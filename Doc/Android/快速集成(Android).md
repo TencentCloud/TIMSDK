@@ -8,7 +8,7 @@
 
 ### 方法一：自动加载（aar）
 IM SDK已经发布到 jcenter 库，您可以通过配置 gradle 自动下载更新
-只需要用Android Studio打开需要集成SDK的工程（本文以 [TIM SDK Demo](https://github.com/TencentVideoCloudIM/TIMSDK/tree/master/Android)为例），然后通过简单的三个步骤修改app/build.gradle文件，就可以完成SDK集成：
+只需要用Android Studio打开需要集成SDK的工程（本文以 [TIM SDK Demo](https://github.com/tencentyun/TIMSDK/tree/master/Android) 为例），然后通过简单的三个步骤修改app/build.gradle文件，就可以完成SDK集成：
 
 ![](https://main.qcloudimg.com/raw/211945758a897f53299951d415209ea6.png)
 
@@ -35,9 +35,10 @@ dependencies {
 点击 Sync Now 按钮，如果您的网络连接jcenter没有问题，很快SDK就会自动下载集成到工程里面。
 
 ### 方法二：手动下载（aar）
-如果您的网络连接jcenter有问题，也可以手动下载SDK集成到工程里面：
+如果您的网络连接 jcenter 有问题，也可以手动下载SDK集成到工程里面：
+
 - **第一步：下载 IM SDK**  
-在 Github 上可以下载到最新版本的 [IM SDK](https://github.com/TencentVideoCloudIM/TIMSDK/tree/master/Android/tuikit/libs)：
+在 Github 上可以下载到最新版本的 [IM SDK](https://github.com/tencentyun/TIMSDK/tree/master/Android/tuikit/libs)：
 ![](https://main.qcloudimg.com/raw/0529e40e225998b0a4419f33c55283b6.png)
 - **第二步：拷贝IM SDK到工程目录**  
 将下载到的 aar 文件拷贝到tuikit lib工程的 **/libs** 目录下：
@@ -51,6 +52,7 @@ dependencies {
 由于tuikit是以lib工程导入的，需要在app/build.gradle 和 tuikit/build.gradle 中，添加引用 aar 包的代码
  ![](https://main.qcloudimg.com/raw/53d530fd5ce0b66c88e678250b3d9386.png) 
  ![](https://main.qcloudimg.com/raw/5175545f0e583fba7b7099ee94c721fa.png)
+ 
 - **第五步：指定App使用架构**
 在 app/build.gradle的defaultConfig 中，指定App使用的cpu架构(目前IM SDK支持armeabi-v7a)
 
@@ -70,7 +72,7 @@ dependencies {
 如果您不想集成 aar 库，也可以通过导入jar和so库的方式集成 IM SDK：
 
 - **第一步：下载解压 IM SDK**
-在 Github 上可以 [下载](https://github.com/TencentVideoCloudIM/TIMSDK/tree/master/Android/tuikit/libs) 到最新版本的 aar 文件，解压：
+在 Github 上可以 [下载](https://github.com/tencentyun/TIMSDK/tree/master/Android/tuikit/libs) 到最新版本的 aar 文件，解压：
 ![](https://main.qcloudimg.com/raw/0529e40e225998b0a4419f33c55283b6.png)
 解压后的目录里面主要包含 jar 文件和so 文件夹，把其中的 **classes.jar** 重命名成 **imsdk.jar** ，文件清单如下：
 ![](https://main.qcloudimg.com/raw/cbe70a310281e4085cbe77f129202762.png)
