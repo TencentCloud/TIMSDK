@@ -7,7 +7,7 @@
 您可以选择使用Gradle自动加载的方式，或者手动下载 aar 再将其导入到您当前的工程项目中。
 
 ### 方法一：自动加载（aar）
-IM SDK已经发布到jcenter库，您可以通过配置gradle自动下载更新
+IM SDK已经发布到 jcenter 库，您可以通过配置 gradle 自动下载更新
 只需要用Android Studio打开需要集成SDK的工程（本文以 [TIM SDK Demo](https://github.com/TencentVideoCloudIM/TIMSDK/tree/master/Android)为例），然后通过简单的三个步骤修改app/build.gradle文件，就可以完成SDK集成：
 
 ![](https://main.qcloudimg.com/raw/211945758a897f53299951d415209ea6.png)
@@ -53,13 +53,16 @@ dependencies {
  ![](https://main.qcloudimg.com/raw/5175545f0e583fba7b7099ee94c721fa.png)
 - **第五步：指定App使用架构**
 在 app/build.gradle的defaultConfig 中，指定App使用的cpu架构(目前IM SDK支持armeabi-v7a)
-    ```
-    defaultConfig {
+
+```
+ defaultConfig {
             ndk {
                 abiFilters "armeabi-v7a"
             }
     }
-    ```
+```
+		
+	
 - **第六步：同步 SDK**  
 点击 Sync Now 按钮，完成 IM SDK 的集成工作。
 
