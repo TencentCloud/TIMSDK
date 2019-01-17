@@ -51,7 +51,7 @@ pod命令执行完后，会生成集成了SDK的 .xcworkspace 后缀的工程文
 
 ### 手动集成
 #### 1. 从 [Git](https://github.com/TencentVideoCloudIM/TIMSDK.git) 下载 ImSDK 开发包，SDK所在的位置如下：
-![](https://main.qcloudimg.com/raw/6520882a4726ad96db29c84c528718cc.png)
+![](https://main.qcloudimg.com/raw/2ccfbe6b80be0e2f2a1a0bc5f80439d4.png)
 
 **必选 SDK：**
 
