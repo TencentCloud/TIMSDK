@@ -25,7 +25,7 @@
 
 
 ## 4. 下载 Demo 源码
-从 [Github](https://github.com/TencentVideoCloudIM/TIMSDK) 下载 ImSDK Android开发包，打开tuikit工程。
+从 [Github](https://github.com/tencentyun/TIMSDK/tree/master/Android) 下载 ImSDK Android开发包，打开tuikit工程。
 
 ## 5. 修改源码配置
 - 使用 Android Studio （3.0 以上的版本）  打开源码工程。
