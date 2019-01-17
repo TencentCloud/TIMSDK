@@ -1,9 +1,6 @@
 
 本文主要介绍如何快速地将腾讯云 IMSDK 集成到您的项目中，只要按照如下步骤进行配置，就可以完成 SDK 的集成工作。
 
-> **注意：**
-> 使用互动直播业务的开发者，请集成 ImSDKv2 版本。
-
 ## 开发环境要求
 - Xcode 9.0+
 - iOS 8.0 以上的 iPhone 或者 iPad 真机
@@ -53,13 +50,13 @@ pod命令执行完后，会生成集成了SDK的 .xcworkspace 后缀的工程文
 #### 1. 从 [Git](https://github.com/tencentyun/TIMSDK) 或 [官网](https://cloud.tencent.com/product/im/developer) 下载 ImSDK 开发包，其中SDK所在的位置如下：
 ![](https://main.qcloudimg.com/raw/2ccfbe6b80be0e2f2a1a0bc5f80439d4.png)
 
-**必选 SDK：**
+- IMSDK.framework 为 IMSDK 的核心静态库文件。
 
 | 包名 | 介绍 |  ipa增量 |
 | --- | --- | --- |
 | ImSDK.framework | IM 功能包 | 1.9M|
 
-**可选 SDK：**
+- TXLiteAVSDK_UGC.framework 是腾讯云短视频（UGC）SDK，用于实现 IM 中的短视频收发能力，为可选组件。
 
 | 包名 | 介绍 | 功能 |
 | --- | --- | --- |
@@ -97,9 +94,3 @@ ImSDK.framework
 ```
 #import <ImSDK/ImSDK.h>
 ```
-
-
-
-
-
-
