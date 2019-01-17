@@ -1,45 +1,346 @@
+本文主要介绍腾讯云 Im SDK 的几个最基本功能的使用方法，阅读此文档有助于您对 IM 的基本使用流程有一个简单的认识。
+## 初始化
+ImSDK 一切操作都是由通讯管理器 `TIMManager` 开始，SDK 操作第一步需要获取 `TIMManager` 单例。
 
-本文主要介绍如何快速地将腾讯云即时通信Demo工程运行起来，您只需参考如下步骤依次执行即可。
+**原型：**
+```
+/**
+*  获取管理器实例
+*
+*  @return 管理器实例
+*/
+public static TIMManager getInstance()
+```
 
-## 1. 创建应用
-进入腾讯云通信 [控制台](https://console.cloud.tencent.com/avc/list)，单击“创建应用接入”，会出现下图的内容，您按照您的需要进行应用的创建，
-![](https://main.qcloudimg.com/raw/14a392ce346a812dca533282692d8360.png)
+**示例：**
+```
+TIMManager.getInstance();
+```
+在使用 SDK 进一步操作之前，需要初始 SDK。
 
-创建应用后，会给您分配一个应用标识：sdkappid，接下来进入“帐号集成”。
+**原型:**
+```
+/**
+ * 初始化 ImSDK
+ * @param context  application context
+ * @param config SDK 全局配置
+ * @return true - 初始化成功， false - 初始化失败
+ */
+public boolean init(@NonNull Context context, @NonNull TIMSdkConfig config)
+```
+**示例：**
+```
+//初始化 SDK 基本配置
+TIMSdkConfig config = new TIMSdkConfig(sdkAppId)
+        .enableCrashReport(false);
+        .enableLogPrint(true)
+        .setLogLevel(TIMLogLevel.DEBUG)
+        .setLogPath(Environment.getExternalStorageDirectory().getPath() + "/justfortest/")
 
-## 2. 帐号集成
-完成创建应用之后返回应用列表，单击相应应用的“应用配置”链接，
-![](https://main.qcloudimg.com/raw/944ba26dbf293fd971eb20ee40d0d672.png)
+//初始化 SDK
+TIMManager.getInstance().init(getApplicationContext(), config);
+```
+**更多初始化操作请参考 [初始化](https://cloud.tencent.com/document/product/269/9229)**
 
-在新的页面内容中，找到当前页面的帐号体系集成部分，单击“编辑”链接，
-![](https://main.qcloudimg.com/raw/32b3023bee01dbb4214d6efb6d214921.png)
+## 登录/登出
+### 登录
+用户登录腾讯后台服务器后才能正常收发消息，登录需要用户提供 `identifier`、`userSig`。如果用户保存用户票据，可能会存在过期的情况，如果用户票据过期，`login` 将会返回 `70001` 错误码，开发者可根据错误码进行票据更换。登录为异步过程，通过回调函数返回是否成功，成功后方能进行后续操作。登录成功或者失败后使用闭包 `succ` 和 `fail` 进行回调。
 
-帐号名称相当于是应用所属系列的名称，多个应用可以使用相同的，如果之前创建过应用，下拉列表中可以看到之前应用使用的帐号名称。
+> **注意：**
+>- 如果此用户在其他终端被踢，登录将会失败，返回错误码（`ERR_IMSDK_KICKED_BY_OTHERS：6208`）。开发者必须进行登录错误码 `ERR_IMSDK_KICKED_BY_OTHERS` 的判断。关于被踢的详细描述，参见 [用户状态变更](https://cloud.tencent.com/document/product/269/9229#.E7.94.A8.E6.88.B7.E7.8A.B6.E6.80.81.E5.8F.98.E6.9B.B4)。
+>- 只要登录成功以后，用户没有主动登出或者被踢，网络变更会自动重连，无需开发者关心。不过特别需要注意被踢操作，需要注册 [用户状态变更回调](https://cloud.tencent.com/document/product/269/9229#.E7.94.A8.E6.88.B7.E7.8A.B6.E6.80.81.E5.8F.98.E6.9B.B4)，否则被踢时得不到通知。
 
-集成模式使用 [独立模式](https://cloud.tencent.com/document/product/269/1507)。
+**原型：**
+```
+/** 登录
+ * @param identifier 用户帐号
+ * @param userSig userSig，用户帐号签名，由私钥加密获得，具体请参考文档
+ * @param callback 回调接口
+ */
+public void login(@NonNull String identifier, @NonNull String userSig, @NonNull TIMCallBack callback)
+```
 
-下面是帐号集成完成后应用的配置页面，
-![](https://main.qcloudimg.com/raw/70a9d5f3846dac7eb6a288aa3b425b9d.png)
+**示例：**
 
-## 3. 获取测试userSig
-点击**下载公私钥**的链接，即可获得一个名为 **keys.zip** 的压缩包，解压后可以得到两个文件，即 public_key 和 private_key，用记事本打开 **private_key** 文件，并将其中的内容拷贝到**开发辅助工具**的私钥文本输入框中。
-![](https://main.qcloudimg.com/raw/a1b9bb35760e1e52825c754bd3ef9a52.png)
-其中：identifier 即为你的测试账号，私钥为下载的私钥信息，生成的签名就是**userSig**。identifier 和 userSig 是一一对应的关系。
+```
+// identifier为用户名，userSig 为用户登录凭证
+TIMManager.getInstance().login(identifier, userSig, new TIMCallBack() {
+    @Override
+    public void onError(int code, String desc) {
+        //错误码 code 和错误描述 desc，可用于定位请求失败原因
+        //错误码 code 列表请参见错误码表
+        Log.d(tag, "login failed. code: " + code + " errmsg: " + desc);
+    }
 
-## 4. 下载 Demo源码
-从 [Github](https://github.com/TencentVideoCloudIM/TIMSDK) 下载 ImSDK Android开发包，打开tuikit工程。
+    @Override
+    public void onSuccess() {
+        Log.d(tag, "login succ");
+    }
+});
+```
 
-## 5. 配置工程
-使用 Android Studio （3.0 以上的版本）  打开源码工程
-工程中默认配置了测试的 SDKAPPID 以及在控制台生成的四个测试账号，直接运行到手机上即可体验。
-当然您也可以使用自己按照上面的步骤配置好的测试账号使用，需要做以下的替换即可：
- - 在com.tencent.qcloud.uipojo.utils.Constants中替换您的 SDKAPPID
-![](https://main.qcloudimg.com/raw/b6cec2fd99c8350f4781304d96d28653.png)
+### 登出
 
-- 在com.tencent.qcloud.uipojo.login.view.LoginActivity中替换 userId 和 userSig 信息
-![](https://main.qcloudimg.com/raw/976f87fe676546bfc93fc3dcb04bc97e.png)
+如用户主动注销或需要进行用户的切换，则需要调用注销操作。
 
-**注意：该方案仅适合本地跑通demo和功能调试，产品真正上线发布，userSig获取请使用服务器获取方案** [Doc](https://cloud.tencent.com/document/product/269/1507)
+**原型：**
 
-## 6. 编译运行
-APP启动后，在不同的手机上登录不同的账号，就可以体验 IM 的功能了。
+```
+/**
+ * 注销
+ * @param callback 回调，不需要可以填 null
+ */
+public void logout(@Nullable TIMCallBack callback)
+```
+
+**示例：**
+
+> **注意：**
+> 在需要切换帐号时，需要 `logout` 回调成功或者失败后才能再次 `login`，否则 `login`可能会失败。
+
+```
+//登出
+TIMManager.getInstance().logout(new TIMCallBack() {
+    @Override
+    public void onError(int code, String desc) {
+
+        //错误码 code 和错误描述 desc，可用于定位请求失败原因
+        //错误码 code 列表请参见错误码表
+        Log.d(tag, "logout failed. code: " + code + " errmsg: " + desc);
+    }
+
+    @Override
+    public void onSuccess() {
+        //登出成功
+    }
+});
+```
+**更多登录操作请参考 [登录](https://cloud.tencent.com/document/product/269/9233)**
+
+## 消息发送
+
+### 通用消息发送
+
+#### 会话获取
+
+会话是指面向一个人或者一个群组的对话，通过与单个人或群组之间会话收发消息，发消息时首先需要先获取会话，获取会话需要指定会话类型（群组或者单聊），以及会话对方标志（对方帐号或者群号）。获取会话由 `getConversation` 实现。
+
+**原型：** 
+
+```
+/**
+ * 获取会话
+ * @param type 会话类型
+ * @param peer 参与会话的对方, C2C 会话为对方帐号 identifier, 群组会话为群组 ID
+ * @return 会话实例
+ */
+public TIMConversation getConversation(TIMConversationType type, String peer)
+```
+
+**获取对方 `identifier` 为『sample_user_1』的单聊会话示例： **
+
+```
+//获取单聊会话
+String peer = "sample_user_1";  //获取与用户 "sample_user_1" 的会话
+conversation = TIMManager.getInstance().getConversation(
+        TIMConversationType.C2C,    //会话类型：单聊
+        peer);                      //会话对方用户帐号//对方ID
+```
+
+**获取群组 ID 为『TGID1EDABEAEO』的群聊会话示例：** 
+
+```
+//获取群聊会话
+String groupId = "TGID1EDABEAEO";  //获取与群组 "TGID1LTTZEAEO" 的会话
+conversation = TIMManager.getInstance().getConversation(
+        TIMConversationType.Group,      //会话类型：群组
+        groupId);                       //群组 ID
+```
+
+#### 消息发送
+
+通过 `TIMManager` 获取会话 `TIMConversation` 后，可发送消息和获取会话缓存消息。ImSDK 中消息的解释可参阅 [ImSDK 对象简介](https://cloud.tencent.com/document/product/269/9227#imsdk-.E5.AF.B9.E8.B1.A1.E7.AE.80.E4.BB.8B)。 ImSDK 中的消息由 `TIMMessage` 表达， 一个 `TIMMessage` 由多个 `TIMElem` 组成，每个 `TIMElem` 可以是文本和图片，也就是说每一条消息可包含多个文本和多张图片。发消息通过 `TIMConversation` 的成员 `sendMessage` 实现。有两种方式实现，一种使用闭包，另一种调用方实现 `protocol` 回调。
+
+![](//mccdn.qcloud.com/static/img/7226ab79d4294cc53980c888892f5c6d/image.png)
+
+**原型：**
+
+```
+/**
+ * 发送消息
+ * @param msg 消息
+ * @param callback 回调
+ */
+public void sendMessage(@NonNull TIMMessage msg, @NonNull TIMValueCallBack<TIMMessage> callback)
+```
+
+### 文本消息发送
+
+文本消息由 `TIMTextElem` 定义。
+
+```
+/**
+  * 获取文本内容
+  * @return 文本内容
+  */
+public String getText() {
+		return text;
+}
+
+/**
+ * 设置文本内容
+ * @param text 文本内容
+ */
+public void setText(String text) {
+		this.text = text;
+}
+```
+
+**示例：**
+
+> 注：
+>- text 传递需要发送的文本消息。
+>- 失败回调中，code 表示错误码，具体可参阅 [错误码](/doc/product/269/1671)，err 表示错误描述。
+
+```
+//构造一条消息
+TIMMessage msg = new TIMMessage();
+
+//添加文本内容
+TIMTextElem elem = new TIMTextElem();
+elem.setText("a new msg");
+
+//将elem添加到消息
+if(msg.addElement(elem) != 0) {
+   Log.d(tag, "addElement failed");
+   return;
+}
+
+//发送消息
+conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
+    @Override
+    public void onError(int code, String desc) {//发送消息失败
+        //错误码 code 和错误描述 desc，可用于定位请求失败原因
+        //错误码 code 含义请参见错误码表
+        Log.d(tag, "send message failed. code: " + code + " errmsg: " + desc);
+    }
+
+    @Override
+    public void onSuccess(TIMMessage msg) {//发送消息成功
+        Log.e(tag, "SendMsg ok");
+    }
+});
+```
+
+**更多消息发送操作请参考 [消息收发](https://cloud.tencent.com/document/product/269/9232)**
+
+## 消息接收
+在多数情况下，用户需要感知新消息的通知，这时只需注册新消息通知回调 `TIMMessageListener`，在用户登录状态下，会拉取离线消息，为了不漏掉消息通知，需要在登录之前注册新消息通知。
+
+**原型：**
+
+```
+/**
+ * 添加一个消息监听器
+ * @param listener 消息监听器
+ *                 默认情况下所有消息监听器都将按添加顺序被回调一次
+ *                 除非用户在 onNewMessages 回调中返回 true，此时将不再继续回调下一个消息监听器
+ */
+public void addMessageListener(TIMMessageListener listener)
+
+/**
+* 收到新消息回调
+* @param msgs 收到的新消息
+* @return 正常情况下，如果注册了多个listener, SDK会顺序回调到所有的listener。当碰到listener的回调返回true的时候，将终止继续回调后续的listener。
+*/
+public boolean onNewMessages(List<TIMMessage> msgs)
+```
+
+回调消息内容通过参数 `TIMMessage` 传递，通过 `TIMMessage` 可以获取消息和相关会话的详细信息，如消息文本，语音数据，图片等。以下示例中设置消息回调通知，并且在有新消息时直接打印消息。详细可参阅 [消息解析](https://cloud.tencent.com/document/product/269/9232#.E6.B6.88.E6.81.AF.E8.A7.A3.E6.9E.90) 部分。
+
+**示例：**
+
+```
+//设置消息监听器，收到新消息时，通过此监听器回调
+TIMManager.getInstance().addMessageListener(new TIMMessageListener() {//消息监听器
+    @Override
+    public boolean onNewMessages(List<TIMMessage> msgs) {//收到新消息
+        //消息的内容解析请参考消息收发文档中的消息解析说明
+        return true; //返回true将终止回调链，不再调用下一个新消息监听器
+    }
+});
+```
+**更多消息接收操作请参考 [消息收发](https://cloud.tencent.com/document/product/269/9232)**
+
+## 群组管理
+IM 云通讯有多种群组类型，其特点以及限制因素可参考 [群组系统](/doc/product/269/群组系统)。群组使用唯一 ID 标识，通过群组 ID 可以进行不同操作，其中群组相关操作都由 `TIMGroupManager` 实现，需要用户登录成功后操作。
+
+**获取单例原型：**
+
+```
+/** 获取实例
+ * @return TIMGroupManager 实例
+ */
+public static TIMGroupManager getInstance()
+```
+
+### 创建群组
+
+云通信中内置了私有群、公开群、聊天室、互动直播聊天室和在线成员广播大群五种群组类型，详情请见 [群组形态介绍](https://cloud.tencent.com/document/product/269/1502#.E7.BE.A4.E7.BB.84.E5.BD.A2.E6.80.81.E4.BB.8B.E7.BB.8D)。创建时可指定群组名称以及要加入的用户列表，创建成功后返回群组 ID，可通过群组 ID 获取 `Conversation` 收发消息等。
+
+**原型：**
+
+```
+/**
+ * 创建群组
+ * @param param 创建群组需要的信息集, 详见{@see CreateGroupParam}
+ * @param cb 回调，OnSuccess 函数的参数中将返回创建成功的群组 ID
+ */
+public void createGroup(@NonNull CreateGroupParam param, @NonNull TIMValueCallBack<String> cb)
+```
+
+以下示例创建一个公开群组，并且把用户『cat』拉入群组。 **示例：**
+
+```
+//创建公开群，且不自定义群 ID
+TIMGroupManager.CreateGroupParam param = new TIMGroupManager.CreateGroupParam("Public", "test_group");
+//指定群简介
+param.setIntroduction("hello world");
+//指定群公告
+param.setNotification("welcome to our group");
+
+//添加群成员
+List<TIMGroupMemberInfo> infos = new ArrayList<TIMGroupMemberInfo>();
+TIMGroupMemberInfo member = new TIMGroupMemberInfo();
+member.setUser("cat");
+member.setRoleType(TIMGroupMemberRoleType.Normal);
+infos.add(member);        
+param.setMembers(infos);
+
+//设置群自定义字段，需要先到控制台配置相应的 key
+try {
+    param.setCustomInfo("GroupKey1", "wildcat".getBytes("utf-8"));
+} catch (UnsupportedEncodingException e) {
+    e.printStackTrace();
+}
+
+//创建群组
+TIMGroupManager.getInstance().createGroup(param, new TIMValueCallBack<String>() {
+    @Override
+    public void onError(int code, String desc) {
+        Log.d(tag, "create group failed. code: " + code + " errmsg: " + desc);
+    }
+
+    @Override
+    public void onSuccess(String s) {
+        Log.d(tag, "create group succ, groupId:" + s);
+    }
+});
+```
+
+### 群组消息 
+群组消息与 C2C （单聊）消息相同，仅在获取 `Conversation` 时的会话类型不同，可参照 [消息发送](https://cloud.tencent.com/document/product/269/9232#.E6.B6.88.E6.81.AF.E5.8F.91.E9.80.81) 部分。
+
+**更多群组操作请参考 [群组管理](https://cloud.tencent.com/document/product/269/9236)**
+
+
