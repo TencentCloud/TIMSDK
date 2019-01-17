@@ -1,0 +1,61 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tencent.qcloud.uikit">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application>
+        <activity
+            android:name="com.tencent.qcloud.uikit.common.component.picture.ui.MatisseActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tencent.qcloud.uikit.common.component.picture.internal.ui.AlbumPreviewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tencent.qcloud.uikit.common.component.picture.internal.ui.SelectedPreviewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".common.component.video.CameraActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".common.component.video.VideoViewActivity"
+            android:configChanges="keyboardHidden|orientation" />
+
+        <activity
+            android:name=".common.widget.photoview.PhotoViewActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".operation.c2c.C2CChatStartActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".operation.group.GroupChatCreateActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+        <activity
+            android:name=".operation.group.GroupManagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".operation.group.GroupChatJoinActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".operation.group.GroupApplyManagerActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.uikit.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths_public"></meta-data>
+        </provider>
+
+    </application>
+
+
+</manifest>

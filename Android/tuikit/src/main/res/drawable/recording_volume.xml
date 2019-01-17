@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/voice_volume1"
+        android:duration="125" />
+    <item
+        android:drawable="@drawable/voice_volume2"
+        android:duration="125" />
+    <item
+        android:drawable="@drawable/voice_volume3"
+        android:duration="125" />
+    <item
+        android:drawable="@drawable/voice_volume4"
+        android:duration="125" />
+    <item
+        android:drawable="@drawable/voice_volume5"
+        android:duration="125" />
+    <item
+        android:drawable="@drawable/voice_volume6"
+        android:duration="125" />
+    android:duration="125" />
+    <item
+        android:drawable="@drawable/voice_volume7"
+        android:duration="125" />
+
+</animation-list>

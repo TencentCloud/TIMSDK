@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/selectable_contact_item"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="#fcfcfc"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="15dp">
+
+    <CheckBox
+        android:id="@+id/contact_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:button="@drawable/checkbox_selector"
+        android:clickable="false"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ivAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:clickable="false"
+        tools:src="@drawable/friend" />
+
+    <TextView
+        android:id="@+id/tvCity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:textColor="@color/text_color_gray"
+        tools:text="安徽" />
+</LinearLayout>

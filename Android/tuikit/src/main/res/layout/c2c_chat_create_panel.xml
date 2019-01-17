@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="back">
+
+            <ImageView
+                android:id="@+id/page_title_left_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:clickable="false"
+                android:src="@drawable/title_bar_back" />
+
+        </RelativeLayout>
+
+
+        <SearchView
+            android:id="@+id/c2c_user_search"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginLeft="-20dp"
+            android:layout_weight="1"
+            android:iconifiedByDefault="false"
+            android:padding="0dp"
+            android:queryHint="@string/c2c_session_search_hint" />
+
+        <Button
+            android:id="@+id/c2c_chat_start"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/green_btn_bg"
+            android:text="@string/c2c_session_start"
+            android:textColor="#fff" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

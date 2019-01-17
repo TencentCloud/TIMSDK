@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg_color"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+
+    <com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar
+        android:id="@+id/group_create_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <EditText
+        android:id="@+id/group_create_group_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/page_margin"
+        android:hint="@string/input_group_name"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/group_create_group_notice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/page_margin"
+        android:hint="@string/input_group_notice"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/group_type_group"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#fff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/page_margin"
+        android:paddingRight="@dimen/page_margin">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/group_type" />
+
+        <TextView
+            android:id="@+id/group_create_group_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/arrow_right" />
+
+    </LinearLayout>
+
+    <com.tencent.qcloud.uikit.common.widget.InfoItemView
+        android:id="@+id/group_type_join"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="1dp"
+        android:background="#fff"
+        android:paddingLeft="@dimen/page_margin"
+        android:paddingRight="@dimen/page_margin"
+        android:visibility="gone"
+        app:infoLabel="@string/group_join_type" />
+
+    <SearchView
+        android:id="@+id/group_user_search"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="@dimen/page_margin"
+        android:iconifiedByDefault="false"
+        android:padding="0dp"
+        android:queryHint="@string/search"
+        android:visibility="gone" />
+
+
+    <com.tencent.qcloud.uikit.business.contact.view.ContactList
+        android:id="@+id/group_create_member_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+</LinearLayout>

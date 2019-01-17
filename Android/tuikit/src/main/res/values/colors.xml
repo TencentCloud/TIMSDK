@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Copyright 2017 Zhihu Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<resources>
+    <color name="top_session_color">#e5e5e5</color>
+    <color name="white_color">#ffffff</color>
+    <color name="main_bg_color">#f2f2f2</color>
+    <color name="main_fg_color">#ffffff</color>
+    <color name="item_split_color">#cccccc</color>
+    <color name="title_bar_bg_color">#ffffff</color>
+    <color name="title_bar_font_color">#016fff</color>
+
+    <color name="text_color_black">#000</color>
+    <color name="text_color_gray">#696969</color>
+
+    <color name="font_blue">#066fff</color>
+
+    <color name="voice_pressed">#d2d2d2</color>
+    <color name="voice_normal">#c2c2c2</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="blur_bg">#FFFAF0</color>
+    <color name="black">#000000</color>
+    <color name="grey">#808080</color>
+    <color name="right_bg">#696969</color>
+    <color name="preview_bottom_toolbar_bg">#CC000000</color>
+    <color name="preview_bottom_size">#61FFFFFF</color>
+    <color name="partTranslucent">#39000000</color>
+
+
+    <color name="pickerview_timebtn_nor">#057dff</color>
+    <color name="pickerview_timebtn_pre">#c2daf5</color>
+    <color name="pickerview_bg_topbar">#f5f5f5</color>
+
+    <color name="pickerview_topbar_title">#000000</color>
+    <color name="pickerview_wheelview_textcolor_out">#a8a8a8</color>
+    <color name="pickerview_wheelview_textcolor_center">#2a2a2a</color>
+    <color name="pickerview_wheelview_textcolor_divider">#d5d5d5</color>
+    <color name="pickerview_bgColor_overlay">#60000000</color>
+    <color name="pickerview_bgColor_default">#FFFFFFFF</color>
+</resources>
