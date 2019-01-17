@@ -15,7 +15,9 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :git => 'https://github.com/TencentVideoCloudIM/TIMSDK.git', :tag => spec.version}
+  spec.source = { :git => 'https://github.com/tencentyun/TIMSDK.git', :tag => spec.version}
+  spec.preserve_paths = 'iOS/ImSDK.framework'
+  spec.source_files = 'iOS/ImSDK.framework/Headers/*.h'
   spec.public_header_files = 'iOS/ImSDK.framework/Headers/*.h'
   spec.vendored_frameworks = 'iOS/ImSDK.framework'
   spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK/iOS/ImSDK.framework/Headers/'}
