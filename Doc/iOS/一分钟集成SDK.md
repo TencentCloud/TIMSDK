@@ -47,7 +47,7 @@ pod update
 pod命令执行完后，会生成集成了SDK的 .xcworkspace 后缀的工程文件，双击打开即可。
 
 ### 手动集成
-#### 1. 从 [Git](https://github.com/tencentyun/TIMSDK) 或 [官网](https://cloud.tencent.com/product/im/developer) 下载 ImSDK 开发包，其中SDK所在的位置如下：
+#### 1. 从 [Git](https://github.com/tencentyun/TIMSDK) 下载 ImSDK 开发包，其中SDK所在的位置如下：
 ![](https://main.qcloudimg.com/raw/2ccfbe6b80be0e2f2a1a0bc5f80439d4.png)
 
 - IMSDK.framework 为 IMSDK 的核心静态库文件。
