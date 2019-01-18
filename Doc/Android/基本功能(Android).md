@@ -106,7 +106,7 @@ conversation = TIMManager.getInstance().getConversation(
 
 ImSDK 中的每一条消息都是一个 `TIMMessage` 对象， 一条完整的 `TIMMessage` 消息可以包含多个 `TIMElem` 单元，每个 `TIMElem` 单元可以是文本，也可以是图片，也就是说每一条消息可包含多个文本、多张图片、以及其他类型的单元。
 
-![](//mccdn.qcloud.com/static/img/7226ab79d4294cc53980c888892f5c6d/image.png)
+![](https://main.qcloudimg.com/raw/2841a6842e0f46d2ac71eae1e5a13e05.png)
 
 ```
 //构造一条消息并添加一个文本内容
