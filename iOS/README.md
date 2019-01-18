@@ -24,7 +24,7 @@
 > 可以多生成4组以上的 userid 和 usersig，方便在第5步中调试使用。
 
 ## 4. 下载 Demo源码
-从 [Github](https://github.com/tencentyun/TIMSDK/tree/master/iOS) 下载 ImSDK iOS开发包，打开TUIKitDemo工程。
+从 [Git](https://github.com/tencentyun/TIMSDK) 下载 ImSDK iOS开发包，打开TUIKitDemo工程。
 ![](https://main.qcloudimg.com/raw/45f395119c820d5da88f7124174c013f.png)
 
 ## 5. 配置工程
