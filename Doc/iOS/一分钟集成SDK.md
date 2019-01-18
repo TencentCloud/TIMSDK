@@ -30,7 +30,7 @@ platform :ios, '8.0'
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'App' do
-pod 'TXIMSDK'
+pod 'TXIMSDK_iOS'
 end
 ```
 
@@ -50,7 +50,7 @@ pod命令执行完后，会生成集成了SDK的 .xcworkspace 后缀的工程文
 #### 1. 从 [Git](https://github.com/tencentyun/TIMSDK) 下载 ImSDK 开发包，其中SDK所在的位置如下：
 ![](https://main.qcloudimg.com/raw/2ccfbe6b80be0e2f2a1a0bc5f80439d4.png)
 
-- IMSDK.framework 为 IMSDK 的核心静态库文件。
+- IMSDK.framework 为 IMSDK 的核心动态库文件。
 
 | 包名 | 介绍 |  ipa增量 |
 | --- | --- | --- |
@@ -72,9 +72,9 @@ pod命令执行完后，会生成集成了SDK的 .xcworkspace 后缀的工程文
 
 #### 2. 集成 ImSDK
 
-**添加依赖库：**选中 IMDemo 的【Target】，在【General】面板中的【Linked Frameworks and Libraries】添加依赖库。
+**添加依赖库：**选中 IMDemo 的【Target】，在【General】面板中的 【Embedded Binaries】和【Linked Frameworks and Libraries】添加依赖库。
 
-![](//avc.qcloud.com/wiki2.0/im/imgs/20150928013833_31715.jpg)
+![](https://main.qcloudimg.com/raw/3a1cc30c280362be2d99058dde347d4f.png)
 
 **添加依赖库：**
 ```

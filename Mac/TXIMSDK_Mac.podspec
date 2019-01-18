@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Mac'
-  spec.version      = '3.5.0'
+  spec.version      = '4.0.0'
   spec.platform     = :osx  
   spec.osx.deployment_target = '10.10'
   spec.license      = { :type => 'Proprietary',
@@ -17,8 +17,8 @@ Pod::Spec.new do |spec|
 
   spec.source = { :git => 'https://github.com/tencentyun/TIMSDK.git', :tag => spec.version}
   spec.preserve_paths = 'Mac/ImSDKForMac.framework'
-  spec.source_files = 'Mac/ImSDKForMac.framework/Headers/*.h'
-  spec.public_header_files = 'Mac/ImSDKForMac.framework/Headers/*.h'
+  spec.source_files = 'Mac/ImSDKForMac.framework/Versions/A/Headers/*.h'
+  spec.public_header_files = 'Mac/ImSDKForMac.framework/Versions/A/Headers/*.h'
   spec.vendored_frameworks = 'Mac/ImSDKForMac.framework'
-  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Mac/Mac/ImSDKForMac.framework/Headers/'}
+  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Mac/Mac/ImSDKForMac.framework/Versions/A/Headers/'}
 end
