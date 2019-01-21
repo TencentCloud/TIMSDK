@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		40157908217B925D002E0629 /* TUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0144A0216E1A5500C12E35 /* TUIKit.framework */; };
-		40157909217B925D002E0629 /* TUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CF0144A0216E1A5500C12E35 /* TUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CE1664CE21EF6CD400293705 /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1664CA21EF6CC100293705 /* ImSDK.framework */; };
-		CE1664CF21EF6CD400293705 /* ImSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CE1664CA21EF6CC100293705 /* ImSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CE4361F521F5A5660070D6C9 /* TUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0144A0216E1A5500C12E35 /* TUIKit.framework */; };
+		CE4361F621F5A5660070D6C9 /* TUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CF0144A0216E1A5500C12E35 /* TUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CE43620821F5A6690070D6C9 /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE7FC09321F02B970085A659 /* ImSDK.framework */; };
+		CE43620921F5A6690070D6C9 /* ImSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CE7FC09321F02B970085A659 /* ImSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CE7FC09721F02C4A0085A659 /* UserSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7FC09621F02C4A0085A659 /* UserSelectView.m */; };
 		CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014486216E1A4900C12E35 /* AppDelegate.m */; };
 		CF01448A216E1A4900C12E35 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014489216E1A4900C12E35 /* LoginController.m */; };
@@ -35,14 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		401578F3217B9205002E0629 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CF01449B216E1A5500C12E35 /* TUIKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = CF0143DC216E183800C12E35;
-			remoteInfo = TUIKit;
-		};
-		4015790A217B925D002E0629 /* PBXContainerItemProxy */ = {
+		CE4361F721F5A5660070D6C9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CF01449B216E1A5500C12E35 /* TUIKit.xcodeproj */;
 			proxyType = 1;
@@ -59,14 +52,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		4015790C217B925D002E0629 /* Embed Frameworks */ = {
+		CE4361F421F5A5480070D6C9 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				40157909217B925D002E0629 /* TUIKit.framework in Embed Frameworks */,
-				CE1664CF21EF6CD400293705 /* ImSDK.framework in Embed Frameworks */,
+				CE4361F621F5A5660070D6C9 /* TUIKit.framework in Embed Frameworks */,
+				CE43620921F5A6690070D6C9 /* ImSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -74,7 +67,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		CE1664CA21EF6CC100293705 /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = ../ImSDK.framework; sourceTree = "<group>"; };
+		CE7FC09321F02B970085A659 /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = ../ImSDK.framework; sourceTree = "<group>"; };
 		CE7FC09521F02C490085A659 /* UserSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserSelectView.h; sourceTree = "<group>"; };
 		CE7FC09621F02C4A0085A659 /* UserSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserSelectView.m; sourceTree = "<group>"; };
 		CF00884C2188772F00AD2879 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -123,23 +116,31 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40157908217B925D002E0629 /* TUIKit.framework in Frameworks */,
-				CE1664CE21EF6CD400293705 /* ImSDK.framework in Frameworks */,
+				CE4361F521F5A5660070D6C9 /* TUIKit.framework in Frameworks */,
+				CE43620821F5A6690070D6C9 /* ImSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE4361FA21F5A5A00070D6C9 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				CE7FC09321F02B970085A659 /* ImSDK.framework */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		CF014479216E1A4900C12E35 = {
 			isa = PBXGroup;
 			children = (
-				CE1664CA21EF6CC100293705 /* ImSDK.framework */,
 				CFDC2F99216E2BD1002EAEC2 /* TUIKitFace.bundle */,
 				CFDC2F9A216E2BD1002EAEC2 /* TUIKitResource.bundle */,
 				CF014484216E1A4900C12E35 /* TUIKitDemo */,
 				CF014483216E1A4900C12E35 /* Products */,
 				CF0144A1216E1A6400C12E35 /* Frameworks */,
+				CE4361FA21F5A5A00070D6C9 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -219,13 +220,12 @@
 				CF01447E216E1A4900C12E35 /* Sources */,
 				CF01447F216E1A4900C12E35 /* Frameworks */,
 				CF014480216E1A4900C12E35 /* Resources */,
-				4015790C217B925D002E0629 /* Embed Frameworks */,
+				CE4361F421F5A5480070D6C9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				401578F4217B9205002E0629 /* PBXTargetDependency */,
-				4015790B217B925D002E0629 /* PBXTargetDependency */,
+				CE4361F821F5A5660070D6C9 /* PBXTargetDependency */,
 			);
 			name = TUIKitDemo;
 			productName = TUIKitDemo;
@@ -322,15 +322,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		401578F4217B9205002E0629 /* PBXTargetDependency */ = {
+		CE4361F821F5A5660070D6C9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = TUIKit;
-			targetProxy = 401578F3217B9205002E0629 /* PBXContainerItemProxy */;
-		};
-		4015790B217B925D002E0629 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = TUIKit;
-			targetProxy = 4015790A217B925D002E0629 /* PBXContainerItemProxy */;
+			targetProxy = CE4361F721F5A5660070D6C9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
