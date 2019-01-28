@@ -1,0 +1,420 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CE43635621F70A030070D6C9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43635521F70A030070D6C9 /* AppDelegate.m */; };
+		CE43635921F70A030070D6C9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43635821F70A030070D6C9 /* LoginViewController.m */; };
+		CE43635B21F70A040070D6C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE43635A21F70A040070D6C9 /* Assets.xcassets */; };
+		CE43635E21F70A040070D6C9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE43635C21F70A040070D6C9 /* Main.storyboard */; };
+		CE43636121F70A040070D6C9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43636021F70A040070D6C9 /* main.m */; };
+		CE4363A221F71B260070D6C9 /* AddChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4363A021F71B260070D6C9 /* AddChatViewController.m */; };
+		CE4363A321F71B260070D6C9 /* AddChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE4363A121F71B260070D6C9 /* AddChatViewController.xib */; };
+		CE4363A821F71D6D0070D6C9 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4363A621F71D6D0070D6C9 /* ChatViewController.m */; };
+		CE4363A921F71D6D0070D6C9 /* ChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE4363A721F71D6D0070D6C9 /* ChatViewController.xib */; };
+		CE43649421F8638E0070D6C9 /* MsgTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43649321F8638E0070D6C9 /* MsgTableCellView.m */; };
+		CE43649821F865A00070D6C9 /* ConversationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43649621F865A00070D6C9 /* ConversationController.m */; };
+		CE43649921F865A00070D6C9 /* ConversationController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE43649721F865A00070D6C9 /* ConversationController.xib */; };
+		CE43649E21F8838E0070D6C9 /* default_head@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE43649C21F8838E0070D6C9 /* default_head@2x.png */; };
+		CE43649F21F8838E0070D6C9 /* default_head@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE43649D21F8838E0070D6C9 /* default_head@3x.png */; };
+		CE4364A421F887080070D6C9 /* default_group@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE4364A321F887080070D6C9 /* default_group@2x.png */; };
+		CE4364A621F88E610070D6C9 /* more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE4364A521F88E610070D6C9 /* more@3x.png */; };
+		CEEBCEE121FEECE500A82B0D /* ImSDKForMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */; };
+		CEEBCEE221FEECE500A82B0D /* ImSDKForMac.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CEEBCEE321FEECE500A82B0D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CEEBCEE221FEECE500A82B0D /* ImSDKForMac.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		CE43635121F70A030070D6C9 /* TUIKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TUIKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE43635421F70A030070D6C9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CE43635521F70A030070D6C9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CE43635721F70A030070D6C9 /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		CE43635821F70A030070D6C9 /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		CE43635A21F70A040070D6C9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CE43635D21F70A040070D6C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		CE43635F21F70A040070D6C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE43636021F70A040070D6C9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CE43636221F70A040070D6C9 /* TUIKitDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TUIKitDemo.entitlements; sourceTree = "<group>"; };
+		CE43639F21F71B260070D6C9 /* AddChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddChatViewController.h; sourceTree = "<group>"; };
+		CE4363A021F71B260070D6C9 /* AddChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddChatViewController.m; sourceTree = "<group>"; };
+		CE4363A121F71B260070D6C9 /* AddChatViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddChatViewController.xib; sourceTree = "<group>"; };
+		CE4363A521F71D6D0070D6C9 /* ChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
+		CE4363A621F71D6D0070D6C9 /* ChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
+		CE4363A721F71D6D0070D6C9 /* ChatViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatViewController.xib; sourceTree = "<group>"; };
+		CE43649221F8638E0070D6C9 /* MsgTableCellView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MsgTableCellView.h; sourceTree = "<group>"; };
+		CE43649321F8638E0070D6C9 /* MsgTableCellView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MsgTableCellView.m; sourceTree = "<group>"; };
+		CE43649521F865A00070D6C9 /* ConversationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationController.h; sourceTree = "<group>"; };
+		CE43649621F865A00070D6C9 /* ConversationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationController.m; sourceTree = "<group>"; };
+		CE43649721F865A00070D6C9 /* ConversationController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationController.xib; sourceTree = "<group>"; };
+		CE43649C21F8838E0070D6C9 /* default_head@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default_head@2x.png"; path = "../../../../ios/TUIKit/TUIKitResource.bundle/default_head@2x.png"; sourceTree = "<group>"; };
+		CE43649D21F8838E0070D6C9 /* default_head@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default_head@3x.png"; path = "../../../../ios/TUIKit/TUIKitResource.bundle/default_head@3x.png"; sourceTree = "<group>"; };
+		CE4364A321F887080070D6C9 /* default_group@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default_group@2x.png"; path = "../../../../ios/TUIKit/TUIKitResource.bundle/default_group@2x.png"; sourceTree = "<group>"; };
+		CE4364A521F88E610070D6C9 /* more@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "more@3x.png"; path = "../../../../ios/TUIKit/TUIKitResource.bundle/more@3x.png"; sourceTree = "<group>"; };
+		CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDKForMac.framework; path = ../../ImSDKForMac.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CE43634E21F70A030070D6C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEEBCEE121FEECE500A82B0D /* ImSDKForMac.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CE43634821F70A030070D6C9 = {
+			isa = PBXGroup;
+			children = (
+				CE43635321F70A030070D6C9 /* TUIKitDemo */,
+				CE43635221F70A030070D6C9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CE43635221F70A030070D6C9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CE43635121F70A030070D6C9 /* TUIKitDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CE43635321F70A030070D6C9 /* TUIKitDemo */ = {
+			isa = PBXGroup;
+			children = (
+				CE43635421F70A030070D6C9 /* AppDelegate.h */,
+				CE43635521F70A030070D6C9 /* AppDelegate.m */,
+				CE43635721F70A030070D6C9 /* LoginViewController.h */,
+				CE43635821F70A030070D6C9 /* LoginViewController.m */,
+				CE43649221F8638E0070D6C9 /* MsgTableCellView.h */,
+				CE43649321F8638E0070D6C9 /* MsgTableCellView.m */,
+				CE43649521F865A00070D6C9 /* ConversationController.h */,
+				CE43649621F865A00070D6C9 /* ConversationController.m */,
+				CE43649721F865A00070D6C9 /* ConversationController.xib */,
+				CE43639F21F71B260070D6C9 /* AddChatViewController.h */,
+				CE4363A021F71B260070D6C9 /* AddChatViewController.m */,
+				CE4363A121F71B260070D6C9 /* AddChatViewController.xib */,
+				CE4363A521F71D6D0070D6C9 /* ChatViewController.h */,
+				CE4363A621F71D6D0070D6C9 /* ChatViewController.m */,
+				CE4363A721F71D6D0070D6C9 /* ChatViewController.xib */,
+				CE43635A21F70A040070D6C9 /* Assets.xcassets */,
+				CE43635C21F70A040070D6C9 /* Main.storyboard */,
+				CE43635F21F70A040070D6C9 /* Info.plist */,
+				CE43636021F70A040070D6C9 /* main.m */,
+				CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */,
+				CE43649B21F8837E0070D6C9 /* source */,
+				CE43636221F70A040070D6C9 /* TUIKitDemo.entitlements */,
+			);
+			path = TUIKitDemo;
+			sourceTree = "<group>";
+		};
+		CE43649B21F8837E0070D6C9 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				CE4364A521F88E610070D6C9 /* more@3x.png */,
+				CE4364A321F887080070D6C9 /* default_group@2x.png */,
+				CE43649C21F8838E0070D6C9 /* default_head@2x.png */,
+				CE43649D21F8838E0070D6C9 /* default_head@3x.png */,
+			);
+			path = source;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CE43635021F70A030070D6C9 /* TUIKitDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE43636521F70A040070D6C9 /* Build configuration list for PBXNativeTarget "TUIKitDemo" */;
+			buildPhases = (
+				CE43634D21F70A030070D6C9 /* Sources */,
+				CE43634E21F70A030070D6C9 /* Frameworks */,
+				CE43634F21F70A030070D6C9 /* Resources */,
+				CEEBCEE321FEECE500A82B0D /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TUIKitDemo;
+			productName = TUIKitDemo;
+			productReference = CE43635121F70A030070D6C9 /* TUIKitDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CE43634921F70A030070D6C9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = lynxzhang;
+				TargetAttributes = {
+					CE43635021F70A030070D6C9 = {
+						CreatedOnToolsVersion = 10.1;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = CE43634C21F70A030070D6C9 /* Build configuration list for PBXProject "TUIKitDemo" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CE43634821F70A030070D6C9;
+			productRefGroup = CE43635221F70A030070D6C9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CE43635021F70A030070D6C9 /* TUIKitDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CE43634F21F70A030070D6C9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE43649921F865A00070D6C9 /* ConversationController.xib in Resources */,
+				CE43635B21F70A040070D6C9 /* Assets.xcassets in Resources */,
+				CE4364A421F887080070D6C9 /* default_group@2x.png in Resources */,
+				CE4364A621F88E610070D6C9 /* more@3x.png in Resources */,
+				CE43649E21F8838E0070D6C9 /* default_head@2x.png in Resources */,
+				CE43635E21F70A040070D6C9 /* Main.storyboard in Resources */,
+				CE43649F21F8838E0070D6C9 /* default_head@3x.png in Resources */,
+				CE4363A921F71D6D0070D6C9 /* ChatViewController.xib in Resources */,
+				CE4363A321F71B260070D6C9 /* AddChatViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CE43634D21F70A030070D6C9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE43649821F865A00070D6C9 /* ConversationController.m in Sources */,
+				CE43649421F8638E0070D6C9 /* MsgTableCellView.m in Sources */,
+				CE43635921F70A030070D6C9 /* LoginViewController.m in Sources */,
+				CE43636121F70A040070D6C9 /* main.m in Sources */,
+				CE4363A821F71D6D0070D6C9 /* ChatViewController.m in Sources */,
+				CE4363A221F71B260070D6C9 /* AddChatViewController.m in Sources */,
+				CE43635621F70A030070D6C9 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		CE43635C21F70A040070D6C9 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE43635D21F70A040070D6C9 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CE43636321F70A040070D6C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CE43636421F70A040070D6C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		CE43636621F70A040070D6C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = B543JTT8E3;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/..";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../ImSDKForMac.framework/Headers";
+				INFOPLIST_FILE = TUIKitDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = lynxzhang.TUIKitDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		CE43636721F70A040070D6C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = B543JTT8E3;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/..";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../ImSDKForMac.framework/Headers";
+				INFOPLIST_FILE = TUIKitDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = lynxzhang.TUIKitDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CE43634C21F70A030070D6C9 /* Build configuration list for PBXProject "TUIKitDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE43636321F70A040070D6C9 /* Debug */,
+				CE43636421F70A040070D6C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE43636521F70A040070D6C9 /* Build configuration list for PBXNativeTarget "TUIKitDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE43636621F70A040070D6C9 /* Debug */,
+				CE43636721F70A040070D6C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CE43634921F70A030070D6C9 /* Project object */;
+}
