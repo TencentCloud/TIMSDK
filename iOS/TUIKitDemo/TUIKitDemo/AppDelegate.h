@@ -10,9 +10,10 @@
 #import "TTabBarController.h"
 #import "LoginController.h"
 
-#define Key_UserInfo_User @"Key_UserInfo_User"
-#define Key_UserInfo_Pwd @"Key_UserInfo_Pwd"
-#define Key_UserInfo_Sig @"Key_UserInfo_Sig"
+#define Key_UserInfo_Appid @"Key_UserInfo_Appid"
+#define Key_UserInfo_User  @"Key_UserInfo_User"
+#define Key_UserInfo_Pwd   @"Key_UserInfo_Pwd"
+#define Key_UserInfo_Sig   @"Key_UserInfo_Sig"
 
 #define sdkAppid          123456789
 #define sdkAccountType    @"36862"

@@ -54,6 +54,7 @@
         [alert show];
     }else{
         [[TUIKit sharedInstance] loginKit:_userName userSig:_userSig succ:^{
+            [[NSUserDefaults standardUserDefaults] setObject:@(sdkAppid) forKey:Key_UserInfo_Appid];
             [[NSUserDefaults standardUserDefaults] setObject:ws.userName forKey:Key_UserInfo_User];
             [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Pwd];
             [[NSUserDefaults standardUserDefaults] setObject:ws.userSig forKey:Key_UserInfo_Sig];

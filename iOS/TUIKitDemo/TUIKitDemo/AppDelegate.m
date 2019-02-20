@@ -37,14 +37,19 @@
         [[TUIKit sharedInstance] initKit:sdkAppid accountType:sdkAccountType withConfig:[TUIKitConfig defaultConfig]];
     }
     
+    NSNumber *appId = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Appid];
     NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_User];
     //NSString *pwd = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Pwd];
     NSString *userSig = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Sig];
-    if(identifier.length != 0){
+    if([appId integerValue] == sdkAppid && identifier.length != 0 && userSig.length != 0){
         __weak typeof(self) ws = self;
         [[TUIKit sharedInstance] loginKit:identifier userSig:userSig succ:^{
             ws.window.rootViewController = [self getMainController];
         } fail:^(int code, NSString *msg) {
+            [[NSUserDefaults standardUserDefaults] setObject:@(0) forKey:Key_UserInfo_Appid];
+            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_User];
+            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Pwd];
+            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Sig];
             ws.window.rootViewController = [self getLoginController];
         }];
     }
