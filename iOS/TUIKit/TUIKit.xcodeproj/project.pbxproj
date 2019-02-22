@@ -907,6 +907,7 @@
 		CF0143E6216E183800C12E35 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BITCODE_GENERATION_MODE = bitcode;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -930,6 +931,11 @@
 					"$(PROJECT_DIR)/TUIKit/third/voiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/TUIKit/third/voiceConvert/opencore-amrwb",
 				);
+				OTHER_CFLAGS = "-fembed-bitcode";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fno-exceptions",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.TUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -941,6 +947,7 @@
 		CF0143E7216E183800C12E35 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BITCODE_GENERATION_MODE = bitcode;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
@@ -962,6 +969,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/TUIKit/third/voiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/TUIKit/third/voiceConvert/opencore-amrwb",
+				);
+				OTHER_CFLAGS = "-fembed-bitcode";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fno-exceptions",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.TUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
