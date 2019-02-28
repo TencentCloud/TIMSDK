@@ -290,12 +290,5 @@
  *  @return 返回日志级别
  */
 -(TIMLogLevel) getLogLevel;
-
-/**
- 重置ImSDK配置信息，内部自动化测试使用，外部禁止使用
- */
-- (void)unInit;
-
 @end
-
 #endif
