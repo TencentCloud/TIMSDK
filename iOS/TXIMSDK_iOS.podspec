@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_iOS'
-  spec.version      = '4.0.7'
+  spec.version      = '4.0.8'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
