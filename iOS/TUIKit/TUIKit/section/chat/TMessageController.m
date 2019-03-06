@@ -1028,15 +1028,8 @@
         //play current
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
         NSString *wavPath = [[path stringByDeletingPathExtension] stringByAppendingString:@".wav"];
-        NSURL *url = nil;
-        if (voice.isSelf) {
-            //本地录制视频要转成wav播放
-            [THelper convertAmr:path toWav:wavPath];
-            url = [NSURL fileURLWithPath:wavPath];
-        }else{
-            //服务器获取的视频直接播放
-            url = [NSURL fileURLWithPath:path];
-        }
+        [THelper convertAmr:path toWav:wavPath];
+        NSURL *url = [NSURL fileURLWithPath:wavPath];
         ws.voicePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
         [ws.voicePlayer play];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(voice.duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
