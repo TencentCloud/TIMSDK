@@ -20,5 +20,5 @@ Pod::Spec.new do |spec|
   spec.source_files = 'iOS/TUIKit.framework/Headers/*.h'
   spec.public_header_files = 'iOS/TUIKit.framework/Headers/*.h'
   spec.vendored_frameworks = 'iOS/TUIKit.framework'
-  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_iOS/iOS/TUIKit.framework/Headers/'}
+  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_TUIKit_iOS/iOS/TUIKit.framework/Headers/'}
 end
