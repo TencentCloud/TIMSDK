@@ -25,7 +25,7 @@
 
 
 ## 4. 下载 Demo 源码
-从 [Github](https://github.com/tencentyun/TIMSDK) 下载 ImSDK Windows IMApp 工程代码。
+下载 ImSDK Windows IMApp 工程代码。
 
 
 ## 5. 修改源码配置
