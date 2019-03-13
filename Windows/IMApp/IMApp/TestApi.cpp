@@ -217,6 +217,39 @@ void Test_GroupGetPendencyList() {
     }
 }
 
+void Test_GetMsgList()
+{
+    Json::Value json_elem(Json::objectValue);
+    json_elem[kTIMElemType] = 0;
+    json_elem[kTIMTextElemContent] = "2";
+
+    Json::Value json_elem_array(Json::arrayValue);
+    json_elem_array.append(json_elem);
+
+    Json::Value json_msg(Json::objectValue);
+    json_msg[kTIMMsgClientTime] = 1652039330;
+    json_msg[kTIMMsgConvId] = "user2";
+    json_msg[kTIMMsgConvType] = 1;
+    json_msg[kTIMMsgElemArray] = json_elem_array;
+    json_msg[kTIMMsgIsFormSelf] = true;
+    json_msg[kTIMMsgIsRead] = true;
+    json_msg[kTIMMsgRand] = 3984852732LL;
+    json_msg[kTIMMsgSender] = "user1";
+    json_msg[kTIMMsgSeq] = 1;
+    json_msg[kTIMMsgServerTime] = 1652039330;
+    json_msg[kTIMMsgStatus] = 2;
+
+    Json::Value json_msgget_param;
+    json_msgget_param[kTIMMsgGetMsgListParamLastMsg] = json_msg;
+    json_msgget_param[kTIMMsgGetMsgListParamIsRamble] = false;
+    json_msgget_param[kTIMMsgGetMsgListParamIsForward] = false;
+    json_msgget_param[kTIMMsgGetMsgListParamCount] = 100;
+    std::string json = json_msgget_param.toStyledString();
+    int ret = TIMMsgGetMsgList("user2", kTIMConv_C2C, json.c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "TIMMsgGetMsgList cb code:%u desc:%s", code, desc);
+    }, nullptr);
+}
+
 
 // 此函数用于测试各个API功能
 void TestApi() {
@@ -240,7 +273,6 @@ void TestApi() {
     //int ret = TIMGroupGetMemberInfoList(getmeminfo_opt.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
 
     //}, this);
-}
     
-    Test_MsgImport();
+    Test_GetMsgList();
 }
