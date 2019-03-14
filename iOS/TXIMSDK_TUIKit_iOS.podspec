@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_TUIKit_iOS'
-  spec.version      = '4.0.13'
+  spec.version      = '4.2.1'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -21,4 +21,5 @@ Pod::Spec.new do |spec|
   spec.public_header_files = 'iOS/TUIKit.framework/Headers/*.h'
   spec.vendored_frameworks = 'iOS/TUIKit.framework'
   spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_TUIKit_iOS/iOS/TUIKit.framework/Headers/'}
+  spec.resource = ['iOS/TUIKit.framework/TUIKitFace.bundle','iOS/TUIKit.framework/TUIKitResource.bundle','iOS/TUIKit.framework/emoji.plist','iOS/TUIKit.framework/Assets.car']
 end

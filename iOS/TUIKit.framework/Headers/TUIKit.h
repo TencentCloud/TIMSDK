@@ -28,11 +28,11 @@ typedef NS_ENUM(NSUInteger, TNetStatus) {
 
 @interface TUIKit : NSObject
 + (instancetype)sharedInstance;
-- (void)initKit:(NSInteger)sdkAppId withConfig:(TUIKitConfig *)config;
+- (void)initKit:(NSInteger)sdkAppId accountType:(NSString *)accountType withConfig:(TUIKitConfig *)config;
 - (void)loginKit:(NSString *)identifier userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail;
 - (void)logoutKit:(TSucc)succ fail:(TFail)fail;
-- (void)setToken:(NSData *)deviceToken;
 - (TUIKitConfig *)getConfig;
+- (NSString *)getSDKVersion;
 @end
 
 
