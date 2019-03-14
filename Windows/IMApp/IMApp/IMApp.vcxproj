@@ -92,6 +92,7 @@ xcopy /E /Y "$(ProjectDir)..\res" "$(OutDir)"</Command>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;;UILIB_STATIC;USE_LOG;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/source-charset:.65001 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
