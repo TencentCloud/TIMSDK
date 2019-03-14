@@ -156,7 +156,8 @@ function convertMsgtoHtml(msg) {
                 }
                 break;
             case webim.MSG_ELEMENT_TYPE.SOUND:
-                html += convertSoundMsgToHtml(content);
+                // html += convertSoundMsgToHtml(content);
+                html += convertSoundMsgToAMRPlayer(content);
                 break;
             case webim.MSG_ELEMENT_TYPE.FILE:
                 html += convertFileMsgToHtml(content);
@@ -228,6 +229,53 @@ function convertSoundMsgToHtml(content) {
     }
     return '<audio id="uuid_' + content.uuid + '" src="' + downUrl + '" controls="controls" onplay="onChangePlayAudio(this)" preload="none"></audio>';
 }
+
+/**
+ * @uses amr音频信息转使用amr.js播放
+ * @param {Object} content 
+ */
+var convertSoundMsgToAMRPlayerLoadBenzAMRRecorderRetryCount=0;  //变量取长一点， 防止重复
+function convertSoundMsgToAMRPlayer(content) {
+    //因为BenzAMRRecorder文件比较大， 加载时间比较长， 这里重试三次。防止失败
+    if (typeof BenzAMRRecorder == 'undefined') {
+        if (convertSoundMsgToAMRPlayerLoadBenzAMRRecorderRetryCount<=3) {
+            stouTimeout(function(){
+                convertSoundMsgToAMRPlayerLoadBenzAMRRecorderRetryCount++;
+                convertSoundMsgToAMRPlayer(content)
+            },500);
+            return;
+        }
+    }
+    var iconStartChar= '&nbsp;&nbsp;&#9658;&nbsp;&nbsp;';
+    var btnid= ['amrplay_btn_',content.uuid,'-', Math.round(Math.random()*1000000)].join('');
+    var aElmentString= ['<button id="',btnid,'" style="font-size:1.5em;" data-url="',content.downUrl,'">',iconStartChar,'</button>'].join('');
+    setTimeout(function(){
+        convertSoundMsgToAMRPlayerLoadBenzAMRRecorderRetryCount=0;
+        var btelm= document.getElementById(btnid);
+        btelm.onclick= function(event){
+            var amr = new BenzAMRRecorder();
+            var seed= null;
+            amr.onPlay(function(){
+                let arr= ['&#9744;','&#9744;','&#9744;','&#9744;','&#9744;'];
+                var count = 0;
+                seed= setInterval(function(){
+                    arr= ['&#9744;','&#9744;','&#9744;','&#9744;','&#9744;'];
+                    arr[count%arr.length]= '&#9635;';
+                    event.target.innerHTML= arr.join('');
+                    count++;
+                },90)
+            });
+            amr.onStop(function(){
+                clearInterval(seed);
+                event.target.innerHTML= iconStartChar;
+            });
+            amr.initWithUrl(content.downUrl).then(function(){
+                amr.play();
+            });
+        }
+    },0);
+    return aElmentString;
+}
 //解析文件消息元素
 
 function convertFileMsgToHtml(content) {
@@ -240,7 +288,8 @@ function convertFileMsgToHtml(content) {
     }
     // return '<a href="' + content.getDownUrl() + '" title="点击下载文件" ><i class="glyphicon glyphicon-file">&nbsp;' + content.getName() + '(' + fileSize + unitStr + ')</i></a>';
 
-    return '<a href="javascript:;" onclick=\'webim.onDownFile("' + content.uuid + '")\' title="点击下载文件" ><i class="glyphicon glyphicon-file">&nbsp;' + content.name + '(' + fileSize + unitStr + ')</i></a>';
+    // return '<a href="javascript:;" onclick=\'webim.onDownFile("' + content.uuid + '")\' title="点击下载文件" ><i class="glyphicon glyphicon-file">&nbsp;' + content.name + '(' + fileSize + unitStr + ')</i></a>';
+    return '<a href="'+content.downUrl+'" target="'+content.name+'" title="点击下载文件" ><i class="glyphicon glyphicon-file">&nbsp;' + content.name + '(' + fileSize + unitStr + ')</i></a>';
 }
 //解析位置消息元素
 

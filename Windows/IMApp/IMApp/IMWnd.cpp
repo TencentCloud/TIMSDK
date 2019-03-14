@@ -27,35 +27,7 @@ void CIMWnd::Init(SdkAppInfo &info) {
     TIMSetRecvNewMsgCallback([](const char* json_msg_array, const void* user_data) {
         CIMWnd* ths = (CIMWnd*)user_data;
         ths->Logf("Message", kTIMLog_Info, "New Message:\n%s", json_msg_array);
-        //Json::Value json_value_msgs; // 显示消息
-        //Json::Reader reader;
-        //if (!reader.parse(json_msg_array, json_value_msgs)) {
-        //    ths->Logf("Parse", kTIMLog_Error, reader.getFormattedErrorMessages().c_str());
-        //    return;
-        //}
-        //for (Json::ArrayIndex i = 0; i < json_value_msgs.size(); i++) {  // 遍历Message
-        //    Json::Value& json_value_msg = json_value_msgs[i];
-        //    Json::Value& elems = json_value_msg[kTIMMsgElemArray];
-        //    for (Json::ArrayIndex m = 0; m < elems.size(); m++) {
-        //        Json::Value& elem = elems[i];
-        //
-        //        uint32_t elem_type = elem[kTIMElemType].asUInt();
-        //        if (elem_type == TIMElemType::kTIMElem_File) {
-        //            uint32_t flag = elem[kTIMFileElemDownloadFlag].asUInt();
-        //            uint32_t type = kTIMDownload_File;
-        //            std::string id = elem[kTIMFileElemFileId].asString();
-        //            uint32_t business_id = elem[kTIMFileElemBusinessId].asUInt();
-        //            std::string url = elem[kTIMFileElemUrl].asString();
-        //            std::string name = elem[kTIMFileElemFileName].asString();
-        //            ths->DownloadMessageElem(flag, type, id, business_id, url, name);
-        //        }
-        //        else if (elem_type == TIMElemType::kTIMElem_Image) {
-        //            std::string url = elem[kTIMImageElemLargeUrl].asString();
-        //            std::string name = "large_iamge";
-        //            ths->DownloadMessageElem(url, name);
-        //        }
-        //    }
-        //}
+        
         ths->ParseMsg(json_msg_array);
     }, this);
 
@@ -165,19 +137,20 @@ void CIMWnd::Init(SdkAppInfo &info) {
         }
         for (Json::ArrayIndex i = 0; i < json_value.size(); i++) {
             Json::Value& convinfo = json_value[i];
-            ths->Logf("ConvEvent", kTIMLog_Info, "%02u event:%u id:%s type:%u", i, conv_event, convinfo[kTIMConvId].asCString(), convinfo[kTIMConvType].asUInt());
+            std::string conv_id = convinfo[kTIMConvId].asCString();
+            uint32_t conv_type = convinfo[kTIMConvType].asUInt();
+            ths->Logf("ConvEvent", kTIMLog_Info, "%02u event:%u id:%s type:%u", i, conv_event, conv_id.c_str(), conv_type);
             if (conv_event == kTIMConvEvent_Add) {
+                CIMWnd::GetInst().AddConv(conv_id, conv_type);
             }
             else if (conv_event == kTIMConvEvent_Del) {
-
+                CIMWnd::GetInst().DelConv(conv_id, conv_type);
             }
             else if (conv_event == kTIMConvEvent_Update) {
-                
+                CIMWnd::GetInst().UpdateConv(conv_id, conv_type);
             }
         }
-
     }, this);
-
 
     TIMSetNetworkStatusListenerCallback([](TIMNetworkStatus status, int32_t code, const char* desc, const void* user_data) {
         CIMWnd* ths = (CIMWnd*)user_data;
@@ -599,6 +572,7 @@ void CIMWnd::OnLoginBtn() { //登入
         ths->SetControlVisible(_T("cur_login_info"), true);
         ths->SetControlText(_T("cur_login_info"), Str2TStr(ths->login_id).c_str());
         ths->InitConvList();
+        ths->GetGroupJoinedList();
     }, this);
 
     Logf("Login", kTIMLog_Info, "User Id:%s Sig:%s", userid.c_str(), usersig.c_str());
@@ -640,28 +614,72 @@ void CIMWnd::InitConvList() { // 获取会话列表
 
             std::string id = conv[kTIMConvId].asString();
             uint32_t type = conv[kTIMConvType].asUInt();
-            if (type == TIMConvType::kTIMConv_C2C) {
-                ConvInfo conv;
-                conv.id = id;
-                CIMWnd::GetInst().convs.push_back(conv);
-                CIMWnd::GetInst().GetConvMsgs(id, (TIMConvType)type);
-            }
-            else if (type == TIMConvType::kTIMConv_C2C) {
-                GroupInfo group;
-                group.id = id;
-                CIMWnd::GetInst().groups.push_back(group);
-                CIMWnd::GetInst().GetConvMsgs(id, (TIMConvType)type);
-            }
-            else if (type == TIMConvType::kTIMConv_System) {
-
-            }
+            CIMWnd::GetInst().AddConv(id, type);
         }
-        CIMWnd::GetInst().GetGroupJoinedList();
     }, this);
     Logf("Init", kTIMLog_Info, "TIMConvGetConvList ret %d", ret);
+    
+}
+void CIMWnd::AddConv(std::string id, uint32_t type) {
+    if (type == TIMConvType::kTIMConv_C2C) {
+        ConvInfo conv;
+        conv.id = id;
+        for (std::size_t i = 0; i < convs.size(); i++) {
+            if (convs[i].id == id) { // 已添加
+                return;
+            }
+        }
+        convs.push_back(conv);
+        GetConvMsgs(id, (TIMConvType)type);
+        UpdateNodeView();
+    }
+    else if (type == TIMConvType::kTIMConv_Group) {
+        GroupInfo group;
+        group.id = id;
+        for (std::size_t i = 0; i < groups.size(); i++) {
+            if (groups[i].id == id) { // 已添加
+                return;
+            }
+        }
+        groups.push_back(group);
+        GetConvMsgs(id, (TIMConvType)type);
+        UpdateNodeView();
+    }
+    else if (type == TIMConvType::kTIMConv_System) {
+
+    }
+}
+void CIMWnd::DelConv(std::string id, uint32_t type) {
+    if (type == TIMConvType::kTIMConv_C2C) {
+        for (std::size_t i = 0; i < CIMWnd::GetInst().convs.size(); i++) {
+            if (CIMWnd::GetInst().convs[i].id == id) { // 删除
+                CIMWnd::GetInst().convs.erase(CIMWnd::GetInst().convs.begin() + i);
+                UpdateNodeView();
+                return;
+            }
+        }
+    }
+    else if (type == TIMConvType::kTIMConv_Group) {
+        GroupInfo group;
+        group.id = id;
+        for (std::size_t i = 0; i < CIMWnd::GetInst().groups.size(); i++) {
+            if (CIMWnd::GetInst().groups[i].id == id) { // 删除
+                CIMWnd::GetInst().groups.erase(CIMWnd::GetInst().groups.begin() + i);
+                UpdateNodeView();
+                return;
+            }
+        }
+    }
+    else if (type == TIMConvType::kTIMConv_System) {
+
+    }
+
+}
+void CIMWnd::UpdateConv(std::string id, uint32_t type) {
+    // todo
 }
 
-void CIMWnd::GetGroupJoinedList() {
+void CIMWnd::GetGroupJoinedList() { // 已加入群列表
     // 获取群列表
     int ret = TIMGroupGetJoinedGroupList([](int32_t code, const char* desc, const char* json_param, const void* user_data) {
         if (strlen(json_param) == 0) {
@@ -784,8 +802,8 @@ void CIMWnd::GetConvMsgs(std::string userid, TIMConvType type) {
     Json::Value json_msg(Json::objectValue);
     Json::Value json_msgget_param;
     json_msgget_param[kTIMMsgGetMsgListParamLastMsg] = json_msg;
-    json_msgget_param[kTIMMsgGetMsgListParamIsRamble] = false;
-    json_msgget_param[kTIMMsgGetMsgListParamIsForward] = true;
+    json_msgget_param[kTIMMsgGetMsgListParamIsRamble] = true;
+    json_msgget_param[kTIMMsgGetMsgListParamIsForward] = false;
     json_msgget_param[kTIMMsgGetMsgListParamCount] = 100;
     std::string json = json_msgget_param.toStyledString();
     int ret = TIMMsgGetMsgList(userid.c_str(), type, json.c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
@@ -1077,7 +1095,7 @@ void CIMWnd::OnDelGroupBtn() { // 删除群组 按钮
         }
         ud->ths->Logf("Group", kTIMLog_Info, "Del Group Success!group id:%s", ud->groupid.c_str());
         delete ud;
-    }, this);
+    }, ud);
     if (ret != TIM_SUCC) {
         Logf("Group", kTIMLog_Error, "删除群组失败!groupId:%s ret:%d", groupid.c_str(), ret);
         return;
@@ -1280,8 +1298,8 @@ void CIMWnd::ShowMsgs(std::vector<std::string>& msgs, std::string conv_id, TIMCo
             Logf("ShowMsg", kTIMLog_Error, reader.getFormattedErrorMessages().c_str());
             return;
         }
-        for (Json::ArrayIndex i = 0; i < json_value_msgs.size(); i++) {  // 遍历Message
-            Json::Value& json_value_msg = json_value_msgs[i];
+        for (Json::ArrayIndex i = json_value_msgs.size(); i > 0; i--) {  // 遍历Message
+            Json::Value& json_value_msg = json_value_msgs[i - 1];
 
             std::string id = json_value_msg[kTIMMsgConvId].asString();
             TIMConvType type = (TIMConvType)json_value_msg[kTIMMsgConvType].asUInt();
@@ -1389,7 +1407,7 @@ void CIMWnd::ParseMsg(const char* json_msg_array) {  //解析消息找到对应�
         struct tm local;
         localtime_s(&local, &time);
         std::string sender = json_value_msg[kTIMMsgSender].asString();
-        std::string tmp = Fmt("%10s : %d-%d-%d %02d:%02d:%02d\r\n", "SystemMsg", sender.c_str(), (local.tm_year + 1900), (local.tm_mon + 1), local.tm_mday, local.tm_hour, local.tm_min, local.tm_sec);
+        std::string tmp = Fmt("%10s : %s %d-%d-%d %02d:%02d:%02d\r\n", "SystemMsg", sender.c_str(), (local.tm_year + 1900), (local.tm_mon + 1), local.tm_mday, local.tm_hour, local.tm_min, local.tm_sec);
         m_LogData->AppendText(WStr2TStr(UTF82Wide(tmp)).c_str());
     }
     UpdateNodeView();

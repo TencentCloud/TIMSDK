@@ -89,6 +89,9 @@ public:
 
 
     void InitConvList();
+    void AddConv(std::string id, uint32_t type);
+    void DelConv(std::string id, uint32_t type);
+    void UpdateConv(std::string id, uint32_t type);
     void GetGroupJoinedList();
     void GetGroupInfoList();
     void GetGroupMemberInfoList(std::string groupid);

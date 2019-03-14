@@ -2,7 +2,7 @@
 /* webim javascript SDK
  * VER 1.7.2
  */
- (function (global, factory) {
+(function (global, factory) {
 
     global["Long"] = factory();
 
@@ -4205,7 +4205,7 @@ var webim = { // namespace object webim
     };
 
     // class Msg.Elem.Sound
-    Msg.Elem.Sound = function (uuid, second, size, senderId, receiverId, downFlag, chatType) {
+    Msg.Elem.Sound = function (uuid, second, size, senderId, receiverId, downFlag, chatType, url) {
         this.uuid = uuid; //文件id
         this.second = second; //时长，单位：秒
         this.size = size; //大小，单位：字节
@@ -4216,10 +4216,14 @@ var webim = { // namespace object webim
 
         //根据不同情况拉取数据
         //是否需要申请下载地址  0:到架平申请  1:到cos申请  2:不需要申请, 直接拿url下载
-        if (this.downFlag !== undefined && this.busiId !== undefined) {
-            getFileDownUrlV2(uuid, senderId, second, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.SOUND);
+        if (downFlag==2 && url!=null) {
+            this.downUrl= url;
         } else {
-            this.downUrl = getSoundDownUrl(uuid, senderId, second); //下载地址
+            if (this.downFlag !== undefined && this.busiId !== undefined) {
+                getFileDownUrlV2(uuid, senderId, second, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.SOUND);
+            } else {
+                this.downUrl = getSoundDownUrl(uuid, senderId, second); //下载地址
+            }
         }
     };
     Msg.Elem.Sound.prototype.getUUID = function () {
@@ -4235,7 +4239,7 @@ var webim = { // namespace object webim
         return this.senderId;
     };
     Msg.Elem.Sound.prototype.getDownUrl = function () {
-        return this.downUrl;
+            return this.downUrl;
     };
     Msg.Elem.Sound.prototype.toHtml = function () {
         if (BROWSER_INFO.type == 'ie' && parseInt(BROWSER_INFO.ver) <= 8) {
@@ -4245,7 +4249,7 @@ var webim = { // namespace object webim
     };
 
     // class Msg.Elem.File
-    Msg.Elem.File = function (uuid, name, size, senderId, receiverId, downFlag, chatType) {
+    Msg.Elem.File = function (uuid, name, size, senderId, receiverId, downFlag, chatType, url) {
         this.uuid = uuid; //文件id
         this.name = name; //文件名
         this.size = size; //大小，单位：字节
@@ -4256,10 +4260,14 @@ var webim = { // namespace object webim
         this.busiId = chatType == SESSION_TYPE.C2C ? 2 : 1; //busi_id ( 1：群    2:C2C)
         //根据不同情况拉取数据
         //是否需要申请下载地址  0:到架平申请  1:到cos申请  2:不需要申请, 直接拿url下载
-        if (downFlag !== undefined && busiId !== undefined) {
-            getFileDownUrlV2(uuid, senderId, name, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.FILE);
+        if (downFlag==2 && url!=null) {
+            this.downUrl= url;
         } else {
-            this.downUrl = getFileDownUrl(uuid, senderId, name); //下载地址
+            if (downFlag !== undefined && busiId !== undefined) {
+                getFileDownUrlV2(uuid, senderId, name, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.FILE);
+            } else {
+                this.downUrl = getFileDownUrl(uuid, senderId, name); //下载地址
+            }
         }
     };
     Msg.Elem.File.prototype.getUUID = function () {
@@ -5683,7 +5691,8 @@ var webim = { // namespace object webim
                                     msgInfo.From_Account,
                                     msgInfo.To_Account,
                                     msgBody.MsgContent.Download_Flag,
-                                    SESSION_TYPE.C2C
+                                    SESSION_TYPE.C2C,
+                                    msgBody.MsgContent.Url || null
                                 );
                             } else {
                                 msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -5708,7 +5717,8 @@ var webim = { // namespace object webim
                                     msgInfo.From_Account,
                                     msgInfo.To_Account,
                                     msgBody.MsgContent.Download_Flag,
-                                    SESSION_TYPE.C2C
+                                    SESSION_TYPE.C2C,
+                                    msgBody.MsgContent.Url || null
                                 );
                             } else {
                                 msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -5738,6 +5748,7 @@ var webim = { // namespace object webim
                     msg.elems.push(new Msg.Elem(msgType, msgContent));
                 }
 
+                // msg.random= [Math.ceil(Math.random()*10000000000)].join('');
                 if (msg.elems.length > 0 && MsgStore.addMsg(msg, true)) {
                     notifyInfo.push(msg);
                 }
@@ -5847,7 +5858,8 @@ var webim = { // namespace object webim
                                         msgInfo.From_Account,
                                         msgInfo.To_Account,
                                         msgBody.MsgContent.Download_Flag,
-                                        SESSION_TYPE.C2C
+                                        SESSION_TYPE.C2C,
+                                        msgBody.MsgContent.Url || null
                                     );
                                 } else {
                                     msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -5873,7 +5885,8 @@ var webim = { // namespace object webim
                                         msgInfo.From_Account,
                                         msgInfo.To_Account,
                                         msgBody.MsgContent.Download_Flag,
-                                        SESSION_TYPE.C2C
+                                        SESSION_TYPE.C2C,
+                                        msgBody.MsgContent.Url || null
                                     );
                                 } else {
                                     msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -6027,7 +6040,8 @@ var webim = { // namespace object webim
                                         msgInfo.From_Account,
                                         msgInfo.To_Account,
                                         msgBody.MsgContent.Download_Flag,
-                                        SESSION_TYPE.C2C
+                                        SESSION_TYPE.C2C,
+                                        msgBody.MsgContent.Url || null
                                     );
                                 } else {
                                     msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -6054,7 +6068,8 @@ var webim = { // namespace object webim
                                         msgInfo.From_Account,
                                         msgInfo.To_Account,
                                         msgBody.MsgContent.Download_Flag,
-                                        SESSION_TYPE.C2C
+                                        SESSION_TYPE.C2C,
+                                        msgBody.MsgContent.Url || null
                                     );
                                 } else {
                                     msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -6261,7 +6276,8 @@ var webim = { // namespace object webim
                                 msgInfo.From_Account,
                                 msgInfo.To_Account,
                                 msgBody.MsgContent.Download_Flag,
-                                SESSION_TYPE.GROUP
+                                SESSION_TYPE.GROUP,
+                                msgBody.MsgContent.Url || null
                             );
                         } else {
                             msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -6288,7 +6304,8 @@ var webim = { // namespace object webim
                                 msgInfo.From_Account,
                                 msgInfo.To_Account,
                                 msgBody.MsgContent.Download_Flag,
-                                SESSION_TYPE.GROUP
+                                SESSION_TYPE.GROUP,
+                                msgBody.MsgContent.Url || null
                             );
                         } else {
                             msgType = MSG_ELEMENT_TYPE.TEXT;
