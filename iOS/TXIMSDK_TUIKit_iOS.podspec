@@ -21,5 +21,5 @@ Pod::Spec.new do |spec|
   spec.public_header_files = 'iOS/TUIKit.framework/Headers/*.h'
   spec.vendored_frameworks = 'iOS/TUIKit.framework'
   spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_TUIKit_iOS/iOS/TUIKit.framework/Headers/'}
-  spec.resource = ['iOS/TUIKit.framework/TUIKitFace.bundle','iOS/TUIKit.framework/TUIKitResource.bundle','iOS/TUIKit.framework/emoji.plist','iOS/TUIKit.framework/Assets.car']
+  spec.resource = ['iOS/TUIKit.framework/TUIKitFace.bundle','iOS/TUIKit.framework/TUIKitResource.bundle','iOS/TUIKit.framework/emoji.plist']
 end
