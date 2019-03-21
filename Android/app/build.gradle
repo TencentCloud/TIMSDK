@@ -52,6 +52,7 @@ dependencies {
     // Optional, if you use support library fragments:
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
 
-//    implementation(name: 'imsdk_4.0.0.1', ext: 'aar')
+    // 如果用aar方式集成，这里需要指定libs文件夹下的aar的名称
+//    implementation(name: 'imsdk-xxx', ext: 'aar')
     implementation project(':tuikit')
 }
