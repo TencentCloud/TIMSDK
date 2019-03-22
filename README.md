@@ -36,7 +36,9 @@
 ### Windows:
 修复切换账号longloop偶现异常的问题
 
-## 检出 Android
+## 如何只检出指定平台的代码？
+
+- 检出 Android
 ```
 git init TIM_Android
 cd TIM_Android
@@ -46,7 +48,7 @@ echo "Android/*" >> .git/info/sparse-checkout
 git pull origin master
 ```
 
-## 检出 iOS
+- 检出 iOS
 ```
 git init TIM_iOS
 cd TIM_iOS
@@ -56,7 +58,7 @@ echo "iOS/*" >> .git/info/sparse-checkout
 git pull origin master
 ```
 
-## 检出 Mac
+- 检出 Mac
 ```
 git init TIM_Mac
 cd TIM_Mac
@@ -66,7 +68,7 @@ echo "Mac/*" >> .git/info/sparse-checkout
 git pull origin master
 ```
 
-## 检出 Windows
+- 检出 Windows
 ```
 git init TIM_Windows
 cd TIM_Windows
