@@ -6,29 +6,33 @@
 ### iOS：
 **新增功能：**
 
-1，SDK 新增用户资料逻辑
-2，SDK 新增自动登录逻辑
-3，SDK 新增错误码枚举类 TIMErrorCode.h
-4，DEMO 新增推送设置示例代码
+1. SDK 新增用户资料逻辑
+
+2. SDK 新增自动登录逻辑
+3. SDK 新增错误码枚举类 TIMErrorCode.h
+4. DEMO 新增推送设置示例代码
 
 **bugfix：**
-1，修复OfflinePushInfo设置和获取无效的问题
-2，修复本地消息没有保存pushinfo中的descr和ext字段的问题
-3，修复调用setAPNS crash的问题
-2，修复TUIKit 偶现 crash的问题
-3，修复切换账号longloop偶现异常的问题
-4，修复消息重复检测偶现异常的问题
+
+1. 修复OfflinePushInfo设置和获取无效的问题
+2. 修复本地消息没有保存pushinfo中的descr和ext字段的问题
+3. 修复调用setAPNS crash的问题
+4. 修复TUIKit 偶现 crash的问题
+5. 修复切换账号longloop偶现异常的问题
+6. 修复消息重复检测偶现异常的问题
 
 ### Android：
 **新增功能：**
-1，SDK 新增用户资料逻辑
-2，SDK 新增自动登录逻辑
+
+1. SDK 新增用户资料逻辑
+2. SDK 新增自动登录逻辑
 
 **bugfix：**
-1，修复本地消息没有保存pushinfo中的descr和ext字段的问题
-2，修复切换账号longloop偶现异常的问题
-3，修复消息重复检测偶现异常的问题
-4， 修复内存泄漏问题
+
+1. 修复本地消息没有保存pushinfo中的descr和ext字段的问题
+2. 修复切换账号longloop偶现异常的问题
+3. 修复消息重复检测偶现异常的问题
+4.  修复内存泄漏问题
 
 ### Windows:
 修复切换账号longloop偶现异常的问题
