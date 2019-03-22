@@ -28,6 +28,9 @@
 @end
 
 @implementation TAddGroupController
+{
+    UIView *_line3;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -38,8 +41,13 @@
 
 - (void)setupViews
 {
-    self.title = @"发起群聊";
-    self.parentViewController.title = @"发起群聊";
+    if (_addGroupType == AddGroupType_Create) {
+        self.title = @"发起群聊";
+        self.parentViewController.title = @"发起群聊";
+    }else{
+        self.title = @"加入群聊";
+        self.parentViewController.title = @"加入群聊";
+    }
     self.view.backgroundColor = TAddGroupController_Background_Color;
     
     //left
@@ -95,38 +103,44 @@
     line.backgroundColor = TAddGroupController_Line_Color;
     [self.view addSubview:line];
     
-    _groupTypeView = [[TAddGroupOptionView alloc] initWithFrame:CGRectMake(0, line.frame.origin.y + line.frame.size.height, self.view.frame.size.width, TAddGroupOptionView_Height)];
-    _groupTypeView.delegate = self;
-    [self.view addSubview:_groupTypeView];
-    [_groupTypeView setData:_selectedType];
-    
-    UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(0, _groupTypeView.frame.origin.y + _groupTypeView.frame.size.height, self.view.frame.size.width, TAddGroupController_Line_Height)];
-    line2.backgroundColor = TAddGroupController_Line_Color;
-    [self.view addSubview:line2];
-    
-    _groupAddOptionView = [[TAddGroupOptionView alloc] initWithFrame:CGRectMake(0, line2.frame.origin.y + line2.frame.size.height, self.view.frame.size.width, TAddGroupOptionView_Height)];
-    _groupAddOptionView.delegate = self;
-    [self.view addSubview:_groupAddOptionView];
-    [_groupAddOptionView setData:_selectedAddOption];
-    
-    UIView *line3 = [[UIView alloc] initWithFrame:CGRectMake(0, _groupAddOptionView.frame.origin.y + _groupAddOptionView.frame.size.height, self.view.frame.size.width, TAddGroupController_Line_Height)];
-    line3.backgroundColor = TAddGroupController_Line_Color;
-    [self.view addSubview:line3];
-    
-    CGFloat originY = line3.frame.origin.y + line3.frame.size.height;
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, originY, self.view.frame.size.width, Screen_Height - originY)];
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
-    [_tableView registerClass:[TAddHeaderView class] forHeaderFooterViewReuseIdentifier:TAddHeaderView_ReuseId];
-    _tableView.tableFooterView = [[UIView alloc] init];
-    [self.view addSubview:_tableView];
-    
-    
-    _indexView = [[TAddIndexView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - TAddIndexView_Width, 0, TAddIndexView_Width, self.view.frame.size.height)];
-    _indexView.delegate = self;
-    _indexView.dataSource = self;
-    [self.view addSubview:_indexView];
-    [_indexView setSelectionIndex:0];
+    if (_addGroupType == AddGroupType_Create) {
+        _groupTypeView = [[TAddGroupOptionView alloc] initWithFrame:CGRectMake(0, line.frame.origin.y + line.frame.size.height, self.view.frame.size.width, TAddGroupOptionView_Height)];
+        _groupTypeView.delegate = self;
+        [self.view addSubview:_groupTypeView];
+        [_groupTypeView setData:_selectedType];
+        
+        UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(0, _groupTypeView.frame.origin.y + _groupTypeView.frame.size.height, self.view.frame.size.width, TAddGroupController_Line_Height)];
+        line2.backgroundColor = TAddGroupController_Line_Color;
+        [self.view addSubview:line2];
+        
+        _groupAddOptionView = [[TAddGroupOptionView alloc] initWithFrame:CGRectMake(0, line2.frame.origin.y + line2.frame.size.height, self.view.frame.size.width, TAddGroupOptionView_Height)];
+        _groupAddOptionView.delegate = self;
+        _groupAddOptionView.hidden = YES;
+        [self.view addSubview:_groupAddOptionView];
+        [_groupAddOptionView setData:_selectedAddOption];
+        
+        _line3 = [[UIView alloc] initWithFrame:CGRectMake(0, _groupAddOptionView.frame.origin.y + _groupAddOptionView.frame.size.height, self.view.frame.size.width, TAddGroupController_Line_Height)];
+        _line3.backgroundColor = TAddGroupController_Line_Color;
+        _line3.hidden = YES;
+        [self.view addSubview:_line3];
+        
+        CGFloat originY = _line3.frame.origin.y + _line3.frame.size.height;
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, originY, self.view.frame.size.width, Screen_Height - originY)];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        [_tableView registerClass:[TAddHeaderView class] forHeaderFooterViewReuseIdentifier:TAddHeaderView_ReuseId];
+        _tableView.tableFooterView = [[UIView alloc] init];
+        [self.view addSubview:_tableView];
+        
+        
+        _indexView = [[TAddIndexView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - TAddIndexView_Width, 0, TAddIndexView_Width, self.view.frame.size.height)];
+        _indexView.delegate = self;
+        _indexView.dataSource = self;
+        [self.view addSubview:_indexView];
+        [_indexView setSelectionIndex:0];
+    }else{
+        _textField.placeholder = @"输入群组ID";
+    }
 }
 
 - (void)setupData
@@ -194,63 +208,94 @@
     }
     [_textField resignFirstResponder];
     
-    NSString *groupType = (NSString *)_selectedType.value.value;
-    NSNumber *addOption = (NSNumber *)_selectedAddOption.value.value;
-    NSString *groupName = [[TIMManager sharedInstance] getLoginUser];
-    
-    NSMutableArray *members = [NSMutableArray array];
-//    for (TAddCellData *item in _selectedData) {
-//        NSString *tmp = [NSString stringWithFormat:@"%@、%@", groupName, item.name];
-//        if([self getByteLength:tmp] > 20){
-//            break;
-//        }
-//        groupName = tmp;
-//    }
-    
-    groupName = [NSString stringWithFormat:@"%@、%@", groupName, _textField.text];
-    
-    
-//    for (TAddCellData *item in _selectedData) {
-//        TIMCreateGroupMemberInfo *member = [[TIMCreateGroupMemberInfo alloc] init];
-//        member.member = item.identifier;
-//        member.role = TIM_GROUP_MEMBER_ROLE_MEMBER;
-//        [members addObject:member];
-//    }
-    TIMCreateGroupMemberInfo *member = [[TIMCreateGroupMemberInfo alloc] init];
-    member.member = _textField.text;
-    member.role = TIM_GROUP_MEMBER_ROLE_MEMBER;
-    [members addObject:member];
-    
-    TIMCreateGroupInfo *info = [[TIMCreateGroupInfo alloc] init];
-    info.groupName = groupName;
-    info.groupType = groupType;
-    if([info.groupType isEqualToString:@"Private"]){
-        info.setAddOpt = false;
-    }
-    else{
-        info.setAddOpt = true;
-        info.addOpt = (TIMGroupAddOpt)addOption.intValue;
-    }
-    info.membersInfo = members;
-    
-    __weak typeof(self) ws = self;
-    [[TIMGroupManager sharedInstance] createGroup:info succ:^(NSString *groupId) {
-        TIMMessage *tip = [[TIMMessage alloc] init];
-        TIMCustomElem *custom = [[TIMCustomElem alloc] init];
-        custom.data = [@"group_create" dataUsingEncoding:NSUTF8StringEncoding];
-        custom.ext = [NSString stringWithFormat:@"\"%@\"创建群组", [[TIMManager sharedInstance] getLoginUser]];
-        [tip addElem:custom];
-        TIMConversation *conv = [[TIMManager sharedInstance] getConversation:TIM_GROUP receiver:groupId];
-        [conv sendMessage:tip succ:nil fail:nil];
+    if (_addGroupType == AddGroupType_Create) {
+        NSString *groupType = (NSString *)_selectedType.value.value;
+        NSNumber *addOption = (NSNumber *)_selectedAddOption.value.value;
+        NSString *groupName = [[TIMManager sharedInstance] getLoginUser];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(ws.delegate && [ws.delegate respondsToSelector:@selector(addGroupController:didCreateGroupId:groupName:)]){
-                [ws.delegate addGroupController:ws didCreateGroupId:groupId groupName:groupName];
-            }
-        });
-    } fail:^(int code, NSString *msg) {
-        NSLog(@"");
-    }];
+        if ([groupName isEqualToString:_textField.text]) {
+             __weak typeof(self) ws = self;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (ws.delegate && [ws.delegate respondsToSelector:@selector(addGroupController:didJoinGroupIdFailed:errorMsg:)]) {
+                    [ws.delegate addGroupController:ws didCreateGroupIdFailed:-1 errorMsg:@"创建群聊失败，不能和自己发起群聊"];
+                }
+            });
+            return;
+        }
+        
+        NSMutableArray *members = [NSMutableArray array];
+        //    for (TAddCellData *item in _selectedData) {
+        //        NSString *tmp = [NSString stringWithFormat:@"%@、%@", groupName, item.name];
+        //        if([self getByteLength:tmp] > 20){
+        //            break;
+        //        }
+        //        groupName = tmp;
+        //    }
+        
+        groupName = [NSString stringWithFormat:@"%@、%@", groupName, _textField.text];
+        
+        
+        //    for (TAddCellData *item in _selectedData) {
+        //        TIMCreateGroupMemberInfo *member = [[TIMCreateGroupMemberInfo alloc] init];
+        //        member.member = item.identifier;
+        //        member.role = TIM_GROUP_MEMBER_ROLE_MEMBER;
+        //        [members addObject:member];
+        //    }
+        TIMCreateGroupMemberInfo *member = [[TIMCreateGroupMemberInfo alloc] init];
+        member.member = _textField.text;
+        member.role = TIM_GROUP_MEMBER_ROLE_MEMBER;
+        [members addObject:member];
+        
+        TIMCreateGroupInfo *info = [[TIMCreateGroupInfo alloc] init];
+        info.groupName = groupName;
+        info.groupType = groupType;
+        if([info.groupType isEqualToString:@"Private"]){
+            info.setAddOpt = false;
+        }
+        else{
+            info.setAddOpt = true;
+            info.addOpt = (TIMGroupAddOpt)addOption.intValue;
+        }
+        info.membersInfo = members;
+        
+        __weak typeof(self) ws = self;
+        [[TIMGroupManager sharedInstance] createGroup:info succ:^(NSString *groupId) {
+            TIMMessage *tip = [[TIMMessage alloc] init];
+            TIMCustomElem *custom = [[TIMCustomElem alloc] init];
+            custom.data = [@"group_create" dataUsingEncoding:NSUTF8StringEncoding];
+            custom.ext = [NSString stringWithFormat:@"\"%@\"创建群组", [[TIMManager sharedInstance] getLoginUser]];
+            [tip addElem:custom];
+            TIMConversation *conv = [[TIMManager sharedInstance] getConversation:TIM_GROUP receiver:groupId];
+            [conv sendMessage:tip succ:nil fail:nil];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(ws.delegate && [ws.delegate respondsToSelector:@selector(addGroupController:didCreateGroupId:groupName:)]){
+                    [ws.delegate addGroupController:ws didCreateGroupId:groupId groupName:groupName];
+                }
+            });
+        } fail:^(int code, NSString *msg) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (ws.delegate && [ws.delegate respondsToSelector:@selector(addGroupController:didJoinGroupIdFailed:errorMsg:)]) {
+                    [ws.delegate addGroupController:ws didCreateGroupIdFailed:code errorMsg:msg];
+                }
+            });
+        }];
+    }else{
+        __weak typeof(self) ws = self;
+        [[TIMGroupManager sharedInstance] joinGroup:_textField.text msg:[NSString stringWithFormat:@"%@ 申请加入群聊",[[TIMManager sharedInstance] getLoginUser]] succ:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(ws.delegate && [ws.delegate respondsToSelector:@selector(addGroupController:didJoinGroupId:)]){
+                    [ws.delegate addGroupController:ws didJoinGroupId:ws.textField.text];
+                }
+            });
+        } fail:^(int code, NSString *msg) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (ws.delegate && [ws.delegate respondsToSelector:@selector(addGroupController:didJoinGroupIdFailed:errorMsg:)]) {
+                    [ws.delegate addGroupController:ws didJoinGroupIdFailed:code errorMsg:msg];
+                }
+            });
+        }];
+    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -425,6 +470,18 @@
         TAddGroupOptionData *data = _typeData[index];
         _selectedType.value = data;
         [_groupTypeView setData:_selectedType];
+        
+        //私有群禁止加入
+        if (index == 0) {
+            TAddGroupOptionData *data = _addOptionData[0];
+            _selectedAddOption.value = data;
+            [_groupAddOptionView setData:_selectedAddOption];
+            [_groupAddOptionView setHidden:YES];
+            [_line3 setHidden:YES];
+        }else{
+            [_groupAddOptionView setHidden:NO];
+            [_line3 setHidden:NO];
+        }
     }
     else if(pickView.tag == 1){
         TAddGroupOptionData *data = _addOptionData[index];

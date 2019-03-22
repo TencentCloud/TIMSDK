@@ -32,6 +32,7 @@ typedef NS_ENUM(NSUInteger, TNetStatus) {
 - (void)loginKit:(NSString *)identifier userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail;
 - (void)logoutKit:(TSucc)succ fail:(TFail)fail;
 - (TUIKitConfig *)getConfig;
+- (NSString *)getSDKVersion;
 @end
 
 

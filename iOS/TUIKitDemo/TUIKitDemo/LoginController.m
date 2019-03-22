@@ -18,6 +18,7 @@
 #import "THeader.h"
 #import "AppDelegate.h"
 #import "UserSelectView.h"
+#import "ImSDK.h"
 
 @interface LoginController ()<UserSelectViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
@@ -54,6 +55,20 @@
         [alert show];
     }else{
         [[TUIKit sharedInstance] loginKit:_userName userSig:_userSig succ:^{
+            AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            NSData *deviceToken = delegate.deviceToken;
+            if (deviceToken) {
+                TIMTokenParam *param = [[TIMTokenParam alloc] init];
+                /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
+                //企业证书 ID
+                param.busiId = sdkBusiId;
+                [param setToken:deviceToken];
+                [[TIMManager sharedInstance] setToken:param succ:^{
+                    NSLog(@"-----> 上传 token 成功 ");
+                } fail:^(int code, NSString *msg) {
+                    NSLog(@"-----> 上传 token 失败 ");
+                }];
+            }
             [[NSUserDefaults standardUserDefaults] setObject:@(sdkAppid) forKey:Key_UserInfo_Appid];
             [[NSUserDefaults standardUserDefaults] setObject:ws.userName forKey:Key_UserInfo_User];
             [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Pwd];

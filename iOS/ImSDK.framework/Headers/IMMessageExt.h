@@ -9,7 +9,6 @@
 #ifndef ImSDK_h
 #define ImSDK_h
 
-#import "ImSDK.h"
 #import "TIMConversation+MsgExt.h"
 #import "TIMMessage+MsgExt.h"
 #import "TIMComm+MsgExt.h"

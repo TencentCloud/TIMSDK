@@ -9,7 +9,7 @@
 #ifndef TIMConversation_h
 #define TIMConversation_h
 
-#import "ImSDK.h"
+#import "TIMConversation.h"
 #import "TIMMessage+MsgExt.h"
 
 @interface TIMConversation (MsgExt)

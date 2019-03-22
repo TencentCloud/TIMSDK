@@ -38,16 +38,18 @@
     }
     self.navigationItem.leftBarButtonItems = @[spaceItem,leftItem];
     self.parentViewController.navigationItem.leftBarButtonItems = @[spaceItem,leftItem];
-    
+
     
     //right
     UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [rightButton addTarget:self action:@selector(rightBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
     if(_conversation.convType == TConv_Type_C2C){
-//        [rightButton setImage:[UIImage imageNamed:TUIKitResource(@"personal")] forState:UIControlStateNormal];
+        [rightButton setImage:[UIImage imageNamed:TUIKitResource(@"person_nav")] forState:UIControlStateNormal];
+        [rightButton setImage:[UIImage imageNamed:TUIKitResource(@"person_nav_hover")] forState:UIControlStateHighlighted];
     }
     else if(_conversation.convType == TConv_Type_Group){
-        [rightButton setImage:[UIImage imageNamed:TUIKitResource(@"group")] forState:UIControlStateNormal];
+        [rightButton setImage:[UIImage imageNamed:TUIKitResource(@"group_nav")] forState:UIControlStateNormal];
+        [rightButton setImage:[UIImage imageNamed:TUIKitResource(@"group_nav_hover")] forState:UIControlStateNormal];
     }
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightItem;
@@ -71,9 +73,6 @@
 
 
 - (void)rightBarButtonClick{
-    if(_conversation.convType == TConv_Type_C2C){
-        return;
-    }
     if(_delegate && [_delegate respondsToSelector:@selector(chatControllerDidClickRightBarButton:)]){
         [_delegate chatControllerDidClickRightBarButton:self];
     }

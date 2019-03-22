@@ -9,7 +9,7 @@
 #ifndef TIMManager_MsgExt_h
 #define TIMManager_MsgExt_h
 
-#import "ImSDK.h"
+#import "TIMManager.h"
 #import "TIMComm+MsgExt.h"
 
 @class TIMMessage;

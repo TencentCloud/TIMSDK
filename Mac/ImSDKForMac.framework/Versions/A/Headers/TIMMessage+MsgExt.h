@@ -9,7 +9,7 @@
 #ifndef TIMMessage_h
 #define TIMMessage_h
 
-#import "ImSDK.h"
+#import "TIMMessage.h"
 #import "TIMComm+MsgExt.h"
 
 #pragma mark - Elem类型

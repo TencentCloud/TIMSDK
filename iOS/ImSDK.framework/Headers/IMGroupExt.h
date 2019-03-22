@@ -9,7 +9,6 @@
 #ifndef IMGroupExt_h
 #define IMGroupExt_h
 
-#import "ImSDK.h"
 #import "TIMComm+Group.h"
 #import "TIMGroupManager+Ext.h"
 

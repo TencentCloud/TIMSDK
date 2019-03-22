@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TIMFriendshipManager.h"
 
 @class TSettingController;
 @protocol TSettingControllerDelegate <NSObject>
@@ -15,4 +16,5 @@
 
 @interface TSettingController : UITableViewController
 @property (nonatomic, weak) id<TSettingControllerDelegate> delegate;
+@property TIMUserProfile *profile;
 @end
