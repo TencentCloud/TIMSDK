@@ -5,6 +5,7 @@
 
 ### iOS：
 **新增功能：**
+
 1，SDK 新增用户资料逻辑
 2，SDK 新增自动登录逻辑
 3，SDK 新增错误码枚举类 TIMErrorCode.h
