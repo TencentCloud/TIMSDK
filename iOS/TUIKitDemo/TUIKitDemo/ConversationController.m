@@ -41,14 +41,20 @@
 - (void)conversationController:(TConversationController *)conversationController DidClickRightBarButton:(UIButton *)rightBarButton
 {
     NSMutableArray *menus = [NSMutableArray array];
-    TPopCellData *group = [[TPopCellData alloc] init];
-    group.image = TUIKitResource(@"add_group");
-    group.title = @"发起群聊";
-    [menus addObject:group];
     TPopCellData *friend = [[TPopCellData alloc] init];
     friend.image = TUIKitResource(@"add_friend");
     friend.title = @"添加会话";
     [menus addObject:friend];
+    
+    TPopCellData *group = [[TPopCellData alloc] init];
+    group.image = TUIKitResource(@"add_group");
+    group.title = @"创建群聊";
+    [menus addObject:group];
+    
+    TPopCellData *group2 = [[TPopCellData alloc] init];
+    group2.image = TUIKitResource(@"add_group");
+    group2.title = @"加入群聊";
+    [menus addObject:group2];
     
     CGFloat height = [TPopCell getHeight] * menus.count + TPopView_Arrow_Size.height;
     CGFloat orginY = StatusBar_Height + NavBar_Height;
@@ -64,10 +70,15 @@
 {
     UIViewController *add = nil;
     if(index == 0){
-        add = [[AddGroupController alloc] init];
+        add = [[AddC2CController alloc] init];
     }
     else if(index == 1){
-        add = [[AddC2CController alloc] init];
+        add = [[AddGroupController alloc] init];
+        [(AddGroupController *)add setAddGroupType:AddGroupType_Create];
+    }
+    else if(index == 2){
+        add = [[AddGroupController alloc] init];
+        [(AddGroupController *)add setAddGroupType:AddGroupType_Join];
     }
     UINavigationController *addNavi = [[UINavigationController alloc] initWithRootViewController:add];
     [self.navigationController presentViewController:addNavi animated:YES completion:nil];

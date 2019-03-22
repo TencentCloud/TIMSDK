@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TAddGroupController.h"
 
 @interface AddGroupController : UIViewController
-
+@property (nonatomic,assign) AddGroupType addGroupType;
 @end
