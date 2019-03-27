@@ -9,7 +9,7 @@
 #ifndef TIMComm_Group_h
 #define TIMComm_Group_h
 
-#import "ImSDK.h"
+#import "TIMComm.h"
 
 @class TIMGroupPendencyMeta;
 

@@ -9,6 +9,7 @@
 #import "TUIKit.h"
 #import "THeader.h"
 #import "ImSDK.h"
+#import "IMMessageExt.h"
 
 @interface TUIKit () <TIMRefreshListener, TIMMessageListener, TIMMessageRevokeListener, TIMUploadProgressListener, TIMUserStatusListener, TIMConnListener>
 @property (nonatomic, strong) TUIKitConfig *config;
@@ -59,7 +60,7 @@
     userConfig.uploadProgressListener = self;
     userConfig.userStatusListener = self;
     [[TIMManager sharedInstance] setUserConfig:userConfig];
-
+    
     [[TIMManager sharedInstance] addMessageListener:self];
     
 }
@@ -70,7 +71,20 @@
     TIMLoginParam *param = [[TIMLoginParam alloc] init];
     param.identifier = identifier;
     param.userSig = sig;
-    [[TIMManager sharedInstance] login:param succ:succ fail:fail];
+    [[TIMManager sharedInstance] login:param succ:^{
+        succ();
+    } fail:^(int code, NSString *msg) {
+        // 收到被踢的通知后再次主动登录下
+        if (code == 6208) {
+            [[TIMManager sharedInstance] login:param succ:^{
+                succ();
+            } fail:^(int code, NSString *msg) {
+                fail(code,msg);
+            }];
+        }else{
+            fail(code,msg);
+        }
+    }];
 }
 
 - (void)logoutKit:(TSucc)succ fail:(TFail)fail
@@ -172,5 +186,10 @@
 - (TUIKitConfig *)getConfig
 {
     return _config;
+}
+
+- (NSString *)getSDKVersion
+{
+    return [TIMManager sharedInstance].GetVersion;
 }
 @end

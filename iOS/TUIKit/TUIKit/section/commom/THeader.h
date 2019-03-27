@@ -331,4 +331,12 @@
 #define TUIKit_Voice_Path [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/voice/"]
 #define TUIKit_File_Path [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/file/"]
 
+
+// rich
+#define kDefaultRichCellHeight 50
+#define kDefaultRichCellMargin 8
+#define kRichCellValueColor  [UIColor blackColor]
+#define kRichCellTipsColor [UIColor grayColor]
+#define kRichCellTextFont      [UIFont systemFontOfSize:14]
+
 #endif /* THeader_h */

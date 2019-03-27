@@ -10,7 +10,7 @@
 #define TIMComm_MsgExt_h
 
 #import <Foundation/Foundation.h>
-#import "ImSDK.h"
+#import "TIMComm.h"
 
 @class TIMSendToUsersDetailInfo;
 

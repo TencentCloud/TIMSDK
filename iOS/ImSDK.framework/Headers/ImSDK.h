@@ -15,8 +15,10 @@
 #import "TIMConversation.h"
 #import "TIMGroupManager.h"
 #import "TIMCallback.h"
-//#import "TIMFriendshipManager.h"
-
-//#import "IMSdkInt.h"
+#import "TIMFriendshipManager.h"
+#import "IMSdkComm.h"
+#import "TIMErrorCode.h"
+#import "IMGroupExt.h"
+#import "IMMessageExt.h"
 
 #endif

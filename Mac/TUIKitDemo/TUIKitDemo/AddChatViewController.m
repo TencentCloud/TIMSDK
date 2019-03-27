@@ -8,7 +8,7 @@
 
 #import "AddChatViewController.h"
 #import "ChatViewController.h"
-#import "IMGroupExt.h"
+#import "ImSDK.h"
 
 @interface AddChatViewController ()
 

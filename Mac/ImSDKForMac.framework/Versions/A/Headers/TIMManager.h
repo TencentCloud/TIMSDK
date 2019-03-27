@@ -13,7 +13,7 @@
 #import "TIMCallback.h"
 
 @class TIMGroupManager;
-//@class TIMFriendshipManager;
+@class TIMFriendshipManager;
 
 /////////////////////////////////////////////////////////
 ///  Tencent 开放 SDK API
@@ -92,6 +92,17 @@
  *  @return 0 请求成功
  */
 - (int)login: (TIMLoginParam*)param succ:(TIMLoginSucc)succ fail:(TIMFail)fail;
+
+/**
+ *  自动登录（首次登陆之后，SDK会把登陆信息存在在本地，下次登陆即可调用自动登录）
+ *
+ *  @param param 登陆参数（userSig不用填）
+ *  @param succ  成功回调
+ *  @param fail  失败回调
+ *
+ *  @return 0 请求成功
+ */
+- (int)autoLogin:(TIMLoginParam*)param succ:(TIMLoginSucc)succ fail:(TIMFail)fail;
 
 /**
  *  获取当前登陆的用户
@@ -263,7 +274,7 @@
  *
  *  @return 好友管理器
  */
-//- (TIMFriendshipManager*)friendshipManager;
+- (TIMFriendshipManager*)friendshipManager;
 
 /**
  *  获取群管理器
@@ -290,12 +301,5 @@
  *  @return 返回日志级别
  */
 -(TIMLogLevel) getLogLevel;
-
-/**
- 重置ImSDK配置信息，内部自动化测试使用，外部禁止使用
- */
-- (void)unInit;
-
 @end
-
 #endif

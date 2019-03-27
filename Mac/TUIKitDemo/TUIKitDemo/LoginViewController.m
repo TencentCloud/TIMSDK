@@ -34,6 +34,9 @@
     sdkConfig.accountType = sdkAccountType;
     sdkConfig.connListener = self;
     [[TIMManager sharedInstance] initSdk:sdkConfig];
+    
+    NSString *version = [[TIMManager sharedInstance] GetVersion];
+    NSLog(@"version is  %@",version);
 }
 
 - (IBAction)login:(NSButton *)sender {

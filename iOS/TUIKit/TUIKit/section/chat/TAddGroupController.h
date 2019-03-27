@@ -10,13 +10,22 @@
 #import "TAddIndexView.h"
 #import "TAddGroupOptionView.h"
 
+typedef NS_ENUM(NSInteger,AddGroupType){
+    AddGroupType_Create,
+    AddGroupType_Join,
+};
+
 @class TAddGroupController;
 @protocol TAddGroupControllerDelegate <NSObject>
 - (void)didCancelInAddGroupController:(TAddGroupController *)controller;
 - (void)addGroupController:(TAddGroupController *)controller didCreateGroupId:(NSString *)groupId groupName:(NSString *)groupName;
+- (void)addGroupController:(TAddGroupController *)controller didCreateGroupIdFailed:(int)errorCode errorMsg:(NSString *)errorMsg;
+- (void)addGroupController:(TAddGroupController *)controller didJoinGroupId:(NSString *)groupId;
+- (void)addGroupController:(TAddGroupController *)controller didJoinGroupIdFailed:(int)errorCode errorMsg:(NSString *)errorMsg;
 @end
 
 @interface TAddGroupController : UIViewController
+@property (nonatomic, assign) AddGroupType addGroupType;
 @property (nonatomic, strong) UITextField *textField;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UICollectionViewFlowLayout *flowLayout;

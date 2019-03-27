@@ -513,59 +513,6 @@ typedef NS_ENUM(NSInteger, TIMGender) {
     
 };
 
-/**
- * 基本资料标志位
- */
-typedef NS_ENUM(NSInteger, TIMProfileFlag) {
-    /**
-     * 昵称
-     */
-    TIM_PROFILE_FLAG_NICK                = 0x01,
-    /**
-     * 好友验证方式
-     */
-    TIM_PROFILE_FLAG_ALLOW_TYPE          = (0x01 << 1),
-    /**
-     * 头像
-     */
-    TIM_PROFILE_FLAG_FACE_URL            = (0x01 << 2),
-    /**
-     * 好友备注
-     */
-    TIM_PROFILE_FLAG_REMARK              = (0x01 << 3),
-    /**
-     * 好友分组
-     */
-    TIM_PROFILE_FLAG_GROUP               = (0x01 << 4),
-    /**
-     * 用户签名
-     */
-    TIM_PROFILE_FLAG_SELFSIGNATURE       = (0x01 << 5),
-    /**
-     * 用户性别
-     */
-    TIM_PROFILE_FLAG_GENDER              = (0x01 << 6),
-    /**
-     * 用户生日
-     */
-    TIM_PROFILE_FLAG_BIRTHDAY            = (0x01 << 7),
-    /**
-     * 用户区域
-     */
-    TIM_PROFILE_FLAG_LOCATION            = (0x01 << 8),
-    /**
-     * 用户语言
-     */
-    TIM_PROFILE_FLAG_LANGUAGE            = (0x01 << 9),
-    /**
-     * 用户等级
-     */
-    TIM_PROFILE_FLAG_LEVEL               = (0x01 << 10),
-    /**
-     * 用户角色
-     */
-    TIM_PROFILE_FLAG_ROLE                = (0x01 << 11),
-};
 
 #pragma mark - block回调
 
@@ -652,6 +599,7 @@ typedef void (^TIMFriendSucc)(NSArray * friends);
  */
 typedef void (^TIMGetProfileSucc)(TIMUserProfile * profile);
 
+typedef void (^TIMGetProfileArraySucc)(NSArray<TIMUserProfile *> *profiles);
 #pragma mark - 基本类型
 
 @interface TIMCodingModel : NSObject <NSCoding>
@@ -743,10 +691,6 @@ typedef void (^TIMGetProfileSucc)(TIMUserProfile * profile);
  */
 @property(nonatomic,assign) BOOL disableRecentContactNotify;
 
-///**
-// *  开启关系链数据本地缓存功能（加载好友扩展包有效）
-// */
-//@property(nonatomic,assign) BOOL enableFriendshipProxy;
 
 ///**
 // *  开启群组数据本地缓存功能（加载群组扩展包有效）
@@ -764,7 +708,7 @@ typedef void (^TIMGetProfileSucc)(TIMUserProfile * profile);
 @property(nonatomic,strong) TIMGroupMemberInfoOption * groupMemberInfoOpt;
 
 /**
- *  设置默认拉取的好友资料
+ *  关系链参数
  */
 @property(nonatomic,strong) TIMFriendProfileOption * friendProfileOpt;
 
@@ -1186,29 +1130,11 @@ typedef void (^TIMGetProfileSucc)(TIMUserProfile * profile);
 
 @end
 
-@interface TIMFriendProfileOption : NSObject
 
 /**
- *  需要获取的好友信息标志（TIMProfileFlag）,默认为0xffffff
+ *  好友
  */
-@property(nonatomic,assign) uint64_t friendFlags;
-
-/**
- *  需要获取的好友自定义信息（NSString*）列表
- */
-@property(nonatomic,strong) NSArray * friendCustom;
-
-/**
- *  需要获取的用户自定义信息（NSString*）列表
- */
-@property(nonatomic,strong) NSArray * userCustom;
-
-@end
-
-/**
- *  好友资料
- */
-@interface TIMUserProfile : TIMCodingModel
+@interface TIMUser : TIMCodingModel
 
 /**
  *  用户identifier
@@ -1226,6 +1152,52 @@ typedef void (^TIMGetProfileSucc)(TIMUserProfile * profile);
 @property(nonatomic,strong) NSString* remark;
 
 /**
+ *  分组名称 NSString* 列表
+ */
+@property(nonatomic,strong) NSArray* groups;
+
+/**
+ *  自定义字段集合,key是NSString类型,value是NSData类型或者NSNumber类型
+ *  (key值按照后台配置的字符串传入)
+ */
+@property(nonatomic,strong) NSDictionary* customInfo;
+
+/**
+ * 好友资料
+ */
+@property(nonatomic,strong) TIMUserProfile *profile;
+
+@end
+
+/**
+ * 资料与关系链
+ */
+@interface TIMFriendProfileOption : NSObject
+
+/**
+ * 关系链最大缓存时间
+ * 默认缓存一天；获取资料和关系链超过缓存时间，将自动向服务器发起请求
+ */
+@property NSInteger expiredSeconds;
+
+@end
+
+/**
+ *  用户资料
+ */
+@interface TIMUserProfile : TIMCodingModel
+
+/**
+ *  用户identifier
+ */
+@property(nonatomic,strong) NSString* identifier;
+
+/**
+ *  用户昵称
+ */
+@property(nonatomic,strong) NSString* nickname;
+
+/**
  *  好友验证方式
  */
 @property(nonatomic,assign) TIMFriendAllowType allowType;
@@ -1241,22 +1213,22 @@ typedef void (^TIMGetProfileSucc)(TIMUserProfile * profile);
 @property(nonatomic,strong) NSData* selfSignature;
 
 /**
- *  好友性别
+ *  用户性别
  */
 @property(nonatomic,assign) TIMGender gender;
 
 /**
- *  好友生日
+ *  用户生日
  */
 @property(nonatomic,assign) uint32_t birthday;
 
 /**
- *  好友区域
+ *  用户区域
  */
 @property(nonatomic,strong) NSData* location;
 
 /**
- *  好友语言
+ *  用户语言
  */
 @property(nonatomic,assign) uint32_t language;
 
@@ -1269,11 +1241,6 @@ typedef void (^TIMGetProfileSucc)(TIMUserProfile * profile);
  *  角色
  */
 @property(nonatomic,assign) uint32_t role;
-
-/**
- *  好友分组名称 NSString* 列表
- */
-@property(nonatomic,strong) NSArray* friendGroups;
 
 /**
  *  自定义字段集合,key是NSString类型,value是NSData类型或者NSNumber类型

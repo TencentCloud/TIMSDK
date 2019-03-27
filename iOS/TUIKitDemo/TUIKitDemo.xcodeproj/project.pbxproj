@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CE4361F521F5A5660070D6C9 /* TUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0144A0216E1A5500C12E35 /* TUIKit.framework */; };
-		CE4361F621F5A5660070D6C9 /* TUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CF0144A0216E1A5500C12E35 /* TUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CE43620821F5A6690070D6C9 /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE7FC09321F02B970085A659 /* ImSDK.framework */; };
-		CE43620921F5A6690070D6C9 /* ImSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CE7FC09321F02B970085A659 /* ImSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CE621AF32245143900386B29 /* TUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE621AEF224513F500386B29 /* TUIKit.framework */; };
+		CE621AF42245143900386B29 /* TUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CE621AEF224513F500386B29 /* TUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CE7FC09721F02C4A0085A659 /* UserSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7FC09621F02C4A0085A659 /* UserSelectView.m */; };
+		CEE2922F224517A1003A8AA2 /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE2922D22451674003A8AA2 /* ImSDK.framework */; };
+		CEE29230224517A1003A8AA2 /* ImSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CEE2922D22451674003A8AA2 /* ImSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014486216E1A4900C12E35 /* AppDelegate.m */; };
 		CF01448A216E1A4900C12E35 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014489216E1A4900C12E35 /* LoginController.m */; };
 		CF01448D216E1A4900C12E35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF01448B216E1A4900C12E35 /* Main.storyboard */; };
@@ -35,31 +35,31 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		CE4361F721F5A5660070D6C9 /* PBXContainerItemProxy */ = {
+		CE621AEE224513F500386B29 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = CF01449B216E1A5500C12E35 /* TUIKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = CF0143DC216E183800C12E35;
-			remoteInfo = TUIKit;
-		};
-		CF01449F216E1A5500C12E35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CF01449B216E1A5500C12E35 /* TUIKit.xcodeproj */;
+			containerPortal = CE621AEA224513F400386B29 /* TUIKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = CF0143DD216E183800C12E35;
+			remoteInfo = TUIKit;
+		};
+		CE621AF52245143900386B29 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE621AEA224513F400386B29 /* TUIKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = CF0143DC216E183800C12E35;
 			remoteInfo = TUIKit;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		CE4361F421F5A5480070D6C9 /* Embed Frameworks */ = {
+		CE621AF22245143600386B29 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				CE4361F621F5A5660070D6C9 /* TUIKit.framework in Embed Frameworks */,
-				CE43620921F5A6690070D6C9 /* ImSDK.framework in Embed Frameworks */,
+				CE621AF42245143900386B29 /* TUIKit.framework in Embed Frameworks */,
+				CEE29230224517A1003A8AA2 /* ImSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,9 +67,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CE621AEA224513F400386B29 /* TUIKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TUIKit.xcodeproj; path = ../../TUIKit/TUIKit.xcodeproj; sourceTree = "<group>"; };
 		CE7FC09321F02B970085A659 /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = ../ImSDK.framework; sourceTree = "<group>"; };
 		CE7FC09521F02C490085A659 /* UserSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserSelectView.h; sourceTree = "<group>"; };
 		CE7FC09621F02C4A0085A659 /* UserSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserSelectView.m; sourceTree = "<group>"; };
+		CEE2922D22451674003A8AA2 /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = ../ImSDK.framework; sourceTree = "<group>"; };
 		CF00884C2188772F00AD2879 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		CF00884D2188773000AD2879 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		CF014482216E1A4900C12E35 /* TUIKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TUIKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,7 +84,6 @@
 		CF014491216E1A4B00C12E35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CF014493216E1A4B00C12E35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF014494216E1A4B00C12E35 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		CF01449B216E1A5500C12E35 /* TUIKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TUIKit.xcodeproj; path = ../../TUIKit/TUIKit.xcodeproj; sourceTree = "<group>"; };
 		CF2BCA9221748AD100CD6298 /* AddC2CController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddC2CController.m; sourceTree = "<group>"; };
 		CF2BCA9421748AD200CD6298 /* AddC2CController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddC2CController.h; sourceTree = "<group>"; };
 		CF46E5CC21997377005929D8 /* FileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileViewController.h; sourceTree = "<group>"; };
@@ -116,8 +117,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE4361F521F5A5660070D6C9 /* TUIKit.framework in Frameworks */,
-				CE43620821F5A6690070D6C9 /* ImSDK.framework in Frameworks */,
+				CE621AF32245143900386B29 /* TUIKit.framework in Frameworks */,
+				CEE2922F224517A1003A8AA2 /* ImSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,8 +129,17 @@
 			isa = PBXGroup;
 			children = (
 				CE7FC09321F02B970085A659 /* ImSDK.framework */,
+				CEE2922D22451674003A8AA2 /* ImSDK.framework */,
 			);
 			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		CE621AEB224513F400386B29 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CE621AEF224513F500386B29 /* TUIKit.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		CF014479216E1A4900C12E35 = {
@@ -155,7 +165,7 @@
 		CF014484216E1A4900C12E35 /* TUIKitDemo */ = {
 			isa = PBXGroup;
 			children = (
-				CF01449B216E1A5500C12E35 /* TUIKit.xcodeproj */,
+				CE621AEA224513F400386B29 /* TUIKit.xcodeproj */,
 				CF014485216E1A4900C12E35 /* AppDelegate.h */,
 				CF014486216E1A4900C12E35 /* AppDelegate.m */,
 				CF014488216E1A4900C12E35 /* LoginController.h */,
@@ -195,14 +205,6 @@
 			path = TUIKitDemo;
 			sourceTree = "<group>";
 		};
-		CF01449C216E1A5500C12E35 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				CF0144A0216E1A5500C12E35 /* TUIKit.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		CF0144A1216E1A6400C12E35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -220,12 +222,12 @@
 				CF01447E216E1A4900C12E35 /* Sources */,
 				CF01447F216E1A4900C12E35 /* Frameworks */,
 				CF014480216E1A4900C12E35 /* Resources */,
-				CE4361F421F5A5480070D6C9 /* Embed Frameworks */,
+				CE621AF22245143600386B29 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				CE4361F821F5A5660070D6C9 /* PBXTargetDependency */,
+				CE621AF62245143900386B29 /* PBXTargetDependency */,
 			);
 			name = TUIKitDemo;
 			productName = TUIKitDemo;
@@ -259,8 +261,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = CF01449C216E1A5500C12E35 /* Products */;
-					ProjectRef = CF01449B216E1A5500C12E35 /* TUIKit.xcodeproj */;
+					ProductGroup = CE621AEB224513F400386B29 /* Products */;
+					ProjectRef = CE621AEA224513F400386B29 /* TUIKit.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -271,11 +273,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		CF0144A0216E1A5500C12E35 /* TUIKit.framework */ = {
+		CE621AEF224513F500386B29 /* TUIKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = TUIKit.framework;
-			remoteRef = CF01449F216E1A5500C12E35 /* PBXContainerItemProxy */;
+			remoteRef = CE621AEE224513F500386B29 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -322,10 +324,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CE4361F821F5A5660070D6C9 /* PBXTargetDependency */ = {
+		CE621AF62245143900386B29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = TUIKit;
-			targetProxy = CE4361F721F5A5660070D6C9 /* PBXContainerItemProxy */;
+			targetProxy = CE621AF52245143900386B29 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

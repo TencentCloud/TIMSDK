@@ -289,6 +289,10 @@
 
 - (void)didSelectAddOption
 {
+    //私有群禁止加入
+    if ([self.groupInfo.groupType isEqualToString:@"Private"]) {
+        return;
+    }
     NSMutableArray *addOptionData = [NSMutableArray array];
     [addOptionData addObject:@"禁止加入"];
     [addOptionData addObject:@"管理员审批"];

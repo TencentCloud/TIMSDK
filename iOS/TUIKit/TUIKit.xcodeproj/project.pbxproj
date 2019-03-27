@@ -7,7 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CE7FC09421F02B970085A659 /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE7FC09321F02B970085A659 /* ImSDK.framework */; };
+		9100FD8922375D3C0031CF11 /* NSString+Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 9100FD8522375D3B0031CF11 /* NSString+Common.m */; };
+		9100FD8A22375D3C0031CF11 /* NSString+Common.h in Headers */ = {isa = PBXBuildFile; fileRef = 9100FD8822375D3B0031CF11 /* NSString+Common.h */; };
+		9100FE23223BC5470031CF11 /* libopencore-amrwb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF8208C3218C3598002EEE90 /* libopencore-amrwb.a */; };
+		91660A712236945B00ED8611 /* TMyProfileController.h in Headers */ = {isa = PBXBuildFile; fileRef = 91660A6F2236945B00ED8611 /* TMyProfileController.h */; };
+		91660A722236945B00ED8611 /* TMyProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91660A702236945B00ED8611 /* TMyProfileController.m */; };
+		91660A7922374C0600ED8611 /* TRichMenuCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = 91660A7722374C0600ED8611 /* TRichMenuCellData.m */; };
+		91660A7A22374C0600ED8611 /* TRichMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91660A7822374C0600ED8611 /* TRichMenuCell.m */; };
+		91660A7D22374D5900ED8611 /* TEditInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91660A7B22374D5900ED8611 /* TEditInfoViewController.m */; };
+		91660A7E22374D5900ED8611 /* TEditInfoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 91660A7C22374D5900ED8611 /* TEditInfoViewController.h */; };
+		91660A87223755E400ED8611 /* UIView+MMLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 91660A84223755E300ED8611 /* UIView+MMLayout.h */; };
+		91660A88223755E400ED8611 /* UIView+MMLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 91660A85223755E300ED8611 /* UIView+MMLayout.m */; };
+		91660A89223755E400ED8611 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 91660A86223755E300ED8611 /* README.md */; };
+		CEE2924122451BB8003A8AA2 /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE2924022451BB8003A8AA2 /* ImSDK.framework */; };
 		CF00880D2181744D00AD2879 /* TResponderTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF00880B2181744D00AD2879 /* TResponderTextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF00880E2181744D00AD2879 /* TResponderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CF00880C2181744D00AD2879 /* TResponderTextView.m */; };
 		CF0143E2216E183800C12E35 /* TUIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = CF0143E0216E183800C12E35 /* TUIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -27,15 +39,15 @@
 		CF014445216E18C200C12E35 /* TFileMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF0143FC216E18C200C12E35 /* TFileMessageCell.m */; };
 		CF014446216E18C200C12E35 /* TMenuCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CF0143FD216E18C200C12E35 /* TMenuCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF014447216E18C200C12E35 /* TMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF0143FE216E18C200C12E35 /* TMenuCell.m */; };
-		CF014448216E18C200C12E35 /* TMenuView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF0143FF216E18C200C12E35 /* TMenuView.h */; };
+		CF014448216E18C200C12E35 /* TMenuView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF0143FF216E18C200C12E35 /* TMenuView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF014449216E18C200C12E35 /* TMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014400216E18C200C12E35 /* TMenuView.m */; };
-		CF01444A216E18C200C12E35 /* TMessageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CF014401216E18C200C12E35 /* TMessageCell.h */; };
+		CF01444A216E18C200C12E35 /* TMessageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CF014401216E18C200C12E35 /* TMessageCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF01444B216E18C200C12E35 /* TMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014402216E18C200C12E35 /* TMessageCell.m */; };
 		CF01444C216E18C200C12E35 /* TMessageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF014403216E18C200C12E35 /* TMessageView.h */; };
 		CF01444D216E18C200C12E35 /* TMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014404216E18C200C12E35 /* TMessageView.m */; };
 		CF01444E216E18C200C12E35 /* TMoreCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CF014405216E18C200C12E35 /* TMoreCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF01444F216E18C200C12E35 /* TMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014406216E18C200C12E35 /* TMoreCell.m */; };
-		CF014450216E18C200C12E35 /* TMoreView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF014407216E18C200C12E35 /* TMoreView.h */; };
+		CF014450216E18C200C12E35 /* TMoreView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF014407216E18C200C12E35 /* TMoreView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF014451216E18C200C12E35 /* TMoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014408216E18C200C12E35 /* TMoreView.m */; };
 		CF014452216E18C200C12E35 /* TRecordView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF014409216E18C200C12E35 /* TRecordView.h */; };
 		CF014453216E18C200C12E35 /* TRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = CF01440A216E18C200C12E35 /* TRecordView.m */; };
@@ -47,7 +59,7 @@
 		CF014459216E18C200C12E35 /* TVideoMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014410216E18C200C12E35 /* TVideoMessageCell.m */; };
 		CF01445A216E18C200C12E35 /* TVoiceMessageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CF014411216E18C200C12E35 /* TVoiceMessageCell.h */; };
 		CF01445B216E18C200C12E35 /* TVoiceMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014412216E18C200C12E35 /* TVoiceMessageCell.m */; };
-		CF01445E216E18C200C12E35 /* TUnReadView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF014416216E18C200C12E35 /* TUnReadView.h */; };
+		CF01445E216E18C200C12E35 /* TUnReadView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF014416216E18C200C12E35 /* TUnReadView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF01445F216E18C200C12E35 /* TUnReadView.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014417216E18C200C12E35 /* TUnReadView.m */; };
 		CF014460216E18C200C12E35 /* THeader.h in Headers */ = {isa = PBXBuildFile; fileRef = CF014418216E18C200C12E35 /* THeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF014461216E18C200C12E35 /* TConversationController.h in Headers */ = {isa = PBXBuildFile; fileRef = CF01441A216E18C200C12E35 /* TConversationController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -75,7 +87,7 @@
 		CF2BCA812174802D00CD6298 /* TAddC2CController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF2BCA7F2174802D00CD6298 /* TAddC2CController.m */; };
 		CF3A874D216F31A200C1DEB2 /* TConversationView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF3A874B216F31A200C1DEB2 /* TConversationView.h */; };
 		CF3A874E216F31A200C1DEB2 /* TConversationView.m in Sources */ = {isa = PBXBuildFile; fileRef = CF3A874C216F31A200C1DEB2 /* TConversationView.m */; };
-		CF3A8751216F355700C1DEB2 /* TGroupMembersView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF3A874F216F355700C1DEB2 /* TGroupMembersView.h */; };
+		CF3A8751216F355700C1DEB2 /* TGroupMembersView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF3A874F216F355700C1DEB2 /* TGroupMembersView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF3A8752216F355700C1DEB2 /* TGroupMembersView.m in Sources */ = {isa = PBXBuildFile; fileRef = CF3A8750216F355700C1DEB2 /* TGroupMembersView.m */; };
 		CF46E5D1219AABA0005929D8 /* TTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = CF46E5CF219AABA0005929D8 /* TTabBarController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF46E5D2219AABA0005929D8 /* TTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF46E5D0219AABA0005929D8 /* TTabBarController.m */; };
@@ -94,9 +106,9 @@
 		CF46E5F2219D748C005929D8 /* TMessageResource.h in Headers */ = {isa = PBXBuildFile; fileRef = CF46E5F0219D748C005929D8 /* TMessageResource.h */; };
 		CF46E5F3219D748C005929D8 /* TMessageResource.m in Sources */ = {isa = PBXBuildFile; fileRef = CF46E5F1219D748C005929D8 /* TMessageResource.m */; };
 		CF4D05282170589F0067704E /* TUIKit.m in Sources */ = {isa = PBXBuildFile; fileRef = CF4D05272170589F0067704E /* TUIKit.m */; };
-		CF4D052B21707F260067704E /* TMessageController.h in Headers */ = {isa = PBXBuildFile; fileRef = CF4D052921707F260067704E /* TMessageController.h */; };
+		CF4D052B21707F260067704E /* TMessageController.h in Headers */ = {isa = PBXBuildFile; fileRef = CF4D052921707F260067704E /* TMessageController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF4D052C21707F260067704E /* TMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF4D052A21707F260067704E /* TMessageController.m */; };
-		CF4D052F217080A60067704E /* TInputController.h in Headers */ = {isa = PBXBuildFile; fileRef = CF4D052D217080A60067704E /* TInputController.h */; };
+		CF4D052F217080A60067704E /* TInputController.h in Headers */ = {isa = PBXBuildFile; fileRef = CF4D052D217080A60067704E /* TInputController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF4D0530217080A60067704E /* TInputController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF4D052E217080A60067704E /* TInputController.m */; };
 		CF82085D218ADB4C002EEE90 /* THelper.h in Headers */ = {isa = PBXBuildFile; fileRef = CF82085B218ADB4C002EEE90 /* THelper.h */; };
 		CF82085E218ADB4C002EEE90 /* THelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CF82085C218ADB4C002EEE90 /* THelper.m */; };
@@ -111,12 +123,11 @@
 		CF8208CC218C3599002EEE90 /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF8208BF218C3598002EEE90 /* libopencore-amrnb.a */; };
 		CF8208CD218C3599002EEE90 /* dec_if.h in Headers */ = {isa = PBXBuildFile; fileRef = CF8208C1218C3598002EEE90 /* dec_if.h */; };
 		CF8208CE218C3599002EEE90 /* if_rom.h in Headers */ = {isa = PBXBuildFile; fileRef = CF8208C2218C3598002EEE90 /* if_rom.h */; };
-		CF8208CF218C3599002EEE90 /* libopencore-amrwb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF8208C3218C3598002EEE90 /* libopencore-amrwb.a */; };
 		CF8208D321901C41002EEE90 /* TUIKitConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = CF8208D121901C41002EEE90 /* TUIKitConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF8208D421901C41002EEE90 /* TUIKitConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8208D221901C41002EEE90 /* TUIKitConfig.m */; };
 		CF89BAEE21759FC900D43101 /* TAddGroupController.h in Headers */ = {isa = PBXBuildFile; fileRef = CF89BAEC21759FC900D43101 /* TAddGroupController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF89BAEF21759FC900D43101 /* TAddGroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF89BAED21759FC900D43101 /* TAddGroupController.m */; };
-		CF89BB002175E11400D43101 /* TAddGroupOptionView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF89BAFE2175E11400D43101 /* TAddGroupOptionView.h */; };
+		CF89BB002175E11400D43101 /* TAddGroupOptionView.h in Headers */ = {isa = PBXBuildFile; fileRef = CF89BAFE2175E11400D43101 /* TAddGroupOptionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF89BB012175E11400D43101 /* TAddGroupOptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = CF89BAFF2175E11400D43101 /* TAddGroupOptionView.m */; };
 		CFDC2F98216E2BC4002EAEC2 /* TUIKitFace.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CFDC2F97216E2BC4002EAEC2 /* TUIKitFace.bundle */; };
 		CFE533D421A6585A0052DAD5 /* TNaviBarIndicatorView.h in Headers */ = {isa = PBXBuildFile; fileRef = CFE533D221A6585A0052DAD5 /* TNaviBarIndicatorView.h */; };
@@ -126,7 +137,7 @@
 		CFEB47972178299F00CFD98C /* TDeleteMemberController.h in Headers */ = {isa = PBXBuildFile; fileRef = CFEB47952178299F00CFD98C /* TDeleteMemberController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CFEB47982178299F00CFD98C /* TDeleteMemberController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47962178299F00CFD98C /* TDeleteMemberController.m */; };
 		CFEB47B421786BEB00CFD98C /* TModifyView.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47A221786BEA00CFD98C /* TModifyView.m */; };
-		CFEB47B521786BEB00CFD98C /* TAddIndexView.h in Headers */ = {isa = PBXBuildFile; fileRef = CFEB47A321786BEA00CFD98C /* TAddIndexView.h */; };
+		CFEB47B521786BEB00CFD98C /* TAddIndexView.h in Headers */ = {isa = PBXBuildFile; fileRef = CFEB47A321786BEA00CFD98C /* TAddIndexView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CFEB47B621786BEB00CFD98C /* TPickView.h in Headers */ = {isa = PBXBuildFile; fileRef = CFEB47A421786BEA00CFD98C /* TPickView.h */; };
 		CFEB47B721786BEB00CFD98C /* TAddHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = CFEB47A521786BEA00CFD98C /* TAddHelper.h */; };
 		CFEB47B821786BEB00CFD98C /* TAddHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47A621786BEA00CFD98C /* TAddHelper.m */; };
@@ -141,14 +152,27 @@
 		CFEB47C121786BEB00CFD98C /* TAddHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47AF21786BEB00CFD98C /* TAddHeaderView.m */; };
 		CFEB47C221786BEB00CFD98C /* TSelectView.h in Headers */ = {isa = PBXBuildFile; fileRef = CFEB47B021786BEB00CFD98C /* TSelectView.h */; };
 		CFEB47C321786BEB00CFD98C /* TSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47B121786BEB00CFD98C /* TSelectView.m */; };
-		CFEB47C421786BEB00CFD98C /* TAddCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CFEB47B221786BEB00CFD98C /* TAddCell.h */; };
+		CFEB47C421786BEB00CFD98C /* TAddCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CFEB47B221786BEB00CFD98C /* TAddCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CFEB47C521786BEB00CFD98C /* TModifyView.h in Headers */ = {isa = PBXBuildFile; fileRef = CFEB47B321786BEB00CFD98C /* TModifyView.h */; };
 		CFEB47C821786C2A00CFD98C /* TAlertView.h in Headers */ = {isa = PBXBuildFile; fileRef = CFEB47C621786C2A00CFD98C /* TAlertView.h */; };
 		CFEB47C921786C2A00CFD98C /* TAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47C721786C2A00CFD98C /* TAlertView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		CE7FC09321F02B970085A659 /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = ../ImSDK.framework; sourceTree = "<group>"; };
+		9100FD8522375D3B0031CF11 /* NSString+Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Common.m"; sourceTree = "<group>"; };
+		9100FD8822375D3B0031CF11 /* NSString+Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Common.h"; sourceTree = "<group>"; };
+		91660A6F2236945B00ED8611 /* TMyProfileController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TMyProfileController.h; sourceTree = "<group>"; };
+		91660A702236945B00ED8611 /* TMyProfileController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TMyProfileController.m; sourceTree = "<group>"; };
+		91660A7522374C0500ED8611 /* TRichMenuCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRichMenuCellData.h; sourceTree = "<group>"; };
+		91660A7622374C0500ED8611 /* TRichMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRichMenuCell.h; sourceTree = "<group>"; };
+		91660A7722374C0600ED8611 /* TRichMenuCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRichMenuCellData.m; sourceTree = "<group>"; };
+		91660A7822374C0600ED8611 /* TRichMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRichMenuCell.m; sourceTree = "<group>"; };
+		91660A7B22374D5900ED8611 /* TEditInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TEditInfoViewController.m; sourceTree = "<group>"; };
+		91660A7C22374D5900ED8611 /* TEditInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TEditInfoViewController.h; sourceTree = "<group>"; };
+		91660A84223755E300ED8611 /* UIView+MMLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MMLayout.h"; sourceTree = "<group>"; };
+		91660A85223755E300ED8611 /* UIView+MMLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MMLayout.m"; sourceTree = "<group>"; };
+		91660A86223755E300ED8611 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		CEE2924022451BB8003A8AA2 /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = ../ImSDK.framework; sourceTree = "<group>"; };
 		CF00880B2181744D00AD2879 /* TResponderTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TResponderTextView.h; sourceTree = "<group>"; };
 		CF00880C2181744D00AD2879 /* TResponderTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TResponderTextView.m; sourceTree = "<group>"; };
 		CF0143DD216E183800C12E35 /* TUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -295,19 +319,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF8208CF218C3599002EEE90 /* libopencore-amrwb.a in Frameworks */,
 				CF8208CC218C3599002EEE90 /* libopencore-amrnb.a in Frameworks */,
-				CE7FC09421F02B970085A659 /* ImSDK.framework in Frameworks */,
+				9100FE23223BC5470031CF11 /* libopencore-amrwb.a in Frameworks */,
+				CEE2924122451BB8003A8AA2 /* ImSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		91660A83223755B400ED8611 /* MMLayout */ = {
+			isa = PBXGroup;
+			children = (
+				91660A86223755E300ED8611 /* README.md */,
+				91660A84223755E300ED8611 /* UIView+MMLayout.h */,
+				91660A85223755E300ED8611 /* UIView+MMLayout.m */,
+			);
+			path = MMLayout;
+			sourceTree = "<group>";
+		};
 		CF0143D3216E183800C12E35 = {
 			isa = PBXGroup;
 			children = (
-				CE7FC09321F02B970085A659 /* ImSDK.framework */,
+				CEE2924022451BB8003A8AA2 /* ImSDK.framework */,
 				CFDC2F97216E2BC4002EAEC2 /* TUIKitFace.bundle */,
 				CF0144AD216E1D1800C12E35 /* TUIKitResource.bundle */,
 				CF0143DF216E183800C12E35 /* TUIKit */,
@@ -409,6 +443,10 @@
 		CF014413216E18C200C12E35 /* commom */ = {
 			isa = PBXGroup;
 			children = (
+				91660A7522374C0500ED8611 /* TRichMenuCellData.h */,
+				91660A7722374C0600ED8611 /* TRichMenuCellData.m */,
+				91660A7622374C0500ED8611 /* TRichMenuCell.h */,
+				91660A7822374C0600ED8611 /* TRichMenuCell.m */,
 				CF46E5E0219BD08B005929D8 /* TSwitchCell.h */,
 				CF46E5E1219BD08C005929D8 /* TSwitchCell.m */,
 				CF46E5DD219BCAFD005929D8 /* TButtonCell.h */,
@@ -446,6 +484,8 @@
 				CF00880C2181744D00AD2879 /* TResponderTextView.m */,
 				CF82085B218ADB4C002EEE90 /* THelper.h */,
 				CF82085C218ADB4C002EEE90 /* THelper.m */,
+				9100FD8822375D3B0031CF11 /* NSString+Common.h */,
+				9100FD8522375D3B0031CF11 /* NSString+Common.m */,
 				CF46E5CF219AABA0005929D8 /* TTabBarController.h */,
 				CF46E5D0219AABA0005929D8 /* TTabBarController.m */,
 				CF46E5D3219AAE9F005929D8 /* TNavigationController.h */,
@@ -508,6 +548,10 @@
 				CF46E5EC219BD492005929D8 /* TSettingController.m */,
 				CF46E5E4219BD2F4005929D8 /* TPersonalCommonCell.h */,
 				CF46E5E5219BD2F5005929D8 /* TPersonalCommonCell.m */,
+				91660A6F2236945B00ED8611 /* TMyProfileController.h */,
+				91660A702236945B00ED8611 /* TMyProfileController.m */,
+				91660A7C22374D5900ED8611 /* TEditInfoViewController.h */,
+				91660A7B22374D5900ED8611 /* TEditInfoViewController.m */,
 			);
 			path = setting;
 			sourceTree = "<group>";
@@ -515,6 +559,7 @@
 		CF8208B3218C3598002EEE90 /* third */ = {
 			isa = PBXGroup;
 			children = (
+				91660A83223755B400ED8611 /* MMLayout */,
 				CF8208B4218C3598002EEE90 /* voiceConvert */,
 			);
 			path = third;
@@ -590,6 +635,7 @@
 				CF01444C216E18C200C12E35 /* TMessageView.h in Headers */,
 				CF014467216E18C200C12E35 /* TGroupInfoController.h in Headers */,
 				CFE533D421A6585A0052DAD5 /* TNaviBarIndicatorView.h in Headers */,
+				91660A712236945B00ED8611 /* TMyProfileController.h in Headers */,
 				CF8208C4218C3599002EEE90 /* amrFileCodec.h in Headers */,
 				CF46E5DF219BCAFD005929D8 /* TButtonCell.h in Headers */,
 				CF46E5D1219AABA0005929D8 /* TTabBarController.h in Headers */,
@@ -621,6 +667,7 @@
 				CF014446216E18C200C12E35 /* TMenuCell.h in Headers */,
 				CF014438216E18C200C12E35 /* TFaceCell.h in Headers */,
 				CF46E5E2219BD08C005929D8 /* TSwitchCell.h in Headers */,
+				91660A7E22374D5900ED8611 /* TEditInfoViewController.h in Headers */,
 				CF014448216E18C200C12E35 /* TMenuView.h in Headers */,
 				CFEB47C821786C2A00CFD98C /* TAlertView.h in Headers */,
 				CF89BB002175E11400D43101 /* TAddGroupOptionView.h in Headers */,
@@ -633,6 +680,7 @@
 				CF89BAEE21759FC900D43101 /* TAddGroupController.h in Headers */,
 				CF0143E2216E183800C12E35 /* TUIKit.h in Headers */,
 				CF8208CB218C3599002EEE90 /* interf_enc.h in Headers */,
+				91660A87223755E400ED8611 /* UIView+MMLayout.h in Headers */,
 				CF01443C216E18C200C12E35 /* TFaceView.h in Headers */,
 				CF01443E216E18C200C12E35 /* TImageMessageCell.h in Headers */,
 				CF014442216E18C200C12E35 /* TTextView.h in Headers */,
@@ -641,6 +689,7 @@
 				CF8208CD218C3599002EEE90 /* dec_if.h in Headers */,
 				CF014473216E18C200C12E35 /* TGroupMembersCell.h in Headers */,
 				CF46E5F2219D748C005929D8 /* TMessageResource.h in Headers */,
+				9100FD8A22375D3C0031CF11 /* NSString+Common.h in Headers */,
 				CF3A8751216F355700C1DEB2 /* TGroupMembersView.h in Headers */,
 				CFEB47C421786BEB00CFD98C /* TAddCell.h in Headers */,
 				CF014469216E18C200C12E35 /* TGroupMemberController.h in Headers */,
@@ -707,6 +756,7 @@
 			files = (
 				CF0144AE216E1D1800C12E35 /* TUIKitResource.bundle in Resources */,
 				CF014477216E18C200C12E35 /* Assets.xcassets in Resources */,
+				91660A89223755E400ED8611 /* README.md in Resources */,
 				CFDC2F98216E2BC4002EAEC2 /* TUIKitFace.bundle in Resources */,
 				CF014478216E18C200C12E35 /* emoji.plist in Resources */,
 			);
@@ -719,10 +769,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91660A722236945B00ED8611 /* TMyProfileController.m in Sources */,
 				CF46E5DB219BCACF005929D8 /* TKeyValueCell.m in Sources */,
 				CF01446A216E18C200C12E35 /* TGroupMemberController.m in Sources */,
 				CF00880E2181744D00AD2879 /* TResponderTextView.m in Sources */,
 				CF46E5E3219BD08C005929D8 /* TSwitchCell.m in Sources */,
+				91660A7D22374D5900ED8611 /* TEditInfoViewController.m in Sources */,
 				CF01443F216E18C200C12E35 /* TImageMessageCell.m in Sources */,
 				CF01443D216E18C200C12E35 /* TFaceView.m in Sources */,
 				CF014462216E18C200C12E35 /* TConversationController.m in Sources */,
@@ -730,7 +782,9 @@
 				CF014472216E18C200C12E35 /* TGroupMemberCell.m in Sources */,
 				CFEB47C321786BEB00CFD98C /* TSelectView.m in Sources */,
 				CF014447216E18C200C12E35 /* TMenuCell.m in Sources */,
+				91660A7A22374C0600ED8611 /* TRichMenuCell.m in Sources */,
 				CF46E5EE219BD492005929D8 /* TSettingController.m in Sources */,
+				91660A7922374C0600ED8611 /* TRichMenuCellData.m in Sources */,
 				CF01443B216E18C200C12E35 /* TFaceMessageCell.m in Sources */,
 				CF89BAEF21759FC900D43101 /* TAddGroupController.m in Sources */,
 				CF014451216E18C200C12E35 /* TMoreView.m in Sources */,
@@ -763,6 +817,7 @@
 				CF8208C5218C3599002EEE90 /* amrFileCodec.mm in Sources */,
 				CF2BCA75217321E000CD6298 /* TPopCell.m in Sources */,
 				CFEB47C021786BEB00CFD98C /* TPickView.m in Sources */,
+				91660A88223755E400ED8611 /* UIView+MMLayout.m in Sources */,
 				CF01445F216E18C200C12E35 /* TUnReadView.m in Sources */,
 				CF01444F216E18C200C12E35 /* TMoreCell.m in Sources */,
 				CFEB47BC21786BEB00CFD98C /* TAddCell.m in Sources */,
@@ -772,6 +827,7 @@
 				CF014468216E18C200C12E35 /* TGroupInfoController.m in Sources */,
 				CF014459216E18C200C12E35 /* TVideoMessageCell.m in Sources */,
 				CFEB47942178298600CFD98C /* TAddMemberController.m in Sources */,
+				9100FD8922375D3C0031CF11 /* NSString+Common.m in Sources */,
 				CFEB47B921786BEB00CFD98C /* TAddIndicatorView.m in Sources */,
 				CF01444B216E18C200C12E35 /* TMessageCell.m in Sources */,
 				CF8208D421901C41002EEE90 /* TUIKitConfig.m in Sources */,
@@ -916,8 +972,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/..";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../ImSDK.framework/Headers";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/..",
+				);
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../ImSDK.framework/Headers/**";
 				INFOPLIST_FILE = TUIKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -955,8 +1014,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/..";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../ImSDK.framework/Headers";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/..",
+				);
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../ImSDK.framework/Headers/**";
 				INFOPLIST_FILE = TUIKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

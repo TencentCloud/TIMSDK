@@ -10,19 +10,35 @@
 #import "TPersonalCommonCell.h"
 #import "TKeyValueCell.h"
 #import "TButtonCell.h"
+#import "TRichMenuCell.h"
 #import "THeader.h"
 #import "TAlertView.h"
 #import "IMMessageExt.h"
+#import "TMyProfileController.h"
+#import "UIView+MMLayout.h"
 
-@interface TSettingController () <TButtonCellDelegate, TAlertViewDelegate>
+@interface TSettingController () <TButtonCellDelegate, TAlertViewDelegate, UIActionSheetDelegate>
 @property (nonatomic, strong) NSMutableArray *data;
+@property TRichMenuCell  *allowCell;
+@property TMyProfileController *profileController;
 @end
 
 @implementation TSettingController
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
-    [self setupData];
+    [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
+        self.profile = profile;
+        [self setupData];
+        [self.tableView reloadData];
+    } fail:^(int code, NSString *msg) {
+        
+    }];
+}
+
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+    
 }
 
 - (void)setupViews
@@ -43,6 +59,29 @@
     personal.head = TUIKitResource(@"default_head");
     personal.selector = @selector(didSelectCommon);
     [_data addObject:@[personal]];
+    
+    TRichMenuCellData *friendApply = [[TRichMenuCellData alloc] init];
+    friendApply.valueAlignment = NSTextAlignmentRight;
+    friendApply.margin = 20;
+    friendApply.descColor = [UIColor blackColor];
+    friendApply.valueColor = [UIColor grayColor];
+    friendApply.desc = @"好友申请";
+    friendApply.type = ERichCell_TextNext;
+    if (self.profile.allowType == TIM_FRIEND_ALLOW_ANY) {
+        friendApply.value = @"同意任何用户加好友";
+    }
+    if (self.profile.allowType == TIM_FRIEND_NEED_CONFIRM) {
+        friendApply.value = @"需要验证";
+    }
+    if (self.profile.allowType == TIM_FRIEND_DENY_ANY) {
+        friendApply.value = @"拒绝任何人加好友";
+    }
+    @m_weakify(self)
+    friendApply.action = ^(TRichMenuCellData *menu, TRichMenuCell *cell) {
+        @m_strongify(self)
+        [self onEditFriendApply:menu cell:cell];
+    };
+    [_data addObject:@[friendApply]];
     
     TButtonCellData *button =  [[TButtonCellData alloc] init];
     button.title = @"退 出";
@@ -82,6 +121,9 @@
     else if([data isKindOfClass:[TButtonCellData class]]){
         return [TButtonCell getHeight];
     }
+    else if([data isKindOfClass:[TRichMenuCellData class]]){
+        return [TRichMenuCell heightOf:(TRichMenuCellData *)data];
+    }
     return 44;
 }
 
@@ -90,12 +132,15 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     NSMutableArray *array = _data[indexPath.section];
     NSObject *data = array[indexPath.row];
-    SEL selector;
-    if([data isKindOfClass:[TPersonalCommonCellData class]]){
+    SEL selector = 0;
+    if ([data isKindOfClass:[TPersonalCommonCellData class]]){
         selector = ((TPersonalCommonCellData *)data).selector;
     }
-    if(selector){
+    if (selector){
         [self performSelector:selector];
+    }
+    if  ([data isKindOfClass:[TRichMenuCellData class]]){
+        [[(TRichMenuCellData *)data assignCell] doAction];;
     }
 }
 
@@ -118,13 +163,23 @@
         }
         [cell setData:(TButtonCellData *)data];
         return cell;
+    }  else if([data isKindOfClass:[TRichMenuCellData class]]) {
+        TRichMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:[(TRichMenuCellData *)data reuseIndentifier]];
+        if(!cell){
+            cell = [[TRichMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[(TRichMenuCellData *)data reuseIndentifier]];
+        }
+        [cell setData:(TRichMenuCellData *)data];
+        return cell;
     }
     return nil;
 }
 
 - (void)didSelectCommon
 {
-    
+    self.profileController = [[TMyProfileController alloc] init];
+    self.profileController.identifier = self.profile.identifier;
+    self.profileController.title = @"我的资料";
+    [self.navigationController pushViewController:self.profileController animated:YES];
 }
 
 - (void)didTouchUpInsideInButtonCell:(TButtonCell *)cell
@@ -148,4 +203,29 @@
     }];
 }
 
+- (void)onEditFriendApply:(TRichMenuCellData *)menu cell:(TRichMenuCell *)cell
+{
+    UIActionSheet *sheet = [[UIActionSheet alloc] init];
+    
+    [sheet addButtonWithTitle:@"同意任何用户加好友"];
+    [sheet addButtonWithTitle:@"需要验证"];
+    [sheet addButtonWithTitle:@"拒绝任何人加好友"];
+    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:@"取消"]];
+    [sheet setDelegate:self];
+    [sheet showInView:self.view];
+    
+    self.allowCell = cell;
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex >= 3)
+        return;
+    
+    self.profile.allowType = buttonIndex;
+    TRichMenuCellData *old = self.allowCell.data;
+    old.value = [actionSheet buttonTitleAtIndex:buttonIndex];
+    self.allowCell.data = old;
+    [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_AllowType:[NSNumber numberWithInteger:self.profile.allowType]} succ:nil fail:nil];
+}
 @end
