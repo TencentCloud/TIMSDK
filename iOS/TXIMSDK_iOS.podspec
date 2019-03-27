@@ -20,5 +20,5 @@ Pod::Spec.new do |spec|
   spec.source_files = 'iOS/ImSDK.framework/Headers/*.h'
   spec.public_header_files = 'iOS/ImSDK.framework/Headers/*.h'
   spec.vendored_frameworks = 'iOS/ImSDK.framework'
-  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_iOS/iOS/ImSDK.framework/Headers/'}
+   spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_iOS/iOS/ImSDK.framework/Headers/'}
 end
