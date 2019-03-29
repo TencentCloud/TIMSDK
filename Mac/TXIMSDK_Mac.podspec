@@ -20,5 +20,5 @@ Pod::Spec.new do |spec|
   spec.source_files = 'Mac/ImSDKForMac.framework/Versions/A/Headers/*.h'
   spec.public_header_files = 'Mac/ImSDKForMac.framework/Versions/A/Headers/*.h'
   spec.vendored_frameworks = 'Mac/ImSDKForMac.framework'
-  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Mac/Mac/ImSDKForMac.framework/Versions/A/Headers/'}
+   spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Mac/Mac/ImSDKForMac.framework/Versions/A/Headers/'}
 end
