@@ -310,7 +310,7 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 /**
  *  加好友请求
  */
-@interface TIMAddFriendRequest : TIMCodingModel
+@interface TIMFriendRequest : TIMCodingModel
 
 /**
  *  用户identifier
@@ -632,7 +632,7 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 @property(nonatomic,strong) NSArray* profiles;
 @end
 
-
+// 用户资料KEY
 
 /**
  * 昵称
@@ -686,8 +686,26 @@ extern NSString *const TIMProfileTypeKey_Role;
 extern NSString *const TIMProfileTypeKey_SelfSignature;
 /**
  * 自定义字段前缀
- * 值类型: [NSData|NSNumber]
+ * 值类型: [NSString,NSData|NSNumber]
  */
 extern NSString *const TIMProfileTypeKey_Custom_Prefix;
+
+// 好友资料KEY
+
+/**
+ * 备注
+ * 值类型: NSString
+ */
+extern NSString *const TIMUserTypeKey_Remark;
+/**
+ * 分组
+ * 值类型: [NSArray]
+ */
+extern NSString *const TIMUserTypeKey_Group;
+/**
+ * 自定义字段前缀
+ * 值类型: [NSString,NSData|NSNumber]
+ */
+extern NSString *const TIMUserTypeKey_Custom_Prefix;
 #endif /* TIMFriendshipDefine_h */
 

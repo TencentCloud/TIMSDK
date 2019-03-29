@@ -28,6 +28,7 @@
 @class TIMConversation;
 @class TIMAPNSConfig;
 @class TIMUserProfile;
+@class TIMUser;
 @class TIMGroupInfoOption;
 @class TIMGroupMemberInfoOption;
 @class TIMFriendProfileOption;
@@ -590,7 +591,7 @@ typedef void (^TIMCreateGroupSucc)(NSString * groupId);
  *
  *  @param friends 好友列表
  */
-typedef void (^TIMFriendSucc)(NSArray * friends);
+typedef void (^TIMGetFriendSucc)(NSArray<TIMUser *> *friends);
 
 /**
  *  获取资料回调
@@ -1131,43 +1132,7 @@ typedef void (^TIMGetProfileArraySucc)(NSArray<TIMUserProfile *> *profiles);
 @end
 
 
-/**
- *  好友
- */
-@interface TIMUser : TIMCodingModel
 
-/**
- *  用户identifier
- */
-@property(nonatomic,strong) NSString* identifier;
-
-/**
- *  用户昵称
- */
-@property(nonatomic,strong) NSString* nickname;
-
-/**
- *  用户备注（最大96字节，获取自己资料时，该字段为空）
- */
-@property(nonatomic,strong) NSString* remark;
-
-/**
- *  分组名称 NSString* 列表
- */
-@property(nonatomic,strong) NSArray* groups;
-
-/**
- *  自定义字段集合,key是NSString类型,value是NSData类型或者NSNumber类型
- *  (key值按照后台配置的字符串传入)
- */
-@property(nonatomic,strong) NSDictionary* customInfo;
-
-/**
- * 好友资料
- */
-@property(nonatomic,strong) TIMUserProfile *profile;
-
-@end
 
 /**
  * 资料与关系链
@@ -1250,4 +1215,36 @@ typedef void (^TIMGetProfileArraySucc)(NSArray<TIMUserProfile *> *profiles);
 
 @end
 
+/**
+ *  好友
+ */
+@interface TIMUser : TIMCodingModel
+
+/**
+ *  好友identifier
+ */
+@property(nonatomic,strong) NSString* identifier;
+
+/**
+ *  好友备注（最大96字节，获取自己资料时，该字段为空）
+ */
+@property(nonatomic,strong) NSString* remark;
+
+/**
+ *  分组名称 NSString* 列表
+ */
+@property(nonatomic,strong) NSArray* groups;
+
+/**
+ *  自定义字段集合,key是NSString类型,value是NSData类型或者NSNumber类型
+ *  (key值按照后台配置的字符串传入)
+ */
+@property(nonatomic,strong) NSDictionary* customInfo;
+
+/**
+ * 好友资料
+ */
+@property(nonatomic,strong) TIMUserProfile *profile;
+
+@end
 #endif
