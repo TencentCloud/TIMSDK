@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+  <Font name="微软雅黑" size="13" bold="false" default="true" />
+  <Font name="Courier New" size="13" bold="true"/>
+  <Font name="微软雅黑"    size="12" bold="true"/>
+  <Font name="微软雅黑"    size="13"/>
+  <Font name="微软雅黑"    size="16"/>
+  <Font name="微软雅黑"    size="22"/>
+  <Font name="微软雅黑"    size="13" bold="true" />
+  <Default name="Label"      value="autocalcwidth=&quot;true&quot;" />
+  <Default name="VScrollBar" value="width=&quot;17&quot;" />
+  <Default name="Option"     value="textcolor=&quot;#FF454545&quot; disabledtextcolor=&quot;#FF888888&quot; width=&quot;10&quot; height=&quot;24&quot; padding=&quot;0,6,0,0&quot; textpadding=&quot;16,1,0,0&quot; align=&quot;left&quot; autocalcwidth=&quot;true&quot;"/>
+  <Default name="CheckBox"   value="textcolor=&quot;#FF454545&quot; disabledtextcolor=&quot;#FF888888&quot; width=&quot;10&quot; height=&quot;24&quot; padding=&quot;0,6,0,0&quot; textpadding=&quot;16,1,0,0&quot; align=&quot;left&quot;  autocalcwidth=&quot;true&quot;"/>
+  <Default name="Combo"      value="" />
+  <Default name="Button"     value="autocalcwidth=&quot;true&quot;" />
+</Window>
