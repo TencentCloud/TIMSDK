@@ -9,11 +9,19 @@ extern"C"
 #endif
 
 /// @overview TIMCloud
-/// @overbrief 腾讯云通信的跨平台C接口(API), 暂不支持64位编译
+/// @overbrief 腾讯云通信的跨平台C接口(API)
 /*
-* @brief ImSDK下载链接
-* > windows平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/Windows)
-* > Windows快速开始[集成SDK](https://cloud.tencent.com/document/product/269/33489)和[跑通demo](https://cloud.tencent.com/document/product/269/33488)
+* @brief 各个平台的下载链接
+* > windows平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Windows), 暂不支持64位编译
+* >> Windows快速开始[集成SDK](https://cloud.tencent.com/document/product/269/33489)和[跑通demo](https://cloud.tencent.com/document/product/269/33488)
+* > iOS平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/iOS)
+* > Mac平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Mac)
+* > Android平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Android)
+*
+* @note 关于接口回调和事件回调说明
+* > iOS、Mac、Android三个平台的回调在ImSDK内部的逻辑线程触发，跟调用接口的线程不是同一线程
+* > Windows平台，如果调用[TIMInit]()接口进行初始化Imsdk之前，已创建了UI的消息循环，且调用[TIMInit]()接口的线程为主UI线程，则ImSDK内部会将回调放到主UI线程调用
+*
 */
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -174,16 +182,10 @@ TIM_DECL void TIMSetMsgUpdateCallback(TIMMsgUpdateCallback cb, const void* user_
 * @return int 返回TIM_SUCC表示接口调用成功，其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 * 
 * @example
-* Json::Value json_value_dev;
-* json_value_dev[kTIMDeviceInfoDevId] = "12345678";
-* json_value_dev[kTIMDeviceInfoPlatform] = TIMPlatform::kTIMPlatform_Windows;
-* json_value_dev[kTIMDeviceInfoDevType] = "";
-* 
 * Json::Value json_value_init;
 * json_value_init[kTIMSdkConfigLogFilePath] = "D:\\";
 * json_value_init[kTIMSdkConfigConfigFilePath] = "D:\\";
 * json_value_init[kTIMSdkConfigAccountType] = "107";
-* json_value_init[kTIMSdkConfigDeviceInfo] = json_value_dev;
 * 
 * uint64_t sdk_app_id = 1234567890;
 * if (TIM_SUCC != TIMInit(sdk_app_id, json_value_init.toStyledString().c_str())) {
@@ -194,11 +196,6 @@ TIM_DECL void TIMSetMsgUpdateCallback(TIMMsgUpdateCallback cb, const void* user_
 * {
 *    "sdk_config_account_type" : "107",
 *    "sdk_config_config_file_path" : "D:\\",
-*    "sdk_config_device_info" : {
-*       "device_info_dev_id" : "12345678",
-*       "device_info_dev_type" : "",
-*       "device_info_platform" : 4
-*    },
 *    "sdk_config_log_file_path" : "D:\\"
 * }
 * 
@@ -222,13 +219,13 @@ TIM_DECL int TIMInit(uint64_t sdk_app_id, const char* json_sdk_config);
 * 卸载DLL或退出进程前需此接口卸载ImSDK，清理ImSDK相关资源
 *
 */
-TIM_DECL int TIMUninit();
+TIM_DECL int TIMUninit(void);
 
 /**
 * @brief  获取ImSDK版本号
 * @return const char* 返回ImSDK的版本号
 */
-TIM_DECL const char* const TIMGetSDKVersion();
+TIM_DECL const char* const TIMGetSDKVersion(void);
 
 /**
 * @brief  设置额外的用户配置
@@ -352,7 +349,7 @@ TIM_DECL int TIMLogout(TIMCommCallback cb, const void* user_data);
 * > 会话是指面向一个人或者一个群组的对话，通过与单个人或群组之间会话收发消息
 * > 此接口创建或者获取会话信息，需要指定会话类型（群组或者单聊），以及会话对方标志（对方帐号或者群号）。会话信息通过cb回传。
 */
-TIM_DECL int TIMConvCreate(const char* conv_id, TIMConvType conv_type, TIMCommCallback cb, const void* user_data); 
+TIM_DECL int TIMConvCreate(const char* conv_id, enum TIMConvType conv_type, TIMCommCallback cb, const void* user_data); 
 
 /**
 * @brief 删除会话
@@ -366,7 +363,7 @@ TIM_DECL int TIMConvCreate(const char* conv_id, TIMConvType conv_type, TIMCommCa
 * @note
 * 此接口用于删除会话，删除会话是否成功通过回调返回。
 */
-TIM_DECL int TIMConvDelete(const char* conv_id, TIMConvType conv_type, TIMCommCallback cb, const void* user_data);
+TIM_DECL int TIMConvDelete(const char* conv_id, enum TIMConvType conv_type, TIMCommCallback cb, const void* user_data);
 
 /**
 * @brief 获取本地缓存的会话列表
@@ -419,7 +416,7 @@ TIM_DECL int TIMConvGetConvList(TIMCommCallback cb, const void* user_data);
 * @note
 * 会话草稿一般用在保存用户当前输入的未发送的消息。
 */
-TIM_DECL int TIMConvSetDraft(const char* conv_id, TIMConvType conv_type, const char* json_draft_param);
+TIM_DECL int TIMConvSetDraft(const char* conv_id, enum TIMConvType conv_type, const char* json_draft_param);
 
 /**
 * @brief 取消指定会话的草稿(删除)
@@ -429,7 +426,7 @@ TIM_DECL int TIMConvSetDraft(const char* conv_id, TIMConvType conv_type, const c
 * @return int 返回TIM_SUCC表示接口调用成功，其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
 */
-TIM_DECL int TIMConvCancelDraft(const char* conv_id, TIMConvType conv_type);
+TIM_DECL int TIMConvCancelDraft(const char* conv_id, enum TIMConvType conv_type);
 /// @}
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -494,7 +491,7 @@ TIM_DECL int TIMConvCancelDraft(const char* conv_id, TIMConvType conv_type);
 * >>   文件消息元素，请参考 [FileElem](TIMCloudDef.h)
 * >>   视频消息元素，请参考 [VideoElem](TIMCloudDef.h)
 */
-TIM_DECL int TIMMsgSendNewMsg(const char* conv_id, TIMConvType conv_type, const char* json_msg_param, TIMCommCallback cb, const void* user_data);
+TIM_DECL int TIMMsgSendNewMsg(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_param, TIMCommCallback cb, const void* user_data);
 
 /**
 * @brief 消息上报已读
@@ -509,7 +506,7 @@ TIM_DECL int TIMMsgSendNewMsg(const char* conv_id, TIMConvType conv_type, const 
 * @note
 * 上报此消息已读状态，最好用接收新消息获取的消息数组里面的消息Json 或者用消息定位符查找到的消息 Json，避免重复构造消息 Json
 */
-TIM_DECL int TIMMsgReportReaded(const char* conv_id, TIMConvType conv_type, const char* json_msg_param, TIMCommCallback cb, const void* user_data);
+TIM_DECL int TIMMsgReportReaded(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_param, TIMCommCallback cb, const void* user_data);
 
 /**
 * @brief 消息撤回
@@ -524,7 +521,7 @@ TIM_DECL int TIMMsgReportReaded(const char* conv_id, TIMConvType conv_type, cons
 * @note
 * 消息撤回。使用保存的消息Json或者用消息定位符查找到的消息Json，避免重复构造消息Json.
 */
-TIM_DECL int TIMMsgRevoke(const char* conv_id, TIMConvType conv_type, const char* json_msg_param, TIMCommCallback cb, const void* user_data);
+TIM_DECL int TIMMsgRevoke(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_param, TIMCommCallback cb, const void* user_data);
 
 /**
 * @brief 根据消息定位精准查找指定会话的消息
@@ -564,7 +561,7 @@ TIM_DECL int TIMMsgRevoke(const char* conv_id, TIMConvType conv_type, const char
 * > 此接口根据消息定位符精准查找指定会话的消息，该功能一般用于消息撤回时查找指定消息等
 * > 一个消息定位符对应一条消息
 */
-TIM_DECL int TIMMsgFindByMsgLocatorList(const char* conv_id, TIMConvType conv_type, const char* json_msg_Locator_array, TIMCommCallback cb, const void* user_data);
+TIM_DECL int TIMMsgFindByMsgLocatorList(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_Locator_array, TIMCommCallback cb, const void* user_data);
 
 /**
 * @brief 导入消息列表到指定会话
@@ -612,7 +609,7 @@ TIM_DECL int TIMMsgFindByMsgLocatorList(const char* conv_id, TIMConvType conv_ty
 * @note
 * 批量导入消息，可以自己构造消息去导入。也可以将之前要导入的消息数组 Json 保存，然后导入的时候直接调用接口，避免构造消息数组
 */
-TIM_DECL int TIMMsgImportMsgList(const char* conv_id, TIMConvType conv_type, const char* json_msg_array, TIMCommCallback cb, const void* user_data);
+TIM_DECL int TIMMsgImportMsgList(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_array, TIMCommCallback cb, const void* user_data);
 
 /**
 * @brief 保存自定义消息
@@ -627,7 +624,7 @@ TIM_DECL int TIMMsgImportMsgList(const char* conv_id, TIMConvType conv_type, con
 * @note
 * 消息保存接口，一般是自己构造一个消息Json字符串，然后保存到指定会话
 */
-TIM_DECL int TIMMsgSaveMsg(const char* conv_id, TIMConvType conv_type, const char* json_msg_param, TIMCommCallback cb, const void* user_data);
+TIM_DECL int TIMMsgSaveMsg(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_param, TIMCommCallback cb, const void* user_data);
 
 /**
 * @brief 获取指定会话的消息列表
@@ -662,7 +659,7 @@ TIM_DECL int TIMMsgSaveMsg(const char* conv_id, TIMConvType conv_type, const cha
 * 从 kTIMMsgGetMsgListParamLastMsg 指定的消息开始获取本地消息列表，kTIMMsgGetMsgListParamCount 为要获取的消息数目。
 * 若指定 kTIMMsgGetMsgListParamIsRamble 为true则本地消息获取不够指定数目时，则会去获取云端漫游消息。kTIMMsgGetMsgListParamIsForward 指定向前获取还是向后获取
 */
-TIM_DECL int TIMMsgGetMsgList(const char* conv_id, TIMConvType conv_type, const char* json_get_msg_param, TIMCommCallback cb, const void* user_data);
+TIM_DECL int TIMMsgGetMsgList(const char* conv_id, enum TIMConvType conv_type, const char* json_get_msg_param, TIMCommCallback cb, const void* user_data);
 
 /**
 * @brief 删除指定会话的消息
@@ -694,7 +691,7 @@ TIM_DECL int TIMMsgGetMsgList(const char* conv_id, TIMConvType conv_type, const 
 * > 当未设置 kTIMMsgDeleteParamMsg 时， kTIMMsgDeleteParamIsRamble 为false表示删除会话所有本地消息，true 表示删除会话所有漫游消息(删除漫游消息暂时不支持)
 * > 一般直接使用保存的消息 Json，或者通过消息定位符查找得到的 Json。不用删除的时候构造消息 Json
 */
-TIM_DECL int TIMMsgDelete(const char* conv_id, TIMConvType conv_type, const char* json_msgdel_param, TIMCommCallback cb, const void* user_data);
+TIM_DECL int TIMMsgDelete(const char* conv_id, enum TIMConvType conv_type, const char* json_msgdel_param, TIMCommCallback cb, const void* user_data);
 
 /**
 * @brief 下载消息内元素到指定文件路径(图片、视频、音频、文件)

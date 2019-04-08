@@ -316,7 +316,7 @@ typedef void (*TIMGroupTipsEventCallback)(const char* json_group_tip_array, cons
 *     }
 * }
 */
-typedef void (*TIMConvEventCallback)(TIMConvEvent conv_event, const char* json_conv_array, const void* user_data);
+typedef void (*TIMConvEventCallback)(enum TIMConvEvent conv_event, const char* json_conv_array, const void* user_data);
 
 /**
 * @brief 网络状态回调
@@ -326,7 +326,7 @@ typedef void (*TIMConvEventCallback)(TIMConvEvent conv_event, const char* json_c
 * @param desc 错误描述字符串
 * @param user_data SDK负责透传的用户自定义数据，未做任何处理
 */
-typedef void (*TIMNetworkStatusListenerCallback)(TIMNetworkStatus status, int32_t code, const char* desc, const void* user_data);
+typedef void (*TIMNetworkStatusListenerCallback)(enum TIMNetworkStatus status, int32_t code, const char* desc, const void* user_data);
 /***
 *
 * @example 感知网络状态的回调处理
@@ -373,7 +373,7 @@ typedef void (*TIMUserSigExpiredCallback)(const void* user_data);
 * @param log 日子字符串
 * @param user_data SDK负责透传的用户自定义数据，未做任何处理
 */
-typedef void (*TIMLogCallback)(TIMLogLevel level, const char* log, const void* user_data);
+typedef void (*TIMLogCallback)(enum TIMLogLevel level, const char* log, const void* user_data);
 
 /**
 * @brief 消息更新回调

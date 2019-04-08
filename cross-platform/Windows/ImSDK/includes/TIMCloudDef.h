@@ -123,34 +123,11 @@ enum TIMConvType {
 };
 
 /**
-* @brief 平台类型
-*/
-enum TIMPlatform {
-    kTIMPlatform_Android,    // Android平台
-    kTIMPlatform_IOS,        // IOS平台
-    kTIMPlatform_Mac,        // Mac平台
-    kTIMPlatform_Simulator,  // 模拟器
-    kTIMPlatform_Windows,    // Windows平台
-    kTIMPlatform_Other,      // 其他
-};
-
-/**
-* @brief 设备信息
-*
-*/
-// Struct DeviceInfo JsonKey
-static const char* kTIMDeviceInfoDevId    = "device_info_dev_id";   // string, 只写(必填), 设备ID
-static const char* kTIMDeviceInfoPlatform = "device_info_platform"; // uint [TIMPlatform](), 只写(必填), 平台
-static const char* kTIMDeviceInfoDevType  = "device_info_dev_type"; // string, 只写(必填), 设备类型
-// EndStruct
-
-/**
 * @brief 初始化SDK的配置
 */
 // Struct SdKConfig JsonKey
 static const char* kTIMSdkConfigAccountType        = "sdk_config_account_type";    // string, 只写(选填), 账号类型,默认为0
 static const char* kTIMSdkConfigConfigFilePath     = "sdk_config_config_file_path";// string, 只写(选填), 配置文件路径,默认路径为"/"
-static const char* kTIMSdkConfigDeviceInfo         = "sdk_config_device_info";     // string, 只写(选填), 设备信息
 static const char* kTIMSdkConfigLogFilePath        = "sdk_config_log_file_path";   // string, 只写(选填), 日志文件路径,默认路径为"/"
 // EndStruct
 
