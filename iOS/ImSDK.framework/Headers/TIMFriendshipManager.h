@@ -100,16 +100,61 @@
 - (int)delFriend:(NSString *)user delType:(TIMDelFriendType)delType succ:(TIMSucc)succ fail:(TIMFail)fail;
 
 /**
- *  设置好友的资料
+ *  修改关系链
  *
  *  @param identifier 好友的 identifier
- *  @param values  需要更新的属性，可一次更新多个字段. 参见 TIMFriendshipDefine.h 的 TIMUserTypeKey_XXX
+ *  @param values  需要更新的属性，可一次更新多个字段. 参见 TIMFriendshipDefine.h 的 TIMFriendTypeKey_XXX
  *  @param succ 成功回调
  *  @param fail 失败回调
  *
  *  @return 0 发送请求成功
  */
-- (int)modifyUserProfile:(NSString *)identifier values:(NSDictionary<NSString *, id> *)values succ:(TIMSucc)succ fail:(TIMFail)fail;
+- (int)modifyFriend:(NSString *)identifier values:(NSDictionary<NSString *, id> *)values succ:(TIMSucc)succ fail:(TIMFail)fail;
+
+/**
+ *  通过未决请求列表
+ *
+ *  @param pendencyRequest  请求信息，详细参考TIMFriendPendencyRequest
+ *  @param succ 成功回调
+ *  @param fail 失败回调
+ *
+ *  @return 0 发送请求成功
+ */
+- (int)getPendencyList:(TIMFriendPendencyRequest *)pendencyRequest succ:(TIMGetFriendPendencyListSucc)succ fail:(TIMFail)fail;
+
+/**
+ *  未决删除
+ *
+ *  @param type  未决好友类型
+ *  @param users 要删除的未决列表
+ *  @param succ  成功回调
+ *  @param fail  失败回调
+ *
+ *  @return 0 发送请求成功
+ */
+- (int)deletePendency:(TIMPendencyGetType)type users:(NSArray *)users succ:(TIMSucc)succ fail:(TIMFail)fail;
+
+/**
+ *  未决请求已读上报
+ *
+ *  @param timestamp 已读时间戳，此时间戳以前的消息都将置为已读
+ *  @param succ  成功回调
+ *  @param fail  失败回调
+ *
+ *  @return 0 发送请求成功
+ */
+- (int)pendencyReport:(uint64_t)timestamp succ:(TIMSucc)succ fail:(TIMFail)fail;
+
+/**
+ *  已决删除
+ *
+ *  @param users 要删除的已决列表
+ *  @param succ  成功回调，返回 TIMFriendResult* 列表
+ *  @param fail  失败回调
+ *
+ *  @return 0 发送请求成功
+ */
+- (int)deleteDecide:(NSArray *)users succ:(TIMSucc)succ fail:(TIMFail)fail;
 
 @end
 

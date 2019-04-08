@@ -12,7 +12,8 @@
 #import "ImSDK.h"
 
 @class TIMFriendMetaInfo;
-@class TIMFriendPendencyMeta;
+@class TIMFriendPendencyResponse;
+@class TIMFriendPendencyItem;
 @class TIMFriendFutureMeta;
 
 #pragma mark - 枚举类型
@@ -270,10 +271,10 @@ typedef void (^TIMGetFriendListByPageSucc)(TIMFriendMetaInfo * meta, NSArray * f
 /**
  * 获取未决请求列表成功
  *
- *  @param meta 未决请求元信息
+ *  @param pendencyResponse 未决请求元信息
  *  @param pendencies  未决请求列表（TIMFriendPendencyItem*）数组
  */
-typedef void (^TIMGetFriendPendencyListSucc)(TIMFriendPendencyMeta * meta, NSArray * pendencies);
+typedef void (^TIMGetFriendPendencyListSucc)(TIMFriendPendencyResponse *pendencyResponse, NSArray<TIMFriendPendencyItem *> * pendencies);
 
 /**
  * 获取推荐好友和未决列表成功
@@ -374,9 +375,9 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 @end
 
 /**
- * 未决请求元信息
+ * 未决请求信息
  */
-@interface TIMFriendPendencyMeta : TIMCodingModel
+@interface TIMFriendPendencyRequest : TIMCodingModel
 
 /**
  * 序列号，未决列表序列号
@@ -392,14 +393,33 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 @property(nonatomic,assign) uint64_t timestamp;
 
 /**
- * 每页的数量，请求时有效（建议值，server可根据需要返回或多或少，不能作为完成与否的标志）
+ * 每页的数量，请求时有效
  */
 @property(nonatomic,assign) uint64_t numPerPage;
 
 /**
- * 未决请求未读数量（仅在server返回时有效）
+ * 未决请求拉取类型
  */
-@property(nonatomic,assign) uint64_t unReadCnt;
+@property(nonatomic,assign) TIMPendencyGetType type;
+
+@end
+
+@interface TIMFriendPendencyResponse : TIMCodingModel
+
+/**
+ * 本次请求的未决列表序列号
+ */
+@property(nonatomic,assign) uint64_t seq;
+
+/**
+ * 本次请求的翻页时间戳
+ */
+@property(nonatomic,assign) uint64_t timestamp;
+
+/**
+ * 未决请求未读数量
+ */
+@property(nonatomic,assign) uint64_t unreadCnt;
 
 @end
 
@@ -696,16 +716,16 @@ extern NSString *const TIMProfileTypeKey_Custom_Prefix;
  * 备注
  * 值类型: NSString
  */
-extern NSString *const TIMUserTypeKey_Remark;
+extern NSString *const TIMFriendTypeKey_Remark;
 /**
  * 分组
  * 值类型: [NSArray]
  */
-extern NSString *const TIMUserTypeKey_Group;
+extern NSString *const TIMFriendTypeKey_Group;
 /**
  * 自定义字段前缀
  * 值类型: [NSString,NSData|NSNumber]
  */
-extern NSString *const TIMUserTypeKey_Custom_Prefix;
+extern NSString *const TIMFriendTypeKey_Custom_Prefix;
 #endif /* TIMFriendshipDefine_h */
 
