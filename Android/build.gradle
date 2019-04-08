@@ -24,6 +24,8 @@ allprojects {
                 dirs 'libs', '../tuikit/libs'
             }
         }
+        // 华为离线推送
+        maven {url 'http://developer.huawei.com/repo/'}
     }
 
     tasks.withType(Javadoc) {
