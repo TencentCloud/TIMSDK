@@ -28,7 +28,7 @@
 @class TIMConversation;
 @class TIMAPNSConfig;
 @class TIMUserProfile;
-@class TIMUser;
+@class TIMFriend;
 @class TIMGroupInfoOption;
 @class TIMGroupMemberInfoOption;
 @class TIMFriendProfileOption;
@@ -591,7 +591,7 @@ typedef void (^TIMCreateGroupSucc)(NSString * groupId);
  *
  *  @param friends 好友列表
  */
-typedef void (^TIMGetFriendSucc)(NSArray<TIMUser *> *friends);
+typedef void (^TIMGetFriendSucc)(NSArray<TIMFriend *> *friends);
 
 /**
  *  获取资料回调
@@ -1218,7 +1218,7 @@ typedef void (^TIMGetProfileArraySucc)(NSArray<TIMUserProfile *> *profiles);
 /**
  *  好友
  */
-@interface TIMUser : TIMCodingModel
+@interface TIMFriend : TIMCodingModel
 
 /**
  *  好友identifier
