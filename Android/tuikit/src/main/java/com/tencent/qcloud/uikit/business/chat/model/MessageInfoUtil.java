@@ -255,7 +255,7 @@ public class MessageInfoUtil {
         msgInfo.setMsgId(timMessage.getMsgId());
         if (isGroup) {
             TIMGroupMemberInfo memberInfo = timMessage.getSenderGroupMemberProfile();
-            if (!TextUtils.isEmpty(memberInfo.getNameCard()))
+            if (memberInfo != null && !TextUtils.isEmpty(memberInfo.getNameCard()))
                 msgInfo.setFromUser(memberInfo.getNameCard());
             else
                 msgInfo.setFromUser(sender);

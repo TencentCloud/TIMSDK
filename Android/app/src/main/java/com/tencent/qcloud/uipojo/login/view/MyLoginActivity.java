@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.tencent.qcloud.tim.tuikit.R;
 import com.tencent.qcloud.uikit.TUIKit;
 import com.tencent.qcloud.uikit.common.IUIKitCallBack;
-import com.tencent.qcloud.uipojo.R;
 import com.tencent.qcloud.uipojo.login.model.PojoLoginManager;
 import com.tencent.qcloud.uipojo.main.MainActivity;
 

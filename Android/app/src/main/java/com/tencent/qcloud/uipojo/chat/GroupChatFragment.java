@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tencent.qcloud.tim.tuikit.R;
 import com.tencent.qcloud.uikit.business.chat.group.view.GroupChatPanel;
-import com.tencent.qcloud.uikit.common.component.audio.UIKitAudioArmMachine;
-import com.tencent.qcloud.uikit.operation.group.GroupInfoFragment;
 import com.tencent.qcloud.uikit.common.BaseFragment;
 import com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar;
-import com.tencent.qcloud.uipojo.R;
 import com.tencent.qcloud.uipojo.utils.Constants;
 
 /**
