@@ -530,17 +530,10 @@ void CIMWnd::OnInitSDKBtn() { //初始化ImSDK
     std::string path = m_LogPath->GetText().GetStringA();
     uint64_t sdk_app_id = atoi(sdkappid.c_str());
 
-    std::string json_init_cfg;
-    Json::Value json_value_dev;
-    json_value_dev[kTIMDeviceInfoDevId] = "12345678";
-    json_value_dev[kTIMDeviceInfoPlatform] = TIMPlatform::kTIMPlatform_Windows;
-    json_value_dev[kTIMDeviceInfoDevType] = "";
-
     Json::Value json_value_init;
     json_value_init[kTIMSdkConfigLogFilePath] = path;
     json_value_init[kTIMSdkConfigConfigFilePath] = path;
     json_value_init[kTIMSdkConfigAccountType] = "107";
-    json_value_init[kTIMSdkConfigDeviceInfo] = json_value_dev;
 
     TIMInit(sdk_app_id, json_value_init.toStyledString().c_str());
     ChangeMainView(INITSDK_VIEW, LOGIN_VIEW);
