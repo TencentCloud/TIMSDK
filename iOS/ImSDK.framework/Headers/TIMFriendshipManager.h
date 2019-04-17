@@ -23,7 +23,7 @@
 /**
  *  设置自己的资料
  *
- *  @param values    需要更新的属性，可一次更新多个字段. 参见 TIMFriendshipDefine.h 的 TIMProfileTypeKey_XXX
+ *  @param values 需要更新的属性，可一次更新多个字段. 参见 TIMFriendshipDefine.h 的 TIMProfileTypeKey_XXX
  *  @param succ 成功回调
  *  @param fail 失败回调
  *

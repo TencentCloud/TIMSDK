@@ -74,9 +74,9 @@
 - (TIMConversationType)getType;
 
 /**
- *  获取该会话所属用户的id
+ *  获取自己的 id
  *
- *  @return 用户id
+ *  @return 用户 id
  */
 - (NSString*)getSelfIdentifier;
 
