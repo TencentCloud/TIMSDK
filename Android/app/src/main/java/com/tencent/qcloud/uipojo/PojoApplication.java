@@ -1,30 +1,22 @@
 package com.tencent.qcloud.uipojo;
 
 import android.app.Application;
-import android.os.StrictMode;
 
-import com.squareup.leakcanary.LeakCanary;
-import com.tencent.imsdk.TIMLogLevel;
-import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.TIMOfflinePushListener;
-import com.tencent.imsdk.TIMOfflinePushNotification;
-import com.tencent.imsdk.TIMSdkConfig;
-import com.tencent.imsdk.TIMUserConfig;
-import com.tencent.imsdk.TIMUserStatusListener;
-import com.tencent.imsdk.ext.message.TIMUserConfigMsgExt;
+import com.huawei.android.hms.agent.HMSAgent;
+import com.meizu.cloud.pushsdk.PushManager;
+import com.meizu.cloud.pushsdk.util.MzSystemUtils;
 import com.tencent.imsdk.session.SessionWrapper;
-import com.tencent.imsdk.utils.BuglyUtils;
+import com.tencent.imsdk.utils.IMFunc;
 import com.tencent.qcloud.uikit.BaseUIKitConfigs;
 import com.tencent.qcloud.uikit.IMEventListener;
 import com.tencent.qcloud.uikit.TUIKit;
-import com.tencent.qcloud.uikit.business.chat.c2c.model.C2CChatManager;
 import com.tencent.qcloud.uikit.business.chat.view.widget.CustomFaceGroupConfigs;
 import com.tencent.qcloud.uikit.business.chat.view.widget.FaceConfig;
-import com.tencent.qcloud.uikit.business.session.model.SessionManager;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
-import com.tencent.qcloud.uikit.operation.UIKitMessageRevokedManager;
 import com.tencent.qcloud.uipojo.main.MainActivity;
 import com.tencent.qcloud.uipojo.utils.Constants;
+import com.vivo.push.PushClient;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.util.ArrayList;
 
@@ -54,6 +46,23 @@ public class PojoApplication extends Application {
             //添加自定初始化配置
             customConfig();
             System.out.println(">>>>>>>>>>>>>>>>>>"+(System.currentTimeMillis()-current));
+
+            if(IMFunc.isBrandXiaoMi()){
+                // 小米离线推送
+                MiPushClient.registerPush(this, Constants.XM_PUSH_APPID, Constants.XM_PUSH_APPKEY);
+            }
+            if(IMFunc.isBrandHuawei()){
+                // 华为离线推送
+                HMSAgent.init(this);
+            }
+            if(MzSystemUtils.isBrandMeizu(this)){
+                // 魅族离线推送
+                PushManager.register(this, Constants.MZ_PUSH_APPID, Constants.MZ_PUSH_APPKEY);
+            }
+            if(IMFunc.isBrandVivo()){
+                // vivo离线推送
+                PushClient.getInstance(getApplicationContext()).initialize();
+            }
         }
         instance = this;
        /* if (LeakCanary.isInAnalyzerProcess(this)) {

@@ -22,14 +22,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.huawei.android.hms.agent.HMSAgent;
+import com.huawei.android.hms.agent.common.handler.ConnectHandler;
+import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.log.QLog;
+import com.tencent.imsdk.utils.IMFunc;
+import com.tencent.qcloud.tim.tuikit.R;
 import com.tencent.qcloud.uikit.business.login.view.ILoginEvent;
 import com.tencent.qcloud.uikit.business.login.view.LoginView;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
-import com.tencent.qcloud.uipojo.R;
 import com.tencent.qcloud.uipojo.login.presenter.PojoLoginPresenter;
 import com.tencent.qcloud.uipojo.main.MainActivity;
+import com.tencent.qcloud.uipojo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.uipojo.utils.Constants;
+import com.vivo.push.IPushActionListener;
+import com.vivo.push.PushClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,6 +114,43 @@ public class LoginActivity extends Activity implements ILoginEvent, ILoginView, 
         } else {
             mFlashView.setVisibility(View.GONE);
         }
+
+        if(IMFunc.isBrandHuawei()){
+            // 华为离线推送
+            HMSAgent.connect(this, new ConnectHandler() {
+                @Override
+                public void onConnect(int rst) {
+                    QLog.i("huaweipush", "HMS connect end:" + rst);
+                }
+            });
+            getHuaWeiPushToken();
+        }
+        if(IMFunc.isBrandVivo()){
+            // vivo离线推送
+            PushClient.getInstance(getApplicationContext()).turnOnPush(new IPushActionListener() {
+                @Override
+                public void onStateChanged(int state) {
+                    if(state == 0){
+                        String regId = PushClient.getInstance(getApplicationContext()).getRegId();
+                        QLog.i("vivopush", "open vivo push success regId = " + regId);
+                        ThirdPushTokenMgr.getInstance().setThirdPushToken(regId);
+                        ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
+                    }else {
+                        // 根据vivo推送文档说明，state = 101 表示该vivo机型或者版本不支持vivo推送，链接：https://dev.vivo.com.cn/documentCenter/doc/156
+                        QLog.i("vivopush", "open vivo push fail state = " + state);
+                    }
+                }
+            });
+        }
+    }
+
+    private void getHuaWeiPushToken() {
+        HMSAgent.Push.getToken(new GetTokenHandler() {
+            @Override
+            public void onResult(int rtnCode) {
+                QLog.i("huaweipush", "get token: end" + rtnCode);
+            }
+        });
     }
 
     private void testUserName() {

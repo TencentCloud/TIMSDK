@@ -15,6 +15,7 @@
 @class TIMFriendPendencyResponse;
 @class TIMFriendPendencyItem;
 @class TIMFriendFutureMeta;
+@class TIMFriendGroup;
 
 #pragma mark - 枚举类型
 
@@ -295,9 +296,9 @@ typedef void (^TIMUserSearchSucc)(uint64_t totalNum, NSArray * users);
 /**
  *  好友分组列表
  *
- *  @param arr 好友分组（TIMFriendGroup*)列表
+ *  @param groups 好友分组（TIMFriendGroup*)列表
  */
-typedef void (^TIMFriendGroupSucc)(NSArray * arr);
+typedef void (^TIMFriendGroupArraySucc)(NSArray<TIMFriendGroup *> * groups);
 
 /**
  *  好友关系检查回调
@@ -334,9 +335,9 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 @property(nonatomic,strong) NSString* addSource;
 
 /**
- *  预分组名
+ *  分组名
  */
-@property(nonatomic,strong) NSString* friendGroup;
+@property(nonatomic,strong) NSString* group;
 
 @end
 
@@ -375,6 +376,29 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 @end
 
 /**
+ * 未决推送
+ */
+@interface TIMFriendPendencyInfo : TIMCodingModel
+/**
+ * 用户标识
+ */
+@property(nonatomic,strong) NSString* identifier;
+/**
+ * 来源
+ */
+@property(nonatomic,strong) NSString* addSource;
+/**
+ * 加好友附言
+ */
+@property(nonatomic,strong) NSString* addWording;
+
+/**
+ * 加好友昵称
+ */
+@property(nonatomic,strong) NSString* nickname;
+@end
+
+/**
  * 未决请求信息
  */
 @interface TIMFriendPendencyRequest : TIMCodingModel
@@ -403,6 +427,7 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 @property(nonatomic,assign) TIMPendencyGetType type;
 
 @end
+
 
 @interface TIMFriendPendencyResponse : TIMCodingModel
 
@@ -573,14 +598,23 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 /**
  *  用户Id
  */
-@property(nonatomic,strong) NSString* identifier;
+@property NSString* identifier;
+
 /**
- *  返回状态
+ * 返回码
  */
-@property(nonatomic,assign) TIMFriendStatus status;
+@property NSInteger result_code;
+
+/**
+ * 返回信息
+ */
+@property NSString *result_info;
 
 @end
 
+/**
+ * 响应好友请求
+ */
 @interface TIMFriendResponse : NSObject
 
 /**
@@ -594,53 +628,12 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 @property(nonatomic,strong) NSString* identifier;
 
 /**
- *  （可选）如果要加对方为好友，表示备注，其他type无效，备注最大96字节
+ *  备注好友（可选，如果要加对方为好友）。备注最大96字节
  */
 @property(nonatomic,strong) NSString* remark;
 
 @end
 
-/**
- * 推荐好友
- */
-@interface TIMFriendFutureItem : TIMCodingModel
-
-/**
- * 推荐好友类型
- */
-@property(nonatomic,assign) TIMFutureFriendType type;
-
-/**
- * 好友标识
- */
-@property(nonatomic,strong) NSString* identifier;
-
-/**
- * 好友资料
- */
-@property(nonatomic,strong) TIMUserProfile* profile;
-
-/**
- * 添加时间
- */
-@property(nonatomic,assign) uint64_t addTime;
-
-/**
- * 来源（仅未决好友有效）
- */
-@property(nonatomic,strong) NSString* addSource;
-
-/**
- * 加好友附言（仅未决好友有效）
- */
-@property(nonatomic,strong) NSString* addWording;
-
-/**
- * 推荐理由（server端写入，仅推荐好友有效）
- */
-@property(nonatomic,strong) NSDictionary* recommendTags;
-
-@end
 
 /**
  *  好友分组信息扩展

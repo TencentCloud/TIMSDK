@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TFriendListViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)contactsController:(TContactsController *)controller didClickRightBarButton:(UIButton *)rightBarButton;
 @end
 
-@interface TContactsController : UIViewController
+@interface TContactsController : TFriendListViewController
 @property (nonatomic, weak) id<TContactsControllerDelegagte> delegate;
 @end
 

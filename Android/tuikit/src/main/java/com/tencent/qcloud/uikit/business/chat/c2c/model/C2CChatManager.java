@@ -2,10 +2,11 @@ package com.tencent.qcloud.uikit.business.chat.c2c.model;
 
 import android.util.Log;
 
-import com.tencent.qcloud.uikit.common.IUIKitCallBack;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.TIMElem;
+import com.tencent.imsdk.TIMElemType;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
@@ -16,6 +17,7 @@ import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.log.QLog;
 import com.tencent.qcloud.uikit.business.chat.model.MessageInfo;
 import com.tencent.qcloud.uikit.business.chat.model.MessageInfoUtil;
+import com.tencent.qcloud.uikit.common.IUIKitCallBack;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 import com.tencent.qcloud.uikit.operation.UIKitMessageRevokedManager;
 import com.tencent.qcloud.uikit.operation.message.UIKitRequest;
@@ -248,6 +250,19 @@ public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedMa
             TIMConversation conversation = msg.getConversation();
             TIMConversationType type = conversation.getType();
             if (type == TIMConversationType.C2C) {
+                TIMElem ele = msg.getElement(0);
+                TIMElemType eleType = ele.getType();
+                // 用户资料修改通知，不需要在聊天界面展示，可以通过TIMManager中的setFriendshipProxyListener处理
+                if (eleType == TIMElemType.ProfileTips) {
+                    QLog.i(TAG, "onNewMessages, eleType is ProfileTips, ignore");
+                    return false;
+                }
+                // 关系链变更通知，不需要在聊天界面展示，可以通过TIMManager中的setFriendshipProxyListener处理
+                if (eleType == TIMElemType.SNSTips) {
+                    QLog.i(TAG, "onNewMessages, eleType is SNSTips, ignore");
+                    return false;
+                }
+
                 QLog.i(TAG, "onNewMessages::: " + msg);
                 onReceiveMessage(conversation, msg);
 
