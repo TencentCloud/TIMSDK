@@ -1,6 +1,5 @@
 package com.tencent.qcloud.uipojo.self;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,11 +8,11 @@ import android.view.ViewGroup;
 
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMManager;
+import com.tencent.qcloud.tim.tuikit.R;
 import com.tencent.qcloud.uikit.TUIKit;
 import com.tencent.qcloud.uikit.business.mine.view.SelfInfoPanel;
 import com.tencent.qcloud.uikit.common.BaseFragment;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
-import com.tencent.qcloud.uipojo.R;
 import com.tencent.qcloud.uipojo.main.MainActivity;
 
 /**

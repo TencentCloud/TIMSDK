@@ -323,7 +323,10 @@
 #define TUIKitNotification_TIMUploadProgressListener @"TUIKitNotification_TIMUploadProgressListener"
 #define TUIKitNotification_TIMUserStatusListener @"TUIKitNotification_TIMUserStatusListener"
 #define TUIKitNotification_TIMConnListener @"TUIKitNotification_TIMConnListener"
-
+#define TUIKitNotification_onAddFriends @"TUIKitNotification_onAddFriends"
+#define TUIKitNotification_onDelFriends @"TUIKitNotification_onDelFriends"
+#define TUIKitNotification_onFriendProfileUpdate @"TUIKitNotification_onFriendProfileUpdate"
+#define TUIKitNotification_onAddFriendReqs @"TUIKitNotification_onAddFriendReqs"
 //path
 #define TUIKit_DB_Path [NSHomeDirectory() stringByAppendingString:@"/Documents/com_tencent_imsdk_data/"]
 #define TUIKit_Image_Path [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/image/"]

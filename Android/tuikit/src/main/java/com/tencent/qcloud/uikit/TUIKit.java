@@ -83,7 +83,8 @@ public class TUIKit {
         TIMSdkConfig config = getBaseConfigs().getTIMSdkConfig();
         if (config == null) {
             config = new TIMSdkConfig(sdkAppID)
-                    .setLogLevel(TIMLogLevel.DEBUG).enableCrashReport(true);
+                    .setLogLevel(TIMLogLevel.DEBUG);
+            config.enableLogPrint(true);
         }
         TIMManager.getInstance().init(context, config);
         // 设置离线消息通知
@@ -170,6 +171,8 @@ public class TUIKit {
 
         TIMUserConfigMsgExt ext = new TIMUserConfigMsgExt(userConfig);
         ext.setMessageRevokedListener(UIKitMessageRevokedManager.getInstance());
+        // 禁用自动上报，通过调用已读上报接口来实现已读功能
+        ext.setAutoReportEnabled(false);
         TIMManager.getInstance().setUserConfig(ext);
 
     }

@@ -12,6 +12,7 @@ import com.tencent.imsdk.ext.message.TIMConversationExt;
 import com.tencent.imsdk.ext.message.TIMMessageExt;
 import com.tencent.imsdk.log.QLog;
 import com.tencent.qcloud.uipojo.PojoApplication;
+import com.tencent.qcloud.uipojo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.uipojo.utils.Constants;
 import com.tencent.qcloud.uipojo.utils.SimpleHelper;
 
@@ -288,6 +289,9 @@ public class PojoLoginManager {
         UserInfo.getInstance().setAccount(userName);
         UserInfo.getInstance().setPassword(password);
         UserInfo.getInstance().writeToCache(PojoApplication.instance());
+
+        ThirdPushTokenMgr.getInstance().setIsLogin(true);
+        ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
     }
 
     public interface LoginCallback {

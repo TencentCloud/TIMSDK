@@ -11,9 +11,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tencent.imsdk.TIMManager;
+import com.tencent.qcloud.tim.tuikit.R;
 import com.tencent.qcloud.uikit.business.session.model.SessionManager;
-import com.tencent.qcloud.uikit.common.utils.UIUtils;
-import com.tencent.qcloud.uipojo.R;
 import com.tencent.qcloud.uipojo.contact.ContactFragment;
 import com.tencent.qcloud.uipojo.login.view.LoginActivity;
 import com.tencent.qcloud.uipojo.self.SelfInfoFragment;

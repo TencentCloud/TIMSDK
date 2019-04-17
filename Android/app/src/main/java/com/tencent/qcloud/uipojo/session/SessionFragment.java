@@ -6,12 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tencent.qcloud.uikit.TUIKit;
+import com.tencent.qcloud.tim.tuikit.R;
 import com.tencent.qcloud.uikit.business.session.model.SessionInfo;
 import com.tencent.qcloud.uikit.business.session.view.SessionPanel;
 import com.tencent.qcloud.uikit.business.session.view.wedgit.SessionClickListener;
 import com.tencent.qcloud.uikit.common.BaseFragment;
-import com.tencent.qcloud.uipojo.R;
 import com.tencent.qcloud.uipojo.chat.ChatActivity;
 
 /**
