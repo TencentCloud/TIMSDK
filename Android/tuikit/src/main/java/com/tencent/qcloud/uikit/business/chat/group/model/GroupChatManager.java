@@ -947,7 +947,7 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
         member.setAccount(info.getUser());
         member.setTinyId(info.getTinyId());
         member.setJoinTime(info.getJoinTime());
-        member.setMemberType(info.getRole().ordinal());
+        member.setMemberType(info.getRole());
         return member;
     }
 
