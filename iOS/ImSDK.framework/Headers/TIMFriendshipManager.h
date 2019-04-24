@@ -131,7 +131,7 @@
  *
  *  @return 0 发送请求成功
  */
-- (int)deletePendency:(TIMPendencyGetType)type users:(NSArray *)identifiers succ:(TIMSucc)succ fail:(TIMFail)fail;
+- (int)deletePendency:(TIMPendencyType)type users:(NSArray *)identifiers succ:(TIMSucc)succ fail:(TIMFail)fail;
 
 /**
  *  未决已读上报

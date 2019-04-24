@@ -28,6 +28,20 @@ typedef NS_ENUM(NSInteger, TIMFriendStatus) {
      */
     TIM_FRIEND_STATUS_SUCC                              = 0,
     
+    /**
+     *  加好友、响应好友时有效：自己的好友数已达系统上限
+     */
+    TIM_ADD_FRIEND_STATUS_SELF_FRIEND_FULL                  = 30010,
+    
+    /**
+     * 更新好友分组时有效：分组已达系统上限
+     */
+    TIM_UPDATE_FRIEND_GROUP_STATUS_MAX_GROUPS_EXCEED        = 30011,
+    
+    /**
+     *  加好友、响应好友时有效：对方的好友数已达系统上限
+     */
+    TIM_ADD_FRIEND_STATUS_THEIR_FRIEND_FULL                 = 30014,
     
     /**
      *  加好友时有效：被加好友在自己的黑名单中
@@ -38,16 +52,6 @@ typedef NS_ENUM(NSInteger, TIMFriendStatus) {
      *  加好友时有效：被加好友设置为禁止加好友
      */
     TIM_ADD_FRIEND_STATUS_FRIEND_SIDE_FORBID_ADD            = 30516,
-    
-    /**
-     *  加好友时有效：好友数量已满
-     */
-    TIM_ADD_FRIEND_STATUS_SELF_FRIEND_FULL                  = 30519,
-    
-    /**
-     *  加好友时有效：已经是好友
-     */
-    TIM_ADD_FRIEND_STATUS_ALREADY_FRIEND                    = 30520,
     
     /**
      *  加好友时有效：已被被添加好友设置为黑名单
@@ -69,27 +73,10 @@ typedef NS_ENUM(NSInteger, TIMFriendStatus) {
      */
     TIM_DEL_FRIEND_STATUS_NO_FRIEND                         = 31704,
     
-    
     /**
      *  响应好友申请时有效：对方没有申请过好友
      */
     TIM_RESPONSE_FRIEND_STATUS_NO_REQ                       = 30614,
-    
-    /**
-     *  响应好友申请时有效：自己的好友满
-     */
-    TIM_RESPONSE_FRIEND_STATUS_SELF_FRIEND_FULL             = 30615,
-    
-    /**
-     *  响应好友申请时有效：好友已经存在
-     */
-    TIM_RESPONSE_FRIEND_STATUS_FRIEND_EXIST                 = 30617,
-    
-    /**
-     *  响应好友申请时有效：对方好友满
-     */
-    TIM_RESPONSE_FRIEND_STATUS_OTHER_SIDE_FRIEND_FULL       = 30630,
-    
     
     /**
      *  添加黑名单有效：已经在黑名单了
@@ -131,10 +118,7 @@ typedef NS_ENUM(NSInteger, TIMFriendStatus) {
      */
     TIM_UPDATE_FRIEND_GROUP_STATUS_DEL_NOT_IN_GROUP         = 32520,
     
-    /**
-     * 更新好友分组时有效：该好友加入的好友分组个数超过了限制，每个好友最多只能加入32个好友分组
-     */
-    TIM_UPDATE_FRIEND_GROUP_STATUS_MAX_GROUPS_EXCEED        = 32521,
+    
 };
 
 typedef NS_ENUM(NSInteger, TIMDelFriendType) {
@@ -149,21 +133,21 @@ typedef NS_ENUM(NSInteger, TIMDelFriendType) {
     TIM_FRIEND_DEL_BOTH                 = 2,
 };
 
-typedef NS_ENUM(NSInteger, TIMPendencyGetType) {
+typedef NS_ENUM(NSInteger, TIMPendencyType) {
     /**
      *  别人发给我的
      */
-    TIM_PENDENCY_GET_COME_IN                    = 1,
+    TIM_PENDENCY_COME_IN                    = 1,
     
     /**
      *  我发给别人的
      */
-    TIM_PENDENCY_GET_SEND_OUT                   = 2,
+    TIM_PENDENCY_SEND_OUT                   = 2,
     
     /**
-     * 别人发给我的 和 我发给别人的
+     * 别人发给我的 和 我发给别人的。仅拉取时有效
      */
-    TIM_PENDENCY_GET_BOTH                       = 3,
+    TIM_PENDENCY_BOTH                       = 3,
 };
 
 /**
@@ -273,17 +257,8 @@ typedef void (^TIMGetFriendListByPageSucc)(TIMFriendMetaInfo * meta, NSArray * f
  * 获取未决请求列表成功
  *
  *  @param pendencyResponse 未决请求元信息
- *  @param pendencies  未决请求列表（TIMFriendPendencyItem*）数组
  */
-typedef void (^TIMGetFriendPendencyListSucc)(TIMFriendPendencyResponse *pendencyResponse, NSArray<TIMFriendPendencyItem *> * pendencies);
-
-/**
- * 获取推荐好友和未决列表成功
- *
- *  @param meta      下次拉取时填入信息
- *  @param items     列表（TIMFriendFutureItem*）数组
- */
-typedef void (^TIMGetFriendFutureListSucc)(TIMFriendFutureMeta * meta, NSArray * items);
+typedef void (^TIMGetFriendPendencyListSucc)(TIMFriendPendencyResponse *pendencyResponse);
 
 /**
  *  群搜索回调
@@ -315,29 +290,30 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 @interface TIMFriendRequest : TIMCodingModel
 
 /**
- *  用户identifier
+ *  用户identifier（必填）
  */
-@property(nonatomic,strong) NSString* identifier;
+@property (nonatomic,strong) NSString* identifier;
 
 /**
- *  用户备注（备注最大96字节）
+ *  备注（备注最大96字节）
  */
-@property(nonatomic,strong) NSString* remark;
+@property (nonatomic,strong) NSString* remark;
 
 /**
  *  请求说明（最大120字节）
  */
-@property(nonatomic,strong) NSString* addWording;
+@property (nonatomic,strong) NSString* addWording;
 
 /**
  *  添加来源
+ *  来源需要添加“AddSource_Type_”前缀
  */
-@property(nonatomic,strong) NSString* addSource;
+@property (nonatomic,strong) NSString* addSource;
 
 /**
- *  分组名
+ *  分组
  */
-@property(nonatomic,strong) NSString* group;
+@property (nonatomic,strong) NSString* group;
 
 @end
 
@@ -371,7 +347,7 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 /**
  * 未决请求类型
  */
-@property(nonatomic,assign) TIMPendencyGetType type;
+@property(nonatomic,assign) TIMPendencyType type;
 
 @end
 
@@ -417,18 +393,20 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 @property(nonatomic,assign) uint64_t timestamp;
 
 /**
- * 每页的数量，请求时有效
+ * 每页的数量，即本次请求最多返回都个数据
  */
 @property(nonatomic,assign) uint64_t numPerPage;
 
 /**
  * 未决请求拉取类型
  */
-@property(nonatomic,assign) TIMPendencyGetType type;
+@property(nonatomic,assign) TIMPendencyType type;
 
 @end
 
-
+/**
+ * 未决返回信息
+ */
 @interface TIMFriendPendencyResponse : TIMCodingModel
 
 /**
@@ -446,75 +424,14 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
  */
 @property(nonatomic,assign) uint64_t unreadCnt;
 
+/**
+ * 未决数据
+ */
+@property NSArray<TIMFriendPendencyItem *> * pendencies;
+
 @end
 
 
-/**
- * 推荐好友元信息
- */
-@interface TIMFriendFutureMeta : TIMCodingModel
-
-/**
- * 翻页类型
- */
-@property(nonatomic,assign) TIMPageDirectionType directionType;
-
-/**
- * 获取数量
- */
-@property(nonatomic,assign) uint64_t reqNum;
-
-/**
- * 时间戳：只做分页之用，第一次请求填0，分页时下次请求传入返回的时间戳，直到返回的时间戳为0，表示数据已经拉完，此时更新pendencySeq和recommendSeq（分页过程中不能更新pendencySeq和recommendSeq）
- */
-@property(nonatomic,assign) uint64_t timestamp;
-
-/**
- * 未决序列号
- */
-@property(nonatomic,assign) uint64_t pendencySeq;
-
-/**
- * 推荐序列号
- */
-@property(nonatomic,assign) uint64_t recommendSeq;
-
-/**
- * 已决序列号
- */
-@property(nonatomic,assign) uint64_t decideSeq;
-
-/**
- * 未决未读数量
- */
-@property(nonatomic,assign) uint64_t pendencyUnReadCnt;
-
-/**
- * 推荐未读数量
- */
-@property(nonatomic,assign) uint64_t recommendUnReadCnt;
-
-/**
- * 已决未读数量
- */
-@property(nonatomic,assign) uint64_t decideUnReadCnt;
-
-/**
- * 未决最新时间戳
- */
-@property(nonatomic,assign) uint64_t currentPendencyTimestamp;
-
-/**
- * 推荐最新时间戳
- */
-@property(nonatomic,assign) uint64_t currentRecommendTimestamp;
-
-/**
- * 已决最新时间戳
- */
-@property(nonatomic,assign) uint64_t currentDecideTimestamp;
-
-@end
 
 /**
  * 好友元信息
@@ -669,17 +586,17 @@ extern NSString *const TIMProfileTypeKey_AllowType;
 extern NSString *const TIMProfileTypeKey_Gender;
 /**
  * 生日
- * 值类型: NSNumber 
+ * 值类型: NSNumber
  */
 extern NSString *const TIMProfileTypeKey_Birthday;
 /**
  * 位置
- * 值类型: NSString 
+ * 值类型: NSString
  */
 extern NSString *const TIMProfileTypeKey_Location;
 /**
  * 语言
- * 值类型: NSNumber 
+ * 值类型: NSNumber
  */
 extern NSString *const TIMProfileTypeKey_Language;
 /**
@@ -689,7 +606,7 @@ extern NSString *const TIMProfileTypeKey_Language;
 extern NSString *const TIMProfileTypeKey_Level;
 /**
  * 角色
- * 值类型: NSNumber 
+ * 值类型: NSNumber
  */
 extern NSString *const TIMProfileTypeKey_Role;
 /**
@@ -700,6 +617,7 @@ extern NSString *const TIMProfileTypeKey_SelfSignature;
 /**
  * 自定义字段前缀
  * 值类型: [NSString,NSData|NSNumber]
+ * @note 当设置自定义字的值NSString对象时，后台会将其转为UTF8保存在数据库中。由于部分用户迁移资料时可能不是UTF8类型，所以在获取资料时，统一返回NSData类型。
  */
 extern NSString *const TIMProfileTypeKey_Custom_Prefix;
 
