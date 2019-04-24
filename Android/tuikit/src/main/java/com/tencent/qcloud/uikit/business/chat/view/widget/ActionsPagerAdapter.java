@@ -21,7 +21,6 @@ public class ActionsPagerAdapter extends PagerAdapter {
     private final Context context;
     private int actionWidth, actionHeight;
 
-
     private final List<MessageOperaUnit> actions;
     private final ViewPager viewPager;
     private final int gridViewCount;

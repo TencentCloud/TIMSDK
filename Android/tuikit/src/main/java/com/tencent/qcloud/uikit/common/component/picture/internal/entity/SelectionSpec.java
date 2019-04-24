@@ -99,7 +99,7 @@ public final class SelectionSpec {
     }
 
     public boolean onlyShowImages() {
-        return showSingleMediaType && MimeType.ofImage().containsAll(mimeTypeSet);
+        return true/*showSingleMediaType && MimeType.ofImage().containsAll(mimeTypeSet)*/; //暂时过滤只支持发送图片
     }
 
     public boolean onlyShowVideos() {

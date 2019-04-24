@@ -9,14 +9,10 @@ import java.util.List;
 
 /**
  * 介绍：IndexBar 的 数据相关帮助类 实现
- * * 1 将汉语转成拼音(利用tinyPinyin)
+ * 1 将汉语转成拼音(利用tinyPinyin)
  * 2 填充indexTag (取拼音首字母)
  * 3 排序源数据源
  * 4 根据排序后的源数据源->indexBar的数据源
- * 作者：zhangxutong
- * 邮箱：mcxtzhang@163.com
- * 主页：http://blog.csdn.net/zxt0601
- * 时间： 2016/11/28.
  */
 
 public class IndexBarDataHelperImpl implements IIndexBarDataHelper {

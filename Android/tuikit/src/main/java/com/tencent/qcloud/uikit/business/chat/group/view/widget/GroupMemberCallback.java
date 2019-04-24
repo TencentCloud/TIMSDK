@@ -5,5 +5,5 @@ import com.tencent.qcloud.uikit.business.chat.group.model.GroupMemberInfo;
 import java.util.List;
 
 public interface GroupMemberCallback {
-    public void onMemberRemove(GroupMemberInfo memberInfo, List<GroupMemberInfo> members);
+    void onMemberRemove(GroupMemberInfo memberInfo, List<GroupMemberInfo> members);
 }

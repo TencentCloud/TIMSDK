@@ -15,9 +15,6 @@ import com.tencent.qcloud.uikit.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/8/7.
- */
 
 public class InfoItemAdapter extends BaseAdapter {
     private List<InfoItemAction> actions = new ArrayList<>();

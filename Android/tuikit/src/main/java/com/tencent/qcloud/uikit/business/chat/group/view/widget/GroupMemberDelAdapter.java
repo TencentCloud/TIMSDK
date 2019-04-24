@@ -19,11 +19,9 @@ import com.tencent.qcloud.uikit.common.component.picture.imageEngine.impl.GlideE
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class GroupMemberDelAdapter extends BaseAdapter {
+
     private List<GroupMemberInfo> mGroupMembers = new ArrayList<>();
     private List<GroupMemberInfo> mDelMembers = new ArrayList<>();
     private GroupMemberDelSelectCallback mSelectCallback;
@@ -90,7 +88,6 @@ public class GroupMemberDelAdapter extends BaseAdapter {
                 }
             });
         }
-
     }
 
 

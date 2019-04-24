@@ -1,13 +1,9 @@
 package com.tencent.qcloud.uikit.api.chat;
 
-
 import com.tencent.qcloud.uikit.business.chat.model.MessageInfo;
 
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/7/17.
- */
 
 public interface IChatProvider {
 
@@ -16,7 +12,7 @@ public interface IChatProvider {
      *
      * @return
      */
-    public List<MessageInfo> getDataSource();
+    List<MessageInfo> getDataSource();
 
     /**
      * 批量添加聊天消息
@@ -25,7 +21,7 @@ public interface IChatProvider {
      * @param front    是否往前加（前：消息列表的头部，对应聊天界面的顶部，后：消息列表的尾部，对应聊天界面的底部）
      * @return
      */
-    public boolean addMessageInfos(List<MessageInfo> messages, boolean front);
+    boolean addMessageInfos(List<MessageInfo> messages, boolean front);
 
 
     /**
@@ -34,7 +30,7 @@ public interface IChatProvider {
      * @param messages 聊天消息
      * @return
      */
-    public boolean deleteMessageInfos(List<MessageInfo> messages);
+    boolean deleteMessageInfos(List<MessageInfo> messages);
 
 
     /**
@@ -43,7 +39,7 @@ public interface IChatProvider {
      * @param messages 聊天消息
      * @return
      */
-    public boolean updateMessageInfos(List<MessageInfo> messages);
+    boolean updateMessageInfos(List<MessageInfo> messages);
 
 
     /**
@@ -51,6 +47,6 @@ public interface IChatProvider {
      *
      * @param adapter 会话UI显示适配器
      */
-    public void attachAdapter(IChatAdapter adapter);
+    void attachAdapter(IChatAdapter adapter);
 
 }

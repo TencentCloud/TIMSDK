@@ -6,9 +6,6 @@ import com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar;
 
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/6/28.
- */
 
 public interface IContactPanel {
 
@@ -16,7 +13,7 @@ public interface IContactPanel {
 
     void setContactPanelEvent(ContactPanelEvent event);
 
-    public void addPopActions(List<PopMenuAction> actions);
+    void addPopActions(List<PopMenuAction> actions);
 
     void setDataProvider(IContactDataProvider provider);
 

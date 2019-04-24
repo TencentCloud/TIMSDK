@@ -14,9 +14,6 @@ import android.widget.EditText;
 import com.tencent.qcloud.uikit.TUIKit;
 import com.tencent.qcloud.uikit.common.UIKitConstants;
 
-/**
- * Created by valxehuang on 2018/7/23.
- */
 
 public class SoftKeyBoardUtil {
     private static int softKeyBoardHeight;

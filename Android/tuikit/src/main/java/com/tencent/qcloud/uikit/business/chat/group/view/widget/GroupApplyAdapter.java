@@ -16,9 +16,6 @@ import com.tencent.qcloud.uikit.business.chat.group.presenter.GroupApplyPresente
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class GroupApplyAdapter extends BaseAdapter implements GroupApplyCallback {
     private List<GroupApplyInfo> mGroupMembers = new ArrayList<>();

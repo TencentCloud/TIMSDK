@@ -21,11 +21,9 @@ import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class GroupMemberDelPanel extends LinearLayout implements GroupMemberDelAdapter.GroupMemberDelSelectCallback {
+
     private PageTitleBar mTitleBar;
     private ListView mMembers;
     private SearchView mMemberSearch;

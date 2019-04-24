@@ -18,9 +18,6 @@ import com.tencent.qcloud.uikit.common.component.picture.imageEngine.impl.GlideE
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class GroupMemberControlAdapter extends BaseAdapter {
 

@@ -12,9 +12,6 @@ import android.view.ViewGroup;
 
 import com.tencent.qcloud.uikit.business.chat.view.widget.ChatAdapter;
 
-/**
- * Created by valexhuang on 2018/9/29.
- */
 
 public class ChatListView extends RecyclerView {
     public static final int DATA_CHANGE_TYPE_REFRESH = 0;

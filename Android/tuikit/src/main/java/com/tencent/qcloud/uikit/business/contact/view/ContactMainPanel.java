@@ -30,12 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Created by valexhuang on 2018/8/2.
- */
-
-
 public class ContactMainPanel extends LinearLayout implements IContactPanel {
+
     private List<ContactInfoBean> mDatas = new ArrayList<>();
     private ContactPresenter mPresenter;
     private PageTitleBar mTitleBar;

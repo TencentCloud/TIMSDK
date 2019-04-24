@@ -52,9 +52,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/18.
- */
 
 public class ChatAdapter extends IChatAdapter {
 
@@ -285,8 +282,6 @@ public class ChatAdapter extends IChatAdapter {
                         msgHolder.msg.setTextColor(mRecycleView.getOppositeContentColor());
                     }
                 }
-
-
                 break;
             case MessageInfo.MSG_TYPE_VIDEO:
             case MessageInfo.MSG_TYPE_VIDEO + 1:
@@ -383,7 +378,6 @@ public class ChatAdapter extends IChatAdapter {
                     imgHolder.mDuration.setVisibility(View.VISIBLE);
                     final TIMVideoElem videoEle = (TIMVideoElem) timMsg.getElement(0);
                     final TIMVideo video = videoEle.getVideoInfo();
-
 
                     if (!TextUtils.isEmpty(msg.getDataPath())) {
                         GlideEngine.loadImage(imgHolder.imgData, msg.getDataPath(), null);
@@ -574,45 +568,29 @@ public class ChatAdapter extends IChatAdapter {
         }
 
 
-        if (mRecycleView.getNameColor() != 0)
-
-        {
+        if (mRecycleView.getNameColor() != 0) {
             chatHolder.userName.setTextColor(mRecycleView.getNameColor());
         }
-        if (mRecycleView.getNameSize() != 0)
-
-        {
+        if (mRecycleView.getNameSize() != 0) {
             chatHolder.userName.setTextSize(mRecycleView.getNameSize());
         }
 
-        if (msg.isGroup())
-
-        {
+        if (msg.isGroup()) {
             chatHolder.userName.setVisibility(View.VISIBLE);
             chatHolder.userName.setText(msg.getFromUser());
-        } else
-
-        {
+        } else {
             chatHolder.userName.setVisibility(View.GONE);
         }
-        if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL)
-
-        {
+        if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL) {
             chatHolder.status.setVisibility(View.VISIBLE);
-        } else
-
-        {
+        } else {
             chatHolder.status.setVisibility(View.GONE);
         }
 
-        if (msg.getStatus() == MessageInfo.MSG_STATUS_SENDING || msg.getStatus() == MessageInfo.MSG_STATUS_DOWNLOADING)
-
-        {
+        if (msg.getStatus() == MessageInfo.MSG_STATUS_SENDING || msg.getStatus() == MessageInfo.MSG_STATUS_DOWNLOADING) {
             if (chatHolder.progress != null)
                 chatHolder.progress.setVisibility(View.VISIBLE);
-        } else
-
-        {
+        } else {
             if (chatHolder.progress != null)
                 chatHolder.progress.setVisibility(View.GONE);
         }
@@ -628,12 +606,10 @@ public class ChatAdapter extends IChatAdapter {
         if (mLoading)
             return;
         mLoading = true;
-        notifyItemChanged(0, "adcd");
+        notifyItemChanged(0);
     }
 
     public void notifyDataSetChanged(final int type, final int value) {
-       /* QLog.i("notifyDataSetChanged", "type=" + type + ":value=" + value);
-        QLog.i("notifyDataSetChanged", Log.getStackTraceString(new Throwable()));*/
         BackgroundTasks.getInstance().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -645,30 +621,26 @@ public class ChatAdapter extends IChatAdapter {
                     notifyItemRangeInserted(mDataSource.size() + 1, value);
                     mRecycleView.scrollToEnd();
                 } else if (type == ChatListView.DATA_CHANGE_TYPE_UPDATE) {
-                    System.out.println("================" + System.currentTimeMillis());
-                    notifyItemChanged((Integer) value + 1, "abcd");
+                    notifyItemChanged(value + 1);
                 } else if (type == ChatListView.DATA_CHANGE_TYPE_LOAD || type == ChatListView.DATA_CHANGE_TYPE_ADD_FRONT) {
                     //加载条目为数0，只更新动画
                     if (value == 0) {
-                        notifyItemChanged(0, "abcd");
+                        notifyItemChanged(0);
                     } else {
                         //加载过程中有可能之前第一条与新加载的最后一条的时间间隔不超过5分钟，时间条目需去掉，所以这里的刷新要多一个条目
                         if (getItemCount() > value) {
                             notifyItemRangeInserted(0, value);
-                            //notifyItemChanged(value + 1, "abcd");
                         } else {
                             notifyItemRangeInserted(0, value);
                         }
-
                     }
-
                 } else if (type == ChatListView.DATA_CHANGE_TYPE_DELETE) {
                     notifyItemRemoved(value + 1);
+                    notifyDataSetChanged();
+                    mRecycleView.scrollToEnd();
                 }
             }
         }, 100);
-
-
     }
 
 
@@ -706,14 +678,13 @@ public class ChatAdapter extends IChatAdapter {
 
     @Override
     public MessageInfo getItem(int position) {
-        if (position == 0 || mDataSource == null || mDataSource.size() == 0)
+        if (position == 0 || mDataSource.size() == 0)
             return null;
         MessageInfo info = mDataSource.get(position - 1);
         if (mInterceptor != null)
             mInterceptor.intercept(info);
         return info;
     }
-
 
     class BaseChatHolder extends RecyclerView.ViewHolder {
         protected ChatIconView userIcon;
@@ -737,12 +708,10 @@ public class ChatAdapter extends IChatAdapter {
     }
 
     private class HeaderViewHolder extends RecyclerView.ViewHolder {
-
         public HeaderViewHolder(View itemView) {
             super(itemView);
         }
     }
-
 
     class ChatTextHolder extends BaseChatHolder {
         private TextView msg;
@@ -784,7 +753,6 @@ public class ChatAdapter extends IChatAdapter {
             time = itemView.findViewById(R.id.audio_time);
         }
     }
-
 
     class ChatFileHolder extends BaseChatHolder {
         private ImageView fileIcon;

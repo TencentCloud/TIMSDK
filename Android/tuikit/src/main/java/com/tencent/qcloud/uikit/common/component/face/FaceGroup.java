@@ -4,10 +4,6 @@ import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 
-/**
- * Created by valexhuang on 2018/10/31.
- */
-
 public class FaceGroup {
     private int groupId;
     private String desc;

@@ -1,18 +1,24 @@
 package com.tencent.qcloud.uikit;
 
-import android.content.Context;
-
 import com.tencent.imsdk.TIMSdkConfig;
+import com.tencent.imsdk.log.QLog;
 import com.tencent.qcloud.uikit.business.chat.view.widget.CustomFaceGroupConfigs;
 import com.tencent.qcloud.uikit.common.component.face.FaceManager;
 
 import java.util.ArrayList;
 
-/**
- * Created by valexhuang on 2018/9/4.
- */
-
 public class BaseUIKitConfigs<T> {
+
+    private static final String TAG = BaseUIKitConfigs.class.getSimpleName();
+
+    /**
+     * 文本框最大输入字符数目默认值
+     *
+     * 限制：单聊、群聊消息，单条消息最大长度限制为9000字节，超过此长度会被系统丢弃
+     * https://cloud.tencent.com/document/product/269/32429
+     * 在此我们假设默认为中文输入，最大长度为9000/2=4500
+     */
+    private static final int DEFAULT_MAX_INPUT_TEXT_LENGTH = 4500;
 
     /**
      * 配置 APP 保存图片/语音/文件/log等数据缓存的目录(一般配置在SD卡目录)
@@ -24,7 +30,7 @@ public class BaseUIKitConfigs<T> {
     /**
      * 文本框最大输入字符数目
      */
-    private int maxInputTextLength = 200;
+    private int maxInputTextLength = DEFAULT_MAX_INPUT_TEXT_LENGTH;
 
 
     /**
@@ -65,11 +71,18 @@ public class BaseUIKitConfigs<T> {
     /**
      * 文本框最大输入字符数目
      *
+     * 请参考开发文档中对内容长度的限制：
+     * https://cloud.tencent.com/document/product/269/32429
+     *
      * @param maxInputTextLength
      * @return
      */
     public BaseUIKitConfigs setMaxInputTextLength(int maxInputTextLength) {
-        this.maxInputTextLength = maxInputTextLength;
+        if (maxInputTextLength > DEFAULT_MAX_INPUT_TEXT_LENGTH) {
+            QLog.w(TAG, "setMaxInputTextLength failed: too long, more than: " + DEFAULT_MAX_INPUT_TEXT_LENGTH);
+        } else {
+            this.maxInputTextLength = maxInputTextLength;
+        }
         return this;
     }
 
@@ -134,8 +147,7 @@ public class BaseUIKitConfigs<T> {
         return new BaseUIKitConfigs();
     }
 
-
-    public com.tencent.imsdk.TIMSdkConfig getTIMSdkConfig() {
+    public TIMSdkConfig getTIMSdkConfig() {
         return TIMSdkConfig;
     }
 
@@ -144,7 +156,7 @@ public class BaseUIKitConfigs<T> {
         return this;
     }
 
-    public com.tencent.qcloud.uikit.IMEventListener getIMEventListener() {
+    public IMEventListener getIMEventListener() {
         return IMEventListener;
     }
 

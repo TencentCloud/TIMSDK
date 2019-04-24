@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.tencent.qcloud.uikit.R;
 import com.tencent.qcloud.uikit.common.BaseFragment;
@@ -25,14 +23,9 @@ import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 
-/**
- * Created by teambition on 15/8/27.
- */
 public class FaceFragment extends BaseFragment implements View.OnClickListener {
 
     public static FaceFragment Instance() {

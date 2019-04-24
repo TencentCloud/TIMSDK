@@ -16,12 +16,9 @@ import com.tencent.qcloud.uikit.business.contact.view.ContactList;
 
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/7/3.
- */
-
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
+
     protected List<ContactInfoBean> mDatas;
     protected LayoutInflater mInflater;
     private ContactList.ContactSelectChangedListener mSelectChangeListener;

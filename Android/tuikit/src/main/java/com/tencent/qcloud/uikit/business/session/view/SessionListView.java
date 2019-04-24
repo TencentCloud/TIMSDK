@@ -1,8 +1,5 @@
 package com.tencent.qcloud.uikit.business.session.view;
 
-/**
- * Created by valexhuang on 2018/7/17.
- */
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -45,7 +42,7 @@ public class SessionListView extends ListView {
     private long mPressedTime;
 
 
-    private ItemLongClickListener mItemLongClickListener;
+//    private ItemLongClickListener mItemLongClickListener;
 
 
     public SessionListView(Context context) {
@@ -68,10 +65,14 @@ public class SessionListView extends ListView {
         mTypedArray.recycle();
     }
 
-    public void setItemLongClickListener(ItemLongClickListener listener) {
-        this.mItemLongClickListener = listener;
-    }
+//    public void setItemLongClickListener(ItemLongClickListener listener) {
+//        this.mItemLongClickListener = listener;
+//    }
 
+    @Override
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        super.setOnItemLongClickListener(listener);
+    }
 
     /**
      * 拦截事件
@@ -156,113 +157,113 @@ public class SessionListView extends ListView {
      * vertical, can move horizontal. return super.onTouchEvent(ev), can move
      * both.
      */
-    @Override
-    public boolean onTouchEvent(final MotionEvent ev) {
-        float lastX = ev.getX();
-        float lastY = ev.getY();
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mIsPressed = true;
-                mLongPressed = false;
-                mPressedTime = System.currentTimeMillis();
-                postDelayed(new LongPressCheck(mPressedTime, lastX, lastY), 500);
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                float dx = lastX - mFirstX;
-                float dy = lastY - mFirstY;
-                if (Math.abs(dx) > 10)
-                    mIsPressed = false;
-                if (mLongPressed)
-                    return true;
-                if (mCurrentItemView == null)
-                    return true;
-                // confirm is scroll direction
-                if (mIsHorizontal == null) {
-                    if (!judgeScrollDirection(dx, dy)) {
-                        break;
-                    }
-                }
-
-                if (mIsHorizontal) {
-                    if (mIsShown && mPreItemView != mCurrentItemView) {
-                        /**
-                         * 情况二：
-                         * <p>
-                         * 一个Item的右边布局已经显示，
-                         * <p>
-                         * 这时候左右滑动另外一个item,那个右边布局显示的item隐藏其右边布局
-                         * <p>
-                         * 向左滑动只触发该情况，向右滑动还会触发情况五
-                         */
-                        hiddenRight(mPreItemView);
-                    }
-
-                    if (mIsShown && mPreItemView == mCurrentItemView) {
-                        dx = dx - mRightViewWidth;
-                    }
-
-                    // can't move beyond boundary
-                    if (dx < 0 && dx > -mRightViewWidth) {
-                        mCurrentItemView.scrollTo((int) (-dx), 0);
-                    }
-
-                    return true;
-                } else {
-                    if (mIsShown) {
-                        /**
-                         * 情况三：
-                         * <p>
-                         * 一个Item的右边布局已经显示，
-                         * <p>
-                         * 这时候上下滚动ListView,那么那个右边布局显示的item隐藏其右边布局
-                         */
-                        hiddenRight(mPreItemView);
-                    }
-                }
-
-                break;
-
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                mIsPressed = false;
-                if (mLongPressed)
-                    return true;
-                if (mCurrentItemView == null)
-                    return true;
-                clearPressedState();
-                if (mIsShown) {
-                    /**
-                     * 情况四：
-                     * <p>
-                     * 一个Item的右边布局已经显示，
-                     * <p>
-                     * 这时候左右滑动当前一个item,那个右边布局显示的item隐藏其右边布局
-                     */
-                    hiddenRight(mPreItemView);
-                    return true;
-                }
-
-                if (mIsHorizontal != null && mIsHorizontal) {
-                    if (mFirstX - lastX > mRightViewWidth / 2) {
-                        showRight(mCurrentItemView);
-                    } else {
-                        /**
-                         * 情况五：
-                         * <p>
-                         * 向右滑动一个item,且滑动的距离超过了右边View的宽度的一半，隐藏之。
-                         */
-                        hiddenRight(mCurrentItemView);
-                    }
-
-                    return true;
-                }
-
-                break;
-        }
-
-        return super.onTouchEvent(ev);
-    }
+//    @Override
+//    public boolean onTouchEvent(final MotionEvent ev) {
+//        float lastX = ev.getX();
+//        float lastY = ev.getY();
+//        switch (ev.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                mIsPressed = true;
+//                mLongPressed = false;
+//                mPressedTime = System.currentTimeMillis();
+////                postDelayed(new LongPressCheck(mPressedTime, lastX, lastY), 500);
+//                break;
+//
+//            case MotionEvent.ACTION_MOVE:
+//                float dx = lastX - mFirstX;
+//                float dy = lastY - mFirstY;
+//                if (Math.abs(dx) > 10)
+//                    mIsPressed = false;
+//                if (mLongPressed)
+//                    return true;
+//                if (mCurrentItemView == null)
+//                    return true;
+//                // confirm is scroll direction
+//                if (mIsHorizontal == null) {
+//                    if (!judgeScrollDirection(dx, dy)) {
+//                        break;
+//                    }
+//                }
+//
+//                if (mIsHorizontal) {
+//                    if (mIsShown && mPreItemView != mCurrentItemView) {
+//                        /**
+//                         * 情况二：
+//                         * <p>
+//                         * 一个Item的右边布局已经显示，
+//                         * <p>
+//                         * 这时候左右滑动另外一个item,那个右边布局显示的item隐藏其右边布局
+//                         * <p>
+//                         * 向左滑动只触发该情况，向右滑动还会触发情况五
+//                         */
+//                        hiddenRight(mPreItemView);
+//                    }
+//
+//                    if (mIsShown && mPreItemView == mCurrentItemView) {
+//                        dx = dx - mRightViewWidth;
+//                    }
+//
+//                    // can't move beyond boundary
+//                    if (dx < 0 && dx > -mRightViewWidth) {
+//                        mCurrentItemView.scrollTo((int) (-dx), 0);
+//                    }
+//
+//                    return true;
+//                } else {
+//                    if (mIsShown) {
+//                        /**
+//                         * 情况三：
+//                         * <p>
+//                         * 一个Item的右边布局已经显示，
+//                         * <p>
+//                         * 这时候上下滚动ListView,那么那个右边布局显示的item隐藏其右边布局
+//                         */
+//                        hiddenRight(mPreItemView);
+//                    }
+//                }
+//
+//                break;
+//
+//            case MotionEvent.ACTION_UP:
+//            case MotionEvent.ACTION_CANCEL:
+//                mIsPressed = false;
+//                if (mLongPressed)
+//                    return true;
+//                if (mCurrentItemView == null)
+//                    return true;
+//                clearPressedState();
+//                if (mIsShown) {
+//                    /**
+//                     * 情况四：
+//                     * <p>
+//                     * 一个Item的右边布局已经显示，
+//                     * <p>
+//                     * 这时候左右滑动当前一个item,那个右边布局显示的item隐藏其右边布局
+//                     */
+//                    hiddenRight(mPreItemView);
+//                    return true;
+//                }
+//
+//                if (mIsHorizontal != null && mIsHorizontal) {
+//                    if (mFirstX - lastX > mRightViewWidth / 2) {
+//                        showRight(mCurrentItemView);
+//                    } else {
+//                        /**
+//                         * 情况五：
+//                         * <p>
+//                         * 向右滑动一个item,且滑动的距离超过了右边View的宽度的一半，隐藏之。
+//                         */
+//                        hiddenRight(mCurrentItemView);
+//                    }
+//
+//                    return true;
+//                }
+//
+//                break;
+//        }
+//
+//        return super.onTouchEvent(ev);
+//    }
 
     @Override
     protected boolean dispatchHoverEvent(MotionEvent event) {
@@ -396,18 +397,18 @@ public class SessionListView extends ListView {
 
         @Override
         public void run() {
-            if (mPressedTime == pressTime) {
-                if (mIsPressed && mItemLongClickListener != null && mCurrentItemView != null) {
-                    mLongPressed = true;
-                    clearPressedState();
-                    mItemLongClickListener.onItemLongClick(mCurrentItemView, getPositionForView(mCurrentItemView), locationX, locationY);
-                }
-            }
+//            if (mPressedTime == pressTime) {
+//                if (mIsPressed && mItemLongClickListener != null && mCurrentItemView != null) {
+//                    mLongPressed = true;
+//                    clearPressedState();
+//                    mItemLongClickListener.onItemLongClick(mCurrentItemView, getPositionForView(mCurrentItemView), locationX, locationY);
+//                }
+//            }
         }
     }
 
 
-    public interface ItemLongClickListener {
-        void onItemLongClick(View view, int position, float x, float y);
-    }
+//    public interface ItemLongClickListener {
+//        void onItemLongClick(View view, int position, float x, float y);
+//    }
 }

@@ -2,11 +2,9 @@ package com.tencent.qcloud.uikit.business.chat.group.model;
 
 import com.tencent.imsdk.ext.group.TIMGroupPendencyItem;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class GroupApplyInfo {
+
     private int status;
     private TIMGroupPendencyItem pendencyItem;
 

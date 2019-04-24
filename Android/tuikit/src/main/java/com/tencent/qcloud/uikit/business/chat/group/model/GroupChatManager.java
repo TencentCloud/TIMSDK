@@ -47,12 +47,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by valxehuang on 2018/7/18.
- */
 
 public class GroupChatManager implements TIMMessageListener, UIKitMessageRevokedManager.MessageRevokeHandler {
-    private static final String TAG = "GroupChatManager";
+
+    private static final String TAG = "tuikit/" + GroupChatManager.class.getSimpleName();
     private static final int MSG_PAGE_COUNT = 10;
     private static GroupChatManager instance = new GroupChatManager();
     private GroupChatProvider mCurrentProvider;
@@ -62,11 +60,10 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
     private List<GroupApplyInfo> mCurrentApplies = new ArrayList<>();
     private List<GroupMemberInfo> mCurrentGroupMembers = new ArrayList<>();
     private GroupMemberInfo mSelfInfo;
-    private long pendencyTime;
-    private boolean hasMore;
+    private long mPendencyTime;
+    private boolean mIsMore;
     private GroupNotifyHandler mGroupHandler;
-    private boolean sending, mLoading;
-
+    private boolean mIsSending, mIsLoading;
 
     public static GroupChatManager getInstance() {
         return instance;
@@ -113,6 +110,7 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
                         @Override
                         public void onError(String module, int errCode, String errMsg) {
                             QLog.e(TAG, "loadGroupMembersRemote failed, code: " + errCode + "|desc: " + errMsg);
+                            callBack.onError(module, errCode, errMsg);
                         }
                     });
                 }
@@ -121,6 +119,7 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 QLog.e(TAG, "getGroupChatInfo failed, code: " + errCode + "|desc: " + errMsg);
+                callBack.onError(module, errCode, errMsg);
             }
         });
 
@@ -136,8 +135,8 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
         mCurrentApplies.clear();
         mCurrentGroupMembers.clear();
         mSelfInfo = null;
-        hasMore = true;
-        sending = false;
+        mIsMore = true;
+        mIsSending = false;
     }
 
     public GroupChatInfo getCurrentChatInfo() {
@@ -147,13 +146,13 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
     public synchronized void loadChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
         if (mCurrentChatInfo == null)
             return;
-        if (mLoading)
+        if (mIsLoading)
             return;
-        mLoading = true;
-        if (!hasMore) {
+        mIsLoading = true;
+        if (!mIsMore) {
             mCurrentProvider.addMessageInfo(null);
             callBack.onSuccess(null);
-            mLoading = false;
+            mIsLoading = false;
             return;
         }
 
@@ -169,13 +168,13 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
                     @Override
                     public void onError(int code, String desc) {
                         callBack.onError(TAG, code, desc);
-                        mLoading = false;
+                        mIsLoading = false;
                         QLog.e(TAG, "group getMessage failed, code: " + code + "|desc: " + desc);
                     }
 
                     @Override
                     public void onSuccess(List<TIMMessage> timMessages) {
-                        mLoading = false;
+                        mIsLoading = false;
                         if (mCurrentProvider == null)
                             return;
                         if (unread > 0) {
@@ -192,7 +191,7 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
                             });
                         }
                         if (timMessages.size() < MSG_PAGE_COUNT)
-                            hasMore = false;
+                            mIsMore = false;
 
                         ArrayList<TIMMessage> messages = new ArrayList<>(timMessages);
                         Collections.reverse(messages);
@@ -206,9 +205,9 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
 
     public synchronized void sendGroupMessage(final MessageInfo message, final IUIKitCallBack callBack) {
 
-        if (mCurrentConversation == null || sending)
+        if (mCurrentConversation == null || mIsSending || mCurrentChatInfo == null || message == null)
             return;
-        sending = true;
+        mIsSending = true;
         message.setPeer(mCurrentChatInfo.getPeer());
         message.setSelf(true);
         message.setRead(true);
@@ -233,7 +232,7 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
                     @Override
                     public void onError(final int code, final String desc) {
                         QLog.i(TAG, "sendGroupMessage fail:" + code + "=" + desc);
-                        sending = false;
+                        mIsSending = false;
                         if (mCurrentProvider == null)
                             return;
                         if (callBack != null)
@@ -246,7 +245,7 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
                     @Override
                     public void onSuccess(TIMMessage timMessage) {
                         QLog.i(TAG, "sendGroupMessage onSuccess");
-                        sending = false;
+                        mIsSending = false;
                         if (mCurrentProvider == null)
                             return;
                         message.setStatus(MessageInfo.MSG_STATUS_SEND_SUCCESS);
@@ -442,14 +441,18 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
 
             @Override
             public void onSuccess(List<TIMGroupMemberInfo> timGroupMemberInfos) {
-                for (int i = begin; i < end; i++) {
-                    GroupMemberInfo memberInfo = mCurrentGroupMembers.get(i);
-                    for (int j = 0; j < timGroupMemberInfos.size(); j++) {
-                        TIMGroupMemberInfo detail = timGroupMemberInfos.get(j);
-                        if (memberInfo.getAccount().equals(detail.getUser())) {
-                            memberInfo.setDetail(detail);
-                            timGroupMemberInfos.remove(j);
-                            break;
+                if (mCurrentGroupMembers.size() > 0) {
+                    for (int i = begin; i < end; i++) {
+                        if ( i < mCurrentGroupMembers.size()) {
+                            GroupMemberInfo memberInfo = mCurrentGroupMembers.get(i);
+                            for (int j = 0; j < timGroupMemberInfos.size(); j++) {
+                                TIMGroupMemberInfo detail = timGroupMemberInfos.get(j);
+                                if (memberInfo.getAccount().equals(detail.getUser())) {
+                                    memberInfo.setDetail(detail);
+                                    timGroupMemberInfos.remove(j);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -705,7 +708,7 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
 
     public void loadRemoteApplayInfos(final IUIKitCallBack callBack) {
         TIMGroupPendencyGetParam param = new TIMGroupPendencyGetParam();
-        param.setTimestamp(pendencyTime);
+        param.setTimestamp(mPendencyTime);
         TIMGroupManagerExt.getInstance().getGroupPendencyList(param, new TIMValueCallBack<TIMGroupPendencyListGetSucc>() {
             @Override
             public void onError(final int code, final String desc) {
@@ -715,7 +718,7 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
 
             @Override
             public void onSuccess(final TIMGroupPendencyListGetSucc timGroupPendencyListGetSucc) {
-                pendencyTime = timGroupPendencyListGetSucc.getMeta().getNextStartTimestamp();
+                mPendencyTime = timGroupPendencyListGetSucc.getMeta().getNextStartTimestamp();
                 List<TIMGroupPendencyItem> pendencies = timGroupPendencyListGetSucc.getPendencies();
                 for (int i = 0; i < pendencies.size(); i++) {
                     System.out.println("!!!!!!!!!!!!!!!!!" + new String(pendencies.get(i).getAuth()));
@@ -725,8 +728,6 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
                 }
                 if (mCurrentApplies.size() > 0)
                     callBack.onSuccess(mCurrentApplies.size());
-
-
             }
         });
     }
@@ -987,6 +988,7 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
     }
 
     public interface GroupNotifyHandler {
+
         void onGroupForceExit();
 
         void onGroupNameChanged(String newName);

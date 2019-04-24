@@ -6,7 +6,6 @@ import com.tencent.qcloud.uikit.business.session.view.wedgit.SessionAdapter;
 import java.util.List;
 
 /**
- * Created by valexhuang on 2018/7/17.
  * 会话列表数据源
  */
 
@@ -17,7 +16,7 @@ public interface ISessionProvider {
      *
      * @return
      */
-    public List<SessionInfo> getDataSource();
+    List<SessionInfo> getDataSource();
 
     /**
      * 批量添加会话条目
@@ -25,7 +24,7 @@ public interface ISessionProvider {
      * @param sessions 会话数据集合
      * @return
      */
-    public boolean addSessions(List<SessionInfo> sessions);
+    boolean addSessions(List<SessionInfo> sessions);
 
     /**
      * 删除会话条目
@@ -33,7 +32,7 @@ public interface ISessionProvider {
      * @param sessions 会话数据集合
      * @return
      */
-    public boolean deleteSessions(List<SessionInfo> sessions);
+    boolean deleteSessions(List<SessionInfo> sessions);
 
     /**
      * 更新会话条目
@@ -41,7 +40,7 @@ public interface ISessionProvider {
      * @param sessions 会话数据集合
      * @return
      */
-    public boolean updateSessions(List<SessionInfo> sessions);
+    boolean updateSessions(List<SessionInfo> sessions);
 
 
     /**
@@ -51,6 +50,6 @@ public interface ISessionProvider {
      * @return
      */
 
-    public void attachAdapter(ISessionAdapter adapter);
+    void attachAdapter(ISessionAdapter adapter);
 
 }

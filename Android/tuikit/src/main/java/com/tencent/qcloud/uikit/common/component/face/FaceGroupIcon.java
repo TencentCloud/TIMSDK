@@ -10,9 +10,6 @@ import android.widget.RelativeLayout;
 
 import com.tencent.qcloud.uikit.R;
 
-/**
- * Created by valexhuang on 2018/11/1.
- */
 
 public class FaceGroupIcon extends RelativeLayout {
 

@@ -89,7 +89,6 @@ public class MyLoginActivity extends Activity implements View.OnClickListener {
                  * IM登录成功后的回调操作，一般为跳转到应用的主页
                  *
                  */
-
                 Intent intent = new Intent(MyLoginActivity.this, MainActivity.class);
                 startActivity(intent);
             }

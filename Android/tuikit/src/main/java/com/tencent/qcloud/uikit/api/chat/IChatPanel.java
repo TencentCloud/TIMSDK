@@ -1,18 +1,12 @@
 package com.tencent.qcloud.uikit.api.chat;
 
 
-import android.graphics.Bitmap;
-
 import com.tencent.qcloud.uikit.common.component.action.PopMenuAction;
 import com.tencent.qcloud.uikit.business.chat.view.widget.MessageOperaUnit;
 import com.tencent.qcloud.uikit.business.chat.view.widget.ChatListEvent;
 
 import java.util.List;
 
-
-/**
- * Created by valxehuang on 2018/7/17.
- */
 
 public interface IChatPanel {
 

@@ -22,8 +22,6 @@ import java.util.Locale;
  */
 
 public class SimpleHelper {
-    private static final String TAG = SimpleHelper.class.getSimpleName();
-
 
     /**
      * 到业务服务器获取usersig
@@ -74,20 +72,20 @@ public class SimpleHelper {
 
                         JSONObject jobj = new JSONObject(out.toString());
                         int errCode = jobj.optInt("error_code");
-                        if(errCode != 0){
+                        if (errCode != 0) {
                             String errMsg = jobj.optString("error_msg");
                             cb.onError(errCode, errMsg);
                             return;
                         }
 
                         usersig = jobj.optString("user_sig");
-                        if(usersig.isEmpty()){
+                        if (usersig.isEmpty()) {
                             cb.onError(-1, "getUsersig failed, nothing from server");
                         }
 
                         cb.onSuccess(usersig);
-                    }else {
-                        cb.onError(-1, "getUsersig failed, code: " + httpStatus);
+                    } else {
+                        cb.onError(httpStatus, "getUsersig failed, code: " + httpStatus);
                     }
 
                 } catch (Throwable e) {

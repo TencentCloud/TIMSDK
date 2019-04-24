@@ -14,9 +14,6 @@ import com.tencent.qcloud.uikit.common.BaseFragment;
 
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/23.
- */
 
 public class ChatActionsFragment extends BaseFragment {
 

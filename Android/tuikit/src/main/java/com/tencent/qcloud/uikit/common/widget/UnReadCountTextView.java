@@ -10,9 +10,6 @@ import android.util.TypedValue;
 
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
-/**
- * Created by valexhuang on 2018/10/25.
- */
 
 public class UnReadCountTextView extends android.support.v7.widget.AppCompatTextView {
     int normalSize = UIUtils.getPxByDp(16);

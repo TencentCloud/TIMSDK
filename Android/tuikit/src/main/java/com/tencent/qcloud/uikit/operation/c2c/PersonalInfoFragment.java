@@ -11,10 +11,6 @@ import com.tencent.qcloud.uikit.business.chat.c2c.view.PersonalInfoPanel;
 import com.tencent.qcloud.uikit.common.BaseFragment;
 import com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
-
 public class PersonalInfoFragment extends BaseFragment {
     private View mBaseView;
     private PersonalInfoPanel infoPanel;

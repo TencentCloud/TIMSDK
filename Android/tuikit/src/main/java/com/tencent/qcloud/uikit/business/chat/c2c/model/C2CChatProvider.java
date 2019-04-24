@@ -12,14 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Created by valexhuang on 2018/7/17.
- */
-
 public class C2CChatProvider implements IChatProvider {
 
     private ArrayList<MessageInfo> dataSource = new ArrayList();
-
     private IChatAdapter adapter;
 
     @Override
@@ -49,7 +44,6 @@ public class C2CChatProvider implements IChatProvider {
             }
         }
         return false;
-
     }
 
     @Override

@@ -4,11 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ListView;
 
-/**
- * Created by valexhuang on 2018/8/7.
- */
-
 public class InfoItemListView extends ListView {
+
     public InfoItemListView(Context context) {
         super(context);
     }

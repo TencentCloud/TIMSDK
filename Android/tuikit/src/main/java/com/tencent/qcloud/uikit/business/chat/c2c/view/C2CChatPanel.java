@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.tencent.qcloud.uikit.R;
 import com.tencent.qcloud.uikit.api.chat.IChatPanel;
 import com.tencent.qcloud.uikit.business.chat.c2c.model.C2CChatInfo;
 import com.tencent.qcloud.uikit.business.chat.c2c.model.C2CChatManager;
@@ -21,38 +20,27 @@ import com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/18.
- */
 
 public class C2CChatPanel extends ChatPanel implements IChatPanel {
 
-    C2CChatPresenter mPresenter;
+    private C2CChatPresenter mPresenter;
     private C2CChatInfo mBaseInfo;
 
     public C2CChatPanel(Context context) {
         super(context);
-        init();
     }
 
     public C2CChatPanel(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public C2CChatPanel(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
-
-    private void init() {
-
-    }
-
 
     public void setBaseChatId(String chatId) {
         mPresenter = new C2CChatPresenter(this);
-        this.mBaseInfo = mPresenter.getC2CChatInfo(chatId);
+        mBaseInfo = mPresenter.getC2CChatInfo(chatId);
         if (mBaseInfo == null)
             return;
         String chatTitle = mBaseInfo.getChatName();
@@ -65,7 +53,6 @@ public class C2CChatPanel extends ChatPanel implements IChatPanel {
         UIKitAudioArmMachine.getInstance().stopRecord();
         C2CChatManager.getInstance().destroyC2CChat();
     }
-
 
     @Override
     public void sendMessage(MessageInfo messageInfo) {
@@ -89,6 +76,9 @@ public class C2CChatPanel extends ChatPanel implements IChatPanel {
 
     @Override
     protected void initPopActions(final MessageInfo msg) {
+        if (msg == null) {
+            return;
+        }
         List<PopMenuAction> actions = new ArrayList<>();
         PopMenuAction action = new PopMenuAction();
         action.setActionName("删除");
@@ -100,7 +90,6 @@ public class C2CChatPanel extends ChatPanel implements IChatPanel {
         });
         actions.add(action);
         if (msg.isSelf()) {
-
             action = new PopMenuAction();
             action.setActionName("撤销");
             action.setActionClickListener(new PopActionClickListener() {

@@ -19,12 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Created by valexhuang on 2018/8/2.
- */
-
-
 public class ContactList extends LinearLayout {
+
     private static final String INDEX_STRING_TOP = "↑";
     private RecyclerView mRv;
     private ContactAdapter mAdapter;

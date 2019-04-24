@@ -1,12 +1,8 @@
 package com.tencent.qcloud.uikit.business.chat.view.widget;
 
-import android.util.SparseArray;
 
 import java.util.ArrayList;
 
-/**
- * Created by valexhuang on 2018/10/31.
- */
 
 public class CustomFaceGroupConfigs {
 

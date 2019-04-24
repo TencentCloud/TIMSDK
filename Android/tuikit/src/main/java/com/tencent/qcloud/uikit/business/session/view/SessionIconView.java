@@ -12,10 +12,6 @@ import com.tencent.qcloud.uikit.common.widget.gatherimage.SynthesizedImageView;
 
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/10/10.
- */
-
 public class SessionIconView extends RelativeLayout {
     private ImageView mIconView;
 

@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.tencent.qcloud.uikit.TUIKit;
 import com.tencent.qcloud.uikit.R;
 import com.tencent.qcloud.uikit.business.chat.c2c.model.C2CChatInfo;
 import com.tencent.qcloud.uikit.business.chat.c2c.model.C2CChatManager;
@@ -17,6 +16,7 @@ import com.tencent.qcloud.uikit.business.session.model.SessionInfo;
 import com.tencent.qcloud.uikit.business.session.model.SessionManager;
 
 public class C2CChatCreatePanel extends LinearLayout {
+
     private SearchView mUserSearch;
 
     public C2CChatCreatePanel(Context context) {

@@ -8,11 +8,9 @@ import com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar;
 
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/17.
- */
 
 public interface IGroupInfoPanel {
+
     void setGroupInfo(GroupChatInfo info);
 
     void setGroupInfoPanelEvent(GroupInfoPanelEvent event);
@@ -23,8 +21,7 @@ public interface IGroupInfoPanel {
 
     PageTitleBar getTitleBar();
 
+    void addInfoItem(List<InfoItemAction> items, int group, int index);
 
-    public void addInfoItem(List<InfoItemAction> items, int group, int index);
-
-    public void addPopActions(List<PopMenuAction> actions);
+    void addPopActions(List<PopMenuAction> actions);
 }

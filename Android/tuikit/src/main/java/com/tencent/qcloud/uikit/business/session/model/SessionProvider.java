@@ -1,18 +1,12 @@
 package com.tencent.qcloud.uikit.business.session.model;
 
-import android.widget.BaseAdapter;
 
 import com.tencent.qcloud.uikit.api.session.ISessionAdapter;
 import com.tencent.qcloud.uikit.api.session.ISessionProvider;
-import com.tencent.qcloud.uikit.business.session.view.wedgit.SessionAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-/**
- * Created by valexhuang on 2018/7/17.
- */
 
 public class SessionProvider implements ISessionProvider {
 

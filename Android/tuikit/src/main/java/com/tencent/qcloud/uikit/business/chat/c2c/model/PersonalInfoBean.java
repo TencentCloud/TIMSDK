@@ -4,11 +4,9 @@ import com.tencent.qcloud.uikit.common.component.info.BaseInfoBean;
 
 import java.io.Serializable;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class PersonalInfoBean extends BaseInfoBean implements Serializable {
+
     private String nickName;
     private String iconUrl;
     private String account;

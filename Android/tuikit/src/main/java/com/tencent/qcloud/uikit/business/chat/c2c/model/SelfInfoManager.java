@@ -2,11 +2,9 @@ package com.tencent.qcloud.uikit.business.chat.c2c.model;
 
 import com.tencent.qcloud.uikit.common.IUIKitCallBack;
 
-/**
- * Created by valexhuang on 2018/8/6.
- */
 
 public class SelfInfoManager {
+
     private static final SelfInfoManager instance = new SelfInfoManager();
 
     private SelfInfoManager() {
