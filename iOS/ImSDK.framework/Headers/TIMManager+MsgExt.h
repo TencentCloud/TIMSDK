@@ -38,20 +38,22 @@
 /**
  *  删除会话
  *
- *  @param type 会话类型，TIM_C2C 表示单聊 TIM_GROUP 表示群聊
- *  @param receiver    用户identifier 或者 群组Id
+ *  @param type 会话类型，TIM_C2C：表示单聊；TIM_GROUP：表示群聊
+ *  @param receiver 用户 identifier 或者群组 Id
  *
- *  @return TRUE:删除成功  FALSE:删除失败
+ *  @return TRUE:删除成功；FALSE:删除失败
  */
 - (BOOL)deleteConversation:(TIMConversationType)type receiver:(NSString*)receiver;
 
 /**
  *  删除会话和消息
  *
- *  @param type 会话类型，TIM_C2C 表示单聊 TIM_GROUP 表示群聊
- *  @param receiver    用户identifier 或者 群组Id
+ *  这里只是删除本地消息，通过 getMessage 会拉取到漫游消息，所以存在删除消息成功，但是拉取到消息的情况，取决于是否重新从漫游拉回到本地。如果不需要拉取漫游，可以通过 getLocalMessage 获取本地消息，或者只通过 getMessage 拉取指定条数（如未读条数数量）的消息。
  *
- *  @return TRUE:删除成功  FALSE:删除失败
+ *  @param type 会话类型，TIM_C2C：表示单聊；TIM_GROUP：表示群聊
+ *  @param receiver    用户identifier 或者 群组 Id
+ *
+ *  @return TRUE:删除成功；FALSE:删除失败
  */
 - (BOOL)deleteConversationAndMessages:(TIMConversationType)type receiver:(NSString*)receiver;
 
@@ -63,13 +65,15 @@
 - (int)conversationCount;
 
 /**
- *  初始化存储，仅查看历史消息时使用，如果要收发消息等操作，如login成功，不需要调用此函数
+ *  初始化存储（暂未实现）
+ *
+ *  仅查看历史消息时使用，如果要收发消息等操作，如login成功，不需要调用此函数
  *
  *  @param param 登陆参数（userSig 不用填写）
  *  @param succ  成功回调，收到回调时，可以获取会话列表和消息
  *  @param fail  失败回调
  *
- *  @return 0 请求成功
+ *  @return 0：请求成功；1：失败
  */
 - (int)initStorage:(TIMLoginParam*)param succ:(TIMLoginSucc)succ fail:(TIMFail)fail;
 

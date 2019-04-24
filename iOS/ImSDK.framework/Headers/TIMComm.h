@@ -368,7 +368,7 @@ typedef NS_ENUM(NSInteger, TIM_GROUP_TIPS_TYPE){
 };
 
 /**
- *  群 Tips 类型
+ *  群变更信息 Tips 类型
  */
 typedef NS_ENUM(NSInteger, TIM_GROUP_INFO_CHANGE_TYPE){
     /**
