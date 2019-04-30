@@ -3,7 +3,6 @@ package com.tencent.qcloud.uikit.business.chat.model;
 import com.tencent.imsdk.TIMConversationType;
 
 /**
- * Created by valexhuang on 2018/8/21.
  * 聊天信息基本类
  */
 

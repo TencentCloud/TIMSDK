@@ -27,58 +27,35 @@ import com.tencent.qcloud.uikit.business.chat.model.MessageInfo;
 import com.tencent.qcloud.uikit.business.chat.view.widget.ChatAdapter;
 import com.tencent.qcloud.uikit.business.chat.view.widget.MessageOperaUnit;
 import com.tencent.qcloud.uikit.business.chat.view.widget.ChatListEvent;
-import com.tencent.qcloud.uikit.common.component.audio.UIKitAudioArmMachine;
 import com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar;
 import com.tencent.qcloud.uikit.common.utils.PopWindowUtil;
-import com.tencent.qcloud.uikit.common.utils.ScreenUtil;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/18.
- */
 
 public abstract class ChatPanel extends LinearLayout implements IChatPanel {
-    /**
-     * 标题栏
-     */
-    public PageTitleBar mTitleBar;
-    /**
-     * 聊天列表
-     */
-    public ChatListView mChatList;
-    /**
-     * 聊天列表适配器
-     */
-    public IChatAdapter mAdapter;
-    /**
-     * 聊天面板底部输入组件
-     */
-    public ChatBottomInputGroup mInputGroup;
 
-
-    /**
-     * 消息长按弹框列表
-     */
-    public ListView mItemPopMenuList;
+    protected PageTitleBar mTitleBar;
+    protected ChatListView mChatList;
+    protected IChatAdapter mAdapter;
+    protected ChatBottomInputGroup mInputGroup;
+    protected ListView mItemPopMenuList;
 
     /**
      * 聊天界面顶部提示栏（通知类型的消息，如加群申请）
      */
-    public View mTipsGroup;
-    public TextView mTipsContent, mTipsHandel;
+    protected View mTipsGroup;
+    protected TextView mTipsContent, mTipsHandel;
 
     private AnimationDrawable mVolumeAnim;
-
     private PopupWindow mPopWindow;
     private PopMenuAdapter mItemMenuAdapter;
     private View mRecordingGroup;
     private ImageView mRecordingIcon;
     private TextView mRecordingTips;
     private ChatListEvent mEvent;
-
 
     private List<PopMenuAction> mMessagePopActions = new ArrayList<>();
 
@@ -97,13 +74,10 @@ public abstract class ChatPanel extends LinearLayout implements IChatPanel {
         init();
     }
 
-    /**
-     * 初始化
-     */
+
     private void init() {
         inflate(getContext(), R.layout.chat_panel, this);
         mTitleBar = findViewById(R.id.chat_page_title);
-
         mChatList = findViewById(R.id.chat_list);
         mChatList.setMLoadMoreHandler(new ChatListView.OnLoadMoreHandler() {
             @Override
@@ -165,103 +139,79 @@ public abstract class ChatPanel extends LinearLayout implements IChatPanel {
         });
 
         mInputGroup = findViewById(R.id.chat_bottom_box);
-        mInputGroup.setInputHandler(new ChatBottomInputGroup.ChatInputHandler()
+        mInputGroup.setInputHandler(mChatInputHandler);
 
-        {
-            @Override
-            public void popupAreaShow() {
-                scrollToEnd();
-            }
-
-            @Override
-            public void popupAreaHide() {
-            }
-
-            @Override
-            public void startRecording() {
-                mRecordingIcon.setImageResource(R.drawable.recording_volume);
-                mVolumeAnim = (AnimationDrawable) mRecordingIcon.getDrawable();
-                mRecordingGroup.setVisibility(View.VISIBLE);
-                mVolumeAnim.start();
-                mRecordingTips.setTextColor(Color.WHITE);
-                mRecordingTips.setText("上滑取消录音");
-            }
-
-            @Override
-            public void stopRecording() {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mVolumeAnim.stop();
-                        mRecordingGroup.setVisibility(View.GONE);
-                    }
-                });
-
-            }
-
-            @Override
-            public void tooShortRecording() {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mVolumeAnim.stop();
-                        mRecordingIcon.setImageResource(R.drawable.exclama);
-                        mRecordingTips.setTextColor(Color.WHITE);
-                        mRecordingTips.setText("说话时间太短");
-                    }
-                });
-
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecordingGroup.setVisibility(View.GONE);
-                    }
-                }, 1000);
-            }
-
-            @Override
-            public void cancelRecording() {
-                mRecordingIcon.setImageResource(R.drawable.recording_cancel);
-                mRecordingTips.setTextColor(Color.RED);
-                mRecordingTips.setText("松开手指，取消发送");
-            }
-        });
-
-        mRecordingGroup =
-
-                findViewById(R.id.voice_recording_view);
-
-        mRecordingIcon =
-
-                findViewById(R.id.recording_icon);
-
-        mRecordingTips =
-
-                findViewById(R.id.recording_tips);
+        mRecordingGroup = findViewById(R.id.voice_recording_view);
+        mRecordingIcon = findViewById(R.id.recording_icon);
+        mRecordingTips = findViewById(R.id.recording_tips);
+        mTipsGroup = findViewById(R.id.chat_tips_group);
+        mTipsContent = findViewById(R.id.chat_tips_content);
+        mTipsHandel = findViewById(R.id.chat_tips_handle);
 
         mChatList.setAdapter(mAdapter);
-
-
-        mTipsGroup =
-
-                findViewById(R.id.chat_tips_group);
-
-        mTipsContent =
-
-                findViewById(R.id.chat_tips_content);
-
-        mTipsHandel =
-
-                findViewById(R.id.chat_tips_handle);
-
-
     }
 
+    private ChatBottomInputGroup.ChatInputHandler mChatInputHandler = new ChatBottomInputGroup.ChatInputHandler() {
+        @Override
+        public void popupAreaShow() {
+            scrollToEnd();
+        }
 
-    public abstract void sendMessage(MessageInfo messageInfo);
+        @Override
+        public void popupAreaHide() {
+        }
 
-    public abstract void loadMessages();
+        @Override
+        public void startRecording() {
+            mRecordingIcon.setImageResource(R.drawable.recording_volume);
+            mVolumeAnim = (AnimationDrawable) mRecordingIcon.getDrawable();
+            mRecordingGroup.setVisibility(View.VISIBLE);
+            mVolumeAnim.start();
+            mRecordingTips.setTextColor(Color.WHITE);
+            mRecordingTips.setText("上滑取消录音");
+        }
 
+        @Override
+        public void stopRecording() {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    mVolumeAnim.stop();
+                    mRecordingGroup.setVisibility(View.GONE);
+                }
+            });
+
+        }
+
+        @Override
+        public void tooShortRecording() {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    mVolumeAnim.stop();
+                    mRecordingIcon.setImageResource(R.drawable.exclama);
+                    mRecordingTips.setTextColor(Color.WHITE);
+                    mRecordingTips.setText("说话时间太短");
+                }
+            });
+
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mRecordingGroup.setVisibility(View.GONE);
+                }
+            }, 1000);
+        }
+
+        @Override
+        public void cancelRecording() {
+            mRecordingIcon.setImageResource(R.drawable.recording_cancel);
+            mRecordingTips.setTextColor(Color.RED);
+            mRecordingTips.setText("松开手指，取消发送");
+        }
+    };
+
+    @Override
     public void setChatAdapter(IChatAdapter adapter) {
         mAdapter = adapter;
         mChatList.setAdapter(mAdapter);
@@ -269,29 +219,14 @@ public abstract class ChatPanel extends LinearLayout implements IChatPanel {
             ((ChatAdapter) mAdapter).setChatListEvent(mEvent);
     }
 
-    public void scrollToEnd() {
-        mChatList.scrollToEnd();
-    }
-
-
+    @Override
     public void setChatListEvent(ChatListEvent event) {
         this.mEvent = event;
         if (mAdapter != null && mAdapter instanceof ChatAdapter)
             ((ChatAdapter) mAdapter).setChatListEvent(event);
     }
 
-
-    public void setDataProvider(IChatProvider provider) {
-        if (mAdapter != null)
-            mAdapter.setDataSource(provider);
-    }
-
-
-    public void setMoreOperaUnits(List<MessageOperaUnit> units, boolean isAdd) {
-        mInputGroup.setMoreOperaUnits(units, isAdd);
-    }
-
-
+    @Override
     public void setMessagePopActions(List<PopMenuAction> actions, boolean isAdd) {
         if (isAdd)
             mMessagePopActions.addAll(actions);
@@ -299,20 +234,18 @@ public abstract class ChatPanel extends LinearLayout implements IChatPanel {
             mMessagePopActions = actions;
     }
 
-
     public void refreshData() {
         mAdapter.notifyDataSetChanged(ChatListView.DATA_CHANGE_TYPE_REFRESH, 0);
     }
 
-
-    void showItemPopMenu(final int index, final MessageInfo messageInfo, View view) {
+    private void showItemPopMenu(final int index, final MessageInfo messageInfo, View view) {
         initPopActions(messageInfo);
         int[] location = new int[2];
         view.getLocationOnScreen(location);
         int locationX = location[0];
         int locationY = location[1];
         int parentViewHeight = view.getMeasuredHeight();
-        if (mMessagePopActions == null || mMessagePopActions.size() == 0)
+        if (mMessagePopActions.size() == 0)
             return;
         View itemPop = inflate(getContext(), R.layout.pop_menu_layout, null);
         mItemPopMenuList = itemPop.findViewById(R.id.pop_menu_list);
@@ -334,10 +267,14 @@ public abstract class ChatPanel extends LinearLayout implements IChatPanel {
         if (locationY < 50)
             locationY = locationY + viewHeight + parentViewHeight;
         mPopWindow = PopWindowUtil.popupWindow(itemPop, this, (int) locationX, (int) locationY);
-    }
-
-    protected void initPopActions(MessageInfo msg) {
-
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mPopWindow != null) {
+                    mPopWindow.dismiss();
+                }
+            }
+        }, 6000); // 6s后无操作自动消失
     }
 
     @Override
@@ -350,7 +287,7 @@ public abstract class ChatPanel extends LinearLayout implements IChatPanel {
         });
     }
 
-    public void initDefaultEvent() {
+    protected void initDefaultEvent() {
         setChatListEvent(new ChatListEvent() {
 
             @Override
@@ -377,5 +314,24 @@ public abstract class ChatPanel extends LinearLayout implements IChatPanel {
     public PageTitleBar getTitleBar() {
         return mTitleBar;
     }
+
+    public void scrollToEnd() {
+        mChatList.scrollToEnd();
+    }
+
+    public void setDataProvider(IChatProvider provider) {
+        if (mAdapter != null)
+            mAdapter.setDataSource(provider);
+    }
+
+    public void setMoreOperaUnits(List<MessageOperaUnit> units, boolean isAdd) {
+        mInputGroup.setMoreOperaUnits(units, isAdd);
+    }
+
+    protected abstract void sendMessage(MessageInfo messageInfo);
+
+    protected abstract void loadMessages();
+
+    protected abstract void initPopActions(MessageInfo msg);
 
 }

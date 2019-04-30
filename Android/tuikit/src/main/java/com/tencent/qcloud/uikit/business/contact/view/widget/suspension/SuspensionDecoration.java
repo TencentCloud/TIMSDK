@@ -16,10 +16,6 @@ import java.util.List;
 
 /**
  * 介绍：分类、悬停的Decoration
- * 作者：zhangxutong
- * 邮箱：mcxtzhang@163.com
- * 主页：http://blog.csdn.net/zxt0601
- * 时间： 2016/11/7.
  */
 
 public class SuspensionDecoration extends RecyclerView.ItemDecoration {

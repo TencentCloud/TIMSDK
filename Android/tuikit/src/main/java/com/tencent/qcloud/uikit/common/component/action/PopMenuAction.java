@@ -1,11 +1,6 @@
 package com.tencent.qcloud.uikit.common.component.action;
 
 import android.graphics.Bitmap;
-import android.widget.AdapterView;
-
-/**
- * Created by valxehuang on 2018/7/27.
- */
 
 public class PopMenuAction {
 

@@ -40,11 +40,9 @@ import com.tencent.qcloud.uikit.operation.message.UIKitRequestDispatcher;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/10/8.
- */
 
 public class GroupCreatePanel extends LinearLayout {
+
     private PageTitleBar mTitleBar;
     private SearchView mUserSearch;
     private ContactList mContactList;
@@ -54,9 +52,9 @@ public class GroupCreatePanel extends LinearLayout {
     private InfoItemView mJoinType;
     private ArrayList<GroupMemberInfo> mMembers = new ArrayList<>();
     private int groupTypeIndex = -1, joinTypeIndex = 2;
-    List<String> groupTypes = new ArrayList<>();
-    List<String> joinTypes = new ArrayList<>();
-    List<String> groupTypeValue = new ArrayList<>();
+    private List<String> groupTypes = new ArrayList<>();
+    private List<String> joinTypes = new ArrayList<>();
+    private List<String> groupTypeValue = new ArrayList<>();
     private boolean creating;
 
 

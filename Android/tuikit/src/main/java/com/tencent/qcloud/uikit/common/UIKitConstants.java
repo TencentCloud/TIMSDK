@@ -4,9 +4,6 @@ import android.os.Environment;
 
 import com.tencent.qcloud.uikit.TUIKit;
 
-/**
- * Created by valexhuang on 2018/7/16.
- */
 
 public class UIKitConstants {
 

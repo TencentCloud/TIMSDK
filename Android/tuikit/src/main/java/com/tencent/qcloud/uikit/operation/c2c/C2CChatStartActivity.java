@@ -8,20 +8,14 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.tencent.qcloud.uikit.TUIKit;
 import com.tencent.qcloud.uikit.R;
 import com.tencent.qcloud.uikit.business.chat.c2c.model.C2CChatInfo;
 import com.tencent.qcloud.uikit.business.chat.c2c.model.C2CChatManager;
 import com.tencent.qcloud.uikit.business.session.model.SessionInfo;
-import com.tencent.qcloud.uikit.business.session.model.SessionManager;
-import com.tencent.qcloud.uikit.business.session.view.SessionPanel;
 import com.tencent.qcloud.uikit.common.utils.SoftKeyBoardUtil;
 import com.tencent.qcloud.uikit.operation.message.UIKitRequest;
 import com.tencent.qcloud.uikit.operation.message.UIKitRequestDispatcher;
 
-/**
- * Created by valexhuang on 2018/9/4.
- */
 
 public class C2CChatStartActivity extends Activity {
 

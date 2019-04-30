@@ -6,10 +6,8 @@ import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
 import java.io.Serializable;
 
-/**
- * Created by teambition on 15/8/27.
- */
 public class Emoji implements Serializable {
+
     private static final int deaultSize = UIUtils.getPxByDp(32);
 
     public String getDesc() {

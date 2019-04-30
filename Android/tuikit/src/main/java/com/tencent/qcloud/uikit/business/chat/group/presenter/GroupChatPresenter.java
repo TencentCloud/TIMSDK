@@ -9,16 +9,14 @@ import com.tencent.qcloud.uikit.common.BackgroundTasks;
 import com.tencent.qcloud.uikit.business.chat.model.MessageInfo;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
-/**
- * Created by valxehuang on 2018/7/18.
- */
 
 public class GroupChatPresenter implements GroupChatManager.GroupNotifyHandler {
-    GroupChatPanel mChatPanel;
-    GroupChatManager mChatManager;
+
+    private GroupChatPanel mChatPanel;
+    private GroupChatManager mChatManager;
 
     public GroupChatPresenter(GroupChatPanel chatPanel) {
-        this.mChatPanel = chatPanel;
+        mChatPanel = chatPanel;
         mChatManager = GroupChatManager.getInstance();
         mChatManager.setGroupHandler(this);
     }
@@ -45,7 +43,6 @@ public class GroupChatPresenter implements GroupChatManager.GroupNotifyHandler {
             public void onSuccess(Object data) {
                 if (lastMessage == null && data != null)
                     mChatPanel.setDataProvider((GroupChatProvider) data);
-
             }
 
             @Override
@@ -54,7 +51,6 @@ public class GroupChatPresenter implements GroupChatManager.GroupNotifyHandler {
             }
         });
     }
-
 
     public void sendGroupMessage(MessageInfo message) {
         mChatManager.sendGroupMessage(message, new IUIKitCallBack() {
@@ -75,7 +71,6 @@ public class GroupChatPresenter implements GroupChatManager.GroupNotifyHandler {
             }
         });
     }
-
 
     public void deleteMessage(int position, MessageInfo message) {
         mChatManager.deleteMessage(position, message);
@@ -107,7 +102,6 @@ public class GroupChatPresenter implements GroupChatManager.GroupNotifyHandler {
         if (applySize > 0)
             mChatPanel.onChatActive(applySize);
     }
-
 
     public void exitChat() {
         mChatManager.removeGroupHandler();

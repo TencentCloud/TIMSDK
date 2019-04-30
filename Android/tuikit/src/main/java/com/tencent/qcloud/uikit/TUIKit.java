@@ -29,11 +29,9 @@ import com.tencent.qcloud.uikit.operation.UIKitMessageRevokedManager;
 
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/6/22.
- */
 
 public class TUIKit {
+
     private static Context appContext;
     private static BaseUIKitConfigs baseConfigs;
 
@@ -47,6 +45,7 @@ public class TUIKit {
     public static void init(Context context, int sdkAppID, BaseUIKitConfigs configs) {
         appContext = context;
         baseConfigs = configs;
+        baseConfigs.setAppCacheDir(context.getFilesDir().getPath());
         long current = System.currentTimeMillis();
 
         initIM(context, sdkAppID);
@@ -54,7 +53,7 @@ public class TUIKit {
         current = System.currentTimeMillis();
 
         BackgroundTasks.initInstance();
-        FileUtil.initPath();
+        FileUtil.initPath(); // 取决于app什么时候获取到权限，即使在application中初始化，首次安装时，存在获取不到权限，建议app端在activity中再初始化一次，确保文件目录完整创建
         System.out.println("TUIKIT>>>>>>>>>>>>>>>>>>" + (System.currentTimeMillis() - current));
         current = System.currentTimeMillis();
         FaceManager.loadFaceFiles();
@@ -84,6 +83,13 @@ public class TUIKit {
         if (config == null) {
             config = new TIMSdkConfig(sdkAppID)
                     .setLogLevel(TIMLogLevel.DEBUG);
+//            config.setLogCallbackLevel(TIMLogLevel.DEBUG);
+//            config.setLogListener(new TIMLogListener() {
+//                @Override
+//                public void log(int level, String tag, String msg) {
+//                    Log.e("TUIKit", "test session wrapper jni, msg = " + msg);
+//                }
+//            });
             config.enableLogPrint(true);
         }
         TIMManager.getInstance().init(context, config);

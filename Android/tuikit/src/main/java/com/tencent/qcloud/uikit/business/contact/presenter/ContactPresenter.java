@@ -5,9 +5,6 @@ import com.tencent.qcloud.uikit.business.contact.model.ContactManager;
 import com.tencent.qcloud.uikit.common.IUIKitUICallback;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
-/**
- * Created by valexhuang on 2018/6/21.
- */
 
 public class ContactPresenter {
 

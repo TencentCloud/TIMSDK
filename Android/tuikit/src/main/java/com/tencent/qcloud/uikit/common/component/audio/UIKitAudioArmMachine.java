@@ -1,27 +1,13 @@
 package com.tencent.qcloud.uikit.common.component.audio;
 
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioRecord;
-import android.media.AudioTrack;
+
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.util.Log;
 
 import com.tencent.qcloud.uikit.TUIKit;
 import com.tencent.qcloud.uikit.common.UIKitConstants;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-/**
- * Created by valexhuang on 2018/5/29.
- */
 
 public class UIKitAudioArmMachine {
 

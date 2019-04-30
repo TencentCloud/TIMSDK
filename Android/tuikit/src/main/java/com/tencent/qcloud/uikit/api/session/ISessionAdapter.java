@@ -5,7 +5,6 @@ import android.widget.BaseAdapter;
 import com.tencent.qcloud.uikit.business.session.model.SessionInfo;
 
 /**
- * Created by valexhuang on 2018/9/27.
  * ISessionPanel(SessionListView) 的适配器，用户可自定义实现
  */
 

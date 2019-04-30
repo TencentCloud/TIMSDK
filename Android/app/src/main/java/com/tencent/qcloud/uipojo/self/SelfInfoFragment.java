@@ -15,11 +15,9 @@ import com.tencent.qcloud.uikit.common.BaseFragment;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 import com.tencent.qcloud.uipojo.main.MainActivity;
 
-/**
- * Created by valxehuang on 2018/7/30
- */
 
 public class SelfInfoFragment extends BaseFragment {
+
     private View mBaseView;
     private SelfInfoPanel infoPanel;
 

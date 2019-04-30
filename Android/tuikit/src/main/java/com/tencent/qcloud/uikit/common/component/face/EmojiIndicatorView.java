@@ -16,10 +16,9 @@ import com.tencent.qcloud.uikit.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by teambition on 15/8/27.
- */
+
 public class EmojiIndicatorView extends LinearLayout {
+
     private Context mContext;
     private ArrayList<ImageView> mImageViews;
     private Bitmap bmpSelect;

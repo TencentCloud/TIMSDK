@@ -13,9 +13,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 
-/**
- * Created by valexhuang on 2018/10/11.
- */
 @SuppressLint("AppCompatCustomView")
 public class UIKitTextView extends TextView implements InfoCacheView {
     private HashMap<Method, Object[]> infoCache = new HashMap<>();

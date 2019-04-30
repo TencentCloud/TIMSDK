@@ -6,9 +6,6 @@ import android.provider.MediaStore;
 
 import com.tencent.qcloud.uikit.TUIKit;
 
-/**
- * Created by valxehuang on 2018/7/26.
- */
 
 public class URIUtil {
 

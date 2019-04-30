@@ -2,9 +2,6 @@ package com.tencent.qcloud.uikit.common.component.info;
 
 import android.view.View;
 
-/**
- * Created by valexhuang on 2018/8/7.
- */
 
 public class InfoItemAction {
     private int leftIcon;

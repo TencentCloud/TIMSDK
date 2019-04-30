@@ -4,9 +4,6 @@ import android.view.View;
 
 import com.tencent.qcloud.uikit.business.session.model.SessionInfo;
 
-/**
- * Created by valxehuang on 2018/7/17.
- */
 
 public interface SessionListEvent {
 

@@ -17,9 +17,6 @@ import android.widget.TextView;
 
 import com.tencent.qcloud.uikit.R;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class PopWindowUtil {
 

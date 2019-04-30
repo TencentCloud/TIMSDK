@@ -2,6 +2,7 @@ package com.tencent.qcloud.uikit.business.session.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.tencent.qcloud.uikit.common.IUIKitCallBack;
 import com.tencent.imsdk.TIMConversation;
@@ -31,12 +32,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by valexhuang on 2018/7/17.
- */
 
 public class SessionManager implements UIKitRequestHandler, TIMRefreshListener, UIKitMessageRevokedManager.MessageRevokeHandler {
-    private final static String TAG = "SessionManager";
+
+    private final static String TAG = "tuikit/" + SessionManager.class.getSimpleName();
+    private final static String SP_NAME = SessionManager.class.getSimpleName();
     private final static String TOP_LIST = "top_list";
     private SessionProvider mProvider;
     private List<MessageUnreadWatcher> mUnreadWatchers = new ArrayList<>();
@@ -52,7 +52,7 @@ public class SessionManager implements UIKitRequestHandler, TIMRefreshListener, 
     }
 
     public void init() {
-        mSessionPreferences = TUIKit.getAppContext().getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        mSessionPreferences = TUIKit.getAppContext().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         mTopList = mSessionPreferences.getStringSet(TOP_LIST, new HashSet<String>());
         UIKitRequestDispatcher.getInstance().registerHandler(UIKitRequestDispatcher.MODEL_SESSION, this);
         UIKitMessageRevokedManager.getInstance().addHandler(this);
@@ -160,6 +160,11 @@ public class SessionManager implements UIKitRequestHandler, TIMRefreshListener, 
      * @return
      */
     private SessionInfo TIMConversation2SessionInfo(TIMConversation session) {
+        if (session != null) {
+            if (TextUtils.isEmpty(session.getPeer())) { // 没有peer的会话，点击进去会有异常，这里做拦截
+                return null;
+            }
+        }
         TIMConversationExt ext = new TIMConversationExt(session);
         TIMMessage message = ext.getLastMsg();
         if (message == null)
@@ -253,8 +258,9 @@ public class SessionManager implements UIKitRequestHandler, TIMRefreshListener, 
             SessionInfo info = sessionInfos.get(i);
             if (info.getPeer().equals(peer)) {
                 session = info;
+                break;
             }
-            break;
+            continue;
         }
         if (session == null)
             return;
@@ -287,6 +293,7 @@ public class SessionManager implements UIKitRequestHandler, TIMRefreshListener, 
         if (status) {
             handleTopData(session.getPeer(), false);
             mProvider.deleteSession(index);
+            updateUnreadTotal(mUnreadTotal - session.getUnRead());
         }
     }
 
@@ -441,14 +448,10 @@ public class SessionManager implements UIKitRequestHandler, TIMRefreshListener, 
      * 会话未读计数变化监听器
      */
     public interface MessageUnreadWatcher {
-        public void updateUnread(int count);
+        void updateUnread(int count);
     }
 
-
-    /**
-     * 会话未读计数变化监听器
-     */
     public interface SessionStartChat {
-        public void startChat(SessionInfo sessionInfo);
+        void startChat(SessionInfo sessionInfo);
     }
 }

@@ -3,16 +3,11 @@ package com.tencent.qcloud.uikit.common;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 
-/**
- * Created by valexhuang on 2018/6/14.
- */
-
 public class BaseFragment extends Fragment {
 
     public void forward(Fragment fragment, boolean hide) {
         forward(getId(), fragment, null, hide);
     }
-
 
     public void forward(int viewId, Fragment fragment, String name, boolean hide) {
         FragmentTransaction trans = getFragmentManager().beginTransaction();

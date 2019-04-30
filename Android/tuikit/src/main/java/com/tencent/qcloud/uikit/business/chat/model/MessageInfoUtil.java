@@ -37,9 +37,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/8/6.
- */
 
 public class MessageInfoUtil {
 

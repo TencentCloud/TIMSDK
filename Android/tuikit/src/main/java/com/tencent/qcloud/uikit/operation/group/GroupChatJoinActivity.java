@@ -15,10 +15,6 @@ import com.tencent.qcloud.uikit.business.chat.group.model.GroupChatManager;
 import com.tencent.qcloud.uikit.common.utils.SoftKeyBoardUtil;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
-/**
- * Created by valexhuang on 2018/9/4.
- */
-
 public class GroupChatJoinActivity extends Activity {
 
     private SearchView mGroupSearch;

@@ -9,9 +9,9 @@ import com.tencent.qcloud.uipojo.login.view.ILoginView;
  */
 
 public class PojoLoginPresenter {
-    ILoginView mView;
-    PojoLoginManager mManager = PojoLoginManager.getInstance();
 
+    private ILoginView mView;
+    private PojoLoginManager mManager = PojoLoginManager.getInstance();
 
     public PojoLoginPresenter(ILoginView view) {
         mView = view;
@@ -27,6 +27,7 @@ public class PojoLoginPresenter {
             @Override
             public void onFail(String module, int errCode, String errMsg) {
                 mView.onLoginFail(module, errCode, errMsg);
+                UIUtils.toastLongMessage("登录失败, errCode = " + errCode + ", errInfo = " + errMsg);
             }
         });
     }
@@ -40,7 +41,7 @@ public class PojoLoginPresenter {
 
             @Override
             public void onFail(String module, int errCode, String errMsg) {
-                UIUtils.toastLongMessage("注册失败：" + errMsg);
+                UIUtils.toastLongMessage("注册失败, errCode = " + errCode + ", errInfo = " + errMsg);
             }
         });
     }

@@ -5,9 +5,6 @@ import com.tencent.qcloud.uikit.api.contact.IContactDataProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/7/3.
- */
 
 public class ContactProvider implements IContactDataProvider {
     public List<ContactInfoBean> dataSource = new ArrayList<>();

@@ -4,9 +4,6 @@ import android.view.View;
 
 import com.tencent.qcloud.uikit.business.chat.model.MessageInfo;
 
-/**
- * Created by valxehuang on 2018/7/18.
- */
 
 public interface ChatListEvent {
     void onMessageLongClick(View view, int position, MessageInfo messageInfo);

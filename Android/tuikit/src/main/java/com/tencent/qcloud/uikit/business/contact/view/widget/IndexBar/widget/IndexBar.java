@@ -27,10 +27,6 @@ import java.util.List;
 
 /**
  * 介绍：索引右侧边栏
- * 作者：zhangxutong
- * 邮箱：mcxtzhang@163.com
- * CSDN：http://blog.csdn.net/zxt0601
- * 时间： 16/09/04.
  */
 
 public class IndexBar extends View {

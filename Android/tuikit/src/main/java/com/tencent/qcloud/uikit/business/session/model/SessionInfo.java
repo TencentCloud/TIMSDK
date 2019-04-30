@@ -128,11 +128,11 @@ public class SessionInfo implements Serializable, Comparable<SessionInfo> {
         this.lastMessageTime = lastMessageTime;
     }
 
-    public com.tencent.qcloud.uikit.business.chat.model.MessageInfo getLastMessage() {
+    public MessageInfo getLastMessage() {
         return lastMessage;
     }
 
-    public void setLastMessage(com.tencent.qcloud.uikit.business.chat.model.MessageInfo lastMessage) {
+    public void setLastMessage(MessageInfo lastMessage) {
         this.lastMessage = lastMessage;
     }
 

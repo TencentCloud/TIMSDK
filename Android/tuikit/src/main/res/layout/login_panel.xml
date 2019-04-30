@@ -41,6 +41,7 @@
                 android:background="@null"
                 android:gravity="center_vertical"
                 android:hint="字母开头，4~24个字母+数字" />
+
         </LinearLayout>
 
         <View
@@ -90,8 +91,7 @@
             android:layout_height="40dp"
             android:layout_gravity="right"
             android:gravity="right|bottom"
-            android:text="注册"
-            android:visibility="gone"/>
+            android:text="注册" />
 
     </LinearLayout>
 

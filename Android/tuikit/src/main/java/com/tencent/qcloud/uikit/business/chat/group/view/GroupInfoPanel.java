@@ -43,26 +43,33 @@ import com.tencent.qcloud.uikit.common.widget.UIKitSwitch;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class GroupInfoPanel extends LinearLayout implements IGroupInfoPanel {
+
     private ImageView mGroupIcon;
-    private TextView mGroupName, mGroupAccount, mGroupNotice;
+    private TextView mGroupName;
+    private TextView mGroupAccount;
+    private TextView mGroupNotice;
     private UIKitSwitch mTopSwitch;
-    private Button mDissolveBtn, mModifyGroupName, mModifyGroupNotice, mCancelBtn;
+    private Button mDissolveBtn;
+    private Button mModifyGroupName;
+    private Button mModifyGroupNotice;
+    private Button mCancelBtn;
     private PageTitleBar mTitleBar;
     private GroupInfoPanelEvent mEvent;
     private AlertDialog mDialog;
-    private InfoItemView mMemberBar, mGroupTypeBar, mJoinTypeBar, mSelfNickBar;
+    private InfoItemView mMemberBar;
+    private InfoItemView mGroupTypeBar;
+    private InfoItemView mJoinTypeBar;
+    private InfoItemView mSelfNickBar;
+
     private GridView mMembersGrid;
     private GroupChatInfo mGroupInfo;
     private GroupMemberControlAdapter mMemberAdapter;
     private AlertDialog mModifyDialog;
     private GroupMemberControler mContorler;
     private GroupInfoPresenter mPresenter;
-    List<String> joinTypes = new ArrayList<>();
+    private List<String> joinTypes = new ArrayList<>();
 
     public GroupInfoPanel(Context context) {
         super(context);
