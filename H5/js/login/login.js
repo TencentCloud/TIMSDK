@@ -21,7 +21,8 @@ function tlsGetUserSig(res) {
         loginInfo.sdkAppID = loginInfo.appIDAt3rd = Number(webim.Tool.getQueryString("sdkappid"));
         //从cookie获取accountType
         var accountType = webim.Tool.getCookie('accountType');
-        if (accountType) {
+    console.log('getCookie accountType');
+    if (accountType) {
             loginInfo.accountType = accountType;
             //sdk登录
             webimLogin();

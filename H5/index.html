@@ -1654,9 +1654,8 @@
   <!-- web im 让h5支持播放amr录音文件 -->
 
   <script type="text/javascript">
-    // 将以下两个参数替换成您的配置
     var sdkAppID = '', // 填写第一步获取到的 sdkappid
-        accountType = ''; // 填写第二步设置账号体系集成获取到的 accountType
+    accountType = ''; // 填写第二步设置账号体系集成获取到的 accountType
 
     // 登录帐号
     var identifier = '', // 填写第三步输入的 identifier，由您指定，可以在登录页面直接输入
@@ -1670,8 +1669,6 @@
       'sdkAppID': sdkAppID, //用户所属应用id,必填
       'accountType': accountType, //用户所属应用帐号类型，必填
       'identifier': identifier, //当前用户ID,必须是否字符串类型，必填
-      // 'identifier': "webim_test_userid", //当前用户ID,必须是否字符串类型，必填
-      // 'identifier': "user_b", //当前用户ID,必须是否字符串类型，必填
       'userSig': userSig,
       //当前用户身份凭证，必须是字符串类型，必填
       'identifierNick': null, //当前用户昵称，不用填写，登录接口会返回用户的昵称，如果没有设置，则返回用户的id
@@ -1811,7 +1808,9 @@
 
     var isAccessFormalEnv = true; //是否访问正式环境
 
-
+    if(webim.Tool.getQueryString("env")=="false"){
+        isAccessFormalEnv=false;//访问测试环境
+    }
 
     var isLogOn = false; //是否开启sdk在控制台打印日志
 
