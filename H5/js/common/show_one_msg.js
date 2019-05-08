@@ -233,8 +233,8 @@ function convertSoundMsgToHtml(content) {
 /**
  * @uses amr音频信息转使用amr.js播放
  * @param {object.<{uuid:string,downUrl:string}>} content - 消息内容对象
- * @property {string} uuid - 文件的UUID
- * @property {string} downUrl - 文件的下载地址
+ * @param {string} content.uuid - 文件的UUID
+ * @param {string} content.downUrl - 文件的下载地址
  * @returns {string||null} aElmentString - AMR播放控件的HTML代码
  */
 function convertSoundMsgToAMRPlayer(content) {

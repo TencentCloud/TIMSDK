@@ -68,7 +68,6 @@ function selectApp() {
     }
     //将account_type保存到cookie中,有效期是1天
     webim.Tool.setCookie('accountType', loginInfo.accountType, 3600 * 24);
-    console.log('setCookie accountType');
     $('#select_app_dialog').modal('hide');
 
     if (accountMode == 1) {
