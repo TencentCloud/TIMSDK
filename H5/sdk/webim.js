@@ -92,10 +92,9 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _build_version_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 var _build_version_json__WEBPACK_IMPORTED_MODULE_0___namespace = /*#__PURE__*/__webpack_require__.t(1, 1);
-/* webim javascript SDK
- * VER 1.7.3
- */
 
+/* webim javascript SDK
+ */
 (function (global, factory) {
 
     global["Long"] = factory();
@@ -1463,7 +1462,7 @@ window.webim= webim;
 (function (webim) {
     //sdk版本
     var SDK = {
-        'VERSION': _build_version_json__WEBPACK_IMPORTED_MODULE_0__, // sdk版本号
+        'VERSION': _build_version_json__WEBPACK_IMPORTED_MODULE_0__["Version"], // sdk版本号
         'APPID': '537048168', //web im sdk 版本 APPID
         'PLAATFORM': "10" // 发送请求时判断其是来自web端的请求
     };
