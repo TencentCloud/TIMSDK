@@ -14,6 +14,8 @@
 @class TIMMessage;
 @class TIMGroupTipsElem;
 @class TIMGroupInfo;
+@class TIMSNSChangeInfo;
+@class TIMFriendPendencyInfo;
 
 /**
  *  连接通知回调
@@ -167,90 +169,40 @@
 - (void)onGroupTipsEvent:(TIMGroupTipsElem*)elem;
 @end
 
-///**
-// *  好友代理事件回调
-// */
-//@protocol TIMFriendshipListener <NSObject>
-//@optional
-//
-///**
-// *  添加好友通知
-// *
-// *  @param users 好友列表（TIMUserProfile*）
-// */
-//- (void)onAddFriends:(NSArray*)users;
-//
-///**
-// *  删除好友通知
-// *
-// *  @param identifiers 用户id列表（NSString*）
-// */
-//- (void)onDelFriends:(NSArray*)identifiers;
-//
-///**
-// *  好友资料更新通知
-// *
-// *  @param profiles 资料列表（TIMUserProfile*）
-// */
-//- (void)onFriendProfileUpdate:(NSArray*)profiles;
-//
-///**
-// *  好友申请通知
-// *
-// *  @param reqs 好友申请者id列表（TIMSNSChangeInfo*）
-// */
-//- (void)onAddFriendReqs:(NSArray*)reqs;
-//
-//@end
+/**
+ *  好友代理事件回调
+ */
+@protocol TIMFriendshipListener <NSObject>
+@optional
 
-//@protocol TIMGroupListener <NSObject>
-//@optional
-//
-///**
-// *  有新用户加入群时的通知回调
-// *
-// *  @param groupId     群ID
-// *  @param membersInfo 加群用户的群资料（TIMGroupMemberInfo*）列表
-// */
-//- (void)onMemberJoin:(NSString*)groupId membersInfo:(NSArray*)membersInfo;
-//
-///**
-// *  有群成员退群时的通知回调
-// *
-// *  @param groupId 群ID
-// *  @param members 退群成员的identifier（NSString*）列表
-// */
-//- (void)onMemberQuit:(NSString*)groupId members:(NSArray*)members;
-//
-///**
-// *  群成员信息更新的通知回调
-// *
-// *  @param groupId     群ID
-// *  @param membersInfo 更新后的群成员资料（TIMGroupMemberInfo*）列表
-// */
-//- (void)onMemberUpdate:(NSString*)groupId membersInfo:(NSArray*)membersInfo;
-//
-///**
-// *  加入群的通知回调
-// *
-// *  @param groupInfo 加入群的群组资料
-// */
-//- (void)onGroupAdd:(TIMGroupInfo*)groupInfo;
-//
-///**
-// * 本地群组资料被删除的通知回调，包括主动退群，被踢，群被解散，群被回收
-// *
-// * @param groupId 对应的群ID
-// */
-//- (void)onGroupDelete:(NSString*)groupId;
-//
-///**
-// *  群资料更新的通知回调
-// *
-// *  @param groupInfo 更新后的群资料信息
-// */
-//- (void)onGroupUpdate:(TIMGroupInfo*)groupInfo;
-//
-//@end
+/**
+ *  添加好友通知
+ *
+ *  @param users 好友列表（NSString*）
+ */
+- (void)onAddFriends:(NSArray*)users;
+
+/**
+ *  删除好友通知
+ *
+ *  @param identifiers 用户id列表（NSString*）
+ */
+- (void)onDelFriends:(NSArray*)identifiers;
+
+/**
+ *  好友资料更新通知
+ *
+ *  @param profiles 资料列表（TIMSNSChangeInfo *）
+ */
+- (void)onFriendProfileUpdate:(NSArray<TIMSNSChangeInfo *> *)profiles;
+
+/**
+ *  好友申请通知
+ *
+ *  @param reqs 好友申请者id列表（TIMFriendPendencyInfo *）
+ */
+- (void)onAddFriendReqs:(NSArray<TIMFriendPendencyInfo *> *)reqs;
+
+@end
 
 #endif

@@ -28,7 +28,7 @@ enum ERROR_CODE {
     ERR_IN_PROGESS                       = 6015, //执行中
     ERR_INVALID_MSG_ELEM                 = 6016, //IM: 无效消息elem
     ERR_INVALID_PARAMETERS               = 6017, //API参数无效
-    ERR_INIT_CORE_FAIL                     = 6018, //INIT CORE模块失败
+    ERR_INIT_CORE_FAIL                   = 6018, //INIT CORE模块失败
     ERR_DATABASE_OPERATE_FAILED          = 6019, //本地数据库操作失败
     ERR_EXPIRED_SESSION_NODE             = 6020, //SessionNode为null
     ERR_INVALID_SDK_OBJECT               = 6021, //无效的imsdk对象，例如用户自己生成TIMImage,或内部赋值错误导致的sdk对象无效
@@ -36,6 +36,7 @@ enum ERROR_CODE {
     ERR_LOGGED_OUT_BEFORE_LOGIN_FINISHED = 6023, //在登录完成前进行了登出（在登录时返回）
     ERR_TLSSDK_NOT_INITIALIZED           = 6024, //tlssdk未初始化
     ERR_TLSSDK_USER_NOT_FOUND            = 6025, //TLSSDK没有找到相应的用户信息
+    ERR_NO_PREVIOUS_LOGIN                = 6026, //自动登陆时并没有登陆过该用户
     
     ERR_BIND_FAIL_UNKNOWN                = 6100, //QALSDK未知原因BIND失败
     ERR_BIND_FAIL_NO_SSOTICKET           = 6101, //缺少SSO票据
