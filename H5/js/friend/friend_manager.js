@@ -48,14 +48,7 @@ function initGetMyFriendTable(data) {
             {field: "Info_Account", title: "账号", align: "center", valign: "middle", sortable: "true"},
             {field: "Nick", title: "昵称", align: "center", valign: "middle", sortable: "true"},
             {field: "Gender", title: "性别", align: "center", valign: "middle", sortable: "true"},
-            {
-                field: "gmfOperate",
-                title: "操作",
-                align: "center",
-                valign: "middle",
-                formatter: "gmfOperateFormatter",
-                events: "gmfOperateEvents"
-            }
+            {field: "gmfOperate",title: "操作",align: "center",valign: "middle",formatter: "gmfOperateFormatter",events: "gmfOperateEvents"}
         ],
         data: data,
         formatNoMatches: function () {

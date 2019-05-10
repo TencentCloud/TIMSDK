@@ -1,7 +1,7 @@
-/* webim javascript SDK (for wechat miniProgram )
- * VER 1.7.2
- */
+/* webim javascript SDK (for wechat miniProgram ) 
+*/
 module.exports = function () {
+    var Version = '1.7.3';
 
     if (typeof Array.prototype.forEach != 'function') {
         Array.prototype.forEach = function (callback) {
@@ -11,7 +11,6 @@ module.exports = function () {
         };
     }
     /* webim javascript SDK
-     * VER 1.7.2
      */
 
     /* webim API definitions
@@ -570,7 +569,7 @@ module.exports = function () {
     (function (webim) {
         //sdk版本
         var SDK = {
-            'VERSION': '1.7.2', //sdk版本号
+            'VERSION': Version, //sdk版本号
             'APPID': '537048168', //web im sdk 版本 APPID
             'PLAATFORM': "10" //发送请求时判断其是来自web端的请求
         };
@@ -1529,12 +1528,12 @@ module.exports = function () {
                     return;
                 }
             }
-            if (!loginInfo.accountType) {
-                if (cbErr) {
-                    cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
-                    return;
-                }
-            }
+            // if (!loginInfo.accountType) {
+            //     if (cbErr) {
+            //         cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
+            //         return;
+            //     }
+            // }
 
             if (loginInfo.identifier) {
                 ctx.identifier = loginInfo.identifier.toString();
@@ -1549,7 +1548,7 @@ module.exports = function () {
                 ctx.userSig = loginInfo.userSig.toString();
             }
             ctx.sdkAppID = loginInfo.sdkAppID;
-            ctx.accountType = loginInfo.accountType;
+            ctx.accountType = loginInfo.accountType||'';
 
             if (ctx.identifier && ctx.userSig) { //带登录态
                 proto_accesslayer(function () {
@@ -3159,10 +3158,14 @@ module.exports = function () {
 
             //根据不同情况拉取数据
             //是否需要申请下载地址  0:到架平申请  1:到cos申请  2:不需要申请, 直接拿url下载
-            if (this.downFlag !== undefined && this.busiId !== undefined) {
-                getFileDownUrlV2(uuid, senderId, second, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.SOUND);
+            if (downFlag==2 && url!=null) {
+                this.downUrl= url;
             } else {
-                this.downUrl = getSoundDownUrl(uuid, senderId, second); //下载地址
+                if (this.downFlag !== undefined && this.busiId !== undefined) {
+                    getFileDownUrlV2(uuid, senderId, second, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.SOUND);
+                } else {
+                    this.downUrl = getSoundDownUrl(uuid, senderId, second); //下载地址
+                }
             }
         };
         Msg.Elem.Sound.prototype.getUUID = function () {
@@ -3199,10 +3202,14 @@ module.exports = function () {
             this.busiId = chatType == SESSION_TYPE.C2C ? 2 : 1; //busi_id ( 1：群    2:C2C)
             //根据不同情况拉取数据
             //是否需要申请下载地址  0:到架平申请  1:到cos申请  2:不需要申请, 直接拿url下载
-            if (downFlag !== undefined && busiId !== undefined) {
-                getFileDownUrlV2(uuid, senderId, name, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.FILE);
+            if (downFlag==2 && url!=null) {
+                this.downUrl= url;
             } else {
-                this.downUrl = getFileDownUrl(uuid, senderId, name); //下载地址
+                if (downFlag !== undefined && busiId !== undefined) {
+                    getFileDownUrlV2(uuid, senderId, name, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.FILE);
+                } else {
+                    this.downUrl = getFileDownUrl(uuid, senderId, name); //下载地址
+                }
             }
         };
         Msg.Elem.File.prototype.getUUID = function () {
@@ -3707,7 +3714,10 @@ module.exports = function () {
             bigGroupLongPollingStartSeqMap[groupId] = 0;
             bigGroupLongPollingKeyMap[groupId] = null;
             bigGroupLongPollingMsgMap[groupId] = {};
-            
+
+            bigGroupLongPollingStartSeqMap[groupId].delete();
+            bigGroupLongPollingKeyMap[groupId].delete();
+            bigGroupLongPollingMsgMap[groupId].delete();
         };
 
             //设置群消息数据条数
@@ -4466,17 +4476,18 @@ module.exports = function () {
                             onKickedEventCall();
                         }
                     }
-                    //累计超过一定次数，不再发起长轮询请求
-                    if (curBigGroupLongPollingRetErrorCount < LONG_POLLING_MAX_RET_ERROR_COUNT) {
                     bigGroupLongPollingOn && MsgManager.bigGroupLongPolling( GroupId );
-                    } else {
-                        var errInfo = {
-                            'ActionStatus': ACTION_STATUS.FAIL,
-                            'ErrorCode': CONNECTION_STATUS.OFF,
-                            'ErrorInfo': 'connection is off'
-                        };
-                        ConnManager.callBack(errInfo);
-                    }
+                    //累计超过一定次数，不再发起长轮询请求 - 去掉轮询次数限制的逻辑 SaxonGao
+                    // if (curBigGroupLongPollingRetErrorCount < LONG_POLLING_MAX_RET_ERROR_COUNT) {
+                    //     bigGroupLongPollingOn && MsgManager.bigGroupLongPolling( GroupId );
+                    // } else {
+                    //     var errInfo = {
+                    //         'ActionStatus': ACTION_STATUS.FAIL,
+                    //         'ErrorCode': CONNECTION_STATUS.OFF,
+                    //         'ErrorInfo': 'connection is off'
+                    //     };
+                    //     ConnManager.callBack(errInfo);
+                    // }
                     if (cbErr) cbErr(err);
 
                 }, bigGroupLongPollingHoldTime * 1000);

@@ -109,11 +109,8 @@ function initGetRecentContactListTable(data) {
 //我的最近联系人
 var getRecentContactList = function () {
     initGetRecentContactListTable([]);
-    var options = {
-        'Count': reqRecentSessCount //最近的会话数
-    };
     webim.getRecentContactList(
-        options,
+        {},
         function (resp) {
             var data = [];
             var tempSess, tempSessMap = {}; //临时会话变量
