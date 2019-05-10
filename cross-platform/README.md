@@ -1,7 +1,6 @@
 
 **跨平台C接口，目前支持以下四个平台**
-- Windows 平台
- - Windows 快速开始 [集成 SDK](https://cloud.tencent.com/document/product/269/33489) 和 [跑通 demo](https://cloud.tencent.com/document/product/269/33488)。
+- Windows 平台，Windows 快速开始 [集成 SDK](https://cloud.tencent.com/document/product/269/33489) 和 [跑通 demo](https://cloud.tencent.com/document/product/269/33488)。
 - iOS 平台
 - Mac 平台
 - Android 平台
