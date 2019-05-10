@@ -1,6 +1,99 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _build_version_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+var _build_version_json__WEBPACK_IMPORTED_MODULE_0___namespace = /*#__PURE__*/__webpack_require__.t(1, 1);
 
 /* webim javascript SDK
- * VER 1.7.2
  */
 (function (global, factory) {
 
@@ -21,6 +114,7 @@
         enumerable: false,
         configurable: false
     });
+
 
     function isLong(obj) {
         return (obj && obj["__isLong__"]) === true;
@@ -1361,15 +1455,16 @@ var webim = { // namespace object webim
     }
 
 };
+window.webim= webim;
 
 /* webim API implementation
  */
 (function (webim) {
     //sdk版本
     var SDK = {
-        'VERSION': '1.7.2', //sdk版本号
+        'VERSION': _build_version_json__WEBPACK_IMPORTED_MODULE_0__["Version"], // sdk版本号
         'APPID': '537048168', //web im sdk 版本 APPID
-        'PLAATFORM': "10" //发送请求时判断其是来自web端的请求
+        'PLAATFORM': "10" // 发送请求时判断其是来自web端的请求
     };
 
     //是否启用正式环境，默认启用
@@ -2488,12 +2583,12 @@ var webim = { // namespace object webim
                 return;
             }
         }
-        if (!loginInfo.accountType) {
-            if (cbErr) {
-                cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
-                return;
-            }
-        }
+        // if (!loginInfo.accountType) {
+        //     if (cbErr) {
+        //         cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
+        //         return;
+        //     }
+        // }
 
         if (loginInfo.identifier) {
             ctx.identifier = loginInfo.identifier.toString();
@@ -2508,7 +2603,7 @@ var webim = { // namespace object webim
             ctx.userSig = loginInfo.userSig.toString();
         }
         ctx.sdkAppID = loginInfo.sdkAppID;
-        ctx.accountType = loginInfo.accountType;
+        ctx.accountType = loginInfo.accountType||'';
 
         if (ctx.identifier && ctx.userSig) { //带登录态
           proto_accesslayer( function(){
@@ -3178,7 +3273,7 @@ var webim = { // namespace object webim
                 MsgStore.delSessByTypeId(SESSION_TYPE.GROUP, options.GroupId);
                 //重置当前再请求中的ajax
                 //clearXmlHttpObjMap();
-                //退出大群成功之后需要重置长轮询信息
+                //退出大群成功之后需要重置长轮询信息 - bigGroupLongPollingKeyMap
                 // MsgManager.resetBigGroupLongPollingInfo();
                 if (cbOk) cbOk(resp);
             },
@@ -4763,9 +4858,14 @@ var webim = { // namespace object webim
         //重置大群长轮询变量
         this.resetBigGroupLongPollingInfo = function ( groupId ) {
             bigGroupLongPollingOn = false;
+            
             bigGroupLongPollingStartSeqMap[groupId] = 0;
             bigGroupLongPollingKeyMap[groupId] = null;
             bigGroupLongPollingMsgMap[groupId] = {};
+
+            bigGroupLongPollingStartSeqMap[groupId].delete();
+            bigGroupLongPollingKeyMap[groupId].delete();
+            bigGroupLongPollingMsgMap[groupId].delete();
             
         };
 
@@ -5547,17 +5647,18 @@ var webim = { // namespace object webim
                         onKickedEventCall();
                     }
                 }
-                //累计超过一定次数，不再发起长轮询请求
-                if (curBigGroupLongPollingRetErrorCount < LONG_POLLING_MAX_RET_ERROR_COUNT) {
-                    bigGroupLongPollingOn && MsgManager.bigGroupLongPolling( GroupId );
-                } else {
-                    var errInfo = {
-                        'ActionStatus': ACTION_STATUS.FAIL,
-                        'ErrorCode': CONNECTION_STATUS.OFF,
-                        'ErrorInfo': 'connection is off'
-                    };
-                    ConnManager.callBack(errInfo);
-                }
+                bigGroupLongPollingOn && MsgManager.bigGroupLongPolling( GroupId );
+                //累计超过一定次数，不再发起长轮询请求 - 去掉轮询次数限制的逻辑 SaxonGao
+                // if (curBigGroupLongPollingRetErrorCount < LONG_POLLING_MAX_RET_ERROR_COUNT) {
+                //     bigGroupLongPollingOn && MsgManager.bigGroupLongPolling( GroupId );
+                // } else {
+                //     var errInfo = {
+                //         'ActionStatus': ACTION_STATUS.FAIL,
+                //         'ErrorCode': CONNECTION_STATUS.OFF,
+                //         'ErrorInfo': 'connection is off'
+                //     };
+                //     ConnManager.callBack(errInfo);
+                // }
                 if (cbErr) cbErr(err);
 
             }, bigGroupLongPollingHoldTime * 1000);
@@ -7258,3 +7359,12 @@ var webim = { // namespace object webim
         return checkLogin(cbErr, isNeedCallBack);
     };
 })(webim);
+
+/***/ }),
+/* 1 */
+/***/ (function(module) {
+
+module.exports = {"Version":"1.7.3"};
+
+/***/ })
+/******/ ]);

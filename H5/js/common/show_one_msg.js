@@ -232,25 +232,16 @@ function convertSoundMsgToHtml(content) {
 
 /**
  * @uses amr音频信息转使用amr.js播放
- * @param {Object} content 
+ * @param {object.<{uuid:string,downUrl:string}>} content - 消息内容对象
+ * @param {string} content.uuid - 文件的UUID
+ * @param {string} content.downUrl - 文件的下载地址
+ * @returns {string||null} aElmentString - AMR播放控件的HTML代码
  */
-var convertSoundMsgToAMRPlayerLoadBenzAMRRecorderRetryCount=0;  //变量取长一点， 防止重复
 function convertSoundMsgToAMRPlayer(content) {
-    //因为BenzAMRRecorder文件比较大， 加载时间比较长， 这里重试三次。防止失败
-    if (typeof BenzAMRRecorder == 'undefined') {
-        if (convertSoundMsgToAMRPlayerLoadBenzAMRRecorderRetryCount<=3) {
-            stouTimeout(function(){
-                convertSoundMsgToAMRPlayerLoadBenzAMRRecorderRetryCount++;
-                convertSoundMsgToAMRPlayer(content)
-            },500);
-            return;
-        }
-    }
     var iconStartChar= '&nbsp;&nbsp;&#9658;&nbsp;&nbsp;';
     var btnid= ['amrplay_btn_',content.uuid,'-', Math.round(Math.random()*1000000)].join('');
     var aElmentString= ['<button id="',btnid,'" style="font-size:1.5em;" data-url="',content.downUrl,'">',iconStartChar,'</button>'].join('');
     setTimeout(function(){
-        convertSoundMsgToAMRPlayerLoadBenzAMRRecorderRetryCount=0;
         var btelm= document.getElementById(btnid);
         btelm.onclick= function(event){
             var amr = new BenzAMRRecorder();
