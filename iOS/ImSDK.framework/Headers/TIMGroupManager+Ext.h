@@ -308,7 +308,7 @@
  *
  *  @return 0：成功；1：失败
  */
-- (int)modifyGroupCustomInfo:(NSString*)group customInfo:(NSDictionary*)customInfo succ:(TIMSucc)succ fail:(TIMFail)fail;
+- (int)modifyGroupCustomInfo:(NSString*)group customInfo:(NSDictionary<NSString *,NSData *>*)customInfo succ:(TIMSucc)succ fail:(TIMFail)fail;
 
 /**
  *  转让群给新群主
@@ -398,7 +398,7 @@
  *
  *  @return 0：成功；1：失败
  */
-- (int)modifyGroupMemberInfoSetCustomInfo:(NSString*)group user:(NSString*)identifier customInfo:(NSDictionary*)customInfo succ:(TIMSucc)succ fail:(TIMFail)fail;
+- (int)modifyGroupMemberInfoSetCustomInfo:(NSString*)group user:(NSString*)identifier customInfo:(NSDictionary<NSString*,NSData*> *)customInfo succ:(TIMSucc)succ fail:(TIMFail)fail;
 
 /**
  *  修改群组是否可被搜索属性

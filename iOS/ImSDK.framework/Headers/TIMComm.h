@@ -786,7 +786,7 @@ typedef void (^TIMFriendResultArraySucc)(NSArray<TIMFriendResult *> *results);
 ///Group 消息声音,不设置传入 nil
 @property(nonatomic,strong) NSString * groupSound;
 
-///Video 音视频邀请声音,不设置传入 nil
+///Video 音视频邀请声音,不设置传入 nil (暂不支持)
 @property(nonatomic,strong) NSString * videoSound;
 
 @end
@@ -1029,43 +1029,70 @@ typedef void (^TIMFriendResultArraySucc)(NSArray<TIMFriendResult *> *results);
 ///用户资料
 @interface TIMUserProfile : TIMCodingModel
 
-///用户 identifier
+/**
+ *  用户 identifier
+ */
 @property(nonatomic,strong) NSString* identifier;
 
-///用户昵称
+/**
+ *  用户昵称
+ */
 @property(nonatomic,strong) NSString* nickname;
 
-///好友验证方式
+/**
+ *  好友验证方式
+ */
 @property(nonatomic,assign) TIMFriendAllowType allowType;
 
-///用户头像
+/**
+ * 用户头像
+ */
 @property(nonatomic,strong) NSString* faceURL;
 
-///用户签名
+/**
+ *  用户签名
+ */
 @property(nonatomic,strong) NSData* selfSignature;
 
-///用户性别
+/**
+ *  用户性别
+ */
 @property(nonatomic,assign) TIMGender gender;
 
-///用户生日
+/**
+ *  用户生日
+ */
 @property(nonatomic,assign) uint32_t birthday;
 
-///用户区域
+/**
+ *  用户区域
+ */
 @property(nonatomic,strong) NSData* location;
 
-///用户语言
+/**
+ *  用户语言
+ */
 @property(nonatomic,assign) uint32_t language;
 
-///等级
+/**
+ *  等级
+ */
 @property(nonatomic,assign) uint32_t level;
 
-///角色
+/**
+ *  角色
+ */
 @property(nonatomic,assign) uint32_t role;
 
-///自定义字段集合,key 是 NSString 类型,value 是 NSData 类型或者 NSNumber 类型(key 值按照后台配置的字符串传入)
+/**
+ *  自定义字段集合,key是NSString类型,value是NSData类型或者NSNumber类型
+ *  key值按照后台配置的字符串传入,不包括 TIMProfileTypeKey_Custom_Prefix 前缀
+ */
 @property(nonatomic,strong) NSDictionary* customInfo;
 
 @end
+
+typedef void(^ProfileCallBack) (TIMUserProfile * proflie);
 
 /**
  *  好友
@@ -1102,10 +1129,15 @@ typedef void (^TIMFriendResultArraySucc)(NSArray<TIMFriendResult *> *results);
  */
 @property(nonatomic,assign) uint64_t addTime;
 
-///自定义字段集合,key 是 NSString 类型,value 是 NSData 类型或者 NSNumber 类型(key 值按照后台配置的字符串传入)
+/**
+ *  自定义字段集合,key是NSString类型,value是NSData类型或者NSNumber类型
+ *  key值按照后台配置的字符串传入,不包括 TIMFriendTypeKey_Custom_Prefix 前缀
+ */
 @property(nonatomic,strong) NSDictionary* customInfo;
 
-///好友资料
+/**
+ * 好友资料
+ */
 @property(nonatomic,strong) TIMUserProfile *profile;
 
 @end

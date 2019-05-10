@@ -263,9 +263,9 @@
 @interface TIMVideoElem : TIMElem
 
 /**
- *  上传时任务Id，可用来查询上传进度
+ *  上传时任务Id，可用来查询上传进度（已废弃，请在 TIMUploadProgressListener 监听上传进度）
  */
-@property(nonatomic,assign) uint32_t taskId;
+@property(nonatomic,assign) uint32_t taskId DEPRECATED_ATTRIBUTE;
 
 /**
  *  视频文件路径，发送消息时设置
@@ -803,19 +803,20 @@ extern NSString * const kIOSOfflinePushNoSound;
 - (NSDate*)timestamp;
 
 /**
- *  获取发送者资料（发送者为自己时可能为空）
+ *  获取发送者资料
  *
- *  C2C 消息只有字段：identifier、nickname、customInfo，群组消息只有字段：identifier、nickname、faceURL、customInfo。如果要获取更多用户信息，请主动调用 TIMFriendshipManager.h 里面的 getUsersProfile 接口。
- *  C2C 消息不携带 faceURL，原因是在 C2C 会话中，对方的用户固定且 faceURL 一般不会变化，如果每条消息都带上这个字段，会造成系统资源的浪费。
+ *  如果本地有发送者资料，这里会直接通过 return 值 TIMUserProfile 返回发送者资料，如果本地没有发送者资料，这里会直接 return nil,SDK 内部会向服务器拉取发送者资料，并在 profileCallBack 回调里面返回发送者资料。
  *
- *  @return 发送者资料，nil 表示没有获取资料
+ *  @param  profileCallBack 发送者资料回调
+ *
+ *  @return 发送者资料，nil 表示本地没有获取到资料
  */
-- (TIMUserProfile*)getSenderProfile;
+- (TIMUserProfile*)getSenderProfile:(ProfileCallBack)profileCallBack;
 
 /**
  *  获取发送者群内资料（发送者为自己时可能为空）
  *
- *  @return 发送者群内资料，nil 表示没有获取资料或者不是群消息，目前只有字段：member、nameCard、role、customInfo
+ *  @return 发送者群内资料，nil 表示没有获取资料或者不是群消息，目前仅能获取字段：member ，其他的字段获取建议通过 TIMGroupManager+Ext.h -> getGroupMembers 获取
  */
 - (TIMGroupMemberInfo*)getSenderGroupMemberProfile;
 
