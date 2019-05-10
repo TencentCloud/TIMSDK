@@ -1,7 +1,7 @@
-/* webim javascript SDK (for wechat miniProgram )
+/* webim javascript SDK (for wechat miniProgram ) 
 */
 module.exports = function () {
-    let Version = '1.7.3';
+    var Version = '1.7.3';
 
     if (typeof Array.prototype.forEach != 'function') {
         Array.prototype.forEach = function (callback) {
@@ -1528,12 +1528,12 @@ module.exports = function () {
                     return;
                 }
             }
-            if (!loginInfo.accountType) {
-                if (cbErr) {
-                    cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
-                    return;
-                }
-            }
+            // if (!loginInfo.accountType) {
+            //     if (cbErr) {
+            //         cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
+            //         return;
+            //     }
+            // }
 
             if (loginInfo.identifier) {
                 ctx.identifier = loginInfo.identifier.toString();
@@ -1548,7 +1548,7 @@ module.exports = function () {
                 ctx.userSig = loginInfo.userSig.toString();
             }
             ctx.sdkAppID = loginInfo.sdkAppID;
-            ctx.accountType = loginInfo.accountType;
+            ctx.accountType = loginInfo.accountType||'';
 
             if (ctx.identifier && ctx.userSig) { //带登录态
                 proto_accesslayer(function () {

@@ -2583,12 +2583,12 @@ window.webim= webim;
                 return;
             }
         }
-        if (!loginInfo.accountType) {
-            if (cbErr) {
-                cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
-                return;
-            }
-        }
+        // if (!loginInfo.accountType) {
+        //     if (cbErr) {
+        //         cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
+        //         return;
+        //     }
+        // }
 
         if (loginInfo.identifier) {
             ctx.identifier = loginInfo.identifier.toString();
@@ -2603,7 +2603,7 @@ window.webim= webim;
             ctx.userSig = loginInfo.userSig.toString();
         }
         ctx.sdkAppID = loginInfo.sdkAppID;
-        ctx.accountType = loginInfo.accountType;
+        ctx.accountType = loginInfo.accountType||'';
 
         if (ctx.identifier && ctx.userSig) { //带登录态
           proto_accesslayer( function(){
