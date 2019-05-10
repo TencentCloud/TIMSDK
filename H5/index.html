@@ -1655,8 +1655,8 @@
 
   <script type="text/javascript">
     // 将以下两个参数替换成您的配置
-    var sdkAppID = '', // 填写第一步获取到的 sdkappid
-    accountType = ''; // 填写第二步设置账号体系集成获取到的 accountType
+    var sdkAppID = ''; // 填写第一步获取到的 sdkappid
+    //var accountType = ''; // 填写第二步设置账号体系集成获取到的 accountType , 已废弃
 
     // 登录帐号
     var identifier = '', // 填写第三步输入的 identifier，由您指定，可以在登录页面直接输入
@@ -1668,7 +1668,7 @@
     //当前用户身份
     var loginInfo = {
       'sdkAppID': sdkAppID, //用户所属应用id,必填
-      'accountType': accountType, //用户所属应用帐号类型，必填
+      // 'accountType': accountType, //用户所属应用帐号类型，必填 , 已废弃
       'identifier': identifier, //当前用户ID,必须是否字符串类型，必填
       'userSig': userSig,
       //当前用户身份凭证，必须是字符串类型，必填

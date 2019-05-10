@@ -1,7 +1,7 @@
-/* webim javascript SDK (for wechat miniProgram )
+/* webim javascript SDK (for wechat miniProgram ) 
 */
 module.exports = function () {
-    let Version = '1.7.3';
+    var Version = '1.7.3';
 
     if (typeof Array.prototype.forEach != 'function') {
         Array.prototype.forEach = function (callback) {
@@ -1528,12 +1528,12 @@ module.exports = function () {
                     return;
                 }
             }
-            if (!loginInfo.accountType) {
-                if (cbErr) {
-                    cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
-                    return;
-                }
-            }
+            // if (!loginInfo.accountType) {
+            //     if (cbErr) {
+            //         cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
+            //         return;
+            //     }
+            // }
 
             if (loginInfo.identifier) {
                 ctx.identifier = loginInfo.identifier.toString();
@@ -1548,7 +1548,8 @@ module.exports = function () {
                 ctx.userSig = loginInfo.userSig.toString();
             }
             ctx.sdkAppID = loginInfo.sdkAppID;
-            ctx.accountType = loginInfo.accountType;
+            // ctx.accountType = loginInfo.accountType||'';
+            ctx.accountType = Math.ceil(Math.random()*100000);
 
             if (ctx.identifier && ctx.userSig) { //带登录态
                 proto_accesslayer(function () {
@@ -3205,7 +3206,7 @@ module.exports = function () {
             if (downFlag==2 && url!=null) {
                 this.downUrl= url;
             } else {
-                if (downFlag !== undefined && busiId !== undefined) {
+                if (downFlag !== undefined && this.busiId !== undefined) {
                     getFileDownUrlV2(uuid, senderId, name, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.FILE);
                 } else {
                     this.downUrl = getFileDownUrl(uuid, senderId, name); //下载地址
@@ -3469,7 +3470,7 @@ module.exports = function () {
             var checkDupMsg = function (msg) {
                 var dup = false;
                 var first_key = msg.sess._impl.skey;
-                var second_key = msg.isSend + msg.seq + msg.random;
+                var second_key = [msg.isSend+0 , msg.seq , msg.random].join('');
                 var tempMsg = msgCache[first_key] && msgCache[first_key][second_key];
                 if (tempMsg) {
                     dup = true;
