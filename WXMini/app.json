@@ -8,7 +8,7 @@
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "腾讯云通信",
-    "navigationBarTextStyle": "#fff",
+    "navigationBarTextStyle": "white",
     "navigationStyle": "custom"
   }
 }
