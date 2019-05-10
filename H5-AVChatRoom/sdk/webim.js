@@ -1,101 +1,8 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _build_version_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-var _build_version_json__WEBPACK_IMPORTED_MODULE_0___namespace = /*#__PURE__*/__webpack_require__.t(1, 1);
 
 /* webim javascript SDK
+ * VER 1.7.2
  */
-(function (global, factory) {
+ (function (global, factory) {
 
     global["Long"] = factory();
 
@@ -114,7 +21,6 @@ var _build_version_json__WEBPACK_IMPORTED_MODULE_0___namespace = /*#__PURE__*/__
         enumerable: false,
         configurable: false
     });
-
 
     function isLong(obj) {
         return (obj && obj["__isLong__"]) === true;
@@ -1455,16 +1361,15 @@ var webim = { // namespace object webim
     }
 
 };
-window.webim= webim;
 
 /* webim API implementation
  */
 (function (webim) {
     //sdk版本
     var SDK = {
-        'VERSION': _build_version_json__WEBPACK_IMPORTED_MODULE_0__["Version"], // sdk版本号
+        'VERSION': '1.7.2', //sdk版本号
         'APPID': '537048168', //web im sdk 版本 APPID
-        'PLAATFORM': "10" // 发送请求时判断其是来自web端的请求
+        'PLAATFORM': "10" //发送请求时判断其是来自web端的请求
     };
 
     //是否启用正式环境，默认启用
@@ -2583,12 +2488,12 @@ window.webim= webim;
                 return;
             }
         }
-        // if (!loginInfo.accountType) {
-        //     if (cbErr) {
-        //         cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
-        //         return;
-        //     }
-        // }
+        if (!loginInfo.accountType) {
+            if (cbErr) {
+                cbErr(tool.getReturnError("loginInfo.accountType is empty", -8));
+                return;
+            }
+        }
 
         if (loginInfo.identifier) {
             ctx.identifier = loginInfo.identifier.toString();
@@ -2603,7 +2508,7 @@ window.webim= webim;
             ctx.userSig = loginInfo.userSig.toString();
         }
         ctx.sdkAppID = loginInfo.sdkAppID;
-        ctx.accountType = loginInfo.accountType||'';
+        ctx.accountType = loginInfo.accountType;
 
         if (ctx.identifier && ctx.userSig) { //带登录态
           proto_accesslayer( function(){
@@ -3273,7 +3178,7 @@ window.webim= webim;
                 MsgStore.delSessByTypeId(SESSION_TYPE.GROUP, options.GroupId);
                 //重置当前再请求中的ajax
                 //clearXmlHttpObjMap();
-                //退出大群成功之后需要重置长轮询信息 - bigGroupLongPollingKeyMap
+                //退出大群成功之后需要重置长轮询信息
                 // MsgManager.resetBigGroupLongPollingInfo();
                 if (cbOk) cbOk(resp);
             },
@@ -4300,7 +4205,7 @@ window.webim= webim;
     };
 
     // class Msg.Elem.Sound
-    Msg.Elem.Sound = function (uuid, second, size, senderId, receiverId, downFlag, chatType, url) {
+    Msg.Elem.Sound = function (uuid, second, size, senderId, receiverId, downFlag, chatType) {
         this.uuid = uuid; //文件id
         this.second = second; //时长，单位：秒
         this.size = size; //大小，单位：字节
@@ -4311,14 +4216,10 @@ window.webim= webim;
 
         //根据不同情况拉取数据
         //是否需要申请下载地址  0:到架平申请  1:到cos申请  2:不需要申请, 直接拿url下载
-        if (downFlag==2 && url!=null) {
-            this.downUrl= url;
+        if (this.downFlag !== undefined && this.busiId !== undefined) {
+            getFileDownUrlV2(uuid, senderId, second, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.SOUND);
         } else {
-            if (this.downFlag !== undefined && this.busiId !== undefined) {
-                getFileDownUrlV2(uuid, senderId, second, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.SOUND);
-            } else {
-                this.downUrl = getSoundDownUrl(uuid, senderId, second); //下载地址
-            }
+            this.downUrl = getSoundDownUrl(uuid, senderId, second); //下载地址
         }
     };
     Msg.Elem.Sound.prototype.getUUID = function () {
@@ -4334,7 +4235,7 @@ window.webim= webim;
         return this.senderId;
     };
     Msg.Elem.Sound.prototype.getDownUrl = function () {
-            return this.downUrl;
+        return this.downUrl;
     };
     Msg.Elem.Sound.prototype.toHtml = function () {
         if (BROWSER_INFO.type == 'ie' && parseInt(BROWSER_INFO.ver) <= 8) {
@@ -4344,7 +4245,7 @@ window.webim= webim;
     };
 
     // class Msg.Elem.File
-    Msg.Elem.File = function (uuid, name, size, senderId, receiverId, downFlag, chatType, url) {
+    Msg.Elem.File = function (uuid, name, size, senderId, receiverId, downFlag, chatType) {
         this.uuid = uuid; //文件id
         this.name = name; //文件名
         this.size = size; //大小，单位：字节
@@ -4355,14 +4256,10 @@ window.webim= webim;
         this.busiId = chatType == SESSION_TYPE.C2C ? 2 : 1; //busi_id ( 1：群    2:C2C)
         //根据不同情况拉取数据
         //是否需要申请下载地址  0:到架平申请  1:到cos申请  2:不需要申请, 直接拿url下载
-        if (downFlag==2 && url!=null) {
-            this.downUrl= url;
+        if (downFlag !== undefined && busiId !== undefined) {
+            getFileDownUrlV2(uuid, senderId, name, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.FILE);
         } else {
-            if (downFlag !== undefined && busiId !== undefined) {
-                getFileDownUrlV2(uuid, senderId, name, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.FILE);
-            } else {
-                this.downUrl = getFileDownUrl(uuid, senderId, name); //下载地址
-            }
+            this.downUrl = getFileDownUrl(uuid, senderId, name); //下载地址
         }
     };
     Msg.Elem.File.prototype.getUUID = function () {
@@ -4858,14 +4755,9 @@ window.webim= webim;
         //重置大群长轮询变量
         this.resetBigGroupLongPollingInfo = function ( groupId ) {
             bigGroupLongPollingOn = false;
-            
             bigGroupLongPollingStartSeqMap[groupId] = 0;
             bigGroupLongPollingKeyMap[groupId] = null;
             bigGroupLongPollingMsgMap[groupId] = {};
-
-            bigGroupLongPollingStartSeqMap[groupId].delete();
-            bigGroupLongPollingKeyMap[groupId].delete();
-            bigGroupLongPollingMsgMap[groupId].delete();
             
         };
 
@@ -5647,18 +5539,17 @@ window.webim= webim;
                         onKickedEventCall();
                     }
                 }
-                bigGroupLongPollingOn && MsgManager.bigGroupLongPolling( GroupId );
-                //累计超过一定次数，不再发起长轮询请求 - 去掉轮询次数限制的逻辑 SaxonGao
-                // if (curBigGroupLongPollingRetErrorCount < LONG_POLLING_MAX_RET_ERROR_COUNT) {
-                //     bigGroupLongPollingOn && MsgManager.bigGroupLongPolling( GroupId );
-                // } else {
-                //     var errInfo = {
-                //         'ActionStatus': ACTION_STATUS.FAIL,
-                //         'ErrorCode': CONNECTION_STATUS.OFF,
-                //         'ErrorInfo': 'connection is off'
-                //     };
-                //     ConnManager.callBack(errInfo);
-                // }
+                //累计超过一定次数，不再发起长轮询请求
+                if (curBigGroupLongPollingRetErrorCount < LONG_POLLING_MAX_RET_ERROR_COUNT) {
+                    bigGroupLongPollingOn && MsgManager.bigGroupLongPolling( GroupId );
+                } else {
+                    var errInfo = {
+                        'ActionStatus': ACTION_STATUS.FAIL,
+                        'ErrorCode': CONNECTION_STATUS.OFF,
+                        'ErrorInfo': 'connection is off'
+                    };
+                    ConnManager.callBack(errInfo);
+                }
                 if (cbErr) cbErr(err);
 
             }, bigGroupLongPollingHoldTime * 1000);
@@ -5792,8 +5683,7 @@ window.webim= webim;
                                     msgInfo.From_Account,
                                     msgInfo.To_Account,
                                     msgBody.MsgContent.Download_Flag,
-                                    SESSION_TYPE.C2C,
-                                    msgBody.MsgContent.Url || null
+                                    SESSION_TYPE.C2C
                                 );
                             } else {
                                 msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -5818,8 +5708,7 @@ window.webim= webim;
                                     msgInfo.From_Account,
                                     msgInfo.To_Account,
                                     msgBody.MsgContent.Download_Flag,
-                                    SESSION_TYPE.C2C,
-                                    msgBody.MsgContent.Url || null
+                                    SESSION_TYPE.C2C
                                 );
                             } else {
                                 msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -5849,7 +5738,6 @@ window.webim= webim;
                     msg.elems.push(new Msg.Elem(msgType, msgContent));
                 }
 
-                // msg.random= [Math.ceil(Math.random()*10000000000)].join('');
                 if (msg.elems.length > 0 && MsgStore.addMsg(msg, true)) {
                     notifyInfo.push(msg);
                 }
@@ -5959,8 +5847,7 @@ window.webim= webim;
                                         msgInfo.From_Account,
                                         msgInfo.To_Account,
                                         msgBody.MsgContent.Download_Flag,
-                                        SESSION_TYPE.C2C,
-                                        msgBody.MsgContent.Url || null
+                                        SESSION_TYPE.C2C
                                     );
                                 } else {
                                     msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -5986,8 +5873,7 @@ window.webim= webim;
                                         msgInfo.From_Account,
                                         msgInfo.To_Account,
                                         msgBody.MsgContent.Download_Flag,
-                                        SESSION_TYPE.C2C,
-                                        msgBody.MsgContent.Url || null
+                                        SESSION_TYPE.C2C
                                     );
                                 } else {
                                     msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -6141,8 +6027,7 @@ window.webim= webim;
                                         msgInfo.From_Account,
                                         msgInfo.To_Account,
                                         msgBody.MsgContent.Download_Flag,
-                                        SESSION_TYPE.C2C,
-                                        msgBody.MsgContent.Url || null
+                                        SESSION_TYPE.C2C
                                     );
                                 } else {
                                     msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -6169,8 +6054,7 @@ window.webim= webim;
                                         msgInfo.From_Account,
                                         msgInfo.To_Account,
                                         msgBody.MsgContent.Download_Flag,
-                                        SESSION_TYPE.C2C,
-                                        msgBody.MsgContent.Url || null
+                                        SESSION_TYPE.C2C
                                     );
                                 } else {
                                     msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -6377,8 +6261,7 @@ window.webim= webim;
                                 msgInfo.From_Account,
                                 msgInfo.To_Account,
                                 msgBody.MsgContent.Download_Flag,
-                                SESSION_TYPE.GROUP,
-                                msgBody.MsgContent.Url || null
+                                SESSION_TYPE.GROUP
                             );
                         } else {
                             msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -6405,8 +6288,7 @@ window.webim= webim;
                                 msgInfo.From_Account,
                                 msgInfo.To_Account,
                                 msgBody.MsgContent.Download_Flag,
-                                SESSION_TYPE.GROUP,
-                                msgBody.MsgContent.Url || null
+                                SESSION_TYPE.GROUP
                             );
                         } else {
                             msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -7359,12 +7241,3 @@ window.webim= webim;
         return checkLogin(cbErr, isNeedCallBack);
     };
 })(webim);
-
-/***/ }),
-/* 1 */
-/***/ (function(module) {
-
-module.exports = {"Version":"1.7.3"};
-
-/***/ })
-/******/ ]);

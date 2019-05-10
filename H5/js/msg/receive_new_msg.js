@@ -12,7 +12,7 @@ function onMsgNotify(newMsgList) {
     for (var j in newMsgList) { //遍历新消息
         newMsg = newMsgList[j];
 
-        if (!selToID) { //没有聊天对象
+        if (!selToID) { //没有聊天对象, selToID 为全局变量，表示当前正在进行的聊天 id，当聊天类型为私聊时，该值为好友帐号，否则为群号。
             selToID = newMsg.getSession().id();
             selType = newMsg.getSession().type();
             selSess = newMsg.getSession();
