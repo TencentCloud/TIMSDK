@@ -54,6 +54,7 @@ dependencies {
 
     // HUAWEI push sdk
     compile 'com.huawei.android.hms:push:2.6.3.301'
+    compile 'com.huawei.android.hms:base:2.6.3.301' // 如果有碰到报错：com.huawei.hms.api不存在，这条也要加上，注意版本号必须相同
     // MEIZU push sdk
     compile 'com.meizu.flyme.internet:push-internal:3.6.+@aar'
 
