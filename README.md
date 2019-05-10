@@ -3,7 +3,7 @@
 
 ## 最新版本 4.3.118 @2019.05.10
 
-iOS平台
+**iOS平台**
 
 - 增加 TIMFriendshipManager 类中的 querySelfProfile 和 queryUserProfile 接口（读取本地数据）
 - 修复获取登录 getLoginUser 返回登录用户异常的问题
@@ -30,7 +30,7 @@ iOS平台
 - TUIKit 优化个人资料页：增加昵称、个人签名、生日、性别、所在地修改功能
 - TUIKit 优化群列表置顶功能
 
-Android平台
+**Android平台**
 
 - 增加 TIMFriendshipManager 类中的 querySelfProfile 和 queryUserProfile 接口（读取本地数据）
 - 增加获取好友信息中 addTime 字段
@@ -61,7 +61,7 @@ Android平台
 - TUIKit 修复聊天界面长按图片消息没有弹出删除和撤销的操作按钮
 - TUIKit 优化和修复线上反馈的 crash 问题
 
-Windows平台
+**Windows平台**
 
 - 修复获取登录 getLoginUser 返回登录用户异常的问题
 - 修复线上反馈的用户资料获取失败问题
