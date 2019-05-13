@@ -262,7 +262,7 @@ enum TIMMsgPriority {
 * > 对应Elem的顺序
 * + 目前文件和语音Elem不一定会按照添加顺序传输，其他Elem按照顺序，不过建议不要过于依赖Elem顺序进行处理，应该逐个按照Elem类型处理，防止异常情况下进程Crash。
 * > 针对群组的红包和点赞消息
-* + 对于直播场景，会有点赞和发红包功能，点赞相对优先级较低，红包消息优先级较高，具体消息内容可以使用TIMCustomElem进行定义，发送消息时，可使用不同接口定义消息优先级。具体消息优先级的策略，可参阅[互动直播集成多人聊天方案](https://cloud.tencent.com/document/product/269/3885)
+* + 对于直播场景，会有点赞和发红包功能，点赞相对优先级较低，红包消息优先级较高，具体消息内容可以使用TIMCustomElem进行定义，发送消息时，可使用不同接口定义消息优先级。
 * > 消息自定义字段
 * + 开发者可以对消息增加自定义字段，如自定义整数、自定义二进制数据(必须转换成String，Json不支持二进制传输)，可以根据这两个字段做出各种不通效果，比如语音消息是否已经播放等等。另外需要注意，此自定义字段仅存储于本地，不会同步到Server，更换终端获取不到。
 */
@@ -357,7 +357,7 @@ enum TIMImageLevel {
 * @brief 图片元素
 *
 * @note
-* >  图片规格说明：每幅图片有三种规格，分别是 Original（原图）、Large（大图）、Thumb（缩略图）。
+* >  图片规格说明：每幅图片有三种规格，分别是Original（原图）、Large（大图）、Thumb（缩略图）。
 * >> 原图：指用户发送的原始图片，尺寸和大小都保持不变。
 * >> 大图：是将原图等比压缩，压缩后宽、高中较小的一个等于720像素。
 * >> 缩略图：是将原图等比压缩，压缩后宽、高中较小的一个等于198像素
@@ -401,7 +401,7 @@ static const char* kTIMSoundElemFileSize        = "sound_elem_file_size";       
 static const char* kTIMSoundElemFileTime        = "sound_elem_file_time";        // int,    读写(必填), 语音时长
 static const char* kTIMSoundElemFileId          = "sound_elem_file_id";          // string, 只读,       下载声音文件时的ID
 static const char* kTIMSoundElemBusinessId      = "sound_elem_business_id";      // int,    只读,       下载时用到的businessID
-static const char* kTIMSoundElemDownloadFlag    = "sound_elem_download_flag";    // int,    只读,       是否需要申请下载地址(0:到架平申请  1:到cos申请  2:不需要申请,直接拿url下载)
+static const char* kTIMSoundElemDownloadFlag    = "sound_elem_download_flag";    // int,    只读,       是否需要申请下载地址(0:到架平申请，1:到cos申请，2:不需要申请,直接拿url下载)
 static const char* kTIMSoundElemUrl             = "sound_elem_url";              // string, 只读,       下载的URL
 static const char* kTIMSoundElemTaskId          = "sound_elem_task_id";          // int,    只读,       任务ID
 // EndStruct

@@ -404,7 +404,7 @@ typedef void (*TIMMsgUpdateCallback)(const char* json_msg_array, const void* use
 * @param user_data SDK负责透传的用户自定义数据，未做任何处理
 *
 * @note
-* 所有回调均需判断 code 是否等于 ERR_SUC ，若不等于说明接口调用失败了，具体原因可以看 code 的值以及 desc 描述。请参考[错误码](https://cloud.tencent.com/document/product/269/1671)
+* 所有回调均需判断code是否等于ERR_SUC，若不等于说明接口调用失败了，具体原因可以看code的值以及desc描述。详情请参考[错误码](https://cloud.tencent.com/document/product/269/1671)
 */
 typedef void (*TIMCommCallback)(int32_t code, const char* desc, const char* json_params, const void* user_data);
 /***

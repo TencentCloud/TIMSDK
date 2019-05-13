@@ -18,9 +18,9 @@ extern"C"
 * > Mac平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Mac)
 * > Android平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Android)
 *
-* @note 关于接口回调和事件回调说明
-* > iOS、Mac、Android三个平台的回调在ImSDK内部的逻辑线程触发，跟调用接口的线程不是同一线程
-* > Windows平台，如果调用[TIMInit]()接口进行初始化Imsdk之前，已创建了UI的消息循环，且调用[TIMInit]()接口的线程为主UI线程，则ImSDK内部会将回调放到主UI线程调用
+* @note 关于回调的说明
+* > 回调分两种，一种是指调用接口的异步返回，另外一种指后台推送的通知。回调在ImSDK内部的逻辑线程触发，跟调用接口的线程可能不是同一线程
+* > 在Windows平台，如果调用[TIMInit]()接口进行初始化Imsdk之前，已创建了UI的消息循环，且调用[TIMInit]()接口的线程为主UI线程，则ImSDK内部会将回调抛到主UI线程调用
 *
 */
 
@@ -230,7 +230,7 @@ TIM_DECL const char* const TIMGetSDKVersion(void);
 /**
 * @brief  设置额外的用户配置
 * @param json_config 其他配置选项
-* @param cb 返回设置配置之后所有配置的回调，此回调cb可为空，表示不获取所有配置信息。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMSetConfig](TIMCloudCallback.h)
+* @param cb 返回设置配置之后所有配置的回调，此回调cb可为空，表示不获取所有配置信息。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
@@ -315,7 +315,7 @@ TIM_DECL int TIMLogout(TIMCommCallback cb, const void* user_data);
 *
 * @param conv_id   会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
-* @param cb 创建会话的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMConvCreate](TIMCloudCallback.h)
+* @param cb 创建会话的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
@@ -368,7 +368,7 @@ TIM_DECL int TIMConvDelete(const char* conv_id, enum TIMConvType conv_type, TIMC
 /**
 * @brief 获取本地缓存的会话列表
 * 
-* @param cb 获取会话缓存列表的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMConvGetConvList](TIMCloudCallback.h)
+* @param cb 获取会话缓存列表的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 * 
@@ -419,7 +419,7 @@ TIM_DECL int TIMConvGetConvList(TIMCommCallback cb, const void* user_data);
 TIM_DECL int TIMConvSetDraft(const char* conv_id, enum TIMConvType conv_type, const char* json_draft_param);
 
 /**
-* @brief 取消指定会话的草稿(删除)
+* @brief 删除指定会话的草稿
 *
 * @param conv_id   会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
@@ -435,7 +435,7 @@ TIM_DECL int TIMConvCancelDraft(const char* conv_id, enum TIMConvType conv_type)
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// @name 消息相关接口
-/// @brief 消息介绍请参考 [消息](https://cloud.tencent.com/document/product/269/3662)、[群组消息](https://cloud.tencent.com/document/product/269/3663)和[消息格式描述](https://cloud.tencent.com/document/product/269/2720)
+/// @brief 消息介绍请参考 [单聊消息](https://cloud.tencent.com/document/product/269/3662)、[群组消息](https://cloud.tencent.com/document/product/269/3663)和[消息格式描述](https://cloud.tencent.com/document/product/269/2720)
 /// @{
 /**
 * @brief 发送新消息
@@ -529,7 +529,7 @@ TIM_DECL int TIMMsgRevoke(const char* conv_id, enum TIMConvType conv_type, const
 * @param conv_id   会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
 * @param json_msg_Locator_array  消息定位符数组
-* @param cb 根据消息定位精准查找指定会话的消息成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMMsgFindByMsgLocatorList](TIMCloudCallback.h)
+* @param cb 根据消息定位精准查找指定会话的消息成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 * @example
@@ -632,7 +632,7 @@ TIM_DECL int TIMMsgSaveMsg(const char* conv_id, enum TIMConvType conv_type, cons
 * @param conv_id   会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
 * @param json_get_msg_param 消息获取参数
-* @param cb 获取指定会话的消息列表成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMMsgGetMsgList](TIMCloudCallback.h)
+* @param cb 获取指定会话的消息列表成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
@@ -698,7 +698,7 @@ TIM_DECL int TIMMsgDelete(const char* conv_id, enum TIMConvType conv_type, const
 *
 * @param json_download_elem_param  下载的参数Json字符串
 * @param path 下载文件保存路径
-* @param cb 下载成功与否的回调以及下载进度回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMMsgDownloadElemToPath](TIMCloudCallback.h)
+* @param cb 下载成功与否的回调以及下载进度回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
@@ -724,7 +724,7 @@ TIM_DECL int TIMMsgDownloadElemToPath(const char* json_download_elem_param, cons
 * @brief 群发消息
 *
 * @param json_batch_send_param  群发消息json字符串
-* @param cb 群发消息成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMMsgBatchSend](TIMCloudCallback.h)
+* @param cb 群发消息成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
@@ -780,13 +780,13 @@ TIM_DECL int TIMMsgBatchSend(const char* json_batch_send_param, TIMCommCallback 
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// @name 群组相关接口
-/// @brief 群组相关介绍请参考 [群组系统](https://cloud.tencent.com/document/product/269/1502)、[群组管理](https://cloud.tencent.com/document/product/269/3661)和 [群组自定义字段](https://cloud.tencent.com/document/product/269/1502#自定义字段)
+/// @brief 群组相关介绍请参考 [群组系统](https://cloud.tencent.com/document/product/269/1502)、[群组管理](https://cloud.tencent.com/document/product/269/3661)和 [群组自定义字段](https://cloud.tencent.com/document/product/269/1502#.E8.87.AA.E5.AE.9A.E4.B9.89.E5.AD.97.E6.AE.B5)
 /// @{
 /**
 * @brief 创建群组
 *
 * @param json_group_create_param 创建群组的参数Json字符串
-* @param cb 创建群组成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMGroupCreate](TIMCloudCallback.h)
+* @param cb 创建群组成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
@@ -893,7 +893,7 @@ TIM_DECL int TIMGroupQuit(const char* group_id, TIMCommCallback cb, const void* 
 * @brief 邀请加入群组
 *
 * @param json_group_invite_param 邀请加入群组的Json字符串
-* @param cb 邀请加入群组成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMGroupInviteMember](TIMCloudCallback.h)
+* @param cb 邀请加入群组成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
@@ -935,7 +935,7 @@ TIM_DECL int TIMGroupInviteMember(const char* json_group_invite_param, TIMCommCa
 * @brief 删除群组成员
 *
 * @param json_group_delete_param 删除群组成员的Json字符串
-* @param cb 删除群组成员成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMGroupDeleteMember](TIMCloudCallback.h)
+* @param cb 删除群组成员成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
@@ -969,7 +969,7 @@ TIM_DECL int TIMGroupDeleteMember(const char* json_group_delete_param, TIMCommCa
 /**
 * @brief 获取已加入群组列表
 *
-* @param cb 获取已加入群组列表成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMGroupGetJoinedGroupList](TIMCloudCallback.h)
+* @param cb 获取已加入群组列表成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
@@ -985,7 +985,7 @@ TIM_DECL int TIMGroupGetJoinedGroupList(TIMCommCallback cb, const void* user_dat
 * @brief 获取群组信息列表
 *
 * @param json_group_getinfo_param 获取群组信息列表参数的Json字符串
-* @param cb 获取群组信息列表成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMGroupGetGroupInfoList](TIMCloudCallback.h)
+* @param cb 获取群组信息列表成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
@@ -1065,7 +1065,7 @@ TIM_DECL int TIMGroupModifyGroupInfo(const char* json_group_modifyinfo_param, TI
 * @brief 获取群成员信息列表
 *
 * @param json_group_getmeminfos_param 获取群成员信息列表参数的Json字符串
-* @param cb 获取群成员信息列表成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMGroupGetMemberInfoList](TIMCloudCallback.h)
+* @param cb 获取群成员信息列表成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
@@ -1151,7 +1151,7 @@ TIM_DECL int TIMGroupModifyMemberInfo(const char* json_group_modifymeminfo_param
 *        群未决信息是指还没有处理的操作，例如，邀请加群或者请求加群操作还没有被处理，称之为群未决信息
 *
 * @param json_group_getpendence_list_param 设置群未决信息参数的Json字符串
-* @param cb 获取群未决信息列表成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)，回调参数解析请参考 [TIMGroupGetPendencyList](TIMCloudCallback.h)
+* @param cb 获取群未决信息列表成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
