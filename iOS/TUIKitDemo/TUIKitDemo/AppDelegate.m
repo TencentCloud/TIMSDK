@@ -10,12 +10,14 @@
 #import "TNavigationController.h"
 #import "ConversationController.h"
 #import "SettingController.h"
+#import "ContactsController.h"
 #import "TUIKit.h"
 #import "THeader.h"
 #import "TAlertView.h"
 #import "ImSDK.h"
+#import <Bugly/Bugly.h>
 
-@interface AppDelegate () <TAlertViewDelegate>
+@interface AppDelegate () <TAlertViewDelegate,BuglyDelegate>
 
 @end
 
@@ -27,6 +29,7 @@
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onForceOffline:) name:TUIKitNotification_TIMUserStatusListener object:nil];
     
+    [self setupBugly];
     [self registNotification];
     
     //sdkAppId 填写自己控制台申请的sdkAppid
@@ -72,6 +75,55 @@
         _window.rootViewController = [self getLoginController];
     }
     return YES;
+}
+
+- (void)setupBugly {
+    // Get the default config
+    BuglyConfig * config = [[BuglyConfig alloc] init];
+    
+    // Open the debug mode to print the sdk log message.
+    // Default value is NO, please DISABLE it in your RELEASE version.
+#if DEBUG
+    config.debugMode = YES;
+#endif
+    
+    // Open the customized log record and report, BuglyLogLevelWarn will report Warn, Error log message.
+    // Default value is BuglyLogLevelSilent that means DISABLE it.
+    // You could change the value according to you need.
+    //    config.reportLogLevel = BuglyLogLevelWarn;
+    
+    // Open the STUCK scene data in MAIN thread record and report.
+    // Default value is NO
+    //config.blockMonitorEnable = YES;
+    
+    // Set the STUCK THRESHOLD time, when STUCK time > THRESHOLD it will record an event and report data when the app launched next time.
+    // Default value is 3.5 second.
+    //config.blockMonitorTimeout = 1.5;
+    
+    // Set the app channel to deployment
+    config.channel = @"Bugly";
+    
+    config.delegate = self;
+    
+    config.consolelogEnable = NO;
+    config.viewControllerTrackingEnable = NO;
+    config.version = [[TUIKit sharedInstance] getSDKVersion];
+    
+    // NOTE:Required
+    // Start the Bugly sdk with APP_ID and your config
+    [Bugly startWithAppId:BUGLY_APP_ID
+#if DEBUG
+        developmentDevice:YES
+#endif
+                   config:config];
+    
+    // Set the customizd tag thats config in your APP registerd on the  bugly.qq.com
+    // [Bugly setTag:1799];
+    
+    [Bugly setUserIdentifier:[NSString stringWithFormat:@"User: %@", [UIDevice currentDevice].name]];
+    
+    [Bugly setUserValue:[NSProcessInfo processInfo].processName forKey:@"Process"];
+    
 }
 
 - (void)registNotification
@@ -168,8 +220,15 @@ void uncaughtExceptionHandler(NSException*exception){
     msgItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
     [items addObject:msgItem];
     
+    TTabBarItem *contactItem = [[TTabBarItem alloc] init];
+    contactItem.title = @"通讯录";
+    contactItem.selectedImage = [UIImage imageNamed:TUIKitResource(@"contacts_pressed")];
+    contactItem.normalImage = [UIImage imageNamed:TUIKitResource(@"contacts_normal")];
+    contactItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
+    [items addObject:contactItem];
+    
     TTabBarItem *setItem = [[TTabBarItem alloc] init];
-    setItem.title = @"设置";
+    setItem.title = @"我";
     setItem.selectedImage = [UIImage imageNamed:TUIKitResource(@"setting_pressed")];
     setItem.normalImage = [UIImage imageNamed:TUIKitResource(@"setting_normal")];
     setItem.controller = [[TNavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
@@ -191,3 +250,4 @@ void uncaughtExceptionHandler(NSException*exception){
     self.window.rootViewController = [self getLoginController];
 }
 @end
+

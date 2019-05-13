@@ -3,14 +3,14 @@
 //  TUIKit
 //
 //  Created by kennethmiao on 2018/10/15.
-//  Copyright © 2018年 kennethmiao. All rights reserved.
+//  Copyright © 2018年 Tencent. All rights reserved.
 //
 
 #import "AddGroupController.h"
 #import "TAddCell.h"
 #import "ChatViewController.h"
 #import "TUIKit.h"
-#import "TAlertView.h""
+#import "TAlertView.h"
 
 @interface AddGroupController () <TAddGroupControllerDelegate,UIAlertViewDelegate>
 
@@ -20,14 +20,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //    NSMutableArray *datas = [NSMutableArray array];
-    //    for (NSString *item in [[TUIKit sharedInstance] testUser]) {
-    //        TAddCellData *data = [[TAddCellData alloc] init];
-    //        data.head = TUIKitResource(@"default_head");
-    //        data.name = item;
-    //        data.identifier = item;
-    //        [datas addObject:data];
-    //    }
+//    NSMutableArray *datas = [NSMutableArray array];
+//    for (NSString *item in [[TUIKit sharedInstance] testUser]) {
+//        TAddCellData *data = [[TAddCellData alloc] init];
+//        data.head = TUIKitResource(@"default_head");
+//        data.name = item;
+//        data.identifier = item;
+//        [datas addObject:data];
+//    }
     TAddGroupController *add = [[TAddGroupController alloc] init];
     add.delegate = self;
     add.addGroupType = _addGroupType;
