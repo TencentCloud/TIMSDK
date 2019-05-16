@@ -28,3 +28,5 @@ Pod::Spec.new do |spec|
   spec.vendored_libraries = ['iOS/TUIKit/Classes/third/voiceConvert/opencore-amrnb/libopencore-amrnb.a', 'iOS/TUIKit/Classes/third/voiceConvert/opencore-amrwb/libopencore-amrwb.a']
   spec.resource = ['iOS/TUIKit/Resources/TUIKitFace.bundle','iOS/TUIKit/Resources/TUIKitResource.bundle']
 end
+
+# pod trunk push TXIMSDK_TUIKit_iOS.podspec --use-libraries --allow-warnings
