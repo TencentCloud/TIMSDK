@@ -33,6 +33,7 @@
 @class TIMGroupMemberInfoOption;
 @class TIMFriendProfileOption;
 @class TIMFriendResult;
+@class TIMCheckFriendResult;
 
 #pragma mark - 枚举类型
 
@@ -658,6 +659,13 @@ typedef void (^TIMFriendResultSucc)(TIMFriendResult *result);
  */
 typedef void (^TIMFriendResultArraySucc)(NSArray<TIMFriendResult *> *results);
 
+/**
+ *  检查好友操作回调
+ *
+ *  @param results 检查结果
+ */
+typedef void (^TIMCheckFriendResultArraySucc)(NSArray<TIMCheckFriendResult *> *results);
+
 #pragma mark - 基本类型
 
 /// 实现 NSCoding 协议
@@ -734,28 +742,28 @@ typedef void (^TIMFriendResultArraySucc)(NSArray<TIMFriendResult *> *results);
 @property(nonatomic,strong) TIMFriendProfileOption * friendProfileOpt;
 
 ///用户登录状态监听器
-@property(nonatomic,strong) id<TIMUserStatusListener> userStatusListener;
+@property(nonatomic,weak) id<TIMUserStatusListener> userStatusListener;
 
 ///会话刷新监听器（未读计数、已读同步）
-@property(nonatomic,strong) id<TIMRefreshListener> refreshListener;
+@property(nonatomic,weak) id<TIMRefreshListener> refreshListener;
 
 ///消息已读回执监听器
-@property(nonatomic,strong) id<TIMMessageReceiptListener> messageReceiptListener;
+@property(nonatomic,weak) id<TIMMessageReceiptListener> messageReceiptListener;
 
 ///消息 svr 重写监听器
-@property(nonatomic,strong) id<TIMMessageUpdateListener> messageUpdateListener;
+@property(nonatomic,weak) id<TIMMessageUpdateListener> messageUpdateListener;
 
 ///消息撤回监听器
-@property(nonatomic,strong) id<TIMMessageRevokeListener> messageRevokeListener;
+@property(nonatomic,weak) id<TIMMessageRevokeListener> messageRevokeListener;
 
 ///文件上传进度监听器
-@property(nonatomic,strong) id<TIMUploadProgressListener> uploadProgressListener;
+@property(nonatomic,weak) id<TIMUploadProgressListener> uploadProgressListener;
 
 ///群组事件通知监听器
-@property(nonatomic,strong) id<TIMGroupEventListener> groupEventListener;
+@property(nonatomic,weak) id<TIMGroupEventListener> groupEventListener;
 
 ///关系链数据本地缓存监听器
-@property(nonatomic,strong) id<TIMFriendshipListener> friendshipListener;
+@property(nonatomic,weak) id<TIMFriendshipListener> friendshipListener;
 
 @end
 
@@ -786,7 +794,7 @@ typedef void (^TIMFriendResultArraySucc)(NSArray<TIMFriendResult *> *results);
 ///Group 消息声音,不设置传入 nil
 @property(nonatomic,strong) NSString * groupSound;
 
-///Video 音视频邀请声音,不设置传入 nil
+///Video 音视频邀请声音,不设置传入 nil (暂不支持)
 @property(nonatomic,strong) NSString * videoSound;
 
 @end
@@ -1092,6 +1100,8 @@ typedef void (^TIMFriendResultArraySucc)(NSArray<TIMFriendResult *> *results);
 
 @end
 
+typedef void(^ProfileCallBack) (TIMUserProfile * proflie);
+
 /**
  *  好友
  */
@@ -1133,7 +1143,9 @@ typedef void (^TIMFriendResultArraySucc)(NSArray<TIMFriendResult *> *results);
  */
 @property(nonatomic,strong) NSDictionary* customInfo;
 
-///好友资料
+/**
+ * 好友资料
+ */
 @property(nonatomic,strong) TIMUserProfile *profile;
 
 @end

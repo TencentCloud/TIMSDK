@@ -19,10 +19,9 @@
 		CE43649421F8638E0070D6C9 /* MsgTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43649321F8638E0070D6C9 /* MsgTableCellView.m */; };
 		CE43649821F865A00070D6C9 /* ConversationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43649621F865A00070D6C9 /* ConversationController.m */; };
 		CE43649921F865A00070D6C9 /* ConversationController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE43649721F865A00070D6C9 /* ConversationController.xib */; };
-		CE43649E21F8838E0070D6C9 /* default_head@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE43649C21F8838E0070D6C9 /* default_head@2x.png */; };
-		CE43649F21F8838E0070D6C9 /* default_head@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE43649D21F8838E0070D6C9 /* default_head@3x.png */; };
-		CE4364A421F887080070D6C9 /* default_group@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE4364A321F887080070D6C9 /* default_group@2x.png */; };
-		CE4364A621F88E610070D6C9 /* more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE4364A521F88E610070D6C9 /* more@3x.png */; };
+		CE9C8789228E5062001D1AF2 /* default_head@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C8786228E5062001D1AF2 /* default_head@2x.png */; };
+		CE9C878A228E5062001D1AF2 /* more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C8787228E5062001D1AF2 /* more@3x.png */; };
+		CE9C878B228E5062001D1AF2 /* default_group@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C8788228E5062001D1AF2 /* default_group@2x.png */; };
 		CEEBCEE121FEECE500A82B0D /* ImSDKForMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */; };
 		CEEBCEE221FEECE500A82B0D /* ImSDKForMac.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -63,10 +62,9 @@
 		CE43649521F865A00070D6C9 /* ConversationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationController.h; sourceTree = "<group>"; };
 		CE43649621F865A00070D6C9 /* ConversationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationController.m; sourceTree = "<group>"; };
 		CE43649721F865A00070D6C9 /* ConversationController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationController.xib; sourceTree = "<group>"; };
-		CE43649C21F8838E0070D6C9 /* default_head@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default_head@2x.png"; path = "../../../../ios/TUIKit/TUIKitResource.bundle/default_head@2x.png"; sourceTree = "<group>"; };
-		CE43649D21F8838E0070D6C9 /* default_head@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default_head@3x.png"; path = "../../../../ios/TUIKit/TUIKitResource.bundle/default_head@3x.png"; sourceTree = "<group>"; };
-		CE4364A321F887080070D6C9 /* default_group@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default_group@2x.png"; path = "../../../../ios/TUIKit/TUIKitResource.bundle/default_group@2x.png"; sourceTree = "<group>"; };
-		CE4364A521F88E610070D6C9 /* more@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "more@3x.png"; path = "../../../../ios/TUIKit/TUIKitResource.bundle/more@3x.png"; sourceTree = "<group>"; };
+		CE9C8786228E5062001D1AF2 /* default_head@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default_head@2x.png"; sourceTree = "<group>"; };
+		CE9C8787228E5062001D1AF2 /* more@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@3x.png"; sourceTree = "<group>"; };
+		CE9C8788228E5062001D1AF2 /* default_group@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default_group@2x.png"; sourceTree = "<group>"; };
 		CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDKForMac.framework; path = ../../ImSDKForMac.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -120,20 +118,19 @@
 				CE43635C21F70A040070D6C9 /* Main.storyboard */,
 				CE43635F21F70A040070D6C9 /* Info.plist */,
 				CE43636021F70A040070D6C9 /* main.m */,
+				CE9C8785228E5062001D1AF2 /* source */,
 				CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */,
-				CE43649B21F8837E0070D6C9 /* source */,
 				CE43636221F70A040070D6C9 /* TUIKitDemo.entitlements */,
 			);
 			path = TUIKitDemo;
 			sourceTree = "<group>";
 		};
-		CE43649B21F8837E0070D6C9 /* source */ = {
+		CE9C8785228E5062001D1AF2 /* source */ = {
 			isa = PBXGroup;
 			children = (
-				CE4364A521F88E610070D6C9 /* more@3x.png */,
-				CE4364A321F887080070D6C9 /* default_group@2x.png */,
-				CE43649C21F8838E0070D6C9 /* default_head@2x.png */,
-				CE43649D21F8838E0070D6C9 /* default_head@3x.png */,
+				CE9C8786228E5062001D1AF2 /* default_head@2x.png */,
+				CE9C8787228E5062001D1AF2 /* more@3x.png */,
+				CE9C8788228E5062001D1AF2 /* default_group@2x.png */,
 			);
 			path = source;
 			sourceTree = "<group>";
@@ -203,11 +200,10 @@
 			files = (
 				CE43649921F865A00070D6C9 /* ConversationController.xib in Resources */,
 				CE43635B21F70A040070D6C9 /* Assets.xcassets in Resources */,
-				CE4364A421F887080070D6C9 /* default_group@2x.png in Resources */,
-				CE4364A621F88E610070D6C9 /* more@3x.png in Resources */,
-				CE43649E21F8838E0070D6C9 /* default_head@2x.png in Resources */,
+				CE9C878A228E5062001D1AF2 /* more@3x.png in Resources */,
 				CE43635E21F70A040070D6C9 /* Main.storyboard in Resources */,
-				CE43649F21F8838E0070D6C9 /* default_head@3x.png in Resources */,
+				CE9C8789228E5062001D1AF2 /* default_head@2x.png in Resources */,
+				CE9C878B228E5062001D1AF2 /* default_group@2x.png in Resources */,
 				CE4363A921F71D6D0070D6C9 /* ChatViewController.xib in Resources */,
 				CE4363A321F71B260070D6C9 /* AddChatViewController.xib in Resources */,
 			);

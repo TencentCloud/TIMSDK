@@ -72,7 +72,7 @@
 @property(nonatomic,strong) NSString * fromUser;
 
 /**
- *  资料变更的昵称（如果昵称没有变更，该值为 nil）
+ *  资料变更的昵称（暂未实现）
  */
 @property(nonatomic,strong) NSString * nickName;
 
@@ -111,15 +111,6 @@
  *  @return TRUE：成功；FALSE：失败
  */
 - (BOOL)remove;
-
-/**
- *  消息是否有断层
- *
- *  OnNewMessage 回调收到消息，如果有断层，需要重新 getMessage 补全（有C2C漫游的情况下使用）
- *
- *  @return TRUE：有断层；FALSE：无断层
- */
-- (BOOL)hasGap;
 
 /**
  *  设置自定义整数，默认为 0

@@ -12,6 +12,7 @@
 #import "TIMComm.h"
 
 @class TIMGroupPendencyMeta;
+@class TIMCreateGroupMemberInfo;
 
 #pragma mark - 枚举类型
 
@@ -329,7 +330,7 @@ typedef void (^TIMGetGroupPendencyListSucc)(TIMGroupPendencyMeta * meta, NSArray
 /**
  *  创建成员（TIMCreateGroupMemberInfo*）列表
  */
-@property(nonatomic,strong) NSArray* membersInfo;
+@property(nonatomic,strong) NSArray <TIMCreateGroupMemberInfo *>* membersInfo;
 
 @end
 

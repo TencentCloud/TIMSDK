@@ -42,6 +42,13 @@
 - (int)getSelfProfile:(TIMGetProfileSucc)succ fail:(TIMFail)fail;
 
 /**
+ *  在缓存中查询自己的资料
+ *
+ *  @return 返回缓存的资料，未找到返回nil
+ */
+- (TIMUserProfile *)querySelfProfile;
+
+/**
  *  获取指定用户资料
  *
  *  @param identifiers 用户id，非好友的用户也可以
@@ -54,6 +61,15 @@
 - (int)getUsersProfile:(NSArray<NSString *> *)identifiers forceUpdate:(BOOL)forceUpdate succ:(TIMUserProfileArraySucc)succ fail:(TIMFail)fail;
 
 /**
+ *  在缓存中查询的资料
+ *
+ *  @praram identifier 用户id，非好友的用户也可以
+ *
+ *  @return 返回缓存的资料，未找到返回nil
+ */
+- (TIMUserProfile *)queryUserProfile:(NSString *)identifier;
+
+/**
  *  获取好友列表
  *
  *  @param succ 成功回调，返回好友(TIMFriend)列表
@@ -63,6 +79,16 @@
  */
 -(int)getFriendList:(TIMFriendArraySucc)succ fail:(TIMFail)fail;
 
+/**
+ *  检查指定用户的好友关系
+ *
+ *  @param checkInfo 好友检查信息
+ *  @param succ  成功回调，返回检查结果
+ *  @param fail  失败回调
+ *
+ *  @return 0 发送成功
+ */
+- (int)checkFriends:(TIMFriendCheckInfo *)checkInfo succ:(TIMCheckFriendResultArraySucc)succ fail:(TIMFail)fail;
 
 /**
  *  添加好友
@@ -111,7 +137,7 @@
 - (int)modifyFriend:(NSString *)identifier values:(NSDictionary<NSString *, id> *)values succ:(TIMSucc)succ fail:(TIMFail)fail;
 
 /**
- *  未决列表请求
+ *  获取未决列表
  *
  *  @param pendencyRequest  请求信息，详细参考TIMFriendPendencyRequest
  *  @param succ 成功回调
