@@ -382,7 +382,7 @@ public class GroupChatManager implements TIMMessageListener, UIKitMessageRevoked
     public void getGroupRemote(String groupId, final IUIKitCallBack callBack) {
         List<String> groupList = new ArrayList<>();
         groupList.add(groupId);
-        TIMGroupManagerExt.getInstance().getGroupPublicInfo(groupList, new TIMValueCallBack<List<TIMGroupDetailInfo>>() {
+        TIMGroupManagerExt.getInstance().getGroupInfo(groupList, new TIMValueCallBack<List<TIMGroupDetailInfo>>() {
             @Override
             public void onError(final int code, final String desc) {
                 QLog.e(TAG, "getGroupPublicInfo failed, code: " + code + "|desc: " + desc);
