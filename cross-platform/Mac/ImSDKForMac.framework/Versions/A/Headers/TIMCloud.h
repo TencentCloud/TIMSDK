@@ -9,18 +9,17 @@ extern"C"
 #endif
 
 /// @overview TIMCloud
-/// @overbrief 腾讯云通信的跨平台C接口(API)
+/// @overbrief 腾讯云通信IM的跨平台C接口(API)
 /*
 * @brief 各个平台的下载链接
-* > windows平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Windows), 暂不支持64位编译
-* >> Windows快速开始[集成SDK](https://cloud.tencent.com/document/product/269/33489)和[跑通demo](https://cloud.tencent.com/document/product/269/33488)
+* > Windows平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Windows),Windows快速开始[集成ImSDK](https://cloud.tencent.com/document/product/269/33489)和[跑通demo](https://cloud.tencent.com/document/product/269/33488).暂不支持64位编译.
 * > iOS平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/iOS)
 * > Mac平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Mac)
 * > Android平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Android)
 *
-* @note 关于回调的说明
+* @brief 关于回调的说明
 * > 回调分两种，一种是指调用接口的异步返回，另外一种指后台推送的通知。回调在ImSDK内部的逻辑线程触发，跟调用接口的线程可能不是同一线程
-* > 在Windows平台，如果调用[TIMInit]()接口进行初始化Imsdk之前，已创建了UI的消息循环，且调用[TIMInit]()接口的线程为主UI线程，则ImSDK内部会将回调抛到主UI线程调用
+* > 在Windows平台，如果调用[TIMInit]()接口进行初始化ImSDK之前，已创建了UI的消息循环，且调用[TIMInit]()接口的线程为主UI线程，则ImSDK内部会将回调抛到主UI线程调用
 *
 */
 
@@ -32,7 +31,7 @@ extern"C"
 /// @name 事件回调接口
 /// @{
 /**
-* @brief 设置接收新消息回调
+* @brief 增加接收新消息回调
 * @param cb 新消息回调函数，请参考[TIMRecvNewMsgCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * 
@@ -41,7 +40,16 @@ extern"C"
 * 只是本地曾经没有过的消息（例如在另外一个终端已读，拉取最近联系人消息时可以获取会话最后一条消息，如果本地没有，会通过此方法抛出）。
 * 在用户登录之后，ImSDK会拉取离线消息，为了不漏掉消息通知，需要在登录之前注册新消息通知。
 */
-TIM_DECL void TIMSetRecvNewMsgCallback(TIMRecvNewMsgCallback cb, const void* user_data);
+TIM_DECL void TIMAddRecvNewMsgCallback(TIMRecvNewMsgCallback cb, const void* user_data);
+
+/**
+* @brief 删除接收新消息回调
+* @param cb 新消息回调函数，请参考[TIMRecvNewMsgCallback](TIMCloudCallback.h)
+*
+* @note
+* 参数cb需要跟[TIMAddRecvNewMsgCallback]()传入的cb一致，否则删除回调失败
+*/
+TIM_DECL void TIMRemoveRecvNewMsgCallback(TIMRecvNewMsgCallback cb);
 
 /**
 * @brief 设置消息已读回执回调
@@ -49,7 +57,7 @@ TIM_DECL void TIMSetRecvNewMsgCallback(TIMRecvNewMsgCallback cb, const void* use
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * 
 * @note 
-* 发送方发送消息，接收方调用接口[TIMMsgReportReaded]()上报该消息已读，发送方 ImSDK会通过此接口设置的回调抛出。
+* 发送方发送消息，接收方调用接口[TIMMsgReportReaded]()上报该消息已读，发送方ImSDK会通过此接口设置的回调抛出。
 */
 TIM_DECL void TIMSetMsgReadedReceiptCallback(TIMMsgReadedReceiptCallback cb, const void* user_data);
 
@@ -106,7 +114,7 @@ TIM_DECL void TIMSetConvEventCallback(TIMConvEventCallback cb, const void* user_
 * 
 * @note
 * > 当调用接口 [TIMInit]() 时，ImSDK会去连接云后台。此接口设置的回调用于监听网络连接的状态。
-* > 网络连接状态包含四个：正在连接、连接失败、连接成功、已连接。这里的网络事件不表示用户本地网络状态，仅指明 SDK 是否与 IM 云 Server 连接状态。
+* > 网络连接状态包含四个：正在连接、连接失败、连接成功、已连接。这里的网络事件不表示用户本地网络状态，仅指明ImSDK是否与云通信IM云Server连接状态。
 * > 可选设置，如果要用户感知是否已经连接服务器，需要设置此回调，用于通知调用者跟通讯后台链接的连接和断开事件，另外，如果断开网络，等网络恢复后会自动重连，自动拉取消息通知用户，用户无需关心网络状态，仅作通知之用
 * > 只要用户处于登录状态，ImSDK内部会进行断网重连，用户无需关心。
 */
@@ -119,7 +127,7 @@ TIM_DECL void TIMSetNetworkStatusListenerCallback(TIMNetworkStatusListenerCallba
 * 
 * @note
 * > 用户如果在其他终端登录，会被踢下线，这时会收到用户被踢下线的通知，出现这种情况常规的做法是提示用户进行操作（退出，或者再次把对方踢下线）。
-* > 用户如果在离线状态下被踢，下次登录将会失败，可以给用户一个非常强的提醒（登录错误码 ERR_IMSDK_KICKED_BY_OTHERS：6208），开发者也可以选择忽略这次错误，再次登录即可。
+* > 用户如果在离线状态下被踢，下次登录将会失败，可以给用户一个非常强的提醒（登录错误码ERR_IMSDK_KICKED_BY_OTHERS：6208），开发者也可以选择忽略这次错误，再次登录即可。
 * > 用户在线情况下的互踢情况：
 * +  用户在设备1登录，保持在线状态下，该用户又在设备2登录，这时用户会在设备1上强制下线，收到 TIMKickedOfflineCallback 回调。
 *    用户在设备1上收到回调后，提示用户，可继续调用login上线，强制设备2下线。这里是在线情况下互踢过程。
@@ -148,7 +156,7 @@ TIM_DECL void TIMSetUserSigExpiredCallback(TIMUserSigExpiredCallback cb, const v
 *
 * @note
 * 设置日志监听的回调之后，ImSDK内部的日志会回传到此接口设置的回调。
-* 客户可以通过接口[TIMSetConfig]()配置哪些日志级别的日志回传到回调函数。
+* 开发者可以通过接口[TIMSetConfig]()配置哪些日志级别的日志回传到回调函数。
 */
 TIM_DECL void TIMSetLogCallback(TIMLogCallback cb, const void* user_data);
 
@@ -159,8 +167,8 @@ TIM_DECL void TIMSetLogCallback(TIMLogCallback cb, const void* user_data);
 * 
 * @note 
 * > 当您发送的消息在服务端被修改后，ImSDK会通过该回调通知给您 
-* > 您可以在您自己的服务器上拦截所有IM消息 [发单聊消息之前回调](https://cloud.tencent.com/document/product/269/1632)
-* > 设置成功之后，腾讯云IM服务器会将您的用户发送的每条消息都同步地通知给您的业务服务器。
+* > 您可以在您自己的服务器上拦截所有云通信IM消息 [发单聊消息之前回调](https://cloud.tencent.com/document/product/269/1632)
+* > 设置成功之后，云通信IM服务器会将您的用户发送的每条消息都同步地通知给您的业务服务器。
 * > 您的业务服务器可以对该条消息进行修改（比如过滤敏感词），如果您的服务器对消息进行了修改，ImSDK就会通过此回调通知您。
 */
 TIM_DECL void TIMSetMsgUpdateCallback(TIMMsgUpdateCallback cb, const void* user_data);
@@ -169,23 +177,22 @@ TIM_DECL void TIMSetMsgUpdateCallback(TIMMsgUpdateCallback cb, const void* user_
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                       SDK初始化
+//                       ImSDK初始化
 //
 /////////////////////////////////////////////////////////////////////////////////
-/// @name SDK初始化相关接口
+/// @name ImSDK初始化相关接口
 /// @{
 /**
 * @brief ImSDK初始化
 *
-* @param sdk_app_id 官网申请的 SDKAppid
-* @param json_sdk_config SDK配置选项Json字符串,详情请参考[SdkConfig](TIMCloudDef.h)
+* @param sdk_app_id 官网申请的SDKAppid
+* @param json_sdk_config ImSDK配置选项Json字符串,详情请参考[SdkConfig](TIMCloudDef.h)
 * @return int 返回TIM_SUCC表示接口调用成功，其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 * 
 * @example
 * Json::Value json_value_init;
 * json_value_init[kTIMSdkConfigLogFilePath] = "D:\\";
 * json_value_init[kTIMSdkConfigConfigFilePath] = "D:\\";
-* json_value_init[kTIMSdkConfigAccountType] = "107";
 * 
 * uint64_t sdk_app_id = 1234567890;
 * if (TIM_SUCC != TIMInit(sdk_app_id, json_value_init.toStyledString().c_str())) {
@@ -194,7 +201,6 @@ TIM_DECL void TIMSetMsgUpdateCallback(TIMMsgUpdateCallback cb, const void* user_
 * 
 * // json_value_init.toStyledString() 得到 json_sdk_config JSON 字符串如下
 * {
-*    "sdk_config_account_type" : "107",
 *    "sdk_config_config_file_path" : "D:\\",
 *    "sdk_config_log_file_path" : "D:\\"
 * }
@@ -252,10 +258,67 @@ TIM_DECL const char* const TIMGetSDKVersion(void);
 *       "user_config_is_read_receipt" : true
 *    }
 * }
+*
+* @example 设置Http代理
+* Json::Value json_http_proxy;
+* json_http_proxy[kTIMHttpProxyInfoIp] = "http://http-proxy.xxxxx.com";
+* json_http_proxy[kTIMHttpProxyInfoPort] = 8888;
+* Json::Value json_config;
+* json_config[kTIMSetConfigHttpProxyInfo] = json_http_proxy;
+*
+* if (TIM_SUCC != TIMSetConfig(json_config.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*     // 回调内部
+* }, this)) {
+*     // TIMSetConfig接口调用失败
+* }
+*
+* @example 取消Http代理
+* Json::Value json_http_proxy;
+* json_http_proxy[kTIMHttpProxyInfoIp] = "";
+* json_http_proxy[kTIMHttpProxyInfoPort] = 0;
+* Json::Value json_config;
+* json_config[kTIMSetConfigHttpProxyInfo] = json_http_proxy;
+*
+* if (TIM_SUCC != TIMSetConfig(json_config.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*     // 回调内部
+* }, this)) {
+*     // TIMSetConfig接口调用失败
+* }
+*
+* @example 设置socks5代理
+* Json::Value json_socks5_value;
+* json_socks5_value[kTIMSocks5ProxyInfoIp] = "111.222.333.444";
+* json_socks5_value[kTIMSocks5ProxyInfoPort] = 8888;
+* json_socks5_value[kTIMSocks5ProxyInfoUserName] = "";
+* json_socks5_value[kTIMSocks5ProxyInfoPassword] = "";
+* Json::Value json_config;
+* json_config[kTIMSetConfigSocks5ProxyInfo] = json_socks5_value;
+*
+* if (TIM_SUCC != TIMSetConfig(json_config.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*     // 回调内部
+* }, this)) {
+*     //TIMSetConfig接口调用失败
+* }
+*
+* @example 取消socks5代理
+* Json::Value json_socks5_value;
+* json_socks5_value[kTIMSocks5ProxyInfoIp] = "";
+* json_socks5_value[kTIMSocks5ProxyInfoPort] = 0;
+* json_socks5_value[kTIMSocks5ProxyInfoUserName] = "";
+* json_socks5_value[kTIMSocks5ProxyInfoPassword] = "";
+* Json::Value json_config;
+* json_config[kTIMSetConfigSocks5ProxyInfo] = json_socks5_value;
+*
+* if (TIM_SUCC != TIMSetConfig(json_config.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*     // 回调内部
+* }, this)) {
+*     //TIMSetConfig接口调用失败
+* }
 * 
 * @note 
-* 目前支持设置的配置有代理的IP和端口、输出日志的级别、获取群信息/群成员信息的默认选项、是否接受消息已读回执事件等。
-* 每项配置可以单独设置、也可以一起配置,详情请参考 [SetConfig](TIMCloudDef.h)
+* 目前支持设置的配置有http代理的IP和端口、socks5代理的IP和端口、输出日志的级别、获取群信息/群成员信息的默认选项、是否接受消息已读回执事件等。
+* http代理的IP和端口、socks5代理的IP和端口建议调用[TIMInit]()之前配置。
+* 每项配置可以单独设置，也可以一起配置,详情请参考 [SetConfig](TIMCloudDef.h)
 */
 TIM_DECL int TIMSetConfig(const char* json_config, TIMCommCallback cb, const void* user_data);
 /// @}
@@ -272,14 +335,13 @@ TIM_DECL int TIMSetConfig(const char* json_config, TIMCommCallback cb, const voi
 * @brief 登录
 *
 * @param user_id 用户的indentifier
-* @param user_sig 用户的 sig
+* @param user_sig 用户的sig
 * @param cb 登录成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
 * @note 
-* 用户登录腾讯后台服务器后才能正常收发消息，登录需要用户提供identifier、userSig等信息，具体含义请参考
-* [登录鉴权](https://cloud.tencent.com/document/product/269/31999)
+* 用户登录腾讯后台服务器后才能正常收发消息，登录需要用户提供identifier、userSig等信息，具体含义请参考[登录鉴权](https://cloud.tencent.com/document/product/269/31999)
 */
 TIM_DECL int TIMLogin(const char* user_id, const char* user_sig, TIMCommCallback cb, const void* user_data);
 
@@ -319,7 +381,7 @@ TIM_DECL int TIMLogout(TIMCommCallback cb, const void* user_data);
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
-* @example 获取对方 identifier 为Windows-02的单聊会话示例：
+* @example 获取对方identifier为Windows-02的单聊会话示例：
 * const void* user_data = nullptr; // 回调函数回传
 * const char* userid = "Windows-02";
 * int ret = TIMConvCreate(userid, kTIMConv_C2C, [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
@@ -457,7 +519,7 @@ TIM_DECL int TIMConvCancelDraft(const char* conv_id, enum TIMConvType conv_type)
 * json_value_msg[kTIMMsgClientTime] = time(NULL);
 * json_value_msg[kTIMMsgServerTime] = time(NULL);
 *
-* int ret = TIMMsgSendNewMsg(conv.id.c_str(), kTIMConv_C2C, json_value_msg.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+* int ret = TIMMsgSendNewMsg(conv_id.c_str(), kTIMConv_C2C, json_value_msg.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
 *     if (ERR_SUCC != code) {
 *         // 消息发送失败
 *         return;
@@ -465,7 +527,7 @@ TIM_DECL int TIMConvCancelDraft(const char* conv_id, enum TIMConvType conv_type)
 *     // 消息发送成功
 * }, this);
 *
-* // json_value_msg.toStyledString().c_str()得到 json_msg_param JSON 字符串如下
+* // json_value_msg.toStyledString().c_str() 得到 json_msg_param JSON 字符串如下
 * {
 *    "message_client_time" : 1551446728,
 *    "message_elem_array" : [
@@ -479,7 +541,7 @@ TIM_DECL int TIMConvCancelDraft(const char* conv_id, enum TIMConvType conv_type)
 * }
 * @note
 * >  发送新消息，单聊消息和群消息的发送均采用此接口。
-* >> 发送单聊消息时 conv_id 为对方的 identifier， conv_type 为 kTIMConv_C2C 
+* >> 发送单聊消息时 conv_id 为对方的identifier， conv_type 为 kTIMConv_C2C 
 * >> 发送群聊消息时 conv_id 为群ID， conv_type 为 kTIMConv_Group 。
 * >  发送消息时不能发送 kTIMElem_GroupTips 、 kTIMElem_GroupReport ，他们由为后台下发，用于更新(通知)群的信息。可以的发送消息内元素
 * >>   文本消息元素，请参考 [TextElem](TIMCloudDef.h)
@@ -504,7 +566,7 @@ TIM_DECL int TIMMsgSendNewMsg(const char* conv_id, enum TIMConvType conv_type, c
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
 * @note
-* 上报此消息已读状态，最好用接收新消息获取的消息数组里面的消息Json 或者用消息定位符查找到的消息 Json，避免重复构造消息 Json
+* 上报此消息已读状态，最好用接收新消息获取的消息数组里面的消息Json或者用消息定位符查找到的消息Json，避免重复构造消息Json
 */
 TIM_DECL int TIMMsgReportReaded(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_param, TIMCommCallback cb, const void* user_data);
 
@@ -517,6 +579,29 @@ TIM_DECL int TIMMsgReportReaded(const char* conv_id, enum TIMConvType conv_type,
 * @param cb 消息撤回成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+*
+* @example
+* Json::Value json_value_text;
+* json_value_text[kTIMElemType] = kTIMElem_Text;
+* json_value_text[kTIMTextElemContent] = "send text";
+* Json::Value json_value_msg;
+* json_value_msg[kTIMMsgElemArray].append(json_value_text);
+*
+* int ret = TIMMsgSendNewMsg("test_win_03", kTIMConv_C2C, json_value_msg.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*     if (ERR_SUCC != code) {
+*         // 消息发送失败
+*         return;
+*     }
+*     // 消息发送成功 json_param 返回发送后的消息json字符串
+*     TIMMsgRevoke("test_win_03", kTIMConv_C2C, json_param, [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*         if (ERR_SUCC != code) {
+*             // 消息撤回失败
+*             return;
+*         }
+*         // 消息撤回成功
+*
+*     }, user_data);
+* }, this);
 *
 * @note
 * 消息撤回。使用保存的消息Json或者用消息定位符查找到的消息Json，避免重复构造消息Json.
@@ -591,7 +676,7 @@ TIM_DECL int TIMMsgFindByMsgLocatorList(const char* conv_id, enum TIMConvType co
 *     
 * }, nullptr);
 *
-* // json_value_msgs.toStyledString().c_str()得到的json_msg_array JSON 字符串如下
+* // json_value_msgs.toStyledString().c_str() 得到json_msg_array JSON 字符串如下
 * [
 *    {
 *       "message_client_time" : 1551446728,
@@ -607,7 +692,7 @@ TIM_DECL int TIMMsgFindByMsgLocatorList(const char* conv_id, enum TIMConvType co
 * ]
 * 
 * @note
-* 批量导入消息，可以自己构造消息去导入。也可以将之前要导入的消息数组 Json 保存，然后导入的时候直接调用接口，避免构造消息数组
+* 批量导入消息，可以自己构造消息去导入。也可以将之前要导入的消息数组Json保存，然后导入的时候直接调用接口，避免构造消息数组
 */
 TIM_DECL int TIMMsgImportMsgList(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_array, TIMCommCallback cb, const void* user_data);
 
@@ -647,7 +732,7 @@ TIM_DECL int TIMMsgSaveMsg(const char* conv_id, enum TIMConvType conv_type, cons
 * int ret = TIMMsgGetMsgList("Windows-02", kTIMConv_C2C, json_get_msg_param.toStyledString().c_str(), type, json.c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
 * }, this);
 * 
-* // json_get_msg_param.toStyledString().c_str()得到 json_get_msg_param JSON 字符串如下
+* // json_get_msg_param.toStyledString().c_str() 得到 json_get_msg_param JSON 字符串如下
 * {
 *    "msg_getmsglist_param_count" : 100,
 *    "msg_getmsglist_param_is_forward" : true,
@@ -680,7 +765,7 @@ TIM_DECL int TIMMsgGetMsgList(const char* conv_id, enum TIMConvType conv_type, c
 * 
 * }, nullptr);
 * 
-* // json_value_msgdelete.toStyledString().c_str()得到 json_msgdel_param JSON 字符串如下
+* // json_value_msgdelete.toStyledString().c_str() 得到 json_msgdel_param JSON 字符串如下
 * {
 *   "msg_delete_param_is_remble" : false,
 *   "msg_delete_param_msg" : {}
@@ -689,7 +774,7 @@ TIM_DECL int TIMMsgGetMsgList(const char* conv_id, enum TIMConvType conv_type, c
 * @note 
 * > 当设置 kTIMMsgDeleteParamMsg 时，在会话中删除指定本地消息
 * > 当未设置 kTIMMsgDeleteParamMsg 时， kTIMMsgDeleteParamIsRamble 为false表示删除会话所有本地消息，true 表示删除会话所有漫游消息(删除漫游消息暂时不支持)
-* > 一般直接使用保存的消息 Json，或者通过消息定位符查找得到的 Json。不用删除的时候构造消息 Json
+* > 一般直接使用保存的消息Json，或者通过消息定位符查找得到的Json。不用删除的时候构造消息Json
 */
 TIM_DECL int TIMMsgDelete(const char* conv_id, enum TIMConvType conv_type, const char* json_msgdel_param, TIMCommCallback cb, const void* user_data);
 
@@ -751,7 +836,7 @@ TIM_DECL int TIMMsgDownloadElemToPath(const char* json_download_elem_param, cons
 * int ret = TIMMsgBatchSend(json_value_batchsend.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
 * }, nullptr);
 * 
-* // json_value_batchsend.toStyledString().c_str()得到 json_batch_send_param JSON 字符串如下
+* // json_value_batchsend.toStyledString().c_str() 得到 json_batch_send_param JSON 字符串如下
 * {
 *    "msg_batch_send_param_identifier_array" : [ "user2", "user3" ],
 *    "msg_batch_send_param_msg" : {
@@ -768,7 +853,7 @@ TIM_DECL int TIMMsgDownloadElemToPath(const char* json_download_elem_param, cons
 * }
 *
 * @note
-* 批量发送消息的接口，每个 identifier 发送成功与否，通过回调cb返回。
+* 批量发送消息的接口，每个identifier发送成功与否，通过回调cb返回。
 */
 TIM_DECL int TIMMsgBatchSend(const char* json_batch_send_param, TIMCommCallback cb, const void* user_data);
 /// @}
@@ -833,7 +918,7 @@ TIM_DECL int TIMMsgBatchSend(const char* json_batch_send_param, TIMCommCallback 
 * }
 *
 * @note
-* > 创建群组时可以指定群ID，若未指定时IM 通讯云服务器会生成一个唯一的 ID，以便后续操作，群组ID通过创建群组时传入的回调返回
+* > 创建群组时可以指定群ID，若未指定时IM通讯云服务器会生成一个唯一的ID，以便后续操作，群组ID通过创建群组时传入的回调返回
 * > 创建群参数的Json Key详情请参考[CreateGroupParam](TIMCloudDef.h)
 */
 TIM_DECL int TIMGroupCreate(const char* json_group_create_param, TIMCommCallback cb, const void* user_data);
@@ -850,7 +935,7 @@ TIM_DECL int TIMGroupCreate(const char* json_group_create_param, TIMCommCallback
 * > 权限说明：
 * >>   对于私有群，任何人都无法解散群组。
 * >>   对于公开群、聊天室和直播大群，群主可以解散群组。
-* > 删除指定群组 group_id 的接口，删除成功与否可根据回调cb的参数判断。
+* > 删除指定群组group_id的接口，删除成功与否可根据回调cb的参数判断。
 */
 TIM_DECL int TIMGroupDelete(const char* group_id, TIMCommCallback cb, const void* user_data);
 
@@ -869,7 +954,7 @@ TIM_DECL int TIMGroupDelete(const char* group_id, TIMCommCallback cb, const void
 * >> 公开群和聊天室可以主动申请进入。
 * +  如果群组设置为需要审核，申请后管理员和群主会受到申请入群系统消息，需要等待管理员或者群主审核，如果群主设置为任何人可加入，则直接入群成功。
 *    直播大群可以任意加入群组。
-* > 申请加入指定群组 group_id 的接口，申请加入的操作成功与否可根据回调cb的参数判断。
+* > 申请加入指定群组group_id的接口，申请加入的操作成功与否可根据回调cb的参数判断。
 */
 TIM_DECL int TIMGroupJoin(const char* group_id, const char* hello_msg, TIMCommCallback cb, const void* user_data);
 
@@ -885,7 +970,7 @@ TIM_DECL int TIMGroupJoin(const char* group_id, const char* hello_msg, TIMCommCa
 * > 权限说明：
 * >>   对于私有群，全员可退出群组。
 * >>   对于公开群、聊天室和直播大群，群主不能退出。
-* > 退出指定群组 group_id 的接口，退出成功与否可根据回调cb的参数判断。
+* > 退出指定群组group_id的接口，退出成功与否可根据回调cb的参数判断。
 */
 TIM_DECL int TIMGroupQuit(const char* group_id, TIMCommCallback cb, const void* user_data);
 
@@ -998,7 +1083,7 @@ TIM_DECL int TIMGroupGetJoinedGroupList(TIMCommCallback cb, const void* user_dat
 *
 * }, this);
 *
-* // groupids.toStyledString().c_str()得到的 json_group_getinfo_param 如下
+* // groupids.toStyledString().c_str() 得到json_group_getinfo_param如下
 * [ "third group id", "second group id", "first group id" ]
 *
 * @note
@@ -1024,7 +1109,7 @@ TIM_DECL int TIMGroupGetGroupInfoList(const char* json_group_getinfo_param, TIMC
 *
 * }, nullptr);
 *
-* // json_value_modifygroupinfo.toStyledString().c_str()得到的 json_group_modifyinfo_param JSON 字符串如下
+* // json_value_modifygroupinfo.toStyledString().c_str() 得到json_group_modifyinfo_param JSON 字符串如下
 * {
 *   "group_modify_info_param_group_id" : "first group id",
 *   "group_modify_info_param_modify_flag" : -2147483648,
@@ -1042,7 +1127,7 @@ TIM_DECL int TIMGroupGetGroupInfoList(const char* json_group_getinfo_param, TIMC
 *
 * }, nullptr);
 * 
-* // json_value_modifygroupinfo.toStyledString().c_str()得到的 json_group_modifyinfo_param JSON 字符串如下
+* // json_value_modifygroupinfo.toStyledString().c_str() 得到json_group_modifyinfo_param JSON 字符串如下
 * {
 *    "group_modify_info_param_group_id" : "first group id",
 *    "group_modify_info_param_group_name" : "first group name to other name",
@@ -1088,7 +1173,7 @@ TIM_DECL int TIMGroupModifyGroupInfo(const char* json_group_modifyinfo_param, TI
 * 
 * }, this);
 *
-* // getmeminfo_opt.toStyledString().c_str()得到的 json_group_getmeminfos_param JSON 字符串如下
+* // getmeminfo_opt.toStyledString().c_str() 得到json_group_getmeminfos_param JSON 字符串如下
 * {
 *    "group_get_members_info_list_param_group_id" : "first group id",
 *    "group_get_members_info_list_param_identifier_array" : [],
@@ -1128,7 +1213,7 @@ TIM_DECL int TIMGroupGetMemberInfoList(const char* json_group_getmeminfos_param,
 *   
 * }, nullptr);
 * 
-* // json_value_modifygroupmeminfo.toStyledString().c_str() 得到的 json_group_modifymeminfo_param JSON 字符串如下
+* // json_value_modifygroupmeminfo.toStyledString().c_str() 得到json_group_modifymeminfo_param JSON 字符串如下
 * {
 *    "group_modify_member_info_group_id" : "third group id",
 *    "group_modify_member_info_identifier" : "user2",
@@ -1166,7 +1251,7 @@ TIM_DECL int TIMGroupModifyMemberInfo(const char* json_group_modifymeminfo_param
 *     }
 * }, nullptr);
 * 
-* // get_pendency_option.toStyledString().c_str() 得到的 json_group_getpendence_list_param JSON 字符串如下
+* // get_pendency_option.toStyledString().c_str() 得到json_group_getpendence_list_param JSON 字符串如下
 * {
 *    "group_pendency_option_max_limited" : 0,
 *    "group_pendency_option_start_time" : 0
@@ -1174,12 +1259,12 @@ TIM_DECL int TIMGroupModifyMemberInfo(const char* json_group_modifymeminfo_param
 *
 * @note 
 * > 此处的群未决消息泛指所有需要审批的群相关的操作。例如：加群待审批，拉人入群待审批等等。即便审核通过或者拒绝后，该条信息也可通过此接口拉回，拉回的信息中有已决标志。
-* > UserA申请加入群GroupA，则群管理员可获取此未决相关信息，UserA 因为没有审批权限，不需要获取此未决信息。
-* > 如果AdminA拉UserA进去GroupA，则UserA可以拉取此未决相关信息，因为该未决信息待 UserA 审批
+* > UserA申请加入群GroupA，则群管理员可获取此未决相关信息，UserA因为没有审批权限，不需要获取此未决信息。
+* > 如果AdminA拉UserA进去GroupA，则UserA可以拉取此未决相关信息，因为该未决信息待UserA审批
 * > 权限说明：
 * >> 只有审批人有权限拉取相关未决信息。
 * > kTIMGroupPendencyOptionStartTime 设置拉取时间戳,第一次请求填0,后边根据server返回的 [GroupPendencyResult](TIMCloudDef.h) 键 kTIMGroupPendencyResultNextStartTime 指定的时间戳进行填写。
-* > kTIMGroupPendencyOptionMaxLimited 拉取的建议数量, server 可根据需要返回或多或少,不能作为完成与否的标志
+* > kTIMGroupPendencyOptionMaxLimited 拉取的建议数量,server可根据需要返回或多或少,不能作为完成与否的标志
 */
 TIM_DECL int TIMGroupGetPendencyList(const char* json_group_getpendence_list_param, TIMCommCallback cb, const void* user_data);
 
@@ -1218,7 +1303,7 @@ TIM_DECL int TIMGroupReportPendencyReaded(uint64_t time_stamp, TIMCommCallback c
 *     }
 * }, nullptr);
 *
-* // handle_pendency.toStyledString().c_str() 都到的json_group_handle_pendency_param JSON 字符串如下
+* // handle_pendency.toStyledString().c_str() 得到json_group_handle_pendency_param JSON 字符串如下
 * {
 *    "group_handle_pendency_param_handle_msg" : "I accept this pendency",
 *    "group_handle_pendency_param_is_accept" : true,
@@ -1238,7 +1323,7 @@ TIM_DECL int TIMGroupReportPendencyReaded(uint64_t time_stamp, TIMCommCallback c
 * }
 * 
 * @note 
-* > 对于群的未决信息，SDK 增加了处理接口。审批人可以选择对单条信息进行同意或者拒绝。已处理成功过的未决信息不能再次处理。
+* > 对于群的未决信息，ImSDK增加了处理接口。审批人可以选择对单条信息进行同意或者拒绝。已处理成功过的未决信息不能再次处理。
 * > 处理未决信息时需要带一个未决信息[GroupPendency](TIMCloudDef.h)，可以在接口[TIMGroupGetPendencyList]()返回的未决信息列表将未决信息保存下来，
 *   在处理未决信息的时候将[GroupPendency](TIMCloudDef.h)传入键 kTIMGroupHandlePendencyParamPendency 。
 */

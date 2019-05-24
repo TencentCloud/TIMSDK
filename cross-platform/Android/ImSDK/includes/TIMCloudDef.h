@@ -20,7 +20,7 @@ enum TIMErrCode {
     ERR_FILE_TRANS_UPLOAD_FAILED         = 6008, // 文件传输-上传失败,请检查网络是否连接
     ERR_FILE_TRANS_DOWNLOAD_FAILED       = 6009, // 文件传输-下载失败,请检查网络,或者文件、语音是否已经过期,目前资源文件存储 7 天
     ERR_HTTP_REQ_FAILED                  = 6010, // HTTP 请求失败
-    ERR_TO_USER_INVALID                  = 6011, // 消息接收方无效,对方用户不存在（接收方需登录过 IMSDK 或用帐号导入接口导入）
+    ERR_TO_USER_INVALID                  = 6011, // 消息接收方无效,对方用户不存在（接收方需登录过 ImSDK 或用帐号导入接口导入）
     ERR_REQUEST_TIMEOUT                  = 6012, // 请求超时,请等网络恢复后重试。（Android SDK 1.8.0 以上需要参考 Android 服务进程配置方式进行配置,否则会出现此错误）
     ERR_SDK_NOT_INITIALIZED              = 6013, // SDK 未初始化或者用户未登录成功,请先登录,成功回调之后重试
     ERR_SDK_NOT_LOGGED_IN                = 6014, // SDK 未登录,请先登录,成功回调之后重试,或者被踢下线,可使用 TIMManager getLoginUser 检查当前是否在线
@@ -72,7 +72,7 @@ enum TIMErrCode {
 */
 enum TIMResult {
     TIM_SUCC = 0,          // 接口调用成功
-    TIM_ERR_SDKUNINIT = -1,// 接口调用失败，SDK未初始化
+    TIM_ERR_SDKUNINIT = -1,// 接口调用失败，ImSDK未初始化
     TIM_ERR_NOTLOGIN = -2, // 接口调用失败，用户未登录
     TIM_ERR_JSON = -3,     // 接口调用失败，错误的Json格式或Json Key
     TIM_ERR_PARAM = -4,    // 接口调用成功，参数错误
@@ -123,10 +123,9 @@ enum TIMConvType {
 };
 
 /**
-* @brief 初始化SDK的配置
+* @brief 初始化ImSDK的配置
 */
 // Struct SdKConfig JsonKey
-static const char* kTIMSdkConfigAccountType        = "sdk_config_account_type";    // string, 只写(选填), 账号类型,默认为0
 static const char* kTIMSdkConfigConfigFilePath     = "sdk_config_config_file_path";// string, 只写(选填), 配置文件路径,默认路径为"/"
 static const char* kTIMSdkConfigLogFilePath        = "sdk_config_log_file_path";   // string, 只写(选填), 日志文件路径,默认路径为"/"
 // EndStruct
@@ -212,21 +211,41 @@ static const char* kTIMUserConfigGroupMemberGetInfoOption = "user_config_group_m
 // EndStruct
 
 /**
-* @brief 代理信息
+* @brief HTTP代理信息
 */
-// Struct ProxyInfo JsonKey
-static const char* kTIMProxyInfoIp      = "proxy_info_ip";   // string, 只写(必填), 代理的IP
-static const char* kTIMProxyInfoPort    = "proxy_info_port"; // int,    只写(必填), 代理的端口
+// Struct HttpProxyInfo JsonKey
+static const char* kTIMHttpProxyInfoIp      = "http_proxy_info_ip";   // string, 只写(必填), 代理的IP
+static const char* kTIMHttpProxyInfoPort    = "http_proxy_info_port"; // int,    只写(必填), 代理的端口
 // EndStruct
+
+/**
+* @brief SOCKS5代理信息
+*/
+// Struct Socks5ProxyInfo JsonKey
+static const char* kTIMSocks5ProxyInfoIp       = "socks5_proxy_info_ip";       // string, 只写(必填), socks5代理的IP
+static const char* kTIMSocks5ProxyInfoPort     = "socks5_proxy_info_port";     // int,    只写(必填), socks5代理的端口
+static const char* kTIMSocks5ProxyInfoUserName = "socks5_proxy_info_username"; // string, 只写(选填), 认证的用户名
+static const char* kTIMSocks5ProxyInfoPassword = "socks5_proxy_info_password"; // string, 只写(选填), 认证的密码
+// EndStruct
+
 /**
 * @brief 更新配置
+* > 自定义数据
+* + 开发者可以自定义的数据(长度限制为64个字节)，ImSDK只负责透传给云通信IM后台后，可以通过第三方回调[状态变更回调](https://cloud.tencent.com/document/product/269/2570)告知开发者业务后台。
+* > HTTP代理
+* + HTTP代理主要用在发送图片、语音、文件、微视频等消息时，将相关文件上传到COS，以及接收到图片、语音、文件、微视频等消息，将相关文件下载到本地时用到。
+*   设置时，设置的IP不能为空，端口不能为0.如果需要取消HTTP代理，只需将代理的IP设置为空字符串，端口设置为0
+* > SOCKS5代理
+* + SOCKS5代理需要在初始化之前设置。设置之后ImSDK发送的所有协议会通过SOCKS5代理服务器发送的云通信IM后台。
 */
 // Struct SetConfig JsonKey
 static const char* kTIMSetConfigLogLevel           = "set_config_log_level";             // uint [TIMLogLevel](),  只写(选填), 输出到日志文件的日子级别
 static const char* kTIMSetConfigCackBackLogLevel   = "set_config_callback_log_level";    // uint [TIMLogLevel](),  只写(选填), 日子回调的日志级别 
-static const char* kTIMSetConfigIsLogOutputConsole = "set_config_is_log_output_console"; // bool,                 只写(选填), 是否输出到控制台 
+static const char* kTIMSetConfigIsLogOutputConsole = "set_config_is_log_output_console"; // bool,                  只写(选填), 是否输出到控制台 
 static const char* kTIMSetConfigUserConfig         = "set_config_user_config";           // object [UserConfig](), 只写(选填), 用户配置
-static const char* kTIMSetConfigProxyInfo          = "set_config_proxy_info";            // object [ProxyInfo](), 只写(选填), 设置代理
+static const char* kTIMSetConfigUserDefineData     = "set_config_user_define_data";      // string,                只写(选填), 自定义数据，如果需要，初始化前设置
+static const char* kTIMSetConfigHttpProxyInfo      = "set_config_http_proxy_info";       // object [HttpProxyInfo](),  只写(选填), 设置HTTP代理，如果需要，在发送图片、文件、语音、视频前设置
+static const char* kTIMSetConfigSocks5ProxyInfo    = "set_config_socks5_proxy_info";     // object [Socks5ProxyInfo](), 只写(选填), 设置SOCKS5代理，如果需要，初始化前设置
 // EndStruct
 /// @}
 
@@ -262,9 +281,16 @@ enum TIMMsgPriority {
 * > 对应Elem的顺序
 * + 目前文件和语音Elem不一定会按照添加顺序传输，其他Elem按照顺序，不过建议不要过于依赖Elem顺序进行处理，应该逐个按照Elem类型处理，防止异常情况下进程Crash。
 * > 针对群组的红包和点赞消息
-* + 对于直播场景，会有点赞和发红包功能，点赞相对优先级较低，红包消息优先级较高，具体消息内容可以使用TIMCustomElem进行定义，发送消息时，可使用不同接口定义消息优先级。
+* + 对于直播场景，会有点赞和发红包功能，点赞相对优先级较低，红包消息优先级较高，具体消息内容可以使用自定义消息[CustomElem]()进行定义，发送消息时，可通过 kTIMMsgPriority 定义消息优先级。
+* > 阅后即焚消息
+* + 开发者通过设置 kTIMMsgIsOnlineMsg 字段为true时，表示发送阅后即焚消息,该消息有如下特性
+* >>C2C会话,当此消息发送时，只有对方在线，对方才会收到。如果当时离线，后续再登录也收不到此消息。
+* >>群会话,当此消息发送时，只有群里在线的成员才会收到。如果当时离线，后续再登录也收不到此消息。
+* >>此消息服务器不会保存
+* >>此消息不计入未读计数
+* >>此消息在本地不会存储
 * > 消息自定义字段
-* + 开发者可以对消息增加自定义字段，如自定义整数、自定义二进制数据(必须转换成String，Json不支持二进制传输)，可以根据这两个字段做出各种不通效果，比如语音消息是否已经播放等等。另外需要注意，此自定义字段仅存储于本地，不会同步到Server，更换终端获取不到。
+* + 开发者可以对消息增加自定义字段，如自定义整数(通过 kTIMMsgCustomInt 指定)、自定义二进制数据(通过 kTIMMsgCustomStr 指定，必须转换成String，Json不支持二进制传输)，可以根据这两个字段做出各种不同效果，比如语音消息是否已经播放等等。另外需要注意，此自定义字段仅存储于本地，不会同步到Server，更换终端获取不到。
 */
 // Struct Message JsonKey
 static const char* kTIMMsgElemArray   = "message_elem_array";    //array [Elem](), 读写(必填), 消息内元素列表
@@ -275,12 +301,14 @@ static const char* kTIMMsgPriority    = "message_priority";      //uint [TIMMsgP
 static const char* kTIMMsgClientTime  = "message_client_time";   //uint64,         读写(选填),       客户端时间
 static const char* kTIMMsgServerTime  = "message_server_time";   //uint64,         读写(选填),       服务端时间
 static const char* kTIMMsgIsFormSelf  = "message_is_from_self";  //bool,           读写(选填),       消息是否来自自己
-static const char* kTIMMsgIsRead      = "message_is_read";       //bool,           读写(选填),       消息是否已读 
-static const char* kTIMMsgIsPeerRead  = "message_is_peer_read";  //bool,           只读,            消息是否被会话对方已读 
-static const char* kTIMMsgStatus      = "message_status";        //uint [TIMMsgStatus](), 只读, 消息当前状态
+static const char* kTIMMsgIsRead      = "message_is_read";       //bool,           读写(选填),       消息是否已读
+static const char* kTIMMsgIsOnlineMsg = "message_is_online_msg"; //bool,           读写(选填),       消息是否是在线消息，默认为false表示普通消息,true表示阅后即焚消息
+static const char* kTIMMsgIsPeerRead  = "message_is_peer_read";  //bool,           只读,            消息是否被会话对方已读
+static const char* kTIMMsgStatus      = "message_status";        //uint [TIMMsgStatus](), 读写(选填), 消息当前状态
 static const char* kTIMMsgRand        = "message_rand";          //uint64,         只读,       唯一标识 
 static const char* kTIMMsgSeq         = "message_seq";           //uint64,         只读,       消息序列
-static const char* kTIMMsgCustom      = "message_custom";        //string,         读写(选填), 用于自定义字段(与后台协商)
+static const char* kTIMMsgCustomInt   = "message_custom_int";    //uint32_t,       读写(选填), 自定义整数值字段
+static const char* kTIMMsgCustomStr   = "message_custom_str";    //string,         读写(选填), 自定义数据字段
 // EndStruct
 
 /**
@@ -326,8 +354,8 @@ static const char* kTIMTextElemContent  = "text_elem_content"; // string, 读写
 * @brief 表情元素
 *
 * @note 
-* SDK并不提供表情包，如果开发者有表情包，可使用 kTIMFaceElemIndex 存储表情在表情包中的索引，由用户自定义。
-* 或者直接使用 kTIMFaceElemBuf 存储表情二进制信息(必须转换成String，Json不支持二进制传输)，由用户自定义，SDK内部只做透传。
+* ImSDK并不提供表情包，如果开发者有表情包，可使用 kTIMFaceElemIndex 存储表情在表情包中的索引，由用户自定义。
+* 或者直接使用 kTIMFaceElemBuf 存储表情二进制信息(必须转换成String，Json不支持二进制传输)，由用户自定义，ImSDK内部只做透传。
 */
 // Struct FaceElem JsonKey
 static const char* kTIMFaceElemIndex          = "face_elem_index";  // int,    读写(必填), 表情索引
@@ -396,7 +424,7 @@ static const char* kTIMImageElemTaskId          = "image_elem_task_id";         
 * > 一条消息只能添加一个声音元素，添加多个声音元素时，发送消息可能失败。
 */
 // Struct SoundElem JsonKey
-static const char* kTIMSoundElemFilePath        = "sound_elem_file_path";        // string, 读写(必填), 语音文件路径,需要客户自己先保存语言然后指定路径
+static const char* kTIMSoundElemFilePath        = "sound_elem_file_path";        // string, 读写(必填), 语音文件路径,需要开发者自己先保存语言然后指定路径
 static const char* kTIMSoundElemFileSize        = "sound_elem_file_size";        // int,    读写(必填), 语言数据文件大小，以秒为单位
 static const char* kTIMSoundElemFileTime        = "sound_elem_file_time";        // int,    读写(必填), 语音时长
 static const char* kTIMSoundElemFileId          = "sound_elem_file_id";          // string, 只读,       下载声音文件时的ID
@@ -584,6 +612,7 @@ static const char* kTIMMsgBatchSendParamMsg             = "msg_batch_send_param_
 static const char* kTIMMsgBatchSendResultIdentifier = "msg_batch_send_result_identifier";  // string, 只读, 群发的单个ID
 static const char* kTIMMsgBatchSendResultCode       = "msg_batch_send_result_code";        // int [错误码](https://cloud.tencent.com/document/product/269/1671), 只读, 消息发送结果
 static const char* kTIMMsgBatchSendResultDesc       = "msg_batch_send_result_desc";        // string, 只读, 消息发送的描述
+static const char* kTIMMsgBatchSendResultMsg        = "msg_batch_send_result_msg";         // object [Message](), 只读, 发送的消息
 // EndStruct
 
 /**

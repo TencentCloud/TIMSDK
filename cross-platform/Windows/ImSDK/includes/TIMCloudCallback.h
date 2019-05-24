@@ -9,16 +9,16 @@ extern"C"
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                       SDK事件回调
+//                       ImSDK事件回调
 //
 /////////////////////////////////////////////////////////////////////////////////
-/// @name SDK事件回调
+/// @name ImSDK事件回调
 /// @{
 /**
 * @brief 新消息回调
 *
 * @param json_msg_array 新消息数组
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 * 
 * @note
 * 此回调可以获取新接收的消息数组。注意 消息内的元素也是一个数组。每个元素的定义由 elem_type 字段决定
@@ -178,7 +178,7 @@ typedef void (*TIMRecvNewMsgCallback)(const char* json_msg_array, const void* us
 * @brief 新消息回调
 *
 * @param json_msg_readed_receipt_array 消息已读回执数组
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 *
 * @example
 * void MsgReadedReceiptCallback(const char* json_msg_readed_receipt_array, const void* user_data) {
@@ -206,7 +206,7 @@ typedef void (*TIMMsgReadedReceiptCallback)(const char* json_msg_readed_receipt_
 * @brief 新消息回调
 *
 * @param json_msg_locator_array 消息定位符数组
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 * 
 * @example
 * void MsgRevokeCallback(const char* json_msg_locator_array, const void* user_data) {
@@ -241,7 +241,7 @@ typedef void (*TIMMsgRevokeCallback)(const char* json_msg_locator_array, const v
 * @param index 上传 Elem 元素在 json_msg 消息的下标
 * @param cur_size 上传当前大小
 * @param total_size 上传总大小
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 *
 * @example
 * void MsgElemUploadProgressCallback(const char* json_msg, uint32_t index, uint32_t cur_size, uint32_t total_size, const void* user_data) {
@@ -282,7 +282,7 @@ typedef void (*TIMMsgElemUploadProgressCallback)(const char* json_msg, uint32_t 
 * @brief 群事件回调
 *
 * @param json_group_tip_array 群提示列表
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 */
 typedef void (*TIMGroupTipsEventCallback)(const char* json_group_tip_array, const void* user_data);
 
@@ -291,7 +291,7 @@ typedef void (*TIMGroupTipsEventCallback)(const char* json_group_tip_array, cons
 *
 * @param conv_event 会话事件类型，请参考[TIMConvEvent](TIMCloudDef.h)
 * @param json_conv_array 会话信息列表
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 *
 * @example 会话事件回调数据解析
 * void ConvEventCallback(TIMConvEvent conv_event, const char* json_conv_array, const void* user_data) {
@@ -324,7 +324,7 @@ typedef void (*TIMConvEventCallback)(enum TIMConvEvent conv_event, const char* j
 * @param status 网络状态，请参考[TIMNetworkStatus](TIMCloudDef.h)
 * @param code 值为ERR_SUCC表示成功，其他值表示失败。详情请参考 [错误码](https://cloud.tencent.com/document/product/269/1671)
 * @param desc 错误描述字符串
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 */
 typedef void (*TIMNetworkStatusListenerCallback)(enum TIMNetworkStatus status, int32_t code, const char* desc, const void* user_data);
 /***
@@ -355,14 +355,14 @@ typedef void (*TIMNetworkStatusListenerCallback)(enum TIMNetworkStatus status, i
 /**
 * @brief 被踢下线回调
 *
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 */
 typedef void (*TIMKickedOfflineCallback)(const void* user_data);
 
 /**
 * @brief 用户票据过期回调
 *
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 */
 typedef void (*TIMUserSigExpiredCallback)(const void* user_data);
 
@@ -371,7 +371,7 @@ typedef void (*TIMUserSigExpiredCallback)(const void* user_data);
 *
 * @param level 日志级别,请参考[TIMLogLevel](TIMCloudDef.h)
 * @param log 日子字符串
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 */
 typedef void (*TIMLogCallback)(enum TIMLogLevel level, const char* log, const void* user_data);
 
@@ -379,7 +379,7 @@ typedef void (*TIMLogCallback)(enum TIMLogLevel level, const char* log, const vo
 * @brief 消息更新回调
 *
 * @param json_msg_array 更新的消息数组
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 *
 * @note
 * 请参考 [TIMRecvNewMsgCallback]()
@@ -390,10 +390,10 @@ typedef void (*TIMMsgUpdateCallback)(const char* json_msg_array, const void* use
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                       SDK接口回调
+//                       ImSDK接口回调
 //
 /////////////////////////////////////////////////////////////////////////////////
-/// @name SDK接口回调
+/// @name ImSDK接口回调
 /// @{
 /**
 * @brief 接口回调定义
@@ -401,7 +401,7 @@ typedef void (*TIMMsgUpdateCallback)(const char* json_msg_array, const void* use
 * @param code 值为ERR_SUCC表示成功，其他值表示失败。详情请参考 [错误码](https://cloud.tencent.com/document/product/269/1671)
 * @param desc 错误描述字符串
 * @param json_params Json字符串，不同的接口，Json字符串不一样
-* @param user_data SDK负责透传的用户自定义数据，未做任何处理
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 *
 * @note
 * 所有回调均需判断code是否等于ERR_SUC，若不等于说明接口调用失败了，具体原因可以看code的值以及desc描述。详情请参考[错误码](https://cloud.tencent.com/document/product/269/1671)
@@ -494,7 +494,31 @@ typedef void (*TIMCommCallback)(int32_t code, const char* desc, const char* json
 *       "conv_unread_num" : 0
 *    }
 * ]
-* 
+* @example 接口[TIMMsgSendNewMsg](TIMCloud.h)的回调TIMCommCallback参数json_params的Json。Json Key请参考[Message](TIMCloudDef.h)。
+* {
+*    "message_client_time" : 1558598732,
+*    "message_conv_id" : "asd12341",
+*    "message_conv_type" : 1,
+*    "message_custom_int" : 0,
+*    "message_custom_str" : "",
+*    "message_elem_array" : [
+*       {
+*          "elem_type" : 0,
+*          "text_elem_content" : "test"
+*       }
+*    ],
+*    "message_is_from_self" : true,
+*    "message_is_online_msg" : false,
+*    "message_is_peer_read" : false,
+*    "message_is_read" : true,
+*    "message_priority" : 1,
+*    "message_rand" : 1340036983,
+*    "message_sender" : "test_win_01",
+*    "message_seq" : 20447,
+*    "message_server_time" : 1558598733,
+*    "message_status" : 2
+* }
+*
 * @example 接口[TIMMsgFindByMsgLocatorList](TIMCloud.h)的回调TIMCommCallback参数json_params的Json。Json Key请参考[Message](TIMCloudDef.h)。
 * [
 *    {
@@ -552,12 +576,58 @@ typedef void (*TIMCommCallback)(int32_t code, const char* desc, const char* json
 *    {
 *       "msg_batch_send_result_code" : 0,
 *       "msg_batch_send_result_desc" : "",
-*       "msg_batch_send_result_identifier" : "user3"
+*       "msg_batch_send_result_identifier" : "test_win_05",
+*       "msg_batch_send_result_msg" : {
+*          "message_client_time" : 1558598923,
+*          "message_conv_id" : "test_win_05",
+*          "message_conv_type" : 1,
+*          "message_custom_int" : 0,
+*          "message_custom_str" : "",
+*          "message_elem_array" : [
+*             {
+*                "elem_type" : 0,
+*                "text_elem_content" : "this is batch send msgs"
+*             }
+*          ],
+*          "message_is_from_self" : true,
+*          "message_is_online_msg" : false,
+*          "message_is_peer_read" : false,
+*          "message_is_read" : true,
+*          "message_priority" : 1,
+*          "message_rand" : 673379256,
+*          "message_sender" : "test_win_01",
+*          "message_seq" : 10274,
+*          "message_server_time" : 1558598924,
+*          "message_status" : 2
+*       }
 *    },
 *    {
 *       "msg_batch_send_result_code" : 0,
 *       "msg_batch_send_result_desc" : "",
-*       "msg_batch_send_result_identifier" : "user2"
+*       "msg_batch_send_result_identifier" : "test_win_02",
+*       "msg_batch_send_result_msg" : {
+*          "message_client_time" : 1558598923,
+*          "message_conv_id" : "test_win_02",
+*          "message_conv_type" : 1,
+*          "message_custom_int" : 0,
+*          "message_custom_str" : "",
+*          "message_elem_array" : [
+*             {
+*                "elem_type" : 0,
+*                "text_elem_content" : "this is batch send msgs"
+*             }
+*          ],
+*          "message_is_from_self" : true,
+*          "message_is_online_msg" : false,
+*          "message_is_peer_read" : false,
+*          "message_is_read" : true,
+*          "message_priority" : 1,
+*          "message_rand" : 673460408,
+*          "message_sender" : "test_win_01",
+*          "message_seq" : 10276,
+*          "message_server_time" : 1558598924,
+*          "message_status" : 2
+*       }
 *    }
 * ]
 *
@@ -683,8 +753,7 @@ typedef void (*TIMCommCallback)(int32_t code, const char* desc, const char* json
 * 
 * @note 以下接口的回调TIMCommCallback参数json_params均为空字符串""
 * > [TIMLogin](TIMCloud.h) 
-* > [TIMLogout](TIMCloud.h) 
-* > [TIMMsgSendNewMsg](TIMCloud.h)
+* > [TIMLogout](TIMCloud.h)
 * > [TIMMsgSaveMsg](TIMCloud.h)
 * > [TIMMsgReportReaded](TIMCloud.h)
 * > [TIMMsgRevoke](TIMCloud.h)

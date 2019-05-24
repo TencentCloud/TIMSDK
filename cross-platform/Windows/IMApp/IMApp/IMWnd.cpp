@@ -24,7 +24,7 @@ CIMWnd::CIMWnd() {
 void CIMWnd::Init(SdkAppInfo &info) {
     info_ = info;
     // 新消息回调时间
-    TIMSetRecvNewMsgCallback([](const char* json_msg_array, const void* user_data) {
+    TIMAddRecvNewMsgCallback([](const char* json_msg_array, const void* user_data) {
         CIMWnd* ths = (CIMWnd*)user_data;
         ths->Logf("Message", kTIMLog_Info, "New Message:\n%s", json_msg_array);
         
@@ -517,8 +517,20 @@ void CIMWnd::OnInitSDKBtn() { //初始化ImSDK
     //获取配置
     Json::Value json_user_config;
     json_user_config[kTIMUserConfigIsReadReceipt] = true;  // 开启已读回执
+    Json::Value json_http_proxy;
+    json_http_proxy[kTIMHttpProxyInfoIp] = "http://http-proxy.xxxx.com";
+    json_http_proxy[kTIMHttpProxyInfoPort] = 8888;
+
+    Json::Value json_socks5_value;
+    json_socks5_value[kTIMSocks5ProxyInfoIp] = "111.222.333.444";
+    json_socks5_value[kTIMSocks5ProxyInfoPort] = 8888;
+    json_socks5_value[kTIMSocks5ProxyInfoUserName] = "";
+    json_socks5_value[kTIMSocks5ProxyInfoPassword] = "";
     Json::Value json_config;
     json_config[kTIMSetConfigUserConfig] = json_user_config;
+    //json_config[kTIMSetConfigSocks5ProxyInfo] = json_socks5_value;
+    json_config[kTIMSetConfigHttpProxyInfo] = json_http_proxy;
+    json_config[kTIMSetConfigUserDefineData] = "1.3.4.5.6.7";
 
     TIMSetConfig(json_config.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
         CIMWnd* ths = (CIMWnd*)user_data;
@@ -530,10 +542,11 @@ void CIMWnd::OnInitSDKBtn() { //初始化ImSDK
     std::string path = m_LogPath->GetText().GetStringA();
     uint64_t sdk_app_id = atoi(sdkappid.c_str());
 
+    std::string json_init_cfg;
+
     Json::Value json_value_init;
     json_value_init[kTIMSdkConfigLogFilePath] = path;
     json_value_init[kTIMSdkConfigConfigFilePath] = path;
-    json_value_init[kTIMSdkConfigAccountType] = "107";
 
     TIMInit(sdk_app_id, json_value_init.toStyledString().c_str());
     ChangeMainView(INITSDK_VIEW, LOGIN_VIEW);
@@ -845,7 +858,7 @@ void CIMWnd::OnSendImageBtn() { //发送图片
 
     Json::Value json_value_image;
     json_value_image[kTIMImageElemOrigPath] = path;
-    json_value_image[kTIMElemType] = kTIMElem_Face;
+    json_value_image[kTIMElemType] = kTIMElem_Image;
     Json::Value json_value_msg;
     json_value_msg[kTIMMsgElemArray].append(json_value_image);
     std::string json_msg = json_value_msg.toStyledString();

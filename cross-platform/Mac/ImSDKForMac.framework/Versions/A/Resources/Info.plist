@@ -17,17 +17,17 @@
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
 	<key>CFBundleShortVersionString</key>
-	<string>4.3.118</string>
+	<string>4.3.135</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>MacOSX</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>4.3.118</string>
+	<string>4.3.135</string>
 	<key>DTCompiler</key>
 	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTPlatformBuild</key>
-	<string>10E125</string>
+	<string>10E1001</string>
 	<key>DTPlatformVersion</key>
 	<string>GM</string>
 	<key>DTSDKBuild</key>
@@ -37,7 +37,7 @@
 	<key>DTXcode</key>
 	<string>1020</string>
 	<key>DTXcodeBuild</key>
-	<string>10E125</string>
+	<string>10E1001</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2019 cloud. All rights reserved.</string>
 </dict>
