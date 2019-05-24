@@ -31,7 +31,6 @@
     
     TIMSdkConfig *sdkConfig = [[TIMSdkConfig alloc] init];
     sdkConfig.sdkAppId = sdkAppid;
-    sdkConfig.accountType = sdkAccountType;
     sdkConfig.connListener = self;
     [[TIMManager sharedInstance] initSdk:sdkConfig];
     

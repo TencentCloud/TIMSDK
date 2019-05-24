@@ -42,7 +42,7 @@
 /**
  *  1.2 初始化 SDK，设置全局配置信息
  *
- *  初始化 SDK 需要设置 TIMSdkConfig 信息，TIMSdkConfig 主要包含 sdkAppId 和 accountType 设置、Log 相关逻辑设置、数据库存储路径设置、网络监听设置等，其中 sdkAppId 和 accountType 的获取请参考官网文档 [跑通Demo(iOS与Mac)](https://cloud.tencent.com/document/product/269/32674)。
+ *  初始化 SDK 需要设置 TIMSdkConfig 信息，TIMSdkConfig 主要包含 sdkAppId 设置、Log 相关逻辑设置、数据库存储路径设置、网络监听设置等，其中 sdkAppId 的获取请参考官网文档 [跑通Demo(iOS与Mac)](https://cloud.tencent.com/document/product/269/32674)。
  *
  *  @param config 配置信息，全局有效，详情请参考 TIMComm.h 中的 TIMSdkConfig 定义
  *
@@ -340,31 +340,6 @@
 /// @name 调试相关接口
 /// @{
 /**
- * 获取网络状态
- *
- * @return 网络状态，详情请参考 TIMComm.h 中的 TIMNetworkStatus 定义
- */
-- (TIMNetworkStatus)networkStatus;
-
-/**
- *  设置环境（暂未实现）
- *
- *  在 InitSdk 之前调用，注意：除非是 IM 工作人员指定要求设置，否则不需要调用此接口
- *
- *  @param env 0:正式环境（默认）；1:测试环境
- *
- */
-- (void)setEnv:(int)env;
-
-/**
- *  获取环境类型（暂未实现）
- *
- *  @return env 0:正式环境（默认）；1:测试环境
- *
- */
-- (int)getEnv;
-
-/**
  *  获取版本号
  *
  *  @return 返回版本号，字符串表示，例如 v1.1.1
@@ -399,22 +374,12 @@
  */
 -(TIMLogLevel) getLogLevel;
 
-///@}
-
-/////////////////////////////////////////////////////////////////////////////////
-//
-//                      （九）废弃接口
-//
-/////////////////////////////////////////////////////////////////////////////////
-/// @name 废弃接口
-/// @{
 /**
- *  获取联网SDK的版本号 (方法已废弃, SDK 不再依赖 QAL 库)
- *
- *  @return 返回版本号
+ 重置ImSDK配置信息，内部自动化测试使用，外部禁止使用
  */
-- (NSString*)GetQALVersion;
+- (void)unInit;
 
 ///@}
+
 @end
 #endif

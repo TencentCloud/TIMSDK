@@ -152,6 +152,8 @@
 /**
  *  获取消息定位符
  *
+ *  如果是自己创建的 TIMMessage，需要等到消息发送成功后才能获取到 TIMMessageLocator 里面的具体信息
+ *
  *  @return locator，详情请参考 TIMComm.h 里面的 TIMMessageLocator 定义
  */
 - (TIMMessageLocator*)locator;

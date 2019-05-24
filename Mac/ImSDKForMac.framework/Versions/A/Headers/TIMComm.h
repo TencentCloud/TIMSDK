@@ -685,11 +685,8 @@ typedef void (^TIMCheckFriendResultArraySucc)(NSArray<TIMCheckFriendResult *> *r
 ///用户标识接入 SDK 的应用 ID，必填
 @property(nonatomic,assign) int sdkAppId;
 
-///用户的账号类型，必填
-@property(nonatomic,strong) NSString * accountType;
-
-///禁用 crash 上报，默认上报 (方法已废弃，客户需要自己集成 Crash 上报逻辑)
-@property(nonatomic,assign) BOOL disableCrashReport DEPRECATED_ATTRIBUTE;
+///用户的账号类型，新版本不需要再填写
+//@property(nonatomic,strong) NSString * accountType;
 
 ///禁止在控制台打印 log
 @property(nonatomic,assign) BOOL disableLogPrint;
@@ -717,20 +714,11 @@ typedef void (^TIMCheckFriendResultArraySucc)(NSArray<TIMCheckFriendResult *> *r
 /// 设置用户配置信息
 @interface TIMUserConfig : NSObject
 
-///禁用本地存储（暂未实现）
-//@property(nonatomic,assign) BOOL disableStorage;
-
 ///禁止消息已读自动上报,一旦禁用自动上报，需要开发者显式调用 setReadMessage ，详情请参考官网文档 [未读消息计数](https://cloud.tencent.com/document/product/269/9151)
 @property(nonatomic,assign) BOOL disableAutoReport;
 
 ///开启 C2C 已读回执，只针对 C2C 消息生效，用户开启已读回执功能后，对方调用 setReadMessage 时会同步已读信息到本客户端，您可以在 TIMMessageReceiptListener 监听消息已读回执
 @property(nonatomic,assign) BOOL enableReadReceipt;
-
-///不开启最近联系人（暂未实现）
-//@property(nonatomic,assign) BOOL disableRecnetContact;
-
-///不通过 onNewMessage: 抛出最近联系人的最后一条消息（暂未实现）
-//@property(nonatomic,assign) BOOL disableRecentContactNotify;
 
 ///设置默认拉取的群组资料
 @property(nonatomic,strong) TIMGroupInfoOption * groupInfoOpt;
@@ -960,7 +948,7 @@ typedef void (^TIMCheckFriendResultArraySucc)(NSArray<TIMCheckFriendResult *> *r
 @property(nonatomic,strong) TIMGroupSelfInfo* selfInfo;
 
 ///自定义字段集合,key 是 NSString* 类型,value 是 NSData* 类型
-@property(nonatomic,strong) NSDictionary* customInfo;
+@property(nonatomic,strong) NSDictionary<NSString *,NSData *>* customInfo;
 
 @end
 
