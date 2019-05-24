@@ -1,6 +1,0 @@
-framework module TUIKit {
-  umbrella header "TUIKit.h"
-
-  export *
-  module * { export * }
-}

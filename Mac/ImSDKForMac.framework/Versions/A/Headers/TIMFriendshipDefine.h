@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, TIMFriendStatus) {
     TIM_FRIEND_PARAM_INVALID                                = 30001,
     
     /**
-     *  加好友、响应好友时有效：自己的好友数已达系统上限
+     *  加好友时有效：自己的好友数已达系统上限
      */
     TIM_ADD_FRIEND_STATUS_SELF_FRIEND_FULL                  = 30010,
     
@@ -62,11 +62,6 @@ typedef NS_ENUM(NSInteger, TIMFriendStatus) {
      *  加好友时有效：已被被添加好友设置为黑名单
      */
     TIM_ADD_FRIEND_STATUS_IN_OTHER_SIDE_BLACK_LIST          = 30525,
-    
-    /**
-     *  加好友时有效：对方好友列表已满
-     */
-    TIM_ADD_FRIEND_STATUS_OTHER_SIDE_FRIEND_LIST_FULL       = 30535,
     
     /**
      *  加好友时有效：等待好友审核同意
@@ -122,7 +117,6 @@ typedef NS_ENUM(NSInteger, TIMFriendStatus) {
      * 更新好友分组时有效：要从好友分组中删除的好友不在好友分组中
      */
     TIM_UPDATE_FRIEND_GROUP_STATUS_DEL_NOT_IN_GROUP         = 32520,
-    
     
 };
 
@@ -503,11 +497,18 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 /**
  *  用户id
  */
-@property(nonatomic,strong) NSString* identifier;
+@property NSString* identifier;
+
 /**
- *  返回状态
+ * 返回码
  */
-@property(nonatomic,assign) TIMFriendStatus status;
+@property NSInteger result_code;
+
+/**
+ * 返回信息
+ */
+@property NSString *result_info;
+
 /**
  *  检查结果
  */

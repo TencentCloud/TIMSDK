@@ -3,7 +3,7 @@
 //  TUIKitDemo
 //
 //  Created by kennethmiao on 2018/10/10.
-//  Copyright © 2018年 kennethmiao. All rights reserved.
+//  Copyright © 2018年 Tencent. All rights reserved.
 //
 
 #import "ChatViewController.h"
@@ -14,6 +14,8 @@
 #import "ImageViewController.h"
 #import "VideoViewController.h"
 #import "FileViewController.h"
+#import "TUserProfileController.h"
+#import "TIMFriendshipManager.h"
 
 @interface ChatViewController () <TChatControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentPickerDelegate>
 @property (nonatomic, strong) TChatController *chat;
@@ -36,9 +38,22 @@
 
 - (void)chatControllerDidClickRightBarButton:(TChatController *)controller
 {
-    GroupInfoController *groupInfo = [[GroupInfoController alloc] init];
-    groupInfo.groupId = _conversation.convId;
-    [self.navigationController pushViewController:groupInfo animated:YES];
+    if (_conversation.convType == TConv_Type_C2C) {
+        
+        
+        [[TIMFriendshipManager sharedInstance] getUsersProfile:@[_conversation.convId] forceUpdate:YES succ:^(NSArray<TIMUserProfile *> *profiles) {
+            TUserProfileController *myProfile = [[TUserProfileController alloc] init];
+            myProfile.profile = profiles.firstObject;
+            [self.navigationController pushViewController:myProfile animated:YES];
+        } fail:^(int code, NSString *msg) {
+            
+        }];
+        
+    } else {
+        GroupInfoController *groupInfo = [[GroupInfoController alloc] init];
+        groupInfo.groupId = _conversation.convId;
+        [self.navigationController pushViewController:groupInfo animated:YES];
+    }
 }
 
 - (void)chatController:(TChatController *)chatController didSelectMoreAtIndex:(NSInteger)index

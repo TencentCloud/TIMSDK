@@ -86,26 +86,26 @@
 
 - (void)getUserSig:(NSString *)user callback:(void (^)(NSString *sig))callback
 {
-//    url 填写自己业务服务器获取userSig的地址
-//    NSURL *url = [NSURL URLWithString:@""];
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
-//    request.HTTPMethod = @"POST";
-//    NSDictionary *param = @{@"cmd":@"open_account_svc", @"sub_cmd":@"fetch_sig", @"id":user};
-//    request.HTTPBody = [NSJSONSerialization dataWithJSONObject:param options:NSJSONWritingPrettyPrinted error:nil];
-//    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-//    NSURLSession *session = [NSURLSession sharedSession];
-//    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-//        NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-//        int code = [[result objectForKey:@"error_code"] intValue];
-//        NSString *sig = nil;
-//        if(code == 0){
-//            sig = [result objectForKey:@"user_sig"];
-//        }
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            callback(sig);
-//        });
-//    }];
-//    [task resume];
+    //    url 填写自己业务服务器获取userSig的地址
+    //    NSURL *url = [NSURL URLWithString:@""];
+    //    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
+    //    request.HTTPMethod = @"POST";
+    //    NSDictionary *param = @{@"cmd":@"open_account_svc", @"sub_cmd":@"fetch_sig", @"id":user};
+    //    request.HTTPBody = [NSJSONSerialization dataWithJSONObject:param options:NSJSONWritingPrettyPrinted error:nil];
+    //    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    //    NSURLSession *session = [NSURLSession sharedSession];
+    //    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    //        NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    //        int code = [[result objectForKey:@"error_code"] intValue];
+    //        NSString *sig = nil;
+    //        if(code == 0){
+    //            sig = [result objectForKey:@"user_sig"];
+    //        }
+    //        dispatch_async(dispatch_get_main_queue(), ^{
+    //            callback(sig);
+    //        });
+    //    }];
+    //    [task resume];
 }
 
 - (void)optionView:(UserSelectView *)optionView selectedIndex:(NSInteger)selectedIndex

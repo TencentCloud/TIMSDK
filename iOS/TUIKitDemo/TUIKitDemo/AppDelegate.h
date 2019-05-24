@@ -17,6 +17,7 @@
 
 #define sdkAppid          123456789
 #define sdkAccountType    @"36862"
+#define BUGLY_APP_ID      @"e965e5d928"
 
 #define sdkBusiId   12742
 
