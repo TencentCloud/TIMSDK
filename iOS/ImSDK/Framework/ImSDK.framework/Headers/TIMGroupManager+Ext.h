@@ -115,18 +115,6 @@
  */
 - (int)deleteGroupMemberWithReason:(NSString*)group reason:(NSString*)reason members:(NSArray*)members succ:(TIMGroupMemberSucc)succ fail:(TIMFail)fail;
 
-/**
- *  获取群公开信息(暂未实现)
- *
- *  任意用户可以获取群公开资料，只能获取公开信息。
- *
- *  @param groups 群组Id
- *  @param succ 成功回调
- *  @param fail 失败回调
- *
- *  @return 0：成功；1：失败
- */
-- (int)getGroupPublicInfo:(NSArray*)groups succ:(TIMGroupListSucc)succ fail:(TIMFail)fail;
 
 /**
  *  获取群列表
@@ -142,17 +130,30 @@
 - (int)getGroupList:(TIMGroupListSucc)succ fail:(TIMFail)fail;
 
 /**
- *  获取群信息
+ *  获取服务器存储的群组信息
  *
- *  1. 获取群组资料接口只能由群成员调用，非群成员无法通过此方法获取资料，需要调用 getGroupPublicInfo 获取资料。
- *  2. 默认拉取基本资料,如果想要拉取自定义字段，首先要通过 [IM 控制台](https://console.cloud.tencent.com/avc) -> 功能配置 -> 群维度自定义字段 配置相关的 key 和权限，然后在 initSDK 的时候把生成的 key 设置在 IMGroupInfoOption 里面的 groupCustom 字段。需要注意的是，只有对自定义字段 value 做了赋值或则修改，才能拉取到自定义字段。
+ *  1. 无论是公开群还是私有群，群成员均可以拉到群组信息。
+ *  2. 如果是公开群，非群组成员可以拉到 group\groupName\owner\groupType\createTime\maxMemberNum\memberNum\introduction\faceURL\addOpt\onlineMemberNum\customInfo 这些字段信息。如果是私有群，非群组成员拉取不到群组信息。
+ *  3. 群成员和非群成员这个接口都拉取不到 selfInfo 信息。
+ *  4. 默认拉取基本资料,如果想要拉取自定义字段，首先要通过 [IM 控制台](https://console.cloud.tencent.com/avc) -> 功能配置 -> 群维度自定义字段 配置相关的 key 和权限，然后在 initSDK 的时候把生成的 key 设置在 IMGroupInfoOption 里面的 groupCustom 字段。需要注意的是，只有对自定义字段的 value 做了赋值或则修改，才能拉取到自定义字段。
  *
- *  @param succ 成功回调，不包含 selfInfo信息
+ *  @param succ 成功回调，不包含 selfInfo 信息
  *  @param fail 失败回调
  *
  *  @return 0：成功；1：失败
  */
 - (int)getGroupInfo:(NSArray*)groups succ:(TIMGroupListSucc)succ fail:(TIMFail)fail;
+
+/**
+ *  获取本地存储的群组信息
+ *
+ *  1. 无论是公开群还是私有群，群成员均可以拉到群组信息。
+ *  2. 如果是公开群，非群组成员可以拉到 group\groupName\owner\groupType\createTime\maxMemberNum\memberNum\introduction\faceURL\addOpt\onlineMemberNum\customInfo 这些字段信息。如果是私有群，非群组成员拉取不到群组信息。
+ *  3. 群成员和非群成员这个接口都拉取不到 selfInfo 信息。
+ *
+ *  @return 群组信息
+ */
+- (TIMGroupInfo *)queryGroupInfo:(NSString *)group;
 
 /**
  *  获取本人在群组内的成员信息
@@ -465,17 +466,6 @@
  *  @return 0：成功；1：失败
  */
 - (int)pendencyReport:(uint64_t)timestamp succ:(TIMSucc)succ fail:(TIMFail)fail;
-
-/**
- *  获取用户所在群组信息(暂未实现)
- *
- *  开启本地缓存后有效
- *
- *  @param groups 群组id（NSString*）列表，nil时返回群组列表
- *
- *  @return 群组信息（TIMGroupInfo*)列表，assistant未同步时返回nil
- */
-- (NSArray*)getGroupInfo:(NSArray*)groups;
 
 @end
 

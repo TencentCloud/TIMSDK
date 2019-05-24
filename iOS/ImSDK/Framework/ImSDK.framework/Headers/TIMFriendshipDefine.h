@@ -21,6 +21,8 @@
 
 /**
  * 好友操作状态
+ *
+ * 详细错误码参见 https://cloud.tencent.com/document/product/269/1671#.E5.85.B3.E7.B3.BB.E9.93.BE.E9.94.99.E8.AF.AF.E7.A0.81
  */
 typedef NS_ENUM(NSInteger, TIMFriendStatus) {
     /**
@@ -32,92 +34,106 @@ typedef NS_ENUM(NSInteger, TIMFriendStatus) {
      *  请求参数错误，请根据错误描述检查请求是否正确
      */
     TIM_FRIEND_PARAM_INVALID                                = 30001,
+
+    /**
+     *  请求参数错误，SdkAppid 不匹配。
+     */
+    TIM_FRIEND_SDK_APPID_INVALID                            = 30002,
+
+    /**
+     *  请求的用户帐号不存在
+     */
+    TIM_FRIEND_ID_INVALID                                   = 30003,
+
+    /**
+     *  请求需要 App 管理员权限
+     */
+    TIM_FRIEND_NEED_ADMIN_PERMISSON                         = 30004,
+
+    /**
+     *  关系链字段中包含敏感词
+     */
+    TIM_FRIEND_DIRTY_WORD                                   = 30005,
     
     /**
-     *  加好友时有效：自己的好友数已达系统上限
+     *  服务器内部错误，请重试
+     */
+    TIM_FRIEND_SERVER_ERROR                                 = 30006,
+
+    /**
+     *  网络超时，请稍后重试
+     */
+    TIM_FRIEND_TIMEOUT                                      = 30007,
+
+    /**
+     *  并发写导致写冲突，建议使用批量方式
+     */
+    TIM_FRIEND_WRITE_ERROR                                  = 30008,
+
+    /**
+     *  后台禁止该用户发起加好友请求
+     */
+    TIM_ADD_FRIEND_FORBIDEN                                 = 30009,
+    
+    /**
+     *  自己的好友数已达系统上限
      */
     TIM_ADD_FRIEND_STATUS_SELF_FRIEND_FULL                  = 30010,
     
     /**
-     * 更新好友分组时有效：分组已达系统上限
+     * 分组已达系统上限
      */
     TIM_UPDATE_FRIEND_GROUP_STATUS_MAX_GROUPS_EXCEED        = 30011,
+
+    /**
+     * 未决数已达系统上限。
+     */
+    TIM_PENDENCY_STATUS_FULL                                = 30012,
     
     /**
-     *  加好友、响应好友时有效：对方的好友数已达系统上限
+     * 黑名单数已达系统上限
+     */
+    TIM_ADD_BLACKLIST_STATUS_FULL                           = 30013,
+    
+    /**
+     *  对方的好友数已达系统上限
      */
     TIM_ADD_FRIEND_STATUS_THEIR_FRIEND_FULL                 = 30014,
     
     /**
-     *  加好友时有效：被加好友在自己的黑名单中
+     *  被加好友在自己的黑名单中
      */
     TIM_ADD_FRIEND_STATUS_IN_SELF_BLACK_LIST                = 30515,
     
     /**
-     *  加好友时有效：被加好友设置为禁止加好友
+     *  被加好友设置为禁止加好友
      */
     TIM_ADD_FRIEND_STATUS_FRIEND_SIDE_FORBID_ADD            = 30516,
     
     /**
-     *  加好友时有效：已被被添加好友设置为黑名单
+     *  已被被添加好友设置为黑名单
      */
     TIM_ADD_FRIEND_STATUS_IN_OTHER_SIDE_BLACK_LIST          = 30525,
     
     /**
-     *  加好友时有效：等待好友审核同意
+     *  等待好友审核同意
      */
     TIM_ADD_FRIEND_STATUS_PENDING                           = 30539,
     
     /**
-     *  删除好友时有效：删除好友时对方不是好友
+     *  添加好友请求被安全策略打击，请勿频繁发起添加好友请求
      */
-    TIM_DEL_FRIEND_STATUS_NO_FRIEND                         = 31704,
+    TIM_ADD_FRIEND_STATUS_SENSITIVE                         = 30540,
     
     /**
-     *  响应好友申请时有效：对方没有申请过好友
+     *  对方没有申请过好友
      */
     TIM_RESPONSE_FRIEND_STATUS_NO_REQ                       = 30614,
     
     /**
-     *  添加黑名单有效：已经在黑名单了
+     *  删除好友请求被安全策略打击，请勿频繁发起删除好友请求
      */
-    TIM_ADD_BLACKLIST_FRIEND_STATUS_IN_BLACK_LIST           = 31307,
-    
-    /**
-     *  删除黑名单有效：用户不在黑名单里
-     */
-    TIM_DEL_BLACKLIST_FRIEND_STATUS_NOT_IN_BLACK_LIST       = 31503,
-    
-    /**
-     * 创建好友分组时有效：没有拉到SDKAppId
-     */
-    TIM_ADD_FRIEND_GROUP_STATUS_GET_SDKAPPID_FAILED         = 32207,
-    
-    /**
-     * 创建好友分组时有效：要加入到好友分组中的用户不是好友
-     */
-    TIM_ADD_FRIEND_GROUP_STATUS_NOT_FRIEND                  = 32216,
-    
-    /**
-     * 更新好友分组时有效：没有拉到SDKAppId
-     */
-    TIM_UPDATE_FRIEND_GROUP_STATUS_GET_SDKAPPID_FAILED      = 32511,
-    
-    /**
-     * 更新好友分组时有效：要加入到好友分组中的用户不是好友
-     */
-    TIM_UPDATE_FRIEND_GROUP_STATUS_ADD_NOT_FRIEND           = 32518,
-    
-    /**
-     * 更新好友分组时有效：要加入到好友分组中的好友已经在分组中
-     */
-    TIM_UPDATE_FRIEND_GROUP_STATUS_ADD_ALREADY_IN_GROUP     = 32519,
-    
-    /**
-     * 更新好友分组时有效：要从好友分组中删除的好友不在好友分组中
-     */
-    TIM_UPDATE_FRIEND_GROUP_STATUS_DEL_NOT_IN_GROUP         = 32520,
-    
+    TIM_DELETE_FRIEND_STATUS_SENSITIVE                      = 31707,
 };
 
 typedef NS_ENUM(NSInteger, TIMDelFriendType) {
@@ -222,7 +238,7 @@ typedef NS_ENUM(NSInteger,TIMFriendRelationType) {
     /**
      *  互为好友
      */
-    TIM_FRIEND_RELATION_TYPE_BOTH           = 0x3,
+    TIM_FRIEND_RELATION_TYPE_BOTHWAY        = 0x3,
 };
 
 typedef NS_ENUM(NSInteger, TIMFriendResponseType) {
@@ -497,11 +513,18 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 /**
  *  用户id
  */
-@property(nonatomic,strong) NSString* identifier;
+@property NSString* identifier;
+
 /**
- *  返回状态
+ * 返回码
  */
-@property(nonatomic,assign) TIMFriendStatus status;
+@property NSInteger result_code;
+
+/**
+ * 返回信息
+ */
+@property NSString *result_info;
+
 /**
  *  检查结果
  */

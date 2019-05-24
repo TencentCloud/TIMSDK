@@ -48,7 +48,7 @@
     
     TIMSdkConfig *sdkConfig = [[TIMSdkConfig alloc] init];
     sdkConfig.sdkAppId = (int)sdkAppId;
-    sdkConfig.accountType = accountType;
+//    sdkConfig.accountType = accountType;
     sdkConfig.dbPath = TUIKit_DB_Path;
     sdkConfig.connListener = self;
     [[TIMManager sharedInstance] initSdk:sdkConfig];

@@ -66,7 +66,7 @@
 
 
 - (UIView * (^)(void))mm_sizeToFit;              ///< sizeToFit
-
+- (UIView * (^)(CGFloat w, CGFloat h))mm_sizeToFitThan;  ///< sizeToFit, 最小值
 @end
 
 

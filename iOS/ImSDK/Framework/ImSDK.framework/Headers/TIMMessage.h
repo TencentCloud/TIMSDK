@@ -61,7 +61,7 @@
  */
 @interface TIMImage : NSObject
 /**
- *  图片ID，内部标识，可用于外部缓存key
+ *  图片 ID，内部标识，可用于外部缓存key
  */
 @property(nonatomic,strong) NSString * uuid;
 /**
@@ -126,7 +126,7 @@
 @property(nonatomic,strong) NSArray * imageList;
 
 /**
- * 上传时任务Id，可用来查询上传进度（已废弃，请在 TIMUploadProgressListener 监听上传进度）
+ * 上传时任务 ID，可用来查询上传进度（已废弃，请在 TIMUploadProgressListener 监听上传进度）
  */
 @property(nonatomic,assign) uint32_t taskId DEPRECATED_ATTRIBUTE;
 
@@ -159,7 +159,7 @@
  */
 @interface TIMSoundElem : TIMElem
 /**
- *  上传时任务Id，可用来查询上传进度（已废弃，请在 TIMUploadProgressListener 监听上传进度）
+ *  上传时任务 ID，可用来查询上传进度（已废弃，请在 TIMUploadProgressListener 监听上传进度）
  */
 @property(nonatomic,assign) uint32_t taskId DEPRECATED_ATTRIBUTE;
 /**
@@ -263,7 +263,7 @@
 @interface TIMVideoElem : TIMElem
 
 /**
- *  上传时任务Id，可用来查询上传进度（已废弃，请在 TIMUploadProgressListener 监听上传进度）
+ *  上传时任务 ID，可用来查询上传进度（已废弃，请在 TIMUploadProgressListener 监听上传进度）
  */
 @property(nonatomic,assign) uint32_t taskId DEPRECATED_ATTRIBUTE;
 
@@ -302,7 +302,7 @@
  */
 @interface TIMFileElem : TIMElem
 /**
- *  上传时任务Id，可用来查询上传进度（已废弃，请在 TIMUploadProgressListener 监听上传进度）
+ *  上传时任务 ID，可用来查询上传进度（已废弃，请在 TIMUploadProgressListener 监听上传进度）
  */
 @property(nonatomic,assign) uint32_t taskId DEPRECATED_ATTRIBUTE;
 /**
@@ -310,7 +310,7 @@
  */
 @property(nonatomic,strong) NSString * path;
 /**
- *  文件内部ID
+ *  文件内部 ID
  */
 @property(nonatomic,strong) NSString * uuid;
 /**
@@ -407,7 +407,7 @@
  */
 @interface TIMSnapshot : NSObject
 /**
- *  图片ID，不用设置
+ *  图片 ID，不用设置
  */
 @property(nonatomic,strong) NSString * uuid;
 /**
@@ -522,12 +522,12 @@
 @end
 
 /**
- *  群Tips
+ *  群 Tips
  */
 @interface TIMGroupTipsElem : TIMElem
 
 /**
- *  群组Id
+ *  群组 ID
  */
 @property(nonatomic,strong) NSString * group;
 
@@ -609,7 +609,7 @@
 @property(nonatomic,assign) TIM_GROUP_SYSTEM_TYPE type;
 
 /**
- * 群组Id
+ * 群组 ID
  */
 @property(nonatomic,strong) NSString * group;
 
@@ -784,7 +784,7 @@ extern NSString * const kIOSOfflinePushNoSound;
 - (NSString*)sender;
 
 /**
- *  消息 Id，当消息生成时，就已经固定，这种方式可能跟其他用户产生的消息冲突，需要再加一个时间约束，可以认为 10 分钟以内的消息可以使用 msgId 区分，需要在同一个会话内判断。
+ *  消息 ID，当消息生成时，就已经固定，这种方式可能跟其他用户产生的消息冲突，需要再加一个时间约束，可以认为 10 分钟以内的消息可以使用 msgId 区分，需要在同一个会话内判断。
  */
 - (NSString*)msgId;
 
@@ -816,7 +816,7 @@ extern NSString * const kIOSOfflinePushNoSound;
 /**
  *  获取发送者群内资料（发送者为自己时可能为空）
  *
- *  @return 发送者群内资料，nil 表示没有获取资料或者不是群消息，目前仅能获取字段：member ，其他的字段获取建议通过 TIMGroupManager+Ext.h -> getGroupMembers 获取
+ *  @return 发送者群内资料，nil 表示没有获取资料或者不是群消息，目前仅能获取字段：member，nameCard，其他的字段获取建议通过 TIMGroupManager+Ext.h -> getGroupMembers 获取
  */
 - (TIMGroupMemberInfo*)getSenderGroupMemberProfile;
 
@@ -837,15 +837,6 @@ extern NSString * const kIOSOfflinePushNoSound;
  *  @return 优先级
  */
 - (TIMMessagePriority)getPriority;
-
-/**
- *  获取消息所属会话的接收消息选项（仅对群组消息有效）
- *
- *  对于群组会话消息，可以通过消息属性判断本群组设置的接收消息选项，可参阅 [群组管理](https://cloud.tencent.com/document/product/269/9152#.E4.BF.AE.E6.94.B9.E6.8E.A5.E6.94.B6.E7.BE.A4.E6.B6.88.E6.81.AF.E9.80.89.E9.A1.B9)。
- *
- *  @return 接收消息选项
- */
-- (TIMGroupReceiveMessageOpt)getRecvOpt;
 
 /**
  *  拷贝消息中的属性（ELem、priority、online、offlinePushInfo）

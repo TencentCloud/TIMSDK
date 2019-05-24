@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CA76F942300B835CDAFA815A06C9FD03"
+               BlueprintIdentifier = "0B2E5653026E563209ED42340DDC0F84"
                BuildableName = "libMMLayout.a"
                BlueprintName = "MMLayout"
                ReferencedContainer = "container:Pods.xcodeproj">

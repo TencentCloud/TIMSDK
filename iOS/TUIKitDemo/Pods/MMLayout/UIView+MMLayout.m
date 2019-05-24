@@ -217,6 +217,18 @@
         return self;
     };
 }
+-(UIView *(^)(CGFloat w, CGFloat h))mm_sizeToFitThan {
+    @mm_weakify(self);
+    return ^(CGFloat w, CGFloat h){
+        @mm_strongify(self);
+        [self sizeToFit];
+        if (self.mm_w < w)
+            self.mm_w = w;
+        if (self.mm_h < h)
+            self.mm_h = h;
+        return self;
+    };
+}
 
 - (UIView * (^)(CGFloat space))mm_hstack {
     @mm_weakify(self);

@@ -99,18 +99,6 @@
 - (int)revokeMessage:(TIMMessage*)msg succ:(TIMSucc)succ fail:(TIMFail)fail;
 
 /**
- *  同步群的消息撤回通知
- *
- *  针对群组，断线重连后，如果用户处于群组聊天界面，需要业务端主动同步该群组会话的消息撤回通知。其他场景不需要主动同步消息撤回通知。
- *
- *  @param succ  成功时回调，同步的通知会通过 TIMMessageRevokeListener 抛出
- *  @param fail  失败时回调
- *
- *  @return 0 本次操作成功
- */
-- (int)syncRevokeNotify:(TIMSucc)succ fail:(TIMFail)fail;
-
-/**
  *  删除本地会话消息
  *
  *  可以在保留会话同时删除本地的会话消息。
@@ -181,14 +169,6 @@
  *  @return 草稿内容，没有草稿返回 nil
  */
 - (TIMMessageDraft*)getDraft;
-
-/**
- *  禁用本会话的存储(暂未实现)
- *
- *  1. 需要 initSdk 之后调用
- *  2. 只对当前初始化有效，重启后需要重新设置
- */
-- (void)disableStorage;
 
 @end
 

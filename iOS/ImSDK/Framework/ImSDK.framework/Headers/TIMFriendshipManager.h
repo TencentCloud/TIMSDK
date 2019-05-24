@@ -79,6 +79,16 @@
  */
 -(int)getFriendList:(TIMFriendArraySucc)succ fail:(TIMFail)fail;
 
+/**
+ *  检查指定用户的好友关系
+ *
+ *  @param checkInfo 好友检查信息
+ *  @param succ  成功回调，返回检查结果
+ *  @param fail  失败回调
+ *
+ *  @return 0 发送成功
+ */
+- (int)checkFriends:(TIMFriendCheckInfo *)checkInfo succ:(TIMCheckFriendResultArraySucc)succ fail:(TIMFail)fail;
 
 /**
  *  添加好友

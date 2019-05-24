@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "893A4D60A583AC3543A6AC1CD591B60A"
+               BlueprintIdentifier = "D901A50C02D14E7B3E9F174091E3EA20"
                BuildableName = "libPods-TUIKitDemo.a"
                BlueprintName = "Pods-TUIKitDemo"
                ReferencedContainer = "container:Pods.xcodeproj">

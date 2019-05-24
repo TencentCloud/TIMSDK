@@ -224,14 +224,14 @@ typedef NS_ENUM(NSInteger, TIMGroupPendencyHandleResult) {
  *
  *  @param members 群成员列表，成员类型 TIMGroupMemberInfo
  */
-typedef void (^TIMGroupMemberSucc)(NSArray * members);
+typedef void (^TIMGroupMemberSucc)(NSArray<TIMGroupMemberInfo *> * members);
 
 /**
  *  群列表回调
  *
  *  @param arr 群列表，成员类型 TIMGroupInfo
  */
-typedef void (^TIMGroupListSucc)(NSArray * arr);
+typedef void (^TIMGroupListSucc)(NSArray<TIMGroupInfo *> * arr);
 
 /**
  *  本人群组内成员信息回调
