@@ -2432,6 +2432,7 @@ window.webim= webim;
             url += '&contenttype=' + ctx.contentType;
         }
         url += '&sdkappid=' + ctx.sdkAppID + '&accounttype=' + ctx.accountType + '&apn=' + ctx.apn + '&reqtime=' + unixtime();
+        console.log('url : ', url);
         return url;
     };
 
@@ -2603,7 +2604,8 @@ window.webim= webim;
             ctx.userSig = loginInfo.userSig.toString();
         }
         ctx.sdkAppID = loginInfo.sdkAppID;
-        ctx.accountType = loginInfo.accountType||'';
+        // ctx.accountType = loginInfo.accountType||'';
+        ctx.accountType = Math.ceil(Math.random()*100000);
 
         if (ctx.identifier && ctx.userSig) { //带登录态
           proto_accesslayer( function(){
@@ -4358,7 +4360,7 @@ window.webim= webim;
         if (downFlag==2 && url!=null) {
             this.downUrl= url;
         } else {
-            if (downFlag !== undefined && busiId !== undefined) {
+            if (downFlag !== undefined && this.busiId !== undefined) {
                 getFileDownUrlV2(uuid, senderId, name, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.FILE);
             } else {
                 this.downUrl = getFileDownUrl(uuid, senderId, name); //下载地址
@@ -4617,7 +4619,7 @@ window.webim= webim;
         var checkDupMsg = function (msg) {
             var dup = false;
             var first_key = msg.sess._impl.skey;
-            var second_key = msg.isSend + msg.seq + msg.random;
+            var second_key = [msg.isSend+0 , msg.seq , msg.random].join('');
             var tempMsg = msgCache[first_key] && msgCache[first_key][second_key];
             if (tempMsg) {
                 dup = true;
