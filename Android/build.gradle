@@ -24,6 +24,8 @@ allprojects {
                 dirs 'libs', '../tuikit/libs'
             }
         }
+        // 华为离线推送
+        maven {url 'http://developer.huawei.com/repo/'}
     }
 
     tasks.withType(Javadoc) {
@@ -36,9 +38,9 @@ ext {
     compileSdkVersion = 27
     minSdkVersion = 16
     targetSdkVersion = 27
-    versionCode = 213
-    versionName = "3.5.0.230"
-    abiFilters = ['armeabi-v7a']//'arm64-v8a'，'armeabi-v7a', 'armeabi'
+    versionCode = 1
+    versionName = "4.3.81"
+    abiFilters = ['armeabi-v7a', 'arm64-v8a']//'arm64-v8a', 'armeabi-v7a', 'x86', 'armeabi'
     arguments = "-DANDROID_STL=c++_shared"
     cppFlags = "-std=c++11"
 }

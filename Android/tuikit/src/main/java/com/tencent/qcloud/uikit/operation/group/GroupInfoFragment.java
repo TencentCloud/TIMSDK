@@ -14,9 +14,6 @@ import com.tencent.qcloud.uikit.common.BaseFragment;
 import com.tencent.qcloud.uikit.common.UIKitConstants;
 import com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class GroupInfoFragment extends BaseFragment {
     private View mBaseView;

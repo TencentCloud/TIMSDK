@@ -20,11 +20,9 @@ import com.tencent.qcloud.uikit.common.utils.UIUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class GroupMemberInvitePanel extends LinearLayout {
+
     private PageTitleBar mTitleBar;
     private ContactList mContactList;
     private List<String> mInviteMembers = new ArrayList<>();

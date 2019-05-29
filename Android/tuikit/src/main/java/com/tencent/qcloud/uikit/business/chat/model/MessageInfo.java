@@ -6,9 +6,6 @@ import com.tencent.imsdk.TIMMessage;
 
 import java.util.UUID;
 
-/**
- * Created by valxehuang on 2018/7/18.
- */
 
 public class MessageInfo {
     /**

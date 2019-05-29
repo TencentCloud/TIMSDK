@@ -22,14 +22,23 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.huawei.android.hms.agent.HMSAgent;
+import com.huawei.android.hms.agent.common.handler.ConnectHandler;
+import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.log.QLog;
+import com.tencent.imsdk.utils.IMFunc;
+import com.tencent.qcloud.tim.tuikit.R;
+import com.tencent.qcloud.uikit.TUIKit;
 import com.tencent.qcloud.uikit.business.login.view.ILoginEvent;
 import com.tencent.qcloud.uikit.business.login.view.LoginView;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
-import com.tencent.qcloud.uipojo.R;
 import com.tencent.qcloud.uipojo.login.presenter.PojoLoginPresenter;
 import com.tencent.qcloud.uipojo.main.MainActivity;
+import com.tencent.qcloud.uipojo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.uipojo.utils.Constants;
+import com.vivo.push.IPushActionListener;
+import com.vivo.push.PushClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +98,7 @@ public class LoginActivity extends Activity implements ILoginEvent, ILoginView, 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         mPresenter = new PojoLoginPresenter(this);
         MainActivity.init = false;
-        checkPermission();
+        checkPermission(this);
 //        initCache();
 
 
@@ -106,6 +115,43 @@ public class LoginActivity extends Activity implements ILoginEvent, ILoginView, 
         } else {
             mFlashView.setVisibility(View.GONE);
         }
+
+        if(IMFunc.isBrandHuawei()){
+            // 华为离线推送
+            HMSAgent.connect(this, new ConnectHandler() {
+                @Override
+                public void onConnect(int rst) {
+                    QLog.i("huaweipush", "HMS connect end:" + rst);
+                }
+            });
+            getHuaWeiPushToken();
+        }
+        if(IMFunc.isBrandVivo()){
+            // vivo离线推送
+            PushClient.getInstance(getApplicationContext()).turnOnPush(new IPushActionListener() {
+                @Override
+                public void onStateChanged(int state) {
+                    if(state == 0){
+                        String regId = PushClient.getInstance(getApplicationContext()).getRegId();
+                        QLog.i("vivopush", "open vivo push success regId = " + regId);
+                        ThirdPushTokenMgr.getInstance().setThirdPushToken(regId);
+                        ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
+                    }else {
+                        // 根据vivo推送文档说明，state = 101 表示该vivo机型或者版本不支持vivo推送，链接：https://dev.vivo.com.cn/documentCenter/doc/156
+                        QLog.i("vivopush", "open vivo push fail state = " + state);
+                    }
+                }
+            });
+        }
+    }
+
+    private void getHuaWeiPushToken() {
+        HMSAgent.Push.getToken(new GetTokenHandler() {
+            @Override
+            public void onResult(int rtnCode) {
+                QLog.i("huaweipush", "get token: end" + rtnCode);
+            }
+        });
     }
 
     private void testUserName() {
@@ -227,12 +273,6 @@ public class LoginActivity extends Activity implements ILoginEvent, ILoginView, 
         UIUtils.toastLongMessage("注册失败：" + errMsg);
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -240,31 +280,31 @@ public class LoginActivity extends Activity implements ILoginEvent, ILoginView, 
             finish();
         }
         return true;
-
     }
 
+
     //权限检查
-    private boolean checkPermission() {
+    public static boolean checkPermission(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             List<String> permissions = new ArrayList<>();
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.CAMERA)) {
                 permissions.add(Manifest.permission.CAMERA);
             }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO)) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.RECORD_AUDIO)) {
                 permissions.add(Manifest.permission.RECORD_AUDIO);
             }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE)) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.READ_PHONE_STATE)) {
                 permissions.add(Manifest.permission.READ_PHONE_STATE);
             }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
             }
             if (permissions.size() != 0) {
                 String[] permissionsArray = permissions.toArray(new String[1]);
-                ActivityCompat.requestPermissions(this,
+                ActivityCompat.requestPermissions(activity,
                         permissionsArray,
                         REQ_PERMISSION_CODE);
                 return false;
@@ -272,6 +312,26 @@ public class LoginActivity extends Activity implements ILoginEvent, ILoginView, 
         }
 
         return true;
+    }
+
+    /**
+     * 系统请求权限回调
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQ_PERMISSION_CODE:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    UIUtils.toastLongMessage("未全部授权，部分功能可能无法使用！");
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
 }

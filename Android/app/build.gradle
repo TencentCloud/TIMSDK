@@ -13,7 +13,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.tencent.qcloud.uipojo"
+        applicationId "com.tencent.qcloud.tim.tuikit"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
@@ -52,6 +52,17 @@ dependencies {
     // Optional, if you use support library fragments:
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
 
-//    implementation(name: 'imsdk_4.0.0.1', ext: 'aar')
+    // HUAWEI push sdk
+    compile 'com.huawei.android.hms:push:2.6.3.301'
+    compile 'com.huawei.android.hms:base:2.6.3.301' // 如果有碰到报错：com.huawei.hms.api不存在，这条也要加上，注意版本号必须相同
+    // MEIZU push sdk
+    compile 'com.meizu.flyme.internet:push-internal:3.6.+@aar'
+
+    // bugly sdk
+    compile 'com.tencent.bugly:crashreport:2.6.6'
+    compile 'com.tencent.bugly:nativecrashreport:3.3.1'
+
+    // 如果用aar方式集成，这里需要指定libs文件夹下的aar的名称
+//    implementation(name: 'imsdk-xxx', ext: 'aar')
     implementation project(':tuikit')
 }

@@ -19,9 +19,6 @@ import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
 import java.util.HashMap;
 
-/**
- * Created by valxehuang on 2018/8/19.
- */
 
 @SuppressLint("AppCompatCustomView")
 public class ShadeImageView extends ImageView {

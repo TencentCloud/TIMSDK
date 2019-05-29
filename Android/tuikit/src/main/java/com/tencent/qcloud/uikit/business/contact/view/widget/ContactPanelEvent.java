@@ -2,15 +2,11 @@ package com.tencent.qcloud.uikit.business.contact.view.widget;
 
 import android.view.View;
 
-
-/**
- * Created by valexhuang on 2018/6/28.
- */
-
+// 重复代码，待删除
 public interface ContactPanelEvent {
-    public void onAddContactClick(View view, String identify);
+    void onAddContactClick(View view, String identify);
 
-    public void onDelContactClick(View view, String identify);
+    void onDelContactClick(View view, String identify);
 
     void onItemClick(View view, int position);
 }

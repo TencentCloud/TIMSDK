@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.tencent.qcloud.tim.tuikit.R;
 import com.tencent.qcloud.uikit.TUIKit;
 import com.tencent.qcloud.uikit.common.IUIKitCallBack;
-import com.tencent.qcloud.uipojo.R;
 import com.tencent.qcloud.uipojo.login.model.PojoLoginManager;
 import com.tencent.qcloud.uipojo.main.MainActivity;
 
@@ -89,7 +89,6 @@ public class MyLoginActivity extends Activity implements View.OnClickListener {
                  * IM登录成功后的回调操作，一般为跳转到应用的主页
                  *
                  */
-
                 Intent intent = new Intent(MyLoginActivity.this, MainActivity.class);
                 startActivity(intent);
             }

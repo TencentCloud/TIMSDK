@@ -16,16 +16,15 @@ import com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/8/2.
- */
 
 public class StartGroupChatFragment extends BaseFragment {
+
     private View mBaseView;
     private ContactList mContactList;
     private PageTitleBar mTitleBar;
     private EditText mSearch;
-    private List mDatas, mSelectedContacts = new ArrayList();
+    private List<ContactInfoBean> mDatas = new ArrayList();
+    private List<ContactInfoBean> mSelectedContacts = new ArrayList<>();
 
 
     @Nullable
@@ -74,7 +73,9 @@ public class StartGroupChatFragment extends BaseFragment {
     private void initDatas() {
         String data[] = getResources().getStringArray(R.array.provinces);
         mDatas = new ArrayList<>();
-        mDatas.add((ContactInfoBean) new ContactInfoBean("面对面建群").setTop(true).setBaseIndexTag(ContactInfoBean.INDEX_STRING_TOP));
+        ContactInfoBean bean = new ContactInfoBean("面对面建群");
+        bean.setTop(true).setBaseIndexTag(ContactInfoBean.INDEX_STRING_TOP);
+        mDatas.add(bean);
         for (int i = 0; i < data.length; i++) {
             ContactInfoBean cityBean = new ContactInfoBean();
             cityBean.setIdentifier(data[i]);//设置城市名称

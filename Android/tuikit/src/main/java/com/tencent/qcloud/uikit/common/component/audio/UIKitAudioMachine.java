@@ -14,9 +14,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- * Created by valexhuang on 2018/5/29.
- */
 
 public class UIKitAudioMachine {
 

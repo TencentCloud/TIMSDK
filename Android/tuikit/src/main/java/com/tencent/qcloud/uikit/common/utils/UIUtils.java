@@ -99,4 +99,5 @@ public class UIUtils {
         SOFT_INPUT_HEIGHT = totalHeight - contentHeight;
         return SOFT_INPUT_HEIGHT;
     }
+
 }

@@ -12,9 +12,6 @@ import android.widget.TextView;
 
 import com.tencent.qcloud.uikit.R;
 
-/**
- * Created by valexhuang on 2018/9/17.
- */
 
 public class InfoItemView extends LinearLayout {
     private TextView mLable, mValue;

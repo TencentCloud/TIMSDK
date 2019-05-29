@@ -37,9 +37,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/8/6.
- */
 
 public class MessageInfoUtil {
 
@@ -255,7 +252,7 @@ public class MessageInfoUtil {
         msgInfo.setMsgId(timMessage.getMsgId());
         if (isGroup) {
             TIMGroupMemberInfo memberInfo = timMessage.getSenderGroupMemberProfile();
-            if (!TextUtils.isEmpty(memberInfo.getNameCard()))
+            if (memberInfo != null && !TextUtils.isEmpty(memberInfo.getNameCard()))
                 msgInfo.setFromUser(memberInfo.getNameCard());
             else
                 msgInfo.setFromUser(sender);

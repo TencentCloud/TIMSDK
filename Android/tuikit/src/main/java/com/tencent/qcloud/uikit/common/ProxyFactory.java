@@ -10,11 +10,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-/**
- * Created by valexhuang on 2018/7/3.
- */
 
 public class ProxyFactory {
+
     public static IContactDataProvider createContactProviderProxy(IContactDataProvider provider, RecyclerView.Adapter adapter) {
         ProxySubject proxy = new ProxySubject(provider, adapter);
         IContactDataProvider sub = (IContactDataProvider) Proxy.newProxyInstance(provider.getClass().getClassLoader(),

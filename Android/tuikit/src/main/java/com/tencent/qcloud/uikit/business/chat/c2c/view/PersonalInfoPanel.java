@@ -24,15 +24,21 @@ import com.tencent.qcloud.uikit.common.widget.UIKitSwitch;
 
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class PersonalInfoPanel extends LinearLayout implements IPersonalInfoPanel {
+
     private ImageView mUserIcon;
-    private TextView mNickName, mAccount, mSignature, mLocation, mBirthday;
+    private TextView mNickName;
+    private TextView mAccount;
+    private TextView mSignature;
+    private TextView mLocation;
+    private TextView mBirthday;
+
     private UIKitSwitch mTopILiveSwitch;
-    private Button mBtn, mDelFriendBtn, mAddBlackListBtn, mCancelBtn;
+    private Button mBtn;
+    private Button mDelFriendBtn;
+    private Button mAddBlackListBtn;
+    private Button mCancelBtn;
     private PageTitleBar mTitleBar;
     private PersonalPresenter mPresenter;
     private PersonalInfoPanelEvent mEvent;

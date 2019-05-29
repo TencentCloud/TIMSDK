@@ -10,11 +10,14 @@
 #import "TNavigationController.h"
 #import "ConversationController.h"
 #import "SettingController.h"
+#import "ContactsController.h"
 #import "TUIKit.h"
 #import "THeader.h"
 #import "TAlertView.h"
+#import "ImSDK.h"
+#import <Bugly/Bugly.h>
 
-@interface AppDelegate () <TAlertViewDelegate>
+@interface AppDelegate () <TAlertViewDelegate,BuglyDelegate>
 
 @end
 
@@ -25,6 +28,9 @@
     // Override point for customization after application launch.
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onForceOffline:) name:TUIKitNotification_TIMUserStatusListener object:nil];
+    
+    [self setupBugly];
+    [self registNotification];
     
     //sdkAppId 填写自己控制台申请的sdkAppid
     if (sdkAppid == 0) {
@@ -44,6 +50,18 @@
     if([appId integerValue] == sdkAppid && identifier.length != 0 && userSig.length != 0){
         __weak typeof(self) ws = self;
         [[TUIKit sharedInstance] loginKit:identifier userSig:userSig succ:^{
+            if (ws.deviceToken) {
+                TIMTokenParam *param = [[TIMTokenParam alloc] init];
+                /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
+                //企业证书 ID
+                param.busiId = sdkBusiId;
+                [param setToken:ws.deviceToken];
+                [[TIMManager sharedInstance] setToken:param succ:^{
+                    NSLog(@"-----> 上传 token 成功 ");
+                } fail:^(int code, NSString *msg) {
+                    NSLog(@"-----> 上传 token 失败 ");
+                }];
+            }
             ws.window.rootViewController = [self getMainController];
         } fail:^(int code, NSString *msg) {
             [[NSUserDefaults standardUserDefaults] setObject:@(0) forKey:Key_UserInfo_Appid];
@@ -59,6 +77,72 @@
     return YES;
 }
 
+- (void)setupBugly {
+    // Get the default config
+    BuglyConfig * config = [[BuglyConfig alloc] init];
+    
+    // Open the debug mode to print the sdk log message.
+    // Default value is NO, please DISABLE it in your RELEASE version.
+#if DEBUG
+    config.debugMode = YES;
+#endif
+    
+    // Open the customized log record and report, BuglyLogLevelWarn will report Warn, Error log message.
+    // Default value is BuglyLogLevelSilent that means DISABLE it.
+    // You could change the value according to you need.
+    //    config.reportLogLevel = BuglyLogLevelWarn;
+    
+    // Open the STUCK scene data in MAIN thread record and report.
+    // Default value is NO
+    //config.blockMonitorEnable = YES;
+    
+    // Set the STUCK THRESHOLD time, when STUCK time > THRESHOLD it will record an event and report data when the app launched next time.
+    // Default value is 3.5 second.
+    //config.blockMonitorTimeout = 1.5;
+    
+    // Set the app channel to deployment
+    config.channel = @"Bugly";
+    
+    config.delegate = self;
+    
+    config.consolelogEnable = NO;
+    config.viewControllerTrackingEnable = NO;
+    config.version = [[TUIKit sharedInstance] getSDKVersion];
+    
+    // NOTE:Required
+    // Start the Bugly sdk with APP_ID and your config
+    [Bugly startWithAppId:BUGLY_APP_ID
+#if DEBUG
+        developmentDevice:YES
+#endif
+                   config:config];
+    
+    // Set the customizd tag thats config in your APP registerd on the  bugly.qq.com
+    // [Bugly setTag:1799];
+    
+    [Bugly setUserIdentifier:[NSString stringWithFormat:@"User: %@", [UIDevice currentDevice].name]];
+    
+    [Bugly setUserValue:[NSProcessInfo processInfo].processName forKey:@"Process"];
+    
+}
+
+- (void)registNotification
+{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
+    {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }
+    else
+    {
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert)];
+    }
+}
+
+-(void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    _deviceToken = deviceToken;
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -67,8 +151,32 @@
 
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    __block UIBackgroundTaskIdentifier bgTaskID;
+    bgTaskID = [application beginBackgroundTaskWithExpirationHandler:^ {
+        //不管有没有完成，结束 background_task 任务
+        [application endBackgroundTask: bgTaskID];
+        bgTaskID = UIBackgroundTaskInvalid;
+    }];
+    
+    //获取未读计数
+    int unReadCount = 0;
+    NSArray *convs = [[TIMManager sharedInstance] getConversationList];
+    for (TIMConversation *conv in convs) {
+        if([conv getType] == TIM_SYSTEM){
+            continue;
+        }
+        unReadCount += [conv getUnReadMessageNum];
+    }
+    [UIApplication sharedApplication].applicationIconBadgeNumber = unReadCount;
+    
+    //doBackground
+    TIMBackgroundParam  *param = [[TIMBackgroundParam alloc] init];
+    [param setC2cUnread:unReadCount];
+    [[TIMManager sharedInstance] doBackground:param succ:^() {
+        NSLog(@"doBackgroud Succ");
+    } fail:^(int code, NSString * err) {
+        NSLog(@"Fail: %d->%@", code, err);
+    }];
 }
 
 
@@ -78,7 +186,11 @@
 
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [[TIMManager sharedInstance] doForeground:^() {
+        NSLog(@"doForegroud Succ");
+    } fail:^(int code, NSString * err) {
+        NSLog(@"Fail: %d->%@", code, err);
+    }];
 }
 
 
@@ -108,8 +220,15 @@ void uncaughtExceptionHandler(NSException*exception){
     msgItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
     [items addObject:msgItem];
     
+    TTabBarItem *contactItem = [[TTabBarItem alloc] init];
+    contactItem.title = @"通讯录";
+    contactItem.selectedImage = [UIImage imageNamed:TUIKitResource(@"contacts_pressed")];
+    contactItem.normalImage = [UIImage imageNamed:TUIKitResource(@"contacts_normal")];
+    contactItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
+    [items addObject:contactItem];
+    
     TTabBarItem *setItem = [[TTabBarItem alloc] init];
-    setItem.title = @"设置";
+    setItem.title = @"我";
     setItem.selectedImage = [UIImage imageNamed:TUIKitResource(@"setting_pressed")];
     setItem.normalImage = [UIImage imageNamed:TUIKitResource(@"setting_normal")];
     setItem.controller = [[TNavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
@@ -131,3 +250,4 @@ void uncaughtExceptionHandler(NSException*exception){
     self.window.rootViewController = [self getLoginController];
 }
 @end
+

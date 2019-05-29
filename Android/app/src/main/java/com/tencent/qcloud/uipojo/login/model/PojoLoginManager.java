@@ -12,6 +12,7 @@ import com.tencent.imsdk.ext.message.TIMConversationExt;
 import com.tencent.imsdk.ext.message.TIMMessageExt;
 import com.tencent.imsdk.log.QLog;
 import com.tencent.qcloud.uipojo.PojoApplication;
+import com.tencent.qcloud.uipojo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.uipojo.utils.Constants;
 import com.tencent.qcloud.uipojo.utils.SimpleHelper;
 
@@ -69,10 +70,12 @@ public class PojoLoginManager {
 
     //IM登录
     private void imLogin(final String name, final String password, final boolean autoJoin, final LoginCallback callback) {
+
+
         SimpleHelper.getUsersig(Constants.SDKAPPID, name, new TIMValueCallBack<String>() {
             @Override
             public void onError(int code, String desc) {
-                QLog.i(TAG, "getUsersig onError=" + code + ":" + desc);
+                QLog.i(TAG, "getUsersig errorCode = " + code + ", errorInfo = " + desc);
             }
 
             @Override
@@ -82,7 +85,7 @@ public class PojoLoginManager {
                     public void onError(int code, String desc) {
                         if (callback != null)
                             callback.onFail(TAG, code, desc);
-                        QLog.i(TAG, "imLogin onError=" + code + ":" + desc);
+                        QLog.i(TAG, "imLogin errorCode = " + code + ", errorInfo = " + desc);
                     }
 
                     @Override
@@ -256,8 +259,7 @@ public class PojoLoginManager {
         TIMGroupManager.getInstance().applyJoinGroup("developers@Android", "", new TIMCallBack() {
             @Override
             public void onError(final int code, final String desc) {
-                QLog.e(TAG, "autoJoin failed, code: " + code + "|desc: " + desc);
-
+                QLog.e(TAG, "autoJoin failed, code = " + code + ", errorInfo = " + desc);
             }
 
             @Override
@@ -270,15 +272,16 @@ public class PojoLoginManager {
     private String handleRegisterError(int errorCode) {
         if (errorCode == 610) {
             return "用户名格式错误";
-        }
-        if (errorCode == 602) {
+        } else if (errorCode == 602) {
             return "用户名或密码不合法";
         } else if (errorCode == 612) {
             return "用户已存在";
         } else if (errorCode == 500) {
             return "服务器错误";
-        } else if (errorCode == 610) {
-            return "用户名格式错误";
+        } else if (errorCode == 620) {
+            return "用户不存在";
+        } else if (errorCode == 621) {
+            return "密码错误";
         }
         return "";
     }
@@ -288,6 +291,9 @@ public class PojoLoginManager {
         UserInfo.getInstance().setAccount(userName);
         UserInfo.getInstance().setPassword(password);
         UserInfo.getInstance().writeToCache(PojoApplication.instance());
+
+        ThirdPushTokenMgr.getInstance().setIsLogin(true);
+        ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
     }
 
     public interface LoginCallback {

@@ -34,10 +34,6 @@ import com.tencent.qcloud.uikit.operation.group.GroupChatJoinActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/17.
- */
-
 public class SessionPanel extends RelativeLayout implements ISessionPanel {
     /**
      * 会话面板标题栏
@@ -108,17 +104,24 @@ public class SessionPanel extends RelativeLayout implements ISessionPanel {
         mSessionList = findViewById(R.id.session_list);
         mSessionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (mSessionClickListener != null)
-                    mSessionClickListener.onSessionClick(mAdapter.getItem(i));
+                    mSessionClickListener.onSessionClick(mAdapter.getItem(position));
             }
         });
-        mSessionList.setItemLongClickListener(new SessionListView.ItemLongClickListener() {
+        mSessionList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemLongClick(View view, int position, float x, float y) {
-                showItemPopMenu(position, mAdapter.getItem(position), x, y);
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                showItemPopMenu(position, mAdapter.getItem(position), view.getWidth() / 2 + view.getX(), view.getY() + view.getHeight() / 2);
+                return true;
             }
         });
+//        mSessionList.setItemLongClickListener(new SessionListView.ItemLongClickListener() {
+//            @Override
+//            public void onItemLongClick(View view, int position, float x, float y) {
+//                showItemPopMenu(position, mAdapter.getItem(position), x, y);
+//            }
+//        });
     }
 
     /**
@@ -204,6 +207,12 @@ public class SessionPanel extends RelativeLayout implements ISessionPanel {
         mSessionPopList.setAdapter(mSessionPopAdapter);
         mSessionPopAdapter.setDataSource(mSessionPopActions);
         mSessionPopWindow = PopWindowUtil.popupWindow(itemPop, this, (int) locationX, (int) locationY);
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSessionPopWindow.dismiss();
+            }
+        }, 6000); // 6s后无操作自动消失
     }
 
     /**

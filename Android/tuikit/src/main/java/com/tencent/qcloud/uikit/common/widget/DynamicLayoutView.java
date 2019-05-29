@@ -7,9 +7,6 @@ import android.view.ViewGroup.LayoutParams;
 
 import com.tencent.qcloud.uikit.business.chat.model.MessageInfo;
 
-/**
- * Created by valexhuang on 2018/10/10.
- */
 public abstract class DynamicLayoutView<T> {
     protected ViewGroup mContainer;
     protected int mViewId;

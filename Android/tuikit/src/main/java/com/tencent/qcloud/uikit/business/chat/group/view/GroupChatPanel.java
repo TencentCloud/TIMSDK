@@ -20,21 +20,19 @@ import com.tencent.qcloud.uikit.common.component.action.PopActionClickListener;
 import com.tencent.qcloud.uikit.common.component.action.PopMenuAction;
 import com.tencent.qcloud.uikit.common.component.audio.UIKitAudioArmMachine;
 import com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar;
+import com.tencent.qcloud.uikit.common.utils.UIUtils;
 import com.tencent.qcloud.uikit.operation.group.GroupApplyManagerActivity;
 import com.tencent.qcloud.uikit.operation.group.GroupManagerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/18.
- */
 
 public class GroupChatPanel extends ChatPanel implements IChatPanel {
 
-    GroupChatPresenter mPresenter;
+    private static final int DELAY_GONE_TIME = 500;
+    private GroupChatPresenter mPresenter;
     private GroupChatInfo mBaseInfo;
-
 
     public GroupChatPanel(Context context) {
         super(context);
@@ -59,10 +57,9 @@ public class GroupChatPanel extends ChatPanel implements IChatPanel {
                 postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
                         mTipsGroup.setVisibility(View.GONE);
                     }
-                }, 500);
+                }, DELAY_GONE_TIME);
             }
         });
     }
@@ -71,10 +68,7 @@ public class GroupChatPanel extends ChatPanel implements IChatPanel {
     public void setBaseChatId(String peer) {
         mPresenter = new GroupChatPresenter(this);
         mPresenter.getGroupChatInfo(peer);
-
-
     }
-
 
     public void onGroupInfoLoaded(GroupChatInfo groupInfo) {
         if (groupInfo == null)
@@ -98,7 +92,6 @@ public class GroupChatPanel extends ChatPanel implements IChatPanel {
     public void onGroupNameChanged(String newName) {
         getTitleBar().setTitle(newName, PageTitleBar.POSITION.CENTER);
     }
-
 
     @Override
     public void exitChat() {
@@ -128,10 +121,13 @@ public class GroupChatPanel extends ChatPanel implements IChatPanel {
         mTitleBar.setRightClick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), GroupManagerActivity.class);
-                intent.putExtra(UIKitConstants.GROUP_ID, mBaseInfo.getPeer());
-                getContext().startActivity(intent);
-
+                if (mBaseInfo != null) {
+                    Intent intent = new Intent(getContext(), GroupManagerActivity.class);
+                    intent.putExtra(UIKitConstants.GROUP_ID, mBaseInfo.getPeer());
+                    getContext().startActivity(intent);
+                } else {
+                    UIUtils.toastLongMessage("请稍后再试试~");
+                }
             }
         });
     }
@@ -149,7 +145,6 @@ public class GroupChatPanel extends ChatPanel implements IChatPanel {
         });
         actions.add(action);
         if (msg.isSelf()) {
-
             action = new PopMenuAction();
             action.setActionName("撤销");
             action.setActionClickListener(new PopActionClickListener() {
@@ -178,7 +173,6 @@ public class GroupChatPanel extends ChatPanel implements IChatPanel {
         if (getContext() instanceof Activity) {
             ((Activity) getContext()).finish();
         }
-
     }
 
     @Override

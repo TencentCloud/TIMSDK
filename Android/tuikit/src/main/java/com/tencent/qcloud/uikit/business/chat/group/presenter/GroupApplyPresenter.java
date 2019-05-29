@@ -9,8 +9,9 @@ import com.tencent.qcloud.uikit.common.utils.UIUtils;
 import java.util.List;
 
 public class GroupApplyPresenter {
-    GroupApplyCallback mApplyHandler;
-    GroupChatManager mManager;
+
+    private GroupApplyCallback mApplyHandler;
+    private GroupChatManager mManager;
 
     public GroupApplyPresenter(GroupApplyCallback handler) {
         mApplyHandler = handler;

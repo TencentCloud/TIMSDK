@@ -1,10 +1,8 @@
 package com.tencent.qcloud.uikit.business.chat.view.widget;
 
-/**
- * Created by valexhuang on 2018/10/31.
- */
 
 public class FaceConfig {
+
     private String assetPath;
     private String faceName;
     private int faceResourceId;

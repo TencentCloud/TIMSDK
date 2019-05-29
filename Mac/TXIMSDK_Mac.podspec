@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Mac'
-  spec.version      = '4.0.1'
+  spec.version      = '4.3.135'
   spec.platform     = :osx  
   spec.osx.deployment_target = '10.10'
   spec.license      = { :type => 'Proprietary',
@@ -20,5 +20,5 @@ Pod::Spec.new do |spec|
   spec.source_files = 'Mac/ImSDKForMac.framework/Versions/A/Headers/*.h'
   spec.public_header_files = 'Mac/ImSDKForMac.framework/Versions/A/Headers/*.h'
   spec.vendored_frameworks = 'Mac/ImSDKForMac.framework'
-  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Mac/Mac/ImSDKForMac.framework/Versions/A/Headers/'}
+   spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Mac/Mac/ImSDKForMac.framework/Versions/A/Headers/'}
 end

@@ -12,10 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Created by valexhuang on 2018/7/17.
- */
-
 public class GroupChatProvider implements IChatProvider {
 
     private ArrayList<MessageInfo> dataSource = new ArrayList();
@@ -29,15 +25,33 @@ public class GroupChatProvider implements IChatProvider {
 
     @Override
     public boolean addMessageInfos(List<MessageInfo> msgs, boolean front) {
+        List<MessageInfo> messageInfos = removeExistElement(msgs);
         boolean flag;
         if (front) {
-            flag = dataSource.addAll(0, msgs);
-            updateAdapter(ChatListView.DATA_CHANGE_TYPE_ADD_FRONT, msgs.size());
+            flag = dataSource.addAll(0, messageInfos);
+            updateAdapter(ChatListView.DATA_CHANGE_TYPE_ADD_FRONT, messageInfos.size());
         } else {
-            flag = dataSource.addAll(msgs);
-            updateAdapter(ChatListView.DATA_CHANGE_TYPE_ADD_BACK, msgs.size());
+            flag = dataSource.addAll(messageInfos);
+            updateAdapter(ChatListView.DATA_CHANGE_TYPE_ADD_BACK, messageInfos.size());
         }
         return flag;
+    }
+
+    private List<MessageInfo> removeExistElement(List<MessageInfo> msgs) {
+        if (msgs.size() > 0) {
+            for (int i = 0; i < msgs.size(); i++) {
+                String msgId = msgs.get(i).getMsgId();
+                if (msgId != null) {
+                    for (int j = dataSource.size() - 1; j >= 0; j--) {
+                        TIMMessage timMessage = dataSource.get(j).getTIMMessage();
+                        if (timMessage.getMsgId().equals(msgId)) {
+                            msgs.remove(msgs.get(i));
+                        }
+                    }
+                }
+            }
+        }
+        return msgs;
     }
 
     private boolean checkExist(MessageInfo msg) {

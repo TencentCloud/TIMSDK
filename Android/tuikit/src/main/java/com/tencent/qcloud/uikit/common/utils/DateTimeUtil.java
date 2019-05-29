@@ -1,12 +1,8 @@
 package com.tencent.qcloud.uikit.common.utils;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by valxehuang on 2018/7/29.
- */
 
 public class DateTimeUtil {
 
@@ -27,76 +23,39 @@ public class DateTimeUtil {
             return null;
         }
 
-        int currentDayIndex;
-        int currentWeek;
-
-
-        int msgDayIndex;
-        int msgYear;
-        int msgDayInWeek;
-        int msgWeek;
-        String msgTimeStr;
         Calendar calendar = Calendar.getInstance();
-        currentDayIndex = calendar.get(Calendar.DAY_OF_YEAR);
-        currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+
+        int currentDayIndex = calendar.get(Calendar.DAY_OF_YEAR);
+        int currentYear = calendar.get(Calendar.YEAR);
 
         calendar.setTime(date);
-        msgYear = calendar.get(Calendar.YEAR);
-        msgDayIndex = calendar.get(Calendar.DAY_OF_YEAR);
+        int msgYear = calendar.get(Calendar.YEAR);
+        int msgDayIndex = calendar.get(Calendar.DAY_OF_YEAR);
         int msgMinute = calendar.get(Calendar.MINUTE);
 
-        msgTimeStr = calendar.get(Calendar.HOUR_OF_DAY) + ":";
+        String msgTimeStr = calendar.get(Calendar.HOUR_OF_DAY) + ":";
+
         if (msgMinute < 10) {
             msgTimeStr = msgTimeStr + "0" + msgMinute;
         } else {
             msgTimeStr = msgTimeStr + msgMinute;
         }
-        msgDayInWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        msgWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+
+        int msgDayInWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
         if (currentDayIndex == msgDayIndex) {
             return msgTimeStr;
         } else {
-            if (currentDayIndex - msgDayIndex == 1) {
+            if (currentDayIndex - msgDayIndex == 1 && currentYear == msgYear) {
                 msgTimeStr = "昨天 " + msgTimeStr;
-            } else if (currentDayIndex - msgDayIndex > 1) {
-                //同一周的时间显示，0是周天，中国人的习惯是跨周了
-                if (msgWeek == currentWeek && msgDayInWeek != 0) {
-                    msgTimeStr = getWeekDay(msgDayInWeek) + " " + msgTimeStr;
-                }
-                //不同周显示具体月，日
-                else {
-                    msgTimeStr = calendar.get(Calendar.MONTH) + "月" + calendar.get(Calendar.DAY_OF_MONTH) + "日" + msgTimeStr + " ";
-                }
+            } else if (currentDayIndex - msgDayIndex > 1 && currentYear == msgYear) { //本年消息
+                //不同周显示具体月，日，注意函数：calendar.get(Calendar.MONTH) 一月对应0，十二月对应11
+                msgTimeStr = calendar.get(Calendar.MONTH) + 1 + "月" + calendar.get(Calendar.DAY_OF_MONTH) + "日" + msgTimeStr + " ";
+            } else  { // 1、非正常时间，如currentYear < msgYear，或者currentDayIndex < msgDayIndex
+                //2、非本年消息（currentYear > msgYear），如：历史消息是2018，今年是2019，显示年、月、日
+                msgTimeStr = msgYear + "年" + calendar.get(Calendar.MONTH) + 1 + "月" + calendar.get(Calendar.DAY_OF_MONTH) + "日" + msgTimeStr + " ";
             }
-            //最后一种情况就是currentDayIndex<msgDayIndex,那只能是跨年了
-            else {
-                msgTimeStr = msgYear + "年" + calendar.get(Calendar.MONTH) + "月" + calendar.get(Calendar.DAY_OF_MONTH) + "日" + msgTimeStr + " ";
-            }
-
-
         }
         return msgTimeStr;
-    }
-
-
-    private static String getWeekDay(int dayInWeek) {
-        switch (dayInWeek) {
-            case Calendar.SUNDAY:
-                return "周日";
-            case Calendar.MONDAY:
-                return "周一";
-            case Calendar.TUESDAY:
-                return "周二";
-            case Calendar.WEDNESDAY:
-                return "周三";
-            case Calendar.THURSDAY:
-                return "周四";
-            case Calendar.FRIDAY:
-                return "周五";
-            case Calendar.SATURDAY:
-                return "周六";
-        }
-        return "";
     }
 }

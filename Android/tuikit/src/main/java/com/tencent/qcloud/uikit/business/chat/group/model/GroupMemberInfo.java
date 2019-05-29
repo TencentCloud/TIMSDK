@@ -5,11 +5,9 @@ import com.tencent.qcloud.uikit.common.component.info.BaseInfoBean;
 
 import java.io.Serializable;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class GroupMemberInfo extends BaseInfoBean implements Serializable {
+
     private String iconUrl;
     private String account;
     private String signature;

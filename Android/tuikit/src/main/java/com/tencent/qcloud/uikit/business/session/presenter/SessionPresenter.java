@@ -7,11 +7,8 @@ import com.tencent.qcloud.uikit.business.session.model.SessionProvider;
 import com.tencent.qcloud.uikit.business.session.view.SessionPanel;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
-/**
- * Created by valxehuang on 2018/7/17.
- */
-
 public class SessionPresenter implements SessionManager.SessionStartChat {
+
     private SessionPanel mSessionPanel;
     private SessionManager mManager;
 

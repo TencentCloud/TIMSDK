@@ -9,19 +9,16 @@ import com.tencent.qcloud.uikit.common.BackgroundTasks;
 import com.tencent.qcloud.uikit.business.chat.model.MessageInfo;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
-/**
- * Created by valxehuang on 2018/7/18.
- */
 
 public class C2CChatPresenter {
-    C2CChatPanel mChatPanel;
-    C2CChatManager mChatManager;
+
+    private C2CChatPanel mChatPanel;
+    private C2CChatManager mChatManager;
 
     public C2CChatPresenter(C2CChatPanel chatPanel) {
-        this.mChatPanel = chatPanel;
+        mChatPanel = chatPanel;
         mChatManager = C2CChatManager.getInstance();
     }
-
 
     public C2CChatInfo getC2CChatInfo(String peer) {
         C2CChatInfo chatInfo = mChatManager.getC2CChatInfo(peer);
@@ -71,7 +68,4 @@ public class C2CChatPresenter {
         mChatManager.revokeMessage(position, message);
     }
 
-    public void exitC2CChat() {
-
-    }
 }

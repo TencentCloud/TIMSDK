@@ -5,11 +5,9 @@ import com.tencent.qcloud.uikit.api.infos.IPersonalInfoPanel;
 import com.tencent.qcloud.uikit.business.chat.c2c.model.PersonalInfoBean;
 import com.tencent.qcloud.uikit.business.chat.c2c.model.PersonalInfoManager;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class PersonalPresenter {
+
     private IPersonalInfoPanel mInfoPanel;
     private PersonalInfoManager mManager = PersonalInfoManager.getInstance();
 

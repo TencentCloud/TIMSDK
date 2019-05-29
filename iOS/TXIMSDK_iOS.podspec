@@ -1,6 +1,7 @@
+
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_iOS'
-  spec.version      = '4.0.13'
+  spec.version      = '4.3.135'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,9 +17,9 @@ Pod::Spec.new do |spec|
   spec.requires_arc = true
 
   spec.source = { :git => 'https://github.com/tencentyun/TIMSDK.git', :tag => spec.version}
-  spec.preserve_paths = 'iOS/ImSDK.framework'
-  spec.source_files = 'iOS/ImSDK.framework/Headers/*.h'
-  spec.public_header_files = 'iOS/ImSDK.framework/Headers/*.h'
-  spec.vendored_frameworks = 'iOS/ImSDK.framework'
-  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_iOS/iOS/ImSDK.framework/Headers/'}
+  spec.preserve_paths = 'iOS/ImSDK/Framework/ImSDK.framework'
+  spec.source_files = 'iOS/ImSDK/Framework/ImSDK.framework/Headers/*.h'
+  spec.public_header_files = 'iOS/ImSDK/Framework/ImSDK.framework/Headers/*.h'
+  spec.vendored_frameworks = 'iOS/ImSDK/Framework/ImSDK.framework'
+  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_iOS/iOS/ImSDK/Framework/ImSDK.framework/Headers/'}
 end

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_TUIKit_iOS'
-  spec.version      = '4.0.13'
+  spec.version      = '4.3.135'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -12,13 +12,21 @@ Pod::Spec.new do |spec|
   spec.documentation_url = 'https://cloud.tencent.com/document/product/269/9147'
   spec.authors      = 'tencent video cloud'
   spec.summary      = 'TXIMSDK_TUIKit_iOS'
+  spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
+  spec.libraries    = 'stdc++'
+
+  spec.dependency 'MMLayout'
+  spec.dependency 'SDWebImage'
+  spec.dependency 'TXIMSDK_iOS'
+  spec.dependency 'ReactiveObjC'
   
   spec.requires_arc = true
 
   spec.source = { :git => 'https://github.com/tencentyun/TIMSDK.git', :tag => spec.version}
-  spec.preserve_paths = 'iOS/TUIKit.framework'
-  spec.source_files = 'iOS/TUIKit.framework/Headers/*.h'
-  spec.public_header_files = 'iOS/TUIKit.framework/Headers/*.h'
-  spec.vendored_frameworks = 'iOS/TUIKit.framework'
-  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_TUIKit_iOS/iOS/TUIKit.framework/Headers/'}
+  spec.source_files = 'iOS/TUIKit/Classes/**/*.{h,m,mm}'
+  # spec.vendored_frameworks = ''
+  spec.vendored_libraries = ['iOS/TUIKit/Classes/third/voiceConvert/opencore-amrnb/libopencore-amrnb.a', 'iOS/TUIKit/Classes/third/voiceConvert/opencore-amrwb/libopencore-amrwb.a']
+  spec.resource = ['iOS/TUIKit/Resources/TUIKitFace.bundle','iOS/TUIKit/Resources/TUIKitResource.bundle']
 end
+
+# pod trunk push TXIMSDK_TUIKit_iOS.podspec --use-libraries --allow-warnings

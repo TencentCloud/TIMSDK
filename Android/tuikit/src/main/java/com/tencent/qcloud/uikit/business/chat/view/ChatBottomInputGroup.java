@@ -1,11 +1,19 @@
 package com.tencent.qcloud.uikit.business.chat.view;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -42,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by valxehuang on 2018/7/18.
+ * 聊天界面，底部发送图片、拍照、摄像、文件面板
  */
 
 public class ChatBottomInputGroup extends LinearLayout implements View.OnClickListener, UIKitAudioArmMachine.AudioRecordCallback, TextWatcher {
@@ -95,6 +103,8 @@ public class ChatBottomInputGroup extends LinearLayout implements View.OnClickLi
     private int lastMsgLineCount;
     private float startRecordY;
 
+    private AlertDialog mPermissionDialog;
+    private String mPackName = "com.tencent.qcloud.tim.tuikit";
 
     public ChatBottomInputGroup(Context context) {
         super(context);
@@ -153,7 +163,15 @@ public class ChatBottomInputGroup extends LinearLayout implements View.OnClickLi
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-
+                if (checkStoragePermisson(activity, Manifest.permission.RECORD_AUDIO) != true) {
+                    return false;
+                }
+                if (checkStoragePermisson(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != true) {
+                    return false;
+                }
+                if (checkStoragePermisson(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != true) {
+                    return false;
+                }
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     audioCancel = true;
                     startRecordY = motionEvent.getY();
@@ -190,6 +208,7 @@ public class ChatBottomInputGroup extends LinearLayout implements View.OnClickLi
 
     }
 
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -203,53 +222,10 @@ public class ChatBottomInputGroup extends LinearLayout implements View.OnClickLi
         action.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Matisse.defaultFrom(activity, new IUIKitCallBack() {
-                    @Override
-                    public void onSuccess(Object data) {
-                        if (data instanceof List) {
-                            List<Uri> uris = (List<Uri>) data;
-                            for (int i = 0; i < uris.size(); i++) {
-                                MessageInfo info = MessageInfoUtil.buildImageMessage(uris.get(i), true, false);
-                                if (msgHandler != null)
-                                    msgHandler.sendMessage(info);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-
-                    }
-                });
+                startSendPhoto();
             }
         });
         actions.add(action);
-        action = new MessageOperaUnit();
-        action.setIconResId(R.drawable.action_video_selector);
-        action.setTitleId(R.string.action_file);
-        action.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                actionsFragment.setCallback(new IUIKitCallBack() {
-                    @Override
-                    public void onSuccess(Object data) {
-                        MessageInfo info = MessageInfoUtil.buildFileMessage((Uri) data);
-                        if (msgHandler != null)
-                            msgHandler.sendMessage(info);
-                    }
-
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-                        UIUtils.toastLongMessage(errMsg);
-                    }
-                });
-                actionsFragment.startActivityForResult(intent, ChatActionsFragment.REQUEST_CODE_FILE);
-            }
-        });
-
 
         action = new MessageOperaUnit();
         action.setIconResId(R.drawable.photo);
@@ -257,23 +233,7 @@ public class ChatBottomInputGroup extends LinearLayout implements View.OnClickLi
         action.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent captureIntent = new Intent(getContext(), CameraActivity.class);
-                captureIntent.putExtra(UIKitConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_ONLY_CAPTURE);
-                CameraActivity.mCallBack = new IUIKitCallBack() {
-                    @Override
-                    public void onSuccess(Object data) {
-                        Uri contentUri = Uri.fromFile(new File(data.toString()));
-                        MessageInfo msg = MessageInfoUtil.buildImageMessage(contentUri, true, true);
-                        if (msgHandler != null)
-                            msgHandler.sendMessage(msg);
-                    }
-
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-
-                    }
-                };
-                getContext().startActivity(captureIntent);
+                startTakeShot();
             }
         });
         actions.add(action);
@@ -284,28 +244,7 @@ public class ChatBottomInputGroup extends LinearLayout implements View.OnClickLi
         action.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent captureIntent = new Intent(getContext(), CameraActivity.class);
-                captureIntent.putExtra(UIKitConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_ONLY_RECORDER);
-                CameraActivity.mCallBack = new IUIKitCallBack() {
-                    @Override
-                    public void onSuccess(Object data) {
-                        Intent videoData = (Intent) data;
-                        String imgPath = videoData.getStringExtra(UIKitConstants.CAMERA_IMAGE_PATH);
-                        String videoPath = videoData.getStringExtra(UIKitConstants.CAMERA_VIDEO_PATH);
-                        int imgWidth = videoData.getIntExtra(UIKitConstants.IMAGE_WIDTH, 0);
-                        int imgHeight = videoData.getIntExtra(UIKitConstants.IMAGE_HEIGHT, 0);
-                        long duration = videoData.getLongExtra(UIKitConstants.VIDEO_TIME, 0);
-                        MessageInfo msg = MessageInfoUtil.buildVideoMessage(imgPath, videoPath, imgWidth, imgHeight, duration);
-                        if (msgHandler != null)
-                            msgHandler.sendMessage(msg);
-                    }
-
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-
-                    }
-                };
-                getContext().startActivity(captureIntent);
+                startSendRecord();
             }
         });
         actions.add(action);
@@ -316,27 +255,129 @@ public class ChatBottomInputGroup extends LinearLayout implements View.OnClickLi
         action.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                actionsFragment.setCallback(new IUIKitCallBack() {
-                    @Override
-                    public void onSuccess(Object data) {
-                        MessageInfo info = MessageInfoUtil.buildFileMessage((Uri) data);
-                        if (msgHandler != null)
-                            msgHandler.sendMessage(info);
-                    }
-
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-                        UIUtils.toastLongMessage(errMsg);
-                    }
-                });
-                actionsFragment.startActivityForResult(intent, ChatActionsFragment.REQUEST_CODE_FILE);
-                //UIUtils.toastLongMessage("文件");
+                startSendFile();
             }
         });
         actions.add(action);
+    }
+
+    private void startSendPhoto() {
+        if (checkStoragePermisson(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != true) {
+            return;
+        }
+        if (checkStoragePermisson(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != true) {
+            return;
+        }
+        Matisse.defaultFrom(activity, new IUIKitCallBack() {
+            @Override
+            public void onSuccess(Object data) {
+                if (data instanceof List) {
+                    List<Uri> uris = (List<Uri>) data;
+                    for (int i = 0; i < uris.size(); i++) {
+                        MessageInfo info = MessageInfoUtil.buildImageMessage(uris.get(i), true, false);
+                        if (msgHandler != null)
+                            msgHandler.sendMessage(info);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+
+            }
+        });
+    }
+
+    private void startTakeShot() {
+        if (checkStoragePermisson(activity, Manifest.permission.CAMERA) != true) {
+            return;
+        }
+        if (checkStoragePermisson(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != true) {
+            return;
+        }
+        if (checkStoragePermisson(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != true) {
+            return;
+        }
+        Intent captureIntent = new Intent(getContext(), CameraActivity.class);
+        captureIntent.putExtra(UIKitConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_ONLY_CAPTURE);
+        CameraActivity.mCallBack = new IUIKitCallBack() {
+            @Override
+            public void onSuccess(Object data) {
+                Uri contentUri = Uri.fromFile(new File(data.toString()));
+                MessageInfo msg = MessageInfoUtil.buildImageMessage(contentUri, true, true);
+                if (msgHandler != null)
+                    msgHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+
+            }
+        };
+        getContext().startActivity(captureIntent);
+    }
+
+    private void startSendRecord() {
+        if (checkStoragePermisson(activity, Manifest.permission.CAMERA) != true) {
+            return;
+        }
+        if (checkStoragePermisson(activity, Manifest.permission.RECORD_AUDIO) != true) {
+            return;
+        }
+        if (checkStoragePermisson(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != true) {
+            return;
+        }
+        if (checkStoragePermisson(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != true) {
+            return;
+        }
+        Intent captureIntent = new Intent(getContext(), CameraActivity.class);
+        captureIntent.putExtra(UIKitConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_ONLY_RECORDER);
+        CameraActivity.mCallBack = new IUIKitCallBack() {
+            @Override
+            public void onSuccess(Object data) {
+                Intent videoData = (Intent) data;
+                String imgPath = videoData.getStringExtra(UIKitConstants.CAMERA_IMAGE_PATH);
+                String videoPath = videoData.getStringExtra(UIKitConstants.CAMERA_VIDEO_PATH);
+                int imgWidth = videoData.getIntExtra(UIKitConstants.IMAGE_WIDTH, 0);
+                int imgHeight = videoData.getIntExtra(UIKitConstants.IMAGE_HEIGHT, 0);
+                long duration = videoData.getLongExtra(UIKitConstants.VIDEO_TIME, 0);
+                MessageInfo msg = MessageInfoUtil.buildVideoMessage(imgPath, videoPath, imgWidth, imgHeight, duration);
+                if (msgHandler != null)
+                    msgHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+
+            }
+        };
+        getContext().startActivity(captureIntent);
+    }
+
+    private void startSendFile() {
+        if (checkStoragePermisson(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != true) {
+            return;
+        }
+        if (checkStoragePermisson(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != true) {
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        actionsFragment.setCallback(new IUIKitCallBack() {
+            @Override
+            public void onSuccess(Object data) {
+                MessageInfo info = MessageInfoUtil.buildFileMessage((Uri) data);
+                if (msgHandler != null)
+                    msgHandler.sendMessage(info);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                UIUtils.toastLongMessage(errMsg);
+            }
+        });
+        actionsFragment.startActivityForResult(intent, ChatActionsFragment.REQUEST_CODE_FILE);
     }
 
     public void setMoreOperaUnits(List<MessageOperaUnit> actions, boolean isAdd) {
@@ -348,6 +389,49 @@ public class ChatBottomInputGroup extends LinearLayout implements View.OnClickLi
         actionsFragment.setActions(actions);
     }
 
+
+    private boolean checkStoragePermisson(Activity activity, String permisson) {
+        boolean flag = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int permission = ActivityCompat.checkSelfPermission(activity, permisson);
+            if (PackageManager.PERMISSION_GRANTED != permission) {
+                //2.没有权限
+                showPermissionDialog();
+                flag = false;
+            }
+        }
+        return flag;
+    }
+
+    private void showPermissionDialog() {
+        if (mPermissionDialog == null) {
+            mPermissionDialog = new AlertDialog.Builder(activity)
+                    .setMessage("使用该功能，需要开启权限，鉴于您禁用相关权限，请手动设置开启权限")
+                    .setPositiveButton("设置", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            cancelPermissionDialog();
+                            Uri packageURI = Uri.parse("package:" + mPackName);
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+                            activity.startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //关闭页面或者做其他操作
+                            cancelPermissionDialog();
+                        }
+                    })
+                    .create();
+        }
+        mPermissionDialog.show();
+    }
+
+    //关闭对话框
+    private void cancelPermissionDialog() {
+        mPermissionDialog.cancel();
+    }
 
     public void setInputHandler(ChatInputHandler handler) {
         this.inputHandler = handler;
@@ -562,7 +646,7 @@ public class ChatBottomInputGroup extends LinearLayout implements View.OnClickLi
         }
 
 
-        if (!TextUtils.isEmpty(s.toString())) {
+        if (!TextUtils.isEmpty(s.toString().trim())) {
             sendAble = true;
             sendBtn.setVisibility(View.VISIBLE);
             moreBtn.setVisibility(View.GONE);
@@ -581,9 +665,8 @@ public class ChatBottomInputGroup extends LinearLayout implements View.OnClickLi
 
 
     public interface MessageHandler {
-        public void sendMessage(MessageInfo msg);
+        void sendMessage(MessageInfo msg);
     }
-
 
     public interface ChatInputHandler {
 

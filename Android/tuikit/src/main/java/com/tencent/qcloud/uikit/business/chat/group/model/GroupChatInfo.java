@@ -6,9 +6,6 @@ import com.tencent.qcloud.uikit.business.chat.model.BaseChatInfo;
 
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/8/21.
- */
 
 public class GroupChatInfo extends BaseChatInfo {
 

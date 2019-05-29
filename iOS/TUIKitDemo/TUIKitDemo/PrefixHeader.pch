@@ -1,0 +1,17 @@
+//
+//  PrefixHeader.pch
+//  TUIKitDemo
+//
+//  Created by annidyfeng on 2019/5/2.
+//  Copyright © 2019年 Tencent. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#import "MMLayout/UIView+MMLayout.h"
+#import "ImSDK/ImSDK.h"
+#import "ReactiveObjC.h"
+#endif /* PrefixHeader_pch */

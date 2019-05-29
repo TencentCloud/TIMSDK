@@ -11,18 +11,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tencent.imsdk.TIMManager;
+import com.tencent.qcloud.tim.tuikit.R;
 import com.tencent.qcloud.uikit.business.session.model.SessionManager;
-import com.tencent.qcloud.uikit.common.utils.UIUtils;
-import com.tencent.qcloud.uipojo.R;
+import com.tencent.qcloud.uikit.common.utils.FileUtil;
 import com.tencent.qcloud.uipojo.contact.ContactFragment;
 import com.tencent.qcloud.uipojo.login.view.LoginActivity;
 import com.tencent.qcloud.uipojo.self.SelfInfoFragment;
 import com.tencent.qcloud.uipojo.session.SessionFragment;
 import com.tencent.qcloud.uipojo.utils.Constants;
 
-/**
- * Created by valxehuang on 2018/7/17.
- */
 
 public class MainActivity extends Activity implements SessionManager.MessageUnreadWatcher {
 
@@ -64,6 +61,7 @@ public class MainActivity extends Activity implements SessionManager.MessageUnre
         sessionFragment = new SessionFragment();
         getFragmentManager().beginTransaction().replace(R.id.empty_view, sessionFragment).commitAllowingStateLoss();
         SessionManager.getInstance().addUnreadWatcher(this);
+        FileUtil.initPath(); // 从application移入到这里，原因在于首次装上app，需要获取一系列权限，如创建文件夹，图片下载需要指定创建好的文件目录，否则会下载本地失败，聊天页面从而获取不到图片、表情
         lastButton = sessionBtn;
     }
 

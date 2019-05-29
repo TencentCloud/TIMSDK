@@ -6,19 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tencent.qcloud.uikit.TUIKit;
+import com.tencent.qcloud.tim.tuikit.R;
 import com.tencent.qcloud.uikit.business.session.model.SessionInfo;
 import com.tencent.qcloud.uikit.business.session.view.SessionPanel;
 import com.tencent.qcloud.uikit.business.session.view.wedgit.SessionClickListener;
 import com.tencent.qcloud.uikit.common.BaseFragment;
-import com.tencent.qcloud.uipojo.R;
 import com.tencent.qcloud.uipojo.chat.ChatActivity;
 
-/**
- * Created by valxehuang on 2018/7/17.
- */
 
 public class SessionFragment extends BaseFragment implements SessionClickListener {
+
     private View baseView;
     private SessionPanel sessionPanel;
 
@@ -32,7 +29,6 @@ public class SessionFragment extends BaseFragment implements SessionClickListene
 
 
     private void initView() {
-
         // 获取会话列表组件，
         sessionPanel = baseView.findViewById(R.id.session_panel);
         // 会话面板初始化默认功能

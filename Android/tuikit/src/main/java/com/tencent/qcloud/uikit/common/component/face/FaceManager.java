@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 
 
 public class FaceManager {
+
     private static ArrayList<Emoji> emojiList = new ArrayList<>();
     private static LruCache<String, Bitmap> drawableCache = new LruCache(1024);
     private static Context context = TUIKit.getAppContext();

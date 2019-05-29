@@ -7,9 +7,6 @@ import com.tencent.qcloud.uikit.TUIKit;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/9/30.
- */
 
 public class UIKitMessageRevokedManager implements TIMMessageRevokedListener {
 

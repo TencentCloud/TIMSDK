@@ -9,13 +9,11 @@ import com.tencent.qcloud.uikit.business.chat.group.model.GroupInfoUtils;
 import com.tencent.qcloud.uikit.business.chat.group.view.GroupInfoPanel;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
-/**
- * Created by valxehuang on 2018/7/18.
- */
 
 public class GroupInfoPresenter {
-    GroupInfoPanel mInfoPanel;
-    GroupChatManager mChatManager;
+
+    private GroupInfoPanel mInfoPanel;
+    private GroupChatManager mChatManager;
 
     public GroupInfoPresenter(GroupInfoPanel chatPanel) {
         this.mInfoPanel = chatPanel;

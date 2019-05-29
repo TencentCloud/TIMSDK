@@ -12,11 +12,9 @@ import com.tencent.qcloud.uikit.common.widget.gatherimage.SynthesizedImageView;
 
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/10/10.
- */
 
 public class ChatIconView extends RelativeLayout {
+
     private SynthesizedImageView mIconView;
     private DynamicChatUserIconView mDynamicView;
     private int mDefaultImageResId;

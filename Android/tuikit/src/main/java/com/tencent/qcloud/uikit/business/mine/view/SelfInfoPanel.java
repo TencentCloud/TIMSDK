@@ -41,11 +41,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
-
 public class SelfInfoPanel extends LinearLayout implements ISelfInfoPanel, View.OnClickListener {
+
     public ImageView mUserIcon;
     public TextView mNickName, mAccount, mSignature;
     public ListView mFirstItemList, mSecondItemList;

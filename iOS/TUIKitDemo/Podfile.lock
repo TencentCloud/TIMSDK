@@ -1,0 +1,47 @@
+PODS:
+  - KVOController (1.2.0)
+  - MBProgressHUD (1.1.0)
+  - MMLayout (0.2.0)
+  - ReactiveObjC (3.1.1)
+  - SDWebImage (5.0.3):
+    - SDWebImage/Core (= 5.0.3)
+  - SDWebImage/Core (5.0.3)
+  - TXIMSDK_iOS (4.3.135)
+  - TXIMSDK_TUIKit_iOS (4.3.135):
+    - MMLayout
+    - ReactiveObjC
+    - SDWebImage
+    - TXIMSDK_iOS
+
+DEPENDENCIES:
+  - KVOController
+  - MBProgressHUD
+  - TXIMSDK_iOS (from `../../`)
+  - TXIMSDK_TUIKit_iOS (from `../../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - KVOController
+    - MBProgressHUD
+    - MMLayout
+    - ReactiveObjC
+    - SDWebImage
+
+EXTERNAL SOURCES:
+  TXIMSDK_iOS:
+    :path: "../../"
+  TXIMSDK_TUIKit_iOS:
+    :path: "../../"
+
+SPEC CHECKSUMS:
+  KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
+  MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
+  MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
+  SDWebImage: d4f87d7d36c8a4d9f9459dc282e0caa057fdf935
+  TXIMSDK_iOS: ca306df5c9e0edc673dfb8a5697f0ecbca87ef6e
+  TXIMSDK_TUIKit_iOS: 2440d22318228cee4ceb556d09e73d441cbdedb5
+
+PODFILE CHECKSUM: bee99c672c038c8f27cf383492e56bab7a807a62
+
+COCOAPODS: 1.7.0.rc.2

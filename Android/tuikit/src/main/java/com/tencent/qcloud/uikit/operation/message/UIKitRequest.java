@@ -1,10 +1,8 @@
 package com.tencent.qcloud.uikit.operation.message;
 
-/**
- * Created by valexhuang on 2018/9/20.
- */
 
 public class UIKitRequest {
+
     private String model;
     private String action;
     private Object request;

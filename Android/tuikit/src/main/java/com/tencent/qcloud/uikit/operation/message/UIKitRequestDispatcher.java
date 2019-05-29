@@ -2,9 +2,6 @@ package com.tencent.qcloud.uikit.operation.message;
 
 import java.util.HashMap;
 
-/**
- * Created by valexhuang on 2018/9/7.
- */
 
 public class UIKitRequestDispatcher {
     public static final String MODEL_SESSION = "model_session";

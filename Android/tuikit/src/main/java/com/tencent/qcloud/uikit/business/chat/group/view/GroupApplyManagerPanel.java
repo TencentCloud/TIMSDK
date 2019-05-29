@@ -12,11 +12,9 @@ import com.tencent.qcloud.uikit.R;
 import com.tencent.qcloud.uikit.business.chat.group.view.widget.GroupApplyAdapter;
 import com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class GroupApplyManagerPanel extends LinearLayout {
+
     private PageTitleBar mTitleBar;
     private ListView mApplyMemberList;
     private GroupApplyAdapter mAdapter;

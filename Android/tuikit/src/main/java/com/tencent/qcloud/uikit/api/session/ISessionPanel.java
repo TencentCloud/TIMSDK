@@ -9,7 +9,6 @@ import com.tencent.qcloud.uikit.common.widget.DynamicLayoutView;
 import java.util.List;
 
 /**
- * Created by valxehuang on 2018/7/17.
  * 会话面板类(SessionPanel)实现的业务接口
  */
 
@@ -46,14 +45,14 @@ public interface ISessionPanel {
      * @param actions PopMenuAction集合
      * @param isAdd   是否为添加，ture为在默认的弹框集合上添加新的item,false再替换默认的
      */
-    public void setSessionPopActions(List<PopMenuAction> actions, boolean isAdd);
+    void setSessionPopActions(List<PopMenuAction> actions, boolean isAdd);
 
     /**
      * 设置会话列表其它事件(除单击事件外)监听器，不设置则用默认实现
      *
      * @param {SessionListEvent} event
      */
-    public void setSessionListEvent(SessionListEvent event);
+    void setSessionListEvent(SessionListEvent event);
 
 
     /**

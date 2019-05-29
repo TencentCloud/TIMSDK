@@ -18,15 +18,14 @@ import android.widget.TextView;
 import com.tencent.qcloud.uikit.R;
 import com.tencent.qcloud.uikit.api.login.ILoginPanel;
 
-/**
- * Created by valexhuang on 2018/7/2.
- */
 
 public class LoginView extends LinearLayout implements ILoginPanel, TextWatcher {
-    public EditText mUserAccount, mPassword;
-    public Button mLoginButton;
-    public TextView mRegisterButton;
-    public ImageView mLogo;
+
+    private EditText mUserAccount;
+    private EditText mPassword;
+    private Button mLoginButton;
+    private TextView mRegisterButton;
+    private ImageView mLogo;
     private ILoginEvent mLoginEvent;
     private boolean mLoginModel = true;
 
@@ -173,6 +172,5 @@ public class LoginView extends LinearLayout implements ILoginPanel, TextWatcher 
             mLoginButton.setEnabled(true);
         }
     }
-
 
 }

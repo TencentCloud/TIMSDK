@@ -2,9 +2,6 @@ package com.tencent.qcloud.uikit.api.login;
 
 import com.tencent.qcloud.uikit.business.login.view.ILoginEvent;
 
-/**
- * Created by valexhuang on 2018/7/2.
- */
 
 public interface ILoginPanel {
     /**
@@ -12,5 +9,5 @@ public interface ILoginPanel {
      *
      * @param event
      */
-    public void setLoginEvent(ILoginEvent event);
+    void setLoginEvent(ILoginEvent event);
 }

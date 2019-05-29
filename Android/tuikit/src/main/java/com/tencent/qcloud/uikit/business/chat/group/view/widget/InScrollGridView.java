@@ -4,11 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.GridView;
 
-/**
- * Created by valexhuang on 2018/10/8.
- */
 
 public class InScrollGridView extends GridView {
+
     public InScrollGridView(Context context) {
         super(context);
     }

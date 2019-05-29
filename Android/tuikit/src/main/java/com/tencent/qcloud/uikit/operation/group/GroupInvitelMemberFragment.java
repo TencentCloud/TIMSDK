@@ -10,9 +10,6 @@ import com.tencent.qcloud.uikit.R;
 import com.tencent.qcloud.uikit.business.chat.group.view.GroupMemberInvitePanel;
 import com.tencent.qcloud.uikit.common.BaseFragment;
 
-/**
- * Created by valexhuang on 2018/8/1.
- */
 
 public class GroupInvitelMemberFragment extends BaseFragment {
     private GroupMemberInvitePanel mInvitePanel;

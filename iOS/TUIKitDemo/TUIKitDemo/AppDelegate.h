@@ -17,6 +17,9 @@
 
 #define sdkAppid          123456789
 #define sdkAccountType    @"36862"
+#define BUGLY_APP_ID      @"e965e5d928"
+
+#define sdkBusiId   12742
 
 #define identifier1 @"user1"
 #define userSig1    @""
@@ -32,6 +35,7 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 @property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, strong) NSData *deviceToken;
 - (UIViewController *)getLoginController;
 - (UITabBarController *)getMainController;
 @end

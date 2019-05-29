@@ -1,10 +1,7 @@
 package com.tencent.qcloud.uikit.business.contact.model;
 
-
 import com.tencent.qcloud.uikit.common.IUIKitUICallback;
-/**
- * Created by valexhuang on 2018/6/21.
- */
+
 
 public class ContactManager {
     private ContactProvider mProvider = new ContactProvider();

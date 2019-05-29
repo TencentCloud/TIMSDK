@@ -54,8 +54,10 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.github.promeg:tinypinyin:1.0.0' // ~80KB
 
-//    implementation(name: 'imsdk_4.0.0.1', ext: 'aar')
+    // 如果用aar方式集成，这里需要指定libs文件夹下的aar的名称
+//    implementation(name: 'imsdk-xxx', ext: 'aar')
 
-    api 'com.tencent.imsdk:imsdk:4.0.0.1'
+    // 如果用jcenter方式集成，可以使用以下配置保证获取的是4.x版本的最新版，或者指定某一个版本，比如4.3.81
+    api 'com.tencent.imsdk:imsdk:4+'
 }
 

@@ -16,9 +16,6 @@ import android.view.WindowManager;
 import com.tencent.qcloud.uikit.TUIKit;
 import com.tencent.qcloud.uikit.common.UIKitConstants;
 
-/**
- * Created by valxehuang on 2018/7/26.
- */
 
 public class ScreenUtil {
     private static int navigationBarHeight = 0;

@@ -8,9 +8,6 @@ import android.view.View;
 import com.tencent.qcloud.uikit.R;
 import com.tencent.qcloud.uikit.business.chat.group.view.GroupCreatePanel;
 
-/**
- * Created by valexhuang on 2018/9/4.
- */
 
 public class GroupManagerActivity extends Activity {
 

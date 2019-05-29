@@ -6,9 +6,6 @@ import com.tencent.qcloud.uikit.common.component.titlebar.PageTitleBar;
 
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/17.
- */
 
 public interface IGroupMemberPanel {
 

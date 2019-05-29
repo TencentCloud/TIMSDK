@@ -18,6 +18,7 @@
 #import "THeader.h"
 #import "AppDelegate.h"
 #import "UserSelectView.h"
+#import "ImSDK.h"
 
 @interface LoginController ()<UserSelectViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
@@ -54,6 +55,20 @@
         [alert show];
     }else{
         [[TUIKit sharedInstance] loginKit:_userName userSig:_userSig succ:^{
+            AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            NSData *deviceToken = delegate.deviceToken;
+            if (deviceToken) {
+                TIMTokenParam *param = [[TIMTokenParam alloc] init];
+                /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
+                //企业证书 ID
+                param.busiId = sdkBusiId;
+                [param setToken:deviceToken];
+                [[TIMManager sharedInstance] setToken:param succ:^{
+                    NSLog(@"-----> 上传 token 成功 ");
+                } fail:^(int code, NSString *msg) {
+                    NSLog(@"-----> 上传 token 失败 ");
+                }];
+            }
             [[NSUserDefaults standardUserDefaults] setObject:@(sdkAppid) forKey:Key_UserInfo_Appid];
             [[NSUserDefaults standardUserDefaults] setObject:ws.userName forKey:Key_UserInfo_User];
             [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Pwd];
@@ -71,26 +86,26 @@
 
 - (void)getUserSig:(NSString *)user callback:(void (^)(NSString *sig))callback
 {
-//    url 填写自己业务服务器获取userSig的地址
-//    NSURL *url = [NSURL URLWithString:@""];
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
-//    request.HTTPMethod = @"POST";
-//    NSDictionary *param = @{@"cmd":@"open_account_svc", @"sub_cmd":@"fetch_sig", @"id":user};
-//    request.HTTPBody = [NSJSONSerialization dataWithJSONObject:param options:NSJSONWritingPrettyPrinted error:nil];
-//    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-//    NSURLSession *session = [NSURLSession sharedSession];
-//    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-//        NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-//        int code = [[result objectForKey:@"error_code"] intValue];
-//        NSString *sig = nil;
-//        if(code == 0){
-//            sig = [result objectForKey:@"user_sig"];
-//        }
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            callback(sig);
-//        });
-//    }];
-//    [task resume];
+    //    url 填写自己业务服务器获取userSig的地址
+    //    NSURL *url = [NSURL URLWithString:@""];
+    //    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
+    //    request.HTTPMethod = @"POST";
+    //    NSDictionary *param = @{@"cmd":@"open_account_svc", @"sub_cmd":@"fetch_sig", @"id":user};
+    //    request.HTTPBody = [NSJSONSerialization dataWithJSONObject:param options:NSJSONWritingPrettyPrinted error:nil];
+    //    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    //    NSURLSession *session = [NSURLSession sharedSession];
+    //    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    //        NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    //        int code = [[result objectForKey:@"error_code"] intValue];
+    //        NSString *sig = nil;
+    //        if(code == 0){
+    //            sig = [result objectForKey:@"user_sig"];
+    //        }
+    //        dispatch_async(dispatch_get_main_queue(), ^{
+    //            callback(sig);
+    //        });
+    //    }];
+    //    [task resume];
 }
 
 - (void)optionView:(UserSelectView *)optionView selectedIndex:(NSInteger)selectedIndex

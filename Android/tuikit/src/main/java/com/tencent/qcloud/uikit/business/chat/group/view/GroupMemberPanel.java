@@ -24,11 +24,9 @@ import com.tencent.qcloud.uikit.common.utils.PopWindowUtil;
 
 import java.util.List;
 
-/**
- * Created by valxehuang on 2018/7/30.
- */
 
 public class GroupMemberPanel extends LinearLayout implements IGroupMemberPanel {
+
     private PageTitleBar mTitleBar;
     private GridView mMemberGrid;
     private SearchView mMemberSearch;
@@ -149,11 +147,11 @@ public class GroupMemberPanel extends LinearLayout implements IGroupMemberPanel 
     }
 
     public interface GroupMemberPanelEvent {
-        public void backBtnClick();
+        void backBtnClick();
 
-        public void addMemberBtnClick();
+        void addMemberBtnClick();
 
-        public void delMemberBtnClick();
+        void delMemberBtnClick();
     }
 
 }

@@ -4,9 +4,6 @@ import android.support.v7.widget.RecyclerView;
 
 import com.tencent.qcloud.uikit.business.chat.model.MessageInfo;
 
-/**
- * Created by valexhuang on 2018/9/28.
- */
 
 public abstract class IChatAdapter extends RecyclerView.Adapter {
     /**

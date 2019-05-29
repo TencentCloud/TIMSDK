@@ -11,10 +11,6 @@ import java.util.List;
  * 2 填充indexTag
  * 3 排序源数据源
  * 4 根据排序后的源数据源->indexBar的数据源
- * 作者：zhangxutong
- * 邮箱：mcxtzhang@163.com
- * 主页：http://blog.csdn.net/zxt0601
- * 时间： 2016/11/28.
  */
 
 public interface IIndexBarDataHelper {

@@ -1,11 +1,11 @@
 package com.tencent.qcloud.uikit.business.chat.c2c.model;
 
-import android.util.Log;
 
-import com.tencent.qcloud.uikit.common.IUIKitCallBack;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.TIMElem;
+import com.tencent.imsdk.TIMElemType;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
@@ -16,6 +16,7 @@ import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.log.QLog;
 import com.tencent.qcloud.uikit.business.chat.model.MessageInfo;
 import com.tencent.qcloud.uikit.business.chat.model.MessageInfoUtil;
+import com.tencent.qcloud.uikit.common.IUIKitCallBack;
 import com.tencent.qcloud.uikit.common.utils.UIUtils;
 import com.tencent.qcloud.uikit.operation.UIKitMessageRevokedManager;
 import com.tencent.qcloud.uikit.operation.message.UIKitRequest;
@@ -27,26 +28,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by valxehuang on 2018/7/18.
- */
 
 public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedManager.MessageRevokeHandler {
-    private static final String TAG = "C2CChatManager";
-    private static C2CChatManager instance = new C2CChatManager();
+
+    private static final String TAG = "tuikit/" + C2CChatManager.class.getSimpleName();
+    private static C2CChatManager sInstance = new C2CChatManager();
     private static final int MSG_PAGE_COUNT = 10;
+    private static final int REVOKE_TIME_OUT = 6223;
     private C2CChatProvider mCurrentProvider;
     private TIMConversation mCurrentConversation;
     private TIMConversationExt mCurrentConversationExt;
     private C2CChatInfo mCurrentChatInfo;
-    private Map<String, C2CChatInfo> mC2CChats = new HashMap<>();
-    private boolean hasMore;
-    private boolean mLoading;
+    private Map<String, C2CChatInfo> mC2CChatMap = new HashMap<>();
+    private boolean mIsMore;
+    private boolean mIsLoading;
 
     public static C2CChatManager getInstance() {
-        return instance;
+        return sInstance;
     }
-
 
     private C2CChatManager() {
 
@@ -54,7 +53,7 @@ public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedMa
 
     public void init() {
         destroyC2CChat();
-        TIMManager.getInstance().addMessageListener(instance);
+        TIMManager.getInstance().addMessageListener(sInstance);
         UIKitMessageRevokedManager.getInstance().addHandler(this);
     }
 
@@ -66,34 +65,34 @@ public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedMa
         mCurrentConversation = TIMManager.getInstance().getConversation(info.getType(), info.getPeer());
         mCurrentConversationExt = new TIMConversationExt(mCurrentConversation);
         mCurrentProvider = new C2CChatProvider();
-        hasMore = true;
-        mLoading = false;
+        mIsMore = true;
+        mIsLoading = false;
     }
 
 
     public boolean addChatInfo(C2CChatInfo chatInfo) {
-        return mC2CChats.put(chatInfo.getPeer(), chatInfo) == null;
+        return mC2CChatMap.put(chatInfo.getPeer(), chatInfo) == null;
     }
 
     public C2CChatInfo getC2CChatInfo(String peer) {
-        C2CChatInfo chatInfo = mC2CChats.get(peer);
+        C2CChatInfo chatInfo = mC2CChatMap.get(peer);
         if (chatInfo == null) {
             chatInfo = new C2CChatInfo();
             chatInfo.setPeer(peer);
             chatInfo.setChatName(peer);
-            mC2CChats.put(peer, chatInfo);
+            mC2CChatMap.put(peer, chatInfo);
         }
         return chatInfo;
     }
 
     public synchronized void loadChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
-        if (mLoading)
+        if (mIsLoading)
             return;
-        mLoading = true;
-        if (!hasMore) {
+        mIsLoading = true;
+        if (!mIsMore) {
             mCurrentProvider.addMessageInfo(null);
             callBack.onSuccess(null);
-            mLoading = false;
+            mIsLoading = false;
             return;
         }
 
@@ -108,31 +107,31 @@ public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedMa
                 , lastTIMMsg, new TIMValueCallBack<List<TIMMessage>>() {
                     @Override
                     public void onError(int code, String desc) {
-                        mLoading = false;
+                        mIsLoading = false;
                         callBack.onError(TAG, code, desc);
-                        QLog.e(TAG, "getMessage failed, code: " + code + "|desc: " + desc);
+                        QLog.e(TAG, "loadChatMessages() getMessage failed, code = " + code + ", desc = " + desc);
                     }
 
                     @Override
                     public void onSuccess(List<TIMMessage> timMessages) {
-                        mLoading = false;
+                        mIsLoading = false;
                         if (mCurrentProvider == null)
                             return;
                         if (unread > 0) {
                             mCurrentConversationExt.setReadMessage(null, new TIMCallBack() {
                                 @Override
                                 public void onError(int code, String desc) {
-                                    QLog.e(TAG, "setReadMessage failed, code: " + code + "|desc: " + desc);
+                                    QLog.e(TAG, "loadChatMessages() setReadMessage failed, code = " + code + ", desc = " + desc);
                                 }
 
                                 @Override
                                 public void onSuccess() {
-                                    QLog.d(TAG, "setReadMessage succ");
+                                    QLog.d(TAG, "loadChatMessages() setReadMessage success");
                                 }
                             });
                         }
                         if (timMessages.size() < MSG_PAGE_COUNT)
-                            hasMore = false;
+                            mIsMore = false;
                         ArrayList<TIMMessage> messages = new ArrayList<>(timMessages);
                         Collections.reverse(messages);
 
@@ -190,7 +189,6 @@ public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedMa
                     @Override
                     public void onSuccess(final TIMMessage timMessage) {
                         QLog.i(TAG, "sendC2CMessage onSuccess time=" + (System.currentTimeMillis() - current));
-                        System.out.println("================" + System.currentTimeMillis());
                         if (mCurrentProvider == null)
                             return;
                         message.setStatus(MessageInfo.MSG_STATUS_SEND_SUCCESS);
@@ -198,8 +196,6 @@ public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedMa
                         mCurrentProvider.updateMessageInfo(message);
                         if (callBack != null)
                             callBack.onSuccess(mCurrentProvider);
-
-
                     }
                 });
             }
@@ -221,7 +217,7 @@ public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedMa
         mCurrentConversationExt.revokeMessage(messageInfo.getTIMMessage(), new TIMCallBack() {
             @Override
             public void onError(int code, String desc) {
-                if (code == 6223) {
+                if (code == REVOKE_TIME_OUT) {
                     UIUtils.toastLongMessage("消息发送已超过2分钟");
                 } else {
                     UIUtils.toastLongMessage("撤销失败:" + code + "=" + desc);
@@ -248,7 +244,20 @@ public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedMa
             TIMConversation conversation = msg.getConversation();
             TIMConversationType type = conversation.getType();
             if (type == TIMConversationType.C2C) {
-                QLog.i(TAG, "onNewMessages::: " + msg);
+                TIMElem ele = msg.getElement(0);
+                TIMElemType eleType = ele.getType();
+                // 用户资料修改通知，不需要在聊天界面展示，可以通过 TIMUserConfig 中的 setFriendshipListener 处理
+                if (eleType == TIMElemType.ProfileTips) {
+                    QLog.i(TAG, "onNewMessages() eleType is ProfileTips, ignore");
+                    return false;
+                }
+                // 关系链变更通知，不需要在聊天界面展示，可以通过 TIMUserConfig 中的 setFriendshipListener 处理
+                if (eleType == TIMElemType.SNSTips) {
+                    QLog.i(TAG, "onNewMessages() eleType is SNSTips, ignore");
+                    return false;
+                }
+
+                QLog.i(TAG, "onNewMessages() msg = " + msg);
                 onReceiveMessage(conversation, msg);
 
             }
@@ -286,12 +295,12 @@ public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedMa
             mCurrentConversationExt.setReadMessage(null, new TIMCallBack() {
                 @Override
                 public void onError(int code, String desc) {
-                    QLog.e(TAG, "setReadMessage failed, code: " + code + "|desc: " + desc);
+                    QLog.e(TAG, "executeMessage() setReadMessage failed, code = " + code + ", desc = " + desc);
                 }
 
                 @Override
                 public void onSuccess() {
-                    Log.d(TAG, "setReadMessage succ");
+                    QLog.d(TAG, "executeMessage() setReadMessage success");
                 }
             });
         }
@@ -301,10 +310,9 @@ public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedMa
     @Override
     public void handleInvoke(TIMMessageLocator locator) {
         if (mCurrentChatInfo != null && locator.getConversationId().equals(mCurrentChatInfo.getPeer())) {
-            QLog.i(TAG, "handleInvoke::: " + locator);
+            QLog.d(TAG, "handleInvoke() locator = " + locator);
             mCurrentProvider.updateMessageRevoked(locator);
         }
-
     }
 
     public void destroyC2CChat() {
@@ -312,8 +320,7 @@ public class C2CChatManager implements TIMMessageListener, UIKitMessageRevokedMa
         mCurrentConversation = null;
         mCurrentProvider = null;
         mCurrentConversationExt = null;
-        hasMore = true;
+        mIsMore = true;
     }
-
 
 }

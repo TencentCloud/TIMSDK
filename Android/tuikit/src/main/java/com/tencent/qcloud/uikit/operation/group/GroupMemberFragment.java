@@ -19,9 +19,6 @@ import com.tencent.qcloud.uikit.common.utils.UIUtils;
 
 import java.util.List;
 
-/**
- * Created by valexhuang on 2018/8/1.
- */
 
 public class GroupMemberFragment extends BaseFragment {
     private GroupMemberPanel mMemberPanel;

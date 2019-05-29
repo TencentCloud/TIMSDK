@@ -3,9 +3,6 @@ package com.tencent.qcloud.uikit.business.contact.view.adapter;
 import android.graphics.Bitmap;
 import android.widget.AdapterView;
 
-/**
- * Created by valxehuang on 2018/7/27.
- */
 
 public class ContactPopMenuAction {
 

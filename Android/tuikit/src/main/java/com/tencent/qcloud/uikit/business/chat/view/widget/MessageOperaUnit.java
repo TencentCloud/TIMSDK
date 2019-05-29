@@ -2,11 +2,9 @@ package com.tencent.qcloud.uikit.business.chat.view.widget;
 
 import android.view.View;
 
-/**
- * Created by valxehuang on 2018/7/23.
- */
 
 public class MessageOperaUnit {
+
     private int iconResId;
 
     private int titleId;
