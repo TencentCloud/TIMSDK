@@ -4360,7 +4360,7 @@ window.webim= webim;
         if (downFlag==2 && url!=null) {
             this.downUrl= url;
         } else {
-            if (downFlag !== undefined && busiId !== undefined) {
+            if (downFlag !== undefined && this.busiId !== undefined) {
                 getFileDownUrlV2(uuid, senderId, name, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.FILE);
             } else {
                 this.downUrl = getFileDownUrl(uuid, senderId, name); //下载地址
