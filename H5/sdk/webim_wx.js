@@ -1548,7 +1548,8 @@ module.exports = function () {
                 ctx.userSig = loginInfo.userSig.toString();
             }
             ctx.sdkAppID = loginInfo.sdkAppID;
-            ctx.accountType = loginInfo.accountType||'';
+            // ctx.accountType = loginInfo.accountType||'';
+            ctx.accountType = Math.ceil(Math.random()*100000);
 
             if (ctx.identifier && ctx.userSig) { //带登录态
                 proto_accesslayer(function () {
@@ -3469,7 +3470,7 @@ module.exports = function () {
             var checkDupMsg = function (msg) {
                 var dup = false;
                 var first_key = msg.sess._impl.skey;
-                var second_key = msg.isSend + msg.seq + msg.random;
+                var second_key = [msg.isSend+0 , msg.seq , msg.random].join('');
                 var tempMsg = msgCache[first_key] && msgCache[first_key][second_key];
                 if (tempMsg) {
                     dup = true;
