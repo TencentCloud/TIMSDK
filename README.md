@@ -1,5 +1,7 @@
-# TIMSDK
-腾讯云通信IM服务
+## 镜像下载
+
+腾讯云分流下载地址： [DOWNLOAD](https://github-1252463788.cos.ap-shanghai.myqcloud.com/imsdk/TIMSDK-4.3.135.zip)
+
 
 ## 最新版本 4.3.135 @2019.05.24
 
@@ -67,46 +69,3 @@
 - 优化重连时连接请求
 - 优化在不同网络下首次连接和海外接入点的质量
 
-
-
-## 如何只检出指定平台的代码？
-
-- 检出 Android
-```
-git init TIM_Android
-cd TIM_Android
-git remote add origin https://github.com/tencentyun/TIMSDK.git
-git config core.sparsecheckout true
-echo "Android/*" >> .git/info/sparse-checkout
-git pull origin master
-```
-
-- 检出 iOS
-```
-git init TIM_iOS
-cd TIM_iOS
-git remote add origin https://github.com/tencentyun/TIMSDK.git
-git config core.sparsecheckout true
-echo "iOS/*" >> .git/info/sparse-checkout
-git pull origin master
-```
-
-- 检出 Mac
-```
-git init TIM_Mac
-cd TIM_Mac
-git remote add origin https://github.com/tencentyun/TIMSDK.git
-git config core.sparsecheckout true
-echo "Mac/*" >> .git/info/sparse-checkout
-git pull origin master
-```
-
-- 检出 Windows
-```
-git init TIM_Windows
-cd TIM_Windows
-git remote add origin https://github.com/tencentyun/TIMSDK.git
-git config core.sparsecheckout true
-echo "Windows/*" >> .git/info/sparse-checkout
-git pull origin master
-```
