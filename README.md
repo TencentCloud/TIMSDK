@@ -8,10 +8,9 @@
 - [Android v2 v3 v4](https://github.com/tencentyun/TIMSDK/wiki/iOS-IMSDK-%E6%8E%A5%E5%8F%A3%E5%8F%98%E5%8C%96%EF%BC%88v2---v3---v4%EF%BC%89)
 - [Windows v2 v4](https://github.com/tencentyun/TIMSDK/wiki/Windows-IMSDK-%E6%8E%A5%E5%8F%A3%E5%8F%98%E5%8C%96%EF%BC%88v2---v4%EF%BC%89)
 
-## 最新版本 4.3.135 @2019.05.24
+## 最新版本 
 
-**iOS平台**
-
+### iOS 4.3.135 @2019.05.24
 - 增加校验好友接口 checkFriends
 - 增加 queryGroupInfo 接口获取本地数据
 - 废弃 getGroupPublicInfo 接口，统一用 getGroupInfo 接口
@@ -32,9 +31,7 @@
 - 优化在不同网络下首次连接和海外接入点的质量
 - 优化iOS切换WIFI时网络重连慢的问题
 
-
-**Android平台**
-
+### Android 4.3.135 @2019.05.24
 - 增加校验好友接口 checkFriends
 - 增加 queryGroupInfo 接口获取本地数据
 - 废弃 getGroupDetailInfo 和 getGroupPublicInfo 接口，统一用 getGroupInfo 接口
@@ -53,10 +50,7 @@
 - 优化重连时连接请求
 - 优化在不同网络下首次连接和海外接入点的质量
 
-
-
-**Windows平台**
-
+### Windows 4.3.135 @2019.05.24
 - 新增自定义字段数据上报
 - 新增阅后即焚消息
 - 新增消息撤回使用用例
