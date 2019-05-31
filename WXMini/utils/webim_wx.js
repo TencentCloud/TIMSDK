@@ -3148,7 +3148,7 @@ module.exports = function () {
         };
 
         // class Msg.Elem.Sound
-        Msg.Elem.Sound = function (uuid, second, size, senderId, receiverId, downFlag, chatType) {
+        Msg.Elem.Sound = function (uuid, second, size, senderId, receiverId, downFlag, chatType, url)) {
             this.uuid = uuid; //文件id
             this.second = second; //时长，单位：秒
             this.size = size; //大小，单位：字节
@@ -3159,7 +3159,9 @@ module.exports = function () {
 
             //根据不同情况拉取数据
             //是否需要申请下载地址  0:到架平申请  1:到cos申请  2:不需要申请, 直接拿url下载
-            if (this.downFlag !== undefined && this.busiId !== undefined) {
+            if (downFlag == 2 && url != undefined && url != null) {
+        	this.downUrl = url;
+	    }else if (this.downFlag !== undefined && this.busiId !== undefined) {
                 getFileDownUrlV2(uuid, senderId, second, downFlag, receiverId, this.busiId, UPLOAD_RES_TYPE.SOUND);
             } else {
                 this.downUrl = getSoundDownUrl(uuid, senderId, second); //下载地址
@@ -4610,7 +4612,8 @@ module.exports = function () {
                                         msgInfo.From_Account,
                                         msgInfo.To_Account,
                                         msgBody.MsgContent.Download_Flag,
-                                        SESSION_TYPE.C2C
+                                        SESSION_TYPE.C2C,
+					msgBody.MsgContent.Url
                                     );
                                 } else {
                                     msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -4774,7 +4777,8 @@ module.exports = function () {
                                             msgInfo.From_Account,
                                             msgInfo.To_Account,
                                             msgBody.MsgContent.Download_Flag,
-                                            SESSION_TYPE.C2C
+                                            SESSION_TYPE.C2C,
+					    msgBody.MsgContent.Url
                                         );
                                     } else {
                                         msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -4954,7 +4958,8 @@ module.exports = function () {
                                             msgInfo.From_Account,
                                             msgInfo.To_Account,
                                             msgBody.MsgContent.Download_Flag,
-                                            SESSION_TYPE.C2C
+                                            SESSION_TYPE.C2C,
+                      			    msgBody.MsgContent.Url
                                         );
                                     } else {
                                         msgType = MSG_ELEMENT_TYPE.TEXT;
@@ -5187,7 +5192,8 @@ module.exports = function () {
                                     msgInfo.From_Account,
                                     msgInfo.To_Account,
                                     msgBody.MsgContent.Download_Flag,
-                                    SESSION_TYPE.GROUP
+                                    SESSION_TYPE.GROUP,
+                      		    msgBody.MsgContent.Url
                                 );
                             } else {
                                 msgType = MSG_ELEMENT_TYPE.TEXT;
