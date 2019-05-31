@@ -72,6 +72,11 @@
     param.identifier = identifier;
     param.userSig = sig;
     [[TIMManager sharedInstance] login:param succ:^{
+        [[TIMGroupManager sharedInstance] getReciveMessageOpt:@"1872071" succ:^(TIMGroupReceiveMessageOpt opt) {
+            NSLog(@"");
+        } fail:^(int code, NSString *msg) {
+            
+        }];
         succ();
     } fail:^(int code, NSString *msg) {
         // 收到被踢的通知后再次主动登录下
