@@ -15,14 +15,14 @@
 #define Key_UserInfo_Pwd   @"Key_UserInfo_Pwd"
 #define Key_UserInfo_Sig   @"Key_UserInfo_Sig"
 
-#define sdkAppid          123456789
+#define sdkAppid          1400124969
 #define sdkAccountType    @"36862"
 #define BUGLY_APP_ID      @"e965e5d928"
 
 #define sdkBusiId   12742
 
-#define identifier1 @"user1"
-#define userSig1    @""
+#define identifier1 @"fjsand"
+#define userSig1    @"eJx1kE9PgzAYh*98CsJ1xrSFyuoNGZoNdW6oAS6kru3ozDr*VDY0fvdNZmIvvvndnid5kvfLsm3beb5PLulqtftQutB9xR372nZcD6Gxc-EnVJVkBdWF27BBgB4AEHnkihgWP1Sy4QUVmjdny0djAAxDMq60FPKXi01LFTN4y96LofV-pJXrAT5EWThdTPJsqdtyEo72GLsl3McHEqooFIQoFsRzLpYZ7WjwmaaLaRk8brsoqUf1UwJncP5yF8SxiPLXvFv32axPpZ-Ut5sSv93IwEhquT2-BWJMAPJPM2jHm1bu1CAgADFELvg5x-q2jtOXX*E_"
 
 #define identifier2 @"user2"
 #define userSig2    @""

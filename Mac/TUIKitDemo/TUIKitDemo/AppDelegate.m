@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "ImSDK.h"
 
 @interface AppDelegate ()
 
@@ -21,6 +22,7 @@
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     // Insert code here to tear down your application
+    [[TIMManager sharedInstance] unInit];
 }
 
 
