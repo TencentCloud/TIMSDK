@@ -1548,7 +1548,7 @@ module.exports = function () {
                 ctx.userSig = loginInfo.userSig.toString();
             }
             ctx.sdkAppID = loginInfo.sdkAppID;
-            ctx.accountType = loginInfo.accountType||'';
+            ctx.accountType = Math.ceil(Math.random() * 10000);
 
             if (ctx.identifier && ctx.userSig) { //带登录态
                 proto_accesslayer(function () {
