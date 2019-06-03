@@ -1548,8 +1548,7 @@ module.exports = function () {
                 ctx.userSig = loginInfo.userSig.toString();
             }
             ctx.sdkAppID = loginInfo.sdkAppID;
-            // ctx.accountType = loginInfo.accountType||'';
-            ctx.accountType = Math.ceil(Math.random()*100000);
+            ctx.accountType = loginInfo.accountType||'';
 
             if (ctx.identifier && ctx.userSig) { //带登录态
                 proto_accesslayer(function () {
@@ -3470,7 +3469,7 @@ module.exports = function () {
             var checkDupMsg = function (msg) {
                 var dup = false;
                 var first_key = msg.sess._impl.skey;
-                var second_key = [msg.isSend+0 , msg.seq , msg.random].join('');
+                var second_key = [!!msg.isSend? '1': '0' ,msg.seq, msg.random].join('');
                 var tempMsg = msgCache[first_key] && msgCache[first_key][second_key];
                 if (tempMsg) {
                     dup = true;
@@ -4002,7 +4001,7 @@ module.exports = function () {
                  }*/
                     if (isNeedValidRepeatMsg) {
                         //var key=groupTip.ToGroupId+"_"+reportType+"_"+groupTip.MsgTimeStamp+"_"+groupReportTypeMsg.Operator_Account;
-                        var key = groupTip.ToGroupId + "_" + reportType + "_" + groupReportTypeMsg.Operator_Account;
+                        var key = groupTip.ToGroupId + "_" + reportType + "_" + groupReportTypeMsg.Operator_Account+"_"+groupTip.ClientSeq;
                         var isExist = groupSystemMsgsCache[key];
                         if (isExist) {
                             log.warn("收到重复的群系统消息：key=" + key);
@@ -4018,7 +4017,10 @@ module.exports = function () {
                         "GroupName": groupTip.GroupInfo.GroupName,
                         "Operator_Account": groupReportTypeMsg.Operator_Account,
                         "MsgTime": groupTip.MsgTimeStamp,
-                        "groupReportTypeMsg": groupReportTypeMsg
+                        "groupReportTypeMsg": groupReportTypeMsg,
+                        "MsgSeq": groupTip.ClientSeq, //群系统消息的 ClientSeq 才是可用的，如删除群系统消息的接口 (deleteMsg) 中传的 MsgSeq 参数即 ClientSeq
+                        "MsgRandom": groupTip.MsgRandom,
+                        "sourceGroupTip": groupTip
                     };
                     switch (reportType) {
                         case GROUP_SYSTEM_TYPE.JOIN_GROUP_REQUEST: //申请加群(只有管理员会接收到)
@@ -4027,8 +4029,6 @@ module.exports = function () {
                             notify["Authentication"] = groupReportTypeMsg.Authentication;
                             notify["UserDefinedField"] = groupTip.UserDefinedField;
                             notify["From_Account"] = groupTip.From_Account;
-                            notify["MsgSeq"] = groupTip.ClientSeq;
-                            notify["MsgRandom"] = groupTip.MsgRandom;
                             break;
                         case GROUP_SYSTEM_TYPE.JOIN_GROUP_ACCEPT: //申请加群被同意(只有申请人自己接收到)
                         case GROUP_SYSTEM_TYPE.JOIN_GROUP_REFUSE: //申请加群被拒绝(只有申请人自己接收到)
@@ -4047,7 +4047,6 @@ module.exports = function () {
                         case GROUP_SYSTEM_TYPE.READED: //群消息已读同步
                             break;
                         case GROUP_SYSTEM_TYPE.CUSTOM: //用户自定义通知(默认全员接收)
-                            notify["MsgSeq"] = groupTip.MsgSeq;
                             notify["UserDefinedField"] = groupReportTypeMsg.UserDefinedField;
                             break;
                         default:
@@ -5893,6 +5892,14 @@ module.exports = function () {
         webim.deleteApplyJoinGroupPendency = function (options, cbOk, cbErr) {
             return proto_deleteC2CMsg(options, cbOk, cbErr);
         };
+
+        //删除群系统消息
+        webim.deleteGroupSystemMsgs = function(options, cbOk, cbErr){
+            options.DelMsgList.forEach(item=>{
+                item.From_Account = '@TIM#SYSTEM'
+            })
+            return proto_deleteC2CMsg(options,cbOk,cbErr);
+        }
 
         //主动退群
         webim.quitGroup = function (options, cbOk, cbErr) {
