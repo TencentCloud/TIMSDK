@@ -5895,7 +5895,7 @@ module.exports = function () {
 
         //删除群系统消息
         webim.deleteGroupSystemMsgs = function(options, cbOk, cbErr){
-            options.DelMsgList.forEach(item=>{
+            options.DelMsgList.forEach(function(item){
                 item.From_Account = '@TIM#SYSTEM'
             })
             return proto_deleteC2CMsg(options,cbOk,cbErr);
