@@ -149,21 +149,29 @@ function onSelSess(sess_type, to_id) {
         var sessMap = webim.MsgStore.sessMap(); //获取到之前已经保存的消息
         var sessCS = webim.SESSION_TYPE.GROUP + selToID;
         if (sessMap && sessMap[sessCS]) { //判断之前是否保存过消息
-            selType = webim.SESSION_TYPE.GROUP
-            bindScrollHistoryEvent.init();
+            selType = webim.SESSION_TYPE.GROUP;
 
-            function compare(property) {
-                return function(a, b) {
-                    var value1 = a[property];
-                    var value2 = b[property];
-                    return value1 - value2;
-                }
-            }
-            var sessMapOld = sessMap[sessCS]._impl.msgs.sort(compare('time'));
+            getLastGroupHistoryMsgs(function(msgList) {
+                getHistoryMsgCallback(msgList);
+                bindScrollHistoryEvent.init();
+            }, function(err) {
+                alert(err.ErrorInfo);
+            });
+            return;
+            // bindScrollHistoryEvent.init();
 
-            for (var i = 0; i < sessMapOld.length; i++) {
-                addMsg(sessMapOld[i]); //显示已经保存的消息
-            }
+            // function compare(property) {
+            //     return function(a, b) {
+            //         var value1 = a[property];
+            //         var value2 = b[property];
+            //         return value1 - value2;
+            //     }
+            // }
+            // var sessMapOld = sessMap[sessCS]._impl.msgs.sort(compare('time'));
+
+            // for (var i = 0; i < sessMapOld.length; i++) {
+            //     addMsg(sessMapOld[i]); //显示已经保存的消息
+            // }
         } else {
             if (sess_type == webim.SESSION_TYPE.GROUP) {
                 if (selType == webim.SESSION_TYPE.C2C) {
