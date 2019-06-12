@@ -24,12 +24,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
     strResourcePath += _T("imskin");
     CPaintManagerUI::SetResourcePath(strResourcePath.GetData());
 
-    //HANDLE hSingleMetux = ::CreateMutex(NULL, FALSE, TEXT("IMApp_Metux_V1.0.0.1"));
-    //if (GetLastError() == ERROR_ALREADY_EXISTS) {
-    //    CIMWnd::MsgBoxEx("info", "IMApp has started");
-    //    CloseHandle(hSingleMetux);
-    //    return 0;
-    //}
+    HANDLE hSingleMetux = ::CreateMutex(NULL, FALSE, TEXT("IMApp_Metux_V1.0.0.1"));
+    if (GetLastError() == ERROR_ALREADY_EXISTS) {
+        CIMWnd::MsgBoxEx("info", "IMApp has started");
+        CloseHandle(hSingleMetux);
+        return 0;
+    }
 
     ::OleInitialize(NULL);
     ::CoInitialize(NULL);
