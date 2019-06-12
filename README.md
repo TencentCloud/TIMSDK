@@ -8,9 +8,9 @@
 - [Android v2 v3 v4](https://github.com/tencentyun/TIMSDK/wiki/Android-IMSDK-%E6%8E%A5%E5%8F%A3%E5%8F%98%E5%8C%96%EF%BC%88v2---v3---v4%EF%BC%89)
 - [Windows v2 v4](https://github.com/tencentyun/TIMSDK/wiki/Windows-IMSDK-%E6%8E%A5%E5%8F%A3%E5%8F%98%E5%8C%96%EF%BC%88v2---v4%EF%BC%89)
 
-最新版本 4.4.479 @2019.06.12
+## 最新版本 4.4.479 @2019.06.12
 
-iOS平台
+**iOS平台**
 
 - 修复拉取离线消息出现丢消息的问题
 - 修复更换不同 SDKAppId 引起登录失败的问题
@@ -25,7 +25,7 @@ iOS平台
   - 完善通讯录、群组管理、关系链等功能
   - 一大波bugfix
 
-Android平台
+**Android平台**
 
 - 修复拉取离线消息出现丢消息的问题
 - 修复更换不同 SDKAppId 引起登录失败的问题
@@ -41,7 +41,7 @@ Android平台
   - 完善通讯录、群组管理、关系链等功能
   - 一大波bugfix
 
-Windows平台
+**Windows平台**
 
 - 修复拉取离线消息出现丢消息的问题
 - 修复更换不同 SDKAppId 引起登录失败的问题
@@ -50,6 +50,3 @@ Windows平台
 - 修复获取好友列表和创建群组的6002错误
 - 缓存优化，降低UI卡顿
 - 优化发送消息的效率
-
-
-
