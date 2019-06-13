@@ -14,14 +14,11 @@
 
 >账号管理员可以随便填写，在使用云通讯后台的 REST API 发送消息时才会用到。
 
-## 3. 获取测试userSig
-点击**下载公私钥**的链接，即可获得一个名为 **keys.zip** 的压缩包，解压后可以得到两个文件，即 public_key 和 private_key，用记事本打开 **private_key** 文件，并将其中的内容拷贝到**开发辅助工具**的私钥文本输入框中。
+## 3. 下载公私钥
+点击**下载公私钥**的链接，即可获得一个名为 **keys.zip** 的压缩包，解压后可以得到两个文件，即 public_key 和 private_key，用记事本打开 **private_key** 文件
 
-其中：**identifier** 即为你的测试账号（也就是 userId），私钥为 private_key 文件里的文本内容，生成的签名就是**userSig**。identifier 和 userSig 是一一对应的关系。
+![](https://main.qcloudimg.com/raw/6be1ef4294a6a892834c998175ff5187.png)
 
-![](https://main.qcloudimg.com/raw/a1b9bb35760e1e52825c754bd3ef9a52.png)
-
-> 可以多生成4组以上的 userid 和 usersig，方便在第5步中调试使用。
 
 
 ## 4. 下载 Demo 源码
@@ -30,15 +27,17 @@
 ## 5. 修改源码配置
 - 使用 Android Studio （3.0 以上的版本）  打开源码工程。
 
-- 工程中默认配置了测试的 SDKAPPID 以及在控制台生成的四个测试账号，由于每个账号同时只能有一个端登录，所以您需要按照 step 3 中指引拿到自己的四组测试账号配置进去。
+- 虽然工程中默认配置了测试的 SDKAPPID ，但是您需要替换成您 step 1 中您自己的 SDKAPPID ，由于每个账号同时只能有一个端登录，你可以用多台手机来登录不同的账号，以便互相通信，
 
-- 在 com.tencent.qcloud.uipojo.utils.Constants 中替换您的 SDKAPPID。
-![](https://main.qcloudimg.com/raw/b6cec2fd99c8350f4781304d96d28653.png)
+- 在 /TIMSDK/Android/app/src/main/java/com/tencent/qcloud/tim/demo/utils/Constants.java 中替换您的 SDKAPPID。
+![](https://main.qcloudimg.com/raw/aeb37b0ca5f0d3f5c156149803d33a36.png)
 
-- 在com.tencent.qcloud.uipojo.login.view.LoginActivity中替换 step 3 中指引拿到 userId 和 userSig 。
-![](https://main.qcloudimg.com/raw/976f87fe676546bfc93fc3dcb04bc97e.png)
+- 在 step 3 中下载公私钥并打开 **private_key** 文件后，并将其中的所有内容拷贝到 **/TIMSDK/Android/app/src/main/java/com/tencent/qcloud/tim/demo/signature/GenerateTestUserSig.java** 文件中定义的常量 **PRIVATEKEY** 。
+![](https://main.qcloudimg.com/raw/d9e6f60bbe4b6c23fa3886ab16a4afd3.png)
 
-> ! 这里提到的获取 userid 和 usersig 的方案仅适合本地跑通demo和功能调试，userSig 正确的签发方式请参考 [服务器获取方案](https://cloud.tencent.com/document/product/269/1507)。
+通过 **GenerateTestUserSig** 中的 **genTestUserSig** 方法就可以自动帮你帮您获取测试 **userSig** 。
+
+> ! 需要注意的是：这里提到的获取测试 **userSig**方案仅适合本地跑通demo和功能调试，userSig 正确的签发和获取方式请参考 [服务器获取方案](https://cloud.tencent.com/document/product/269/1507)。
 
 ## 6. 编译运行
-APP启动后，在不同的手机上登录不同的账号，就可以搜索对方的 userId 体验发消息了。
+APP启动后，在不同的手机上登录不同的账号，就可以添加对方的 userId 体验收发消息，以及其他功能。
