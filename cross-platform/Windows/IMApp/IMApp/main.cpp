@@ -7,7 +7,7 @@
 #include "../common/crashdump.h"
 #include "UIlib.h"
 #include "MsgBox.h"
-
+#include "TestUserSigGenerator.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -38,17 +38,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
     SdkAppInfo appinfo;
     appinfo.sdkappid = "12345678";  //写入您在腾讯云控制台云通信的应用SDKAPPID
     AccountInfo account;
-    account.userid = "user1";       //写入测试账号identifier
-    account.usersig = "user1sig";   //写入上述第三步生成的usersig
+    account.userid = "user1";         //写入测试账号identifier
+    account.usersig = TestUserSigGenerator::instance().genTestUserSig(account.userid);   //写入上述第三步生成的usersig
     appinfo.accounts.push_back(account);
     account.userid = "user2";
-    account.usersig = "user2sig";
+    account.usersig = TestUserSigGenerator::instance().genTestUserSig(account.userid);
     appinfo.accounts.push_back(account);
     account.userid = "user3";
-    account.usersig = "user3sig";
+    account.usersig = TestUserSigGenerator::instance().genTestUserSig(account.userid);
     appinfo.accounts.push_back(account);
     account.userid = "user4";
-    account.usersig = "user4sig";
+    account.usersig = TestUserSigGenerator::instance().genTestUserSig(account.userid);
     appinfo.accounts.push_back(account);
 
     CIMWnd& wnd = CIMWnd::GetInst();
