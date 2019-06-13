@@ -46,18 +46,16 @@
     CGFloat labelX = _indicator.hidden ? 0 : (_indicator.frame.origin.x + _indicator.frame.size.width + TNaviBarIndicatorView_Margin);
     _label.frame = CGRectMake(labelX, labelY, labelSize.width, NavBar_Height);
     self.frame = CGRectMake(0, 0, labelX + labelSize.width + TNaviBarIndicatorView_Margin, NavBar_Height);
-    self.center = CGPointMake(Screen_Width * 0.5, NavBar_Height * 0.5);
+//    self.center = CGPointMake(Screen_Width * 0.5, NavBar_Height * 0.5);
 }
 
 - (void)startAnimating
 {
     [_indicator startAnimating];
-    [self updateLayout];
 }
 
 - (void)stopAnimating
 {
     [_indicator stopAnimating];
-    [self updateLayout];
 }
 @end

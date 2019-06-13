@@ -1,5 +1,5 @@
 //
-//  TCommonFriendCell.m
+//  TCommonContactCell.m
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/5.
@@ -11,7 +11,7 @@
 #import "THeader.h"
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "TCommonContactCellData.h"
-
+#import "TUIKit.h"
 
 @interface TCommonContactCell()
 @property TCommonContactCellData *contactData;
@@ -19,22 +19,12 @@
 
 @implementation TCommonContactCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.avatarView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:TUIKitResource(@"default_head")]];
+        self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
         [self.contentView addSubview:self.avatarView];
         self.avatarView.mm_width(34).mm_height(34).mm__centerY(28).mm_left(12);
         
@@ -60,7 +50,7 @@
     } else if (contactData.avatarImage) {
         [self.avatarView setImage:contactData.avatarImage];
     } else {
-        [self.avatarView setImage:[UIImage imageNamed:TUIKitResource(@"default_head")]];
+        [self.avatarView setImage:DefaultAvatarImage];
     }
 }
 @end

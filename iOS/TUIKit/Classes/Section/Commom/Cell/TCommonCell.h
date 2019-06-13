@@ -10,7 +10,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TCommonCellData : NSObject
+@property (strong) NSString *reuseId;
 @property (nonatomic, assign) SEL cselector;
+- (CGFloat)heightOfWidth:(CGFloat)width;
 @end
 
 @interface TCommonTableViewCell : UITableViewCell

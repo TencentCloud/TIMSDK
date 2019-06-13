@@ -7,13 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TUIUserProfileControllerServiceProtocol.h"
 
-@class TIMUserProfile;
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface TUserProfileController : UITableViewController
-@property TIMUserProfile *profile;
+@interface TUserProfileController : UITableViewController<TUIUserProfileControllerServiceProtocol>
 @end
 
-NS_ASSUME_NONNULL_END

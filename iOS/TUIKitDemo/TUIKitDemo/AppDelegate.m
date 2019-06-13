@@ -11,6 +11,8 @@
 #import "ConversationController.h"
 #import "SettingController.h"
 #import "ContactsController.h"
+#import "LoginController.h"
+#import "TUITabBarController.h"
 #import "TUIKit.h"
 #import "THeader.h"
 #import "TAlertView.h"
@@ -36,11 +38,8 @@
     if (sdkAppid == 0) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Demo尚未配置SdkAppid，请前往IM控制台创建应用，获取SdkAppid，然后在工程 Appdelegate 头文件里面配置" message:nil delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
         [alert show];
-    }else if (sdkAccountType == 0){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Demo尚未配置AccountType，请前往IM控制台创建应用，获取AccountType，然后在工程 Appdelegate 头文件里面配置" message:nil delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
-        [alert show];
     }else{
-        [[TUIKit sharedInstance] initKit:sdkAppid accountType:sdkAccountType withConfig:[TUIKitConfig defaultConfig]];
+        [[TUIKit sharedInstance] setupWithAppId:sdkAppid];
     }
     
     NSNumber *appId = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Appid];
@@ -49,7 +48,10 @@
     NSString *userSig = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Sig];
     if([appId integerValue] == sdkAppid && identifier.length != 0 && userSig.length != 0){
         __weak typeof(self) ws = self;
-        [[TUIKit sharedInstance] loginKit:identifier userSig:userSig succ:^{
+        TIMLoginParam *param = [[TIMLoginParam alloc] init];
+        param.identifier = identifier;
+        param.userSig = userSig;
+        [[TIMManager sharedInstance] login:param succ:^{
             if (ws.deviceToken) {
                 TIMTokenParam *param = [[TIMTokenParam alloc] init];
                 /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
@@ -107,7 +109,7 @@
     
     config.consolelogEnable = NO;
     config.viewControllerTrackingEnable = NO;
-    config.version = [[TUIKit sharedInstance] getSDKVersion];
+    config.version = [[TIMManager sharedInstance] GetVersion];
     
     // NOTE:Required
     // Start the Bugly sdk with APP_ID and your config
@@ -211,23 +213,23 @@ void uncaughtExceptionHandler(NSException*exception){
 }
 
 - (UITabBarController *)getMainController{
-    TTabBarController *tbc = [[TTabBarController alloc] init];
+    TUITabBarController *tbc = [[TUITabBarController alloc] init];
     NSMutableArray *items = [NSMutableArray array];
-    TTabBarItem *msgItem = [[TTabBarItem alloc] init];
+    TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
     msgItem.title = @"消息";
     msgItem.selectedImage = [UIImage imageNamed:TUIKitResource(@"message_pressed")];
     msgItem.normalImage = [UIImage imageNamed:TUIKitResource(@"message_normal")];
     msgItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
     [items addObject:msgItem];
     
-    TTabBarItem *contactItem = [[TTabBarItem alloc] init];
+    TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
     contactItem.title = @"通讯录";
     contactItem.selectedImage = [UIImage imageNamed:TUIKitResource(@"contacts_pressed")];
     contactItem.normalImage = [UIImage imageNamed:TUIKitResource(@"contacts_normal")];
     contactItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
     [items addObject:contactItem];
     
-    TTabBarItem *setItem = [[TTabBarItem alloc] init];
+    TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
     setItem.title = @"我";
     setItem.selectedImage = [UIImage imageNamed:TUIKitResource(@"setting_pressed")];
     setItem.normalImage = [UIImage imageNamed:TUIKitResource(@"setting_normal")];
@@ -250,4 +252,5 @@ void uncaughtExceptionHandler(NSException*exception){
     self.window.rootViewController = [self getLoginController];
 }
 @end
+
 

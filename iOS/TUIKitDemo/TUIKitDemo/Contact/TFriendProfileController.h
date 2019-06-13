@@ -7,13 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TFriendProfileControllerServiceProtocol.h"
+#import "TUIFriendProfileControllerServiceProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class TIMFriend;
-
-@interface TFriendProfileController : UITableViewController <TFriendProfileControllerServiceProtocol>
+@interface TFriendProfileController : UITableViewController <TUIFriendProfileControllerServiceProtocol>
 
 @end
 

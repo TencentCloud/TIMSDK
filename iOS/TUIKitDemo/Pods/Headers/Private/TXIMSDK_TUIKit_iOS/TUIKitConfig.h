@@ -1,1 +1,1 @@
-../../../../../TUIKit/Classes/TUIKitConfig.h
+../../../../../TUIKit/Classes/Global/TUIKitConfig.h

@@ -1,1 +1,1 @@
-../../../../../TUIKit/Classes/Section/Commom/TNavigationController.h
+../../../../../TUIKit/Classes/Section/Commom/Controller/TNavigationController.h

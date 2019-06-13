@@ -13,10 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TContactViewModel : NSObject
 @property (readonly) NSDictionary<NSString *, NSArray<TCommonContactCellData *> *> *dataDict;
 @property (readonly) NSArray *groupList;
-@property NSArray<TCommonContactCellData *> *firstGroupData;
 
 @property (readonly) BOOL isLoadFinished;
-@property SEL contactSelector;
 
 - (void)loadContacts;
 

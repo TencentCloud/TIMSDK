@@ -9,28 +9,30 @@
 #import "SettingController.h"
 #import "LoginController.h"
 #import "AppDelegate.h"
-#import "TPersonalCommonCell.h"
-#import "TButtonCell.h"
+#import "TUIProfileCardCell.h"
+#import "TUIButtonCell.h"
 #import "THeader.h"
 #import "TAlertView.h"
 #import "IMMessageExt.h"
-#import "TUserProfileController.h"
 #import "TTextEditController.h"
 #import "TDateEditController.h"
 #import "NotifySetupController.h"
-#import "KVOController/KVOController.h"
 #import "TIMUserProfile+DataProvider.h"
-#import "TDataProviderService.h"
+#import "TUIUserProfileDataProviderService.h"
 #import "TCServiceManager.h"
 #import "TCommonTextCell.h"
 #import "MMLayout/UIView+MMLayout.h"
+#import "ReactiveObjC/ReactiveObjC.h"
+#import "UIImage+TUIKIT.h"
+#import "TUIKit.h"
+
 @import ImSDK;
 
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2
 #define SHEET_SEX    3
 
-@interface MyUserProfileExpresser : TDataProviderService
+@interface MyUserProfileExpresser : TUIUserProfileDataProviderService
 @end
 
 @implementation MyUserProfileExpresser
@@ -53,12 +55,18 @@
     return @"暂无个性签名";
 }
 
+- (NSString *)getLocation:(TIMUserProfile *)profile
+{
+    NSString *ret = [super getLocation:profile];
+    if (ret.length != 0)
+        return ret;
+    return @"未知";
+}
+
 @end
 
-@interface SettingController () <TButtonCellDelegate, TAlertViewDelegate, UIActionSheetDelegate>
+@interface SettingController () <UIActionSheetDelegate>
 @property (nonatomic, strong) NSMutableArray *data;
-@property TPersonalCommonCell *personalCell;
-@property TUserProfileController *profileController;
 @property TIMUserProfile *profile;
 @end
 
@@ -66,22 +74,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[TCServiceManager shareInstance] registerService:@protocol(TDataProviderServiceProtocol) implClass:[MyUserProfileExpresser class]];
+    [[TCServiceManager shareInstance] registerService:@protocol(TUIUserProfileDataProviderServiceProtocol) implClass:[MyUserProfileExpresser class]];
     [self setupViews];
-}
 
-- (void)willMoveToParentViewController:(UIViewController *)parent
-{
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
-        [self setupData];
-    } fail:^(int code, NSString *msg) {
-        
-    }];
 }
 
 - (void)setupViews
@@ -93,23 +88,29 @@
     self.tableView.backgroundColor = TSettingController_Background_Color;
     
     [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"textCell"];
-    [self.tableView registerClass:[TPersonalCommonCell class] forCellReuseIdentifier:@"personalCell"];
-    [self.tableView registerClass:[TButtonCell class] forCellReuseIdentifier:@"buttonCell"];
+    [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"personalCell"];
+    [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"buttonCell"];
 
+    [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
+        self.profile = profile;
+        [self setupData];
+    } fail:^(int code, NSString *msg) {
+        
+    }];
 }
 
 - (void)setupData
 {
-    self.profile = [[TIMFriendshipManager sharedInstance] querySelfProfile];
 
     _data = [NSMutableArray array];
     
-    TPersonalCommonCellData *personal = [[TPersonalCommonCellData alloc] init];
+    TUIProfileCardCellData *personal = [[TUIProfileCardCellData alloc] init];
     personal.identifier = self.profile.identifier;
-    personal.head = TUIKitResource(@"default_head");
+    personal.avatarImage = DefaultAvatarImage;
     personal.name = [self.profile showName];
     personal.signature = [self.profile showSignature];
-    personal.selector = @selector(didSelectCommon);
+    personal.cselector = @selector(didSelectCommon);
+    personal.showAccessory = YES;
     [_data addObject:@[personal]];
     
     TCommonTextCellData *birthdayData = [TCommonTextCellData new];
@@ -155,10 +156,16 @@
     messageNotify.cselector = @selector(didSelectNotifySet);
     [_data addObject:@[friendApply, messageNotify]];
     
+    TCommonTextCellData *about = [TCommonTextCellData new];
+    about.key = @"关于云通信IM";
+    about.showAccessory = YES;
+    about.cselector = @selector(didSelectAbout);
+    [_data addObject:@[about]];
     
-    
-    TButtonCellData *button =  [[TButtonCellData alloc] init];
-    button.title = @"退 出";
+    TUIButtonCellData *button =  [[TUIButtonCellData alloc] init];
+    button.title = @"退出登录";
+    button.style = ButtonRedText;
+    button.cbuttonSelector = @selector(logout:);
     [_data addObject:@[button]];
     
     [self.tableView reloadData];
@@ -190,50 +197,29 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableArray *array = _data[indexPath.section];
-    NSObject *data = array[indexPath.row];
-    if([data isKindOfClass:[TPersonalCommonCellData class]]){
-        return [TPersonalCommonCell getHeight];
-    }
-    else if([data isKindOfClass:[TButtonCellData class]]){
-        return [TButtonCell getHeight];
-    }
+    TCommonCellData *data = array[indexPath.row];
 
-    return 44;
+    return [data heightOfWidth:Screen_Width];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    NSMutableArray *array = _data[indexPath.section];
-    NSObject *data = array[indexPath.row];
-    SEL selector = 0;
-    if ([data isKindOfClass:[TPersonalCommonCellData class]]){
-        selector = ((TPersonalCommonCellData *)data).selector;
-    }
-    if (selector){
-        [self performSelector:selector];
-    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *array = _data[indexPath.section];
     NSObject *data = array[indexPath.row];
-    if([data isKindOfClass:[TPersonalCommonCellData class]]){
-        TPersonalCommonCell *cell = [tableView dequeueReusableCellWithIdentifier:TPersonalCommonCell_ReuseId];
-        if(!cell){
-            cell = [[TPersonalCommonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TPersonalCommonCell_ReuseId];
-        }
-        [cell setData:(TPersonalCommonCellData *)data];
-        self.personalCell = cell;
+    if([data isKindOfClass:[TUIProfileCardCellData class]]){
+        TUIProfileCardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"personalCell" forIndexPath:indexPath];
+        [cell fillWithData:(TUIProfileCardCellData *)data];
         return cell;
     }
-    else if([data isKindOfClass:[TButtonCellData class]]){
-        TButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:TButtonCell_ReuseId];
+    else if([data isKindOfClass:[TUIButtonCellData class]]){
+        TUIButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:TButtonCell_ReuseId];
         if(!cell){
-            cell = [[TButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TButtonCell_ReuseId];
-            cell.delegate = self;
+            cell = [[TUIButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TButtonCell_ReuseId];
         }
-        [cell setData:(TButtonCellData *)data];
+        [cell fillWithData:(TUIButtonCellData *)data];
         return cell;
     }  else if([data isKindOfClass:[TCommonTextCellData class]]) {
         TCommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textCell" forIndexPath:indexPath];
@@ -259,13 +245,13 @@
     TTextEditController *vc = [[TTextEditController alloc] initWithText:self.profile.nickname];
     vc.title = @"修改昵称";
     [self.navigationController pushViewController:vc animated:YES];
-    
-    [self.KVOControllerNonRetaining observe:vc keyPath:@"textValue" options:NSKeyValueObservingOptionNew block:^(SettingController *observer, TTextEditController *object, NSDictionary<NSString *,id> * _Nonnull change) {
-        NSString *nick = change[NSKeyValueChangeNewKey];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_Nick: nick}
-                                                            succ:^{
-                                                                [observer setupData];
-                                                            } fail:nil];
+    @weakify(self)
+    [[RACObserve(vc, textValue) skip:1] subscribeNext:^(NSString *x) {
+        @strongify(self)
+        self.profile.nickname = x;
+        [self setupData];
+        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_Nick: x}
+                                                            succ:nil fail:nil];
     }];
 }
 
@@ -275,12 +261,13 @@
     vc.title = @"修改个性签名";
     [self.navigationController pushViewController:vc animated:YES];
     
-    [self.KVOControllerNonRetaining observe:vc keyPath:@"textValue" options:NSKeyValueObservingOptionNew block:^(SettingController *observer, TTextEditController *object, NSDictionary<NSString *,id> * _Nonnull change) {
-        NSString *value = change[NSKeyValueChangeNewKey];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_SelfSignature: value}
-                                                            succ:^{
-                                                                [observer setupData];
-                                                            } fail:nil];
+    @weakify(self)
+    [[RACObserve(vc, textValue) skip:1] subscribeNext:^(NSString *x) {
+        @strongify(self)
+        self.profile.selfSignature = [x dataUsingEncoding:NSUTF8StringEncoding];
+        [self setupData];
+        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_SelfSignature: x}
+                                                            succ:nil fail:nil];
     }];
 }
 
@@ -289,12 +276,13 @@
     TTextEditController *vc = [[TTextEditController alloc] initWithText:[self.profile showLocation]];
     vc.title = @"修改所在地";
     [self.navigationController pushViewController:vc animated:YES];
-    [self.KVOControllerNonRetaining observe:vc keyPath:@"textValue" options:NSKeyValueObservingOptionNew block:^(SettingController *observer, TTextEditController *object, NSDictionary<NSString *,id> * _Nonnull change) {
-        NSString *value = change[NSKeyValueChangeNewKey];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_Location: value}
-                                                            succ:^{
-                                                                [observer setupData];
-                                                            } fail:nil];
+    @weakify(self)
+    [[RACObserve(vc, textValue) skip:1] subscribeNext:^(NSString *x) {
+        @strongify(self)
+        self.profile.location = [x dataUsingEncoding:NSUTF8StringEncoding];
+        [self setupData];
+        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_Location: x}
+                                                            succ:nil fail:nil];
     }];
 }
 
@@ -314,14 +302,13 @@
     TDateEditController *vc = [[TDateEditController alloc] initWithDate:[self.profile showBirthday]];
     vc.title = @"修改生日";
     [self.navigationController pushViewController:vc animated:YES];
-    //监听值的改变
-    [self.KVOControllerNonRetaining observe:vc keyPath:@"dateValue" options:NSKeyValueObservingOptionNew block:^(SettingController *observer, TTextEditController *object, NSDictionary<NSString *,id> * _Nonnull change) {
-        NSDate *value = change[NSKeyValueChangeNewKey];
-        [observer.profile setShowBirthday:value];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_Birthday: @(observer.profile.birthday)}
-                                                            succ:^{
-                                                                [observer setupData];
-                                                            } fail:nil];
+    @weakify(self)
+    [[RACObserve(vc, dateValue) skip:1] subscribeNext:^(NSDate *value) {
+        @strongify(self)
+        [self.profile setShowBirthday:value];
+        [self setupData];
+        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_Birthday: @(self.profile.birthday)}
+                                                            succ:nil fail:nil];
     }];
 }
 
@@ -337,14 +324,19 @@
     [sheet showInView:self.view];
 }
 
-- (void)didTouchUpInsideInButtonCell:(TButtonCell *)cell
+- (void)logout:(TUIButtonCell *)cell
 {
-    TAlertView *alert = [[TAlertView alloc] initWithTitle:@"确定退出吗"];
-    alert.delegate = self;
-    [alert showInWindow:self.view.window];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确定退出吗" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self didConfirmLogout];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)didConfirmInAlertView:(TAlertView *)alertView
+- (void)didConfirmLogout
 {
     [[TIMManager sharedInstance] logout:^{
         [self didLogoutInSettingController:self];
@@ -370,11 +362,9 @@
     if (actionSheet.tag == SHEET_AGREE) {
         if (buttonIndex >= 3)
             return;
-        
+        self.profile.allowType = buttonIndex;
         [self setupData];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_AllowType:[NSNumber numberWithInteger:buttonIndex]} succ:^{
-            [self setupData];
-        } fail:nil];
+        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_AllowType:[NSNumber numberWithInteger:buttonIndex]} succ:nil fail:nil];
     }
     if (actionSheet.tag == SHEET_COMMON) {
         if (buttonIndex == 0) {
@@ -392,21 +382,32 @@
         if (buttonIndex == 1) {
             gender = TIM_GENDER_FEMALE;
         }
-        
+        self.profile.gender = gender;
+        [self setupData];
         [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_Gender: @(gender)}
-                                                            succ:^{
-                                                                [self setupData];
-                                                            } fail:nil];
+                                                            succ:nil fail:nil];
     }
 }
 
 - (void)didLogoutInSettingController:(SettingController *)controller
 {
-    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_User];
-    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Pwd];
-    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Sig];
+    [[TUILocalStorage sharedInstance] logout];
     UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     LoginController *login = [board instantiateViewControllerWithIdentifier:@"LoginController"];
     self.view.window.rootViewController = login;
+}
+
+- (void)didSelectAbout
+{
+    if (@available(iOS 10.0, *)) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://cloud.tencent.com/product/im"]
+                                           options:@{} completionHandler:^(BOOL success) {
+                                               if (success) {
+                                                   NSLog(@"Opened url");
+                                               }
+                                           }];
+    } else {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://cloud.tencent.com/product/im"]];
+    }
 }
 @end

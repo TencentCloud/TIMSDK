@@ -7,7 +7,10 @@ target 'TUIKitDemo' do
 
   # Pods for Example
   pod 'MBProgressHUD'
-  pod 'KVOController'
+  pod 'MMLayout'
+  pod 'SDWebImage'
+  pod 'AFNetworking'
+  pod 'ReactiveObjC'
   pod 'TXIMSDK_TUIKit_iOS', :path => "../../"
   pod 'TXIMSDK_iOS', :path => "../../"
 end

@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TContactController.h"
+#import "TUIContactController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ContactsController : TContactController
+@interface ContactsController : TUIContactController
 
 @end
 

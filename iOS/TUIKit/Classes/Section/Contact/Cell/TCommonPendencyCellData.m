@@ -24,4 +24,9 @@
     return self;
 }
 
+- (BOOL)isEqual:(TCommonPendencyCellData *)object
+{
+    return [self.identifier isEqual:object.identifier];
+}
+
 @end

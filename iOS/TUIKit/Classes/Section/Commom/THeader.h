@@ -9,6 +9,8 @@
 #ifndef THeader_h
 #define THeader_h
 
+#define DefaultAvatarImage ([TUIKit sharedInstance].config.defaultAvatarImage)
+#define DefaultGroupAvatarImage ([TUIKit sharedInstance].config.defaultGroupAvatarImage)
 
 
 #define Screen_Width        [UIScreen mainScreen].bounds.size.width
@@ -26,6 +28,8 @@
 
 
 //cell
+#define TMessageCell_Head_Width 45
+#define TMessageCell_Head_Height 45
 #define TMessageCell_Head_Size CGSizeMake(45, 45)
 #define TMessageCell_Padding 8
 #define TMessageCell_Margin 8
@@ -80,7 +84,7 @@
 #define TVoiceMessageCell_Margin 12
 #define TVoiceMessageCell_Back_Width_Max (Screen_Width * 0.4)
 #define TVoiceMessageCell_Back_Width_Min 60
-#define TVoiceMessageCell_Duration_Size CGSizeMake(30, 30)
+#define TVoiceMessageCell_Duration_Size CGSizeMake(33, 33)
 
 //text view
 #define TTextView_Height (49)
@@ -142,7 +146,6 @@
 #define TGroupMemberCell_Name_Height 20
 
 //conversation cell
-#define TConversationCell_ReuseId @"TConversationCell"
 #define TConversationCell_Height 70
 #define TConversationCell_Margin 10
 #define TConversationCell_Margin_Text 13
@@ -278,7 +281,7 @@
 //button cell
 #define TButtonCell_ReuseId @"TButtonCell"
 #define TButtonCell_Height 60
-#define TButtonCell_Margin 10
+#define TButtonCell_Margin 12
 
 //switch cell
 #define TSwitchCell_ReuseId @"TSwitchCell"
@@ -286,7 +289,6 @@
 #define TSwitchCell_Margin 10
 
 //personal common cell
-#define TPersonalCommonCell_ReuseId @"TPersonalCommonCell"
 #define TPersonalCommonCell_Image_Size CGSizeMake(80, 80)
 #define TPersonalCommonCell_Margin 10
 #define TPersonalCommonCell_Indicator_Size CGSizeMake(15, 15)

@@ -1,6 +1,6 @@
 {
   "name": "TXIMSDK_TUIKit_iOS",
-  "version": "4.3.135",
+  "version": "4.4.479",
   "platforms": {
     "ios": "8.0"
   },
@@ -28,12 +28,15 @@
     ],
     "ReactiveObjC": [
 
+    ],
+    "Toast": [
+
     ]
   },
   "requires_arc": true,
   "source": {
     "git": "https://github.com/tencentyun/TIMSDK.git",
-    "tag": "4.3.135"
+    "tag": "4.4.479"
   },
   "source_files": "iOS/TUIKit/Classes/**/*.{h,m,mm}",
   "vendored_libraries": [

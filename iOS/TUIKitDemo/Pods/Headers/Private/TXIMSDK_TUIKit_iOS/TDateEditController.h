@@ -1,1 +1,1 @@
-../../../../../TUIKit/Classes/Section/Commom/TDateEditController.h
+../../../../../TUIKit/Classes/Section/Commom/Controller/TDateEditController.h

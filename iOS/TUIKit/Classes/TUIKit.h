@@ -8,17 +8,25 @@
 
 #import <UIKit/UIKit.h>
 #import "TUIKitConfig.h"
+#import "TUIImageCache.h"
+#import "UIImage+TUIKIT.h"
+#import "NSDate+TUIKIT.h"
+#import "TUIChatController.h"
+#import "TUIBubbleMessageCell.h"
+#import "TIMUserProfile+DataProvider.h"
+#import "TUIProfileCardCell.h"
+#import "TUIButtonCell.h"
+#import "TUIFriendProfileControllerServiceProtocol.h"
+#import "TCServiceManager.h"
+#import "TUILocalStorage.h"
 
-typedef void (^TFail)(int code, NSString * msg);
-typedef void (^TSucc)(void);
-
-typedef NS_ENUM(NSUInteger, TUserStatus) {
+typedef NS_ENUM(NSUInteger, TUIUserStatus) {
     TUser_Status_ForceOffline,
     TUser_Status_ReConnFailed,
     TUser_Status_SigExpired,
 };
 
-typedef NS_ENUM(NSUInteger, TNetStatus) {
+typedef NS_ENUM(NSUInteger, TUINetStatus) {
     TNet_Status_Succ,
     TNet_Status_Connecting,
     TNet_Status_ConnFailed,
@@ -28,11 +36,12 @@ typedef NS_ENUM(NSUInteger, TNetStatus) {
 
 @interface TUIKit : NSObject
 + (instancetype)sharedInstance;
-- (void)initKit:(NSInteger)sdkAppId accountType:(NSString *)accountType withConfig:(TUIKitConfig *)config;
-- (void)loginKit:(NSString *)identifier userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail;
-- (void)logoutKit:(TSucc)succ fail:(TFail)fail;
-- (TUIKitConfig *)getConfig;
-- (NSString *)getSDKVersion;
+
+- (void)setupWithAppId:(NSInteger)sdkAppId;
+
+@property TUIKitConfig *config;
+@property (readonly) TUINetStatus netStatus;
+
 @end
 
 

@@ -3,37 +3,36 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		913C85192266DC7100D74B58 /* QuickContactsTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C85182266DC7000D74B58 /* QuickContactsTestViewController.m */; };
-		913C8531226705C300D74B58 /* AddFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C852E226705C300D74B58 /* AddFriendViewController.m */; };
+		910AF70B22925BF000ED5675 /* SearchGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF70A22925BF000ED5675 /* SearchGroupViewController.m */; };
+		910AF7112292820300ED5675 /* GroupRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF7102292820300ED5675 /* GroupRequestViewController.m */; };
+		910D900B22AE069A00C9A318 /* TCUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 910D900922AE069A00C9A318 /* TCUtil.m */; };
+		913C8531226705C300D74B58 /* SearchFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C852E226705C300D74B58 /* SearchFriendViewController.m */; };
 		913C853A2268260100D74B58 /* FriendRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C85392268260100D74B58 /* FriendRequestViewController.m */; };
 		915AA66A2248DBC600C0C9A0 /* ContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 915AA6692248DBC600C0C9A0 /* ContactsController.m */; };
 		9176C5BE227A98A300DF5784 /* TUserProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9176C5BC227A98A300DF5784 /* TUserProfileController.m */; };
+		91941A4D22AE40C300123596 /* MyCustomCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = 91941A4C22AE40C300123596 /* MyCustomCellData.m */; };
+		91941A5222AE435700123596 /* MyCustomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91941A5122AE435700123596 /* MyCustomCell.m */; };
+		91D3AD3122AA06440036CDE0 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = 91D3AD2F22AA06430036CDE0 /* Aspects.m */; };
 		91FE93A2227590F000C17D6C /* NotifySetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91FE93A1227590EF00C17D6C /* NotifySetupController.m */; };
 		91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */; };
 		BCF739AA621A7AF4B48F1525 /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */; };
 		CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0BDFA8221D53C60083E1B0 /* Bugly.framework */; };
-		CEF8564A22895C9F00B52E16 /* UserSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF8564922895C9F00B52E16 /* UserSelectView.m */; };
+		CECC13CB22B2824E008378A2 /* UserSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CECC13CA22B2824E008378A2 /* UserSelectView.m */; };
+		CECC13CE22B282C7008378A2 /* TCLoginParam.m in Sources */ = {isa = PBXBuildFile; fileRef = CECC13CD22B282C7008378A2 /* TCLoginParam.m */; };
 		CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014486216E1A4900C12E35 /* AppDelegate.m */; };
 		CF01448A216E1A4900C12E35 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014489216E1A4900C12E35 /* LoginController.m */; };
 		CF01448D216E1A4900C12E35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF01448B216E1A4900C12E35 /* Main.storyboard */; };
 		CF01448F216E1A4B00C12E35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF01448E216E1A4B00C12E35 /* Assets.xcassets */; };
 		CF014492216E1A4B00C12E35 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF014490216E1A4B00C12E35 /* LaunchScreen.storyboard */; };
 		CF014495216E1A4B00C12E35 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014494216E1A4B00C12E35 /* main.m */; };
-		CF2BCA9621748AD200CD6298 /* AddC2CController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF2BCA9221748AD100CD6298 /* AddC2CController.m */; };
-		CF46E5CE21997377005929D8 /* FileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF46E5CD21997377005929D8 /* FileViewController.m */; };
-		CF89BAF82175A1C300D43101 /* AddGroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF89BAF42175A1C100D43101 /* AddGroupController.m */; };
-		CF8E281021957E5B000DDA79 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8E280F21957E5B000DDA79 /* VideoViewController.m */; };
-		CF8F086C2189B58500ACAAAC /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8F086B2189B58500ACAAAC /* ImageViewController.m */; };
 		CFDC2FA2216E2C8F002EAEC2 /* ConversationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFDC2FA1216E2C8F002EAEC2 /* ConversationController.m */; };
 		CFDC2FA5216E2D5E002EAEC2 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFDC2FA4216E2D5E002EAEC2 /* ChatViewController.m */; };
 		CFEB47752177981900CFD98C /* GroupInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47742177981900CFD98C /* GroupInfoController.m */; };
 		CFEB47782177982B00CFD98C /* GroupMemberController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47772177982B00CFD98C /* GroupMemberController.m */; };
-		CFEB479B217837AF00CFD98C /* AddMemberController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB479A217837AF00CFD98C /* AddMemberController.m */; };
-		CFEB479E217837C900CFD98C /* DeleteMemberController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB479D217837C900CFD98C /* DeleteMemberController.m */; };
 		CFEB47D02179B82300CFD98C /* SettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47CF2179B82300CFD98C /* SettingController.m */; };
 /* End PBXBuildFile section */
 
@@ -83,10 +82,17 @@
 
 /* Begin PBXFileReference section */
 		30722D34BE1DD45B2ACBD3BB /* Pods-TUIKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.release.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.release.xcconfig"; sourceTree = "<group>"; };
-		913C85172266DC6F00D74B58 /* QuickContactsTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QuickContactsTestViewController.h; sourceTree = "<group>"; };
-		913C85182266DC7000D74B58 /* QuickContactsTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QuickContactsTestViewController.m; sourceTree = "<group>"; };
-		913C852C226705C200D74B58 /* AddFriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddFriendViewController.h; sourceTree = "<group>"; };
-		913C852E226705C300D74B58 /* AddFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddFriendViewController.m; sourceTree = "<group>"; };
+		910AF70922925BF000ED5675 /* SearchGroupViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchGroupViewController.h; sourceTree = "<group>"; };
+		910AF70A22925BF000ED5675 /* SearchGroupViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchGroupViewController.m; sourceTree = "<group>"; };
+		910AF70F2292820300ED5675 /* GroupRequestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupRequestViewController.h; sourceTree = "<group>"; };
+		910AF7102292820300ED5675 /* GroupRequestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupRequestViewController.m; sourceTree = "<group>"; };
+		910D900622AE069A00C9A318 /* TCUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCUtil.h; sourceTree = "<group>"; };
+		910D900722AE069A00C9A318 /* TCUploadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCUploadHelper.h; sourceTree = "<group>"; };
+		910D900822AE069A00C9A318 /* TCUploadHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUploadHelper.m; sourceTree = "<group>"; };
+		910D900922AE069A00C9A318 /* TCUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUtil.m; sourceTree = "<group>"; };
+		910D901022AE0DBD00C9A318 /* TCConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCConstants.h; sourceTree = "<group>"; };
+		913C852C226705C200D74B58 /* SearchFriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchFriendViewController.h; sourceTree = "<group>"; };
+		913C852E226705C300D74B58 /* SearchFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchFriendViewController.m; sourceTree = "<group>"; };
 		913C85382268260100D74B58 /* FriendRequestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendRequestViewController.h; sourceTree = "<group>"; };
 		913C85392268260100D74B58 /* FriendRequestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendRequestViewController.m; sourceTree = "<group>"; };
 		915AA6682248DBC600C0C9A0 /* ContactsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactsController.h; sourceTree = "<group>"; };
@@ -94,6 +100,12 @@
 		9176C5BC227A98A300DF5784 /* TUserProfileController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUserProfileController.m; sourceTree = "<group>"; };
 		9176C5BD227A98A300DF5784 /* TUserProfileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUserProfileController.h; sourceTree = "<group>"; };
 		9176C5C3227A9D3500DF5784 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		91941A4B22AE40C300123596 /* MyCustomCellData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyCustomCellData.h; sourceTree = "<group>"; };
+		91941A4C22AE40C300123596 /* MyCustomCellData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyCustomCellData.m; sourceTree = "<group>"; };
+		91941A5022AE435700123596 /* MyCustomCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyCustomCell.h; sourceTree = "<group>"; };
+		91941A5122AE435700123596 /* MyCustomCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyCustomCell.m; sourceTree = "<group>"; };
+		91D3AD2F22AA06430036CDE0 /* Aspects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Aspects.m; sourceTree = "<group>"; };
+		91D3AD3022AA06440036CDE0 /* Aspects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Aspects.h; sourceTree = "<group>"; };
 		91FE93A0227590EF00C17D6C /* NotifySetupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotifySetupController.h; sourceTree = "<group>"; };
 		91FE93A1227590EF00C17D6C /* NotifySetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotifySetupController.m; sourceTree = "<group>"; };
 		91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TFriendProfileController.m; sourceTree = "<group>"; };
@@ -101,8 +113,10 @@
 		91FE93EE22793A9A00C17D6C /* imsdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = imsdk.xcodeproj; path = /Users/annidy/Work/imsdk/tuikit/ios/TUIKit/../../../source/project/ios/imsdk/imsdk.xcodeproj; sourceTree = "<absolute>"; };
 		CE0BDFA8221D53C60083E1B0 /* Bugly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bugly.framework; sourceTree = "<group>"; };
 		CE1C55922224F22C00A75262 /* TUIKitDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TUIKitDemo.entitlements; sourceTree = "<group>"; };
-		CEF8564822895C9E00B52E16 /* UserSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserSelectView.h; sourceTree = "<group>"; };
-		CEF8564922895C9F00B52E16 /* UserSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserSelectView.m; sourceTree = "<group>"; };
+		CECC13C922B2824D008378A2 /* UserSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserSelectView.h; sourceTree = "<group>"; };
+		CECC13CA22B2824E008378A2 /* UserSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserSelectView.m; sourceTree = "<group>"; };
+		CECC13CC22B282C7008378A2 /* TCLoginParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCLoginParam.h; sourceTree = "<group>"; };
+		CECC13CD22B282C7008378A2 /* TCLoginParam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLoginParam.m; sourceTree = "<group>"; };
 		CF00884C2188772F00AD2879 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		CF00884D2188773000AD2879 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		CF014482216E1A4900C12E35 /* TUIKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TUIKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,16 +129,6 @@
 		CF014491216E1A4B00C12E35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CF014493216E1A4B00C12E35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF014494216E1A4B00C12E35 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		CF2BCA9221748AD100CD6298 /* AddC2CController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddC2CController.m; sourceTree = "<group>"; };
-		CF2BCA9421748AD200CD6298 /* AddC2CController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddC2CController.h; sourceTree = "<group>"; };
-		CF46E5CC21997377005929D8 /* FileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileViewController.h; sourceTree = "<group>"; };
-		CF46E5CD21997377005929D8 /* FileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileViewController.m; sourceTree = "<group>"; };
-		CF89BAF42175A1C100D43101 /* AddGroupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddGroupController.m; sourceTree = "<group>"; };
-		CF89BAF62175A1C200D43101 /* AddGroupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddGroupController.h; sourceTree = "<group>"; };
-		CF8E280E21957E5B000DDA79 /* VideoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
-		CF8E280F21957E5B000DDA79 /* VideoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
-		CF8F086A2189B58500ACAAAC /* ImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
-		CF8F086B2189B58500ACAAAC /* ImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
 		CFDC2FA0216E2C8F002EAEC2 /* ConversationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationController.h; sourceTree = "<group>"; };
 		CFDC2FA1216E2C8F002EAEC2 /* ConversationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationController.m; sourceTree = "<group>"; };
 		CFDC2FA3216E2D5E002EAEC2 /* ChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
@@ -133,10 +137,6 @@
 		CFEB47742177981900CFD98C /* GroupInfoController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupInfoController.m; sourceTree = "<group>"; };
 		CFEB47762177982B00CFD98C /* GroupMemberController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupMemberController.h; sourceTree = "<group>"; };
 		CFEB47772177982B00CFD98C /* GroupMemberController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupMemberController.m; sourceTree = "<group>"; };
-		CFEB4799217837AF00CFD98C /* AddMemberController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddMemberController.h; sourceTree = "<group>"; };
-		CFEB479A217837AF00CFD98C /* AddMemberController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddMemberController.m; sourceTree = "<group>"; };
-		CFEB479C217837C900CFD98C /* DeleteMemberController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeleteMemberController.h; sourceTree = "<group>"; };
-		CFEB479D217837C900CFD98C /* DeleteMemberController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeleteMemberController.m; sourceTree = "<group>"; };
 		CFEB47CE2179B82300CFD98C /* SettingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingController.h; sourceTree = "<group>"; };
 		CFEB47CF2179B82300CFD98C /* SettingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingController.m; sourceTree = "<group>"; };
 		D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -165,11 +165,50 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		9176C5B9227A987300DF5784 /* Chat */ = {
+		910D8FFB22AE051C00C9A318 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				CF014488216E1A4900C12E35 /* LoginController.h */,
+				CF014489216E1A4900C12E35 /* LoginController.m */,
+				CECC13C922B2824D008378A2 /* UserSelectView.h */,
+				CECC13CA22B2824E008378A2 /* UserSelectView.m */,
+				CECC13CC22B282C7008378A2 /* TCLoginParam.h */,
+				CECC13CD22B282C7008378A2 /* TCLoginParam.m */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		910D8FFE22AE052400C9A318 /* Conversation */ = {
 			isa = PBXGroup;
 			children = (
 				CFDC2FA0216E2C8F002EAEC2 /* ConversationController.h */,
 				CFDC2FA1216E2C8F002EAEC2 /* ConversationController.m */,
+			);
+			path = Conversation;
+			sourceTree = "<group>";
+		};
+		910D900522AE069000C9A318 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				910D901022AE0DBD00C9A318 /* TCConstants.h */,
+				910D900722AE069A00C9A318 /* TCUploadHelper.h */,
+				910D900822AE069A00C9A318 /* TCUploadHelper.m */,
+				910D900622AE069A00C9A318 /* TCUtil.h */,
+				910D900922AE069A00C9A318 /* TCUtil.m */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		9176C5B9227A987300DF5784 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				91941A4A22AE409F00123596 /* Custom */,
+				CFEB47732177981900CFD98C /* GroupInfoController.h */,
+				CFEB47742177981900CFD98C /* GroupInfoController.m */,
+				CFEB47762177982B00CFD98C /* GroupMemberController.h */,
+				CFEB47772177982B00CFD98C /* GroupMemberController.m */,
+				CFDC2FA3216E2D5E002EAEC2 /* ChatViewController.h */,
+				CFDC2FA4216E2D5E002EAEC2 /* ChatViewController.m */,
 				9176C5BD227A98A300DF5784 /* TUserProfileController.h */,
 				9176C5BC227A98A300DF5784 /* TUserProfileController.m */,
 			);
@@ -179,21 +218,49 @@
 		9176C5CD227AE37D00DF5784 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				91FE93A1227590EF00C17D6C /* NotifySetupController.m */,
+				91FE93A0227590EF00C17D6C /* NotifySetupController.h */,
 				CFEB47CE2179B82300CFD98C /* SettingController.h */,
 				CFEB47CF2179B82300CFD98C /* SettingController.m */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
 		};
+		91941A4A22AE409F00123596 /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				91941A4B22AE40C300123596 /* MyCustomCellData.h */,
+				91941A4C22AE40C300123596 /* MyCustomCellData.m */,
+				91941A5022AE435700123596 /* MyCustomCell.h */,
+				91941A5122AE435700123596 /* MyCustomCell.m */,
+			);
+			path = Custom;
+			sourceTree = "<group>";
+		};
+		91D3AD2C22AA06110036CDE0 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				91D3AD3022AA06440036CDE0 /* Aspects.h */,
+				91D3AD2F22AA06430036CDE0 /* Aspects.m */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		91FE93E12276EEEE00C17D6C /* Contact */ = {
 			isa = PBXGroup;
 			children = (
-				913C852C226705C200D74B58 /* AddFriendViewController.h */,
-				913C852E226705C300D74B58 /* AddFriendViewController.m */,
+				913C85382268260100D74B58 /* FriendRequestViewController.h */,
+				913C85392268260100D74B58 /* FriendRequestViewController.m */,
+				913C852C226705C200D74B58 /* SearchFriendViewController.h */,
+				913C852E226705C300D74B58 /* SearchFriendViewController.m */,
 				915AA6682248DBC600C0C9A0 /* ContactsController.h */,
 				915AA6692248DBC600C0C9A0 /* ContactsController.m */,
 				91FE93E32276EF0F00C17D6C /* TFriendProfileController.h */,
 				91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */,
+				910AF70922925BF000ED5675 /* SearchGroupViewController.h */,
+				910AF70A22925BF000ED5675 /* SearchGroupViewController.m */,
+				910AF70F2292820300ED5675 /* GroupRequestViewController.h */,
+				910AF7102292820300ED5675 /* GroupRequestViewController.m */,
 			);
 			path = Contact;
 			sourceTree = "<group>";
@@ -229,48 +296,22 @@
 		CF014484216E1A4900C12E35 /* TUIKitDemo */ = {
 			isa = PBXGroup;
 			children = (
+				910D900522AE069000C9A318 /* Util */,
+				910D8FFE22AE052400C9A318 /* Conversation */,
+				910D8FFB22AE051C00C9A318 /* Login */,
+				91D3AD2C22AA06110036CDE0 /* Utils */,
+				9176C5B9227A987300DF5784 /* Chat */,
+				9176C5CD227AE37D00DF5784 /* Setting */,
+				91FE93E12276EEEE00C17D6C /* Contact */,
 				CE1C55922224F22C00A75262 /* TUIKitDemo.entitlements */,
 				91FE93EE22793A9A00C17D6C /* imsdk.xcodeproj */,
 				CF014485216E1A4900C12E35 /* AppDelegate.h */,
 				CF014486216E1A4900C12E35 /* AppDelegate.m */,
-				CF014488216E1A4900C12E35 /* LoginController.h */,
-				CF014489216E1A4900C12E35 /* LoginController.m */,
-				CEF8564822895C9E00B52E16 /* UserSelectView.h */,
-				CEF8564922895C9F00B52E16 /* UserSelectView.m */,
 				CF01448B216E1A4900C12E35 /* Main.storyboard */,
 				CF01448E216E1A4B00C12E35 /* Assets.xcassets */,
 				CF014490216E1A4B00C12E35 /* LaunchScreen.storyboard */,
 				CF014493216E1A4B00C12E35 /* Info.plist */,
 				CF014494216E1A4B00C12E35 /* main.m */,
-				CF89BAF62175A1C200D43101 /* AddGroupController.h */,
-				CF89BAF42175A1C100D43101 /* AddGroupController.m */,
-				CF2BCA9421748AD200CD6298 /* AddC2CController.h */,
-				CF2BCA9221748AD100CD6298 /* AddC2CController.m */,
-				CFDC2FA3216E2D5E002EAEC2 /* ChatViewController.h */,
-				CFDC2FA4216E2D5E002EAEC2 /* ChatViewController.m */,
-				CFEB47732177981900CFD98C /* GroupInfoController.h */,
-				CFEB47742177981900CFD98C /* GroupInfoController.m */,
-				CFEB47762177982B00CFD98C /* GroupMemberController.h */,
-				CFEB47772177982B00CFD98C /* GroupMemberController.m */,
-				913C85382268260100D74B58 /* FriendRequestViewController.h */,
-				913C85392268260100D74B58 /* FriendRequestViewController.m */,
-				CFEB4799217837AF00CFD98C /* AddMemberController.h */,
-				CFEB479A217837AF00CFD98C /* AddMemberController.m */,
-				CFEB479C217837C900CFD98C /* DeleteMemberController.h */,
-				CFEB479D217837C900CFD98C /* DeleteMemberController.m */,
-				9176C5B9227A987300DF5784 /* Chat */,
-				9176C5CD227AE37D00DF5784 /* Setting */,
-				91FE93A0227590EF00C17D6C /* NotifySetupController.h */,
-				91FE93A1227590EF00C17D6C /* NotifySetupController.m */,
-				91FE93E12276EEEE00C17D6C /* Contact */,
-				913C85172266DC6F00D74B58 /* QuickContactsTestViewController.h */,
-				913C85182266DC7000D74B58 /* QuickContactsTestViewController.m */,
-				CF8F086A2189B58500ACAAAC /* ImageViewController.h */,
-				CF8F086B2189B58500ACAAAC /* ImageViewController.m */,
-				CF8E280E21957E5B000DDA79 /* VideoViewController.h */,
-				CF8E280F21957E5B000DDA79 /* VideoViewController.m */,
-				CF46E5CC21997377005929D8 /* FileViewController.h */,
-				CF46E5CD21997377005929D8 /* FileViewController.m */,
 				9176C5C3227A9D3500DF5784 /* PrefixHeader.pch */,
 			);
 			path = TUIKitDemo;
@@ -458,26 +499,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF8F086C2189B58500ACAAAC /* ImageViewController.m in Sources */,
-				CFEB479E217837C900CFD98C /* DeleteMemberController.m in Sources */,
+				CECC13CE22B282C7008378A2 /* TCLoginParam.m in Sources */,
 				915AA66A2248DBC600C0C9A0 /* ContactsController.m in Sources */,
 				913C853A2268260100D74B58 /* FriendRequestViewController.m in Sources */,
-				CFEB479B217837AF00CFD98C /* AddMemberController.m in Sources */,
-				CF2BCA9621748AD200CD6298 /* AddC2CController.m in Sources */,
 				CF01448A216E1A4900C12E35 /* LoginController.m in Sources */,
-				913C8531226705C300D74B58 /* AddFriendViewController.m in Sources */,
+				913C8531226705C300D74B58 /* SearchFriendViewController.m in Sources */,
 				CFEB47782177982B00CFD98C /* GroupMemberController.m in Sources */,
-				CF46E5CE21997377005929D8 /* FileViewController.m in Sources */,
-				CF8E281021957E5B000DDA79 /* VideoViewController.m in Sources */,
-				CF89BAF82175A1C300D43101 /* AddGroupController.m in Sources */,
-				913C85192266DC7100D74B58 /* QuickContactsTestViewController.m in Sources */,
+				91941A5222AE435700123596 /* MyCustomCell.m in Sources */,
 				CFEB47752177981900CFD98C /* GroupInfoController.m in Sources */,
 				91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */,
 				CFEB47D02179B82300CFD98C /* SettingController.m in Sources */,
 				9176C5BE227A98A300DF5784 /* TUserProfileController.m in Sources */,
 				CFDC2FA5216E2D5E002EAEC2 /* ChatViewController.m in Sources */,
-				CEF8564A22895C9F00B52E16 /* UserSelectView.m in Sources */,
+				910D900B22AE069A00C9A318 /* TCUtil.m in Sources */,
+				91941A4D22AE40C300123596 /* MyCustomCellData.m in Sources */,
+				91D3AD3122AA06440036CDE0 /* Aspects.m in Sources */,
+				CECC13CB22B2824E008378A2 /* UserSelectView.m in Sources */,
 				91FE93A2227590F000C17D6C /* NotifySetupController.m in Sources */,
+				910AF70B22925BF000ED5675 /* SearchGroupViewController.m in Sources */,
+				910AF7112292820300ED5675 /* GroupRequestViewController.m in Sources */,
 				CF014495216E1A4B00C12E35 /* main.m in Sources */,
 				CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */,
 				CFDC2FA2216E2C8F002EAEC2 /* ConversationController.m in Sources */,
@@ -638,6 +678,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QE8PS7F45A;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -671,6 +712,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QE8PS7F45A;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",

@@ -7,26 +7,36 @@
 //
 
 #import "TUserProfileController.h"
-#import "TPersonalCommonCell.h"
-#import "TButtonCell.h"
+#import "TUIProfileCardCell.h"
+#import "TUIButtonCell.h"
 #import "THeader.h"
-#import "TAlertView.h"
-#import "TRichMenuCell.h"
-#import "TRichMenuCellData.h"
 #import "TTextEditController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "ChatViewController.h"
-
+#import "FriendRequestViewController.h"
+#import "TCommonTextCell.h"
+#import "TIMUserProfile+DataProvider.h"
+#import "Toast/Toast.h"
+#import "TUIKit.h"
 @import ImSDK;
 
+@TCServiceRegister(TUIUserProfileControllerServiceProtocol, TUserProfileController)
+
 @interface TUserProfileController ()
-@property NSMutableArray<TRichMenuCellData *> *dataList;
-@property BOOL isSelfProfile;
+@property NSMutableArray<TCommonTextCellData *> *dataList;
+@property UITableViewHeaderFooterView *footer;
 @end
 
 @implementation TUserProfileController
+{
+    TIMUserProfile *_userProfile;
+    ProfileControllerAction _actionType;
+}
+
+@synthesize userProfile = _userProfile;
+@synthesize actionType = _actionType;
 
 - (instancetype)init
 {
@@ -43,35 +53,69 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.title = @"详细资料";
 
-    [self.tableView registerClass:[TRichMenuCell class] forCellReuseIdentifier:kRichMenuCellReuseIdentifier];
+    [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"TextCell"];
     
     [self loadData];
 }
 
 - (void)loadData
 {
-    self.isSelfProfile = ([self.profile.identifier isEqualToString:[[TIMManager sharedInstance] getLoginUser]]);
-                        
+    
     NSMutableArray *list = @[].mutableCopy;
     [list addObject:({
-        TRichMenuCellData *data = TRichMenuCellData.new;
-        data.type = ERichCell_Text;
-        data.desc = @"昵称";
-        data.value = self.profile.nickname;
-        if (data.value.length == 0)
-        {
-            data.value = @"无";
-        }
+        TCommonTextCellData *data = TCommonTextCellData.new;
+        data.key = @"昵称";
+        data.value = [self.userProfile showName];
         data;
     })];
-    
     self.dataList = list;
+    self.footer = [[UITableViewHeaderFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.mm_w, 80)];
+    
+    if (self.actionType == PCA_ADD_FRIEND) {
+        TIMFriendCheckInfo *ck = TIMFriendCheckInfo.new;
+        ck.users = @[self.userProfile.identifier];
+        ck.checkType = TIM_FRIEND_CHECK_TYPE_BIDIRECTION;
+        [[TIMFriendshipManager sharedInstance] checkFriends:ck succ:^(NSArray<TIMCheckFriendResult *> *results) {
+            TIMCheckFriendResult *result = results.firstObject;
+            if (result.resultType == TIM_FRIEND_RELATION_TYPE_MY_UNI || result.resultType == TIM_FRIEND_RELATION_TYPE_BOTHWAY) {
+                return;
+            }
+           
+            
+            UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            [self.footer addSubview:btn2];
+            [btn2 setTitle:@"加好友" forState:UIControlStateNormal];
+            [btn2 setBackgroundColor:[UIColor blueColor]];
+            [btn2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            btn2.mm_left(12).mm_height(48).mm_top(20).mm_flexToRight(12);
+            [btn2 addTarget:self action:@selector(onAddFriend) forControlEvents:UIControlEventTouchUpInside];
+            
+            [self.tableView reloadData];
+        } fail:^(int code, NSString *msg) {
+            
+        }];
+    }
+    
+    if (self.actionType == PCA_PENDENDY_CONFIRM) {
+        UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [self.footer addSubview:btn2];
+        [btn2 setTitle:@"拒绝" forState:UIControlStateNormal];
+        [btn2 setBackgroundColor:[UIColor redColor]];
+        [btn2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        btn2.mm_left(12).mm_height(48).mm_top(20).mm_width((self.view.mm_w-36)/2);
+        [btn2 addTarget:self action:@selector(onRejectFriend) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIButton *btn3 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [self.footer addSubview:btn3];
+        [btn3 setTitle:@"同意" forState:UIControlStateNormal];
+        [btn3 setBackgroundColor:[UIColor blueColor]];
+        [btn3 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        btn3.mm_height(48).mm_top(20).mm_width((self.view.mm_w-36)/2).mm_right(12);
+        [btn3 addTarget:self action:@selector(onAgreeFriend) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
     [self.tableView reloadData];
 }
 
@@ -86,9 +130,8 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    TRichMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:kRichMenuCellReuseIdentifier forIndexPath:indexPath];
-    
-    cell.data = self.dataList[indexPath.row];
+    TCommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
+    [cell fillWithData:self.dataList[indexPath.row]];
     
     return cell;
 }
@@ -98,10 +141,10 @@
     UITableViewHeaderFooterView *header = [[UITableViewHeaderFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.mm_w, 120)];
     UIImageView *avatarView = [[UIImageView alloc] initWithFrame:CGRectZero];
     [header addSubview:avatarView];
-    if (self.profile.faceURL) {
-        [avatarView sd_setImageWithURL:[NSURL URLWithString:self.profile.faceURL] placeholderImage:[UIImage imageNamed:TUIKitResource(@"default_head")]];
+    if (self.userProfile.faceURL) {
+        [avatarView sd_setImageWithURL:[NSURL URLWithString:self.userProfile.faceURL] placeholderImage:DefaultAvatarImage];
     } else {
-        [avatarView setImage:[UIImage imageNamed:TUIKitResource(@"default_head")]];
+        [avatarView setImage:DefaultAvatarImage];
     }
     avatarView.layer.cornerRadius = 40;
     avatarView.layer.masksToBounds = YES;
@@ -111,7 +154,7 @@
     [header addSubview:label];
     label.textAlignment = NSTextAlignmentCenter;
     label.mm_width(header.mm_w).mm_top(avatarView.mm_maxY+10).mm_height(20);
-    label.text = self.profile.identifier;
+    label.text = self.userProfile.identifier;
     label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
     
     return header;
@@ -124,19 +167,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    if (self.isSelfProfile)
-        return nil;
-    
-    UITableViewHeaderFooterView *footer = [[UITableViewHeaderFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.mm_w, 80)];
-    
-    UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [footer addSubview:btn2];
-    [btn2 setTitle:@"发送消息" forState:UIControlStateNormal];
-    [btn2 setBackgroundColor:[UIColor blueColor]];
-    [btn2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    btn2.mm_left(20).mm_height(48).mm_top(20).mm_flexToRight(20);
-    [btn2 addTarget:self action:@selector(onSendMessage) forControlEvents:UIControlEventTouchUpInside];
-    return footer;
+    return self.footer;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -146,12 +177,48 @@
 
 - (void)onSendMessage
 {
-    TConversationCellData *data = [[TConversationCellData alloc] init];
-    data.convId = self.profile.identifier;
-    data.convType = TConv_Type_C2C;
-    data.title = self.profile.identifier;
+    TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
+    data.convId = self.userProfile.identifier;
+    data.convType = TIM_C2C;
+    data.title = [self.userProfile showName];
     ChatViewController *chat = [[ChatViewController alloc] init];
-    chat.conversation = data;
+    chat.conversationData = data;
     [self.navigationController pushViewController:chat animated:YES];
+}
+
+- (void)onAddFriend
+{
+    FriendRequestViewController *vc = [FriendRequestViewController new];
+    vc.profile = self.userProfile;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)onAgreeFriend
+{
+    TIMFriendResponse *rsp = TIMFriendResponse.new;
+    rsp.identifier = self.userProfile.identifier;
+    rsp.responseType = TIM_FRIEND_RESPONSE_AGREE_AND_ADD;
+    [[TIMFriendshipManager sharedInstance] doResponse:rsp succ:^(TIMFriendResult *result) {
+        [self.toastView makeToast:@"已发送"];
+    } fail:^(int code, NSString *msg) {
+        [self.toastView makeToast:msg];
+    }];
+}
+
+- (void)onRejectFriend
+{
+    TIMFriendResponse *rsp = TIMFriendResponse.new;
+    rsp.identifier = self.userProfile.identifier;;
+    rsp.responseType = TIM_FRIEND_RESPONSE_REJECT;
+    [[TIMFriendshipManager sharedInstance] doResponse:rsp succ:^(TIMFriendResult *result) {
+        [self.toastView makeToast:@"已发送"];
+    } fail:^(int code, NSString *msg) {
+        [self.toastView makeToast:msg];
+    }];
+}
+
+- (UIView *)toastView
+{
+    return [UIApplication sharedApplication].keyWindow;
 }
 @end

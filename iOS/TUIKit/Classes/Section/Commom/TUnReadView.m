@@ -36,7 +36,7 @@
 {
     _unReadLabel = [[UILabel alloc] init];
     _unReadLabel.text = @"11";
-    _unReadLabel.font = [UIFont systemFontOfSize:11];
+    _unReadLabel.font = [UIFont systemFontOfSize:12];
     _unReadLabel.textColor = [UIColor whiteColor];
     _unReadLabel.textAlignment = NSTextAlignmentCenter;
     [_unReadLabel sizeToFit];

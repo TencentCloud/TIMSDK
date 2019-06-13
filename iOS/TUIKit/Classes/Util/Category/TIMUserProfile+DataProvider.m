@@ -7,43 +7,43 @@
 
 #import "TIMUserProfile+DataProvider.h"
 #import "TCServiceManager.h"
-#import "TDataProviderService.h"
+#import "TUIUserProfileDataProviderServiceProtocol.h"
 
 @implementation TIMUserProfile (DataProvider)
 
 - (NSString *)showName
 {
-    id<TDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TDataProviderServiceProtocol)];
+    id<TUIUserProfileDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TUIUserProfileDataProviderServiceProtocol)];
     return [expr getName:self];
 }
 
 - (NSString *)showGender
 {
-    id<TDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TDataProviderServiceProtocol)];
+    id<TUIUserProfileDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TUIUserProfileDataProviderServiceProtocol)];
     return [expr getGender:self];
 }
 
 - (NSString *)showSignature
 {
-    id<TDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TDataProviderServiceProtocol)];
+    id<TUIUserProfileDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TUIUserProfileDataProviderServiceProtocol)];
     return [expr getSignature:self];
 }
 
 - (NSString *)showLocation
 {
-    id<TDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TDataProviderServiceProtocol)];
+    id<TUIUserProfileDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TUIUserProfileDataProviderServiceProtocol)];
     return [expr getLocation:self];
 }
 
 - (NSDate *)showBirthday
 {
-    id<TDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TDataProviderServiceProtocol)];
+    id<TUIUserProfileDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TUIUserProfileDataProviderServiceProtocol)];
     return [expr getBirthday:self];
 }
 
 - (NSString *)showAllowType
 {
-    id<TDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TDataProviderServiceProtocol)];
+    id<TUIUserProfileDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TUIUserProfileDataProviderServiceProtocol)];
     return [expr getAllowType:self];
 }
 
@@ -59,7 +59,7 @@
 
 - (UIImageView *)avatarView
 {
-    id<TDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TDataProviderServiceProtocol)];
+    id<TUIUserProfileDataProviderServiceProtocol> expr = [[TCServiceManager shareInstance] createService:@protocol(TUIUserProfileDataProviderServiceProtocol)];
     return [expr getAvatarView:self];
 }
 

@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSString *addSource;
 @property NSString *addWording;
 @property BOOL isAccepted;
-@property SEL cagreeSelector;
+@property SEL cbuttonSelector;
 
 - (instancetype)initWithPendency:(TIMFriendPendencyItem *)args;
 

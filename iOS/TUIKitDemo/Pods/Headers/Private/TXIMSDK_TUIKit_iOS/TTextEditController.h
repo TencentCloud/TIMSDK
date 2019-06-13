@@ -1,1 +1,1 @@
-../../../../../TUIKit/Classes/Section/Commom/TTextEditController.h
+../../../../../TUIKit/Classes/Section/Commom/Controller/TTextEditController.h

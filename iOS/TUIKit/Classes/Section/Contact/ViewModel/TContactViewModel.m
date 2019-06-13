@@ -18,15 +18,6 @@
 
 @implementation TContactViewModel
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-
-    }
-    return self;
-}
-
 - (void)loadContacts
 {
     self.isLoadFinished = NO;
@@ -38,7 +29,6 @@
         
         for (TIMFriend *friend in friends) {
             TCommonContactCellData *data = [[TCommonContactCellData alloc] initWithFriend:friend];
-            data.cselector = self.contactSelector;
             NSString *group = [[data.title firstPinYin] uppercaseString];
             if (group.length == 0 || !isalpha([group characterAtIndex:0])) {
                 [nonameList addObject:data];
@@ -60,10 +50,6 @@
         }
         for (NSMutableArray *list in [dataDict allValues]) {
             [list sortUsingSelector:@selector(compare:)];
-        }
-        if (self.firstGroupData) {
-            dataDict[@" "] = self.firstGroupData;
-            [groupList insertObject:@" " atIndex:0];
         }
         
         self.groupList = groupList;

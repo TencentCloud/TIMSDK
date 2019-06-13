@@ -7,26 +7,27 @@
 //
 
 #import "TFriendProfileController.h"
-#import "TRichMenuCell.h"
+#import "TCommonTextCell.h"
+#import "TCommonSwitchCell.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "THeader.h"
 #import "TTextEditController.h"
-#import "KVOController/KVOController.h"
 #import "TIMFriendshipManager.h"
 #import "ChatViewController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
+#import "TUIKit.h"
 
-
-@TCServiceRegister(TFriendProfileControllerServiceProtocol, TFriendProfileController)
+@TCServiceRegister(TUIFriendProfileControllerServiceProtocol, TFriendProfileController)
 
 @interface TFriendProfileController ()
 {
     TIMFriend *_friendProfile;
 }
-@property NSArray *dataList;
+@property NSArray<NSArray *> *dataList;
 @property BOOL isInBlackList;
 @property BOOL modified;
+@property TIMUserProfile *profile;
 @end
 
 @implementation TFriendProfileController
@@ -52,13 +53,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
+       
     [[TIMFriendshipManager sharedInstance] getBlackList:^(NSArray<TIMFriend *> *friends) {
         for (TIMFriend *friend in friends) {
             if ([friend.identifier isEqualToString:self.friendProfile.identifier])
@@ -70,71 +65,115 @@
         [self loadData];
     } fail:nil];
     
-
+    self.profile = self.friendProfile.profile;
     
-    [self.tableView registerClass:[TRichMenuCell class] forCellReuseIdentifier:kRichMenuCellReuseIdentifier];
+    [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"TextCell"];
+    [self.tableView registerClass:[TCommonSwitchCell class] forCellReuseIdentifier:@"SwitchCell"];
+    [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"CardCell"];
+    [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
+
+    self.title = @"详细资料";
 }
 
 - (void)loadData
 {
-    @mm_weakify(self)
     NSMutableArray *list = @[].mutableCopy;
     [list addObject:({
-        TRichMenuCellData *data = TRichMenuCellData.new;
-        data.type = ERichCell_Text;
-        data.desc = @"昵称";
-        data.value = self.friendProfile.profile.nickname;
-        if (data.value.length == 0)
-        {
-            data.value = @"无";
-        }
-        data;
+        NSMutableArray *inlist = @[].mutableCopy;
+        [inlist addObject:({
+            TUIProfileCardCellData *personal = [[TUIProfileCardCellData alloc] init];
+            personal.identifier = self.profile.identifier;
+            personal.avatarImage = DefaultAvatarImage;
+            personal.name = [self.profile showName];
+            personal.signature = [self.profile showSignature];
+            personal.reuseId = @"CardCell";
+            personal;
+        })];
+        inlist;
     })];
+    
     [list addObject:({
-        TRichMenuCellData *data = TRichMenuCellData.new;
-        data.type = ERichCell_TextNext;
-        data.desc = @"备注名";
-        data.value = self.friendProfile.remark;
-        if (data.value.length == 0)
-        {
-            data.value = @"无";
-        }
-        data.onSelectAction = ^(TRichMenuCellData *menu, TRichMenuCell *cell) {
-            @mm_strongify(self);
-            TTextEditController *vc = [[TTextEditController alloc] initWithText:self.friendProfile.remark];
-            vc.title = @"修改备注";
-            vc.textValue = self.friendProfile.remark;
-            [self.navigationController pushViewController:vc animated:YES];
-            [self.KVOControllerNonRetaining observe:vc keyPath:@"textValue" options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-               self.modified = YES;
-                [[TIMFriendshipManager sharedInstance] modifyFriend:self.friendProfile.identifier
-                                                             values:@{TIMFriendTypeKey_Remark: change[NSKeyValueChangeNewKey]}
-                                                               succ:^{
-                                                                   self.friendProfile.remark = change[NSKeyValueChangeNewKey];
-                                                                   [self loadData];
-                                                               } fail:nil];
-            }];
-        };
-        data;
-    })];
-    [list addObject:({
-        TRichMenuCellData *data = TRichMenuCellData.new;
-        data.type = ERichCell_Switch;
-        data.desc = @"加入黑名单";
-        data.switchValue = self.isInBlackList;
-        data.onSwitchAction = ^(TRichMenuCellData *menu, TRichMenuCell *cell) {
-            @mm_strongify(self)
-            if (cell.onSwitch.on) {
-                [[TIMFriendshipManager sharedInstance] addBlackList:@[self.friendProfile.identifier] succ:^(NSArray<TIMFriendResult *> *results) {
-                    menu.switchValue = YES;
-                } fail:nil];
-            } else {
-                [[TIMFriendshipManager sharedInstance] deleteBlackList:@[self.friendProfile.identifier] succ:^(NSArray<TIMFriendResult *> *results) {
-                    menu.switchValue = NO;
-                } fail:nil];
+        NSMutableArray *inlist = @[].mutableCopy;
+        [inlist addObject:({
+            TCommonTextCellData *data = TCommonTextCellData.new;
+            data.key = @"备注名";
+            data.value = self.friendProfile.remark;
+            if (data.value.length == 0)
+            {
+                data.value = @"无";
             }
-        };
-        data;
+            data.showAccessory = YES;
+            data.cselector = @selector(onChangeRemark:);
+            data.reuseId = @"TextCell";
+            data;
+        })];
+        [inlist addObject:({
+            TCommonSwitchCellData *data = TCommonSwitchCellData.new;
+            data.title = @"加入黑名单";
+            data.on = self.isInBlackList;
+            data.cswitchSelector =  @selector(onChangeBlackList:);
+            data.reuseId = @"SwitchCell";
+            data;
+        })];
+        inlist;
+    })];
+    
+    [list addObject:({
+        NSMutableArray *inlist = @[].mutableCopy;
+        [inlist addObject:({
+            TCommonTextCellData *data = TCommonTextCellData.new;
+            data.key = @"所在地";
+            data.value = [self.friendProfile.profile showLocation];
+            data.reuseId = @"TextCell";
+            data;
+        })];
+        [inlist addObject:({
+            TCommonTextCellData *data = TCommonTextCellData.new;
+            data.key = @"生日";
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.dateFormat = @"YYYY年M月d日";
+            if ([self.friendProfile.profile showBirthday])
+                data.value = [formatter stringFromDate:[self.friendProfile.profile showBirthday]];
+            else
+                data.value = @"无";
+            data.reuseId = @"TextCell";
+            data;
+        })];
+        inlist;
+    })];
+    [list addObject:({
+        NSMutableArray *inlist = @[].mutableCopy;
+        [inlist addObject:({
+            TCommonSwitchCellData *data = TCommonSwitchCellData.new;
+            data.title = @"置顶聊天";
+            if ([[[TUILocalStorage sharedInstance] topConversationList] containsObject:self.friendProfile.identifier]) {
+                data.on = YES;
+            }
+            data.cswitchSelector =  @selector(onTopMostChat:);
+            data.reuseId = @"SwitchCell";
+            data;
+        })];
+        inlist;
+    })];
+    [list addObject:({
+        NSMutableArray *inlist = @[].mutableCopy;
+        [inlist addObject:({
+            TUIButtonCellData *data = TUIButtonCellData.new;
+            data.title = @"发送消息";
+            data.style = ButtonGreen;
+            data.cbuttonSelector = @selector(onSendMessage:);
+            data.reuseId = @"ButtonCell";
+            data;
+        })];
+        [inlist addObject:({
+            TUIButtonCellData *data = TUIButtonCellData.new;
+            data.title = @"删除好友";
+            data.style = ButtonRedText;
+            data.cbuttonSelector =  @selector(onDeleteFriend:);
+            data.reuseId = @"ButtonCell";
+            data;
+        })];
+        inlist;
     })];
     
     self.dataList = list;
@@ -142,80 +181,60 @@
 }
 
 #pragma mark - Table view data source
+- (void)onChangeBlackList:(TCommonSwitchCell *)cell
+{
+    if (cell.switcher.on) {
+        [[TIMFriendshipManager sharedInstance] addBlackList:@[self.friendProfile.identifier] succ:^(NSArray<TIMFriendResult *> *results) {
+        } fail:nil];
+    } else {
+        [[TIMFriendshipManager sharedInstance] deleteBlackList:@[self.friendProfile.identifier] succ:^(NSArray<TIMFriendResult *> *results) {
+        } fail:nil];
+    }
+}
+- (void)onChangeRemark:(TCommonTextCell *)cell
+{
+    TTextEditController *vc = [[TTextEditController alloc] initWithText:self.friendProfile.remark];
+    vc.title = @"修改备注";
+    vc.textValue = self.friendProfile.remark;
+    [self.navigationController pushViewController:vc animated:YES];
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    @weakify(self)
+    [[RACObserve(vc, textValue) skip:1] subscribeNext:^(NSString *value) {
+        @strongify(self)
+        self.modified = YES;
+        [[TIMFriendshipManager sharedInstance] modifyFriend:self.friendProfile.identifier
+                                                     values:@{TIMFriendTypeKey_Remark: value}
+                                                       succ:^{
+                                                           self.friendProfile.remark = value;
+                                                           [self loadData];
+                                                       } fail:nil];
+    }];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.dataList.count;
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.dataList[section].count;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    TRichMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:kRichMenuCellReuseIdentifier forIndexPath:indexPath];
- 
-    cell.data = self.dataList[indexPath.row];
+    
+    TCommonCellData *data = self.dataList[indexPath.section][indexPath.row];
+    TCommonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
+    [cell fillWithData:data];
  
     return cell;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    UITableViewHeaderFooterView *header = [[UITableViewHeaderFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.mm_w, 120)];
-    UIImageView *avatarView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    [header addSubview:avatarView];
-    if (self.friendProfile.profile.faceURL) {
-        [avatarView sd_setImageWithURL:[NSURL URLWithString:self.friendProfile.profile.faceURL] placeholderImage:[UIImage imageNamed:TUIKitResource(@"default_head")]];
-    } else {
-        [avatarView setImage:[UIImage imageNamed:TUIKitResource(@"default_head")]];
-    }
-    avatarView.layer.cornerRadius = 40;
-    avatarView.layer.masksToBounds = YES;
-    avatarView.mm_width(80).mm_height(80).mm_center();
-    
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
-    [header addSubview:label];
-    label.textAlignment = NSTextAlignmentCenter;
-    label.mm_width(header.mm_w).mm_top(avatarView.mm_maxY+10).mm_height(20);
-    label.text = _friendProfile.identifier;
-    label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
-
-    return header;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 160;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    UITableViewHeaderFooterView *footer = [[UITableViewHeaderFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.mm_w, 80)];
-    
-    UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [footer addSubview:btn1];
-    [btn1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [btn1 setTitle:@"删除好友" forState:UIControlStateNormal];
-    [btn1 setBackgroundColor:[UIColor redColor]];
-    [btn1 addTarget:self action:@selector(onDeleteFriend) forControlEvents:UIControlEventTouchUpInside];
-    btn1.mm_width(footer.mm_w/2-20).mm_height(48).mm_top(20).mm__centerX(footer.mm_w/4);
-
-    UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [footer addSubview:btn2];
-    [btn2 setTitle:@"发送消息" forState:UIControlStateNormal];
-    [btn2 setBackgroundColor:[UIColor blueColor]];
-    [btn2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    btn2.mm_width(footer.mm_w/2-20).mm_height(48).mm_top(20).mm__centerX(footer.mm_w/4*3);
-    [btn2 addTarget:self action:@selector(onSendMessage) forControlEvents:UIControlEventTouchUpInside];
-    return footer;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return 80;
+    TCommonCellData *data = self.dataList[indexPath.section][indexPath.row];
+    return [data heightOfWidth:Screen_Width];
 }
      
-- (void)onDeleteFriend
+- (void)onDeleteFriend:(id)sender
 {
     [[TIMFriendshipManager sharedInstance] deleteFriends:@[self.friendProfile.identifier] delType:TIM_FRIEND_DEL_BOTH succ:^(NSArray<TIMFriendResult *> *results) {
         TIMFriendResult *result = results.firstObject;
@@ -228,15 +247,23 @@
     }];
 }
 
-- (void)onSendMessage
+- (void)onSendMessage:(id)sender
 {
-    TConversationCellData *data = [[TConversationCellData alloc] init];
+    TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
     data.convId = self.friendProfile.identifier;
-    data.convType = TConv_Type_C2C;
-    data.title = self.friendProfile.identifier;
+    data.convType = TIM_C2C;
+    data.title = [self.friendProfile.profile showName];
     ChatViewController *chat = [[ChatViewController alloc] init];
-    chat.conversation = data;
+    chat.conversationData = data;
     [self.navigationController pushViewController:chat animated:YES];
 }
 
+- (void)onTopMostChat:(TCommonSwitchCell *)cell
+{
+    if (cell.switcher.on) {
+        [[TUILocalStorage sharedInstance] addTopConversation:self.friendProfile.identifier];
+    } else {
+        [[TUILocalStorage sharedInstance] removeTopConversation:self.friendProfile.identifier];
+    }
+}
 @end

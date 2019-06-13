@@ -11,10 +11,11 @@
 @import ImSDK;
 
 @interface TUIKit () <TIMRefreshListener, TIMMessageListener, TIMMessageRevokeListener, TIMUploadProgressListener, TIMUserStatusListener, TIMConnListener, TIMFriendshipListener>
-@property (nonatomic, strong) TUIKitConfig *config;
+@property (nonatomic) TUINetStatus netStatus;
 @end
 
 @implementation TUIKit
+
 + (instancetype)sharedInstance
 {
     static TUIKit *instance = nil;
@@ -25,10 +26,17 @@
     return instance;
 }
 
-- (void)initKit:(NSInteger)sdkAppId accountType:(NSString *)accountType withConfig:(TUIKitConfig *)config
+- (instancetype)init
 {
-    _config = config;
-    
+    self = [super init];
+    if (self) {
+        _config = [TUIKitConfig defaultConfig];
+    }
+    return self;
+}
+
+- (void)setupWithAppId:(NSInteger)sdkAppId
+{
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if(![fileManager fileExistsAtPath:TUIKit_Image_Path]){
         [fileManager createDirectoryAtPath:TUIKit_Image_Path withIntermediateDirectories:YES attributes:nil error:nil];
@@ -48,7 +56,6 @@
     
     TIMSdkConfig *sdkConfig = [[TIMSdkConfig alloc] init];
     sdkConfig.sdkAppId = (int)sdkAppId;
-//    sdkConfig.accountType = accountType;
     sdkConfig.dbPath = TUIKit_DB_Path;
     sdkConfig.connListener = self;
     [[TIMManager sharedInstance] initSdk:sdkConfig];
@@ -62,39 +69,6 @@
     [[TIMManager sharedInstance] setUserConfig:userConfig];
     
     [[TIMManager sharedInstance] addMessageListener:self];
-    
-}
-
-
-- (void)loginKit:(NSString *)identifier userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail
-{
-    TIMLoginParam *param = [[TIMLoginParam alloc] init];
-    param.identifier = identifier;
-    param.userSig = sig;
-    [[TIMManager sharedInstance] login:param succ:^{
-        [[TIMGroupManager sharedInstance] getReciveMessageOpt:@"1872071" succ:^(TIMGroupReceiveMessageOpt opt) {
-            NSLog(@"");
-        } fail:^(int code, NSString *msg) {
-            
-        }];
-        succ();
-    } fail:^(int code, NSString *msg) {
-        // 收到被踢的通知后再次主动登录下
-        if (code == 6208) {
-            [[TIMManager sharedInstance] login:param succ:^{
-                succ();
-            } fail:^(int code, NSString *msg) {
-                fail(code,msg);
-            }];
-        }else{
-            fail(code,msg);
-        }
-    }];
-}
-
-- (void)logoutKit:(TSucc)succ fail:(TFail)fail
-{
-    [[TIMManager sharedInstance] logout:succ fail:fail];
 }
 
 - (void)onRefresh
@@ -144,22 +118,28 @@
 
 - (void)onConnSucc
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMConnListener object:[NSNumber numberWithInt:TNet_Status_Succ]];
+    self.netStatus = TNet_Status_Succ;
 }
 
 - (void)onConnFailed:(int)code err:(NSString*)err
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMConnListener object:[NSNumber numberWithInt:TNet_Status_ConnFailed]];
+    self.netStatus = TNet_Status_ConnFailed;
 }
 
 - (void)onDisconnect:(int)code err:(NSString*)err
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMConnListener object:[NSNumber numberWithInt:TNet_Status_Disconnect]];
+    self.netStatus = TNet_Status_Disconnect;
 }
 
 - (void)onConnecting
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMConnListener object:[NSNumber numberWithInt:TNet_Status_Connecting]];
+    self.netStatus = TNet_Status_ConnFailed;
+}
+
+- (void)setNetStatus:(TUINetStatus)netStatus
+{
+    _netStatus = netStatus;
+    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMConnListener object:[NSNumber numberWithInt:netStatus]];
 }
 
 - (void)onAddFriends:(NSArray *)users
@@ -212,13 +192,4 @@
     return array;
 }
 
-- (TUIKitConfig *)getConfig
-{
-    return _config;
-}
-
-- (NSString *)getSDKVersion
-{
-    return [TIMManager sharedInstance].GetVersion;
-}
 @end

@@ -8,6 +8,7 @@
 #import "TCommonPendencyCell.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "THeader.h"
+#import "TUIKit.h"
 
 @implementation TCommonPendencyCell
 
@@ -15,7 +16,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     
-    self.avatarView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:TUIKitResource(@"default_head")]];
+    self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
     [self.contentView addSubview:self.avatarView];
     self.avatarView.mm_width(70).mm_height(70).mm__centerY(43).mm_left(12);
     
@@ -81,16 +82,23 @@
 
 - (void)agreeClick
 {
-    if (self.pendencyData.cagreeSelector) {
+    if (self.pendencyData.cbuttonSelector) {
         UIViewController *vc = self.mm_viewController;
-        if ([vc respondsToSelector:self.pendencyData.cagreeSelector]) {
+        if ([vc respondsToSelector:self.pendencyData.cbuttonSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            [vc performSelector:self.pendencyData.cagreeSelector withObject:self];
+            [vc performSelector:self.pendencyData.cbuttonSelector withObject:self];
 #pragma clang diagnostic pop
         }
     }
          
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if ((touch.view == self.agreeButton)) {
+        return NO;
+    }
+    return YES;
+}
 @end

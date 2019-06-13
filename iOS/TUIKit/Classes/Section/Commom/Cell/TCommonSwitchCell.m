@@ -24,35 +24,17 @@
 
 @implementation TCommonSwitchCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-    
-    // Configure the view for the selected state
-}
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])
     {
-        _titleLabel = [[UILabel alloc] init];
-        _titleLabel.adjustsFontSizeToFitWidth = YES;
-        _titleLabel.font = kRichCellTextFont;
-        [self.contentView addSubview:_titleLabel];
-        _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
-        
+        _titleLabel = self.textLabel;
+
         _switcher = [[UISwitch alloc] init];
         self.accessoryView = _switcher;
         [self.contentView addSubview:_switcher];
         [_switcher addTarget:self action:@selector(switchClick) forControlEvents:UIControlEventValueChanged];
-        
-        _titleLabel.mm_width(120).mm_height(self.contentView.mm_h).mm__centerY(self.contentView.mm_h / 2);
-        
-        _titleLabel.textColor = [UIColor blackColor];
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -69,7 +51,7 @@
     _titleLabel.text = switchData.title;
     [_switcher setOn:switchData.isOn];
     
-    _titleLabel.mm_left(switchData.margin);
+    _titleLabel.mm_sizeToFit().mm_left(switchData.margin).mm__centerY(self.contentView.mm_h / 2);
 }
 
 - (void)switchClick

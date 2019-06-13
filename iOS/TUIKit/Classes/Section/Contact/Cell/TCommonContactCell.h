@@ -1,5 +1,5 @@
 //
-//  TCommonFriendCell.h
+//  TCommonContactCell.h
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/5.
