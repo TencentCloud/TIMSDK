@@ -8,11 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define sdkAppid          1400187352
-#define sdkAccountType    @"36862"
+//快速跑通 demo 请参考官网文档：https://cloud.tencent.com/document/product/269/32674
+#define sdkAppid    123456789  //替换成您在控制台生成的 sdkAppid
 
 #define identifier1 @"user_mac_1"
-#define userSig1    @"eJw9j11PgzAUhv-K0mvjWgoyTXaxAcbpDFEceNcUWrCZQC2FDYz-XWDpTs7V*yTvxy-42Ee3NMvqttJE95KDhwWA4GYxg46rRtTVpFkQOciCtkENOxIqpWATRDaEaOVix7piUUzgNXjzdo8DfEr8w9ZXWc2fz0WcREMaB1j27MdSnT*kS695Sbo4CDdicwhwUaZV*56X-Sct78PQdSlTpx1cfUXLLfRydAy-T-usK9ZrEycYr7TIBVdTattwRUqaEWT43JRQTbCaCxtdi3JejJw7aGNnfEP4WQrFCc31xXPcPh74*wfZW1rz"
+#define userSig1    @""
 
 #define identifier2 @"user_mac_2"
 #define userSig2    @""
