@@ -88,7 +88,7 @@
  *
  *  1. 仅 C2C 和 GROUP 会话有效、onlineMessage 无效、AVChatRoom 和 BChatRoom 无效。
  *  2. 可以在 TIMUserConfig 设置的 TIMMessageRevokeListener 监听 onRevokeMessage 消息撤回回调。
- *  3. 遍历本地消息列表，如果消息的 respondsToLocator 函数返回 YES，则是对应的消息，您可以在 UI 上执行删除操作，具体可以参考 TMessageController.h 里面的 onRevokeMessage 回调的实现。
+ *  3. 遍历本地消息列表，如果消息的 respondsToLocator 函数返回 YES，则是对应的消息，您可以在 UI 上执行删除操作，具体可以参考 TUIMessageController.h 里面的 onRevokeMessage 回调的实现。
  *
  *  @param msg   被撤回的消息
  *  @param succ  成功时回调

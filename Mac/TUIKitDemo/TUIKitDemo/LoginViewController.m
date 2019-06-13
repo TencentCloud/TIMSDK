@@ -35,7 +35,7 @@
     [[TIMManager sharedInstance] initSdk:sdkConfig];
     
     NSString *version = [[TIMManager sharedInstance] GetVersion];
-    NSLog(@"version is  %@",version);
+    NSLog(@"sdk version is  %@",version);
 }
 
 - (IBAction)login:(NSButton *)sender {

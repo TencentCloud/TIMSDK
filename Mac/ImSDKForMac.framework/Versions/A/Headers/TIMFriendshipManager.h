@@ -61,7 +61,7 @@
 - (int)getUsersProfile:(NSArray<NSString *> *)identifiers forceUpdate:(BOOL)forceUpdate succ:(TIMUserProfileArraySucc)succ fail:(TIMFail)fail;
 
 /**
- *  在缓存中查询的资料
+ *  在缓存中查询用户的资料
  *
  *  @praram identifier 用户id，非好友的用户也可以
  *
@@ -78,6 +78,25 @@
  *  @return 0 发送请求成功
  */
 -(int)getFriendList:(TIMFriendArraySucc)succ fail:(TIMFail)fail;
+
+
+/**
+ *  在缓存中查询用户的关系链数据
+ *
+ *  @praram identifier 用户id
+ *
+ *  @return 返回缓存的关系链数据，未找到返回nil
+ *  @note 缓存数据来自于上一次调用getFriendList，请确保已调用了获取好友列表方法
+ */
+- (TIMFriend *)queryFriend:(NSString *)identifier;
+
+/**
+ *  获取缓存中的关系链列表
+ *
+ *  @return 返回缓存的关系链数据
+ *  @note 缓存数据来自于上一次调用getFriendList，请确保已调用了获取好友列表方法
+ */
+- (NSArray<TIMFriend *> *)queryFriendList;
 
 /**
  *  检查指定用户的好友关系

@@ -20,7 +20,7 @@
 		CE43649821F865A00070D6C9 /* ConversationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43649621F865A00070D6C9 /* ConversationController.m */; };
 		CE43649921F865A00070D6C9 /* ConversationController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE43649721F865A00070D6C9 /* ConversationController.xib */; };
 		CE9C8789228E5062001D1AF2 /* default_head@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C8786228E5062001D1AF2 /* default_head@2x.png */; };
-		CE9C878A228E5062001D1AF2 /* more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C8787228E5062001D1AF2 /* more@3x.png */; };
+		CE9C878A228E5062001D1AF2 /* more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C8787228E5062001D1AF2 /* more@2x.png */; };
 		CE9C878B228E5062001D1AF2 /* default_group@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C8788228E5062001D1AF2 /* default_group@2x.png */; };
 		CEEBCEE121FEECE500A82B0D /* ImSDKForMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */; };
 		CEEBCEE221FEECE500A82B0D /* ImSDKForMac.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -63,7 +63,7 @@
 		CE43649621F865A00070D6C9 /* ConversationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationController.m; sourceTree = "<group>"; };
 		CE43649721F865A00070D6C9 /* ConversationController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationController.xib; sourceTree = "<group>"; };
 		CE9C8786228E5062001D1AF2 /* default_head@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default_head@2x.png"; sourceTree = "<group>"; };
-		CE9C8787228E5062001D1AF2 /* more@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@3x.png"; sourceTree = "<group>"; };
+		CE9C8787228E5062001D1AF2 /* more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@2x.png"; sourceTree = "<group>"; };
 		CE9C8788228E5062001D1AF2 /* default_group@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default_group@2x.png"; sourceTree = "<group>"; };
 		CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDKForMac.framework; path = ../../ImSDKForMac.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -129,7 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				CE9C8786228E5062001D1AF2 /* default_head@2x.png */,
-				CE9C8787228E5062001D1AF2 /* more@3x.png */,
+				CE9C8787228E5062001D1AF2 /* more@2x.png */,
 				CE9C8788228E5062001D1AF2 /* default_group@2x.png */,
 			);
 			path = source;
@@ -200,7 +200,7 @@
 			files = (
 				CE43649921F865A00070D6C9 /* ConversationController.xib in Resources */,
 				CE43635B21F70A040070D6C9 /* Assets.xcassets in Resources */,
-				CE9C878A228E5062001D1AF2 /* more@3x.png in Resources */,
+				CE9C878A228E5062001D1AF2 /* more@2x.png in Resources */,
 				CE43635E21F70A040070D6C9 /* Main.storyboard in Resources */,
 				CE9C8789228E5062001D1AF2 /* default_head@2x.png in Resources */,
 				CE9C878B228E5062001D1AF2 /* default_group@2x.png in Resources */,
