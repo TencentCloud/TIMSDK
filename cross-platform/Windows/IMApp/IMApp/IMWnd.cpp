@@ -409,7 +409,7 @@ void CIMWnd::InitWindow() {
 
     m_SdkAppIdCombo = static_cast<CComboUI*>(m_pm.FindControl(_T("sdkappid_combo")));
     CListLabelElementUI* ele = new CListLabelElementUI;
-    ele->SetText(Str2TStr(info_.sdkappid).c_str());
+    ele->SetText(Str2TStr(std::to_string(info_.sdkappid)).c_str());
     m_SdkAppIdCombo->Add(ele);
     m_SdkAppIdCombo->SelectItem(0);
 

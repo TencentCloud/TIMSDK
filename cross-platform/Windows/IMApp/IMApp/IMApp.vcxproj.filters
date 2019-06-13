@@ -60,6 +60,9 @@
     <ClCompile Include="TestApi.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="TestUserSigGenerator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -105,6 +108,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="TestApi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TestUserSigGenerator.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
