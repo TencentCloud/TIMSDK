@@ -12,4 +12,13 @@
         <item name="android:windowDrawsSystemBarBackgrounds">false</item>
     </style>
 
+    <!--解决冷启动白屏问题-->
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
 </resources>

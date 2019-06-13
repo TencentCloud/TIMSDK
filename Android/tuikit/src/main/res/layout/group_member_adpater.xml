@@ -5,21 +5,23 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.uikit.common.widget.ShadeImageView
+    <com.tencent.qcloud.tim.uikit.component.gatherimage.ShadeImageView
         android:id="@+id/group_member_icon"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="10dp"
+        android:layout_width="@dimen/item_width"
+        android:layout_height="@dimen/item_width"
+        android:layout_margin="5dp"
         android:scaleType="centerInside"
         android:src="@drawable/default_user_icon" />
 
 
     <TextView
         android:id="@+id/group_member_name"
-        android:layout_width="60dp"
+        android:layout_width="@dimen/item_width"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="3dp"
         android:gravity="center"
         android:lines="1"
+        android:maxEms="3"
+        android:ellipsize="end"
         android:textColor="@color/text_color_gray" />
 </LinearLayout>

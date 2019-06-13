@@ -52,7 +52,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/arrow_left" />
+            android:src="@drawable/arrow_right" />
 
     </LinearLayout>
 

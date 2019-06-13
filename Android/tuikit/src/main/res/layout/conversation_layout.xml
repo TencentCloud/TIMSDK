@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
+        android:id="@+id/conversation_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line"/>
+
+    <com.tencent.qcloud.tim.uikit.modules.conversation.ConversationListLayout
+        android:id="@+id/conversation_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/item_split_color"
+        android:dividerHeight="1px"
+        android:listSelector="#00000000"/>
+
+</LinearLayout>

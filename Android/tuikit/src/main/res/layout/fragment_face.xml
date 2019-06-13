@@ -13,7 +13,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp" />
 
-    <com.tencent.qcloud.uikit.common.component.face.EmojiIndicatorView
+    <com.tencent.qcloud.tim.uikit.component.face.EmojiIndicatorView
         android:id="@+id/face_indicator"
         android:layout_width="match_parent"
         android:layout_height="20dp"
@@ -27,7 +27,7 @@
         android:orientation="horizontal">
 
 
-        <com.tencent.qcloud.uikit.common.component.face.FaceGroupIcon
+        <com.tencent.qcloud.tim.uikit.component.face.FaceGroupIcon
             android:id="@+id/face_first_set"
             android:layout_width="70dp"
             android:layout_height="match_parent" />

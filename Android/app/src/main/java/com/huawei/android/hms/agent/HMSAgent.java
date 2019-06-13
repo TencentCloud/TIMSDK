@@ -6,7 +6,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
 
 import com.huawei.android.hms.agent.common.ActivityMgr;
 import com.huawei.android.hms.agent.common.ApiClientMgr;
@@ -30,6 +29,7 @@ import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.huawei.android.hms.agent.push.handler.QueryAgreementHandler;
 import com.huawei.hms.api.HuaweiApiAvailability;
 import com.huawei.hms.api.HuaweiApiClient;
+import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 /**
  * HMSAgent 封装入口类。 提供了HMS SDK 功能的封装，使开发者更聚焦业务的处理。
@@ -142,7 +142,7 @@ public final class HMSAgent implements INoProguard {
         if (sdkMainVerL != agentMainVerL) {
             String errMsg = "error: HMSAgent major version code ("+agentMainVerL+") does not match HMSSDK major version code ("+sdkMainVerL+")";
             HMSAgentLog.e(errMsg);
-            Toast.makeText(context, errMsg, Toast.LENGTH_LONG).show();
+            ToastUtil.toastLongMessage(errMsg);
             return false;
         }
         return true;

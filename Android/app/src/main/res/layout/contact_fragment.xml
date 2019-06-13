@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.tencent.qcloud.uipojo.contact.ContactFragment">
+    android:layout_height="match_parent">
 
-
-    <TextView
+    <com.tencent.qcloud.tim.uikit.modules.contact.ContactLayout
+        android:id="@+id/contact_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/main_bg_color"
-        android:gravity="center"
-        android:text="敬请期待"
-        android:textColor="#000"
-        android:textSize="16sp" />
+        android:layout_height="match_parent" />
 
 
-</RelativeLayout>
+</LinearLayout>

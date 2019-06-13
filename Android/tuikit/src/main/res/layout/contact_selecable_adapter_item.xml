@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/selectable_contact_item"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="60dp"
     android:background="#fcfcfc"
+    android:focusable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="15dp">
+    android:paddingLeft="10dp">
 
     <CheckBox
         android:id="@+id/contact_check_box"
@@ -16,22 +18,39 @@
         android:layout_marginRight="10dp"
         android:button="@drawable/checkbox_selector"
         android:clickable="false"
+        android:focusable="false"
         android:visibility="gone" />
 
     <ImageView
         android:id="@+id/ivAvatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/item_width"
+        android:layout_height="@dimen/item_height"
         android:clickable="false"
-        tools:src="@drawable/friend" />
+        android:focusable="false"
+        android:src="@drawable/default_user_icon" />
 
-    <TextView
-        android:id="@+id/tvCity"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="false"
-        android:gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:textColor="@color/text_color_gray"
-        tools:text="安徽" />
+        android:paddingLeft="15dp">
+
+        <TextView
+            android:id="@+id/tvCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:textColor="@color/text_color_gray"
+            tools:text="默认好友" />
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/main_bg_color" />
+    </RelativeLayout>
+
 </LinearLayout>

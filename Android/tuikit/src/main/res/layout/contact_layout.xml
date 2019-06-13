@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
+        android:id="@+id/contact_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line"/>
+
+    <com.tencent.qcloud.tim.uikit.modules.contact.ContactListView
+        android:id="@+id/contact_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

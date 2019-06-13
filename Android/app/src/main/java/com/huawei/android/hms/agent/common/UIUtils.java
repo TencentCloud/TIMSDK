@@ -15,13 +15,6 @@ public final class UIUtils {
     public static boolean isActivityFullscreen(Activity activity)
     {
         WindowManager.LayoutParams attrs = activity.getWindow().getAttributes();
-        if ((attrs.flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return (attrs.flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
     }
 }

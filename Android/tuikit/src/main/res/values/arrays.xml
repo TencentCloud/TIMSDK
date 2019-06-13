@@ -1,80 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 
-    <string-array name="provinces">
-        <item>广东</item>
-        <item>北京</item>
-        <item>福建</item>
-        <item>浙江</item>
-        <item>山东</item>
-        <item>江苏</item>
-        <item>河南</item>
-        <item>安徽</item>
-        <item>123</item>
-        <item>重庆</item>
-        <item>湖北</item>
-        <item>湖南</item>
-        <item>河北</item>
-        <item>四川</item>
-        <item>天津</item>
-        <item>吉林</item>
-        <item>黑龙江</item>
-        <item>江西</item>
-        <item>辽宁</item>
-        <item>内蒙古</item>
-        <item>宁夏</item>
-        <item>青海</item>
-        <item>山西</item>
-        <item>陕西</item>
-        <item>上海</item>
-        <item>新疆</item>
-        <item>西藏</item>
-        <item>云南</item>
-        <item>甘肃</item>
-        <item>贵州</item>
-        <item>广西</item>
-        <item>海南</item>
-
-        <item>A</item>
-        <item>a</item>
-        <item>b</item>
-        <item>d</item>
-
-        <item>.a</item>
-        <item>;b</item>
-        <item>#c</item>
-        <item>d</item>
-
-        <item>ab</item>
-        <item>aa</item>
-    </string-array>
-    <string-array name="group_type">
-        <item>Private</item>
-        <item>Public</item>
-        <item>ChatRoom</item>
-    </string-array>
-    <string-array name="group_type_name">
-        <item>私有群</item>
-        <item>公开群</item>
-        <item>聊天室</item>
-    </string-array>
     <string-array name="group_join_type">
         <item>禁止加群</item>
         <item>管理员审批</item>
         <item>自动审批</item>
     </string-array>
 
-    <string-array name="contact">
-        <item>abcd</item>
-        <item>efgh</item>
-        <item>jack</item>
-        <item>tom</item>
-        <item>test</item>
-        <item>selina</item>
-        <item>well</item>
-        <item>kids</item>
-        <item>just</item>
-    </string-array>
     <string-array name="emoji_filter">
         <item>[龇牙]</item>
         <item>[调皮]</item>

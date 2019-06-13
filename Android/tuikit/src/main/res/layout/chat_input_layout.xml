@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#c2c2c2" />
+
+    <!--<com.tencent.qcloud.tim.uikit.modules.chat.area.ShortcutArea-->
+        <!--android:id="@+id/shortcut_area"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="gone"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="55dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/voice_input_switch"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/action_audio_selector" />
+
+        <EditText
+            android:id="@+id/chat_message_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/msg_editor_border"
+            android:maxHeight="120dp"
+            android:minHeight="30dp"
+            android:textCursorDrawable="@drawable/my_cursor"
+            android:padding="5dp" />
+
+        <Button
+            android:id="@+id/chat_voice_input"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/voice_btn_selector"
+            android:text="按住说话"
+            android:textColor="@color/text_color_gray"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/face_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/action_face_selector" />
+
+        <ImageView
+            android:id="@+id/more_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/action_more_selector" />
+
+        <Button
+            android:id="@+id/send_btn"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:background="@drawable/message_send_border"
+            android:text="@string/send"
+            android:textColor="#fff"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#c2c2c2" />
+
+    <RelativeLayout
+        android:id="@+id/more_groups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+</LinearLayout>

@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/page_margin"
     android:paddingRight="@dimen/page_margin">
 
-    <com.tencent.qcloud.uikit.common.widget.ShadeImageView
+    <com.tencent.qcloud.tim.uikit.component.gatherimage.ShadeImageView
         android:id="@+id/group_apply_member_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -43,8 +43,8 @@
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/green_btn_bg"
-        android:onClick="startSession"
+        android:background="@color/bg_positive_btn"
+        android:onClick="startConversation"
         android:text="@string/accept"
         android:textColor="#fff" />
 
@@ -53,8 +53,8 @@
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/gray_btn_bg"
-        android:onClick="startSession"
+        android:background="@color/bg_negative_btn"
+        android:onClick="startConversation"
         android:text="@string/refuse"
         android:textColor="#fff" />
 </LinearLayout>

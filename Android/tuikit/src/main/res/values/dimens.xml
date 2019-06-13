@@ -1,24 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  Copyright 2017 Zhihu Inc.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  -->
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="chat_time_zone_height">18dp</dimen>
-    <dimen name="chat_time_text_size">11sp</dimen>
     <dimen name="chat_time_margin">13.33dp</dimen>
-    <dimen name="chat_user_icon_size">36dp</dimen>
 
     <dimen name="grid_expected_size">120dp</dimen>
     <dimen name="media_grid_size">48dp</dimen>
@@ -27,19 +10,26 @@
     <dimen name="page_title_height">45dp</dimen>
     <dimen name="page_margin">10dp</dimen>
 
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">10dp</dimen>
+    // 按钮通用
+    <dimen name="btn_margin_top">36dp</dimen>
+    <dimen name="btn_margin_left">12dp</dimen>
+    <dimen name="btn_margin_right">12dp</dimen>
+    <dimen name="btn_margin_bottom">8dp</dimen>
+    <dimen name="btn_margin_middle">10dp</dimen>
+    <dimen name="btn_padding_left">16dp</dimen>
+    <dimen name="btn_padding_right">16dp</dimen>
+
+    // 小按钮
+    <dimen name="btn_text_size">14dp</dimen>
+    <dimen name="btn_height">40dp</dimen>
+
+    // 大按钮
+    <dimen name="btn_text_size_large">18dp</dimen>
+    <dimen name="btn_height_large">50dp</dimen>
 
 
-    <!-- 顶部按钮栏高度 -->
-    <dimen name="pickerview_topbar_height">44dp</dimen>
+    // 列表头像
+    <dimen name="item_height">40dp</dimen>
+    <dimen name="item_width">40dp</dimen>
 
-    <!-- 顶部按钮padding -->
-    <dimen name="pickerview_topbar_padding">20dp</dimen>
-
-    <!-- 顶部按钮文字大小 -->
-    <dimen name="pickerview_topbar_btn_textsize">17sp</dimen>
-    <dimen name="title_bar_textsize">18sp</dimen>
-    <!-- 选项文字大小 -->
-    <dimen name="pickerview_textsize">20sp</dimen>
 </resources>

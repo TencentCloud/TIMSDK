@@ -8,8 +8,8 @@
     android:orientation="vertical">
 
 
-    <com.tencent.qcloud.uikit.business.chat.group.view.GroupMemberInvitePanel
-        android:id="@+id/group_member_invite_panel"
+    <com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInviteLayout
+        android:id="@+id/group_member_invite_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
