@@ -29,7 +29,7 @@ private:
 	* 进入云通信[控制台]( https://console.cloud.tencent.com/avc ) 创建应用，即可看到 SDKAppId，
 	* 它是腾讯云用于区分客户的唯一标识。
 	*/
-	const int _sdkAppId = 0;
+	const uint32_t _sdkAppId = 0;
 	
 	/**
 	*  签名过期时间，建议不要设置的过短
@@ -56,7 +56,9 @@ private:
 		
 public:
     static TestUserSigGenerator& instance();
-	
+
+    uint32_t getSdkAppId() const;
+
 	/**
 	* 计算 UserSig 签名
 	*

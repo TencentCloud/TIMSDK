@@ -45,7 +45,7 @@ typedef struct {
 }AccountInfo;
 
 typedef struct {
-    std::string sdkappid;
+    uint32_t sdkappid;
     std::vector<AccountInfo> accounts;
 }SdkAppInfo;
 

@@ -36,10 +36,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
     const char* version = TIMGetSDKVersion();
 
     SdkAppInfo appinfo;
-    appinfo.sdkappid = "12345678";  //写入您在腾讯云控制台云通信的应用SDKAPPID
+    appinfo.sdkappid = TestUserSigGenerator::instance().getSdkAppId();
     AccountInfo account;
-    account.userid = "user1";         //写入测试账号identifier
-    account.usersig = TestUserSigGenerator::instance().genTestUserSig(account.userid);   //写入上述第三步生成的usersig
+    account.userid = "user1";
+    account.usersig = TestUserSigGenerator::instance().genTestUserSig(account.userid);
     appinfo.accounts.push_back(account);
     account.userid = "user2";
     account.usersig = TestUserSigGenerator::instance().genTestUserSig(account.userid);

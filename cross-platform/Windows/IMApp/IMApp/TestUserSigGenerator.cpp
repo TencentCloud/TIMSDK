@@ -23,6 +23,11 @@ TestUserSigGenerator& TestUserSigGenerator::instance()
     return uniqueInstance;
 }
 
+uint32_t TestUserSigGenerator::getSdkAppId() const
+{
+    return _sdkAppId;
+}
+
 std::string TestUserSigGenerator::genTestUserSig(const std::string& userId)
 {
     std::string sig;
