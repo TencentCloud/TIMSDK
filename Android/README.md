@@ -17,7 +17,7 @@
 ## 3. 下载公私钥
 点击**下载公私钥**的链接，即可获得一个名为 **keys.zip** 的压缩包，解压后可以得到两个文件，即 public_key 和 private_key，用记事本打开 **private_key** 文件
 
-![](https://cdn.nlark.com/yuque/0/2019/png/367185/1560754603263-3d124499-78ea-4937-ba0d-7c34ef8b06d6.png#align=left&display=inline&height=1192&name=Snip20190613_29.png&originHeight=1192&originWidth=2526&size=956436&status=done&width=2526)
+![](https://cdn.nlark.com/yuque/0/2019/png/367185/1560754915512-fc218293-1316-445f-91aa-f7314ba23b30.png#align=left&display=inline&height=1788&name=Snip20190617_7.png&originHeight=1788&originWidth=3776&size=2105704&status=done&width=3776)
 
 
 
