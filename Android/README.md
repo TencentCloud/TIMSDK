@@ -17,7 +17,7 @@
 ## 3. 下载公私钥
 点击**下载公私钥**的链接，即可获得一个名为 **keys.zip** 的压缩包，解压后可以得到两个文件，即 public_key 和 private_key，用记事本打开 **private_key** 文件
 
-![](https://main.qcloudimg.com/raw/6be1ef4294a6a892834c998175ff5187.png)
+![](https://cdn.nlark.com/yuque/0/2019/png/367185/1560754603263-3d124499-78ea-4937-ba0d-7c34ef8b06d6.png#align=left&display=inline&height=1192&name=Snip20190613_29.png&originHeight=1192&originWidth=2526&size=956436&status=done&width=2526)
 
 
 
@@ -30,7 +30,7 @@
 - 虽然工程中默认配置了测试的 SDKAPPID ，但是您需要替换成您 step 1 中您自己的 SDKAPPID ，由于每个账号同时只能有一个端登录，你可以用多台手机来登录不同的账号，以便互相通信，
 
 - 在 /TIMSDK/Android/app/src/main/java/com/tencent/qcloud/tim/demo/utils/Constants.java 中替换您的 SDKAPPID。
-![](https://main.qcloudimg.com/raw/aeb37b0ca5f0d3f5c156149803d33a36.png)
+![](https://main.qcloudimg.com/raw/260d0bea33a644b519fd11d612df770b.png)
 
 - 在 step 3 中下载公私钥并打开 **private_key** 文件后，并将其中的所有内容拷贝到 **/TIMSDK/Android/app/src/main/java/com/tencent/qcloud/tim/demo/signature/GenerateTestUserSig.java** 文件中定义的常量 **PRIVATEKEY** 。
 ![](https://main.qcloudimg.com/raw/d9e6f60bbe4b6c23fa3886ab16a4afd3.png)
