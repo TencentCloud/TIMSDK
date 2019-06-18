@@ -1,44 +1,62 @@
 
-本文主要介绍如何快速地将腾讯云即时通信Demo工程运行起来，您只需参考如下步骤依次执行即可。
+本文主要介绍如何快速地运行云通信 IM Demo（Android）工程。
 
-## 1. 创建应用
-进入腾讯云通讯（IM）[控制台](https://console.cloud.tencent.com/avc)，会出现“应用列表”，单击“创建应用接入”，会出现下图的内容：
-![](https://main.qcloudimg.com/raw/27314e92cd2972a8eada8cfba4055ac6.png)
+## 1、创建应用
+1. 登录云通信 IM [控制台](https://console.cloud.tencent.com/avc)。
+ >?如果您已有应用，请记录其 SDKAppID 并 [配置应用](#step2)。
+ >
+2. 在【应用列表】页，单击【创建应用接入】。
+ ![](https://main.qcloudimg.com/raw/a7769d15f050286162b0cbcdadca5f03.png)
+3. 在【创建新应用】对话框中，填写新建应用的信息，单击【确认】。
+ 应用创建完成后，自动生成一个应用标识 SDKAppID，请记录 SDKAppID 信息。
+ ![](https://main.qcloudimg.com/raw/bf8fe4f38d782741a6e142c24648c9e0.png)
 
-创建应用后，腾讯云会给您的新应用分配一个应用标识：sdkappid，如下图：
-![](https://main.qcloudimg.com/raw/826b903373db7cff2adebec6fa3a40a8.png)
+## 2、配置应用
+1. 单击目标应用所在行的【应用配置】，进入应用详情页面。
+ ![](https://main.qcloudimg.com/raw/e41602a50754be9d478b9db84c0bcff2.png)
+2. 单击【帐号体系集成】右侧的【编辑】，配置**帐号管理员**信息，单击【保存】。
+ ![](https://main.qcloudimg.com/raw/2ad153a77fe6f838633d23a0c6a4dde1.png)
 
-## 2. 配置应用
-完成创建应用之后返回应用列表，单击相应应用的“应用配置”链接，在新页面中，找到当前页面的**帐号体系集成**部分，单击“编辑”链接：
-![](https://main.qcloudimg.com/raw/e3ce0ef527d2d4f8d0b3a0f69cefa78e.png)
+## 3、下载公私钥
 
->账号管理员可以随便填写，在使用云通讯后台的 REST API 发送消息时才会用到。
+1. 在控制台应用详情页面，单击【下载公私钥】，保存 **keys.zip** 压缩文件。
+ ![](https://main.qcloudimg.com/raw/c44938b9268d0ef76c68b8bf61689219.png)
+2. 解压 **keys.zip** 文件 ，获得 **private_key.txt** 和 **public_key.txt** 文件，其中 **private_key.txt** 即为私钥文件。
+ ![](https://main.qcloudimg.com/raw/ec89f5bb93d57de1acffa4e15786da11.png)
 
-## 3. 获取测试userSig
-点击**下载公私钥**的链接，即可获得一个名为 **keys.zip** 的压缩包，解压后可以得到两个文件，即 public_key 和 private_key，用记事本打开 **private_key** 文件，并将其中的内容拷贝到**开发辅助工具**的私钥文本输入框中。
+## 4、下载 Demo 源码
+从 [Github](https://github.com/tencentyun/TIMSDK/tree/master/Android) 下载云通信 IM Demo（Android）工程。
 
-其中：**identifier** 即为你的测试账号（也就是 userId），私钥为 private_key 文件里的文本内容，生成的签名就是**userSig**。identifier 和 userSig 是一一对应的关系。
+## 5、修改源码配置
+1. 使用 Android Studio （3.0以上的版本）打开源码工程。
+2. 打开 /TIMSDK/Android/app/src/main/java/com/tencent/qcloud/tim/demo/utils/Constants.java 文件，将工程中默认的 SDKAppID 替换成 [创建应用](#step1) 中获取的 SDKAppID。
+ ![](https://main.qcloudimg.com/raw/260d0bea33a644b519fd11d612df770b.png)
+3. 打开 /TIMSDK/Android/app/src/main/java/com/tencent/qcloud/tim/demo/signature/GenerateTestUserSig.java 文件 ，将常量 **PRIVATEKEY** 的值设置为 [下载公私钥](#step3) 中获得的私钥文件内容。
+ ![](https://main.qcloudimg.com/raw/d9e6f60bbe4b6c23fa3886ab16a4afd3.png)
+4. 通过 **GenerateTestUserSig** 中的 **genTestUserSig** 方法，自动帮您获取测试 **UserSig** 。
 
-![](https://main.qcloudimg.com/raw/a1b9bb35760e1e52825c754bd3ef9a52.png)
+>!本文提到的获取 UserSig 的方案是在客户端代码中配置 PRIVATEKEY，该方法中 PRIVATEKEY 很容易被反编译逆向破解，一旦您的私钥泄露，攻击者就可以盗用您的腾讯云流量，因此该方法仅适合本地跑通 Demo 和功能调试。
+>**正确的 UserSig 签发方式是将 UserSig 的计算代码放在您的业务服务器上，并提供面向 App 的服务端接口，在需要 UserSig 时由您的 App 向业务服务器发起请求获取动态 UserSig。**更多详情请参见 [服务器生成 UserSig](https://cloud.tencent.com/document/product/269/32688#.E6.9C.8D.E5.8A.A1.E5.99.A8.E7.94.9F.E6.88.90-usersig)。
 
-> 可以多生成4组以上的 userid 和 usersig，方便在第5步中调试使用。
-
-
-## 4. 下载 Demo 源码
-从 [Github](https://github.com/tencentyun/TIMSDK/tree/master/Android) 下载 ImSDK Android开发包，打开tuikit工程。
-
-## 5. 修改源码配置
-- 使用 Android Studio （3.0 以上的版本）  打开源码工程。
-
-- 工程中默认配置了测试的 SDKAPPID 以及在控制台生成的四个测试账号，由于每个账号同时只能有一个端登录，所以您需要按照 step 3 中指引拿到自己的四组测试账号配置进去。
-
-- 在 com.tencent.qcloud.uipojo.utils.Constants 中替换您的 SDKAPPID。
-![](https://main.qcloudimg.com/raw/b6cec2fd99c8350f4781304d96d28653.png)
-
-- 在com.tencent.qcloud.uipojo.login.view.LoginActivity中替换 step 3 中指引拿到 userId 和 userSig 。
-![](https://main.qcloudimg.com/raw/976f87fe676546bfc93fc3dcb04bc97e.png)
-
-> ! 这里提到的获取 userid 和 usersig 的方案仅适合本地跑通demo和功能调试，userSig 正确的签发方式请参考 [服务器获取方案](https://cloud.tencent.com/document/product/269/1507)。
-
-## 6. 编译运行
-APP启动后，在不同的手机上登录不同的账号，就可以搜索对方的 userId 体验发消息了。
+## 6、编译运行
+App 启动后，在不同的手机上登录不同的帐号，搜索对方的 UserID 体验发送消息等功能。
+会话列表以及通讯录相关界面演示：
+<div>
+<img src="https://cdn.nlark.com/yuque/0/2019/gif/367185/1560518740493-e5a89223-4cb4-44df-a9a5-665e78b67983.gif#align=left&display=inline&height=674&name=%E4%BC%9A%E8%AF%9D%E5%88%97%E8%A1%A8.gif&originHeight=674&originWidth=380&size=319844&status=done&width=380" width="300" height="535">
+</div>
+聊天界面收发消息演示：
+<div>
+<img src="https://cdn.nlark.com/yuque/0/2019/gif/367185/1560519391978-f7dbd5fa-8ee7-4b4c-9e71-c7e8d6c5b01b.gif#align=left&display=inline&height=674&name=%E8%81%8A%E5%A4%A9%E6%BC%94%E7%A4%BA.gif&originHeight=674&originWidth=380&size=918355&status=done&width=380" width="300" height="535">
+</div>
+输入区域自定义部分功能演示：
+<div>
+<img src="https://cdn.nlark.com/yuque/0/2019/gif/366128/1559825875054-fdfb0919-1f59-4382-924a-b2197f813ab4.gif#align=left&display=inline&height=533&name=add.gif&originHeight=1920&originWidth=1080&size=547272&status=done&width=300" width="300" height="535">
+</div>
+输入区域自定义按钮事件演示：
+<div>
+<img src="https://cdn.nlark.com/yuque/0/2019/gif/366128/1559825509248-ebb52b9b-8fee-421f-ad32-f2a12192167c.gif#align=left&display=inline&height=533&name=replace%2B.gif&originHeight=1920&originWidth=1080&size=177751&status=done&width=300" width="300">
+</div>
+输入区域自定义全部功能演示：
+<div>
+<img src="https://cdn.nlark.com/yuque/0/2019/gif/366128/1559826601807-394ea189-6188-47e7-bfe8-bb19c67b9dbb.gif#align=left&display=inline&height=587&name=new.gif&originHeight=1920&originWidth=1080&size=508813&status=done&width=330" width="300" height="535">
+</div>
