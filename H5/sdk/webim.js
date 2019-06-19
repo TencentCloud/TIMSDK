@@ -4770,9 +4770,9 @@ window.webim = webim;
             bigGroupLongPollingKeyMap[groupId] = null;
             bigGroupLongPollingMsgMap[groupId] = {};
 
-            bigGroupLongPollingStartSeqMap[groupId].delete();
-            bigGroupLongPollingKeyMap[groupId].delete();
-            bigGroupLongPollingMsgMap[groupId].delete();
+            delete bigGroupLongPollingStartSeqMap[groupId];
+            delete bigGroupLongPollingKeyMap[groupId];
+            delete bigGroupLongPollingMsgMap[groupId];
 
         };
 
