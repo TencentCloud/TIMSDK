@@ -64,9 +64,9 @@ Page({
 
         webimhandler.init({
             accountMode: 0 ,//帐号模式，0-表示独立模式，1-表示托管模式(已停用，仅作为演示)
-            accountType: Config.accountType,
+            accountType: 1, // 已废弃
             sdkAppID: Config.sdkappid,
-            avChatRoomId: avChatRoomId, //默认房间群ID，群类型必须是直播聊天室（AVChatRoom），这个为官方测试ID(托管模式)
+            avChatRoomId: avChatRoomId, //默认房间群ID，群类型必须是直播聊天室（AVChatRoom）
             selType: webim.SESSION_TYPE.GROUP,
             selToID: avChatRoomId,
             selSess: null //当前聊天会话
@@ -75,7 +75,7 @@ Page({
         var loginInfo = {
             'sdkAppID': Config.sdkappid, //用户所属应用id,必填
             'appIDAt3rd': Config.sdkappid, //用户所属应用id，必填
-            'accountType': Config.accountType, //用户所属应用帐号类型，必填
+            'accountType': 1, // 已废弃
             'identifier': that.data.identifier, //当前用户ID,必须是否字符串类型，选填
             'identifierNick': that.data.nickName || '', //当前用户昵称，选填
             'userSig': that.data.userSig, //当前用户身份凭证，必须是字符串类型，选填
