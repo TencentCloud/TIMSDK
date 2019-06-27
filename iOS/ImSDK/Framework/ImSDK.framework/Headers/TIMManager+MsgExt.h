@@ -69,11 +69,11 @@
  *
  *  仅查看历史消息时使用，如果要收发消息等操作，如login成功，不需要调用此函数
  *
- *  @param param 登陆参数（userSig 不用填写）
+ *  @param param 登陆参数（identifier 必须填写，userSig 不用填写）
  *  @param succ  成功回调，收到回调时，可以获取会话列表和消息
  *  @param fail  失败回调
  *
- *  @return 0：请求成功；1：失败
+ *  @return 0：请求成功；1：请求失败，identifier 为 nil 或则用户已登录
  */
 - (int)initStorage:(TIMLoginParam*)param succ:(TIMLoginSucc)succ fail:(TIMFail)fail;
 

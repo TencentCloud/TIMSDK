@@ -15,8 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) NSArray *groupList;
 
 @property (readonly) BOOL isLoadFinished;
+@property (readonly) NSUInteger pendencyCnt;
 
 - (void)loadContacts;
+- (void)clearPendencyCnt;
 
 @end
 

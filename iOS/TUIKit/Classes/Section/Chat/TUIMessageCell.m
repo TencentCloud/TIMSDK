@@ -27,6 +27,10 @@
         _avatarView = [[UIImageView alloc] init];
         _avatarView.contentMode = UIViewContentModeScaleAspectFit;
         [self addSubview:_avatarView];
+        UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSelectMessageAvatar:)];
+        [_avatarView addGestureRecognizer:tap1];
+        [_avatarView setUserInteractionEnabled:YES];
+        
         //nameLabel
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.font = [UIFont systemFontOfSize:13];
@@ -163,9 +167,10 @@
 
 - (void)onRetryMessage:(UIGestureRecognizer *)recognizer
 {
-    if(_delegate && [_delegate respondsToSelector:@selector(onRetryMessage:)]){
-        [_delegate onRetryMessage:self];
-    }
+    if (_messageData.status == Msg_Status_Fail)
+        if (_delegate && [_delegate respondsToSelector:@selector(onRetryMessage:)]) {
+            [_delegate onRetryMessage:self];
+        }
 }
 
 
@@ -173,6 +178,13 @@
 {
     if(_delegate && [_delegate respondsToSelector:@selector(onSelectMessage:)]){
         [_delegate onSelectMessage:self];
+    }
+}
+
+- (void)onSelectMessageAvatar:(UIGestureRecognizer *)recognizer
+{
+    if(_delegate && [_delegate respondsToSelector:@selector(onSelectMessageAvatar:)]){
+        [_delegate onSelectMessageAvatar:self];
     }
 }
 @end

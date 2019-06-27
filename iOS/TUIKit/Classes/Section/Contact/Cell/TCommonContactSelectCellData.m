@@ -19,17 +19,13 @@
     return self;
 }
 
-- (void)updateFromFriend:(TIMFriend *)afriend {
+- (void)setProfile:(TIMUserProfile *)profile {
 
-    if (afriend.remark.length) {
-        _title = afriend.remark;
-    } else {
-        _title = [afriend.profile showName];
+    self.title = [profile showName];
+    if (profile.faceURL.length) {
+        self.avatarUrl = [NSURL URLWithString:profile.faceURL];
     }
-    if (afriend.profile.faceURL.length) {
-        _avatarUrl = [NSURL URLWithString:afriend.profile.faceURL];
-    }
-    _identifier = afriend.identifier;
+    self.identifier = profile.identifier;
 }
 
 - (NSComparisonResult)compare:(TCommonContactSelectCellData *)data

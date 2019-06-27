@@ -8,22 +8,43 @@
 
 #import "TUIImageViewController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
+#import "ISVImageScrollView.h"
+#import "MMLayout/UIView+MMLayout.h"
 
-@interface TUIImageViewController ()
+@interface TUIImageViewController () <UIScrollViewDelegate>
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIButton *button;
 @property (nonatomic, strong) UILabel *progress;
+@property ISVImageScrollView *imageScrollView;
+
+@property UIImage *saveBackgroundImage;
+@property UIImage *saveShadowImage;
+
 @end
 
 @implementation TUIImageViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
-    _imageView.frame = self.view.bounds;
-    _imageView.backgroundColor = [UIColor blackColor];
-    _imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.view addSubview:_imageView];
+    
+    self.saveBackgroundImage = [self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault];
+    self.saveShadowImage = self.navigationController.navigationBar.shadowImage;
+    
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
+                                                  forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    
+    self.imageScrollView = [[ISVImageScrollView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:self.imageScrollView];
+    self.imageScrollView.backgroundColor = [UIColor blackColor];
+    self.imageScrollView.mm_fill();
+    
+    self.imageView = [[UIImageView alloc] initWithImage:nil];
+    self.imageScrollView.imageView = self.imageView;
+    self.imageScrollView.maximumZoomScale = 4.0;
+    self.imageScrollView.delegate = self;
+    
+
     
     BOOL isExist = NO;
     [_data getImagePath:TImage_Type_Origin isExist:&isExist];
@@ -36,6 +57,7 @@
             [RACObserve(_data, originImage) subscribeNext:^(UIImage *x) {
                 @strongify(self)
                 self.imageView.image = x;
+                [self.imageScrollView setNeedsLayout];
             }];
         }
     } else {
@@ -60,13 +82,6 @@
         [self.view addSubview:_button];
     }
 
-    UIGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
-    [self.view addGestureRecognizer:tap];
-}
-
-- (void)onTap:(UIGestureRecognizer *)recognizer
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)downloadOrigin:(id)sender
@@ -77,6 +92,7 @@
         @strongify(self)
         if (x) {
             self.imageView.image = x;
+            [self.imageScrollView setNeedsLayout];
             self.progress.hidden = YES;
         }
     }];
@@ -88,5 +104,30 @@
             self.progress.hidden = YES;
     }];
     self.button.hidden = YES;
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    return self.imageView;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+}
+
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+    if (parent == nil) {
+        [self.navigationController.navigationBar setBackgroundImage:self.saveBackgroundImage
+                                                      forBarMetrics:UIBarMetricsDefault];
+        self.navigationController.navigationBar.shadowImage = self.saveShadowImage;
+    }
 }
 @end

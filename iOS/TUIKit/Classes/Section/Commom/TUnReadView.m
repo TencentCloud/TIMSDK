@@ -29,7 +29,6 @@
     _unReadLabel.text = unReadStr;
     self.hidden = (num == 0? YES: NO);
     [self defaultLayout];
-    [self customLayout];
 }
 
 - (void)setupViews
@@ -58,10 +57,5 @@
     }
     self.bounds = CGRectMake(0, 0, width, height);
     _unReadLabel.frame = self.bounds;
-}
-
-- (void)customLayout
-{
-    
 }
 @end

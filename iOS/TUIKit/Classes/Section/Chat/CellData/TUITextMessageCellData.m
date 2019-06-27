@@ -131,7 +131,7 @@
                 [imageDic setObject:[NSValue valueWithRange:range] forKey:@"range"];
                 //把字典存入数组中
                 [imageArray addObject:imageDic];
-                
+                break;
             }
         }
     }

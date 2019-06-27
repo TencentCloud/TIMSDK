@@ -129,6 +129,7 @@
     if ([controller isKindOfClass:[UIViewController class]]) {
         [[TIMFriendshipManager sharedInstance] getUsersProfile:@[cell.pendencyData.identifier] forceUpdate:NO succ:^(NSArray<TIMUserProfile *> *profiles) {
             controller.userProfile = profiles.firstObject;
+            controller.pendency = cell.pendencyData;
             controller.actionType = PCA_PENDENDY_CONFIRM;
             [self.navigationController pushViewController:(UIViewController *)controller animated:YES];
         } fail:nil];

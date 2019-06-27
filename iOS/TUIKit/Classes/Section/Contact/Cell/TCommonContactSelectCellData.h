@@ -6,12 +6,12 @@
 //
 
 #import "TCommonCell.h"
-@class TIMFriend;
+@class TIMUserProfile;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TCommonContactSelectCellData : TCommonCellData
 
-- (void)updateFromFriend:(TIMFriend *)afriend;
+- (void)setProfile:(TIMUserProfile *)profile;
 
 @property NSURL *avatarUrl;
 @property NSString *title;

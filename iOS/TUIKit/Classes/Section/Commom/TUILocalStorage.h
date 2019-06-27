@@ -27,6 +27,9 @@ typedef void (^loginBlock) (NSString *user, NSString *pwd, NSUInteger appId, NSS
           withPwd:(NSString *)pwd
         withAppId:(NSUInteger)appId
       withUserSig:(NSString *)sig;
+
+- (NSInteger)pendencyReadTimestamp;
+- (void)setPendencyReadTimestamp:(NSInteger)pendencyReadTimestamp;
 @end
 
 NS_ASSUME_NONNULL_END

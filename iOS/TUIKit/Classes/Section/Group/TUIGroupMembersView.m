@@ -26,14 +26,14 @@
 - (void)setupViews
 {
     self.backgroundColor = [UIColor whiteColor];
-    
+    /*
     _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, SearchBar_Height)];
     _searchBar.placeholder = @"搜索";
     _searchBar.backgroundImage = [UIImage new];
     _searchBar.backgroundColor = TGroupMembersController_Background_Color;
     _searchBar.delegate = self;
     [self addSubview:_searchBar];
-    
+    */
     _flowLayout = [[UICollectionViewFlowLayout alloc] init];
     _flowLayout.headerReferenceSize = CGSizeMake(self.frame.size.width, TGroupMembersController_Margin);
     CGSize cellSize = [TUIGroupMemberCell getSize];

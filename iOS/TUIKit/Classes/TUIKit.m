@@ -162,34 +162,4 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onAddFriendReqs object:reqs];
 }
 
-- (NSArray *)testUser
-{
-    NSArray *array = [NSArray arrayWithObjects:@"angie", @"angelie", @"anita", @"ann",
-                      @"bailee", @"barbara", @"barbie", @"becky",
-                      @"cally", @"candy", @"canny", @"carina",
-                      @"dannie", @"dennielle", @"dennise", @"doris",
-                      @"elle", @"ellen", @"emi", @"emily",
-                      @"fannie", @"faye", @"fiona", @"flora",
-                      @"gia", @"gigi", @"gloria", @"grace",
-                      @"heidi", @"helen", @"hope",
-                      @"irene", @"iris", @"ivy",
-                      @"jade", @"jo", @"jill",
-                      @"karen", @"kiki", @"kelly",
-                      @"leila", @"lily", @"linda",
-                      @"olivia", @"ok",
-                      @"pace", @"paris", @"penny",
-                      @"qe", @"qa", @"qt",
-                      @"renee", @"rita", @"ruby",
-                      @"sally", @"sky", @"sara",
-                      @"tina", @"tori", @"tracy",
-                      @"uy", @"uo", @"uu",
-                      @"vicki", @"vicky", @"vivien",
-                      @"wing", @"wy", @"ww",
-                      @"xx", @"xo", @"xa",
-                      @"yoyo", @"you", @"yoo",
-                      @"zoe", @"zero",
-                      nil];
-    return array;
-}
-
 @end

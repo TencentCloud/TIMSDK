@@ -14,6 +14,7 @@ PODS:
   - AFNetworking/Serialization (3.2.1)
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
+  - ISVImageScrollView (0.1.2)
   - MBProgressHUD (1.1.0)
   - MMLayout (0.2.0)
   - ReactiveObjC (3.1.1)
@@ -21,8 +22,9 @@ PODS:
     - SDWebImage/Core (= 5.0.4)
   - SDWebImage/Core (5.0.4)
   - Toast (4.0.0)
-  - TXIMSDK_iOS (4.4.479)
-  - TXIMSDK_TUIKit_iOS (4.4.479):
+  - TXIMSDK_iOS (4.4.627)
+  - TXIMSDK_TUIKit_iOS (4.4.627):
+    - ISVImageScrollView
     - MMLayout
     - ReactiveObjC
     - SDWebImage
@@ -41,6 +43,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
+    - ISVImageScrollView
     - MBProgressHUD
     - MMLayout
     - ReactiveObjC
@@ -55,13 +58,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  ISVImageScrollView: ba511d12a1661b40feb8921309c0854bf93ec749
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: c739016e4bdf0a4a1f9a04b5e0385395ad63a282
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_iOS: 762407cdbcfc415bfb87666daec7481a2ad4cbc6
-  TXIMSDK_TUIKit_iOS: f8a59111c114d990a844ad8f531dfb61db086098
+  TXIMSDK_iOS: 6641a71d741a1a1fb31b69419b2431d9aecdf12e
+  TXIMSDK_TUIKit_iOS: 168d95421e6476e8994139f7e21401cc6b13fff7
 
 PODFILE CHECKSUM: f71b27950d8d118ec2a50961ce29aa9a8f093139
 

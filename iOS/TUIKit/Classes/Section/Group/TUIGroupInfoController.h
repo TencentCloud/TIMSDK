@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @class TUIGroupInfoController;
+@class TGroupMemberCellData;
+
 @protocol TGroupInfoControllerDelegate <NSObject>
 - (void)groupInfoController:(TUIGroupInfoController *)controller didSelectMembersInGroup:(NSString *)groupId;
-- (void)groupInfoController:(TUIGroupInfoController *)controller didAddMembersInGroup:(NSString *)groupId members:(NSArray *)members;
-- (void)groupInfoController:(TUIGroupInfoController *)controller didDeleteMembersInGroup:(NSString *)groupId members:(NSArray *)members;
+- (void)groupInfoController:(TUIGroupInfoController *)controller didAddMembersInGroup:(NSString *)groupId members:(NSArray<TGroupMemberCellData *> *)members;
+- (void)groupInfoController:(TUIGroupInfoController *)controller didDeleteMembersInGroup:(NSString *)groupId members:(NSArray<TGroupMemberCellData *> *)members;
 - (void)groupInfoController:(TUIGroupInfoController *)controller didDeleteGroup:(NSString *)groupId;
 - (void)groupInfoController:(TUIGroupInfoController *)controller didQuitGroup:(NSString *)groupId;
 @end

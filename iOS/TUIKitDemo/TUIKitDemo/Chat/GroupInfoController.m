@@ -39,10 +39,11 @@
 {
     GroupMemberController *membersController = [[GroupMemberController alloc] init];
     membersController.groupId = groupId;
+    membersController.title = @"群成员";
     [self.navigationController pushViewController:membersController animated:YES];
 }
 
-- (void)groupInfoController:(TUIGroupInfoController *)controller didAddMembersInGroup:(NSString *)groupId members:(NSArray *)members
+- (void)groupInfoController:(TUIGroupInfoController *)controller didAddMembersInGroup:(NSString *)groupId members:(NSArray<TGroupMemberCellData *> *)members
 {
     TUIContactSelectController *vc = [[TUIContactSelectController alloc] initWithNibName:nil bundle:nil];
     vc.title = @"添加联系人";
@@ -66,17 +67,18 @@
     };
 }
 
-- (void)groupInfoController:(TUIGroupInfoController *)controller didDeleteMembersInGroup:(NSString *)groupId members:(NSArray *)members
+- (void)groupInfoController:(TUIGroupInfoController *)controller didDeleteMembersInGroup:(NSString *)groupId members:(NSArray<TGroupMemberCellData *> *)members
 {
     TUIContactSelectController *vc = [[TUIContactSelectController alloc] initWithNibName:nil bundle:nil];
     vc.title = @"删除联系人";
-    vc.viewModel.avaliableFilter = ^BOOL(TCommonContactSelectCellData *data) {
-        for (TGroupMemberCellData *cd in members) {
-            if ([cd.identifier isEqualToString:data.identifier])
-                return YES;
+    NSMutableArray *ids = NSMutableArray.new;
+    for (TGroupMemberCellData *cd in members) {
+        if (![cd.identifier isEqualToString:[[TIMManager sharedInstance] getLoginUser]]) {
+            [ids addObject:cd.identifier];
         }
-        return NO;
-    };
+    }
+    [vc setSourceIds:ids];
+
     @weakify(self)
     [self.navigationController pushViewController:vc animated:YES];
     vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *selectArray) {

@@ -11,6 +11,7 @@
 #define Key_UserInfo_User  @"Key_UserInfo_User"
 #define Key_UserInfo_Pwd   @"Key_UserInfo_Pwd"
 #define Key_UserInfo_Sig   @"Key_UserInfo_Sig"
+#define Key_Pendency_Read_Time @"Key_Pendency_Read_Time"
 
 NSString *kTopConversationListChangedNotification = @"kTopConversationListChangedNotification";
 
@@ -24,6 +25,19 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
         instance = [TUILocalStorage new];
     });
     return instance;
+}
+
+- (NSInteger)pendencyReadTimestamp
+{
+    NSNumber *time = [[NSUserDefaults standardUserDefaults] objectForKey:Key_Pendency_Read_Time];
+    if ([time isKindOfClass:[NSNumber class]])
+        return [time integerValue];
+    return 0;
+}
+
+- (void)setPendencyReadTimestamp:(NSInteger)pendencyReadTimestamp
+{
+    [[NSUserDefaults standardUserDefaults] setValue:@(pendencyReadTimestamp) forKey:Key_Pendency_Read_Time];
 }
 
 - (NSArray *)topConversationList

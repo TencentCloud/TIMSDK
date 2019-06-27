@@ -10,10 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @class TIMFriend;
+@class TIMGroupInfo;
 
 @interface TCommonContactCellData : TCommonCellData
 
 - (instancetype)initWithFriend:(TIMFriend *)args;
+- (instancetype)initWithGroupInfo:(TIMGroupInfo *)args;
 
 @property TIMFriend *friendProfile;
 @property NSString *identifier;

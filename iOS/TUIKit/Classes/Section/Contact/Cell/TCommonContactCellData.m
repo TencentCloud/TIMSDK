@@ -7,6 +7,9 @@
 
 #import "TCommonContactCellData.h"
 #import "TIMUserProfile+DataProvider.h"
+#import "TUIKit.h"
+#import "THeader.h"
+
 @import ImSDK;
 
 @implementation TCommonContactCellData
@@ -29,9 +32,25 @@
     return self;
 }
 
+- (instancetype)initWithGroupInfo:(TIMGroupInfo *)args
+{
+    self = [super init];
+    
+    _title = args.groupName;
+    _avatarImage = DefaultGroupAvatarImage;
+    
+    _identifier = args.group;
+    
+    return self;
+}
+
 - (NSComparisonResult)compare:(TCommonContactCellData *)data
 {
     return [self.title localizedCompare:data.title];
 }
 
+- (CGFloat)heightOfWidth:(CGFloat)width
+{
+    return 56;
+}
 @end

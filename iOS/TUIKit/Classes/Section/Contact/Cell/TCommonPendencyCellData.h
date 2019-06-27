@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithPendency:(TIMFriendPendencyItem *)args;
 
+- (void)agree;
+- (void)reject;
+
 @end
 
 NS_ASSUME_NONNULL_END

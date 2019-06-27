@@ -375,7 +375,7 @@
 -(TIMLogLevel) getLogLevel;
 
 /**
- 重置ImSDK配置信息，内部自动化测试使用，外部禁止使用
+ *  重置ImSDK配置信息，内部自动化测试使用
  */
 - (void)unInit;
 

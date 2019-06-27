@@ -29,6 +29,8 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 };
 
 @interface TUIMessageCellData : TCommonCellData
+
+@property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSURL *avatarUrl;
 @property (nonatomic, strong) UIImage *avatarImage;
 

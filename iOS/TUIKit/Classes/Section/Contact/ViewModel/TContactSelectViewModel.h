@@ -32,6 +32,8 @@ typedef BOOL(^ContactSelectFilterBlock)(TCommonContactSelectCellData *data);
 
 - (void)loadContacts;
 
+- (void)setSourceIds:(NSArray<NSString *> *)ids;
+
 @end
 
 NS_ASSUME_NONNULL_END

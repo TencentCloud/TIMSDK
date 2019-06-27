@@ -18,6 +18,8 @@ char pinyinFirstLetter(unsigned short hanzi);
 
 -(NSString*)firstPinYin;
 
+- (NSString *)safePathString;
+
 //是否为空
 + (BOOL)isEmpty:(NSString *)string;
 

@@ -21,6 +21,7 @@
 #import "TUIConversationListController.h"
 #import "TUIChatController.h"
 #import "TUIGroupConversationListController.h"
+#import "TUIContactActionCell.h"
 
 @import ImSDK;
 
@@ -29,7 +30,7 @@
 
 @interface TUIContactController () <UITableViewDelegate,UITableViewDataSource,TUIConversationListControllerDelegagte>
 @property UITableView *tableView;
-@property NSArray<TCommonContactCellData *> *firstGroupData;
+@property NSArray<TUIContactActionCellData *> *firstGroupData;
 @end
 
 @implementation TUIContactController
@@ -39,22 +40,22 @@
     
     NSMutableArray *list = @[].mutableCopy;
     [list addObject:({
-        TCommonContactCellData *data = [[TCommonContactCellData alloc] init];
-        data.avatarImage = [UIImage imageNamed:TUIKitResource(@"new_friend")];
+        TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
+        data.icon = [UIImage imageNamed:TUIKitResource(@"new_friend")];
         data.title = @"新的联系人";
         data.cselector = @selector(onAddNewFriend:);
         data;
     })];
     [list addObject:({
-        TCommonContactCellData *data = [[TCommonContactCellData alloc] init];
-        data.avatarImage = [UIImage imageNamed:TUIKitResource(@"public_group")];
+        TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
+        data.icon = [UIImage imageNamed:TUIKitResource(@"public_group")];
         data.title = @"群聊";
         data.cselector = @selector(onGroupConversation:);
         data;
     })];
     [list addObject:({
-        TCommonContactCellData *data = [[TCommonContactCellData alloc] init];
-        data.avatarImage = [UIImage imageNamed:TUIKitResource(@"blacklist")];
+        TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
+        data.icon = [UIImage imageNamed:TUIKitResource(@"blacklist")];
         data.title = @"黑名单";
         data.cselector = @selector(onBlackList:);
         data;
@@ -78,7 +79,7 @@
     _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);
     
     [_tableView registerClass:[TCommonContactCell class] forCellReuseIdentifier:kContactCellReuseId];
-    [_tableView registerClass:[TCommonContactCell class] forCellReuseIdentifier:kContactActionCellReuseId];
+    [_tableView registerClass:[TUIContactActionCell class] forCellReuseIdentifier:kContactActionCellReuseId];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:TUIKitNotification_onAddFriends object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:TUIKitNotification_onDelFriends object:nil];
@@ -86,14 +87,15 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:TUIKitNotification_onFriendProfileUpdate object:nil];
    
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAddFriendReqs:) name:TUIKitNotification_onAddFriendReqs object:nil];
-    
     @weakify(self)
     [RACObserve(self.viewModel, isLoadFinished) subscribeNext:^(id finished) {
         @strongify(self)
         if ([(NSNumber *)finished boolValue]) {
             [self.tableView reloadData];
         }
+    }];
+    [RACObserve(self.viewModel, pendencyCnt) subscribeNext:^(NSNumber *x) {
+        self.firstGroupData[0].redNum = [x integerValue];
     }];
     [self reloadData];
 }
@@ -140,13 +142,14 @@
         headerView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:headerViewId];
         UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         textLabel.tag = TEXT_TAG;
-        textLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+        textLabel.font = [UIFont systemFontOfSize:16];
         textLabel.textColor = RGB(0x80, 0x80, 0x80);
         [headerView addSubview:textLabel];
+        textLabel.mm_fill().mm_left(12);
+        textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
     label.text = self.viewModel.groupList[section-1];
-    label.mm_sizeToFit().mm_left(12).mm__centerY(12);
     
     return headerView;
 }
@@ -161,7 +164,7 @@
     if (section == 0)
         return 0;
     
-    return 22;
+    return 33;
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
@@ -173,9 +176,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        TCommonContactCell *cell = [tableView dequeueReusableCellWithIdentifier:kContactActionCellReuseId forIndexPath:indexPath];
+        TUIContactActionCell *cell = [tableView dequeueReusableCellWithIdentifier:kContactActionCellReuseId forIndexPath:indexPath];
         [cell fillWithData:self.firstGroupData[indexPath.row]];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         return cell;
     } else {
         TCommonContactCell *cell = [tableView dequeueReusableCellWithIdentifier:kContactCellReuseId forIndexPath:indexPath];
@@ -184,7 +186,6 @@
         TCommonContactCellData *data = list[indexPath.row];
         data.cselector = @selector(onSelectFriend:);
         [cell fillWithData:data];
-        cell.accessoryType = UITableViewCellAccessoryNone;
         return cell;
     }
 }
@@ -200,16 +201,13 @@
     }
 }
 
-- (void)onAddFriendReqs:(NSNotification *)notify
-{
-    // TODO: 新朋友请求
-}
 
 //
 - (void)onAddNewFriend:(TCommonTableViewCell *)cell
 {
     TUINewFriendViewController *vc = TUINewFriendViewController.new;
     [self.navigationController pushViewController:vc animated:YES];
+    [self.viewModel clearPendencyCnt];
 }
 
 - (void)onGroupConversation:(TCommonTableViewCell *)cell

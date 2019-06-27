@@ -9,6 +9,7 @@
 #import "THelper.h"
 #import "EMVoiceConverter.h"
 #import "TUIKit.h"
+#import "Toast/Toast.h"
 @import ImSDK;
 
 @implementation THelper
@@ -86,8 +87,14 @@
 }
 
 
-+ (void)asyncDecodeImage:(NSString *)path queue:(dispatch_queue_t)queue complete:(TAsyncImageComplete)complete
++ (void)asyncDecodeImage:(NSString *)path complete:(TAsyncImageComplete)complete
 {
+    static dispatch_queue_t queue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = dispatch_queue_create("com.tuikit.asyncDecodeImage", DISPATCH_QUEUE_SERIAL);
+    });
+    
     dispatch_async(queue, ^{
         if(path == nil){
             return;
@@ -144,5 +151,8 @@
     });
 }
 
-
++ (void)makeToast:(NSString *)str
+{
+    [[UIApplication sharedApplication].keyWindow makeToast:str];
+}
 @end

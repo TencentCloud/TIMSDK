@@ -20,32 +20,49 @@
 
 @implementation TContactSelectViewModel
 
+
 - (void)loadContacts
 {
     self.isLoadFinished = NO;
     
     NSArray<TIMFriend *> *friends = [[TIMFriendshipManager sharedInstance] queryFriendList];
     if (friends.count > 0) {
-        [self fillList:friends];
+        [self fillList:[self allProfiles:friends]];
     }
     else {
         @weakify(self)
         [[TIMFriendshipManager sharedInstance] getFriendList:^(NSArray<TIMFriend *> *friends) {
             @strongify(self)
-            [self fillList:friends];
+            [self fillList:[self allProfiles:friends]];
         } fail:nil];
     }
 }
 
-- (void)fillList:(NSArray<TIMFriend *> *)friends
+- (void)setSourceIds:(NSArray<NSString *> *)ids
+{
+    [[TIMFriendshipManager sharedInstance] getUsersProfile:ids forceUpdate:NO succ:^(NSArray<TIMUserProfile *> *profiles) {
+        [self fillList:profiles];
+    } fail:nil];
+}
+
+- (NSArray<TIMUserProfile *> *)allProfiles:(NSArray<TIMFriend *> *)friends
+{
+    NSMutableArray *arr = [NSMutableArray new];
+    for (TIMFriend *fr in friends) {
+        [arr addObject:fr.profile];
+    }
+    return arr;
+}
+
+- (void)fillList:(NSArray<TIMUserProfile *> *)profiles
 {
     NSMutableDictionary *dataDict = @{}.mutableCopy;
     NSMutableArray *groupList = @[].mutableCopy;
     NSMutableArray *nonameList = @[].mutableCopy;
     
-    for (TIMFriend *friend in friends) {
+    for (TIMUserProfile *profile in profiles) {
         TCommonContactSelectCellData *data = [TCommonContactSelectCellData new];
-        [data updateFromFriend:friend];
+        [data setProfile:profile];
         
         if (self.avaliableFilter && !self.avaliableFilter(data)) {
             continue;

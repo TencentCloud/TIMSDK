@@ -9,12 +9,15 @@
 #import "TUIGroupMemberController.h"
 #import "TUIGroupMemberCell.h"
 #import "THeader.h"
-#import "TSelectView.h"
 #import "TAddCell.h"
+#import "ReactiveObjC/ReactiveObjC.h"
+#import "MMLayout/UIView+MMLayout.h"
+#import "Toast/Toast.h"
 @import ImSDK;
 
-@interface TUIGroupMemberController ()<TGroupMembersViewDelegate, TSelectViewDelegate>
+@interface TUIGroupMemberController ()<TGroupMembersViewDelegate>
 @property (nonatomic, strong) NSMutableArray<TGroupMemberCellData *> *members;
+@property TIMGroupInfo *groupInfo;
 @end
 
 @implementation TUIGroupMemberController
@@ -27,21 +30,31 @@
 - (void)updateData
 {
     _members = [NSMutableArray array];
-    __weak typeof(self) ws = self;
+    @weakify(self)
+    [[TIMGroupManager sharedInstance] getGroupInfo:@[_groupId] succ:^(NSArray *arr) {
+        @strongify(self)
+        if(arr.count == 1){
+            self.groupInfo = arr[0];
+        }
+    } fail:^(int code, NSString *msg) {
+        @strongify(self)
+        [self.view makeToast:msg];
+    }];
+    
     [[TIMGroupManager sharedInstance] getGroupMembers:_groupId succ:^(NSArray *members) {
+        @strongify(self)
         for (TIMGroupMemberInfo *member in members) {
             TGroupMemberCellData *user = [[TGroupMemberCellData alloc] init];
             user.identifier = member.member;
-            user.head = TUIKitResource(@"default_head");
-            user.name = member.member;
-            [ws.members addObject:user];
+            user.name = member.nameCard;
+            [self.members addObject:user];
         }
-        [ws.groupMembersView setData:ws.members];
-        NSString *title = [NSString stringWithFormat:@"群成员(%ld人)", (long)ws.members.count];
-        ws.title = title;
-        ws.parentViewController.title = title;
+        [self.groupMembersView setData:self.members];
+        NSString *title = [NSString stringWithFormat:@"群成员(%ld人)", (long)self.members.count];
+        self.title = title;
     } fail:^(int code, NSString *msg) {
-        
+        @strongify(self)
+        [self.view makeToast:msg];
     }];
 }
 
@@ -84,25 +97,55 @@
     }
 }
 
-- (void)rightBarButtonClick{
-    TSelectView *select = [[TSelectView alloc] init];
-    select.delegate = self;
-    NSMutableArray *array = [NSMutableArray arrayWithObjects:@"添加成员", @"删除成员", nil];
-    [select setData:array];
-    [select showInWindow:self.view.window];
+- (void)rightBarButtonClick {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    if ([self canInviteMember]) {
+        [ac addAction:[UIAlertAction actionWithTitle:@"添加成员" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            if(self.delegate && [self.delegate respondsToSelector:@selector(groupMemberController:didAddMembersInGroup:hasMembers:)]){
+                [self.delegate groupMemberController:self didAddMembersInGroup:self.groupId hasMembers:self.members];
+            }
+        }]];
+    }
+    if ([self canRemoveMember]) {
+        [ac addAction:[UIAlertAction actionWithTitle:@"删除成员" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            if(self.delegate && [self.delegate respondsToSelector:@selector(groupMemberController:didDeleteMembersInGroup:hasMembers:)]){
+                [self.delegate groupMemberController:self didDeleteMembersInGroup:self.groupId hasMembers:self.members];
+            }
+        }]];
+    }
+    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    
+    [self presentViewController:ac animated:YES completion:nil];
 }
 
-- (void)selectView:(TSelectView *)selectView didSelectRowAtIndex:(NSInteger)index
+
+- (BOOL)isMeOwner
 {
-    if(index == 0){
-        if(_delegate && [_delegate respondsToSelector:@selector(groupMemberController:didAddMembersInGroup:hasMembers:)]){
-            [_delegate groupMemberController:self didAddMembersInGroup:_groupId hasMembers:_members];
-        }
+    return [self.groupInfo.owner isEqualToString:[[TIMManager sharedInstance] getLoginUser]];
+}
+
+- (BOOL)isPrivate
+{
+    return [self.groupInfo.groupType isEqualToString:@"Private"];
+}
+
+- (BOOL)canInviteMember
+{
+    if([self.groupInfo.groupType isEqualToString:@"Private"]){
+        return YES;
     }
-    else if(index == 1){
-        if(_delegate && [_delegate respondsToSelector:@selector(groupMemberController:didDeleteMembersInGroup:hasMembers:)]){
-            [_delegate groupMemberController:self didDeleteMembersInGroup:_groupId hasMembers:_members];
-        }
+    else if([self.groupInfo.groupType isEqualToString:@"Public"]){
+        return NO;
     }
+    else if([self.groupInfo.groupType isEqualToString:@"ChatRoom"]){
+        return NO;
+    }
+    return NO;
+}
+
+- (BOOL)canRemoveMember
+{
+    return [self isMeOwner] && (self.members.count > 1);
 }
 @end

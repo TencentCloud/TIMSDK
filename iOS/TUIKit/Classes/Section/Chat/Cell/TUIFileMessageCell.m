@@ -39,15 +39,7 @@
         [self.container addSubview:_image];
 
         
-        _progress = [[UILabel alloc] init];
-        _progress.textColor = [UIColor whiteColor];
-        _progress.font = [UIFont systemFontOfSize:15];
-        _progress.textAlignment = NSTextAlignmentCenter;
-        _progress.layer.cornerRadius = 5.0;
-        _progress.hidden = YES;
-        _progress.backgroundColor = TFileMessageCell_Progress_Color;
-        [_progress.layer setMasksToBounds:YES];
-        [self.container addSubview:_progress];
+
     }
     return self;
 }
@@ -71,8 +63,11 @@
     [progressSignal subscribeNext:^(NSNumber *x) {
         @strongify(self)
         int progress = [x intValue];
-        self.progress.text = [NSString stringWithFormat:@"%d%%", progress];
-        self.progress.hidden = (progress >= 100 || progress == 0);
+        if (progress >= 100 || progress == 0) {
+            [self.indicator stopAnimating];
+        } else {
+            [self.indicator startAnimating];
+        }
     }];
 }
 
@@ -104,6 +99,5 @@
     _fileName.frame = CGRectMake(TFileMessageCell_Margin, TFileMessageCell_Margin, textWidth, nameSize.height);
     CGSize lengthSize = [_length sizeThatFits:containerSize];
     _length.frame = CGRectMake(TFileMessageCell_Margin, _fileName.frame.origin.y + nameSize.height + TFileMessageCell_Margin * 0.5, textWidth, lengthSize.height);
-    _progress.frame = self.container.bounds;
 }
 @end

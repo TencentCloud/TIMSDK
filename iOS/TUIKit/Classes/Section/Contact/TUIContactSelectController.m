@@ -87,7 +87,11 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     
     [self setupBinds];
     
-    [self.viewModel loadContacts];
+    if (self.sourceIds) {
+        [self.viewModel setSourceIds:self.sourceIds];
+    } else {
+        [self.viewModel loadContacts];
+    }
     
     self.view.backgroundColor = RGB(42,42,40);
 }
@@ -143,13 +147,14 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
         headerView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:headerViewId];
         UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         textLabel.tag = TEXT_TAG;
-        textLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+        textLabel.font = [UIFont systemFontOfSize:16];
         textLabel.textColor = RGB(0x80, 0x80, 0x80);
         [headerView addSubview:textLabel];
+        textLabel.mm_fill().mm_left(12);
+        textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
     label.text = self.viewModel.groupList[section];
-    label.mm_sizeToFit().mm_left(12).mm__centerY(12);
     
     return headerView;
 }
@@ -161,7 +166,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {   
-    return 22;
+    return 33;
 }
 
 //- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section

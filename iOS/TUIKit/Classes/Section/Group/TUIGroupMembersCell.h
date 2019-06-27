@@ -17,13 +17,13 @@
 
 @interface TGroupMembersCellData : NSObject
 @property (nonatomic, strong) NSMutableArray *members;
-@property (nonatomic, assign) SEL selector;
 @end
 
 @interface TUIGroupMembersCell : UITableViewCell
 @property (nonatomic, strong) UICollectionView *memberCollectionView;
 @property (nonatomic, strong) UICollectionViewFlowLayout *memberFlowLayout;
 @property (nonatomic, weak) id<TGroupMembersCellDelegate> delegate;
+@property (nonatomic) TGroupMembersCellData *data;
 + (CGFloat)getHeight:(TGroupMembersCellData *)data;
-- (void)setData:(TGroupMembersCellData *)data;
+
 @end

@@ -330,12 +330,15 @@
 #define TUIKitNotification_onDelFriends @"TUIKitNotification_onDelFriends"
 #define TUIKitNotification_onFriendProfileUpdate @"TUIKitNotification_onFriendProfileUpdate"
 #define TUIKitNotification_onAddFriendReqs @"TUIKitNotification_onAddFriendReqs"
+
+
+
 //path
 #define TUIKit_DB_Path [NSHomeDirectory() stringByAppendingString:@"/Documents/com_tencent_imsdk_data/"]
-#define TUIKit_Image_Path [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/image/"]
-#define TUIKit_Video_Path [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/video/"]
-#define TUIKit_Voice_Path [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/voice/"]
-#define TUIKit_File_Path [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/file/"]
+#define TUIKit_Image_Path [NSHomeDirectory() stringByAppendingString:@"/Documents/com_tencent_imsdk_data/image/"]
+#define TUIKit_Video_Path [NSHomeDirectory() stringByAppendingString:@"/Documents/com_tencent_imsdk_data/video/"]
+#define TUIKit_Voice_Path [NSHomeDirectory() stringByAppendingString:@"/Documents/com_tencent_imsdk_data/voice/"]
+#define TUIKit_File_Path  [NSHomeDirectory() stringByAppendingString:@"/Documents/com_tencent_imsdk_data/file/"]
 
 
 // rich

@@ -7,7 +7,6 @@
 
 #import "TUIGroupConversationListController.h"
 #import "TUIConversationListController.h"
-#import "TUIConversationCell.h"
 #import "TPopView.h"
 #import "TPopCell.h"
 #import "THeader.h"
@@ -45,7 +44,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     
     _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);
     
-    [_tableView registerClass:[TUIConversationCell class] forCellReuseIdentifier:kConversationCell_ReuseId]; 
+    [_tableView registerClass:[TCommonContactCell class] forCellReuseIdentifier:kConversationCell_ReuseId];
 
     
     self.viewModel = [TUIGroupConversationListViewModel new];
@@ -92,7 +91,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TUIConversationCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
+    TCommonContactCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
     return [data heightOfWidth:Screen_Width];
 }
 
@@ -120,7 +119,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [tableView beginUpdates];
-        TUIConversationCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
+        TCommonContactCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
         [self.viewModel removeData:data];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
         [tableView endUpdates];
@@ -139,29 +138,35 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
         headerView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:headerViewId];
         UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         textLabel.tag = TEXT_TAG;
-        textLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+        textLabel.textColor = RGB(0x80, 0x80, 0x80);
         [headerView addSubview:textLabel];
+        textLabel.mm_fill().mm_left(12);
+        textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
     label.text = self.viewModel.groupList[section];
-    label.mm_sizeToFit().mm_left(12).mm__centerY(15);
     
     return headerView;
 }
 
-- (void)didSelectConversation:(TUIConversationCell *)cell
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 33;
+}
+
+- (void)didSelectConversation:(TCommonContactCell *)cell
 {
     
-    TIMConversation *conv = [[TIMManager sharedInstance] getConversation:cell.convData.convType receiver:cell.convData.convId];
+    TIMConversation *conv = [[TIMManager sharedInstance] getConversation:TIM_GROUP receiver:cell.contactData.identifier];
     
     TUIChatController *chat = [[TUIChatController alloc] initWithConversation:conv];
-    chat.title = cell.convData.title;
+    chat.title = cell.contactData.title;
     [self.navigationController pushViewController:chat animated:YES];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    TUIConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:kConversationCell_ReuseId forIndexPath:indexPath];
-    TUIConversationCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
+    TCommonContactCell *cell = [tableView dequeueReusableCellWithIdentifier:kConversationCell_ReuseId forIndexPath:indexPath];
+    TCommonContactCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
     if (!data.cselector) {
         data.cselector = @selector(didSelectConversation:);
     }
