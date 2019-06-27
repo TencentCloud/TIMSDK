@@ -12,66 +12,66 @@
   </tr>
 
   <tr >
-    <td rowspan='2' style="text-align:center">快速集成</td>
-    <td style="text-align:center">iOS</td>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-iOS%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90">TUIKit-iOS快速集成</a></td>
+​    <td rowspan='2' style="text-align:center">快速集成</td>
+​    <td style="text-align:center">iOS</td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-iOS%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90">TUIKit-iOS快速集成</a></td>
   </tr>
 
   <tr>
-    <td style="text-align:center">Android</td>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90">TUIKit-Android快速集成</a></td>
+​    <td style="text-align:center">Android</td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90">TUIKit-Android快速集成</a></td>
   </tr>
 
   <tr>
-    <td rowspan='2' style="text-align:center">快速搭建</td>
-    <td style="text-align:center">iOS</td>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-iOS%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA">TUIKit-iOS快速搭建</a></td>
+​    <td rowspan='2' style="text-align:center">快速搭建</td>
+​    <td style="text-align:center">iOS</td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-iOS%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA">TUIKit-iOS快速搭建</a></td>
   </tr>
 
   <tr>
-    <td style="text-align:center">Android</td>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA">TUIKit-Android快速搭建</a></td>
+​    <td style="text-align:center">Android</td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA">TUIKit-Android快速搭建</a></td>
   </tr>
 
   <tr>
-    <td rowspan='6' style="text-align:center">修改界面样式</td>
-    <td style="text-align:center">iOS</td>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-iOS%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F">TUIKit-iOS修改界面样式</a></td>
+​    <td rowspan='6' style="text-align:center">修改界面样式</td>
+​    <td style="text-align:center">iOS</td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-iOS%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F">TUIKit-iOS修改界面样式</a></td>
 
   </tr>
 
   <tr>
-    <td rowspan='5' style="text-align:center">Android</td>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F-%E4%BC%9A%E8%AF%9D%E5%88%97%E8%A1%A8">TUIKit-Android修改界面样式-会话列表</a></td>
+​    <td rowspan='5' style="text-align:center">Android</td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F-%E4%BC%9A%E8%AF%9D%E5%88%97%E8%A1%A8">TUIKit-Android修改界面样式-会话列表</a></td>
   </tr>
 
   <tr>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F-%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A2">TUIKit-Android修改界面样式-聊天界面</a></td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F-%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A2">TUIKit-Android修改界面样式-聊天界面</a></td>
   </tr>
 
   <tr>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F-%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A2-%E9%80%9A%E7%9F%A5%E5%8C%BA%E5%9F%9F">TUIKit-Android修改界面样式-聊天界面-通知区域</a></td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F-%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A2-%E9%80%9A%E7%9F%A5%E5%8C%BA%E5%9F%9F">TUIKit-Android修改界面样式-聊天界面-通知区域</a></td>
   </tr>
 
   <tr>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F-%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A2-%E6%B6%88%E6%81%AF%E5%8C%BA%E5%9F%9F">TUIKit-Android修改界面样式-聊天界面-消息区域</a></td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F-%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A2-%E6%B6%88%E6%81%AF%E5%8C%BA%E5%9F%9F">TUIKit-Android修改界面样式-聊天界面-消息区域</a></td>
   </tr>
 
   <tr>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F-%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A2-%E8%BE%93%E5%85%A5%E5%8C%BA%E5%9F%9F">TUIKit-Android修改界面样式-聊天界面-输入区域</a></td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E4%BF%AE%E6%94%B9%E7%95%8C%E9%9D%A2%E6%A0%B7%E5%BC%8F-%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A2-%E8%BE%93%E5%85%A5%E5%8C%BA%E5%9F%9F">TUIKit-Android修改界面样式-聊天界面-输入区域</a></td>
   </tr>
 
   <tr>
-    <td rowspan='2' style="text-align:center">自定义消息</td>
-    <td style="text-align:center">iOS</td>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-iOS%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B6%88%E6%81%AF">TUIKit-iOS自定义消息</a></td>
+​    <td rowspan='2' style="text-align:center">自定义消息</td>
+​    <td style="text-align:center">iOS</td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-iOS%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B6%88%E6%81%AF">TUIKit-iOS自定义消息</a></td>
   </tr>
 
   <tr>
-    <td style="text-align:center">Android</td>
-    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B6%88%E6%81%AF">TUIKit-Android自定义消息</a></td>
+​    <td style="text-align:center">Android</td>
+​    <td style="text-align:center"><a href="https://github.com/tencentyun/TIMSDK/wiki/TUIKit-Android%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B6%88%E6%81%AF">TUIKit-Android自定义消息</a></td>
   </tr>
-  
+
 </table>
 
 
@@ -85,45 +85,74 @@
 - 为了更好的了解您使用TIMSDK所遇到的问题，方便快速有效定位解决TIMSDK问题，希望您按如下反馈指引反馈issue，方便我们尽快解决您的问题
 - [TIMSDK issue反馈指引](https://github.com/tencentyun/TIMSDK/wiki/TIMSDK-issue%E6%9C%89%E6%95%88%E5%8F%8D%E9%A6%88%E6%A8%A1%E6%9D%BF)
 
-## 最新版本 4.4.479 @2019.06.12
+## 最新版本 4.4.627 @2019.06.27
 
-**iOS平台**
+**iOS & Mac平台**
 
-- 修复拉取离线消息出现丢消息的问题
-- 修复更换不同 SDKAppId 引起登录失败的问题
-- 修复语音消息播放失败的问题
-- 修复群消息撤回的崩溃
-- 修复获取好友列表和创建群组的6002错误
-- 优化发送消息的效率
-- 缓存优化，降低UI卡顿
+- 修复无网络时发消息超时长的问题
+- 修复消息发送后ID值变化的问题
+- 修复消息乱序的问题
+- 修复拉取聊天室历史消息丢失的问题
+- 修复系统消息类型错误的问题
+- 修复获取图片消息的原图片 size 大小为0的问题
+- 修复手机修改系统时间后发消息失败问题
+- 修复某些情况下上报会话已读失败，获取未读数目异常的问题 
+- 修复发送在线消息后，可通过会话 getLastMessage 获取到的问题
+- 修复撤回最后一条消息，通过会话获取 lastMsg 状态异常的问题
+- 修复消息撤回后，对方的会话列表依然存在消息内容的问题
+- 修复断网重连的情况下，图片/语音/文件消息发送状态异常的问题
+- 修复登录帐号含有特殊字符，无法发送语音图片的问题
+- 修复V2版本向V4版本发图片，V4版本拿不到微缩图宽高的问题
+- 修复创建一个会话 saveMessage 后，最近会话拉取不到的问题
+- 修复 getMessage 获取不到群Tips消息的 MemberChangeList 内容的问题
+- 修复getLoginStatus获取登录状态异常的问题
+- 修复拒绝加群请求，对方却进了群的问题
+- 修复设置日志路径后，盘符的根目录下也有会一个log文件问题
+- 修复互踢收不到回调的问题 -Mac
 - TUIKit
-  - 全新的UI设计
-  - 全新的架构设计
-  - 完善通讯录、群组管理、关系链等功能
-  - 一大波bugfix
+  - 优化群组管理页面逻辑
+  - 解决iOS 13兼容性问题
+  - 已知问题修复
 
 **Android平台**
 
-- 修复拉取离线消息出现丢消息的问题
-- 修复更换不同 SDKAppId 引起登录失败的问题
-- 修复语音消息播放失败的问题
-- 修复群消息撤回的崩溃
-- 修复获取好友列表和创建群组的6002错误
-- 修复Android 创建群人数过多导致崩溃问题
-- 优化发送消息的效率
-- 缓存优化，降低UI卡顿
+- 修复无网络时发消息超时长的问题
+- 修复消息发送后ID值变化的问题
+- 修复消息乱序的问题
+- 修复拉取聊天室历史消息丢失的问题
+- 修复系统消息类型错误的问题
+- 修复下载文件的进度值异常问题
+- 修复手机修改系统时间后发消息失败问题
+- 修复断网重连的情况下，图片/语音/文件消息发送状态异常的问题
+- 修复群组被解散或则用户被禁言后发消息排序异常的问题
+- 修复某些情况下上报会话已读失败，获取未读数目异常的问题 
+- 修复消息撤回后，对方的会话列表依然存在消息内容的问题
+- 修复撤回最后一条消息，通过会话 getLastMessage 状态异常的问题
+- 修复发送在线消息后，通过会话 getLastMessage 获取到的问题
+- 修复获取图片消息的原图片 size 大小为0的问题
+- 修复V2版本向V4版本发图片，V4版本拿不到微缩图宽高的问题
+- 修复被挤下线后 getLoginUser() 仍可获取登录的用户问题
+- 修复 getSenderProfile 获取个人信息为空的问题
+- 修复群系统消息 TIMGroupSystemElem 中的 getOpUser 为空的问题
+- 修复 getMessage 获取不到群Tips消息的 MemberChangeList 内容的问题
+- 修复创建一个会话 saveMessage 后，最近会话拉取不到的问题
+- 修复设置日志路径后，盘符的根目录下也有会一个log文件问题
+
 - TUIKit
-  - 全新的UI设计
-  - 全新的架构设计
-  - 完善通讯录、群组管理、关系链等功能
-  - 一大波bugfix
+  - 已知问题修复
 
 **Windows平台**
 
-- 修复拉取离线消息出现丢消息的问题
-- 修复更换不同 SDKAppId 引起登录失败的问题
-- 修复语音消息播放失败的问题
-- 修复群消息撤回的崩溃
-- 修复获取好友列表和创建群组的6002错误
-- 缓存优化，降低UI卡顿
-- 优化发送消息的效率
+- 修复无网络时发消息超时长的问题
+- 修复消息发送后ID值变化的问题
+- 修复消息乱序的问题
+- 修复拉取聊天室历史消息丢失的问题
+- 修复系统消息类型错误的问题
+- 修复跨平台库iOS的ImSDK模块中不包含Armv7a架构的问题
+- 修复跨平台库TIMMsgReportReaded接口不支持Message为空的问题
+- 修复跨平台库同一设备下运行IM多个实例登录同一个帐号不互踢问题
+- 跨平台库消息增加获取消息唯一ID的json key
+- 修复设置日志路径后，盘符的根目录下也有会一个log文件问题
+- 修复 getMessage 获取不到群Tips消息的 MemberChangeList 内容的问题
+- 修复撤回最后一条消息，通过会话获取 lastMsg 状态异常的问题
+- 修复某些情况下上报会话已读失败，获取未读数目异常的问题
