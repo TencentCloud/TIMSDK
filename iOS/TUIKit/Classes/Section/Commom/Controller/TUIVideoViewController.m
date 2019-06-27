@@ -16,12 +16,25 @@
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UILabel *progress;
 @property AVPlayerViewController *playerVc;
+
+@property UIImage *saveBackgroundImage;
+@property UIImage *saveShadowImage;
+
 @end
 
 @implementation TUIVideoViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.saveBackgroundImage = [self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault];
+    self.saveShadowImage = self.navigationController.navigationBar.shadowImage;
+    
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
+                                                  forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+
+    
     @weakify(self)
     if (![_data isVideoExist])
     {
@@ -40,10 +53,7 @@
         _progress.font = [UIFont systemFontOfSize:18];
         _progress.textAlignment = NSTextAlignmentCenter;
         _progress.userInteractionEnabled = YES;
-        UIGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
-        [_progress addGestureRecognizer:tap];
         [self.view addSubview:_progress];
-        
         
         [RACObserve(_data, thumbImage) subscribeNext:^(UIImage *x) {
             @strongify(self)
@@ -78,6 +88,15 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
 }
 
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+    if (parent == nil) {
+        [self.navigationController.navigationBar setBackgroundImage:self.saveBackgroundImage
+                                                      forBarMetrics:UIBarMetricsDefault];
+        self.navigationController.navigationBar.shadowImage = self.saveShadowImage;
+    }
+}
+
 - (void)addPlayer:(NSString *)path
 {
     AVPlayerViewController *vc = [[AVPlayerViewController alloc] initWithNibName:nil bundle:nil];
@@ -98,9 +117,5 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)onTap:(UIGestureRecognizer *)recognizer
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 
 @end

@@ -20,23 +20,28 @@
 #import "TIMUserProfile+DataProvider.h"
 #import "Toast/Toast.h"
 #import "TUIKit.h"
+#import "TUIGroupPendencyCellData.h"
+#import "TCommonPendencyCellData.h"
 @import ImSDK;
 
 @TCServiceRegister(TUIUserProfileControllerServiceProtocol, TUserProfileController)
 
 @interface TUserProfileController ()
-@property NSMutableArray<TCommonTextCellData *> *dataList;
-@property UITableViewHeaderFooterView *footer;
+@property NSMutableArray<NSArray *> *dataList;
 @end
 
 @implementation TUserProfileController
 {
     TIMUserProfile *_userProfile;
     ProfileControllerAction _actionType;
+    TUIGroupPendencyCellData *_groupPendency;
+    TCommonPendencyCellData *_pendency;
 }
 
 @synthesize userProfile = _userProfile;
 @synthesize actionType = _actionType;
+@synthesize groupPendency = _groupPendency;
+@synthesize pendency = _pendency;
 
 - (instancetype)init
 {
@@ -56,22 +61,49 @@
     self.title = @"详细资料";
 
     [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"TextCell"];
+    [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"CardCell"];
+    [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
     
     [self loadData];
 }
 
 - (void)loadData
 {
-    
     NSMutableArray *list = @[].mutableCopy;
     [list addObject:({
-        TCommonTextCellData *data = TCommonTextCellData.new;
-        data.key = @"昵称";
-        data.value = [self.userProfile showName];
-        data;
+        NSMutableArray *inlist = @[].mutableCopy;
+        [inlist addObject:({
+            TUIProfileCardCellData *personal = [[TUIProfileCardCellData alloc] init];
+            personal.identifier = self.userProfile.identifier;
+            personal.avatarImage = DefaultAvatarImage;
+            personal.name = [self.userProfile showName];
+            personal.signature = [self.userProfile showSignature];
+            personal.reuseId = @"CardCell";
+            personal;
+        })];
+        inlist;
     })];
+    
+    if (self.pendency || self.groupPendency) {
+        [list addObject:({
+            NSMutableArray *inlist = @[].mutableCopy;
+            [inlist addObject:({
+                TCommonTextCellData *data = TCommonTextCellData.new;
+                data.key = @"验证消息";
+                if (self.pendency) {
+                    data.value = self.pendency.addWording;
+                } else if (self.groupPendency) {
+                    data.value = self.groupPendency.requestMsg;
+                }
+                data.reuseId = @"TextCell";
+                data;
+            })];
+            inlist;
+        })];
+    }
+    
+    
     self.dataList = list;
-    self.footer = [[UITableViewHeaderFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.mm_w, 80)];
     
     if (self.actionType == PCA_ADD_FRIEND) {
         TIMFriendCheckInfo *ck = TIMFriendCheckInfo.new;
@@ -82,16 +114,20 @@
             if (result.resultType == TIM_FRIEND_RELATION_TYPE_MY_UNI || result.resultType == TIM_FRIEND_RELATION_TYPE_BOTHWAY) {
                 return;
             }
-           
             
-            UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-            [self.footer addSubview:btn2];
-            [btn2 setTitle:@"加好友" forState:UIControlStateNormal];
-            [btn2 setBackgroundColor:[UIColor blueColor]];
-            [btn2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            btn2.mm_left(12).mm_height(48).mm_top(20).mm_flexToRight(12);
-            [btn2 addTarget:self action:@selector(onAddFriend) forControlEvents:UIControlEventTouchUpInside];
             
+            [self.dataList addObject:({
+                NSMutableArray *inlist = @[].mutableCopy;
+                [inlist addObject:({
+                    TUIButtonCellData *data = TUIButtonCellData.new;
+                    data.title = @"加好友";
+                    data.style = ButtonGreen;
+                    data.cbuttonSelector = @selector(onAddFriend);
+                    data.reuseId = @"ButtonCell";
+                    data;
+                })];
+                inlist;
+            })];
             [self.tableView reloadData];
         } fail:^(int code, NSString *msg) {
             
@@ -99,21 +135,49 @@
     }
     
     if (self.actionType == PCA_PENDENDY_CONFIRM) {
-        UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [self.footer addSubview:btn2];
-        [btn2 setTitle:@"拒绝" forState:UIControlStateNormal];
-        [btn2 setBackgroundColor:[UIColor redColor]];
-        [btn2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        btn2.mm_left(12).mm_height(48).mm_top(20).mm_width((self.view.mm_w-36)/2);
-        [btn2 addTarget:self action:@selector(onRejectFriend) forControlEvents:UIControlEventTouchUpInside];
-        
-        UIButton *btn3 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [self.footer addSubview:btn3];
-        [btn3 setTitle:@"同意" forState:UIControlStateNormal];
-        [btn3 setBackgroundColor:[UIColor blueColor]];
-        [btn3 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        btn3.mm_height(48).mm_top(20).mm_width((self.view.mm_w-36)/2).mm_right(12);
-        [btn3 addTarget:self action:@selector(onAgreeFriend) forControlEvents:UIControlEventTouchUpInside];
+        [self.dataList addObject:({
+            NSMutableArray *inlist = @[].mutableCopy;
+            [inlist addObject:({
+                TUIButtonCellData *data = TUIButtonCellData.new;
+                data.title = @"同意";
+                data.style = ButtonGreen;
+                data.cbuttonSelector = @selector(onAgreeFriend);
+                data.reuseId = @"ButtonCell";
+                data;
+            })];
+            [inlist addObject:({
+                TUIButtonCellData *data = TUIButtonCellData.new;
+                data.title = @"拒绝";
+                data.style = ButtonRedText;
+                data.cbuttonSelector =  @selector(onRejectFriend);
+                data.reuseId = @"ButtonCell";
+                data;
+            })];
+            inlist;
+        })];
+    }
+    
+    if (self.actionType == PCA_GROUP_CONFIRM) {
+        [self.dataList addObject:({
+            NSMutableArray *inlist = @[].mutableCopy;
+            [inlist addObject:({
+                TUIButtonCellData *data = TUIButtonCellData.new;
+                data.title = @"同意";
+                data.style = ButtonGreen;
+                data.cbuttonSelector = @selector(onAgreeGroup);
+                data.reuseId = @"ButtonCell";
+                data;
+            })];
+            [inlist addObject:({
+                TUIButtonCellData *data = TUIButtonCellData.new;
+                data.title = @"拒绝";
+                data.style = ButtonRedText;
+                data.cbuttonSelector =  @selector(onRejectGroup);
+                data.reuseId = @"ButtonCell";
+                data;
+            })];
+            inlist;
+        })];
     }
     
     [self.tableView reloadData];
@@ -122,58 +186,28 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dataList.count;
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.dataList[section].count;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    TCommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
-    [cell fillWithData:self.dataList[indexPath.row]];
+    
+    TCommonCellData *data = self.dataList[indexPath.section][indexPath.row];
+    TCommonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
+    [cell fillWithData:data];
     
     return cell;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    UITableViewHeaderFooterView *header = [[UITableViewHeaderFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.mm_w, 120)];
-    UIImageView *avatarView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    [header addSubview:avatarView];
-    if (self.userProfile.faceURL) {
-        [avatarView sd_setImageWithURL:[NSURL URLWithString:self.userProfile.faceURL] placeholderImage:DefaultAvatarImage];
-    } else {
-        [avatarView setImage:DefaultAvatarImage];
-    }
-    avatarView.layer.cornerRadius = 40;
-    avatarView.layer.masksToBounds = YES;
-    avatarView.mm_width(80).mm_height(80).mm_center();
-    
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
-    [header addSubview:label];
-    label.textAlignment = NSTextAlignmentCenter;
-    label.mm_width(header.mm_w).mm_top(avatarView.mm_maxY+10).mm_height(20);
-    label.text = self.userProfile.identifier;
-    label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
-    
-    return header;
+    TCommonCellData *data = self.dataList[indexPath.section][indexPath.row];
+    return [data heightOfWidth:Screen_Width];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 160;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    return self.footer;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return 80;
-}
 
 - (void)onSendMessage
 {
@@ -195,30 +229,28 @@
 
 - (void)onAgreeFriend
 {
-    TIMFriendResponse *rsp = TIMFriendResponse.new;
-    rsp.identifier = self.userProfile.identifier;
-    rsp.responseType = TIM_FRIEND_RESPONSE_AGREE_AND_ADD;
-    [[TIMFriendshipManager sharedInstance] doResponse:rsp succ:^(TIMFriendResult *result) {
-        [self.toastView makeToast:@"已发送"];
-    } fail:^(int code, NSString *msg) {
-        [self.toastView makeToast:msg];
-    }];
+    [self.pendency agree];
 }
 
 - (void)onRejectFriend
 {
-    TIMFriendResponse *rsp = TIMFriendResponse.new;
-    rsp.identifier = self.userProfile.identifier;;
-    rsp.responseType = TIM_FRIEND_RESPONSE_REJECT;
-    [[TIMFriendshipManager sharedInstance] doResponse:rsp succ:^(TIMFriendResult *result) {
-        [self.toastView makeToast:@"已发送"];
-    } fail:^(int code, NSString *msg) {
-        [self.toastView makeToast:msg];
-    }];
+    [self.pendency reject];
+}
+
+- (void)onAgreeGroup
+{
+    [self.groupPendency accept];
+}
+
+- (void)onRejectGroup
+{
+    [self.groupPendency reject];
 }
 
 - (UIView *)toastView
 {
     return [UIApplication sharedApplication].keyWindow;
 }
+
+
 @end

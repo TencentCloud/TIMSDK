@@ -7,6 +7,9 @@
 
 #import "TConversationListViewModel.h"
 #import "TUILocalStorage.h"
+#import "TUIKit.h"
+#import "THeader.h"
+
 @import ImSDK;
 
 @interface TConversationListViewModel ()
@@ -15,6 +18,21 @@
 @end
 
 @implementation TConversationListViewModel
+
+- (instancetype)init
+{
+    if (self = [super init]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(loadConversation) name:TUIKitNotification_TIMRefreshListener object:nil];
+        [self loadConversation];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (void)loadConversation
 {

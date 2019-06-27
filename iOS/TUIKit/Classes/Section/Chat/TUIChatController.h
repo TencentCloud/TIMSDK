@@ -19,6 +19,7 @@
 
 - (TUIMessageCell *)chatController:(TUIChatController *)controller onShowMessageData:(TUIMessageCellData *)cellData;
 
+
 @end
 
 @interface TUIChatController : UIViewController

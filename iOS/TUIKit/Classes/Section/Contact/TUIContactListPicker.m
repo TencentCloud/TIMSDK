@@ -53,7 +53,7 @@ static NSString *kReuseIdentifier = @"PickerIdentifier";
     _accessoryBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_accessoryBtn setBackgroundImage:[UIImage tk_imageNamed:@"icon_cell_blue_normal"] forState:UIControlStateNormal];
     [_accessoryBtn setBackgroundImage:[UIImage tk_imageNamed:@"icon_cell_blue_normal"] forState:UIControlStateHighlighted];
-    [_accessoryBtn setTitle:@"确定" forState:UIControlStateNormal];
+    [_accessoryBtn setTitle:@" 确定 " forState:UIControlStateNormal];
     [self addSubview:_accessoryBtn];
 }
 

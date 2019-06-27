@@ -91,7 +91,7 @@
  *
  *  @param group   群组Id
  *  @param members 要加入的成员列表（NSString* 类型数组）
- *  @param succ    成功回调
+ *  @param succ    成功回调 (TIMGroupMemberResult 列表)
  *  @param fail    失败回调
  *
  *  @return 0：成功；1：失败
@@ -108,7 +108,7 @@
  *  @param group   群组Id
  *  @param reason  删除原因
  *  @param members 要删除的成员列表
- *  @param succ    成功回调
+ *  @param succ    成功回调 (TIMGroupMemberResult 列表)
  *  @param fail    失败回调
  *
  *  @return 0：成功；1：失败
@@ -187,7 +187,7 @@
  *  3. 直播大群：只能拉取部分成员（包括群主、管理员和部分成员）。
  *
  *  @param group 群组Id
- *  @param succ  成功回调(TIMGroupMemberInfo列表)
+ *  @param succ  成功回调 (TIMGroupMemberInfo 列表)
  *  @param fail  失败回调
  *
  *  @return 0：成功；1：失败
@@ -201,7 +201,7 @@
  *
  *  @param group   群组Id
  *  @param members 成员Id（NSString*）列表
- *  @param succ    成功回调(TIMGroupMemberInfo列表)
+ *  @param succ    成功回调 (TIMGroupMemberInfo 列表)
  *  @param fail    失败回调
  *
  *  @return 0：成功；1：失败

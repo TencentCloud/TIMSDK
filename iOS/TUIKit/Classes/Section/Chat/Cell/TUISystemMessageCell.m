@@ -48,6 +48,8 @@
     [super layoutSubviews];
     self.nameLabel.hidden = YES;
     self.avatarView.hidden = YES;
+    self.retryView.hidden = YES;
+    self.indicator.hidden = YES;
     self.container.mm_center();
     self.messageLabel.mm_fill();
 }

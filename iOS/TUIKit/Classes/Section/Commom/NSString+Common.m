@@ -707,5 +707,12 @@ char pinyinFirstLetter(unsigned short hanzi)
     return contentSize;
 }
 
-
+- (NSString *)safePathString
+{
+    NSString *homePrefix = [NSHomeDirectory() stringByDeletingLastPathComponent];
+    if ([self hasPrefix:homePrefix]) {
+        return [NSHomeDirectory() stringByAppendingString:[self substringFromIndex:[NSHomeDirectory() length]]];
+    }
+    return self;
+}
 @end

@@ -10,9 +10,9 @@
 
 @interface TGroupMemberCellData : NSObject
 @property (nonatomic, strong) NSString *identifier;
-@property (nonatomic, strong) NSString *head;
+@property (nonatomic, strong) UIImage *avatar;
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, assign) SEL selector;
+@property NSInteger tag;
 @end
 
 @interface TUIGroupMemberCell : UICollectionViewCell

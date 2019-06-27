@@ -20,5 +20,6 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (BOOL)isAmr:(NSString *)path;
 + (BOOL)convertAmr:(NSString*)amrPath toWav:(NSString*)wavPath;
 + (BOOL)convertWav:(NSString*)wavPath toAmr:(NSString*)amrPath;
-+ (void)asyncDecodeImage:(NSString *)path queue:(dispatch_queue_t)queue complete:(TAsyncImageComplete)complete;
++ (void)asyncDecodeImage:(NSString *)path complete:(TAsyncImageComplete)complete;
++ (void)makeToast:(NSString *)str;
 @end

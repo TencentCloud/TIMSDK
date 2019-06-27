@@ -15,9 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *fileName;
 @property (nonatomic, strong) NSString *uuid;
 @property (nonatomic, assign) int length;
-@property (nonatomic, assign) int uploadProgress;
+@property (nonatomic, assign) NSUInteger uploadProgress;
+@property (nonatomic, assign) NSUInteger downladProgress;
 @property (nonatomic, assign) BOOL isDownloading;
-- (void)downloadFile:(TDownloadProgress)progress response:(TDownloadResponse)response;
+- (void)downloadFile;
+- (BOOL)isLocalExist;
+
 - (NSString *)getFilePath:(BOOL *)isExist;
 
 @end

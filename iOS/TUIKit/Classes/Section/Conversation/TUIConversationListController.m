@@ -28,7 +28,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [super viewDidLoad];
     
     [self setupViews];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onRefreshConversations:) name:TUIKitNotification_TIMRefreshListener object:nil];
+
 
     
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
@@ -56,10 +56,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     }];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [self updateConversations];
-}
+
 
 - (TConversationListViewModel *)viewModel
 {
@@ -70,16 +67,6 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
         };
     }
     return _viewModel;
-}
-
-- (void)updateConversations
-{
-    [self.viewModel loadConversation];
-}
-
-- (void)onRefreshConversations:(NSNotification *)notification
-{
-    [self updateConversations];
 }
 
 

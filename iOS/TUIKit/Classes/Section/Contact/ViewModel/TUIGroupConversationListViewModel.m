@@ -7,12 +7,16 @@
 
 #import "TUIGroupConversationListViewModel.h"
 #import "TUILocalStorage.h"
+#import "ReactiveObjC/ReactiveObjC.h"
+#import "MMLayout/UIView+MMLayout.h"
+#import "NSString+Common.h"
+
 @import ImSDK;
 
 @interface TUIGroupConversationListViewModel ()
 @property BOOL isLoadFinished;
 @property BOOL isLoading;
-@property NSDictionary<NSString *, NSArray<TUIConversationCellData *> *> *dataDict;
+@property NSDictionary<NSString *, NSArray<TCommonContactCellData *> *> *dataDict;
 @property NSArray *groupList;
 @end
 
@@ -28,37 +32,45 @@
     
     NSMutableDictionary *dataDict = @{}.mutableCopy;
     NSMutableArray *groupList = @[].mutableCopy;
-    NSMutableDictionary *groupDict = @{}.mutableCopy;
-
-    TIMManager *manager = [TIMManager sharedInstance];
-    NSArray *convs = [manager getConversationList];
-    for (TIMConversation *conv in convs) {
+    NSMutableArray *nonameList = @[].mutableCopy;
+    
+    @weakify(self)
+    [[TIMGroupManager sharedInstance] getGroupList:^(NSArray<TIMGroupInfo *> *arr) {
+        @strongify(self)
+        for (TIMGroupInfo *group in arr) {
+            
+            TCommonContactCellData *data = [[TCommonContactCellData alloc] initWithGroupInfo:group];
+            
+            NSString *group = [[data.title firstPinYin] uppercaseString];
+            if (group.length == 0 || !isalpha([group characterAtIndex:0])) {
+                [nonameList addObject:data];
+                continue;
+            }
+            NSMutableArray *list = [dataDict objectForKey:group];
+            if (!list) {
+                list = @[].mutableCopy;
+                dataDict[group] = list;
+                [groupList addObject:group];
+            }
+            [list addObject:data];
+        }
+    
         
-        TUIConversationCellData *data = [[TUIConversationCellData alloc] initWithConversation:conv];
-        if ([data title].length == 0)
-            continue;
-        if ([data convType] != TIM_GROUP)
-            continue;
-
-        NSString *group = @"";
-        if ([data.time timeIntervalSinceNow] < 3 * 24 * 60 * 60) {
-            group = @"近三天";
-            groupDict[@"1"] = group;
+        [groupList sortUsingSelector:@selector(localizedStandardCompare:)];
+        if (nonameList.count) {
+            [groupList addObject:@"#"];
+            dataDict[@"#"] = nonameList;
+        }
+        for (NSMutableArray *list in [self.dataDict allValues]) {
+            [list sortUsingSelector:@selector(compare:)];
         }
         
-        NSMutableArray *list = [dataDict objectForKey:group];
-        if (!list) {
-            list = @[].mutableCopy;
-            dataDict[group] = list;
-        }
-        [list addObject:data];
-    }
-    for (NSString *key in groupDict) {
-        [groupList addObject:groupDict[key]];
-    }
-    self.groupList = groupList;
-    self.dataDict = dataDict;
-    self.isLoadFinished = YES;
+        self.groupList = groupList;
+        self.dataDict = dataDict;
+        self.isLoadFinished = YES;
+        
+    } fail:nil];
+    
 }
 
 - (void)removeData:(TUIConversationCellData *)data
@@ -73,7 +85,6 @@
         }
     }
     self.dataDict = dictDict;
-    [[TIMManager sharedInstance] deleteConversation:data.convType receiver:data.convId];
 }
 
 

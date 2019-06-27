@@ -19,6 +19,7 @@ typedef void (^TDownloadResponse)(int code, NSString *desc, NSString *path);
 - (void)onLongPressMessage:(TUIMessageCell *)cell;
 - (void)onRetryMessage:(TUIMessageCell *)cell;
 - (void)onSelectMessage:(TUIMessageCell *)cell;
+- (void)onSelectMessageAvatar:(TUIMessageCell *)cell;
 @end
 
 @interface TUIMessageCell : TCommonTableViewCell

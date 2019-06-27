@@ -84,7 +84,7 @@
     if (!isExist) {
         return;
     }
-    [THelper asyncDecodeImage:path queue:dispatch_get_global_queue(0, 0) complete:^(NSString *path, UIImage *image) {
+    [THelper asyncDecodeImage:path complete:^(NSString *path, UIImage *image) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.thumbImage = image;
             self.thumbProgress = 100;
@@ -109,6 +109,7 @@
     @weakify(self)
     TIMVideo *imVideo = [self getIMVideo];
     [imVideo getVideo:path progress:^(NSInteger curSize, NSInteger totalSize) {
+        @strongify(self)
         [self updateVideoProgress:curSize * 100 / totalSize];
     } succ:^{
         @strongify(self)

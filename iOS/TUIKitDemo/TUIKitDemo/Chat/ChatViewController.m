@@ -35,7 +35,9 @@
     [self addChildViewController:_chat];
     [self.view addSubview:_chat.view];
     
-    self.title = _conversationData.title;
+    
+    RAC(self, title) = RACObserve(_conversationData, title);
+    
 #if CUSTOM
     NSMutableArray *moreMenus = [NSMutableArray arrayWithArray:_chat.moreMenus];
     [moreMenus addObject:({

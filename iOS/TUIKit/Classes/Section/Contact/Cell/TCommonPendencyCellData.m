@@ -7,6 +7,7 @@
 
 #import "TCommonPendencyCellData.h"
 #import "TIMUserProfile+DataProvider.h"
+#import "Toast/Toast.h"
 
 @implementation TCommonPendencyCellData
 
@@ -29,4 +30,32 @@
     return [self.identifier isEqual:object.identifier];
 }
 
+- (void)agree
+{
+    TIMFriendResponse *rsp = TIMFriendResponse.new;
+    rsp.identifier = _identifier;
+    rsp.responseType = TIM_FRIEND_RESPONSE_AGREE_AND_ADD;
+    [[TIMFriendshipManager sharedInstance] doResponse:rsp succ:^(TIMFriendResult *result) {
+        [self.toastView makeToast:@"已发送"];
+    } fail:^(int code, NSString *msg) {
+        [self.toastView makeToast:msg];
+    }];
+}
+
+- (void)reject
+{
+    TIMFriendResponse *rsp = TIMFriendResponse.new;
+    rsp.identifier = _identifier;;
+    rsp.responseType = TIM_FRIEND_RESPONSE_REJECT;
+    [[TIMFriendshipManager sharedInstance] doResponse:rsp succ:^(TIMFriendResult *result) {
+        [self.toastView makeToast:@"已发送"];
+    } fail:^(int code, NSString *msg) {
+        [self.toastView makeToast:msg];
+    }];
+}
+
+- (UIView *)toastView
+{
+    return [UIApplication sharedApplication].keyWindow;
+}
 @end

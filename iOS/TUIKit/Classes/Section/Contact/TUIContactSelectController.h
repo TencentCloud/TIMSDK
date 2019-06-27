@@ -27,6 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property NSInteger maxSelectCount;
 
+/**
+ * 自定义的数据列表
+ */
+@property NSArray *sourceIds;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -9,6 +9,7 @@
 #import "THelper.h"
 #import "THeader.h"
 #import "ReactiveObjC/ReactiveObjC.h"
+#import "SDWebImage/SDImageCache.h"
 
 @import ImSDK;
 
@@ -113,23 +114,37 @@
     {
         return;
     }
-    [THelper asyncDecodeImage:path queue:dispatch_get_global_queue(0, 0) complete:^(NSString *path, UIImage *image) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (type == TImage_Type_Thumb) {
-                self.thumbImage = image;
-                self.thumbProgress = 100;
-                self.uploadProgress = 100;
-            }
-            if (type == TImage_Type_Large) {
-                self.largeImage = image;
-                self.largeProgress = 100;
-            }
-            if (type == TImage_Type_Origin) {
-                self.originImage = image;
-                self.originProgress = 100;
-            }
-        });
-    }];
+    
+    void (^finishBlock)(UIImage *) = ^(UIImage *image){
+        if (type == TImage_Type_Thumb) {
+            self.thumbImage = image;
+            self.thumbProgress = 100;
+            self.uploadProgress = 100;
+        }
+        if (type == TImage_Type_Large) {
+            self.largeImage = image;
+            self.largeProgress = 100;
+        }
+        if (type == TImage_Type_Origin) {
+            self.originImage = image;
+            self.originProgress = 100;
+        }
+    };
+    
+    NSString *cacheKey = [path substringFromIndex:TUIKit_Image_Path.length];
+    
+    
+    UIImage *cacheImage = [[SDImageCache sharedImageCache] imageFromCacheForKey:cacheKey];
+    if (cacheImage) {
+        finishBlock(cacheImage);
+    } else {
+        [THelper asyncDecodeImage:path complete:^(NSString *path, UIImage *image) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[SDImageCache sharedImageCache] storeImageToMemory:image forKey:cacheKey];
+                finishBlock(image);
+            });
+        }];
+    }
 }
 
 - (TUIImageItem *)getTImageItem:(TUIImageType)type

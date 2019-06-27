@@ -7,12 +7,13 @@
 
 #import <Foundation/Foundation.h>
 #import "TUIConversationCell.h"
+#import "TCommonContactCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIGroupConversationListViewModel : NSObject
 
-@property (readonly) NSDictionary<NSString *, NSArray<TUIConversationCellData *> *> *dataDict;
+@property (readonly) NSDictionary<NSString *, NSArray<TCommonContactCellData *> *> *dataDict;
 @property (readonly) NSArray *groupList;
 
 @property (readonly) BOOL isLoadFinished;
@@ -25,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 删除会话数据
  */
-- (void)removeData:(TUIConversationCellData *)data;
+- (void)removeData:(TCommonContactCellData *)data;
 
 @end
 

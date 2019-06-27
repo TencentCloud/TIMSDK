@@ -9,6 +9,9 @@
 #import "TUIFileViewController.h"
 #import "THeader.h"
 #import <QuickLook/QuickLook.h>
+#import "ReactiveObjC/ReactiveObjC.h"
+#import "MMLayout/UIView+MMLayout.h"
+#import "Toast/Toast.h"
 
 @interface TUIFileViewController () <UIDocumentInteractionControllerDelegate>
 @property (nonatomic, strong) UIImageView *image;
@@ -52,35 +55,31 @@
     [self.view addSubview:_name];
     
     _button = [[UIButton alloc] initWithFrame:CGRectMake(100, _name.frame.origin.y + _name.frame.size.height + 20, self.view.frame.size.width - 200, 40)];
-    [_button setTitle:@"用其他应用程序打" forState:UIControlStateNormal];
     [_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _button.backgroundColor = [UIColor colorWithRed:44/255.0 green:145/255.0 blue:247/255.0 alpha:1.0];
     _button.layer.cornerRadius = 5;
     [_button.layer setMasksToBounds:YES];
     [_button addTarget:self action:@selector(onOpen:) forControlEvents:UIControlEventTouchUpInside];
+    
     [self.view addSubview:_button];
     
-    BOOL isExist = NO;
-    [_data getFilePath:&isExist];
-    if(!isExist || _data.isDownloading){
-        _progress = [[UILabel alloc] initWithFrame:_image.frame];
-        _progress.textColor = [UIColor grayColor];
-        _progress.font = [UIFont systemFontOfSize:15];
-        _progress.textAlignment = NSTextAlignmentCenter;
-        [self.view addSubview:_progress];
-        
-        __weak typeof(self) ws = self;
-        _button.enabled = NO;
-        _progress.hidden = NO;
-        [_data downloadFile:^(NSInteger curSize, NSInteger totalSize) {
-            ws.progress.text = [NSString stringWithFormat:@"%ld%%", curSize * 100 / totalSize];
-        } response:^(int code, NSString *desc, NSString *path) {
-            if(code == 0){
-                ws.progress.hidden = YES;
-                ws.button.enabled = YES;
-            }
-        }];
+    @weakify(self)
+    [RACObserve(_data, downladProgress) subscribeNext:^(NSNumber *x) {
+        @strongify(self)
+        int progress = [x intValue];
+        if (progress < 100 && progress > 0) {
+            [self.button setTitle:[NSString stringWithFormat:@"正在下载%d%%", progress] forState:UIControlStateNormal];
+        } else {
+            [self.button setTitle:@"用其他应用程序打" forState:UIControlStateNormal];
+        }
+    }];
+    if ([_data isLocalExist]) {
+        [self.button setTitle:@"用其他应用程序打" forState:UIControlStateNormal];
+ 
+    } else {
+        [self.button setTitle:@"下载文件" forState:UIControlStateNormal];
     }
+    
 }
 
 - (void)onOpen:(id)sender {
@@ -91,8 +90,12 @@
         _document = [UIDocumentInteractionController interactionControllerWithURL:url];
         _document.delegate = self;
         [_document presentOptionsMenuFromRect:self.view.bounds inView:self.view animated:YES];
+    } else {
+       [_data downloadFile];
     }
 }
+
+
 
 - (void)onBack:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];

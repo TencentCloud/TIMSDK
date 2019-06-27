@@ -9,9 +9,22 @@
 #import "THeader.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "ReactiveObjC/ReactiveObjC.h"
+#import "MMLayout/UIView+MMLayout.h"
+#import "TUIGroupPendencyViewModel.h"
+#import "TUIMessageController.h"
+#import "TUIGroupPendencyController.h"
+#import "TUIFriendProfileControllerServiceProtocol.h"
+#import "TUIUserProfileControllerServiceProtocol.h"
+#import "TCServiceManager.h"
+#import "Toast/Toast.h"
 
 @interface TUIChatController () <TMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate>
 @property (nonatomic, strong) TIMConversation *conversation;
+@property UIView *tipsView;
+@property UILabel *pendencyLabel;
+@property UIButton *pendencyBtn;
+@property TUIGroupPendencyViewModel *pendencyViewModel;
+@property RACSubject *sendMediaSignal;
 @end
 
 @implementation TUIChatController
@@ -28,6 +41,39 @@
         [moreMenus addObject:[TUIInputMoreCellData videoData]];
         [moreMenus addObject:[TUIInputMoreCellData fileData]];
         _moreMenus = moreMenus;
+        
+        if (_conversation.getType == TIM_GROUP) {
+            _pendencyViewModel = [TUIGroupPendencyViewModel new];
+            _pendencyViewModel.groupId = [_conversation getReceiver];
+        }
+        
+        @weakify(self)
+        _sendMediaSignal = [RACSubject subject];
+        [[_sendMediaSignal throttle:1] subscribeNext:^(NSDictionary *info) {
+            @strongify(self)
+            NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+            if([mediaType isEqualToString:(NSString *)kUTTypeImage]){
+                UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+                UIImageOrientation imageOrientation=  image.imageOrientation;
+                if(imageOrientation != UIImageOrientationUp)
+                {
+                    CGFloat aspectRatio = MIN ( 1920 / image.size.width, 1920 / image.size.height );
+                    CGFloat aspectWidth = image.size.width * aspectRatio;
+                    CGFloat aspectHeight = image.size.height * aspectRatio;
+                    
+                    UIGraphicsBeginImageContext(CGSizeMake(aspectWidth, aspectHeight));
+                    [image drawInRect:CGRectMake(0, 0, aspectWidth, aspectHeight)];
+                    image = UIGraphicsGetImageFromCurrentImageContext();
+                    UIGraphicsEndImageContext();
+                }
+                
+                [self sendImageMessage:image];
+            }
+            else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){
+                NSURL *url = [info objectForKey:UIImagePickerControllerMediaURL];
+                [self sendVideoMessage:url];
+            }
+        }];
     }
     return self;
 }
@@ -60,6 +106,7 @@
     //input
     _inputController = [[TUIInputController alloc] init];
     _inputController.view.frame = CGRectMake(0, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight, self.view.frame.size.width, TTextView_Height + Bottom_SafeHeight);
+    _inputController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     _inputController.delegate = self;
     [RACObserve(self, moreMenus) subscribeNext:^(NSArray *x) {
         @strongify(self)
@@ -80,7 +127,60 @@
             }
         }
     }
+    
+
+    self.tipsView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.tipsView.backgroundColor = RGB(246, 234, 190);
+    [self.view addSubview:self.tipsView];
+    self.tipsView.mm_height(24).mm_width(self.view.mm_w);
+    
+    self.pendencyLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    [self.tipsView addSubview:self.pendencyLabel];
+    self.pendencyLabel.font = [UIFont systemFontOfSize:12];
+    
+    
+    self.pendencyBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.tipsView addSubview:self.pendencyBtn];
+    [self.pendencyBtn setTitle:@"点击处理" forState:UIControlStateNormal];
+    [self.pendencyBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [self.pendencyBtn addTarget:self action:@selector(openPendency:) forControlEvents:UIControlEventTouchUpInside];
+    [self.pendencyBtn sizeToFit];
+    self.tipsView.hidden = YES;
+
+    
+    [RACObserve(self.pendencyViewModel, unReadCnt) subscribeNext:^(NSNumber *unReadCnt) {
+        @strongify(self)
+        if ([unReadCnt intValue]) {
+            self.pendencyLabel.text = [NSString stringWithFormat:@"%@条入群请求", unReadCnt];
+            [self.pendencyLabel sizeToFit];
+            CGFloat gap = (self.tipsView.mm_w - self.pendencyLabel.mm_w - self.pendencyBtn.mm_w-8)/2;
+            self.pendencyLabel.mm_left(gap).mm__centerY(self.tipsView.mm_h/2);
+            self.pendencyBtn.mm_hstack(8);
+            
+            [UIView animateWithDuration:1.f animations:^{
+                self.tipsView.hidden = NO;
+                self.tipsView.mm_top(self.navigationController.navigationBar.mm_maxY);
+            }];
+        } else {
+            self.tipsView.hidden = YES;
+        }
+    }];
+    [self getPendencyList];
 }
+
+- (void)getPendencyList
+{
+    if (self.conversation.getType == TIM_GROUP)
+        [self.pendencyViewModel loadData];
+}
+
+- (void)openPendency:(id)sender
+{
+    TUIGroupPendencyController *vc = [[TUIGroupPendencyController alloc] init];
+    vc.viewModel = self.pendencyViewModel;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 
 - (void)inputController:(TUIInputController *)inputController didChangeHeight:(CGFloat)height
 {
@@ -171,6 +271,39 @@
     return nil;
 }
 
+- (void)messageController:(TUIMessageController *)controller onSelectMessageAvatar:(TUIMessageCell *)cell
+{
+    if (cell.messageData.identifier == nil)
+        return;
+    
+    @weakify(self)
+    TIMFriend *friend = [[TIMFriendshipManager sharedInstance] queryFriend:cell.messageData.identifier];
+    if (friend) {
+        id<TUIFriendProfileControllerServiceProtocol> vc = [[TCServiceManager shareInstance] createService:@protocol(TUIFriendProfileControllerServiceProtocol)];
+        if ([vc isKindOfClass:[UIViewController class]]) {
+            vc.friendProfile = friend;
+            [self.navigationController pushViewController:(UIViewController *)vc animated:YES];
+            return;
+        }
+    }
+        
+    [[TIMFriendshipManager sharedInstance] getUsersProfile:@[cell.messageData.identifier] forceUpdate:YES succ:^(NSArray<TIMUserProfile *> *profiles) {
+        @strongify(self)
+        if (profiles.count > 0) {
+            id<TUIUserProfileControllerServiceProtocol> vc = [[TCServiceManager shareInstance] createService:@protocol(TUIUserProfileControllerServiceProtocol)];
+            if ([vc isKindOfClass:[UIViewController class]]) {
+                vc.userProfile = profiles[0];
+                vc.actionType = PCA_ADD_FRIEND;
+                [self.navigationController pushViewController:(UIViewController *)vc animated:YES];
+                return;
+            }
+        }
+    } fail:^(int code, NSString *msg) {
+        @strongify(self)
+        [self.view makeToast:msg];
+    }];
+}
+
 
 - (void)didHideMenuInMessageController:(TUIMessageController *)controller
 {
@@ -209,6 +342,7 @@
     picker.sourceType = UIImagePickerControllerSourceTypeCamera;
     picker.cameraCaptureMode =UIImagePickerControllerCameraCaptureModePhoto;
     picker.delegate = self;
+    
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -218,7 +352,7 @@
                 picker.sourceType = UIImagePickerControllerSourceTypeCamera;
             picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
             picker.cameraCaptureMode =UIImagePickerControllerCameraCaptureModeVideo;
-            picker.videoQuality =UIImagePickerControllerQualityTypeHigh;
+            picker.videoQuality = UIImagePickerControllerQualityTypeMedium;
     [picker setVideoMaximumDuration:15];
     picker.delegate = self;
     [self presentViewController:picker animated:YES completion:nil];
@@ -234,25 +368,8 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
-    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
-    if([mediaType isEqualToString:(NSString *)kUTTypeImage]){
-        UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-        UIImageOrientation imageOrientation=  image.imageOrientation;
-        if(imageOrientation != UIImageOrientationUp)
-        {
-            UIGraphicsBeginImageContext(image.size);
-            [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
-            image = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-        }
-
-        [self sendImageMessage:image];
-    }
-    else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){
-        NSURL *url = [info objectForKey:UIImagePickerControllerMediaURL];
-        [self sendVideoMessage:url];
-    }
-
+    // 快速点的时候会回调多次
+    [_sendMediaSignal sendNext:info];
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 

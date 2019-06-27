@@ -11,8 +11,6 @@
 @interface TUIImageCache()
 @property (nonatomic, strong) NSMutableDictionary *resourceCache;
 @property (nonatomic, strong) NSMutableDictionary *faceCache;
-@property (nonatomic, strong) dispatch_queue_t decodeResourceQueue;
-@property (nonatomic, strong) dispatch_queue_t decodeFaceQueue;
 @end
 
 @implementation TUIImageCache
@@ -31,8 +29,6 @@
 {
     self = [super init];
     if (self) {
-        _decodeResourceQueue = dispatch_queue_create("tuikit.decoderesourcequeue", DISPATCH_QUEUE_SERIAL);
-        _decodeFaceQueue = dispatch_queue_create("tuikit.decodefacequeue", DISPATCH_QUEUE_SERIAL);
         _resourceCache = [NSMutableDictionary dictionary];
         _faceCache = [NSMutableDictionary dictionary];
     }
@@ -42,7 +38,7 @@
 - (void)addResourceToCache:(NSString *)path
 {
     __weak typeof(self) ws = self;
-    [THelper asyncDecodeImage:path queue:_decodeResourceQueue complete:^(NSString *key, UIImage *image) {
+    [THelper asyncDecodeImage:path complete:^(NSString *key, UIImage *image) {
         __strong __typeof(ws) strongSelf = ws;
         [strongSelf.resourceCache setValue:image forKey:key];
     }];
@@ -63,7 +59,7 @@
 - (void)addFaceToCache:(NSString *)path
 {
     __weak typeof(self) ws = self;
-    [THelper asyncDecodeImage:path queue:_decodeFaceQueue complete:^(NSString *key, UIImage *image) {
+    [THelper asyncDecodeImage:path complete:^(NSString *key, UIImage *image) {
         __strong __typeof(ws) strongSelf = ws;
         [strongSelf.faceCache setValue:image forKey:key];
     }];

@@ -120,6 +120,15 @@
                         }
                     }
                         break;
+                    case TIM_GROUP_TIPS_TYPE_QUIT_GRP:
+                    {
+                        if (tips.opUser.length) {
+                            str = [NSString stringWithFormat:@"您所在的群已被\"%@\"解散", tips.opUser];
+                        } else {
+                            str = @"您所在的群已解散";
+                        }
+                    }
+                        break;
                     default:
                         break;
                 }

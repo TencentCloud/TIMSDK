@@ -25,6 +25,7 @@
 #import "TUIVideoViewController.h"
 #import "TUIFileViewController.h"
 #import "TUIConversationDataProviderService.h"
+#import "NSString+Common.h"
 @import ImSDK;
 
 #define MAX_MESSAGE_SEP_DLAY (5 * 60)
@@ -207,20 +208,18 @@
         TIMMessage *imMsg = uiMsg.innerMessage;
         if(imMsg){
             if([imMsg respondsToLocator:[msg locator]]){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if([uiMsg isKindOfClass:[TUIImageMessageCellData class]]){
-                        TUIImageMessageCellData *data = (TUIImageMessageCellData *)uiMsg;
-                        data.uploadProgress = progress.intValue;
-                    }
-                    else if([uiMsg isKindOfClass:[TUIVideoMessageCellData class]]){
-                        TUIVideoMessageCellData *data = (TUIVideoMessageCellData *)uiMsg;
-                        data.uploadProgress = progress.intValue;
-                    }
-                    else if([uiMsg isKindOfClass:[TUIFileMessageCellData class]]){
-                        TUIFileMessageCellData *data = (TUIFileMessageCellData *)uiMsg;
-                        data.uploadProgress = progress.intValue;
-                    }
-                });
+                if([uiMsg isKindOfClass:[TUIImageMessageCellData class]]){
+                    TUIImageMessageCellData *data = (TUIImageMessageCellData *)uiMsg;
+                    data.uploadProgress = progress.intValue;
+                }
+                else if([uiMsg isKindOfClass:[TUIVideoMessageCellData class]]){
+                    TUIVideoMessageCellData *data = (TUIVideoMessageCellData *)uiMsg;
+                    data.uploadProgress = progress.intValue;
+                }
+                else if([uiMsg isKindOfClass:[TUIFileMessageCellData class]]){
+                    TUIFileMessageCellData *data = (TUIFileMessageCellData *)uiMsg;
+                    data.uploadProgress = progress.intValue;
+                }
             }
         }
     }
@@ -231,9 +230,7 @@
     NSMutableArray *uiMsgs = [NSMutableArray array];
     for (NSInteger k = msgs.count - 1; k >= 0; --k) {
         TIMMessage *msg = msgs[k];
-        if(![[[msg getConversation] getReceiver] isEqualToString:[_conv getReceiver]]){
-            continue;
-        }
+
         if(msg.status == TIM_MSG_STATUS_HAS_DELETED){
             continue;
         }
@@ -244,6 +241,19 @@
             TIMElem *elem = [msg getElem:i];
             if ([elem isKindOfClass:[TIMSNSSystemElem class]] || [elem isKindOfClass:[TIMProfileSystemElem class]]) {
                 //资料关系链消息不往列表里面抛
+                continue;
+            }
+            if ([elem isKindOfClass:[TIMGroupTipsElem class]]) {
+                TIMGroupTipsElem *gt = (TIMGroupTipsElem *)elem;
+                if (![[gt group] isEqualToString:[_conv getReceiver]]) {
+                    continue;
+                }
+            } else if ([elem isKindOfClass:[TIMGroupSystemElem class]]) {
+                TIMGroupSystemElem *gs = (TIMGroupSystemElem *)elem;
+                if (![[gs group] isEqualToString:[_conv getReceiver]]) {
+                    continue;
+                }
+            } else if(![[[msg getConversation] getReceiver] isEqualToString:[_conv getReceiver]]){
                 continue;
             }
             hasShowElem =true;
@@ -302,7 +312,7 @@
             else if([elem isKindOfClass:[TIMImageElem class]]){
                 TIMImageElem *image = (TIMImageElem *)elem;
                 TUIImageMessageCellData *imageData = [[TUIImageMessageCellData alloc] initWithDirection:(msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-                imageData.path = image.path;
+                imageData.path = [image.path safePathString];
                 imageData.items = [NSMutableArray array];
                 for (TIMImage *item in image.imageList) {
                     TUIImageItem *itemData = [[TUIImageItem alloc] init];
@@ -333,8 +343,8 @@
             else if([elem isKindOfClass:[TIMVideoElem class]]){
                 TIMVideoElem *video = (TIMVideoElem *)elem;
                 TUIVideoMessageCellData *videoData = [[TUIVideoMessageCellData alloc] initWithDirection:(msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-                videoData.videoPath = video.videoPath;
-                videoData.snapshotPath = video.snapshotPath;
+                videoData.videoPath = [video.videoPath safePathString];
+                videoData.snapshotPath = [video.snapshotPath safePathString];
                 
                 videoData.videoItem = [[TUIVideoItem alloc] init];
                 videoData.videoItem.uuid = video.video.uuid;
@@ -353,60 +363,68 @@
             else if([elem isKindOfClass:[TIMFileElem class]]){
                 TIMFileElem *file = (TIMFileElem *)elem;
                 TUIFileMessageCellData *fileData = [[TUIFileMessageCellData alloc] initWithDirection:(msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-                fileData.path = file.path;
+                fileData.path = [file.path safePathString];
                 fileData.fileName = file.filename;
                 fileData.length = file.fileSize;
                 fileData.uuid = file.uuid;
 
                 data = fileData;
-            }
-#if 0
-            if([elem isKindOfClass:[TIMCustomElem class]]){
+            } else if ([elem isKindOfClass:[TIMCustomElem class]]) {
                 TIMCustomElem *custom = (TIMCustomElem *)elem;
-                TUISystemMessageCellData *systemData = [[TUISystemMessageCellData alloc] initWithDirection:(msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-                systemData.content = custom.ext;
-                if (systemData.content.length > 0)
-                    data = systemData;
+                if (custom.data.bytes) {
+                    if (strcmp(custom.data.bytes, "group_create") == 0 ||
+                        strcmp(custom.data.bytes, "group_delete") == 0 ||
+                        strcmp(custom.data.bytes, "group_quit") == 0) {
+                        TUISystemMessageCellData *sysdata = [[TUISystemMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
+                        sysdata.content = [msg getDisplayString];
+                        
+                        data = sysdata;
+                    }
+                }
+            } else {
+                TUISystemMessageCellData *sysdata = [[TUISystemMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
+                sysdata.content = [msg getDisplayString];
+                if (sysdata.content.length) {
+                    data = sysdata;
+                }
             }
-#endif
             if([[msg getConversation] getType] == TIM_GROUP && !msg.isSelf){
                 data.showName = YES;
             }
             if(data){
                 data.direction = msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
-                //data.name = msg.sender;
+                data.identifier = [msg sender];
                 if([[msg getConversation] getType] == TIM_GROUP){
                     data.name = [msg getSenderGroupMemberProfile].nameCard;
                 }
-                else if([[msg getConversation] getType] == TIM_C2C){
+                if(data.name.length == 0) {
                     TIMUserProfile *profile = [msg getSenderProfile:^(TIMUserProfile *proflie) {
                         //更新 profile
                         if (proflie) {
-                            data.name = proflie.nickname;
+                            data.name = [proflie showName];
                         }
                     }];
-                    data.name = profile.nickname;
+                    if (profile) {
+                        data.name = [profile showName];
+                    } else {
+                        data.name = msg.sender;
+                    }
                 }
-                if(data.name.length == 0){
-                    data.name = msg.sender;
+                switch (msg.status) {
+                    case TIM_MSG_STATUS_SEND_SUCC:
+                        data.status = Msg_Status_Succ;
+                        break;
+                    case TIM_MSG_STATUS_SEND_FAIL:
+                        data.status = Msg_Status_Fail;
+                        break;
+                    case TIM_MSG_STATUS_SENDING:
+                        data.status = Msg_Status_Sending_2;
+                        break;
+                    default:
+                        break;
                 }
-                if(msg.status == TIM_MSG_STATUS_SEND_SUCC){
-                    data.status = Msg_Status_Succ;
-                    [uiMsgs addObject:data];
-                }
-                else if(msg.status == TIM_MSG_STATUS_SEND_FAIL){
-                    data.status = Msg_Status_Fail;
-                    [uiMsgs addObject:data];
-                }
+                [uiMsgs addObject:data];
                 data.innerMessage = msg;
-            }
-            
-            if([elem isKindOfClass:[TIMGroupTipsElem class]]){
-                TUISystemMessageCellData *sysdata = [[TUISystemMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
-                sysdata.content = [msg getDisplayString];
-
-                [uiMsgs addObject:sysdata];
-                data = sysdata;
             }
         }
     }
@@ -674,6 +692,10 @@
 {
     TUIMessageCellData *data = cell.messageData;
     NSMutableArray *items = [NSMutableArray array];
+    if ([data isKindOfClass:[TUITextMessageCellData class]]) {
+        [items addObject:[[UIMenuItem alloc] initWithTitle:@"复制" action:@selector(onCopyMsg:)]];
+    }
+    
     [items addObject:[[UIMenuItem alloc] initWithTitle:@"删除" action:@selector(onDelete:)]];
     TIMMessage *imMsg = data.innerMessage;
     if(imMsg){
@@ -684,6 +706,7 @@
     if(imMsg.status == TIM_MSG_STATUS_SEND_FAIL){
         [items addObject:[[UIMenuItem alloc] initWithTitle:@"重发" action:@selector(onReSend:)]];
     }
+
     
     BOOL isFirstResponder = NO;
     if(_delegate && [_delegate respondsToSelector:@selector(messageController:willShowMenuInCell:)]){
@@ -717,12 +740,19 @@
     [self.navigationController presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)onSelectMessageAvatar:(TUIMessageCell *)cell
+{
+    if ([self.delegate respondsToSelector:@selector(messageController:onSelectMessageAvatar:)]) {
+        [self.delegate messageController:self onSelectMessageAvatar:cell];
+    }
+}
 
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
     if (action == @selector(onDelete:) ||
         action == @selector(onRevoke:) ||
-        action == @selector(onReSend:)){
+        action == @selector(onReSend:) ||
+        action == @selector(onCopyMsg:)){
         return YES;
     }
     return NO;
@@ -756,6 +786,15 @@
         [_delegate didHideMenuInMessageController:self];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIMenuControllerDidHideMenuNotification object:nil];
+}
+
+- (void)onCopyMsg:(id)sender
+{
+    if ([_menuUIMsg isKindOfClass:[TUITextMessageCellData class]]) {
+        TUITextMessageCellData *txtMsg = (TUITextMessageCellData *)_menuUIMsg;
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = txtMsg.content;
+    }
 }
 
 - (void)onRevoke:(id)sender
@@ -804,7 +843,7 @@
 
 - (void)sendImageMessage:(UIImage *)image;
 {
-    NSData *data = UIImagePNGRepresentation(image);
+    NSData *data = UIImageJPEGRepresentation(image, 0.75);
     NSString *path = [TUIKit_Image_Path stringByAppendingString:[THelper genImageName:nil]];
     [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
     
@@ -896,14 +935,14 @@
 {
     TUIImageViewController *image = [[TUIImageViewController alloc] init];
     image.data = [cell imageData];
-    [self presentViewController:image animated:YES completion:nil];
+    [self.navigationController pushViewController:image animated:YES];
 }
 
 - (void)showVideoMessage:(TUIVideoMessageCell *)cell
 {
     TUIVideoViewController *video = [[TUIVideoViewController alloc] init];
     video.data = [cell videoData];
-    [self presentViewController:video animated:YES completion:nil];
+    [self.navigationController pushViewController:video animated:YES];
 }
 
 - (void)showFileMessage:(TUIFileMessageCell *)cell

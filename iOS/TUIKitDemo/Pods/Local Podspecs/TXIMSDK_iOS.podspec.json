@@ -1,6 +1,6 @@
 {
   "name": "TXIMSDK_iOS",
-  "version": "4.4.479",
+  "version": "4.4.627",
   "platforms": {
     "ios": "8.0"
   },
@@ -15,7 +15,7 @@
   "requires_arc": true,
   "source": {
     "git": "https://github.com/tencentyun/TIMSDK.git",
-    "tag": "4.4.479"
+    "tag": "4.4.627"
   },
   "preserve_paths": "iOS/ImSDK/Framework/ImSDK.framework",
   "source_files": "iOS/ImSDK/Framework/ImSDK.framework/Headers/*.h",

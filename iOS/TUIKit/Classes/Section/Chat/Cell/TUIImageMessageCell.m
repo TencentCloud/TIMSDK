@@ -69,8 +69,11 @@
         [[[RACObserve(data, uploadProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
             @strongify(self)
             int progress = [x intValue];
-            self.progress.text = [NSString stringWithFormat:@"%d%%", progress];
-            self.progress.hidden = (progress >= 100 || progress == 0);
+            if (progress >= 100 || progress == 0) {
+                [self.indicator stopAnimating];
+            } else {
+                [self.indicator startAnimating];
+            }
         }];
     }
 }

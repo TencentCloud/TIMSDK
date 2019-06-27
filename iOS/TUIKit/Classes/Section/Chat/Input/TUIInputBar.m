@@ -12,6 +12,8 @@
 #import "THelper.h"
 #import "TUIKit.h"
 #import <AVFoundation/AVFoundation.h>
+#import "ReactiveObjC/ReactiveObjC.h"
+#import "MMLayout/UIView+MMLayout.h"
 
 @interface TUIInputBar() <UITextViewDelegate, AVAudioRecorderDelegate>
 @property (nonatomic, strong) TRecordView *record;
@@ -284,16 +286,21 @@
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     if([text isEqualToString:@"\n"]){
-        if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendText:)]){
-            if(![textView.text isEqualToString:@""]){
+        if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendText:)]) {
+            NSString *sp = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            if (sp.length == 0) {
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"不能发送空白消息" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+                 [self.mm_viewController presentViewController:ac animated:YES completion:nil];
+            } else {
                 [_delegate inputBar:self didSendText:textView.text];
                 [self clearInput];
             }
         }
         return NO;
     }
-    else if (textView.text.length > 0 && [text isEqualToString:@""]) {
-        if ([textView.text characterAtIndex:range.location] == ']') {
+    else if ([text isEqualToString:@""]) {
+        if (textView.text.length > range.location && [textView.text characterAtIndex:range.location] == ']') {
             NSUInteger location = range.location;
             NSUInteger length = range.length;
             while (location != 0) {
@@ -308,10 +315,6 @@
                     return YES;
                 }
             }
-        }
-        else{
-            textView.text = [textView.text stringByReplacingCharactersInRange:range withString:@""];
-            return NO;
         }
     }
     return YES;

@@ -53,4 +53,5 @@
         [self.avatarView setImage:DefaultAvatarImage];
     }
 }
+
 @end

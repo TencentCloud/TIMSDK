@@ -222,9 +222,9 @@ typedef NS_ENUM(NSInteger, TIMGroupPendencyHandleResult) {
 /**
  *  群成员列表回调
  *
- *  @param members 群成员列表，成员类型 TIMGroupMemberInfo
+ *  @param members 群成员列表
  */
-typedef void (^TIMGroupMemberSucc)(NSArray<TIMGroupMemberInfo *> * members);
+typedef void (^TIMGroupMemberSucc)(NSArray * members);
 
 /**
  *  群列表回调
