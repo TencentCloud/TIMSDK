@@ -29,7 +29,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onForceOffline:) name:TUIKitNotification_TIMUserStatusListener object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserStatus:) name:TUIKitNotification_TIMUserStatusListener object:nil];
     
     [self setupBugly];
     [self registNotification];
@@ -240,11 +240,29 @@ void uncaughtExceptionHandler(NSException*exception){
     return tbc;
 }
 
-- (void)onForceOffline:(NSNotification *)notification
+- (void)onUserStatus:(NSNotification *)notification
 {
-    TAlertView *alert = [[TAlertView alloc] initWithTitle:@"账号在其他终端登录"];
-    alert.delegate = self;
-    [alert showInWindow:self.window];
+    TUIUserStatus status = [notification.object integerValue];
+    switch (status) {
+        case TUser_Status_ForceOffline:
+        {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"下线通知" message:@"您的帐号于另一台手机上登录。" delegate:self cancelButtonTitle:@"退出" otherButtonTitles:@"重新登录", nil];
+            [alertView show];
+        }
+            break;
+        case TUser_Status_ReConnFailed:
+        {
+            NSLog(@"连网失败");
+        }
+            break;
+        case TUser_Status_SigExpired:
+        {
+            NSLog(@"userSig过期");
+        }
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)didConfirmInAlertView:(TAlertView *)alertView
