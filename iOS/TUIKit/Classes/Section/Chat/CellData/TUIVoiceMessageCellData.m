@@ -144,12 +144,19 @@ self.cellLayout = [TIncommingVoiceCellLayout new];
         return;
     //play current
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-    self.wavPath = [[path stringByDeletingPathExtension] stringByAppendingString:@".wav"];
-    [THelper convertAmr:path toWav:self.wavPath];
-    NSURL *url = [NSURL fileURLWithPath:self.wavPath];
+    NSURL *url = [NSURL fileURLWithPath:path];
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
     self.audioPlayer.delegate = self;
-    [self.audioPlayer play];
+    bool result = [self.audioPlayer play];
+    if (!result) {
+        self.wavPath = [[path stringByDeletingPathExtension] stringByAppendingString:@".wav"];
+        [THelper convertAmr:path toWav:self.wavPath];
+        NSURL *url = [NSURL fileURLWithPath:self.wavPath];
+        [self.audioPlayer stop];
+        self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
+        self.audioPlayer.delegate = self;
+        [self.audioPlayer play];
+    }
 }
 
 - (void)stopVoiceMessage
