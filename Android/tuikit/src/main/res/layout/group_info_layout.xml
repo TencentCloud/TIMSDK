@@ -26,7 +26,6 @@
                 android:id="@+id/group_member_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/page_margin"
                 app:name="@string/group_members" />
 
             <com.tencent.qcloud.tim.uikit.component.GridViewInScrollView

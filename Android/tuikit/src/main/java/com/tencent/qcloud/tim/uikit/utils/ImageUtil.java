@@ -1,7 +1,5 @@
 package com.tencent.qcloud.tim.uikit.utils;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,13 +11,13 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.provider.MediaStore;
 
 import com.tencent.qcloud.tim.uikit.TUIKit;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -315,38 +313,20 @@ public class ImageUtil {
 
     }
 
-    public static CopyImageInfo copyImage(Uri uri, String dir) {
+    public static CopyImageInfo copyImage(String path, String dir) {
         CopyImageInfo info = new CopyImageInfo();
-        if (null == uri)
+        if (null == path) {
             return null;
-        final String scheme = uri.getScheme();
-        String data = null;
-        if (scheme == null)
-            data = uri.getPath();
-        else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
-            data = uri.getPath();
-        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-            Cursor cursor = TUIKit.getAppContext().getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
-            if (null != cursor) {
-                if (cursor.moveToFirst()) {
-                    int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-                    if (index > -1) {
-                        data = cursor.getString(index);
-                    }
-                }
-                cursor.close();
-            }
         }
         try {
-            int index = data.lastIndexOf(".");
+            int index = path.lastIndexOf(".");
             String fileType = "";
             if (index >= 0) {
-                fileType = data.substring(index + 1);
+                fileType = path.substring(index + 1);
             }
             String newFileName = dir + File.separator + System.currentTimeMillis() + "." + fileType;
-            InputStream is = TUIKit.getAppContext().getContentResolver()
-                    .openInputStream(uri);
-            int degree = getBitmapDegree(uri);
+            InputStream is = new FileInputStream(new File(path));
+            int degree = getBitmapDegree(path);
             File file = new File(newFileName);
             BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
             onlyBoundsOptions.inJustDecodeBounds = true;
@@ -356,8 +336,7 @@ public class ImageUtil {
 
             //没有旋转，直接copy
             if (degree == 0) {
-                is = TUIKit.getAppContext().getContentResolver()
-                        .openInputStream(uri);
+                is = new FileInputStream(new File(path));
                 OutputStream os = new FileOutputStream(file);
                 byte bt[] = new byte[1024 * 10];
                 int c;
@@ -379,14 +358,15 @@ public class ImageUtil {
                 } else if (info.width < info.height && info.height > hh) {//如果高度高的话根据宽度固定大小缩放
                     be = info.height / hh;
                 }
-                if (be <= 0)
+                if (be <= 0) {
                     be = 1;
+                }
                 //比例压缩
                 BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                 bitmapOptions.inSampleSize = be;//设置缩放比例
                 bitmapOptions.inDither = true;//optional
                 bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional
-                is = TUIKit.getAppContext().getContentResolver().openInputStream(uri);
+                is = new FileInputStream(new File(path));
                 Bitmap bitmap = BitmapFactory.decodeStream(is, null, bitmapOptions);
                 bitmap = rotateBitmapByDegree(bitmap, degree);
                 info.setWidth(bitmap.getWidth());

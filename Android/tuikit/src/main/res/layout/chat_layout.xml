@@ -24,22 +24,23 @@
         android:layout_marginTop="1dp"
         android:visibility="gone" />
 
+    <com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout
+        android:id="@+id/chat_message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chat_input_layout"
+        android:layout_below="@+id/chat_notice_layout"
+        android:layout_marginBottom="5dp"
+        android:baselineAligned="false"
+        android:clickable="false"
+        android:descendantFocusability="blocksDescendants" />
+
+
     <com.tencent.qcloud.tim.uikit.modules.chat.layout.input.InputLayout
         android:id="@+id/chat_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
-
-    <com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout
-        android:id="@+id/chat_message_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/chat_input_layout"
-        android:layout_below="@id/chat_notice_layout"
-        android:layout_marginBottom="5dp"
-        android:baselineAligned="false"
-        android:clickable="false"
-        android:descendantFocusability="blocksDescendants" />
 
 
     <RelativeLayout

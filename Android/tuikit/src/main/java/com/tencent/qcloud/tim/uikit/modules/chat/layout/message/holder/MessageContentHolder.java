@@ -162,6 +162,14 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         //// 发送状态的设置
         if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL) {
             statusImage.setVisibility(View.VISIBLE);
+            statusImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onMessageLongClick(msgContentFrame, position, msg);
+                    }
+                }
+            });
         } else {
             statusImage.setVisibility(View.GONE);
         }

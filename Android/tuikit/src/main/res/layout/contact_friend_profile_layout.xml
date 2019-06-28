@@ -33,69 +33,76 @@
             android:textColor="@color/text_gray1"
             android:textSize="16sp" />
     </LinearLayout>
+
     <com.tencent.qcloud.tim.uikit.component.LineControllerView
         android:id="@+id/id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        app:name="@string/profile_id"/>
+        app:name="@string/profile_id" />
+
     <com.tencent.qcloud.tim.uikit.component.LineControllerView
         android:id="@+id/add_wording"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:visibility="gone"
-        app:name="@string/profile_add_wording"/>
+        app:name="@string/profile_add_wording" />
+
     <com.tencent.qcloud.tim.uikit.component.LineControllerView
         android:id="@+id/remark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:canNav="true"
-        app:name="@string/profile_remark"/>
+        app:name="@string/profile_remark" />
+
     <com.tencent.qcloud.tim.uikit.component.LineControllerView
         android:id="@+id/chat_to_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:isSwitch="true"
-        app:name="@string/chat_to_top"/>
+        app:name="@string/chat_to_top" />
+
     <com.tencent.qcloud.tim.uikit.component.LineControllerView
         android:id="@+id/blackList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:isSwitch="true"
-        app:name="@string/profile_black"/>
+        app:name="@string/profile_black" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/btn_margin_left"
-        android:paddingRight="@dimen/btn_margin_right"
         android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/btn_margin_left"
+        android:paddingRight="@dimen/btn_margin_right">
+
         <TextView
             android:id="@+id/btnDel"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="40dp"
+            android:layout_weight="1"
             android:background="@color/bg_negative_btn"
-            android:textColor="@color/text_btn"
-            android:textSize="18sp"
-            android:gravity="center"
             android:clickable="true"
-            android:text="@string/profile_del"/>
+            android:gravity="center"
+            android:text="@string/profile_del"
+            android:textColor="@color/text_btn"
+            android:textSize="18sp" />
+
         <TextView
             android:id="@+id/btnChat"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="40dp"
             android:layout_marginLeft="@dimen/btn_margin_middle"
+            android:layout_weight="1"
             android:background="@color/bg_positive_btn"
-            android:textColor="@color/text_btn"
-            android:textSize="18sp"
             android:clickable="true"
             android:gravity="center"
-            android:text="@string/profile_chat"/>
+            android:text="@string/profile_chat"
+            android:textColor="@color/text_btn"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>

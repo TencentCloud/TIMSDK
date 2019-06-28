@@ -74,6 +74,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_alignParentBottom="true"
-        android:background="#f2f2f2" />
+        android:background="#c2c2c2"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

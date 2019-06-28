@@ -12,13 +12,16 @@ import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InputMoreFragment extends BaseInputFragment {
 
     public static final int REQUEST_CODE_FILE = 1011;
+    public static final int REQUEST_CODE_PHOTO = 1012;
+
     private View mBaseView;
-    private List<InputMoreActionUnit> mInputMoreList;
+    private List<InputMoreActionUnit> mInputMoreList = new ArrayList<>();
     private IUIKitCallBack mCallback;
 
     @Nullable
@@ -40,12 +43,15 @@ public class InputMoreFragment extends BaseInputFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_FILE) {
-            if (resultCode != -1)
+        if (requestCode == REQUEST_CODE_FILE
+                || requestCode == REQUEST_CODE_PHOTO) {
+            if (resultCode != -1) {
                 return;
+            }
             Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
-            if (mCallback != null)
+            if (mCallback != null) {
                 mCallback.onSuccess(uri);
+            }
         }
     }
 }

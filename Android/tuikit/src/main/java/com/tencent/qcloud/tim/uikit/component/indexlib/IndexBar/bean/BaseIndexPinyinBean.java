@@ -6,7 +6,7 @@ package com.tencent.qcloud.tim.uikit.component.indexlib.IndexBar.bean;
 
 public abstract class BaseIndexPinyinBean extends BaseIndexBean {
 
-    private String baseIndexPinyin;//城市的拼音
+    private String baseIndexPinyin;//名字的拼音
 
     public String getBaseIndexPinyin() {
         return baseIndexPinyin;

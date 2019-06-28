@@ -239,13 +239,23 @@ public class MessageImageHolder extends MessageContentHolder {
 
         final String videoPath = TUIKitConstants.VIDEO_DOWNLOAD_DIR + video.getUuid();
         final File videoFile = new File(videoPath);
-        if (videoFile.exists()) {
+        //以下代码为zanhanding修改，用于fix视频消息发送失败后不显示红色感叹号的问题
+        if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_SUCCESS) {
+            //若发送成功，则不显示红色感叹号和发送中动画
             statusImage.setVisibility(View.GONE);
             sendingProgress.setVisibility(View.GONE);
-        } else {
+        } else if (videoFile.exists() && msg.getStatus() == MessageInfo.MSG_STATUS_SENDING) {
+            //若存在正在发送中的视频文件（消息），则显示发送中动画（隐藏红色感叹号）
+            statusImage.setVisibility(View.GONE);
             sendingProgress.setVisibility(View.VISIBLE);
             getVideo(video, videoPath, msg, false, position);
+        } else if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL) {
+            //若发送失败，则显示红色感叹号（不显示发送中动画）
+            statusImage.setVisibility(View.VISIBLE);
+            sendingProgress.setVisibility(View.GONE);
+
         }
+        //以上代码为zanhanding修改，用于fix视频消息发送失败后不显示红色感叹号的问题
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -254,7 +264,23 @@ public class MessageImageHolder extends MessageContentHolder {
                 }
                 sendingProgress.setVisibility(View.VISIBLE);
                 mClicking = true;
-                getVideo(video, videoPath, msg, true, position);
+                //以下代码为zanhanding修改，用于fix点击发送失败视频后无法播放，并且红色感叹号消失的问题
+                final File videoFile = new File(videoPath);
+                if (videoFile.exists()) {//若存在本地文件则优先获取本地文件
+                    mAdapter.notifyItemChanged(position);
+                    mClicking = false;
+                    play(msg);
+                    // 有可能播放的Activity还没有显示，这里延迟200ms，拦截压力测试的快速点击
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mClicking = false;
+                        }
+                    }, 200);
+                } else {
+                    getVideo(video, videoPath, msg, true, position);
+                }
+                //以上代码为zanhanding修改，用于fix点击发送失败视频后无法播放，并且红色感叹号消失的问题
             }
         });
     }

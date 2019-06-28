@@ -91,31 +91,18 @@ public class MessageInfoUtil {
      * 创建一条图片消息
      * @param uri 图片URI
      * @param compressed 是否压缩
-     * @param appPohto 是否是本应用的拍摄照片
      * @return
      */
-    public static MessageInfo buildImageMessage(final Uri uri, boolean compressed, boolean appPohto) {
+    public static MessageInfo buildImageMessage(final Uri uri, boolean compressed) {
         final MessageInfo info = new MessageInfo();
         final TIMImageElem ele = new TIMImageElem();
-        //不是应用自己拍摄的照片，先copy一份过来
-        if (!appPohto) {
-            ImageUtil.CopyImageInfo copInfo = ImageUtil.copyImage(uri, TUIKitConstants.IMAGE_DOWNLOAD_DIR);
-            if (copInfo == null)
-                return null;
-            ele.setPath(copInfo.getPath());
-            info.setDataPath(copInfo.getPath());
-            info.setImgWidth(copInfo.getWidth());
-            info.setImgHeight(copInfo.getHeight());
-            info.setDataUri(FileUtil.getUriFromPath(copInfo.getPath()));
-        } else {
-            info.setDataUri(uri);
-            int size[] = ImageUtil.getImageSize(uri);
-            String path = FileUtil.getPathFromUri(uri);
-            ele.setPath(path);
-            info.setDataPath(path);
-            info.setImgWidth(size[0]);
-            info.setImgHeight(size[1]);
-        }
+        info.setDataUri(uri);
+        int size[] = ImageUtil.getImageSize(uri);
+        String path = FileUtil.getPathFromUri(uri);
+        ele.setPath(path);
+        info.setDataPath(path);
+        info.setImgWidth(size[0]);
+        info.setImgHeight(size[1]);
 
         TIMMessage TIMMsg = new TIMMessage();
         TIMMessageExt ext = new TIMMessageExt(TIMMsg);

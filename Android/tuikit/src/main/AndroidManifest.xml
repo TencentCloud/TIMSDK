@@ -9,15 +9,6 @@
 
     <application>
         <activity
-            android:name=".component.picture.ui.MatissePickerActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".component.picture.internal.ui.AlbumPreviewActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".component.picture.internal.ui.SelectedPreviewActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".component.video.CameraActivity"
             android:screenOrientation="portrait" />
         <activity

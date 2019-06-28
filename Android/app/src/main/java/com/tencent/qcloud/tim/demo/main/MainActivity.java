@@ -22,6 +22,7 @@ import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
+import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
@@ -63,6 +64,7 @@ public class MainActivity extends Activity implements ConversationManagerKit.Mes
 
         // 未读消息监视器
         ConversationManagerKit.getInstance().addUnreadWatcher(this);
+        GroupChatManagerKit.getInstance();
         mLastButton = mConversationBtn;
     }
 

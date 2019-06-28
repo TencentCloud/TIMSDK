@@ -136,7 +136,7 @@ public class MessageLayout extends MessageLayoutUI {
         actions.add(action);
         if (msg.isSelf()) {
             action = new PopMenuAction();
-            action.setActionName("撤销");
+            action.setActionName("撤回");
             action.setActionClickListener(new PopActionClickListener() {
                 @Override
                 public void onActionClick(int position, Object data) {

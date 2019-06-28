@@ -140,7 +140,12 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
         getInputLayout().setChatInputHandler(new InputLayout.ChatInputHandler() {
             @Override
             public void popupLayoutShow() {
-                scrollToEnd();
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollToEnd();
+                    }
+                });
             }
 
             @Override
@@ -149,27 +154,41 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
 
             @Override
             public void startRecording() {
-                mRecordingGroup.setVisibility(View.VISIBLE);
-                mRecordingIcon.setImageResource(R.drawable.recording_volume);
-                mVolumeAnim = (AnimationDrawable) mRecordingIcon.getDrawable();
-                mVolumeAnim.start();
-                mRecordingTips.setTextColor(Color.WHITE);
-                mRecordingTips.setText("手指上滑，取消发送");
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRecordingGroup.setVisibility(View.VISIBLE);
+                        mRecordingIcon.setImageResource(R.drawable.recording_volume);
+                        mVolumeAnim = (AnimationDrawable) mRecordingIcon.getDrawable();
+                        mVolumeAnim.start();
+                        mRecordingTips.setTextColor(Color.WHITE);
+                        mRecordingTips.setText("手指上滑，取消发送");
+                    }
+                });
             }
 
             @Override
             public void stopRecording() {
-                mVolumeAnim.stop();
-                mRecordingGroup.setVisibility(View.GONE);
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mVolumeAnim.stop();
+                        mRecordingGroup.setVisibility(View.GONE);
+                    }
+                });
             }
 
             @Override
             public void tooShortRecording() {
-                mVolumeAnim.stop();
-                mRecordingIcon.setImageResource(R.drawable.ic_volume_dialog_length_short);
-                mRecordingTips.setTextColor(Color.WHITE);
-                mRecordingTips.setText("说话时间太短");
-
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mVolumeAnim.stop();
+                        mRecordingIcon.setImageResource(R.drawable.ic_volume_dialog_length_short);
+                        mRecordingTips.setTextColor(Color.WHITE);
+                        mRecordingTips.setText("说话时间太短");
+                    }
+                });
                 postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -180,8 +199,13 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
 
             @Override
             public void cancelRecording() {
-                mRecordingIcon.setImageResource(R.drawable.ic_volume_dialog_cancel);
-                mRecordingTips.setText("松开手指，取消发送");
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRecordingIcon.setImageResource(R.drawable.ic_volume_dialog_cancel);
+                        mRecordingTips.setText("松开手指，取消发送");
+                    }
+                });
             }
         });
     }

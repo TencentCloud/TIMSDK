@@ -19,6 +19,7 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         archivesBaseName = "TUIKitDemo"
+        multiDexEnabled = true
 
         ndk {
             abiFilters = []
@@ -60,7 +61,7 @@ dependencies {
 
     // HUAWEI push sdk
     compile 'com.huawei.android.hms:push:2.6.3.301'
-    compile 'com.huawei.android.hms:base:2.6.3.301' // 如果有碰到报错：com.huawei.hms.api不存在，这条也要加上，注意版本号必须相同
+    compile 'com.huawei.android.hms:base:2.6.3.301'
     // MEIZU push sdk
     compile 'com.meizu.flyme.internet:push-internal:3.6.+@aar'
 
@@ -69,7 +70,6 @@ dependencies {
     compile 'com.tencent.bugly:nativecrashreport:3.3.1'
     compile 'org.bouncycastle:bcpkix-jdk15on:1.59'
 
-    // 如果用aar方式集成，这里需要指定libs文件夹下的aar的名称
-//    compile 'com.tencent.imsdk:tuikit:4.4.479'
-    implementation project(':tuikit')
+    implementation 'com.tencent.imsdk:tuikit:4.4.627'
+//    implementation project(':tuikit')
 }

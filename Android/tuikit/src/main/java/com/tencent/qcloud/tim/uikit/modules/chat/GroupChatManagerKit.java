@@ -1,7 +1,5 @@
 package com.tencent.qcloud.tim.uikit.modules.chat;
 
-import android.text.TextUtils;
-
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMElem;
@@ -20,6 +18,7 @@ import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatManagerKit;
+import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.group.apply.GroupApplyInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfoProvider;
@@ -41,7 +40,6 @@ public class GroupChatManagerKit extends ChatManagerKit {
     private GroupInfo mCurrentChatInfo;
     private List<GroupApplyInfo> mCurrentApplies = new ArrayList<>();
     private List<GroupMemberInfo> mCurrentGroupMembers = new ArrayList<>();
-    private GroupMemberInfo mSelfInfo;
     private GroupNotifyHandler mGroupHandler;
     private GroupInfoProvider mGroupInfoProvider;
     private static GroupChatManagerKit mKit;
@@ -202,7 +200,9 @@ public class GroupChatManagerKit extends ChatManagerKit {
                 TIMGroupTipsGroupInfoType modifyType = modifyInfo.getType();
                 if (modifyType == TIMGroupTipsGroupInfoType.ModifyName) {
                     mCurrentChatInfo.setGroupName(modifyInfo.getContent());
-                    mGroupHandler.onGroupNameChanged(modifyInfo.getContent());
+                    if (mGroupHandler != null) {
+                        mGroupHandler.onGroupNameChanged(modifyInfo.getContent());
+                    }
                 } else if (modifyType == TIMGroupTipsGroupInfoType.ModifyNotification) {
                     mCurrentChatInfo.setNotice(modifyInfo.getContent());
                 }
@@ -213,8 +213,6 @@ public class GroupChatManagerKit extends ChatManagerKit {
 
     //群系统消息处理，不需要显示信息的
     private void groupSystMsgHandle(TIMGroupSystemElem groupSysEle) {
-        if (mCurrentChatInfo == null)
-            return;
         TIMGroupSystemElemType type = groupSysEle.getSubtype();
         if (type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_ADD_GROUP_ACCEPT_TYPE) {
             ToastUtil.toastLongMessage("您已被同意加入群：" + groupSysEle.getGroupId());
@@ -222,6 +220,7 @@ public class GroupChatManagerKit extends ChatManagerKit {
             ToastUtil.toastLongMessage("您被拒绝加入群：" + groupSysEle.getGroupId());
         } else if (type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_KICK_OFF_FROM_GROUP_TYPE) {
             ToastUtil.toastLongMessage("您已被踢出群：" + groupSysEle.getGroupId());
+            ConversationManagerKit.getInstance().deleteConversation(groupSysEle.getGroupId(), true);
             if (mCurrentChatInfo != null && groupSysEle.getGroupId().equals(mCurrentChatInfo.getId())) {
                 onGroupForceExit();
             }
@@ -246,7 +245,6 @@ public class GroupChatManagerKit extends ChatManagerKit {
         mCurrentChatInfo = (GroupInfo) info;
         mCurrentApplies.clear();
         mCurrentGroupMembers.clear();
-        mSelfInfo = null;
         mGroupInfoProvider.loadGroupInfo(mCurrentChatInfo);
     }
 
@@ -254,7 +252,6 @@ public class GroupChatManagerKit extends ChatManagerKit {
     public void destroyChat() {
         super.destroyChat();
         mCurrentChatInfo = null;
-        mSelfInfo = null;
         mGroupHandler = null;
         mCurrentApplies.clear();
         mCurrentGroupMembers.clear();
@@ -287,11 +284,6 @@ public class GroupChatManagerKit extends ChatManagerKit {
     @Override
     protected void assembleGroupMessage(MessageInfo message) {
         message.setGroup(true);
-        if (mSelfInfo != null && mSelfInfo.getDetail() != null && !TextUtils.isEmpty(mSelfInfo.getDetail().getNameCard())) {
-            message.setFromUser(mSelfInfo.getDetail().getNameCard());
-        } else {
-            message.setFromUser(TIMManager.getInstance().getLoginUser());
-        }
-
+        message.setFromUser(TIMManager.getInstance().getLoginUser());
     }
 }

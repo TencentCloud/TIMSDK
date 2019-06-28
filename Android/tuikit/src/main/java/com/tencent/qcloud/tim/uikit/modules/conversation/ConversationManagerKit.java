@@ -330,7 +330,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      */
     public void deleteConversation(int index, ConversationInfo conversation) {
         TUIKitLog.d(TAG, "deleteConversation index = " + index + ", conversation = " + conversation);
-        boolean status = TIMManagerExt.getInstance().deleteConversationAndLocalMsgs(conversation.isGroup() ? TIMConversationType.Group : TIMConversationType.C2C, conversation.getId());
+        boolean status = TIMManagerExt.getInstance().deleteConversation(conversation.isGroup() ? TIMConversationType.Group : TIMConversationType.C2C, conversation.getId());
         if (status) {
             handleTopData(conversation.getId(), false);
             mProvider.deleteConversation(index);
@@ -357,7 +357,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
         if (mProvider != null) {
             mProvider.deleteConversation(id);
         }
-        TIMManagerExt.getInstance().deleteConversationAndLocalMsgs(isGroup ? TIMConversationType.Group : TIMConversationType.C2C, id);
+        TIMManagerExt.getInstance().deleteConversation(isGroup ? TIMConversationType.Group : TIMConversationType.C2C, id);
     }
 
     /**
@@ -431,7 +431,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
     }
 
     /**
-     * 消息撤销回调
+     * 消息撤回回调
      *
      * @param locator
      */

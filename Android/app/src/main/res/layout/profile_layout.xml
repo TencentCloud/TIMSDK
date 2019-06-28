@@ -12,24 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/item_split_color" />
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/self_info_base_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/self_profile_group"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:background="#fff"

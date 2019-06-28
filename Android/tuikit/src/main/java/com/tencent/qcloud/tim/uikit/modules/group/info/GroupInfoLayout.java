@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -244,7 +245,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mGroupNotice.setContent(info.getNotice());
         mMemberView.setContent(info.getMemberCount() + "人");
         mMemberAdapter.setDataSource(info);
-        mGroupTypeView.setContent(info.getGroupType());
+        mGroupTypeView.setContent(convertGroupText(info.getGroupType()));
         mJoinTypeView.setContent(mJoinTypes.get(info.getJoinType()));
         mNickView.setContent(mPresenter.getNickName());
         mTopSwitchView.setChecked(mGroupInfo.isTopChat());
@@ -260,6 +261,21 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             mJoinTypeView.setVisibility(GONE);
             mDissolveBtn.setText(R.string.exit_group);
         }
+    }
+
+    private String convertGroupText(String groupType) {
+        String groupText = "";
+        if (TextUtils.isEmpty(groupType)) {
+            return groupText;
+        }
+        if (TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_PRIVATE)) {
+            groupText = "讨论组";
+        } else if (TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_PUBLIC)) {
+            groupText = "公开群";
+        } else if (TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_CHAT_ROOM)) {
+            groupText = "聊天室";
+        }
+        return groupText;
     }
 
     public void onGroupInfoModified(Object value, int type) {

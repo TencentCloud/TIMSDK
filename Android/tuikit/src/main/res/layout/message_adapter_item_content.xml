@@ -53,9 +53,9 @@
         android:id="@+id/user_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/chat_time_tv"
-        android:layout_toLeftOf="@id/right_user_icon_view"
-        android:layout_toRightOf="@id/left_user_icon_view"
+        android:layout_below="@+id/chat_time_tv"
+        android:layout_toLeftOf="@+id/right_user_icon_view"
+        android:layout_toRightOf="@+id/left_user_icon_view"
         android:textColor="#606060"
         android:layout_marginLeft="5dp"
         android:textSize="12sp"
@@ -65,10 +65,10 @@
         android:id="@+id/msg_content_ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_name_tv"
+        android:layout_below="@+id/user_name_tv"
         android:layout_marginTop="2dp"
-        android:layout_toLeftOf="@id/right_user_icon_view"
-        android:layout_toRightOf="@id/left_user_icon_view"
+        android:layout_toLeftOf="@+id/right_user_icon_view"
+        android:layout_toRightOf="@+id/left_user_icon_view"
         android:orientation="horizontal">
 
         <ProgressBar

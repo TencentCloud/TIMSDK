@@ -31,6 +31,8 @@ public class GroupInfoProvider {
 
     private static final String TAG = GroupInfoProvider.class.getSimpleName();
 
+    private static final int PAGE = 50;
+
     private GroupInfo mGroupInfo;
     private GroupMemberInfo mSelfInfo;
     private List<GroupMemberInfo> mGroupMembers = new ArrayList<>();
@@ -65,32 +67,16 @@ public class GroupInfoProvider {
                 boolean isTop = ConversationManagerKit.getInstance().isTopConversation(groupId);
                 mGroupInfo.setTopChat(isTop);
 
-                final GroupInfo groupInfo = mGroupInfo;
                 // 异步获取群成员
-                loadGroupMembers(new IUIKitCallBack() {
-                    @Override
-                    public void onSuccess(Object data) {
-                        // 获取到群成员信息
-                        mGroupMembers = (List<GroupMemberInfo>) data;
-                        // 递归加载群成员更多资料
-                        loadGroupMembersDetail(0);
-
-                        mGroupInfo.setMemberDetails(mGroupMembers);
-                        callBack.onSuccess(groupInfo);
-                    }
-
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-                        TUIKitLog.e(TAG, "loadGroupMembers failed, code: " + errCode + "|desc: " + errMsg);
-                        callBack.onError(module, errCode, errMsg);
-                    }
-                });
+                loadGroupMembers(mGroupInfo, callBack);
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 TUIKitLog.e(TAG, "loadGroupPublicInfo failed, code: " + errCode + "|desc: " + errMsg);
-                callBack.onError(module, errCode, errMsg);
+                if (callBack != null) {
+                    callBack.onError(module, errCode, errMsg);
+                }
             }
         });
     }
@@ -101,7 +87,6 @@ public class GroupInfoProvider {
             public void onError(int code, String desc) {
                 callBack.onError(TAG, code, desc);
                 TUIKitLog.e(TAG, "deleteGroup failed, code: " + code + "|desc: " + desc);
-
             }
 
             @Override
@@ -135,7 +120,7 @@ public class GroupInfoProvider {
         });
     }
 
-    public void loadGroupMembers(final IUIKitCallBack callBack) {
+    public void loadGroupMembers(final Object result, final IUIKitCallBack callBack) {
         TIMGroupManagerExt.getInstance().getGroupMembers(mGroupInfo.getId(), new TIMValueCallBack<List<TIMGroupMemberInfo>>() {
             @Override
             public void onError(int code, String desc) {
@@ -150,21 +135,36 @@ public class GroupInfoProvider {
                     GroupMemberInfo member = new GroupMemberInfo();
                     members.add(member.covertTIMGroupMemberInfo(timGroupMemberInfos.get(i)));
                 }
-                callBack.onSuccess(members);
+                mGroupMembers = members;
+                mGroupInfo.setMemberDetails(mGroupMembers);
+                loadGroupMembersDetail(0, new IUIKitCallBack() {
+                    @Override
+                    public void onSuccess(Object data) {
+                        callBack.onSuccess(result);
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        callBack.onError(module, errCode, errMsg);
+                    }
+                });
             }
         });
     }
 
-    private void loadGroupMembersDetail(final int begin) {
+    private void loadGroupMembersDetail(final int begin, final IUIKitCallBack callBack) {
+        if (callBack == null) {
+            return;
+        }
         final ArrayList<String> memberIds = new ArrayList<>();
         final int end;
         if (mGroupMembers.size() == 0) {
             return;
         }
-        if (begin + 100 > mGroupMembers.size()) {
+        if (begin + PAGE > mGroupMembers.size()) {
             end = mGroupMembers.size();
         } else {
-            end = begin + 100;
+            end = begin + PAGE;
         }
         for (int i = begin; i < end; i++) {
             memberIds.add(mGroupMembers.get(i).getAccount());
@@ -172,11 +172,13 @@ public class GroupInfoProvider {
         TIMGroupManagerExt.getInstance().getGroupMembersInfo(mGroupInfo.getId(), memberIds, new TIMValueCallBack<List<TIMGroupMemberInfo>>() {
             @Override
             public void onError(int code, String desc) {
-                TUIKitLog.e(TAG, "loadGroupMembersInfo failed, code: " + code + "|desc: " + desc);
+                TUIKitLog.e(TAG, "getGroupMembersInfo failed, code: " + code + "|desc: " + desc);
+                callBack.onError(TAG, code, desc);
             }
 
             @Override
             public void onSuccess(List<TIMGroupMemberInfo> timGroupMemberInfos) {
+                TUIKitLog.i(TAG, "getGroupMembersInfo success: " + timGroupMemberInfos.size());
                 for (int i = begin; i < end; i++) {
                     GroupMemberInfo memberInfo = mGroupMembers.get(i);
                     for (int j = timGroupMemberInfos.size() - 1; j >= 0; j--) {
@@ -190,7 +192,9 @@ public class GroupInfoProvider {
                 }
 
                 if (end < mGroupMembers.size()) {
-                    loadGroupMembersDetail(end);
+                    loadGroupMembersDetail(end, callBack);
+                } else {
+                    callBack.onSuccess(null);
                 }
             }
         });
@@ -315,20 +319,7 @@ public class GroupInfoProvider {
                     }
                 }
                 if (adds.size() > 0) {
-                    loadGroupMembers(new IUIKitCallBack() {
-                        @Override
-                        public void onSuccess(Object data) {
-                            mGroupMembers = (List<GroupMemberInfo>) data;
-                            loadGroupMembersDetail(0);
-                            mGroupInfo.setMemberDetails(mGroupMembers);
-                            callBack.onSuccess(adds);
-                        }
-
-                        @Override
-                        public void onError(String module, int errCode, String errMsg) {
-                            callBack.onError(TAG, errCode, errMsg);
-                        }
-                    });
+                    loadGroupMembers(adds, callBack);
                 }
             }
         });

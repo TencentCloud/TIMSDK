@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 public abstract class BaseIndexBean implements ISuspensionInterface, Serializable {
 
-    private String baseIndexTag;//所属的分类（城市的汉语拼音首字母）
+    private String baseIndexTag;//所属的分类（名字的汉语拼音首字母）
 
     public String getBaseIndexTag() {
         return baseIndexTag;

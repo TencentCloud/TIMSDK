@@ -2,11 +2,9 @@ package com.tencent.qcloud.tim.uikit.modules.contact;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -78,7 +76,7 @@ public class ContactListView extends LinearLayout {
         mIndexBar = findViewById(R.id.contact_indexBar);//IndexBar
         //indexbar初始化
         mIndexBar.setPressedShowTextView(mTvSideBarHint)//设置HintTextView
-                .setNeedRealIndex(false)
+                .setNeedRealIndex(true)//设置为根据联系人内容改变index（修改者zanhanding）
                 .setLayoutManager(mManager);//设置RecyclerView的LayoutManager
         mContactCountTv = findViewById(R.id.contact_count);
         mContactCountTv.setText(String.format(getResources().getString(R.string.contact_count), 0));
@@ -94,6 +92,12 @@ public class ContactListView extends LinearLayout {
         mIndexBar.setSourceDatas(mData).invalidate();
         mDecoration.setDatas(mData);
         mContactCountTv.setText(String.format(getResources().getString(R.string.contact_count), mData.size()));
+        //以下根据内容动态设置右侧导航栏的高度（修改者zanhanding）
+        ViewGroup.LayoutParams params = mIndexBar.getLayoutParams();
+        if(mData.size() * 50 < mIndexBar.getMeasuredHeight())//若动态设置的侧边栏高度大于之前的旧值，则不改变侧边栏高度
+            params.height = mData.size() * 50 ;
+        mIndexBar.setLayoutParams(params);
+        //以上根据内容动态设置右侧导航栏的高度（修改者zanhanding）
     }
 
     public void setSingleSelectMode(boolean mode) {
@@ -151,6 +155,10 @@ public class ContactListView extends LinearLayout {
             @Override
             public void onSuccess(List<TIMFriend> timFriends) {
                 TUIKitLog.i(TAG, "getFriendList success result = " + timFriends.size());
+                if (timFriends.size() == 0) {
+                    TUIKitLog.i(TAG, "getFriendList success but no data");
+                    return;
+                }
                 mData.clear();
                 if (loopMore) {
                     mData.add((ContactItemBean) new ContactItemBean(getResources().getString(R.string.new_friend))
@@ -180,8 +188,9 @@ public class ContactListView extends LinearLayout {
 
             @Override
             public void onSuccess(List<TIMFriend> timFriends) {
+                TUIKitLog.i(TAG, "getFriendGroups success");
                 if (timFriends.size() == 0) {
-                    ToastUtil.toastShortMessage("getBlackList success, no ids");
+                    TUIKitLog.i(TAG, "getFriendGroups success but no data");
                     return;
                 }
                 mData.clear();
@@ -207,12 +216,14 @@ public class ContactListView extends LinearLayout {
             @Override
             public void onSuccess(List<TIMGroupBaseInfo> infos) {
                 TUIKitLog.i(TAG, "getFriendGroups success");
+                if (infos.size() == 0) {
+                    TUIKitLog.i(TAG, "getFriendGroups success but no data");
+                    return;
+                }
                 mData.clear();
                 for (TIMGroupBaseInfo info : infos) {
-                    if (!TextUtils.equals(info.getGroupType(), "Private")) {
-                        ContactItemBean bean = new ContactItemBean();
-                        mData.add(bean.covertTIMGroupBaseInfo(info));
-                    }
+                    ContactItemBean bean = new ContactItemBean();
+                    mData.add(bean.covertTIMGroupBaseInfo(info));
                 }
                 setDataSource(mData);
             }

@@ -54,7 +54,7 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
         LinearLayout.LayoutParams  params = (LinearLayout.LayoutParams) mTitleLayout.getLayoutParams();
         params.height = ScreenUtil.getPxByDp(45);
         mTitleLayout.setLayoutParams(params);
-        mTitleLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+        mTitleLayout.setBackgroundColor(getResources().getColor(R.color.main_bg_color));
     }
 
     @Override

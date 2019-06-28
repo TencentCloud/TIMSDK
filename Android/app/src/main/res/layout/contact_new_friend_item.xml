@@ -10,7 +10,7 @@
     android:paddingBottom="8dp">
 
     <com.tencent.qcloud.tim.uikit.component.CircleImageView
-        android:id="@id/avatar"
+        android:id="@+id/avatar"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginLeft="10dp" />

@@ -22,7 +22,6 @@ import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
 import com.tencent.qcloud.tim.uikit.component.face.Emoji;
 import com.tencent.qcloud.tim.uikit.component.face.FaceFragment;
 import com.tencent.qcloud.tim.uikit.component.face.FaceManager;
-import com.tencent.qcloud.tim.uikit.component.picture.Matisse;
 import com.tencent.qcloud.tim.uikit.component.video.CameraActivity;
 import com.tencent.qcloud.tim.uikit.component.video.JCameraView;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
@@ -30,10 +29,10 @@ import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreFragm
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * 聊天界面，底部发送图片、拍照、摄像、文件面板
@@ -160,26 +159,27 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
         if(!checkPermission(SEND_PHOTO)) {
             return;
         }
-        Matisse.defaultFrom(mActivity, new IUIKitCallBack() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        mInputMoreFragment.setCallback(new IUIKitCallBack() {
             @Override
             public void onSuccess(Object data) {
-                if (data instanceof List) {
-                    List<Uri> uris = (List<Uri>) data;
-                    for (int i = 0; i < uris.size(); i++) {
-                        MessageInfo info = MessageInfoUtil.buildImageMessage(uris.get(i), true, false);
-                        if (mMessageHandler != null) {
-                            mMessageHandler.sendMessage(info);
-                            hideSoftInput();
-                        }
-                    }
+                TUIKitLog.i(TAG, "onSuccess: " + data);
+                MessageInfo info = MessageInfoUtil.buildImageMessage((Uri)data, true);
+                if (mMessageHandler != null) {
+                    mMessageHandler.sendMessage(info);
+                    hideSoftInput();
                 }
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-
+                TUIKitLog.i(TAG, "errCode: " + errCode);
+                ToastUtil.toastLongMessage(errMsg);
             }
         });
+        mInputMoreFragment.startActivityForResult(intent, InputMoreFragment.REQUEST_CODE_PHOTO);
     }
 
     @Override
@@ -193,7 +193,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
             @Override
             public void onSuccess(Object data) {
                 Uri contentUri = Uri.fromFile(new File(data.toString()));
-                MessageInfo msg = MessageInfoUtil.buildImageMessage(contentUri, true, true);
+                MessageInfo msg = MessageInfoUtil.buildImageMessage(contentUri, true);
                 if (mMessageHandler != null) {
                     mMessageHandler.sendMessage(msg);
                     hideSoftInput();
@@ -245,7 +245,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
             return;
         }
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
+        intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         mInputMoreFragment.setCallback(new IUIKitCallBack() {
             @Override
@@ -314,7 +314,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                 mEmojiInputButton.setImageResource(R.drawable.action_textinput_selector);
                 showFaceViewGroup();
             }
-        } else if (view.getId() == R.id.more_btn) {
+        } else if (view.getId() == R.id.more_btn) {//若点击右边的“+”号按钮
             if (mMoreInputEvent instanceof View.OnClickListener) {
                 ((View.OnClickListener) mMoreInputEvent).onClick(view);
             } else if (mMoreInputEvent instanceof BaseInputFragment) {
@@ -322,9 +322,16 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
             } else {
                 if (mCurrentState == STATE_ACTION_INPUT) {
                     mCurrentState = STATE_NONE_INPUT;
-                    mInputMoreView.setVisibility(View.GONE);
+                    //以下是zanhanding添加的代码，用于fix有时需要两次点击加号按钮才能呼出富文本选择布局的问题
+                    //判断富文本选择布局是否已经被呼出，并反转相应的状态
+                    if (mInputMoreView.getVisibility() == View.VISIBLE){
+                        mInputMoreView.setVisibility(View.GONE);
+                    }else{
+                        mInputMoreView.setVisibility(View.VISIBLE);
+                    }
+                    //以上是zanhanding添加的代码，用于fix有时需要两次点击加号按钮才能呼出富文本选择布局的问题
                 } else {
-                    showInputMoreLayout();
+                    showInputMoreLayout();//显示“更多”消息发送布局
                     mCurrentState = STATE_ACTION_INPUT;
                     mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
                     mEmojiInputButton.setImageResource(R.drawable.action_face_selector);

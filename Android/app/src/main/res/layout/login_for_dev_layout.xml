@@ -39,7 +39,7 @@
                 android:layout_height="60dp"
                 android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="字母开头，4~24个字母+数字"
+                android:hint="请参考LoginForDevActivity的类注释"
                 android:textCursorDrawable="@drawable/my_cursor"
                 android:singleLine="true" />
 
@@ -62,7 +62,6 @@
             android:layout_height="50dp"
             android:layout_marginTop="60dp"
             android:layout_weight="1"
-            android:background="@drawable/green_btn_bg"
             android:text="登录"
             android:textColor="#fff" />
 

@@ -36,8 +36,6 @@
     <string name="add_wording">验证消息</string>
 
     // 群信息相关
-    <string name="input_group_name">群聊名称</string>
-    <string name="input_group_notice">群公告</string>
     <string name="tips_empty_group_member">请选择群成员</string>
     <string name="tips_empty_group_type">请选择加群方式</string>
 

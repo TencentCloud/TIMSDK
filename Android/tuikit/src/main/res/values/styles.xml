@@ -9,45 +9,6 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Matisse.Picker" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/picker_primary</item>
-        <item name="colorPrimaryDark">@color/picker_primary_dark</item>
-        <item name="toolbar">@style/Toolbar.Picker</item>
-        <item name="album.dropdown.title.color">@color/picker_album_dropdown_title_text</item>
-        <item name="album.dropdown.count.color">@color/picker_album_dropdown_count_text</item>
-        <item name="album.element.color">@android:color/white</item>
-        <item name="album.thumbnail.placeholder">@color/picker_album_dropdown_thumbnail_placeholder
-        </item>
-        <item name="album.emptyView">@drawable/ic_empty_picker</item>
-        <item name="album.emptyView.textColor">@color/picker_album_empty_view</item>
-        <item name="item.placeholder">@color/picker_item_placeholder</item>
-        <item name="item.checkCircle.backgroundColor">
-            @color/picker_item_checkCircle_backgroundColor
-        </item>
-        <item name="item.checkCircle.borderColor">@color/picker_item_checkCircle_borderColor</item>
-        <item name="page.bg">@color/picker_page_bg</item>
-        <item name="bottomToolbar.bg">@color/picker_bottom_toolbar_bg</item>
-        <item name="bottomToolbar.preview.textColor">@color/dracula_bottom_toolbar_preview_text
-        </item>
-        <item name="bottomToolbar.apply.textColor">@color/picker_bottom_toolbar_apply_text</item>
-        <item name="preview.bottomToolbar.back.textColor">
-            @color/picker_preview_bottom_toolbar_back_text
-        </item>
-        <item name="preview.bottomToolbar.apply.textColor">
-            @color/picker_preview_bottom_toolbar_apply_text
-        </item>
-        <item name="listPopupWindowStyle">@style/Popup.Picker</item>
-        <item name="capture.textColor">@color/picker_capture</item>
-    </style>
-
-    <style name="Toolbar.Picker" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-
-    </style>
-
-    <style name="Popup.Picker" parent="Widget.AppCompat.Light.ListPopupWindow">
-        <item name="android:popupBackground">@color/picker_album_popup_bg</item>
-    </style>
-
 
     <!-- 自定义AlertDialog的样式 -->
     <style name="AlertDialogStyle" parent="@android:style/Theme.Dialog">

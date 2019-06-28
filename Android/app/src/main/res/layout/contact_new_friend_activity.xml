@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/new_friend_manager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,7 +10,6 @@
         android:layout_height="@dimen/page_title_height" />
 
     <ListView
-        android:layout_marginTop="10dp"
         android:id="@+id/new_friend_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -13,10 +13,13 @@ import com.tencent.imsdk.TIMMessageListener;
 import com.tencent.imsdk.TIMOfflinePushListener;
 import com.tencent.imsdk.TIMOfflinePushNotification;
 import com.tencent.imsdk.TIMRefreshListener;
+import com.tencent.imsdk.TIMSNSChangeInfo;
 import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserStatusListener;
 import com.tencent.imsdk.ext.message.TIMUserConfigMsgExt;
+import com.tencent.imsdk.friendship.TIMFriendPendencyInfo;
+import com.tencent.imsdk.friendship.TIMFriendshipListener;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.face.FaceManager;
@@ -26,6 +29,7 @@ import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageRevokedManager;
 import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.util.List;
 
@@ -117,21 +121,24 @@ public class TUIKitImpl {
             @Override
             public void onConnected() {
                 sIMSDKConnected = true;
-                if (sIMEventListener != null)
+                if (sIMEventListener != null) {
                     sIMEventListener.onConnected();
+                }
             }
 
             @Override
             public void onDisconnected(int code, String desc) {
                 sIMSDKConnected = false;
-                if (sIMEventListener != null)
+                if (sIMEventListener != null) {
                     sIMEventListener.onDisconnected(code, desc);
+                }
             }
 
             @Override
             public void onWifiNeedAuth(String name) {
-                if (sIMEventListener != null)
+                if (sIMEventListener != null) {
                     sIMEventListener.onWifiNeedAuth(name);
+                }
             }
         });
 
@@ -156,6 +163,28 @@ public class TUIKitImpl {
                 if (sIMEventListener != null) {
                     sIMEventListener.onGroupTipsEvent(elem);
                 }
+            }
+        });
+
+        userConfig.setFriendshipListener(new TIMFriendshipListener() {
+            @Override
+            public void onAddFriends(List<String> list) {
+                TUIKitLog.i(TAG, "onAddFriends: " + list.size());
+            }
+
+            @Override
+            public void onDelFriends(List<String> list) {
+                TUIKitLog.i(TAG, "onDelFriends: " + list.size());
+            }
+
+            @Override
+            public void onFriendProfileUpdate(List<TIMSNSChangeInfo> list) {
+                TUIKitLog.i(TAG, "onFriendProfileUpdate: " + list.size());
+            }
+
+            @Override
+            public void onAddFriendReqs(List<TIMFriendPendencyInfo> list) {
+                TUIKitLog.i(TAG, "onAddFriendReqs: " + list.size());
             }
         });
 

@@ -35,11 +35,6 @@ android {
 
 }
 
-afterEvaluate {
-    assembleDebug.dependsOn ':imsdk:assembleDebug'
-    assembleRelease.dependsOn ':imsdk:assembleRelease'
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -53,10 +48,7 @@ dependencies {
     implementation 'com.github.promeg:tinypinyin:1.0.0' // ~80KB
     implementation 'com.google.code.gson:gson:2.8.5'
 
-    // 如果用aar方式集成，这里需要指定libs文件夹下的aar的名称
-//    implementation(name: 'imsdk-xxx', ext: 'aar')
-
-    // 如果用jcenter方式集成，可以使用以下配置保证获取的是4.x版本的最新版，或者指定某一个版本，比如4.4.479
-    api 'com.tencent.imsdk:imsdk:4.4.479'
+    implementation 'com.tencent.imsdk:imsdk:4.4.627'
+//    api project(':imsdk')
 }
 

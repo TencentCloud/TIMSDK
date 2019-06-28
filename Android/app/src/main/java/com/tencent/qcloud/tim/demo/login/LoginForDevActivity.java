@@ -29,6 +29,8 @@ import java.util.List;
 /**
  * <p>
  * Demo的登录Activity
+ * 用户名可以是任意非空字符，但是前提需要按照下面文档修改代码里的 SDKAPPID 与 PRIVATEKEY
+ * https://github.com/tencentyun/TIMSDK/tree/master/Android
  * <p>
  */
 
@@ -45,6 +47,8 @@ public class LoginForDevActivity extends Activity {
         setContentView(R.layout.login_for_dev_layout);
 
         mLoginView = findViewById(R.id.login_btn);
+        // 用户名可以是任意非空字符，但是前提需要按照下面文档修改代码里的 SDKAPPID 与 PRIVATEKEY
+        // https://github.com/tencentyun/TIMSDK/tree/master/Android
         mUserAccount = findViewById(R.id.login_user);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         checkPermission(this);

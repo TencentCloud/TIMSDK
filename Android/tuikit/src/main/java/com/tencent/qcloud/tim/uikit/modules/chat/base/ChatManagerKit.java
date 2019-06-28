@@ -8,6 +8,7 @@ import com.tencent.imsdk.TIMElemType;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
+import com.tencent.imsdk.TIMSNSSystemElem;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.ext.message.TIMConversationExt;
 import com.tencent.imsdk.ext.message.TIMMessageExt;
@@ -65,31 +66,39 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
 
     @Override
     public boolean onNewMessages(List<TIMMessage> msgs) {
-        for (TIMMessage msg : msgs) {
-            TIMConversation conversation = msg.getConversation();
-            TIMConversationType type = conversation.getType();
-            if (type == TIMConversationType.C2C) {
-                TIMElem ele = msg.getElement(0);
-                TIMElemType eleType = ele.getType();
-                // 用户资料修改通知，不需要在聊天界面展示，可以通过 TIMUserConfig 中的 setFriendshipListener 处理
-                if (eleType == TIMElemType.ProfileTips) {
-                    TUIKitLog.i(TAG, "onNewMessages() eleType is ProfileTips, ignore");
-                    return false;
-                }
-                // 关系链变更通知，不需要在聊天界面展示，可以通过 TIMUserConfig 中的 setFriendshipListener 处理
-                if (eleType == TIMElemType.SNSTips) {
-                    TUIKitLog.i(TAG, "onNewMessages() eleType is SNSTips, ignore");
-                    return false;
-                }
+        if (null != msgs && msgs.size() > 0) {
+            for (TIMMessage msg : msgs) {
+                TIMConversation conversation = msg.getConversation();
+                TIMConversationType type = conversation.getType();
+                if (type == TIMConversationType.C2C) {
+                    TIMElem ele = msg.getElement(0);
+                    TIMElemType eleType = ele.getType();
+                    // 用户资料修改通知，不需要在聊天界面展示，可以通过 TIMUserConfig 中的 setFriendshipListener 处理
+                    if (eleType == TIMElemType.ProfileTips) {
+                        TUIKitLog.i(TAG, "onNewMessages() eleType is ProfileTips, ignore");
+                        return false;
+                    }
+                    if (eleType == TIMElemType.SNSTips) {
+                        TUIKitLog.i(TAG, "onNewMessages() eleType is SNSTips");
+                        TIMSNSSystemElem m = (TIMSNSSystemElem) ele;
+                        if (m.getRequestAddFriendUserList().size() > 0) {
+                            ToastUtil.toastLongMessage("好友申请通过");
+                        }
+                        if (m.getDelFriendAddPendencyList().size() > 0) {
+                            ToastUtil.toastLongMessage("好友申请被拒绝");
+                        }
+                        return false;
+                    }
 
-                TUIKitLog.i(TAG, "onNewMessages() msg = " + msg);
-                onReceiveMessage(conversation, msg);
+                    TUIKitLog.i(TAG, "onNewMessages() msg = " + msg);
+                    onReceiveMessage(conversation, msg);
 
-            } else if (type == TIMConversationType.Group) {
-                onReceiveMessage(conversation, msg);
-                TUIKitLog.i(TAG, "onNewMessages::: " + msg);
-            } else if (type == TIMConversationType.System) {
-                onReceiveSystemMessage(msg);
+                } else if (type == TIMConversationType.Group) {
+                    onReceiveMessage(conversation, msg);
+                    TUIKitLog.i(TAG, "onNewMessages::: " + msg);
+                } else if (type == TIMConversationType.System) {
+                    onReceiveSystemMessage(msg);
+                }
             }
         }
         return false;
@@ -100,34 +109,25 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
     }
 
     protected void onReceiveMessage(final TIMConversation conversation, final TIMMessage msg) {
-        if (conversation == null || conversation.getPeer() == null || getCurrentChatInfo() == null) {
+        if (!safetyCall()) {
+            TUIKitLog.w(TAG, "unSafetyCall");
             return;
         }
-        //图片，视频类的消息先把快照下载了再通知用户
-         /*
-        现在用占位图，直接通知用户了
-        if (MessageInfoUtil.checkMessage(msg, new TIMCallBack() {
-            @Override
-            public void onError(int code, String desc) {
-                TUIKitLog.e(TAG, "group checkMessage failed, code: " + code + "|desc: " + desc);
-            }
-
-            @Override
-            public void onSuccess() {
-                addMessage(conversation, msg);
-            }
-        })) {
+        if (conversation == null || conversation.getPeer() == null) {
             return;
         }
-        */
         addMessage(conversation, msg);
     }
 
     protected abstract boolean isGroup();
 
     protected void addMessage(TIMConversation conversation, TIMMessage msg) {
+        if (!safetyCall()) {
+            TUIKitLog.w(TAG, "unSafetyCall");
+            return;
+        }
         final MessageInfo msgInfo = MessageInfoUtil.TIMMessage2MessageInfo(msg, isGroup());
-        if (msgInfo != null && mCurrentConversation != null && mCurrentConversation.getPeer().equals(conversation.getPeer())) {
+        if (msgInfo != null && mCurrentConversation.getPeer().equals(conversation.getPeer())) {
             mCurrentProvider.addMessageInfo(msgInfo);
             msgInfo.setRead(true);
             mCurrentConversationExt.setReadMessage(msg, new TIMCallBack() {
@@ -150,30 +150,33 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
     }
 
     public void deleteMessage(int position, MessageInfo messageInfo) {
+        if (!safetyCall()) {
+            TUIKitLog.w(TAG, "unSafetyCall");
+            return;
+        }
         TIMMessageExt ext = new TIMMessageExt(messageInfo.getTIMMessage());
         if (ext.remove()) {
-            if (mCurrentProvider == null)
-                return;
             mCurrentProvider.remove(position);
         }
     }
 
     public void revokeMessage(final int position, final MessageInfo messageInfo) {
+        if (!safetyCall()) {
+            TUIKitLog.w(TAG, "unSafetyCall");
+            return;
+        }
         mCurrentConversationExt.revokeMessage(messageInfo.getTIMMessage(), new TIMCallBack() {
             @Override
             public void onError(int code, String desc) {
                 if (code == REVOKE_TIME_OUT) {
                     ToastUtil.toastLongMessage("消息发送已超过2分钟");
                 } else {
-                    ToastUtil.toastLongMessage("撤销失败:" + code + "=" + desc);
+                    ToastUtil.toastLongMessage("撤回失败:" + code + "=" + desc);
                 }
             }
 
             @Override
             public void onSuccess() {
-                if (mCurrentProvider == null) {
-                    return;
-                }
                 mCurrentProvider.updateMessageRevoked(messageInfo.getId());
                 ConversationManagerKit.getInstance().loadConversation(null);
             }
@@ -181,8 +184,11 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
     }
 
     public synchronized void sendMessage(final MessageInfo message, boolean retry, final IUIKitCallBack callBack) {
-
-        if (mCurrentConversation == null || getCurrentChatInfo() == null || message == null || message.getStatus() == MessageInfo.MSG_STATUS_SENDING) {
+        if (!safetyCall()) {
+            TUIKitLog.w(TAG, "unSafetyCall");
+            return;
+        }
+        if (message == null || message.getStatus() == MessageInfo.MSG_STATUS_SENDING) {
             return;
         }
         message.setSelf(true);
@@ -241,7 +247,11 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
     }
 
     public synchronized void loadLocalChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
-        if (getCurrentChatInfo() == null || mIsLoading) {
+        if (!safetyCall()) {
+            TUIKitLog.w(TAG, "unSafetyCall");
+            return;
+        }
+        if (mIsLoading) {
             return;
         }
         mIsLoading = true;
@@ -307,7 +317,11 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
     }
 
     public synchronized void loadChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
-        if (getCurrentChatInfo() == null || mIsLoading) {
+        if (!safetyCall()) {
+            TUIKitLog.w(TAG, "unSafetyCall");
+            return;
+        }
+        if (mIsLoading) {
             return;
         }
         mIsLoading = true;
@@ -337,9 +351,6 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                     @Override
                     public void onSuccess(List<TIMMessage> timMessages) {
                         mIsLoading = false;
-                        if (mCurrentProvider == null) {
-                            return;
-                        }
                         if (unread > 0) {
                             mCurrentConversationExt.setReadMessage(null, new TIMCallBack() {
                                 @Override
@@ -374,10 +385,24 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
 
     @Override
     public void handleInvoke(TIMMessageLocator locator) {
-        if (getCurrentChatInfo() != null && locator.getConversationId().equals(getCurrentChatInfo().getId())) {
+        if (!safetyCall()) {
+            TUIKitLog.w(TAG, "unSafetyCall");
+            return;
+        }
+        if (locator.getConversationId().equals(getCurrentChatInfo().getId())) {
             TUIKitLog.d(TAG, "handleInvoke() locator = " + locator);
             mCurrentProvider.updateMessageRevoked(locator);
         }
     }
 
+    protected boolean safetyCall() {
+        if (mCurrentConversation == null
+                || mCurrentConversationExt == null
+                || mCurrentProvider == null
+                || getCurrentChatInfo() == null
+                ) {
+            return false;
+        }
+        return true;
+    }
 }

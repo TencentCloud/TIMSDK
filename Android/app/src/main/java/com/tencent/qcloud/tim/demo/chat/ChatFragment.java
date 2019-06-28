@@ -87,8 +87,11 @@ public class ChatFragment extends BaseFragment {
 
             @Override
             public void onUserIconClick(View view, int position, MessageInfo messageInfo) {
+                if (null == messageInfo || null == messageInfo.getTIMMessage() ) {
+                    return;
+                }
                 ChatInfo info = new ChatInfo();
-                info.setId(messageInfo.getFromUser());
+                info.setId(messageInfo.getTIMMessage().getSender());
                 Intent intent = new Intent(DemoApplication.instance(), FriendProfileActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(TUIKitConstants.ProfileType.CONTENT, info);

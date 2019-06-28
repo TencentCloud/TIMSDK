@@ -3,7 +3,7 @@
     <color name="top_conversation_color">#e5e5e5</color>
     <color name="white_color">#ffffff</color>
     <color name="main_bg_color">#EDEDED</color>
-    <color name="main_fg_color">#ffffff</color>
+    <color name="btn_blue_standard_color">#338BFF</color>
     <color name="item_split_color">#cccccc</color>
 
     <color name="text_color_black">#000</color>
@@ -16,10 +16,7 @@
 
     <color name="transparent">#00000000</color>
     <color name="black">#000000</color>
-    <color name="grey">#808080</color>
     <color name="list_bottom_text_bg">#777777</color>
-    <color name="preview_bottom_toolbar_bg">#CC000000</color>
-    <color name="preview_bottom_size">#61FFFFFF</color>
     <color name="partTranslucent">#39000000</color>
     <color name="custom_transparent">#B3000000</color>
     <color name="dialog_line_bg">#c6c6c6</color>
@@ -31,34 +28,7 @@
 
     <color name="text_gray1">#777777</color>
 
-    <color name="dracula_bottom_toolbar_preview_text">#DEFFFFFF</color>
-
-    <color name="picker_primary">#1E8AE8</color>
-    <color name="picker_primary_dark">#176EB9</color>
-
-    <color name="picker_album_popup_bg">#FFFFFF</color>
-    <color name="picker_album_dropdown_title_text">#DE000000</color>
-    <color name="picker_album_dropdown_count_text">#999999</color>
-    <color name="picker_album_dropdown_thumbnail_placeholder">#EAEEF4</color>
-    <color name="picker_album_empty_view">#4D000000</color>
-
-    <color name="picker_item_placeholder">#EAEEF4</color>
-    <color name="picker_item_checkCircle_backgroundColor">#1E8AE8</color>
-    <color name="picker_item_checkCircle_borderColor">#FFFFFF</color>
-    <color name="picker_capture">#424242</color>
-
-    <color name="picker_page_bg">#FFFFFF</color>
-    <color name="picker_bottom_toolbar_bg">#FFFFFF</color>
-
-    <color name="picker_bottom_toolbar_apply_text">#0077D9</color>
-
-    <color name="picker_preview_bottom_toolbar_back_text">#FFFFFF</color>
-    <color name="picker_preview_bottom_toolbar_apply_text">#0077D9</color>
-
-    <color name="picker_check_original_radio_disable">#808080</color>
     <color name="title_bar_font_color">#016fff</color>
-
-    <color name="text_blue1">#1173CB</color>
 
     <color name="tab_text_selected_color">#006EFF</color>
     <color name="tab_text_normal_color">#888888</color>
@@ -76,7 +46,6 @@
     <color name="btn_text_hover">#FFFFFF</color>
 
     // 聊天昵称/时间条背景色值
-    <color name="chat_text_bg">#d2d2d2</color>
 
     // 聊天发送/光标色值
     <color name="green">#70C160</color>

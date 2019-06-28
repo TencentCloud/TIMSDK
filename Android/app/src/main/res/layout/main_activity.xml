@@ -50,7 +50,7 @@
                 android:id="@+id/msg_total_unread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@id/conversation"
+                android:layout_alignEnd="@+id/conversation"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/unread_message_count_bg"
                 android:gravity="center"

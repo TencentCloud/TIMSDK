@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.uikit.config.CustomFaceConfig;
 import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
 
 import java.io.IOException;
@@ -67,11 +68,16 @@ public class FaceManager {
                 for (int i = 0; i < emojiFilters.length; i++) {
                     loadAssetBitmap(emojiFilters[i], "emoji/" + emojiFilters[i] + "@2x.png", true);
                 }
-                List<CustomFaceGroup> faceConfigs = TUIKit.getConfigs().getCustomFaceConfig().getFaceGroups();
-                if (faceConfigs == null)
+                CustomFaceConfig config = TUIKit.getConfigs().getCustomFaceConfig();
+                if (config == null) {
                     return;
-                for (int i = 0; i < faceConfigs.size(); i++) {
-                    CustomFaceGroup groupConfigs = faceConfigs.get(i);
+                }
+                List<CustomFaceGroup> groups = config.getFaceGroups();
+                if (groups == null) {
+                    return;
+                }
+                for (int i = 0; i < groups.size(); i++) {
+                    CustomFaceGroup groupConfigs = groups.get(i);
                     FaceGroup groupInfo = new FaceGroup();
                     groupInfo.setGroupId(groupConfigs.getFaceGroupId());
                     groupInfo.setDesc(groupConfigs.getFaceIconName());
@@ -79,14 +85,13 @@ public class FaceManager {
                     groupInfo.setPageRowCount(groupConfigs.getPageRowCount());
                     groupInfo.setGroupIcon(loadAssetBitmap(groupConfigs.getFaceIconName(), groupConfigs.getFaceIconPath(), false).getIcon());
 
-
                     ArrayList<CustomFace> customFaceArray = groupConfigs.getCustomFaceList();
                     ArrayList<Emoji> faceList = new ArrayList<>();
                     for (int j = 0; j < customFaceArray.size(); j++) {
-                        CustomFace config = customFaceArray.get(j);
-                        Emoji emoji = loadAssetBitmap(config.getFaceName(), config.getAssetPath(), false);
-                        emoji.setWidth(config.getFaceWidth());
-                        emoji.setHeight(config.getFaceHeight());
+                        CustomFace face = customFaceArray.get(j);
+                        Emoji emoji = loadAssetBitmap(face.getFaceName(), face.getAssetPath(), false);
+                        emoji.setWidth(face.getFaceWidth());
+                        emoji.setHeight(face.getFaceHeight());
                         faceList.add(emoji);
 
                     }

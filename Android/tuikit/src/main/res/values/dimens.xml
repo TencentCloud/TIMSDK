@@ -3,10 +3,6 @@
 
     <dimen name="chat_time_margin">13.33dp</dimen>
 
-    <dimen name="grid_expected_size">120dp</dimen>
-    <dimen name="media_grid_size">48dp</dimen>
-    <dimen name="media_grid_spacing">4dp</dimen>
-    <dimen name="album_item_height">72dp</dimen>
     <dimen name="page_title_height">45dp</dimen>
     <dimen name="page_margin">10dp</dimen>
 
@@ -24,7 +20,6 @@
     <dimen name="btn_height">40dp</dimen>
 
     // 大按钮
-    <dimen name="btn_text_size_large">18dp</dimen>
     <dimen name="btn_height_large">50dp</dimen>
 
 
