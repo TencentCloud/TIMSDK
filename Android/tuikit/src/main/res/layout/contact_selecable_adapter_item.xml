@@ -45,6 +45,20 @@
             android:textColor="@color/text_color_gray"
             tools:text="默认好友" />
 
+        <!--zanhanding添加，用于显示未读红点-->
+        <com.tencent.qcloud.tim.uikit.component.UnreadCountTextView
+            android:id="@+id/conversation_unread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="24dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="ddd"
+            android:textColor="#fff"
+            android:textSize="10sp" />
+
         <View
             android:id="@+id/view_line"
             android:layout_alignParentBottom="true"
