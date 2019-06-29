@@ -70,6 +70,6 @@ dependencies {
     compile 'com.tencent.bugly:nativecrashreport:3.3.1'
     compile 'org.bouncycastle:bcpkix-jdk15on:1.59'
 
-    implementation 'com.tencent.imsdk:tuikit:4.4.627'
-//    implementation project(':tuikit')
+    implementation(name: 'imsdk-4.4.627', ext: 'aar')//zanhanding修改，引用本地编译的imsdk
+    implementation project(':tuikit')
 }

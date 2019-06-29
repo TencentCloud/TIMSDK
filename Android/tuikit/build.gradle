@@ -48,7 +48,7 @@ dependencies {
     implementation 'com.github.promeg:tinypinyin:1.0.0' // ~80KB
     implementation 'com.google.code.gson:gson:2.8.5'
 
-    implementation 'com.tencent.imsdk:imsdk:4.4.627'
+    implementation(name: 'imsdk-4.4.627', ext: 'aar')//zanhanding修改，读取本地输出的aar
 //    api project(':imsdk')
 }
 
