@@ -85,7 +85,13 @@
 - 为了更好的了解您使用TIMSDK所遇到的问题，方便快速有效定位解决TIMSDK问题，希望您按如下反馈指引反馈issue，方便我们尽快解决您的问题
 - [TIMSDK issue反馈指引](https://github.com/tencentyun/TIMSDK/wiki/TIMSDK-issue%E6%9C%89%E6%95%88%E5%8F%8D%E9%A6%88%E6%A8%A1%E6%9D%BF)
 
-## 最新版本 4.4.627 @2019.06.27
+## 补丁包 4.4.631 @2019.07.03
+
+**Android平台**
+
+- 修复离线推送问题及崩溃问题
+
+## 4.4.627 @2019.06.27
 
 **iOS & Mac平台**
 
