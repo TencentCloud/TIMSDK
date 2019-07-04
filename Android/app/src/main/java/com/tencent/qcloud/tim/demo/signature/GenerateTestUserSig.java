@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tim.demo.signature;
 
+import android.os.Build;
+
 import com.tencent.qcloud.tim.demo.utils.Constants;
 
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -133,12 +135,14 @@ public class GenerateTestUserSig {
 
         try {
             //Create Signature by SerialString
-            Signature signature = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                signature = Signature.getInstance("SHA256withECDSA"); //适配Android P及以后版本，否则报错NoSuchAlgorithmException
-            } else {
-                signature = Signature.getInstance("SHA256withECDSA", "BC");
-            }
+            // 如果您的compileSdkVersion或者targetSdkVersion在28以上，可以打开下面一段注释代码，后续版本会使用HMAC-SHA256加密算法，更简单和无兼容性问题。
+            //Signature signature = null;
+            //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            //    signature = Signature.getInstance("SHA256withECDSA"); //适配Android P及以后版本，否则报错NoSuchAlgorithmException
+            //} else {
+            //    signature = Signature.getInstance("SHA256withECDSA", "BC");
+            //}
+            Signature signature = Signature.getInstance("SHA256withECDSA", "BC");
             signature.initSign(privKeyStruct);
             signature.update(SerialString.getBytes(Charset.forName("UTF-8")));
             byte[] signatureBytes = signature.sign();
