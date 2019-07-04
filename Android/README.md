@@ -3,7 +3,7 @@
 <span id="step1"></span>
 ## 创建应用
 1. 登录云通信 IM [控制台](https://console.cloud.tencent.com/avc)。
- >?如果您已有应用，请记录其 SDKAppID 并 [配置应用](#step2)。
+ >如果您已有应用，请记录其 SDKAppID 并 [配置应用](#step2)。
  >
 2. 在【应用列表】页，单击【创建应用接入】。
  ![](https://main.qcloudimg.com/raw/a7769d15f050286162b0cbcdadca5f03.png)
