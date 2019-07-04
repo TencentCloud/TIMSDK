@@ -133,7 +133,12 @@ public class GenerateTestUserSig {
 
         try {
             //Create Signature by SerialString
-            Signature signature = Signature.getInstance("SHA256withECDSA", "BC");
+            Signature signature = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                signature = Signature.getInstance("SHA256withECDSA"); //适配Android P及以后版本，否则报错NoSuchAlgorithmException
+            } else {
+                signature = Signature.getInstance("SHA256withECDSA", "BC");
+            }
             signature.initSign(privKeyStruct);
             signature.update(SerialString.getBytes(Charset.forName("UTF-8")));
             byte[] signatureBytes = signature.sign();
