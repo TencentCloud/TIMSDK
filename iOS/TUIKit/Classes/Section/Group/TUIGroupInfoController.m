@@ -551,7 +551,7 @@
 - (NSMutableArray *)getShowMembers:(NSMutableArray *)members
 {
     int maxCount = TGroupMembersCell_Column_Count * TGroupMembersCell_Row_Count;
-    if ([self canRemoveMember]) maxCount--;
+    if ([self canInviteMember]) maxCount--;
     if ([self canRemoveMember]) maxCount--;
     NSMutableArray *tmpArray = [NSMutableArray array];
 
