@@ -24,7 +24,7 @@ module.exports = function () {
          *   loginInfo      - Object, 登录身份相关参数集合，详见下面
          *   {
          *     sdkAppID     - String, 用户标识接入SDK的应用ID，必填
-         *     accountType  - int, 账号类型，必填
+         *     accountType  - int, 账号类型，已废弃
          *     identifier   - String, 用户帐号,必须是字符串类型，必填
          *     identifierNick   - String, 用户昵称，选填
          *     userSig      - String, 鉴权Token，必须是字符串类型，必填

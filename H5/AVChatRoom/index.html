@@ -131,17 +131,17 @@
     //官方 demo appid,需要开发者自己修改（托管模式）
     // var sdkAppID = 1400073803;
     var sdkAppID = 1400001533;
-    var accountType = 792;
-
+    
     var avChatRoomId = '@TGS#aRZ7BT3EB';  //默认房间群ID，群类型必须是直播聊天室（AVChatRoom），这个为官方测试ID(托管模式)
-
+    
     if (webim.Tool.getQueryString("groupid")) {
         avChatRoomId = webim.Tool.getQueryString("groupid");//用户自定义房间群id
     }
-
+    
     var selType = webim.SESSION_TYPE.GROUP;
     var selToID = avChatRoomId;//当前选中聊天id（当聊天类型为私聊时，该值为好友帐号，否则为群号）
     var selSess = null;//当前聊天会话
+    var accountType = 1; //用户所属应用帐号类型，已废弃
 
     //默认群组头像(选填)
     var selSessHeadUrl = 'img/2017.jpg';
@@ -151,11 +151,11 @@
     var loginInfo = {
         'sdkAppID': sdkAppID, //用户所属应用id,必填
         'appIDAt3rd': sdkAppID, //用户所属应用id，必填
-        'accountType': accountType, //用户所属应用帐号类型，必填
         'identifier': null, //当前用户ID,必须是否字符串类型，选填
         'identifierNick': "null", //当前用户昵称，选填
         'userSig': null, //当前用户身份凭证，必须是字符串类型，选填
-        'headurl': 'img/2016.gif'//当前用户默认头像，选填
+        'headurl': 'img/2016.gif',//当前用户默认头像，选填
+        'accountType': accountType //用户所属应用帐号类型，已废弃
 
     };
     //监听（多终端同步）群系统消息方法，方法都定义在demo_group_notice.js文件中
