@@ -344,14 +344,14 @@ var initRecentContactList = function (cbOK, cbErr) {
                         sessionNick = sessionNick.substr(0, maxNameLen) + "...";
                     }
 
-                    tempSess = recentSessMap[sessType + "_" + sessionId];
+                    tempSess = recentSessMap[sessType + sessionId];
                     if (!tempSess) { //先判断是否存在（用于去重），不存在增加一个
 
                         if (!firstSessId) {
                             firstSessType = sessType; //记录第一个会话类型
                             firstSessId = sessionId; //记录第一个会话id
                         }
-                        recentSessMap[sessType + "_" + sessionId] = {
+                        recentSessMap[sessType + sessionId] = {
                             SessionType: sessType, //会话类型
                             SessionId: sessionId, //会话对象id，好友id或者群id
                             SessionNick: sessionNick, //会话昵称，好友昵称或群名称
@@ -374,7 +374,7 @@ var initRecentContactList = function (cbOK, cbErr) {
                 //清空聊天界面
                 document.getElementsByClassName("msgflow")[0].innerHTML = "";
 
-                tempSess = recentSessMap[firstSessType + "_" + firstSessId]; //选中第一个会话
+                tempSess = recentSessMap[firstSessType + firstSessId]; //选中第一个会话
                 selType = tempSess.SessionType; //初始化当前聊天类型
 
                 selToID = tempSess.SessionId; //初始化当前聊天对象id

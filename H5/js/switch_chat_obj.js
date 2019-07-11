@@ -50,18 +50,21 @@ function addSess(sess_type, to_id, name, face_url, unread_msg_count, sesslist, a
     delchat.className = 'delChat';
     delchat.innerHTML = '删除会话';
     delchat.onclick = function(e) {
-        var selSess = webim.MsgStore.sessByTypeId(sess_type, to_id)
+        let type_number;
+        switch(sess_type){
+            case 'GROUP': type_number = 2;break;
+            case 'C2C': type_number = 1;break;
+        }
+        var selSess = webim.MsgStore.sessMap()[sess_type + to_id];
         if (sess_type == 'C2C') {
-            sess_type = 1;
             webim.setAutoRead(selSess, true, false)
         } else {
-            sess_type = 2;
             webim.groupMsgReaded({
                 "GroupId": to_id,
-                "MsgReadedSeq": selSess._impl.curMaxMsgSeq
+                "MsgReadedSeq": recentSessMap['GROUP'+to_id].MsgGroupReadedSeq
             })
         }
-        delChat(sess_type, to_id);
+        delChat(type_number, to_id);
         e.preventDefault()
         e.stopPropagation()
         return false;
@@ -105,7 +108,10 @@ function delChat(sess_type, to_id) {
     webim.deleteChat(
         data,
         function(resp) {
-            $("#sessDiv_" + to_id).remove();
+            // 群组 id中含有特殊字符，直接用$(id)会报错
+            var id = 'sessDiv_' + to_id;
+            var selectIdStr = "[id='"+id+"']"
+            $(selectIdStr).remove();
         }
     );
 }

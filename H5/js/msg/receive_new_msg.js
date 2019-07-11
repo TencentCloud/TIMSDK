@@ -37,6 +37,11 @@ function onMsgNotify(newMsgList) {
 
     for (var i in sessMap) {
         sess = sessMap[i];
+        // 更新demo 维护的recentSessMap的MsgGroupReadedSeq字段
+        if(sess._impl && sess._impl.curMaxMsgSeq){
+            recentSessMap[i] = {};
+            recentSessMap[i].MsgGroupReadedSeq = sess._impl.curMaxMsgSeq;
+        }
         if (selToID != sess.id()) { //更新其他聊天对象的未读消息数
             if (!dateStart) {
                 dateStart = new Date();
