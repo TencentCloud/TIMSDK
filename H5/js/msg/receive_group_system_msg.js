@@ -166,10 +166,10 @@ function onCustomGroupNotify(notify) {
 function onReadedSyncGroupNotify(notify) {
     var seq = notify.LastReadMsgSeq;
     //更新当前的seq
-    var currentUnRead = recentSessMap[webim.SESSION_TYPE.GROUP + "_" + notify.GroupId].MsgGroupReadedSeq;
+    var currentUnRead = recentSessMap[webim.SESSION_TYPE.GROUP + notify.GroupId] ? recentSessMap[webim.SESSION_TYPE.GROUP + notify.GroupId].MsgGroupReadedSeq : 0;
     var unread = currentUnRead - seq;
     unread = unread > 0 ? unread : 0;
-    recentSessMap[webim.SESSION_TYPE.GROUP + "_" + notify.GroupId].MsgGroupReadedSeq = seq;
+    recentSessMap[webim.SESSION_TYPE.GROUP + notify.GroupId].MsgGroupReadedSeq = seq;
 
 
     //更新未读数
