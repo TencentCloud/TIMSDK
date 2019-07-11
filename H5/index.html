@@ -1655,7 +1655,7 @@
 
   <script type="text/javascript">
     // 将以下两个参数替换成您的配置
-    var sdkAppID = ''; // 填写第一步获取到的 sdkappid
+    var sdkAppID = '1400187352'; // 填写第一步获取到的 sdkappid
     //var accountType = ''; // 填写第二步设置账号体系集成获取到的 accountType , 已废弃
 
     // 登录帐号
@@ -1682,7 +1682,7 @@
     var selSess = null; //当前聊天会话对象
     var recentSessMap = {}; //保存最近会话列表
     var reqRecentSessCount = 50; //每次请求的最近会话条数，业务可以自定义
-
+    window.recentSessMap = recentSessMap;
     var isPeerRead = 1; //是否需要支持APP端已读回执的功能,默认为0。是：1，否：0。
 
     //默认好友头像
