@@ -36,7 +36,7 @@ public class ContactFragment extends BaseFragment {
     private void initViews(View view) {
         // 从布局文件中获取通讯录面板
         mContactLayout = view.findViewById(R.id.contact_layout);
-        mMenu = new Menu(getActivity(), mContactLayout.getTitleBar(),  Menu.MENU_TYPE_CONTACT);
+        mMenu = new Menu(getActivity(), mContactLayout.getTitleBar(), Menu.MENU_TYPE_CONTACT);
         mContactLayout.getTitleBar().setOnRightClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

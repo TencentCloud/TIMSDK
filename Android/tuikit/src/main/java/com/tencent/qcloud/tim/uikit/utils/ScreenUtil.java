@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 
 public class ScreenUtil {
     private static int navigationBarHeight = 0;
-    private static SharedPreferences preferences = TUIKit.getAppContext().getSharedPreferences(TUIKitConstants.UI_PARAMS, Context.MODE_PRIVATE);
 
     public static boolean checkNavigationBarShow(@NonNull Context context, @NonNull Window window) {
         boolean show;
@@ -83,7 +82,6 @@ public class ScreenUtil {
         wm.getDefaultDisplay().getMetrics(metric);
         return metric.widthPixels;
     }
-
 
     public static int getPxByDp(int dp) {
         float scale = TUIKit.getAppContext().getResources().getDisplayMetrics().density;

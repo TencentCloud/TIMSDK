@@ -10,8 +10,6 @@ import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
 import com.tencent.imsdk.TIMSNSSystemElem;
 import com.tencent.imsdk.TIMValueCallBack;
-import com.tencent.imsdk.ext.message.TIMConversationExt;
-import com.tencent.imsdk.ext.message.TIMMessageExt;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
@@ -25,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class ChatManagerKit implements TIMMessageListener, MessageRevokedManager.MessageRevokeHandler{
+public abstract class ChatManagerKit implements TIMMessageListener, MessageRevokedManager.MessageRevokeHandler {
 
     private static final String TAG = ChatManagerKit.class.getSimpleName();
 
@@ -34,7 +32,6 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
 
     protected ChatProvider mCurrentProvider;
     protected TIMConversation mCurrentConversation;
-    protected TIMConversationExt mCurrentConversationExt;
 
     protected boolean mIsMore;
     private boolean mIsLoading;
@@ -47,7 +44,6 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
 
     public void destroyChat() {
         mCurrentConversation = null;
-        mCurrentConversationExt = null;
         mCurrentProvider = null;
     }
 
@@ -58,7 +54,6 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
             return;
         }
         mCurrentConversation = TIMManager.getInstance().getConversation(info.getType(), info.getId());
-        mCurrentConversationExt = new TIMConversationExt(mCurrentConversation);
         mCurrentProvider = new ChatProvider();
         mIsMore = true;
         mIsLoading = false;
@@ -130,7 +125,7 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
         if (msgInfo != null && mCurrentConversation.getPeer().equals(conversation.getPeer())) {
             mCurrentProvider.addMessageInfo(msgInfo);
             msgInfo.setRead(true);
-            mCurrentConversationExt.setReadMessage(msg, new TIMCallBack() {
+            mCurrentConversation.setReadMessage(msg, new TIMCallBack() {
                 @Override
                 public void onError(int code, String desc) {
                     TUIKitLog.e(TAG, "addMessage() setReadMessage failed, code = " + code + ", desc = " + desc);
@@ -154,8 +149,8 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
             TUIKitLog.w(TAG, "unSafetyCall");
             return;
         }
-        TIMMessageExt ext = new TIMMessageExt(messageInfo.getTIMMessage());
-        if (ext.remove()) {
+        TIMMessage timMessage = messageInfo.getTIMMessage();
+        if (timMessage.remove()) {
             mCurrentProvider.remove(position);
         }
     }
@@ -165,7 +160,7 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
             TUIKitLog.w(TAG, "unSafetyCall");
             return;
         }
-        mCurrentConversationExt.revokeMessage(messageInfo.getTIMMessage(), new TIMCallBack() {
+        mCurrentConversation.revokeMessage(messageInfo.getTIMMessage(), new TIMCallBack() {
             @Override
             public void onError(int code, String desc) {
                 if (code == REVOKE_TIME_OUT) {
@@ -202,8 +197,6 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
             } else {
                 mCurrentProvider.addMessageInfo(message);
             }
-            callBack.onSuccess(mCurrentProvider);
-
         }
         new Thread() {
             @Override
@@ -268,8 +261,8 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
         } else {
             lastTIMMsg = lastMessage.getTIMMessage();
         }
-        final int unread = (int) mCurrentConversationExt.getUnreadMessageNum();
-        mCurrentConversationExt.getLocalMessage(unread > MSG_PAGE_COUNT ? unread : MSG_PAGE_COUNT
+        final int unread = (int) mCurrentConversation.getUnreadMessageNum();
+        mCurrentConversation.getLocalMessage(unread > MSG_PAGE_COUNT ? unread : MSG_PAGE_COUNT
                 , lastTIMMsg, new TIMValueCallBack<List<TIMMessage>>() {
                     @Override
                     public void onError(int code, String desc) {
@@ -285,7 +278,7 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                             return;
                         }
                         if (unread > 0) {
-                            mCurrentConversationExt.setReadMessage(null, new TIMCallBack() {
+                            mCurrentConversation.setReadMessage(null, new TIMCallBack() {
                                 @Override
                                 public void onError(int code, String desc) {
                                     TUIKitLog.e(TAG, "loadChatMessages() setReadMessage failed, code = " + code + ", desc = " + desc);
@@ -338,8 +331,8 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
         } else {
             lastTIMMsg = lastMessage.getTIMMessage();
         }
-        final int unread = (int) mCurrentConversationExt.getUnreadMessageNum();
-        mCurrentConversationExt.getMessage(unread > MSG_PAGE_COUNT ? unread : MSG_PAGE_COUNT
+        final int unread = (int) mCurrentConversation.getUnreadMessageNum();
+        mCurrentConversation.getMessage(unread > MSG_PAGE_COUNT ? unread : MSG_PAGE_COUNT
                 , lastTIMMsg, new TIMValueCallBack<List<TIMMessage>>() {
                     @Override
                     public void onError(int code, String desc) {
@@ -352,7 +345,7 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                     public void onSuccess(List<TIMMessage> timMessages) {
                         mIsLoading = false;
                         if (unread > 0) {
-                            mCurrentConversationExt.setReadMessage(null, new TIMCallBack() {
+                            mCurrentConversation.setReadMessage(null, new TIMCallBack() {
                                 @Override
                                 public void onError(int code, String desc) {
                                     TUIKitLog.e(TAG, "loadChatMessages() setReadMessage failed, code = " + code + ", desc = " + desc);
@@ -397,10 +390,9 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
 
     protected boolean safetyCall() {
         if (mCurrentConversation == null
-                || mCurrentConversationExt == null
                 || mCurrentProvider == null
                 || getCurrentChatInfo() == null
-                ) {
+        ) {
             return false;
         }
         return true;

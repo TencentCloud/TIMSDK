@@ -82,7 +82,7 @@ public class PopWindowUtil {
                 SoftKeyBoardUtil.hideKeyBoard(editText);
                 if (listener != null)
                     listener.sure(editText.getText().toString());
-                    dialog.dismiss();
+                dialog.dismiss();
                 if (autoDismiss)
                     dialog.dismiss();
             }

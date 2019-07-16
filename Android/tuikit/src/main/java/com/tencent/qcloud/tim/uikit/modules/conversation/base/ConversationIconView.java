@@ -73,12 +73,12 @@ public class ConversationIconView extends RelativeLayout {
 
 
     public void setDefaultImageResId(int resId) {
-        BitmapDrawable bd = (BitmapDrawable)  getContext().getResources().getDrawable(resId);
+        BitmapDrawable bd = (BitmapDrawable) getContext().getResources().getDrawable(resId);
         mIconView.setImageBitmap(bd.getBitmap());
     }
 
     public void setBitmapResId(int resId) {
-        BitmapDrawable bd = (BitmapDrawable)  getContext().getResources().getDrawable(resId);
+        BitmapDrawable bd = (BitmapDrawable) getContext().getResources().getDrawable(resId);
         Bitmap bitmap = ImageUtil.toRoundBitmap(bd.getBitmap());
         mIconView.setImageBitmap(bitmap);
     }

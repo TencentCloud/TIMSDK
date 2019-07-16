@@ -1,17 +1,14 @@
 package com.tencent.qcloud.tim.demo.utils;
 
-/**
- * Created by Administrator on 2018/7/2.
- */
 
 public class Constants {
 
-    public static final int SDKAPPID = 1400178783; // 替换成您在腾讯云控制台云通信的应用SDKAPPID，链接 https://console.cloud.tencent.com/avc
+    public static final int SDKAPPID = 1400187352;
     public static final String DEFAULT_USER = "wwww";
     public static final String DEFAULT_SIG = "eJxlj11PgzAYhe-5FaS3M1oKjGHihWWGNYhzGfPjirDRzXcbBUsHm8b-LuISm3hun*fk5Hwapmmi5H5*ma1W5UGoVJ0qjsxrE2F08QerCvI0U6kt83*QHyuQPM3WisseWq7rEox1B3IuFKzhbLRdNFrnu7Sf*K07Xdch-ojoCmx6GN8tAjYL-Kn9tj14QULL29FVGH1Qa7l-fm9kEjVFNIenVnitOsX5eMY2D0CTOp5MlsphKhxuacQCf18-vgyOxUDScSCKEMdMvS52N9qkgoKf-1hD4vkWcTXacFlDKXqB4E4hNv4JMr6Mb*XyXRg_";
 
     // 获取usersig的业务服务器基本URL
-    public static final String BUSIZ_SERVER_BASE_URL = "您自己获取userSig的业务服务器地址";
+    public static final String BUSIZ_SERVER_BASE_URL = "http://123.206.118.43/conf_svr_sdk/conference_server/public/api/conference?";
 
     // bugly上报
     public static final String BUGLY_APPID = "e3afc505b6";

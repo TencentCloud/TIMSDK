@@ -9,14 +9,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tencent.imsdk.TIMFriendshipManager;
+import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.ext.group.TIMGroupBaseInfo;
-import com.tencent.imsdk.ext.group.TIMGroupManagerExt;
 import com.tencent.imsdk.friendship.TIMFriend;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tim.uikit.component.indexlib.IndexBar.widget.IndexBar;
 import com.tencent.qcloud.tim.uikit.component.indexlib.suspension.SuspensionDecoration;
+import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfo;
+import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
@@ -35,6 +37,7 @@ public class ContactListView extends LinearLayout {
     private List<ContactItemBean> mData = new ArrayList<>();
     private SuspensionDecoration mDecoration;
     private TextView mContactCountTv;
+    private GroupInfo mGroupInfo;
 
     /**
      * 右侧边栏导航区域
@@ -94,8 +97,8 @@ public class ContactListView extends LinearLayout {
         mContactCountTv.setText(String.format(getResources().getString(R.string.contact_count), mData.size()));
         //以下根据内容动态设置右侧导航栏的高度（修改者zanhanding）
         ViewGroup.LayoutParams params = mIndexBar.getLayoutParams();
-        if(mData.size() * 50 < mIndexBar.getMeasuredHeight())//若动态设置的侧边栏高度大于之前的旧值，则不改变侧边栏高度
-            params.height = mData.size() * 50 ;
+        if (mData.size() * 50 < mIndexBar.getMeasuredHeight())//若动态设置的侧边栏高度大于之前的旧值，则不改变侧边栏高度
+            params.height = mData.size() * 50;
         mIndexBar.setLayoutParams(params);
         //以上根据内容动态设置右侧导航栏的高度（修改者zanhanding）
     }
@@ -145,6 +148,28 @@ public class ContactListView extends LinearLayout {
         }
     }
 
+    public void setGroupInfo(GroupInfo groupInfo) {
+        mGroupInfo = groupInfo;
+    }
+
+    private void updateStatus(List<ContactItemBean> beanList) {
+        if (mGroupInfo == null) {
+            return;
+        }
+        List<GroupMemberInfo> list = mGroupInfo.getMemberDetails();
+        if (list.size() > 0) {
+            for (GroupMemberInfo info : list) {
+                for (ContactItemBean bean : beanList) {
+                    if (info.getAccount().equals(bean.getId())) {
+                        bean.setSelected(true);
+                        bean.setEnable(false);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        }
+    }
+
     private void loadFriendListData(final boolean loopMore) {
         TIMFriendshipManager.getInstance().getFriendList(new TIMValueCallBack<List<TIMFriend>>() {
             @Override
@@ -168,11 +193,12 @@ public class ContactListView extends LinearLayout {
                     mData.add((ContactItemBean) new ContactItemBean(getResources().getString(R.string.blacklist)).
                             setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
                 }
-                for (TIMFriend timFriend : timFriends){
+                for (TIMFriend timFriend : timFriends) {
                     ContactItemBean info = new ContactItemBean();
                     info.covertTIMFriend(timFriend);
                     mData.add(info);
                 }
+                updateStatus(mData);
                 setDataSource(mData);
             }
         });
@@ -194,7 +220,7 @@ public class ContactListView extends LinearLayout {
                     return;
                 }
                 mData.clear();
-                for (TIMFriend timFriend : timFriends){
+                for (TIMFriend timFriend : timFriends) {
                     ContactItemBean info = new ContactItemBean();
                     info.covertTIMFriend(timFriend).setBlackList(true);
                     mData.add(info);
@@ -205,7 +231,7 @@ public class ContactListView extends LinearLayout {
     }
 
     private void loadGroupListData() {
-        TIMGroupManagerExt.getInstance().getGroupList(new TIMValueCallBack<List<TIMGroupBaseInfo>>() {
+        TIMGroupManager.getInstance().getGroupList(new TIMValueCallBack<List<TIMGroupBaseInfo>>() {
 
             @Override
             public void onError(int i, String s) {

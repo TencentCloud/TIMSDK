@@ -79,7 +79,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
                     break;
             }
             if (holder != null) {
-                ((MessageEmptyHolder)holder).setAdapter(adapter);
+                ((MessageEmptyHolder) holder).setAdapter(adapter);
             }
 
             return holder;

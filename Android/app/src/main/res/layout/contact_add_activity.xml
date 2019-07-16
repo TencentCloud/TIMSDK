@@ -18,7 +18,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="70dp"
             android:layout_height="45dp"
             android:gravity="center_vertical"
             android:text="@string/user_id"
@@ -48,7 +48,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="70dp"
             android:layout_height="45dp"
             android:gravity="center_vertical"
             android:text="@string/add_wording"

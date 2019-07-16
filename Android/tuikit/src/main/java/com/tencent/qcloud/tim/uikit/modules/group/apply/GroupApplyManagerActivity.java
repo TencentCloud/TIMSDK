@@ -24,7 +24,7 @@ public class GroupApplyManagerActivity extends Activity {
         }
         mManagerLayout = findViewById(R.id.group_apply_manager_layout);
 
-        mGroupInfo = (GroupInfo)getIntent().getExtras().getSerializable(TUIKitConstants.Group.GROUP_INFO);
+        mGroupInfo = (GroupInfo) getIntent().getExtras().getSerializable(TUIKitConstants.Group.GROUP_INFO);
         mManagerLayout.setDataSource(mGroupInfo);
     }
 
@@ -41,7 +41,7 @@ public class GroupApplyManagerActivity extends Activity {
         if (resultCode != RESULT_OK) {
             return;
         }
-        GroupApplyInfo info = (GroupApplyInfo)data.getSerializableExtra(TUIKitConstants.Group.MEMBER_APPLY);
+        GroupApplyInfo info = (GroupApplyInfo) data.getSerializableExtra(TUIKitConstants.Group.MEMBER_APPLY);
         if (info == null) {
             return;
         }

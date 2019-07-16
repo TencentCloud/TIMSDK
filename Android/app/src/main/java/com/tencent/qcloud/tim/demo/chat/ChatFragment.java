@@ -37,7 +37,6 @@ public class ChatFragment extends BaseFragment {
             return null;
         }
         mBaseView = inflater.inflate(R.layout.chat_fragment, container, false);
-
         initView();
         return mBaseView;
     }

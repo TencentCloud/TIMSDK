@@ -66,7 +66,7 @@ public class ConversationListAdapter extends IConversationAdapter {
             holder = new ConversationCommonHolder(view);
         }
         if (holder != null) {
-            ((ConversationBaseHolder)holder).setAdapter(this);
+            ((ConversationBaseHolder) holder).setAdapter(this);
         }
         return holder;
     }
@@ -81,7 +81,7 @@ public class ConversationListAdapter extends IConversationAdapter {
                 break;
             default:
                 //设置点击和长按事件
-                if (mOnItemClickListener != null){
+                if (mOnItemClickListener != null) {
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -89,7 +89,7 @@ public class ConversationListAdapter extends IConversationAdapter {
                         }
                     });
                 }
-                if (mOnItemLongClickListener != null){
+                if (mOnItemLongClickListener != null) {
                     holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
@@ -123,13 +123,13 @@ public class ConversationListAdapter extends IConversationAdapter {
         return 1;
     }
 
-    public void addItem(int position, ConversationInfo info){
+    public void addItem(int position, ConversationInfo info) {
         mDataSource.add(position, info);
         notifyItemInserted(position);
         notifyDataSetChanged();
     }
 
-    public void removeItem(int position){
+    public void removeItem(int position) {
         mDataSource.remove(position);
         notifyItemRemoved(position);
         notifyDataSetChanged();

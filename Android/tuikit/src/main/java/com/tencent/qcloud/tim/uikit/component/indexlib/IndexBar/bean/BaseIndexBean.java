@@ -1,4 +1,5 @@
 package com.tencent.qcloud.tim.uikit.component.indexlib.IndexBar.bean;
+
 import com.tencent.qcloud.tim.uikit.component.indexlib.suspension.ISuspensionInterface;
 
 import java.io.Serializable;

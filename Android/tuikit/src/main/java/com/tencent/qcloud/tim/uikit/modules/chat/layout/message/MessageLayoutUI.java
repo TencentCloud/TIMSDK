@@ -296,7 +296,7 @@ public abstract class MessageLayoutUI extends RecyclerView implements IMessageLa
         private static Properties sP = new Properties();
 
         public static Properties getInstance() {
-            if (sP == null ) {
+            if (sP == null) {
                 sP = new Properties();
             }
             return sP;

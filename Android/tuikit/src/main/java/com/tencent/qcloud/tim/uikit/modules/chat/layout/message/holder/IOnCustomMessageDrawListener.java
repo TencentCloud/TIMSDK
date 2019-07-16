@@ -11,7 +11,7 @@ public interface IOnCustomMessageDrawListener {
      * TUIKit在刷新自定义消息时，会调用该方法来绘制自定义的UI
      *
      * @param parent 使用者需要把自己定义的view加到parent里
-     * @param info 消息体
+     * @param info   消息体
      */
     void onDraw(ICustomMessageViewGroup parent, MessageInfo info);
 

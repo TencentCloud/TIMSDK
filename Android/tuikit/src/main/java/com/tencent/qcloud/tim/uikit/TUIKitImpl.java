@@ -17,7 +17,6 @@ import com.tencent.imsdk.TIMSNSChangeInfo;
 import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserStatusListener;
-import com.tencent.imsdk.ext.message.TIMUserConfigMsgExt;
 import com.tencent.imsdk.friendship.TIMFriendPendencyInfo;
 import com.tencent.imsdk.friendship.TIMFriendshipListener;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
@@ -81,7 +80,7 @@ public class TUIKitImpl {
 
     private static void initIM(Context context, int sdkAppID) {
         TIMSdkConfig sdkConfig = sConfigs.getSdkConfig();
-        if (sdkConfig == null ) {
+        if (sdkConfig == null) {
             sdkConfig = new TIMSdkConfig(sdkAppID);
             sConfigs.setSdkConfig(sdkConfig);
         }
@@ -198,11 +197,8 @@ public class TUIKitImpl {
             }
         });
 
-        TIMUserConfigMsgExt ext = new TIMUserConfigMsgExt(userConfig);
-        ext.setMessageRevokedListener(MessageRevokedManager.getInstance());
-        // 禁用自动上报，通过调用已读上报接口来实现已读功能
-        ext.setAutoReportEnabled(false);
-        TIMManager.getInstance().setUserConfig(ext);
+        userConfig.setMessageRevokedListener(MessageRevokedManager.getInstance());
+        TIMManager.getInstance().setUserConfig(userConfig);
 
     }
 

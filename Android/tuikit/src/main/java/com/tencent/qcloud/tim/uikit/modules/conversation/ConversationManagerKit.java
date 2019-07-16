@@ -15,8 +15,6 @@ import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.TIMUserProfile;
-import com.tencent.imsdk.ext.message.TIMConversationExt;
-import com.tencent.imsdk.ext.message.TIMManagerExt;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.friendship.TIMFriend;
 import com.tencent.qcloud.tim.uikit.TUIKit;
@@ -54,7 +52,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
     }
 
     private void init() {
-        mConversationPreferences = TUIKit.getAppContext().getSharedPreferences( TIMManager.getInstance().getLoginUser() + SP_NAME, Context.MODE_PRIVATE);
+        mConversationPreferences = TUIKit.getAppContext().getSharedPreferences(TIMManager.getInstance().getLoginUser() + SP_NAME, Context.MODE_PRIVATE);
         mTopLinkedList = SharedPreferenceUtils.getListData(mConversationPreferences, TOP_LIST, ConversationInfo.class);
         MessageRevokedManager.getInstance().addHandler(this);
     }
@@ -77,12 +75,12 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
         } else {
             mProvider.clear();
         }
-        List<TIMConversation> TIMConversations = TIMManagerExt.getInstance().getConversationList();
+        List<TIMConversation> TIMConversations = TIMManager.getInstance().getConversationList();
         ArrayList<ConversationInfo> infos = new ArrayList<>();
         for (int i = 0; i < TIMConversations.size(); i++) {
             TIMConversation conversation = TIMConversations.get(i);
             if (conversation != null) {
-                TUIKitLog.d(TAG,"loadConversation conversation peer " + conversation.getPeer() + ", groupName " + conversation.getGroupName());
+                TUIKitLog.d(TAG, "loadConversation conversation peer " + conversation.getPeer() + ", groupName " + conversation.getGroupName());
             }
             //将imsdk TIMConversation转换为UIKit ConversationInfo
             ConversationInfo conversationInfo = TIMConversation2ConversationInfo(conversation);
@@ -180,8 +178,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
                 return null;
             }
         }
-        TIMConversationExt ext = new TIMConversationExt(conversation);
-        TIMMessage message = ext.getLastMsg();
+        TIMMessage message = conversation.getLastMsg();
         if (message == null)
             return null;
         ConversationInfo info = new ConversationInfo();
@@ -218,10 +215,10 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
         }
         info.setId(conversation.getPeer());
         info.setGroup(conversation.getType() == TIMConversationType.Group);
-        if (ext.getUnreadMessageNum() > 0) {
-            info.setUnRead((int) ext.getUnreadMessageNum());
+        if (conversation.getUnreadMessageNum() > 0) {
+            info.setUnRead((int) conversation.getUnreadMessageNum());
         }
-        TUIKitLog.d(TAG, "onRefreshConversation ext.getUnreadMessageNum() " + ext.getUnreadMessageNum());
+        TUIKitLog.d(TAG, "onRefreshConversation ext.getUnreadMessageNum() " + conversation.getUnreadMessageNum());
         return info;
     }
 
@@ -263,7 +260,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
     /**
      * 会话置顶操作
      *
-     * @param id 会话ID
+     * @param id   会话ID
      * @param flag 是否置顶
      */
     public void setConversationTop(String id, boolean flag) {
@@ -325,12 +322,12 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
     /**
      * 删除会话，会将本地会话数据从imsdk中删除
      *
-     * @param index   在数据源中的索引
+     * @param index        在数据源中的索引
      * @param conversation 会话信息
      */
     public void deleteConversation(int index, ConversationInfo conversation) {
         TUIKitLog.d(TAG, "deleteConversation index = " + index + ", conversation = " + conversation);
-        boolean status = TIMManagerExt.getInstance().deleteConversation(conversation.isGroup() ? TIMConversationType.Group : TIMConversationType.C2C, conversation.getId());
+        boolean status = TIMManager.getInstance().deleteConversation(conversation.isGroup() ? TIMConversationType.Group : TIMConversationType.C2C, conversation.getId());
         if (status) {
             handleTopData(conversation.getId(), false);
             mProvider.deleteConversation(index);
@@ -357,7 +354,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
         if (mProvider != null) {
             mProvider.deleteConversation(id);
         }
-        TIMManagerExt.getInstance().deleteConversation(isGroup ? TIMConversationType.Group : TIMConversationType.C2C, id);
+        TIMManager.getInstance().deleteConversation(isGroup ? TIMConversationType.Group : TIMConversationType.C2C, id);
     }
 
     /**

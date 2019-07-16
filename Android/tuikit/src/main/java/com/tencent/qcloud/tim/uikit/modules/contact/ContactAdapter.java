@@ -60,9 +60,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!contactBean.isEnable()) {
+                    return;
+                }
                 holder.ccSelect.setChecked(!holder.ccSelect.isChecked());
                 contactBean.setSelected(holder.ccSelect.isChecked());
-                if (mOnClickListener != null ) {
+                if (mOnClickListener != null) {
                     mOnClickListener.onItemClick(position, contactBean);
                 }
                 if (isSingleSelectMode && position != mPreSelectedPosition && contactBean.isSelected()) {

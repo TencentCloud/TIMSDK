@@ -27,7 +27,7 @@ public class GroupInfoPresenter {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                TUIKitLog.e("modifyGroupName", errCode + ":" + errMsg);
+                TUIKitLog.e("loadGroupInfo", errCode + ":" + errMsg);
                 callBack.onError(module, errCode, errMsg);
                 ToastUtil.toastLongMessage(errMsg);
             }

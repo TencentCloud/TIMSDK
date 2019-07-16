@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -87,7 +88,7 @@ public class SelectionActivity extends Activity {
         }
         mSelectionType = bundle.getInt(TUIKitConstants.Selection.TYPE);
 
-        String title = bundle.getString(TUIKitConstants.Selection.TITLE);
+        final String title = bundle.getString(TUIKitConstants.Selection.TITLE);
         titleBar.setTitle(title, TitleBarLayout.POSITION.MIDDLE);
         titleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override
@@ -100,14 +101,19 @@ public class SelectionActivity extends Activity {
         titleBar.setOnRightClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                echoClick();
+                echoClick(title);
             }
         });
     }
 
-    private void echoClick() {
+    private void echoClick(String title) {
         switch (mSelectionType) {
             case TUIKitConstants.Selection.TYPE_TEXT:
+                if (TextUtils.isEmpty(input.getText().toString()) && title.equals(getResources().getString(R.string.modify_group_name))) {
+                    ToastUtil.toastLongMessage("没有输入昵称，请重新填写");
+                    return;
+                }
+
                 if (sOnResultReturnListener != null) {
                     sOnResultReturnListener.onReturn(input.getText().toString());
                 }

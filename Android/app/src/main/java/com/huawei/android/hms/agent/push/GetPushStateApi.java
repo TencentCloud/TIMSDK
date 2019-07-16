@@ -48,7 +48,7 @@ public class GetPushStateApi extends BaseApiAgent {
     }
 
     void onGetPushStateResult(int rstCode) {
-        HMSAgentLog.i("getPushState:callback=" + StrUtils.objDesc(handler) +" retCode=" + rstCode);
+        HMSAgentLog.i("getPushState:callback=" + StrUtils.objDesc(handler) + " retCode=" + rstCode);
         if (handler != null) {
             new Handler(Looper.getMainLooper()).post(new CallbackCodeRunnable(handler, rstCode));
             handler = null;

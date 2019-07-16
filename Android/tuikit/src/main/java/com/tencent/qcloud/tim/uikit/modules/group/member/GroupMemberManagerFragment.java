@@ -15,7 +15,7 @@ import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
  * 群成员管理
  */
 public class GroupMemberManagerFragment extends BaseFragment {
-    
+
     private GroupMemberManagerLayout mMemberLayout;
     private View mBaseView;
     private GroupInfo mGroupInfo;

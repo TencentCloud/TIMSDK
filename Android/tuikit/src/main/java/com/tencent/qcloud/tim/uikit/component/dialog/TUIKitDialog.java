@@ -112,7 +112,7 @@ public class TUIKitDialog {
      * @return
      */
     public TUIKitDialog setPositiveButton(String text,
-                                       final OnClickListener listener) {
+                                          final OnClickListener listener) {
         showPosBtn = true;
         mSureButton.setText(text);
         mSureButton.setOnClickListener(new OnClickListener() {
@@ -137,7 +137,7 @@ public class TUIKitDialog {
      * @return
      */
     public TUIKitDialog setNegativeButton(String text,
-                                       final OnClickListener listener) {
+                                          final OnClickListener listener) {
         showNegBtn = true;
         mCancelButton.setText(text);
         mCancelButton.setOnClickListener(new OnClickListener() {
@@ -284,5 +284,5 @@ public class TUIKitDialog {
     public Button getBtn_pos() {
         return mSureButton;
     }
-    
+
 }

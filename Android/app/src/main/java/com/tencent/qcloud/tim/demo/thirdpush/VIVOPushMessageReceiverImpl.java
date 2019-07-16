@@ -6,13 +6,11 @@ import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.vivo.push.model.UPSNotificationMessage;
 import com.vivo.push.sdk.OpenClientPushMessageReceiver;
 
-/**
- * Created by vinsonswang on 2019/2/27.
- */
 
 public class VIVOPushMessageReceiverImpl extends OpenClientPushMessageReceiver {
 
     private static final String TAG = VIVOPushMessageReceiverImpl.class.getSimpleName();
+
     @Override
     public void onNotificationMessageClicked(Context context, UPSNotificationMessage upsNotificationMessage) {
         DemoLog.i(TAG, "onNotificationMessageClicked");

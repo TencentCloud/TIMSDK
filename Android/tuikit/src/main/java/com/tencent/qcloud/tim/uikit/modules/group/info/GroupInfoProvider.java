@@ -9,7 +9,6 @@ import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
-import com.tencent.imsdk.ext.group.TIMGroupManagerExt;
 import com.tencent.imsdk.ext.group.TIMGroupMemberResult;
 import com.tencent.imsdk.ext.group.TIMGroupPendencyGetParam;
 import com.tencent.imsdk.ext.group.TIMGroupPendencyHandledStatus;
@@ -20,8 +19,8 @@ import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.group.apply.GroupApplyInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class GroupInfoProvider {
         loadGroupPublicInfo(groupId, new IUIKitCallBack() {
             @Override
             public void onSuccess(Object data) {
-                
+
                 // 设置群的一般信息，比如名称、类型等
                 mGroupInfo.covertTIMGroupDetailInfo((TIMGroupDetailInfo) data);
 
@@ -102,7 +101,7 @@ public class GroupInfoProvider {
     public void loadGroupPublicInfo(String groupId, final IUIKitCallBack callBack) {
         List<String> groupList = new ArrayList<>();
         groupList.add(groupId);
-        TIMGroupManagerExt.getInstance().getGroupInfo(groupList, new TIMValueCallBack<List<TIMGroupDetailInfo>>() {
+        TIMGroupManager.getInstance().getGroupInfo(groupList, new TIMValueCallBack<List<TIMGroupDetailInfo>>() {
             @Override
             public void onError(final int code, final String desc) {
                 TUIKitLog.e(TAG, "loadGroupPublicInfo failed, code: " + code + "|desc: " + desc);
@@ -121,7 +120,7 @@ public class GroupInfoProvider {
     }
 
     public void loadGroupMembers(final Object result, final IUIKitCallBack callBack) {
-        TIMGroupManagerExt.getInstance().getGroupMembers(mGroupInfo.getId(), new TIMValueCallBack<List<TIMGroupMemberInfo>>() {
+        TIMGroupManager.getInstance().getGroupMembers(mGroupInfo.getId(), new TIMValueCallBack<List<TIMGroupMemberInfo>>() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "loadGroupMembers failed, code: " + code + "|desc: " + desc);
@@ -169,7 +168,7 @@ public class GroupInfoProvider {
         for (int i = begin; i < end; i++) {
             memberIds.add(mGroupMembers.get(i).getAccount());
         }
-        TIMGroupManagerExt.getInstance().getGroupMembersInfo(mGroupInfo.getId(), memberIds, new TIMValueCallBack<List<TIMGroupMemberInfo>>() {
+        TIMGroupManager.getInstance().getGroupMembersInfo(mGroupInfo.getId(), memberIds, new TIMValueCallBack<List<TIMGroupMemberInfo>>() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "getGroupMembersInfo failed, code: " + code + "|desc: " + desc);
@@ -205,7 +204,7 @@ public class GroupInfoProvider {
     }
 
     public void modifyGroupInfo(final Object value, final int type, final IUIKitCallBack callBack) {
-        TIMGroupManagerExt.ModifyGroupInfoParam param = new TIMGroupManagerExt.ModifyGroupInfoParam(mGroupInfo.getId());
+        TIMGroupManager.ModifyGroupInfoParam param = new TIMGroupManager.ModifyGroupInfoParam(mGroupInfo.getId());
         if (type == TUIKitConstants.Group.MODIFY_GROUP_NAME) {
             param.setGroupName(value.toString());
         } else if (type == TUIKitConstants.Group.MODIFY_GROUP_NOTICE) {
@@ -214,7 +213,7 @@ public class GroupInfoProvider {
             param.setAddOption(TIMGroupAddOpt.values()[(Integer) value]);
         }
 
-        TIMGroupManagerExt.getInstance().modifyGroupInfo(param, new TIMCallBack() {
+        TIMGroupManager.getInstance().modifyGroupInfo(param, new TIMCallBack() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.i(TAG, "modifyGroupInfo faild tyep| value| code| desc " + value + ":" + type + ":" + code + ":" + desc);
@@ -239,9 +238,9 @@ public class GroupInfoProvider {
         if (mGroupInfo == null) {
             ToastUtil.toastLongMessage("modifyMyGroupNickname fail: NO GROUP");
         }
-        TIMGroupManagerExt.ModifyMemberInfoParam param = new TIMGroupManagerExt.ModifyMemberInfoParam(mGroupInfo.getId(), TIMManager.getInstance().getLoginUser());
+        TIMGroupManager.ModifyMemberInfoParam param = new TIMGroupManager.ModifyMemberInfoParam(mGroupInfo.getId(), TIMManager.getInstance().getLoginUser());
         param.setNameCard(nickname);
-        TIMGroupManagerExt.getInstance().modifyMemberInfo(param, new TIMCallBack() {
+        TIMGroupManager.getInstance().modifyMemberInfo(param, new TIMCallBack() {
             @Override
             public void onError(int code, String desc) {
                 callBack.onError(TAG, code, desc);
@@ -296,7 +295,7 @@ public class GroupInfoProvider {
         if (addMembers == null || addMembers.size() == 0) {
             return;
         }
-        TIMGroupManagerExt.getInstance().inviteGroupMember(mGroupInfo.getId(), addMembers, new TIMValueCallBack<List<TIMGroupMemberResult>>() {
+        TIMGroupManager.getInstance().inviteGroupMember(mGroupInfo.getId(), addMembers, new TIMValueCallBack<List<TIMGroupMemberResult>>() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "addGroupMembers failed, code: " + code + "|desc: " + desc);
@@ -334,8 +333,8 @@ public class GroupInfoProvider {
             members.add(delMembers.get(i).getAccount());
         }
 
-        TIMGroupManagerExt.DeleteMemberParam param = new TIMGroupManagerExt.DeleteMemberParam(mGroupInfo.getId(), members);
-        TIMGroupManagerExt.getInstance().deleteGroupMember(param, new TIMValueCallBack<List<TIMGroupMemberResult>>() {
+        TIMGroupManager.DeleteMemberParam param = new TIMGroupManager.DeleteMemberParam(mGroupInfo.getId(), members);
+        TIMGroupManager.getInstance().deleteGroupMember(param, new TIMValueCallBack<List<TIMGroupMemberResult>>() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "removeGroupMembers failed, code: " + code + "|desc: " + desc);
@@ -380,7 +379,7 @@ public class GroupInfoProvider {
                     return;
                 }
                 String groupId = mGroupInfo.getId();
-                List<GroupApplyInfo> allApplies = (List<GroupApplyInfo>)data;
+                List<GroupApplyInfo> allApplies = (List<GroupApplyInfo>) data;
                 List<GroupApplyInfo> applyInfos = new ArrayList<>();
                 for (int i = 0; i < allApplies.size(); i++) {
                     GroupApplyInfo applyInfo = allApplies.get(i);
@@ -405,7 +404,7 @@ public class GroupInfoProvider {
         final List<GroupApplyInfo> applies = new ArrayList<>();
         TIMGroupPendencyGetParam param = new TIMGroupPendencyGetParam();
         param.setTimestamp(mPendencyTime);
-        TIMGroupManagerExt.getInstance().getGroupPendencyList(param, new TIMValueCallBack<TIMGroupPendencyListGetSucc>() {
+        TIMGroupManager.getInstance().getGroupPendencyList(param, new TIMValueCallBack<TIMGroupPendencyListGetSucc>() {
             @Override
             public void onError(final int code, final String desc) {
                 TUIKitLog.e(TAG, "getGroupPendencyList failed, code: " + code + "|desc: " + desc);

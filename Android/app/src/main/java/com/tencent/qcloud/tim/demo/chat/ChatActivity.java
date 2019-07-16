@@ -8,7 +8,7 @@ import com.tencent.qcloud.tim.demo.R;
 
 public class ChatActivity extends Activity {
 
-    private ChatFragment chatFragment;
+    private ChatFragment mChatFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -16,8 +16,8 @@ public class ChatActivity extends Activity {
         setContentView(R.layout.chat_activity);
 
         Bundle bundle = getIntent().getExtras();
-        chatFragment = new ChatFragment();
-        chatFragment.setArguments(bundle);
-        getFragmentManager().beginTransaction().replace(R.id.empty_view, chatFragment).commitAllowingStateLoss();
+        mChatFragment = new ChatFragment();
+        mChatFragment.setArguments(bundle);
+        getFragmentManager().beginTransaction().replace(R.id.empty_view, mChatFragment).commitAllowingStateLoss();
     }
 }

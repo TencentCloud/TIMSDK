@@ -134,8 +134,8 @@ public class StartGroupChatActivity extends Activity {
         SelectionActivity.startListSelection(this, bundle, new SelectionActivity.OnResultReturnListener() {
             @Override
             public void onReturn(Object text) {
-                mJoinType.setContent(mJoinTypes.get((Integer)text));
-                mJoinTypeIndex = (Integer)text;
+                mJoinType.setContent(mJoinTypes.get((Integer) text));
+                mJoinTypeIndex = (Integer) text;
             }
         });
     }

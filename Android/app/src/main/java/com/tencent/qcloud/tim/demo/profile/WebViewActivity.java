@@ -14,7 +14,6 @@ import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
 
 public class WebViewActivity extends Activity {
 
-    //声明引用
     private WebView mWebView;
     private TitleBarLayout mTitleBar;
 

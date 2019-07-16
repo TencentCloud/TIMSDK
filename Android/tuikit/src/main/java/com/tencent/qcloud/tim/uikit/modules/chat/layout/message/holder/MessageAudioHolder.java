@@ -9,12 +9,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
+
+import java.io.File;
 
 public class MessageAudioHolder extends MessageContentHolder {
 
@@ -65,6 +70,9 @@ public class MessageAudioHolder extends MessageContentHolder {
         if (duration == 0) {
             duration = 1;
         }
+        if (TextUtils.isEmpty(msg.getDataPath())) {
+            getSound(msg, soundElem);
+        }
         ViewGroup.LayoutParams audioParams = msgContentFrame.getLayoutParams();
         audioParams.width = AUDIO_MIN_WIDTH + ScreenUtil.getPxByDp(duration * 6);
         if (audioParams.width > AUDIO_MAX_WIDTH) {
@@ -100,6 +108,26 @@ public class MessageAudioHolder extends MessageContentHolder {
                 });
             }
         });
+    }
+
+    private void getSound(final MessageInfo msgInfo, TIMSoundElem soundElemEle) {
+        final String path = TUIKitConstants.RECORD_DOWNLOAD_DIR + soundElemEle.getUuid();
+        File file = new File(path);
+        if (!file.exists()) {
+            soundElemEle.getSoundToFile(path, new TIMCallBack() {
+                @Override
+                public void onError(int code, String desc) {
+                    TUIKitLog.e("getSoundToFile failed code = ", code + ", info = " + desc);
+                }
+
+                @Override
+                public void onSuccess() {
+                    msgInfo.setDataPath(path);
+                }
+            });
+        } else {
+            msgInfo.setDataPath(path);
+        }
     }
 
 }

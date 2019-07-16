@@ -12,14 +12,12 @@ import com.tencent.imsdk.TIMBackgroundParam;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.ext.message.TIMConversationExt;
-import com.tencent.imsdk.ext.message.TIMManagerExt;
-import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.imsdk.session.SessionWrapper;
 import com.tencent.imsdk.utils.IMFunc;
 import com.tencent.qcloud.tim.demo.helper.ConfigHelper;
-import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.demo.utils.Constants;
+import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
@@ -51,19 +49,19 @@ public class DemoApplication extends Application {
              */
             TUIKit.init(this, Constants.SDKAPPID, new ConfigHelper().getConfigs());
 
-            if(IMFunc.isBrandXiaoMi()){
+            if (IMFunc.isBrandXiaoMi()) {
                 // 小米离线推送
                 MiPushClient.registerPush(this, Constants.XM_PUSH_APPID, Constants.XM_PUSH_APPKEY);
             }
-            if(IMFunc.isBrandHuawei()){
+            if (IMFunc.isBrandHuawei()) {
                 // 华为离线推送
                 HMSAgent.init(this);
             }
-            if(MzSystemUtils.isBrandMeizu(this)){
+            if (MzSystemUtils.isBrandMeizu(this)) {
                 // 魅族离线推送
                 PushManager.register(this, Constants.MZ_PUSH_APPID, Constants.MZ_PUSH_APPKEY);
             }
-            if(IMFunc.isBrandVivo()){
+            if (IMFunc.isBrandVivo()) {
                 // vivo离线推送
                 PushClient.getInstance(getApplicationContext()).initialize();
             }
@@ -77,9 +75,10 @@ public class DemoApplication extends Application {
         LeakCanary.install(this);*/
     }
 
-    class StatisticActivityLifecycleCallback implements ActivityLifecycleCallbacks{
+    class StatisticActivityLifecycleCallback implements ActivityLifecycleCallbacks {
         private int foregroundActivities = 0;
         private boolean isChangingConfiguration;
+
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle) {
 
@@ -123,10 +122,9 @@ public class DemoApplication extends Application {
                 // 应用切到后台
                 DemoLog.i(TAG, "application enter background");
                 int unReadCount = 0;
-                List<TIMConversation> conversationList = TIMManagerExt.getInstance().getConversationList();
+                List<TIMConversation> conversationList = TIMManager.getInstance().getConversationList();
                 for (TIMConversation timConversation : conversationList) {
-                    TIMConversationExt timConversationExt = new TIMConversationExt(timConversation);
-                    unReadCount += timConversationExt.getUnreadMessageNum();
+                    unReadCount += timConversation.getUnreadMessageNum();
                 }
                 TIMBackgroundParam param = new TIMBackgroundParam();
                 param.setC2cUnread(unReadCount);

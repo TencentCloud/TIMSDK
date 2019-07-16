@@ -8,7 +8,7 @@ import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
  * ConversationLayout 的适配器，用户可自定义实现
  */
 
-public abstract class IConversationAdapter extends RecyclerView.Adapter  {
+public abstract class IConversationAdapter extends RecyclerView.Adapter {
     /**
      * 设置适配器的数据源，该接口一般由ConversationContainer自动调用
      *

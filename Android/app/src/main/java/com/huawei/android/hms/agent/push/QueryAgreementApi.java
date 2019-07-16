@@ -48,7 +48,7 @@ public class QueryAgreementApi extends BaseApiAgent {
     }
 
     void onQueryAgreementResult(int rstCode) {
-        HMSAgentLog.i("queryAgreement:callback=" + StrUtils.objDesc(handler) +" retCode=" + rstCode);
+        HMSAgentLog.i("queryAgreement:callback=" + StrUtils.objDesc(handler) + " retCode=" + rstCode);
         if (handler != null) {
             new Handler(Looper.getMainLooper()).post(new CallbackCodeRunnable(handler, rstCode));
             handler = null;

@@ -57,7 +57,7 @@ public class RecentEmojiManager {
 
     public Collection getCollection(String key) throws IOException, ClassNotFoundException {
         String collectionString = getString(key);
-        if (TextUtils.isEmpty(collectionString) || TextUtils.isEmpty(collectionString.trim())){
+        if (TextUtils.isEmpty(collectionString) || TextUtils.isEmpty(collectionString.trim())) {
             return null;
         }
         byte[] mobileBytes = Base64.decode(collectionString.getBytes(), Base64.DEFAULT);

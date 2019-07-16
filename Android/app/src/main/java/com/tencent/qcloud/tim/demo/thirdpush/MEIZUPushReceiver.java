@@ -13,12 +13,10 @@ import com.meizu.cloud.pushsdk.platform.message.SubTagsStatus;
 import com.meizu.cloud.pushsdk.platform.message.UnRegisterStatus;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 
-/**
- * Created by vinsonswang on 2019/2/27.
- */
-
 public class MEIZUPushReceiver extends MzPushMessageReceiver {
-    private static final String TAG = "MEIZUPushReceiver";
+
+    private static final String TAG = MEIZUPushReceiver.class.getSimpleName();
+
     @Override
     public void onMessage(Context context, String s) {
         DemoLog.i(TAG, "onMessage method1 msg = " + s);

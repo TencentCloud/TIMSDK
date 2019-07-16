@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.interfaces;
 
 import android.view.View;
+
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreActionUnit;
 

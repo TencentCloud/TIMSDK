@@ -317,6 +317,7 @@ public class MessageInfo {
 
     /**
      * 非文字消息在会话列表时展示的文字说明，比如照片在会话列表展示为“[图片]”
+     *
      * @return
      */
     public Object getExtra() {

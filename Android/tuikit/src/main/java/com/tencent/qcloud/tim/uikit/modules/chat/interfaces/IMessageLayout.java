@@ -7,7 +7,7 @@ import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.IOnCustom
 
 import java.util.List;
 
-public interface IMessageLayout extends IMessageProperties{
+public interface IMessageLayout extends IMessageProperties {
 
     /**
      * 设置消息列表的适配器{@link MessageListAdapter}

@@ -73,7 +73,7 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     protected View mInputMoreLayout;
     private AlertDialog mPermissionDialog;
 
-//    protected ShortcutArea mShortcutArea;
+    //    protected ShortcutArea mShortcutArea;
     protected View mInputMoreView;
 
     private boolean mSendPhotoDisable;
@@ -234,97 +234,101 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     }
 
     protected abstract void init();
+
     protected abstract void startSendPhoto();
+
     protected abstract void startCapture();
+
     protected abstract void startVideoRecord();
+
     protected abstract void startSendFile();
 
-     @Override
-     public void disableAudioInput(boolean disable) {
-         mAudioInputDisable = disable;
-         if (disable) {
-             mAudioInputSwitchButton.setVisibility(GONE);
-         } else {
-             mAudioInputSwitchButton.setVisibility(VISIBLE);
-         }
-     }
+    @Override
+    public void disableAudioInput(boolean disable) {
+        mAudioInputDisable = disable;
+        if (disable) {
+            mAudioInputSwitchButton.setVisibility(GONE);
+        } else {
+            mAudioInputSwitchButton.setVisibility(VISIBLE);
+        }
+    }
 
-     @Override
-     public void disableEmojiInput(boolean disable) {
-         mEmojiInputDisable = disable;
-         if (disable) {
-             mEmojiInputButton.setVisibility(GONE);
-         } else {
-             mEmojiInputButton.setVisibility(VISIBLE);
-         }
-     }
+    @Override
+    public void disableEmojiInput(boolean disable) {
+        mEmojiInputDisable = disable;
+        if (disable) {
+            mEmojiInputButton.setVisibility(GONE);
+        } else {
+            mEmojiInputButton.setVisibility(VISIBLE);
+        }
+    }
 
-     @Override
-     public void disableMoreInput(boolean disable) {
-         mMoreInputDisable = disable;
-         if (disable) {
-             mMoreInputButton.setVisibility(GONE);
-             mSendTextButton.setVisibility(VISIBLE);
-         } else {
-             mMoreInputButton.setVisibility(VISIBLE);
-             mSendTextButton.setVisibility(GONE);
-         }
-     }
+    @Override
+    public void disableMoreInput(boolean disable) {
+        mMoreInputDisable = disable;
+        if (disable) {
+            mMoreInputButton.setVisibility(GONE);
+            mSendTextButton.setVisibility(VISIBLE);
+        } else {
+            mMoreInputButton.setVisibility(VISIBLE);
+            mSendTextButton.setVisibility(GONE);
+        }
+    }
 
-     @Override
-     public void replaceMoreInput(BaseInputFragment fragment) {
-         mMoreInputEvent = fragment;
-     }
+    @Override
+    public void replaceMoreInput(BaseInputFragment fragment) {
+        mMoreInputEvent = fragment;
+    }
 
-     @Override
-     public void replaceMoreInput(OnClickListener listener) {
-         mMoreInputEvent = listener;
-     }
+    @Override
+    public void replaceMoreInput(OnClickListener listener) {
+        mMoreInputEvent = listener;
+    }
 
-     @Override
-     public void disableSendPhotoAction(boolean disable) {
-         mSendPhotoDisable = disable;
-     }
+    @Override
+    public void disableSendPhotoAction(boolean disable) {
+        mSendPhotoDisable = disable;
+    }
 
-     @Override
-     public void disableCaptureAction(boolean disable) {
+    @Override
+    public void disableCaptureAction(boolean disable) {
         mCaptureDisable = disable;
-     }
+    }
 
-     @Override
-     public void disableVideoRecordAction(boolean disable) {
-         mVideoRecordDisable = disable;
-     }
+    @Override
+    public void disableVideoRecordAction(boolean disable) {
+        mVideoRecordDisable = disable;
+    }
 
-     @Override
-     public void disableSendFileAction(boolean disable) {
+    @Override
+    public void disableSendFileAction(boolean disable) {
         mSendFileDisable = disable;
-     }
+    }
 
-     @Override
-     public void addAction(InputMoreActionUnit action) {
-         mInputMoreCustomActionList.add(action);
-     }
+    @Override
+    public void addAction(InputMoreActionUnit action) {
+        mInputMoreCustomActionList.add(action);
+    }
 
-     protected void showMoreInputButton(int visibility) {
-         if (mMoreInputDisable) {
-             return;
-         }
-         mMoreInputButton.setVisibility(visibility);
-     }
+    protected void showMoreInputButton(int visibility) {
+        if (mMoreInputDisable) {
+            return;
+        }
+        mMoreInputButton.setVisibility(visibility);
+    }
 
-     protected void showSendTextButton(int visibility) {
-         if (mMoreInputDisable) {
-             mSendTextButton.setVisibility(VISIBLE);
-         } else {
-             mSendTextButton.setVisibility(visibility);
-         }
-     }
+    protected void showSendTextButton(int visibility) {
+        if (mMoreInputDisable) {
+            mSendTextButton.setVisibility(VISIBLE);
+        } else {
+            mSendTextButton.setVisibility(visibility);
+        }
+    }
 
-     protected void showEmojiInputButton(int visibility) {
-         if (mEmojiInputDisable) {
-             return;
-         }
-         mEmojiInputButton.setVisibility(visibility);
-     }
- }
+    protected void showEmojiInputButton(int visibility) {
+        if (mEmojiInputDisable) {
+            return;
+        }
+        mEmojiInputButton.setVisibility(visibility);
+    }
+}

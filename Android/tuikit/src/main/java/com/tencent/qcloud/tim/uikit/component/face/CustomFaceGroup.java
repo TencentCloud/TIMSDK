@@ -17,6 +17,7 @@ public class CustomFaceGroup {
 
     /**
      * 增加一个表情
+     *
      * @param face
      */
     public void addCustomFace(CustomFace face) {
@@ -25,6 +26,7 @@ public class CustomFaceGroup {
 
     /**
      * 获取表情包
+     *
      * @return
      */
     public ArrayList<CustomFace> getCustomFaceList() {
@@ -33,6 +35,7 @@ public class CustomFaceGroup {
 
     /**
      * 获取表情包所在的组ID
+     *
      * @return
      */
     public int getFaceGroupId() {
@@ -41,6 +44,7 @@ public class CustomFaceGroup {
 
     /**
      * 设置表情包所在的组ID
+     *
      * @param faceGroupId
      */
     public void setFaceGroupId(int faceGroupId) {
@@ -49,6 +53,7 @@ public class CustomFaceGroup {
 
     /**
      * 获取表情包的封面
+     *
      * @return
      */
     public String getFaceIconPath() {
@@ -57,6 +62,7 @@ public class CustomFaceGroup {
 
     /**
      * 获取表情包每行显示数量
+     *
      * @return
      */
     public int getPageRowCount() {
@@ -65,6 +71,7 @@ public class CustomFaceGroup {
 
     /**
      * 设置表情包每行的显示数量
+     *
      * @param pageRowCount
      */
     public void setPageRowCount(int pageRowCount) {
@@ -73,6 +80,7 @@ public class CustomFaceGroup {
 
     /**
      * 获取表情包的列数量
+     *
      * @return
      */
     public int getPageColumnCount() {
@@ -81,6 +89,7 @@ public class CustomFaceGroup {
 
     /**
      * 设置表情包的列数量
+     *
      * @param pageColumnCount
      */
     public void setPageColumnCount(int pageColumnCount) {
@@ -89,6 +98,7 @@ public class CustomFaceGroup {
 
     /**
      * 设置表情包的封面
+     *
      * @param faceIconPath
      */
     public void setFaceIconPath(String faceIconPath) {
@@ -97,6 +107,7 @@ public class CustomFaceGroup {
 
     /**
      * 获取表情包的名称
+     *
      * @return
      */
     public String getFaceIconName() {
@@ -105,6 +116,7 @@ public class CustomFaceGroup {
 
     /**
      * 设置表情包的名称
+     *
      * @param faceIconName
      */
     public void setFaceIconName(String faceIconName) {

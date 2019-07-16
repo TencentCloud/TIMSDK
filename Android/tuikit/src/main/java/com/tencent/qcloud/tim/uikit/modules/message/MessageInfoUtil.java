@@ -27,11 +27,10 @@ import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.imsdk.TIMTextElem;
 import com.tencent.imsdk.TIMVideo;
 import com.tencent.imsdk.TIMVideoElem;
-import com.tencent.imsdk.ext.message.TIMMessageExt;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ public class MessageInfoUtil {
     /**
      * 创建一条自定义表情的消息
      *
-     * @param groupId 自定义表情所在的表情组id
+     * @param groupId  自定义表情所在的表情组id
      * @param faceName 表情的名称
      * @return
      */
@@ -89,7 +88,8 @@ public class MessageInfoUtil {
 
     /**
      * 创建一条图片消息
-     * @param uri 图片URI
+     *
+     * @param uri        图片URI
      * @param compressed 是否压缩
      * @return
      */
@@ -105,9 +105,8 @@ public class MessageInfoUtil {
         info.setImgHeight(size[1]);
 
         TIMMessage TIMMsg = new TIMMessage();
-        TIMMessageExt ext = new TIMMessageExt(TIMMsg);
-        ext.setSender(TIMManager.getInstance().getLoginUser());
-        ext.setTimestamp(System.currentTimeMillis());
+        TIMMsg.setSender(TIMManager.getInstance().getLoginUser());
+        TIMMsg.setTimestamp(System.currentTimeMillis());
         if (!compressed) {
             ele.setLevel(0);
         }
@@ -124,11 +123,11 @@ public class MessageInfoUtil {
     /**
      * 创建一条视频消息
      *
-     * @param imgPath 视频缩略图路径
+     * @param imgPath   视频缩略图路径
      * @param videoPath 视频路径
-     * @param width 视频的宽
-     * @param height 视频的高
-     * @param duration 视频的时长
+     * @param width     视频的宽
+     * @param height    视频的高
+     * @param duration  视频的时长
      * @return
      */
     public static MessageInfo buildVideoMessage(String imgPath, String videoPath, int width, int height, long duration) {
@@ -167,16 +166,15 @@ public class MessageInfoUtil {
      * 创建一条音频消息
      *
      * @param recordPath 音频路径
-     * @param duration 音频的时长
+     * @param duration   音频的时长
      * @return
      */
     public static MessageInfo buildAudioMessage(String recordPath, int duration) {
         MessageInfo info = new MessageInfo();
         info.setDataPath(recordPath);
         TIMMessage TIMMsg = new TIMMessage();
-        TIMMessageExt ext = new TIMMessageExt(TIMMsg);
-        ext.setSender(TIMManager.getInstance().getLoginUser());
-        ext.setTimestamp(System.currentTimeMillis() / 1000);
+        TIMMsg.setSender(TIMManager.getInstance().getLoginUser());
+        TIMMsg.setTimestamp(System.currentTimeMillis() / 1000);
         TIMSoundElem ele = new TIMSoundElem();
         ele.setDuration(duration / 1000);
         ele.setPath(recordPath);
@@ -204,9 +202,8 @@ public class MessageInfoUtil {
             info.setDataPath(filePath);
             TIMMessage TIMMsg = new TIMMessage();
             TIMFileElem ele = new TIMFileElem();
-            TIMMessageExt ext = new TIMMessageExt(TIMMsg);
-            ext.setSender(TIMManager.getInstance().getLoginUser());
-            ext.setTimestamp(System.currentTimeMillis() / 1000);
+            TIMMsg.setSender(TIMManager.getInstance().getLoginUser());
+            TIMMsg.setTimestamp(System.currentTimeMillis() / 1000);
             ele.setPath(filePath);
             ele.setFileName(file.getName());
             TIMMsg.addElement(ele);
@@ -244,7 +241,7 @@ public class MessageInfoUtil {
     /**
      * 创建一条群消息自定义内容
      *
-     * @param action 群消息类型，比如建群等
+     * @param action  群消息类型，比如建群等
      * @param message 消息内容
      * @return
      */
@@ -271,7 +268,7 @@ public class MessageInfoUtil {
      * 把SDK的消息bean列表转化为TUIKit的消息bean列表
      *
      * @param timMessages SDK的群消息bean列表
-     * @param isGroup 是否是群消息
+     * @param isGroup     是否是群消息
      * @return
      */
     public static List<MessageInfo> TIMMessages2MessageInfos(List<TIMMessage> timMessages, boolean isGroup) {
@@ -293,7 +290,7 @@ public class MessageInfoUtil {
      * 把SDK的消息bean转化为TUIKit的消息bean
      *
      * @param timMessage SDK的群消息bean
-     * @param isGroup 是否是群消息
+     * @param isGroup    是否是群消息
      * @return
      */
     public static MessageInfo TIMMessage2MessageInfo(TIMMessage timMessage, boolean isGroup) {

@@ -5,7 +5,7 @@ import android.widget.RelativeLayout;
 
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
-public class MessageCustomHolder extends MessageContentHolder implements ICustomMessageViewGroup{
+public class MessageCustomHolder extends MessageContentHolder implements ICustomMessageViewGroup {
 
     public MessageCustomHolder(View itemView) {
         super(itemView);
@@ -33,10 +33,10 @@ public class MessageCustomHolder extends MessageContentHolder implements ICustom
 
     @Override
     public void addMessageItemView(View view) {
-        ((RelativeLayout)rootView).removeAllViews();
-        ((RelativeLayout)rootView).addView(chatTimeText, 0);
+        ((RelativeLayout) rootView).removeAllViews();
+        ((RelativeLayout) rootView).addView(chatTimeText, 0);
         if (view != null) {
-            ((RelativeLayout)rootView).addView(view, 1);
+            ((RelativeLayout) rootView).addView(view, 1);
         }
     }
 

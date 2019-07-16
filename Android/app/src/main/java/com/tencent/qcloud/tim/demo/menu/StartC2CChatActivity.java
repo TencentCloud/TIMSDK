@@ -84,7 +84,13 @@ public class StartC2CChatActivity extends Activity {
         ChatInfo chatInfo = new ChatInfo();
         chatInfo.setType(TIMConversationType.C2C);
         chatInfo.setId(mSelectedItem.getId());
-        chatInfo.setChatName(TextUtils.isEmpty(mSelectedItem.getRemark()) ? mSelectedItem.getId() : mSelectedItem.getRemark());
+        String chatName = mSelectedItem.getId();
+        if (!TextUtils.isEmpty(mSelectedItem.getRemark())) {
+            chatName = mSelectedItem.getRemark();
+        } else if (!TextUtils.isEmpty(mSelectedItem.getNickname())) {
+            chatName = mSelectedItem.getNickname();
+        }
+        chatInfo.setChatName(chatName);
         Intent intent = new Intent(DemoApplication.instance(), ChatActivity.class);
         intent.putExtra(Constants.CHAT_INFO, chatInfo);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

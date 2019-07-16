@@ -144,8 +144,8 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
             SelectionActivity.startListSelection((Activity) getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
                 @Override
                 public void onReturn(Object text) {
-                    mModifyAllowTypeView.setContent(mJoinTypeTextList.get((Integer)text));
-                    mJoinTypeIndex = (Integer)text;
+                    mModifyAllowTypeView.setContent(mJoinTypeTextList.get((Integer) text));
+                    mJoinTypeIndex = (Integer) text;
                     updateProfile();
                 }
             });
@@ -157,13 +157,13 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
             SelectionActivity.startTextSelection((Activity) getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
                 @Override
                 public void onReturn(Object text) {
-                mModifySignatureView.setContent(text.toString());
-                updateProfile();
+                    mModifySignatureView.setContent(text.toString());
+                    updateProfile();
                 }
             });
         } else if (v.getId() == R.id.about_im) {
-            Intent intent = new Intent((Activity)getContext(), WebViewActivity.class);
-            ((Activity)getContext()).startActivity(intent);
+            Intent intent = new Intent((Activity) getContext(), WebViewActivity.class);
+            ((Activity) getContext()).startActivity(intent);
         }
     }
 
@@ -172,9 +172,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
 
         // 昵称
         String nickName = mModifyNickNameView.getContent();
-        if (!TextUtils.isEmpty(nickName) ) {
-            hashMap.put(TIMUserProfile.TIM_PROFILE_TYPE_KEY_NICK, nickName);
-        }
+        hashMap.put(TIMUserProfile.TIM_PROFILE_TYPE_KEY_NICK, nickName);
 
         // 个性签名
         String signature = mModifySignatureView.getContent();

@@ -13,7 +13,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".component.video.VideoViewActivity"
-            android:configChanges="keyboardHidden|orientation" />
+            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".component.photoview.PhotoViewActivity"
             android:screenOrientation="portrait" />

@@ -169,13 +169,13 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
 
             @Override
             public void stopRecording() {
-                post(new Runnable() {
+                postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         mVolumeAnim.stop();
                         mRecordingGroup.setVisibility(View.GONE);
                     }
-                });
+                }, 500);
             }
 
             @Override

@@ -54,7 +54,7 @@ public class EnableReceiveNotifyMsgApi extends BaseApiAgent {
     }
 
     void onEnableReceiveNotifyMsgResult(int rstCode) {
-        HMSAgentLog.i("enableReceiveNotifyMsg:callback=" + StrUtils.objDesc(handler) +" retCode=" + rstCode);
+        HMSAgentLog.i("enableReceiveNotifyMsg:callback=" + StrUtils.objDesc(handler) + " retCode=" + rstCode);
         if (handler != null) {
             new Handler(Looper.getMainLooper()).post(new CallbackCodeRunnable(handler, rstCode));
             handler = null;
@@ -63,6 +63,7 @@ public class EnableReceiveNotifyMsgApi extends BaseApiAgent {
 
     /**
      * 打开/关闭自呈现消息
+     *
      * @param enable 打开/关闭
      */
     public void enableReceiveNotifyMsg(boolean enable, EnableReceiveNotifyMsgHandler handler) {

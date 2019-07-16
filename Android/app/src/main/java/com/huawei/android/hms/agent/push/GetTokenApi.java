@@ -86,11 +86,12 @@ public class GetTokenApi extends BaseApiAgent {
     /**
      * 获取pushtoken接口调用回调
      * pushtoken通过广播下发，要监听的广播，请参见HMS-SDK开发准备中PushReceiver的注册
+     *
      * @param rstCode 结果码
-     * @param result 调用获取pushtoken接口的结果
+     * @param result  调用获取pushtoken接口的结果
      */
     void onPushTokenResult(int rstCode, TokenResult result) {
-        HMSAgentLog.i("getToken:callback=" + StrUtils.objDesc(handler) +" retCode=" + rstCode);
+        HMSAgentLog.i("getToken:callback=" + StrUtils.objDesc(handler) + " retCode=" + rstCode);
         if (handler != null) {
             new Handler(Looper.getMainLooper()).post(new CallbackCodeRunnable(handler, rstCode));
             handler = null;
@@ -101,6 +102,7 @@ public class GetTokenApi extends BaseApiAgent {
     /**
      * 获取pushtoken接口
      * pushtoken通过广播下发，要监听的广播，请参见HMS-SDK开发准备中PushReceiver的注册
+     *
      * @param handler pushtoken接口调用回调
      */
     public void getToken(GetTokenHandler handler) {

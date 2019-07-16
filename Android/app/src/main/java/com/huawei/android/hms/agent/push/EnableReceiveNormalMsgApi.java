@@ -54,7 +54,7 @@ public class EnableReceiveNormalMsgApi extends BaseApiAgent {
     }
 
     void onEnableReceiveNormalMsgResult(int rstCode) {
-        HMSAgentLog.i("enableReceiveNormalMsg:callback=" + StrUtils.objDesc(handler) +" retCode=" + rstCode);
+        HMSAgentLog.i("enableReceiveNormalMsg:callback=" + StrUtils.objDesc(handler) + " retCode=" + rstCode);
         if (handler != null) {
             new Handler(Looper.getMainLooper()).post(new CallbackCodeRunnable(handler, rstCode));
             handler = null;
@@ -63,6 +63,7 @@ public class EnableReceiveNormalMsgApi extends BaseApiAgent {
 
     /**
      * 打开/关闭透传消息
+     *
      * @param enable 打开/关闭
      */
     public void enableReceiveNormalMsg(boolean enable, EnableReceiveNormalMsgHandler handler) {

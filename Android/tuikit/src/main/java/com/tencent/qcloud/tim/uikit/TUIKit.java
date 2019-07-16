@@ -37,6 +37,7 @@ public class TUIKit {
 
     /**
      * 获取TUIKit的全部配置
+     *
      * @return
      */
     public static TUIKitConfigs getConfigs() {
@@ -45,6 +46,7 @@ public class TUIKit {
 
     /**
      * 设置TUIKit的IM消息的全局监听
+     *
      * @param listener
      */
     public static void setIMEventListener(IMEventListener listener) {
@@ -54,8 +56,8 @@ public class TUIKit {
     /**
      * 用户IM登录
      *
-     * @param userid 用户名
-     * @param usersig 从业务服务器获取的usersig
+     * @param userid   用户名
+     * @param usersig  从业务服务器获取的usersig
      * @param callback 登录是否成功的回调
      */
     public static void login(String userid, String usersig, final IUIKitCallBack callback) {

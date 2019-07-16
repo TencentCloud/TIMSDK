@@ -17,6 +17,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
     private String nickname;
     private boolean isGroup;
     private boolean isFriend = true;
+    private boolean isEnable = true;
 
     public ContactItemBean() {
     }
@@ -48,7 +49,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         if (!TextUtils.isEmpty(remark)) {
             return remark;
         }
-        if (!TextUtils.isEmpty(nickname) ) {
+        if (!TextUtils.isEmpty(nickname)) {
             return nickname;
         }
         return id;
@@ -70,6 +71,14 @@ public class ContactItemBean extends BaseIndexPinyinBean {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public boolean isEnable() {
+        return isEnable;
+    }
+
+    public void setEnable(boolean enable) {
+        isEnable = enable;
     }
 
     public boolean isBlackList() {

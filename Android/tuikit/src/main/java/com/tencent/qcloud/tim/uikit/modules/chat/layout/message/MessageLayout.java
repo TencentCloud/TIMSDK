@@ -91,6 +91,7 @@ public class MessageLayout extends MessageLayoutUI {
             public boolean showPopupList(View adapterView, View contextView, int contextPosition) {
                 return true;
             }
+
             @Override
             public void onPopupListClick(View contextView, int contextPosition, int position) {
                 PopMenuAction action = mPopActions.get(position);

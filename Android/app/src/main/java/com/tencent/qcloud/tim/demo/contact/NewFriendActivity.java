@@ -74,7 +74,7 @@ public class NewFriendActivity extends Activity {
 
     private void initPendency() {
         final TIMFriendPendencyRequest timFriendPendencyRequest = new TIMFriendPendencyRequest();
-        timFriendPendencyRequest.setTimPendencyGetType(TIMPendencyType.TIM_PENDENCY_BOTH);
+        timFriendPendencyRequest.setTimPendencyGetType(TIMPendencyType.TIM_PENDENCY_COME_IN);
         timFriendPendencyRequest.setSeq(0);
         timFriendPendencyRequest.setTimestamp(0);
         timFriendPendencyRequest.setNumPerPage(10);

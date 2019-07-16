@@ -63,7 +63,7 @@ public class AddMoreActivity extends Activity {
 
     public void addFriend(View view) {
         String id = mUserID.getText().toString();
-        if (TextUtils.isEmpty(id)){
+        if (TextUtils.isEmpty(id)) {
             return;
         }
 
@@ -118,7 +118,7 @@ public class AddMoreActivity extends Activity {
 
     public void addGroup(View view) {
         String id = mUserID.getText().toString();
-        if (TextUtils.isEmpty(id)){
+        if (TextUtils.isEmpty(id)) {
             return;
         }
         TIMGroupManager.getInstance().applyJoinGroup(id, mAddWording.getText().toString(), new TIMCallBack() {

@@ -41,7 +41,7 @@ public interface ITitleBarLayout {
     /**
      * 设置标题
      *
-     * @param title 标题内容
+     * @param title    标题内容
      * @param position 标题位置
      */
     void setTitle(String title, POSITION position);

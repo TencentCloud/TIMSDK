@@ -52,14 +52,14 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         final MessageInfo msg = getItem(position);
-        MessageBaseHolder baseHolder = (MessageBaseHolder)holder;
+        MessageBaseHolder baseHolder = (MessageBaseHolder) holder;
         baseHolder.setOnItemClickListener(mOnItemClickListener);
         switch (getItemViewType(position)) {
             case MSG_TYPE_HEADER_VIEW:
-                ((MessageHeaderHolder)baseHolder).setLoadingStatus(mLoading);
+                ((MessageHeaderHolder) baseHolder).setLoadingStatus(mLoading);
                 break;
             case MessageInfo.MSG_TYPE_CUSTOM:
-                MessageCustomHolder customHolder = (MessageCustomHolder)holder;
+                MessageCustomHolder customHolder = (MessageCustomHolder) holder;
                 if (mOnCustomMessageDrawListener != null) {
                     mOnCustomMessageDrawListener.onDraw(customHolder, msg);
                 }

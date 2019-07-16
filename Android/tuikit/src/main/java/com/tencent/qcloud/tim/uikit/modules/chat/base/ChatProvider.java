@@ -3,7 +3,6 @@ package com.tencent.qcloud.tim.uikit.modules.chat.base;
 import android.text.TextUtils;
 
 import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.ext.message.TIMMessageExt;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatProvider;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
@@ -123,8 +122,7 @@ public class ChatProvider implements IChatProvider {
         for (int i = 0; i < mDataSource.size(); i++) {
             MessageInfo messageInfo = mDataSource.get(i);
             TIMMessage msg = messageInfo.getTIMMessage();
-            TIMMessageExt ext = new TIMMessageExt(msg);
-            if (ext.checkEquals(locator)) {
+            if (msg.checkEquals(locator)) {
                 messageInfo.setMsgType(MessageInfo.MSG_STATUS_REVOKE);
                 messageInfo.setStatus(MessageInfo.MSG_STATUS_REVOKE);
                 updateAdapter(MessageLayout.DATA_CHANGE_TYPE_UPDATE, i);

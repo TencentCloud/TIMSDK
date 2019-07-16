@@ -248,7 +248,6 @@ public class MessageImageHolder extends MessageContentHolder {
             //若存在正在发送中的视频文件（消息），则显示发送中动画（隐藏红色感叹号）
             statusImage.setVisibility(View.GONE);
             sendingProgress.setVisibility(View.VISIBLE);
-            getVideo(video, videoPath, msg, false, position);
         } else if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL) {
             //若发送失败，则显示红色感叹号（不显示发送中动画）
             statusImage.setVisibility(View.VISIBLE);

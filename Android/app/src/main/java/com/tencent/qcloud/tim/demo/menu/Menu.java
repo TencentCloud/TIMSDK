@@ -47,7 +47,7 @@ public class Menu {
         PopActionClickListener popActionClickListener = new PopActionClickListener() {
             @Override
             public void onActionClick(int position, Object data) {
-                PopMenuAction action = (PopMenuAction)data;
+                PopMenuAction action = (PopMenuAction) data;
                 if (TextUtils.equals(action.getActionName(), mActivity.getResources().getString(R.string.add_friend))) {
                     Intent intent = new Intent(DemoApplication.instance(), AddMoreActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -175,7 +175,7 @@ public class Menu {
                 }
             }
         });
-        mMenuWindow.setWidth(ScreenUtil.getPxByDp(150));
+        mMenuWindow.setWidth(ScreenUtil.getPxByDp(160));
         mMenuWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         mMenuWindow.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.top_pop));
         // 设置pop获取焦点，如果为false点击返回按钮会退出当前Activity，如果pop中有Editor的话，focusable必须要为true

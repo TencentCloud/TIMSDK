@@ -27,12 +27,9 @@ public class TUIKitConstants {
     public static final String CAMERA_VIDEO_PATH = "camera_video_path";
     public static String UI_PARAMS = "ilive_ui_params";
     public static String SOFT_KEY_BOARD_HEIGHT = "soft_key_board_height";
-    public static String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
-
 
     public static final String IMAGE_DATA = "image_data";
     public static final String SELF_MESSAGE = "self_message";
-    public static final String ITENT_DATA = "intent_data";
     public static final String CAMERA_TYPE = "camera_type";
 
     public static final class ActivityRequest {

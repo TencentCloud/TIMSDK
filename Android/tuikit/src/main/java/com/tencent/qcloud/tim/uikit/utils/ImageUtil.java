@@ -386,8 +386,7 @@ public class ImageUtil {
     /**
      * 转换图片成圆形
      *
-     * @param bitmap
-     *            传入Bitmap对象
+     * @param bitmap 传入Bitmap对象
      * @return
      */
     public static Bitmap toRoundBitmap(Bitmap bitmap) {

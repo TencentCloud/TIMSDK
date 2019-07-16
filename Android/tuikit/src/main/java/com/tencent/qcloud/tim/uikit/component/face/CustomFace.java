@@ -12,6 +12,7 @@ public class CustomFace {
 
     /**
      * 获取表情在asset中的路径
+     *
      * @return
      */
     public String getAssetPath() {
@@ -20,6 +21,7 @@ public class CustomFace {
 
     /**
      * 设置表情在asset中的路径
+     *
      * @param assetPath
      */
     public void setAssetPath(String assetPath) {
@@ -28,6 +30,7 @@ public class CustomFace {
 
     /**
      * 获取表情名字
+     *
      * @return
      */
     public String getFaceName() {
@@ -36,6 +39,7 @@ public class CustomFace {
 
     /**
      * 设置表情名字
+     *
      * @param faceName
      */
     public void setFaceName(String faceName) {
@@ -44,6 +48,7 @@ public class CustomFace {
 
     /**
      * 获取表情的宽
+     *
      * @return
      */
     public int getFaceWidth() {
@@ -52,6 +57,7 @@ public class CustomFace {
 
     /**
      * 设置表情的宽
+     *
      * @param faceWidth
      */
     public void setFaceWidth(int faceWidth) {
@@ -60,6 +66,7 @@ public class CustomFace {
 
     /**
      * 获取表情的高
+     *
      * @return
      */
     public int getFaceHeight() {
@@ -68,6 +75,7 @@ public class CustomFace {
 
     /**
      * 设置表情的高
+     *
      * @param faceHeight
      */
     public void setFaceHeight(int faceHeight) {

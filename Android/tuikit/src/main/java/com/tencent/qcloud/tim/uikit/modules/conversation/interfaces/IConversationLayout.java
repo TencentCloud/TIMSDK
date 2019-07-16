@@ -16,7 +16,7 @@ public interface IConversationLayout extends ILayout {
     /**
      * 置顶会话
      *
-     * @param position 该item在列表的索引
+     * @param position     该item在列表的索引
      * @param conversation 会话内容
      */
     void setConversationTop(int position, ConversationInfo conversation);
@@ -24,7 +24,7 @@ public interface IConversationLayout extends ILayout {
     /**
      * 删除会话
      *
-     * @param position 该item在列表的索引
+     * @param position     该item在列表的索引
      * @param conversation 会话内容
      */
     void deleteConversation(int position, ConversationInfo conversation);

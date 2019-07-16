@@ -32,6 +32,7 @@ public abstract class MessageEmptyHolder extends MessageBaseHolder {
             setVariableLayout(getVariableLayout());
         }
     }
+
     private void setVariableLayout(int resId) {
         if (msgContentFrame.getChildCount() == 0) {
             View.inflate(rootView.getContext(), resId, msgContentFrame);

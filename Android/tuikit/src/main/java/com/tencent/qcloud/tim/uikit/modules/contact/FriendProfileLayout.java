@@ -429,7 +429,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                 public void onReturn(Object text) {
                     mRemarkView.setContent(text.toString());
                     if (TextUtils.isEmpty(text.toString())) {
-                        text = mId;
+                        text = "";
                     }
                     modifyRemark(text.toString());
                 }
@@ -504,6 +504,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
 
     public interface OnButtonClickListener {
         void onStartConversationClick(ContactItemBean info);
+
         void onDeleteFriendClick(String id);
     }
 

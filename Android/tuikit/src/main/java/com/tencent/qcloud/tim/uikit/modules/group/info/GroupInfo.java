@@ -88,6 +88,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 获取群类型，Public/Private/ChatRoom
+     *
      * @return
      */
     public String getGroupType() {

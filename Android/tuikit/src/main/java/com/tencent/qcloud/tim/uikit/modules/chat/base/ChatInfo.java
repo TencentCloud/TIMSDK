@@ -56,6 +56,7 @@ public class ChatInfo implements Serializable {
 
     /**
      * 获取聊天唯一标识
+     *
      * @return
      */
     public String getId() {

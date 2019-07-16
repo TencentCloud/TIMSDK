@@ -99,6 +99,9 @@ public class GroupMemberInviteLayout extends LinearLayout implements IGroupMembe
 
     public void setDataSource(GroupInfo groupInfo) {
         mGroupInfo = groupInfo;
+        if (mContactListView != null) {
+            mContactListView.setGroupInfo(mGroupInfo);
+        }
     }
 
     public TitleBarLayout getTitleBar() {

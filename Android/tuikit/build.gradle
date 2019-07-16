@@ -48,7 +48,7 @@ dependencies {
     implementation 'com.github.promeg:tinypinyin:1.0.0' // ~80KB
     implementation 'com.google.code.gson:gson:2.8.5'
 
-    api 'com.tencent.imsdk:imsdk:4.4.627'
+    api 'com.tencent.imsdk:imsdk:4.4.716'
 //    api project(':imsdk')
 }
 

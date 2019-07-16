@@ -11,9 +11,6 @@ import com.xiaomi.mipush.sdk.PushMessageReceiver;
 
 import java.util.List;
 
-/**
- * Created by vinsonswang on 2019/2/26.
- */
 
 public class XiaomiMsgReceiver extends PushMessageReceiver {
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.tencent.imsdk.TIMConversationType;
@@ -66,7 +67,13 @@ public class GroupListActivity extends Activity {
             public void onItemClick(int position, ContactItemBean contact) {
                 ChatInfo chatInfo = new ChatInfo();
                 chatInfo.setType(TIMConversationType.Group);
-                chatInfo.setChatName(contact.getRemark());
+                String chatName = contact.getId();
+                if (!TextUtils.isEmpty(contact.getRemark())) {
+                    chatName = contact.getRemark();
+                } else if (!TextUtils.isEmpty(contact.getNickname())) {
+                    chatName = contact.getNickname();
+                }
+                chatInfo.setChatName(chatName);
                 chatInfo.setId(contact.getId());
                 Intent intent = new Intent(GroupListActivity.this, ChatActivity.class);
                 intent.putExtra(Constants.CHAT_INFO, chatInfo);

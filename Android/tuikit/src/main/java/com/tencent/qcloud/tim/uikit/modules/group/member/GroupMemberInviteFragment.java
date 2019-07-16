@@ -28,7 +28,7 @@ public class GroupMemberInviteFragment extends BaseFragment {
     }
 
     private void init() {
-        mInviteLayout.setDataSource((GroupInfo)getArguments().getSerializable(TUIKitConstants.Group.GROUP_INFO));
+        mInviteLayout.setDataSource((GroupInfo) getArguments().getSerializable(TUIKitConstants.Group.GROUP_INFO));
         mInviteLayout.getTitleBar().setOnLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

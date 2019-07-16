@@ -11,18 +11,21 @@ public interface IChatLayout extends ILayout {
 
     /**
      * 获取聊天窗口Input区域Layout
+     *
      * @return
      */
     InputLayout getInputLayout();
 
     /**
      * 获取聊天窗口Message区域Layout
+     *
      * @return
      */
     MessageLayout getMessageLayout();
 
     /**
      * 获取聊天窗口Message区域Layout
+     *
      * @return
      */
     NoticeLayout getNoticeLayout();
@@ -51,7 +54,8 @@ public interface IChatLayout extends ILayout {
 
     /**
      * 发送消息
-     * @param msg 消息
+     *
+     * @param msg   消息
      * @param retry 是否重试
      */
     void sendMessage(MessageInfo msg, boolean retry);

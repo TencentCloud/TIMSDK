@@ -43,7 +43,7 @@ public class DeleteTokenApi extends BaseApiAgent {
             @Override
             public void run() {
                 //调用删除TOKEN需要传入通过getToken接口获取到TOKEN，并且需要对TOKEN进行非空判断
-                if (!TextUtils.isEmpty(token)){
+                if (!TextUtils.isEmpty(token)) {
                     if (client == null || !ApiClientMgr.INST.isConnect(client)) {
                         HMSAgentLog.e("client not connted");
                         onDeleteTokenResult(rst);
@@ -65,7 +65,7 @@ public class DeleteTokenApi extends BaseApiAgent {
     }
 
     void onDeleteTokenResult(int rstCode) {
-        HMSAgentLog.i("deleteToken:callback=" + StrUtils.objDesc(handler) +" retCode=" + rstCode);
+        HMSAgentLog.i("deleteToken:callback=" + StrUtils.objDesc(handler) + " retCode=" + rstCode);
         if (handler != null) {
             new Handler(Looper.getMainLooper()).post(new CallbackCodeRunnable(handler, rstCode));
             handler = null;
@@ -75,6 +75,7 @@ public class DeleteTokenApi extends BaseApiAgent {
     /**
      * 删除指定的pushtoken
      * 该接口只在EMUI5.1以及更高版本的华为手机上调用该接口后才不会收到PUSH消息。
+     *
      * @param token 要删除的token
      */
     public void deleteToken(String token, DeleteTokenHandler handler) {

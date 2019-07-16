@@ -105,7 +105,7 @@ public class ChatLayout extends AbsChatLayout implements GroupChatManagerKit.Gro
         mGroupChatManager.getProvider().loadGroupApplies(new IUIKitCallBack() {
             @Override
             public void onSuccess(Object data) {
-                List<GroupApplyInfo> applies = (List<GroupApplyInfo> )data;
+                List<GroupApplyInfo> applies = (List<GroupApplyInfo>) data;
                 if (applies != null && applies.size() > 0) {
                     mGroupApplyLayout.getContent().setText(getContext().getString(R.string.group_apply_tips, applies.size()));
                     mGroupApplyLayout.setVisibility(View.VISIBLE);

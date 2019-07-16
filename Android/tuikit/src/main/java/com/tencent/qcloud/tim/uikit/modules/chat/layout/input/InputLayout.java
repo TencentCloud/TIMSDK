@@ -105,7 +105,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(!checkPermission(AUDIO_RECORD)) {
+                if (!checkPermission(AUDIO_RECORD)) {
                     return false;
                 }
                 switch (motionEvent.getAction()) {
@@ -156,7 +156,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     @Override
     protected void startSendPhoto() {
-        if(!checkPermission(SEND_PHOTO)) {
+        if (!checkPermission(SEND_PHOTO)) {
             return;
         }
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -166,7 +166,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
             @Override
             public void onSuccess(Object data) {
                 TUIKitLog.i(TAG, "onSuccess: " + data);
-                MessageInfo info = MessageInfoUtil.buildImageMessage((Uri)data, true);
+                MessageInfo info = MessageInfoUtil.buildImageMessage((Uri) data, true);
                 if (mMessageHandler != null) {
                     mMessageHandler.sendMessage(info);
                     hideSoftInput();
@@ -184,7 +184,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     @Override
     protected void startCapture() {
-        if(!checkPermission(CAPTURE)) {
+        if (!checkPermission(CAPTURE)) {
             return;
         }
         Intent captureIntent = new Intent(getContext(), CameraActivity.class);
@@ -210,7 +210,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     @Override
     protected void startVideoRecord() {
-        if(!checkPermission(VIDEO_RECORD)) {
+        if (!checkPermission(VIDEO_RECORD)) {
             return;
         }
         Intent captureIntent = new Intent(getContext(), CameraActivity.class);
@@ -281,7 +281,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                 mCurrentState = STATE_VOICE_INPUT;
                 mInputMoreView.setVisibility(View.GONE);
                 mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
-            } else if (mCurrentState == STATE_SOFT_INPUT ) {
+            } else if (mCurrentState == STATE_SOFT_INPUT) {
                 mCurrentState = STATE_VOICE_INPUT;
             } else {
                 mCurrentState = STATE_SOFT_INPUT;
@@ -324,9 +324,9 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                     mCurrentState = STATE_NONE_INPUT;
                     //以下是zanhanding添加的代码，用于fix有时需要两次点击加号按钮才能呼出富文本选择布局的问题
                     //判断富文本选择布局是否已经被呼出，并反转相应的状态
-                    if (mInputMoreView.getVisibility() == View.VISIBLE){
+                    if (mInputMoreView.getVisibility() == View.VISIBLE) {
                         mInputMoreView.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         mInputMoreView.setVisibility(View.VISIBLE);
                     }
                     //以上是zanhanding添加的代码，用于fix有时需要两次点击加号按钮才能呼出富文本选择布局的问题
@@ -487,7 +487,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                 mChatInputHandler.stopRecording();
                 return;
             }
-            if (duration < 500) {
+            if (duration < 1000) {
                 mChatInputHandler.tooShortRecording();
                 return;
             }

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout, View.OnClickListener{
+public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout, View.OnClickListener {
 
     private TitleBarLayout mTitleBar;
     private LineControllerView mMemberView;
@@ -70,7 +70,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((Activity)getContext()).finish();
+                ((Activity) getContext()).finish();
             }
         });
         // 成员标题
@@ -168,8 +168,8 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 SelectionActivity.startListSelection((Activity) getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
                     @Override
                     public void onReturn(final Object text) {
-                        mPresenter.modifyGroupInfo((Integer)text, TUIKitConstants.Group.MODIFY_GROUP_JOIN_TYPE);
-                        mJoinTypeView.setContent(mJoinTypes.get((Integer)text));
+                        mPresenter.modifyGroupInfo((Integer) text, TUIKitConstants.Group.MODIFY_GROUP_JOIN_TYPE);
+                        mJoinTypeView.setContent(mJoinTypes.get((Integer) text));
 
                     }
                 });
@@ -225,7 +225,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mPresenter.loadGroupInfo(groupId, new IUIKitCallBack() {
             @Override
             public void onSuccess(Object data) {
-                setGroupInfo((GroupInfo)data);
+                setGroupInfo((GroupInfo) data);
             }
 
             @Override
@@ -289,7 +289,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 ToastUtil.toastLongMessage(getResources().getString(R.string.modify_group_notice_success));
                 break;
             case TUIKitConstants.Group.MODIFY_GROUP_JOIN_TYPE:
-                mJoinTypeView.setContent(mJoinTypes.get((Integer)value));
+                mJoinTypeView.setContent(mJoinTypes.get((Integer) value));
                 break;
             case TUIKitConstants.Group.MODIFY_MEMBER_NAME:
                 ToastUtil.toastLongMessage(getResources().getString(R.string.modify_nickname_success));
