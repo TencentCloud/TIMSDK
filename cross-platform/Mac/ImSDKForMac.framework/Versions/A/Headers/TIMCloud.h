@@ -21,6 +21,7 @@ extern"C"
 * > 回调分两种，一种是指调用接口的异步返回，另外一种指后台推送的通知。回调在ImSDK内部的逻辑线程触发，跟调用接口的线程可能不是同一线程
 * > 在Windows平台，如果调用[TIMInit]()接口进行初始化ImSDK之前，已创建了UI的消息循环，且调用[TIMInit]()接口的线程为主UI线程，则ImSDK内部会将回调抛到主UI线程调用
 *
+* @brief 如果接口的参数字符串包含中文，请使用UTF-8编码
 */
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -730,7 +731,7 @@ TIM_DECL int TIMMsgSaveMsg(const char* conv_id, enum TIMConvType conv_type, cons
 * json_get_msg_param[kTIMMsgGetMsgListParamIsForward] = true;
 * json_get_msg_param[kTIMMsgGetMsgListParamCount] = 100;
 *
-* int ret = TIMMsgGetMsgList("Windows-02", kTIMConv_C2C, json_get_msg_param.toStyledString().c_str(), type, json.c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+* int ret = TIMMsgGetMsgList("Windows-02", kTIMConv_C2C, json_get_msg_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
 * }, this);
 * 
 * // json_get_msg_param.toStyledString().c_str() 得到 json_get_msg_param JSON 字符串如下

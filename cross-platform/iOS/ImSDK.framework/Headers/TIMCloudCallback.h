@@ -175,7 +175,7 @@ typedef void (*TIMRecvNewMsgCallback)(const char* json_msg_array, const void* us
 
 
 /**
-* @brief 新消息回调
+* @brief 消息已读回执回调
 *
 * @param json_msg_readed_receipt_array 消息已读回执数组
 * @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
@@ -203,7 +203,7 @@ typedef void (*TIMRecvNewMsgCallback)(const char* json_msg_array, const void* us
 typedef void (*TIMMsgReadedReceiptCallback)(const char* json_msg_readed_receipt_array, const void* user_data);
 
 /**
-* @brief 新消息回调
+* @brief 接收的消息被撤回回调
 *
 * @param json_msg_locator_array 消息定位符数组
 * @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
@@ -235,7 +235,7 @@ typedef void (*TIMMsgReadedReceiptCallback)(const char* json_msg_readed_receipt_
 typedef void (*TIMMsgRevokeCallback)(const char* json_msg_locator_array, const void* user_data);
 
 /**
-* @brief 新消息回调
+* @brief 消息内元素相关文件上传进度回调
 *
 * @param json_msg 新消息
 * @param index 上传 Elem 元素在 json_msg 消息的下标
@@ -750,7 +750,6 @@ typedef void (*TIMCommCallback)(int32_t code, const char* desc, const char* json
 *    "group_pendency_result_read_time_seq" : 0,
 *    "group_pendency_result_unread_num" : 1
 * }
-* 
 * @note 以下接口的回调TIMCommCallback参数json_params均为空字符串""
 * > [TIMLogin](TIMCloud.h) 
 * > [TIMLogout](TIMCloud.h)
