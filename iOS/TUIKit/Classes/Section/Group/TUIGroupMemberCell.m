@@ -1,16 +1,12 @@
-//
-//  TUIGroupMemberCell.m
-//  UIKit
-//
-//  Created by kennethmiao on 2018/9/25.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIGroupMemberCell.h"
 #import "THeader.h"
 #import "TUIKit.h"
+#import "ReactiveObjC/ReactiveObjC.h"
+#import "MMLayout/UIView+MMLayout.h"
+#import "SDWebImage/UIImageView+WebCache.h"
 
 @implementation TGroupMemberCellData
+
 @end
 
 @implementation TUIGroupMemberCell
@@ -48,17 +44,22 @@
 
 - (void)setData:(TGroupMemberCellData *)data
 {
-    if (data.avatar == nil) {
-        _head.image = [UIImage tk_imageNamed:@"default_head"];
+    if (data.avatarImage) {
+        self.head.image = data.avatarImage;
     } else {
-        _head.image = data.avatar;
-        
+        self.head.image = DefaultAvatarImage;
+        [[TIMFriendshipManager sharedInstance] getUsersProfile:@[data.identifier] forceUpdate:NO succ:^(NSArray<TIMUserProfile *> *profiles) {
+            if (profiles.firstObject) {
+                [self.head sd_setImageWithURL:[NSURL URLWithString:profiles.firstObject.faceURL] placeholderImage:DefaultAvatarImage];
+            }
+        } fail:nil];
     }
-    if (data.name.length)
-        [_name setText:data.name];
-    else
-        [_name setText:data.identifier];
     
+    if (data.name.length) {
+        self.name.text = data.name;
+    } else {
+        self.name.text = data.identifier;
+    }
     [self defaultLayout];
 }
 

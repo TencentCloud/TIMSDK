@@ -7,8 +7,6 @@
 //
 
 #import "TUIContactController.h"
-#import "TPopView.h"
-#import "TPopCell.h"
 #import "THeader.h"
 #import "TUIKit.h"
 #import "NSString+Common.h"

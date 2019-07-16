@@ -17,6 +17,8 @@
 #import "TUIUserProfileControllerServiceProtocol.h"
 #import "TCServiceManager.h"
 #import "Toast/Toast.h"
+#import "THelper.h"
+#import <FBRetainCycleDetector/FBRetainCycleDetector.h>
 
 @interface TUIChatController () <TMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate>
 @property (nonatomic, strong) TIMConversation *conversation;
@@ -24,7 +26,6 @@
 @property UILabel *pendencyLabel;
 @property UIButton *pendencyBtn;
 @property TUIGroupPendencyViewModel *pendencyViewModel;
-@property RACSubject *sendMediaSignal;
 @end
 
 @implementation TUIChatController
@@ -46,34 +47,6 @@
             _pendencyViewModel = [TUIGroupPendencyViewModel new];
             _pendencyViewModel.groupId = [_conversation getReceiver];
         }
-        
-        @weakify(self)
-        _sendMediaSignal = [RACSubject subject];
-        [[_sendMediaSignal throttle:1] subscribeNext:^(NSDictionary *info) {
-            @strongify(self)
-            NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
-            if([mediaType isEqualToString:(NSString *)kUTTypeImage]){
-                UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-                UIImageOrientation imageOrientation=  image.imageOrientation;
-                if(imageOrientation != UIImageOrientationUp)
-                {
-                    CGFloat aspectRatio = MIN ( 1920 / image.size.width, 1920 / image.size.height );
-                    CGFloat aspectWidth = image.size.width * aspectRatio;
-                    CGFloat aspectHeight = image.size.height * aspectRatio;
-                    
-                    UIGraphicsBeginImageContext(CGSizeMake(aspectWidth, aspectHeight));
-                    [image drawInRect:CGRectMake(0, 0, aspectWidth, aspectHeight)];
-                    image = UIGraphicsGetImageFromCurrentImageContext();
-                    UIGraphicsEndImageContext();
-                }
-                
-                [self sendImageMessage:image];
-            }
-            else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){
-                NSURL *url = [info objectForKey:UIImagePickerControllerMediaURL];
-                [self sendVideoMessage:url];
-            }
-        }];
     }
     return self;
 }
@@ -128,7 +101,7 @@
         }
     }
     
-
+    
     self.tipsView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tipsView.backgroundColor = RGB(246, 234, 190);
     [self.view addSubview:self.tipsView];
@@ -146,7 +119,7 @@
     [self.pendencyBtn addTarget:self action:@selector(openPendency:) forControlEvents:UIControlEventTouchUpInside];
     [self.pendencyBtn sizeToFit];
     self.tipsView.hidden = YES;
-
+    
     
     [RACObserve(self.pendencyViewModel, unReadCnt) subscribeNext:^(NSNumber *unReadCnt) {
         @strongify(self)
@@ -180,7 +153,6 @@
     vc.viewModel = self.pendencyViewModel;
     [self.navigationController pushViewController:vc animated:YES];
 }
-
 
 - (void)inputController:(TUIInputController *)inputController didChangeHeight:(CGFloat)height
 {
@@ -276,6 +248,11 @@
     if (cell.messageData.identifier == nil)
         return;
     
+    if ([self.delegate respondsToSelector:@selector(chatController:onSelectMessageAvatar:)]) {
+        [self.delegate chatController:self onSelectMessageAvatar:cell];
+        return;
+    }
+    
     @weakify(self)
     TIMFriend *friend = [[TIMFriendshipManager sharedInstance] queryFriend:cell.messageData.identifier];
     if (friend) {
@@ -286,7 +263,7 @@
             return;
         }
     }
-        
+    
     [[TIMFriendshipManager sharedInstance] getUsersProfile:@[cell.messageData.identifier] forceUpdate:YES succ:^(NSArray<TIMUserProfile *> *profiles) {
         @strongify(self)
         if (profiles.count > 0) {
@@ -299,9 +276,16 @@
             }
         }
     } fail:^(int code, NSString *msg) {
-        @strongify(self)
-        [self.view makeToast:msg];
+        [THelper makeToastError:code msg:msg];
     }];
+}
+
+- (void)messageController:(TUIMessageController *)controller onSelectMessageContent:(TUIMessageCell *)cell
+{
+    if ([self.delegate respondsToSelector:@selector(chatController:onSelectMessageContent:)]) {
+        [self.delegate chatController:self onSelectMessageContent:cell];
+        return;
+    }
 }
 
 
@@ -349,10 +333,10 @@
 - (void)takeVideoForSend
 {
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-                picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-            picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-            picker.cameraCaptureMode =UIImagePickerControllerCameraCaptureModeVideo;
-            picker.videoQuality = UIImagePickerControllerQualityTypeMedium;
+    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+    picker.cameraCaptureMode =UIImagePickerControllerCameraCaptureModeVideo;
+    picker.videoQuality = UIImagePickerControllerQualityTypeMedium;
     [picker setVideoMaximumDuration:15];
     picker.delegate = self;
     [self presentViewController:picker animated:YES completion:nil];
@@ -360,17 +344,40 @@
 
 - (void)selectFileForSend
 {
-            UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[(NSString *)kUTTypeData] inMode:UIDocumentPickerModeOpen];
-        picker.delegate = self;
-        [self presentViewController:picker animated:YES completion:nil];
-
+    UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[(NSString *)kUTTypeData] inMode:UIDocumentPickerModeOpen];
+    picker.delegate = self;
+    [self presentViewController:picker animated:YES completion:nil];
+    
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     // 快速点的时候会回调多次
-    [_sendMediaSignal sendNext:info];
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    picker.delegate = nil;
+    [picker dismissViewControllerAnimated:YES completion:^{
+        NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+        if([mediaType isEqualToString:(NSString *)kUTTypeImage]){
+            UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+            UIImageOrientation imageOrientation = image.imageOrientation;
+            if(imageOrientation != UIImageOrientationUp)
+            {
+                CGFloat aspectRatio = MIN ( 1920 / image.size.width, 1920 / image.size.height );
+                CGFloat aspectWidth = image.size.width * aspectRatio;
+                CGFloat aspectHeight = image.size.height * aspectRatio;
+                
+                UIGraphicsBeginImageContext(CGSizeMake(aspectWidth, aspectHeight));
+                [image drawInRect:CGRectMake(0, 0, aspectWidth, aspectHeight)];
+                image = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+            }
+            
+            [self sendImageMessage:image];
+        }
+        else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){
+            NSURL *url = [info objectForKey:UIImagePickerControllerMediaURL];
+            [self sendVideoMessage:url];
+        }
+    }];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker

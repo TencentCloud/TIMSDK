@@ -82,10 +82,14 @@
     [super fillWithData:data];
     self.cardData = data;
     //set data
-    _identifier.text = [@"帐号: " stringByAppendingString:data.identifier];
-    _signature.text = data.signature;
-    
     @weakify(self)
+    
+    RAC(_signature, text) = [RACObserve(data, signature) takeUntil:self.rac_prepareForReuseSignal];
+    [[[RACObserve(data, identifier) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSString *x) {
+        @strongify(self)
+        self.identifier.text = [@"帐号: " stringByAppendingString:data.identifier];
+    }];   
+    
     [[[RACObserve(data, name) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSString *x) {
         @strongify(self)
         self.name.text = x;

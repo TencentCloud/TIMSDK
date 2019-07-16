@@ -36,7 +36,11 @@
     //set data
     [super fillWithData:data];
     self.voiceData = data;
-    _duration.text = [NSString stringWithFormat:@"%ld\"", (long)data.duration];
+    if (data.duration > 0) {
+        _duration.text = [NSString stringWithFormat:@"%ld\"", (long)data.duration];
+    } else {
+        _duration.text = @"1\"";    // 显示0秒容易产生误解
+    }
     _voice.image = data.voiceImage;
     _voice.animationImages = data.voiceAnimationImages;    
     //animate

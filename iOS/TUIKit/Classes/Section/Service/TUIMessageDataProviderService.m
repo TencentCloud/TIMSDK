@@ -98,6 +98,11 @@
                                     str = [NSString stringWithFormat:@"\"%@\"修改群主为\"%@\"", tips.opUser, info.value];
                                 }
                                     break;
+                                case TIM_GROUP_INFO_CHANGE_GROUP_FACE:
+                                {
+                                    str = [NSString stringWithFormat:@"\"%@\"修改群头像", tips.opUser];
+                                }
+                                    break;
                                 default:
                                     break;
                             }
@@ -123,10 +128,21 @@
                     case TIM_GROUP_TIPS_TYPE_QUIT_GRP:
                     {
                         if (tips.opUser.length) {
-                            str = [NSString stringWithFormat:@"您所在的群已被\"%@\"解散", tips.opUser];
-                        } else {
-                            str = @"您所在的群已解散";
+                            str = [NSString stringWithFormat:@"\"%@\"退出了群聊", tips.opUser];
                         }
+                    }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if ([elem isKindOfClass:[TIMGroupSystemElem class]]) {
+                // TODO: 退群消息由于SDK的bug，导致经常接收不到
+                // GroupSeystem的conv->groupId为空
+                TIMGroupSystemElem *tips = (TIMGroupSystemElem *)elem;
+                switch (tips.type) {
+                    case TIM_GROUP_SYSTEM_DELETE_GROUP_TYPE: {
+                        str = @"您所在的群已解散";
                     }
                         break;
                     default:

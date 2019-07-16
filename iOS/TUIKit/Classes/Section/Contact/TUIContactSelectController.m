@@ -14,6 +14,7 @@
 #import "UIImage+TUIKIT.h"
 #import "THeader.h"
 #import "Toast/Toast.h"
+#import "THelper.h"
 
 static NSString *kReuseIdentifier = @"ContactSelectCell";
 
@@ -199,7 +200,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     TCommonContactSelectCellData *data = cell.selectData;
     if (!data.isSelected) {
         if (self.selectArray.count + 1 > self.maxSelectCount) {
-            [self.view makeToast:[NSString stringWithFormat:@"最多选择%ld个",(long)self.maxSelectCount]];
+            [THelper makeToast:[NSString stringWithFormat:@"最多选择%ld个",(long)self.maxSelectCount]];
             return;
         }
     }

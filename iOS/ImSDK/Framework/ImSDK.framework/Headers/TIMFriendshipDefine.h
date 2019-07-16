@@ -11,7 +11,6 @@
 
 #import "ImSDK.h"
 
-@class TIMFriendMetaInfo;
 @class TIMFriendPendencyResponse;
 @class TIMFriendPendencyItem;
 @class TIMFriendFutureMeta;
@@ -258,15 +257,20 @@ typedef NS_ENUM(NSInteger, TIMFriendResponseType) {
     TIM_FRIEND_RESPONSE_REJECT                      = 2,
 };
 
-#pragma mark - block回调
-
 /**
- * 获取好友列表回调
- *
- *  @param meta 好友元信息
- *  @param friends 好友列表 TIMUserProfile* 数组，只包含需要的字段
+ *  好友检查类型
  */
-typedef void (^TIMGetFriendListByPageSucc)(TIMFriendMetaInfo * meta, NSArray * friends);
+typedef NS_ENUM(NSInteger,TIMFriendAddType) {
+    /**
+     *  单向好友
+     */
+    TIM_FRIEND_ADD_TYPE_SINGLE     = 1,
+    /**
+     *  互为好友
+     */
+    TIM_FRIEND_ADD_TYPE_BOTH       = 2,
+};
+#pragma mark - block回调
 
 /**
  * 获取未决请求列表成功
@@ -329,6 +333,11 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
  *  分组
  */
 @property (nonatomic,strong) NSString* group;
+
+/**
+ *  加好友方式 (可选)
+ */
+@property (nonatomic,assign) TIMFriendAddType addType;
 
 @end
 
@@ -408,7 +417,7 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
 @property(nonatomic,assign) uint64_t timestamp;
 
 /**
- * 每页的数量，即本次请求最多返回都个数据
+ * 每页的数量，即本次请求最多返回多个数据，建议最大不超过 100，设置太大一次请求回包的时间会过长
  */
 @property(nonatomic,assign) uint64_t numPerPage;
 
@@ -443,32 +452,6 @@ typedef void (^TIMFriendCheckSucc)(NSArray* results);
  * 未决数据
  */
 @property NSArray<TIMFriendPendencyItem *> * pendencies;
-
-@end
-
-
-
-/**
- * 好友元信息
- */
-@interface TIMFriendMetaInfo : TIMCodingModel
-
-/**
- * 时间戳，需要保存，下次拉取时传入，增量更新使用
- */
-@property(nonatomic,assign) uint64_t timestamp;
-/**
- * 序列号，需要保存，下次拉取时传入，增量更新使用
- */
-@property(nonatomic,assign) uint64_t infoSeq;
-/**
- * 分页信息，无需保存，返回为0时结束，非0时传入再次拉取，第一次拉取时传0
- */
-@property(nonatomic,assign) uint64_t nextSeq;
-/**
- * 覆盖：为TRUE时需要重设timestamp, infoSeq, nextSeq为0，清除客户端存储，重新拉取资料
- */
-@property(nonatomic,assign) BOOL recover;
 
 @end
 

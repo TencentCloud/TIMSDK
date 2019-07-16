@@ -43,15 +43,8 @@
     [super fillWithData:contactData];
     self.contactData = contactData;
     
-    
     self.titleLabel.text = contactData.title;
-    if (contactData.avatarUrl) {
-        [self.avatarView sd_setImageWithURL:contactData.avatarUrl];
-    } else if (contactData.avatarImage) {
-        [self.avatarView setImage:contactData.avatarImage];
-    } else {
-        [self.avatarView setImage:DefaultAvatarImage];
-    }
+    [self.avatarView sd_setImageWithURL:contactData.avatarUrl placeholderImage:contactData.avatarImage?:DefaultAvatarImage];
 }
 
 @end

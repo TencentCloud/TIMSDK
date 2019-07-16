@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		910AF70B22925BF000ED5675 /* SearchGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF70A22925BF000ED5675 /* SearchGroupViewController.m */; };
 		910AF7112292820300ED5675 /* GroupRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF7102292820300ED5675 /* GroupRequestViewController.m */; };
-		910D900B22AE069A00C9A318 /* TCUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 910D900922AE069A00C9A318 /* TCUtil.m */; };
 		913C8531226705C300D74B58 /* SearchFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C852E226705C300D74B58 /* SearchFriendViewController.m */; };
 		913C853A2268260100D74B58 /* FriendRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C85392268260100D74B58 /* FriendRequestViewController.m */; };
 		915AA66A2248DBC600C0C9A0 /* ContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 915AA6692248DBC600C0C9A0 /* ContactsController.m */; };
@@ -21,6 +20,8 @@
 		91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */; };
 		BCF739AA621A7AF4B48F1525 /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */; };
 		CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0BDFA8221D53C60083E1B0 /* Bugly.framework */; };
+		CE1A434A22DE07EB008A767E /* PAirSandbox.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434322DE07EB008A767E /* PAirSandbox.m */; };
+		CE1A434C22DE07EB008A767E /* TCUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434822DE07EB008A767E /* TCUtil.m */; };
 		CECC13CB22B2824E008378A2 /* UserSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CECC13CA22B2824E008378A2 /* UserSelectView.m */; };
 		CECC13CE22B282C7008378A2 /* TCLoginParam.m in Sources */ = {isa = PBXBuildFile; fileRef = CECC13CD22B282C7008378A2 /* TCLoginParam.m */; };
 		CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014486216E1A4900C12E35 /* AppDelegate.m */; };
@@ -86,11 +87,6 @@
 		910AF70A22925BF000ED5675 /* SearchGroupViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchGroupViewController.m; sourceTree = "<group>"; };
 		910AF70F2292820300ED5675 /* GroupRequestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupRequestViewController.h; sourceTree = "<group>"; };
 		910AF7102292820300ED5675 /* GroupRequestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupRequestViewController.m; sourceTree = "<group>"; };
-		910D900622AE069A00C9A318 /* TCUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCUtil.h; sourceTree = "<group>"; };
-		910D900722AE069A00C9A318 /* TCUploadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCUploadHelper.h; sourceTree = "<group>"; };
-		910D900822AE069A00C9A318 /* TCUploadHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUploadHelper.m; sourceTree = "<group>"; };
-		910D900922AE069A00C9A318 /* TCUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUtil.m; sourceTree = "<group>"; };
-		910D901022AE0DBD00C9A318 /* TCConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCConstants.h; sourceTree = "<group>"; };
 		913C852C226705C200D74B58 /* SearchFriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchFriendViewController.h; sourceTree = "<group>"; };
 		913C852E226705C300D74B58 /* SearchFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchFriendViewController.m; sourceTree = "<group>"; };
 		913C85382268260100D74B58 /* FriendRequestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendRequestViewController.h; sourceTree = "<group>"; };
@@ -112,6 +108,13 @@
 		91FE93E32276EF0F00C17D6C /* TFriendProfileController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TFriendProfileController.h; sourceTree = "<group>"; };
 		91FE93EE22793A9A00C17D6C /* imsdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = imsdk.xcodeproj; path = /Users/annidy/Work/imsdk/tuikit/ios/TUIKit/../../../source/project/ios/imsdk/imsdk.xcodeproj; sourceTree = "<absolute>"; };
 		CE0BDFA8221D53C60083E1B0 /* Bugly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bugly.framework; sourceTree = "<group>"; };
+		CE1A434322DE07EB008A767E /* PAirSandbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAirSandbox.m; sourceTree = "<group>"; };
+		CE1A434422DE07EB008A767E /* TCUploadHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUploadHelper.m; sourceTree = "<group>"; };
+		CE1A434522DE07EB008A767E /* TCUploadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCUploadHelper.h; sourceTree = "<group>"; };
+		CE1A434622DE07EB008A767E /* TCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCConstants.h; sourceTree = "<group>"; };
+		CE1A434722DE07EB008A767E /* PAirSandbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAirSandbox.h; sourceTree = "<group>"; };
+		CE1A434822DE07EB008A767E /* TCUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUtil.m; sourceTree = "<group>"; };
+		CE1A434922DE07EB008A767E /* TCUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCUtil.h; sourceTree = "<group>"; };
 		CE1C55922224F22C00A75262 /* TUIKitDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TUIKitDemo.entitlements; sourceTree = "<group>"; };
 		CECC13C922B2824D008378A2 /* UserSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserSelectView.h; sourceTree = "<group>"; };
 		CECC13CA22B2824E008378A2 /* UserSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserSelectView.m; sourceTree = "<group>"; };
@@ -190,11 +193,13 @@
 		910D900522AE069000C9A318 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				910D901022AE0DBD00C9A318 /* TCConstants.h */,
-				910D900722AE069A00C9A318 /* TCUploadHelper.h */,
-				910D900822AE069A00C9A318 /* TCUploadHelper.m */,
-				910D900622AE069A00C9A318 /* TCUtil.h */,
-				910D900922AE069A00C9A318 /* TCUtil.m */,
+				CE1A434722DE07EB008A767E /* PAirSandbox.h */,
+				CE1A434322DE07EB008A767E /* PAirSandbox.m */,
+				CE1A434622DE07EB008A767E /* TCConstants.h */,
+				CE1A434522DE07EB008A767E /* TCUploadHelper.h */,
+				CE1A434422DE07EB008A767E /* TCUploadHelper.m */,
+				CE1A434922DE07EB008A767E /* TCUtil.h */,
+				CE1A434822DE07EB008A767E /* TCUtil.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -500,18 +505,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				CECC13CE22B282C7008378A2 /* TCLoginParam.m in Sources */,
+				CE1A434A22DE07EB008A767E /* PAirSandbox.m in Sources */,
 				915AA66A2248DBC600C0C9A0 /* ContactsController.m in Sources */,
 				913C853A2268260100D74B58 /* FriendRequestViewController.m in Sources */,
 				CF01448A216E1A4900C12E35 /* LoginController.m in Sources */,
 				913C8531226705C300D74B58 /* SearchFriendViewController.m in Sources */,
 				CFEB47782177982B00CFD98C /* GroupMemberController.m in Sources */,
 				91941A5222AE435700123596 /* MyCustomCell.m in Sources */,
+				CE1A434C22DE07EB008A767E /* TCUtil.m in Sources */,
 				CFEB47752177981900CFD98C /* GroupInfoController.m in Sources */,
 				91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */,
 				CFEB47D02179B82300CFD98C /* SettingController.m in Sources */,
 				9176C5BE227A98A300DF5784 /* TUserProfileController.m in Sources */,
 				CFDC2FA5216E2D5E002EAEC2 /* ChatViewController.m in Sources */,
-				910D900B22AE069A00C9A318 /* TCUtil.m in Sources */,
 				91941A4D22AE40C300123596 /* MyCustomCellData.m in Sources */,
 				91D3AD3122AA06440036CDE0 /* Aspects.m in Sources */,
 				CECC13CB22B2824E008378A2 /* UserSelectView.m in Sources */,

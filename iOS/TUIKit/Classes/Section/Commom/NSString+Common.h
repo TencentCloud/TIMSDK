@@ -83,7 +83,7 @@ char pinyinFirstLetter(unsigned short hanzi);
 - (NSString *)substringAtRange:(NSRange)rang;
 
 
-// 是否带有表情府
+// 是否带有表情符
 
 - (NSUInteger)utf8Length;
 

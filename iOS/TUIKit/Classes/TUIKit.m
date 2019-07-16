@@ -10,7 +10,7 @@
 #import "THeader.h"
 @import ImSDK;
 
-@interface TUIKit () <TIMRefreshListener, TIMMessageListener, TIMMessageRevokeListener, TIMUploadProgressListener, TIMUserStatusListener, TIMConnListener, TIMFriendshipListener>
+@interface TUIKit () <TIMRefreshListener, TIMMessageListener, TIMMessageRevokeListener, TIMUploadProgressListener, TIMUserStatusListener, TIMConnListener, TIMFriendshipListener, TIMMessageUpdateListener>
 @property (nonatomic) TUINetStatus netStatus;
 @end
 
@@ -66,6 +66,7 @@
     userConfig.uploadProgressListener = self;
     userConfig.userStatusListener = self;
     userConfig.friendshipListener = self;
+    userConfig.messageUpdateListener = self;
     [[TIMManager sharedInstance] setUserConfig:userConfig];
     
     [[TIMManager sharedInstance] addMessageListener:self];
@@ -81,6 +82,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMRefreshListener object:conversations];
 }
 
+#pragma mark - TIMMessageListener
 - (void)onNewMessage:(NSArray *)msgs
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMMessageListener object:msgs];
@@ -162,4 +164,9 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onAddFriendReqs object:reqs];
 }
 
+#pragma mark - TIMMessageUpdateListener
+- (void)onMessageUpdate:(NSArray*) msgs
+{
+    
+}
 @end

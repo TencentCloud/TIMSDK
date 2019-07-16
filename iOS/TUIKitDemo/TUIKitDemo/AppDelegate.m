@@ -15,11 +15,10 @@
 #import "TUITabBarController.h"
 #import "TUIKit.h"
 #import "THeader.h"
-#import "TAlertView.h"
 #import "ImSDK.h"
 #import <Bugly/Bugly.h>
 
-@interface AppDelegate () <TAlertViewDelegate,BuglyDelegate>
+@interface AppDelegate () <BuglyDelegate,UIAlertViewDelegate>
 
 @end
 
@@ -263,11 +262,6 @@ void uncaughtExceptionHandler(NSException*exception){
         default:
             break;
     }
-}
-
-- (void)didConfirmInAlertView:(TAlertView *)alertView
-{
-    self.window.rootViewController = [self getLoginController];
 }
 
 

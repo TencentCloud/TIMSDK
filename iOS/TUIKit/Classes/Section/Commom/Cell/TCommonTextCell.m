@@ -8,6 +8,8 @@
 #import "TCommonTextCell.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "THeader.h"
+#import "ReactiveObjC/ReactiveObjC.h"
+#import "MMLayout/UIView+MMLayout.h"
 
 @implementation TCommonTextCellData
 - (instancetype)init {
@@ -44,8 +46,8 @@
     
     self.textData = textData;
     
-    _keyLabel.text = textData.key;
-    _valueLabel.text = textData.value;
+    RAC(_keyLabel, text) = [RACObserve(textData, key) takeUntil:self.rac_prepareForReuseSignal];
+    RAC(_valueLabel, text) = [RACObserve(textData, value) takeUntil:self.rac_prepareForReuseSignal];
     
     if (textData.showAccessory) {
         self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

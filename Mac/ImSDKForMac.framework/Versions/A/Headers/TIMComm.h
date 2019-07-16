@@ -34,6 +34,12 @@
 @class TIMFriendProfileOption;
 @class TIMFriendResult;
 @class TIMCheckFriendResult;
+@class TIMGroupPendencyMeta;
+@class TIMCreateGroupMemberInfo;
+@class TIMSendToUsersDetailInfo;
+@class TIMGroupInfo;
+@class TIMGroupMemberInfo;
+@class TIMGroupPendencyItem;
 
 #pragma mark - 枚举类型
 
@@ -98,6 +104,44 @@ typedef NS_ENUM(NSInteger, TIMConversationType) {
      *  系统消息
      */
     TIM_SYSTEM           = 3,
+};
+
+/**
+ * 会话刷新原因：
+ */
+typedef NS_ENUM(NSInteger, TIMConversationRefreshReason) {
+    /**
+     *  同步会话列表 （登录或则断网重连后 SDK 自动同步服务器的会话列表）
+     */
+    TIM_CONVERSATION_SYNC_FROM_SERVER,
+    /**
+     *  收到会话被删除通知 (如果会话被删除，会收到这个通知)
+     */
+    TIM_CONVERSATION_RECEIVE_DELETE,
+    /**
+     *  发送消息
+     */
+    TIM_CONVERSATION_SEDN_MSG,
+    /**
+     *  收到消息
+     */
+    TIM_CONVERSATION_RECEIVE_MSG,
+    /**
+     *  设置会话消息已读 （针对 C2C 和 群组类型生效）
+     */
+    TIM_CONVERSATION_SET_MSG_READ,
+    /**
+     *  收到会话消息已读通知 (针对 C2C 和 群组类型生效，同一账号多终端登录，一端上报已读，其他端会收到这个通知)
+     */
+    TIM_CONVERSATION_RECEIVE_MSG_READ,
+    /**
+     *  收到会话消息撤回通知 （针对 C2C 和 群组类型生效，其他用户撤回消息，自己会收到这个通知）
+     */
+    TIM_CONVERSATION_RECEIVE_MSG_REVOKE,
+    /**
+     *  收到会话消息已读回执通知 （针对 C2C 类型生效，自己发出的消息如果对方设置了已读，自己会收到这个通知）
+     */
+    TIM_CONVERSATION_RECEIVE_MSG_RECEIPT,
 };
 
 /**
@@ -219,19 +263,47 @@ typedef NS_ENUM(NSInteger, TIM_IMAGE_FORMAT){
  */
 typedef NS_ENUM(NSInteger, TIMLoginStatus) {
     /**
-     *  已登陆
+     *  已登录
      */
     TIM_STATUS_LOGINED             = 1,
     
     /**
-     *  登陆中
+     *  登录中
      */
     TIM_STATUS_LOGINING            = 2,
     
     /**
-     *  无登陆
+     *  无登录
      */
     TIM_STATUS_LOGOUT              = 3,
+};
+
+/**
+ *  推送规则
+ */
+typedef NS_ENUM(NSInteger, TIMOfflinePushFlag) {
+    /**
+     *  按照默认规则进行推送
+     */
+    TIM_OFFLINE_PUSH_DEFAULT    = 0,
+    /**
+     *  不进行推送
+     */
+    TIM_OFFLINE_PUSH_NO_PUSH    = 1,
+};
+
+/**
+ *  安卓离线推送模式
+ */
+typedef NS_ENUM(NSInteger, TIMAndroidOfflinePushNotifyMode) {
+    /**
+     *  通知栏消息
+     */
+    TIM_ANDROID_OFFLINE_PUSH_NOTIFY_MODE_NOTIFICATION = 0x00,
+    /**
+     *  不弹窗，由应用自行处理
+     */
+    TIM_ANDROID_OFFLINE_PUSH_NOTIFY_MODE_CUSTOM = 0x01,
 };
 
 /**
@@ -461,34 +533,6 @@ typedef NS_ENUM(NSInteger, TIM_GROUP_SYSTEM_TYPE){
 };
 
 /**
- *  推送规则
- */
-typedef NS_ENUM(NSInteger, TIMOfflinePushFlag) {
-    /**
-     *  按照默认规则进行推送
-     */
-    TIM_OFFLINE_PUSH_DEFAULT    = 0,
-    /**
-     *  不进行推送
-     */
-    TIM_OFFLINE_PUSH_NO_PUSH    = 1,
-};
-
-/**
- *  安卓离线推送模式
- */
-typedef NS_ENUM(NSInteger, TIMAndroidOfflinePushNotifyMode) {
-    /**
-     *  通知栏消息
-     */
-    TIM_ANDROID_OFFLINE_PUSH_NOTIFY_MODE_NOTIFICATION = 0x00,
-    /**
-     *  不弹窗，由应用自行处理
-     */
-    TIM_ANDROID_OFFLINE_PUSH_NOTIFY_MODE_CUSTOM = 0x01,
-};
-
-/**
  * 群成员角色
  */
 typedef NS_ENUM(NSInteger, TIMGroupMemberRole) {
@@ -511,6 +555,216 @@ typedef NS_ENUM(NSInteger, TIMGroupMemberRole) {
      *  群主
      */
     TIM_GROUP_MEMBER_ROLE_SUPER               = 400,
+};
+
+/**
+ * 群基本获取资料标志
+ */
+typedef NS_ENUM(NSInteger, TIMGetGroupBaseInfoFlag) {
+    /**
+     *  不获取群组资料
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_NONE                           = 0x00,
+    /**
+     *  获取群组名
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_NAME                           = 0x01,
+    /**
+     *  获取创建时间
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_CREATE_TIME                    = 0x01 << 1,
+    /**
+     *  获取群主id
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_OWNER_UIN                      = 0x01 << 2,
+    /**
+     *  （不可用）
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_SEQ                            = 0x01 << 3,
+    /**
+     *  获取最近一次修改群信息时间
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_TIME                           = 0x01 << 4,
+    /**
+     *  （不可用）
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_NEXT_MSG_SEQ                   = 0x01 << 5,
+    /**
+     *  获取最近一次发消息时间
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_LAST_MSG_TIME                  = 0x01 << 6,
+    /**
+     *  （不可用）
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_APP_ID                         = 0x01 << 7,
+    /**
+     *  获取群成员数量
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_MEMBER_NUM                     = 0x01 << 8,
+    /**
+     *  获取最大群成员数量
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_MAX_MEMBER_NUM                 = 0x01 << 9,
+    /**
+     *  获取群公告
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_NOTIFICATION                   = 0x01 << 10,
+    /**
+     *  获取群简介
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_INTRODUCTION                   = 0x01 << 11,
+    /**
+     *  获取群头像
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_FACE_URL                       = 0x01 << 12,
+    /**
+     *  获取入群类型
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_ADD_OPTION                     = 0x01 << 13,
+    /**
+     *  获取群组类型
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_GROUP_TYPE                     = 0x01 << 14,
+    /**
+     *  获取最后一条群消息
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_LAST_MSG                       = 0x01 << 15,
+    /**
+     *  获取在线人数
+     */
+    TIM_GET_GROUP_BASE_INFO_FLAG_ONLINE_NUM                     = 0x01 << 16,
+    /**
+     *  获取群成员是否可见标志
+     */
+    TIM_GET_GROUP_BASE_INFO_VISIBLE                             = 0x01 << 17,
+    /**
+     *  获取群是否能被搜到标志
+     */
+    TIM_GET_GROUP_BASE_INFO_SEARCHABLE                          = 0x01 << 18,
+    /**
+     *  获取群全员禁言时间
+     */
+    TIM_GET_GROUP_BASE_INFO_ALL_SHUTUP                          = 0x01 << 19
+};
+
+/**
+ *  群成员角色过滤方式
+ */
+typedef NS_ENUM(NSInteger, TIMGroupMemberFilter) {
+    /**
+     *  全部成员
+     */
+    TIM_GROUP_MEMBER_FILTER_ALL            = 0x00,
+    /**
+     *  群主
+     */
+    TIM_GROUP_MEMBER_FILTER_SUPER          = 0x01,
+    /**
+     *  管理员
+     */
+    TIM_GROUP_MEMBER_FILTER_ADMIN          = 0x02,
+    /**
+     *  普通成员
+     */
+    TIM_GROUP_MEMBER_FILTER_COMMON         = 0x04,
+};
+
+/**
+ * 群成员获取资料标志
+ */
+typedef NS_ENUM(NSInteger, TIMGetGroupMemInfoFlag) {
+    
+    /**
+     * 入群时间
+     */
+    TIM_GET_GROUP_MEM_INFO_FLAG_JOIN_TIME                    = 0x01,
+    /**
+     * 消息标志
+     */
+    TIM_GET_GROUP_MEM_INFO_FLAG_MSG_FLAG                     = 0x01 << 1,
+    /**
+     * 角色
+     */
+    TIM_GET_GROUP_MEM_INFO_FLAG_ROLE_INFO                    = 0x01 << 3,
+    /**
+     * 禁言时间
+     */
+    TIM_GET_GROUP_MEM_INFO_FLAG_SHUTUP_TIME                  = 0x01 << 4,
+    /**
+     * 群名片
+     */
+    TIM_GET_GROUP_MEM_INFO_FLAG_NAME_CARD                    = 0x01 << 5,
+};
+
+/**
+ *  群组操作结果
+ */
+typedef NS_ENUM(NSInteger, TIMGroupMemberStatus) {
+    /**
+     *  操作失败
+     */
+    TIM_GROUP_MEMBER_STATUS_FAIL              = 0,
+    
+    /**
+     *  操作成功
+     */
+    TIM_GROUP_MEMBER_STATUS_SUCC              = 1,
+    
+    /**
+     *  无效操作，加群时已经是群成员，移除群组时不在群内
+     */
+    TIM_GROUP_MEMBER_STATUS_INVALID           = 2,
+    
+    /**
+     *  等待处理，邀请入群时等待对方处理
+     */
+    TIM_GROUP_MEMBER_STATUS_PENDING           = 3,
+};
+
+/**
+ *  群组未决请求类型
+ */
+typedef NS_ENUM(NSInteger, TIMGroupPendencyGetType) {
+    /**
+     *  申请入群
+     */
+    TIM_GROUP_PENDENCY_GET_TYPE_JOIN            = 0x0,
+    /**
+     *  邀请入群
+     */
+    TIM_GROUP_PENDENCY_GET_TYPE_INVITE          = 0x1,
+};
+
+/**
+ *  群组已决标志
+ */
+typedef NS_ENUM(NSInteger, TIMGroupPendencyHandleStatus) {
+    /**
+     *  未处理
+     */
+    TIM_GROUP_PENDENCY_HANDLE_STATUS_UNHANDLED            = 0,
+    /**
+     *  被他人处理
+     */
+    TIM_GROUP_PENDENCY_HANDLE_STATUS_OTHER_HANDLED        = 1,
+    /**
+     *  被用户处理
+     */
+    TIM_GROUP_PENDENCY_HANDLE_STATUS_OPERATOR_HANDLED     = 2,
+};
+
+/**
+ *  群组已决结果
+ */
+typedef NS_ENUM(NSInteger, TIMGroupPendencyHandleResult) {
+    /**
+     *  拒绝申请
+     */
+    TIM_GROUP_PENDENCY_HANDLE_RESULT_REFUSE       = 0,
+    /**
+     *  同意申请
+     */
+    TIM_GROUP_PENDENCY_HANDLE_RESULT_AGREE        = 1,
 };
 
 /**
@@ -552,6 +806,79 @@ typedef NS_ENUM(NSInteger, TIMGender) {
     
 };
 
+/**
+ * 操作类型
+ */
+typedef NS_ENUM(NSInteger, TIM_SNS_SYSTEM_TYPE){
+    /**
+     *  增加好友消息
+     */
+    TIM_SNS_SYSTEM_ADD_FRIEND                           = 0x01,
+    /**
+     *  删除好友消息
+     */
+    TIM_SNS_SYSTEM_DEL_FRIEND                           = 0x02,
+    /**
+     *  增加好友申请
+     */
+    TIM_SNS_SYSTEM_ADD_FRIEND_REQ                       = 0x03,
+    /**
+     *  删除未决申请
+     */
+    TIM_SNS_SYSTEM_DEL_FRIEND_REQ                       = 0x04,
+    /**
+     *  黑名单添加
+     */
+    TIM_SNS_SYSTEM_ADD_BLACKLIST                        = 0x05,
+    /**
+     *  黑名单删除
+     */
+    TIM_SNS_SYSTEM_DEL_BLACKLIST                        = 0x06,
+    /**
+     *  未决已读上报
+     */
+    TIM_SNS_SYSTEM_PENDENCY_REPORT                      = 0x07,
+    /**
+     *  关系链资料变更
+     */
+    TIM_SNS_SYSTEM_SNS_PROFILE_CHANGE                   = 0x08,
+    /**
+     *  推荐数据增加
+     */
+    TIM_SNS_SYSTEM_ADD_RECOMMEND                        = 0x09,
+    /**
+     *  推荐数据删除
+     */
+    TIM_SNS_SYSTEM_DEL_RECOMMEND                        = 0x0a,
+    /**
+     *  已决增加
+     */
+    TIM_SNS_SYSTEM_ADD_DECIDE                           = 0x0b,
+    /**
+     *  已决删除
+     */
+    TIM_SNS_SYSTEM_DEL_DECIDE                           = 0x0c,
+    /**
+     *  推荐已读上报
+     */
+    TIM_SNS_SYSTEM_RECOMMEND_REPORT                     = 0x0d,
+    /**
+     *  已决已读上报
+     */
+    TIM_SNS_SYSTEM_DECIDE_REPORT                        = 0x0e,
+    
+    
+};
+
+/**
+ *  资料变更
+ */
+typedef NS_ENUM(NSInteger, TIM_PROFILE_SYSTEM_TYPE){
+    /**
+     好友资料变更
+     */
+    TIM_PROFILE_SYSTEM_FRIEND_PROFILE_CHANGE        = 0x01,
+};
 
 #pragma mark - block 回调
 
@@ -584,7 +911,7 @@ typedef void (^TIMFail)(int code, NSString * msg);
 typedef void (^TIMProgress)(NSInteger curSize, NSInteger totalSize);
 
 /**
- *  登陆成功回调
+ *  登录成功回调
  */
 typedef void (^TIMLoginSucc)(void);
 
@@ -666,6 +993,67 @@ typedef void (^TIMFriendResultArraySucc)(NSArray<TIMFriendResult *> *results);
  */
 typedef void (^TIMCheckFriendResultArraySucc)(NSArray<TIMCheckFriendResult *> *results);
 
+
+/**
+ *  群成员列表回调
+ *
+ *  @param members 群成员列表
+ */
+typedef void (^TIMGroupMemberSucc)(NSArray * members);
+
+/**
+ *  群列表回调
+ *
+ *  @param arr 群列表，成员类型 TIMGroupInfo
+ */
+typedef void (^TIMGroupListSucc)(NSArray<TIMGroupInfo *> * arr);
+
+/**
+ *  本人群组内成员信息回调
+ *
+ *  @param selfInfo 本人成员信息
+ */
+typedef void (^TIMGroupSelfSucc)(TIMGroupMemberInfo * selfInfo);
+
+/**
+ *  群接受消息选项回调
+ *
+ *  @param opt 群接受消息选项
+ */
+typedef void (^TIMGroupReciveMessageOptSucc)(TIMGroupReceiveMessageOpt opt);
+
+/**
+ *  群成员列表回调（分页使用）
+ *
+ *  @param members 群成员（TIMGroupMemberInfo*）列表
+ */
+typedef void (^TIMGroupMemberSuccV2)(uint64_t nextSeq, NSArray * members);
+
+/**
+ *  群搜索回调
+ *
+ *  @param totalNum 搜索结果的总数
+ *  @param groups  请求的群列表片段
+ */
+typedef void (^TIMGroupSearchSucc)(uint64_t totalNum, NSArray * groups);
+
+/**
+ *  获取群组未决请求列表成功
+ *
+ *  @param meta       未决请求元信息
+ *  @param pendencies 未决请求列表（TIMGroupPendencyItem）数组
+ */
+typedef void (^TIMGetGroupPendencyListSucc)(TIMGroupPendencyMeta * meta, NSArray<TIMGroupPendencyItem *> * pendencies);
+
+/**
+ *  发送消息给多个用户失败
+ *
+ *  @param code 错误码
+ *  @param err  错误信息
+ *  @param detailInfo 错误详情
+ */
+typedef void (^TIMSendToUsersFail)(int code, NSString *err, TIMSendToUsersDetailInfo *detailInfo);
+
 #pragma mark - 基本类型
 
 /// 实现 NSCoding 协议
@@ -694,10 +1082,10 @@ typedef void (^TIMCheckFriendResultArraySucc)(NSArray<TIMCheckFriendResult *> *r
 ///本地写 log 文件的等级，默认 DEBUG 等级
 @property(nonatomic,assign) TIMLogLevel logLevel;
 
-///log 文件路径，不设置时为默认路径
+///log 文件路径，不设置时为默认路径，可以通过 TIMManager -> getLogPath 获取 log 路径
 @property(nonatomic,strong) NSString * logPath;
 
-///回调给 log 函数的 log 等级，默认 DEBUG 等级
+///回调给 logFunc 函数的 log 等级，默认 DEBUG 等级
 @property(nonatomic,assign) TIMLogLevel logFuncLevel;
 
 ///log 监听函数
@@ -706,7 +1094,7 @@ typedef void (^TIMCheckFriendResultArraySucc)(NSArray<TIMCheckFriendResult *> *r
 ///消息数据库路径，不设置时为默认路径
 @property(nonatomic,strong) NSString * dbPath;
 
-///网络监听器
+///网络监听器,监听网络连接成功失败的状态
 @property(nonatomic,strong) id<TIMConnListener> connListener;
 
 @end
@@ -714,37 +1102,40 @@ typedef void (^TIMCheckFriendResultArraySucc)(NSArray<TIMCheckFriendResult *> *r
 /// 设置用户配置信息
 @interface TIMUserConfig : NSObject
 
-///禁止消息已读自动上报,一旦禁用自动上报，需要开发者显式调用 setReadMessage ，详情请参考官网文档 [未读消息计数](https://cloud.tencent.com/document/product/269/9151)
+///禁用本地存储
+@property(nonatomic,assign) BOOL disableStorage;
+
+///默认情况下，出于性能考虑，当用户在终端 A 收到未读消息后，Server 默认会删除未读消息，但如果用户切换到终端 B 后，IM SDK 无法再同步到未读消息，未读计数也不会增加，如果需要在终端 B 下也有未读，请设置 disableAutoReport 为 YES，这个时候 Server 不会再主动删除未读消息。注意一旦这这样设置，开发者需要主动调用 TIMConversation.h -> setReadMessage ，否则未读消息会一直存在 Server，IM SDK 每次登录或则断网重连都会再次同步到未读消息，详情请参考官方文档 [自动已读上报](https://cloud.tencent.com/document/product/269/9151)。
 @property(nonatomic,assign) BOOL disableAutoReport;
 
-///开启 C2C 已读回执，只针对 C2C 消息生效，用户开启已读回执功能后，对方调用 setReadMessage 时会同步已读信息到本客户端，您可以在 TIMMessageReceiptListener 监听消息已读回执
+///已读回执是自己发出去的消息，对方设置为已读后，自己能收到已读的回调，只针对单聊（C2C）会话生效，默认是关闭的，如果需要开启，请设置 enableReadReceipt 为 YES，收到消息的用户需要显式调用 TIMConversation.h -> setReadMessage，发消息的用户才能通过 TIMMessageReceiptListener 监听到消息的已读回执。
 @property(nonatomic,assign) BOOL enableReadReceipt;
 
-///设置默认拉取的群组资料
+///设置默认拉取的群组资料,当您获取群资料的时候，默认只能拉取内置字段，如果想要拉取自定义字段，首先要通过 [IM 控制台](https://console.cloud.tencent.com/avc) -> 功能配置 -> 群维度自定义字段 配置对应的 "自定义字段" 和用户操作权限，然后设置 IMGroupInfoOption -> groupCustom = @[@"自定义字段名称",...]。
 @property(nonatomic,strong) TIMGroupInfoOption * groupInfoOpt;
 
-///设置默认拉取的群成员资料
+///设置默认拉取的群成员资料,当您获取群成员资料的时候，默认只能拉取内置字段，如果想要拉取自定义字段，首先要通过 [IM 控制台](https://console.cloud.tencent.com/avc) -> 功能配置 -> 群成员维度自定义字段配置对应的 "自定义字段" 和用户操作权限，后设置 TIMGroupMemberInfoOption -> memberCustom = @[@"自定义字段名称",...]。
 @property(nonatomic,strong) TIMGroupMemberInfoOption * groupMemberInfoOpt;
 
 ///关系链参数
 @property(nonatomic,strong) TIMFriendProfileOption * friendProfileOpt;
 
-///用户登录状态监听器
+///用户登录状态监听器,用于监听用户被踢，断网重连失败，userSig 过期的通知
 @property(nonatomic,weak) id<TIMUserStatusListener> userStatusListener;
 
-///会话刷新监听器（未读计数、已读同步）
+///会话刷新监听器，用于监听会话的刷新
 @property(nonatomic,weak) id<TIMRefreshListener> refreshListener;
 
-///消息已读回执监听器
+///消息已读回执监听器，用于监听消息已读回执，enableReadReceipt 字段需要设置为 YES
 @property(nonatomic,weak) id<TIMMessageReceiptListener> messageReceiptListener;
 
-///消息 svr 重写监听器
+///消息修改监听器，用于监听消息状态的变化
 @property(nonatomic,weak) id<TIMMessageUpdateListener> messageUpdateListener;
 
-///消息撤回监听器
+///消息撤回监听器，用于监听会话中的消息撤回通知
 @property(nonatomic,weak) id<TIMMessageRevokeListener> messageRevokeListener;
 
-///文件上传进度监听器
+///文件上传进度监听器，发送语音，图片，视频，文件消息的时候需要先上传对应文件到服务器，这里可以监听上传进度
 @property(nonatomic,weak) id<TIMUploadProgressListener> uploadProgressListener;
 
 ///群组事件通知监听器
@@ -755,7 +1146,7 @@ typedef void (^TIMCheckFriendResultArraySucc)(NSArray<TIMCheckFriendResult *> *r
 
 @end
 
-/// 登陆参数
+/// 登录参数
 @interface TIMLoginParam : NSObject
 
 ///用户名
@@ -790,7 +1181,7 @@ typedef void (^TIMCheckFriendResultArraySucc)(NSArray<TIMCheckFriendResult *> *r
 /// SetToken 参数
 @interface TIMTokenParam : NSObject
 
-///获取的客户端 Token 信息
+///token 是苹果后台对客户端的唯一标识，需要主动调用系统 API 向苹果请求获取
 @property(nonatomic,strong) NSData* token;
 
 ///业务 ID，传递证书时分配
@@ -868,6 +1259,28 @@ typedef void (^TIMCheckFriendResultArraySucc)(NSArray<TIMCheckFriendResult *> *r
 ///忽略 badge 计数
 @property(nonatomic,assign) BOOL ignoreBadge;
 
+@end
+
+/// 填入 sound 字段表示接收时不会播放声音
+extern NSString * const kIOSOfflinePushNoSound;
+
+/// 自定义消息 push
+@interface TIMOfflinePushInfo : NSObject
+
+///自定义消息描述信息，做离线Push时文本展示
+@property(nonatomic,strong) NSString * desc;
+
+///离线 Push 时扩展字段信息
+@property(nonatomic,strong) NSString * ext;
+
+///推送规则标志
+@property(nonatomic,assign) TIMOfflinePushFlag pushFlag;
+
+///iOS离线推送配置
+@property(nonatomic,strong) TIMIOSOfflinePushConfig * iosConfig;
+
+///Android离线推送配置
+@property(nonatomic,strong) TIMAndroidOfflinePushConfig * androidConfig;
 @end
 
 /// 群组内的本人信息
@@ -1138,4 +1551,287 @@ typedef void(^ProfileCallBack) (TIMUserProfile * proflie);
 
 @end
 
+/**
+ *  创建群参数
+ */
+@interface TIMCreateGroupInfo : TIMCodingModel
+
+/**
+ *  群组Id,nil则使用系统默认Id
+ */
+@property(nonatomic,strong) NSString* group;
+
+/**
+ *  群名
+ */
+@property(nonatomic,strong) NSString* groupName;
+
+/**
+ *  群类型：Private,Public,ChatRoom,AVChatRoom,BChatRoom
+ */
+@property(nonatomic,strong) NSString* groupType;
+
+/**
+ *  是否设置入群选项，Private类型群组请设置为false
+ */
+@property(nonatomic,assign) BOOL setAddOpt;
+
+/**
+ *  入群选项
+ */
+@property(nonatomic,assign) TIMGroupAddOpt addOpt;
+
+/**
+ *  最大成员数，填0则系统使用默认值
+ */
+@property(nonatomic,assign) uint32_t maxMemberNum;
+
+/**
+ *  群公告
+ */
+@property(nonatomic,strong) NSString* notification;
+
+/**
+ *  群简介
+ */
+@property(nonatomic,strong) NSString* introduction;
+
+/**
+ *  群头像
+ */
+@property(nonatomic,strong) NSString* faceURL;
+
+/**
+ *  自定义字段集合,key是NSString*类型,value是NSData*类型
+ */
+@property(nonatomic,strong) NSDictionary* customInfo;
+
+/**
+ *  创建成员（TIMCreateGroupMemberInfo*）列表
+ */
+@property(nonatomic,strong) NSArray <TIMCreateGroupMemberInfo *>* membersInfo;
+
+@end
+
+/**
+ * 未决请求选项
+ */
+@interface TIMGroupPendencyOption : TIMCodingModel
+
+/**
+ *  拉取的起始时间 0：拉取最新的
+ */
+@property(nonatomic,assign) uint64_t timestamp;
+
+/**
+ *  每页的数量
+ */
+@property(nonatomic,assign) uint32_t numPerPage;
+@end
+
+/**
+ *  未决请求元信息
+ */
+@interface TIMGroupPendencyMeta : TIMCodingModel
+
+/**
+ *  下一次拉取的起始时间戳
+ */
+@property(nonatomic,assign) uint64_t nextStartTime;
+
+/**
+ *  已读时间戳大小
+ */
+@property(nonatomic,assign) uint64_t readTimeSeq;
+
+/**
+ *  未决未读数
+ */
+@property(nonatomic,assign) uint32_t unReadCnt;
+
+@end
+
+/**
+ *  创建群组时的成员信息
+ */
+@interface TIMCreateGroupMemberInfo : TIMCodingModel
+
+/**
+ *  被操作成员
+ */
+@property(nonatomic,strong) NSString* member;
+
+/**
+ *  成员类型
+ */
+@property(nonatomic,assign) TIMGroupMemberRole role;
+
+/**
+ *  自定义字段集合,key是NSString*类型,value是NSData*类型
+ */
+@property(nonatomic,strong) NSDictionary* customInfo;
+
+@end
+
+/**
+ *  成员操作返回值
+ */
+@interface TIMGroupMemberResult : NSObject
+
+/**
+ *  被操作成员
+ */
+@property(nonatomic,strong) NSString* member;
+/**
+ *  返回状态
+ */
+@property(nonatomic,assign) TIMGroupMemberStatus status;
+
+@end
+
+/**
+ *  未决申请
+ */
+@interface TIMGroupPendencyItem : TIMCodingModel
+
+/**
+ *  相关群组id
+ */
+@property(nonatomic,strong) NSString* groupId;
+
+/**
+ *  请求者id，请求加群:请求者，邀请加群:邀请人
+ */
+@property(nonatomic,strong) NSString* fromUser;
+
+/**
+ *  判决者id，请求加群:0，邀请加群:被邀请人
+ */
+@property(nonatomic,strong) NSString* toUser;
+
+/**
+ *  未决添加时间
+ */
+@property(nonatomic,assign) uint64_t addTime;
+
+/**
+ *  未决请求类型
+ */
+@property(nonatomic,assign) TIMGroupPendencyGetType getType;
+
+/**
+ *  已决标志
+ */
+@property(nonatomic,assign) TIMGroupPendencyHandleStatus handleStatus;
+
+/**
+ *  已决结果
+ */
+@property(nonatomic,assign) TIMGroupPendencyHandleResult handleResult;
+
+/**
+ *  申请或邀请附加信息
+ */
+@property(nonatomic,strong) NSString* requestMsg;
+
+/**
+ *  审批信息：同意或拒绝信息
+ */
+@property(nonatomic,strong) NSString* handledMsg;
+
+
+/**
+ *  同意申请
+ *
+ *  @param msg      同意理由，选填
+ *  @param succ     成功回调
+ *  @param fail     失败回调，返回错误码和错误描述
+ */
+-(void) accept:(NSString*)msg succ:(TIMSucc)succ fail:(TIMFail)fail;
+
+/**
+ *  拒绝申请
+ *
+ *  @param msg      拒绝理由，选填
+ *  @param succ     成功回调
+ *  @param fail     失败回调，返回错误码和错误描述
+ */
+-(void) refuse:(NSString*)msg succ:(TIMSucc)succ fail:(TIMFail)fail;
+
+
+/**
+ *  用户自己的id
+ */
+@property(nonatomic,strong) NSString* selfIdentifier;
+
+@end
+
+/**
+ *  关系链变更详细信息
+ */
+@interface TIMSNSChangeInfo : NSObject
+
+/**
+ *  用户 identifier
+ */
+@property(nonatomic,strong) NSString * identifier;
+
+/**
+ *  用户昵称
+ */
+@property(nonatomic,strong) NSString * nickname;
+
+/**
+ *  申请添加时有效，添加理由
+ */
+@property(nonatomic,strong) NSString * wording;
+
+/**
+ *  申请时填写，添加来源
+ */
+@property(nonatomic,strong) NSString * source;
+
+
+/**
+ *  备注 type=TIM_SNS_SYSTEM_SNS_PROFILE_CHANGE 有效
+ */
+@property(nonatomic,strong) NSString * remark;
+
+@end
+
+/**
+ *  发送消息给多用户的失败回调信息
+ */
+@interface TIMSendToUsersDetailInfo : NSObject
+/**
+ *  发送消息成功的目标用户数
+ */
+@property(nonatomic,assign) uint32_t succCnt;
+/**
+ *  发送消息失败的目标用户数
+ */
+@property(nonatomic,assign) uint32_t failCnt;
+/**
+ *  失败信息（TIMSendToUsersErrInfo*）列表
+ */
+@property(nonatomic,strong) NSArray *errInofs;
+@end
+
+/**
+ *  发送消息给多用户的失败信息
+ */
+@interface TIMSendToUsersErrInfo : NSObject
+/**
+ *  发送消息失败的目标用户id
+ */
+@property(nonatomic,strong) NSString *identifier;
+/**
+ *  错误码
+ */
+@property(nonatomic,assign) int code;
+/**
+ *  错误描述
+ */
+@property(nonatomic,strong) NSString *err;
+@end
 #endif

@@ -1,10 +1,8 @@
-//
-//  TCommonContactCell.h
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/5.
-//
-
+/******************************************************************************
+ *
+ *  本文件声明了通用联系人单元，负责显示
+ *
+ ******************************************************************************/
 #import <UIKit/UIKit.h>
 #import "TCommonContactCellData.h"
 #import "TCommonCell.h"

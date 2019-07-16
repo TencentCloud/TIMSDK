@@ -30,7 +30,9 @@
     
     if (!self.viewModel) {
         self.viewModel = TUIBlackListViewModel.new;
+        @weakify(self)
         [RACObserve(self.viewModel, isLoadFinished) subscribeNext:^(id finished) {
+            @strongify(self)
             if ([(NSNumber *)finished boolValue])
                 [self.tableView reloadData];
         }];

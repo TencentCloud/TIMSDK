@@ -2,7 +2,7 @@
 //  TUIMessageController.m
 //  UIKit
 //
-//  Created by kennethmiao on 2018/9/18.
+//  Created by annidyfeng on 2019/7/1.
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
 
@@ -26,6 +26,8 @@
 #import "TUIFileViewController.h"
 #import "TUIConversationDataProviderService.h"
 #import "NSString+Common.h"
+#import "ReactiveObjC/ReactiveObjC.h"
+#import "MMLayout/UIView+MMLayout.h"
 @import ImSDK;
 
 #define MAX_MESSAGE_SEP_DLAY (5 * 60)
@@ -38,10 +40,11 @@
 @property (nonatomic, strong) TIMMessage *msgForGet;
 @property (nonatomic, strong) TUIMessageCellData *menuUIMsg;
 @property (nonatomic, strong) TUIMessageCellData *reSendUIMsg;
-@property (nonatomic, strong) UIActivityIndicatorView *headerView;
+@property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
 @property (nonatomic, assign) BOOL isScrollBottom;
 @property (nonatomic, assign) BOOL isLoadingMsg;
 @property (nonatomic, assign) BOOL noMoreMsg;
+@property (nonatomic, assign) BOOL firstLoad;
 @property id<TUIConversationDataProviderServiceProtocol> conversationDataProviderService;
 @end
 
@@ -98,12 +101,13 @@
     [self.tableView registerClass:[TUIFileMessageCell class] forCellReuseIdentifier:TFileMessageCell_ReuseId];
 
     
-    _headerView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, TMessageController_Header_Height)];
-    _headerView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    self.tableView.tableHeaderView = _headerView;
+    _indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, TMessageController_Header_Height)];
+    _indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    self.tableView.tableHeaderView = _indicatorView;
     
     _heightCache = [NSMutableArray array];
     _uiMsgs = [[NSMutableArray alloc] init];
+    _firstLoad = YES;
 }
 
 - (void)setConversation:(TIMConversation *)conversation
@@ -120,51 +124,46 @@
         return;
     }
     _isLoadingMsg = YES;
-
-    __weak typeof(self) ws = self;
     int msgCount = 20;
     
-    
+    @weakify(self)
     [self.conversationDataProviderService getMessage:self.conv count:msgCount last:_msgForGet succ:^(NSArray *msgs) {
+        @strongify(self)
         if(msgs.count != 0){
-            ws.msgForGet = msgs[msgs.count - 1];
+            self.msgForGet = msgs[msgs.count - 1];
         }
-        NSMutableArray *uiMsgs = [ws transUIMsgFromIMMsg:msgs];
+        NSMutableArray *uiMsgs = [self transUIMsgFromIMMsg:msgs];
         dispatch_async(dispatch_get_main_queue(), ^{
             if(msgs.count < msgCount){
-                ws.noMoreMsg = YES;
-                CGRect frame = ws.headerView.frame;
-                frame.size.height = 0;
-                ws.headerView.frame = frame;
+                self.noMoreMsg = YES;
+                self.indicatorView.mm_h = 0;
             }
             if(uiMsgs.count != 0){
-                BOOL firstLoad = YES;
-                if(ws.uiMsgs.count != 0){
-                    firstLoad = NO;
-                }
                 NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
-                [ws.uiMsgs insertObjects:uiMsgs atIndexes:indexSet];
-                [ws.heightCache removeAllObjects];
-                [ws.tableView reloadData];
-                [ws.tableView layoutIfNeeded];
-                if(!firstLoad){
+                [self.uiMsgs insertObjects:uiMsgs atIndexes:indexSet];
+                [self.heightCache removeAllObjects];
+                [self.tableView reloadData];
+                [self.tableView layoutIfNeeded];
+                if(!self.firstLoad){
                     CGFloat visibleHeight = 0;
                     for (NSInteger i = 0; i < uiMsgs.count; ++i) {
                         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                        visibleHeight += [ws tableView:ws.tableView heightForRowAtIndexPath:indexPath];
+                        visibleHeight += [self tableView:self.tableView heightForRowAtIndexPath:indexPath];
                     }
-                    if(ws.noMoreMsg){
+                    if(self.noMoreMsg){
                         visibleHeight -= TMessageController_Header_Height;
                     }
-                    [ws.tableView scrollRectToVisible:CGRectMake(0, ws.tableView.contentOffset.y + visibleHeight, ws.tableView.frame.size.width, ws.tableView.frame.size.height) animated:NO];
+                    [self.tableView scrollRectToVisible:CGRectMake(0, self.tableView.contentOffset.y + visibleHeight, self.tableView.frame.size.width, self.tableView.frame.size.height) animated:NO];
                 }
             }
-            ws.isLoadingMsg = NO;
-            [ws.headerView stopAnimating];
+            self.isLoadingMsg = NO;
+            [self.indicatorView stopAnimating];
+            self.firstLoad = NO;
         });
     } fail:^(int code, NSString *msg) {
-        ws.isLoadingMsg = NO;
-        NSLog(@"");
+        @strongify(self)
+        self.isLoadingMsg = NO;
+        [THelper makeToastError:code msg:msg];
     }];
 }
 
@@ -172,12 +171,11 @@
 {
     NSArray *msgs = notification.object;
     NSMutableArray *uiMsgs = [self transUIMsgFromIMMsg:msgs];
-    [_uiMsgs addObjectsFromArray:uiMsgs];
-    __weak typeof(self) ws = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [ws.tableView reloadData];
-        [ws scrollToBottom:YES];
-    });
+    if (uiMsgs.count > 0) {
+        [_uiMsgs addObjectsFromArray:uiMsgs];
+        [self.tableView reloadData];
+        [self scrollToBottom:YES];
+    }
 }
 
 - (void)onRevokeMessage:(NSNotification *)notification
@@ -188,9 +186,8 @@
         TIMMessage *imMsg = uiMsg.innerMessage;
         if(imMsg){
             if([imMsg respondsToLocator:locator]){
-                __weak typeof(self) ws = self;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [ws revokeMsg:uiMsg];
+                    [self revokeMsg:uiMsg];
                 });
                 break;
             }
@@ -268,8 +265,16 @@
             [uiMsgs addObject:dateMsg];
         }
         if(msg.status == TIM_MSG_STATUS_LOCAL_REVOKED){
-            TUISystemMessageCellData *revoke = [[TUISystemMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-            revoke.content = @"你撤回了一条消息";
+            TUISystemMessageCellData *revoke = [[TUISystemMessageCellData alloc] initWithDirection:(msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+            if(msg.isSelf){
+                revoke.content = @"你撤回了一条消息";
+            }
+            else if (self.conv.getType == TIM_C2C){
+                revoke.content = @"对方撤回了一条消息";
+            } else {
+                revoke.content = [NSString stringWithFormat:@"\"%@\"撤回了一条消息", msg.sender];
+            }
+            
             revoke.innerMessage = msg;
             [uiMsgs addObject:revoke];
             continue;
@@ -388,28 +393,31 @@
                     data = sysdata;
                 }
             }
-            if([[msg getConversation] getType] == TIM_GROUP && !msg.isSelf){
+            if([[msg getConversation] getType] == TIM_GROUP && !msg.isSelf
+               && ![data isKindOfClass:[TUISystemMessageCellData class]]){
                 data.showName = YES;
             }
-            if(data){
+            
+            if(data) {
                 data.direction = msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
                 data.identifier = [msg sender];
+                
+                NSString *nameCard;
                 if([[msg getConversation] getType] == TIM_GROUP){
-                    data.name = [msg getSenderGroupMemberProfile].nameCard;
+                    nameCard = [msg getSenderGroupMemberProfile].nameCard;
                 }
-                if(data.name.length == 0) {
-                    TIMUserProfile *profile = [msg getSenderProfile:^(TIMUserProfile *proflie) {
-                        //更新 profile
-                        if (proflie) {
-                            data.name = [proflie showName];
-                        }
-                    }];
-                    if (profile) {
+                
+                void (^block)(TIMUserProfile *) = ^(TIMUserProfile *profile)  {
+                    //更新 profile
+                    if (nameCard.length == 0)
                         data.name = [profile showName];
-                    } else {
-                        data.name = msg.sender;
-                    }
-                }
+                    if (profile.faceURL)
+                        data.avatarUrl = [NSURL URLWithString:[profile faceURL]];
+                };
+                
+                [msg getSenderProfile:block];
+                data.name = nameCard.length ? nameCard : msg.sender;
+                
                 switch (msg.status) {
                     case TIM_MSG_STATUS_SEND_SUCC:
                         data.status = Msg_Status_Succ;
@@ -537,10 +545,16 @@
         [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:0]]
                               withRowAnimation:UITableViewRowAnimationFade];
     } else {
+        [self.tableView endUpdates];
         NSLog(@"Unknown message state");
         return;
     }
+    TIMUserProfile *selfProfile = [[TIMFriendshipManager sharedInstance] querySelfProfile];
+    
     msg.status = Msg_Status_Sending;
+    msg.name = [selfProfile showName];
+    msg.avatarUrl = [NSURL URLWithString:selfProfile.faceURL];
+    
     if(dateMsg){
         _msgForDate = imMsg;
         [_uiMsgs addObject:dateMsg];
@@ -559,7 +573,9 @@
             [ws changeMsg:msg status:Msg_Status_Succ];
         });
     } fail:^(int code, NSString *desc) {
+        NSLog(@"====== %d",imMsg.status);
         dispatch_async(dispatch_get_main_queue(), ^{
+            [THelper makeToastError:code msg:desc];
             [ws changeMsg:msg status:Msg_Status_Fail];
         });
     }];
@@ -652,13 +668,13 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if(!_noMoreMsg && scrollView.contentOffset.y <= TMessageController_Header_Height){
-        if(!_headerView.isAnimating){
-            [_headerView startAnimating];
+        if(!_indicatorView.isAnimating){
+            [_indicatorView startAnimating];
         }
     }
     else{
-        if(_headerView.isAnimating){
-            [_headerView stopAnimating];
+        if(_indicatorView.isAnimating){
+            [_indicatorView stopAnimating];
         }
     }
 }
@@ -686,11 +702,17 @@
     if ([cell isKindOfClass:[TUIFileMessageCell class]]) {
         [self showFileMessage:(TUIFileMessageCell *)cell];
     }
+    if ([self.delegate respondsToSelector:@selector(messageController:onSelectMessageContent:)]) {
+        [self.delegate messageController:self onSelectMessageContent:cell];
+    }
 }
 
 - (void)onLongPressMessage:(TUIMessageCell *)cell
 {
     TUIMessageCellData *data = cell.messageData;
+    if ([data isKindOfClass:[TUISystemMessageCellData class]])
+        return; // 系统消息不响应
+    
     NSMutableArray *items = [NSMutableArray array];
     if ([data isKindOfClass:[TUITextMessageCellData class]]) {
         [items addObject:[[UIMenuItem alloc] initWithTitle:@"复制" action:@selector(onCopyMsg:)]];
@@ -831,7 +853,9 @@
     if(imMsg.isSelf){
         data.content = @"你撤回了一条消息";
     }
-    else{
+    else if (self.conv.getType == TIM_C2C){
+        data.content = @"对方撤回了一条消息";
+    } else {
         data.content = [NSString stringWithFormat:@"\"%@\"撤回了一条消息", imMsg.sender];
     }
     [_uiMsgs insertObject:data atIndex:index];

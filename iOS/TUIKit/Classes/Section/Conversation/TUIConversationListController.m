@@ -7,8 +7,6 @@
 
 #import "TUIConversationListController.h"
 #import "TUIConversationCell.h"
-#import "TPopView.h"
-#import "TPopCell.h"
 #import "THeader.h"
 #import "TUIKit.h"
 #import "TUILocalStorage.h"

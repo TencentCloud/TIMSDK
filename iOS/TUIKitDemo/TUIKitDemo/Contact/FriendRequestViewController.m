@@ -5,7 +5,11 @@
 //  Created by annidyfeng on 2019/4/18.
 //  Copyright © 2019年 kennethmiao. All rights reserved.
 //
-
+/** 腾讯云IM Demo 添加好友视图
+ *  本文件实现了添加好友时的视图，在您想要添加其他用户为好友时提供UI
+ *
+ *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ */
 #import "FriendRequestViewController.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "TUIProfileCardCell.h"
@@ -15,6 +19,8 @@
 #import <ReactiveObjC.h>
 #import "UIImage+TUIKIT.h"
 #import "TUIKit.h"
+#import "TCommonSwitchCell.h"
+#import "THelper.h"
 
 @interface FriendRequestViewController () <UITableViewDataSource, UITableViewDelegate>
 @property UITableView *tableView;
@@ -23,6 +29,7 @@
 @property UILabel *groupNameLabel;
 @property BOOL keyboardShown;
 @property TUIProfileCardCellData *cardCellData;
+@property TCommonSwitchCellData *singleSwitchData;
 @end
 
 @implementation FriendRequestViewController
@@ -30,6 +37,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //初始化视图内的组件
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     [self.view addSubview:self.tableView];
     self.tableView.frame = self.view.frame;
@@ -59,6 +67,11 @@
     data.avatarImage = DefaultAvatarImage;
     self.cardCellData = data;
     
+    
+    self.singleSwitchData = [TCommonSwitchCellData new];
+    self.singleSwitchData.title = @"单向好友";
+    
+    
     @weakify(self)
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIKeyboardWillShowNotification object:nil]
       filter:^BOOL(NSNotification *value) {
@@ -84,6 +97,9 @@
 }
 
 #pragma mark - Keyboard
+/**
+ *根据键盘的上浮与下沉，使组件一起浮动，保证视图不被键盘遮挡
+ */
 - (void)adjustContentOffsetDuringKeyboardAppear:(BOOL)appear withNotification:(NSNotification *)notification {
     NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     UIViewAnimationCurve curve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
@@ -109,15 +125,12 @@
     if (indexPath.section == 1) {
         return 120;
     }
-    if (indexPath.section == 2) {
-        return 44;
-    }
-    return 0.;
+    return 44;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 {
-    return 3;
+    return 4;
 }
 
 - (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -137,6 +150,9 @@
     return 1;
 }
 
+/**
+ *初始化tableView的信息单元
+ */
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
@@ -167,6 +183,11 @@
             return cell;
         }
     }
+    if (indexPath.section == 3) {
+        TCommonSwitchCell *cell = [[TCommonSwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SwitchCell"];
+        [cell fillWithData:self.singleSwitchData];
+        return cell;
+    }
     
     return nil;
 }
@@ -176,6 +197,9 @@
     return NO;
 }
 
+/**
+ *发送好友请求，包含请求后的回调
+ */
 - (void)onSend
 {
     [self.view endEditing:YES];
@@ -188,16 +212,22 @@
     req.group = self.groupNameLabel.text;
     req.identifier = self.profile.identifier;
     req.addSource = @"iOS";
+    if (self.singleSwitchData.on) {
+        req.addType = TIM_FRIEND_ADD_TYPE_SINGLE;
+    } else {
+        req.addType = TIM_FRIEND_ADD_TYPE_BOTH;
+    }
     [[TIMFriendshipManager sharedInstance] addFriend:req succ:^(TIMFriendResult *result) {
         NSString *msg = [NSString stringWithFormat:@"%ld", (long)result.result_code];
+        //根据回调类型向用户展示添加结果
         if (result.result_code == TIM_ADD_FRIEND_STATUS_PENDING) {
-            msg = @"发送成功";
+            msg = @"发送成功,等待审核同意";
         }
         if (result.result_code == TIM_ADD_FRIEND_STATUS_FRIEND_SIDE_FORBID_ADD) {
             msg = @"对方禁止添加";
         }
         if (result.result_code == 0) {
-            msg = @"添加成功";
+            msg = @"已添加到好友列表";
         }
         if (result.result_code == TIM_FRIEND_PARAM_INVALID) {
             msg = @"好友已存在";
@@ -210,9 +240,7 @@
         
     } fail:^(int code, NSString *msg) {
         [self.view hideToastActivity];
-        [self.view makeToast:msg
-                    duration:3.0
-                    position:CSToastPositionBottom];
+        [THelper makeToastError:code msg:msg];
     }];
 }
 

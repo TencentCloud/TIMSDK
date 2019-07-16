@@ -34,7 +34,7 @@
     if ([TUIKit sharedInstance].netStatus == TNet_Status_ConnFailed || [TUIKit sharedInstance].netStatus == TNet_Status_Disconnect) {
         return [conv getLocalMessage:count last:last succ:succ fail:fail];
     }
-    return [conv getMessage:count last:last succ:succ fail:fail];
+    return [conv getLocalMessage:count last:last succ:succ fail:fail];
 }
 
 @end

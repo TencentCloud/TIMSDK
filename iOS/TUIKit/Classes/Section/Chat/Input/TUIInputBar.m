@@ -7,7 +7,7 @@
 //
 
 #import "TUIInputBar.h"
-#import "TRecordView.h"
+#import "TUIRecordView.h"
 #import "THeader.h"
 #import "THelper.h"
 #import "TUIKit.h"
@@ -16,7 +16,7 @@
 #import "MMLayout/UIView+MMLayout.h"
 
 @interface TUIInputBar() <UITextViewDelegate, AVAudioRecorderDelegate>
-@property (nonatomic, strong) TRecordView *record;
+@property (nonatomic, strong) TUIRecordView *record;
 @property (nonatomic, strong) NSDate *recordStartTime;
 @property (nonatomic, strong) AVAudioRecorder *recorder;
 @property (nonatomic, strong) NSTimer *recordTimer;
@@ -190,8 +190,26 @@
 
 - (void)recordBtnDown:(UIButton *)sender
 {
+    if (AVAudioSession.sharedInstance.recordPermission == AVAudioSessionRecordPermissionDenied) {
+        [AVAudioSession.sharedInstance requestRecordPermission:^(BOOL granted) {
+            if (!granted) {
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"无法访问麦克风" message:@"开启麦克风权限才能发送语音消息" preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:@"以后再说" style:UIAlertActionStyleCancel handler:nil]];
+                [ac addAction:[UIAlertAction actionWithTitle:@"去开启" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    UIApplication *app = [UIApplication sharedApplication];
+                    NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                    if ([app canOpenURL:settingsURL]) {
+                        [app openURL:settingsURL];
+                    }
+                }]];
+                [self.mm_viewController presentViewController:ac animated:YES completion:nil];
+            }
+        }];
+        return;
+    }
+    
     if(!_record){
-        _record = [[TRecordView alloc] init];
+        _record = [[TUIRecordView alloc] init];
         _record.frame = [UIScreen mainScreen].bounds;
     }
     [self.window addSubview:_record];
@@ -223,8 +241,10 @@
     else{
         [_record removeFromSuperview];
         NSString *path = [self stopRecord];
-        if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendVoice:)]){
-            [_delegate inputBar:self didSendVoice:path];
+        if (path) {
+            if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendVoice:)]){
+                [_delegate inputBar:self didSendVoice:path];
+            }
         }
     }
 }
@@ -395,6 +415,7 @@
     if([_recorder isRecording]){
         [_recorder stop];
     }
+    _record = nil;
     NSString *wavPath = _recorder.url.path;
     NSString *amrpath = [[wavPath stringByDeletingPathExtension] stringByAppendingString:@".amr"];
     [THelper convertWav:wavPath toAmr:amrpath];

@@ -27,6 +27,7 @@
     }
     
     _identifier = args.identifier;
+    _avatarUrl = [NSURL URLWithString:args.profile.faceURL];
     _friendProfile = args;
     
     return self;

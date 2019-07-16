@@ -13,32 +13,397 @@
 #import <Foundation/Foundation.h>
 
 #import "TIMComm.h"
+#import "TIMComm+MsgExt.h"
 #import "TIMCallback.h"
 
+@class TIMElem;
 @class TIMUserProfile;
 @class TIMGroupMemberInfo;
 @class TIMConversation;
 @class TIMSnapshot;
+@class TIMOfflinePushInfo;
 
+#pragma mark 一，消息封装
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （一）消息基类
+//                      （一）消息封装
 //
 /////////////////////////////////////////////////////////////////////////////////
-/// @name 消息基类
+/// @name 消息封装
+/// @{
+
+/**
+ TIMMessage 由多个 TIMElem 组成，每个 TIMElem 可以是文本和图片，也就是说每一条消息可包含多个文本和多张图片。详情请参考官网文档 [消息收发](https://cloud.tencent.com/document/product/269/9150)
+ */
+@interface TIMMessage : NSObject
+
+/**
+ *  1.1 增加 Elem
+ *
+ *  @param elem elem 结构
+ *
+ *  @return 0：表示成功；1：禁止添加 Elem（文件或语音多于两个 Elem）；2：未知 Elem
+ */
+- (int)addElem:(TIMElem*)elem;
+
+/**
+ *  1.2 获取对应索引的 Elem
+ *
+ *  @param index 对应索引
+ *
+ *  @return 返回对应 Elem
+ */
+- (TIMElem*)getElem:(int)index;
+
+/**
+ *  1.3 获取 Elem 数量
+ *
+ *  @return elem数量
+ */
+- (int)elemCount;
+
+/**
+ *  1.4 设置业务命令字
+ *
+ *  @param buzCmds 业务命令字列表
+ *                 @"im_open_busi_cmd.msg_robot"：表示发送给IM机器人；
+ *                 @"im_open_busi_cmd.msg_nodb"：表示不存离线；
+ *                 @"im_open_busi_cmd.msg_noramble"：表示不存漫游；
+ *                 @"im_open_busi_cmd.msg_nopush"：表示不实时下发给用户
+ *
+ *  @return 0：成功；1：buzCmds 为 nil
+ */
+-(int)setBusinessCmd:(NSArray*)buzCmds;
+
+/**
+ *  1.5 消息状态
+ *
+ *  @return TIMMessageStatus 消息状态
+ */
+- (TIMMessageStatus)status;
+
+/**
+ *  1.6 是否发送方
+ *
+ *  @return TRUE：表示是发送消息；FALSE：表示是接收消息
+ */
+- (BOOL)isSelf;
+
+/**
+ *  1.7 获取消息的发送方
+ *
+ *  @return 发送方 identifier
+ */
+- (NSString*)sender;
+
+/**
+ *  1.8 消息 ID
+ *
+ *  1. 当消息生成时，就已经固定，这种方式可能跟其他用户产生的消息冲突，需要再加一个时间约束，可以认为 10 分钟以内的消息可以使用 msgId 区分，需要在同一个会话内判断。
+ *  2. 对于发送成功的消息或则从服务器接收到的消息，请使用 uniqueId 判断消息的全局唯一。
+ *
+ *  @return msgId
+ *
+ */
+- (NSString*)msgId;
+
+/**
+ *  1.9 消息 uniqueId
+ *
+ *  对于发送成功的消息或则从服务器接收到的消息，uniqueId 能保证全局唯一，需要在同一个会话内判断。
+ *
+ *  @return uniqueId
+ */
+- (uint64_t)uniqueId;
+
+/**
+ *  1.10 当前消息的时间戳
+ *
+ *  当消息还没发送成功，此时间为根据 Server 时间校准过的本地时间，发送成功后会改为准确的 Server 时间
+ *
+ *  @return 时间戳
+ */
+- (NSDate*)timestamp;
+
+/**
+ *  1.11 自己是否已读
+ *
+ *  @return TRUE：已读；FALSE：未读
+ */
+- (BOOL)isReaded;
+
+/**
+ *  1.12 对方是否已读（仅 C2C 消息有效）
+ *
+ *  @return TRUE：已读；FALSE：未读
+ */
+- (BOOL)isPeerReaded;
+
+/**
+ *  1.13 消息定位符
+ *
+ *  如果是自己创建的 TIMMessage，需要等到消息发送成功后才能获取到 TIMMessageLocator 里面的具体信息
+ *
+ *  @return locator，详情请参考 TIMComm.h 里面的 TIMMessageLocator 定义
+ */
+- (TIMMessageLocator*)locator;
+
+/**
+ *  1.14 是否为 locator 对应的消息
+ *
+ *  @param locator 消息定位符
+ *
+ *  @return YES 是对应的消息
+ */
+- (BOOL)respondsToLocator:(TIMMessageLocator*)locator;
+
+/**
+ *  1.15 删除消息
+ *
+ *  目前暂不支持 Server 消息删除，只能在本地删除。删除后使用 getMessage 拉取本地消息，不会返回被删除的消息。
+ *
+ *  @return TRUE：成功；FALSE：失败
+ */
+- (BOOL)remove;
+
+/**
+ *  1.16 获取会话
+ *
+ *  @return 该消息所对应会话
+ */
+- (TIMConversation*)getConversation;
+
+
+/**
+ *  1.17 获取发送者资料
+ *
+ *  如果本地有发送者资料，会在 profileCallBack 回调里面立即同步返回发送者资料，如果本地没有发送者资料，SDK 内部会先向服务器拉取发送者资料，并在 profileCallBack 回调里面异步返回发送者资料。
+ *
+ *  @param  profileCallBack 发送者资料回调
+ *
+ */
+- (void)getSenderProfile:(ProfileCallBack)profileCallBack;
+
+/**
+ *  1.18 获取发送者群内资料
+ *
+ *  目前仅能获取字段：member，nameCard，其他的字段获取建议通过 TIMGroupManager+Ext.h -> getGroupMembers 获取
+ *
+ *  @return 发送者群内资料，nil 表示没有获取到资料或者不是群消息
+ */
+- (TIMGroupMemberInfo*)getSenderGroupMemberProfile;
+
+/**
+ *  1.19 设置消息的优先级（仅对群组消息有效）
+ *
+ *  对于直播场景，会有点赞和发红包功能，点赞相对优先级较低，红包消息优先级较高，具体消息内容可以使用 TIMCustomElem 进行定义，发送消息时，可设置消息优先级。
+ *
+ *  @param priority 优先级
+ *
+ *  @return TRUE 设置成功
+ */
+- (BOOL)setPriority:(TIMMessagePriority)priority;
+
+/**
+ *  1.20 获取消息的优先级（仅对群组消息有效）
+ *
+ *  @return 优先级
+ */
+- (TIMMessagePriority)getPriority;
+
+/**
+ *  1.21 设置消息离线推送配置
+ *
+ *  @param info 配置信息
+ *
+ *  @return 0 成功
+ */
+- (int)setOfflinePushInfo:(TIMOfflinePushInfo*)info;
+
+/**
+ *  1.22 获取消息离线推送配置
+ *
+ *  @return 配置信息，没设置返回 nil
+ */
+- (TIMOfflinePushInfo*)getOfflinePushInfo;
+
+/**
+ *  设置自定义整数，默认为 0
+ *
+ *  1.此自定义字段仅存储于本地，不会同步到 Server，用户卸载应用或则更换终端后无法获取。
+ *  2.可以根据这个字段设置语音消息是否已经播放，如 customInt 的值 0 表示未播放，1 表示播放，当用户单击播放后可设置 customInt 的值为 1。
+ *
+ *  @param param 设置参数
+ *
+ *  @return TRUE：设置成功；FALSE:设置失败
+ */
+- (BOOL)setCustomInt:(int32_t)param;
+
+/**
+ *  获取 CustomInt
+ *
+ *  @return CustomInt
+ */
+- (int32_t)customInt;
+
+/**
+ *  设置自定义数据，默认为""
+ *
+ *  此自定义字段仅存储于本地，不会同步到 Server，用户卸载应用或则更换终端后无法获取。
+ *
+ *  @param data 设置参数
+ *
+ *  @return TRUE：设置成功；FALSE:设置失败
+ */
+- (BOOL)setCustomData:(NSData*)data;
+
+/**
+ *  获取 CustomData
+ *
+ *  @return CustomData
+ */
+- (NSData*)customData;
+
+/**
+ *  拷贝消息中的属性（ELem、priority、online、offlinePushInfo）
+ *
+ *  @param srcMsg 源消息
+ *
+ *  @return 0 成功
+ */
+- (int)copyFrom:(TIMMessage*)srcMsg;
+
+/**
+ *  将消息导入到本地
+ *
+ *  只有调用这个接口，才能去修改消息的时间戳和发送方
+ *
+ *  @return 0：成功；1：失败
+ */
+- (int)convertToImportedMsg;
+
+/**
+ *  设置消息时间戳
+ *
+ *  需要先将消息到导入到本地，调用 convertToImportedMsg 方法
+ *
+ *  @param time 时间戳
+ *
+ *  @return 0：成功；1：失败
+ */
+- (int)setTime:(time_t)time;
+
+/**
+ *  设置消息发送方
+ *
+ *  需要先将消息到导入到本地，调用 convertToImportedMsg 方法
+ *
+ *  @param sender 发送方 identifier
+ *
+ *  @return 0：成功；1：失败
+ */
+- (int)setSender:(NSString*)sender;
+
+@end
+
+/// @}
+
+#pragma mark 二，草稿箱
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                      （二）草稿箱
+//
+/////////////////////////////////////////////////////////////////////////////////
+/// @name 草稿箱
+/// @{
+
+@interface TIMMessageDraft : NSObject
+
+/**
+ *  2.1 设置自定义数据
+ *
+ *  @param userData 自定义数据
+ *
+ *  @return 0：成功；1：失败
+ */
+- (int)setUserData:(NSData*)userData;
+
+/**
+ *  2.2 获取自定义数据
+ *
+ *  @return 自定义数据
+ */
+- (NSData*)getUserData;
+
+/**
+ *  2.3 增加Elem
+ *
+ *  @param elem elem结构
+ *
+ *  @return 0：表示成功；1：禁止添加Elem（文件或语音多于两个Elem)；2：未知Elem
+ *
+ */
+- (int)addElem:(TIMElem*)elem;
+
+/**
+ *  2.4 获取对应索引的 Elem
+ *
+ *  @param index 对应索引
+ *
+ *  @return 返回对应 Elem
+ */
+- (TIMElem*)getElem:(int)index;
+
+/**
+ *  2.5 获取Elem数量
+ *
+ *  @return elem数量
+ */
+- (int)elemCount;
+
+/**
+ *  2.6 草稿生成对应的消息
+ *
+ *  @return 消息，详情请参考 TIMMessage 定义
+ */
+- (TIMMessage*)transformToMessage;
+
+/**
+ *  2.7 获取当前消息的时间戳
+ *
+ *  @return 时间戳
+ */
+- (NSDate*)timestamp;
+
+/// @}
+
+@end
+#pragma mark 三，消息 Elem 基类
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                      （三）消息 Elem 基类
+//
+/////////////////////////////////////////////////////////////////////////////////
+/// @name 消息 Elem 基类
+/// @{
+
 /**
  *  消息 Elem 基类
  */
 @interface TIMElem : NSObject
 @end
+
 /// @}
 
+#pragma mark 四，文本消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （二）文本消息
+//                      （四）文本消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
-/// @name 文本消息
+/// @name 文本消息 Elem
+/// @{
+
 /**
  *  文本消息 Elem
  */
@@ -48,14 +413,18 @@
  */
 @property(nonatomic,strong) NSString * text;
 @end
+
 /// @}
 
+#pragma mark 五，图片消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （三）图片消息
+//                      （五）图片消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
-/// @name 图片消息
+/// @name 图片消息 Elem
+/// @{
+
 /**
  *  图片
  */
@@ -144,12 +513,15 @@
 
 /// @}
 
+#pragma mark 六，语音消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （四）语音消息
+//                      （六）语音消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
-/// @name 语音消息
+/// @name 语音消息 Elem
+/// @{
+
 /**
  *  语音消息Elem
  *
@@ -180,6 +552,13 @@
 @property(nonatomic,assign) int second;
 
 /**
+ *  获取语音的 URL 下载地址
+ *
+ *  @param urlCallBack 获取 URL 地址回调
+ */
+-(void)getUrl:(void (^)(NSString * url))urlCallBack;
+
+/**
  *  获取语音数据到指定路径的文件中
  *
  *  getSound 接口每次都会从服务端下载，如需缓存或者存储，开发者可根据 uuid 作为 key 进行外部存储，ImSDK 并不会存储资源文件。
@@ -206,12 +585,15 @@
 
 /// @}
 
+#pragma mark 七，视频消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （五）视频消息
+//                      （七）视频消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
-/// @name 视频消息
+/// @name 视频消息 Elem
+/// @{
+
 /**
  *  视频
  */
@@ -232,6 +614,13 @@
  *  视频时长，发送消息时设置
  */
 @property(nonatomic,assign) int duration;
+
+/**
+ *  获取视频的 URL 下载地址
+ *
+ *  @param urlCallBack 获取 URL 地址回调
+ */
+-(void)getUrl:(void (^)(NSString * url))urlCallBack;
 
 /**
  *  获取视频
@@ -291,12 +680,15 @@
 
 /// @}
 
+#pragma mark 八，文件消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （六）文件消息
+//                      （八）文件消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// @name 文件消息
+/// @{
+
 /**
  *  文件消息Elem
  */
@@ -321,6 +713,13 @@
  *  文件显示名，发消息时设置
  */
 @property(nonatomic,strong) NSString * filename;
+
+/**
+ *  获取文件的 URL 下载地址
+ *
+ *  @param urlCallBack 获取 URL 地址回调
+ */
+-(void)getUrl:(void (^)(NSString * url))urlCallBack;
 
 /**
  *  获取文件数据到指定路径的文件中
@@ -349,11 +748,15 @@
 
 /// @}
 
+#pragma mark 九，表情消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （七）表情消息
+//                      （九）表情消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
+/// @name 表情消息 Elem
+/// @{
+
 /**
  *  表情消息类型
  *
@@ -374,11 +777,17 @@
 
 @end
 
+/// @}
+
+#pragma mark 十，地理位置消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （八）地理位置消息
+//                      （十）地理位置消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
+/// @name 地理位置消息 Elem
+/// @{
+
 /**
  *  地理位置Elem
  */
@@ -397,11 +806,17 @@
 @property(nonatomic,assign) double longitude;
 @end
 
+/// @}
+
+#pragma mark 十一，截图消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （九）截图消息
+//                      （十一）截图消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
+/// @name 截图消息 Elem
+/// @{
+
 /**
  *  截图消息 Elem
  */
@@ -428,6 +843,13 @@
 @property(nonatomic,assign) int height;
 
 /**
+ *  获取截图的 URL 下载地址
+ *
+ *  @param urlCallBack 获取 URL 地址回调
+ */
+-(void)getUrl:(void (^)(NSString * url))urlCallBack;
+
+/**
  *  获取图片
  *
  *  getImage 接口每次都会从服务端下载，如需缓存或者存储，开发者可根据 uuid 作为 key 进行外部存储，ImSDK 并不会存储资源文件。
@@ -452,11 +874,17 @@
 
 @end
 
+/// @}
+
+#pragma mark 十二，自定义消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （十）自定义消息
+//                      （十二）自定义消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
+/// @name 自定义消息 Elem
+/// @{
+
 /**
  *  自定义消息类型
  *
@@ -483,11 +911,16 @@
 @property(nonatomic,strong) NSString * sound DEPRECATED_ATTRIBUTE;
 @end
 
+/// @}
+
+#pragma mark 十三，群 Tips 消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （十一）群 Tips 消息
+//                      （十三）群 Tips 消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
+/// @name 群 Tips 消息 Elem
+/// @{
 
 /**
  *  群tips，成员变更信息
@@ -554,12 +987,12 @@
 /**
  *  群信息变更： TIM_GROUP_TIPS_TYPE_INFO_CHANGE 时有效，为 TIMGroupTipsElemGroupInfo 结构体列表
  */
-@property(nonatomic,strong) NSArray * groupChangeList;
+@property(nonatomic,strong) NSArray<TIMGroupTipsElemGroupInfo *> * groupChangeList;
 
 /**
  *  成员变更： TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE 时有效，为 TIMGroupTipsElemMemberInfo 结构体列表
  */
-@property(nonatomic,strong) NSArray * memberChangeList;
+@property(nonatomic,strong) NSArray<TIMGroupTipsElemMemberInfo *> * memberChangeList;
 
 /**
  *  操作者用户资料
@@ -572,11 +1005,11 @@
 /**
  *  变更成员资料
  */
-@property(nonatomic,strong) NSDictionary * changedUserInfo;
+@property(nonatomic,strong) NSDictionary<NSString *,TIMUserProfile *> * changedUserInfo;
 /**
  *  变更成员群内资料
  */
-@property(nonatomic,strong) NSDictionary * changedGroupMemberInfo;
+@property(nonatomic,strong) NSDictionary<NSString *,TIMGroupMemberInfo *> * changedGroupMemberInfo;
 
 /**
  *  当前群人数： TIM_GROUP_TIPS_TYPE_INVITE、TIM_GROUP_TIPS_TYPE_QUIT_GRP、
@@ -593,11 +1026,17 @@
 
 @end
 
+/// @}
+
+#pragma mark 十四，群系统消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （十二）群系统消息
+//                      （十四）群系统消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
+/// @name 群系统消息 Elem
+/// @{
+
 /**
  *  群系统消息
  */
@@ -656,197 +1095,76 @@
 
 @end
 
+/// @}
 
+#pragma mark 十五，关系链变更消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （十三）设置消息推送
+//                      （十五）关系链变更消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
-/**
- 填入 sound 字段表示接收时不会播放声音
- */
-extern NSString * const kIOSOfflinePushNoSound;
+/// @name 关系链变更消息
+/// @{
 
-@interface TIMOfflinePushInfo : NSObject
+@interface TIMSNSSystemElem : TIMElem
+
 /**
- *  自定义消息描述信息，做离线Push时文本展示
+ * 操作类型
  */
-@property(nonatomic,strong) NSString * desc;
+@property(nonatomic,assign) TIM_SNS_SYSTEM_TYPE type;
+
 /**
- *  离线 Push 时扩展字段信息
+ * 被操作用户列表：TIMSNSChangeInfo 列表
  */
-@property(nonatomic,strong) NSString * ext;
+@property(nonatomic,strong) NSArray * users;
+
 /**
- *  推送规则标志
+ * 未决已读上报时间戳 type = TIM_SNS_SYSTEM_PENDENCY_REPORT 有效
  */
-@property(nonatomic,assign) TIMOfflinePushFlag pushFlag;
+@property(nonatomic,assign) uint64_t pendencyReportTimestamp;
+
 /**
- *  iOS离线推送配置
+ * 推荐已读上报时间戳 type = TIM_SNS_SYSTEM_RECOMMEND_REPORT 有效
  */
-@property(nonatomic,strong) TIMIOSOfflinePushConfig * iosConfig;
+@property(nonatomic,assign) uint64_t recommendReportTimestamp;
+
 /**
- *  Android离线推送配置
+ * 已决已读上报时间戳 type = TIM_SNS_SYSTEM_DECIDE_REPORT 有效
  */
-@property(nonatomic,strong) TIMAndroidOfflinePushConfig * androidConfig;
+@property(nonatomic,assign) uint64_t decideReportTimestamp;
+
 @end
 
+/// @}
 
+#pragma mark 十六，资料变更消息 Elem
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                      （十四）消息封装
+//                      （十六）资料变更消息 Elem
 //
 /////////////////////////////////////////////////////////////////////////////////
-/**
- *  消息
- */
-@interface TIMMessage : NSObject
+/// @name 资料变更消息 Elem
+/// @{
+
+@interface TIMProfileSystemElem : TIMElem
 
 /**
- *  增加 Elem
- *
- *  @param elem elem 结构
- *
- *  @return 0：表示成功；1：禁止添加 Elem（文件或语音多于两个 Elem）；2：未知 Elem
+ *  变更类型
  */
-- (int)addElem:(TIMElem*)elem;
+@property(nonatomic,assign) TIM_PROFILE_SYSTEM_TYPE type;
 
 /**
- *  获取对应索引的 Elem
- *
- *  @param index 对应索引
- *
- *  @return 返回对应 Elem
+ *  资料变更的用户
  */
-- (TIMElem*)getElem:(int)index;
+@property(nonatomic,strong) NSString * fromUser;
 
 /**
- *  获取 Elem 数量
- *
- *  @return elem数量
+ *  资料变更的昵称（暂未实现）
  */
-- (int)elemCount;
-
-/**
- *  设置离线推送配置信息
- *
- *  @param info 配置信息
- *
- *  @return 0 成功
- */
-- (int)setOfflinePushInfo:(TIMOfflinePushInfo*)info;
-
-/**
- *  获得本消息离线推送配置信息
- *
- *  @return 配置信息，没设置返回 nil
- */
-- (TIMOfflinePushInfo*)getOfflinePushInfo;
-
-/**
- *  设置业务命令字
- *
- *  @param buzCmds 业务命令字列表
- *                 @"im_open_busi_cmd.msg_robot"：表示发送给IM机器人；
- *                 @"im_open_busi_cmd.msg_nodb"：表示不存离线；
- *                 @"im_open_busi_cmd.msg_noramble"：表示不存漫游；
- *                 @"im_open_busi_cmd.msg_nopush"：表示不实时下发给用户
- *
- *  @return 0：成功；1：buzCmds 为 nil
- */
--(int)setBusinessCmd:(NSArray*)buzCmds;
-
-/**
- *  获取会话
- *
- *  @return 该消息所对应会话
- */
-- (TIMConversation*)getConversation;
-
-/**
- *  消息状态
- *
- *  @return TIMMessageStatus 消息状态
- */
-- (TIMMessageStatus)status;
-
-/**
- *  是否发送方
- *
- *  @return TRUE：表示是发送消息；FALSE：表示是接收消息
- */
-- (BOOL)isSelf;
-
-/**
- *  获取发送方
- *
- *  @return 发送方标识
- */
-- (NSString*)sender;
-
-/**
- *  消息 ID，当消息生成时，就已经固定，这种方式可能跟其他用户产生的消息冲突，需要再加一个时间约束，可以认为 10 分钟以内的消息可以使用 msgId 区分，需要在同一个会话内判断。
- */
-- (NSString*)msgId;
-
-/**
- *  消息 uniqueId，当消息发送成功以后才能固定下来（uniqueId），这种方式能保证全局唯一，需要在同一个会话内判断。
- *
- *  @return uniqueId
- */
-- (uint64_t)uniqueId;
-
-/**
- *  当前消息的时间戳
- *
- *  @return 时间戳，该时间是 Server 时间，而非本地时间。在创建消息时，此时间为根据 Server 时间校准过的时间，发送成功后会改为准确的 Server 时间。
- */
-- (NSDate*)timestamp;
-
-/**
- *  获取发送者资料
- *
- *  如果本地有发送者资料，这里会直接通过 return 值 TIMUserProfile 返回发送者资料，如果本地没有发送者资料，这里会直接 return nil,SDK 内部会向服务器拉取发送者资料，并在 profileCallBack 回调里面返回发送者资料。
- *
- *  @param  profileCallBack 发送者资料回调
- *
- *  @return 发送者资料，nil 表示本地没有获取到资料
- */
-- (TIMUserProfile*)getSenderProfile:(ProfileCallBack)profileCallBack;
-
-/**
- *  获取发送者群内资料（发送者为自己时可能为空）
- *
- *  @return 发送者群内资料，nil 表示没有获取资料或者不是群消息，目前仅能获取字段：member，nameCard，其他的字段获取建议通过 TIMGroupManager+Ext.h -> getGroupMembers 获取
- */
-- (TIMGroupMemberInfo*)getSenderGroupMemberProfile;
-
-/**
- *  设置消息的优先级
- *
- *  @param priority 优先级
- *
- *  @return TRUE 设置成功
- */
-- (BOOL)setPriority:(TIMMessagePriority)priority;
-
-/**
- *  获取消息的优先级（仅对群组消息有效）
- *
- *  对于直播场景，会有点赞和发红包功能，点赞相对优先级较低，红包消息优先级较高，具体消息内容可以使用 TIMCustomElem 进行定义，发送消息时，可设置消息优先级。
- *
- *  @return 优先级
- */
-- (TIMMessagePriority)getPriority;
-
-/**
- *  拷贝消息中的属性（ELem、priority、online、offlinePushInfo）
- *
- *  @param srcMsg 源消息
- *
- *  @return 0 成功
- */
-- (int)copyFrom:(TIMMessage*)srcMsg;
+@property(nonatomic,strong) NSString * nickName;
 
 @end
+
+/// @}
 
 #endif

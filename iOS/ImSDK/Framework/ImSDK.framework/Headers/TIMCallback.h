@@ -37,7 +37,7 @@
 - (void)onConnFailed:(int)code err:(NSString*)err;
 
 /**
- *  网络连接断开（断线只是通知用户，不需要重新登陆，重连以后会自动上线）
+ *  网络连接断开（断线只是通知用户，不需要重新登录，重连以后会自动上线）
  *
  *  @param code 错误码
  *  @param err  错误描述
@@ -85,11 +85,19 @@
 - (void)onRefresh;
 
 /**
- *  刷新部分会话（包括多终端已读上报同步）
+ *  刷新部分会话
  *
  *  @param conversations 会话（TIMConversation*）列表
  */
-- (void)onRefreshConversations:(NSArray*)conversations;
+- (void)onRefreshConversations:(NSArray<TIMConversation *>*)conversations;
+
+/**
+ *  刷新部分会话
+ *
+ *  @param conversations 会话（TIMConversation*）列表
+ *  @param reason 会话刷新原因，详情请参考 TIMConversationRefreshReason
+ */
+- (void)onRefreshConversations:(NSArray<TIMConversation *>*)conversations reason:(TIMConversationRefreshReason)reason;
 @end
 
 /**
@@ -141,7 +149,7 @@
 @end
 
 /**
- *  图片上传进度回调
+ *  上传进度回调
  */
 @protocol TIMUploadProgressListener <NSObject>
 @optional

@@ -5,7 +5,12 @@
 //  Created by wilderliao on 15/12/2.
 //  Copyright © 2015年 sofawang. All rights reserved.
 //
-
+/** 腾讯云IM Demo消息提醒设置视图
+ *  在用户需要自定义APP提醒模式时，向用户提供UI
+ *
+ *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ *
+ */
 #import "NotifySetupController.h"
 #import "TCommonSwitchCell.h"
 
@@ -144,6 +149,7 @@
     
     _configState.openPush = (config.openPush==1) ? YES : NO;
     
+    //根据当前配置文件名，修改App的通知模式
     if ([config.c2cSound isEqualToString:@"00.caf"] || config.c2cSound.length==0)
     {
         _configState.c2cOpenSound = NO;
@@ -205,6 +211,9 @@
     
 }
 
+/**
+ *  根据当前App设置，修改配置文件名
+ */
 - (NSString *)selectFileName:(BOOL)soundOn shakeSwitchOn:(BOOL)shakeOn
 {
     if (!soundOn && !shakeOn)
@@ -267,6 +276,9 @@
 }
 
 #pragma mark - tableview delegate
+/**
+ *  tableView委托函数
+ */
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {

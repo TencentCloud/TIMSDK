@@ -5,7 +5,11 @@
 //  Created by AlexiChen on 16/2/29.
 //  Copyright © 2016年 AlexiChen. All rights reserved.
 //
-
+/** 腾讯云IM Demo查找好友视图
+ *  本文件实现了查找好友的视图控制器，使用户能够根据用户ID查找指定用户
+ *
+ *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ */
 #import "SearchFriendViewController.h"
 #import "UIView+MMLayout.h"
 #import "TIMFriendshipManager.h"
@@ -37,6 +41,9 @@
     return self;
 }
 
+/**
+ *设置用户信息
+ */
 - (void)setProfile:(TIMUserProfile *)profile
 {
     _profile = profile;
@@ -112,6 +119,9 @@
     self.userView.mm_top(self.searchController.searchBar.mm_maxY).mm_height(44).mm_width(Screen_Width);
 }
 
+/**
+ *设置UI显示的安全区域，防止View被异性屏等遮挡
+ */
 - (CGFloat)safeAreaTopGap
 {
     NSNumber *gap;
@@ -132,7 +142,9 @@
     self.userView.profile = nil;
 }
 
-
+/**
+ *searchController中的内容每次更新，都会调用改函数进行一次当前内容的搜索
+ */
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSString *inputStr = searchController.searchBar.text ;
     NSLog(@"serach %@", inputStr);

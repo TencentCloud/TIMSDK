@@ -9,6 +9,7 @@
 #import "TIMUserProfile+DataProvider.h"
 #import "Toast/Toast.h"
 #import "THeader.h"
+#import "THelper.h"
 @import ImSDK;
 
 @interface TUIGroupPendencyCellData ()
@@ -45,27 +46,23 @@
 - (void)accept
 {
     [_pendencyItem accept:@"管理员同意申请" succ:^{
-        [[self toastView] makeToast:@"已发送"];
+        [THelper makeToast:@"已发送"];
         [[NSNotificationCenter defaultCenter] postNotificationName:TUIGroupPendencyCellData_onPendencyChanged object:nil];
     } fail:^(int code, NSString *msg) {
-        [[self toastView] makeToast:msg];
+        [THelper makeToastError:code msg:msg];
     }];
     self.isAccepted = YES;
 }
 - (void)reject
 {
     [_pendencyItem refuse:@"管理员拒绝申请" succ:^{
-        [[self toastView] makeToast:@"已发送"];
+        [THelper makeToast:@"已发送"];
         [[NSNotificationCenter defaultCenter] postNotificationName:TUIGroupPendencyCellData_onPendencyChanged object:nil];
     } fail:^(int code, NSString *msg) {
-        [[self toastView] makeToast:msg];
+        [THelper makeToastError:code msg:msg];
     }];
     self.isRejectd = YES;
 }
 
 
-- (UIView *)toastView
-{
-    return [UIApplication sharedApplication].keyWindow;
-}
 @end

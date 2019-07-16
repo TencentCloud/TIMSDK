@@ -216,10 +216,6 @@
 #define TAddCollectionCell_Margin 10
 #define TAddCollectionCell_Size CGSizeMake(33, 33)
 
-//add option cell
-#define TAddGroupOptionView_Margin 15
-#define TAddGroupOptionView_Height 55
-
 
 
 
@@ -230,39 +226,12 @@
 #define TAddCell_Select_Size CGSizeMake(25, 25)
 #define TAddCell_Head_Size CGSizeMake(38, 38)
 
-//add header
-#define TAddHeaderView_ReuseId @"TAddHeaderView"
-#define TAddHeaderView_Height 22
-#define TAddHeaderView_Margin 10
-
-//pick view
-#define TPickView_Background_Color RGBA(188, 188, 188, 0.5)
-#define TPickView_Line_Height 0.5
-#define TPickView_Line_Color RGBA(188, 188, 188, 0.6)
-#define TPickView_Margin 15
-#define TPickView_Button_Size CGSizeMake(40, 20)
-#define TPickView_Confirm_Color RGBA(44, 145, 247, 1.0)
-
-//select view
-#define TSelectView_ReuseId @"TSelectView"
-#define TSelectView_Background_Color RGBA(188, 188, 188, 0.5)
-#define TSelectView_Row_Heihgt 50
-#define TSelectView_Header_Background_Color RGBA(244, 244, 246, 1.0)
 
 //modify view
 #define TModifyView_Background_Color RGBA(188, 188, 188, 0.5)
 #define TModifyView_Line_Height_Width 0.5
 #define TModifyView_Line_Color RGBA(188, 188, 188, 0.6)
 #define TModifyView_Confirm_Color RGBA(44, 145, 247, 1.0)
-
-//alert view
-#define TAlertView_Background_Color RGBA(188, 188, 188, 0.5)
-#define TAlertView_Line_Height_Width 0.5
-#define TAlertView_Line_Color RGBA(188, 188, 188, 0.6)
-#define TAlertView_Confirm_Color RGBA(44, 145, 247, 1.0)
-
-//index view
-#define TAddIndexView_Width 30
 
 
 //record

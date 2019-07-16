@@ -49,6 +49,9 @@
     return config;
 }
 
+/**
+ *  初始化默认表情，并将配默认表情写入本地缓存，方便下一次快速加载
+ */
 - (void)defaultFace
 {
     NSMutableArray *faceGroups = [NSMutableArray array];
@@ -109,6 +112,9 @@
 
 
 #pragma mark - resource
+/**
+ *  将配默认配置写入本地缓存，方便下一次快速加载
+ */
 - (void)defaultResourceCache
 {
     //common

@@ -14,8 +14,11 @@ PODS:
   - AFNetworking/Serialization (3.2.1)
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
+  - FBRetainCycleDetector (0.1.4)
   - ISVImageScrollView (0.1.2)
   - MBProgressHUD (1.1.0)
+  - MLeaksFinder (1.0.0):
+    - FBRetainCycleDetector
   - MMLayout (0.2.0)
   - ReactiveObjC (3.1.1)
   - SDWebImage (5.0.4):
@@ -34,6 +37,7 @@ PODS:
 DEPENDENCIES:
   - AFNetworking
   - MBProgressHUD
+  - MLeaksFinder
   - MMLayout
   - ReactiveObjC
   - SDWebImage
@@ -43,8 +47,10 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
+    - FBRetainCycleDetector
     - ISVImageScrollView
     - MBProgressHUD
+    - MLeaksFinder
     - MMLayout
     - ReactiveObjC
     - SDWebImage
@@ -58,8 +64,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
   ISVImageScrollView: ba511d12a1661b40feb8921309c0854bf93ec749
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
+  MLeaksFinder: 8c435bd2f6d070af18cff082b503b21adc130fc0
   MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: c739016e4bdf0a4a1f9a04b5e0385395ad63a282
@@ -67,6 +75,6 @@ SPEC CHECKSUMS:
   TXIMSDK_iOS: 6641a71d741a1a1fb31b69419b2431d9aecdf12e
   TXIMSDK_TUIKit_iOS: 168d95421e6476e8994139f7e21401cc6b13fff7
 
-PODFILE CHECKSUM: f71b27950d8d118ec2a50961ce29aa9a8f093139
+PODFILE CHECKSUM: b0a31b41a941981f6b960198d8f688e42f097547
 
 COCOAPODS: 1.7.0.rc.2

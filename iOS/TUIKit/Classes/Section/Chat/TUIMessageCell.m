@@ -100,7 +100,7 @@
             [_indicator stopAnimating];
         }
         else if(data.status == Msg_Status_Sending){
-            
+             [_indicator stopAnimating];
         }
         self.retryView.image = nil;
     }

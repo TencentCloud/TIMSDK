@@ -22,4 +22,8 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (BOOL)convertWav:(NSString*)wavPath toAmr:(NSString*)amrPath;
 + (void)asyncDecodeImage:(NSString *)path complete:(TAsyncImageComplete)complete;
 + (void)makeToast:(NSString *)str;
++ (void)makeToastError:(NSInteger)error msg:(NSString *)msg;
++ (void)makeToastActivity;
++ (void)hideToastActivity;
++ (NSString *)randAvatarUrl;
 @end

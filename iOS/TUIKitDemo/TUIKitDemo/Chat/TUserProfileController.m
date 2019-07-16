@@ -5,6 +5,13 @@
 //  Created by annidyfeng on 2019/3/11.
 //  Copyright © 2019年 kennethmiao. All rights reserved.
 //
+/** 腾讯云IM Demo 用户信息视图
+ *  本文件实现了用户信息的视图，在您想要查看其他用户信息时提供UI
+ *  在这里，用户是指非好友身份的其他用户
+ *  好友信息视图请查看TUIKitDemo/Contact/TFriendProfileController
+ *
+ *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ */
 
 #import "TUserProfileController.h"
 #import "TUIProfileCardCell.h"
@@ -67,6 +74,9 @@
     [self loadData];
 }
 
+/**
+ * 加载视图信息
+ */
 - (void)loadData
 {
     NSMutableArray *list = @[].mutableCopy;
@@ -76,6 +86,7 @@
             TUIProfileCardCellData *personal = [[TUIProfileCardCellData alloc] init];
             personal.identifier = self.userProfile.identifier;
             personal.avatarImage = DefaultAvatarImage;
+            personal.avatarUrl = [NSURL URLWithString:self.userProfile.faceURL];
             personal.name = [self.userProfile showName];
             personal.signature = [self.userProfile showSignature];
             personal.reuseId = @"CardCell";
@@ -84,6 +95,7 @@
         inlist;
     })];
     
+    //当用户状态为请求添加好友/请求添加群组时，视图加载出验证消息模块
     if (self.pendency || self.groupPendency) {
         [list addObject:({
             NSMutableArray *inlist = @[].mutableCopy;
@@ -105,6 +117,7 @@
     
     self.dataList = list;
     
+    //当用户为陌生人时，在当前视图给出"加好友"按钮
     if (self.actionType == PCA_ADD_FRIEND) {
         TIMFriendCheckInfo *ck = TIMFriendCheckInfo.new;
         ck.users = @[self.userProfile.identifier];
@@ -134,6 +147,7 @@
         }];
     }
     
+    //当用户请求添加使用者为好友时，在当前视图给出"同意"、"拒绝"，使当前用户进行选择
     if (self.actionType == PCA_PENDENDY_CONFIRM) {
         [self.dataList addObject:({
             NSMutableArray *inlist = @[].mutableCopy;
@@ -157,6 +171,7 @@
         })];
     }
     
+    //当用户请求加入群组时，在当前视图给出"同意"、"拒绝"，使当前群组管理员进行选择
     if (self.actionType == PCA_GROUP_CONFIRM) {
         [self.dataList addObject:({
             NSMutableArray *inlist = @[].mutableCopy;
@@ -184,6 +199,9 @@
 }
 
 #pragma mark - Table view data source
+/**
+ *  tableView数据源函数
+ */
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.dataList.count;
@@ -209,6 +227,9 @@
 }
 
 
+/**
+ *  点击 发送信息 按钮后执行的函数
+ */
 - (void)onSendMessage
 {
     TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
@@ -220,6 +241,9 @@
     [self.navigationController pushViewController:chat animated:YES];
 }
 
+/**
+ *  点击 加好友 按钮后执行的函数
+ */
 - (void)onAddFriend
 {
     FriendRequestViewController *vc = [FriendRequestViewController new];
@@ -227,6 +251,9 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+/**
+ *  点击 同意(好友) 按钮后执行的函数
+ */
 - (void)onAgreeFriend
 {
     [self.pendency agree];

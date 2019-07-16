@@ -5,7 +5,13 @@
 //  Created by kennethmiao on 2018/10/10.
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
-
+/** 腾讯云IM Demo 聊天视图
+ *  本文件实现了聊天视图
+ *  在用户需要收发群组、以及其他用户消息时提供UI
+ *
+ *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ *
+ */
 #import "ChatViewController.h"
 #import "GroupInfoController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -17,6 +23,7 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "MyCustomCell.h"
+
 
 #define CUSTOM 0
 
@@ -36,7 +43,7 @@
     [self.view addSubview:_chat.view];
     
     
-    RAC(self, title) = RACObserve(_conversationData, title);
+    RAC(self, title) = [RACObserve(_conversationData, title) distinctUntilChanged];
     
 #if CUSTOM
     NSMutableArray *moreMenus = [NSMutableArray arrayWithArray:_chat.moreMenus];
@@ -50,6 +57,10 @@
 #endif
     //left
     [self setupNavigator];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onRefreshNotification:)
+                                                 name:TUIKitNotification_TIMRefreshListener
+                                               object:nil];
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent
@@ -59,11 +70,36 @@
     }
 }
 
+// 聊天窗口标题由上层维护，需要自行设置标题
+- (void)onRefreshNotification:(NSNotification *)notifi
+{
+    NSArray<TIMConversation *> *convs = notifi.object;
+    if ([convs isKindOfClass:[NSArray class]]) {
+        for (TIMConversation *conv in convs) {
+            if ([[conv getReceiver] isEqualToString:_conversationData.convId]) {
+                if (_conversationData.convType == TIM_GROUP) {
+                    _conversationData.title = [conv getGroupName];
+                } else if (_conversationData.convType == TIM_C2C) {
+                    TIMUserProfile *user = [[TIMFriendshipManager sharedInstance] queryUserProfile:_conversationData.convId];
+                    if (user) {
+                        _conversationData.title = [user showName];
+                    }
+                }
+            }
+        }
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)setupNavigator
 {
     //left    
     
-    //right
+    //right，根据当前聊天页类型设置右侧按钮格式
     UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [rightButton addTarget:self action:@selector(rightBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
     if(_conversationData.convType == TIM_C2C){
@@ -81,6 +117,7 @@
 
 - (void)rightBarButtonClick
 {
+    //当前为用户和用户之间通信时，右侧按钮响应为用户信息视图入口
     if (_conversationData.convType == TIM_C2C) {
         @weakify(self)
         [[TIMFriendshipManager sharedInstance] getFriendList:^(NSArray<TIMFriend *> *friends) {
@@ -109,7 +146,7 @@
         }];
         
 
-        
+    //当前为群组通信时，右侧按钮响应为群组信息入口
     } else {
         GroupInfoController *groupInfo = [[GroupInfoController alloc] init];
         groupInfo.groupId = _conversationData.convId;
@@ -158,5 +195,14 @@
     return nil;
 }
 
+- (void)chatController:(TUIChatController *)controller onSelectMessageContent:(TUIMessageCell *)cell
+{
+    
+}
 
+
+//- (void)chatController:(TUIChatController *)controller onSelectMessageAvatar:(TUIMessageCell *)cell
+//{
+//
+//}
 @end

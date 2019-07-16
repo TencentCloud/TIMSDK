@@ -10,6 +10,7 @@
 #import "EMVoiceConverter.h"
 #import "TUIKit.h"
 #import "Toast/Toast.h"
+#import "TUIError.h"
 @import ImSDK;
 
 @implementation THelper
@@ -154,5 +155,25 @@
 + (void)makeToast:(NSString *)str
 {
     [[UIApplication sharedApplication].keyWindow makeToast:str];
+}
+
++ (void)makeToastError:(NSInteger)error msg:(NSString *)msg
+{
+    [[UIApplication sharedApplication].keyWindow makeToast:[TUIError strError:error msg:msg]];
+}
+
++ (void)makeToastActivity
+{
+    [[UIApplication sharedApplication].keyWindow makeToastActivity:CSToastPositionCenter];
+}
+
++ (void)hideToastActivity
+{
+    [[UIApplication sharedApplication].keyWindow hideToastActivity];
+}
+
++ (NSString *)randAvatarUrl
+{
+    return [NSString stringWithFormat:@"https://picsum.photos/id/%d/200/200", rand()%999];
 }
 @end
