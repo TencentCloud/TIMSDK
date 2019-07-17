@@ -104,28 +104,30 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
-        <!-- 消息收发 service -->
-        <service
-            android:name="com.tencent.imsdk.session.remote.SessionService"
-            android:process=":network" />
-        <!-- 消息收发辅助 service -->
+        <!-- 从4.4.627版本开始，这几项配置可以去掉了start -->
+            <!--&lt;!&ndash; 消息收发 service &ndash;&gt;-->
+            <!--<service-->
+                <!--android:name="com.tencent.imsdk.session.remote.SessionService"-->
+                <!--android:process=":network" />-->
+            <!--&lt;!&ndash; 消息收发辅助 service &ndash;&gt;-->
 
-        <service
-            android:name="com.tencent.imsdk.session.remote.AssistService"
-            android:process=":network" />
-        <service
-            android:name="com.tencent.imsdk.session.remote.KeepAliveJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:process=":network" />
+            <!--<service-->
+                <!--android:name="com.tencent.imsdk.session.remote.AssistService"-->
+                <!--android:process=":network" />-->
+            <!--<service-->
+                <!--android:name="com.tencent.imsdk.session.remote.KeepAliveJobService"-->
+                <!--android:permission="android.permission.BIND_JOB_SERVICE"-->
+                <!--android:process=":network" />-->
 
-        <!-- 离线消息广播接收器 -->
-        <receiver android:name="com.tencent.imsdk.session.SessionBroadcastReceiver">
-            <intent-filter>
-                <action android:name="com.tencent.imsdk.session.boot" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
+            <!--&lt;!&ndash; 离线消息广播接收器 &ndash;&gt;-->
+            <!--<receiver android:name="com.tencent.imsdk.session.SessionBroadcastReceiver">-->
+                <!--<intent-filter>-->
+                    <!--<action android:name="com.tencent.imsdk.session.boot" />-->
+                    <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+                    <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+                <!--</intent-filter>-->
+            <!--</receiver>-->
+        <!-- 从4.4.627版本开始，这几项配置可以去掉了end -->
 
         <!-- ********小米推送service和receiver设置start******** -->
         <service
