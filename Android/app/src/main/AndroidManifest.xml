@@ -55,7 +55,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.tencent.qcloud.tim.demo.login.LoginForDevActivity"
+            android:name="com.tencent.qcloud.tim.demo.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -66,9 +66,9 @@
             </intent-filter>
         </activity>
 
-        <!--<activity-->
-            <!--android:name="com.tencent.qcloud.tim.demo.login.LoginForDevActivity"-->
-            <!--android:screenOrientation="portrait" />-->
+        <activity
+            android:name="com.tencent.qcloud.tim.demo.login.LoginForDevActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tim.demo.chat.ChatActivity"
             android:launchMode="singleTask"
