@@ -18,7 +18,6 @@
 #import "TCServiceManager.h"
 #import "Toast/Toast.h"
 #import "THelper.h"
-#import <FBRetainCycleDetector/FBRetainCycleDetector.h>
 
 @interface TUIChatController () <TMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate>
 @property (nonatomic, strong) TIMConversation *conversation;
