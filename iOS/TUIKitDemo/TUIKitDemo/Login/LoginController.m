@@ -30,14 +30,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _userNames = @[identifier1,identifier2,identifier3,identifier4];
-    _userSigs  = @[userSig1,userSig2,userSig3,userSig4];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    _userNames = @[appDelegate.identifier1,appDelegate.identifier2,appDelegate.identifier3,appDelegate.identifier4];
+    _userSigs  = @[appDelegate.userSig1,appDelegate.userSig2,appDelegate.userSig3,appDelegate.userSig4];
     _userName  = _userNames[0];
     _userSig   = _userSigs[0];
     
     UserSelectView *view = [[UserSelectView alloc] initWithFrame:CGRectMake(self.userNameLabel.frame.origin.x + self.userNameLabel.frame.size.width + 15, [self isiPhoneX] ? self.userNameLabel.frame.origin.y + 20 : self.userNameLabel.frame.origin.y, 200, 30)];
     view.dataSource = _userNames;
     view.delegate = self;
+    view.title = appDelegate.identifier1;
     [self.view addSubview:view];
 }
 
@@ -66,7 +68,7 @@
                     NSLog(@"-----> 上传 token 失败 ");
                 }];
             }
-            [[NSUserDefaults standardUserDefaults] setObject:@(sdkAppid) forKey:Key_UserInfo_Appid];
+            [[NSUserDefaults standardUserDefaults] setObject:@([(AppDelegate *)[UIApplication sharedApplication].delegate sdkAppid]) forKey:Key_UserInfo_Appid];
             [[NSUserDefaults standardUserDefaults] setObject:ws.userName forKey:Key_UserInfo_User];
             [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Pwd];
             [[NSUserDefaults standardUserDefaults] setObject:ws.userSig forKey:Key_UserInfo_Sig];

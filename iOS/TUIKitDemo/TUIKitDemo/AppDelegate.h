@@ -14,19 +14,9 @@
 #define Key_UserInfo_Sig   @"Key_UserInfo_Sig"
 
 //快速跑通 demo 请参考官网文档：https://cloud.tencent.com/document/product/269/32674
-#define sdkAppid    123456789  //替换成您在控制台生成的 sdkAppid
 
-#define identifier1 @"user1"
-#define userSig1    @""
 
-#define identifier2 @"user2"
-#define userSig2    @""
 
-#define identifier3 @"user3"
-#define userSig3    @""
-
-#define identifier4 @"user4"
-#define userSig4    @""
 
 #define sdkBusiId         12742
 #define BUGLY_APP_ID      @"e965e5d928"
@@ -34,6 +24,15 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong) NSData *deviceToken;
+@property (nonatomic, assign) NSInteger  sdkAppid;
+@property (nonatomic, strong) NSString * identifier1;
+@property (nonatomic, strong) NSString * userSig1;
+@property (nonatomic, strong) NSString * identifier2;
+@property (nonatomic, strong) NSString * userSig2;
+@property (nonatomic, strong) NSString * identifier3;
+@property (nonatomic, strong) NSString * userSig3;
+@property (nonatomic, strong) NSString * identifier4;
+@property (nonatomic, strong) NSString * userSig4;
 - (UIViewController *)getLoginController;
 - (UITabBarController *)getMainController;
 @end

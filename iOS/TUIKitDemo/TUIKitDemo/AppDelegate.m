@@ -23,7 +23,36 @@
 @end
 
 @implementation AppDelegate
-
+- (void)generalConfigFromPasteboard{
+    NSString *string = [UIPasteboard generalPasteboard].string;
+    if (!string) {
+        return;
+    }
+    NSData *jsonData = [string dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error;
+    NSDictionary* outData = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+    if(!error){
+        self.sdkAppid = [outData[@"sdkappid"] integerValue];
+        self.identifier1 = outData[@"users"][0][@"userId"];
+        self.userSig1 = outData[@"users"][0][@"userToken"];
+        self.identifier2 = outData[@"users"][1][@"userId"];
+        self.userSig2 = outData[@"users"][1][@"userToken"];
+        self.identifier3 = outData[@"users"][2][@"userId"];
+        self.userSig3 = outData[@"users"][2][@"userToken"];
+        self.identifier4 = outData[@"users"][3][@"userId"];
+        self.userSig4 = outData[@"users"][3][@"userToken"];
+    }else{
+        self.sdkAppid = 0;
+        self.identifier1 = @"user1";
+        self.userSig1 = @"";
+        self.identifier2 = @"user2";
+        self.userSig2 = @"";
+        self.identifier3 = @"user3";
+        self.userSig3 = @"";
+        self.identifier4 = @"user4";
+        self.userSig4 = @"";
+    }
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
@@ -32,20 +61,20 @@
     
     [self setupBugly];
     [self registNotification];
-    
+    [self generalConfigFromPasteboard];
     //sdkAppId 填写自己控制台申请的sdkAppid
-    if (sdkAppid == 0) {
+    if (self.sdkAppid == 0) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Demo尚未配置SdkAppid，请前往IM控制台创建应用，获取SdkAppid，然后在工程 Appdelegate 头文件里面配置" message:nil delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
         [alert show];
     }else{
-        [[TUIKit sharedInstance] setupWithAppId:sdkAppid];
+        [[TUIKit sharedInstance] setupWithAppId:self.sdkAppid];
     }
     
     NSNumber *appId = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Appid];
     NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_User];
     //NSString *pwd = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Pwd];
     NSString *userSig = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Sig];
-    if([appId integerValue] == sdkAppid && identifier.length != 0 && userSig.length != 0){
+    if([appId integerValue] == self.sdkAppid && identifier.length != 0 && userSig.length != 0){
         __weak typeof(self) ws = self;
         TIMLoginParam *param = [[TIMLoginParam alloc] init];
         param.identifier = identifier;
@@ -278,7 +307,7 @@ void uncaughtExceptionHandler(NSException*exception){
         NSNumber *appId = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Appid];
         NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_User];
         NSString *userSig = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Sig];
-        if([appId integerValue] == sdkAppid && identifier.length != 0 && userSig.length != 0){
+        if([appId integerValue] == self.sdkAppid && identifier.length != 0 && userSig.length != 0){
             __weak typeof(self) ws = self;
             TIMLoginParam *param = [[TIMLoginParam alloc] init];
             param.identifier = identifier;
