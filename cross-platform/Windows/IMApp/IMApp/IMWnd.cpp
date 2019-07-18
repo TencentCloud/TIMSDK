@@ -332,7 +332,7 @@ void CIMWnd::Notify(TNotifyUI & msg) {
             groupaddopt_cursul_ =  m_GroupAddOpt->GetCurSel();
         }
         if (msg.pSender->GetName() == _T("delmem_groupid_combo")) {  //更新删除是的成员列表
-            std::string groupid = TStr2Str(msg.pSender->GetText().GetData());
+            std::string groupid = Wide2UTF8(msg.pSender->GetText().GetData());
 
             
         }
@@ -342,7 +342,7 @@ void CIMWnd::Notify(TNotifyUI & msg) {
                 std::string userid = m_UserIdCombo->GetText().GetStringA();
                 std::string userid2 = msg.pSender->GetText().GetStringA();
                 if (account.userid == userid) {
-                    m_UserSig->SetText(Str2TStr(account.usersig).c_str());
+                    m_UserSig->SetText(UTF82Wide(account.usersig).c_str());
                     break;
                 }
             }
@@ -405,11 +405,11 @@ void CIMWnd::InitWindow() {
         }
     }
     m_LogPath->SetText(szTPath);
-    path_ = TStr2Str(szTPath);
+    path_ = Wide2UTF8(szTPath);
 
     m_SdkAppIdCombo = static_cast<CComboUI*>(m_pm.FindControl(_T("sdkappid_combo")));
     CListLabelElementUI* ele = new CListLabelElementUI;
-    ele->SetText(Str2TStr(std::to_string(info_.sdkappid)).c_str());
+    ele->SetText(UTF82Wide(std::to_string(info_.sdkappid)).c_str());
     m_SdkAppIdCombo->Add(ele);
     m_SdkAppIdCombo->SelectItem(0);
 
@@ -417,7 +417,7 @@ void CIMWnd::InitWindow() {
     for (std::size_t i = 0; i < info_.accounts.size(); i++) {
         AccountInfo& account = info_.accounts[i];
         ele = new CListLabelElementUI;
-        ele->SetText(Str2TStr(account.userid).c_str());
+        ele->SetText(UTF82Wide(account.userid).c_str());
         m_UserIdCombo->Add(ele);
     }
 }
@@ -429,7 +429,7 @@ void CIMWnd::MsgBox(std::string title, const char* fmt, ...) {
     va_end(ap);
 
     CMsgBox msgbox;
-    msgbox.DuiMessageBox(this, WStr2TStr(UTF82Wide(tmp)).c_str(), WStr2TStr(UTF82Wide(title)).c_str());
+    msgbox.DuiMessageBox(this, UTF82Wide(tmp).c_str(), UTF82Wide(title).c_str());
 }
 
 void CIMWnd::MsgBoxEx(std::string title, const char* fmt, ...) {
@@ -440,7 +440,7 @@ void CIMWnd::MsgBoxEx(std::string title, const char* fmt, ...) {
     va_end(ap);
 
     CMsgBox msgbox;
-    msgbox.DuiMessageBox(nullptr, Str2TStr(tmp).c_str(), Str2TStr(title).c_str());
+    msgbox.DuiMessageBox(nullptr, UTF82Wide(tmp).c_str(), UTF82Wide(title).c_str());
 }
 
 void CIMWnd::Log(const char* module, TIMLogLevel level, const char* log, bool msgbox) {
@@ -478,7 +478,7 @@ void CIMWnd::Log(const char* module, TIMLogLevel level, const char* log, bool ms
     }
     for (std::size_t i = 0; i < stV.size(); i++) {
         std::string tmp = Fmt("%10s : %s\r\n", module, stV[i].c_str());
-        m_LogData->AppendText(WStr2TStr(UTF82Wide(tmp)).c_str());
+        m_LogData->AppendText(UTF82Wide(tmp).c_str());
     }
 }
 
@@ -508,7 +508,7 @@ std::string CIMWnd::OpenFile() {
     ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
     if (GetOpenFileName(&ofn)) {
-        return TStr2Str(szFile);
+        return Wide2UTF8(szFile);
     }
     return "";
 }
@@ -518,8 +518,8 @@ void CIMWnd::OnInitSDKBtn() { //初始化ImSDK
     Json::Value json_user_config;
     json_user_config[kTIMUserConfigIsReadReceipt] = true;  // 开启已读回执
     Json::Value json_http_proxy;
-    json_http_proxy[kTIMHttpProxyInfoIp] = "http://http-proxy.xxxx.com";
-    json_http_proxy[kTIMHttpProxyInfoPort] = 8888;
+    json_http_proxy[kTIMHttpProxyInfoIp] = "http://127.0.0.1";
+    json_http_proxy[kTIMHttpProxyInfoPort] = 12639;
 
     Json::Value json_socks5_value;
     json_socks5_value[kTIMSocks5ProxyInfoIp] = "111.222.333.444";
@@ -539,7 +539,7 @@ void CIMWnd::OnInitSDKBtn() { //初始化ImSDK
 
     // 初始化
     std::string sdkappid = m_SdkAppIdCombo->GetText().GetStringA();
-    std::string path = m_LogPath->GetText().GetStringA();
+    std::string path = Wide2UTF8(m_LogPath->GetText().GetData());
     uint64_t sdk_app_id = atoi(sdkappid.c_str());
 
     std::string json_init_cfg;
@@ -576,13 +576,13 @@ void CIMWnd::OnLoginBtn() { //登入
         ths->SetControlVisible(_T("test_btn"), true);
 
         ths->SetControlVisible(_T("cur_login_info"), true);
-        ths->SetControlText(_T("cur_login_info"), Str2TStr(ths->login_id).c_str());
+        ths->SetControlText(_T("cur_login_info"), UTF82Wide(ths->login_id).c_str());
         ths->InitConvList();
         ths->GetGroupJoinedList();
     }, this);
 
     Logf("Login", kTIMLog_Info, "User Id:%s Sig:%s", userid.c_str(), usersig.c_str());
-    SetControlText(_T("cur_loginid_lbl"), Str2TStr(userid).c_str());
+    SetControlText(_T("cur_loginid_lbl"), UTF82Wide(userid).c_str());
 }
 
 void CIMWnd::OnLogoutBtn() { //登出
@@ -904,7 +904,7 @@ void CIMWnd::OnSendFileBtn() {  //发送文件
 
 void CIMWnd::OnSendMsgBtn() {   //发送文本
     CDuiString text = GetControlText(_T("msgcontxt_edit"));
-    std::string send_text = TStr2Str(text.GetData());
+    std::string send_text = Wide2UTF8(text.GetData());
 
     Json::Value json_value_text;
     json_value_text[kTIMElemType] = kTIMElem_Text;
@@ -944,7 +944,7 @@ void CIMWnd::DownloadMessageElem(std::string url, std::string name) {
 }
 void CIMWnd::OnCreateConvBtn() {  //创建会话 按钮
     CDuiString tmp = GetControlText(_T("conv_userid_edit"));
-    std::string userid = TStr2Str(tmp.GetData());
+    std::string userid = Wide2UTF8(tmp.GetData());
 
     if (TIM_SUCC != TIMConvCreate(userid.c_str(), kTIMConv_C2C, [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
         CIMWnd* ths = (CIMWnd*)user_data;
@@ -977,7 +977,7 @@ void CIMWnd::OnCreateConvBtn() {  //创建会话 按钮
 
 void CIMWnd::OnDelConvBtn() { //删除会话 按钮
     CDuiString tmp = GetControlText(_T("delete_conv_combo"));
-    std::string userid = TStr2Str(tmp.GetData());
+    std::string userid = Wide2UTF8(tmp.GetData());
     typedef struct {
         std::string userid;
         CIMWnd* ths;
@@ -1013,7 +1013,7 @@ void CIMWnd::OnDelConvBtn() { //删除会话 按钮
 void CIMWnd::OnCreateGroupBtn() { // 创建群组 按钮
     std::string groupid = GetControlText(_T("create_groupid_edit")).GetStringA();
     CDuiString name = GetControlText(_T("create_groupname_edit"));
-    std::string groupname = TStr2Str(name.GetData());
+    std::string groupname = Wide2UTF8(name.GetData());
     std::string type = GetControlText(_T("create_grouptype_combo")).GetStringA();
     std::string addopt = GetControlText(_T("create_groupaddopt_combo")).GetStringA();
     
@@ -1317,7 +1317,7 @@ void CIMWnd::ShowMsgs(std::vector<std::string>& msgs, std::string conv_id, TIMCo
             localtime_s(&local, &time);
             std::string sender = json_value_msg[kTIMMsgSender].asString();
             std::string tip = Fmt("%s   %d-%d-%d %02d:%02d:%02d\r\n", sender.c_str(), (local.tm_year + 1900), (local.tm_mon + 1), local.tm_mday, local.tm_hour, local.tm_min, local.tm_sec);
-            m_ConvMsgData->AppendText(Str2TStr(tip).c_str());
+            m_ConvMsgData->AppendText(UTF82Wide(tip).c_str());
 
             Json::Value& json_value_elems = json_value_msg[kTIMMsgElemArray];
             for (Json::ArrayIndex i = 0; i < json_value_elems.size(); i++) { //遍历 elem array
@@ -1326,52 +1326,52 @@ void CIMWnd::ShowMsgs(std::vector<std::string>& msgs, std::string conv_id, TIMCo
                 switch (elem_type) {
                 case kTIMElem_Text: {
                     std::string content = json_value_elem[kTIMTextElemContent].asString();
-                    m_ConvMsgData->AppendText(Str2TStr(content).c_str());
+                    m_ConvMsgData->AppendText(UTF82Wide(content).c_str());
                     break;
                 }
                 case kTIMElem_Image: {
                     std::string content = json_value_elem[kTIMTextElemContent].asString();
-                    m_ConvMsgData->AppendText(Str2TStr(content).c_str());
+                    m_ConvMsgData->AppendText(UTF82Wide(content).c_str());
                     break;
                 }
                 case kTIMElem_Sound: {
                     std::string content = json_value_elem[kTIMTextElemContent].asString();
-                    m_ConvMsgData->AppendText(Str2TStr(content).c_str());
+                    m_ConvMsgData->AppendText(UTF82Wide(content).c_str());
                     break;
                 }
                 case kTIMElem_Custom: {
                     std::string content = json_value_elem[kTIMTextElemContent].asString();
-                    m_ConvMsgData->AppendText(Str2TStr(content).c_str());
+                    m_ConvMsgData->AppendText(UTF82Wide(content).c_str());
                     break;
                 }
                 case kTIMElem_File: {
                     std::string content = json_value_elem[kTIMTextElemContent].asString();
-                    m_ConvMsgData->AppendText(Str2TStr(content).c_str());
+                    m_ConvMsgData->AppendText(UTF82Wide(content).c_str());
                     break;
                 }
                 case kTIMElem_Face: {
                     std::string content = json_value_elem[kTIMTextElemContent].asString();
-                    m_ConvMsgData->AppendText(Str2TStr(content).c_str());
+                    m_ConvMsgData->AppendText(UTF82Wide(content).c_str());
                     break;
                 }
                 case kTIMElem_Location: {
                     std::string content = json_value_elem[kTIMTextElemContent].asString();
-                    m_ConvMsgData->AppendText(Str2TStr(content).c_str());
+                    m_ConvMsgData->AppendText(UTF82Wide(content).c_str());
                     break;
                 }
                 case kTIMElem_Video: {
                     std::string content = json_value_elem[kTIMTextElemContent].asString();
-                    m_ConvMsgData->AppendText(Str2TStr(content).c_str());
+                    m_ConvMsgData->AppendText(UTF82Wide(content).c_str());
                     break;
                 }
                 case kTIMElem_GroupTips: {
                     std::string content = json_value_elem[kTIMTextElemContent].asString();
-                    m_ConvMsgData->AppendText(Str2TStr(content).c_str());
+                    m_ConvMsgData->AppendText(UTF82Wide(content).c_str());
                     break;
                 }
                 case kTIMElem_GroupReport: {
                     std::string content = json_value_elem[kTIMTextElemContent].asString();
-                    m_ConvMsgData->AppendText(Str2TStr(content).c_str());
+                    m_ConvMsgData->AppendText(UTF82Wide(content).c_str());
                     break;
                 }
                 default:
@@ -1414,7 +1414,7 @@ void CIMWnd::ParseMsg(const char* json_msg_array) {  //解析消息找到对应�
         localtime_s(&local, &time);
         std::string sender = json_value_msg[kTIMMsgSender].asString();
         std::string tmp = Fmt("%10s : %s %d-%d-%d %02d:%02d:%02d\r\n", "SystemMsg", sender.c_str(), (local.tm_year + 1900), (local.tm_mon + 1), local.tm_mday, local.tm_hour, local.tm_min, local.tm_sec);
-        m_LogData->AppendText(WStr2TStr(UTF82Wide(tmp)).c_str());
+        m_LogData->AppendText(UTF82Wide(tmp).c_str());
     }
     UpdateNodeView();
 }
@@ -1462,7 +1462,7 @@ void CIMWnd::UpdateGroupCombo(TCHAR * combo_name) { // 更新群组ID combo
     uint32_t cur = -1;
     for (uint32_t i = 0; i < groups.size(); i++) {
         GroupInfo& group = groups[i];
-        ComboBoxAdd(combo_name, Str2TStr(group.id).c_str());
+        ComboBoxAdd(combo_name, UTF82Wide(group.id).c_str());
         if (m_CurMenuNode && (m_CurMenuNode->GetTag() == (UINT_PTR)&group)) {
             cur = i;
         }
@@ -1495,7 +1495,7 @@ void CIMWnd::UpdateNodeView() {
         node->SetName(_T("conv_node_item"));
         node->SetContextMenuUsed(true);
         node->SetTag((UINT_PTR)&conv); //保存会话信息
-        node->SetItemText(Str2TStr(conv.id).c_str());
+        node->SetItemText(UTF82Wide(conv.id).c_str());
         m_ConvNode->Add(node);
         if (Menu_Node_Tag == (UINT_PTR)&conv) {  //更新当前Node
             m_CurMenuNode = node;
@@ -1515,7 +1515,7 @@ void CIMWnd::UpdateNodeView() {
         node->SetName(_T("group_node_item"));
         node->SetContextMenuUsed(true);
         node->SetTag((UINT_PTR)&group); //保存会话信息
-        node->SetItemText(Str2TStr(group.id).c_str());
+        node->SetItemText(UTF82Wide(group.id).c_str());
         m_GroupNode->Add(node);
     
         for (uint32_t i = 0; i < group.mems.size(); i++) {
@@ -1528,7 +1528,7 @@ void CIMWnd::UpdateNodeView() {
             memnode->SetName(_T("groupmem_node_item"));
             memnode->SetContextMenuUsed(true);
             memnode->SetTag((UINT_PTR)&group); //保存会话信息
-            memnode->SetItemText(Str2TStr(info.id).c_str());
+            memnode->SetItemText(UTF82Wide(info.id).c_str());
             node->Add(memnode);
         }
         if (Menu_Node_Tag == (UINT_PTR)&group) { //更新会话节点
@@ -1552,7 +1552,7 @@ void CIMWnd::UpdateNodeView() {
                 }
                 m_ConvGroupInfoView->SetVisible(true);
                 m_ConvUserInfoView->SetVisible(false);
-                SetControlText(_T("conv_groupinfo_lab"), Str2TStr(group.id).c_str());  //显示群组相关信息
+                SetControlText(_T("conv_groupinfo_lab"), UTF82Wide(group.id).c_str());  //显示群组相关信息
                 ShowMsgs(msgs, group.id, kTIMConv_Group);
             }
             for (uint32_t i = 0; i < convs.size(); i++) {  // 显示会话消息
@@ -1562,7 +1562,7 @@ void CIMWnd::UpdateNodeView() {
                 }
                 m_ConvGroupInfoView->SetVisible(false);
                 m_ConvUserInfoView->SetVisible(true);
-                SetControlText(_T("conv_userinfo_lab"), Str2TStr(conv.id).c_str());  //显示会话名称
+                SetControlText(_T("conv_userinfo_lab"), UTF82Wide(conv.id).c_str());  //显示会话名称
                 ShowMsgs(msgs, conv.id, kTIMConv_C2C);
             }
         }
@@ -1573,7 +1573,7 @@ void CIMWnd::UpdateNodeView() {
         uint32_t cur = -1;
         for (uint32_t i = 0; i < convs.size(); i++) {
             ConvInfo& conv = convs[i];
-            ComboBoxAdd(_T("delete_conv_combo"), Str2TStr(conv.id).c_str());
+            ComboBoxAdd(_T("delete_conv_combo"), UTF82Wide(conv.id).c_str());
             if (m_CurMenuNode && (m_CurMenuNode->GetTag() == (UINT_PTR)&conv)) {
                 cur = i;
             }
