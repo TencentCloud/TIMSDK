@@ -86,15 +86,6 @@
 - [TIMSDK issue反馈指引](https://github.com/tencentyun/TIMSDK/wiki/TIMSDK-issue%E6%9C%89%E6%95%88%E5%8F%8D%E9%A6%88%E6%A8%A1%E6%9D%BF)
 
 ## 4.4.717 @2019.07.18
-
-**跨平台库**
-
-- 紧急修复创建群组失败问题
-- Windows Demo更新
-
-## 4.4.716 @2019.07.16
-
-
 **iOS & Mac平台**
 
 - API 整理合并
