@@ -107,44 +107,6 @@ typedef NS_ENUM(NSInteger, TIMConversationType) {
 };
 
 /**
- * 会话刷新原因：
- */
-typedef NS_ENUM(NSInteger, TIMConversationRefreshReason) {
-    /**
-     *  同步会话列表 （登录或则断网重连后 SDK 自动同步服务器的会话列表）
-     */
-    TIM_CONVERSATION_SYNC_FROM_SERVER,
-    /**
-     *  收到会话被删除通知 (如果会话被删除，会收到这个通知)
-     */
-    TIM_CONVERSATION_RECEIVE_DELETE,
-    /**
-     *  发送消息
-     */
-    TIM_CONVERSATION_SEDN_MSG,
-    /**
-     *  收到消息
-     */
-    TIM_CONVERSATION_RECEIVE_MSG,
-    /**
-     *  设置会话消息已读 （针对 C2C 和 群组类型生效）
-     */
-    TIM_CONVERSATION_SET_MSG_READ,
-    /**
-     *  收到会话消息已读通知 (针对 C2C 和 群组类型生效，同一账号多终端登录，一端上报已读，其他端会收到这个通知)
-     */
-    TIM_CONVERSATION_RECEIVE_MSG_READ,
-    /**
-     *  收到会话消息撤回通知 （针对 C2C 和 群组类型生效，其他用户撤回消息，自己会收到这个通知）
-     */
-    TIM_CONVERSATION_RECEIVE_MSG_REVOKE,
-    /**
-     *  收到会话消息已读回执通知 （针对 C2C 类型生效，自己发出的消息如果对方设置了已读，自己会收到这个通知）
-     */
-    TIM_CONVERSATION_RECEIVE_MSG_RECEIPT,
-};
-
-/**
  *  消息状态
  */
 typedef NS_ENUM(NSInteger, TIMMessageStatus){

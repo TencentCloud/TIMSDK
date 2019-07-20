@@ -91,13 +91,6 @@
  */
 - (void)onRefreshConversations:(NSArray<TIMConversation *>*)conversations;
 
-/**
- *  刷新部分会话
- *
- *  @param conversations 会话（TIMConversation*）列表
- *  @param reason 会话刷新原因，详情请参考 TIMConversationRefreshReason
- */
-- (void)onRefreshConversations:(NSArray<TIMConversation *>*)conversations reason:(TIMConversationRefreshReason)reason;
 @end
 
 /**
