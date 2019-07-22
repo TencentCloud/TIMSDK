@@ -1,11 +1,3 @@
-//
-//  TUIFaceCell.m
-//  UIKit
-//
-//  Created by kennethmiao on 2018/9/29.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIFaceCell.h"
 #import "TUIKit.h"
 

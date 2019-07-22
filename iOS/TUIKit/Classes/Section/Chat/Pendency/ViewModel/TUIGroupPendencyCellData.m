@@ -1,10 +1,3 @@
-//
-//  TUIGroupPendencyCellData.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/6/18.
-//
-
 #import "TUIGroupPendencyCellData.h"
 #import "TIMUserProfile+DataProvider.h"
 #import "Toast/Toast.h"

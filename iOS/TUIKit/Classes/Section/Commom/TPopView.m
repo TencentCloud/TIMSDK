@@ -1,11 +1,3 @@
-//
-//  TPopView.m
-//  TUIKit
-//
-//  Created by kennethmiao on 2018/10/15.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TPopView.h"
 #import "TPopCell.h"
 #import "THeader.h"

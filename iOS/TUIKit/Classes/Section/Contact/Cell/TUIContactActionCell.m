@@ -1,10 +1,3 @@
-//
-//  TUIContactActionCell.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/6/21.
-//
-
 #import "TUIContactActionCell.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "TIMUserProfile+DataProvider.h"

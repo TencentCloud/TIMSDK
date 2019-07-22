@@ -1,10 +1,3 @@
-//
-//  FaceMessageCell.m
-//  UIKit
-//
-//  Created by annidyfeng on 2019/5/30.
-//
-
 #import "TUIFaceMessageCell.h"
 #import "THeader.h"
 #import "TUIKit.h"

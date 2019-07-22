@@ -1,10 +1,3 @@
-//
-//  TCommonPendencyCell.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/7.
-//
-
 #import "TCommonPendencyCell.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "THeader.h"

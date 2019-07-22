@@ -1,10 +1,3 @@
-//
-//  TMoreCell.m
-//  UIKit
-//
-//  Created by annidyfeng on 2019/5/22.
-//
-
 #import "TUIInputMoreCell.h"
 #import "THeader.h"
 #import "TUIKit.h"

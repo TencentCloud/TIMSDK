@@ -1,11 +1,3 @@
-//
-//  VoiceConverter.m
-//  Jeans
-//
-//  Created by Jeans Huang on 12-7-22.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
 #import "EMVoiceConverter.h"
 #import "wav.h"
 #import "interf_dec.h"

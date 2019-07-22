@@ -1,10 +1,3 @@
-//
-//  TUIGroupPendencyController.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/6/18.
-//
-
 #import "TUIGroupPendencyController.h"
 #import "TUIGroupPendencyCell.h"
 #import "TUIUserProfileControllerServiceProtocol.h"

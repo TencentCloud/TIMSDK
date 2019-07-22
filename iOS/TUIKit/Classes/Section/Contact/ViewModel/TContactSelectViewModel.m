@@ -1,10 +1,3 @@
-//
-//  TContactSelectViewModel.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/8.
-//
-
 #import "TContactSelectViewModel.h"
 #import "TCommonContactSelectCellData.h"
 #import "NSString+Common.h"

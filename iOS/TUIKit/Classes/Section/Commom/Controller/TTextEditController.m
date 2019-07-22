@@ -1,11 +1,3 @@
-//
-//  EditInfoViewController.m
-//  TUIKit
-//
-//  Created by annidyfeng on 2019/3/11.
-//  Copyright © 2019年 annidyfeng. All rights reserved.
-//
-
 #import "TTextEditController.h"
 #import "THeader.h"
 

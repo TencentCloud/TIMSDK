@@ -1,11 +1,3 @@
-//
-//  TUINewFriendViewController.m
-//  TUIKit
-//
-//  Created by annidyfeng on 2019/4/19.
-//  Copyright © 2019年 Tencent. All rights reserved.
-//
-
 #import "TUINewFriendViewController.h"
 #import "TUINewFriendViewModel.h"
 #import "ReactiveObjC.h"

@@ -1,10 +1,3 @@
-//
-//  TUIGroupConversationListModel.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/6/11.
-//
-
 #import "TUIGroupConversationListViewModel.h"
 #import "TUILocalStorage.h"
 #import "ReactiveObjC/ReactiveObjC.h"

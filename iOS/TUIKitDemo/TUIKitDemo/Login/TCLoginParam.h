@@ -1,11 +1,3 @@
-//
-//  TCLoginParam.h
-//  TCLVBIMDemo
-//
-//  Created by dackli on 16/8/4.
-//  Copyright © 2016年 tencent. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 #import <ImSDK/ImSDK.h>
 

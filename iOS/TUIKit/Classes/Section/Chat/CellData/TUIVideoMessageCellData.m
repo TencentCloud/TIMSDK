@@ -1,10 +1,3 @@
-//
-//  TUIVideoMessageCellData.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/21.
-//
-
 #import "TUIVideoMessageCellData.h"
 #import "THeader.h"
 #import "THelper.h"

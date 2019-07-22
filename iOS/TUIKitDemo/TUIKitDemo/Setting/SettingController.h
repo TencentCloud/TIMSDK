@@ -1,10 +1,3 @@
-//
-//  SettingController.h
-//  TUIKitDemo
-//
-//  Created by kennethmiao on 2018/10/19.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
 /** 腾讯云IM Demo 设置主界面视图
  *  本文件实现了设置视图控制器，即TabBar内 "我" 按钮对应的视图
  *

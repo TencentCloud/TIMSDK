@@ -1,11 +1,3 @@
-//
-//  TUIFaceView.m
-//  UIKit
-//
-//  Created by kennethmiao on 2018/9/18.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIFaceView.h"
 #import "TUIFaceCell.h"
 #import "THeader.h"

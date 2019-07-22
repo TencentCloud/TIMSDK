@@ -1,10 +1,3 @@
-//
-//  FriendRequestViewController.m
-//  TUIKitDemo
-//
-//  Created by annidyfeng on 2019/4/18.
-//  Copyright © 2019年 kennethmiao. All rights reserved.
-//
 /** 腾讯云IM Demo 添加好友视图
  *  本文件实现了添加好友时的视图，在您想要添加其他用户为好友时提供UI
  *

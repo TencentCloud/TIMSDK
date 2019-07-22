@@ -1,10 +1,3 @@
-//
-//  TUIVideoMessageCell.m
-//  UIKit
-//
-//  Created by annidyfeng on 2019/5/30.
-//
-
 #import "TUIVideoMessageCell.h"
 #import "THeader.h"
 #import "THelper.h"

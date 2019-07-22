@@ -1,10 +1,3 @@
-//
-//  TCommonContactSelectCell.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/8.
-//
-
 #import "TCommonContactSelectCell.h"
 #import "THeader.h"
 #import "MMLayout/UIView+MMLayout.h"

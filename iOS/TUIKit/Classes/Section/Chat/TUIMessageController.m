@@ -1,11 +1,3 @@
-//
-//  TUIMessageController.m
-//  UIKit
-//
-//  Created by annidyfeng on 2019/7/1.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIMessageController.h"
 #import "TUITextMessageCell.h"
 #import "TUISystemMessageCell.h"

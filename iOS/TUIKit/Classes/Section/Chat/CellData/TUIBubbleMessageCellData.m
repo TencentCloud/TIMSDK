@@ -1,10 +1,3 @@
-//
-//  TUIBubbleMessageCellData.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/30.
-//
-
 #import "TUIBubbleMessageCellData.h"
 #import "TUIKit.h"
 #import "THeader.h"

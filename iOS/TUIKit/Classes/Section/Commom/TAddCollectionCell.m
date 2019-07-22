@@ -1,11 +1,3 @@
-//
-//  TAddCollectionCell.m
-//  TUIKit
-//
-//  Created by kennethmiao on 2018/10/16.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TAddCollectionCell.h"
 #import "THeader.h"
 

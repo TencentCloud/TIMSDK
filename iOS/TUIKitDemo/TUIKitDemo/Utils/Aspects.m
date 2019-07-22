@@ -1,10 +1,3 @@
-//
-//  Aspects.m
-//  Aspects - A delightful, simple library for aspect oriented programming.
-//
-//  Copyright (c) 2014 Peter Steinberger. Licensed under the MIT license.
-//
-
 #import "Aspects.h"
 #import <libkern/OSAtomic.h>
 #import <objc/runtime.h>

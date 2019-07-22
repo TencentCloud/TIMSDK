@@ -1,10 +1,3 @@
-//
-//  NotifySetupController.m
-//  MyDemo
-//
-//  Created by wilderliao on 15/12/2.
-//  Copyright © 2015年 sofawang. All rights reserved.
-//
 /** 腾讯云IM Demo消息提醒设置视图
  *  在用户需要自定义APP提醒模式时，向用户提供UI
  *

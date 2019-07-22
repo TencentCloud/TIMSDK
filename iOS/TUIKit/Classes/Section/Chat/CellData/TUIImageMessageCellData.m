@@ -1,10 +1,3 @@
-//
-//  TUIImageMessageCellData.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/21.
-//
-
 #import "TUIImageMessageCellData.h"
 #import "THelper.h"
 #import "THeader.h"

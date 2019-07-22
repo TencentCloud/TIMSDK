@@ -1,10 +1,3 @@
-//
-//  GroupRequestViewController.m
-//  TUIKitDemo
-//
-//  Created by annidyfeng on 2019/5/20.
-//  Copyright © 2019年 Tencent. All rights reserved.
-//
 /** 腾讯云IM Demon群组加入页面，在用户想要加入群组时提供UI
  *
  * 本文件实现了加入群组时的视图，使得使用者能够对只能群组发送申请加入的请求

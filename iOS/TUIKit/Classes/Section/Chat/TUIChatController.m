@@ -1,10 +1,3 @@
-//
-//  TUIChatController.m
-//  UIKit
-//
-//  Created by annidyfeng on 2019/5/21.
-//
-
 #import "TUIChatController.h"
 #import "THeader.h"
 #import <MobileCoreServices/MobileCoreServices.h>

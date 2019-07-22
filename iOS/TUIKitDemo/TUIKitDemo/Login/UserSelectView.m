@@ -1,4 +1,3 @@
-
 #import "UserSelectView.h"
 
 #define WEAKSELF __weak typeof(self) weakSelf = self;

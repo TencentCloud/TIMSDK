@@ -1,11 +1,3 @@
-//
-//  GroupInfoController.m
-//  UIKit
-//
-//  Created by kennethmiao on 2018/9/26.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIGroupInfoController.h"
 #import "TUIProfileCardCell.h"
 #import "TUIGroupMembersCell.h"

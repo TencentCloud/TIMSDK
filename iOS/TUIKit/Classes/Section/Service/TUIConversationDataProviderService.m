@@ -1,10 +1,3 @@
-//
-//  TUIConversationDataProviderService.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/6/11.
-//
-
 #import "TUIConversationDataProviderService.h"
 #import "TCServiceManager.h"
 #import "TUIKit.h"

@@ -1,10 +1,3 @@
-//
-//  NSDate+TUIKIT.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/20.
-//
-
 #import "NSDate+TUIKIT.h"
 
 @implementation NSDate (TUIKIT)

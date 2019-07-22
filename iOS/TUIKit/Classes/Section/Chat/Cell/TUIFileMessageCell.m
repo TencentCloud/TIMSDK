@@ -1,10 +1,3 @@
-//
-//  TFileMessageCell.m
-//  UIKit
-//
-//  Created by annidyfeng on 2019/5/30.
-//
-
 #import "TUIFileMessageCell.h"
 #import "THeader.h"
 #import "MMLayout/UIView+MMLayout.h"

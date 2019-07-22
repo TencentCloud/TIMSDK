@@ -1,11 +1,3 @@
-//
-//  SettingController.m
-//  TUIKitDemo
-//
-//  Created by kennethmiao on 2018/10/19.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "SettingController.h"
 #import "LoginController.h"
 #import "AppDelegate.h"

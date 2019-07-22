@@ -1,10 +1,3 @@
-//
-//  TLocalStorage.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/10.
-//
-
 #import "TUILocalStorage.h"
 #define TOP_CONV_KEY @"TUIKIT_TOP_CONV_KEY"
 #define Key_UserInfo_Appid @"Key_UserInfo_Appid"

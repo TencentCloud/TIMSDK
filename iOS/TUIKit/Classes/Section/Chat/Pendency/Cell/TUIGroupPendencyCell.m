@@ -1,10 +1,3 @@
-//
-//  TUIGroupPendencyCell.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/6/18.
-//
-
 #import "TUIGroupPendencyCell.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "THeader.h"

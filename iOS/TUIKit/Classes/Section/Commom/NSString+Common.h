@@ -1,10 +1,3 @@
-//
-//  NSString+Common.h
-//
-//  Created by Alexi on 12-11-5.
-//  Copyright (c) 2012年 . All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 

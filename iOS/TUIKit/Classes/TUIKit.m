@@ -1,11 +1,3 @@
-//
-//  TUIKit.m
-//  TUIKit
-//
-//  Created by kennethmiao on 2018/10/12.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIKit.h"
 #import "THeader.h"
 @import ImSDK;

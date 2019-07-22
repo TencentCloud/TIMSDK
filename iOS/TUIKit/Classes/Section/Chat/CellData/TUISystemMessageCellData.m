@@ -1,10 +1,3 @@
-//
-//  TUISystemMessageCellData.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/21.
-//
-
 #import "TUISystemMessageCellData.h"
 #import "NSString+Common.h"
 #import "THeader.h"

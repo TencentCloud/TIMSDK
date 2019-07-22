@@ -1,10 +1,3 @@
-//
-//  TCommonContactCell.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/5.
-//
-
 #import "TCommonContactCell.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "TIMUserProfile+DataProvider.h"

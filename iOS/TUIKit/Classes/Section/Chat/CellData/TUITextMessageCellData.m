@@ -1,10 +1,3 @@
-//
-//  TUITextMessageCellData.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/21.
-//
-
 #import "TUITextMessageCellData.h"
 #import "TUIFaceView.h"
 #import "TUIFaceCell.h"

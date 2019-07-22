@@ -1,10 +1,3 @@
-//
-//  TUIVoiceMessageCell.m
-//  UIKit
-//
-//  Created by annidyfeng on 2019/5/30.
-//
-
 #import "TUIVoiceMessageCell.h"
 #import "THeader.h"
 #import "TUIKit.h"

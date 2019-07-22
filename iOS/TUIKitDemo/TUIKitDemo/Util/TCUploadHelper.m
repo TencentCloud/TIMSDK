@@ -1,11 +1,3 @@
-//
-//  UploadImageHelper.m
-//  TCLVBIMDemo
-//
-//  Created by felixlin on 16/8/2.
-//  Copyright © 2016年 tencent. All rights reserved.
-//
-
 #import "TCUploadHelper.h"
 #import "TCUtil.h"
 #import <QCloudCore/QCloudCore.h>

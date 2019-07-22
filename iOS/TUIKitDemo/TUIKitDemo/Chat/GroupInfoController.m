@@ -1,10 +1,3 @@
-//
-//  GroupInfoController.m
-//  TUIKitDemo
-//
-//  Created by kennethmiao on 2018/10/18.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
 /** 腾讯云IM Demo 群组信息视图
  *  本文件实现了群组信息的展示页面
  *

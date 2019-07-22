@@ -1,10 +1,3 @@
-//
-//  TCommonFriendCellData.h
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/7.
-//
-
 #import <Foundation/Foundation.h>
 #import "TCommonCell.h"
 

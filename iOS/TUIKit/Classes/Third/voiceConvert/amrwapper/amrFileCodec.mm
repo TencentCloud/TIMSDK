@@ -1,11 +1,3 @@
-//
-//  amrFileCodec.cpp
-//  amrDemoForiOS
-//
-//  Created by Tang Xiaoping on 9/27/11.
-//  Copyright 2011 test. All rights reserved.
-//
-
 #include "amrFileCodec.h"
 static int amrEncodeMode[] = {4750, 5150, 5900, 6700, 7400, 7950, 10200, 12200};
 

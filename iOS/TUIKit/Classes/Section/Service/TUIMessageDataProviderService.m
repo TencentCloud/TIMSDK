@@ -1,10 +1,3 @@
-//
-//  TElemDataProviderService.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/20.
-//
-
 #import "TUIMessageDataProviderService.h"
 #import "TCServiceManager.h"
 @import ImSDK;

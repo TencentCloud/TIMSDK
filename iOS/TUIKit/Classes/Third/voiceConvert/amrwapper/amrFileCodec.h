@@ -1,10 +1,3 @@
-//
-//  amrFileCodec.h
-//  amrDemoForiOS
-//
-//  Created by Tang Xiaoping on 9/27/11.
-//  Copyright 2011 test. All rights reserved.
-//
 #ifndef amrFileCodec_h
 #define amrFileCodec_h
 #include <stdlib.h>

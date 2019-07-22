@@ -1,10 +1,3 @@
-//
-//  TConversationListViewModel.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/17.
-//
-
 #import "TConversationListViewModel.h"
 #import "TUILocalStorage.h"
 #import "TUIKit.h"

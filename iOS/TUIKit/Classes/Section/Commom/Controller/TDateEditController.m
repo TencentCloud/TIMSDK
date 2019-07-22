@@ -1,10 +1,3 @@
-//
-//  TDateEditController.m
-//  KVOController
-//
-//  Created by annidyfeng on 2019/5/6.
-//
-
 #import "TDateEditController.h"
 #import "THeader.h"
 #import "MMLayout/UIView+MMLayout.h"

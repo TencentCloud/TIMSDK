@@ -1,11 +1,3 @@
-//
-//  TCConstants.h
-//  TCLVBIMDemo
-//
-//  Created by realingzhou on 16/8/22.
-//  Copyright © 2016年 tencent. All rights reserved.
-//
-
 #ifndef TCConstants_h
 #define TCConstants_h
 

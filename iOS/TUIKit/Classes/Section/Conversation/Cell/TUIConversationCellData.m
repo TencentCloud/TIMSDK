@@ -1,10 +1,3 @@
-//
-//  TUIConversationCellData.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/16.
-//
-
 #import "TUIConversationCellData.h"
 #import "THeader.h"
 #import "UIImage+TUIKIT.h"

@@ -1,11 +1,3 @@
-//
-//  TUIMessageCell.m
-//  UIKit
-//
-//  Created by kennethmiao on 2018/9/17.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIMessageCell.h"
 #import "THeader.h"
 #import "SDWebImage/UIImageView+WebCache.h"

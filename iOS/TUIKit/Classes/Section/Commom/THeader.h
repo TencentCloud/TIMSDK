@@ -1,11 +1,3 @@
-//
-//  THeader.h
-//  UIKit
-//
-//  Created by kennethmiao on 2018/9/18.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #ifndef THeader_h
 #define THeader_h
 

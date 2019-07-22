@@ -1,10 +1,3 @@
-//
-//  TUIError.h
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/7/4.
-//
-
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN

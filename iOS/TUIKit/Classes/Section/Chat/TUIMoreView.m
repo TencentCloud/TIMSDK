@@ -1,11 +1,3 @@
-//
-//  TUIMoreView.m
-//  UIKit
-//
-//  Created by kennethmiao on 2018/9/21.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIMoreView.h"
 #import "TUIInputMoreCell.h"
 #import "THeader.h"

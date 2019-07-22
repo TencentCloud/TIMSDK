@@ -1,10 +1,3 @@
-//
-//  TUIImageMessageCell.m
-//  UIKit
-//
-//  Created by annidyfeng on 2019/5/30.
-//
-
 #import "TUIImageMessageCell.h"
 #import "THeader.h"
 #import "THelper.h"

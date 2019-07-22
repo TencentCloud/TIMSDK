@@ -1,11 +1,3 @@
-//
-//  TUIGroupMembersView.m
-//  TUIKit
-//
-//  Created by kennethmiao on 2018/10/11.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIGroupMembersView.h"
 #import "THeader.h"
 

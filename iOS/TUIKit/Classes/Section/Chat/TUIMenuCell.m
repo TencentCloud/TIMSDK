@@ -1,11 +1,3 @@
-//
-//  InputMenuCell.m
-//  UIKit
-//
-//  Created by kennethmiao on 2018/9/20.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIMenuCell.h"
 #import "THeader.h"
 #import "TUIKit.h"

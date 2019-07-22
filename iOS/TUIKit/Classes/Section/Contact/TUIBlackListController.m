@@ -1,10 +1,3 @@
-//
-//  TUIBlackListController.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/5.
-//
-
 #import "TUIBlackListController.h"
 #import "ReactiveObjC.h"
 #import "TUIFriendProfileControllerServiceProtocol.h"

@@ -1,10 +1,3 @@
-//
-//  TUIVideoViewController.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/24.
-//
-
 #import "TUIVideoViewController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"

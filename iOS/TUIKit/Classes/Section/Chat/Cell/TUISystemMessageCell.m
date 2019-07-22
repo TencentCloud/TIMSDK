@@ -1,10 +1,3 @@
-//
-//  TUISystemMessageCell.m
-//  UIKit
-//
-//  Created by annidyfeng on 2019/5/30.
-//
-
 #import "TUISystemMessageCell.h"
 #import "THeader.h"
 #import "MMLayout/UIView+MMLayout.h"

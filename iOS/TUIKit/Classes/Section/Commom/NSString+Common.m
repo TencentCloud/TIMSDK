@@ -1,11 +1,3 @@
-//
-//  NSString+Common.m
-//  
-//
-//  Created by Alexi on 12-11-5.
-//  Copyright (c) 2012年 . All rights reserved.
-//
-
 #import "NSString+Common.h"
 #import <CommonCrypto/CommonDigest.h>
 //#import "pinyin.h"

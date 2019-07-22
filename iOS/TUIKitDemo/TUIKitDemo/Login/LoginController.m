@@ -1,11 +1,3 @@
-//
-//  LoginController.m
-//  TUIKitDemo
-//
-//  Created by kennethmiao on 2018/10/10.
-//  Copyright © 2018年 kennethmiao. All rights reserved.
-//
-
 #import "LoginController.h"
 #import <sys/sysctl.h>
 #import <sys/utsname.h>

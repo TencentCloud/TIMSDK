@@ -1,10 +1,3 @@
-//
-//  TUIConversationListController.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/17.
-//
-
 #import "TUIConversationListController.h"
 #import "TUIConversationCell.h"
 #import "THeader.h"

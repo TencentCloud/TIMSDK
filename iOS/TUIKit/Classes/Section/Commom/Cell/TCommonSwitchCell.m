@@ -1,10 +1,3 @@
-//
-//  TCommonSwitchCell.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/10.
-//
-
 #import "TCommonSwitchCell.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "THeader.h"

@@ -1,9 +1,3 @@
-//
-//  TUIMessageCellLayout.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/5/21.
-//
 
 #import "TUIMessageCellLayout.h"
 #import "THeader.h"

@@ -1,11 +1,3 @@
-//
-//  TUIKitConfig.m
-//  TUIKit
-//
-//  Created by kennethmiao on 2018/11/5.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIKitConfig.h"
 #import "THeader.h"
 #import "TUIFaceCell.h"

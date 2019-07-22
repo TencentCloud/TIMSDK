@@ -1,10 +1,3 @@
-//
-//  TUIError.m
-//  TXIMSDK_TUIKit_iOS
-//
-//  Created by annidyfeng on 2019/7/4.
-//
-
 #import "TUIError.h"
 @import ImSDK;
 

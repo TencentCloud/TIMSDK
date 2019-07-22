@@ -1,11 +1,3 @@
-//
-//  TPopCell.m
-//  TUIKit
-//
-//  Created by kennethmiao on 2018/10/14.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TPopCell.h"
 #import "THeader.h"
 

@@ -1,11 +1,3 @@
-//
-//  TUIProfileCardCell.h
-//  UIKit
-//
-//  Created by annidy on 2019/5/27.
-//  Copyright © 2019年 Tencent. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 #import "TCommonCell.h"
 

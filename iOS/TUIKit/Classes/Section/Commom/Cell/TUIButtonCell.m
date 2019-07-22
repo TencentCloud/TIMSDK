@@ -1,11 +1,3 @@
-//
-//  TButtonCell.m
-//  UIKit
-//
-//  Created by kennethmiao on 2018/9/25.
-//  Copyright © 2018年 Tencent. All rights reserved.
-//
-
 #import "TUIButtonCell.h"
 #import "THeader.h"
 #import "MMLayout/UIView+MMLayout.h"

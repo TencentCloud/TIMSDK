@@ -1,11 +1,3 @@
-//
-//  TContactsController.m
-//  TUIKit
-//
-//  Created by annidyfeng on 2019/3/25.
-//  Copyright © 2019年 Tencent. All rights reserved.
-//
-
 #import "TUIContactController.h"
 #import "THeader.h"
 #import "TUIKit.h"
