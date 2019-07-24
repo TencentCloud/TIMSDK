@@ -1,0 +1,6 @@
+framework module TXIMSDK_TUIKit_iOS {
+  umbrella header "TUIKit.h"
+
+  export *
+  module * { export * }
+}

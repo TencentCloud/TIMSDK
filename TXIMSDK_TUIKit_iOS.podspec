@@ -26,7 +26,7 @@ Pod::Spec.new do |spec|
 
   spec.source = { :git => 'https://github.com/tencentyun/TIMSDK.git', :tag => spec.version}
   spec.source_files = 'iOS/TUIKit/Classes/**/*.{h,m,mm}'
-  spec.public_header_files = ['iOS/TUIKit/Classes/TUIKit.h', 'iOS/TUIKit/Classes/Global/*.h', 'iOS/TUIKit/Classes/Section/**/*.h', 'iOS/TUIKit/Classes/Util/**/*.h']
+  spec.module_map = 'iOS/TUIKit/TXIMSDK_TUIKit_iOS.modulemap'
   # spec.vendored_frameworks = ''
   spec.vendored_libraries = ['iOS/TUIKit/Classes/third/voiceConvert/opencore-amrnb/libopencore-amrnb.a', 'iOS/TUIKit/Classes/third/voiceConvert/opencore-amrwb/libopencore-amrwb.a']
   spec.resource = ['iOS/TUIKit/Resources/TUIKitFace.bundle','iOS/TUIKit/Resources/TUIKitResource.bundle']
