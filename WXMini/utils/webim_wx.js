@@ -3715,9 +3715,9 @@ module.exports = function () {
             bigGroupLongPollingKeyMap[groupId] = null;
             bigGroupLongPollingMsgMap[groupId] = {};
 
-            bigGroupLongPollingStartSeqMap[groupId].delete();
-            bigGroupLongPollingKeyMap[groupId].delete();
-            bigGroupLongPollingMsgMap[groupId].delete();
+            delete bigGroupLongPollingStartSeqMap[groupId];
+            delete bigGroupLongPollingKeyMap[groupId];
+            delete bigGroupLongPollingMsgMap[groupId];
         };
 
             //设置群消息数据条数
