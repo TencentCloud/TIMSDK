@@ -11,6 +11,8 @@
 	"libVersion": "1.9.93",
 	"appid": "在这填写您的微信小程序AppID",
 	"projectname": "WebIM",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,

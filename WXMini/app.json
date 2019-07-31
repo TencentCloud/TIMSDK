@@ -10,5 +10,6 @@
     "navigationBarTitleText": "腾讯云通信",
     "navigationBarTextStyle": "white",
     "navigationStyle": "custom"
-  }
+  },
+  "sitemapLocation": "sitemap.json"
 }

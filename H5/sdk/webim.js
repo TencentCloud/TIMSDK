@@ -1,4 +1,5 @@
 //import {Version} from "../version.js";
+// var Version = '1.7.3';
 var Version = '1.7.3';
 /* webim javascript SDK
  */
@@ -4770,9 +4771,9 @@ window.webim = webim;
             bigGroupLongPollingKeyMap[groupId] = null;
             bigGroupLongPollingMsgMap[groupId] = {};
 
-            bigGroupLongPollingStartSeqMap[groupId].delete();
-            bigGroupLongPollingKeyMap[groupId].delete();
-            bigGroupLongPollingMsgMap[groupId].delete();
+            delete bigGroupLongPollingStartSeqMap[groupId];
+            delete bigGroupLongPollingKeyMap[groupId];
+            delete bigGroupLongPollingMsgMap[groupId];
 
         };
 
