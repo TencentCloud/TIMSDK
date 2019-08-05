@@ -1159,17 +1159,24 @@
         <div class="modal-body">
           <form class="form-horizontal" onkeydown="if(event.keyCode==13)return false;" role="form">
             <div class="form-group">
-              <label class="col-sm-2 control-label" for="login_account">identifier</label>
+              <label class="col-sm-2 control-label" for="login_account">选择用户</label>
               <div class="col-sm-10">
-                <input class="form-control" id="login_account" maxlength="100" placeholder="请输入identifier" type="text" value="">
+                <!-- <input class="form-control" id="login_account" maxlength="100" placeholder="请输入identifier" type="text" value=""> -->
+                <select class="form-control" id="login_account" name="userID">
+                  <option value="u0">u0</option>
+                  <option value="u1">u1</option>
+                  <option value="u2">u2</option>
+                  <option value="u3">u3</option>
+                  <option value="u4">u4</option>
+                </select>
               </div>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label class="col-sm-2 control-label" for="login_pwd">UserSig</label>
               <div class="col-sm-10">
                 <input class="form-control" id="login_pwd" placeholder="请输入UserSig" type="password" value="">
               </div>
-            </div>
+            </div> -->
           </form>
         </div>
         <div class="modal-footer">
@@ -1570,8 +1577,12 @@
   <!--用于获取文件MD5 js api(发送图片时用到)-->
 
   <script src="js/lib/md5/spark-md5.js" type="text/javascript"></script>
-  <!--web im sdk-->
 
+  <!-- 签名计算 -->
+  <script src="js/debug/lib-generate-test-usersig.min.js" type="text/javascript"></script>
+  <script src="js/debug/GenerateTestUserSig.js" type="text/javascript"></script>
+  
+  <!--web im sdk-->
   <script src="sdk/webim.js" type="text/javascript"></script>
   <!--<script type="text/javascript" src="sdk/webim.min.js"></script>-->
 
@@ -1654,23 +1665,15 @@
   <!-- web im 让h5支持播放amr录音文件 -->
 
   <script type="text/javascript">
-    // 将以下两个参数替换成您的配置
-    var sdkAppID = '1400187352'; // 填写第一步获取到的 sdkappid
-    //var accountType = ''; // 填写第二步设置账号体系集成获取到的 accountType , 已废弃
-
-    // 登录帐号
-    var identifier = '', // 填写第三步输入的 identifier，由您指定，可以在登录页面直接输入
-        userSig = ''; //填写第三步生成的userSig，可以在登录页面直接输入
-
     //帐号模式，0-表示独立模式，1-表示托管模式(托管模式已经停用，请使用独立模式集成帐号)
-    var accountMode = 0;
-    
+    // var accountMode = 0;
+
     //当前用户身份
     var loginInfo = {
-      'sdkAppID': sdkAppID, //用户所属应用id,必填
+      'sdkAppID': '', //用户所属应用id,必填
       // 'accountType': accountType, //用户所属应用帐号类型, 已废弃
-      'identifier': identifier, //当前用户ID,必须是否字符串类型，必填
-      'userSig': userSig,
+      'identifier': '', //当前用户ID,必须是否字符串类型，必填
+      'userSig': '',
       //当前用户身份凭证，必须是字符串类型，必填
       'identifierNick': null, //当前用户昵称，不用填写，登录接口会返回用户的昵称，如果没有设置，则返回用户的id
       'headurl': 'img/me.jpg' //当前用户默认头像，选填，如果设置过头像，则可以通过拉取个人资料接口来得到头像信息
