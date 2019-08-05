@@ -22,7 +22,7 @@ function onMsgNotify(newMsgList) {
             } else {
                 headUrl = groupHeadUrl;
             }
-            addSess(selType, selToID, newMsg.getSession().name(), headUrl, 0, 'sesslist'); //新增一个对象
+            addSess(selType, selToID, newMsg.getSession().name(), headUrl, 0, 'sesslist', newMsg); //新增一个对象
             setSelSessStyleOn(selToID);
         }
         if (newMsg.getSession().id() == selToID) { //为当前聊天对象的消息

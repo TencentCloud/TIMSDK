@@ -21,7 +21,7 @@ function updateSessDiv(sess_type, to_id, name, unread_msg_count) {
 
 //新增一条最近会话
 
-function addSess(sess_type, to_id, name, face_url, unread_msg_count, sesslist, addPositonType) {
+function addSess(sess_type, to_id, name, face_url, unread_msg_count, sesslist, addPositonType, newMsg) {
     var sessDivId = "sessDiv_" + to_id;
     var sessDiv = document.getElementById(sessDivId);
     if (sessDiv) { //先判断是否存在会话DIV，已经存在，则不需要增加

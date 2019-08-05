@@ -94,12 +94,14 @@ function independentModeLogin() {
         alert('请输入帐号');
         return;
     }
-    if ($("#login_pwd").val().length == 0) {
-        alert('请输入UserSig');
-        return;
-    }
+    // if ($("#login_pwd").val().length == 0) {
+    //     alert('请输入UserSig');
+    //     return;
+    // }
     loginInfo.identifier = $('#login_account').val();
-    loginInfo.userSig = $('#login_pwd').val();
+    var config = genTestUserSig(loginInfo.identifier);
+    loginInfo.sdkAppID = config.sdkAppID;
+    loginInfo.userSig = config.userSig;
     
     webimLogin(function(){
         $('#login_dialog').modal('hide');
