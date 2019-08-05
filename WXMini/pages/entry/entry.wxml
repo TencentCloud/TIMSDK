@@ -8,7 +8,7 @@
   
   <view class="input-box">
     <picker mode="selector" bindchange="userChange" value="{{index}}" range="{{users}}" range-key="identifier">
-      <view class="picker">{{users[index].identifier}}</view>
+      <view class="picker">{{users[index]['identifier']}}</view>
     </picker>
   </view>
   <view class='tips'>

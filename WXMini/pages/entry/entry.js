@@ -50,7 +50,6 @@ Page({
 
     let identifier = this.data.users[this.data.index].identifier
     let userConfig = genTestUserSig(identifier)
-    console.log(userConfig)
 
     var url = `../index/index?identifier=${identifier}&userSig=${userConfig.userSig}`;
 
