@@ -1,6 +1,6 @@
 const app = getApp();
 const CONFIG = require('../config');
-
+import genTestUserSig from '../../debug/GenerateTestUserSig.js'
 Page({
 
 	/**
@@ -8,7 +8,28 @@ Page({
 	 */
 	data: {
 		tapTime: '',
-		users: CONFIG.users,
+    users: [
+      {
+        id: 0,
+        identifier: 'u0'
+      },
+      {
+        id: 1,
+        identifier: 'u1'
+      },
+      {
+        id: 2,
+        identifier: 'u2'
+      },
+      {
+        id: 3,
+        identifier: 'u3'
+      },
+      {
+        id: 4,
+        identifier: 'u4'
+      }
+    ],
 		index: 0
 	},
 
@@ -20,17 +41,18 @@ Page({
 
 	// 进入聊天室
 	entry: function () {
-
 		var self = this;
 		// 防止两次点击操作间隔太快
 		var nowTime = new Date();
 		if (nowTime - this.data.tapTime < 1000) {
 			return;
 		}
-		var identifier = this.data.users[this.data.index]['identifier'];
-		var userSig = this.data.users[this.data.index]['userSig'];
 
-		var url = `../index/index?identifier=${identifier}&userSig=${userSig}`;
+    let identifier = this.data.users[this.data.index].identifier
+    let userConfig = genTestUserSig(identifier)
+    console.log(userConfig)
+
+    var url = `../index/index?identifier=${identifier}&userSig=${userConfig.userSig}`;
 
 		wx.navigateTo({
 			url: url
