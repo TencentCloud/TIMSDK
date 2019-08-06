@@ -254,6 +254,10 @@ void Test_GetMsgList()
 // 此函数用于测试各个API功能
 void TestApi() {
     const void* user_data = nullptr;
+    Json::Value modify_item;
+
+    
+
     //TIMSetRecvNewMsgCallback(RecvNewMsgCallback, user_data);
     //Test_MsgImport();
 //Json::Value identifiers(Json::arrayValue);
@@ -274,5 +278,5 @@ void TestApi() {
 
     //}, this);
     
-    Test_GetMsgList();
+    //Test_GetMsgList();
 }
