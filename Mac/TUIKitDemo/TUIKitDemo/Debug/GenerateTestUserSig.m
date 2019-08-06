@@ -10,8 +10,8 @@
     long TLSTime = floor(current);
     NSMutableDictionary *obj = [@{@"TLS.ver": @"2.0",
                                   @"TLS.identifier": identifier,
-                                  @"TLS.sdkappid": @(_SDKAppID),
-                                  @"TLS.expire": @(_EXPIRETIME),
+                                  @"TLS.sdkappid": @(SDKAPPID),
+                                  @"TLS.expire": @(EXPIRETIME),
                                   @"TLS.time": @(TLSTime)} mutableCopy];
     NSMutableString *stringToSign = [[NSMutableString alloc] init];
     NSArray *keyOrder = @[@"TLS.identifier",
@@ -51,7 +51,7 @@
 
 + (NSString *)hmac:(NSString *)plainText
 {
-    const char *cKey  = [_SECRETKEY cStringUsingEncoding:NSASCIIStringEncoding];
+    const char *cKey  = [SECRETKEY cStringUsingEncoding:NSASCIIStringEncoding];
     const char *cData = [plainText cStringUsingEncoding:NSASCIIStringEncoding];
 
     unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];

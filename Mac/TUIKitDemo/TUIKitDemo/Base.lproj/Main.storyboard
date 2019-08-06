@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -619,7 +619,7 @@
                                         <menuItem title="Show Sidebar" keyEquivalent="s" id="kIP-vf-haE">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
-                                                <action selector="toggleSourceList:" target="Ady-hI-5gd" id="iwa-gc-5KM"/>
+                                                <action selector="toggleSidebar:" target="Ady-hI-5gd" id="iwa-gc-5KM"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Enter Full Screen" keyEquivalent="f" id="4J7-dP-txa">
@@ -709,15 +709,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <comboBox verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HJs-5M-YvN">
-                                <rect key="frame" x="139" y="138" width="221" height="26"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="请选择测试账号" drawsBackground="YES" completes="NO" numberOfVisibleItems="4" id="ot2-Ey-O7S">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </comboBoxCell>
-                            </comboBox>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1az-Sy-Viq">
                                 <rect key="frame" x="49" y="138" width="44" height="22"/>
                                 <constraints>
@@ -739,10 +730,21 @@
                                     <action selector="login:" target="XfG-lQ-9wD" id="UtS-09-9g5"/>
                                 </connections>
                             </button>
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WIR-z1-Y09">
+                                <rect key="frame" x="131" y="140" width="306" height="22"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="m2i-o0-05n">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="WIR-z1-Y09" secondAttribute="trailing" constant="43" id="9Ri-EB-udB"/>
                             <constraint firstItem="1az-Sy-Viq" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="110" id="ACN-n1-try"/>
                             <constraint firstItem="1az-Sy-Viq" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="51" id="Ish-Db-xSJ"/>
+                            <constraint firstItem="WIR-z1-Y09" firstAttribute="baseline" secondItem="1az-Sy-Viq" secondAttribute="firstBaseline" id="SoC-5M-WO4"/>
+                            <constraint firstItem="WIR-z1-Y09" firstAttribute="leading" secondItem="1az-Sy-Viq" secondAttribute="trailing" constant="40" id="XIe-PP-eIZ"/>
                             <constraint firstItem="36Z-Au-yIW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="agX-1h-faf"/>
                             <constraint firstAttribute="bottom" secondItem="36Z-Au-yIW" secondAttribute="bottom" constant="57" id="bYG-Wd-LtK"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="1az-Sy-Viq" secondAttribute="trailing" constant="20" symbolic="YES" id="oIA-Nf-u56"/>
@@ -750,7 +752,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="userBox" destination="HJs-5M-YvN" id="naC-21-9Tr"/>
+                        <outlet property="userNameField" destination="WIR-z1-Y09" id="UVf-a6-pOu"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
