@@ -10,10 +10,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.imsdk.TIMFriendshipManager;
+import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class MessageContentHolder extends MessageEmptyHolder {
 
@@ -51,8 +55,8 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             leftUserIcon.setDefaultImageResId(properties.getAvatar());
             rightUserIcon.setDefaultImageResId(properties.getAvatar());
         } else {
-            leftUserIcon.setDefaultImageResId(R.drawable.default_user_icon);
-            rightUserIcon.setDefaultImageResId(R.drawable.default_user_icon);
+            leftUserIcon.setDefaultImageResId(R.drawable.chat_left);
+            rightUserIcon.setDefaultImageResId(R.drawable.chat_right);
         }
         if (properties.getAvatarRadius() != 0) {
             leftUserIcon.setRadius(properties.getAvatarRadius());
@@ -109,12 +113,29 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         if (properties.getNameFontSize() != 0) {
             usernameText.setTextSize(properties.getNameFontSize());
         }
+        // 聊天界面设置头像和昵称
         TIMUserProfile profile = TIMFriendshipManager.getInstance().queryUserProfile(msg.getFromUser());
         if (profile == null) {
             usernameText.setText(msg.getFromUser());
         } else {
             usernameText.setText(!TextUtils.isEmpty(profile.getNickName()) ? profile.getNickName() : msg.getFromUser());
+            if (!TextUtils.isEmpty(profile.getFaceUrl()) && !msg.isSelf()) {
+                List<String> urllist = new ArrayList<>();
+                urllist.add(profile.getFaceUrl());
+                leftUserIcon.setIconUrls(urllist);
+                urllist.clear();
+            }
         }
+        TIMUserProfile selfInfo = TIMFriendshipManager.getInstance().queryUserProfile(TIMManager.getInstance().getLoginUser());
+        if (profile != null && msg.isSelf()) {
+            if (!TextUtils.isEmpty(selfInfo.getFaceUrl())) {
+                List<String> urllist = new ArrayList<>();
+                urllist.add(profile.getFaceUrl());
+                rightUserIcon.setIconUrls(urllist);
+                urllist.clear();
+            }
+        }
+
         if (msg.getStatus() == MessageInfo.MSG_STATUS_SENDING || msg.getStatus() == MessageInfo.MSG_STATUS_DOWNLOADING) {
             sendingProgress.setVisibility(View.VISIBLE);
         } else {

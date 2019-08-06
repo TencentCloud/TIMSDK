@@ -142,26 +142,6 @@ public class FileUtil {
         return data;
     }
 
-
-    private static String getRealPathFromUri_AboveApi19(Uri uri) {
-        String filePath = null;
-        String wholeID = DocumentsContract.getDocumentId(uri);
-
-        // 使用':'分割
-        String id = wholeID.split(":")[1];
-
-        String[] projection = {MediaStore.Images.Media.DATA};
-        String selection = MediaStore.Images.Media._ID + "=?";
-        String[] selectionArgs = {id};
-
-        Cursor cursor = TUIKit.getAppContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,//
-                projection, selection, selectionArgs, null);
-        int columnIndex = cursor.getColumnIndex(projection[0]);
-        if (cursor.moveToFirst()) filePath = cursor.getString(columnIndex);
-        cursor.close();
-        return filePath;
-    }
-
     public static Uri getUriFromPath(String path) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

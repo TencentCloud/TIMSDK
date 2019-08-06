@@ -12,6 +12,8 @@ import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 
+import com.tencent.imsdk.TIMCallBack;
+import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.LineControllerView;
@@ -21,14 +23,17 @@ import com.tencent.qcloud.tim.uikit.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tim.uikit.modules.group.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tim.uikit.modules.group.member.IGroupMemberRouter;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 
 public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout, View.OnClickListener {
 
+    private static final String TAG = GroupInfoLayout.class.getSimpleName();
     private TitleBarLayout mTitleBar;
     private LineControllerView mMemberView;
     private GroupInfoAdapter mMemberAdapter;
@@ -36,6 +41,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     private LineControllerView mGroupTypeView;
     private LineControllerView mGroupIDView;
     private LineControllerView mGroupNameView;
+    private LineControllerView mGroupIcon;
     private LineControllerView mGroupNotice;
     private LineControllerView mNickView;
     private LineControllerView mJoinTypeView;
@@ -89,6 +95,10 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mGroupNameView = findViewById(R.id.group_name);
         mGroupNameView.setOnClickListener(this);
         mGroupNameView.setCanNav(true);
+        // 群头像
+        mGroupIcon = findViewById(R.id.group_icon);
+        mGroupIcon.setOnClickListener(this);
+        mGroupIcon.setCanNav(false);
         // 群公告
         mGroupNotice = findViewById(R.id.group_notice);
         mGroupNotice.setOnClickListener(this);
@@ -135,6 +145,23 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                     mGroupNameView.setContent(text.toString());
                 }
             });
+        } else if (v.getId() == R.id.group_icon) {
+            String groupUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
+            TIMGroupManager.ModifyGroupInfoParam param = new TIMGroupManager.ModifyGroupInfoParam(mGroupInfo.getId());
+            param.setFaceUrl(groupUrl);
+            TIMGroupManager.getInstance().modifyGroupInfo(param, new TIMCallBack() {
+                @Override
+                public void onError(int code, String desc) {
+                    TUIKitLog.e(TAG, "modify group icon failed, code:" + code +"|desc:" + desc);
+                    ToastUtil.toastLongMessage("修改群头像失败, code = " + code + ", info = " + desc);
+                }
+
+                @Override
+                public void onSuccess() {
+                    ToastUtil.toastLongMessage("修改群头像成功");
+                }
+            });
+
         } else if (v.getId() == R.id.group_notice) {
             Bundle bundle = new Bundle();
             bundle.putString(TUIKitConstants.Selection.TITLE, getResources().getString(R.string.modify_group_notice));
@@ -161,6 +188,10 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             });
         } else if (v.getId() == R.id.join_type_bar) {
             if (mGroupInfo != null) {
+                if (mGroupTypeView.getContent().equals("聊天室")) {
+                    ToastUtil.toastLongMessage("加入聊天室为自动审批，暂不支持修改");
+                    return;
+                }
                 Bundle bundle = new Bundle();
                 bundle.putString(TUIKitConstants.Selection.TITLE, getResources().getString(R.string.group_join_type));
                 bundle.putStringArrayList(TUIKitConstants.Selection.LIST, mJoinTypes);
@@ -250,6 +281,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mNickView.setContent(mPresenter.getNickName());
         mTopSwitchView.setChecked(mGroupInfo.isTopChat());
 
+        mDissolveBtn.setText(R.string.dissolve);
         if (mGroupInfo.isOwner()) {
             mGroupNotice.setVisibility(VISIBLE);
             mJoinTypeView.setVisibility(VISIBLE);

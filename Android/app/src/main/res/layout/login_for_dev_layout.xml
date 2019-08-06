@@ -29,6 +29,7 @@
             <TextView
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
+                android:textSize="18sp"
                 android:gravity="center_vertical"
                 android:text="@string/account"
                 android:textColor="#000" />
@@ -36,10 +37,11 @@
             <EditText
                 android:id="@+id/login_user"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="match_parent"
+                android:textSize="18sp"
                 android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="请参考LoginForDevActivity的类注释"
+                android:hint="任意非空字符即可，请参考类注释"
                 android:textCursorDrawable="@drawable/my_cursor"
                 android:singleLine="true" />
 
@@ -62,6 +64,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="60dp"
             android:layout_weight="1"
+            android:background="#00a4ff"
             android:text="登录"
             android:textColor="#fff" />
 

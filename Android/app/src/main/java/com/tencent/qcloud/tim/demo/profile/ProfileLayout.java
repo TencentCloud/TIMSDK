@@ -3,6 +3,8 @@ package com.tencent.qcloud.tim.demo.profile;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -19,15 +21,18 @@ import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.component.LineControllerView;
 import com.tencent.qcloud.tim.uikit.component.SelectionActivity;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
+import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class ProfileLayout extends LinearLayout implements View.OnClickListener {
 
@@ -37,6 +42,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
     private TextView mAccountView;
     private TitleBarLayout mTitleBar;
 
+    private LineControllerView mModifyUserIconView;
     private LineControllerView mModifyNickNameView;
     private LineControllerView mModifyAllowTypeView;
     private LineControllerView mModifySignatureView;
@@ -44,6 +50,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
     private ArrayList<String> mJoinTypeTextList = new ArrayList<>();
     private ArrayList<String> mJoinTypeIdList = new ArrayList<>();
     private int mJoinTypeIndex = 2;
+    private String mIconUrl;
 
     public ProfileLayout(Context context) {
         super(context);
@@ -64,6 +71,19 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         inflate(getContext(), R.layout.profile_layout, this);
 
         mUserIcon = findViewById(R.id.self_icon);
+        TIMUserProfile profile = TIMFriendshipManager.getInstance().querySelfProfile();
+        if (profile != null) {
+            if (!TextUtils.isEmpty(profile.getFaceUrl())) {
+                GlideEngine.loadImage(mUserIcon, Uri.parse(profile.getFaceUrl()));
+            }
+        } else {
+            SharedPreferences shareInfo = getContext().getSharedPreferences(Constants.USERINFO, Context.MODE_PRIVATE);
+            String url = shareInfo.getString(Constants.ICON_URL, "");
+            if (!TextUtils.isEmpty(url)) {
+                GlideEngine.loadImage(mUserIcon, Uri.parse(url));
+            }
+        }
+
         mAccountView = findViewById(R.id.self_account);
 
         mTitleBar = findViewById(R.id.self_info_title_bar);
@@ -71,6 +91,9 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         mTitleBar.getRightGroup().setVisibility(GONE);
         mTitleBar.setTitle(getResources().getString(R.string.profile), TitleBarLayout.POSITION.MIDDLE);
 
+        mModifyUserIconView = findViewById(R.id.modify_user_icon);
+        mModifyUserIconView.setCanNav(false);
+        mModifyUserIconView.setOnClickListener(this);
         mModifySignatureView = findViewById(R.id.modify_signature);
         mModifySignatureView.setCanNav(true);
         mModifySignatureView.setOnClickListener(this);
@@ -124,7 +147,17 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.modify_nick_name) {
+        if (v.getId() == R.id.modify_user_icon) {
+            mIconUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
+            GlideEngine.loadImage(mUserIcon, Uri.parse(mIconUrl));
+            updateProfile();
+
+            SharedPreferences shareInfo = getContext().getSharedPreferences(Constants.USERINFO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shareInfo.edit();
+            editor.putString(Constants.ICON_URL, mIconUrl);
+            editor.commit();
+
+        } else if (v.getId() == R.id.modify_nick_name) {
             Bundle bundle = new Bundle();
             bundle.putString(TUIKitConstants.Selection.TITLE, getResources().getString(R.string.modify_nick_name));
             bundle.putString(TUIKitConstants.Selection.INIT_CONTENT, mModifyNickNameView.getContent());
@@ -169,6 +202,11 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
 
     private void updateProfile() {
         HashMap<String, Object> hashMap = new HashMap<>();
+
+        // 头像
+        if (!TextUtils.isEmpty(mIconUrl)) {
+            hashMap.put(TIMUserProfile.TIM_PROFILE_TYPE_KEY_FACEURL, mIconUrl);
+        }
 
         // 昵称
         String nickName = mModifyNickNameView.getContent();

@@ -58,6 +58,13 @@
                 app:name="@string/group_name" />
 
             <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/group_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/page_margin"
+                app:name="@string/group_icon" />
+
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
                 android:id="@+id/group_notice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,10 +101,9 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="@dimen/page_margin"
                 android:layout_marginRight="@dimen/page_margin"
-                android:layout_marginTop="20dp"
-                android:background="#fb6155"
-                android:text="@string/dissolve"
-                android:textColor="#FFFFFF" />
+                android:layout_marginTop="10dp"
+                android:background="#ffffff"
+                android:textColor="#fb6155" />
 
 
         </LinearLayout>

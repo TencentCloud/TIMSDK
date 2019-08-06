@@ -14,6 +14,7 @@ import com.tencent.imsdk.TIMFileElem;
 import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMGroupTipsElem;
 import com.tencent.imsdk.TIMGroupTipsElemGroupInfo;
+import com.tencent.imsdk.TIMGroupTipsElemMemberInfo;
 import com.tencent.imsdk.TIMGroupTipsGroupInfoType;
 import com.tencent.imsdk.TIMGroupTipsType;
 import com.tencent.imsdk.TIMImage;
@@ -27,6 +28,7 @@ import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.imsdk.TIMTextElem;
 import com.tencent.imsdk.TIMVideo;
 import com.tencent.imsdk.TIMVideoElem;
+import com.tencent.qcloud.tim.uikit.utils.DateTimeUtil;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
@@ -335,7 +337,8 @@ public class MessageInfoUtil {
                 String data = new String(customElem.getData());
                 if (data.equals(GROUP_CREATE)) {
                     msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_CREATE);
-                    msgInfo.setExtra(new String(customElem.getExt()));
+                    String message = wrapperColor(msgInfo.getFromUser()) + "创建群组";
+                    msgInfo.setExtra(message);
                 } else if (data.equals(GROUP_DELETE)) {
                     msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_DELETE);
                     msgInfo.setExtra(new String(customElem.getExt()));
@@ -362,7 +365,7 @@ public class MessageInfoUtil {
                 } else {
                     user = groupTips.getOpUserInfo().getIdentifier();
                 }
-                String message = user;
+                String message = wrapperColor(user);
                 if (tipsType == TIMGroupTipsType.Join) {
                     msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_JOIN);
                     message = message + "加入群组";
@@ -375,6 +378,14 @@ public class MessageInfoUtil {
                     msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_KICK);
                     message = message + "被踢出群组";
                 }
+                if (tipsType == TIMGroupTipsType.SetAdmin) {
+                    msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                    message = message + "被设置管理员";
+                }
+                if (tipsType == TIMGroupTipsType.CancelAdmin) {
+                    msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                    message = message + "被取消管理员";
+                }
                 if (tipsType == TIMGroupTipsType.ModifyGroupInfo) {
                     List<TIMGroupTipsElemGroupInfo> modifyList = groupTips.getGroupInfoList();
                     if (modifyList.size() > 0) {
@@ -386,8 +397,33 @@ public class MessageInfoUtil {
                         } else if (modifyType == TIMGroupTipsGroupInfoType.ModifyNotification) {
                             msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
                             message = message + "修改群公告";
+                        } else if (modifyType == TIMGroupTipsGroupInfoType.ModifyOwner) {
+                            msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                            message = message + "转让群主给\"" + modifyInfo.getContent() + "\"";
+                        } else if (modifyType == TIMGroupTipsGroupInfoType.ModifyFaceUrl) {
+                            msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                            message = message + "修改群头像";
+                        } else if (modifyType == TIMGroupTipsGroupInfoType.ModifyIntroduction) {
+                            msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                            message = message + "修改群介绍";
                         }
                     }
+                }
+                if (tipsType == TIMGroupTipsType.ModifyMemberInfo) {
+                    List<TIMGroupTipsElemMemberInfo> modifyList = groupTips.getMemberInfoList();
+                    if (modifyList.size() > 0) {
+                        long shutupTime = modifyList.get(0).getShutupTime();
+                        if (shutupTime > 0) {
+                            msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                            message = message + "被禁言\"" + DateTimeUtil.formatSeconds(shutupTime) + "\"";
+                        } else {
+                            msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                            message = message + "被取消禁言";
+                        }
+                    }
+                }
+                if (TextUtils.isEmpty(message)) {
+                    return null;
                 }
                 msgInfo.setExtra(message);
             } else {
@@ -521,6 +557,14 @@ public class MessageInfoUtil {
         if (timMessage.status() == TIMMessageStatus.HasRevoked) {
             msgInfo.setStatus(MessageInfo.MSG_STATUS_REVOKE);
             msgInfo.setMsgType(MessageInfo.MSG_STATUS_REVOKE);
+            if (msgInfo.isSelf()) {
+                msgInfo.setExtra("您撤回了一条消息");
+            } else if (msgInfo.isGroup()) {
+                String message = wrapperColor(msgInfo.getFromUser());
+                msgInfo.setExtra(message + "撤回了一条消息");
+            } else {
+                msgInfo.setExtra("对方撤回了一条消息");
+            }
         } else {
             if (msgInfo.isSelf()) {
                 if (timMessage.status() == TIMMessageStatus.SendFail) {
@@ -533,6 +577,10 @@ public class MessageInfoUtil {
             }
         }
         return msgInfo;
+    }
+
+    private static String wrapperColor(String raw) {
+        return "\"<font color=\"#338BFF\">" + raw + "</font>\"";
     }
 
     private static int TIMElemType2MessageInfoType(TIMElemType type) {

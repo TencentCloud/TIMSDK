@@ -84,6 +84,11 @@ public class AddMoreActivity extends Activity {
                     case TIMFriendStatus.TIM_FRIEND_STATUS_SUCC:
                         ToastUtil.toastShortMessage("成功");
                         break;
+                    case TIMFriendStatus.TIM_FRIEND_PARAM_INVALID:
+                        if (TextUtils.equals(timFriendResult.getResultInfo(), "Err_SNS_FriendAdd_Friend_Exist")) {
+                            ToastUtil.toastShortMessage("对方已是您的好友");
+                            break;
+                        }
                     case TIMFriendStatus.TIM_ADD_FRIEND_STATUS_SELF_FRIEND_FULL:
                         ToastUtil.toastShortMessage("您的好友数已达系统上限");
                         break;
@@ -102,11 +107,6 @@ public class AddMoreActivity extends Activity {
                     case TIMFriendStatus.TIM_ADD_FRIEND_STATUS_PENDING:
                         ToastUtil.toastShortMessage("等待好友审核同意");
                         break;
-                    case TIMFriendStatus.TIM_FRIEND_PARAM_INVALID:
-                        if (TextUtils.equals(timFriendResult.getResultInfo(), "Err_SNS_FriendAdd_Friend_Exist")) {
-                            ToastUtil.toastShortMessage("对方已是您的好友");
-                            break;
-                        }
                     default:
                         ToastUtil.toastLongMessage(timFriendResult.getResultCode() + " " + timFriendResult.getResultInfo());
                         break;
@@ -132,6 +132,7 @@ public class AddMoreActivity extends Activity {
             @Override
             public void onSuccess() {
                 DemoLog.i(TAG, "addGroup success");
+                ToastUtil.toastShortMessage("加群请求已发送");
                 finish();
             }
         });

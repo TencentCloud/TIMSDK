@@ -20,6 +20,7 @@
 
     <string name="group_id">群ID</string>
     <string name="group_name">群聊名称</string>
+    <string name="group_icon">修改群头像</string>
     <string name="group_notice">群公告</string>
     <string name="group_members">群成员</string>
     <string name="group_type">群类型</string>

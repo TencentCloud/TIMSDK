@@ -157,6 +157,7 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                 post(new Runnable() {
                     @Override
                     public void run() {
+                        AudioPlayer.getInstance().stopPlayRecord();
                         mRecordingGroup.setVisibility(View.VISIBLE);
                         mRecordingIcon.setImageResource(R.drawable.recording_volume);
                         mVolumeAnim = (AnimationDrawable) mRecordingIcon.getDrawable();
@@ -213,7 +214,6 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
     @Override
     public void initDefault() {
         getTitleBar().getLeftGroup().setVisibility(View.VISIBLE);
-        getTitleBar().getRightIcon().setImageResource(R.drawable.group_icon);
         getTitleBar().setOnLeftClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

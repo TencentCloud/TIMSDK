@@ -32,7 +32,7 @@ public class ChatFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-        mChatInfo = (ChatInfo)bundle.getSerializable(Constants.CHAT_INFO);
+        mChatInfo = (ChatInfo) bundle.getSerializable(Constants.CHAT_INFO);
         if (mChatInfo == null) {
             return null;
         }
@@ -86,7 +86,7 @@ public class ChatFragment extends BaseFragment {
 
             @Override
             public void onUserIconClick(View view, int position, MessageInfo messageInfo) {
-                if (null == messageInfo || null == messageInfo.getTIMMessage() ) {
+                if (null == messageInfo || null == messageInfo.getTIMMessage()) {
                     return;
                 }
                 ChatInfo info = new ChatInfo();

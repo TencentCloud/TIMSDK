@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -19,6 +20,9 @@ import java.lang.reflect.Method;
 
 
 public class ScreenUtil {
+
+    private static final String TAG = ScreenUtil.class.getSimpleName();
+
     private static int navigationBarHeight = 0;
 
     public static boolean checkNavigationBarShow(@NonNull Context context, @NonNull Window window) {
@@ -125,4 +129,20 @@ public class ScreenUtil {
         return SOFT_INPUT_HEIGHT;
     }
 
+    public static int[] scaledSize(int containerWidth, int containerHeight, int realWidth, int realHeight) {
+        TUIKitLog.i(TAG, "scaledSize  containerWidth: " + containerWidth + " containerHeight: " + containerHeight
+            + " realWidth: " + realWidth + " realHeight: " + realHeight);
+        float deviceRate = (float) containerWidth / (float) containerHeight;
+        float rate = (float) realWidth / (float) realHeight;
+        int width = 0;
+        int height = 0;
+        if (rate < deviceRate) {
+            height = containerHeight;
+            width = (int) (containerHeight * rate);
+        } else {
+            width = containerWidth;
+            height = (int) (containerWidth / rate);
+        }
+        return new int[] {width, height};
+    }
 }

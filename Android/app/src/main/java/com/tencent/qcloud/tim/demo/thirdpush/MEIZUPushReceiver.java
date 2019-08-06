@@ -40,7 +40,7 @@ public class MEIZUPushReceiver extends MzPushMessageReceiver {
 
     @Override
     public void onNotificationClicked(Context context, MzPushMessage mzPushMessage) {
-        DemoLog.i(TAG, "onNotificationClicked");
+        DemoLog.i(TAG, "onNotificationClicked mzPushMessage " + mzPushMessage.toString());
     }
 
     @Override

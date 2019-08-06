@@ -68,6 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
+            android:thumb="@drawable/switch_thumb"
+            android:track="@drawable/switch_track"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp" />

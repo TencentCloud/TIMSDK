@@ -1,14 +1,16 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
 
+import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tencent.openqq.protocol.imsdk.msg;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
 public class MessageTipsHolder extends MessageEmptyHolder {
 
-    private TextView chat_tips_tv;
+    private TextView mChatTipsTv;
 
     public MessageTipsHolder(View itemView) {
         super(itemView);
@@ -21,7 +23,7 @@ public class MessageTipsHolder extends MessageEmptyHolder {
 
     @Override
     public void initVariableViews() {
-        chat_tips_tv = rootView.findViewById(R.id.chat_tips_tv);
+        mChatTipsTv = rootView.findViewById(R.id.chat_tips_tv);
     }
 
     @Override
@@ -29,27 +31,31 @@ public class MessageTipsHolder extends MessageEmptyHolder {
         super.layoutViews(msg, position);
 
         if (properties.getTipsMessageBubble() != null) {
-            chat_tips_tv.setBackground(properties.getTipsMessageBubble());
+            mChatTipsTv.setBackground(properties.getTipsMessageBubble());
         }
         if (properties.getTipsMessageFontColor() != 0) {
-            chat_tips_tv.setTextColor(properties.getTipsMessageFontColor());
+            mChatTipsTv.setTextColor(properties.getTipsMessageFontColor());
         }
         if (properties.getTipsMessageFontSize() != 0) {
-            chat_tips_tv.setTextSize(properties.getTipsMessageFontSize());
+            mChatTipsTv.setTextSize(properties.getTipsMessageFontSize());
         }
 
-        if (msg.getStatus() == MessageInfo.MSG_STATUS_REVOKE) {
-            if (msg.isSelf())
-                chat_tips_tv.setText("您撤回了一条消息");
-            else if (msg.isGroup()) {
-                chat_tips_tv.setText(msg.getFromUser() + "撤回了一条消息");
+        if (msg.getStatus() == MessageInfo.MSG_STATUS_REVOKE ) {
+            if (msg.isSelf()) {
+                msg.setExtra("您撤回了一条消息");
+            } else if (msg.isGroup()) {
+                String message = "\"<font color=\"#338BFF\">" + msg.getFromUser() + "</font>\"";
+                msg.setExtra(message + "撤回了一条消息");
             } else {
-                chat_tips_tv.setText("对方撤回了一条消息");
+                msg.setExtra("对方撤回了一条消息");
             }
+        }
 
-        } else if (msg.getMsgType() >= MessageInfo.MSG_TYPE_GROUP_CREATE && msg.getMsgType() <= MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE) {
+        if (msg.getStatus() == MessageInfo.MSG_STATUS_REVOKE
+                || (msg.getMsgType() >= MessageInfo.MSG_TYPE_GROUP_CREATE
+                        && msg.getMsgType() <= MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE)) {
             if (msg.getExtra() != null) {
-                chat_tips_tv.setText(msg.getExtra().toString());
+                mChatTipsTv.setText(Html.fromHtml(msg.getExtra().toString()));
             }
         }
     }

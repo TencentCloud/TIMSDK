@@ -44,6 +44,10 @@ android {
             dirs 'libs'
         }
     }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
 }
 
 dependencies {
@@ -55,6 +59,7 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.android.support:multidex:1.0.1'
 
     // Optional, if you use support library fragments:
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
@@ -66,10 +71,10 @@ dependencies {
     compile 'com.meizu.flyme.internet:push-internal:3.6.+@aar'
 
     // bugly sdk
-    compile 'com.tencent.bugly:crashreport:2.6.6'
-    compile 'com.tencent.bugly:nativecrashreport:3.3.1'
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    compile 'com.tencent.bugly:nativecrashreport:latest.release'
     compile 'org.bouncycastle:bcpkix-jdk15on:1.59'
 
-//    implementation 'com.tencent.imsdk:tuikit:0.0.1.198'
-    implementation project(':tuikit')
+    implementation 'com.tencent.imsdk:tuikit:4.4.900'
+//    implementation project(':tuikit')
 }

@@ -3,26 +3,33 @@ package com.tencent.qcloud.tim.uikit.modules.chat.interfaces;
 import android.view.View;
 
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
+import com.tencent.qcloud.tim.uikit.modules.chat.layout.input.InputLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreActionUnit;
+import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 
+/**
+ * 输入区域 {@link InputLayout} 实现了一般消息的输入，包括文本、表情、图片、音频、视频、文件等，<br>
+ * 并且配合 {@link MessageLayout#setOnCustomMessageDrawListener} 可以完成自定义消息的发送与展示。
+ * <br>另外也可以根据需要对上面的功能进行删除或替换。
+ */
 public interface IInputLayout {
 
     /**
-     * disable语音输入后，会隐藏按钮
+     * disable 语音输入后，会隐藏按钮
      *
      * @param disable
      */
     void disableAudioInput(boolean disable);
 
     /**
-     * disable表情输入后，会隐藏按钮
+     * disable 表情输入后，会隐藏按钮
      *
      * @param disable
      */
     void disableEmojiInput(boolean disable);
 
     /**
-     * disable更多功能后，会隐藏按钮
+     * disable 更多功能后，会隐藏按钮
      *
      * @param disable
      */
@@ -43,28 +50,28 @@ public interface IInputLayout {
     void replaceMoreInput(View.OnClickListener listener);
 
     /**
-     * disable发送图片后，会隐藏更多面板上的按钮
+     * disable 发送图片后，会隐藏更多面板上的按钮
      *
      * @param disable
      */
     void disableSendPhotoAction(boolean disable);
 
     /**
-     * disable拍照后，会隐藏更多面板上的按钮
+     * disable 拍照后，会隐藏更多面板上的按钮
      *
      * @param disable
      */
     void disableCaptureAction(boolean disable);
 
     /**
-     * disable录像后，会隐藏更多面板上的按钮
+     * disable 录像后，会隐藏更多面板上的按钮
      *
      * @param disable
      */
     void disableVideoRecordAction(boolean disable);
 
     /**
-     * disable发送文件后，会隐藏更多面板上的按钮
+     * disable 发送文件后，会隐藏更多面板上的按钮
      *
      * @param disable
      */
@@ -73,7 +80,7 @@ public interface IInputLayout {
     /**
      * 增加更多面板上的事件单元
      *
-     * @param action 事件单元{@link InputMoreActionUnit}，可以自定义显示的图片、标题以及点击事件
+     * @param action 事件单元 {@link InputMoreActionUnit}，可以自定义显示的图片、标题以及点击事件
      */
     void addAction(InputMoreActionUnit action);
 }

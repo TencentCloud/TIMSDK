@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.demo;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 
 import com.huawei.android.hms.agent.HMSAgent;
 import com.meizu.cloud.pushsdk.PushManager;
@@ -15,8 +16,10 @@ import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.session.SessionWrapper;
 import com.tencent.imsdk.utils.IMFunc;
 import com.tencent.qcloud.tim.demo.helper.ConfigHelper;
+import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -32,11 +35,11 @@ public class DemoApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        MultiDex.install(this);
         // bugly上报
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
         strategy.setAppVersion(TIMManager.getInstance().getVersion());
-        CrashReport.initCrashReport(getApplicationContext(), Constants.BUGLY_APPID, true, strategy);
+        CrashReport.initCrashReport(getApplicationContext(), PrivateConstants.BUGLY_APPID, true, strategy);
 
         //判断是否是在主线程
         if (SessionWrapper.isMainProcess(getApplicationContext())) {
@@ -47,11 +50,11 @@ public class DemoApplication extends Application {
              * @param sdkAppID 您在腾讯云注册应用时分配的sdkAppID
              * @param configs  TUIKit的相关配置项，一般使用默认即可，需特殊配置参考API文档
              */
-            TUIKit.init(this, Constants.SDKAPPID, new ConfigHelper().getConfigs());
+            TUIKit.init(this, GenerateTestUserSig.SDKAPPID, new ConfigHelper().getConfigs());
 
             if (IMFunc.isBrandXiaoMi()) {
                 // 小米离线推送
-                MiPushClient.registerPush(this, Constants.XM_PUSH_APPID, Constants.XM_PUSH_APPKEY);
+                MiPushClient.registerPush(this, PrivateConstants.XM_PUSH_APPID, PrivateConstants.XM_PUSH_APPKEY);
             }
             if (IMFunc.isBrandHuawei()) {
                 // 华为离线推送
@@ -59,7 +62,7 @@ public class DemoApplication extends Application {
             }
             if (MzSystemUtils.isBrandMeizu(this)) {
                 // 魅族离线推送
-                PushManager.register(this, Constants.MZ_PUSH_APPID, Constants.MZ_PUSH_APPKEY);
+                PushManager.register(this, PrivateConstants.MZ_PUSH_APPID, PrivateConstants.MZ_PUSH_APPKEY);
             }
             if (IMFunc.isBrandVivo()) {
                 // vivo离线推送

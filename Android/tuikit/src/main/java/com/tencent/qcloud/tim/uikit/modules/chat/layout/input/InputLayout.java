@@ -134,6 +134,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                         }
                         mSendAudioButton.setText("松开结束");
                         break;
+                    case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
                         mAudioCancel = motionEvent.getY() - mStartRecordY < -100;
                         if (mChatInputHandler != null) {
@@ -315,6 +316,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                 showFaceViewGroup();
             }
         } else if (view.getId() == R.id.more_btn) {//若点击右边的“+”号按钮
+            hideSoftInput();
             if (mMoreInputEvent instanceof View.OnClickListener) {
                 ((View.OnClickListener) mMoreInputEvent).onClick(view);
             } else if (mMoreInputEvent instanceof BaseInputFragment) {

@@ -60,6 +60,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+
+                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                    android:id="@+id/modify_user_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:name="@string/modify_user_icon" />
+
                 <com.tencent.qcloud.tim.uikit.component.LineControllerView
                     android:id="@+id/modify_nick_name"
                     android:layout_width="match_parent"
@@ -87,6 +95,20 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     app:name="@string/about_im" />
+
+                <Button
+                    android:id="@+id/logout_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/btn_margin_left"
+                    android:layout_marginRight="@dimen/btn_margin_right"
+                    android:layout_marginBottom="@dimen/btn_margin_bottom"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="@dimen/btn_height_large"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/bg_negative_btn"
+                    android:text="@string/exit"
+                    android:textColor="@color/negative_text" />
 
             </LinearLayout>
 

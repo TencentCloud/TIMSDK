@@ -2,9 +2,9 @@ package com.tencent.qcloud.tim.uikit.modules.group.info;
 
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
-import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
+import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
+import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
 
 import java.util.List;
 
@@ -158,7 +158,7 @@ public class GroupInfo extends ChatInfo {
      * @param detailInfo
      * @return
      */
-    public GroupInfo covertTIMGroupDetailInfo(TIMGroupDetailInfo detailInfo) {
+    public GroupInfo covertTIMGroupDetailInfo(TIMGroupDetailInfoResult detailInfo) {
         setChatName(detailInfo.getGroupName());
         setGroupName(detailInfo.getGroupName());
         setId(detailInfo.getGroupId());

@@ -12,7 +12,7 @@ public interface ILayout {
     TitleBarLayout getTitleBar();
 
     /**
-     * 设置该Layout的父容器
+     * 设置该 Layout 的父容器
      *
      * @param parent
      */

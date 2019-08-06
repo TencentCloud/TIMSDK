@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">云通信IM</string>
 
+    // 云通信
+    <string name="chat_top">置顶聊天</string>
+    <string name="chat_delete">删除聊天</string>
+    <string name="quit_chat_top">取消置顶</string>
+
     // 登录相关
     <string name="account">用户名</string>
     <string name="password">密码</string>
@@ -8,6 +13,7 @@
     // "我"相关
     <string name="profile">我</string>
     <string name="id">账号：%1$s</string>
+    <string name="modify_user_icon">修改头像</string>
     <string name="modify_nick_name">修改昵称</string>
     <string name="modify_signature">修改个性签名</string>
     <string name="add_rule">加我为好友时</string>
@@ -38,6 +44,8 @@
     // 群信息相关
     <string name="tips_empty_group_member">请选择群成员</string>
     <string name="tips_empty_group_type">请选择加群方式</string>
+    <string name="no_friend_apply">暂无好友申请</string>
+
 
     // 新朋友
     <string name="request_agree">同意</string>
