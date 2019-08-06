@@ -27,4 +27,9 @@
     <dimen name="item_height">40dp</dimen>
     <dimen name="item_width">40dp</dimen>
 
+    <dimen name="switch_thumb_padding">2dp</dimen>
+    <dimen name="switch_thumb_width">23dp</dimen>
+    <dimen name="switch_thumb_height">23dp</dimen>
+    <dimen name="switch_thumb_radius">20dp</dimen>
+
 </resources>

@@ -56,5 +56,5 @@
         android:background="@color/bg_negative_btn"
         android:onClick="startConversation"
         android:text="@string/refuse"
-        android:textColor="#fff" />
+        android:textColor="#fb6155" />
 </LinearLayout>

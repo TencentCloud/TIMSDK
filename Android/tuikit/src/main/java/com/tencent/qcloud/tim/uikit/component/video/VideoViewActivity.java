@@ -3,16 +3,15 @@ package com.tencent.qcloud.tim.uikit.component.video;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.VideoView;
 
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.component.video.proxy.IPlayer;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
 import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
@@ -22,8 +21,7 @@ public class VideoViewActivity extends Activity {
 
     private static final String TAG = VideoViewActivity.class.getSimpleName();
 
-    private VideoView mVideoView;
-    private boolean mIsPause;
+    private UIKitVideoView mVideoView;
     private int videoWidth = 0;
     private int videoHeight = 0;
 
@@ -47,38 +45,28 @@ public class VideoViewActivity extends Activity {
             updateVideoView();
         }
 
-        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        mVideoView.setVideoURI(videoUri);
+        mVideoView.setOnPreparedListener(new IPlayer.OnPreparedListener() {
             @Override
-            public void onCompletion(MediaPlayer mp) {
-
+            public void onPrepared(IPlayer mediaPlayer) {
+                mVideoView.start();
             }
         });
         mVideoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIsPause) {
-                    mVideoView.resume();
-                    mIsPause = false;
-                } else if (mVideoView.isPlaying()) {
+                if (mVideoView.isPlaying()) {
                     mVideoView.pause();
-                    mIsPause = true;
                 } else {
-                    mIsPause = false;
                     mVideoView.start();
                 }
-            }
-        });
-        mVideoView.setVideoURI(videoUri);
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mVideoView.start();
             }
         });
 
         findViewById(R.id.video_view_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mVideoView.stop();
                 finish();
             }
         });
@@ -95,6 +83,7 @@ public class VideoViewActivity extends Activity {
     }
 
     private void updateVideoView() {
+        TUIKitLog.i(TAG, "updateVideoView videoWidth: " + videoWidth + " videoHeight: " + videoHeight);
         if (videoWidth <= 0 && videoHeight <= 0) {
             return;
         }
@@ -112,23 +101,19 @@ public class VideoViewActivity extends Activity {
             deviceWidth = Math.min(ScreenUtil.getScreenWidth(this), ScreenUtil.getScreenHeight(this));
             deviceHeight = Math.max(ScreenUtil.getScreenWidth(this), ScreenUtil.getScreenHeight(this));
         }
-        float deviceRate = (float) deviceWidth / (float) deviceHeight;
-
-        float rate = (float) videoWidth / (float) videoHeight;
-        int width = 0;
-        int height = 0;
-        if (rate < deviceRate) {
-            height = deviceHeight;
-            width = (int) (deviceHeight * rate);
-        } else {
-            width = deviceWidth;
-            height = (int) (deviceWidth / rate);
-        }
-        TUIKitLog.i(TAG, "scaled width: " + width + "  height: " + height);
-
+        int[] scaledSize = ScreenUtil.scaledSize(deviceWidth, deviceHeight, videoWidth, videoHeight);
+        //  TUIKitLog.i(TAG, "scaled width: " + scaledSize[0] + " height: " + scaledSize[1]);
         ViewGroup.LayoutParams params = mVideoView.getLayoutParams();
-        params.width = width;
-        params.height = height;
+        params.width = scaledSize[0];
+        params.height = scaledSize[1];
         mVideoView.setLayoutParams(params);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mVideoView != null) {
+            mVideoView.stop();
+        }
     }
 }

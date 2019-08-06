@@ -4,14 +4,14 @@
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:shape="rectangle" >
             <corners android:radius="5dp" />
-            <solid android:color="@color/btn_blue_hover" />
+            <solid android:color="@color/btn_positive_hover" />
         </shape>
     </item>
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:shape="rectangle" >
             <corners android:radius="5dp" />
-            <solid android:color="@color/btn_blue" />
+            <solid android:color="@color/btn_positive" />
         </shape>
     </item>
 </selector>

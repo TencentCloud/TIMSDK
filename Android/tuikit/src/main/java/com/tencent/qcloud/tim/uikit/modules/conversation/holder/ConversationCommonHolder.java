@@ -1,6 +1,8 @@
 package com.tencent.qcloud.tim.uikit.modules.conversation.holder;
 
 import android.graphics.Color;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -11,7 +13,9 @@ import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.DateTimeUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ConversationCommonHolder extends ConversationBaseHolder {
 
@@ -34,6 +38,17 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 
     public void layoutViews(ConversationInfo conversation, int position) {
         MessageInfo lastMsg = conversation.getLastMessage();
+        if (lastMsg.getStatus() == MessageInfo.MSG_STATUS_REVOKE ) {
+            if (lastMsg.isSelf()) {
+                lastMsg.setExtra("您撤回了一条消息");
+            } else if (lastMsg.isGroup()) {
+                String message = "\"<font color=\"#338BFF\">" + lastMsg.getFromUser() + "</font>\"";
+                lastMsg.setExtra(message + "撤回了一条消息");
+            } else {
+                lastMsg.setExtra("对方撤回了一条消息");
+            }
+        }
+
         if (conversation.isTop()) {
             leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.top_conversation_color));
         } else {
@@ -58,20 +73,10 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         messageText.setText("");
         timelineText.setText("");
         if (lastMsg != null) {
-            if (lastMsg.getStatus() == MessageInfo.MSG_STATUS_REVOKE) {
-                if (lastMsg.isSelf())
-                    messageText.setText("您撤回了一条消息");
-                else if (lastMsg.isGroup()) {
-                    messageText.setText(lastMsg.getFromUser() + "撤回了一条消息");
-                } else {
-                    messageText.setText("对方撤回了一条消息");
-                }
-
-            } else {
-                if (lastMsg.getExtra() != null)
-                    messageText.setText(lastMsg.getExtra().toString());
+            if (lastMsg.getExtra() != null) {
+                messageText.setText(Html.fromHtml(lastMsg.getExtra().toString()));
+                messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
             }
-
             timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(lastMsg.getMsgTime())));
         }
 
@@ -95,6 +100,13 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 //        if (mIsShowUnreadDot) {
 //            holder.unreadText.setVisibility(View.GONE);
 //        }
+
+        if (!TextUtils.isEmpty(conversation.getIconUrl())) {
+            List<String> urllist = new ArrayList<>();
+            urllist.add(conversation.getIconUrl());
+            conversationIconView.setIconUrls(urllist);
+            urllist.clear();
+        }
 
         //// 由子类设置指定消息类型的views
         layoutVariableViews(conversation, position);

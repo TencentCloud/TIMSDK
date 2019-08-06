@@ -53,6 +53,7 @@
         android:id="@+id/remark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:canNav="true"
         app:name="@string/profile_remark" />
 
@@ -60,6 +61,7 @@
         android:id="@+id/chat_to_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:visibility="gone"
         app:isSwitch="true"
         app:name="@string/chat_to_top" />
@@ -68,41 +70,43 @@
         android:id="@+id/blackList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:isSwitch="true"
         app:name="@string/profile_black" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
         android:paddingLeft="@dimen/btn_margin_left"
         android:paddingRight="@dimen/btn_margin_right">
 
         <TextView
-            android:id="@+id/btnDel"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:background="@color/bg_negative_btn"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="@string/profile_del"
-            android:textColor="@color/text_btn"
-            android:textSize="18sp" />
-
-        <TextView
             android:id="@+id/btnChat"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="@dimen/btn_margin_middle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@color/bg_positive_btn"
             android:clickable="true"
             android:gravity="center"
             android:text="@string/profile_chat"
-            android:textColor="@color/text_btn"
-            android:textSize="18sp" />
+            android:textColor="@color/positive_text"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/btnDel"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:background="@color/bg_negative_btn"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/profile_del"
+            android:textColor="@color/negative_text"
+            android:textSize="14sp" />
+
     </LinearLayout>
 
 </LinearLayout>

@@ -76,6 +76,6 @@
         android:background="@color/bg_negative_btn"
         android:text="@string/contact_add"
         android:onClick="add"
-        android:textColor="#fff" />
+        android:textColor="#fb6155" />
 
 </LinearLayout>

@@ -65,6 +65,7 @@ public class ChatLayout extends AbsChatLayout implements GroupChatManagerKit.Gro
             mGroupInfo = groupInfo;
             loadChatMessages(null);
             loadApplyList();
+            getTitleBar().getRightIcon().setImageResource(R.drawable.chat_group);
             getTitleBar().setOnRightClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -86,6 +87,7 @@ public class ChatLayout extends AbsChatLayout implements GroupChatManagerKit.Gro
                 }
             });
         } else {
+            getTitleBar().getRightIcon().setImageResource(R.drawable.chat_c2c);
             mC2CChatManager = C2CChatManagerKit.getInstance();
             mC2CChatManager.setCurrentChatInfo(chatInfo);
             loadChatMessages(null);

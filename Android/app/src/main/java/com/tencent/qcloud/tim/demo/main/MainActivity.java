@@ -18,7 +18,6 @@ import com.tencent.qcloud.tim.demo.contact.ContactFragment;
 import com.tencent.qcloud.tim.demo.conversation.ConversationFragment;
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
-import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.TUIKit;
@@ -67,10 +66,6 @@ public class MainActivity extends Activity implements ConversationManagerKit.Mes
         ConversationManagerKit.getInstance().addUnreadWatcher(this);
         GroupChatManagerKit.getInstance();
         mLastButton = mConversationBtn;
-
-        // 登录后，设置pushtoken
-        ThirdPushTokenMgr.getInstance().setIsLogin(true);
-        ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
     }
 
     public void tabClick(View view) {

@@ -13,7 +13,8 @@ public class VIVOPushMessageReceiverImpl extends OpenClientPushMessageReceiver {
 
     @Override
     public void onNotificationMessageClicked(Context context, UPSNotificationMessage upsNotificationMessage) {
-        DemoLog.i(TAG, "onNotificationMessageClicked");
+        DemoLog.i(TAG, "onNotificationMessageClicked upsNotificationMessage " + upsNotificationMessage.toString());
+        // 如果聊天消息，跳转到聊天界面
     }
 
     @Override

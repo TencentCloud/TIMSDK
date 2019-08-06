@@ -47,8 +47,10 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.github.promeg:tinypinyin:1.0.0' // ~80KB
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
 
-    api 'com.tencent.imsdk:imsdk:4.4.716'
+    api 'com.tencent.imsdk:imsdk:4.4.900'
 //    api project(':imsdk')
 }
 

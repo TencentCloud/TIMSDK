@@ -66,41 +66,38 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                 TIMConversation conversation = msg.getConversation();
                 TIMConversationType type = conversation.getType();
                 if (type == TIMConversationType.C2C) {
-                    TIMElem ele = msg.getElement(0);
-                    TIMElemType eleType = ele.getType();
-                    // 用户资料修改通知，不需要在聊天界面展示，可以通过 TIMUserConfig 中的 setFriendshipListener 处理
-                    if (eleType == TIMElemType.ProfileTips) {
-                        TUIKitLog.i(TAG, "onNewMessages() eleType is ProfileTips, ignore");
-                        return false;
-                    }
-                    if (eleType == TIMElemType.SNSTips) {
-                        TUIKitLog.i(TAG, "onNewMessages() eleType is SNSTips");
-                        TIMSNSSystemElem m = (TIMSNSSystemElem) ele;
-                        if (m.getRequestAddFriendUserList().size() > 0) {
-                            ToastUtil.toastLongMessage("好友申请通过");
-                        }
-                        if (m.getDelFriendAddPendencyList().size() > 0) {
-                            ToastUtil.toastLongMessage("好友申请被拒绝");
-                        }
-                        return false;
-                    }
-
-                    TUIKitLog.i(TAG, "onNewMessages() msg = " + msg);
                     onReceiveMessage(conversation, msg);
-
+                    TUIKitLog.i(TAG, "onNewMessages() C2C msg = " + msg);
                 } else if (type == TIMConversationType.Group) {
                     onReceiveMessage(conversation, msg);
-                    TUIKitLog.i(TAG, "onNewMessages::: " + msg);
+                    TUIKitLog.i(TAG, "onNewMessages() Group msg = " + msg);
                 } else if (type == TIMConversationType.System) {
                     onReceiveSystemMessage(msg);
+                    TUIKitLog.i(TAG, "onReceiveSystemMessage() msg = " + msg);
                 }
             }
         }
         return false;
     }
 
+    // GroupChatManager会重写该方法
     protected void onReceiveSystemMessage(TIMMessage msg) {
-        // GroupChatManager会重写该方法
+        TIMElem ele = msg.getElement(0);
+        TIMElemType eleType = ele.getType();
+        // 用户资料修改通知，不需要在聊天界面展示，可以通过 TIMUserConfig 中的 setFriendshipListener 处理
+        if (eleType == TIMElemType.ProfileTips) {
+            TUIKitLog.i(TAG, "onReceiveSystemMessage eleType is ProfileTips, ignore");
+        }
+        if (eleType == TIMElemType.SNSTips) {
+            TUIKitLog.i(TAG, "onReceiveSystemMessage eleType is SNSTips");
+            TIMSNSSystemElem m = (TIMSNSSystemElem) ele;
+            if (m.getRequestAddFriendUserList().size() > 0) {
+                ToastUtil.toastLongMessage("好友申请通过");
+            }
+            if (m.getDelFriendAddPendencyList().size() > 0) {
+                ToastUtil.toastLongMessage("好友申请被拒绝");
+            }
+        }
     }
 
     protected void onReceiveMessage(final TIMConversation conversation, final TIMMessage msg) {

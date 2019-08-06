@@ -33,17 +33,21 @@
     <color name="tab_text_selected_color">#006EFF</color>
     <color name="tab_text_normal_color">#888888</color>
 
-    // 蓝色/品牌色按钮色值
-    <color name="btn_blue">#00a4ff</color>
-    <color name="btn_blue_hover">#006eff</color>
+    // 积极钮色值
+    <color name="btn_positive">#00a4ff</color>
+    <color name="btn_positive_hover">#006eff</color>
 
-    // 红色按钮色值
-    <color name="btn_red">#fb6155</color>
-    <color name="btn_red_hover">#cc3428</color>
+    // 积极按钮文本色值
+    <color name="text_positive">#ffffff</color>
+    <color name="text_positive_hover">#ffffff</color>
 
-    // 按钮文本色值
-    <color name="btn_text">#FFFFFF</color>
-    <color name="btn_text_hover">#FFFFFF</color>
+    // 消极按钮背景色值
+    <color name="btn_negative">#ffffff</color>
+    <color name="btn_negative_hover">#cc3428</color>
+
+    // 消极按钮文本色值
+    <color name="text_negative">#fb6155</color>
+    <color name="text_negative_hover">#FFFFFF</color>
 
     // 聊天昵称/时间条背景色值
 

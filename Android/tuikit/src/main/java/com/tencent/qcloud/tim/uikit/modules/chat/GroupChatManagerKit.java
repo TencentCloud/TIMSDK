@@ -136,10 +136,11 @@ public class GroupChatManagerKit extends ChatManagerKit {
 
     @Override
     protected void onReceiveSystemMessage(TIMMessage msg) {
+        super.onReceiveSystemMessage(msg);
         TIMElem ele = msg.getElement(0);
         TIMElemType eleType = ele.getType();
         if (eleType == TIMElemType.GroupSystem) {
-            TUIKitLog.i(TAG, "onNewMessages::: " + msg);
+            TUIKitLog.i(TAG, "onReceiveSystemMessage msg = " + msg);
             TIMGroupSystemElem groupSysEle = (TIMGroupSystemElem) ele;
             groupSystMsgHandle(groupSysEle);
         }

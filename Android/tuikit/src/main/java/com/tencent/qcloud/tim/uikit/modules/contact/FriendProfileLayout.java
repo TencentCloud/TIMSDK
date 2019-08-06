@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.uikit.modules.contact;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -29,6 +30,7 @@ import com.tencent.qcloud.tim.uikit.component.CircleImageView;
 import com.tencent.qcloud.tim.uikit.component.LineControllerView;
 import com.tencent.qcloud.tim.uikit.component.SelectionActivity;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
+import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
@@ -141,6 +143,9 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                     }
                 }
             });
+            if (!TextUtils.isEmpty(mContactInfo.getAvatarurl())) {
+                GlideEngine.loadImage(mHeadImageView, Uri.parse(mContactInfo.getAvatarurl()));
+            }
         } else if (data instanceof TIMFriendPendencyItem) {
             mPendencyItem = (TIMFriendPendencyItem) data;
             mId = mPendencyItem.getIdentifier();
@@ -241,6 +246,10 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         } else {
             mNickNameView.setText(mId);
         }
+
+        if (!TextUtils.isEmpty(bean.getAvatarurl())) {
+            GlideEngine.loadImage(mHeadImageView, Uri.parse(bean.getAvatarurl()));
+        }
         mIDView.setContent(mId);
     }
 
@@ -264,6 +273,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                 final TIMUserProfile profile = timUserProfiles.get(0);
                 bean.setNickname(profile.getNickName());
                 bean.setId(profile.getIdentifier());
+                bean.setAvatarurl(profile.getFaceUrl());
                 updateViews(bean);
             }
         });
@@ -301,6 +311,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                         if (TextUtils.equals(friend.getIdentifier(), mId)) {
                             bean.setFriend(true);
                             bean.setRemark(friend.getRemark());
+                            bean.setAvatarurl(friend.getTimUserProfile().getFaceUrl());
                             break;
                         }
                     }

@@ -38,7 +38,6 @@ public class NewFriendActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contact_new_friend_activity);
-
         init();
     }
 
@@ -90,7 +89,7 @@ public class NewFriendActivity extends Activity {
                 DemoLog.i(TAG, "getPendencyList success result = " + timFriendPendencyResponse.toString());
                 if (timFriendPendencyResponse.getItems() != null) {
                     if (timFriendPendencyResponse.getItems().size() == 0 ) {
-                        mEmptyView.setText("暂无好友申请");
+                        mEmptyView.setText(getResources().getString(R.string.no_friend_apply));
                         mNewFriendLv.setVisibility(View.GONE);
                         mEmptyView.setVisibility(View.VISIBLE);
                         return;

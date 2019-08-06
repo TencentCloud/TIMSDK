@@ -113,6 +113,9 @@ public class MessageImageHolder extends MessageContentHolder {
     }
 
     private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final MessageInfo msg) {
+        if (msg.getImgWidth() == 0 || msg.getImgHeight() == 0 ) {
+            return params;
+        }
         if (msg.getImgWidth() > msg.getImgHeight()) {
             params.width = DEFAULT_MAX_SIZE;
             params.height = DEFAULT_MAX_SIZE * msg.getImgHeight() / msg.getImgWidth();

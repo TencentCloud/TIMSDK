@@ -4,8 +4,8 @@ import android.graphics.drawable.Drawable;
 
 public interface IMessageProperties {
 
-    /////////////////////
-    ////// 设置头像 //////
+    /// @name 设置头像
+    /// @{
 
     /**
      * 设置默认头像，默认与左边与右边的头像相同
@@ -50,8 +50,9 @@ public interface IMessageProperties {
      */
     int[] getAvatarSize();
 
-    /////////////////////
-    ////// 设置昵称样式 //////
+    /// @}
+    /// @name 设置昵称样式
+    /// @{
 
     /**
      * 设置昵称文字大小
@@ -109,8 +110,9 @@ public interface IMessageProperties {
      */
     int getRightNameVisibility();
 
-    /////////////////////
-    ////// 设置气泡 ///////
+    /// @}
+    /// @name 设置气泡
+    /// @{
 
     /**
      * 设置右边聊天气泡的背景
@@ -140,8 +142,9 @@ public interface IMessageProperties {
      */
     Drawable getLeftBubble();
 
-    /////////////////////
-    ////// 设置聊天内容 //////
+    /// @}
+    /// @name 设置聊天内容
+    /// @{
 
     /**
      * 设置聊天内容字体大小
@@ -185,8 +188,9 @@ public interface IMessageProperties {
      */
     void setLeftChatContentFontColor(int color);
 
-    /////////////////////
-    ////// 设置聊天时间 //////
+    /// @}
+    /// @name 设置聊天时间
+    /// @{
 
     /**
      * 设置聊天时间的背景
@@ -230,8 +234,9 @@ public interface IMessageProperties {
      */
     int getChatTimeFontColor();
 
-    /////////////////////
-    ////// 设置聊天的提示信息 //////
+    /// @}
+    /// @name 设置聊天的提示信息
+    /// @{
 
     /**
      * 设置聊天提示信息的背景

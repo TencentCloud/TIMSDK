@@ -182,7 +182,6 @@ public class ContactListView extends LinearLayout {
                 TUIKitLog.i(TAG, "getFriendList success result = " + timFriends.size());
                 if (timFriends.size() == 0) {
                     TUIKitLog.i(TAG, "getFriendList success but no data");
-                    return;
                 }
                 mData.clear();
                 if (loopMore) {
@@ -217,7 +216,6 @@ public class ContactListView extends LinearLayout {
                 TUIKitLog.i(TAG, "getFriendGroups success");
                 if (timFriends.size() == 0) {
                     TUIKitLog.i(TAG, "getFriendGroups success but no data");
-                    return;
                 }
                 mData.clear();
                 for (TIMFriend timFriend : timFriends) {
@@ -244,7 +242,6 @@ public class ContactListView extends LinearLayout {
                 TUIKitLog.i(TAG, "getFriendGroups success");
                 if (infos.size() == 0) {
                     TUIKitLog.i(TAG, "getFriendGroups success but no data");
-                    return;
                 }
                 mData.clear();
                 for (TIMGroupBaseInfo info : infos) {

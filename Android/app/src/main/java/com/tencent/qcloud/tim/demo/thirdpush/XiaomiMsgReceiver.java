@@ -24,7 +24,8 @@ public class XiaomiMsgReceiver extends PushMessageReceiver {
 
     @Override
     public void onNotificationMessageClicked(Context context, MiPushMessage miPushMessage) {
-        DemoLog.d(TAG, "onNotificationMessageClicked is called. ");
+        DemoLog.d(TAG, "onNotificationMessageClicked miPushMessage " + miPushMessage.toString());
+        // 如果聊天消息，跳转到聊天界面
     }
 
     @Override

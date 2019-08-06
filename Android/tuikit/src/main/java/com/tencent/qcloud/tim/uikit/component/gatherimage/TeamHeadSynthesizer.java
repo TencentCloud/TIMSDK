@@ -6,10 +6,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.MD5Utils;
@@ -250,14 +252,9 @@ public class TeamHeadSynthesizer implements Synthesizer {
      * @param imageUrl
      * @param targetImageSize
      * @return
-     * @throws InterruptedException
-     * @throws ExecutionException
      */
-    private Bitmap asyncLoadImage(String imageUrl, int targetImageSize) throws InterruptedException, ExecutionException {
-        return Glide.with(mContext).asBitmap()
-                .load(imageUrl)
-                .into(targetImageSize, targetImageSize)
-                .get();
+    private Bitmap asyncLoadImage(String imageUrl, int targetImageSize) throws ExecutionException, InterruptedException {
+        return GlideEngine.loadBitmap(imageUrl, targetImageSize);
     }
 
     public void load() {
@@ -268,9 +265,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
 
         if (multiImageData.size() == 1) {
             imageView.setImageResource(getDefaultImage());
-            Glide.with(mContext)
-                    .load(multiImageData.getImageUrls().get(0))
-                    .into(imageView);
+            GlideEngine.loadImage(imageView, Uri.parse(multiImageData.getImageUrls().get(0)));
             return;
         }
 
@@ -343,10 +338,6 @@ public class TeamHeadSynthesizer implements Synthesizer {
             if (obj instanceof File) {
                 if (complete) loadOk = true;
                 imageView.setImageBitmap(BitmapFactory.decodeFile(((File) obj).getAbsolutePath()));
-                /*
-                Glide.with(mContext)
-                        .load(((File) obj))
-                        .into(imageView);*/
             } else if (obj instanceof Bitmap) {
                 if (complete) loadOk = true;
                 imageView.setImageBitmap(((Bitmap) obj));

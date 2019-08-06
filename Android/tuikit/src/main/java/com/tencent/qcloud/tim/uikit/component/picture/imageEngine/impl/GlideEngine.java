@@ -1,10 +1,12 @@
 package com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -112,6 +114,7 @@ public class GlideEngine implements ImageEngine {
         }
         Glide.with(TUIKit.getAppContext())
                 .load(uri)
+                .apply(new RequestOptions().error(R.drawable.default_user_icon))
                 .into(imageView);
     }
 
@@ -126,6 +129,17 @@ public class GlideEngine implements ImageEngine {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Bitmap loadBitmap(String imageUrl, int targetImageSize) throws InterruptedException, ExecutionException {
+        if (TextUtils.isEmpty(imageUrl)) {
+            return null;
+        }
+        return Glide.with(TUIKit.getAppContext()).asBitmap()
+                .load(imageUrl)
+                .apply(new RequestOptions().error(R.drawable.default_user_icon))
+                .into(targetImageSize, targetImageSize)
+                .get();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tim.uikit.modules.contact;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
 
 import java.util.List;
 
@@ -76,16 +78,22 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 mPreSelectedPosition = position;
             }
         });
-        if (contactBean.isGroup()) {
-            holder.avatar.setImageResource(R.drawable.conversation_group);
-        } else if (TextUtils.equals(TUIKit.getAppContext().getResources().getString(R.string.new_friend), contactBean.getId())) {
+        if (TextUtils.equals(TUIKit.getAppContext().getResources().getString(R.string.new_friend), contactBean.getId())) {
             holder.avatar.setImageResource(R.drawable.group_new_friend);
         } else if (TextUtils.equals(TUIKit.getAppContext().getResources().getString(R.string.group), contactBean.getId())) {
             holder.avatar.setImageResource(R.drawable.group_common_list);
         } else if (TextUtils.equals(TUIKit.getAppContext().getResources().getString(R.string.blacklist), contactBean.getId())) {
             holder.avatar.setImageResource(R.drawable.group_black_list);
         } else {
-            holder.avatar.setImageResource(R.drawable.ic_personal_member);
+            if (!TextUtils.isEmpty(mData.get(position).getAvatarurl())) {
+                GlideEngine.loadImage(holder.avatar, Uri.parse(mData.get(position).getAvatarurl()));
+            } else {
+                if (contactBean.isGroup()) {
+                    holder.avatar.setImageResource(R.drawable.conversation_group);
+                } else {
+                    holder.avatar.setImageResource(R.drawable.ic_personal_member);
+                }
+            }
         }
 
     }
@@ -96,7 +104,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         }
         return null;
     }
-
 
     @Override
     public int getItemCount() {

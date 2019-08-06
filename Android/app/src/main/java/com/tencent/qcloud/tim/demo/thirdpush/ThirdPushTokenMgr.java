@@ -8,6 +8,7 @@ import com.tencent.imsdk.TIMOfflinePushToken;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.imsdk.utils.IMFunc;
 import com.tencent.qcloud.tim.demo.utils.Constants;
+import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 
 /**
  * 用来保存厂商注册离线推送token的管理类示例，当登陆im后，通过 setOfflinePushToken 上报证书 ID 及设备 token 给im后台。开发者可以根据自己的需求灵活实现
@@ -57,15 +58,15 @@ public class ThirdPushTokenMgr {
         }
         TIMOfflinePushToken param = null;
         if (IMFunc.isBrandXiaoMi()) {
-            param = new TIMOfflinePushToken(Constants.XM_PUSH_BUZID, token);
+            param = new TIMOfflinePushToken(PrivateConstants.XM_PUSH_BUZID, token);
         } else if (IMFunc.isBrandHuawei()) {
-            param = new TIMOfflinePushToken(Constants.HW_PUSH_BUZID, token);
+            param = new TIMOfflinePushToken(PrivateConstants.HW_PUSH_BUZID, token);
         } else if (IMFunc.isBrandMeizu()) {
-            param = new TIMOfflinePushToken(Constants.MZ_PUSH_BUZID, token);
+            param = new TIMOfflinePushToken(PrivateConstants.MZ_PUSH_BUZID, token);
         } else if (IMFunc.isBrandOppo()) {
 
         } else if (IMFunc.isBrandVivo()) {
-            param = new TIMOfflinePushToken(Constants.VIVO_PUSH_BUZID, token);
+            param = new TIMOfflinePushToken(PrivateConstants.VIVO_PUSH_BUZID, token);
         } else {
             return;
         }

@@ -62,14 +62,7 @@ public class ConversationFragment extends BaseFragment {
             @Override
             public void onItemClick(View view, int position, ConversationInfo conversationInfo) {
                 //此处为demo的实现逻辑，更根据会话类型跳转到相关界面，开发者可根据自己的应用场景灵活实现
-                ChatInfo chatInfo = new ChatInfo();
-                chatInfo.setType(conversationInfo.isGroup() ? TIMConversationType.Group : TIMConversationType.C2C);
-                chatInfo.setId(conversationInfo.getId());
-                chatInfo.setChatName(conversationInfo.getTitle());
-                Intent intent = new Intent(DemoApplication.instance(), ChatActivity.class);
-                intent.putExtra(Constants.CHAT_INFO, chatInfo);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                DemoApplication.instance().startActivity(intent);
+                startChatActivity(conversationInfo);
             }
         });
         mConversationLayout.getConversationList().setOnItemLongClickListener(new ConversationListLayout.OnItemLongClickListener() {
@@ -100,7 +93,7 @@ public class ConversationFragment extends BaseFragment {
         // 设置长按conversation显示PopAction
         List<PopMenuAction> conversationPopActions = new ArrayList<PopMenuAction>();
         PopMenuAction action = new PopMenuAction();
-        action.setActionName("置顶聊天");
+        action.setActionName(getResources().getString(R.string.chat_top));
         action.setActionClickListener(new PopActionClickListener() {
             @Override
             public void onActionClick(int position, Object data) {
@@ -115,7 +108,7 @@ public class ConversationFragment extends BaseFragment {
                 mConversationLayout.deleteConversation(position, (ConversationInfo) data);
             }
         });
-        action.setActionName("删除聊天");
+        action.setActionName(getResources().getString(R.string.chat_delete));
         conversationPopActions.add(action);
         mConversationPopActions.clear();
         mConversationPopActions.addAll(conversationPopActions);
@@ -148,12 +141,12 @@ public class ConversationFragment extends BaseFragment {
         for (int i = 0; i < mConversationPopActions.size(); i++) {
             PopMenuAction action = mConversationPopActions.get(i);
             if (conversationInfo.isTop()) {
-                if (action.getActionName().equals("置顶聊天")) {
-                    action.setActionName("取消置顶");
+                if (action.getActionName().equals(getResources().getString(R.string.chat_top))) {
+                    action.setActionName(getResources().getString(R.string.quit_chat_top));
                 }
             } else {
-                if (action.getActionName().equals("取消置顶")) {
-                    action.setActionName("置顶聊天");
+                if (action.getActionName().equals(getResources().getString(R.string.quit_chat_top))) {
+                    action.setActionName(getResources().getString(R.string.chat_top));
                 }
 
             }
@@ -170,8 +163,19 @@ public class ConversationFragment extends BaseFragment {
         }, 10000); // 10s后无操作自动消失
     }
 
-    public void startPopShow(View view, int position, ConversationInfo info) {
-        showItemPopMenu(position, info, /*view.getWidth() / 2 + */view.getX(), view.getY() + view.getHeight() / 2);
+    private void startPopShow(View view, int position, ConversationInfo info) {
+        showItemPopMenu(position, info, view.getX(), view.getY() + view.getHeight() / 2);
+    }
+
+    private void startChatActivity(ConversationInfo conversationInfo) {
+        ChatInfo chatInfo = new ChatInfo();
+        chatInfo.setType(conversationInfo.isGroup() ? TIMConversationType.Group : TIMConversationType.C2C);
+        chatInfo.setId(conversationInfo.getId());
+        chatInfo.setChatName(conversationInfo.getTitle());
+        Intent intent = new Intent(DemoApplication.instance(), ChatActivity.class);
+        intent.putExtra(Constants.CHAT_INFO, chatInfo);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        DemoApplication.instance().startActivity(intent);
     }
 
 }

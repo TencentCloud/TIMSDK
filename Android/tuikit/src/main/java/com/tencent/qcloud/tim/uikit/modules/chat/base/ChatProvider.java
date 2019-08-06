@@ -26,29 +26,15 @@ public class ChatProvider implements IChatProvider {
 
     @Override
     public boolean addMessageList(List<MessageInfo> msgs, boolean front) {
-        List<MessageInfo> messageList = removeExistElement(msgs);
         boolean flag;
         if (front) {
-            flag = mDataSource.addAll(0, messageList);
-            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_FRONT, messageList.size());
+            flag = mDataSource.addAll(0, msgs);
+            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_FRONT, msgs.size());
         } else {
-            flag = mDataSource.addAll(messageList);
-            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_BACK, messageList.size());
+            flag = mDataSource.addAll(msgs);
+            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_BACK, msgs.size());
         }
         return flag;
-    }
-
-    private List<MessageInfo> removeExistElement(List<MessageInfo> messages) {
-        for (int i = messages.size() - 1; i >= 0; i--) {
-            String msgId = messages.get(i).getId();
-            for (int j = 0; j < mDataSource.size(); j++) {
-                TIMMessage timMessage = mDataSource.get(j).getTIMMessage();
-                if (TextUtils.equals(timMessage.getMsgId(), msgId)) {
-                    messages.remove(messages.get(i));
-                }
-            }
-        }
-        return messages;
     }
 
     private boolean checkExist(MessageInfo msg) {

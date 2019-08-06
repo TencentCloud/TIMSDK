@@ -15,6 +15,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
     private boolean isBlackList;
     private String remark;
     private String nickname;
+    private String avatarurl;
     private boolean isGroup;
     private boolean isFriend = true;
     private boolean isEnable = true;
@@ -104,6 +105,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         setId(friend.getIdentifier());
         setRemark(friend.getRemark());
         setNickname(friend.getTimUserProfile().getNickName());
+        setAvatarurl(friend.getTimUserProfile().getFaceUrl());
         return this;
     }
 
@@ -127,6 +129,14 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         return isFriend;
     }
 
+    public String getAvatarurl() {
+        return avatarurl;
+    }
+
+    public void setAvatarurl(String avatarurl) {
+        this.avatarurl = avatarurl;
+    }
+
     public void setFriend(boolean friend) {
         isFriend = friend;
     }
@@ -137,6 +147,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         }
         setId(group.getGroupId());
         setRemark(group.getGroupName());
+        setAvatarurl(group.getFaceUrl());
         setGroup(true);
         return this;
     }

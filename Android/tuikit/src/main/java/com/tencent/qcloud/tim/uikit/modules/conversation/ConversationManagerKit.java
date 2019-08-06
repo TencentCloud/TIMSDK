@@ -9,12 +9,14 @@ import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMElemType;
 import com.tencent.imsdk.TIMFriendshipManager;
+import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMGroupSystemElem;
 import com.tencent.imsdk.TIMGroupSystemElemType;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.TIMUserProfile;
+import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.friendship.TIMFriend;
 import com.tencent.qcloud.tim.uikit.TUIKit;
@@ -25,6 +27,7 @@ import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageRevokedManager;
 import com.tencent.qcloud.tim.uikit.utils.SharedPreferenceUtils;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
+import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -173,14 +176,13 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      * @return
      */
     private ConversationInfo TIMConversation2ConversationInfo(TIMConversation conversation) {
-        if (conversation != null) {
-            if (TextUtils.isEmpty(conversation.getPeer())) { // 没有peer的会话，点击进去会有异常，这里做拦截
-                return null;
-            }
+        if (conversation == null) {
+            return null;
         }
         TIMMessage message = conversation.getLastMsg();
-        if (message == null)
+        if (message == null) {
             return null;
+        }
         ConversationInfo info = new ConversationInfo();
         TIMConversationType type = conversation.getType();
         if (type == TIMConversationType.System) {
@@ -189,7 +191,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
                 TIMElemType eleType = ele.getType();
                 if (eleType == TIMElemType.GroupSystem) {
                     TIMGroupSystemElem groupSysEle = (TIMGroupSystemElem) ele;
-                    groupSystMsgHandle(groupSysEle);
+                    groupSystMsgHandle(groupSysEle, conversation);
                 }
             }
             return null;
@@ -197,21 +199,30 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
 
         boolean isGroup = type == TIMConversationType.Group;
         info.setLastMessageTime(message.timestamp() * 1000);
-        MessageInfo msg = MessageInfoUtil.TIMMessage2MessageInfo(message, isGroup);
+         MessageInfo msg = MessageInfoUtil.TIMMessage2MessageInfo(message, isGroup);
         info.setLastMessage(msg);
         if (isGroup) {
             info.setTitle(conversation.getGroupName());
+            TIMGroupDetailInfo groupDetailInfo = TIMGroupManager.getInstance().queryGroupInfo(conversation.getPeer());
+            if (groupDetailInfo != null && !TextUtils.isEmpty(groupDetailInfo.getFaceUrl())) {
+                info.setIconUrl(groupDetailInfo.getFaceUrl());
+            }
         } else {
             String title = conversation.getPeer();
+            String faceUrl = null;
             TIMUserProfile profile = TIMFriendshipManager.getInstance().queryUserProfile(conversation.getPeer());
             if (profile != null && !TextUtils.isEmpty(profile.getNickName())) {
                 title = profile.getNickName();
+            }
+            if (profile != null && !TextUtils.isEmpty(profile.getFaceUrl())) {
+                faceUrl = profile.getFaceUrl();
             }
             TIMFriend friend = TIMFriendshipManager.getInstance().queryFriend(conversation.getPeer());
             if (friend != null && !TextUtils.isEmpty(friend.getRemark())) {
                 title = friend.getRemark();
             }
             info.setTitle(title);
+            info.setIconUrl(faceUrl);
         }
         info.setId(conversation.getPeer());
         info.setGroup(conversation.getType() == TIMConversationType.Group);
@@ -228,12 +239,19 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      *
      * @param groupSysEle
      */
-    private void groupSystMsgHandle(TIMGroupSystemElem groupSysEle) {
+    private void groupSystMsgHandle(TIMGroupSystemElem groupSysEle, TIMConversation conversation) {
         TIMGroupSystemElemType type = groupSysEle.getSubtype();
         //群组解散或者被踢出群组
-        if (type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_KICK_OFF_FROM_GROUP_TYPE || type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_DELETE_GROUP_TYPE) {
+        if (type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_KICK_OFF_FROM_GROUP_TYPE
+                || type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_DELETE_GROUP_TYPE) {
             //imsdk会自动删除持久化的数据，应用层只需删除会话数据源中的即可
             deleteConversation(groupSysEle.getGroupId(), true);
+        } else if (type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_INVITED_TO_GROUP_TYPE) {
+            String group = conversation.getGroupName();
+            if (TextUtils.isEmpty(group)) {
+                group = groupSysEle.getGroupId();
+            }
+            ToastUtil.toastLongMessage("您已经被邀请进群【" + group + "】，请到我的群聊里面查看！");
         }
     }
 
@@ -377,10 +395,10 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      */
     private List<ConversationInfo> sortConversations(List<ConversationInfo> sources) {
         ArrayList<ConversationInfo> conversationInfos = new ArrayList<>();
-        List<ConversationInfo> topConversations = new ArrayList<>();
         List<ConversationInfo> normalConversations = new ArrayList<>();
+        List<ConversationInfo> topConversations = new ArrayList<>();
 
-        for (int i = 0; i < sources.size(); i++) {
+        for (int i = 0; i <= sources.size() - 1; i++) {
             ConversationInfo conversation = sources.get(i);
             if (isTop(conversation.getId())) {
                 conversation.setTop(true);
@@ -389,26 +407,14 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
                 normalConversations.add(conversation);
             }
         }
+
         mTopLinkedList.clear();
         mTopLinkedList.addAll(topConversations);
+        Collections.sort(topConversations); // 置顶会话列表页也需要按照最后一条时间排序，由新到旧，如果旧会话收到新消息，会排序到前面
         conversationInfos.addAll(topConversations);
-        Collections.sort(normalConversations);
+        Collections.sort(normalConversations); // 正常会话也是按照最后一条消息时间排序，由新到旧
         conversationInfos.addAll(normalConversations);
-        return removeExistElement(conversationInfos);
-    }
-
-    private List<ConversationInfo> removeExistElement(List<ConversationInfo> list) {
-        if (list.size() == 0) {
-            return list;
-        }
-        Set<String> set = new HashSet<>();
-        List<ConversationInfo> newList = new ArrayList<>();
-        for (ConversationInfo cd : list) {
-            if (set.add(cd.getId())) {
-                newList.add(cd);
-            }
-        }
-        return newList;
+        return conversationInfos;
     }
 
     /**

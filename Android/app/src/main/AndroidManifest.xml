@@ -73,7 +73,17 @@
             android:name="com.tencent.qcloud.tim.demo.chat.ChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden">
+
+            <intent-filter>
+                <action android:name="android.intent.action.View" />
+                <data
+                    android:host="com.tencent.qcloud"
+                    android:path="/detail"
+                    android:scheme="pushscheme" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name="com.tencent.qcloud.tim.demo.main.MainActivity"
             android:launchMode="singleTask"
@@ -104,30 +114,28 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
-        <!-- 从4.4.627版本开始，这几项配置可以去掉了start -->
-            <!--&lt;!&ndash; 消息收发 service &ndash;&gt;-->
-            <!--<service-->
-                <!--android:name="com.tencent.imsdk.session.remote.SessionService"-->
-                <!--android:process=":network" />-->
-            <!--&lt;!&ndash; 消息收发辅助 service &ndash;&gt;-->
+        <!--&lt;!&ndash; 消息收发 service &ndash;&gt;-->
+        <!--<service-->
+            <!--android:name="com.tencent.imsdk.session.remote.SessionService"-->
+            <!--android:process=":network" />-->
+        <!--&lt;!&ndash; 消息收发辅助 service &ndash;&gt;-->
 
-            <!--<service-->
-                <!--android:name="com.tencent.imsdk.session.remote.AssistService"-->
-                <!--android:process=":network" />-->
-            <!--<service-->
-                <!--android:name="com.tencent.imsdk.session.remote.KeepAliveJobService"-->
-                <!--android:permission="android.permission.BIND_JOB_SERVICE"-->
-                <!--android:process=":network" />-->
+        <!--<service-->
+            <!--android:name="com.tencent.imsdk.session.remote.AssistService"-->
+            <!--android:process=":network" />-->
+        <!--<service-->
+            <!--android:name="com.tencent.imsdk.session.remote.KeepAliveJobService"-->
+            <!--android:permission="android.permission.BIND_JOB_SERVICE"-->
+            <!--android:process=":network" />-->
 
-            <!--&lt;!&ndash; 离线消息广播接收器 &ndash;&gt;-->
-            <!--<receiver android:name="com.tencent.imsdk.session.SessionBroadcastReceiver">-->
-                <!--<intent-filter>-->
-                    <!--<action android:name="com.tencent.imsdk.session.boot" />-->
-                    <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
-                    <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-                <!--</intent-filter>-->
-            <!--</receiver>-->
-        <!-- 从4.4.627版本开始，这几项配置可以去掉了end -->
+        <!--&lt;!&ndash; 离线消息广播接收器 &ndash;&gt;-->
+        <!--<receiver android:name="com.tencent.imsdk.session.SessionBroadcastReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.tencent.imsdk.session.boot" />-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <!-- ********小米推送service和receiver设置start******** -->
         <service
@@ -200,7 +208,7 @@
             android:name="com.huawei.updatesdk.fileprovider.UpdateSdkFileProvider"
             android:authorities="com.tencent.qcloud.tim.tuikit.updateSdk.fileProvider"
             android:exported="false"
-            android:grantUriPermissions="true"/>
+            android:grantUriPermissions="true" />
 
         <activity
             android:name="com.huawei.android.hms.agent.common.HMSAgentActivity"

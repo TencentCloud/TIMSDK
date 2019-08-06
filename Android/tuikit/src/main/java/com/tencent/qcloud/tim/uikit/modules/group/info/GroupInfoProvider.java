@@ -8,7 +8,7 @@ import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMValueCallBack;
-import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
+import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
 import com.tencent.imsdk.ext.group.TIMGroupMemberResult;
 import com.tencent.imsdk.ext.group.TIMGroupPendencyGetParam;
 import com.tencent.imsdk.ext.group.TIMGroupPendencyHandledStatus;
@@ -60,7 +60,7 @@ public class GroupInfoProvider {
             public void onSuccess(Object data) {
 
                 // 设置群的一般信息，比如名称、类型等
-                mGroupInfo.covertTIMGroupDetailInfo((TIMGroupDetailInfo) data);
+                mGroupInfo.covertTIMGroupDetailInfo((TIMGroupDetailInfoResult) data);
 
                 // 设置是否为置顶聊天
                 boolean isTop = ConversationManagerKit.getInstance().isTopConversation(groupId);
@@ -101,7 +101,7 @@ public class GroupInfoProvider {
     public void loadGroupPublicInfo(String groupId, final IUIKitCallBack callBack) {
         List<String> groupList = new ArrayList<>();
         groupList.add(groupId);
-        TIMGroupManager.getInstance().getGroupInfo(groupList, new TIMValueCallBack<List<TIMGroupDetailInfo>>() {
+        TIMGroupManager.getInstance().getGroupInfo(groupList, new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
             @Override
             public void onError(final int code, final String desc) {
                 TUIKitLog.e(TAG, "loadGroupPublicInfo failed, code: " + code + "|desc: " + desc);
@@ -109,9 +109,9 @@ public class GroupInfoProvider {
             }
 
             @Override
-            public void onSuccess(final List<TIMGroupDetailInfo> timGroupDetailInfos) {
-                if (timGroupDetailInfos.size() > 0) {
-                    TIMGroupDetailInfo info = timGroupDetailInfos.get(0);
+            public void onSuccess(final List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
+                if (timGroupDetailInfoResults.size() > 0) {
+                    TIMGroupDetailInfoResult info = timGroupDetailInfoResults.get(0);
                     TUIKitLog.i(TAG, info.toString());
                     callBack.onSuccess(info);
                 }
