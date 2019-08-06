@@ -52,16 +52,16 @@
         <VerticalLayout padding="4,4,4,4" height="380">
           <HorizontalLayout height="24" padding="40,4,40,4">
             <Label text="UserId" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
-            <!--Edit  name="userid_edit" -->
-            <Combo name="userid_combo" textpadding="0,2,0,0" font="0" autocalcwidth="false" itemalign="center" bkcolor="#FFFFFFFF" visible="true"/>
+            <Edit  name="userid_edit" />
+            <!--Combo name="userid_combo" textpadding="0,2,0,0" font="0" autocalcwidth="false" itemalign="center" bkcolor="#FFFFFFFF" visible="true"-->
           </HorizontalLayout>
-          <HorizontalLayout padding="40,4,40,4">
+          <!--HorizontalLayout padding="40,4,40,4">
             <VerticalLayout width="80">
               <Label text="UserSig" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80" height="24"/>
               <Control />
             </VerticalLayout>
             <RichEdit  name="usersig_edit" multiline="true" vscrollbar="true" autovscroll="true" hscrollbar="true" autohscroll="true" bkcolor="#FFFFFFFF" bordercolor="#FFC5C5C5" bordersize="1"  enabled="false" />
-          </HorizontalLayout>
+          </HorizontalLayout -->
         </VerticalLayout>
         <HorizontalLayout height="40" >
           <Control />
