@@ -23,9 +23,12 @@
 使用 Chrome 浏览器打开 Demo 根目录下的 **index.html** 即可运行 Demo。
 - 登录成功后，可以进行查找好友，建群，聊天等操作：
 ![](https://main.qcloudimg.com/raw/87e6f5eae834907cab89f50d5ce49b49.png)
+
 - 搜索并添加好友。
 ![](https://main.qcloudimg.com/raw/ef4c39f1ec649ad4f10cd8764ca51d1c.png)
+
 - 选择好友发消息。
 ![](https://main.qcloudimg.com/raw/ff8c787aa814edefd96468de2da59f26.png)
+
 - 给好友发消息。
 ![](https://main.qcloudimg.com/raw/d55732975bb5d3e8e44a283e1a26ba4b.png)
