@@ -198,6 +198,9 @@
 
 - (NSString *)getDateDisplayString:(NSDate *)date
 {
+    if (date == nil) {
+        return @"";
+    }
     NSCalendar *calendar = [ NSCalendar currentCalendar ];
     int unit = NSCalendarUnitDay | NSCalendarUnitMonth |  NSCalendarUnitYear ;
     NSDateComponents *nowCmps = [calendar components:unit fromDate:[ NSDate date ]];

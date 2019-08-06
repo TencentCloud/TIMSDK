@@ -10,27 +10,20 @@
 #import "ConversationController.h"
 #import "AppDelegate.h"
 #import "ImSDK.h"
+#import "GenerateTestUserSig.h"
 
 @interface LoginViewController()<TIMConnListener,TIMUserStatusListener,TIMRefreshListener>
+@property (weak) IBOutlet NSTextField *userNameField;
 
 @end
 
 @implementation LoginViewController
-{
-    NSArray  *_userNames;
-    NSArray  *_userSigs;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _userNames = @[identifier1,identifier2,identifier3,identifier4];
-    _userSigs  = @[userSig1,userSig2,userSig3,userSig4];
-    [_userBox removeAllItems];
-    [_userBox addItemsWithObjectValues:_userNames];
-    
     TIMSdkConfig *sdkConfig = [[TIMSdkConfig alloc] init];
-    sdkConfig.sdkAppId = sdkAppid;
+    sdkConfig.sdkAppId = SDKAPPID;
     sdkConfig.connListener = self;
     [[TIMManager sharedInstance] initSdk:sdkConfig];
     
@@ -39,27 +32,29 @@
 }
 
 - (IBAction)login:(NSButton *)sender {
-    if (![_userNames containsObject:_userBox.stringValue]) {
-        [self alert:@"账号错误！" informativeText:@"请选择测试账号"];
+    if ([[_userNameField stringValue] isEqualToString:@""]) {
+        [self alert:@"账号错误！" informativeText:@"请输入账号"];
         return;
     }
-    NSString *sig = [_userSigs objectAtIndex:[_userNames indexOfObject:_userBox.stringValue]];
-    if ([sig isEqualToString:@""]) {
-        [self alert:@"userSig错误！" informativeText:@"请前往IM控制台 -> 开发者辅助工具生成对应测试账号的userSig，然后在工程 AppDelegate.h 配置"];
-        return;
-    }
+    TIMLoginParam *param = [[TIMLoginParam alloc] init];
+    param.identifier = [_userNameField stringValue];
+    //genTestUserSig 方法仅用于本地测试，请不要将如下代码发布到您的线上正式版本的 App 中，原因如下：
+    /*
+     *  本文件中的代码虽然能够正确计算出 UserSig，但仅适合快速调通 SDK 的基本功能，不适合线上产品，
+     *  这是因为客户端代码中的 SECRETKEY 很容易被反编译逆向破解，尤其是 Web 端的代码被破解的难度几乎为零。
+     *  一旦您的密钥泄露，攻击者就可以计算出正确的 UserSig 来盗用您的腾讯云流量。
+     *
+     *  正确的做法是将 UserSig 的计算代码和加密密钥放在您的业务服务器上，然后由 App 按需向您的服务器获取实时算出的 UserSig。
+     *  由于破解服务器的成本要高于破解客户端 App，所以服务器计算的方案能够更好地保护您的加密密钥。
+     */
+    param.userSig = [GenerateTestUserSig genTestUserSig:[_userNameField stringValue]];
     __weak typeof(self) ws = self;
-    //[self getUserSig:_userBox.stringValue callback:^(NSString *sig) {
-        TIMLoginParam *param = [TIMLoginParam new];
-        param.identifier = self.userBox.stringValue;
-        param.userSig = sig;
-        [[TIMManager sharedInstance] login:param succ:^{
-            ConversationController *vc = [[ConversationController alloc] initWithNibName:@"ConversationController" bundle:nil];
-            [ws presentViewControllerAsModalWindow:vc];
-        } fail:^(int code, NSString *msg) {
-            [ws alert:@"登录失败！" informativeText:[NSString stringWithFormat:@"code:%d msg:%@ ,请检查sdkAppId 和 userSig 是否正确配置",code,msg]];
-        }];
-    //}];
+    [[TIMManager sharedInstance] login:param succ:^{
+        ConversationController *vc = [[ConversationController alloc] initWithNibName:@"ConversationController" bundle:nil];
+        [ws presentViewControllerAsModalWindow:vc];
+    } fail:^(int code, NSString *msg) {
+        [ws alert:@"登录失败！" informativeText:[NSString stringWithFormat:@"code:%d msg:%@ ,请检查sdkAppId 和 userSig 是否正确配置",code,msg]];
+    }];
 }
 
 - (void)alert:(NSString *)text informativeText:(NSString *)informativeText{
