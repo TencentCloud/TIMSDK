@@ -16,13 +16,13 @@
 #include "MsgBox.h"
 #include "TIMCloud.h"
 #include "TestApi.h"
-#include "GenerateTestUserSig.h"
 
 CIMWnd::CIMWnd() {
     m_SkilFile = "frame.xml";
 }
 
-void CIMWnd::Init() {
+void CIMWnd::Init(SdkAppInfo &info) {
+    info_ = info;
     // 新消息回调时间
     TIMAddRecvNewMsgCallback([](const char* json_msg_array, const void* user_data) {
         CIMWnd* ths = (CIMWnd*)user_data;
@@ -166,7 +166,7 @@ void CIMWnd::Init() {
         CIMWnd* ths = (CIMWnd*)user_data;
         ths->Logf("UserSig", kTIMLog_Info, "Expired");
     }, this);
-    
+
     TIMSetLogCallback([](TIMLogLevel level, const char* log, const void* user_data) {
         CIMWnd* ths = (CIMWnd*)user_data;
         //ths->Log("SdkLog", level, log, false);
@@ -336,6 +336,17 @@ void CIMWnd::Notify(TNotifyUI & msg) {
 
             
         }
+        if (msg.pSender == m_UserIdCombo) { //跟据UserId切换UserSig
+            for (std::size_t i = 0; i < info_.accounts.size(); i++) {
+                AccountInfo& account = info_.accounts[i];
+                std::string userid = m_UserIdCombo->GetText().GetStringA();
+                std::string userid2 = msg.pSender->GetText().GetStringA();
+                if (account.userid == userid) {
+                    m_UserSig->SetText(UTF82Wide(account.usersig).c_str());
+                    break;
+                }
+            }
+        }
     }
     __super::Notify(msg);
 }
@@ -354,6 +365,8 @@ LRESULT CIMWnd::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 void CIMWnd::InitWindow() {
     SetIcon(IDR_MAINFRAME);
     m_LogPath = static_cast<CEditUI*>(m_pm.FindControl(_T("logpath_edit")));
+    m_UserSig = static_cast<CRichEditUI*>(m_pm.FindControl(_T("usersig_edit")));
+
 
     m_InitSdkView = static_cast<CControlUI*>(m_pm.FindControl(_T("initsdk_view")));  //初始化
     m_LoginView = static_cast<CControlUI*>(m_pm.FindControl(_T("login_view")));  //登入
@@ -377,6 +390,7 @@ void CIMWnd::InitWindow() {
     m_GroupAddOpt->SelectItem(0);
     SetControlVisible(_T("logout_btn"), false);
     SetControlVisible(_T("test_btn"), false);
+    m_UserSig->SetWordWrap();
     //m_LogData->SetWordWrap();
 
     m_pm.SetFocus(nullptr);
@@ -395,11 +409,17 @@ void CIMWnd::InitWindow() {
 
     m_SdkAppIdCombo = static_cast<CComboUI*>(m_pm.FindControl(_T("sdkappid_combo")));
     CListLabelElementUI* ele = new CListLabelElementUI;
-    ele->SetText(UTF82Wide(std::to_string(GenerateTestUserSig::instance().getSdkAppId())).c_str());
+    ele->SetText(UTF82Wide(std::to_string(info_.sdkappid)).c_str());
     m_SdkAppIdCombo->Add(ele);
     m_SdkAppIdCombo->SelectItem(0);
 
-    m_UserIdEdit = static_cast<CEditUI*>(m_pm.FindControl(_T("userid_edit")));
+    m_UserIdCombo = static_cast<CComboUI*>(m_pm.FindControl(_T("userid_combo")));
+    for (std::size_t i = 0; i < info_.accounts.size(); i++) {
+        AccountInfo& account = info_.accounts[i];
+        ele = new CListLabelElementUI;
+        ele->SetText(UTF82Wide(account.userid).c_str());
+        m_UserIdCombo->Add(ele);
+    }
 }
 void CIMWnd::MsgBox(std::string title, const char* fmt, ...) {
     std::string tmp;
@@ -539,8 +559,8 @@ void CIMWnd::OnUnInitSDKBtn() {
     ChangeMainView(LOGIN_VIEW, INITSDK_VIEW);
 }
 void CIMWnd::OnLoginBtn() { //登入
-    std::string userid = m_UserIdEdit->GetText().GetStringA();
-    std::string usersig = GenerateTestUserSig::instance().genTestUserSig(userid);
+    std::string userid = m_UserIdCombo->GetText().GetStringA();
+    std::string usersig = m_UserSig->GetText().GetStringA();
 
     login_id = userid;
     TIMLogin(userid.c_str(), usersig.c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
@@ -1405,6 +1425,7 @@ void CIMWnd::ChangeMainView(MainViewType before, MainViewType after) { //修改�
         m_LoginView->SetVisible(true);
         m_MainLogicView->SetVisible(false);
         m_InitSdkView->SetVisible(false);
+        m_UserIdCombo->SelectItem(0);
     }
     if ((before == LOGIN_VIEW) && (after == INITSDK_VIEW)) {
         m_LoginView->SetVisible(false);

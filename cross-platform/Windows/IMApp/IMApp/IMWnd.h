@@ -38,6 +38,17 @@ typedef enum {
     MENU_DELETE_GROUPMEM,
 }MenuType;
 
+//4个测试账号
+typedef struct {
+    std::string userid;  // identify
+    std::string usersig;
+}AccountInfo;
+
+typedef struct {
+    uint32_t sdkappid;
+    std::vector<AccountInfo> accounts;
+}SdkAppInfo;
+
 class CIMWnd : public WindowImplBase
 {
 public: //virture
@@ -53,7 +64,7 @@ public:
         static CIMWnd inst;
         return inst;
     }
-    void Init();
+    void Init(SdkAppInfo &info);
 
    //overwrite
     virtual LPCTSTR GetWindowClassName() const { return _T("IM_Frame"); };
@@ -134,8 +145,11 @@ public:
     std::string login_id;
     std::string path_;
 public:
+    //CEditUI* m_SdkAppId = nullptr;
     CEditUI* m_LogPath = nullptr;
-    CEditUI* m_UserIdEdit = nullptr;
+    //CEditUI* m_UserId = nullptr;
+    CRichEditUI* m_UserSig = nullptr;
+    CComboUI* m_UserIdCombo = nullptr;
     CComboUI* m_SdkAppIdCombo = nullptr;
 
     CControlUI* m_InitSdkView = nullptr;
@@ -163,6 +177,7 @@ public:
     CControlUI* m_CurMenuNode = nullptr; //触发右键菜单的TreeNode控件
 
     //HttpClient m_http_client;
+    SdkAppInfo info_;
     NodeViewType node_type_;
 
 private:
