@@ -4,7 +4,6 @@
 #pragma once
 #include "OAIdl.h"
 #include <vector>
-#include <string>
 
 namespace DuiLib
 {
