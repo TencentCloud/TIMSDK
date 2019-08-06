@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CE37D1CC22F998FE0012500D /* GenerateTestUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D1CA22F998FE0012500D /* GenerateTestUserSig.m */; };
+		CE37D1D022F99BF00012500D /* GenerateTestUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D1CE22F99BF00012500D /* GenerateTestUserSig.m */; };
 		CE43635621F70A030070D6C9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43635521F70A030070D6C9 /* AppDelegate.m */; };
 		CE43635921F70A030070D6C9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43635821F70A030070D6C9 /* LoginViewController.m */; };
 		CE43635B21F70A040070D6C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE43635A21F70A040070D6C9 /* Assets.xcassets */; };
@@ -42,8 +42,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		CE37D1CA22F998FE0012500D /* GenerateTestUserSig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateTestUserSig.m; sourceTree = "<group>"; };
-		CE37D1CB22F998FE0012500D /* GenerateTestUserSig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateTestUserSig.h; sourceTree = "<group>"; };
+		CE37D1CE22F99BF00012500D /* GenerateTestUserSig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateTestUserSig.m; sourceTree = "<group>"; };
+		CE37D1CF22F99BF00012500D /* GenerateTestUserSig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateTestUserSig.h; sourceTree = "<group>"; };
 		CE43635121F70A030070D6C9 /* TUIKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TUIKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE43635421F70A030070D6C9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CE43635521F70A030070D6C9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -83,11 +83,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CE37D1C922F998FE0012500D /* Debug */ = {
+		CE37D1CD22F99BF00012500D /* Debug */ = {
 			isa = PBXGroup;
 			children = (
-				CE37D1CA22F998FE0012500D /* GenerateTestUserSig.m */,
-				CE37D1CB22F998FE0012500D /* GenerateTestUserSig.h */,
+				CE37D1CE22F99BF00012500D /* GenerateTestUserSig.m */,
+				CE37D1CF22F99BF00012500D /* GenerateTestUserSig.h */,
 			);
 			path = Debug;
 			sourceTree = "<group>";
@@ -111,7 +111,7 @@
 		CE43635321F70A030070D6C9 /* TUIKitDemo */ = {
 			isa = PBXGroup;
 			children = (
-				CE37D1C922F998FE0012500D /* Debug */,
+				CE37D1CD22F99BF00012500D /* Debug */,
 				CE43635421F70A030070D6C9 /* AppDelegate.h */,
 				CE43635521F70A030070D6C9 /* AppDelegate.m */,
 				CE43635721F70A030070D6C9 /* LoginViewController.h */,
@@ -234,7 +234,7 @@
 				CE43635921F70A030070D6C9 /* LoginViewController.m in Sources */,
 				CE43636121F70A040070D6C9 /* main.m in Sources */,
 				CE4363A821F71D6D0070D6C9 /* ChatViewController.m in Sources */,
-				CE37D1CC22F998FE0012500D /* GenerateTestUserSig.m in Sources */,
+				CE37D1D022F99BF00012500D /* GenerateTestUserSig.m in Sources */,
 				CE4363A221F71B260070D6C9 /* AddChatViewController.m in Sources */,
 				CE43635621F70A030070D6C9 /* AppDelegate.m in Sources */,
 			);
@@ -369,7 +369,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = B543JTT8E3;
@@ -385,7 +384,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = lynxzhang.TUIKitDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -393,7 +391,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = B543JTT8E3;
@@ -409,7 +406,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = lynxzhang.TUIKitDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

@@ -730,9 +730,9 @@
                                     <action selector="login:" target="XfG-lQ-9wD" id="UtS-09-9g5"/>
                                 </connections>
                             </button>
-                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WIR-z1-Y09">
-                                <rect key="frame" x="131" y="140" width="306" height="22"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="m2i-o0-05n">
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="geQ-OR-048">
+                                <rect key="frame" x="128" y="140" width="309" height="22"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="ebt-a9-IlL">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -740,19 +740,19 @@
                             </textField>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="WIR-z1-Y09" secondAttribute="trailing" constant="43" id="9Ri-EB-udB"/>
+                            <constraint firstItem="geQ-OR-048" firstAttribute="baseline" secondItem="1az-Sy-Viq" secondAttribute="firstBaseline" id="3VV-dW-1Ch"/>
                             <constraint firstItem="1az-Sy-Viq" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="110" id="ACN-n1-try"/>
                             <constraint firstItem="1az-Sy-Viq" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="51" id="Ish-Db-xSJ"/>
-                            <constraint firstItem="WIR-z1-Y09" firstAttribute="baseline" secondItem="1az-Sy-Viq" secondAttribute="firstBaseline" id="SoC-5M-WO4"/>
-                            <constraint firstItem="WIR-z1-Y09" firstAttribute="leading" secondItem="1az-Sy-Viq" secondAttribute="trailing" constant="40" id="XIe-PP-eIZ"/>
                             <constraint firstItem="36Z-Au-yIW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="agX-1h-faf"/>
                             <constraint firstAttribute="bottom" secondItem="36Z-Au-yIW" secondAttribute="bottom" constant="57" id="bYG-Wd-LtK"/>
+                            <constraint firstAttribute="trailing" secondItem="geQ-OR-048" secondAttribute="trailing" constant="43" id="esT-3x-cAu"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="1az-Sy-Viq" secondAttribute="trailing" constant="20" symbolic="YES" id="oIA-Nf-u56"/>
                             <constraint firstAttribute="trailing" secondItem="36Z-Au-yIW" secondAttribute="trailing" constant="204" id="taZ-ll-nsS"/>
+                            <constraint firstItem="geQ-OR-048" firstAttribute="leading" secondItem="1az-Sy-Viq" secondAttribute="trailing" constant="37" id="xwF-5Q-TaQ"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="userNameField" destination="WIR-z1-Y09" id="UVf-a6-pOu"/>
+                        <outlet property="userNameField" destination="geQ-OR-048" id="6eG-hn-VaW"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
