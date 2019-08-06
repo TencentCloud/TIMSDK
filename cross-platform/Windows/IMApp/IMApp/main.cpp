@@ -7,7 +7,6 @@
 #include "../common/crashdump.h"
 #include "UIlib.h"
 #include "MsgBox.h"
-#include "TestUserSigGenerator.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -24,35 +23,20 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
     strResourcePath += _T("imskin");
     CPaintManagerUI::SetResourcePath(strResourcePath.GetData());
 
-    HANDLE hSingleMetux = ::CreateMutex(NULL, FALSE, TEXT("IMApp_Metux_V1.0.0.1"));
-    if (GetLastError() == ERROR_ALREADY_EXISTS) {
-        CIMWnd::MsgBoxEx("info", "IMApp has started");
-        CloseHandle(hSingleMetux);
-        return 0;
-    }
+//     HANDLE hSingleMetux = ::CreateMutex(NULL, FALSE, TEXT("IMApp_Metux_V1.0.0.1"));
+//     if (GetLastError() == ERROR_ALREADY_EXISTS) {
+//         CIMWnd::MsgBoxEx("info", "IMApp has started");
+//         CloseHandle(hSingleMetux);
+//         return 0;
+//     }
 
     ::OleInitialize(NULL);
     ::CoInitialize(NULL);
     const char* version = TIMGetSDKVersion();
 
-    SdkAppInfo appinfo;
-    appinfo.sdkappid = TestUserSigGenerator::instance().getSdkAppId();
-    AccountInfo account;
-    account.userid = "user1";
-    account.usersig = TestUserSigGenerator::instance().genTestUserSig(account.userid);
-    appinfo.accounts.push_back(account);
-    account.userid = "user2";
-    account.usersig = TestUserSigGenerator::instance().genTestUserSig(account.userid);
-    appinfo.accounts.push_back(account);
-    account.userid = "user3";
-    account.usersig = TestUserSigGenerator::instance().genTestUserSig(account.userid);
-    appinfo.accounts.push_back(account);
-    account.userid = "user4";
-    account.usersig = TestUserSigGenerator::instance().genTestUserSig(account.userid);
-    appinfo.accounts.push_back(account);
 
     CIMWnd& wnd = CIMWnd::GetInst();
-    wnd.Init(appinfo);
+    wnd.Init();
     wnd.Create(NULL, _T("IMApp"), WS_VISIBLE | WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, WS_EX_WINDOWEDGE);
     wnd.CenterWindow();
     wnd.ShowModal();
