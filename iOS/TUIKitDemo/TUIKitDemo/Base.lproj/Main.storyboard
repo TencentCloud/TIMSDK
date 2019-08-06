@@ -60,25 +60,35 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Qhy-ZX-0UL">
+                                <rect key="frame" x="114" y="315" width="211" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="8jc-YP-vv6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="12" id="48k-DW-nBN"/>
                             <constraint firstAttribute="trailingMargin" secondItem="8jc-YP-vv6" secondAttribute="trailing" constant="11" id="IBw-4X-wel"/>
+                            <constraint firstItem="Qhy-ZX-0UL" firstAttribute="leading" secondItem="vez-AB-MAF" secondAttribute="trailing" constant="18" id="KML-Ws-NLg"/>
                             <constraint firstItem="vez-AB-MAF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="25" id="MST-8P-7Ls"/>
+                            <constraint firstItem="Qhy-ZX-0UL" firstAttribute="centerY" secondItem="vez-AB-MAF" secondAttribute="centerY" id="b9p-4X-nCK"/>
                             <constraint firstItem="vez-AB-MAF" firstAttribute="top" secondItem="9lt-pA-giX" secondAttribute="bottom" constant="300" id="giW-mw-xP5"/>
                             <constraint firstItem="khU-eI-NaA" firstAttribute="top" secondItem="9lt-pA-giX" secondAttribute="bottom" constant="95" id="v8T-AY-Rs1"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Qhy-ZX-0UL" secondAttribute="trailing" constant="34" id="vCe-AP-jRU"/>
                             <constraint firstItem="khU-eI-NaA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ynG-Fz-SBj"/>
                             <constraint firstItem="l0H-PR-bq1" firstAttribute="top" secondItem="8jc-YP-vv6" secondAttribute="bottom" constant="169" id="zYi-0w-2AD"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="userNameLabel" destination="vez-AB-MAF" id="IYO-JJ-z7T"/>
+                        <outlet property="userNameTextFeild" destination="Qhy-ZX-0UL" id="URb-Cv-8dQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1065" y="1"/>
+            <point key="canvasLocation" x="-1391.2" y="-8.5457271364317844"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="MU1-3L-lOK">
@@ -111,6 +121,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="logo" width="319" height="231"/>
+        <image name="logo" width="320" height="320"/>
     </resources>
 </document>
