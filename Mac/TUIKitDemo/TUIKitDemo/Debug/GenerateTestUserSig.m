@@ -11,7 +11,7 @@
     NSMutableDictionary *obj = [@{@"TLS.ver": @"2.0",
                                   @"TLS.identifier": identifier,
                                   @"TLS.sdkappid": @(SDKAPPID),
-                                  @"TLS.expire": @(EXPIRETIME),
+                                  @"TLS.expire": @(SDKAPPID),
                                   @"TLS.time": @(TLSTime)} mutableCopy];
     NSMutableString *stringToSign = [[NSMutableString alloc] init];
     NSArray *keyOrder = @[@"TLS.identifier",
