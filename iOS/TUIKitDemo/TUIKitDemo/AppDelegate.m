@@ -8,10 +8,10 @@
 #import "TUIKit.h"
 #import "THeader.h"
 #import "ImSDK.h"
+#import "GenerateTestUserSig.h"
 #import <Bugly/Bugly.h>
 
-@interface AppDelegate () <BuglyDelegate,UIAlertViewDelegate>
-
+@interface AppDelegate () <BuglyDelegate>
 @end
 
 @implementation AppDelegate
@@ -25,19 +25,19 @@
     [self setupBugly];
     [self registNotification];
     
-    //sdkAppId 填写自己控制台申请的sdkAppid
-    if (sdkAppid == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Demo尚未配置SdkAppid，请前往IM控制台创建应用，获取SdkAppid，然后在工程 Appdelegate 头文件里面配置" message:nil delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+    //_SDKAppID 填写自己控制台申请的sdkAppid
+    if (SDKAPPID == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Demo 尚未配置 sdkAppid，请前往 GenerateTestUserSig.h 配置" message:nil delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
         [alert show];
     }else{
-        [[TUIKit sharedInstance] setupWithAppId:sdkAppid];
+        [[TUIKit sharedInstance] setupWithAppId:SDKAPPID];
     }
     
     NSNumber *appId = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Appid];
     NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_User];
     //NSString *pwd = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Pwd];
     NSString *userSig = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Sig];
-    if([appId integerValue] == sdkAppid && identifier.length != 0 && userSig.length != 0){
+    if([appId integerValue] == SDKAPPID && identifier.length != 0 && userSig.length != 0){
         __weak typeof(self) ws = self;
         TIMLoginParam *param = [[TIMLoginParam alloc] init];
         param.identifier = identifier;
@@ -270,7 +270,7 @@ void uncaughtExceptionHandler(NSException*exception){
         NSNumber *appId = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Appid];
         NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_User];
         NSString *userSig = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Sig];
-        if([appId integerValue] == sdkAppid && identifier.length != 0 && userSig.length != 0){
+        if([appId integerValue] == SDKAPPID && identifier.length != 0 && userSig.length != 0){
             __weak typeof(self) ws = self;
             TIMLoginParam *param = [[TIMLoginParam alloc] init];
             param.identifier = identifier;
