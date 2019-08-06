@@ -53,3 +53,5 @@ function genTestUserSig(userID) {
     userSig: userSig
   };
 }
+
+module.exports = genTestUserSig;
