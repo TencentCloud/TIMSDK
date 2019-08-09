@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/face_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" />
+
+    <com.tencent.qcloud.tim.uikit.component.face.EmojiIndicatorView
+        android:id="@+id/face_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="center_horizontal" />
+
+    <LinearLayout
+        android:id="@+id/face_view_group"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#ECEFF1"
+        android:orientation="horizontal">
+
+
+        <com.tencent.qcloud.tim.uikit.component.face.FaceGroupIcon
+            android:id="@+id/face_first_set"
+            android:layout_width="70dp"
+            android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,63 @@
+/**index.wxss**/
+.container {
+  background-image: url(https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+
+.msgs-wrapper {
+  position: absolute;
+  bottom: 100rpx;
+  left: 10rpx;
+  right: 10rpx;
+}
+
+.msgs {
+  max-width: 80%;
+  display: block;
+  padding: 5rpx;
+  color: #ffffff;
+  margin: 5rpx 0;
+  word-wrap: break-word
+}
+
+.msg-item {
+  padding: 8rpx 5rpx;
+  border-radius: 4rpx;
+  font-size: 14px;
+}
+
+.nickname {
+  color: #ff7906
+}
+
+.input-section {
+  position: absolute;
+  bottom: 10rpx;
+  left: 10rpx;
+  right: 10rpx;
+}
+
+.input-section input {
+  background: #fff;
+  margin-right: 100rpx;
+  padding: 10rpx;
+}
+
+.input-section .love {
+  background: url(http://avc.qcloud.com/demo/webim/biggroup/mobile/img/like_hover.png);
+  background-size: 100%;
+  width: 70rpx;
+  height: 70rpx;
+  display: block;
+  position: absolute;
+  right: 10rpx;
+  bottom: 0;
+  border: 0;
+  outline: 0;
+}
+
+.input-section .love:after {
+  border: 0
+}

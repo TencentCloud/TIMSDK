@@ -1,0 +1,18 @@
+
+/* Class = "UIButton"; normalTitle = "登 陆"; ObjectID = "8jc-YP-vv6"; */
+"8jc-YP-vv6.normalTitle" = "登 录";
+
+/* Class = "UITextField"; placeholder = "8～16位密码"; ObjectID = "HVD-3G-U4R"; */
+"HVD-3G-U4R.placeholder" = "8～16位密码";
+
+/* Class = "UITextField"; placeholder = "支持小写字母、数字、下划线"; ObjectID = "Sf3-sD-vMh"; */
+"Sf3-sD-vMh.placeholder" = "支持小写字母、数字、下划线";
+
+/* Class = "UITextField"; text = "user"; ObjectID = "Sf3-sD-vMh"; */
+"Sf3-sD-vMh.text" = "user";
+
+/* Class = "UILabel"; text = "密码"; ObjectID = "ZzM-q6-Wwo"; */
+"ZzM-q6-Wwo.text" = "密码";
+
+/* Class = "UILabel"; text = "用户名"; ObjectID = "lCo-nh-Fc4"; */
+"lCo-nh-Fc4.text" = "用户名";

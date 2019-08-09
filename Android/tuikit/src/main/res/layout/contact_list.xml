@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/contact_member_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.tencent.qcloud.tim.uikit.component.indexlib.IndexBar.widget.IndexBar
+        android:id="@+id/contact_indexBar"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical|right"
+        app:indexBarPressBackground="@color/partTranslucent"
+        app:indexBarTextSize="12sp" />
+
+    <TextView
+        android:id="@+id/contact_tvSideBarHint"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_side_bar_bg"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:text="A"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/contact_count"
+            android:textSize="14sp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/contact_count"
+            android:layout_gravity="bottom"
+            android:visibility="gone"/>
+    </LinearLayout>
+</FrameLayout>

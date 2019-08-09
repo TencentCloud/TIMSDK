@@ -1,0 +1,1 @@
+../../../../../TUIKit/Classes/Section/Commom/Controller/TUIAvatarViewController.h

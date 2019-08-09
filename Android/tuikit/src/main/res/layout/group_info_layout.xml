@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
+        android:id="@+id/group_info_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/group_member_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:name="@string/group_members" />
+
+            <com.tencent.qcloud.tim.uikit.component.GridViewInScrollView
+                android:id="@+id/group_members"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:numColumns="6" />
+
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/group_type_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:name="@string/group_type" />
+
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/group_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/page_margin"
+                app:name="@string/group_id" />
+
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/group_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/page_margin"
+                app:name="@string/group_name" />
+
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/group_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/page_margin"
+                app:name="@string/group_icon" />
+
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/group_notice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/page_margin"
+                app:name="@string/group_notice" />
+
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/join_type_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/page_margin"
+                app:name="@string/join_group_type" />
+
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/self_nickname_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/page_margin"
+                app:name="@string/in_group_nick_name" />
+
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/chat_to_top_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/page_margin"
+                app:name="@string/chat_to_top"
+                app:isSwitch="true"/>
+
+            <Button
+                android:id="@+id/group_dissolve_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="@dimen/page_margin"
+                android:layout_marginRight="@dimen/page_margin"
+                android:layout_marginTop="10dp"
+                android:background="#ffffff"
+                android:textColor="#fb6155" />
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>
+

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="top_conversation_color">#e5e5e5</color>
+    <color name="white_color">#ffffff</color>
+    <color name="main_bg_color">#EDEDED</color>
+    <color name="btn_blue_standard_color">#338BFF</color>
+    <color name="item_split_color">#cccccc</color>
+
+    <color name="text_color_black">#000</color>
+    <color name="text_color_gray">#696969</color>
+
+    <color name="font_blue">#066fff</color>
+
+    <color name="voice_pressed">#DEDEDE</color>
+    <color name="voice_normal">#ffffff</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="black">#000000</color>
+    <color name="list_bottom_text_bg">#777777</color>
+    <color name="partTranslucent">#39000000</color>
+    <color name="custom_transparent">#B3000000</color>
+    <color name="dialog_line_bg">#c6c6c6</color>
+    <color name="read_dot_bg">#f74c31</color>
+
+
+    <color name="white">#FFFFFF</color>
+    <color name="line">#DDDDDD</color>
+
+    <color name="text_gray1">#777777</color>
+
+    <color name="title_bar_font_color">#016fff</color>
+
+    <color name="tab_text_selected_color">#006EFF</color>
+    <color name="tab_text_normal_color">#888888</color>
+
+    // 积极钮色值
+    <color name="btn_positive">#00a4ff</color>
+    <color name="btn_positive_hover">#006eff</color>
+
+    // 积极按钮文本色值
+    <color name="text_positive">#ffffff</color>
+    <color name="text_positive_hover">#ffffff</color>
+
+    // 消极按钮背景色值
+    <color name="btn_negative">#ffffff</color>
+    <color name="btn_negative_hover">#cc3428</color>
+
+    // 消极按钮文本色值
+    <color name="text_negative">#fb6155</color>
+    <color name="text_negative_hover">#FFFFFF</color>
+
+    // 聊天昵称/时间条背景色值
+
+    // 聊天发送/光标色值
+    <color name="green">#70C160</color>
+
+
+</resources>

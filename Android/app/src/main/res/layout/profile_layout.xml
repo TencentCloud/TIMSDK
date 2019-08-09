@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg_color"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
+        android:id="@+id/self_info_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="#fff"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/page_margin">
+
+                <ImageView
+                    android:id="@+id/self_icon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/default_user_icon" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/self_account"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textSize="12sp"
+                        android:text="" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                    android:id="@+id/modify_user_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:name="@string/modify_user_icon" />
+
+                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                    android:id="@+id/modify_nick_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:name="@string/modify_nick_name" />
+
+                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                    android:id="@+id/modify_signature"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:name="@string/modify_signature" />
+
+                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                    android:id="@+id/modify_allow_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:name="@string/add_rule" />
+
+                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                    android:id="@+id/about_im"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:name="@string/about_im" />
+
+                <Button
+                    android:id="@+id/logout_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/btn_margin_left"
+                    android:layout_marginRight="@dimen/btn_margin_right"
+                    android:layout_marginBottom="@dimen/btn_margin_bottom"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="@dimen/btn_height_large"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/bg_negative_btn"
+                    android:text="@string/exit"
+                    android:textColor="@color/negative_text" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

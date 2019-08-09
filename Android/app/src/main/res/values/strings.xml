@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">云通信IM</string>
+
+    // 云通信
+    <string name="chat_top">置顶聊天</string>
+    <string name="chat_delete">删除聊天</string>
+    <string name="quit_chat_top">取消置顶</string>
+
+    // 登录相关
+    <string name="account">用户名</string>
+    <string name="password">密码</string>
+
+    // "我"相关
+    <string name="profile">我</string>
+    <string name="id">账号：%1$s</string>
+    <string name="modify_user_icon">修改头像</string>
+    <string name="modify_nick_name">修改昵称</string>
+    <string name="modify_signature">修改个性签名</string>
+    <string name="add_rule">加我为好友时</string>
+    <string name="allow_type_allow_any">允许任何人</string>
+    <string name="allow_type_deny_any">拒绝任何人</string>
+    <string name="allow_type_need_confirm">需要验证</string>
+    <string name="exit">退出登录</string>
+    <string name="about_im">关于云通信IM</string>
+
+    // 主页Tab相关
+    <string name="tab_contact_tab_text">通讯录</string>
+    <string name="tab_conversation_tab_text">消息</string>
+    <string name="tab_profile_tab_text">我</string>
+
+    // "+"menu相关
+    <string name="add_friend">添加好友</string>
+    <string name="add_group">添加群聊</string>
+    <string name="start_conversation">发起会话</string>
+    <string name="create_group_chat">创建群聊</string>
+    <string name="create_chat_room">创建聊天室</string>
+    <string name="create_private_group">创建讨论组</string>
+    <string name="hint_add_user_id">请输入ID</string>
+    <string name="hint_add_wording">请输入验证消息</string>
+    <string name="contact_add">添加</string>
+    <string name="user_id">对方ID</string>
+    <string name="add_wording">验证消息</string>
+
+    // 群信息相关
+    <string name="tips_empty_group_member">请选择群成员</string>
+    <string name="tips_empty_group_type">请选择加群方式</string>
+    <string name="no_friend_apply">暂无好友申请</string>
+
+
+    // 新朋友
+    <string name="request_agree">同意</string>
+    <string name="request_accepted">已接受</string>
+    <string name="request_waiting">等待验证</string>
+
+</resources>

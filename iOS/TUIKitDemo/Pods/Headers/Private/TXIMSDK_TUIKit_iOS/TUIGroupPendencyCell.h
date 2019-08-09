@@ -1,0 +1,1 @@
+../../../../../TUIKit/Classes/Section/Chat/Pendency/Cell/TUIGroupPendencyCell.h

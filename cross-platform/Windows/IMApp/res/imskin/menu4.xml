@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window size="120,102">
+  <Include source="default.xml" />
+  <Default name="Menu" value="bordersize=&quot;1&quot; bordercolor=&quot;#FFB5B5B5&quot; inset=&quot;3,4,3,4&quot; itemtextpadding=&quot;35,0,0,0&quot; bkcolor=&quot;#FFFFFFFE&quot; itemselectedbkcolor=&quot;#FFB5B5B5&quot;" />
+  
+    <Menu>
+      <MenuElement name="delete_groupmem_menu" height="28" text="删除成员" inset="40,0,0,0" />
+    </Menu>
+
+</Window>
+ 

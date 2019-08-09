@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="group_type">
+        <item>Private</item>
+        <item>Public</item>
+        <item>ChatRoom</item>
+    </string-array>
+</resources>

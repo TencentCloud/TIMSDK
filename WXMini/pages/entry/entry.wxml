@@ -1,0 +1,20 @@
+<view class='container-box'>
+  <view class='title'style='padding-top:{{(headerHeight + statusBarHeight)/2 - 12}}px'>
+    <text>腾讯云通信</text>
+  </view>
+  <view class='tips'>
+    <text>本小程序展示通过WEBIM小程序SDK登录并进入互动直播聊天室等功能，由腾讯云提供技术支持</text>
+  </view>
+  
+  <view class="input-box">
+    <picker mode="selector" bindchange="userChange" value="{{index}}" range="{{users}}" range-key="identifier">
+      <view class="picker">{{users[index].identifier}}</view>
+    </picker>
+  </view>
+  <view class='tips'>
+      <text>请选择体验帐号</text>
+  </view>
+</view>
+<view class='bottom-btn'>
+  <button type="primary" bindtap="entry" hover-class="none">登录</button>
+</view>

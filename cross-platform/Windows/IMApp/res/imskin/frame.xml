@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window size="800,600" sizebox="4,4,6,6" caption="0,0,0,30" mininfo="800,600" roundcorner="6,6" bktrans="false" trayiconid="101" traytiptext="IMApp V1.0.0.1" >
+  <Include source="default.xml" />
+  <VerticalLayout name="background" bkcolor="#FF366CB3" bordercolor="#FF000000" bordersize="1"  childpadding="2" >
+    <VerticalLayout height="30"><!-- 标题栏 -->
+      <Control />
+      <HorizontalLayout height="24">
+        <Container width="24" />
+        <Label name="IM_Title" text="IMApp V1.0.0.1" endellipsis="true"/>
+        <Control />
+        <HorizontalLayout name="cur_login_info" visible="false">
+          <Label text="当前登入账号:" />
+          <Control width="5" />
+          <Label name="cur_loginid_lbl" />
+        </HorizontalLayout>
+        <Button name="test_btn" text="测试按钮" />
+        <Control width="40" />
+        <Button name="logout_btn" text="登出" />
+        <Control width="20" />
+        <Button name="closebtn" text="关闭" />
+        <Control width="8" />
+      </HorizontalLayout>
+    </VerticalLayout>
+    <Control height="4" />
+    <HorizontalLayout padding="6,6,6,6" >
+      <VerticalLayout name="initsdk_view" > <!-- 初始化SDK界面 -->
+        <Control />
+        <VerticalLayout padding="4,4,4,4" height="340">
+          <Control />
+          <HorizontalLayout height="24" padding="40,4,40,4">
+            <Label text="SDKAPPID" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+            <Combo name="sdkappid_combo" textpadding="0,2,0,0" font="0" autocalcwidth="false" itemalign="center" bkcolor="#FFFFFFFF" visible="true"/>
+            <!--Edit  name="sdkappid_edit" -->
+          </HorizontalLayout>
+          <Control />
+          <HorizontalLayout height="24" padding="40,4,40,4">
+            <Label text="LogPath" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+            <Edit  name="logpath_edit" />
+          </HorizontalLayout>
+          <Control />
+        </VerticalLayout>
+        <HorizontalLayout height="40" >
+          <Control />
+          <Button name="initsdk_btn" text="初始化SDK" width="80" height="24" />
+          <Control />
+        </HorizontalLayout >
+        <Control />
+      </VerticalLayout>
+      
+      <VerticalLayout name="login_view" visible="false" > <!-- 登入界面 -->
+        <Control />
+        <VerticalLayout padding="4,4,4,4" height="380">
+          <HorizontalLayout height="24" padding="40,4,40,4">
+            <Label text="UserId" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+            <Edit  name="userid_edit" />
+            <!--Combo name="userid_combo" textpadding="0,2,0,0" font="0" autocalcwidth="false" itemalign="center" bkcolor="#FFFFFFFF" visible="true"-->
+          </HorizontalLayout>
+          <!--HorizontalLayout padding="40,4,40,4">
+            <VerticalLayout width="80">
+              <Label text="UserSig" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80" height="24"/>
+              <Control />
+            </VerticalLayout>
+            <RichEdit  name="usersig_edit" multiline="true" vscrollbar="true" autovscroll="true" hscrollbar="true" autohscroll="true" bkcolor="#FFFFFFFF" bordercolor="#FFC5C5C5" bordersize="1"  enabled="false" />
+          </HorizontalLayout -->
+        </VerticalLayout>
+        <HorizontalLayout height="40" >
+          <Control />
+          <Button name="login_btn" text="登陆" width="40" height="24" />
+          <Control width="10" />
+          <Button name="register_btn" text="注册" width="40" enabled="false" height="24" />	
+          <Control width="10" />
+          <Button name="uninitsdk_btn" text="退出" width="40" height="24" />	
+          <Control />
+        </HorizontalLayout >
+        <Control />
+      </VerticalLayout>
+      
+      <HorizontalLayout name="main_logic_view" visible="false" bkcolor="#FF366CB3" bkcolor2="#FFF2F3F5"> <!-- 主逻辑界面 -->
+        <VerticalLayout width="120" >
+          <TreeView hscrollbar="true" vscrollbar="true">
+            <TreeNode name="log_node" text="日志" />
+            <!-- TreeNode name="sysmsg_node" text="系统消息" /-->
+            <TreeNode name="create_conv_node" text="创建会话" />
+            <TreeNode name="delete_conv_node" text="删除会话" />
+            <TreeNode name="create_group_node" text="创建群组" />
+            <TreeNode name="join_group_node"   text="加入群组" />
+            <TreeNode name="invite_group_node" text="邀请加入群组" />
+            <TreeNode name="delmem_group_node" text="删除群组成员" />
+            <TreeNode name="delete_group_node" text="删除群组" />
+            <TreeNode name="quit_group_node"   text="退出群组" />
+            
+            <Control height="10" />
+            <TreeNode name="conv_node"  menu="true" text="所有会话" />
+            <TreeNode name="group_node" menu="true" text="所有群组" />
+          </TreeView>	
+        </VerticalLayout>
+        <Control width="5"/>
+        <TabLayout name="main_logic_tab" selectedid="0" >
+          <VerticalLayout >
+            <RichEdit  name="logdata_edit" readonly="true" multiline="true" vscrollbar="true" autovscroll="true" hscrollbar="true" autohscroll="true" bkcolor="#FFFFFFFF" bordercolor="#FFC5C5C5" bordersize="1" />
+          </VerticalLayout>
+          <!--VerticalLayout >
+            <RichEdit  name="sysmsgdata_edit" readonly="true" multiline="true" vscrollbar="true" autovscroll="true" hscrollbar="true" autohscroll="true" bkcolor="#FFFFFFFF" bordercolor="#FFC5C5C5" bordersize="1" />
+          </VerticalLayout -->
+          <HorizontalLayout>  <!-- 会话聊天界面，模拟QQ(企业微信) -->
+            <VerticalLayout>
+              <HorizontalLayout name="conv_userinfo_view" height="24" childpadding="5" > <!-- 会话信息 群注释等-->
+                <Label name="conv_userinfo_lab" text="User1" autocalcwidth="false" tooltip="成员名称"/>
+                <Control />
+              </HorizontalLayout>
+              <HorizontalLayout name="conv_groupinfo_view" height="24" childpadding="5" visible="false" > <!-- 会话信息 群注释等-->
+                <Label name="conv_groupinfo_lab" text="GroupName" autocalcwidth="false" tooltip="群组名称"/>
+                <Control />
+                <Button name="conv_groupinfo_add_btn"  autocalcwidth="true" text="添加成员" />
+              </HorizontalLayout>
+              <RichEdit name="convdata_edit" readonly="true" multiline="true" vscrollbar="true" autovscroll="true" bkcolor="#FFFFFFFF" bordercolor="#FFC5C5C5" bordersize="1" />
+              <HorizontalLayout height="30" childpadding="5" > <!-- 各类操作 (上传图片、表情、文件 消息记录等操作)-->
+                <Button name="sendface_bth"  width="40" text="表情" />
+                <Button name="sendimage_btn" width="40" text="图片" />
+                <Button name="sendfile_btn"  width="40" text="文件" />
+                <Control />
+              </HorizontalLayout>
+              <VerticalLayout sepimm="true" sepheight="3">  <!-- 发送消息 -->
+                <RichEdit name="msgcontxt_edit" multiline="true" vscrollbar="true" autovscroll="true"  bkcolor="#FFFFFFFF" />
+                <HorizontalLayout height="30" > 
+                  <Control />
+                  <Button name="sendmsg_btn" text="发送" width="40" />
+                  <Control width="5" />
+                </HorizontalLayout>
+              </VerticalLayout>
+            </VerticalLayout>
+          </HorizontalLayout>
+          
+          <VerticalLayout childpadding="5"> <!-- 创建会话界面 -->
+            <Control />
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="UserId" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+              <Edit  name="conv_userid_edit" width="180"/>
+              <Control />
+            </HorizontalLayout>
+            <Control height="10" />
+            <HorizontalLayout height="24" >
+              <Control />
+              <Button name="create_conv_btn" text="创建会话" width="80"/>
+              <Control />
+            </HorizontalLayout >
+            <Control />
+            <Control />
+          </VerticalLayout >
+          <VerticalLayout > <!-- 创建群组界面 -->
+            <Control />
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="GroupId" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="100"/>
+              <Edit  name="create_groupid_edit" width="180"/>
+              <Control />
+            </HorizontalLayout>
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="GroupName" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="100"/>
+              <Edit  name="create_groupname_edit" width="180"/>
+              <Control />
+            </HorizontalLayout>
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="GroupType" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="100" />
+              <Combo  name="create_grouptype_combo" width="180" itemalign="center" bkcolor="#FFFFFFFF" visible="true">
+                <ListLabelElement text="Public" />
+                <ListLabelElement text="Private" />
+              </Combo>
+              <Control />
+            </HorizontalLayout>
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="GroupAddOpt" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="100" />
+              <Combo  name="create_groupaddopt_combo" width="180" itemalign="center" bkcolor="#FFFFFFFF" visible="true">
+                <ListLabelElement text="AnyJoin" />
+                <ListLabelElement text="AutoJoin" />
+                <ListLabelElement text="ForbidJoin" />
+              </Combo>
+              <Control />
+            </HorizontalLayout>
+            <Control height="10" />
+            <HorizontalLayout height="24" >
+              <Control />
+              <Button name="create_group_btn" text="创建群组" width="80"/>
+              <Control />
+            </HorizontalLayout >
+            <Control />
+            <Control />
+          </VerticalLayout >
+          <VerticalLayout ><!-- 加入群组界面 -->
+            <Control />
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="GroupId" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+              <Edit  name="join_groupid_edit" width="180"/>
+              <Control />
+            </HorizontalLayout>
+            <Control height="10" />
+            <HorizontalLayout height="24" >
+              <Control />
+              <Button name="join_group_btn" text="加入群组" width="80"/>
+              <Control />
+            </HorizontalLayout >
+            <Control />
+            <Control />
+          </VerticalLayout>
+          <VerticalLayout ><!-- 邀请加入群组界面 -->
+            <Control />
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="GroupId" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+              <Combo name="invite_groupid_combo" width="180" itemalign="center" bkcolor="#FFFFFFFF"/>
+              <Control />
+            </HorizontalLayout>
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="UserIds" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+              <Edit  name="invite_userid_edit" width="180"/>
+              <Control />
+            </HorizontalLayout>
+            <Control height="10" />
+            <HorizontalLayout height="24" >
+              <Control />
+              <Button name="invite_group_btn" text="邀请加入群组" width="80"/>
+              <Control />
+            </HorizontalLayout >
+            <Control />
+            <Control />
+          </VerticalLayout>
+          <VerticalLayout ><!-- 删除会话 -->
+            <Control />
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="UserId" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+              <Combo name="delete_conv_combo" width="180" itemalign="center" bkcolor="#FFFFFFFF"/>
+              <Control />
+            </HorizontalLayout>
+            <Control height="10" />
+            <HorizontalLayout height="24" >
+              <Control />
+              <Button name="delete_conv_btn" text="删除会话" width="80"/>
+              <Control />
+            </HorizontalLayout >
+            <Control />
+            <Control />
+          </VerticalLayout>
+          <VerticalLayout ><!-- 删除群组 -->
+            <Control />
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="GroupId" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+              <Combo name="delete_group_combo" width="180" itemalign="center" bkcolor="#FFFFFFFF"/>
+              <Control />
+            </HorizontalLayout>
+            <Control height="10" />
+            <HorizontalLayout height="24" >
+              <Control />
+              <Button name="delete_group_btn" text="删除群组" width="80"/>
+              <Control />
+            </HorizontalLayout >
+            <Control />
+            <Control />
+          </VerticalLayout>
+          <VerticalLayout ><!-- 退出群组 -->
+            <Control />
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="GroupId" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+              <Combo name="quit_groupid_combo" width="180" itemalign="center" bkcolor="#FFFFFFFF"/>
+              <Control />
+            </HorizontalLayout>
+            <Control height="10" />
+            <HorizontalLayout height="24" >
+              <Control />
+              <Button name="quit_group_btn" text="退出群组" width="80"/>
+              <Control />
+            </HorizontalLayout >
+            <Control />
+            <Control />
+          </VerticalLayout>
+          <VerticalLayout ><!-- 删除群组成员 -->
+            <Control />
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="GroupId" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+              <Combo name="delmem_groupid_combo" width="180" itemalign="center" bkcolor="#FFFFFFFF"/>
+              <Control />
+            </HorizontalLayout>
+            <Control height="10" />
+            <HorizontalLayout height="24" padding="40,4,40,4">
+              <Control />
+              <Label text="UserIds" textpadding="0,2,0,0" font="0" autocalcwidth="false" width="80"/>
+              <Edit  name="delmem_userid_edit" width="180"/>
+              <Control />
+            </HorizontalLayout>
+            <Control height="10" />
+            <HorizontalLayout height="24" >
+              <Control />
+              <Button name="delmem_group_btn" text="删除群组成员" width="80"/>
+              <Control />
+            </HorizontalLayout >
+            <Control />
+            <Control />
+          </VerticalLayout>
+        </TabLayout>
+      </HorizontalLayout>
+      
+    </HorizontalLayout>
+  </VerticalLayout>
+</Window>

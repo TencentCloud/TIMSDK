@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg_color">
+
+    <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
+        android:id="@+id/chat_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <com.tencent.qcloud.tim.uikit.component.NoticeLayout
+        android:id="@+id/chat_group_apply_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_title_bar"
+        android:visibility="gone" />
+
+    <com.tencent.qcloud.tim.uikit.component.NoticeLayout
+        android:id="@+id/chat_notice_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_group_apply_layout"
+        android:layout_marginTop="1dp"
+        android:visibility="gone" />
+
+    <com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout
+        android:id="@+id/chat_message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chat_input_layout"
+        android:layout_below="@+id/chat_notice_layout"
+        android:layout_marginBottom="5dp"
+        android:baselineAligned="false"
+        android:clickable="false"
+        android:descendantFocusability="blocksDescendants" />
+
+
+    <com.tencent.qcloud.tim.uikit.modules.chat.layout.input.InputLayout
+        android:id="@+id/chat_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+
+    <RelativeLayout
+        android:id="@+id/voice_recording_view"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/ic_volume_dialog_bg"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:id="@+id/recording_icon"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"/>
+
+
+            <TextView
+                android:id="@+id/recording_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_marginTop="10dp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

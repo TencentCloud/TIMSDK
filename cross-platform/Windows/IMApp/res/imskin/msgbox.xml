@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="355,166" sizebox="4,4,4,4" caption="0,0,0,126" minsize="355,166"> 
+  <Font name="微软雅黑" size="13" default="true"/>
+  <Include source="default.xml" />
+  <VerticalLayout  bordercolor="#FF47484B" bordersize="1" inset="1,1,1,1">
+    <HorizontalLayout name="background" height="30" bkcolor="#FF4B78B8" bkcolor2="#FF274F8A" bkcolor3="#FF0F3672"><!-- 标题栏 -->
+        <Label name="MessageBox_Caption" autocalcwidth="false"/>
+        <Control />
+        <Button name="closebtn" text="关闭" width="24" height="18" padding="0,10,0,0"/>                    
+    </HorizontalLayout>
+    <Control height="10" bkcolor="#FFFFFFFF"/>
+    <HorizontalLayout bkcolor="#FFFFFFFF" >
+      <Control width="10" />
+      <VerticalLayout name="MessageBox_IconLayout" width="45">
+        <Control />
+        <Button name="MessageBox_Icon" width="41" height="41"/>
+        <Control />
+      </VerticalLayout>
+      <Control width="4" />
+      <VerticalLayout name="MessageBox_TextLayout"> 
+        <Text name="MessageBox_Text" />      
+        <HorizontalLayout height="28" >
+          <Control />
+          <Button name="closebtn" width="75" height="28" text="确定" /> 
+          <Button name="cancelbtn" width="75" height="28" text="取消" />   
+          <Control width="1" /> 
+        </HorizontalLayout >          
+      </VerticalLayout >
+      <Control width="10" />
+    </HorizontalLayout>  
+    <Control height="10" bkcolor="#FFFFFFFF"/>    
+  </VerticalLayout >  
+</Window>
+
+ 

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
+        android:id="@+id/add_friend_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="45dp"
+            android:gravity="center_vertical"
+            android:text="@string/user_id"
+            android:textColor="#000" />
+
+        <EditText
+            android:id="@+id/user_id"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:iconifiedByDefault="false"
+            android:textSize="@dimen/btn_text_size"
+            android:padding="10dp"
+            android:maxLength="30"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/my_cursor"
+            android:hint="@string/hint_add_user_id" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="45dp"
+            android:gravity="center_vertical"
+            android:text="@string/add_wording"
+            android:textColor="#000" />
+
+        <EditText
+            android:id="@+id/add_wording"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/btn_text_size"
+            android:padding="10dp"
+            android:maxLength="100"
+            android:textCursorDrawable="@drawable/my_cursor"
+            android:hint="@string/hint_add_wording" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="@dimen/btn_margin_top"
+        android:layout_marginLeft="@dimen/btn_margin_left"
+        android:layout_marginRight="@dimen/btn_margin_right"
+        android:background="@color/bg_negative_btn"
+        android:text="@string/contact_add"
+        android:onClick="add"
+        android:textColor="#fb6155" />
+
+</LinearLayout>

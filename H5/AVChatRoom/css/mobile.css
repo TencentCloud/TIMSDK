@@ -1,0 +1,430 @@
+@charset "utf-8";
+html {
+    font-family: PingFangSC-Light, HelveticaNeue-Light, "Helvetica Neue Light", "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
+    font-size: 14px
+}
+
+body, dd, dl, h1, h2, h3, ol, p, ul {
+    margin: 0
+}
+
+ol, ul {
+    padding: 0
+}
+
+body {
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0
+}
+
+h1, h2, h3 {
+    font-size: 100%;
+    font-weight: 400
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+img {
+    border: 0
+}
+
+li {
+    list-style-type: none
+}
+
+button, input, option, select, textarea {
+    font: inherit;
+    outline: 0;
+    -webkit-appearance: none;
+    border: 0
+}
+
+button {
+    padding: 0;
+    margin: 0;
+    border: 0
+}
+
+a {
+    -webkit-touch-callout: none;
+    text-decoration: none
+}
+
+em, i {
+    font-style: normal
+}
+
+.video-page {
+    position: fixed;
+    top: 0;
+    width: 100%
+}
+
+.video-play video {
+    width: 100%;
+    height: 100%;
+    background-color: #fff
+}
+
+.video-pane {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1000
+}
+
+.video-pane .video-pane-head {
+    height: 20%;
+    position: relative;
+    width: 100%
+}
+
+.video-pane .video-pane-body {
+    height: 80%;
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    bottom: 0
+}
+
+.video-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: url(../img/drop_out.png) no-repeat;
+    background-size: 14px 14px;
+    width: 14px;
+    height: 14px;
+    margin: 15px
+}
+
+.video-close:focus, .video-close:hover {
+    background-image: url(../img/drop_out_hover.png)
+}
+
+.user-info-num {
+    font-size: 13px;
+    color: #fff
+}
+
+.video-pane-info {
+    display: inline-block;
+    background: url(../img/back.png);
+    border-radius: 51px;
+    height: 51px;
+    margin: 15px
+}
+
+.video-info {
+    z-index: 2;
+    position: relative;
+    padding: 3px
+}
+
+.user-img {
+    display: inline-block
+}
+
+.user-info-text {
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 20px;
+    vertical-align: top;
+    padding-top: 5px;
+    color: #fff;
+    max-width: 200px
+}
+
+.user-info-name {
+    line-height: 16px
+}
+
+.user-icon-fans {
+    background: url(../img/visitor_white.png) no-repeat
+}
+
+.user-icon-like {
+    background: url(../img/like_white.png) no-repeat;
+    margin-left: 10px
+}
+
+.user-icon-fans, .user-icon-like {
+    background-size: 11px 10px;
+    width: 11px;
+    height: 10px;
+    display: inline-block;
+    margin-right: 2px
+}
+
+.video-discuss {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0
+}
+
+.video-sms-list {
+    color: #fff;
+    margin: 0 15px
+}
+
+.video-sms-list li {
+    margin-bottom: 5px
+}
+
+.video-sms-list li:nth-child(1) {
+    opacity: .4
+}
+
+.video-sms-list li:nth-child(2) {
+    opacity: .6
+}
+
+.video-sms-list li:nth-child(3) {
+    opacity: .8
+}
+
+.video-sms-pane {
+    display: inline-block
+}
+
+.video-sms-text {
+    padding: 2px 10px;
+    font-size: 14px;
+    background-color: #fff;
+    border-radius: 10px;
+    text-align: left;
+    max-width: 250px;
+    line-height: 18px;
+    color: #000;
+    word-wrap: break-word
+}
+
+.video-sms-text span {
+    padding-right: 10px;
+    vertical-align: top;
+    color: #000
+}
+
+.video-sms-text span.user-name-green {
+    color: #1fbcb6
+}
+
+.video-sms-text span.user-name-red {
+    color: #f12b5b
+}
+
+.video-sms-text span.user-name-blue {
+    color: #2b84f1
+}
+
+.video-sms-text span.user-name-org {
+    color: #ff7906
+}
+
+.video-discuss-tool {
+    margin: 25px 15px 15px
+}
+
+.video-discuss-sms {
+    background: url(../img/comment.png) no-repeat;
+    background-size: 35px 35px;
+    display: inline-block;
+    width: 35px;
+    height: 35px
+}
+
+.video-discuss-sms:focus, .video-discuss-sms:hover {
+    background-image: url(../img/comment_hover.png)
+}
+
+.video-discuss-like {
+    background: url(../img/like.png) no-repeat;
+    background-size: 35px 35px;
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    right: 15px
+}
+
+.video-discuss-like:focus, .video-discuss-like:hover {
+    background-image: url(../img/like_hover.png)
+}
+
+.video-discuss-form {
+    height: 30px;
+    background: url(../img/form-back.png);
+    padding: 8px 60px 10px 8px;
+    position: relative
+}
+
+.video-discuss-input {
+    width: 85%;
+    height: 30px;
+    vertical-align: top;
+    padding: 0 13% 0 2%;
+    border-radius: 2px
+}
+
+.video-discuss-button {
+    background-color: #dc4b53;
+    height: 30px;
+    color: #fff;
+    width: 45px;
+    position: absolute;
+    right: 10px;
+    font-size: 14px;
+    top: 8px;
+    border-radius: 2px
+}
+
+.video-discuss-face {
+    background: url(../img/face.png) no-repeat;
+    background-size: 20px 20px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    right: 65px;
+    top: 12px;
+    position: absolute
+}
+
+.video-discuss-face:focus, .video-discuss-face:hover {
+    background-image: url(../img/face_hover.png)
+}
+
+.like-icon {
+    background: url(../img/like_icon_1.png) no-repeat;
+    background-size: 19px 17px;
+    width: 19px;
+    height: 17px;
+    position: absolute;
+    right: 24px;
+    margin-top: -15px;
+    opacity: 0;
+    -webkit-animation-duration: 1.5s;
+    animation-duration: 1.5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both
+}
+
+.like-icon.green {
+    background-image: url(../img/like_icon_2.png)
+}
+
+.like-icon.blue {
+    background-image: url(../img/like_icon_3.png)
+}
+
+.like-icon.red {
+    background-image: url(../img/like_icon_4.png)
+}
+
+@-webkit-keyframes zoomIn {
+    from {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3);
+        margin-top: 0
+    }
+    50% {
+        opacity: 1
+    }
+    100% {
+        opacity: 0;
+        margin-top: -60px;
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3);
+        margin-top: 0
+    }
+    50% {
+        opacity: 1
+    }
+    100% {
+        opacity: 0;
+        margin-top: -60px;
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
+}
+
+.zoomIn {
+    -webkit-animation-name: zoomIn;
+    animation-name: zoomIn
+}
+
+.video-discuss-emotion {
+    height: 140px;
+    background-color: #fff;
+    padding: 8px;
+    position: relative
+}
+
+.video-emotion-pane {
+    width: 100%;
+    height: 100%
+}
+
+.video-emotion-pane ul {
+    margin: 12px;
+    padding: 0;
+    overflow: hidden;
+    border-top: 1px #CCC solid;
+    border-left: 1px #CCC solid;
+    list-style: none;
+    width: 333px
+}
+
+.video-emotion-pane ul li {
+    float: left;
+    border-right: 1px #CCC solid;
+    border-bottom: 1px #CCC solid;
+    height: 30px;
+    line-height: 30px;
+    width: 32px;
+    margin: 0;
+    padding: 4px 2px;
+    text-align: center
+}
+
+.video-emotion-pane ul li img {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle
+}
+
+#MAXIM {
+    content: "tig201605241501026"
+}
+
+#login_dialog{
+    display: none;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+}
+
+.login_dialog_p{display: inline-block;color: #fff;text-align: right;width: 54px;}
+
+#login_dialog_all{margin-top: 200px;margin-left: 50px;}
+
+.install_div{margin:10px;}
+.install_div input{padding: 5px;width: 60%;}
+.install_button_div{width:100%;text-align: center;}
+.install_button_div button{color: #fff;border-radius: 4px;background: red;padding: 4px 20px;}
