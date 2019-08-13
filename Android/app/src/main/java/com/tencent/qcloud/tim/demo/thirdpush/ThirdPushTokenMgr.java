@@ -5,9 +5,8 @@ import android.text.TextUtils;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMOfflinePushToken;
-import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.imsdk.utils.IMFunc;
-import com.tencent.qcloud.tim.demo.utils.Constants;
+import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 
 /**
@@ -19,7 +18,6 @@ public class ThirdPushTokenMgr {
     private static final String TAG = ThirdPushTokenMgr.class.getSimpleName();
     private String mThirdPushToken;
     private boolean mIsTokenSet = false;
-    private boolean mIsLogin = false;
 
     public static ThirdPushTokenMgr getInstance() {
         return ThirdPushTokenHolder.instance;
@@ -27,10 +25,6 @@ public class ThirdPushTokenMgr {
 
     private static class ThirdPushTokenHolder {
         private static final ThirdPushTokenMgr instance = new ThirdPushTokenMgr();
-    }
-
-    public void setIsLogin(boolean isLogin) {
-        mIsLogin = isLogin;
     }
 
     public String getThirdPushToken() {
@@ -50,10 +44,6 @@ public class ThirdPushTokenMgr {
         if (TextUtils.isEmpty(token)) {
             DemoLog.i(TAG, "setPushTokenToTIM third token is empty");
             mIsTokenSet = false;
-            return;
-        }
-        if (!mIsLogin) {
-            DemoLog.i(TAG, "setPushTokenToTIM not login, ignore");
             return;
         }
         TIMOfflinePushToken param = null;

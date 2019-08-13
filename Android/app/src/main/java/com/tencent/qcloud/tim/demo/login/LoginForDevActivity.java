@@ -18,6 +18,7 @@ import android.widget.EditText;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
+import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
@@ -70,6 +71,7 @@ public class LoginForDevActivity extends Activity {
 
                     @Override
                     public void onSuccess(Object data) {
+                        ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
                         Intent intent = new Intent(LoginForDevActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
