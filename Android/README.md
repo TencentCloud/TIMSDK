@@ -1,6 +1,5 @@
 本文介绍如何快速跑通即时通信 IM 的体验 Demo。
 
-<span id="step1"></span>
 ## 步骤1：创建应用
 1. 登录即时通信 IM [控制台](https://console.cloud.tencent.com/avc)。
  >?如果您已有应用，请记录其 SDKAppID 并 [配置应用](#step2)。
@@ -9,7 +8,6 @@
 3. 在【创建新应用】对话框中，填写新建应用的信息，单击【确认】。
  应用创建完成后，自动生成一个应用标识 SDKAppID，请记录 SDKAppID 信息。
 
-<span id="step2"></span>
 ## 步骤2：获取密钥信息
 
 1. 单击目标应用所在行的【应用配置】，进入应用详情页面。
@@ -18,7 +16,6 @@
 4. 单击【查看密钥】，拷贝并保存密钥信息。
  >!请妥善保管密钥信息，谨防泄露。
 
-<span id="step3"></span>
 ## 步骤3：下载并配置 Demo 源码
 
 1. 从 [Github](https://github.com/tencentyun/TIMSDK) 克隆即时通信 IM Demo 工程。
@@ -57,8 +54,8 @@
  >?本文以使用 Android Studio 打开 Android 工程为例。
   >
 3. 设置`GenerateTestUserSig`文件中的相关参数：
- - SDKAPPID：请设置为 [步骤1](#step1) 中获取的实际应用 SDKAppID。
- - SECRETKEY：请设置为 [步骤2](#step2) 中获取的实际密钥信息。
+ - SDKAPPID：请设置为 **步骤1** 中获取的实际应用 SDKAppID。
+ - SECRETKEY：请设置为 **步骤2** 中获取的实际密钥信息。
  ![](https://main.qcloudimg.com/raw/bfbe25b15b7aa1cc34be76d7388562aa.png)
 
 
