@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tim.demo.signature;
 
+import android.text.TextUtils;
 import android.util.Base64;
 
 import org.json.JSONException;
@@ -95,6 +96,9 @@ public class GenerateTestUserSig {
      * @return 如果出错，会返回为空，或者有异常打印，成功返回有效的票据
      */
     private static String GenTLSSignature(long sdkappid, String userId, long expire, byte[] userbuf, String priKeyContent) {
+        if (TextUtils.isEmpty(priKeyContent)) {
+            return "";
+        }
         long currTime = System.currentTimeMillis() / 1000;
         JSONObject sigDoc = new JSONObject();
         try {
