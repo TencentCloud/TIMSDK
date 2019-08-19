@@ -51,7 +51,7 @@
      </tr>  
 </table>
 
- >?本文以使用 Android Studio 打开 Android 工程为例。
+ >本文以使用 Android Studio 打开 Android 工程为例。
   >
 3. 设置`GenerateTestUserSig`文件中的相关参数：
  - SDKAPPID：请设置为 **步骤1** 中获取的实际应用 SDKAppID。
