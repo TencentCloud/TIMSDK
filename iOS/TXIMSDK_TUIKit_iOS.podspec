@@ -24,11 +24,11 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :git => 'https://github.com/tencentyun/TIMSDK.git', :tag => spec.version}
-  spec.source_files = 'iOS/TUIKit/Classes/**/*.{h,m,mm}'
+  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.4.900/TIM_SDK_TUIKIT_iOS_latest_framework.zip'}
+  spec.source_files = '**/TUIKit/Classes/**/*.{h,m,mm}'
   # spec.vendored_frameworks = ''
-  spec.vendored_libraries = ['iOS/TUIKit/Classes/third/voiceConvert/opencore-amrnb/libopencore-amrnb.a', 'iOS/TUIKit/Classes/third/voiceConvert/opencore-amrwb/libopencore-amrwb.a']
-  spec.resource = ['iOS/TUIKit/Resources/TUIKitFace.bundle','iOS/TUIKit/Resources/TUIKitResource.bundle']
+  spec.vendored_libraries = ['**/TUIKit/Classes/third/voiceConvert/opencore-amrnb/libopencore-amrnb.a', '**/TUIKit/Classes/third/voiceConvert/opencore-amrwb/libopencore-amrwb.a']
+  spec.resource = ['**/TUIKit/Resources/TUIKitFace.bundle','**/TUIKit/Resources/TUIKitResource.bundle']
 end
 
 # pod trunk push TXIMSDK_TUIKit_iOS.podspec --use-libraries --allow-warnings
