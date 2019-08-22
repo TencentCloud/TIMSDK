@@ -55,6 +55,9 @@
                 TIMUserProfile *userProfile = [[TIMFriendshipManager sharedInstance] queryUserProfile:msg.sender];
                 userString = userProfile.showName;
             }
+            if(userString.length == 0 || userString == nil){//由于上一行代码的 showName 为异步，所以为了防止异步拉空的情况，在此再进行一次校验。
+                userString = msg.sender;
+            }
             
             str = [NSString stringWithFormat:@"\"%@\"撤回了一条消息", userString];
             
@@ -214,7 +217,6 @@
     }
     //赋值头像 URL，否则消息单元不回显示对方头像
     data.avatarUrl = [NSURL URLWithString:[[TIMFriendshipManager sharedInstance] queryUserProfile:message.sender].faceURL];
-    
     return data;
 }
 
@@ -222,8 +224,6 @@
     TIMTextElem *text = (TIMTextElem *)elem;
     TUITextMessageCellData *textData = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
     textData.content = text.text;
-
-    
     return textData;
 }
 
@@ -244,7 +244,7 @@
     
     //如果没有查询到该表情，或者表情在本机无法解析，返回一个文字消息，提示无法解析。
     UIImage *image = [[TUIImageCache sharedInstance] getFaceFromCache:faceData.path];
-    if(image == nil){
+    if(image == nil || faceData.groupIndex == 0){//第 0 组为[微笑]这类的文本类表情符号，这样强制将第 0 组表情转为文字，可更好的匹配旧版本表情。
         TUITextMessageCellData *textData = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
         textData.content = faceData.faceName;
         return textData;
@@ -353,8 +353,10 @@
             //入群与踢出不同，在入群时，opUser 可能和 user 为同一人。
             TUIJoinGroupMessageCellData *joinGroupData = [[TUIJoinGroupMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
             joinGroupData.content = [self getDisplayString:message];
-            [joinGroupData.userName addObject:opUser];
-            [joinGroupData.userID addObject:tip.opUser];
+            if(opUser.length) //addObject 参数为 nil 时非常容易使得程序崩溃。所以此处添加一个判定，防止崩溃发生。
+                [joinGroupData.userName addObject:opUser];
+            if(tip.opUser.length)
+                [joinGroupData.userID addObject:tip.opUser];
             if(userList.count && ![tip.opUser isEqualToString:tip.userList[0]]){//此处加入判定，如果是自主入群，即 opUser和userlist相同 则不再重复添加 userList 信息。
                 [joinGroupData.userName addObjectsFromArray:userList];//多人入群的昵称
                 [joinGroupData.userID addObjectsFromArray:tip.userList];//多人入群的ID，用于跳转到用户界面。
@@ -366,8 +368,10 @@
         } else if(tip.type == TIM_GROUP_TIPS_TYPE_KICKED){
             TUIJoinGroupMessageCellData *joinGroupData = [[TUIJoinGroupMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
             joinGroupData.content = [self getDisplayString:message];
-            [joinGroupData.userName addObject:opUser];
-            [joinGroupData.userID addObject:tip.opUser];
+            if(opUser.length)
+                [joinGroupData.userName addObject:opUser];
+            if(tip.opUser.length)
+                [joinGroupData.userID addObject:tip.opUser];
             if(userList.count){
                 [joinGroupData.userName addObjectsFromArray:userList];//多人入群的昵称
                 [joinGroupData.userID addObjectsFromArray:tip.userList];//多人入群的ID，用于跳转到用户界面。
@@ -378,16 +382,20 @@
         } else if(tip.type == TIM_GROUP_TIPS_TYPE_INFO_CHANGE){
             TUIJoinGroupMessageCellData *joinGroupData = [[TUIJoinGroupMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
             joinGroupData.content = [self getDisplayString:message];
-            [joinGroupData.userName addObject:opUser];
-            [joinGroupData.userID addObject:tip.opUser];
+            if(opUser.length)
+                [joinGroupData.userName addObject:opUser];
+            if(tip.opUser.length)
+                [joinGroupData.userID addObject:tip.opUser];
             if(joinGroupData.userName.count && joinGroupData.userName.count == joinGroupData.userID.count){
                 return joinGroupData;
             }
         }else if(tip.type == TIM_GROUP_TIPS_TYPE_QUIT_GRP){
             TUIJoinGroupMessageCellData *joinGroupData = [[TUIJoinGroupMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
             joinGroupData.content = [self getDisplayString:message];
-            [joinGroupData.userName addObject:opUser];
-            [joinGroupData.userID addObject:tip.opUser];
+            if(opUser.length)
+                [joinGroupData.userName addObject:opUser];
+            if(tip.opUser.length)
+                [joinGroupData.userID addObject:tip.opUser];
             if(joinGroupData.userName.count && joinGroupData.userName.count == joinGroupData.userID.count){
                 return joinGroupData;
             }
@@ -427,10 +435,14 @@
             TIMUserProfile *userProfile = [[TIMFriendshipManager sharedInstance] queryUserProfile:message.sender];
             userString = userProfile.showName;
         }
+        if(userString.length == 0 || userString == nil)//由于上一行代码的 showName 为异步，所以为了防止异步拉空的情况，在此再进行一次校验。
+            userString = message.sender;
         TUIJoinGroupMessageCellData *joinGroupData = [[TUIJoinGroupMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
         joinGroupData.content = [NSString stringWithFormat:@"\"%@\"撤回了一条消息", userString];
-        [joinGroupData.userName addObject:userString];
-        [joinGroupData.userID addObject:message.sender];
+        if(userString.length)
+            [joinGroupData.userName addObject:userString];
+        if(message.sender.length)
+            [joinGroupData.userID addObject:message.sender];
         if(joinGroupData.userName.count && joinGroupData.userName.count == joinGroupData.userID.count){
             return joinGroupData;
         }
@@ -451,7 +463,7 @@
 
 }
 -(NSString *)getOpUserFromTip:(TIMGroupTipsElem *)tip{
-      NSString *opUser;
+      NSString *opUser = [NSString string];
     if(![tip.opGroupMemberInfo.nameCard isEqualToString:@""]){
         opUser = tip.opGroupMemberInfo.nameCard;
     }else if(![tip.opUserInfo.nickname isEqualToString:@""]) {
