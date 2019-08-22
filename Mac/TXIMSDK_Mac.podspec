@@ -15,10 +15,10 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :git => 'https://github.com/tencentyun/TIMSDK.git', :tag => spec.version}
-  spec.preserve_paths = 'Mac/ImSDKForMac.framework'
-  spec.source_files = 'Mac/ImSDKForMac.framework/Versions/A/Headers/*.h'
-  spec.public_header_files = 'Mac/ImSDKForMac.framework/Versions/A/Headers/*.h'
-  spec.vendored_frameworks = 'Mac/ImSDKForMac.framework'
-   spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Mac/Mac/ImSDKForMac.framework/Versions/A/Headers/'}
+  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.4.900/TIM_SDK_Mac_latest_framework.zip'}
+  spec.preserve_paths = '**/ImSDKForMac.framework'
+  spec.source_files = '**/ImSDKForMac.framework/Versions/A/Headers/*.h'
+  spec.public_header_files = '**/ImSDKForMac.framework/Versions/A/Headers/*.h'
+  spec.vendored_frameworks = '**/ImSDKForMac.framework'
+   spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Mac/**/ImSDKForMac.framework/Versions/A/Headers/'}
 end
