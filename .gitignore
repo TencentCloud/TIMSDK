@@ -63,8 +63,9 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
-H5/_doc/info.md
-H5/sdk.dev
-H5/src
-H5/index.dev.html
-H5/_doc/
+H5/v1.7.x/_doc/info.md
+H5/v1.7.x/sdk.dev
+H5/v1.7.x/src
+H5/v1.7.x/index.dev.html
+H5/v1.7.x/_doc/
+H5/node_modules/
