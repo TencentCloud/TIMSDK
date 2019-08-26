@@ -4,7 +4,7 @@
 
 ##  1分钟预览项目
 
-此小节专为想在本地快速预览小程序的用户，说明如何快速在本地预览本项目
+此小节讲解如何快速在本地预览项目，请按照以下步骤
 
 1. 安装微信小程序 [开发者工具](https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html)。
 
@@ -12,7 +12,7 @@
 
    ![](_doc/1.png)
 
-3. 修改`/dist/wx/static/debug/GeneraterUserSig.js` 文件里的 SDKAPPID 和 SECRETKEY 为第一步获取到的
+3. 修改`/dist/wx/static/debug/GeneraterUserSig.js` 文件里的 SDKAPPID 和 SECRETKEY 为第一步获取到的 `SDKAPPID` 和 `SECRETKEY` 
 
    ![](_doc/2.png)
 
