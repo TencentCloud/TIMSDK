@@ -2,7 +2,7 @@
 
 ## 一分钟跑通Demo
 
-1. 下载源码到本地，并解压
+1. 下载源码到本地
 
 3. 配置 `SDKAppID` 和 `SECRETKEY`，参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A42.EF.BC.9A.E8.8E.B7.E5.8F.96.E5.AF.86.E9.92.A5.E4.BF.A1.E6.81.AF)
 
@@ -12,11 +12,11 @@
 
    ![配置SDKAppID和SECRETKEY](_doc/image/demo-init-1.png)
 
-4. 打开 `/dist/index.html` 文件
+4. 建议使用 `Chrome` 浏览器打开 `/dist/index.html` 文件，即可预览。
 
 ## 开发运行
 
-Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该Demo进行业务开发，也可以直接基于本Demo进行二次开发。 
+Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo 进行业务开发，也可以直接基于本Demo 进行二次开发。 
 
 > 参考文档：
 >
@@ -25,6 +25,8 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该Demo进
 ### 目录结构
 
 ```
+├───sdk/ 
+│   ├───tim-js.js - tim sdk 文件，demo 中未使用，仅供自行集成使用
 ├───dist/  - 打包编译后的目录
 ├───public/ - 公共入口
 │   ├───debug/ - 用于配置SDKAppID 和 SECRETKEY
@@ -38,8 +40,6 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该Demo进
 │   ├───main.js - Vue 全局配置
 │   └───tim.js - TIM SDK相关
 ├───_doc/ - 文档相关
-├───sdk/ - sdk 目录，demo 中未使用
-│   ├───tim-js.js - tim sdk 文件
 ├───.eslintignore - eslint 忽略配置
 ├───babel.config.js - babel 配置
 ├───package.json
@@ -56,8 +56,11 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该Demo进
     ```shell
     # 命令行执行
     git clone https://github.com/tencentyun/TIMSDK.git
-    ```
-
+    
+    # 进入 Web Demo 项目
+    cd TIMSDK/H5
+   ```
+   
 2. 配置 `SDKAppID` 和 `SECRETKEY`，参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A42.EF.BC.9A.E8.8E.B7.E5.8F.96.E5.AF.86.E9.92.A5.E4.BF.A1.E6.81.AF)
 
    2.1 打开 `/public/debug/GenerateTestUserSig.js` 文件
