@@ -1,0 +1,35 @@
+
+.item.data-v-0a07ea7a {
+  padding-top: 80rpx;
+}
+.input.data-v-0a07ea7a {
+  text-align: center;
+  height: 64rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  border: 2rpx solid #e9eaec;
+  font-size: 32rpx;
+}
+.card.data-v-0a07ea7a {
+  border-bottom: 2rpx solid #e9eaec;
+}
+.avatar.data-v-0a07ea7a {
+  padding: 20rpx;
+}
+.right.data-v-0a07ea7a {
+  box-sizing: border-box;
+  height: 200rpx;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.username.data-v-0a07ea7a {
+  font-weight: 600;
+  font-size: 36rpx;
+  color: #1c2438;
+}
+.account.data-v-0a07ea7a {
+  font-size: 28rpx;
+  color: #80848f;
+}

@@ -1,0 +1,58 @@
+{
+  "pages": [
+    "pages/login/main",
+    "pages/index/main",
+    "pages/contact/main",
+    "pages/own/main",
+    "pages/chat/main",
+    "pages/friend/main",
+    "pages/create/main",
+    "pages/members/main",
+    "pages/system/main",
+    "pages/detail/main",
+    "pages/groupDetail/main",
+    "pages/groups/main",
+    "pages/blacklist/main",
+    "pages/mention/main",
+    "pages/profile/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999",
+    "backgroundColor": "#F5F6F8",
+    "selectedColor": "#409EFF",
+    "borderStyle": "white",
+
+    "list": [
+      {
+        "text": "消息",
+        "pagePath": "pages/index/main",
+        "iconPath": "static/images/chat.png",
+        "selectedIconPath": "static/images/chat_focus.png"
+      },
+      {
+        "text": "通讯录",
+        "pagePath": "pages/contact/main",
+        "iconPath": "static/images/address.png",
+        "selectedIconPath": "static/images/address_focus.png"
+      },
+      {
+        "text": "账号",
+        "pagePath": "pages/own/main",
+        "iconPath": "static/images/my.png",
+        "selectedIconPath": "static/images/my_focus.png"
+      }
+    ],
+    "position": "bottom"
+  },
+
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  }
+}

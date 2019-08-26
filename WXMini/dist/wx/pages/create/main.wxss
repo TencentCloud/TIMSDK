@@ -1,0 +1,126 @@
+
+.temp.data-v-3244b950 {
+  height: 40rpx;
+  border: 2rpx solid #e9eaec;
+  background-color: #fff;
+  width: 100%;
+}
+.input-wrapper.data-v-3244b950 {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+.title.data-v-3244b950 {
+  color: #495060;
+  font-size: 24rpx;
+  padding: 0 0 8rpx 20rpx;
+}
+.add.data-v-3244b950 {
+  color: #fff;
+  background-color: #0ac160;
+  border-radius: 24rpx;
+  height: 60rpx;
+  width: 240rpx;
+  line-height: 60rpx;
+  font-size: 28rpx;
+}
+.container.data-v-3244b950 {
+  min-height: 100vh;
+  padding: 40rpx 0;
+  box-sizing: border-box;
+  background-color: #f8f8f9;
+}
+.item.data-v-3244b950 {
+  height: 80rpx;
+  display: flex;
+  background-color: #fff;
+  font-size: 28rpx;
+  padding: 6rpx 20rpx;
+  vertical-align: middle;
+  box-sizing: border-box;
+  border: 2rpx solid #e9eaec;
+  margin-bottom: -2rpx;
+}
+.item .label.data-v-3244b950 {
+  line-height: 64rpx;
+  color: #495060;
+  width: 25%;
+}
+.item .add-label.data-v-3244b950 {
+  line-height: 64rpx;
+  color: #495060;
+  width: 40%;
+}
+.input.data-v-3244b950 {
+  color: #495060;
+  text-align: left;
+  height: 64rpx;
+  background-color: #fff;
+  font-size: 32rpx;
+  line-height: 64rpx;
+  width: 75%;
+  border-radius: 20rpx;
+}
+.type.data-v-3244b950 {
+  padding-top: 40rpx;
+}
+.type .adding.data-v-3244b950 {
+  font-size: 24rpx;
+  color: #2d8cf0;
+  padding-left: 20rpx;
+}
+.start.data-v-3244b950 {
+  color: #fff;
+  background-color: #2d8cf0;
+  border-radius: 16rpx;
+  height: 100rpx;
+  width: 400rpx;
+  line-height: 100rpx;
+  font-size: 32rpx;
+}
+.card.data-v-3244b950 {
+  border-bottom: 2rpx solid #e9eaec;
+}
+.avatar.data-v-3244b950 {
+  padding: 20rpx;
+}
+.right.data-v-3244b950 {
+  box-sizing: border-box;
+  height: 200rpx;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.username.data-v-3244b950 {
+  font-weight: 600;
+  font-size: 36rpx;
+  color: #1c2438;
+}
+.account.data-v-3244b950 {
+  font-size: 28rpx;
+  color: #80848f;
+}
+.button.data-v-3244b950 {
+  color: #fff;
+  border-radius: 24rpx;
+  height: 80rpx;
+  width: 400rpx;
+  line-height: 80rpx;
+  font-size: 32rpx;
+  margin-top: 40rpx;
+}
+.success.data-v-3244b950 {
+  background-color: #0ac160;
+}
+.fail.data-v-3244b950 {
+  background-color: #ed3f14;
+}
+.border.data-v-3244b950 {
+  border: 2rpx solid #dddee1;
+}
+.center.data-v-3244b950 {
+  text-align: center;
+}

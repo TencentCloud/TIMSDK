@@ -1,0 +1,74 @@
+
+.bg.data-v-31e8b46d {
+  background-color: #f8f8f9;
+  height: 100vh;
+}
+.right.data-v-31e8b46d {
+  box-sizing: border-box;
+  height: 200rpx;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.right .username.data-v-31e8b46d {
+  font-weight: 600;
+  font-size: 36rpx;
+  color: #1c2438;
+}
+.right .account.data-v-31e8b46d {
+  font-size: 28rpx;
+  color: #80848f;
+}
+.btn.data-v-31e8b46d {
+  color: #fff;
+  background-color: #2d8cf0;
+  border-radius: 40rpx;
+  height: 80rpx;
+  width: 300rpx;
+  line-height: 80rpx;
+  font-size: 32rpx;
+}
+.delete.data-v-31e8b46d {
+  background-color: #ed3f14;
+}
+.container.data-v-31e8b46d {
+  background-color: #f8f8f9;
+  height: 100vh;
+  overflow: scroll;
+}
+.card.data-v-31e8b46d {
+  border-top: 2rpx solid #e9eaec;
+  border-bottom: 2rpx solid #e9eaec;
+  background-color: #fff;
+  margin-bottom: -2rpx;
+}
+.card .item.data-v-31e8b46d {
+  display: flex;
+  width: 100vw;
+  padding: 20rpx 40rpx;
+  border-bottom: 2rpx solid #dddee1;
+  font-size: 32rpx;
+}
+.card .item .key.data-v-31e8b46d {
+  width: 60vw;
+  font-weight: 500;
+  color: #1c2438;
+  box-sizing: border-box;
+}
+.card .item .value.data-v-31e8b46d {
+  width: 40vw;
+  font-weight: 400;
+  color: #495060;
+  box-sizing: border-box;
+}
+.avatar.data-v-31e8b46d {
+  padding: 20rpx;
+}
+.revise.data-v-31e8b46d {
+  padding-top: 40rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 200rpx;
+}
