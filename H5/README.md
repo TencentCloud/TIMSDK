@@ -6,13 +6,13 @@
 
 3. 配置 `SDKAppID` 和 `SECRETKEY`，参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A42.EF.BC.9A.E8.8E.B7.E5.8F.96.E5.AF.86.E9.92.A5.E4.BF.A1.E6.81.AF)
 
-   2.1 打开 `dist/debug/GenerateTestUserSig.js`文件
+   2.1 打开 `/dist/debug/GenerateTestUserSig.js` 文件
 
    2.2 按图示填写相应配置后，保存文件
 
    ![配置SDKAppID和SECRETKEY](_doc/image/demo-init-1.png)
 
-4. 打开`dist/index.html`文件
+4. 打开 `/dist/index.html` 文件
 
 ## 开发运行
 
@@ -21,8 +21,6 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该Demo进
 > 参考文档：
 >
 > - [TIMSDK 官方文档](https://imsdk-1252463788.file.myqcloud.com/IM_DOC/Web/index.html)
-> - [Vue 官方文档](https://cn.vuejs.org) 
-> - [Vuex 官方文档](https://vuex.vuejs.org/zh/)
 
 ### 目录结构
 
@@ -40,8 +38,9 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该Demo进
 │   ├───main.js - Vue 全局配置
 │   └───tim.js - TIM SDK相关
 ├───_doc/ - 文档相关
+├───sdk/ - sdk 目录，demo 中未使用
+│   ├───tim-js.js - tim sdk 文件
 ├───.eslintignore - eslint 忽略配置
-├───.gitignore - git 忽略配置
 ├───babel.config.js - babel 配置
 ├───package.json
 ├───README.md
@@ -53,14 +52,15 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该Demo进
 ### 启动流程
 
 1. 克隆本仓库到本地
-
-   ```bash
-   npm install // 在根目录，命令行执行
-   ```
+   
+    ```shell
+    # 命令行执行
+    git clone https://github.com/tencentyun/TIMSDK.git
+    ```
 
 2. 配置 `SDKAppID` 和 `SECRETKEY`，参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A42.EF.BC.9A.E8.8E.B7.E5.8F.96.E5.AF.86.E9.92.A5.E4.BF.A1.E6.81.AF)
 
-   2.1 打开 `public/debug/GenerateTestUserSig.js` 文件
+   2.1 打开 `/public/debug/GenerateTestUserSig.js` 文件
 
    2.2 按图示填写相应配置后，保存文件
 
@@ -68,9 +68,11 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该Demo进
 
 3. 启动项目
 
-   ```bash
-   npm install // 同步依赖
-   npm start // 在根目录，命令行执行
+   ```shell
+   # 同步依赖
+   npm install
+   # 启动项目
+   npm start 
    ```
 
 4. 浏览器中打开链接：http://localhost:8080/
