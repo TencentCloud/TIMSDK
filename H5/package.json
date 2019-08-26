@@ -3,13 +3,10 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "start": "node --max_old_space_size=4096 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --open",
-    "serve": "node --max_old_space_size=4096 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --open",
-    "build": "vue-cli-service build",
-    "build:test": "vue-cli-service build --report --dest ./dist.test; npm run copy ./package.json.dist.test ./dist.test/package.json;",
-    "build:dev": "vue-cli-service build --report --mode development --dest ./dist.test; npm run copy ./package.json.dist.test ./dist.test/package.json;",
-    "copy": "node copy.js",
-    "lint": "vue-cli-service lint src --ext .vue,.js --fix"
+    "start": "node node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
+    "serve": "node node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
+    "build": "node node_modules/@vue/cli-service/bin/vue-cli-service.js build",
+    "lint": "node node_modules/@vue/cli-service/bin/vue-cli-service.js lint src --ext .vue,.js --fix"
   },
   "dependencies": {
     "benz-amr-recorder": "^1.0.17",
