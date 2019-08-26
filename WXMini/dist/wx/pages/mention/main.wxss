@@ -1,0 +1,19 @@
+
+.chatting.data-v-77726b38 {
+  background-color: #f8f8f9;
+}
+.chatting .title.data-v-77726b38 {
+  color: #495060;
+  font-size: 24rpx;
+  padding: 8rpx 20rpx;
+}
+.chatting .chat.data-v-77726b38 {
+  background-color: #fff;
+  border: 2rpx solid #e9eaec;
+  margin-bottom: -2rpx;
+  padding: 20rpx 40rpx;
+}
+.username.data-v-77726b38 {
+  color: #1c2438;
+  line-height: 64rpx;
+}
