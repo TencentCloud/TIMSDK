@@ -1,0 +1,48 @@
+/* pages/webrtc-room-demo/join-room-by-id/joinRoomById.wxss */
+
+.container-box {
+  background-image: url(https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png);
+  background-color: #333;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+.title {
+  color: #ffffff;
+  font-size: 16px;
+  text-align: center;
+  padding: 10vw 0 5vw;
+}
+.tips {
+  color: #ffffff;
+  font-size: 12px;
+  text-align: center;
+  padding:  5vw;
+}
+.input-box {
+  background-color: transparent;
+  color: #ffffff;
+  padding: 3vw 5vw;
+  border-color: #577785;
+  border-style: solid;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 1px;
+  border-left-width: 0px;
+  padding-top: 10%;
+  margin-left: 30px;
+  margin-right: 30px;
+  text-align: center;
+}
+
+.bottom-btn {
+  position: fixed;
+  width: 92vw;
+  left: 4vw;
+  bottom: 6vh;
+}
+
+.bottom-btn button {
+  background-color: #006eff;
+  border-radius: 50px;
+}

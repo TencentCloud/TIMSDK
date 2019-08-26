@@ -1,0 +1,1166 @@
+require("../../common/manifest.js")
+require("../../common/vendor.js")
+global.webpackJsonpMpvue([15],{
+
+/***/ 88:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(89);
+
+
+
+var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a(__WEBPACK_IMPORTED_MODULE_1__index__["a" /* default */]);
+app.$mount();
+
+/***/ }),
+
+/***/ 89:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_cd922218_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(92);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(90)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+
+/* template */
+
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-cd922218"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_cd922218_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__["a" /* default */],
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src\\pages\\chat\\index.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-cd922218", Component.options)
+  } else {
+    hotAPI.reload("data-v-cd922218", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 90:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 91:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_emojiMap__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_index__ = __webpack_require__(22);
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+var audioContext = wx.createInnerAudioContext();
+/* harmony default export */ __webpack_exports__["a"] = ({
+  data: function data() {
+    return {
+      messageContent: '',
+      conversation: {},
+      messageKey: '',
+      lastMsgTime: '',
+      count: 15,
+      isEmojiOpen: false,
+      isMoreOpen: false,
+      isFocus: false,
+      isGroup: false,
+      messageList: [],
+      emojiName: __WEBPACK_IMPORTED_MODULE_2__utils_emojiMap__["b" /* emojiName */],
+      emojiMap: __WEBPACK_IMPORTED_MODULE_2__utils_emojiMap__["a" /* emojiMap */],
+      emojiUrl: __WEBPACK_IMPORTED_MODULE_2__utils_emojiMap__["c" /* emojiUrl */],
+      height: 0,
+      modalVisible: false,
+      downloadInfo: {},
+      percent: 0,
+      sysInfo: {},
+      customModalVisible: false,
+      customData: '',
+      customDescription: '',
+      customExtension: '',
+      safeBottom: 34,
+      isIpx: false
+    };
+  },
+  onLoad: function onLoad(options) {
+    var _this = this;
+
+    this.set = options.toAccount;
+    // 设置header——聊天对象昵称或群名
+    wx.setNavigationBarTitle({
+      title: this.set
+    });
+    var sysInfo = wx.getSystemInfoSync();
+    this.sysInfo = sysInfo;
+    this.height = sysInfo.windowHeight;
+    this.isIpx = sysInfo.model.indexOf('iPhone X') > -1;
+    var query = wx.createSelectorQuery();
+    var that = this;
+    wx.$app.on(this.TIM.EVENT.MESSAGE_RECEIVED, function () {
+      query.select('#chat').boundingClientRect(function (res) {
+        if (res.bottom - that.height < 150) {
+          that.scrollToBottom();
+        }
+      }).exec();
+    });
+    var interval = setInterval(function () {
+      if (_this.currentMessageList.length !== 0) {
+        _this.scrollToBottom();
+        clearInterval(interval);
+      }
+    }, 600);
+    this.$bus.$off('atUser');
+    this.$bus.$on('atUser', function (user) {
+      _this.messageContent += user.userID;
+      _this.messageContent += ' ';
+    });
+  },
+
+  // 退出聊天页面的时候所有状态清空
+  onUnload: function onUnload() {
+    wx.$app.setMessageRead({ conversationID: this.$store.state.conversation.currentConversationID });
+    this.isEmojiOpen = false;
+    this.isMoreOpen = false;
+    this.messageContent = '';
+    var unWatch = this.$watch('messageContent', function (e) {
+      if (e.slice(-1) === '@') {
+        var url = '../mention/main?';
+        wx.navigateTo({ url: url });
+      }
+    });
+    // app.$watch调用后会返回一个值，就是unWatch方法
+    // 注销 watch 只要调用unWatch方法就可以了。
+    unWatch(); // 手动注销watch
+  },
+  onPullDownRefresh: function onPullDownRefresh() {
+    Object(__WEBPACK_IMPORTED_MODULE_3__utils_index__["b" /* throttle */])(this.getMessageList, 1000)();
+  },
+
+  computed: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapState */])({
+    currentMessageList: function currentMessageList(state) {
+      return state.conversation.currentMessageList;
+    },
+    imageUrls: function imageUrls(state) {
+      return state.conversation.imageUrls;
+    }
+  })),
+  methods: {
+    // 滚动到列表bottom
+    scrollToBottom: function scrollToBottom() {
+      wx.pageScrollTo({
+        scrollTop: 99999
+      });
+    },
+    customModal: function customModal() {
+      this.customModalVisible = !this.customModalVisible;
+    },
+    sendCustomMessage: function sendCustomMessage() {
+      if (this.customData.length === 0 && this.customDescription.length === 0 && this.customExtension.length === 0) {
+        this.$store.commit('showToast', {
+          title: '不能为空'
+        });
+        return;
+      }
+      var message = wx.$app.createCustomMessage({
+        to: this.$store.getters.toAccount,
+        conversationType: this.$store.getters.currentConversationType,
+        payload: {
+          data: this.customData,
+          description: this.customDescription,
+          extension: this.customExtension
+        }
+      });
+      this.$store.commit('sendMessage', message);
+      wx.$app.sendMessage(message);
+      this.customModal();
+      this.customData = '';
+      this.customDescription = '';
+      this.customExtension = '';
+    },
+
+    // 失去焦点
+    loseFocus: function loseFocus() {
+      this.handleClose();
+    },
+
+    // 下载文件模态框
+    handleModalShow: function handleModalShow() {
+      this.modalVisible = !this.modalVisible;
+    },
+    handleDownload: function handleDownload(message) {
+      this.percent = 0;
+      this.downloadInfo = message;
+      this.handleModalShow();
+    },
+    download: function download() {
+      var that = this;
+      var downloadTask = wx.downloadFile({
+        url: that.downloadInfo.fileUrl,
+        success: function success(res) {
+          console.log('start downloading: ', res);
+        },
+        fail: function fail(_ref) {
+          var errMsg = _ref.errMsg;
+
+          console.log('downloadFile fail, err is:', errMsg);
+          that.$store.commit('showToast', {
+            title: '文件下载出错',
+            icon: 'none',
+            duration: 1500
+          });
+          that.handleModalShow();
+        },
+        complete: function complete(res) {
+          downloadTask = null;
+          wx.openDocument({
+            filePath: res.tempFilePath,
+            success: function success(res) {
+              console.log('open file fail', res);
+              that.$store.commit('showToast', {
+                title: '打开文档成功',
+                icon: 'none',
+                duration: 1000
+              });
+              that.percent = 0;
+              that.handleModalShow();
+            },
+            fail: function fail(err) {
+              console.log('open file fail', err);
+              that.$store.commit('showToast', {
+                title: '小程序不支持该文件预览哦',
+                icon: 'none',
+                duration: 2000
+              });
+              that.handleModalShow();
+            }
+          });
+        }
+      });
+      downloadTask.onProgressUpdate(function (res) {
+        that.percent = res.progress;
+        console.log(res.progress);
+      });
+    },
+
+    // 群简介或者人简介
+    toDetail: function toDetail() {
+      var _this2 = this;
+
+      var conversationID = this.$store.state.conversation.currentConversationID;
+      this.isGroup = conversationID.indexOf(this.TIM.TYPES.CONV_GROUP) === 0;
+      if (!this.isGroup) {
+        var id = conversationID.substring(3);
+        var option = {
+          userIDList: [id]
+        };
+        wx.$app.getUserProfile(option).then(function (res) {
+          var userProfile = res.data[0];
+          switch (userProfile.gender) {
+            case _this2.TIM.TYPES.GENDER_UNKNOWN:
+              userProfile.gender = _this2.$type.GENDER_UNKNOWN;
+              break;
+            case _this2.TIM.TYPES.GENDER_MALE:
+              userProfile.gender = _this2.$type.GENDER_MALE;
+              break;
+            case _this2.TIM.TYPES.GENDER_FEMALE:
+              userProfile.gender = _this2.$type.GENDER_FEMALE;
+              break;
+          }
+          _this2.$store.commit('updateUserProfile', userProfile);
+          var url = '../detail/main';
+          wx.navigateTo({ url: url });
+        });
+      } else {
+        var url = '../groupDetail/main';
+        wx.navigateTo({ url: url });
+      }
+    },
+
+    // 获取消息
+    getMessageList: function getMessageList() {
+      this.$store.dispatch('getMessageList');
+      wx.stopPullDownRefresh();
+    },
+
+    // 处理emoji选项卡
+    handleEmoji: function handleEmoji() {
+      if (this.isFocus) {
+        this.isFocus = false;
+        this.isEmojiOpen = true;
+      } else {
+        this.isEmojiOpen = !this.isEmojiOpen;
+        this.isMoreOpen = false;
+      }
+    },
+
+    // 处理更多选项卡
+    handleMore: function handleMore() {
+      if (this.isFocus) {
+        this.isFocus = false;
+        this.isMoreOpen = true;
+      } else {
+        this.isMoreOpen = !this.isMoreOpen;
+        this.isEmojiOpen = false;
+      }
+    },
+
+    // 选项卡关闭
+    handleClose: function handleClose() {
+      this.isFocus = false;
+      this.isMoreOpen = false;
+      this.isEmojiOpen = false;
+    },
+    isnull: function isnull(content) {
+      if (content === '') {
+        return true;
+      }
+      var reg = '^[ ]+$';
+      var re = new RegExp(reg);
+      return re.test(content);
+    },
+
+    // 发送text message 包含 emoji
+    sendMessage: function sendMessage() {
+      var _this3 = this;
+
+      if (!this.isnull(this.messageContent)) {
+        var message = wx.$app.createTextMessage({
+          to: this.$store.getters.toAccount,
+          conversationType: this.$store.getters.currentConversationType,
+          payload: { text: this.messageContent }
+        });
+        var index = this.$store.state.conversation.currentMessageList.length;
+        this.$store.commit('sendMessage', message);
+        wx.$app.sendMessage(message).catch(function () {
+          _this3.$store.commit('changeMessageStatus', index);
+        });
+        this.messageContent = '';
+      } else {
+        this.$store.commit('showToast', { title: '消息不能为空' });
+      }
+      this.isFocus = false;
+      this.isEmojiOpen = false;
+      this.isMoreOpen = false;
+    },
+    sendPhoto: function sendPhoto(name) {
+      var self = this;
+      if (name === 'album') {
+        this.chooseImage(name);
+      } else if (name === 'camera') {
+        wx.getSetting({
+          success: function success(res) {
+            if (!res.authSetting['scope.camera']) {
+              // 无权限，跳转设置权限页面
+              wx.authorize({
+                scope: 'scope.camera',
+                success: function success() {
+                  self.chooseImage(name);
+                }
+              });
+            } else {
+              self.chooseImage(name);
+            }
+          }
+        });
+      }
+    },
+    chooseImage: function chooseImage(name) {
+      var self = this;
+      var message = {};
+      wx.chooseImage({
+        sourceType: [name],
+        count: 1,
+        success: function success(res) {
+          message = wx.$app.createImageMessage({
+            to: self.$store.getters.toAccount,
+            conversationType: self.$store.getters.currentConversationType,
+            payload: {
+              file: res
+            },
+            onProgress: function onProgress(percent) {
+              self.percent = percent;
+            }
+          });
+          self.$store.commit('sendMessage', message);
+          wx.$app.sendMessage(message).then(function () {
+            self.percent = 0;
+          }).catch(function (err) {
+            console.log(err);
+          });
+        }
+      });
+      this.handleClose();
+    },
+    previewImage: function previewImage(src) {
+      var that = this;
+      var url = src;
+      url = url.slice(0, 2) === '//' ? 'https:' + url : url;
+      wx.previewImage({
+        current: url, // 当前显示图片的http链接
+        urls: that.imageUrls // 需要预览的图片http链接列表，当前会话所有图片
+      });
+    },
+
+    // 发消息选中emoji
+    chooseEmoji: function chooseEmoji(item) {
+      this.messageContent += item;
+    },
+
+    // 重发消息
+    handleResend: function handleResend(message) {
+      if (message.status === 'fail') {
+        wx.$app.resendMessage(message);
+      }
+    },
+
+    // 掷骰子也是自定义消息
+    dice: function dice() {
+      var message = wx.$app.createCustomMessage({
+        to: this.$store.getters.toAccount,
+        conversationType: this.$store.getters.currentConversationType,
+        payload: {
+          data: 'dice',
+          description: String((Math.random() * 10).toFixed(0) % 6 + 1),
+          extension: ''
+        }
+      });
+      this.$store.commit('sendMessage', message);
+      wx.$app.sendMessage(message);
+      this.handleClose();
+    },
+
+    // 播放音频
+    openAudio: function openAudio(audio) {
+      console.log(audio, this.sysInfo);
+      var that = this;
+      audioContext.src = audio.url;
+      audioContext.play();
+      audioContext.onPlay(function () {});
+      audioContext.onEnded(function () {
+        wx.hideToast();
+      });
+      audioContext.onError(function () {
+        that.$store.commit('showToast', {
+          title: '小程序暂不支持播放该音频格式',
+          icon: 'none',
+          duration: 2000
+        });
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.$watch('messageContent', function (e) {
+      if (this.$store.state.conversation.currentConversation.type === this.TIM.TYPES.CONV_GROUP) {
+        if (e.slice(-1) === '@') {
+          var url = '../mention/main';
+          wx.navigateTo({ url: url });
+        }
+      }
+    });
+  }
+});
+
+/***/ }),
+
+/***/ 92:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "chat",
+    style: ({
+      paddingBottom: _vm.isIpx ? (_vm.safeBottom + 40) + 'px' : '40px'
+    }),
+    attrs: {
+      "id": "chat"
+    }
+  }, [_c('div', {
+    staticClass: "nav",
+    attrs: {
+      "eventid": '0'
+    },
+    on: {
+      "click": _vm.toDetail
+    }
+  }, [_vm._v("\n      查看资料\n    ")]), _vm._v(" "), _c('i-modal', {
+    attrs: {
+      "title": "确认下载？",
+      "visible": _vm.modalVisible,
+      "eventid": '1',
+      "mpcomid": '0'
+    },
+    on: {
+      "ok": _vm.download,
+      "cancel": _vm.handleModalShow
+    }
+  }, [_c('div', {
+    staticClass: "input-wrapper"
+  }, [_vm._v("\n        进度" + _vm._s(_vm.percent) + "%\n      ")])]), _vm._v(" "), _c('i-modal', {
+    attrs: {
+      "title": "发送自定义消息",
+      "i-class": "custom-modal",
+      "visible": _vm.customModalVisible,
+      "eventid": '5',
+      "mpcomid": '1'
+    },
+    on: {
+      "ok": _vm.sendCustomMessage,
+      "cancel": _vm.customModal
+    }
+  }, [_c('div', {
+    staticClass: "custom-wrapper"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model.lazy:value",
+      value: (_vm.customData),
+      expression: "customData",
+      modifiers: {
+        "lazy:value": true
+      }
+    }],
+    staticClass: "custom-input",
+    attrs: {
+      "type": "text",
+      "placeholder": "输入数据",
+      "eventid": '2'
+    },
+    domProps: {
+      "value": (_vm.customData)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.customData = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model.lazy:value",
+      value: (_vm.customDescription),
+      expression: "customDescription",
+      modifiers: {
+        "lazy:value": true
+      }
+    }],
+    staticClass: "custom-input",
+    attrs: {
+      "type": "text",
+      "placeholder": "输入描述",
+      "eventid": '3'
+    },
+    domProps: {
+      "value": (_vm.customDescription)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.customDescription = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model.lazy:value",
+      value: (_vm.customExtension),
+      expression: "customExtension",
+      modifiers: {
+        "lazy:value": true
+      }
+    }],
+    staticClass: "custom-input",
+    attrs: {
+      "type": "text",
+      "placeholder": "输入其他",
+      "eventid": '4'
+    },
+    domProps: {
+      "value": (_vm.customExtension)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.customExtension = $event.target.value
+      }
+    }
+  })])]), _vm._v(" "), _c('div', {
+    attrs: {
+      "id": "list",
+      "eventid": '10'
+    },
+    on: {
+      "click": _vm.loseFocus
+    }
+  }, _vm._l((_vm.currentMessageList), function(message, index) {
+    return _c('li', {
+      key: message.ID,
+      attrs: {
+        "id": message.ID
+      }
+    }, [(message.type === 'TIMGroupTipElem' || message.type === 'TIMGroupSystemNoticeElem') ? _c('div', {
+      staticClass: "notice"
+    }, [_c('div', {
+      staticClass: "content"
+    }, _vm._l((message.virtualDom), function(div, index1) {
+      return _c('span', {
+        key: message.ID + index1
+      }, [(div.name === 'groupTip' || 'system') ? _c('span', [_vm._v(_vm._s(div.text))]) : _vm._e()])
+    }))]) : _c('div', {
+      class: (message.flow === 'out') ? 'item-right' : 'item-left'
+    }, [_c('div', {
+      staticClass: "load",
+      attrs: {
+        "eventid": '6_' + index
+      },
+      on: {
+        "click": function($event) {
+          _vm.handleResend(message)
+        }
+      }
+    }, [_c('div', {
+      class: message.status
+    })]), _vm._v(" "), _c('div', {
+      staticClass: "content"
+    }, [_c('div', {
+      staticClass: "name"
+    }, [_vm._v("\n              " + _vm._s(message.from) + "\n            ")]), _vm._v(" "), (message.type === 'TIMTextElem') ? _c('div', {
+      staticClass: "message"
+    }, [_c('div', {
+      staticClass: "text-message"
+    }, _vm._l((message.virtualDom), function(div, index2) {
+      return _c('span', {
+        key: message.ID + index2
+      }, [(div.name === 'span') ? _c('span', [_vm._v(_vm._s(div.text))]) : _vm._e(), _vm._v(" "), (div.name === 'img') ? _c('image', {
+        staticStyle: {
+          "width": "20px",
+          "height": "20px"
+        },
+        attrs: {
+          "src": div.src
+        }
+      }) : _vm._e()])
+    }))]) : (message.type === 'TIMImageElem') ? _c('div', {
+      staticClass: "message",
+      attrs: {
+        "eventid": '7_' + index
+      },
+      on: {
+        "click": function($event) {
+          _vm.previewImage(message.payload.imageInfoArray[1].url)
+        }
+      }
+    }, [_c('image', {
+      staticClass: "img",
+      staticStyle: {
+        "max-width": "200px",
+        "height": "150px"
+      },
+      attrs: {
+        "src": message.payload.imageInfoArray[1].url,
+        "mode": "aspectFit"
+      }
+    })]) : (message.type === 'TIMFileElem') ? _c('div', {
+      staticClass: "message"
+    }, [_c('div', {
+      staticClass: "file",
+      attrs: {
+        "eventid": '8_' + index
+      },
+      on: {
+        "click": function($event) {
+          _vm.handleDownload(message.payload)
+        }
+      }
+    }, [_c('i-avatar', {
+      attrs: {
+        "src": "../../../static/images/file.png",
+        "size": "large",
+        "shape": "square",
+        "mpcomid": '2_' + index
+      }
+    }), _vm._v(" "), _c('div', [_vm._v(_vm._s(message.payload.fileName))])], 1)]) : (message.type === 'TIMCustomElem') ? _c('div', {
+      staticClass: "message"
+    }, [(message.payload.data === 'dice') ? _c('div', [_c('image', {
+      staticStyle: {
+        "height": "40px",
+        "width": "40px"
+      },
+      attrs: {
+        "src": '/static/images/dice' + message.payload.description + '.png'
+      }
+    })]) : _c('div', {
+      staticClass: "custom-elem"
+    }, [_vm._v("这是自定义消息")])]) : (message.type === 'TIMSoundElem') ? _c('div', {
+      staticClass: "message",
+      attrs: {
+        "url": message.payload.url
+      }
+    }, [_c('div', {
+      staticClass: "box",
+      attrs: {
+        "eventid": '9_' + index
+      },
+      on: {
+        "click": function($event) {
+          _vm.openAudio(message.payload)
+        }
+      }
+    }, [_c('image', {
+      staticStyle: {
+        "height": "20px",
+        "width": "14px"
+      },
+      attrs: {
+        "src": "/static/images/audio.png"
+      }
+    }), _vm._v(" "), _c('div', {
+      staticStyle: {
+        "padding-left": "10px"
+      }
+    }, [_vm._v(_vm._s(message.payload.second) + "s")])])]) : (message.type === 'TIMFaceElem') ? _c('div', {
+      staticClass: "message"
+    }, [_c('div', {
+      staticClass: "custom-elem"
+    }, [_vm._v("[FaceElem暂未解析]")])]) : _vm._e()]), _vm._v(" "), _c('div', {
+      staticClass: "avatar"
+    }, [_c('i-avatar', {
+      attrs: {
+        "src": "../../../static/images/header.png",
+        "shape": "square",
+        "mpcomid": '3_' + index
+      }
+    })], 1)])])
+  })), _vm._v(" "), _c('div', {
+    staticClass: "bottom",
+    style: ({
+      paddingBottom: _vm.isIpx ? _vm.safeBottom + 'px' : ''
+    })
+  }, [_c('div', {
+    staticClass: "bottom-div"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model.lazy:value",
+      value: (_vm.messageContent),
+      expression: "messageContent",
+      modifiers: {
+        "lazy:value": true
+      }
+    }],
+    staticClass: "input",
+    attrs: {
+      "type": "text",
+      "confirm-type": "send",
+      "focus": _vm.isFocus,
+      "eventid": '11'
+    },
+    domProps: {
+      "value": (_vm.messageContent)
+    },
+    on: {
+      "confirm": _vm.sendMessage,
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.messageContent = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('div', {
+    staticClass: "btn",
+    attrs: {
+      "eventid": '12'
+    },
+    on: {
+      "click": function($event) {
+        _vm.handleEmoji()
+      }
+    }
+  }, [_c('image', {
+    staticClass: "btn-small",
+    attrs: {
+      "src": "/static/images/emoji.png"
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "btn",
+    attrs: {
+      "eventid": '13'
+    },
+    on: {
+      "click": function($event) {
+        _vm.handleMore()
+      }
+    }
+  }, [_c('image', {
+    staticClass: "btn-small",
+    attrs: {
+      "src": "/static/images/plus.png"
+    }
+  })])]), _vm._v(" "), (_vm.isEmojiOpen) ? _c('div', {
+    staticClass: "bottom-emoji"
+  }, [_c('div', {
+    staticClass: "emojis"
+  }, _vm._l((_vm.emojiName), function(emojiItem, index3) {
+    return _c('div', {
+      key: emojiItem,
+      staticClass: "emoji",
+      attrs: {
+        "eventid": '14_' + index3
+      },
+      on: {
+        "click": function($event) {
+          _vm.chooseEmoji(emojiItem)
+        }
+      }
+    }, [_c('image', {
+      staticStyle: {
+        "width": "25px",
+        "height": "25px"
+      },
+      attrs: {
+        "src": _vm.emojiUrl + _vm.emojiMap[emojiItem]
+      }
+    })])
+  })), _vm._v(" "), _c('div', {
+    staticClass: "emoji-tab"
+  }, [_c('i-row', {
+    attrs: {
+      "mpcomid": '6'
+    }
+  }, [_c('i-col', {
+    attrs: {
+      "span": "21",
+      "mpcomid": '4'
+    }
+  }, [_c('div', {
+    staticStyle: {
+      "line-height": "26px"
+    }
+  }, [_vm._v("\n                😄\n              ")])]), _vm._v(" "), _c('i-col', {
+    attrs: {
+      "span": "3",
+      "mpcomid": '5'
+    }
+  }, [_c('div', {
+    staticClass: "sending",
+    attrs: {
+      "eventid": '15'
+    },
+    on: {
+      "click": function($event) {
+        _vm.sendMessage()
+      }
+    }
+  }, [_vm._v("发送")])])], 1)], 1)]) : _vm._e(), _vm._v(" "), (_vm.isMoreOpen) ? _c('div', {
+    staticClass: "bottom-image"
+  }, [_c('div', {
+    staticClass: "images"
+  }, [_c('div', {
+    staticClass: "block",
+    attrs: {
+      "eventid": '16'
+    },
+    on: {
+      "click": function($event) {
+        _vm.sendPhoto('album')
+      }
+    }
+  }, [_vm._m(0), _vm._v(" "), _c('div', {
+    staticClass: "name"
+  }, [_vm._v("\n              图片\n            ")])]), _vm._v(" "), _c('div', {
+    staticClass: "block",
+    attrs: {
+      "eventid": '17'
+    },
+    on: {
+      "click": function($event) {
+        _vm.sendPhoto('camera')
+      }
+    }
+  }, [_vm._m(1), _vm._v(" "), _c('div', {
+    staticClass: "name"
+  }, [_vm._v("\n              拍照\n            ")])]), _vm._v(" "), _c('div', {
+    staticClass: "block",
+    attrs: {
+      "eventid": '18'
+    },
+    on: {
+      "click": function($event) {
+        _vm.customModal()
+      }
+    }
+  }, [_vm._m(2), _vm._v(" "), _c('div', {
+    staticClass: "name"
+  }, [_vm._v("\n              自定义消息\n            ")])]), _vm._v(" "), _c('div', {
+    staticClass: "block",
+    attrs: {
+      "eventid": '19'
+    },
+    on: {
+      "click": function($event) {
+        _vm.dice()
+      }
+    }
+  }, [_vm._m(3), _vm._v(" "), _c('div', {
+    staticClass: "name"
+  }, [_vm._v("\n              掷骰子\n            ")])])])]) : _vm._e()])], 1)
+}
+var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "image"
+  }, [_c('image', {
+    staticStyle: {
+      "width": "30px",
+      "height": "30px"
+    },
+    attrs: {
+      "src": "/static/images/image.png"
+    }
+  })])
+},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "image"
+  }, [_c('image', {
+    staticStyle: {
+      "width": "30px",
+      "height": "30px"
+    },
+    attrs: {
+      "src": "/static/images/photo.png"
+    }
+  })])
+},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "image"
+  }, [_c('image', {
+    staticStyle: {
+      "width": "30px",
+      "height": "30px"
+    },
+    attrs: {
+      "src": "/static/images/define.png"
+    }
+  })])
+},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "image"
+  }, [_c('image', {
+    staticStyle: {
+      "width": "30px",
+      "height": "30px"
+    },
+    attrs: {
+      "src": "/static/images/dice.png"
+    }
+  })])
+}]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-cd922218", esExports)
+  }
+}
+
+/***/ })
+
+},[88]);

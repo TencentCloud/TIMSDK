@@ -1,0 +1,30 @@
+
+.container.data-v-3072a3a0 {
+  background-color: #f8f8f9;
+  min-height: 100vh;
+}
+.container .group.data-v-3072a3a0 {
+  height: 100rpx;
+  background-color: #fff;
+  box-sizing: border-box;
+  border-bottom: 2rpx solid #dddee1;
+  display: flex;
+  padding: 20rpx 40rpx;
+}
+.container .group .avatar.data-v-3072a3a0 {
+  width: 120rpx;
+}
+.container .group .avatar .img.data-v-3072a3a0 {
+  width: 60rpx;
+  height: 60rpx;
+}
+.name.data-v-3072a3a0 {
+  line-height: 60rpx;
+  width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.type.data-v-3072a3a0 {
+  line-height: 60rpx;
+}

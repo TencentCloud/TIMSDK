@@ -1,0 +1,36 @@
+
+.card.data-v-0fe0d080 {
+  border-bottom: 2rpx solid #e9eaec;
+}
+.avatar.data-v-0fe0d080 {
+  padding: 20rpx;
+}
+.right.data-v-0fe0d080 {
+  box-sizing: border-box;
+  height: 200rpx;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.username.data-v-0fe0d080 {
+  font-weight: 600;
+  font-size: 36rpx;
+  color: #1c2438;
+}
+.account.data-v-0fe0d080 {
+  font-size: 28rpx;
+  color: #80848f;
+}
+.start.data-v-0fe0d080 {
+  color: #fff;
+  background-color: #2d8cf0;
+  border-radius: 16rpx;
+  height: 100rpx;
+  width: 400rpx;
+  line-height: 100rpx;
+  font-size: 32rpx;
+}
+.revise.data-v-0fe0d080 {
+  padding: 40rpx 80rpx 0 80rpx;
+}

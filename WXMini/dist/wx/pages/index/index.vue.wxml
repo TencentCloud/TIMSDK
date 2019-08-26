@@ -1,0 +1,67 @@
+<template name="261059d1">
+  <view class="_div data-v-40c73f0c chatting">
+    <view class="_div data-v-40c73f0c chat" wx:key="item.conversationID" key="{{item.conversationID}}" wx:for="{{allConversation}}" wx:for-index="index" wx:for-item="item">
+      <i-modal title="确认删除会话？" visible="{{modalVisible}}" bindok="handleProxy" bindcancel="handleProxy" data-eventid="{{'0_'+index}}" data-comkey="{{$k}}" class="_i-modal data-v-40c73f0c"></i-modal>
+      <view bindlongpress="handleProxy" data-eventid="{{'4_'+index}}" data-comkey="{{$k}}" class="_div data-v-40c73f0c">
+        <i-row wx:if="{{item.type === 'C2C'}}" bindtap="handleProxy" slot="content" data-eventid="{{'3_'+index}}" data-comkey="{{$k}}" class="_i-row data-v-40c73f0c">
+          <i-col span="4" class="_i-col data-v-40c73f0c">
+            <view class="_div data-v-40c73f0c avatar">
+              <i-avatar src="{{item.userProfile.avatar || '/static/images/header.png'}}" size="large" shape="square" class="_i-avatar data-v-40c73f0c"></i-avatar>
+            </view>
+          </i-col>
+          <i-col span="20" class="_i-col data-v-40c73f0c">
+            <view class="_div data-v-40c73f0c right">
+              <view class="_div data-v-40c73f0c information">
+                <view class="_div data-v-40c73f0c username">{{item.userProfile.nick || item.userProfile.userID}}</view>
+                <view class="_div data-v-40c73f0c last">{{item.lastMessage._lastTime}}</view>
+              </view>
+              <view class="_div data-v-40c73f0c information">
+                <view class="_div data-v-40c73f0c content">{{item.lastMessage.messageForShow}}</view>
+                <view class="_div data-v-40c73f0c remain" wx:if="{{item.unreadCount > 0}}">{{item.unreadCount}}</view>
+              </view>
+            </view>
+          </i-col>
+        </i-row>
+        <i-row wx:elif="{{item.type === 'GROUP'}}" bindtap="handleProxy" slot="content" data-eventid="{{'1_'+index}}" data-comkey="{{$k}}" class="_i-row data-v-40c73f0c">
+          <i-col span="4" class="_i-col data-v-40c73f0c">
+            <view class="_div data-v-40c73f0c avatar">
+              <i-avatar src="{{item.groupProfile.avatar || '/static/images/groups.png'}}" size="large" shape="square" class="_i-avatar data-v-40c73f0c"></i-avatar>
+            </view>
+          </i-col>
+          <i-col span="20" class="_i-col data-v-40c73f0c">
+            <view class="_div data-v-40c73f0c right">
+              <view class="_div data-v-40c73f0c information">
+                <view class="_div data-v-40c73f0c username">{{item.groupProfile.name || item.groupProfile.groupID}}</view>
+                <view class="_div data-v-40c73f0c last">{{item.lastMessage._lastTime}}</view>
+              </view>
+              <view class="_div data-v-40c73f0c information">
+                <view class="_div data-v-40c73f0c content" wx:if="{{item.lastMessage.fromAccount === '@TIM#SYSTEM'}}">[群系统消息]</view>
+                <view class="_div data-v-40c73f0c content-red" wx:elif="{{item.lastMessage.at && item.unreadCount > 0}}">[有人@你了]</view>
+                <view class="_div data-v-40c73f0c content" wx:else>{{item.lastMessage.fromAccount}}：{{item.lastMessage.messageForShow}}</view>
+                <view class="_div data-v-40c73f0c remain" wx:if="{{item.unreadCount > 0}}">{{item.unreadCount}}</view>
+              </view>
+            </view>
+          </i-col>
+        </i-row>
+        <i-row wx:elif="{{item.type === '@TIM#SYSTEM'}}" bindtap="handleProxy" slot="content" data-eventid="{{'2_'+index}}" data-comkey="{{$k}}" class="_i-row data-v-40c73f0c">
+          <i-col span="4" class="_i-col data-v-40c73f0c">
+            <view class="_div data-v-40c73f0c avatar">
+              <i-avatar src="../../../static/images/system.png" size="large" shape="square" class="_i-avatar data-v-40c73f0c"></i-avatar>
+            </view>
+          </i-col>
+          <i-col span="20" class="_i-col data-v-40c73f0c">
+            <view class="_div data-v-40c73f0c right">
+              <view class="_div data-v-40c73f0c information">
+                <view class="_div data-v-40c73f0c username">系统消息</view>
+                <view class="_div data-v-40c73f0c remain" wx:if="{{item.unreadCount > 0}}">{{item.unreadCount}}</view>
+              </view>
+              <view class="_div data-v-40c73f0c information">
+                <view class="_div data-v-40c73f0c content">点击查看</view>
+              </view>
+            </view>
+          </i-col>
+        </i-row>
+      </view>
+    </view>
+  </view>
+</template>
