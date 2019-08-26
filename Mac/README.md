@@ -1,90 +1,72 @@
+本文介绍如何快速跑通即时通信 IM 的体验 Demo。
 
-本文主要介绍如何快速地将腾讯云 IMSDK 集成到您的项目中，只要按照如下步骤进行配置，就可以完成 SDK 的集成工作。
+<span id="step1"></span>
+## 步骤1：创建应用
+1. 登录即时通信 IM [控制台](https://console.cloud.tencent.com/avc)。
+>?如果您已有应用，请记录其 SDKAppID 并 [配置应用](#step2)。
+>
+2. 在【应用列表】页，单击【创建应用接入】。
+3. 在【创建新应用】对话框中，填写新建应用的信息，单击【确认】。
+应用创建完成后，自动生成一个应用标识 SDKAppID，请记录 SDKAppID 信息。
 
-## 开发环境要求
-- Xcode 9.0+
-- OS X 10.10+ 的Mac真机
-- 项目已配置有效的开发者签名
+<span id="step2"></span>
+## 步骤2：获取密钥信息
 
-## 集成 IMSDK
-您可以选择使用 CocoaPods 自动加载的方式，或者先下载 SDK 再将其导入到您当前的工程项目中。
+1. 单击目标应用所在行的【应用配置】，进入应用详情页面。
+3. 单击**帐号体系集成**右侧的【编辑】，配置**帐号管理员**信息，单击【保存】。
+![](https://main.qcloudimg.com/raw/2ad153a77fe6f838633d23a0c6a4dde1.png)
+4. 单击【查看密钥】，拷贝并保存密钥信息。
+>!请妥善保管密钥信息，谨防泄露。
 
-### CocoaPods
-#### 1. 安装 CocoaPods
-在终端窗口中输入如下命令（需要提前在 Mac 中安装 Ruby 环境）
-```
-sudo gem install cocoapods
-```
+<span id="step3"></span>
+## 步骤3：下载并配置 Demo 源码
 
-#### 2. 创建 Podfile 文件
-进入项目所在路径，然后输入以下命令行，之后项目路径下会出现一个 Podfile 文件。
-```
-pod init
-```
+1. 从 [Github](https://github.com/tencentyun/TIMSDK) 克隆即时通信 IM Demo 工程。
+2. 打开所属终端目录的工程，找到对应的`GenerateTestUserSig`文件。
+<table>
+<tr>
+<th nowrap="nowrap">所属平台</th>  
+<th nowrap="nowrap">文件相对路径</th>  
+</tr>
+<tr>      
+<td>Android</td>   
+<td>Android/app/src/main/java/com/tencent/qcloud/tim/demo/signature/GenerateTestUserSig.java</td>   
+</tr> 
+<tr>
+<td>iOS</td>   
+<td>iOS/TUIKitDemo/TUIKitDemo/Debug/GenerateTestUserSig.h</td>
+</tr> 
+<tr>      
+<td>Mac</td>   
+<td>Mac/TUIKitDemo/TUIKitDemo/Debug/GenerateTestUserSig.h</td>   
+</tr>  
+<tr>      
+<td>Windows</td>   
+<td>cross-platform/Windows/IMApp/IMApp/GenerateTestUserSig.h</td>   
+</tr>  
+<tr>      
+<td>Web（通用）</td>   
+<td>H5/js/debug/GenerateTestUserSig.js</td>   
+</tr>  
+<tr>      
+<td>小程序</td>   
+<td>WXMini/debug/GenerateTestUserSig.js</td>   
+</tr>  
+</table>
 
-#### 3. 编辑 Podfile 文件
-编辑 Podfile 文件，按如下方式设置：  
+>?本文以使用 Android Studio 打开 Android 工程为例。
+>
+3. 设置`GenerateTestUserSig`文件中的相关参数：
+- SDKAPPID：请设置为 [步骤1](#step1) 中获取的实际应用 SDKAppID。
+- SECRETKEY：请设置为 [步骤2](#step2) 中获取的实际密钥信息。
+![](https://main.qcloudimg.com/raw/bfbe25b15b7aa1cc34be76d7388562aa.png)
 
-```
-platform :macos, '10.10'
-source 'https://github.com/CocoaPods/Specs.git'
 
-target 'mac_test' do
-pod 'TXIMSDK_Mac'
-end
-```
+>!本文提到的获取 UserSig 的方案是在客户端代码中配置 SECRETKEY，该方法中 SECRETKEY 很容易被反编译逆向破解，一旦您的密钥泄露，攻击者就可以盗用您的腾讯云流量，因此**该方法仅适合本地跑通 Demo 和功能调试**。
+>正确的 UserSig 签发方式是将 UserSig 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 UserSig 时由您的 App 向业务服务器发起请求获取动态 UserSig。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。
 
-#### 4. 更新并安装 SDK
-在终端窗口中输入如下命令以更新本地库文件，并安装 TXIMSDK_Mac：
-```
-pod install
-```
-或使用以下命令更新本地库版本:
-```
-pod update
-```
+## 步骤4：编译运行
+进入 Mac/TUIKitDemo 目录，打开 TUIKitDemo.xcodeproj 运行。
 
-pod命令执行完后，会生成集成了SDK的 .xcworkspace 后缀的工程文件，双击打开即可。
 
-### 手动集成
-#### 1. 从 [Git](https://github.com/tencentyun/TIMSDK) 下载 ImSDK 开发包，其中SDK所在的位置如下：
-![](https://main.qcloudimg.com/raw/25a0fdc636ace72dc3cc22ce6531ee9b.png)
 
-- ImSDKForMac.framework 为 IMSDK 的核心动态库文件。
-
-| 包名 | 介绍 |  ipa增量 |
-| --- | --- | --- |
-| ImSDKForMac.framework | IM 功能包 | 1.4M|
-
-#### 2. 创建一个新工程
-
-![](https://main.qcloudimg.com/raw/7dd7a0f99893f52c63fd3144794a12cd.png)
-
-**填入工程名：**
-
-![](https://main.qcloudimg.com/raw/39f16307b69c8f0d766349e5ed201ef4.png)
-
-#### 2. 集成 ImSDK
-
-**添加依赖库：**选中 Demo 的【Target】，在【General】面板中的 【Embedded Binaries】和【Linked Frameworks and Libraries】添加依赖库。
-
-![](https://main.qcloudimg.com/raw/440dd55e50d2fe52e1d83ed0aa4284be.png)
-
-**添加依赖库：**
-```
-ImSDKForMac.framework
-```
-> **注意：**
->- 需要在【Build Setting】-【Other Linker Flags】添加 `-ObjC`。
-
-## 引用 ImSDK
-项目代码中使用 SDK 有两种方式：
-- 方式一： 在Xcode -> Build Setting -> Herader Search Paths 设置ImSDKForMac.framework/Headers 路径，在项目需要使用SDK API的文件里，直接引用头文件"ImSDK.h"
-```
-#import "ImSDK.h"
-```
-
-- 方式二：在项目需要使用SDK API的文件里，引入具体的头文件 < ImSDKForMac/ImSDK.h >
-```
-#import <ImSDKForMac/ImSDK.h>
-```
