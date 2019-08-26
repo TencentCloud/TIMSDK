@@ -46,7 +46,6 @@
 6. 选择体验帐号登录聊天室，即可体验收发消息等功能。
  ![](https://main.qcloudimg.com/raw/65952c55ee5102973b6e5383ddc5ba7e.png)
 
-
 ## 常见问题
 ### 1. 小程序 SDK 与 WebIM SDK 有什么区别？
 小程序 SDK 是基于 WebIM SDK 的兼容版本，因此相关接口文档请参考 [Web 通用](https://cloud.tencent.com/document/product/269/1595) 及 [Web 直播聊天室](https://cloud.tencent.com/document/product/269/4066) 的相关接口文档。但由于小程序运行时环境的差异，**目前 IM SDK 在小程序中仅支持文本格式消息**。
