@@ -1,39 +1,72 @@
 # IMSDK小程序demo运行
 
+本 IM 小程序 demo 是基于 MpVue 框架进行开发的。
+
 ##  一分钟跑通demo
 
-1. 安装微信小程序 [开发者工具](https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html)。
+1. 克隆本仓库到本地
 
-2. 使用微信开发者工具打开`/dist/wx`目录
+   ```shell
+   # 命令行执行
+   git clone https://github.com/tencentyun/TIMSDK.git
+   
+   # 进入 Web Demo 项目
+   cd TIMSDK/WXMini
+   ```
+
+2. 安装微信小程序 [开发者工具](https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html)。
+
+3. 使用微信开发者工具打开`/dist/wx`目录。
 
    ![](_doc/1.png)
 
-3. 配置 `SDKAPPID` 和 `SECRETKEY`，获取方式参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A41.EF.BC.9A.E5.88.9B.E5.BB.BA.E5.BA.94.E7.94.A8)
-   1. 打开 `/dist/wx/static/debug/GeneraterUserSig.js` 文件
-   2. 按图示填写相应配置后，保存文件
-   
+4. 配置 `SDKAPPID` 和 `SECRETKEY`，获取方式参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A41.EF.BC.9A.E5.88.9B.E5.BB.BA.E5.BA.94.E7.94.A8)
+   - 打开 `/dist/wx/static/debug/GeneraterUserSig.js` 文件
+
+   - 按图示填写相应配置后，保存文件
+
    ![](_doc/2.png)
 
-4. 点击编译即可运行
+5. 本地配置如图右边选项
+
+   - 勾选ES6转ES5选项
+   - 勾选不检验合法域名选项
+   - 基础库版本 > 2.1.1
 
    ![](_doc/4.png)
-   
-    > **常见问题：**
-    >
-    > 1. 合法域名
-    >
-    >    进入微信公众平台，在小程序开发的服务器域名配置相关域名信息
-    >
-    >    ![](_doc/5.png)
-    >
-    > 2. 基础库
-    >
-    >    如果打开项目后，编译报错，请您升级小程序开发工具为最新版本，基础库版本 > 2.1.1,
-    >
-    > 3. 本地设置
-    >
-    >    如上图所示
 
+6. 点击编译即可运行
+
+   ![](_doc/9.png)
+
+   > ### 注意事项
+   >
+   > **合法域名**
+   >
+   >    请将以下域名在[【微信公众平台】](https://mp.weixin.qq.com/)>【开发】>【开发设置】>【服务器域名】中进行配置
+   >
+   > 进入微信公众平台，在小程序开发的服务器域名配置相关域名信息
+   >
+   > 添加到 **request 合法域名**：
+   >
+   > |            域名            | 说明            | 是否必须 |
+   > | :------------------------: | --------------- | -------- |
+   > | `https://webim.tim.qq.com` | Web IM 业务域名 | 必须     |
+   > |  `https://yun.tim.qq.com`  | Web IM 业务域名 | 必须     |
+   > |  `https://pingtas.qq.com`  | Web IM 统计域名 | 必须     |
+   >
+   > 添加到 **uploadFile 合法域名**：
+   >
+   > |                  域名                  | 说明         | 是否必须 |
+   > | :------------------------------------: | ------------ | -------- |
+   > | `https://cos.ap-shanghai.myqcloud.com` | 文件上传域名 | 必须     |
+   >
+   > 添加到 **downloadFile 合法域名**：
+   >
+   > |                  域名                  | 说明         | 是否必须 |
+   > | :------------------------------------: | ------------ | -------- |
+   > | `https://cos.ap-shanghai.myqcloud.com` | 文件下载域名 | 必须     |
+   > ![](_doc/5.png)
 
 ##  开发运行
 
@@ -73,10 +106,20 @@
 
 ```
 
+### 准备工作
+
+1. 获取到您应用的 `SDKAPPID` 和 `SECRETKEY`，方式参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A41.EF.BC.9A.E5.88.9B.E5.BB.BA.E5.BA.94.E7.94.A8)
+
+2. 安装微信小程序 [开发者工具](https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html)
+
+3. 安装 [nodejs 环境](https://nodejs.org/zh-cn/) ( Version > 8 ) 
+   
+   - 安装后，在命令行输入`node --version` ，如果 > 8 即可
+
 ### 启动流程
 
 1. 克隆本仓库到本地
-      
+   
      ```shell
      # 命令行执行
      git clone https://github.com/tencentyun/TIMSDK.git
@@ -87,32 +130,27 @@
 
 2. 将`project.config.json`文件中的`appid`修改为自己微信小程序的`appid`
 
-   ![](_doc\3.png)
+   ![](_doc/3.png)
 
 3. 配置 `SDKAPPID` 和 `SECRETKEY`，获取方式参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A41.EF.BC.9A.E5.88.9B.E5.BB.BA.E5.BA.94.E7.94.A8)
-    1. 打开 `/dist/wx/static/debug/GeneraterUserSig.js` 文件
-    2. 按图示填写相应配置后，保存文件
+    - 打开 `/dist/wx/static/debug/GeneraterUserSig.js` 文件
+    
+    - 按图示填写相应配置后，保存文件
     
      ![](_doc/8.png)
-     
-4. 项目使用了 [MpVue](http://mpvue.com/mpvue/) 需要[nodejs](https://nodejs.org/zh-cn/) ( Version > 8 ) 环境
-
-   安装依赖并启动
-
-   ```shell
-   # 安装demo构建和运行所需依赖
-   npm install
+    
+4. 安装依赖并启动
    
+   ```shell
+   
+   ```
+# 安装demo构建和运行所需依赖
+   npm install
+
    # 构建并生成最终可在小程序开发工具内使用的代码
    npm run start
    ```
-
-   > **注意事项：**
-   >
-   > 1. node version > 8
-   >
-   > 2. 使用 npm install 命令，如果有些依赖包无法成功安装，你可以试着切换 npm 源，然后再执行npm install命令
-
+   
 6. 使用微信开发者工具导入项目，目录为`/dist/wx`
 
     ![](_doc/1.png)
@@ -161,3 +199,10 @@
 | detail/  | 个人信息&群信息                                               |
 | friend/  | 发起会话                                                     |
 | mention/ | @选择页 |
+
+
+## 注意事项
+
+1. 使用 npm install 命令，如果有些依赖包无法成功安装，你可以试着切换 npm 源，然后再执行npm install命令
+
+   ```
