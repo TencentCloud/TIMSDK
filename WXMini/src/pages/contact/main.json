@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "通讯录",
+  "navigationBarBackgroundColor": "#E7E9EA",
+  "disableScroll": true,
+  "usingComponents": {
+    "i-avatar": "../../../static/iview/avatar/index",
+    "i-row": "../../../static/iview/row/index",
+    "i-col": "../../../static/iview/col/index",
+    "i-modal": "../../../static/iview/modal/index"
+  }
+}

@@ -1,0 +1,41 @@
+<template name="2ee10fa8">
+  <view class="_div data-v-4997f4e3 counter-warp">
+    <view style="margin-bottom: 20px" class="_div data-v-4997f4e3">
+      <i-avatar src="../../../static/images/launch.png" size="large" shape="square" class="_i-avatar data-v-4997f4e3"></i-avatar>
+    </view>
+    <view class="_div data-v-4997f4e3 login">
+      <view class="_div data-v-4997f4e3 select-wrapper" bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}">
+        <view class="_div data-v-4997f4e3 show">{{userID}}</view>
+        <view class="_div data-v-4997f4e3 down">
+          <view class="_div data-v-4997f4e3 inside"></view>
+        </view>
+      </view>
+      <view class="_div data-v-4997f4e3 select-list" wx:if="{{selected}}" bindtap="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}">
+        <view class="_div data-v-4997f4e3 select" id="user0">user0</view>
+        <view class="_div data-v-4997f4e3 select" id="user1">user1</view>
+        <view class="_div data-v-4997f4e3 select" id="user2">user2</view>
+        <view class="_div data-v-4997f4e3 select" id="user3">user3</view>
+        <view class="_div data-v-4997f4e3 select" id="user4">user4</view>
+        <view class="_div data-v-4997f4e3 select" id="user5">user5</view>
+        <view class="_div data-v-4997f4e3 select" id="user6">user6</view>
+        <view class="_div data-v-4997f4e3 select" id="user7">user7</view>
+        <view class="_div data-v-4997f4e3 select" id="user8">user8</view>
+        <view class="_div data-v-4997f4e3 select" id="user9">user9</view>
+        <view class="_div data-v-4997f4e3 select" id="user10">user10</view>
+        <view class="_div data-v-4997f4e3 select" id="user11">user11</view>
+        <view class="_div data-v-4997f4e3 select" id="user12">user12</view>
+        <view class="_div data-v-4997f4e3 select" id="user13">user13</view>
+        <view class="_div data-v-4997f4e3 select" id="user14">user14</view>
+        <view class="_div data-v-4997f4e3 select" id="user15">user15</view>
+        <view class="_div data-v-4997f4e3 select" id="user16">user16</view>
+        <view class="_div data-v-4997f4e3 select" id="user17">user17</view>
+        <view class="_div data-v-4997f4e3 select" id="user18">user18</view>
+        <view class="_div data-v-4997f4e3 select" id="user19">user19</view>
+        <view class="_div data-v-4997f4e3 select" id="user20">user20</view>
+      </view>
+    </view>
+    <view class="_div data-v-4997f4e3 login-button">
+      <i-button bindtap="handleProxy" type="primary" shape="circle" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_i-button data-v-4997f4e3">登录</i-button>
+    </view>
+  </view>
+</template>
