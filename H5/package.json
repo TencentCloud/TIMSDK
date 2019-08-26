@@ -1,0 +1,45 @@
+{
+  "name": "timsdk-demo",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node --max_old_space_size=4096 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --open",
+    "serve": "node --max_old_space_size=4096 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --open",
+    "build": "vue-cli-service build",
+    "build:test": "vue-cli-service build --report --dest ./dist.test; npm run copy ./package.json.dist.test ./dist.test/package.json;",
+    "build:dev": "vue-cli-service build --report --mode development --dest ./dist.test; npm run copy ./package.json.dist.test ./dist.test/package.json;",
+    "copy": "node copy.js",
+    "lint": "vue-cli-service lint src --ext .vue,.js --fix"
+  },
+  "dependencies": {
+    "benz-amr-recorder": "^1.0.17",
+    "core-js": "^2.6.9",
+    "cos-js-sdk-v5": "^0.5.17",
+    "element-ui": "^2.9.1",
+    "tim-js-sdk": "^2.0.2",
+    "vue": "^2.6.10",
+    "vuex": "^3.1.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.8.0",
+    "@vue/cli-plugin-eslint": "^3.8.0",
+    "@vue/cli-service": "^3.8.0",
+    "babel-eslint": "^10.0.1",
+    "babel-plugin-component": "^1.1.1",
+    "copy-webpack-plugin": "^5.0.4",
+    "cp": "^0.2.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
