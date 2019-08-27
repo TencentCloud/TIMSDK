@@ -27,7 +27,7 @@
       </div>
       <message-send-box v-if="showMessageSendBox" />
     </div>
-    <conversation-profile v-show="showConversationProfile" />
+    <conversation-profile v-if="showConversationProfile" />
     <image-previewer />
   </div>
 </template>
