@@ -10,7 +10,7 @@
    # 命令行执行
    git clone https://github.com/tencentyun/TIMSDK.git
    
-   # 进入 Web Demo 项目
+   # 进入 Demo 项目
    cd TIMSDK/WXMini
    ```
 
@@ -66,6 +66,7 @@
    > |                  域名                  | 说明         | 是否必须 |
    > | :------------------------------------: | ------------ | -------- |
    > | `https://cos.ap-shanghai.myqcloud.com` | 文件下载域名 | 必须     |
+   >
    > ![](_doc/5.png)
 
 ##  开发运行
@@ -124,7 +125,7 @@
      # 命令行执行
      git clone https://github.com/tencentyun/TIMSDK.git
      
-     # 进入 Web Demo 项目
+     # 进入 Demo 项目
      cd TIMSDK/WXMini
     ```
 
@@ -149,7 +150,11 @@
    npm run start
    ```
    
-   > 使用 npm install 命令，如果有些依赖包无法成功安装，你可以试着切换 npm 源，然后再执行npm install命令
+   > 使用 `npm install` 命令，如果有些依赖包无法成功安装
+   >
+   > 您可以试着切换源， 例如： `npm config set registry http://r.cnpmjs.org/`
+   >
+   > 然后再执行 `npm install`
    
 5. 使用微信开发者工具导入项目，目录为`/dist/wx`
 
@@ -186,6 +191,7 @@
    > |                  域名                  | 说明         | 是否必须 |
    > | :------------------------------------: | ------------ | -------- |
    > | `https://cos.ap-shanghai.myqcloud.com` | 文件下载域名 | 必须     |
+   >
    > ![](_doc/5.png)
 
 ## 项目截图
