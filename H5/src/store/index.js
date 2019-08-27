@@ -9,11 +9,26 @@ import blacklist from './modules/blacklist'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  state: {
+    current: Date.now(), // 当前时间
+    intervalID: 0
+  },
+  mutations: {
+    startComputeCurrent(state) {
+      state.intervalID = setInterval(() => {
+        state.current = Date.now()
+      }, 1000)
+    },
+    stopComputeCurrent(state) {
+      clearInterval(state.intervalID)
+      state.intervalID = 0
+    }
+  },
   modules: {
     conversation,
     group,
     friend,
     blacklist,
     user
-  },
+  }
 })
