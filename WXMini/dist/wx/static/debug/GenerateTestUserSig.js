@@ -58,7 +58,7 @@ function genTestUserSig(userID) {
   };
 }
 
-export  {
+export {
   _SDKAPPID as SDKAPPID,
   genTestUserSig
 }
