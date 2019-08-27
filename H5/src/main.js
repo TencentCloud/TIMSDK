@@ -8,6 +8,7 @@ import TIM from 'tim-js-sdk'
 import './assets/icon/iconfont.css'
 
 window.tim = tim
+window.TIM = TIM
 window.store = store
 window.$message = Message
 Vue.prototype.$bus = new Vue() // event Bus 用于无关系组件间的通信。

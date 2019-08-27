@@ -7,7 +7,7 @@
         <span>Add</span>
       </div>
     </popover>
-    <template v-for="member in memberList">
+    <template v-for="member in members">
       <popover placement="right" :key="member.userID">
         <group-member-info :member="member" />
         <div slot="reference" class="group-member" @click="currentMemberID = member.userID">
@@ -18,6 +18,7 @@
         </div>
       </popover>
     </template>
+    <el-button type="text" @click="loadMore">查看更多</el-button>
   </div>
 </template>
 
@@ -30,7 +31,8 @@ export default {
   data() {
     return {
       addGroupMemberVisible: false,
-      currentMemberID: ''
+      currentMemberID: '',
+      count: 30 // 显示的群成员数量
     }
   },
   props: ['memberList'],
@@ -42,7 +44,10 @@ export default {
   computed: {
     ...mapState({
       currentConversation: state => state.conversation.currentConversation
-    })
+    }),
+    members() {
+      return this.memberList.slice(0, this.count)
+    }
   },
   methods: {
     getGroupMemberAvatarText(role) {
@@ -54,6 +59,9 @@ export default {
         default:
           return '普'
       }
+    },
+    loadMore() {
+      this.count += 30
     }
   }
 }
