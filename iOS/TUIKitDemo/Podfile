@@ -12,6 +12,6 @@ target 'TUIKitDemo' do
   pod 'AFNetworking'
   pod 'ReactiveObjC'
   pod 'MLeaksFinder'
-  pod 'TXIMSDK_TUIKit_iOS', :path => "../../"
-  pod 'TXIMSDK_iOS', :path => "../../"
+  pod 'TXIMSDK_TUIKit_iOS'
+  pod 'TXIMSDK_iOS'
 end

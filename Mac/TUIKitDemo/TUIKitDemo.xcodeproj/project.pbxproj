@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0677B3AA0CA6BF3E225D722A /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E48D18D1DA394C75976BA25 /* libPods-TUIKitDemo.a */; };
 		CE37D1D022F99BF00012500D /* GenerateTestUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D1CE22F99BF00012500D /* GenerateTestUserSig.m */; };
 		CE43635621F70A030070D6C9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43635521F70A030070D6C9 /* AppDelegate.m */; };
 		CE43635921F70A030070D6C9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE43635821F70A030070D6C9 /* LoginViewController.m */; };
@@ -23,8 +24,6 @@
 		CE9C8789228E5062001D1AF2 /* default_head@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C8786228E5062001D1AF2 /* default_head@2x.png */; };
 		CE9C878A228E5062001D1AF2 /* more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C8787228E5062001D1AF2 /* more@2x.png */; };
 		CE9C878B228E5062001D1AF2 /* default_group@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C8788228E5062001D1AF2 /* default_group@2x.png */; };
-		CEEBCEE121FEECE500A82B0D /* ImSDKForMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */; };
-		CEEBCEE221FEECE500A82B0D /* ImSDKForMac.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,7 +33,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				CEEBCEE221FEECE500A82B0D /* ImSDKForMac.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -42,6 +40,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1E48D18D1DA394C75976BA25 /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E3A9EEC070B60E0C79F5E67 /* Pods-TUIKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.debug.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		B174ABE42004FAC0F5C76BF8 /* Pods-TUIKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.release.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.release.xcconfig"; sourceTree = "<group>"; };
 		CE37D1CE22F99BF00012500D /* GenerateTestUserSig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateTestUserSig.m; sourceTree = "<group>"; };
 		CE37D1CF22F99BF00012500D /* GenerateTestUserSig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateTestUserSig.h; sourceTree = "<group>"; };
 		CE43635121F70A030070D6C9 /* TUIKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TUIKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,7 +69,6 @@
 		CE9C8786228E5062001D1AF2 /* default_head@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default_head@2x.png"; sourceTree = "<group>"; };
 		CE9C8787228E5062001D1AF2 /* more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@2x.png"; sourceTree = "<group>"; };
 		CE9C8788228E5062001D1AF2 /* default_group@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default_group@2x.png"; sourceTree = "<group>"; };
-		CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDKForMac.framework; path = ../../ImSDKForMac.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,13 +76,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEEBCEE121FEECE500A82B0D /* ImSDKForMac.framework in Frameworks */,
+				0677B3AA0CA6BF3E225D722A /* libPods-TUIKitDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		169CE7080B64D3A255745A9B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7E3A9EEC070B60E0C79F5E67 /* Pods-TUIKitDemo.debug.xcconfig */,
+				B174ABE42004FAC0F5C76BF8 /* Pods-TUIKitDemo.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		60C879FD205176B4EC85C078 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1E48D18D1DA394C75976BA25 /* libPods-TUIKitDemo.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CE37D1CD22F99BF00012500D /* Debug */ = {
 			isa = PBXGroup;
 			children = (
@@ -97,6 +114,8 @@
 			children = (
 				CE43635321F70A030070D6C9 /* TUIKitDemo */,
 				CE43635221F70A030070D6C9 /* Products */,
+				169CE7080B64D3A255745A9B /* Pods */,
+				60C879FD205176B4EC85C078 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -132,7 +151,6 @@
 				CE43635F21F70A040070D6C9 /* Info.plist */,
 				CE43636021F70A040070D6C9 /* main.m */,
 				CE9C8785228E5062001D1AF2 /* source */,
-				CEEBCEDD21FEEC7400A82B0D /* ImSDKForMac.framework */,
 				CE43636221F70A040070D6C9 /* TUIKitDemo.entitlements */,
 			);
 			path = TUIKitDemo;
@@ -155,10 +173,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE43636521F70A040070D6C9 /* Build configuration list for PBXNativeTarget "TUIKitDemo" */;
 			buildPhases = (
+				5CEAB54155A1F17808D0001C /* [CP] Check Pods Manifest.lock */,
 				CE43634D21F70A030070D6C9 /* Sources */,
 				CE43634E21F70A030070D6C9 /* Frameworks */,
 				CE43634F21F70A030070D6C9 /* Resources */,
 				CEEBCEE321FEECE500A82B0D /* Embed Frameworks */,
+				61236DEF872870AE8675C311 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -223,6 +243,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5CEAB54155A1F17808D0001C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TUIKitDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		61236DEF872870AE8675C311 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CE43634D21F70A030070D6C9 /* Sources */ = {
@@ -367,16 +429,15 @@
 		};
 		CE43636621F70A040070D6C9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E3A9EEC070B60E0C79F5E67 /* Pods-TUIKitDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = B543JTT8E3;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/..";
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../ImSDKForMac.framework/Headers",
-					"$(SRCROOT)/Debug",
-				);
+				DEVELOPMENT_TEAM = AR35RB2L8Z;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TUIKitDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -384,21 +445,21 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = lynxzhang.TUIKitDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
 		CE43636721F70A040070D6C9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B174ABE42004FAC0F5C76BF8 /* Pods-TUIKitDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = B543JTT8E3;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/..";
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../ImSDKForMac.framework/Headers",
-					"$(SRCROOT)/Debug",
-				);
+				DEVELOPMENT_TEAM = AR35RB2L8Z;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TUIKitDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -406,6 +467,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = lynxzhang.TUIKitDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

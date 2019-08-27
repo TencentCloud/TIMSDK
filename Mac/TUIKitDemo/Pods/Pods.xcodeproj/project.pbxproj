@@ -1,0 +1,496 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		6CF579A1F8C20F5516433C75A028959A /* TXIMSDK_Mac */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = BFFEF071F8930F25310A75D639A1096B /* Build configuration list for PBXAggregateTarget "TXIMSDK_Mac" */;
+			buildPhases = (
+			);
+			dependencies = (
+			);
+			name = TXIMSDK_Mac;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		6E8992DB75BAEE96B9C00B0DCB413E74 /* Pods-TUIKitDemo-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D75830C5C7C1F42D51C602B0883862 /* Pods-TUIKitDemo-dummy.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7DFD4D4F616F978D4C17EBA07036A1B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6CF579A1F8C20F5516433C75A028959A;
+			remoteInfo = TXIMSDK_Mac;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		059EDDAE946C777B75C349020AB4AEA3 /* TIMCallback.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TIMCallback.h; path = ImSDKForMac.framework/Versions/A/Headers/TIMCallback.h; sourceTree = "<group>"; };
+		0B38B3D19F99B6A5E6840A56C5AD270A /* Pods-TUIKitDemo-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TUIKitDemo-frameworks.sh"; sourceTree = "<group>"; };
+		0BE1BFBEB3962A58BF4B852A6BE2E6AB /* TIMManager+MsgExt.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "TIMManager+MsgExt.h"; path = "ImSDKForMac.framework/Versions/A/Headers/TIMManager+MsgExt.h"; sourceTree = "<group>"; };
+		1DF0BE21B7B33F689439758E60219AD2 /* TIMErrorCode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TIMErrorCode.h; path = ImSDKForMac.framework/Versions/A/Headers/TIMErrorCode.h; sourceTree = "<group>"; };
+		1E7C5911589B6A9CE08F3F2EDAEB9218 /* TXIMSDK_Mac.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TXIMSDK_Mac.xcconfig; sourceTree = "<group>"; };
+		1F2B3F09964FB35761F29E51A1834817 /* TIMComm.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TIMComm.h; path = ImSDKForMac.framework/Versions/A/Headers/TIMComm.h; sourceTree = "<group>"; };
+		3AE6F0F9F8D01B40E346F068097FC765 /* TIMComm+MsgExt.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "TIMComm+MsgExt.h"; path = "ImSDKForMac.framework/Versions/A/Headers/TIMComm+MsgExt.h"; sourceTree = "<group>"; };
+		3E4078520A936AA6A6F1FBFE69E9EEBA /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-TUIKitDemo.a"; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		448C74B5980431C7D667FC15C185B399 /* Pods-TUIKitDemo-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TUIKitDemo-acknowledgements.plist"; sourceTree = "<group>"; };
+		52A223474D8477BEED1B30685AEF5426 /* TIMConversation+MsgExt.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "TIMConversation+MsgExt.h"; path = "ImSDKForMac.framework/Versions/A/Headers/TIMConversation+MsgExt.h"; sourceTree = "<group>"; };
+		63D75830C5C7C1F42D51C602B0883862 /* Pods-TUIKitDemo-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TUIKitDemo-dummy.m"; sourceTree = "<group>"; };
+		6745B1CA0DC165E28C82A317C30800D4 /* TIMGroupManager+Ext.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "TIMGroupManager+Ext.h"; path = "ImSDKForMac.framework/Versions/A/Headers/TIMGroupManager+Ext.h"; sourceTree = "<group>"; };
+		681A9BC80F9C914DD4006A13BC42F721 /* TIMComm+Group.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "TIMComm+Group.h"; path = "ImSDKForMac.framework/Versions/A/Headers/TIMComm+Group.h"; sourceTree = "<group>"; };
+		7FCA1C5C9F154F1C46C0D526551E33E3 /* IMMessageExt.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IMMessageExt.h; path = ImSDKForMac.framework/Versions/A/Headers/IMMessageExt.h; sourceTree = "<group>"; };
+		8A6DE5B69C0C3338ADFC10705D131A58 /* ImSDKForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ImSDKForMac.framework; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A5F8FE46EC4BA742D33F923B64662651 /* Pods-TUIKitDemo-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TUIKitDemo-acknowledgements.markdown"; sourceTree = "<group>"; };
+		ACF4A5BAE5510E46198AE458B56D5FD3 /* ImSDK.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ImSDK.h; path = ImSDKForMac.framework/Versions/A/Headers/ImSDK.h; sourceTree = "<group>"; };
+		B1397ABB50960F56C22B908508F13F13 /* TIMFriendshipManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TIMFriendshipManager.h; path = ImSDKForMac.framework/Versions/A/Headers/TIMFriendshipManager.h; sourceTree = "<group>"; };
+		B9B87227678A29614C9345C2FBA45358 /* Pods-TUIKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TUIKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		C1496BD6CF656826BAEC2A5FF17C3611 /* TIMConversation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TIMConversation.h; path = ImSDKForMac.framework/Versions/A/Headers/TIMConversation.h; sourceTree = "<group>"; };
+		C9A78DBF4D304DC26B7BD1EFB9DF0428 /* TIMFriendshipDefine.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TIMFriendshipDefine.h; path = ImSDKForMac.framework/Versions/A/Headers/TIMFriendshipDefine.h; sourceTree = "<group>"; };
+		CD11422379F83455464D485305C67E67 /* TIMMessage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TIMMessage.h; path = ImSDKForMac.framework/Versions/A/Headers/TIMMessage.h; sourceTree = "<group>"; };
+		CDFF15E7493F02F9666E3EA81B487AED /* TIMMessage+MsgExt.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "TIMMessage+MsgExt.h"; path = "ImSDKForMac.framework/Versions/A/Headers/TIMMessage+MsgExt.h"; sourceTree = "<group>"; };
+		CEC325F4FD778CE437DC645E19C9DE1A /* TIMGroupManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TIMGroupManager.h; path = ImSDKForMac.framework/Versions/A/Headers/TIMGroupManager.h; sourceTree = "<group>"; };
+		D04645D7014AD0403AC64E1624DEFDCA /* TIMManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TIMManager.h; path = ImSDKForMac.framework/Versions/A/Headers/TIMManager.h; sourceTree = "<group>"; };
+		E071887FAF072014EEF8F820C412F933 /* IMGroupExt.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IMGroupExt.h; path = ImSDKForMac.framework/Versions/A/Headers/IMGroupExt.h; sourceTree = "<group>"; };
+		F2FC9AF695E9288168B9ED5067807CA2 /* Pods-TUIKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TUIKitDemo.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		66EE5C88261CFB10D3719FACFFE186B5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2A1CFE0599A67CC49E1AEB6C328C684F /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				1E7C5911589B6A9CE08F3F2EDAEB9218 /* TXIMSDK_Mac.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/TXIMSDK_Mac";
+			sourceTree = "<group>";
+		};
+		ABF12BB7AA1E194F4F5334390341A9CD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8A6DE5B69C0C3338ADFC10705D131A58 /* ImSDKForMac.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B3F3652BEB64BC59224FF1B4F0B4A1F0 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				BEF0C2CFECB15E1B05C21E97540DF151 /* Pods-TUIKitDemo */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		B50B5B3268E295CCB90431D0A5555395 /* TXIMSDK_Mac */ = {
+			isa = PBXGroup;
+			children = (
+				E071887FAF072014EEF8F820C412F933 /* IMGroupExt.h */,
+				7FCA1C5C9F154F1C46C0D526551E33E3 /* IMMessageExt.h */,
+				ACF4A5BAE5510E46198AE458B56D5FD3 /* ImSDK.h */,
+				059EDDAE946C777B75C349020AB4AEA3 /* TIMCallback.h */,
+				1F2B3F09964FB35761F29E51A1834817 /* TIMComm.h */,
+				681A9BC80F9C914DD4006A13BC42F721 /* TIMComm+Group.h */,
+				3AE6F0F9F8D01B40E346F068097FC765 /* TIMComm+MsgExt.h */,
+				C1496BD6CF656826BAEC2A5FF17C3611 /* TIMConversation.h */,
+				52A223474D8477BEED1B30685AEF5426 /* TIMConversation+MsgExt.h */,
+				1DF0BE21B7B33F689439758E60219AD2 /* TIMErrorCode.h */,
+				C9A78DBF4D304DC26B7BD1EFB9DF0428 /* TIMFriendshipDefine.h */,
+				B1397ABB50960F56C22B908508F13F13 /* TIMFriendshipManager.h */,
+				CEC325F4FD778CE437DC645E19C9DE1A /* TIMGroupManager.h */,
+				6745B1CA0DC165E28C82A317C30800D4 /* TIMGroupManager+Ext.h */,
+				D04645D7014AD0403AC64E1624DEFDCA /* TIMManager.h */,
+				0BE1BFBEB3962A58BF4B852A6BE2E6AB /* TIMManager+MsgExt.h */,
+				CD11422379F83455464D485305C67E67 /* TIMMessage.h */,
+				CDFF15E7493F02F9666E3EA81B487AED /* TIMMessage+MsgExt.h */,
+				ABF12BB7AA1E194F4F5334390341A9CD /* Frameworks */,
+				2A1CFE0599A67CC49E1AEB6C328C684F /* Support Files */,
+			);
+			name = TXIMSDK_Mac;
+			path = TXIMSDK_Mac;
+			sourceTree = "<group>";
+		};
+		BEF0C2CFECB15E1B05C21E97540DF151 /* Pods-TUIKitDemo */ = {
+			isa = PBXGroup;
+			children = (
+				A5F8FE46EC4BA742D33F923B64662651 /* Pods-TUIKitDemo-acknowledgements.markdown */,
+				448C74B5980431C7D667FC15C185B399 /* Pods-TUIKitDemo-acknowledgements.plist */,
+				63D75830C5C7C1F42D51C602B0883862 /* Pods-TUIKitDemo-dummy.m */,
+				0B38B3D19F99B6A5E6840A56C5AD270A /* Pods-TUIKitDemo-frameworks.sh */,
+				B9B87227678A29614C9345C2FBA45358 /* Pods-TUIKitDemo.debug.xcconfig */,
+				F2FC9AF695E9288168B9ED5067807CA2 /* Pods-TUIKitDemo.release.xcconfig */,
+			);
+			name = "Pods-TUIKitDemo";
+			path = "Target Support Files/Pods-TUIKitDemo";
+			sourceTree = "<group>";
+		};
+		CB0A314FA5B4CED3460AD9290EA122B1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B50B5B3268E295CCB90431D0A5555395 /* TXIMSDK_Mac */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				D89477F20FB1DE18A04690586D7808C4 /* Frameworks */,
+				CB0A314FA5B4CED3460AD9290EA122B1 /* Pods */,
+				E4889A21156F97E3632B8013868790BA /* Products */,
+				B3F3652BEB64BC59224FF1B4F0B4A1F0 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D89477F20FB1DE18A04690586D7808C4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E4889A21156F97E3632B8013868790BA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3E4078520A936AA6A6F1FBFE69E9EEBA /* libPods-TUIKitDemo.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		81EEC98CFCBB53DFA4A0CD8EB512C786 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D901A50C02D14E7B3E9F174091E3EA20 /* Pods-TUIKitDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5FBAC2E5D9C507ABAEB1DFFAB7F31003 /* Build configuration list for PBXNativeTarget "Pods-TUIKitDemo" */;
+			buildPhases = (
+				81EEC98CFCBB53DFA4A0CD8EB512C786 /* Headers */,
+				5656BFF5E5A3E0D1125AE09AC7608B4E /* Sources */,
+				66EE5C88261CFB10D3719FACFFE186B5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F77CB294A2E38E4DA7B16508562F2B3D /* PBXTargetDependency */,
+			);
+			name = "Pods-TUIKitDemo";
+			productName = "Pods-TUIKitDemo";
+			productReference = 3E4078520A936AA6A6F1FBFE69E9EEBA /* libPods-TUIKitDemo.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 10.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = E4889A21156F97E3632B8013868790BA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D901A50C02D14E7B3E9F174091E3EA20 /* Pods-TUIKitDemo */,
+				6CF579A1F8C20F5516433C75A028959A /* TXIMSDK_Mac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5656BFF5E5A3E0D1125AE09AC7608B4E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E8992DB75BAEE96B9C00B0DCB413E74 /* Pods-TUIKitDemo-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F77CB294A2E38E4DA7B16508562F2B3D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TXIMSDK_Mac;
+			target = 6CF579A1F8C20F5516433C75A028959A /* TXIMSDK_Mac */;
+			targetProxy = 7DFD4D4F616F978D4C17EBA07036A1B8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0A4E8437AC7C5E8A6E80920A6EEE3954 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		5F14B856CAD788D737965259A3024EA6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		649E43247E2D80B1424F74EEBF44C926 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1E7C5911589B6A9CE08F3F2EDAEB9218 /* TXIMSDK_Mac.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		93F0F835DF5B8AD674183A510D7B70D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1E7C5911589B6A9CE08F3F2EDAEB9218 /* TXIMSDK_Mac.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		B889C97E314B3AE60E8EDBB502AD67ED /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F2FC9AF695E9288168B9ED5067807CA2 /* Pods-TUIKitDemo.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		C09F4E85B22D163C882F301AC6CB2BE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B9B87227678A29614C9345C2FBA45358 /* Pods-TUIKitDemo.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5F14B856CAD788D737965259A3024EA6 /* Debug */,
+				0A4E8437AC7C5E8A6E80920A6EEE3954 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5FBAC2E5D9C507ABAEB1DFFAB7F31003 /* Build configuration list for PBXNativeTarget "Pods-TUIKitDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C09F4E85B22D163C882F301AC6CB2BE1 /* Debug */,
+				B889C97E314B3AE60E8EDBB502AD67ED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BFFEF071F8930F25310A75D639A1096B /* Build configuration list for PBXAggregateTarget "TXIMSDK_Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93F0F835DF5B8AD674183A510D7B70D8 /* Debug */,
+				649E43247E2D80B1424F74EEBF44C926 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}
