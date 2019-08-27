@@ -47,20 +47,32 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 └───vue.config.js - vue-cli@3 配置文件
 ```
 
+### 准备工作
 
+1. 准备好您的 `SDKAPPID` 和 `SECRETKEY`，获取方式参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A41.EF.BC.9A.E5.88.9B.E5.BB.BA.E5.BA.94.E7.94.A8)
+
+2. 搭建 [nodejs 环境](https://nodejs.org/zh-cn/) （建议安装 8.0 版本以上的 nodejs），选择官网推荐的安装包，安装即可
+
+   安装完成后，打开命令行，输入以下命令：
+
+   ```shell
+   node -v
+   ```
+
+   如果上述命令输出相应的版本号，说明环境搭建完成。
 
 ### 启动流程
 
 1. 克隆本仓库到本地
+
+   ```shell
+   # 命令行执行
+   git clone https://github.com/tencentyun/TIMSDK.git
    
-    ```shell
-    # 命令行执行
-    git clone https://github.com/tencentyun/TIMSDK.git
-    
-    # 进入 Web Demo 项目
-    cd TIMSDK/H5
+   # 进入 Web Demo 项目
+   cd TIMSDK/H5
    ```
-   
+
 2. 配置 `SDKAppID` 和 `SECRETKEY`，参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A42.EF.BC.9A.E8.8E.B7.E5.8F.96.E5.AF.86.E9.92.A5.E4.BF.A1.E6.81.AF)
 
    2.1 打开 `/public/debug/GenerateTestUserSig.js` 文件
@@ -77,6 +89,13 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
    # 启动项目
    npm start 
    ```
+
+   > 若同步依赖过程中出现问题，尝试切换 npm 源后重试。
+   >
+   > ```shell
+   > # 切换 cnpm 源
+   > npm config set registry http://r.cnpmjs.org/
+   > ```
 
 4. 浏览器中打开链接：http://localhost:8080/
 
