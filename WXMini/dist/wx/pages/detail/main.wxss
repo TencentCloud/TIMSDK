@@ -1,9 +1,9 @@
 
-.bg.data-v-31e8b46d {
+.bg.data-v-4ca416ca {
   background-color: #f8f8f9;
   height: 100vh;
 }
-.right.data-v-31e8b46d {
+.right.data-v-4ca416ca {
   box-sizing: border-box;
   height: 200rpx;
   padding: 20rpx;
@@ -11,16 +11,16 @@
   flex-direction: column;
   justify-content: space-around;
 }
-.right .username.data-v-31e8b46d {
+.right .username.data-v-4ca416ca {
   font-weight: 600;
   font-size: 36rpx;
   color: #1c2438;
 }
-.right .account.data-v-31e8b46d {
+.right .account.data-v-4ca416ca {
   font-size: 28rpx;
   color: #80848f;
 }
-.btn.data-v-31e8b46d {
+.btn.data-v-4ca416ca {
   color: #fff;
   background-color: #2d8cf0;
   border-radius: 40rpx;
@@ -29,43 +29,43 @@
   line-height: 80rpx;
   font-size: 32rpx;
 }
-.delete.data-v-31e8b46d {
+.delete.data-v-4ca416ca {
   background-color: #ed3f14;
 }
-.container.data-v-31e8b46d {
+.container.data-v-4ca416ca {
   background-color: #f8f8f9;
   height: 100vh;
   overflow: scroll;
 }
-.card.data-v-31e8b46d {
+.card.data-v-4ca416ca {
   border-top: 2rpx solid #e9eaec;
   border-bottom: 2rpx solid #e9eaec;
   background-color: #fff;
   margin-bottom: -2rpx;
 }
-.card .item.data-v-31e8b46d {
+.card .item.data-v-4ca416ca {
   display: flex;
   width: 100vw;
   padding: 20rpx 40rpx;
   border-bottom: 2rpx solid #dddee1;
   font-size: 32rpx;
 }
-.card .item .key.data-v-31e8b46d {
+.card .item .key.data-v-4ca416ca {
   width: 60vw;
   font-weight: 500;
   color: #1c2438;
   box-sizing: border-box;
 }
-.card .item .value.data-v-31e8b46d {
+.card .item .value.data-v-4ca416ca {
   width: 40vw;
   font-weight: 400;
   color: #495060;
   box-sizing: border-box;
 }
-.avatar.data-v-31e8b46d {
+.avatar.data-v-4ca416ca {
   padding: 20rpx;
 }
-.revise.data-v-31e8b46d {
+.revise.data-v-4ca416ca {
   padding-top: 40rpx;
   display: flex;
   flex-direction: column;

@@ -1,67 +1,67 @@
-<template name="6f6d57b9">
-  <view class="_div data-v-3244b950 container">
-    <i-modal title="添加的用户ID" visible="{{addModalVisible}}" bindok="handleProxy" bindcancel="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_i-modal data-v-3244b950">
-      <view class="_div data-v-3244b950 input-wrapper"><input type="text" class="_input data-v-3244b950 input border center" value="{{addUserId}}" bindinput="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" /></view>
+<template name="1265b1e4">
+  <view class="_div data-v-e2ba38f4 container">
+    <i-modal title="添加的用户ID" visible="{{addModalVisible}}" bindok="handleProxy" bindcancel="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_i-modal data-v-e2ba38f4">
+      <view class="_div data-v-e2ba38f4 input-wrapper"><input type="text" class="_input data-v-e2ba38f4 input border center" value="{{addUserId}}" bindinput="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" /></view>
     </i-modal>
-    <view class="_div data-v-3244b950 title">基础信息</view>
-    <view class="_div data-v-3244b950 item">
-      <view class="_div data-v-3244b950 label"> 群ID： </view>
-      <view class="_div data-v-3244b950"><input type="text" class="_input data-v-3244b950 input" placeholder="请输入群ID" value="{{id}}" bindinput="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}" /></view>
+    <view class="_div data-v-e2ba38f4 title">基础信息</view>
+    <view class="_div data-v-e2ba38f4 item">
+      <view class="_div data-v-e2ba38f4 label"> 群ID： </view>
+      <view class="_div data-v-e2ba38f4"><input type="text" class="_input data-v-e2ba38f4 input" placeholder="请输入群ID" value="{{id}}" bindinput="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}" /></view>
     </view>
-    <view class="_div data-v-3244b950 item">
-      <view class="_div data-v-3244b950 label"> 群名： </view>
-      <view class="_div data-v-3244b950"><input type="text" class="_input data-v-3244b950 input" placeholder="请输入群名" value="{{name}}" bindinput="handleProxy" data-eventid="{{'3'}}" data-comkey="{{$k}}" /></view>
+    <view class="_div data-v-e2ba38f4 item">
+      <view class="_div data-v-e2ba38f4 label"> 群名： </view>
+      <view class="_div data-v-e2ba38f4"><input type="text" class="_input data-v-e2ba38f4 input" placeholder="请输入群名" value="{{name}}" bindinput="handleProxy" data-eventid="{{'3'}}" data-comkey="{{$k}}" /></view>
     </view>
-    <view class="_div data-v-3244b950 item">
-      <view class="_div data-v-3244b950 label"> 群头像： </view>
-      <view class="_div data-v-3244b950"><input type="text" class="_input data-v-3244b950 input" placeholder="请输入群头像" value="{{avatar}}" bindinput="handleProxy" data-eventid="{{'4'}}" data-comkey="{{$k}}" /></view>
+    <view class="_div data-v-e2ba38f4 item">
+      <view class="_div data-v-e2ba38f4 label"> 群头像： </view>
+      <view class="_div data-v-e2ba38f4"><input type="text" class="_input data-v-e2ba38f4 input" placeholder="请输入群头像" value="{{avatar}}" bindinput="handleProxy" data-eventid="{{'4'}}" data-comkey="{{$k}}" /></view>
     </view>
-    <view class="_div data-v-3244b950 item">
-      <view class="_div data-v-3244b950 label"> 群简介： </view>
-      <view class="_div data-v-3244b950"><input type="text" class="_input data-v-3244b950 input" placeholder="请输入群简介" value="{{introduction}}" bindinput="handleProxy" data-eventid="{{'5'}}" data-comkey="{{$k}}" /></view>
+    <view class="_div data-v-e2ba38f4 item">
+      <view class="_div data-v-e2ba38f4 label"> 群简介： </view>
+      <view class="_div data-v-e2ba38f4"><input type="text" class="_input data-v-e2ba38f4 input" placeholder="请输入群简介" value="{{introduction}}" bindinput="handleProxy" data-eventid="{{'5'}}" data-comkey="{{$k}}" /></view>
     </view>
-    <view class="_div data-v-3244b950 item">
-      <view class="_div data-v-3244b950 label"> 群公告： </view>
-      <view class="_div data-v-3244b950"><input type="text" class="_input data-v-3244b950 input" placeholder="请输入群公告" value="{{notice}}" bindinput="handleProxy" data-eventid="{{'6'}}" data-comkey="{{$k}}" /></view>
+    <view class="_div data-v-e2ba38f4 item">
+      <view class="_div data-v-e2ba38f4 label"> 群公告： </view>
+      <view class="_div data-v-e2ba38f4"><input type="text" class="_input data-v-e2ba38f4 input" placeholder="请输入群公告" value="{{notice}}" bindinput="handleProxy" data-eventid="{{'6'}}" data-comkey="{{$k}}" /></view>
     </view>
-    <view class="_div data-v-3244b950 type">
-      <view class="_div data-v-3244b950 title"> 群类型： </view>
-      <view class="_div data-v-3244b950 choose">
-        <i-radio-group current="{{currentType}}" bindchange="handleProxy" data-eventid="{{'7'}}" data-comkey="{{$k}}" class="_i-radio-group data-v-3244b950">
-          <i-radio value="Private" class="_i-radio data-v-3244b950"></i-radio>
-          <i-radio value="Public" class="_i-radio data-v-3244b950"></i-radio>
-          <i-radio value="ChatRoom" class="_i-radio data-v-3244b950"></i-radio>
-          <i-radio value="AVChatRoom" class="_i-radio data-v-3244b950"></i-radio>
+    <view class="_div data-v-e2ba38f4 type">
+      <view class="_div data-v-e2ba38f4 title"> 群类型： </view>
+      <view class="_div data-v-e2ba38f4 choose">
+        <i-radio-group current="{{currentType}}" bindchange="handleProxy" data-eventid="{{'7'}}" data-comkey="{{$k}}" class="_i-radio-group data-v-e2ba38f4">
+          <i-radio value="Private" class="_i-radio data-v-e2ba38f4"></i-radio>
+          <i-radio value="Public" class="_i-radio data-v-e2ba38f4"></i-radio>
+          <i-radio value="ChatRoom" class="_i-radio data-v-e2ba38f4"></i-radio>
+          <i-radio value="AVChatRoom" class="_i-radio data-v-e2ba38f4"></i-radio>
         </i-radio-group>
       </view>
     </view>
-    <view class="_div data-v-3244b950 type" wx:if="{{currentType !== 'Private' && currentType !== 'AVChatRoom'}}">
-      <view class="_div data-v-3244b950 title"> 加群方式： </view>
-      <view class="_div data-v-3244b950 choose">
-        <i-radio-group current="{{addType}}" bindchange="handleProxy" data-eventid="{{'8'}}" data-comkey="{{$k}}" class="_i-radio-group data-v-3244b950">
-          <i-radio value="自由加群" class="_i-radio data-v-3244b950"></i-radio>
-          <i-radio value="需要验证" class="_i-radio data-v-3244b950"></i-radio>
-          <i-radio value="禁止加群" class="_i-radio data-v-3244b950"></i-radio>
+    <view class="_div data-v-e2ba38f4 type" wx:if="{{currentType !== 'Private' && currentType !== 'AVChatRoom'}}">
+      <view class="_div data-v-e2ba38f4 title"> 加群方式： </view>
+      <view class="_div data-v-e2ba38f4 choose">
+        <i-radio-group current="{{addType}}" bindchange="handleProxy" data-eventid="{{'8'}}" data-comkey="{{$k}}" class="_i-radio-group data-v-e2ba38f4">
+          <i-radio value="自由加群" class="_i-radio data-v-e2ba38f4"></i-radio>
+          <i-radio value="需要验证" class="_i-radio data-v-e2ba38f4"></i-radio>
+          <i-radio value="禁止加群" class="_i-radio data-v-e2ba38f4"></i-radio>
         </i-radio-group>
       </view>
     </view>
-    <view class="_div data-v-3244b950 type">
-      <view class="_div data-v-3244b950 title"> 群成员列表<label bindtap="handleProxy" class="_span data-v-3244b950 adding" data-eventid="{{'9'}}" data-comkey="{{$k}}">添加成员</label></view>
+    <view class="_div data-v-e2ba38f4 type">
+      <view class="_div data-v-e2ba38f4 title"> 群成员列表<label bindtap="handleProxy" class="_span data-v-e2ba38f4 adding" data-eventid="{{'9'}}" data-comkey="{{$k}}">添加成员</label></view>
     </view>
-    <view class="_div data-v-3244b950 temp" wx:if="{{memberList.length === 0}}"></view>
-    <view class="_div data-v-3244b950 item" wx:key="item.userID" key="{{item.userID}}" wx:for="{{memberList}}" wx:for-index="index" wx:for-item="item">
-      <view class="_div data-v-3244b950 add-label">
+    <view class="_div data-v-e2ba38f4 temp" wx:if="{{memberList.length === 0}}"></view>
+    <view class="_div data-v-e2ba38f4 item" wx:key="item.userID" key="{{item.userID}}" wx:for="{{memberList}}" wx:for-index="index" wx:for-item="item">
+      <view class="_div data-v-e2ba38f4 add-label">
         {{item.nick || '无昵称'}}
       </view>
-      <view class="_div data-v-3244b950 add-label">
+      <view class="_div data-v-e2ba38f4 add-label">
         {{item.userID}}
       </view>
-      <view class="_div data-v-3244b950 delete" bindtap="handleProxy" data-eventid="{{'10_'+index}}" data-comkey="{{$k}}">
-        <i-avatar src="../../../static/images/delete.png" class="_i-avatar data-v-3244b950"></i-avatar>
+      <view class="_div data-v-e2ba38f4 delete" bindtap="handleProxy" data-eventid="{{'10_'+index}}" data-comkey="{{$k}}">
+        <i-avatar src="../../../static/images/delete.png" class="_i-avatar data-v-e2ba38f4"></i-avatar>
       </view>
     </view>
-    <i-row class="_i-row data-v-3244b950">
-      <i-col span="24" class="_i-col data-v-3244b950"><button type="button" class="_button data-v-3244b950 button success" bindtap="handleProxy" data-eventid="{{'11'}}" data-comkey="{{$k}}">确定创建</button> <button type="button" class="_button data-v-3244b950 button fail" bindtap="handleProxy" data-eventid="{{'12'}}" data-comkey="{{$k}}">清空</button></i-col>
+    <i-row class="_i-row data-v-e2ba38f4">
+      <i-col span="24" class="_i-col data-v-e2ba38f4"><button type="button" class="_button data-v-e2ba38f4 button success" bindtap="handleProxy" data-eventid="{{'11'}}" data-comkey="{{$k}}">确定创建</button> <button type="button" class="_button data-v-e2ba38f4 button fail" bindtap="handleProxy" data-eventid="{{'12'}}" data-comkey="{{$k}}">清空</button></i-col>
     </i-row>
   </view>
 </template>

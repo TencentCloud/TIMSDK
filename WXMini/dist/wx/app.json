@@ -27,6 +27,7 @@
     "backgroundColor": "#F5F6F8",
     "selectedColor": "#409EFF",
     "borderStyle": "white",
+
     "list": [
       {
         "text": "消息",
@@ -49,9 +50,9 @@
     ],
     "position": "bottom"
   },
+
   "networkTimeout": {
     "request": 10000,
     "downloadFile": 10000
-  },
-  "sitemapLocation": "sitemap.json"
+  }
 }
