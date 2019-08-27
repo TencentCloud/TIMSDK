@@ -10,7 +10,7 @@
    # 命令行执行
    git clone https://github.com/tencentyun/TIMSDK.git
    
-   # 进入 Demo 项目
+   # 进入 Web Demo 项目
    cd TIMSDK/WXMini
    ```
 
@@ -66,7 +66,6 @@
    > |                  域名                  | 说明         | 是否必须 |
    > | :------------------------------------: | ------------ | -------- |
    > | `https://cos.ap-shanghai.myqcloud.com` | 文件下载域名 | 必须     |
-   >
    > ![](_doc/5.png)
 
 ##  开发运行
@@ -125,7 +124,7 @@
      # 命令行执行
      git clone https://github.com/tencentyun/TIMSDK.git
      
-     # 进入 Demo 项目
+     # 进入 Web Demo 项目
      cd TIMSDK/WXMini
     ```
 
@@ -146,15 +145,11 @@
    # 安装demo构建和运行所需依赖
    npm install
    
-   # 构建并生成最终可在小程序开发工具内使用的代码
+# 构建并生成最终可在小程序开发工具内使用的代码
    npm run start
    ```
    
-   > 使用 `npm install` 命令，如果有些依赖包无法成功安装
-   >
-   > 您可以试着切换源， 例如： `npm config set registry http://r.cnpmjs.org/`
-   >
-   > 然后再执行 `npm install`
+   > 使用 npm install 命令，如果有些依赖包无法成功安装，你可以试着切换 npm 源，然后再执行npm install命令
    
 5. 使用微信开发者工具导入项目，目录为`/dist/wx`
 
@@ -164,35 +159,18 @@
 
    ![](_doc/4.png)
 
-   > ### 注意事项
+   > **注意事项：**
    >
-   > **合法域名**
+   > 1. 合法域名
    >
-   >    请将以下域名在[【微信公众平台】](https://mp.weixin.qq.com/)>【开发】>【开发设置】>【服务器域名】中进行配置
+   >    进入微信公众平台，在小程序开发的服务器域名配置相关域名信息
    >
-   > 进入微信公众平台，在小程序开发的服务器域名配置相关域名信息
+   >    ![](_doc/5.png)
    >
-   > 添加到 **request 合法域名**：
+   > 2. 基础库
    >
-   > |            域名            | 说明            | 是否必须 |
-   > | :------------------------: | --------------- | -------- |
-   > | `https://webim.tim.qq.com` | Web IM 业务域名 | 必须     |
-   > |  `https://yun.tim.qq.com`  | Web IM 业务域名 | 必须     |
-   > |  `https://pingtas.qq.com`  | Web IM 统计域名 | 必须     |
+   >    如果打开项目后，编译报错，请您升级小程序开发工具，基础库使用 > 2.1.1,
    >
-   > 添加到 **uploadFile 合法域名**：
-   >
-   > |                  域名                  | 说明         | 是否必须 |
-   > | :------------------------------------: | ------------ | -------- |
-   > | `https://cos.ap-shanghai.myqcloud.com` | 文件上传域名 | 必须     |
-   >
-   > 添加到 **downloadFile 合法域名**：
-   >
-   > |                  域名                  | 说明         | 是否必须 |
-   > | :------------------------------------: | ------------ | -------- |
-   > | `https://cos.ap-shanghai.myqcloud.com` | 文件下载域名 | 必须     |
-   >
-   > ![](_doc/5.png)
 
 ## 项目截图
 
@@ -225,7 +203,7 @@
 
 ## 注意事项
 
-**1. 避免在前端进行签名计算**
+### 避免在前端进行签名计算
 
 本 Demo 为了用户体验的便利，将 `userSig` 签发放到前端执行。若直接部署上线，会面临 `SECRETKEY` 泄露的风险。正确的 `userSig` 签发方式是将 `userSig` 的计算代码集成到您的服务端，并提供相应接口。在需要 `userSig` 时，发起请求获取动态 `userSig`。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。
 

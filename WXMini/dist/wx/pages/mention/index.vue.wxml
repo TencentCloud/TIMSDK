@@ -1,16 +1,16 @@
-<template name="126318a9">
-  <view class="_div data-v-77726b38 chatting">
-    <view class="_div data-v-77726b38 title">点击进行选择</view>
-    <view class="_div data-v-77726b38 chat" wx:key="item.userID" key="{{item.userID}}" bindtap="handleProxy" data-eventid="{{'0_'+index}}" data-comkey="{{$k}}" wx:for="{{currentGroupProfile.memberList}}" wx:for-index="index" wx:for-item="item">
-      <i-row class="_i-row data-v-77726b38">
-        <i-col span="6" class="_i-col data-v-77726b38">
-          <view class="_div data-v-77726b38 avatar">
-            <i-avatar src="{{item.avatar || '/static/images/header.png'}}" class="_i-avatar data-v-77726b38"></i-avatar>
+<template name="76fd33f4">
+  <view class="_div data-v-15298ff6 chatting">
+    <view class="_div data-v-15298ff6 title">点击进行选择</view>
+    <view class="_div data-v-15298ff6 chat" wx:key="item.userID" key="{{item.userID}}" bindtap="handleProxy" data-eventid="{{'0_'+index}}" data-comkey="{{$k}}" wx:for="{{currentGroupProfile.memberList}}" wx:for-index="index" wx:for-item="item">
+      <i-row class="_i-row data-v-15298ff6">
+        <i-col span="6" class="_i-col data-v-15298ff6">
+          <view class="_div data-v-15298ff6 avatar">
+            <i-avatar src="{{item.avatar || '/static/images/header.png'}}" class="_i-avatar data-v-15298ff6"></i-avatar>
           </view>
         </i-col>
-        <i-col span="18" class="_i-col data-v-77726b38">
-          <view class="_div data-v-77726b38 information">
-            <view class="_div data-v-77726b38 username">{{item.nick || item.userID}}</view>
+        <i-col span="18" class="_i-col data-v-15298ff6">
+          <view class="_div data-v-15298ff6 information">
+            <view class="_div data-v-15298ff6 username">{{item.nick || item.userID}}</view>
           </view>
         </i-col>
       </i-row>

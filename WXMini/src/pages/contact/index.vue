@@ -97,7 +97,7 @@
             </div>
           </i-col>
           <i-col span="20">
-            <p style="line-height: 60px">{{item.profile.nick}}</p>
+            <p class="line">{{item.profile.nick || item.profile.userID}}</p>
           </i-col>
         </i-row>
       </div>
@@ -231,6 +231,9 @@ export default {
 </script>
 
 <style lang='stylus' scoped>
+.line
+  line-height 60px
+  border-bottom 1px solid $border-light
 .container
   background $background
   width 100%

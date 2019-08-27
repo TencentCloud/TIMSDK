@@ -1,48 +1,48 @@
 
-.input.data-v-40c73f0c {
+.input.data-v-0c62411e {
   text-align: center;
   height: 64rpx;
   background-color: #fff;
   border-radius: 16rpx;
   font-size: 32rpx;
 }
-.avatar.data-v-40c73f0c {
+.avatar.data-v-0c62411e {
   padding-right: 20rpx;
 }
-.chatting.data-v-40c73f0c {
+.chatting.data-v-0c62411e {
   background-color: #e6e6e6;
   min-height: 100vh;
   box-sizing: border-box;
   border-bottom: 2rpx solid #dddee1;
 }
-.chat.data-v-40c73f0c {
+.chat.data-v-0c62411e {
   background-color: #fff;
   margin-bottom: -2rpx;
   padding: 30rpx 40rpx;
   border-top: 2rpx solid #dddee1;
   border-bottom: 2rpx solid #dddee1;
 }
-.right.data-v-40c73f0c {
+.right.data-v-0c62411e {
   padding: 0 36rpx 0 16rpx;
 }
-.information.data-v-40c73f0c {
+.information.data-v-0c62411e {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
-.username.data-v-40c73f0c {
+.username.data-v-0c62411e {
   color: #1c2438;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 50%;
 }
-.last.data-v-40c73f0c {
+.last.data-v-0c62411e {
   color: #495060;
   font-size: 24rpx;
   padding: 4rpx 0;
 }
-.content.data-v-40c73f0c {
+.content.data-v-0c62411e {
   color: #495060;
   font-size: 24rpx;
   overflow: hidden;
@@ -50,7 +50,7 @@
   white-space: nowrap;
   width: 80%;
 }
-.content-red.data-v-40c73f0c {
+.content-red.data-v-0c62411e {
   color: #ed3f14;
   font-size: 24rpx;
   overflow: hidden;
@@ -58,14 +58,14 @@
   white-space: nowrap;
   width: 80%;
 }
-.remain.data-v-40c73f0c {
+.remain.data-v-0c62411e {
   color: #fff;
   font-size: 24rpx;
   background-color: #ed3f14;
   border-radius: 16rpx;
   padding: 4rpx 16rpx;
 }
-.delete.data-v-40c73f0c {
+.delete.data-v-0c62411e {
   color: #fff;
   font-size: 28rpx;
   font-weight: 600;
@@ -75,6 +75,6 @@
   flex-direction: column;
   justify-content: center;
 }
-.delete-button.data-v-40c73f0c {
+.delete-button.data-v-0c62411e {
   text-align: center;
 }
