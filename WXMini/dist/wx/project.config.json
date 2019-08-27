@@ -22,7 +22,7 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.8.1",
-	"appid": "AppID",
+	"appid": "APPID",
 	"projectname": "demo",
 	"debugOptions": {
 		"hidedInDevtools": []

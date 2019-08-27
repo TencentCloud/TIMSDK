@@ -7710,8 +7710,8 @@ var emojiName = ['[龇牙]', '[调皮]', '[流汗]', '[偷笑]', '[再见]', '[�
 /*eslint-disable*/
 
 
-const _SDKAPPID = 1400187352
-const _SECRETKEY = '61cbf613d0cea4b302958e39c7b74acaaed0956fe8c494eda1c45912c324ecab'
+const _SDKAPPID = 0
+const _SECRETKEY = '0'
 /*
  * Module:   GenerateTestUserSig
  *
