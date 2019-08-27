@@ -63,12 +63,28 @@
 >正确的 UserSig 签发方式是将 UserSig 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 UserSig 时由您的 App 向业务服务器发起请求获取动态 UserSig。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。
 
 ## 步骤4：编译运行
-1. 使用以下命令，加载 ImSDK 库。
+1. 终端执行以下命令，检查 pod 版本。
+```
+pod --version
+```
+如果提示 pod 不存在，或则 pod 版本小于 1.7.5，请执行以下命令安装最新 pod。
+```
+//更换源
+gem sources --remove https://rubygems.org/
+gem sources --add https://gems.ruby-china.com/
+//安装 pod
+sudo gem install cocoapods -n /usr/local/bin
+//如果安装了多个 Xcode ，请使用下面的命令选择（一般需要选择最近的 Xcode 版本）
+sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
+//更新 pod 本地库
+pod setup
+```
+2. 终端执行以下命令，加载 ImSDK 库。
 ```
 cd iOS/TUIKitDemo
 pod install
 ```
-2. 进入 iOS/TUIKitDemo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
+3. 进入 iOS/TUIKitDemo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
 
 
 
