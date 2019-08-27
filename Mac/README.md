@@ -63,7 +63,11 @@
 >正确的 UserSig 签发方式是将 UserSig 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 UserSig 时由您的 App 向业务服务器发起请求获取动态 UserSig。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。
 
 ## 步骤4：编译运行
-进入 Mac/TUIKitDemo 目录，打开 TUIKitDemo.xcodeproj 运行。
-
+1. 使用以下命令，加载 ImSDK 库。
+```
+cd Mac/TUIKitDemo
+pod install
+```
+2. 进入 Mac/TUIKitDemo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
 
 

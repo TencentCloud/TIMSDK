@@ -41,8 +41,8 @@ DEPENDENCIES:
   - MMLayout
   - ReactiveObjC
   - SDWebImage
-  - TXIMSDK_iOS (from `../../`)
-  - TXIMSDK_TUIKit_iOS (from `../../`)
+  - TXIMSDK_iOS
+  - TXIMSDK_TUIKit_iOS
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -55,12 +55,8 @@ SPEC REPOS:
     - ReactiveObjC
     - SDWebImage
     - Toast
-
-EXTERNAL SOURCES:
-  TXIMSDK_iOS:
-    :path: "../../"
-  TXIMSDK_TUIKit_iOS:
-    :path: "../../"
+    - TXIMSDK_iOS
+    - TXIMSDK_TUIKit_iOS
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
@@ -72,9 +68,9 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: c739016e4bdf0a4a1f9a04b5e0385395ad63a282
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_iOS: 3eb300fc9b4fe67670c58c90fed2801b715e8616
-  TXIMSDK_TUIKit_iOS: 18e9081269ca97399c232a18d1a27f1342f9a365
+  TXIMSDK_iOS: 54c04c0807ccf0c406366ef86cff663ea277e235
+  TXIMSDK_TUIKit_iOS: c6ba8a30b963e2a076fdaacc5ac42e5ad43f18c0
 
-PODFILE CHECKSUM: b0a31b41a941981f6b960198d8f688e42f097547
+PODFILE CHECKSUM: cb27fae17c15b110179aebb298f41aadeb1137ae
 
 COCOAPODS: 1.7.5
