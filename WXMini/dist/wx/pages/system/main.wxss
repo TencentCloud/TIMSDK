@@ -1,9 +1,9 @@
 
-.handle.data-v-92da5e6a {
+.handle.data-v-5e5810f9 {
   display: flex;
   justify-content: space-between;
 }
-.card.data-v-92da5e6a {
+.card.data-v-5e5810f9 {
   font-size: 28rpx;
   margin: 40rpx;
   padding: 40rpx;
@@ -12,10 +12,10 @@
   background-color: #f0faff;
   border-radius: 24rpx;
 }
-.card .time.data-v-92da5e6a {
+.card .time.data-v-5e5810f9 {
   color: #5cadff;
 }
-.button.data-v-92da5e6a {
+.button.data-v-5e5810f9 {
   color: #fff;
   background-color: #2d8cf0;
   border-radius: 16rpx;
@@ -23,16 +23,16 @@
   font-size: 32rpx;
   width: 140rpx;
 }
-.delete.data-v-92da5e6a {
+.delete.data-v-5e5810f9 {
   background-color: #ed3f14;
 }
-.choose.data-v-92da5e6a {
+.choose.data-v-5e5810f9 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
 }
-.input.data-v-92da5e6a {
+.input.data-v-5e5810f9 {
   text-align: center;
   height: 64rpx;
   background-color: #fff;

@@ -1,27 +1,27 @@
-<template name="1bc05076">
-  <view class="_div data-v-0fe0d080 container">
-    <view class="_div data-v-0fe0d080 card">
-      <view class="_div data-v-0fe0d080 item">
-        <i-row class="_i-row data-v-0fe0d080">
-          <i-col span="8" class="_i-col data-v-0fe0d080">
-            <view class="_div data-v-0fe0d080 avatar">
-              <image style="width: 80px; height: 80px; border-radius: 8px" src="{{myInfo.avatar || '/static/images/header.png'}}" class="_image data-v-0fe0d080"></image>
+<template name="4d095090">
+  <view class="_div data-v-08192f12 container">
+    <view class="_div data-v-08192f12 card">
+      <view class="_div data-v-08192f12 item">
+        <i-row class="_i-row data-v-08192f12">
+          <i-col span="8" class="_i-col data-v-08192f12">
+            <view class="_div data-v-08192f12 avatar">
+              <image style="width: 80px; height: 80px; border-radius: 8px" src="{{myInfo.avatar || '/static/images/header.png'}}" class="_image data-v-08192f12"></image>
             </view>
           </i-col>
-          <i-col span="16" class="_i-col data-v-0fe0d080">
-            <view class="_div data-v-0fe0d080 right">
-              <view class="_div data-v-0fe0d080 username">{{myInfo.nick}}</view>
-              <view class="_div data-v-0fe0d080 account">账号：{{myInfo.userID}}</view>
+          <i-col span="16" class="_i-col data-v-08192f12">
+            <view class="_div data-v-08192f12 right">
+              <view class="_div data-v-08192f12 username">{{myInfo.nick}}</view>
+              <view class="_div data-v-08192f12 account">账号：{{myInfo.userID}}</view>
             </view>
           </i-col>
         </i-row>
       </view>
     </view>
-    <view class="_div data-v-0fe0d080 revise">
-      <i-button bindtap="handleProxy" type="primary" long="true" shape="circle" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_i-button data-v-0fe0d080">修改资料</i-button>
+    <view class="_div data-v-08192f12 revise">
+      <i-button bindtap="handleProxy" type="primary" long="true" shape="circle" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_i-button data-v-08192f12">修改资料</i-button>
     </view>
-    <view class="_div data-v-0fe0d080 revise">
-      <i-button bindtap="handleProxy" type="error" long="true" shape="circle" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_i-button data-v-0fe0d080">退出登陆</i-button>
+    <view class="_div data-v-08192f12 revise">
+      <i-button bindtap="handleProxy" type="error" long="true" shape="circle" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_i-button data-v-08192f12">退出登陆</i-button>
     </view>
   </view>
 </template>

@@ -147,6 +147,9 @@ export default {
     this.intervalID = setInterval(() => {
       this.current = Date.now()
     }, 1000)
+  },
+  destory () {
+    this.intervalID = ''
   }
 }
 </script>
