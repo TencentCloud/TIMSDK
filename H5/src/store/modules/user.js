@@ -32,6 +32,7 @@ const user = {
         })
         .then(() => {
           context.commit('toggleIsLogin', true)
+          context.commit('startComputeCurrent')
         })
         .catch(imError => {
           if (imError.code === 20000) {
@@ -46,6 +47,7 @@ const user = {
       }
       tim.logout().then(() => {
         context.commit('toggleIsLogin')
+        context.commit('stopComputeCurrent')
         context.commit('reset')
       })
     }
