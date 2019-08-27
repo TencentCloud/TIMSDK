@@ -67,14 +67,14 @@
 ```
 pod --version
 ```
-如果提示 pod 不存在，或则 pod 版本小于 1.7.5，请执行以下命令安装最新 pod。
+  如果提示 pod 不存在，或则 pod 版本小于 1.7.5，请执行以下命令安装最新 pod。
 ```
 //更换源
 gem sources --remove https://rubygems.org/
 gem sources --add https://gems.ruby-china.com/
 //安装 pod
 sudo gem install cocoapods -n /usr/local/bin
-//如果安装了多个 Xcode ，请使用下面的命令选择（一般需要选择最近的 Xcode 版本）
+//如果安装了多个 Xcode ，请使用下面的命令选择 Xcode 版本（一般选择最新的 Xcode 版本）
 sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
 //更新 pod 本地库
 pod setup
