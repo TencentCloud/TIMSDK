@@ -130,7 +130,7 @@
         />
       </div>
       <div class="content" v-show="!showEditJoinOption">
-        {{ joinOptionMap[joinOption] }}
+        {{ joinOptionMap[groupProfile.joinOption] }}
       </div>
       <el-select
         ref="editJoinOption"
@@ -160,7 +160,7 @@
         />
       </div>
       <div class="content" v-show="!showEditMessageRemindType">
-        {{ messageRemindTypeMap[messageRemindType] }}
+        {{ messageRemindTypeMap[this.groupProfile.selfInfo.messageRemindType] }}
       </div>
       <el-select
         ref="editMessageRemindType"
