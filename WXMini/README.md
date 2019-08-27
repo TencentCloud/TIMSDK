@@ -112,7 +112,7 @@
 
 2. 安装微信小程序 [开发者工具](https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html)
 
-3. 安装 [nodejs 环境](https://nodejs.org/zh-cn/) ( Version > 8 ) 
+3. 安装 [nodejs 环境](https://nodejs.org/zh-cn/) ( Version > 8 ) ，选择合适您安装环境的安装包
    
    - 安装后，在命令行输入`node --version` ，如果 > 8 即可
 
@@ -142,39 +142,55 @@
 4. 安装依赖并启动
    
    ```shell
-   
    # 安装demo构建和运行所需依赖
    npm install
-
+   
    # 构建并生成最终可在小程序开发工具内使用的代码
    npm run start
    ```
    
+   > 使用 npm install 命令，如果有些依赖包无法成功安装，你可以试着切换 npm 源，然后再执行npm install命令
    
-6. 使用微信开发者工具导入项目，目录为`/dist/wx`
+5. 使用微信开发者工具导入项目，目录为`/dist/wx`
 
     ![](_doc/1.png)
 
-7. 点击开发工具的编译即可预览该项目
+6. 点击开发工具的编译即可预览该项目
 
    ![](_doc/4.png)
 
-   > **注意事项：**
+   > ### 注意事项
    >
-   > 1. 合法域名
+   > **合法域名**
    >
-   >    进入微信公众平台，在小程序开发的服务器域名配置相关域名信息
+   >    请将以下域名在[【微信公众平台】](https://mp.weixin.qq.com/)>【开发】>【开发设置】>【服务器域名】中进行配置
    >
-   >    ![](_doc/5.png)
+   > 进入微信公众平台，在小程序开发的服务器域名配置相关域名信息
    >
-   > 2. 基础库
+   > 添加到 **request 合法域名**：
    >
-   >    如果打开项目后，编译报错，请您升级小程序开发工具，基础库使用>2.1.1,
+   > |            域名            | 说明            | 是否必须 |
+   > | :------------------------: | --------------- | -------- |
+   > | `https://webim.tim.qq.com` | Web IM 业务域名 | 必须     |
+   > |  `https://yun.tim.qq.com`  | Web IM 业务域名 | 必须     |
+   > |  `https://pingtas.qq.com`  | Web IM 统计域名 | 必须     |
    >
+   > 添加到 **uploadFile 合法域名**：
+   >
+   > |                  域名                  | 说明         | 是否必须 |
+   > | :------------------------------------: | ------------ | -------- |
+   > | `https://cos.ap-shanghai.myqcloud.com` | 文件上传域名 | 必须     |
+   >
+   > 添加到 **downloadFile 合法域名**：
+   >
+   > |                  域名                  | 说明         | 是否必须 |
+   > | :------------------------------------: | ------------ | -------- |
+   > | `https://cos.ap-shanghai.myqcloud.com` | 文件下载域名 | 必须     |
+   > ![](_doc/5.png)
 
 ## 项目截图
 
-   ![](_doc/6.png)
+![](_doc/6.png)
 
 ## 备注
 
@@ -203,6 +219,7 @@
 
 ## 注意事项
 
-1. 使用 npm install 命令，如果有些依赖包无法成功安装，你可以试着切换 npm 源，然后再执行npm install命令
+**1. 避免在前端进行签名计算**
 
-   ```
+本 Demo 为了用户体验的便利，将 `userSig` 签发放到前端执行。若直接部署上线，会面临 `SECRETKEY` 泄露的风险。正确的 `userSig` 签发方式是将 `userSig` 的计算代码集成到您的服务端，并提供相应接口。在需要 `userSig` 时，发起请求获取动态 `userSig`。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。
+
