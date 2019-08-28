@@ -8,7 +8,7 @@
     <i-modal title="转让群组" :visible="changeOwnerModal" @ok="handleChangeOwner" @cancel="changeGroupOwner">
       <div class="input-wrapper">
         <i-radio-group :current="current" @change="handleChange">
-          <i-radio v-for="item in groupProfile.memberList.slice(0, 30)" position="left" :key="item.userID" :value="item.userID">{{item.userID}}
+          <i-radio v-for="item in groupProfile.memberList" position="left" :key="item.userID" :value="item.userID">{{item.userID}}
           </i-radio>
         </i-radio-group>
       </div>
