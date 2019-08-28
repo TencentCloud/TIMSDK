@@ -1,283 +1,9 @@
 require("../../common/manifest.js")
+require("../../debug/GenerateTestUserSig.js")
 require("../../common/vendor.js")
 global.webpackJsonpMpvue([13],{
 
-/***/ 100:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 101:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-  data: function data() {
-    return {
-      id: '',
-      name: '',
-      content: '',
-      currentType: this.$type.GRP_PRIVATE,
-      avatar: '',
-      introduction: '',
-      notice: '',
-      addType: '自由加群',
-      memberList: [],
-      addModalVisible: false,
-      addUserId: ''
-    };
-  },
-
-  computed: {
-    username: function username() {
-      return this.$store.state.user.userProfile.to;
-    }
-  },
-  methods: {
-    // 创建群组
-    createGroup: function createGroup() {
-      var _this = this;
-
-      if (this.name) {
-        var list = this.memberList.map(function (userID) {
-          return { userID: userID.userID };
-        });
-        var adding = void 0;
-        switch (this.addType) {
-          case '自由加群':
-            adding = this.$type.JOIN_OPTIONS_FREE_ACCESS;
-            break;
-          case '禁止加群':
-            adding = this.$type.JOIN_OPTIONS_DISABLE_APPLY;
-            break;
-          case '需要验证':
-            adding = this.$type.JOIN_OPTIONS_NEED_PERMISSION;
-            break;
-        }
-        var options = void 0;
-        if (this.currentType !== this.TIM.TYPES.GRP_PRIVATE && this.currentType !== this.TIM.TYPES.GRP_AVCHATROOM) {
-          adding = this.currentType === this.TIM.TYPES.GRP_AVCHATROOM ? this.$type.JOIN_OPTIONS_FREE_ACCESS : adding;
-          options = {
-            groupID: this.id,
-            name: this.name,
-            type: this.currentType,
-            avatar: this.avatar,
-            introduction: this.introduction,
-            notification: this.notice,
-            joinOption: adding,
-            memberList: list
-          };
-        } else {
-          options = {
-            groupID: this.id,
-            name: this.name,
-            type: this.currentType,
-            avatar: this.avatar,
-            introduction: this.introduction,
-            notification: this.notice,
-            memberList: list
-          };
-        }
-        console.log(options);
-        wx.$app.createGroup(options).then(function () {
-          _this.$store.commit('showToast', {
-            title: '创建成功',
-            icon: 'success',
-            duration: 1500
-          });
-          _this.empty();
-          wx.switchTab({
-            url: '../index/main'
-          });
-        }).catch(function (err) {
-          console.log(err);
-        });
-      } else {
-        this.$store.commit('showToast', {
-          title: '请输入群名'
-        });
-      }
-    },
-    handleTypeChange: function handleTypeChange(e) {
-      this.currentType = e.target.value;
-    },
-    handleAddTypeChange: function handleAddTypeChange(e) {
-      this.addType = e.target.value;
-    },
-
-    // 添加群成员modal
-    handleModalShow: function handleModalShow() {
-      this.addModalVisible = !this.addModalVisible;
-    },
-
-    // 添加群成员
-    handleAdd: function handleAdd() {
-      var _this2 = this;
-
-      if (this.addUserId) {
-        wx.$app.getUserProfile({
-          userIDList: [this.addUserId]
-        }).then(function (res) {
-          console.log(122, res);
-          _this2.addUserId = '';
-          if (res.data.length > 0) {
-            _this2.handleModalShow();
-            _this2.memberList.push(res.data[0]);
-            _this2.$store.commit('showToast', {
-              title: '添加成功',
-              icon: 'none',
-              duration: 1500
-            });
-          } else {
-            _this2.$store.commit('showToast', {
-              title: '没有找到该用户',
-              icon: 'none',
-              duration: 1500
-            });
-          }
-        }).catch(function () {
-          _this2.$store.commit('showToast', {
-            title: '没有找到该用户',
-            icon: 'none',
-            duration: 1500
-          });
-        });
-      } else {
-        this.$store.commit('showToast', {
-          title: 'ID不能为空'
-        });
-      }
-    },
-
-    // 删除成员
-    deleteMember: function deleteMember(item) {
-      this.memberList = this.memberList.filter(function (member) {
-        return member.userID !== item.userID;
-      });
-    },
-
-    // 清空所有的信息
-    empty: function empty() {
-      this.id = '';
-      this.name = '';
-      this.currentType = '';
-      this.avatar = '';
-      this.introduction = '';
-      this.notice = '';
-      this.addType = '';
-      this.memberList = [];
-      this.addModalVisible = false;
-    }
-  }
-});
-
-/***/ }),
-
-/***/ 102:
+/***/ "GU/c":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -601,26 +327,19 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, [_vm._v("清空")])], 1)], 1)], 2)
 }
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-e2ba38f4", esExports)
-  }
-}
 
 /***/ }),
 
-/***/ 98:
+/***/ "TIXD":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__("5nAL");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(99);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__("qy7V");
 
 
 
@@ -629,18 +348,23 @@ app.$mount();
 
 /***/ }),
 
-/***/ 99:
+/***/ "gQ1t":
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "qy7V":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(101);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_e2ba38f4_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(102);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__("xNvV");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_e2ba38f4_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__("GU/c");
 function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(100)
+  __webpack_require__("gQ1t")
 }
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__("ybqe")
 /* script */
 
 /* template */
@@ -658,29 +382,278 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "src\\pages\\create\\index.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-e2ba38f4", Component.options)
-  } else {
-    hotAPI.reload("data-v-e2ba38f4", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
+/***/ }),
+
+/***/ "xNvV":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  data: function data() {
+    return {
+      id: '',
+      name: '',
+      content: '',
+      currentType: this.$type.GRP_PRIVATE,
+      avatar: '',
+      introduction: '',
+      notice: '',
+      addType: '自由加群',
+      memberList: [],
+      addModalVisible: false,
+      addUserId: ''
+    };
+  },
+
+  computed: {
+    username: function username() {
+      return this.$store.state.user.userProfile.to;
+    }
+  },
+  methods: {
+    // 创建群组
+    createGroup: function createGroup() {
+      var _this = this;
+
+      if (this.name) {
+        var list = this.memberList.map(function (userID) {
+          return { userID: userID.userID };
+        });
+        var adding = void 0;
+        switch (this.addType) {
+          case '自由加群':
+            adding = this.$type.JOIN_OPTIONS_FREE_ACCESS;
+            break;
+          case '禁止加群':
+            adding = this.$type.JOIN_OPTIONS_DISABLE_APPLY;
+            break;
+          case '需要验证':
+            adding = this.$type.JOIN_OPTIONS_NEED_PERMISSION;
+            break;
+        }
+        var options = void 0;
+        if (this.currentType !== this.TIM.TYPES.GRP_PRIVATE && this.currentType !== this.TIM.TYPES.GRP_AVCHATROOM) {
+          adding = this.currentType === this.TIM.TYPES.GRP_AVCHATROOM ? this.$type.JOIN_OPTIONS_FREE_ACCESS : adding;
+          options = {
+            groupID: this.id,
+            name: this.name,
+            type: this.currentType,
+            avatar: this.avatar,
+            introduction: this.introduction,
+            notification: this.notice,
+            joinOption: adding,
+            memberList: list
+          };
+        } else {
+          options = {
+            groupID: this.id,
+            name: this.name,
+            type: this.currentType,
+            avatar: this.avatar,
+            introduction: this.introduction,
+            notification: this.notice,
+            memberList: list
+          };
+        }
+        console.log(options);
+        wx.$app.createGroup(options).then(function () {
+          _this.$store.commit('showToast', {
+            title: '创建成功',
+            icon: 'success',
+            duration: 1500
+          });
+          _this.empty();
+          wx.switchTab({
+            url: '../index/main'
+          });
+        }).catch(function (err) {
+          console.log(err);
+        });
+      } else {
+        this.$store.commit('showToast', {
+          title: '请输入群名'
+        });
+      }
+    },
+    handleTypeChange: function handleTypeChange(e) {
+      this.currentType = e.target.value;
+    },
+    handleAddTypeChange: function handleAddTypeChange(e) {
+      this.addType = e.target.value;
+    },
+
+    // 添加群成员modal
+    handleModalShow: function handleModalShow() {
+      this.addModalVisible = !this.addModalVisible;
+    },
+
+    // 添加群成员
+    handleAdd: function handleAdd() {
+      var _this2 = this;
+
+      if (this.addUserId) {
+        wx.$app.getUserProfile({
+          userIDList: [this.addUserId]
+        }).then(function (res) {
+          console.log(122, res);
+          _this2.addUserId = '';
+          if (res.data.length > 0) {
+            _this2.handleModalShow();
+            _this2.memberList.push(res.data[0]);
+            _this2.$store.commit('showToast', {
+              title: '添加成功',
+              icon: 'none',
+              duration: 1500
+            });
+          } else {
+            _this2.$store.commit('showToast', {
+              title: '没有找到该用户',
+              icon: 'none',
+              duration: 1500
+            });
+          }
+        }).catch(function () {
+          _this2.$store.commit('showToast', {
+            title: '没有找到该用户',
+            icon: 'none',
+            duration: 1500
+          });
+        });
+      } else {
+        this.$store.commit('showToast', {
+          title: 'ID不能为空'
+        });
+      }
+    },
+
+    // 删除成员
+    deleteMember: function deleteMember(item) {
+      this.memberList = this.memberList.filter(function (member) {
+        return member.userID !== item.userID;
+      });
+    },
+
+    // 清空所有的信息
+    empty: function empty() {
+      this.id = '';
+      this.name = '';
+      this.currentType = '';
+      this.avatar = '';
+      this.introduction = '';
+      this.notice = '';
+      this.addType = '';
+      this.memberList = [];
+      this.addModalVisible = false;
+    }
+  }
+});
+
 /***/ })
 
-},[98]);
+},["TIXD"]);

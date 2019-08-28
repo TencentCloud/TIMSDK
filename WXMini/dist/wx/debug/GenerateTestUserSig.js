@@ -1,5 +1,14 @@
+global.webpackJsonpMpvue([17],{
+
+/***/ "fUtS":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _SDKAPPID; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return genTestUserSig; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_generate_test_usersig_es_min_js__ = __webpack_require__("0HKf");
 /*eslint-disable*/
-import LibGenerateTestUserSig from './lib-generate-test-usersig-es.min.js'
+
 
 const _SDKAPPID = 0;
 const _SECRETKEY = '';
@@ -50,7 +59,7 @@ function genTestUserSig(userID) {
    */
   var SECRETKEY = _SECRETKEY;
   
-  var generator = new LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
+  var generator = new __WEBPACK_IMPORTED_MODULE_0__lib_generate_test_usersig_es_min_js__["a" /* default */](SDKAPPID, SECRETKEY, EXPIRETIME);
   var userSig = generator.genTestUserSig(userID);
   return {
     sdkappid: SDKAPPID,
@@ -58,7 +67,9 @@ function genTestUserSig(userID) {
   };
 }
 
-export {
-  _SDKAPPID as SDKAPPID,
-  genTestUserSig
-}
+
+
+
+/***/ })
+
+});
