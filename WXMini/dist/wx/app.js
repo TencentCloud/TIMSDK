@@ -643,7 +643,7 @@ tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.KICKED_OUT, func
 // 出错统一处理
 tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.ERROR, function (event) {
   // 网络错误不弹toast && sdk未初始化完全报错
-  if (event.data.code !== 25000 && event.data.code !== 30001) {
+  if (event.data.code !== 2800 && event.data.code !== 2999) {
     __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('showToast', {
       title: event.data.message,
       duration: 2000
