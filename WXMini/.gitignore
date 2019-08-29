@@ -1,3 +1,5 @@
 node_modules/
 .idea/
 package-lock.json
+dist/wx/project.config.json
+dist/wx/sitemap.json
