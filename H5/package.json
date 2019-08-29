@@ -9,7 +9,6 @@
     "lint": "node node_modules/@vue/cli-service/bin/vue-cli-service.js lint src --ext .vue,.js --fix"
   },
   "dependencies": {
-    "benz-amr-recorder": "^1.0.17",
     "core-js": "^2.6.9",
     "cos-js-sdk-v5": "^0.5.17",
     "element-ui": "^2.9.1",
