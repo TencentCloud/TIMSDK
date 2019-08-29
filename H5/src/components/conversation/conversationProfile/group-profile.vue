@@ -1,6 +1,6 @@
 <template>
   <div>
-    <group-member-list :memberList="groupProfile.memberList" />
+    <group-member-list :memberList="groupProfile.memberList" :groupProfile="groupProfile" />
     <div class="info-item">
       <div class="label">群ID</div>
       <div class="content">{{ groupProfile.groupID }}</div>

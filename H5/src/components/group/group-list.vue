@@ -1,9 +1,6 @@
 <template>
   <div class="list-container">
     <div class="group-container">
-      <el-dialog title="创建群组" :visible="createGroupModelVisible" @close="closeCreateGroupModel">
-        <create-group></create-group>
-      </el-dialog>
       <div class="header-bar">
         <el-autocomplete
           :value-key="'name' || 'groupID'"
@@ -21,6 +18,9 @@
         <i class="el-icon-plus create-group-button" title="创建群组" @click="showCreateGroupModel"></i>
       </div>
       <group-item v-for="group in groupList" :key="group.groupID" :group="group" />
+      <el-dialog title="创建群组" :visible="createGroupModelVisible" @close="closeCreateGroupModel">
+        <create-group></create-group>
+      </el-dialog>
     </div>
   </div>
 </template>

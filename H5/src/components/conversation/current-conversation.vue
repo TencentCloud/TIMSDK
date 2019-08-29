@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <div class="current-conversation-wrapper" @scroll="onScroll">
+  <div class="current-conversation-wrapper">
+    <div class="current-conversation" @scroll="onScroll" v-if="showCurrentConversation">
       <div class="header">
-        <span class="conversation-name text-ellipsis" style="max-width: 60%;">{{name}}</span>
+        <span class="conversation-name text-ellipsis" style="max-width: 60%;">{{ name }}</span>
         <span
           class="el-icon-more show-more"
           @click="showMore"
@@ -10,20 +10,17 @@
           title="查看详细"
         ></span>
       </div>
-      <div class="content" :class="!showMessageSendBox?'full-height':''">
+      <div class="content" :class="!showMessageSendBox ? 'full-height' : ''">
         <div class="message-list" ref="message-list" @scroll="this.onScroll">
           <el-button
             type="text"
             style="display:block;margin: 0 auto;"
             @click="$store.dispatch('getMessageList', currentConversation.conversationID)"
-          >查看更多</el-button>
+            >查看更多</el-button
+          >
           <message-item v-for="message in currentMessageList" :key="message.ID" :message="message" />
         </div>
-        <a
-          v-show="isShowScrollButtomTips"
-          class="newMessageTips"
-          @click="scrollMessageListToButtom"
-        >↓回到最新位置↓</a>
+        <a v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">↓回到最新位置↓</a>
       </div>
       <message-send-box v-if="showMessageSendBox" />
     </div>
@@ -59,6 +56,10 @@ export default {
       currentMessageList: state => state.conversation.currentMessageList
     }),
     ...mapGetters(['toAccount']),
+    // 是否显示当前会话组件
+    showCurrentConversation() {
+      return !!this.currentConversation.conversationID
+    },
     name() {
       if (this.currentConversation.type === 'C2C') {
         return this.currentConversation.userProfile.nick || this.toAccount
@@ -68,10 +69,7 @@ export default {
       return this.toAccount
     },
     showMessageSendBox() {
-      return (
-        this.currentConversation.type !==
-        this.TIM.TYPES.CONV_SYSTEM
-      )
+      return this.currentConversation.type !== this.TIM.TYPES.CONV_SYSTEM
     }
   },
   mounted() {
@@ -88,10 +86,7 @@ export default {
       if (!messageListNode) {
         return
       }
-      if (
-        this.preScrollHeight - messageListNode.clientHeight - scrollTop <
-        20
-      ) {
+      if (this.preScrollHeight - messageListNode.clientHeight - scrollTop < 20) {
         this.isShowScrollButtomTips = false
       }
     },
@@ -102,12 +97,7 @@ export default {
         return
       }
       // 距离底部20px内强制滚到底部,否则提示有新消息
-      if (
-        this.preScrollHeight -
-          messageListNode.clientHeight -
-          messageListNode.scrollTop <
-        20
-      ) {
+      if (this.preScrollHeight - messageListNode.clientHeight - messageListNode.scrollTop < 20) {
         this.$nextTick(() => {
           messageListNode.scrollTop = messageListNode.scrollHeight
         })
@@ -140,14 +130,22 @@ export default {
 </script>
 
 <style scoped>
+/* 当前会话的骨架屏 */
+.current-conversation-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-color: #eee;
+  box-sizing: border-box;
+  color: #000;
+}
+.current-conversation {
+  width: 100%;
+  min-width: 500px;
+}
 .el-row,
 .el-col {
   height: 100%;
-}
-.current-conversation-wrapper {
-  position: relative;
-  min-width: 500px;
-  width: 100%;
 }
 .header {
   position: relative;
