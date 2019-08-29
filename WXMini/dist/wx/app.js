@@ -1,9 +1,730 @@
 require("./common/manifest.js")
-require("./debug/GenerateTestUserSig.js")
 require("./common/vendor.js")
 global.webpackJsonpMpvue([1],{
 
-/***/ "17x+":
+/***/ 38:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mpvue__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mpvue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_mpvue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store_index__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__static_debug_GenerateTestUserSig__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_types__ = __webpack_require__(76);
+
+
+
+
+
+
+
+
+var tim = __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.create({
+  SDKAppID: __WEBPACK_IMPORTED_MODULE_5__static_debug_GenerateTestUserSig__["a" /* SDKAPPID */]
+});
+wx.$app = tim;
+wx.$app.registerPlugin({ 'cos-wx-sdk': __WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5___default.a });
+
+var $bus = new __WEBPACK_IMPORTED_MODULE_0_mpvue___default.a();
+__WEBPACK_IMPORTED_MODULE_0_mpvue___default.a.prototype.TIM = __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a;
+__WEBPACK_IMPORTED_MODULE_0_mpvue___default.a.prototype.$type = __WEBPACK_IMPORTED_MODULE_6__utils_types__["a" /* default */];
+__WEBPACK_IMPORTED_MODULE_0_mpvue___default.a.prototype.$store = __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */];
+__WEBPACK_IMPORTED_MODULE_0_mpvue___default.a.prototype.$bus = $bus;
+
+tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.SDK_READY, onReadyStateUpdate, this);
+tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.SDK_NOT_READY, onReadyStateUpdate, this);
+
+tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.KICKED_OUT, function (event) {
+  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('resetGroup');
+  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('resetUser');
+  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('resetCurrentConversation');
+  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('resetAllConversation');
+  wx.showToast({
+    title: '你已被踢下线',
+    icon: 'none',
+    duration: 1500
+  });
+  setTimeout(function () {
+    wx.clearStorage();
+    wx.reLaunch({
+      url: '../login/main'
+    });
+  }, 1500);
+});
+
+// 出错统一处理
+tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.ERROR, function (event) {
+  // 网络错误不弹toast && sdk未初始化完全报错
+  if (event.data.code !== 2800 && event.data.code !== 2999) {
+    __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('showToast', {
+      title: event.data.message,
+      duration: 2000
+    });
+  }
+});
+
+tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.MESSAGE_RECEIVED, function (event) {
+  wx.$app.ready(function () {
+    __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].dispatch('onMessageEvent', event);
+  });
+});
+tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
+  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('updateAllConversation', event.data);
+});
+tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.GROUP_LIST_UPDATED, function (event) {
+  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('updateGroupList', event.data);
+});
+tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.BLACKLIST_UPDATED, function (event) {
+  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('updateBlacklist', event.data);
+});
+
+tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.GROUP_SYSTEM_NOTICE_RECERIVED, function (event) {
+  console.log('system message', event);
+});
+
+function onReadyStateUpdate(_ref) {
+  var name = _ref.name;
+
+  var isSDKReady = name === __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.SDK_READY;
+  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('setSdkReady', isSDKReady);
+}
+
+new __WEBPACK_IMPORTED_MODULE_0_mpvue___default.a({
+  TIMApp: __WEBPACK_IMPORTED_MODULE_1__App__["a" /* default */]
+}).$mount();
+
+/***/ }),
+
+/***/ 39:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(42);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(40)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+
+/* template */
+var __vue_template__ = null
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_App_vue__["a" /* default */],
+  __vue_template__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src\\App.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-518580ad", Component.options)
+  } else {
+    hotAPI.reload("data-v-518580ad", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 40:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 42:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  created: function created() {}
+});
+
+/***/ }),
+
+/***/ 44:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_conversation_js__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_group__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modules_user__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__modules_global__ = __webpack_require__(73);
+
+
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
+
+/* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
+  modules: {
+    conversation: __WEBPACK_IMPORTED_MODULE_2__modules_conversation_js__["a" /* default */],
+    group: __WEBPACK_IMPORTED_MODULE_3__modules_group__["a" /* default */],
+    user: __WEBPACK_IMPORTED_MODULE_4__modules_user__["a" /* default */],
+    global: __WEBPACK_IMPORTED_MODULE_5__modules_global__["a" /* default */]
+  }
+}));
+
+/***/ }),
+
+/***/ 45:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_index__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_decodeElement__ = __webpack_require__(70);
+
+
+
+
+var conversationModules = {
+  state: {
+    allConversation: [], // 所有的conversation
+    currentConversationID: '', // 当前聊天对话ID
+    currentConversation: {}, // 当前聊天对话信息
+    currentMessageList: [], // 当前聊天消息列表
+    nextReqMessageID: '', // 下一条消息标志
+    imageUrls: [], // 当前会话中已加载信息所有的图片链接
+    isCompleted: false, // 当前会话消息是否已经请求完毕
+    isLoading: false // 是否正在请求
+  },
+  getters: {
+    allConversation: function allConversation(state) {
+      return state.allConversation;
+    },
+    // 当前聊天对象的ID
+    toAccount: function toAccount(state) {
+      if (state.currentConversationID.indexOf('C2C') === 0) {
+        return state.currentConversationID.substring(3);
+      } else if (state.currentConversationID.indexOf('GROUP') === 0) {
+        return state.currentConversationID.substring(5);
+      }
+    },
+    // 当前聊天对象的昵称
+    toName: function toName(state) {
+      if (state.currentConversation.type === 'C2C') {
+        return state.currentConversation.userProfile.userID;
+      } else if (state.currentConversation.type === 'GROUP') {
+        return state.currentConversation.groupProfile.name;
+      }
+    },
+    // 当前聊天对话的Type
+    currentConversationType: function currentConversationType(state) {
+      if (state.currentConversationID.indexOf('C2C') === 0) {
+        return 'C2C';
+      }
+      if (state.currentConversationID.indexOf('GROUP') === 0) {
+        return 'GROUP';
+      }
+      return '';
+    },
+    currentConversation: function currentConversation(state) {
+      return state.currentConversation;
+    },
+    currentMessageList: function currentMessageList(state) {
+      return state.currentMessageList;
+    },
+    imageUrls: function imageUrls(state) {
+      return state.imageUrls;
+    }
+  },
+  mutations: {
+    // 历史头插消息列表
+    unshiftMessageList: function unshiftMessageList(state, messageList) {
+      var list = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(messageList));
+      var urls = [];
+      for (var i = 0; i < list.length; i++) {
+        var message = list[i];
+        list[i].virtualDom = Object(__WEBPACK_IMPORTED_MODULE_2__utils_decodeElement__["a" /* decodeElement */])(message.elements[0]);
+        if (message.type === 'TIMImageElem') {
+          var url = message.payload.imageInfoArray[1].url;
+          url = url.slice(0, 2) === '//' ? 'https:' + url : url;
+          urls.push(url);
+        }
+        var date = new Date(message.time * 1000);
+        list[i].newtime = Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* formatTime */])(date);
+      }
+      state.imageUrls = [].concat(urls, __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.imageUrls));
+      state.currentMessageList = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(list), __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.currentMessageList));
+    },
+
+    // 收到
+    receiveMessage: function receiveMessage(state, messageList) {
+      var list = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(messageList));
+      var urls = [];
+      for (var i = 0; i < list.length; i++) {
+        var item = list[i];
+        list[i].virtualDom = Object(__WEBPACK_IMPORTED_MODULE_2__utils_decodeElement__["a" /* decodeElement */])(item.elements[0]);
+        var date = new Date(item.time * 1000);
+        list[i].newtime = Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* formatTime */])(date);
+        if (item.type === 'TIMImageElem') {
+          var url = item.elements[0].content.imageInfoArray[1].url;
+          url = url.slice(0, 2) === '//' ? 'https:' + url : url;
+          urls.push(url);
+        }
+      }
+      state.imageUrls = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.imageUrls), urls);
+      state.currentMessageList = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.currentMessageList), __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(list));
+      setTimeout(function () {
+        wx.pageScrollTo({
+          scrollTop: 99999
+        });
+      }, 800);
+    },
+    sendMessage: function sendMessage(state, message) {
+      message.virtualDom = Object(__WEBPACK_IMPORTED_MODULE_2__utils_decodeElement__["a" /* decodeElement */])(message.elements[0]);
+      var date = new Date(message.time * 1000);
+      message.newtime = Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* formatTime */])(date);
+      if (message.type === 'TIMImageElem') {
+        var url = message.payload.imageInfoArray[1].url;
+        url = url.slice(0, 2) === '//' ? 'https:' + url : url;
+        state.imageUrls.push(url);
+      }
+      state.currentMessageList.push(message);
+      setTimeout(function () {
+        wx.pageScrollTo({
+          scrollTop: 99999
+        });
+      }, 800);
+    },
+
+    // 更新当前的会话
+    updateCurrentConversation: function updateCurrentConversation(state, conversation) {
+      state.currentConversation = conversation;
+      state.currentConversationID = conversation.conversationID;
+    },
+
+    // 更新当前所有会话列表
+    updateAllConversation: function updateAllConversation(state, list) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].lastMessage && typeof list[i].lastMessage.lastTime === 'number') {
+          var date = new Date(list[i].lastMessage.lastTime * 1000);
+          list[i].lastMessage._lastTime = Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* formatTime */])(date);
+        }
+      }
+      state.allConversation = list;
+    },
+
+    // 重置当前会话
+    resetCurrentConversation: function resetCurrentConversation(state) {
+      state.currentConversationID = ''; // 当前聊天对话ID
+      state.currentConversation = {}; // 当前聊天对话信息
+      state.currentMessageList = []; // 当前聊天消息列表
+      state.nextReqMessageID = ''; // 下一条消息标志
+      state.imageUrls = []; // 当前会话中已加载信息所有的图片链接
+      state.isCompleted = false; // 当前会话消息是否已经请求完毕
+      state.isLoading = false; // 是否正在请求
+    },
+    resetAllConversation: function resetAllConversation(state) {
+      state.allConversation = [];
+    },
+    removeMessage: function removeMessage(state, message) {
+      state.currentMessageList.splice(state.currentMessageList.findIndex(function (item) {
+        return item.ID === message.ID;
+      }), 1);
+    },
+    changeMessageStatus: function changeMessageStatus(state, index) {
+      state.currentMessageList[index].status = 'fail';
+    },
+    offAtRemind: function offAtRemind(state, conversation) {
+      var item = state.allConversation.filter(function (item) {
+        return item.conversationID === conversation.conversationID;
+      })[0];
+      item.lastMessage.at = false;
+    }
+  },
+  actions: {
+    // 消息事件
+    onMessageEvent: function onMessageEvent(context, event) {
+      var messageList = event.data;
+      var atTextMessageList = messageList.filter(function (message) {
+        return message.type === 'TIMTextElem' && message.payload.text.includes('@');
+      });
+
+      var _loop = function _loop(i) {
+        var message = atTextMessageList[i];
+        var matched = message.payload.text.match(/@\w+/g);
+        if (!matched) {
+          return 'continue';
+        }
+        // @ 我的
+        if (matched.includes('@' + context.getters.myInfo.userID)) {
+          // TODO: notification
+          context.state.allConversation.filter(function (item) {
+            if (item.conversationID === message.conversationID) {
+              item.lastMessage.at = true;
+            }
+          });
+        }
+      };
+
+      for (var i = 0; i < atTextMessageList.length; i++) {
+        var _ret = _loop(i);
+
+        if (_ret === 'continue') continue;
+      }
+      if (event.name === 'onMessageReceived') {
+        var id = context.state.currentConversationID;
+        if (!id) {
+          return;
+        }
+        var list = [];
+        event.data.forEach(function (item) {
+          if (item.conversationID === id) {
+            list.push(item);
+          }
+        });
+        context.commit('receiveMessage', list);
+      }
+    },
+
+    // 获取消息列表
+    getMessageList: function getMessageList(context) {
+      var _context$state = context.state,
+          currentConversationID = _context$state.currentConversationID,
+          nextReqMessageID = _context$state.nextReqMessageID;
+      // 判断是否拉完了
+
+      if (!context.state.isCompleted) {
+        if (!context.state.isLoading) {
+          context.state.isLoading = true;
+          wx.$app.getMessageList({ conversationID: currentConversationID, nextReqMessageID: nextReqMessageID, count: 15 }).then(function (res) {
+            context.state.nextReqMessageID = res.data.nextReqMessageID;
+            context.commit('unshiftMessageList', res.data.messageList);
+            if (res.data.isCompleted) {
+              context.state.isCompleted = true;
+              wx.showToast({
+                title: '更新成功',
+                icon: 'none',
+                duration: 1500
+              });
+            }
+            context.state.isLoading = false;
+          }).catch(function (err) {
+            console.log(err);
+          });
+        } else {
+          wx.showToast({
+            title: '你拉的太快了',
+            icon: 'none',
+            duration: 500
+          });
+        }
+      } else {
+        wx.showToast({
+          title: '没有更多啦',
+          icon: 'none',
+          duration: 1500
+        });
+      }
+    }
+  }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (conversationModules);
+
+/***/ }),
+
+/***/ 70:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = decodeElement;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__emojiMap__ = __webpack_require__(36);
+
+/** 传入message.element（群系统消息SystemMessage，群提示消息GroupTip除外）
+ * content = {
+ *  type: 'TIMTextElem',
+ *  content: {
+ *    text: 'AAA[龇牙]AAA[龇牙]AAA[龇牙AAA]'
+ *  }
+ *}
+ **/
+var GROUP_SYSTEM_NOTICE_TYPE = {
+  JOIN_GROUP_REQUEST: 1, // 申请加群请求（只有管理员会收到）
+  JOIN_GROUP_ACCEPT: 2, // 申请加群被同意（只有申请人能够收到）
+  JOIN_GROUP_REFUSE: 3, // 申请加群被拒绝（只有申请人能够收到）
+  KICKED_OUT: 4, // 被管理员踢出群(只有被踢者接收到)
+  GROUP_DISMISSED: 5, // 群被解散(全员接收)
+  GROUP_CREATED: 6, // 创建群(创建者接收, 不展示)
+  INVITED_JOIN_GROUP_REQUEST: 7, // 邀请加群(被邀请者接收)。对于被邀请者，表示被邀请进群。
+  QUIT: 8, // 主动退群(主动退出者接收, 不展示)
+  SET_ADMIN: 9, // 设置管理员(被设置者接收)
+  CANCELED_ADMIN: 10, // 取消管理员(被取消者接收)
+  REVOKE: 11, // 群已被回收(全员接收, 不展示)
+  INVITED_JOIN_GROUP_REQUEST_AGREE: 12, // 邀请加群(被邀请者需同意)
+  READED: 15, // 群消息已读同步
+  CUSTOM: 255 // 用户自定义通知(默认全员接收)
+
+
+  // 群提示消息的含义 (opType)
+};var GROUP_TIP_TYPE = {
+  MEMBER_JOIN: 1,
+  MEMBER_QUIT: 2,
+  MEMBER_KICKED_OUT: 3,
+  MEMBER_SET_ADMIN: 4, // 被设置为管理员
+  MEMBER_CANCELED_ADMIN: 5, // 被取消管理员
+  GROUP_INFO_MODIFIED: 6, // 修改群资料，转让群组为该类型，msgBody.msgGroupNewInfo.ownerAccount表示新群主的ID
+  MEMBER_INFO_MODIFIED: 7 // 修改群成员信息
+};
+
+function parseText(message) {
+  var renderDom = [];
+  var temp = message.content.text;
+  var left = -1;
+  var right = -1;
+  while (temp !== '') {
+    left = temp.indexOf('[');
+    right = temp.indexOf(']');
+    switch (left) {
+      case 0:
+        if (right === -1) {
+          renderDom.push({
+            name: 'span',
+            text: temp
+          });
+          temp = '';
+        } else {
+          var _emoji = temp.slice(0, right + 1);
+          if (__WEBPACK_IMPORTED_MODULE_0__emojiMap__["a" /* emojiMap */][_emoji]) {
+            renderDom.push({
+              name: 'img',
+              src: __WEBPACK_IMPORTED_MODULE_0__emojiMap__["c" /* emojiUrl */] + __WEBPACK_IMPORTED_MODULE_0__emojiMap__["a" /* emojiMap */][_emoji]
+            });
+            temp = temp.substring(right + 1);
+          } else {
+            renderDom.push({
+              name: 'span',
+              text: '['
+            });
+            temp = temp.slice(1);
+          }
+        }
+        break;
+      case -1:
+        renderDom.push({
+          name: 'span',
+          text: temp
+        });
+        temp = '';
+        break;
+      default:
+        renderDom.push({
+          name: 'span',
+          text: temp.slice(0, left)
+        });
+        temp = temp.substring(left);
+        break;
+    }
+  }
+  return renderDom;
+}
+function parseGroupSystemNotice(message) {
+  var element = message.content;
+  var groupName = element.groupProfile.groupName || element.groupProfile.groupID;
+  var text = void 0;
+  switch (element.operationType) {
+    case GROUP_SYSTEM_NOTICE_TYPE.JOIN_GROUP_REQUEST:
+      text = element.operatorID + ' \u7533\u8BF7\u52A0\u5165\u7FA4\u7EC4\uFF1A' + groupName;
+      break;
+    case GROUP_SYSTEM_NOTICE_TYPE.JOIN_GROUP_ACCEPT:
+      text = '\u6210\u529F\u52A0\u5165\u7FA4\u7EC4\uFF1A' + groupName;
+      break;
+    case GROUP_SYSTEM_NOTICE_TYPE.JOIN_GROUP_REFUSE:
+      text = '\u7533\u8BF7\u52A0\u5165\u7FA4\u7EC4\uFF1A' + groupName + '\u88AB\u62D2\u7EDD';
+      break;
+    case GROUP_SYSTEM_NOTICE_TYPE.KICKED_OUT:
+      text = '\u88AB\u7BA1\u7406\u5458' + element.operatorID + '\u8E22\u51FA\u7FA4\u7EC4\uFF1A' + groupName;
+      break;
+    case GROUP_SYSTEM_NOTICE_TYPE.GROUP_DISMISSED:
+      text = '\u7FA4\uFF1A' + groupName + ' \u5DF2\u88AB' + element.operatorID + '\u89E3\u6563';
+      break;
+    case GROUP_SYSTEM_NOTICE_TYPE.GROUP_CREATED:
+      text = element.operatorID + '\u521B\u5EFA\u7FA4\uFF1A' + groupName;
+      break;
+    case GROUP_SYSTEM_NOTICE_TYPE.INVITED_JOIN_GROUP_REQUEST:
+      text = element.operatorID + '\u9080\u8BF7\u4F60\u52A0\u7FA4\uFF1A' + groupName;
+      break;
+    case GROUP_SYSTEM_NOTICE_TYPE.QUIT:
+      text = '\u4F60\u9000\u51FA\u7FA4\u7EC4\uFF1A' + groupName;
+      break;
+    case GROUP_SYSTEM_NOTICE_TYPE.SET_ADMIN:
+      text = '\u4F60\u88AB' + element.operatorID + '\u8BBE\u7F6E\u4E3A\u7FA4\uFF1A' + groupName + '\u7684\u7BA1\u7406\u5458';
+      break;
+    case GROUP_SYSTEM_NOTICE_TYPE.CANCELED_ADMIN:
+      text = '\u4F60\u88AB' + element.operatorID + '\u64A4\u9500\u7FA4\uFF1A' + groupName + '\u7684\u7BA1\u7406\u5458\u8EAB\u4EFD';
+      break;
+    case GROUP_SYSTEM_NOTICE_TYPE.REVOKE:
+      text = '\u7FA4\uFF1A' + groupName + '\u88AB' + element.operatorID + '\u56DE\u6536';
+      break;
+    case GROUP_SYSTEM_NOTICE_TYPE.INVITED_JOIN_GROUP_REQUEST_AGREE:
+      text = element.operatorID + '\u540C\u610F\u5165\u7FA4\uFF1A' + groupName + '\u9080\u8BF7';
+      break;
+  }
+  return [{
+    name: 'system',
+    text: text
+  }];
+}
+function parseGroupTip(message) {
+  var elem = message.content;
+  var tip = void 0;
+  switch (elem.operationType) {
+    case GROUP_TIP_TYPE.MEMBER_JOIN:
+      tip = '\u65B0\u6210\u5458\u52A0\u5165\uFF1A' + elem.userIDList.join(',');
+      break;
+    case GROUP_TIP_TYPE.MEMBER_QUIT:
+      tip = '\u7FA4\u6210\u5458\u9000\u7FA4\uFF1A' + elem.userIDList.join(',');
+      break;
+    case GROUP_TIP_TYPE.MEMBER_KICKED_OUT:
+      tip = '\u7FA4\u6210\u5458\u88AB\u8E22\uFF1A' + elem.userIDList.join(',');
+      break;
+    case GROUP_TIP_TYPE.MEMBER_SET_ADMIN:
+      tip = elem.operatorID + '\u5C06' + elem.userIDList.join(',') + '\u8BBE\u7F6E\u4E3A\u7BA1\u7406\u5458';
+      break;
+    case GROUP_TIP_TYPE.MEMBER_CANCELED_ADMIN:
+      tip = elem.operatorID + '\u5C06' + elem.userIDList.join(',') + '\u53D6\u6D88\u4F5C\u4E3A\u7BA1\u7406\u5458';
+      break;
+    case GROUP_TIP_TYPE.GROUP_INFO_MODIFIED:
+      tip = '群资料修改';
+      break;
+    case GROUP_TIP_TYPE.MEMBER_INFO_MODIFIED:
+      tip = '群成员资料修改';
+      break;
+  }
+  return [{
+    name: 'groupTip',
+    text: tip
+  }];
+}
+function decodeElement(message) {
+  // renderDom是最终渲染的
+  switch (message.type) {
+    case 'TIMTextElem':
+      return parseText(message);
+    case 'TIMGroupSystemNoticeElem':
+      return parseGroupSystemNotice(message);
+    case 'TIMGroupTipElem':
+      return parseGroupTip(message);
+    default:
+      return [];
+  }
+}
+
+/***/ }),
+
+/***/ 71:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var groupModules = {
+  state: {
+    groupList: [],
+    currentGroupProfile: {}
+  },
+  getters: {
+    hasGroupList: function hasGroupList(state) {
+      return state.groupList.length > 0;
+    }
+  },
+  mutations: {
+    updateGroupList: function updateGroupList(state, groupList) {
+      state.groupList = groupList;
+    },
+    updateCurrentGroupProfile: function updateCurrentGroupProfile(state, groupProfile) {
+      state.currentGroupProfile = groupProfile;
+    },
+    resetGroup: function resetGroup(state) {
+      state.groupList = [];
+      state.currentGroupProfile = {};
+    }
+  }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (groupModules);
+
+/***/ }),
+
+/***/ 72:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var userModules = {
+  state: {
+    myInfo: {},
+    userProfile: {},
+    blacklist: []
+  },
+  getters: {
+    myInfo: function myInfo(state) {
+      return state.myInfo;
+    },
+    userProfile: function userProfile(state) {
+      return state.userProfile;
+    }
+  },
+  mutations: {
+    updateMyInfo: function updateMyInfo(state, myInfo) {
+      state.myInfo = myInfo;
+    },
+    updateUserProfile: function updateUserProfile(state, userProfile) {
+      state.userProfile = userProfile;
+    },
+    setBlacklist: function setBlacklist(state, blacklist) {
+      state.blacklist = blacklist;
+    },
+    updateBlacklist: function updateBlacklist(state, blacklist) {
+      state.blacklist.push(blacklist);
+    },
+    resetUser: function resetUser(state) {
+      state.blacklist = [];
+      state.userProfile = {};
+      state.myInfo = {};
+    }
+  }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (userModules);
+
+/***/ }),
+
+/***/ 73:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42,7 +763,7 @@ var globalModules = {
 
 /***/ }),
 
-/***/ "Bbwh":
+/***/ 76:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -509,708 +1230,6 @@ var TYPES = {
 
 /* harmony default export */ __webpack_exports__["a"] = (TYPES);
 
-/***/ }),
-
-/***/ "IcnI":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__("5nAL");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__("NYxO");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_conversation_js__ = __webpack_require__("tn05");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_group__ = __webpack_require__("xTcS");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modules_user__ = __webpack_require__("bREw");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__modules_global__ = __webpack_require__("17x+");
-
-
-
-
-
-
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
-
-/* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
-  modules: {
-    conversation: __WEBPACK_IMPORTED_MODULE_2__modules_conversation_js__["a" /* default */],
-    group: __WEBPACK_IMPORTED_MODULE_3__modules_group__["a" /* default */],
-    user: __WEBPACK_IMPORTED_MODULE_4__modules_user__["a" /* default */],
-    global: __WEBPACK_IMPORTED_MODULE_5__modules_global__["a" /* default */]
-  }
-}));
-
-/***/ }),
-
-/***/ "M93x":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__("Mw+1");
-function injectStyle (ssrContext) {
-  __webpack_require__("OYdO")
-}
-var normalizeComponent = __webpack_require__("ybqe")
-/* script */
-
-/* template */
-var __vue_template__ = null
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_App_vue__["a" /* default */],
-  __vue_template__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-
-/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
-
-
-/***/ }),
-
-/***/ "Mw+1":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-  created: function created() {}
-});
-
-/***/ }),
-
-/***/ "NHnr":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mpvue__ = __webpack_require__("5nAL");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mpvue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_mpvue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App__ = __webpack_require__("M93x");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk__ = __webpack_require__("PDEy");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store_index__ = __webpack_require__("IcnI");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5__ = __webpack_require__("h1dT");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__static_debug_GenerateTestUserSig__ = __webpack_require__("fUtS");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_types__ = __webpack_require__("Bbwh");
-
-
-
-
-
-
-
-
-var tim = __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.create({
-  SDKAppID: __WEBPACK_IMPORTED_MODULE_5__static_debug_GenerateTestUserSig__["a" /* SDKAPPID */]
-});
-wx.$app = tim;
-wx.$app.registerPlugin({ 'cos-wx-sdk': __WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5___default.a });
-
-var $bus = new __WEBPACK_IMPORTED_MODULE_0_mpvue___default.a();
-__WEBPACK_IMPORTED_MODULE_0_mpvue___default.a.prototype.TIM = __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a;
-__WEBPACK_IMPORTED_MODULE_0_mpvue___default.a.prototype.$type = __WEBPACK_IMPORTED_MODULE_6__utils_types__["a" /* default */];
-__WEBPACK_IMPORTED_MODULE_0_mpvue___default.a.prototype.$store = __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */];
-__WEBPACK_IMPORTED_MODULE_0_mpvue___default.a.prototype.$bus = $bus;
-
-tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.SDK_READY, onReadyStateUpdate, this);
-tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.SDK_NOT_READY, onReadyStateUpdate, this);
-
-tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.KICKED_OUT, function (event) {
-  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('resetGroup');
-  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('resetUser');
-  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('resetCurrentConversation');
-  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('resetAllConversation');
-  wx.showToast({
-    title: '你已被踢下线',
-    icon: 'none',
-    duration: 1500
-  });
-  setTimeout(function () {
-    wx.clearStorage();
-    wx.reLaunch({
-      url: '../login/main'
-    });
-  }, 1500);
-});
-
-// 出错统一处理
-tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.ERROR, function (event) {
-  // 网络错误不弹toast && sdk未初始化完全报错
-  if (event.data.code !== 2800 && event.data.code !== 2999) {
-    __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('showToast', {
-      title: event.data.message,
-      duration: 2000
-    });
-  }
-});
-
-tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.MESSAGE_RECEIVED, function (event) {
-  wx.$app.ready(function () {
-    __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].dispatch('onMessageEvent', event);
-  });
-});
-tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
-  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('updateAllConversation', event.data);
-});
-tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.GROUP_LIST_UPDATED, function (event) {
-  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('updateGroupList', event.data);
-});
-tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.BLACKLIST_UPDATED, function (event) {
-  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('updateBlacklist', event.data);
-});
-
-tim.on(__WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.GROUP_SYSTEM_NOTICE_RECERIVED, function (event) {
-  console.log('system message', event);
-});
-
-function onReadyStateUpdate(_ref) {
-  var name = _ref.name;
-
-  var isSDKReady = name === __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.EVENT.SDK_READY;
-  __WEBPACK_IMPORTED_MODULE_3__store_index__["a" /* default */].commit('setSdkReady', isSDKReady);
-}
-
-new __WEBPACK_IMPORTED_MODULE_0_mpvue___default.a({
-  TIMApp: __WEBPACK_IMPORTED_MODULE_1__App__["a" /* default */]
-}).$mount();
-
-/***/ }),
-
-/***/ "OYdO":
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "Srkd":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = decodeElement;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__emojiMap__ = __webpack_require__("lRgn");
-
-/** 传入message.element（群系统消息SystemMessage，群提示消息GroupTip除外）
- * content = {
- *  type: 'TIMTextElem',
- *  content: {
- *    text: 'AAA[龇牙]AAA[龇牙]AAA[龇牙AAA]'
- *  }
- *}
- **/
-var GROUP_SYSTEM_NOTICE_TYPE = {
-  JOIN_GROUP_REQUEST: 1, // 申请加群请求（只有管理员会收到）
-  JOIN_GROUP_ACCEPT: 2, // 申请加群被同意（只有申请人能够收到）
-  JOIN_GROUP_REFUSE: 3, // 申请加群被拒绝（只有申请人能够收到）
-  KICKED_OUT: 4, // 被管理员踢出群(只有被踢者接收到)
-  GROUP_DISMISSED: 5, // 群被解散(全员接收)
-  GROUP_CREATED: 6, // 创建群(创建者接收, 不展示)
-  INVITED_JOIN_GROUP_REQUEST: 7, // 邀请加群(被邀请者接收)。对于被邀请者，表示被邀请进群。
-  QUIT: 8, // 主动退群(主动退出者接收, 不展示)
-  SET_ADMIN: 9, // 设置管理员(被设置者接收)
-  CANCELED_ADMIN: 10, // 取消管理员(被取消者接收)
-  REVOKE: 11, // 群已被回收(全员接收, 不展示)
-  INVITED_JOIN_GROUP_REQUEST_AGREE: 12, // 邀请加群(被邀请者需同意)
-  READED: 15, // 群消息已读同步
-  CUSTOM: 255 // 用户自定义通知(默认全员接收)
-
-
-  // 群提示消息的含义 (opType)
-};var GROUP_TIP_TYPE = {
-  MEMBER_JOIN: 1,
-  MEMBER_QUIT: 2,
-  MEMBER_KICKED_OUT: 3,
-  MEMBER_SET_ADMIN: 4, // 被设置为管理员
-  MEMBER_CANCELED_ADMIN: 5, // 被取消管理员
-  GROUP_INFO_MODIFIED: 6, // 修改群资料，转让群组为该类型，msgBody.msgGroupNewInfo.ownerAccount表示新群主的ID
-  MEMBER_INFO_MODIFIED: 7 // 修改群成员信息
-};
-
-function parseText(message) {
-  var renderDom = [];
-  var temp = message.content.text;
-  var left = -1;
-  var right = -1;
-  while (temp !== '') {
-    left = temp.indexOf('[');
-    right = temp.indexOf(']');
-    switch (left) {
-      case 0:
-        if (right === -1) {
-          renderDom.push({
-            name: 'span',
-            text: temp
-          });
-          temp = '';
-        } else {
-          var _emoji = temp.slice(0, right + 1);
-          if (__WEBPACK_IMPORTED_MODULE_0__emojiMap__["a" /* emojiMap */][_emoji]) {
-            renderDom.push({
-              name: 'img',
-              src: __WEBPACK_IMPORTED_MODULE_0__emojiMap__["c" /* emojiUrl */] + __WEBPACK_IMPORTED_MODULE_0__emojiMap__["a" /* emojiMap */][_emoji]
-            });
-            temp = temp.substring(right + 1);
-          } else {
-            renderDom.push({
-              name: 'span',
-              text: '['
-            });
-            temp = temp.slice(1);
-          }
-        }
-        break;
-      case -1:
-        renderDom.push({
-          name: 'span',
-          text: temp
-        });
-        temp = '';
-        break;
-      default:
-        renderDom.push({
-          name: 'span',
-          text: temp.slice(0, left)
-        });
-        temp = temp.substring(left);
-        break;
-    }
-  }
-  return renderDom;
-}
-function parseGroupSystemNotice(message) {
-  var element = message.content;
-  var groupName = element.groupProfile.groupName || element.groupProfile.groupID;
-  var text = void 0;
-  switch (element.operationType) {
-    case GROUP_SYSTEM_NOTICE_TYPE.JOIN_GROUP_REQUEST:
-      text = element.operatorID + ' \u7533\u8BF7\u52A0\u5165\u7FA4\u7EC4\uFF1A' + groupName;
-      break;
-    case GROUP_SYSTEM_NOTICE_TYPE.JOIN_GROUP_ACCEPT:
-      text = '\u6210\u529F\u52A0\u5165\u7FA4\u7EC4\uFF1A' + groupName;
-      break;
-    case GROUP_SYSTEM_NOTICE_TYPE.JOIN_GROUP_REFUSE:
-      text = '\u7533\u8BF7\u52A0\u5165\u7FA4\u7EC4\uFF1A' + groupName + '\u88AB\u62D2\u7EDD';
-      break;
-    case GROUP_SYSTEM_NOTICE_TYPE.KICKED_OUT:
-      text = '\u88AB\u7BA1\u7406\u5458' + element.operatorID + '\u8E22\u51FA\u7FA4\u7EC4\uFF1A' + groupName;
-      break;
-    case GROUP_SYSTEM_NOTICE_TYPE.GROUP_DISMISSED:
-      text = '\u7FA4\uFF1A' + groupName + ' \u5DF2\u88AB' + element.operatorID + '\u89E3\u6563';
-      break;
-    case GROUP_SYSTEM_NOTICE_TYPE.GROUP_CREATED:
-      text = element.operatorID + '\u521B\u5EFA\u7FA4\uFF1A' + groupName;
-      break;
-    case GROUP_SYSTEM_NOTICE_TYPE.INVITED_JOIN_GROUP_REQUEST:
-      text = element.operatorID + '\u9080\u8BF7\u4F60\u52A0\u7FA4\uFF1A' + groupName;
-      break;
-    case GROUP_SYSTEM_NOTICE_TYPE.QUIT:
-      text = '\u4F60\u9000\u51FA\u7FA4\u7EC4\uFF1A' + groupName;
-      break;
-    case GROUP_SYSTEM_NOTICE_TYPE.SET_ADMIN:
-      text = '\u4F60\u88AB' + element.operatorID + '\u8BBE\u7F6E\u4E3A\u7FA4\uFF1A' + groupName + '\u7684\u7BA1\u7406\u5458';
-      break;
-    case GROUP_SYSTEM_NOTICE_TYPE.CANCELED_ADMIN:
-      text = '\u4F60\u88AB' + element.operatorID + '\u64A4\u9500\u7FA4\uFF1A' + groupName + '\u7684\u7BA1\u7406\u5458\u8EAB\u4EFD';
-      break;
-    case GROUP_SYSTEM_NOTICE_TYPE.REVOKE:
-      text = '\u7FA4\uFF1A' + groupName + '\u88AB' + element.operatorID + '\u56DE\u6536';
-      break;
-    case GROUP_SYSTEM_NOTICE_TYPE.INVITED_JOIN_GROUP_REQUEST_AGREE:
-      text = element.operatorID + '\u540C\u610F\u5165\u7FA4\uFF1A' + groupName + '\u9080\u8BF7';
-      break;
-  }
-  return [{
-    name: 'system',
-    text: text
-  }];
-}
-function parseGroupTip(message) {
-  var elem = message.content;
-  var tip = void 0;
-  switch (elem.operationType) {
-    case GROUP_TIP_TYPE.MEMBER_JOIN:
-      tip = '\u65B0\u6210\u5458\u52A0\u5165\uFF1A' + elem.userIDList.join(',');
-      break;
-    case GROUP_TIP_TYPE.MEMBER_QUIT:
-      tip = '\u7FA4\u6210\u5458\u9000\u7FA4\uFF1A' + elem.userIDList.join(',');
-      break;
-    case GROUP_TIP_TYPE.MEMBER_KICKED_OUT:
-      tip = '\u7FA4\u6210\u5458\u88AB\u8E22\uFF1A' + elem.userIDList.join(',');
-      break;
-    case GROUP_TIP_TYPE.MEMBER_SET_ADMIN:
-      tip = elem.operatorID + '\u5C06' + elem.userIDList.join(',') + '\u8BBE\u7F6E\u4E3A\u7BA1\u7406\u5458';
-      break;
-    case GROUP_TIP_TYPE.MEMBER_CANCELED_ADMIN:
-      tip = elem.operatorID + '\u5C06' + elem.userIDList.join(',') + '\u53D6\u6D88\u4F5C\u4E3A\u7BA1\u7406\u5458';
-      break;
-    case GROUP_TIP_TYPE.GROUP_INFO_MODIFIED:
-      tip = '群资料修改';
-      break;
-    case GROUP_TIP_TYPE.MEMBER_INFO_MODIFIED:
-      tip = '群成员资料修改';
-      break;
-  }
-  return [{
-    name: 'groupTip',
-    text: tip
-  }];
-}
-function decodeElement(message) {
-  // renderDom是最终渲染的
-  switch (message.type) {
-    case 'TIMTextElem':
-      return parseText(message);
-    case 'TIMGroupSystemNoticeElem':
-      return parseGroupSystemNotice(message);
-    case 'TIMGroupTipElem':
-      return parseGroupTip(message);
-    default:
-      return [];
-  }
-}
-
-/***/ }),
-
-/***/ "bREw":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var userModules = {
-  state: {
-    myInfo: {},
-    userProfile: {},
-    blacklist: []
-  },
-  getters: {
-    myInfo: function myInfo(state) {
-      return state.myInfo;
-    },
-    userProfile: function userProfile(state) {
-      return state.userProfile;
-    }
-  },
-  mutations: {
-    updateMyInfo: function updateMyInfo(state, myInfo) {
-      state.myInfo = myInfo;
-    },
-    updateUserProfile: function updateUserProfile(state, userProfile) {
-      state.userProfile = userProfile;
-    },
-    setBlacklist: function setBlacklist(state, blacklist) {
-      state.blacklist = blacklist;
-    },
-    updateBlacklist: function updateBlacklist(state, blacklist) {
-      state.blacklist.push(blacklist);
-    },
-    resetUser: function resetUser(state) {
-      state.blacklist = [];
-      state.userProfile = {};
-      state.myInfo = {};
-    }
-  }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (userModules);
-
-/***/ }),
-
-/***/ "tn05":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray__ = __webpack_require__("Gu7T");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_index__ = __webpack_require__("0xDb");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_decodeElement__ = __webpack_require__("Srkd");
-
-
-
-
-var conversationModules = {
-  state: {
-    allConversation: [], // 所有的conversation
-    currentConversationID: '', // 当前聊天对话ID
-    currentConversation: {}, // 当前聊天对话信息
-    currentMessageList: [], // 当前聊天消息列表
-    nextReqMessageID: '', // 下一条消息标志
-    imageUrls: [], // 当前会话中已加载信息所有的图片链接
-    isCompleted: false, // 当前会话消息是否已经请求完毕
-    isLoading: false // 是否正在请求
-  },
-  getters: {
-    allConversation: function allConversation(state) {
-      return state.allConversation;
-    },
-    // 当前聊天对象的ID
-    toAccount: function toAccount(state) {
-      if (state.currentConversationID.indexOf('C2C') === 0) {
-        return state.currentConversationID.substring(3);
-      } else if (state.currentConversationID.indexOf('GROUP') === 0) {
-        return state.currentConversationID.substring(5);
-      }
-    },
-    // 当前聊天对象的昵称
-    toName: function toName(state) {
-      if (state.currentConversation.type === 'C2C') {
-        return state.currentConversation.userProfile.userID;
-      } else if (state.currentConversation.type === 'GROUP') {
-        return state.currentConversation.groupProfile.name;
-      }
-    },
-    // 当前聊天对话的Type
-    currentConversationType: function currentConversationType(state) {
-      if (state.currentConversationID.indexOf('C2C') === 0) {
-        return 'C2C';
-      }
-      if (state.currentConversationID.indexOf('GROUP') === 0) {
-        return 'GROUP';
-      }
-      return '';
-    },
-    currentConversation: function currentConversation(state) {
-      return state.currentConversation;
-    },
-    currentMessageList: function currentMessageList(state) {
-      return state.currentMessageList;
-    },
-    imageUrls: function imageUrls(state) {
-      return state.imageUrls;
-    }
-  },
-  mutations: {
-    // 历史头插消息列表
-    unshiftMessageList: function unshiftMessageList(state, messageList) {
-      var list = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(messageList));
-      var urls = [];
-      for (var i = 0; i < list.length; i++) {
-        var message = list[i];
-        list[i].virtualDom = Object(__WEBPACK_IMPORTED_MODULE_2__utils_decodeElement__["a" /* decodeElement */])(message.elements[0]);
-        if (message.type === 'TIMImageElem') {
-          var url = message.payload.imageInfoArray[1].url;
-          url = url.slice(0, 2) === '//' ? 'https:' + url : url;
-          urls.push(url);
-        }
-        var date = new Date(message.time * 1000);
-        list[i].newtime = Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* formatTime */])(date);
-      }
-      state.imageUrls = [].concat(urls, __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.imageUrls));
-      state.currentMessageList = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(list), __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.currentMessageList));
-    },
-
-    // 收到
-    receiveMessage: function receiveMessage(state, messageList) {
-      var list = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(messageList));
-      var urls = [];
-      for (var i = 0; i < list.length; i++) {
-        var item = list[i];
-        list[i].virtualDom = Object(__WEBPACK_IMPORTED_MODULE_2__utils_decodeElement__["a" /* decodeElement */])(item.elements[0]);
-        var date = new Date(item.time * 1000);
-        list[i].newtime = Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* formatTime */])(date);
-        if (item.type === 'TIMImageElem') {
-          var url = item.elements[0].content.imageInfoArray[1].url;
-          url = url.slice(0, 2) === '//' ? 'https:' + url : url;
-          urls.push(url);
-        }
-      }
-      state.imageUrls = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.imageUrls), urls);
-      state.currentMessageList = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.currentMessageList), __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(list));
-      setTimeout(function () {
-        wx.pageScrollTo({
-          scrollTop: 99999
-        });
-      }, 800);
-    },
-    sendMessage: function sendMessage(state, message) {
-      message.virtualDom = Object(__WEBPACK_IMPORTED_MODULE_2__utils_decodeElement__["a" /* decodeElement */])(message.elements[0]);
-      var date = new Date(message.time * 1000);
-      message.newtime = Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* formatTime */])(date);
-      if (message.type === 'TIMImageElem') {
-        var url = message.payload.imageInfoArray[1].url;
-        url = url.slice(0, 2) === '//' ? 'https:' + url : url;
-        state.imageUrls.push(url);
-      }
-      state.currentMessageList.push(message);
-      setTimeout(function () {
-        wx.pageScrollTo({
-          scrollTop: 99999
-        });
-      }, 800);
-    },
-
-    // 更新当前的会话
-    updateCurrentConversation: function updateCurrentConversation(state, conversation) {
-      state.currentConversation = conversation;
-      state.currentConversationID = conversation.conversationID;
-    },
-
-    // 更新当前所有会话列表
-    updateAllConversation: function updateAllConversation(state, list) {
-      for (var i = 0; i < list.length; i++) {
-        if (list[i].lastMessage && typeof list[i].lastMessage.lastTime === 'number') {
-          var date = new Date(list[i].lastMessage.lastTime * 1000);
-          list[i].lastMessage._lastTime = Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* formatTime */])(date);
-        }
-      }
-      state.allConversation = list;
-    },
-
-    // 重置当前会话
-    resetCurrentConversation: function resetCurrentConversation(state) {
-      state.currentConversationID = ''; // 当前聊天对话ID
-      state.currentConversation = {}; // 当前聊天对话信息
-      state.currentMessageList = []; // 当前聊天消息列表
-      state.nextReqMessageID = ''; // 下一条消息标志
-      state.imageUrls = []; // 当前会话中已加载信息所有的图片链接
-      state.isCompleted = false; // 当前会话消息是否已经请求完毕
-      state.isLoading = false; // 是否正在请求
-    },
-    resetAllConversation: function resetAllConversation(state) {
-      state.allConversation = [];
-    },
-    removeMessage: function removeMessage(state, message) {
-      state.currentMessageList.splice(state.currentMessageList.findIndex(function (item) {
-        return item.ID === message.ID;
-      }), 1);
-    },
-    changeMessageStatus: function changeMessageStatus(state, index) {
-      state.currentMessageList[index].status = 'fail';
-    },
-    offAtRemind: function offAtRemind(state, conversation) {
-      var item = state.allConversation.filter(function (item) {
-        return item.conversationID === conversation.conversationID;
-      })[0];
-      item.lastMessage.at = false;
-    }
-  },
-  actions: {
-    // 消息事件
-    onMessageEvent: function onMessageEvent(context, event) {
-      var messageList = event.data;
-      var atTextMessageList = messageList.filter(function (message) {
-        return message.type === 'TIMTextElem' && message.payload.text.includes('@');
-      });
-
-      var _loop = function _loop(i) {
-        var message = atTextMessageList[i];
-        var matched = message.payload.text.match(/@\w+/g);
-        if (!matched) {
-          return 'continue';
-        }
-        // @ 我的
-        if (matched.includes('@' + context.getters.myInfo.userID)) {
-          // TODO: notification
-          context.state.allConversation.filter(function (item) {
-            if (item.conversationID === message.conversationID) {
-              item.lastMessage.at = true;
-            }
-          });
-        }
-      };
-
-      for (var i = 0; i < atTextMessageList.length; i++) {
-        var _ret = _loop(i);
-
-        if (_ret === 'continue') continue;
-      }
-      if (event.name === 'onMessageReceived') {
-        var id = context.state.currentConversationID;
-        if (!id) {
-          return;
-        }
-        var list = [];
-        event.data.forEach(function (item) {
-          if (item.conversationID === id) {
-            list.push(item);
-          }
-        });
-        context.commit('receiveMessage', list);
-      }
-    },
-
-    // 获取消息列表
-    getMessageList: function getMessageList(context) {
-      var _context$state = context.state,
-          currentConversationID = _context$state.currentConversationID,
-          nextReqMessageID = _context$state.nextReqMessageID;
-      // 判断是否拉完了
-
-      if (!context.state.isCompleted) {
-        if (!context.state.isLoading) {
-          context.state.isLoading = true;
-          wx.$app.getMessageList({ conversationID: currentConversationID, nextReqMessageID: nextReqMessageID, count: 15 }).then(function (res) {
-            context.state.nextReqMessageID = res.data.nextReqMessageID;
-            context.commit('unshiftMessageList', res.data.messageList);
-            if (res.data.isCompleted) {
-              context.state.isCompleted = true;
-              wx.showToast({
-                title: '更新成功',
-                icon: 'none',
-                duration: 1500
-              });
-            }
-            context.state.isLoading = false;
-          }).catch(function (err) {
-            console.log(err);
-          });
-        } else {
-          wx.showToast({
-            title: '你拉的太快了',
-            icon: 'none',
-            duration: 500
-          });
-        }
-      } else {
-        wx.showToast({
-          title: '没有更多啦',
-          icon: 'none',
-          duration: 1500
-        });
-      }
-    }
-  }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (conversationModules);
-
-/***/ }),
-
-/***/ "xTcS":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var groupModules = {
-  state: {
-    groupList: [],
-    currentGroupProfile: {}
-  },
-  getters: {
-    hasGroupList: function hasGroupList(state) {
-      return state.groupList.length > 0;
-    }
-  },
-  mutations: {
-    updateGroupList: function updateGroupList(state, groupList) {
-      state.groupList = groupList;
-    },
-    updateCurrentGroupProfile: function updateCurrentGroupProfile(state, groupProfile) {
-      state.currentGroupProfile = groupProfile;
-    },
-    resetGroup: function resetGroup(state) {
-      state.groupList = [];
-      state.currentGroupProfile = {};
-    }
-  }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (groupModules);
-
 /***/ })
 
-},["NHnr"]);
+},[38]);

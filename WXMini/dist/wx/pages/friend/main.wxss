@@ -1,8 +1,8 @@
 
-.item.data-v-9c65aab0 {
+.item.data-v-cacaafe0 {
   padding-top: 80rpx;
 }
-.input.data-v-9c65aab0 {
+.input.data-v-cacaafe0 {
   text-align: center;
   height: 64rpx;
   background-color: #fff;
@@ -10,13 +10,13 @@
   border: 2rpx solid #e9eaec;
   font-size: 32rpx;
 }
-.card.data-v-9c65aab0 {
+.card.data-v-cacaafe0 {
   border-bottom: 2rpx solid #e9eaec;
 }
-.avatar.data-v-9c65aab0 {
+.avatar.data-v-cacaafe0 {
   padding: 20rpx;
 }
-.right.data-v-9c65aab0 {
+.right.data-v-cacaafe0 {
   box-sizing: border-box;
   height: 200rpx;
   padding: 20rpx;
@@ -24,12 +24,12 @@
   flex-direction: column;
   justify-content: space-around;
 }
-.username.data-v-9c65aab0 {
+.username.data-v-cacaafe0 {
   font-weight: 600;
   font-size: 36rpx;
   color: #1c2438;
 }
-.account.data-v-9c65aab0 {
+.account.data-v-cacaafe0 {
   font-size: 28rpx;
   color: #80848f;
 }

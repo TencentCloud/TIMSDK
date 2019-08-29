@@ -1,5 +1,25 @@
-<template name="72fb56fe"><view class="_div data-v-5e5810f9 container"><i-modal title="处理申请" visible="{{applyModalVisible}}" bindok="handleProxy" bindcancel="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_i-modal data-v-5e5810f9"><view class="_div data-v-5e5810f9 input-wrapper"><i-radio-group current="{{action}}" bindchange="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_i-radio-group data-v-5e5810f9"><i-radio value="Agree" class="_i-radio data-v-5e5810f9">同意</i-radio> <i-radio value="Reject" class="_i-radio data-v-5e5810f9">不同意</i-radio></i-radio-group> <input type="text" class="_input data-v-5e5810f9 input" placeholder="输入回复" value="{{text}}" bindinput="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" /></view></i-modal> <view wx:key="message.ID" key="{{message.ID}}" wx:for="{{currentMessageList}}" wx:for-index="index" wx:for-item="message" class="_div data-v-5e5810f9"><view wx:if="{{message.payload.operationType === 1}}" class="_div data-v-5e5810f9 card handle"><view class="_div data-v-5e5810f9"><view class="_div data-v-5e5810f9 time">{{message.newtime}}</view>
+<template name="3cbb5f2b">
+  <view class="_div data-v-47258e61 container">
+    <i-modal title="处理申请" visible="{{applyModalVisible}}" bindok="handleProxy" bindcancel="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_i-modal data-v-47258e61">
+      <view class="_div data-v-47258e61 input-wrapper">
+        <i-radio-group current="{{action}}" bindchange="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_i-radio-group data-v-47258e61">
+          <i-radio value="Agree" class="_i-radio data-v-47258e61">同意</i-radio>
+          <i-radio value="Reject" class="_i-radio data-v-47258e61">不同意</i-radio>
+        </i-radio-group> <input type="text" class="_input data-v-47258e61 input" placeholder="输入回复" value="{{text}}" bindinput="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" />
+      </view>
+    </i-modal>
+    <view wx:key="message.ID" key="{{message.ID}}" wx:for="{{currentMessageList}}" wx:for-index="index" wx:for-item="message" class="_div data-v-47258e61">
+      <view wx:if="{{message.payload.operationType === 1}}" class="_div data-v-47258e61 card handle">
+        <view class="_div data-v-47258e61">
+          <view class="_div data-v-47258e61 time">{{message.newtime}}</view>
+          {{message.virtualDom[0].text}}
+        </view>
+        <view class="_div data-v-47258e61 choose"><button type="button" class="_button data-v-47258e61 button" bindtap="handleProxy" data-eventid="{{'3_'+index}}" data-comkey="{{$k}}">处理</button></view>
+      </view>
+      <view class="_div data-v-47258e61 card" wx:else>
+        <view class="_div data-v-47258e61 time">{{message.newtime}}</view>
         {{message.virtualDom[0].text}}
-      </view> <view class="_div data-v-5e5810f9 choose"><button type="button" class="_button data-v-5e5810f9 button" bindtap="handleProxy" data-eventid="{{'3_'+index}}" data-comkey="{{$k}}">处理</button></view></view><view class="_div data-v-5e5810f9 card" wx:else><view class="_div data-v-5e5810f9 time">{{message.newtime}}</view>
-      {{message.virtualDom[0].text}}
-    </view></view></view></template>
+      </view>
+    </view>
+  </view>
+</template>

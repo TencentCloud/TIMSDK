@@ -1,5 +1,23 @@
-<template name="19f76e30"><view class="_div data-v-9c65aab0 container"><view class="_div data-v-9c65aab0 item"><i-row class="_i-row data-v-9c65aab0"><i-col span="7" offset="1" class="_i-col data-v-9c65aab0"><view class="_div data-v-9c65aab0 avatar">
-            用户ID:
-          </view></i-col> <i-col span="15" class="_i-col data-v-9c65aab0"><input type="text" class="_input data-v-9c65aab0 input" placeholder="输入接受者ID" value="{{id}}" bindinput="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" /></i-col></i-row> <i-row class="_i-row data-v-9c65aab0"><i-col span="7" offset="1" class="_i-col data-v-9c65aab0"><view class="_div data-v-9c65aab0 avatar">
-            内容：
-          </view></i-col> <i-col span="15" class="_i-col data-v-9c65aab0"><input type="text" class="_input data-v-9c65aab0 input" placeholder="输入你要发送的内容" value="{{content}}" bindinput="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" /></i-col></i-row> <i-row class="_i-row data-v-9c65aab0"><i-col span="16" offset="4" class="_i-col data-v-9c65aab0"><i-button bindtap="handleProxy" type="primary" long="true" shape="circle" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_i-button data-v-9c65aab0">发起会话</i-button></i-col></i-row></view></view></template>
+<template name="df9f0e4c">
+  <view class="_div data-v-cacaafe0 container">
+    <view class="_div data-v-cacaafe0 item">
+      <i-row class="_i-row data-v-cacaafe0">
+        <i-col span="7" offset="1" class="_i-col data-v-cacaafe0">
+          <view class="_div data-v-cacaafe0 avatar"> 用户ID: </view>
+        </i-col>
+        <i-col span="15" class="_i-col data-v-cacaafe0"><input type="text" class="_input data-v-cacaafe0 input" placeholder="输入接受者ID" value="{{id}}" bindinput="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" /></i-col>
+      </i-row>
+      <i-row class="_i-row data-v-cacaafe0">
+        <i-col span="7" offset="1" class="_i-col data-v-cacaafe0">
+          <view class="_div data-v-cacaafe0 avatar"> 内容： </view>
+        </i-col>
+        <i-col span="15" class="_i-col data-v-cacaafe0"><input type="text" class="_input data-v-cacaafe0 input" placeholder="输入你要发送的内容" value="{{content}}" bindinput="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" /></i-col>
+      </i-row>
+      <i-row class="_i-row data-v-cacaafe0">
+        <i-col span="16" offset="4" class="_i-col data-v-cacaafe0">
+          <i-button bindtap="handleProxy" type="primary" long="true" shape="circle" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_i-button data-v-cacaafe0">发起会话</i-button>
+        </i-col>
+      </i-row>
+    </view>
+  </view>
+</template>

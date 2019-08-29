@@ -1,5 +1,15 @@
-<template name="10939c34"><view class="_div data-v-e0e82344 container"><view class="_div data-v-e0e82344 group" wx:key="item.groupID" key="{{item.groupID}}" bindtap="handleProxy" data-eventid="{{'0_'+index}}" data-comkey="{{$k}}" wx:for="{{groupList}}" wx:for-index="index" wx:for-item="item"><view class="_div data-v-e0e82344 avatar"><image class="_image data-v-e0e82344 img" src="{{item.avatar || '/static/images/groups.png'}}"></image></view> <view class="_div data-v-e0e82344 name">
-      {{item.name}}
-    </view> <view class="_div data-v-e0e82344 type">
-      {{item.type}}
-    </view></view></view></template>
+<template name="6def3c90">
+  <view class="_div data-v-78596bc6 container">
+    <view class="_div data-v-78596bc6 group" wx:key="item.groupID" key="{{item.groupID}}" bindtap="handleProxy" data-eventid="{{'0_'+index}}" data-comkey="{{$k}}" wx:for="{{groupList}}" wx:for-index="index" wx:for-item="item">
+      <view class="_div data-v-78596bc6 avatar">
+        <image class="_image data-v-78596bc6 img" src="{{item.avatar || '/static/images/groups.png'}}"></image>
+      </view>
+      <view class="_div data-v-78596bc6 name">
+        {{item.name}}
+      </view>
+      <view class="_div data-v-78596bc6 type">
+        {{item.type}}
+      </view>
+    </view>
+  </view>
+</template>
