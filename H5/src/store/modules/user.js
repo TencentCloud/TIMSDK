@@ -35,8 +35,10 @@ const user = {
           context.commit('startComputeCurrent')
         })
         .catch(imError => {
-          if (imError.code === 20000) {
+          if (imError.code === 2000) {
             window.$message.error(imError.message + ', 请检查是否正确填写了 SDKAPPID')
+          } else {
+            window.$message.error(imError.message)
           }
         })
     },
