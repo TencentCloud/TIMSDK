@@ -1451,8 +1451,8 @@ window.webim = webim;
 
     //消息最大长度（字节）
     var MSG_MAX_LENGTH = {
-        'C2C': 12000, //私聊消息
-        'GROUP': 8898 //群聊
+        'C2C': 9000, //私聊消息 与官网文档维持一致，https://cloud.tencent.com/document/product/269/32429#.E4.B8.9A.E5.8A.A1.E7.89.B9.E6.80.A7.E9.99.90.E5.88.B6
+        'GROUP': 9000 //群聊
     };
 
     //后台接口返回类型
@@ -2919,9 +2919,7 @@ window.webim = webim;
                 var lastMsgTime = resp.LastMsgTime;
 
                 if (resp.MsgList && resp.MsgList.length) {
-                    for (var i in resp.MsgList) {
-                        tempC2CHistoryMsgList.push(resp.MsgList[i]);
-                    }
+                    tempC2CHistoryMsgList = resp.MsgList.concat(tempC2CHistoryMsgList);
                 }
                 var netxOptions = null;
                 if (complete == 0) { //还有历史消息可拉取
@@ -4774,7 +4772,6 @@ window.webim = webim;
             delete bigGroupLongPollingStartSeqMap[groupId];
             delete bigGroupLongPollingKeyMap[groupId];
             delete bigGroupLongPollingMsgMap[groupId];
-
         };
 
         //设置群消息数据条数
@@ -6530,13 +6527,15 @@ window.webim = webim;
             proto_sendMsg(msg, function (resp) {
                 //私聊时，加入自己的发的消息，群聊时，由于seq和服务器的seq不一样，所以不作处理
                 if (msg.sess.type() == SESSION_TYPE.C2C) {
-                    if (!MsgStore.addMsg(msg)) {
-                        var errInfo = "sendMsg: addMsg failed!";
-                        var error = tool.getReturnError(errInfo, -17);
-                        log.error(errInfo);
-                        if (cbErr) cbErr(error);
-                        return;
-                    }
+                    MsgStore.addMsg(msg)
+                    // 用以下注释代码会出现 C2C 发消息成功报 -17错误，原因：轮询的消息先入库后走到下面注释逻辑，导致命中判重逻辑
+                    // if (!MsgStore.addMsg(msg)) {
+                    //     var errInfo = "sendMsg: addMsg failed!";
+                    //     var error = tool.getReturnError(errInfo, -17);
+                    //     log.error(errInfo);
+                    //     if (cbErr) cbErr(error);
+                    //     return;
+                    // }
                     //更新信息流时间
                     MsgStore.updateTimeline();
                 }
