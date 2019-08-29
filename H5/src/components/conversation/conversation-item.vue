@@ -22,13 +22,13 @@
             <div class="item-header">
               <div
                 class="covnersation-info text-ellipsis"
-                v-if="typeof conversation.userProfile !== 'undefined'"
+                v-if="conversation.type ===  TIM.TYPES.CONV_C2C"
               >{{conversation.userProfile.nick || conversation.userProfile.userID}}</div>
               <div
                 class="covnersation-info text-ellipsis"
-                v-else-if="typeof conversation.groupProfile !== 'undefined'"
+                v-else-if="conversation.type ===  TIM.TYPES.CONV_GROUP"
               >{{conversation.groupProfile.name || conversation.groupProfile.groupID}}</div>
-              <div class="covnersation-info text-ellipsis" v-else>{{conversation.conversationID}}</div>
+              <div class="covnersation-info text-ellipsis" v-else-if="conversation.type === TIM.TYPES.CONV_SYSTEM">系统通知</div>
               <badge
                 v-if="showUnreadCount"
                 :max="99"
@@ -52,13 +52,12 @@
 
 <script>
 import { Button, Badge, Popover } from 'element-ui'
-import Avatar from '../avatar.vue'
 import { mapGetters, mapState } from 'vuex'
 import { isToday, getDate, getTime } from '../../utils/date'
 export default {
   name: 'conversation-item',
   props: ['conversation'],
-  components: { Badge, Avatar, Popover, ElButton: Button },
+  components: { Badge, Popover, ElButton: Button },
   data() {
     return {
       popoverVisible: false,

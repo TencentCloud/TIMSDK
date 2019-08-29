@@ -1,18 +1,12 @@
 <template>
   <div id="conversation-list" class="list-container">
-    <el-dialog title="快速发起会话" :visible.sync="showDialog">
-      <el-input placeholder="请输入用户ID" v-model="userID"/>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirm">确 定</el-button>
-      </span>
-    </el-dialog>
     <conversation-item
       :conversation="item"
       v-for="item in conversationList"
       :key="item.conversationID"
-      :class="{'current-conversation-item': item.conversationID === currentConversation.conversationID}"
+      :class="{ 'current-conversation-item': item.conversationID === currentConversation.conversationID }"
     />
+
     <el-button
       class="bottom-circle-btn create-conversation"
       @click="handleAddButtonClick"
@@ -27,6 +21,13 @@
       icon="el-icon-refresh-right"
       circle
     ></el-button>
+    <el-dialog title="快速发起会话" :visible.sync="showDialog">
+      <el-input placeholder="请输入用户ID" v-model="userID" />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showDialog = false">取 消</el-button>
+        <el-button type="primary" @click="handleConfirm">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -35,10 +36,11 @@ import ConversationItem from './conversation-item'
 import { mapState } from 'vuex'
 export default {
   name: 'ConversationList',
+  components: { ConversationItem },
   data() {
     return {
       showDialog: false,
-      userID: '',
+      userID: ''
     }
   },
   computed: {
@@ -46,9 +48,6 @@ export default {
       conversationList: state => state.conversation.conversationList,
       currentConversation: state => state.conversation.currentConversation
     })
-  },
-  components: {
-    ConversationItem
   },
   methods: {
     handleRefresh() {
@@ -58,7 +57,7 @@ export default {
       this.showDialog = true
     },
     handleConfirm() {
-      this.$store.dispatch('checkoutConversation', `C2C${this.userID}`).then(()=>{
+      this.$store.dispatch('checkoutConversation', `C2C${this.userID}`).then(() => {
         this.showDialog = false
       })
     }

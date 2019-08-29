@@ -1,25 +1,18 @@
 <template>
   <div id="tim-demo-wrapper">
+    <!-- 登录组件 -->
     <login v-if="!isLogin" />
-    <div class="demo" v-else>
-      <el-row
-        style="width:100%"
-        v-loading="showLoading"
-        element-loading-text="正在拼命初始化..."
-        element-loading-background="rgba(0, 0, 0, 0.8)"
-      >
-        <el-col :span="8" style="height:100%">
-          <side-bar />
-        </el-col>
-        <el-col :span="16" style="height:100%">
-          <current-conversation-box
-            ref="currentConversationBox"
-            class="current-conversation"
-            v-if="showMessageSendBox"
-          />
-          <div v-else class="current-conversation-skeleton"></div>
-        </el-col>
-      </el-row>
+    <div
+      class="demo"
+      v-else
+      v-loading="showLoading"
+      element-loading-text="正在拼命初始化..."
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+    >
+      <!-- 侧栏 -->
+      <side-bar />
+      <!-- 当前会话 -->
+      <current-conversation />
     </div>
   </div>
 </template>
@@ -27,7 +20,7 @@
 <script>
 import { Notification } from 'element-ui'
 import { mapState } from 'vuex'
-import CurrentConversationBox from './components/conversation/current-conversation'
+import CurrentConversation from './components/conversation/current-conversation'
 import SideBar from './components/layout/side-bar'
 import Login from './components/login/login'
 import { translateGroupSystemNotice } from './utils/common'
@@ -35,26 +28,19 @@ import { translateGroupSystemNotice } from './utils/common'
 export default {
   title: 'TIMSDK DEMO',
   components: {
-    CurrentConversationBox,
+    Login,
     SideBar,
-    Login
-  },
-  data() {
-    return {
-      activeName: 'conversation'
-    }
+    CurrentConversation
   },
 
   computed: {
-    showMessageSendBox() {
-      return this.$store.getters.currentConversationType !== ''
-    },
     ...mapState({
       currentUserProfile: state => state.user.currentUserProfile,
       currentConversation: state => state.conversation.currentConversation,
       isLogin: state => state.user.isLogin,
       isSDKReady: state => state.user.isSDKReady
     }),
+    // 是否显示 Loading 状态
     showLoading() {
       return !this.isSDKReady
     }
@@ -67,21 +53,29 @@ export default {
 
   methods: {
     initListener() {
+      // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
       this.tim.on(this.TIM.EVENT.SDK_READY, this.onReadyStateUpdate, this)
+      // SDK NOT READT
       this.tim.on(this.TIM.EVENT.SDK_NOT_READY, this.onReadyStateUpdate, this)
+      // 被踢出
       this.tim.on(this.TIM.EVENT.KICKED_OUT, () => {
         this.$message.error('被踢出，请重新登录。')
         this.$store.commit('toggleIsLogin', false)
         this.$store.commit('reset')
       })
+      // SDK内部出错
       this.tim.on(this.TIM.EVENT.ERROR, this.onError)
+      // 收到新消息
       this.tim.on(this.TIM.EVENT.MESSAGE_RECEIVED, this.onReceiveMessage)
+      // 会话列表更新
       this.tim.on(this.TIM.EVENT.CONVERSATION_LIST_UPDATED, event => {
         this.$store.commit('updateConversationList', event.data)
       })
+      // 群组列表更新
       this.tim.on(this.TIM.EVENT.GROUP_LIST_UPDATED, event => {
         this.$store.commit('updateGroupList', event.data)
       })
+      // 收到新的群系统通知
       this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECERIVED, event => {
         const isKickedout = event.data.type === 4
         const isCurrentConversation =
@@ -125,7 +119,7 @@ export default {
      * @param {Message[]} messageList
      */
     handleAt(messageList) {
-      // 有@符号的文本消息
+      // 筛选有 @ 符号的文本消息
       const atTextMessageList = messageList.filter(
         message => message.type === this.TIM.TYPES.MSG_TEXT && message.payload.text.includes('@')
       )
@@ -137,7 +131,7 @@ export default {
         }
         // @ 我的
         if (matched.includes(`@${this.currentUserProfile.userID}`)) {
-          // 当前页面不可见时，通知一波。
+          // 当前页面不可见时，调用window.Notification接口，系统级别通知。
           if (document.hidden) {
             this.notifyMe(message)
           }
@@ -157,6 +151,7 @@ export default {
      * @param {Message} message
      */
     notifyMe(message) {
+      // 需检测浏览器支持和用户授权
       if (!('Notification' in window)) {
         return
       } else if (window.Notification.permission === 'granted') {
@@ -218,19 +213,6 @@ body {
 }
 .el-tabs__active-bar {
   background-color: #808080;
-}
-/* 当前会话的骨架屏 */
-.current-conversation,
-.current-conversation-skeleton {
-  height: 100%;
-  background-color: #eee;
-  box-sizing: border-box;
-  display: flex;
-}
-/* 当前会话 */
-.current-conversation {
-  color: #000;
-  width: 100%;
 }
 
 /* 设置滚动条的样式 */

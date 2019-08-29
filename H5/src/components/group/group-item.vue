@@ -1,5 +1,4 @@
 <template>
-  <!-- <context-menu :visible="visible"> -->
   <div @click="handleGroupClick">
     <el-row class="group-item-container">
       <el-col :span="6">
@@ -10,16 +9,11 @@
       </el-col>
     </el-row>
   </div>
-  <!-- </context-menu> -->
 </template>
 
 <script>
-import Avatar from '../avatar.vue'
 export default {
   props: ['group'],
-  components: {
-    Avatar
-  },
   data() {
     return {
       visible: false,
@@ -51,16 +45,5 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 6px 12px;
-}
-.group-avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-}
-
-.group-avatar-default {
-  background: gray;
-  text-align: center;
-  line-height: 30px;
 }
 </style>

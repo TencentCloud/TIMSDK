@@ -3,30 +3,25 @@
     <div class="bar-header">
       <my-profile />
       <div class="tab-items" @click="handleClick">
-        <el-badge :value="totalUnreadCount" :max="99" :hidden="totalUnreadCount===0">
+        <el-badge :value="totalUnreadCount" :max="99" :hidden="totalUnreadCount === 0">
           <span
             id="conversation-list"
             class="iconfont icon-conversation"
-            :class="{'active': showConversationList}"
+            :class="{ active: showConversationList }"
             title="会话列表"
           ></span>
         </el-badge>
-        <span
-          id="group-list"
-          class="iconfont icon-group"
-          :class="{'active': showGroupList}"
-          title="群组列表"
-        ></span>
+        <span id="group-list" class="iconfont icon-group" :class="{ active: showGroupList }" title="群组列表"></span>
         <span
           id="friend-list"
           class="iconfont icon-contact"
-          :class="{'active': showFriendList}"
+          :class="{ active: showFriendList }"
           title="好友列表"
         ></span>
         <span
           id="black-list"
           class="iconfont icon-blacklist"
-          :class="{'active': showBlackList}"
+          :class="{ active: showBlackList }"
           title="黑名单列表"
         ></span>
       </div>
@@ -91,10 +86,8 @@ export default {
       return this.active === activeName.BLACK_LIST
     },
     showAddButton() {
-      return [activeName.CONVERSATION_LIST, activeName.GROUP_LIST].includes(
-        this.active
-      )
-    },
+      return [activeName.CONVERSATION_LIST, activeName.GROUP_LIST].includes(this.active)
+    }
   },
   methods: {
     checkoutActive(name) {
@@ -175,6 +168,8 @@ export default {
 }
 .side-bar-wrapper {
   position: relative;
+  width: 300px;
+  min-width: 300px;
   height: 100%;
   background-color: #dcdcdc;
   color: #000;
@@ -190,8 +185,8 @@ export default {
 }
 .bar-content {
   width: 100%;
-      overflow-y: scroll;
-    overflow-x: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 .tab-items {
   display: flex;
