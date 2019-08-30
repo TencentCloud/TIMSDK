@@ -40,7 +40,7 @@ void Test_TIMMsgBatchSend() {
             std::string id = res[kTIMMsgBatchSendResultIdentifier].asString();
             int sub_code = res[kTIMMsgBatchSendResultCode].asInt();
             std::string sub_desc = res[kTIMMsgBatchSendResultDesc].asString();
-            
+
             if (code != ERR_SUCC) {
                 CIMWnd::GetInst().Logf("TestApi", kTIMLog_Error, "TIMMsgBatchSend to id:%s Failure! code:%u desc:%s", id.c_str(), sub_code, sub_desc.c_str());
             }
@@ -77,7 +77,7 @@ void Test_MsgImport() {
     Json::Value json_value_elem; //构造消息文本元素
     json_value_elem[kTIMElemType] = TIMElemType::kTIMElem_Text;
     json_value_elem[kTIMTextElemContent] = "this is import msg";
-    
+
     Json::Value json_value_msg; //构造消息
     json_value_msg[kTIMMsgSender] = CIMWnd::GetInst().login_id;
     json_value_msg[kTIMMsgClientTime] = time(NULL);
@@ -129,7 +129,7 @@ void Test_SetGroupInfo() {
             CIMWnd::GetInst().Logf("TestApi", kTIMLog_Error, "TIMGroupModifyGroupInfo cb code:%u desc:%s", code, desc);
             return;
         }
-        
+
     }, nullptr);
     if (TIM_SUCC != ret) {
         CIMWnd::GetInst().Logf("TestApi", kTIMLog_Error, "TIMGroupSetGroupInfo Failure!ret %d", ret);
@@ -250,13 +250,233 @@ void Test_GetMsgList()
     }, nullptr);
 }
 
+//****************** 好友关系链接口使用**********************/
+void TestFriendshipGetProfileList() {
+    Json::Value json_get_profile_list_param;
+    json_get_profile_list_param[kTIMFriendShipGetProfileListParamForceUpdate] = false;
+    json_get_profile_list_param[kTIMFriendShipGetProfileListParamIdentifierArray].append("user1");
+    json_get_profile_list_param[kTIMFriendShipGetProfileListParamIdentifierArray].append("user2");
+    json_get_profile_list_param[kTIMFriendShipGetProfileListParamIdentifierArray].append("user4");
+
+    TIMProfileGetUserProfileList(json_get_profile_list_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "GetProfileList cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestFriendshipModifySelfProfile() {
+    Json::Value modify_item;
+    modify_item[kTIMUserProfileItemNickName] = "change my nick name"; // 修改昵称
+    modify_item[kTIMUserProfileItemGender] = kTIMGenderType_Female;  // 修改性别
+    modify_item[kTIMUserProfileItemAddPermission] = kTIMProfileAddPermission_NeedConfirm;  // 修改添加好友权限
+
+    Json::Value json_user_profile_item_custom;
+    json_user_profile_item_custom[kTIMUserProfileCustemStringInfoKey] = "Str";
+    json_user_profile_item_custom[kTIMUserProfileCustemStringInfoValue] = "my define data";
+    modify_item[kTIMUserProfileItemCustomStringArray].append(json_user_profile_item_custom);
+    int ret = TIMProfileModifySelfUserProfile(modify_item.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "GetProfileList cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestFriendshipGetFriendProfileList() {
+    int ret = TIMFriendshipGetFriendProfileList([](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "GetProfileList cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestFriendshipAddFriend() {
+    Json::Value json_add_friend_param;
+    json_add_friend_param[kTIMFriendshipAddFriendParamIdentifier] = "user4";
+    json_add_friend_param[kTIMFriendshipAddFriendParamFriendType] = FriendTypeBoth;
+    json_add_friend_param[kTIMFriendshipAddFriendParamAddSource] = "Windows";
+    json_add_friend_param[kTIMFriendshipAddFriendParamAddWording] = "I am Iron Man";
+    int ret = TIMFriendshipAddFriend(json_add_friend_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, " cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestTIMFriendshipDeleteFriend() {
+    Json::Value json_delete_friend_param;
+    json_delete_friend_param[kTIMFriendshipDeleteFriendParamIdentifierArray].append("user4");
+    json_delete_friend_param[kTIMFriendshipDeleteFriendParamFriendType] = FriendTypeBoth;
+    int ret = TIMFriendshipDeleteFriend(json_delete_friend_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+void TestTIMFriendshipGetPendencyList() {
+    Json::Value json_get_pendency_list_param;
+    json_get_pendency_list_param[kTIMFriendshipGetPendencyListParamType] = FriendPendencyTypeBoth;
+    json_get_pendency_list_param[kTIMFriendshipGetPendencyListParamStartSeq] = 0;
+    int ret = TIMFriendshipGetPendencyList(json_get_pendency_list_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestTIMFriendshipReportPendencyReaded() {
+    uint64_t time_stamp = 1563026447;
+    int ret = TIMFriendshipReportPendencyReaded(time_stamp, [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestTIMFriendshipDeletePendency() {
+    Json::Value json_delete_pendency_param;
+    json_delete_pendency_param[kTIMFriendshipDeletePendencyParamType] = FriendPendencyTypeSendOut;
+    json_delete_pendency_param[kTIMFriendshipDeletePendencyParamIdentifierArray].append("user4");
+    int ret = TIMFriendshipDeletePendency(json_delete_pendency_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestTIMFriendshipHandleFriendAddRequest() {
+    Json::Value json_handle_friend_add_param;
+    json_handle_friend_add_param[kTIMFriendResponeIdentifier] = "user1";
+    json_handle_friend_add_param[kTIMFriendResponeAction] = ResponseActionAgreeAndAdd;
+    json_handle_friend_add_param[kTIMFriendResponeRemark] = "I am Captain China";
+    json_handle_friend_add_param[kTIMFriendResponeGroupName] = "schoolmate";
+    int ret = TIMFriendshipHandleFriendAddRequest(json_handle_friend_add_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestTIMFriendshipModifyFriendProfile() {
+    Json::Value json_modify_friend_profile_item;
+    json_modify_friend_profile_item[kTIMFriendProfileItemRemark] = "xxxx yyyy";  // 修改备注
+    json_modify_friend_profile_item[kTIMFriendProfileItemGroupNameArray].append("group1"); // 修改好友所在分组
+    json_modify_friend_profile_item[kTIMFriendProfileItemGroupNameArray].append("group2");
+    Json::Value json_modify_friend_profilie_custom;
+    json_modify_friend_profilie_custom[kTIMFriendProfileCustemStringInfoKey] = "Str";
+    json_modify_friend_profilie_custom[kTIMFriendProfileCustemStringInfoValue] = "this is changed value";
+    json_modify_friend_profile_item[kTIMFriendProfileItemCustomStringArray].append(json_modify_friend_profilie_custom);
+
+    Json::Value json_modify_friend_info_param;
+    json_modify_friend_info_param[kTIMFriendshipModifyFriendProfileParamIdentifier] = "user4";
+    json_modify_friend_info_param[kTIMFriendshipModifyFriendProfileParamItem] = json_modify_friend_profile_item;
+    int ret = TIMFriendshipModifyFriendProfile(json_modify_friend_info_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestTIMFriendshipCheckFriendType() {
+    Json::Value json_check_friend_list_param;
+    json_check_friend_list_param[kTIMFriendshipCheckFriendTypeParamCheckType] = FriendTypeBoth;
+    json_check_friend_list_param[kTIMFriendshipCheckFriendTypeParamIdentifierArray].append("user4");
+    int ret = TIMFriendshipCheckFriendType(json_check_friend_list_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestTIMFriendshipCreateFriendGroup() {
+    Json::Value json_create_friend_group_param;
+    json_create_friend_group_param[kTIMFriendshipCreateFriendGroupParamNameArray].append("Group123");
+    json_create_friend_group_param[kTIMFriendshipCreateFriendGroupParamNameArray].append("Group321");
+    json_create_friend_group_param[kTIMFriendshipCreateFriendGroupParamIdentifierArray].append("user4");
+    json_create_friend_group_param[kTIMFriendshipCreateFriendGroupParamIdentifierArray].append("user10");
+    int ret = TIMFriendshipCreateFriendGroup(json_create_friend_group_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+void TestTIMFriendshipGetFriendGroupList() {
+    Json::Value json_get_friend_group_list_param;
+    json_get_friend_group_list_param.append("Group123");
+    //json_get_friend_group_list_param.append("Group1");
+    //json_get_friend_group_list_param.append("Group2");
+    int ret = TIMFriendshipGetFriendGroupList(json_get_friend_group_list_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+void TestTIMFriendshipModifyFriendGroup() {
+    Json::Value json_modify_friend_group_param;
+    json_modify_friend_group_param[kTIMFriendshipModifyFriendGroupParamName] = "Group123";
+    json_modify_friend_group_param[kTIMFriendshipModifyFriendGroupParamNewName] = "GroupNewName";
+    json_modify_friend_group_param[kTIMFriendshipModifyFriendGroupParamDeleteIdentifierArray].append("user4");
+    json_modify_friend_group_param[kTIMFriendshipModifyFriendGroupParamAddIdentifierArray].append("user9");
+    json_modify_friend_group_param[kTIMFriendshipModifyFriendGroupParamAddIdentifierArray].append("user5");
+    int ret = TIMFriendshipModifyFriendGroup(json_modify_friend_group_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestTIMFriendshipDeleteFriendGroup() {
+    Json::Value json_delete_friend_group_param;
+    json_delete_friend_group_param.append("GroupNewName");
+    int ret = TIMFriendshipDeleteFriendGroup(json_delete_friend_group_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestTIMFriendshipAddToBlackList() {
+    Json::Value json_add_to_blacklist_param;
+    json_add_to_blacklist_param.append("user5");
+    json_add_to_blacklist_param.append("user10");
+    int ret = TIMFriendshipAddToBlackList(json_add_to_blacklist_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestTIMFriendshipGetBlackList() {
+    int ret = TIMFriendshipGetBlackList([](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
+
+void TestTIMFriendshipDeleteFromBlackList() {
+    Json::Value json_delete_from_blacklist_param;
+    json_delete_from_blacklist_param.append("user5");
+    json_delete_from_blacklist_param.append("user10");
+    int ret = TIMFriendshipDeleteFromBlackList(json_delete_from_blacklist_param.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "cb code:%u desc:%s", code, desc);
+        CIMWnd::GetInst().Logf("TestApi", kTIMLog_Info, "json_params:%s", json_params);
+    }, nullptr);
+}
 
 // 此函数用于测试各个API功能
 void TestApi() {
     const void* user_data = nullptr;
     Json::Value modify_item;
 
-    
+    //TestFriendshipGetProfileList();
+    //TestFriendshipModifySelfProfile();
+
+    //TestTIMFriendshipDeleteFriend();
+    //TestFriendshipAddFriend();
+
+    //TestFriendshipGetFriendProfileList();
+
+    TestTIMFriendshipModifyFriendProfile();
+
+    //TestTIMFriendshipGetPendencyList();
+    //TestTIMFriendshipReportPendencyReaded();
+    //TestTIMFriendshipDeletePendency();
+    //TestTIMFriendshipHandleFriendAddRequest();
+
+    //TestTIMFriendshipCheckFriendType();
+
+    //TestTIMFriendshipCreateFriendGroup();
+    //TestTIMFriendshipGetFriendGroupList();
+    //TestTIMFriendshipModifyFriendGroup();
+    //TestTIMFriendshipDeleteFriendGroup();
+
+    //TestTIMFriendshipAddToBlackList();
+    //TestTIMFriendshipGetBlackList();
+    //TestTIMFriendshipDeleteFromBlackList();
 
     //TIMSetRecvNewMsgCallback(RecvNewMsgCallback, user_data);
     //Test_MsgImport();
@@ -277,6 +497,6 @@ void TestApi() {
     //int ret = TIMGroupGetMemberInfoList(getmeminfo_opt.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
 
     //}, this);
-    
+
     //Test_GetMsgList();
 }

@@ -14,11 +14,11 @@ public:
 
     void close();
 
-	static HttpReportRequest& instance();
+    static HttpReportRequest& instance();
 
     void setProxy(const std::string& ip, unsigned short port);
 
-	void reportELK(const std::string& reportJson);
+    void reportELK(const std::string& reportJson);
 
 private:
     HttpClient m_httpClient;

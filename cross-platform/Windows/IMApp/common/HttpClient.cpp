@@ -65,10 +65,10 @@ static size_t onHeaderCallback(char *buffer, size_t size, size_t nitems, void *u
 }
 
 HttpClient::HttpClient(const std::wstring& user_agent)
-	: m_user_agent(user_agent)
-	, m_hSession(NULL)
-	, m_hConnect(NULL)
-	, m_hRequest(NULL)
+    : m_user_agent(user_agent)
+    , m_hSession(NULL)
+    , m_hConnect(NULL)
+    , m_hRequest(NULL)
     , m_proxyIP("")
     , m_proxyPort(1080)
 {
@@ -77,15 +77,15 @@ HttpClient::HttpClient(const std::wstring& user_agent)
 
 HttpClient::~HttpClient()
 {
-	http_close();
+    http_close();
 }
 
 
 size_t req_reply(void *ptr, size_t size, size_t nmemb, void *stream)
 {
-	std::string *str = (std::string*)stream;
-	(*str).append((char*)ptr, size * nmemb);
-	return (size * nmemb);
+    std::string *str = (std::string*)stream;
+    (*str).append((char*)ptr, size * nmemb);
+    return (size * nmemb);
 }
 
 void HttpClient::setProxy(const std::string& ip, unsigned short port)
@@ -95,16 +95,16 @@ void HttpClient::setProxy(const std::string& ip, unsigned short port)
 }
 
 DWORD HttpClient::http_get(const std::wstring& url
-	, const std::vector<std::wstring>& headers, std::string& resp_data)
+    , const std::vector<std::wstring>& headers, std::string& resp_data)
 {
 #ifndef USER_CURL
-	DWORD ret = request(url, L"GET", headers, std::string(), resp_data);
-	http_close();
-	return ret;
+    DWORD ret = request(url, L"GET", headers, std::string(), resp_data);
+    http_close();
+    return ret;
 #else
 
-	std::string url_temp = Wide2UTF8(url);
-	CURL* curl = curl_easy_init();
+    std::string url_temp = Wide2UTF8(url);
+    CURL* curl = curl_easy_init();
 
     CURLcode res = CURLE_OK;
     if (curl)
@@ -150,26 +150,26 @@ DWORD HttpClient::http_get(const std::wstring& url
         curl = NULL;
     }
 
-	return res;
+    return res;
 #endif // !USER_CURL
 }
 
 DWORD HttpClient::http_post(const std::wstring& url
-	, const std::vector<std::wstring>& headers, const std::string& body, std::string& resp_data)
+    , const std::vector<std::wstring>& headers, const std::string& body, std::string& resp_data)
 {
 
 #ifndef USER_CURL
-	DWORD ret = request(url, L"POST", headers, body, resp_data);
-	http_close();
-	return ret;
+    DWORD ret = request(url, L"POST", headers, body, resp_data);
+    http_close();
+    return ret;
 #else
 
-	std::string url_temp = Wide2UTF8(url);
-	CURL* curl = curl_easy_init();
+    std::string url_temp = Wide2UTF8(url);
+    CURL* curl = curl_easy_init();
 
     CURLcode res = CURLE_OK;
-	if (curl)
-	{
+    if (curl)
+    {
         RequestSink reqSink = { const_cast<std::string*>(&body), 0 };
 
         std::vector<std::string> respHeaders;
@@ -185,10 +185,10 @@ DWORD HttpClient::http_post(const std::wstring& url
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&respSink);
         curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, onHeaderCallback);
         curl_easy_setopt(curl, CURLOPT_HEADERDATA, (void *)&respSink);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-		curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5000);
-		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5000);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5000);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5000);
 
         if (false == m_proxyIP.empty())
         {
@@ -197,20 +197,20 @@ DWORD HttpClient::http_post(const std::wstring& url
             curl_easy_setopt(curl, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5_HOSTNAME);
         }
 
-		struct curl_slist *headerlist = NULL;
-		size_t headerlength = headers.size();
-		for (int i = 0; i < headerlength; i++)
-		{
-			headerlist = curl_slist_append(headerlist, Wide2UTF8(headers[i]).c_str());
-		}
+        struct curl_slist *headerlist = NULL;
+        size_t headerlength = headers.size();
+        for (int i = 0; i < headerlength; i++)
+        {
+            headerlist = curl_slist_append(headerlist, Wide2UTF8(headers[i]).c_str());
+        }
 
-		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
 
-		// start req  
-		res = curl_easy_perform(curl);
+        // start req  
+        res = curl_easy_perform(curl);
 
-		curl_slist_free_all(headerlist);
-	}
+        curl_slist_free_all(headerlist);
+    }
 
     if (NULL != curl)
     {
@@ -218,17 +218,17 @@ DWORD HttpClient::http_post(const std::wstring& url
         curl = NULL;
     }
 
-	return res;
+    return res;
 #endif
 }
 
 DWORD HttpClient::http_put(const std::wstring& url
-	, const std::vector<std::wstring>& headers, const std::string& body, std::string& resp_data)
+    , const std::vector<std::wstring>& headers, const std::string& body, std::string& resp_data)
 {
-	DWORD ret = request(url, L"PUT", headers, body, resp_data);
-	http_close();
+    DWORD ret = request(url, L"PUT", headers, body, resp_data);
+    http_close();
 
-	return ret;
+    return ret;
 }
 
 void HttpClient::http_close()
@@ -253,123 +253,123 @@ void HttpClient::http_close()
 }
 
 DWORD HttpClient::request(const std::wstring& url, const std::wstring& method
-	, const std::vector<std::wstring>& headers, const std::string& body, std::string& resp_data)
+    , const std::vector<std::wstring>& headers, const std::string& body, std::string& resp_data)
 {
-	assert(NULL == m_hSession && NULL == m_hConnect && NULL == m_hRequest);
+    assert(NULL == m_hSession && NULL == m_hConnect && NULL == m_hRequest);
 
-	std::wstring host_name;
-	std::wstring url_path;
-	URL_COMPONENTS url_comp = { 0 };
-	url_comp.dwStructSize = sizeof(url_comp);
+    std::wstring host_name;
+    std::wstring url_path;
+    URL_COMPONENTS url_comp = { 0 };
+    url_comp.dwStructSize = sizeof(url_comp);
 
-	host_name.resize(url.size());
-	url_path.resize(url.size());
+    host_name.resize(url.size());
+    url_path.resize(url.size());
 
-	url_comp.lpszHostName = const_cast<wchar_t*>(host_name.data());
-	url_comp.dwHostNameLength = host_name.size();
-	url_comp.lpszUrlPath = const_cast<wchar_t*>(url_path.data());
-	url_comp.dwUrlPathLength = url_path.size();
-	if (FALSE == ::WinHttpCrackUrl(url.c_str(), static_cast<DWORD>(url.size()), 0, &url_comp))
-	{
-		return ::GetLastError();
-	}
+    url_comp.lpszHostName = const_cast<wchar_t*>(host_name.data());
+    url_comp.dwHostNameLength = host_name.size();
+    url_comp.lpszUrlPath = const_cast<wchar_t*>(url_path.data());
+    url_comp.dwUrlPathLength = url_path.size();
+    if (FALSE == ::WinHttpCrackUrl(url.c_str(), static_cast<DWORD>(url.size()), 0, &url_comp))
+    {
+        return ::GetLastError();
+    }
 
-	m_hSession = ::WinHttpOpen(m_user_agent.c_str()
-		, WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
-	if (NULL == m_hSession)
-	{
-		return ::GetLastError();
-	}
+    m_hSession = ::WinHttpOpen(m_user_agent.c_str()
+        , WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+    if (NULL == m_hSession)
+    {
+        return ::GetLastError();
+    }
 
-	m_hConnect = ::WinHttpConnect(m_hSession, host_name.c_str(), url_comp.nPort, 0);
-	if (NULL == m_hConnect)
-	{
-		return ::GetLastError();
-	}
+    m_hConnect = ::WinHttpConnect(m_hSession, host_name.c_str(), url_comp.nPort, 0);
+    if (NULL == m_hConnect)
+    {
+        return ::GetLastError();
+    }
 
-	DWORD flags = (INTERNET_SCHEME_HTTP == url_comp.nScheme ? 0 : WINHTTP_FLAG_SECURE);
-	m_hRequest = ::WinHttpOpenRequest(m_hConnect, method.c_str(), url_path.c_str(),
-		NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, flags);
-	if (NULL == m_hRequest)
-	{
-		return ::GetLastError();
-	}
+    DWORD flags = (INTERNET_SCHEME_HTTP == url_comp.nScheme ? 0 : WINHTTP_FLAG_SECURE);
+    m_hRequest = ::WinHttpOpenRequest(m_hConnect, method.c_str(), url_path.c_str(),
+        NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, flags);
+    if (NULL == m_hRequest)
+    {
+        return ::GetLastError();
+    }
 
-	for (std::vector<std::wstring>::const_iterator it = headers.begin(); headers.end() != it; ++it)
-	{
-		::WinHttpAddRequestHeaders(m_hRequest, it->c_str(), (ULONG)-1L, WINHTTP_ADDREQ_FLAG_ADD | WINHTTP_ADDREQ_FLAG_COALESCE);
-	}
+    for (std::vector<std::wstring>::const_iterator it = headers.begin(); headers.end() != it; ++it)
+    {
+        ::WinHttpAddRequestHeaders(m_hRequest, it->c_str(), (ULONG)-1L, WINHTTP_ADDREQ_FLAG_ADD | WINHTTP_ADDREQ_FLAG_COALESCE);
+    }
 
-	if (0 == method.compare(L"GET"))
-	{
-		::WinHttpSendRequest(m_hRequest, WINHTTP_NO_ADDITIONAL_HEADERS,
-			0, WINHTTP_NO_REQUEST_DATA, 0,
-			0, 0);
-	}
-	else if (0 == method.compare(L"POST"))
-	{
-		const void* body_data = reinterpret_cast<const void*>(body.c_str());
-		::WinHttpSendRequest(m_hRequest, WINHTTP_NO_ADDITIONAL_HEADERS,
-			0, const_cast<void*>(body_data), body.size(),
-			body.size(), 0);
-	}
-	else if (0 == method.compare(L"PUT"))
-	{
-		const void* body_data = reinterpret_cast<const void*>(body.c_str());
-		::WinHttpSendRequest(m_hRequest, WINHTTP_NO_ADDITIONAL_HEADERS,
-			0, const_cast<void*>(body_data), body.size(),
-			body.size(), 0);
-	}
+    if (0 == method.compare(L"GET"))
+    {
+        ::WinHttpSendRequest(m_hRequest, WINHTTP_NO_ADDITIONAL_HEADERS,
+            0, WINHTTP_NO_REQUEST_DATA, 0,
+            0, 0);
+    }
+    else if (0 == method.compare(L"POST"))
+    {
+        const void* body_data = reinterpret_cast<const void*>(body.c_str());
+        ::WinHttpSendRequest(m_hRequest, WINHTTP_NO_ADDITIONAL_HEADERS,
+            0, const_cast<void*>(body_data), body.size(),
+            body.size(), 0);
+    }
+    else if (0 == method.compare(L"PUT"))
+    {
+        const void* body_data = reinterpret_cast<const void*>(body.c_str());
+        ::WinHttpSendRequest(m_hRequest, WINHTTP_NO_ADDITIONAL_HEADERS,
+            0, const_cast<void*>(body_data), body.size(),
+            body.size(), 0);
+    }
 
-	if (ERROR_SUCCESS != ::GetLastError())
-	{
-		return ::GetLastError();
-	}
+    if (ERROR_SUCCESS != ::GetLastError())
+    {
+        return ::GetLastError();
+    }
 
-	if (FALSE == ::WinHttpReceiveResponse(m_hRequest, NULL))
-	{
-		return ::GetLastError();
-	}
+    if (FALSE == ::WinHttpReceiveResponse(m_hRequest, NULL))
+    {
+        return ::GetLastError();
+    }
 
-	WCHAR status_code[16] = { 0 };
-	DWORD buffer_length = _countof(status_code);
-	if (FALSE == ::WinHttpQueryHeaders(m_hRequest, WINHTTP_QUERY_STATUS_CODE
-		, WINHTTP_HEADER_NAME_BY_INDEX, status_code, &buffer_length
-		, WINHTTP_NO_HEADER_INDEX))
-	{
-		return ::GetLastError();
-	}
+    WCHAR status_code[16] = { 0 };
+    DWORD buffer_length = _countof(status_code);
+    if (FALSE == ::WinHttpQueryHeaders(m_hRequest, WINHTTP_QUERY_STATUS_CODE
+        , WINHTTP_HEADER_NAME_BY_INDEX, status_code, &buffer_length
+        , WINHTTP_NO_HEADER_INDEX))
+    {
+        return ::GetLastError();
+    }
 
-	DWORD size = 0;
-	while (TRUE == ::WinHttpQueryDataAvailable(m_hRequest, &size))
-	{
-		if (0 == size)
-		{
-			break;
-		}
+    DWORD size = 0;
+    while (TRUE == ::WinHttpQueryDataAvailable(m_hRequest, &size))
+    {
+        if (0 == size)
+        {
+            break;
+        }
 
-		std::unique_ptr<char[]> buffer(new char[size]);
-		if (NULL == buffer.get())
-		{
-			break;
-		}
+        std::unique_ptr<char[]> buffer(new char[size]);
+        if (NULL == buffer.get())
+        {
+            break;
+        }
 
-		DWORD lpdwNumberOfBytesRead = 0;
-		if (TRUE == ::WinHttpReadData(m_hRequest, buffer.get(), size, &lpdwNumberOfBytesRead))
-		{
-			resp_data.append(buffer.get(), static_cast<size_t>(lpdwNumberOfBytesRead));
-		}
-		else
-		{
-			return ::GetLastError();
-		}
-	}
+        DWORD lpdwNumberOfBytesRead = 0;
+        if (TRUE == ::WinHttpReadData(m_hRequest, buffer.get(), size, &lpdwNumberOfBytesRead))
+        {
+            resp_data.append(buffer.get(), static_cast<size_t>(lpdwNumberOfBytesRead));
+        }
+        else
+        {
+            return ::GetLastError();
+        }
+    }
 
-	const WCHAR ok_status_code[] = { L'2', L'0', L'0', L'\0' };
-	if (0 != ::_wcsicmp(ok_status_code, status_code))
-	{
-		return EcHttpCodeError;
-	}
+    const WCHAR ok_status_code[] = { L'2', L'0', L'0', L'\0' };
+    if (0 != ::_wcsicmp(ok_status_code, status_code))
+    {
+        return EcHttpCodeError;
+    }
 
-	return ERROR_SUCCESS;
+    return ERROR_SUCCESS;
 }

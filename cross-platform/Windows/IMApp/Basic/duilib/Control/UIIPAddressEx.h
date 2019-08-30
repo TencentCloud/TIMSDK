@@ -7,11 +7,11 @@
 
 namespace DuiLib
 {
-	
+
     /// IP输入控件
     class UILIB_API CIPAddressExUI : public CEditUI
     {
-		DECLARE_DUICONTROL(CIPAddressExUI)
+        DECLARE_DUICONTROL(CIPAddressExUI)
     public:
         CIPAddressExUI();
         LPCTSTR GetClass() const;

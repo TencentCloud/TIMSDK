@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.271
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IMApp", "IMApp\IMApp.vcxproj", "{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -12,28 +12,40 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "duilib", "Basic\duilib\duil
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Professional_Release|x64 = Professional_Release|x64
 		Professional_Release|x86 = Professional_Release|x86
+		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Debug|x64.ActiveCfg = Debug|x64
+		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Debug|x64.Build.0 = Debug|x64
 		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Debug|x86.ActiveCfg = Debug|Win32
 		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Debug|x86.Build.0 = Debug|Win32
+		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Professional_Release|x64.ActiveCfg = Release|x64
+		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Professional_Release|x64.Build.0 = Release|x64
 		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Professional_Release|x86.ActiveCfg = Release|Win32
 		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Professional_Release|x86.Build.0 = Release|Win32
+		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Release|x64.ActiveCfg = Release|x64
+		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Release|x64.Build.0 = Release|x64
 		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Release|x86.ActiveCfg = Release|Win32
 		{6FC7E557-24DE-40C2-9FA6-A1ABADAB5CF6}.Release|x86.Build.0 = Release|Win32
+		{604863C3-EE26-416E-8DCE-6869133D5C07}.Debug|x64.ActiveCfg = Debug|x64
+		{604863C3-EE26-416E-8DCE-6869133D5C07}.Debug|x64.Build.0 = Debug|x64
 		{604863C3-EE26-416E-8DCE-6869133D5C07}.Debug|x86.ActiveCfg = Debug|Win32
 		{604863C3-EE26-416E-8DCE-6869133D5C07}.Debug|x86.Build.0 = Debug|Win32
+		{604863C3-EE26-416E-8DCE-6869133D5C07}.Professional_Release|x64.ActiveCfg = Release|Win32
+		{604863C3-EE26-416E-8DCE-6869133D5C07}.Professional_Release|x64.Build.0 = Release|Win32
 		{604863C3-EE26-416E-8DCE-6869133D5C07}.Professional_Release|x86.ActiveCfg = Release|Win32
 		{604863C3-EE26-416E-8DCE-6869133D5C07}.Professional_Release|x86.Build.0 = Release|Win32
+		{604863C3-EE26-416E-8DCE-6869133D5C07}.Release|x64.ActiveCfg = Release|x64
+		{604863C3-EE26-416E-8DCE-6869133D5C07}.Release|x64.Build.0 = Release|x64
 		{604863C3-EE26-416E-8DCE-6869133D5C07}.Release|x86.ActiveCfg = Release|Win32
 		{604863C3-EE26-416E-8DCE-6869133D5C07}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {CDB0C675-741D-4A4F-95AF-A5BA2F0B63D5}
 	EndGlobalSection
 EndGlobal

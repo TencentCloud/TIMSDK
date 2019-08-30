@@ -34,6 +34,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
     ::CoInitialize(NULL);
     const char* version = TIMGetSDKVersion();
 
+
     CIMWnd& wnd = CIMWnd::GetInst();
     wnd.Init();
     wnd.Create(NULL, _T("IMApp"), WS_VISIBLE | WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, WS_EX_WINDOWEDGE);

@@ -93,10 +93,10 @@ bool CEventSource::operator() (void* param)
 }
 void CEventSource::Clear()
 {
-	for( int i = 0; i < m_aDelegates.GetSize(); i++ ) {
-		CDelegateBase* pObject = static_cast<CDelegateBase*>(m_aDelegates[i]);
-		if( pObject) delete pObject;
-	}
-	m_aDelegates.Empty();
+    for( int i = 0; i < m_aDelegates.GetSize(); i++ ) {
+        CDelegateBase* pObject = static_cast<CDelegateBase*>(m_aDelegates[i]);
+        if( pObject) delete pObject;
+    }
+    m_aDelegates.Empty();
 }
 } // namespace DuiLib
