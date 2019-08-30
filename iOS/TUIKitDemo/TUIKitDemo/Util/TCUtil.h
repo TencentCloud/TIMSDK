@@ -19,7 +19,9 @@
 
 + (NSData *)dictionary2JsonData:(NSDictionary *)dict;
 
-+ (NSDictionary *)jsonData2Dictionary:(NSString *)jsonData;
++ (NSDictionary *)jsonSring2Dictionary:(NSString *)jsonString;
+
++ (NSDictionary *)jsonData2Dictionary:(NSData *)jsonData;
 
 + (NSString *)getFileCachePath:(NSString *)fileName;
 

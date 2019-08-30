@@ -18,14 +18,14 @@
 @interface NotifySetupController : UITableViewController
 {
 //    UITableView           *_tableView;
-    
+
     NSMutableArray        *_sectionTitle;
 //    NSMutableDictionary   *_datas;
-    
+
     BOOL                  _isOpenApns;
-    
+
     BOOL                  _isEnableSwitch;
-    
+
     ConfigState           *_configState;
 }
 

@@ -16,25 +16,25 @@
 
 // Block internals.
 typedef NS_OPTIONS(int, AspectBlockFlags) {
-	AspectBlockFlagsHasCopyDisposeHelpers = (1 << 25),
-	AspectBlockFlagsHasSignature          = (1 << 30)
+    AspectBlockFlagsHasCopyDisposeHelpers = (1 << 25),
+    AspectBlockFlagsHasSignature          = (1 << 30)
 };
 typedef struct _AspectBlock {
-	__unused Class isa;
-	AspectBlockFlags flags;
-	__unused int reserved;
-	void (__unused *invoke)(struct _AspectBlock *block, ...);
-	struct {
-		unsigned long int reserved;
-		unsigned long int size;
-		// requires AspectBlockFlagsHasCopyDisposeHelpers
-		void (*copy)(void *dst, const void *src);
-		void (*dispose)(const void *);
-		// requires AspectBlockFlagsHasSignature
-		const char *signature;
-		const char *layout;
-	} *descriptor;
-	// imported variables
+    __unused Class isa;
+    AspectBlockFlags flags;
+    __unused int reserved;
+    void (__unused *invoke)(struct _AspectBlock *block, ...);
+    struct {
+        unsigned long int reserved;
+        unsigned long int size;
+        // requires AspectBlockFlagsHasCopyDisposeHelpers
+        void (*copy)(void *dst, const void *src);
+        void (*dispose)(const void *);
+        // requires AspectBlockFlagsHasSignature
+        const char *signature;
+        const char *layout;
+    } *descriptor;
+    // imported variables
 } *AspectBlockRef;
 
 @interface AspectInfo : NSObject <AspectInfo>
@@ -167,28 +167,28 @@ static void aspect_performLocked(dispatch_block_t block) {
 
 static SEL aspect_aliasForSelector(SEL selector) {
     NSCParameterAssert(selector);
-	return NSSelectorFromString([AspectsMessagePrefix stringByAppendingFormat:@"_%@", NSStringFromSelector(selector)]);
+    return NSSelectorFromString([AspectsMessagePrefix stringByAppendingFormat:@"_%@", NSStringFromSelector(selector)]);
 }
 
 static NSMethodSignature *aspect_blockMethodSignature(id block, NSError **error) {
     AspectBlockRef layout = (__bridge void *)block;
-	if (!(layout->flags & AspectBlockFlagsHasSignature)) {
+    if (!(layout->flags & AspectBlockFlagsHasSignature)) {
         NSString *description = [NSString stringWithFormat:@"The block %@ doesn't contain a type signature.", block];
         AspectError(AspectErrorMissingBlockSignature, description);
         return nil;
     }
-	void *desc = layout->descriptor;
-	desc += 2 * sizeof(unsigned long int);
-	if (layout->flags & AspectBlockFlagsHasCopyDisposeHelpers) {
-		desc += 2 * sizeof(void *);
+    void *desc = layout->descriptor;
+    desc += 2 * sizeof(unsigned long int);
+    if (layout->flags & AspectBlockFlagsHasCopyDisposeHelpers) {
+        desc += 2 * sizeof(void *);
     }
-	if (!desc) {
+    if (!desc) {
         NSString *description = [NSString stringWithFormat:@"The block %@ doesn't has a type signature.", block];
         AspectError(AspectErrorMissingBlockSignature, description);
         return nil;
     }
-	const char *signature = (*(const char **)desc);
-	return [NSMethodSignature signatureWithObjCTypes:signature];
+    const char *signature = (*(const char **)desc);
+    return [NSMethodSignature signatureWithObjCTypes:signature];
 }
 
 static BOOL aspect_isCompatibleBlockSignature(NSMethodSignature *blockSignature, id object, SEL selector, NSError **error) {
@@ -292,7 +292,7 @@ static void aspect_cleanupHookedClassAndSelector(NSObject *self, SEL selector) {
     NSCParameterAssert(self);
     NSCParameterAssert(selector);
 
-	Class klass = object_getClass(self);
+    Class klass = object_getClass(self);
     BOOL isMetaClass = class_isMetaClass(klass);
     if (isMetaClass) {
         klass = (Class)self;
@@ -338,7 +338,7 @@ static void aspect_cleanupHookedClassAndSelector(NSObject *self, SEL selector) {
             if (isMetaClass) {
                 aspect_undoSwizzleClassInPlace((Class)self);
             }else if (self.class != klass) {
-            	aspect_undoSwizzleClassInPlace(klass);
+                aspect_undoSwizzleClassInPlace(klass);
             }
         }
     }
@@ -349,16 +349,16 @@ static void aspect_cleanupHookedClassAndSelector(NSObject *self, SEL selector) {
 
 static Class aspect_hookClass(NSObject *self, NSError **error) {
     NSCParameterAssert(self);
-	Class statedClass = self.class;
-	Class baseClass = object_getClass(self);
-	NSString *className = NSStringFromClass(baseClass);
+    Class statedClass = self.class;
+    Class baseClass = object_getClass(self);
+    NSString *className = NSStringFromClass(baseClass);
 
     // Already subclassed
-	if ([className hasSuffix:AspectsSubclassSuffix]) {
-		return baseClass;
+    if ([className hasSuffix:AspectsSubclassSuffix]) {
+        return baseClass;
 
         // We swizzle a class object, not a single object.
-	}else if (class_isMetaClass(baseClass)) {
+    }else if (class_isMetaClass(baseClass)) {
         return aspect_swizzleClassInPlace((Class)self);
         // Probably a KVO'ed class. Swizzle in place. Also swizzle meta classes in place.
     }else if (statedClass != baseClass) {
@@ -366,25 +366,25 @@ static Class aspect_hookClass(NSObject *self, NSError **error) {
     }
 
     // Default case. Create dynamic subclass.
-	const char *subclassName = [className stringByAppendingString:AspectsSubclassSuffix].UTF8String;
-	Class subclass = objc_getClass(subclassName);
+    const char *subclassName = [className stringByAppendingString:AspectsSubclassSuffix].UTF8String;
+    Class subclass = objc_getClass(subclassName);
 
-	if (subclass == nil) {
-		subclass = objc_allocateClassPair(baseClass, subclassName, 0);
-		if (subclass == nil) {
+    if (subclass == nil) {
+        subclass = objc_allocateClassPair(baseClass, subclassName, 0);
+        if (subclass == nil) {
             NSString *errrorDesc = [NSString stringWithFormat:@"objc_allocateClassPair failed to allocate class %s.", subclassName];
             AspectError(AspectErrorFailedToAllocateClassPair, errrorDesc);
             return nil;
         }
 
-		aspect_swizzleForwardInvocation(subclass);
-		aspect_hookedGetClass(subclass, statedClass);
-		aspect_hookedGetClass(object_getClass(subclass), statedClass);
-		objc_registerClassPair(subclass);
-	}
+        aspect_swizzleForwardInvocation(subclass);
+        aspect_hookedGetClass(subclass, statedClass);
+        aspect_hookedGetClass(object_getClass(subclass), statedClass);
+        objc_registerClassPair(subclass);
+    }
 
-	object_setClass(self, subclass);
-	return subclass;
+    object_setClass(self, subclass);
+    return subclass;
 }
 
 static NSString *const AspectsForwardInvocationSelectorName = @"__aspects_forwardInvocation:";
@@ -412,11 +412,11 @@ static void aspect_undoSwizzleForwardInvocation(Class klass) {
 static void aspect_hookedGetClass(Class class, Class statedClass) {
     NSCParameterAssert(class);
     NSCParameterAssert(statedClass);
-	Method method = class_getInstanceMethod(class, @selector(class));
-	IMP newIMP = imp_implementationWithBlock(^(id self) {
-		return statedClass;
-	});
-	class_replaceMethod(class, @selector(class), newIMP, method_getTypeEncoding(method));
+    Method method = class_getInstanceMethod(class, @selector(class));
+    IMP newIMP = imp_implementationWithBlock(^(id self) {
+        return statedClass;
+    });
+    class_replaceMethod(class, @selector(class), newIMP, method_getTypeEncoding(method));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -475,7 +475,7 @@ static void __ASPECTS_ARE_BEING_CALLED__(__unsafe_unretained NSObject *self, SEL
     NSCParameterAssert(self);
     NSCParameterAssert(invocation);
     SEL originalSelector = invocation.selector;
-	SEL aliasSelector = aspect_aliasForSelector(invocation.selector);
+    SEL aliasSelector = aspect_aliasForSelector(invocation.selector);
     invocation.selector = aliasSelector;
     AspectsContainer *objectContainer = objc_getAssociatedObject(self, aliasSelector);
     AspectsContainer *classContainer = aspect_getContainerForClass(object_getClass(self), aliasSelector);
@@ -640,9 +640,9 @@ static BOOL aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, Aspec
             // All superclasses get marked as having a subclass that is modified.
             subclassTracker = tracker;
         }while ((currentClass = class_getSuperclass(currentClass)));
-	} else {
-		return YES;
-	}
+    } else {
+        return YES;
+    }
 
     return YES;
 }
@@ -727,16 +727,16 @@ static void aspect_deregisterTrackedSelector(id self, SEL selector) {
 
 // Thanks to the ReactiveCocoa team for providing a generic solution for this.
 - (id)aspect_argumentAtIndex:(NSUInteger)index {
-	const char *argType = [self.methodSignature getArgumentTypeAtIndex:index];
-	// Skip const type qualifier.
-	if (argType[0] == _C_CONST) argType++;
+    const char *argType = [self.methodSignature getArgumentTypeAtIndex:index];
+    // Skip const type qualifier.
+    if (argType[0] == _C_CONST) argType++;
 
 #define WRAP_AND_RETURN(type) do { type val = 0; [self getArgument:&val atIndex:(NSInteger)index]; return @(val); } while (0)
-	if (strcmp(argType, @encode(id)) == 0 || strcmp(argType, @encode(Class)) == 0) {
-		__autoreleasing id returnObj;
-		[self getArgument:&returnObj atIndex:(NSInteger)index];
-		return returnObj;
-	} else if (strcmp(argType, @encode(SEL)) == 0) {
+    if (strcmp(argType, @encode(id)) == 0 || strcmp(argType, @encode(Class)) == 0) {
+        __autoreleasing id returnObj;
+        [self getArgument:&returnObj atIndex:(NSInteger)index];
+        return returnObj;
+    } else if (strcmp(argType, @encode(SEL)) == 0) {
         SEL selector = 0;
         [self getArgument:&selector atIndex:(NSInteger)index];
         return NSStringFromSelector(selector);
@@ -745,59 +745,59 @@ static void aspect_deregisterTrackedSelector(id self, SEL selector) {
         [self getArgument:&theClass atIndex:(NSInteger)index];
         return theClass;
         // Using this list will box the number with the appropriate constructor, instead of the generic NSValue.
-	} else if (strcmp(argType, @encode(char)) == 0) {
-		WRAP_AND_RETURN(char);
-	} else if (strcmp(argType, @encode(int)) == 0) {
-		WRAP_AND_RETURN(int);
-	} else if (strcmp(argType, @encode(short)) == 0) {
-		WRAP_AND_RETURN(short);
-	} else if (strcmp(argType, @encode(long)) == 0) {
-		WRAP_AND_RETURN(long);
-	} else if (strcmp(argType, @encode(long long)) == 0) {
-		WRAP_AND_RETURN(long long);
-	} else if (strcmp(argType, @encode(unsigned char)) == 0) {
-		WRAP_AND_RETURN(unsigned char);
-	} else if (strcmp(argType, @encode(unsigned int)) == 0) {
-		WRAP_AND_RETURN(unsigned int);
-	} else if (strcmp(argType, @encode(unsigned short)) == 0) {
-		WRAP_AND_RETURN(unsigned short);
-	} else if (strcmp(argType, @encode(unsigned long)) == 0) {
-		WRAP_AND_RETURN(unsigned long);
-	} else if (strcmp(argType, @encode(unsigned long long)) == 0) {
-		WRAP_AND_RETURN(unsigned long long);
-	} else if (strcmp(argType, @encode(float)) == 0) {
-		WRAP_AND_RETURN(float);
-	} else if (strcmp(argType, @encode(double)) == 0) {
-		WRAP_AND_RETURN(double);
-	} else if (strcmp(argType, @encode(BOOL)) == 0) {
-		WRAP_AND_RETURN(BOOL);
-	} else if (strcmp(argType, @encode(bool)) == 0) {
-		WRAP_AND_RETURN(BOOL);
-	} else if (strcmp(argType, @encode(char *)) == 0) {
-		WRAP_AND_RETURN(const char *);
-	} else if (strcmp(argType, @encode(void (^)(void))) == 0) {
-		__unsafe_unretained id block = nil;
-		[self getArgument:&block atIndex:(NSInteger)index];
-		return [block copy];
-	} else {
-		NSUInteger valueSize = 0;
-		NSGetSizeAndAlignment(argType, &valueSize, NULL);
+    } else if (strcmp(argType, @encode(char)) == 0) {
+        WRAP_AND_RETURN(char);
+    } else if (strcmp(argType, @encode(int)) == 0) {
+        WRAP_AND_RETURN(int);
+    } else if (strcmp(argType, @encode(short)) == 0) {
+        WRAP_AND_RETURN(short);
+    } else if (strcmp(argType, @encode(long)) == 0) {
+        WRAP_AND_RETURN(long);
+    } else if (strcmp(argType, @encode(long long)) == 0) {
+        WRAP_AND_RETURN(long long);
+    } else if (strcmp(argType, @encode(unsigned char)) == 0) {
+        WRAP_AND_RETURN(unsigned char);
+    } else if (strcmp(argType, @encode(unsigned int)) == 0) {
+        WRAP_AND_RETURN(unsigned int);
+    } else if (strcmp(argType, @encode(unsigned short)) == 0) {
+        WRAP_AND_RETURN(unsigned short);
+    } else if (strcmp(argType, @encode(unsigned long)) == 0) {
+        WRAP_AND_RETURN(unsigned long);
+    } else if (strcmp(argType, @encode(unsigned long long)) == 0) {
+        WRAP_AND_RETURN(unsigned long long);
+    } else if (strcmp(argType, @encode(float)) == 0) {
+        WRAP_AND_RETURN(float);
+    } else if (strcmp(argType, @encode(double)) == 0) {
+        WRAP_AND_RETURN(double);
+    } else if (strcmp(argType, @encode(BOOL)) == 0) {
+        WRAP_AND_RETURN(BOOL);
+    } else if (strcmp(argType, @encode(bool)) == 0) {
+        WRAP_AND_RETURN(BOOL);
+    } else if (strcmp(argType, @encode(char *)) == 0) {
+        WRAP_AND_RETURN(const char *);
+    } else if (strcmp(argType, @encode(void (^)(void))) == 0) {
+        __unsafe_unretained id block = nil;
+        [self getArgument:&block atIndex:(NSInteger)index];
+        return [block copy];
+    } else {
+        NSUInteger valueSize = 0;
+        NSGetSizeAndAlignment(argType, &valueSize, NULL);
 
-		unsigned char valueBytes[valueSize];
-		[self getArgument:valueBytes atIndex:(NSInteger)index];
+        unsigned char valueBytes[valueSize];
+        [self getArgument:valueBytes atIndex:(NSInteger)index];
 
-		return [NSValue valueWithBytes:valueBytes objCType:argType];
-	}
-	return nil;
+        return [NSValue valueWithBytes:valueBytes objCType:argType];
+    }
+    return nil;
 #undef WRAP_AND_RETURN
 }
 
 - (NSArray *)aspects_arguments {
-	NSMutableArray *argumentsArray = [NSMutableArray array];
-	for (NSUInteger idx = 2; idx < self.methodSignature.numberOfArguments; idx++) {
-		[argumentsArray addObject:[self aspect_argumentAtIndex:idx] ?: NSNull.null];
-	}
-	return [argumentsArray copy];
+    NSMutableArray *argumentsArray = [NSMutableArray array];
+    for (NSUInteger idx = 2; idx < self.methodSignature.numberOfArguments; idx++) {
+        [argumentsArray addObject:[self aspect_argumentAtIndex:idx] ?: NSNull.null];
+    }
+    return [argumentsArray copy];
 }
 
 @end
@@ -842,24 +842,24 @@ static void aspect_deregisterTrackedSelector(id self, SEL selector) {
     if (numberOfArguments > 1) {
         [blockInvocation setArgument:&info atIndex:1];
     }
-    
-	void *argBuf = NULL;
+
+    void *argBuf = NULL;
     for (NSUInteger idx = 2; idx < numberOfArguments; idx++) {
         const char *type = [originalInvocation.methodSignature getArgumentTypeAtIndex:idx];
-		NSUInteger argSize;
-		NSGetSizeAndAlignment(type, &argSize, NULL);
-        
-		if (!(argBuf = reallocf(argBuf, argSize))) {
+        NSUInteger argSize;
+        NSGetSizeAndAlignment(type, &argSize, NULL);
+
+        if (!(argBuf = reallocf(argBuf, argSize))) {
             AspectLogError(@"Failed to allocate memory for block invocation.");
-			return NO;
-		}
-        
-		[originalInvocation getArgument:argBuf atIndex:idx];
-		[blockInvocation setArgument:argBuf atIndex:idx];
+            return NO;
+        }
+
+        [originalInvocation getArgument:argBuf atIndex:idx];
+        [blockInvocation setArgument:argBuf atIndex:idx];
     }
-    
+
     [blockInvocation invokeWithTarget:self.block];
-    
+
     if (argBuf != NULL) {
         free(argBuf);
     }

@@ -23,13 +23,13 @@
         _myTextLabel.numberOfLines = 0;
         _myTextLabel.font = [UIFont systemFontOfSize:15];
         [self.container addSubview:_myTextLabel];
-        
+
         _myLinkLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _myLinkLabel.text = @"查看详情>>";
         _myLinkLabel.font = [UIFont systemFontOfSize:15];
         _myLinkLabel.textColor = [UIColor blueColor];
         [self.container addSubview:_myLinkLabel];
-        
+
         self.container.backgroundColor = [UIColor whiteColor];
         [self.container.layer setMasksToBounds:YES];
         [self.container.layer setBorderColor:[UIColor lightGrayColor].CGColor];

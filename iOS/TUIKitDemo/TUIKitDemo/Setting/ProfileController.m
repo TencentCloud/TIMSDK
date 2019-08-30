@@ -78,7 +78,7 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     [self addLongPressGesture];//添加长按手势
     [self setupViews];
-    
+
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
 }
@@ -88,46 +88,46 @@
 {
     self.title = @"个人信息";
     self.parentViewController.title = @"个人信息";
-    
+
     //self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.backgroundColor = TSettingController_Background_Color;
     self.clearsSelectionOnViewWillAppear = YES;
-    
+
     [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TCommonAvatarCell class] forCellReuseIdentifier:@"avatarCell"];
-    
+
     [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
         self.profile = profile;
         [self setupData];
     } fail:^(int code, NSString *msg) {
-        
+
     }];
 }
 
 - (void)setupData
 {
-    
+
     _data = [NSMutableArray array];
-    
+
     TCommonAvatarCellData *avatarData = [TCommonAvatarCellData new];
     avatarData.key = @"头像";
     avatarData.showAccessory = YES;
     avatarData.cselector = @selector(didSelectAvatar);
     avatarData.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
     [_data addObject:@[avatarData]];
-    
+
     TCommonTextCellData *nicknameData = [TCommonTextCellData new];
     nicknameData.key = @"昵称";
     nicknameData.value = self.profile.showName;
     nicknameData.showAccessory = YES;
     nicknameData.cselector = @selector(didSelectChangeNick);
-    
+
     TCommonTextCellData *IDData = [TCommonTextCellData new];
     IDData.key = @"账号";
     IDData.value = self.profile.identifier;
     IDData.showAccessory = NO;
     [_data addObject:@[nicknameData, IDData]];
-    
+
     TCommonTextCellData *birthdayData = [TCommonTextCellData new];
     birthdayData.key = @"生日";
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -137,26 +137,26 @@
     else birthdayData.value = @"未设置";
     birthdayData.showAccessory = YES;
     birthdayData.cselector = @selector(didSelectBirthday);
-    
+
     TCommonTextCellData *signatureData = [TCommonTextCellData new];
     signatureData.key = @"个性签名";
     signatureData.value = self.profile.showSignature;
     signatureData.showAccessory = YES;
     signatureData.cselector = @selector(didSelectChangeSignature);
-    
+
     TCommonTextCellData *sexData = [TCommonTextCellData new];
     sexData.key = @"性别";
     sexData.value = [self.profile showGender];
     sexData.showAccessory = YES;
     sexData.cselector = @selector(didSelectSex);
-    
+
     TCommonTextCellData *localData = [TCommonTextCellData new];
     localData.key = @"所在地";
     localData.value = [self.profile showLocation];
     localData.showAccessory = YES;
     localData.cselector = @selector(didSelectLocal);
     [_data addObject:@[signatureData, birthdayData, sexData, localData]];
-    
+
 
     [self.tableView reloadData];
 }
@@ -188,7 +188,7 @@
 {
     NSMutableArray *array = _data[indexPath.section];
     TCommonCellData *data = array[indexPath.row];
-    
+
     return [data heightOfWidth:Screen_Width];
 }
 
@@ -239,7 +239,7 @@
     TTextEditController *vc = [[TTextEditController alloc] initWithText:[self.profile showSignature]];
     vc.title = @"修改个性签名";
     [self.navigationController pushViewController:vc animated:YES];
-    
+
     @weakify(self)
     [[RACObserve(vc, textValue) skip:1] subscribeNext:^(NSString *x) {
         @strongify(self)
@@ -303,7 +303,7 @@
         [self setupData];
         [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_FaceUrl: self.profile.faceURL}
                                                             succ:nil fail:nil];
-      
+
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
@@ -340,7 +340,7 @@
         CGPoint point = [longPress locationInView:self.tableView];
         NSIndexPath *pathAtView = [self.tableView indexPathForRowAtPoint:point];
         NSObject *data = [self.tableView cellForRowAtIndexPath:pathAtView];
-        
+
         //长按 TCommonTextCell，可以复制 cell 内的字符串。
         if([data isKindOfClass:[TCommonTextCell class]]){
             TCommonTextCell *textCell = (TCommonTextCell *)data;
@@ -359,7 +359,7 @@
                 NSString *toastString = [NSString stringWithFormat:@"已将该用户账号复制到粘贴板"];
                 [THelper makeToast:toastString];
             }
-            
+
         }
     }
 }

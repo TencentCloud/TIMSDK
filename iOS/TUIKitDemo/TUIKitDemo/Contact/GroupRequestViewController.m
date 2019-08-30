@@ -40,22 +40,22 @@
     self.tableView.mm_fill();
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
+
     self.addMsgTextView = [[UITextView alloc] initWithFrame:CGRectZero];
     self.addMsgTextView.font = [UIFont systemFontOfSize:14];
     [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
         self.addMsgTextView.text = [NSString stringWithFormat:@"%@ 申请加入群聊", [profile showName]];
     } fail:^(int code, NSString *msg) {
-        
+
     }];
-    
+
     TUIProfileCardCellData *data = [TUIProfileCardCellData new];
     data.name = self.groupInfo.groupName;
     data.identifier = self.groupInfo.group;
     data.avatarImage = DefaultGroupAvatarImage;
     data.avatarUrl = [NSURL URLWithString:self.groupInfo.faceURL];
     self.cardCellData = data;
-    
+
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发送" style:UIBarButtonItemStylePlain target:self action:@selector(onSend)];
     self.title = @"添加群组";
 }
@@ -107,7 +107,7 @@
         self.addMsgTextView.mm_width(Screen_Width).mm_height(120);
         return cell;
     }
-    
+
     return nil;
 }
 
@@ -123,7 +123,7 @@
 {
     // display toast with an activity spinner
     [self.view makeToastActivity:CSToastPositionCenter];
-    
+
     [[TIMGroupManager sharedInstance] joinGroup:self.groupInfo.group
                                             msg:self.addMsgTextView.text
                                            succ:^{

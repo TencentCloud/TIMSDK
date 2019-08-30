@@ -31,7 +31,7 @@ static TCUploadHelper *_shareInstance = nil;
 + (instancetype)shareInstance
 {
     static dispatch_once_t predicate;
-    
+
     dispatch_once(&predicate, ^{
         _shareInstance = [[TCUploadHelper alloc] init];
     });
@@ -49,15 +49,15 @@ static TCUploadHelper *_shareInstance = nil;
 
 - (void) setupCOSXMLShareService {
     QCloudServiceConfiguration* configuration = [QCloudServiceConfiguration new];
-    
+
     TCUserInfoData *infoData = [[TCUserInfoModel sharedInstance] getUserProfile];
     configuration.appID =  infoData.appid;
     configuration.signatureProvider = self;
     QCloudCOSXMLEndPoint* endpoint = [[QCloudCOSXMLEndPoint alloc] init];
-    
+
     endpoint.regionName = infoData.region;
     configuration.endpoint = endpoint;
-    
+
     [QCloudCOSXMLService registerCOSXMLWithConfiguration:configuration withKey:kTCHeadUploadCosKey];
     [QCloudCOSTransferMangerService registerCOSTransferMangerWithConfiguration:configuration withKey:kTCHeadUploadCosKey];
 }
@@ -67,7 +67,7 @@ static TCUploadHelper *_shareInstance = nil;
                   urlRequest:(NSMutableURLRequest*)urlRequst
                    compelete:(QCloudHTTPAuthentationContinueBlock)continueBlock
 {
-    
+
     if (_creator != nil) {
         QCloudSignature* signature =  [_creator signatureForData:urlRequst];
         continueBlock(signature, nil);
@@ -84,19 +84,19 @@ static TCUploadHelper *_shareInstance = nil;
         }
         return;
     }
-    
+
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSData *imageData = UIImageJPEGRepresentation(image, 0.3);
-        
+
         // 以时间戳为文件名(毫秒为单位，跟Android保持一致)
         NSString *photoName = [[NSString alloc] initWithFormat:@"%.f", [[NSDate date] timeIntervalSince1970] * 1000];
         NSString *pathSave = [TCUtil getFileCachePath:photoName];
-        
+
         BOOL succ = [imageData writeToFile:pathSave atomically:YES];
         if (succ)
         {
             //获取sign
-            
+
             [self getCOSSign:^(int errCode) {
                 if (200 == errCode)
                 {
@@ -104,7 +104,7 @@ static TCUploadHelper *_shareInstance = nil;
                     upload.body = [NSURL fileURLWithPath:pathSave];
                     upload.bucket = [[TCUserInfoModel sharedInstance] getUserProfile].bucket;
                     upload.object = [NSUUID UUID].UUIDString;
-                    
+
                     [upload setFinishBlock:^(QCloudUploadObjectResult *result, NSError * error) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             if (completion) {
@@ -112,18 +112,18 @@ static TCUploadHelper *_shareInstance = nil;
                                     completion((int)error.code, error.localizedDescription);
                                 } else {
                                     NSString * resultString = [result qcloud_modelToJSONString];
-                                    NSDictionary * data = [TCUtil jsonData2Dictionary:resultString];
+                                    NSDictionary * data = [TCUtil jsonSring2Dictionary:resultString];
                                     if (data != nil) {
                                         completion(0, [data objectForKey:@"Location"]);
                                     } else {
                                         completion(-1, resultString);
                                     }
-                                    
+
                                 }
                             }
                         });
                     }];
-                    
+
                     [[QCloudCOSTransferMangerService costransfermangerServiceForKey:kTCHeadUploadCosKey] UploadObject:upload];
                 }
                 else
@@ -136,8 +136,8 @@ static TCUploadHelper *_shareInstance = nil;
                     }
                 }
             }];
-            
-            
+
+
         }
         else
         {
@@ -150,7 +150,7 @@ static TCUploadHelper *_shareInstance = nil;
 
         }
     });
-    
+
 }
 
 - (void)getCOSSign:(void (^)(int errCode))handler
@@ -173,8 +173,8 @@ static TCUploadHelper *_shareInstance = nil;
             {
                 strKeyTime = resultDict[@"keyTime"];
             }
-            
-            
+
+
             if (_creator == nil) {
                 _creator = [[QCloudAuthentationHeadV5Creator alloc] initWithSignKey:[[TCUserInfoModel sharedInstance] getUserProfile].secretId  signKey:strSignKey keyTime:strKeyTime];
             } else {
@@ -183,7 +183,7 @@ static TCUploadHelper *_shareInstance = nil;
             handler(errCode);
         }
     }];
-    
+
 //    NSDictionary* dictParam = @{@"Action" : @"GetCOSSignV2"};
 //    [TCUtil asyncSendHttpRequest:dictParam handler:^(int result, NSDictionary *resultDict) {
 //        if (result != 0)

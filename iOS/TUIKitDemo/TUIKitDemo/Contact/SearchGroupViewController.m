@@ -39,15 +39,15 @@
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    
+
     _idLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [self addSubview:_idLabel];
-    
+
     _line = [[UIView alloc] initWithFrame:CGRectZero];
     _line.backgroundColor = [UIColor grayColor];
     [self addSubview:_line];
-    
-    
+
+
     return self;
 }
 
@@ -68,8 +68,8 @@
         _idLabel.text = @"";
         _line.hidden = YES;
     }
-    
-    
+
+
     _groupInfo = groupInfo;
 }
 
@@ -93,13 +93,13 @@
 {
     [super viewDidLoad];
     self.title = @"添加群组";
-    
+
     self.view.backgroundColor = TSettingController_Background_Color;
-    
+
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.definesPresentationContext = YES;//不设置会导致一些位置错乱，无动画等问题
-    
+
     // 创建搜索框
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     //设置代理
@@ -108,10 +108,10 @@
     self.searchController.dimsBackgroundDuringPresentation = NO;
     _searchController.searchBar.placeholder = @"群组ID";
     [self.view addSubview:_searchController.searchBar];
-    
+
     self.userView = [[AddGroupItemView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.userView];
-    
+
     UITapGestureRecognizer *singleFingerTap =
     [[UITapGestureRecognizer alloc] initWithTarget:self
                                             action:@selector(handleUserTap:)];
@@ -126,7 +126,7 @@
 {
     NSLog(@"didPresentSearchController");
     [self.view addSubview:self.searchController.searchBar];
-    
+
     self.searchController.searchBar.mm_top([self safeAreaTopGap]);
     self.userView.mm_top(self.searchController.searchBar.mm_maxY).mm_height(44).mm_width(Screen_Width);
 }
@@ -157,7 +157,7 @@
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSString *inputStr = searchController.searchBar.text ;
     NSLog(@"serach %@", inputStr);
-    
+
     [[TIMGroupManager sharedInstance] getGroupInfo:@[inputStr] succ:^(NSArray *arr) {
         if(arr.count == 1){
             self.userView.groupInfo = arr[0];

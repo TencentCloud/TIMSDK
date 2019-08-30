@@ -44,7 +44,7 @@
 - (instancetype)init
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
-    
+
     return self;
 }
 
@@ -71,9 +71,9 @@
         }
         [self loadData];
     } fail:nil];
-    
+
     self.profile = self.friendProfile.profile;
-    
+
     [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[TCommonSwitchCell class] forCellReuseIdentifier:@"SwitchCell"];
     [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"CardCell"];
@@ -81,7 +81,7 @@
 
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
-    
+
     self.title = @"详细资料";
 }
 /**
@@ -105,7 +105,7 @@
         })];
         inlist;
     })];
-    
+
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
@@ -131,7 +131,7 @@
         })];
         inlist;
     })];
-    
+
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
@@ -189,7 +189,7 @@
         })];
         inlist;
     })];
-    
+
     self.dataList = list;
     [self.tableView reloadData];
 }
@@ -227,7 +227,7 @@
                                                            [self loadData];
                                                        } fail:nil];
     }];
- 
+
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -239,7 +239,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+
     NSObject *data = self.dataList[indexPath.section][indexPath.row];
     //原本的写法会使得子类重写的方法无法被调用，所以此处使用了“我”界面的写法。
     if([data isKindOfClass:[TUIProfileCardCellData class]]){
@@ -248,7 +248,7 @@
         cell.delegate = self;
         [cell fillWithData:(TUIProfileCardCellData *)data];
         return cell;
-        
+
     }   else if([data isKindOfClass:[TUIButtonCellData class]]){
         TUIButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ButtonCell"];
         if(!cell){
@@ -256,12 +256,12 @@
         }
         [cell fillWithData:(TUIButtonCellData *)data];
         return cell;
-        
+
     }  else if([data isKindOfClass:[TCommonTextCellData class]]) {
         TCommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
         [cell fillWithData:(TCommonTextCellData *)data];
         return cell;
-        
+
     }  else if([data isKindOfClass:[TCommonSwitchCellData class]]) {
         TCommonSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SwitchCell" forIndexPath:indexPath];
         [cell fillWithData:(TCommonSwitchCellData *)data];
@@ -294,7 +294,7 @@
             [self.navigationController popViewControllerAnimated:YES];
         }
     } fail:^(int code, NSString *msg) {
-        
+
     }];
 }
 
@@ -337,7 +337,7 @@
         CGPoint point = [longPress locationInView:self.tableView];
         NSIndexPath *pathAtView = [self.tableView indexPathForRowAtPoint:point];
         NSObject *data = [self.tableView cellForRowAtIndexPath:pathAtView];
-        
+
         //长按 TCommonTextCell，可以复制 cell 内的字符串。
         if([data isKindOfClass:[TCommonTextCell class]]){
             TCommonTextCell *textCell = (TCommonTextCell *)data;
@@ -356,7 +356,7 @@
                 NSString *toastString = [NSString stringWithFormat:@"已将该用户账号复制到粘贴板"];
                 [THelper makeToast:toastString];
             }
-            
+
         }
     }
 }

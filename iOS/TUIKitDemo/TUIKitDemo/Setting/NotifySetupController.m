@@ -32,7 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     self.title = @"消息提醒设置";
     [self configOwnViews];
 }
@@ -41,7 +41,7 @@
 {
     _dataDictionary = @{}.mutableCopy;
     _groupArray = @[].mutableCopy;
-    
+
     //开启通知section
     TCommonSwitchCellData *notifySwitch = [[TCommonSwitchCellData alloc] init];
     notifySwitch.title = @"开启通知";
@@ -58,7 +58,7 @@
     c2cOpenSound.title = @"开启声音";
     c2cOpenSound.on = _configState.c2cOpenSound;
     c2cOpenSound.cswitchSelector = @selector(onC2CSoundConfig:);
-    
+
     TCommonSwitchCellData *c2cOpenShake = [[TCommonSwitchCellData alloc] init];
     c2cOpenShake.title = @"开启震动";
     c2cOpenShake.on = _configState.c2cOpenShake;
@@ -66,17 +66,17 @@
     [_dataDictionary setObject:@[c2cOpenSound, c2cOpenShake] forKey:@"C2C消息设置"];
     [_groupArray addObject:@"C2C消息设置"];
     //Group消息设置
-    
+
     TCommonSwitchCellData *groupOpenSound = [[TCommonSwitchCellData alloc] init];
     groupOpenSound.title = @"开启声音";
     groupOpenSound.on = _configState.groupOpenSound;
     groupOpenSound.cswitchSelector = @selector(onGroupSoundConfig:);
-    
+
     TCommonSwitchCellData *groupOpenShake = [[TCommonSwitchCellData alloc] init];
     groupOpenShake.title = @"开启震动";
     groupOpenShake.on = _configState.groupOpenShake;
     groupOpenShake.cswitchSelector = @selector(onGroupShakeConfig:);
-    
+
     [_dataDictionary setObject:@[groupOpenSound, groupOpenShake] forKey:@"Group消息设置"];
     [_groupArray addObject:@"Group消息设置"];
     [self.tableView reloadData];
@@ -87,7 +87,7 @@
     _configState.openPush = cell.switcher.on;
     uint32_t openPush = (cell.switcher.on) ? 1 : 2;
     [self setApns:openPush type:nil soundName:nil succ:^{
-        
+
     }];
     [self configOwnViews];
 }
@@ -96,7 +96,7 @@
 {
     _configState.c2cOpenSound = cell.switcher.on;
     NSString *fileName = [self selectFileName:_configState.c2cOpenSound shakeSwitchOn:_configState.c2cOpenShake];
-    
+
 
     [self setApns:0 type:@"c2cSound" soundName:fileName succ:^{
     }];
@@ -106,7 +106,7 @@
 {
     _configState.c2cOpenShake = cell.switcher.on;
     NSString *fileName = [self selectFileName:_configState.c2cOpenSound shakeSwitchOn:_configState.c2cOpenShake];
-    
+
     [self setApns:0 type:@"c2cSound" soundName:fileName succ:^{
     }];
 }
@@ -115,7 +115,7 @@
 {
     _configState.groupOpenSound = cell.switcher.on;
     NSString *fileName = [self selectFileName:_configState.groupOpenSound shakeSwitchOn:_configState.groupOpenShake];
-    
+
     [self setApns:0 type:@"groupSound" soundName:fileName succ:^{
 
     }];
@@ -125,7 +125,7 @@
 {
     _configState.groupOpenShake = cell.switcher.on;
     NSString *fileName = [self selectFileName:_configState.groupOpenSound shakeSwitchOn:_configState.groupOpenShake];
-    
+
     [self setApns:0 type:@"groupSound" soundName:fileName succ:^{
     }];
 }
@@ -133,7 +133,7 @@
 - (void)configState:(TIMAPNSConfig *)config
 {
     _configState = [[ConfigState alloc] init];
-    
+
     //设置默认值
     if (config == nil)
     {
@@ -146,9 +146,9 @@
 //        _configState.videoOpenShake = NO;
         return;
     }
-    
+
     _configState.openPush = (config.openPush==1) ? YES : NO;
-    
+
     //根据当前配置文件名，修改App的通知模式
     if ([config.c2cSound isEqualToString:@"00.caf"] || config.c2cSound.length==0)
     {
@@ -170,7 +170,7 @@
         _configState.c2cOpenSound = YES;
         _configState.c2cOpenShake = YES;
     }
-    
+
     if ([config.groupSound isEqualToString:@"00.caf"] || config.groupSound.length==0)
     {
         _configState.groupOpenSound = NO;
@@ -191,7 +191,7 @@
         _configState.groupOpenSound = YES;
         _configState.groupOpenShake = YES;
     }
-    
+
 //    if ([config.videoSound isEqualToString:@"00.caf"] || config.videoSound.length==0) {
 //        _configState.videoOpenSound = NO;
 //        _configState.videoOpenShake = NO;
@@ -208,7 +208,7 @@
 //        _configState.videoOpenSound = YES;
 //        _configState.videoOpenShake = YES;
 //    }
-    
+
 }
 
 /**
@@ -261,8 +261,8 @@
     {
         apnsConfig.videoSound = name;
     }
-    
-    
+
+
     [[TIMManager sharedInstance] setAPNS:apnsConfig succ:^()
      {
          if (succ)
@@ -271,7 +271,7 @@
          }
      } fail:^(int code, NSString *err)
      {
-         
+
      }];
 }
 
@@ -303,7 +303,7 @@
     NSString *key = _groupArray[indexPath.section];
     NSArray *array = _dataDictionary[key];
     TCommonSwitchCellData *data = array[indexPath.row];
-    
+
     static NSString *reuseId = @"SwitchCell";
     TCommonSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId];
     if (!cell) {
