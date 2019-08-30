@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatProvider;
+import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageContentHolder;
 import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.IOnCustomMessageDrawListener;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageBaseHolder;
@@ -94,6 +95,13 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         notifyItemChanged(0);
     }
 
+    @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        if (holder instanceof MessageContentHolder) {
+            ((MessageContentHolder)holder).msgContentLinear.setBackground(null);
+        }
+    }
+
     public void notifyDataSourceChanged(final int type, final int value) {
         BackgroundTasks.getInstance().postDelayed(new Runnable() {
             @Override
@@ -149,8 +157,9 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     }
 
     public MessageInfo getItem(int position) {
-        if (position == 0 || mDataSource.size() == 0)
+        if (position == 0 || mDataSource.size() == 0) {
             return null;
+        }
         MessageInfo info = mDataSource.get(position - 1);
         return info;
     }

@@ -75,12 +75,12 @@ public class ContactListView extends LinearLayout {
         mRv.addItemDecoration(mDecoration = new SuspensionDecoration(getContext(), mData));
         //如果add两个，那么按照先后顺序，依次渲染。
         //使用indexBar
-        mTvSideBarHint = findViewById(R.id.contact_tvSideBarHint);//HintTextView
-        mIndexBar = findViewById(R.id.contact_indexBar);//IndexBar
+        mTvSideBarHint = findViewById(R.id.contact_tvSideBarHint);
+        mIndexBar = findViewById(R.id.contact_indexBar);
         //indexbar初始化
-        mIndexBar.setPressedShowTextView(mTvSideBarHint)//设置HintTextView
-                .setNeedRealIndex(true)//设置为根据联系人内容改变index（修改者zanhanding）
-                .setLayoutManager(mManager);//设置RecyclerView的LayoutManager
+        mIndexBar.setPressedShowTextView(mTvSideBarHint)
+                .setNeedRealIndex(true)
+                .setLayoutManager(mManager);
         mContactCountTv = findViewById(R.id.contact_count);
         mContactCountTv.setText(String.format(getResources().getString(R.string.contact_count), 0));
     }
@@ -95,12 +95,12 @@ public class ContactListView extends LinearLayout {
         mIndexBar.setSourceDatas(mData).invalidate();
         mDecoration.setDatas(mData);
         mContactCountTv.setText(String.format(getResources().getString(R.string.contact_count), mData.size()));
-        //以下根据内容动态设置右侧导航栏的高度（修改者zanhanding）
+        // 根据内容动态设置右侧导航栏的高度
         ViewGroup.LayoutParams params = mIndexBar.getLayoutParams();
-        if (mData.size() * 50 < mIndexBar.getMeasuredHeight())//若动态设置的侧边栏高度大于之前的旧值，则不改变侧边栏高度
+        if (mData.size() * 50 < mIndexBar.getMeasuredHeight()) { // 若动态设置的侧边栏高度大于之前的旧值，则不改变侧边栏高度
             params.height = mData.size() * 50;
+        }
         mIndexBar.setLayoutParams(params);
-        //以上根据内容动态设置右侧导航栏的高度（修改者zanhanding）
     }
 
     public void setSingleSelectMode(boolean mode) {
@@ -157,16 +157,20 @@ public class ContactListView extends LinearLayout {
             return;
         }
         List<GroupMemberInfo> list = mGroupInfo.getMemberDetails();
+        boolean needFresh = false;
         if (list.size() > 0) {
             for (GroupMemberInfo info : list) {
                 for (ContactItemBean bean : beanList) {
                     if (info.getAccount().equals(bean.getId())) {
                         bean.setSelected(true);
                         bean.setEnable(false);
-                        mAdapter.notifyDataSetChanged();
+                        needFresh = true;
                     }
                 }
             }
+        }
+        if (needFresh) {
+            mAdapter.notifyDataSetChanged();
         }
     }
 

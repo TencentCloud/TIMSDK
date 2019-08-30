@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageContentHolder;
 import com.tencent.qcloud.tim.uikit.modules.conversation.interfaces.IConversationAdapter;
 import com.tencent.qcloud.tim.uikit.modules.conversation.interfaces.IConversationProvider;
 import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
@@ -101,6 +102,13 @@ public class ConversationListAdapter extends IConversationAdapter {
                 break;
         }
         baseHolder.layoutViews(conversationInfo, position);
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        if (holder instanceof ConversationCommonHolder) {
+            ((ConversationCommonHolder)holder).conversationIconView.setBackground(null);
+        }
     }
 
     public ConversationInfo getItem(int position) {

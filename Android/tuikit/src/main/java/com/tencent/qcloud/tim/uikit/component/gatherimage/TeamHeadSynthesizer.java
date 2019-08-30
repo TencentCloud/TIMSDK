@@ -115,7 +115,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
         Bitmap mergeBitmap = Bitmap.createBitmap(maxWidth, maxHeight, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mergeBitmap);
         drawDrawable(canvas);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.save();
         canvas.restore();
         return mergeBitmap;
     }

@@ -96,6 +96,7 @@ public class UIKitVideoView extends TextureView {
                 // 有些视频拍摄的时候有角度，需要做旋转，默认ijk是不会做的，这里自己实现
                 mVideoRotationDegree = extra;
                 setRotation(mVideoRotationDegree);
+                requestLayout();
             }
         }
     };
@@ -216,12 +217,12 @@ public class UIKitVideoView extends TextureView {
         } else {
             // no size yet, just adopt the given spec sizes
         }
-        // TUIKitLog.i(TAG, "width: " + width + " height: " + height);
+        TUIKitLog.i(TAG, "onMeasure width: " + width + " height: " + height + " rotation degree: " + mVideoRotationDegree);
         setMeasuredDimension(width, height);
         if ((mVideoRotationDegree + 180) % 180 != 0) {
             // 画面旋转之后需要缩放，而且旋转之后宽高的计算都要换为高宽。
             int[] size = ScreenUtil.scaledSize(widthSpecSize, heightSpecSize, height, width);
-            // TUIKitLog.i(TAG, "width: " + size[0] + " height: " + size[1]);
+            TUIKitLog.i(TAG, "onMeasure scaled width: " + size[0] + " height: " + size[1]);
             setScaleX(size[0] / ((float)height));
             setScaleY(size[1] / ((float)width));
         }

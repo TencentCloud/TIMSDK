@@ -10,12 +10,14 @@ import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMElemType;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupManager;
+import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMGroupSystemElem;
 import com.tencent.imsdk.TIMGroupSystemElemType;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.TIMUserProfile;
+import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.friendship.TIMFriend;
@@ -55,6 +57,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
     }
 
     private void init() {
+        TUIKitLog.i(TAG, "init");
         mConversationPreferences = TUIKit.getAppContext().getSharedPreferences(TIMManager.getInstance().getLoginUser() + SP_NAME, Context.MODE_PRIVATE);
         mTopLinkedList = SharedPreferenceUtils.getListData(mConversationPreferences, TOP_LIST, ConversationInfo.class);
         MessageRevokedManager.getInstance().addHandler(this);
@@ -70,21 +73,16 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      * @param callBack
      */
     public void loadConversation(IUIKitCallBack callBack) {
-        TUIKitLog.d(TAG, "loadConversation ");
+        TUIKitLog.i(TAG, "loadConversation callBack:" + callBack);
         mUnreadTotal = 0;
         //mProvider初始化值为null,用户注销时会销毁，登录完成进入需再次实例化
         if (mProvider == null) {
             mProvider = new ConversationProvider();
-        } else {
-            mProvider.clear();
         }
         List<TIMConversation> TIMConversations = TIMManager.getInstance().getConversationList();
         ArrayList<ConversationInfo> infos = new ArrayList<>();
         for (int i = 0; i < TIMConversations.size(); i++) {
             TIMConversation conversation = TIMConversations.get(i);
-            if (conversation != null) {
-                TUIKitLog.d(TAG, "loadConversation conversation peer " + conversation.getPeer() + ", groupName " + conversation.getGroupName());
-            }
             //将imsdk TIMConversation转换为UIKit ConversationInfo
             ConversationInfo conversationInfo = TIMConversation2ConversationInfo(conversation);
             if (conversationInfo != null) {
@@ -119,7 +117,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      */
     @Override
     public void onRefreshConversation(List<TIMConversation> conversations) {
-        TUIKitLog.i(TAG, "onRefreshConversation");
+        TUIKitLog.i(TAG, "onRefreshConversation conversations:" + conversations);
         if (mProvider == null) {
             return;
         }
@@ -128,6 +126,23 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
             TIMConversation conversation = conversations.get(i);
             TUIKitLog.i(TAG, "onRefreshConversation TIMConversation " + conversation.toString());
             ConversationInfo conversationInfo = TIMConversation2ConversationInfo(conversation);
+            if (conversation.getType() == TIMConversationType.System) {
+                TIMMessage message = conversation.getLastMsg();
+                if (message.getElementCount() > 0) {
+                    TIMElem ele = message.getElement(0);
+                    TIMElemType eleType = ele.getType();
+                    if (eleType == TIMElemType.GroupSystem) {
+                        TIMGroupSystemElem groupSysEle = (TIMGroupSystemElem) ele;
+                        if (groupSysEle.getSubtype() == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_INVITED_TO_GROUP_TYPE) {
+                            String group = conversation.getGroupName();
+                            if (TextUtils.isEmpty(group)) {
+                                group = groupSysEle.getGroupId();
+                            }
+                            ToastUtil.toastLongMessage("您已经被邀请进群【" + group + "】，请到我的群聊里面查看！");
+                        }
+                    }
+                }
+            }
             if (conversationInfo != null) {
                 infos.add(conversationInfo);
             }
@@ -175,15 +190,16 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      * @param conversation
      * @return
      */
-    private ConversationInfo TIMConversation2ConversationInfo(TIMConversation conversation) {
+    private ConversationInfo TIMConversation2ConversationInfo(final TIMConversation conversation) {
         if (conversation == null) {
             return null;
         }
+        TUIKitLog.i(TAG, "loadConversation conversation peer " + conversation.getPeer() + ", groupName " + conversation.getGroupName());
         TIMMessage message = conversation.getLastMsg();
         if (message == null) {
             return null;
         }
-        ConversationInfo info = new ConversationInfo();
+        final ConversationInfo info = new ConversationInfo();
         TIMConversationType type = conversation.getType();
         if (type == TIMConversationType.System) {
             if (message.getElementCount() > 0) {
@@ -191,7 +207,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
                 TIMElemType eleType = ele.getType();
                 if (eleType == TIMElemType.GroupSystem) {
                     TIMGroupSystemElem groupSysEle = (TIMGroupSystemElem) ele;
-                    groupSystMsgHandle(groupSysEle, conversation);
+                    groupSystMsgHandle(groupSysEle);
                 }
             }
             return null;
@@ -199,8 +215,10 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
 
         boolean isGroup = type == TIMConversationType.Group;
         info.setLastMessageTime(message.timestamp() * 1000);
-         MessageInfo msg = MessageInfoUtil.TIMMessage2MessageInfo(message, isGroup);
-        info.setLastMessage(msg);
+        List<MessageInfo> list = MessageInfoUtil.TIMMessage2MessageInfo(message, isGroup);
+        if (list != null && list.size() > 0) {
+            info.setLastMessage(list.get(list.size() - 1));
+        }
         if (isGroup) {
             info.setTitle(conversation.getGroupName());
             TIMGroupDetailInfo groupDetailInfo = TIMGroupManager.getInstance().queryGroupInfo(conversation.getPeer());
@@ -210,26 +228,88 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
         } else {
             String title = conversation.getPeer();
             String faceUrl = null;
+            final ArrayList<String> ids = new ArrayList<>();
+            ids.add(conversation.getPeer());
             TIMUserProfile profile = TIMFriendshipManager.getInstance().queryUserProfile(conversation.getPeer());
-            if (profile != null && !TextUtils.isEmpty(profile.getNickName())) {
-                title = profile.getNickName();
+            if (profile == null) {
+                TIMFriendshipManager.getInstance().getUsersProfile(ids, false, new TIMValueCallBack<List<TIMUserProfile>>() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIKitLog.e(TAG, "getUsersProfile failed! code: " + code + " desc: " + desc);
+                    }
+
+                    @Override
+                    public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                        if (timUserProfiles == null || timUserProfiles.size() != 1) {
+                            TUIKitLog.i(TAG, "No TIMUserProfile");
+                            return;
+                        }
+                        TIMUserProfile profile = timUserProfiles.get(0);
+                        String faceUrl = null;
+                        if (profile != null && !TextUtils.isEmpty(profile.getFaceUrl())) {
+                            faceUrl = profile.getFaceUrl();
+                        }
+                        String title = conversation.getPeer();
+                        if (profile != null && !TextUtils.isEmpty(profile.getNickName())) {
+                            title = profile.getNickName();
+                        }
+                        info.setTitle(title);
+                        info.setIconUrl(faceUrl);
+                        mProvider.updateAdapter();
+                    }
+                });
+            } else {
+                if (!TextUtils.isEmpty(profile.getNickName())) {
+                    title = profile.getNickName();
+                }
+                if (!TextUtils.isEmpty(profile.getFaceUrl())) {
+                    faceUrl = profile.getFaceUrl();
+                }
+                info.setTitle(title);
+                info.setIconUrl(faceUrl);
             }
-            if (profile != null && !TextUtils.isEmpty(profile.getFaceUrl())) {
-                faceUrl = profile.getFaceUrl();
-            }
+
             TIMFriend friend = TIMFriendshipManager.getInstance().queryFriend(conversation.getPeer());
-            if (friend != null && !TextUtils.isEmpty(friend.getRemark())) {
-                title = friend.getRemark();
+            if (friend == null) {
+                TIMFriendshipManager.getInstance().getFriendList(new TIMValueCallBack<List<TIMFriend>>() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIKitLog.e(TAG, "getFriendList failed! code: " + code + " desc: " + desc);
+                    }
+
+                    @Override
+                    public void onSuccess(List<TIMFriend> timFriends) {
+                        String remark = "";
+                        if (timFriends == null || timFriends.size() == 0) {
+                            TUIKitLog.i(TAG, "No Friends");
+                            return;
+                        }
+                        for (TIMFriend friend : timFriends) {
+                            if (TextUtils.equals(conversation.getPeer(), friend.getIdentifier())) {
+                                if (!TextUtils.isEmpty(friend.getRemark())) {
+                                    info.setTitle(friend.getRemark());
+                                }
+                                info.setTitle(remark);
+                                mProvider.updateAdapter();
+                                return;
+                            }
+                        }
+                        TUIKitLog.i(TAG, conversation.getPeer() + " is not my friend");
+                    }
+                });
+            } else {
+                if (!TextUtils.isEmpty(friend.getRemark())) {
+                    title = friend.getRemark();
+                    info.setTitle(title);
+                }
             }
-            info.setTitle(title);
-            info.setIconUrl(faceUrl);
         }
         info.setId(conversation.getPeer());
         info.setGroup(conversation.getType() == TIMConversationType.Group);
         if (conversation.getUnreadMessageNum() > 0) {
             info.setUnRead((int) conversation.getUnreadMessageNum());
         }
-        TUIKitLog.d(TAG, "onRefreshConversation ext.getUnreadMessageNum() " + conversation.getUnreadMessageNum());
+        TUIKitLog.i(TAG, "onRefreshConversation ext.getUnreadMessageNum() " + conversation.getUnreadMessageNum());
         return info;
     }
 
@@ -239,19 +319,13 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      *
      * @param groupSysEle
      */
-    private void groupSystMsgHandle(TIMGroupSystemElem groupSysEle, TIMConversation conversation) {
+    private void groupSystMsgHandle(TIMGroupSystemElem groupSysEle) {
         TIMGroupSystemElemType type = groupSysEle.getSubtype();
         //群组解散或者被踢出群组
         if (type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_KICK_OFF_FROM_GROUP_TYPE
                 || type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_DELETE_GROUP_TYPE) {
             //imsdk会自动删除持久化的数据，应用层只需删除会话数据源中的即可
             deleteConversation(groupSysEle.getGroupId(), true);
-        } else if (type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_INVITED_TO_GROUP_TYPE) {
-            String group = conversation.getGroupName();
-            if (TextUtils.isEmpty(group)) {
-                group = groupSysEle.getGroupId();
-            }
-            ToastUtil.toastLongMessage("您已经被邀请进群【" + group + "】，请到我的群聊里面查看！");
         }
     }
 
@@ -263,6 +337,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      * @param conversation
      */
     public void setConversationTop(int index, ConversationInfo conversation) {
+        TUIKitLog.i(TAG, "setConversationTop index:" + index + "|conversation:" + conversation);
         if (!conversation.isTop()) {
             mTopLinkedList.remove(conversation);
             mTopLinkedList.addFirst(conversation);
@@ -282,6 +357,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      * @param flag 是否置顶
      */
     public void setConversationTop(String id, boolean flag) {
+        TUIKitLog.i(TAG, "setConversationTop id:" + id + "|flag:" + flag);
         handleTopData(id, flag);
         mProvider.setDataSource(sortConversations(mProvider.getDataSource()));
         SharedPreferenceUtils.putListData(mConversationPreferences, TOP_LIST, mTopLinkedList);
@@ -344,7 +420,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      * @param conversation 会话信息
      */
     public void deleteConversation(int index, ConversationInfo conversation) {
-        TUIKitLog.d(TAG, "deleteConversation index = " + index + ", conversation = " + conversation);
+        TUIKitLog.i(TAG, "deleteConversation index:" + index + "|conversation:" + conversation);
         boolean status = TIMManager.getInstance().deleteConversation(conversation.isGroup() ? TIMConversationType.Group : TIMConversationType.C2C, conversation.getId());
         if (status) {
             handleTopData(conversation.getId(), false);
@@ -359,7 +435,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      * @param id 会话id
      */
     public void deleteConversation(String id, boolean isGroup) {
-        TUIKitLog.d(TAG, "deleteConversation id = " + id);
+        TUIKitLog.i(TAG, "deleteConversation id:" + id + "|isGroup:" + isGroup);
         handleTopData(id, false);
         List<ConversationInfo> conversationInfos = mProvider.getDataSource();
         for (int i = 0; i < conversationInfos.size(); i++) {
@@ -423,6 +499,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      * @param unreadTotal
      */
     public void updateUnreadTotal(int unreadTotal) {
+        TUIKitLog.i(TAG, "updateUnreadTotal:" + unreadTotal);
         mUnreadTotal = unreadTotal;
         for (int i = 0; i < mUnreadWatchers.size(); i++) {
             mUnreadWatchers.get(i).updateUnread(mUnreadTotal);
@@ -430,6 +507,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
     }
 
     public boolean isTopConversation(String groupId) {
+        TUIKitLog.i(TAG, "isTopConversation:" + groupId);
         return isTop(groupId);
     }
 
@@ -440,6 +518,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      */
     @Override
     public void handleInvoke(TIMMessageLocator locator) {
+        TUIKitLog.i(TAG, "handleInvoke:" + locator);
         if (mProvider != null) {
             loadConversation(null);
         }
@@ -452,6 +531,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      * @param messageUnreadWatcher
      */
     public void addUnreadWatcher(MessageUnreadWatcher messageUnreadWatcher) {
+        TUIKitLog.i(TAG, "addUnreadWatcher:" + messageUnreadWatcher);
         if (!mUnreadWatchers.contains(messageUnreadWatcher)) {
             mUnreadWatchers.add(messageUnreadWatcher);
         }
@@ -462,6 +542,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      * 销毁会话列表模块，退出登录时调用
      */
     public void destroyConversation() {
+        TUIKitLog.i(TAG, "destroyConversation");
         if (mProvider != null) {
             mProvider.clear();
         }

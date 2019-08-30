@@ -34,7 +34,7 @@ public interface IChatLayout extends ILayout {
     MessageLayout getMessageLayout();
 
     /**
-     * 获取聊天窗口 Message 区域 Layout
+     * 获取聊天窗口 Notice 区域 Layout
      *
      * @return
      */

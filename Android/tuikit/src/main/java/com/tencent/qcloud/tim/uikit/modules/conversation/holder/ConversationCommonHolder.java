@@ -24,7 +24,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected TextView messageText;
     protected TextView timelineText;
     protected TextView unreadText;
-    protected ConversationIconView conversationIconView;
+    public ConversationIconView conversationIconView;
 
     public ConversationCommonHolder(View itemView) {
         super(itemView);

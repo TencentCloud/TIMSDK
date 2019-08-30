@@ -129,6 +129,10 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
 
     @Override
     public void onClick(View v) {
+        if (mGroupInfo == null) {
+            TUIKitLog.e(TAG, "mGroupInfo is NULL");
+            return;
+        }
         if (v.getId() == R.id.group_member_bar) {
             if (mMemberPreviewListener != null) {
                 mMemberPreviewListener.forwardListMember(mGroupInfo);
@@ -187,67 +191,63 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 }
             });
         } else if (v.getId() == R.id.join_type_bar) {
-            if (mGroupInfo != null) {
-                if (mGroupTypeView.getContent().equals("聊天室")) {
-                    ToastUtil.toastLongMessage("加入聊天室为自动审批，暂不支持修改");
-                    return;
-                }
-                Bundle bundle = new Bundle();
-                bundle.putString(TUIKitConstants.Selection.TITLE, getResources().getString(R.string.group_join_type));
-                bundle.putStringArrayList(TUIKitConstants.Selection.LIST, mJoinTypes);
-                bundle.putInt(TUIKitConstants.Selection.DEFAULT_SELECT_ITEM_INDEX, mGroupInfo.getJoinType());
-                SelectionActivity.startListSelection((Activity) getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
-                    @Override
-                    public void onReturn(final Object text) {
-                        mPresenter.modifyGroupInfo((Integer) text, TUIKitConstants.Group.MODIFY_GROUP_JOIN_TYPE);
-                        mJoinTypeView.setContent(mJoinTypes.get((Integer) text));
-
-                    }
-                });
+            if (mGroupTypeView.getContent().equals("聊天室")) {
+                ToastUtil.toastLongMessage("加入聊天室为自动审批，暂不支持修改");
+                return;
             }
-        } else if (v.getId() == R.id.group_dissolve_button) {
-            if (mGroupInfo != null) {
-                if (mGroupInfo.isOwner() && !mGroupInfo.getGroupType().equals("Private")) {
-                    new TUIKitDialog(getContext())
-                            .builder()
-                            .setCancelable(true)
-                            .setCancelOutside(true)
-                            .setTitle("您确认解散该群?")
-                            .setDialogWidth(0.75f)
-                            .setPositiveButton("确定", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    mPresenter.deleteGroup();
-                                }
-                            })
-                            .setNegativeButton("取消", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+            Bundle bundle = new Bundle();
+            bundle.putString(TUIKitConstants.Selection.TITLE, getResources().getString(R.string.group_join_type));
+            bundle.putStringArrayList(TUIKitConstants.Selection.LIST, mJoinTypes);
+            bundle.putInt(TUIKitConstants.Selection.DEFAULT_SELECT_ITEM_INDEX, mGroupInfo.getJoinType());
+            SelectionActivity.startListSelection((Activity) getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
+                @Override
+                public void onReturn(final Object text) {
+                    mPresenter.modifyGroupInfo((Integer) text, TUIKitConstants.Group.MODIFY_GROUP_JOIN_TYPE);
+                    mJoinTypeView.setContent(mJoinTypes.get((Integer) text));
 
-                                }
-                            })
-                            .show();
-                } else {
-                    new TUIKitDialog(getContext())
-                            .builder()
-                            .setCancelable(true)
-                            .setCancelOutside(true)
-                            .setTitle("您确认退出该群？")
-                            .setDialogWidth(0.75f)
-                            .setPositiveButton("确定", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    mPresenter.quitGroup();
-                                }
-                            })
-                            .setNegativeButton("取消", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            })
-                            .show();
                 }
+            });
+        } else if (v.getId() == R.id.group_dissolve_button) {
+            if (mGroupInfo.isOwner() && !mGroupInfo.getGroupType().equals("Private")) {
+                new TUIKitDialog(getContext())
+                        .builder()
+                        .setCancelable(true)
+                        .setCancelOutside(true)
+                        .setTitle("您确认解散该群?")
+                        .setDialogWidth(0.75f)
+                        .setPositiveButton("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPresenter.deleteGroup();
+                            }
+                        })
+                        .setNegativeButton("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        })
+                        .show();
+            } else {
+                new TUIKitDialog(getContext())
+                        .builder()
+                        .setCancelable(true)
+                        .setCancelOutside(true)
+                        .setTitle("您确认退出该群？")
+                        .setDialogWidth(0.75f)
+                        .setPositiveButton("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPresenter.quitGroup();
+                            }
+                        })
+                        .setNegativeButton("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        })
+                        .show();
             }
         }
     }

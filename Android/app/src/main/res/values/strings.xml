@@ -21,7 +21,7 @@
     <string name="allow_type_deny_any">拒绝任何人</string>
     <string name="allow_type_need_confirm">需要验证</string>
     <string name="exit">退出登录</string>
-    <string name="about_im">关于云通信IM</string>
+    <string name="about_im">关于即时通信IM</string>
 
     // 主页Tab相关
     <string name="tab_contact_tab_text">通讯录</string>
@@ -51,5 +51,8 @@
     <string name="request_agree">同意</string>
     <string name="request_accepted">已接受</string>
     <string name="request_waiting">等待验证</string>
+
+    <string name="test_custom_action">自定义消息</string>
+    <string name="test_custom_message">查看详情>></string>
 
 </resources>

@@ -11,8 +11,10 @@ import com.tencent.imsdk.TIMConversationType;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.FriendProfileActivity;
+import com.tencent.qcloud.tim.demo.helper.ChatLayoutHelper;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.uikit.base.BaseFragment;
+import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.ChatLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
@@ -49,7 +51,7 @@ public class ChatFragment extends BaseFragment {
         mChatLayout.initDefault();
 
         // TODO 通过api设置ChatLayout各种属性的样例
-//        ChatLayoutHelper.customizeChatLayout(getActivity(), mChatLayout);
+        ChatLayoutHelper.customizeChatLayout(getActivity(), mChatLayout);
 
         /*
          * 需要聊天的基本信息
@@ -99,6 +101,11 @@ public class ChatFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        AudioPlayer.getInstance().stopPlayRecord();
+    }
 
     @Override
     public void onDestroy() {

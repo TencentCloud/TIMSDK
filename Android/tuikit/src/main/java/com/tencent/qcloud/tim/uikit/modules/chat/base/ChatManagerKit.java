@@ -118,10 +118,13 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
             TUIKitLog.w(TAG, "unSafetyCall");
             return;
         }
-        final MessageInfo msgInfo = MessageInfoUtil.TIMMessage2MessageInfo(msg, isGroup());
-        if (msgInfo != null && mCurrentConversation.getPeer().equals(conversation.getPeer())) {
-            mCurrentProvider.addMessageInfo(msgInfo);
-            msgInfo.setRead(true);
+        final List<MessageInfo> list = MessageInfoUtil.TIMMessage2MessageInfo(msg, isGroup());
+        if (list != null && list.size() != 0 && mCurrentConversation.getPeer().equals(conversation.getPeer())) {
+            mCurrentProvider.addMessageInfoList(list);
+            for (MessageInfo msgInfo : list) {
+                msgInfo.setRead(true);
+                addGroupMessage(msgInfo);
+            }
             mCurrentConversation.setReadMessage(msg, new TIMCallBack() {
                 @Override
                 public void onError(int code, String desc) {
@@ -133,12 +136,11 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                     TUIKitLog.d(TAG, "addMessage() setReadMessage success");
                 }
             });
-            addGroupMessage(msgInfo);
         }
     }
 
     protected void addGroupMessage(MessageInfo msgInfo) {
-        // GroupChatManager会重写该方法
+        // GroupChatManagerKit会重写该方法
     }
 
     public void deleteMessage(int position, MessageInfo messageInfo) {
@@ -380,7 +382,7 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
             return;
         }
         if (locator.getConversationId().equals(getCurrentChatInfo().getId())) {
-            TUIKitLog.d(TAG, "handleInvoke() locator = " + locator);
+            TUIKitLog.i(TAG, "handleInvoke locator = " + locator);
             mCurrentProvider.updateMessageRevoked(locator);
         }
     }

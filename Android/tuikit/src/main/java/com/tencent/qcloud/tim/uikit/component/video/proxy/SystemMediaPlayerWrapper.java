@@ -8,8 +8,6 @@ import android.view.SurfaceHolder;
 
 import java.io.IOException;
 
-import tv.danmaku.ijk.media.player.IMediaPlayer;
-
 public class SystemMediaPlayerWrapper implements IPlayer {
 
     private MediaPlayer mMediaPlayer;

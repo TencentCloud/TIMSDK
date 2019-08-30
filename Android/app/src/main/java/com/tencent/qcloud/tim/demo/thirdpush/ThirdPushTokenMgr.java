@@ -18,6 +18,7 @@ public class ThirdPushTokenMgr {
     private static final String TAG = ThirdPushTokenMgr.class.getSimpleName();
     private String mThirdPushToken;
     private boolean mIsTokenSet = false;
+    public static final boolean USER_GOOGLE_FCM = false;
 
     public static ThirdPushTokenMgr getInstance() {
         return ThirdPushTokenHolder.instance;
@@ -47,7 +48,9 @@ public class ThirdPushTokenMgr {
             return;
         }
         TIMOfflinePushToken param = null;
-        if (IMFunc.isBrandXiaoMi()) {
+        if (USER_GOOGLE_FCM) {
+            param = new TIMOfflinePushToken(PrivateConstants.GOOGLE_FCM_PUSH_BUZID, token);
+        } else if (IMFunc.isBrandXiaoMi()) {
             param = new TIMOfflinePushToken(PrivateConstants.XM_PUSH_BUZID, token);
         } else if (IMFunc.isBrandHuawei()) {
             param = new TIMOfflinePushToken(PrivateConstants.HW_PUSH_BUZID, token);

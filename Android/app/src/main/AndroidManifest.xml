@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.tencent.qcloud.tim.demo">
+
+    <uses-sdk tools:overrideLibrary="tv.danmaku.ijk.media.player_arm64"/>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -306,6 +309,17 @@
         <meta-data
             android:name="com.vivo.push.app_id"
             android:value="11178" />
+        <!-- ********vivo推送设置end******** -->
+
+        <!-- ********海外google云消息传递start******** -->
+        <service
+            android:name=".thirdpush.GoogleFCMMsgService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- ********海外google云消息传递end******** -->
     </application>
 
 </manifest>
