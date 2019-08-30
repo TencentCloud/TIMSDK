@@ -55,7 +55,7 @@
 - (instancetype)init
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
-    
+
     return self;
 }
 
@@ -66,17 +66,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.title = @"详细资料";
     self.clearsSelectionOnViewWillAppear = YES;
 
     [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"CardCell"];
     [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
-    
+
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
-    
+
     [self loadData];
 }
 
@@ -102,7 +102,7 @@
         })];
         inlist;
     })];
-    
+
     //当用户状态为请求添加好友/请求添加群组时，视图加载出验证消息模块
     if (self.pendency || self.groupPendency) {
         [list addObject:({
@@ -121,10 +121,10 @@
             inlist;
         })];
     }
-    
-    
+
+
     self.dataList = list;
-    
+
     //当用户为陌生人时，在当前视图给出"加好友"按钮
     if (self.actionType == PCA_ADD_FRIEND) {
         TIMFriendCheckInfo *ck = TIMFriendCheckInfo.new;
@@ -135,8 +135,8 @@
             if (result.resultType == TIM_FRIEND_RELATION_TYPE_MY_UNI || result.resultType == TIM_FRIEND_RELATION_TYPE_BOTHWAY) {
                 return;
             }
-            
-            
+
+
             [self.dataList addObject:({
                 NSMutableArray *inlist = @[].mutableCopy;
                 [inlist addObject:({
@@ -151,10 +151,10 @@
             })];
             [self.tableView reloadData];
         } fail:^(int code, NSString *msg) {
-            
+
         }];
     }
-    
+
     //当用户请求添加使用者为好友时，在当前视图给出"同意"、"拒绝"，使当前用户进行选择
     if (self.actionType == PCA_PENDENDY_CONFIRM) {
         [self.dataList addObject:({
@@ -178,7 +178,7 @@
             inlist;
         })];
     }
-    
+
     //当用户请求加入群组时，在当前视图给出"同意"、"拒绝"，使当前群组管理员进行选择
     if (self.actionType == PCA_GROUP_CONFIRM) {
         [self.dataList addObject:({
@@ -202,7 +202,7 @@
             inlist;
         })];
     }
-    
+
     [self.tableView reloadData];
 }
 
@@ -220,7 +220,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+
     TCommonCellData *data = self.dataList[indexPath.section][indexPath.row];
     TCommonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
     //如果是 profileCard 的话，添加委托。
@@ -230,7 +230,7 @@
         cell = cardCell;
     }
     [cell fillWithData:data];
-    
+
     return cell;
 }
 
@@ -300,7 +300,7 @@
     image.avatarData.avatarUrl = [NSURL URLWithString:self.userProfile.faceURL];
     NSArray *list = self.dataList;
     NSLog(@"%@",list);
-    
+
     [self.navigationController pushViewController:image animated:YES];
 }
 

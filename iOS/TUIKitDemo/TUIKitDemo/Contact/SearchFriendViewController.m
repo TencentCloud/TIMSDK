@@ -29,15 +29,15 @@
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    
+
     _idLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [self addSubview:_idLabel];
-    
+
     _line = [[UIView alloc] initWithFrame:CGRectZero];
     _line.backgroundColor = [UIColor grayColor];
     [self addSubview:_line];
-    
-    
+
+
     return self;
 }
 
@@ -48,7 +48,7 @@
 {
     _profile = profile;
     if (_profile) {
-    
+
         _idLabel.text = profile.identifier;
         _idLabel.mm_sizeToFit().mm_center().mm_left(8);
         _line.mm_height(1).mm_width(self.mm_w).mm_bottom(0);
@@ -57,8 +57,8 @@
         _idLabel.text = @"";
         _line.hidden = YES;
     }
-    
-    
+
+
     _profile = profile;
 }
 
@@ -82,13 +82,13 @@
 {
     [super viewDidLoad];
     self.title = @"添加好友";
-    
+
     self.view.backgroundColor = TSettingController_Background_Color;
-    
+
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.definesPresentationContext = YES;//不设置会导致一些位置错乱，无动画等问题
-    
+
     // 创建搜索框
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     //设置代理
@@ -101,7 +101,7 @@
 
     self.userView = [[AddFriendUserView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.userView];
-    
+
     UITapGestureRecognizer *singleFingerTap =
     [[UITapGestureRecognizer alloc] initWithTarget:self
                                             action:@selector(handleUserTap:)];
@@ -114,7 +114,7 @@
 {
     NSLog(@"didPresentSearchController");
     [self.view addSubview:self.searchController.searchBar];
-    
+
     self.searchController.searchBar.mm_top([self safeAreaTopGap]);
     self.userView.mm_top(self.searchController.searchBar.mm_maxY).mm_height(44).mm_width(Screen_Width);
 }
@@ -148,7 +148,7 @@
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSString *inputStr = searchController.searchBar.text ;
     NSLog(@"serach %@", inputStr);
-    
+
     [[TIMFriendshipManager sharedInstance] getUsersProfile:@[inputStr] forceUpdate:NO succ:^(NSArray<TIMUserProfile *> *profiles) {
         if (profiles.count)
             self.userView.profile = profiles[0];

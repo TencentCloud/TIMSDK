@@ -13,5 +13,4 @@ target 'TUIKitDemo' do
   pod 'ReactiveObjC'
   pod 'MLeaksFinder'
   pod 'TXIMSDK_TUIKit_iOS'
-  pod 'TXIMSDK_iOS'
 end

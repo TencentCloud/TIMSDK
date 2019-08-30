@@ -45,16 +45,30 @@
     return nil;
 }
 
-+ (NSDictionary *)jsonData2Dictionary:(NSString *)jsonData
++ (NSDictionary *)jsonSring2Dictionary:(NSString *)jsonString
+{
+    if (jsonString == nil) {
+        return nil;
+    }
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err = nil;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&err];
+    if (err || ![dic isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"Json parse failed: %@", jsonString);
+        return nil;
+    }
+    return dic;
+}
+
++ (NSDictionary *)jsonData2Dictionary:(NSData *)jsonData
 {
     if (jsonData == nil) {
         return nil;
     }
-    NSData *data = [jsonData dataUsingEncoding:NSUTF8StringEncoding];
     NSError *err = nil;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&err];
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
     if (err || ![dic isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"Json parse failed: %@", jsonData);
+        NSLog(@"Json parse failed");
         return nil;
     }
     return dic;
@@ -66,10 +80,10 @@
     {
         return nil;
     }
-    
+
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *cacheDirectory = [paths objectAtIndex:0];
-    
+
     NSString *fileFullPath = [cacheDirectory stringByAppendingPathComponent:fileName];
     return fileFullPath;
 }
@@ -91,13 +105,13 @@
             length++;
         }
     }
-    
+
     return length;
 }
 + (NSString *)md5Hash:(NSData *)data {
     unsigned char result[CC_MD5_DIGEST_LENGTH];
     CC_MD5([data bytes], (CC_LONG)[data length], result);
-    
+
     return [NSString stringWithFormat:
             @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
             result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7],
@@ -118,13 +132,13 @@
             });
             return;
         }
-        
+
         NSString* urlString = [kHttpServerAddr stringByAppendingPathComponent:command];
         NSMutableString *strUrl = [[NSMutableString alloc] initWithString:urlString];
-        
+
         NSURL *URL = [NSURL URLWithString:strUrl];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
-        
+
         if (data)
         {
             [request setValue:[NSString stringWithFormat:@"%ld",(long)[data length]] forHTTPHeaderField:@"Content-Length"];
@@ -132,16 +146,16 @@
             [request setValue:@"application/json; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
             [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
             if (token.length > 0) {
-                
+
                 NSString* sig = [[NSString stringWithFormat:@"%@%@", token, [self md5Hash:data]] md5];
                 [request setValue:sig forHTTPHeaderField:@"Liteav-Sig"];
             }
             [request setHTTPBody:data];
         }
-        
+
         [request setTimeoutInterval:kHttpTimeout];
-        
-        
+
+
         NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error != nil)
             {
@@ -153,7 +167,7 @@
             else
             {
                 NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                NSDictionary* resultDict = [TCUtil jsonData2Dictionary:responseString];
+                NSDictionary* resultDict = [TCUtil jsonSring2Dictionary:responseString];
                 int errCode = -1;
                 NSString* message = @"";
                 NSDictionary* dataDict = nil;
@@ -162,11 +176,11 @@
                     if (resultDict[@"code"]) {
                         errCode = [resultDict[@"code"] intValue];
                     }
-                    
+
                     if (resultDict[@"message"]) {
                         message = resultDict[@"message"];
                     }
-                    
+
                     if (200 == errCode && resultDict[@"data"])
                     {
                         dataDict = resultDict[@"data"];
@@ -177,7 +191,7 @@
                 });
             }
         }];
-        
+
         [task resume];
     });
 }
@@ -200,25 +214,25 @@
             });
             return;
         }
-        
+
         NSMutableString *strUrl = [[NSMutableString alloc] initWithString:kHttpServerAddr];
-        
+
         NSURL *URL = [NSURL URLWithString:strUrl];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
-        
+
         if (data)
         {
             [request setValue:[NSString stringWithFormat:@"%ld",(long)[data length]] forHTTPHeaderField:@"Content-Length"];
             [request setHTTPMethod:@"POST"];
             [request setValue:@"application/json; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
             [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-            
+
             [request setHTTPBody:data];
         }
-        
+
         [request setTimeoutInterval:kHttpTimeout];
-        
-        
+
+
         NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error != nil)
             {
@@ -230,14 +244,14 @@
             else
             {
                 NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                NSDictionary* resultDict = [TCUtil jsonData2Dictionary:responseString];
+                NSDictionary* resultDict = [TCUtil jsonSring2Dictionary:responseString];
                 int errCode = -1;
                 NSDictionary* dataDict = nil;
                 if (resultDict)
                 {
                     if (resultDict[@"returnValue"])
                         errCode = [resultDict[@"returnValue"] intValue];
-                    
+
                     if (0 == errCode && resultDict[@"returnData"])
                     {
                         dataDict = resultDict[@"returnData"];
@@ -248,7 +262,7 @@
                 });
             }
         }];
-        
+
         [task resume];
     });
 }

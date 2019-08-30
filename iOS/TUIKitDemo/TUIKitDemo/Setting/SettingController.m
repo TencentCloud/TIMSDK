@@ -33,7 +33,8 @@
 #import "ProfileController.h"
 #import "PAirSandbox.h"
 #import "TUIAvatarViewController.h"
-
+#import "TCommonSwitchCell.h"
+//#import <QAPM/QAPM.h>
 #import <ImSDK/ImSDK.h>
 
 #define SHEET_COMMON 1
@@ -81,6 +82,8 @@
 
 @interface SettingController () <UIActionSheetDelegate>
 @property (nonatomic, strong) NSMutableArray *data;
+@property (nonatomic, strong) dispatch_source_t timer;
+@property (nonatomic, assign) BOOL memoryReport;
 @property TIMUserProfile *profile;
 @property (nonatomic, strong) TUIProfileCardCellData *profileCellData;
 @end
@@ -91,7 +94,7 @@
     [super viewDidLoad];
     [[TCServiceManager shareInstance] registerService:@protocol(TUIUserProfileDataProviderServiceProtocol) implClass:[MyUserProfileExpresser class]];
     [self setupViews];
-    
+
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
 
@@ -103,7 +106,7 @@
  self.profile = profile;
  [self setupData];
  } fail:^(int code, NSString *msg) {
- 
+
  }];
 }
 
@@ -111,19 +114,20 @@
 {
     self.title = @"我";
     self.parentViewController.title = @"我";
-    
+
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.backgroundColor = TSettingController_Background_Color;
-    
+
     [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"personalCell"];
     [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"buttonCell"];
+    [self.tableView registerClass:[TCommonSwitchCell class] forCellReuseIdentifier:@"switchCell"];
 
     [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
         self.profile = profile;
         [self setupData];
     } fail:^(int code, NSString *msg) {
-        
+
     }];
 }
 
@@ -134,7 +138,7 @@
 {
 
     _data = [NSMutableArray array];
-    
+
     TUIProfileCardCellData *personal = [[TUIProfileCardCellData alloc] init];
     personal.identifier = self.profile.identifier;
     personal.avatarImage = DefaultAvatarImage;
@@ -147,7 +151,7 @@
     self.profileCellData = personal;
     [_data addObject:@[personal]];
 
-    
+
     TCommonTextCellData *friendApply = [TCommonTextCellData new];
     friendApply.key = @"好友申请";
     friendApply.showAccessory = YES;
@@ -161,31 +165,37 @@
     if (self.profile.allowType == TIM_FRIEND_DENY_ANY) {
         friendApply.value = @"拒绝任何人加好友";
     }
-    
+
     TCommonTextCellData *messageNotify = [TCommonTextCellData new];
     messageNotify.key = @"消息提醒";
     messageNotify.showAccessory = YES;
     messageNotify.cselector = @selector(didSelectNotifySet);
     [_data addObject:@[friendApply, messageNotify]];
-    
+
     TCommonTextCellData *about = [TCommonTextCellData new];
     about.key = @"关于云通信IM";
     about.showAccessory = YES;
     about.cselector = @selector(didSelectAbout);
     [_data addObject:@[about]];
-    
+
     TCommonTextCellData *log = [TCommonTextCellData new];
     log.key = @"开发调试";
     log.showAccessory = YES;
     log.cselector = @selector(didSelectLog);
     [_data addObject:@[log]];
     
+    TCommonSwitchCellData *memory = [TCommonSwitchCellData new];
+    memory.title = @"内存泄露上报";
+    memory.on = self.memoryReport;
+    memory.cswitchSelector = @selector(onNotifySwitch:);
+    [_data addObject:@[memory]];
+
     TUIButtonCellData *button =  [[TUIButtonCellData alloc] init];
     button.title = @"退出登录";
     button.style = ButtonRedText;
     button.cbuttonSelector = @selector(logout:);
     [_data addObject:@[button]];
-    
+
     [self.tableView reloadData];
 }
 #pragma mark - Table view data source
@@ -225,7 +235,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -248,6 +258,11 @@
     }  else if([data isKindOfClass:[TCommonTextCellData class]]) {
         TCommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textCell" forIndexPath:indexPath];
         [cell fillWithData:(TCommonTextCellData *)data];
+        return cell;
+    }
+    else if([data isKindOfClass:[TCommonSwitchCellData class]]) {
+        TCommonSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell" forIndexPath:indexPath];
+        [cell fillWithData:(TCommonSwitchCellData *)data];
         return cell;
     }
     return nil;
@@ -283,7 +298,7 @@
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确定退出吗" message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-    
+
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         [self didConfirmLogout];
@@ -352,6 +367,28 @@
 - (void)didSelectLog
 {
     [[PAirSandbox sharedInstance] showSandboxBrowser];
+}
+
+- (void)onNotifySwitch:(TCommonSwitchCell *)cell
+{
+    //定时去上报内存泄露，1min 上报一次
+    if (cell.switcher.isOn) {
+        _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+        dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW,5 *NSEC_PER_SEC);
+        uint64_t intevel = 5 * NSEC_PER_SEC;
+        dispatch_source_set_timer(_timer, start, intevel, 0 * NSEC_PER_SEC);
+        dispatch_source_set_event_handler(_timer, ^{
+            //[QAPMQQLeakProfile executeLeakCheck];
+        });
+        dispatch_resume(_timer);
+        self.memoryReport = YES;
+    } else {
+        if (_timer) {
+            dispatch_cancel(_timer);
+            _timer = nil;
+        }
+        self.memoryReport = NO;
+    }
 }
 
 /**

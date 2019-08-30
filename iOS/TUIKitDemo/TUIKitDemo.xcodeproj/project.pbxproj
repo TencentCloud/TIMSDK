@@ -18,7 +18,6 @@
 		91D3AD3122AA06440036CDE0 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = 91D3AD2F22AA06430036CDE0 /* Aspects.m */; };
 		91FE93A2227590F000C17D6C /* NotifySetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91FE93A1227590EF00C17D6C /* NotifySetupController.m */; };
 		91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */; };
-		BCF739AA621A7AF4B48F1525 /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */; };
 		CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0BDFA8221D53C60083E1B0 /* Bugly.framework */; };
 		CE1A434A22DE07EB008A767E /* PAirSandbox.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434322DE07EB008A767E /* PAirSandbox.m */; };
 		CE1A434C22DE07EB008A767E /* TCUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434822DE07EB008A767E /* TCUtil.m */; };
@@ -36,38 +35,8 @@
 		CFEB47752177981900CFD98C /* GroupInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47742177981900CFD98C /* GroupInfoController.m */; };
 		CFEB47782177982B00CFD98C /* GroupMemberController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47772177982B00CFD98C /* GroupMemberController.m */; };
 		CFEB47D02179B82300CFD98C /* SettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47CF2179B82300CFD98C /* SettingController.m */; };
+		E09A2F6CC5B0570A280D21CA /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBCF978C82A325488DA85D87 /* libPods-TUIKitDemo.a */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		91FE93F422793A9A00C17D6C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 91FE93EE22793A9A00C17D6C /* imsdk.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4098964B21368C840085425C;
-			remoteInfo = ImSDK;
-		};
-		91FE93F622793A9A00C17D6C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 91FE93EE22793A9A00C17D6C /* imsdk.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 40C67458218AAF0E00F3F29A;
-			remoteInfo = ImSDKForMac;
-		};
-		91FE93F822793A9A00C17D6C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 91FE93EE22793A9A00C17D6C /* imsdk.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DAAEE1D9225B771C00B5C277;
-			remoteInfo = ImSDKTests;
-		};
-		91FE940E2279498F00C17D6C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 91FE93EE22793A9A00C17D6C /* imsdk.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 4098964A21368C840085425C;
-			remoteInfo = ImSDK;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		CE4361FE21F5A5FA0070D6C9 /* Embed Frameworks */ = {
@@ -83,7 +52,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		30722D34BE1DD45B2ACBD3BB /* Pods-TUIKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.release.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.release.xcconfig"; sourceTree = "<group>"; };
+		492D8F1F0DED1F83086F3E82 /* Pods-TUIKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.release.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.release.xcconfig"; sourceTree = "<group>"; };
+		4A94A8992A0612C1D8FEAB79 /* Pods-TUIKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.debug.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		910AF70922925BF000ED5675 /* SearchGroupViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchGroupViewController.h; sourceTree = "<group>"; };
 		910AF70A22925BF000ED5675 /* SearchGroupViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchGroupViewController.m; sourceTree = "<group>"; };
 		910AF70F2292820300ED5675 /* GroupRequestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupRequestViewController.h; sourceTree = "<group>"; };
@@ -107,7 +77,6 @@
 		91FE93A1227590EF00C17D6C /* NotifySetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotifySetupController.m; sourceTree = "<group>"; };
 		91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TFriendProfileController.m; sourceTree = "<group>"; };
 		91FE93E32276EF0F00C17D6C /* TFriendProfileController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TFriendProfileController.h; sourceTree = "<group>"; };
-		91FE93EE22793A9A00C17D6C /* imsdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = imsdk.xcodeproj; path = /Users/annidy/Work/imsdk/tuikit/ios/TUIKit/../../../source/project/ios/imsdk/imsdk.xcodeproj; sourceTree = "<absolute>"; };
 		CE0BDFA8221D53C60083E1B0 /* Bugly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bugly.framework; sourceTree = "<group>"; };
 		CE1A434322DE07EB008A767E /* PAirSandbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAirSandbox.m; sourceTree = "<group>"; };
 		CE1A434422DE07EB008A767E /* TCUploadHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUploadHelper.m; sourceTree = "<group>"; };
@@ -145,8 +114,7 @@
 		CFEB47772177982B00CFD98C /* GroupMemberController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupMemberController.m; sourceTree = "<group>"; };
 		CFEB47CE2179B82300CFD98C /* SettingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingController.h; sourceTree = "<group>"; };
 		CFEB47CF2179B82300CFD98C /* SettingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingController.m; sourceTree = "<group>"; };
-		D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FFA1E52ABCCAE78D060D1E3D /* Pods-TUIKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.debug.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		FBCF978C82A325488DA85D87 /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,19 +123,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */,
-				BCF739AA621A7AF4B48F1525 /* libPods-TUIKitDemo.a in Frameworks */,
+				E09A2F6CC5B0570A280D21CA /* libPods-TUIKitDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0EAC6405FA3E1068F8C9B7B0 /* Pods */ = {
+		46BF8BF62A4989382EFC56F0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				FFA1E52ABCCAE78D060D1E3D /* Pods-TUIKitDemo.debug.xcconfig */,
-				30722D34BE1DD45B2ACBD3BB /* Pods-TUIKitDemo.release.xcconfig */,
+				4A94A8992A0612C1D8FEAB79 /* Pods-TUIKitDemo.debug.xcconfig */,
+				492D8F1F0DED1F83086F3E82 /* Pods-TUIKitDemo.release.xcconfig */,
 			);
+			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -273,16 +242,6 @@
 			path = Contact;
 			sourceTree = "<group>";
 		};
-		91FE93EF22793A9A00C17D6C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				91FE93F522793A9A00C17D6C /* ImSDK.framework */,
-				91FE93F722793A9A00C17D6C /* ImSDKForMac.framework */,
-				91FE93F922793A9A00C17D6C /* ImSDKTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		CE37D1C122F9942B0012500D /* Debug */ = {
 			isa = PBXGroup;
 			children = (
@@ -298,7 +257,7 @@
 				CF014484216E1A4900C12E35 /* TUIKitDemo */,
 				CF014483216E1A4900C12E35 /* Products */,
 				CF0144A1216E1A6400C12E35 /* Frameworks */,
-				0EAC6405FA3E1068F8C9B7B0 /* Pods */,
+				46BF8BF62A4989382EFC56F0 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -322,7 +281,6 @@
 				9176C5CD227AE37D00DF5784 /* Setting */,
 				91FE93E12276EEEE00C17D6C /* Contact */,
 				CE1C55922224F22C00A75262 /* TUIKitDemo.entitlements */,
-				91FE93EE22793A9A00C17D6C /* imsdk.xcodeproj */,
 				CF014485216E1A4900C12E35 /* AppDelegate.h */,
 				CF014486216E1A4900C12E35 /* AppDelegate.m */,
 				CF01448B216E1A4900C12E35 /* Main.storyboard */,
@@ -339,7 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				CE0BDFA8221D53C60083E1B0 /* Bugly.framework */,
-				D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */,
+				FBCF978C82A325488DA85D87 /* libPods-TUIKitDemo.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -357,12 +315,11 @@
 				CF014480216E1A4900C12E35 /* Resources */,
 				CE4361FE21F5A5FA0070D6C9 /* Embed Frameworks */,
 				B2A65600FF8D3C09CA9FE6F1 /* [CP] Copy Pods Resources */,
-				AE3AA7FF247BA8285649258A /* [CP] Embed Pods Frameworks */,
+				5CDDBA481EDB7F4A293D5E96 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				91FE940F2279498F00C17D6C /* PBXTargetDependency */,
 			);
 			name = TUIKitDemo;
 			productName = TUIKitDemo;
@@ -403,42 +360,12 @@
 			mainGroup = CF014479216E1A4900C12E35;
 			productRefGroup = CF014483216E1A4900C12E35 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 91FE93EF22793A9A00C17D6C /* Products */;
-					ProjectRef = 91FE93EE22793A9A00C17D6C /* imsdk.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				CF014481216E1A4900C12E35 /* TUIKitDemo */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		91FE93F522793A9A00C17D6C /* ImSDK.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ImSDK.framework;
-			remoteRef = 91FE93F422793A9A00C17D6C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		91FE93F722793A9A00C17D6C /* ImSDKForMac.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ImSDKForMac.framework;
-			remoteRef = 91FE93F622793A9A00C17D6C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		91FE93F922793A9A00C17D6C /* ImSDKTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ImSDKTests.xctest;
-			remoteRef = 91FE93F822793A9A00C17D6C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		CF014480216E1A4900C12E35 /* Resources */ = {
@@ -476,7 +403,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		AE3AA7FF247BA8285649258A /* [CP] Embed Pods Frameworks */ = {
+		5CDDBA481EDB7F4A293D5E96 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -545,14 +472,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		91FE940F2279498F00C17D6C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ImSDK;
-			targetProxy = 91FE940E2279498F00C17D6C /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		CF01448B216E1A4900C12E35 /* Main.storyboard */ = {
@@ -690,7 +609,7 @@
 		};
 		CF014499216E1A4B00C12E35 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FFA1E52ABCCAE78D060D1E3D /* Pods-TUIKitDemo.debug.xcconfig */;
+			baseConfigurationReference = 4A94A8992A0612C1D8FEAB79 /* Pods-TUIKitDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -723,7 +642,7 @@
 		};
 		CF01449A216E1A4B00C12E35 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 30722D34BE1DD45B2ACBD3BB /* Pods-TUIKitDemo.release.xcconfig */;
+			baseConfigurationReference = 492D8F1F0DED1F83086F3E82 /* Pods-TUIKitDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

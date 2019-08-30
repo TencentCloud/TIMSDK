@@ -21,12 +21,12 @@ PODS:
     - FBRetainCycleDetector
   - MMLayout (0.2.0)
   - ReactiveObjC (3.1.1)
-  - SDWebImage (5.0.4):
-    - SDWebImage/Core (= 5.0.4)
-  - SDWebImage/Core (5.0.4)
+  - SDWebImage (5.1.0):
+    - SDWebImage/Core (= 5.1.0)
+  - SDWebImage/Core (5.1.0)
   - Toast (4.0.0)
-  - TXIMSDK_iOS (4.4.900)
-  - TXIMSDK_TUIKit_iOS (4.4.900):
+  - TXIMSDK_iOS (4.5.15)
+  - TXIMSDK_TUIKit_iOS (4.5.15):
     - ISVImageScrollView
     - MMLayout
     - ReactiveObjC
@@ -41,7 +41,6 @@ DEPENDENCIES:
   - MMLayout
   - ReactiveObjC
   - SDWebImage
-  - TXIMSDK_iOS
   - TXIMSDK_TUIKit_iOS
 
 SPEC REPOS:
@@ -66,11 +65,11 @@ SPEC CHECKSUMS:
   MLeaksFinder: 8c435bd2f6d070af18cff082b503b21adc130fc0
   MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
-  SDWebImage: c739016e4bdf0a4a1f9a04b5e0385395ad63a282
+  SDWebImage: fb387001955223213dde14bc08c8b73f371f8d8f
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_iOS: 54c04c0807ccf0c406366ef86cff663ea277e235
-  TXIMSDK_TUIKit_iOS: c6ba8a30b963e2a076fdaacc5ac42e5ad43f18c0
+  TXIMSDK_iOS: 7cf467dc7c90f294b894e8a7b7004bce7acfd332
+  TXIMSDK_TUIKit_iOS: 95bc7ce8b6c73c8e5ebbe60c77e44c15ac4ec30c
 
-PODFILE CHECKSUM: cb27fae17c15b110179aebb298f41aadeb1137ae
+PODFILE CHECKSUM: a136670c9c25694a02df9f7f48560f22fc3b2496
 
 COCOAPODS: 1.7.5

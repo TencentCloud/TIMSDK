@@ -40,17 +40,17 @@
     conv.delegate = self;
     [self addChildViewController:conv];
     [self.view addSubview:conv.view];
-    
+
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     conv.tableView.delaysContentTouches = NO;
-    
-    
+
+
     UIButton *moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     [moreButton setImage:[UIImage imageNamed:TUIKitResource(@"more")] forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
     self.navigationItem.rightBarButtonItem = moreItem;
-    
+
     [self setupNavigation];
 }
 
@@ -63,7 +63,7 @@
     [_titleView setTitle:@"云通信IM"];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNetworkChanged:) name:TUIKitNotification_TIMConnListener object:nil];
 }
 
@@ -90,7 +90,7 @@
             [_titleView setTitle:@"云通信IM(未连接)"];
             [_titleView stopAnimating];
             break;
-            
+
         default:
             break;
     }
@@ -116,12 +116,12 @@
     friend.image = TUIKitResource(@"add_friend");
     friend.title = @"发起会话";
     [menus addObject:friend];
-    
+
     TPopCellData *group3 = [[TPopCellData alloc] init];
     group3.image = TUIKitResource(@"create_group");
     group3.title = @"创建讨论组";
     [menus addObject:group3];
-    
+
     TPopCellData *group = [[TPopCellData alloc] init];
     group.image = TUIKitResource(@"create_group");
     group.title = @"创建群聊";
@@ -132,7 +132,7 @@
     room.title = @"创建聊天室";
     [menus addObject:room];
 
-    
+
     CGFloat height = [TPopCell getHeight] * menus.count + TPopView_Arrow_Size.height;
     CGFloat orginY = StatusBar_Height + NavBar_Height;
     TPopView *popView = [[TPopView alloc] initWithFrame:CGRectMake(Screen_Width - 145, orginY, 135, height)];
@@ -164,7 +164,7 @@
             ChatViewController *chat = [[ChatViewController alloc] init];
             chat.conversationData = data;
             [self.navigationController pushViewController:chat animated:YES];
-            
+
             NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
             [tempArray removeObjectAtIndex:tempArray.count-2];
             self.navigationController.viewControllers = tempArray;
@@ -227,12 +227,12 @@
         [groupName appendFormat:@"、%@", item.title];
         [members addObject:member];
     }
-    
+
     //群组名称默认长度不超过10，如有需求可在此更改，但可能会出现UI上的显示bug
     if ([groupName length] > 10) {
         groupName = [groupName substringToIndex:10].mutableCopy;
     }
-    
+
     TIMCreateGroupInfo *info = [[TIMCreateGroupInfo alloc] init];
     info.groupName = groupName;
     info.groupType = groupType;
@@ -244,7 +244,7 @@
         info.addOpt = addOption;
     }
     info.membersInfo = members;
-    
+
     //发送创建请求后的回调函数
     @weakify(self)
     [[TIMGroupManager sharedInstance] createGroup:info succ:^(NSString *groupId) {
@@ -253,11 +253,11 @@
         TIMMessage *tip = [[TIMMessage alloc] init];
         TIMCustomElem *custom = [[TIMCustomElem alloc] init];
         custom.data = [@"group_create" dataUsingEncoding:NSUTF8StringEncoding];
-        
+
         //对于创建群消息时的名称显示（此时还未设置群名片），优先显示用户昵称。
         NSString *userId = [[TIMManager sharedInstance] getLoginUser];
         TIMUserProfile *user = [[TIMFriendshipManager sharedInstance] queryUserProfile:userId];
-        
+
         if([info.groupType isEqualToString:@"Private"]) {
             custom.ext = [NSString stringWithFormat:@"\"%@\"创建讨论组",user.showName];
         } else if([info.groupType isEqualToString:@"Public"]){
@@ -267,13 +267,13 @@
         } else {
             custom.ext = [NSString stringWithFormat:@"\"%@\"创建群组",user.showName];
         }
-        
-        
+
+
         [tip addElem:custom];
         TIMConversation *conv = [[TIMManager sharedInstance] getConversation:TIM_GROUP receiver:groupId];
         [conv sendMessage:tip succ:nil fail:nil];
-        
-        
+
+
         //创建成功后，默认跳转到群组对应的聊天界面
         TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
         data.convId = groupId;
@@ -282,11 +282,11 @@
         ChatViewController *chat = [[ChatViewController alloc] init];
         chat.conversationData = data;
         [self.navigationController pushViewController:chat animated:YES];
-        
+
         NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
         [tempArray removeObjectAtIndex:tempArray.count-2];
         self.navigationController.viewControllers = tempArray;
-        
+
     } fail:^(int code, NSString *msg) {
         [THelper makeToastError:code msg:msg];
     }];

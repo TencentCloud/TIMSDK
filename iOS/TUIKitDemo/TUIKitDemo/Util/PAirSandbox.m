@@ -47,7 +47,7 @@ typedef enum : NSUInteger {
     {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         int cellWidth = [UIScreen mainScreen].bounds.size.width - 2*ASWindowPadding;
-        
+
         _lbName = [UILabel new];
         _lbName.backgroundColor = [UIColor clearColor];
         _lbName.font = [UIFont systemFontOfSize:13];
@@ -55,7 +55,7 @@ typedef enum : NSUInteger {
         _lbName.frame = CGRectMake(10, 30, cellWidth - 20, 15);
         _lbName.textColor = [UIColor blackColor];
         [self addSubview:_lbName];
-        
+
         UIView* line = [UIView new];
         line.backgroundColor = ASThemeColor;
         line.frame = CGRectMake(10, 47, cellWidth - 20, 1);
@@ -83,7 +83,7 @@ typedef enum : NSUInteger {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     [self prepareCtrl];
     [self loadPath:nil];
 }
@@ -91,21 +91,21 @@ typedef enum : NSUInteger {
 - (void)prepareCtrl
 {
     self.view.backgroundColor = [UIColor whiteColor];
-    
+
     _btnClose = [UIButton new];
     [self.view addSubview:_btnClose];
     _btnClose.backgroundColor = ASThemeColor;
     [_btnClose setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_btnClose setTitle:@"Close" forState:UIControlStateNormal];
     [_btnClose addTarget:self action:@selector(btnCloseClick) forControlEvents:UIControlEventTouchUpInside];
-    
+
     _tableView = [UITableView new];
     [self.view addSubview:_tableView];
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    
+
     _items = @[];
     _rootPath = NSHomeDirectory();
 }
@@ -113,13 +113,13 @@ typedef enum : NSUInteger {
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-    
+
     int viewWidth = [UIScreen mainScreen].bounds.size.width - 2*ASWindowPadding;
     int closeWidth = 60;
     int closeHeight = 28;
-    
+
     _btnClose.frame = CGRectMake(viewWidth-closeWidth-4, 4, closeWidth, closeHeight);
-    
+
     CGRect tableFrame = self.view.frame;
     tableFrame.origin.y += (closeHeight+4);
     tableFrame.size.height -= (closeHeight+4);
@@ -134,7 +134,7 @@ typedef enum : NSUInteger {
 - (void)loadPath:(NSString*)filePath
 {
     NSMutableArray* files = @[].mutableCopy;
-    
+
     NSFileManager* fm = [NSFileManager defaultManager];
     NSArray *groupItems = [PAirSandbox sharedInstance].groupItems;
     for (ASFileItem *groupItem in groupItems) {
@@ -144,7 +144,7 @@ typedef enum : NSUInteger {
             break;
         }
     }
-    
+
     NSString* targetPath = filePath;
     if (targetPath.length == 0 || [targetPath isEqualToString:_rootPath]) {
         targetPath = _rootPath;
@@ -158,19 +158,19 @@ typedef enum : NSUInteger {
         file.path = filePath;
         [files addObject:file];
     }
-    
+
     NSError* err = nil;
     NSArray* paths = [fm contentsOfDirectoryAtPath:targetPath error:&err];
     for (NSString* path in paths) {
-        
+
         if ([[path lastPathComponent] hasPrefix:@"."]) {
             continue;
         }
-        
+
         BOOL isDir = false;
         NSString* fullPath = [targetPath stringByAppendingPathComponent:path];
         [fm fileExistsAtPath:fullPath isDirectory:&isDir];
-        
+
         ASFileItem* file = [ASFileItem new];
         file.path = fullPath;
         if (isDir) {
@@ -183,7 +183,7 @@ typedef enum : NSUInteger {
             file.name = [NSString stringWithFormat:@"%@ %@", @"📄", path];
         }
         [files addObject:file];
-        
+
     }
     _items = files.copy;
     [_tableView reloadData];
@@ -200,16 +200,16 @@ typedef enum : NSUInteger {
     if (indexPath.row > _items.count-1) {
         return [UITableViewCell new];
     }
-    
+
     ASFileItem* item = [_items objectAtIndex:indexPath.row];
-    
+
     static NSString* cellIdentifier = @"PAirSandboxCell";
     PAirSandboxCell* cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (!cell) {
         cell = [[PAirSandboxCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     [cell renderWithItem:item];
-    
+
     return cell;
 }
 
@@ -224,9 +224,9 @@ typedef enum : NSUInteger {
     if (indexPath.row > _items.count-1) {
         return;
     }
-    
+
     [tableView deselectRowAtIndexPath:indexPath animated:false];
-    
+
     ASFileItem* item = [_items objectAtIndex:indexPath.row];
     if (item.type == ASFileItemUp) {
         [self loadPath:[item.path stringByDeletingLastPathComponent]];
@@ -243,7 +243,7 @@ typedef enum : NSUInteger {
 {
     NSURL *url = [NSURL fileURLWithPath:path];
     NSArray *objectsToShare = @[url];
-    
+
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
     NSArray *excludedActivities = @[UIActivityTypePostToTwitter, UIActivityTypePostToFacebook,
                                     UIActivityTypePostToWeibo,
@@ -253,7 +253,7 @@ typedef enum : NSUInteger {
                                     UIActivityTypeAddToReadingList, UIActivityTypePostToFlickr,
                                     UIActivityTypePostToVimeo, UIActivityTypePostToTencentWeibo];
     controller.excludedActivityTypes = excludedActivities;
-    
+
     if ([(NSString *)[UIDevice currentDevice].model hasPrefix:@"iPad"]) {
         controller.popoverPresentationController.sourceView = self.view;
         controller.popoverPresentationController.sourceRect = CGRectMake([UIScreen mainScreen].bounds.size.width * 0.5, [UIScreen mainScreen].bounds.size.height, 10, 10);
@@ -274,12 +274,12 @@ typedef enum : NSUInteger {
 + (instancetype)sharedInstance
 {
     static PAirSandbox* instance = nil;
-    
+
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [PAirSandbox new];
     });
-    
+
     return instance;
 }
 
@@ -307,7 +307,7 @@ typedef enum : NSUInteger {
         _window.layer.borderColor = ASThemeColor.CGColor;
         _window.layer.borderWidth = 2.0;
         _window.windowLevel = UIWindowLevelStatusBar;
-        
+
         _ctrl = [ASViewController new];
         _window.rootViewController = _ctrl;
     }
@@ -318,10 +318,10 @@ typedef enum : NSUInteger {
     if (_groupItems == nil) {
         _groupItems = @[].mutableCopy;
     }
-    
+
     NSURL *groupURL = [[NSFileManager defaultManager]
                        containerURLForSecurityApplicationGroupIdentifier:groupId];
-    
+
     ASFileItem* file = [ASFileItem new];
     file.path = groupURL.relativePath;
     file.type = ASFileItemDirectory;

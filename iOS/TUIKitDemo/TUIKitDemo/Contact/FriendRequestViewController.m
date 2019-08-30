@@ -37,30 +37,30 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     //初始化视图内的组件
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     [self.view addSubview:self.tableView];
     self.tableView.frame = self.view.frame;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
-    
+
+
     self.addWordTextView = [[UITextView alloc] initWithFrame:CGRectZero];
     self.addWordTextView.font = [UIFont systemFontOfSize:14];
     [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
         self.addWordTextView.text = [NSString stringWithFormat:@"我是%@", profile.nickname.length?profile.nickname:profile.identifier];
     } fail:^(int code, NSString *msg) {
-        
+
     }];
-    
+
     self.nickTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     self.nickTextField.textAlignment = NSTextAlignmentRight;
-    
-    
+
+
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发送" style:UIBarButtonItemStylePlain target:self action:@selector(onSend)];
     self.title = @"填写信息";
-    
+
     TUIProfileCardCellData *data = [TUIProfileCardCellData new];
     data.name = [self.profile showName];
     data.genderString = [self.profile showGender];
@@ -69,12 +69,12 @@
     data.avatarImage = DefaultAvatarImage;
     data.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
     self.cardCellData = data;
-    
-    
+
+
     self.singleSwitchData = [TCommonSwitchCellData new];
     self.singleSwitchData.title = @"单向好友";
-    
-    
+
+
     @weakify(self)
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIKeyboardWillShowNotification object:nil]
       filter:^BOOL(NSNotification *value) {
@@ -86,7 +86,7 @@
          self.keyboardShown = YES;
          [self adjustContentOffsetDuringKeyboardAppear:YES withNotification:x];
      }];
-    
+
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIKeyboardWillHideNotification object:nil]
       filter:^BOOL(NSNotification *value) {
           @strongify(self);
@@ -106,14 +106,14 @@
 - (void)adjustContentOffsetDuringKeyboardAppear:(BOOL)appear withNotification:(NSNotification *)notification {
     NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     UIViewAnimationCurve curve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
-    
+
     CGRect keyboardEndFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGFloat keyboardHeight = CGRectGetHeight(keyboardEndFrame);
-    
+
 
     CGSize contentSize = self.tableView.contentSize;
     contentSize.height += appear? -keyboardHeight : keyboardHeight;
-    
+
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
         self.tableView.contentSize = contentSize;
         [self.view layoutIfNeeded];
@@ -193,7 +193,7 @@
         [cell fillWithData:self.singleSwitchData];
         return cell;
     }
-    
+
     return nil;
 }
 
@@ -210,7 +210,7 @@
     [self.view endEditing:YES];
     // display toast with an activity spinner
     [self.view makeToastActivity:CSToastPositionCenter];
-    
+
     TIMFriendRequest *req = [[TIMFriendRequest alloc] init];
     req.addWording = self.addWordTextView.text;
     req.remark = self.nickTextField.text;
@@ -237,12 +237,12 @@
         if (result.result_code == TIM_FRIEND_PARAM_INVALID) {
             msg = @"好友已存在";
         }
-        
+
         [self.view hideToastActivity];
         [self.view makeToast:msg
                     duration:3.0
                     position:CSToastPositionBottom];
-        
+
     } fail:^(int code, NSString *msg) {
         [self.view hideToastActivity];
         [THelper makeToastError:code msg:msg];
