@@ -10,3 +10,5 @@
 /captures
 .externalNativeBuild
 *.idea
+/app/build
+/tuikit/build
