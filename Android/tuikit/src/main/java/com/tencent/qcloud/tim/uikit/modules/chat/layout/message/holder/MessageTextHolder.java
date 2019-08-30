@@ -30,11 +30,7 @@ public class MessageTextHolder extends MessageContentHolder {
     @Override
     public void layoutVariableViews(MessageInfo msg, int position) {
         msgBodyText.setVisibility(View.VISIBLE);
-        final TIMMessage timMsg = msg.getTIMMessage();
-        if (timMsg.getElement(0) instanceof TIMTextElem) {
-            TIMTextElem textElem = (TIMTextElem) timMsg.getElement(0);
-            FaceManager.handlerEmojiText(msgBodyText, textElem.getText());
-        }
+        FaceManager.handlerEmojiText(msgBodyText, msg.getExtra().toString());
         if (properties.getChatContextFontSize() != 0) {
             msgBodyText.setTextSize(properties.getChatContextFontSize());
         }

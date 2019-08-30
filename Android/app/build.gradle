@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -69,12 +70,20 @@ dependencies {
     compile 'com.huawei.android.hms:base:2.6.3.301'
     // MEIZU push sdk
     compile 'com.meizu.flyme.internet:push-internal:3.6.+@aar'
+    // google firebase
+    implementation('com.google.firebase:firebase-core:17.0.0') {
+        exclude group: 'androidx.core', module: 'core'
+    }
+    // google 云消息传递
+    implementation ('com.google.firebase:firebase-messaging:19.0.1'){
+        exclude group: 'androidx.core', module: 'core'
+    }
 
     // bugly sdk
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
     compile 'org.bouncycastle:bcpkix-jdk15on:1.59'
 
-    implementation 'com.tencent.imsdk:tuikit:4.4.900'
-//    implementation project(':tuikit')
+implementation 'com.tencent.imsdk:tuikit:4.5.15'
+// implementation project(':tuikit')
 }

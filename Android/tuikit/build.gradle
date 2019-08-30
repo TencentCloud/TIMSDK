@@ -49,8 +49,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
     implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.8'
 
-    api 'com.tencent.imsdk:imsdk:4.4.900'
-//    api project(':imsdk')
+api 'com.tencent.imsdk:imsdk:4.5.15'
+// api project(':imsdk')
 }
 

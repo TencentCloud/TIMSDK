@@ -17,6 +17,8 @@ import com.tencent.imsdk.TIMSNSChangeInfo;
 import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserStatusListener;
+import com.tencent.imsdk.ext.message.TIMMessageReceipt;
+import com.tencent.imsdk.ext.message.TIMMessageReceiptListener;
 import com.tencent.imsdk.friendship.TIMFriendPendencyInfo;
 import com.tencent.imsdk.friendship.TIMFriendshipListener;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
@@ -50,6 +52,7 @@ public class TUIKitImpl {
      * @param configs  TUIKit的相关配置项，一般使用默认即可，需特殊配置参考API文档
      */
     public static void init(Context context, int sdkAppID, TUIKitConfigs configs) {
+        TUIKitLog.e("TUIKit", "init tuikit version: " + BuildConfig.VERSION_NAME);
         sAppContext = context;
         sConfigs = configs;
         if (sConfigs.getGeneralConfig() == null) {
@@ -98,6 +101,13 @@ public class TUIKitImpl {
         });
 
         TIMUserConfig userConfig = new TIMUserConfig();
+        userConfig.setReadReceiptEnabled(true);
+        userConfig.setMessageReceiptListener(new TIMMessageReceiptListener() {
+            @Override
+            public void onRecvReceipt(List<TIMMessageReceipt> receiptList) {
+
+            }
+        });
         userConfig.setUserStatusListener(new TIMUserStatusListener() {
             @Override
             public void onForceOffline() {

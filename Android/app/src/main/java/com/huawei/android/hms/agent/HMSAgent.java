@@ -51,7 +51,7 @@ public final class HMSAgent implements INoProguard {
      *      1、增加了升级时被其他界面覆盖的处理                  | Increased handling of other interface coverage issues when upgrading
      *      2、game模块savePlayerInfo接口，去掉activity的判断    | Game Module Saveplayerinfo method to remove activity judgments
      *      3、解决错误回调成功，增加重试次数3次                 | Resolve error callback succeeded, increase retry count 3 times
-	 *      4、提供了多种HMSAgent初始化方法                      | Provides a variety of hmsagent initialization methods
+     *      4、提供了多种HMSAgent初始化方法                      | Provides a variety of hmsagent initialization methods
      *      5、初始化时增加了版本号校验                          | Increased version number checksum during initialization
      */
     private static final String VER_020600001 = "020600001";

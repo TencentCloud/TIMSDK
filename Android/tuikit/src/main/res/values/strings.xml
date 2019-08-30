@@ -55,7 +55,7 @@
     <string name="blacklist">黑名单</string>
     <string name="contact_count">%d位联系人</string>
     <string name="contact_title">通讯录</string>
-    <string name="conversation_title">云通信IM</string>
+    <string name="conversation_title">腾讯·云通信</string>
 
     // 好友资料
     <string name="profile_detail">详细资料</string>

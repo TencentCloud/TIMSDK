@@ -275,6 +275,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         resetState(TYPE_PICTURE);
         CameraInterface.getInstance().isPreview(false);
         CameraInterface.getInstance().unregisterSensorManager(mContext);
+        CameraInterface.destroyCameraInterface();
     }
 
     //SurfaceView生命周期

@@ -11,9 +11,17 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.tencent.imsdk.TIMFriendshipManager;
+import com.tencent.imsdk.TIMValueCallBack;
+import com.tencent.imsdk.friendship.TIMFriendPendencyRequest;
+import com.tencent.imsdk.friendship.TIMFriendPendencyResponse;
+import com.tencent.imsdk.friendship.TIMPendencyType;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
+import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.List;
 
@@ -78,24 +86,56 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 mPreSelectedPosition = position;
             }
         });
+        holder.unreadText.setVisibility(View.GONE);
         if (TextUtils.equals(TUIKit.getAppContext().getResources().getString(R.string.new_friend), contactBean.getId())) {
             holder.avatar.setImageResource(R.drawable.group_new_friend);
+            final TIMFriendPendencyRequest timFriendPendencyRequest = new TIMFriendPendencyRequest();
+            timFriendPendencyRequest.setTimPendencyGetType(TIMPendencyType.TIM_PENDENCY_COME_IN);
+            TIMFriendshipManager.getInstance().getPendencyList(timFriendPendencyRequest, new TIMValueCallBack<TIMFriendPendencyResponse>() {
+                @Override
+                public void onError(int i, String s) {
+                    ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+                }
+
+                @Override
+                public void onSuccess(TIMFriendPendencyResponse timFriendPendencyResponse) {
+                    if (timFriendPendencyResponse.getItems() != null) {
+                        int pendingRequest = timFriendPendencyResponse.getItems().size();
+                        if (pendingRequest == 0) {
+                            holder.unreadText.setVisibility(View.GONE);
+                        } else {
+                            holder.unreadText.setVisibility(View.VISIBLE);
+                            holder.unreadText.setText("" + pendingRequest);
+                        }
+                    }
+                }
+            });
         } else if (TextUtils.equals(TUIKit.getAppContext().getResources().getString(R.string.group), contactBean.getId())) {
             holder.avatar.setImageResource(R.drawable.group_common_list);
         } else if (TextUtils.equals(TUIKit.getAppContext().getResources().getString(R.string.blacklist), contactBean.getId())) {
             holder.avatar.setImageResource(R.drawable.group_black_list);
         } else {
-            if (!TextUtils.isEmpty(mData.get(position).getAvatarurl())) {
-                GlideEngine.loadImage(holder.avatar, Uri.parse(mData.get(position).getAvatarurl()));
-            } else {
+            if (TextUtils.isEmpty(contactBean.getAvatarurl())) {
                 if (contactBean.isGroup()) {
                     holder.avatar.setImageResource(R.drawable.conversation_group);
                 } else {
                     holder.avatar.setImageResource(R.drawable.ic_personal_member);
                 }
+            } else {
+                GlideEngine.loadImage(holder.avatar, Uri.parse(contactBean.getAvatarurl()));
             }
         }
 
+    }
+
+    @Override
+    public void onViewRecycled(ContactAdapter.ViewHolder holder) {
+        if (holder != null) {
+            GlideEngine.clear(holder.avatar);
+            holder.avatar.setImageResource(0);
+
+        }
+        super.onViewRecycled(holder);
     }
 
     private ContactItemBean getItem(int position) {
@@ -129,6 +169,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName;
+        TextView unreadText;
         ImageView avatar;
         CheckBox ccSelect;
         View content;
@@ -136,6 +177,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvCity);
+            unreadText = itemView.findViewById(R.id.conversation_unread);
+            unreadText.setVisibility(View.GONE);
             avatar = itemView.findViewById(R.id.ivAvatar);
             ccSelect = itemView.findViewById(R.id.contact_check_box);
             content = itemView.findViewById(R.id.selectable_contact_item);

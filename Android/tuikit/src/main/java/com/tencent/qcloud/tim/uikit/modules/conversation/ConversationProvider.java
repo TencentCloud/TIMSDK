@@ -149,12 +149,13 @@ public class ConversationProvider implements IConversationProvider {
     public void clear() {
         mDataSource.clear();
         updateAdapter();
+        mAdapter = null;
     }
 
     /**
      * 会话会话列界面，在数据源更新的地方调用
      */
-    private void updateAdapter() {
+    public void updateAdapter() {
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }

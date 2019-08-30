@@ -56,7 +56,7 @@ public class ProfileFragment extends BaseFragment {
                                     public void onSuccess() {
                                         Activity activity = getActivity();
                                         if (activity instanceof MainActivity) {
-                                            ((MainActivity) activity).login(false);
+                                            ((MainActivity) activity).logout(false);
                                         }
                                         TUIKit.unInit();
                                         if (getActivity() != null) {

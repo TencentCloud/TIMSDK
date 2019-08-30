@@ -321,6 +321,7 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
     @Override
     public void exitChat() {
         AudioPlayer.getInstance().stopRecord();
+        AudioPlayer.getInstance().stopPlayRecord();
         if (getChatManager() != null) {
             getChatManager().destroyChat();
         }

@@ -127,10 +127,10 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             }
         }
         TIMUserProfile selfInfo = TIMFriendshipManager.getInstance().queryUserProfile(TIMManager.getInstance().getLoginUser());
-        if (profile != null && msg.isSelf()) {
+        if (selfInfo != null && msg.isSelf()) {
             if (!TextUtils.isEmpty(selfInfo.getFaceUrl())) {
                 List<String> urllist = new ArrayList<>();
-                urllist.add(profile.getFaceUrl());
+                urllist.add(selfInfo.getFaceUrl());
                 rightUserIcon.setIconUrls(urllist);
                 urllist.clear();
             }
@@ -145,21 +145,21 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         //// 聊天气泡设置
         if (msg.isSelf()) {
             if (properties.getRightBubble() != null) {
-                msgContentFrame.setBackground(properties.getRightBubble());
+                msgContentLinear.setBackground(properties.getRightBubble());
             } else {
-                msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_myself);
+                msgContentLinear.setBackgroundResource(R.drawable.chat_bubble_myself);
             }
         } else {
             if (properties.getLeftBubble() != null) {
-                msgContentFrame.setBackground(properties.getLeftBubble());
+                msgContentLinear.setBackground(properties.getLeftBubble());
             } else {
-                msgContentFrame.setBackgroundResource(R.drawable.chat_other_bg);
+                msgContentLinear.setBackgroundResource(R.drawable.chat_other_bg);
             }
         }
 
         //// 聊天气泡的点击事件处理
         if (onItemClickListener != null) {
-            msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
+            msgContentLinear.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     onItemClickListener.onMessageLongClick(v, position, msg);

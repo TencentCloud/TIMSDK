@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import com.tencent.qcloud.tim.uikit.utils.SystemUtils;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.io.IOException;
@@ -17,15 +16,11 @@ public class MediaPlayerProxy implements IPlayer{
     private IPlayer mMediaPlayer;
 
     public MediaPlayerProxy() {
-        if (SystemUtils.is64Bit()) {
+        try {
+            Class.forName("tv.danmaku.ijk.media.player.IjkMediaPlayer").newInstance();
+            mMediaPlayer = new IjkMediaPlayerWrapper();
+        } catch (Exception e) {
             mMediaPlayer = new SystemMediaPlayerWrapper();
-        } else {
-            try {
-                Class.forName("tv.danmaku.ijk.media.player.IjkMediaPlayer").newInstance();
-                mMediaPlayer = new IjkMediaPlayerWrapper();
-            } catch (Exception e) {
-                mMediaPlayer = new SystemMediaPlayerWrapper();
-            }
         }
         TUIKitLog.i(TAG, "use mMediaPlayer: " + mMediaPlayer);
     }

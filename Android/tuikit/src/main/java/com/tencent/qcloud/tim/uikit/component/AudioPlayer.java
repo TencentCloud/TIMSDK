@@ -47,8 +47,9 @@ public class AudioPlayer {
             if (recording) {
                 recording = false;
                 endTime = System.currentTimeMillis();
-                if (mRecordCallback != null)
+                if (mRecordCallback != null) {
                     mRecordCallback.recordComplete(endTime - startTime);
+                }
                 if (mRecorder != null && innerRecording) {
                     try {
                         innerRecording = false;
@@ -57,6 +58,7 @@ public class AudioPlayer {
                         e.printStackTrace();
                     }
                 }
+                mRecordCallback = null;
             }
         }
     }
@@ -72,7 +74,10 @@ public class AudioPlayer {
         if (mPlayer != null) {
             mPlayer.stop();
             playing = false;
-            mPlayCallback.playComplete();
+            if (mPlayCallback != null) {
+                mPlayCallback.playComplete();
+                mPlayCallback = null;
+            }
         }
     }
 
@@ -106,15 +111,16 @@ public class AudioPlayer {
 
                 mRecorder = new MediaRecorder();
                 mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                //RAW_AMR虽然被高版本废弃，但它兼容低版本还是可以用的
-                mRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
+                // AMR在web端支持不好，这里使用aac
+                mRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
                 recordAudioPath = CURRENT_RECORD_FILE + System.currentTimeMillis();
                 mRecorder.setOutputFile(recordAudioPath);
-                mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
                 startTime = System.currentTimeMillis();
                 synchronized (recording) {
-                    if (recording == false)
+                    if (recording == false) {
                         return;
+                    }
                     mRecorder.prepare();
                     mRecorder.start();
                 }
@@ -158,7 +164,9 @@ public class AudioPlayer {
                 mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
-                        mPlayCallback.playComplete();
+                        if (mPlayCallback != null) {
+                            mPlayCallback.playComplete();
+                        }
                         playing = false;
                     }
                 });
@@ -168,7 +176,9 @@ public class AudioPlayer {
             } catch (Exception e) {
                 ToastUtil.toastLongMessage("语音文件已损坏或不存在");
                 e.printStackTrace();
-                mPlayCallback.playComplete();
+                if (mPlayCallback != null) {
+                    mPlayCallback.playComplete();
+                }
                 playing = false;
             }
         }

@@ -2,12 +2,18 @@ package com.tencent.qcloud.tim.demo;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.huawei.android.hms.agent.HMSAgent;
 import com.meizu.cloud.pushsdk.PushManager;
 import com.meizu.cloud.pushsdk.util.MzSystemUtils;
+import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.imsdk.TIMBackgroundParam;
 import com.tencent.imsdk.TIMCallBack;
@@ -17,7 +23,7 @@ import com.tencent.imsdk.session.SessionWrapper;
 import com.tencent.imsdk.utils.IMFunc;
 import com.tencent.qcloud.tim.demo.helper.ConfigHelper;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
-import com.tencent.qcloud.tim.demo.utils.Constants;
+import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.uikit.TUIKit;
@@ -34,6 +40,7 @@ public class DemoApplication extends Application {
 
     @Override
     public void onCreate() {
+        DemoLog.i(TAG, "onCreate");
         super.onCreate();
         MultiDex.install(this);
         // bugly上报
@@ -52,19 +59,33 @@ public class DemoApplication extends Application {
              */
             TUIKit.init(this, GenerateTestUserSig.SDKAPPID, new ConfigHelper().getConfigs());
 
-            if (IMFunc.isBrandXiaoMi()) {
+            if ( ThirdPushTokenMgr.USER_GOOGLE_FCM ) {
+                FirebaseInstanceId.getInstance().getInstanceId()
+                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                            @Override
+                            public void onComplete(Task<InstanceIdResult> task) {
+                                if (!task.isSuccessful()) {
+                                    DemoLog.w(TAG, "getInstanceId failed exception = " + task.getException());
+                                    return;
+                                }
+
+                                // Get new Instance ID token
+                                String token = task.getResult().getToken();
+                                DemoLog.i(TAG, "google fcm getToken = " + token);
+
+                                ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
+                            }
+                        });
+            } else if (IMFunc.isBrandXiaoMi()) {
                 // 小米离线推送
                 MiPushClient.registerPush(this, PrivateConstants.XM_PUSH_APPID, PrivateConstants.XM_PUSH_APPKEY);
-            }
-            if (IMFunc.isBrandHuawei()) {
+            } else if (IMFunc.isBrandHuawei()) {
                 // 华为离线推送
                 HMSAgent.init(this);
-            }
-            if (MzSystemUtils.isBrandMeizu(this)) {
+            } else if (MzSystemUtils.isBrandMeizu(this)) {
                 // 魅族离线推送
                 PushManager.register(this, PrivateConstants.MZ_PUSH_APPID, PrivateConstants.MZ_PUSH_APPKEY);
-            }
-            if (IMFunc.isBrandVivo()) {
+            } else if (IMFunc.isBrandVivo()) {
                 // vivo离线推送
                 PushClient.getInstance(getApplicationContext()).initialize();
             }
@@ -72,10 +93,10 @@ public class DemoApplication extends Application {
             registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
         }
         instance = this;
-       /* if (LeakCanary.isInAnalyzerProcess(this)) {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
             return;
         }
-        LeakCanary.install(this);*/
+        LeakCanary.install(this);
     }
 
     class StatisticActivityLifecycleCallback implements ActivityLifecycleCallbacks {
@@ -84,7 +105,13 @@ public class DemoApplication extends Application {
 
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle) {
-
+            DemoLog.i(TAG, "onActivityCreated bundle: " + bundle);
+            if (bundle != null) { // 若bundle不为空则程序异常结束
+                // 重启整个程序
+                Intent intent = new Intent(activity, SplashActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                startActivity(intent);
+            }
         }
 
         @Override

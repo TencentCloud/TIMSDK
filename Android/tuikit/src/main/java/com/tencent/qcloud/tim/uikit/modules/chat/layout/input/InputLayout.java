@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -105,7 +106,9 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                TUIKitLog.i(TAG, "mSendAudioButton onTouch action:" + motionEvent.getAction());
                 if (!checkPermission(AUDIO_RECORD)) {
+                    TUIKitLog.i(TAG, "audio record checkPermission failed");
                     return false;
                 }
                 switch (motionEvent.getAction()) {
@@ -157,7 +160,9 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     @Override
     protected void startSendPhoto() {
+        TUIKitLog.i(TAG, "startSendPhoto");
         if (!checkPermission(SEND_PHOTO)) {
+            TUIKitLog.i(TAG, "startSendPhoto checkPermission failed");
             return;
         }
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -185,7 +190,9 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     @Override
     protected void startCapture() {
+        TUIKitLog.i(TAG, "startCapture");
         if (!checkPermission(CAPTURE)) {
+            TUIKitLog.i(TAG, "startCapture checkPermission failed");
             return;
         }
         Intent captureIntent = new Intent(getContext(), CameraActivity.class);
@@ -211,7 +218,9 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     @Override
     protected void startVideoRecord() {
+        TUIKitLog.i(TAG, "startVideoRecord");
         if (!checkPermission(VIDEO_RECORD)) {
+            TUIKitLog.i(TAG, "startVideoRecord checkPermission failed");
             return;
         }
         Intent captureIntent = new Intent(getContext(), CameraActivity.class);
@@ -242,7 +251,9 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     @Override
     protected void startSendFile() {
+        TUIKitLog.i(TAG, "startSendFile");
         if (!checkPermission(SEND_FILE)) {
+            TUIKitLog.i(TAG, "startSendFile checkPermission failed");
             return;
         }
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -277,6 +288,14 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     @Override
     public void onClick(View view) {
+        TUIKitLog.i(TAG, "onClick id:" + view.getId()
+                + "|voice_input_switch:" + R.id.voice_input_switch
+                + "|face_btn:" + R.id.face_btn
+                + "|more_btn:" + R.id.more_btn
+                + "|send_btn:" + R.id.send_btn
+                + "|mCurrentState:" + mCurrentState
+                + "|mSendEnable:" + mSendEnable
+                + "|mMoreInputEvent:" + mMoreInputEvent);
         if (view.getId() == R.id.voice_input_switch) {
             if (mCurrentState == STATE_FACE_INPUT || mCurrentState == STATE_ACTION_INPUT) {
                 mCurrentState = STATE_VOICE_INPUT;
@@ -352,6 +371,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
     }
 
     private void showSoftInput() {
+        TUIKitLog.i(TAG, "showSoftInput");
         hideInputMoreLayout();
         mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
         mEmojiInputButton.setImageResource(R.drawable.ic_input_face_normal);
@@ -369,6 +389,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
     }
 
     public void hideSoftInput() {
+        TUIKitLog.i(TAG, "hideSoftInput");
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
         mTextInput.clearFocus();
@@ -379,6 +400,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
     }
 
     private void showFaceViewGroup() {
+        TUIKitLog.i(TAG, "showFaceViewGroup");
         if (mFragmentManager == null) {
             mFragmentManager = mActivity.getFragmentManager();
         }
@@ -438,6 +460,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
     }
 
     private void showCustomInputMoreFragment() {
+        TUIKitLog.i(TAG, "showCustomInputMoreFragment");
         if (mFragmentManager == null) {
             mFragmentManager = mActivity.getFragmentManager();
         }
@@ -456,6 +479,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
     }
 
     private void showInputMoreLayout() {
+        TUIKitLog.i(TAG, "showInputMoreLayout");
         if (mFragmentManager == null) {
             mFragmentManager = mActivity.getFragmentManager();
         }
@@ -484,6 +508,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     @Override
     public void recordComplete(long duration) {
+        TUIKitLog.i(TAG, "recordComplete duration:" + duration);
         if (mChatInputHandler != null) {
             if (mAudioCancel) {
                 mChatInputHandler.stopRecording();

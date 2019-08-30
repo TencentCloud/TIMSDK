@@ -18,7 +18,6 @@ import android.widget.EditText;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
-import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
@@ -31,7 +30,7 @@ import java.util.List;
  * <p>
  * Demo的登录Activity
  * 用户名可以是任意非空字符，但是前提需要按照下面文档修改代码里的 SDKAPPID 与 PRIVATEKEY
- * https://github.com/tencentyun/TIMSDK/tree/master/Android
+ * https://cloud.tencent.com/document/product/269/36838
  * <p>
  */
 
@@ -71,7 +70,6 @@ public class LoginForDevActivity extends Activity {
 
                     @Override
                     public void onSuccess(Object data) {
-                        ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
                         Intent intent = new Intent(LoginForDevActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

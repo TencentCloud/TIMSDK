@@ -66,7 +66,7 @@ public class MessageImageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(MessageInfo msg, int position) {
-        msgContentFrame.setBackground(null);
+        msgContentLinear.setBackground(null);
         switch (msg.getMsgType()) {
             case MessageInfo.MSG_TYPE_CUSTOM_FACE:
             case MessageInfo.MSG_TYPE_CUSTOM_FACE + 1:

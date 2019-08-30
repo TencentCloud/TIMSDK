@@ -23,11 +23,14 @@ import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IInputLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreActionUnit;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
+
+    private static String TAG = InputLayoutUI.class.getSimpleName();
 
     protected static final int CAPTURE = 1;
     protected static final int AUDIO_RECORD = 2;
@@ -172,11 +175,11 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     }
 
     protected boolean checkPermission(Context context, String permission) {
+        TUIKitLog.i(TAG, "checkPermission permission:" + permission + "|sdk:" + Build.VERSION.SDK_INT);
         boolean flag = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int result = ActivityCompat.checkSelfPermission(context, permission);
             if (PackageManager.PERMISSION_GRANTED != result) {
-                //2.没有权限
                 showPermissionDialog();
                 flag = false;
             }
