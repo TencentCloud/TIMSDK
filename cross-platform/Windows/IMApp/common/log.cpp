@@ -80,7 +80,7 @@ void DebugOutFA(LogLevel level, const char* file_name, uint32_t line, const char
         DebugOutA(level, file_name, line, func_name, "NULL == out_fmt");
         return;
     }
-    
+
     std::string strTmp = "";
     va_list ap;
     va_start(ap, out_fmt);
@@ -136,14 +136,14 @@ void DebugOutA(LogLevel level, const char* file_name, uint32_t line, const char 
         OutputDebugStringA(str_msg.c_str());
         return;
     }
-     
+
     //多行输出
     std::vector<std::string> stV;
     GetStrLines(out_str, stV);
     for (std::string::size_type i = 0; i < stV.size(); i++) {
         str_msg = "[" + log_prefix_ + "] " + str_msg + stV[i] + "\r\n";
         OutputDebugStringA(str_msg.c_str());
-        
+
     }
 }
 

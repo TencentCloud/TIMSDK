@@ -47,7 +47,7 @@ public: //virture
     CIMWnd& operator = (const CIMWnd&) { }   //防止赋值构造出另一个实例
     CIMWnd(CIMWnd&&) { }                     //防止移动拷贝拷贝另一个实例
     CIMWnd& operator=(CIMWnd&&) { }          //防止移动赋值出另一个实例
-    
+
 public:
     static CIMWnd& GetInst() {
         static CIMWnd inst;
@@ -63,7 +63,7 @@ public:
 public: //cb
     virtual void Notify(TNotifyUI& msg);
     virtual CControlUI* CreateControl(LPCTSTR pstrClass);
-    
+
 public:
     virtual void InitWindow();
     void MsgBox(std::string title, const char* fmt, ...);
@@ -107,7 +107,7 @@ public:
     void ParseMsg(const char* json_msg_array);
     void ShowMsgs(std::vector<std::string>& msgs, std::string conv_id, TIMConvType conv_type);
     void OnPopupMenu(MenuType mt); //新建会话
-    
+
     void ChangeMainView(MainViewType before, MainViewType after);
     void ChangeNodeView(NodeViewType vt);
     void UpdateNodeView();
@@ -153,7 +153,7 @@ public:
 
     CTreeNodeUI* m_ConvNode = nullptr;
     CTreeNodeUI* m_GroupNode = nullptr;
-    
+
     CComboUI* m_GroupType = nullptr;
     CComboUI* m_GroupAddOpt = nullptr;
     int groupaddopt_cursul_ = 0;

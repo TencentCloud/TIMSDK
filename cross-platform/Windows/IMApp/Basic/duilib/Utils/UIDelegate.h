@@ -5,7 +5,7 @@
 
 namespace DuiLib {
 
-class UILIB_API CDelegateBase	 
+class UILIB_API CDelegateBase     
 {
 public:
     CDelegateBase(void* pObject, void* pFn);
@@ -83,7 +83,7 @@ public:
     void operator-= (const CDelegateBase& d);
     void operator-= (FnType pFn);
     bool operator() (void* param);
-	void Clear();
+    void Clear();
 
 protected:
     CStdPtrArray m_aDelegates;

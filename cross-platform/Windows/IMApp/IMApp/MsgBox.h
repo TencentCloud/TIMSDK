@@ -36,9 +36,9 @@ public:
     LRESULT OnGetMinMaxInfo(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
     LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    
+
     UINT DuiMessageBox(WindowImplBase *pWnd, LPCTSTR lpText, LPCTSTR lpCaption = _T("提示"), UINT uIcon = MESSAGE_INFO, BOOL bOk = TRUE);
- 
+
     static void MsgBox(std::string title, const char* fmt, ...);
     int GetStringLines(CDuiString st, CDuiString &stMax);
 protected:

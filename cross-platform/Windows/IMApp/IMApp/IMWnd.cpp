@@ -27,7 +27,7 @@ void CIMWnd::Init() {
     TIMAddRecvNewMsgCallback([](const char* json_msg_array, const void* user_data) {
         CIMWnd* ths = (CIMWnd*)user_data;
         ths->Logf("Message", kTIMLog_Info, "New Message:\n%s", json_msg_array);
-        
+
         ths->ParseMsg(json_msg_array);
     }, this);
 
@@ -165,6 +165,26 @@ void CIMWnd::Init() {
     TIMSetUserSigExpiredCallback([](const void* user_data) {
         CIMWnd* ths = (CIMWnd*)user_data;
         ths->Logf("UserSig", kTIMLog_Info, "Expired");
+    }, this);
+
+    TIMSetOnAddFriendCallback([](const char* json_identifier_array, const void* user_data) {
+        CIMWnd* ths = (CIMWnd*)user_data;
+        ths->Logf("OnAddFriend", kTIMLog_Info, json_identifier_array);
+    }, this);
+
+    TIMSetOnDeleteFriendCallback([](const char* json_identifier_array, const void* user_data) {
+        CIMWnd* ths = (CIMWnd*)user_data;
+        ths->Logf("OnDeleteFriend", kTIMLog_Info, json_identifier_array);
+    }, this);
+
+    TIMSetUpdateFriendProfileCallback([](const char* json_friend_profile_update_array, const void* user_data) {
+        CIMWnd* ths = (CIMWnd*)user_data;
+        ths->Logf("UpdateFriend", kTIMLog_Info, json_friend_profile_update_array);
+    }, this);
+
+    TIMSetFriendAddRequestCallback([](const char* json_friend_add_request_pendency_array, const void* user_data) {
+        CIMWnd* ths = (CIMWnd*)user_data;
+        ths->Logf("FriendAddRequest", kTIMLog_Info, json_friend_add_request_pendency_array);
     }, this);
 
     TIMSetLogCallback([](TIMLogLevel level, const char* log, const void* user_data) {
@@ -334,7 +354,7 @@ void CIMWnd::Notify(TNotifyUI & msg) {
         if (msg.pSender->GetName() == _T("delmem_groupid_combo")) {  //更新删除是的成员列表
             std::string groupid = Wide2UTF8(msg.pSender->GetText().GetData());
 
-            
+
         }
     }
     __super::Notify(msg);
@@ -604,7 +624,7 @@ void CIMWnd::InitConvList() { // 获取会话列表
         }
     }, this);
     Logf("Init", kTIMLog_Info, "TIMConvGetConvList ret %d", ret);
-    
+
 }
 void CIMWnd::AddConv(std::string id, uint32_t type) {
     if (type == TIMConvType::kTIMConv_C2C) {
@@ -928,7 +948,7 @@ void CIMWnd::OnCreateConvBtn() {  //创建会话 按钮
 
     if (TIM_SUCC != TIMConvCreate(userid.c_str(), kTIMConv_C2C, [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
         CIMWnd* ths = (CIMWnd*)user_data;
-        
+
     }, this)) {
         Logf("Conv", kTIMLog_Error, "创建会话失败!userId:%s", userid.c_str());
         return;
@@ -937,8 +957,8 @@ void CIMWnd::OnCreateConvBtn() {  //创建会话 按钮
     conv.id = userid;
     convs.push_back(conv);
 
-    
-    
+
+
     Json::Value json_value_text;  // 构造消息
     json_value_text[kTIMElemType] = kTIMElem_Text;
     json_value_text[kTIMTextElemContent] = "this draft";
@@ -996,7 +1016,7 @@ void CIMWnd::OnCreateGroupBtn() { // 创建群组 按钮
     std::string groupname = Wide2UTF8(name.GetData());
     std::string type = GetControlText(_T("create_grouptype_combo")).GetStringA();
     std::string addopt = GetControlText(_T("create_groupaddopt_combo")).GetStringA();
-    
+
     Json::Value json_group_member_array(Json::arrayValue);
 
     Json::Value json_value_param;
@@ -1009,7 +1029,7 @@ void CIMWnd::OnCreateGroupBtn() { // 创建群组 按钮
     }
     json_value_param[kTIMCreateGroupParamGroupName] = groupname;
     json_value_param[kTIMCreateGroupParamGroupMemberArray] = json_group_member_array;
-    
+
     json_value_param[kTIMCreateGroupParamNotification] = "group notification";
     json_value_param[kTIMCreateGroupParamIntroduction] = "group introduction";
     json_value_param[kTIMCreateGroupParamFaceUrl] = "group face url";
@@ -1383,7 +1403,7 @@ void CIMWnd::ParseMsg(const char* json_msg_array) {  //解析消息找到对应�
         if (false == json_value_msg[kTIMMsgIsRead].asBool()) {
             TIMMsgReportReaded(id.c_str(), type, json_value_msg.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
                 CIMWnd* ths = (CIMWnd*)user_data;
-                
+
             }, this);
         }
         if (kTIMConv_System != type) {
@@ -1484,7 +1504,7 @@ void CIMWnd::UpdateNodeView() {
         }
     }
     m_ConvNode->Invalidate();
-    
+
     for (uint32_t i = 0; i < groups.size(); i++) { // 显示群组Node列表
         GroupInfo& group = groups[i];
         CTreeNodeUI* node = new CTreeNodeUI(m_GroupNode);  //增加群组Node
@@ -1496,10 +1516,10 @@ void CIMWnd::UpdateNodeView() {
         node->SetTag((UINT_PTR)&group); //保存会话信息
         node->SetItemText(UTF82Wide(group.id).c_str());
         m_GroupNode->Add(node);
-    
+
         for (uint32_t i = 0; i < group.mems.size(); i++) {
             GroupMemberInfo& info = group.mems[i];
-            
+
             CTreeNodeUI* memnode = new CTreeNodeUI(node);
             if (memnode == nullptr) {
                 continue;
@@ -1518,12 +1538,12 @@ void CIMWnd::UpdateNodeView() {
         }
     }
     m_GroupNode->Invalidate();
-    
+
     if (node_type_ == NODE_CONV_VIEW) {  //显示和更新会话消息
         m_ConvMsgData->SetText(_T(""));          //首先清空会话消息
         if (m_CurShowConvNode && m_CurShowConvNode->GetTag()) {
             UINT_PTR tag = m_CurShowConvNode->GetTag();
-            
+
             for (uint32_t i = 0; i < groups.size(); i++) { // 显示群组消息
                 GroupInfo& group = groups[i];
                 if (tag != (UINT_PTR)&group) {

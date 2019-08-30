@@ -89,7 +89,7 @@ bool CWndShadow::Initialize(HINSTANCE hInstance)
     s_UpdateLayeredWindow = 
         (pfnUpdateLayeredWindow)GetProcAddress(hUser32, 
         "UpdateLayeredWindow");
-    
+
     // If the import did not succeed, make sure your app can handle it!
     if (NULL == s_UpdateLayeredWindow)
         return false;
@@ -153,10 +153,10 @@ void CWndShadow::Create(HWND hParentWnd,bool IsWS_CAPTION /*= false*/)
     }
 
     // Replace the original WndProc of parent window to steal messages
-    m_OriParentProc = GetWindowLong(hParentWnd, GWL_WNDPROC);
+    //m_OriParentProc = GetWindowLong(hParentWnd, GWL_WNDPROC);
 
 #pragma warning(disable: 4311)    // temporrarily disable the type_cast warning in Win32
-    SetWindowLong(hParentWnd, GWL_WNDPROC, (LONG)ParentProc);
+    //SetWindowLong(hParentWnd, GWL_WNDPROC, (LONG)ParentProc);
 #pragma warning(default: 4311)
 
 }
@@ -248,7 +248,7 @@ LRESULT CALLBACK CWndShadow::ParentProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPA
     case WM_DESTROY:
         DestroyWindow(pThis->m_hWnd);    // Destroy the shadow
         break;
-        
+
     case WM_NCDESTROY:
         s_Shadowmap.erase(hwnd);    // Remove this window and shadow from the map
         break;
@@ -565,7 +565,7 @@ bool CWndShadow::SetPosition(int NewXOffset, int NewYOffset)
     if(NewXOffset > 20 || NewXOffset < -20 ||
         NewYOffset > 20 || NewYOffset < -20)
         return false;
-    
+
     m_nxOffset = (signed char)NewXOffset;
     m_nyOffset = (signed char)NewYOffset;
     if(SS_VISABLE & m_Status)

@@ -42,7 +42,7 @@
 #ifndef __IDownloadManager_FWD_DEFINED__
 #define __IDownloadManager_FWD_DEFINED__
 typedef interface IDownloadManager IDownloadManager;
-#endif 	/* __IDownloadManager_FWD_DEFINED__ */
+#endif     /* __IDownloadManager_FWD_DEFINED__ */
 
 
 /* header files for imported files */
@@ -97,7 +97,7 @@ extern RPC_IF_HANDLE __MIDL_itf_downloadmgr_0000_v0_0_s_ifspec;
 EXTERN_C const IID IID_IDownloadManager;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("988934A4-064B-11D3-BB80-00104B35E7F9")
     IDownloadManager : public IUnknown
     {
@@ -111,26 +111,26 @@ EXTERN_C const IID IID_IDownloadManager;
             /* [in] */ LPCOLESTR pszHeaders,
             /* [in] */ LPCOLESTR pszRedir,
             /* [in] */ UINT uiCP) = 0;
-        
+
     };
-    
-#else 	/* C style interface */
+
+#else     /* C style interface */
 
     typedef struct IDownloadManagerVtbl
     {
         BEGIN_INTERFACE
-        
+
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *QueryInterface )( 
             IDownloadManager __RPC_FAR * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void __RPC_FAR *__RPC_FAR *ppvObject);
-        
+
         ULONG ( STDMETHODCALLTYPE __RPC_FAR *AddRef )( 
             IDownloadManager __RPC_FAR * This);
-        
+
         ULONG ( STDMETHODCALLTYPE __RPC_FAR *Release )( 
             IDownloadManager __RPC_FAR * This);
-        
+
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Download )( 
             IDownloadManager __RPC_FAR * This,
             /* [in] */ IMoniker __RPC_FAR *pmk,
@@ -141,7 +141,7 @@ EXTERN_C const IID IID_IDownloadManager;
             /* [in] */ LPCOLESTR pszHeaders,
             /* [in] */ LPCOLESTR pszRedir,
             /* [in] */ UINT uiCP);
-        
+
         END_INTERFACE
     } IDownloadManagerVtbl;
 
@@ -150,28 +150,28 @@ EXTERN_C const IID IID_IDownloadManager;
         CONST_VTBL struct IDownloadManagerVtbl __RPC_FAR *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
 
-#define IDownloadManager_QueryInterface(This,riid,ppvObject)	\
+#define IDownloadManager_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDownloadManager_AddRef(This)	\
+#define IDownloadManager_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDownloadManager_Release(This)	\
+#define IDownloadManager_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDownloadManager_Download(This,pmk,pbc,dwBindVerb,grfBINDF,pBindInfo,pszHeaders,pszRedir,uiCP)	\
+#define IDownloadManager_Download(This,pmk,pbc,dwBindVerb,grfBINDF,pBindInfo,pszHeaders,pszRedir,uiCP)    \
     (This)->lpVtbl -> Download(This,pmk,pbc,dwBindVerb,grfBINDF,pBindInfo,pszHeaders,pszRedir,uiCP)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -195,7 +195,7 @@ void __RPC_STUB IDownloadManager_Download_Stub(
 
 
 
-#endif 	/* __IDownloadManager_INTERFACE_DEFINED__ */
+#endif     /* __IDownloadManager_INTERFACE_DEFINED__ */
 
 
 /* Additional Prototypes for ALL interfaces */

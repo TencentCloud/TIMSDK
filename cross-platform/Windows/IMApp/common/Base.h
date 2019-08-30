@@ -44,7 +44,7 @@ static std::wstring Ansi2Wide(const std::string& strAnsi)
     return buffer.get();
 }
 
-static std::string Wide2UTF8(const std::wstring& strWide)
+static std::string Wide2UTF8(const std::wstring strWide)
 {
     int nUTF8 = ::WideCharToMultiByte(CP_UTF8, 0, strWide.c_str(), strWide.size(), NULL, 0, NULL, NULL);
 
@@ -60,7 +60,7 @@ static std::string Wide2UTF8(const std::wstring& strWide)
     return buffer.get();
 }
 
-static std::string Wide2Ansi(const std::wstring& strWide)
+static std::string Wide2Ansi(const std::wstring strWide)
 {
     int nAnsi = ::WideCharToMultiByte(CP_ACP, 0, strWide.c_str(), strWide.size(), NULL, 0, NULL, NULL);
 

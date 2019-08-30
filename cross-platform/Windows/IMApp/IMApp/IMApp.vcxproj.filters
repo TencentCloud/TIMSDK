@@ -20,7 +20,7 @@
       <UniqueIdentifier>{a311d24e-94e2-4ca6-be12-049413362288}</UniqueIdentifier>
     </Filter>
     <Filter Include="zlib">
-      <UniqueIdentifier>{4b07b9f9-ccd1-4da9-97b5-8a9323dbbc2e}</UniqueIdentifier>
+      <UniqueIdentifier>{49f4a328-e1c0-4829-8044-9f50708168e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

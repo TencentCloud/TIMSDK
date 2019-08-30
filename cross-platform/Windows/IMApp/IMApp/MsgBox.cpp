@@ -227,7 +227,7 @@ UINT CMsgBox::DuiMessageBox(WindowImplBase *pWnd, LPCTSTR lpText, LPCTSTR lpCapt
 
     CTextUI* pCaption_control = static_cast<CTextUI*>(m_pm.FindControl(wMessageBoxCaption));
     if (pCaption_control != NULL)    pCaption_control->SetText(lpCaption);
-    
+
     CContainerUI* pTextLayout = static_cast<CContainerUI*>(m_pm.FindControl(wMessageBoxTextLayout));
     CTextUI* pText_control = static_cast<CTextUI*>(m_pm.FindControl(wMessageBoxText));
     if (pText_control != NULL && pTextLayout != NULL)

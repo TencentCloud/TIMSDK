@@ -25,9 +25,9 @@ public:
         , const std::vector<std::wstring>& headers, std::string& resp_data);
     DWORD http_post(const std::wstring& url
         , const std::vector<std::wstring>& headers, const std::string& body, std::string& resp_data);
-	DWORD http_put(const std::wstring& url
-		, const std::vector<std::wstring>& headers, const std::string& body, std::string& resp_data);
-	void  http_close();
+    DWORD http_put(const std::wstring& url
+        , const std::vector<std::wstring>& headers, const std::string& body, std::string& resp_data);
+    void  http_close();
 private:
     DWORD request(const std::wstring& url, const std::wstring& method
         , const std::vector<std::wstring>& headers, const std::string& body, std::string& resp_data);

@@ -5,27 +5,27 @@
 
 namespace DuiLib
 {
-	class UILIB_API CTileLayoutUI : public CContainerUI
-	{
-		DECLARE_DUICONTROL(CTileLayoutUI)
-	public:
-		CTileLayoutUI();
+    class UILIB_API CTileLayoutUI : public CContainerUI
+    {
+        DECLARE_DUICONTROL(CTileLayoutUI)
+    public:
+        CTileLayoutUI();
 
-		LPCTSTR GetClass() const;
-		LPVOID GetInterface(LPCTSTR pstrName);
+        LPCTSTR GetClass() const;
+        LPVOID GetInterface(LPCTSTR pstrName);
 
-		void SetPos(RECT rc, bool bNeedInvalidate = true);
+        void SetPos(RECT rc, bool bNeedInvalidate = true);
 
-		SIZE GetItemSize() const;
-		void SetItemSize(SIZE szItem);
-		int GetColumns() const;
-		void SetColumns(int nCols);
+        SIZE GetItemSize() const;
+        void SetItemSize(SIZE szItem);
+        int GetColumns() const;
+        void SetColumns(int nCols);
 
-		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
+        void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
-	protected:
-		SIZE m_szItem;
-		int m_nColumns;
-	};
+    protected:
+        SIZE m_szItem;
+        int m_nColumns;
+    };
 }
 #endif // __UITILELAYOUT_H__

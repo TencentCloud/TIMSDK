@@ -19,14 +19,14 @@
 #endif
 
 #ifndef __FILET__
-#define __DUILIB_STR2WSTR(str)	L##str
-#define _DUILIB_STR2WSTR(str)	__DUILIB_STR2WSTR(str)
+#define __DUILIB_STR2WSTR(str)    L##str
+#define _DUILIB_STR2WSTR(str)    __DUILIB_STR2WSTR(str)
 #ifdef _UNICODE
-#define __FILET__	_DUILIB_STR2WSTR(__FILE__)
-#define __FUNCTIONT__	_DUILIB_STR2WSTR(__FUNCTION__)
+#define __FILET__    _DUILIB_STR2WSTR(__FILE__)
+#define __FUNCTIONT__    _DUILIB_STR2WSTR(__FUNCTION__)
 #else
-#define __FILET__	__FILE__
-#define __FUNCTIONT__	__FUNCTION__
+#define __FILET__    __FILE__
+#define __FUNCTIONT__    __FUNCTION__
 #endif
 #endif
 
@@ -44,7 +44,7 @@
 #endif
 #endif // _MSC_VER
 #ifdef __BORLANDC__
-#pragma option -w-8027		   // function not expanded inline
+#pragma option -w-8027           // function not expanded inline
 #endif
 
 // Required for VS 2008 (fails on XP and Win2000 without this fix)

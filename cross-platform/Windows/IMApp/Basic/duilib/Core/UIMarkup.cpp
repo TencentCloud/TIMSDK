@@ -168,7 +168,7 @@ void CMarkupNode::_MapAttributes()
         pstr += _tcslen(pstr) + 1;
         m_pOwner->_SkipWhitespace(pstr);
         if( *pstr++ != _T('\"') ) return; // if( *pstr != _T('\"') ) { pstr = ::CharNext(pstr); return; }
-        
+
         m_aAttributes[m_nAttributes++].iValue = pstr - m_pOwner->m_pstrXML;
         if( m_nAttributes >= MAX_XML_ATTRIBUTES ) return;
         pstr += _tcslen(pstr) + 1;
@@ -350,36 +350,36 @@ bool CMarkup::LoadFromFile(LPCTSTR pstrFilename, int encoding)
         ::CloseHandle( hFile );
         if( dwRead != dwSize ) {
             delete[] pByte;
-			pByte = NULL;
+            pByte = NULL;
             Release();
             return _Failed(_T("Could not read file"));
         }
 
         bool ret = LoadFromMem(pByte, dwSize, encoding);
         delete[] pByte;
-		pByte = NULL;
+        pByte = NULL;
 
         return ret;
     }
     else {
-		sFile += CPaintManagerUI::GetResourceZip();
-		HZIP hz = NULL;
+        sFile += CPaintManagerUI::GetResourceZip();
+        HZIP hz = NULL;
         if( CPaintManagerUI::IsCachedResourceZip() ) hz = (HZIP)CPaintManagerUI::GetResourceZipHandle();
         else {
-			CDuiString sFilePwd = CPaintManagerUI::GetResourceZipPwd();
+            CDuiString sFilePwd = CPaintManagerUI::GetResourceZipPwd();
 #ifdef UNICODE
-			char* pwd = w2a((wchar_t*)sFilePwd.GetData());
-			hz = OpenZip(sFile.GetData(), pwd);
-			if(pwd) delete[] pwd;
+            char* pwd = w2a((wchar_t*)sFilePwd.GetData());
+            hz = OpenZip(sFile.GetData(), pwd);
+            if(pwd) delete[] pwd;
 #else
             hz = OpenZip(sFile.GetData(), sFilePwd.GetData());
 #endif
-		}
+        }
         if( hz == NULL ) return _Failed(_T("Error opening zip file"));
         ZIPENTRY ze; 
         int i = 0; 
-		CDuiString key = pstrFilename;
-		key.Replace(_T("\\"), _T("/"));
+        CDuiString key = pstrFilename;
+        key.Replace(_T("\\"), _T("/"));
         if( FindZipItem(hz, key, true, &i, &ze) != 0 ) return _Failed(_T("Could not find ziped file"));
         DWORD dwSize = ze.unc_size;
         if( dwSize == 0 ) return _Failed(_T("File is empty"));
@@ -394,7 +394,7 @@ bool CMarkup::LoadFromFile(LPCTSTR pstrFilename, int encoding)
         if( !CPaintManagerUI::IsCachedResourceZip() ) CloseZip(hz);
         bool ret = LoadFromMem(pByte, dwSize, encoding);
         delete[] pByte;
-		pByte = NULL;
+        pByte = NULL;
         return ret;
     }
 }
@@ -544,9 +544,9 @@ void CMarkup::_SkipIdentifier(LPTSTR& pstr) const
 
 bool CMarkup::_ParseAttributes(LPTSTR& pstrText)
 {   
-	// 无属性
-	LPTSTR pstrIdentifier = pstrText;
-	if( *pstrIdentifier == _T('/') && *++pstrIdentifier == _T('>') ) return true;
+    // 无属性
+    LPTSTR pstrIdentifier = pstrText;
+    if( *pstrIdentifier == _T('/') && *++pstrIdentifier == _T('>') ) return true;
     if( *pstrText == _T('>') ) return true;
     *pstrText++ = _T('\0');
     _SkipWhitespace(pstrText);
@@ -573,13 +573,13 @@ bool CMarkup::_ParseAttributes(LPTSTR& pstrText)
 bool CMarkup::_ParseData(LPTSTR& pstrText, LPTSTR& pstrDest, char cEnd)
 {
     while( *pstrText != _T('\0') && *pstrText != cEnd ) {
-		if( *pstrText == _T('&') ) {
-			while( *pstrText == _T('&') ) {
-				_ParseMetaChar(++pstrText, pstrDest);
-			}
-			if (*pstrText == cEnd)
-				break;
-		}
+        if( *pstrText == _T('&') ) {
+            while( *pstrText == _T('&') ) {
+                _ParseMetaChar(++pstrText, pstrDest);
+            }
+            if (*pstrText == cEnd)
+                break;
+        }
 
         if( *pstrText == _T(' ') ) {
             *pstrDest++ = *pstrText++;
