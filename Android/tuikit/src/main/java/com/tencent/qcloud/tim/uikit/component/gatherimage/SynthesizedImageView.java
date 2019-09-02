@@ -3,8 +3,9 @@ package com.tencent.qcloud.tim.uikit.component.gatherimage;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+
+import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tim.uikit.R;
 

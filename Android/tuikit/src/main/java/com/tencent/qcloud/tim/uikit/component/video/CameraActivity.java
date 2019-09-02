@@ -30,7 +30,6 @@ public class CameraActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        TUIKitLog.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         //去除标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -44,11 +43,10 @@ public class CameraActivity extends Activity {
 
         int state = getIntent().getIntExtra(TUIKitConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_BOTH);
         jCameraView.setFeatures(state);
-        if (state == JCameraView.BUTTON_STATE_ONLY_CAPTURE) {
+        if (state == JCameraView.BUTTON_STATE_ONLY_CAPTURE)
             jCameraView.setTip("点击拍照");
-        } else if (state == JCameraView.BUTTON_STATE_ONLY_RECORDER) {
+        else if (state == JCameraView.BUTTON_STATE_ONLY_RECORDER)
             jCameraView.setTip("长按摄像");
-        }
 
         jCameraView.setMediaQuality(JCameraView.MEDIA_QUALITY_MIDDLE);
         jCameraView.setErrorLisenter(new ErrorListener() {
@@ -99,7 +97,6 @@ public class CameraActivity extends Activity {
                 finish();
             }
         });
-
         jCameraView.setLeftClickListener(new ClickListener() {
             @Override
             public void onClick() {
@@ -143,23 +140,13 @@ public class CameraActivity extends Activity {
 
     @Override
     protected void onResume() {
-        TUIKitLog.i(TAG, "onResume");
         super.onResume();
         jCameraView.onResume();
     }
 
     @Override
     protected void onPause() {
-        TUIKitLog.i(TAG, "onPause");
         super.onPause();
         jCameraView.onPause();
     }
-
-    @Override
-    protected void onDestroy() {
-        TUIKitLog.i(TAG, "onDestroy");
-        super.onDestroy();
-        mCallBack = null;
-    }
-
 }

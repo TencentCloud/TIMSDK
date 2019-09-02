@@ -10,11 +10,10 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.MD5Utils;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
 import java.io.File;
 import java.util.List;
@@ -115,7 +114,6 @@ public class TeamHeadSynthesizer implements Synthesizer {
         Bitmap mergeBitmap = Bitmap.createBitmap(maxWidth, maxHeight, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mergeBitmap);
         drawDrawable(canvas);
-        canvas.save();
         canvas.restore();
         return mergeBitmap;
     }

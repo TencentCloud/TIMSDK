@@ -20,7 +20,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven {url 'http://developer.huawei.com/repo/'}
+        maven { url 'http://developer.huawei.com/repo/' }
     }
 
     tasks.withType(Javadoc) {
@@ -30,17 +30,21 @@ allprojects {
     }
 }
 
-ext {
-    compileSdkVersion = 28
-    minSdkVersion = 16
-    targetSdkVersion = 28
-    versionCode = 1
-    versionName = "4.5.15"
-    abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'] //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
-    arguments = "-DANDROID_STL=c++_static"
-    cppFlags = "-std=c++11"
-}
-
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+ext {
+    compileSdkVersion = 29
+    buildToolsVersion = '29.0.0'
+    minSdkVersion = 16
+    targetSdkVersion = 29
+    supportVersion = '1.0.0'
+
+    versionName = "2.0.7"//版本
+    versionCode = 27//版本序号
+
+    abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
+    //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
+    arguments = "-DANDROID_STL=c++_static"
+    cppFlags = "-std=c++11"
 }

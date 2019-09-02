@@ -9,7 +9,7 @@ import com.squareup.picasso.Picasso;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.ImageEngine;
 
 /**
- * {@link ImageEngine} implementation using Picasso.
+ * implementation using Picasso.
  */
 
 public class PicassoEngine implements ImageEngine {

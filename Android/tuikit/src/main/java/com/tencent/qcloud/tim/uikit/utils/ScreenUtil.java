@@ -1,18 +1,17 @@
 package com.tencent.qcloud.tim.uikit.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+
+import androidx.annotation.NonNull;
 
 import com.tencent.qcloud.tim.uikit.TUIKit;
 
@@ -131,7 +130,7 @@ public class ScreenUtil {
 
     public static int[] scaledSize(int containerWidth, int containerHeight, int realWidth, int realHeight) {
         TUIKitLog.i(TAG, "scaledSize  containerWidth: " + containerWidth + " containerHeight: " + containerHeight
-            + " realWidth: " + realWidth + " realHeight: " + realHeight);
+                + " realWidth: " + realWidth + " realHeight: " + realHeight);
         float deviceRate = (float) containerWidth / (float) containerHeight;
         float rate = (float) realWidth / (float) realHeight;
         int width = 0;
@@ -143,6 +142,6 @@ public class ScreenUtil {
             width = containerWidth;
             height = (int) (containerWidth / rate);
         }
-        return new int[] {width, height};
+        return new int[]{width, height};
     }
 }

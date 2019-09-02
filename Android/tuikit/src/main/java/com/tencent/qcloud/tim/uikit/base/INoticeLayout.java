@@ -3,10 +3,8 @@ package com.tencent.qcloud.tim.uikit.base;
 import android.view.View;
 import android.widget.TextView;
 
-import com.tencent.qcloud.tim.uikit.component.NoticeLayout;
-
 /**
- * 通知区域 {@link NoticeLayout} 位置固定，只能显示或隐藏，位置不会随聊天内容的滚动而变化，可以用来展示<br>
+ * 通知区域  位置固定，只能显示或隐藏，位置不会随聊天内容的滚动而变化，可以用来展示<br>
  * 待处理的群消息，或者一些广播等。该区域分为两部分，可以用来展示内容主题以及辅助主题。可以设置点击事件来<br>
  * 响应用户操作。
  */

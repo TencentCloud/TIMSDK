@@ -3,10 +3,11 @@ package com.tencent.qcloud.tim.uikit.component.video;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.TextureView;
+
+import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tim.uikit.component.video.proxy.IPlayer;
 import com.tencent.qcloud.tim.uikit.component.video.proxy.MediaPlayerProxy;
@@ -96,7 +97,6 @@ public class UIKitVideoView extends TextureView {
                 // 有些视频拍摄的时候有角度，需要做旋转，默认ijk是不会做的，这里自己实现
                 mVideoRotationDegree = extra;
                 setRotation(mVideoRotationDegree);
-                requestLayout();
             }
         }
     };
@@ -130,23 +130,23 @@ public class UIKitVideoView extends TextureView {
         mOutOnCompletionListener = l;
     }
 
-    private TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
+    private SurfaceTextureListener mSurfaceTextureListener = new SurfaceTextureListener() {
 
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-             TUIKitLog.i(TAG,"onSurfaceTextureAvailable");
+            TUIKitLog.i(TAG, "onSurfaceTextureAvailable");
             mSurface = new Surface(surface);
             openVideo();
         }
 
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-             TUIKitLog.i(TAG,"onSurfaceTextureSizeChanged");
+            TUIKitLog.i(TAG, "onSurfaceTextureSizeChanged");
         }
 
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-            TUIKitLog.i(TAG,"onSurfaceTextureDestroyed");
+            TUIKitLog.i(TAG, "onSurfaceTextureDestroyed");
             return true;
         }
 
@@ -176,10 +176,10 @@ public class UIKitVideoView extends TextureView {
                 height = heightSpecSize;
 
                 // for compatibility, we adjust size based on aspect ratio
-                if ( mVideoWidth * height  < width * mVideoHeight ) {
+                if (mVideoWidth * height < width * mVideoHeight) {
                     //Log.i("@@@", "image too wide, correcting");
                     width = height * mVideoWidth / mVideoHeight;
-                } else if ( mVideoWidth * height  > width * mVideoHeight ) {
+                } else if (mVideoWidth * height > width * mVideoHeight) {
                     //Log.i("@@@", "image too tall, correcting");
                     height = width * mVideoHeight / mVideoWidth;
                 }
@@ -217,14 +217,14 @@ public class UIKitVideoView extends TextureView {
         } else {
             // no size yet, just adopt the given spec sizes
         }
-        TUIKitLog.i(TAG, "onMeasure width: " + width + " height: " + height + " rotation degree: " + mVideoRotationDegree);
+        // TUIKitLog.i(TAG, "width: " + width + " height: " + height);
         setMeasuredDimension(width, height);
         if ((mVideoRotationDegree + 180) % 180 != 0) {
             // 画面旋转之后需要缩放，而且旋转之后宽高的计算都要换为高宽。
             int[] size = ScreenUtil.scaledSize(widthSpecSize, heightSpecSize, height, width);
-            TUIKitLog.i(TAG, "onMeasure scaled width: " + size[0] + " height: " + size[1]);
-            setScaleX(size[0] / ((float)height));
-            setScaleY(size[1] / ((float)width));
+            // TUIKitLog.i(TAG, "width: " + size[0] + " height: " + size[1]);
+            setScaleX(size[0] / ((float) height));
+            setScaleY(size[1] / ((float) width));
         }
     }
 

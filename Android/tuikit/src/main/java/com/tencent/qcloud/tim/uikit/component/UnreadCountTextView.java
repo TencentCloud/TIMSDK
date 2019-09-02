@@ -8,11 +8,13 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 
+import androidx.appcompat.widget.AppCompatTextView;
+
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
 
 
-public class UnreadCountTextView extends android.support.v7.widget.AppCompatTextView {
+public class UnreadCountTextView extends AppCompatTextView {
 
     private int mNormalSize = ScreenUtil.getPxByDp(16);
     private Paint mPaint;

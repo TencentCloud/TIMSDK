@@ -3,9 +3,9 @@ package com.tencent.qcloud.tim.uikit.component.video.state;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import com.tencent.qcloud.tim.uikit.component.video.CameraInterface;
-import com.tencent.qcloud.tim.uikit.component.video.JCameraView;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
+import com.ole.travel.im.component.video.CameraInterface;
+import com.ole.travel.im.component.video.JCameraView;
+import com.ole.travel.im.utils.TUIKitLog;
 
 public class BorrowPictureState implements State {
 
@@ -48,7 +48,7 @@ public class BorrowPictureState implements State {
     }
 
     @Override
-    public void record(Surface surface,float screenProp) {
+    public void record(Surface surface, float screenProp) {
 
     }
 

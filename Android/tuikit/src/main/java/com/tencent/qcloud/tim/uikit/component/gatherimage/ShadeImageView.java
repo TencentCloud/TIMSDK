@@ -10,10 +10,11 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.widget.ImageView;
+
+import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
 

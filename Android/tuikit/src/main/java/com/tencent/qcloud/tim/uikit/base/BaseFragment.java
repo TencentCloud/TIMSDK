@@ -1,7 +1,8 @@
 package com.tencent.qcloud.tim.uikit.base;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class BaseFragment extends Fragment {
 

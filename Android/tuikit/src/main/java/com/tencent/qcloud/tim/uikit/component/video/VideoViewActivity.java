@@ -102,7 +102,7 @@ public class VideoViewActivity extends Activity {
             deviceHeight = Math.max(ScreenUtil.getScreenWidth(this), ScreenUtil.getScreenHeight(this));
         }
         int[] scaledSize = ScreenUtil.scaledSize(deviceWidth, deviceHeight, videoWidth, videoHeight);
-        TUIKitLog.i(TAG, "scaled width: " + scaledSize[0] + " height: " + scaledSize[1]);
+        //  TUIKitLog.i(TAG, "scaled width: " + scaledSize[0] + " height: " + scaledSize[1]);
         ViewGroup.LayoutParams params = mVideoView.getLayoutParams();
         params.width = scaledSize[0];
         params.height = scaledSize[1];

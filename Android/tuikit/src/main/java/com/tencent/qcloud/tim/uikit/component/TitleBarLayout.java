@@ -1,13 +1,13 @@
 package com.tencent.qcloud.tim.uikit.component;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.ITitleBarLayout;
@@ -51,10 +51,10 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
         mCenterTitle = findViewById(R.id.page_title);
         mLeftIcon = findViewById(R.id.page_title_left_icon);
         mRightIcon = findViewById(R.id.page_title_right_icon);
-        LinearLayout.LayoutParams  params = (LinearLayout.LayoutParams) mTitleLayout.getLayoutParams();
+        LayoutParams params = (LayoutParams) mTitleLayout.getLayoutParams();
         params.height = ScreenUtil.getPxByDp(45);
         mTitleLayout.setLayoutParams(params);
-        setBackgroundColor(getResources().getColor(R.color.main_bg_color));
+        mTitleLayout.setBackgroundColor(getResources().getColor(R.color.main_bg_color));
     }
 
     @Override
@@ -78,7 +78,7 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
     }
 
     @Override
-    public void setTitle(String title, POSITION position) {
+    public void setTitle(String title, ITitleBarLayout.POSITION position) {
         switch (position) {
             case LEFT:
                 mLeftTitle.setText(title);
@@ -126,4 +126,5 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
     public TextView getRightTitle() {
         return mRightTitle;
     }
+
 }

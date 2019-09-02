@@ -87,9 +87,9 @@ public class CaptureButton extends View {
 
         state = STATE_IDLE;                //初始化为空闲状态
         button_state = JCameraView.BUTTON_STATE_BOTH;  //初始化按钮为可录制可拍照
-        TUIKitLog.i(TAG,"CaptureButtom start");
+        TUIKitLog.i(TAG, "CaptureButtom start");
         duration = 10 * 1000;              //默认最长录制时间为10s
-        TUIKitLog.i(TAG,"CaptureButtom end");
+        TUIKitLog.i(TAG, "CaptureButtom end");
         min_duration = 1500;              //默认最短录制时间为1.5s
 
         center_X = (button_size + outside_add_size * 2) / 2;
@@ -135,7 +135,7 @@ public class CaptureButton extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                TUIKitLog.i(TAG,"state = " + state);
+                TUIKitLog.i(TAG, "state = " + state);
                 if (event.getPointerCount() > 1 || state != STATE_IDLE)
                     break;
                 event_Y = event.getY();     //记录Y值

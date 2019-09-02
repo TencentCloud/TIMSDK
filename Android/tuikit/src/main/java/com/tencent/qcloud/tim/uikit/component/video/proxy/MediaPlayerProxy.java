@@ -5,22 +5,27 @@ import android.net.Uri;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import com.ole.travel.im.utils.SystemUtils;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.io.IOException;
 
-public class MediaPlayerProxy implements IPlayer{
+public class MediaPlayerProxy implements IPlayer {
 
     private static final String TAG = MediaPlayerProxy.class.getSimpleName();
 
     private IPlayer mMediaPlayer;
 
     public MediaPlayerProxy() {
-        try {
-            Class.forName("tv.danmaku.ijk.media.player.IjkMediaPlayer").newInstance();
-            mMediaPlayer = new IjkMediaPlayerWrapper();
-        } catch (Exception e) {
+        if (SystemUtils.is64Bit()) {
             mMediaPlayer = new SystemMediaPlayerWrapper();
+        } else {
+            try {
+                Class.forName("tv.danmaku.ijk.media.player.IjkMediaPlayer").newInstance();
+                mMediaPlayer = new IjkMediaPlayerWrapper();
+            } catch (Exception e) {
+                mMediaPlayer = new SystemMediaPlayerWrapper();
+            }
         }
         TUIKitLog.i(TAG, "use mMediaPlayer: " + mMediaPlayer);
     }

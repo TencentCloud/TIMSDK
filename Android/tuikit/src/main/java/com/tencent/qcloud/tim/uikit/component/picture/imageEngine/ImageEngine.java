@@ -5,12 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
 
-import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.PicassoEngine;
-
 /**
- * Image loader interface. There are predefined {@link GlideEngine}
- * and {@link PicassoEngine}.
+ * Image loader interface. There are predefined
+ * and .
  */
 @SuppressWarnings("unused")
 public interface ImageEngine {

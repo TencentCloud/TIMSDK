@@ -108,10 +108,6 @@ public class GlideEngine implements ImageEngine {
                 .into(imageView);
     }
 
-    public static void clear(ImageView imageView) {
-        Glide.with(TUIKit.getAppContext()).clear(imageView);
-    }
-
     public static void loadImage(ImageView imageView, Uri uri) {
         if (uri == null) {
             return;
@@ -121,6 +117,7 @@ public class GlideEngine implements ImageEngine {
                 .apply(new RequestOptions().error(R.drawable.default_user_icon))
                 .into(imageView);
     }
+
 
     public static void loadImage(String filePath, String url) {
         try {

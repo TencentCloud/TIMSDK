@@ -5,13 +5,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tencent.qcloud.tim.uikit.modules.chat.ChatLayout;
-import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationLayout;
-
 /**
- * 会话列表窗口 {@link ConversationLayout}、聊天窗口 {@link ChatLayout} 等都自带标题栏，<br>
+ * 会话列表窗口 等都自带标题栏，<br>
  * 标题栏设计为左中右三部分标题，左边可为图片+文字，中间为文字，右边也可为图片+文字，这些区域返回的都是标准的<br>
- *  Android View，可以根据业务需要对这些 View 进行交互响应处理。
+ * Android View，可以根据业务需要对这些 View 进行交互响应处理。
  */
 public interface ITitleBarLayout {
 

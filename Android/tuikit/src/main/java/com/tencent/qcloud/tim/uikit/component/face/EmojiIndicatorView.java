@@ -47,7 +47,7 @@ public class EmojiIndicatorView extends LinearLayout {
         this.removeAllViews();
         for (int i = 0; i < count; i++) {
             RelativeLayout rl = new RelativeLayout(mContext);
-            LayoutParams params = new LinearLayout.LayoutParams(mMaxHeight, mMaxHeight);
+            LayoutParams params = new LayoutParams(mMaxHeight, mMaxHeight);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
             ImageView imageView = new ImageView(mContext);

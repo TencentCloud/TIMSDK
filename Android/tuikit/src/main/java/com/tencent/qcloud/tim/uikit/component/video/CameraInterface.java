@@ -233,7 +233,7 @@ public class CameraInterface implements Camera.PreviewCallback {
                     mParams.setZoom(nowScaleRate);
                     mCamera.setParameters(mParams);
                 }
-                TUIKitLog.i(TAG,"setZoom = " + nowScaleRate);
+                TUIKitLog.i(TAG, "setZoom = " + nowScaleRate);
                 break;
         }
 
@@ -317,7 +317,7 @@ public class CameraInterface implements Camera.PreviewCallback {
             SELECTED_CAMERA = CAMERA_POST_POSITION;
         }
         doDestroyCamera();
-        TUIKitLog.i(TAG,"open start");
+        TUIKitLog.i(TAG, "open start");
         openCamera(SELECTED_CAMERA);
 //        mCamera = Camera.open();
         if (Build.VERSION.SDK_INT > 17 && this.mCamera != null) {
@@ -327,7 +327,7 @@ public class CameraInterface implements Camera.PreviewCallback {
                 e.printStackTrace();
             }
         }
-        TUIKitLog.i(TAG,"open end");
+        TUIKitLog.i(TAG, "open end");
         doStartPreview(holder, screenProp);
     }
 
@@ -336,7 +336,7 @@ public class CameraInterface implements Camera.PreviewCallback {
      */
     public void doStartPreview(SurfaceHolder holder, float screenProp) {
         if (isPreviewing) {
-            TUIKitLog.i(TAG,"doStartPreview isPreviewing");
+            TUIKitLog.i(TAG, "doStartPreview isPreviewing");
         }
         if (this.screenProp < 0) {
             this.screenProp = screenProp;
