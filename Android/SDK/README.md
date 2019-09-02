@@ -2,4 +2,4 @@
 
 ## 下载地址
 
-[最新TUIKit aar 和IM SDK aar下载](https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.4.900/TIM_SDK_Android_latest_aar.zip)
+[最新TUIKit aar 和IM SDK aar下载](https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.5.15/TIM_SDK_Android_latest_aar.zip)
