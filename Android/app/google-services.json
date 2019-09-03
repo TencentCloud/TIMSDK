@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "791251993264",
+    "firebase_url": "https://tencent-im.firebaseio.com",
+    "project_id": "tencent-im",
+    "storage_bucket": "tencent-im.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791251993264:android:c2fafda64119338e",
+        "android_client_info": {
+          "package_name": "com.tencent.qcloud.tim.tuikit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791251993264-miujg0k5krieotg4p5vgt9oqg8ekdha4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBO10a0NI6g_BhfIQvq57d7cGNJ1td5Oys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "791251993264-miujg0k5krieotg4p5vgt9oqg8ekdha4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
