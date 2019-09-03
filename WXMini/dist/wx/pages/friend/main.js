@@ -130,6 +130,7 @@ var Component = normalizeComponent(
               var conversationID = _this.TIM.TYPES.CONV_C2C + _this.id;
               wx.$app.getConversationProfile(conversationID).then(function (res) {
                 _this.$store.commit('resetCurrentConversation');
+                _this.$store.commit('resetGroup');
                 _this.$store.commit('updateCurrentConversation', res.data.conversation);
                 _this.$store.dispatch('getMessageList', conversationID);
                 _this.content = '';

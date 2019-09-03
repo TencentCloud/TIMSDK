@@ -442,6 +442,9 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       }
     }
   }, [_c('i-row', {
+    staticStyle: {
+      "border-bottom": "1px solid #e9eaec"
+    },
     attrs: {
       "mpcomid": '16'
     }

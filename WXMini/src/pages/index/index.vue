@@ -116,6 +116,7 @@ export default {
         this.$store.commit('offAtRemind', item)
       }
       this.$store.commit('resetCurrentConversation')
+      this.$store.commit('resetGroup')
       this.setMessageRead(item)
       wx.$app.getConversationProfile(item.conversationID)
         .then((res) => {
@@ -135,6 +136,7 @@ export default {
     // 点击系统通知时，处理notification
     checkoutNotification (item) {
       this.$store.commit('resetCurrentConversation')
+      this.$store.commit('resetGroup')
       this.setMessageRead(item)
       wx.$app.getConversationProfile(item.conversationID)
         .then((res) => {

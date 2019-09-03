@@ -5,7 +5,7 @@
         <input type="number" class="input" placeholder="单位：秒" v-model.lazy:value="muteTime"/>
       </div>
     </i-modal>
-    <div class="chat" v-for="item in currentGroupProfile.memberList" :key="item.userID">
+    <div class="chat" v-for="item in currentGroupMemberList" :key="item.userID">
       <i-row slot="content">
         <i-col span="1">
           <div class="last" v-if="item.role === 'Member'">普</div>
@@ -67,20 +67,25 @@ export default {
       currentGroupProfile: state => {
         console.log(state.group.currentGroupProfile)
         return state.group.currentGroupProfile
+      },
+      currentGroupMemberList: state => {
+        return state.group.currentGroupMemberList
       }
     }),
     isMyRoleOwner () {
-      let myID = this.$store.state.user.myInfo.userID
-      let myRole = this.currentGroupProfile.memberList.filter(item => item.userID === myID)[0].role
-      return myRole === this.$type.GRP_MBR_ROLE_OWNER
+      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_OWNER
     },
     isMyRoleAdmin () {
-      let myID = this.$store.state.user.myInfo.userID
-      let myRole = this.currentGroupProfile.memberList.filter(item => item.userID === myID)[0].role
-      return myRole === this.$type.GRP_MBR_ROLE_ADMIN
+      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_ADMIN
     }
   },
+  onReachBottom () {
+    this.getGroupMemberList()
+  },
   methods: {
+    getGroupMemberList () {
+      this.$store.dispatch('getGroupMemberList')
+    },
     muteMember () {
       wx.$app.setGroupMemberMuteTime({
         groupID: this.currentGroupProfile.groupID,
@@ -116,7 +121,6 @@ export default {
         reason: '踢出群',
         userIDList: [item.userID]
       }).then(res => {
-        console.log(res.data)
         this.$store.commit('updateCurrentGroupProfile', res.data.group)
       })
     },

@@ -152,7 +152,30 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     }
   }, [_c('div', {
     staticClass: "member"
-  }, [_vm._v("\n          群成员\n        ")])]), _vm._v(" "), _c('i-col', {
+  }, [_c('div', {
+    staticClass: "member-list"
+  }, [_vm._v("\n            群成员\n          ")]), _vm._v(" "), (_vm.currentGroupProfile.type === 'Private') ? _c('div', {
+    staticStyle: {
+      "padding-left": "10px"
+    },
+    attrs: {
+      "eventid": '4'
+    },
+    on: {
+      "click": function($event) {
+        _vm.handleModalShow()
+      }
+    }
+  }, [_c('image', {
+    staticStyle: {
+      "width": "20px",
+      "height": "20px",
+      "border-radius": "50%"
+    },
+    attrs: {
+      "src": "/static/images/more.png"
+    }
+  })]) : _vm._e()])]), _vm._v(" "), _c('i-col', {
     attrs: {
       "span": "2",
       "mpcomid": '8'
@@ -160,7 +183,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, [_c('div', {
     staticClass: "member",
     attrs: {
-      "eventid": '4'
+      "eventid": '5'
     },
     on: {
       "click": function($event) {
@@ -176,54 +199,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     attrs: {
       "src": "/static/images/right.png"
     }
-  })])])], 1), _vm._v(" "), _c('i-row', {
-    attrs: {
-      "mpcomid": '12'
-    }
-  }, [(_vm.currentGroupProfile.type === 'Private') ? _c('i-col', {
-    attrs: {
-      "span": "3",
-      "mpcomid": '10'
-    }
-  }, [_c('div', {
-    staticClass: "avatar-list",
-    attrs: {
-      "eventid": '5'
-    },
-    on: {
-      "click": function($event) {
-        _vm.handleModalShow()
-      }
-    }
-  }, [_c('image', {
-    staticStyle: {
-      "width": "30px",
-      "height": "30px",
-      "border-radius": "50%"
-    },
-    attrs: {
-      "src": "/static/images/more.png"
-    }
-  })])]) : _vm._e(), _vm._v(" "), _vm._l((_vm.groupProfile.memberList), function(person, index) {
-    return _c('i-col', {
-      key: index,
-      attrs: {
-        "span": "3",
-        "mpcomid": '11_' + index
-      }
-    }, [_c('div', {
-      staticClass: "avatar-list"
-    }, [_c('image', {
-      staticStyle: {
-        "width": "30px",
-        "height": "30px",
-        "border-radius": "50%"
-      },
-      attrs: {
-        "src": person.avatar || '/static/images/header.png'
-      }
-    })])])
-  })], 2)], 1), _vm._v(" "), _c('div', {
+  })])])], 1)], 1), _vm._v(" "), _c('div', {
     staticClass: "card"
   }, [_c('div', {
     staticClass: "item"
@@ -377,15 +353,6 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -407,28 +374,15 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 
   computed: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapState */])({
     currentGroupProfile: function currentGroupProfile(state) {
+      console.log(state.group.currentGroupProfile);
       return state.group.currentGroupProfile;
     }
   }), {
     isMyRoleOwner: function isMyRoleOwner() {
-      var myID = this.$store.state.user.myInfo.userID;
-      if (this.currentGroupProfile.memberList) {
-        var myRole = this.currentGroupProfile.memberList.filter(function (item) {
-          return item.userID === myID;
-        })[0].role;
-        return myRole === this.$type.GRP_MBR_ROLE_OWNER;
-      }
-      return null;
+      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_OWNER;
     },
     isMyRoleAdmin: function isMyRoleAdmin() {
-      var myID = this.$store.state.user.myInfo.userID;
-      if (this.currentGroupProfile.memberList) {
-        var myRole = this.currentGroupProfile.memberList.filter(function (item) {
-          return item.userID === myID;
-        })[0].role;
-        return myRole === this.$type.GRP_MBR_ROLE_ADMIN;
-      }
-      return null;
+      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_ADMIN;
     }
   }),
   onShow: function onShow() {
@@ -448,6 +402,7 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
           type: 'success'
         });
         _this.$store.commit('resetCurrentConversation');
+        _this.$store.commit('resetGroup');
         wx.switchTab({
           url: '../index/main'
         });
@@ -484,27 +439,39 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 
     // 所有成员页
     allMember: function allMember() {
-      var url = '../members/main';
-      wx.navigateTo({ url: url });
+      var _this4 = this;
+
+      var count = this.$store.state.group.count;
+      wx.$app.getGroupMemberList({
+        groupID: this.currentGroupProfile.groupID,
+        offset: 0,
+        count: count
+      }).then(function (res) {
+        _this4.$store.commit('updateCurrentGroupMemberList', res.data.memberList);
+        _this4.$store.commit('updateOffset');
+        var url = '../members/main';
+        wx.navigateTo({ url: url });
+      });
     },
 
     // 退出群聊
     quitGroup: function quitGroup() {
-      var _this4 = this;
+      var _this5 = this;
 
       wx.$app.quitGroup(this.groupProfile.groupID).then(function () {
-        _this4.$store.commit('showToast', {
+        _this5.$store.commit('showToast', {
           title: '退出成功',
           icon: 'success',
           duration: 1500
         });
-        _this4.$store.commit('resetCurrentConversation');
+        _this5.$store.commit('resetCurrentConversation');
+        _this5.$store.commit('resetGroup');
         wx.switchTab({
           url: '../index/main'
         });
       }).catch(function (err) {
         console.warn('quitGroupFail', err);
-        _this4.$store.commit('showToast', {
+        _this5.$store.commit('showToast', {
           title: '退出失败',
           icon: 'none',
           duration: 1500
@@ -519,37 +486,37 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 
     // 群组详情页，添加群成员
     handleAdd: function handleAdd() {
-      var _this5 = this;
+      var _this6 = this;
 
       var conversationID = this.$store.state.conversation.currentConversationID;
       wx.$app.getUserProfile({
         userIDList: [this.addUserId]
       }).then(function () {
         wx.$app.addGroupMember({
-          groupID: conversationID.replace(_this5.TIM.TYPES.CONV_GROUP, ''),
-          userIDList: [_this5.addUserId]
+          groupID: conversationID.replace(_this6.TIM.TYPES.CONV_GROUP, ''),
+          userIDList: [_this6.addUserId]
         }).then(function (res) {
-          _this5.addUserId = '';
-          _this5.handleModalShow();
+          _this6.addUserId = '';
+          _this6.handleModalShow();
           var fails = res.data.failureUserIDList;
           var existed = res.data.existedUserIDList;
           var success = res.data.successUserIDList;
           if (fails.length > 0) {
-            _this5.$store.commit('showToast', {
+            _this6.$store.commit('showToast', {
               title: '添加失败!再试试吧',
               icon: 'none',
               duration: 1500
             });
           }
           if (existed.length > 0) {
-            _this5.$store.commit('showToast', {
+            _this6.$store.commit('showToast', {
               title: '已经在群里',
               icon: 'none',
               duration: 1500
             });
           }
           if (success.length > 0) {
-            _this5.$store.commit('showToast', {
+            _this6.$store.commit('showToast', {
               title: '添加成功',
               icon: 'none',
               duration: 1500
@@ -557,7 +524,7 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
           }
         });
       }).catch(function () {
-        _this5.$store.commit('showToast', {
+        _this6.$store.commit('showToast', {
           title: '没有找到该用户',
           icon: 'none',
           duration: 1500

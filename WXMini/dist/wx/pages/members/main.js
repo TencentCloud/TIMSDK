@@ -104,7 +104,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
         _vm.muteTime = $event.target.value
       }
     }
-  })])]), _vm._v(" "), _vm._l((_vm.currentGroupProfile.memberList), function(item, index) {
+  })])]), _vm._v(" "), _vm._l((_vm.currentGroupMemberList), function(item, index) {
     return _c('div', {
       key: item.userID,
       staticClass: "chat"
@@ -302,24 +302,26 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
     currentGroupProfile: function currentGroupProfile(state) {
       console.log(state.group.currentGroupProfile);
       return state.group.currentGroupProfile;
+    },
+    currentGroupMemberList: function currentGroupMemberList(state) {
+      return state.group.currentGroupMemberList;
     }
   }), {
     isMyRoleOwner: function isMyRoleOwner() {
-      var myID = this.$store.state.user.myInfo.userID;
-      var myRole = this.currentGroupProfile.memberList.filter(function (item) {
-        return item.userID === myID;
-      })[0].role;
-      return myRole === this.$type.GRP_MBR_ROLE_OWNER;
+      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_OWNER;
     },
     isMyRoleAdmin: function isMyRoleAdmin() {
-      var myID = this.$store.state.user.myInfo.userID;
-      var myRole = this.currentGroupProfile.memberList.filter(function (item) {
-        return item.userID === myID;
-      })[0].role;
-      return myRole === this.$type.GRP_MBR_ROLE_ADMIN;
+      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_ADMIN;
     }
   }),
+  onReachBottom: function onReachBottom() {
+    this.getGroupMemberList();
+  },
+
   methods: {
+    getGroupMemberList: function getGroupMemberList() {
+      this.$store.dispatch('getGroupMemberList');
+    },
     muteMember: function muteMember() {
       var _this = this;
 
@@ -362,7 +364,6 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
         reason: '踢出群',
         userIDList: [item.userID]
       }).then(function (res) {
-        console.log(res.data);
         _this3.$store.commit('updateCurrentGroupProfile', res.data.group);
       });
     },
