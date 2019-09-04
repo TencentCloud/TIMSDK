@@ -9,7 +9,7 @@ export function getDate(date, splitor = '-') {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
-  return `${year}${splitor}${addZeroPrefix(month)}${splitor}${day}`
+  return `${year}${splitor}${addZeroPrefix(month)}${splitor}${addZeroPrefix(day)}`
 }
 
 /**

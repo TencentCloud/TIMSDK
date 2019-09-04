@@ -1,24 +1,30 @@
 <template>
   <div class="group-member-list-wrapper">
-    <popover v-model="addGroupMemberVisible">
-      <add-group-member></add-group-member>
-      <div slot="reference" class="add-group-member group-member">
-        <span class="el-icon-plus add-button" style="width:30px;height:30px;" circle></span>
-        <span>Add</span>
-      </div>
-    </popover>
-    <template v-for="member in members">
-      <popover placement="right" :key="member.userID">
-        <group-member-info :member="member" />
-        <div slot="reference" class="group-member" @click="currentMemberID = member.userID">
-          <avatar :src="member.avatar" :text="getGroupMemberAvatarText(member.role)" shape="square" />
-          <span class="member-name" v-if="member.nameCard">{{ member.nameCard }}</span>
-          <span class="member-name" v-else-if="member.nick">{{ member.nick }}</span>
-          <span class="member-name" v-else>{{ member.userID }}</span>
+    <div class="group-member-list">
+      <popover v-model="addGroupMemberVisible">
+        <add-group-member></add-group-member>
+        <div slot="reference" class="add-group-member group-member">
+          <span class="el-icon-plus add-button" style="width:30px;height:30px;" circle></span>
+          <span>Add</span>
         </div>
       </popover>
-    </template>
-    <el-button type="text" @click="loadMore">查看更多</el-button>
+      <template v-for="member in members">
+        <popover placement="right" :key="member.userID">
+          <group-member-info :member="member" />
+          <div slot="reference" class="group-member" @click="currentMemberID = member.userID">
+            <avatar
+              :src="member.avatar"
+              :text="getGroupMemberAvatarText(member.role)"
+              shape="square"
+            />
+            <span class="member-name" v-if="member.nameCard">{{ member.nameCard }}</span>
+            <span class="member-name" v-else-if="member.nick">{{ member.nick }}</span>
+            <span class="member-name" v-else>{{ member.userID }}</span>
+          </div>
+        </popover>
+      </template>
+    </div>
+    <el-button v-if="showLoadMore" type="text" @click="loadMore">查看更多</el-button>
   </div>
 </template>
 
@@ -35,7 +41,7 @@ export default {
       count: 30 // 显示的群成员数量
     }
   },
-  props: ['memberList'],
+  props: ['groupProfile'],
   components: {
     Popover,
     AddGroupMember,
@@ -43,10 +49,14 @@ export default {
   },
   computed: {
     ...mapState({
-      currentConversation: state => state.conversation.currentConversation
+      currentConversation: state => state.conversation.currentConversation,
+      currentMemberList: state => state.group.currentMemberList
     }),
+    showLoadMore() {
+      return this.members.length < this.groupProfile.memberNum
+    },
     members() {
-      return this.memberList.slice(0, this.count)
+      return this.currentMemberList.slice(0, this.count)
     }
   },
   methods: {
@@ -61,7 +71,11 @@ export default {
       }
     },
     loadMore() {
-      this.count += 30
+      this.$store
+        .dispatch('getGroupMemberList', this.groupProfile.groupID)
+        .then(() => {
+          this.count += 30
+        })
     }
   }
 }
@@ -86,13 +100,17 @@ export default {
   line-height: 30px;
 }
 .group-member-list-wrapper {
+  border-bottom: 1px solid #ded8d8;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  max-height: 300px;
+  overflow-y: scroll;
+}
+.group-member-list {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
-  border-bottom: 1px solid #ded8d8;
-  padding-bottom: 6px;
-  margin-bottom: 6px;
 }
 .member-name {
   overflow: hidden;

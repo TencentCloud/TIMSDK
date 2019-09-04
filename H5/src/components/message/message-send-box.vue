@@ -31,7 +31,7 @@
         <el-button type="primary" @click="sendCustomMessage">确 定</el-button>
       </span>
     </el-dialog>
-    <el-popover trigger="manual" v-model="showAtGroupMember" placement="top">
+    <el-popover trigger="manual" v-model="showAtGroupMember" placement="top" style="max-height:500px;overflow-y:scroll;">
       <el-radio-group
         v-model="atUserID"
         style="display:flex;flex-decoration: column;"
@@ -105,12 +105,7 @@ export default {
   computed: {
     ...mapGetters(['toAccount', 'currentConversationType']),
     ...mapState({
-      memberList: state =>
-        state.conversation.currentConversation.type === 'GROUP'
-          ? state.conversation.currentConversation.groupProfile.memberList.filter(
-              member => member.userID !== state.user.currentUserProfile.userID
-            )
-          : []
+      memberList: state => state.group.currentMemberList
     })
   },
   methods: {
