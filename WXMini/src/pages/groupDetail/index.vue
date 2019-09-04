@@ -102,7 +102,6 @@ export default {
   computed: {
     ...mapState({
       currentGroupProfile: state => {
-        console.log(state.group.currentGroupProfile)
         return state.group.currentGroupProfile
       }
     }),

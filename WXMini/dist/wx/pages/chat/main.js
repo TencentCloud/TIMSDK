@@ -294,7 +294,6 @@ var audioContext = wx.createInnerAudioContext();
 
   computed: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapState */])({
     currentMessageList: function currentMessageList(state) {
-      console.log(state.conversation.currentMessageList);
       return state.conversation.currentMessageList;
     },
     imageUrls: function imageUrls(state) {
@@ -395,7 +394,6 @@ var audioContext = wx.createInnerAudioContext();
       });
       downloadTask.onProgressUpdate(function (res) {
         that.percent = res.progress;
-        console.log(res.progress);
       });
     },
 
@@ -588,7 +586,6 @@ var audioContext = wx.createInnerAudioContext();
 
     // 播放音频
     openAudio: function openAudio(audio) {
-      console.log(audio, this.sysInfo);
       var that = this;
       audioContext.src = audio.url;
       audioContext.play();

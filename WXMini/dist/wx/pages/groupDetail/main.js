@@ -374,7 +374,6 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 
   computed: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapState */])({
     currentGroupProfile: function currentGroupProfile(state) {
-      console.log(state.group.currentGroupProfile);
       return state.group.currentGroupProfile;
     }
   }), {

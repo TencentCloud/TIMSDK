@@ -243,7 +243,6 @@ export default {
   computed: {
     ...mapState({
       currentMessageList: state => {
-        console.log(state.conversation.currentMessageList)
         return state.conversation.currentMessageList
       },
       imageUrls: state => state.conversation.imageUrls
@@ -339,7 +338,6 @@ export default {
       })
       downloadTask.onProgressUpdate((res) => {
         that.percent = res.progress
-        console.log(res.progress)
       })
     },
     // 群简介或者人简介
@@ -517,7 +515,6 @@ export default {
     },
     // 播放音频
     openAudio (audio) {
-      console.log(audio, this.sysInfo)
       let that = this
       audioContext.src = audio.url
       audioContext.play()

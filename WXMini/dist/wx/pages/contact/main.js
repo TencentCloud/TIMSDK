@@ -151,8 +151,7 @@ global.webpackJsonpMpvue([14],{
           });
         }
         _this.handleApplyModal();
-      }).catch(function (error) {
-        console.log(error);
+      }).catch(function () {
         _this.$store.commit('showToast', {
           title: '加群失败'
         });

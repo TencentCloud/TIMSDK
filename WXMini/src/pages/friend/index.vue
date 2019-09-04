@@ -51,7 +51,6 @@ export default {
           userIDList: [this.id]
         }
         wx.$app.getUserProfile(option).then((res) => {
-          console.log(res)
           if (res.data.length > 0) {
             const message = wx.$app.createTextMessage({
               to: this.id,

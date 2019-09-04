@@ -119,7 +119,6 @@ var Component = normalizeComponent(
           userIDList: [this.id]
         };
         wx.$app.getUserProfile(option).then(function (res) {
-          console.log(res);
           if (res.data.length > 0) {
             var message = wx.$app.createTextMessage({
               to: _this.id,

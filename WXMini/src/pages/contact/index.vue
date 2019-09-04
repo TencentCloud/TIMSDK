@@ -135,8 +135,7 @@ export default {
           }
           this.handleApplyModal()
         })
-        .catch(error => {
-          console.log(error)
+        .catch(() => {
           this.$store.commit('showToast', {
             title: '加群失败'
           })
