@@ -4,20 +4,22 @@
     <div class="content">
       <message-status-icon :message="message" />
       <text-element
-        v-if="message.type === 'TIMTextElem'"
+        v-if="message.type === TIM.TYPES.MSG_TEXT"
         :isMine="isMine"
         :payload="message.payload"
       />
-      <image-element v-if="message.type === 'TIMImageElem'" :payload="message.payload" />
-      <file-element v-else-if="message.type === 'TIMFileElem'" :payload="message.payload" />
-      <sound-element v-else-if="message.type === 'TIMSoundElem'" :payload="message.payload" />
-      <group-tip-element v-else-if="message.type==='TIMGroupTipElem'" :payload="message.payload" />
+      <image-element v-else-if="message.type === TIM.TYPES.MSG_IMAGE" :payload="message.payload" />
+      <file-element v-else-if="message.type === TIM.TYPES.MSG_FILE" :payload="message.payload" />
+      <sound-element v-else-if="message.type === TIM.TYPES.MSG_SOUND" :payload="message.payload" />
+      <group-tip-element v-else-if="message.type===TIM.TYPES.MSG_GRP_TIP" :payload="message.payload" />
       <group-system-notice-element
-        v-else-if="message.type === 'TIMGroupSystemNoticeElem'"
+        v-else-if="message.type === TIM.TYPES.MSG_GRP_SYS_NOTICE"
         :payload="message.payload"
         :message="message"
       />
-      <custom-element v-else-if="message.type === 'TIMCustomElem'" :payload="message.payload" />
+      <custom-element v-else-if="message.type === TIM.TYPES.MSG_CUSTOM" :payload="message.payload" />
+      <face-element v-else-if="message.type === TIM.TYPES.MSG_FACE" :payload="message.payload"/>
+      <span v-else>暂未支持的消息类型：{{message.type}}</span>
     </div>
   </div>
 </template>
@@ -27,6 +29,7 @@ import { mapState } from 'vuex'
 import MessageStatusIcon from './message-status-icon.vue'
 import MessageHeader from './message-header'
 import FileElement from './message-elements/file-element.vue'
+import FaceElement from './message-elements/face-element.vue'
 import ImageElement from './message-elements/image-element.vue'
 import TextElement from './message-elements/text-element.vue'
 import SoundElement from './message-elements/sound-element.vue'
@@ -45,6 +48,7 @@ export default {
     MessageHeader,
     MessageStatusIcon,
     FileElement,
+    FaceElement,
     ImageElement,
     TextElement,
     SoundElement,

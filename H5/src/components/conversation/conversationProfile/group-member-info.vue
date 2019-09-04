@@ -61,7 +61,7 @@ export default {
     }),
     // 是否显示踢出群成员按钮
     showKickout() {
-      return ['Owner', 'Admin'].includes(this.currentConversation.groupProfile.selfInfo.role) && this.isMine
+      return (this.isOwner || this.isAdmin) && !this.isMine
     },
     isOwner() {
       return this.currentConversation.groupProfile.selfInfo.role === 'Owner'
