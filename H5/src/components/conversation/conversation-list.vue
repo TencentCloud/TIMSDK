@@ -40,7 +40,8 @@ export default {
   data() {
     return {
       showDialog: false,
-      userID: ''
+      userID: '',
+      isCheckouting: false // 是否正在切换会话
     }
   },
   computed: {
@@ -48,6 +49,12 @@ export default {
       conversationList: state => state.conversation.conversationList,
       currentConversation: state => state.conversation.currentConversation
     })
+  },
+  mounted() {
+    window.addEventListener('keydown', this.handleKeydown)
+  },
+  destroyed() {
+    window.removeEventListener('keydown', this.handleKeydown)
   },
   methods: {
     handleRefresh() {
@@ -57,9 +64,56 @@ export default {
       this.showDialog = true
     },
     handleConfirm() {
-      this.$store.dispatch('checkoutConversation', `C2C${this.userID}`).then(() => {
-        this.showDialog = false
-      })
+      this.$store
+        .dispatch('checkoutConversation', `C2C${this.userID}`)
+        .then(() => {
+          this.showDialog = false
+        })
+    },
+    handleKeydown(event) {
+      if (event.keyCode !== 38 && event.keyCode !== 40 || this.isCheckouting) {
+        return
+      }
+      const currentIndex = this.conversationList.findIndex(
+        item => item.conversationID === this.currentConversation.conversationID
+      )
+      if (event.keyCode === 38 && currentIndex - 1 >= 0) {
+        this.checkoutPrev(currentIndex)
+      }
+      if (
+        event.keyCode === 40 &&
+        currentIndex + 1 < this.conversationList.length
+      ) {
+        this.checkoutNext(currentIndex)
+      }
+    },
+    checkoutPrev(currentIndex) {
+      this.isCheckouting = true
+      this.$store
+        .dispatch(
+          'checkoutConversation',
+          this.conversationList[currentIndex - 1].conversationID
+        )
+        .then(() => {
+          this.isCheckouting = false
+        })
+        .catch(() => {
+          this.isCheckouting = false
+        })
+    },
+    checkoutNext(currentIndex) {
+      this.isCheckouting = true
+      this.$store
+        .dispatch(
+          'checkoutConversation',
+          this.conversationList[currentIndex + 1].conversationID
+        )
+        .then(() => {
+          this.isCheckouting = false
+        })
+        .catch(() => {
+          this.isCheckouting = false
+        })
     }
   }
 }

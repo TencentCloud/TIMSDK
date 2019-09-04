@@ -140,6 +140,7 @@ const conversationModules = {
      * @param {String} conversationID
      */
     checkoutConversation(context, conversationID) {
+      context.commit('resetCurrentMemberList')
       // 1.切换会话前，将切换前的会话进行已读上报
       if (context.state.currentConversation.conversationID) {
         const prevConversationID = context.state.currentConversation.conversationID
@@ -153,6 +154,10 @@ const conversationModules = {
         context.commit('updateCurrentConversation', data.conversation)
         // 3.2 获取消息列表
         context.dispatch('getMessageList', conversationID)
+        // 3.3 拉取第一页群成员列表
+        if (data.conversation.type === TIM.TYPES.CONV_GROUP) {
+          return context.dispatch('getGroupMemberList', data.conversation.groupProfile.groupID)
+        }
         return Promise.resolve()
       })
     }
