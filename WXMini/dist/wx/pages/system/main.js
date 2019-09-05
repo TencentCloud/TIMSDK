@@ -56,6 +56,7 @@ global.webpackJsonpMpvue([2],{
   },
   onUnload: function onUnload() {
     this.$store.commit('resetCurrentConversation');
+    this.$store.commit('resetGroup');
   },
 
   computed: __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_extends___default()({}, Object(__WEBPACK_IMPORTED_MODULE_2_vuex__["b" /* mapState */])({

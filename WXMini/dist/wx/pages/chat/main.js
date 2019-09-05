@@ -202,6 +202,8 @@ var Component = normalizeComponent(
 //
 //
 //
+//
+//
 
 
 
@@ -392,7 +394,6 @@ var audioContext = wx.createInnerAudioContext();
       });
       downloadTask.onProgressUpdate(function (res) {
         that.percent = res.progress;
-        console.log(res.progress);
       });
     },
 
@@ -585,7 +586,6 @@ var audioContext = wx.createInnerAudioContext();
 
     // 播放音频
     openAudio: function openAudio(audio) {
-      console.log(audio, this.sysInfo);
       var that = this;
       audioContext.src = audio.url;
       audioContext.play();
@@ -802,7 +802,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       staticClass: "content"
     }, [_c('div', {
       staticClass: "name"
-    }, [_vm._v("\n              " + _vm._s(message.from) + "\n            ")]), _vm._v(" "), (message.type === 'TIMTextElem') ? _c('div', {
+    }, [_vm._v("\n              " + _vm._s(message.nick || message.from) + "\n            ")]), _vm._v(" "), (message.type === 'TIMTextElem') ? _c('div', {
       staticClass: "message"
     }, [_c('div', {
       staticClass: "text-message"
@@ -900,11 +900,19 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       staticClass: "message"
     }, [_c('div', {
       staticClass: "custom-elem"
-    }, [_vm._v("[FaceElem暂未解析]")])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    }, [_c('image', {
+      staticStyle: {
+        "height": "90px",
+        "width": "90px"
+      },
+      attrs: {
+        "src": 'https://imgcache.qq.com/open/qcloud/tim/assets/face-elem/' + message.payload.data + '.png'
+      }
+    })])]) : _vm._e()]), _vm._v(" "), _c('div', {
       staticClass: "avatar"
     }, [_c('i-avatar', {
       attrs: {
-        "src": "../../../static/images/header.png",
+        "src": message.avatar || '../../../static/images/header.png',
         "shape": "square",
         "mpcomid": '3_' + index
       }

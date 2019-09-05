@@ -561,7 +561,6 @@ var Component = normalizeComponent(
             memberList: list
           };
         }
-        console.log(options);
         wx.$app.createGroup(options).then(function () {
           _this.$store.commit('showToast', {
             title: '创建成功',
@@ -601,7 +600,6 @@ var Component = normalizeComponent(
         wx.$app.getUserProfile({
           userIDList: [this.addUserId]
         }).then(function (res) {
-          console.log(122, res);
           _this2.addUserId = '';
           if (res.data.length > 0) {
             _this2.handleModalShow();

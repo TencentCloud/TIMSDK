@@ -134,6 +134,7 @@ global.webpackJsonpMpvue([8],{
         this.$store.commit('offAtRemind', item);
       }
       this.$store.commit('resetCurrentConversation');
+      this.$store.commit('resetGroup');
       this.setMessageRead(item);
       wx.$app.getConversationProfile(item.conversationID).then(function (res) {
         _this.$store.commit('updateCurrentConversation', res.data.conversation);
@@ -154,6 +155,7 @@ global.webpackJsonpMpvue([8],{
       var _this2 = this;
 
       this.$store.commit('resetCurrentConversation');
+      this.$store.commit('resetGroup');
       this.setMessageRead(item);
       wx.$app.getConversationProfile(item.conversationID).then(function (res) {
         _this2.$store.commit('updateCurrentConversation', res.data.conversation);

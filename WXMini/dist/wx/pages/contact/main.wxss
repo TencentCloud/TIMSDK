@@ -1,7 +1,6 @@
 
 .line.data-v-6b29caac {
   line-height: 120rpx;
-  border-bottom: 2rpx solid #e9eaec;
 }
 .container.data-v-6b29caac {
   background: #f8f8f9;
