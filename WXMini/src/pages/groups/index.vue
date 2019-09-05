@@ -30,7 +30,6 @@ export default {
   },
   methods: {
     startConversation (item) {
-      console.log(item)
       let conversationID = this.TIM.TYPES.CONV_GROUP + item.groupID
       wx.$app.getConversationProfile(conversationID)
         .then((res) => {

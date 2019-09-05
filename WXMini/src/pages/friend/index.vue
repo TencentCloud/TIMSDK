@@ -51,7 +51,6 @@ export default {
           userIDList: [this.id]
         }
         wx.$app.getUserProfile(option).then((res) => {
-          console.log(res)
           if (res.data.length > 0) {
             const message = wx.$app.createTextMessage({
               to: this.id,
@@ -62,6 +61,7 @@ export default {
               let conversationID = this.TIM.TYPES.CONV_C2C + this.id
               wx.$app.getConversationProfile(conversationID).then((res) => {
                 this.$store.commit('resetCurrentConversation')
+                this.$store.commit('resetGroup')
                 this.$store.commit('updateCurrentConversation', res.data.conversation)
                 this.$store.dispatch('getMessageList', conversationID)
                 this.content = ''

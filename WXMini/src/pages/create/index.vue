@@ -162,7 +162,6 @@ export default {
             memberList: list
           }
         }
-        console.log(options)
         wx.$app.createGroup(options).then(() => {
           this.$store.commit('showToast', {
             title: '创建成功',
@@ -199,7 +198,6 @@ export default {
           .getUserProfile({
             userIDList: [this.addUserId]
           }).then(res => {
-            console.log(122, res)
             this.addUserId = ''
             if (res.data.length > 0) {
               this.handleModalShow()

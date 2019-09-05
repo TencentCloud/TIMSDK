@@ -33,7 +33,7 @@
           </div>
           <div class="content">
             <div class="name">
-              {{message.from}}
+              {{message.nick || message.from}}
             </div>
             <div class="message" v-if="message.type === 'TIMTextElem'">
               <div class="text-message">
@@ -65,11 +65,13 @@
               </div>
             </div>
             <div class="message" v-else-if="message.type === 'TIMFaceElem'">
-              <div class="custom-elem">[FaceElem暂未解析]</div>
+              <div class="custom-elem">
+                <image :src="'https://imgcache.qq.com/open/qcloud/tim/assets/face-elem/' + message.payload.data + '.png'" style="height:90px; width:90px"/>
+              </div>
             </div>
           </div>
           <div class="avatar">
-            <i-avatar src="../../../static/images/header.png" shape="square"/>
+            <i-avatar :src="message.avatar || '../../../static/images/header.png'" shape="square"/>
           </div>
         </div>
       </li>
@@ -336,7 +338,6 @@ export default {
       })
       downloadTask.onProgressUpdate((res) => {
         that.percent = res.progress
-        console.log(res.progress)
       })
     },
     // 群简介或者人简介
@@ -514,7 +515,6 @@ export default {
     },
     // 播放音频
     openAudio (audio) {
-      console.log(audio, this.sysInfo)
       let that = this
       audioContext.src = audio.url
       audioContext.play()

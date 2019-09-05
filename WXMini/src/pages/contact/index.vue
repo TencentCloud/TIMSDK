@@ -71,7 +71,7 @@
         </i-row>
       </div>
       <div class="item" @click="toGroupList()">
-        <i-row>
+        <i-row style="border-bottom: 1px solid #e9eaec">
           <i-col span="4">
             <div style="padding: 10px">
               <i-avatar shape="square" size="large" src="../../../static/images/contact.png" />
@@ -135,8 +135,7 @@ export default {
           }
           this.handleApplyModal()
         })
-        .catch(error => {
-          console.log(error)
+        .catch(() => {
           this.$store.commit('showToast', {
             title: '加群失败'
           })
@@ -233,7 +232,6 @@ export default {
 <style lang='stylus' scoped>
 .line
   line-height 60px
-  border-bottom 1px solid $border-light
 .container
   background $background
   width 100%
