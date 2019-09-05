@@ -58,8 +58,9 @@ export default {
       // SDK NOT READT
       this.tim.on(this.TIM.EVENT.SDK_NOT_READY, this.onReadyStateUpdate, this)
       // 被踢出
-      this.tim.on(this.TIM.EVENT.KICKED_OUT, () => {
-        this.$message.error('被踢出，请重新登录。')
+      this.tim.on(this.TIM.EVENT.KICKED_OUT, ({data:{type}}) => {
+        const message = type === this.TIM.TYPES.KICKED_OUT_MULT_ACCOUNT ? '您的账号已在其他页面登录' : '您的账号已在其他设备登录'
+        this.$message.error(message)
         this.$store.commit('toggleIsLogin', false)
         this.$store.commit('reset')
       })
@@ -98,7 +99,6 @@ export default {
     onReceiveMessage({ data: messageList }) {
       this.handleAt(messageList)
       this.$store.commit('pushCurrentMessageList', messageList)
-      this.$bus.$emit('scroll-bottom')
     },
     onError({ data: error }) {
       this.$message.error(error.message)
@@ -180,12 +180,15 @@ export default {
 </script>
 
 <style>
+html {
+  font-size: 10px;
+}
 body {
   margin: 0;
   background-color: #232329;
   color: #fcfcfc;
-  padding: 1em;
-  font-size: 1em;
+  padding: 1.6em;
+  font-size: 1.6em;
 }
 #tim-demo-wrapper {
   display: flex;
