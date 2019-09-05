@@ -35,7 +35,7 @@ export default {
 
 <style scoped>
 .dice {
-  font-size: 32px;
+  font-size: 3.2rem;
   color: #fff;
   background: #000;
 }

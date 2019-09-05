@@ -196,7 +196,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 5px;
-  font-size: 12px;
+  font-size: 1.2rem;
   text-align: center;
   border-radius: 10px;
   border: #ccc 1px solid;

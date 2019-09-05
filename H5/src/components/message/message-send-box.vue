@@ -276,7 +276,7 @@ export default {
 }
 .send-header-bar i {
   cursor: pointer;
-  font-size: 20px;
+  font-size: 2.0rem;
   color: gray;
   margin: 0 6px;
 }
