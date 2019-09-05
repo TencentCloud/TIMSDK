@@ -40,6 +40,7 @@ export default {
   },
   onUnload () {
     this.$store.commit('resetCurrentConversation')
+    this.$store.commit('resetGroup')
   },
   computed: {
     ...mapState({
