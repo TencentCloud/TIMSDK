@@ -28,10 +28,7 @@ export default {
   methods: {
     handleGroupClick() {
       const conversationID = `GROUP${this.group.groupID}`
-      this.tim.getConversationProfile(conversationID).then(({ data: { conversation } }) => {
-        this.$store.commit('updateCurrentConversation', conversation)
-        this.$store.dispatch('getMessageList', conversation.conversationID)
-      })
+      this.$store.dispatch('checkoutConversation', conversationID)
     },
     quitGroup() {
       this.tim.quitGroup(this.group.groupID)
