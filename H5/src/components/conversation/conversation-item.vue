@@ -215,7 +215,7 @@ export default {
 }
 .message-time {
   color: gray;
-  font-size: 14px;
+  font-size: 1.4rem;
   white-space: nowrap;
 }
 </style>

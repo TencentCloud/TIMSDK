@@ -18,7 +18,7 @@
       {{ member.nameCard || '暂无' }}
       <el-popover title="修改群名片" v-model="nameCardPopoverVisible" v-show="showEditNameCard">
         <el-input v-model="nameCard" placeholder="请输入群名片" @keydown.enter.native="setGroupMemberNameCard" />
-        <i class="el-icon-edit" title="修改群名片" slot="reference" style="cursor:pointer; font-size:16px;"></i>
+        <i class="el-icon-edit" title="修改群名片" slot="reference" style="cursor:pointer; font-size:1.6rem;"></i>
       </el-popover>
     </div>
     <div>

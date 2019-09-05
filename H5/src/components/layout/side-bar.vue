@@ -141,7 +141,7 @@ export default {
 
 <style scoped>
 .iconfont {
-  font-size: 24px;
+  font-size: 2.4rem;
   cursor: pointer;
   color: gray;
   margin: 8px 0;
@@ -150,7 +150,7 @@ export default {
   position: absolute;
   margin-left: -12px;
   bottom: 30px;
-  font-size: 24px;
+  font-size: 2.4rem;
   color: gray;
   cursor: pointer;
 }

@@ -112,7 +112,7 @@ export default {
   display: block;
 }
 .create-group-button {
-  font-size: 20px;
+  font-size: 2rem;
   background: #fff;
   color: gray;
   padding: 3px;
