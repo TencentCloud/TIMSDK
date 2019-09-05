@@ -4,7 +4,7 @@
       <img
         class="image-preview"
         :style="{transform: `scale(${zoom}) rotate(${rotate}deg)`}"
-        :src="formatUrl(imgUrlList[index])"
+        :src="previewUrl"
         @click="close"
       />
     </div>
@@ -44,19 +44,18 @@ export default {
       return {
         transform: `scale(${this.zoom});`
       }
+    },
+    previewUrl() {
+      return this.formatUrl(this.imgUrlList[this.index])
     }
   },
   mounted() {
     this.$bus.$on('image-preview', this.handlePreview)
   },
-  watch: {
-    url(next) {
-      this.index = this.imgUrlList.findIndex(item => item === next)
-    }
-  },
   methods: {
     handlePreview({ url }) {
       this.url = url
+      this.index = this.imgUrlList.findIndex(item => item === url)
       this.visible = true
     },
     handleMouseWheel(event) {
@@ -117,7 +116,7 @@ export default {
 
 .close-button {
   cursor: pointer;
-  font-size: 28px;
+  font-size: 2.8rem;
   color: #000;
   position: fixed;
   top: 50px;
@@ -150,7 +149,7 @@ export default {
   background: rgba(255, 255, 255, 0.8);
 }
 .actions-bar i {
-  font-size: 24px;
+  font-size: 2.4rem;
   cursor: pointer;
   margin: 0 6px;
 }
@@ -161,7 +160,7 @@ export default {
   cursor: pointer;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
-  font-size: 24px;
+  font-size: 2.4rem;
   padding: 12px;
 }
 .prev-button {
