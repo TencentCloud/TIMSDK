@@ -106,7 +106,7 @@ export default {
   margin-left: 12px;
 }
 .file-size {
-  font-size: 14px;
+  font-size: 1.4rem;
   color: gray;
 }
 .download-link {
