@@ -15,7 +15,6 @@
             showEditFaceUrl = true
             inputFocus('editFaceUrl')
           "
-          style="cursor:pointer; font-size:16px;"
         />
       </div>
       <div class="content" v-if="!showEditFaceUrl" style="display:flex;align-items:center;">
@@ -46,13 +45,10 @@
             showEditName = true
             inputFocus('editName')
           "
-          style="cursor:pointer; font-size:16px;"
         />
       </div>
 
-      <div class="content text-ellipsis" v-if="!showEditName">
-        {{ groupProfile.name || '暂无' }}
-      </div>
+      <div class="content text-ellipsis" v-if="!showEditName">{{ groupProfile.name || '暂无' }}</div>
       <el-input
         ref="editName"
         v-else
@@ -73,12 +69,12 @@
             showEditIntroduction = true
             inputFocus('editIntroduction')
           "
-          style="cursor:pointer; font-size:16px;"
         />
       </div>
-      <div class="content text-ellipsis" v-if="!showEditIntroduction">
-        {{ groupProfile.introduction || '暂无' }}
-      </div>
+      <div
+        class="content text-ellipsis"
+        v-if="!showEditIntroduction"
+      >{{ groupProfile.introduction || '暂无' }}</div>
       <el-input
         ref="editIntroduction"
         v-else
@@ -99,12 +95,12 @@
             showEditNotification = true
             inputFocus('editNotification')
           "
-          style="cursor:pointer; font-size:16px;"
         />
       </div>
-      <div class="content text-ellipsis" v-if="!showEditNotification">
-        {{ groupProfile.notification || '暂无' }}
-      </div>
+      <div
+        class="content text-ellipsis"
+        v-if="!showEditNotification"
+      >{{ groupProfile.notification || '暂无' }}</div>
 
       <el-input
         ref="editNotification"
@@ -121,17 +117,14 @@
         申请加群方式
         <i
           class="el-icon-edit"
-          v-if="editable"
+          v-if="joinOptionEditable"
           @click="
             showEditJoinOption = true
             inputFocus('editJoinOption')
           "
-          style="cursor:pointer; font-size:16px;"
         />
       </div>
-      <div class="content" v-show="!showEditJoinOption">
-        {{ joinOptionMap[groupProfile.joinOption] }}
-      </div>
+      <div class="content" v-show="!showEditJoinOption">{{ joinOptionMap[groupProfile.joinOption] }}</div>
       <el-select
         ref="editJoinOption"
         v-model="joinOption"
@@ -156,12 +149,12 @@
             showEditMessageRemindType = true
             inputFocus('editMessageRemindType')
           "
-          style="cursor:pointer; font-size:16px;"
         />
       </div>
-      <div class="content" v-show="!showEditMessageRemindType">
-        {{ messageRemindTypeMap[this.groupProfile.selfInfo.messageRemindType] }}
-      </div>
+      <div
+        class="content"
+        v-show="!showEditMessageRemindType"
+      >{{ messageRemindTypeMap[this.groupProfile.selfInfo.messageRemindType] }}</div>
       <el-select
         ref="editMessageRemindType"
         v-show="showEditMessageRemindType"
@@ -176,7 +169,7 @@
         <el-option label="屏蔽消息" value="Discard"></el-option>
       </el-select>
     </div>
-    <div class="info-item">
+    <!-- <div class="info-item">
       <div class="label">
         我的群名片
         <i
@@ -185,7 +178,6 @@
             showEditNameCard = true
             inputFocus('editNameCard')
           "
-          style="cursor:pointer; font-size:16px;"
         />
       </div>
       <div class="content cursor-pointer" v-if="!showEditNameCard">
@@ -200,7 +192,7 @@
         @blur="showEditNameCard = false"
         @keydown.enter.native="editNameCard"
       />
-    </div>
+    </div>-->
     <div v-if="isOwner">
       <el-button type="text" @click="showChangeGroupOwner = true">转让群组</el-button>
       <el-input
@@ -266,6 +258,12 @@ export default {
       return (
         this.groupProfile.type === this.TIM.TYPES.GRP_PRIVATE ||
         ['Owner', 'Admin'].includes(this.groupProfile.selfInfo.role)
+      )
+    },
+    joinOptionEditable() {
+      // 只有公开群才能修改 joinOption
+      return (
+        this.editable && this.groupProfile.type === this.TIM.TYPES.GRP_PUBLIC
       )
     },
     isOwner() {
@@ -367,26 +365,31 @@ export default {
         })
     },
     quitGroup() {
-      this.tim.quitGroup(this.groupProfile.groupID).then(({ data: { groupID } }) => {
-        this.$message({
-          message: '退群成功',
-          type: 'success'
+      this.tim
+        .quitGroup(this.groupProfile.groupID)
+        .then(({ data: { groupID } }) => {
+          this.$message({
+            message: '退群成功',
+            type: 'success'
+          })
+          if (groupID === this.groupProfile.groupID) {
+            this.$store.commit('resetCurrentConversation')
+          }
         })
-        if (groupID === this.groupProfile.groupID) {
-          this.$store.commit('resetCurrentConversation')
-        }
-      })
     },
     dismissGroup() {
-      this.tim.dismissGroup(this.groupProfile.groupID).then(({ data: { groupID } }) => {
-        this.$message({
-          message: `群：${this.groupProfile.name || this.groupProfile.groupID}解散成功！`,
-          type: 'success'
+      this.tim
+        .dismissGroup(this.groupProfile.groupID)
+        .then(({ data: { groupID } }) => {
+          this.$message({
+            message: `群：${this.groupProfile.name ||
+              this.groupProfile.groupID}解散成功！`,
+            type: 'success'
+          })
+          if (groupID === this.groupProfile.groupID) {
+            this.$store.commit('resetCurrentConversation')
+          }
         })
-        if (groupID === this.groupProfile.groupID) {
-          this.$store.commit('resetCurrentConversation')
-        }
-      })
     },
     editMessageRemindType() {
       this.tim
@@ -426,5 +429,9 @@ export default {
 }
 .cursor-pointer {
   cursor: pointer;
+}
+.el-icon-edit {
+  cursor: pointer;
+  font-size: 1.6rem;
 }
 </style>
