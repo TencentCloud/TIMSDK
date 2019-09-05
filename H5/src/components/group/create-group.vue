@@ -25,10 +25,7 @@
         <el-input type="textarea" v-model="form.notification" :maxlength="300"></el-input>
       </el-form-item>
       <el-form-item label="加群方式">
-        <el-radio-group
-          v-model="form.joinOption"
-          :disabled="['Private','AVChatRoom'].includes(form.type)"
-        >
+        <el-radio-group v-model="form.joinOption" :disabled="joinOptionDisabled">
           <el-radio label="FreeAccess">自由加群</el-radio>
           <el-radio label="NeedPermission">需要验证</el-radio>
           <el-radio label="DisableApply">禁止加群</el-radio>
@@ -86,14 +83,23 @@ export default {
         avatar: '',
         introduction: '',
         notification: '',
-        joinOption: 'NeedPermission',
+        joinOption: 'FreeAccess',
         memberList: []
       },
-      options:[],
+      options: [],
       loading: false,
       rules: {
         name: [{ required: true, message: '请输入群名称', trigger: 'blur' }]
       }
+    }
+  },
+  computed: {
+    joinOptionDisabled() {
+      return [
+        this.TIM.TYPES.GRP_PRIVATE,
+        this.TIM.TYPES.GRP_CHATROOM,
+        this.TIM.TYPES.GRP_AVCHATROOM
+      ].includes(this.form.type)
     }
   },
   methods: {
@@ -109,11 +115,9 @@ export default {
       this.$store.commit('updateCreateGroupModelVisible', false)
     },
     createGroup() {
-      this.tim
-        .createGroup(this.getOptions())
-        .then(() => {
-          this.closeCreateGroupModel()
-        })
+      this.tim.createGroup(this.getOptions()).then(() => {
+        this.closeCreateGroupModel()
+      })
     },
     getOptions() {
       let options = {
@@ -132,7 +136,7 @@ export default {
           this.options = data.map(item => item.userID)
           this.loading = false
         })
-      } 
+      }
     }
   }
 }
