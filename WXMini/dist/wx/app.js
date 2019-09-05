@@ -1185,10 +1185,17 @@ var conversationModules = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray__ = __webpack_require__("Gu7T");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray__);
+
 var groupModules = {
   state: {
     groupList: [],
-    currentGroupProfile: {}
+    currentGroupProfile: {},
+    currentGroupMemberList: [],
+    offset: 0,
+    count: 15,
+    isLoading: false
   },
   getters: {
     hasGroupList: function hasGroupList(state) {
@@ -1196,8 +1203,14 @@ var groupModules = {
     }
   },
   mutations: {
+    updateOffset: function updateOffset(state) {
+      state.offset += state.count;
+    },
     updateGroupList: function updateGroupList(state, groupList) {
       state.groupList = groupList;
+    },
+    updateCurrentGroupMemberList: function updateCurrentGroupMemberList(state, groupMemberList) {
+      state.currentGroupMemberList = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.currentGroupMemberList), __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(groupMemberList));
     },
     updateCurrentGroupProfile: function updateCurrentGroupProfile(state, groupProfile) {
       state.currentGroupProfile = groupProfile;
@@ -1205,6 +1218,45 @@ var groupModules = {
     resetGroup: function resetGroup(state) {
       state.groupList = [];
       state.currentGroupProfile = {};
+      state.currentGroupMemberList = [];
+      state.offset = 0;
+    }
+  },
+  actions: {
+    getGroupMemberList: function getGroupMemberList(context) {
+      var _context$state = context.state,
+          offset = _context$state.offset,
+          count = _context$state.count,
+          isLoading = _context$state.isLoading,
+          _context$state$curren = _context$state.currentGroupProfile,
+          memberNum = _context$state$curren.memberNum,
+          groupID = _context$state$curren.groupID;
+
+      var notCompleted = offset < memberNum;
+      if (notCompleted) {
+        if (!isLoading) {
+          context.state.isLoading = true;
+          wx.$app.getGroupMemberList({ groupID: groupID, offset: offset, count: count }).then(function (res) {
+            context.commit('updateCurrentGroupMemberList', res.data.memberList);
+            context.commit('updateOffset');
+            context.state.isLoading = false;
+          }).catch(function (err) {
+            console.log(err);
+          });
+        } else {
+          wx.showToast({
+            title: '你拉的太快了',
+            icon: 'none',
+            duration: 500
+          });
+        }
+      } else {
+        wx.showToast({
+          title: '没有更多啦',
+          icon: 'none',
+          duration: 1500
+        });
+      }
     }
   }
 };
