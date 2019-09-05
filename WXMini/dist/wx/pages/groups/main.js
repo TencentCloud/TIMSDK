@@ -99,7 +99,6 @@ var Component = normalizeComponent(
     startConversation: function startConversation(item) {
       var _this = this;
 
-      console.log(item);
       var conversationID = this.TIM.TYPES.CONV_GROUP + item.groupID;
       wx.$app.getConversationProfile(conversationID).then(function (res) {
         _this.$store.commit('updateCurrentConversation', res.data.conversation);

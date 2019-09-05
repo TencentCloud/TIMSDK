@@ -119,7 +119,6 @@ var Component = normalizeComponent(
           userIDList: [this.id]
         };
         wx.$app.getUserProfile(option).then(function (res) {
-          console.log(res);
           if (res.data.length > 0) {
             var message = wx.$app.createTextMessage({
               to: _this.id,
@@ -130,6 +129,7 @@ var Component = normalizeComponent(
               var conversationID = _this.TIM.TYPES.CONV_C2C + _this.id;
               wx.$app.getConversationProfile(conversationID).then(function (res) {
                 _this.$store.commit('resetCurrentConversation');
+                _this.$store.commit('resetGroup');
                 _this.$store.commit('updateCurrentConversation', res.data.conversation);
                 _this.$store.dispatch('getMessageList', conversationID);
                 _this.content = '';

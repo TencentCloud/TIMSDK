@@ -2,7 +2,6 @@
   "navigationBarTitleText": "详细信息",
   "navigationBarBackgroundColor": "#E7E9EA",
   "backgroundColor": "#e6e6e6",
-  "disableScroll": true,
   "usingComponents": {
     "i-input": "../../../static/iview/input/index",
     "i-avatar": "../../../static/iview/avatar/index",
