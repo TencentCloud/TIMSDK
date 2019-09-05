@@ -15,9 +15,6 @@
             <el-radio :label="TIM.TYPES.GENDER_UNKNOWN">不显示</el-radio>
           </el-radio-group>
         </el-form-item>
-        <!-- <el-form-item label="生日">
-          <el-date-picker v-model="form.birthday" placeholder="选择生日" />
-        </el-form-item> -->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showEditMyProfile = false">取 消</el-button>
@@ -27,7 +24,13 @@
     <el-popover :width="200" trigger="click" placement="right">
       <profile-card :profile="currentUserProfile" />
       <el-button type="text" @click="handleEdit">编辑</el-button>
-      <avatar shape="square" slot="reference" :src="currentUserProfile.avatar" text="U" class="my-avatar" />
+      <avatar
+        shape="square"
+        slot="reference"
+        :src="currentUserProfile.avatar"
+        text="U"
+        class="my-avatar"
+      />
     </el-popover>
   </div>
 </template>
@@ -49,7 +52,7 @@ export default {
   data() {
     return {
       showEditMyProfile: false,
-      form: { avatar: '', nick: '', gender: '', birthday: '' }
+      form: { avatar: '', nick: '', gender: '' }
     }
   },
   computed: {
@@ -70,20 +73,26 @@ export default {
   },
   methods: {
     editMyProfile() {
-      const { avatar, nick, gender } = this.form
+      const options = {}
+      // 过滤空串
+      Object.keys(this.form).forEach(key => {
+        if (this.form[key]) {
+          options[key] = this.form[key]
+        }
+      })
       this.tim
-        .updateMyProfile({
-          avatar,
-          nick,
-          gender
-        })
+        .updateMyProfile(options)
         .then(() => {
           this.$message({ message: '修改成功', type: 'success' })
           this.showEditMyProfile = false
         })
+        .catch(imError => {
+          this.$message.error(imError.message)
+        })
     },
     handleEdit() {
-      Object.assign(this.form, this.currentUserProfile)
+      const { avatar, nick, gender } = this.currentUserProfile
+      Object.assign(this.form, { avatar, nick, gender })
       this.showEditMyProfile = true
     }
   }
