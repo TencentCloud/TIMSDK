@@ -33,7 +33,14 @@
       <i-row>
         <i-col span="22">
           <div class="member">
-            群成员
+            <div class="member-list">
+              群成员
+            </div>
+            <div @click="handleModalShow()"  v-if="currentGroupProfile.type === 'Private'" style="padding-left: 10px">
+              <image
+                style="width:20px;height:20px;border-radius:50%"
+                src="/static/images/more.png" />
+            </div>
           </div>
         </i-col>
         <i-col span="2">
@@ -41,22 +48,6 @@
             <image
               style="width:20px;height:20px;border-radius:50%"
               src="/static/images/right.png" />
-          </div>
-        </i-col>
-      </i-row>
-      <i-row>
-        <i-col span="3" v-if="currentGroupProfile.type === 'Private'">
-          <div class="avatar-list" @click="handleModalShow()">
-            <image
-              style="width:30px;height:30px;border-radius:50%"
-              src="/static/images/more.png" />
-          </div>
-        </i-col>
-        <i-col span="3" v-for="(person, index) in groupProfile.memberList" :key="index">
-          <div class="avatar-list">
-            <image
-              style="width:30px;height:30px;border-radius:50%"
-              :src="person.avatar || '/static/images/header.png'" />
           </div>
         </i-col>
       </i-row>
@@ -115,20 +106,10 @@ export default {
       }
     }),
     isMyRoleOwner () {
-      let myID = this.$store.state.user.myInfo.userID
-      if (this.currentGroupProfile.memberList) {
-        let myRole = this.currentGroupProfile.memberList.filter(item => item.userID === myID)[0].role
-        return myRole === this.$type.GRP_MBR_ROLE_OWNER
-      }
-      return null
+      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_OWNER
     },
     isMyRoleAdmin () {
-      let myID = this.$store.state.user.myInfo.userID
-      if (this.currentGroupProfile.memberList) {
-        let myRole = this.currentGroupProfile.memberList.filter(item => item.userID === myID)[0].role
-        return myRole === this.$type.GRP_MBR_ROLE_ADMIN
-      }
-      return null
+      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_ADMIN
     }
   },
   onShow () {
@@ -144,6 +125,7 @@ export default {
             type: 'success'
           })
           this.$store.commit('resetCurrentConversation')
+          this.$store.commit('resetGroup')
           wx.switchTab({
             url: '../index/main'
           })
@@ -174,8 +156,17 @@ export default {
     },
     // 所有成员页
     allMember () {
-      let url = '../members/main'
-      wx.navigateTo({url})
+      let count = this.$store.state.group.count
+      wx.$app.getGroupMemberList({
+        groupID: this.currentGroupProfile.groupID,
+        offset: 0,
+        count: count
+      }).then((res) => {
+        this.$store.commit('updateCurrentGroupMemberList', res.data.memberList)
+        this.$store.commit('updateOffset')
+        let url = '../members/main'
+        wx.navigateTo({url})
+      })
     },
     // 退出群聊
     quitGroup () {
@@ -186,6 +177,7 @@ export default {
           duration: 1500
         })
         this.$store.commit('resetCurrentConversation')
+        this.$store.commit('resetGroup')
         wx.switchTab({
           url: '../index/main'
         })
@@ -256,6 +248,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.member-list
+  color $base
+  font-weight 500
 .manage
   color $dark-primary
   border-radius 8px
@@ -283,6 +278,7 @@ export default {
   background-color white
   margin-bottom -1px
 .member
+  display flex
   padding-top 10px
   padding-bottom 10px
 .avatar
