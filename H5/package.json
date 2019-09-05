@@ -1,6 +1,6 @@
 {
   "name": "timsdk-demo",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": true,
   "scripts": {
     "start": "node node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
