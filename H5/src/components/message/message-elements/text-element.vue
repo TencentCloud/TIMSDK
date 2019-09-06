@@ -37,7 +37,8 @@ export default {
   max-width: 300px;
   border: 1px solid rgb(235, 235, 235);
   border-radius: 3px;
-  word-break: break-word;
+  word-wrap:break-word;
+  word-break:break-all;
 }
 .text-element {
   padding: 6px;
