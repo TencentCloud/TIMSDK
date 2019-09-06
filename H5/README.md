@@ -109,6 +109,14 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### Change Log
 
+#### 2019/09/06
+
+**Bug Fixes**
+
+- 修复 IE 下超长文本消息的显示超出会话框的问题
+- 修复重发消息失败时无错误提示的问题
+
+
 #### 2019/09/05
 
 **Bug Fixes**
