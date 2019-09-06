@@ -30,7 +30,9 @@ export default {
   methods: {
     handleIconClick() {
       if (this.messageIconClass === 'message-send-fail') {
-        this.tim.resendMessage(this.message)
+        this.tim.resendMessage(this.message).catch(imError => {
+          this.$message.error(imError.message)
+        })
       }
     }
   }
