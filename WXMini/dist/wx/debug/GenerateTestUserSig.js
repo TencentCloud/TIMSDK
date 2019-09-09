@@ -1,12 +1,12 @@
 global.webpackJsonpMpvue([17],{
 
-/***/ "fUtS":
+/***/ "dutN":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _SDKAPPID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return genTestUserSig; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_generate_test_usersig_es_min_js__ = __webpack_require__("0HKf");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_generate_test_usersig_es_min_js__ = __webpack_require__("n7IX");
 /*eslint-disable*/
 
 
