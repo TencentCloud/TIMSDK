@@ -43,7 +43,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { genTestUserSig } from '../../../static/debug/GenerateTestUserSig'
+import { genTestUserSig } from '../../../static/utils/GenerateTestUserSig'
 export default {
   data () {
     return {
