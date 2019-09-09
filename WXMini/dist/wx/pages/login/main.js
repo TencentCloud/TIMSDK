@@ -10,7 +10,7 @@ global.webpackJsonpMpvue([7],{
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__("Dd8w");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__("NYxO");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_debug_GenerateTestUserSig__ = __webpack_require__("fUtS");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_utils_GenerateTestUserSig__ = __webpack_require__("dutN");
 
 //
 //
@@ -75,7 +75,7 @@ global.webpackJsonpMpvue([7],{
   methods: {
     // 点击登录进行初始化
     handleLogin: function handleLogin() {
-      var options = Object(__WEBPACK_IMPORTED_MODULE_2__static_debug_GenerateTestUserSig__["b" /* genTestUserSig */])(this.userID);
+      var options = Object(__WEBPACK_IMPORTED_MODULE_2__static_utils_GenerateTestUserSig__["b" /* genTestUserSig */])(this.userID);
       options.runLoopNetType = 0;
       if (options) {
         wx.$app.login({

@@ -597,7 +597,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store_index__ = __webpack_require__("IcnI");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5__ = __webpack_require__("h1dT");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__static_debug_GenerateTestUserSig__ = __webpack_require__("fUtS");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__static_utils_GenerateTestUserSig__ = __webpack_require__("dutN");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_types__ = __webpack_require__("Bbwh");
 
 
@@ -608,7 +608,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 var tim = __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.create({
-  SDKAppID: __WEBPACK_IMPORTED_MODULE_5__static_debug_GenerateTestUserSig__["a" /* SDKAPPID */]
+  SDKAppID: __WEBPACK_IMPORTED_MODULE_5__static_utils_GenerateTestUserSig__["a" /* SDKAPPID */]
 });
 wx.$app = tim;
 wx.$app.registerPlugin({ 'cos-wx-sdk': __WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5___default.a });

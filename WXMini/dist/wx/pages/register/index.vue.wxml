@@ -1,0 +1,7 @@
+<template name="abd78216"><view class="_div data-v-0cbdecad counter-warp"><view class="_div data-v-0cbdecad login"><view style="margin-bottom: 20px" class="_div data-v-0cbdecad register">
+      注册
+    </view> <view class="_div data-v-0cbdecad item"><view class="_div data-v-0cbdecad label">
+        用户名：
+      </view> <view class="_div data-v-0cbdecad"><input type="text" class="_input data-v-0cbdecad input" placeholder="请输入用户名" value="{{userID}}" bindinput="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" /></view></view> <view class="_div data-v-0cbdecad tip">由英文开始，可使用a~z,A~Z,0~9，长度4~24位</view> <view class="_div data-v-0cbdecad item"><view class="_div data-v-0cbdecad label">
+        密码：
+      </view> <view class="_div data-v-0cbdecad"><input type="password" class="_input data-v-0cbdecad input" minlength="6" placeholder="请输入密码" value="{{password}}" bindinput="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" /></view></view> <view class="_div data-v-0cbdecad tip">最少6位</view></view> <view class="_div data-v-0cbdecad login-button"><i-button bindtap="handleProxy" type="primary" shape="circle" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_i-button data-v-0cbdecad">注册</i-button></view></view></template>
