@@ -4,7 +4,7 @@ import TIM from 'tim-wx-sdk'
 import store from './store/index'
 
 import COS from 'cos-wx-sdk-v5'
-import { SDKAPPID } from '../static/debug/GenerateTestUserSig'
+import { SDKAPPID } from '../static/utils/GenerateTestUserSig'
 import TYPES from './utils/types'
 const tim = TIM.create({
   SDKAppID: SDKAPPID
