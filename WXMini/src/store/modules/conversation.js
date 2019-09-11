@@ -8,7 +8,6 @@ const conversationModules = {
     currentConversation: {}, // 当前聊天对话信息
     currentMessageList: [], // 当前聊天消息列表
     nextReqMessageID: '', // 下一条消息标志
-    imageUrls: [], // 当前会话中已加载信息所有的图片链接
     isCompleted: false, // 当前会话消息是否已经请求完毕
     isLoading: false // 是否正在请求
   },
@@ -41,44 +40,29 @@ const conversationModules = {
       return ''
     },
     currentConversation: state => state.currentConversation,
-    currentMessageList: state => state.currentMessageList,
-    imageUrls: state => state.imageUrls
+    currentMessageList: state => state.currentMessageList
   },
   mutations: {
     // 历史头插消息列表
     unshiftMessageList (state, messageList) {
       let list = [...messageList]
-      let urls = []
       for (let i = 0; i < list.length; i++) {
         let message = list[i]
         list[i].virtualDom = decodeElement(message.elements[0])
-        if (message.type === 'TIMImageElem') {
-          let url = message.payload.imageInfoArray[1].url
-          url = url.slice(0, 2) === '//' ? `https:${url}` : url
-          urls.push(url)
-        }
         let date = new Date(message.time * 1000)
         list[i].newtime = formatTime(date)
       }
-      state.imageUrls = [...urls, ...state.imageUrls]
       state.currentMessageList = [...list, ...state.currentMessageList]
     },
     // 收到
     receiveMessage (state, messageList) {
       let list = [...messageList]
-      let urls = []
       for (let i = 0; i < list.length; i++) {
         let item = list[i]
         list[i].virtualDom = decodeElement(item.elements[0])
         let date = new Date(item.time * 1000)
         list[i].newtime = formatTime(date)
-        if (item.type === 'TIMImageElem') {
-          let url = item.elements[0].content.imageInfoArray[1].url
-          url = url.slice(0, 2) === '//' ? `https:${url}` : url
-          urls.push(url)
-        }
       }
-      state.imageUrls = [...state.imageUrls, ...urls]
       state.currentMessageList = [...state.currentMessageList, ...list]
       setTimeout(() => {
         wx.pageScrollTo({
@@ -90,11 +74,6 @@ const conversationModules = {
       message.virtualDom = decodeElement(message.elements[0])
       let date = new Date(message.time * 1000)
       message.newtime = formatTime(date)
-      if (message.type === 'TIMImageElem') {
-        let url = message.payload.imageInfoArray[1].url
-        url = url.slice(0, 2) === '//' ? `https:${url}` : url
-        state.imageUrls.push(url)
-      }
       state.currentMessageList.push(message)
       setTimeout(() => {
         wx.pageScrollTo({
@@ -123,7 +102,6 @@ const conversationModules = {
       state.currentConversation = {} // 当前聊天对话信息
       state.currentMessageList = [] // 当前聊天消息列表
       state.nextReqMessageID = '' // 下一条消息标志
-      state.imageUrls = [] // 当前会话中已加载信息所有的图片链接
       state.isCompleted = false // 当前会话消息是否已经请求完毕
       state.isLoading = false // 是否正在请求
     },

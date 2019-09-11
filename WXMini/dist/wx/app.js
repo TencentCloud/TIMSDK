@@ -940,7 +940,6 @@ var conversationModules = {
     currentConversation: {}, // 当前聊天对话信息
     currentMessageList: [], // 当前聊天消息列表
     nextReqMessageID: '', // 下一条消息标志
-    imageUrls: [], // 当前会话中已加载信息所有的图片链接
     isCompleted: false, // 当前会话消息是否已经请求完毕
     isLoading: false // 是否正在请求
   },
@@ -979,47 +978,30 @@ var conversationModules = {
     },
     currentMessageList: function currentMessageList(state) {
       return state.currentMessageList;
-    },
-    imageUrls: function imageUrls(state) {
-      return state.imageUrls;
     }
   },
   mutations: {
     // 历史头插消息列表
     unshiftMessageList: function unshiftMessageList(state, messageList) {
       var list = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(messageList));
-      var urls = [];
       for (var i = 0; i < list.length; i++) {
         var message = list[i];
         list[i].virtualDom = Object(__WEBPACK_IMPORTED_MODULE_2__utils_decodeElement__["a" /* decodeElement */])(message.elements[0]);
-        if (message.type === 'TIMImageElem') {
-          var url = message.payload.imageInfoArray[1].url;
-          url = url.slice(0, 2) === '//' ? 'https:' + url : url;
-          urls.push(url);
-        }
         var date = new Date(message.time * 1000);
         list[i].newtime = Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* formatTime */])(date);
       }
-      state.imageUrls = [].concat(urls, __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.imageUrls));
       state.currentMessageList = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(list), __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.currentMessageList));
     },
 
     // 收到
     receiveMessage: function receiveMessage(state, messageList) {
       var list = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(messageList));
-      var urls = [];
       for (var i = 0; i < list.length; i++) {
         var item = list[i];
         list[i].virtualDom = Object(__WEBPACK_IMPORTED_MODULE_2__utils_decodeElement__["a" /* decodeElement */])(item.elements[0]);
         var date = new Date(item.time * 1000);
         list[i].newtime = Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* formatTime */])(date);
-        if (item.type === 'TIMImageElem') {
-          var url = item.elements[0].content.imageInfoArray[1].url;
-          url = url.slice(0, 2) === '//' ? 'https:' + url : url;
-          urls.push(url);
-        }
       }
-      state.imageUrls = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.imageUrls), urls);
       state.currentMessageList = [].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(state.currentMessageList), __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(list));
       setTimeout(function () {
         wx.pageScrollTo({
@@ -1031,11 +1013,6 @@ var conversationModules = {
       message.virtualDom = Object(__WEBPACK_IMPORTED_MODULE_2__utils_decodeElement__["a" /* decodeElement */])(message.elements[0]);
       var date = new Date(message.time * 1000);
       message.newtime = Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* formatTime */])(date);
-      if (message.type === 'TIMImageElem') {
-        var url = message.payload.imageInfoArray[1].url;
-        url = url.slice(0, 2) === '//' ? 'https:' + url : url;
-        state.imageUrls.push(url);
-      }
       state.currentMessageList.push(message);
       setTimeout(function () {
         wx.pageScrollTo({
@@ -1067,7 +1044,6 @@ var conversationModules = {
       state.currentConversation = {}; // 当前聊天对话信息
       state.currentMessageList = []; // 当前聊天消息列表
       state.nextReqMessageID = ''; // 下一条消息标志
-      state.imageUrls = []; // 当前会话中已加载信息所有的图片链接
       state.isCompleted = false; // 当前会话消息是否已经请求完毕
       state.isLoading = false; // 是否正在请求
     },

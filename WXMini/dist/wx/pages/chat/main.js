@@ -295,9 +295,6 @@ var audioContext = wx.createInnerAudioContext();
   computed: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapState */])({
     currentMessageList: function currentMessageList(state) {
       return state.conversation.currentMessageList;
-    },
-    imageUrls: function imageUrls(state) {
-      return state.conversation.imageUrls;
     }
   })),
   methods: {
@@ -547,12 +544,9 @@ var audioContext = wx.createInnerAudioContext();
       this.handleClose();
     },
     previewImage: function previewImage(src) {
-      var that = this;
-      var url = src;
-      url = url.slice(0, 2) === '//' ? 'https:' + url : url;
       wx.previewImage({
-        current: url, // 当前显示图片的http链接
-        urls: that.imageUrls // 需要预览的图片http链接列表，当前会话所有图片
+        current: src, // 当前显示图片的http链接
+        urls: [src]
       });
     },
 
