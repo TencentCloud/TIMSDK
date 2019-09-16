@@ -204,11 +204,30 @@ var Component = normalizeComponent(
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 
 var audioContext = wx.createInnerAudioContext();
+var recorderManager = wx.getRecorderManager();
+var recordOptions = {
+  duration: 60000,
+  sampleRate: 44100,
+  numberOfChannels: 1,
+  encodeBitRate: 192000,
+  format: 'mp3'
+};
 /* harmony default export */ __webpack_exports__["a"] = ({
   data: function data() {
     return {
@@ -235,7 +254,9 @@ var audioContext = wx.createInnerAudioContext();
       customDescription: '',
       customExtension: '',
       safeBottom: 34,
-      isIpx: false
+      isIpx: false,
+      isRecord: false,
+      isRecording: false
     };
   },
   onLoad: function onLoad(options) {
@@ -270,6 +291,28 @@ var audioContext = wx.createInnerAudioContext();
       _this.messageContent += user.userID;
       _this.messageContent += ' ';
     });
+    recorderManager.onStart(function () {
+      console.log('recorder start');
+      wx.showLoading({
+        title: '正在录音'
+      });
+    });
+    recorderManager.onPause(function () {
+      console.log('recorder pause');
+    });
+    recorderManager.onStop(function (res) {
+      console.log('recorder stop', res);
+      wx.hideLoading();
+      var message = wx.$app.createSoundMessage({
+        to: _this.$store.getters.toAccount,
+        conversationType: _this.$store.getters.currentConversationType,
+        payload: {
+          file: res
+        }
+      });
+      console.log(121212, message);
+      wx.$app.sendMessage(message);
+    });
   },
 
   // 退出聊天页面的时候所有状态清空
@@ -298,6 +341,67 @@ var audioContext = wx.createInnerAudioContext();
     }
   })),
   methods: {
+    chooseRecord: function chooseRecord() {
+      this.isRecord = !this.isRecord;
+    },
+    startRecording: function startRecording() {
+      var _this2 = this;
+
+      wx.getSetting({
+        success: function success(res) {
+          var auth = res.authSetting['scope.record'];
+          if (auth === false) {
+            // 已申请过授权，但是用户拒绝
+            wx.openSetting({
+              success: function success(res) {
+                var auth = res.authSetting['scope.record'];
+                if (auth === true) {
+                  wx.showToast({
+                    title: '授权成功',
+                    icon: 'success',
+                    duration: 1500
+                  });
+                } else {
+                  wx.showToast({
+                    title: '授权失败',
+                    icon: 'none',
+                    duration: 1500
+                  });
+                }
+              }
+            });
+          } else if (auth === true) {
+            // 用户已经同意授权
+            _this2.isRecording = true;
+            recorderManager.start(recordOptions);
+          } else {
+            // 第一次进来，未发起授权
+            wx.authorize({
+              scope: 'scope.record',
+              success: function success() {
+                wx.showToast({
+                  title: '授权成功',
+                  icon: 'success',
+                  duration: 1500
+                });
+              }
+            });
+          }
+        },
+        fail: function fail() {
+          wx.showToast({
+            title: '授权失败',
+            icon: 'none',
+            duration: 1500
+          });
+        }
+      });
+    },
+    stopRecording: function stopRecording() {
+      this.isRecording = false;
+      recorderManager.stop();
+    },
+
     // 滚动到列表bottom
     scrollToBottom: function scrollToBottom() {
       wx.pageScrollTo({
@@ -396,7 +500,7 @@ var audioContext = wx.createInnerAudioContext();
 
     // 群简介或者人简介
     toDetail: function toDetail() {
-      var _this2 = this;
+      var _this3 = this;
 
       var conversationID = this.$store.state.conversation.currentConversationID;
       this.isGroup = conversationID.indexOf(this.TIM.TYPES.CONV_GROUP) === 0;
@@ -408,17 +512,17 @@ var audioContext = wx.createInnerAudioContext();
         wx.$app.getUserProfile(option).then(function (res) {
           var userProfile = res.data[0];
           switch (userProfile.gender) {
-            case _this2.TIM.TYPES.GENDER_UNKNOWN:
-              userProfile.gender = _this2.$type.GENDER_UNKNOWN;
+            case _this3.TIM.TYPES.GENDER_UNKNOWN:
+              userProfile.gender = _this3.$type.GENDER_UNKNOWN;
               break;
-            case _this2.TIM.TYPES.GENDER_MALE:
-              userProfile.gender = _this2.$type.GENDER_MALE;
+            case _this3.TIM.TYPES.GENDER_MALE:
+              userProfile.gender = _this3.$type.GENDER_MALE;
               break;
-            case _this2.TIM.TYPES.GENDER_FEMALE:
-              userProfile.gender = _this2.$type.GENDER_FEMALE;
+            case _this3.TIM.TYPES.GENDER_FEMALE:
+              userProfile.gender = _this3.$type.GENDER_FEMALE;
               break;
           }
-          _this2.$store.commit('updateUserProfile', userProfile);
+          _this3.$store.commit('updateUserProfile', userProfile);
           var url = '../detail/main';
           wx.navigateTo({ url: url });
         });
@@ -473,7 +577,7 @@ var audioContext = wx.createInnerAudioContext();
 
     // 发送text message 包含 emoji
     sendMessage: function sendMessage() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (!this.isnull(this.messageContent)) {
         var message = wx.$app.createTextMessage({
@@ -484,7 +588,7 @@ var audioContext = wx.createInnerAudioContext();
         var index = this.$store.state.conversation.currentMessageList.length;
         this.$store.commit('sendMessage', message);
         wx.$app.sendMessage(message).catch(function () {
-          _this3.$store.commit('changeMessageStatus', index);
+          _this4.$store.commit('changeMessageStatus', index);
         });
         this.messageContent = '';
       } else {
@@ -918,6 +1022,23 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     })
   }, [_c('div', {
     staticClass: "bottom-div"
+  }, [_c('div', {
+    staticClass: "btn",
+    attrs: {
+      "eventid": '11'
+    },
+    on: {
+      "click": _vm.chooseRecord
+    }
+  }, [_c('image', {
+    staticClass: "btn-small",
+    attrs: {
+      "src": "/static/images/record.png"
+    }
+  })]), _vm._v(" "), (!_vm.isRecord) ? _c('div', {
+    staticStyle: {
+      "width": "80%"
+    }
   }, [_c('input', {
     directives: [{
       name: "model",
@@ -933,7 +1054,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "type": "text",
       "confirm-type": "send",
       "focus": _vm.isFocus,
-      "eventid": '11'
+      "eventid": '12'
     },
     domProps: {
       "value": (_vm.messageContent)
@@ -945,10 +1066,26 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
         _vm.messageContent = $event.target.value
       }
     }
-  }), _vm._v(" "), _c('div', {
+  })]) : _vm._e(), _vm._v(" "), (_vm.isRecord && !_vm.isRecording) ? _c('div', {
+    staticClass: "record",
+    attrs: {
+      "eventid": '13'
+    },
+    on: {
+      "click": _vm.startRecording
+    }
+  }, [_vm._v("\n          点击进行录音\n        ")]) : _vm._e(), _vm._v(" "), (_vm.isRecord && _vm.isRecording) ? _c('div', {
+    staticClass: "record",
+    attrs: {
+      "eventid": '14'
+    },
+    on: {
+      "click": _vm.stopRecording
+    }
+  }, [_vm._v("\n          点击停止录音\n        ")]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "btn",
     attrs: {
-      "eventid": '12'
+      "eventid": '15'
     },
     on: {
       "click": function($event) {
@@ -963,7 +1100,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   })]), _vm._v(" "), _c('div', {
     staticClass: "btn",
     attrs: {
-      "eventid": '13'
+      "eventid": '16'
     },
     on: {
       "click": function($event) {
@@ -984,7 +1121,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       key: emojiItem,
       staticClass: "emoji",
       attrs: {
-        "eventid": '14_' + index3
+        "eventid": '17_' + index3
       },
       on: {
         "click": function($event) {
@@ -1023,7 +1160,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, [_c('div', {
     staticClass: "sending",
     attrs: {
-      "eventid": '15'
+      "eventid": '18'
     },
     on: {
       "click": function($event) {
@@ -1037,7 +1174,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, [_c('div', {
     staticClass: "block",
     attrs: {
-      "eventid": '16'
+      "eventid": '19'
     },
     on: {
       "click": function($event) {
@@ -1049,7 +1186,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, [_vm._v("\n              图片\n            ")])]), _vm._v(" "), _c('div', {
     staticClass: "block",
     attrs: {
-      "eventid": '17'
+      "eventid": '20'
     },
     on: {
       "click": function($event) {
@@ -1061,7 +1198,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, [_vm._v("\n              拍照\n            ")])]), _vm._v(" "), _c('div', {
     staticClass: "block",
     attrs: {
-      "eventid": '18'
+      "eventid": '21'
     },
     on: {
       "click": function($event) {
@@ -1073,7 +1210,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, [_vm._v("\n              自定义消息\n            ")])]), _vm._v(" "), _c('div', {
     staticClass: "block",
     attrs: {
-      "eventid": '19'
+      "eventid": '22'
     },
     on: {
       "click": function($event) {

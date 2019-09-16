@@ -282,3 +282,15 @@ to {
   height: 40rpx;
   line-height: 40rpx;
 }
+.record.data-v-afeb3abc {
+  margin-right: 20rpx;
+  width: 80%;
+  border: 2rpx solid #dddee1;
+  color: #80848f;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+  height: 60rpx;
+  line-height: 60rpx;
+  display: flex;
+  justify-content: center;
+}

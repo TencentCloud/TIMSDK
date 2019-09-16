@@ -610,6 +610,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var tim = __WEBPACK_IMPORTED_MODULE_2_tim_wx_sdk___default.a.create({
   SDKAppID: __WEBPACK_IMPORTED_MODULE_5__static_utils_GenerateTestUserSig__["a" /* SDKAPPID */]
 });
+tim.setLogLevel(0);
 wx.$app = tim;
 wx.$app.registerPlugin({ 'cos-wx-sdk': __WEBPACK_IMPORTED_MODULE_4_cos_wx_sdk_v5___default.a });
 

@@ -10021,20 +10021,20 @@ module.exports = function (it) {
   /**
    * 其他配置常量
    */
-  //sdk版本
+  // sdk版本
   var SDK = {
     VERSION: '1.7.3',
-    //sdk版本号，暂定，此参数影响到后端接口返回的数据
+    // sdk版本号，暂定，此参数影响到后端接口返回的数据
     APPID: '537048168',
-    //web im sdk 版本 APPID
-    PLATFORM: '10' //发送请求时判断其是来自web端的请求
+    // web im sdk 版本 APPID
+    PLATFORM: '10' // 发送请求时判断其是来自web端的请求
 
-  }; //环境配置
+  }; // 环境配置
 
   var PROTOCOL_TYPE = {
     PROTOBUF: 'protobuf',
     JSON: 'json'
-  }; //接口地址配置
+  }; // 接口地址配置
 
   var SERVER = {
     HOST: {
@@ -10048,10 +10048,10 @@ module.exports = function (it) {
        */
       ACCESS_LAYER_TYPES: {
         SANDBOX: 1,
-        //使用沙箱服务器,判断该值时，为服务端返回，只能取1
+        // 使用沙箱服务器,判断该值时，为服务端返回，只能取1
         TEST: 2,
-        //使用测试服务器
-        PRODUCTION: 3 //使用正式环境
+        // 使用测试服务器
+        PRODUCTION: 3 // 使用正式环境
 
       },
 
@@ -10122,26 +10122,26 @@ module.exports = function (it) {
         }
       }
     },
-    //服务名称
+    // 服务名称
     NAME: {
       OPEN_IM: 'openim',
-      //私聊（拉取未读c2c消息，长轮询，c2c消息已读上报等）服务名
+      // 私聊（拉取未读c2c消息，长轮询，c2c消息已读上报等）服务名
       GROUP: 'group_open_http_svc',
-      //群组管理（拉取群消息，创建群，群成员管理，群消息已读上报等）服务名
+      // 群组管理（拉取群消息，创建群，群成员管理，群消息已读上报等）服务名
       FRIEND: 'sns',
-      //关系链管理（好友管理，黑名单管理等）服务名
+      // 关系链管理（好友管理，黑名单管理等）服务名
       PROFILE: 'profile',
-      //资料管理（查询，设置个人资料等）服务名
+      // 资料管理（查询，设置个人资料等）服务名
       RECENT_CONTACT: 'recentcontact',
-      //最近联系人服务名
+      // 最近联系人服务名
       PIC: 'openpic',
-      //图片（或文件）服务名
+      // 图片（或文件）服务名
       BIG_GROUP_NO_AUTH: 'group_open_http_noauth_svc',
-      //直播大群 群组管理（申请加大群）服务名
+      // 直播大群 群组管理（申请加大群）服务名
       BIG_GROUP_LONG_POLLING_NO_AUTH: 'group_open_long_polling_http_noauth_svc',
-      //直播大群 长轮询（拉取消息等）服务名
+      // 直播大群 长轮询（拉取消息等）服务名
       IM_OPEN_STAT: 'imopenstat',
-      //质量上报，统计接口错误率
+      // 质量上报，统计接口错误率
       WEB_IM: 'webim',
       IM_COS_SIGN: 'im_cos_sign_svr'
     },
@@ -10151,78 +10151,78 @@ module.exports = function (it) {
      **/
     CMD: {
       ACCESS_LAYER: 'accesslayer',
-      //获取沙箱
+      // 获取沙箱
       LOGIN: 'login',
-      //登录
+      // 登录
       LOGOUT_LONG_POLL: 'longpollinglogout',
       // 登出
       LOGOUT_ALL: 'logout',
       //
       PORTRAIT_GET: 'portrait_get',
-      //获取个人信息
+      // 获取个人信息
       PORTRAIT_SET: 'portrait_set',
-      //获取个人信息
+      // 获取个人信息
       GET_LONG_POLL_ID: 'getlongpollingid',
       LONG_POLL: 'longpolling',
       // 轮询
       AVCHATROOM_LONG_POLL: 'get_msg',
       // AVChatRoom 长轮询拉消息
       FRIEND_ADD: 'friend_add',
-      //加好友
+      // 加好友
       FRIEND_GET_ALL: 'friend_get_all',
-      //获取所有好友
+      // 获取所有好友
       FRIEND_DELETE: 'friend_delete',
-      //删除好友
+      // 删除好友
       RESPONSE_PENDENCY: 'friend_response',
-      //响应好友申请
+      // 响应好友申请
       GET_PENDENCY: 'pendency_get',
-      //获取未决的好友申请列表
+      // 获取未决的好友申请列表
       DELETE_PENDENCY: 'pendency_delete',
-      //删除好友申请列表
+      // 删除好友申请列表
       GET_BLACKLIST: 'black_list_get',
-      //获取黑名单列表
+      // 获取黑名单列表
       ADD_BLACKLIST: 'black_list_add',
-      //添加好友进黑名单
+      // 添加好友进黑名单
       DELETE_BLACKLIST: 'black_list_delete',
-      //将好友移出黑名单
+      // 将好友移出黑名单
       CREATE_GROUP: 'create_group',
-      //创建群组
+      // 创建群组
       GET_JOINED_GROUPS: 'get_joined_group_list',
-      //获取用户加入的群组
+      // 获取用户加入的群组
       SEND_MESSAGE: 'sendmsg',
       // 发送私聊消息
       SEND_GROUP_MESSAGE: 'send_group_msg',
       // 发送群消息
       GET_GROUP_INFO: 'get_group_info',
-      //获取群组详细信息
+      // 获取群组详细信息
       GET_GROUP_MEMBER_INFO: 'get_group_member_info',
-      //获取群组成员信息列表
+      // 获取群组成员信息列表
       QUIT_GROUP: 'quit_group',
-      //退出群组
+      // 退出群组
       CHANGE_GROUP_OWNER: 'change_group_owner',
-      //转让群组
+      // 转让群组
       DESTROY_GROUP: 'destroy_group',
-      //解散群组
+      // 解散群组
       ADD_GROUP_MEMBER: 'add_group_member',
-      //添加群成员
+      // 添加群成员
       DELETE_GROUP_MEMBER: 'delete_group_member',
-      //删除群成员
+      // 删除群成员
       SEARCH_GROUP_BY_ID: 'get_group_public_info',
-      //搜索群组（ID）
+      // 搜索群组（ID）
       APPLY_JOIN_GROUP: 'apply_join_group',
-      //申请加群
+      // 申请加群
       HANDLE_APPLY_JOIN_GROUP: 'handle_apply_join_group',
-      //处理加群申请
+      // 处理加群申请
       MODIFY_GROUP_INFO: 'modify_group_base_info',
-      //修改群资料
+      // 修改群资料
       MODIFY_GROUP_MEMBER_INFO: 'modify_group_member_info',
-      //修改群成员资料
+      // 修改群成员资料
       DELETE_GROUP_SYSTEM_MESSAGE: 'deletemsg',
-      //修改群成员资料
+      // 修改群成员资料
       GET_CONVERSATION_LIST: 'get',
-      //获取会话列表
+      // 获取会话列表
       DELETE_CONVERSATION: 'delete',
-      //删除会话
+      // 删除会话
       GET_MESSAGES: 'getmsg',
       // 获取未读消息
       GET_C2C_ROAM_MESSAGES: 'getroammsg',
@@ -10243,7 +10243,7 @@ module.exports = function (it) {
       AUTO: 0 // - 由ConnectionController决定用什么方式完成请求
 
     },
-    //不同服务对应的版本号
+    // 不同服务对应的版本号
     NAME_VERSION: {
       openim: 'v4',
       group_open_http_svc: 'v4',
@@ -10257,9 +10257,10 @@ module.exports = function (it) {
       im_cos_sign_svr: 'v4',
       webim: 'v3'
     }
-  }; //默认使用正式环境
+  }; // 默认使用正式环境
+  // SERVER.HOST.setCurrent(SERVER.HOST.ACCESS_LAYER_TYPES.PRODUCTION);
 
-  SERVER.HOST.setCurrent(SERVER.HOST.ACCESS_LAYER_TYPES.PRODUCTION); // SERVER.HOST.setCurrent(SERVER.HOST.ACCESS_LAYER_TYPES.TEST);
+  SERVER.HOST.setCurrent(SERVER.HOST.ACCESS_LAYER_TYPES.TEST);
 
   /**
    * 场景：后端CGI参数命名大多数为大驼峰形式，但也有部分是To_Account这种形式，或许也有其他形式。
@@ -11078,6 +11079,68 @@ module.exports = function (it) {
       newObj[key] = iteratee(obj[key]);
     });
     return newObj;
+  } // -----------------探测函数-----------------
+
+  /**
+   * 探测图片文件的宽和高
+   * @param {*} imageURL 图片地址
+   * @returns {Promise}
+   */
+
+  function probeImageWidthHeight(imageURL) {
+    // h5不能用FileReader，因为FileReader处理后，input选择的file对象会被释放掉，导致无法用cos上传
+    // 用createObjectURL(file)生成url，不能立即赋值给image.src，因为触发onload事件后，file对象也会被释放掉，导致无法用cos上传
+    // 用createObjectURL(file)生成url，然后用cos上传，cos上传后file对象被释放掉，此时将url赋值给image.src，在onload回调里就能探测到宽高
+    if (!IN_WX_MINI_APP) {
+      // IE9就不探测了，填0
+      if (IS_IE && IE_VERSION === 9) {
+        return Promise.resolve({
+          width: 0,
+          height: 0
+        });
+      }
+
+      return new Promise(function (resolve, reject) {
+        var image = new Image();
+
+        image.onload = function () {
+          resolve({
+            width: this.width,
+            height: this.height
+          });
+          image = null;
+        };
+
+        image.onerror = function () {
+          resolve({
+            width: 0,
+            height: 0
+          });
+          image = null;
+        };
+
+        image.src = imageURL;
+      });
+    } // 小程序用wx.getImageInfo探测
+
+
+    return new Promise(function (resolve, reject) {
+      wx.getImageInfo({
+        src: imageURL,
+        success: function success(res) {
+          resolve({
+            width: res.width,
+            height: res.height
+          });
+        },
+        fail: function fail() {
+          resolve({
+            width: 0,
+            height: 0
+          });
+        }
+      });
+    });
   }
 
   function camelCase(input, options) {
@@ -19154,8 +19217,8 @@ module.exports = function (it) {
           this.instanceID = randomInt(9999999);
           this.sizeType = options.type || 0;
           this.size = options.size || 0;
-          this.width = options.width || 1024;
-          this.height = options.height || 800;
+          this.width = options.width || 0;
+          this.height = options.height || 0;
           this.imageUrl = options.url || '';
           this.url = options.url || father._imageMemoryURL || father._defaultImage; // 默认图片地址
           // urlList[this.instanceID] = options.url || father._imageMemoryURL || father._defaultImage; // 默认图片地址
@@ -19211,18 +19274,33 @@ module.exports = function (it) {
        * @param {*} options - 更新参数
        * @param {Number} options.size - 图片大小
        * @param {String} options.url - 图片URL
+       * @param {Number} options.width - 图片宽度
+       * @param {Number} options.height - 图片高度
        */
 
     }, {
       key: "updateImageInfoArray",
       value: function updateImageInfoArray(options) {
         var len = this.content.imageInfoArray.length;
+        var imageInfo;
 
         for (var i = 0; i < len; i++) {
-          options.size ? this.content.imageInfoArray[i].size = options.size : null;
+          imageInfo = this.content.imageInfoArray[i];
+
+          if (options.size) {
+            imageInfo.size = options.size;
+          }
 
           if (options.url) {
-            this.content.imageInfoArray[i].setImageUrl(options.url);
+            imageInfo.setImageUrl(options.url);
+          }
+
+          if (options.width) {
+            imageInfo.width = options.width;
+          }
+
+          if (options.height) {
+            imageInfo.height = options.height;
           }
         }
       }
@@ -19255,7 +19333,7 @@ module.exports = function (it) {
           onlyUrl = info.imageUrl.slice(info.imageUrl.indexOf('://') + 1);
 
           if (accessPrefix.indexOf(preFix) < 0) {
-            preFix = 'http:';
+            preFix = 'https:';
           }
 
           this.content.imageInfoArray[i].setImageUrl([preFix, onlyUrl].join(''));
@@ -19307,8 +19385,8 @@ module.exports = function (it) {
       key: "createImageDataASURLInWXMiniApp",
       value: function createImageDataASURLInWXMiniApp(file) {
         // 限制读取一个，不允许传多个文件
-        if (file && file.tempFilePaths[0]) {
-          this._imageMemoryURL = file.tempFilePaths[0];
+        if (file && file.url) {
+          this._imageMemoryURL = file.url;
         }
       }
       /**
@@ -19418,14 +19496,20 @@ module.exports = function (it) {
         second: options.second,
         size: options.size,
         url: options.url,
-        uuid: options.uuid
+        soundUrl: ''
       };
     }
 
     _createClass(SoundElement, [{
+      key: "updateSoundUrl",
+      value: function updateSoundUrl(newUrl) {
+        this.content.url = newUrl;
+        this.content.soundUrl = newUrl;
+      }
+    }, {
       key: "isEmpty",
       value: function isEmpty() {
-        if (this.content.url === '') {
+        if (this.content.soundUrl === '') {
           return true;
         }
 
@@ -19910,6 +19994,7 @@ module.exports = function (it) {
      * | TIM.TYPES.MSG_IMAGE | 图片消息 |
      * | TIM.TYPES.MSG_SOUND | 音频消息 |
      * | TIM.TYPES.MSG_FILE | 文件消息 |
+     * | TIM.TYPES.MSG_CUSTOM | 自定义消息 |
      * | TIM.TYPES.MSG_GRP_TIP | 群提示消息 |
      * | TIM.TYPES.MSG_GRP_SYS_NOTICE | 群系统通知消息 |
      * @property {Object}  payload - 消息的内容，具体如下：<br/>
@@ -24081,8 +24166,19 @@ module.exports = function (it) {
         var uploadController = this.tim.uploadController;
         options.currentUser = this.tim.context.identifier; // 发消息时，需要传入currentUser参数
 
-        console.log(1212, JSON.parse(JSON.stringify(options)));
         var message = new Message(options);
+
+        if (IN_WX_MINI_APP) {
+          var file = options.payload.file;
+          var _file = {
+            url: file.tempFilePaths[0],
+            name: file.tempFilePaths[0].slice(file.tempFilePaths[0].lastIndexOf('/') + 1),
+            size: file.tempFiles[0].size,
+            type: file.tempFilePaths[0].slice(file.tempFilePaths[0].lastIndexOf('.') + 1).toUpperCase()
+          };
+          options.payload.file = _file;
+        }
+
         var element = new ImageElement({
           imageFormat: 'UNKNOWN',
           uuid: ['fake', randomInt(), randomInt()].join('-'),
@@ -24104,12 +24200,23 @@ module.exports = function (it) {
           element.updateImageInfoArray({
             size: uploadResponse.fileSize,
             url: imageUrl
-          });
+          }); // 上传成功后探测图片的宽高并修改默认值
+
+          return probeImageWidthHeight(element._imageMemoryURL);
+        }).then(function (info) {
+          if (info.width !== 0 && info.height !== 0) {
+            logger.log("MessageController.probeImageWidthHeight width=".concat(info.width, " height=").concat(info.height));
+            element.updateImageInfoArray({
+              width: info.width,
+              height: info.height
+            });
+          }
+
           message.triggerOperated();
         })["catch"](function (uploadErrorResponse) {
           // 上传失败， message的状态设置为FAIL
           message.status = TIM_STATUS.MESSAGE_STATUS.FAIL;
-          logger.warn('MessageController.createImageMessage(), error:', uploadErrorResponse); // TODO: 需要把消息设置给IMPromise
+          logger.warn('MessageController.createImageMessage(), error:', JSON.stringify(uploadErrorResponse)); // TODO: 需要把消息设置给IMPromise
         });
         message.setElement(element);
         return message;
@@ -24120,6 +24227,7 @@ module.exports = function (it) {
        * @param {string} options.to - 消息的接收方
        * @param {string} options.conversationType - 会话类型
        * @param {HTMLFileElement} options.payload.file - HTMLFileElement对象，用于接收文件数据
+       * @param {Function} options.onProgress - 获取上传进度的回调函数
        * @returns {Message}
        */
 
@@ -24137,7 +24245,7 @@ module.exports = function (it) {
         options.currentUser = this.tim.context.identifier; // 发消息时，需要传入currentUser参数
 
         var message = new Message(options);
-        var element = new SoundElement({
+        var element = new FileElement({
           uuid: ['fake', randomInt(), randomInt()].join('-'),
           file: options.payload.file
         });
@@ -24181,23 +24289,44 @@ module.exports = function (it) {
     }, {
       key: "createSoundMessage",
       value: function createSoundMessage(options) {
+        if (!IN_WX_MINI_APP) {
+          logger.warn('createSoundMessage 目前只支持微信小程序发语音消息');
+          return;
+        }
+
         var uploadController = this.tim.uploadController;
+        var file = options.payload.file;
+
+        if (IN_WX_MINI_APP) {
+          var _file = {
+            url: file.tempFilePath,
+            name: file.tempFilePath.slice(file.tempFilePath.lastIndexOf('/') + 1),
+            size: file.fileSize,
+            second: parseInt(file.duration) / 1000,
+            type: file.tempFilePath.slice(file.tempFilePath.lastIndexOf('.') + 1).toUpperCase()
+          };
+          options.payload.file = _file;
+        }
+
         options.currentUser = this.tim.context.identifier; // 发消息时，需要传入currentUser参数
 
         var message = new Message(options);
-        console.log(1212, options);
         var element = new SoundElement({
-          uuid: ['fake', randomInt(), randomInt()].join('-'),
-          file: options.payload.file
+          second: Math.floor(file.duration / 1000),
+          size: file.fileSize,
+          url: file.tempFilePath
         });
-        console.log('createSoundMessage', element);
         uploadController.uploadSound({
           file: options.payload.file,
           to: options.to
         }).then(function (uploadResponse) {
-          console.log('uploadsuccess', uploadResponse);
+          var fileUrl = ['https://', uploadResponse.location].join('');
+          element.updateSoundUrl(fileUrl);
+          message.triggerOperated();
         })["catch"](function (uploadErrorResponse) {
-          console.log('uploaderror', uploadErrorResponse);
+          message.status = TIM_STATUS.MESSAGE_STATUS.FAIL;
+          logger.warn('MessageController.createSoundMessage(), error:', uploadErrorResponse);
+          message.triggerOperated();
         });
         message.setElement(element);
         return message;
@@ -30305,12 +30434,12 @@ module.exports = function (it) {
         var fileType = '';
 
         if (IN_WX_MINI_APP) {
-          fileType = file.tempFiles[0].path.slice(file.tempFiles[0].path.lastIndexOf('.') + 1);
+          fileType = file.url.slice(file.url.lastIndexOf('.') + 1);
         } else {
           fileType = file.files[0].name.slice(file.files[0].name.lastIndexOf('.') + 1);
         }
 
-        if (UPLOAD_IMAGE_TYPES_LIMIT.indexOf(fileType) >= 0) {
+        if (UPLOAD_IMAGE_TYPES_LIMIT.indexOf(fileType.toLowerCase()) >= 0) {
           return true;
         }
 
@@ -30348,7 +30477,7 @@ module.exports = function (it) {
         var fileSize = 0;
 
         if (IN_WX_MINI_APP) {
-          fileSize = file.tempFiles[0].size;
+          fileSize = file.size;
         } else {
           fileSize = file.files[0].size;
         }
@@ -30424,7 +30553,7 @@ module.exports = function (it) {
           }));
         }
 
-        if (options.file.fileSize > UPLOAD_FILE_SIZE_LIMIT) {
+        if (options.file.size > UPLOAD_FILE_SIZE_LIMIT) {
           return IMPromise.reject(new IMError({
             code: ERROR_CODE.MESSAGE_FILE_SIZE_LIMIT,
             message: "".concat(ERROR_MESSAGE.MESSAGE_FILE_SIZE_LIMIT, ": ").concat(UPLOAD_FILE_SIZE_LIMIT, " bytes")
@@ -30447,9 +30576,6 @@ module.exports = function (it) {
 
         logger.time(label.UPLOAD);
         var file = IN_WX_MINI_APP ? options.file : options.file.files[0];
-
-        this._iniFileObjectMembersForWXMiniApp(file);
-
         return new Promise(function (revolve, reject) {
           var cosUploadOptions = IN_WX_MINI_APP ? _this5._createCosOptionsWXMiniApp(options) // 小程序配置
           : _this5._createCosOptionsWeb(options); // web 配置
@@ -30545,36 +30671,6 @@ module.exports = function (it) {
         return temp.toFixed(1) + 'MB/s';
       }
       /**
-       * 为小程序环境完善一下File实例的成员，方便统一处理
-       */
-
-    }, {
-      key: "_iniFileObjectMembersForWXMiniApp",
-      value: function _iniFileObjectMembersForWXMiniApp(file) {
-        if (!IN_WX_MINI_APP) {
-          return;
-        }
-
-        console.log('change', file);
-
-        if (!file.name) {
-          if (file.tempFilePaths) {
-            file.name = file.tempFilePaths[0].slice(file.tempFilePaths[0].lastIndexOf('/') + 1);
-          } else if (file.tempFilePath) {
-            file.name = file.tempFilePath.slice(file.tempFilePath.lastIndexOf('/') + 1);
-            file.tempFilePaths = [file.tempFilePath];
-          }
-        }
-
-        if (file.tempFiles) {
-          file.size = file.tempFiles[0].size;
-        } else {
-          file.size = file.fileSize;
-        }
-
-        file.type = file.name.slice(file.name.lastIndexOf('.') + 1).toUpperCase();
-      }
-      /**
        * 创建WEB COS上传配置
        * @param {object} options - 配置参数
        * @returns {object}
@@ -30616,11 +30712,12 @@ module.exports = function (it) {
       key: "_createCosOptionsWXMiniApp",
       value: function _createCosOptionsWXMiniApp(options) {
         var from = this.tim.context.identifier;
+        var url = options.file.url;
         return {
           Bucket: "".concat(this.bucketName, "-").concat(this.appid),
           Region: this.region,
           Key: "imfiles/".concat(from, "/").concat(options.to, "-").concat(options.file.name),
-          FilePath: options.file.tempFiles[0].path,
+          FilePath: url,
           onProgress: function onProgress(info) {
             logger.log(JSON.stringify(info));
 

@@ -79,12 +79,23 @@
 <!--    输入框及选择框部分-->
     <div class="bottom" :style="{ paddingBottom: isIpx ? safeBottom + 'px': '' }">
       <div class="bottom-div">
-        <input type="text"
-               class="input"
-               v-model.lazy:value="messageContent"
-               confirm-type="send"
-               :focus="isFocus"
-               @confirm='sendMessage'/>
+        <div class="btn" @click="chooseRecord">
+          <image src="/static/images/record.png" class="btn-small"/>
+        </div>
+        <div v-if="!isRecord" style="width: 80%">
+          <input type="text"
+                 class="input"
+                 v-model.lazy:value="messageContent"
+                 confirm-type="send"
+                 :focus="isFocus"
+                 @confirm='sendMessage'/>
+        </div>
+        <div v-if="isRecord && !isRecording" @click="startRecording" class="record">
+          点击进行录音
+        </div>
+        <div v-if="isRecord && isRecording" @click="stopRecording" class="record">
+          点击停止录音
+        </div>
         <div class="btn" @click="handleEmoji()">
           <image src="/static/images/emoji.png" class="btn-small"/>
         </div>
@@ -161,6 +172,14 @@ import { mapState } from 'vuex'
 import { emojiName, emojiMap, emojiUrl } from '../../utils/emojiMap'
 import { throttle } from '../../utils/index'
 const audioContext = wx.createInnerAudioContext()
+const recorderManager = wx.getRecorderManager()
+const recordOptions = {
+  duration: 60000,
+  sampleRate: 44100,
+  numberOfChannels: 1,
+  encodeBitRate: 192000,
+  format: 'mp3'
+}
 export default {
   data () {
     return {
@@ -187,7 +206,9 @@ export default {
       customDescription: '',
       customExtension: '',
       safeBottom: 34,
-      isIpx: false
+      isIpx: false,
+      isRecord: false,
+      isRecording: false
     }
   },
   onLoad (options) {
@@ -220,6 +241,28 @@ export default {
       this.messageContent += user.userID
       this.messageContent += ' '
     })
+    recorderManager.onStart(() => {
+      console.log('recorder start')
+      wx.showLoading({
+        title: '正在录音'
+      })
+    })
+    recorderManager.onPause(() => {
+      console.log('recorder pause')
+    })
+    recorderManager.onStop((res) => {
+      console.log('recorder stop', res)
+      wx.hideLoading()
+      const message = wx.$app.createSoundMessage({
+        to: this.$store.getters.toAccount,
+        conversationType: this.$store.getters.currentConversationType,
+        payload: {
+          file: res
+        }
+      })
+      console.log(121212, message)
+      wx.$app.sendMessage(message)
+    })
   },
   // 退出聊天页面的时候所有状态清空
   onUnload () {
@@ -248,6 +291,61 @@ export default {
     })
   },
   methods: {
+    chooseRecord () {
+      this.isRecord = !this.isRecord
+    },
+    startRecording () {
+      wx.getSetting({
+        success: (res) => {
+          let auth = res.authSetting['scope.record']
+          if (auth === false) { // 已申请过授权，但是用户拒绝
+            wx.openSetting({
+              success: function (res) {
+                let auth = res.authSetting['scope.record']
+                if (auth === true) {
+                  wx.showToast({
+                    title: '授权成功',
+                    icon: 'success',
+                    duration: 1500
+                  })
+                } else {
+                  wx.showToast({
+                    title: '授权失败',
+                    icon: 'none',
+                    duration: 1500
+                  })
+                }
+              }
+            })
+          } else if (auth === true) { // 用户已经同意授权
+            this.isRecording = true
+            recorderManager.start(recordOptions)
+          } else { // 第一次进来，未发起授权
+            wx.authorize({
+              scope: 'scope.record',
+              success: () => {
+                wx.showToast({
+                  title: '授权成功',
+                  icon: 'success',
+                  duration: 1500
+                })
+              }
+            })
+          }
+        },
+        fail: function () {
+          wx.showToast({
+            title: '授权失败',
+            icon: 'none',
+            duration: 1500
+          })
+        }
+      })
+    },
+    stopRecording () {
+      this.isRecording = false
+      recorderManager.stop()
+    },
     // 滚动到列表bottom
     scrollToBottom () {
       wx.pageScrollTo({
@@ -781,4 +879,15 @@ li
   display flex
   height 20px
   line-height 20px
+.record
+  margin-right 10px
+  width 80%
+  border 1px solid $border-base
+  color $secondary
+  border-radius 8px
+  box-sizing border-box
+  height 30px
+  line-height 30px
+  display flex
+  justify-content center
 </style>
