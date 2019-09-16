@@ -244,8 +244,7 @@ export default {
     ...mapState({
       currentMessageList: state => {
         return state.conversation.currentMessageList
-      },
-      imageUrls: state => state.conversation.imageUrls
+      }
     })
   },
   methods: {
@@ -480,12 +479,9 @@ export default {
       this.handleClose()
     },
     previewImage (src) {
-      let that = this
-      let url = src
-      url = url.slice(0, 2) === '//' ? `https:${url}` : url
       wx.previewImage({
-        current: url, // 当前显示图片的http链接
-        urls: that.imageUrls // 需要预览的图片http链接列表，当前会话所有图片
+        current: src, // 当前显示图片的http链接
+        urls: [src]
       })
     },
     // 发消息选中emoji
