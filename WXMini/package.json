@@ -26,7 +26,7 @@
   "dependencies": {
     "cos-wx-sdk-v5": "^0.7.3",
     "mpvue": "^2.0.0",
-    "tim-wx-sdk": "^2.0.6",
+    "tim-wx-sdk": "^2.0.8",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
