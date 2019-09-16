@@ -118,10 +118,11 @@ if (config.build.bundleAnalyzerReport) {
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
 
-var useUglifyJs = false
+var useUglifyJs = true
 if (useUglifyJs) {
   webpackConfig.plugins.push(new UglifyJsPlugin({
-    sourceMap: true
+    sourceMap: true,
+    exclude: /GenerateTestUserSig.js/
   }))
 }
 

@@ -9,6 +9,7 @@ import TYPES from './utils/types'
 const tim = TIM.create({
   SDKAppID: SDKAPPID
 })
+tim.setLogLevel(0)
 wx.$app = tim
 wx.$app.registerPlugin({'cos-wx-sdk': COS})
 
