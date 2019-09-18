@@ -13,7 +13,7 @@
 #define ENABLE_SHARE 1
 
 #import "TCUtil.h"
-#import "NSString+Common.h"
+#import "NSString+TUICommon.h"
 #import <mach/mach.h>
 #import <Accelerate/Accelerate.h>
 #import <mach/mach.h>
