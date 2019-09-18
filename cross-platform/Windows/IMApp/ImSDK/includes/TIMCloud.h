@@ -12,7 +12,7 @@ extern"C"
 /// @overbrief 腾讯即时通信IM的跨平台C接口(API)
 /*
 * @brief 各个平台的下载链接
-* > Windows平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Windows),Windows快速开始[集成ImSDK](https://cloud.tencent.com/document/product/269/33489)和[一分钟跑通demo](https://cloud.tencent.com/document/product/269/33488).支持32位/64位系统。
+* > Windows平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Windows),Windows快速开始[集成ImSDK](https://cloud.tencent.com/document/product/269/33489)和[一分钟跑通Demo](https://cloud.tencent.com/document/product/269/36838).支持32位/64位系统。
 * > iOS平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/iOS).
 * > Mac平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Mac).
 * > Android平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Android).
