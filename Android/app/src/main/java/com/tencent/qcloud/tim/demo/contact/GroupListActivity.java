@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.tencent.imsdk.TIMConversationType;
+import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.chat.ChatActivity;
@@ -18,7 +19,7 @@ import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.contact.ContactItemBean;
 import com.tencent.qcloud.tim.uikit.modules.contact.ContactListView;
 
-public class GroupListActivity extends Activity {
+public class GroupListActivity extends BaseActivity {
 
     private static final String TAG = GroupListActivity.class.getSimpleName();
 

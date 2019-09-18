@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
+import com.tencent.imsdk.ext.message.TIMMessageReceipt;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatProvider;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageListAdapter;
@@ -112,6 +113,21 @@ public class ChatProvider implements IChatProvider {
         return false;
     }
 
+    public boolean resendMessageInfo(MessageInfo message) {
+        boolean found = false;
+        for (int i = 0; i < mDataSource.size(); i++) {
+            if (mDataSource.get(i).getId().equals(message.getId())) {
+                mDataSource.remove(i);
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            return false;
+        }
+        return addMessageInfo(message);
+    }
+
     public boolean updateMessageInfo(MessageInfo message) {
         for (int i = 0; i < mDataSource.size(); i++) {
             if (mDataSource.get(i).getId().equals(message.getId())) {
@@ -152,6 +168,27 @@ public class ChatProvider implements IChatProvider {
         return false;
     }
 
+    public void updateReadMessage(TIMMessageReceipt max) {
+        for (int i = 0; i < mDataSource.size(); i++) {
+            MessageInfo messageInfo = mDataSource.get(i);
+            if (messageInfo.getTIMMessage().timestamp() > max.getTimestamp()) {
+                messageInfo.getTIMMessage().setCustomInt(0);
+            } else {
+                messageInfo.getTIMMessage().setCustomInt(1);
+                updateAdapter(MessageLayout.DATA_CHANGE_TYPE_UPDATE, i);
+            }
+        }
+    }
+
+    public void notifyTyping() {
+        if (mTypingListener != null) {
+            mTypingListener.onTyping();
+        }
+    }
+
+    public void setTypingListener(TypingListener l) {
+        mTypingListener = l;
+    }
 
     public void remove(int index) {
         mDataSource.remove(index);
@@ -174,4 +211,8 @@ public class ChatProvider implements IChatProvider {
         this.mAdapter = adapter;
     }
 
+    private TypingListener mTypingListener;
+    public interface TypingListener {
+        void onTyping();
+    }
 }

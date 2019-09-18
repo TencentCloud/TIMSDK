@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tencent.imsdk.TIMGroupMemberRoleType;
+import com.tencent.imsdk.TIMManager;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
@@ -138,7 +140,15 @@ public class GroupInfoAdapter extends BaseAdapter {
                 add.setMemberType(ADD_TYPE);
                 mGroupMembers.add(add);
             }
-            if (info.isOwner()) {
+            GroupMemberInfo self = null;
+            for (int i = 0; i < mGroupMembers.size(); i++) {
+                GroupMemberInfo memberInfo = mGroupMembers.get(i);
+                if (TextUtils.equals(memberInfo.getAccount(), TIMManager.getInstance().getLoginUser())) {
+                    self = memberInfo;
+                    break;
+                }
+            }
+            if (info.isOwner() || (self != null && self.getMemberType() == TIMGroupMemberRoleType.ROLE_TYPE_ADMIN)) {
                 GroupMemberInfo del = new GroupMemberInfo();
                 del.setMemberType(DEL_TYPE);
                 mGroupMembers.add(del);

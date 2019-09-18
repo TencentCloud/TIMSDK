@@ -71,6 +71,15 @@
         android:layout_toRightOf="@+id/left_user_icon_view"
         android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/is_read_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="6dp"
+            android:textColor="@color/text_gray1"
+            android:layout_gravity="center_vertical"
+            android:textSize="11sp"/>
+
         <ProgressBar
             android:id="@+id/message_sending_pb"
             android:layout_width="10dp"

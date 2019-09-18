@@ -38,7 +38,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 
     public void layoutViews(ConversationInfo conversation, int position) {
         MessageInfo lastMsg = conversation.getLastMessage();
-        if (lastMsg.getStatus() == MessageInfo.MSG_STATUS_REVOKE ) {
+        if (lastMsg != null && lastMsg.getStatus() == MessageInfo.MSG_STATUS_REVOKE ) {
             if (lastMsg.isSelf()) {
                 lastMsg.setExtra("您撤回了一条消息");
             } else if (lastMsg.isGroup()) {

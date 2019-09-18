@@ -5,12 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.SplashActivity;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 
-public class ChatActivity extends Activity {
+public class ChatActivity extends BaseActivity {
 
     private ChatFragment mChatFragment;
     private ChatInfo mChatInfo;

@@ -10,8 +10,6 @@ import com.tencent.imsdk.TIMGroupTipsElem;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
-import com.tencent.imsdk.TIMOfflinePushListener;
-import com.tencent.imsdk.TIMOfflinePushNotification;
 import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.TIMSNSChangeInfo;
 import com.tencent.imsdk.TIMSdkConfig;
@@ -26,12 +24,14 @@ import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.face.FaceManager;
 import com.tencent.qcloud.tim.uikit.config.GeneralConfig;
 import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
+import com.tencent.qcloud.tim.uikit.modules.chat.C2CChatManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageRevokedManager;
 import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.tencent.qcloud.tim.uikit.utils.NetWorkUtils.sIMSDKConnected;
@@ -42,7 +42,7 @@ public class TUIKitImpl {
 
     private static Context sAppContext;
     private static TUIKitConfigs sConfigs;
-    private static IMEventListener sIMEventListener;
+    private static List<IMEventListener> sIMEventListeners = new ArrayList<>();
 
     /**
      * TUIKit的初始化函数
@@ -91,36 +91,28 @@ public class TUIKitImpl {
         sdkConfig.setLogLevel(generalConfig.getLogLevel());
         sdkConfig.enableLogPrint(generalConfig.isLogPrint());
         TIMManager.getInstance().init(context, sdkConfig);
-        // 设置离线消息通知
-        TIMManager.getInstance().setOfflinePushListener(new TIMOfflinePushListener() {
-
-            @Override
-            public void handleNotification(TIMOfflinePushNotification var1) {
-
-            }
-        });
 
         TIMUserConfig userConfig = new TIMUserConfig();
         userConfig.setReadReceiptEnabled(true);
         userConfig.setMessageReceiptListener(new TIMMessageReceiptListener() {
             @Override
             public void onRecvReceipt(List<TIMMessageReceipt> receiptList) {
-
+                C2CChatManagerKit.getInstance().onReadReport(receiptList);
             }
         });
         userConfig.setUserStatusListener(new TIMUserStatusListener() {
             @Override
             public void onForceOffline() {
-                if (sIMEventListener != null) {
-                    sIMEventListener.onForceOffline();
+                for (IMEventListener l : sIMEventListeners) {
+                    l.onForceOffline();
                 }
                 unInit();
             }
 
             @Override
             public void onUserSigExpired() {
-                if (sIMEventListener != null) {
-                    sIMEventListener.onUserSigExpired();
+                for (IMEventListener l : sIMEventListeners) {
+                    l.onUserSigExpired();
                 }
                 unInit();
             }
@@ -130,23 +122,23 @@ public class TUIKitImpl {
             @Override
             public void onConnected() {
                 sIMSDKConnected = true;
-                if (sIMEventListener != null) {
-                    sIMEventListener.onConnected();
+                for (IMEventListener l : sIMEventListeners) {
+                    l.onConnected();
                 }
             }
 
             @Override
             public void onDisconnected(int code, String desc) {
                 sIMSDKConnected = false;
-                if (sIMEventListener != null) {
-                    sIMEventListener.onDisconnected(code, desc);
+                for (IMEventListener l : sIMEventListeners) {
+                    l.onDisconnected(code, desc);
                 }
             }
 
             @Override
             public void onWifiNeedAuth(String name) {
-                if (sIMEventListener != null) {
-                    sIMEventListener.onWifiNeedAuth(name);
+                for (IMEventListener l : sIMEventListeners) {
+                    l.onWifiNeedAuth(name);
                 }
             }
         });
@@ -160,8 +152,8 @@ public class TUIKitImpl {
             @Override
             public void onRefreshConversation(List<TIMConversation> conversations) {
                 ConversationManagerKit.getInstance().onRefreshConversation(conversations);
-                if (sIMEventListener != null) {
-                    sIMEventListener.onRefreshConversation(conversations);
+                for (IMEventListener l : sIMEventListeners) {
+                    l.onRefreshConversation(conversations);
                 }
             }
         });
@@ -169,8 +161,8 @@ public class TUIKitImpl {
         userConfig.setGroupEventListener(new TIMGroupEventListener() {
             @Override
             public void onGroupTipsEvent(TIMGroupTipsElem elem) {
-                if (sIMEventListener != null) {
-                    sIMEventListener.onGroupTipsEvent(elem);
+                for (IMEventListener l : sIMEventListeners) {
+                    l.onGroupTipsEvent(elem);
                 }
             }
         });
@@ -200,8 +192,8 @@ public class TUIKitImpl {
         TIMManager.getInstance().addMessageListener(new TIMMessageListener() {
             @Override
             public boolean onNewMessages(List<TIMMessage> msgs) {
-                if (sIMEventListener != null) {
-                    sIMEventListener.onNewMessages(msgs);
+                for (IMEventListener l : sIMEventListeners) {
+                    l.onNewMessages(msgs);
                 }
                 return false;
             }
@@ -228,7 +220,17 @@ public class TUIKitImpl {
         return sConfigs;
     }
 
-    public static void setIMEventListener(IMEventListener listener) {
-        sIMEventListener = listener;
+    public static void addIMEventListener(IMEventListener listener) {
+        if (listener != null && !sIMEventListeners.contains(listener)) {
+            sIMEventListeners.add(listener);
+        }
+    }
+
+    public static void removeIMEventListener(IMEventListener listener) {
+        if (listener == null) {
+            sIMEventListeners.clear();
+        } else {
+            sIMEventListeners.remove(listener);
+        }
     }
 }

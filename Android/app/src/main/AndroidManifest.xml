@@ -278,7 +278,7 @@
                 <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
                 <action android:name="com.meizu.c2dm.intent.RECEIVE" />
 
-                <category android:name="com.tencent.qcloud.uipojo.thirdpush" />
+                <category android:name="com.tencent.qcloud.tim.demo.thirdpush" />
             </intent-filter>
         </receiver>
         <!-- ********魅族推送设置end******** -->

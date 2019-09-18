@@ -130,7 +130,7 @@ public class MessageInfo {
     private String dataPath;
     private Object extra;
     private long msgTime;
-    private int imgWithd;
+    private int imgWidth;
     private int imgHeight;
 
     private TIMMessage TIMMessage;
@@ -339,7 +339,7 @@ public class MessageInfo {
      * @return
      */
     public int getImgWidth() {
-        return imgWithd;
+        return imgWidth;
     }
 
     /**
@@ -348,7 +348,7 @@ public class MessageInfo {
      * @param imgWidth
      */
     public void setImgWidth(int imgWidth) {
-        this.imgWithd = imgWidth;
+        this.imgWidth = imgWidth;
     }
 
     /**

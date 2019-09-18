@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.base;
 
+import android.text.TextUtils;
+
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
@@ -11,6 +13,8 @@ import com.tencent.imsdk.TIMMessageListener;
 import com.tencent.imsdk.TIMSNSSystemElem;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
+import com.tencent.imsdk.ext.message.TIMMessageReceipt;
+import com.tencent.openqq.protocol.imsdk.msg;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
@@ -59,6 +63,28 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
         mIsLoading = false;
     }
 
+    public void onReadReport(List<TIMMessageReceipt> receiptList) {
+        TUIKitLog.i(TAG, "onReadReport:" + receiptList);
+        if (!safetyCall()) {
+            TUIKitLog.w(TAG, "unSafetyCall");
+            return;
+        }
+        if (receiptList.size() == 0) {
+            return;
+        }
+        TIMMessageReceipt max = receiptList.get(0);
+        for (TIMMessageReceipt msg : receiptList) {
+            if (!TextUtils.equals(msg.getConversation().getPeer(), mCurrentConversation.getPeer())
+                    || msg.getConversation().getType() == TIMConversationType.Group) {
+                continue;
+            }
+            if (max.getTimestamp() < msg.getTimestamp()) {
+                max = msg;
+            }
+        }
+        mCurrentProvider.updateReadMessage(max);
+    }
+
     @Override
     public boolean onNewMessages(List<TIMMessage> msgs) {
         if (null != msgs && msgs.size() > 0) {
@@ -66,7 +92,11 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                 TIMConversation conversation = msg.getConversation();
                 TIMConversationType type = conversation.getType();
                 if (type == TIMConversationType.C2C) {
-                    onReceiveMessage(conversation, msg);
+                    if (MessageInfoUtil.isTyping(msg)) {
+                        notifyTyping();
+                    } else {
+                        onReceiveMessage(conversation, msg);
+                    }
                     TUIKitLog.i(TAG, "onNewMessages() C2C msg = " + msg);
                 } else if (type == TIMConversationType.Group) {
                     onReceiveMessage(conversation, msg);
@@ -78,6 +108,14 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
             }
         }
         return false;
+    }
+
+    private void notifyTyping() {
+        if (!safetyCall()) {
+            TUIKitLog.w(TAG, "unSafetyCall");
+            return;
+        }
+        mCurrentProvider.notifyTyping();
     }
 
     // GroupChatManager会重写该方法
@@ -192,7 +230,7 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
         if (message.getMsgType() < MessageInfo.MSG_TYPE_TIPS) {
             message.setStatus(MessageInfo.MSG_STATUS_SENDING);
             if (retry) {
-                mCurrentProvider.updateMessageInfo(message);
+                mCurrentProvider.resendMessageInfo(message);
             } else {
                 mCurrentProvider.addMessageInfo(message);
             }
@@ -200,6 +238,7 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
         new Thread() {
             @Override
             public void run() {
+                TUIKitLog.i(TAG, "sendMessage:" + message.getTIMMessage());
                 mCurrentConversation.sendMessage(message.getTIMMessage(), new TIMValueCallBack<TIMMessage>() {
                     @Override
                     public void onError(final int code, final String desc) {

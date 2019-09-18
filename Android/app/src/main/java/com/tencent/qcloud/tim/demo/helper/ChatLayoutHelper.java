@@ -227,10 +227,14 @@ public class ChatLayoutHelper {
             // 获取到自定义消息的json数据
             TIMCustomElem elem = (TIMCustomElem) info.getTIMMessage().getElement(0);
             // 自定义的json数据，需要解析成bean实例
-            final CustomMessageData customMessageData = new Gson().fromJson(new String(elem.getData()), CustomMessageData.class);
-            if (customMessageData == null) {
+            CustomMessageData data = null;
+            try {
+                data = new Gson().fromJson(new String(elem.getData()), CustomMessageData.class);
+            } catch (Exception e) {
+                DemoLog.e(TAG, "invalid json: " + new String(elem.getData()));
+            }
+            if (data == null) {
                 DemoLog.e(TAG, "No Custom Data: " + new String(elem.getData()));
-                return;
             }
 
             // 把自定义消息view添加到TUIKit内部的父容器里
@@ -239,11 +243,22 @@ public class ChatLayoutHelper {
 
             // 自定义消息view的实现，这里仅仅展示文本信息，并且实现超链接跳转
             TextView textView = view.findViewById(R.id.test_custom_message_tv);
-            textView.setText(customMessageData.text);
+            final String text = "不支持的自定义消息：" + new String(elem.getData());
+            if (data == null) {
+                textView.setText(text);
+            } else {
+                textView.setText(data.text);
+            }
+            final CustomMessageData customMessageData = data;
             view.setClickable(true);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (customMessageData == null) {
+                        DemoLog.e(TAG, "Do what?");
+                        ToastUtil.toastShortMessage(text);
+                        return;
+                    }
                     Intent intent = new Intent();
                     intent.setAction("android.intent.action.VIEW");
                     Uri content_url = Uri.parse(customMessageData.link);

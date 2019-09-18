@@ -14,6 +14,7 @@ import com.tencent.imsdk.friendship.TIMFriendPendencyItem;
 import com.tencent.imsdk.friendship.TIMFriendPendencyRequest;
 import com.tencent.imsdk.friendship.TIMFriendPendencyResponse;
 import com.tencent.imsdk.friendship.TIMPendencyType;
+import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.menu.AddMoreActivity;
@@ -24,7 +25,7 @@ import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewFriendActivity extends Activity {
+public class NewFriendActivity extends BaseActivity {
 
     private static final String TAG = NewFriendActivity.class.getSimpleName();
 
