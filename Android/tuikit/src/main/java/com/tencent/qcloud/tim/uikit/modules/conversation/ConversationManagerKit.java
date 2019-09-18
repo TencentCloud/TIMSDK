@@ -279,20 +279,20 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
 
                     @Override
                     public void onSuccess(List<TIMFriend> timFriends) {
-                        String remark = "";
                         if (timFriends == null || timFriends.size() == 0) {
                             TUIKitLog.i(TAG, "No Friends");
                             return;
                         }
                         for (TIMFriend friend : timFriends) {
-                            if (TextUtils.equals(conversation.getPeer(), friend.getIdentifier())) {
-                                if (!TextUtils.isEmpty(friend.getRemark())) {
-                                    info.setTitle(friend.getRemark());
-                                }
-                                info.setTitle(remark);
-                                mProvider.updateAdapter();
-                                return;
+                            if (!TextUtils.equals(conversation.getPeer(), friend.getIdentifier())) {
+                                continue;
                             }
+                            if (TextUtils.isEmpty(friend.getRemark())) {
+                                continue;
+                            }
+                            info.setTitle(friend.getRemark());
+                            mProvider.updateAdapter();
+                            return;
                         }
                         TUIKitLog.i(TAG, conversation.getPeer() + " is not my friend");
                     }
@@ -539,14 +539,13 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
 
 
     /**
-     * 销毁会话列表模块，退出登录时调用
+     * 与UI做解绑操作，避免内存泄漏
      */
     public void destroyConversation() {
         TUIKitLog.i(TAG, "destroyConversation");
         if (mProvider != null) {
-            mProvider.clear();
+            mProvider.attachAdapter(null);
         }
-        mProvider = null;
         if (mUnreadWatchers != null) {
             mUnreadWatchers.clear();
         }

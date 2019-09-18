@@ -14,6 +14,7 @@ import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.friendship.TIMFriendRequest;
 import com.tencent.imsdk.friendship.TIMFriendResult;
 import com.tencent.imsdk.friendship.TIMFriendStatus;
+import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
@@ -21,7 +22,7 @@ import com.tencent.qcloud.tim.uikit.utils.SoftKeyBoardUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
-public class AddMoreActivity extends Activity {
+public class AddMoreActivity extends BaseActivity {
 
     private static final String TAG = AddMoreActivity.class.getSimpleName();
 

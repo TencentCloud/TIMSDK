@@ -49,8 +49,17 @@ public class TUIKit {
      *
      * @param listener
      */
-    public static void setIMEventListener(IMEventListener listener) {
-        TUIKitImpl.setIMEventListener(listener);
+    public static void addIMEventListener(IMEventListener listener) {
+        TUIKitImpl.addIMEventListener(listener);
+    }
+
+    /**
+     * 删除TUIKit的IM消息的全局监听
+     *
+     * @param listener 如果为空，则删除全部的监听
+     */
+    public static void removeIMEventListener(IMEventListener listener) {
+        TUIKitImpl.removeIMEventListener(listener);
     }
 
     /**

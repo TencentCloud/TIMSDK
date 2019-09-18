@@ -244,7 +244,29 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
         getMessageLayout().scrollToEnd();
     }
 
+    private Runnable mTypingRunnable = null;
+    private ChatProvider.TypingListener mTypingListener = new ChatProvider.TypingListener() {
+        @Override
+        public void onTyping() {
+            final String oldTitle = getTitleBar().getMiddleTitle().getText().toString();
+            getTitleBar().getMiddleTitle().setText(R.string.typing);
+            if (mTypingRunnable == null) {
+                mTypingRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        getTitleBar().getMiddleTitle().setText(oldTitle);
+                    }
+                };
+            }
+            getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
+            getTitleBar().getMiddleTitle().postDelayed(mTypingRunnable, 3000);
+        }
+    };
+
     public void setDataProvider(IChatProvider provider) {
+        if (provider != null) {
+            ((ChatProvider)provider).setTypingListener(mTypingListener);
+        }
         if (mAdapter != null) {
             mAdapter.setDataSource(provider);
         }
@@ -320,6 +342,7 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
 
     @Override
     public void exitChat() {
+        getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
         AudioPlayer.getInstance().stopRecord();
         AudioPlayer.getInstance().stopPlayRecord();
         if (getChatManager() != null) {

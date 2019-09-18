@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMManager;
+import com.tencent.qcloud.tim.demo.BaseActivity;
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.BaseFragment;
@@ -54,10 +56,7 @@ public class ProfileFragment extends BaseFragment {
 
                                     @Override
                                     public void onSuccess() {
-                                        Activity activity = getActivity();
-                                        if (activity instanceof MainActivity) {
-                                            ((MainActivity) activity).logout(false);
-                                        }
+                                        BaseActivity.logout(DemoApplication.instance(), false);
                                         TUIKit.unInit();
                                         if (getActivity() != null) {
                                             getActivity().finish();

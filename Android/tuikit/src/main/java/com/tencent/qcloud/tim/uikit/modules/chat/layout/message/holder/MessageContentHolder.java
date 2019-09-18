@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
 
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
     public LinearLayout msgContentLinear;
     public ProgressBar sendingProgress;
     public ImageView statusImage;
+    public TextView isReadText;
 
     public MessageContentHolder(View itemView) {
         super(itemView);
@@ -38,6 +40,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         msgContentLinear = itemView.findViewById(R.id.msg_content_ll);
         statusImage = itemView.findViewById(R.id.message_status_iv);
         sendingProgress = itemView.findViewById(R.id.message_sending_pb);
+        isReadText = itemView.findViewById(R.id.is_read_tv);
     }
 
     public void layoutViews(final MessageInfo msg, final int position) {
@@ -114,7 +117,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             usernameText.setTextSize(properties.getNameFontSize());
         }
         // 聊天界面设置头像和昵称
-        TIMUserProfile profile = TIMFriendshipManager.getInstance().queryUserProfile(msg.getFromUser());
+        TIMUserProfile profile = TIMFriendshipManager.getInstance().queryUserProfile(msg.getTIMMessage().getSender());
         if (profile == null) {
             usernameText.setText(msg.getFromUser());
         } else {
@@ -145,21 +148,21 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         //// 聊天气泡设置
         if (msg.isSelf()) {
             if (properties.getRightBubble() != null) {
-                msgContentLinear.setBackground(properties.getRightBubble());
+                msgContentFrame.setBackground(properties.getRightBubble());
             } else {
-                msgContentLinear.setBackgroundResource(R.drawable.chat_bubble_myself);
+                msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_myself);
             }
         } else {
             if (properties.getLeftBubble() != null) {
-                msgContentLinear.setBackground(properties.getLeftBubble());
+                msgContentFrame.setBackground(properties.getLeftBubble());
             } else {
-                msgContentLinear.setBackgroundResource(R.drawable.chat_other_bg);
+                msgContentFrame.setBackgroundResource(R.drawable.chat_other_bg);
             }
         }
 
         //// 聊天气泡的点击事件处理
         if (onItemClickListener != null) {
-            msgContentLinear.setOnLongClickListener(new View.OnLongClickListener() {
+            msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     onItemClickListener.onMessageLongClick(v, position, msg);
@@ -183,7 +186,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         //// 发送状态的设置
         if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL) {
             statusImage.setVisibility(View.VISIBLE);
-            statusImage.setOnClickListener(new View.OnClickListener() {
+            msgContentFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (onItemClickListener != null) {
@@ -192,6 +195,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
                 }
             });
         } else {
+            msgContentFrame.setOnClickListener(null);
             statusImage.setVisibility(View.GONE);
         }
 
@@ -202,6 +206,25 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         } else {
             msgContentLinear.removeView(msgContentFrame);
             msgContentLinear.addView(msgContentFrame, 0);
+        }
+
+        //// 对方已读标识的设置
+        if (msg.isSelf()) {
+            if (msg.isGroup()) {
+                isReadText.setVisibility(View.GONE);
+            } else {
+                isReadText.setVisibility(View.VISIBLE);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)isReadText.getLayoutParams();
+                params.gravity = Gravity.CENTER_VERTICAL;
+                isReadText.setLayoutParams(params);
+                if (msg.getTIMMessage().isPeerReaded() || msg.getTIMMessage().getCustomInt() == 1) {
+                    isReadText.setText(R.string.has_read);
+                } else {
+                    isReadText.setText(R.string.unread);
+                }
+            }
+        } else {
+            isReadText.setVisibility(View.GONE);
         }
 
         //// 由子类设置指定消息类型的views

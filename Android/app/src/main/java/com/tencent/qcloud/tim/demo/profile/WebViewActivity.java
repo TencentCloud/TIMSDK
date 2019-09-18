@@ -9,10 +9,11 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
 
-public class WebViewActivity extends Activity {
+public class WebViewActivity extends BaseActivity {
 
     private WebView mWebView;
     private TitleBarLayout mTitleBar;

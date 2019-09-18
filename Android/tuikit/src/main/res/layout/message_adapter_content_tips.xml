@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:background="@drawable/chat_time_border"
         android:textColor="#fff"
         android:clickable="true"

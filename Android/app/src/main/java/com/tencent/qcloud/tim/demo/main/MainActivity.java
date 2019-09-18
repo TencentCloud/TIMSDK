@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -15,12 +14,12 @@ import android.widget.TextView;
 import com.huawei.android.hms.agent.HMSAgent;
 import com.huawei.android.hms.agent.common.handler.ConnectHandler;
 import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
-import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.utils.IMFunc;
+import com.tencent.qcloud.tim.demo.BaseActivity;
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.ContactFragment;
 import com.tencent.qcloud.tim.demo.conversation.ConversationFragment;
-import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.Constants;
@@ -35,7 +34,7 @@ import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
 
 
-public class MainActivity extends Activity implements ConversationManagerKit.MessageUnreadWatcher {
+public class MainActivity extends BaseActivity implements ConversationManagerKit.MessageUnreadWatcher {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -43,19 +42,12 @@ public class MainActivity extends Activity implements ConversationManagerKit.Mes
     private TextView mContactBtn;
     private TextView mProfileSelfBtn;
     private TextView mMsgUnread;
-    private TextView mLastButton;
-    private int mCurrentTab;
+    private View mLastTab;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         DemoLog.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setCustomConfig();
-        if (!TextUtils.isEmpty(TIMManager.getInstance().getLoginUser())) {
-            autoLogin(true); // 如果账户不为空，就默认下次自动登录
-        }
-        initView();
-
         prepareThirdPushToken();
     }
 
@@ -106,44 +98,40 @@ public class MainActivity extends Activity implements ConversationManagerKit.Mes
         // 未读消息监视器
         ConversationManagerKit.getInstance().addUnreadWatcher(this);
         GroupChatManagerKit.getInstance();
-        mLastButton = mConversationBtn;
-
+        if (mLastTab == null) {
+            mLastTab = findViewById(R.id.conversation_btn_group);
+        } else {
+            // 初始化时，强制切换tab到上一次的位置
+            View tmp = mLastTab;
+            mLastTab = null;
+            tabClick(tmp);
+            mLastTab = tmp;
+        }
     }
 
     public void tabClick(View view) {
-        if (mCurrentTab == view.getId()) {
+        DemoLog.i(TAG, "tabClick last: " + mLastTab + " current: " + view);
+        if (mLastTab != null && mLastTab.getId() == view.getId()) {
             return;
         }
-        mCurrentTab = view.getId();
+        mLastTab = view;
+        resetMenuState();
         Fragment current = null;
-        changeMenuState();
         switch (view.getId()) {
             case R.id.conversation_btn_group:
-                if (mLastButton == mConversationBtn) {
-                    return;
-                }
                 current = new ConversationFragment();;
                 mConversationBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.conversation_selected), null, null);
-                mLastButton = mConversationBtn;
                 break;
             case R.id.contact_btn_group:
-                if (mLastButton == mContactBtn) {
-                    return;
-                }
                 current = new ContactFragment();
                 mContactBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.contact_selected), null, null);
-                mLastButton = mContactBtn;
                 break;
             case R.id.myself_btn_group:
-                if (mLastButton == mProfileSelfBtn) {
-                    return;
-                }
                 current = new ProfileFragment();
                 mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_selected), null, null);
-                mLastButton = mProfileSelfBtn;
                 break;
         }
 
@@ -155,24 +143,13 @@ public class MainActivity extends Activity implements ConversationManagerKit.Mes
         }
     }
 
-    private void changeMenuState() {
-        if (mLastButton == null) {
-            return;
-        }
-        switch (mLastButton.getId()) {
-            case R.id.conversation:
-                mConversationBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.conversation_normal), null, null);
-                break;
-            case R.id.contact:
-                mContactBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.contact_normal), null, null);
-                break;
-            case R.id.mine:
-                mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_normal), null, null);
-                break;
-        }
+    private void resetMenuState() {
+        mConversationBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+        mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.conversation_normal), null, null);
+        mContactBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+        mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.contact_normal), null, null);
+        mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+        mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_normal), null, null);
     }
 
 
@@ -205,6 +182,13 @@ public class MainActivity extends Activity implements ConversationManagerKit.Mes
     }
 
     @Override
+    protected void onStart() {
+        DemoLog.i(TAG, "onStart");
+        super.onStart();
+        initView();
+    }
+
+    @Override
     protected void onResume() {
         DemoLog.i(TAG, "onResume");
         super.onResume();
@@ -217,47 +201,17 @@ public class MainActivity extends Activity implements ConversationManagerKit.Mes
     }
 
     @Override
+    protected void onStop() {
+        DemoLog.i(TAG, "onStop");
+        ConversationManagerKit.getInstance().destroyConversation();
+        super.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
         DemoLog.i(TAG, "onDestroy");
+        mLastTab = null;
         super.onDestroy();
-        clean();
-    }
-
-    public void logout(boolean autoLogin) {
-        DemoLog.i(TAG, "logout");
-        autoLogin(autoLogin);
-        clean();
-        Intent intent = new Intent(this, LoginForDevActivity.class);
-        intent.putExtra(Constants.LOGOUT, true);
-        startActivity(intent);
-    }
-
-    private void autoLogin(boolean autoLogin) {
-        SharedPreferences shareInfo = getSharedPreferences(Constants.USERINFO, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shareInfo.edit();
-        editor.putBoolean(Constants.AUTO_LOGIN, autoLogin);
-        editor.commit();
-    }
-
-    private void clean() {
-        ConversationManagerKit.getInstance().destroyConversation();
-        TUIKit.setIMEventListener(null);
-    }
-
-    private void setCustomConfig() {
-        //注册IM事件回调，这里示例为用户被踢的回调，更多事件注册参考文档
-        TUIKit.setIMEventListener(new IMEventListener() {
-            @Override
-            public void onForceOffline() {
-                ToastUtil.toastLongMessage("您的帐号已在其它终端登录");
-                logout(false);
-                finish();
-            }
-
-            @Override
-            public void onDisconnected(int code, String desc) {
-            }
-        });
     }
 
     private void getHuaWeiPushToken() {

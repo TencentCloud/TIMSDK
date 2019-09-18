@@ -17,7 +17,6 @@ public class ThirdPushTokenMgr {
 
     private static final String TAG = ThirdPushTokenMgr.class.getSimpleName();
     private String mThirdPushToken;
-    private boolean mIsTokenSet = false;
     public static final boolean USER_GOOGLE_FCM = false;
 
     public static ThirdPushTokenMgr getInstance() {
@@ -37,14 +36,9 @@ public class ThirdPushTokenMgr {
     }
 
     public void setPushTokenToTIM() {
-        if (mIsTokenSet) {
-            DemoLog.i(TAG, "setPushTokenToTIM mIsTokenSet true, ignore");
-            return;
-        }
         String token = ThirdPushTokenMgr.getInstance().getThirdPushToken();
         if (TextUtils.isEmpty(token)) {
             DemoLog.i(TAG, "setPushTokenToTIM third token is empty");
-            mIsTokenSet = false;
             return;
         }
         TIMOfflinePushToken param = null;
@@ -72,7 +66,6 @@ public class ThirdPushTokenMgr {
             @Override
             public void onSuccess() {
                 DemoLog.d(TAG, "setOfflinePushToken success");
-                mIsTokenSet = true;
             }
         });
     }

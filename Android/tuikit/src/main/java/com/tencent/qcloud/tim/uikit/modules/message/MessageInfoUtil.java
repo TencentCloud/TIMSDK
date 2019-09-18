@@ -3,9 +3,8 @@ package com.tencent.qcloud.tim.uikit.modules.message;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMConversation;
-import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMCustomElem;
 import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMElemType;
@@ -311,6 +310,35 @@ public class MessageInfoUtil {
         return list;
     }
 
+    public static boolean isTyping(TIMMessage timMessage) {
+        // 如果有任意一个element是正在输入，则认为这条消息是正在输入。除非测试，正常不可能发这种消息。
+        for (int i = 0; i < timMessage.getElementCount(); i++) {
+            if (timMessage.getElement(i).getType() == TIMElemType.Custom) {
+                TIMCustomElem customElem = (TIMCustomElem) timMessage.getElement(i);
+                if (isTyping(customElem.getData())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean isTyping(byte[] data) {
+        try {
+            String str = new String(data, "UTF-8");
+            MessageTyping typing = new Gson().fromJson(str, MessageTyping.class);
+            if (typing != null
+                    && typing.userAction == MessageTyping.TYPE_TYPING
+                    && TextUtils.equals(typing.actionParam, MessageTyping.EDIT_START)) {
+                return true;
+            }
+            return false;
+        } catch (Exception e){
+            TUIKitLog.e(TAG, "parse json error");
+        }
+        return false;
+    }
+
     private static MessageInfo ele2MessageInfo(final MessageInfo msgInfo, TIMMessage timMessage, TIMElem ele, boolean isGroup) {
         if (msgInfo == null
                 || timMessage == null
@@ -350,6 +378,10 @@ public class MessageInfoUtil {
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_DELETE);
                 msgInfo.setExtra(new String(customElem.getExt()));
             } else {
+                if (isTyping(customElem.getData())) {
+                    // 忽略正在输入，它不能作为真正的消息展示
+                    return null;
+                }
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_CUSTOM);
                 msgInfo.setExtra("[自定义消息]");
             }
@@ -395,24 +427,27 @@ public class MessageInfoUtil {
             }
             if (tipsType == TIMGroupTipsType.ModifyGroupInfo) {
                 List<TIMGroupTipsElemGroupInfo> modifyList = groupTips.getGroupInfoList();
-                if (modifyList.size() > 0) {
-                    TIMGroupTipsElemGroupInfo modifyInfo = modifyList.get(0);
+                for (int i = 0; i < modifyList.size(); i++) {
+                    TIMGroupTipsElemGroupInfo modifyInfo = modifyList.get(i);
                     TIMGroupTipsGroupInfoType modifyType = modifyInfo.getType();
                     if (modifyType == TIMGroupTipsGroupInfoType.ModifyName) {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NAME);
                         message = message + "修改群名称为\"" + modifyInfo.getContent() + "\"";
                     } else if (modifyType == TIMGroupTipsGroupInfoType.ModifyNotification) {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                        message = message + "修改群公告";
+                        message = message + "修改群公告为\"" + modifyInfo.getContent() + "\"";
                     } else if (modifyType == TIMGroupTipsGroupInfoType.ModifyOwner) {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
                         message = message + "转让群主给\"" + modifyInfo.getContent() + "\"";
                     } else if (modifyType == TIMGroupTipsGroupInfoType.ModifyFaceUrl) {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                        message = message + "修改群头像";
+                        message = message + "修改了群头像";
                     } else if (modifyType == TIMGroupTipsGroupInfoType.ModifyIntroduction) {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                        message = message + "修改群介绍";
+                        message = message + "修改群介绍为\"" + modifyInfo.getContent() + "\"";
+                    }
+                    if (i < modifyList.size() - 1) {
+                        message = message + "、";
                     }
                 }
             }
@@ -523,7 +558,11 @@ public class MessageInfoUtil {
                 msgInfo.setExtra("[视频]");
             } else if (type == TIMElemType.File) {
                 TIMFileElem fileElem = (TIMFileElem) ele;
-                final String path = TUIKitConstants.FILE_DOWNLOAD_DIR + fileElem.getUuid();
+                String filename = fileElem.getUuid();
+                if (TextUtils.isEmpty(filename)) {
+                    filename = System.currentTimeMillis() + fileElem.getFileName();
+                }
+                final String path = TUIKitConstants.FILE_DOWNLOAD_DIR + filename;
                 if (!msgInfo.isSelf()) {
                     File file = new File(path);
                     if (!file.exists()) {

@@ -19,6 +19,8 @@ import com.tencent.imsdk.TIMBackgroundParam;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.TIMMessage;
+import com.tencent.imsdk.TIMOfflinePushNotification;
 import com.tencent.imsdk.session.SessionWrapper;
 import com.tencent.imsdk.utils.IMFunc;
 import com.tencent.qcloud.tim.demo.helper.ConfigHelper;
@@ -27,6 +29,7 @@ import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.uikit.base.IMEventListener;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
@@ -93,10 +96,12 @@ public class DemoApplication extends Application {
             registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
         }
         instance = this;
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
+        if (BuildConfig.DEBUG) {
+            if (LeakCanary.isInAnalyzerProcess(this)) {
+                return;
+            }
+            LeakCanary.install(this);
         }
-        LeakCanary.install(this);
     }
 
     class StatisticActivityLifecycleCallback implements ActivityLifecycleCallbacks {
@@ -131,6 +136,7 @@ public class DemoApplication extends Application {
                         DemoLog.i(TAG, "doForeground success");
                     }
                 });
+                TUIKit.removeIMEventListener(mIMEventListener);
             }
             isChangingConfiguration = false;
         }
@@ -169,9 +175,22 @@ public class DemoApplication extends Application {
                         DemoLog.i(TAG, "doBackground success");
                     }
                 });
+                // 应用退到后台，消息转化为系统通知
+                TUIKit.addIMEventListener(mIMEventListener);
             }
             isChangingConfiguration = activity.isChangingConfigurations();
         }
+
+        private IMEventListener mIMEventListener = new IMEventListener() {
+            @Override
+            public void onNewMessages(List<TIMMessage> msgs) {
+                for (TIMMessage msg : msgs) {
+                    // 小米手机需要在设置里面把demo的"后台弹出权限"打开才能点击Notification跳转。TIMOfflinePushNotification后续不再维护，如有需要，建议应用自己调用系统api弹通知栏消息。
+                    TIMOfflinePushNotification notification = new TIMOfflinePushNotification(DemoApplication.this, msg);
+                    notification.doNotify(DemoApplication.this, R.drawable.default_user_icon);
+                }
+            }
+        };
 
         @Override
         public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
@@ -187,5 +206,4 @@ public class DemoApplication extends Application {
     public static DemoApplication instance() {
         return instance;
     }
-
 }

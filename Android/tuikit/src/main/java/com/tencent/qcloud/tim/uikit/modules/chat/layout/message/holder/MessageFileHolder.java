@@ -71,6 +71,7 @@ public class MessageFileHolder extends MessageContentHolder {
                             @Override
                             public void onError(int code, String desc) {
                                 ToastUtil.toastLongMessage("getToFile fail:" + code + "=" + desc);
+                                fileStatusText.setText(R.string.un_download);
                                 sendingProgress.setVisibility(View.GONE);
                             }
 

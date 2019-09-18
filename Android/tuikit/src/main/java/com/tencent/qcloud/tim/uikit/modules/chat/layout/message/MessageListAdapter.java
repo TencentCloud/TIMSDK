@@ -98,7 +98,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     @Override
     public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
         if (holder instanceof MessageContentHolder) {
-            ((MessageContentHolder)holder).msgContentLinear.setBackground(null);
+            ((MessageContentHolder)holder).msgContentFrame.setBackground(null);
         }
     }
 

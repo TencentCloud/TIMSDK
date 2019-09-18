@@ -114,12 +114,12 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
 
     @Override
     public TextView getLeftTitle() {
-        return mCenterTitle;
+        return mLeftTitle;
     }
 
     @Override
     public TextView getMiddleTitle() {
-        return null;
+        return mCenterTitle;
     }
 
     @Override
