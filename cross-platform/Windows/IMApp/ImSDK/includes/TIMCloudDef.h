@@ -187,7 +187,7 @@ enum TIMErrCode {
     ERR_SVR_ACCOUNT_USERSIG_MISMATCH_ID         = 70013,  ///< 请求的 Identifier 与生成 UserSig 的 Identifier 不匹配。
     ERR_SVR_ACCOUNT_USERSIG_MISMATCH_SDKAPPID   = 70014,  ///< 请求的 SDKAppID 与生成 UserSig 的 SDKAppID 不匹配。
     ERR_SVR_ACCOUNT_USERSIG_PUBLICKEY_NOT_FOUND = 70016,  ///< 验证 UserSig 时公钥不存在。请先登录控制台下载私钥，下载私钥的具体方法可参考 [下载签名用的私钥](https://cloud.tencent.com/document/product/269/32688#.E4.B8.8B.E8.BD.BD.E7.AD.BE.E5.90.8D.E7.94.A8.E7.9A.84.E7.A7.81.E9.92.A5) 。
-    ERR_SVR_ACCOUNT_SDKAPPID_NOT_FOUND          = 70020,  ///< SDKAppID 未找到，请在云通信 IM 控制台确认应用信息。
+    ERR_SVR_ACCOUNT_SDKAPPID_NOT_FOUND          = 70020,  ///< SDKAppID 未找到，请在即时通信 IM 控制台确认应用信息。
     ERR_SVR_ACCOUNT_INVALID_USERSIG             = 70052,  ///< UserSig 已经失效，请重新生成，再次尝试。
     ERR_SVR_ACCOUNT_NOT_FOUND                   = 70107,  ///< 请求的用户帐号不存在。
     ERR_SVR_ACCOUNT_SEC_RSTR                    = 70114,  ///< 安全原因被限制。
@@ -253,7 +253,7 @@ enum TIMErrCode {
 
     ERR_SVR_MSG_PKG_PARSE_FAILED                = 20001,  ///< 请求包非法，请检查发送方和接收方帐号是否存在。
     ERR_SVR_MSG_INTERNAL_AUTH_FAILED            = 20002,  ///< 内部鉴权失败。
-    ERR_SVR_MSG_INVALID_ID                      = 20003,  ///< Identifier 无效或者 Identifier 未导入云通信 IM。
+    ERR_SVR_MSG_INVALID_ID                      = 20003,  ///< Identifier 无效或者 Identifier 未导入即时通信 IM。
     ERR_SVR_MSG_NET_ERROR                       = 20004,  ///< 网络异常，请重试。
     ERR_SVR_MSG_INTERNAL_ERROR1                 = 20005,  ///< 服务端内部错误，请重试。
     ERR_SVR_MSG_PUSH_DENY                       = 20006,  ///< 触发发送单聊消息之前回调，App 后台返回禁止下发该消息。
@@ -273,7 +273,7 @@ enum TIMErrCode {
     ERR_SVR_MSG_ADMIN_REQUIRED                  = 90009,  ///< 请求需要 App 管理员权限。
     ERR_SVR_MSG_INVALID_JSON_FORMAT             = 90010,  ///< JSON 格式请求包不符合消息格式描述，请参考 [TIMMsgElement 对象](https://cloud.tencent.com/document/product/269/2720#.E6.B6.88.E6.81.AF.E5.85.83.E7.B4.A0timmsgelement) 的定义。
     ERR_SVR_MSG_TO_ACCOUNT_COUNT_LIMIT          = 90011,  ///< 批量发消息目标帐号超过500，请减少 To_Account 中目标帐号数量。
-    ERR_SVR_MSG_TO_ACCOUNT_NOT_FOUND            = 90012,  ///< To_Account 没有注册或不存在，请确认 To_Account 是否导入云通信 IM 或者是否拼写错误。
+    ERR_SVR_MSG_TO_ACCOUNT_NOT_FOUND            = 90012,  ///< To_Account 没有注册或不存在，请确认 To_Account 是否导入即时通信 IM 或者是否拼写错误。
     ERR_SVR_MSG_TIME_LIMIT                      = 90026,  ///< 消息离线存储时间错误（最多不能超过7天）。
     ERR_SVR_MSG_INVALID_SYNCOTHERMACHINE        = 90031,  ///< JSON 格式请求包体中 SyncOtherMachine 字段不是 Integer 类型
     ERR_SVR_MSG_INVALID_MSGLIFETIME             = 90044,  ///< JSON 格式请求包体中 MsgLifeTime 字段不是 Integer 类型
@@ -281,7 +281,7 @@ enum TIMErrCode {
     ERR_SVR_MSG_INTERNAL_ERROR2                 = 90994,  ///< 服务内部错误，请重试。
     ERR_SVR_MSG_INTERNAL_ERROR3                 = 90995,  ///< 服务内部错误，请重试。
     ERR_SVR_MSG_INTERNAL_ERROR4                 = 91000,  ///< 服务内部错误，请重试。
-    ERR_SVR_MSG_INTERNAL_ERROR5                 = 90992,  ///< 服务内部错误，请重试；如果所有请求都返回该错误码，且 App 配置了第三方回调，请检查 App 服务端是否正常向云通信 IM 后台服务端返回回调结果。
+    ERR_SVR_MSG_INTERNAL_ERROR5                 = 90992,  ///< 服务内部错误，请重试；如果所有请求都返回该错误码，且 App 配置了第三方回调，请检查 App 服务端是否正常向即时通信 IM 后台服务端返回回调结果。
     ERR_SVR_MSG_BODY_SIZE_LIMIT                 = 93000,  ///< JSON 数据包超长，消息包体请不要超过8k。
     ERR_SVR_MSG_LONGPOLLING_COUNT_LIMIT         = 91101,  ///< Web 端长轮询被踢（Web 端同时在线实例个数超出限制）。
     // 120001 - 130000,  ///< 单聊第三方回调返回的自定义错误码。
@@ -570,12 +570,12 @@ static const char* kTIMSocks5ProxyInfoPassword = "socks5_proxy_info_password"; /
 /**
 * @brief 更新配置
 * > 自定义数据
-* + 开发者可以自定义的数据(长度限制为64个字节)，ImSDK只负责透传给云通信IM后台后，可以通过第三方回调[状态变更回调](https://cloud.tencent.com/document/product/269/2570)告知开发者业务后台。
+* + 开发者可以自定义的数据(长度限制为64个字节)，ImSDK只负责透传给即时通信IM后台后，可以通过第三方回调[状态变更回调](https://cloud.tencent.com/document/product/269/2570)告知开发者业务后台。
 * > HTTP代理
 * + HTTP代理主要用在发送图片、语音、文件、微视频等消息时，将相关文件上传到COS，以及接收到图片、语音、文件、微视频等消息，将相关文件下载到本地时用到。
 *   设置时，设置的IP不能为空，端口不能为0.如果需要取消HTTP代理，只需将代理的IP设置为空字符串，端口设置为0
 * > SOCKS5代理
-* + SOCKS5代理需要在初始化之前设置。设置之后ImSDK发送的所有协议会通过SOCKS5代理服务器发送的云通信IM后台。
+* + SOCKS5代理需要在初始化之前设置。设置之后ImSDK发送的所有协议会通过SOCKS5代理服务器发送的即时通信IM后台。
 */
 // Struct SetConfig JsonKey
 static const char* kTIMSetConfigLogLevel           = "set_config_log_level";             // uint [TIMLogLevel](),  只写(选填), 输出到日志文件的日子级别
@@ -1058,7 +1058,7 @@ enum TIMDownloadType {
 */
 // Struct DownloadElemParam JsonKey
 static const char* kTIMMsgDownloadElemParamFlag       = "msg_download_elem_param_flag";         // uint,   只写, 从消息元素里面取出来,元素的下载类型
-static const char* kTIMMsgDownloadElemParamType       = "msg_download_elem_param_type";         // uint [TIMDownladType](), 只写, 从消息元素里面取出来,元素的类型
+static const char* kTIMMsgDownloadElemParamType       = "msg_download_elem_param_type";         // uint [TIMDownloadType](), 只写, 从消息元素里面取出来,元素的类型
 static const char* kTIMMsgDownloadElemParamId         = "msg_download_elem_param_id";           // string, 只写, 从消息元素里面取出来,元素的ID
 static const char* kTIMMsgDownloadElemParamBusinessId = "msg_download_elem_param_business_id";  // uint,   只写, 从消息元素里面取出来,元素的BusinessID
 static const char* kTIMMsgDownloadElemParamUrl        = "msg_download_elem_param_url";          // string, 只写, 从消息元素里面取出来,元素URL
