@@ -130,4 +130,7 @@ export default {
 .account
   font-size 14px
   color $secondary
+._i-row
+  margin-top 20rpx
+  display block
 </style>

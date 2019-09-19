@@ -313,12 +313,12 @@ export default {
   font-size 16px
   .key
     padding 10px 20px
-    width 60%
+    width 20%
     font-weight 500
     color $base
   .value
-    width 40%
-    padding 10px 20px
+    width 80%
+    padding 10px 20px 10px 0
     font-weight 400
     color $regular
     overflow hidden

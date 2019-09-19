@@ -132,7 +132,7 @@
    ![](_doc/3.png)
 
 3. 配置 `SDKAPPID` 和 `SECRETKEY`，获取方式参考：[密钥获取方法](https://cloud.tencent.com/document/product/269/36838#.E6.AD.A5.E9.AA.A41.EF.BC.9A.E5.88.9B.E5.BB.BA.E5.BA.94.E7.94.A8)
-    - 打开 `/static/debug/GeneraterUserSig.js` 文件
+    - 打开 `/static/utils/GeneraterUserSig.js` 文件
     
     - 按图示填写相应配置后，保存文件
     

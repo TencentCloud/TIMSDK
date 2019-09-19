@@ -1,4 +1,4 @@
-export const emojiUrl = 'http://imgcache.qq.com/open/qcloud/tim/assets/emoji/'
+export const emojiUrl = 'https://webim-1252463788.file.myqcloud.com/assets/emoji/'
 export const emojiMap = {
   '[NO]': 'emoji_0@2x.png',
   '[OK]': 'emoji_1@2x.png',
