@@ -66,7 +66,7 @@
             </div>
             <div class="message" v-else-if="message.type === 'TIMFaceElem'">
               <div class="custom-elem">
-                <image :src="'https://imgcache.qq.com/open/qcloud/tim/assets/face-elem/' + message.payload.data + '.png'" style="height:90px; width:90px"/>
+                <image :src="'https://webim-1252463788.file.myqcloud.com/assets/face-elem/' + message.payload.data + '.png'" style="height:90px; width:90px"/>
               </div>
             </div>
           </div>

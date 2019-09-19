@@ -66,7 +66,7 @@ tim.on(TIM.EVENT.BLACKLIST_UPDATED, event => {
   store.commit('updateBlacklist', event.data)
 })
 
-tim.on(TIM.EVENT.GROUP_SYSTEM_NOTICE_RECERIVED, event => {
+tim.on(TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, event => {
   console.log('system message', event)
 })
 
