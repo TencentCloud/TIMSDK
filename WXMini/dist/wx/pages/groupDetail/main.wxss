@@ -78,13 +78,13 @@
 }
 .item .key.data-v-536d31bc {
   padding: 20rpx 40rpx;
-  width: 60%;
+  width: 20%;
   font-weight: 500;
   color: #1c2438;
 }
 .item .value.data-v-536d31bc {
-  width: 40%;
-  padding: 20rpx 40rpx;
+  width: 80%;
+  padding: 20rpx 40rpx 20rpx 0;
   font-weight: 400;
   color: #495060;
   overflow: hidden;

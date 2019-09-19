@@ -33,3 +33,7 @@
   font-size: 28rpx;
   color: #80848f;
 }
+._i-row.data-v-9c65aab0 {
+  margin-top: 20rpx;
+  display: block;
+}
