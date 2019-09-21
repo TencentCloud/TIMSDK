@@ -109,6 +109,12 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### Change Log
 
+#### 2019/09/21
+
+**Bug Fixes**
+
+- 修复收到新群系统通知事件名不正确的问题
+
 #### 2019/09/06
 
 **Bug Fixes**
