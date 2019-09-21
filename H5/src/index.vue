@@ -77,7 +77,7 @@ export default {
         this.$store.commit('updateGroupList', event.data)
       })
       // 收到新的群系统通知
-      this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECERIVED, event => {
+      this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, event => {
         const isKickedout = event.data.type === 4
         const isCurrentConversation =
           `GROUP${event.data.message.payload.groupProfile.groupID}` === this.currentConversation.conversationID
