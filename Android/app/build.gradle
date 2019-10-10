@@ -84,6 +84,6 @@ dependencies {
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
     compile 'org.bouncycastle:bcpkix-jdk15on:1.59'
 
-implementation 'com.tencent.imsdk:tuikit:4.5.45'
+implementation 'com.tencent.imsdk:tuikit:4.5.55'
 // implementation project(':tuikit')
 }
