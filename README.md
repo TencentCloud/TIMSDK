@@ -69,36 +69,9 @@
 - 为了更好的了解您使用TIMSDK所遇到的问题，方便快速有效定位解决TIMSDK问题，希望您按如下反馈指引反馈issue，方便我们尽快解决您的问题
 - [TIMSDK issue反馈指引](https://github.com/tencentyun/TIMSDK/wiki/TIMSDK-issue%E6%9C%89%E6%95%88%E5%8F%8D%E9%A6%88%E6%A8%A1%E6%9D%BF)
 
-## 4.5.45 @2019.09.18
+## 4.5.55 @2019.10.10
 
 ### SDK
 
-**通用变更点**
-
-- 优化网络连接的质量
-- 修复删除群会话后，再收到新消息，修复未读数异常的问题
-- 修复删除会话后，还能在会话更新回调里面获取到已删除会话的问题 
-- 优化群/群成员自定义段拉取逻辑
-
-**Android 平台**
-
-- 废弃 TIMManager中的 setOfflinePushListener 接口 以及 TIMOfflinePushNotification 类
-
-### TUIKit & Demo
-
-**iOS**
-
-- 修复 NSSting + Common.h  类冲突的问题
-- 修复群 tips 消息展示不全的问题
-
-**Android**
-
-- 增加已读回执
-- 兼容老版本正在输入显示
-- 修复重发消息不能立即显示在聊天窗口最下方的问题
-- 修复群聊时特定条件下不能显示头像的问题
-- 修复不能显示多 elements 群消息的问题
-- 修复特定消息导致的崩溃
-- 修复群管理员权限错误的问题
-- 修复web端发送文件不能正常接收的问题
+- 修复已知问题
 
