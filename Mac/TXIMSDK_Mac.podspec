@@ -22,3 +22,7 @@ Pod::Spec.new do |spec|
   spec.vendored_frameworks = '**/ImSDKForMac.framework'
   spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Mac/ImSDKForMac.framework/Versions/A/Headers/'}
 end
+
+# export EXPANDED_CODE_SIGN_IDENTITY=""
+# export EXPANDED_CODE_SIGN_IDENTITY_NAME=""
+# export EXPANDED_PROVISIONING_PROFILE=""
