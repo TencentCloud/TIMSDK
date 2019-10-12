@@ -231,7 +231,40 @@
 
 ## 注意事项
 
-**1. 避免在前端进行签名计算**
+1. 避免在前端进行签名计算
 
-本 Demo 为了用户体验的便利，将 `userSig` 签发放到前端执行。若直接部署上线，会面临 `SECRETKEY` 泄露的风险。正确的 `userSig` 签发方式是将 `userSig` 的计算代码集成到您的服务端，并提供相应接口。在需要 `userSig` 时，发起请求获取动态 `userSig`。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。
+   本 Demo 为了用户体验的便利，将 `userSig` 签发放到前端执行。若直接部署上线，会面临 `SECRETKEY` 泄露的风险。
+
+   正确的 `userSig` 签发方式是将 `userSig` 的计算代码集成到您的服务端，并提供相应接口。在需要 `userSig` 时，发起请求获取动态 `userSig`。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。
+
+### Change Log
+
+#### 2019/10/12
+
+**Bug Fixes**
+
+- 修复 React 框架下发图片消息失败的问题
+
+
+#### 2019/09/21
+
+**Bug Fixes**
+
+- 修复收到新群系统通知事件名不正确的问题
+
+#### 2019/09/06
+
+**Bug Fixes**
+
+- 修复 IE 下超长文本消息的显示超出会话框的问题
+- 修复重发消息失败时无错误提示的问题
+
+
+#### 2019/09/05
+
+**Bug Fixes**
+
+- 修复预览图片时，图片显示不正确的问题
+- 修复点击群组列表时，群成员列表不更新的问题
+- 解决修改个人资料时，报错的问题
 

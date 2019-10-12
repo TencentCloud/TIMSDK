@@ -109,6 +109,13 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### Change Log
 
+#### 2019/10/12
+
+**Bug Fixes**
+
+- 修复 React 框架下发图片消息失败的问题
+
+
 #### 2019/09/21
 
 **Bug Fixes**
