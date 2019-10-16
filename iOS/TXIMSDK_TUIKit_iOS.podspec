@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_TUIKit_iOS'
-  spec.version      = '4.5.55'
+  spec.version      = '4.5.111'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -24,7 +24,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.5.55/TIM_SDK_TUIKIT_iOS_latest_framework.zip'}
+  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.5.111/TIM_SDK_TUIKIT_iOS_latest_framework.zip'}
   spec.source_files = '**/TUIKit/Classes/**/*.{h,m,mm}'
   # spec.vendored_frameworks = ''
   spec.vendored_libraries = ['**/TUIKit/Classes/third/voiceConvert/opencore-amrnb/libopencore-amrnb.a', '**/TUIKit/Classes/third/voiceConvert/opencore-amrwb/libopencore-amrwb.a']
