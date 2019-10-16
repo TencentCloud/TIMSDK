@@ -10,13 +10,6 @@ import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationListLayout;
 public interface IConversationListLayout {
 
     /**
-     * 设置会话Adapter
-     *
-     * @param adapter
-     */
-    void setAdapter(IConversationAdapter adapter);
-
-    /**
      * 设置会话界面背景，非ListView区域
      *
      * @param resId
@@ -85,5 +78,12 @@ public interface IConversationListLayout {
      * @return
      */
     ConversationListAdapter getAdapter();
+
+    /**
+     * 设置会话Adapter
+     *
+     * @param adapter
+     */
+    void setAdapter(IConversationAdapter adapter);
 
 }

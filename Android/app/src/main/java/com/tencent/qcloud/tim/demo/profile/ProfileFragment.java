@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo.profile;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,9 +13,8 @@ import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.BaseFragment;
-import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 import com.tencent.qcloud.tim.uikit.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tim.demo.main.MainActivity;
+import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 
 public class ProfileFragment extends BaseFragment {

@@ -7,6 +7,14 @@ import com.tencent.qcloud.tim.uikit.TUIKit;
 
 public class TUIKitConstants {
 
+    public static final String CAMERA_IMAGE_PATH = "camera_image_path";
+    public static final String IMAGE_WIDTH = "image_width";
+    public static final String IMAGE_HEIGHT = "image_height";
+    public static final String VIDEO_TIME = "video_time";
+    public static final String CAMERA_VIDEO_PATH = "camera_video_path";
+    public static final String IMAGE_DATA = "image_data";
+    public static final String SELF_MESSAGE = "self_message";
+    public static final String CAMERA_TYPE = "camera_type";
     public static String SD_CARD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static String APP_DIR = TUIKit.getConfigs().getGeneralConfig().getAppCacheDir() != null
             ? TUIKit.getConfigs().getGeneralConfig().getAppCacheDir()
@@ -19,18 +27,8 @@ public class TUIKitConstants {
     public static String MEDIA_DIR = APP_DIR + "/media";
     public static String FILE_DOWNLOAD_DIR = APP_DIR + "/file/download/";
     public static String CRASH_LOG_DIR = APP_DIR + "/crash/";
-
-    public static final String CAMERA_IMAGE_PATH = "camera_image_path";
-    public static final String IMAGE_WIDTH = "image_width";
-    public static final String IMAGE_HEIGHT = "image_height";
-    public static final String VIDEO_TIME = "video_time";
-    public static final String CAMERA_VIDEO_PATH = "camera_video_path";
     public static String UI_PARAMS = "ilive_ui_params";
     public static String SOFT_KEY_BOARD_HEIGHT = "soft_key_board_height";
-
-    public static final String IMAGE_DATA = "image_data";
-    public static final String SELF_MESSAGE = "self_message";
-    public static final String CAMERA_TYPE = "camera_type";
 
     public static final class ActivityRequest {
         public static final int CODE_1 = 1;

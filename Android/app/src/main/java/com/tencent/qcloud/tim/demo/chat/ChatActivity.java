@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo.chat;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

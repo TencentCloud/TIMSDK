@@ -10,6 +10,7 @@ import java.util.List;
 public class MessageRevokedManager implements TIMMessageRevokedListener {
 
     private static final MessageRevokedManager instance = new MessageRevokedManager();
+    private List<MessageRevokeHandler> mHandlers = new ArrayList<>();
 
     private MessageRevokedManager() {
     }
@@ -17,8 +18,6 @@ public class MessageRevokedManager implements TIMMessageRevokedListener {
     public static MessageRevokedManager getInstance() {
         return instance;
     }
-
-    private List<MessageRevokeHandler> mHandlers = new ArrayList<>();
 
     @Override
     public void onMessageRevoked(TIMMessageLocator locator) {

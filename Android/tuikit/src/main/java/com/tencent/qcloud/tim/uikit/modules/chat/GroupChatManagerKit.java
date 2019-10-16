@@ -1,20 +1,7 @@
 package com.tencent.qcloud.tim.uikit.modules.chat;
 
-import com.tencent.imsdk.TIMConversation;
-import com.tencent.imsdk.TIMConversationType;
-import com.tencent.imsdk.TIMElem;
-import com.tencent.imsdk.TIMElemType;
-import com.tencent.imsdk.TIMGroupAddOpt;
-import com.tencent.imsdk.TIMGroupManager;
-import com.tencent.imsdk.TIMGroupMemberInfo;
-import com.tencent.imsdk.TIMGroupSystemElem;
-import com.tencent.imsdk.TIMGroupSystemElemType;
-import com.tencent.imsdk.TIMGroupTipsElem;
-import com.tencent.imsdk.TIMGroupTipsElemGroupInfo;
-import com.tencent.imsdk.TIMGroupTipsGroupInfoType;
-import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMValueCallBack;
+import com.tencent.imsdk.*;
+import com.tencent.openqq.protocol.imsdk.msg;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatManagerKit;
@@ -36,13 +23,12 @@ import java.util.Map;
 public class GroupChatManagerKit extends ChatManagerKit {
 
     private static final String TAG = GroupChatManagerKit.class.getSimpleName();
-
+    private static GroupChatManagerKit mKit;
     private GroupInfo mCurrentChatInfo;
     private List<GroupApplyInfo> mCurrentApplies = new ArrayList<>();
     private List<GroupMemberInfo> mCurrentGroupMembers = new ArrayList<>();
     private GroupNotifyHandler mGroupHandler;
     private GroupInfoProvider mGroupInfoProvider;
-    private static GroupChatManagerKit mKit;
 
     private GroupChatManagerKit() {
         init();
@@ -53,19 +39,6 @@ public class GroupChatManagerKit extends ChatManagerKit {
             mKit = new GroupChatManagerKit();
         }
         return mKit;
-    }
-
-    protected void init() {
-        super.init();
-        mGroupInfoProvider = new GroupInfoProvider();
-    }
-
-    public GroupInfoProvider getProvider() {
-        return mGroupInfoProvider;
-    }
-
-    public ChatInfo getCurrentChatInfo() {
-        return mCurrentChatInfo;
     }
 
     private static void sendTipsMessage(TIMConversation conversation, TIMMessage message, final IUIKitCallBack callBack) {
@@ -111,14 +84,14 @@ public class GroupChatManagerKit extends ChatManagerKit {
             public void onSuccess(final String groupId) {
                 chatInfo.setId(groupId);
                 String message = TIMManager.getInstance().getLoginUser() + "创建群组";
-                final MessageInfo createTips = MessageInfoUtil.buildGroupCustomMessage(MessageInfoUtil.GROUP_CREATE, message);
+                final TIMMessage createTips = MessageInfoUtil.buildGroupCustomMessage(MessageInfoUtil.GROUP_CREATE, message);
                 TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.Group, groupId);
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                sendTipsMessage(conversation, createTips.getTIMMessage(), new IUIKitCallBack() {
+                sendTipsMessage(conversation, createTips, new IUIKitCallBack() {
                     @Override
                     public void onSuccess(Object data) {
                         callBack.onSuccess(groupId);
@@ -135,6 +108,31 @@ public class GroupChatManagerKit extends ChatManagerKit {
     }
 
     @Override
+    protected void init() {
+        super.init();
+        mGroupInfoProvider = new GroupInfoProvider();
+    }
+
+    public GroupInfoProvider getProvider() {
+        return mGroupInfoProvider;
+    }
+
+    @Override
+    public ChatInfo getCurrentChatInfo() {
+        return mCurrentChatInfo;
+    }
+
+    @Override
+    public void setCurrentChatInfo(ChatInfo info) {
+        super.setCurrentChatInfo(info);
+
+        mCurrentChatInfo = (GroupInfo) info;
+        mCurrentApplies.clear();
+        mCurrentGroupMembers.clear();
+        mGroupInfoProvider.loadGroupInfo(mCurrentChatInfo);
+    }
+
+    @Override
     protected void onReceiveSystemMessage(TIMMessage msg) {
         super.onReceiveSystemMessage(msg);
         TIMElem ele = msg.getElement(0);
@@ -148,53 +146,59 @@ public class GroupChatManagerKit extends ChatManagerKit {
 
     @Override
     protected void addGroupMessage(MessageInfo msgInfo) {
+        TIMGroupTipsElem groupTips;
+        if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_JOIN
+                || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_QUITE
+                || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_KICK
+                || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NAME
+                || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE) {
+            TIMElem elem = msgInfo.getElement();
+            if (!(elem instanceof TIMGroupTipsElem)) {
+                return;
+            }
+            groupTips = (TIMGroupTipsElem) elem;
+        } else {
+            return;
+        }
         if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_JOIN) {
-            for (int i = 0; i < msgInfo.getTIMMessage().getElementCount(); i++) {
-                TIMGroupTipsElem groupTips = (TIMGroupTipsElem) msgInfo.getTIMMessage().getElement(i);
-                Map<String, TIMGroupMemberInfo> changeInfos = groupTips.getChangedGroupMemberInfo();
-                if (changeInfos.size() > 0) {
-                    Iterator<String> keys = changeInfos.keySet().iterator();
-                    while (keys.hasNext()) {
-                        GroupMemberInfo member = new GroupMemberInfo();
-                        member.covertTIMGroupMemberInfo(changeInfos.get(keys.next()));
-                        mCurrentGroupMembers.add(member);
-                    }
-                } else {
+            Map<String, TIMGroupMemberInfo> changeInfos = groupTips.getChangedGroupMemberInfo();
+            if (changeInfos.size() > 0) {
+                Iterator<String> keys = changeInfos.keySet().iterator();
+                while (keys.hasNext()) {
                     GroupMemberInfo member = new GroupMemberInfo();
-                    member.covertTIMGroupMemberInfo(groupTips.getOpGroupMemberInfo());
+                    member.covertTIMGroupMemberInfo(changeInfos.get(keys.next()));
                     mCurrentGroupMembers.add(member);
                 }
+            } else {
+                GroupMemberInfo member = new GroupMemberInfo();
+                member.covertTIMGroupMemberInfo(groupTips.getOpGroupMemberInfo());
+                mCurrentGroupMembers.add(member);
             }
             mCurrentChatInfo.setMemberDetails(mCurrentGroupMembers);
         } else if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_QUITE || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_KICK) {
-            for (int i = 0; i < msgInfo.getTIMMessage().getElementCount(); i++) {
-
-                TIMGroupTipsElem groupTips = (TIMGroupTipsElem) msgInfo.getTIMMessage().getElement(i);
-                Map<String, TIMGroupMemberInfo> changeInfos = groupTips.getChangedGroupMemberInfo();
-                if (changeInfos.size() > 0) {
-                    Iterator<String> keys = changeInfos.keySet().iterator();
-                    while (keys.hasNext()) {
-                        String id = keys.next();
-                        for (int j = 0; j < mCurrentGroupMembers.size(); j++) {
-                            if (mCurrentGroupMembers.get(i).getAccount().equals(id)) {
-                                mCurrentGroupMembers.remove(i);
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    TIMGroupMemberInfo memberInfo = groupTips.getOpGroupMemberInfo();
-                    for (int j = 0; j < mCurrentGroupMembers.size(); j++) {
-                        if (mCurrentGroupMembers.get(i).getAccount().equals(memberInfo.getUser())) {
+            Map<String, TIMGroupMemberInfo> changeInfos = groupTips.getChangedGroupMemberInfo();
+            if (changeInfos.size() > 0) {
+                Iterator<String> keys = changeInfos.keySet().iterator();
+                while (keys.hasNext()) {
+                    String id = keys.next();
+                    for (int i = 0; i < mCurrentGroupMembers.size(); i++) {
+                        if (mCurrentGroupMembers.get(i).getAccount().equals(id)) {
                             mCurrentGroupMembers.remove(i);
                             break;
                         }
                     }
                 }
+            } else {
+                TIMGroupMemberInfo memberInfo = groupTips.getOpGroupMemberInfo();
+                for (int i = 0; i < mCurrentGroupMembers.size(); i++) {
+                    if (mCurrentGroupMembers.get(i).getAccount().equals(memberInfo.getUser())) {
+                        mCurrentGroupMembers.remove(i);
+                        break;
+                    }
+                }
             }
             mCurrentChatInfo.setMemberDetails(mCurrentGroupMembers);
         } else if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NAME || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE) {
-            TIMGroupTipsElem groupTips = (TIMGroupTipsElem) msgInfo.getTIMMessage().getElement(0);
             List<TIMGroupTipsElemGroupInfo> modifyList = groupTips.getGroupInfoList();
             if (modifyList.size() > 0) {
                 TIMGroupTipsElemGroupInfo modifyInfo = modifyList.get(0);
@@ -210,7 +214,6 @@ public class GroupChatManagerKit extends ChatManagerKit {
             }
         }
     }
-
 
     //群系统消息处理，不需要显示信息的
     private void groupSystMsgHandle(TIMGroupSystemElem groupSysEle) {
@@ -240,16 +243,6 @@ public class GroupChatManagerKit extends ChatManagerKit {
     }
 
     @Override
-    public void setCurrentChatInfo(ChatInfo info) {
-        super.setCurrentChatInfo(info);
-
-        mCurrentChatInfo = (GroupInfo) info;
-        mCurrentApplies.clear();
-        mCurrentGroupMembers.clear();
-        mGroupInfoProvider.loadGroupInfo(mCurrentChatInfo);
-    }
-
-    @Override
     public void destroyChat() {
         super.destroyChat();
         mCurrentChatInfo = null;
@@ -260,15 +253,6 @@ public class GroupChatManagerKit extends ChatManagerKit {
 
     public void setGroupHandler(GroupNotifyHandler mGroupHandler) {
         this.mGroupHandler = mGroupHandler;
-    }
-
-    public interface GroupNotifyHandler {
-
-        void onGroupForceExit();
-
-        void onGroupNameChanged(String newName);
-
-        void onApplied(int size);
     }
 
     public void onApplied(int unHandledSize) {
@@ -286,5 +270,14 @@ public class GroupChatManagerKit extends ChatManagerKit {
     protected void assembleGroupMessage(MessageInfo message) {
         message.setGroup(true);
         message.setFromUser(TIMManager.getInstance().getLoginUser());
+    }
+
+    public interface GroupNotifyHandler {
+
+        void onGroupForceExit();
+
+        void onGroupNameChanged(String newName);
+
+        void onApplied(int size);
     }
 }

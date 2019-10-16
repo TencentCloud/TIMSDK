@@ -39,23 +39,11 @@ import java.io.IOException;
 public class JCameraView extends FrameLayout implements CameraInterface.CameraOpenOverCallback, SurfaceHolder
         .Callback, CameraView {
 
-    private static final String TAG = JCameraView.class.getSimpleName();
-
-    //Camera状态机
-    private CameraMachine machine;
-
-    //闪关灯状态
-    private static final int TYPE_FLASH_AUTO = 0x021;
-    private static final int TYPE_FLASH_ON = 0x022;
-    private static final int TYPE_FLASH_OFF = 0x023;
-    private int type_flash = TYPE_FLASH_OFF;
-
     //拍照浏览时候的类型
     public static final int TYPE_PICTURE = 0x001;
     public static final int TYPE_VIDEO = 0x002;
     public static final int TYPE_SHORT = 0x003;
     public static final int TYPE_DEFAULT = 0x004;
-
     //录制视频比特率
     public static final int MEDIA_QUALITY_HIGH = 20 * 100000;
     public static final int MEDIA_QUALITY_MIDDLE = 16 * 100000;
@@ -64,13 +52,17 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     public static final int MEDIA_QUALITY_FUNNY = 4 * 100000;
     public static final int MEDIA_QUALITY_DESPAIR = 2 * 100000;
     public static final int MEDIA_QUALITY_SORRY = 1 * 80000;
-
-
     public static final int BUTTON_STATE_ONLY_CAPTURE = 0x101;      //只能拍照
     public static final int BUTTON_STATE_ONLY_RECORDER = 0x102;     //只能录像
     public static final int BUTTON_STATE_BOTH = 0x103;              //两者都可以
-
-
+    private static final String TAG = JCameraView.class.getSimpleName();
+    //闪关灯状态
+    private static final int TYPE_FLASH_AUTO = 0x021;
+    private static final int TYPE_FLASH_ON = 0x022;
+    private static final int TYPE_FLASH_OFF = 0x023;
+    //Camera状态机
+    private CameraMachine machine;
+    private int type_flash = TYPE_FLASH_OFF;
     //回调监听
     private JCameraListener jCameraLisenter;
     private ClickListener leftClickListener;
@@ -106,6 +98,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     private boolean firstTouch = true;
     private float firstTouchLength = 0;
+    private ErrorListener errorLisenter;
 
     public JCameraView(Context context) {
         this(context, null);
@@ -137,7 +130,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         layout_width = ScreenUtil.getScreenWidth(mContext);
         //缩放梯度
         zoomGradient = (int) (layout_width / 16f);
-        TUIKitLog.i(TAG,"zoom = " + zoomGradient);
+        TUIKitLog.i(TAG, "zoom = " + zoomGradient);
         machine = new CameraMachine(getContext(), this, this);
     }
 
@@ -195,7 +188,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
             @Override
             public void recordZoom(float zoom) {
-                TUIKitLog.i(TAG,"recordZoom");
+                TUIKitLog.i(TAG, "recordZoom");
                 machine.zoom(zoom, CameraInterface.TYPE_RECORDER);
             }
 
@@ -262,7 +255,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     //生命周期onResume
     public void onResume() {
-        TUIKitLog.i(TAG,"JCameraView onResume");
+        TUIKitLog.i(TAG, "JCameraView onResume");
         resetState(TYPE_DEFAULT); //重置状态
         CameraInterface.getInstance().registerSensorManager(mContext);
         machine.start(mVideoView.getHolder(), screenProp);
@@ -270,7 +263,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     //生命周期onPause
     public void onPause() {
-        TUIKitLog.i(TAG,"JCameraView onPause");
+        TUIKitLog.i(TAG, "JCameraView onPause");
         stopVideo();
         resetState(TYPE_PICTURE);
         CameraInterface.getInstance().isPreview(false);
@@ -281,7 +274,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     //SurfaceView生命周期
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        TUIKitLog.i(TAG,"JCameraView SurfaceCreated");
+        TUIKitLog.i(TAG, "JCameraView SurfaceCreated");
         new Thread() {
             @Override
             public void run() {
@@ -296,10 +289,9 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        TUIKitLog.i(TAG,"JCameraView SurfaceDestroyed");
+        TUIKitLog.i(TAG, "JCameraView SurfaceDestroyed");
         CameraInterface.getInstance().doDestroyCamera();
     }
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -366,13 +358,9 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         }
     }
 
-
     public void setJCameraLisenter(JCameraListener jCameraLisenter) {
         this.jCameraLisenter = jCameraLisenter;
     }
-
-
-    private ErrorListener errorLisenter;
 
     //启动Camera错误回调
     public void setErrorLisenter(ErrorListener errorLisenter) {
@@ -457,42 +445,36 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     public void playVideo(Bitmap firstFrame, final String url) {
         videoUrl = url;
         JCameraView.this.firstFrame = firstFrame;
-        new Thread(new Runnable() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void run() {
-                try {
-                    if (mMediaPlayer == null) {
-                        mMediaPlayer = new MediaPlayer();
-                    } else {
-                        mMediaPlayer.reset();
-                    }
-                    mMediaPlayer.setDataSource(url);
-                    mMediaPlayer.setSurface(mVideoView.getHolder().getSurface());
-                    mMediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
-                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    mMediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer
-                            .OnVideoSizeChangedListener() {
-                        @Override
-                        public void
-                        onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-                            updateVideoViewSize(mMediaPlayer.getVideoWidth(), mMediaPlayer
-                                    .getVideoHeight());
-                        }
-                    });
-                    mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mMediaPlayer.start();
-                        }
-                    });
-                    mMediaPlayer.setLooping(true);
-                    mMediaPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        try {
+            if (mMediaPlayer == null) {
+                mMediaPlayer = new MediaPlayer();
+            } else {
+                mMediaPlayer.reset();
             }
-        }).start();
+            mMediaPlayer.setDataSource(url);
+            mMediaPlayer.setSurface(mVideoView.getHolder().getSurface());
+            mMediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mMediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer
+                    .OnVideoSizeChangedListener() {
+                @Override
+                public void
+                onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                    updateVideoViewSize(mMediaPlayer.getVideoWidth(), mMediaPlayer
+                            .getVideoHeight());
+                }
+            });
+            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mMediaPlayer.start();
+                }
+            });
+            mMediaPlayer.setLooping(true);
+            mMediaPlayer.prepareAsync();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -511,7 +493,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     @Override
     public void startPreviewCallback() {
-        TUIKitLog.i(TAG,"startPreviewCallback");
+        TUIKitLog.i(TAG, "startPreviewCallback");
         handlerFoucs(mFoucsView.getWidth() / 2, mFoucsView.getHeight() / 2);
     }
 

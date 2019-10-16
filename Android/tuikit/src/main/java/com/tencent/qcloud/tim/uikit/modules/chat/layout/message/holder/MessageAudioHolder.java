@@ -2,6 +2,7 @@ package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.imsdk.TIMCallBack;
+import com.tencent.imsdk.TIMElem;
+import com.tencent.imsdk.TIMFaceElem;
 import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
@@ -25,6 +28,9 @@ public class MessageAudioHolder extends MessageContentHolder {
 
     private static final int AUDIO_MIN_WIDTH = ScreenUtil.getPxByDp(60);
     private static final int AUDIO_MAX_WIDTH = ScreenUtil.getPxByDp(250);
+
+    private static final int UNREAD = 0;
+    private static final int READ = 1;
 
     private TextView audioTimeText;
     private ImageView audioPlayImage;
@@ -55,6 +61,9 @@ public class MessageAudioHolder extends MessageContentHolder {
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.rightMargin = 25;
             audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
+            audioContentView.removeView(audioPlayImage);
+            audioContentView.addView(audioPlayImage);
+            unreadAudioText.setVisibility(View.GONE);
         } else {
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             params.leftMargin = 25;
@@ -62,10 +71,23 @@ public class MessageAudioHolder extends MessageContentHolder {
             audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
             audioContentView.removeView(audioPlayImage);
             audioContentView.addView(audioPlayImage, 0);
+            if (msg.getCustomInt() == UNREAD) {
+                LinearLayout.LayoutParams unreadParams = (LinearLayout.LayoutParams) isReadText.getLayoutParams();
+                unreadParams.gravity = Gravity.CENTER_VERTICAL;
+                unreadParams.leftMargin = 10;
+                unreadAudioText.setVisibility(View.VISIBLE);
+                unreadAudioText.setLayoutParams(unreadParams);
+            } else {
+                unreadAudioText.setVisibility(View.GONE);
+            }
         }
         audioContentView.setLayoutParams(params);
 
-        final TIMSoundElem soundElem = (TIMSoundElem) msg.getTIMMessage().getElement(0);
+        TIMElem elem = msg.getElement();
+        if (!(elem instanceof TIMSoundElem)) {
+            return;
+        }
+        final TIMSoundElem soundElem = (TIMSoundElem) elem;
         int duration = (int) soundElem.getDuration();
         if (duration == 0) {
             duration = 1;
@@ -83,8 +105,8 @@ public class MessageAudioHolder extends MessageContentHolder {
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (AudioPlayer.getInstance().isPlayingRecord()) {
-                    AudioPlayer.getInstance().stopPlayRecord();
+                if (AudioPlayer.getInstance().isPlaying()) {
+                    AudioPlayer.getInstance().stopPlay();
                     return;
                 }
                 if (TextUtils.isEmpty(msg.getDataPath())) {
@@ -94,9 +116,11 @@ public class MessageAudioHolder extends MessageContentHolder {
                 audioPlayImage.setImageResource(R.drawable.play_voice_message);
                 final AnimationDrawable animationDrawable = (AnimationDrawable) audioPlayImage.getDrawable();
                 animationDrawable.start();
-                AudioPlayer.getInstance().playRecord(msg.getDataPath(), new AudioPlayer.AudioPlayCallback() {
+                msg.setCustomInt(READ);
+                unreadAudioText.setVisibility(View.GONE);
+                AudioPlayer.getInstance().startPlay(msg.getDataPath(), new AudioPlayer.Callback() {
                     @Override
-                    public void playComplete() {
+                    public void onCompletion(Boolean success) {
                         audioPlayImage.post(new Runnable() {
                             @Override
                             public void run() {

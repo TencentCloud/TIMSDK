@@ -24,9 +24,8 @@ import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 public class CameraActivity extends Activity {
 
     private static final String TAG = CameraActivity.class.getSimpleName();
-
-    private JCameraView jCameraView;
     public static IUIKitCallBack mCallBack;
+    private JCameraView jCameraView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

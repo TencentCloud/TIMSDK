@@ -142,7 +142,7 @@ public class IjkMediaPlayerWrapper implements IPlayer {
             ListenerHandler listenerHandler = new ListenerHandler(outerListener);
             Object listenerInstance = Proxy.newProxyInstance(
                     this.getClass().getClassLoader(),
-                    new Class[] {listenerClass},
+                    new Class[]{listenerClass},
                     listenerHandler
             );
             method.invoke(mMediaPlayerInstance, listenerInstance);

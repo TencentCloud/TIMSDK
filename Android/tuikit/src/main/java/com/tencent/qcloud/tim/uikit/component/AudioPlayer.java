@@ -3,186 +3,173 @@ package com.tencent.qcloud.tim.uikit.component;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-
+import android.os.Handler;
+import android.text.TextUtils;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 
 public class AudioPlayer {
 
-    private static AudioPlayer instance = new AudioPlayer();
-    private boolean playing;
-    private boolean innerRecording;
-    private volatile Boolean recording = false;
+    private static final String TAG = AudioPlayer.class.getSimpleName();
+    private static AudioPlayer sInstance = new AudioPlayer();
     private static String CURRENT_RECORD_FILE = TUIKitConstants.RECORD_DIR + "auto_";
-    private AudioRecordCallback mRecordCallback;
-    private AudioPlayCallback mPlayCallback;
+    private static int MAGIC_NUMBER = 500;
+    private static int MIN_RECORD_DURATION = 1000;
+    private Callback mRecordCallback;
+    private Callback mPlayCallback;
 
-    private String recordAudioPath;
-    private long startTime;
-    private long endTime;
+    private String mAudioRecordPath;
     private MediaPlayer mPlayer;
     private MediaRecorder mRecorder;
+    private Handler mHandler;
 
     private AudioPlayer() {
-
+        mHandler = new Handler();
     }
 
     public static AudioPlayer getInstance() {
-        return instance;
+        return sInstance;
     }
 
 
-    public void startRecord(AudioRecordCallback callback) {
-        synchronized (recording) {
-            mRecordCallback = callback;
-            recording = true;
-            new RecordThread().start();
+    public void startRecord(Callback callback) {
+        mRecordCallback = callback;
+        try {
+            mAudioRecordPath = CURRENT_RECORD_FILE + System.currentTimeMillis() + ".m4a";
+            mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            // 使用mp4容器并且后缀改为.m4a，来兼容小程序的播放
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mRecorder.setOutputFile(mAudioRecordPath);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            mRecorder.prepare();
+            mRecorder.start();
+            // 最大录制时间之后需要停止录制
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    stopInternalRecord();
+                    onRecordCompleted(true);
+                    mRecordCallback = null;
+                    ToastUtil.toastShortMessage("已达到最大语音长度");
+                }
+            }, TUIKit.getConfigs().getGeneralConfig().getAudioRecordMaxTime() * 1000);
+        } catch (Exception e) {
+            TUIKitLog.w(TAG, "startRecord failed", e);
+            stopInternalRecord();
+            onRecordCompleted(false);
         }
     }
 
     public void stopRecord() {
-        synchronized (recording) {
-            if (recording) {
-                recording = false;
-                endTime = System.currentTimeMillis();
-                if (mRecordCallback != null) {
-                    mRecordCallback.recordComplete(endTime - startTime);
+        stopInternalRecord();
+        onRecordCompleted(true);
+        mRecordCallback = null;
+    }
+
+    private void stopInternalRecord() {
+        mHandler.removeCallbacksAndMessages(null);
+        if (mRecorder == null) {
+            return;
+        }
+        mRecorder.release();
+        mRecorder = null;
+    }
+
+    public void startPlay(String filePath, Callback callback) {
+        mAudioRecordPath = filePath;
+        mPlayCallback = callback;
+        try {
+            mPlayer = new MediaPlayer();
+            mPlayer.setDataSource(filePath);
+            mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    stopInternalPlay();
+                    onPlayCompleted(true);
                 }
-                if (mRecorder != null && innerRecording) {
-                    try {
-                        innerRecording = false;
-                        mRecorder.stop();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                mRecordCallback = null;
-            }
+            });
+            mPlayer.prepare();
+            mPlayer.start();
+        } catch (Exception e) {
+            TUIKitLog.w(TAG, "startPlay failed", e);
+            ToastUtil.toastLongMessage("语音文件已损坏或不存在");
+            stopInternalPlay();
+            onPlayCompleted(false);
         }
     }
 
-
-    public void playRecord(String filePath, AudioPlayCallback callback) {
-        this.mPlayCallback = callback;
-        new PlayThread(filePath).start();
+    public void stopPlay() {
+        stopInternalPlay();
+        onPlayCompleted(false);
+        mPlayCallback = null;
     }
 
-
-    public void stopPlayRecord() {
-        if (mPlayer != null) {
-            mPlayer.stop();
-            playing = false;
-            if (mPlayCallback != null) {
-                mPlayCallback.playComplete();
-                mPlayCallback = null;
-            }
+    private void stopInternalPlay() {
+        if (mPlayer == null) {
+            return;
         }
+        mPlayer.release();
+        mPlayer = null;
     }
 
-    public boolean isPlayingRecord() {
-        return playing;
+    public boolean isPlaying() {
+        if (mPlayer != null && mPlayer.isPlaying()) {
+            return true;
+        }
+        return false;
     }
 
+    private void onPlayCompleted(boolean success) {
+        if (mPlayCallback != null) {
+            mPlayCallback.onCompletion(success);
+        }
+        mPlayer = null;
+    }
 
-    public String getRecordAudioPath() {
-        return recordAudioPath;
+    private void onRecordCompleted(boolean success) {
+        if (mRecordCallback != null) {
+            mRecordCallback.onCompletion(success);
+        }
+        mRecorder = null;
+    }
+
+    public String getPath() {
+        return mAudioRecordPath;
     }
 
     public int getDuration() {
-        return (int) (endTime - startTime);
-    }
-
-    public interface AudioRecordCallback {
-        void recordComplete(long duration);
-    }
-
-    public interface AudioPlayCallback {
-        void playComplete();
-    }
-
-
-    private class RecordThread extends Thread {
-        @Override
-        public void run() {
-            //根据采样参数获取每一次音频采样大小
-            try {
-
-                mRecorder = new MediaRecorder();
-                mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                // AMR在web端支持不好，这里使用aac
-                mRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
-                recordAudioPath = CURRENT_RECORD_FILE + System.currentTimeMillis();
-                mRecorder.setOutputFile(recordAudioPath);
-                mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-                startTime = System.currentTimeMillis();
-                synchronized (recording) {
-                    if (recording == false) {
-                        return;
-                    }
-                    mRecorder.prepare();
-                    mRecorder.start();
-                }
-                innerRecording = true;
-                new Thread() {
-                    @Override
-                    public void run() {
-                        while (recording && innerRecording) {
-                            try {
-                                RecordThread.sleep(200);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            if (System.currentTimeMillis() - startTime >= TUIKit.getConfigs().getGeneralConfig().getAudioRecordMaxTime() * 1000) {
-                                stopRecord();
-                                return;
-                            }
-                        }
-                    }
-                }.start();
-
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (TextUtils.isEmpty(mAudioRecordPath)) {
+            return 0;
+        }
+        int duration = 0;
+        // 通过初始化播放器的方式来获取真实的音频长度
+        try {
+            MediaPlayer mp = new MediaPlayer();
+            mp.setDataSource(mAudioRecordPath);
+            mp.prepare();
+            duration = mp.getDuration();
+            // 语音长度如果是59s多，因为外部会/1000取整，会一直显示59'，所以这里对长度进行处理，达到四舍五入的效果
+            if (duration < MIN_RECORD_DURATION) {
+                duration = 0;
+            } else {
+                duration = duration + MAGIC_NUMBER;
             }
-
+        } catch (Exception e) {
+            TUIKitLog.w(TAG, "getDuration failed", e);
         }
+        if (duration < 0) {
+            duration = 0;
+        }
+        return duration;
     }
 
-
-    private class PlayThread extends Thread {
-        String audioPath;
-
-        PlayThread(String filePath) {
-            audioPath = filePath;
-        }
-
-        public void run() {
-            try {
-                mPlayer = new MediaPlayer();
-                mPlayer.setDataSource(audioPath);
-                mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        if (mPlayCallback != null) {
-                            mPlayCallback.playComplete();
-                        }
-                        playing = false;
-                    }
-                });
-                mPlayer.prepare();
-                mPlayer.start();
-                playing = true;
-            } catch (Exception e) {
-                ToastUtil.toastLongMessage("语音文件已损坏或不存在");
-                e.printStackTrace();
-                if (mPlayCallback != null) {
-                    mPlayCallback.playComplete();
-                }
-                playing = false;
-            }
-        }
+    public interface Callback {
+        void onCompletion(Boolean success);
     }
-
 
 }

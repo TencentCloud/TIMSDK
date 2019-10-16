@@ -1,9 +1,5 @@
 package com.tencent.qcloud.tim.uikit.utils;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.text.DecimalFormat;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,9 +8,101 @@ import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+
 public class NetWorkUtils {
 
+    /**
+     * Network type is unknown
+     */
+    public static final int NETWORK_TYPE_UNKNOWN = 0;
+    /**
+     * Current network is GPRS
+     */
+    public static final int NETWORK_TYPE_GPRS = 1;
+    /**
+     * Current network is EDGE
+     */
+    public static final int NETWORK_TYPE_EDGE = 2;
+    /**
+     * Current network is UMTS
+     */
+    public static final int NETWORK_TYPE_UMTS = 3;
+    /**
+     * Current network is CDMA: Either IS95A or IS95B
+     */
+    public static final int NETWORK_TYPE_CDMA = 4;
+    /**
+     * Current network is EVDO revision 0
+     */
+    public static final int NETWORK_TYPE_EVDO_0 = 5;
+    /**
+     * Current network is EVDO revision A
+     */
+    public static final int NETWORK_TYPE_EVDO_A = 6;
+    /**
+     * Current network is 1xRTT
+     */
+    public static final int NETWORK_TYPE_1xRTT = 7;
+    /**
+     * Current network is HSDPA
+     */
+    public static final int NETWORK_TYPE_HSDPA = 8;
+    /**
+     * Current network is HSUPA
+     */
+    public static final int NETWORK_TYPE_HSUPA = 9;
+    /**
+     * Current network is HSPA
+     */
+    public static final int NETWORK_TYPE_HSPA = 10;
+    /**
+     * Current network is iDen
+     */
+    public static final int NETWORK_TYPE_IDEN = 11;
+    /**
+     * Current network is EVDO revision B
+     */
+    public static final int NETWORK_TYPE_EVDO_B = 12;
+    /**
+     * Current network is LTE
+     */
+    public static final int NETWORK_TYPE_LTE = 13;
+    /**
+     * Current network is eHRPD
+     */
+    public static final int NETWORK_TYPE_EHRPD = 14;
+    /**
+     * Current network is HSPA+
+     */
+    public static final int NETWORK_TYPE_HSPAP = 15;
+
+    // 适配低版本手机
+    private static final int NETWORK_TYPE_UNAVAILABLE = -1;
+    // private static final int NETWORK_TYPE_MOBILE = -100;
+    private static final int NETWORK_TYPE_WIFI = -101;
+    private static final int NETWORK_CLASS_WIFI = -101;
+    private static final int NETWORK_CLASS_UNAVAILABLE = -1;
+    /**
+     * Unknown network class.
+     */
+    private static final int NETWORK_CLASS_UNKNOWN = 0;
+    /**
+     * Class of broadly defined "2G" networks.
+     */
+    private static final int NETWORK_CLASS_2_G = 1;
+    /**
+     * Class of broadly defined "3G" networks.
+     */
+    private static final int NETWORK_CLASS_3_G = 2;
+    /**
+     * Class of broadly defined "4G" networks.
+     */
+    private static final int NETWORK_CLASS_4_G = 3;
     public static boolean sIMSDKConnected;
+    private static DecimalFormat df = new DecimalFormat("#.##");
 
     public static boolean isWifiAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -149,97 +237,6 @@ public class NetWorkUtils {
         }
         return false;
     }
-
-    private static final int NETWORK_TYPE_UNAVAILABLE = -1;
-    // private static final int NETWORK_TYPE_MOBILE = -100;
-    private static final int NETWORK_TYPE_WIFI = -101;
-
-    private static final int NETWORK_CLASS_WIFI = -101;
-    private static final int NETWORK_CLASS_UNAVAILABLE = -1;
-    /**
-     * Unknown network class.
-     */
-    private static final int NETWORK_CLASS_UNKNOWN = 0;
-    /**
-     * Class of broadly defined "2G" networks.
-     */
-    private static final int NETWORK_CLASS_2_G = 1;
-    /**
-     * Class of broadly defined "3G" networks.
-     */
-    private static final int NETWORK_CLASS_3_G = 2;
-    /**
-     * Class of broadly defined "4G" networks.
-     */
-    private static final int NETWORK_CLASS_4_G = 3;
-
-    private static DecimalFormat df = new DecimalFormat("#.##");
-
-    // 适配低版本手机
-    /**
-     * Network type is unknown
-     */
-    public static final int NETWORK_TYPE_UNKNOWN = 0;
-    /**
-     * Current network is GPRS
-     */
-    public static final int NETWORK_TYPE_GPRS = 1;
-    /**
-     * Current network is EDGE
-     */
-    public static final int NETWORK_TYPE_EDGE = 2;
-    /**
-     * Current network is UMTS
-     */
-    public static final int NETWORK_TYPE_UMTS = 3;
-    /**
-     * Current network is CDMA: Either IS95A or IS95B
-     */
-    public static final int NETWORK_TYPE_CDMA = 4;
-    /**
-     * Current network is EVDO revision 0
-     */
-    public static final int NETWORK_TYPE_EVDO_0 = 5;
-    /**
-     * Current network is EVDO revision A
-     */
-    public static final int NETWORK_TYPE_EVDO_A = 6;
-    /**
-     * Current network is 1xRTT
-     */
-    public static final int NETWORK_TYPE_1xRTT = 7;
-    /**
-     * Current network is HSDPA
-     */
-    public static final int NETWORK_TYPE_HSDPA = 8;
-    /**
-     * Current network is HSUPA
-     */
-    public static final int NETWORK_TYPE_HSUPA = 9;
-    /**
-     * Current network is HSPA
-     */
-    public static final int NETWORK_TYPE_HSPA = 10;
-    /**
-     * Current network is iDen
-     */
-    public static final int NETWORK_TYPE_IDEN = 11;
-    /**
-     * Current network is EVDO revision B
-     */
-    public static final int NETWORK_TYPE_EVDO_B = 12;
-    /**
-     * Current network is LTE
-     */
-    public static final int NETWORK_TYPE_LTE = 13;
-    /**
-     * Current network is eHRPD
-     */
-    public static final int NETWORK_TYPE_EHRPD = 14;
-    /**
-     * Current network is HSPA+
-     */
-    public static final int NETWORK_TYPE_HSPAP = 15;
 
     /**
      * 格式化大小

@@ -60,15 +60,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 设置是否是群主
-     *
-     * @param owner
-     */
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    /**
      * 回去加群验证方式
      *
      * @return
@@ -150,6 +141,15 @@ public class GroupInfo extends ChatInfo {
      */
     public boolean isOwner() {
         return TIMManager.getInstance().getLoginUser().equals(owner);
+    }
+
+    /**
+     * 设置是否是群主
+     *
+     * @param owner
+     */
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     /**

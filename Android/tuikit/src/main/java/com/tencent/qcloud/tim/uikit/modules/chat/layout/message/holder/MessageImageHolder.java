@@ -12,15 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMFaceElem;
-import com.tencent.imsdk.TIMImage;
-import com.tencent.imsdk.TIMImageElem;
-import com.tencent.imsdk.TIMImageType;
-import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMSnapshot;
-import com.tencent.imsdk.TIMVideo;
-import com.tencent.imsdk.TIMVideoElem;
+import com.tencent.imsdk.*;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.component.face.FaceManager;
@@ -89,31 +81,32 @@ public class MessageImageHolder extends MessageContentHolder {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         contentImage.setLayoutParams(params);
-        TIMMessage timMsg = msg.getTIMMessage();
-        if (timMsg.getElementCount() > 0) {
-            TIMFaceElem faceEle = (TIMFaceElem) timMsg.getElement(0);
-            String filter = new String(faceEle.getData());
-            if (!filter.contains("@2x")) {
-                filter += "@2x";
-            }
-            Bitmap bitmap = FaceManager.getCustomBitmap(faceEle.getIndex(), filter);
+        TIMElem elem = msg.getElement();
+        if (!(elem instanceof TIMFaceElem)) {
+            return;
+        }
+        TIMFaceElem faceEle = (TIMFaceElem) elem;
+        String filter = new String(faceEle.getData());
+        if (!filter.contains("@2x")) {
+            filter += "@2x";
+        }
+        Bitmap bitmap = FaceManager.getCustomBitmap(faceEle.getIndex(), filter);
+        if (bitmap == null) {
+            // 自定义表情没有找到，用emoji再试一次
+            bitmap = FaceManager.getEmoji(new String(faceEle.getData()));
             if (bitmap == null) {
-                // 自定义表情没有找到，用emoji再试一次
-                bitmap = FaceManager.getEmoji(new String(faceEle.getData()));
-                if (bitmap == null) {
-                    // TODO 临时找的一个图片用来表明自定义表情加载失败
-                    contentImage.setImageDrawable(rootView.getContext().getResources().getDrawable(R.drawable.face_delete));
-                } else {
-                    contentImage.setImageBitmap(bitmap);
-                }
+                // TODO 临时找的一个图片用来表明自定义表情加载失败
+                contentImage.setImageDrawable(rootView.getContext().getResources().getDrawable(R.drawable.face_delete));
             } else {
                 contentImage.setImageBitmap(bitmap);
             }
+        } else {
+            contentImage.setImageBitmap(bitmap);
         }
     }
 
     private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final MessageInfo msg) {
-        if (msg.getImgWidth() == 0 || msg.getImgHeight() == 0 ) {
+        if (msg.getImgWidth() == 0 || msg.getImgHeight() == 0) {
             return params;
         }
         if (msg.getImgWidth() > msg.getImgHeight()) {
@@ -135,8 +128,11 @@ public class MessageImageHolder extends MessageContentHolder {
         resetParentLayout();
         videoPlayBtn.setVisibility(View.GONE);
         videoDurationText.setVisibility(View.GONE);
-        TIMMessage timMsg = msg.getTIMMessage();
-        final TIMImageElem imageEle = (TIMImageElem) timMsg.getElement(0);
+        TIMElem elem = msg.getElement();
+        if (!(elem instanceof TIMImageElem)) {
+            return;
+        }
+        final TIMImageElem imageEle = (TIMImageElem) elem;
         final List<TIMImage> imgs = imageEle.getImageList();
         if (!TextUtils.isEmpty(msg.getDataPath())) {
             GlideEngine.loadCornerImage(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
@@ -203,8 +199,11 @@ public class MessageImageHolder extends MessageContentHolder {
 
         videoPlayBtn.setVisibility(View.VISIBLE);
         videoDurationText.setVisibility(View.VISIBLE);
-        TIMMessage timMsg = msg.getTIMMessage();
-        final TIMVideoElem videoEle = (TIMVideoElem) timMsg.getElement(0);
+        TIMElem elem = msg.getElement();
+        if (!(elem instanceof TIMVideoElem)) {
+            return;
+        }
+        final TIMVideoElem videoEle = (TIMVideoElem) elem;
         final TIMVideo video = videoEle.getVideoInfo();
 
         if (!TextUtils.isEmpty(msg.getDataPath())) {

@@ -61,6 +61,15 @@ public class CustomFaceGroup {
     }
 
     /**
+     * 设置表情包的封面
+     *
+     * @param faceIconPath
+     */
+    public void setFaceIconPath(String faceIconPath) {
+        this.faceIconPath = faceIconPath;
+    }
+
+    /**
      * 获取表情包每行显示数量
      *
      * @return
@@ -94,15 +103,6 @@ public class CustomFaceGroup {
      */
     public void setPageColumnCount(int pageColumnCount) {
         this.pageColumnCount = pageColumnCount;
-    }
-
-    /**
-     * 设置表情包的封面
-     *
-     * @param faceIconPath
-     */
-    public void setFaceIconPath(String faceIconPath) {
-        this.faceIconPath = faceIconPath;
     }
 
     /**

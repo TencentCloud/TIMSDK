@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tim.uikit.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -10,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -24,6 +22,7 @@ public class ScreenUtil {
     private static final String TAG = ScreenUtil.class.getSimpleName();
 
     private static int navigationBarHeight = 0;
+    private static int SOFT_INPUT_HEIGHT = 0;
 
     public static boolean checkNavigationBarShow(@NonNull Context context, @NonNull Window window) {
         boolean show;
@@ -44,7 +43,6 @@ public class ScreenUtil {
         return show;
     }
 
-
     public static int getNavigationBarHeight() {
         if (navigationBarHeight != 0)
             return navigationBarHeight;
@@ -54,7 +52,6 @@ public class ScreenUtil {
         navigationBarHeight = height;
         return height;
     }
-
 
     public static int[] getScreenSize() {
         int size[] = new int[2];
@@ -92,7 +89,6 @@ public class ScreenUtil {
         return (int) (dp * scale + 0.5f);
     }
 
-
     public static int getDpi(Context context) {
         int dpi = 0;
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -112,8 +108,6 @@ public class ScreenUtil {
         return dpi;
     }
 
-    private static int SOFT_INPUT_HEIGHT = 0;
-
     /**
      * 获取 虚拟按键的高度
      *
@@ -131,7 +125,7 @@ public class ScreenUtil {
 
     public static int[] scaledSize(int containerWidth, int containerHeight, int realWidth, int realHeight) {
         TUIKitLog.i(TAG, "scaledSize  containerWidth: " + containerWidth + " containerHeight: " + containerHeight
-            + " realWidth: " + realWidth + " realHeight: " + realHeight);
+                + " realWidth: " + realWidth + " realHeight: " + realHeight);
         float deviceRate = (float) containerWidth / (float) containerHeight;
         float rate = (float) realWidth / (float) realHeight;
         int width = 0;
@@ -143,6 +137,6 @@ public class ScreenUtil {
             width = containerWidth;
             height = (int) (containerWidth / rate);
         }
-        return new int[] {width, height};
+        return new int[]{width, height};
     }
 }

@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 
 import com.tencent.qcloud.tim.uikit.TUIKit;
 
@@ -31,6 +30,11 @@ import java.util.Locale;
 
 public class FileUtil {
 
+
+    public static final int SIZETYPE_B = 1;//获取文件大小单位为B的double值
+    public static final int SIZETYPE_KB = 2;//获取文件大小单位为KB的double值
+    public static final int SIZETYPE_MB = 3;//获取文件大小单位为MB的double值
+    public static final int SIZETYPE_GB = 4;//获取文件大小单位为GB的double值
 
     public static void initPath() {
 
@@ -145,7 +149,7 @@ public class FileUtil {
     public static Uri getUriFromPath(String path) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return FileProvider.getUriForFile(TUIKit.getAppContext(), TUIKit.getAppContext().getApplicationInfo().packageName + ".uikit.fileprovider", new File(path));
+                return TUIKitFileProvider.getUriForFile(TUIKit.getAppContext(), TUIKit.getAppContext().getApplicationInfo().packageName + ".uikit.fileprovider", new File(path));
             } else {
                 return Uri.fromFile(new File(path));
             }
@@ -167,7 +171,6 @@ public class FileUtil {
         }
         return false;
     }
-
 
     /**
      * 专为Android4.4以上设计的从Uri获取文件路径
@@ -293,12 +296,6 @@ public class FileUtil {
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
-
-
-    public static final int SIZETYPE_B = 1;//获取文件大小单位为B的double值
-    public static final int SIZETYPE_KB = 2;//获取文件大小单位为KB的double值
-    public static final int SIZETYPE_MB = 3;//获取文件大小单位为MB的double值
-    public static final int SIZETYPE_GB = 4;//获取文件大小单位为GB的double值
 
     /**
      * 获取文件指定文件的指定单位的大小

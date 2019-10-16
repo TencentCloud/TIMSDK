@@ -14,7 +14,6 @@ import com.tencent.imsdk.TIMSNSSystemElem;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.ext.message.TIMMessageReceipt;
-import com.tencent.openqq.protocol.imsdk.msg;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
@@ -29,11 +28,9 @@ import java.util.List;
 
 public abstract class ChatManagerKit implements TIMMessageListener, MessageRevokedManager.MessageRevokeHandler {
 
-    private static final String TAG = ChatManagerKit.class.getSimpleName();
-
     protected static final int MSG_PAGE_COUNT = 20;
     protected static final int REVOKE_TIME_OUT = 6223;
-
+    private static final String TAG = ChatManagerKit.class.getSimpleName();
     protected ChatProvider mCurrentProvider;
     protected TIMConversation mCurrentConversation;
 
@@ -186,8 +183,7 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
             TUIKitLog.w(TAG, "unSafetyCall");
             return;
         }
-        TIMMessage timMessage = messageInfo.getTIMMessage();
-        if (timMessage.remove()) {
+        if (messageInfo.remove()) {
             mCurrentProvider.remove(position);
         }
     }
@@ -209,13 +205,17 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
 
             @Override
             public void onSuccess() {
+                if (!safetyCall()) {
+                    TUIKitLog.w(TAG, "unSafetyCall");
+                    return;
+                }
                 mCurrentProvider.updateMessageRevoked(messageInfo.getId());
                 ConversationManagerKit.getInstance().loadConversation(null);
             }
         });
     }
 
-    public synchronized void sendMessage(final MessageInfo message, boolean retry, final IUIKitCallBack callBack) {
+    public void sendMessage(final MessageInfo message, boolean retry, final IUIKitCallBack callBack) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "unSafetyCall");
             return;
@@ -235,49 +235,45 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                 mCurrentProvider.addMessageInfo(message);
             }
         }
-        new Thread() {
+        TUIKitLog.i(TAG, "sendMessage:" + message.getTIMMessage());
+        mCurrentConversation.sendMessage(message.getTIMMessage(), new TIMValueCallBack<TIMMessage>() {
             @Override
-            public void run() {
-                TUIKitLog.i(TAG, "sendMessage:" + message.getTIMMessage());
-                mCurrentConversation.sendMessage(message.getTIMMessage(), new TIMValueCallBack<TIMMessage>() {
-                    @Override
-                    public void onError(final int code, final String desc) {
-                        TUIKitLog.i(TAG, "sendMessage fail:" + code + "=" + desc);
-                        if (callBack != null) {
-                            callBack.onError(TAG, code, desc);
-                        }
-                        if (mCurrentProvider == null) {
-                            return;
-                        }
-                        message.setStatus(MessageInfo.MSG_STATUS_SEND_FAIL);
-                        mCurrentProvider.updateMessageInfo(message);
+            public void onError(final int code, final String desc) {
+                TUIKitLog.i(TAG, "sendMessage fail:" + code + "=" + desc);
+                if (!safetyCall()) {
+                    TUIKitLog.w(TAG, "unSafetyCall");
+                    return;
+                }
+                if (callBack != null) {
+                    callBack.onError(TAG, code, desc);
+                }
+                message.setStatus(MessageInfo.MSG_STATUS_SEND_FAIL);
+                mCurrentProvider.updateMessageInfo(message);
 
-                    }
-
-                    @Override
-                    public void onSuccess(TIMMessage timMessage) {
-                        TUIKitLog.i(TAG, "sendMessage onSuccess");
-                        if (callBack != null) {
-                            callBack.onSuccess(mCurrentProvider);
-                        }
-                        if (mCurrentProvider == null) {
-                            return;
-                        }
-                        message.setStatus(MessageInfo.MSG_STATUS_SEND_SUCCESS);
-                        message.setId(timMessage.getMsgId());
-                        mCurrentProvider.updateMessageInfo(message);
-                    }
-                });
             }
-        }.start();
 
+            @Override
+            public void onSuccess(TIMMessage timMessage) {
+                TUIKitLog.i(TAG, "sendMessage onSuccess");
+                if (!safetyCall()) {
+                    TUIKitLog.w(TAG, "unSafetyCall");
+                    return;
+                }
+                if (callBack != null) {
+                    callBack.onSuccess(mCurrentProvider);
+                }
+                message.setStatus(MessageInfo.MSG_STATUS_SEND_SUCCESS);
+                message.setId(timMessage.getMsgId());
+                mCurrentProvider.updateMessageInfo(message);
+            }
+        });
     }
 
     protected void assembleGroupMessage(MessageInfo message) {
         // GroupChatManager会重写该方法
     }
 
-    public synchronized void loadLocalChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
+    public void loadLocalChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "unSafetyCall");
             return;
@@ -312,7 +308,8 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                     @Override
                     public void onSuccess(List<TIMMessage> timMessages) {
                         mIsLoading = false;
-                        if (mCurrentProvider == null) {
+                        if (!safetyCall()) {
+                            TUIKitLog.w(TAG, "unSafetyCall");
                             return;
                         }
                         if (unread > 0) {
@@ -347,7 +344,7 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                 });
     }
 
-    public synchronized void loadChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
+    public void loadChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "unSafetyCall");
             return;
@@ -375,6 +372,8 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                     @Override
                     public void onError(int code, String desc) {
                         mIsLoading = false;
+                        List<MessageInfo> msgInfos = new ArrayList<>();
+                        mCurrentProvider.addMessageList(msgInfos, true);
                         callBack.onError(TAG, code, desc);
                         TUIKitLog.e(TAG, "loadChatMessages() getMessage failed, code = " + code + ", desc = " + desc);
                     }
@@ -382,6 +381,10 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                     @Override
                     public void onSuccess(List<TIMMessage> timMessages) {
                         mIsLoading = false;
+                        if (!safetyCall()) {
+                            TUIKitLog.w(TAG, "unSafetyCall");
+                            return;
+                        }
                         if (unread > 0) {
                             mCurrentConversation.setReadMessage(null, new TIMCallBack() {
                                 @Override

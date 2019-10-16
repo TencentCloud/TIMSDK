@@ -88,11 +88,11 @@ public class ChatFragment extends BaseFragment {
 
             @Override
             public void onUserIconClick(View view, int position, MessageInfo messageInfo) {
-                if (null == messageInfo || null == messageInfo.getTIMMessage()) {
+                if (null == messageInfo) {
                     return;
                 }
                 ChatInfo info = new ChatInfo();
-                info.setId(messageInfo.getTIMMessage().getSender());
+                info.setId(messageInfo.getFromUser());
                 Intent intent = new Intent(DemoApplication.instance(), FriendProfileActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(TUIKitConstants.ProfileType.CONTENT, info);
@@ -104,7 +104,7 @@ public class ChatFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        AudioPlayer.getInstance().stopPlayRecord();
+        AudioPlayer.getInstance().stopPlay();
     }
 
     @Override

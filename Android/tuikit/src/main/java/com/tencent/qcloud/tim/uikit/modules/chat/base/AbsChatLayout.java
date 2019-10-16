@@ -34,6 +34,24 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
     protected MessageListAdapter mAdapter;
 
     private AnimationDrawable mVolumeAnim;
+    private Runnable mTypingRunnable = null;
+    private ChatProvider.TypingListener mTypingListener = new ChatProvider.TypingListener() {
+        @Override
+        public void onTyping() {
+            final String oldTitle = getTitleBar().getMiddleTitle().getText().toString();
+            getTitleBar().getMiddleTitle().setText(R.string.typing);
+            if (mTypingRunnable == null) {
+                mTypingRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        getTitleBar().getMiddleTitle().setText(oldTitle);
+                    }
+                };
+            }
+            getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
+            getTitleBar().getMiddleTitle().postDelayed(mTypingRunnable, 3000);
+        }
+    };
 
     public AbsChatLayout(Context context) {
         super(context);
@@ -55,9 +73,8 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                 if (clipboard == null || msg == null) {
                     return;
                 }
-                final TIMMessage timMsg = msg.getTIMMessage();
-                if (timMsg.getElement(0) instanceof TIMTextElem) {
-                    TIMTextElem textElem = (TIMTextElem) timMsg.getElement(0);
+                if (msg.getElement() instanceof TIMTextElem) {
+                    TIMTextElem textElem = (TIMTextElem) msg.getElement();
                     ClipData clip = ClipData.newPlainText("message", textElem.getText());
                     clipboard.setPrimaryClip(clip);
                 }
@@ -139,7 +156,7 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
 
         getInputLayout().setChatInputHandler(new InputLayout.ChatInputHandler() {
             @Override
-            public void popupLayoutShow() {
+            public void onInputAreaClick() {
                 post(new Runnable() {
                     @Override
                     public void run() {
@@ -149,15 +166,31 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
             }
 
             @Override
-            public void popupLayoutHide() {
+            public void onRecordStatusChanged(int status) {
+                switch (status) {
+                    case RECORD_START:
+                        startRecording();
+                        break;
+                    case RECORD_STOP:
+                        stopRecording();
+                        break;
+                    case RECORD_CANCEL:
+                        cancelRecording();
+                        break;
+                    case RECORD_TOO_SHORT:
+                    case RECORD_FAILED:
+                        stopAbnormally(status);
+                        break;
+                    default:
+                        break;
+                }
             }
 
-            @Override
-            public void startRecording() {
+            private void startRecording() {
                 post(new Runnable() {
                     @Override
                     public void run() {
-                        AudioPlayer.getInstance().stopPlayRecord();
+                        AudioPlayer.getInstance().stopPlay();
                         mRecordingGroup.setVisibility(View.VISIBLE);
                         mRecordingIcon.setImageResource(R.drawable.recording_volume);
                         mVolumeAnim = (AnimationDrawable) mRecordingIcon.getDrawable();
@@ -168,8 +201,7 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                 });
             }
 
-            @Override
-            public void stopRecording() {
+            private void stopRecording() {
                 postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -179,15 +211,18 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                 }, 500);
             }
 
-            @Override
-            public void tooShortRecording() {
+            private void stopAbnormally(final int status) {
                 post(new Runnable() {
                     @Override
                     public void run() {
                         mVolumeAnim.stop();
                         mRecordingIcon.setImageResource(R.drawable.ic_volume_dialog_length_short);
                         mRecordingTips.setTextColor(Color.WHITE);
-                        mRecordingTips.setText("说话时间太短");
+                        if (status == RECORD_TOO_SHORT) {
+                            mRecordingTips.setText("说话时间太短");
+                        } else {
+                            mRecordingTips.setText("录音失败");
+                        }
                     }
                 });
                 postDelayed(new Runnable() {
@@ -198,8 +233,7 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                 }, 1000);
             }
 
-            @Override
-            public void cancelRecording() {
+            private void cancelRecording() {
                 post(new Runnable() {
                     @Override
                     public void run() {
@@ -244,28 +278,9 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
         getMessageLayout().scrollToEnd();
     }
 
-    private Runnable mTypingRunnable = null;
-    private ChatProvider.TypingListener mTypingListener = new ChatProvider.TypingListener() {
-        @Override
-        public void onTyping() {
-            final String oldTitle = getTitleBar().getMiddleTitle().getText().toString();
-            getTitleBar().getMiddleTitle().setText(R.string.typing);
-            if (mTypingRunnable == null) {
-                mTypingRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        getTitleBar().getMiddleTitle().setText(oldTitle);
-                    }
-                };
-            }
-            getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
-            getTitleBar().getMiddleTitle().postDelayed(mTypingRunnable, 3000);
-        }
-    };
-
     public void setDataProvider(IChatProvider provider) {
         if (provider != null) {
-            ((ChatProvider)provider).setTypingListener(mTypingListener);
+            ((ChatProvider) provider).setTypingListener(mTypingListener);
         }
         if (mAdapter != null) {
             mAdapter.setDataSource(provider);
@@ -292,6 +307,9 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                 @Override
                 public void onError(String module, int errCode, String errMsg) {
                     ToastUtil.toastLongMessage(errMsg);
+                    if (lastMessage == null) {
+                        setDataProvider(null);
+                    }
                 }
             });
         } else {
@@ -306,6 +324,9 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                 @Override
                 public void onError(String module, int errCode, String errMsg) {
                     ToastUtil.toastLongMessage(errMsg);
+                    if (lastMessage == null) {
+                        setDataProvider(null);
+                    }
                 }
             });
         }
@@ -344,7 +365,7 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
     public void exitChat() {
         getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
         AudioPlayer.getInstance().stopRecord();
-        AudioPlayer.getInstance().stopPlayRecord();
+        AudioPlayer.getInstance().stopPlay();
         if (getChatManager() != null) {
             getChatManager().destroyChat();
         }

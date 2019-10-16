@@ -9,14 +9,12 @@ import android.view.View;
 
 public class ReturnButton extends View {
 
+    Path path;
     private int size;
-
     private int center_X;
     private int center_Y;
     private float strokeWidth;
-
     private Paint paint;
-    Path path;
 
     public ReturnButton(Context context, int size) {
         this(context);
@@ -47,9 +45,9 @@ public class ReturnButton extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        path.moveTo(strokeWidth, strokeWidth/2);
-        path.lineTo(center_X, center_Y - strokeWidth/2);
-        path.lineTo(size - strokeWidth, strokeWidth/2);
+        path.moveTo(strokeWidth, strokeWidth / 2);
+        path.lineTo(center_X, center_Y - strokeWidth / 2);
+        path.lineTo(size - strokeWidth, strokeWidth / 2);
         canvas.drawPath(path, paint);
     }
 }

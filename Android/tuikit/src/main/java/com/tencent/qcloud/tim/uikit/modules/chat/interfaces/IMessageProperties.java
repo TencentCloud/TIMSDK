@@ -8,26 +8,18 @@ public interface IMessageProperties {
     /// @{
 
     /**
-     * 设置默认头像，默认与左边与右边的头像相同
-     *
-     * @param resId
-     */
-    void setAvatar(int resId);
-
-    /**
      * 获取默认头像
      *
      * @return
      */
     int getAvatar();
 
-
     /**
-     * 设置头像圆角
+     * 设置默认头像，默认与左边与右边的头像相同
      *
-     * @param radius
+     * @param resId
      */
-    void setAvatarRadius(int radius);
+    void setAvatar(int resId);
 
     /**
      * 获取头像圆角
@@ -37,11 +29,11 @@ public interface IMessageProperties {
     int getAvatarRadius();
 
     /**
-     * 设置头像大小
+     * 设置头像圆角
      *
-     * @param size
+     * @param radius
      */
-    void setAvatarSize(int[] size);
+    void setAvatarRadius(int radius);
 
     /**
      * 获得头像大小
@@ -50,16 +42,16 @@ public interface IMessageProperties {
      */
     int[] getAvatarSize();
 
-    /// @}
-    /// @name 设置昵称样式
-    /// @{
-
     /**
-     * 设置昵称文字大小
+     * 设置头像大小
      *
      * @param size
      */
-    void setNameFontSize(int size);
+    void setAvatarSize(int[] size);
+
+    /// @}
+    /// @name 设置昵称样式
+    /// @{
 
     /**
      * 获得昵称文字大小
@@ -69,11 +61,11 @@ public interface IMessageProperties {
     int getNameFontSize();
 
     /**
-     * 设置昵称文字颜色
+     * 设置昵称文字大小
      *
-     * @param color
+     * @param size
      */
-    void setNameFontColor(int color);
+    void setNameFontSize(int size);
 
     /**
      * 获取昵称文字颜色
@@ -83,11 +75,11 @@ public interface IMessageProperties {
     int getNameFontColor();
 
     /**
-     * 设置左边昵称是否显示
+     * 设置昵称文字颜色
      *
-     * @param visibility
+     * @param color
      */
-    void setLeftNameVisibility(int visibility);
+    void setNameFontColor(int color);
 
     /**
      * 获取左边昵称显示状态
@@ -97,11 +89,11 @@ public interface IMessageProperties {
     int getLeftNameVisibility();
 
     /**
-     * 设置右边昵称是否显示
+     * 设置左边昵称是否显示
      *
      * @param visibility
      */
-    void setRightNameVisibility(int visibility);
+    void setLeftNameVisibility(int visibility);
 
     /**
      * 获取右边昵称显示状态
@@ -110,16 +102,16 @@ public interface IMessageProperties {
      */
     int getRightNameVisibility();
 
+    /**
+     * 设置右边昵称是否显示
+     *
+     * @param visibility
+     */
+    void setRightNameVisibility(int visibility);
+
     /// @}
     /// @name 设置气泡
     /// @{
-
-    /**
-     * 设置右边聊天气泡的背景
-     *
-     * @param drawable
-     */
-    void setRightBubble(Drawable drawable);
 
     /**
      * 获取右边聊天气泡的背景
@@ -129,11 +121,11 @@ public interface IMessageProperties {
     Drawable getRightBubble();
 
     /**
-     * 设置左边聊天气泡的背景
+     * 设置右边聊天气泡的背景
      *
      * @param drawable
      */
-    void setLeftBubble(Drawable drawable);
+    void setRightBubble(Drawable drawable);
 
     /**
      * 获取左边聊天气泡的背景
@@ -142,16 +134,16 @@ public interface IMessageProperties {
      */
     Drawable getLeftBubble();
 
+    /**
+     * 设置左边聊天气泡的背景
+     *
+     * @param drawable
+     */
+    void setLeftBubble(Drawable drawable);
+
     /// @}
     /// @name 设置聊天内容
     /// @{
-
-    /**
-     * 设置聊天内容字体大小
-     *
-     * @param size
-     */
-    void setChatContextFontSize(int size);
 
     /**
      * 获取聊天内容字体大小
@@ -161,11 +153,11 @@ public interface IMessageProperties {
     int getChatContextFontSize();
 
     /**
-     * 设置右边聊天内容字体颜色
+     * 设置聊天内容字体大小
      *
-     * @param color
+     * @param size
      */
-    void setRightChatContentFontColor(int color);
+    void setChatContextFontSize(int size);
 
     /**
      * 获取右边聊天内容字体颜色
@@ -173,6 +165,13 @@ public interface IMessageProperties {
      * @return
      */
     int getRightChatContentFontColor();
+
+    /**
+     * 设置右边聊天内容字体颜色
+     *
+     * @param color
+     */
+    void setRightChatContentFontColor(int color);
 
     /**
      * 获取左边聊天内容字体颜色
@@ -193,13 +192,6 @@ public interface IMessageProperties {
     /// @{
 
     /**
-     * 设置聊天时间的背景
-     *
-     * @param drawable
-     */
-    void setChatTimeBubble(Drawable drawable);
-
-    /**
      * 获取聊天时间的背景
      *
      * @return
@@ -207,11 +199,11 @@ public interface IMessageProperties {
     Drawable getChatTimeBubble();
 
     /**
-     * 设置聊天时间的字体大小
+     * 设置聊天时间的背景
      *
-     * @param size
+     * @param drawable
      */
-    void setChatTimeFontSize(int size);
+    void setChatTimeBubble(Drawable drawable);
 
     /**
      * 获取聊天时间的文字大小
@@ -221,11 +213,11 @@ public interface IMessageProperties {
     int getChatTimeFontSize();
 
     /**
-     * 设置聊天时间的字体颜色
+     * 设置聊天时间的字体大小
      *
-     * @param color
+     * @param size
      */
-    void setChatTimeFontColor(int color);
+    void setChatTimeFontSize(int size);
 
     /**
      * 获取聊天时间的字体颜色
@@ -234,16 +226,16 @@ public interface IMessageProperties {
      */
     int getChatTimeFontColor();
 
+    /**
+     * 设置聊天时间的字体颜色
+     *
+     * @param color
+     */
+    void setChatTimeFontColor(int color);
+
     /// @}
     /// @name 设置聊天的提示信息
     /// @{
-
-    /**
-     * 设置聊天提示信息的背景
-     *
-     * @param drawable
-     */
-    void setTipsMessageBubble(Drawable drawable);
 
     /**
      * 获取聊天提示信息的背景
@@ -253,11 +245,11 @@ public interface IMessageProperties {
     Drawable getTipsMessageBubble();
 
     /**
-     * 设置聊天提示信息的文字大小
+     * 设置聊天提示信息的背景
      *
-     * @param size
+     * @param drawable
      */
-    void setTipsMessageFontSize(int size);
+    void setTipsMessageBubble(Drawable drawable);
 
     /**
      * 获取聊天提示信息的文字大小
@@ -267,11 +259,11 @@ public interface IMessageProperties {
     int getTipsMessageFontSize();
 
     /**
-     * 设置聊天提示信息的文字颜色
+     * 设置聊天提示信息的文字大小
      *
-     * @param color
+     * @param size
      */
-    void setTipsMessageFontColor(int color);
+    void setTipsMessageFontSize(int size);
 
     /**
      * 获取聊天提示信息的文字颜色
@@ -279,4 +271,11 @@ public interface IMessageProperties {
      * @return
      */
     int getTipsMessageFontColor();
+
+    /**
+     * 设置聊天提示信息的文字颜色
+     *
+     * @param color
+     */
+    void setTipsMessageFontColor(int color);
 }

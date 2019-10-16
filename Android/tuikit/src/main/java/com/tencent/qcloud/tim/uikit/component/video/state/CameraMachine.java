@@ -39,10 +39,6 @@ public class CameraMachine implements State {
         return context;
     }
 
-    public void setState(State state) {
-        this.state = state;
-    }
-
     //获取浏览图片状态
     State getBorrowPictureState() {
         return borrowPictureState;
@@ -108,7 +104,6 @@ public class CameraMachine implements State {
         state.confirm();
     }
 
-
     @Override
     public void zoom(float zoom, int type) {
         state.zoom(zoom, type);
@@ -121,5 +116,9 @@ public class CameraMachine implements State {
 
     public State getState() {
         return this.state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }

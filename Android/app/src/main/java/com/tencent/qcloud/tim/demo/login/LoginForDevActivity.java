@@ -40,9 +40,40 @@ import java.util.List;
 public class LoginForDevActivity extends Activity {
 
     private static final String TAG = LoginForDevActivity.class.getSimpleName();
+    private static final int REQ_PERMISSION_CODE = 0x100;
     private Button mLoginView;
     private EditText mUserAccount;
-    private static final int REQ_PERMISSION_CODE = 0x100;
+
+    //权限检查
+    public static boolean checkPermission(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> permissions = new ArrayList<>();
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.CAMERA)) {
+                permissions.add(Manifest.permission.CAMERA);
+            }
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.RECORD_AUDIO)) {
+                permissions.add(Manifest.permission.RECORD_AUDIO);
+            }
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.READ_PHONE_STATE)) {
+                permissions.add(Manifest.permission.READ_PHONE_STATE);
+            }
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+            if (permissions.size() != 0) {
+                String[] permissionsArray = permissions.toArray(new String[1]);
+                ActivityCompat.requestPermissions(activity,
+                        permissionsArray,
+                        REQ_PERMISSION_CODE);
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,37 +122,6 @@ public class LoginForDevActivity extends Activity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
         }
-        return true;
-    }
-
-    //权限检查
-    public static boolean checkPermission(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            List<String> permissions = new ArrayList<>();
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.CAMERA)) {
-                permissions.add(Manifest.permission.CAMERA);
-            }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.RECORD_AUDIO)) {
-                permissions.add(Manifest.permission.RECORD_AUDIO);
-            }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.READ_PHONE_STATE)) {
-                permissions.add(Manifest.permission.READ_PHONE_STATE);
-            }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-            }
-            if (permissions.size() != 0) {
-                String[] permissionsArray = permissions.toArray(new String[1]);
-                ActivityCompat.requestPermissions(activity,
-                        permissionsArray,
-                        REQ_PERMISSION_CODE);
-                return false;
-            }
-        }
-
         return true;
     }
 

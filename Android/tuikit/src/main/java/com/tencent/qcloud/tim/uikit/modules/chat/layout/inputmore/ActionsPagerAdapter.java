@@ -19,11 +19,10 @@ public class ActionsPagerAdapter extends PagerAdapter {
 
     private final int ITEM_COUNT_PER_GRID_VIEW = 4;
     private final Context mContext;
-    private int actionWidth, actionHeight;
-
     private final List<InputMoreActionUnit> mInputMoreList;
     private final ViewPager mViewPager;
     private final int mGridViewCount;
+    private int actionWidth, actionHeight;
 
     public ActionsPagerAdapter(ViewPager mViewPager, List<InputMoreActionUnit> mInputMoreList) {
         this.mContext = mViewPager.getContext();

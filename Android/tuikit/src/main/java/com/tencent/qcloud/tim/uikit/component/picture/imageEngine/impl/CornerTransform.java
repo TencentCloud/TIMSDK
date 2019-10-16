@@ -24,6 +24,11 @@ public class CornerTransform implements Transformation<Bitmap> {
     private float radius;
     private boolean exceptLeftTop, exceptRightTop, exceptLeftBottom, exceptRightBottom;
 
+    public CornerTransform(Context context, float radius) {
+        this.mBitmapPool = Glide.get(context).getBitmapPool();
+        this.radius = radius;
+    }
+
     /**
      * 除了那几个角不需要圆角的
      *
@@ -37,11 +42,6 @@ public class CornerTransform implements Transformation<Bitmap> {
         this.exceptRightTop = rightTop;
         this.exceptLeftBottom = leftBottom;
         this.exceptRightBottom = rightBottom;
-    }
-
-    public CornerTransform(Context context, float radius) {
-        this.mBitmapPool = Glide.get(context).getBitmapPool();
-        this.radius = radius;
     }
 
     @NonNull

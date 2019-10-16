@@ -28,11 +28,11 @@ import java.util.regex.Pattern;
 
 public class FaceManager {
 
+    private static final int drawableWidth = ScreenUtil.getPxByDp(32);
     private static ArrayList<Emoji> emojiList = new ArrayList<>();
     private static LruCache<String, Bitmap> drawableCache = new LruCache(1024);
     private static Context context = TUIKit.getAppContext();
     private static String[] emojiFilters = context.getResources().getStringArray(R.array.emoji_filter);
-    private static final int drawableWidth = ScreenUtil.getPxByDp(32);
     private static ArrayList<FaceGroup> customFace = new ArrayList<>();
 
     public static ArrayList<Emoji> getEmojiList() {

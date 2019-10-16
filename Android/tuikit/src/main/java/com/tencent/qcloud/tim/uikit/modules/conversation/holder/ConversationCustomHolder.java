@@ -37,7 +37,6 @@ public class ConversationCustomHolder extends ConversationBaseHolder {
 
     @Override
     public void layoutViews(ConversationInfo conversation, int position) {
-        MessageInfo lastMsg = conversation.getLastMessage();
         if (conversation.isTop()) {
             leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.top_conversation_color));
         } else {

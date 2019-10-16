@@ -1,9 +1,9 @@
 package com.tencent.qcloud.tim.uikit.modules.conversation;
 
 
+import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
 import com.tencent.qcloud.tim.uikit.modules.conversation.interfaces.IConversationAdapter;
 import com.tencent.qcloud.tim.uikit.modules.conversation.interfaces.IConversationProvider;
-import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
 
 import java.util.ArrayList;
 import java.util.List;

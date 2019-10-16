@@ -13,16 +13,16 @@ public class GroupApplyInfo implements Serializable {
     private int status;
     private TIMGroupPendencyItem pendencyItem;
 
-    public void setStatus(int status) {
-        this.status = status;
+    public GroupApplyInfo(TIMGroupPendencyItem pendency) {
+        this.pendencyItem = pendency;
     }
 
     public int getStatus() {
         return status;
     }
 
-    public GroupApplyInfo(TIMGroupPendencyItem pendency) {
-        this.pendencyItem = pendency;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public TIMGroupPendencyItem getPendencyItem() {

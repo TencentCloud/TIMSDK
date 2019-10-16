@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -39,22 +38,19 @@ import java.io.File;
  * 聊天界面，底部发送图片、拍照、摄像、文件面板
  */
 
-public class InputLayout extends InputLayoutUI implements View.OnClickListener, AudioPlayer.AudioRecordCallback, TextWatcher {
+public class InputLayout extends InputLayoutUI implements View.OnClickListener, TextWatcher {
 
     private static final String TAG = InputLayout.class.getSimpleName();
-
-    private FaceFragment mFaceFragment;
-    private ChatInputHandler mChatInputHandler;
-    private MessageHandler mMessageHandler;
-    private FragmentManager mFragmentManager;
-    private InputMoreFragment mInputMoreFragment;
-
     private static final int STATE_NONE_INPUT = -1;
     private static final int STATE_SOFT_INPUT = 0;
     private static final int STATE_VOICE_INPUT = 1;
     private static final int STATE_FACE_INPUT = 2;
     private static final int STATE_ACTION_INPUT = 3;
-
+    private FaceFragment mFaceFragment;
+    private ChatInputHandler mChatInputHandler;
+    private MessageHandler mMessageHandler;
+    private FragmentManager mFragmentManager;
+    private InputMoreFragment mInputMoreFragment;
     private boolean mSendEnable;
     private boolean mAudioCancel;
     private int mCurrentState;
@@ -75,6 +71,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
     }
 
     @SuppressLint("ClickableViewAccessibility")
+    @Override
     protected void init() {
 
         mAudioInputSwitchButton.setOnClickListener(this);
@@ -116,21 +113,26 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                         mAudioCancel = true;
                         mStartRecordY = motionEvent.getY();
                         if (mChatInputHandler != null) {
-                            mChatInputHandler.startRecording();
+                            mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_START);
                         }
                         mSendAudioButton.setText("松开结束");
-                        AudioPlayer.getInstance().startRecord(InputLayout.this);
+                        AudioPlayer.getInstance().startRecord(new AudioPlayer.Callback() {
+                            @Override
+                            public void onCompletion(Boolean success) {
+                                recordComplete(success);
+                            }
+                        });
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (motionEvent.getY() - mStartRecordY < -100) {
                             mAudioCancel = true;
                             if (mChatInputHandler != null) {
-                                mChatInputHandler.cancelRecording();
+                                mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CANCEL);
                             }
                         } else {
                             if (mAudioCancel) {
                                 if (mChatInputHandler != null) {
-                                    mChatInputHandler.startRecording();
+                                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_START);
                                 }
                             }
                             mAudioCancel = false;
@@ -141,10 +143,12 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                     case MotionEvent.ACTION_UP:
                         mAudioCancel = motionEvent.getY() - mStartRecordY < -100;
                         if (mChatInputHandler != null) {
-                            mChatInputHandler.stopRecording();
+                            mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_STOP);
                         }
                         AudioPlayer.getInstance().stopRecord();
                         mSendAudioButton.setText("按住说话");
+                        break;
+                    default:
                         break;
                 }
                 return false;
@@ -382,7 +386,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mChatInputHandler.popupLayoutShow();
+                    mChatInputHandler.onInputAreaClick();
                 }
             }, 200);
         }
@@ -393,9 +397,6 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
         mTextInput.clearFocus();
-        if (mChatInputHandler != null) {
-            mChatInputHandler.popupLayoutHide();
-        }
         mInputMoreView.setVisibility(View.GONE);
     }
 
@@ -416,8 +417,9 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                 int index = mTextInput.getSelectionStart();
                 Editable editable = mTextInput.getText();
                 boolean isFace = false;
-                if (index <= 0)
+                if (index <= 0) {
                     return;
+                }
                 if (editable.charAt(index - 1) == ']') {
                     for (int i = index - 2; i >= 0; i--) {
                         if (editable.charAt(i) == '[') {
@@ -453,7 +455,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mChatInputHandler.popupLayoutShow();
+                    mChatInputHandler.onInputAreaClick();
                 }
             }, 100);
         }
@@ -472,7 +474,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mChatInputHandler.popupLayoutShow();
+                    mChatInputHandler.onInputAreaClick();
                 }
             }, 100);
         }
@@ -496,7 +498,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mChatInputHandler.popupLayoutShow();
+                    mChatInputHandler.onInputAreaClick();
                 }
             }, 100);
         }
@@ -506,23 +508,27 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
         mInputMoreView.setVisibility(View.GONE);
     }
 
-    @Override
-    public void recordComplete(long duration) {
+    private void recordComplete(boolean success) {
+        int duration = AudioPlayer.getInstance().getDuration();
         TUIKitLog.i(TAG, "recordComplete duration:" + duration);
         if (mChatInputHandler != null) {
+            if (!success || duration == 0) {
+                mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_FAILED);
+                return;
+            }
             if (mAudioCancel) {
-                mChatInputHandler.stopRecording();
+                mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CANCEL);
                 return;
             }
             if (duration < 1000) {
-                mChatInputHandler.tooShortRecording();
+                mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_TOO_SHORT);
                 return;
             }
-            mChatInputHandler.stopRecording();
+            mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_STOP);
         }
 
-        if (mMessageHandler != null) {
-            mMessageHandler.sendMessage(MessageInfoUtil.buildAudioMessage(AudioPlayer.getInstance().getRecordAudioPath(), (int) duration));
+        if (mMessageHandler != null && success) {
+            mMessageHandler.sendMessage(MessageInfoUtil.buildAudioMessage(AudioPlayer.getInstance().getPath(), duration));
         }
     }
 
@@ -549,7 +555,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
             if (mTextInput.getLineCount() != mLastMsgLineCount) {
                 mLastMsgLineCount = mTextInput.getLineCount();
                 if (mChatInputHandler != null) {
-                    mChatInputHandler.popupLayoutShow();
+                    mChatInputHandler.onInputAreaClick();
                 }
             }
             if (!TextUtils.equals(mInputContent, mTextInput.getText().toString())) {
@@ -565,17 +571,15 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     public interface ChatInputHandler {
 
-        void popupLayoutShow();
+        int RECORD_START = 1;
+        int RECORD_STOP = 2;
+        int RECORD_CANCEL = 3;
+        int RECORD_TOO_SHORT = 4;
+        int RECORD_FAILED = 5;
 
-        void popupLayoutHide();
+        void onInputAreaClick();
 
-        void startRecording();
-
-        void stopRecording();
-
-        void tooShortRecording();
-
-        void cancelRecording();
+        void onRecordStatusChanged(int status);
     }
 
 }

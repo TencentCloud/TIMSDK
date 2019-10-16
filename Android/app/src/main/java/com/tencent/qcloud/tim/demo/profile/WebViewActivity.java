@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo.profile;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;

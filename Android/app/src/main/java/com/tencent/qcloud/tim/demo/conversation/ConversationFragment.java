@@ -14,7 +14,6 @@ import com.tencent.imsdk.TIMConversationType;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.chat.ChatActivity;
-import com.tencent.qcloud.tim.demo.helper.ConversationLayoutHelper;
 import com.tencent.qcloud.tim.demo.menu.Menu;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.uikit.base.BaseFragment;
@@ -117,10 +116,10 @@ public class ConversationFragment extends BaseFragment {
     /**
      * 长按会话item弹框
      *
-     * @param index       会话序列号
+     * @param index            会话序列号
      * @param conversationInfo 会话数据对象
-     * @param locationX   长按时X坐标
-     * @param locationY   长按时Y坐标
+     * @param locationX        长按时X坐标
+     * @param locationY        长按时Y坐标
      */
     private void showItemPopMenu(final int index, final ConversationInfo conversationInfo, float locationX, float locationY) {
         if (mConversationPopActions == null || mConversationPopActions.size() == 0)

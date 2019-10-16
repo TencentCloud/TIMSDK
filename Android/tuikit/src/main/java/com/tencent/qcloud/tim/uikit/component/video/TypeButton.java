@@ -11,7 +11,7 @@ import android.view.View;
 /**
  * 拍照或录制完成后弹出的确认和返回按钮
  */
-public class TypeButton extends View{
+public class TypeButton extends View {
 
     public static final int TYPE_CANCEL = 0x001;
     public static final int TYPE_CONFIRM = 0x002;

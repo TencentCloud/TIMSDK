@@ -18,15 +18,14 @@ import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
 public abstract class ChatLayoutUI extends LinearLayout implements IChatLayout {
 
+    protected NoticeLayout mGroupApplyLayout;
+    protected View mRecordingGroup;
+    protected ImageView mRecordingIcon;
+    protected TextView mRecordingTips;
     private TitleBarLayout mTitleBar;
     private MessageLayout mMessageLayout;
     private InputLayout mInputLayout;
     private NoticeLayout mNoticeLayout;
-    protected NoticeLayout mGroupApplyLayout;
-
-    protected View mRecordingGroup;
-    protected ImageView mRecordingIcon;
-    protected TextView mRecordingTips;
 
     public ChatLayoutUI(Context context) {
         super(context);

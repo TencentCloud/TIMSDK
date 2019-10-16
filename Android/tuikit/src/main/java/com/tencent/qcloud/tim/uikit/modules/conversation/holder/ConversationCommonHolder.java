@@ -19,12 +19,12 @@ import java.util.List;
 
 public class ConversationCommonHolder extends ConversationBaseHolder {
 
+    public ConversationIconView conversationIconView;
     protected LinearLayout leftItemLayout;
     protected TextView titleText;
     protected TextView messageText;
     protected TextView timelineText;
     protected TextView unreadText;
-    public ConversationIconView conversationIconView;
 
     public ConversationCommonHolder(View itemView) {
         super(itemView);
@@ -38,11 +38,13 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 
     public void layoutViews(ConversationInfo conversation, int position) {
         MessageInfo lastMsg = conversation.getLastMessage();
-        if (lastMsg != null && lastMsg.getStatus() == MessageInfo.MSG_STATUS_REVOKE ) {
+        if (lastMsg != null && lastMsg.getStatus() == MessageInfo.MSG_STATUS_REVOKE) {
             if (lastMsg.isSelf()) {
                 lastMsg.setExtra("您撤回了一条消息");
             } else if (lastMsg.isGroup()) {
-                String message = "\"<font color=\"#338BFF\">" + lastMsg.getFromUser() + "</font>\"";
+                String message = "\"<font color=\"#338BFF\">"
+                        + (TextUtils.isEmpty(lastMsg.getGroupNameCard()) ? lastMsg.getFromUser() : lastMsg.getGroupNameCard())
+                        + "</font>\"";
                 lastMsg.setExtra(message + "撤回了一条消息");
             } else {
                 lastMsg.setExtra("对方撤回了一条消息");
@@ -77,7 +79,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 messageText.setText(Html.fromHtml(lastMsg.getExtra().toString()));
                 messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
             }
-            timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(lastMsg.getMsgTime())));
+            timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(lastMsg.getMsgTime() * 1000)));
         }
 
 

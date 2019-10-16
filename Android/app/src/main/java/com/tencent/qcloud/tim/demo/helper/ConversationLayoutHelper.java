@@ -1,11 +1,7 @@
 package com.tencent.qcloud.tim.demo.helper;
 
-import android.os.Handler;
-import android.os.Looper;
-
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationLayout;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationListLayout;
-import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
 
 public class ConversationLayoutHelper {
 

@@ -6,14 +6,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-
 
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.CustomLinearLayoutManager;
@@ -63,6 +61,7 @@ public class IndexBar extends View {
     private List<? extends BaseIndexPinyinBean> mSourceDatas;//Adapter的数据源
     private CustomLinearLayoutManager mLayoutManager;
     private int mHeaderViewCount = 0;
+    private onIndexPressedListener mOnIndexPressedListener;
 
     public IndexBar(Context context) {
         this(context, null);
@@ -221,7 +220,6 @@ public class IndexBar extends View {
         setMeasuredDimension(measureWidth, measureHeight);
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         int t = getPaddingTop();//top的基准点(支持padding)
@@ -233,7 +231,6 @@ public class IndexBar extends View {
             canvas.drawText(index, mWidth / 2 - mPaint.measureText(index) / 2, t + mGapHeight * i + baseline, mPaint);//调用drawText，居中显示绘制index
         }
     }
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -280,17 +277,6 @@ public class IndexBar extends View {
         }
         computeGapHeight();
     }
-
-    /**
-     * 当前被按下的index的监听器
-     */
-    public interface onIndexPressedListener {
-        void onIndexPressed(int index, String text);//当某个Index被按下
-
-        void onMotionEventEnd();//当触摸事件结束（UP CANCEL）
-    }
-
-    private onIndexPressedListener mOnIndexPressedListener;
 
     public onIndexPressedListener getOnIndexPressedListener() {
         return mOnIndexPressedListener;
@@ -342,7 +328,6 @@ public class IndexBar extends View {
         return this;
     }
 
-
     /**
      * 初始化原始数据源，并取出索引数据源
      *
@@ -386,7 +371,6 @@ public class IndexBar extends View {
 
     }
 
-
     /**
      * 根据传入的pos返回tag
      *
@@ -407,6 +391,16 @@ public class IndexBar extends View {
             }
         }
         return -1;
+    }
+
+
+    /**
+     * 当前被按下的index的监听器
+     */
+    public interface onIndexPressedListener {
+        void onIndexPressed(int index, String text);//当某个Index被按下
+
+        void onMotionEventEnd();//当触摸事件结束（UP CANCEL）
     }
 
 }

@@ -14,6 +14,7 @@ public class CustomFaceConfig {
 
     /**
      * 增加自定义表情包
+     *
      * @param group
      * @return
      */
@@ -27,6 +28,7 @@ public class CustomFaceConfig {
 
     /**
      * 获取全部的自定义表情包
+     *
      * @return
      */
     public List<CustomFaceGroup> getFaceGroups() {

@@ -217,12 +217,16 @@ public class MessageLayout extends MessageLayoutUI {
         mAdapter.setOnItemClickListener(new MessageLayout.OnItemClickListener() {
             @Override
             public void onMessageLongClick(View view, int position, MessageInfo messageInfo) {
-                mOnItemClickListener.onMessageLongClick(view, position, messageInfo);
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onMessageLongClick(view, position, messageInfo);
+                }
             }
 
             @Override
             public void onUserIconClick(View view, int position, MessageInfo info) {
-                mOnItemClickListener.onUserIconClick(view, position, info);
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onUserIconClick(view, position, info);
+                }
             }
         });
     }

@@ -21,11 +21,11 @@ import android.widget.ImageView;
 public class CircleImageView extends ImageView {
 
 
+    private static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
+    private static final int COLORDRAWABLE_DIMENSION = 2;
     private Bitmap mBitmap;
     private BitmapShader mBitmapShader;
     private Paint mPaint;
-    private static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
-    private static final int COLORDRAWABLE_DIMENSION = 2;
 
     public CircleImageView(Context context, AttributeSet attrs) {
         super(context, attrs);

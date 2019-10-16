@@ -156,7 +156,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             TIMGroupManager.getInstance().modifyGroupInfo(param, new TIMCallBack() {
                 @Override
                 public void onError(int code, String desc) {
-                    TUIKitLog.e(TAG, "modify group icon failed, code:" + code +"|desc:" + desc);
+                    TUIKitLog.e(TAG, "modify group icon failed, code:" + code + "|desc:" + desc);
                     ToastUtil.toastLongMessage("修改群头像失败, code = " + code + ", info = " + desc);
                 }
 

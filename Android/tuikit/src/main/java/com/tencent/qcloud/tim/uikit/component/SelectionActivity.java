@@ -26,17 +26,17 @@ public class SelectionActivity extends Activity {
     private EditText input;
     private int mSelectionType;
 
-    public static void startTextSelection(Context context, Bundle bundle, OnResultReturnListener listener){
+    public static void startTextSelection(Context context, Bundle bundle, OnResultReturnListener listener) {
         bundle.putInt(TUIKitConstants.Selection.TYPE, TUIKitConstants.Selection.TYPE_TEXT);
-        startSelection( context, bundle, listener);
+        startSelection(context, bundle, listener);
     }
 
-    public static void startListSelection(Context context, Bundle bundle, OnResultReturnListener listener){
+    public static void startListSelection(Context context, Bundle bundle, OnResultReturnListener listener) {
         bundle.putInt(TUIKitConstants.Selection.TYPE, TUIKitConstants.Selection.TYPE_LIST);
-        startSelection( context, bundle, listener);
+        startSelection(context, bundle, listener);
     }
 
-    private static void startSelection(Context context, Bundle bundle, OnResultReturnListener listener){
+    private static void startSelection(Context context, Bundle bundle, OnResultReturnListener listener) {
         Intent intent = new Intent(context, SelectionActivity.class);
         intent.putExtra(TUIKitConstants.Selection.CONTENT, bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -58,12 +58,12 @@ public class SelectionActivity extends Activity {
                 radioGroup.setVisibility(View.GONE);
                 String defaultString = bundle.getString(TUIKitConstants.Selection.INIT_CONTENT);
                 int limit = bundle.getInt(TUIKitConstants.Selection.LIMIT);
-                if (!TextUtils.isEmpty(defaultString)){
+                if (!TextUtils.isEmpty(defaultString)) {
                     input.setText(defaultString);
                     input.setSelection(defaultString.length());
                 }
-                if (limit > 0){
-                    input.setFilters( new InputFilter[] { new InputFilter.LengthFilter(limit) } );
+                if (limit > 0) {
+                    input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(limit)});
                 }
                 break;
             case TUIKitConstants.Selection.TYPE_LIST:
@@ -128,7 +128,7 @@ public class SelectionActivity extends Activity {
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
         sOnResultReturnListener = null;
     }
