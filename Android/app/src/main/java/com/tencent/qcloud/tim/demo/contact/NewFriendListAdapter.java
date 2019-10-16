@@ -81,7 +81,7 @@ public class NewFriendListAdapter extends ArrayAdapter<TIMFriendPendencyItem> {
         mViewHolder.avatar.setImageResource(R.drawable.ic_personal_member);
         mViewHolder.name.setText(TextUtils.isEmpty(data.getNickname()) ? data.getIdentifier() : data.getNickname());
         mViewHolder.des.setText(data.getAddWording());
-        switch (data.getType()){
+        switch (data.getType()) {
             case TIMPendencyType.TIM_PENDENCY_COME_IN:
                 mViewHolder.agree.setText(res.getString(R.string.request_agree));
                 mViewHolder.agree.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +121,7 @@ public class NewFriendListAdapter extends ArrayAdapter<TIMFriendPendencyItem> {
         });
     }
 
-    public class ViewHolder{
+    public class ViewHolder {
         ImageView avatar;
         TextView name;
         TextView des;

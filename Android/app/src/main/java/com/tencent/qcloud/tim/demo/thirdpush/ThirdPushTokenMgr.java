@@ -15,16 +15,12 @@ import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 
 public class ThirdPushTokenMgr {
 
+    public static final boolean USER_GOOGLE_FCM = false;
     private static final String TAG = ThirdPushTokenMgr.class.getSimpleName();
     private String mThirdPushToken;
-    public static final boolean USER_GOOGLE_FCM = false;
 
     public static ThirdPushTokenMgr getInstance() {
         return ThirdPushTokenHolder.instance;
-    }
-
-    private static class ThirdPushTokenHolder {
-        private static final ThirdPushTokenMgr instance = new ThirdPushTokenMgr();
     }
 
     public String getThirdPushToken() {
@@ -68,5 +64,9 @@ public class ThirdPushTokenMgr {
                 DemoLog.d(TAG, "setOfflinePushToken success");
             }
         });
+    }
+
+    private static class ThirdPushTokenHolder {
+        private static final ThirdPushTokenMgr instance = new ThirdPushTokenMgr();
     }
 }

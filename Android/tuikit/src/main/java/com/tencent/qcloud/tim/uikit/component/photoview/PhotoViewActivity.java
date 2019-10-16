@@ -15,17 +15,17 @@ import android.widget.TextView;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMImage;
 import com.tencent.qcloud.tim.uikit.R;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
 import java.io.File;
 
 
 public class PhotoViewActivity extends Activity {
 
+    public static TIMImage mCurrentOriginalImage;
     private PhotoView mPhotoView;
     private Matrix mCurrentDisplayMatrix = null;
-    public static TIMImage mCurrentOriginalImage;
     private TextView mViewOriginalBtn;
 
     @Override

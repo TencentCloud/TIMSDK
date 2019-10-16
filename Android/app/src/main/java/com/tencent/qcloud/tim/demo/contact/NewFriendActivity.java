@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo.contact;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -47,6 +46,7 @@ public class NewFriendActivity extends BaseActivity {
         super.onResume();
         initPendency();
     }
+
     private void init() {
         mTitleBar = findViewById(R.id.new_friend_titlebar);
         mTitleBar.setTitle(getResources().getString(R.string.new_friend), TitleBarLayout.POSITION.LEFT);
@@ -89,7 +89,7 @@ public class NewFriendActivity extends BaseActivity {
             public void onSuccess(TIMFriendPendencyResponse timFriendPendencyResponse) {
                 DemoLog.i(TAG, "getPendencyList success result = " + timFriendPendencyResponse.toString());
                 if (timFriendPendencyResponse.getItems() != null) {
-                    if (timFriendPendencyResponse.getItems().size() == 0 ) {
+                    if (timFriendPendencyResponse.getItems().size() == 0) {
                         mEmptyView.setText(getResources().getString(R.string.no_friend_apply));
                         mNewFriendLv.setVisibility(View.GONE);
                         mEmptyView.setVisibility(View.VISIBLE);

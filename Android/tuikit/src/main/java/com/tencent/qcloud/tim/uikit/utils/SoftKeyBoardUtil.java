@@ -98,14 +98,6 @@ public class SoftKeyBoardUtil {
         });
     }
 
-
-    public interface SoftKeyboardStateListener {
-        void onSoftKeyboardOpened(int keyboardHeightInPx);
-
-        void onSoftKeyboardClosed();
-    }
-
-
     public static void hideKeyBoard(EditText editor) {
 
         imm.hideSoftInputFromWindow(editor.getWindowToken(), 0);
@@ -114,6 +106,12 @@ public class SoftKeyBoardUtil {
     public static void hideKeyBoard(IBinder token) {
 
         imm.hideSoftInputFromWindow(token, 0);
+    }
+
+    public interface SoftKeyboardStateListener {
+        void onSoftKeyboardOpened(int keyboardHeightInPx);
+
+        void onSoftKeyboardClosed();
     }
 
 

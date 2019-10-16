@@ -21,7 +21,7 @@ public final class ThreadUtil {
      * 在线程中执行
      * @param runnable 要执行的runnable
      */
-    public void excute(Runnable runnable) {
+    public void execute(Runnable runnable) {
         ExecutorService executorService = getExecutorService();
         if (executorService != null) {
             // 优先使用线程池，提高效率

@@ -48,7 +48,7 @@ public class BorrowPictureState implements State {
     }
 
     @Override
-    public void record(Surface surface,float screenProp) {
+    public void record(Surface surface, float screenProp) {
 
     }
 

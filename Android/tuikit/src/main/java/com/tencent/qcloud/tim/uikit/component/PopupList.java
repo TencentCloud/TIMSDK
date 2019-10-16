@@ -122,7 +122,7 @@ public class PopupList {
         mOffsetX = anchorView.getX() + anchorView.getWidth() / 2;
         mOffsetY = anchorView.getY();
         if (mPopupListListener != null && !mPopupListListener.showPopupList(anchorView, anchorView, 0)) {
-            return ;
+            return;
         }
         mContextView = anchorView;
         mContextPosition = 0;
@@ -358,6 +358,10 @@ public class PopupList {
         return mIndicatorView;
     }
 
+    public void setIndicatorView(View indicatorView) {
+        this.mIndicatorView = indicatorView;
+    }
+
     public View getDefaultIndicatorView(Context context) {
         return getTriangleIndicatorView(context, dp2px(16), dp2px(8), DEFAULT_NORMAL_BACKGROUND_COLOR);
     }
@@ -406,10 +410,6 @@ public class PopupList {
         };
         indicator.setImageDrawable(drawable);
         return indicator;
-    }
-
-    public void setIndicatorView(View indicatorView) {
-        this.mIndicatorView = indicatorView;
     }
 
     public void setIndicatorSize(int widthPixel, int heightPixel) {

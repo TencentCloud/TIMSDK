@@ -28,29 +28,28 @@ import java.util.List;
 
 public class FaceFragment extends BaseInputFragment implements View.OnClickListener {
 
+    ViewPager faceViewPager;
+    EmojiIndicatorView faceIndicator;
+    FaceGroupIcon faceFirstSetTv;
+    FaceGroupIcon mCurrentSelected;
+    LinearLayout faceGroup;
+    ArrayList<View> ViewPagerItems = new ArrayList<>();
+    ArrayList<Emoji> emojiList;
+    ArrayList<Emoji> recentlyEmojiList;
+    ArrayList<FaceGroup> customFaces;
+    private int mCurrentGroupIndex = 0;
+    private int columns = 7;
+    private int rows = 3;
+    private int vMargin = 0;
+    private OnEmojiClickListener listener;
+    private RecentEmojiManager recentManager;
+
     public static FaceFragment Instance() {
         FaceFragment instance = new FaceFragment();
         Bundle bundle = new Bundle();
         instance.setArguments(bundle);
         return instance;
     }
-
-    ViewPager faceViewPager;
-    EmojiIndicatorView faceIndicator;
-    FaceGroupIcon faceFirstSetTv;
-    FaceGroupIcon mCurrentSelected;
-    LinearLayout faceGroup;
-    private int mCurrentGroupIndex = 0;
-
-    ArrayList<View> ViewPagerItems = new ArrayList<>();
-    ArrayList<Emoji> emojiList;
-    ArrayList<Emoji> recentlyEmojiList;
-    ArrayList<FaceGroup> customFaces;
-    private int columns = 7;
-    private int rows = 3;
-    private int vMargin = 0;
-    private OnEmojiClickListener listener;
-    private RecentEmojiManager recentManager;
 
     public void setListener(OnEmojiClickListener listener) {
         this.listener = listener;
@@ -293,6 +292,14 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
     }
 
 
+    public interface OnEmojiClickListener {
+        void onEmojiDelete();
+
+        void onEmojiClick(Emoji emoji);
+
+        void onCustomFaceClick(int groupIndex, Emoji emoji);
+    }
+
     class FaceGVAdapter extends BaseAdapter {
         private List<Emoji> list;
         private Context mContext;
@@ -394,13 +401,5 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
         public boolean isViewFromObject(View arg0, Object arg1) {
             return (arg0 == arg1);
         }
-    }
-
-    public interface OnEmojiClickListener {
-        void onEmojiDelete();
-
-        void onEmojiClick(Emoji emoji);
-
-        void onCustomFaceClick(int groupIndex, Emoji emoji);
     }
 }

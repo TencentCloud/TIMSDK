@@ -18,17 +18,14 @@ import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 public class CaptureButton extends View {
 
-    private static final String TAG = CaptureButton.class.getSimpleName();
-
-    private int state;              //当前按钮状态
-    private int button_state;       //按钮可执行的功能状态（拍照,录制,两者）
-
     public static final int STATE_IDLE = 0x001;        //空闲状态
     public static final int STATE_PRESS = 0x002;       //按下状态
     public static final int STATE_LONG_PRESS = 0x003;  //长按状态
     public static final int STATE_RECORDERING = 0x004; //录制状态
     public static final int STATE_BAN = 0x005;         //禁止状态
-
+    private static final String TAG = CaptureButton.class.getSimpleName();
+    private int state;              //当前按钮状态
+    private int button_state;       //按钮可执行的功能状态（拍照,录制,两者）
     private int progress_color = 0xEE16AE16;            //进度条颜色
     private int outside_color = 0xEEDCDCDC;             //外圆背景色
     private int inside_color = 0xFFFFFFFF;              //内圆背景色
@@ -87,9 +84,9 @@ public class CaptureButton extends View {
 
         state = STATE_IDLE;                //初始化为空闲状态
         button_state = JCameraView.BUTTON_STATE_BOTH;  //初始化按钮为可录制可拍照
-        TUIKitLog.i(TAG,"CaptureButtom start");
+        TUIKitLog.i(TAG, "CaptureButtom start");
         duration = 10 * 1000;              //默认最长录制时间为10s
-        TUIKitLog.i(TAG,"CaptureButtom end");
+        TUIKitLog.i(TAG, "CaptureButtom end");
         min_duration = 1500;              //默认最短录制时间为1.5s
 
         center_X = (button_size + outside_add_size * 2) / 2;
@@ -135,7 +132,7 @@ public class CaptureButton extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                TUIKitLog.i(TAG,"state = " + state);
+                TUIKitLog.i(TAG, "state = " + state);
                 if (event.getPointerCount() > 1 || state != STATE_IDLE)
                     break;
                 event_Y = event.getY();     //记录Y值
@@ -279,6 +276,41 @@ public class CaptureButton extends View {
         invalidate();
     }
 
+    /**************************************************
+     * 对外提供的API                     *
+     **************************************************/
+
+    //设置最长录制时间
+    public void setDuration(int duration) {
+        this.duration = duration;
+        timer = new RecordCountDownTimer(duration, duration / 360);    //录制定时器
+    }
+
+    //设置最短录制时间
+    public void setMinDuration(int duration) {
+        this.min_duration = duration;
+    }
+
+    //设置回调接口
+    public void setCaptureLisenter(CaptureListener captureLisenter) {
+        this.captureLisenter = captureLisenter;
+    }
+
+    //设置按钮功能（拍照和录像）
+    public void setButtonFeatures(int state) {
+        this.button_state = state;
+    }
+
+    //是否空闲状态
+    public boolean isIdle() {
+        return state == STATE_IDLE;
+    }
+
+    //设置状态
+    public void resetState() {
+        state = STATE_IDLE;
+    }
+
     //录制视频计时器
     private class RecordCountDownTimer extends CountDownTimer {
         RecordCountDownTimer(long millisInFuture, long countDownInterval) {
@@ -318,40 +350,5 @@ public class CaptureButton extends View {
                     button_inside_radius - inside_reduce_size
             );
         }
-    }
-
-    /**************************************************
-     * 对外提供的API                     *
-     **************************************************/
-
-    //设置最长录制时间
-    public void setDuration(int duration) {
-        this.duration = duration;
-        timer = new RecordCountDownTimer(duration, duration / 360);    //录制定时器
-    }
-
-    //设置最短录制时间
-    public void setMinDuration(int duration) {
-        this.min_duration = duration;
-    }
-
-    //设置回调接口
-    public void setCaptureLisenter(CaptureListener captureLisenter) {
-        this.captureLisenter = captureLisenter;
-    }
-
-    //设置按钮功能（拍照和录像）
-    public void setButtonFeatures(int state) {
-        this.button_state = state;
-    }
-
-    //是否空闲状态
-    public boolean isIdle() {
-        return state == STATE_IDLE;
-    }
-
-    //设置状态
-    public void resetState() {
-        state = STATE_IDLE;
     }
 }

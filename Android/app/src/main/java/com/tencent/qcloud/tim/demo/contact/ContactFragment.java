@@ -12,7 +12,6 @@ import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.menu.Menu;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.base.BaseFragment;
-import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
 import com.tencent.qcloud.tim.uikit.modules.contact.ContactItemBean;
 import com.tencent.qcloud.tim.uikit.modules.contact.ContactLayout;
 import com.tencent.qcloud.tim.uikit.modules.contact.ContactListView;

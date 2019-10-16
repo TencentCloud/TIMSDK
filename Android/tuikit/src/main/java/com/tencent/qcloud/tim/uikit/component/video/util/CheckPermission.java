@@ -9,11 +9,10 @@ import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 public class CheckPermission {
 
-    private static final String TAG = CheckPermission.class.getSimpleName();
-
     public static final int STATE_RECORDING = -1;
     public static final int STATE_NO_PERMISSION = -2;
     public static final int STATE_SUCCESS = 1;
+    private static final String TAG = CheckPermission.class.getSimpleName();
 
     /**
      * 用于检测是否具有录音权限

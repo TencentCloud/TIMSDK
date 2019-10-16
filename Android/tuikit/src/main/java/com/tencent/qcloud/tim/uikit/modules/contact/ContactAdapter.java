@@ -11,16 +11,14 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.friendship.TIMFriendPendencyRequest;
 import com.tencent.imsdk.friendship.TIMFriendPendencyResponse;
 import com.tencent.imsdk.friendship.TIMPendencyType;
-import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.List;

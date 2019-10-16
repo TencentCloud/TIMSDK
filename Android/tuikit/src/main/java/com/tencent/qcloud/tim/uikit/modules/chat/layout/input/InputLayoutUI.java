@@ -30,14 +30,12 @@ import java.util.List;
 
 abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
 
-    private static String TAG = InputLayoutUI.class.getSimpleName();
-
     protected static final int CAPTURE = 1;
     protected static final int AUDIO_RECORD = 2;
     protected static final int VIDEO_RECORD = 3;
     protected static final int SEND_PHOTO = 4;
     protected static final int SEND_FILE = 5;
-
+    private static String TAG = InputLayoutUI.class.getSimpleName();
     /**
      * 语音/文字切换输入控件
      */
@@ -74,17 +72,15 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
 
     protected Activity mActivity;
     protected View mInputMoreLayout;
-    private AlertDialog mPermissionDialog;
-
     //    protected ShortcutArea mShortcutArea;
     protected View mInputMoreView;
-
+    protected List<InputMoreActionUnit> mInputMoreActionList = new ArrayList<>();
+    protected List<InputMoreActionUnit> mInputMoreCustomActionList = new ArrayList<>();
+    private AlertDialog mPermissionDialog;
     private boolean mSendPhotoDisable;
     private boolean mCaptureDisable;
     private boolean mVideoRecordDisable;
     private boolean mSendFileDisable;
-    protected List<InputMoreActionUnit> mInputMoreActionList = new ArrayList<>();
-    protected List<InputMoreActionUnit> mInputMoreCustomActionList = new ArrayList<>();
 
     public InputLayoutUI(Context context) {
         super(context);
@@ -311,6 +307,11 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     @Override
     public void addAction(InputMoreActionUnit action) {
         mInputMoreCustomActionList.add(action);
+    }
+
+    @Override
+    public EditText getInputText() {
+        return mTextInput;
     }
 
     protected void showMoreInputButton(int visibility) {

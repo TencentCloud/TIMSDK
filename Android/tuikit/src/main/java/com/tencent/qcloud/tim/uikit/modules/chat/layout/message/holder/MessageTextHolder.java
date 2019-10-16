@@ -3,8 +3,6 @@ package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
 import android.view.View;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMTextElem;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.face.FaceManager;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;

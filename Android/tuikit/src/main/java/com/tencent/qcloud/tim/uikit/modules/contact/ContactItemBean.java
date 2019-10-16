@@ -129,16 +129,16 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         return isFriend;
     }
 
+    public void setFriend(boolean friend) {
+        isFriend = friend;
+    }
+
     public String getAvatarurl() {
         return avatarurl;
     }
 
     public void setAvatarurl(String avatarurl) {
         this.avatarurl = avatarurl;
-    }
-
-    public void setFriend(boolean friend) {
-        isFriend = friend;
     }
 
     public ContactItemBean covertTIMGroupBaseInfo(TIMGroupBaseInfo group) {

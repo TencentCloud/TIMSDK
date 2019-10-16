@@ -4,11 +4,10 @@ import com.tencent.imsdk.TIMSdkConfig;
 
 public class TUIKitConfigs {
 
+    private static TUIKitConfigs sConfigs;
     private GeneralConfig generalConfig;
     private CustomFaceConfig customFaceConfig;
     private TIMSdkConfig sdkConfig;
-
-    private static TUIKitConfigs sConfigs;
 
     private TUIKitConfigs() {
 
@@ -16,6 +15,7 @@ public class TUIKitConfigs {
 
     /**
      * 获取TUIKit的全部配置
+     *
      * @return
      */
     public static TUIKitConfigs getConfigs() {
@@ -27,6 +27,7 @@ public class TUIKitConfigs {
 
     /**
      * 获取TUIKit的通用配置
+     *
      * @return
      */
     public GeneralConfig getGeneralConfig() {
@@ -35,6 +36,7 @@ public class TUIKitConfigs {
 
     /**
      * 设置TUIKit的通用配置
+     *
      * @param generalConfig
      * @return
      */
@@ -45,6 +47,7 @@ public class TUIKitConfigs {
 
     /**
      * 获取自定义表情包配置
+     *
      * @return
      */
     public CustomFaceConfig getCustomFaceConfig() {
@@ -53,6 +56,7 @@ public class TUIKitConfigs {
 
     /**
      * 设置自定义表情包配置
+     *
      * @param customFaceConfig
      * @return
      */
@@ -63,6 +67,7 @@ public class TUIKitConfigs {
 
     /**
      * 获取IMSDK的配置
+     *
      * @return
      */
     public TIMSdkConfig getSdkConfig() {
@@ -71,6 +76,7 @@ public class TUIKitConfigs {
 
     /**
      * 设置IMSDK的配置
+     *
      * @param timSdkConfig
      * @return
      */

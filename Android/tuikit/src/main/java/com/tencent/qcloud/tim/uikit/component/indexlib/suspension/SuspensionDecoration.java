@@ -10,8 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
-
 import java.util.List;
 
 /**
@@ -21,16 +19,13 @@ import java.util.List;
 public class SuspensionDecoration extends RecyclerView.ItemDecoration {
 
     private static final String TAG = SuspensionDecoration.class.getSimpleName();
-
-    private List<? extends ISuspensionInterface> mDatas;
-    private Paint mPaint;
-    private Rect mBounds;//用于存放测量文字Rect
-
-    private int mTitleHeight;//title的高
     private static int COLOR_TITLE_BG = Color.parseColor("#EDEDED");
     private static int COLOR_TITLE_FONT = Color.parseColor("#FF999999");
     private static int mTitleFontSize;//title字体大小
-
+    private List<? extends ISuspensionInterface> mDatas;
+    private Paint mPaint;
+    private Rect mBounds;//用于存放测量文字Rect
+    private int mTitleHeight;//title的高
     private int mHeaderViewCount = 0;
 
 

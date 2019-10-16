@@ -11,14 +11,13 @@ import java.util.Map;
  */
 
 public class MultiImageData {
+    final static int maxSize = 9;
     //图片地址链接
     List<String> imageUrls;
     //默认的图片ID
     int defaultImageResId;
     //下载下来的图片地址
     Map<Integer, Bitmap> bitmapMap;
-
-    final static int maxSize = 9;
 
     public MultiImageData() {
     }
@@ -32,12 +31,12 @@ public class MultiImageData {
         this.defaultImageResId = defaultImageResId;
     }
 
-    public void setDefaultImageResId(int defaultImageResId) {
-        this.defaultImageResId = defaultImageResId;
-    }
-
     public int getDefaultImageResId() {
         return defaultImageResId;
+    }
+
+    public void setDefaultImageResId(int defaultImageResId) {
+        this.defaultImageResId = defaultImageResId;
     }
 
     public List<String> getImageUrls() {

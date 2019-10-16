@@ -1,10 +1,6 @@
 package com.tencent.qcloud.tim.demo.main;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
@@ -16,20 +12,15 @@ import com.huawei.android.hms.agent.common.handler.ConnectHandler;
 import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.tencent.imsdk.utils.IMFunc;
 import com.tencent.qcloud.tim.demo.BaseActivity;
-import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.ContactFragment;
 import com.tencent.qcloud.tim.demo.conversation.ConversationFragment;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
-import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.uikit.TUIKit;
-import com.tencent.qcloud.tim.uikit.base.IMEventListener;
 import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
-import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
 
@@ -54,7 +45,7 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     private void prepareThirdPushToken() {
         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
 
-        if ( ThirdPushTokenMgr.USER_GOOGLE_FCM ) {
+        if (ThirdPushTokenMgr.USER_GOOGLE_FCM) {
             return;
         }
         if (IMFunc.isBrandHuawei()) {
@@ -119,7 +110,8 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
         Fragment current = null;
         switch (view.getId()) {
             case R.id.conversation_btn_group:
-                current = new ConversationFragment();;
+                current = new ConversationFragment();
+                ;
                 mConversationBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.conversation_selected), null, null);
                 break;

@@ -110,8 +110,9 @@ public class VideoViewActivity extends Activity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        TUIKitLog.i(TAG, "onStop");
+        super.onStop();
         if (mVideoView != null) {
             mVideoView.stop();
         }

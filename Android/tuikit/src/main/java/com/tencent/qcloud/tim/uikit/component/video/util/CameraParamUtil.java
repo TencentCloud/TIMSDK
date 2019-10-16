@@ -14,8 +14,8 @@ import java.util.List;
 public class CameraParamUtil {
 
     private static final String TAG = CameraParamUtil.class.getSimpleName();
-    private CameraSizeComparator sizeComparator = new CameraSizeComparator();
     private static CameraParamUtil cameraParamUtil = null;
+    private CameraSizeComparator sizeComparator = new CameraSizeComparator();
 
     private CameraParamUtil() {
 
@@ -106,19 +106,6 @@ public class CameraParamUtil {
         return false;
     }
 
-    private class CameraSizeComparator implements Comparator<Camera.Size> {
-        public int compare(Camera.Size lhs, Camera.Size rhs) {
-            if (lhs.width == rhs.width) {
-                return 0;
-            } else if (lhs.width > rhs.width) {
-                return 1;
-            } else {
-                return -1;
-            }
-        }
-
-    }
-
     public int getCameraDisplayOrientation(Context context, int cameraId) {
         Camera.CameraInfo info = new Camera.CameraInfo();
         Camera.getCameraInfo(cameraId, info);
@@ -148,5 +135,18 @@ public class CameraParamUtil {
             result = (info.orientation - degrees + 360) % 360;
         }
         return result;
+    }
+
+    private class CameraSizeComparator implements Comparator<Camera.Size> {
+        public int compare(Camera.Size lhs, Camera.Size rhs) {
+            if (lhs.width == rhs.width) {
+                return 0;
+            } else if (lhs.width > rhs.width) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+
     }
 }

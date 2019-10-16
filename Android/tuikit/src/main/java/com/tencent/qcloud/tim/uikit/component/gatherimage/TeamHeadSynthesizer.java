@@ -10,11 +10,10 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.MD5Utils;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
 import java.io.File;
 import java.util.List;
@@ -31,11 +30,25 @@ public class TeamHeadSynthesizer implements Synthesizer {
     Context mContext;
     int targetImageSize;//目标图片宽高
     int maxWidth, maxHeight;//最大宽度，最大高度
-    private int mRowCount; //行数
-    private int mColumnCount;  //列数
     ImageView imageView;
     int bgColor = Color.parseColor("#cfd3d8");
     boolean loadOk;//加载完毕
+    Callback callback = new Callback() {
+        @Override
+        public void onCall(Object obj, String targetID, boolean complete) {
+            //判断回调结果的任务id是否为同一批次的任务
+            if (!TextUtils.equals(currentTargetID, targetID)) return;
+            if (obj instanceof File) {
+                if (complete) loadOk = true;
+                imageView.setImageBitmap(BitmapFactory.decodeFile(((File) obj).getAbsolutePath()));
+            } else if (obj instanceof Bitmap) {
+                if (complete) loadOk = true;
+                imageView.setImageBitmap(((Bitmap) obj));
+            }
+        }
+    };
+    private int mRowCount; //行数
+    private int mColumnCount;  //列数
     private int mGap = 6; //宫格间距
 
     public TeamHeadSynthesizer(Context mContext, ImageView imageView) {
@@ -65,12 +78,12 @@ public class TeamHeadSynthesizer implements Synthesizer {
         return multiImageData;
     }
 
-    public void setDefaultImage(int defaultImageResId) {
-        multiImageData.setDefaultImageResId(defaultImageResId);
-    }
-
     public int getDefaultImage() {
         return multiImageData.getDefaultImageResId();
+    }
+
+    public void setDefaultImage(int defaultImageResId) {
+        multiImageData.setDefaultImageResId(defaultImageResId);
     }
 
     public int getBgColor() {
@@ -329,21 +342,6 @@ public class TeamHeadSynthesizer implements Synthesizer {
             }
         }.start();
     }
-
-    Callback callback = new Callback() {
-        @Override
-        public void onCall(Object obj, String targetID, boolean complete) {
-            //判断回调结果的任务id是否为同一批次的任务
-            if (!TextUtils.equals(currentTargetID, targetID)) return;
-            if (obj instanceof File) {
-                if (complete) loadOk = true;
-                imageView.setImageBitmap(BitmapFactory.decodeFile(((File) obj).getAbsolutePath()));
-            } else if (obj instanceof Bitmap) {
-                if (complete) loadOk = true;
-                imageView.setImageBitmap(((Bitmap) obj));
-            }
-        }
-    };
 
     /**
      * 生成合成图片的id，保证唯一性

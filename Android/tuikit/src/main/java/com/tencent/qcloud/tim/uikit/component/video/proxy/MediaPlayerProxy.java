@@ -9,7 +9,7 @@ import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.io.IOException;
 
-public class MediaPlayerProxy implements IPlayer{
+public class MediaPlayerProxy implements IPlayer {
 
     private static final String TAG = MediaPlayerProxy.class.getSimpleName();
 

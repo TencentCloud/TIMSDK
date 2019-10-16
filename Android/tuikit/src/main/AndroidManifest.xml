@@ -33,7 +33,7 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name=".utils.TUIKitFileProvider"
             android:authorities="${applicationId}.uikit.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">

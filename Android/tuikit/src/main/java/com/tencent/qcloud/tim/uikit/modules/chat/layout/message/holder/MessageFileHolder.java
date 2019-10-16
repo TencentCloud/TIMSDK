@@ -5,6 +5,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tencent.imsdk.TIMCallBack;
+import com.tencent.imsdk.TIMElem;
+import com.tencent.imsdk.TIMFaceElem;
 import com.tencent.imsdk.TIMFileElem;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
@@ -37,7 +39,11 @@ public class MessageFileHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(final MessageInfo msg, final int position) {
-        final TIMFileElem fileElem = (TIMFileElem) msg.getTIMMessage().getElement(0);
+        TIMElem elem = msg.getElement();
+        if (!(elem instanceof TIMFileElem)) {
+            return;
+        }
+        final TIMFileElem fileElem = (TIMFileElem) elem;
         final String path = msg.getDataPath();
         fileNameText.setText(fileElem.getFileName());
         String size = FileUtil.FormetFileSize(fileElem.getFileSize());

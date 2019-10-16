@@ -33,7 +33,7 @@ public class QueryAgreementApi extends BaseApiAgent {
     @Override
     public void onConnect(final int rst, final HuaweiApiClient client) {
         //需要在子线程中执行获取push协议展示的操作
-        ThreadUtil.INST.excute(new Runnable() {
+        ThreadUtil.INST.execute(new Runnable() {
             @Override
             public void run() {
                 if (client == null || !ApiClientMgr.INST.isConnect(client)) {

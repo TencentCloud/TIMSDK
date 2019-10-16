@@ -5,8 +5,17 @@ import android.os.Handler;
 
 public class BackgroundTasks {
 
+    private static BackgroundTasks instance;
     private Handler mHandler = new Handler();
 
+    public static BackgroundTasks getInstance() {
+        return instance;
+    }
+
+    // 需要在主线程中初始化
+    public static void initInstance() {
+        instance = new BackgroundTasks();
+    }
 
     public void runOnUiThread(Runnable runnable) {
         mHandler.post(runnable);
@@ -18,18 +27,6 @@ public class BackgroundTasks {
 
     public Handler getHandler() {
         return mHandler;
-    }
-
-    private static BackgroundTasks instance;
-
-    public static BackgroundTasks getInstance() {
-        return instance;
-    }
-
-
-    // 需要在主线程中初始化
-    public static void initInstance() {
-        instance = new BackgroundTasks();
     }
 
 

@@ -56,7 +56,7 @@ class PreviewState implements State {
             public void captureResult(Bitmap bitmap, boolean isVertical) {
                 machine.getView().showPicture(bitmap, isVertical);
                 machine.setState(machine.getBorrowPictureState());
-                TUIKitLog.i(TAG,"capture");
+                TUIKitLog.i(TAG, "capture");
             }
         });
     }
@@ -83,12 +83,12 @@ class PreviewState implements State {
 
     @Override
     public void cancle(SurfaceHolder holder, float screenProp) {
-        TUIKitLog.i(TAG,"浏览状态下,没有 cancle 事件");
+        TUIKitLog.i(TAG, "浏览状态下,没有 cancle 事件");
     }
 
     @Override
     public void confirm() {
-        TUIKitLog.i(TAG,"浏览状态下,没有 confirm 事件");
+        TUIKitLog.i(TAG, "浏览状态下,没有 confirm 事件");
     }
 
     @Override

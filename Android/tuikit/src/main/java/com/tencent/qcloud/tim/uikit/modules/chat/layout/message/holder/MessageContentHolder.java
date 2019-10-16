@@ -29,6 +29,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
     public ProgressBar sendingProgress;
     public ImageView statusImage;
     public TextView isReadText;
+    public TextView unreadAudioText;
 
     public MessageContentHolder(View itemView) {
         super(itemView);
@@ -41,6 +42,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         statusImage = itemView.findViewById(R.id.message_status_iv);
         sendingProgress = itemView.findViewById(R.id.message_sending_pb);
         isReadText = itemView.findViewById(R.id.is_read_tv);
+        unreadAudioText = itemView.findViewById(R.id.audio_unread);
     }
 
     public void layoutViews(final MessageInfo msg, final int position) {
@@ -117,11 +119,15 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             usernameText.setTextSize(properties.getNameFontSize());
         }
         // 聊天界面设置头像和昵称
-        TIMUserProfile profile = TIMFriendshipManager.getInstance().queryUserProfile(msg.getTIMMessage().getSender());
+        TIMUserProfile profile = TIMFriendshipManager.getInstance().queryUserProfile(msg.getFromUser());
         if (profile == null) {
             usernameText.setText(msg.getFromUser());
         } else {
-            usernameText.setText(!TextUtils.isEmpty(profile.getNickName()) ? profile.getNickName() : msg.getFromUser());
+            if (TextUtils.isEmpty(msg.getGroupNameCard())) {
+                usernameText.setText(!TextUtils.isEmpty(profile.getNickName()) ? profile.getNickName() : msg.getFromUser());
+            } else {
+                usernameText.setText(msg.getGroupNameCard());
+            }
             if (!TextUtils.isEmpty(profile.getFaceUrl()) && !msg.isSelf()) {
                 List<String> urllist = new ArrayList<>();
                 urllist.add(profile.getFaceUrl());
@@ -147,14 +153,15 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
 
         //// 聊天气泡设置
         if (msg.isSelf()) {
-            if (properties.getRightBubble() != null) {
-                msgContentFrame.setBackground(properties.getRightBubble());
+            if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
+                msgContentFrame.setBackground(properties.getRightBubble().getConstantState().newDrawable());
             } else {
                 msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_myself);
             }
         } else {
-            if (properties.getLeftBubble() != null) {
-                msgContentFrame.setBackground(properties.getLeftBubble());
+            if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
+                msgContentFrame.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
+                msgContentFrame.setLayoutParams(msgContentFrame.getLayoutParams());
             } else {
                 msgContentFrame.setBackgroundResource(R.drawable.chat_other_bg);
             }
@@ -214,10 +221,10 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
                 isReadText.setVisibility(View.GONE);
             } else {
                 isReadText.setVisibility(View.VISIBLE);
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)isReadText.getLayoutParams();
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) isReadText.getLayoutParams();
                 params.gravity = Gravity.CENTER_VERTICAL;
                 isReadText.setLayoutParams(params);
-                if (msg.getTIMMessage().isPeerReaded() || msg.getTIMMessage().getCustomInt() == 1) {
+                if (msg.isPeerRead()) {
                     isReadText.setText(R.string.has_read);
                 } else {
                     isReadText.setText(R.string.unread);
@@ -226,6 +233,9 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         } else {
             isReadText.setVisibility(View.GONE);
         }
+
+        //// 音频已读
+        unreadAudioText.setVisibility(View.GONE);
 
         //// 由子类设置指定消息类型的views
         layoutVariableViews(msg, position);

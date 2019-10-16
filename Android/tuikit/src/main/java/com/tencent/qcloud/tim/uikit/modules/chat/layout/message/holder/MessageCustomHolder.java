@@ -6,7 +6,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
-import com.tencent.qcloud.tim.uikit.component.face.FaceManager;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
 public class MessageCustomHolder extends MessageContentHolder implements ICustomMessageViewGroup {

@@ -14,11 +14,10 @@ import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
 public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
 
-    protected View rootView;
-
     public MessageListAdapter mAdapter;
-    protected MessageLayout.OnItemClickListener onItemClickListener;
     public MessageLayoutUI.Properties properties = MessageLayout.Properties.getInstance();
+    protected View rootView;
+    protected MessageLayout.OnItemClickListener onItemClickListener;
 
     public MessageBaseHolder(View itemView) {
         super(itemView);

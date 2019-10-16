@@ -347,7 +347,7 @@ public final class ApiClientMgr implements HuaweiApiClient.ConnectionCallbacks, 
         curLeftResolveTimes--;
 
         HMSAgentLog.d("start thread to connect");
-        ThreadUtil.INST.excute(new Runnable() {
+        ThreadUtil.INST.execute(new Runnable() {
             @Override
             public void run() {
                 HuaweiApiClient client =  getApiClient();
@@ -400,7 +400,7 @@ public final class ApiClientMgr implements HuaweiApiClient.ConnectionCallbacks, 
      * @param callback 回调
      */
     private void aSysnCallback(final int rstCode, final IClientConnectCallback callback) {
-        ThreadUtil.INST.excute(new Runnable() {
+        ThreadUtil.INST.execute(new Runnable() {
             @Override
             public void run() {
                 HuaweiApiClient client =  getApiClient();

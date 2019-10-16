@@ -115,22 +115,6 @@ public class ContactListView extends LinearLayout {
         mAdapter.setOnItemClickListener(listener);
     }
 
-    public interface OnSelectChangedListener {
-        void onSelectChanged(ContactItemBean contact, boolean selected);
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(int position, ContactItemBean contact);
-    }
-
-    public static class DataSource {
-        public static final int UNKNOWN = -1;
-        public static final int FRIEND_LIST = 1;
-        public static final int BLACK_LIST = 2;
-        public static final int GROUP_LIST = 3;
-        public static final int CONTACT_LIST = 4;
-    }
-
     public void loadDataSource(int dataSource) {
         switch (dataSource) {
             case DataSource.FRIEND_LIST:
@@ -259,5 +243,21 @@ public class ContactListView extends LinearLayout {
 
     public List<ContactItemBean> getGroupData() {
         return mData;
+    }
+
+    public interface OnSelectChangedListener {
+        void onSelectChanged(ContactItemBean contact, boolean selected);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position, ContactItemBean contact);
+    }
+
+    public static class DataSource {
+        public static final int UNKNOWN = -1;
+        public static final int FRIEND_LIST = 1;
+        public static final int BLACK_LIST = 2;
+        public static final int GROUP_LIST = 3;
+        public static final int CONTACT_LIST = 4;
     }
 }

@@ -19,6 +19,7 @@ public class ChatProvider implements IChatProvider {
     private ArrayList<MessageInfo> mDataSource = new ArrayList();
 
     private MessageListAdapter mAdapter;
+    private TypingListener mTypingListener;
 
     @Override
     public List<MessageInfo> getDataSource() {
@@ -42,8 +43,8 @@ public class ChatProvider implements IChatProvider {
         if (msg != null) {
             String msgId = msg.getId();
             for (int i = mDataSource.size() - 1; i >= 0; i--) {
-                if (mDataSource.get(i).getTIMMessage().getMsgId().equals(msgId)
-                        && mDataSource.get(i).getTIMMessage().getMsgUniqueId() == msg.getTIMMessage().getMsgUniqueId()
+                if (mDataSource.get(i).getId().equals(msgId)
+                        && mDataSource.get(i).getUniqueId() == msg.getUniqueId()
                         && TextUtils.equals(mDataSource.get(i).getExtra().toString(), msg.getExtra().toString())) {
                     return true;
                 }
@@ -143,9 +144,8 @@ public class ChatProvider implements IChatProvider {
     public boolean updateMessageRevoked(TIMMessageLocator locator) {
         for (int i = 0; i < mDataSource.size(); i++) {
             MessageInfo messageInfo = mDataSource.get(i);
-            TIMMessage msg = messageInfo.getTIMMessage();
             // 一条包含多条元素的消息，撤回时，会把所有元素都撤回，所以下面的判断即使满足条件也不能return
-            if (msg.checkEquals(locator)) {
+            if (messageInfo.checkEquals(locator)) {
                 messageInfo.setMsgType(MessageInfo.MSG_STATUS_REVOKE);
                 messageInfo.setStatus(MessageInfo.MSG_STATUS_REVOKE);
                 updateAdapter(MessageLayout.DATA_CHANGE_TYPE_UPDATE, i);
@@ -153,7 +153,6 @@ public class ChatProvider implements IChatProvider {
         }
         return false;
     }
-
 
     public boolean updateMessageRevoked(String msgId) {
         for (int i = 0; i < mDataSource.size(); i++) {
@@ -171,10 +170,10 @@ public class ChatProvider implements IChatProvider {
     public void updateReadMessage(TIMMessageReceipt max) {
         for (int i = 0; i < mDataSource.size(); i++) {
             MessageInfo messageInfo = mDataSource.get(i);
-            if (messageInfo.getTIMMessage().timestamp() > max.getTimestamp()) {
-                messageInfo.getTIMMessage().setCustomInt(0);
+            if (messageInfo.getMsgTime() > max.getTimestamp()) {
+                messageInfo.setPeerRead(false);
             } else {
-                messageInfo.getTIMMessage().setCustomInt(1);
+                messageInfo.setPeerRead(true);
                 updateAdapter(MessageLayout.DATA_CHANGE_TYPE_UPDATE, i);
             }
         }
@@ -200,7 +199,6 @@ public class ChatProvider implements IChatProvider {
         updateAdapter(MessageLayout.DATA_CHANGE_TYPE_LOAD, 0);
     }
 
-
     private void updateAdapter(int type, int data) {
         if (mAdapter != null) {
             mAdapter.notifyDataSourceChanged(type, data);
@@ -211,7 +209,6 @@ public class ChatProvider implements IChatProvider {
         this.mAdapter = adapter;
     }
 
-    private TypingListener mTypingListener;
     public interface TypingListener {
         void onTyping();
     }

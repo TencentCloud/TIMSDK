@@ -39,7 +39,7 @@ public class DeleteTokenApi extends BaseApiAgent {
     @Override
     public void onConnect(final int rst, final HuaweiApiClient client) {
         //需要在子线程中执行删除TOKEN操作
-        ThreadUtil.INST.excute(new Runnable() {
+        ThreadUtil.INST.execute(new Runnable() {
             @Override
             public void run() {
                 //调用删除TOKEN需要传入通过getToken接口获取到TOKEN，并且需要对TOKEN进行非空判断

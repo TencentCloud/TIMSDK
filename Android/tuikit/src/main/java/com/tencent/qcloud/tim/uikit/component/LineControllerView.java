@@ -63,6 +63,12 @@ public class LineControllerView extends LinearLayout {
         mSwitchView.setVisibility(mIsSwitch ? VISIBLE : GONE);
     }
 
+    /**
+     * 获取内容
+     */
+    public String getContent() {
+        return mContentText.getText().toString();
+    }
 
     /**
      * 设置文字内容
@@ -72,13 +78,6 @@ public class LineControllerView extends LinearLayout {
     public void setContent(String content) {
         this.mContent = content;
         mContentText.setText(content);
-    }
-
-    /**
-     * 获取内容
-     */
-    public String getContent() {
-        return mContentText.getText().toString();
     }
 
     public void setSingleLine(boolean singleLine) {
@@ -108,6 +107,9 @@ public class LineControllerView extends LinearLayout {
         }
     }
 
+    public boolean isChecked() {
+        return mSwitchView.isChecked();
+    }
 
     /**
      * 设置开关状态
@@ -116,10 +118,6 @@ public class LineControllerView extends LinearLayout {
      */
     public void setChecked(boolean on) {
         mSwitchView.setChecked(on);
-    }
-
-    public boolean isChecked() {
-        return mSwitchView.isChecked();
     }
 
     /**

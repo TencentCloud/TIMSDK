@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import com.tencent.imsdk.TIMGroupMemberRoleType;
 import com.tencent.imsdk.TIMManager;
-import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.R;
-import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
-import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.member.IGroupMemberRouter;
+import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
 import java.util.ArrayList;

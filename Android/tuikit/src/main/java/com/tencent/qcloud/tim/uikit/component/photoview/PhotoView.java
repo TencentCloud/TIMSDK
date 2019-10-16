@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+
 /**
  * A zoomable ImageView. See {@link PhotoViewAttacher} for most of the details on how the zooming
  * is accomplished
@@ -59,6 +60,15 @@ public class PhotoView extends AppCompatImageView {
     }
 
     @Override
+    public void setScaleType(ScaleType scaleType) {
+        if (attacher == null) {
+            pendingScaleType = scaleType;
+        } else {
+            attacher.setScaleType(scaleType);
+        }
+    }
+
+    @Override
     public Matrix getImageMatrix() {
         return attacher.getImageMatrix();
     }
@@ -71,15 +81,6 @@ public class PhotoView extends AppCompatImageView {
     @Override
     public void setOnClickListener(OnClickListener l) {
         attacher.setOnClickListener(l);
-    }
-
-    @Override
-    public void setScaleType(ScaleType scaleType) {
-        if (attacher == null) {
-            pendingScaleType = scaleType;
-        } else {
-            attacher.setScaleType(scaleType);
-        }
     }
 
     @Override
@@ -157,32 +158,36 @@ public class PhotoView extends AppCompatImageView {
         return attacher.getMinimumScale();
     }
 
-    public float getMediumScale() {
-        return attacher.getMediumScale();
-    }
-
-    public float getMaximumScale() {
-        return attacher.getMaximumScale();
-    }
-
-    public float getScale() {
-        return attacher.getScale();
-    }
-
-    public void setAllowParentInterceptOnEdge(boolean allow) {
-        attacher.setAllowParentInterceptOnEdge(allow);
-    }
-
     public void setMinimumScale(float minimumScale) {
         attacher.setMinimumScale(minimumScale);
+    }
+
+    public float getMediumScale() {
+        return attacher.getMediumScale();
     }
 
     public void setMediumScale(float mediumScale) {
         attacher.setMediumScale(mediumScale);
     }
 
+    public float getMaximumScale() {
+        return attacher.getMaximumScale();
+    }
+
     public void setMaximumScale(float maximumScale) {
         attacher.setMaximumScale(maximumScale);
+    }
+
+    public float getScale() {
+        return attacher.getScale();
+    }
+
+    public void setScale(float scale) {
+        attacher.setScale(scale);
+    }
+
+    public void setAllowParentInterceptOnEdge(boolean allow) {
+        attacher.setAllowParentInterceptOnEdge(allow);
     }
 
     public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
@@ -207,10 +212,6 @@ public class PhotoView extends AppCompatImageView {
 
     public void setOnViewDragListener(OnViewDragListener listener) {
         attacher.setOnViewDragListener(listener);
-    }
-
-    public void setScale(float scale) {
-        attacher.setScale(scale);
     }
 
     public void setScale(float scale, boolean animate) {

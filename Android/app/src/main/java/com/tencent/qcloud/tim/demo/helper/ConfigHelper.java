@@ -11,6 +11,7 @@ public class ConfigHelper {
     public ConfigHelper() {
 
     }
+
     public TUIKitConfigs getConfigs() {
         return TUIKit.getConfigs()
                 .setCustomFaceConfig(initCustomFaceConfig());

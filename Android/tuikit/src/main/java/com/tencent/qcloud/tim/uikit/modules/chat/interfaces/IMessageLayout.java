@@ -23,18 +23,18 @@ public interface IMessageLayout extends IMessageProperties {
     void setAdapter(MessageListAdapter adapter);
 
     /**
-     * 设置消息列表的事件监听器 {@link MessageLayout.OnItemClickListener}
-     *
-     * @param listener
-     */
-    void setOnItemClickListener(MessageLayout.OnItemClickListener listener);
-
-    /**
      * 获得消息列表的点击事件
      *
      * @return
      */
     MessageLayout.OnItemClickListener getOnItemClickListener();
+
+    /**
+     * 设置消息列表的事件监听器 {@link MessageLayout.OnItemClickListener}
+     *
+     * @param listener
+     */
+    void setOnItemClickListener(MessageLayout.OnItemClickListener listener);
 
     /**
      * 获取 PopMenu 的 Action 列表

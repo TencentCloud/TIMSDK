@@ -126,10 +126,17 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.top = top;
     }
 
+    /**
+     * 获得最后一条消息的时间，单位是秒
+     */
     public long getLastMessageTime() {
         return lastMessageTime;
     }
 
+    /**
+     * 设置最后一条消息的时间，单位是秒
+     * @param lastMessageTime
+     */
     public void setLastMessageTime(long lastMessageTime) {
         this.lastMessageTime = lastMessageTime;
     }

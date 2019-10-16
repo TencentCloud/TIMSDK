@@ -8,13 +8,14 @@ import com.tencent.qcloud.tim.demo.utils.Constants;
 
 public class UserInfo {
 
+    private static UserInfo instance;
     private String account;
     private String password;
     private int room = 4321;
-
     private String replayUrl;
 
-    private static UserInfo instance;
+    private UserInfo() {
+    }
 
     public static UserInfo getInstance() {
         if (null == instance) {
@@ -25,9 +26,6 @@ public class UserInfo {
             }
         }
         return instance;
-    }
-
-    private UserInfo() {
     }
 
     public String getAccount() {

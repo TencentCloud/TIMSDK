@@ -2,7 +2,9 @@ package com.tencent.qcloud.tim.uikit.component.video;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Surface;
@@ -40,6 +42,81 @@ public class UIKitVideoView extends TextureView {
     private IPlayer.OnPreparedListener mOutOnPreparedListener;
     private IPlayer.OnErrorListener mOutOnErrorListener;
     private IPlayer.OnCompletionListener mOutOnCompletionListener;
+    private IPlayer.OnPreparedListener mOnPreparedListener = new IPlayer.OnPreparedListener() {
+        public void onPrepared(IPlayer mp) {
+            mCurrentState = STATE_PREPARED;
+            mVideoHeight = mp.getVideoHeight();
+            mVideoWidth = mp.getVideoWidth();
+            TUIKitLog.i(TAG, "onPrepared mVideoWidth: " + mVideoWidth
+                    + " mVideoHeight: " + mVideoHeight
+                    + " mVideoRotationDegree: " + mVideoRotationDegree);
+            if (mOutOnPreparedListener != null) {
+                mOutOnPreparedListener.onPrepared(mp);
+            }
+        }
+    };
+    private IPlayer.OnErrorListener mOnErrorListener = new IPlayer.OnErrorListener() {
+        public boolean onError(IPlayer mp, int what, int extra) {
+            TUIKitLog.w(TAG, "onError: what/extra: " + what + "/" + extra);
+            mCurrentState = STATE_ERROR;
+            stop_l();
+            if (mOutOnErrorListener != null) {
+                mOutOnErrorListener.onError(mp, what, extra);
+            }
+            return true;
+        }
+    };
+    private IPlayer.OnInfoListener mOnInfoListener = new IPlayer.OnInfoListener() {
+        public void onInfo(IPlayer mp, int what, int extra) {
+            TUIKitLog.w(TAG, "onInfo: what/extra: " + what + "/" + extra);
+            if (what == 10001) { // IJK: MEDIA_INFO_VIDEO_ROTATION_CHANGED
+                // 有些视频拍摄的时候有角度，需要做旋转，默认ijk是不会做的，这里自己实现
+                mVideoRotationDegree = extra;
+                setRotation(mVideoRotationDegree);
+                requestLayout();
+            }
+        }
+    };
+    private IPlayer.OnCompletionListener mOnCompletionListener = new IPlayer.OnCompletionListener() {
+        public void onCompletion(IPlayer mp) {
+            TUIKitLog.i(TAG, "onCompletion");
+            mCurrentState = STATE_PLAYBACK_COMPLETED;
+            if (mOutOnCompletionListener != null) {
+                mOutOnCompletionListener.onCompletion(mp);
+            }
+        }
+    };
+    private IPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener = new IPlayer.OnVideoSizeChangedListener() {
+        @Override
+        public void onVideoSizeChanged(IPlayer mp, int width, int height) {
+            // TUIKitLog.i(TAG, "onVideoSizeChanged width: " + width + " height: " + height);
+        }
+    };
+    private TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
+
+        @Override
+        public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+            TUIKitLog.i(TAG, "onSurfaceTextureAvailable");
+            mSurface = new Surface(surface);
+            openVideo();
+        }
+
+        @Override
+        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+            TUIKitLog.i(TAG, "onSurfaceTextureSizeChanged");
+        }
+
+        @Override
+        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+            TUIKitLog.i(TAG, "onSurfaceTextureDestroyed");
+            return true;
+        }
+
+        @Override
+        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+            // TUIKitLog.i(TAG,"onSurfaceTextureUpdated");
+        }
+    };
 
     public UIKitVideoView(Context context) {
         super(context);
@@ -63,61 +140,6 @@ public class UIKitVideoView extends TextureView {
         mCurrentState = STATE_IDLE;
     }
 
-    private IPlayer.OnPreparedListener mOnPreparedListener = new IPlayer.OnPreparedListener() {
-        public void onPrepared(IPlayer mp) {
-            mCurrentState = STATE_PREPARED;
-            mVideoHeight = mp.getVideoHeight();
-            mVideoWidth = mp.getVideoWidth();
-            TUIKitLog.i(TAG, "onPrepared mVideoWidth: " + mVideoWidth
-                    + " mVideoHeight: " + mVideoHeight
-                    + " mVideoRotationDegree: " + mVideoRotationDegree);
-            if (mOutOnPreparedListener != null) {
-                mOutOnPreparedListener.onPrepared(mp);
-            }
-        }
-    };
-
-    private IPlayer.OnErrorListener mOnErrorListener = new IPlayer.OnErrorListener() {
-        public boolean onError(IPlayer mp, int what, int extra) {
-            TUIKitLog.w(TAG, "onError: what/extra: " + what + "/" + extra);
-            mCurrentState = STATE_ERROR;
-            stop_l();
-            if (mOutOnErrorListener != null) {
-                mOutOnErrorListener.onError(mp, what, extra);
-            }
-            return true;
-        }
-    };
-
-    private IPlayer.OnInfoListener mOnInfoListener = new IPlayer.OnInfoListener() {
-        public void onInfo(IPlayer mp, int what, int extra) {
-            TUIKitLog.w(TAG, "onInfo: what/extra: " + what + "/" + extra);
-            if (what == 10001) { // IJK: MEDIA_INFO_VIDEO_ROTATION_CHANGED
-                // 有些视频拍摄的时候有角度，需要做旋转，默认ijk是不会做的，这里自己实现
-                mVideoRotationDegree = extra;
-                setRotation(mVideoRotationDegree);
-                requestLayout();
-            }
-        }
-    };
-
-    private IPlayer.OnCompletionListener mOnCompletionListener = new IPlayer.OnCompletionListener() {
-        public void onCompletion(IPlayer mp) {
-            TUIKitLog.i(TAG, "onCompletion");
-            mCurrentState = STATE_PLAYBACK_COMPLETED;
-            if (mOutOnCompletionListener != null) {
-                mOutOnCompletionListener.onCompletion(mp);
-            }
-        }
-    };
-
-    private IPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener = new IPlayer.OnVideoSizeChangedListener() {
-        @Override
-        public void onVideoSizeChanged(IPlayer mp, int width, int height) {
-            // TUIKitLog.i(TAG, "onVideoSizeChanged width: " + width + " height: " + height);
-        }
-    };
-
     public void setOnPreparedListener(IPlayer.OnPreparedListener l) {
         mOutOnPreparedListener = l;
     }
@@ -129,32 +151,6 @@ public class UIKitVideoView extends TextureView {
     public void setOnCompletionListener(IPlayer.OnCompletionListener l) {
         mOutOnCompletionListener = l;
     }
-
-    private TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
-
-        @Override
-        public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-             TUIKitLog.i(TAG,"onSurfaceTextureAvailable");
-            mSurface = new Surface(surface);
-            openVideo();
-        }
-
-        @Override
-        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-             TUIKitLog.i(TAG,"onSurfaceTextureSizeChanged");
-        }
-
-        @Override
-        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-            TUIKitLog.i(TAG,"onSurfaceTextureDestroyed");
-            return true;
-        }
-
-        @Override
-        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-            // TUIKitLog.i(TAG,"onSurfaceTextureUpdated");
-        }
-    };
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -176,10 +172,10 @@ public class UIKitVideoView extends TextureView {
                 height = heightSpecSize;
 
                 // for compatibility, we adjust size based on aspect ratio
-                if ( mVideoWidth * height  < width * mVideoHeight ) {
+                if (mVideoWidth * height < width * mVideoHeight) {
                     //Log.i("@@@", "image too wide, correcting");
                     width = height * mVideoWidth / mVideoHeight;
-                } else if ( mVideoWidth * height  > width * mVideoHeight ) {
+                } else if (mVideoWidth * height > width * mVideoHeight) {
                     //Log.i("@@@", "image too tall, correcting");
                     height = width * mVideoHeight / mVideoWidth;
                 }
@@ -223,8 +219,8 @@ public class UIKitVideoView extends TextureView {
             // 画面旋转之后需要缩放，而且旋转之后宽高的计算都要换为高宽。
             int[] size = ScreenUtil.scaledSize(widthSpecSize, heightSpecSize, height, width);
             TUIKitLog.i(TAG, "onMeasure scaled width: " + size[0] + " height: " + size[1]);
-            setScaleX(size[0] / ((float)height));
-            setScaleY(size[1] / ((float)width));
+            setScaleX(size[0] / ((float) height));
+            setScaleY(size[1] / ((float) width));
         }
     }
 
@@ -296,6 +292,13 @@ public class UIKitVideoView extends TextureView {
             return mMediaPlayer.isPlaying();
         }
         return false;
+    }
+
+    @Override
+    public void setBackgroundDrawable(Drawable background) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N && background != null) {
+            super.setBackgroundDrawable(background);
+        }
     }
 
     @Override

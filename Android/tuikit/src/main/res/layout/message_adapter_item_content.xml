@@ -71,6 +71,19 @@
         android:layout_toRightOf="@+id/left_user_icon_view"
         android:orientation="horizontal">
 
+        <com.tencent.qcloud.tim.uikit.component.UnreadCountTextView
+            android:id="@+id/audio_unread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ProgressBar
+                android:id="@+id/message_sending_pb"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:visibility="gone" />
+
         <TextView
             android:id="@+id/is_read_tv"
             android:layout_width="wrap_content"
@@ -79,14 +92,6 @@
             android:textColor="@color/text_gray1"
             android:layout_gravity="center_vertical"
             android:textSize="11sp"/>
-
-        <ProgressBar
-            android:id="@+id/message_sending_pb"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/message_status_iv"

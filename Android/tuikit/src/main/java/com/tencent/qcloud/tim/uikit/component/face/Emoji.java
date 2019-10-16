@@ -9,6 +9,11 @@ import java.io.Serializable;
 public class Emoji implements Serializable {
 
     private static final int deaultSize = ScreenUtil.getPxByDp(32);
+    private String desc;
+    private String filter;
+    private Bitmap icon;
+    private int width = deaultSize;
+    private int height = deaultSize;
 
     public String getDesc() {
         return desc;
@@ -49,11 +54,5 @@ public class Emoji implements Serializable {
     public void setHeight(int height) {
         this.height = height;
     }
-
-    private String desc;
-    private String filter;
-    private Bitmap icon;
-    private int width = deaultSize;
-    private int height = deaultSize;
 
 }

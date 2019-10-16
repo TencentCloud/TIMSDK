@@ -41,6 +41,10 @@ public class DemoApplication extends Application {
 
     private static DemoApplication instance;
 
+    public static DemoApplication instance() {
+        return instance;
+    }
+
     @Override
     public void onCreate() {
         DemoLog.i(TAG, "onCreate");
@@ -62,7 +66,7 @@ public class DemoApplication extends Application {
              */
             TUIKit.init(this, GenerateTestUserSig.SDKAPPID, new ConfigHelper().getConfigs());
 
-            if ( ThirdPushTokenMgr.USER_GOOGLE_FCM ) {
+            if (ThirdPushTokenMgr.USER_GOOGLE_FCM) {
                 FirebaseInstanceId.getInstance().getInstanceId()
                         .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                             @Override
@@ -107,6 +111,16 @@ public class DemoApplication extends Application {
     class StatisticActivityLifecycleCallback implements ActivityLifecycleCallbacks {
         private int foregroundActivities = 0;
         private boolean isChangingConfiguration;
+        private IMEventListener mIMEventListener = new IMEventListener() {
+            @Override
+            public void onNewMessages(List<TIMMessage> msgs) {
+                for (TIMMessage msg : msgs) {
+                    // 小米手机需要在设置里面把demo的"后台弹出权限"打开才能点击Notification跳转。TIMOfflinePushNotification后续不再维护，如有需要，建议应用自己调用系统api弹通知栏消息。
+                    TIMOfflinePushNotification notification = new TIMOfflinePushNotification(DemoApplication.this, msg);
+                    notification.doNotify(DemoApplication.this, R.drawable.default_user_icon);
+                }
+            }
+        };
 
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle) {
@@ -114,7 +128,7 @@ public class DemoApplication extends Application {
             if (bundle != null) { // 若bundle不为空则程序异常结束
                 // 重启整个程序
                 Intent intent = new Intent(activity, SplashActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         }
@@ -181,17 +195,6 @@ public class DemoApplication extends Application {
             isChangingConfiguration = activity.isChangingConfigurations();
         }
 
-        private IMEventListener mIMEventListener = new IMEventListener() {
-            @Override
-            public void onNewMessages(List<TIMMessage> msgs) {
-                for (TIMMessage msg : msgs) {
-                    // 小米手机需要在设置里面把demo的"后台弹出权限"打开才能点击Notification跳转。TIMOfflinePushNotification后续不再维护，如有需要，建议应用自己调用系统api弹通知栏消息。
-                    TIMOfflinePushNotification notification = new TIMOfflinePushNotification(DemoApplication.this, msg);
-                    notification.doNotify(DemoApplication.this, R.drawable.default_user_icon);
-                }
-            }
-        };
-
         @Override
         public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
 
@@ -201,9 +204,5 @@ public class DemoApplication extends Application {
         public void onActivityDestroyed(Activity activity) {
 
         }
-    }
-
-    public static DemoApplication instance() {
-        return instance;
     }
 }
