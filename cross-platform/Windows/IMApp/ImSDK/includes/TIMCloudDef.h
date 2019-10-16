@@ -466,6 +466,7 @@ enum TIMConvType {
 // Struct SdKConfig JsonKey
 static const char* kTIMSdkConfigConfigFilePath     = "sdk_config_config_file_path";// string, 只写(选填), 配置文件路径,默认路径为"/"
 static const char* kTIMSdkConfigLogFilePath        = "sdk_config_log_file_path";   // string, 只写(选填), 日志文件路径,默认路径为"/"
+static const char* kTIMSdkConfigJavaVM             = "sdk_config_java_vm";         // uint64, 只写(选填), Android平台种的Java虚拟机指针
 // EndStruct
 
 
@@ -1130,9 +1131,10 @@ enum TIMGroupType {
 * @brief 群组成员角色类型
 */
 enum TIMGroupMemberRole {
+    kTIMMemberRole_None,       // 未定义
     kTIMMemberRole_Normal,     // 群成员
     kTIMMemberRole_Admin,      // 管理员
-    kTIMMemberRole_SuperAdmin, // 超级管理员
+    kTIMMemberRole_Owner,      // 超级管理员(群主）
 };
 
 /**
