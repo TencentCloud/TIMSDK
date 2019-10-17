@@ -1,30 +1,39 @@
 <template>
   <div class="group-member-list-wrapper">
-    <div class="group-member-list">
+    <div class="header">
+      <span class="member-count text-ellipsis">群成员：{{currentConversation.groupProfile.memberNum}}</span>
       <popover v-model="addGroupMemberVisible">
         <add-group-member></add-group-member>
-        <div slot="reference" class="add-group-member group-member">
-          <span class="el-icon-plus add-button" style="width:30px;height:30px;" circle></span>
-          <span>Add</span>
+        <div slot="reference" class="btn-add-member" title="添加群成员">
+          <span class="tim-icon-friend-add"></span>
         </div>
       </popover>
-      <template v-for="member in members">
-        <popover placement="right" :key="member.userID">
-          <group-member-info :member="member" />
-          <div slot="reference" class="group-member" @click="currentMemberID = member.userID">
-            <avatar
-              :src="member.avatar"
-              :text="getGroupMemberAvatarText(member.role)"
-              shape="square"
-            />
-            <span class="member-name" v-if="member.nameCard">{{ member.nameCard }}</span>
-            <span class="member-name" v-else-if="member.nick">{{ member.nick }}</span>
-            <span class="member-name" v-else>{{ member.userID }}</span>
-          </div>
-        </popover>
-      </template>
     </div>
-    <el-button v-if="showLoadMore" type="text" @click="loadMore">查看更多</el-button>
+    <div class="scroll-content">
+      <div class="group-member-list">
+        <template v-for="member in members">
+          <popover placement="right" :key="member.userID">
+            <group-member-info :member="member" />
+            <div slot="reference" class="group-member" @click="currentMemberID = member.userID">
+              <avatars :title=getGroupMemberAvatarText(member.role) :src="member.avatar" />
+              <!-- <avatar
+                :src="member.avatar"
+                :text="getGroupMemberAvatarText(member.role)"
+                shape="square"
+              /> -->
+              <div class="member-name text-ellipsis">
+                <span v-if="member.nameCard" :title=member.nameCard>{{ member.nameCard }}</span>
+                <span v-else-if="member.nick" :title=member.nick>{{ member.nick }}</span>
+                <span v-else :title=member.userID>{{ member.userID }}</span>
+              </div>
+            </div>
+          </popover>
+        </template>
+      </div>
+    </div>
+    <div class="more">
+      <el-button v-if="showLoadMore" type="text" @click="loadMore">查看更多</el-button>
+    </div>
   </div>
 </template>
 
@@ -63,11 +72,11 @@ export default {
     getGroupMemberAvatarText(role) {
       switch (role) {
         case 'Owner':
-          return '主'
+          return '群主'
         case 'Admin':
-          return '管'
+          return '管理员'
         default:
-          return '普'
+          return '群成员'
       }
     },
     loadMore() {
@@ -81,41 +90,69 @@ export default {
 }
 </script>
 
-<style scoped>
-.group-member {
-  display: flex;
-  flex-direction: column;
-  width: fit-content;
-  text-align: center;
-  color: #000;
-  margin: 0 12px;
-  cursor: pointer;
-}
-.add-group-member {
-  cursor: pointer;
-}
-.add-button {
-  border: 1px solid gray;
-  text-align: center;
-  line-height: 30px;
-}
-.group-member-list-wrapper {
-  border-bottom: 1px solid #ded8d8;
-  padding-bottom: 6px;
-  margin-bottom: 6px;
-  max-height: 300px;
-  overflow-y: scroll;
-}
-.group-member-list {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.member-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 30px;
-}
+<style lang="stylus" scoped>
+.group-member-list-wrapper
+  .header
+    height 50px
+    padding 10px 16px 10px 20px
+    border-bottom 1px solid $border-base
+    .member-count
+      display inline-block
+      max-width 130px
+      line-height 30px
+      font-size 14px
+      vertical-align bottom
+    .btn-add-member
+      width 30px
+      height 30px
+      font-size 28px
+      text-align center
+      line-height 32px
+      cursor pointer
+      float right
+      &:hover
+        color $light-primary
+  .scroll-content
+    max-height: 250px;
+    overflow-y: scroll;
+    padding 10px 15px 10px 15px
+    width 100%
+    .group-member-list
+      display flex
+      justify-content flex-start
+      flex-wrap wrap
+      width 100%
+    .group-member
+      width 60px
+      height 60px
+      display: flex;
+      justify-content center
+      align-content center
+      flex-direction: column;
+      text-align: center;
+      color: $black;
+      cursor: pointer;
+      .avatar
+        width 40px
+        height 40px
+        border-radius 50%
+      .member-name
+        font-size 12px
+        width: 40px;
+        text-align center
+  .more
+    padding 0 20px
+    border-bottom 1px solid $border-base
+
+// .add-group-member {
+//   cursor: pointer;
+// }
+// .add-button {
+//   border: 1px solid gray;
+//   text-align: center;
+//   line-height: 30px;
+// }
+
+
+
 </style>

@@ -1,31 +1,27 @@
 <template>
-  <div>
-    <div class="info-item">
-      <div class="label">userID</div>
-      <div class="content">{{ userProfile.userID }}</div>
+  <div class="profile-user">
+    <avatars :title=userProfile.userID :src="userProfile.avatar" />
+    <div class="nick-name text-ellipsis">
+      <span v-if="userProfile.nick" :title=userProfile.nick>
+        {{ userProfile.nick }}
+      </span>
+      <span v-else class="anonymous" title="该用户未设置昵称">
+        [Anonymous]
+      </span>
     </div>
-    <div class="info-item">
-      <div class="label">头像</div>
-      <div class="content">
-        <avatar :src="userProfile.avatar" :text="userProfile.userID" />
-      </div>
-    </div>
-    <div class="info-item">
-      <div class="label">昵称</div>
-      <div class="content">{{ userProfile.nick || '暂无' }}</div>
-    </div>
-    <div class="info-item">
-      <div class="label">性别</div>
-      <div class="content">{{ gender }}</div>
+    <div class="gender" v-if="genderClass">
+      <span :title="gender" class="iconfont" :class="genderClass"></span>
     </div>
     <el-button
+      title="将该用户加入黑名单"
       type="text"
       @click="addToBlackList"
       v-if="!isInBlacklist && userProfile.userID !== myUserID"
-      style="color:red;"
-      >拉黑</el-button
+      class="btn-add-blacklist"
+      >加入黑名单</el-button
     >
-    <el-button type="text" @click="removeFromBlacklist" v-else-if="isInBlacklist">取消拉黑</el-button>
+    <el-button title="将该用户移出黑名单" type="text" @click="removeFromBlacklist" v-else-if="isInBlacklist">移出黑名单</el-button>
+    <!-- 拉黑 和 反拉黑 -->
   </div>
 </template>
 
@@ -55,6 +51,16 @@ export default {
         default:
           return '未设置'
       }
+    },
+    genderClass() {
+      switch (this.userProfile.gender) {
+        case this.TIM.TYPES.GENDER_MALE:
+          return 'icon-male'
+        case this.TIM.TYPES.GENDER_FEMALE:
+          return 'icon-female'
+        default:
+          return ''
+      }
     }
   },
   methods: {
@@ -65,7 +71,10 @@ export default {
           this.$store.dispatch('getBlacklist')
         })
         .catch(imError => {
-          this.$message.error(imError.message)
+          this.$store.commit('showMessage', {
+            message: imError.message,
+            type: 'error'
+          })
         })
     },
     removeFromBlacklist() {
@@ -77,12 +86,28 @@ export default {
 }
 </script>
 
-<style scoped>
-.info-item {
-  margin: 12px 0;
-}
-.info-item .label {
-  font-size: 0.8em;
-  color: gray;
-}
+<style lang="stylus" scoped>
+.profile-user
+  width 100%
+  text-align center
+  padding 0 20px
+  .avatar
+    width 160px
+    height 160px
+    border-radius 50%
+    margin 30px auto
+  .nick-name
+    width 100%
+    color $base
+    font-size 20px
+    font-weight bold
+    text-shadow $font-dark 0 0 0.1em
+    .anonymous
+      color $first
+      text-shadow none
+  .gender
+    padding 5px 0 10px 0
+    border-bottom 1px solid $border-base
+  .btn-add-blacklist
+    color $danger
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="my-profile-wrapper">
-    <el-dialog title="编辑个人资料" :visible.sync="showEditMyProfile">
+    <el-dialog title="编辑个人资料" :visible.sync="showEditMyProfile" width="30%">
       <el-form v-model="form" label-width="100px">
         <el-form-item label="头像">
           <el-input v-model="form.avatar" placeholder="头像地址(URL)" />
@@ -24,11 +24,9 @@
     <el-popover :width="200" trigger="click" placement="right">
       <profile-card :profile="currentUserProfile" />
       <el-button type="text" @click="handleEdit">编辑</el-button>
-      <avatar
-        shape="square"
+      <avatars
         slot="reference"
         :src="currentUserProfile.avatar"
-        text="U"
         class="my-avatar"
       />
     </el-popover>
@@ -73,6 +71,14 @@ export default {
   },
   methods: {
     editMyProfile() {
+      if (this.form.avatar && this.form.avatar.indexOf('http') === -1) {
+        this.$store.commit('showMessage', {
+          message: '头像应该是 Url 地址',
+          type: 'warning'
+        })
+        this.form.avatar = ''
+        return
+      }
       const options = {}
       // 过滤空串
       Object.keys(this.form).forEach(key => {
@@ -83,11 +89,16 @@ export default {
       this.tim
         .updateMyProfile(options)
         .then(() => {
-          this.$message({ message: '修改成功', type: 'success' })
+          this.$store.commit('showMessage', {
+            message: '修改成功'
+          })
           this.showEditMyProfile = false
         })
         .catch(imError => {
-          this.$message.error(imError.message)
+          this.$store.commit('showMessage', {
+            message: imError.message,
+            type: 'error'
+          })
         })
     },
     handleEdit() {
@@ -99,8 +110,16 @@ export default {
 }
 </script>
 
-<style scoped>
-.my-avatar {
-  cursor: pointer;
-}
+<style lang="stylus" scoped>
+.my-profile-wrapper
+  width 50px
+  height 50px
+  margin 15px
+  &>span
+    display: block;
+    width: 100%;
+    height: 100%;
+.my-avatar
+  cursor pointer
+  border-radius: 50%;
 </style>

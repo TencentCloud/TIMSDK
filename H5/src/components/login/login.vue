@@ -32,14 +32,15 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus" scoped>
 .login-wrapper {
   display: flex;
   align-items: center;
   flex-direction: column;
   padding: 24px;
-  background: #fff;
-  color: #000;
+  background: $white;
+  color: $black;
   border-radius: 5px;
+  box-shadow: 0 11px 20px 0 rgba(0, 0, 0, .3);
 }
 </style>

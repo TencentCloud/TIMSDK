@@ -1,7 +1,7 @@
 <template>
   <div class="profile-card-wrapper">
     <div class="profile-header">
-      <avatar :src="profile.avatar" shape="square" text="U" />
+      <avatar :src="profile.avatar" shape="circle" text="U" />
       <div class="basic">
         <span class="nick text-ellipsis">{{ profile.nick || profile.userID }}</span>
         <span class="iconfont" :class="genderClass"></span>
@@ -35,7 +35,7 @@ export default {
 }
 </script>
 
-<style scpoed>
+<style lang="stylus" scpoed>
 .profile-header {
   display: flex;
   margin-bottom: 12px;
@@ -44,7 +44,7 @@ export default {
   margin-left: 12px;
 }
 .icon-male {
-  color: #14b1f6;
+  color: $primary;
 }
 .icon-female {
   color: #ff8096;

@@ -31,7 +31,10 @@ export default {
     handleIconClick() {
       if (this.messageIconClass === 'message-send-fail') {
         this.tim.resendMessage(this.message).catch(imError => {
-          this.$message.error(imError.message)
+          this.$store.commit('showMessage', {
+            message: imError.message,
+            type: 'error'
+          })
         })
       }
     }
@@ -39,10 +42,10 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus" scoped>
 .message-send-fail {
   background-color: red;
-  color: #fff;
+  color: $white;
   border-radius: 50%;
   text-align: center;
   line-height: 16px;

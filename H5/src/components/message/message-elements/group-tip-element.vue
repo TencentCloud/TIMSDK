@@ -40,11 +40,12 @@ export default {
 }
 </script>
 
-<style scoped>
-.group-tip-element-wrapper {
-  background: #ababab;
-  padding: 3px 6px;
-  border-radius: 3px;
-  color: #fff;
-}
+<style lang="stylus" scoped>
+.group-tip-element-wrapper
+  background $white
+  padding 4px 15px
+  border-radius 3px
+  color $secondary
+  font-size 12px
+  // text-shadow $secondary 0 0 0.05em
 </style>

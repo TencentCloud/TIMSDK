@@ -1,6 +1,6 @@
 {
   "name": "timsdk-demo",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "start": "node node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
@@ -12,7 +12,7 @@
     "core-js": "^2.6.9",
     "cos-js-sdk-v5": "^0.5.17",
     "element-ui": "^2.9.1",
-    "tim-js-sdk": "^2.0.9",
+    "tim-js-sdk": "^2.1.0",
     "vue": "^2.6.10",
     "vuex": "^3.1.1"
   },
@@ -24,6 +24,8 @@
     "babel-plugin-component": "^1.1.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "stylus": "^0.54.7",
+    "stylus-loader": "^3.0.2",
     "vue-template-compiler": "^2.6.10"
   },
   "postcss": {

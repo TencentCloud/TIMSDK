@@ -5,13 +5,15 @@ import group from './modules/group'
 import user from './modules/user'
 import friend from './modules/friend'
 import blacklist from './modules/blacklist'
+import {Message} from 'element-ui'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     current: Date.now(), // 当前时间
-    intervalID: 0
+    intervalID: 0,
+    message: undefined
   },
   mutations: {
     startComputeCurrent(state) {
@@ -22,6 +24,17 @@ export default new Vuex.Store({
     stopComputeCurrent(state) {
       clearInterval(state.intervalID)
       state.intervalID = 0
+    },
+    showMessage(state, options) {
+      if (state.message) {
+        state.message.close()
+      }
+      state.message = Message({
+        message: options.message,
+        type: options.type || 'success',
+        duration: options.duration || 2000,
+        offset: 40
+      })
     }
   },
   modules: {

@@ -1,10 +1,7 @@
 <template>
-  <div
-    class="from"
-    :style="{ textAlign: isMine ? 'right' : 'left', color: 'gray', fontSize: '14px' }"
-  >
-    <span class="name text-ellipsis">{{ from }}</span>
-    <span style="margin-left:12px">{{ date }}</span>
+  <div class="base" :class="[ isMine ? 'right' : 'left']">
+    <div class="name text-ellipsis">{{ from }}</div>
+    <div class="date">{{ date }}</div>
   </div>
 </template>
 
@@ -40,6 +37,10 @@ export default {
           this.currentConversation.userProfile.nick ||
           this.currentConversation.userProfile.userID
         )
+      } else if (this.currentConversation.type === this.TIM.TYPES.CONV_SYSTEM) {
+        return this.message.type === this.TIM.TYPES.MSG_GRP_SYS_NOTICE
+          ? '群系统通知'
+          : '系统通知'
       }
       // 2. 群组消息，用消息体中的 nick 渲染。nameCard暂时支持不完善
       return this.message.nick || this.message.from
@@ -51,13 +52,24 @@ export default {
 }
 </script>
 
-<style scoped>
-.from {
+<style lang="stylus" scoped>
+.right {
   display: flex;
-  align-items: center;
+  flex-direction: row-reverse;
 }
+
+.left {
+  display: flex;
+  flex-direction: row;
+}
+
+.base {
+  color: $secondary;
+  font-size: 12px;
+}
+
 .name {
-  display: inline-block;
+  padding: 0 4px;
   max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
