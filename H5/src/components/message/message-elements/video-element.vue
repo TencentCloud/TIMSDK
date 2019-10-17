@@ -36,5 +36,6 @@ export default {
 
 <style lang="stylus" scoped>
 .video
+  width 100%
   max-height 300px
 </style>
