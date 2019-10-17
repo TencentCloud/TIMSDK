@@ -36,7 +36,8 @@
                 <div class="last">{{item.lastMessage._lastTime}}</div>
               </div>
               <div class="information">
-                <div class="content" v-if="item.lastMessage.fromAccount === '@TIM#SYSTEM'">[群系统消息]</div>
+                <div class="content" v-if="item.lastMessage.fromAccount === '@TIM#SYSTEM'">{{item.lastMessage.messageForShow}}</div>
+                <div class="content" v-else-if="item.lastMessage.type === 'TIMCustomElem'">[自定义消息]</div>
                 <div class="content-red" v-else-if="item.lastMessage.at && item.unreadCount > 0">[有人@你了]</div>
                 <div class="content" v-else>{{item.lastMessage.fromAccount}}：{{item.lastMessage.messageForShow}}</div>
                 <div class="remain" v-if="item.unreadCount > 0">{{item.unreadCount}}</div>
@@ -53,7 +54,7 @@
           <i-col span="20">
             <div class="right">
               <div class="information">
-                <div class="username">系统消息</div>
+                <div class="username">系统通知</div>
                 <div class="remain" v-if="item.unreadCount > 0">{{item.unreadCount}}</div>
               </div>
               <div class="information">

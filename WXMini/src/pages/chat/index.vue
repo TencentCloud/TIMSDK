@@ -1,7 +1,20 @@
 <template>
-  <div class="chat" id="chat" :style="{ paddingBottom: isIpx ? (safeBottom + 40) + 'px': '40px' }">
+  <div class="chat"
+       id="chat"
+       :style="{ paddingBottom: isIpx ? (safeBottom + 40) + 'px': '40px' }"
+       @longpress="handleLongPress"
+       @touchmove="handleTouchMove"
+       @touchend="handleTouchEnd">
     <div class="nav" @click="toDetail">
       查看资料
+    </div>
+    <div :class="isRecording ? '' : 'modal-display'" class="record-modal">
+      <div class="wrapper">
+        <div class="modal-loading"></div>
+      </div>
+      <div class="modal-title">
+        {{title}}
+      </div>
     </div>
     <i-modal title="确认下载？" :visible="modalVisible" @ok="download" @cancel="handleModalShow">
       <div class="input-wrapper">
@@ -13,6 +26,15 @@
         <input type="text" class="custom-input" placeholder="输入数据" v-model.lazy:value="customData"/>
         <input type="text" class="custom-input" placeholder="输入描述" v-model.lazy:value="customDescription"/>
         <input type="text" class="custom-input" placeholder="输入其他" v-model.lazy:value="customExtension"/>
+      </div>
+    </i-modal>
+    <i-modal title="对IM demo的评分和评价" i-class="custom-modal" :visible="rateModal" @ok="sendSurvey" @cancel="rateModal = false">
+      <div class="custom-wrapper">
+        <i-rate
+          @change="onChange"
+          :value="rate">
+        </i-rate>
+        <input type="text" class="custom-input" placeholder="输入评价" v-model.lazy:value="customExtension"/>
       </div>
     </i-modal>
     <div id="list" @click="loseFocus">
@@ -53,8 +75,22 @@
               </div>
             </div>
             <div class="message" v-else-if="message.type === 'TIMCustomElem'">
-              <div v-if="message.payload.data === 'dice'">
-                <image :src="'/static/images/dice' + message.payload.description + '.png'" style="height:40px;width:40px"/>
+              <div v-if="message.payload.data === 'survey'" class="survey">
+                <div class="title">
+                  对IM DEMO的评分和建议
+                </div>
+                <div class="description">
+                  <i-rate
+                    disabled="true"
+                    :value="message.payload.description">
+                  </i-rate>
+                </div>
+                <div class="suggestion">
+                  <div>{{message.payload.extension}}</div>
+                </div>
+              </div>
+              <div v-else-if="message.payload.data === 'group_create'">
+                <div>{{message.payload.extension}}</div>
               </div>
               <div v-else class="custom-elem">这是自定义消息</div>
             </div>
@@ -69,6 +105,9 @@
                 <image :src="'https://webim-1252463788.file.myqcloud.com/assets/face-elem/' + message.payload.data + '.png'" style="height:90px; width:90px"/>
               </div>
             </div>
+            <div class="message" v-else-if="message.type === 'TIMVideoFileElem'">
+              <video :src="message.payload.videoUrl" class="video" :poster="message.payload.thumbUrl" object-fit="contain" @error="videoError"></video>
+            </div>
           </div>
           <div class="avatar">
             <i-avatar :src="message.avatar || '../../../static/images/header.png'" shape="square"/>
@@ -79,12 +118,28 @@
 <!--    输入框及选择框部分-->
     <div class="bottom" :style="{ paddingBottom: isIpx ? safeBottom + 'px': '' }">
       <div class="bottom-div">
-        <input type="text"
-               class="input"
-               v-model.lazy:value="messageContent"
-               confirm-type="send"
-               :focus="isFocus"
-               @confirm='sendMessage'/>
+        <div class="btn" @click="chooseRecord">
+          <image src="/static/images/record.png" class="btn-small"/>
+        </div>
+        <div v-if="!isRecord" style="width: 80%">
+          <input type="text"
+                 class="input"
+                 v-model.lazy:value="messageContent"
+                 confirm-type="send"
+                 :focus="isFocus"
+                 @confirm='sendMessage'/>
+        </div>
+        <div class="record"
+             id="record"
+            v-if="isRecord">
+          <template v-if="!isRecording">
+            长按进行录音
+          </template>
+          <template v-if="isRecording">
+            抬起停止录音
+          </template>
+        </div>
+
         <div class="btn" @click="handleEmoji()">
           <image src="/static/images/emoji.png" class="btn-small"/>
         </div>
@@ -142,12 +197,12 @@
               自定义消息
             </div>
           </div>
-          <div class="block" @click="dice()">
+          <div class="block" @click="rateModal = true">
             <div class="image">
               <image src="/static/images/dice.png" style="width:30px;height:30px"/>
             </div>
             <div class="name">
-              掷骰子
+              小调查
             </div>
           </div>
         </div>
@@ -161,6 +216,14 @@ import { mapState } from 'vuex'
 import { emojiName, emojiMap, emojiUrl } from '../../utils/emojiMap'
 import { throttle } from '../../utils/index'
 const audioContext = wx.createInnerAudioContext()
+const recorderManager = wx.getRecorderManager()
+const recordOptions = {
+  duration: 60000,
+  sampleRate: 44100,
+  numberOfChannels: 1,
+  encodeBitRate: 192000,
+  format: 'aac' // 音频格式，选择此格式创建的音频消息，可以在即时通信 IM 全平台（Android、iOS、微信小程序和Web）互通
+}
 export default {
   data () {
     return {
@@ -187,7 +250,14 @@ export default {
       customDescription: '',
       customExtension: '',
       safeBottom: 34,
-      isIpx: false
+      isIpx: false,
+      isRecord: false,
+      isRecording: false,
+      canSend: true,
+      startPoint: 0,
+      title: '正在录音',
+      rateModal: false,
+      rate: 5
     }
   },
   onLoad (options) {
@@ -220,11 +290,39 @@ export default {
       this.messageContent += user.userID
       this.messageContent += ' '
     })
+    recorderManager.onStart(() => {
+      console.log('recorder start')
+    })
+    recorderManager.onPause(() => {
+      console.log('recorder pause')
+    })
+    recorderManager.onStop((res) => {
+      console.log('recorder stop')
+      wx.hideLoading()
+      if (this.canSend) {
+        if (res.duration < 1000) {
+          this.$store.commit('showToast', {
+            title: '录音时间太短'
+          })
+        } else {
+          const message = wx.$app.createAudioMessage({
+            to: this.$store.getters.toAccount,
+            conversationType: this.$store.getters.currentConversationType,
+            payload: {
+              file: res
+            }
+          })
+          this.$store.commit('sendMessage', message)
+          wx.$app.sendMessage(message)
+        }
+      }
+    })
   },
   // 退出聊天页面的时候所有状态清空
   onUnload () {
     wx.$app.setMessageRead({conversationID: this.$store.state.conversation.currentConversationID})
     this.isEmojiOpen = false
+    this.rateModal = false
     this.isMoreOpen = false
     this.messageContent = ''
     const unWatch = this.$watch('messageContent', function (e) {
@@ -248,6 +346,88 @@ export default {
     })
   },
   methods: {
+    onChange (e) {
+      this.rate = e.mp.detail.index
+    },
+    handleLongPress (e) {
+      this.startPoint = e.touches[0]
+      if (e.target.id === 'record') {
+        this.title = '正在录音'
+        this.isRecording = true
+        this.startRecording()
+        this.canSend = true
+      }
+    },
+    chooseRecord () {
+      this.isRecord = !this.isRecord
+    },
+    handleTouchMove (e) {
+      if (this.isRecording) {
+        if (this.startPoint.clientY - e.touches[e.touches.length - 1].clientY > 100) {
+          this.title = '松开手指，取消发送'
+          this.canSend = false
+        } else if (this.startPoint.clientY - e.touches[e.touches.length - 1].clientY > 20) {
+          this.title = '上划可取消'
+          this.canSend = true
+        } else {
+          this.title = '正在录音'
+          this.canSend = true
+        }
+      }
+    },
+    handleTouchEnd () {
+      this.isRecording = false
+      wx.hideLoading()
+      recorderManager.stop()
+    },
+    startRecording () {
+      wx.getSetting({
+        success: (res) => {
+          let auth = res.authSetting['scope.record']
+          if (auth === false) { // 已申请过授权，但是用户拒绝
+            wx.openSetting({
+              success: function (res) {
+                let auth = res.authSetting['scope.record']
+                if (auth === true) {
+                  wx.showToast({
+                    title: '授权成功',
+                    icon: 'success',
+                    duration: 1500
+                  })
+                } else {
+                  wx.showToast({
+                    title: '授权失败',
+                    icon: 'none',
+                    duration: 1500
+                  })
+                }
+              }
+            })
+          } else if (auth === true) { // 用户已经同意授权
+            this.isRecording = true
+            recorderManager.start(recordOptions)
+          } else { // 第一次进来，未发起授权
+            wx.authorize({
+              scope: 'scope.record',
+              success: () => {
+                wx.showToast({
+                  title: '授权成功',
+                  icon: 'success',
+                  duration: 1500
+                })
+              }
+            })
+          }
+        },
+        fail: function () {
+          wx.showToast({
+            title: '授权失败',
+            icon: 'none',
+            duration: 1500
+          })
+        }
+      })
+    },
     // 滚动到列表bottom
     scrollToBottom () {
       wx.pageScrollTo({
@@ -298,10 +478,9 @@ export default {
       let downloadTask = wx.downloadFile({
         url: that.downloadInfo.fileUrl,
         success: function (res) {
-          console.log('start downloading: ', res)
+          console.log('start downloading: ')
         },
         fail: function ({errMsg}) {
-          console.log('downloadFile fail, err is:', errMsg)
           that.$store.commit('showToast', {
             title: '文件下载出错',
             icon: 'none',
@@ -397,6 +576,7 @@ export default {
     },
     // 选项卡关闭
     handleClose () {
+      this.rateModal = false
       this.isFocus = false
       this.isMoreOpen = false
       this.isEmojiOpen = false
@@ -451,6 +631,13 @@ export default {
         })
       }
     },
+    videoError (e) {
+      console.log(e)
+      this.$store.commit('showToast', {
+        title: `视频出现错误，错误信息${e.mp.detail.errMsg}`,
+        duration: 1500
+      })
+    },
     chooseImage (name) {
       let self = this
       let message = {}
@@ -494,20 +681,27 @@ export default {
         wx.$app.resendMessage(message)
       }
     },
-    // 掷骰子也是自定义消息
-    dice () {
-      const message = wx.$app.createCustomMessage({
-        to: this.$store.getters.toAccount,
-        conversationType: this.$store.getters.currentConversationType,
-        payload: {
-          data: 'dice',
-          description: String((Math.random() * 10).toFixed(0) % 6 + 1),
-          extension: ''
-        }
-      })
-      this.$store.commit('sendMessage', message)
-      wx.$app.sendMessage(message)
-      this.handleClose()
+    sendSurvey () {
+      if (this.customExtension) {
+        const message = wx.$app.createCustomMessage({
+          to: this.$store.getters.toAccount,
+          conversationType: this.$store.getters.currentConversationType,
+          payload: {
+            data: 'survey',
+            description: String(this.rate),
+            extension: this.customExtension
+          }
+        })
+        this.rate = 0
+        this.customExtension = ''
+        this.$store.commit('sendMessage', message)
+        wx.$app.sendMessage(message)
+        this.handleClose()
+      } else {
+        this.$store.commit('showToast', {
+          title: '建议不要为空哦！'
+        })
+      }
     },
     // 播放音频
     openAudio (audio) {
@@ -661,7 +855,6 @@ export default {
   border-radius 8px
   height 30px
   margin-right 10px
-  width 80%
   box-sizing border-box
 .btn
   padding 0
@@ -740,6 +933,7 @@ li
   display flex
   flex-direction row
   flex-wrap wrap
+  white-space pre-wrap
 .custom-elem
   background-color white
   color $dark-primary
@@ -759,6 +953,35 @@ li
     .message
       background-color $light-primary
       border-radius 20px / 20px 0px 20px 20px
+.survey
+  padding 20px
+  background-color white
+  .title
+    font-size 16px
+    font-weight 600
+  .rate
+    display flex
+    flex-direction flex-start
+    align-content center
+    .star
+      width 30px
+      height 30px
+    .rating
+      font-weight 600
+      color $regular
+      line-height 30px
+      padding-left 10px
+  .suggestion
+    padding-top 10px
+    font-size 14px
+    color $black
+    font-weight 500
+  .description
+    font-size 18px
+    color $black
+.video
+  max-height 200px
+  max-width 50vw
 .item-left
   display flex
   flex-direction row-reverse
@@ -781,4 +1004,53 @@ li
   display flex
   height 20px
   line-height 20px
+.record
+  margin-right 10px
+  width 100%
+  border 1px solid $border-base
+  color $secondary
+  border-radius 8px
+  box-sizing border-box
+  height 30px
+  line-height 30px
+  display flex
+  justify-content center
+.record-modal
+  height 150px
+  width 60vw
+  background-color black
+  opacity 0.8
+  position fixed
+  top 200px
+  z-index 9999
+  left 20vw
+  border-radius 12px
+  display flex
+  flex-direction column
+  .wrapper
+    display flex
+    height 100px
+    box-sizing border-box
+    padding 10vw
+    .modal-loading
+      opacity 1
+      width 20px
+      height 8px
+      border-radius: 2px
+      background-color $primary
+      animation loading 2s cubic-bezier(.17,.37,.43,.67) infinite
+  .modal-title
+    text-align center
+    color white
+@-webkit-keyframes loading
+  0%
+    transform translate(0,0)
+  50%
+    transform translate(30vw,0)
+    background-color #f5634a
+    width 40px
+  100%
+    transform translate(0,0)
+.modal-display
+  display none
 </style>

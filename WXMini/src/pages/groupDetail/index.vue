@@ -162,8 +162,7 @@ export default {
         offset: 0,
         count: count
       }).then((res) => {
-        this.$store.commit('updateCurrentGroupMemberList', res.data.memberList)
-        this.$store.commit('updateOffset')
+        this.$store.commit('setCurrentGroupMemberList', res.data.memberList)
         let url = '../members/main'
         wx.navigateTo({url})
       })

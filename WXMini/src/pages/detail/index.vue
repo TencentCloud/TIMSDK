@@ -10,7 +10,7 @@
         <i-col span="16">
           <div class="right">
             <div class="username">{{userProfile.nick || '未设置'}}</div>
-            <div class="account">账号：{{userProfile.userID}}</div>
+            <div class="account">帐号：{{userProfile.userID}}</div>
           </div>
         </i-col>
       </i-row>
@@ -68,10 +68,6 @@ export default {
         this.$store.commit('setBlacklist', res.data)
       })
     },
-    // 删除好友
-    // deleteFriend () {
-    //   console.log('delete')
-    // },
     // 拉黑好友
     addBlackList () {
       wx.$app.addToBlacklist({ userIDList: [this.userProfile.userID] }).then((res) => {

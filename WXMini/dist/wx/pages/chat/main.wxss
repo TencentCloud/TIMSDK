@@ -135,7 +135,6 @@
   border-radius: 16rpx;
   height: 60rpx;
   margin-right: 20rpx;
-  width: 80%;
   box-sizing: border-box;
 }
 .btn.data-v-afeb3abc {
@@ -229,6 +228,7 @@ to {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  white-space: pre-wrap;
 }
 .custom-elem.data-v-afeb3abc {
   background-color: #fff;
@@ -254,6 +254,43 @@ to {
 .item-right .content .message.data-v-afeb3abc {
   background-color: #5cadff;
   border-radius: 40rpx/40rpx 0 40rpx 40rpx;
+}
+.survey.data-v-afeb3abc {
+  padding: 40rpx;
+  background-color: #fff;
+}
+.survey .title.data-v-afeb3abc {
+  font-size: 32rpx;
+  font-weight: 600;
+}
+.survey .rate.data-v-afeb3abc {
+  display: flex;
+  flex-direction: flex-start;
+  align-content: center;
+}
+.survey .rate .star.data-v-afeb3abc {
+  width: 60rpx;
+  height: 60rpx;
+}
+.survey .rate .rating.data-v-afeb3abc {
+  font-weight: 600;
+  color: #495060;
+  line-height: 60rpx;
+  padding-left: 20rpx;
+}
+.survey .suggestion.data-v-afeb3abc {
+  padding-top: 20rpx;
+  font-size: 28rpx;
+  color: $black;
+  font-weight: 500;
+}
+.survey .description.data-v-afeb3abc {
+  font-size: 36rpx;
+  color: $black;
+}
+.video.data-v-afeb3abc {
+  max-height: 400rpx;
+  max-width: 50vw;
 }
 .item-left.data-v-afeb3abc {
   display: flex;
@@ -281,4 +318,63 @@ to {
   display: flex;
   height: 40rpx;
   line-height: 40rpx;
+}
+.record.data-v-afeb3abc {
+  margin-right: 20rpx;
+  width: 100%;
+  border: 2rpx solid #dddee1;
+  color: #80848f;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+  height: 60rpx;
+  line-height: 60rpx;
+  display: flex;
+  justify-content: center;
+}
+.record-modal.data-v-afeb3abc {
+  height: 300rpx;
+  width: 60vw;
+  background-color: #000;
+  opacity: 0.8;
+  position: fixed;
+  top: 400rpx;
+  z-index: 9999;
+  left: 20vw;
+  border-radius: 24rpx;
+  display: flex;
+  flex-direction: column;
+}
+.record-modal .wrapper.data-v-afeb3abc {
+  display: flex;
+  height: 200rpx;
+  box-sizing: border-box;
+  padding: 10vw;
+}
+.record-modal .wrapper .modal-loading.data-v-afeb3abc {
+  opacity: 1;
+  width: 40rpx;
+  height: 16rpx;
+  border-radius: 4rpx;
+  background-color: #2d8cf0;
+  animation: loading 2s cubic-bezier(0.17, 0.37, 0.43, 0.67) infinite;
+}
+.record-modal .modal-title.data-v-afeb3abc {
+  text-align: center;
+  color: #fff;
+}
+@-webkit-keyframes loading {
+0% {
+    transform: translate(0, 0);
+}
+50% {
+    transform: translate(30vw, 0);
+    background-color: #f5634a;
+    width: 80rpx;
+}
+100% {
+    transform: translate(0, 0);
+}
+}
+.modal-display.data-v-afeb3abc {
+  display: none;
 }
