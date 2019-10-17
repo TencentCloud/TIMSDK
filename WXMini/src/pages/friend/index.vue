@@ -8,7 +8,7 @@
           </div>
         </i-col>
         <i-col span="15">
-          <input type="text" class="input" placeholder="输入接受者ID" v-model="id"/>
+          <input type="text" class="input" placeholder="输入接收者ID" v-model="id"/>
         </i-col>
       </i-row>
       <i-row>

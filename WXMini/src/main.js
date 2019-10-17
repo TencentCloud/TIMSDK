@@ -52,9 +52,7 @@ tim.on(TIM.EVENT.ERROR, event => {
 })
 
 tim.on(TIM.EVENT.MESSAGE_RECEIVED, event => {
-  wx.$app.ready(() => {
-    store.dispatch('onMessageEvent', event)
-  })
+  store.dispatch('onMessageEvent', event)
 })
 tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, event => {
   store.commit('updateAllConversation', event.data)
@@ -72,6 +70,12 @@ tim.on(TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, event => {
 
 function onReadyStateUpdate ({ name }) {
   const isSDKReady = (name === TIM.EVENT.SDK_READY)
+  if (isSDKReady) {
+    wx.hideLoading()
+    wx.switchTab({
+      url: '../index/main'
+    })
+  }
   store.commit('setSdkReady', isSDKReady)
 }
 
