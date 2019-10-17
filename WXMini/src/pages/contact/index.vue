@@ -79,29 +79,29 @@
           </i-col>
           <i-col span="20">
             <div class="right">
-              <div class="information">我的群聊</div>
+              <div class="information  border-bottom">我的群聊</div>
             </div>
           </i-col>
         </i-row>
       </div>
     </div>
-    <div class="friends">
-      <div class="slot">
-        联系人
-      </div>
-      <div class="friend">
-        <i-row v-for="item in friends" :key="item.name" @click="chatTo(item)">
-          <i-col span="4">
-            <div style="padding: 10px">
-              <i-avatar shape="square" size="large" src="../../../static/images/header.png" />
-            </div>
-          </i-col>
-          <i-col span="20">
-            <p class="line">{{item.profile.nick || item.profile.userID}}</p>
-          </i-col>
-        </i-row>
-      </div>
-    </div>
+<!--    <div class="friends">-->
+<!--      <div class="slot">-->
+<!--        联系人-->
+<!--      </div>-->
+<!--      <div class="friend">-->
+<!--        <i-row v-for="item in friends" :key="item.name" @click="chatTo(item)">-->
+<!--          <i-col span="4">-->
+<!--            <div style="padding: 10px">-->
+<!--              <i-avatar shape="square" size="large" src="../../../static/images/header.png" />-->
+<!--            </div>-->
+<!--          </i-col>-->
+<!--          <i-col span="20">-->
+<!--            <p class="line">{{item.profile.nick || item.profile.userID}}</p>-->
+<!--          </i-col>-->
+<!--        </i-row>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -146,15 +146,21 @@ export default {
     },
     // 软键盘点击搜索
     confirm () {
-      wx.$app.searchGroupByID(this.search).then((res) => {
-        this.result = res.data.group
-        this.handleApplyModal()
-      }).catch(() => {
-        this.search = ''
+      if (this.search !== '@TIM#SYSTEM') {
+        wx.$app.searchGroupByID(this.search).then((res) => {
+          this.result = res.data.group
+          this.handleApplyModal()
+        }).catch(() => {
+          this.search = ''
+          this.$store.commit('showToast', {
+            title: '没有搜到群组'
+          })
+        })
+      } else {
         this.$store.commit('showToast', {
           title: '没有搜到群组'
         })
-      })
+      }
     },
     // 初始化朋友列表
     initFriendsList () {
@@ -224,7 +230,7 @@ export default {
     }
   },
   mounted () {
-    this.initFriendsList()
+    // this.initFriendsList()
   }
 }
 </script>

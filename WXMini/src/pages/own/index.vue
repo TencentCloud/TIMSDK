@@ -11,7 +11,7 @@
           <i-col span="16">
             <div class="right">
               <div class="username">{{myInfo.nick}}</div>
-              <div class="account">账号：{{myInfo.userID}}</div>
+              <div class="account">帐号：{{myInfo.userID}}</div>
             </div>
           </i-col>
         </i-row>
@@ -21,7 +21,7 @@
     <i-button @click="reviseInfo" type="primary" long="true" shape="circle">修改资料</i-button>
   </div>
   <div class="revise">
-    <i-button @click="logout" type="error" long="true" shape="circle">退出登陆</i-button>
+    <i-button @click="logout" type="error" long="true" shape="circle">退出登录</i-button>
   </div>
 </div>
 </template>
