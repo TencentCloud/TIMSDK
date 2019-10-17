@@ -31,16 +31,19 @@ export default {
         .then(imResponse => {
           const { successUserIDList, failureUserIDList, existedUserIDList } = imResponse.data
           if (successUserIDList.length > 0) {
-            this.$message({
+            this.$store.commit('showMessage', {
               message: `群成员：${successUserIDList.join(',')}，加群成功`,
               type: 'success'
             })
           }
           if (failureUserIDList.length > 0) {
-            this.$message.error(`群成员：${failureUserIDList.join(',')}，添加失败！`)
+            this.$store.commit('showMessage', {
+              message: `群成员：${failureUserIDList.join(',')}，添加失败！`,
+              type: 'error'
+            })
           }
           if (existedUserIDList.length > 0) {
-            this.$message({
+            this.$store.commit('showMessage', {
               message: `群成员：${existedUserIDList.join(',')}，已在群中`
             })
           }
@@ -50,4 +53,4 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="stylus" scoped></style>

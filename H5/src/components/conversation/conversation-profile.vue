@@ -32,12 +32,15 @@ export default {
 }
 </script>
 
-<style scoped>
-.conversation-profile-wrapper {
-  background: rgb(255, 255, 255);
-  padding: 12px;
-  width: 200px;
-  min-width: 200px;
-  overflow-y: scroll;
+<style lang="stylus" scoped>
+.conversation-profile-wrapper 
+  background-color $white
+  height 100%
+  overflow-y scroll
+
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
 }
 </style>

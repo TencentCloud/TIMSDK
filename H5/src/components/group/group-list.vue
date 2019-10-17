@@ -15,10 +15,12 @@
           @input="hideSearchLoading = false"
           @select="applyJoinGroup"
         ></el-autocomplete>
-        <i class="el-icon-plus create-group-button" title="创建群组" @click="showCreateGroupModel"></i>
+        <button title="创建群组" @click="showCreateGroupModel">
+          <i class="tim-icon-add"></i>
+        </button>
       </div>
       <group-item v-for="group in groupList" :key="group.groupID" :group="group" />
-      <el-dialog title="创建群组" :visible="createGroupModelVisible" @close="closeCreateGroupModel">
+      <el-dialog title="创建群组" :visible="createGroupModelVisible" @close="closeCreateGroupModel" width="30%">
         <create-group></create-group>
       </el-dialog>
     </div>
@@ -70,7 +72,10 @@ export default {
             showInSearchResult([group])
           })
           .catch(() => {
-            this.$message('没有找到该群')
+            this.$store.commit('showMessage', {
+              message: '没有找到该群',
+              type: 'error'
+            })
           })
       } else {
         this.hideSearchLoading = true
@@ -84,41 +89,81 @@ export default {
         .joinGroup({ groupID: group.groupID, type: group.type })
         .then(res => {
           if (res.data.status === 'JoinedSuccess') {
-            this.$message({ message: '加群成功', type: 'success' })
+            this.$store.commit('showMessage', {
+              message: '加群成功',
+              type: 'success'
+            })
           } else {
-            this.$message.info('申请成功，等待群管理员确认。')
+            this.$store.commit('showMessage', {
+              message: '申请成功，等待群管理员确认。',
+              type: 'info'
+            })
           }
         })
         .catch(error => {
-          this.$message.error(error.error.message)
+          this.$store.commit('showMessage', {
+            message: error.error.message,
+            type: 'error'
+          })
         })
     }
   }
 }
 </script>
 
-<style scoped>
-.header-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid #d1d1d1;
-  background: #dcdcdc;
-  height: 40px;
-}
-.group-seach-bar {
-  width: 75%;
-  margin: 6px auto;
-  display: block;
-}
-.create-group-button {
-  font-size: 2rem;
-  background: #fff;
-  color: gray;
-  padding: 3px;
-  border-radius: 3px;
-  border: 1px solid #cecece;
-  margin-right: 6px;
-  cursor: pointer;
-}
+<style lang="stylus" scoped>
+.list-container
+  height 100%
+  width 100%
+  display flex
+  flex-direction column
+  .header-bar
+    display: flex;
+    flex-shrink 0
+    height 50px
+    border-bottom 1px solid $background-deep-dark
+    padding 10px 10px 10px 20px
+    .group-seach-bar
+      width 100%
+      margin-right 10px
+      >>> .el-input
+        input
+          color $first
+          border none
+          border-radius 30px
+          background-color $deep-background !important
+          &::placeholder
+            color $font-dark
+        .el-icon-search
+          color $font-dark
+    button
+      float right
+      display: inline-block;
+      cursor: pointer;
+      background $background-deep-dark
+      border: none
+      color: $font-dark;
+      box-sizing: border-box;
+      transition: .3s;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      margin: 0
+      padding 0
+      width 30px
+      height 30px
+      line-height 34px
+      font-size: 24px;
+      text-align: center;
+      white-space: nowrap;
+      border-radius: 50%
+      outline 0
+      flex-shrink 0
+      &:hover
+        transform: rotate(360deg);
+        color $light-primary
+  .scroll-container
+    overflow-y scroll
+    flex 1
+
 </style>

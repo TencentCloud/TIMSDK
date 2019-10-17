@@ -116,7 +116,7 @@ export default {
 
 .close-button {
   cursor: pointer;
-  font-size: 2.8rem;
+  font-size: 28px;
   color: #000;
   position: fixed;
   top: 50px;
@@ -149,7 +149,7 @@ export default {
   background: rgba(255, 255, 255, 0.8);
 }
 .actions-bar i {
-  font-size: 2.4rem;
+  font-size: 24px;
   cursor: pointer;
   margin: 0 6px;
 }
@@ -160,7 +160,7 @@ export default {
   cursor: pointer;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
-  font-size: 2.4rem;
+  font-size: 24px;
   padding: 12px;
 }
 .prev-button {

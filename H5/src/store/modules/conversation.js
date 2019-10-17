@@ -121,7 +121,10 @@ const conversationModules = {
      */
     getMessageList(context, conversationID) {
       if (context.state.isCompleted) {
-        window.$message('已经没有更多的历史消息了哦')
+        context.commit('showMessage', {
+          message: '已经没有更多的历史消息了哦',
+          type: 'info'
+        })
         return
       }
       const { nextReqMessageID, currentMessageList } = context.state

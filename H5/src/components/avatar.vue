@@ -2,7 +2,6 @@
   <div>
     <el-image
       class="avatar"
-      :style="{width: width + 'px',height: height + 'px', lineHeight: height + 'px'}"
       :class="shape"
       v-if="src"
       :src="src"
@@ -46,13 +45,11 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus" scoped>
 .avatar {
   display: block;
-  width: 30px;
-  height: 30px;
-  background: gray;
-  color: #fff;
+  background-color: $first;
+  color: $white;
   text-align: center;
   line-height: 30px;
 }

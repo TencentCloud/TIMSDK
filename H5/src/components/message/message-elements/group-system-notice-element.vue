@@ -1,30 +1,39 @@
 <template>
-  <div class="group-system-element-wrapper">
-    {{ text }}
-    <el-button v-if="isJoinGroupRequest" type="text" @click="showDialog = true">处理</el-button>
-    <!-- <el-button type="text" style="color:red;" @click="deleteGroupSystemNotice">删除</el-button> -->
-    <el-dialog title="处理加群申请" :visible.sync="showDialog">
-      <el-form ref="form" v-model="form" label-width="100px">
-        <el-form-item label="处理结果：">
-          <el-radio-group v-model="form.handleAction">
-            <el-radio label="Agree">同意</el-radio>
-            <el-radio label="Reject">拒绝</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="附言：">
-          <el-input type="textarea" resize="none" :rows="3" placeholder="请输入附言" v-model="form.handleMessage" />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="handleGroupApplication">确 定</el-button>
-      </span>
-    </el-dialog>
-  </div>
+  <message-bubble :isMine="false">
+    <div class="group-system-element-wrapper">
+      {{ text }}
+      <el-button v-if="isJoinGroupRequest" type="text" @click="showDialog = true">处理</el-button>
+      <el-dialog title="处理加群申请" :visible.sync="showDialog" width="30%">
+        <el-form ref="form" v-model="form" label-width="100px">
+          <el-form-item label="处理结果：">
+            <el-radio-group v-model="form.handleAction">
+              <el-radio label="Agree">同意</el-radio>
+              <el-radio label="Reject">拒绝</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="附言：">
+            <el-input
+              type="textarea"
+              resize="none"
+              :rows="3"
+              placeholder="请输入附言"
+              v-model="form.handleMessage"
+            />
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showDialog = false">取 消</el-button>
+          <el-button type="primary" @click="handleGroupApplication">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+  </message-bubble>
 </template>
 
 <script>
 import { Dialog, Form, FormItem, RadioGroup, Radio } from 'element-ui'
+import MessageBubble from '../message-bubble'
+
 export default {
   name: 'GroupSystemNoticeElement',
   props: {
@@ -42,7 +51,8 @@ export default {
     ElForm: Form,
     ElFormItem: FormItem,
     ElRadioGroup: RadioGroup,
-    ElRadio: Radio
+    ElRadio: Radio,
+    MessageBubble,
   },
   data() {
     return {
@@ -57,13 +67,20 @@ export default {
     text() {
       return this.translateGroupSystemNotice(this.payload)
     },
+    title() {
+      if (this.message.type === this.TIM.TYPES.MSG_GRP_SYS_NOTICE) {
+        return '群系统通知'
+      }
+      return '系统通知'
+    },
     isJoinGroupRequest() {
       return this.payload.operationType === 1
     }
   },
   methods: {
     translateGroupSystemNotice(payload) {
-      const groupName = payload.groupProfile.groupName || payload.groupProfile.groupID
+      const groupName =
+        payload.groupProfile.name || payload.groupProfile.groupID
       switch (payload.operationType) {
         case 1:
           return `${payload.operatorID} 申请加入群组：${groupName}`
@@ -107,4 +124,19 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="stylus" scoped>
+.card {
+  background: #fff;
+  padding: 12px;
+  border-radius: 5px;
+  width: 300px;
+
+  .card-header {
+    font-size: 18px;
+  }
+
+  .card-content {
+    font-size: 14px;
+  }
+}
+</style>

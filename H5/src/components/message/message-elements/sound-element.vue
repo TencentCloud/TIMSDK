@@ -1,18 +1,27 @@
 <template>
-  <div class="sound-element-wrapper" @click="play">
+<message-bubble :isMine=isMine>
+  <div class="sound-element-wrapper" title="单击播放" @click="play">
     <i class="iconfont icon-voice"></i>
     {{ second + '"' }}
   </div>
+</message-bubble>
 </template>
 
 <script>
+import MessageBubble from '../message-bubble'
 export default {
   name: 'SoundElement',
   props: {
     payload: {
       type: Object,
       required: true
+    },
+    isMine: {
+      type: Boolean
     }
+  },
+  components: {
+    MessageBubble
   },
   data() {
     return {
@@ -46,7 +55,10 @@ export default {
         const isIE = /MSIE|Trident|Edge/.test(window.navigator.userAgent)
         // amr 播放组件库在 IE 不支持
         if (isIE) {
-          this.$message.warning('您的浏览器不支持该格式的语音消息播放，请尝试更换浏览器，建议使用：谷歌浏览器')
+          this.$store.commit('showMessage', {
+            message: '您的浏览器不支持该格式的语音消息播放，请尝试更换浏览器，建议使用：谷歌浏览器',
+            type: 'warning'
+          })
           return
         }
         // 动态插入 amr 播放组件库
@@ -60,7 +72,10 @@ export default {
         }
         this.playAMR()
       } catch (error) {
-        this.$message.warning('您的浏览器不支持该格式的语音消息播放，请尝试更换浏览器，建议使用：谷歌浏览器')
+        this.$store.commit('showMessage', {
+          message: '您的浏览器不支持该格式的语音消息播放，请尝试更换浏览器，建议使用：谷歌浏览器',
+          type: 'warning'
+        })
       }
     },
     playAMR() {
@@ -79,12 +94,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus" scoped>
 .sound-element-wrapper {
-  width: 100px;
-  background: #fff;
-  padding: 3px 6px;
-  border-radius: 3px;
+  padding: 0px 10px;
   cursor: pointer;
 }
 </style>

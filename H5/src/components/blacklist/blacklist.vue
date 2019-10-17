@@ -5,7 +5,6 @@
         v-for="item in blacklist"
         :key="item.userID"
         :profile="item"
-        style="margin:8px 0;"
       />
     </div>
     <span style="color:gray" v-else>黑名单还是空的</span>
@@ -31,9 +30,10 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus" scoped>
 .blacklist-wrapper {
   padding: 12px;
+  overflow-y: scroll;
 }
 .default {
   display: flex;
