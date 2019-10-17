@@ -2,30 +2,34 @@
   <div class="current-conversation-wrapper">
     <div class="current-conversation" @scroll="onScroll" v-if="showCurrentConversation">
       <div class="header">
-        <span class="conversation-name text-ellipsis" style="max-width: 60%;">{{ name }}</span>
-        <span
-          class="el-icon-more show-more"
+        <div class="name">{{ name }}</div>
+        <div class="btn-more-info"
+          :class="showConversationProfile ? '' : 'left-arrow'"
           @click="showMore"
           v-show="!currentConversation.conversationID.includes('SYSTEM')"
-          title="查看详细"
-        ></span>
-      </div>
-      <div class="content" :class="!showMessageSendBox ? 'full-height' : ''">
-        <div class="message-list" ref="message-list" @scroll="this.onScroll">
-          <el-button
-            type="text"
-            style="display:block;margin: 0 auto;"
-            @click="$store.dispatch('getMessageList', currentConversation.conversationID)"
-            >查看更多</el-button
-          >
-          <message-item v-for="message in currentMessageList" :key="message.ID" :message="message" />
+          title="查看详细信息">
         </div>
-        <a v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">↓回到最新位置↓</a>
       </div>
-      <message-send-box v-if="showMessageSendBox" />
+      <div class="content">
+        <div class="message-list" ref="message-list" @scroll="this.onScroll">
+          <div class="more" v-if="!isCompleted">
+            <el-button
+              type="text"
+              @click="$store.dispatch('getMessageList', currentConversation.conversationID)"
+            >查看更多</el-button>
+          </div>
+          <div class="no-more" v-else>没有更多了</div>
+          <message-item v-for="message in currentMessageList" :key="message.ID" :message="message"/>
+        </div>
+        <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">回到最新位置</div>
+      </div>
+      <div class="footer" v-if="showMessageSendBox" >
+        <message-send-box/>
+      </div>
     </div>
-    <conversation-profile v-if="showConversationProfile" />
-    <image-previewer />
+    <div class="profile" v-if="showConversationProfile" >
+      <conversation-profile/>
+    </div>
   </div>
 </template>
 
@@ -34,26 +38,26 @@ import { mapGetters, mapState } from 'vuex'
 import MessageSendBox from '../message/message-send-box'
 import MessageItem from '../message/message-item'
 import ConversationProfile from './conversation-profile.vue'
-import ImagePreviewer from '../message/image-previewer'
 export default {
   name: 'CurrentConversation',
   components: {
     MessageSendBox,
     MessageItem,
-    ConversationProfile,
-    ImagePreviewer
+    ConversationProfile
   },
   data() {
     return {
       isShowScrollButtomTips: false,
       preScrollHeight: 0,
-      showConversationProfile: false
+      showConversationProfile: false,
+      timeout: ''
     }
   },
   computed: {
     ...mapState({
       currentConversation: state => state.conversation.currentConversation,
-      currentMessageList: state => state.conversation.currentMessageList
+      currentMessageList: state => state.conversation.currentMessageList,
+      isCompleted: state => state.conversation.isCompleted
     }),
     ...mapGetters(['toAccount']),
     // 是否显示当前会话组件
@@ -65,6 +69,8 @@ export default {
         return this.currentConversation.userProfile.nick || this.toAccount
       } else if (this.currentConversation.type === 'GROUP') {
         return this.currentConversation.groupProfile.name || this.toAccount
+      } else if (this.currentConversation.conversationID === '@TIM#SYSTEM') {
+        return '系统通知'
       }
       return this.toAccount
     },
@@ -75,11 +81,16 @@ export default {
   mounted() {
     this.$bus.$on('image-loaded', this.onImageLoaded)
     this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom)
+    if (this.currentConversation.conversationID === '@TIM#SYSTEM') {
+      return false
+    }
   },
   updated() {
     this.keepMessageListOnButtom()
+    if (this.currentConversation.conversationID === '@TIM#SYSTEM') {
+      this.showConversationProfile = false
+    }
   },
-
   methods: {
     onScroll({ target: { scrollTop } }) {
       let messageListNode = this.$refs['message-list']
@@ -129,78 +140,115 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="stylus" scoped>
 /* 当前会话的骨架屏 */
-.current-conversation-wrapper {
+.current-conversation-wrapper
+  height $height
+  background-color $background-light
+  color $base
+  display flex
+  .current-conversation
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: $height;
+  .profile
+    height: $height;
+    overflow-y: scroll;
+    width 220px
+    border-left 1px solid $border-base
+    flex-shrink 0
+  .more
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+  .no-more
+    display: flex;
+    justify-content: center;
+    color: $secondary;
+    font-size: 12px;
+    padding: 10px 10px;
+
+.header
+  border-bottom 1px solid $border-base
+  height 50px
+  position relative
+  .name
+    padding 0 20px
+    color $base
+    font-size 18px
+    font-weight bold
+    line-height 50px
+    text-shadow $font-dark 0 0 0.1em
+  .btn-more-info
+    position absolute
+    top 10px
+    right -15px
+    border-radius 50%
+    width 30px
+    height 30px
+    cursor pointer
+    &::before
+      position absolute
+      right 0
+      z-index 0
+      content ""
+      width: 15px
+      height: 30px
+      border: 1px solid $border-base
+      border-radius: 0 100% 100% 0/50%
+      border-left: none
+      background-color $background-light
+    &::after
+      content ""
+      width: 8px;
+      height: 8px;
+      transition: transform 0.8s;
+      border-top: 2px solid $secondary;
+      border-right: 2px solid $secondary;
+      float:right;
+      position:relative;
+      top: 11px;
+      right: 8px;
+      transform:rotate(45deg)
+    &.left-arrow
+      transform rotate(180deg)
+      &::before
+        background-color $white
+    &:hover
+      &::after
+        border-color $light-primary
+.content
   display: flex;
-  width: 100%;
+  flex 1
+  flex-direction: column;
   height: 100%;
-  background-color: #eee;
-  box-sizing: border-box;
-  color: #000;
-}
-.current-conversation {
-  width: 100%;
-  min-width: 500px;
-}
-.el-row,
-.el-col {
-  height: 100%;
-}
-.header {
+  overflow: hidden;
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid #dddddd;
-  height: 40px;
-}
-.content {
-  display: flex;
-  height: 70%;
-  position: relative;
-}
-.message-list {
-  width: 100%;
-  overflow-y: scroll;
-  padding-left: 12px;
-}
-.dropdown-menu {
-  padding: 12px;
-  max-width: 80%;
-  color: #000;
-}
-.message-list {
-  position: relative;
-  width: 100%;
-}
+  .message-list
+    width: 100%;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    padding: 0 20px;
+  .newMessageTips
+    position: absolute
+    cursor: pointer;
+    padding: 5px;
+    width: 120px;
+    margin: auto;
+    left: 0;
+    right: 0;
+    bottom: 5px;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 10px;
+    border: $border-light 1px solid;
+    background-color: $white;
+    color: $primary;
+.footer
+  border-top: 1px solid $border-base;
 .show-more {
-  position: absolute;
-  right: 15px;
-  color: gray;
-  cursor: pointer;
-}
-.show-more:hover {
-  color: black;
-}
-.full-height {
-  height: 90%;
-}
-.newMessageTips {
-  position: absolute;
-  display: block;
-  cursor: pointer;
-  padding: 5px;
-  width: 100px;
-  margin: auto;
-  left: 0;
-  right: 0;
-  bottom: 5px;
-  font-size: 1.2rem;
-  text-align: center;
-  border-radius: 10px;
-  border: #ccc 1px solid;
-  background-color: #fff;
-  color: #268bf5;
+  text-align: right;
+  padding: 10px 20px 0 0;
 }
 </style>

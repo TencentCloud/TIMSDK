@@ -1,17 +1,26 @@
 <template>
+<message-bubble :isMine=isMine>
   <div class="face-element-wrapper">
-    <img :src="url" style="height:90px; width:90px"/>
+    <img :src="url"/>
   </div>
+</message-bubble>
 </template>
 
 <script>
+import MessageBubble from '../message-bubble'
 export default {
   name: 'FaceElement',
   props: {
     payload: {
       type: Object,
       required: true
+    },
+    isMine: {
+      type: Boolean
     }
+  },
+  components: {
+    MessageBubble,
   },
   computed:{
     url() {
@@ -21,5 +30,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus" scoped>
+.face-element-wrapper
+  img
+    max-width 90px
 </style>

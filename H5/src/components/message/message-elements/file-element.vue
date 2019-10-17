@@ -1,5 +1,6 @@
 <template>
-  <div class="file-element-wrapper">
+<message-bubble :isMine=isMine>  
+  <div class="file-element-wrapper" title="单击下载" @click="downloadFile">
     <div class="header">
       <i class="el-icon-document file-icon"></i>
       <div class="file-element">
@@ -7,18 +8,17 @@
         <span class="file-size">{{ size }}</span>
       </div>
     </div>
-    <div class="footer">
-      <span @click="downloadFile" class="download-link">下载</span>
-    </div>
     <el-progress
       v-if="showProgressBar"
       :percentage="percentage"
       :color="percentage => (percentage === 100 ? '#67c23a' : '#409eff')"
     />
   </div>
+</message-bubble>
 </template>
 
 <script>
+import MessageBubble from '../message-bubble'
 import { Progress } from 'element-ui'
 export default {
   name: 'FileElement',
@@ -26,9 +26,13 @@ export default {
     payload: {
       type: Object,
       required: true
+    },
+    isMine: {
+      type: Boolean
     }
   },
   components: {
+    MessageBubble,
     ElProgress: Progress
   },
   computed: {
@@ -83,19 +87,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="stylus" scoped>
 .file-element-wrapper {
-  background-color: #fff;
-  padding: 12px;
+  cursor pointer
 }
 .header {
   display: flex;
-}
-.footer {
-  border-top: 1px solid #dddddd;
-  text-align: right;
-  padding: 3px;
-  margin-top: 8px;
 }
 .file-icon {
   font-size: 40px !important;
@@ -106,11 +103,7 @@ export default {
   margin-left: 12px;
 }
 .file-size {
-  font-size: 1.4rem;
-  color: gray;
-}
-.download-link {
-  cursor: pointer;
-  color: #409eff;
+  font-size: 12px;
+  padding-top 5px
 }
 </style>

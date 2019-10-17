@@ -154,7 +154,10 @@ export default {
     },
     setGroupMemberNameCard() {
       if (this.nameCard.trim().length === 0) {
-        this.$message.warning('不能设置空的群名片')
+        this.$store.commit('showMessage', {
+          message: '不能设置空的群名片',
+          type: 'warning'
+        })
         return
       }
       this.tim
@@ -165,14 +168,16 @@ export default {
         })
         .then(() => {
           this.nameCardPopoverVisible = false
-          this.$message({ message: '修改成功', type: 'success' })
+          this.$store.commit('showMessage', {
+            message: '修改成功'
+          })
         })
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="stylus" scoped>
 .label {
   color: rgb(204, 200, 200);
 }

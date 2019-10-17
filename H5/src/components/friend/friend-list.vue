@@ -25,11 +25,12 @@ export default {
 }
 </script>
 
-<style scpoed>
+<style lang="stylus" scpoed>
 .default {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
+  overflow-y: scroll;
 }
 </style>

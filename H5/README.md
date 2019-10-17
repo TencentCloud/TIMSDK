@@ -109,12 +109,19 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### Change Log
 
+#### 2019/10/17
+
+**Features**
+
+- Web Demo 样式调整
+- SDK 版本更新，支持接收视频消息
+- 移除掷骰子功能，替换为使用评分
+
 #### 2019/10/12
 
 **Bug Fixes**
 
 - 修复 React 框架下发图片消息失败的问题
-
 
 #### 2019/09/21
 
