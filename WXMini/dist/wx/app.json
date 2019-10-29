@@ -13,7 +13,6 @@
     "pages/groupDetail/main",
     "pages/groups/main",
     "pages/blacklist/main",
-    "pages/mention/main",
     "pages/profile/main"
   ],
   "window": {

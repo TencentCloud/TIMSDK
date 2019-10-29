@@ -30,7 +30,12 @@ export default {
   },
   methods: {
     startConversation (item) {
+      this.$store.commit('resetCurrentConversation')
+      this.$store.commit('resetGroup')
       let conversationID = this.TIM.TYPES.CONV_GROUP + item.groupID
+      wx.$app.setMessageRead({
+        conversationID: conversationID
+      })
       wx.$app.getConversationProfile(conversationID)
         .then((res) => {
           this.$store.commit('updateCurrentConversation', res.data.conversation)

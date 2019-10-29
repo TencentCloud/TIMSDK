@@ -48,7 +48,7 @@ const conversationModules = {
       let list = [...messageList]
       for (let i = 0; i < list.length; i++) {
         let message = list[i]
-        list[i].virtualDom = decodeElement(message.elements[0])
+        list[i].virtualDom = decodeElement(message)
         let date = new Date(message.time * 1000)
         list[i].newtime = formatTime(date)
       }
@@ -58,9 +58,9 @@ const conversationModules = {
     receiveMessage (state, messageList) {
       let list = [...messageList]
       for (let i = 0; i < list.length; i++) {
-        let item = list[i]
-        list[i].virtualDom = decodeElement(item.elements[0])
-        let date = new Date(item.time * 1000)
+        let message = list[i]
+        list[i].virtualDom = decodeElement(message)
+        let date = new Date(message.time * 1000)
         list[i].newtime = formatTime(date)
       }
       state.currentMessageList = [...state.currentMessageList, ...list]
@@ -71,7 +71,7 @@ const conversationModules = {
       }, 800)
     },
     sendMessage (state, message) {
-      message.virtualDom = decodeElement(message.elements[0])
+      message.virtualDom = decodeElement(message)
       let date = new Date(message.time * 1000)
       message.newtime = formatTime(date)
       state.currentMessageList.push(message)
@@ -122,28 +122,6 @@ const conversationModules = {
   actions: {
     // 消息事件
     onMessageEvent (context, event) {
-      let messageList = event.data
-      const atTextMessageList = messageList.filter(
-        message =>
-          message.type === 'TIMTextElem' &&
-          message.payload.text.includes('@')
-      )
-      for (let i = 0; i < atTextMessageList.length; i++) {
-        const message = atTextMessageList[i]
-        const matched = message.payload.text.match(/@\w+/g)
-        if (!matched) {
-          continue
-        }
-        // @ 我的
-        if (matched.includes(`@${context.getters.myInfo.userID}`)) {
-          // TODO: notification
-          context.state.allConversation.filter((item) => {
-            if (item.conversationID === message.conversationID) {
-              item.lastMessage.at = true
-            }
-          })
-        }
-      }
       if (event.name === 'onMessageReceived') {
         let id = context.state.currentConversationID
         if (!id) {
