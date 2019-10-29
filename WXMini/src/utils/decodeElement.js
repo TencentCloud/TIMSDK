@@ -37,7 +37,7 @@ const GROUP_TIP_TYPE = {
 
 function parseText (message) {
   let renderDom = []
-  let temp = message.content.text
+  let temp = message.payload.text
   let left = -1
   let right = -1
   while (temp !== '') {
@@ -87,13 +87,13 @@ function parseText (message) {
   return renderDom
 }
 function parseGroupSystemNotice (message) {
-  const element = message.content
+  const payload = message.payload
   const groupName =
-    element.groupProfile.groupName || element.groupProfile.groupID
+    payload.groupProfile.groupName || payload.groupProfile.groupID
   let text
-  switch (element.operationType) {
+  switch (payload.operationType) {
     case GROUP_SYSTEM_NOTICE_TYPE.JOIN_GROUP_REQUEST:
-      text = `${element.operatorID} 申请加入群组：${groupName}`
+      text = `${payload.operatorID} 申请加入群组：${groupName}`
       break
     case GROUP_SYSTEM_NOTICE_TYPE.JOIN_GROUP_ACCEPT:
       text = `成功加入群组：${groupName}`
@@ -102,32 +102,34 @@ function parseGroupSystemNotice (message) {
       text = `申请加入群组：${groupName}被拒绝`
       break
     case GROUP_SYSTEM_NOTICE_TYPE.KICKED_OUT:
-      text = `被管理员${element.operatorID}踢出群组：${groupName}`
+      text = `被管理员${payload.operatorID}踢出群组：${groupName}`
       break
     case GROUP_SYSTEM_NOTICE_TYPE.GROUP_DISMISSED:
-      text = `群：${groupName} 已被${element.operatorID}解散`
+      text = `群：${groupName} 已被${payload.operatorID}解散`
       break
     case GROUP_SYSTEM_NOTICE_TYPE.GROUP_CREATED:
-      text = `${element.operatorID}创建群：${groupName}`
+      text = `${payload.operatorID}创建群：${groupName}`
       break
     case GROUP_SYSTEM_NOTICE_TYPE.INVITED_JOIN_GROUP_REQUEST:
-      text = `${element.operatorID}邀请你加群：${groupName}`
+      text = `${payload.operatorID}邀请你加群：${groupName}`
       break
     case GROUP_SYSTEM_NOTICE_TYPE.QUIT:
       text = `你退出群组：${groupName}`
       break
     case GROUP_SYSTEM_NOTICE_TYPE.SET_ADMIN:
-      text = `你被${element.operatorID}设置为群：${groupName}的管理员`
+      text = `你被${payload.operatorID}设置为群：${groupName}的管理员`
       break
     case GROUP_SYSTEM_NOTICE_TYPE.CANCELED_ADMIN:
-      text = `你被${element.operatorID}撤销群：${groupName}的管理员身份`
+      text = `你被${payload.operatorID}撤销群：${groupName}的管理员身份`
       break
     case GROUP_SYSTEM_NOTICE_TYPE.REVOKE:
-      text = `群：${groupName}被${element.operatorID}回收`
+      text = `群：${groupName}被${payload.operatorID}回收`
       break
     case GROUP_SYSTEM_NOTICE_TYPE.INVITED_JOIN_GROUP_REQUEST_AGREE:
-      text = `${element.operatorID}同意入群：${groupName}邀请`
+      text = `${payload.operatorID}同意入群：${groupName}邀请`
       break
+    case GROUP_SYSTEM_NOTICE_TYPE.CUSTOM:
+      text = `自定义群系统通知：${payload.userDefinedField}`
   }
   return [{
     name: 'system',
@@ -135,23 +137,23 @@ function parseGroupSystemNotice (message) {
   }]
 }
 function parseGroupTip (message) {
-  const elem = message.content
+  const payload = message.payload
   let tip
-  switch (elem.operationType) {
+  switch (payload.operationType) {
     case GROUP_TIP_TYPE.MEMBER_JOIN:
-      tip = `新成员加入：${elem.userIDList.join(',')}`
+      tip = `新成员加入：${payload.userIDList.join(',')}`
       break
     case GROUP_TIP_TYPE.MEMBER_QUIT:
-      tip = `群成员退群：${elem.userIDList.join(',')}`
+      tip = `群成员退群：${payload.userIDList.join(',')}`
       break
     case GROUP_TIP_TYPE.MEMBER_KICKED_OUT:
-      tip = `群成员被踢：${elem.userIDList.join(',')}`
+      tip = `群成员被踢：${payload.userIDList.join(',')}`
       break
     case GROUP_TIP_TYPE.MEMBER_SET_ADMIN:
-      tip = `${elem.operatorID}将${elem.userIDList.join(',')}设置为管理员`
+      tip = `${payload.operatorID}将${payload.userIDList.join(',')}设置为管理员`
       break
     case GROUP_TIP_TYPE.MEMBER_CANCELED_ADMIN:
-      tip = `${elem.operatorID}将${elem.userIDList.join(',')}取消作为管理员`
+      tip = `${payload.operatorID}将${payload.userIDList.join(',')}取消作为管理员`
       break
     case GROUP_TIP_TYPE.GROUP_INFO_MODIFIED:
       tip = '群资料修改'

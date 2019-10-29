@@ -102,32 +102,42 @@
   box-sizing: border-box;
   background-color: #e6e6e6;
 }
-.bottom-image .images.data-v-afeb3abc {
+.bottom-image.data-v-afeb3abc {
   height: 360rpx;
   border-bottom: 2rpx solid #dddee1;
   box-sizing: border-box;
   background-color: #e6e6e6;
+}
+.bottom-image .images.data-v-afeb3abc {
+  height: 180rpx;
+  box-sizing: border-box;
   display: flex;
-  justify-content: flex-start;
-  padding: 20rpx;
+  flex-direction: row;
 }
 .bottom-image .images .block.data-v-afeb3abc {
+  width: 25vw;
+  padding: 20rpx 5vw;
+  box-sizing: border-box;
+  height: 180rpx;
   display: flex;
   flex-direction: column;
-  text-align: center;
-  padding: 0 20rpx;
 }
 .bottom-image .images .block .name.data-v-afeb3abc {
   font-size: 24rpx;
   color: #80848f;
+  text-align: center;
 }
 .bottom-image .images .block .image.data-v-afeb3abc {
-  width: 120rpx;
-  height: 120rpx;
+  width: 15vw;
+  height: 15vw;
   box-sizing: border-box;
   border-radius: 16rpx;
   background-color: #fff;
-  padding: 30rpx;
+  padding: 3vw;
+}
+.bottom-image .images .block .image .icon.data-v-afeb3abc {
+  width: 9vw;
+  height: 9vw;
 }
 .input.data-v-afeb3abc {
   border: 2rpx solid #e9eaec;
