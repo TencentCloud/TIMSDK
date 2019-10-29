@@ -175,7 +175,7 @@
         <div class="images">
           <div class="block" @click="sendPhoto('album')">
             <div class="image">
-              <image src="/static/images/image.png" style="width:30px;height:30px"/>
+              <image src="/static/images/image.png" class="icon"/>
             </div>
             <div class="name">
               图片
@@ -183,7 +183,7 @@
           </div>
           <div class="block" @click="sendPhoto('camera')">
             <div class="image">
-              <image src="/static/images/photo.png" style="width:30px;height:30px"/>
+              <image src="/static/images/photo.png" class="icon"/>
             </div>
             <div class="name">
               拍照
@@ -191,21 +191,31 @@
           </div>
           <div class="block" @click="customModal()">
             <div class="image">
-              <image src="/static/images/define.png" style="width:30px;height:30px"/>
+              <image src="/static/images/define.png" class="icon"/>
             </div>
             <div class="name">
-              自定义消息
+              自定义
             </div>
           </div>
           <div class="block" @click="rateModal = true">
             <div class="image">
-              <image src="/static/images/dice.png" style="width:30px;height:30px"/>
+              <image src="/static/images/dice.png" class="icon"/>
             </div>
             <div class="name">
-              小调查
+              评分
             </div>
           </div>
         </div>
+        <!-- <div class="images">
+          <div class="block" @click="phoneCall">
+            <div class="image">
+              <image src="/static/images/phone.png" class="icon"/>
+            </div>
+            <div class="name">
+              视频通话
+            </div>
+          </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -325,15 +335,6 @@ export default {
     this.rateModal = false
     this.isMoreOpen = false
     this.messageContent = ''
-    const unWatch = this.$watch('messageContent', function (e) {
-      if (e.slice(-1) === '@') {
-        let url = '../mention/main?'
-        wx.navigateTo({ url })
-      }
-    })
-    // app.$watch调用后会返回一个值，就是unWatch方法
-    // 注销 watch 只要调用unWatch方法就可以了。
-    unWatch() // 手动注销watch
   },
   onPullDownRefresh () {
     throttle(this.getMessageList, 1000)()
@@ -721,16 +722,6 @@ export default {
         })
       })
     }
-  },
-  mounted () {
-    this.$watch('messageContent', function (e) {
-      if (this.$store.state.conversation.currentConversation.type === this.TIM.TYPES.CONV_GROUP) {
-        if (e.slice(-1) === '@') {
-          let url = '../mention/main'
-          wx.navigateTo({ url })
-        }
-      }
-    })
   }
 }
 </script>
@@ -826,29 +817,36 @@ export default {
     box-sizing border-box
     background-color $dark-background
 .bottom-image
+  height 180px
+  border-bottom 1px solid $border-base
+  box-sizing border-box
+  background-color $dark-background
   .images
-    height 180px
-    border-bottom 1px solid $border-base
+    height 90px
     box-sizing border-box
-    background-color $dark-background
     display flex
-    justify-content flex-start
-    padding 10px
+    flex-direction row
     .block
+      width 25vw
+      padding 10px 5vw
+      box-sizing border-box
+      height 90px
       display flex
       flex-direction column
-      text-align center
-      padding 0 10px
       .name
         font-size 12px
         color $secondary
+        text-align center
       .image
-        width 60px
-        height 60px
+        width 15vw
+        height 15vw
         box-sizing border-box
         border-radius 8px
         background-color white
-        padding 15px
+        padding 3vw
+        .icon
+          width 9vw
+          height 9vw
 .input
   border 1px solid $border-light
   background-color white
