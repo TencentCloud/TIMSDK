@@ -1,6 +1,6 @@
 <template>
   <div class="profile-user">
-    <avatars :title=userProfile.userID :src="userProfile.avatar" />
+    <avatar :title=userProfile.userID :src="userProfile.avatar" />
     <div class="nick-name text-ellipsis">
       <span v-if="userProfile.nick" :title=userProfile.nick>
         {{ userProfile.nick }}

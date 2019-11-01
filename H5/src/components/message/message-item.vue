@@ -7,11 +7,12 @@
     >
       <div class="col-1" v-if="showAvatar">
         <!-- 头像 -->
-        <avatars :src="avatar" />
+        <avatar :src="avatar" />
       </div>
       <div class="col-2">
         <!-- 消息主体 -->
-        <div class="message-content">
+        <div class="content-wrapper">
+          <message-status-icon v-if="isMine" :message="message" />
           <text-element
             v-if="message.type === TIM.TYPES.MSG_TEXT"
             :isMine="isMine"
@@ -62,7 +63,6 @@
       </div>
       <div class="col-3">
         <!-- 消息状态 -->
-        <message-status-icon :message="message" />
       </div>
     </div>
 
@@ -73,90 +73,70 @@
     >
       <!-- 头像 群组没有获取单个头像的接口，暂时无法显示头像-->
       <div class="col-1" v-if="showAvatar">
-        <avatars :src="avatar" />
+        <avatar :src="avatar" />
       </div>
       <div class="col-2">
         <!-- 消息主体 -->
         <message-header v-if="showMessageHeader" :message="message" />
-        <text-element
-          v-if="message.type === TIM.TYPES.MSG_TEXT"
-          :isMine="isMine"
-          :payload="message.payload"
-        />
-        <image-element
-          v-else-if="message.type === TIM.TYPES.MSG_IMAGE"
-          :isMine="isMine"
-          :payload="message.payload"
-        />
-        <file-element
-          v-else-if="message.type === TIM.TYPES.MSG_FILE"
-          :isMine="isMine"
-          :payload="message.payload"
-        />
-        <sound-element
-          v-else-if="message.type === TIM.TYPES.MSG_SOUND"
-          :isMine="isMine"
-          :payload="message.payload"
-        />
-        <group-tip-element
-          v-else-if="message.type===TIM.TYPES.MSG_GRP_TIP"
-          :isMine="isMine"
-          :payload="message.payload"
-        />
-        <custom-element
-          v-else-if="message.type === TIM.TYPES.MSG_CUSTOM"
-          :isMine="isMine"
-          :payload="message.payload"
-        />
-        <face-element
-          v-else-if="message.type === TIM.TYPES.MSG_FACE"
-          :isMine="isMine"
-          :payload="message.payload"
-        />
-        <video-element
-          v-else-if="message.type === TIM.TYPES.MSG_VIDEO"
-          :isMine="isMine"
-          :payload="message.payload"
-        />
-        <span v-else>暂未支持的消息类型：{{message.type}}</span>
+        <div class="content-wrapper">
+          <message-status-icon v-if="isMine" :message="message" />
+          <text-element
+            v-if="message.type === TIM.TYPES.MSG_TEXT"
+            :isMine="isMine"
+            :payload="message.payload"
+          />
+          <image-element
+            v-else-if="message.type === TIM.TYPES.MSG_IMAGE"
+            :isMine="isMine"
+            :payload="message.payload"
+          />
+          <file-element
+            v-else-if="message.type === TIM.TYPES.MSG_FILE"
+            :isMine="isMine"
+            :payload="message.payload"
+          />
+          <sound-element
+            v-else-if="message.type === TIM.TYPES.MSG_SOUND"
+            :isMine="isMine"
+            :payload="message.payload"
+          />
+          <group-tip-element
+            v-else-if="message.type===TIM.TYPES.MSG_GRP_TIP"
+            :isMine="isMine"
+            :payload="message.payload"
+          />
+          <custom-element
+            v-else-if="message.type === TIM.TYPES.MSG_CUSTOM"
+            :isMine="isMine"
+            :payload="message.payload"
+          />
+          <face-element
+            v-else-if="message.type === TIM.TYPES.MSG_FACE"
+            :isMine="isMine"
+            :payload="message.payload"
+          />
+          <video-element
+            v-else-if="message.type === TIM.TYPES.MSG_VIDEO"
+            :isMine="isMine"
+            :payload="message.payload"
+          />
+          <span v-else>暂未支持的消息类型：{{message.type}}</span>
+        </div>
       </div>
       <div class="col-3">
         <!-- 消息状态 -->
-        <message-status-icon :message="message" />
       </div>
     </div>
 
     <div class="system-layout" v-if="currentConversationType === TIM.TYPES.CONV_SYSTEM ">
       <div class="col-1">
-        <avatars :src="avatar" :type="currentConversationType"/>
+        <avatar :src="avatar" :type="currentConversationType" />
       </div>
       <div class="col-2">
         <message-header :message="message" />
         <group-system-notice-element :payload="message.payload" :message="message" />
       </div>
     </div>
-    <!-- 旧排版 -->
-    <!-- <message-header v-if="showMessageHeader" :message="message" />
-    <div class="content">
-      <message-status-icon :message="message" />
-      <text-element
-        v-if="message.type === TIM.TYPES.MSG_TEXT"
-        :isMine="isMine"
-        :payload="message.payload"
-      />
-      <image-element v-else-if="message.type === TIM.TYPES.MSG_IMAGE" :payload="message.payload" />
-      <file-element v-else-if="message.type === TIM.TYPES.MSG_FILE" :payload="message.payload" />
-      <sound-element v-else-if="message.type === TIM.TYPES.MSG_SOUND" :payload="message.payload" />
-      <group-tip-element v-else-if="message.type===TIM.TYPES.MSG_GRP_TIP" :payload="message.payload" />
-      <group-system-notice-element
-        v-else-if="message.type === TIM.TYPES.MSG_GRP_SYS_NOTICE"
-        :payload="message.payload"
-        :message="message"
-      />
-      <custom-element v-else-if="message.type === TIM.TYPES.MSG_CUSTOM" :payload="message.payload" />
-      <face-element v-else-if="message.type === TIM.TYPES.MSG_FACE" :payload="message.payload"/>
-      <span v-else>暂未支持的消息类型：{{message.type}}</span>
-    </div>-->
   </div>
 </template>
 
@@ -238,7 +218,7 @@ export default {
     messagePosition() {
       if (
         ['TIMGroupTipElem', 'TIMGroupSystemNoticeElem'].includes(
-          this.message.elements[0].type
+          this.message.type
         )
       ) {
         return 'position-center'
@@ -252,7 +232,7 @@ export default {
     showMessageHeader() {
       if (
         ['TIMGroupTipElem', 'TIMGroupSystemNoticeElem'].includes(
-          this.message.elements[0].type
+          this.message.type
         )
       ) {
         return false
@@ -266,6 +246,10 @@ export default {
 <style lang="stylus" scoped>
 .message-wrapper {
   margin: 20px 0;
+  .content-wrapper {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .group-layout, .c2c-layout, .system-layout {

@@ -1,9 +1,9 @@
 <template>
-  <span
+  <div
     style="width:16px;height:16px;"
     :class="messageIconClass"
     @click="handleIconClick"
-  >{{messageIconClass==='message-send-fail'? '!':''}}</span>
+  >{{messageIconClass==='message-send-fail'? '!':''}}</div>
 </template>
 
 <script>
@@ -44,7 +44,8 @@ export default {
 
 <style lang="stylus" scoped>
 .message-send-fail {
-  background-color: red;
+  margin-right: 8px;
+  background-color: #f35f5f;
   color: $white;
   border-radius: 50%;
   text-align: center;

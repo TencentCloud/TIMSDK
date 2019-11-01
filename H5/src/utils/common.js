@@ -22,7 +22,7 @@ export function translateGroupSystemNotice(message) {
     case 10:
       return `你被${message.payload.operatorID}撤销群：${groupName}的管理员身份`
     case 255:
-      return '自定义群系统通知'
+      return '自定义群系统通知: ' + message.payload.userDefinedField
   }
 }
 

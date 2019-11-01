@@ -82,13 +82,13 @@ export default {
             this.showDialog = false
           }).catch(() => {
           this.$store.commit('showMessage', {
-            message: '没有搜到群组',
+            message: '没有找到该用户',
             type: 'warning'
           })
         })
       } else {
         this.$store.commit('showMessage', {
-          message: '没有搜到群组',
+          message: '没有找到该用户',
           type: 'warning'
         })
       }

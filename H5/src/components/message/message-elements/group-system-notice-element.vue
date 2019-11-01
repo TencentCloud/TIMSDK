@@ -33,6 +33,7 @@
 <script>
 import { Dialog, Form, FormItem, RadioGroup, Radio } from 'element-ui'
 import MessageBubble from '../message-bubble'
+import { translateGroupSystemNotice } from '../../../utils/common'
 
 export default {
   name: 'GroupSystemNoticeElement',
@@ -65,7 +66,7 @@ export default {
   },
   computed: {
     text() {
-      return this.translateGroupSystemNotice(this.payload)
+      return translateGroupSystemNotice(this.message)
     },
     title() {
       if (this.message.type === this.TIM.TYPES.MSG_GRP_SYS_NOTICE) {
@@ -78,34 +79,6 @@ export default {
     }
   },
   methods: {
-    translateGroupSystemNotice(payload) {
-      const groupName =
-        payload.groupProfile.name || payload.groupProfile.groupID
-      switch (payload.operationType) {
-        case 1:
-          return `${payload.operatorID} 申请加入群组：${groupName}`
-        case 2:
-          return `成功加入群组：${groupName}`
-        case 3:
-          return `申请加入群组：${groupName}被拒绝`
-        case 4:
-          return `被管理员${payload.operatorID}踢出群组：${groupName}`
-        case 5:
-          return `群：${groupName} 已被${payload.operatorID}解散`
-        case 6:
-          return `${payload.operatorID}创建群：${groupName}`
-        case 7:
-          return `${payload.operatorID}邀请你加群：${groupName}`
-        case 8:
-          return `你退出群组：${groupName}`
-        case 9:
-          return `你被${payload.operatorID}设置为群：${groupName}的管理员`
-        case 10:
-          return `你被${payload.operatorID}撤销群：${groupName}的管理员身份`
-        case 255:
-          return '自定义群系统通知'
-      }
-    },
     handleGroupApplication() {
       this.tim
         .handleGroupApplication({

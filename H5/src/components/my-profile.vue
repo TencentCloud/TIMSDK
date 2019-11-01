@@ -21,10 +21,10 @@
         <el-button type="primary" @click="editMyProfile">确 定</el-button>
       </span>
     </el-dialog>
-    <el-popover :width="200" trigger="click" placement="right">
+    <el-popover :width="200" trigger="click" placement="right" class="popover">
       <profile-card :profile="currentUserProfile" />
-      <el-button type="text" @click="handleEdit">编辑</el-button>
-      <avatars
+      <i class="el-icon-setting edit-my-profile" @click="handleEdit"></i>
+      <avatar
         slot="reference"
         :src="currentUserProfile.avatar"
         class="my-avatar"
@@ -119,7 +119,17 @@ export default {
     display: block;
     width: 100%;
     height: 100%;
+  .popover
+    padding none 
+    border none 
+    border-radius 30px
 .my-avatar
   cursor pointer
   border-radius: 50%;
+
+.edit-my-profile
+  position absolute
+  top 10px
+  right 10px
+  cursor pointer
 </style>

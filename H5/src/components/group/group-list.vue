@@ -3,7 +3,7 @@
     <div class="group-container">
       <div class="header-bar">
         <el-autocomplete
-          :value-key="'name' || 'groupID'"
+          :value-key="'groupID'"
           :debounce="500"
           size="mini"
           v-model="groupID"
@@ -88,16 +88,26 @@ export default {
       this.tim
         .joinGroup({ groupID: group.groupID, type: group.type })
         .then(res => {
-          if (res.data.status === 'JoinedSuccess') {
-            this.$store.commit('showMessage', {
-              message: '加群成功',
-              type: 'success'
-            })
-          } else {
-            this.$store.commit('showMessage', {
-              message: '申请成功，等待群管理员确认。',
-              type: 'info'
-            })
+          switch(res.data.status) {
+            case this.TIM.TYPES.JOIN_STATUS_WAIT_APPROVAL:
+              this.$store.commit('showMessage', {
+                message: '申请成功，等待群管理员确认。',
+                type: 'info'
+              })
+              break
+            case this.TIM.TYPES.JOIN_STATUS_SUCCESS:
+              this.$store.commit('showMessage', {
+                message: '加群成功',
+                type: 'success'
+              })
+              break
+            case this.TIM.TYPES.JOIN_STATUS_ALREADY_IN_GROUP:
+              this.$store.commit('showMessage', {
+                message: '您已经是群成员了，请勿重复加群哦！',
+                type: 'info'
+              })
+              break
+            default: break
           }
         })
         .catch(error => {

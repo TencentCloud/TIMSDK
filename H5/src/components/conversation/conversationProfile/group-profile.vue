@@ -20,8 +20,7 @@
           />
         </div>
         <div class="content" v-if="!showEditFaceUrl">
-          <!-- <avatar :src="groupProfile.avatar" text="G" style="margin-right:6px;" /> -->
-          <avatars :src="groupProfile.avatar"/>
+          <avatar :src="groupProfile.avatar"/>
 
         </div>
         <el-input
