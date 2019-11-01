@@ -1,4 +1,443 @@
 require("../../common/manifest.js")
-require("../../debug/GenerateTestUserSig.js")
 require("../../common/vendor.js")
-global.webpackJsonpMpvue([5],{"9VMl":function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var i=r("5nAL"),o=r.n(i),n=r("C+d8");o.a.config.errorHandler=function(e){console&&console.error&&console.error(e)},new o.a(n.a).$mount()},"C+d8":function(e,t,r){"use strict";var i=r("mHre"),o=r("IRB7");var n=function(e){r("mW48")},s=r("ybqe")(i.a,o.a,n,"data-v-1f364c65",null);t.a=s.exports},IRB7:function(e,t,r){"use strict";var i={render:function(){var e=this,t=e.$createElement,r=e._self._c||t;return r("div",{staticClass:"chatting"},[r("i-modal",{attrs:{title:"设置禁言时间",visible:e.muteModal,eventid:"1",mpcomid:"0"},on:{ok:e.muteMember,cancel:e.cancelMuteModal}},[r("div",{staticClass:"input-wrapper"},[r("input",{directives:[{name:"model",rawName:"v-model.lazy:value",value:e.muteTime,expression:"muteTime",modifiers:{"lazy:value":!0}}],staticClass:"input",attrs:{type:"number",placeholder:"单位：秒",eventid:"0"},domProps:{value:e.muteTime},on:{input:function(t){t.target.composing||(e.muteTime=t.target.value)}}})])]),e._v(" "),e._l(e.currentGroupMemberList,function(t,i){return r("div",{key:t.userID,staticClass:"chat"},[r("i-row",{attrs:{mpcomid:"8_"+i},slot:"content"},[r("i-col",{attrs:{span:"1",mpcomid:"1_"+i}},["Member"===t.role?r("div",{staticClass:"last"},[e._v("普")]):"Admin"===t.role?r("div",{staticClass:"last"},[e._v("管")]):"Owner"===t.role?r("div",{staticClass:"last"},[e._v("主")]):e._e()]),e._v(" "),r("i-col",{attrs:{span:"3",mpcomid:"3_"+i}},[r("div",{staticClass:"avatar"},[r("i-avatar",{attrs:{src:t.avatar||"/static/images/header.png",mpcomid:"2_"+i}})],1)]),e._v(" "),r("i-col",{attrs:{span:"7",mpcomid:"4_"+i}},[r("div",{staticClass:"information"},[r("div",{staticClass:"username"},[e._v(e._s(t.nick||t.userID))])])]),e._v(" "),"Public"===e.currentGroupProfile.type||"ChatRoom"===e.currentGroupProfile.type?r("i-col",{attrs:{span:"6",mpcomid:"5_"+i}},[r("div",{staticClass:"information"},[(e.isMyRoleOwner||e.isMyRoleAdmin)&&"Member"===t.role?r("a",{staticClass:"set",attrs:{eventid:"2_"+i},on:{click:function(r){e.setRole(t)}}},[e._v("设为管理员")]):e._e(),e._v(" "),e.isMyRoleOwner&&"Admin"===t.role?r("a",{staticClass:"set",attrs:{eventid:"3_"+i},on:{click:function(r){e.setRole(t)}}},[e._v("取消管理员")]):e._e()])]):e._e(),e._v(" "),r("i-col",{attrs:{span:"3",mpcomid:"6_"+i}},[r("div",{staticClass:"information"},[e.isMyRoleOwner&&"Owner"!==t.role||e.isMyRoleAdmin&&"Member"===t.role?r("a",{staticClass:"delete",attrs:{eventid:"4_"+i},on:{click:function(r){e.kick(t)}}},[e._v("删除")]):e._e()])]),e._v(" "),r("i-col",{attrs:{span:"4",mpcomid:"7_"+i}},["Private"!==e.currentGroupProfile.type?r("div",{staticClass:"information"},[e.isMyRoleOwner&&("Member"===t.role||"Admin"===t.role)||e.isMyRoleAdmin&&"Member"===t.role?r("div",[1e3*t.muteUntil>e.current?r("span",[r("a",{staticClass:"delete",attrs:{eventid:"5_"+i},on:{click:function(r){e.cancelMute(t)}}},[e._v("取消禁言")])]):r("span",[r("a",{staticClass:"delete",attrs:{eventid:"6_"+i},on:{click:function(r){e.mute(t)}}},[e._v("禁言")])])]):e._e()]):e._e()])],1)],1)})],2)},staticRenderFns:[]};t.a=i},mHre:function(e,t,r){"use strict";var i=r("Dd8w"),o=r.n(i),n=r("NYxO");t.a={data:function(){return{muteModal:!1,member:{},muteTime:void 0,current:Date.now(),intervalID:""}},computed:o()({},Object(n.b)({currentGroupProfile:function(e){return e.group.currentGroupProfile},currentGroupMemberList:function(e){return e.group.currentGroupMemberList}}),{isMyRoleOwner:function(){return this.currentGroupProfile.selfInfo.role===this.$type.GRP_MBR_ROLE_OWNER},isMyRoleAdmin:function(){return this.currentGroupProfile.selfInfo.role===this.$type.GRP_MBR_ROLE_ADMIN}}),onReachBottom:function(){this.getGroupMemberList()},methods:{getGroupMemberList:function(){this.$store.dispatch("getGroupMemberList")},muteMember:function(){var e=this;wx.$app.setGroupMemberMuteTime({groupID:this.currentGroupProfile.groupID,userID:this.member.userID,muteTime:Number(this.muteTime)}).then(function(t){e.$store.commit("updateCurrentGroupProfile",t.data.group),e.$store.commit("showToast",{title:"设置禁言成功"}),e.muteTime=void 0,e.cancelMuteModal()})},cancelMuteModal:function(){this.muteModal=!1},cancelMute:function(e){var t=this;wx.$app.setGroupMemberMuteTime({groupID:this.currentGroupProfile.groupID,userID:e.userID,muteTime:Number(0)}).then(function(){t.$store.commit("showToast",{title:"禁言成功"})})},kick:function(e){var t=this;wx.$app.deleteGroupMember({groupID:this.currentGroupProfile.groupID,reason:"踢出群",userIDList:[e.userID]}).then(function(e){t.$store.commit("updateCurrentGroupProfile",e.data.group)})},mute:function(e){this.muteModal=!0,this.member=e},setRole:function(e){var t=this,r="Admin";"Admin"===e.role&&(r="Member"),wx.$app.setGroupMemberRole({groupID:this.currentGroupProfile.groupID,userID:e.userID,role:r}).then(function(){t.$store.commit("showToast",{title:"设置成功",icon:"success",duration:1500})})}},mounted:function(){var e=this;this.intervalID=setInterval(function(){e.current=Date.now()},1e3)},destory:function(){this.intervalID=""}}},mW48:function(e,t){}},["9VMl"]);
+global.webpackJsonpMpvue([5],{
+
+/***/ 133:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(134);
+
+
+
+// add this to handle exception
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.config.errorHandler = function (err) {
+  if (console && console.error) {
+    console.error(err);
+  }
+};
+
+var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a(__WEBPACK_IMPORTED_MODULE_1__index__["a" /* default */]);
+app.$mount();
+
+/***/ }),
+
+/***/ 134:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(136);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_1f364c65_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(137);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(135)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+
+/* template */
+
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-1f364c65"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_1f364c65_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__["a" /* default */],
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src\\pages\\members\\index.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1f364c65", Component.options)
+  } else {
+    hotAPI.reload("data-v-1f364c65", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 135:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 136:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(2);
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  data: function data() {
+    return {
+      muteModal: false,
+      member: {},
+      muteTime: undefined,
+      current: Date.now(),
+      intervalID: ''
+    };
+  },
+
+  computed: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapState */])({
+    currentGroupProfile: function currentGroupProfile(state) {
+      return state.group.currentGroupProfile;
+    },
+    currentGroupMemberList: function currentGroupMemberList(state) {
+      return state.group.currentGroupMemberList;
+    }
+  }), {
+    isMyRoleOwner: function isMyRoleOwner() {
+      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_OWNER;
+    },
+    isMyRoleAdmin: function isMyRoleAdmin() {
+      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_ADMIN;
+    }
+  }),
+  onReachBottom: function onReachBottom() {
+    this.getGroupMemberList();
+  },
+
+  methods: {
+    getGroupMemberList: function getGroupMemberList() {
+      this.$store.dispatch('getGroupMemberList');
+    },
+    muteMember: function muteMember() {
+      var _this = this;
+
+      wx.$app.setGroupMemberMuteTime({
+        groupID: this.currentGroupProfile.groupID,
+        userID: this.member.userID,
+        muteTime: Number(this.muteTime)
+      }).then(function (res) {
+        _this.$store.commit('updateCurrentGroupProfile', res.data.group);
+        _this.$store.commit('showToast', {
+          title: '设置禁言成功'
+        });
+        _this.muteTime = undefined;
+        _this.cancelMuteModal();
+      });
+    },
+    cancelMuteModal: function cancelMuteModal() {
+      this.muteModal = false;
+    },
+    cancelMute: function cancelMute(item) {
+      var _this2 = this;
+
+      wx.$app.setGroupMemberMuteTime({
+        groupID: this.currentGroupProfile.groupID,
+        userID: item.userID,
+        muteTime: Number(0)
+      }).then(function () {
+        _this2.$store.commit('showToast', {
+          title: '禁言成功'
+        });
+      });
+    },
+
+    // 踢出群聊
+    kick: function kick(item) {
+      var _this3 = this;
+
+      wx.$app.deleteGroupMember({
+        groupID: this.currentGroupProfile.groupID,
+        reason: '踢出群',
+        userIDList: [item.userID]
+      }).then(function (res) {
+        _this3.$store.commit('updateCurrentGroupProfile', res.data.group);
+      });
+    },
+    mute: function mute(item) {
+      this.muteModal = true;
+      this.member = item;
+    },
+
+    // 设置群角色——管理员Admin, 普通Member
+    setRole: function setRole(item) {
+      var _this4 = this;
+
+      var role = 'Admin';
+      if (item.role === 'Admin') {
+        role = 'Member';
+      }
+      wx.$app.setGroupMemberRole({
+        groupID: this.currentGroupProfile.groupID,
+        userID: item.userID,
+        role: role
+      }).then(function () {
+        _this4.$store.commit('showToast', {
+          title: '设置成功',
+          icon: 'success',
+          duration: 1500
+        });
+      });
+    }
+  },
+  mounted: function mounted() {
+    var _this5 = this;
+
+    this.intervalID = setInterval(function () {
+      _this5.current = Date.now();
+    }, 1000);
+  },
+  destory: function destory() {
+    this.intervalID = '';
+  }
+});
+
+/***/ }),
+
+/***/ 137:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "chatting"
+  }, [_c('i-modal', {
+    attrs: {
+      "title": "设置禁言时间",
+      "visible": _vm.muteModal,
+      "eventid": '1',
+      "mpcomid": '0'
+    },
+    on: {
+      "ok": _vm.muteMember,
+      "cancel": _vm.cancelMuteModal
+    }
+  }, [_c('div', {
+    staticClass: "input-wrapper"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model.lazy:value",
+      value: (_vm.muteTime),
+      expression: "muteTime",
+      modifiers: {
+        "lazy:value": true
+      }
+    }],
+    staticClass: "input",
+    attrs: {
+      "type": "number",
+      "placeholder": "单位：秒",
+      "eventid": '0'
+    },
+    domProps: {
+      "value": (_vm.muteTime)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.muteTime = $event.target.value
+      }
+    }
+  })])]), _vm._v(" "), _vm._l((_vm.currentGroupMemberList), function(item, index) {
+    return _c('div', {
+      key: item.userID,
+      staticClass: "chat"
+    }, [_c('i-row', {
+      attrs: {
+        "mpcomid": '8_' + index
+      },
+      slot: "content"
+    }, [_c('i-col', {
+      attrs: {
+        "span": "1",
+        "mpcomid": '1_' + index
+      }
+    }, [(item.role === 'Member') ? _c('div', {
+      staticClass: "last"
+    }, [_vm._v("普")]) : (item.role === 'Admin') ? _c('div', {
+      staticClass: "last"
+    }, [_vm._v("管")]) : (item.role === 'Owner') ? _c('div', {
+      staticClass: "last"
+    }, [_vm._v("主")]) : _vm._e()]), _vm._v(" "), _c('i-col', {
+      attrs: {
+        "span": "3",
+        "mpcomid": '3_' + index
+      }
+    }, [_c('div', {
+      staticClass: "avatar"
+    }, [_c('i-avatar', {
+      attrs: {
+        "src": item.avatar || '/static/images/header.png',
+        "mpcomid": '2_' + index
+      }
+    })], 1)]), _vm._v(" "), _c('i-col', {
+      attrs: {
+        "span": "7",
+        "mpcomid": '4_' + index
+      }
+    }, [_c('div', {
+      staticClass: "information"
+    }, [_c('div', {
+      staticClass: "username"
+    }, [_vm._v(_vm._s(item.nick || item.userID))])])]), _vm._v(" "), (_vm.currentGroupProfile.type === 'Public' || _vm.currentGroupProfile.type === 'ChatRoom') ? _c('i-col', {
+      attrs: {
+        "span": "6",
+        "mpcomid": '5_' + index
+      }
+    }, [_c('div', {
+      staticClass: "information"
+    }, [((_vm.isMyRoleOwner || _vm.isMyRoleAdmin) && item.role === 'Member') ? _c('a', {
+      staticClass: "set",
+      attrs: {
+        "eventid": '2_' + index
+      },
+      on: {
+        "click": function($event) {
+          _vm.setRole(item)
+        }
+      }
+    }, [_vm._v("设为管理员")]) : _vm._e(), _vm._v(" "), (_vm.isMyRoleOwner && item.role === 'Admin') ? _c('a', {
+      staticClass: "set",
+      attrs: {
+        "eventid": '3_' + index
+      },
+      on: {
+        "click": function($event) {
+          _vm.setRole(item)
+        }
+      }
+    }, [_vm._v("取消管理员")]) : _vm._e()])]) : _vm._e(), _vm._v(" "), _c('i-col', {
+      attrs: {
+        "span": "3",
+        "mpcomid": '6_' + index
+      }
+    }, [_c('div', {
+      staticClass: "information"
+    }, [((_vm.isMyRoleOwner && item.role !== 'Owner' || _vm.isMyRoleAdmin && item.role === 'Member')) ? _c('a', {
+      staticClass: "delete",
+      attrs: {
+        "eventid": '4_' + index
+      },
+      on: {
+        "click": function($event) {
+          _vm.kick(item)
+        }
+      }
+    }, [_vm._v("删除")]) : _vm._e()])]), _vm._v(" "), _c('i-col', {
+      attrs: {
+        "span": "4",
+        "mpcomid": '7_' + index
+      }
+    }, [(_vm.currentGroupProfile.type !== 'Private') ? _c('div', {
+      staticClass: "information"
+    }, [((_vm.isMyRoleOwner && (item.role === 'Member' || item.role === 'Admin')) || (_vm.isMyRoleAdmin && item.role === 'Member')) ? _c('div', [(item.muteUntil * 1000 > _vm.current) ? _c('span', [_c('a', {
+      staticClass: "delete",
+      attrs: {
+        "eventid": '5_' + index
+      },
+      on: {
+        "click": function($event) {
+          _vm.cancelMute(item)
+        }
+      }
+    }, [_vm._v("取消禁言")])]) : _c('span', [_c('a', {
+      staticClass: "delete",
+      attrs: {
+        "eventid": '6_' + index
+      },
+      on: {
+        "click": function($event) {
+          _vm.mute(item)
+        }
+      }
+    }, [_vm._v("禁言")])])]) : _vm._e()]) : _vm._e()])], 1)], 1)
+  })], 2)
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-1f364c65", esExports)
+  }
+}
+
+/***/ })
+
+},[133]);
