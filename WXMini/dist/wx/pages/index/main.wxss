@@ -1,4 +1,18 @@
 
+.empty.data-v-0c62411e {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+.empty .empty-button.data-v-0c62411e {
+  color: #fff;
+  margin-top: 40vh;
+  background-color: #2d8cf0;
+  border-radius: 16rpx;
+  line-height: 60rpx;
+  font-size: 32rpx;
+  width: 50vw;
+}
 .input.data-v-0c62411e {
   text-align: center;
   height: 64rpx;
