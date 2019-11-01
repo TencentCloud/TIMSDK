@@ -1,20 +1,10 @@
 <template>
   <div @click="handleGroupClick" class="scroll-container">
     <div class="group-item">
-      <avatars :src="group.avatar" />
+      <avatar :src="group.avatar" />
       <div class="group-name text-ellipsis">{{ group.name }}</div>
     </div>
   </div>
-  <!-- <div @click="handleGroupClick"  class="group-item-container">
-    <el-row>
-      <el-col :span="4">
-        <avatar :src="group.avatar" text="G" />
-      </el-col>
-      <el-col :span="20">
-        <div class="group-name">{{ group.name }}</div>
-      </el-col>
-    </el-row>
-  </div> -->
 </template>
 
 <script>

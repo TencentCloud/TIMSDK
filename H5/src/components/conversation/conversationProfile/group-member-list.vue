@@ -15,12 +15,7 @@
           <popover placement="right" :key="member.userID">
             <group-member-info :member="member" />
             <div slot="reference" class="group-member" @click="currentMemberID = member.userID">
-              <avatars :title=getGroupMemberAvatarText(member.role) :src="member.avatar" />
-              <!-- <avatar
-                :src="member.avatar"
-                :text="getGroupMemberAvatarText(member.role)"
-                shape="square"
-              /> -->
+              <avatar :title=getGroupMemberAvatarText(member.role) :src="member.avatar" />
               <div class="member-name text-ellipsis">
                 <span v-if="member.nameCard" :title=member.nameCard>{{ member.nameCard }}</span>
                 <span v-else-if="member.nick" :title=member.nick>{{ member.nick }}</span>

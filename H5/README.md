@@ -109,6 +109,17 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### Change Log
 
+#### 2019/11/01
+
+**Change**
+
+- 优化几处体验问题
+
+**BUG Fixes**
+
+- 修复删除群组会话后，会话又出现的问题
+- 修复退出群组时，Demo 出现空白区域的问题
+
 #### 2019/10/17
 
 **Features**
