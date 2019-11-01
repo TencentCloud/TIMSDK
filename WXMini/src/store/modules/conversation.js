@@ -64,11 +64,6 @@ const conversationModules = {
         list[i].newtime = formatTime(date)
       }
       state.currentMessageList = [...state.currentMessageList, ...list]
-      setTimeout(() => {
-        wx.pageScrollTo({
-          scrollTop: 99999
-        })
-      }, 800)
     },
     sendMessage (state, message) {
       message.virtualDom = decodeElement(message)

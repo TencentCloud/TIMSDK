@@ -267,8 +267,12 @@ export default {
       startPoint: 0,
       title: '正在录音',
       rateModal: false,
-      rate: 5
+      rate: 5,
+      isShow: false
     }
+  },
+  onShow () {
+    this.isShow = true
   },
   onLoad (options) {
     this.set = options.toAccount
@@ -335,6 +339,7 @@ export default {
     this.rateModal = false
     this.isMoreOpen = false
     this.messageContent = ''
+    this.isShow = false
   },
   onPullDownRefresh () {
     throttle(this.getMessageList, 1000)()
@@ -431,9 +436,11 @@ export default {
     },
     // 滚动到列表bottom
     scrollToBottom () {
-      wx.pageScrollTo({
-        scrollTop: 99999
-      })
+      if (this.isShow) {
+        wx.pageScrollTo({
+          scrollTop: 99999
+        })
+      }
     },
     customModal () {
       this.customModalVisible = !this.customModalVisible
