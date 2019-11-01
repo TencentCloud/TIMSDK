@@ -1,14 +1,14 @@
 <template>
     <div
         class="conversation-item-container"
-        @click="selectConversation"
         :class="{ 'choose': conversation.conversationID === currentConversation.conversationID }"
+        @click="selectConversation"
     >
       <div class="close-btn">
         <span class="tim-icon-close" title="删除会话" @click="deleteConversation"></span>
       </div>
       <div class="warp">
-        <avatars :src="avatar" :type="conversation.type" />
+        <avatar :src="avatar" :type="conversation.type" />
         <div class="content">
           <div class="row-1">
             <div class="name">
@@ -96,6 +96,18 @@ export default {
           return ''
       }
     },
+    conversationName: function() {
+      if (this.conversation.type === this.TIM.TYPES.CONV_C2C) {
+        return this.conversation.userProfile.nick || this.conversation.userProfile.userID
+      }
+      if (this.conversation.type === this.TIM.TYPES.CONV_GROUP) {
+        return this.conversation.groupProfile.name || this.conversation.groupProfile.groupID
+      }
+      if (this.conversation.type === this.TIM.TYPES.CONV_SYSTEM) {
+        return '系统通知'
+      }
+      return ''
+    },
     showGrayBadge() {
       if (this.conversation.type !== this.TIM.TYPES.CONV_GROUP) {
         return false
@@ -130,12 +142,14 @@ export default {
         )
       }
     },
-    deleteConversation() {
+    deleteConversation(event) {
+      // 停止冒泡，避免和点击会话的事件冲突
+      event.stopPropagation()
       this.tim
         .deleteConversation(this.conversation.conversationID)
         .then(() => {
           this.$store.commit('showMessage', {
-            message: `会话${this.conversation.conversationID}删除成功!`,
+            message: `会话【${this.conversationName}】删除成功!`,
             type: 'success'
           })
           this.popoverVisible = false
@@ -143,7 +157,7 @@ export default {
         })
         .catch(error => {
           this.$store.commit('showMessage', {
-            message: `会话${this.conversation.conversationID}删除失败!, error=${error.message}`,
+            message: `会话【${this.conversationName}】删除失败!, error=${error.message}`,
             type: 'error'
           })
           this.popoverVisible = false
@@ -152,22 +166,6 @@ export default {
     showContextMenu() {
       this.popoverVisible = true
     },
-    setMessageRead() {
-      if (this.conversation.unreadCount === 0) {
-        return
-      }
-      if (this.conversation.type === 'C2C') {
-        this.tim.setMessageRead({
-          conversationID: this.conversation.conversationID,
-          lastMessageTime: this.conversation.lastMessage.lastTime
-        })
-      } else if (this.conversation.type === 'GROUP') {
-        this.tim.setMessageRead({
-          conversationID: this.conversation.conversationID,
-          lastMessageSeq: this.conversation.lastMessage.lastSequence
-        })
-      }
-    }
   },
   watch: {
     currentConversation(next) {

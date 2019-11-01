@@ -2,7 +2,7 @@
   <div>
     <el-row class="friend-item-container">
       <el-col :span="6">
-        <avatar :src="friend.profile.avatar" text="F" />
+        <avatar :src="friend.profile.avatar" />
       </el-col>
       <el-col :span="18">
         <div class="friend-name">{{friend.profile.nick||friend.userID}}</div>

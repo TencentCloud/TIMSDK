@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import { MessageBox, Row, Col, Button, Input, Loading, Dialog } from 'element-ui'
 import Avatar from './components/avatar.vue'
-import Avatars from './components/avatars.vue'
 import Index from './index.vue'
 import store from './store/index'
 import tim from 'tim'
@@ -24,7 +23,6 @@ Vue.use(Input)
 Vue.use(Loading)
 Vue.use(Dialog)
 Vue.component('avatar', Avatar)
-Vue.component('avatars', Avatars)
 new Vue({
   render: h => h(Index)
 }).$mount('#app')

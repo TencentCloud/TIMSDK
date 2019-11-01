@@ -1,11 +1,10 @@
 <template>
   <div class="profile-card-wrapper">
-    <div class="profile-header">
-      <avatar :src="profile.avatar" shape="circle" text="U" />
+    <div class="content">
+      <avatar :src="profile.avatar" />
       <div class="basic">
         <span class="nick text-ellipsis">{{ profile.nick || profile.userID }}</span>
         <span class="iconfont" :class="genderClass"></span>
-        <div>ID:{{ profile.userID }}</div>
       </div>
     </div>
   </div>
@@ -40,16 +39,37 @@ export default {
   display: flex;
   margin-bottom: 12px;
 }
-.basic {
-  margin-left: 12px;
+
+.profile-card-wrapper {
+  .content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .avatar {
+    width: 70px;
+    height: 70px;
+  }
 }
+
+.basic {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+
 .icon-male {
   color: $primary;
 }
+
 .icon-female {
   color: #ff8096;
 }
+
 .nick {
+  font-size: 18px;
   margin-right: 8px;
   max-width: 100px;
   display: inline-block;

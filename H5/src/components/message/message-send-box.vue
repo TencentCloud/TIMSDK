@@ -269,13 +269,15 @@ export default {
         }
       })
       this.$store.commit('pushCurrentMessageList', message)
-      this.tim.sendMessage(message).catch(imError => {
-        this.$store.commit('showMessage', {
-          message: imError.message,
-          type: 'error'
-        })
+      this.tim.sendMessage(message)
+        .then(() => {
+          this.$refs.imagePicker.value = null
+        }).catch(imError => {
+          this.$store.commit('showMessage', {
+            message: imError.message,
+            type: 'error'
+          })
       })
-      this.$refs.imagePicker.value = null
     },
     sendFile() {
       const message = this.tim.createFileMessage({
@@ -289,13 +291,15 @@ export default {
         }
       })
       this.$store.commit('pushCurrentMessageList', message)
-      this.tim.sendMessage(message).catch(imError => {
+      this.tim.sendMessage(message)
+        .then(() => {
+          this.$refs.imagePicker.value = null
+        }).catch(imError => {
         this.$store.commit('showMessage', {
           message: imError.message,
           type: 'error'
         })
       })
-      this.$refs.filePicker.value = null
     }
   }
 }
