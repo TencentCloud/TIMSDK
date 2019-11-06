@@ -108,10 +108,6 @@ const conversationModules = {
     },
     changeMessageStatus (state, index) {
       state.currentMessageList[index].status = 'fail'
-    },
-    offAtRemind (state, conversation) {
-      let item = state.allConversation.filter(item => item.conversationID === conversation.conversationID)[0]
-      item.lastMessage.at = false
     }
   },
   actions: {
