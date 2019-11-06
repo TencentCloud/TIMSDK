@@ -206,16 +206,6 @@
             </div>
           </div>
         </div>
-        <!-- <div class="images">
-          <div class="block" @click="phoneCall">
-            <div class="image">
-              <image src="/static/images/phone.png" class="icon"/>
-            </div>
-            <div class="name">
-              视频通话
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
@@ -729,7 +719,8 @@ export default {
         })
       })
     }
-  }
+  },
+  destory () {}
 }
 </script>
 
