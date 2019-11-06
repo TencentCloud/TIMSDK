@@ -116,9 +116,6 @@ export default {
     },
     // 点击某会话
     checkoutConversation (item, name) {
-      if (item.lastMessage.at) {
-        this.$store.commit('offAtRemind', item)
-      }
       this.$store.commit('resetCurrentConversation')
       this.$store.commit('resetGroup')
       this.setMessageRead(item)
