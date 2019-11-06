@@ -1,25 +1,3 @@
-<template name="ec03861a">
-  <view class="_div data-v-282a98f5 profile">
-    <view class="_div data-v-282a98f5 title">个人信息</view>
-    <view class="_div data-v-282a98f5 item">
-      <view class="_div data-v-282a98f5 label"> 昵称： </view>
-      <view class="_div data-v-282a98f5"><input type="text" class="_input data-v-282a98f5 input" placeholder="请输入新昵称" value="{{nick}}" bindinput="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" /></view>
-    </view>
-    <view class="_div data-v-282a98f5 title">头像</view>
-    <view class="_div data-v-282a98f5 avatar">
-      <radio-group bindchange="handleProxy" class="_radio-group data-v-282a98f5 group" data-eventid="{{'1'}}" data-comkey="{{$k}}"><label wx:key="index" key="{{index}}" class="_label data-v-282a98f5 label" wx:for="{{imgArr}}" wx:for-index="index" wx:for-item="item">
-          <image style="width: 40px; height: 40px; border-radius: 8px" src="{{item}}" class="_image data-v-282a98f5"></image>
-          <view class="_div data-v-282a98f5 radio-wrapper">
-            <radio name="list" value="{{item}}" checked="{{avatar === item}}" class="_input data-v-282a98f5" />
-          </view>
-        </label></radio-group>
-    </view>
-    <i-row class="_i-row data-v-282a98f5">
-      <i-col span="12" offset="6" class="_i-col data-v-282a98f5">
-        <view style="padding: 20px 0" class="_div data-v-282a98f5">
-          <i-button bindtap="handleProxy" type="primary" long="true" shape="circle" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_i-button data-v-282a98f5">修改资料</i-button>
-        </view>
-      </i-col>
-    </i-row>
-  </view>
-</template>
+<template name="ec03861a"><view class="_div data-v-282a98f5 profile"><view class="_div data-v-282a98f5 title">个人信息</view> <view class="_div data-v-282a98f5 item"><view class="_div data-v-282a98f5 label">
+      昵称：
+    </view> <view class="_div data-v-282a98f5"><input type="text" class="_input data-v-282a98f5 input" placeholder="请输入新昵称" value="{{nick}}" bindinput="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" /></view></view> <view class="_div data-v-282a98f5 title">头像</view> <view class="_div data-v-282a98f5 avatar"><radio-group bindchange="handleProxy" class="_radio-group data-v-282a98f5 group" data-eventid="{{'1'}}" data-comkey="{{$k}}"><label wx:key="index" key="{{index}}" class="_label data-v-282a98f5 label" wx:for="{{imgArr}}" wx:for-index="index" wx:for-item="item"><image style="width: 40px; height: 40px; border-radius: 8px" src="{{item}}" class="_image data-v-282a98f5"></image> <view class="_div data-v-282a98f5 radio-wrapper"><radio name="list" value="{{item}}" checked="{{avatar === item}}" class="_input data-v-282a98f5" /></view></label></radio-group></view> <i-row class="_i-row data-v-282a98f5"><i-col span="12" offset="6" class="_i-col data-v-282a98f5"><view style="padding: 20px 0" class="_div data-v-282a98f5"><i-button bindtap="handleProxy" type="primary" long="true" shape="circle" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_i-button data-v-282a98f5">修改资料</i-button></view></i-col></i-row></view></template>

@@ -1,11 +1,5 @@
-<template name="3a23cc67">
-  <view class="_div data-v-67fa5f29 blacklist">
-    <view class="_div data-v-67fa5f29 slot">黑名单</view>
-    <view class="_div data-v-67fa5f29 wrapper">
-      <view wx:if="{{blacklist.length === 0}}" class="_div data-v-67fa5f29 none"> 你还没有拉黑任何人哦 </view>
-      <view class="_div data-v-67fa5f29 item" bindtap="handleProxy" wx:key="id" key="{{id}}" data-eventid="{{'0_'+index}}" data-comkey="{{$k}}" wx:for="{{blacklist}}" wx:for-index="index" wx:for-item="id">
-        {{ id }}
-      </view>
-    </view>
-  </view>
-</template>
+<template name="3a23cc67"><view class="_div data-v-67fa5f29 blacklist"><view class="_div data-v-67fa5f29 slot">黑名单</view> <view class="_div data-v-67fa5f29 wrapper"><view wx:if="{{blacklist.length === 0}}" class="_div data-v-67fa5f29 none">
+      你还没有拉黑任何人哦
+    </view> <view class="_div data-v-67fa5f29 item" bindtap="handleProxy" wx:key="id" key="{{id}}" data-eventid="{{'0_'+index}}" data-comkey="{{$k}}" wx:for="{{blacklist}}" wx:for-index="index" wx:for-item="id">
+      {{ id }}
+    </view></view></view></template>
