@@ -57,10 +57,11 @@
 - (void)setGroupInfo:(TIMGroupInfo *)groupInfo
 {
     if (groupInfo) {
-        if (groupInfo.groupName.length == 0)
+        if (groupInfo.groupName.length > 0) {
+            _idLabel.text = [NSString stringWithFormat:@"%@ (group id: %@)",groupInfo.groupName,groupInfo.group];
+        } else {
             _idLabel.text = groupInfo.group;
-        else
-            _idLabel.text = groupInfo.groupName;
+        }
         _idLabel.mm_sizeToFit().mm_center().mm_left(8);
         _line.mm_height(1).mm_width(self.mm_w).mm_bottom(0);
         _line.hidden = NO;
@@ -159,8 +160,10 @@
     NSLog(@"serach %@", inputStr);
 
     [[TIMGroupManager sharedInstance] getGroupInfo:@[inputStr] succ:^(NSArray *arr) {
-        if(arr.count == 1){
+        if(arr.count >= 1) {
             self.userView.groupInfo = arr[0];
+        } else {
+            self.userView.groupInfo = nil;
         }
     } fail:^(int code, NSString *msg) {
         self.userView.groupInfo = nil;

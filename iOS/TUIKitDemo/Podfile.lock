@@ -14,62 +14,58 @@ PODS:
   - AFNetworking/Serialization (3.2.1)
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
-  - FBRetainCycleDetector (0.1.4)
   - ISVImageScrollView (0.1.2)
   - MBProgressHUD (1.1.0)
-  - MLeaksFinder (1.0.0):
-    - FBRetainCycleDetector
   - MMLayout (0.2.0)
   - ReactiveObjC (3.1.1)
-  - SDWebImage (5.2.3):
-    - SDWebImage/Core (= 5.2.3)
-  - SDWebImage/Core (5.2.3)
+  - SDWebImage (5.3.1):
+    - SDWebImage/Core (= 5.3.1)
+  - SDWebImage/Core (5.3.1)
   - Toast (4.0.0)
-  - TXIMSDK_iOS (4.5.111)
-  - TXIMSDK_TUIKit_iOS (4.5.111):
+  - TXIMSDK_iOS (4.6.1)
+  - TXIMSDK_TUIKit_iOS (4.6.1):
     - ISVImageScrollView
     - MMLayout
     - ReactiveObjC
     - SDWebImage
     - Toast
     - TXIMSDK_iOS
+  - TXLiteAVSDK_TRTC (6.7.7758)
 
 DEPENDENCIES:
   - AFNetworking
   - MBProgressHUD
-  - MLeaksFinder
   - MMLayout
   - ReactiveObjC
   - SDWebImage
   - TXIMSDK_TUIKit_iOS
+  - TXLiteAVSDK_TRTC
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
-    - FBRetainCycleDetector
     - ISVImageScrollView
     - MBProgressHUD
-    - MLeaksFinder
     - MMLayout
     - ReactiveObjC
     - SDWebImage
     - Toast
     - TXIMSDK_iOS
     - TXIMSDK_TUIKit_iOS
+    - TXLiteAVSDK_TRTC
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
-  FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
   ISVImageScrollView: ba511d12a1661b40feb8921309c0854bf93ec749
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
-  MLeaksFinder: 8c435bd2f6d070af18cff082b503b21adc130fc0
   MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
-  SDWebImage: 46a7f73228f84ce80990c786e4372cf4db5875ce
+  SDWebImage: 7137d57385fb632129838c1e6ab9528a22c666cc
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_iOS: 5c952428d5a44f3c35f4fa5d37cf4aaec8f190e6
-  TXIMSDK_TUIKit_iOS: 048d7602c061c6f17f2e3727a0fb3f157cee314b
+  TXIMSDK_iOS: fe85c769896ebffcca191dfb24d93618dd736d62
+  TXIMSDK_TUIKit_iOS: 25ad776973bb5192ef62cddf4ea56e348393e6df
+  TXLiteAVSDK_TRTC: 1c67571b546a72a06401bdfe185714a400c49b8b
 
-PODFILE CHECKSUM: a136670c9c25694a02df9f7f48560f22fc3b2496
+PODFILE CHECKSUM: 3f738094aa69c2e51daf7cd6e3de46212490c177
 
 COCOAPODS: 1.7.5

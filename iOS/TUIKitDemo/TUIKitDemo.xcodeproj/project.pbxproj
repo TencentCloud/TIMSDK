@@ -24,6 +24,11 @@
 		CE37D1C422F9942B0012500D /* GenerateTestUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D1C222F9942B0012500D /* GenerateTestUserSig.m */; };
 		CE37D24A22F9CBC80012500D /* ProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D24822F9CBC80012500D /* ProfileController.m */; };
 		CECC13CE22B282C7008378A2 /* TCLoginParam.m in Sources */ = {isa = PBXBuildFile; fileRef = CECC13CD22B282C7008378A2 /* TCLoginParam.m */; };
+		CED3DD60237BECD00096D2E2 /* VideoCallManager+videoMeeting.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD57237BECD00096D2E2 /* VideoCallManager+videoMeeting.m */; };
+		CED3DD61237BECD00096D2E2 /* VideoCallCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD5A237BECD00096D2E2 /* VideoCallCell.m */; };
+		CED3DD62237BECD00096D2E2 /* VideoCallManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD5B237BECD00096D2E2 /* VideoCallManager.m */; };
+		CED3DD63237BECD00096D2E2 /* VideoCallCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD5F237BECD00096D2E2 /* VideoCallCellData.m */; };
+		CED3DD66237BF1EE0096D2E2 /* ChatViewController+video.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD65237BF1EE0096D2E2 /* ChatViewController+video.m */; };
 		CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014486216E1A4900C12E35 /* AppDelegate.m */; };
 		CF01448A216E1A4900C12E35 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014489216E1A4900C12E35 /* LoginController.m */; };
 		CF01448D216E1A4900C12E35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF01448B216E1A4900C12E35 /* Main.storyboard */; };
@@ -35,7 +40,7 @@
 		CFEB47752177981900CFD98C /* GroupInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47742177981900CFD98C /* GroupInfoController.m */; };
 		CFEB47782177982B00CFD98C /* GroupMemberController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47772177982B00CFD98C /* GroupMemberController.m */; };
 		CFEB47D02179B82300CFD98C /* SettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47CF2179B82300CFD98C /* SettingController.m */; };
-		E09A2F6CC5B0570A280D21CA /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBCF978C82A325488DA85D87 /* libPods-TUIKitDemo.a */; };
+		E7ED9B1F8520F432D1BF065E /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2DBC7B50E65863AA83F14AD /* libPods-TUIKitDemo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -77,6 +82,7 @@
 		91FE93A1227590EF00C17D6C /* NotifySetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotifySetupController.m; sourceTree = "<group>"; };
 		91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TFriendProfileController.m; sourceTree = "<group>"; };
 		91FE93E32276EF0F00C17D6C /* TFriendProfileController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TFriendProfileController.h; sourceTree = "<group>"; };
+		C2DBC7B50E65863AA83F14AD /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE0BDFA8221D53C60083E1B0 /* Bugly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bugly.framework; sourceTree = "<group>"; };
 		CE1A434322DE07EB008A767E /* PAirSandbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAirSandbox.m; sourceTree = "<group>"; };
 		CE1A434422DE07EB008A767E /* TCUploadHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUploadHelper.m; sourceTree = "<group>"; };
@@ -92,6 +98,16 @@
 		CE37D24922F9CBC80012500D /* ProfileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileController.h; sourceTree = "<group>"; };
 		CECC13CC22B282C7008378A2 /* TCLoginParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCLoginParam.h; sourceTree = "<group>"; };
 		CECC13CD22B282C7008378A2 /* TCLoginParam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLoginParam.m; sourceTree = "<group>"; };
+		CED3DD57237BECD00096D2E2 /* VideoCallManager+videoMeeting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoCallManager+videoMeeting.m"; sourceTree = "<group>"; };
+		CED3DD58237BECD00096D2E2 /* VideoCallManager+videoMeeting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoCallManager+videoMeeting.h"; sourceTree = "<group>"; };
+		CED3DD5A237BECD00096D2E2 /* VideoCallCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCallCell.m; sourceTree = "<group>"; };
+		CED3DD5B237BECD00096D2E2 /* VideoCallManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCallManager.m; sourceTree = "<group>"; };
+		CED3DD5C237BECD00096D2E2 /* VideoCallCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCallCellData.h; sourceTree = "<group>"; };
+		CED3DD5D237BECD00096D2E2 /* VideoCallCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCallCell.h; sourceTree = "<group>"; };
+		CED3DD5E237BECD00096D2E2 /* VideoCallManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCallManager.h; sourceTree = "<group>"; };
+		CED3DD5F237BECD00096D2E2 /* VideoCallCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCallCellData.m; sourceTree = "<group>"; };
+		CED3DD64237BF1EE0096D2E2 /* ChatViewController+video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ChatViewController+video.h"; sourceTree = "<group>"; };
+		CED3DD65237BF1EE0096D2E2 /* ChatViewController+video.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ChatViewController+video.m"; sourceTree = "<group>"; };
 		CF00884C2188772F00AD2879 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		CF00884D2188773000AD2879 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		CF014482216E1A4900C12E35 /* TUIKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TUIKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,7 +130,6 @@
 		CFEB47772177982B00CFD98C /* GroupMemberController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupMemberController.m; sourceTree = "<group>"; };
 		CFEB47CE2179B82300CFD98C /* SettingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingController.h; sourceTree = "<group>"; };
 		CFEB47CF2179B82300CFD98C /* SettingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingController.m; sourceTree = "<group>"; };
-		FBCF978C82A325488DA85D87 /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,7 +138,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */,
-				E09A2F6CC5B0570A280D21CA /* libPods-TUIKitDemo.a in Frameworks */,
+				E7ED9B1F8520F432D1BF065E /* libPods-TUIKitDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,7 +151,6 @@
 				4A94A8992A0612C1D8FEAB79 /* Pods-TUIKitDemo.debug.xcconfig */,
 				492D8F1F0DED1F83086F3E82 /* Pods-TUIKitDemo.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -177,6 +191,8 @@
 		9176C5B9227A987300DF5784 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				CED3DD56237BECD00096D2E2 /* Meeting */,
+				CED3DD59237BECD00096D2E2 /* VideoCall */,
 				91941A4A22AE409F00123596 /* Custom */,
 				CFEB47732177981900CFD98C /* GroupInfoController.h */,
 				CFEB47742177981900CFD98C /* GroupInfoController.m */,
@@ -184,6 +200,8 @@
 				CFEB47772177982B00CFD98C /* GroupMemberController.m */,
 				CFDC2FA3216E2D5E002EAEC2 /* ChatViewController.h */,
 				CFDC2FA4216E2D5E002EAEC2 /* ChatViewController.m */,
+				CED3DD64237BF1EE0096D2E2 /* ChatViewController+video.h */,
+				CED3DD65237BF1EE0096D2E2 /* ChatViewController+video.m */,
 				9176C5BD227A98A300DF5784 /* TUserProfileController.h */,
 				9176C5BC227A98A300DF5784 /* TUserProfileController.m */,
 			);
@@ -251,6 +269,28 @@
 			path = Debug;
 			sourceTree = "<group>";
 		};
+		CED3DD56237BECD00096D2E2 /* Meeting */ = {
+			isa = PBXGroup;
+			children = (
+				CED3DD57237BECD00096D2E2 /* VideoCallManager+videoMeeting.m */,
+				CED3DD58237BECD00096D2E2 /* VideoCallManager+videoMeeting.h */,
+			);
+			path = Meeting;
+			sourceTree = "<group>";
+		};
+		CED3DD59237BECD00096D2E2 /* VideoCall */ = {
+			isa = PBXGroup;
+			children = (
+				CED3DD5A237BECD00096D2E2 /* VideoCallCell.m */,
+				CED3DD5B237BECD00096D2E2 /* VideoCallManager.m */,
+				CED3DD5C237BECD00096D2E2 /* VideoCallCellData.h */,
+				CED3DD5D237BECD00096D2E2 /* VideoCallCell.h */,
+				CED3DD5E237BECD00096D2E2 /* VideoCallManager.h */,
+				CED3DD5F237BECD00096D2E2 /* VideoCallCellData.m */,
+			);
+			path = VideoCall;
+			sourceTree = "<group>";
+		};
 		CF014479216E1A4900C12E35 = {
 			isa = PBXGroup;
 			children = (
@@ -297,7 +337,7 @@
 			isa = PBXGroup;
 			children = (
 				CE0BDFA8221D53C60083E1B0 /* Bugly.framework */,
-				FBCF978C82A325488DA85D87 /* libPods-TUIKitDemo.a */,
+				C2DBC7B50E65863AA83F14AD /* libPods-TUIKitDemo.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -314,8 +354,8 @@
 				CF01447F216E1A4900C12E35 /* Frameworks */,
 				CF014480216E1A4900C12E35 /* Resources */,
 				CE4361FE21F5A5FA0070D6C9 /* Embed Frameworks */,
-				B2A65600FF8D3C09CA9FE6F1 /* [CP] Copy Pods Resources */,
-				5CDDBA481EDB7F4A293D5E96 /* [CP] Embed Pods Frameworks */,
+				61CAB06CE3F1C633914AD722 /* [CP] Embed Pods Frameworks */,
+				F9C3A4EE8D4492FFA622EB2B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -403,7 +443,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5CDDBA481EDB7F4A293D5E96 /* [CP] Embed Pods Frameworks */ = {
+		61CAB06CE3F1C633914AD722 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -420,7 +460,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B2A65600FF8D3C09CA9FE6F1 /* [CP] Copy Pods Resources */ = {
+		F9C3A4EE8D4492FFA622EB2B /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -457,9 +497,13 @@
 				91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */,
 				CE37D24A22F9CBC80012500D /* ProfileController.m in Sources */,
 				CE37D1C422F9942B0012500D /* GenerateTestUserSig.m in Sources */,
+				CED3DD61237BECD00096D2E2 /* VideoCallCell.m in Sources */,
+				CED3DD62237BECD00096D2E2 /* VideoCallManager.m in Sources */,
 				CFEB47D02179B82300CFD98C /* SettingController.m in Sources */,
 				9176C5BE227A98A300DF5784 /* TUserProfileController.m in Sources */,
 				CFDC2FA5216E2D5E002EAEC2 /* ChatViewController.m in Sources */,
+				CED3DD60237BECD00096D2E2 /* VideoCallManager+videoMeeting.m in Sources */,
+				CED3DD63237BECD00096D2E2 /* VideoCallCellData.m in Sources */,
 				91941A4D22AE40C300123596 /* MyCustomCellData.m in Sources */,
 				91D3AD3122AA06440036CDE0 /* Aspects.m in Sources */,
 				91FE93A2227590F000C17D6C /* NotifySetupController.m in Sources */,
@@ -468,6 +512,7 @@
 				CF014495216E1A4B00C12E35 /* main.m in Sources */,
 				CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */,
 				CFDC2FA2216E2C8F002EAEC2 /* ConversationController.m in Sources */,
+				CED3DD66237BF1EE0096D2E2 /* ChatViewController+video.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,6 +17,13 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "TUIVideoMessageCell.h"
 #import "TUIFileMessageCell.h"
+#import "TUITextMessageCell.h"
+#import "TUISystemMessageCell.h"
+#import "TUIVoiceMessageCell.h"
+#import "TUIImageMessageCell.h"
+#import "TUIFaceMessageCell.h"
+#import "TUIVideoMessageCell.h"
+#import "TUIFileMessageCell.h"
 #import "TUserProfileController.h"
 #import "TIMFriendshipManager.h"
 #import "TUIKit.h"
@@ -25,6 +32,8 @@
 #import "MyCustomCell.h"
 #import "TCUtil.h"
 #import "THelper.h"
+#import "ChatViewController+video.h"
+#import "VideoCallManager.h"
 
 // MLeaksFinder 会对这个类误报，这里需要关闭一下
 @implementation UIImagePickerController (Leak)
@@ -54,6 +63,16 @@
     RAC(self, title) = [RACObserve(_conversationData, title) distinctUntilChanged];
 
     NSMutableArray *moreMenus = [NSMutableArray arrayWithArray:_chat.moreMenus];
+    
+    if (_conversationData.convType == TIM_C2C) {
+        [moreMenus addObject:({
+            TUIInputMoreCellData *data = [TUIInputMoreCellData new];
+            data.image = [UIImage tk_imageNamed:@"more_video"];
+            data.title = @"视频通话";
+            data;
+        })];
+    }
+
     [moreMenus addObject:({
         TUIInputMoreCellData *data = [TUIInputMoreCellData new];
         data.image = [UIImage tk_imageNamed:@"more_custom"];
@@ -105,6 +124,16 @@
     }
 
 
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [[VideoCallManager shareInstance] setCurrentChatVC:self];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[VideoCallManager shareInstance] setCurrentChatVC:nil];
 }
 
 - (void)dealloc
@@ -206,6 +235,9 @@
         [cellData.innerMessage addElem:custom_elem];
 
         [chatController sendMessage:cellData];
+    } else if ([cell.data.title isEqualToString:@"视频通话"]) {
+        [[VideoCallManager shareInstance] setConversationData:self.conversationData];
+        [[VideoCallManager shareInstance] videoCall:chatController];
     }
 }
 
@@ -213,7 +245,7 @@
 {
     if (msg && msg.elemCount > 0) {
         TIMElem *elem = [msg getElem:0];
-        if([elem isKindOfClass:[TIMCustomElem class]]){
+        if([elem isKindOfClass:[TIMCustomElem class]]) {
             NSDictionary *param = [TCUtil jsonData2Dictionary:[(TIMCustomElem *)elem data]];
             if (param != nil && [param[@"version"] integerValue] == 1) {
                 MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
@@ -221,6 +253,8 @@
                 cellData.link = param[@"link"];
                 cellData.avatarUrl = [NSURL URLWithString:[[TIMFriendshipManager sharedInstance] querySelfProfile].faceURL];
                 return cellData;
+            } else if (param != nil && [param[@"version"] integerValue] == 2) {
+                return [self chatController:controller onNewVideoCallMessage:msg];
             }
         }
     }
@@ -234,6 +268,26 @@
         [myCell fillWithData:(MyCustomCellData *)data];
         return myCell;
     }
+    
+    if ([data isKindOfClass:[VideoCallCellData class]]) {
+        UInt32 state = [(VideoCallCellData *)data videoState];
+        if (state == VIDEOCALL_REQUESTING || state == VIDEOCALL_USER_CONNECTTING) {
+            return nil;
+        } else {
+            VideoCallCell *videoCallCell = [[VideoCallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"VideoCell"];
+            [videoCallCell fillWithData:(VideoCallCellData *)data];
+            @weakify(self);
+            @weakify(controller);
+            [videoCallCell setVidelClick:^{
+                @strongify(self);
+                @strongify(controller);
+                [[VideoCallManager shareInstance] setConversationData:self.conversationData];
+                [[VideoCallManager shareInstance] videoCall:controller];
+            }];
+            return videoCallCell;
+        }
+    }
+
     return nil;
 }
 
@@ -289,7 +343,9 @@
     }
 }
 
-
+- (void)sendMessage:(TUIMessageCellData*)msg {
+    [_chat sendMessage:msg];
+}
 
 //- (void)chatController:(TUIChatController *)controller onSelectMessageAvatar:(TUIMessageCell *)cell
 //{

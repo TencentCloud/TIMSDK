@@ -11,6 +11,6 @@ target 'TUIKitDemo' do
   pod 'SDWebImage'
   pod 'AFNetworking'
   pod 'ReactiveObjC'
-  pod 'MLeaksFinder'
   pod 'TXIMSDK_TUIKit_iOS'
+  pod 'TXLiteAVSDK_TRTC'
 end
