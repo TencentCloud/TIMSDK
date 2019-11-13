@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="#A0A0A0">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/content_image_iv"
@@ -26,11 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/content_image_iv"
         android:layout_alignRight="@+id/content_image_iv"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="5dp"
-        android:background="#05000000"
-        android:padding="2dp"
-        android:textColor="#fff"
-        android:textSize="10sp" />
+        android:layout_marginBottom="4dp"
+        android:layout_marginRight="6.5dp"
+        android:textColor="@color/white"
+        android:textSize="11sp" />
 
 </RelativeLayout>

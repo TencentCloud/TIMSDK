@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
 public class MessageTipsHolder extends MessageEmptyHolder {
 
@@ -44,9 +45,10 @@ public class MessageTipsHolder extends MessageEmptyHolder {
             if (msg.isSelf()) {
                 msg.setExtra("您撤回了一条消息");
             } else if (msg.isGroup()) {
-                String message = "\"<font color=\"#338BFF\">"
-                        + (TextUtils.isEmpty(msg.getGroupNameCard()) ? msg.getFromUser() : msg.getGroupNameCard())
-                        + "</font>\"";
+                String message = TUIKitConstants.covert2HTMLString(
+                        (TextUtils.isEmpty(msg.getGroupNameCard())
+                                ? msg.getFromUser()
+                                : msg.getGroupNameCard()));
                 msg.setExtra(message + "撤回了一条消息");
             } else {
                 msg.setExtra("对方撤回了一条消息");

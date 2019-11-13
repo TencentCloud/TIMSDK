@@ -59,14 +59,14 @@ public class MessageAudioHolder extends MessageContentHolder {
         params.addRule(RelativeLayout.CENTER_VERTICAL);
         if (msg.isSelf()) {
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            params.rightMargin = 25;
+            params.rightMargin = 24;
             audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
             audioContentView.removeView(audioPlayImage);
             audioContentView.addView(audioPlayImage);
             unreadAudioText.setVisibility(View.GONE);
         } else {
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            params.leftMargin = 25;
+            params.leftMargin = 24;
             // TODO 图标不对
             audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
             audioContentView.removeView(audioPlayImage);

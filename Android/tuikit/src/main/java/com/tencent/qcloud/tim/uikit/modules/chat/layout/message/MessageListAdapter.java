@@ -57,12 +57,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             case MSG_TYPE_HEADER_VIEW:
                 ((MessageHeaderHolder) baseHolder).setLoadingStatus(mLoading);
                 break;
-            case MessageInfo.MSG_TYPE_CUSTOM:
-                MessageCustomHolder customHolder = (MessageCustomHolder) holder;
-                if (mOnCustomMessageDrawListener != null) {
-                    mOnCustomMessageDrawListener.onDraw(customHolder, msg);
-                }
-                break;
             case MessageInfo.MSG_TYPE_TEXT:
             case MessageInfo.MSG_TYPE_IMAGE:
             case MessageInfo.MSG_TYPE_VIDEO:
@@ -77,6 +71,13 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 break;
         }
         baseHolder.layoutViews(msg, position);
+        // 对于自定义消息，需要在正常布局之后，交给外部调用者重新加载渲染
+        if (getItemViewType(position) == MessageInfo.MSG_TYPE_CUSTOM) {
+            MessageCustomHolder customHolder = (MessageCustomHolder) holder;
+            if (mOnCustomMessageDrawListener != null) {
+                mOnCustomMessageDrawListener.onDraw(customHolder, msg);
+            }
+        }
     }
 
     @Override
@@ -110,6 +111,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                     mRecycleView.scrollToEnd();
                 } else if (type == MessageLayout.DATA_CHANGE_TYPE_ADD_BACK) {
                     notifyItemRangeInserted(mDataSource.size() + 1, value);
+                    notifyDataSetChanged();
                     mRecycleView.scrollToEnd();
                 } else if (type == MessageLayout.DATA_CHANGE_TYPE_UPDATE) {
                     notifyItemChanged(value + 1);

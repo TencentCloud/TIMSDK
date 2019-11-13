@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tim.uikit;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConnListener;
@@ -31,6 +32,7 @@ import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,7 @@ import static com.tencent.qcloud.tim.uikit.utils.NetWorkUtils.sIMSDKConnected;
 
 public class TUIKitImpl {
 
-    private static final String TAG = TUIKitImpl.class.getSimpleName();
+    private static final String TAG = "TUIKit";
 
     private static Context sAppContext;
     private static TUIKitConfigs sConfigs;
@@ -52,14 +54,35 @@ public class TUIKitImpl {
      * @param configs  TUIKit的相关配置项，一般使用默认即可，需特殊配置参考API文档
      */
     public static void init(Context context, int sdkAppID, TUIKitConfigs configs) {
-        TUIKitLog.e("TUIKit", "init tuikit version: " + BuildConfig.VERSION_NAME);
+        TUIKitLog.e(TAG, "init tuikit version: " + BuildConfig.VERSION_NAME);
         sAppContext = context;
         sConfigs = configs;
         if (sConfigs.getGeneralConfig() == null) {
             GeneralConfig generalConfig = new GeneralConfig();
             sConfigs.setGeneralConfig(generalConfig);
         }
-        sConfigs.getGeneralConfig().setAppCacheDir(context.getFilesDir().getPath());
+        String dir = sConfigs.getGeneralConfig().getAppCacheDir();
+        if (TextUtils.isEmpty(dir)) {
+            TUIKitLog.e(TAG, "appCacheDir is empty, use default dir");
+            sConfigs.getGeneralConfig().setAppCacheDir(context.getFilesDir().getPath());
+        } else {
+            File file = new File(dir);
+            if (file.exists()) {
+                if (file.isFile()) {
+                    TUIKitLog.e(TAG, "appCacheDir is a file, use default dir");
+                    sConfigs.getGeneralConfig().setAppCacheDir(context.getFilesDir().getPath());
+                } else if (!file.canWrite()) {
+                    TUIKitLog.e(TAG, "appCacheDir can not write, use default dir");
+                    sConfigs.getGeneralConfig().setAppCacheDir(context.getFilesDir().getPath());
+                }
+            } else {
+                boolean ret = file.mkdirs();
+                if (!ret) {
+                    TUIKitLog.e(TAG, "appCacheDir is invalid, use default dir");
+                    sConfigs.getGeneralConfig().setAppCacheDir(context.getFilesDir().getPath());
+                }
+            }
+        }
         initIM(context, sdkAppID);
 
         BackgroundTasks.initInstance();

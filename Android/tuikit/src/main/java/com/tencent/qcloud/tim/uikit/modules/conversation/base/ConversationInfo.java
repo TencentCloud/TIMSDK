@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConversationInfo implements Serializable, Comparable<ConversationInfo> {
 
@@ -31,7 +33,16 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     /**
      * 会话头像url
      */
-    private String iconUrl;
+    private List<Object> iconUrlList = new ArrayList<>();
+
+    public List<Object> getIconUrlList() {
+        return iconUrlList;
+    }
+
+    public void setIconUrlList(List<Object> iconUrlList) {
+        this.iconUrlList = iconUrlList;
+    }
+
     /**
      * 会话标题
      */
@@ -78,14 +89,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.id = id;
     }
 
-    public String getIconUrl() {
-        return iconUrl;
-    }
-
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -100,14 +103,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     public void setUnRead(int unRead) {
         this.unRead = unRead;
-    }
-
-    public Bitmap getIcon() {
-        return icon;
-    }
-
-    public void setIcon(Bitmap icon) {
-        this.icon = icon;
     }
 
     public boolean isGroup() {
@@ -169,7 +164,7 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
                 ", unRead=" + unRead +
                 ", conversationId='" + conversationId + '\'' +
                 ", id='" + id + '\'' +
-                ", iconUrl='" + iconUrl + '\'' +
+                ", iconUrl='" + iconUrlList.size() + '\'' +
                 ", title='" + title + '\'' +
                 ", icon=" + icon +
                 ", isGroup=" + isGroup +

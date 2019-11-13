@@ -79,7 +79,7 @@ public class UserIconView extends RelativeLayout {
         mIconView.setRadius(mIconRadius);
     }
 
-    public void setIconUrls(List<String> iconUrls) {
+    public void setIconUrls(List<Object> iconUrls) {
         mIconView.displayImage(iconUrls).load();
     }
 

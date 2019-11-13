@@ -4,49 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:orientation="vertical"
-    android:paddingTop="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:paddingBottom="12.6dp"
+    android:paddingLeft="12.6dp"
+    android:paddingRight="12.6dp">
 
     <TextView
         android:id="@+id/chat_time_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/chat_time_margin"
-        android:background="@drawable/chat_time_border"
-        android:paddingLeft="5dp"
-        android:paddingTop="4dp"
-        android:paddingRight="5dp"
-        android:paddingBottom="4dp"
-        android:textColor="#fff"
-        android:textSize="12sp" />
+        android:includeFontPadding="false"
+        android:layout_marginBottom="20.58dp"
+        android:layout_marginTop="8.98dp"
+        android:textColor="@color/text_tips_color"
+        android:textSize="12.6sp" />
 
     <com.tencent.qcloud.tim.uikit.component.gatherimage.UserIconView
         android:id="@+id/left_user_icon_view"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="5.5dp"
-        android:layout_marginRight="3dp"
-        android:layout_marginBottom="3dp"
+        android:layout_width="41dp"
+        android:layout_height="41dp"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/chat_time_tv"
+        android:layout_marginRight="6.23dp"
         app:default_image="@drawable/default_user_icon"
-        app:image_radius="10dp"
+        app:image_radius="20dp"
         android:visibility="gone"/>
 
     <com.tencent.qcloud.tim.uikit.component.gatherimage.UserIconView
         android:id="@+id/right_user_icon_view"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginBottom="3dp"
+        android:layout_width="41dp"
+        android:layout_height="41dp"
         android:layout_alignParentRight="true"
+        android:layout_marginLeft="6.23dp"
         android:layout_below="@+id/chat_time_tv"
         app:default_image="@drawable/default_user_icon"
-        app:image_radius="10dp"
+        app:image_radius="20dp"
         android:visibility="gone"/>
 
     <TextView
@@ -56,9 +48,10 @@
         android:layout_below="@+id/chat_time_tv"
         android:layout_toLeftOf="@+id/right_user_icon_view"
         android:layout_toRightOf="@+id/left_user_icon_view"
-        android:textColor="#606060"
-        android:layout_marginLeft="5dp"
-        android:textSize="12sp"
+        android:layout_marginBottom="3.68dp"
+        android:textColor="@color/text_tips_color"
+        android:layout_marginLeft="6.67dp"
+        android:textSize="12.6sp"
         android:visibility="gone" />
 
     <LinearLayout
@@ -66,7 +59,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/user_name_tv"
-        android:layout_marginTop="2dp"
         android:layout_toLeftOf="@+id/right_user_icon_view"
         android:layout_toRightOf="@+id/left_user_icon_view"
         android:orientation="horizontal">
@@ -77,12 +69,12 @@
             android:layout_height="wrap_content"/>
 
         <ProgressBar
-                android:id="@+id/message_sending_pb"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="10dp"
-                android:visibility="gone" />
+            android:id="@+id/message_sending_pb"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/is_read_tv"

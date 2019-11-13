@@ -184,18 +184,24 @@ public class FaceManager {
     }
 
 
-    public static void handlerEmojiText(TextView comment, String content) {
+    public static void handlerEmojiText(TextView comment, String content, boolean typing) {
         SpannableStringBuilder sb = new SpannableStringBuilder(content);
         String regex = "\\[(\\S+?)\\]";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(content);
+        boolean imageFound = false;
         while (m.find()) {
             String emojiName = m.group();
             Bitmap bitmap = drawableCache.get(emojiName);
             if (bitmap != null) {
+                imageFound = true;
                 sb.setSpan(new ImageSpan(context, bitmap),
                         m.start(), m.end(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
             }
+        }
+        // 如果没有发现表情图片，并且当前是输入状态，不再重设输入框
+        if (!imageFound && typing) {
+            return;
         }
         int selection = comment.getSelectionStart();
         comment.setText(sb);

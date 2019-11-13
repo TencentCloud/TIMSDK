@@ -92,9 +92,9 @@ public class IndexBarDataHelperImpl implements IIndexBarDataHelper {
                     return 0;
                 } else if (!rhs.isNeedToPinyin()) {
                     return 0;
-                } else if (lhs.getBaseIndexTag().equals("#")) {
+                } else if (lhs.getBaseIndexTag().equals("#") && !rhs.getBaseIndexTag().equals("#")) {
                     return 1;
-                } else if (rhs.getBaseIndexTag().equals("#")) {
+                } else if (!lhs.getBaseIndexTag().equals("#") && rhs.getBaseIndexTag().equals("#")) {
                     return -1;
                 } else {
                     return lhs.getBaseIndexPinyin().compareTo(rhs.getBaseIndexPinyin());

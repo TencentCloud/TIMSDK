@@ -30,6 +30,10 @@ public class TUIKitConstants {
     public static String UI_PARAMS = "ilive_ui_params";
     public static String SOFT_KEY_BOARD_HEIGHT = "soft_key_board_height";
 
+    public static String covert2HTMLString(String original) {
+        return "\"<font color=\"#5B6B92\">" + original + "</font>\"";
+    }
+
     public static final class ActivityRequest {
         public static final int CODE_1 = 1;
     }

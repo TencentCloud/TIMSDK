@@ -14,7 +14,7 @@ import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
 
 public class UnreadCountTextView extends android.support.v7.widget.AppCompatTextView {
 
-    private int mNormalSize = ScreenUtil.getPxByDp(16);
+    private int mNormalSize = ScreenUtil.getPxByDp(18.4f);
     private Paint mPaint;
 
     public UnreadCountTextView(Context context) {
@@ -36,7 +36,7 @@ public class UnreadCountTextView extends android.support.v7.widget.AppCompatText
         mPaint = new Paint();
         mPaint.setColor(getResources().getColor(R.color.read_dot_bg));
         setTextColor(Color.WHITE);
-        setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
+        setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.6f);
     }
 
 
@@ -44,7 +44,7 @@ public class UnreadCountTextView extends android.support.v7.widget.AppCompatText
     protected void onDraw(Canvas canvas) {
         if (getText().length() == 0) {
             // 没有字符，就在本View中心画一个小圆点
-            int l = (getMeasuredWidth() - ScreenUtil.getPxByDp(7)) / 2;
+            int l = (getMeasuredWidth() - ScreenUtil.getPxByDp(10)) / 2;
             int t = l;
             int r = getMeasuredWidth() - l;
             int b = r;

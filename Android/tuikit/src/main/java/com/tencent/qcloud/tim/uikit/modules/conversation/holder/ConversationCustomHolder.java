@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationIconView;
 import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
-import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
 /**
  * 自定义会话Holder
@@ -22,13 +22,13 @@ public class ConversationCustomHolder extends ConversationBaseHolder {
     protected TextView messageText;
     protected TextView timelineText;
     protected TextView unreadText;
-    protected ImageView imageView;
+    protected ConversationIconView conversationIconView;
 
 
     public ConversationCustomHolder(View itemView) {
         super(itemView);
         leftItemLayout = rootView.findViewById(R.id.item_left);
-        imageView = rootView.findViewById(R.id.conversation_icon);
+        conversationIconView = rootView.findViewById(R.id.conversation_icon);
         titleText = rootView.findViewById(R.id.conversation_title);
         messageText = rootView.findViewById(R.id.conversation_last_msg);
         timelineText = rootView.findViewById(R.id.conversation_time);
@@ -38,13 +38,11 @@ public class ConversationCustomHolder extends ConversationBaseHolder {
     @Override
     public void layoutViews(ConversationInfo conversation, int position) {
         if (conversation.isTop()) {
-            leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.top_conversation_color));
+            leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.conversation_top_color));
         } else {
             leftItemLayout.setBackgroundColor(Color.WHITE);
         }
-        if (conversation.getIconUrl() != null) {
-            GlideEngine.loadImage(imageView, Uri.parse(conversation.getIconUrl()));
-        }
+        conversationIconView.setConversation(conversation);
 
         titleText.setText(conversation.getTitle());
         messageText.setText("");
@@ -52,7 +50,11 @@ public class ConversationCustomHolder extends ConversationBaseHolder {
 
         if (conversation.getUnRead() > 0) {
             unreadText.setVisibility(View.VISIBLE);
-            unreadText.setText("" + conversation.getUnRead());
+            if (conversation.getUnRead() > 99) {
+                unreadText.setText("99+");
+            } else {
+                unreadText.setText("" + conversation.getUnRead());
+            }
         } else {
             unreadText.setVisibility(View.GONE);
         }

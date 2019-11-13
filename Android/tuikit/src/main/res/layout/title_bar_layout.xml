@@ -26,7 +26,7 @@
             android:id="@+id/page_title_left_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@color/black_font_color"
             android:gravity="center"
             android:textSize="14sp"/>
 
@@ -39,9 +39,10 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:layout_weight="1"
+        android:textStyle="bold"
         android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="14sp" />
+        android:textColor="@color/black_font_color"
+        android:textSize="16.3sp" />
 
     <LinearLayout
         android:id="@+id/page_title_right_group"
@@ -59,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:textColor="@color/black"
+            android:textColor="@color/black_font_color"
             android:textSize="14sp"/>
 
         <ImageView
@@ -71,9 +72,4 @@
             android:src="@drawable/ic_personal_member" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#c2c2c2"
-        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

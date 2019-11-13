@@ -12,6 +12,7 @@ import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationIconVi
 import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.DateTimeUtil;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,9 +43,10 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             if (lastMsg.isSelf()) {
                 lastMsg.setExtra("您撤回了一条消息");
             } else if (lastMsg.isGroup()) {
-                String message = "\"<font color=\"#338BFF\">"
-                        + (TextUtils.isEmpty(lastMsg.getGroupNameCard()) ? lastMsg.getFromUser() : lastMsg.getGroupNameCard())
-                        + "</font>\"";
+                String message = TUIKitConstants.covert2HTMLString(
+                        TextUtils.isEmpty(lastMsg.getGroupNameCard())
+                                ? lastMsg.getFromUser()
+                                : lastMsg.getGroupNameCard());
                 lastMsg.setExtra(message + "撤回了一条消息");
             } else {
                 lastMsg.setExtra("对方撤回了一条消息");
@@ -52,23 +54,9 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         }
 
         if (conversation.isTop()) {
-            leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.top_conversation_color));
+            leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.conversation_top_color));
         } else {
             leftItemLayout.setBackgroundColor(Color.WHITE);
-        }
-        conversationIconView.setIconUrls(null); // 如果自己要设置url，这行代码需要删除
-        if (conversation.isGroup()) {
-            if (mAdapter.mIsShowItemRoundIcon) {
-                conversationIconView.setBitmapResId(R.drawable.conversation_group);
-            } else {
-                conversationIconView.setDefaultImageResId(R.drawable.conversation_group);
-            }
-        } else {
-            if (mAdapter.mIsShowItemRoundIcon) {
-                conversationIconView.setBitmapResId(R.drawable.conversation_c2c);
-            } else {
-                conversationIconView.setDefaultImageResId(R.drawable.conversation_c2c);
-            }
         }
 
         titleText.setText(conversation.getTitle());
@@ -82,10 +70,13 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(lastMsg.getMsgTime() * 1000)));
         }
 
-
         if (conversation.getUnRead() > 0) {
             unreadText.setVisibility(View.VISIBLE);
-            unreadText.setText("" + conversation.getUnRead());
+            if (conversation.getUnRead() > 99) {
+                unreadText.setText("99+");
+            } else {
+                unreadText.setText("" + conversation.getUnRead());
+            }
         } else {
             unreadText.setVisibility(View.GONE);
         }
@@ -103,11 +94,8 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 //            holder.unreadText.setVisibility(View.GONE);
 //        }
 
-        if (!TextUtils.isEmpty(conversation.getIconUrl())) {
-            List<String> urllist = new ArrayList<>();
-            urllist.add(conversation.getIconUrl());
-            conversationIconView.setIconUrls(urllist);
-            urllist.clear();
+        if (conversation.getIconUrlList() != null) {
+            conversationIconView.setConversation(conversation);
         }
 
         //// 由子类设置指定消息类型的views

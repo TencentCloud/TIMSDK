@@ -32,8 +32,8 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class MessageImageHolder extends MessageContentHolder {
 
-    private static final int DEFAULT_MAX_SIZE = 360;
-    private static final int DEFAULT_RADIUS = 5;
+    private static final int DEFAULT_MAX_SIZE = 540;
+    private static final int DEFAULT_RADIUS = 10;
     private final List<String> downloadEles = new ArrayList<>();
     private ImageView contentImage;
     private ImageView videoPlayBtn;

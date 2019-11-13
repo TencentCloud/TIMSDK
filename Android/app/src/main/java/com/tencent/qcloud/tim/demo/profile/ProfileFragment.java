@@ -50,10 +50,15 @@ public class ProfileFragment extends BaseFragment {
                                     @Override
                                     public void onError(int code, String desc) {
                                         ToastUtil.toastLongMessage("logout fail: " + code + "=" + desc);
+                                        logout();
                                     }
 
                                     @Override
                                     public void onSuccess() {
+                                        logout();
+                                    }
+
+                                    private void logout() {
                                         BaseActivity.logout(DemoApplication.instance(), false);
                                         TUIKit.unInit();
                                         if (getActivity() != null) {

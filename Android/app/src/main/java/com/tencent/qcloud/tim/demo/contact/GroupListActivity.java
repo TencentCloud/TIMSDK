@@ -61,7 +61,6 @@ public class GroupListActivity extends BaseActivity {
         });
 
         mListView = findViewById(R.id.group_list);
-        mListView.loadDataSource(ContactListView.DataSource.GROUP_LIST);
         mListView.setOnItemClickListener(new ContactListView.OnItemClickListener() {
             @Override
             public void onItemClick(int position, ContactItemBean contact) {

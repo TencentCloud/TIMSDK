@@ -20,7 +20,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:textColor="#000000"
-            android:textSize="13sp" />
+            android:textSize="14.5sp" />
 
         <ImageView
             android:id="@+id/audio_play_iv"

@@ -1,9 +1,11 @@
 package com.tencent.qcloud.tim.demo.helper;
 
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.component.face.CustomFace;
 import com.tencent.qcloud.tim.uikit.component.face.CustomFaceGroup;
 import com.tencent.qcloud.tim.uikit.config.CustomFaceConfig;
+import com.tencent.qcloud.tim.uikit.config.GeneralConfig;
 import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
 
 public class ConfigHelper {
@@ -13,8 +15,13 @@ public class ConfigHelper {
     }
 
     public TUIKitConfigs getConfigs() {
-        return TUIKit.getConfigs()
-                .setCustomFaceConfig(initCustomFaceConfig());
+        GeneralConfig config = new GeneralConfig();
+        // 显示对方是否已读的view将会展示
+        config.setShowRead(true);
+        config.setAppCacheDir(DemoApplication.instance().getFilesDir().getPath());
+        TUIKit.getConfigs().setGeneralConfig(config);
+        TUIKit.getConfigs().setCustomFaceConfig(initCustomFaceConfig());
+        return TUIKit.getConfigs();
     }
 
     private CustomFaceConfig initCustomFaceConfig() {

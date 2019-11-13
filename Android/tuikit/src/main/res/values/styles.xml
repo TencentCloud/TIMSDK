@@ -2,7 +2,7 @@
 <resources>
 
 
-    <style name="Theme_Transparent" parent="@android:style/Theme.DeviceDefault.Light.Dialog">
+    <style name="TUIKit_Theme_Transparent" parent="@android:style/Theme.DeviceDefault.Light.Dialog">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -11,7 +11,7 @@
 
 
     <!-- 自定义AlertDialog的样式 -->
-    <style name="AlertDialogStyle" parent="@android:style/Theme.Dialog">
+    <style name="TUIKit_AlertDialogStyle" parent="@android:style/Theme.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsFloating">true</item>

@@ -51,9 +51,9 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
         mLeftIcon = findViewById(R.id.page_title_left_icon);
         mRightIcon = findViewById(R.id.page_title_right_icon);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTitleLayout.getLayoutParams();
-        params.height = ScreenUtil.getPxByDp(45);
+        params.height = ScreenUtil.getPxByDp(50);
         mTitleLayout.setLayoutParams(params);
-        setBackgroundColor(getResources().getColor(R.color.main_bg_color));
+        setBackgroundColor(getResources().getColor(R.color.status_bar_color));
     }
 
     @Override

@@ -42,7 +42,6 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
         mTitleBar.getRightIcon().setImageResource(R.drawable.conversation_more);
 
         mContactListView = findViewById(R.id.contact_listview);
-        mContactListView.loadDataSource(ContactListView.DataSource.CONTACT_LIST);
     }
 
     public void initDefault() {

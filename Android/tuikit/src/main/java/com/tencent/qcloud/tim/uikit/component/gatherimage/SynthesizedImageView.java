@@ -20,7 +20,7 @@ public class SynthesizedImageView extends ShadeImageView {
     TeamHeadSynthesizer teamHeadSynthesizer;
     int imageSize = 100;
     int synthesizedBg = Color.parseColor("#cfd3d8");
-    int defaultImageResId = R.drawable.default_user_icon;
+    int defaultImageResId = 0;
     int imageGap = 6;
 
     public SynthesizedImageView(Context context) {
@@ -59,7 +59,7 @@ public class SynthesizedImageView extends ShadeImageView {
         teamHeadSynthesizer.setGap(imageGap);
     }
 
-    public SynthesizedImageView displayImage(List<String> imageUrls) {
+    public SynthesizedImageView displayImage(List<Object> imageUrls) {
         teamHeadSynthesizer.getMultiImageData().setImageUrls(imageUrls);
         return this;
     }
@@ -74,6 +74,9 @@ public class SynthesizedImageView extends ShadeImageView {
         return this;
     }
 
+    public void setImageId(String id) {
+        teamHeadSynthesizer.setImageId(id);
+    }
 
     public void load() {
         teamHeadSynthesizer.load();

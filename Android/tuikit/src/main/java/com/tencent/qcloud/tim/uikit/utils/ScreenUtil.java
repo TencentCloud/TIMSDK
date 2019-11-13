@@ -84,7 +84,7 @@ public class ScreenUtil {
         return metric.widthPixels;
     }
 
-    public static int getPxByDp(int dp) {
+    public static int getPxByDp(float dp) {
         float scale = TUIKit.getAppContext().getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }

@@ -15,6 +15,7 @@ import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.gatherimage.UserIconView;
+import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
 import java.util.ArrayList;
@@ -60,8 +61,8 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             leftUserIcon.setDefaultImageResId(properties.getAvatar());
             rightUserIcon.setDefaultImageResId(properties.getAvatar());
         } else {
-            leftUserIcon.setDefaultImageResId(R.drawable.chat_left);
-            rightUserIcon.setDefaultImageResId(R.drawable.chat_right);
+            leftUserIcon.setDefaultImageResId(R.drawable.default_head);
+            rightUserIcon.setDefaultImageResId(R.drawable.default_head);
         }
         if (properties.getAvatarRadius() != 0) {
             leftUserIcon.setRadius(properties.getAvatarRadius());
@@ -91,11 +92,6 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             } else {
                 usernameText.setVisibility(properties.getRightNameVisibility());
             }
-            if (usernameText.getVisibility() == View.GONE) {
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) msgContentLinear.getLayoutParams();
-                params.topMargin = 6;
-                msgContentLinear.setLayoutParams(params);
-            }
         } else {
             if (properties.getLeftNameVisibility() == 0) {
                 if (msg.isGroup()) { // 群聊默认显示对方的昵称
@@ -105,11 +101,6 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
                 }
             } else {
                 usernameText.setVisibility(properties.getLeftNameVisibility());
-            }
-            if (usernameText.getVisibility() == View.GONE) {
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) msgContentLinear.getLayoutParams();
-                params.topMargin = 17;
-                msgContentLinear.setLayoutParams(params);
             }
         }
         if (properties.getNameFontColor() != 0) {
@@ -129,7 +120,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
                 usernameText.setText(msg.getGroupNameCard());
             }
             if (!TextUtils.isEmpty(profile.getFaceUrl()) && !msg.isSelf()) {
-                List<String> urllist = new ArrayList<>();
+                List<Object> urllist = new ArrayList<>();
                 urllist.add(profile.getFaceUrl());
                 leftUserIcon.setIconUrls(urllist);
                 urllist.clear();
@@ -138,7 +129,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         TIMUserProfile selfInfo = TIMFriendshipManager.getInstance().queryUserProfile(TIMManager.getInstance().getLoginUser());
         if (selfInfo != null && msg.isSelf()) {
             if (!TextUtils.isEmpty(selfInfo.getFaceUrl())) {
-                List<String> urllist = new ArrayList<>();
+                List<Object> urllist = new ArrayList<>();
                 urllist.add(selfInfo.getFaceUrl());
                 rightUserIcon.setIconUrls(urllist);
                 urllist.clear();
@@ -214,24 +205,27 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             msgContentLinear.removeView(msgContentFrame);
             msgContentLinear.addView(msgContentFrame, 0);
         }
+        msgContentLinear.setVisibility(View.VISIBLE);
 
         //// 对方已读标识的设置
-        if (msg.isSelf()) {
-            if (msg.isGroup()) {
-                isReadText.setVisibility(View.GONE);
-            } else {
-                isReadText.setVisibility(View.VISIBLE);
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) isReadText.getLayoutParams();
-                params.gravity = Gravity.CENTER_VERTICAL;
-                isReadText.setLayoutParams(params);
-                if (msg.isPeerRead()) {
-                    isReadText.setText(R.string.has_read);
+        if (TUIKitConfigs.getConfigs().getGeneralConfig().isShowRead()) {
+            if (msg.isSelf()) {
+                if (msg.isGroup()) {
+                    isReadText.setVisibility(View.GONE);
                 } else {
-                    isReadText.setText(R.string.unread);
+                    isReadText.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) isReadText.getLayoutParams();
+                    params.gravity = Gravity.CENTER_VERTICAL;
+                    isReadText.setLayoutParams(params);
+                    if (msg.isPeerRead()) {
+                        isReadText.setText(R.string.has_read);
+                    } else {
+                        isReadText.setText(R.string.unread);
+                    }
                 }
+            } else {
+                isReadText.setVisibility(View.GONE);
             }
-        } else {
-            isReadText.setVisibility(View.GONE);
         }
 
         //// 音频已读

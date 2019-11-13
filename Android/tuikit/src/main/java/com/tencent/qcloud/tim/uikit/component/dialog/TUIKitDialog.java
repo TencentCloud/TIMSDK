@@ -69,7 +69,7 @@ public class TUIKitDialog {
         mLineImg = (ImageView) view.findViewById(R.id.img_line);
         mLineImg.setVisibility(View.GONE);
 
-        dialog = new Dialog(mContext, R.style.AlertDialogStyle);
+        dialog = new Dialog(mContext, R.style.TUIKit_AlertDialogStyle);
         dialog.setContentView(view);
 
         mBackgroundLayout.setLayoutParams(new FrameLayout.LayoutParams((int) (mDisplay.getWidth() * dialogWidth), LayoutParams.WRAP_CONTENT));
