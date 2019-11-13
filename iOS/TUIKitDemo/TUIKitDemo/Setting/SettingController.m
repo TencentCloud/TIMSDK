@@ -18,7 +18,7 @@
 #import "TUIProfileCardCell.h"
 #import "TUIButtonCell.h"
 #import "THeader.h"
-#import "IMMessageExt.h"
+#import "ImSDK.h"
 #import "TTextEditController.h"
 #import "TDateEditController.h"
 #import "NotifySetupController.h"
@@ -173,7 +173,7 @@
     [_data addObject:@[friendApply, messageNotify]];
 
     TCommonTextCellData *about = [TCommonTextCellData new];
-    about.key = @"关于云通信IM";
+    about.key = @"关于腾讯·云通信";
     about.showAccessory = YES;
     about.cselector = @selector(didSelectAbout);
     [_data addObject:@[about]];

@@ -24,6 +24,8 @@
 #import "TNaviBarIndicatorView.h"
 #import "TUIKit.h"
 #import "THelper.h"
+#import "TCUtil.h"
+#import "VideoCallManager.h"
 #import "TIMUserProfile+DataProvider.h"
 
 #import <ImSDK/ImSDK.h>
@@ -52,6 +54,9 @@
     self.navigationItem.rightBarButtonItem = moreItem;
 
     [self setupNavigation];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+    selector:@selector(onNewMessageNotification:) name:TUIKitNotification_TIMMessageListener object:nil];
 }
 
 /**
@@ -60,7 +65,7 @@
 - (void)setupNavigation
 {
     _titleView = [[TNaviBarIndicatorView alloc] init];
-    [_titleView setTitle:@"云通信IM"];
+    [_titleView setTitle:@"腾讯·云通信"];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
 
@@ -75,7 +80,7 @@
     TUINetStatus status = (TUINetStatus)[notification.object intValue];
     switch (status) {
         case TNet_Status_Succ:
-            [_titleView setTitle:@"云通信IM"];
+            [_titleView setTitle:@"腾讯·云通信"];
             [_titleView stopAnimating];
             break;
         case TNet_Status_Connecting:
@@ -83,11 +88,11 @@
             [_titleView startAnimating];
             break;
         case TNet_Status_Disconnect:
-            [_titleView setTitle:@"云通信IM(未连接)"];
+            [_titleView setTitle:@"腾讯·云通信(未连接)"];
             [_titleView stopAnimating];
             break;
         case TNet_Status_ConnFailed:
-            [_titleView setTitle:@"云通信IM(未连接)"];
+            [_titleView setTitle:@"腾讯·云通信(未连接)"];
             [_titleView stopAnimating];
             break;
 
@@ -291,4 +296,21 @@
         [THelper makeToastError:code msg:msg];
     }];
 }
+
+- (void)onNewMessageNotification:(NSNotification *)no
+{
+    NSArray<TIMMessage *> *msgs = no.object;
+    for (TIMMessage *msg in msgs) {
+        
+        TIMElem *elem = [msg getElem:0];
+        if ([elem isKindOfClass:[TIMCustomElem class]]) {
+            TIMCustomElem *custom = (TIMCustomElem *)elem;
+            NSDictionary *param = [TCUtil jsonData2Dictionary:[custom data]];
+            if (param != nil && [param[@"version"] integerValue] == 2) {
+                [[VideoCallManager shareInstance] onNewVideoCallMessage:msg];
+            }
+        }
+    }
+}
+
 @end

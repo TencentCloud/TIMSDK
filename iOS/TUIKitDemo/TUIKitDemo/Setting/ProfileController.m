@@ -11,7 +11,7 @@
 #import "AppDelegate.h"
 #import "TUIButtonCell.h"
 #import "THeader.h"
-#import "IMMessageExt.h"
+#import "ImSDK.h"
 #import "TTextEditController.h"
 #import "TDateEditController.h"
 #import "NotifySetupController.h"
