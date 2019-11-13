@@ -357,8 +357,6 @@ public class MessageInfoUtil {
             TIMGroupMemberInfo memberInfo = timMessage.getSenderGroupMemberProfile();
             if (memberInfo != null && !TextUtils.isEmpty(memberInfo.getNameCard())) {
                 msgInfo.setGroupNameCard(memberInfo.getNameCard());
-            } else {
-                msgInfo.setGroupNameCard(sender);
             }
         }
         msgInfo.setMsgTime(timMessage.timestamp());
@@ -370,7 +368,10 @@ public class MessageInfoUtil {
             String data = new String(customElem.getData());
             if (data.equals(GROUP_CREATE)) {
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_CREATE);
-                String message = wrapperColor(TextUtils.isEmpty(msgInfo.getGroupNameCard()) ? msgInfo.getFromUser() : msgInfo.getGroupNameCard()) + "创建群组";
+                String message = TUIKitConstants.covert2HTMLString(
+                        TextUtils.isEmpty(msgInfo.getGroupNameCard())
+                                ? msgInfo.getFromUser()
+                                : msgInfo.getGroupNameCard()) + "创建群组";
                 msgInfo.setExtra(message);
             } else if (data.equals(GROUP_DELETE)) {
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_DELETE);
@@ -402,7 +403,7 @@ public class MessageInfoUtil {
             } else {
                 user = groupTips.getOpUserInfo().getIdentifier();
             }
-            String message = wrapperColor(user);
+            String message = TUIKitConstants.covert2HTMLString(user);
             if (tipsType == TIMGroupTipsType.Join) {
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_JOIN);
                 message = message + "加入群组";
@@ -561,32 +562,33 @@ public class MessageInfoUtil {
                     filename = System.currentTimeMillis() + fileElem.getFileName();
                 }
                 final String path = TUIKitConstants.FILE_DOWNLOAD_DIR + filename;
-                if (!msgInfo.isSelf()) {
-                    File file = new File(path);
-                    if (!file.exists()) {
-                        msgInfo.setStatus(MessageInfo.MSG_STATUS_UN_DOWNLOAD);
+                File file = new File(path);
+                if (file.exists()) {
+                    if (msgInfo.isSelf()) {
+                        msgInfo.setStatus(MessageInfo.MSG_STATUS_SEND_SUCCESS);
                     } else {
                         msgInfo.setStatus(MessageInfo.MSG_STATUS_DOWNLOADED);
                     }
                     msgInfo.setDataPath(path);
                 } else {
-                    if (TextUtils.isEmpty(fileElem.getPath())) {
-                        fileElem.getToFile(path, new TIMCallBack() {
-                            @Override
-                            public void onError(int code, String desc) {
-                                TUIKitLog.e("MessageInfoUtil getToFile", code + ":" + desc);
-                            }
-
-                            @Override
-                            public void onSuccess() {
+                    if (msgInfo.isSelf()) {
+                        if (TextUtils.isEmpty(fileElem.getPath())) {
+                            msgInfo.setStatus(MessageInfo.MSG_STATUS_UN_DOWNLOAD);
+                            msgInfo.setDataPath(path);
+                        } else {
+                            file = new File(fileElem.getPath());
+                            if (file.exists()) {
+                                msgInfo.setStatus(MessageInfo.MSG_STATUS_SEND_SUCCESS);
+                                msgInfo.setDataPath(fileElem.getPath());
+                            } else {
+                                msgInfo.setStatus(MessageInfo.MSG_STATUS_UN_DOWNLOAD);
                                 msgInfo.setDataPath(path);
                             }
-                        });
+                        }
                     } else {
-                        msgInfo.setStatus(MessageInfo.MSG_STATUS_SEND_SUCCESS);
-                        msgInfo.setDataPath(fileElem.getPath());
+                        msgInfo.setStatus(MessageInfo.MSG_STATUS_UN_DOWNLOAD);
+                        msgInfo.setDataPath(path);
                     }
-
                 }
                 msgInfo.setExtra("[文件]");
             }
@@ -599,7 +601,7 @@ public class MessageInfoUtil {
             if (msgInfo.isSelf()) {
                 msgInfo.setExtra("您撤回了一条消息");
             } else if (msgInfo.isGroup()) {
-                String message = wrapperColor(msgInfo.getFromUser());
+                String message = TUIKitConstants.covert2HTMLString(msgInfo.getFromUser());
                 msgInfo.setExtra(message + "撤回了一条消息");
             } else {
                 msgInfo.setExtra("对方撤回了一条消息");
@@ -616,10 +618,6 @@ public class MessageInfoUtil {
             }
         }
         return msgInfo;
-    }
-
-    private static String wrapperColor(String raw) {
-        return "\"<font color=\"#338BFF\">" + raw + "</font>\"";
     }
 
     private static int TIMElemType2MessageInfoType(TIMElemType type) {

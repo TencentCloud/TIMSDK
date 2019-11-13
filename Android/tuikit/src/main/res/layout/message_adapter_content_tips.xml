@@ -2,24 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/chat_time_margin"
-    android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/chat_tips_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:includeFontPadding="false"
         android:gravity="center"
-        android:background="@drawable/chat_time_border"
-        android:textColor="#fff"
+        android:textColor="@color/text_tips_color"
         android:clickable="true"
-        android:paddingBottom="4dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="4dp"
-        android:textSize="12sp" />
+        android:textSize="14.2sp" />
 
 </LinearLayout>

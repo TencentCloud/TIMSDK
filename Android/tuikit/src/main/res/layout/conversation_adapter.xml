@@ -4,32 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#FFFFFF"
-    android:paddingTop="10dp"
-    android:paddingLeft="10dp"
+    android:paddingTop="12dp"
+    android:paddingLeft="14.85dp"
     android:orientation="horizontal">
 
         <com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationIconView
             android:id="@+id/conversation_icon"
-            android:layout_width="@dimen/item_width"
-            android:layout_height="@dimen/item_height" />
+            android:layout_width="@dimen/conversation_avatar_width"
+            android:layout_height="@dimen/conversation_avatar_height" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_height="50dp">
+            android:paddingTop="1.37dp"
+            android:paddingLeft="11.43dp"
+            android:paddingRight="18.11dp"
+            android:layout_height="62.3dp">
 
             <TextView
                 android:id="@+id/conversation_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="top|left"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/black"
+                android:textColor="@color/black_font_color"
                 android:text="aaa"
-                android:textSize="14sp" />
+                android:textSize="16.3sp" />
 
             <TextView
                 android:id="@+id/conversation_time"
@@ -37,9 +39,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:text="bbb"
-                android:textColor="@color/list_bottom_text_bg"
-                android:textSize="10sp" />
+                android:textColor="@color/conversation_time_color"
+                android:textSize="11.14sp" />
 
             <TextView
                 android:id="@+id/conversation_last_msg"
@@ -47,14 +48,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="10dp"
+                android:layout_marginRight="48dp"
+                android:layout_marginBottom="15.54dp"
                 android:layout_above="@+id/view_line"
-                android:layout_toLeftOf="@+id/conversation_unread"
-                android:text="ccc"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@color/list_bottom_text_bg"
-                android:textSize="12sp" />
+                android:textSize="12.86sp" />
 
 
             <com.tencent.qcloud.tim.uikit.component.UnreadCountTextView
@@ -64,8 +64,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_above="@+id/view_line"
-                android:text="ddd"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="15.54dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="#fff"
@@ -74,9 +73,10 @@
             <View
                 android:id="@+id/view_line"
                 android:layout_alignParentBottom="true"
+                android:layout_marginTop="12dp"
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/main_bg_color" />
+                android:layout_height="0.3dp"
+                android:background="@color/split_lint_color" />
         </RelativeLayout>
 
 </LinearLayout>

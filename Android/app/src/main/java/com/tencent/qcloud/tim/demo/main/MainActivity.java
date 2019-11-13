@@ -111,7 +111,6 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
         switch (view.getId()) {
             case R.id.conversation_btn_group:
                 current = new ConversationFragment();
-                ;
                 mConversationBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.conversation_selected), null, null);
                 break;
@@ -124,6 +123,8 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
                 current = new ProfileFragment();
                 mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_selected), null, null);
+                break;
+            default:
                 break;
         }
 

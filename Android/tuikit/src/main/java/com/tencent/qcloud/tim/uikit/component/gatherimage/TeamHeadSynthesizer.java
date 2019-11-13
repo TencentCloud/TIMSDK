@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tim.uikit.component.gatherimage;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,10 +11,14 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
+import com.tencent.imsdk.TIMManager;
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
 import com.tencent.qcloud.tim.uikit.utils.MD5Utils;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.uikit.utils.ThreadHelper;
 
 import java.io.File;
 import java.util.List;
@@ -33,16 +38,24 @@ public class TeamHeadSynthesizer implements Synthesizer {
     ImageView imageView;
     int bgColor = Color.parseColor("#cfd3d8");
     boolean loadOk;//加载完毕
+    private String mImageId = "";
+    private final String SP_IMAGE = "conversation_group_face";
     Callback callback = new Callback() {
         @Override
         public void onCall(Object obj, String targetID, boolean complete) {
             //判断回调结果的任务id是否为同一批次的任务
-            if (!TextUtils.equals(currentTargetID, targetID)) return;
+            if (!TextUtils.equals(currentTargetID, targetID)) {
+                return;
+            }
             if (obj instanceof File) {
-                if (complete) loadOk = true;
+                if (complete) {
+                    loadOk = true;
+                }
                 imageView.setImageBitmap(BitmapFactory.decodeFile(((File) obj).getAbsolutePath()));
             } else if (obj instanceof Bitmap) {
-                if (complete) loadOk = true;
+                if (complete) {
+                    loadOk = true;
+                }
                 imageView.setImageBitmap(((Bitmap) obj));
             }
         }
@@ -136,26 +149,19 @@ public class TeamHeadSynthesizer implements Synthesizer {
     @Override
     public boolean asyncLoadImageList() {
         boolean loadSuccess = true;
-        List<String> imageUrls = multiImageData.getImageUrls();
+        List<Object> imageUrls = multiImageData.getImageUrls();
         for (int i = 0; i < imageUrls.size(); i++) {
-            String imageUrl = imageUrls.get(i);
-            if (TextUtils.isEmpty(imageUrl)) {
-                //图片链接不存在
-                continue;
-            } else {
-                //下载图片
-                try {
-                    Bitmap bitmap = asyncLoadImage(imageUrl, targetImageSize);
-                    multiImageData.putBitmap(bitmap, i);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    multiImageData.putBitmap(null, i);
-                    loadSuccess = false;
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                    multiImageData.putBitmap(null, i);
-                    loadSuccess = false;
-                }
+            Bitmap defaultIcon = BitmapFactory. decodeResource(mContext.getResources(), R.drawable.default_user_icon);
+            //下载图片
+            try {
+                Bitmap bitmap = asyncLoadImage(imageUrls.get(i), targetImageSize);
+                multiImageData.putBitmap(bitmap, i);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                multiImageData.putBitmap(defaultIcon, i);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+                multiImageData.putBitmap(defaultIcon, i);
             }
         }
         //下载完毕
@@ -266,8 +272,12 @@ public class TeamHeadSynthesizer implements Synthesizer {
      * @param targetImageSize
      * @return
      */
-    private Bitmap asyncLoadImage(String imageUrl, int targetImageSize) throws ExecutionException, InterruptedException {
+    private Bitmap asyncLoadImage(Object imageUrl, int targetImageSize) throws ExecutionException, InterruptedException {
         return GlideEngine.loadBitmap(imageUrl, targetImageSize);
+    }
+
+    public void setImageId(String id) {
+        mImageId = id;
     }
 
     public void load() {
@@ -277,16 +287,15 @@ public class TeamHeadSynthesizer implements Synthesizer {
         }
 
         if (multiImageData.size() == 1) {
-            imageView.setImageResource(getDefaultImage());
-            GlideEngine.loadImage(imageView, Uri.parse(multiImageData.getImageUrls().get(0)));
+            GlideEngine.loadImage(imageView, multiImageData.getImageUrls().get(0));
             return;
         }
 
         String newTargetID = buildTargetSynthesizedId();
-        /*if (loadOk && null != imageView.getDrawable() && TextUtils.equals(currentTargetID, newTargetID)) {
+        if (loadOk && null != imageView.getDrawable() && TextUtils.equals(currentTargetID, newTargetID)) {
             //两次加载的图片是一样的，而且已经加载成功了，图片没有被回收,此时无需重复加载
             return;
-        }*/
+        }
         currentTargetID = newTargetID;
         //初始化图片信息
         int[] gridParam = calculateGridParam(multiImageData.size());
@@ -294,10 +303,9 @@ public class TeamHeadSynthesizer implements Synthesizer {
         mColumnCount = gridParam[1];
         targetImageSize = (maxWidth - (mColumnCount + 1) * mGap) / (mColumnCount == 1 ? 2 : mColumnCount);//图片尺寸
         //imageView.setImageResource(multiImageData.getDefaultImageResId());
-        new Thread() {
+        ThreadHelper.INST.execute(new Runnable() {
             @Override
             public void run() {
-                super.run();
                 final String targetID = currentTargetID;
                 //根据id获取存储的文件路径
                 String absolutePath = mContext.getFilesDir().getAbsolutePath();
@@ -321,6 +329,13 @@ public class TeamHeadSynthesizer implements Synthesizer {
                     if (loadSuccess) {
                         //所有图片加载成功，则保存合成图片
                         ImageUtil.storeBitmap(file, bitmap);
+                        if (!TextUtils.isEmpty(mImageId)) {
+                            SharedPreferences sp = TUIKit.getAppContext().getSharedPreferences(
+                                    TIMManager.getInstance().getLoginUser() + SP_IMAGE, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putString(mImageId, file.getAbsolutePath());
+                            editor.apply();
+                        }
                     }
                     //执行回调
                     //判断当前图片的多个小图是否全部加载完全的，如果加载完全的，complete=true;
@@ -340,7 +355,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
                     });
                 }
             }
-        }.start();
+        });
     }
 
     /**
@@ -351,8 +366,8 @@ public class TeamHeadSynthesizer implements Synthesizer {
         int size = multiImageData.size();
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < size; i++) {
-            String imageUrl = multiImageData.getImageUrls().get(i);
-            buffer.append(i + imageUrl);
+            Object imageUrl = multiImageData.getImageUrls().get(i);
+            buffer.append(i + "" + imageUrl);
         }
         return MD5Utils.getMD5String(buffer.toString());
     }

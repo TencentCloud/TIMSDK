@@ -37,7 +37,6 @@ public class BlackListActivity extends BaseActivity {
         mTitleBar.getRightGroup().setVisibility(View.GONE);
 
         mListView = findViewById(R.id.black_list);
-        mListView.loadDataSource(ContactListView.DataSource.BLACK_LIST);
         mListView.setOnItemClickListener(new ContactListView.OnItemClickListener() {
             @Override
             public void onItemClick(int position, ContactItemBean contact) {

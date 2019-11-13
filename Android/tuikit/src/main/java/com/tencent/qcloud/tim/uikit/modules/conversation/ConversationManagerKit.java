@@ -10,6 +10,7 @@ import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMElemType;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupManager;
+import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMGroupSystemElem;
 import com.tencent.imsdk.TIMGroupSystemElemType;
 import com.tencent.imsdk.TIMManager;
@@ -19,8 +20,11 @@ import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
+import com.tencent.imsdk.ext.group.TIMGroupMemberRoleFilter;
+import com.tencent.imsdk.ext.group.TIMGroupMemberSucc;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.friendship.TIMFriend;
+import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
@@ -31,6 +35,7 @@ import com.tencent.qcloud.tim.uikit.utils.SharedPreferenceUtils;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -41,6 +46,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
     private final static String TAG = ConversationManagerKit.class.getSimpleName();
     private final static String SP_NAME = "top_conversion_list";
     private final static String TOP_LIST = "top_list";
+    private final String SP_IMAGE = "conversation_group_face";
 
     private static ConversationManagerKit instance = new ConversationManagerKit();
 
@@ -218,123 +224,9 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
             info.setLastMessage(list.get(list.size() - 1));
         }
         if (isGroup) {
-            TIMGroupDetailInfo groupDetailInfo = TIMGroupManager.getInstance().queryGroupInfo(conversation.getPeer());
-            if (groupDetailInfo == null) {
-                if (TextUtils.isEmpty(conversation.getGroupName())) {
-                    info.setTitle(conversation.getPeer());
-                } else {
-                    info.setTitle(conversation.getGroupName());
-                }
-                final ArrayList<String> ids = new ArrayList<>();
-                ids.add(conversation.getPeer());
-                TIMGroupManager.getInstance().getGroupInfo(ids, new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
-                    @Override
-                    public void onError(int code, String desc) {
-                        TUIKitLog.e(TAG, "getGroupInfo failed! code: " + code + " desc: " + desc);
-                    }
-
-                    @Override
-                    public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
-                        if (timGroupDetailInfoResults == null || timGroupDetailInfoResults.size() != 1) {
-                            TUIKitLog.i(TAG, "No GroupInfo");
-                            return;
-                        }
-                        TIMGroupDetailInfoResult result = timGroupDetailInfoResults.get(0);
-                        if (result != null) {
-                            if (TextUtils.isEmpty(result.getGroupName())) {
-                                info.setTitle(result.getGroupId());
-                            } else {
-                                info.setTitle(result.getGroupName());
-                            }
-                        }
-                    }
-                });
-            } else {
-                info.setIconUrl(groupDetailInfo.getFaceUrl());
-                if (TextUtils.isEmpty(groupDetailInfo.getGroupName())) {
-                    info.setTitle(groupDetailInfo.getGroupId());
-                } else {
-                    info.setTitle(groupDetailInfo.getGroupName());
-                }
-            }
+            fillConversationWithGroupInfo(conversation, info);
         } else {
-            String title = conversation.getPeer();
-            String faceUrl = null;
-            final ArrayList<String> ids = new ArrayList<>();
-            ids.add(conversation.getPeer());
-            TIMUserProfile profile = TIMFriendshipManager.getInstance().queryUserProfile(conversation.getPeer());
-            if (profile == null) {
-                TIMFriendshipManager.getInstance().getUsersProfile(ids, false, new TIMValueCallBack<List<TIMUserProfile>>() {
-                    @Override
-                    public void onError(int code, String desc) {
-                        TUIKitLog.e(TAG, "getUsersProfile failed! code: " + code + " desc: " + desc);
-                    }
-
-                    @Override
-                    public void onSuccess(List<TIMUserProfile> timUserProfiles) {
-                        if (timUserProfiles == null || timUserProfiles.size() != 1) {
-                            TUIKitLog.i(TAG, "No TIMUserProfile");
-                            return;
-                        }
-                        TIMUserProfile profile = timUserProfiles.get(0);
-                        String faceUrl = null;
-                        if (profile != null && !TextUtils.isEmpty(profile.getFaceUrl())) {
-                            faceUrl = profile.getFaceUrl();
-                        }
-                        String title = conversation.getPeer();
-                        if (profile != null && !TextUtils.isEmpty(profile.getNickName())) {
-                            title = profile.getNickName();
-                        }
-                        info.setTitle(title);
-                        info.setIconUrl(faceUrl);
-                        mProvider.updateAdapter();
-                    }
-                });
-            } else {
-                if (!TextUtils.isEmpty(profile.getNickName())) {
-                    title = profile.getNickName();
-                }
-                if (!TextUtils.isEmpty(profile.getFaceUrl())) {
-                    faceUrl = profile.getFaceUrl();
-                }
-                info.setTitle(title);
-                info.setIconUrl(faceUrl);
-            }
-
-            TIMFriend friend = TIMFriendshipManager.getInstance().queryFriend(conversation.getPeer());
-            if (friend == null) {
-                TIMFriendshipManager.getInstance().getFriendList(new TIMValueCallBack<List<TIMFriend>>() {
-                    @Override
-                    public void onError(int code, String desc) {
-                        TUIKitLog.e(TAG, "getFriendList failed! code: " + code + " desc: " + desc);
-                    }
-
-                    @Override
-                    public void onSuccess(List<TIMFriend> timFriends) {
-                        if (timFriends == null || timFriends.size() == 0) {
-                            TUIKitLog.i(TAG, "No Friends");
-                            return;
-                        }
-                        for (TIMFriend friend : timFriends) {
-                            if (!TextUtils.equals(conversation.getPeer(), friend.getIdentifier())) {
-                                continue;
-                            }
-                            if (TextUtils.isEmpty(friend.getRemark())) {
-                                continue;
-                            }
-                            info.setTitle(friend.getRemark());
-                            mProvider.updateAdapter();
-                            return;
-                        }
-                        TUIKitLog.i(TAG, conversation.getPeer() + " is not my friend");
-                    }
-                });
-            } else {
-                if (!TextUtils.isEmpty(friend.getRemark())) {
-                    title = friend.getRemark();
-                    info.setTitle(title);
-                }
-            }
+            fillConversationWithUserProfile(conversation, info);
         }
         info.setId(conversation.getPeer());
         info.setGroup(conversation.getType() == TIMConversationType.Group);
@@ -345,6 +237,212 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
         return info;
     }
 
+    private void fillConversationWithUserProfile(final TIMConversation conversation, final ConversationInfo info) {
+        String title = conversation.getPeer();
+        final ArrayList<String> ids = new ArrayList<>();
+        ids.add(conversation.getPeer());
+        TIMUserProfile profile = TIMFriendshipManager.getInstance().queryUserProfile(conversation.getPeer());
+        if (profile == null) {
+            TIMFriendshipManager.getInstance().getUsersProfile(ids, false, new TIMValueCallBack<List<TIMUserProfile>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    TUIKitLog.e(TAG, "getUsersProfile failed! code: " + code + " desc: " + desc);
+                }
+
+                @Override
+                public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                    if (timUserProfiles == null || timUserProfiles.size() != 1) {
+                        TUIKitLog.i(TAG, "No TIMUserProfile");
+                        return;
+                    }
+                    TIMUserProfile profile = timUserProfiles.get(0);
+                    List<Object> face = new ArrayList<>();
+                    if (profile != null && !TextUtils.isEmpty(profile.getFaceUrl())) {
+                        face.add(profile.getFaceUrl());
+                    } else {
+                        face.add(R.drawable.default_head);
+                    }
+                    String title = conversation.getPeer();
+                    if (profile != null && !TextUtils.isEmpty(profile.getNickName())) {
+                        title = profile.getNickName();
+                    }
+                    info.setTitle(title);
+                    info.setIconUrlList(face);
+                    mProvider.updateAdapter();
+                }
+            });
+        } else {
+            List<Object> face = new ArrayList<>();
+            if (!TextUtils.isEmpty(profile.getNickName())) {
+                title = profile.getNickName();
+            }
+            if (TextUtils.isEmpty(profile.getFaceUrl())) {
+                face.add(R.drawable.default_head);
+            } else {
+                face.add(profile.getFaceUrl());
+            }
+            info.setTitle(title);
+            info.setIconUrlList(face);
+        }
+
+        TIMFriend friend = TIMFriendshipManager.getInstance().queryFriend(conversation.getPeer());
+        if (friend == null) {
+            TIMFriendshipManager.getInstance().getFriendList(new TIMValueCallBack<List<TIMFriend>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    TUIKitLog.e(TAG, "getFriendList failed! code: " + code + " desc: " + desc);
+                }
+
+                @Override
+                public void onSuccess(List<TIMFriend> timFriends) {
+                    if (timFriends == null || timFriends.size() == 0) {
+                        TUIKitLog.i(TAG, "No Friends");
+                        return;
+                    }
+                    for (TIMFriend friend : timFriends) {
+                        if (!TextUtils.equals(conversation.getPeer(), friend.getIdentifier())) {
+                            continue;
+                        }
+                        if (TextUtils.isEmpty(friend.getRemark())) {
+                            continue;
+                        }
+                        info.setTitle(friend.getRemark());
+                        mProvider.updateAdapter();
+                        return;
+                    }
+                    TUIKitLog.i(TAG, conversation.getPeer() + " is not my friend");
+                }
+            });
+        } else {
+            if (!TextUtils.isEmpty(friend.getRemark())) {
+                title = friend.getRemark();
+                info.setTitle(title);
+            }
+        }
+    }
+
+    private void fillConversationWithGroupInfo(final TIMConversation conversation, final ConversationInfo info) {
+        SharedPreferences sp = TUIKit.getAppContext().getSharedPreferences(
+                TIMManager.getInstance().getLoginUser() + SP_IMAGE, Context.MODE_PRIVATE);
+        final String savedIcon = sp.getString(conversation.getPeer(), "");
+        if (!TextUtils.isEmpty(savedIcon) && new File(savedIcon).isFile() && new File(savedIcon).exists()) {
+            List<Object> list = new ArrayList<>();
+            list.add(savedIcon);
+            info.setIconUrlList(list);
+        }
+        TIMGroupDetailInfo groupDetailInfo = TIMGroupManager.getInstance().queryGroupInfo(conversation.getPeer());
+        if (groupDetailInfo == null) {
+            if (TextUtils.isEmpty(conversation.getGroupName())) {
+                info.setTitle(conversation.getPeer());
+            } else {
+                info.setTitle(conversation.getGroupName());
+            }
+            final ArrayList<String> ids = new ArrayList<>();
+            ids.add(conversation.getPeer());
+            TIMGroupManager.getInstance().getGroupInfo(ids, new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    TUIKitLog.e(TAG, "getGroupInfo failed! code: " + code + " desc: " + desc);
+                }
+
+                @Override
+                public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
+                    if (timGroupDetailInfoResults == null || timGroupDetailInfoResults.size() != 1) {
+                        TUIKitLog.i(TAG, "No GroupInfo");
+                        return;
+                    }
+                    TIMGroupDetailInfoResult result = timGroupDetailInfoResults.get(0);
+                    if (TextUtils.isEmpty(result.getGroupName())) {
+                        info.setTitle(result.getGroupId());
+                    } else {
+                        info.setTitle(result.getGroupName());
+                    }
+                    if (TextUtils.isEmpty(result.getFaceUrl())) {
+                        fillFaceUrlList(conversation.getPeer(), info);
+                    } else {
+                        List<Object> list = new ArrayList<>();
+                        list.add(result.getFaceUrl());
+                        info.setIconUrlList(list);
+                    }
+                    mProvider.updateAdapter();
+                }
+            });
+        } else {
+            if (TextUtils.isEmpty(groupDetailInfo.getFaceUrl())) {
+                fillFaceUrlList(conversation.getPeer(), info);
+            } else {
+                List<Object> list = new ArrayList<>();
+                list.add(groupDetailInfo.getFaceUrl());
+                info.setIconUrlList(list);
+            }
+            if (TextUtils.isEmpty(groupDetailInfo.getGroupName())) {
+                info.setTitle(groupDetailInfo.getGroupId());
+            } else {
+                info.setTitle(groupDetailInfo.getGroupName());
+            }
+        }
+    }
+
+    private void fillFaceUrlList(final String groupID, final ConversationInfo info) {
+        TIMGroupManager.getInstance().getGroupMembersByFilter(groupID,
+                TIMGroupManager.TIM_GET_GROUP_MEM_INFO_FLAG_NAME_CARD,
+                TIMGroupMemberRoleFilter.All,
+                null,
+                0,
+                new TIMValueCallBack<TIMGroupMemberSucc>() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIKitLog.e(TAG, "getGroupMembersByFilter failed! code: " + code + " desc: " + desc);
+                    }
+
+                    @Override
+                    public void onSuccess(TIMGroupMemberSucc timGroupMemberSucc) {
+                        List<TIMGroupMemberInfo> timGroupMemberInfos = timGroupMemberSucc.getMemberInfoList();
+                        int faceSize = timGroupMemberInfos.size() > 9 ? 9 : timGroupMemberInfos.size();
+                        final List<Object> urlList = new ArrayList<>();
+                        List<String> needGetFromNetworkList = new ArrayList<>();
+                        for (int i = 0; i < faceSize; i++) {
+                            TIMUserProfile profile = TIMFriendshipManager.getInstance().queryUserProfile(timGroupMemberInfos.get(i).getUser());
+                            if (profile == null) {
+                                needGetFromNetworkList.add(timGroupMemberInfos.get(i).getUser());
+                            } else {
+                                if (TextUtils.isEmpty(profile.getFaceUrl())) {
+                                    urlList.add(R.drawable.default_head);
+                                } else {
+                                    urlList.add(profile.getFaceUrl());
+                                }
+                            }
+                        }
+                        if (urlList.size() == faceSize) {
+                            info.setIconUrlList(urlList);
+                            mProvider.updateAdapter();
+                            return;
+                        }
+                        TIMFriendshipManager.getInstance().getUsersProfile(needGetFromNetworkList, false, new TIMValueCallBack<List<TIMUserProfile>>() {
+                            @Override
+                            public void onError(int code, String desc) {
+                                TUIKitLog.e(TAG, "getUsersProfile failed! code: " + code + " desc: " + desc);
+                            }
+
+                            @Override
+                            public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                                if (timUserProfiles == null || timUserProfiles.size() == 0) {
+                                    return;
+                                }
+                                for (TIMUserProfile profile : timUserProfiles) {
+                                    if (TextUtils.isEmpty(profile.getFaceUrl())) {
+                                        urlList.add(R.drawable.default_head);
+                                    } else {
+                                        urlList.add(profile.getFaceUrl());
+                                    }
+                                }
+                                info.setIconUrlList(urlList);
+                                mProvider.updateAdapter();
+                            }
+                        });
+                    }
+                });
+    }
 
     /**
      * 群系统消息处理，不需要显示信息的

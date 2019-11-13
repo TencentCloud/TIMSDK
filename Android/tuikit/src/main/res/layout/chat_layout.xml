@@ -2,18 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_bg_color">
+    android:background="@color/chat_background_color">
 
     <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
         android:id="@+id/chat_title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
 
+    <View
+        android:id="@+id/view_line"
+        android:layout_below="@+id/chat_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:background="@color/chat_title_line_color" />
+
     <com.tencent.qcloud.tim.uikit.component.NoticeLayout
         android:id="@+id/chat_group_apply_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/chat_title_bar"
+        android:layout_below="@+id/view_line"
         android:visibility="gone" />
 
     <com.tencent.qcloud.tim.uikit.component.NoticeLayout
@@ -30,7 +37,6 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/chat_input_layout"
         android:layout_below="@+id/chat_notice_layout"
-        android:paddingBottom="5dp"
         android:baselineAligned="false"
         android:clickable="false"
         android:descendantFocusability="blocksDescendants" />
@@ -41,7 +47,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
-
 
     <RelativeLayout
         android:id="@+id/voice_recording_view"

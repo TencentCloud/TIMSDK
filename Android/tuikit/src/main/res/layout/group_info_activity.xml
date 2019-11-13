@@ -5,7 +5,7 @@
     android:id="@+id/group_manager_base"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_bg_color"
+    android:background="@color/status_bar_color"
     android:clickable="true"
     android:orientation="vertical">
 

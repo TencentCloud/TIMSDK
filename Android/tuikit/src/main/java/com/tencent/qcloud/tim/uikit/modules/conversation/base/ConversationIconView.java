@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.tencent.imsdk.conversation.Conversation;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
@@ -48,7 +49,7 @@ public class ConversationIconView extends RelativeLayout {
     private void init() {
         inflate(getContext(), R.layout.profile_icon_view, this);
         mIconView = findViewById(R.id.profile_icon);
-        ((SynthesizedImageView) mIconView).defaultImage(R.drawable.default_user_icon);
+        ((SynthesizedImageView) mIconView).defaultImage(0);
     }
 
     public void setProfileImageView(ImageView iconView) {
@@ -64,12 +65,18 @@ public class ConversationIconView extends RelativeLayout {
      *
      * @param iconUrls 头像url,最多只取前9个
      */
-    public void setIconUrls(List<String> iconUrls) {
+    public void setIconUrls(List<Object> iconUrls) {
         if (mIconView instanceof SynthesizedImageView) {
             ((SynthesizedImageView) (mIconView)).displayImage(iconUrls).load();
         }
     }
 
+    public void setConversation(ConversationInfo c) {
+        if (mIconView instanceof SynthesizedImageView) {
+            ((SynthesizedImageView) (mIconView)).setImageId(c.getId());
+            setIconUrls(c.getIconUrlList());
+        }
+    }
 
     public void setDefaultImageResId(int resId) {
         BitmapDrawable bd = (BitmapDrawable) getContext().getResources().getDrawable(resId);

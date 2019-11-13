@@ -49,6 +49,7 @@ public class DemoApplication extends Application {
     public void onCreate() {
         DemoLog.i(TAG, "onCreate");
         super.onCreate();
+        instance = this;
         MultiDex.install(this);
         // bugly上报
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
@@ -99,7 +100,6 @@ public class DemoApplication extends Application {
 
             registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
         }
-        instance = this;
         if (BuildConfig.DEBUG) {
             if (LeakCanary.isInAnalyzerProcess(this)) {
                 return;

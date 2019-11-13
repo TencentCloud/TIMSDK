@@ -27,7 +27,7 @@ public class PopWindowUtil {
             if (activity.isDestroyed())
                 return null;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.Theme_Transparent));
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.TUIKit_Theme_Transparent));
         builder.setTitle("");
         builder.setCancelable(true);
         AlertDialog dialog = builder.create();

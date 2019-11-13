@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tencent.imsdk.TIMFriendshipManager;
@@ -19,7 +20,9 @@ import com.tencent.qcloud.tim.uikit.component.indexlib.IndexBar.widget.IndexBar;
 import com.tencent.qcloud.tim.uikit.component.indexlib.suspension.SuspensionDecoration;
 import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
+import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
+import com.tencent.qcloud.tim.uikit.utils.ThreadHelper;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ public class ContactListView extends LinearLayout {
     private CustomLinearLayoutManager mManager;
     private List<ContactItemBean> mData = new ArrayList<>();
     private SuspensionDecoration mDecoration;
-    private TextView mContactCountTv;
+    private ProgressBar mContactLoadingBar;
     private GroupInfo mGroupInfo;
 
     /**
@@ -73,16 +76,12 @@ public class ContactListView extends LinearLayout {
         mAdapter = new ContactAdapter(mData);
         mRv.setAdapter(mAdapter);
         mRv.addItemDecoration(mDecoration = new SuspensionDecoration(getContext(), mData));
-        //如果add两个，那么按照先后顺序，依次渲染。
-        //使用indexBar
         mTvSideBarHint = findViewById(R.id.contact_tvSideBarHint);
         mIndexBar = findViewById(R.id.contact_indexBar);
-        //indexbar初始化
         mIndexBar.setPressedShowTextView(mTvSideBarHint)
-                .setNeedRealIndex(true)
+                .setNeedRealIndex(false)
                 .setLayoutManager(mManager);
-        mContactCountTv = findViewById(R.id.contact_count);
-        mContactCountTv.setText(String.format(getResources().getString(R.string.contact_count), 0));
+        mContactLoadingBar = findViewById(R.id.contact_loading_bar);
     }
 
     public ContactAdapter getAdapter() {
@@ -90,17 +89,11 @@ public class ContactListView extends LinearLayout {
     }
 
     public void setDataSource(List<ContactItemBean> data) {
+        mContactLoadingBar.setVisibility(GONE);
         this.mData = data;
         mAdapter.setDataSource(mData);
         mIndexBar.setSourceDatas(mData).invalidate();
         mDecoration.setDatas(mData);
-        mContactCountTv.setText(String.format(getResources().getString(R.string.contact_count), mData.size()));
-        // 根据内容动态设置右侧导航栏的高度
-        ViewGroup.LayoutParams params = mIndexBar.getLayoutParams();
-        if (mData.size() * 50 < mIndexBar.getMeasuredHeight()) { // 若动态设置的侧边栏高度大于之前的旧值，则不改变侧边栏高度
-            params.height = mData.size() * 50;
-        }
-        mIndexBar.setLayoutParams(params);
     }
 
     public void setSingleSelectMode(boolean mode) {
@@ -116,9 +109,11 @@ public class ContactListView extends LinearLayout {
     }
 
     public void loadDataSource(int dataSource) {
+        mContactLoadingBar.setVisibility(VISIBLE);
+        mData.clear();
         switch (dataSource) {
             case DataSource.FRIEND_LIST:
-                loadFriendListData(false);
+                loadFriendListDataAsync();
                 break;
             case DataSource.BLACK_LIST:
                 loadBlackListData();
@@ -127,9 +122,18 @@ public class ContactListView extends LinearLayout {
                 loadGroupListData();
                 break;
             case DataSource.CONTACT_LIST:
-                loadFriendListData(true);
+                mData.add((ContactItemBean) new ContactItemBean(getResources().getString(R.string.new_friend))
+                        .setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
+                mData.add((ContactItemBean) new ContactItemBean(getResources().getString(R.string.group)).
+                        setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
+                mData.add((ContactItemBean) new ContactItemBean(getResources().getString(R.string.blacklist)).
+                        setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
+                loadFriendListDataAsync();
+                break;
+            default:
                 break;
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     public void setGroupInfo(GroupInfo groupInfo) {
@@ -154,56 +158,86 @@ public class ContactListView extends LinearLayout {
             }
         }
         if (needFresh) {
-            mAdapter.notifyDataSetChanged();
+            BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
         }
     }
 
-    private void loadFriendListData(final boolean loopMore) {
-        TIMFriendshipManager.getInstance().getFriendList(new TIMValueCallBack<List<TIMFriend>>() {
+    private void loadFriendListDataAsync() {
+        TUIKitLog.i(TAG, "loadFriendListDataAsync");
+        ThreadHelper.INST.execute(new Runnable() {
             @Override
-            public void onError(int code, String desc) {
-                TUIKitLog.e(TAG, "getFriendList err code = " + code);
-            }
-
-            @Override
-            public void onSuccess(List<TIMFriend> timFriends) {
-                TUIKitLog.i(TAG, "getFriendList success result = " + timFriends.size());
-                if (timFriends.size() == 0) {
-                    TUIKitLog.i(TAG, "getFriendList success but no data");
+            public void run() {
+                // 压测时数据量比较大，query耗时比较久，所以这里使用新线程来处理
+                TUIKitLog.i(TAG, "queryFriendList");
+                List<TIMFriend> timFriends = TIMFriendshipManager.getInstance().queryFriendList();
+                if (timFriends == null) {
+                    timFriends = new ArrayList<>();
                 }
-                mData.clear();
-                if (loopMore) {
-                    mData.add((ContactItemBean) new ContactItemBean(getResources().getString(R.string.new_friend))
-                            .setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
-                    mData.add((ContactItemBean) new ContactItemBean(getResources().getString(R.string.group)).
-                            setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
-                    mData.add((ContactItemBean) new ContactItemBean(getResources().getString(R.string.blacklist)).
-                            setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
-                }
-                for (TIMFriend timFriend : timFriends) {
-                    ContactItemBean info = new ContactItemBean();
-                    info.covertTIMFriend(timFriend);
-                    mData.add(info);
-                }
-                updateStatus(mData);
-                setDataSource(mData);
+                TUIKitLog.i(TAG, "queryFriendList: " + timFriends.size());
+                fillFriendListData(timFriends);
             }
         });
     }
 
+    private void fillFriendListData(final List<TIMFriend> timFriends) {
+        // 外部调用是在其他线程里面，但是更新数据同时会刷新UI，所以需要放在主线程做。
+        BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (timFriends.size() == 0) {
+                    TIMFriendshipManager.getInstance().getFriendList(new TIMValueCallBack<List<TIMFriend>>() {
+                        @Override
+                        public void onError(int code, String desc) {
+                            TUIKitLog.e(TAG, "getFriendList err code = " + code);
+                            mContactLoadingBar.setVisibility(GONE);
+                        }
+
+                        @Override
+                        public void onSuccess(List<TIMFriend> timFriends) {
+                            if (timFriends == null) {
+                                timFriends = new ArrayList<>();
+                            }
+                            TUIKitLog.i(TAG, "getFriendList success result = " + timFriends.size());
+                            assembleFriendListData(timFriends);
+                        }
+                    });
+                } else {
+                    assembleFriendListData(timFriends);
+                }
+            }
+        });
+    }
+
+    private void assembleFriendListData(final List<TIMFriend> timFriends) {
+        for (TIMFriend timFriend : timFriends) {
+            ContactItemBean info = new ContactItemBean();
+            info.covertTIMFriend(timFriend);
+            mData.add(info);
+        }
+        updateStatus(mData);
+        setDataSource(mData);
+    }
+
     private void loadBlackListData() {
+        TUIKitLog.i(TAG, "loadBlackListData");
         TIMFriendshipManager.getInstance().getBlackList(new TIMValueCallBack<List<TIMFriend>>() {
             @Override
             public void onError(int i, String s) {
                 TUIKitLog.e(TAG, "getBlackList err code = " + i + ", desc = " + s);
                 ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+                mContactLoadingBar.setVisibility(GONE);
             }
 
             @Override
             public void onSuccess(List<TIMFriend> timFriends) {
-                TUIKitLog.i(TAG, "getFriendGroups success");
+                TUIKitLog.i(TAG, "getBlackList success: " + timFriends.size());
                 if (timFriends.size() == 0) {
-                    TUIKitLog.i(TAG, "getFriendGroups success but no data");
+                    TUIKitLog.i(TAG, "getBlackList success but no data");
                 }
                 mData.clear();
                 for (TIMFriend timFriend : timFriends) {
@@ -217,19 +251,21 @@ public class ContactListView extends LinearLayout {
     }
 
     private void loadGroupListData() {
+        TUIKitLog.i(TAG, "loadGroupListData");
         TIMGroupManager.getInstance().getGroupList(new TIMValueCallBack<List<TIMGroupBaseInfo>>() {
 
             @Override
             public void onError(int i, String s) {
                 TUIKitLog.e(TAG, "getGroupList err code = " + i + ", desc = " + s);
                 ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+                mContactLoadingBar.setVisibility(GONE);
             }
 
             @Override
             public void onSuccess(List<TIMGroupBaseInfo> infos) {
-                TUIKitLog.i(TAG, "getFriendGroups success");
+                TUIKitLog.i(TAG, "getGroupList success: " + infos.size());
                 if (infos.size() == 0) {
-                    TUIKitLog.i(TAG, "getFriendGroups success but no data");
+                    TUIKitLog.i(TAG, "getGroupList success but no data");
                 }
                 mData.clear();
                 for (TIMGroupBaseInfo info : infos) {

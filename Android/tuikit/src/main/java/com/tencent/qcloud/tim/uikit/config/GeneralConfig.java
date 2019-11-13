@@ -15,6 +15,7 @@ public class GeneralConfig {
     private int videoRecordMaxTime = DEFAULT_VIDEO_RECORD_MAX_TIME;
     private int logLevel = TIMLogLevel.DEBUG;
     private boolean enableLogPrint = true;
+    private boolean showRead = false;
 
     /**
      * 获取是否打印日志
@@ -111,4 +112,23 @@ public class GeneralConfig {
         this.videoRecordMaxTime = videoRecordMaxTime;
         return this;
     }
+
+    /**
+     * 对方已读的 view 是否展示
+     *
+     * @return
+     */
+    public boolean isShowRead() {
+        return showRead;
+    }
+
+    /**
+     * 设置对方已读的 view 是否展示
+     *
+     * @return
+     */
+    public void setShowRead(boolean showRead) {
+        this.showRead = showRead;
+    }
+
 }
