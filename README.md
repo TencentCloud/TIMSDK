@@ -1,6 +1,6 @@
 ## 镜像下载
 
-腾讯云分流下载地址： [DOWNLOAD](https://github-1252463788.cos.ap-shanghai.myqcloud.com/imsdk/TIMSDK-4.5.15.zip)
+腾讯云分流下载地址： [DOWNLOAD](https://github-1252463788.cos.ap-shanghai.myqcloud.com/imsdk/TIMSDK.zip)
 
 ## TUIKit集成
 
