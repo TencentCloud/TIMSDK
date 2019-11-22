@@ -5,7 +5,11 @@
       {{ member.userID }}
       <el-button v-if="showCancelBan" type="text" @click="cancelMute">取消禁言</el-button>
       <el-popover title="禁言" v-model="popoverVisible" v-show="showBan">
-        <el-input v-model="muteTime" placeholder="请输入禁言时间" @keydown.enter.native="setGroupMemberMuteTime" />
+        <el-input
+          v-model="muteTime"
+          placeholder="请输入禁言时间"
+          @keydown.enter.native="setGroupMemberMuteTime"
+        />
         <el-button slot="reference" type="text" style="color:red;">禁言</el-button>
       </el-popover>
     </div>
@@ -17,8 +21,17 @@
       <span class="label">nameCard:</span>
       {{ member.nameCard || '暂无' }}
       <el-popover title="修改群名片" v-model="nameCardPopoverVisible" v-show="showEditNameCard">
-        <el-input v-model="nameCard" placeholder="请输入群名片" @keydown.enter.native="setGroupMemberNameCard" />
-        <i class="el-icon-edit" title="修改群名片" slot="reference" style="cursor:pointer; font-size:1.6rem;"></i>
+        <el-input
+          v-model="nameCard"
+          placeholder="请输入群名片"
+          @keydown.enter.native="setGroupMemberNameCard"
+        />
+        <i
+          class="el-icon-edit"
+          title="修改群名片"
+          slot="reference"
+          style="cursor:pointer; font-size:1.6rem;"
+        ></i>
       </el-popover>
     </div>
     <div>
@@ -29,9 +42,11 @@
       <span class="label">禁言至:</span>
       <span class="content">{{ muteUntil }}</span>
     </div>
-    <el-button type="text" v-if="canChangeRole" @click="changeMemberRole">{{
+    <el-button type="text" v-if="canChangeRole" @click="changeMemberRole">
+      {{
       member.role === 'Admin' ? '取消管理员' : '设为管理员'
-    }}</el-button>
+      }}
+    </el-button>
     <el-button type="text" v-if="showKickout" style="color:red;" @click="kickoutGroupMember">踢出群组</el-button>
   </div>
 </template>
@@ -50,7 +65,7 @@ export default {
       muteTime: '',
       popoverVisible: false,
       nameCardPopoverVisible: false,
-      nameCard: this.member.nameCard,
+      nameCard: this.member.nameCard
     }
   },
   computed: {
@@ -73,13 +88,18 @@ export default {
       return this.currentUserProfile.userID === this.member.userID
     },
     canChangeRole() {
-      return this.isOwner && ['ChatRoom', 'Public'].includes(this.currentConversation.subType)
+      return (
+        this.isOwner &&
+        ['ChatRoom', 'Public'].includes(this.currentConversation.subType)
+      )
     },
     changeRoleTitle() {
       if (!this.canChangeRole) {
         return ''
       }
-      return this.isOwner && this.member.role === 'Admin' ? '设为：Member' : '设为：Admin'
+      return this.isOwner && this.member.role === 'Admin'
+        ? '设为：Member'
+        : '设为：Admin'
     },
     // 是否显示禁言时间
     showMuteUntil() {
@@ -88,7 +108,11 @@ export default {
     },
     // 是否显示取消禁言按钮
     showCancelBan() {
-      if (this.showMuteUntil && this.currentConversation.type === this.TIM.TYPES.CONV_GROUP && !this.isMine) {
+      if (
+        this.showMuteUntil &&
+        this.currentConversation.type === this.TIM.TYPES.CONV_GROUP &&
+        !this.isMine
+      ) {
         return this.isOwner || this.isAdmin
       }
       return false
@@ -111,22 +135,39 @@ export default {
   },
   methods: {
     kickoutGroupMember() {
-      this.tim.deleteGroupMember({
-        groupID: this.currentConversation.groupProfile.groupID,
-        reason: '我要踢你出群',
-        userIDList: [this.member.userID]
-      })
+      this.tim
+        .deleteGroupMember({
+          groupID: this.currentConversation.groupProfile.groupID,
+          reason: '我要踢你出群',
+          userIDList: [this.member.userID]
+        })
+        .then(() => {
+          this.$store.commit('deleteGroupMemeber', this.member.userID)
+        })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     changeMemberRole() {
       if (!this.canChangeRole) {
         return
       }
       let currentRole = this.member.role
-      this.tim.setGroupMemberRole({
-        groupID: this.currentConversation.groupProfile.groupID,
-        userID: this.member.userID,
-        role: currentRole === 'Admin' ? 'Member' : 'Admin'
-      })
+      this.tim
+        .setGroupMemberRole({
+          groupID: this.currentConversation.groupProfile.groupID,
+          userID: this.member.userID,
+          role: currentRole === 'Admin' ? 'Member' : 'Admin'
+        })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     setGroupMemberMuteTime() {
       this.tim
@@ -139,6 +180,12 @@ export default {
           this.muteTime = ''
           this.popoverVisible = false
         })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     // 取消禁言
     cancelMute() {
@@ -150,6 +197,12 @@ export default {
         })
         .then(() => {
           this.muteTime = ''
+        })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
         })
     },
     setGroupMemberNameCard() {
@@ -172,6 +225,12 @@ export default {
             message: '修改成功'
           })
         })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     }
   }
 }
@@ -181,6 +240,7 @@ export default {
 .label {
   color: rgb(204, 200, 200);
 }
+
 .cursor-pointer {
   cursor: pointer;
 }

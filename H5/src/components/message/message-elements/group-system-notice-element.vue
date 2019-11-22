@@ -53,7 +53,7 @@ export default {
     ElFormItem: FormItem,
     ElRadioGroup: RadioGroup,
     ElRadio: Radio,
-    MessageBubble,
+    MessageBubble
   },
   data() {
     return {
@@ -89,7 +89,11 @@ export default {
         .then(() => {
           this.showDialog = false
         })
-        .catch(() => {
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
           this.showDialog = false
         })
     }

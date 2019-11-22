@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div id="wrapper" v-if="!isLogin" >
-      <login/>
+    <div id="wrapper" v-if="!isLogin">
+      <login />
+      <qr-code-list />
     </div>
     <div
       class="loading"
@@ -19,13 +20,17 @@
             <current-conversation />
           </el-col>
         </el-row>
+        <a
+          class="official-link"
+          href="https://cloud.tencent.com/product/im"
+          target="_blank"
+          @click="handleLinkClick"
+        >登录 即时通信IM 官网，了解更多体验方式</a>
       </div>
       <image-previewer />
     </div>
-    <div class="bg">
-    </div>
+    <div class="bg"></div>
   </div>
-
 </template>
 
 <script>
@@ -36,6 +41,8 @@ import SideBar from './components/layout/side-bar'
 import Login from './components/user/login'
 import ImagePreviewer from './components/message/image-previewer.vue'
 import { translateGroupSystemNotice } from './utils/common'
+import QrCodeList from './components/qr-code-list'
+import MTA from './utils/mta'
 
 export default {
   title: 'TIMSDK DEMO',
@@ -43,7 +50,8 @@ export default {
     Login,
     SideBar,
     CurrentConversation,
-    ImagePreviewer
+    ImagePreviewer,
+    QrCodeList
   },
 
   computed: {
@@ -62,6 +70,14 @@ export default {
   mounted() {
     // 初始化监听器
     this.initListener()
+  },
+
+  watch: {
+    isLogin(next) {
+      if (next) {
+        MTA.clickStat('link_two', { show: 'true' })
+      }
+    }
   },
 
   methods: {
@@ -95,7 +111,8 @@ export default {
       this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, event => {
         const isKickedout = event.data.type === 4
         const isCurrentConversation =
-          `GROUP${event.data.message.payload.groupProfile.groupID}` === this.currentConversation.conversationID
+          `GROUP${event.data.message.payload.groupProfile.groupID}` ===
+          this.currentConversation.conversationID
         // 在当前会话被踢，需reset当前会话
         if (isKickedout && isCurrentConversation) {
           this.$store.commit('resetCurrentConversation')
@@ -128,9 +145,17 @@ export default {
       this.$store.commit('toggleIsSDKReady', isSDKReady)
 
       if (isSDKReady) {
-        this.tim.getMyProfile().then(({ data }) => {
-          this.$store.commit('updateCurrentUserProfile', data)
-        })
+        this.tim
+          .getMyProfile()
+          .then(({ data }) => {
+            this.$store.commit('updateCurrentUserProfile', data)
+          })
+          .catch(error => {
+            this.$store.commit('showMessage', {
+              type: 'error',
+              message: error.message
+            })
+          })
         this.$store.dispatch('getBlacklist')
       }
     },
@@ -141,7 +166,9 @@ export default {
     handleAt(messageList) {
       // 筛选有 @ 符号的文本消息
       const atTextMessageList = messageList.filter(
-        message => message.type === this.TIM.TYPES.MSG_TEXT && message.payload.text.includes('@')
+        message =>
+          message.type === this.TIM.TYPES.MSG_TEXT &&
+          message.payload.text.includes('@')
       )
       for (let i = 0; i < atTextMessageList.length; i++) {
         const message = atTextMessageList[i]
@@ -194,19 +221,22 @@ export default {
         this.$store.dispatch('checkoutConversation', message.conversationID)
         notification.close()
       }
+    },
+    handleLinkClick() {
+      MTA.clickStat('link_two', { click: 'true' })
     }
   }
 }
 </script>
 
 <style lang="stylus">
-body
-  overflow hidden
-  margin 0
-  font-family "Microsoft YaHei","微软雅黑","MicrosoftJhengHei","Lantinghei SC", "Open Sans", Arial, "Hiragino Sans GB", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif
+body {
+  overflow: hidden;
+  margin: 0;
+  font-family: 'Microsoft YaHei', '微软雅黑', 'MicrosoftJhengHei', 'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'STHeiti', 'WenQuanYi Micro Hei', SimSun, sans-serif;
   // font-family  "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif
   // text-shadow: $regular 0 0 0.05em
-  background-color $bg
+  background-color: $bg;
   -ms-scroll-chaining: chained;
   -ms-overflow-style: none;
   -ms-content-zooming: zoom;
@@ -218,28 +248,35 @@ body
   -ms-overflow-style: none;
   overflow: auto;
 
-  div
-    box-sizing border-box
-    &::before
-    &::after
-      box-sizing border-box
+  div {
+    box-sizing: border-box;
+
+    &::before, &::after {
+      box-sizing: border-box;
+    }
+  }
+}
 
 #wrapper {
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
   padding-top: 100px;
 }
+
 // TODO filter mac chrome 会有问题，下次修改可以去掉
-.bg
-  position absolute
+.bg {
+  position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
   z-index: -1;
-  background url('~@/./assets/image/bg.jpg') no-repeat 0 0
-  background-size cover
+  background: url('~@/./assets/image/bg.jpg') no-repeat 0 0;
+  background-size: cover;
   // filter blur(67px)
+}
 
 .loading {
   height: 100vh;
@@ -254,22 +291,35 @@ body
   white-space: nowrap;
 }
 
-.chat-wrapper
-  margin-top: 8vh
-  width $width
-  height $height
-  max-width 1280px
-  box-shadow 0 11px 20px 0 rgba(0, 0, 0, .3)
+.chat-wrapper {
+  margin-top: 8vh;
+  width: $width;
+  height: $height;
+  max-width: 1280px;
+  box-shadow: 0 11px 20px 0 rgba(0, 0, 0, 0.3);
+
+  .official-link {
+    display: flex;
+    text-decoration: none;
+    color: #38c9ff;
+    width: fit-content;
+    float: right;
+    height: 45px;
+    align-items: center;
+  }
+}
 
 /* 设置滚动条的样式 */
 ::-webkit-scrollbar {
   width: 3px;
   height: 3px;
 }
+
 /* 滚动槽 */
 ::-webkit-scrollbar-track {
   border-radius: 10px;
 }
+
 /* 滚动条滑块 */
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
