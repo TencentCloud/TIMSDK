@@ -57,6 +57,11 @@
             :isMine="isMine"
             :payload="message.payload"
           />
+          <geo-element
+            v-else-if="message.type === TIM.TYPES.MSG_GEO"
+            :isMine="isMine"
+            :payload="message.payload"
+          />
           <span v-else>暂未支持的消息类型：{{message.type}}</span>
         </div>
         <message-footer v-if="showMessageHeader" :message="message" />
@@ -72,8 +77,8 @@
       :class="messagePosition"
     >
       <!-- 头像 群组没有获取单个头像的接口，暂时无法显示头像-->
-      <div class="col-1" v-if="showAvatar">
-        <avatar :src="avatar" />
+      <div class="col-1" v-if="showAvatar" >
+        <avatar class="group-member-avatar" :src="avatar" @click.native="showGroupMemberProfile"/>
       </div>
       <div class="col-2">
         <!-- 消息主体 -->
@@ -120,6 +125,11 @@
             :isMine="isMine"
             :payload="message.payload"
           />
+          <geo-element
+            v-else-if="message.type === TIM.TYPES.MSG_GEO"
+            :isMine="isMine"
+            :payload="message.payload"
+          />
           <span v-else>暂未支持的消息类型：{{message.type}}</span>
         </div>
       </div>
@@ -154,6 +164,8 @@ import VideoElement from './message-elements/video-element.vue'
 import GroupTipElement from './message-elements/group-tip-element.vue'
 import GroupSystemNoticeElement from './message-elements/group-system-notice-element.vue'
 import CustomElement from './message-elements/custom-element.vue'
+import GeoElement from './message-elements/geo-element.vue'
+
 export default {
   name: 'MessageItem',
   props: {
@@ -174,7 +186,8 @@ export default {
     GroupTipElement,
     GroupSystemNoticeElement,
     CustomElement,
-    VideoElement
+    VideoElement,
+    GeoElement,
   },
   data() {
     return {
@@ -239,6 +252,20 @@ export default {
       }
       return true
     }
+  },
+  methods: {
+    showGroupMemberProfile(event) {
+      this.tim
+        .getGroupMemberProfile({
+          groupID: this.message.to,
+          userIDList: [this.message.from]
+        })
+        .then(({ data: { memberList } }) => {
+          if (memberList[0]) {
+            this.$bus.$emit('showMemberProfile', { event, member: memberList[0] })
+          }
+        })
+    }
   }
 }
 </script>
@@ -246,6 +273,7 @@ export default {
 <style lang="stylus" scoped>
 .message-wrapper {
   margin: 20px 0;
+
   .content-wrapper {
     display: flex;
     align-items: center;
@@ -262,6 +290,10 @@ export default {
       border-radius: 50%;
       box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
     }
+  }
+
+  .group-member-avatar {
+    cursor: pointer;
   }
 
   .col-2 {
