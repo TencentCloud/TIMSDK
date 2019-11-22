@@ -33,7 +33,6 @@ tim.on(TIM.EVENT.KICKED_OUT, event => {
     duration: 1500
   })
   setTimeout(() => {
-    wx.clearStorage()
     wx.reLaunch({
       url: '../login/main'
     })
