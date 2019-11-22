@@ -52,6 +52,7 @@
    > | :------------------------: | --------------- | -------- |
    > | `https://webim.tim.qq.com` | Web IM 业务域名 | 必须     |
    > |  `https://yun.tim.qq.com`  | Web IM 业务域名 | 必须     |
+   > |  `https://grouptalk.c2c.qq.com`  | Web IM 业务域名 | 必须     |
    > |  `https://pingtas.qq.com`  | Web IM 统计域名 | 必须     |
    >
    > 添加到 **uploadFile 合法域名**：
@@ -184,6 +185,8 @@
    > | :------------------------: | --------------- | -------- |
    > | `https://webim.tim.qq.com` | Web IM 业务域名 | 必须     |
    > |  `https://yun.tim.qq.com`  | Web IM 业务域名 | 必须     |
+   > |  `https://events.tim.qq.com` |	Web IM 业务域名 | 必须   |
+   > |  `https://grouptalk.c2c.qq.com`  | Web IM 业务域名 | 必须     |
    > |  `https://pingtas.qq.com`  | Web IM 统计域名 | 必须     |
    >
    > 添加到 **uploadFile 合法域名**：
@@ -236,6 +239,12 @@
 本 Demo 为了用户体验的便利，将 `userSig` 签发放到前端执行。若直接部署上线，会面临 `SECRETKEY` 泄露的风险。正确的 `userSig` 签发方式是将 `userSig` 的计算代码集成到您的服务端，并提供相应接口。在需要 `userSig` 时，发起请求获取动态 `userSig`。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。
 
 ## Change Log
+
+#### 2019/11/21
+
+**Feat Add**
+
+- 小程序支持发送视频消息
 
 #### 2019/10/17
 

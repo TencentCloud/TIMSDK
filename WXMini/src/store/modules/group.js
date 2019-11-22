@@ -24,7 +24,6 @@ const groupModules = {
       state.currentGroupProfile = groupProfile
     },
     resetGroup (state) {
-      state.groupList = []
       state.currentGroupProfile = {}
       state.currentGroupMemberList = []
       state.offset = 0
