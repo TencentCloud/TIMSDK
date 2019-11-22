@@ -115,9 +115,19 @@ export default {
       this.$store.commit('updateCreateGroupModelVisible', false)
     },
     createGroup() {
-      this.tim.createGroup(this.getOptions()).then(() => {
+      this.tim.createGroup(this.getOptions()).then((imResponse) => {
+         this.$store.commit('showMessage', {
+            message: `群组：【${imResponse.data.group.name}】创建成功`,
+            type: 'success'
+          })
         this.closeCreateGroupModel()
       })
+      .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     getOptions() {
       let options = {
@@ -135,6 +145,12 @@ export default {
         this.tim.getUserProfile({ userIDList: [userID] }).then(({ data }) => {
           this.options = data.map(item => item.userID)
           this.loading = false
+        })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
         })
       }
     }

@@ -178,7 +178,7 @@
           <el-option label="屏蔽消息" value="Discard"></el-option>
         </el-select>
       </div>
-      <!-- <div class="info-item">
+      <div class="info-item">
         <div class="label">
           我的群名片
           <i
@@ -202,7 +202,7 @@
           @blur="showEditNameCard = false"
           @keydown.enter.native="editNameCard"
         />
-      </div> -->
+      </div>
       <div v-if="isOwner">
         <el-button type="text" @click="showChangeGroupOwner = true">转让群组</el-button>
         <el-input
@@ -314,6 +314,12 @@ export default {
         .then(() => {
           this.showEditName = false
         })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     editFaceUrl() {
       this.tim
@@ -323,6 +329,12 @@ export default {
         })
         .then(() => {
           this.showEditFaceUrl = false
+        })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
         })
     },
     editIntroduction() {
@@ -334,6 +346,12 @@ export default {
         .then(() => {
           this.showEditIntroduction = false
         })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     editNotification() {
       this.tim
@@ -344,6 +362,12 @@ export default {
         .then(() => {
           this.showEditNotification = false
         })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     editJoinOption() {
       this.tim
@@ -353,6 +377,12 @@ export default {
         })
         .then(() => {
           this.showEditJoinOption = false
+        })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
         })
     },
     changeOwner() {
@@ -368,6 +398,12 @@ export default {
           })
           this.newOwnerUserID = ''
         })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     quitGroup() {
       this.tim.quitGroup(this.groupProfile.groupID).then(({ data: { groupID } }) => {
@@ -378,6 +414,12 @@ export default {
           this.$store.commit('resetCurrentConversation')
         }
       })
+      .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     dismissGroup() {
       this.tim.dismissGroup(this.groupProfile.groupID).then(({ data: { groupID } }) => {
@@ -389,6 +431,12 @@ export default {
           this.$store.commit('resetCurrentConversation')
         }
       })
+      .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     editMessageRemindType() {
       this.tim
@@ -398,6 +446,12 @@ export default {
         })
         .then(() => {
           this.showEditMessageRemindType = false
+        })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
         })
     },
     editNameCard() {
@@ -415,6 +469,12 @@ export default {
         })
         .then(() => {
           this.showEditNameCard = false
+        })
+        .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
         })
     }
   }

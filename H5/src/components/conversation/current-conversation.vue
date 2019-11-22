@@ -30,6 +30,8 @@
     <div class="profile" v-if="showConversationProfile" >
       <conversation-profile/>
     </div>
+    <!-- 群成员资料组件 -->
+    <member-profile-card />
   </div>
 </template>
 
@@ -38,12 +40,14 @@ import { mapGetters, mapState } from 'vuex'
 import MessageSendBox from '../message/message-send-box'
 import MessageItem from '../message/message-item'
 import ConversationProfile from './conversation-profile.vue'
+import MemberProfileCard from '../group/member-profile-card'
 export default {
   name: 'CurrentConversation',
   components: {
     MessageSendBox,
     MessageItem,
-    ConversationProfile
+    ConversationProfile,
+    MemberProfileCard
   },
   data() {
     return {

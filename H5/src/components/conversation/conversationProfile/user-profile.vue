@@ -81,6 +81,12 @@ export default {
       this.tim.removeFromBlacklist({ userIDList: [this.userProfile.userID] }).then(() => {
         this.$store.commit('removeFromBlacklist', this.userProfile.userID)
       })
+      .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     }
   }
 }

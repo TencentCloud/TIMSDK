@@ -28,6 +28,12 @@ export default {
     },
     quitGroup() {
       this.tim.quitGroup(this.group.groupID)
+      .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
     }
   }
 }
