@@ -525,7 +525,7 @@ export default {
             fail: function (err) {
               console.log('open file fail', err)
               that.$store.commit('showToast', {
-                title: '小程序打开失败',
+                title: '小程序打开该文件失败',
                 icon: 'none',
                 duration: 2000
               })
