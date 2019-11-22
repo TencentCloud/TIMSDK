@@ -102,11 +102,11 @@
             </div>
             <div class="message" v-else-if="message.type === 'TIMFaceElem'">
               <div class="custom-elem">
-                <image :src="'https://webim-1252463788.file.myqcloud.com/assets/face-elem/' + message.payload.data + '.png'" style="height:90px; width:90px"/>
+                <image :src="message.payload.data.indexOf('@') > 0 ? faceUrl + message.payload.data + '.png' : faceUrl + message.payload.data + '@2x.png'" style="height:90px; width:90px"/>
               </div>
             </div>
             <div class="message" v-else-if="message.type === 'TIMVideoFileElem'">
-              <video :src="message.payload.videoUrl" class="video" :poster="message.payload.thumbUrl" object-fit="contain" @error="videoError"></video>
+              <video :src="message.payload.videoUrl" class="video" :poster="message.payload.thumbUrl === '' ? 'https://webim-1252463788.file.myqcloud.com/assets/images/video-poster.png' : message.payload.thumbUrl" object-fit="contain" @error="videoError"></video>
             </div>
           </div>
           <div class="avatar">
@@ -206,6 +206,16 @@
             </div>
           </div>
         </div>
+        <div class="images">
+          <div class="block" @click="video">
+            <div class="image">
+              <image src="/static/images/video.png" class="icon"/>
+            </div>
+            <div class="name">
+              视频
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -258,7 +268,8 @@ export default {
       title: '正在录音',
       rateModal: false,
       rate: 5,
-      isShow: false
+      isShow: false,
+      faceUrl: 'https://webim-1252463788.file.myqcloud.com/assets/face-elem/'
     }
   },
   onShow () {
@@ -337,6 +348,7 @@ export default {
   computed: {
     ...mapState({
       currentMessageList: state => {
+        // console.log(state.conversation.currentMessageList)
         return state.conversation.currentMessageList
       }
     })
@@ -467,9 +479,19 @@ export default {
       this.modalVisible = !this.modalVisible
     },
     handleDownload (message) {
-      this.percent = 0
-      this.downloadInfo = message
-      this.handleModalShow()
+      const fileType = message.fileUrl.slice(message.fileUrl.lastIndexOf('.')).toLowerCase()
+      const allow = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf']
+      if (allow.indexOf(fileType) > -1) {
+        this.percent = 0
+        this.downloadInfo = message
+        this.handleModalShow()
+      } else {
+        this.$store.commit('showToast', {
+          title: '小程序不支持该文件预览哦',
+          icon: 'none',
+          duration: 2000
+        })
+      }
     },
     download () {
       let that = this
@@ -503,7 +525,7 @@ export default {
             fail: function (err) {
               console.log('open file fail', err)
               that.$store.commit('showToast', {
-                title: '小程序不支持该文件预览哦',
+                title: '小程序打开该文件失败',
                 icon: 'none',
                 duration: 2000
               })
@@ -717,6 +739,27 @@ export default {
           icon: 'none',
           duration: 2000
         })
+      })
+    },
+    // 发送视频消息
+    video () {
+      let that = this
+      wx.chooseVideo({
+        sourceType: ['album', 'camera'],
+        maxDuration: 60,
+        camera: 'back',
+        success (res) {
+          let message = wx.$app.createVideoMessage({
+            to: that.$store.getters.toAccount,
+            conversationType: that.$store.getters.currentConversationType,
+            payload: {
+              file: res
+            }
+          })
+          that.$store.commit('sendMessage', message)
+          wx.$app.sendMessage(message)
+          that.handleClose()
+        }
       })
     }
   },

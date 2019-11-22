@@ -38,8 +38,16 @@ export default {
       })
       wx.$app.getConversationProfile(conversationID)
         .then((res) => {
-          this.$store.commit('updateCurrentConversation', res.data.conversation)
-          this.$store.dispatch('getMessageList', res.data.conversation.conversationID)
+          const conversation = res.data.conversation
+          this.$store.commit('updateCurrentConversation', conversation)
+          this.$store.dispatch('getMessageList', conversation.conversationID)
+          if (conversation.type === this.TIM.TYPES.CONV_GROUP) {
+            let groupID = conversation.conversationID.substring(5)
+            wx.$app.getGroupProfile({ groupID: groupID })
+              .then(res => {
+                this.$store.commit('updateCurrentGroupProfile', res.data.group)
+              })
+          }
         })
       let url = `../chat/main?toAccount=${item.name}`
       wx.navigateTo({url})

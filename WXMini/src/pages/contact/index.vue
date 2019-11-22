@@ -1,10 +1,5 @@
 <template>
   <div class="container">
-<!--    <i-modal title="添加的用户ID" :visible="addModalVisible" @ok="handleAdd" @cancel="handleModalShow">-->
-<!--      <div class="input-wrapper">-->
-<!--        <input type="text" class="input border center" v-model.lazy:value="addUserId"/>-->
-<!--      </div>-->
-<!--    </i-modal>-->
     <i-modal title="提示" :visible="applyModalVisible" @ok="handleApply" @cancel="handleApplyModal">
       <div class="input-wrapper">
         确定要加入群{{search}}吗？
