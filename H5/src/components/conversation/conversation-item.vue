@@ -28,9 +28,8 @@
               </div>
             </div>
             <div class="unread-count">
-              <span class="badge" v-if="conversation.unreadCount > 0">
-                {{conversation.unreadCount}}
-                <template v-if="conversation.unreadCount > 99">+</template>
+              <span class="badge" v-if="showUnreadCount">
+                {{conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}}
               </span>
             </div>
           </div>
@@ -67,6 +66,9 @@ export default {
   },
   computed: {
     showUnreadCount() {
+      if (this.$store.getters.hidden) {
+        return this.conversation.unreadCount > 0
+      }
       // 是否显示未读计数。当前会话和未读计数为0的会话，不显示。
       return (
         this.currentConversation.conversationID !==

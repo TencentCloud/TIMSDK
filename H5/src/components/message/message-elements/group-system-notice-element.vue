@@ -88,6 +88,7 @@ export default {
         })
         .then(() => {
           this.showDialog = false
+          this.$store.commit('removeMessage', this.message)
         })
         .catch(error => {
           this.$store.commit('showMessage', {

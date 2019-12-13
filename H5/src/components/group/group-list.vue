@@ -86,8 +86,8 @@ export default {
     },
     applyJoinGroup(group) {
       this.tim
-        .joinGroup({ groupID: group.groupID, type: group.type })
-        .then(res => {
+        .joinGroup({ groupID: group.groupID })
+        .then(async res => {
           switch(res.data.status) {
             case this.TIM.TYPES.JOIN_STATUS_WAIT_APPROVAL:
               this.$store.commit('showMessage', {
@@ -96,6 +96,10 @@ export default {
               })
               break
             case this.TIM.TYPES.JOIN_STATUS_SUCCESS:
+              await this.$store.dispatch(
+                'checkoutConversation',
+                `GROUP${res.data.group.groupID}`
+              )
               this.$store.commit('showMessage', {
                 message: '加群成功',
                 type: 'success'
