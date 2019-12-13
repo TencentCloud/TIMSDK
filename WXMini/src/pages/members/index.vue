@@ -72,10 +72,16 @@ export default {
       }
     }),
     isMyRoleOwner () {
-      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_OWNER
+      if (this.currentGroupProfile.hasOwnProperty('selfInfo')) {
+        return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_OWNER
+      }
+      return false
     },
     isMyRoleAdmin () {
-      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_ADMIN
+      if (this.currentGroupProfile.hasOwnProperty('selfInfo')) {
+        return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_ADMIN
+      }
+      return false
     }
   },
   onReachBottom () {

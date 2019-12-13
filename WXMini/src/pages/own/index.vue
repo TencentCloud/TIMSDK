@@ -45,7 +45,6 @@ export default {
       this.$store.commit('resetCurrentConversation')
       this.$store.commit('resetAllConversation')
       wx.$app.logout()
-      wx.hideLoading()
       wx.reLaunch({
         url: '../login/main'
       })

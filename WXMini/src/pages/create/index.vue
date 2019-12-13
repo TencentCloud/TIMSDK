@@ -172,8 +172,10 @@ export default {
           wx.switchTab({
             url: '../index/main'
           })
-        }).catch((err) => {
-          console.log(err)
+        }).catch(() => {
+          this.$store.commit('showToast', {
+            title: '创建群组失败'
+          })
         })
       } else {
         this.$store.commit('showToast', {
