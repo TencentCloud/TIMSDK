@@ -130,6 +130,7 @@ export default {
     },
     onReceiveMessage({ data: messageList }) {
       this.handleAt(messageList)
+      this.handleQuitGroupTip(messageList)
       this.$store.commit('pushCurrentMessageList', messageList)
     },
     onError({ data }) {
@@ -179,7 +180,7 @@ export default {
         // @ 我的
         if (matched.includes(`@${this.currentUserProfile.userID}`)) {
           // 当前页面不可见时，调用window.Notification接口，系统级别通知。
-          if (document.hidden) {
+          if (this.$store.getters.hidden) {
             this.notifyMe(message)
           }
           Notification({
@@ -214,6 +215,7 @@ export default {
     },
     handleNotify(message) {
       const notification = new window.Notification('有人提到了你', {
+        icon: 'https://webim-1252463788.file.myqcloud.com/demo/img/logo.dc3be0d4.png',
         body: message.payload.text
       })
       notification.onclick = () => {
@@ -224,6 +226,27 @@ export default {
     },
     handleLinkClick() {
       MTA.clickStat('link_two', { click: 'true' })
+    },
+    /**
+     * 收到有群成员退群/被踢出的groupTip时，需要将相关群成员从当前会话的群成员列表中移除
+     * @param {Message[]} messageList
+     */
+    handleQuitGroupTip(messageList) {
+      // 筛选出当前会话的退群/被踢群的 groupTip
+      const groupTips = messageList.filter(message => {
+        return this.currentConversation.conversationID === message.conversationID &&
+          message.type === this.TIM.TYPES.MSG_GRP_TIP &&
+          (message.payload.operationType === this.TIM.TYPES.GRP_TIP_MBR_QUIT || 
+          message.payload.operationType === this.TIM.TYPES.GRP_TIP_MBR_KICKED_OUT) 
+      })
+      // 清理当前会话的群成员列表
+      if (groupTips.length > 0) {
+        groupTips.forEach(groupTip => {
+          if (Array.isArray(groupTip.payload.userIDList) || groupTip.payload.userIDList.length > 0) {
+            this.$store.commit('deleteGroupMemberList', groupTip.payload.userIDList)
+          }
+        })
+      }
     }
   }
 }
