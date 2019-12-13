@@ -1,9 +1,9 @@
 
-.container.data-v-e0e82344 {
+.container.data-v-78596bc6 {
   background-color: #f8f8f9;
   min-height: 100vh;
 }
-.container .group.data-v-e0e82344 {
+.container .group.data-v-78596bc6 {
   height: 100rpx;
   background-color: #fff;
   box-sizing: border-box;
@@ -11,20 +11,20 @@
   display: flex;
   padding: 20rpx 40rpx;
 }
-.container .group .avatar.data-v-e0e82344 {
+.container .group .avatar.data-v-78596bc6 {
   width: 120rpx;
 }
-.container .group .avatar .img.data-v-e0e82344 {
+.container .group .avatar .img.data-v-78596bc6 {
   width: 60rpx;
   height: 60rpx;
 }
-.name.data-v-e0e82344 {
+.name.data-v-78596bc6 {
   line-height: 60rpx;
   width: 50%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.type.data-v-e0e82344 {
+.type.data-v-78596bc6 {
   line-height: 60rpx;
 }
