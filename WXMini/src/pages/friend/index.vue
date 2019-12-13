@@ -69,7 +69,9 @@ export default {
                 let url = `../chat/main?toAccount=${res.data.conversation.userProfile.nick || res.data.conversation.userProfile.userID}`
                 wx.navigateTo({ url })
               }).catch(error => {
-                console.log(error)
+                this.$store.commit('showToast', {
+                  title: error.message
+                })
               })
             }).catch(() => {
               this.$store.commit('showToast', {

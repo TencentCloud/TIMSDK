@@ -16,7 +16,7 @@
         {{title}}
       </div>
     </div>
-    <i-modal title="确认下载？" :visible="modalVisible" @ok="download" @cancel="handleModalShow">
+    <i-modal title="确认下载？" :visible="modalVisible" @ok="download" s@cancel="handleModalShow">
       <div class="input-wrapper">
         进度{{percent}}%
       </div>
@@ -92,7 +92,10 @@
               <div v-else-if="message.payload.data === 'group_create'">
                 <div>{{message.payload.extension}}</div>
               </div>
-              <div v-else class="custom-elem">这是自定义消息</div>
+              <div v-else-if="message.virtualDom[0].name === 'videoCall'" class="custom-elem">
+                <div>{{message.virtualDom[0].text}}</div>
+              </div>
+              <div v-else class="custom-elem">自定义消息</div>
             </div>
             <div class="message" v-else-if="message.type === 'TIMSoundElem'" :url="message.payload.url">
               <div class="box" @click="openAudio(message.payload)">
@@ -102,7 +105,7 @@
             </div>
             <div class="message" v-else-if="message.type === 'TIMFaceElem'">
               <div class="custom-elem">
-                <image :src="message.payload.data.indexOf('@') > 0 ? faceUrl + message.payload.data + '.png' : faceUrl + message.payload.data + '@2x.png'" style="height:90px; width:90px"/>
+                <image :src="message.payload.data[4] === '@' ? faceUrl + message.payload.data + '.png' : faceUrl + message.payload.data + '@2x.png'" style="height:90px; width:90px"/>
               </div>
             </div>
             <div class="message" v-else-if="message.type === 'TIMVideoFileElem'">
@@ -123,11 +126,11 @@
         </div>
         <div v-if="!isRecord" style="width: 80%">
           <input type="text"
-                 class="input"
-                 v-model.lazy:value="messageContent"
-                 confirm-type="send"
-                 :focus="isFocus"
-                 @confirm='sendMessage'/>
+             class="input"
+             v-model.lazy:value="messageContent"
+             confirm-type="send"
+             :focus="isFocus"
+             @confirm='sendMessage'/>
         </div>
         <div class="record"
              id="record"
@@ -189,12 +192,12 @@
               拍照
             </div>
           </div>
-          <div class="block" @click="customModal()">
+          <div class="block" @click="video">
             <div class="image">
-              <image src="/static/images/define.png" class="icon"/>
+              <image src="/static/images/video.png" class="icon"/>
             </div>
             <div class="name">
-              自定义
+              视频
             </div>
           </div>
           <div class="block" @click="rateModal = true">
@@ -207,12 +210,20 @@
           </div>
         </div>
         <div class="images">
-          <div class="block" @click="video">
+          <div class="block" @click="customModal()">
             <div class="image">
-              <image src="/static/images/video.png" class="icon"/>
+              <image src="/static/images/define.png" class="icon"/>
             </div>
             <div class="name">
-              视频
+              自定义
+            </div>
+          </div>
+          <div class="block" @click="call" v-if="currentConversationType === 'C2C'">
+            <div class="image">
+              <image src="/static/images/video-call.png" class="icon"/>
+            </div>
+            <div class="name">
+              视频通话
             </div>
           </div>
         </div>
@@ -222,9 +233,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { emojiName, emojiMap, emojiUrl } from '../../utils/emojiMap'
-import { throttle } from '../../utils/index'
+import { throttle, videoStatus, randomString } from '../../utils/index'
 const audioContext = wx.createInnerAudioContext()
 const recorderManager = wx.getRecorderManager()
 const recordOptions = {
@@ -269,7 +280,8 @@ export default {
       rateModal: false,
       rate: 5,
       isShow: false,
-      faceUrl: 'https://webim-1252463788.file.myqcloud.com/assets/face-elem/'
+      faceUrl: 'https://webim-1252463788.file.myqcloud.com/assets/face-elem/',
+      videoStatus: videoStatus
     }
   },
   onShow () {
@@ -306,13 +318,13 @@ export default {
       this.messageContent += ' '
     })
     recorderManager.onStart(() => {
-      console.log('recorder start')
+      console.log('开始录音')
     })
     recorderManager.onPause(() => {
-      console.log('recorder pause')
+      console.log('暂停录音')
     })
     recorderManager.onStop((res) => {
-      console.log('recorder stop')
+      console.log('结束录音')
       wx.hideLoading()
       if (this.canSend) {
         if (res.duration < 1000) {
@@ -332,6 +344,13 @@ export default {
         }
       }
     })
+    this.$bus.$on('groupNameUpdate', event => {
+      if (event.groupProfile.groupID === this.toAccount) {
+        wx.setNavigationBarTitle({
+          title: event.newGroupProfile.name
+        })
+      }
+    })
   },
   // 退出聊天页面的时候所有状态清空
   onUnload () {
@@ -348,10 +367,15 @@ export default {
   computed: {
     ...mapState({
       currentMessageList: state => {
-        // console.log(state.conversation.currentMessageList)
         return state.conversation.currentMessageList
       }
-    })
+    }),
+    ...mapGetters([
+      'currentConversationType',
+      'currentConversationID',
+      'myInfo',
+      'toAccount'
+    ])
   },
   methods: {
     onChange (e) {
@@ -389,49 +413,68 @@ export default {
       recorderManager.stop()
     },
     startRecording () {
-      wx.getSetting({
-        success: (res) => {
-          let auth = res.authSetting['scope.record']
-          if (auth === false) { // 已申请过授权，但是用户拒绝
-            wx.openSetting({
-              success: function (res) {
-                let auth = res.authSetting['scope.record']
-                if (auth === true) {
-                  wx.showToast({
-                    title: '授权成功',
-                    icon: 'success',
-                    duration: 1500
-                  })
-                } else {
-                  wx.showToast({
-                    title: '授权失败',
-                    icon: 'none',
-                    duration: 1500
-                  })
-                }
-              }
-            })
-          } else if (auth === true) { // 用户已经同意授权
-            this.isRecording = true
-            recorderManager.start(recordOptions)
-          } else { // 第一次进来，未发起授权
-            wx.authorize({
-              scope: 'scope.record',
-              success: () => {
-                wx.showToast({
-                  title: '授权成功',
-                  icon: 'success',
-                  duration: 1500
-                })
-              }
-            })
-          }
+      const that = this
+      wx.authorize({
+        scope: 'scope.record',
+        success () {
+          console.log('录音授权成功')
+          recorderManager.start(recordOptions)
         },
-        fail: function () {
-          wx.showToast({
-            title: '授权失败',
-            icon: 'none',
-            duration: 1500
+        fail () {
+          that.isRecording = false
+          console.log('第一次录音授权失败')
+          wx.showModal({
+            title: '提示',
+            content: '您未授权录音，功能将无法使用',
+            showCancel: true,
+            confirmText: '授权',
+            success: function (res) {
+              if (res.confirm) {
+                // 确认则打开设置页面（重点）
+                wx.openSetting({
+                  success: (res) => {
+                    if (!res.authSetting['scope.record']) {
+                      // 未设置录音授权
+                      console.log('未设置录音授权')
+                      wx.showModal({
+                        title: '提示',
+                        content: '您未授权录音，功能将无法使用',
+                        showCancel: false,
+                        success: function (res) {
+                          wx.showToast({
+                            title: '授权成功'
+                          })
+                        }
+                      })
+                    } else {
+                      // 第二次才成功授权
+                      wx.showToast({
+                        title: '授权成功',
+                        icon: 'none',
+                        duration: 500
+                      })
+                      recorderManager.start(recordOptions)
+                    }
+                  },
+                  fail: function () {
+                    wx.showToast({
+                      title: '授权失败',
+                      icon: 'none',
+                      duration: 500
+                    })
+                  }
+                })
+              } else if (res.cancel) {
+                console.log('取消授权录音')
+              }
+            },
+            fail: function () {
+              wx.showToast({
+                title: '打开授权失败',
+                icon: 'none',
+                duration: 500
+              })
+            }
           })
         }
       })
@@ -458,7 +501,7 @@ export default {
         to: this.$store.getters.toAccount,
         conversationType: this.$store.getters.currentConversationType,
         payload: {
-          data: this.customData,
+          data: JSON.stringify({ data: this.customData }),
           description: this.customDescription,
           extension: this.customExtension
         }
@@ -498,7 +541,7 @@ export default {
       let downloadTask = wx.downloadFile({
         url: that.downloadInfo.fileUrl,
         success: function (res) {
-          console.log('start downloading: ')
+          console.log('开始下载文件: ', res)
         },
         fail: function ({errMsg}) {
           that.$store.commit('showToast', {
@@ -513,7 +556,6 @@ export default {
           wx.openDocument({
             filePath: res.tempFilePath,
             success: function (res) {
-              console.log('open file fail', res)
               that.$store.commit('showToast', {
                 title: '打开文档成功',
                 icon: 'none',
@@ -523,7 +565,7 @@ export default {
               that.handleModalShow()
             },
             fail: function (err) {
-              console.log('open file fail', err)
+              console.log('打开文件失败', err)
               that.$store.commit('showToast', {
                 title: '小程序打开该文件失败',
                 icon: 'none',
@@ -652,7 +694,6 @@ export default {
       }
     },
     videoError (e) {
-      console.log(e)
       this.$store.commit('showToast', {
         title: `视频出现错误，错误信息${e.mp.detail.errMsg}`,
         duration: 1500
@@ -679,7 +720,10 @@ export default {
           wx.$app.sendMessage(message).then(() => {
             self.percent = 0
           }).catch((err) => {
-            console.log(err)
+            this.$store.commit('showToast', {
+              title: err.message,
+              duration: 200
+            })
           })
         }
       })
@@ -761,6 +805,38 @@ export default {
           that.handleClose()
         }
       })
+    },
+    getRandomInt (min, max) {
+      min = Math.ceil(min)
+      max = Math.floor(max)
+      return Math.floor(Math.random() * (max - min)) + min
+    },
+    generateUUID () {
+      return '2.3.0-' + `${randomString()}`
+    },
+    call () {
+      const options = {
+        call_id: this.generateUUID(),
+        version: 3,
+        room_id: this.getRandomInt(0, 4294967295),
+        action: 0,
+        duration: 0,
+        invited_list: []
+      }
+      let args = JSON.stringify(options)
+      const message = wx.$app.createCustomMessage({
+        to: this.$store.getters.toAccount,
+        conversationType: this.$store.getters.currentConversationType,
+        payload: {
+          data: args,
+          description: '',
+          extension: ''
+        }
+      })
+      this.$store.commit('sendMessage', message)
+      wx.$app.sendMessage(message)
+      let url = `../call/main?args=${args}&&from=${message.from}&&to=${message.to}`
+      wx.navigateTo({url})
     }
   },
   destory () {}
@@ -974,8 +1050,8 @@ li
   flex-wrap wrap
   white-space pre-wrap
 .custom-elem
-  background-color white
-  color $dark-primary
+  color black
+  font-weight 700
 .item-right
   display flex
   flex-direction row

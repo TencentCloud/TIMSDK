@@ -1,4 +1,5 @@
 import { emojiMap, emojiUrl } from './emojiMap'
+import { formatDuration } from './index'
 /** 传入message.element（群系统消息SystemMessage，群提示消息GroupTip除外）
  * content = {
  *  type: 'TIMTextElem',
@@ -7,22 +8,6 @@ import { emojiMap, emojiUrl } from './emojiMap'
  *  }
  *}
  **/
-const GROUP_SYSTEM_NOTICE_TYPE = {
-  JOIN_GROUP_REQUEST: 1, // 申请加群请求（只有管理员会收到）
-  JOIN_GROUP_ACCEPT: 2, // 申请加群被同意（只有申请人能够收到）
-  JOIN_GROUP_REFUSE: 3, // 申请加群被拒绝（只有申请人能够收到）
-  KICKED_OUT: 4, // 被管理员踢出群(只有被踢者接收到)
-  GROUP_DISMISSED: 5, // 群被解散(全员接收)
-  GROUP_CREATED: 6, // 创建群(创建者接收, 不展示)
-  INVITED_JOIN_GROUP_REQUEST: 7, // 邀请加群(被邀请者接收)。对于被邀请者，表示被邀请进群。
-  QUIT: 8, // 主动退群(主动退出者接收, 不展示)
-  SET_ADMIN: 9, // 设置管理员(被设置者接收)
-  CANCELED_ADMIN: 10, // 取消管理员(被取消者接收)
-  REVOKE: 11, // 群已被回收(全员接收, 不展示)
-  INVITED_JOIN_GROUP_REQUEST_AGREE: 12, // 邀请加群(被邀请者需同意)
-  READED: 15, // 群消息已读同步
-  CUSTOM: 255 // 用户自定义通知(默认全员接收)
-}
 
 // 群提示消息的含义 (opType)
 const GROUP_TIP_TYPE = {
@@ -92,44 +77,39 @@ function parseGroupSystemNotice (message) {
     payload.groupProfile.groupName || payload.groupProfile.groupID
   let text
   switch (payload.operationType) {
-    case GROUP_SYSTEM_NOTICE_TYPE.JOIN_GROUP_REQUEST:
+    case 1:
       text = `${payload.operatorID} 申请加入群组：${groupName}`
       break
-    case GROUP_SYSTEM_NOTICE_TYPE.JOIN_GROUP_ACCEPT:
+    case 2:
       text = `成功加入群组：${groupName}`
       break
-    case GROUP_SYSTEM_NOTICE_TYPE.JOIN_GROUP_REFUSE:
+    case 3:
       text = `申请加入群组：${groupName}被拒绝`
       break
-    case GROUP_SYSTEM_NOTICE_TYPE.KICKED_OUT:
+    case 4:
       text = `被管理员${payload.operatorID}踢出群组：${groupName}`
       break
-    case GROUP_SYSTEM_NOTICE_TYPE.GROUP_DISMISSED:
+    case 5:
       text = `群：${groupName} 已被${payload.operatorID}解散`
       break
-    case GROUP_SYSTEM_NOTICE_TYPE.GROUP_CREATED:
+    case 6:
       text = `${payload.operatorID}创建群：${groupName}`
       break
-    case GROUP_SYSTEM_NOTICE_TYPE.INVITED_JOIN_GROUP_REQUEST:
+    case 7:
       text = `${payload.operatorID}邀请你加群：${groupName}`
       break
-    case GROUP_SYSTEM_NOTICE_TYPE.QUIT:
+    case 8:
       text = `你退出群组：${groupName}`
       break
-    case GROUP_SYSTEM_NOTICE_TYPE.SET_ADMIN:
+    case 9:
       text = `你被${payload.operatorID}设置为群：${groupName}的管理员`
       break
-    case GROUP_SYSTEM_NOTICE_TYPE.CANCELED_ADMIN:
+    case 10:
       text = `你被${payload.operatorID}撤销群：${groupName}的管理员身份`
       break
-    case GROUP_SYSTEM_NOTICE_TYPE.REVOKE:
-      text = `群：${groupName}被${payload.operatorID}回收`
+    case 255:
+      text = '自定义群系统通知: ' + payload.userDefinedField
       break
-    case GROUP_SYSTEM_NOTICE_TYPE.INVITED_JOIN_GROUP_REQUEST_AGREE:
-      text = `${payload.operatorID}同意入群：${groupName}邀请`
-      break
-    case GROUP_SYSTEM_NOTICE_TYPE.CUSTOM:
-      text = `自定义群系统通知：${payload.userDefinedField}`
   }
   return [{
     name: 'system',
@@ -167,6 +147,70 @@ function parseGroupTip (message) {
     text: tip
   }]
 }
+function isJSON (str) {
+  if (typeof str === 'string') {
+    try {
+      let obj = JSON.parse(str)
+      if (typeof obj === 'object' && obj) {
+        return true
+      } else {
+        return false
+      }
+    } catch (e) {
+      return false
+    }
+  }
+}
+
+function parseCustom (message) {
+  let data = message.payload.data
+  if (isJSON(data)) {
+    data = JSON.parse(data)
+    if (data.hasOwnProperty('version') && data.version === 3) {
+      let tip
+      const time = formatDuration(data.duration)
+      switch (data.action) {
+        case 0:
+          tip = '请求通话'
+          break
+        case 1:
+          tip = '取消通话'
+          break
+        case 2:
+          tip = '拒绝通话'
+          break
+        case 3:
+          tip = '无应答'
+          break
+        case 4:
+          tip = '开始通话'
+          break
+        case 5:
+          if (data.duration === 0) {
+            tip = '结束通话'
+          } else {
+            tip = `结束通话，通话时长${time}`
+          }
+          break
+        case 6:
+          tip = '正在通话中'
+          break
+      }
+      return [{
+        name: 'videoCall',
+        text: tip
+      }]
+    }
+    return [{
+      name: 'custom',
+      text: data
+    }]
+  }
+  return [{
+    name: 'custom',
+    text: data
+  }]
+}
 export function decodeElement (message) {
   // renderDom是最终渲染的
   switch (message.type) {
@@ -176,6 +220,8 @@ export function decodeElement (message) {
       return parseGroupSystemNotice(message)
     case 'TIMGroupTipElem':
       return parseGroupTip(message)
+    case 'TIMCustomElem':
+      return parseCustom(message)
     default:
       return []
   }

@@ -13,6 +13,7 @@
     "pages/groupDetail/main",
     "pages/groups/main",
     "pages/blacklist/main",
+    "pages/call/main",
     "pages/profile/main"
   ],
   "window": {
