@@ -39,6 +39,7 @@ const conversationModules = {
       }
       return ''
     },
+    currentConversationID: state => state.currentConversationID,
     currentConversation: state => state.currentConversation,
     currentMessageList: state => state.currentMessageList
   },
@@ -70,11 +71,13 @@ const conversationModules = {
       let date = new Date(message.time * 1000)
       message.newtime = formatTime(date)
       state.currentMessageList.push(message)
-      setTimeout(() => {
-        wx.pageScrollTo({
-          scrollTop: 99999
-        })
-      }, 800)
+      if (message.conversationID === state.currentConversationID) {
+        setTimeout(() => {
+          wx.pageScrollTo({
+            scrollTop: 99999
+          })
+        }, 800)
+      }
     },
     // 更新当前的会话
     updateCurrentConversation (state, conversation) {

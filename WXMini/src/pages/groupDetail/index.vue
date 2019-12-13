@@ -70,13 +70,13 @@
         <div class="value">{{groupProfile.type}}</div>
       </div>
     </div>
-    <div class="revise" v-if="isOwner && groupProfile.type !== 'AVChatRoom'">
+    <div class="revise" v-if="isMyRoleOwner && groupProfile.type !== 'AVChatRoom'">
         <button @click="changeGroupOwner" class="btn delete">转让群组</button>
       </div>
     <div class="revise" v-if="groupProfile.type !== 'Public'">
       <button @click="quitGroup" class="btn delete">退出群组</button>
     </div>
-    <div class="revise"  v-if="isOwner && groupProfile.type !== 'Private'">
+    <div class="revise"  v-if="isMyRoleOwner && groupProfile.type !== 'Private'">
       <button @click="dismissGroup" class="btn delete">解散群组</button>
     </div>
   </div>
@@ -106,10 +106,16 @@ export default {
       }
     }),
     isMyRoleOwner () {
-      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_OWNER
+      if (this.currentGroupProfile.hasOwnProperty('selfInfo')) {
+        return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_OWNER
+      }
+      return false
     },
     isMyRoleAdmin () {
-      return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_ADMIN
+      if (this.currentGroupProfile.hasOwnProperty('selfInfo')) {
+        return this.currentGroupProfile.selfInfo.role === this.$type.GRP_MBR_ROLE_ADMIN
+      }
+      return false
     }
   },
   onShow () {

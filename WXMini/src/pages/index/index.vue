@@ -157,17 +157,7 @@ export default {
       let url = '../friend/main'
       wx.navigateTo({url})
     }
-  },
-  // 初始化加载userProfile并且存入store
-  onLoad () {
-    wx.$app.getMyProfile().then(res => {
-      this.$store.commit('updateMyInfo', res.data)
-    })
-    wx.$app.getBlacklist().then(res => {
-      this.$store.commit('setBlacklist', res.data)
-    })
-  },
-  mounted () {}
+  }
 }
 </script>
 
