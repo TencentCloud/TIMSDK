@@ -241,8 +241,8 @@ to {
   white-space: pre-wrap;
 }
 .custom-elem.data-v-afeb3abc {
-  background-color: #fff;
-  color: #2b85e4;
+  color: #000;
+  font-weight: 700;
 }
 .item-right.data-v-afeb3abc {
   display: flex;
