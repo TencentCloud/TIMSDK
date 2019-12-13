@@ -71,6 +71,7 @@
     </el-popover>
     <div class="bottom">
       <textarea
+        ref="text-input"
         rows="4"
         resize="false"
         v-model="messageContent"
@@ -81,7 +82,8 @@
         @keyup.ctrl.enter.prevent.exact="handleLine"
         @keydown.up.stop="handleUp"
         @keydown.down.stop="handleDown"
-      ></textarea>
+      >
+      </textarea>
       <el-tooltip
         class="item"
         effect="dark"
@@ -163,6 +165,12 @@ export default {
       memberList: state => state.group.currentMemberList
     })
   },
+  mounted() {
+    this.$refs['text-input'].addEventListener('paste', this.handlePaste)
+  },
+  unmounted() {
+    this.$refs['text-input'].removeEventListener('paste', this.handlePaste)
+  },
   methods: {
     handleSelectAtUser() {
       this.messageContent += this.atUserID + ' '
@@ -195,6 +203,42 @@ export default {
     },
     handleLine() {
       this.messageContent += '\n'
+    },
+    handlePaste(e) {
+      let clipboardData = e.clipboardData
+      let file
+      if (
+        clipboardData &&
+        clipboardData.files &&
+        clipboardData.files.length > 0
+      ) {
+        file = clipboardData.files[0]
+      }
+
+      if (typeof file === 'undefined') {
+        return
+      }
+      // 1. 创建消息实例，接口返回的实例可以上屏
+      let message = this.tim.createImageMessage({
+        to: this.toAccount,
+        conversationType: this.currentConversationType,
+        payload: {
+          file: file
+        },
+        onProgress: percent => {
+          this.$set(message, 'progress', percent) // 手动给message 实例加个响应式属性: progress
+        }
+      })
+      this.$store.commit('pushCurrentMessageList', message)
+
+      // 2. 发送消息
+      let promise = this.tim.sendMessage(message)
+      promise.catch(error => {
+        this.$store.commit('showMessage', {
+          type: 'error',
+          message: error.message
+        })
+      })
     },
     sendTextMessage() {
       if (

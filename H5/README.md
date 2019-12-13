@@ -109,6 +109,17 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### WebIM Demo Change Log
 
+#### 2019/12/13
+
+**Features**
+
+- 支持粘贴发送截图
+
+**Change**
+
+- 完善收到新消息时的通知处理
+- 处理完【加群申请】后，将相应的通知删除
+
 #### 2019/11/22
 
 **Features**

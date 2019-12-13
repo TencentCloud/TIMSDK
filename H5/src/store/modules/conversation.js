@@ -1,5 +1,7 @@
 import tim from 'tim'
 import TIM from 'tim-js-sdk'
+import store from '..'
+import { titleNotify } from '../../utils'
 const conversationModules = {
   state: {
     currentConversation: {},
@@ -29,19 +31,15 @@ const conversationModules = {
       return state.currentConversation.type
     },
     totalUnreadCount: state => {
-      return state.conversationList.reduce((count, conversation) => {
+      const result = state.conversationList.reduce((count, conversation) => {
         // 当前会话不计算总未读
-        if (conversation.conversationID === state.currentConversation.conversationID) {
-          return count
-        }
-        if (
-          conversation.type === 'GROUP' &&
-          conversation.groupProfile.selfInfo.messageRemindType === 'AcceptNotNotify'
-        ) {
+        if (!store.getters.hidden && state.currentConversation.conversationID === conversation.conversationID) {
           return count
         }
         return count + conversation.unreadCount
       }, 0)
+      titleNotify(result)
+      return result
     },
     // 用于当前会话的图片预览
     imgUrlList: state => {
@@ -96,10 +94,19 @@ const conversationModules = {
         // 筛选出当前会话的消息
         const result = data.filter(item => item.conversationID === state.currentConversation.conversationID)
         state.currentMessageList = [...state.currentMessageList, ...result]
-        // state.currentMessageList = mergeMessageList(state.currentMessageList, result);
       } else if (data.conversationID === state.currentConversation.conversationID) {
         state.currentMessageList = [...state.currentMessageList, data]
-        // state.currentMessageList = mergeMessageList(state.currentMessageList, [data]);
+      }
+    },
+    /**
+     * 从当前消息列表中删除某条消息
+     * @param {Object} state
+     * @param {Message} message
+     */
+    removeMessage(state, message) {
+      const index = state.currentMessageList.findIndex(({ ID }) => ID === message.ID)
+      if (index >= 0) {
+        state.currentMessageList.splice(index, 1)
       }
     },
     reset(state) {
