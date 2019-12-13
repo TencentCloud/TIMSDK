@@ -1,48 +1,48 @@
 
-.member-list.data-v-536d31bc {
+.member-list.data-v-3c045558 {
   color: #1c2438;
   font-weight: 500;
 }
-.manage.data-v-536d31bc {
+.manage.data-v-3c045558 {
   color: #2b85e4;
   border-radius: 16rpx;
   border: 2rpx solid #2b85e4;
   padding: 4rpx 8rpx;
 }
-.input-wrapper.data-v-536d31bc {
+.input-wrapper.data-v-3c045558 {
   width: 100%;
   display: flex;
   justify-content: center;
 }
-.input.data-v-536d31bc {
+.input.data-v-3c045558 {
   width: 80%;
   border: 2rpx solid #e9eaec;
   border-radius: 24rpx;
 }
-.bg.data-v-536d31bc {
+.bg.data-v-3c045558 {
   background-color: #f8f8f9;
   height: 100vh;
 }
-.input-wrapper.data-v-536d31bc {
+.input-wrapper.data-v-3c045558 {
   width: 100%;
   display: flex;
   justify-content: center;
 }
-.card.data-v-536d31bc {
+.card.data-v-3c045558 {
   border-top: 2rpx solid #e9eaec;
   border-bottom: 2rpx solid #e9eaec;
   background-color: #fff;
   margin-bottom: -2rpx;
 }
-.member.data-v-536d31bc {
+.member.data-v-3c045558 {
   display: flex;
   padding-top: 20rpx;
   padding-bottom: 20rpx;
 }
-.avatar.data-v-536d31bc {
+.avatar.data-v-3c045558 {
   padding: 20rpx;
 }
-.right.data-v-536d31bc {
+.right.data-v-3c045558 {
   box-sizing: border-box;
   height: 200rpx;
   padding: 20rpx;
@@ -50,16 +50,16 @@
   flex-direction: column;
   justify-content: space-around;
 }
-.right .username.data-v-536d31bc {
+.right .username.data-v-3c045558 {
   font-weight: 600;
   font-size: 36rpx;
   color: #1c2438;
 }
-.right .account.data-v-536d31bc {
+.right .account.data-v-3c045558 {
   font-size: 28rpx;
   color: #80848f;
 }
-.btn.data-v-536d31bc {
+.btn.data-v-3c045558 {
   color: #fff;
   background-color: #2d8cf0;
   border-radius: 40rpx;
@@ -68,21 +68,21 @@
   line-height: 80rpx;
   font-size: 32rpx;
 }
-.delete.data-v-536d31bc {
+.delete.data-v-3c045558 {
   background-color: #ed3f14;
 }
-.item.data-v-536d31bc {
+.item.data-v-3c045558 {
   display: flex;
   justify-content: space-between;
   font-size: 32rpx;
 }
-.item .key.data-v-536d31bc {
+.item .key.data-v-3c045558 {
   padding: 20rpx 40rpx;
   width: 20%;
   font-weight: 500;
   color: #1c2438;
 }
-.item .value.data-v-536d31bc {
+.item .value.data-v-3c045558 {
   width: 80%;
   padding: 20rpx 40rpx 20rpx 0;
   font-weight: 400;
@@ -91,7 +91,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.revise.data-v-536d31bc {
+.revise.data-v-3c045558 {
   padding-top: 40rpx;
   display: flex;
   flex-direction: column;
