@@ -219,8 +219,10 @@ export default {
         this.id = ''
         let url = `../chat/main?toAccount=${res.data.conversation.userProfile.nick}`
         wx.navigateTo({ url })
-      }).catch(error => {
-        console.log(error)
+      }).catch(() => {
+        this.$store.commit('showToast', {
+          title: '获取会话信息失败'
+        })
       })
     }
   },

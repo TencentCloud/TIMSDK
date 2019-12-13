@@ -72,6 +72,9 @@ export default {
           wx.showLoading({
             title: '登录成功'
           })
+          wx.switchTab({
+            url: '../index/main'
+          })
         })
       }
     },

@@ -21,7 +21,14 @@
               </div>
               <div class="information">
                 <div class="content">{{item.lastMessage.messageForShow}}</div>
-                <div class="remain" v-if="item.unreadCount > 0">{{item.unreadCount}}</div>
+                <div class="remain" v-if="item.unreadCount > 0">
+                  <template v-if="item.unreadCount > 99">
+                    99+
+                  </template>
+                  <template v-else>
+                    {{item.unreadCount}}
+                  </template>
+                </div>
               </div>
             </div>
           </i-col>
@@ -43,7 +50,14 @@
                 <div class="content" v-else-if="item.lastMessage.type === 'TIMCustomElem'">[自定义消息]</div>
                 <div class="content-red" v-else-if="item.lastMessage.at && item.unreadCount > 0">[有人@你了]</div>
                 <div class="content" v-else>{{item.lastMessage.fromAccount}}：{{item.lastMessage.messageForShow}}</div>
-                <div class="remain" v-if="item.unreadCount > 0">{{item.unreadCount}}</div>
+                <div class="remain" v-if="item.unreadCount > 0">
+                  <template v-if="item.unreadCount > 99">
+                    99+
+                  </template>
+                  <template v-else>
+                    {{item.unreadCount}}
+                  </template>
+                </div>
               </div>
             </div>
           </i-col>
@@ -150,24 +164,17 @@ export default {
     // 删除会话
     deleteConversation (item) {
       wx.$app.deleteConversation(item.conversationID).then((res) => {
-        console.log('delete success', res)
+        this.$store.commit('showToast', {
+          title: '删除成功',
+          duration: 200
+        })
       })
     },
     empty () {
       let url = '../friend/main'
       wx.navigateTo({url})
     }
-  },
-  // 初始化加载userProfile并且存入store
-  onLoad () {
-    wx.$app.getMyProfile().then(res => {
-      this.$store.commit('updateMyInfo', res.data)
-    })
-    wx.$app.getBlacklist().then(res => {
-      this.$store.commit('setBlacklist', res.data)
-    })
-  },
-  mounted () {}
+  }
 }
 </script>
 

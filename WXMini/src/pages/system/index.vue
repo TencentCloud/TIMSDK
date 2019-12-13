@@ -45,9 +45,19 @@ export default {
   computed: {
     ...mapState({
       currentMessageList: state => {
-        return [...state.conversation.currentMessageList].reverse()
+        return [...state.conversation.currentMessageList]
       }
     })
+  },
+  onShow () {
+    let interval = setInterval(() => {
+      if (this.currentMessageList.length !== 0) {
+        wx.pageScrollTo({
+          scrollTop: 99999
+        })
+        clearInterval(interval)
+      }
+    }, 600)
   },
   methods: {
     handleChange (e) {
@@ -70,7 +80,9 @@ export default {
           title: '处理完成'
         })
       }).catch((err) => {
-        console.log(err)
+        this.$store.commit('showToast', {
+          title: err.message
+        })
         this.modal()
       })
     }
