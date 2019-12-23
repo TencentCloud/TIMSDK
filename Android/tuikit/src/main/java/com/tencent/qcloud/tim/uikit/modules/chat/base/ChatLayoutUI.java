@@ -26,6 +26,7 @@ public abstract class ChatLayoutUI extends LinearLayout implements IChatLayout {
     private MessageLayout mMessageLayout;
     private InputLayout mInputLayout;
     private NoticeLayout mNoticeLayout;
+    private ChatInfo mChatInfo;
 
     public ChatLayoutUI(Context context) {
         super(context);
@@ -77,7 +78,13 @@ public abstract class ChatLayoutUI extends LinearLayout implements IChatLayout {
     }
 
     @Override
+    public ChatInfo getChatInfo() {
+        return mChatInfo;
+    }
+
+    @Override
     public void setChatInfo(ChatInfo chatInfo) {
+        mChatInfo = chatInfo;
         if (chatInfo == null) {
             return;
         }

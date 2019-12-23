@@ -59,14 +59,14 @@ public class ConversationCustomHolder extends ConversationBaseHolder {
             unreadText.setVisibility(View.GONE);
         }
 
-        if (mAdapter.mDateTextSize != 0) {
-            timelineText.setTextSize(mAdapter.mDateTextSize);
+        if (mAdapter.getItemDateTextSize() != 0) {
+            timelineText.setTextSize(mAdapter.getItemDateTextSize());
         }
-        if (mAdapter.mBottomTextSize != 0) {
-            messageText.setTextSize(mAdapter.mBottomTextSize);
+        if (mAdapter.getItemBottomTextSize() != 0) {
+            messageText.setTextSize(mAdapter.getItemBottomTextSize());
         }
-        if (mAdapter.mTopTextSize != 0) {
-            titleText.setTextSize(mAdapter.mTopTextSize);
+        if (mAdapter.getItemTopTextSize() != 0) {
+            titleText.setTextSize(mAdapter.getItemTopTextSize());
         }
 
     }

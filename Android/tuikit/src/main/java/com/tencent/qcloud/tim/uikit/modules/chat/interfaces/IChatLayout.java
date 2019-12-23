@@ -41,7 +41,12 @@ public interface IChatLayout extends ILayout {
     NoticeLayout getNoticeLayout();
 
     /**
-     * 设置当前的会话 ID，会话面板会依据该 ID 加载会话所需的相关信息，如消息记录，用户（群）信息等
+     * 获取当前的会话信息
+     */
+    ChatInfo getChatInfo();
+
+    /**
+     * 设置当前的会话信息
      *
      * @param chatInfo
      */

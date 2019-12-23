@@ -20,7 +20,7 @@ import com.tencent.qcloud.tim.uikit.R;
 public class TUIKitDialog {
 
     private Context mContext;
-    private Dialog dialog;
+    protected Dialog dialog;
     private LinearLayout mBackgroundLayout;
     private LinearLayout mMainLayout;
     private TextView mTitleTv;

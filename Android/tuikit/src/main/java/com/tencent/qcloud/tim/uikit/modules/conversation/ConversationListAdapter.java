@@ -14,17 +14,18 @@ import com.tencent.qcloud.tim.uikit.modules.conversation.holder.ConversationComm
 import com.tencent.qcloud.tim.uikit.modules.conversation.holder.ConversationCustomHolder;
 import com.tencent.qcloud.tim.uikit.modules.conversation.interfaces.IConversationAdapter;
 import com.tencent.qcloud.tim.uikit.modules.conversation.interfaces.IConversationProvider;
+import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConversationListAdapter extends IConversationAdapter {
 
-    public boolean mIsShowUnreadDot = true;
-    public boolean mIsShowItemRoundIcon = false;
-    public int mTopTextSize;
-    public int mBottomTextSize;
-    public int mDateTextSize;
+    private boolean mHasShowUnreadDot = true;
+    private int mItemAvatarRadius = ScreenUtil.getPxByDp(5);
+    private int mTopTextSize;
+    private int mBottomTextSize;
+    private int mDateTextSize;
     private List<ConversationInfo> mDataSource = new ArrayList<>();
     private ConversationListLayout.OnItemClickListener mOnItemClickListener;
     private ConversationListLayout.OnItemLongClickListener mOnItemLongClickListener;
@@ -145,21 +146,39 @@ public class ConversationListAdapter extends IConversationAdapter {
         mTopTextSize = size;
     }
 
+    public int getItemTopTextSize() {
+        return mTopTextSize;
+    }
+
     public void setItemBottomTextSize(int size) {
         mBottomTextSize = size;
+    }
+
+    public int getItemBottomTextSize() {
+        return mBottomTextSize;
     }
 
     public void setItemDateTextSize(int size) {
         mDateTextSize = size;
     }
 
-    public void enableItemRoundIcon(boolean flag) {
-        mIsShowItemRoundIcon = flag;
+    public int getItemDateTextSize() {
+        return mDateTextSize;
+    }
+
+    public void setItemAvatarRadius(int radius) {
+        mItemAvatarRadius = radius;
+    }
+
+    public int getItemAvatarRadius() {
+        return mItemAvatarRadius;
     }
 
     public void disableItemUnreadDot(boolean flag) {
-        mIsShowUnreadDot = !flag;
+        mHasShowUnreadDot = !flag;
     }
 
-
+    public boolean hasItemUnreadDot() {
+        return mHasShowUnreadDot;
+    }
 }

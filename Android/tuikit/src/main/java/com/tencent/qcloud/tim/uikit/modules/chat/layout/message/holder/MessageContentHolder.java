@@ -136,8 +136,14 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             }
         }
 
-        if (msg.getStatus() == MessageInfo.MSG_STATUS_SENDING || msg.getStatus() == MessageInfo.MSG_STATUS_DOWNLOADING) {
-            sendingProgress.setVisibility(View.VISIBLE);
+        if (msg.isSelf()) {
+            if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL
+                    || msg.getStatus() == MessageInfo.MSG_STATUS_SEND_SUCCESS
+                    || msg.isPeerRead()) {
+                sendingProgress.setVisibility(View.GONE);
+            } else {
+                sendingProgress.setVisibility(View.VISIBLE);
+            }
         } else {
             sendingProgress.setVisibility(View.GONE);
         }

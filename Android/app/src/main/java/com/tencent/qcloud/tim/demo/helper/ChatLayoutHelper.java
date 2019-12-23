@@ -1,19 +1,15 @@
 package com.tencent.qcloud.tim.demo.helper;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.tencent.imsdk.TIMCustomElem;
-import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.modules.chat.ChatLayout;
@@ -27,11 +23,21 @@ import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
+import static com.tencent.qcloud.tim.demo.helper.CustomMessage.JSON_VERSION_1_HELLOTIM;
+import static com.tencent.qcloud.tim.demo.helper.CustomMessage.JSON_VERSION_3_ANDROID_IOS_TRTC;
+
 public class ChatLayoutHelper {
 
     private static final String TAG = ChatLayoutHelper.class.getSimpleName();
 
-    public static void customizeChatLayout(final Context context, final ChatLayout layout) {
+    private Context mContext;
+
+    public ChatLayoutHelper(Context context) {
+        mContext = context;
+    }
+
+    public void customizeChatLayout(final ChatLayout layout) {
+        CustomAVCallUIController.getInstance().setUISender(layout);
 
 //        //====== NoticeLayout使用范例 ======//
 //        NoticeLayout noticeLayout = layout.getNoticeLayout();
@@ -148,6 +154,19 @@ public class ChatLayoutHelper {
 //        inputLayout.disableSendPhotoAction(true);
 //        inputLayout.disableVideoRecordAction(true);
         // TODO 可以自己增加一些功能，可以打开下面代码测试
+        // 这里增加一个视频通话
+//        InputMoreActionUnit videoCall = new InputMoreActionUnit();
+//        videoCall.setIconResId(com.tencent.qcloud.tim.uikit.R.drawable.ic_more_video);
+//        videoCall.setTitleId(R.string.video_call);
+//        videoCall.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CustomAVCallUIController.getInstance().createVideoCallRequest();
+//            }
+//        });
+//        inputLayout.addAction(videoCall);
+
+        // 增加一个欢迎提示富文本
         InputMoreActionUnit unit = new InputMoreActionUnit();
         unit.setIconResId(R.drawable.custom);
         unit.setTitleId(R.string.test_custom_action);
@@ -155,8 +174,8 @@ public class ChatLayoutHelper {
             @Override
             public void onClick(View v) {
                 Gson gson = new Gson();
-                CustomMessageData customMessageData = new CustomMessageData();
-                String data = gson.toJson(customMessageData);
+                CustomMessage customMessage = new CustomMessage();
+                String data = gson.toJson(customMessage);
                 MessageInfo info = MessageInfoUtil.buildCustomMessage(data);
                 layout.sendMessage(info, false);
             }
@@ -176,8 +195,8 @@ public class ChatLayoutHelper {
                     ToastUtil.toastShortMessage("自定义的按钮1");
                     if (getChatLayout() != null) {
                         Gson gson = new Gson();
-                        CustomMessageData customMessageData = new CustomMessageData();
-                        String data = gson.toJson(customMessageData);
+                        CustomMessage customMessage = new CustomMessage();
+                        String data = gson.toJson(customMessage);
                         MessageInfo info = MessageInfoUtil.buildCustomMessage(data);
                         getChatLayout().sendMessage(info, false);
                     }
@@ -190,8 +209,8 @@ public class ChatLayoutHelper {
                     ToastUtil.toastShortMessage("自定义的按钮2");
                     if (getChatLayout() != null) {
                         Gson gson = new Gson();
-                        CustomMessageData customMessageData = new CustomMessageData();
-                        String data = gson.toJson(customMessageData);
+                        CustomMessage customMessage = new CustomMessage();
+                        String data = gson.toJson(customMessage);
                         MessageInfo info = MessageInfoUtil.buildCustomMessage(data);
                         getChatLayout().sendMessage(info, false);
                     }
@@ -202,16 +221,7 @@ public class ChatLayoutHelper {
 
     }
 
-    /**
-     * 自定义消息的bean实体，用来与json的相互转化
-     */
-    public static class CustomMessageData {
-        int version = 1;
-        String text = "欢迎加入云通信IM大家庭！";
-        String link = "https://cloud.tencent.com/document/product/269/3794";
-    }
-
-    public static class CustomMessageDraw implements IOnCustomMessageDrawListener {
+    public class CustomMessageDraw implements IOnCustomMessageDrawListener {
 
         /**
          * 自定义消息渲染时，会调用该方法，本方法实现了自定义消息的创建，以及交互逻辑
@@ -227,46 +237,21 @@ public class ChatLayoutHelper {
             }
             TIMCustomElem elem = (TIMCustomElem) info.getElement();
             // 自定义的json数据，需要解析成bean实例
-            CustomMessageData data = null;
+            CustomMessage data = null;
             try {
-                data = new Gson().fromJson(new String(elem.getData()), CustomMessageData.class);
+                data = new Gson().fromJson(new String(elem.getData()), CustomMessage.class);
             } catch (Exception e) {
-                DemoLog.e(TAG, "invalid json: " + new String(elem.getData()));
+                DemoLog.e(TAG, "invalid json: " + new String(elem.getData()) + " " + e.getMessage());
             }
             if (data == null) {
                 DemoLog.e(TAG, "No Custom Data: " + new String(elem.getData()));
-            }
-
-            // 把自定义消息view添加到TUIKit内部的父容器里
-            View view = LayoutInflater.from(DemoApplication.instance()).inflate(R.layout.test_custom_message_layout1, null, false);
-            parent.addMessageContentView(view);
-
-            // 自定义消息view的实现，这里仅仅展示文本信息，并且实现超链接跳转
-            TextView textView = view.findViewById(R.id.test_custom_message_tv);
-            final String text = "不支持的自定义消息：" + new String(elem.getData());
-            if (data == null) {
-                textView.setText(text);
+            } else if (data.version == JSON_VERSION_1_HELLOTIM) {
+                CustomHelloTIMUIController.onDraw(parent, data);
+            } else if (data.version == JSON_VERSION_3_ANDROID_IOS_TRTC) {
+                CustomAVCallUIController.getInstance().onDraw(parent, data);
             } else {
-                textView.setText(data.text);
+                DemoLog.e(TAG, "unsupported version: " + data.version);
             }
-            final CustomMessageData customMessageData = data;
-            view.setClickable(true);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (customMessageData == null) {
-                        DemoLog.e(TAG, "Do what?");
-                        ToastUtil.toastShortMessage(text);
-                        return;
-                    }
-                    Intent intent = new Intent();
-                    intent.setAction("android.intent.action.VIEW");
-                    Uri content_url = Uri.parse(customMessageData.link);
-                    intent.setData(content_url);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    DemoApplication.instance().startActivity(intent);
-                }
-            });
         }
     }
 

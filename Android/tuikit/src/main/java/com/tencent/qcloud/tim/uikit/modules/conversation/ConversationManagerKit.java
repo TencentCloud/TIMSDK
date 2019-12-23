@@ -66,8 +66,6 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
 
     private void init() {
         TUIKitLog.i(TAG, "init");
-        mConversationPreferences = TUIKit.getAppContext().getSharedPreferences(TIMManager.getInstance().getLoginUser() + SP_NAME, Context.MODE_PRIVATE);
-        mTopLinkedList = SharedPreferenceUtils.getListData(mConversationPreferences, TOP_LIST, ConversationInfo.class);
         MessageRevokedManager.getInstance().addHandler(this);
     }
 
@@ -78,6 +76,8 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      */
     public void loadConversation(IUIKitCallBack callBack) {
         TUIKitLog.i(TAG, "loadConversation callBack:" + callBack);
+        mConversationPreferences = TUIKit.getAppContext().getSharedPreferences(TIMManager.getInstance().getLoginUser() + SP_NAME, Context.MODE_PRIVATE);
+        mTopLinkedList = SharedPreferenceUtils.getListData(mConversationPreferences, TOP_LIST, ConversationInfo.class);
         mUnreadTotal = 0;
         //mProvider初始化值为null,用户注销时会销毁，登录完成进入需再次实例化
         if (mProvider == null) {

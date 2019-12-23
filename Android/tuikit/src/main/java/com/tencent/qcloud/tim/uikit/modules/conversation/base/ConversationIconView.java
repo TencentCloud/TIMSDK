@@ -78,6 +78,12 @@ public class ConversationIconView extends RelativeLayout {
         }
     }
 
+    public void setRadius(int radius) {
+        if (mIconView instanceof SynthesizedImageView) {
+            ((SynthesizedImageView) (mIconView)).setRadius(radius);
+        }
+    }
+
     public void setDefaultImageResId(int resId) {
         BitmapDrawable bd = (BitmapDrawable) getContext().getResources().getDrawable(resId);
         mIconView.setImageBitmap(bd.getBitmap());

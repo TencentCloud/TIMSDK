@@ -38,11 +38,11 @@ public interface IConversationListLayout {
     void disableItemUnreadDot(boolean flag);
 
     /**
-     * 会话Item头像圆角化
+     * 设置会话Item头像圆角
      *
-     * @param flag
+     * @param radius
      */
-    void enableItemRoundIcon(boolean flag);
+    void setItemAvatarRadius(int radius);
 
     /**
      * 设置会话Item顶部字体大小

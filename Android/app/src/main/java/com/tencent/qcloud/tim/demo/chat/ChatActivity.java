@@ -8,9 +8,12 @@ import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.SplashActivity;
 import com.tencent.qcloud.tim.demo.utils.Constants;
+import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 
 public class ChatActivity extends BaseActivity {
+
+    private static final String TAG = ChatActivity.class.getSimpleName();
 
     private ChatFragment mChatFragment;
     private ChatInfo mChatInfo;
@@ -20,7 +23,24 @@ public class ChatActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
 
-        Bundle bundle = getIntent().getExtras();
+        chat(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        DemoLog.i(TAG, "onNewIntent");
+        super.onNewIntent(intent);
+        chat(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        DemoLog.i(TAG, "onResume");
+        super.onResume();
+    }
+
+    private void chat(Intent intent) {
+        Bundle bundle = intent.getExtras();
         if (bundle == null) {
             startSplashActivity();
         } else {
