@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_iOS'
-  spec.version      = '4.6.1'
+  spec.version      = '4.6.50'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.6.1/TIM_SDK_iOS_latest_framework.zip'}
+  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.6.50/TIM_SDK_iOS_latest_framework.zip'}
   spec.preserve_paths = '**/ImSDK.framework'
   spec.source_files = '**/ImSDK.framework/Headers/*.h'
   spec.public_header_files = '**/ImSDK.framework/Headers/*.h'
