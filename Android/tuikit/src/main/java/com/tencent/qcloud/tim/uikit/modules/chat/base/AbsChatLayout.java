@@ -262,6 +262,7 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                 AbsChatLayout.this.sendMessage(msg, false);
             }
         });
+        getInputLayout().clearCustomActionList();
         if (getMessageLayout().getAdapter() == null) {
             mAdapter = new MessageListAdapter();
             getMessageLayout().setAdapter(mAdapter);

@@ -49,10 +49,12 @@ public class ActionsGridViewAdapter extends BaseAdapter {
         }
 
         InputMoreActionUnit action = baseActions.get(position);
-        if (action.getIconResId() > 0)
+        if (action.getIconResId() > 0) {
             ((ImageView) itemlayout.findViewById(R.id.imageView)).setImageResource(action.getIconResId());
-        if (action.getTitleId() > 0)
+        }
+        if (action.getTitleId() > 0) {
             ((TextView) itemlayout.findViewById(R.id.textView)).setText(context.getString(action.getTitleId()));
+        }
         return itemlayout;
     }
 }

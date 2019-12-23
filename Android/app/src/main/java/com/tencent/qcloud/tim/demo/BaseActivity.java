@@ -101,4 +101,9 @@ public class BaseActivity extends Activity {
         super.onDestroy();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        DemoLog.i(TAG, "onNewIntent");
+        super.onNewIntent(intent);
+    }
 }

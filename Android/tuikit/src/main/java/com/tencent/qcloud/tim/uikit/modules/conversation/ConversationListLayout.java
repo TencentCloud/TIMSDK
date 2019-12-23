@@ -52,8 +52,8 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
     }
 
     @Override
-    public void enableItemRoundIcon(boolean flag) {
-        mAdapter.enableItemRoundIcon(flag);
+    public void setItemAvatarRadius(int radius) {
+        mAdapter.setItemAvatarRadius(radius);
     }
 
     @Override

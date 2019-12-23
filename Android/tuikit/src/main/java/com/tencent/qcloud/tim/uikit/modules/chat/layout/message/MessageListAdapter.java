@@ -65,9 +65,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             case MessageInfo.MSG_TYPE_FILE:
                 break;
             default:
-                if (msg.getMsgType() < MessageInfo.MSG_TYPE_TIPS) {
-                    TUIKitLog.e(TAG, "Never be here!");
-                }
                 break;
         }
         baseHolder.layoutViews(msg, position);

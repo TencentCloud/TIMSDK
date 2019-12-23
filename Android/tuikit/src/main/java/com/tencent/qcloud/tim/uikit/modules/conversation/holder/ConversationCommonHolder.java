@@ -14,9 +14,7 @@ import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.DateTimeUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class ConversationCommonHolder extends ConversationBaseHolder {
 
@@ -81,18 +79,19 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             unreadText.setVisibility(View.GONE);
         }
 
-        if (mAdapter.mDateTextSize != 0) {
-            timelineText.setTextSize(mAdapter.mDateTextSize);
+        conversationIconView.setRadius(mAdapter.getItemAvatarRadius());
+        if (mAdapter.getItemDateTextSize() != 0) {
+            timelineText.setTextSize(mAdapter.getItemDateTextSize());
         }
-        if (mAdapter.mBottomTextSize != 0) {
-            messageText.setTextSize(mAdapter.mBottomTextSize);
+        if (mAdapter.getItemBottomTextSize() != 0) {
+            messageText.setTextSize(mAdapter.getItemBottomTextSize());
         }
-        if (mAdapter.mTopTextSize != 0) {
-            titleText.setTextSize(mAdapter.mTopTextSize);
+        if (mAdapter.getItemTopTextSize() != 0) {
+            titleText.setTextSize(mAdapter.getItemTopTextSize());
         }
-//        if (mIsShowUnreadDot) {
-//            holder.unreadText.setVisibility(View.GONE);
-//        }
+        if (!mAdapter.hasItemUnreadDot()) {
+            unreadText.setVisibility(View.GONE);
+        }
 
         if (conversation.getIconUrlList() != null) {
             conversationIconView.setConversation(conversation);

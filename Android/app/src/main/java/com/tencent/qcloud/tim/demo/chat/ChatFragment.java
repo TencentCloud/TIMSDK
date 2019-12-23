@@ -33,13 +33,7 @@ public class ChatFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        Bundle bundle = getArguments();
-        mChatInfo = (ChatInfo) bundle.getSerializable(Constants.CHAT_INFO);
-        if (mChatInfo == null) {
-            return null;
-        }
         mBaseView = inflater.inflate(R.layout.chat_fragment, container, false);
-        initView();
         return mBaseView;
     }
 
@@ -49,9 +43,6 @@ public class ChatFragment extends BaseFragment {
 
         //单聊组件的默认UI和交互初始化
         mChatLayout.initDefault();
-
-        // TODO 通过api设置ChatLayout各种属性的样例
-        ChatLayoutHelper.customizeChatLayout(getActivity(), mChatLayout);
 
         /*
          * 需要聊天的基本信息
@@ -102,6 +93,22 @@ public class ChatFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = getArguments();
+        mChatInfo = (ChatInfo) bundle.getSerializable(Constants.CHAT_INFO);
+        if (mChatInfo == null) {
+            return;
+        }
+        initView();
+
+        // TODO 通过api设置ChatLayout各种属性的样例
+        ChatLayoutHelper helper = new ChatLayoutHelper(getActivity());
+        helper.customizeChatLayout(mChatLayout);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         AudioPlayer.getInstance().stopPlay();
@@ -110,7 +117,9 @@ public class ChatFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mChatLayout.exitChat();
+        if (mChatLayout != null) {
+            mChatLayout.exitChat();
+        }
     }
 
 }

@@ -17,7 +17,10 @@ import java.util.List;
 
 public class ActionsPagerAdapter extends PagerAdapter {
 
-    private final int ITEM_COUNT_PER_GRID_VIEW = 4;
+    // 每页8个
+    private final int ITEM_COUNT_PER_GRID_VIEW = 8;
+    // 每行4个
+    private final int COLUMN_COUNT = 4;
     private final Context mContext;
     private final List<InputMoreActionUnit> mInputMoreList;
     private final ViewPager mViewPager;
@@ -33,15 +36,15 @@ public class ActionsPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        int end = (position + 1) * ITEM_COUNT_PER_GRID_VIEW > mInputMoreList.size() ? mInputMoreList
-                .size() : (position + 1) * ITEM_COUNT_PER_GRID_VIEW;
+        int end = (position + 1) * ITEM_COUNT_PER_GRID_VIEW > mInputMoreList.size()
+                ? mInputMoreList.size() : (position + 1) * ITEM_COUNT_PER_GRID_VIEW;
         List<InputMoreActionUnit> subBaseActions = mInputMoreList.subList(position
                 * ITEM_COUNT_PER_GRID_VIEW, end);
 
         GridView gridView = new GridView(mContext);
         gridView.setAdapter(new ActionsGridViewAdapter(mContext, subBaseActions));
-        if (mInputMoreList.size() >= 4) {
-            gridView.setNumColumns(4);
+        if (mInputMoreList.size() >= COLUMN_COUNT) {
+            gridView.setNumColumns(COLUMN_COUNT);
 
             container.post(new Runnable() {
                 @Override
@@ -64,8 +67,8 @@ public class ActionsPagerAdapter extends PagerAdapter {
             });
         }
         gridView.setSelector(R.color.transparent);
-        gridView.setHorizontalSpacing(0);
-        gridView.setVerticalSpacing(0);
+        gridView.setHorizontalSpacing(96);
+        gridView.setVerticalSpacing(60);
         gridView.setGravity(Gravity.CENTER);
         gridView.setTag(Integer.valueOf(position));
         gridView.setOnItemClickListener(new GridView.OnItemClickListener() {

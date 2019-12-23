@@ -217,7 +217,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         hashMap.put(TIMUserProfile.TIM_PROFILE_TYPE_KEY_SELFSIGNATURE, signature);
 
         // 地区
-        hashMap.put(TIMUserProfile.TIM_PROFILE_TYPE_KEY_LOCATION, "sz"); // TODO 不加SDK会有个崩溃
+        hashMap.put(TIMUserProfile.TIM_PROFILE_TYPE_KEY_LOCATION, "sz");
 
         // 加我验证方式
         String allowType = mJoinTypeIdList.get(mJoinTypeIndex);

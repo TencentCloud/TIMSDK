@@ -335,4 +335,8 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
         }
         mEmojiInputButton.setVisibility(visibility);
     }
+
+    public void clearCustomActionList() {
+        mInputMoreCustomActionList.clear();
+    }
 }

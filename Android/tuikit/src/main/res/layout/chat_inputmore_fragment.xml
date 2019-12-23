@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="114dp"
+    android:layout_height="206dp"
     android:orientation="vertical">
 
     <com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreLayout

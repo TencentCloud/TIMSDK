@@ -12,7 +12,7 @@ public class ConversationLayoutHelper {
         listLayout.setItemTopTextSize(16); // 设置adapter item中top文字大小
         listLayout.setItemBottomTextSize(12);// 设置adapter item中bottom文字大小
         listLayout.setItemDateTextSize(10);// 设置adapter item中timeline文字大小
-        listLayout.enableItemRoundIcon(true);// 设置adapter item头像是否显示圆角，默认是方形
+        listLayout.setItemAvatarRadius(5);// 设置adapter item头像圆角大小
         listLayout.disableItemUnreadDot(false);// 设置adapter item是否不显示未读红点，默认显示
 
         // 动态插入，删除Item，包括自定义会话
