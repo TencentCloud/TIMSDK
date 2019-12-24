@@ -40,7 +40,7 @@ enum TIMErrCode {
 
     ERR_SDK_NOT_LOGGED_IN                       = 6014,    ///< IM SDK 未登录，请先登录，成功回调之后重试，或者已被踢下线，可使用 TIMManager getLoginUser 检查当前是否在线。
     ERR_NO_PREVIOUS_LOGIN                       = 6026,    ///< 自动登录时，并没有登录过该用户，这时候请调用 login 接口重新登录。
-    ERR_USER_SIG_EXPIRED                        = 6206,    ///< UserSig 过期，需要监听 UserStatusListener，onUserSigExpired 后重新获取 UserSig 登录。
+    ERR_USER_SIG_EXPIRED                        = 6206,    ///< UserSig 过期，请重新获取有效的 UserSig 后再重新登录。
     ERR_LOGIN_KICKED_OFF_BY_OTHER               = 6208,    ///< 其他终端登录同一个帐号，引起已登录的帐号被踢，需重新登录。
     ERR_SDK_ACCOUNT_LOGIN_IN_PROCESS            = 7501,    ///< 登录正在执行中，例如，第一次 login 或 autoLogin 操作在回调前，后续的 login 或 autoLogin 操作会返回该错误码。
     ERR_SDK_ACCOUNT_LOGOUT_IN_PROCESS           = 7502,    ///< 登出正在执行中，例如，第一次 logout 操作在回调前，后续的 logout 操作会返回该错误码。
@@ -466,7 +466,7 @@ enum TIMConvType {
 // Struct SdKConfig JsonKey
 static const char* kTIMSdkConfigConfigFilePath     = "sdk_config_config_file_path";// string, 只写(选填), 配置文件路径,默认路径为"/"
 static const char* kTIMSdkConfigLogFilePath        = "sdk_config_log_file_path";   // string, 只写(选填), 日志文件路径,默认路径为"/"
-static const char* kTIMSdkConfigJavaVM             = "sdk_config_java_vm";         // uint64, 只写(选填), Android平台种的Java虚拟机指针
+static const char* kTIMSdkConfigJavaVM             = "sdk_config_java_vm";         // uint64, 只写(选填), 配置Android平台的Java虚拟机指针
 // EndStruct
 
 
@@ -593,6 +593,56 @@ static const char* kTIMSetConfigSocks5ProxyInfo    = "set_config_socks5_proxy_in
 /// @brief 消息相关宏定义，以及相关结构成员存取Json Key定义
 /// @{
 /**
+* @brief 消息在iOS系统上的离线推送配置
+*/
+// Struct IOSOfflinePushConfig JsonKey
+static const char* kTIMIOSOfflinePushConfigTitle       = "ios_offline_push_config_title";         //string, 读写, 通知标题
+static const char* kTIMIOSOfflinePushConfigSound       = "ios_offline_push_config_sound";         //string, 读写, 当前消息在iOS设备上的离线推送提示声音URL。当设置为push.no_sound时表示无提示音无振动
+static const char* kTIMIOSOfflinePushConfigIgnoreBadge = "ios_offline_push_config_ignore_badge";  //bool, 读写, 是否忽略badge计数。若为true，在iOS接收端，这条消息不会使APP的应用图标未读计数增加
+// EndStruct
+
+/**
+* @brief Android离线推送模式
+*/
+enum TIMAndroidOfflinePushNotifyMode {
+    kTIMAndroidOfflinePushNotifyMode_Normal,   // 普通通知栏消息模式，离线消息下发后，点击通知栏消息直接启动应用，不会给应用进行回调
+    kTIMAndroidOfflinePushNotifyMode_Custom,   // 自定义消息模式，离线消息下发后，点击通知栏消息会给应用进行回调
+};
+
+/**
+* @brief 消息在Android系统上的离线推送配置
+*
+* @note ChannelID的说明
+* Android8.0系统以上通知栏消息增加了channelid的设置，目前oppo要求必须填写，否则在8.0及以上的OPPO手机上会收不到离线推送消息。
+* 后续可能会增加xiaomi_channel_id_，huawei_channel_id等。
+*/
+// Struct AndroidOfflinePushConfig JsonKey
+static const char* kTIMAndroidOfflinePushConfigTitle         = "android_offline_push_config_title";            //string, 读写, 通知标题
+static const char* kTIMAndroidOfflinePushConfigSound         = "android_offline_push_config_sound";            //string, 读写, 当前消息在Android设备上的离线推送提示声音URL
+static const char* kTIMAndroidOfflinePushConfigNotifyMode    = "android_offline_push_config_notify_mode";      //uint [TIMAndroidOfflinePushNotifyMode](), 读写, 当前消息的通知模式
+static const char* kTIMAndroidOfflinePushConfigOPPOChannelID = "android_offline_push_config_oppo_channel_id";  //string, 读写, OPPO的ChannelID
+// EndStruct
+
+/**
+* @brief 推送规则
+*/
+enum TIMOfflinePushFlag {
+    kTIMOfflinePushFlag_Default,   // 按照默认规则进行推送
+    kTIMOfflinePushFlag_NoPush,    // 不进行推送
+};
+
+/**
+* @brief 消息离线推送配置
+*/
+// Struct OfflinePushConfig JsonKey
+static const char* kTIMOfflinePushConfigDesc          = "offline_push_config_desc";            //string, 读写, 当前消息在对方收到离线推送时候展示内容
+static const char* kTIMOfflinePushConfigExt           = "offline_push_config_ext";             //string, 读写, 当前消息离线推送时的扩展字段
+static const char* kTIMOfflinePushConfigFlag          = "offline_push_config_flag";            //uint [TIMOfflinePushFlag](), 读写, 当前消息是否允许推送，默认允许推送 kTIMOfflinePushFlag_Default
+static const char* kTIMOfflinePushConfigIOSConfig     = "offline_push_config_ios_config";      //object [IOSOfflinePushConfig](), 读写, iOS离线推送配置
+static const char* kTIMOfflinePushConfigAndroidConfig = "offline_push_config_android_config";  //object [AndroidOfflinePushConfig](), 读写, Android离线推送配置
+// EndStruct
+
+/**
 * @brief 消息当前状态定义
 */
 enum TIMMsgStatus {
@@ -650,6 +700,9 @@ static const char* kTIMMsgRand        = "message_rand";          //uint64,      
 static const char* kTIMMsgSeq         = "message_seq";           //uint64,         只读,       消息序列
 static const char* kTIMMsgCustomInt   = "message_custom_int";    //uint32_t,       读写(选填), 自定义整数值字段
 static const char* kTIMMsgCustomStr   = "message_custom_str";    //string,         读写(选填), 自定义数据字段
+static const char* kTIMMsgSenderProfile         = "message_sender_profile";            //object [UserProfile](), 读写(选填), 消息的发送者的用户资料
+static const char* kTIMMsgSenderGroupMemberInfo = "message_sender_group_member_info";  //object [GroupMemberInfo](), 读写(选填), 消息发送者在群里面的信息，只有在群会话有效。目前仅能获取字段 kTIMGroupMemberInfoIdentifier、kTIMGroupMemberInfoNameCard 其他的字段建议通过 TIMGroupGetMemberInfoList 接口获取
+static const char* kTIMMsgOfflinePushConfig     = "message_offlie_push_config";        //object [OfflinePushConfig](), 读写(选填), 消息的离线推送设置
 // EndStruct
 
 /**
@@ -911,7 +964,7 @@ enum TIMGroupReportType {
     kTIMGroupReport_InviteReq,    // 邀请加群(只有被邀请者会接收到)
     kTIMGroupReport_InviteAccept, // 邀请加群被同意(只有发出邀请者会接收到)
     kTIMGroupReport_InviteRefuse, // 邀请加群被拒绝(只有发出邀请者会接收到)
-    kTIMGroupReport_ReadedSync,   // 已读上报多终端同步通知(只有上报人自己收到)
+    kTIMGroupReport_ReadReport,   // 已读上报多终端同步通知(只有上报人自己收到)
     kTIMGroupReport_UserDefine,   // 用户自定义通知(默认全员接收)
 };
 
@@ -1089,7 +1142,7 @@ static const char* kTIMDraftEditTime         = "draft_edit_time";   // uint, 只
 // EndStruct
 
 /**
-* @brief 草稿信息
+* @brief 会话信息
 */
 // Struct ConvInfo JsonKey
 static const char* kTIMConvId           = "conv_id";             // string, 只读, 会话ID
@@ -1173,7 +1226,7 @@ static const char* kTIMGroupInfoCustemStringInfoValue = "group_info_custom_strin
 // Struct CreateGroupParam JsonKey
 static const char* kTIMCreateGroupParamGroupName        = "create_group_param_group_name";          // string, 只写(必填), 群组名称
 static const char* kTIMCreateGroupParamGroupId          = "create_group_param_group_id";            // string, 只写(选填), 群组ID,不填时创建成功回调会返回一个后台分配的群ID
-static const char* kTIMCreateGroupParamGroupType        = "create_group_param_group_type";          // uint[TIMGroupType](), 只写(选填), 群组类型,默认为Public
+static const char* kTIMCreateGroupParamGroupType        = "create_group_param_group_type";          // uint [TIMGroupType](), 只写(选填), 群组类型,默认为Public
 static const char* kTIMCreateGroupParamGroupMemberArray = "create_group_param_group_member_array";  // array [GroupMemberInfo](), 只写(选填), 群组初始成员数组
 static const char* kTIMCreateGroupParamNotification     = "create_group_param_notification";        // string, 只写(选填), 群组公告,
 static const char* kTIMCreateGroupParamIntroduction     = "create_group_param_introduction";        // string, 只写(选填), 群组简介,
@@ -1262,7 +1315,7 @@ static const char* kTIMGroupSelfInfoMsgFlag    = "group_self_info_msg_flag";    
 // Struct GroupBaseInfo JsonKey
 static const char* kTIMGroupBaseInfoGroupId      = "group_base_info_group_id";       // string, 只读, 群组ID
 static const char* kTIMGroupBaseInfoGroupName    = "group_base_info_group_name";     // string, 只读, 群组名称
-static const char* kTIMGroupBaseInfoGroupType    = "group_base_info_group_type";     // string [TIMGroupType](), 只读, 群组类型
+static const char* kTIMGroupBaseInfoGroupType    = "group_base_info_group_type";     // uint [TIMGroupType](), 只读, 群组类型
 static const char* kTIMGroupBaseInfoFaceUrl      = "group_base_info_face_url";       // string, 只读, 群组头像URL
 static const char* kTIMGroupBaseInfoInfoSeq      = "group_base_info_info_seq";       // uint,   只读, 群资料的Seq，群资料的每次变更都会增加这个字段的值
 static const char* kTIMGroupBaseInfoLastestSeq   = "group_base_info_lastest_seq";    // uint,   只读, 群最新消息的Seq。群组内每一条消息都有一条唯一的消息Seq，且该Seq是按照发消息顺序而连续的。从1开始，群内每增加一条消息，LastestSeq就会增加1
@@ -1304,7 +1357,7 @@ static const char* kTIMGroupDetialInfoCustomInfo       = "group_detial_info_cust
 // Struct GetGroupInfoResult JsonKey
 static const char* kTIMGetGroupInfoResultCode  = "get_groups_info_result_code";    // int [错误码](https://cloud.tencent.com/document/product/269/1671),   只读, 获取群组详细信息的结果
 static const char* kTIMGetGroupInfoResultDesc  = "get_groups_info_result_desc";    // string, 只读, 获取群组详细失败的描述信息
-static const char* kTIMGetGroupInfoResultInfo  = "get_groups_info_result_info";    // json object [GroupDetailInfo](), 只读, 群组详细信息
+static const char* kTIMGetGroupInfoResultInfo  = "get_groups_info_result_info";    // object [GroupDetailInfo](), 只读, 群组详细信息
 // EndStruct
 
 /**
@@ -1321,7 +1374,9 @@ enum TIMGroupModifyInfoFlag {
     kTIMGroupModifyInfoFlag_Visible      = 0x01 << 6,  // 修改群是否可见,    
     kTIMGroupModifyInfoFlag_Searchable   = 0x01 << 7,  // 修改群是否被搜索,  
     kTIMGroupModifyInfoFlag_ShutupAll    = 0x01 << 8,  // 修改群是否全体禁言,
+    kTIMGroupModifyInfoFlag_Custom       = 0x01 << 9,  // 修改群自定义信息
     kTIMGroupModifyInfoFlag_Owner        = 0x01 << 31, // 修改群主
+
 };
 
 /**
@@ -1371,6 +1426,7 @@ enum TIMGroupMemberModifyInfoFlag {
     kTIMGroupMemberModifyFlag_MemberRole = 0x01 << 1, // 修改成员角色
     kTIMGroupMemberModifyFlag_ShutupTime = 0x01 << 2, // 修改禁言时间
     kTIMGroupMemberModifyFlag_NameCard   = 0x01 << 3, // 修改群名片
+    kTIMGroupMemberModifyFlag_Custom     = 0x01 << 4, // 修改群成员自定义信息
 };
 
 
@@ -1556,7 +1612,7 @@ static const char* kTIMFriendProfileRemark              = "friend_profile_remark
 static const char* kTIMFriendProfileAddWording          = "friend_profile_add_wording";         // string,       只读, 好友申请时的添加理由
 static const char* kTIMFriendProfileAddSource           = "friend_profile_add_source";          // string,       只读, 好友申请时的添加来源
 static const char* kTIMFriendProfileAddTime             = "friend_profile_add_time";            // uint64,       只读, 好友添加时间
-static const char* kTIMFriendProfileUserProfile         = "friend_profile_user_profile";        // object [UserProfile], 只读, 好友的个人资料
+static const char* kTIMFriendProfileUserProfile         = "friend_profile_user_profile";        // object [UserProfile](), 只读, 好友的个人资料
 static const char* kTIMFriendProfileCustomStringArray   = "friend_profile_custom_string_array"; // array [FriendProfileCustemStringInfo](), 只读, [自定义好友字段](https://cloud.tencent.com/document/product/269/1501#.E8.87.AA.E5.AE.9A.E4.B9.89.E5.A5.BD.E5.8F.8B.E5.AD.97.E6.AE.B5)
 // EndStruct
 
