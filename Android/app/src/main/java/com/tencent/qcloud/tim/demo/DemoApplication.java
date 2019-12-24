@@ -102,12 +102,12 @@ public class DemoApplication extends Application {
 
             registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
         }
-        if (BuildConfig.DEBUG) {
-            if (LeakCanary.isInAnalyzerProcess(this)) {
-                return;
-            }
-            LeakCanary.install(this);
-        }
+//        if (BuildConfig.DEBUG) {
+//            if (LeakCanary.isInAnalyzerProcess(this)) {
+//                return;
+//            }
+//            LeakCanary.install(this);
+//        }
         CustomAVCallUIController.getInstance().onCreate();
         IMEventListener imEventListener = new IMEventListener() {
             @Override
