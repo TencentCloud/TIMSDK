@@ -23,6 +23,8 @@
 		CE1A434C22DE07EB008A767E /* TCUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434822DE07EB008A767E /* TCUtil.m */; };
 		CE37D1C422F9942B0012500D /* GenerateTestUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D1C222F9942B0012500D /* GenerateTestUserSig.m */; };
 		CE37D24A22F9CBC80012500D /* ProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D24822F9CBC80012500D /* ProfileController.m */; };
+		CE685F1523B48F8700A3953C /* 00.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE685F1323B48F8700A3953C /* 00.caf */; };
+		CE685F1623B48F8700A3953C /* 01.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE685F1423B48F8700A3953C /* 01.caf */; };
 		CECC13CE22B282C7008378A2 /* TCLoginParam.m in Sources */ = {isa = PBXBuildFile; fileRef = CECC13CD22B282C7008378A2 /* TCLoginParam.m */; };
 		CED3DD60237BECD00096D2E2 /* VideoCallManager+videoMeeting.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD57237BECD00096D2E2 /* VideoCallManager+videoMeeting.m */; };
 		CED3DD61237BECD00096D2E2 /* VideoCallCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD5A237BECD00096D2E2 /* VideoCallCell.m */; };
@@ -96,6 +98,8 @@
 		CE37D1C322F9942B0012500D /* GenerateTestUserSig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateTestUserSig.h; sourceTree = "<group>"; };
 		CE37D24822F9CBC80012500D /* ProfileController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileController.m; sourceTree = "<group>"; };
 		CE37D24922F9CBC80012500D /* ProfileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileController.h; sourceTree = "<group>"; };
+		CE685F1323B48F8700A3953C /* 00.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 00.caf; sourceTree = "<group>"; };
+		CE685F1423B48F8700A3953C /* 01.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 01.caf; sourceTree = "<group>"; };
 		CECC13CC22B282C7008378A2 /* TCLoginParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCLoginParam.h; sourceTree = "<group>"; };
 		CECC13CD22B282C7008378A2 /* TCLoginParam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLoginParam.m; sourceTree = "<group>"; };
 		CED3DD57237BECD00096D2E2 /* VideoCallManager+videoMeeting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoCallManager+videoMeeting.m"; sourceTree = "<group>"; };
@@ -329,6 +333,8 @@
 				CF014493216E1A4B00C12E35 /* Info.plist */,
 				CF014494216E1A4B00C12E35 /* main.m */,
 				9176C5C3227A9D3500DF5784 /* PrefixHeader.pch */,
+				CE685F1323B48F8700A3953C /* 00.caf */,
+				CE685F1423B48F8700A3953C /* 01.caf */,
 			);
 			path = TUIKitDemo;
 			sourceTree = "<group>";
@@ -412,8 +418,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE685F1623B48F8700A3953C /* 01.caf in Resources */,
 				CF014492216E1A4B00C12E35 /* LaunchScreen.storyboard in Resources */,
 				CF01448F216E1A4B00C12E35 /* Assets.xcassets in Resources */,
+				CE685F1523B48F8700A3953C /* 00.caf in Resources */,
 				CF01448D216E1A4900C12E35 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
