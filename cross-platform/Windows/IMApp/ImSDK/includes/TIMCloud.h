@@ -764,7 +764,7 @@ TIM_DECL int TIMMsgSaveMsg(const char* conv_id, enum TIMConvType conv_type, cons
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
-* @example 给C2C会话 Windows-02、kTIMConv_C2C导入消息列表
+* @example 获取C2C会话 Windows-02 消息列表
 * Json::Value json_msg(Json::objectValue); // 构造Message
 * Json::Value json_get_msg_param;
 * json_get_msg_param[kTIMMsgGetMsgListParamLastMsg] = json_msg;
@@ -784,8 +784,9 @@ TIM_DECL int TIMMsgSaveMsg(const char* conv_id, enum TIMConvType conv_type, cons
 * }
 *   
 * @note
-* 从 kTIMMsgGetMsgListParamLastMsg 指定的消息开始获取本地消息列表，kTIMMsgGetMsgListParamCount 为要获取的消息数目。
-* 若指定 kTIMMsgGetMsgListParamIsRamble 为true则本地消息获取不够指定数目时，则会去获取云端漫游消息。kTIMMsgGetMsgListParamIsForward 指定向前获取还是向后获取
+* 从 kTIMMsgGetMsgListParamLastMsg 指定的消息开始获取本地消息列表，kTIMMsgGetMsgListParamCount 为要获取的消息数目。kTIMMsgGetMsgListParamLastMsg 可以不指定，不指定时表示以会话最新的消息为 LastMsg。
+* 若指定 kTIMMsgGetMsgListParamIsRamble 为true则本地消息获取不够指定数目时，会去获取云端漫游消息。
+* kTIMMsgGetMsgListParamIsForward 为true时表示获取比 kTIMMsgGetMsgListParamLastMsg 新的消息，为false时表示获取比 kTIMMsgGetMsgListParamLastMsg 老的消息
 */
 TIM_DECL int TIMMsgGetMsgList(const char* conv_id, enum TIMConvType conv_type, const char* json_get_msg_param, TIMCommCallback cb, const void* user_data);
 
