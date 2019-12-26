@@ -53,6 +53,16 @@
                 [param setToken:deviceToken];
                 [[TIMManager sharedInstance] setToken:param succ:^{
                     NSLog(@"-----> 上传 token 成功 ");
+                    //推送声音的自定义化设置
+                    TIMAPNSConfig *config = [[TIMAPNSConfig alloc] init];
+                    config.openPush = 0;
+                    config.c2cSound = @"00.caf";
+                    config.groupSound = @"01.caf";
+                    [[TIMManager sharedInstance] setAPNS:config succ:^{
+                        NSLog(@"-----> 设置 APNS 成功");
+                    } fail:^(int code, NSString *msg) {
+                        NSLog(@"-----> 设置 APNS 失败");
+                    }];
                 } fail:^(int code, NSString *msg) {
                     NSLog(@"-----> 上传 token 失败 ");
                 }];

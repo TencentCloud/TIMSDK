@@ -84,7 +84,11 @@ pod setup
 cd iOS/TUIKitDemo
 pod install
 ```
-3. 进入 iOS/TUIKitDemo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
+3. 如果安装失败，运行以下命令更新本地的 CocoaPods 仓库列表
+```
+pod repo update
+```
+4. 进入 iOS/TUIKitDemo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
 
 
 
