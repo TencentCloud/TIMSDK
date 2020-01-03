@@ -18,12 +18,12 @@ PODS:
   - MBProgressHUD (1.1.0)
   - MMLayout (0.2.0)
   - ReactiveObjC (3.1.1)
-  - SDWebImage (5.4.0):
-    - SDWebImage/Core (= 5.4.0)
-  - SDWebImage/Core (5.4.0)
+  - SDWebImage (5.4.1):
+    - SDWebImage/Core (= 5.4.1)
+  - SDWebImage/Core (5.4.1)
   - Toast (4.0.0)
-  - TXIMSDK_iOS (4.6.51)
-  - TXIMSDK_TUIKit_iOS (4.6.1):
+  - TXIMSDK_iOS (4.6.54)
+  - TXIMSDK_TUIKit_iOS (4.6.54):
     - ISVImageScrollView
     - MMLayout
     - ReactiveObjC
@@ -60,10 +60,10 @@ SPEC CHECKSUMS:
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
-  SDWebImage: 5bf6aec6481ae2a062bdc59f9d6c1d1e552090e0
+  SDWebImage: 29c340dbdcef342bb13125553f4e19ce056b07a7
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_iOS: 3e71bcdc7a829437d7b7d11d884293e15be8bedf
-  TXIMSDK_TUIKit_iOS: 25ad776973bb5192ef62cddf4ea56e348393e6df
+  TXIMSDK_iOS: c75175b843c2adfeb137dd54a92d7721d8fe53db
+  TXIMSDK_TUIKit_iOS: 4b2dc7fa98bab179b199a9a411cbce57de8c337a
   TXLiteAVSDK_TRTC: 0f1499f24318dd9087b324a6c0652ae7d197b3c7
 
 PODFILE CHECKSUM: 3f738094aa69c2e51daf7cd6e3de46212490c177
