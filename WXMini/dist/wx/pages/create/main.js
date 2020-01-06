@@ -1,4 +1,330 @@
 require("../../common/manifest.js")
-require("../../debug/GenerateTestUserSig.js")
 require("../../common/vendor.js")
-global.webpackJsonpMpvue([13],{TIXD:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var a=i("5nAL"),s=i.n(a),n=i("qy7V");new s.a(n.a).$mount()},U78t:function(t,e,i){"use strict";var a={render:function(){var t=this,e=t.$createElement,i=t._self._c||e;return i("div",{staticClass:"container"},[i("i-modal",{attrs:{title:"添加的用户ID",visible:t.addModalVisible,eventid:"1",mpcomid:"0"},on:{ok:t.handleAdd,cancel:t.handleModalShow}},[i("div",{staticClass:"input-wrapper"},[i("input",{directives:[{name:"model",rawName:"v-model.lazy:value",value:t.addUserId,expression:"addUserId",modifiers:{"lazy:value":!0}}],staticClass:"input border center",attrs:{type:"text",eventid:"0"},domProps:{value:t.addUserId},on:{input:function(e){e.target.composing||(t.addUserId=e.target.value)}}})])]),t._v(" "),i("div",{staticClass:"title"},[t._v("基础信息")]),t._v(" "),i("div",{staticClass:"item"},[i("div",{staticClass:"label"},[t._v("\n        群ID：\n      ")]),t._v(" "),i("div",[i("input",{directives:[{name:"model",rawName:"v-model.lazy:value",value:t.id,expression:"id",modifiers:{"lazy:value":!0}}],staticClass:"input",attrs:{type:"text",placeholder:"请输入群ID",eventid:"2"},domProps:{value:t.id},on:{input:function(e){e.target.composing||(t.id=e.target.value)}}})])]),t._v(" "),i("div",{staticClass:"item"},[i("div",{staticClass:"label"},[t._v("\n        群名：\n      ")]),t._v(" "),i("div",[i("input",{directives:[{name:"model",rawName:"v-model.lazy:value",value:t.name,expression:"name",modifiers:{"lazy:value":!0}}],staticClass:"input",attrs:{type:"text",placeholder:"请输入群名",eventid:"3"},domProps:{value:t.name},on:{input:function(e){e.target.composing||(t.name=e.target.value)}}})])]),t._v(" "),i("div",{staticClass:"item"},[i("div",{staticClass:"label"},[t._v("\n        群头像：\n      ")]),t._v(" "),i("div",[i("input",{directives:[{name:"model",rawName:"v-model.lazy:value",value:t.avatar,expression:"avatar",modifiers:{"lazy:value":!0}}],staticClass:"input",attrs:{type:"text",placeholder:"请输入群头像",eventid:"4"},domProps:{value:t.avatar},on:{input:function(e){e.target.composing||(t.avatar=e.target.value)}}})])]),t._v(" "),i("div",{staticClass:"item"},[i("div",{staticClass:"label"},[t._v("\n        群简介：\n      ")]),t._v(" "),i("div",[i("input",{directives:[{name:"model",rawName:"v-model.lazy:value",value:t.introduction,expression:"introduction",modifiers:{"lazy:value":!0}}],staticClass:"input",attrs:{type:"text",placeholder:"请输入群简介",eventid:"5"},domProps:{value:t.introduction},on:{input:function(e){e.target.composing||(t.introduction=e.target.value)}}})])]),t._v(" "),i("div",{staticClass:"item"},[i("div",{staticClass:"label"},[t._v("\n        群公告：\n      ")]),t._v(" "),i("div",[i("input",{directives:[{name:"model",rawName:"v-model.lazy:value",value:t.notice,expression:"notice",modifiers:{"lazy:value":!0}}],staticClass:"input",attrs:{type:"text",placeholder:"请输入群公告",eventid:"6"},domProps:{value:t.notice},on:{input:function(e){e.target.composing||(t.notice=e.target.value)}}})])]),t._v(" "),i("div",{staticClass:"type"},[i("div",{staticClass:"title"},[t._v("\n        群类型：\n      ")]),t._v(" "),i("div",{staticClass:"choose"},[i("i-radio-group",{attrs:{current:t.currentType,eventid:"7",mpcomid:"5"},on:{change:t.handleTypeChange}},[i("i-radio",{attrs:{value:"Private",mpcomid:"1"}}),t._v(" "),i("i-radio",{attrs:{value:"Public",mpcomid:"2"}}),t._v(" "),i("i-radio",{attrs:{value:"ChatRoom",mpcomid:"3"}}),t._v(" "),i("i-radio",{attrs:{value:"AVChatRoom",mpcomid:"4"}})],1)],1)]),t._v(" "),"Private"!==t.currentType&&"AVChatRoom"!==t.currentType?i("div",{staticClass:"type"},[i("div",{staticClass:"title"},[t._v("\n        加群方式：\n      ")]),t._v(" "),i("div",{staticClass:"choose"},[i("i-radio-group",{attrs:{current:t.addType,eventid:"8",mpcomid:"9"},on:{change:t.handleAddTypeChange}},[i("i-radio",{attrs:{value:"自由加群",mpcomid:"6"}}),t._v(" "),i("i-radio",{attrs:{value:"需要验证",mpcomid:"7"}}),t._v(" "),i("i-radio",{attrs:{value:"禁止加群",mpcomid:"8"}})],1)],1)]):t._e(),t._v(" "),i("div",{staticClass:"type"},[i("div",{staticClass:"title"},[t._v("\n        群成员列表"),i("span",{staticClass:"adding",attrs:{eventid:"9"},on:{click:t.handleModalShow}},[t._v("添加成员")])])]),t._v(" "),0===t.memberList.length?i("div",{staticClass:"temp"}):t._e(),t._v(" "),t._l(t.memberList,function(e,a){return i("div",{key:e.userID,staticClass:"item"},[i("div",{staticClass:"add-label"},[t._v("\n        "+t._s(e.nick||"无昵称")+"\n      ")]),t._v(" "),i("div",{staticClass:"add-label"},[t._v("\n        "+t._s(e.userID)+"\n      ")]),t._v(" "),i("div",{staticClass:"delete",attrs:{eventid:"10_"+a},on:{click:function(i){t.deleteMember(e)}}},[i("i-avatar",{attrs:{src:"../../../static/images/delete.png",mpcomid:"10_"+a}})],1)])}),t._v(" "),i("i-row",{attrs:{mpcomid:"12"}},[i("i-col",{attrs:{span:"24",mpcomid:"11"}},[i("button",{staticClass:"button success",attrs:{type:"button",eventid:"11"},on:{click:t.createGroup}},[t._v("确定创建")]),t._v(" "),i("button",{staticClass:"button fail",attrs:{type:"button",eventid:"12"},on:{click:t.empty}},[t._v("清空")])],1)],1)],2)},staticRenderFns:[]};e.a=a},g4vp:function(t,e){},qy7V:function(t,e,i){"use strict";var a=i("xNvV"),s=i("U78t");var n=function(t){i("g4vp")},o=i("ybqe")(a.a,s.a,n,"data-v-777060ee",null);e.a=o.exports},xNvV:function(t,e,i){"use strict";e.a={data:function(){return{id:"",name:"",content:"",currentType:this.$type.GRP_PRIVATE,avatar:"",introduction:"",notice:"",addType:"自由加群",memberList:[],addModalVisible:!1,addUserId:""}},computed:{username:function(){return this.$store.state.user.userProfile.to}},methods:{createGroup:function(){var t=this;if(this.name){var e=this.memberList.map(function(t){return{userID:t.userID}}),i=void 0;switch(this.addType){case"自由加群":i=this.$type.JOIN_OPTIONS_FREE_ACCESS;break;case"禁止加群":i=this.$type.JOIN_OPTIONS_DISABLE_APPLY;break;case"需要验证":i=this.$type.JOIN_OPTIONS_NEED_PERMISSION}var a=void 0;this.currentType!==this.TIM.TYPES.GRP_PRIVATE&&this.currentType!==this.TIM.TYPES.GRP_AVCHATROOM?(i=this.currentType===this.TIM.TYPES.GRP_AVCHATROOM?this.$type.JOIN_OPTIONS_FREE_ACCESS:i,a={groupID:this.id,name:this.name,type:this.currentType,avatar:this.avatar,introduction:this.introduction,notification:this.notice,joinOption:i,memberList:e}):a={groupID:this.id,name:this.name,type:this.currentType,avatar:this.avatar,introduction:this.introduction,notification:this.notice,memberList:e},wx.$app.createGroup(a).then(function(){t.$store.commit("showToast",{title:"创建成功",icon:"success",duration:1500}),t.empty(),wx.switchTab({url:"../index/main"})}).catch(function(){t.$store.commit("showToast",{title:"创建群组失败"})})}else this.$store.commit("showToast",{title:"请输入群名"})},handleTypeChange:function(t){this.currentType=t.target.value},handleAddTypeChange:function(t){this.addType=t.target.value},handleModalShow:function(){this.addModalVisible=!this.addModalVisible},handleAdd:function(){var t=this;this.addUserId?wx.$app.getUserProfile({userIDList:[this.addUserId]}).then(function(e){t.addUserId="",e.data.length>0?(t.handleModalShow(),t.memberList.push(e.data[0]),t.$store.commit("showToast",{title:"添加成功",icon:"none",duration:1500})):t.$store.commit("showToast",{title:"没有找到该用户",icon:"none",duration:1500})}).catch(function(){t.$store.commit("showToast",{title:"没有找到该用户",icon:"none",duration:1500})}):this.$store.commit("showToast",{title:"ID不能为空"})},deleteMember:function(t){this.memberList=this.memberList.filter(function(e){return e.userID!==t.userID})},empty:function(){this.id="",this.name="",this.currentType="",this.avatar="",this.introduction="",this.notice="",this.addType="",this.memberList=[],this.addModalVisible=!1}}}}},["TIXD"]);
+global.webpackJsonpMpvue([13],{
+
+/***/ 162:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(163);
+
+
+
+var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a(__WEBPACK_IMPORTED_MODULE_1__index__["a" /* default */]);
+app.$mount();
+
+/***/ }),
+
+/***/ 163:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(165);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_e2ba38f4_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(166);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(164)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+
+/* template */
+
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_e2ba38f4_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__["a" /* default */],
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src\\pages\\create\\index.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-e2ba38f4", Component.options)
+  } else {
+    hotAPI.reload("data-v-e2ba38f4", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 164:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 165:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_object_assign__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_object_assign___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_object_assign__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_extends__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_extends__);
+
+
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var defaultData = {
+  selectedIndex: 0,
+  range: [{
+    type: wx.TIM.TYPES.GRP_PRIVATE,
+    name: '讨论组'
+  }, {
+    type: wx.TIM.TYPES.GRP_PUBLIC,
+    name: '公开群'
+  }, {
+    type: wx.TIM.TYPES.GRP_CHATROOM,
+    name: '聊天室'
+  }, {
+    type: wx.TIM.TYPES.GRP_AVCHATROOM,
+    name: '音视频聊天室'
+  }],
+  groupName: '',
+  groupID: '',
+  loading: false
+};
+/* harmony default export */ __webpack_exports__["a"] = ({
+  data: function data() {
+    return __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_extends___default()({}, defaultData);
+  },
+  onUnload: function onUnload() {
+    __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_object_assign___default()(this, defaultData);
+  },
+
+  computed: {
+    isAVChatRoom: function isAVChatRoom() {
+      return this.range[this.selectedIndex].type === wx.TIM.TYPES.GRP_AVCHATROOM;
+    },
+    disabled: function disabled() {
+      if (this.groupName === '') {
+        return true;
+      }
+      if (this.isAVChatRoom && this.groupID === '') {
+        return true;
+      }
+      return false;
+    }
+  },
+  methods: {
+    choose: function choose(event) {
+      this.selectedIndex = Number(event.mp.detail.value);
+    },
+    handleClick: function handleClick() {
+      var _this = this;
+
+      this.loading = true;
+      wx.$app.createGroup({
+        type: this.range[this.selectedIndex].type,
+        groupID: this.groupID || undefined,
+        name: this.groupName
+      }).then(function (_ref) {
+        var group = _ref.data.group;
+
+        if (_this.isAVChatRoom) {
+          return wx.$app.joinGroup({ groupID: group.groupID });
+        }
+        return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise___default.a.resolve();
+      }).then(this.handleResolved).catch(this.handleRejected);
+    },
+    handleResolved: function handleResolved() {
+      this.loading = false;
+      wx.showToast({
+        title: '创建成功',
+        duration: 1000
+      });
+      setTimeout(function () {
+        wx.navigateBack();
+      }, 1000);
+    },
+    handleRejected: function handleRejected() {
+      this.loading = false;
+      wx.showToast({
+        title: '创建失败',
+        icon: 'none',
+        duration: 1000
+      });
+    },
+    showInfo: function showInfo() {
+      wx.showModal({
+        title: '提示',
+        content: '音视频聊天室常用于直播聊天场景，只有在主动加群（需要填写群ID）后才能收到消息，重新登录后需要重新加群。\n故在创建音视频聊天室时，必须填写群ID',
+        showCancel: false,
+        confirmText: '了解'
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ 166:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "container"
+  }, [_c('div', {
+    staticClass: "form-item"
+  }, [_c('div', {
+    staticClass: "label"
+  }, [_vm._v("群类型")]), _vm._v(" "), _c('picker', {
+    attrs: {
+      "range": _vm.range,
+      "range-key": "name",
+      "value": _vm.selectedIndex,
+      "eventid": '0'
+    },
+    on: {
+      "change": _vm.choose
+    }
+  }, [_vm._v("\n      " + _vm._s(_vm.range[_vm.selectedIndex].name) + "\n      "), _c('i-icon', {
+    attrs: {
+      "type": "enter",
+      "mpcomid": '0'
+    }
+  })], 1)], 1), _vm._v(" "), _c('div', {
+    staticClass: "form-item",
+    class: {
+      'required': _vm.isAVChatRoom
+    }
+  }, [_c('div', {
+    staticClass: "label"
+  }, [_vm._v("\n      群ID\n      "), (_vm.isAVChatRoom) ? _c('i-icon', {
+    attrs: {
+      "type": "prompt",
+      "eventid": '1',
+      "mpcomid": '1'
+    },
+    on: {
+      "click": _vm.showInfo
+    }
+  }) : _vm._e()], 1), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.groupID),
+      expression: "groupID"
+    }],
+    attrs: {
+      "placeholder": "请输入群ID",
+      "eventid": '2'
+    },
+    domProps: {
+      "value": (_vm.groupID)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.groupID = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-item name required"
+  }, [_c('div', {
+    staticClass: "label"
+  }, [_vm._v("\n      群名称\n    ")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.groupName),
+      expression: "groupName"
+    }],
+    attrs: {
+      "placeholder": "请输入群名称",
+      "eventid": '3'
+    },
+    domProps: {
+      "value": (_vm.groupName)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.groupName = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('button', {
+    class: {
+      'button-disabled': _vm.disabled
+    },
+    attrs: {
+      "hover-class": "clicked",
+      "loading": _vm.loading,
+      "disabled": _vm.disabled,
+      "eventid": '4'
+    },
+    on: {
+      "click": _vm.handleClick
+    }
+  }, [_vm._v("创建群组")])], 1)
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-e2ba38f4", esExports)
+  }
+}
+
+/***/ })
+
+},[162]);

@@ -1,9 +1,7 @@
 const groupModules = {
   state: {
     groupList: [],
-    currentGroupProfile: {},
     currentGroupMemberList: [],
-    offset: 0,
     count: 15,
     isLoading: false
   },
@@ -11,37 +9,32 @@ const groupModules = {
     hasGroupList: state => state.groupList.length > 0
   },
   mutations: {
-    updateOffset (state) {
-      state.offset += state.count
-    },
     updateGroupList (state, groupList) {
       state.groupList = groupList
     },
     updateCurrentGroupMemberList (state, groupMemberList) {
       state.currentGroupMemberList = [...state.currentGroupMemberList, ...groupMemberList]
     },
-    updateCurrentGroupProfile (state, groupProfile) {
-      state.currentGroupProfile = groupProfile
-    },
     resetGroup (state) {
+      state.groupList = []
       state.currentGroupProfile = {}
       state.currentGroupMemberList = []
-      state.offset = 0
     },
-    setCurrentGroupMemberList (state, groupMemberList) {
-      state.currentGroupMemberList = [...groupMemberList]
+    resetCurrentMemberList (state) {
+      state.currentGroupMemberList = []
     }
   },
   actions: {
     getGroupMemberList (context) {
-      const { offset, count, isLoading, currentGroupProfile: { memberNum, groupID } } = context.state
+      const { memberNum, groupID } = context.rootState.conversation.currentConversation.groupProfile
+      const { count, isLoading } = context.state
+      const offset = context.state.currentGroupMemberList.length
       const notCompleted = (offset < memberNum)
       if (notCompleted) {
         if (!isLoading) {
           context.state.isLoading = true
-          wx.$app.getGroupMemberList({ groupID: groupID, offset: offset, count: count }).then((res) => {
+          wx.$app.getGroupMemberList({ groupID, offset, count }).then((res) => {
             context.commit('updateCurrentGroupMemberList', res.data.memberList)
-            context.commit('updateOffset')
             context.state.isLoading = false
           }).catch(err => {
             console.log(err)

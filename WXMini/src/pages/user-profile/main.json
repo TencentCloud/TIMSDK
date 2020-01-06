@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "详细信息",
+  "navigationBarBackgroundColor": "#ffffff",
+  "backgroundColor": "#e6e6e6",
+  "usingComponents": {
+    "i-avatar": "../../../static/iview/avatar/index",
+    "i-cell-group": "../../../static/iview/cell-group/index",
+    "i-cell": "../../../static/iview/cell/index"
+  }
+}

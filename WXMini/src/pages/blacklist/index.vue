@@ -1,12 +1,16 @@
 <template>
   <div class="blacklist">
-    <div class="slot">黑名单</div>
-    <div class="wrapper">
-      <div v-if="blacklist.length === 0" class="none">
+    <div v-if="blacklist.length === 0" class="wrapper">
+      <div class="none">
         你还没有拉黑任何人哦
       </div>
-      <div class="item" @click="toDetail(id)" v-for="id in blacklist" :key="id">
-        {{ id }}
+    </div>
+    <div class="list" @click="toDetail(item.userID)" v-for="item in userList" :key="item.userID">
+      <div class="avatar">
+        <img :src="item.avatar || '/static/images/avatar.png'" style="width: 100%;height: 100%">
+      </div>
+      <div class="name">
+        {{item.nick || item.userID}}
       </div>
     </div>
   </div>
@@ -17,6 +21,7 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      userList: []
     }
   },
   computed: {
@@ -24,30 +29,20 @@ export default {
       blacklist: state => state.user.blacklist
     })
   },
+  onShow () {
+    if (this.blacklist.length > 0) {
+      let option = {
+        userIDList: this.blacklist
+      }
+      wx.$app.getUserProfile(option).then(res => {
+        this.userList = res.data
+      })
+    }
+  },
   methods: {
     // 去用户详情
     toDetail (id) {
-      let option = {
-        userIDList: [id]
-      }
-      wx.$app.getUserProfile(option).then(res => {
-        let userProfile = res.data[0]
-        switch (userProfile.gender) {
-          // TODO: 修改性别
-          case this.TIM.TYPES.GENDER_UNKNOWN:
-            userProfile.gender = this.$type.GENDER_UNKNOWN
-            break
-          case this.TIM.TYPES.GENDER_MALE:
-            userProfile.gender = this.$type.GENDER_MALE
-            break
-          case this.TIM.TYPES.GENDER_FEMALE:
-            userProfile.gender = this.$type.GENDER_FEMALE
-            break
-        }
-        this.$store.commit('updateUserProfile', userProfile)
-        let url = `../detail/main?isGroup=${false}`
-        wx.navigateTo({url: url})
-      })
+      wx.navigateTo({ url: '../user-profile/main?userID=' + id })
     }
   }
 }
@@ -72,15 +67,22 @@ export default {
   flex-wrap wrap
   padding 4px 6px
   background-color white
+  box-sizing border-box
+  border-top 1px solid $border-base
+  border-bottom 1px solid $border-base
+.list
+  display flex
+  padding 10px 10px
+  background-color white
+  box-sizing border-box
   margin-bottom -1px
   border-top 1px solid $border-base
   border-bottom 1px solid $border-base
-.item
-  border 2px solid $danger
-  border-radius 12px
-  padding 6px 10px
-  font-size 14px
-  color $danger
-  width fit-content
-  margin 6px 8px
+  .avatar
+    height 40px
+    width 40px
+  .name
+    padding-left 25px
+    line-height 40px
+    font-size 16px
 </style>

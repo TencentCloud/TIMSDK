@@ -1,4 +1,460 @@
 require("../../common/manifest.js")
-require("../../debug/GenerateTestUserSig.js")
 require("../../common/vendor.js")
-global.webpackJsonpMpvue([8],{"5vTQ":function(t,s,e){"use strict";var a=e("Dd8w"),n=e.n(a),i=e("NYxO"),o=e("0xDb");s.a={data:function(){return{modalVisible:!1,conversation:{}}},computed:n()({},Object(i.c)({allConversation:function(t){return t.conversation.allConversation}})),onPullDownRefresh:function(){Object(o.d)(wx.$app.getConversationList(),1e3),wx.stopPullDownRefresh()},methods:{longTimePress:function(t){this.conversation=t,this.handleModalShow()},handleModalShow:function(){this.modalVisible=!this.modalVisible},handleConfirm:function(){this.handleModalShow(),this.deleteConversation(this.conversation)},setMessageRead:function(t){0!==t.unreadCount&&wx.$app.setMessageRead({conversationID:t.conversationID})},checkoutConversation:function(t,s){var e=this;this.$store.commit("resetCurrentConversation"),this.$store.commit("resetGroup"),this.setMessageRead(t),wx.$app.getConversationProfile(t.conversationID).then(function(s){if(e.$store.commit("updateCurrentConversation",s.data.conversation),e.$store.dispatch("getMessageList"),t.type===e.TIM.TYPES.CONV_GROUP){var a=t.conversationID.substring(5);wx.$app.getGroupProfile({groupID:a}).then(function(t){e.$store.commit("updateCurrentGroupProfile",t.data.group)})}});var a="../chat/main?toAccount="+s;wx.navigateTo({url:a})},checkoutNotification:function(t){var s=this;this.$store.commit("resetCurrentConversation"),this.$store.commit("resetGroup"),this.setMessageRead(t),wx.$app.getConversationProfile(t.conversationID).then(function(t){s.$store.commit("updateCurrentConversation",t.data.conversation),s.$store.dispatch("getMessageList")});wx.navigateTo({url:"../system/main"})},deleteConversation:function(t){var s=this;wx.$app.deleteConversation(t.conversationID).then(function(t){s.$store.commit("showToast",{title:"删除成功",duration:200})})},empty:function(){wx.navigateTo({url:"../friend/main"})}}}},MhDc:function(t,s,e){"use strict";Object.defineProperty(s,"__esModule",{value:!0});var a=e("5nAL"),n=e.n(a),i=e("Qt9A");n.a.config.errorHandler=function(t){console&&console.error&&console.error(t)},new n.a(i.a).$mount()},Qt9A:function(t,s,e){"use strict";var a=e("5vTQ"),n=e("WTmu");var i=function(t){e("wwbH")},o=e("ybqe")(a.a,n.a,i,"data-v-6ebb76b6",null);s.a=o.exports},WTmu:function(t,s,e){"use strict";var a={render:function(){var t=this,s=t.$createElement,e=t._self._c||s;return e("div",{staticClass:"chatting"},[0===t.allConversation.length?e("div",{staticClass:"empty"},[e("button",{staticClass:"empty-button",attrs:{type:"button",eventid:"0"},on:{click:t.empty}},[t._v("发起会话")])],1):t._e(),t._v(" "),t._l(t.allConversation,function(s,a){return e("div",{key:s.conversationID,staticClass:"chat"},[e("i-modal",{attrs:{title:"确认删除会话？",visible:t.modalVisible,eventid:"1_"+a,mpcomid:"0_"+a},on:{ok:function(s){t.handleConfirm()},cancel:t.handleModalShow}}),t._v(" "),e("div",{attrs:{eventid:"5_"+a},on:{longpress:function(e){t.longTimePress(s)}}},["C2C"===s.type?e("i-row",{attrs:{eventid:"4_"+a,mpcomid:"16_"+a},on:{click:function(e){t.checkoutConversation(s,s.userProfile.nick||s.userProfile.userID)}},slot:"content"},[e("i-col",{attrs:{span:"4",mpcomid:"2_"+a}},[e("div",{staticClass:"avatar"},[e("i-avatar",{attrs:{src:s.userProfile.avatar||"/static/images/header.png",size:"large",shape:"square",mpcomid:"1_"+a}})],1)]),t._v(" "),e("i-col",{attrs:{span:"20",mpcomid:"5_"+a}},[e("div",{staticClass:"right"},[e("div",{staticClass:"information"},[e("div",{staticClass:"username"},[t._v(t._s(s.userProfile.nick||s.userProfile.userID))]),t._v(" "),e("div",{staticClass:"last"},[t._v(t._s(s.lastMessage._lastTime))])]),t._v(" "),e("div",{staticClass:"information"},[e("div",{staticClass:"content"},[t._v(t._s(s.lastMessage.messageForShow))]),t._v(" "),s.unreadCount>0?e("div",{staticClass:"remain"},[s.unreadCount>99?[t._v("\n                  99+\n                ")]:[t._v("\n                  "+t._s(s.unreadCount)+"\n                ")]],2):t._e()])])])],1):"GROUP"===s.type?e("i-row",{attrs:{eventid:"2_"+a,mpcomid:"11_"+a},on:{click:function(e){t.checkoutConversation(s,s.groupProfile.name||s.groupProfile.ID)}},slot:"content"},[e("i-col",{attrs:{span:"4",mpcomid:"7_"+a}},[e("div",{staticClass:"avatar"},[e("i-avatar",{attrs:{src:s.groupProfile.avatar||"/static/images/groups.png",size:"large",shape:"square",mpcomid:"6_"+a}})],1)]),t._v(" "),e("i-col",{attrs:{span:"20",mpcomid:"10_"+a}},[e("div",{staticClass:"right"},[e("div",{staticClass:"information"},[e("div",{staticClass:"username"},[t._v(t._s(s.groupProfile.name||s.groupProfile.groupID))]),t._v(" "),e("div",{staticClass:"last"},[t._v(t._s(s.lastMessage._lastTime))])]),t._v(" "),e("div",{staticClass:"information"},["@TIM#SYSTEM"===s.lastMessage.fromAccount?e("div",{staticClass:"content"},[t._v(t._s(s.lastMessage.messageForShow))]):"TIMCustomElem"===s.lastMessage.type?e("div",{staticClass:"content"},[t._v("[自定义消息]")]):s.lastMessage.at&&s.unreadCount>0?e("div",{staticClass:"content-red"},[t._v("[有人@你了]")]):e("div",{staticClass:"content"},[t._v(t._s(s.lastMessage.fromAccount)+"："+t._s(s.lastMessage.messageForShow))]),t._v(" "),s.unreadCount>0?e("div",{staticClass:"remain"},[s.unreadCount>99?[t._v("\n                  99+\n                ")]:[t._v("\n                  "+t._s(s.unreadCount)+"\n                ")]],2):t._e()])])])],1):"@TIM#SYSTEM"===s.type?e("i-row",{attrs:{eventid:"3_"+a,mpcomid:"15_"+a},on:{click:function(e){t.checkoutNotification(s)}},slot:"content"},[e("i-col",{attrs:{span:"4",mpcomid:"13_"+a}},[e("div",{staticClass:"avatar"},[e("i-avatar",{attrs:{src:"../../../static/images/system.png",size:"large",shape:"square",mpcomid:"12_"+a}})],1)]),t._v(" "),e("i-col",{attrs:{span:"20",mpcomid:"14_"+a}},[e("div",{staticClass:"right"},[e("div",{staticClass:"information"},[e("div",{staticClass:"username"},[t._v("系统通知")]),t._v(" "),s.unreadCount>0?e("div",{staticClass:"remain"},[t._v(t._s(s.unreadCount))]):t._e()]),t._v(" "),e("div",{staticClass:"information"},[e("div",{staticClass:"content"},[t._v("点击查看")])])])])],1):t._e()],1)],1)})],2)},staticRenderFns:[]};s.a=a},wwbH:function(t,s){}},["MhDc"]);
+global.webpackJsonpMpvue([10],{
+
+/***/ 177:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(178);
+
+
+
+// add this to handle exception
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.config.errorHandler = function (err) {
+  if (console && console.error) {
+    console.error(err);
+  }
+};
+
+var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a(__WEBPACK_IMPORTED_MODULE_1__index__["a" /* default */]);
+app.$mount();
+
+/***/ }),
+
+/***/ 178:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(180);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_0c62411e_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(181);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(179)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+
+/* template */
+
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_0c62411e_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__["a" /* default */],
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src\\pages\\index\\index.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0c62411e", Component.options)
+  } else {
+    hotAPI.reload("data-v-0c62411e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 179:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 180:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_index__ = __webpack_require__(17);
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  data: function data() {
+    return {
+      modalVisible: false,
+      conversation: {}
+    };
+  },
+
+  computed: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["c" /* mapState */])({
+    allConversation: function allConversation(state) {
+      return state.conversation.allConversation;
+    },
+    isSdkReady: function isSdkReady(state) {
+      return state.global.isSdkReady;
+    }
+  }), Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapGetters */])(['totalUnreadCount', 'myInfo'])),
+  // 消息列表下拉
+  onPullDownRefresh: function onPullDownRefresh() {
+    Object(__WEBPACK_IMPORTED_MODULE_2__utils_index__["e" /* throttle */])(wx.$app.getConversationList(), 1000);
+    wx.stopPullDownRefresh();
+  },
+
+  methods: {
+    longTimePress: function longTimePress(item) {
+      this.conversation = item;
+      this.handleModalShow();
+    },
+    handleModalShow: function handleModalShow() {
+      this.modalVisible = !this.modalVisible;
+    },
+    handleConfirm: function handleConfirm() {
+      this.handleModalShow();
+      this.deleteConversation(this.conversation);
+    },
+
+    // 将某会话设为已读
+    setMessageRead: function setMessageRead(item) {
+      if (item.unreadCount === 0) {
+        return;
+      }
+      wx.$app.setMessageRead({
+        conversationID: item.conversationID
+      });
+    },
+
+    // 点击某会话
+    checkoutConversation: function checkoutConversation(item, name) {
+      this.$store.dispatch('checkoutConversation', item.conversationID);
+    },
+
+    // 点击系统通知时，处理notification
+    checkoutNotification: function checkoutNotification(item) {
+      var _this = this;
+
+      this.$store.commit('resetCurrentConversation');
+      this.$store.commit('resetGroup');
+      this.setMessageRead(item);
+      wx.$app.getConversationProfile(item.conversationID).then(function (res) {
+        _this.$store.commit('updateCurrentConversation', res.data.conversation);
+        _this.$store.dispatch('getMessageList');
+      });
+      var url = '../system/main';
+      wx.navigateTo({ url: url });
+    },
+
+    // 删除会话
+    deleteConversation: function deleteConversation(item) {
+      wx.$app.deleteConversation(item.conversationID).then(function (res) {
+        console.log('delete success', res);
+      });
+    },
+    empty: function empty() {
+      var url = '../search/main';
+      wx.navigateTo({ url: url });
+    }
+  },
+  onLoad: function onLoad() {
+    if (!this.isSdkReady) {
+      wx.showLoading({ title: '正在同步数据', mask: true });
+    }
+  },
+
+  watch: {
+    isSdkReady: function isSdkReady(newVal) {
+      if (newVal) {
+        wx.hideLoading();
+      }
+    }
+  }
+});
+
+/***/ }),
+
+/***/ 181:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "chat-container"
+  }, [(_vm.allConversation.length === 0) ? _c('div', {
+    staticClass: "empty"
+  }, [_c('button', {
+    staticClass: "empty-button",
+    attrs: {
+      "type": "button",
+      "eventid": '0'
+    },
+    on: {
+      "click": _vm.empty
+    }
+  }, [_vm._v("\n      发起一段对话吧\n    ")])], 1) : _vm._e(), _vm._v(" "), _c('i-modal', {
+    attrs: {
+      "title": "确认删除会话？",
+      "visible": _vm.modalVisible,
+      "eventid": '1',
+      "mpcomid": '0'
+    },
+    on: {
+      "ok": function($event) {
+        _vm.handleConfirm()
+      },
+      "cancel": _vm.handleModalShow
+    }
+  }), _vm._v(" "), _vm._l((_vm.allConversation), function(item, index) {
+    return [(item.type === 'C2C') ? _c('div', {
+      key: item.conversationID,
+      staticClass: "chat",
+      attrs: {
+        "eventid": '4_' + index
+      },
+      on: {
+        "longpress": function($event) {
+          _vm.longTimePress(item)
+        },
+        "click": function($event) {
+          _vm.checkoutConversation(item, item.userProfile.nick || item.userProfile.userID)
+        }
+      }
+    }, [_c('div', {
+      staticClass: "avatar-container"
+    }, [_c('i-avatar', {
+      attrs: {
+        "src": item.userProfile.avatar || '/static/images/avatar.png',
+        "i-class": "avatar",
+        "mpcomid": '1_' + index
+      }
+    })], 1), _vm._v(" "), _c('div', {
+      staticClass: "right"
+    }, [_c('div', {
+      staticClass: "information"
+    }, [_c('div', {
+      staticClass: "username"
+    }, [_vm._v(_vm._s(item.userProfile.nick || item.userProfile.userID))]), _vm._v(" "), (!item.lastMessage.isRevoked) ? _c('div', {
+      staticClass: "content"
+    }, [_vm._v(_vm._s(item.lastMessage.messageForShow))]) : _c('div', {
+      staticClass: "content"
+    }, [(_vm.myInfo.userID === item.lastMessage.fromAccount) ? [_vm._v("你撤回了一条消息")] : [_vm._v(_vm._s(item.lastMessage.fromAccount) + "撤回了一条消息")]], 2)]), _vm._v(" "), _c('div', {
+      staticClass: "time"
+    }, [_c('div', {
+      staticClass: "last"
+    }, [_vm._v(_vm._s(item.lastMessage._lastTime))]), _vm._v(" "), (item.unreadCount > 0) ? _c('div', {
+      staticClass: "remain"
+    }, [(item.unreadCount > 99) ? _c('span', {
+      staticClass: "info"
+    }, [_vm._v("99+")]) : _c('span', {
+      staticClass: "info"
+    }, [_vm._v(_vm._s(item.unreadCount))])]) : _vm._e()])])]) : (item.type === 'GROUP') ? _c('div', {
+      key: item.conversationID,
+      staticClass: "chat",
+      attrs: {
+        "eventid": '2_' + index
+      },
+      on: {
+        "click": function($event) {
+          _vm.checkoutConversation(item, item.groupProfile.name || item.groupProfile.ID)
+        },
+        "longpress": function($event) {
+          _vm.longTimePress(item)
+        }
+      }
+    }, [_c('div', {
+      staticClass: "avatar-container"
+    }, [_c('i-avatar', {
+      attrs: {
+        "src": item.groupProfile.avatar,
+        "i-class": "avatar",
+        "mpcomid": '4_' + index
+      }
+    })], 1), _vm._v(" "), _c('div', {
+      staticClass: "right"
+    }, [_c('div', {
+      staticClass: "information"
+    }, [_c('div', {
+      staticClass: "username"
+    }, [_vm._v(_vm._s(item.groupProfile.name || item.groupProfile.groupID))]), _vm._v(" "), (!item.lastMessage.isRevoked) ? _c('div', {
+      staticClass: "content"
+    }, [(item.lastMessage.fromAccount === '@TIM#SYSTEM') ? [_vm._v(_vm._s(item.lastMessage.messageForShow))] : [_vm._v(_vm._s(item.lastMessage.fromAccount) + "：" + _vm._s(item.lastMessage.messageForShow))]], 2) : _c('div', {
+      staticClass: "content"
+    }, [(_vm.myInfo.userID === item.lastMessage.fromAccount) ? [_vm._v("你撤回了一条消息")] : [_vm._v(_vm._s(item.lastMessage.fromAccount) + "撤回了一条消息")]], 2)]), _vm._v(" "), _c('div', {
+      staticClass: "time"
+    }, [_c('div', {
+      staticClass: "last"
+    }, [_vm._v(_vm._s(item.lastMessage._lastTime))]), _vm._v(" "), (item.unreadCount > 0) ? _c('div', {
+      staticClass: "remain"
+    }, [(item.unreadCount > 99) ? _c('span', {
+      staticClass: "info"
+    }, [_vm._v("99+")]) : _c('span', {
+      staticClass: "info"
+    }, [_vm._v(_vm._s(item.unreadCount))])]) : _vm._e()])])]) : (item.type === '@TIM#SYSTEM') ? _c('div', {
+      key: item.conversationID,
+      staticClass: "chat",
+      attrs: {
+        "eventid": '3_' + index
+      },
+      on: {
+        "click": function($event) {
+          _vm.checkoutNotification(item)
+        },
+        "longpress": function($event) {
+          _vm.longTimePress(item)
+        }
+      }
+    }, [_vm._m(0, true), _vm._v(" "), _c('div', {
+      staticClass: "right"
+    }, [_vm._m(1, true), _vm._v(" "), _c('div', {
+      staticClass: "time"
+    }, [_c('div', {
+      staticClass: "last"
+    }), _vm._v(" "), (item.unreadCount > 0) ? _c('div', {
+      staticClass: "remain"
+    }, [(item.unreadCount > 99) ? _c('span', {
+      staticClass: "info"
+    }, [_vm._v("99+")]) : _c('span', {
+      staticClass: "info"
+    }, [_vm._v(_vm._s(item.unreadCount))])]) : _vm._e()])])]) : _vm._e()]
+  })], 2)
+}
+var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "avatar-container"
+  }, [_c('image', {
+    staticClass: "avatar",
+    attrs: {
+      "src": "/static/images/system.png"
+    }
+  })])
+},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "information"
+  }, [_c('div', {
+    staticClass: "username"
+  }, [_vm._v("系统通知")]), _vm._v(" "), _c('div', {
+    staticClass: "content"
+  }, [_vm._v("点击查看")])])
+}]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-0c62411e", esExports)
+  }
+}
+
+/***/ })
+
+},[177]);

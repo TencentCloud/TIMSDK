@@ -5,47 +5,49 @@
     "pages/contact/main",
     "pages/own/main",
     "pages/chat/main",
-    "pages/friend/main",
+    "pages/call/main",
+    "pages/search/main",
     "pages/create/main",
     "pages/members/main",
     "pages/system/main",
-    "pages/detail/main",
-    "pages/groupDetail/main",
+    "pages/user-profile/main",
+    "pages/group-profile/main",
     "pages/groups/main",
     "pages/blacklist/main",
-    "pages/call/main",
-    "pages/profile/main"
+    "pages/profile/main",
+    "pages/update-profile/main"
   ],
   "window": {
+    "backgroundColor": "#ededed",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#ededed",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
-    "color": "#999",
-    "backgroundColor": "#F5F6F8",
-    "selectedColor": "#409EFF",
+    "color": "#000000",
+    "backgroundColor": "#ededed",
+    "selectedColor": "#006fff",
     "borderStyle": "white",
 
     "list": [
       {
         "text": "消息",
         "pagePath": "pages/index/main",
-        "iconPath": "static/images/chat.png",
-        "selectedIconPath": "static/images/chat_focus.png"
+        "iconPath": "static/theme/chat.png",
+        "selectedIconPath": "static/theme/chat-theme.png"
       },
       {
         "text": "通讯录",
         "pagePath": "pages/contact/main",
-        "iconPath": "static/images/address.png",
-        "selectedIconPath": "static/images/address_focus.png"
+        "iconPath": "static/theme/contact.png",
+        "selectedIconPath": "static/theme/contact-theme.png"
       },
       {
         "text": "帐号",
         "pagePath": "pages/own/main",
-        "iconPath": "static/images/my.png",
-        "selectedIconPath": "static/images/my_focus.png"
+        "iconPath": "static/theme/own.png",
+        "selectedIconPath": "static/theme/own-theme.png"
       }
     ],
     "position": "bottom"

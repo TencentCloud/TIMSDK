@@ -1,10 +1,10 @@
 {
   "navigationBarTitleText": "通讯录",
-  "navigationBarBackgroundColor": "#E7E9EA",
   "usingComponents": {
     "i-avatar": "../../../static/iview/avatar/index",
-    "i-row": "../../../static/iview/row/index",
-    "i-col": "../../../static/iview/col/index",
-    "i-modal": "../../../static/iview/modal/index"
+    "i-cell": "../../../static/iview/cell/index",
+    "i-cell-group": "../../../static/iview/cell-group/index",
+    "van-index-bar": "../../../static/vant/index-bar/index",
+    "van-index-anchor": "../../../static/vant/index-anchor/index"
   }
 }

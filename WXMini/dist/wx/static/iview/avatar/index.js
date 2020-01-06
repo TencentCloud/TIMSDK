@@ -1,20 +1,32 @@
 Component({
-    externalClasses: ['i-class'],
+  externalClasses: ['i-class'],
 
-    properties: {
-        // circle || square
-        shape: {
-            type: String,
-            value: 'circle'
-        },
-        // small || large || default
-        size: {
-            type: String,
-            value: 'default'
-        },
-        src: {
-            type: String,
-            value: ''
-        }
+  data: {
+    isError: false
+  },
+  properties: {
+    // circle || square
+    shape: {
+      type: String,
+      value: 'square'
+    },
+    // small || large || default
+    size: {
+      type: String,
+      value: 'default'
+    },
+    src: {
+      type: String,
+      value: ''
+    },
+    defaultAvatar: {
+      type: String,
+      value: '/static/images/avatar.png'
     }
-});
+  },
+  methods: {
+    handleError () {
+      this.setData({ isError: true })
+    }
+  }
+})

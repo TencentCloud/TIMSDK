@@ -1,5 +1,5 @@
 import { emojiMap, emojiUrl } from './emojiMap'
-import { formatDuration } from './index'
+import { formatDuration, isJSON } from './index'
 /** 传入message.element（群系统消息SystemMessage，群提示消息GroupTip除外）
  * content = {
  *  type: 'TIMTextElem',
@@ -74,7 +74,7 @@ function parseText (message) {
 function parseGroupSystemNotice (message) {
   const payload = message.payload
   const groupName =
-    payload.groupProfile.groupName || payload.groupProfile.groupID
+    payload.groupProfile.name || payload.groupProfile.groupID
   let text
   switch (payload.operationType) {
     case 1:
@@ -140,26 +140,16 @@ function parseGroupTip (message) {
       break
     case GROUP_TIP_TYPE.MEMBER_INFO_MODIFIED:
       tip = '群成员资料修改'
+      if (payload.msgMemberInfo[0].hasOwnProperty('shutupTime')) {
+        const time = (payload.msgMemberInfo[0].shutupTime / 60).toFixed(0)
+        tip = `${payload.operatorID}将${payload.msgMemberInfo[0].userID}禁言${time}分钟`
+      }
       break
   }
   return [{
     name: 'groupTip',
     text: tip
   }]
-}
-function isJSON (str) {
-  if (typeof str === 'string') {
-    try {
-      let obj = JSON.parse(str)
-      if (typeof obj === 'object' && obj) {
-        return true
-      } else {
-        return false
-      }
-    } catch (e) {
-      return false
-    }
-  }
 }
 
 function parseCustom (message) {
@@ -170,6 +160,9 @@ function parseCustom (message) {
       let tip
       const time = formatDuration(data.duration)
       switch (data.action) {
+        case -2:
+          tip = '异常挂断'
+          break
         case 0:
           tip = '请求通话'
           break
@@ -201,10 +194,6 @@ function parseCustom (message) {
         text: tip
       }]
     }
-    return [{
-      name: 'custom',
-      text: data
-    }]
   }
   return [{
     name: 'custom',

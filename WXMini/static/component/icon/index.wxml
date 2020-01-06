@@ -1,0 +1,3 @@
+<view class="icon" style="width: {{ size * 2 }}rpx;height: {{ size * 2 }}rpx">
+    <image src="{{ src }}" wx:if="{{ src !== '' }}"></image>
+</view>

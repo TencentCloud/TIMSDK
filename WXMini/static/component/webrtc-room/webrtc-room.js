@@ -341,7 +341,7 @@ Component({
       if (!self.data.pusherContext) {
         self.data.pusherContext = wx.createLivePusherContext('rtcpusher');
       }
-      console.log('切换摄像头')
+      console.log('switch')
       self.data.pusherContext && self.data.pusherContext.switchCamera({});
     },
     

@@ -1,43 +1,24 @@
 <template>
   <div class="counter-warp">
-    <div style="margin-bottom: 20px">
-      <i-avatar src="../../../static/images/launch.png" size="large" shape="square" />
-    </div>
-    <div class="login">
-      <div class="select-wrapper" @click="choose">
-        <div class="show">{{userID}}</div>
-        <div class="down">
-          <div class="inside"></div>
+    <div class="header">
+      <div class="header-content">
+        <img src="../../../static/images/im.png" class="icon">
+        <div class="text">
+          <div class="text-header">登录 · 即时通信</div>
+          <div class="text-content">体验群组聊天，视频对话等IM功能</div>
         </div>
       </div>
-      <div class="select-list" v-if="selected" @click="select">
-        <div class="select" id="user0">user0</div>
-        <div class="select" id="user1">user1</div>
-        <div class="select" id="user2">user2</div>
-        <div class="select" id="user3">user3</div>
-        <div class="select" id="user4">user4</div>
-        <div class="select" id="user5">user5</div>
-        <div class="select" id="user6">user6</div>
-        <div class="select" id="user7">user7</div>
-        <div class="select" id="user8">user8</div>
-        <div class="select" id="user9">user9</div>
-        <div class="select" id="user10">user10</div>
-        <div class="select" id="user11">user11</div>
-        <div class="select" id="user12">user12</div>
-        <div class="select" id="user13">user13</div>
-        <div class="select" id="user14">user14</div>
-        <div class="select" id="user15">user15</div>
-        <div class="select" id="user16">user16</div>
-        <div class="select" id="user17">user17</div>
-        <div class="select" id="user18">user18</div>
-        <div class="select" id="user19">user19</div>
-        <div class="select" id="user20">user20</div>
+    </div>
+    <picker class="picker" :range="userIDList" :value="selectedIndex" @change="choose">
+      <div class="cell">
+        <div class="choose">用户</div>
+        <div>
+          {{userIDList[selectedIndex]}}
+          <i-icon type="enter" />
+        </div>
       </div>
-<!--      <input type="text" class="input" placeholder="用户名" v-model="userID"/>-->
-    </div>
-    <div class="login-button">
-      <i-button @click="handleLogin" type="primary" shape="circle">登录</i-button>
-    </div>
+    </picker>
+    <button hover-class="clicked" :loading="loading" class="login-button" @click="handleLogin">登录</button>
   </div>
 </template>
 
@@ -47,95 +28,95 @@ import { genTestUserSig } from '../../../static/utils/GenerateTestUserSig'
 export default {
   data () {
     return {
-      userID: 'user0',
       password: '',
-      selected: false
+      userIDList: new Array(30).fill().map((item, idx) => ('user' + idx)),
+      selectedIndex: 1,
+      loading: false
     }
   },
   computed: {
     ...mapState({
-      isSdkReady: state => {
-        return state.global.isSdkReady
-      }
+      myInfo: state => state.user.myInfo
     })
+  },
+  onUnload () {
+    this.loading = false
   },
   methods: {
     // 点击登录进行初始化
     handleLogin () {
-      let options = genTestUserSig(this.userID)
-      options.runLoopNetType = 0
-      if (options) {
-        wx.$app.login({
-          userID: this.userID,
-          userSig: options.userSig
-        }).then(() => {
-          wx.showLoading({
-            title: '登录成功'
-          })
-          wx.switchTab({
-            url: '../index/main'
-          })
-        })
+      const userID = this.userIDList[this.selectedIndex]
+      // case1: 要登录的用户是当前已登录的用户，则直接跳转即可
+      if (this.myInfo.userID && userID === this.myInfo.userID) {
+        wx.switchTab({ url: '../index/main' })
+        return
       }
+
+      this.loading = true
+      // case2: 当前已经登录了用户，但是和即将登录的用户不一致，则先登出当前登录的用户，再登录
+      if (this.myInfo.userID) {
+        this.$store.dispatch('resetStore')
+        wx.$app.logout()
+          .then(() => {
+            this.login(userID)
+          })
+        return
+      }
+      // case3: 正常登录流程
+      this.login(userID)
     },
-    choose () {
-      this.selected = !this.selected
+    login (userID) {
+      wx.$app.login({
+        userID,
+        userSig: genTestUserSig(this.userIDList[this.selectedIndex]).userSig
+      }).then(() => {
+        wx.switchTab({ url: '../index/main' })
+      }).catch(() => {
+        this.loading = false
+      })
     },
-    select (e) {
-      this.userID = e.target.id
-      this.choose()
+    choose (event) {
+      this.selectedIndex = Number(event.mp.detail.value)
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-.select-wrapper
-  display flex
-  justify-content space-between
-  border 1px solid $border-light
-  height 30px
-  .show
-    text-align center
-    color $secondary
-    padding-left 10px
-    font-size 14px
-    line-height 30px
-  .down
-    color white
-    background-color $primary
-    height 100%
-    padding 10px 8px
-    box-sizing border-box
-    .inside
-      width 0
-      height 0
-      border-left 8px solid transparent
-      border-right 8px solid transparent
-      border-top 10px solid white
-.select-list
-  position absolute
-  z-index 9999
-  background-color white
-  width 200px
-  height 200px
-  overflow-y scroll
-  border-left 1px solid $border-base
-  border-right 1px solid $border-base
-  box-sizing border-box
-  .select
-    border-bottom 1px solid $border-base
-    font-size 14px
-    text-align left
-    padding 6px 8px
 .counter-warp
+  height 100%
+  background $white
   text-align center
-  margin-top 100px
-.login
-  display inline-block
-  padding 10px 0
-  border-radius 8px
-  width 200px
+  .header
+    padding 30px 40px
+    background-color $primary
+    color white
+    .header-content
+      display flex
+      align-items center
+      .icon
+        width 76px
+        height 50px
+      .text
+        text-align left
+        padding-left 8px
+        .text-header
+          font-size 28px
+        .text-content
+          font-size 12px
+  .picker
+    width 80vw
+    margin 80px auto 60px
+    .cell
+      display flex
+      justify-content  space-between
+      align-items center
+      border-bottom  1px solid $border-base
+      padding-bottom 12px
+      .choose
+        font-weight 600
+        font-size 16px
+
 .input
   text-align center
   height 32px
@@ -145,7 +126,14 @@ export default {
   border 1px solid $border-base
   margin-bottom 8px
 .login-button
-  width 220px
-  padding 20px 0
-  display inline-block
+  width 80vw
+  background-color $primary
+  color white
+  font-size 16px
+  &::before
+    width 20px
+    height 20px
+    margin 0 6px 2px 0
+.clicked
+  background-color $dark-primary
 </style>

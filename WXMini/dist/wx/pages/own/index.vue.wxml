@@ -1,1 +1,22 @@
-<template name="2f7ebfbd"><view class="_div data-v-79f2eaaa container"><view class="_div data-v-79f2eaaa card"><view class="_div data-v-79f2eaaa item"><i-row class="_i-row data-v-79f2eaaa"><i-col span="8" class="_i-col data-v-79f2eaaa"><view class="_div data-v-79f2eaaa avatar"><image style="width: 80px; height: 80px; border-radius: 8px" src="{{myInfo.avatar || '/static/images/header.png'}}" class="_image data-v-79f2eaaa"></image></view></i-col> <i-col span="16" class="_i-col data-v-79f2eaaa"><view class="_div data-v-79f2eaaa right"><view class="_div data-v-79f2eaaa username">{{myInfo.nick}}</view> <view class="_div data-v-79f2eaaa account">帐号：{{myInfo.userID}}</view></view></i-col></i-row></view></view> <view class="_div data-v-79f2eaaa revise"><i-button bindtap="handleProxy" type="primary" long="true" shape="circle" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_i-button data-v-79f2eaaa">修改资料</i-button></view> <view class="_div data-v-79f2eaaa revise"><i-button bindtap="handleProxy" type="error" long="true" shape="circle" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_i-button data-v-79f2eaaa">退出登录</i-button></view></view></template>
+<template name="4d095090">
+  <view class="_div data-v-08192f12 container">
+    <view class="_div data-v-08192f12 info-card">
+      <image class="_image data-v-08192f12 avatar" src="{{myInfo.avatar || '/static/images/avatar.png'}}"></image>
+      <view class="_div data-v-08192f12 basic">
+        <view class="_div data-v-08192f12 username">{{myInfo.nick || '未设置'}}</view>
+        <view class="_div data-v-08192f12 user-id">用户ID：{{myInfo.userID}}</view>
+      </view>
+    </view>
+    <i-cell-group i-class="cell-group" class="_i-cell-group data-v-08192f12">
+      <i-cell title="个性签名" class="_i-cell data-v-08192f12">
+        <view slot="footer" class="_div data-v-08192f12 signature">
+          {{myInfo.selfSignature || '暂无'}}
+        </view>
+      </i-cell>
+    </i-cell-group>
+    <i-cell-group i-class="cell-group" class="_i-cell-group data-v-08192f12">
+      <i-cell title="修改资料" is-link url="../profile/main" class="_i-cell data-v-08192f12"></i-cell>
+      <i-cell title="退出登录" i-class="logout" bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_i-cell data-v-08192f12"></i-cell>
+    </i-cell-group>
+  </view>
+</template>
