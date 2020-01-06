@@ -1,4 +1,198 @@
 require("../../common/manifest.js")
-require("../../debug/GenerateTestUserSig.js")
 require("../../common/vendor.js")
-global.webpackJsonpMpvue([3],{"N/V5":function(t,a,i){"use strict";var e=i("rkie"),n=i("YzKY");var o=function(t){i("NLu8")},c=i("ybqe")(e.a,n.a,o,null,null);a.a=c.exports},NLu8:function(t,a){},YzKY:function(t,a,i){"use strict";var e={render:function(){var t=this,a=t.$createElement,i=t._self._c||a;return i("div",{staticClass:"profile"},[i("div",{staticClass:"title"},[t._v("个人信息")]),t._v(" "),i("div",{staticClass:"item"},[i("div",{staticClass:"label"},[t._v("\n      昵称：\n    ")]),t._v(" "),i("div",[i("input",{directives:[{name:"model",rawName:"v-model.lazy:value",value:t.nick,expression:"nick",modifiers:{"lazy:value":!0}}],staticClass:"input",attrs:{type:"text",placeholder:"请输入新昵称",eventid:"0"},domProps:{value:t.nick},on:{input:function(a){a.target.composing||(t.nick=a.target.value)}}})])]),t._v(" "),i("div",{staticClass:"title"},[t._v("头像")]),t._v(" "),i("div",{staticClass:"avatar"},[i("radio-group",{staticClass:"group",attrs:{eventid:"1",mpcomid:"0"},on:{change:t.onChange}},t._l(t.imgArr,function(a,e){return i("label",{key:e,staticClass:"label"},[i("image",{staticStyle:{width:"40px",height:"40px","border-radius":"8px"},attrs:{src:a}}),t._v(" "),i("div",{staticClass:"radio-wrapper"},[i("input",{attrs:{type:"radio",name:"list",value:a,checked:t.avatar===a}})])])}))],1),t._v(" "),i("i-row",{attrs:{mpcomid:"3"}},[i("i-col",{attrs:{span:"12",offset:"6",mpcomid:"2"}},[i("div",{staticStyle:{padding:"20px 0"}},[i("i-button",{attrs:{type:"primary",long:"true",shape:"circle",eventid:"2",mpcomid:"1"},on:{click:t.revise}},[t._v("修改资料")])],1)])],1)],1)},staticRenderFns:[]};a.a=e},eWRe:function(t,a,i){"use strict";Object.defineProperty(a,"__esModule",{value:!0});var e=i("5nAL"),n=i.n(e),o=i("N/V5");new n.a(o.a).$mount()},rkie:function(t,a,i){"use strict";a.a={data:function(){return{nick:"",myInfo:{},gender:!1,imgArr:["http://imgcache.qq.com/open/qcloud/video/act/webim-avatar/avatar-1.png","http://imgcache.qq.com/open/qcloud/video/act/webim-avatar/avatar-2.png","http://imgcache.qq.com/open/qcloud/video/act/webim-avatar/avatar-3.png","http://imgcache.qq.com/open/qcloud/video/act/webim-avatar/avatar-4.png","http://imgcache.qq.com/open/qcloud/video/act/webim-avatar/avatar-5.png"],avatar:""}},onShow:function(){this.myInfo=this.$store.state.user.myInfo},methods:{onChange:function(t){this.avatar=t.target.value},revise:function(){var t=this;this.nick||this.avatar?wx.$app.updateMyProfile({nick:this.nick||this.myInfo.nick,avatar:this.avatar||this.myInfo.avatar}).then(function(a){t.$store.commit("updateMyInfo",a.data),t.$store.commit("showToast",{title:"修改成功",icon:"success",duration:1500}),t.nick="",t.avatar="",wx.switchTab({url:"../own/main"})}).catch(function(){t.$store.commit("showToast",{title:"修改失败",icon:"none",duration:1500})}):this.$store.commit("showToast",{title:"你什么都还没填哦！"})}}}}},["eWRe"]);
+global.webpackJsonpMpvue([6],{
+
+/***/ 197:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(198);
+
+
+
+var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a(__WEBPACK_IMPORTED_MODULE_1__index__["a" /* default */]);
+app.$mount();
+
+/***/ }),
+
+/***/ 198:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(200);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_282a98f5_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(201);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(199)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+
+/* template */
+
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_282a98f5_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_fileExt_template_wxml_script_js_style_wxss_platform_wx_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__["a" /* default */],
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src\\pages\\profile\\index.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-282a98f5", Component.options)
+  } else {
+    hotAPI.reload("data-v-282a98f5", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 199:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 200:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(4);
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  data: function data() {
+    return {
+      nick: '',
+      gender: false,
+      avatar: ''
+    };
+  },
+
+  computed: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["c" /* mapState */])({
+    myInfo: function myInfo(state) {
+      return state.user.myInfo;
+    }
+  })),
+  methods: {
+    onChange: function onChange(e) {
+      this.avatar = e.target.value;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ 201:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "profile"
+  }, [_c('i-cell-group', {
+    attrs: {
+      "mpcomid": '5'
+    }
+  }, [_c('i-cell', {
+    attrs: {
+      "title": "userID",
+      "value": _vm.myInfo.userID,
+      "value-class": "cell-value",
+      "mpcomid": '0'
+    }
+  }), _vm._v(" "), _c('i-cell', {
+    attrs: {
+      "title": "头像",
+      "mpcomid": '2'
+    }
+  }, [_c('i-avatar', {
+    attrs: {
+      "i-class": "avatar",
+      "src": _vm.myInfo.avatar,
+      "mpcomid": '1'
+    },
+    slot: "footer"
+  })], 1), _vm._v(" "), _c('i-cell', {
+    attrs: {
+      "title": "昵称",
+      "value-class": "cell-value",
+      "value": _vm.myInfo.nick || '暂无',
+      "is-link": "",
+      "url": "../update-profile/main?type=user&key=nick",
+      "mpcomid": '3'
+    }
+  }), _vm._v(" "), _c('i-cell', {
+    attrs: {
+      "title": "个性签名",
+      "value-class": "cell-value",
+      "is-link": "",
+      "url": "../update-profile/main?type=user&key=signature",
+      "mpcomid": '4'
+    }
+  }, [_c('div', {
+    staticClass: "signature",
+    slot: "footer"
+  }, [_vm._v("\n        " + _vm._s(_vm.myInfo.selfSignature || '暂无') + "\n      ")])])], 1)], 1)
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-282a98f5", esExports)
+  }
+}
+
+/***/ })
+
+},[197]);

@@ -22,8 +22,8 @@ const globalModules = {
       state.isCalling = payload
     }
   },
-  action: {
-    kickedReset (context) {
+  actions: {
+    resetStore (context) {
       context.commit('resetGroup')
       context.commit('resetUser')
       context.commit('resetCurrentConversation')

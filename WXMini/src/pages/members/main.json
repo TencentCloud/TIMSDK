@@ -1,6 +1,5 @@
 {
   "navigationBarTitleText": "群成员",
-  "navigationBarBackgroundColor": "#E7E9EA",
   "disableSwipeBack": true,
   "backgroundColor": "#f8f8f9",
   "onReachBottomDistance": 50,

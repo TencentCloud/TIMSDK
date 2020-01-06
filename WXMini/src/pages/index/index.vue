@@ -1,92 +1,96 @@
 <template>
-  <div class="chatting">
+  <div class="chat-container">
     <div v-if="allConversation.length === 0" class="empty">
-      <button type="button" class="empty-button" @click="empty">发起会话</button>
+      <button type="button" class="empty-button" @click="empty">
+        发起一段对话吧
+      </button>
     </div>
-    <div class="chat" v-for="item in allConversation" :key="item.conversationID">
-      <i-modal title="确认删除会话？" :visible="modalVisible" @ok="handleConfirm()" @cancel="handleModalShow">
-      </i-modal>
-      <div @longpress="longTimePress(item)">
-        <i-row v-if="item.type === 'C2C'" @click="checkoutConversation(item, item.userProfile.nick || item.userProfile.userID)" slot="content">
-          <i-col span="4">
-            <div class="avatar">
-              <i-avatar :src="item.userProfile.avatar || '/static/images/header.png'" size="large" shape="square" />
+    <i-modal title="确认删除会话？" :visible="modalVisible" @ok="handleConfirm()" @cancel="handleModalShow">
+    </i-modal>
+    <template v-for="item in allConversation">
+      <div class="chat"
+         v-if="item.type === 'C2C'"
+         :key="item.conversationID"
+         @longpress="longTimePress(item)"
+         @click="checkoutConversation(item, item.userProfile.nick || item.userProfile.userID)">
+        <div class="avatar-container">
+          <i-avatar :src="item.userProfile.avatar || '/static/images/avatar.png'" i-class="avatar" />
+        </div>
+        <div class="right">
+          <div class="information">
+            <div class="username">{{item.userProfile.nick || item.userProfile.userID}}</div>
+            <div class="content" v-if="!item.lastMessage.isRevoked">{{item.lastMessage.messageForShow}}</div>
+            <div class="content" v-else>
+              <template v-if="myInfo.userID === item.lastMessage.fromAccount">你撤回了一条消息</template>
+              <template v-else>{{item.lastMessage.fromAccount}}撤回了一条消息</template>
             </div>
-          </i-col>
-          <i-col span="20">
-            <div class="right">
-              <div class="information">
-                <div class="username">{{item.userProfile.nick || item.userProfile.userID}}</div>
-                <div class="last">{{item.lastMessage._lastTime}}</div>
-              </div>
-              <div class="information">
-                <div class="content">{{item.lastMessage.messageForShow}}</div>
-                <div class="remain" v-if="item.unreadCount > 0">
-                  <template v-if="item.unreadCount > 99">
-                    99+
-                  </template>
-                  <template v-else>
-                    {{item.unreadCount}}
-                  </template>
-                </div>
-              </div>
+          </div>
+          <div class="time">
+            <div class="last">{{item.lastMessage._lastTime}}</div>
+            <div class="remain" v-if="item.unreadCount > 0">
+              <span v-if="item.unreadCount > 99" class="info">99+</span>
+              <span v-else class="info">{{item.unreadCount}}</span>
             </div>
-          </i-col>
-        </i-row>
-        <i-row v-else-if="item.type === 'GROUP'" @click="checkoutConversation(item, item.groupProfile.name || item.groupProfile.ID)" slot="content">
-          <i-col span="4">
-            <div class="avatar">
-              <i-avatar :src="item.groupProfile.avatar || '/static/images/groups.png'" size="large" shape="square" />
-            </div>
-          </i-col>
-          <i-col span="20">
-            <div class="right">
-              <div class="information">
-                <div class="username">{{item.groupProfile.name || item.groupProfile.groupID}}</div>
-                <div class="last">{{item.lastMessage._lastTime}}</div>
-              </div>
-              <div class="information">
-                <div class="content" v-if="item.lastMessage.fromAccount === '@TIM#SYSTEM'">{{item.lastMessage.messageForShow}}</div>
-                <div class="content" v-else-if="item.lastMessage.type === 'TIMCustomElem'">[自定义消息]</div>
-                <div class="content-red" v-else-if="item.lastMessage.at && item.unreadCount > 0">[有人@你了]</div>
-                <div class="content" v-else>{{item.lastMessage.fromAccount}}：{{item.lastMessage.messageForShow}}</div>
-                <div class="remain" v-if="item.unreadCount > 0">
-                  <template v-if="item.unreadCount > 99">
-                    99+
-                  </template>
-                  <template v-else>
-                    {{item.unreadCount}}
-                  </template>
-                </div>
-              </div>
-            </div>
-          </i-col>
-        </i-row>
-        <i-row v-else-if="item.type === '@TIM#SYSTEM'" @click="checkoutNotification(item)" slot="content">
-          <i-col span="4">
-            <div class="avatar">
-              <i-avatar src="../../../static/images/system.png" size="large" shape="square" />
-            </div>
-          </i-col>
-          <i-col span="20">
-            <div class="right">
-              <div class="information">
-                <div class="username">系统通知</div>
-                <div class="remain" v-if="item.unreadCount > 0">{{item.unreadCount}}</div>
-              </div>
-              <div class="information">
-                <div class="content">点击查看</div>
-              </div>
-            </div>
-          </i-col>
-        </i-row>
+          </div>
+        </div>
       </div>
-    </div>
+      <div class="chat"
+         v-else-if="item.type === 'GROUP'"
+         @click="checkoutConversation(item, item.groupProfile.name || item.groupProfile.ID)"
+         :key="item.conversationID"
+         @longpress="longTimePress(item)">
+        <div class="avatar-container">
+          <i-avatar :src="item.groupProfile.avatar" i-class="avatar" />
+        </div>
+        <div class="right">
+          <div class="information">
+            <div class="username">{{item.groupProfile.name || item.groupProfile.groupID}}</div>
+            <div class="content" v-if="!item.lastMessage.isRevoked">
+              <template v-if="item.lastMessage.fromAccount === '@TIM#SYSTEM'">{{item.lastMessage.messageForShow}}</template>
+              <template v-else>{{item.lastMessage.fromAccount}}：{{item.lastMessage.messageForShow}}</template>
+            </div>
+            <div class="content" v-else>
+              <template v-if="myInfo.userID === item.lastMessage.fromAccount">你撤回了一条消息</template>
+              <template v-else>{{item.lastMessage.fromAccount}}撤回了一条消息</template>
+            </div>
+          </div>
+          <div class="time">
+            <div class="last">{{item.lastMessage._lastTime}}</div>
+            <div class="remain" v-if="item.unreadCount > 0">
+              <span v-if="item.unreadCount > 99" class="info">99+</span>
+              <span v-else class="info">{{item.unreadCount}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chat"
+           v-else-if="item.type === '@TIM#SYSTEM'"
+           @click="checkoutNotification(item)"
+           :key="item.conversationID"
+           @longpress="longTimePress(item)">
+        <div class="avatar-container">
+          <image src="/static/images/system.png" class="avatar" />
+        </div>
+        <div class="right">
+          <div class="information">
+            <div class="username">系统通知</div>
+            <div class="content">点击查看</div>
+          </div>
+          <div class="time">
+            <div class="last"></div>
+            <div class="remain" v-if="item.unreadCount > 0">
+              <span v-if="item.unreadCount > 99" class="info">99+</span>
+              <span v-else class="info">{{item.unreadCount}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { throttle } from '../../utils/index'
 export default {
   data () {
@@ -97,10 +101,10 @@ export default {
   },
   computed: {
     ...mapState({
-      allConversation: state => {
-        return state.conversation.allConversation
-      }
-    })
+      allConversation: state => state.conversation.allConversation,
+      isSdkReady: state => state.global.isSdkReady
+    }),
+    ...mapGetters(['totalUnreadCount', 'myInfo'])
   },
   // 消息列表下拉
   onPullDownRefresh () {
@@ -130,23 +134,7 @@ export default {
     },
     // 点击某会话
     checkoutConversation (item, name) {
-      this.$store.commit('resetCurrentConversation')
-      this.$store.commit('resetGroup')
-      this.setMessageRead(item)
-      wx.$app.getConversationProfile(item.conversationID)
-        .then((res) => {
-          this.$store.commit('updateCurrentConversation', res.data.conversation)
-          this.$store.dispatch('getMessageList')
-          if (item.type === this.TIM.TYPES.CONV_GROUP) {
-            let groupID = item.conversationID.substring(5)
-            wx.$app.getGroupProfile({ groupID: groupID })
-              .then(res => {
-                this.$store.commit('updateCurrentGroupProfile', res.data.group)
-              })
-          }
-        })
-      let url = `../chat/main?toAccount=${name}`
-      wx.navigateTo({url})
+      this.$store.dispatch('checkoutConversation', item.conversationID)
     },
     // 点击系统通知时，处理notification
     checkoutNotification (item) {
@@ -164,75 +152,123 @@ export default {
     // 删除会话
     deleteConversation (item) {
       wx.$app.deleteConversation(item.conversationID).then((res) => {
-        this.$store.commit('showToast', {
-          title: '删除成功',
-          duration: 200
-        })
+        console.log('delete success', res)
       })
     },
     empty () {
-      let url = '../friend/main'
+      let url = '../search/main'
       wx.navigateTo({url})
+    }
+  },
+  onLoad () {
+    if (!this.isSdkReady) {
+      wx.showLoading({ title: '正在同步数据', mask: true })
+    }
+  },
+  watch: {
+    isSdkReady (newVal) {
+      if (newVal) {
+        wx.hideLoading()
+      }
     }
   }
 }
 </script>
 
-<style lang='stylus' scoped>
+<style lang='stylus'>
+.chat-container
+  background-color $background
+  min-height 100vh
+  box-sizing border-box
+  border-bottom 1px solid $border-base
+  .chat
+    background-color white
+    box-sizing border-box
+    display flex
+    height 72px
+    &:last-child .right
+      border-bottom none
+    .avatar-container
+      padding 12px 16px
+      box-sizing border-box
+      .avatar
+        border-radius 4px
+        height 48px
+        width 48px
+.information
+  display flex
+  flex-direction column
+  padding-right 10px
+  height 48px
+  width 60%
+  flex-grow 1
+  .username
+    color $base
+    font-size 18px
+    line-height 28px
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
+  .content
+    color $secondary
+    font-size 14px
+    overflow hidden
+    line-height 20px
+    text-overflow ellipsis
+    white-space nowrap
+.right
+  padding 12px 0
+  display flex
+  justify-content space-between
+  box-sizing border-box
+  border-bottom 1px solid $border-base
+  width calc(100% - 80px) // 80px 是头像框的宽度
+.time
+  padding-right 16px
+  display flex
+  flex-direction column
+  flex-basis 100px
+  text-align right
+  .last
+    color $secondary
+    font-size 12px
+    line-height 28px
+  .remain
+    display flex
+    flex-direction row-reverse
+    .info
+      color white
+      font-size 12px
+      background-color $danger
+      border-radius 30px
+      padding 2px 7px
 .empty
   display flex
   align-content center
   justify-content center
   .empty-button
+    display flex
+    justify-content center
+    align-items center
+    height 46px
     color white
     margin-top 40vh
+    padding 12px
     background-color $primary
-    border-radius 8px
-    line-height 30px
-    font-size 16px
-    width 50vw
+    border-radius 6px
+    font-size 18px
+    width 80vw
+    &:before
+      content '+'
+      font-size 22px
+      margin-right 12px
 .input
   text-align center
   height 32px
   background-color white
   border-radius 8px
   font-size 16px
-.avatar
-  padding-right 10px
-.chatting
-  background-color $dark-background
-  min-height 100vh
-  box-sizing border-box
-  border-bottom 1px solid $border-base
-.chat
-  background-color white
-  margin-bottom -1px
-  padding 15px 20px
-  border-top 1px solid $border-base
-  border-bottom 1px solid $border-base
-.right
-  padding 0 18px 0 8px
-.information
-  display flex
-  flex-direction row
-  justify-content space-between
-.username
-  color $base
-  overflow hidden
-  text-overflow ellipsis
-  white-space nowrap
-  width 50%
-.last
-  color $regular
-  font-size 12px
-  padding 2px 0
-.content
-  color $regular
-  font-size 12px
-  overflow hidden
-  text-overflow ellipsis
-  white-space nowrap
-  width 80%
+
 .content-red
   color $danger
   font-size 12px
@@ -240,12 +276,6 @@ export default {
   text-overflow ellipsis
   white-space nowrap
   width 80%
-.remain
-  color white
-  font-size 12px
-  background-color $danger
-  border-radius 8px
-  padding 2px 8px
 .delete
   color white
   font-size 14px

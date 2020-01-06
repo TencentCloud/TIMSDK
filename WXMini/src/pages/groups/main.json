@@ -1,6 +1,5 @@
 {
   "navigationBarTitleText": "群列表",
-  "navigationBarBackgroundColor": "#E7E9EA",
   "backgroundColor": "#f8f8f9",
   "usingComponents": {
     "i-avatar": "../../../static/iview/avatar/index",

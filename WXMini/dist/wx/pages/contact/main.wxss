@@ -1,20 +1,20 @@
 
-.line.data-v-c7e80b78 {
-  line-height: 120rpx;
+page {
+  height: 100%;
 }
-.container.data-v-c7e80b78 {
-  background: #f8f8f9;
+.container {
+  background: #ededed;
   width: 100%;
   height: 100%;
 }
-.input-wrapper.data-v-c7e80b78 {
+.input-wrapper {
   width: 100%;
   display: flex;
   justify-content: center;
   padding: 40rpx;
   box-sizing: border-box;
 }
-.input.data-v-c7e80b78 {
+.input {
   color: #495060;
   text-align: left;
   height: 64rpx;
@@ -24,81 +24,30 @@
   width: 75%;
   border-radius: 20rpx;
 }
-.search-wrapper.data-v-c7e80b78 {
-  background-color: #e7e9ea;
-  padding: 20rpx 40rpx;
-}
-.search-wrapper .search.data-v-c7e80b78 {
-  width: 100%;
-  box-sizing: border-box;
-  background-color: #fff;
-  height: 60rpx;
-  font-size: 28rpx;
-  line-height: 60rpx;
-  border-radius: 40rpx;
-  text-align: center;
-}
-.input.data-v-c7e80b78 {
-  text-align: center;
-  height: 64rpx;
-  background-color: #fff;
-  border-radius: 16rpx;
-  font-size: 32rpx;
-}
-.item.data-v-c7e80b78 {
+.friends {
+  height: 100vh;
   background-color: #fff;
 }
-.right.data-v-c7e80b78 {
+.friends .van-index-anchor {
+  background-color: #ededed;
+}
+.friends .van-index-anchor--active {
+  color: #006fff;
+}
+.friends .friend-item {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  vertical-align: middle;
+  padding: 24rpx;
+  margin-right: 24rpx;
 }
-.border-bottom.data-v-c7e80b78 {
-  border-bottom: 2rpx solid #dddee1;
+.friends .avatar {
+  width: 80rpx;
+  height: 80rpx;
+  margin-right: 24rpx;
 }
-.information.data-v-c7e80b78 {
-  padding: 34rpx 0;
-}
-.username.data-v-c7e80b78 {
-  color: #1c2438;
-}
-.last.data-v-c7e80b78 {
-  color: #495060;
-  font-size: 24rpx;
-}
-.content.data-v-c7e80b78 {
-  color: #495060;
-  font-size: 24rpx;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 80%;
-}
-.remain.data-v-c7e80b78 {
-  color: #fff;
-  font-size: 24rpx;
-  background-color: #ed3f14;
-  border-radius: 16rpx;
-  padding: 4rpx 16rpx;
-}
-.slot.data-v-c7e80b78 {
-  color: #495060;
-  font-size: 24rpx;
-  padding-left: 20rpx;
-}
-.friends.data-v-c7e80b78 {
-  padding-top: 60rpx;
-}
-.friend.data-v-c7e80b78 {
-  background-color: #fff;
-  margin-bottom: -2rpx;
-  border-bottom: 2rpx solid #e9eaec;
-  border-top: 2rpx solid #e9eaec;
-}
-.border.data-v-c7e80b78 {
-  border: 2rpx solid #dddee1;
-}
-.center.data-v-c7e80b78 {
-  text-align: center;
+.friends .username {
+  width: 100%;
+  height: 100rpx;
+  line-height: 80rpx;
+  font-size: 36rpx;
+  border-bottom: 2rpx solid #ededed;
 }

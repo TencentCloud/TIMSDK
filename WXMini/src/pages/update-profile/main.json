@@ -1,0 +1,7 @@
+{
+  "backgroundColor": "#eeeded",
+  "disableScroll": true,
+  "usingComponents": {
+    "i-input": "../../../static/iview/input/index"
+  }
+}

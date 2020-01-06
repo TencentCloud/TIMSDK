@@ -51,6 +51,7 @@
    > |            域名            | 说明            | 是否必须 |
    > | :------------------------: | --------------- | -------- |
    > | `https://webim.tim.qq.com` | Web IM 业务域名 | 必须     |
+   > |  `https://events.tim.qq.com` |	Web IM 业务域名 | 必须   |
    > |  `https://yun.tim.qq.com`  | Web IM 业务域名 | 必须     |
    > |  `https://grouptalk.c2c.qq.com`  | Web IM 业务域名 | 必须     |
    > |  `https://pingtas.qq.com`  | Web IM 统计域名 | 必须     |
@@ -184,8 +185,8 @@
    > |            域名            | 说明            | 是否必须 |
    > | :------------------------: | --------------- | -------- |
    > | `https://webim.tim.qq.com` | Web IM 业务域名 | 必须     |
-   > |  `https://yun.tim.qq.com`  | Web IM 业务域名 | 必须     |
    > |  `https://events.tim.qq.com` |	Web IM 业务域名 | 必须   |
+   > |  `https://yun.tim.qq.com`  | Web IM 业务域名 | 必须     |
    > |  `https://grouptalk.c2c.qq.com`  | Web IM 业务域名 | 必须     |
    > |  `https://pingtas.qq.com`  | Web IM 统计域名 | 必须     |
    >
