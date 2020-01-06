@@ -1,5 +1,5 @@
 <template>
-<message-bubble :isMine=isMine>
+<message-bubble :isMine=isMine :message=message>
   <div class="face-element-wrapper">
     <img :src="url"/>
   </div>
@@ -12,6 +12,10 @@ export default {
   name: 'FaceElement',
   props: {
     payload: {
+      type: Object,
+      required: true
+    },
+    message: {
       type: Object,
       required: true
     },

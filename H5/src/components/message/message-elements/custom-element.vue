@@ -1,5 +1,5 @@
 <template>
-<message-bubble :isMine=isMine>
+<message-bubble :isMine=isMine :message=message>
   <div class="custom-element-wrapper">
     <div class="survey"  v-if="this.payload.data === 'survey'">
       <div class="title">对IM DEMO的评分和建议</div>
@@ -24,6 +24,10 @@ export default {
   name: 'CustomElement',
   props: {
     payload: {
+      type: Object,
+      required: true
+    },
+    message: {
       type: Object,
       required: true
     },

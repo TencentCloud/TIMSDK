@@ -1,5 +1,5 @@
 export function translateGroupSystemNotice(message) {
-  const groupName = message.payload.groupProfile.groupName || message.payload.groupProfile.groupID
+  const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID
   switch (message.payload.operationType) {
     case 1:
       return `${message.payload.operatorID} 申请加入群组：${groupName}`
@@ -8,7 +8,7 @@ export function translateGroupSystemNotice(message) {
     case 3:
       return `申请加入群组：${groupName}被拒绝`
     case 4:
-      return `被管理员${message.payload.operatorID}踢出群组：${groupName}`
+      return `你被管理员${message.payload.operatorID}踢出群组：${groupName}`
     case 5:
       return `群：${groupName} 已被${message.payload.operatorID}解散`
     case 6:

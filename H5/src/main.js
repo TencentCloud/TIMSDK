@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { MessageBox, Row, Col, Button, Input, Loading, Dialog } from 'element-ui'
+import { MessageBox, Row, Col, Button, Input, Loading, Dialog, Dropdown, DropdownMenu, DropdownItem } from 'element-ui'
 import Avatar from './components/avatar.vue'
 import Index from './index.vue'
 import store from './store/index'
@@ -22,6 +22,9 @@ Vue.use(Col)
 Vue.use(Input)
 Vue.use(Loading)
 Vue.use(Dialog)
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
 Vue.component('avatar', Avatar)
 new Vue({
   render: h => h(Index)

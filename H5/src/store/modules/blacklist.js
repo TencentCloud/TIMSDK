@@ -20,9 +20,13 @@ const blacklistModule = {
     getBlacklist(context) {
       tim
         .getBlacklist()
-        .then(({ data }) => tim.getUserProfile({ userIDList: data }))
         .then(({ data }) => {
-          context.commit('updateBlacklist', data)
+          if (data.length > 0) {
+            tim.getUserProfile({ userIDList: data })
+              .then(({ data }) => {
+                context.commit('updateBlacklist', data)
+              })
+          }
         })
     }
   }

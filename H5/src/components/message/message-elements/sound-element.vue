@@ -1,5 +1,5 @@
 <template>
-<message-bubble :isMine=isMine>
+<message-bubble :isMine=isMine :message=message>
   <div class="sound-element-wrapper" title="单击播放" @click="play">
     <i class="iconfont icon-voice"></i>
     {{ second + '"' }}
@@ -13,6 +13,10 @@ export default {
   name: 'SoundElement',
   props: {
     payload: {
+      type: Object,
+      required: true
+    },
+    message: {
       type: Object,
       required: true
     },

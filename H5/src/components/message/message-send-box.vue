@@ -167,11 +167,15 @@ export default {
   },
   mounted() {
     this.$refs['text-input'].addEventListener('paste', this.handlePaste)
+    this.$bus.$on('reEditMessage', this.reEditMessage)
   },
   unmounted() {
     this.$refs['text-input'].removeEventListener('paste', this.handlePaste)
   },
   methods: {
+    reEditMessage(payload) {
+      this.messageContent = payload
+    },
     handleSelectAtUser() {
       this.messageContent += this.atUserID + ' '
       this.showAtGroupMember = false

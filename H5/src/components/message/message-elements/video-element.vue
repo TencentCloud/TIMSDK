@@ -1,5 +1,5 @@
 <template>
-  <message-bubble :isMine=isMine>
+  <message-bubble :isMine=isMine :message=message>
     <video
       :src="payload.videoUrl"
       :poster="payload.thumbUrl"
@@ -19,6 +19,10 @@ export default {
   },
   props: {
     payload: {
+      type: Object,
+      required: true
+    },
+    message: {
       type: Object,
       required: true
     },
