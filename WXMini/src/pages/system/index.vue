@@ -45,7 +45,7 @@ export default {
   computed: {
     ...mapState({
       currentMessageList: state => {
-        return [...state.conversation.currentMessageList]
+        return [...state.conversation.currentMessageList].reverse()
       }
     })
   },
@@ -80,9 +80,7 @@ export default {
           title: '处理完成'
         })
       }).catch((err) => {
-        this.$store.commit('showToast', {
-          title: err.message
-        })
+        console.log(err)
         this.modal()
       })
     }
@@ -103,7 +101,8 @@ export default {
   background-color #f0faff
   border-radius 12px
   .time
-    color $light-primary
+    font-weight 600
+    color $base
 .button
   color white
   background-color $primary

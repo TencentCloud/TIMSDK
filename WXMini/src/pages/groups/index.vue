@@ -2,13 +2,10 @@
   <div class="container">
     <div class="group" v-for="item in groupList" :key="item.groupID" @click="startConversation(item)">
       <div class="avatar">
-        <image class="img" :src="item.avatar || '/static/images/groups.png'"/>
+        <i-avatar i-class="img" :src="item.avatar"/>
       </div>
       <div class="name">
         {{item.name}}
-      </div>
-      <div class="type">
-        {{item.type}}
       </div>
     </div>
   </div>
@@ -30,33 +27,13 @@ export default {
   },
   methods: {
     startConversation (item) {
-      this.$store.commit('resetCurrentConversation')
-      this.$store.commit('resetGroup')
-      let conversationID = this.TIM.TYPES.CONV_GROUP + item.groupID
-      wx.$app.setMessageRead({
-        conversationID: conversationID
-      })
-      wx.$app.getConversationProfile(conversationID)
-        .then((res) => {
-          const conversation = res.data.conversation
-          this.$store.commit('updateCurrentConversation', conversation)
-          this.$store.dispatch('getMessageList', conversation.conversationID)
-          if (conversation.type === this.TIM.TYPES.CONV_GROUP) {
-            let groupID = conversation.conversationID.substring(5)
-            wx.$app.getGroupProfile({ groupID: groupID })
-              .then(res => {
-                this.$store.commit('updateCurrentGroupProfile', res.data.group)
-              })
-          }
-        })
-      let url = `../chat/main?toAccount=${item.name}`
-      wx.navigateTo({url})
+      this.$store.dispatch('checkoutConversation', `GROUP${item.groupID}`)
     }
   }
 }
 </script>
 
-<style lang='stylus' scoped>
+<style lang='stylus'>
 .container
   background-color $background
   min-height 100vh
@@ -74,7 +51,7 @@ export default {
         height 30px
 .name
   line-height 30px
-  width 50%
+  width 100%
   overflow hidden
   text-overflow ellipsis
   white-space nowrap
