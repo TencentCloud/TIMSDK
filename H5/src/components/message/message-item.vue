@@ -17,21 +17,25 @@
             v-if="message.type === TIM.TYPES.MSG_TEXT"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <image-element
             v-else-if="message.type === TIM.TYPES.MSG_IMAGE"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <file-element
             v-else-if="message.type === TIM.TYPES.MSG_FILE"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <sound-element
             v-else-if="message.type === TIM.TYPES.MSG_SOUND"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <group-tip-element
             v-else-if="message.type===TIM.TYPES.MSG_GRP_TIP"
@@ -46,21 +50,25 @@
             v-else-if="message.type === TIM.TYPES.MSG_CUSTOM"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <face-element
             v-else-if="message.type === TIM.TYPES.MSG_FACE"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <video-element
             v-else-if="message.type === TIM.TYPES.MSG_VIDEO"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <geo-element
             v-else-if="message.type === TIM.TYPES.MSG_GEO"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <span v-else>暂未支持的消息类型：{{message.type}}</span>
         </div>
@@ -89,21 +97,25 @@
             v-if="message.type === TIM.TYPES.MSG_TEXT"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <image-element
             v-else-if="message.type === TIM.TYPES.MSG_IMAGE"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <file-element
             v-else-if="message.type === TIM.TYPES.MSG_FILE"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <sound-element
             v-else-if="message.type === TIM.TYPES.MSG_SOUND"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <group-tip-element
             v-else-if="message.type===TIM.TYPES.MSG_GRP_TIP"
@@ -114,21 +126,25 @@
             v-else-if="message.type === TIM.TYPES.MSG_CUSTOM"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <face-element
             v-else-if="message.type === TIM.TYPES.MSG_FACE"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <video-element
             v-else-if="message.type === TIM.TYPES.MSG_VIDEO"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <geo-element
             v-else-if="message.type === TIM.TYPES.MSG_GEO"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <span v-else>暂未支持的消息类型：{{message.type}}</span>
         </div>
@@ -201,9 +217,9 @@ export default {
     }),
     // 是否显示头像，群提示消息不显示头像
     showAvatar() {
-      if (this.currentConversation.type === 'C2C') {
+      if (this.currentConversation.type === 'C2C' && !this.message.isRevoked) { // C2C且没有撤回的消息
         return true
-      } else if (this.currentConversation.type === 'GROUP') {
+      } else if (this.currentConversation.type === 'GROUP' && !this.message.isRevoked) { // group且没有撤回的消息
         return this.message.type !== this.TIM.TYPES.MSG_GRP_TIP
       }
       return false
@@ -236,6 +252,9 @@ export default {
       ) {
         return 'position-center'
       }
+      if(this.message.isRevoked) { // 撤回消息
+        return 'position-center'
+      }
       if (this.isMine) {
         return 'position-right'
       } else {
@@ -248,6 +267,9 @@ export default {
           this.message.type
         )
       ) {
+        return false
+      }
+      if(this.message.isRevoked) { // 撤回消息
         return false
       }
       return true

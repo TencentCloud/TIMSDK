@@ -38,7 +38,7 @@
               <div v-if="conversation.lastMessage" class="text-ellipsis">
                 <span class="remind" style="color:red;" v-if="hasMessageAtMe">[有人提到我]</span>
                 <span class="text" :title="conversation.lastMessage.messageForShow">
-                  {{conversation.lastMessage.messageForShow}}
+                  {{messageForShow}}
                 </span>
               </div>
             </div>
@@ -119,8 +119,21 @@ export default {
         'AcceptNotNotify'
       )
     },
+    messageForShow() {
+      if (this.conversation.lastMessage.isRevoked) {
+        if (this.conversation.lastMessage.fromAccount === this.currentUserProfile.userID) {
+          return '你撤回了一条消息'
+        }
+        if (this.conversation.type === this.TIM.TYPES.CONV_C2C) {
+          return '对方撤回了一条消息'
+        }
+        return `${this.conversation.lastMessage.fromAccount}撤回了一条消息`
+      }
+      return this.conversation.lastMessage.messageForShow
+    },
     ...mapState({
-      currentConversation: state => state.conversation.currentConversation
+      currentConversation: state => state.conversation.currentConversation,
+      currentUserProfile: state => state.user.currentUserProfile
     }),
     ...mapGetters(['toAccount'])
   },

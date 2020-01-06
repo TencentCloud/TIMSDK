@@ -109,6 +109,14 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### WebIM Demo Change Log
 
+#### 2020/1/6
+
+**Features**
+
+- SDK 版本更新，支持消息撤回
+- Web Demo增加消息撤回与重新编辑功能
+- 账号被踢出时，给出原因提醒
+
 #### 2019/12/13
 
 **Features**

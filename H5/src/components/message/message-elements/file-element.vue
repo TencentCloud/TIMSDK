@@ -1,5 +1,5 @@
 <template>
-<message-bubble :isMine=isMine>  
+<message-bubble :isMine=isMine :message=message>  
   <div class="file-element-wrapper" title="单击下载" @click="downloadFile">
     <div class="header">
       <i class="el-icon-document file-icon"></i>
@@ -24,6 +24,10 @@ export default {
   name: 'FileElement',
   props: {
     payload: {
+      type: Object,
+      required: true
+    },
+    message: {
       type: Object,
       required: true
     },

@@ -1,5 +1,5 @@
 <template>
-  <message-bubble :isMine="isMine">
+  <message-bubble :isMine="isMine" :message=message>
     <a class="geo-element" :href="href" target="_blank" title="点击查看详情">
       <span class="el-icon-location-outline">{{payload.description}}</span>
       <img :src="url" />
@@ -17,6 +17,10 @@ export default {
   },
   props: {
     payload: {
+      type: Object,
+      required: true
+    },
+    message: {
       type: Object,
       required: true
     },
