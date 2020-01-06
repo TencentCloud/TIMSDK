@@ -1,36 +1,38 @@
 
-.card.data-v-79f2eaaa {
-  border-bottom: 2rpx solid #e9eaec;
+.cell-group {
+  margin-top: 20rpx;
 }
-.avatar.data-v-79f2eaaa {
-  padding: 20rpx;
+.logout {
+  color: #fb5250;
 }
-.right.data-v-79f2eaaa {
-  box-sizing: border-box;
-  height: 200rpx;
-  padding: 20rpx;
+.signature {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 50vw;
+  color: #c4c4c4;
+}
+.container {
+  height: 100vh;
+  background-color: #ededed;
+}
+.container .info-card {
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  padding: 56rpx 32rpx 32rpx;
+  background-color: #fff;
 }
-.username.data-v-79f2eaaa {
-  font-weight: 600;
-  font-size: 36rpx;
-  color: #1c2438;
-}
-.account.data-v-79f2eaaa {
-  font-size: 28rpx;
-  color: #80848f;
-}
-.start.data-v-79f2eaaa {
-  color: #fff;
-  background-color: #2d8cf0;
+.container .info-card .avatar {
+  width: 160rpx;
+  height: 160rpx;
   border-radius: 16rpx;
-  height: 100rpx;
-  width: 400rpx;
-  line-height: 100rpx;
-  font-size: 32rpx;
+  margin-right: 28rpx;
 }
-.revise.data-v-79f2eaaa {
-  padding: 40rpx 80rpx 0 80rpx;
+.container .info-card .basic .username {
+  font-size: 48rpx;
+  line-height: 72rpx;
+  font-weight: 600;
+}
+.container .info-card .basic .user-id {
+  font-size: 24rpx;
+  color: #c4c4c4;
 }

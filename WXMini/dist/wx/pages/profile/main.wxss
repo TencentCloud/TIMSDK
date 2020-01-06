@@ -1,85 +1,19 @@
 
 .profile {
-  background-color: #f8f8f9;
+  background-color: #ededed;
   min-height: 100vh;
 }
-.title {
-  color: #495060;
-  font-size: 24rpx;
-  padding: 20rpx 0 8rpx 32rpx;
-}
-.item {
-  height: 80rpx;
-  display: flex;
-  background-color: #fff;
-  font-size: 28rpx;
-  padding: 6rpx 20rpx;
-  vertical-align: middle;
-  box-sizing: border-box;
-  border: 2rpx solid #e9eaec;
-  margin-bottom: -2rpx;
-}
-.item .label {
-  line-height: 64rpx;
-  color: #495060;
-  width: 25%;
-}
-.item .add-label {
-  line-height: 64rpx;
-  color: #495060;
-  width: 40%;
-}
-.radio-group .radio {
-  background: #fff;
-  border: 2rpx solid #d6d6d6;
-  border-radius: 4rpx;
-  padding: 6rpx 24rpx;
-  text-align: center;
-  margin-right: 6rpx;
-}
-radio {
-  padding-left: 14rpx;
-}
-radio .wx-radio-input.wx-radio-input-checked {
-  border-color: #2d8cf0 !important;
-  background: #2d8cf0 !important;
-}
-.group {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-}
-.label {
-  padding: 20rpx;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-}
-.label .circle {
-  height: 30rpx;
-  width: 30rpx;
-}
 .avatar {
-  background-color: #fff;
-  border: 2rpx solid #e9eaec;
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 6rpx;
 }
-.input {
-  color: #495060;
-  text-align: left;
-  height: 64rpx;
-  background-color: #fff;
-  font-size: 32rpx;
-  line-height: 64rpx;
-  width: 75%;
-  border-radius: 20rpx;
+.signature {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 50vw;
 }
-.button {
-  color: #fff;
-  background-color: #2d8cf0;
-  border-radius: 16rpx;
-  height: 100rpx;
-  width: 400rpx;
-  line-height: 100rpx;
-  font-size: 32rpx;
-  margin-top: 60rpx;
+.cell-value {
+  color: #c4c4c4 !important;
 }

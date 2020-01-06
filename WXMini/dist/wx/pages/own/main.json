@@ -1,12 +1,10 @@
 {
-  "navigationBarTitleText": "我的",
-  "navigationBarBackgroundColor": "#E7E9EA",
+  "navigationBarTitleText": "",
+  "navigationBarBackgroundColor": "#ffffff",
+  "backgroundColor": "#ededed",
   "disableScroll": true,
   "usingComponents": {
-    "i-input": "../../../static/iview/input/index",
-    "i-button": "../../../static/iview/button/index",
-    "i-avatar": "../../../static/iview/avatar/index",
-    "i-row": "../../../static/iview/row/index",
-    "i-col": "../../../static/iview/col/index"
+    "i-cell": "../../../static/iview/cell/index",
+    "i-cell-group": "../../../static/iview/cell-group/index"
   }
 }
