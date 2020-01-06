@@ -44,7 +44,7 @@ const conversationModules = {
     // 用于当前会话的图片预览
     imgUrlList: state => {
       return state.currentMessageList
-        .filter(message => message.type === TIM.TYPES.MSG_IMAGE)
+        .filter(message => message.type === TIM.TYPES.MSG_IMAGE && !message.isRevoked) // 筛选出没有撤回并且类型是图片类型的消息
         .map(message => message.payload.imageInfoArray[0].url)
     }
   },

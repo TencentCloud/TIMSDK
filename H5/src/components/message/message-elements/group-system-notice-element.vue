@@ -1,5 +1,5 @@
 <template>
-  <message-bubble :isMine="false">
+  <message-bubble :isMine="false" :message=message>
     <div class="group-system-element-wrapper">
       {{ text }}
       <el-button v-if="isJoinGroupRequest" type="text" @click="showDialog = true">处理</el-button>

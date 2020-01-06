@@ -1,5 +1,5 @@
 <template>
-  <message-bubble :isMine=isMine>
+  <message-bubble :isMine=isMine :message=message>
     <template v-for="(item, index) in contentList">
       <span :key="index" v-if="item.name === 'text'">{{ item.text }}</span>
       <img v-else-if="item.name === 'img'" :src="item.src" width="20px" height="20px" :key="index"/>
@@ -26,6 +26,10 @@ export default {
   },
   props: {
     payload: {
+      type: Object,
+      required: true
+    },
+    message: {
       type: Object,
       required: true
     },

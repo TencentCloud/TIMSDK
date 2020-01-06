@@ -87,46 +87,17 @@ export default {
       // SDK NOT READT
       this.tim.on(this.TIM.EVENT.SDK_NOT_READY, this.onReadyStateUpdate, this)
       // 被踢出
-      this.tim.on(this.TIM.EVENT.KICKED_OUT, () => {
-        this.$store.commit('showMessage', {
-          message: '被踢出，请重新登录。',
-          type: 'error'
-        })
-        this.$store.commit('toggleIsLogin', false)
-        this.$store.commit('reset')
-      })
+      this.tim.on(this.TIM.EVENT.KICKED_OUT, this.onKickOut)
       // SDK内部出错
       this.tim.on(this.TIM.EVENT.ERROR, this.onError)
       // 收到新消息
       this.tim.on(this.TIM.EVENT.MESSAGE_RECEIVED, this.onReceiveMessage)
       // 会话列表更新
-      this.tim.on(this.TIM.EVENT.CONVERSATION_LIST_UPDATED, event => {
-        this.$store.commit('updateConversationList', event.data)
-      })
+      this.tim.on(this.TIM.EVENT.CONVERSATION_LIST_UPDATED, this.onUpdateConversationList)
       // 群组列表更新
-      this.tim.on(this.TIM.EVENT.GROUP_LIST_UPDATED, event => {
-        this.$store.commit('updateGroupList', event.data)
-      })
+      this.tim.on(this.TIM.EVENT.GROUP_LIST_UPDATED, this.onUpdateGroupList)
       // 收到新的群系统通知
-      this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, event => {
-        const isKickedout = event.data.type === 4
-        const isCurrentConversation =
-          `GROUP${event.data.message.payload.groupProfile.groupID}` ===
-          this.currentConversation.conversationID
-        // 在当前会话被踢，需reset当前会话
-        if (isKickedout && isCurrentConversation) {
-          this.$store.commit('resetCurrentConversation')
-        }
-        Notification({
-          title: '新系统通知',
-          message: translateGroupSystemNotice(event.data.message),
-          duration: 3000,
-          onClick: () => {
-            const SystemConversationID = '@TIM#SYSTEM'
-            this.$store.dispatch('checkoutConversation', SystemConversationID)
-          }
-        })
-      })
+      this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, this.onReceiveGroupSystemNotice)
     },
     onReceiveMessage({ data: messageList }) {
       this.handleAt(messageList)
@@ -159,6 +130,51 @@ export default {
           })
         this.$store.dispatch('getBlacklist')
       }
+    },
+    kickedOutReason(type) {
+      switch (type) {
+        case this.TIM.TYPES.KICKED_OUT_MULT_ACCOUNT:
+          return '由于多实例登录'
+        case this.TIM.TYPES.KICKED_OUT_MULT_DEVICE:
+          return '由于多设备登录'
+        case this.TIM.TYPES.KICKED_OUT_USERSIG_EXPIRED:
+          return '由于 userSig 过期'
+        default:
+          return ''
+      }
+    },
+    onKickOut(event) {
+      this.$store.commit('showMessage', {
+        message: `${this.kickedOutReason(event.data.type)}被踢出，请重新登录。`,
+        type: 'error'
+      })
+      this.$store.commit('toggleIsLogin', false)
+      this.$store.commit('reset')
+    },
+    onUpdateConversationList(event) {
+      this.$store.commit('updateConversationList', event.data)
+    },
+    onUpdateGroupList(event) {
+      this.$store.commit('updateGroupList', event.data)
+    },
+    onReceiveGroupSystemNotice(event) {
+      const isKickedout = event.data.type === 4
+      const isCurrentConversation =
+        `GROUP${event.data.message.payload.groupProfile.groupID}` ===
+        this.currentConversation.conversationID
+      // 在当前会话被踢，需reset当前会话
+      if (isKickedout && isCurrentConversation) {
+        this.$store.commit('resetCurrentConversation')
+      }
+      Notification({
+        title: '新系统通知',
+        message: translateGroupSystemNotice(event.data.message),
+        duration: 3000,
+        onClick: () => {
+          const SystemConversationID = '@TIM#SYSTEM'
+          this.$store.dispatch('checkoutConversation', SystemConversationID)
+        }
+      })
     },
     /**
      * 处理 @ 我的消息

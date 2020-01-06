@@ -27,11 +27,14 @@ export default {
           return `群成员：${payload.userIDList.join(',')}，被${
             payload.operatorID
           }踢出群组`
-
         case this.TIM.TYPES.GRP_TIP_MBR_SET_ADMIN:
           return `群成员：${payload.userIDList.join(',')}，成为管理员`
         case this.TIM.TYPES.GRP_TIP_MBR_CANCELED_ADMIN:
           return `群成员：${payload.userIDList.join(',')}，被撤销管理员`
+        case this.TIM.TYPES.GRP_TIP_GRP_PROFILE_UPDATED:
+          return '群资料修改'
+        case this.TIM.TYPES.GRP_TIP_MBR_PROFILE_UPDATED:
+          return '群成员资料修改'
         default:
           return '[群提示消息]'
       }

@@ -1,5 +1,5 @@
 <template>
-  <message-bubble :isMine=isMine>
+  <message-bubble :isMine=isMine :message=message>
      <!-- el-image在IE下会自动加上用于兼容object-fit的类，该类的样式在没设置图片宽高是会 GG -->
     <img class="image-element" :src="imageUrl" @load="onImageLoaded" @click="handlePreview" />
     <el-progress
@@ -18,6 +18,10 @@ export default {
   name: 'ImageElemnt',
   props: {
     payload: {
+      type: Object,
+      required: true
+    },
+    message: {
       type: Object,
       required: true
     },
