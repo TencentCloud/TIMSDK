@@ -9,6 +9,11 @@
         <input type="text" class="input" placeholder="输入回复" v-model.lazy:value="text"/>
       </div>
     </i-modal>
+    <div v-if="currentMessageList.length === 0">
+      <div class="card">
+        暂无系统消息
+      </div>
+    </div>
     <div v-for="message in currentMessageList" :key="message.ID">
       <div v-if="message.payload.operationType === 1" class="card handle">
         <div>
