@@ -1,0 +1,67 @@
+
+.counter-warp.data-v-1532f6f5 {
+  height: 100%;
+  background: #fff;
+  text-align: center;
+}
+.counter-warp .header.data-v-1532f6f5 {
+  padding: 60rpx 80rpx;
+  background-color: #006fff;
+  color: #fff;
+}
+.counter-warp .header .header-content.data-v-1532f6f5 {
+  display: flex;
+  align-items: center;
+}
+.counter-warp .header .header-content .icon.data-v-1532f6f5 {
+  width: 152rpx;
+  height: 100rpx;
+}
+.counter-warp .header .header-content .text.data-v-1532f6f5 {
+  text-align: left;
+  padding-left: 16rpx;
+}
+.counter-warp .header .header-content .text .text-header.data-v-1532f6f5 {
+  font-size: 56rpx;
+}
+.counter-warp .header .header-content .text .text-content.data-v-1532f6f5 {
+  font-size: 24rpx;
+}
+.counter-warp .picker.data-v-1532f6f5 {
+  width: 80vw;
+  margin: 160rpx auto 120rpx;
+}
+.counter-warp .picker .cell.data-v-1532f6f5 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2rpx solid #dbdbdb;
+  padding-bottom: 24rpx;
+}
+.counter-warp .picker .cell .choose.data-v-1532f6f5 {
+  font-weight: 600;
+  font-size: 32rpx;
+}
+.input.data-v-1532f6f5 {
+  text-align: center;
+  height: 64rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  border: 2rpx solid #dbdbdb;
+  margin-bottom: 16rpx;
+}
+.login-button.data-v-1532f6f5 {
+  width: 80vw;
+  background-color: #006fff;
+  color: #fff;
+  font-size: 32rpx;
+}
+.login-button.data-v-1532f6f5::before {
+  width: 40rpx;
+  height: 40rpx;
+  margin: 0 12rpx 4rpx 0;
+}
+.clicked.data-v-1532f6f5 {
+  background-color: #0063e5;
+}

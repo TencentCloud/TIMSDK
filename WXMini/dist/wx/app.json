@@ -1,0 +1,60 @@
+{
+  "pages": [
+    "pages/login/main",
+    "pages/index/main",
+    "pages/contact/main",
+    "pages/own/main",
+    "pages/chat/main",
+    "pages/call/main",
+    "pages/search/main",
+    "pages/create/main",
+    "pages/members/main",
+    "pages/system/main",
+    "pages/user-profile/main",
+    "pages/group-profile/main",
+    "pages/groups/main",
+    "pages/blacklist/main",
+    "pages/profile/main",
+    "pages/update-profile/main"
+  ],
+  "window": {
+    "backgroundColor": "#ededed",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#ededed",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#000000",
+    "backgroundColor": "#ededed",
+    "selectedColor": "#006fff",
+    "borderStyle": "white",
+
+    "list": [
+      {
+        "text": "消息",
+        "pagePath": "pages/index/main",
+        "iconPath": "static/theme/chat.png",
+        "selectedIconPath": "static/theme/chat-theme.png"
+      },
+      {
+        "text": "通讯录",
+        "pagePath": "pages/contact/main",
+        "iconPath": "static/theme/contact.png",
+        "selectedIconPath": "static/theme/contact-theme.png"
+      },
+      {
+        "text": "帐号",
+        "pagePath": "pages/own/main",
+        "iconPath": "static/theme/own.png",
+        "selectedIconPath": "static/theme/own-theme.png"
+      }
+    ],
+    "position": "bottom"
+  },
+
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  }
+}

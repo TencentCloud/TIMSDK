@@ -1,0 +1,77 @@
+
+.cell-group {
+  margin-top: 20rpx;
+}
+.signature {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 50vw;
+  color: #999;
+}
+.container {
+  height: 100vh;
+  background-color: #ededed;
+}
+.container .info-card {
+  display: flex;
+  padding: 32rpx;
+  background-color: #fff;
+}
+.container .info-card .avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 16rpx;
+  margin-right: 28rpx;
+}
+.container .info-card .basic .username {
+  font-size: 48rpx;
+  line-height: 72rpx;
+  font-weight: 600;
+}
+.container .info-card .basic .user-id {
+  font-size: 24rpx;
+  color: #999;
+}
+.container .action-list {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  padding: 24rpx;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+.container .action-list ._button {
+  flex-basis: 40%;
+  flex-grow: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 36rpx;
+  margin: 0;
+}
+.container .action-list ._button:after {
+  border: none;
+}
+.container .action-list .send-messsage {
+  background-color: #006fff;
+  color: #fff;
+}
+.container .action-list .video-call {
+  margin-right: 16rpx;
+  background-color: #dbdbdb;
+  overflow: visible;
+}
+.container .action-list .video-call .new-badge {
+  position: absolute;
+  right: -10rpx;
+  top: -10rpx;
+  width: 68rpx;
+  height: 32rpx;
+  line-height: 32rpx;
+  border-radius: 16rpx;
+  font-size: 20rpx;
+  color: #fff;
+  background-color: #fb5250;
+}

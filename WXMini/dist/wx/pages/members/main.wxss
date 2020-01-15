@@ -1,0 +1,61 @@
+
+.search.data-v-1f364c65 {
+  background-color: #ededed;
+  padding: 16rpx 16rpx 16rpx 16rpx;
+}
+.input.data-v-1f364c65 {
+  text-align: center;
+  height: 64rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  border: 2rpx solid #dbdbdb;
+}
+.avatar.data-v-1f364c65 {
+  padding-right: 20rpx;
+}
+.information.data-v-1f364c65 {
+  width: 100%;
+}
+.chat.data-v-1f364c65 {
+  line-height: 64rpx;
+  padding: 20rpx;
+  background-color: #ededed;
+  margin-bottom: -2rpx;
+  border-top: 2rpx solid #dbdbdb;
+  border-bottom: 2rpx solid #dbdbdb;
+}
+.right.data-v-1f364c65 {
+  padding: 0 36rpx 0 16rpx;
+}
+.set.data-v-1f364c65 {
+  color: #4082a2;
+  font-size: 28rpx;
+}
+.delete.data-v-1f364c65 {
+  color: #c86957;
+  font-size: 28rpx;
+}
+.username.data-v-1f364c65 {
+  font-size: 28rpx;
+  color: #111;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.last.data-v-1f364c65 {
+  color: #495060;
+  font-size: 24rpx;
+}
+.content.data-v-1f364c65 {
+  color: #495060;
+  font-size: 24rpx;
+  width: 80%;
+}
+.remain.data-v-1f364c65 {
+  color: #fff;
+  font-size: 24rpx;
+  background-color: #fb5250;
+  border-radius: 16rpx;
+  padding: 4rpx 16rpx;
+}

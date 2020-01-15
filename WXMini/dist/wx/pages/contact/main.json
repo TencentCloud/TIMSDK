@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "通讯录",
+  "usingComponents": {
+    "i-avatar": "../../../static/iview/avatar/index",
+    "i-cell": "../../../static/iview/cell/index",
+    "i-cell-group": "../../../static/iview/cell-group/index",
+    "van-index-bar": "../../../static/vant/index-bar/index",
+    "van-index-anchor": "../../../static/vant/index-anchor/index"
+  }
+}

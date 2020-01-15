@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "新建群聊",
+  "usingComponents": {
+    "i-icon": "../../../static/iview/icon/index"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "黑名单",
+  "disableSwipeBack": true,
+  "backgroundColor": "#f8f8f9",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "i-avatar": "../../../static/iview/avatar/index",
+    "i-row": "../../../static/iview/row/index",
+    "i-col": "../../../static/iview/col/index"
+  }
+}

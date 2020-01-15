@@ -1,0 +1,1 @@
+<import src="/pages/blacklist/index.vue.wxml" /><template is="3a23cc67" data="{{ ...$root['0'], $root }}"/>
