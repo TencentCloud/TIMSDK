@@ -252,7 +252,7 @@ export default {
       ) {
         return 'position-center'
       }
-      if(this.message.isRevoked) { // 撤回消息
+      if (this.message.isRevoked) { // 撤回消息
         return 'position-center'
       }
       if (this.isMine) {
@@ -269,7 +269,7 @@ export default {
       ) {
         return false
       }
-      if(this.message.isRevoked) { // 撤回消息
+      if (this.message.isRevoked) { // 撤回消息
         return false
       }
       return true
