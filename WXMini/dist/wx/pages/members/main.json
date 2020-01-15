@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "群成员",
+  "disableSwipeBack": true,
+  "backgroundColor": "#f8f8f9",
+  "onReachBottomDistance": 50,
+  "usingComponents": {
+    "i-avatar": "../../../static/iview/avatar/index",
+    "i-row": "../../../static/iview/row/index",
+    "i-col": "../../../static/iview/col/index",
+    "i-modal": "../../../static/iview/modal/index"
+  }
+}

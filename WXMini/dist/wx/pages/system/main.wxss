@@ -1,0 +1,44 @@
+
+.handle.data-v-5e5810f9 {
+  display: flex;
+  justify-content: space-between;
+}
+.card.data-v-5e5810f9 {
+  font-size: 28rpx;
+  margin: 40rpx;
+  padding: 40rpx;
+  box-sizing: border-box;
+  border: 2rpx solid #abdcff;
+  background-color: #f0faff;
+  border-radius: 24rpx;
+}
+.card .time.data-v-5e5810f9 {
+  font-weight: 600;
+  color: #111;
+}
+.button.data-v-5e5810f9 {
+  color: #fff;
+  background-color: #006fff;
+  border-radius: 16rpx;
+  line-height: 60rpx;
+  font-size: 32rpx;
+  width: 140rpx;
+}
+.delete.data-v-5e5810f9 {
+  background-color: #fb5250;
+}
+.choose.data-v-5e5810f9 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+.input.data-v-5e5810f9 {
+  text-align: center;
+  height: 64rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  border: 2rpx solid #e9eaec;
+  font-size: 32rpx;
+  margin: 20rpx 40rpx;
+}

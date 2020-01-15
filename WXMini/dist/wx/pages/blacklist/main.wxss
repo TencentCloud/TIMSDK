@@ -1,0 +1,44 @@
+
+.blacklist.data-v-67fa5f29 {
+  padding: 20rpx 0 8rpx 0;
+  background-color: #ededed;
+  height: 100vh;
+}
+.slot.data-v-67fa5f29 {
+  padding: 0 0 8rpx 20rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+.none.data-v-67fa5f29 {
+  padding: 20rpx;
+  display: flex;
+  justify-content: center;
+  color: #495060;
+}
+.wrapper.data-v-67fa5f29 {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 8rpx 12rpx;
+  background-color: #fff;
+  box-sizing: border-box;
+  border-top: 2rpx solid #dbdbdb;
+  border-bottom: 2rpx solid #dbdbdb;
+}
+.list.data-v-67fa5f29 {
+  display: flex;
+  padding: 20rpx 20rpx;
+  background-color: #fff;
+  box-sizing: border-box;
+  margin-bottom: -2rpx;
+  border-top: 2rpx solid #dbdbdb;
+  border-bottom: 2rpx solid #dbdbdb;
+}
+.list .avatar.data-v-67fa5f29 {
+  height: 80rpx;
+  width: 80rpx;
+}
+.list .name.data-v-67fa5f29 {
+  padding-left: 50rpx;
+  line-height: 80rpx;
+  font-size: 32rpx;
+}

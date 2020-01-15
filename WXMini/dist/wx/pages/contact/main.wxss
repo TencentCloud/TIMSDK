@@ -1,0 +1,52 @@
+
+page {
+  height: 100%;
+}
+.container {
+  background: #ededed;
+  width: 100%;
+  height: 100%;
+}
+.input-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+.input {
+  color: #495060;
+  text-align: left;
+  height: 64rpx;
+  background-color: #fff;
+  font-size: 32rpx;
+  line-height: 64rpx;
+  width: 75%;
+  border-radius: 20rpx;
+}
+.friends {
+  height: 100vh;
+  background-color: #fff;
+}
+.friends .van-index-anchor {
+  background-color: #ededed;
+}
+.friends .van-index-anchor--active {
+  color: #006fff;
+}
+.friends .friend-item {
+  display: flex;
+  padding: 24rpx 0 24rpx 24rpx;
+}
+.friends .avatar {
+  width: 80rpx;
+  height: 80rpx;
+  margin-right: 24rpx;
+}
+.friends .username {
+  width: 100%;
+  height: 100rpx;
+  line-height: 80rpx;
+  font-size: 36rpx;
+  border-bottom: 2rpx solid #ededed;
+}

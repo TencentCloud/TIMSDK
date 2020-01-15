@@ -1,0 +1,15 @@
+{
+  "navigationBarTitleText": "...",
+  "backgroundColor": "#eeeded",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "i-input": "../../../static/iview/input/index",
+    "i-avatar": "../../../static/iview/avatar/index",
+    "icon": "../../../static/component/icon/index",
+    "i-row": "../../../static/iview/row/index",
+    "i-col": "../../../static/iview/col/index",
+    "i-icon": "../../../static/iview/icon/index",
+    "i-rate": "../../../static/iview/rate/index",
+    "i-modal": "../../../static/iview/modal/index"
+  }
+}

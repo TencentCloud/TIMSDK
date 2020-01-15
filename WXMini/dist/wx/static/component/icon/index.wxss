@@ -1,0 +1,2 @@
+.icon{display:inline-block;text-align:center;position:relative;overflow:hidden;vertical-align:middle}
+.icon image{width:100%;height:100%}

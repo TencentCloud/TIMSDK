@@ -1,0 +1,14 @@
+{
+  "navigationBarTitleText": "修改资料",
+  "backgroundColor": "#eeeded",
+  "disableScroll": true,
+  "usingComponents": {
+    "i-input": "../../../static/iview/input/index",
+    "i-avatar": "../../../static/iview/avatar/index",
+    "i-row": "../../../static/iview/row/index",
+    "i-col": "../../../static/iview/col/index",
+    "i-button": "../../../static/iview/button/index",
+    "i-cell-group": "../../../static/iview/cell-group/index",
+    "i-cell": "../../../static/iview/cell/index"
+  }
+}
