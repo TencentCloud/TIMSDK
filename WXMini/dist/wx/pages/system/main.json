@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "系统通知",
+  "usingComponents": {
+    "i-avatar": "../../../static/iview/avatar/index",
+    "i-row": "../../../static/iview/row/index",
+    "i-col": "../../../static/iview/col/index",
+    "i-button": "../../../static/iview/button/index",
+    "i-modal": "../../../static/iview/modal/index",
+    "i-radio-group": "../../../static/iview/radio-group/index",
+    "i-radio": "../../../static/iview/radio/index"
+  }
+}

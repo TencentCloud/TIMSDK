@@ -1,0 +1,7 @@
+<template name="1265b1e4"><view class="_div data-v-e2ba38f4 container"><view class="_div data-v-e2ba38f4 form-item"><view class="_div data-v-e2ba38f4 label">群类型</view> <picker range="{{range}}" range-key="name" value="{{selectedIndex}}" bindchange="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_picker data-v-e2ba38f4">
+      {{range[selectedIndex].name}}
+      <i-icon type="enter" class="_i-icon data-v-e2ba38f4"></i-icon></picker></view> <view class="_div data-v-e2ba38f4 form-item {{[isAVChatRoom ? 'required' : '']}}"><view class="_div data-v-e2ba38f4 label">
+      群ID
+      <i-icon wx:if="{{isAVChatRoom}}" type="prompt" bindtap="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_i-icon data-v-e2ba38f4"></i-icon></view> <input value="{{groupID}}" bindinput="handleProxy" placeholder="请输入群ID" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_input data-v-e2ba38f4" /></view> <view class="_div data-v-e2ba38f4 form-item name required"><view class="_div data-v-e2ba38f4 label">
+      群名称
+    </view> <input value="{{groupName}}" bindinput="handleProxy" placeholder="请输入群名称" data-eventid="{{'3'}}" data-comkey="{{$k}}" class="_input data-v-e2ba38f4" /></view> <button hover-class="clicked" bindtap="handleProxy" loading="{{loading}}" disabled="{{disabled}}" data-eventid="{{'4'}}" data-comkey="{{$k}}" class="_button data-v-e2ba38f4 {{[disabled ? 'button-disabled' : '']}}">创建群组</button></view></template>

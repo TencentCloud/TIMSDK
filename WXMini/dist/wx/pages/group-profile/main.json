@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "聊天详情",
+  "navigationBarBackgroundColor": "#ffffff",
+  "disableScroll": true,
+  "usingComponents": {
+    "i-avatar": "../../../static/iview/avatar/index",
+    "i-modal": "../../../static/iview/modal/index",
+    "icon": "../../../static/component/icon/index",
+    "i-cell": "../../../static/iview/cell/index",
+    "i-cell-group": "../../../static/iview/cell-group/index"
+  }
+}

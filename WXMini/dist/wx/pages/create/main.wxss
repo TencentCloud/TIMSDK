@@ -1,0 +1,34 @@
+
+.container {
+  height: 100vh;
+  background-color: #ededed;
+}
+.container .form-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 24rpx 48rpx;
+  background-color: #fff;
+}
+.container .form-item ._label {
+  display: flex;
+  align-items: center;
+}
+.container .required::before {
+  content: '*';
+  color: #fb5250;
+  position: absolute;
+  left: 24rpx;
+}
+._button {
+  width: 80vw;
+  background-color: #006fff;
+  color: #fff;
+  font-size: 32rpx;
+  position: absolute;
+  bottom: 48rpx;
+  left: 50%;
+  margin-left: -40vw;
+}
+.clicked {
+  background-color: #0063e5;
+}

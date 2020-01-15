@@ -1,0 +1,132 @@
+
+.chat-container {
+  background-color: #ededed;
+  min-height: 100vh;
+  box-sizing: border-box;
+  border-bottom: 2rpx solid #dbdbdb;
+}
+.chat-container .chat {
+  background-color: #fff;
+  box-sizing: border-box;
+  display: flex;
+  height: 144rpx;
+}
+.chat-container .chat:last-child .right {
+  border-bottom: none;
+}
+.chat-container .chat .avatar-container {
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+.chat-container .chat .avatar-container .avatar {
+  border-radius: 8rpx;
+  height: 96rpx;
+  width: 96rpx;
+}
+.information {
+  display: flex;
+  flex-direction: column;
+  padding-right: 20rpx;
+  height: 96rpx;
+  width: 60%;
+  flex-grow: 1;
+}
+.information .username {
+  color: #111;
+  font-size: 36rpx;
+  line-height: 56rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.information .content {
+  color: #999;
+  font-size: 28rpx;
+  overflow: hidden;
+  line-height: 40rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.right {
+  padding: 24rpx 0;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  border-bottom: 2rpx solid #f1f1f1;
+  width: calc(100% - 160rpx);
+  flex-grow: 1;
+}
+.time {
+  padding-right: 32rpx;
+  display: flex;
+  flex-direction: column;
+  flex-basis: 200rpx;
+  text-align: right;
+}
+.time .last {
+  color: #999;
+  font-size: 24rpx;
+  line-height: 56rpx;
+}
+.time .remain {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.time .remain .info {
+  color: #fff;
+  font-size: 24rpx;
+  background-color: #fb5250;
+  border-radius: 60rpx;
+  padding: 4rpx 14rpx 6rpx;
+}
+.empty {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+.empty .empty-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 92rpx;
+  color: #fff;
+  margin-top: 40vh;
+  padding: 24rpx;
+  background-color: #006fff;
+  border-radius: 12rpx;
+  font-size: 36rpx;
+  width: 80vw;
+}
+.empty .empty-button:before {
+  content: '+';
+  font-size: 44rpx;
+  margin-right: 24rpx;
+}
+.input {
+  text-align: center;
+  height: 64rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+}
+.content-red {
+  color: #fb5250;
+  font-size: 24rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 80%;
+}
+.delete {
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 600;
+  background-color: #fb5250;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.delete-button {
+  text-align: center;
+}

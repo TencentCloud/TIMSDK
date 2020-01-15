@@ -1,0 +1,19 @@
+
+.profile {
+  background-color: #ededed;
+  min-height: 100vh;
+}
+.avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 6rpx;
+}
+.signature {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 50vw;
+}
+.cell-value {
+  color: #999 !important;
+}
