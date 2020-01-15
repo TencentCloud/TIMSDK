@@ -12,7 +12,7 @@
 
     <div class="group-tip-element-wrapper" v-if="message.isRevoked">
       {{text}}
-      <el-button type="text" size="mini" class="edit-button" v-show="ifEdit" @click="reEdit">&nbsp;重新编辑</el-button>
+      <el-button type="text" size="mini" class="edit-button" v-show="isEdit" @click="reEdit">&nbsp;重新编辑</el-button>
     </div>
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
   name: 'MessageBubble',
   data() {
     return {
-      ifEditTimeout: true
+      isTimeout: false
     }
   },
   props: {
@@ -38,7 +38,7 @@ export default {
     }
   },
   created() {
-    this.ifEditTimeoutHandler()
+    this.isTimeoutHandler()
   },
   mounted() {
     if (this.$refs.dropdown && this.$refs.dropdown.$el) {
@@ -64,22 +64,22 @@ export default {
       return classString
     },
     text() {
-      if(this.message.conversationType === 'C2C' && !this.isMine) {
+      if (this.message.conversationType === 'C2C' && !this.isMine) {
         return '对方撤回了一条消息'
       }
-      if(this.message.conversationType === 'GROUP' && !this.isMine) {
+      if (this.message.conversationType === 'GROUP' && !this.isMine) {
         return `${this.message.from}撤回了一条消息`
       }
       return '你撤回了一条消息'
     },
-    ifEdit() {
-      if(!this.isMine) {
+    isEdit() {
+      if (!this.isMine) {
         return false
       }
-      if(this.message.type !== this.TIM.TYPES.MSG_TEXT) {
+      if (this.message.type !== this.TIM.TYPES.MSG_TEXT) {
         return false
       }
-      if(!this.ifEditTimeout) {
+      if (this.isTimeout) {
         return false
       }
       return true
@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     handleDropDownMousedown(e) {
-      if (!this.isMine) {
+      if (!this.isMine || this.isTimeout) {
         return
       }
       if (e.buttons === 2) {
@@ -102,7 +102,7 @@ export default {
       switch (command) {
         case 'revoke':
           this.tim.revokeMessage(this.message).then(() => {
-            this.ifEditTimeoutHandler()
+            this.isTimeoutHandler()
           }).catch((err) => {
             this.$store.commit('showMessage', {
               message: err,
@@ -116,13 +116,13 @@ export default {
           break
       }
     },
-    ifEditTimeoutHandler() { // 从发送消息时间开始算起，两分钟内可以编辑
+    isTimeoutHandler() { // 从发送消息时间开始算起，两分钟内可以编辑
       let now = new Date()
-      if(parseInt(now.getTime() / 1000) - this.message.time > 2 * 60) {
-        this.ifEditTimeout = false
+      if (parseInt(now.getTime() / 1000) - this.message.time > 2 * 60) {
+        this.isTimeout = true
         return
       }
-      setTimeout(this.ifEditTimeoutHandler, 1000)
+      setTimeout(this.isTimeoutHandler, 1000)
     },
     reEdit() {
       this.$bus.$emit('reEditMessage', this.message.payload.text)

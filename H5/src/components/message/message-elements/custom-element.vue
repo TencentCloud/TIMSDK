@@ -20,6 +20,9 @@
 <script>
 import MessageBubble from '../message-bubble'
 import { Rate } from 'element-ui'
+import { ACTION } from '../../../utils/trtcCustomMessageMap'
+import { formatDuration } from '../../../utils/formatDuration'
+
 export default {
   name: 'CustomElement',
   props: {
@@ -49,10 +52,35 @@ export default {
   },
   methods: {
     translateCustomMessage(payload) {
+      let videoPayload = {}
+      try{
+        videoPayload = JSON.parse(payload.data)
+      } catch(e) {
+        videoPayload = {}
+      }
       if (payload.data === 'group_create') {
         return `${payload.extension}`
       }
-      return '[自定义消息]'
+      switch (videoPayload.action) {
+        case ACTION.VIDEO_CALL_ACTION_DIALING:
+          return '[请求通话]'
+        case ACTION.VIDEO_CALL_ACTION_SPONSOR_CANCEL:
+          return '[取消通话]'
+        case ACTION.VIDEO_CALL_ACTION_REJECT:
+          return '[拒绝通话]'
+        case ACTION.VIDEO_CALL_ACTION_SPONSOR_TIMEOUT:
+          return '[无应答]'
+        case ACTION.VIDEO_CALL_ACTION_ACCEPTED:
+          return '[开始通话]'
+        case ACTION.VIDEO_CALL_ACTION_HANGUP:
+          return `[结束通话，通话时长：${formatDuration(videoPayload.duration)}]`
+        case ACTION.VIDEO_CALL_ACTION_LINE_BUSY:
+          return '[正在通话中]'
+        case ACTION.VIDEO_CALL_ACTION_ERROR:
+          return '[设备异常]'
+        default:
+          return '[自定义消息]'
+      }
     }
   }
 }

@@ -150,7 +150,7 @@ export default {
   },
   methods: {
     selectConversation() {
-      if (this.conversation.conversationID !== this.$store.state.conversation.currentConversation.conversationID) {
+      if (this.conversation.conversationID !== this.currentConversation.conversationID) {
         this.$store.dispatch(
           'checkoutConversation',
           this.conversation.conversationID

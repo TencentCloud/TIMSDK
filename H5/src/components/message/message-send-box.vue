@@ -13,6 +13,7 @@
       <i class="iconfont icon-wenjian" title="发文件" @click="handleSendFileClick"></i>
       <i class="iconfont icon-zidingyi" title="发自定义消息" @click="sendCustomDialogVisible = true"></i>
       <i class="iconfont icon-diaocha" title="小调查" @click="surveyDialogVisible = true"></i>
+      <i class="el-icon-video-camera" v-if="currentConversationType === 'C2C'&& toAccount !== userID" title="视频通话" @click="videoCall"></i>
     </div>
     <el-dialog title="发自定义消息" :visible.sync="sendCustomDialogVisible" width="30%">
       <el-form label-width="100px">
@@ -121,6 +122,7 @@ import {
   Rate
 } from 'element-ui'
 import { emojiMap, emojiName, emojiUrl } from '../../utils/emojiMap'
+
 export default {
   name: 'message-send-box',
   props: ['scrollMessageListToButtom'],
@@ -158,18 +160,18 @@ export default {
       focus: false
     }
   },
-
   computed: {
     ...mapGetters(['toAccount', 'currentConversationType']),
     ...mapState({
-      memberList: state => state.group.currentMemberList
+      memberList: state => state.group.currentMemberList,
+      userID: state => state.user.userID
     })
   },
   mounted() {
     this.$refs['text-input'].addEventListener('paste', this.handlePaste)
     this.$bus.$on('reEditMessage', this.reEditMessage)
   },
-  unmounted() {
+  beforeDestroy() {
     this.$refs['text-input'].removeEventListener('paste', this.handlePaste)
   },
   methods: {
@@ -349,6 +351,9 @@ export default {
     },
     handleSendFileClick() {
       this.$refs.filePicker.click()
+    },
+    videoCall() {
+      this.$bus.$emit('video-call')
     },
     sendImage() {
       const message = this.tim.createImageMessage({

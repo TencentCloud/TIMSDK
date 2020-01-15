@@ -1,8 +1,6 @@
 
-._input {
-  caret-color: #006fff;
-}
 .button-disabled {
-  color: #c4c4c4 !important;
-  background-color: transparent !important;
+  color: #fff !important;
+  background-color: #006fff !important;
+  opacity: 0.4;
 }

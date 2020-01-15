@@ -1,0 +1,60 @@
+
+.add-member-modal-on-focus {
+  transform: translateY(-140rpx);
+}
+.group-detail-wrapper {
+  height: 100vh;
+  background-color: #ededed;
+}
+.group-detail-wrapper .header {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #fff;
+  padding-bottom: 36rpx;
+  margin-bottom: 16rpx;
+}
+.group-detail-wrapper .header .member,
+.group-detail-wrapper .header .show-more-btn,
+.group-detail-wrapper .header .add-member-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  width: 20%;
+  padding-top: 32rpx;
+}
+.group-detail-wrapper .header .member .name,
+.group-detail-wrapper .header .show-more-btn .name,
+.group-detail-wrapper .header .add-member-btn .name {
+  width: 80rpx;
+  font-size: 24rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+.group-detail-wrapper .header .member .avatar,
+.group-detail-wrapper .header .show-more-btn .avatar,
+.group-detail-wrapper .header .add-member-btn .avatar {
+  width: 80rpx;
+  height: 80rpx;
+}
+.group-detail-wrapper .header .show-more-btn .name,
+.group-detail-wrapper .header .add-member-btn .name {
+  font-size: 20rpx;
+}
+.group-action {
+  margin-top: 16rpx;
+}
+.quit {
+  color: #fb5250;
+}
+.user-id-input {
+  margin: 24rpx auto;
+  width: 80%;
+  padding: 0 24rpx;
+  border-bottom: 2rpx solid #f1f1f1;
+}
+.cell-value {
+  color: #c4c4c4 !important;
+}
