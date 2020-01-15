@@ -4,11 +4,12 @@
       <img src="/static/images/search.png"/>
       <input v-model="ID" :focus="true" confirm-type="search" :placeholder="placeholder" @confirm="search" @input="handleInput"/>
     </div>
-    <button @click="handleClick" :loading="loading" v-show="searched" hover-class="clicked">{{type === 'user' ? '发起会话' : '申请加群' }}</button>
+    <button @click="handleClick" :loading="loading" v-show="searched" hover-class="clicked">{{buttonText}}</button>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 // 该页面用于：
 // 1. 搜索用户>发起会话
 // 2. 搜索群组>申请加群
@@ -19,14 +20,17 @@ export default {
       ID: '',
       searchedID: '',
       searched: false,
-      loading: false
+      loading: false,
+      buttonText: ''
     }
   },
   onLoad ({ type }) {
     this.type = type
     if (type === 'user') {
+      this.buttonText = '发起会话'
       wx.setNavigationBarTitle({ title: '发起会话' })
     } else {
+      this.buttonText = '申请加群'
       wx.setNavigationBarTitle({ title: '加入群聊' })
     }
   },
@@ -37,6 +41,9 @@ export default {
     this.type = ''
   },
   computed: {
+    ...mapState({
+      groupList: state => state.group.groupList
+    }),
     placeholder () {
       if (this.type === 'user') {
         return '请输入userID'
@@ -49,8 +56,6 @@ export default {
     handleInput () {
       if (this.searchedID === '' || this.ID !== this.searchedID) {
         this.searched = false
-      } else {
-        this.searched = true
       }
     },
     search () {
@@ -83,11 +88,21 @@ export default {
       wx.$app.searchGroupByID(this.ID)
         .then(({ data }) => {
           wx.hideLoading()
+          const isJoined = this.groupList.findIndex((group) => group.groupID === this.ID) >= 0
+          if (isJoined || data.group.type === 'AVChatRoom') {
+            this.buttonText = '进入群聊'
+          } else {
+            this.buttonText = '申请加群'
+          }
           this.searched = true
           this.searchedID = this.ID
-        }).catch(() => {
+        }).catch((error) => {
           wx.hideLoading()
-          wx.showToast({ title: '未找到该群组', duration: 1000, icon: 'none' })
+          if (error.code === 10007) {
+            wx.showToast({ title: '讨论组类型群组不允许申请加群', duration: 1000, icon: 'none' })
+          } else {
+            wx.showToast({ title: '未找到该群组', duration: 1000, icon: 'none' })
+          }
         })
     },
     handleClick () {
