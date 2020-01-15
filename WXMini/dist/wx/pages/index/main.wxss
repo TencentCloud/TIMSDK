@@ -15,7 +15,7 @@
   border-bottom: none;
 }
 .chat-container .chat .avatar-container {
-  padding: 24rpx 32rpx;
+  padding: 24rpx;
   box-sizing: border-box;
 }
 .chat-container .chat .avatar-container .avatar {
@@ -52,8 +52,9 @@
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
-  border-bottom: 2rpx solid #dbdbdb;
+  border-bottom: 2rpx solid #f1f1f1;
   width: calc(100% - 160rpx);
+  flex-grow: 1;
 }
 .time {
   padding-right: 32rpx;
@@ -76,7 +77,7 @@
   font-size: 24rpx;
   background-color: #fb5250;
   border-radius: 60rpx;
-  padding: 4rpx 14rpx;
+  padding: 4rpx 14rpx 6rpx;
 }
 .empty {
   display: flex;

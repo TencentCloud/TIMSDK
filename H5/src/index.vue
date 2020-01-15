@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <div id="wrapper" v-if="!isLogin">
-      <login />
-      <qr-code-list />
+  <div class="container">
+    <div id="wrapper" v-if="!isLogin" >
+      <login/>
     </div>
     <div
       class="loading"
@@ -27,9 +26,11 @@
           @click="handleLinkClick"
         >登录 即时通信IM 官网，了解更多体验方式</a>
       </div>
+      <call-layer ref="callLayer" class="chat-wrapper"/>
       <image-previewer />
     </div>
-    <div class="bg"></div>
+    <div class="bg">
+    </div>
   </div>
 </template>
 
@@ -41,8 +42,10 @@ import SideBar from './components/layout/side-bar'
 import Login from './components/user/login'
 import ImagePreviewer from './components/message/image-previewer.vue'
 import { translateGroupSystemNotice } from './utils/common'
-import QrCodeList from './components/qr-code-list'
+import CallLayer from './components/message/call-layer'
+import { ACTION } from './utils/trtcCustomMessageMap'
 import MTA from './utils/mta'
+
 
 export default {
   title: 'TIMSDK DEMO',
@@ -51,7 +54,7 @@ export default {
     SideBar,
     CurrentConversation,
     ImagePreviewer,
-    QrCodeList
+    CallLayer
   },
 
   computed: {
@@ -59,7 +62,9 @@ export default {
       currentUserProfile: state => state.user.currentUserProfile,
       currentConversation: state => state.conversation.currentConversation,
       isLogin: state => state.user.isLogin,
-      isSDKReady: state => state.user.isSDKReady
+      isSDKReady: state => state.user.isSDKReady,
+      isBusy: state => state.video.isBusy,
+      userID: state => state.user.userID
     }),
     // 是否显示 Loading 状态
     showLoading() {
@@ -100,6 +105,7 @@ export default {
       this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, this.onReceiveGroupSystemNotice)
     },
     onReceiveMessage({ data: messageList }) {
+      this.handleVideoMessage(messageList)
       this.handleAt(messageList)
       this.handleQuitGroupTip(messageList)
       this.$store.commit('pushCurrentMessageList', messageList)
@@ -210,6 +216,58 @@ export default {
         }
       }
     },
+    selectConversation(conversationID) {
+      if (conversationID !== this.currentConversation.conversationID) {
+        this.$store.dispatch('checkoutConversation',conversationID)
+      }
+    },
+    isJsonStr(str) {
+      try{
+        JSON.parse(str)
+        return true
+      }catch {
+        return false
+      }
+    },
+    handleVideoMessage(messageList) {
+      const videoMessageList = messageList.filter(
+        message => message.type === this.TIM.TYPES.MSG_CUSTOM && this.isJsonStr(message.payload.data)
+      )
+      if (videoMessageList.length === 0) return
+      const videoPayload = JSON.parse(videoMessageList[0].payload.data)
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_DIALING) {
+        if (this.isBusy) {
+          this.$bus.$emit('busy', videoPayload, videoMessageList[0])
+          return
+        }
+        this.$store.commit('GENERATE_VIDEO_ROOM', videoPayload.room_id)
+        this.selectConversation(videoMessageList[0].conversationID) // 切换当前会话页
+        if (videoMessageList[0].from !== this.userID) {
+          this.$bus.$emit('isCalled')
+        }
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_SPONSOR_CANCEL) {
+        this.$bus.$emit('missCall')
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_REJECT) {
+        this.$bus.$emit('isRefused')
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_SPONSOR_TIMEOUT) {
+        this.$bus.$emit('missCall')
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_ACCEPTED) {
+        this.$bus.$emit('isAccept')
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_HANGUP) {
+        this.$bus.$emit('isHungUp')
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_LINE_BUSY) {
+        this.$bus.$emit('isRefused')
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_ERROR) {
+        this.$bus.$emit('isRefused')
+      }
+    },
     /**
      * 使用 window.Notification 进行全局的系统通知
      * @param {Message} message
@@ -304,6 +362,12 @@ body {
   padding-top: 100px;
 }
 
+.container
+  position relative
+  height 100vh
+.container
+  position relative
+  height 100vh
 // TODO filter mac chrome 会有问题，下次修改可以去掉
 .bg {
   position: absolute;

@@ -27,7 +27,7 @@
     "cos-wx-sdk-v5": "^0.7.3",
     "dayjs": "^1.8.17",
     "mpvue": "^2.0.0",
-    "tim-wx-sdk": "^2.4.0",
+    "tim-wx-sdk": "^2.4.1",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

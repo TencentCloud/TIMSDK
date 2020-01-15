@@ -15,5 +15,5 @@
   max-width: 50vw;
 }
 .cell-value {
-  color: #c4c4c4 !important;
+  color: #999 !important;
 }

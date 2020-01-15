@@ -20,7 +20,7 @@ Component({
     },
     okText: {
       type: String,
-      value: '确定'
+      value: '确认'
     },
     cancelText: {
       type: String,

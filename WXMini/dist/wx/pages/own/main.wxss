@@ -10,7 +10,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 50vw;
-  color: #c4c4c4;
+  color: #999;
 }
 .container {
   height: 100vh;
@@ -18,7 +18,7 @@
 }
 .container .info-card {
   display: flex;
-  padding: 56rpx 32rpx 32rpx;
+  padding: 32rpx;
   background-color: #fff;
 }
 .container .info-card .avatar {
@@ -34,5 +34,5 @@
 }
 .container .info-card .basic .user-id {
   font-size: 24rpx;
-  color: #c4c4c4;
+  color: #999;
 }

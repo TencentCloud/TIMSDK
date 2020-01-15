@@ -98,6 +98,12 @@ export default {
           this.loading = false
           this.$store.commit('toggleIsLogin', true)
           this.$store.commit('startComputeCurrent')
+          this.$store.commit({
+            type: 'GET_USER_INFO',
+            userID: this.form.userID,
+            userSig: window.genTestUserSig(this.form.userID).userSig,
+            sdkAppID: window.genTestUserSig('').SDKAppID
+          })
           this.$store.commit('showMessage', {
             type: 'success',
             message: '登录成功'

@@ -36,8 +36,7 @@ page {
 }
 .friends .friend-item {
   display: flex;
-  padding: 24rpx;
-  margin-right: 24rpx;
+  padding: 24rpx 0 24rpx 24rpx;
 }
 .friends .avatar {
   width: 80rpx;

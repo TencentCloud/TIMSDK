@@ -241,7 +241,7 @@ export default {
       font-size 12px
       background-color $danger
       border-radius 30px
-      padding 2px 7px
+      padding 2px 8px
 .empty
   display flex
   align-content center
