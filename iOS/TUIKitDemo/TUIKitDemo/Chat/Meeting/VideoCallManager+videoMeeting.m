@@ -84,8 +84,7 @@ typedef enum : NSUInteger {
 
 - (NSString *)hmac:(NSString *)plainText
 {
-    const char *cKey  = [@"61cbf613d0cea4b302958e39c7b74acaaed0956fe8c494eda1c45912c324ecab"
-                         cStringUsingEncoding:NSUTF8StringEncoding];
+    const char *cKey  = [SECRETKEY cStringUsingEncoding:NSUTF8StringEncoding];
     const char *cData = [plainText cStringUsingEncoding:NSUTF8StringEncoding];
 
     unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];
