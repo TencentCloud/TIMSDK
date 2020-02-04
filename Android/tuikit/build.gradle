@@ -53,7 +53,7 @@ dependencies {
     implementation 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.8'
     implementation 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.8'
 
-api 'com.tencent.imsdk:imsdk:4.6.51'
+api 'com.tencent.imsdk:imsdk:4.6.56'
 // api project(':imsdk')
 }
 
