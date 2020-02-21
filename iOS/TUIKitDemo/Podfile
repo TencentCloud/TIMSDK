@@ -1,4 +1,5 @@
 # Uncomment the next line to define a global platform for your project
+source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '9.0'
 
 target 'TUIKitDemo' do
@@ -7,10 +8,7 @@ target 'TUIKitDemo' do
 
   # Pods for Example
   pod 'MBProgressHUD'
-  pod 'MMLayout'
-  pod 'SDWebImage'
   pod 'AFNetworking'
-  pod 'ReactiveObjC'
   pod 'TXIMSDK_TUIKit_iOS'
   pod 'TXLiteAVSDK_TRTC'
 end

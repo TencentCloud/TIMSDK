@@ -15,34 +15,31 @@ PODS:
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
   - ISVImageScrollView (0.1.2)
-  - MBProgressHUD (1.1.0)
+  - MBProgressHUD (1.2.0)
   - MMLayout (0.2.0)
   - ReactiveObjC (3.1.1)
-  - SDWebImage (5.4.2):
-    - SDWebImage/Core (= 5.4.2)
-  - SDWebImage/Core (5.4.2)
+  - SDWebImage (5.5.2):
+    - SDWebImage/Core (= 5.5.2)
+  - SDWebImage/Core (5.5.2)
   - Toast (4.0.0)
-  - TXIMSDK_iOS (4.6.58)
-  - TXIMSDK_TUIKit_iOS (4.6.54):
-    - ISVImageScrollView
-    - MMLayout
-    - ReactiveObjC
-    - SDWebImage
-    - Toast
+  - TXIMSDK_iOS (4.6.100)
+  - TXIMSDK_TUIKit_iOS (4.6.100):
+    - ISVImageScrollView (= 0.1.2)
+    - MMLayout (= 0.2.0)
+    - ReactiveObjC (= 3.1.1)
+    - SDWebImage (= 5.5.2)
+    - Toast (= 4.0.0)
     - TXIMSDK_iOS
-  - TXLiteAVSDK_TRTC (6.8.8002)
+  - TXLiteAVSDK_TRTC (6.9.8341)
 
 DEPENDENCIES:
   - AFNetworking
   - MBProgressHUD
-  - MMLayout
-  - ReactiveObjC
-  - SDWebImage
   - TXIMSDK_TUIKit_iOS
   - TXLiteAVSDK_TRTC
 
 SPEC REPOS:
-  trunk:
+  https://github.com/CocoaPods/Specs.git:
     - AFNetworking
     - ISVImageScrollView
     - MBProgressHUD
@@ -57,15 +54,15 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   ISVImageScrollView: ba511d12a1661b40feb8921309c0854bf93ec749
-  MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
-  SDWebImage: 4ca2dc4eefae4224bea8f504251cda485a363745
+  SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_iOS: d4231ccd8a045f54ca04d008dba46fdbf25687fb
-  TXIMSDK_TUIKit_iOS: 4b2dc7fa98bab179b199a9a411cbce57de8c337a
-  TXLiteAVSDK_TRTC: 5a9e9678a44311fab331e8f077012f31334b9227
+  TXIMSDK_iOS: 3484cf59139f8b94202a46aff647fa1f6c84fd90
+  TXIMSDK_TUIKit_iOS: 7c5a6556929b590e3d2cfb85a865a3c5b28f4d87
+  TXLiteAVSDK_TRTC: 0d23d1ff11bfed12e6ed2ea48eb013459018e054
 
-PODFILE CHECKSUM: 3f738094aa69c2e51daf7cd6e3de46212490c177
+PODFILE CHECKSUM: e018a0260749c0ea2e4aa9377cee378860ae7eb8
 
 COCOAPODS: 1.8.4
