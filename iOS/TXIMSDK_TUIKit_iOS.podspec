@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_TUIKit_iOS'
-  spec.version      = '4.6.54'
+  spec.version      = '4.6.100'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -15,16 +15,16 @@ Pod::Spec.new do |spec|
   spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
   spec.libraries    = 'stdc++'
 
-  spec.dependency 'MMLayout'
-  spec.dependency 'SDWebImage'
+  spec.dependency 'MMLayout','0.2.0'
+  spec.dependency 'SDWebImage','5.5.2'
   spec.dependency 'TXIMSDK_iOS'
-  spec.dependency 'ReactiveObjC'
-  spec.dependency 'Toast'
-  spec.dependency 'ISVImageScrollView'
+  spec.dependency 'ReactiveObjC','3.1.1'
+  spec.dependency 'Toast','4.0.0'
+  spec.dependency 'ISVImageScrollView','0.1.2'
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.6.54/TIM_SDK_TUIKIT_iOS_latest_framework.zip'}
+  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.6.100/TIM_SDK_TUIKIT_iOS_latest_framework.zip'}
   spec.source_files = '**/TUIKit/Classes/**/*.{h,m,mm}'
   # spec.vendored_frameworks = ''
   spec.vendored_libraries = ['**/TUIKit/Classes/third/voiceConvert/opencore-amrnb/libopencore-amrnb.a', '**/TUIKit/Classes/third/voiceConvert/opencore-amrwb/libopencore-amrwb.a']
