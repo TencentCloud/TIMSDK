@@ -2,4 +2,4 @@
 
 ## 下载地址
 
-[最新ImSDK.framework下载](https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.6.100/TIM_SDK_Mac_latest_framework.zip)
+[最新ImSDK.framework下载](https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.6.101/TIM_SDK_Mac_latest_framework.zip)
