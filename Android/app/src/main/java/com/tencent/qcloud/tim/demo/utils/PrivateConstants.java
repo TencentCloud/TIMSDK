@@ -41,4 +41,13 @@ public class PrivateConstants {
     public static final long GOOGLE_FCM_PUSH_BUZID = 0;
     /****** google离线推送参数end ******/
 
+    /****** oppo离线推送参数start ******/
+    // 在腾讯云控制台上传第三方推送证书后分配的证书ID
+    public static final long OPPO_PUSH_BUZID = 0;
+    // oppo开放平台分配的应用APPID及APPKEY
+    public static final String OPPO_PUSH_APPID = "";
+    public static final String OPPO_PUSH_APPKEY = "";
+    public static final String OPPO_PUSH_APPSECRET = "";
+    /****** oppo离线推送参数end ******/
+
 }

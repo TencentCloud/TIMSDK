@@ -47,7 +47,7 @@ public class ThirdPushTokenMgr {
         } else if (IMFunc.isBrandMeizu()) {
             param = new TIMOfflinePushToken(PrivateConstants.MZ_PUSH_BUZID, token);
         } else if (IMFunc.isBrandOppo()) {
-
+            param = new TIMOfflinePushToken(PrivateConstants.OPPO_PUSH_BUZID, token);
         } else if (IMFunc.isBrandVivo()) {
             param = new TIMOfflinePushToken(PrivateConstants.VIVO_PUSH_BUZID, token);
         } else {

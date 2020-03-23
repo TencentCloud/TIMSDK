@@ -483,7 +483,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
 
             @Override
             public void onSuccess(List<TIMFriendResult> timFriendResults) {
-                TUIKitLog.i(TAG, "addBlackList success");
+                TUIKitLog.v(TAG, "addBlackList success");
             }
         });
     }

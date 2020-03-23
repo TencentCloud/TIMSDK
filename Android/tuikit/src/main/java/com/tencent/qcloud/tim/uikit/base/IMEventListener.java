@@ -18,21 +18,21 @@ public abstract class IMEventListener {
      * 被踢下线时回调
      */
     public void onForceOffline() {
-        TUIKitLog.d(TAG, "recv onForceOffline");
+        TUIKitLog.v(TAG, "onForceOffline");
     }
 
     /**
      * 用户票据过期
      */
     public void onUserSigExpired() {
-        TUIKitLog.d(TAG, "recv onUserSigExpired");
+        TUIKitLog.v(TAG, "onUserSigExpired");
     }
 
     /**
      * 连接建立
      */
     public void onConnected() {
-        TUIKitLog.d(TAG, "recv onConnected");
+        TUIKitLog.v(TAG, "onConnected");
     }
 
     /**
@@ -42,7 +42,7 @@ public abstract class IMEventListener {
      * @param desc 错误描述
      */
     public void onDisconnected(int code, String desc) {
-        TUIKitLog.d(TAG, "recv onDisconnected, code " + code + "|desc " + desc);
+        TUIKitLog.v(TAG, "onDisconnected, code:" + code + "|desc:" + desc);
     }
 
     /**
@@ -51,7 +51,7 @@ public abstract class IMEventListener {
      * @param name wifi名称
      */
     public void onWifiNeedAuth(String name) {
-        TUIKitLog.d(TAG, "recv onWifiNeedAuth, wifi name " + name);
+        TUIKitLog.v(TAG, "onWifiNeedAuth, wifi name:" + name);
     }
 
     /**
@@ -60,7 +60,7 @@ public abstract class IMEventListener {
      * @param conversations 需要刷新的会话列表
      */
     public void onRefreshConversation(List<TIMConversation> conversations) {
-        TUIKitLog.d(TAG, "recv onRefreshConversation, size " + (conversations != null ? conversations.size() : 0));
+        TUIKitLog.v(TAG, "onRefreshConversation, size:" + (conversations != null ? conversations.size() : 0));
     }
 
     /**
@@ -69,7 +69,7 @@ public abstract class IMEventListener {
      * @param msgs 收到的新消息
      */
     public void onNewMessages(List<TIMMessage> msgs) {
-        TUIKitLog.d(TAG, "recv onNewMessages, size " + (msgs != null ? msgs.size() : 0));
+        TUIKitLog.v(TAG, "onNewMessages, size:" + (msgs != null ? msgs.size() : 0));
     }
 
     /**
@@ -78,6 +78,6 @@ public abstract class IMEventListener {
      * @param elem 群tips消息
      */
     public void onGroupTipsEvent(TIMGroupTipsElem elem) {
-        TUIKitLog.d(TAG, "recv onGroupTipsEvent, groupid: " + elem.getGroupId() + "|type: " + elem.getTipsType());
+        TUIKitLog.v(TAG, "onGroupTipsEvent, groupid:" + elem.getGroupId() + "|type:" + elem.getTipsType());
     }
 }
