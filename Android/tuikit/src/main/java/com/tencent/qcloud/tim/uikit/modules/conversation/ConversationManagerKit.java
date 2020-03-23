@@ -121,14 +121,14 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
      */
     @Override
     public void onRefreshConversation(List<TIMConversation> conversations) {
-        TUIKitLog.i(TAG, "onRefreshConversation conversations:" + conversations);
+        TUIKitLog.v(TAG, "onRefreshConversation conversations:" + conversations);
         if (mProvider == null) {
             return;
         }
         ArrayList<ConversationInfo> infos = new ArrayList<>();
         for (int i = 0; i < conversations.size(); i++) {
             TIMConversation conversation = conversations.get(i);
-            TUIKitLog.i(TAG, "onRefreshConversation TIMConversation " + conversation.toString());
+            TUIKitLog.v(TAG, "onRefreshConversation TIMConversation " + conversation.toString());
             ConversationInfo conversationInfo = TIMConversation2ConversationInfo(conversation);
             if (conversation.getType() == TIMConversationType.System) {
                 TIMMessage message = conversation.getLastMsg();
@@ -161,15 +161,15 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
             boolean exist = false;
             for (int i = 0; i < dataSource.size(); i++) {
                 ConversationInfo cacheInfo = dataSource.get(i);
-                //单个会话刷新时找到老的会话数据，替换
-                if (cacheInfo.getId().equals(update.getId())) {
+                //单个会话刷新时找到老的会话数据，替换，这里需要增加群组类型的判断，防止好友id与群组id相同
+                if (cacheInfo.getId().equals(update.getId()) && cacheInfo.isGroup() == update.isGroup()) {
                     dataSource.remove(i);
                     dataSource.add(i, update);
                     exists.add(update);
                     //infos.remove(j);
                     //需同步更新未读计数
                     mUnreadTotal = mUnreadTotal - cacheInfo.getUnRead() + update.getUnRead();
-                    TUIKitLog.i(TAG, "onRefreshConversation after mUnreadTotal = " + mUnreadTotal);
+                    TUIKitLog.v(TAG, "onRefreshConversation after mUnreadTotal = " + mUnreadTotal);
                     exist = true;
                     break;
                 }
@@ -198,7 +198,9 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
         if (conversation == null) {
             return null;
         }
-        TUIKitLog.i(TAG, "loadConversation conversation peer " + conversation.getPeer() + ", groupName " + conversation.getGroupName());
+        TUIKitLog.i(TAG, "TIMConversation2ConversationInfo id:" + conversation.getPeer()
+                + "|name:" + conversation.getGroupName()
+                + "|unreadNum:" + conversation.getUnreadMessageNum());
         TIMMessage message = conversation.getLastMsg();
         if (message == null) {
             return null;
@@ -230,10 +232,7 @@ public class ConversationManagerKit implements TIMRefreshListener, MessageRevoke
         }
         info.setId(conversation.getPeer());
         info.setGroup(conversation.getType() == TIMConversationType.Group);
-        if (conversation.getUnreadMessageNum() > 0) {
-            info.setUnRead((int) conversation.getUnreadMessageNum());
-        }
-        TUIKitLog.i(TAG, "onRefreshConversation ext.getUnreadMessageNum() " + conversation.getUnreadMessageNum());
+        info.setUnRead((int) conversation.getUnreadMessageNum());
         return info;
     }
 

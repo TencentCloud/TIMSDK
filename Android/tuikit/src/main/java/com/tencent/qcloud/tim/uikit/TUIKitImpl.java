@@ -113,6 +113,7 @@ public class TUIKitImpl {
         GeneralConfig generalConfig = sConfigs.getGeneralConfig();
         sdkConfig.setLogLevel(generalConfig.getLogLevel());
         sdkConfig.enableLogPrint(generalConfig.isLogPrint());
+        sdkConfig.setTestEnv(generalConfig.isTestEnv());
         TIMManager.getInstance().init(context, sdkConfig);
 
         TIMUserConfig userConfig = new TIMUserConfig();
@@ -244,12 +245,14 @@ public class TUIKitImpl {
     }
 
     public static void addIMEventListener(IMEventListener listener) {
+        TUIKitLog.i(TAG, "addIMEventListener:" + sIMEventListeners.size() + "|l:" + listener);
         if (listener != null && !sIMEventListeners.contains(listener)) {
             sIMEventListeners.add(listener);
         }
     }
 
     public static void removeIMEventListener(IMEventListener listener) {
+        TUIKitLog.i(TAG, "removeIMEventListener:" + sIMEventListeners.size() + "|l:" + listener);
         if (listener == null) {
             sIMEventListeners.clear();
         } else {

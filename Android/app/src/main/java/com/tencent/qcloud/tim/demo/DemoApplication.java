@@ -98,25 +98,27 @@ public class DemoApplication extends Application {
             } else if (IMFunc.isBrandVivo()) {
                 // vivo离线推送
                 PushClient.getInstance(getApplicationContext()).initialize();
+            } else if (com.heytap.mcssdk.PushManager.isSupportPush(this)) {
+                // oppo离线推送，因为需要登录成功后向我们后台设置token，所以注册放在MainActivity中做
             }
 
             registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
         }
-//        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
 //            if (LeakCanary.isInAnalyzerProcess(this)) {
 //                return;
 //            }
 //            LeakCanary.install(this);
-//        }
-        CustomAVCallUIController.getInstance().onCreate();
-        IMEventListener imEventListener = new IMEventListener() {
-            @Override
-            public void onNewMessages(List<TIMMessage> msgs) {
-                DemoLog.i(TAG, "onNewMessages");
-                CustomAVCallUIController.getInstance().onNewMessage(msgs);
-            }
-        };
-        TUIKit.addIMEventListener(imEventListener);
+        }
+//        CustomAVCallUIController.getInstance().onCreate();
+//        IMEventListener imEventListener = new IMEventListener() {
+//            @Override
+//            public void onNewMessages(List<TIMMessage> msgs) {
+//                DemoLog.i(TAG, "onNewMessages");
+//                CustomAVCallUIController.getInstance().onNewMessage(msgs);
+//            }
+//        };
+//        TUIKit.addIMEventListener(imEventListener);
     }
 
     class StatisticActivityLifecycleCallback implements ActivityLifecycleCallbacks {
@@ -125,10 +127,10 @@ public class DemoApplication extends Application {
         private IMEventListener mIMEventListener = new IMEventListener() {
             @Override
             public void onNewMessages(List<TIMMessage> msgs) {
-                if (CustomMessage.convert2VideoCallData(msgs) != null) {
-                    // 会弹出接电话的对话框，不再需要通知
-                    return;
-                }
+//                if (CustomMessage.convert2VideoCallData(msgs) != null) {
+//                    // 会弹出接电话的对话框，不再需要通知
+//                    return;
+//                }
                 for (TIMMessage msg : msgs) {
                     // 小米手机需要在设置里面把demo的"后台弹出权限"打开才能点击Notification跳转。TIMOfflinePushNotification后续不再维护，如有需要，建议应用自己调用系统api弹通知栏消息。
                     TIMOfflinePushNotification notification = new TIMOfflinePushNotification(DemoApplication.this, msg);

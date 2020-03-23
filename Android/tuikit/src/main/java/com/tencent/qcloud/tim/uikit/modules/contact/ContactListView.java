@@ -173,12 +173,11 @@ public class ContactListView extends LinearLayout {
             @Override
             public void run() {
                 // 压测时数据量比较大，query耗时比较久，所以这里使用新线程来处理
-                TUIKitLog.i(TAG, "queryFriendList");
                 List<TIMFriend> timFriends = TIMFriendshipManager.getInstance().queryFriendList();
                 if (timFriends == null) {
                     timFriends = new ArrayList<>();
                 }
-                TUIKitLog.i(TAG, "queryFriendList: " + timFriends.size());
+                TUIKitLog.i(TAG, "queryFriendList:" + timFriends.size());
                 fillFriendListData(timFriends);
             }
         });

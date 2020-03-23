@@ -85,9 +85,9 @@ public class CustomAVCallUIController extends TRTCCloudListener {
     };
 
     private CustomAVCallUIController() {
-        mTRTCCloud = TRTCCloud.sharedInstance(DemoApplication.instance());
-        TRTCListener.getInstance().addTRTCCloudListener(this);
-        mTRTCCloud.setListener(TRTCListener.getInstance());
+//        mTRTCCloud = TRTCCloud.sharedInstance(DemoApplication.instance());
+//        TRTCListener.getInstance().addTRTCCloudListener(this);
+//        mTRTCCloud.setListener(TRTCListener.getInstance());
     }
 
     public static CustomAVCallUIController getInstance() {

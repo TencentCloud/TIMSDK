@@ -28,13 +28,20 @@ public class ChatProvider implements IChatProvider {
 
     @Override
     public boolean addMessageList(List<MessageInfo> msgs, boolean front) {
+        List<MessageInfo> list = new ArrayList<>();
+        for (MessageInfo info : msgs) {
+            if (checkExist(info)) {
+                continue;
+            }
+            list.add(info);
+        }
         boolean flag;
         if (front) {
-            flag = mDataSource.addAll(0, msgs);
-            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_FRONT, msgs.size());
+            flag = mDataSource.addAll(0, list);
+            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_FRONT, list.size());
         } else {
-            flag = mDataSource.addAll(msgs);
-            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_BACK, msgs.size());
+            flag = mDataSource.addAll(list);
+            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_BACK, list.size());
         }
         return flag;
     }

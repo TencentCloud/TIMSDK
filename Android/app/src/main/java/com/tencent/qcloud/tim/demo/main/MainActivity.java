@@ -16,8 +16,10 @@ import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.ContactFragment;
 import com.tencent.qcloud.tim.demo.conversation.ConversationFragment;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
+import com.tencent.qcloud.tim.demo.thirdpush.OPPOPushImpl;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
@@ -74,6 +76,12 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
                     }
                 }
             });
+        }
+        if (com.heytap.mcssdk.PushManager.isSupportPush(this)) {
+            // oppo离线推送
+            OPPOPushImpl oppo = new OPPOPushImpl();
+            oppo.createNotificationChannel(this);
+            com.heytap.mcssdk.PushManager.getInstance().register(this, PrivateConstants.OPPO_PUSH_APPKEY, PrivateConstants.OPPO_PUSH_APPSECRET, oppo);
         }
     }
 

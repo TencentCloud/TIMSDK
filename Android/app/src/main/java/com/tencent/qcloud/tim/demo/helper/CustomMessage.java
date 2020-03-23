@@ -85,6 +85,10 @@ public class CustomMessage {
                 continue;
             }
             List<MessageInfo> list = MessageInfoUtil.TIMMessage2MessageInfo(msg, false);
+            if (list == null) {
+                DemoLog.e(TAG, "no valid element");
+                return null;
+            }
             for (MessageInfo info : list) {
                 if (info.getMsgType() != MessageInfo.MSG_TYPE_CUSTOM) {
                     continue;

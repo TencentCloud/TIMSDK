@@ -16,6 +16,7 @@ public class GeneralConfig {
     private int logLevel = TIMLogLevel.DEBUG;
     private boolean enableLogPrint = true;
     private boolean showRead = false;
+    private boolean testEnv = false;
 
     /**
      * 获取是否打印日志
@@ -131,4 +132,11 @@ public class GeneralConfig {
         this.showRead = showRead;
     }
 
+    public boolean isTestEnv() {
+        return testEnv;
+    }
+
+    public void setTestEnv(boolean testEnv) {
+        this.testEnv = testEnv;
+    }
 }

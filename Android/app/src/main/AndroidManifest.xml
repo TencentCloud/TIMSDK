@@ -20,6 +20,11 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+    <!-- ********OPPO 推送 start******** -->
+    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE"/>
+    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE"/>
+    <!-- ********OPPO 推送 end******** -->
+
     <uses-feature android:name="android.hardware.Camera"/>
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -84,12 +89,28 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden">
 
+            <!-- 华为离线推送打开应用内页面 -->
             <intent-filter>
-                <action android:name="android.intent.action.View" />
+                <action android:name="android.intent.action.VIEW" />
                 <data
                     android:host="com.tencent.qcloud"
                     android:path="/detail"
                     android:scheme="pushscheme" />
+            </intent-filter>
+
+            <!-- OPPO离线推送的intent action方式必须配置category且不能有data数据 -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- OPPO离线推送的scheme url方式必须配置action和category -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data
+                    android:scheme="pushscheme"
+                    android:host="com.tencent.qcloud"/>
             </intent-filter>
 
         </activity>
@@ -126,29 +147,6 @@
             android:name="com.tencent.qcloud.tim.demo.helper.TRTCActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
-        <!--&lt;!&ndash; 消息收发 service &ndash;&gt;-->
-        <!--<service-->
-            <!--android:name="com.tencent.imsdk.session.remote.SessionService"-->
-            <!--android:process=":network" />-->
-        <!--&lt;!&ndash; 消息收发辅助 service &ndash;&gt;-->
-
-        <!--<service-->
-            <!--android:name="com.tencent.imsdk.session.remote.AssistService"-->
-            <!--android:process=":network" />-->
-        <!--<service-->
-            <!--android:name="com.tencent.imsdk.session.remote.KeepAliveJobService"-->
-            <!--android:permission="android.permission.BIND_JOB_SERVICE"-->
-            <!--android:process=":network" />-->
-
-        <!--&lt;!&ndash; 离线消息广播接收器 &ndash;&gt;-->
-        <!--<receiver android:name="com.tencent.imsdk.session.SessionBroadcastReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.tencent.imsdk.session.boot" />-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
-                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
 
         <!-- ********小米推送service和receiver设置start******** -->
         <service
@@ -330,6 +328,24 @@
             </intent-filter>
         </service>
         <!-- ********海外google云消息传递end******** -->
+
+        <!-- ********OPPO 推送 start******** -->
+        <service
+            android:name="com.heytap.mcssdk.PushService"
+            android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
+            <intent-filter>
+                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.heytap.mcssdk.AppPushService"
+            android:permission="com.heytap.mcs.permission.SEND_MCS_MESSAGE">
+            <intent-filter>
+                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE"/>
+            </intent-filter>
+        </service>
+        <!-- ********OPPO 推送 end******** -->
     </application>
 
 </manifest>

@@ -375,7 +375,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
     }
 
     private void showSoftInput() {
-        TUIKitLog.i(TAG, "showSoftInput");
+        TUIKitLog.v(TAG, "showSoftInput");
         hideInputMoreLayout();
         mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
         mEmojiInputButton.setImageResource(R.drawable.ic_input_face_normal);
