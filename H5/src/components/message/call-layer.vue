@@ -13,8 +13,8 @@
       <div class="title" v-if="dialling">
         正在呼叫&nbsp;{{ toAccount }}...
       </div>
-      <div id="local" @click="changeMainVideo" :class="isLocalMain ? 'big' : 'small'" v-show="calling"></div>
-      <div name="remote" :class="isLocalMain ? 'small' : 'big'" @click="changeMainVideo" v-show="calling"></div>
+      <div id="local" @click="changeMainVideo" :class="isLocalMain ? 'small' : 'big'" v-show="calling"></div>
+      <div name="remote" :class="isLocalMain ? 'big' : 'small'" @click="changeMainVideo" v-show="calling"></div>
       <div class="duration" v-show="calling">
         {{ formatDurationStr }}
       </div>
@@ -23,7 +23,7 @@
         <div class="refuse" @click="leave"></div>
         <div :class="isMicOn ? 'micOn' : 'micOff'" @click="micHandler"></div>
       </div>
-      <div class="mask" v-show="maskShow" :class="isLocalMain ? 'big' : 'small'" @click="changeMainVideo">
+      <div class="mask" v-show="maskShow" :class="isLocalMain ? 'small' : 'big'" @click="changeMainVideo">
         <div>
           <img class="image" src="../../assets/image/camera-max.png"/>
           <p class="notice">摄像头未打开</p>
@@ -319,10 +319,11 @@ export default {
 .buttons
   position absolute
   z-index 20
-  width 100%
+  width 70%
   top 75%
   display flex
   justify-content space-around
+  margin 0 15% 0 15%
 .duration
   color #fff
   position absolute
@@ -365,10 +366,11 @@ export default {
   width 100%
 .small
   position absolute
+  margin-left 74.8%
   z-index 999
   border-style solid
   border-width 1px
   border-color #808080
-  height 50%
-  width 50%
+  height 44.8%
+  width 25.2%
 </style>

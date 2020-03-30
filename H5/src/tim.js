@@ -9,7 +9,7 @@ const tim = TIM.create({
 window.setLogLevel = tim.setLogLevel
 
 // 无日志级别
-tim.setLogLevel(0)
+tim.setLogLevel(4)
 
 // 注册 cos
 tim.registerPlugin({'cos-js-sdk':COSSDK})

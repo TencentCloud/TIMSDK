@@ -1,5 +1,5 @@
 <template>
-  <div id="message-send-box-wrapper" :style="focus ? {'backgroundColor': 'white'} : {}">
+  <div id="message-send-box-wrapper" :style="focus ? {'backgroundColor': 'white'} : {}" @drop="dropHandler">
     <div class="send-header-bar">
       <el-popover placement="top" width="400" trigger="click">
         <div class="emojis">
@@ -10,6 +10,7 @@
         <i class="iconfont icon-smile" slot="reference" title="发表情"></i>
       </el-popover>
       <i class="iconfont icon-tupian" title="发图片" @click="handleSendImageClick"></i>
+      <i class="el-icon-camera" title="发视频" @click="handleSendVideoClick"></i>
       <i class="iconfont icon-wenjian" title="发文件" @click="handleSendFileClick"></i>
       <i class="iconfont icon-zidingyi" title="发自定义消息" @click="sendCustomDialogVisible = true"></i>
       <i class="iconfont icon-diaocha" title="小调查" @click="surveyDialogVisible = true"></i>
@@ -105,6 +106,7 @@
       style="display:none"
     />
     <input type="file" id="filePicker" ref="filePicker" @change="sendFile" style="display:none" />
+    <input type="file" id="videoPicker" ref="videoPicker" @change="sendVideo" style="display:none" accept=".mp4"/>
   </div>
 </template>
 
@@ -246,6 +248,46 @@ export default {
         })
       })
     },
+    dropHandler(e) {
+      e.preventDefault()
+      let file = e.dataTransfer.files[0]
+      let message = {}
+      if (file.type === 'video/mp4') {
+        message = this.tim.createVideoMessage({
+          to: this.toAccount,
+          conversationType: this.currentConversationType,
+          payload: {
+            file: file
+          },
+          onProgress: percent => {
+            this.$set(message, 'progress', percent) // 手动给message 实例加个响应式属性: progress
+          }
+        })
+      } else {
+        message = this.tim.createFileMessage({
+          to: this.toAccount,
+          conversationType: this.currentConversationType,
+          payload: {
+            file: file
+          },
+          onProgress: percent => {
+            this.$set(message, 'progress', percent) // 手动给message 实例加个响应式属性: progress
+          }
+        })
+      }
+      this.$store.commit('pushCurrentMessageList', message)
+      this.tim
+        .sendMessage(message)
+        .then(() => {
+          this.$refs.videoPicker.value = null
+        })
+        .catch(imError => {
+          this.$store.commit('showMessage', {
+            message: imError.message,
+            type: 'error'
+          })
+        })
+    },
     sendTextMessage() {
       if (
         this.messageContent === '' ||
@@ -352,6 +394,9 @@ export default {
     handleSendFileClick() {
       this.$refs.filePicker.click()
     },
+    handleSendVideoClick() {
+      this.$refs.videoPicker.click()
+    },
     videoCall() {
       this.$bus.$emit('video-call')
     },
@@ -370,7 +415,6 @@ export default {
       this.tim
         .sendMessage(message)
         .then(() => {
-          this.$refs.imagePicker.value = null
         })
         .catch(imError => {
           this.$store.commit('showMessage', {
@@ -378,6 +422,7 @@ export default {
             type: 'error'
           })
         })
+      this.$refs.imagePicker.value = null
     },
     sendFile() {
       const message = this.tim.createFileMessage({
@@ -394,7 +439,31 @@ export default {
       this.tim
         .sendMessage(message)
         .then(() => {
-          this.$refs.imagePicker.value = null
+        })
+        .catch(imError => {
+          this.$store.commit('showMessage', {
+            message: imError.message,
+            type: 'error'
+          })
+        })
+      this.$refs.filePicker.value = null
+    },
+    sendVideo() {
+      const message = this.tim.createVideoMessage({
+        to: this.toAccount,
+        conversationType: this.currentConversationType,
+        payload: {
+          file: document.getElementById('videoPicker') // 或者用event.target
+        },
+        onProgress: percent => {
+          this.$set(message, 'progress', percent) // 手动给message 实例加个响应式属性: progress
+        }
+      })
+      this.$store.commit('pushCurrentMessageList', message)
+      this.tim
+        .sendMessage(message)
+        .then(() => {
+          this.$refs.videoPicker.value = null
         })
         .catch(imError => {
           this.$store.commit('showMessage', {

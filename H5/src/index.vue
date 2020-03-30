@@ -2,6 +2,7 @@
   <div class="container">
     <div id="wrapper" v-if="!isLogin" >
       <login/>
+      <qr-code-list/>
     </div>
     <div
       class="loading"
@@ -41,6 +42,7 @@ import CurrentConversation from './components/conversation/current-conversation'
 import SideBar from './components/layout/side-bar'
 import Login from './components/user/login'
 import ImagePreviewer from './components/message/image-previewer.vue'
+import QrCodeList from './components/qr-code-list'
 import { translateGroupSystemNotice } from './utils/common'
 import CallLayer from './components/message/call-layer'
 import { ACTION } from './utils/trtcCustomMessageMap'
@@ -54,7 +56,8 @@ export default {
     SideBar,
     CurrentConversation,
     ImagePreviewer,
-    CallLayer
+    CallLayer,
+    QrCodeList
   },
 
   computed: {
