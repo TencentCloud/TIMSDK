@@ -7,9 +7,8 @@ export default {
 
 <style lang="stylus">
 @import "stylus/base.styl"
-input
-  caret-color $primary
 .button-disabled
-  color $dark-background !important
-  background-color transparent !important
+  color $white !important
+  background-color $primary !important
+  opacity 0.4
 </style>

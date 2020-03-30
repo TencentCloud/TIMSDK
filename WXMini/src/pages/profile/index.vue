@@ -53,5 +53,5 @@ export default {
   white-space nowrap
   max-width 50vw
 .cell-value
-  color $dark-background !important
+  color $secondary !important
 </style>

@@ -100,7 +100,7 @@ export default {
     this.sdkAppID = loginOptions.sdkappid
     this.isCalling = false
     this.isPending = true
-    console.log(this.type)
+    // 发起方发起通话，1分钟超时时间
     if (this.userID === this.from) {
       this.timeoutId = setTimeout(() => {
         this.timeout()
@@ -144,6 +144,7 @@ export default {
     this.$bus.$off('onBusy')
   },
   onLoad (options) {
+    // onLoad的时候监听，在收到某些message的时候会触发的事件，可在main.js里查看事件 emit 条件
     console.log(options)
     this.args = JSON.parse(options.args)
     this.userID = this.$store.getters.myInfo.userID

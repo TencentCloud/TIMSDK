@@ -57,13 +57,13 @@ export default {
   text-overflow ellipsis
   white-space nowrap
   max-width 50vw
-  color $dark-background
+  color $secondary
 .container
   height 100vh
   background-color $background
   .info-card
     display flex
-    padding 28px 16px 16px
+    padding 16px
     background-color $white
     .avatar
       width 80px
@@ -77,5 +77,5 @@ export default {
         font-weight 600
       .user-id
         font-size 12px
-        color $dark-background
+        color $secondary
 </style>

@@ -54,6 +54,7 @@ const conversationModules = {
   },
   mutations: {
     // 历史头插消息列表
+    // 小程序问题，在渲染的时候模板引擎不能处理函数，所以只能在渲染前处理好message的展示问题
     unshiftMessageList (state, messageList) {
       let list = [...messageList]
       for (let i = 0; i < list.length; i++) {
@@ -140,8 +141,9 @@ const conversationModules = {
     // 获取消息列表
     getMessageList (context) {
       const {currentConversationID, nextReqMessageID} = context.state
-      // 判断是否拉完了
+      // 判断是否拉完了，isCompleted 的话要报一下没有更多了
       if (!context.state.isCompleted) {
+        // 如果请求还没回来，又拉，此时做一下防御
         if (!context.state.isLoading) {
           context.state.isLoading = true
           wx.$app.getMessageList({ conversationID: currentConversationID, nextReqMessageID: nextReqMessageID, count: 15 }).then(res => {

@@ -1,14 +1,5 @@
 <template>
   <div class="container">
-    <i-modal title="处理申请" :visible="applyModalVisible" @ok="handleApply" @cancel="modal">
-      <div class="input-wrapper">
-        <i-radio-group :current="action" @change="handleChange">
-          <i-radio value="Agree">同意</i-radio>
-          <i-radio value="Reject">不同意</i-radio>
-        </i-radio-group>
-        <input type="text" class="input" placeholder="输入回复" v-model.lazy:value="text"/>
-      </div>
-    </i-modal>
     <div v-if="currentMessageList.length === 0">
       <div class="card">
         暂无系统消息
@@ -21,7 +12,7 @@
           {{message.virtualDom[0].text}}
         </div>
         <div class="choose">
-          <button type="button" class="button" @click="handleApplyModal(message)">处理</button>
+          <button type="button" class="button" @click="handleClick(message)">处理</button>
         </div>
       </div>
       <div class="card" v-else>
@@ -35,14 +26,6 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  data () {
-    return {
-      action: 'Agree',
-      message: {},
-      text: '',
-      applyModalVisible: false
-    }
-  },
   onUnload () {
     this.$store.commit('resetCurrentConversation')
     this.$store.commit('resetGroup')
@@ -65,28 +48,30 @@ export default {
     }, 600)
   },
   methods: {
-    handleChange (e) {
-      this.action = e.target.value
-    },
-    handleApplyModal (message) {
-      this.message = message
-      this.modal()
-    },
-    modal () {
-      this.applyModalVisible = !this.applyModalVisible
-    },
-    handleApply () {
-      wx.$app.handleGroupApplication({
-        handleAction: this.action,
-        handleMessage: this.text,
-        message: this.message
-      }).then(() => {
-        this.$store.commit('showToast', {
-          title: '处理完成'
-        })
-      }).catch((err) => {
-        console.log(err)
-        this.modal()
+    handleClick (message) {
+      wx.showActionSheet({
+        itemList: ['同意', '拒绝'],
+        success: res => {
+          const option = {
+            handleAction: 'Agree',
+            handleMessage: '欢迎进群',
+            message
+          }
+          if (res.tapIndex === 1) {
+            option.handleAction = 'Reject'
+            option.handleMessage = '拒绝申请'
+          }
+          wx.$app.handleGroupApplication(option)
+            .then(() => {
+              wx.showToast({ title: option.handleAction === 'Agree' ? '已同意申请' : '已拒绝申请' })
+              this.$store.commit('removeMessage', message)
+            }).catch((error) => {
+              wx.showToast({
+                title: error.message || '处理失败',
+                icon: 'none'
+              })
+            })
+        }
       })
     }
   }
