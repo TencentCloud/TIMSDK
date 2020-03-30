@@ -83,6 +83,7 @@ export function formatDuration (time) {
   return continued
 }
 
+// 获取中文字符首字母拼音
 export function pinyin (raw) {
   const str = `${raw}`
   if (!str || /^ +$/g.test(str)) {
@@ -99,6 +100,7 @@ export function pinyin (raw) {
   }
   return result.join('')
 }
+// 判断是否是json string
 export function isJSON (str) {
   if (typeof str === 'string') {
     try {

@@ -112,6 +112,7 @@ export default {
     wx.stopPullDownRefresh()
   },
   methods: {
+    // 长按删除会话
     longTimePress (item) {
       this.conversation = item
       this.handleModalShow()
@@ -189,7 +190,7 @@ export default {
     &:last-child .right
       border-bottom none
     .avatar-container
-      padding 12px 16px
+      padding 12px
       box-sizing border-box
       .avatar
         border-radius 4px
@@ -221,8 +222,9 @@ export default {
   display flex
   justify-content space-between
   box-sizing border-box
-  border-bottom 1px solid $border-base
+  border-bottom 1px solid $light-background
   width calc(100% - 80px) // 80px 是头像框的宽度
+  flex-grow 1
 .time
   padding-right 16px
   display flex
@@ -241,7 +243,7 @@ export default {
       font-size 12px
       background-color $danger
       border-radius 30px
-      padding 2px 8px
+      padding 2px 7px 3px
 .empty
   display flex
   align-content center

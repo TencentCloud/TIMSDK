@@ -42,8 +42,8 @@
     </i-cell-group>
 
     <!-- 添加群成员 Modal 窗 -->
-    <i-modal title="添加群成员" :visible="addMemberModalVisible" @ok="handleOk" @cancel="addMemberModalVisible = false">
-      <input class="user-id-input" :focus="addMemberModalVisible" v-model="userID" placeholder="请输入 userID"/>
+    <i-modal :i-class="inputFocus ? 'add-member-modal-on-focus add-member-modal' : 'add-member-modal'" title="添加群成员" :visible="addMemberModalVisible" @ok="handleOk" @cancel="addMemberModalVisible = false">
+      <input class="user-id-input" :focus="addMemberModalVisible" v-model="userID" placeholder="请输入 userID" @focus="inputFocus = true" @blur="inputFocus = false"/>
     </i-modal>
   </div>
 </template>
@@ -54,6 +54,7 @@ export default {
   data () {
     return {
       addMemberModalVisible: false,
+      inputFocus: false,
       userID: ''
     }
   },
@@ -177,6 +178,8 @@ export default {
 </script>
 
 <style lang="stylus">
+.add-member-modal-on-focus
+  transform translateY(-70px)
 .group-detail-wrapper
   height 100vh
   background-color $background
@@ -214,7 +217,7 @@ export default {
   margin 12px auto
   width 80%
   padding 0 12px
-  border-bottom 1px solid $dark-background
+  border-bottom 1px solid $light-background
 .cell-value
   color $dark-background !important
 </style>

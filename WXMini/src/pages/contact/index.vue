@@ -74,10 +74,13 @@ export default {
       wx.$app.getFriendList({
         fromAccount: this.$store.state.user.userProfile.to
       }).then(res => {
-        const C2CUserList = this.allConversation.filter(({ type }) => type === wx.TIM.TYPES.CONV_C2C)
-          .map(({ userProfile }) => ({ userID: userProfile.userID, profile: userProfile }))
-        const tempList = [...res.data, ...C2CUserList]
-        const groupedFriends = this.groupingFriendList(tempList)
+        const tempMap = new Map()
+        this.allConversation.filter(({ type }) => type === wx.TIM.TYPES.CONV_C2C)
+          .forEach(({ userProfile }) => {
+            tempMap.set(userProfile.userID, { userID: userProfile.userID, profile: userProfile })
+          })
+        res.data.forEach(friend => tempMap.set(friend.userID, friend))
+        const groupedFriends = this.groupingFriendList([...tempMap.values()])
         this.groupedFriends = groupedFriends
         this.indexList = groupedFriends.map(item => item.key)
       })

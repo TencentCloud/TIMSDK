@@ -19,18 +19,18 @@
         <switch slot="footer" color="#006fff" :checked="isInBlacklist" @change="handleSwitch"/>
       </i-cell>
     </i-cell-group>
-    <div class="action-list">
+    <div class="action-list"  :style="{'margin-bottom': isIphoneX ? '34px' : 0}">
       <button class="video-call" @click="videoCall">
         音视频通话
         <div class="new-badge">NEW</div>
       </button>
-      <button class="send-messsage" @click="sendMessage">发消息</button>
+      <button class="send-messsage" @click="sendMessage">发送消息</button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -41,7 +41,8 @@ export default {
   computed: {
     ...mapState({
       blacklist: state => state.user.blacklist
-    })
+    }),
+    ...mapGetters(['isIphoneX'])
   },
   onLoad ({ userID, groupID }) {
     if (userID) {
@@ -75,8 +76,8 @@ export default {
       }
       let args = JSON.stringify(options)
       const message = wx.$app.createCustomMessage({
-        to: this.$store.getters.toAccount,
-        conversationType: this.$store.getters.currentConversationType,
+        to: this.userProfile.userID,
+        conversationType: 'C2C',
         payload: {
           data: args,
           description: '',
@@ -146,13 +147,13 @@ export default {
   text-overflow ellipsis
   white-space nowrap
   max-width 50vw
-  color $dark-background
+  color $secondary
 .container
   height 100vh
   background-color $background
   .info-card
     display flex
-    padding 28px 16px 16px
+    padding 16px
     background-color $white
     .avatar
       width 80px
@@ -166,7 +167,7 @@ export default {
         font-weight 600
       .user-id
         font-size 12px
-        color $dark-background
+        color $secondary
   .action-list
     position fixed
     bottom 0
@@ -200,7 +201,7 @@ export default {
         height 16px
         line-height 16px
         border-radius 8px
-        font-size 8px
+        font-size 10px
         color $white
         background-color $danger
 

@@ -20,6 +20,7 @@ const GROUP_TIP_TYPE = {
   MEMBER_INFO_MODIFIED: 7 // 修改群成员信息
 }
 
+// 解析小程序text, 表情信息也是[嘻嘻]文本
 function parseText (message) {
   let renderDom = []
   let temp = message.payload.text
@@ -71,6 +72,7 @@ function parseText (message) {
   }
   return renderDom
 }
+// 解析群系统消息
 function parseGroupSystemNotice (message) {
   const payload = message.payload
   const groupName =
@@ -116,6 +118,7 @@ function parseGroupSystemNotice (message) {
     text: text
   }]
 }
+// 解析群提示消息
 function parseGroupTip (message) {
   const payload = message.payload
   let tip
@@ -151,7 +154,7 @@ function parseGroupTip (message) {
     text: tip
   }]
 }
-
+// 解析自定义消息
 function parseCustom (message) {
   let data = message.payload.data
   if (isJSON(data)) {
@@ -200,6 +203,7 @@ function parseCustom (message) {
     text: data
   }]
 }
+// 解析message element
 export function decodeElement (message) {
   // renderDom是最终渲染的
   switch (message.type) {
