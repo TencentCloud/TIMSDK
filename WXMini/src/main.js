@@ -152,6 +152,10 @@ function groupSystemNoticeUpdate (event) {
   console.log('system message', event)
 }
 
+// 获取系统信息
+let sysInfo = wx.getSystemInfoSync()
+store.commit('setSystemInfo', sysInfo)
+
 new Vue({
   TIMApp
 }).$mount()

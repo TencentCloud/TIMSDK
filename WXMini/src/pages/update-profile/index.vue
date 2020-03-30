@@ -174,10 +174,9 @@ export default {
 .update-profile-wrapper
   height 100vh
   padding 12px
-  background-color $background
   .input
     padding 12px
-    border-bottom 1px solid $dark-background
+    border-bottom 1px solid $light-background
   .input-focus
     border-bottom 1px solid $primary
   button 

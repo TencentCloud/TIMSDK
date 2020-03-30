@@ -1,11 +1,13 @@
 const globalModules = {
   state: {
     isSdkReady: false,
-    isCalling: false
+    isCalling: false,
+    systemInfo: null
   },
   getters: {
     isSdkReady: state => state.isSdkReady,
-    isCalling: state => state.isCalling
+    isCalling: state => state.isCalling,
+    isIphoneX: state => state.systemInfo && state.systemInfo.model.indexOf('iPhone X') > -1
   },
   mutations: {
     showToast (state, payload) {
@@ -20,6 +22,9 @@ const globalModules = {
     },
     setCalling (state, payload) {
       state.isCalling = payload
+    },
+    setSystemInfo (state, payload) {
+      state.systemInfo = payload
     }
   },
   actions: {
