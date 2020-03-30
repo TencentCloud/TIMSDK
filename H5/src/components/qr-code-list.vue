@@ -49,11 +49,10 @@ export default {
 <style scoped>
 .qr-code-list-wrapper {
   width: 400px;
-  margin-top: 60px;
 }
 .header {
   color: #fff;
-  margin-bottom: 16px;
+  margin: 16px 0;
 }
 .link {
   color: #38c9ff;
