@@ -1,18 +1,18 @@
 PODS:
-  - AFNetworking (3.2.1):
-    - AFNetworking/NSURLSession (= 3.2.1)
-    - AFNetworking/Reachability (= 3.2.1)
-    - AFNetworking/Security (= 3.2.1)
-    - AFNetworking/Serialization (= 3.2.1)
-    - AFNetworking/UIKit (= 3.2.1)
-  - AFNetworking/NSURLSession (3.2.1):
+  - AFNetworking (4.0.0):
+    - AFNetworking/NSURLSession (= 4.0.0)
+    - AFNetworking/Reachability (= 4.0.0)
+    - AFNetworking/Security (= 4.0.0)
+    - AFNetworking/Serialization (= 4.0.0)
+    - AFNetworking/UIKit (= 4.0.0)
+  - AFNetworking/NSURLSession (4.0.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.2.1)
-  - AFNetworking/Security (3.2.1)
-  - AFNetworking/Serialization (3.2.1)
-  - AFNetworking/UIKit (3.2.1):
+  - AFNetworking/Reachability (4.0.0)
+  - AFNetworking/Security (4.0.0)
+  - AFNetworking/Serialization (4.0.0)
+  - AFNetworking/UIKit (4.0.0):
     - AFNetworking/NSURLSession
   - ISVImageScrollView (0.1.2)
   - MBProgressHUD (1.2.0)
@@ -22,7 +22,7 @@ PODS:
     - SDWebImage/Core (= 5.5.2)
   - SDWebImage/Core (5.5.2)
   - Toast (4.0.0)
-  - TXIMSDK_iOS (4.7.1)
+  - TXIMSDK_iOS (4.7.2)
   - TXIMSDK_TUIKit_iOS (4.6.100):
     - ISVImageScrollView (= 0.1.2)
     - MMLayout (= 0.2.0)
@@ -30,7 +30,7 @@ PODS:
     - SDWebImage (= 5.5.2)
     - Toast (= 4.0.0)
     - TXIMSDK_iOS
-  - TXLiteAVSDK_TRTC (6.9.8341)
+  - TXLiteAVSDK_TRTC (7.1.8775)
 
 DEPENDENCIES:
   - AFNetworking
@@ -52,16 +52,16 @@ SPEC REPOS:
     - TXLiteAVSDK_TRTC
 
 SPEC CHECKSUMS:
-  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  AFNetworking: d9fdf484a3c723ec3c558a41cc5754c7e845ee77
   ISVImageScrollView: ba511d12a1661b40feb8921309c0854bf93ec749
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_iOS: 2506b27cfdf2aea3e4433b67870755d3a14b358c
+  TXIMSDK_iOS: 0d3c292920c96ba08b6fa8efde65c7488eb436a7
   TXIMSDK_TUIKit_iOS: 7c5a6556929b590e3d2cfb85a865a3c5b28f4d87
-  TXLiteAVSDK_TRTC: 0d23d1ff11bfed12e6ed2ea48eb013459018e054
+  TXLiteAVSDK_TRTC: 4edd468729f2284de720ef457183fa96a67f30a5
 
 PODFILE CHECKSUM: e018a0260749c0ea2e4aa9377cee378860ae7eb8
 
