@@ -413,9 +413,9 @@ enum TIMResult {
     TIM_ERR_SDKUNINIT = -1,// 接口调用失败，ImSDK未初始化
     TIM_ERR_NOTLOGIN = -2, // 接口调用失败，用户未登录
     TIM_ERR_JSON = -3,     // 接口调用失败，错误的Json格式或Json Key
-    TIM_ERR_PARAM = -4,    // 接口调用成功，参数错误
-    TIM_ERR_CONV = -5,     // 接口调用成功，无效的会话
-    TIM_ERR_GROUP = -6,    // 接口调用成功，无效的群组
+    TIM_ERR_PARAM = -4,    // 接口调用失败，参数错误
+    TIM_ERR_CONV = -5,     // 接口调用失败，无效的会话
+    TIM_ERR_GROUP = -6,    // 接口调用失败，无效的群组
 };
 
 /**
@@ -825,7 +825,7 @@ static const char* kTIMSoundElemFileSize        = "sound_elem_file_size";       
 static const char* kTIMSoundElemFileTime        = "sound_elem_file_time";        // int,    读写(必填), 语音时长
 static const char* kTIMSoundElemFileId          = "sound_elem_file_id";          // string, 只读,       下载声音文件时的ID
 static const char* kTIMSoundElemBusinessId      = "sound_elem_business_id";      // int,    只读,       下载时用到的businessID
-static const char* kTIMSoundElemDownloadFlag    = "sound_elem_download_flag";    // int,    只读,       是否需要申请下载地址(0:到架平申请，1:到cos申请，2:不需要申请,直接拿url下载)
+static const char* kTIMSoundElemDownloadFlag    = "sound_elem_download_flag";    // int,    只读,       是否需要申请下载地址(0:需要申请，1:到cos申请，2:不需要申请,直接拿url下载)
 static const char* kTIMSoundElemUrl             = "sound_elem_url";              // string, 只读,       下载的URL
 static const char* kTIMSoundElemTaskId          = "sound_elem_task_id";          // int,    只读,       任务ID
 // EndStruct
@@ -840,7 +840,7 @@ static const char* kTIMSoundElemTaskId          = "sound_elem_task_id";         
 static const char* kTIMCustomElemData   = "custom_elem_data";   // string,  读写, 数据,支持二进制数据
 static const char* kTIMCustomElemDesc   = "custom_elem_desc";   // string,  读写, 自定义描述
 static const char* kTIMCustomElemExt    = "custom_elem_ext";    // string,  读写, 后台推送对应的ext字段
-static const char* kTIMCustomElemSound  = "custom_elem_sound";  // string,  读写, 自定义声音,这个声音是给谁听的
+static const char* kTIMCustomElemSound  = "custom_elem_sound";  // string,  读写, 自定义声音
 // EndStruct
 
 /**
@@ -1008,7 +1008,7 @@ enum TIMFriendChangeType {
     kTIMFriendChange_FriendAdd,              // 好友表增加
     kTIMFriendChange_FriendDel,              // 好友表删除
     kTIMFriendChange_PendencyAdd,            // 未决增加
-    kTIMFriendChange_PendencyDel,            // 未决删除 多终端同步
+    kTIMFriendChange_PendencyDel,            // 未决删除
     kTIMFriendChange_BlackListAdd,           // 黑名单添加
     kTIMFriendChange_BlackListDel,           // 黑名单删除
     kTIMFriendChange_PendencyReadedReport,   // 未决已读上报
@@ -1066,14 +1066,14 @@ static const char* kTIMMsgBatchSendResultMsg        = "msg_batch_send_result_msg
 * @brief 消息定位符
 */
 // Struct MsgLocator JsonKey
-static const char* kTIMMsgLocatorConvId    = "message_locator_conv_id";    // bool,   读写,      要查找的消息是否是被撤回。true被撤回的，false非撤回的。默认值为false
-static const char* kTIMMsgLocatorConvType  = "message_locator_conv_type";  // bool,   读写,      要查找的消息是否是被撤回。true被撤回的，false非撤回的。默认值为false
+static const char* kTIMMsgLocatorConvId    = "message_locator_conv_id";    // bool,   读写,      要查找的消息所属的会话ID
+static const char* kTIMMsgLocatorConvType  = "message_locator_conv_type";  // bool,   读写,      要查找的消息所属的会话类型
 static const char* kTIMMsgLocatorIsRevoked = "message_locator_is_revoked"; // bool,   读写(必填), 要查找的消息是否是被撤回。true被撤回的，false非撤回的。默认值为false
 static const char* kTIMMsgLocatorTime      = "message_locator_time";       // uint64, 读写(必填), 要查找的消息的时间戳
 static const char* kTIMMsgLocatorSeq       = "message_locator_seq";        // uint64, 读写(必填), 要查找的消息的序列号
 static const char* kTIMMsgLocatorIsSelf    = "message_locator_is_self";    // bool,   读写(必填), 要查找的消息的发送者是否是自己。true发送者是自己，false发送者不是自己。默认值为false
 static const char* kTIMMsgLocatorRand      = "message_locator_rand";       // uint64, 读写(必填), 要查找的消息随机码
-static const char* kTIMMsgLocatorUniqueId  = "message_locator_unique_id";  // uint64,  读写(必填), 要查找的消息的唯一标识
+static const char* kTIMMsgLocatorUniqueId  = "message_locator_unique_id";  // uint64, 读写(必填), 要查找的消息的唯一标识
 // EndStruct
 
 
@@ -1152,7 +1152,7 @@ static const char* kTIMConvUnReadNum    = "conv_unread_num";     // uint64, 只�
 static const char* kTIMConvActiveTime   = "conv_active_time";    // uint64, 只读, 会话的激活时间
 static const char* kTIMConvIsHasLastMsg = "conv_is_has_lastmsg"; // bool, 只读, 会话是否有最后一条消息
 static const char* kTIMConvLastMsg      = "conv_last_msg";       // object [Message](), 只读, 会话最后一条消息
-static const char* kTIMConvIsHasDraft   = "conv_is_has_draft";   // bool, 只读, 会话草稿
+static const char* kTIMConvIsHasDraft   = "conv_is_has_draft";   // bool, 只读, 会话是否有草稿
 static const char* kTIMConvDraft        = "conv_draft";          // object [Draft](), 只读(选填), 会话草稿
 // EndStruct
 /// @}
@@ -1405,7 +1405,7 @@ static const char* kTIMGroupModifyInfoParamCustomInfo        = "group_modify_inf
 static const char* kTIMGroupGetMemberInfoListParamGroupId         = "group_get_members_info_list_param_group_id";          // string,       只写(必填), 群组ID
 static const char* kTIMGroupGetMemberInfoListParamIdentifierArray = "group_get_members_info_list_param_identifier_array";  // array string, 只写(选填), 群成员ID列表
 static const char* kTIMGroupGetMemberInfoListParamOption          = "group_get_members_info_list_param_option";            // object [GroupMemberGetInfoOption](), 只写(选填), 获取群成员信息的选项
-static const char* kTIMGroupGetMemberInfoListParamNextSeq         = "group_get_members_info_list_param_next_seq";          // uint64, 只写(选填), 分页拉取标志,第一次拉取填0,回调成功如果不为零,需要分页,传入再次拉取,直至为0
+static const char* kTIMGroupGetMemberInfoListParamNextSeq         = "group_get_members_info_list_param_next_seq";          // uint64, 只写(选填), 分页拉取标志,第一次拉取填0,回调成功如果不为零,需要分页,调用接口传入再次拉取,直至为0
 // EndStruct
 
 /**
@@ -1494,6 +1494,9 @@ static const char* kTIMGroupPendencyApplyInviteMsg      = "group_pendency_apply_
 static const char* kTIMGroupPendencyFromUserDefinedData = "group_pendency_form_user_defined_data";  //string, 只读, 申请或邀请者自定义字段
 static const char* kTIMGroupPendencyApprovalMsg         = "group_pendency_approval_msg";            //string, 只读, 审批信息：同意或拒绝信息
 static const char* kTIMGroupPendencyToUserDefinedData   = "group_pendency_to_user_defined_data";    //string, 只读, 审批者自定义字段
+static const char* kTIMGroupPendencyKey                 = "group_pendency_key";                     //string, 只读, 签名信息，客户不用关心
+static const char* kTIMGroupPendencyAuthentication      = "group_pendency_authentication";          //string, 只读, 签名信息，客户不用关心
+static const char* kTIMGroupPendencySelfIdentifier      = "group_pendency_self_identifier";         //string, 只读, 自己的ID
 // EndStruct
 
 /**
@@ -1544,8 +1547,8 @@ enum TIMGenderType {
 enum TIMProfileAddPermission {
     kTIMProfileAddPermission_Unknown,       // 未知
     kTIMProfileAddPermission_AllowAny,      // 允许任何人添加好友
-    kTIMProfileAddPermission_NeedConfirm,   // 拒绝任何人添加好友
-    kTIMProfileAddPermission_DenyAny,       // 添加好友需要验证
+    kTIMProfileAddPermission_NeedConfirm,   // 添加好友需要验证
+    kTIMProfileAddPermission_DenyAny,       // 拒绝任何人添加好友
 };
 
 /**
