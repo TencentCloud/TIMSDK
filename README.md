@@ -69,15 +69,11 @@
 - 为了更好的了解您使用TIMSDK所遇到的问题，方便快速有效定位解决TIMSDK问题，希望您按如下反馈指引反馈issue，方便我们尽快解决您的问题
 - [TIMSDK issue反馈指引](https://github.com/tencentyun/TIMSDK/wiki/TIMSDK-issue%E6%9C%89%E6%95%88%E5%8F%8D%E9%A6%88%E6%A8%A1%E6%9D%BF)
 
-## 4.7.1 @2020.03.23
+## 4.7.2 @2020.04.03
 
 ### SDK
 
 **通用变更点**
 
-- 优化了本地日志大小
-- 优化了登录耗时
-- 修复了未读计数多端同步问题
-- 增加获取单个好友接口 getFriendList
-- iOS & Android SDK 可以分别设置两个平台的离线推送通知栏消息要显示的标题和内容
+- 修正一处数据错误
 
