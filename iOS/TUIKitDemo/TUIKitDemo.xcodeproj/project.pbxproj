@@ -18,6 +18,7 @@
 		91D3AD3122AA06440036CDE0 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = 91D3AD2F22AA06430036CDE0 /* Aspects.m */; };
 		91FE93A2227590F000C17D6C /* NotifySetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91FE93A1227590EF00C17D6C /* NotifySetupController.m */; };
 		91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */; };
+		CC66376147F9780AC76154C2 /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ACF80D249FB861F11A39586 /* libPods-TUIKitDemo.a */; };
 		CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0BDFA8221D53C60083E1B0 /* Bugly.framework */; };
 		CE1A434A22DE07EB008A767E /* PAirSandbox.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434322DE07EB008A767E /* PAirSandbox.m */; };
 		CE1A434C22DE07EB008A767E /* TCUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434822DE07EB008A767E /* TCUtil.m */; };
@@ -42,25 +43,12 @@
 		CFEB47752177981900CFD98C /* GroupInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47742177981900CFD98C /* GroupInfoController.m */; };
 		CFEB47782177982B00CFD98C /* GroupMemberController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47772177982B00CFD98C /* GroupMemberController.m */; };
 		CFEB47D02179B82300CFD98C /* SettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47CF2179B82300CFD98C /* SettingController.m */; };
-		E7ED9B1F8520F432D1BF065E /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2DBC7B50E65863AA83F14AD /* libPods-TUIKitDemo.a */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		CE4361FE21F5A5FA0070D6C9 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		492D8F1F0DED1F83086F3E82 /* Pods-TUIKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.release.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.release.xcconfig"; sourceTree = "<group>"; };
 		4A94A8992A0612C1D8FEAB79 /* Pods-TUIKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.debug.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		4ACF80D249FB861F11A39586 /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		910AF70922925BF000ED5675 /* SearchGroupViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchGroupViewController.h; sourceTree = "<group>"; };
 		910AF70A22925BF000ED5675 /* SearchGroupViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchGroupViewController.m; sourceTree = "<group>"; };
 		910AF70F2292820300ED5675 /* GroupRequestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupRequestViewController.h; sourceTree = "<group>"; };
@@ -84,16 +72,14 @@
 		91FE93A1227590EF00C17D6C /* NotifySetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotifySetupController.m; sourceTree = "<group>"; };
 		91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TFriendProfileController.m; sourceTree = "<group>"; };
 		91FE93E32276EF0F00C17D6C /* TFriendProfileController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TFriendProfileController.h; sourceTree = "<group>"; };
-		C2DBC7B50E65863AA83F14AD /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE0BDFA8221D53C60083E1B0 /* Bugly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bugly.framework; sourceTree = "<group>"; };
 		CE1A434322DE07EB008A767E /* PAirSandbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAirSandbox.m; sourceTree = "<group>"; };
-		CE1A434422DE07EB008A767E /* TCUploadHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUploadHelper.m; sourceTree = "<group>"; };
-		CE1A434522DE07EB008A767E /* TCUploadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCUploadHelper.h; sourceTree = "<group>"; };
 		CE1A434622DE07EB008A767E /* TCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCConstants.h; sourceTree = "<group>"; };
 		CE1A434722DE07EB008A767E /* PAirSandbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAirSandbox.h; sourceTree = "<group>"; };
 		CE1A434822DE07EB008A767E /* TCUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUtil.m; sourceTree = "<group>"; };
 		CE1A434922DE07EB008A767E /* TCUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCUtil.h; sourceTree = "<group>"; };
 		CE1C55922224F22C00A75262 /* TUIKitDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TUIKitDemo.entitlements; sourceTree = "<group>"; };
+		CE2BBCE32421C34D000C4B7A /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = Pods/TXIMSDK_iOS/ImSDK.framework; sourceTree = "<group>"; };
 		CE37D1C222F9942B0012500D /* GenerateTestUserSig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateTestUserSig.m; sourceTree = "<group>"; };
 		CE37D1C322F9942B0012500D /* GenerateTestUserSig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateTestUserSig.h; sourceTree = "<group>"; };
 		CE37D24822F9CBC80012500D /* ProfileController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileController.m; sourceTree = "<group>"; };
@@ -142,7 +128,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */,
-				E7ED9B1F8520F432D1BF065E /* libPods-TUIKitDemo.a in Frameworks */,
+				CC66376147F9780AC76154C2 /* libPods-TUIKitDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,8 +170,6 @@
 				CE1A434722DE07EB008A767E /* PAirSandbox.h */,
 				CE1A434322DE07EB008A767E /* PAirSandbox.m */,
 				CE1A434622DE07EB008A767E /* TCConstants.h */,
-				CE1A434522DE07EB008A767E /* TCUploadHelper.h */,
-				CE1A434422DE07EB008A767E /* TCUploadHelper.m */,
 				CE1A434922DE07EB008A767E /* TCUtil.h */,
 				CE1A434822DE07EB008A767E /* TCUtil.m */,
 			);
@@ -343,7 +327,8 @@
 			isa = PBXGroup;
 			children = (
 				CE0BDFA8221D53C60083E1B0 /* Bugly.framework */,
-				C2DBC7B50E65863AA83F14AD /* libPods-TUIKitDemo.a */,
+				CE2BBCE32421C34D000C4B7A /* ImSDK.framework */,
+				4ACF80D249FB861F11A39586 /* libPods-TUIKitDemo.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -359,9 +344,8 @@
 				CF01447E216E1A4900C12E35 /* Sources */,
 				CF01447F216E1A4900C12E35 /* Frameworks */,
 				CF014480216E1A4900C12E35 /* Resources */,
-				CE4361FE21F5A5FA0070D6C9 /* Embed Frameworks */,
 				61CAB06CE3F1C633914AD722 /* [CP] Embed Pods Frameworks */,
-				F9C3A4EE8D4492FFA622EB2B /* [CP] Copy Pods Resources */,
+				EC502815E8EBA074322E99F1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -468,7 +452,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F9C3A4EE8D4492FFA622EB2B /* [CP] Copy Pods Resources */ = {
+		EC502815E8EBA074322E99F1 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -669,7 +653,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5GHU44CJHG;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -702,11 +686,12 @@
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QE8PS7F45A;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Pods/TXIMSDK_iOS",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
