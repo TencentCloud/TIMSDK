@@ -1404,7 +1404,7 @@ TIM_DECL int TIMGroupHandlePendency(const char* json_group_handle_pendency_param
 * }, nullptr);
 * 
 * @note
-* 可以通过这个获取任何人的个人资料，包括自己的个人资料。当获取的个人资料不是自己的资料时，获取的个人资料加好友选项值为 kTIMProfileAddPermission_Unknown ，无法获取不是自己的加好友权限信息，默认返回未知。
+* 可以通过这个获取任何人的个人资料，包括自己的个人资料。
 */
 TIM_DECL int TIMProfileGetUserProfileList(const char* json_get_user_profile_list_param, TIMCommCallback cb, const void* user_data);
 
@@ -1434,7 +1434,7 @@ TIM_DECL int TIMProfileGetUserProfileList(const char* json_get_user_profile_list
 * }, nullptr);
 *
 * @note
-* 修改好友资料，目前支持修改的字段请参考[UserProfileItem](TIMCloudDef.h)，一次可更新多个字段。修改自定义字段时填入的key值可以添加 Tag_Profile_Custom_ 前缀，也可以不添加 Tag_Profile_Custom_ 前缀，当不添加时，SDK内部会自动添加该前缀。
+* 修改自己的资料，目前支持修改的字段请参考[UserProfileItem](TIMCloudDef.h)，一次可更新多个字段。修改自定义字段时填入的key值可以添加 Tag_Profile_Custom_ 前缀，也可以不添加 Tag_Profile_Custom_ 前缀，当不添加时，SDK内部会自动添加该前缀。
 */
 TIM_DECL int TIMProfileModifySelfUserProfile(const char* json_modify_self_user_profile_param, TIMCommCallback cb, const void* user_data);
 /// @}
