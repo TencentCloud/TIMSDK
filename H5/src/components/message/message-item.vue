@@ -40,6 +40,7 @@
           <group-tip-element
             v-else-if="message.type===TIM.TYPES.MSG_GRP_TIP"
             :payload="message.payload"
+            :message="message"
           />
           <group-system-notice-element
             v-else-if="message.type === TIM.TYPES.MSG_GRP_SYS_NOTICE"
@@ -121,6 +122,7 @@
             v-else-if="message.type===TIM.TYPES.MSG_GRP_TIP"
             :isMine="isMine"
             :payload="message.payload"
+            :message="message"
           />
           <custom-element
             v-else-if="message.type === TIM.TYPES.MSG_CUSTOM"

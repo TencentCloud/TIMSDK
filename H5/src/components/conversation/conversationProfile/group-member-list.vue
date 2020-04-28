@@ -11,7 +11,7 @@
     </div>
     <div class="scroll-content">
       <div class="group-member-list">
-        <template v-for="member in members">
+        <div v-for="member in members" :key="member.userID">
           <popover placement="right" :key="member.userID">
             <group-member-info :member="member" />
             <div slot="reference" class="group-member" @click="currentMemberID = member.userID">
@@ -23,7 +23,7 @@
               </div>
             </div>
           </popover>
-        </template>
+        </div>
       </div>
     </div>
     <div class="more">
