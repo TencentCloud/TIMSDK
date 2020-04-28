@@ -109,6 +109,19 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### WebIM Demo Change Log
 
+#### 2020/4/28
+
+**Features**
+
+- SDK 版本更新至 2.6.3，支持群组全体禁言和取消禁言
+- Web demo 群组支持全体禁言和取消全体禁言的功能入口
+
+**Changes**
+
+- 监听 TIM.EVENT.NET_STATE_CHANGE ，添加网络状态变更提醒
+- 废弃 TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED事件
+- 用户入群、退群、发消息，优先展示其 nick 没有 nick 才用 userID
+
 #### 2020/3/30
 
 **Features**

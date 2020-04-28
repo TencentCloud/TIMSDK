@@ -203,6 +203,15 @@
           @keydown.enter.native="editNameCard"
         />
       </div>
+      <div class="info-item">
+        <div class="label" :class="{'active' : active}">全体禁言</div>
+        <el-switch
+                v-model="muteAllMembers"
+                active-color="#409eff"
+                inactive-color="#dcdfe6"
+                @change='changeMuteStatus'>
+        </el-switch>
+      </div>
       <div v-if="isOwner">
         <el-button type="text" @click="showChangeGroupOwner = true">转让群组</el-button>
         <el-input
@@ -226,13 +235,14 @@
 
 <script>
 import GroupMemberList from './group-member-list.vue'
-import { Select, Option } from 'element-ui'
+import { Select, Option, Switch } from 'element-ui'
 export default {
   props: ['groupProfile'],
   components: {
     GroupMemberList,
     ElSelect: Select,
-    ElOption: Option
+    ElOption: Option,
+    ElSwitch: Switch,
   },
   data() {
     return {
@@ -252,6 +262,7 @@ export default {
       newOwnerUserID: '',
       messageRemindType: this.groupProfile.selfInfo.messageRemindType,
       nameCard: this.groupProfile.selfInfo.nameCard || '',
+      muteAllMembers: this.groupProfile.muteAllMembers,
       messageRemindTypeMap: {
         AcceptAndNotify: '接收消息并提示',
         AcceptNotNotify: '接收消息但不提示',
@@ -261,22 +272,26 @@ export default {
         FreeAccess: '自由加入',
         NeedPermission: '需要验证',
         DisableApply: '禁止加群'
-      }
+      },
+      active:false
     }
   },
   computed: {
     editable() {
       return (
         this.groupProfile.type === this.TIM.TYPES.GRP_PRIVATE ||
-        ['Owner', 'Admin'].includes(this.groupProfile.selfInfo.role)
+        [this.TIM.TYPES.GRP_MBR_ROLE_OWNER, this.TIM.TYPES.GRP_MBR_ROLE_ADMIN].includes(this.groupProfile.selfInfo.role)
       )
     },
     isOwner() {
-      return this.groupProfile.selfInfo.role === 'Owner'
+      return this.groupProfile.selfInfo.role === this.TIM.TYPES.GRP_MBR_ROLE_OWNER
+    },
+    isAdmin() {
+      return this.groupProfile.selfInfo.role === this.TIM.TYPES.GRP_MBR_ROLE_ADMIN
     },
     showDissmissGroup() {
       // 私有群不能解散
-      return this.isOwner && this.groupProfile.type !== 'Private'
+      return this.isOwner && this.groupProfile.type !== this.TIM.TYPES.GRP_PRIVATE
     }
   },
   watch: {
@@ -295,7 +310,8 @@ export default {
         notification: groupProfile.notification,
         joinOption: groupProfile.joinOption,
         messageRemindType: groupProfile.messageRemindType,
-        nameCard: groupProfile.selfInfo.nameCard || ''
+        nameCard: groupProfile.selfInfo.nameCard || '',
+        muteAllMembers: groupProfile.muteAllMembers,
       })
     }
   },
@@ -336,6 +352,41 @@ export default {
             message: error.message
           })
         })
+    },
+    changeMuteStatus() {
+      if (this.isOwner || this.isAdmin) {
+        this.tim
+          .updateGroupProfile({
+          muteAllMembers: this.muteAllMembers,
+          groupID: this.groupProfile.groupID
+        })
+          .then(imResponse => {
+          this.muteAllMembers = imResponse.data.group.muteAllMembers
+          if (this.muteAllMembers) {
+            this.active = true
+            this.$store.commit('showMessage', {
+              message: '全体禁言'
+            })
+          } else {
+            this.active = false
+            this.$store.commit('showMessage', {
+              message: '取消全体禁言'
+            })
+          }
+        })
+          .catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
+      } else {
+        this.muteAllMembers = this.groupProfile.muteAllMembers
+        this.$store.commit('showMessage', {
+          type: 'error',
+          message: '普通群成员不能对全体禁言'
+        })
+      }
     },
     editIntroduction() {
       this.tim
@@ -494,6 +545,9 @@ export default {
   .label {
     font-size: 14px;
     color: $secondary;
+  }
+  .active {
+    color: $black
   }
   .content {
     color: $background;
