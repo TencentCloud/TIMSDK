@@ -37,7 +37,7 @@ tim.on(TIM.EVENT.MESSAGE_RECEIVED, messageReceived, this)
 tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, convListUpdate, this)
 tim.on(TIM.EVENT.GROUP_LIST_UPDATED, groupListUpdate, this)
 tim.on(TIM.EVENT.BLACKLIST_UPDATED, blackListUpdate, this)
-tim.on(TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, groupSystemNoticeUpdate, this)
+tim.on(TIM.EVENT.NET_STATE_CHANGE, netStateChange, this)
 
 function onReadyStateUpdate ({ name }) {
   const isSDKReady = (name === TIM.EVENT.SDK_READY)
@@ -74,6 +74,24 @@ function onError (event) {
       duration: 2000
     })
   }
+}
+
+function checkoutNetState (state) {
+  switch (state) {
+    case TIM.TYPES.NET_STATE_CONNECTED:
+      return { title: '已接入网络', duration: 2000 }
+    case TIM.TYPES.NET_STATE_CONNECTING:
+      return { title: '当前网络不稳定', duration: 2000 }
+    case TIM.TYPES.NET_STATE_DISCONNECTED:
+      return { title: '当前网络不可用', duration: 2000 }
+    default:
+      return ''
+  }
+}
+
+function netStateChange (event) {
+  console.log(event.data.state)
+  store.commit('showToast', checkoutNetState(event.data.state))
 }
 
 function messageReceived (event) {
@@ -146,10 +164,6 @@ function groupListUpdate (event) {
 
 function blackListUpdate (event) {
   store.commit('updateBlacklist', event.data)
-}
-
-function groupSystemNoticeUpdate (event) {
-  console.log('system message', event)
 }
 
 // 获取系统信息

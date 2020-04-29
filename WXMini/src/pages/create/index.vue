@@ -39,7 +39,12 @@ const defaultData = {
   {
     type: wx.TIM.TYPES.GRP_CHATROOM,
     name: '聊天室'
-  }],
+  },
+  {
+    type: wx.TIM.TYPES.GRP_AVCHATROOM,
+    name: '音视频聊天室'
+  }
+  ],
   groupName: '',
   groupID: '',
   loading: false

@@ -647,6 +647,7 @@ export default {
     handleEmoji () {
       if (this.isFocus) {
         this.isFocus = false
+        this.isMoreOpen = false
         this.isEmojiOpen = true
       } else {
         this.isEmojiOpen = !this.isEmojiOpen
@@ -657,6 +658,7 @@ export default {
     handleMore () {
       if (this.isFocus) {
         this.isFocus = false
+        this.isEmojiOpen = false
         this.isMoreOpen = true
       } else {
         this.isMoreOpen = !this.isMoreOpen
