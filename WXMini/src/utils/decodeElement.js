@@ -121,31 +121,34 @@ function parseGroupSystemNotice (message) {
 // 解析群提示消息
 function parseGroupTip (message) {
   const payload = message.payload
+  const userName = message.nick || payload.userIDList.join(',')
   let tip
   switch (payload.operationType) {
     case GROUP_TIP_TYPE.MEMBER_JOIN:
-      tip = `新成员加入：${payload.userIDList.join(',')}`
+      tip = `新成员加入：${userName}`
       break
     case GROUP_TIP_TYPE.MEMBER_QUIT:
-      tip = `群成员退群：${payload.userIDList.join(',')}`
+      tip = `群成员退群：${userName}`
       break
     case GROUP_TIP_TYPE.MEMBER_KICKED_OUT:
-      tip = `群成员被踢：${payload.userIDList.join(',')}`
+      tip = `群成员被踢：${userName}`
       break
     case GROUP_TIP_TYPE.MEMBER_SET_ADMIN:
-      tip = `${payload.operatorID}将${payload.userIDList.join(',')}设置为管理员`
+      tip = `${payload.operatorID}将 ${userName}设置为管理员`
       break
     case GROUP_TIP_TYPE.MEMBER_CANCELED_ADMIN:
-      tip = `${payload.operatorID}将${payload.userIDList.join(',')}取消作为管理员`
+      tip = `${payload.operatorID}将 ${userName}取消作为管理员`
       break
     case GROUP_TIP_TYPE.GROUP_INFO_MODIFIED:
       tip = '群资料修改'
       break
     case GROUP_TIP_TYPE.MEMBER_INFO_MODIFIED:
-      tip = '群成员资料修改'
-      if (payload.msgMemberInfo[0].hasOwnProperty('shutupTime')) {
-        const time = (payload.msgMemberInfo[0].shutupTime / 60).toFixed(0)
-        tip = `${payload.operatorID}将${payload.msgMemberInfo[0].userID}禁言${time}分钟`
+      for (let member of payload.memberList) {
+        if (member.muteTime > 0) {
+          tip = `群成员：${member.userID}被禁言${member.muteTime}秒`
+        } else {
+          tip = `群成员：${member.userID}被取消禁言`
+        }
       }
       break
   }
