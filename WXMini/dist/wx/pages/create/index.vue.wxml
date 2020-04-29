@@ -1,4 +1,4 @@
-<template name="6d9e96e1"><view class="_div data-v-e2ba38f4 container"><view class="_div data-v-e2ba38f4 form-item"><view class="_div data-v-e2ba38f4 label">群类型</view> <picker range="{{range}}" range-key="name" value="{{selectedIndex}}" bindchange="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_picker data-v-e2ba38f4">
+<template name="93ac56aa"><view class="_div data-v-e2ba38f4 container"><view class="_div data-v-e2ba38f4 form-item"><view class="_div data-v-e2ba38f4 label">群类型</view> <picker range="{{range}}" range-key="name" value="{{selectedIndex}}" bindchange="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_picker data-v-e2ba38f4">
       {{range[selectedIndex].name}}
       <i-icon type="enter" class="_i-icon data-v-e2ba38f4"></i-icon></picker></view> <view class="_div data-v-e2ba38f4 form-item {{[isAVChatRoom ? 'required' : '']}}"><view class="_div data-v-e2ba38f4 label">
       群ID

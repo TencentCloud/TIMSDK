@@ -38,6 +38,11 @@
     </i-cell-group>
     <!-- 群组相关操作 -->
     <i-cell-group i-class="group-action">
+      <i-cell title="全体禁言">
+        <switch slot="footer" color="#006fff" :disabled="!isAdminOrOwner" @change="handleMuteSwitch"  @click ="handleClick"/>
+      </i-cell>
+    </i-cell-group>
+    <i-cell-group i-class="group-action">
       <i-cell i-class="quit" :title="quitText" is-link @click="handleQuit" />
     </i-cell-group>
 
@@ -77,7 +82,7 @@ export default {
     // 私有群才能添加群成员
     addMemberButtonVisible () {
       if (this.groupProfile) {
-        return this.groupProfile.type === 'Private'
+        return this.groupProfile.type === wx.TIM.TYPES.GRP_PRIVATE
       }
       return false
     },
@@ -85,7 +90,7 @@ export default {
       if (this.groupProfile &&
         this.groupProfile.type !== wx.TIM.TYPES.GRP_PRIVATE &&
         this.groupProfile.selfInfo &&
-        this.groupProfile.selfInfo.role === 'Owner'
+        this.groupProfile.selfInfo.role === wx.TIM.TYPES.GRP_MBR_ROLE_OWNER
       ) {
         return '退出并解散群聊'
       }
@@ -93,7 +98,7 @@ export default {
     },
     isAdminOrOwner () {
       if (this.groupProfile && this.groupProfile.selfInfo) {
-        return this.groupProfile.selfInfo.role !== 'Member'
+        return this.groupProfile.selfInfo.role !== wx.TIM.TYPES.GRP_MBR_ROLE_MEMBER
       }
       return false
     },
@@ -102,7 +107,7 @@ export default {
         return false
       }
       // 任何成员都可修改私有群的群资料
-      if (this.groupProfile.type === this.TIM.TYPES.GRP_PRIVATE) {
+      if (this.groupProfile.type === wx.TIM.TYPES.GRP_PRIVATE) {
         return true
       }
       // 其他类型的群组只有管理员以上身份可以修改
@@ -149,6 +154,38 @@ export default {
           }
         }
       })
+    },
+    handleClick () {
+      if (!this.isAdminOrOwner) {
+        wx.showToast({ title: '普通群成员不能设置全体禁言', duration: 1500, icon: 'none' })
+      }
+    },
+    handleMuteSwitch (event) {
+      if (this.isAdminOrOwner) {
+        let muteAllMembers = event.mp.detail.value
+        wx.$app.updateGroupProfile({
+          muteAllMembers: muteAllMembers,
+          groupID: this.groupProfile.groupID
+        }).then(imResponse => {
+          const muteAllMembers = imResponse.data.group.muteAllMembers
+          if (muteAllMembers) {
+            this.$store.commit('showToast', {
+              title: '全体禁言已开启',
+              con: 'none',
+              duration: 1500
+            })
+          } else {
+            this.$store.commit('showToast', {
+              title: '全体禁言已取消',
+              icon: 'none',
+              duration: 1500
+            })
+          }
+        })
+          .catch(error => {
+            wx.showToast({ title: error.message, duration: 800, icon: 'none' })
+          })
+      }
     },
     handleOk () {
       if (this.userID === '') {

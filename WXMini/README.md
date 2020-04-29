@@ -241,6 +241,23 @@
 
 ## Change Log
 
+#### 2020/04/29
+
+**Feat Add**
+
+- SDK 升级至2.6.3
+- 小程序支持群组全体禁言和取消禁言
+
+**Changes**
+
+- 监听 TIM.EVENT.NET_STATE_CHANGE ，添加网络状态变更提醒
+- 用户入群、退群、发消息，优先展示其 nick没有 nick 才用 userID
+
+**Bug Fixes**
+
+- 修复输入框错乱问题
+- 修复好友列表头像无法获取的问题
+
 #### 2020/03/30
 
 **Feat Add**
