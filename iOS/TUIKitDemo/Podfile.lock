@@ -22,7 +22,7 @@ PODS:
     - SDWebImage/Core (= 5.5.2)
   - SDWebImage/Core (5.5.2)
   - Toast (4.0.0)
-  - TXIMSDK_iOS (4.7.10)
+  - TXIMSDK_iOS (4.8.1)
   - TXIMSDK_TUIKit_iOS (4.6.100):
     - ISVImageScrollView (= 0.1.2)
     - MMLayout (= 0.2.0)
@@ -59,7 +59,7 @@ SPEC CHECKSUMS:
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_iOS: 694d74be7274e9d94b64d97dfd1dd4f3bd29f150
+  TXIMSDK_iOS: af3040b718f4b73c442de35602cc190f048cfcbc
   TXIMSDK_TUIKit_iOS: 7c5a6556929b590e3d2cfb85a865a3c5b28f4d87
   TXLiteAVSDK_TRTC: 08f7b56b29f3ffff78d162e22f6153db2940f801
 
