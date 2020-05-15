@@ -11,7 +11,7 @@ extern"C"
 /// @overview TIMCloud
 /// @overbrief 腾讯即时通信IM的跨平台C接口(API)
 /*
-* @brief 各个平台的下载链接
+* @brief 各个平台的下载链接：
 * > Windows平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Windows),Windows快速开始[集成ImSDK](https://cloud.tencent.com/document/product/269/33489)和[一分钟跑通Demo](https://cloud.tencent.com/document/product/269/36838).支持32位/64位系统。
 * > iOS平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/iOS).
 * > Mac平台[ImSDK](https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Mac).
@@ -157,7 +157,7 @@ TIM_DECL void TIMSetUserSigExpiredCallback(TIMUserSigExpiredCallback cb, const v
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
 * @note
-* 此回调为了多终端同步。例如A设备、B设备都登录了同一账号的ImSDK，A设备添加了好友，B设备ImSDK会收到添加好友的推送，ImSDK通过此回调告知开发者。
+* 此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备添加了好友，B设备ImSDK会收到添加好友的推送，ImSDK通过此回调告知开发者。
 */
 TIM_DECL void TIMSetOnAddFriendCallback(TIMOnAddFriendCallback cb, const void* user_data);
 
@@ -167,7 +167,7 @@ TIM_DECL void TIMSetOnAddFriendCallback(TIMOnAddFriendCallback cb, const void* u
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
 * @note
-* 此回调为了多终端同步。例如A设备、B设备都登录了同一账号的ImSDK，A设备删除了好友，B设备ImSDK会收到删除好友的推送，ImSDK通过此回调告知开发者。
+* 此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备删除了好友，B设备ImSDK会收到删除好友的推送，ImSDK通过此回调告知开发者。
 */
 TIM_DECL void TIMSetOnDeleteFriendCallback(TIMOnDeleteFriendCallback cb, const void* user_data);
 
@@ -177,7 +177,7 @@ TIM_DECL void TIMSetOnDeleteFriendCallback(TIMOnDeleteFriendCallback cb, const v
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
 * @note
-* 此回调为了多终端同步。例如A设备、B设备都登录了同一账号的ImSDK，A设备更新了好友资料，B设备ImSDK会收到更更新好友资料的推送，ImSDK通过此回调告知开发者。
+* 此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备更新了好友资料，B设备ImSDK会收到更新好友资料的推送，ImSDK通过此回调告知开发者。
 */
 TIM_DECL void TIMSetUpdateFriendProfileCallback(TIMUpdateFriendProfileCallback cb, const void* user_data);
 
@@ -187,7 +187,7 @@ TIM_DECL void TIMSetUpdateFriendProfileCallback(TIMUpdateFriendProfileCallback c
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 *
 * @note
-* 当前登入用户设置添加好友需要确认时，如果有用户请求加当前登入用户为好友，会收到好友添加请求的回调，ImSDK通过此回调告知开发者。如果多终端登入同一账号，每个终端都会收到这个回调。
+* 当前登入用户设置添加好友需要确认时，如果有用户请求加当前登入用户为好友，会收到好友添加请求的回调，ImSDK通过此回调告知开发者。如果多终端登入同一帐号，每个终端都会收到这个回调。
 */
 TIM_DECL void TIMSetFriendAddRequestCallback(TIMFriendAddRequestCallback cb, const void* user_data);
 
@@ -377,14 +377,14 @@ TIM_DECL int TIMSetConfig(const char* json_config, TIMCommCallback cb, const voi
 /**
 * @brief 登录
 *
-* @param user_id 用户的indentifier
-* @param user_sig 用户的sig
+* @param user_id 用户的UserID
+* @param user_sig 用户的UserSig
 * @param cb 登录成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
 * @note 
-* 用户登录腾讯后台服务器后才能正常收发消息，登录需要用户提供identifier、userSig等信息，具体含义请参考[登录鉴权](https://cloud.tencent.com/document/product/269/31999)
+* 用户登录腾讯后台服务器后才能正常收发消息，登录需要用户提供UserID、UserSig等信息，具体含义请参考[登录鉴权](https://cloud.tencent.com/document/product/269/31999)
 */
 TIM_DECL int TIMLogin(const char* user_id, const char* user_sig, TIMCommCallback cb, const void* user_data);
 
@@ -424,7 +424,7 @@ TIM_DECL int TIMLogout(TIMCommCallback cb, const void* user_data);
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 *
-* @example 获取对方identifier为Windows-02的单聊会话示例
+* @example 获取对方UserID为Windows-02的单聊会话示例
 * const void* user_data = nullptr; // 回调函数回传
 * const char* userid = "Windows-02";
 * int ret = TIMConvCreate(userid, kTIMConv_C2C, [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
@@ -471,9 +471,9 @@ TIM_DECL int TIMConvCreate(const char* conv_id, enum TIMConvType conv_type, TIMC
 TIM_DECL int TIMConvDelete(const char* conv_id, enum TIMConvType conv_type, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 获取本地缓存的会话列表
+* @brief 获取最近联系人的会话列表
 * 
-* @param cb 获取会话缓存列表的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param cb 获取最近联系人会话列表的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
 * 
@@ -584,7 +584,7 @@ TIM_DECL int TIMConvCancelDraft(const char* conv_id, enum TIMConvType conv_type)
 * }
 * @note
 * >  发送新消息，单聊消息和群消息的发送均采用此接口。
-* >> 发送单聊消息时 conv_id 为对方的identifier， conv_type 为 kTIMConv_C2C 
+* >> 发送单聊消息时 conv_id 为对方的UserID， conv_type 为 kTIMConv_C2C 
 * >> 发送群聊消息时 conv_id 为群ID， conv_type 为 kTIMConv_Group 。
 * >  发送消息时不能发送 kTIMElem_GroupTips 、 kTIMElem_GroupReport ，他们由为后台下发，用于更新(通知)群的信息。可以的发送消息内元素
 * >>   文本消息元素，请参考 [TextElem](TIMCloudDef.h)
@@ -784,9 +784,9 @@ TIM_DECL int TIMMsgSaveMsg(const char* conv_id, enum TIMConvType conv_type, cons
 * }
 *   
 * @note
-* 从 kTIMMsgGetMsgListParamLastMsg 指定的消息开始获取本地消息列表，kTIMMsgGetMsgListParamCount 为要获取的消息数目。kTIMMsgGetMsgListParamLastMsg 可以不指定，不指定时表示以会话最新的消息为 LastMsg。
+* 从 kTIMMsgGetMsgListParamLastMsg 指定的消息开始获取本地消息列表，kTIMMsgGetMsgListParamCount 为要获取的消息数目。kTIMMsgGetMsgListParamLastMsg 可以不指定，不指定时表示以会话最新的消息为 LastMsg 。
 * 若指定 kTIMMsgGetMsgListParamIsRamble 为true则本地消息获取不够指定数目时，会去获取云端漫游消息。
-* kTIMMsgGetMsgListParamIsForward 为true时表示获取比 kTIMMsgGetMsgListParamLastMsg 新的消息，为false时表示获取比 kTIMMsgGetMsgListParamLastMsg 老的消息
+* kTIMMsgGetMsgListParamIsForward 为true时表示获取比 kTIMMsgGetMsgListParamLastMsg 新的消息，为false时表示获取比 kTIMMsgGetMsgListParamLastMsg 旧的消息
 */
 TIM_DECL int TIMMsgGetMsgList(const char* conv_id, enum TIMConvType conv_type, const char* json_get_msg_param, TIMCommCallback cb, const void* user_data);
 
@@ -897,7 +897,7 @@ TIM_DECL int TIMMsgDownloadElemToPath(const char* json_download_elem_param, cons
 * }
 *
 * @note
-* 批量发送消息的接口，每个identifier发送成功与否，通过回调cb返回。
+* 批量发送消息的接口，每个UserID发送成功与否，通过回调cb返回。
 */
 TIM_DECL int TIMMsgBatchSend(const char* json_batch_send_param, TIMCommCallback cb, const void* user_data);
 /// @}
@@ -1404,7 +1404,7 @@ TIM_DECL int TIMGroupHandlePendency(const char* json_group_handle_pendency_param
 * }, nullptr);
 * 
 * @note
-* 可以通过这个获取任何人的个人资料，包括自己的个人资料。
+* 可以通过该接口获取任何人的个人资料，包括自己的个人资料。
 */
 TIM_DECL int TIMProfileGetUserProfileList(const char* json_get_user_profile_list_param, TIMCommCallback cb, const void* user_data);
 
@@ -1434,7 +1434,7 @@ TIM_DECL int TIMProfileGetUserProfileList(const char* json_get_user_profile_list
 * }, nullptr);
 *
 * @note
-* 修改自己的资料，目前支持修改的字段请参考[UserProfileItem](TIMCloudDef.h)，一次可更新多个字段。修改自定义字段时填入的key值可以添加 Tag_Profile_Custom_ 前缀，也可以不添加 Tag_Profile_Custom_ 前缀，当不添加时，SDK内部会自动添加该前缀。
+* 修改自己的资料时，目前支持修改的字段请参考[UserProfileItem](TIMCloudDef.h)，一次可更新多个字段。修改自定义字段时填入的key值可以添加 Tag_Profile_Custom_ 前缀，也可以不添加 Tag_Profile_Custom_ 前缀，当不添加时，SDK内部会自动添加该前缀。
 */
 TIM_DECL int TIMProfileModifySelfUserProfile(const char* json_modify_self_user_profile_param, TIMCommCallback cb, const void* user_data);
 /// @}
@@ -1565,7 +1565,7 @@ TIM_DECL int TIMFriendshipDeleteFriend(const char* json_delete_friend_param, TIM
 
 
 /**
-* @brief 检测好友类型(单向的还是双向的)
+* @brief 检测好友类型(单向或双向)
 *
 * @param json_check_friend_list_param 检测好友接口参数的Json字符串
 * @param cb 检测好友成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
@@ -1581,7 +1581,7 @@ TIM_DECL int TIMFriendshipDeleteFriend(const char* json_delete_friend_param, TIM
 * }, nullptr);
 *
 * @note
-* 开发者可以通过此接口检测给定的 identifier 列表跟当前账户的好友关系，[检测好友](https://cloud.tencent.com/document/product/269/1501#.E6.A0.A1.E9.AA.8C.E5.A5.BD.E5.8F.8B)。
+* 开发者可以通过此接口检测给定的 UserID 列表跟当前账户的好友关系，检测好友相关内容请参考 [检测好友](https://cloud.tencent.com/document/product/269/1501#.E6.A0.A1.E9.AA.8C.E5.A5.BD.E5.8F.8B)。
 */
 TIM_DECL int TIMFriendshipCheckFriendType(const char* json_check_friend_list_param, TIMCommCallback cb, const void* user_data);
 
