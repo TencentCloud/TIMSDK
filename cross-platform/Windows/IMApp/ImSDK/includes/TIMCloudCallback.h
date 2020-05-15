@@ -431,7 +431,7 @@ typedef void(*TIMFriendAddRequestCallback)(const char* json_friend_add_request_p
 * @brief 日志回调
 *
 * @param level 日志级别,请参考[TIMLogLevel](TIMCloudDef.h)
-* @param log 日子字符串
+* @param log 日志字符串
 * @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 */
 typedef void (*TIMLogCallback)(enum TIMLogLevel level, const char* log, const void* user_data);
@@ -457,7 +457,7 @@ typedef void (*TIMMsgUpdateCallback)(const char* json_msg_array, const void* use
 /// @name ImSDK接口回调
 /// @{
 /**
-* @brief 接口回调定义
+* @brief 接口通用回调的定义
 *
 * @param code 值为ERR_SUCC表示成功，其他值表示失败。详情请参考 [错误码](https://cloud.tencent.com/document/product/269/1671)
 * @param desc 错误描述字符串
