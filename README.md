@@ -69,12 +69,22 @@
 - 为了更好的了解您使用TIMSDK所遇到的问题，方便快速有效定位解决TIMSDK问题，希望您按如下反馈指引反馈issue，方便我们尽快解决您的问题
 - [TIMSDK issue反馈指引](https://github.com/tencentyun/TIMSDK/wiki/TIMSDK-issue%E6%9C%89%E6%95%88%E5%8F%8D%E9%A6%88%E6%A8%A1%E6%9D%BF)
 
-## 4.8.1 @2020.04.30
+## 4.8.10 @2020.05.15
 
 ### SDK
 
 **通用变更点**
 
-- iOS & Android 发布全新的 API2.0 接口
-- 修复某些场景下登录不同账户的会话错乱问题
+- iOS 和 Android 支持 ipv6
+- 直播群（AVChatRoom） 支持群成员列表动态更新
+- 修复 xlog 日志崩溃问题
 
+**iOS & Mac 平台**
+
+- 修复 iOS 发送大文件必现失败问题
+- 修复消息拉取发送者好友备注异常的问题
+
+**Android 平台**
+
+- IM SDK 支持AndroidX
+- 修复 Android 设备由于网络权限问题导致的崩溃
