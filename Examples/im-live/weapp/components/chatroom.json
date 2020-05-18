@@ -1,0 +1,6 @@
+{
+    "component": true,
+    "usingComponents": {
+        "message-item": "./message-item"
+    }
+}

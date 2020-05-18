@@ -1,0 +1,21 @@
+
+<view class="info-wrap">
+    
+    <view wx:if="{{ownerInfo&&ownerInfo.avatar}}" class="an-infos">
+        <image src="{{ownerInfo.avatar}}" class="avtar"></image>
+        <view class="info">
+            <view class="an-name">{{ownerInfo.nick}}</view>
+            <view class="an-fans">{{fans}}粉丝</view>
+        </view>
+        <button data-wpy-evt="11-0" bind:tap="_proxy" class="attention">{{attention?'已关注':'关注'}}</button>
+    </view>
+    
+    <view wx:if="{{groupinfo&&groupinfo.groupID}}" class="room-id-info">
+        直播间ID：{{groupinfo.groupID}}
+    </view>
+    <view wx:if="{{groupinfo.memberNum!==undefinded}}" class="online">{{groupinfo.memberNum}}人在看</view>
+    
+    
+    
+    <image src="/static/images/red-pack.png" data-wpy-evt="11-1" bind:tap="_proxy" class="red-pack"></image>
+</view>

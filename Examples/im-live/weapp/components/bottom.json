@@ -1,0 +1,10 @@
+{
+    "component": true,
+    "usingComponents": {
+        "back": "./back",
+        "goods": "./goods",
+        "like": "./like",
+        "message": "./message",
+        "gift": "./gift"
+    }
+}

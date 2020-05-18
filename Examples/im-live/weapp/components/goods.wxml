@@ -1,0 +1,2 @@
+
+<image src="/static/images/goods.png" data-wpy-evt="22-0" bind:tap="_proxy" class="goods"></image>

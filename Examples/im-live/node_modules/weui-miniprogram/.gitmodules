@@ -1,0 +1,3 @@
+[submodule "src/weui-wxss"]
+	path = src/weui-wxss
+	url = https://github.com/Tencent/weui-wxss/

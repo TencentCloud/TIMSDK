@@ -1,0 +1,10 @@
+
+<scroll-view>
+  <view wx:if="{{ loading }}"></view>
+  <view wx:else>
+    
+    <roomlists bind_init="_initComponent" room="{{ room }}" wx:if="{{ isLogin }}"></roomlists>
+    
+    <login bind_init="_initComponent" wx:else data-wpy-evt="4-0" bind:loginSuccess="_proxy"></login>
+  </view>
+</scroll-view>

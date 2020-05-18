@@ -1,0 +1,6 @@
+                   
+.chatroom-scoll {
+    max-height: 30vh;
+    widows: 100%;
+}
+

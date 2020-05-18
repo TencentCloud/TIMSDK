@@ -1,0 +1,10 @@
+
+<view class="coupon">
+    <image src="/static/images/coupon.png" class="coupon-img"></image>
+    <view class="info">
+        <view class="title">优惠券来袭</view>
+        <view class="desc">平台送你一张优惠券</view>
+        <button data-wpy-evt="15-0" bind:tap="_proxy" class="btn">马上使用</button>
+    </view>
+    <image src="/static/images/close-w.png" data-wpy-evt="15-1" bind:tap="_proxy" class="close"></image>
+</view>

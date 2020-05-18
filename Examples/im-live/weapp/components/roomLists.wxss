@@ -1,0 +1,14 @@
+                   
+.room-list-wrap {
+  flex-direction: row;
+  padding: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-content: flex-start;
+  align-items: flex-start
+}
+.station {
+  width: 45vw
+}
+

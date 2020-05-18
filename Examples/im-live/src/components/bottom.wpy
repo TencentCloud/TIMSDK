@@ -1,0 +1,92 @@
+<style type="less">
+    .goods {
+        margin: 0 32rpx 0 32rpx;
+        display: inline-block;
+        vertical-align: middle
+    }
+    .gift {
+        margin: 0 40rpx 0 70rpx;
+        display: inline-block;
+        vertical-align: middle
+    }
+    .like {
+        margin-right: 40rpx;
+        display: inline-block;
+        vertical-align: middle
+    }
+    .message {
+        width: 266rpx;
+        height: 66rpx;
+        display: inline-block;
+        background: rgba(0, 0, 0, 0.25);
+        border-radius: 40rpx;
+        border-radius: 40rpx;
+        vertical-align: middle
+    }
+    .back{
+        display: inline-block;
+        vertical-align: middle
+    }
+</style>
+
+<template>
+    <view class="room-bottom">
+        <!-- 当前商品 start -->
+        <goods class="goods" @showgoods="showgoods"></goods>
+        <!-- 当前商品 end -->
+        <!-- 消息输入 start -->
+        <message class="message" @send-message="sendMessage" isTimReady="{{isTimReady}}"></message>
+        <!-- 消息输入 end -->
+        <!-- 送礼物 start -->
+        <gift class="gift" @showGift="showGift"></gift>
+        <!-- 送礼物 end -->
+        <!-- 点赞 start -->
+        <like class="like" @like="like"></like>
+        <!-- 点赞 end -->
+        <!-- 退出直播 start -->
+        <back class="back" @quitGroup="quitGroup"></back>
+        <!-- 退出直播 end -->
+    </view>
+</template>
+
+<script>
+    import wepy from '@wepy/core'
+    wepy.component({
+        props: {
+            header: {},
+            isTimReady:false
+        },
+        data: {},
+        methods: {
+            showgoods(){
+                this.$emit('showgoods')
+            },
+            showGift(){
+                this.$emit('showGift')
+            },
+            quitGroup(){
+                this.$emit('quitGroup')
+            },
+            sendMessage(data){
+                this.$emit('send-message',data)
+            },
+            like(){
+                this.$emit('like')
+            }
+        },
+        created() {},
+        mounted() {}
+    })
+</script>
+
+<config>
+{
+    usingComponents: {
+        back:'~@/components/back',
+        goods:'~@/components/goods',
+        gift:'~@/components/gift',
+        like:'~@/components/like',
+        message:'~@/components/message',
+    }
+}
+</config>

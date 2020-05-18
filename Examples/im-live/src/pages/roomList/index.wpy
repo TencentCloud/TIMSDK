@@ -1,0 +1,102 @@
+<style lang="less" scoped>
+
+</style>
+
+<template>
+  <scroll-view>
+    <view v-if="loading"></view>
+    <view v-else>
+      <!-- 如果登录了，就展示房间列表 -->
+      <roomlists :room="room" v-if="isLogin"></roomlists>
+      <!-- 如果没登录，就展示登录界面 -->
+      <login v-else @loginSuccess="loginSuccess"></login>
+    </view>
+  </scroll-view>
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  import CONST from '@/common/const'
+
+  const app = getApp()
+  wepy.page({
+    data: {
+      room: [],
+      btn: [],
+      userData: {},
+      userSig: '',
+      isLogin: true,
+      loading: true
+    },
+    mixins: [],
+    computed: {},
+    methods: {
+      loginSuccess() {
+        this.isLogin = true
+        this.auth()
+      },
+      getRoomList() {
+        wx.request({
+          url: `${CONST.HOST}/release/getRoomList`,
+          method: 'GET',
+          header: {
+            "content-type": "application/x-www-form-urlencoded"
+          },
+          success: (data) => {
+            this.room = data.data
+          },
+          fail() {}
+        })
+      },
+      auth() {
+        wx.login({
+          success: (data) => {
+            this.loading = true
+            wx.request({
+              url: `${CONST.HOST}/release/getUser`,
+              method: 'POST',
+              header: {
+                "content-type": "application/x-www-form-urlencoded"
+              },
+              data: {
+                code: data.code
+              },
+              success: (data) => {
+                if (data.data.code == -2) {
+                  this.isLogin = false
+                } else {
+                  app.userData = data.data
+                  const userData = data.data
+                  this.userData = userData
+                }
+              },
+              fail() {},
+              complete: () => {
+                this.loading = false
+              }
+            })
+          }
+        })
+      }
+    },
+    events: {},
+    onShow() {
+      if (!this.userData.id) {
+        this.auth()
+      }
+    },
+    async created() {
+      this.getRoomList()
+    }
+  })
+</script>
+
+<config>
+{
+    navigationBarBackgroundColor: '#ffffff',
+    usingComponents: {
+      "roomlists":'~@/components/roomLists',
+      "login":'~@/components/login'
+    }
+}
+</config>

@@ -1,0 +1,6 @@
+
+<view>
+    <view style=" {{ 'bottom:' + (displayInputBottom) + ';' }}" class="{{displayInputShow==='none'?'':'input-for-display'}}">
+        <input value="{{text}}" disabled="{{!isTimReady}}" placeholder="{{isTimReady?'我想问主播...':'初始化中，请稍等'}}" placeholder-style="color:#fff;font-size:12px" type="text" confirm-type="send" adjust-position="{{false}}" data-wpy-evt="24-0" bind:confirm="_proxy" bind:input="_proxy" bind:keyboardheightchange="_proxy" bind:blur="_proxy" class="{{displayInputShow==='none'?'message-input':'inner-input'}}"></input>
+    </view>
+</view>

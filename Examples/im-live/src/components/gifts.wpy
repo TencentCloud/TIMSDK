@@ -1,0 +1,71 @@
+<style type="less">
+    .gifts-inner {
+        padding: 0 24rpx;
+        position: absolute;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .gifts-title {
+        height: 114rpx;
+        line-height: 114rpx;
+        font-family: PingFangSC-Medium;
+        font-size: 16px;
+        color: #111111;
+        letter-spacing: 0;
+        text-align: left;
+        display: block;
+        border-bottom: 1px solid #DBDBDB;
+    }
+    .close {
+        height: 64rpx;
+        width: 64rpx;
+        position: absolute;
+        right: 24rpx;
+        top: 24rpx;
+    }
+    .gift-item {
+        width: 218rpx;
+        height: 218rpx;
+        background: rgba(0, 0, 0, 0.10);
+        border-radius: 8rpx;
+        border-radius: 8rpx;
+        text-align: center
+    }
+    .gift-box{
+        padding: 24rpx;
+    }
+    .gift-item-img{
+        width: 84rpx;
+        height: 171rpx;
+        margin-top: 24rpx
+    }
+</style>
+
+<template>
+    <view class="gifts-inner">
+        <view class="gifts-title">点击小火箭，体验送礼消息~</view>
+        <image src="/static/images/close.png" class="close" bindtap="hide"/>
+        <view class="gift-box">
+            <view class="gift-item" bindtap="sendgift">
+                <image src="/static/images/gift-item.png" class="gift-item-img" />
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from '@wepy/core'
+    wepy.component({
+        props: {},
+        data: {},
+        methods: {
+            hide() {
+                this.$emit('hideGift')
+            },
+            sendgift(){
+                this.$emit('sendgift')
+            }
+        },
+        computed: {}
+    })
+</script>

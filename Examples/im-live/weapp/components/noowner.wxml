@@ -1,0 +1,12 @@
+
+<view class="no-owner">
+    <view class="avatar-wraper">
+        <image src="{{ownerInfo.avatar}}" class="avatar"></image>
+    </view>
+    <view class="tips nick">
+        {{ ownerInfo.nick }}
+    </view>
+    <view class="tips other">
+        主播不在线，再逛逛吧
+    </view>
+</view>

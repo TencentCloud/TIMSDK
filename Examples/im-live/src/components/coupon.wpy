@@ -1,0 +1,100 @@
+<style type="less">
+    .coupon {
+        width: 555rpx;
+        height: 313rpx;
+        position: relative;
+        margin: 0 auto;
+    }
+    .coupon-img {
+        width: 555rpx;
+        height: 313rpx;
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+    }
+    .info {
+        width: 555rpx;
+        height: 313rpx;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+    }
+    .title {
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 40rpx;
+        margin-top: 47rpx;
+    }
+    .desc {
+        font-family: PingFangSC-Regular;
+        font-size: 18px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 50rpx;
+        margin-top: 31rpx;
+    }
+    .btn {
+        height: 64rpx;
+        width: 316rpx;
+        background: #FFFFFF;
+        border-radius: 39.5rpx;
+        border-radius: 39.5rpx;
+        padding: 0;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #F16161;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 64rpx;
+        margin-top: 46rpx
+    }
+    .close{
+        width: 52rpx;
+        height: 52rpx;
+        position: absolute;
+        top: 20rpx;
+        right: 20rpx;
+        z-index: 2
+    }
+</style>
+
+<template>
+    <view class="coupon">
+        <image src="/static/images/coupon.png" class="coupon-img" />
+        <view class="info">
+            <view class="title">优惠券来袭</view>
+            <view class="desc">平台送你一张优惠券</view>
+            <button class="btn"  bindtap="usecoupon">马上使用</button>
+        </view>
+        <image src="/static/images/close-w.png" class="close" bindtap="close"/>
+    </view>
+</template>
+
+<script>
+    import wepy from '@wepy/core'
+    wepy.component({
+        props: {},
+        data: {},
+        methods: {
+            showgoods() {
+                this.$emit('showgoods')
+            },
+            close(){
+                this.$emit('hidecoupon')
+            },
+            usecoupon(){
+                this.$emit('usecoupon')
+            }
+        },
+        computed: {},
+        created() {
+            
+        }
+    })
+</script>

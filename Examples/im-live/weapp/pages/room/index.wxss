@@ -1,0 +1,70 @@
+.room-bg {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+.bg-img {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+.room-content {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+.room-bottom {
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  height: 50px;
+  margin-bottom: constant(safe-area-inset-bottom);
+  /* 兼容 iOS < 11.2 */
+  margin-bottom: env(safe-area-inset-bottom);
+  /* 兼容 iOS >= 11.2 */
+}
+.chatroom {
+  width: 50vw;
+  max-height: 30vh;
+  position: absolute;
+  bottom: 120px;
+  z-index: 100;
+  padding: 22rpx;
+}
+.gifts,
+.goodslist {
+  position: absolute;
+  width: 100vw;
+  height: 45vh;
+  background-color: #fff;
+  bottom: -45vh;
+  z-index: 800;
+  left: 0;
+}
+.gift-animation {
+  position: absolute;
+  top: 30vh;
+  left: 20rpx;
+}
+.coupon {
+  margin-top: 400rpx;
+}
+.live-player {
+  width: 100vh;
+  height: 100vw;
+  background-color: #fff;
+}
+.notice {
+  position: absolute;
+  left: 20rpx;
+  bottom: 50vh;
+  max-width: 60vw;
+}
+
