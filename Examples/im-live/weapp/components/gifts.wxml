@@ -1,0 +1,10 @@
+
+<view class="gifts-inner">
+    <view class="gifts-title">点击小火箭，体验送礼消息~</view>
+    <image src="/static/images/close.png" data-wpy-evt="14-0" bind:tap="_proxy" class="close"></image>
+    <view class="gift-box">
+        <view data-wpy-evt="14-1" bind:tap="_proxy" class="gift-item">
+            <image src="/static/images/gift-item.png" class="gift-item-img"></image>
+        </view>
+    </view>
+</view>

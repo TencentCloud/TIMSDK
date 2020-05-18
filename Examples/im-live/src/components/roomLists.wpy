@@ -1,0 +1,43 @@
+<style type="less">
+  .room-list-wrap {
+    flex-direction: row;
+    padding: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start;
+    align-items: flex-start
+  }
+  .station {
+    width: 45vw
+  }
+</style>
+
+<template>
+  <view class="room-list-wrap">
+    <roomitem :item="item" v-for="(item) in room" :key="item.id"></roomitem>
+    <view wx:if="{{room.length % 2 !== 0}}" class="station"></view>
+  </view>
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  wepy.component({
+    props: {
+      room: {}
+    },
+    data: {},
+    methods: {},
+    created() {},
+    mounted() {
+    }
+  })
+</script>
+
+<config>
+{
+    usingComponents: {
+      roomitem:'~@/components/roomItem'
+    }
+}
+</config>

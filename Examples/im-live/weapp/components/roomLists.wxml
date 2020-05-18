@@ -1,0 +1,5 @@
+
+<view class="room-list-wrap">
+  <roomitem bind_init="_initComponent" item="{{ item }}" wx:for="{{ room }}" wx:for-index="index" wx:for-item="item" wx:key="index" key="{{ item.id }}"></roomitem>
+  <view wx:if="{{room.length % 2 !== 0}}" class="station"></view>
+</view>

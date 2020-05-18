@@ -1,0 +1,81 @@
+<style type="less">
+.gift-ani {
+  background-image: linear-gradient(
+    270deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.18) 100%
+  );
+  border-radius: 40rpx;
+  border-radius: 40rpx;
+  width: 330rpx;
+  height: 80rpx;
+  position: relative;
+}
+.avatar,.info-name{
+    display: inline-block;
+    vertical-align: middle
+}
+.avatar{
+    height: 72rpx;
+    width: 72rpx;
+    border-radius: 36rpx;
+    margin: 4rpx;
+}
+.nick{
+    font-family: PingFangSC-Medium;
+    font-size: 12px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    text-align: left;
+    line-height: 24rpx;
+}
+.gift{
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    text-align: left;
+    line-height: 44rpx;
+}
+.gitf-item{
+    height: 170rpx;
+    width: 93rpx;
+    position: absolute;
+    left: 230rpx;
+    top: 0;
+    margin-top: -40rpx
+}
+</style>
+
+<template>
+    <view class="gift-ani">
+        <image src="{{avatar}}" mode="scaleToFill" lazy-load="false" class="avatar"/>
+        <view class="info-name">
+            <view class="nick">{{nick}}</view>
+            <view class="gift">送出 火箭X1</view>
+        </view>
+        <image src="/static/images/gift-item.png" class="gitf-item"/>
+    </view>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+wepy.component({
+  props: {
+      nick:'',
+      avatar:''
+  },
+  data: {},
+  methods: {
+    showgift() {
+      this.$emit('showGift');
+    }
+  },
+  computed: {},
+  created(){
+      setTimeout(()=>{
+         this.$emit('hideani')   
+      },1000)
+  }
+});
+</script>

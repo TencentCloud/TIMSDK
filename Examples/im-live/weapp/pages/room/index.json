@@ -1,0 +1,17 @@
+{
+    "navigationBarTitleText": "房间1",
+    "navigationStyle": "custom",
+    "disableScroll": true,
+    "component": true,
+    "usingComponents": {
+        "room-header": "./../../components/header",
+        "room-bottom": "./../../components/bottom",
+        "chatroom": "./../../components/chatroom",
+        "gifts": "./../../components/gifts",
+        "coupon": "./../../components/coupon",
+        "notice": "./../../components/notice",
+        "goods-list": "./../../components/goodslist",
+        "gift-animation": "./../../components/gift-animation",
+        "no-owner": "./../../components/noowner"
+    }
+}

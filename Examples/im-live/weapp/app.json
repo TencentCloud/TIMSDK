@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/roomList/index",
+    "pages/room/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "IM 直播电商",
+    "navigationBarTextStyle": "black"
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json"
+}

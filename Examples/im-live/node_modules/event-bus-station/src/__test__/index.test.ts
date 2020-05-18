@@ -1,0 +1,16 @@
+import 'mocha'
+import {expect} from 'chai'
+
+import {EventBus} from '..'
+
+describe('test', () => {
+  it('EventBus', () => {
+    const bus = new EventBus()
+
+    expect(bus).to.be.an('object')
+    expect(bus.on).to.be.a('function')
+    expect(bus.once).to.be.a('function')
+    expect(bus.emit).to.be.a('function')
+    expect(bus.off).to.be.a('function')
+  })
+})

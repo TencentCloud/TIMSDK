@@ -1,0 +1,33 @@
+<style type="less">
+.notice {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 40rpx;
+  border-radius: 40rpx;
+  padding: 24rpx;
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: #f9fffe;
+  letter-spacing: 0;
+  line-height: 40rpx;
+}
+</style>
+
+<template>
+    <view class="notice" wx:if="{{noticeText.length}}">
+        直播间公告：{{noticeText}}
+    </view>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+wepy.component({
+  props: {
+      noticeText:''
+  },
+  data: {},
+  methods: {
+    
+  },
+  computed: {}
+});
+</script>

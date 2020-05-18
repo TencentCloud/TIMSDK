@@ -1,0 +1,5 @@
+
+<view data-wpy-evt="20-0" bind:tap="_proxy" class="room-item">
+    <image src="{{item.room_cover_s}}" lazy-load="{{true}}" class="cover"></image>
+    <view class="title">{{item.room_name}}</view>
+</view>

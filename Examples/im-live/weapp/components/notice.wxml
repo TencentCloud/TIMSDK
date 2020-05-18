@@ -1,0 +1,4 @@
+
+<view wx:if="{{noticeText.length}}" class="notice">
+    直播间公告：{{noticeText}}
+</view>

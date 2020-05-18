@@ -1,0 +1,17 @@
+
+<view wx:if="{{ item.message }}">
+    <view wx:if="{{ item.type!==2 }}" class="msg-item">
+        
+        <image src="/static/images/lv.png" class="lv"></image>
+        
+        <text class="name">{{item.name}}：</text>
+        
+        <text class="text">{{item.message}}</text>
+    </view>
+    <view wx:else class="msg-item">
+        
+        <text class="name notice">{{item.name}}：</text>
+        
+        <text class="text">{{item.message}}</text>
+    </view>
+</view>

@@ -1,0 +1,9 @@
+
+<view class="gift-ani">
+    <image src="{{avatar}}" mode="scaleToFill" lazy-load="false" class="avatar"></image>
+    <view class="info-name">
+        <view class="nick">{{nick}}</view>
+        <view class="gift">送出 火箭X1</view>
+    </view>
+    <image src="/static/images/gift-item.png" class="gitf-item"></image>
+</view>

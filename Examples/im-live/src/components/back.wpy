@@ -1,0 +1,25 @@
+<style type="less">
+    .room-back {
+        width: 32px;
+        height: 32px;
+    }
+</style>
+
+<template>
+    <image src="/static/images/back.png" class="room-back" bindtap="back"/>
+</template>
+
+<script>
+    import wepy from '@wepy/core'
+    wepy.component({
+        props : {
+        },
+        data : {},
+        methods : {
+            back(){
+                this.$emit('quitGroup')
+            }
+        },
+        computed : {}
+    })
+</script>

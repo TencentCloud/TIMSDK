@@ -1,0 +1,57 @@
+page {
+    --bottom-safe-area: 68rpx;
+}
+
+.bottom-line {
+    position: relative;
+  
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      transform: scale(.5);
+      transform-origin: 0 0;
+      pointer-events: none;
+      box-sizing: border-box;
+      border: 0 solid #e9eaec;
+      border-bottom-width: 1px;
+    }
+}
+  
+.bottom-line-no-last {
+    .bottom-line;
+  
+    &:last-child::after {
+      content: none;
+    }
+}
+  
+.bold {
+    font-weight: bolder;
+}
+  
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+.active {
+    position: relative;
+  
+    &:active:before {
+      content: "";
+      background: rgba(black, .03);
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      right: 0;
+      top: 0;
+    }
+}
+  
+@green: #07C160;
+@red: #FA5151;

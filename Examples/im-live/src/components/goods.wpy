@@ -1,0 +1,25 @@
+<style type="less">
+    .goods {
+        width: 64rpx;
+        height: 64rpx;
+    }
+</style>
+
+<template>
+    <image src="/static/images/goods.png" class="goods" bindtap="showgoods"/>
+</template>
+
+<script>
+    import wepy from '@wepy/core'
+    wepy.component({
+        props : {
+        },
+        data : {},
+        methods : {
+            showgoods(){
+                this.$emit('showgoods') 
+            }
+        },
+        computed : {}
+    })
+</script>

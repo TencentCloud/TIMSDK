@@ -1,0 +1,30 @@
+                   
+.goods {
+    margin: 0 32rpx 0 32rpx;
+    display: inline-block;
+    vertical-align: middle
+}
+.gift {
+    margin: 0 40rpx 0 70rpx;
+    display: inline-block;
+    vertical-align: middle
+}
+.like {
+    margin-right: 40rpx;
+    display: inline-block;
+    vertical-align: middle
+}
+.message {
+    width: 266rpx;
+    height: 66rpx;
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 40rpx;
+    border-radius: 40rpx;
+    vertical-align: middle
+}
+.back{
+    display: inline-block;
+    vertical-align: middle
+}
+

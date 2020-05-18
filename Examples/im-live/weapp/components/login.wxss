@@ -1,0 +1,44 @@
+                   
+.login {
+    height: 92rpx;
+    width: 600rpx;
+    background: #006EFF;
+    border-radius: r16px;
+    border-radius: r16px;
+    font-family: PingFangSC-Regular;
+    font-size: 18px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    line-height: 92rpx;
+    padding: 0;
+}
+.logo-img {
+    height: 424rpx;
+    width: 505rpx;
+}
+.logo {
+    text-align: center;
+    padding-top: 120rpx;
+}
+.slogan {
+    font-family: PingFangSC-Medium;
+    font-size: 18px;
+    color: #333333;
+    text-align: center;
+    line-height: 50rpx;
+    margin-top: 60rpx;
+}
+.sub-slogan {
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: #999999;
+    text-align: center;
+    line-height: 22px;
+}
+.layout-margintop{
+    margin-top: 40rpx;
+}
+.layout-marginbottom{
+    margin-bottom: 120rpx;
+}
+

@@ -1,0 +1,12 @@
+name:            yaml-js
+version:         0.0.8
+description:     Pure Javascript YAML parser, ported from PyYAML
+main:            ./lib/yaml
+repository:
+  type:          git
+  url:           http://github.com/connec/yaml-js.git
+devDependencies:
+  coffee-script: 1.6.x
+  plantation:    0.0.7
+  squash:        0.0.12
+license:         WTFPL
