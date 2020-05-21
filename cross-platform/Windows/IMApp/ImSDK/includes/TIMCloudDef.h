@@ -731,7 +731,6 @@ static const char* kTIMMsgReceiptTimeStamp = "msg_receipt_time_stamp";  //uint64
 * @brief 元素的类型
 */
 enum TIMElemType {
-    kTIMElem_Invalid,           // 未知元素类型
     kTIMElem_Text,           // 文本元素
     kTIMElem_Image,          // 图片元素
     kTIMElem_Sound,          // 声音元素
@@ -744,6 +743,7 @@ enum TIMElemType {
     kTIMElem_Video,          // 视频元素
     kTIMElem_FriendChange,   // 关系链变更消息元素
     kTIMElem_ProfileChange,  // 资料变更消息元素
+    kTIMElem_Invalid = -1,   // 未知元素类型
 };
 
 /**
