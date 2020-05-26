@@ -82,7 +82,7 @@
 **iOS & Mac 平台**
 
 - 修复 iOS 发送大文件必现失败问题
-- 修复消息拉取发送者好友备注异常的问题
+- 修复 V2TIMMessage 消息中拉取发送者好友备注 getFriendRemark 异常的问题
 
 **Android 平台**
 
