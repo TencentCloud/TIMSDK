@@ -38,6 +38,7 @@ tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, convListUpdate, this)
 tim.on(TIM.EVENT.GROUP_LIST_UPDATED, groupListUpdate, this)
 tim.on(TIM.EVENT.BLACKLIST_UPDATED, blackListUpdate, this)
 tim.on(TIM.EVENT.NET_STATE_CHANGE, netStateChange, this)
+tim.on(TIM.EVENT.MESSAGE_READ_BY_PEER, onMessageReadByPeer)
 
 function onReadyStateUpdate ({ name }) {
   const isSDKReady = (name === TIM.EVENT.SDK_READY)
@@ -92,6 +93,10 @@ function checkoutNetState (state) {
 function netStateChange (event) {
   console.log(event.data.state)
   store.commit('showToast', checkoutNetState(event.data.state))
+}
+
+function onMessageReadByPeer (event) {
+  console.log(event)
 }
 
 function messageReceived (event) {
