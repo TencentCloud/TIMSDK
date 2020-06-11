@@ -283,7 +283,6 @@ to {
   align-items: flex-end;
 }
 .item-right .content .name {
-  width: 100%;
   font-size: 24rpx;
   line-height: 1;
   margin-bottom: 12rpx;
@@ -446,4 +445,9 @@ to {
   line-height: 60rpx;
   font-size: 28rpx;
   margin-left: 20rpx;
+}
+.read-receipts {
+  top: 50%;
+  transform: translateY(45%);
+  margin-right: -36rpx;
 }
