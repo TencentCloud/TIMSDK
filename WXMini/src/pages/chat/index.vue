@@ -84,6 +84,10 @@
               </template>
             </div>
             <div class="wrapper" @longpress="handleMessage(message)">
+              <div class="name read-receipts" v-if="currentConversation.type === 'C2C' && message.from === myInfo.userID">
+                <template v-if="message.isPeerRead">已读</template>
+                <template v-else>未读</template>
+              </div>
               <div class="load" @click="handleResend(message)" v-if="message.from === myInfo.userID">
                 <div :class="message.status">
                 </div>
@@ -898,7 +902,6 @@ export default {
     // 撤回消息
     handleRevokeMessage () {
       wx.$app.revokeMessage(this.revokeMessage).then(res => {
-        console.log(res)
         this.revokeModal = false
         this.$store.commit('showToast', {
           title: '撤回成功',
@@ -1156,7 +1159,6 @@ li
     flex-direction column
     align-items flex-end
     .name
-      width 100%
       font-size 12px
       line-height 1
       margin-bottom 6px
@@ -1290,4 +1292,8 @@ li
   line-height 30px
   font-size 14px
   margin-left 10px
+.read-receipts
+  top 50%
+  transform translateY(45%)
+  margin-right -18px
 </style>
