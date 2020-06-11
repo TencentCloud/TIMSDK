@@ -106,7 +106,8 @@ export default {
       this.tim.on(this.TIM.EVENT.GROUP_LIST_UPDATED, this.onUpdateGroupList)
       // 网络监测
       this.tim.on(this.TIM.EVENT.NET_STATE_CHANGE, this.onNetStateChange)
-
+      // 已读回执
+      this.tim.on(this.TIM.EVENT.MESSAGE_READ_BY_PEER, this.onMessageReadByPeer)
 
     },
     onReceiveMessage({ data: messageList }) {
@@ -122,6 +123,9 @@ export default {
           type: 'error'
         })
       }
+    },
+    onMessageReadByPeer() {
+
     },
     onReadyStateUpdate({ name }) {
       const isSDKReady = name === this.TIM.EVENT.SDK_READY ? true : false
