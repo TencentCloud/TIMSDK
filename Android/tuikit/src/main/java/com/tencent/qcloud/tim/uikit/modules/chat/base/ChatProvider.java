@@ -2,9 +2,8 @@ package com.tencent.qcloud.tim.uikit.modules.chat.base;
 
 import android.text.TextUtils;
 
-import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.ext.message.TIMMessageLocator;
-import com.tencent.imsdk.ext.message.TIMMessageReceipt;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatProvider;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageListAdapter;
@@ -148,14 +147,12 @@ public class ChatProvider implements IChatProvider {
         return false;
     }
 
-    public boolean updateMessageRevoked(TIMMessageLocator locator) {
+    public boolean updateTIMMessageStatus(V2TIMMessage message) {
         for (int i = 0; i < mDataSource.size(); i++) {
-            MessageInfo messageInfo = mDataSource.get(i);
-            // 一条包含多条元素的消息，撤回时，会把所有元素都撤回，所以下面的判断即使满足条件也不能return
-            if (messageInfo.checkEquals(locator)) {
-                messageInfo.setMsgType(MessageInfo.MSG_STATUS_REVOKE);
-                messageInfo.setStatus(MessageInfo.MSG_STATUS_REVOKE);
+            if (mDataSource.get(i).getId().equals(message.getMsgID())) {
+                mDataSource.get(i).setStatus(message.getStatus());
                 updateAdapter(MessageLayout.DATA_CHANGE_TYPE_UPDATE, i);
+                return true;
             }
         }
         return false;
@@ -174,7 +171,7 @@ public class ChatProvider implements IChatProvider {
         return false;
     }
 
-    public void updateReadMessage(TIMMessageReceipt max) {
+    public void updateReadMessage(V2TIMMessageReceipt max) {
         for (int i = 0; i < mDataSource.size(); i++) {
             MessageInfo messageInfo = mDataSource.get(i);
             if (messageInfo.getMsgTime() > max.getTimestamp()) {

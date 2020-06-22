@@ -1,10 +1,11 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MessageHeaderHolder extends MessageBaseHolder {
 

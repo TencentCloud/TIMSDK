@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,8 @@ import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayoutUI;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageListAdapter;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
 

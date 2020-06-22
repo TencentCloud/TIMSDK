@@ -6,15 +6,16 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMTextElem;
+import com.tencent.imsdk.v2.V2TIMTextElem;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
@@ -25,7 +26,6 @@ import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageListAdapter;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
-import com.tencent.qcloud.tim.uikit.utils.NetWorkUtils;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 
@@ -73,8 +73,8 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                 if (clipboard == null || msg == null) {
                     return;
                 }
-                if (msg.getElement() instanceof TIMTextElem) {
-                    TIMTextElem textElem = (TIMTextElem) msg.getElement();
+                if (msg.getMsgType() == MessageInfo.MSG_TYPE_TEXT) {
+                    V2TIMTextElem textElem = msg.getTimMessage().getTextElem();
                     ClipData clip = ClipData.newPlainText("message", textElem.getText());
                     clipboard.setPrimaryClip(clip);
                 }
@@ -136,8 +136,9 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                                 break;
                             }
                         }
-                        if (touchChild == null)
+                        if (touchChild == null) {
                             getInputLayout().hideSoftInput();
+                        }
                     }
                 }
                 return false;
@@ -296,41 +297,22 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
     }
 
     public void loadChatMessages(final MessageInfo lastMessage) {
-        if (NetWorkUtils.sIMSDKConnected) {
-            getChatManager().loadChatMessages(lastMessage, new IUIKitCallBack() {
-                @Override
-                public void onSuccess(Object data) {
-                    if (lastMessage == null && data != null) {
-                        setDataProvider((ChatProvider) data);
-                    }
+        getChatManager().loadChatMessages(lastMessage, new IUIKitCallBack() {
+            @Override
+            public void onSuccess(Object data) {
+                if (lastMessage == null && data != null) {
+                    setDataProvider((ChatProvider) data);
                 }
+            }
 
-                @Override
-                public void onError(String module, int errCode, String errMsg) {
-                    ToastUtil.toastLongMessage(errMsg);
-                    if (lastMessage == null) {
-                        setDataProvider(null);
-                    }
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                ToastUtil.toastLongMessage(errMsg);
+                if (lastMessage == null) {
+                    setDataProvider(null);
                 }
-            });
-        } else {
-            getChatManager().loadLocalChatMessages(lastMessage, new IUIKitCallBack() {
-                @Override
-                public void onSuccess(Object data) {
-                    if (lastMessage == null && data != null) {
-                        setDataProvider((ChatProvider) data);
-                    }
-                }
-
-                @Override
-                public void onError(String module, int errCode, String errMsg) {
-                    ToastUtil.toastLongMessage(errMsg);
-                    if (lastMessage == null) {
-                        setDataProvider(null);
-                    }
-                }
-            });
-        }
+            }
+        });
     }
 
     protected void deleteMessage(int position, MessageInfo msg) {

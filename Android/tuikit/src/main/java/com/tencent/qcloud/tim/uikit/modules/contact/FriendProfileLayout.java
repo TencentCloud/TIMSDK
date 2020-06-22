@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -13,16 +15,14 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMFriendshipManager;
-import com.tencent.imsdk.TIMUserProfile;
-import com.tencent.imsdk.TIMValueCallBack;
-import com.tencent.imsdk.ext.group.TIMGroupPendencyItem;
-import com.tencent.imsdk.friendship.TIMDelFriendType;
-import com.tencent.imsdk.friendship.TIMFriend;
-import com.tencent.imsdk.friendship.TIMFriendPendencyItem;
-import com.tencent.imsdk.friendship.TIMFriendResponse;
-import com.tencent.imsdk.friendship.TIMFriendResult;
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMFriendApplication;
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMFriendOperationResult;
+import com.tencent.imsdk.v2.V2TIMGroupApplication;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
@@ -40,7 +40,6 @@ import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class FriendProfileLayout extends LinearLayout implements View.OnClickListener {
@@ -62,7 +61,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
 
     private ContactItemBean mContactInfo;
     private ChatInfo mChatInfo;
-    private TIMFriendPendencyItem mPendencyItem;
+    private V2TIMFriendApplication mFriendApplication;
     private OnButtonClickListener mListener;
     private String mId;
     private String mNickname;
@@ -146,12 +145,12 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             if (!TextUtils.isEmpty(mContactInfo.getAvatarurl())) {
                 GlideEngine.loadImage(mHeadImageView, Uri.parse(mContactInfo.getAvatarurl()));
             }
-        } else if (data instanceof TIMFriendPendencyItem) {
-            mPendencyItem = (TIMFriendPendencyItem) data;
-            mId = mPendencyItem.getIdentifier();
-            mNickname = mPendencyItem.getNickname();
+        } else if (data instanceof V2TIMFriendApplication) {
+            mFriendApplication = (V2TIMFriendApplication) data;
+            mId = mFriendApplication.getUserID();
+            mNickname = mFriendApplication.getNickname();
             mAddWordingView.setVisibility(View.VISIBLE);
-            mAddWordingView.setContent(mPendencyItem.getAddWording());
+            mAddWordingView.setContent(mFriendApplication.getAddWording());
             mRemarkView.setVisibility(GONE);
             mAddBlackView.setVisibility(GONE);
             mDeleteView.setText(R.string.refuse);
@@ -170,12 +169,9 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             });
         } else if (data instanceof GroupApplyInfo) {
             final GroupApplyInfo info = (GroupApplyInfo) data;
-            TIMGroupPendencyItem item = ((GroupApplyInfo) data).getPendencyItem();
-            mId = item.getIdentifer();
-            if (TextUtils.isEmpty(mId)) {
-                mId = item.getFromUser();
-            }
-            mNickname = item.getFromUser();
+            V2TIMGroupApplication item = ((GroupApplyInfo) data).getGroupApplication();
+            mId = item.getFromUser();
+            mNickname = item.getFromUserNickName();
             mAddWordingView.setVisibility(View.VISIBLE);
             mAddWordingView.setContent(item.getRequestMsg());
             mRemarkView.setVisibility(GONE);
@@ -258,37 +254,39 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         list.add(mId);
         final ContactItemBean bean = new ContactItemBean();
         bean.setFriend(false);
-        TIMFriendshipManager.getInstance().getUsersProfile(list, false, new TIMValueCallBack<List<TIMUserProfile>>() {
+
+        V2TIMManager.getInstance().getUsersInfo(list, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
             @Override
-            public void onError(int i, String s) {
-                TUIKitLog.e(TAG, "loadUserProfile err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "loadUserProfile err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
             }
 
             @Override
-            public void onSuccess(List<TIMUserProfile> timUserProfiles) {
-                if (timUserProfiles == null || timUserProfiles.size() != 1) {
+            public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                if (v2TIMUserFullInfos == null || v2TIMUserFullInfos.size() != 1) {
                     return;
                 }
-                final TIMUserProfile profile = timUserProfiles.get(0);
-                bean.setNickname(profile.getNickName());
-                bean.setId(profile.getIdentifier());
-                bean.setAvatarurl(profile.getFaceUrl());
+                final V2TIMUserFullInfo timUserFullInfo = v2TIMUserFullInfos.get(0);
+                bean.setNickname(timUserFullInfo.getNickName());
+                bean.setId(timUserFullInfo.getUserID());
+                bean.setAvatarurl(timUserFullInfo.getFaceUrl());
                 updateViews(bean);
             }
         });
-        TIMFriendshipManager.getInstance().getBlackList(new TIMValueCallBack<List<TIMFriend>>() {
+
+        V2TIMManager.getFriendshipManager().getBlackList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
             @Override
-            public void onError(int i, String s) {
-                TUIKitLog.e(TAG, "getBlackList err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "getBlackList err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
             }
 
             @Override
-            public void onSuccess(List<TIMFriend> timFriends) {
-                if (timFriends != null && timFriends.size() > 0) {
-                    for (TIMFriend friend : timFriends) {
-                        if (TextUtils.equals(friend.getIdentifier(), mId)) {
+            public void onSuccess(List<V2TIMFriendInfo> v2TIMFriendInfos) {
+                if (v2TIMFriendInfos != null && v2TIMFriendInfos.size() > 0) {
+                    for (V2TIMFriendInfo friendInfo : v2TIMFriendInfos) {
+                        if (TextUtils.equals(friendInfo.getUserID(), mId)) {
                             bean.setBlackList(true);
                             updateViews(bean);
                             break;
@@ -297,21 +295,22 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                 }
             }
         });
-        TIMFriendshipManager.getInstance().getFriendList(new TIMValueCallBack<List<TIMFriend>>() {
+
+        V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
             @Override
-            public void onError(int i, String s) {
-                TUIKitLog.e(TAG, "getFriendList err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "getFriendList err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
             }
 
             @Override
-            public void onSuccess(List<TIMFriend> timFriends) {
-                if (timFriends != null && timFriends.size() > 0) {
-                    for (TIMFriend friend : timFriends) {
-                        if (TextUtils.equals(friend.getIdentifier(), mId)) {
+            public void onSuccess(List<V2TIMFriendInfo> v2TIMFriendInfos) {
+                if (v2TIMFriendInfos != null && v2TIMFriendInfos.size() > 0) {
+                    for (V2TIMFriendInfo friendInfo : v2TIMFriendInfos) {
+                        if (TextUtils.equals(friendInfo.getUserID(), mId)) {
                             bean.setFriend(true);
-                            bean.setRemark(friend.getRemark());
-                            bean.setAvatarurl(friend.getTimUserProfile().getFaceUrl());
+                            bean.setRemark(friendInfo.getFriendRemark());
+                            bean.setAvatarurl(friendInfo.getUserProfile().getFaceUrl());
                             break;
                         }
                     }
@@ -322,18 +321,16 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     }
 
     private void accept() {
-        TIMFriendResponse response = new TIMFriendResponse();
-        response.setIdentifier(mId);
-        response.setResponseType(TIMFriendResponse.TIM_FRIEND_RESPONSE_AGREE_AND_ADD);
-        TIMFriendshipManager.getInstance().doResponse(response, new TIMValueCallBack<TIMFriendResult>() {
+        V2TIMManager.getFriendshipManager().acceptFriendApplication(
+                mFriendApplication, V2TIMFriendApplication.V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD, new V2TIMValueCallback<V2TIMFriendOperationResult>() {
             @Override
-            public void onError(int i, String s) {
-                TUIKitLog.e(TAG, "accept err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "accept err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
             }
 
             @Override
-            public void onSuccess(TIMFriendResult timUserProfiles) {
+            public void onSuccess(V2TIMFriendOperationResult v2TIMFriendOperationResult) {
                 TUIKitLog.i(TAG, "accept success");
                 mChatView.setText(R.string.accepted);
                 ((Activity) getContext()).finish();
@@ -342,23 +339,20 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     }
 
     private void refuse() {
-        TIMFriendResponse response = new TIMFriendResponse();
-        response.setIdentifier(mId);
-        response.setResponseType(TIMFriendResponse.TIM_FRIEND_RESPONSE_REJECT);
-        TIMFriendshipManager.getInstance().doResponse(response, new TIMValueCallBack<TIMFriendResult>() {
-            @Override
-            public void onError(int i, String s) {
-                TUIKitLog.e(TAG, "refuse err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
-            }
+        V2TIMManager.getFriendshipManager().refuseFriendApplication(mFriendApplication, new V2TIMValueCallback<V2TIMFriendOperationResult>() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIKitLog.e(TAG, "accept err code = " + code + ", desc = " + desc);
+                        ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
+                    }
 
-            @Override
-            public void onSuccess(TIMFriendResult timUserProfiles) {
-                TUIKitLog.i(TAG, "refuse success");
-                mDeleteView.setText(R.string.refused);
-                ((Activity) getContext()).finish();
-            }
-        });
+                    @Override
+                    public void onSuccess(V2TIMFriendOperationResult v2TIMFriendOperationResult) {
+                        TUIKitLog.i(TAG, "refuse success");
+                        mDeleteView.setText(R.string.refused);
+                        ((Activity) getContext()).finish();
+                    }
+                });
     }
 
     public void acceptApply(final GroupApplyInfo item) {
@@ -398,15 +392,16 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     private void delete() {
         List<String> identifiers = new ArrayList<>();
         identifiers.add(mId);
-        TIMFriendshipManager.getInstance().deleteFriends(identifiers, TIMDelFriendType.TIM_FRIEND_DEL_BOTH, new TIMValueCallBack<List<TIMFriendResult>>() {
+
+        V2TIMManager.getFriendshipManager().deleteFromFriendList(identifiers, V2TIMFriendInfo.V2TIM_FRIEND_TYPE_BOTH, new V2TIMValueCallback<List<V2TIMFriendOperationResult>>() {
             @Override
-            public void onError(int i, String s) {
-                TUIKitLog.e(TAG, "deleteFriends err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "deleteFriends err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
             }
 
             @Override
-            public void onSuccess(List<TIMFriendResult> timUserProfiles) {
+            public void onSuccess(List<V2TIMFriendOperationResult> v2TIMFriendOperationResults) {
                 TUIKitLog.i(TAG, "deleteFriends success");
                 ConversationManagerKit.getInstance().deleteConversation(mId, false);
                 if (mListener != null) {
@@ -449,13 +444,14 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     }
 
     private void modifyRemark(final String txt) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        // 修改好友备注
-        hashMap.put(TIMFriend.TIM_FRIEND_PROFILE_TYPE_KEY_REMARK, txt);
-        TIMFriendshipManager.getInstance().modifyFriend(mId, hashMap, new TIMCallBack() {
+        V2TIMFriendInfo v2TIMFriendInfo = new V2TIMFriendInfo();
+        v2TIMFriendInfo.setUserID(mId);
+        v2TIMFriendInfo.setFriendRemark(txt);
+
+        V2TIMManager.getFriendshipManager().setFriendInfo(v2TIMFriendInfo, new V2TIMCallback() {
             @Override
-            public void onError(int i, String s) {
-                TUIKitLog.e(TAG, "modifyRemark err code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "modifyRemark err code = " + code + ", desc = " + desc);
             }
 
             @Override
@@ -474,15 +470,15 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             idList.add(id);
         }
 
-        TIMFriendshipManager.getInstance().addBlackList(idList, new TIMValueCallBack<List<TIMFriendResult>>() {
+        V2TIMManager.getFriendshipManager().addToBlackList(idList, new V2TIMValueCallback<List<V2TIMFriendOperationResult>>() {
             @Override
-            public void onError(int i, String s) {
-                TUIKitLog.e(TAG, "addBlackList err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "addBlackList err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
             }
 
             @Override
-            public void onSuccess(List<TIMFriendResult> timFriendResults) {
+            public void onSuccess(List<V2TIMFriendOperationResult> v2TIMFriendOperationResults) {
                 TUIKitLog.v(TAG, "addBlackList success");
             }
         });
@@ -495,15 +491,16 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         for (String id : idStringList) {
             idList.add(id);
         }
-        TIMFriendshipManager.getInstance().deleteBlackList(idList, new TIMValueCallBack<List<TIMFriendResult>>() {
+
+        V2TIMManager.getFriendshipManager().deleteFromBlackList(idList, new V2TIMValueCallback<List<V2TIMFriendOperationResult>>() {
             @Override
-            public void onError(int i, String s) {
-                TUIKitLog.e(TAG, "deleteBlackList err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "deleteBlackList err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
             }
 
             @Override
-            public void onSuccess(List<TIMFriendResult> timFriendResults) {
+            public void onSuccess(List<V2TIMFriendOperationResult> v2TIMFriendOperationResults) {
                 TUIKitLog.i(TAG, "deleteBlackList success");
             }
         });

@@ -2,11 +2,13 @@ package com.tencent.qcloud.tim.demo.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.view.View;
 
-import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
@@ -82,7 +84,7 @@ public class StartC2CChatActivity extends BaseActivity {
             return;
         }
         ChatInfo chatInfo = new ChatInfo();
-        chatInfo.setType(TIMConversationType.C2C);
+        chatInfo.setType(V2TIMConversation.V2TIM_C2C);
         chatInfo.setId(mSelectedItem.getId());
         String chatName = mSelectedItem.getId();
         if (!TextUtils.isEmpty(mSelectedItem.getRemark())) {

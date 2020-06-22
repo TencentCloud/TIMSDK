@@ -68,9 +68,7 @@ public class GroupInfoPresenter {
     public String getNickName() {
         String nickName = "";
         if (mProvider.getSelfGroupInfo() != null) {
-            if (mProvider.getSelfGroupInfo().getDetail() != null) {
-                nickName = mProvider.getSelfGroupInfo().getDetail().getNameCard();
-            }
+            nickName = mProvider.getSelfGroupInfo().getNameCard();
         }
         return nickName == null ? "" : nickName;
     }

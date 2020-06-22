@@ -14,6 +14,8 @@ import java.text.DecimalFormat;
 
 public class NetWorkUtils {
 
+    private static final String TAG = "NetWorkUtils";
+
     /**
      * Network type is unknown
      */
@@ -175,7 +177,7 @@ public class NetWorkUtils {
             return null;
         }
 
-        Log.v("tag", "cmd result : " + result);
+        TUIKitLog.v(TAG, "cmd result : " + result);
 
         // 对该行数据进行解析
         // 例如：eth0 Link encap:Ethernet HWaddr 00:16:E8:3E:DF:67

@@ -1,8 +1,9 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.message;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatProvider;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.IOnCustomMessageDrawListener;
@@ -13,7 +14,6 @@ import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageEm
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageHeaderHolder;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +81,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         mRecycleView = (MessageLayout) recyclerView;
+        mRecycleView.setItemViewCacheSize(5);
     }
 
     public void showLoading() {

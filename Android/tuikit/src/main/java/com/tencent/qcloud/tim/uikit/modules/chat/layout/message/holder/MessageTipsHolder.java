@@ -57,7 +57,7 @@ public class MessageTipsHolder extends MessageEmptyHolder {
 
         if (msg.getStatus() == MessageInfo.MSG_STATUS_REVOKE
                 || (msg.getMsgType() >= MessageInfo.MSG_TYPE_GROUP_CREATE
-                && msg.getMsgType() <= MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE)) {
+                && msg.getMsgType() <= MessageInfo.MSG_TYPE_GROUP_AV_CALL_NOTICE)) {
             if (msg.getExtra() != null) {
                 mChatTipsTv.setText(Html.fromHtml(msg.getExtra().toString()));
             }

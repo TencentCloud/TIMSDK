@@ -3,11 +3,13 @@ package com.tencent.qcloud.tim.uikit.modules.chat;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
@@ -49,7 +51,7 @@ public class ChatLayout extends AbsChatLayout implements GroupChatManagerKit.Gro
             return;
         }
 
-        if (chatInfo.getType() == TIMConversationType.C2C) {
+        if (chatInfo.getType() == V2TIMConversation.V2TIM_C2C) {
             isGroup = false;
         } else {
             isGroup = true;

@@ -16,7 +16,7 @@ public class CustomHelloTIMUIController {
 
     private static final String TAG = CustomHelloTIMUIController.class.getSimpleName();
 
-    public static void onDraw(ICustomMessageViewGroup parent, final CustomMessage data) {
+    public static void onDraw(ICustomMessageViewGroup parent, final CustomHelloMessage data) {
 
         // 把自定义消息view添加到TUIKit内部的父容器里
         View view = LayoutInflater.from(DemoApplication.instance()).inflate(R.layout.test_custom_message_layout1, null, false);

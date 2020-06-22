@@ -1,8 +1,8 @@
 package com.tencent.qcloud.tim.uikit.modules.group.info;
 
-import com.tencent.imsdk.TIMConversationType;
-import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
+import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
 
@@ -20,7 +20,7 @@ public class GroupInfo extends ChatInfo {
     private String owner;
 
     public GroupInfo() {
-        setType(TIMConversationType.Group);
+        setType(V2TIMConversation.V2TIM_GROUP);
     }
 
     /**
@@ -140,7 +140,7 @@ public class GroupInfo extends ChatInfo {
      * @return
      */
     public boolean isOwner() {
-        return TIMManager.getInstance().getLoginUser().equals(owner);
+        return V2TIMManager.getInstance().getLoginUser().equals(owner);
     }
 
     /**
@@ -155,18 +155,21 @@ public class GroupInfo extends ChatInfo {
     /**
      * 从SDK转化为TUIKit的群信息bean
      *
-     * @param detailInfo
+     * @param infoResult
      * @return
      */
-    public GroupInfo covertTIMGroupDetailInfo(TIMGroupDetailInfoResult detailInfo) {
-        setChatName(detailInfo.getGroupName());
-        setGroupName(detailInfo.getGroupName());
-        setId(detailInfo.getGroupId());
-        setNotice(detailInfo.getGroupNotification());
-        setMemberCount((int) detailInfo.getMemberNum());
-        setGroupType(detailInfo.getGroupType());
-        setOwner(detailInfo.getGroupOwner());
-        setJoinType((int) detailInfo.getAddOption().getValue());
+    public GroupInfo covertTIMGroupDetailInfo(V2TIMGroupInfoResult infoResult) {
+        if (infoResult.getResultCode() != 0) {
+            return this;
+        }
+        setChatName(infoResult.getGroupInfo().getGroupName());
+        setGroupName(infoResult.getGroupInfo().getGroupName());
+        setId(infoResult.getGroupInfo().getGroupID());
+        setNotice(infoResult.getGroupInfo().getNotification());
+        setMemberCount(infoResult.getGroupInfo().getMemberCount());
+        setGroupType(infoResult.getGroupInfo().getGroupType());
+        setOwner(infoResult.getGroupInfo().getOwner());
+        setJoinType(infoResult.getGroupInfo().getGroupAddOpt());
         return this;
     }
 }

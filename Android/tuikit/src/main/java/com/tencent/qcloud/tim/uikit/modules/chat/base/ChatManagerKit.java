@@ -2,20 +2,17 @@ package com.tencent.qcloud.tim.uikit.modules.chat.base;
 
 import android.text.TextUtils;
 
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMConversation;
-import com.tencent.imsdk.TIMConversationType;
-import com.tencent.imsdk.TIMElem;
-import com.tencent.imsdk.TIMElemType;
-import com.tencent.imsdk.TIMGroupSystemElem;
-import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMMessageListener;
-import com.tencent.imsdk.TIMMessageOfflinePushSettings;
-import com.tencent.imsdk.TIMSNSSystemElem;
-import com.tencent.imsdk.TIMValueCallBack;
-import com.tencent.imsdk.ext.message.TIMMessageLocator;
-import com.tencent.imsdk.ext.message.TIMMessageReceipt;
+import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMMessageReceipt;
+import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
+import com.tencent.imsdk.v2.V2TIMSendCallback;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
@@ -24,31 +21,28 @@ import com.tencent.qcloud.tim.uikit.modules.message.MessageRevokedManager;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
-public abstract class ChatManagerKit implements TIMMessageListener, MessageRevokedManager.MessageRevokeHandler {
+public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements MessageRevokedManager.MessageRevokeHandler {
 
     protected static final int MSG_PAGE_COUNT = 20;
     protected static final int REVOKE_TIME_OUT = 6223;
     private static final String TAG = ChatManagerKit.class.getSimpleName();
     protected ChatProvider mCurrentProvider;
-    protected TIMConversation mCurrentConversation;
 
     protected boolean mIsMore;
     private boolean mIsLoading;
 
     protected void init() {
         destroyChat();
-        TIMManager.getInstance().addMessageListener(this);
+        V2TIMManager.getMessageManager().addAdvancedMsgListener(this);
         MessageRevokedManager.getInstance().addHandler(this);
     }
 
     public void destroyChat() {
-        mCurrentConversation = null;
         mCurrentProvider = null;
     }
 
@@ -58,13 +52,12 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
         if (info == null) {
             return;
         }
-        mCurrentConversation = TIMManager.getInstance().getConversation(info.getType(), info.getId());
         mCurrentProvider = new ChatProvider();
         mIsMore = true;
         mIsLoading = false;
     }
 
-    public void onReadReport(List<TIMMessageReceipt> receiptList) {
+    public void onReadReport(List<V2TIMMessageReceipt> receiptList) {
         TUIKitLog.i(TAG, "onReadReport:" + receiptList.size());
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "onReadReport unSafetyCall");
@@ -73,10 +66,9 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
         if (receiptList.size() == 0) {
             return;
         }
-        TIMMessageReceipt max = receiptList.get(0);
-        for (TIMMessageReceipt msg : receiptList) {
-            if (!TextUtils.equals(msg.getConversation().getPeer(), mCurrentConversation.getPeer())
-                    || msg.getConversation().getType() == TIMConversationType.Group) {
+        V2TIMMessageReceipt max = receiptList.get(0);
+        for (V2TIMMessageReceipt msg : receiptList) {
+            if (!TextUtils.equals(msg.getUserID(), getCurrentChatInfo().getId())) {
                 continue;
             }
             if (max.getTimestamp() < msg.getTimestamp()) {
@@ -87,26 +79,17 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
     }
 
     @Override
-    public boolean onNewMessages(List<TIMMessage> msgs) {
-        TUIKitLog.i(TAG, "onNewMessages:" + msgs.size());
-        if (null != msgs && msgs.size() > 0) {
-            for (TIMMessage msg : msgs) {
-                TIMConversation conversation = msg.getConversation();
-                TIMConversationType type = conversation.getType();
-                if (type == TIMConversationType.C2C) {
-                    if (MessageInfoUtil.isTyping(msg)) {
-                        notifyTyping();
-                    } else {
-                        onReceiveMessage(conversation, msg);
-                    }
-                } else if (type == TIMConversationType.Group) {
-                    onReceiveMessage(conversation, msg);
-                } else if (type == TIMConversationType.System) {
-                    onReceiveSystemMessage(msg);
-                }
+    public void onRecvNewMessage(V2TIMMessage msg) {
+        TUIKitLog.i(TAG, "onRecvNewMessage msgID:" + msg.getMsgID());
+        int elemType = msg.getElemType();
+        if (elemType == V2TIMMessage.V2TIM_ELEM_TYPE_CUSTOM) {
+            if (MessageInfoUtil.isTyping(msg)) {
+                notifyTyping();
+                return;
             }
         }
-        return false;
+
+        onReceiveMessage(msg);
     }
 
     private void notifyTyping() {
@@ -117,64 +100,89 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
         mCurrentProvider.notifyTyping();
     }
 
-    // GroupChatManager会重写该方法
-    protected void onReceiveSystemMessage(TIMMessage msg) {
-        TIMElem ele = msg.getElement(0);
-        TIMElemType eleType = ele.getType();
-        // 用户资料修改通知，不需要在聊天界面展示，可以通过 TIMUserConfig 中的 setFriendshipListener 处理
-        if (eleType == TIMElemType.ProfileTips) {
-            TUIKitLog.i(TAG, "onReceiveSystemMessage eleType is ProfileTips, ignore");
-        } else if (eleType == TIMElemType.SNSTips) {
-            TUIKitLog.i(TAG, "onReceiveSystemMessage eleType is SNSTips");
-            TIMSNSSystemElem m = (TIMSNSSystemElem) ele;
-            if (m.getRequestAddFriendUserList().size() > 0) {
-                ToastUtil.toastLongMessage("好友申请通过");
-            }
-            if (m.getDelFriendAddPendencyList().size() > 0) {
-                ToastUtil.toastLongMessage("好友申请被拒绝");
-            }
-        } else if (eleType == TIMElemType.GroupSystem) {
-            TIMGroupSystemElem elem = (TIMGroupSystemElem) ele;
-            ToastUtil.toastLongMessage("系统通知：" + new String(elem.getUserData()));
+    public void notifyNewFriend(List<V2TIMFriendInfo> timFriendInfoList) {
+        if (timFriendInfoList == null || timFriendInfoList.size() == 0) {
+            return;
         }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("已和");
+        for (V2TIMFriendInfo v2TIMFriendInfo : timFriendInfoList) {
+            stringBuilder.append(v2TIMFriendInfo.getUserID()).append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        stringBuilder.append("成为好友");
+        ToastUtil.toastLongMessage(stringBuilder.toString());
     }
 
-    protected void onReceiveMessage(final TIMConversation conversation, final TIMMessage msg) {
+    protected void onReceiveMessage(final V2TIMMessage msg) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "onReceiveMessage unSafetyCall");
             return;
         }
-        if (conversation == null || conversation.getPeer() == null) {
-            return;
-        }
-        addMessage(conversation, msg);
+        addMessage(msg);
     }
 
     protected abstract boolean isGroup();
 
-    protected void addMessage(TIMConversation conversation, TIMMessage msg) {
+    protected void addMessage(V2TIMMessage msg) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "addMessage unSafetyCall");
             return;
         }
-        final List<MessageInfo> list = MessageInfoUtil.TIMMessage2MessageInfo(msg, isGroup());
-        if (list != null && list.size() != 0 && mCurrentConversation.getPeer().equals(conversation.getPeer())) {
+        final List<MessageInfo> list = MessageInfoUtil.TIMMessage2MessageInfo(msg);
+        if (list != null && list.size() != 0) {
+            ChatInfo chatInfo = getCurrentChatInfo();
+            boolean isGroupMessage = false;
+            String groupID = null;
+            String userID = null;
+            if (!TextUtils.isEmpty(msg.getGroupID())) {
+                // 群组消息
+                if (chatInfo.getType() == V2TIMConversation.V2TIM_C2C
+                        || !chatInfo.getId().equals(msg.getGroupID())) {
+                    return;
+                }
+                isGroupMessage = true;
+                groupID = msg.getGroupID();
+            } else if (!TextUtils.isEmpty(msg.getUserID())) {
+                // C2C 消息
+                if (chatInfo.getType() == V2TIMConversation.V2TIM_GROUP
+                        || !chatInfo.getId().equals(msg.getUserID())) {
+                    return;
+                }
+                userID = msg.getUserID();
+            } else {
+                return;
+            }
             mCurrentProvider.addMessageInfoList(list);
             for (MessageInfo msgInfo : list) {
                 msgInfo.setRead(true);
                 addGroupMessage(msgInfo);
             }
-            mCurrentConversation.setReadMessage(msg, new TIMCallBack() {
-                @Override
-                public void onError(int code, String desc) {
-                    TUIKitLog.v(TAG, "addMessage() setReadMessage failed, code = " + code + ", desc = " + desc);
-                }
+            if (isGroupMessage) {
+                V2TIMManager.getMessageManager().markGroupMessageAsRead(groupID, new V2TIMCallback() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIKitLog.e(TAG, "addMessage() markGroupMessageAsRead failed, code = " + code + ", desc = " + desc);
+                    }
 
-                @Override
-                public void onSuccess() {
-                    TUIKitLog.v(TAG, "addMessage() setReadMessage success");
-                }
-            });
+                    @Override
+                    public void onSuccess() {
+                        TUIKitLog.i(TAG, "addMessage() markGroupMessageAsRead success");
+                    }
+                });
+            } else {
+                V2TIMManager.getMessageManager().markC2CMessageAsRead(userID, new V2TIMCallback() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIKitLog.e(TAG, "addMessage() markC2CMessageAsRead failed, code = " + code + ", desc = " + desc);
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        TUIKitLog.i(TAG, "addMessage() markC2CMessageAsRead success");
+                    }
+                });
+            }
         }
     }
 
@@ -197,7 +205,7 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
             TUIKitLog.w(TAG, "revokeMessage unSafetyCall");
             return;
         }
-        mCurrentConversation.revokeMessage(messageInfo.getTIMMessage(), new TIMCallBack() {
+        V2TIMManager.getMessageManager().revokeMessage(messageInfo.getTimMessage(), new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
                 if (code == REVOKE_TIME_OUT) {
@@ -219,6 +227,14 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
         });
     }
 
+    public void updateMessageInfoStatus(V2TIMMessage message) {
+        if (!safetyCall()) {
+            TUIKitLog.w(TAG, "updateMessageInfo unSafetyCall");
+            return;
+        }
+        mCurrentProvider.updateTIMMessageStatus(message);
+    }
+
     public void sendMessage(final MessageInfo message, boolean retry, final IUIKitCallBack callBack) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "sendMessage unSafetyCall");
@@ -230,7 +246,66 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
         message.setSelf(true);
         message.setRead(true);
         assembleGroupMessage(message);
+
+        // 离线推送测试代码
+        V2TIMOfflinePushInfo v2TIMOfflinePushInfo = null;
+        if (TUIKit.getConfigs().getGeneralConfig().isTestEnv()) {
+            v2TIMOfflinePushInfo = new V2TIMOfflinePushInfo();
+            v2TIMOfflinePushInfo.setExt(("test" + new Random(100).nextInt()).getBytes());
+            // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
+            v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
+        }
+
+        String userID = "";
+        String groupID = "";
+        boolean isGroup = false;
+        if (getCurrentChatInfo().getType() == V2TIMConversation.V2TIM_GROUP) {
+            groupID = getCurrentChatInfo().getId();
+            isGroup = true;
+        } else {
+            userID = getCurrentChatInfo().getId();
+        }
+
+        V2TIMMessage v2TIMMessage = message.getTimMessage();
+        String msgID = V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, isGroup ? null : userID, isGroup ? groupID : null,
+                V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
+                    @Override
+                    public void onProgress(int progress) {
+
+                    }
+
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIKitLog.v(TAG, "sendMessage fail:" + code + "=" + desc);
+                        if (!safetyCall()) {
+                            TUIKitLog.w(TAG, "sendMessage unSafetyCall");
+                            return;
+                        }
+                        if (callBack != null) {
+                            callBack.onError(TAG, code, desc);
+                        }
+                        message.setStatus(MessageInfo.MSG_STATUS_SEND_FAIL);
+                        mCurrentProvider.updateMessageInfo(message);
+                    }
+
+                    @Override
+                    public void onSuccess(V2TIMMessage v2TIMMessage) {
+                        TUIKitLog.v(TAG, "sendMessage onSuccess:" + v2TIMMessage.getMsgID());
+                        if (!safetyCall()) {
+                            TUIKitLog.w(TAG, "sendMessage unSafetyCall");
+                            return;
+                        }
+                        if (callBack != null) {
+                            callBack.onSuccess(mCurrentProvider);
+                        }
+                        message.setStatus(MessageInfo.MSG_STATUS_SEND_SUCCESS);
+                        mCurrentProvider.updateMessageInfo(message);
+                    }
+                });
+
         //消息先展示，通过状态来确认发送是否成功
+        TUIKitLog.i(TAG, "sendMessage msgID:" + msgID);
+        message.setId(msgID);
         if (message.getMsgType() < MessageInfo.MSG_TYPE_TIPS) {
             message.setStatus(MessageInfo.MSG_STATUS_SENDING);
             if (retry) {
@@ -239,53 +314,13 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
                 mCurrentProvider.addMessageInfo(message);
             }
         }
-
-        // 离线推送测试代码
-//        TIMMessageOfflinePushSettings settings = new TIMMessageOfflinePushSettings();
-//        settings.setExt("test".getBytes());
-//        TIMMessageOfflinePushSettings.AndroidSettings androidSettings = settings.getAndroidSettings();
-//        // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一直
-//        androidSettings.setOPPOChannelID("tuikit");
-//        message.getTIMMessage().setOfflinePushSettings(settings);
-
-        mCurrentConversation.sendMessage(message.getTIMMessage(), new TIMValueCallBack<TIMMessage>() {
-            @Override
-            public void onError(final int code, final String desc) {
-                TUIKitLog.v(TAG, "sendMessage fail:" + code + "=" + desc);
-                if (!safetyCall()) {
-                    TUIKitLog.w(TAG, "sendMessage unSafetyCall");
-                    return;
-                }
-                if (callBack != null) {
-                    callBack.onError(TAG, code, desc);
-                }
-                message.setStatus(MessageInfo.MSG_STATUS_SEND_FAIL);
-                mCurrentProvider.updateMessageInfo(message);
-
-            }
-
-            @Override
-            public void onSuccess(TIMMessage timMessage) {
-                TUIKitLog.v(TAG, "sendMessage onSuccess");
-                if (!safetyCall()) {
-                    TUIKitLog.w(TAG, "sendMessage unSafetyCall");
-                    return;
-                }
-                if (callBack != null) {
-                    callBack.onSuccess(mCurrentProvider);
-                }
-                message.setStatus(MessageInfo.MSG_STATUS_SEND_SUCCESS);
-                message.setId(timMessage.getMsgId());
-                mCurrentProvider.updateMessageInfo(message);
-            }
-        });
     }
 
     protected void assembleGroupMessage(MessageInfo message) {
         // GroupChatManager会重写该方法
     }
 
-    public void loadLocalChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
+    public void loadChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "loadLocalChatMessages unSafetyCall");
             return;
@@ -301,152 +336,108 @@ public abstract class ChatManagerKit implements TIMMessageListener, MessageRevok
             return;
         }
 
-        TIMMessage lastTIMMsg = null;
+        V2TIMMessage lastTIMMsg = null;
         if (lastMessage == null) {
             mCurrentProvider.clear();
         } else {
-            lastTIMMsg = lastMessage.getTIMMessage();
+            lastTIMMsg = lastMessage.getTimMessage();
         }
-        final int unread = (int) mCurrentConversation.getUnreadMessageNum();
-        mCurrentConversation.getLocalMessage(MSG_PAGE_COUNT
-                , lastTIMMsg, new TIMValueCallBack<List<TIMMessage>>() {
-                    @Override
-                    public void onError(int code, String desc) {
-                        mIsLoading = false;
-                        callBack.onError(TAG, code, desc);
-                        TUIKitLog.e(TAG, "loadChatMessages() getMessage failed, code = " + code + ", desc = " + desc);
-                    }
+//        final int unread = (int) mCurrentConversation.getUnreadMessageNum();
+        final ChatInfo chatInfo = getCurrentChatInfo();
+        if (chatInfo.getType() == V2TIMConversation.V2TIM_C2C) {
+            V2TIMManager.getMessageManager().getC2CHistoryMessageList(chatInfo.getId(), MSG_PAGE_COUNT, lastTIMMsg, new V2TIMValueCallback<List<V2TIMMessage>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    mIsLoading = false;
+                    callBack.onError(TAG, code, desc);
+                    TUIKitLog.e(TAG, "loadChatMessages getC2CHistoryMessageList failed, code = " + code + ", desc = " + desc);
+                }
 
-                    @Override
-                    public void onSuccess(List<TIMMessage> timMessages) {
-                        mIsLoading = false;
-                        if (!safetyCall()) {
-                            TUIKitLog.w(TAG, "getLocalMessage unSafetyCall");
-                            return;
-                        }
-                        if (unread > 0) {
-                            mCurrentConversation.setReadMessage(null, new TIMCallBack() {
-                                @Override
-                                public void onError(int code, String desc) {
-                                    TUIKitLog.e(TAG, "loadChatMessages() setReadMessage failed, code = " + code + ", desc = " + desc);
-                                }
+                @Override
+                public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                    processHistoryMsgs(v2TIMMessages, chatInfo, callBack);
+                }
+            });
+        } else {
+            V2TIMManager.getMessageManager().getGroupHistoryMessageList(chatInfo.getId(), MSG_PAGE_COUNT, lastTIMMsg, new V2TIMValueCallback<List<V2TIMMessage>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    mIsLoading = false;
+                    callBack.onError(TAG, code, desc);
+                    TUIKitLog.e(TAG, "loadChatMessages getGroupHistoryMessageList failed, code = " + code + ", desc = " + desc);
+                }
 
-                                @Override
-                                public void onSuccess() {
-                                    TUIKitLog.d(TAG, "loadChatMessages() setReadMessage success");
-                                }
-                            });
-                        }
-                        if (timMessages.size() < MSG_PAGE_COUNT) {
-                            mIsMore = false;
-                        }
-                        ArrayList<TIMMessage> messages = new ArrayList<>(timMessages);
-                        Collections.reverse(messages);
-
-                        List<MessageInfo> msgInfos = MessageInfoUtil.TIMMessages2MessageInfos(messages, isGroup());
-                        mCurrentProvider.addMessageList(msgInfos, true);
-                        for (int i = 0; i < msgInfos.size(); i++) {
-                            MessageInfo info = msgInfos.get(i);
-                            if (info.getStatus() == MessageInfo.MSG_STATUS_SENDING) {
-                                sendMessage(info, true, null);
-                            }
-                        }
-                        callBack.onSuccess(mCurrentProvider);
-                    }
-                });
+                @Override
+                public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                    processHistoryMsgs(v2TIMMessages, chatInfo, callBack);
+                }
+            });
+        }
     }
 
-    public void loadChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
+    private void processHistoryMsgs(List<V2TIMMessage> v2TIMMessages, ChatInfo chatInfo, IUIKitCallBack callBack) {
+        mIsLoading = false;
         if (!safetyCall()) {
-            TUIKitLog.w(TAG, "loadChatMessages unSafetyCall");
+            TUIKitLog.w(TAG, "getLocalMessage unSafetyCall");
             return;
         }
-        if (mIsLoading) {
-            return;
-        }
-        mIsLoading = true;
-        if (!mIsMore) {
-            mCurrentProvider.addMessageInfo(null);
-            callBack.onSuccess(null);
-            mIsLoading = false;
-            return;
-        }
+        if (chatInfo.getType() == V2TIMConversation.V2TIM_C2C) {
+            V2TIMManager.getMessageManager().markC2CMessageAsRead(chatInfo.getId(), new V2TIMCallback() {
+                @Override
+                public void onError(int code, String desc) {
+                    TUIKitLog.e(TAG, "processHistoryMsgs setReadMessage failed, code = " + code + ", desc = " + desc);
+                }
 
-        TIMMessage lastTIMMsg = null;
-        if (lastMessage == null) {
-            mCurrentProvider.clear();
+                @Override
+                public void onSuccess() {
+                    TUIKitLog.d(TAG, "processHistoryMsgs setReadMessage success");
+                }
+            });
         } else {
-            lastTIMMsg = lastMessage.getTIMMessage();
+            V2TIMManager.getMessageManager().markGroupMessageAsRead(chatInfo.getId(), new V2TIMCallback() {
+                @Override
+                public void onError(int code, String desc) {
+                    TUIKitLog.e(TAG, "processHistoryMsgs markC2CMessageAsRead failed, code = " + code + ", desc = " + desc);
+                }
+
+                @Override
+                public void onSuccess() {
+                    TUIKitLog.d(TAG, "processHistoryMsgs markC2CMessageAsRead success");
+                }
+            });
         }
-        final int unread = (int) mCurrentConversation.getUnreadMessageNum();
-        mCurrentConversation.getMessage(MSG_PAGE_COUNT
-                , lastTIMMsg, new TIMValueCallBack<List<TIMMessage>>() {
-                    @Override
-                    public void onError(int code, String desc) {
-                        mIsLoading = false;
-                        List<MessageInfo> msgInfos = new ArrayList<>();
-                        mCurrentProvider.addMessageList(msgInfos, true);
-                        callBack.onError(TAG, code, desc);
-                        TUIKitLog.e(TAG, "loadChatMessages() getMessage failed, code = " + code + ", desc = " + desc);
-                    }
 
-                    @Override
-                    public void onSuccess(List<TIMMessage> timMessages) {
-                        TUIKitLog.i(TAG, "loadChatMessages() timMessages size " + timMessages.size());
-                        mIsLoading = false;
-                        if (!safetyCall()) {
-                            TUIKitLog.w(TAG, "getMessage unSafetyCall");
-                            return;
-                        }
-                        if (unread > 0) {
-                            mCurrentConversation.setReadMessage(null, new TIMCallBack() {
-                                @Override
-                                public void onError(int code, String desc) {
-                                    TUIKitLog.e(TAG, "loadChatMessages() setReadMessage failed, code = " + code + ", desc = " + desc);
-                                }
 
-                                @Override
-                                public void onSuccess() {
-                                    TUIKitLog.d(TAG, "loadChatMessages() setReadMessage success");
-                                }
-                            });
-                        }
-                        if (timMessages.size() < MSG_PAGE_COUNT) {
-                            mIsMore = false;
-                        }
-                        ArrayList<TIMMessage> messages = new ArrayList<>(timMessages);
-                        Collections.reverse(messages);
+        if (v2TIMMessages.size() < MSG_PAGE_COUNT) {
+            mIsMore = false;
+        }
+        ArrayList<V2TIMMessage> messages = new ArrayList<>(v2TIMMessages);
+        Collections.reverse(messages);
 
-                        List<MessageInfo> msgInfos = MessageInfoUtil.TIMMessages2MessageInfos(messages, isGroup());
-                        mCurrentProvider.addMessageList(msgInfos, true);
-                        for (int i = 0; i < msgInfos.size(); i++) {
-                            MessageInfo info = msgInfos.get(i);
-                            if (info.getStatus() == MessageInfo.MSG_STATUS_SENDING) {
-                                sendMessage(info, true, null);
-                            }
-                        }
-                        callBack.onSuccess(mCurrentProvider);
-                    }
-                });
+        List<MessageInfo> msgInfos = MessageInfoUtil.TIMMessages2MessageInfos(messages, isGroup());
+        mCurrentProvider.addMessageList(msgInfos, true);
+        for (int i = 0; i < msgInfos.size(); i++) {
+            MessageInfo info = msgInfos.get(i);
+            if (info.getStatus() == MessageInfo.MSG_STATUS_SENDING) {
+                sendMessage(info, true, null);
+            }
+        }
+        callBack.onSuccess(mCurrentProvider);
     }
 
     @Override
-    public void handleInvoke(TIMMessageLocator locator) {
+    public void handleInvoke(String msgID) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "handleInvoke unSafetyCall");
             return;
         }
-        if (locator.getConversationId().equals(getCurrentChatInfo().getId())) {
-            TUIKitLog.i(TAG, "handleInvoke locator = " + locator);
-            mCurrentProvider.updateMessageRevoked(locator);
-        }
+        TUIKitLog.i(TAG, "handleInvoke msgID = " + msgID);
+        mCurrentProvider.updateMessageRevoked(msgID);
     }
 
     protected boolean safetyCall() {
-        if (mCurrentConversation == null
-                || mCurrentProvider == null
-                || getCurrentChatInfo() == null
-        ) {
+        if (mCurrentProvider == null
+                || getCurrentChatInfo() == null) {
             return false;
         }
         return true;

@@ -1,18 +1,19 @@
 package com.tencent.qcloud.tim.demo.menu;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMFriendshipManager;
-import com.tencent.imsdk.TIMGroupManager;
-import com.tencent.imsdk.TIMValueCallBack;
-import com.tencent.imsdk.friendship.TIMFriendRequest;
-import com.tencent.imsdk.friendship.TIMFriendResult;
-import com.tencent.imsdk.friendship.TIMFriendStatus;
+import com.tencent.imsdk.BaseConstants;
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMFriendAddApplication;
+import com.tencent.imsdk.v2.V2TIMFriendOperationResult;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
@@ -67,48 +68,48 @@ public class AddMoreActivity extends BaseActivity {
             return;
         }
 
-        TIMFriendRequest timFriendRequest = new TIMFriendRequest(id);
-        timFriendRequest.setAddWording(mAddWording.getText().toString());
-        timFriendRequest.setAddSource("android");
-        TIMFriendshipManager.getInstance().addFriend(timFriendRequest, new TIMValueCallBack<TIMFriendResult>() {
+        V2TIMFriendAddApplication v2TIMFriendAddApplication = new V2TIMFriendAddApplication(id);
+        v2TIMFriendAddApplication.setAddWording(mAddWording.getText().toString());
+        v2TIMFriendAddApplication.setAddSource("android");
+        V2TIMManager.getFriendshipManager().addFriend(v2TIMFriendAddApplication, new V2TIMValueCallback<V2TIMFriendOperationResult>() {
             @Override
-            public void onError(int i, String s) {
-                DemoLog.e(TAG, "addFriend err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                DemoLog.e(TAG, "addFriend err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
             }
 
             @Override
-            public void onSuccess(TIMFriendResult timFriendResult) {
-                DemoLog.i(TAG, "addFriend success result = " + timFriendResult.toString());
-                switch (timFriendResult.getResultCode()) {
-                    case TIMFriendStatus.TIM_FRIEND_STATUS_SUCC:
+            public void onSuccess(V2TIMFriendOperationResult v2TIMFriendOperationResult) {
+                DemoLog.i(TAG, "addFriend success");
+                switch (v2TIMFriendOperationResult.getResultCode()) {
+                    case BaseConstants.ERR_SUCC:
                         ToastUtil.toastShortMessage("成功");
                         break;
-                    case TIMFriendStatus.TIM_FRIEND_PARAM_INVALID:
-                        if (TextUtils.equals(timFriendResult.getResultInfo(), "Err_SNS_FriendAdd_Friend_Exist")) {
+                    case BaseConstants.ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS:
+                        if (TextUtils.equals(v2TIMFriendOperationResult.getResultInfo(), "Err_SNS_FriendAdd_Friend_Exist")) {
                             ToastUtil.toastShortMessage("对方已是您的好友");
                             break;
                         }
-                    case TIMFriendStatus.TIM_ADD_FRIEND_STATUS_SELF_FRIEND_FULL:
+                    case BaseConstants.ERR_SVR_FRIENDSHIP_COUNT_LIMIT:
                         ToastUtil.toastShortMessage("您的好友数已达系统上限");
                         break;
-                    case TIMFriendStatus.TIM_ADD_FRIEND_STATUS_THEIR_FRIEND_FULL:
+                    case BaseConstants.ERR_SVR_FRIENDSHIP_PEER_FRIEND_LIMIT:
                         ToastUtil.toastShortMessage("对方的好友数已达系统上限");
                         break;
-                    case TIMFriendStatus.TIM_ADD_FRIEND_STATUS_IN_SELF_BLACK_LIST:
+                    case BaseConstants.ERR_SVR_FRIENDSHIP_IN_SELF_BLACKLIST:
                         ToastUtil.toastShortMessage("被加好友在自己的黑名单中");
                         break;
-                    case TIMFriendStatus.TIM_ADD_FRIEND_STATUS_FRIEND_SIDE_FORBID_ADD:
+                    case BaseConstants.ERR_SVR_FRIENDSHIP_ALLOW_TYPE_DENY_ANY:
                         ToastUtil.toastShortMessage("对方已禁止加好友");
                         break;
-                    case TIMFriendStatus.TIM_ADD_FRIEND_STATUS_IN_OTHER_SIDE_BLACK_LIST:
+                    case BaseConstants.ERR_SVR_FRIENDSHIP_IN_PEER_BLACKLIST:
                         ToastUtil.toastShortMessage("您已被被对方设置为黑名单");
                         break;
-                    case TIMFriendStatus.TIM_ADD_FRIEND_STATUS_PENDING:
+                    case BaseConstants.ERR_SVR_FRIENDSHIP_ALLOW_TYPE_NEED_CONFIRM:
                         ToastUtil.toastShortMessage("等待好友审核同意");
                         break;
                     default:
-                        ToastUtil.toastLongMessage(timFriendResult.getResultCode() + " " + timFriendResult.getResultInfo());
+                        ToastUtil.toastLongMessage(v2TIMFriendOperationResult.getResultCode() + " " + v2TIMFriendOperationResult.getResultInfo());
                         break;
                 }
                 finish();
@@ -121,12 +122,12 @@ public class AddMoreActivity extends BaseActivity {
         if (TextUtils.isEmpty(id)) {
             return;
         }
-        TIMGroupManager.getInstance().applyJoinGroup(id, mAddWording.getText().toString(), new TIMCallBack() {
 
+        V2TIMManager.getInstance().joinGroup(id, mAddWording.getText().toString(), new V2TIMCallback() {
             @Override
-            public void onError(int i, String s) {
-                DemoLog.e(TAG, "addGroup err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                DemoLog.e(TAG, "addGroup err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
             }
 
             @Override

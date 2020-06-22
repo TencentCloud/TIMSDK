@@ -1,7 +1,9 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.base;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -49,6 +51,7 @@ public abstract class ChatLayoutUI extends LinearLayout implements IChatLayout {
         mTitleBar = findViewById(R.id.chat_title_bar);
         mMessageLayout = findViewById(R.id.chat_message_layout);
         mInputLayout = findViewById(R.id.chat_input_layout);
+        mInputLayout.setChatLayout(this);
         mRecordingGroup = findViewById(R.id.voice_recording_view);
         mRecordingIcon = findViewById(R.id.recording_icon);
         mRecordingTips = findViewById(R.id.recording_tips);

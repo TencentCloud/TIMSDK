@@ -7,14 +7,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
-import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
+import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationProvider;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
 import com.tencent.qcloud.tim.uikit.utils.MD5Utils;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
@@ -151,7 +152,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
         boolean loadSuccess = true;
         List<Object> imageUrls = multiImageData.getImageUrls();
         for (int i = 0; i < imageUrls.size(); i++) {
-            Bitmap defaultIcon = BitmapFactory. decodeResource(mContext.getResources(), R.drawable.default_user_icon);
+            Bitmap defaultIcon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_user_icon);
             //下载图片
             try {
                 Bitmap bitmap = asyncLoadImage(imageUrls.get(i), targetImageSize);
@@ -306,9 +307,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
         ThreadHelper.INST.execute(new Runnable() {
             @Override
             public void run() {
-                final String targetID = currentTargetID;
                 //根据id获取存储的文件路径
-                String absolutePath = mContext.getFilesDir().getAbsolutePath();
                 final File file = new File(TUIKitConstants.IMAGE_BASE_DIR + TeamHeadSynthesizer.this.currentTargetID);
                 boolean cacheBitmapExists = false;
                 if (file.exists() && file.isFile()) {
@@ -322,35 +321,23 @@ public class TeamHeadSynthesizer implements Synthesizer {
                     }
                 }
                 if (!cacheBitmapExists) {
-                    //缓存文件不存在，需要加载读取
-                    boolean loadSuccess = asyncLoadImageList();
+                    // 收集图片
+                    asyncLoadImageList();
+                    // 合成图片
                     final Bitmap bitmap = synthesizeImageList();
-                    //保存合成的图片文件
-                    if (loadSuccess) {
-                        //所有图片加载成功，则保存合成图片
-                        ImageUtil.storeBitmap(file, bitmap);
-                        if (!TextUtils.isEmpty(mImageId)) {
-                            SharedPreferences sp = TUIKit.getAppContext().getSharedPreferences(
-                                    TIMManager.getInstance().getLoginUser() + SP_IMAGE, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sp.edit();
-                            editor.putString(mImageId, file.getAbsolutePath());
-                            editor.apply();
-                        }
-                    }
-                    //执行回调
-                    //判断当前图片的多个小图是否全部加载完全的，如果加载完全的，complete=true;
-                    final boolean complete = loadSuccess;
+                    ImageUtil.storeBitmap(file, bitmap);
+                    ConversationManagerKit.getInstance().setGroupConversationAvatar(mImageId, file.getAbsolutePath());
                     imageView.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onCall(bitmap, targetID, complete);
+                            callback.onCall(bitmap, currentTargetID, true);
                         }
                     });
                 } else {
                     imageView.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onCall(file, targetID, true);
+                            callback.onCall(file, currentTargetID, true);
                         }
                     });
                 }

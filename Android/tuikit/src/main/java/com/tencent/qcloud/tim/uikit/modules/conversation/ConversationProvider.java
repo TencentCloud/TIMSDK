@@ -98,12 +98,12 @@ public class ConversationProvider implements IConversationProvider {
     /**
      * 删除单个会话数据
      *
-     * @param id 会话ID
+     * @param conversationID 会话ID
      * @return
      */
-    public void deleteConversation(String id) {
+    public void deleteConversation(String conversationID) {
         for (int i = 0; i < mDataSource.size(); i++) {
-            if (mDataSource.get(i).getId().equals(id)) {
+            if (mDataSource.get(i).getConversationId().equals(conversationID)) {
                 if (mDataSource.remove(i) != null) {
                     updateAdapter();
                 }
@@ -161,6 +161,11 @@ public class ConversationProvider implements IConversationProvider {
         }
     }
 
+    public void updateAdapter(String id) {
+        if (mAdapter != null) {
+            mAdapter.notifyDataSourceChanged(id);
+        }
+    }
 
     /**
      * 会话列表适配器绑定数据源是的回调

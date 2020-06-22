@@ -2,12 +2,14 @@ package com.tencent.qcloud.tim.demo.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.FriendProfileActivity;
@@ -59,7 +61,7 @@ public class ChatFragment extends BaseFragment {
                 getActivity().finish();
             }
         });
-        if (mChatInfo.getType() == TIMConversationType.C2C) {
+        if (mChatInfo.getType() == V2TIMConversation.V2TIM_C2C) {
             mTitleBar.setOnRightClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

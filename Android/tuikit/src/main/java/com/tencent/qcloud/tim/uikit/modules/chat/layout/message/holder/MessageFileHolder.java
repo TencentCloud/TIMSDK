@@ -4,10 +4,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMElem;
-import com.tencent.imsdk.TIMFaceElem;
-import com.tencent.imsdk.TIMFileElem;
+import com.tencent.imsdk.v2.V2TIMDownloadCallback;
+import com.tencent.imsdk.v2.V2TIMElem;
+import com.tencent.imsdk.v2.V2TIMFileElem;
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
@@ -39,11 +39,11 @@ public class MessageFileHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(final MessageInfo msg, final int position) {
-        TIMElem elem = msg.getElement();
-        if (!(elem instanceof TIMFileElem)) {
+        V2TIMMessage message = msg.getTimMessage();
+        if (message.getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_FILE) {
             return;
         }
-        final TIMFileElem fileElem = (TIMFileElem) elem;
+        final V2TIMFileElem fileElem = message.getFileElem();
         final String path = msg.getDataPath();
         fileNameText.setText(fileElem.getFileName());
         String size = FileUtil.FormetFileSize(fileElem.getFileSize());
@@ -68,7 +68,12 @@ public class MessageFileHolder extends MessageContentHolder {
                     msg.setStatus(MessageInfo.MSG_STATUS_DOWNLOADING);
                     sendingProgress.setVisibility(View.VISIBLE);
                     fileStatusText.setText(R.string.downloading);
-                    fileElem.getToFile(path, new TIMCallBack() {
+                    fileElem.downloadFile(path, new V2TIMDownloadCallback() {
+                        @Override
+                        public void onProgress(V2TIMElem.V2ProgressInfo progressInfo) {
+
+                        }
+
                         @Override
                         public void onError(int code, String desc) {
                             ToastUtil.toastLongMessage("getToFile fail:" + code + "=" + desc);

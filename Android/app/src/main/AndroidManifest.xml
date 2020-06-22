@@ -32,6 +32,7 @@
     <permission
         android:name="com.tencent.qcloud.tim.tuikit.permission.PROCESS_PUSH_MSG"
         android:protectionLevel="signatureOrSystem" />
+    <uses-permission android:name = "com.huawei.android.launcher.permission.CHANGE_BADGE" />
 
     <uses-permission android:name="com.tencent.qcloud.tim.tuikit.permission.PROCESS_PUSH_MSG" />
 
@@ -141,10 +142,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tim.demo.menu.StartGroupChatActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-        <activity
-            android:name="com.tencent.qcloud.tim.demo.helper.TRTCActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 

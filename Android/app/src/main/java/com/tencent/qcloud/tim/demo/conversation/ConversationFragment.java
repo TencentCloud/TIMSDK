@@ -2,7 +2,9 @@ package com.tencent.qcloud.tim.demo.conversation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
-import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.chat.ChatActivity;
@@ -168,7 +170,7 @@ public class ConversationFragment extends BaseFragment {
 
     private void startChatActivity(ConversationInfo conversationInfo) {
         ChatInfo chatInfo = new ChatInfo();
-        chatInfo.setType(conversationInfo.isGroup() ? TIMConversationType.Group : TIMConversationType.C2C);
+        chatInfo.setType(conversationInfo.isGroup() ? V2TIMConversation.V2TIM_GROUP : V2TIMConversation.V2TIM_C2C);
         chatInfo.setId(conversationInfo.getId());
         chatInfo.setChatName(conversationInfo.getTitle());
         Intent intent = new Intent(DemoApplication.instance(), ChatActivity.class);

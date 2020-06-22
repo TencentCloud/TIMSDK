@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:background="@color/colorActivityBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="187dp"
+        android:background="@color/colorCloud">
+
+        <ImageView
+            android:id="@+id/iv_logon"
+            android:layout_width="113dp"
+            android:layout_height="54dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="108dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_logo_white" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="105dp"
+            android:layout_toRightOf="@+id/iv_logon"
+            android:includeFontPadding="false"
+            android:text="登录·即时通信"
+            android:textColor="@color/colorActivityBackground"
+            android:textSize="26sp" />
+
+        <TextView
+            android:id="@+id/tv_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_title"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/iv_logon"
+            android:singleLine="false"
+            android:includeFontPadding="false"
+            android:text="体验群组聊天，音视频对话等 IM 功能"
+            android:textColor="@color/colorActivityBackground"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="75dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="44dp"
+            android:text="+"
+            android:textColor="@color/colorCloud"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/et_zone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="86"
+            android:inputType="number"
+            android:maxLength="6"
+            android:textColor="@color/colorCloud"
+            android:background="@null"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_marginLeft="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="20dp"
+            android:background="@color/line" />
+
+        <EditText
+            android:id="@+id/et_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="20dp"
+            android:hint="请输入手机号"
+            android:inputType="number"
+            android:maxLength="11"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="20dp"
+            android:background="@null"
+            tools:text="12312" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#EBEDF5" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_sms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="40dp"
+            android:digits="0123456789"
+            android:hint="请输入短信验证码"
+            android:inputType="number"
+            android:singleLine="true"
+            android:maxLength="6"
+            android:background="@null"
+            android:maxLines="1"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/btn_get_sms"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/button_border"
+            android:text="获取验证码"
+            android:textColor="@color/colorWhite"
+            tools:enabled="false" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#EBEDF5" />
+
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="61dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/button_border"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="登录"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/btn_debug_login"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center"
+        android:text="IM 账号直接登录界面，此只在 Debug 模式下显示"/>
+</LinearLayout>

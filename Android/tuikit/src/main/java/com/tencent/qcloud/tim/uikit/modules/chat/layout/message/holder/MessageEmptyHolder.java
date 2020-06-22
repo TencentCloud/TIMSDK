@@ -4,7 +4,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMMessage;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.DateTimeUtil;
@@ -42,6 +41,7 @@ public abstract class MessageEmptyHolder extends MessageBaseHolder {
 
     public abstract void initVariableViews();
 
+    @Override
     public void layoutViews(final MessageInfo msg, final int position) {
 
         //// 时间线设置

@@ -36,4 +36,8 @@
     <dimen name="switch_thumb_height">23dp</dimen>
     <dimen name="switch_thumb_radius">20dp</dimen>
 
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_middle">14sp</dimen>
+    <dimen name="small_image_size">30dp</dimen>
+    <dimen name="small_image_left_margin">5dp</dimen>
 </resources>

@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.tencent.imsdk.conversation.Conversation;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
@@ -73,7 +72,7 @@ public class ConversationIconView extends RelativeLayout {
 
     public void setConversation(ConversationInfo c) {
         if (mIconView instanceof SynthesizedImageView) {
-            ((SynthesizedImageView) (mIconView)).setImageId(c.getId());
+            ((SynthesizedImageView) (mIconView)).setImageId(c.getConversationId());
             setIconUrls(c.getIconUrlList());
         }
     }

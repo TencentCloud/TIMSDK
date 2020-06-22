@@ -2,10 +2,12 @@ package com.tencent.qcloud.tim.demo.contact;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 
-import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
@@ -30,7 +32,7 @@ public class FriendProfileActivity extends BaseActivity {
             @Override
             public void onStartConversationClick(ContactItemBean info) {
                 ChatInfo chatInfo = new ChatInfo();
-                chatInfo.setType(TIMConversationType.C2C);
+                chatInfo.setType(V2TIMConversation.V2TIM_C2C);
                 chatInfo.setId(info.getId());
                 String chatName = info.getId();
                 if (!TextUtils.isEmpty(info.getRemark())) {

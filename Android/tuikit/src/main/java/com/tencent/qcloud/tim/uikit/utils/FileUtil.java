@@ -11,8 +11,10 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -112,20 +114,21 @@ public class FileUtil {
     }
 
     public static String getPathFromUri(Uri uri) {
+        String path = "";
         try {
             int sdkVersion = Build.VERSION.SDK_INT;
             if (sdkVersion >= 19) {
-                //
-                // return getRealPathFromUri_AboveApi19(uri);
-                return getPath(TUIKit.getAppContext(), uri);
+                path = getPath(TUIKit.getAppContext(), uri);
             } else {
-                return getRealFilePath(uri);
+                path = getRealFilePath(uri);
             }
-            //return new File(new URI(uri.toString())).getAbsolutePath();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        if (path == null) {
+            path = "";
+        }
+        return path;
     }
 
     public static String getRealFilePath(Uri uri) {

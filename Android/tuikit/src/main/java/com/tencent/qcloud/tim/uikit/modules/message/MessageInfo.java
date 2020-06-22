@@ -1,16 +1,18 @@
 package com.tencent.qcloud.tim.uikit.modules.message;
 
 import android.net.Uri;
+import android.text.TextUtils;
 
-import android.support.annotation.NonNull;
-import com.tencent.imsdk.TIMElem;
-import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.ext.message.TIMMessageLocator;
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.util.UUID;
 
 
 public class MessageInfo {
+    private final String TAG = "MessageInfo";
 
     public static final int MSG_TYPE_MIME = 0x1;
 
@@ -57,7 +59,7 @@ public class MessageInfo {
      */
     public static final int MSG_TYPE_GROUP_CREATE = 0x101;
     /**
-     * 群创建提示消息
+     * 群解散提示消息
      */
     public static final int MSG_TYPE_GROUP_DELETE = 0x102;
     /**
@@ -80,6 +82,10 @@ public class MessageInfo {
      * 群通知更新提示消息
      */
     public static final int MSG_TYPE_GROUP_MODIFY_NOTICE = 0x107;
+    /**
+     * 群音视频呼叫提示消息
+     */
+    public static final int MSG_TYPE_GROUP_AV_CALL_NOTICE = 0x108;
 
     /**
      * 消息未读状态
@@ -139,8 +145,7 @@ public class MessageInfo {
     private int imgHeight;
     private boolean peerRead;
 
-    private TIMMessage TIMMessage;
-    private TIMElem element;
+    private V2TIMMessage timMessage;
 
     /**
      * 获取消息唯一标识
@@ -331,31 +336,41 @@ public class MessageInfo {
     }
 
     public int getCustomInt() {
-        if (TIMMessage == null) {
+        if (timMessage == null) {
             return 0;
         }
-        return TIMMessage.getCustomInt();
+        return timMessage.getLocalCustomInt();
     }
 
     public void setCustomInt(int value) {
-        if (TIMMessage == null) {
+        if (timMessage == null) {
             return;
         }
-        TIMMessage.setCustomInt(value);
+        timMessage.setLocalCustomInt(value);
     }
 
-    public boolean checkEquals(@NonNull TIMMessageLocator locator) {
-        if (TIMMessage == null) {
+    public boolean checkEquals(String msgID) {
+        if (TextUtils.isEmpty(msgID)) {
             return false;
         }
-        return TIMMessage.checkEquals(locator);
+        return timMessage.getMsgID().equals(msgID);
     }
 
     public boolean remove() {
-        if (TIMMessage == null) {
+        if (timMessage == null) {
             return false;
         }
-        return TIMMessage.remove();
+        V2TIMManager.getMessageManager().deleteMessageFromLocalStorage(timMessage, new V2TIMCallback() {
+            @Override
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "deleteMessageFromLocalStorage error code = " + code + ", desc = " + desc);
+            }
+
+            @Override
+            public void onSuccess() {
+            }
+        });
+        return true;
     }
 
     /**
@@ -363,25 +378,17 @@ public class MessageInfo {
      *
      * @return
      */
-    public TIMMessage getTIMMessage() {
-        return TIMMessage;
+    public V2TIMMessage getTimMessage() {
+        return timMessage;
     }
 
     /**
      * 设置SDK的消息bean
      *
-     * @param TIMMessage
+     * @param timMessage
      */
-    public void setTIMMessage(TIMMessage TIMMessage) {
-        this.TIMMessage = TIMMessage;
-    }
-
-    public TIMElem getElement() {
-        return element;
-    }
-
-    public void setElement(TIMElem element) {
-        this.element = element;
+    public void setTimMessage(V2TIMMessage timMessage) {
+        this.timMessage = timMessage;
     }
 
     /**

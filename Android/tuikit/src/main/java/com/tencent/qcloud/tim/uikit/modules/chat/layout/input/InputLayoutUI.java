@@ -4,14 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.annotation.Nullable;
+
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -20,10 +15,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IInputLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreActionUnit;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
+import com.tencent.qcloud.tim.uikit.utils.PermissionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +77,8 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     private boolean mCaptureDisable;
     private boolean mVideoRecordDisable;
     private boolean mSendFileDisable;
+    private boolean mEnableAudioCall;
+    private boolean mEnableVideoCall;
 
     public InputLayoutUI(Context context) {
         super(context);
@@ -166,70 +164,54 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
             });
             mInputMoreActionList.add(action);
         }
+
+        if (mEnableAudioCall) {
+            action = new InputMoreActionUnit();
+            action.setIconResId(R.drawable.ic_more_audio_call);
+            action.setTitleId(R.string.audio_call);
+            action.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startAudioCall();
+                }
+            });
+            mInputMoreActionList.add(action);
+        }
+
+        if (mEnableVideoCall) {
+            action = new InputMoreActionUnit();
+            action.setIconResId(R.drawable.ic_more_video_call);
+            action.setTitleId(R.string.video_call);
+            action.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startVideoCall();
+                }
+            });
+            mInputMoreActionList.add(action);
+        }
         mInputMoreActionList.addAll(mInputMoreCustomActionList);
 
     }
 
-    protected boolean checkPermission(Context context, String permission) {
-        TUIKitLog.i(TAG, "checkPermission permission:" + permission + "|sdk:" + Build.VERSION.SDK_INT);
-        boolean flag = true;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int result = ActivityCompat.checkSelfPermission(context, permission);
-            if (PackageManager.PERMISSION_GRANTED != result) {
-                showPermissionDialog();
-                flag = false;
-            }
-        }
-        return flag;
-    }
-
     protected boolean checkPermission(int type) {
-        if (!checkPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (!PermissionUtils.checkPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             return false;
         }
-        if (!checkPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (!PermissionUtils.checkPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             return false;
         }
         if (type == SEND_FILE || type == SEND_PHOTO) {
             return true;
         } else if (type == CAPTURE) {
-            return checkPermission(mActivity, Manifest.permission.CAMERA);
+            return PermissionUtils.checkPermission(mActivity, Manifest.permission.CAMERA);
         } else if (type == AUDIO_RECORD) {
-            return checkPermission(mActivity, Manifest.permission.RECORD_AUDIO);
+            return PermissionUtils.checkPermission(mActivity, Manifest.permission.RECORD_AUDIO);
         } else if (type == VIDEO_RECORD) {
-            return checkPermission(mActivity, Manifest.permission.CAMERA)
-                    && checkPermission(mActivity, Manifest.permission.RECORD_AUDIO);
+            return PermissionUtils.checkPermission(mActivity, Manifest.permission.CAMERA)
+                    && PermissionUtils.checkPermission(mActivity, Manifest.permission.RECORD_AUDIO);
         }
         return true;
-    }
-
-    private void showPermissionDialog() {
-        if (mPermissionDialog == null) {
-            mPermissionDialog = new AlertDialog.Builder(mActivity)
-                    .setMessage("使用该功能，需要开启权限，鉴于您禁用相关权限，请手动设置开启权限")
-                    .setPositiveButton("设置", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            cancelPermissionDialog();
-                            Uri packageURI = Uri.parse("package:" + mActivity.getPackageName());
-                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
-                            mActivity.startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //关闭页面或者做其他操作
-                            cancelPermissionDialog();
-                        }
-                    })
-                    .create();
-        }
-        mPermissionDialog.show();
-    }
-
-    private void cancelPermissionDialog() {
-        mPermissionDialog.cancel();
     }
 
     protected abstract void init();
@@ -241,6 +223,10 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     protected abstract void startVideoRecord();
 
     protected abstract void startSendFile();
+
+    protected abstract void startAudioCall();
+
+    protected abstract void startVideoCall();
 
     @Override
     public void disableAudioInput(boolean disable) {
@@ -302,6 +288,28 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     @Override
     public void disableSendFileAction(boolean disable) {
         mSendFileDisable = disable;
+    }
+
+    @Override
+    public boolean enableAudioCall() {
+        if (TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
+            mEnableAudioCall = true;
+            return true;
+        } else {
+            mEnableAudioCall = false;
+            return false;
+        }
+    }
+
+    @Override
+    public boolean enableVideoCall() {
+        if (TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
+            mEnableVideoCall = true;
+            return true;
+        } else {
+            mEnableVideoCall = false;
+            return false;
+        }
     }
 
     @Override

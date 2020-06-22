@@ -2,8 +2,8 @@ package com.tencent.qcloud.tim.uikit.modules.contact;
 
 import android.text.TextUtils;
 
-import com.tencent.imsdk.ext.group.TIMGroupBaseInfo;
-import com.tencent.imsdk.friendship.TIMFriend;
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.qcloud.tim.uikit.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
 
 public class ContactItemBean extends BaseIndexPinyinBean {
@@ -98,14 +98,14 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         this.nickname = nickname;
     }
 
-    public ContactItemBean covertTIMFriend(TIMFriend friend) {
-        if (friend == null) {
+    public ContactItemBean covertTIMFriend(V2TIMFriendInfo friendInfo) {
+        if (friendInfo == null) {
             return this;
         }
-        setId(friend.getIdentifier());
-        setRemark(friend.getRemark());
-        setNickname(friend.getTimUserProfile().getNickName());
-        setAvatarurl(friend.getTimUserProfile().getFaceUrl());
+        setId(friendInfo.getUserID());
+        setRemark(friendInfo.getFriendRemark());
+        setNickname(friendInfo.getUserProfile().getNickName());
+        setAvatarurl(friendInfo.getUserProfile().getFaceUrl());
         return this;
     }
 
@@ -141,11 +141,11 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         this.avatarurl = avatarurl;
     }
 
-    public ContactItemBean covertTIMGroupBaseInfo(TIMGroupBaseInfo group) {
+    public ContactItemBean covertTIMGroupBaseInfo(V2TIMGroupInfo group) {
         if (group == null) {
             return this;
         }
-        setId(group.getGroupId());
+        setId(group.getGroupID());
         setRemark(group.getGroupName());
         setAvatarurl(group.getFaceUrl());
         setGroup(true);

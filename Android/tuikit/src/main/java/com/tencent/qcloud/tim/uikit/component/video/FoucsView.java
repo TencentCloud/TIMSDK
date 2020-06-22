@@ -3,11 +3,12 @@ package com.tencent.qcloud.tim.uikit.component.video;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
+
+import androidx.annotation.Nullable;
 
 public class FoucsView extends View {
     private int size;

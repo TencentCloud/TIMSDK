@@ -6,13 +6,7 @@ import android.net.Uri;
 import android.widget.ImageView;
 
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.PicassoEngine;
 
-/**
- * Image loader interface. There are predefined {@link GlideEngine}
- * and {@link PicassoEngine}.
- */
-@SuppressWarnings("unused")
 public interface ImageEngine {
 
     /**

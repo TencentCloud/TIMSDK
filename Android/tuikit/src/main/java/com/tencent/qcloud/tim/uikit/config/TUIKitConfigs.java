@@ -1,13 +1,15 @@
 package com.tencent.qcloud.tim.uikit.config;
 
-import com.tencent.imsdk.TIMSdkConfig;
+import android.util.Log;
+
+import com.tencent.imsdk.v2.V2TIMSDKConfig;
 
 public class TUIKitConfigs {
 
     private static TUIKitConfigs sConfigs;
     private GeneralConfig generalConfig;
     private CustomFaceConfig customFaceConfig;
-    private TIMSdkConfig sdkConfig;
+    private V2TIMSDKConfig sdkConfig;
 
     private TUIKitConfigs() {
 
@@ -70,7 +72,7 @@ public class TUIKitConfigs {
      *
      * @return
      */
-    public TIMSdkConfig getSdkConfig() {
+    public V2TIMSDKConfig getSdkConfig() {
         return sdkConfig;
     }
 
@@ -80,8 +82,9 @@ public class TUIKitConfigs {
      * @param timSdkConfig
      * @return
      */
-    public TUIKitConfigs setSdkConfig(TIMSdkConfig timSdkConfig) {
+    public TUIKitConfigs setSdkConfig(V2TIMSDKConfig timSdkConfig) {
         this.sdkConfig = timSdkConfig;
         return this;
     }
+
 }

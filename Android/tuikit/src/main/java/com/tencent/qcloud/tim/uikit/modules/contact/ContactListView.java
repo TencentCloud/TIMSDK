@@ -1,19 +1,19 @@
 package com.tencent.qcloud.tim.uikit.modules.contact;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMFriendshipManager;
-import com.tencent.imsdk.TIMGroupManager;
-import com.tencent.imsdk.TIMValueCallBack;
-import com.tencent.imsdk.ext.group.TIMGroupBaseInfo;
-import com.tencent.imsdk.friendship.TIMFriend;
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMGroupInfo;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tim.uikit.component.indexlib.IndexBar.widget.IndexBar;
@@ -173,49 +173,59 @@ public class ContactListView extends LinearLayout {
             @Override
             public void run() {
                 // 压测时数据量比较大，query耗时比较久，所以这里使用新线程来处理
-                List<TIMFriend> timFriends = TIMFriendshipManager.getInstance().queryFriendList();
-                if (timFriends == null) {
-                    timFriends = new ArrayList<>();
-                }
-                TUIKitLog.i(TAG, "queryFriendList:" + timFriends.size());
-                fillFriendListData(timFriends);
+                V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIKitLog.e(TAG, "loadFriendListDataAsync err code:" + code + ", desc:" + desc);
+                        ToastUtil.toastShortMessage("loadFriendList error code = " + code + ", desc = " + desc);
+                    }
+
+                    @Override
+                    public void onSuccess(List<V2TIMFriendInfo> v2TIMFriendInfos) {
+                        if (v2TIMFriendInfos == null) {
+                            v2TIMFriendInfos = new ArrayList<>();
+                        }
+                        TUIKitLog.i(TAG, "loadFriendListDataAsync->getFriendList:" + v2TIMFriendInfos.size());
+                        assembleFriendListData(v2TIMFriendInfos);
+                    }
+                });
             }
         });
     }
 
-    private void fillFriendListData(final List<TIMFriend> timFriends) {
-        // 外部调用是在其他线程里面，但是更新数据同时会刷新UI，所以需要放在主线程做。
-        BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (timFriends.size() == 0) {
-                    TIMFriendshipManager.getInstance().getFriendList(new TIMValueCallBack<List<TIMFriend>>() {
-                        @Override
-                        public void onError(int code, String desc) {
-                            TUIKitLog.e(TAG, "getFriendList err code = " + code);
-                            mContactLoadingBar.setVisibility(GONE);
-                        }
+//    private void fillFriendListData(final List<V2TIMFriendInfo> timFriendInfoList) {
+//        // 外部调用是在其他线程里面，但是更新数据同时会刷新UI，所以需要放在主线程做。
+//        BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (timFriendInfoList.size() == 0) {
+//                    TIMFriendshipManager.getInstance().getFriendList(new TIMValueCallBack<List<TIMFriend>>() {
+//                        @Override
+//                        public void onError(int code, String desc) {
+//                            TUIKitLog.e(TAG, "getFriendList err code = " + code);
+//                            mContactLoadingBar.setVisibility(GONE);
+//                        }
+//
+//                        @Override
+//                        public void onSuccess(List<TIMFriend> timFriends) {
+//                            if (timFriends == null) {
+//                                timFriends = new ArrayList<>();
+//                            }
+//                            TUIKitLog.i(TAG, "getFriendList success result = " + timFriends.size());
+//                            assembleFriendListData(timFriends);
+//                        }
+//                    });
+//                } else {
+//                    assembleFriendListData(timFriendInfoList);
+//                }
+//            }
+//        });
+//    }
 
-                        @Override
-                        public void onSuccess(List<TIMFriend> timFriends) {
-                            if (timFriends == null) {
-                                timFriends = new ArrayList<>();
-                            }
-                            TUIKitLog.i(TAG, "getFriendList success result = " + timFriends.size());
-                            assembleFriendListData(timFriends);
-                        }
-                    });
-                } else {
-                    assembleFriendListData(timFriends);
-                }
-            }
-        });
-    }
-
-    private void assembleFriendListData(final List<TIMFriend> timFriends) {
-        for (TIMFriend timFriend : timFriends) {
+    private void assembleFriendListData(final List<V2TIMFriendInfo> timFriendInfoList) {
+        for (V2TIMFriendInfo timFriendInfo : timFriendInfoList) {
             ContactItemBean info = new ContactItemBean();
-            info.covertTIMFriend(timFriend);
+            info.covertTIMFriend(timFriendInfo);
             mData.add(info);
         }
         updateStatus(mData);
@@ -224,50 +234,75 @@ public class ContactListView extends LinearLayout {
 
     private void loadBlackListData() {
         TUIKitLog.i(TAG, "loadBlackListData");
-        TIMFriendshipManager.getInstance().getBlackList(new TIMValueCallBack<List<TIMFriend>>() {
+
+        V2TIMManager.getFriendshipManager().getBlackList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
             @Override
-            public void onError(int i, String s) {
-                TUIKitLog.e(TAG, "getBlackList err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "getBlackList err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
                 mContactLoadingBar.setVisibility(GONE);
             }
 
             @Override
-            public void onSuccess(List<TIMFriend> timFriends) {
-                TUIKitLog.i(TAG, "getBlackList success: " + timFriends.size());
-                if (timFriends.size() == 0) {
+            public void onSuccess(List<V2TIMFriendInfo> v2TIMFriendInfos) {
+                TUIKitLog.i(TAG, "getBlackList success: " + v2TIMFriendInfos.size());
+                if (v2TIMFriendInfos.size() == 0) {
                     TUIKitLog.i(TAG, "getBlackList success but no data");
                 }
                 mData.clear();
-                for (TIMFriend timFriend : timFriends) {
+                for (V2TIMFriendInfo timFriendInfo : v2TIMFriendInfos) {
                     ContactItemBean info = new ContactItemBean();
-                    info.covertTIMFriend(timFriend).setBlackList(true);
+                    info.covertTIMFriend(timFriendInfo).setBlackList(true);
                     mData.add(info);
                 }
                 setDataSource(mData);
             }
         });
+
+//        TIMFriendshipManager.getInstance().getBlackList(new TIMValueCallBack<List<TIMFriend>>() {
+//            @Override
+//            public void onError(int i, String s) {
+//                TUIKitLog.e(TAG, "getBlackList err code = " + i + ", desc = " + s);
+//                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+//                mContactLoadingBar.setVisibility(GONE);
+//            }
+//
+//            @Override
+//            public void onSuccess(List<TIMFriend> timFriends) {
+//                TUIKitLog.i(TAG, "getBlackList success: " + timFriends.size());
+//                if (timFriends.size() == 0) {
+//                    TUIKitLog.i(TAG, "getBlackList success but no data");
+//                }
+//                mData.clear();
+//                for (TIMFriend timFriend : timFriends) {
+//                    ContactItemBean info = new ContactItemBean();
+//                    info.covertTIMFriend(timFriend).setBlackList(true);
+//                    mData.add(info);
+//                }
+//                setDataSource(mData);
+//            }
+//        });
     }
 
     private void loadGroupListData() {
         TUIKitLog.i(TAG, "loadGroupListData");
-        TIMGroupManager.getInstance().getGroupList(new TIMValueCallBack<List<TIMGroupBaseInfo>>() {
 
+        V2TIMManager.getGroupManager().getJoinedGroupList(new V2TIMValueCallback<List<V2TIMGroupInfo>>() {
             @Override
-            public void onError(int i, String s) {
-                TUIKitLog.e(TAG, "getGroupList err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "getGroupList err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
                 mContactLoadingBar.setVisibility(GONE);
             }
 
             @Override
-            public void onSuccess(List<TIMGroupBaseInfo> infos) {
-                TUIKitLog.i(TAG, "getGroupList success: " + infos.size());
-                if (infos.size() == 0) {
+            public void onSuccess(List<V2TIMGroupInfo> v2TIMGroupInfos) {
+                TUIKitLog.i(TAG, "getGroupList success: " + v2TIMGroupInfos.size());
+                if (v2TIMGroupInfos.size() == 0) {
                     TUIKitLog.i(TAG, "getGroupList success but no data");
                 }
                 mData.clear();
-                for (TIMGroupBaseInfo info : infos) {
+                for (V2TIMGroupInfo info : v2TIMGroupInfos) {
                     ContactItemBean bean = new ContactItemBean();
                     mData.add(bean.covertTIMGroupBaseInfo(info));
                 }

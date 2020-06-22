@@ -1,7 +1,7 @@
 package com.tencent.qcloud.tim.uikit.modules.conversation.base;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 

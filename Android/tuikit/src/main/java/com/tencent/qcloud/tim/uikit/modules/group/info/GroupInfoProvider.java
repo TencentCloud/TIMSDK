@@ -2,18 +2,16 @@ package com.tencent.qcloud.tim.uikit.modules.group.info;
 
 import android.text.TextUtils;
 
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMGroupAddOpt;
-import com.tencent.imsdk.TIMGroupManager;
-import com.tencent.imsdk.TIMGroupMemberInfo;
-import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.TIMValueCallBack;
-import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
-import com.tencent.imsdk.ext.group.TIMGroupMemberResult;
-import com.tencent.imsdk.ext.group.TIMGroupPendencyGetParam;
-import com.tencent.imsdk.ext.group.TIMGroupPendencyHandledStatus;
-import com.tencent.imsdk.ext.group.TIMGroupPendencyItem;
-import com.tencent.imsdk.ext.group.TIMGroupPendencyListGetSucc;
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMGroupApplication;
+import com.tencent.imsdk.v2.V2TIMGroupApplicationResult;
+import com.tencent.imsdk.v2.V2TIMGroupInfo;
+import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
+import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
+import com.tencent.imsdk.v2.V2TIMGroupMemberOperationResult;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
@@ -36,13 +34,11 @@ public class GroupInfoProvider {
     private GroupMemberInfo mSelfInfo;
     private List<GroupMemberInfo> mGroupMembers = new ArrayList<>();
     private List<GroupApplyInfo> mApplyList = new ArrayList<>();
-    private long mPendencyTime;
 
     private void reset() {
         mGroupInfo = new GroupInfo();
         mGroupMembers = new ArrayList<>();
         mSelfInfo = null;
-        mPendencyTime = 0;
     }
 
     public void loadGroupInfo(GroupInfo info) {
@@ -60,14 +56,14 @@ public class GroupInfoProvider {
             public void onSuccess(Object data) {
 
                 // 设置群的一般信息，比如名称、类型等
-                mGroupInfo.covertTIMGroupDetailInfo((TIMGroupDetailInfoResult) data);
+                mGroupInfo.covertTIMGroupDetailInfo((V2TIMGroupInfoResult) data);
 
                 // 设置是否为置顶聊天
                 boolean isTop = ConversationManagerKit.getInstance().isTopConversation(groupId);
                 mGroupInfo.setTopChat(isTop);
 
                 // 异步获取群成员
-                loadGroupMembers(mGroupInfo, callBack);
+                loadGroupMembers(0, callBack);
             }
 
             @Override
@@ -81,7 +77,7 @@ public class GroupInfoProvider {
     }
 
     public void deleteGroup(final IUIKitCallBack callBack) {
-        TIMGroupManager.getInstance().deleteGroup(mGroupInfo.getId(), new TIMCallBack() {
+        V2TIMManager.getInstance().dismissGroup(mGroupInfo.getId(), new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
                 callBack.onError(TAG, code, desc);
@@ -101,26 +97,28 @@ public class GroupInfoProvider {
     public void loadGroupPublicInfo(String groupId, final IUIKitCallBack callBack) {
         List<String> groupList = new ArrayList<>();
         groupList.add(groupId);
-        TIMGroupManager.getInstance().getGroupInfo(groupList, new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
+
+        V2TIMManager.getGroupManager().getGroupsInfo(groupList, new V2TIMValueCallback<List<V2TIMGroupInfoResult>>() {
             @Override
-            public void onError(final int code, final String desc) {
+            public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "loadGroupPublicInfo failed, code: " + code + "|desc: " + desc);
                 callBack.onError(TAG, code, desc);
             }
 
             @Override
-            public void onSuccess(final List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
-                if (timGroupDetailInfoResults.size() > 0) {
-                    TIMGroupDetailInfoResult info = timGroupDetailInfoResults.get(0);
-                    TUIKitLog.i(TAG, info.toString());
-                    callBack.onSuccess(info);
+            public void onSuccess(List<V2TIMGroupInfoResult> v2TIMGroupInfoResults) {
+                if (v2TIMGroupInfoResults.size() > 0) {
+                    V2TIMGroupInfoResult infoResult = v2TIMGroupInfoResults.get(0);
+                    // TODO toString打印
+                    TUIKitLog.i(TAG, infoResult.toString());
+                    callBack.onSuccess(infoResult);
                 }
             }
         });
     }
 
-    public void loadGroupMembers(final Object result, final IUIKitCallBack callBack) {
-        TIMGroupManager.getInstance().getGroupMembers(mGroupInfo.getId(), new TIMValueCallBack<List<TIMGroupMemberInfo>>() {
+    public void loadGroupMembers(long nextSeq, final IUIKitCallBack callBack) {
+        V2TIMManager.getGroupManager().getGroupMemberList(mGroupInfo.getId(), V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL, nextSeq, new V2TIMValueCallback<V2TIMGroupMemberInfoResult>() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "loadGroupMembers failed, code: " + code + "|desc: " + desc);
@@ -128,72 +126,18 @@ public class GroupInfoProvider {
             }
 
             @Override
-            public void onSuccess(List<TIMGroupMemberInfo> timGroupMemberInfos) {
+            public void onSuccess(V2TIMGroupMemberInfoResult v2TIMGroupMemberInfoResult) {
                 List<GroupMemberInfo> members = new ArrayList<>();
-                for (int i = 0; i < timGroupMemberInfos.size(); i++) {
+                for (int i = 0; i < v2TIMGroupMemberInfoResult.getMemberInfoList().size(); i++) {
                     GroupMemberInfo member = new GroupMemberInfo();
-                    members.add(member.covertTIMGroupMemberInfo(timGroupMemberInfos.get(i)));
+                    members.add(member.covertTIMGroupMemberInfo(v2TIMGroupMemberInfoResult.getMemberInfoList().get(i)));
                 }
-                mGroupMembers = members;
+                mGroupMembers.addAll(members);
                 mGroupInfo.setMemberDetails(mGroupMembers);
-                loadGroupMembersDetail(0, new IUIKitCallBack() {
-                    @Override
-                    public void onSuccess(Object data) {
-                        callBack.onSuccess(result);
-                    }
-
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-                        callBack.onError(module, errCode, errMsg);
-                    }
-                });
-            }
-        });
-    }
-
-    private void loadGroupMembersDetail(final int begin, final IUIKitCallBack callBack) {
-        if (callBack == null) {
-            return;
-        }
-        final ArrayList<String> memberIds = new ArrayList<>();
-        final int end;
-        if (mGroupMembers.size() == 0) {
-            return;
-        }
-        if (begin + PAGE > mGroupMembers.size()) {
-            end = mGroupMembers.size();
-        } else {
-            end = begin + PAGE;
-        }
-        for (int i = begin; i < end; i++) {
-            memberIds.add(mGroupMembers.get(i).getAccount());
-        }
-        TIMGroupManager.getInstance().getGroupMembersInfo(mGroupInfo.getId(), memberIds, new TIMValueCallBack<List<TIMGroupMemberInfo>>() {
-            @Override
-            public void onError(int code, String desc) {
-                TUIKitLog.e(TAG, "getGroupMembersInfo failed, code: " + code + "|desc: " + desc);
-                callBack.onError(TAG, code, desc);
-            }
-
-            @Override
-            public void onSuccess(List<TIMGroupMemberInfo> timGroupMemberInfos) {
-                TUIKitLog.i(TAG, "getGroupMembersInfo success: " + timGroupMemberInfos.size());
-                for (int i = begin; i < end; i++) {
-                    GroupMemberInfo memberInfo = mGroupMembers.get(i);
-                    for (int j = timGroupMemberInfos.size() - 1; j >= 0; j--) {
-                        TIMGroupMemberInfo detail = timGroupMemberInfos.get(j);
-                        if (memberInfo.getAccount().equals(detail.getUser())) {
-                            memberInfo.setDetail(detail);
-                            timGroupMemberInfos.remove(j);
-                            break;
-                        }
-                    }
-                }
-
-                if (end < mGroupMembers.size()) {
-                    loadGroupMembersDetail(end, callBack);
+                if (v2TIMGroupMemberInfoResult.getNextSeq() != 0){
+                    loadGroupMembers(v2TIMGroupMemberInfoResult.getNextSeq(), callBack);
                 } else {
-                    callBack.onSuccess(null);
+                    callBack.onSuccess(mGroupInfo);
                 }
             }
         });
@@ -204,16 +148,16 @@ public class GroupInfoProvider {
     }
 
     public void modifyGroupInfo(final Object value, final int type, final IUIKitCallBack callBack) {
-        TIMGroupManager.ModifyGroupInfoParam param = new TIMGroupManager.ModifyGroupInfoParam(mGroupInfo.getId());
+        V2TIMGroupInfo v2TIMGroupInfo = new V2TIMGroupInfo();
+        v2TIMGroupInfo.setGroupID(mGroupInfo.getId());
         if (type == TUIKitConstants.Group.MODIFY_GROUP_NAME) {
-            param.setGroupName(value.toString());
+            v2TIMGroupInfo.setGroupName(value.toString());
         } else if (type == TUIKitConstants.Group.MODIFY_GROUP_NOTICE) {
-            param.setNotification(value.toString());
+            v2TIMGroupInfo.setNotification(value.toString());
         } else if (type == TUIKitConstants.Group.MODIFY_GROUP_JOIN_TYPE) {
-            param.setAddOption(TIMGroupAddOpt.values()[(Integer) value]);
+            v2TIMGroupInfo.setGroupAddOpt((Integer)value);
         }
-
-        TIMGroupManager.getInstance().modifyGroupInfo(param, new TIMCallBack() {
+        V2TIMManager.getGroupManager().setGroupInfo(v2TIMGroupInfo, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.i(TAG, "modifyGroupInfo faild tyep| value| code| desc " + value + ":" + type + ":" + code + ":" + desc);
@@ -238,9 +182,11 @@ public class GroupInfoProvider {
         if (mGroupInfo == null) {
             ToastUtil.toastLongMessage("modifyMyGroupNickname fail: NO GROUP");
         }
-        TIMGroupManager.ModifyMemberInfoParam param = new TIMGroupManager.ModifyMemberInfoParam(mGroupInfo.getId(), TIMManager.getInstance().getLoginUser());
-        param.setNameCard(nickname);
-        TIMGroupManager.getInstance().modifyMemberInfo(param, new TIMCallBack() {
+
+        V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = new V2TIMGroupMemberFullInfo();
+        v2TIMGroupMemberFullInfo.setUserID(V2TIMManager.getInstance().getLoginUser());
+        v2TIMGroupMemberFullInfo.setNameCard(nickname);
+        V2TIMManager.getGroupManager().setGroupMemberInfo(mGroupInfo.getId(), v2TIMGroupMemberFullInfo, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
                 callBack.onError(TAG, code, desc);
@@ -260,7 +206,7 @@ public class GroupInfoProvider {
         }
         for (int i = 0; i < mGroupMembers.size(); i++) {
             GroupMemberInfo memberInfo = mGroupMembers.get(i);
-            if (TextUtils.equals(memberInfo.getAccount(), TIMManager.getInstance().getLoginUser())) {
+            if (TextUtils.equals(memberInfo.getAccount(), V2TIMManager.getInstance().getLoginUser())) {
                 mSelfInfo = memberInfo;
                 return memberInfo;
             }
@@ -274,7 +220,7 @@ public class GroupInfoProvider {
     }
 
     public void quitGroup(final IUIKitCallBack callBack) {
-        TIMGroupManager.getInstance().quitGroup(mGroupInfo.getId(), new TIMCallBack() {
+        V2TIMManager.getInstance().quitGroup(mGroupInfo.getId(), new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "quitGroup failed, code: " + code + "|desc: " + desc);
@@ -295,7 +241,8 @@ public class GroupInfoProvider {
         if (addMembers == null || addMembers.size() == 0) {
             return;
         }
-        TIMGroupManager.getInstance().inviteGroupMember(mGroupInfo.getId(), addMembers, new TIMValueCallBack<List<TIMGroupMemberResult>>() {
+
+        V2TIMManager.getGroupManager().inviteUserToGroup(mGroupInfo.getId(), addMembers, new V2TIMValueCallback<List<V2TIMGroupMemberOperationResult>>() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "addGroupMembers failed, code: " + code + "|desc: " + desc);
@@ -303,22 +250,22 @@ public class GroupInfoProvider {
             }
 
             @Override
-            public void onSuccess(List<TIMGroupMemberResult> timGroupMemberResults) {
+            public void onSuccess(List<V2TIMGroupMemberOperationResult> v2TIMGroupMemberOperationResults) {
                 final List<String> adds = new ArrayList<>();
-                if (timGroupMemberResults.size() > 0) {
-                    for (int i = 0; i < timGroupMemberResults.size(); i++) {
-                        TIMGroupMemberResult res = timGroupMemberResults.get(i);
-                        if (res.getResult() == 3) {
+                if (v2TIMGroupMemberOperationResults.size() > 0) {
+                    for (int i = 0; i < v2TIMGroupMemberOperationResults.size(); i++) {
+                        V2TIMGroupMemberOperationResult res = v2TIMGroupMemberOperationResults.get(i);
+                        if (res.getResult() == V2TIMGroupMemberOperationResult.OPERATION_RESULT_PENDING) {
                             callBack.onSuccess("邀请成功，等待对方接受");
                             return;
                         }
                         if (res.getResult() > 0) {
-                            adds.add(res.getUser());
+                            adds.add(res.getMemberID());
                         }
                     }
                 }
                 if (adds.size() > 0) {
-                    loadGroupMembers(adds, callBack);
+                    loadGroupMembers(0, callBack);
                 }
             }
         });
@@ -333,8 +280,7 @@ public class GroupInfoProvider {
             members.add(delMembers.get(i).getAccount());
         }
 
-        TIMGroupManager.DeleteMemberParam param = new TIMGroupManager.DeleteMemberParam(mGroupInfo.getId(), members);
-        TIMGroupManager.getInstance().deleteGroupMember(param, new TIMValueCallBack<List<TIMGroupMemberResult>>() {
+        V2TIMManager.getGroupManager().kickGroupMember(mGroupInfo.getId(), members, "", new V2TIMValueCallback<List<V2TIMGroupMemberOperationResult>>() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "removeGroupMembers failed, code: " + code + "|desc: " + desc);
@@ -342,12 +288,12 @@ public class GroupInfoProvider {
             }
 
             @Override
-            public void onSuccess(List<TIMGroupMemberResult> timGroupMemberResults) {
+            public void onSuccess(List<V2TIMGroupMemberOperationResult> v2TIMGroupMemberOperationResults) {
                 List<String> dels = new ArrayList<>();
-                for (int i = 0; i < timGroupMemberResults.size(); i++) {
-                    TIMGroupMemberResult res = timGroupMemberResults.get(i);
-                    if (res.getResult() == 1) {
-                        dels.add(res.getUser());
+                for (int i = 0; i < v2TIMGroupMemberOperationResults.size(); i++) {
+                    V2TIMGroupMemberOperationResult res = v2TIMGroupMemberOperationResults.get(i);
+                    if (res.getResult() == V2TIMGroupMemberOperationResult.OPERATION_RESULT_SUCC) {
+                        dels.add(res.getMemberID());
                     }
                 }
 
@@ -383,8 +329,8 @@ public class GroupInfoProvider {
                 List<GroupApplyInfo> applyInfos = new ArrayList<>();
                 for (int i = 0; i < allApplies.size(); i++) {
                     GroupApplyInfo applyInfo = allApplies.get(i);
-                    if (groupId.equals(applyInfo.getPendencyItem().getGroupId())
-                            && applyInfo.getPendencyItem().getHandledStatus() == TIMGroupPendencyHandledStatus.NOT_HANDLED) {
+                    if (groupId.equals(applyInfo.getGroupApplication().getGroupID())
+                            && applyInfo.getGroupApplication().getHandleStatus() == V2TIMGroupApplication.V2TIM_GROUP_APPLICATION_HANDLE_STATUS_UNHANDLED) {
                         applyInfos.add(applyInfo);
                     }
                 }
@@ -402,21 +348,19 @@ public class GroupInfoProvider {
 
     private void loadApplyInfo(final IUIKitCallBack callBack) {
         final List<GroupApplyInfo> applies = new ArrayList<>();
-        TIMGroupPendencyGetParam param = new TIMGroupPendencyGetParam();
-        param.setTimestamp(mPendencyTime);
-        TIMGroupManager.getInstance().getGroupPendencyList(param, new TIMValueCallBack<TIMGroupPendencyListGetSucc>() {
+
+        V2TIMManager.getGroupManager().getGroupApplicationList(new V2TIMValueCallback<V2TIMGroupApplicationResult>() {
             @Override
-            public void onError(final int code, final String desc) {
+            public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "getGroupPendencyList failed, code: " + code + "|desc: " + desc);
                 callBack.onError(TAG, code, desc);
             }
 
             @Override
-            public void onSuccess(final TIMGroupPendencyListGetSucc timGroupPendencyListGetSucc) {
-                mPendencyTime = timGroupPendencyListGetSucc.getMeta().getNextStartTimestamp();
-                List<TIMGroupPendencyItem> pendencies = timGroupPendencyListGetSucc.getPendencies();
-                for (int i = 0; i < pendencies.size(); i++) {
-                    GroupApplyInfo info = new GroupApplyInfo(pendencies.get(i));
+            public void onSuccess(V2TIMGroupApplicationResult v2TIMGroupApplicationResult) {
+                List<V2TIMGroupApplication> v2TIMGroupApplicationList = v2TIMGroupApplicationResult.getGroupApplicationList();
+                for (int i = 0; i < v2TIMGroupApplicationList.size(); i++) {
+                    GroupApplyInfo info = new GroupApplyInfo(v2TIMGroupApplicationList.get(i));
                     info.setStatus(0);
                     applies.add(info);
                 }
@@ -426,7 +370,7 @@ public class GroupInfoProvider {
     }
 
     public void acceptApply(final GroupApplyInfo item, final IUIKitCallBack callBack) {
-        item.getPendencyItem().accept("", new TIMCallBack() {
+        V2TIMManager.getGroupManager().acceptGroupApplication(item.getGroupApplication(), "", new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "acceptApply failed, code: " + code + "|desc: " + desc);
@@ -439,11 +383,10 @@ public class GroupInfoProvider {
                 callBack.onSuccess(null);
             }
         });
-
     }
 
     public void refuseApply(final GroupApplyInfo item, final IUIKitCallBack callBack) {
-        item.getPendencyItem().refuse("", new TIMCallBack() {
+        V2TIMManager.getGroupManager().refuseGroupApplication(item.getGroupApplication(), "", new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "refuseApply failed, code: " + code + "|desc: " + desc);
