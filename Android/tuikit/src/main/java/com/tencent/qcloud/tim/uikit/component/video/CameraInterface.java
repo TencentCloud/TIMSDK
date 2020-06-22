@@ -103,6 +103,7 @@ public class CameraInterface implements Camera.PreviewCallback {
 
     public static void destroyCameraInterface() {
         if (mCameraInterface != null) {
+            mCameraInterface.doDestroyCamera();
             mCameraInterface = null;
         }
     }

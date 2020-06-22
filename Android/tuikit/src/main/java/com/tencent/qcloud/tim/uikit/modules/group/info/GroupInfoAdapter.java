@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMGroupMemberRoleType;
-import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
@@ -112,7 +112,8 @@ public class GroupInfoAdapter extends BaseAdapter {
         List<GroupMemberInfo> members = info.getMemberDetails();
         if (members != null) {
             int shootMemberCount = 0;
-            if (TextUtils.equals(info.getGroupType(), TUIKitConstants.GroupType.TYPE_PRIVATE)) {
+            if (TextUtils.equals(info.getGroupType(), TUIKitConstants.GroupType.TYPE_PRIVATE)
+                    || TextUtils.equals(info.getGroupType(), TUIKitConstants.GroupType.TYPE_WORK)) {
                 if (info.isOwner()) {
                     shootMemberCount = members.size() > OWNER_PRIVATE_MAX_LIMIT ? OWNER_PRIVATE_MAX_LIMIT : members.size();
                 } else {
@@ -124,7 +125,8 @@ public class GroupInfoAdapter extends BaseAdapter {
                 } else {
                     shootMemberCount = members.size() > NORMAL_PUBLIC_MAX_LIMIT ? NORMAL_PUBLIC_MAX_LIMIT : members.size();
                 }
-            } else if (TextUtils.equals(info.getGroupType(), TUIKitConstants.GroupType.TYPE_CHAT_ROOM)) {
+            } else if (TextUtils.equals(info.getGroupType(), TUIKitConstants.GroupType.TYPE_CHAT_ROOM)
+                    || TextUtils.equals(info.getGroupType(), TUIKitConstants.GroupType.TYPE_MEETING)) {
                 if (info.isOwner()) {
                     shootMemberCount = members.size() > OWNER_CHATROOM_MAX_LIMIT ? OWNER_CHATROOM_MAX_LIMIT : members.size();
                 } else {
@@ -134,7 +136,8 @@ public class GroupInfoAdapter extends BaseAdapter {
             for (int i = 0; i < shootMemberCount; i++) {
                 mGroupMembers.add(members.get(i));
             }
-            if (TextUtils.equals(info.getGroupType(), TUIKitConstants.GroupType.TYPE_PRIVATE)) {
+            if (TextUtils.equals(info.getGroupType(), TUIKitConstants.GroupType.TYPE_PRIVATE)
+                    || TextUtils.equals(info.getGroupType(), TUIKitConstants.GroupType.TYPE_WORK)) {
                 // 公开群/聊天室 只有APP管理员可以邀请他人入群
                 GroupMemberInfo add = new GroupMemberInfo();
                 add.setMemberType(ADD_TYPE);
@@ -143,12 +146,12 @@ public class GroupInfoAdapter extends BaseAdapter {
             GroupMemberInfo self = null;
             for (int i = 0; i < mGroupMembers.size(); i++) {
                 GroupMemberInfo memberInfo = mGroupMembers.get(i);
-                if (TextUtils.equals(memberInfo.getAccount(), TIMManager.getInstance().getLoginUser())) {
+                if (TextUtils.equals(memberInfo.getAccount(), V2TIMManager.getInstance().getLoginUser())) {
                     self = memberInfo;
                     break;
                 }
             }
-            if (info.isOwner() || (self != null && self.getMemberType() == TIMGroupMemberRoleType.ROLE_TYPE_ADMIN)) {
+            if (info.isOwner() || (self != null && self.getMemberType() == V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_ADMIN)) {
                 GroupMemberInfo del = new GroupMemberInfo();
                 del.setMemberType(DEL_TYPE);
                 mGroupMembers.add(del);

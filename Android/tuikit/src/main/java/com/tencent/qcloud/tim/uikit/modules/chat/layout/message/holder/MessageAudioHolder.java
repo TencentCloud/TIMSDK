@@ -10,10 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMElem;
-import com.tencent.imsdk.TIMFaceElem;
-import com.tencent.imsdk.TIMSoundElem;
+import com.tencent.imsdk.v2.V2TIMDownloadCallback;
+import com.tencent.imsdk.v2.V2TIMElem;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMSoundElem;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
@@ -83,11 +83,11 @@ public class MessageAudioHolder extends MessageContentHolder {
         }
         audioContentView.setLayoutParams(params);
 
-        TIMElem elem = msg.getElement();
-        if (!(elem instanceof TIMSoundElem)) {
+        V2TIMMessage timMessage = msg.getTimMessage();
+        if (timMessage.getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_SOUND) {
             return;
         }
-        final TIMSoundElem soundElem = (TIMSoundElem) elem;
+        final V2TIMSoundElem soundElem = timMessage.getSoundElem();
         int duration = (int) soundElem.getDuration();
         if (duration == 0) {
             duration = 1;
@@ -134,11 +134,16 @@ public class MessageAudioHolder extends MessageContentHolder {
         });
     }
 
-    private void getSound(final MessageInfo msgInfo, TIMSoundElem soundElemEle) {
-        final String path = TUIKitConstants.RECORD_DOWNLOAD_DIR + soundElemEle.getUuid();
+    private void getSound(final MessageInfo msgInfo, V2TIMSoundElem soundElemEle) {
+        final String path = TUIKitConstants.RECORD_DOWNLOAD_DIR + soundElemEle.getUUID();
         File file = new File(path);
         if (!file.exists()) {
-            soundElemEle.getSoundToFile(path, new TIMCallBack() {
+            soundElemEle.downloadSound(path, new V2TIMDownloadCallback() {
+                @Override
+                public void onProgress(V2TIMElem.V2ProgressInfo progressInfo) {
+                    TUIKitLog.i("downloadSound progress current:", progressInfo.getCurrentSize() + ", total:" + progressInfo.getTotalSize());
+                }
+
                 @Override
                 public void onError(int code, String desc) {
                     TUIKitLog.e("getSoundToFile failed code = ", code + ", info = " + desc);

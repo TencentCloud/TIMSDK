@@ -3,7 +3,6 @@ package com.tencent.qcloud.tim.uikit.modules.group.info;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -12,8 +11,11 @@ import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMGroupManager;
+import androidx.annotation.Nullable;
+
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMGroupInfo;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.LineControllerView;
@@ -151,9 +153,11 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             });
         } else if (v.getId() == R.id.group_icon) {
             String groupUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
-            TIMGroupManager.ModifyGroupInfoParam param = new TIMGroupManager.ModifyGroupInfoParam(mGroupInfo.getId());
-            param.setFaceUrl(groupUrl);
-            TIMGroupManager.getInstance().modifyGroupInfo(param, new TIMCallBack() {
+
+            V2TIMGroupInfo v2TIMGroupInfo = new V2TIMGroupInfo();
+            v2TIMGroupInfo.setGroupID(mGroupInfo.getId());
+            v2TIMGroupInfo.setFaceUrl(groupUrl);
+            V2TIMManager.getGroupManager().setGroupInfo(v2TIMGroupInfo, new V2TIMCallback() {
                 @Override
                 public void onError(int code, String desc) {
                     TUIKitLog.e(TAG, "modify group icon failed, code:" + code + "|desc:" + desc);
@@ -165,7 +169,6 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                     ToastUtil.toastLongMessage("修改群头像成功");
                 }
             });
-
         } else if (v.getId() == R.id.group_notice) {
             Bundle bundle = new Bundle();
             bundle.putString(TUIKitConstants.Selection.TITLE, getResources().getString(R.string.modify_group_notice));
@@ -208,7 +211,9 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 }
             });
         } else if (v.getId() == R.id.group_dissolve_button) {
-            if (mGroupInfo.isOwner() && !mGroupInfo.getGroupType().equals("Private")) {
+            if (mGroupInfo.isOwner() &&
+                    (!mGroupInfo.getGroupType().equals(TUIKitConstants.GroupType.TYPE_WORK)
+                            || !mGroupInfo.getGroupType().equals(TUIKitConstants.GroupType.TYPE_PRIVATE))) {
                 new TUIKitDialog(getContext())
                         .builder()
                         .setCancelable(true)
@@ -285,7 +290,8 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         if (mGroupInfo.isOwner()) {
             mGroupNotice.setVisibility(VISIBLE);
             mJoinTypeView.setVisibility(VISIBLE);
-            if (mGroupInfo.getGroupType().equals("Private")) {
+            if (mGroupInfo.getGroupType().equals(TUIKitConstants.GroupType.TYPE_WORK)
+                    || mGroupInfo.getGroupType().equals(TUIKitConstants.GroupType.TYPE_PRIVATE)) {
                 mDissolveBtn.setText(R.string.exit_group);
             }
         } else {
@@ -300,11 +306,13 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         if (TextUtils.isEmpty(groupType)) {
             return groupText;
         }
-        if (TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_PRIVATE)) {
+        if (TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_PRIVATE)
+                || TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_WORK)) {
             groupText = "讨论组";
         } else if (TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_PUBLIC)) {
             groupText = "公开群";
-        } else if (TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_CHAT_ROOM)) {
+        } else if (TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_CHAT_ROOM)
+                || TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_MEETING)) {
             groupText = "聊天室";
         }
         return groupText;

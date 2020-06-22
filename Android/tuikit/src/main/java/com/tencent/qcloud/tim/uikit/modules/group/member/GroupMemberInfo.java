@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tim.uikit.modules.group.member;
 
-import com.tencent.imsdk.TIMGroupMemberInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 
 import java.io.Serializable;
 
@@ -11,12 +12,12 @@ public class GroupMemberInfo implements Serializable {
     private String signature;
     private String location;
     private String birthday;
+    private String nameCard;
     private boolean isTopChat;
     private boolean isFriend;
     private long joinTime;
     private long tinyId;
     private int memberType;
-    private TIMGroupMemberInfo detail;
 
     public String getIconUrl() {
         return iconUrl;
@@ -56,6 +57,14 @@ public class GroupMemberInfo implements Serializable {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+
+    public void setNameCard(String nameCard) {
+        this.nameCard = nameCard;
+    }
+
+    public String getNameCard() {
+        return nameCard;
     }
 
     public boolean isTopChat() {
@@ -98,19 +107,14 @@ public class GroupMemberInfo implements Serializable {
         this.memberType = memberType;
     }
 
-    public TIMGroupMemberInfo getDetail() {
-        return detail;
-    }
-
-    public void setDetail(TIMGroupMemberInfo detail) {
-        this.detail = detail;
-    }
-
-    public GroupMemberInfo covertTIMGroupMemberInfo(TIMGroupMemberInfo info) {
-        setAccount(info.getUser());
-        setTinyId(info.getTinyId());
-        setJoinTime(info.getJoinTime());
-        setMemberType(info.getRole());
+    public GroupMemberInfo covertTIMGroupMemberInfo(V2TIMGroupMemberInfo info) {
+        if (info instanceof V2TIMGroupMemberFullInfo) {
+            V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = (V2TIMGroupMemberFullInfo)info;
+            setJoinTime(v2TIMGroupMemberFullInfo.getJoinTime());
+            setMemberType(v2TIMGroupMemberFullInfo.getRole());
+        }
+        setAccount(info.getUserID());
+        setNameCard(info.getNameCard());
         return this;
     }
 }

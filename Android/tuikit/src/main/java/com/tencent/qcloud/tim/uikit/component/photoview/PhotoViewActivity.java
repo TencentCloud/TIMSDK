@@ -12,8 +12,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMImage;
+import com.tencent.imsdk.v2.V2TIMDownloadCallback;
+import com.tencent.imsdk.v2.V2TIMElem;
+import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
@@ -23,7 +24,7 @@ import java.io.File;
 
 public class PhotoViewActivity extends Activity {
 
-    public static TIMImage mCurrentOriginalImage;
+    public static V2TIMImageElem.V2TIMImage mCurrentOriginalImage;
     private PhotoView mPhotoView;
     private Matrix mCurrentDisplayMatrix = null;
     private TextView mViewOriginalBtn;
@@ -49,10 +50,11 @@ public class PhotoViewActivity extends Activity {
             mPhotoView.setImageURI(uri);
         } else {
             if (mCurrentOriginalImage != null) {
-                String path = TUIKitConstants.IMAGE_DOWNLOAD_DIR + mCurrentOriginalImage.getUuid();
+                String path = TUIKitConstants.IMAGE_DOWNLOAD_DIR + mCurrentOriginalImage.getUUID();
                 File file = new File(path);
-                if (file.exists())
+                if (file.exists()) {
                     mPhotoView.setImageURI(FileUtil.getUriFromPath(file.getPath()));
+                }
                 else {
                     mPhotoView.setImageURI(uri);
                     mViewOriginalBtn.setVisibility(View.VISIBLE);
@@ -61,10 +63,15 @@ public class PhotoViewActivity extends Activity {
                         public void onClick(View v) {
                             if (mCurrentOriginalImage != null) {
 
-                                final String path = TUIKitConstants.IMAGE_DOWNLOAD_DIR + mCurrentOriginalImage.getUuid();
+                                final String path = TUIKitConstants.IMAGE_DOWNLOAD_DIR + mCurrentOriginalImage.getUUID();
                                 final File file = new File(path);
                                 if (!file.exists()) {
-                                    mCurrentOriginalImage.getImage(path, new TIMCallBack() {
+                                    mCurrentOriginalImage.downloadImage(path, new V2TIMDownloadCallback() {
+                                        @Override
+                                        public void onProgress(V2TIMElem.V2ProgressInfo progressInfo) {
+
+                                        }
+
                                         @Override
                                         public void onError(int code, String desc) {
 

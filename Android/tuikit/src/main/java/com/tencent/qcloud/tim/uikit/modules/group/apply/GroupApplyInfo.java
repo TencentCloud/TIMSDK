@@ -1,6 +1,6 @@
 package com.tencent.qcloud.tim.uikit.modules.group.apply;
 
-import com.tencent.imsdk.ext.group.TIMGroupPendencyItem;
+import com.tencent.imsdk.v2.V2TIMGroupApplication;
 
 import java.io.Serializable;
 
@@ -11,10 +11,10 @@ public class GroupApplyInfo implements Serializable {
     public static final int UNHANDLED = 0;
 
     private int status;
-    private TIMGroupPendencyItem pendencyItem;
+    private V2TIMGroupApplication timGroupApplication;
 
-    public GroupApplyInfo(TIMGroupPendencyItem pendency) {
-        this.pendencyItem = pendency;
+    public GroupApplyInfo(V2TIMGroupApplication timGroupApplication) {
+        this.timGroupApplication = timGroupApplication;
     }
 
     public int getStatus() {
@@ -25,8 +25,8 @@ public class GroupApplyInfo implements Serializable {
         this.status = status;
     }
 
-    public TIMGroupPendencyItem getPendencyItem() {
-        return pendencyItem;
+    public V2TIMGroupApplication getGroupApplication() {
+        return timGroupApplication;
     }
 
 }

@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.support.v7.view.ContextThemeWrapper;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +17,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
+
+import androidx.appcompat.view.ContextThemeWrapper;
 
 
 public class PopWindowUtil {

@@ -78,6 +78,10 @@ public interface IInputLayout {
      */
     void disableSendFileAction(boolean disable);
 
+    boolean enableAudioCall();
+
+    boolean enableVideoCall();
+
     /**
      * 增加更多面板上的事件单元
      *

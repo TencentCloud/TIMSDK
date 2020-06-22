@@ -1,8 +1,6 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,9 @@ import com.tencent.qcloud.tim.uikit.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 
 public class ActionsPagerAdapter extends PagerAdapter {

@@ -1,8 +1,9 @@
 package com.tencent.qcloud.tim.uikit.modules.conversation.interfaces;
 
-import android.support.v7.widget.RecyclerView;
 
 import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * ConversationLayout 的适配器，用户可自定义实现

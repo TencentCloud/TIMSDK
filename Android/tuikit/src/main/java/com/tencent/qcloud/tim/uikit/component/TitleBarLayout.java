@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tim.uikit.component;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,6 +10,8 @@ import android.widget.TextView;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.ITitleBarLayout;
 import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
+
+import androidx.annotation.Nullable;
 
 
 public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {

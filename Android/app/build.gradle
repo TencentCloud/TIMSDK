@@ -53,38 +53,32 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.squareup.okhttp3:okhttp:3.2.0'
-    implementation "com.android.support:recyclerview-v7:27.1.1"
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.android.support:multidex:1.0.1'
-    compile 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
 
     // Optional, if you use support library fragments:
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
 
     // HUAWEI push sdk
-    compile 'com.huawei.android.hms:push:2.6.3.301'
-    compile 'com.huawei.android.hms:base:2.6.3.301'
+    implementation 'com.huawei.android.hms:push:2.6.3.301'
+    implementation 'com.huawei.android.hms:base:2.6.3.301'
     // MEIZU push sdk
-    compile 'com.meizu.flyme.internet:push-internal:3.6.+@aar'
+    implementation 'com.meizu.flyme.internet:push-internal:3.6.+@aar'
     // google firebase
-    implementation('com.google.firebase:firebase-core:17.0.0') {
-        exclude group: 'androidx.core', module: 'core'
-    }
+    implementation('com.google.firebase:firebase-core:17.0.0')
     // google 云消息传递
-    implementation ('com.google.firebase:firebase-messaging:19.0.1'){
-        exclude group: 'androidx.core', module: 'core'
-    }
+    implementation ('com.google.firebase:firebase-messaging:19.0.1')
 
     // bugly sdk
-    compile 'com.tencent.bugly:crashreport:latest.release'
-    compile 'com.tencent.bugly:nativecrashreport:latest.release'
-    compile 'org.bouncycastle:bcpkix-jdk15on:1.59'
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
 
-implementation 'com.tencent.imsdk:tuikit:4.7.10'
+    api 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
+
+implementation 'com.tencent.imsdk:tuikit:4.8.50'
 // implementation project(':tuikit')
 }

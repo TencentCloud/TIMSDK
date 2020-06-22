@@ -70,4 +70,7 @@
     <string name="profile_chat">发送消息</string>
     <string name="profile_del">删除好友</string>
 
+    <string name="search_call_hint">输入群成员名称</string>
+    <string name="video_call">视频通话</string>
+    <string name="audio_call">语音通话</string>
 </resources>

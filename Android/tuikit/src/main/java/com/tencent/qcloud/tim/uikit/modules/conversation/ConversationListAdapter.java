@@ -1,7 +1,9 @@
 package com.tencent.qcloud.tim.uikit.modules.conversation;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,6 +142,15 @@ public class ConversationListAdapter extends IConversationAdapter {
         mDataSource.remove(position);
         notifyItemRemoved(position);
         notifyDataSetChanged();
+    }
+
+    public void notifyDataSourceChanged(String info) {
+        for (int i = 0; i < mDataSource.size(); i++) {
+            if (TextUtils.equals(info, mDataSource.get(i).getConversationId())) {
+                notifyItemChanged(i);
+                return;
+            }
+        }
     }
 
     public void setItemTopTextSize(int size) {

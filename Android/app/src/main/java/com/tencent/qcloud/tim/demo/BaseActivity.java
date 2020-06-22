@@ -3,14 +3,16 @@ package com.tencent.qcloud.tim.demo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
+
 import android.view.View;
 import android.view.WindowManager;
 
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
+import com.tencent.qcloud.tim.demo.login.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.TUIKit;
@@ -31,16 +33,14 @@ public class BaseActivity extends Activity {
         @Override
         public void onForceOffline() {
             ToastUtil.toastLongMessage("您的帐号已在其它终端登录");
-            logout(DemoApplication.instance(), false);
+            logout(DemoApplication.instance());
         }
     };
 
-    public static void logout(Context context, boolean autoLogin) {
+    public static void logout(Context context) {
         DemoLog.i(TAG, "logout");
-        SharedPreferences shareInfo = context.getSharedPreferences(Constants.USERINFO, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shareInfo.edit();
-        editor.putBoolean(Constants.AUTO_LOGIN, autoLogin);
-        editor.commit();
+        UserInfo.getInstance().setToken("");
+        UserInfo.getInstance().setAutoLogin(false);
 
         Intent intent = new Intent(context, LoginForDevActivity.class);
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
@@ -70,10 +70,9 @@ public class BaseActivity extends Activity {
     protected void onStart() {
         DemoLog.i(TAG, "onStart");
         super.onStart();
-        SharedPreferences shareInfo = getSharedPreferences(Constants.USERINFO, Context.MODE_PRIVATE);
-        boolean login = shareInfo.getBoolean(Constants.AUTO_LOGIN, false);
+        boolean login = UserInfo.getInstance().isAutoLogin();
         if (!login) {
-            BaseActivity.logout(DemoApplication.instance(), false);
+            BaseActivity.logout(DemoApplication.instance());
         }
     }
 

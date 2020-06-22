@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tim.demo.thirdpush;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
@@ -32,5 +33,18 @@ public class HUAWEIPushReceiver extends PushReceiver {
         DemoLog.i(TAG, "onToken = " + token);
         ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
+    }
+
+    public static void updateBadge(final Context context, final int number) {
+        DemoLog.i(TAG, "huawei badge = " + number);
+        try {
+            Bundle extra = new Bundle();
+            extra.putString("package", "com.tencent.qcloud.tim.tuikit");
+            extra.putString("class", "com.tencent.qcloud.tim.demo.SplashActivity");
+            extra.putInt("badgenumber", number);
+            context.getContentResolver().call(Uri.parse("content://com.huawei.android.launcher.settings/badge/"), "change_badge", null, extra);
+        } catch (Exception e) {
+            DemoLog.w(TAG, "huawei badge exception: " + e.getLocalizedMessage());
+        }
     }
 }

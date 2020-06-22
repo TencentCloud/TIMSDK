@@ -1,23 +1,30 @@
 package com.tencent.qcloud.tim.demo.main;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.huawei.android.hms.agent.HMSAgent;
 import com.huawei.android.hms.agent.common.handler.ConnectHandler;
 import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
-import com.tencent.imsdk.utils.IMFunc;
+import com.tencent.liteav.model.CallModel;
+import com.tencent.liteav.model.TRTCAVCallImpl;
 import com.tencent.qcloud.tim.demo.BaseActivity;
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.ContactFragment;
 import com.tencent.qcloud.tim.demo.conversation.ConversationFragment;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
+import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIPushReceiver;
 import com.tencent.qcloud.tim.demo.thirdpush.OPPOPushImpl;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
+import com.tencent.qcloud.tim.demo.utils.BrandUtil;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
@@ -37,11 +44,19 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     private TextView mMsgUnread;
     private View mLastTab;
 
+    private CallModel mCallModel;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         DemoLog.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         prepareThirdPushToken();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        DemoLog.i(TAG, "onNewIntent");
+        mCallModel = (CallModel)intent.getSerializableExtra(Constants.CHAT_INFO);
     }
 
     private void prepareThirdPushToken() {
@@ -50,7 +65,7 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
         if (ThirdPushTokenMgr.USER_GOOGLE_FCM) {
             return;
         }
-        if (IMFunc.isBrandHuawei()) {
+        if (BrandUtil.isBrandHuawei()) {
             // 华为离线推送
             HMSAgent.connect(this, new ConnectHandler() {
                 @Override
@@ -60,7 +75,7 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
             });
             getHuaWeiPushToken();
         }
-        if (IMFunc.isBrandVivo()) {
+        if (BrandUtil.isBrandVivo()) {
             // vivo离线推送
             PushClient.getInstance(getApplicationContext()).turnOnPush(new IPushActionListener() {
                 @Override
@@ -166,6 +181,8 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
             unreadStr = "99+";
         }
         mMsgUnread.setText(unreadStr);
+        // 华为离线推送角标
+        HUAWEIPushReceiver.updateBadge(this, count);
     }
 
     @Override
@@ -193,6 +210,12 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     protected void onResume() {
         DemoLog.i(TAG, "onResume");
         super.onResume();
+        if (mCallModel != null) {
+            TRTCAVCallImpl impl = (TRTCAVCallImpl) TRTCAVCallImpl.sharedInstance(DemoApplication.instance());
+            impl.stopCall();
+            impl.handleDialing(mCallModel, mCallModel.sender);
+            mCallModel = null;
+        }
     }
 
     @Override

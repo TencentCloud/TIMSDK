@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -16,6 +15,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
+import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.liteav.SelectContactActivity;
+import com.tencent.liteav.login.UserModel;
+import com.tencent.liteav.model.ITRTCAVCall;
+import com.tencent.liteav.trtcaudiocalldemo.ui.TRTCAudioCallActivity;
+import com.tencent.liteav.trtcvideocalldemo.ui.TRTCVideoCallActivity;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
@@ -24,7 +31,9 @@ import com.tencent.qcloud.tim.uikit.component.face.FaceFragment;
 import com.tencent.qcloud.tim.uikit.component.face.FaceManager;
 import com.tencent.qcloud.tim.uikit.component.video.CameraActivity;
 import com.tencent.qcloud.tim.uikit.component.video.JCameraView;
+import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
+import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreFragment;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
@@ -33,6 +42,8 @@ import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 聊天界面，底部发送图片、拍照、摄像、文件面板
@@ -51,6 +62,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
     private MessageHandler mMessageHandler;
     private FragmentManager mFragmentManager;
     private InputMoreFragment mInputMoreFragment;
+    private IChatLayout mChatLayout;
     private boolean mSendEnable;
     private boolean mAudioCancel;
     private int mCurrentState;
@@ -279,6 +291,36 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
             }
         });
         mInputMoreFragment.startActivityForResult(intent, InputMoreFragment.REQUEST_CODE_FILE);
+    }
+
+    @Override
+    public void startAudioCall() {
+        if (mChatLayout.getChatInfo().getType() == V2TIMConversation.V2TIM_C2C) {
+            List<UserModel> contactList = new ArrayList<>();
+            UserModel model = new UserModel();
+            model.userId = mChatLayout.getChatInfo().getId();
+            model.userName = mChatLayout.getChatInfo().getChatName();
+            model.userSig = TUIKitConfigs.getConfigs().getGeneralConfig().getUserSig();
+            contactList.add(model);
+            TRTCAudioCallActivity.startCallSomeone(mActivity.getApplicationContext(), contactList);
+        } else {
+            SelectContactActivity.start(mActivity.getApplicationContext(), mChatLayout.getChatInfo().getId(), ITRTCAVCall.TYPE_AUDIO_CALL);
+        }
+    }
+
+    @Override
+    protected void startVideoCall() {
+        if (mChatLayout.getChatInfo().getType() == V2TIMConversation.V2TIM_C2C) {
+            List<UserModel> contactList = new ArrayList<>();
+            UserModel model = new UserModel();
+            model.userId = mChatLayout.getChatInfo().getId();
+            model.userName = mChatLayout.getChatInfo().getChatName();
+            model.userSig = TUIKitConfigs.getConfigs().getGeneralConfig().getUserSig();
+            contactList.add(model);
+            TRTCVideoCallActivity.startCallSomeone(mActivity.getApplicationContext(), contactList);
+        } else {
+            SelectContactActivity.start(mActivity.getApplicationContext(), mChatLayout.getChatInfo().getId(), ITRTCAVCall.TYPE_VIDEO_CALL);
+        }
     }
 
     public void setChatInputHandler(ChatInputHandler handler) {
@@ -564,6 +606,9 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
         }
     }
 
+    public void setChatLayout(IChatLayout chatLayout) {
+        mChatLayout = chatLayout;
+    }
 
     public interface MessageHandler {
         void sendMessage(MessageInfo msg);

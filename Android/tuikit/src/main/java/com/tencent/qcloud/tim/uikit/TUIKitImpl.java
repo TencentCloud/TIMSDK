@@ -1,31 +1,34 @@
 package com.tencent.qcloud.tim.uikit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMConnListener;
-import com.tencent.imsdk.TIMConversation;
-import com.tencent.imsdk.TIMGroupEventListener;
-import com.tencent.imsdk.TIMGroupTipsElem;
-import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMMessageListener;
-import com.tencent.imsdk.TIMRefreshListener;
-import com.tencent.imsdk.TIMSNSChangeInfo;
-import com.tencent.imsdk.TIMSdkConfig;
-import com.tencent.imsdk.TIMUserConfig;
-import com.tencent.imsdk.TIMUserStatusListener;
-import com.tencent.imsdk.ext.message.TIMMessageReceipt;
-import com.tencent.imsdk.ext.message.TIMMessageReceiptListener;
-import com.tencent.imsdk.friendship.TIMFriendPendencyInfo;
-import com.tencent.imsdk.friendship.TIMFriendshipListener;
+import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMConversationListener;
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMFriendshipListener;
+import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
+import com.tencent.imsdk.v2.V2TIMGroupListener;
+import com.tencent.imsdk.v2.V2TIMGroupMemberChangeInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMMessageReceipt;
+import com.tencent.imsdk.v2.V2TIMSDKConfig;
+import com.tencent.imsdk.v2.V2TIMSDKListener;
+import com.tencent.liteav.AVCallManager;
+import com.tencent.liteav.login.ProfileManager;
+import com.tencent.liteav.login.UserModel;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.face.FaceManager;
 import com.tencent.qcloud.tim.uikit.config.GeneralConfig;
 import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
 import com.tencent.qcloud.tim.uikit.modules.chat.C2CChatManagerKit;
+import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageRevokedManager;
 import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
@@ -61,6 +64,7 @@ public class TUIKitImpl {
             GeneralConfig generalConfig = new GeneralConfig();
             sConfigs.setGeneralConfig(generalConfig);
         }
+        sConfigs.getGeneralConfig().setSDKAppId(sdkAppID);
         String dir = sConfigs.getGeneralConfig().getAppCacheDir();
         if (TextUtils.isEmpty(dir)) {
             TUIKitLog.e(TAG, "appCacheDir is empty, use default dir");
@@ -90,8 +94,10 @@ public class TUIKitImpl {
         FaceManager.loadFaceFiles();
     }
 
-    public static void login(String userid, String usersig, final IUIKitCallBack callback) {
-        TIMManager.getInstance().login(userid, usersig, new TIMCallBack() {
+    public static void login(final String userid, final String usersig, final IUIKitCallBack callback) {
+        TUIKitConfigs.getConfigs().getGeneralConfig().setUserId(userid);
+        TUIKitConfigs.getConfigs().getGeneralConfig().setUserSig(usersig);
+        V2TIMManager.getInstance().login(userid, usersig, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
                 callback.onError(TAG, code, desc);
@@ -100,33 +106,68 @@ public class TUIKitImpl {
             @Override
             public void onSuccess() {
                 callback.onSuccess(null);
+                if (!TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
+                    return;
+                }
+                UserModel self = new UserModel();
+                self.userId = userid;
+                self.userSig = usersig;
+                ProfileManager.getInstance().setUserModel(self);
+                AVCallManager.getInstance().init(sAppContext);
+            }
+        });
+    }
+
+    public static void logout(final IUIKitCallBack callback) {
+        V2TIMManager.getInstance().logout(new V2TIMCallback() {
+            @Override
+            public void onError(int code, String desc) {
+                callback.onError(TAG, code, desc);
+            }
+
+            @Override
+            public void onSuccess() {
+                callback.onSuccess(null);
+                if (!TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
+                    return;
+                }
+                Intent intent = new Intent(sAppContext, AVCallManager.class);
+                sAppContext.stopService(intent);
             }
         });
     }
 
     private static void initIM(Context context, int sdkAppID) {
-        TIMSdkConfig sdkConfig = sConfigs.getSdkConfig();
+        V2TIMSDKConfig sdkConfig = sConfigs.getSdkConfig();
         if (sdkConfig == null) {
-            sdkConfig = new TIMSdkConfig(sdkAppID);
+            sdkConfig = new V2TIMSDKConfig();
             sConfigs.setSdkConfig(sdkConfig);
         }
         GeneralConfig generalConfig = sConfigs.getGeneralConfig();
         sdkConfig.setLogLevel(generalConfig.getLogLevel());
-        sdkConfig.enableLogPrint(generalConfig.isLogPrint());
-        sdkConfig.setTestEnv(generalConfig.isTestEnv());
-        TIMManager.getInstance().init(context, sdkConfig);
-
-        TIMUserConfig userConfig = new TIMUserConfig();
-        userConfig.setReadReceiptEnabled(true);
-        userConfig.setMessageReceiptListener(new TIMMessageReceiptListener() {
+        V2TIMManager.getInstance().initSDK(context, sdkAppID, sdkConfig, new V2TIMSDKListener() {
             @Override
-            public void onRecvReceipt(List<TIMMessageReceipt> receiptList) {
-                C2CChatManagerKit.getInstance().onReadReport(receiptList);
+            public void onConnecting() {
             }
-        });
-        userConfig.setUserStatusListener(new TIMUserStatusListener() {
+
             @Override
-            public void onForceOffline() {
+            public void onConnectSuccess() {
+                sIMSDKConnected = true;
+                for (IMEventListener l : sIMEventListeners) {
+                    l.onConnected();
+                }
+            }
+
+            @Override
+            public void onConnectFailed(int code, String error) {
+                sIMSDKConnected = false;
+                for (IMEventListener l : sIMEventListeners) {
+                    l.onDisconnected(code, error);
+                }
+            }
+
+            @Override
+            public void onKickedOffline() {
                 for (IMEventListener l : sIMEventListeners) {
                     l.onForceOffline();
                 }
@@ -142,96 +183,170 @@ public class TUIKitImpl {
             }
         });
 
-        userConfig.setConnectionListener(new TIMConnListener() {
+        V2TIMManager.getConversationManager().setConversationListener(new V2TIMConversationListener() {
             @Override
-            public void onConnected() {
-                sIMSDKConnected = true;
-                for (IMEventListener l : sIMEventListeners) {
-                    l.onConnected();
+            public void onSyncServerStart() {
+                super.onSyncServerStart();
+            }
+
+            @Override
+            public void onSyncServerFinish() {
+                super.onSyncServerFinish();
+            }
+
+            @Override
+            public void onSyncServerFailed() {
+                super.onSyncServerFailed();
+            }
+
+            @Override
+            public void onNewConversation(List<V2TIMConversation> conversationList) {
+                ConversationManagerKit.getInstance().onRefreshConversation(conversationList);
+                for (IMEventListener listener : sIMEventListeners) {
+                    listener.onRefreshConversation(conversationList);
                 }
             }
 
             @Override
-            public void onDisconnected(int code, String desc) {
-                sIMSDKConnected = false;
-                for (IMEventListener l : sIMEventListeners) {
-                    l.onDisconnected(code, desc);
-                }
-            }
-
-            @Override
-            public void onWifiNeedAuth(String name) {
-                for (IMEventListener l : sIMEventListeners) {
-                    l.onWifiNeedAuth(name);
-                }
-            }
-        });
-
-        userConfig.setRefreshListener(new TIMRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-            }
-
-            @Override
-            public void onRefreshConversation(List<TIMConversation> conversations) {
-                ConversationManagerKit.getInstance().onRefreshConversation(conversations);
-                for (IMEventListener l : sIMEventListeners) {
-                    l.onRefreshConversation(conversations);
+            public void onConversationChanged(List<V2TIMConversation> conversationList) {
+                ConversationManagerKit.getInstance().onRefreshConversation(conversationList);
+                for (IMEventListener listener : sIMEventListeners) {
+                    listener.onRefreshConversation(conversationList);
                 }
             }
         });
 
-        userConfig.setGroupEventListener(new TIMGroupEventListener() {
+        V2TIMManager.getInstance().setGroupListener(new V2TIMGroupListener() {
             @Override
-            public void onGroupTipsEvent(TIMGroupTipsElem elem) {
-                for (IMEventListener l : sIMEventListeners) {
-                    l.onGroupTipsEvent(elem);
+            public void onMemberEnter(String groupID, List<V2TIMGroupMemberInfo> memberList) {
+                TUIKitLog.i(TAG, "onMemberEnter groupID:" + groupID + ", size:" + memberList.size());
+                for (V2TIMGroupMemberInfo v2TIMGroupMemberInfo : memberList) {
+                    if (v2TIMGroupMemberInfo.getUserID().equals(V2TIMManager.getInstance().getLoginUser())) {
+                        GroupChatManagerKit.getInstance().notifyJoinGroup(groupID, false);
+                        return;
+                    }
                 }
             }
-        });
 
-        userConfig.setFriendshipListener(new TIMFriendshipListener() {
             @Override
-            public void onAddFriends(List<String> list) {
-                TUIKitLog.i(TAG, "onAddFriends: " + list.size());
+            public void onMemberLeave(String groupID, V2TIMGroupMemberInfo member) {
+                TUIKitLog.i(TAG, "onMemberLeave groupID:" + groupID + ", memberID:" + member.getUserID());
             }
 
             @Override
-            public void onDelFriends(List<String> list) {
-                TUIKitLog.i(TAG, "onDelFriends: " + list.size());
-            }
-
-            @Override
-            public void onFriendProfileUpdate(List<TIMSNSChangeInfo> list) {
-                TUIKitLog.i(TAG, "onFriendProfileUpdate: " + list.size());
-            }
-
-            @Override
-            public void onAddFriendReqs(List<TIMFriendPendencyInfo> list) {
-                TUIKitLog.i(TAG, "onAddFriendReqs: " + list.size());
-            }
-        });
-
-        TIMManager.getInstance().addMessageListener(new TIMMessageListener() {
-            @Override
-            public boolean onNewMessages(List<TIMMessage> msgs) {
-                for (IMEventListener l : sIMEventListeners) {
-                    l.onNewMessages(msgs);
+            public void onMemberInvited(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+                for (V2TIMGroupMemberInfo v2TIMGroupMemberInfo : memberList) {
+                    if (v2TIMGroupMemberInfo.getUserID().equals(V2TIMManager.getInstance().getLoginUser())) {
+                        GroupChatManagerKit.getInstance().notifyJoinGroup(groupID, true);
+                        return;
+                    }
                 }
-                return false;
+            }
+
+            @Override
+            public void onMemberKicked(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+                for (V2TIMGroupMemberInfo v2TIMGroupMemberInfo : memberList) {
+                    if (v2TIMGroupMemberInfo.getUserID().equals(V2TIMManager.getInstance().getLoginUser())) {
+                        GroupChatManagerKit.getInstance().notifyKickedFromGroup(groupID);
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onMemberInfoChanged(String groupID, List<V2TIMGroupMemberChangeInfo> v2TIMGroupMemberChangeInfoList) {
+
+            }
+
+            @Override
+            public void onGroupCreated(String groupID) {
+
+            }
+
+            @Override
+            public void onGroupDismissed(String groupID, V2TIMGroupMemberInfo opUser) {
+                GroupChatManagerKit.getInstance().notifyGroupDismissed(groupID);
+            }
+
+            @Override
+            public void onGroupRecycled(String groupID, V2TIMGroupMemberInfo opUser) {
+                GroupChatManagerKit.getInstance().notifyGroupDismissed(groupID);
+            }
+
+            @Override
+            public void onGroupInfoChanged(String groupID, List<V2TIMGroupChangeInfo> changeInfos) {
+
+            }
+
+            @Override
+            public void onReceiveJoinApplication(String groupID, V2TIMGroupMemberInfo member, String opReason) {
+
+            }
+
+            @Override
+            public void onApplicationProcessed(String groupID, V2TIMGroupMemberInfo opUser, boolean isAgreeJoin, String opReason) {
+                if (!isAgreeJoin) {
+                    GroupChatManagerKit.getInstance().notifyJoinGroupRefused(groupID);
+                }
+            }
+
+            @Override
+            public void onGrantAdministrator(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+
+            }
+
+            @Override
+            public void onRevokeAdministrator(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+
+            }
+
+            @Override
+            public void onQuitFromGroup(String groupID) {
+                TUIKitLog.i(TAG, "onQuitFromGroup groupID:" + groupID);
+            }
+
+            @Override
+            public void onReceiveRESTCustomData(String groupID, byte[] customData) {
+                GroupChatManagerKit.getInstance().notifyGroupRESTCustomSystemData(groupID, customData);
             }
         });
 
-        userConfig.setMessageRevokedListener(MessageRevokedManager.getInstance());
-        TIMManager.getInstance().setUserConfig(userConfig);
+        V2TIMManager.getFriendshipManager().setFriendListener(new V2TIMFriendshipListener() {
+            @Override
+            public void onFriendListAdded(List<V2TIMFriendInfo> users) {
+                C2CChatManagerKit.getInstance().notifyNewFriend(users);
+            }
+        });
 
+        V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
+            @Override
+            public void onRecvNewMessage(V2TIMMessage msg) {
+                for (IMEventListener l : sIMEventListeners) {
+                    l.onNewMessage(msg);
+                }
+            }
+
+            @Override
+            public void onRecvC2CReadReceipt(List<V2TIMMessageReceipt> receiptList) {
+                C2CChatManagerKit.getInstance().onReadReport(receiptList);
+            }
+
+            @Override
+            public void onRecvMessageRevoked(String msgID) {
+                super.onRecvMessageRevoked(msgID);
+            }
+        });
+
+        V2TIMManager.getMessageManager().addAdvancedMsgListener(MessageRevokedManager.getInstance());
     }
 
     public static void unInit() {
         ConversationManagerKit.getInstance().destroyConversation();
+        if (!TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
+            return;
+        }
+        AVCallManager.getInstance().unInit();
     }
-
 
     public static Context getAppContext() {
         return sAppContext;

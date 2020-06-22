@@ -1,8 +1,7 @@
 package com.tencent.qcloud.tim.uikit.base;
 
-import com.tencent.imsdk.TIMConversation;
-import com.tencent.imsdk.TIMGroupTipsElem;
-import com.tencent.imsdk.TIMMessage;
+import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.util.List;
@@ -59,25 +58,16 @@ public abstract class IMEventListener {
      *
      * @param conversations 需要刷新的会话列表
      */
-    public void onRefreshConversation(List<TIMConversation> conversations) {
+    public void onRefreshConversation(List<V2TIMConversation> conversations) {
         TUIKitLog.v(TAG, "onRefreshConversation, size:" + (conversations != null ? conversations.size() : 0));
     }
 
     /**
      * 收到新消息回调
      *
-     * @param msgs 收到的新消息
+     * @param v2TIMMessage 收到的新消息
      */
-    public void onNewMessages(List<TIMMessage> msgs) {
-        TUIKitLog.v(TAG, "onNewMessages, size:" + (msgs != null ? msgs.size() : 0));
-    }
-
-    /**
-     * 群Tips事件通知回调
-     *
-     * @param elem 群tips消息
-     */
-    public void onGroupTipsEvent(TIMGroupTipsElem elem) {
-        TUIKitLog.v(TAG, "onGroupTipsEvent, groupid:" + elem.getGroupId() + "|type:" + elem.getTipsType());
+    public void onNewMessage(V2TIMMessage v2TIMMessage) {
+        TUIKitLog.v(TAG, "onNewMessage, msgID:" + (v2TIMMessage != null ? v2TIMMessage.getMsgID() : ""));
     }
 }

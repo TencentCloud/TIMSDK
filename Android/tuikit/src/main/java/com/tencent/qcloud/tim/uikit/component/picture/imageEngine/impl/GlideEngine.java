@@ -26,10 +26,9 @@ public class GlideEngine implements ImageEngine {
 
     public static void loadCornerImage(ImageView imageView, String filePath, RequestListener listener, float radius) {
         CornerTransform transform = new CornerTransform(TUIKit.getAppContext(), radius);
-        ColorDrawable drawable = new ColorDrawable(Color.GRAY);
         RequestOptions options = new RequestOptions()
                 .centerCrop()
-                .placeholder(drawable)
+                .placeholder(R.drawable.default_head)
                 .transform(transform);
         Glide.with(TUIKit.getAppContext())
                 .load(filePath)

@@ -13,5 +13,4 @@ public class Constants {
     public static final String ICON_URL = "icon_url";
 
     public static final String CHAT_INFO = "chatInfo";
-
 }

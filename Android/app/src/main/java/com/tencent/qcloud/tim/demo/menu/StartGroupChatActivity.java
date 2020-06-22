@@ -2,11 +2,13 @@ package com.tencent.qcloud.tim.demo.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.view.View;
 
-import com.tencent.imsdk.TIMConversationType;
-import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
@@ -56,7 +58,7 @@ public class StartGroupChatActivity extends BaseActivity {
         array = getResources().getStringArray(R.array.group_join_type);
         mJoinTypes.addAll(Arrays.asList(array));
         GroupMemberInfo memberInfo = new GroupMemberInfo();
-        memberInfo.setAccount(TIMManager.getInstance().getLoginUser());
+        memberInfo.setAccount(V2TIMManager.getInstance().getLoginUser());
         mMembers.add(0, memberInfo);
         mTitleBar = findViewById(R.id.group_create_title_bar);
         mTitleBar.setTitle(getResources().getString(R.string.sure), TitleBarLayout.POSITION.RIGHT);
@@ -156,7 +158,7 @@ public class StartGroupChatActivity extends BaseActivity {
             mJoinTypeIndex = -1;
         }
         final GroupInfo groupInfo = new GroupInfo();
-        String groupName = TIMManager.getInstance().getLoginUser();
+        String groupName = V2TIMManager.getInstance().getLoginUser();
         for (int i = 1; i < mMembers.size(); i++) {
             groupName = groupName + "、" + mMembers.get(i).getAccount();
         }
@@ -174,7 +176,7 @@ public class StartGroupChatActivity extends BaseActivity {
             @Override
             public void onSuccess(Object data) {
                 ChatInfo chatInfo = new ChatInfo();
-                chatInfo.setType(TIMConversationType.Group);
+                chatInfo.setType(V2TIMConversation.V2TIM_GROUP);
                 chatInfo.setId(data.toString());
                 chatInfo.setChatName(groupInfo.getGroupName());
                 Intent intent = new Intent(DemoApplication.instance(), ChatActivity.class);

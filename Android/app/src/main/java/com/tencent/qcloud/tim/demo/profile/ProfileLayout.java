@@ -3,10 +3,11 @@ package com.tencent.qcloud.tim.demo.profile;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,14 +15,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMCallBack;
-import com.tencent.imsdk.TIMFriendAllowType;
-import com.tencent.imsdk.TIMFriendshipManager;
-import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.TIMUserProfile;
-import com.tencent.imsdk.TIMValueCallBack;
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.demo.utils.Constants;
+import com.tencent.qcloud.tim.demo.login.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.component.LineControllerView;
 import com.tencent.qcloud.tim.uikit.component.SelectionActivity;
@@ -32,6 +31,7 @@ import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 public class ProfileLayout extends LinearLayout implements View.OnClickListener {
@@ -48,7 +48,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
     private LineControllerView mModifySignatureView;
     private LineControllerView mAboutIM;
     private ArrayList<String> mJoinTypeTextList = new ArrayList<>();
-    private ArrayList<String> mJoinTypeIdList = new ArrayList<>();
+    private ArrayList<Integer> mJoinTypeIdList = new ArrayList<>();
     private int mJoinTypeIndex = 2;
     private String mIconUrl;
 
@@ -71,19 +71,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         inflate(getContext(), R.layout.profile_layout, this);
 
         mUserIcon = findViewById(R.id.self_icon);
-        TIMUserProfile profile = TIMFriendshipManager.getInstance().querySelfProfile();
-        if (profile != null) {
-            if (!TextUtils.isEmpty(profile.getFaceUrl())) {
-                GlideEngine.loadImage(mUserIcon, Uri.parse(profile.getFaceUrl()));
-            }
-        } else {
-            SharedPreferences shareInfo = getContext().getSharedPreferences(Constants.USERINFO, Context.MODE_PRIVATE);
-            String url = shareInfo.getString(Constants.ICON_URL, "");
-            if (!TextUtils.isEmpty(url)) {
-                GlideEngine.loadImage(mUserIcon, Uri.parse(url));
-            }
-        }
-
+        GlideEngine.loadImage(mUserIcon, UserInfo.getInstance().getAvatar());
         mAccountView = findViewById(R.id.self_account);
 
         mTitleBar = findViewById(R.id.self_info_title_bar);
@@ -110,36 +98,52 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         mJoinTypeTextList.add(getResources().getString(R.string.allow_type_allow_any));
         mJoinTypeTextList.add(getResources().getString(R.string.allow_type_deny_any));
         mJoinTypeTextList.add(getResources().getString(R.string.allow_type_need_confirm));
-        mJoinTypeIdList.add(TIMFriendAllowType.TIM_FRIEND_ALLOW_ANY);
-        mJoinTypeIdList.add(TIMFriendAllowType.TIM_FRIEND_DENY_ANY);
-        mJoinTypeIdList.add(TIMFriendAllowType.TIM_FRIEND_NEED_CONFIRM);
+        mJoinTypeIdList.add(V2TIMUserFullInfo.V2TIM_FRIEND_ALLOW_ANY);
+        mJoinTypeIdList.add(V2TIMUserFullInfo.V2TIM_FRIEND_DENY_ANY);
+        mJoinTypeIdList.add(V2TIMUserFullInfo.V2TIM_FRIEND_NEED_CONFIRM);
 
-        mAccountView.setText(String.format(getResources().getString(R.string.id), TIMManager.getInstance().getLoginUser()));
-        TIMFriendshipManager.getInstance().getSelfProfile(new TIMValueCallBack<TIMUserProfile>() {
+        String selfUserID = V2TIMManager.getInstance().getLoginUser();
+
+        mAccountView.setText(String.format(getResources().getString(R.string.id), selfUserID));
+
+        List<String> userList = new ArrayList<>();
+        userList.add(selfUserID);
+        V2TIMManager.getInstance().getUsersInfo(userList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
             @Override
-            public void onError(int i, String s) {
-                DemoLog.e(TAG, "initSelfProfile err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                DemoLog.e(TAG, "initSelfProfile err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
             }
 
             @Override
-            public void onSuccess(TIMUserProfile profile) {
-                DemoLog.i(TAG, "initSelfProfile success, timUserProfile = " + profile.toString());
-                mModifyNickNameView.setContent(profile.getNickName());
-                mAccountView.setText(String.format(getResources().getString(R.string.id), profile.getIdentifier()));
-                mModifySignatureView.setContent(profile.getSelfSignature());
+            public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                if (v2TIMUserFullInfos == null || v2TIMUserFullInfos.size() == 0) {
+                    DemoLog.e(TAG, "getUsersInfo success but is empty");
+                    return;
+                }
+                V2TIMUserFullInfo v2TIMUserFullInfo = v2TIMUserFullInfos.get(0);
+                DemoLog.i(TAG, "initSelfProfile success, v2TIMUserFullInfo = " + v2TIMUserFullInfo.toString());
+                if (TextUtils.isEmpty(v2TIMUserFullInfo.getFaceUrl())) {
+                    GlideEngine.loadImage(mUserIcon, R.drawable.default_user_icon);
+                } else {
+                    GlideEngine.loadImage(mUserIcon, Uri.parse(v2TIMUserFullInfo.getFaceUrl()));
+                }
+
+                mModifyNickNameView.setContent(v2TIMUserFullInfo.getNickName());
+                mAccountView.setText(String.format(getResources().getString(R.string.id), v2TIMUserFullInfo.getUserID()));
+                mModifySignatureView.setContent(v2TIMUserFullInfo.getSelfSignature());
                 mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_need_confirm));
-                if (TextUtils.equals(TIMFriendAllowType.TIM_FRIEND_ALLOW_ANY, profile.getAllowType())) {
+                if (v2TIMUserFullInfo.getAllowType() == V2TIMUserFullInfo.V2TIM_FRIEND_ALLOW_ANY) {
                     mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_allow_any));
                     mJoinTypeIndex = 0;
-                } else if (TextUtils.equals(TIMFriendAllowType.TIM_FRIEND_DENY_ANY, profile.getAllowType())) {
+                } else if (v2TIMUserFullInfo.getAllowType() == V2TIMUserFullInfo.V2TIM_FRIEND_DENY_ANY) {
                     mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_deny_any));
                     mJoinTypeIndex = 1;
-                } else if (TextUtils.equals(TIMFriendAllowType.TIM_FRIEND_NEED_CONFIRM, profile.getAllowType())) {
+                } else if (v2TIMUserFullInfo.getAllowType() == V2TIMUserFullInfo.V2TIM_FRIEND_NEED_CONFIRM) {
                     mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_need_confirm));
                     mJoinTypeIndex = 2;
                 } else {
-                    mModifyAllowTypeView.setContent(profile.getAllowType());
+                    mModifyAllowTypeView.setContent("");
                 }
             }
         });
@@ -148,15 +152,17 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.modify_user_icon) {
-            mIconUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
+            String selfUserID = V2TIMManager.getInstance().getLoginUser();
+            if (TextUtils.isEmpty(selfUserID)) {
+                DemoLog.e(TAG, "selfUserID:" + selfUserID);
+                return;
+            }
+            byte[] bytes = selfUserID.getBytes();
+            int index = bytes[bytes.length - 1] % 10;
+            String avatarName = "avatar" + index + "_100";
+            mIconUrl = "https://imgcache.qq.com/qcloud/public/static/" + avatarName + ".20191230.png";
             GlideEngine.loadImage(mUserIcon, Uri.parse(mIconUrl));
             updateProfile();
-
-            SharedPreferences shareInfo = getContext().getSharedPreferences(Constants.USERINFO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = shareInfo.edit();
-            editor.putString(Constants.ICON_URL, mIconUrl);
-            editor.commit();
-
         } else if (v.getId() == R.id.modify_nick_name) {
             Bundle bundle = new Bundle();
             bundle.putString(TUIKitConstants.Selection.TITLE, getResources().getString(R.string.modify_nick_name));
@@ -203,31 +209,30 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
     private void updateProfile() {
         HashMap<String, Object> hashMap = new HashMap<>();
 
+        V2TIMUserFullInfo v2TIMUserFullInfo = new V2TIMUserFullInfo();
         // 头像
         if (!TextUtils.isEmpty(mIconUrl)) {
-            hashMap.put(TIMUserProfile.TIM_PROFILE_TYPE_KEY_FACEURL, mIconUrl);
+            v2TIMUserFullInfo.setFaceUrl(mIconUrl);
+            UserInfo.getInstance().setAvatar(mIconUrl);
         }
 
         // 昵称
         String nickName = mModifyNickNameView.getContent();
-        hashMap.put(TIMUserProfile.TIM_PROFILE_TYPE_KEY_NICK, nickName);
+        v2TIMUserFullInfo.setNickname(nickName);
 
         // 个性签名
         String signature = mModifySignatureView.getContent();
-        hashMap.put(TIMUserProfile.TIM_PROFILE_TYPE_KEY_SELFSIGNATURE, signature);
-
-        // 地区
-        hashMap.put(TIMUserProfile.TIM_PROFILE_TYPE_KEY_LOCATION, "sz");
+        v2TIMUserFullInfo.setSelfSignature(signature);
 
         // 加我验证方式
-        String allowType = mJoinTypeIdList.get(mJoinTypeIndex);
-        hashMap.put(TIMUserProfile.TIM_PROFILE_TYPE_KEY_ALLOWTYPE, allowType);
+        int allowType = mJoinTypeIdList.get(mJoinTypeIndex);
+        v2TIMUserFullInfo.setAllowType(allowType);
 
-        TIMFriendshipManager.getInstance().modifySelfProfile(hashMap, new TIMCallBack() {
+        V2TIMManager.getInstance().setSelfInfo(v2TIMUserFullInfo, new V2TIMCallback() {
             @Override
-            public void onError(int i, String s) {
-                DemoLog.e(TAG, "modifySelfProfile err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
+            public void onError(int code, String desc) {
+                DemoLog.e(TAG, "modifySelfProfile err code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
             }
 
             @Override

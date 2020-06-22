@@ -1,7 +1,5 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.interfaces;
 
-import android.support.v7.widget.RecyclerView;
-
 import com.tencent.qcloud.tim.uikit.component.action.PopMenuAction;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageListAdapter;

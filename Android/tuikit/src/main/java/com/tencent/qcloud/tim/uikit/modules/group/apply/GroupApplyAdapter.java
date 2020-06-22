@@ -80,8 +80,8 @@ public class GroupApplyAdapter extends BaseAdapter {
         } else {
             holder = (MyViewHolder) view.getTag();
         }
-        holder.memberName.setText(info.getPendencyItem().getFromUser());
-        holder.reason.setText(info.getPendencyItem().getRequestMsg());
+        holder.memberName.setText(info.getGroupApplication().getFromUser());
+        holder.reason.setText(info.getGroupApplication().getRequestMsg());
         if (info.getStatus() == GroupApplyInfo.UNHANDLED) {
             holder.accept.setVisibility(View.VISIBLE);
             holder.accept.setText(R.string.accept);
@@ -124,7 +124,7 @@ public class GroupApplyAdapter extends BaseAdapter {
 
     public void updateItemData(GroupApplyInfo info) {
         for (GroupApplyInfo i : mGroupMembers) {
-            if (TextUtils.equals(i.getPendencyItem().getFromUser(), info.getPendencyItem().getFromUser())) {
+            if (TextUtils.equals(i.getGroupApplication().getFromUser(), info.getGroupApplication().getFromUser())) {
                 i.setStatus(info.getStatus());
                 notifyDataSetChanged();
                 break;

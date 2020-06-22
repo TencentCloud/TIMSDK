@@ -2,7 +2,9 @@ package com.tencent.qcloud.tim.uikit.modules.group.member;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;

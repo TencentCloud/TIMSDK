@@ -1,7 +1,15 @@
 package com.tencent.qcloud.tim.uikit.modules.chat;
 
-import com.tencent.imsdk.*;
-import com.tencent.openqq.protocol.imsdk.msg;
+import com.google.gson.Gson;
+import com.tencent.imsdk.v2.V2TIMCreateGroupMemberInfo;
+import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
+import com.tencent.imsdk.v2.V2TIMGroupInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
+import com.tencent.imsdk.v2.V2TIMGroupTipsElem;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMSendCallback;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatManagerKit;
@@ -10,15 +18,15 @@ import com.tencent.qcloud.tim.uikit.modules.group.apply.GroupApplyInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfoProvider;
 import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
+import com.tencent.qcloud.tim.uikit.modules.message.MessageCustom;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class GroupChatManagerKit extends ChatManagerKit {
 
@@ -41,60 +49,75 @@ public class GroupChatManagerKit extends ChatManagerKit {
         return mKit;
     }
 
-    private static void sendTipsMessage(TIMConversation conversation, TIMMessage message, final IUIKitCallBack callBack) {
-        conversation.sendMessage(message, new TIMValueCallBack<TIMMessage>() {
+    private static void sendTipsMessage(String groupID, V2TIMMessage message, final IUIKitCallBack callBack) {
+        V2TIMManager.getMessageManager().sendMessage(message, null, groupID, V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, null, new V2TIMSendCallback<V2TIMMessage>() {
             @Override
-            public void onError(final int code, final String desc) {
-                TUIKitLog.i(TAG, "sendTipsMessage fail:" + code + "=" + desc);
-                if (callBack != null) {
-                    callBack.onError(TAG, code, desc);
-                }
+            public void onProgress(int progress) {
+
             }
 
             @Override
-            public void onSuccess(TIMMessage timMessage) {
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "sendTipsMessage fail:" + code + "=" + desc);
+            }
+
+            @Override
+            public void onSuccess(V2TIMMessage v2TIMMessage) {
                 TUIKitLog.i(TAG, "sendTipsMessage onSuccess");
                 if (callBack != null) {
-                    callBack.onSuccess(timMessage);
+                    callBack.onSuccess(v2TIMMessage);
                 }
             }
         });
     }
 
     public static void createGroupChat(final GroupInfo chatInfo, final IUIKitCallBack callBack) {
-        final TIMGroupManager.CreateGroupParam param = new TIMGroupManager.CreateGroupParam(chatInfo.getGroupType(), chatInfo.getGroupName());
-        if (chatInfo.getJoinType() > -1) {
-            param.setAddOption(TIMGroupAddOpt.values()[chatInfo.getJoinType()]);
-        }
-        param.setIntroduction(chatInfo.getNotice());
-        List<TIMGroupMemberInfo> infos = new ArrayList<>();
+        V2TIMGroupInfo v2TIMGroupInfo = new V2TIMGroupInfo();
+        v2TIMGroupInfo.setGroupType(chatInfo.getGroupType());
+        v2TIMGroupInfo.setGroupName(chatInfo.getGroupName());
+        v2TIMGroupInfo.setGroupAddOpt(chatInfo.getJoinType());
+
+        List<V2TIMCreateGroupMemberInfo> v2TIMCreateGroupMemberInfoList = new ArrayList<>();
         for (int i = 0; i < chatInfo.getMemberDetails().size(); i++) {
-            TIMGroupMemberInfo memberInfo = new TIMGroupMemberInfo(chatInfo.getMemberDetails().get(i).getAccount());
-            infos.add(memberInfo);
+            GroupMemberInfo groupMemberInfo = chatInfo.getMemberDetails().get(i);
+            V2TIMCreateGroupMemberInfo v2TIMCreateGroupMemberInfo = new V2TIMCreateGroupMemberInfo();
+            v2TIMCreateGroupMemberInfo.setUserID(groupMemberInfo.getAccount());
+            v2TIMCreateGroupMemberInfoList.add(v2TIMCreateGroupMemberInfo);
         }
-        param.setMembers(infos);
-        TIMGroupManager.getInstance().createGroup(param, new TIMValueCallBack<String>() {
+
+        V2TIMManager.getGroupManager().createGroup(v2TIMGroupInfo, v2TIMCreateGroupMemberInfoList, new V2TIMValueCallback<String>() {
             @Override
-            public void onError(final int code, final String desc) {
-                callBack.onError(TAG, code, desc);
+            public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "createGroup failed, code: " + code + "|desc: " + desc);
+                if (callBack != null) {
+                    callBack.onError(TAG, code, desc);
+                }
             }
 
             @Override
             public void onSuccess(final String groupId) {
                 chatInfo.setId(groupId);
-                String message = TIMManager.getInstance().getLoginUser() + "创建群组";
-                final TIMMessage createTips = MessageInfoUtil.buildGroupCustomMessage(MessageInfoUtil.GROUP_CREATE, message);
-                TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.Group, groupId);
+                Gson gson = new Gson();
+                MessageCustom messageCustom = new MessageCustom();
+                messageCustom.version = TUIKitConstants.version;
+                messageCustom.businessID = MessageCustom.BUSINESS_ID_GROUP_CREATE;
+                messageCustom.opUser = V2TIMManager.getInstance().getLoginUser();
+                messageCustom.content = "创建群组";
+                String data = gson.toJson(messageCustom);
+
+                V2TIMMessage createTips = MessageInfoUtil.buildGroupCustomMessage(data);
+
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                sendTipsMessage(conversation, createTips, new IUIKitCallBack() {
+                sendTipsMessage(groupId, createTips, new IUIKitCallBack() {
                     @Override
                     public void onSuccess(Object data) {
-                        callBack.onSuccess(groupId);
+                        if (callBack != null) {
+                            callBack.onSuccess(groupId);
+                        }
                     }
 
                     @Override
@@ -104,7 +127,6 @@ public class GroupChatManagerKit extends ChatManagerKit {
                 });
             }
         });
-
     }
 
     @Override
@@ -133,65 +155,51 @@ public class GroupChatManagerKit extends ChatManagerKit {
     }
 
     @Override
-    protected void onReceiveSystemMessage(TIMMessage msg) {
-        super.onReceiveSystemMessage(msg);
-        TIMElem ele = msg.getElement(0);
-        TIMElemType eleType = ele.getType();
-        if (eleType == TIMElemType.GroupSystem) {
-            TUIKitLog.i(TAG, "onReceiveSystemMessage msg = " + msg);
-            TIMGroupSystemElem groupSysEle = (TIMGroupSystemElem) ele;
-            groupSystMsgHandle(groupSysEle);
-        }
-    }
-
-    @Override
     protected void addGroupMessage(MessageInfo msgInfo) {
-        TIMGroupTipsElem groupTips;
+        V2TIMGroupTipsElem groupTips = null;
         if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_JOIN
                 || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_QUITE
                 || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_KICK
                 || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NAME
                 || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE) {
-            TIMElem elem = msgInfo.getElement();
-            if (!(elem instanceof TIMGroupTipsElem)) {
+            V2TIMMessage v2TIMMessage = msgInfo.getTimMessage();
+            if (v2TIMMessage.getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_GROUP_TIPS) {
                 return;
             }
-            groupTips = (TIMGroupTipsElem) elem;
+            groupTips = v2TIMMessage.getGroupTipsElem();
         } else {
             return;
         }
         if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_JOIN) {
-            Map<String, TIMGroupMemberInfo> changeInfos = groupTips.getChangedGroupMemberInfo();
-            if (changeInfos.size() > 0) {
-                Iterator<String> keys = changeInfos.keySet().iterator();
-                while (keys.hasNext()) {
+            List<V2TIMGroupMemberInfo> memberInfos = groupTips.getMemberList();
+            if (memberInfos.size() > 0) {
+                for (V2TIMGroupMemberInfo v2TIMGroupMemberInfo : memberInfos) {
                     GroupMemberInfo member = new GroupMemberInfo();
-                    member.covertTIMGroupMemberInfo(changeInfos.get(keys.next()));
+                    member.covertTIMGroupMemberInfo(v2TIMGroupMemberInfo);
                     mCurrentGroupMembers.add(member);
                 }
             } else {
                 GroupMemberInfo member = new GroupMemberInfo();
-                member.covertTIMGroupMemberInfo(groupTips.getOpGroupMemberInfo());
+                member.covertTIMGroupMemberInfo(groupTips.getOpMember());
                 mCurrentGroupMembers.add(member);
             }
             mCurrentChatInfo.setMemberDetails(mCurrentGroupMembers);
         } else if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_QUITE || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_KICK) {
-            Map<String, TIMGroupMemberInfo> changeInfos = groupTips.getChangedGroupMemberInfo();
-            if (changeInfos.size() > 0) {
-                Iterator<String> keys = changeInfos.keySet().iterator();
-                while (keys.hasNext()) {
-                    String id = keys.next();
+            List<V2TIMGroupMemberInfo> memberInfos = groupTips.getMemberList();
+            if (memberInfos.size() > 0) {
+                for (V2TIMGroupMemberInfo v2TIMGroupMemberInfo : memberInfos) {
+                    String memberUserID = v2TIMGroupMemberInfo.getUserID();
                     for (int i = 0; i < mCurrentGroupMembers.size(); i++) {
-                        if (mCurrentGroupMembers.get(i).getAccount().equals(id)) {
+                        if (mCurrentGroupMembers.get(i).getAccount().equals(memberUserID)) {
                             mCurrentGroupMembers.remove(i);
                             break;
                         }
                     }
                 }
             } else {
-                TIMGroupMemberInfo memberInfo = groupTips.getOpGroupMemberInfo();
+                V2TIMGroupMemberInfo memberInfo = groupTips.getOpMember();
                 for (int i = 0; i < mCurrentGroupMembers.size(); i++) {
-                    if (mCurrentGroupMembers.get(i).getAccount().equals(memberInfo.getUser())) {
+                    if (mCurrentGroupMembers.get(i).getAccount().equals(memberInfo.getUserID())) {
                         mCurrentGroupMembers.remove(i);
                         break;
                     }
@@ -199,40 +207,53 @@ public class GroupChatManagerKit extends ChatManagerKit {
             }
             mCurrentChatInfo.setMemberDetails(mCurrentGroupMembers);
         } else if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NAME || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE) {
-            List<TIMGroupTipsElemGroupInfo> modifyList = groupTips.getGroupInfoList();
+            List<V2TIMGroupChangeInfo> modifyList = groupTips.getGroupChangeInfoList();
             if (modifyList.size() > 0) {
-                TIMGroupTipsElemGroupInfo modifyInfo = modifyList.get(0);
-                TIMGroupTipsGroupInfoType modifyType = modifyInfo.getType();
-                if (modifyType == TIMGroupTipsGroupInfoType.ModifyName) {
-                    mCurrentChatInfo.setGroupName(modifyInfo.getContent());
+                V2TIMGroupChangeInfo modifyInfo = modifyList.get(0);
+                int modifyType = modifyInfo.getType();
+                if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_NAME) {
+                    mCurrentChatInfo.setGroupName(modifyInfo.getValue());
                     if (mGroupHandler != null) {
-                        mGroupHandler.onGroupNameChanged(modifyInfo.getContent());
+                        mGroupHandler.onGroupNameChanged(modifyInfo.getValue());
                     }
-                } else if (modifyType == TIMGroupTipsGroupInfoType.ModifyNotification) {
-                    mCurrentChatInfo.setNotice(modifyInfo.getContent());
+                } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION) {
+                    mCurrentChatInfo.setNotice(modifyInfo.getValue());
                 }
             }
         }
     }
 
-    //群系统消息处理，不需要显示信息的
-    private void groupSystMsgHandle(TIMGroupSystemElem groupSysEle) {
-        TIMGroupSystemElemType type = groupSysEle.getSubtype();
-        if (type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_ADD_GROUP_ACCEPT_TYPE) {
-            ToastUtil.toastLongMessage("您已被同意加入群：" + groupSysEle.getGroupId());
-        } else if (type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_ADD_GROUP_REFUSE_TYPE) {
-            ToastUtil.toastLongMessage("您被拒绝加入群：" + groupSysEle.getGroupId());
-        } else if (type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_KICK_OFF_FROM_GROUP_TYPE) {
-            ToastUtil.toastLongMessage("您已被踢出群：" + groupSysEle.getGroupId());
-            ConversationManagerKit.getInstance().deleteConversation(groupSysEle.getGroupId(), true);
-            if (mCurrentChatInfo != null && groupSysEle.getGroupId().equals(mCurrentChatInfo.getId())) {
-                onGroupForceExit();
-            }
-        } else if (type == TIMGroupSystemElemType.TIM_GROUP_SYSTEM_DELETE_GROUP_TYPE) {
-            ToastUtil.toastLongMessage("您所在的群" + groupSysEle.getGroupId() + "已解散");
-            if (mCurrentChatInfo != null && groupSysEle.getGroupId().equals(mCurrentChatInfo.getId())) {
-                onGroupForceExit();
-            }
+    public void notifyJoinGroup(String groupID, boolean isInvited) {
+        if (isInvited) {
+            ToastUtil.toastLongMessage("您已被邀请进群：" + groupID);
+        } else {
+            ToastUtil.toastLongMessage("您已加入群：" + groupID);
+        }
+    }
+
+    public void notifyJoinGroupRefused(String groupID) {
+        ToastUtil.toastLongMessage("您被拒绝加入群：" + groupID);
+    }
+
+    public void notifyKickedFromGroup(String groupID) {
+        ToastUtil.toastLongMessage("您已被踢出群：" + groupID);
+        ConversationManagerKit.getInstance().deleteConversation(groupID, true);
+        if (mCurrentChatInfo != null && groupID.equals(mCurrentChatInfo.getId())) {
+            onGroupForceExit();
+        }
+    }
+
+    public void notifyGroupDismissed(String groupID) {
+        ToastUtil.toastLongMessage("您所在的群" + groupID + "已解散");
+        if (mCurrentChatInfo != null && groupID.equals(mCurrentChatInfo.getId())) {
+            onGroupForceExit();
+        }
+        ConversationManagerKit.getInstance().deleteConversation(groupID, true);
+    }
+
+    public void notifyGroupRESTCustomSystemData(String groupID, byte[] customData) {
+        if (mCurrentChatInfo != null && groupID.equals(mCurrentChatInfo.getId())) {
+            ToastUtil.toastLongMessage("收到自定义系统通知：" + new String(customData));
         }
     }
 
@@ -269,7 +290,7 @@ public class GroupChatManagerKit extends ChatManagerKit {
     @Override
     protected void assembleGroupMessage(MessageInfo message) {
         message.setGroup(true);
-        message.setFromUser(TIMManager.getInstance().getLoginUser());
+        message.setFromUser(V2TIMManager.getInstance().getLoginUser());
     }
 
     public interface GroupNotifyHandler {

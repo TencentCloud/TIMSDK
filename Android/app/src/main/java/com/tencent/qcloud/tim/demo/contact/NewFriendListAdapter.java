@@ -12,12 +12,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMFriendshipManager;
-import com.tencent.imsdk.TIMValueCallBack;
-import com.tencent.imsdk.friendship.TIMFriendPendencyItem;
-import com.tencent.imsdk.friendship.TIMFriendResponse;
-import com.tencent.imsdk.friendship.TIMFriendResult;
-import com.tencent.imsdk.friendship.TIMPendencyType;
+import com.tencent.imsdk.v2.V2TIMFriendApplication;
+import com.tencent.imsdk.v2.V2TIMFriendOperationResult;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
@@ -30,7 +28,7 @@ import java.util.List;
 /**
  * 好友关系链管理消息adapter
  */
-public class NewFriendListAdapter extends ArrayAdapter<TIMFriendPendencyItem> {
+public class NewFriendListAdapter extends ArrayAdapter<V2TIMFriendApplication> {
 
     private static final String TAG = NewFriendListAdapter.class.getSimpleName();
 
@@ -47,7 +45,7 @@ public class NewFriendListAdapter extends ArrayAdapter<TIMFriendPendencyItem> {
      *                 instantiating views.
      * @param objects  The objects to represent in the ListView.
      */
-    public NewFriendListAdapter(Context context, int resource, List<TIMFriendPendencyItem> objects) {
+    public NewFriendListAdapter(Context context, int resource, List<V2TIMFriendApplication> objects) {
         super(context, resource, objects);
         mResourceId = resource;
     }
@@ -55,7 +53,7 @@ public class NewFriendListAdapter extends ArrayAdapter<TIMFriendPendencyItem> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final TIMFriendPendencyItem data = getItem(position);
+        final V2TIMFriendApplication data = getItem(position);
         if (convertView != null) {
             mView = convertView;
             mViewHolder = (ViewHolder) mView.getTag();
@@ -79,10 +77,10 @@ public class NewFriendListAdapter extends ArrayAdapter<TIMFriendPendencyItem> {
         }
         Resources res = getContext().getResources();
         mViewHolder.avatar.setImageResource(R.drawable.ic_personal_member);
-        mViewHolder.name.setText(TextUtils.isEmpty(data.getNickname()) ? data.getIdentifier() : data.getNickname());
+        mViewHolder.name.setText(TextUtils.isEmpty(data.getNickname()) ? data.getUserID() : data.getNickname());
         mViewHolder.des.setText(data.getAddWording());
         switch (data.getType()) {
-            case TIMPendencyType.TIM_PENDENCY_COME_IN:
+            case V2TIMFriendApplication.V2TIM_FRIEND_APPLICATION_COME_IN:
                 mViewHolder.agree.setText(res.getString(R.string.request_agree));
                 mViewHolder.agree.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -92,33 +90,31 @@ public class NewFriendListAdapter extends ArrayAdapter<TIMFriendPendencyItem> {
                     }
                 });
                 break;
-            case TIMPendencyType.TIM_PENDENCY_SEND_OUT:
+            case V2TIMFriendApplication.V2TIM_FRIEND_APPLICATION_SEND_OUT:
                 mViewHolder.agree.setText(res.getString(R.string.request_waiting));
                 break;
-            case TIMPendencyType.TIM_PENDENCY_BOTH:
+            case V2TIMFriendApplication.V2TIM_FRIEND_APPLICATION_BOTH:
                 mViewHolder.agree.setText(res.getString(R.string.request_accepted));
                 break;
         }
         return mView;
     }
 
-    private void doResponse(final TextView view, TIMFriendPendencyItem data) {
-        TIMFriendResponse response = new TIMFriendResponse();
-        response.setIdentifier(data.getIdentifier());
-        response.setResponseType(TIMFriendResponse.TIM_FRIEND_RESPONSE_AGREE_AND_ADD);
-        TIMFriendshipManager.getInstance().doResponse(response, new TIMValueCallBack<TIMFriendResult>() {
-            @Override
-            public void onError(int i, String s) {
-                DemoLog.e(TAG, "deleteFriends err code = " + i + ", desc = " + s);
-                ToastUtil.toastShortMessage("Error code = " + i + ", desc = " + s);
-            }
+    private void doResponse(final TextView view, V2TIMFriendApplication data) {
+        V2TIMManager.getFriendshipManager().acceptFriendApplication(
+                data, V2TIMFriendApplication.V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD, new V2TIMValueCallback<V2TIMFriendOperationResult>() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        DemoLog.e(TAG, "deleteFriends err code = " + code + ", desc = " + desc);
+                        ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
+                    }
 
-            @Override
-            public void onSuccess(TIMFriendResult timUserProfiles) {
-                DemoLog.i(TAG, "deleteFriends success");
-                view.setText(getContext().getResources().getString(R.string.request_accepted));
-            }
-        });
+                    @Override
+                    public void onSuccess(V2TIMFriendOperationResult v2TIMFriendOperationResult) {
+                        DemoLog.i(TAG, "deleteFriends success");
+                        view.setText(getContext().getResources().getString(R.string.request_accepted));
+                    }
+                });
     }
 
     public class ViewHolder {

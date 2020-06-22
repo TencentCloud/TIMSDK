@@ -7,12 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.imsdk.TIMFriendshipManager;
-import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.TIMUserProfile;
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
@@ -46,6 +43,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         unreadAudioText = itemView.findViewById(R.id.audio_unread);
     }
 
+    @Override
     public void layoutViews(final MessageInfo msg, final int position) {
         super.layoutViews(msg, position);
 
@@ -110,29 +108,24 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             usernameText.setTextSize(properties.getNameFontSize());
         }
         // 聊天界面设置头像和昵称
-        TIMUserProfile profile = TIMFriendshipManager.getInstance().queryUserProfile(msg.getFromUser());
-        if (profile == null) {
-            usernameText.setText(msg.getFromUser());
+        V2TIMMessage timMessage = msg.getTimMessage();
+        if (!TextUtils.isEmpty(timMessage.getNameCard())) {
+            usernameText.setText(timMessage.getNameCard());
+        } else if (!TextUtils.isEmpty(timMessage.getFriendRemark())) {
+            usernameText.setText(timMessage.getFriendRemark());
+        } else if (!TextUtils.isEmpty(timMessage.getNickName())) {
+            usernameText.setText(timMessage.getNickName());
         } else {
-            if (TextUtils.isEmpty(msg.getGroupNameCard())) {
-                usernameText.setText(!TextUtils.isEmpty(profile.getNickName()) ? profile.getNickName() : msg.getFromUser());
-            } else {
-                usernameText.setText(msg.getGroupNameCard());
-            }
-            if (!TextUtils.isEmpty(profile.getFaceUrl()) && !msg.isSelf()) {
-                List<Object> urllist = new ArrayList<>();
-                urllist.add(profile.getFaceUrl());
-                leftUserIcon.setIconUrls(urllist);
-                urllist.clear();
-            }
+            usernameText.setText(timMessage.getSender());
         }
-        TIMUserProfile selfInfo = TIMFriendshipManager.getInstance().queryUserProfile(TIMManager.getInstance().getLoginUser());
-        if (selfInfo != null && msg.isSelf()) {
-            if (!TextUtils.isEmpty(selfInfo.getFaceUrl())) {
-                List<Object> urllist = new ArrayList<>();
-                urllist.add(selfInfo.getFaceUrl());
+
+        if (!TextUtils.isEmpty(timMessage.getFaceUrl())) {
+            List<Object> urllist = new ArrayList<>();
+            urllist.add(timMessage.getFaceUrl());
+            if (msg.isSelf()) {
                 rightUserIcon.setIconUrls(urllist);
-                urllist.clear();
+            } else {
+                leftUserIcon.setIconUrls(urllist);
             }
         }
 

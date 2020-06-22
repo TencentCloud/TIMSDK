@@ -1,85 +1,121 @@
 package com.tencent.qcloud.tim.demo.login;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 
+import java.io.Serializable;
 
-public class UserInfo {
+public class UserInfo implements Serializable {
 
-    private static UserInfo instance;
-    private String account;
-    private String password;
-    private int room = 4321;
-    private String replayUrl;
+    private final static String PER_USER_MODEL = "per_user_model";
 
-    private UserInfo() {
-    }
+    private static UserInfo sUserInfo;
 
-    public static UserInfo getInstance() {
-        if (null == instance) {
-            synchronized (UserInfo.class) {
-                if (null == instance) {
-                    instance = new UserInfo();
-                }
+    private String zone;
+    private String phone;
+    private String token;
+    private String userId;
+    private String userSig;
+    private String name;
+    private String avatar;
+    private boolean autoLogin;
+
+    public synchronized static UserInfo getInstance() {
+        if (sUserInfo == null) {
+            SharedPreferences shareInfo = DemoApplication.instance().getSharedPreferences(Constants.USERINFO, 0);
+            String json = shareInfo.getString(PER_USER_MODEL, "");
+            sUserInfo = new Gson().fromJson(json, UserInfo.class);
+            if (sUserInfo == null) {
+                sUserInfo = new UserInfo();
             }
         }
-        return instance;
+        return sUserInfo;
     }
 
-    public String getAccount() {
-        return account;
+    private UserInfo() {
+
     }
 
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public int getRoom() {
-        return room;
-    }
-
-    public void setRoom(int room) {
-        this.room = room;
-    }
-
-    public String getReplayUrl() {
-        return replayUrl;
-    }
-
-    public void setReplayUrl(String replayUrl) {
-        this.replayUrl = replayUrl;
-    }
-
-    public void writeToCache(Context context) {
-        SharedPreferences shareInfo = context.getSharedPreferences(Constants.USERINFO, 0);
+    public void setUserInfo(UserInfo info) {
+        SharedPreferences shareInfo = DemoApplication.instance().getSharedPreferences(Constants.USERINFO, 0);
         SharedPreferences.Editor editor = shareInfo.edit();
-        editor.putString(Constants.ACCOUNT, account);
-        editor.putString(Constants.PWD, password);
-        editor.putInt(Constants.ROOM, room);
+        editor.putString(PER_USER_MODEL, new Gson().toJson(info));
         editor.commit();
     }
 
-    public void clearCache(Context context) {
-        SharedPreferences shareInfo = context.getSharedPreferences(Constants.USERINFO, 0);
-        SharedPreferences.Editor editor = shareInfo.edit();
-        editor.clear();
-        editor.commit();
+    public String getUserSig() {
+        return this.userSig;
     }
 
-    public void getCache(Context context) {
-        SharedPreferences shareInfo = context.getSharedPreferences(Constants.USERINFO, 0);
-        account = shareInfo.getString(Constants.ACCOUNT, null);
-        password = shareInfo.getString(Constants.PWD, null);
-        room = shareInfo.getInt(Constants.ROOM, 1234);
+    public void setUserSig(String userSig) {
+        this.userSig = userSig;
+        setUserInfo(this);
     }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        setUserInfo(this);
+    }
+
+    public String getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+        setUserInfo(this);
+    }
+
+    public String getToken() {
+        return this.token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+        setUserInfo(this);
+    }
+
+    public String getZone() {
+        return this.zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
+        setUserInfo(this);
+    }
+
+    public String getPhone() {
+        return this.phone;
+    }
+
+    public void setPhone(String userPhone) {
+        this.phone = userPhone;
+        setUserInfo(this);
+    }
+
+    public Boolean isAutoLogin() {
+        return this.autoLogin;
+    }
+
+    public void setAutoLogin(boolean autoLogin) {
+        this.autoLogin = autoLogin;
+        setUserInfo(this);
+    }
+
+    public String getAvatar() {
+        return this.avatar;
+    }
+
+    public void setAvatar(String url) {
+        this.avatar = url;
+        setUserInfo(this);
+    }
+
 }

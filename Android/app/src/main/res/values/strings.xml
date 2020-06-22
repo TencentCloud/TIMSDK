@@ -54,7 +54,6 @@
 
     <string name="test_custom_action">自定义消息</string>
     <string name="test_custom_message">查看详情>></string>
-    <string name="video_call">视频通话</string>
-    <string name="audio_call">音频通话</string>
 
+    <string name="privacy_text">已同意《<a href="http://privacy.qq.com/">隐私政策</a>》</string>
 </resources>

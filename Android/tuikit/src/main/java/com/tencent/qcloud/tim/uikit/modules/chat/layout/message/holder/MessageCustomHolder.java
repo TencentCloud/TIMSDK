@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
 
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,7 +41,13 @@ public class MessageCustomHolder extends MessageContentHolder implements ICustom
     @Override
     public void layoutVariableViews(MessageInfo msg, int position) {
         msgBodyText.setVisibility(View.VISIBLE);
-        msgBodyText.setText(Html.fromHtml(TUIKitConstants.covert2HTMLString("[不支持的自定义消息]")));
+        if (msg.getExtra() != null) {
+            if (TextUtils.equals("[自定义消息]", msg.getExtra().toString())) {
+                msgBodyText.setText(Html.fromHtml(TUIKitConstants.covert2HTMLString("[不支持的自定义消息]")));
+            } else {
+                msgBodyText.setText(msg.getExtra().toString());
+            }
+        }
         if (properties.getChatContextFontSize() != 0) {
             msgBodyText.setTextSize(properties.getChatContextFontSize());
         }
