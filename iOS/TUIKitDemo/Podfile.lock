@@ -14,55 +14,99 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
+  - Alamofire (4.9.1)
   - ISVImageScrollView (0.1.2)
+  - Material (3.1.8):
+    - Material/Core (= 3.1.8)
+  - Material/Core (3.1.8):
+    - Motion (~> 3.1.1)
   - MBProgressHUD (1.2.0)
   - MMLayout (0.2.0)
+  - Motion (3.1.3):
+    - Motion/Core (= 3.1.3)
+  - Motion/Core (3.1.3)
+  - NVActivityIndicatorView (4.8.0):
+    - NVActivityIndicatorView/Presenter (= 4.8.0)
+  - NVActivityIndicatorView/Presenter (4.8.0)
   - ReactiveObjC (3.1.1)
+  - RxCocoa (5.1.1):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxRelay (5.1.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.1.1)
   - SDWebImage (5.5.2):
     - SDWebImage/Core (= 5.5.2)
   - SDWebImage/Core (5.5.2)
+  - SnapKit (4.2.0)
   - Toast (4.0.0)
-  - TXIMSDK_iOS (4.8.10)
-  - TXIMSDK_TUIKit_iOS (4.6.100):
+  - Toast-Swift (5.0.1)
+  - TXIMSDK_iOS (4.8.50)
+  - TXIMSDK_TUIKit_iOS (4.8.50):
+    - AFNetworking
+    - Alamofire
     - ISVImageScrollView (= 0.1.2)
+    - Material
     - MMLayout (= 0.2.0)
+    - NVActivityIndicatorView
     - ReactiveObjC (= 3.1.1)
+    - RxCocoa
+    - RxSwift
     - SDWebImage (= 5.5.2)
+    - SnapKit
     - Toast (= 4.0.0)
+    - Toast-Swift
     - TXIMSDK_iOS
-  - TXLiteAVSDK_TRTC (7.2.8932)
+    - TXLiteAVSDK_TRTC
+  - TXLiteAVSDK_TRTC (7.3.9138)
 
 DEPENDENCIES:
-  - AFNetworking
   - MBProgressHUD
   - TXIMSDK_TUIKit_iOS
-  - TXLiteAVSDK_TRTC
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - AFNetworking
+    - Alamofire
     - ISVImageScrollView
+    - Material
     - MBProgressHUD
     - MMLayout
+    - Motion
+    - NVActivityIndicatorView
     - ReactiveObjC
+    - RxCocoa
+    - RxRelay
+    - RxSwift
     - SDWebImage
+    - SnapKit
     - Toast
+    - Toast-Swift
     - TXIMSDK_iOS
     - TXIMSDK_TUIKit_iOS
     - TXLiteAVSDK_TRTC
 
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   ISVImageScrollView: ba511d12a1661b40feb8921309c0854bf93ec749
+  Material: a2a3f400a3b549d53ef89e56c58c4535b29db387
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
+  Motion: cf1e060e489f6661126374d5c60dbd2ed991605c
+  NVActivityIndicatorView: d24b7ebcf80af5dcd994adb650e2b6c93379270f
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
+  RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_iOS: 17de2fef786f78843687cc7bd9592759edd2ec0b
-  TXIMSDK_TUIKit_iOS: 7c5a6556929b590e3d2cfb85a865a3c5b28f4d87
-  TXLiteAVSDK_TRTC: 08f7b56b29f3ffff78d162e22f6153db2940f801
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
+  TXIMSDK_iOS: ae26f78e028e01beed47127ea6bde03c11156208
+  TXIMSDK_TUIKit_iOS: e4a382ab4a44a6b7a4bfef234acaf7e14b851281
+  TXLiteAVSDK_TRTC: bc28fa8b49a2150d668d678bcc87889e5c97b75c
 
-PODFILE CHECKSUM: e018a0260749c0ea2e4aa9377cee378860ae7eb8
+PODFILE CHECKSUM: 431b4507d931e1f35c45eef1bcc20d2d9f4731be
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3

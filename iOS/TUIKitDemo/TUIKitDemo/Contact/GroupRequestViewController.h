@@ -17,7 +17,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GroupRequestViewController : UIViewController
-@property TIMGroupInfo *groupInfo;
+@property V2TIMGroupInfo *groupInfo;
 @end
 
 NS_ASSUME_NONNULL_END

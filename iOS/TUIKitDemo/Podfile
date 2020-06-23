@@ -5,10 +5,9 @@ platform :ios, '9.0'
 target 'TUIKitDemo' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   #use_frameworks!
+  use_modular_headers!
 
   # Pods for Example
   pod 'MBProgressHUD'
-  pod 'AFNetworking'
   pod 'TXIMSDK_TUIKit_iOS'
-  pod 'TXLiteAVSDK_TRTC'
 end

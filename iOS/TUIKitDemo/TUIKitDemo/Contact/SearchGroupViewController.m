@@ -16,6 +16,7 @@
 #import "FriendRequestViewController.h"
 #import "GroupRequestViewController.h"
 #import "THeader.h"
+#import "UIColor+TUIDarkMode.h"
 
 // MLeaksFinder 会对这个类误报，这里需要关闭一下
 @implementation UISearchController (Leak)
@@ -27,7 +28,7 @@
 @end
 
 @interface AddGroupItemView : UIView
-@property (nonatomic) TIMGroupInfo *groupInfo;
+@property (nonatomic) V2TIMGroupInfo *groupInfo;
 @end
 
 @implementation AddGroupItemView
@@ -54,13 +55,13 @@
 /**
  *群组信息设置
  */
-- (void)setGroupInfo:(TIMGroupInfo *)groupInfo
+- (void)setGroupInfo:(V2TIMGroupInfo *)groupInfo
 {
     if (groupInfo) {
         if (groupInfo.groupName.length > 0) {
-            _idLabel.text = [NSString stringWithFormat:@"%@ (group id: %@)",groupInfo.groupName,groupInfo.group];
+            _idLabel.text = [NSString stringWithFormat:@"%@ (group id: %@)",groupInfo.groupName,groupInfo.groupID];
         } else {
-            _idLabel.text = groupInfo.group;
+            _idLabel.text = groupInfo.groupID;
         }
         _idLabel.mm_sizeToFit().mm_center().mm_left(8);
         _line.mm_height(1).mm_width(self.mm_w).mm_bottom(0);
@@ -95,7 +96,7 @@
     [super viewDidLoad];
     self.title = @"添加群组";
 
-    self.view.backgroundColor = TSettingController_Background_Color;
+    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
 
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -158,14 +159,18 @@
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSString *inputStr = searchController.searchBar.text ;
     NSLog(@"serach %@", inputStr);
-
-    [[TIMGroupManager sharedInstance] getGroupInfo:@[inputStr] succ:^(NSArray *arr) {
-        if(arr.count >= 1) {
-            self.userView.groupInfo = arr[0];
+    [[V2TIMManager sharedInstance] getGroupsInfo:@[inputStr] succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
+        if(groupResultList.count > 0) {
+            V2TIMGroupInfoResult *result = groupResultList.firstObject;
+            if (0 == result.resultCode) {
+                self.userView.groupInfo = result.info;
+            } else {
+                self.userView.groupInfo = nil;
+            }
         } else {
             self.userView.groupInfo = nil;
         }
-    } fail:^(int code, NSString *msg) {
+    } fail:^(int code, NSString *desc) {
         self.userView.groupInfo = nil;
     }];
 }

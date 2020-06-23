@@ -13,6 +13,7 @@
  */
 #import "NotifySetupController.h"
 #import "TCommonSwitchCell.h"
+#import "TCUtil.h"
 
 @implementation NotifySetupController
 {

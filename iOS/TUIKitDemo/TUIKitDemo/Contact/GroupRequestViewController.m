@@ -22,6 +22,7 @@
 #import "UIImage+TUIKIT.h"
 #import "TUIKit.h"
 #import "THelper.h"
+#import "TCUtil.h"
 #import "TUIAvatarViewController.h"
 
 @interface GroupRequestViewController ()<UITableViewDataSource, UITableViewDelegate>
@@ -43,15 +44,14 @@
 
     self.addMsgTextView = [[UITextView alloc] initWithFrame:CGRectZero];
     self.addMsgTextView.font = [UIFont systemFontOfSize:14];
-    [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
-        self.addMsgTextView.text = [NSString stringWithFormat:@"%@ 申请加入群聊", [profile showName]];
+    NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
+    [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+        self.addMsgTextView.text = [NSString stringWithFormat:@"%@ 申请加入群聊", [[infoList firstObject] showName]];
     } fail:^(int code, NSString *msg) {
-
     }];
-
     TUIProfileCardCellData *data = [TUIProfileCardCellData new];
     data.name = self.groupInfo.groupName;
-    data.identifier = self.groupInfo.group;
+    data.identifier = self.groupInfo.groupID;
     data.avatarImage = DefaultGroupAvatarImage;
     data.avatarUrl = [NSURL URLWithString:self.groupInfo.faceURL];
     self.cardCellData = data;
@@ -123,17 +123,14 @@
 {
     // display toast with an activity spinner
     [self.view makeToastActivity:CSToastPositionCenter];
-
-    [[TIMGroupManager sharedInstance] joinGroup:self.groupInfo.group
-                                            msg:self.addMsgTextView.text
-                                           succ:^{
-                                               [self.view hideToastActivity];
-                                               [self.view makeToast:@"发送成功"
-                                                           duration:3.0
-                                                           position:CSToastPositionBottom];
-    } fail:^(int code, NSString *msg) {
+    [[V2TIMManager sharedInstance] joinGroup:self.groupInfo.groupID msg:self.addMsgTextView.text succ:^{
         [self.view hideToastActivity];
-        [THelper makeToastError:code msg:msg];
+        [self.view makeToast:@"发送成功"
+                    duration:3.0
+                    position:CSToastPositionBottom];
+    } fail:^(int code, NSString *desc) {
+        [self.view hideToastActivity];
+        [THelper makeToastError:code msg:desc];
     }];
 }
 

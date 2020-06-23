@@ -61,11 +61,6 @@
     self.tableView.delaysContentTouches = NO;
 }
 
-
-- (void)onAddFriendReqs {
-
-}
-
 /**
  *在导航栏中添加右侧按钮，使用popView展示进一步的内容
  */
@@ -81,7 +76,6 @@
     group.image = TUIKitResource(@"add_group");
     group.title = @"添加群组";
     [menus addObject:group];
-
 
     CGFloat height = [TPopCell getHeight] * menus.count + TPopView_Arrow_Size.height;
     CGFloat orginY = StatusBar_Height + NavBar_Height;

@@ -18,7 +18,6 @@
 #import "TUIProfileCardCell.h"
 #import "TUIButtonCell.h"
 #import "THeader.h"
-#import "ImSDK.h"
 #import "TTextEditController.h"
 #import "TDateEditController.h"
 #import "NotifySetupController.h"
@@ -34,12 +33,14 @@
 #import "PAirSandbox.h"
 #import "TUIAvatarViewController.h"
 #import "TCommonSwitchCell.h"
-//#import <QAPM/QAPM.h>
+#import "TCUtil.h"
 #import <ImSDK/ImSDK.h>
+#import "UIColor+TUIDarkMode.h"
 
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2
 #define SHEET_SEX    3
+#define SHEET_V2API  4
 
 @interface MyUserProfileExpresser : TUIUserProfileDataProviderService
 @end
@@ -59,23 +60,12 @@
 /**
  *获取签名
  */
-- (NSString *)getSignature:(TIMUserProfile *)profile
+- (NSString *)getSignature:(V2TIMUserFullInfo *)profile
 {
     NSString *ret = [super getSignature:profile];
     if (ret.length != 0)
         return ret;
     return @"暂无个性签名";
-}
-
-/**
- *获取所在地
- */
-- (NSString *)getLocation:(TIMUserProfile *)profile
-{
-    NSString *ret = [super getLocation:profile];
-    if (ret.length != 0)
-        return ret;
-    return @"未设置";
 }
 
 @end
@@ -84,7 +74,7 @@
 @property (nonatomic, strong) NSMutableArray *data;
 @property (nonatomic, strong) dispatch_source_t timer;
 @property (nonatomic, assign) BOOL memoryReport;
-@property TIMUserProfile *profile;
+@property V2TIMUserFullInfo *profile;
 @property (nonatomic, strong) TUIProfileCardCellData *profileCellData;
 @end
 
@@ -102,12 +92,14 @@
 
 //在此处设置一次 setuoData，才能使得“我”界面消息更新。否则由于 UITabBar 的维护，“我”界面的消息将一直无法更新。
 - (void)viewWillAppear:(BOOL)animated{
- [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
- self.profile = profile;
- [self setupData];
- } fail:^(int code, NSString *msg) {
-
- }];
+    NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
+    if (loginUser.length > 0) {
+        @weakify(self)
+        [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+            @strongify(self)
+            self.profile = infoList.firstObject;
+        } fail:nil];
+    }
 }
 
 - (void)setupViews
@@ -116,19 +108,28 @@
     self.parentViewController.title = @"我";
 
     self.tableView.tableFooterView = [[UIView alloc] init];
-    self.tableView.backgroundColor = TSettingController_Background_Color;
+    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
 
     [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"personalCell"];
     [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"buttonCell"];
     [self.tableView registerClass:[TCommonSwitchCell class] forCellReuseIdentifier:@"switchCell"];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onSelfInfoUpdated:) name:TUIKitNotification_onSelfInfoUpdated object:nil];
+    
+    NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
+    if (loginUser.length > 0) {
+        @weakify(self)
+        [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+            @strongify(self)
+            self.profile = infoList.firstObject;
+            [self setupData];
+        } fail:nil];
+    }
+}
 
-    [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
-        self.profile = profile;
-        [self setupData];
-    } fail:^(int code, NSString *msg) {
-
-    }];
+- (void)onSelfInfoUpdated:(NSNotification *)no {
+    self.profile = no.object;
+    [self setupData];
 }
 
 /**
@@ -140,7 +141,7 @@
     _data = [NSMutableArray array];
 
     TUIProfileCardCellData *personal = [[TUIProfileCardCellData alloc] init];
-    personal.identifier = self.profile.identifier;
+    personal.identifier = self.profile.userID;
     personal.avatarImage = DefaultAvatarImage;
     personal.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
     personal.name = [self.profile showName];
@@ -308,10 +309,10 @@
 
 - (void)didConfirmLogout
 {
-    [[TIMManager sharedInstance] logout:^{
-        [self didLogoutInSettingController:self];
+    [[V2TIMManager sharedInstance] logout:^{
+        [self didLogoutInSettingController:self];;
     } fail:^(int code, NSString *msg) {
-        NSLog(@"");
+        NSLog(@"退出登录失败");
     }];
 }
 
@@ -360,13 +361,40 @@
             return;
         self.profile.allowType = buttonIndex;
         [self setupData];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_AllowType:[NSNumber numberWithInteger:buttonIndex]} succ:nil fail:nil];
+        V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
+        info.allowType = [NSNumber numberWithInteger:buttonIndex].intValue;
+        [[V2TIMManager sharedInstance] setSelfInfo:info succ:nil fail:nil];
+    }
+    else if (actionSheet.tag == SHEET_V2API) {
+//        if (buttonIndex == 0) {
+//            V2ManageTestViewController *vc = [[V2ManageTestViewController alloc] initWithNibName:@"V2ManageTestViewController" bundle:nil];
+//            [self presentViewController:vc animated:YES completion:nil];
+//        }
+//        else if (buttonIndex == 1) {
+//            V2GroupTestViewController *vc = [[V2GroupTestViewController alloc] initWithNibName:@"V2GroupTestViewController" bundle:nil];
+//            [self presentViewController:vc animated:YES completion:nil];
+//        }
+//        else if (buttonIndex == 2) {
+//            V2FriendTestViewController *vc = [[V2FriendTestViewController alloc] initWithNibName:@"V2FriendTestViewController" bundle:nil];
+//            [self presentViewController:vc animated:YES completion:nil];
+//        }
     }
 
 }
 - (void)didSelectLog
 {
+//#ifdef DEBUG
+//    UIActionSheet *sheet = [[UIActionSheet alloc] init];
+//    sheet.tag = SHEET_V2API;
+//    [sheet addButtonWithTitle:@"manager + apns + message + conv"];
+//    [sheet addButtonWithTitle:@"group"];
+//    [sheet addButtonWithTitle:@"friend"];
+//    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:@"取消"]];
+//    [sheet setDelegate:self];
+//    [sheet showInView:self.view];
+//#else
     [[PAirSandbox sharedInstance] showSandboxBrowser];
+//#endif
 }
 
 - (void)onNotifySwitch:(TCommonSwitchCell *)cell

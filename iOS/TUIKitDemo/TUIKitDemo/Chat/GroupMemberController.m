@@ -93,21 +93,21 @@
 
 - (void)addGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupMemberController *)controller
 {
-    [[TIMGroupManager sharedInstance] inviteGroupMember:_groupId members:members succ:^(NSArray *members) {
+    [[V2TIMManager sharedInstance] inviteUserToGroup:_groupId userList:members succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
         [THelper makeToast:@"添加成功"];
         [controller updateData];
-    } fail:^(int code, NSString *msg) {
-        [THelper makeToastError:code msg:msg];
+    } fail:^(int code, NSString *desc) {
+        [THelper makeToastError:code msg:desc];
     }];
 }
 
 - (void)deleteGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupMemberController *)controller
 {
-    [[TIMGroupManager sharedInstance] deleteGroupMemberWithReason:groupId reason:@"" members:members succ:^(NSArray *members) {
+    [[V2TIMManager sharedInstance] kickGroupMember:groupId memberList:members reason:@"" succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
         [THelper makeToast:@"删除成功"];
         [controller updateData];
-    } fail:^(int code, NSString *msg) {
-        [THelper makeToastError:code msg:msg];
+    } fail:^(int code, NSString *desc) {
+        [THelper makeToastError:code msg:desc];
     }];
 }
 @end
