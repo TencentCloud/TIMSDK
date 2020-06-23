@@ -26,12 +26,8 @@
 		CE37D24A22F9CBC80012500D /* ProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D24822F9CBC80012500D /* ProfileController.m */; };
 		CE685F1523B48F8700A3953C /* 00.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE685F1323B48F8700A3953C /* 00.caf */; };
 		CE685F1623B48F8700A3953C /* 01.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE685F1423B48F8700A3953C /* 01.caf */; };
+		CE71516B24A1A3250076BAC5 /* swift-test.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE71516A24A1A3250076BAC5 /* swift-test.swift */; };
 		CECC13CE22B282C7008378A2 /* TCLoginParam.m in Sources */ = {isa = PBXBuildFile; fileRef = CECC13CD22B282C7008378A2 /* TCLoginParam.m */; };
-		CED3DD60237BECD00096D2E2 /* VideoCallManager+videoMeeting.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD57237BECD00096D2E2 /* VideoCallManager+videoMeeting.m */; };
-		CED3DD61237BECD00096D2E2 /* VideoCallCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD5A237BECD00096D2E2 /* VideoCallCell.m */; };
-		CED3DD62237BECD00096D2E2 /* VideoCallManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD5B237BECD00096D2E2 /* VideoCallManager.m */; };
-		CED3DD63237BECD00096D2E2 /* VideoCallCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD5F237BECD00096D2E2 /* VideoCallCellData.m */; };
-		CED3DD66237BF1EE0096D2E2 /* ChatViewController+video.m in Sources */ = {isa = PBXBuildFile; fileRef = CED3DD65237BF1EE0096D2E2 /* ChatViewController+video.m */; };
 		CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014486216E1A4900C12E35 /* AppDelegate.m */; };
 		CF01448A216E1A4900C12E35 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014489216E1A4900C12E35 /* LoginController.m */; };
 		CF01448D216E1A4900C12E35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF01448B216E1A4900C12E35 /* Main.storyboard */; };
@@ -86,18 +82,10 @@
 		CE37D24922F9CBC80012500D /* ProfileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileController.h; sourceTree = "<group>"; };
 		CE685F1323B48F8700A3953C /* 00.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 00.caf; sourceTree = "<group>"; };
 		CE685F1423B48F8700A3953C /* 01.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 01.caf; sourceTree = "<group>"; };
+		CE71516924A1A3240076BAC5 /* TUIKitDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TUIKitDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		CE71516A24A1A3250076BAC5 /* swift-test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "swift-test.swift"; sourceTree = "<group>"; };
 		CECC13CC22B282C7008378A2 /* TCLoginParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCLoginParam.h; sourceTree = "<group>"; };
 		CECC13CD22B282C7008378A2 /* TCLoginParam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLoginParam.m; sourceTree = "<group>"; };
-		CED3DD57237BECD00096D2E2 /* VideoCallManager+videoMeeting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoCallManager+videoMeeting.m"; sourceTree = "<group>"; };
-		CED3DD58237BECD00096D2E2 /* VideoCallManager+videoMeeting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoCallManager+videoMeeting.h"; sourceTree = "<group>"; };
-		CED3DD5A237BECD00096D2E2 /* VideoCallCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCallCell.m; sourceTree = "<group>"; };
-		CED3DD5B237BECD00096D2E2 /* VideoCallManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCallManager.m; sourceTree = "<group>"; };
-		CED3DD5C237BECD00096D2E2 /* VideoCallCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCallCellData.h; sourceTree = "<group>"; };
-		CED3DD5D237BECD00096D2E2 /* VideoCallCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCallCell.h; sourceTree = "<group>"; };
-		CED3DD5E237BECD00096D2E2 /* VideoCallManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCallManager.h; sourceTree = "<group>"; };
-		CED3DD5F237BECD00096D2E2 /* VideoCallCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCallCellData.m; sourceTree = "<group>"; };
-		CED3DD64237BF1EE0096D2E2 /* ChatViewController+video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ChatViewController+video.h"; sourceTree = "<group>"; };
-		CED3DD65237BF1EE0096D2E2 /* ChatViewController+video.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ChatViewController+video.m"; sourceTree = "<group>"; };
 		CF00884C2188772F00AD2879 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		CF00884D2188773000AD2879 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		CF014482216E1A4900C12E35 /* TUIKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TUIKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -179,8 +167,6 @@
 		9176C5B9227A987300DF5784 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				CED3DD56237BECD00096D2E2 /* Meeting */,
-				CED3DD59237BECD00096D2E2 /* VideoCall */,
 				91941A4A22AE409F00123596 /* Custom */,
 				CFEB47732177981900CFD98C /* GroupInfoController.h */,
 				CFEB47742177981900CFD98C /* GroupInfoController.m */,
@@ -188,8 +174,6 @@
 				CFEB47772177982B00CFD98C /* GroupMemberController.m */,
 				CFDC2FA3216E2D5E002EAEC2 /* ChatViewController.h */,
 				CFDC2FA4216E2D5E002EAEC2 /* ChatViewController.m */,
-				CED3DD64237BF1EE0096D2E2 /* ChatViewController+video.h */,
-				CED3DD65237BF1EE0096D2E2 /* ChatViewController+video.m */,
 				9176C5BD227A98A300DF5784 /* TUserProfileController.h */,
 				9176C5BC227A98A300DF5784 /* TUserProfileController.m */,
 			);
@@ -257,35 +241,15 @@
 			path = Debug;
 			sourceTree = "<group>";
 		};
-		CED3DD56237BECD00096D2E2 /* Meeting */ = {
-			isa = PBXGroup;
-			children = (
-				CED3DD57237BECD00096D2E2 /* VideoCallManager+videoMeeting.m */,
-				CED3DD58237BECD00096D2E2 /* VideoCallManager+videoMeeting.h */,
-			);
-			path = Meeting;
-			sourceTree = "<group>";
-		};
-		CED3DD59237BECD00096D2E2 /* VideoCall */ = {
-			isa = PBXGroup;
-			children = (
-				CED3DD5A237BECD00096D2E2 /* VideoCallCell.m */,
-				CED3DD5B237BECD00096D2E2 /* VideoCallManager.m */,
-				CED3DD5C237BECD00096D2E2 /* VideoCallCellData.h */,
-				CED3DD5D237BECD00096D2E2 /* VideoCallCell.h */,
-				CED3DD5E237BECD00096D2E2 /* VideoCallManager.h */,
-				CED3DD5F237BECD00096D2E2 /* VideoCallCellData.m */,
-			);
-			path = VideoCall;
-			sourceTree = "<group>";
-		};
 		CF014479216E1A4900C12E35 = {
 			isa = PBXGroup;
 			children = (
+				CE71516A24A1A3250076BAC5 /* swift-test.swift */,
 				CF014484216E1A4900C12E35 /* TUIKitDemo */,
 				CF014483216E1A4900C12E35 /* Products */,
 				CF0144A1216E1A6400C12E35 /* Frameworks */,
 				46BF8BF62A4989382EFC56F0 /* Pods */,
+				CE71516924A1A3240076BAC5 /* TUIKitDemo-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -367,6 +331,7 @@
 				TargetAttributes = {
 					CF014481216E1A4900C12E35 = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1150;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 0;
@@ -486,16 +451,13 @@
 				91941A5222AE435700123596 /* MyCustomCell.m in Sources */,
 				CE1A434C22DE07EB008A767E /* TCUtil.m in Sources */,
 				CFEB47752177981900CFD98C /* GroupInfoController.m in Sources */,
+				CE71516B24A1A3250076BAC5 /* swift-test.swift in Sources */,
 				91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */,
 				CE37D24A22F9CBC80012500D /* ProfileController.m in Sources */,
 				CE37D1C422F9942B0012500D /* GenerateTestUserSig.m in Sources */,
-				CED3DD61237BECD00096D2E2 /* VideoCallCell.m in Sources */,
-				CED3DD62237BECD00096D2E2 /* VideoCallManager.m in Sources */,
 				CFEB47D02179B82300CFD98C /* SettingController.m in Sources */,
 				9176C5BE227A98A300DF5784 /* TUserProfileController.m in Sources */,
 				CFDC2FA5216E2D5E002EAEC2 /* ChatViewController.m in Sources */,
-				CED3DD60237BECD00096D2E2 /* VideoCallManager+videoMeeting.m in Sources */,
-				CED3DD63237BECD00096D2E2 /* VideoCallCellData.m in Sources */,
 				91941A4D22AE40C300123596 /* MyCustomCellData.m in Sources */,
 				91D3AD3122AA06440036CDE0 /* Aspects.m in Sources */,
 				91FE93A2227590F000C17D6C /* NotifySetupController.m in Sources */,
@@ -504,7 +466,6 @@
 				CF014495216E1A4B00C12E35 /* main.m in Sources */,
 				CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */,
 				CFDC2FA2216E2C8F002EAEC2 /* ConversationController.m in Sources */,
-				CED3DD66237BF1EE0096D2E2 /* ChatViewController+video.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -649,6 +610,7 @@
 			baseConfigurationReference = 4A94A8992A0612C1D8FEAB79 /* Pods-TUIKitDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -673,6 +635,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.qcloud.tim.tuikit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Wildcard Dev";
+				SWIFT_OBJC_BRIDGING_HEADER = "TUIKitDemo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -682,6 +647,7 @@
 			baseConfigurationReference = 492D8F1F0DED1F83086F3E82 /* Pods-TUIKitDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -707,6 +673,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.qcloud.tim.tuikit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = tim2_dev;
+				SWIFT_OBJC_BRIDGING_HEADER = "TUIKitDemo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

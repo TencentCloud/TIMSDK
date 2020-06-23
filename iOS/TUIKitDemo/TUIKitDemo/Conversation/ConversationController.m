@@ -25,9 +25,7 @@
 #import "TUIKit.h"
 #import "THelper.h"
 #import "TCUtil.h"
-#import "VideoCallManager.h"
 #import "TIMUserProfile+DataProvider.h"
-
 #import <ImSDK/ImSDK.h>
 
 @interface ConversationController () <TUIConversationListControllerDelegagte, TPopViewDelegate>
@@ -54,9 +52,6 @@
     self.navigationItem.rightBarButtonItem = moreItem;
 
     [self setupNavigation];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-    selector:@selector(onNewMessageNotification:) name:TUIKitNotification_TIMMessageListener object:nil];
 }
 
 /**
@@ -68,7 +63,6 @@
     [_titleView setTitle:@"腾讯·云通信"];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNetworkChanged:) name:TUIKitNotification_TIMConnListener object:nil];
 }
 
@@ -109,6 +103,11 @@
     ChatViewController *chat = [[ChatViewController alloc] init];
     chat.conversationData = conversation.convData;
     [self.navigationController pushViewController:chat animated:YES];
+    
+    if ([conversation.convData.groupID isEqualToString:@"im_demo_admin"] || [conversation.convData.userID isEqualToString:@"im_demo_admin"]) {
+    }
+    if ([conversation.convData.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [conversation.convData.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
+    }
 }
 
 /**
@@ -163,8 +162,7 @@
         vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
             @strongify(self)
             TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
-            data.convId = array.firstObject.identifier;
-            data.convType = TIM_C2C;
+            data.userID = array.firstObject.identifier;
             data.title = array.firstObject.title;
             ChatViewController *chat = [[ChatViewController alloc] init];
             chat.conversationData = data;
@@ -173,6 +171,7 @@
             NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
             [tempArray removeObjectAtIndex:tempArray.count-2];
             self.navigationController.viewControllers = tempArray;
+            
         };
         return;
     }
@@ -183,7 +182,7 @@
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
             @strongify(self)
-            [self addGroup:@"Private" addOption:0 withContacts:array];
+            [self addGroup:GroupType_Work addOption:0 withContacts:array];
         };
         return;
     } else if(index == 2){
@@ -193,7 +192,7 @@
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
             @strongify(self)
-            [self addGroup:@"Public" addOption:TIM_GROUP_ADD_ANY withContacts:array];
+            [self addGroup:GroupType_Public addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
         };
         return;
     } else if(index == 3){
@@ -203,7 +202,7 @@
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
             @strongify(self)
-            [self addGroup:@"ChatRoom" addOption:TIM_GROUP_ADD_ANY withContacts:array];
+            [self addGroup:GroupType_Meeting addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
         };
         return;
     }
@@ -220,97 +219,73 @@
                                      TIM_GROUP_ADD_ANY         任何人可以加群
  *withContacts:群成员的信息数组。数组内每一个元素分别包含了对应成员的头像、ID等信息。具体信息可参照 TCommonContactSelectCellData 定义
  */
-- (void)addGroup:(NSString *)groupType addOption:(TIMGroupAddOpt)addOption withContacts:(NSArray<TCommonContactSelectCellData *>  *)contacts
+- (void)addGroup:(NSString *)groupType addOption:(V2TIMGroupAddOpt)addOption withContacts:(NSArray<TCommonContactSelectCellData *>  *)contacts
 {
-    NSMutableString *groupName = [[[TIMFriendshipManager sharedInstance] querySelfProfile] showName].mutableCopy;
-    NSMutableArray *members = [NSMutableArray array];
-    //遍历contacts，初始化群组成员信息、群组名称信息
-    for (TCommonContactSelectCellData *item in contacts) {
-        TIMCreateGroupMemberInfo *member = [[TIMCreateGroupMemberInfo alloc] init];
-        member.member = item.identifier;
-        member.role = TIM_GROUP_MEMBER_ROLE_MEMBER;
-        [groupName appendFormat:@"、%@", item.title];
-        [members addObject:member];
-    }
-
-    //群组名称默认长度不超过10，如有需求可在此更改，但可能会出现UI上的显示bug
-    if ([groupName length] > 10) {
-        groupName = [groupName substringToIndex:10].mutableCopy;
-    }
-
-    TIMCreateGroupInfo *info = [[TIMCreateGroupInfo alloc] init];
-    info.groupName = groupName;
-    info.groupType = groupType;
-    if([info.groupType isEqualToString:@"Private"]){
-        info.setAddOpt = false;
-    }
-    else{
-        info.setAddOpt = true;
-        info.addOpt = addOption;
-    }
-    info.membersInfo = members;
-
-    //发送创建请求后的回调函数
-    @weakify(self)
-    [[TIMGroupManager sharedInstance] createGroup:info succ:^(NSString *groupId) {
-        //创建成功后，在群内推送创建成功的信息
-        @strongify(self)
-        TIMMessage *tip = [[TIMMessage alloc] init];
-        TIMCustomElem *custom = [[TIMCustomElem alloc] init];
-        custom.data = [@"group_create" dataUsingEncoding:NSUTF8StringEncoding];
-
-        //对于创建群消息时的名称显示（此时还未设置群名片），优先显示用户昵称。
-        NSString *userId = [[TIMManager sharedInstance] getLoginUser];
-        TIMUserProfile *user = [[TIMFriendshipManager sharedInstance] queryUserProfile:userId];
-
-        if([info.groupType isEqualToString:@"Private"]) {
-            custom.ext = [NSString stringWithFormat:@"\"%@\"创建讨论组",user.showName];
-        } else if([info.groupType isEqualToString:@"Public"]){
-            custom.ext = [NSString stringWithFormat:@"\"%@\"创建群聊",user.showName];
-        } else if([info.groupType isEqualToString:@"ChatRoom"]) {
-            custom.ext = [NSString stringWithFormat:@"\"%@\"创建聊天室",user.showName];
-        } else {
-            custom.ext = [NSString stringWithFormat:@"\"%@\"创建群组",user.showName];
+    NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
+    [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+        NSString *showName = loginUser;
+        if (infoList.firstObject.nickName.length > 0) {
+            showName = infoList.firstObject.nickName;
+        }
+        NSMutableString *groupName = [NSMutableString stringWithString:showName];
+        NSMutableArray *members = [NSMutableArray array];
+        //遍历contacts，初始化群组成员信息、群组名称信息
+        for (TCommonContactSelectCellData *item in contacts) {
+            V2TIMCreateGroupMemberInfo *member = [[V2TIMCreateGroupMemberInfo alloc] init];
+            member.userID = item.identifier;
+            member.role = V2TIM_GROUP_MEMBER_ROLE_MEMBER;
+            [groupName appendFormat:@"、%@", item.title];
+            [members addObject:member];
         }
 
+        //群组名称默认长度不超过10，如有需求可在此更改，但可能会出现UI上的显示bug
+        if ([groupName length] > 10) {
+            groupName = [groupName substringToIndex:10].mutableCopy;
+        }
 
-        [tip addElem:custom];
-        TIMConversation *conv = [[TIMManager sharedInstance] getConversation:TIM_GROUP receiver:groupId];
-        [conv sendMessage:tip succ:nil fail:nil];
+        V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
+        info.groupName = groupName;
+        info.groupType = groupType;
+        if(![info.groupType isEqualToString:GroupType_Work]){
+            info.groupAddOpt = addOption;
+        }
 
+        //发送创建请求后的回调函数
+        @weakify(self)
+        [[V2TIMManager sharedInstance] createGroup:info memberList:members succ:^(NSString *groupID) {
+            //创建成功后，在群内推送创建成功的信息
+            @strongify(self)
+            NSString *content = nil;
+            if([info.groupType isEqualToString:GroupType_Work]) {
+                content = @"创建讨论组";
+            } else if([info.groupType isEqualToString:GroupType_Public]){
+                content = @"创建群聊";
+            } else if([info.groupType isEqualToString:GroupType_Meeting]) {
+                content = @"创建聊天室";
+            } else {
+                content = @"创建群组";
+            }
+            NSDictionary *dic = @{@"version": @(Version),@"businessID": @"group_create",@"opUser":showName,@"content":@"创建群组"};
+            NSData *data= [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+            V2TIMMessage *msg = [[V2TIMManager sharedInstance] createCustomMessage:data];
+            [[V2TIMManager sharedInstance] sendMessage:msg receiver:nil groupID:groupID priority:V2TIM_PRIORITY_DEFAULT onlineUserOnly:NO offlinePushInfo:nil progress:nil succ:nil fail:nil];
 
-        //创建成功后，默认跳转到群组对应的聊天界面
-        TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
-        data.convId = groupId;
-        data.convType = TIM_GROUP;
-        data.title = groupName;
-        ChatViewController *chat = [[ChatViewController alloc] init];
-        chat.conversationData = data;
-        [self.navigationController pushViewController:chat animated:YES];
+            //创建成功后，默认跳转到群组对应的聊天界面
+            TUIConversationCellData *cellData = [[TUIConversationCellData alloc] init];
+            cellData.groupID = groupID;
+            cellData.title = groupName;
+            ChatViewController *chat = [[ChatViewController alloc] init];
+            chat.conversationData = cellData;
+            [self.navigationController pushViewController:chat animated:YES];
 
-        NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
-        [tempArray removeObjectAtIndex:tempArray.count-2];
-        self.navigationController.viewControllers = tempArray;
-
+            NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+            [tempArray removeObjectAtIndex:tempArray.count-2];
+            self.navigationController.viewControllers = tempArray;
+        } fail:^(int code, NSString *msg) {
+            [THelper makeToastError:code msg:msg];
+        }];
     } fail:^(int code, NSString *msg) {
-        [THelper makeToastError:code msg:msg];
+        // to do
     }];
 }
-
-- (void)onNewMessageNotification:(NSNotification *)no
-{
-    NSArray<TIMMessage *> *msgs = no.object;
-    for (TIMMessage *msg in msgs) {
-        
-        TIMElem *elem = [msg getElem:0];
-        if ([elem isKindOfClass:[TIMCustomElem class]]) {
-            TIMCustomElem *custom = (TIMCustomElem *)elem;
-            NSDictionary *param = [TCUtil jsonData2Dictionary:[custom data]];
-            if (param != nil && [param[@"version"] integerValue] == 2) {
-                [[VideoCallManager shareInstance] onNewVideoCallMessage:msg];
-            }
-        }
-    }
-}
-
 @end

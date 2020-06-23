@@ -12,6 +12,8 @@
 #import "MyCustomCell.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
+#import "UIColor+TUIDarkMode.h"
+#import "THeader.h"
 
 @implementation MyCustomCell
 
@@ -19,20 +21,22 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.container.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+        
         _myTextLabel = [[UILabel alloc] init];
         _myTextLabel.numberOfLines = 0;
         _myTextLabel.font = [UIFont systemFontOfSize:15];
+        _myTextLabel.textColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark];
         [self.container addSubview:_myTextLabel];
 
         _myLinkLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _myLinkLabel.text = @"查看详情>>";
         _myLinkLabel.font = [UIFont systemFontOfSize:15];
-        _myLinkLabel.textColor = [UIColor blueColor];
+        _myLinkLabel.textColor = [UIColor d_systemBlueColor];
         [self.container addSubview:_myLinkLabel];
 
-        self.container.backgroundColor = [UIColor whiteColor];
         [self.container.layer setMasksToBounds:YES];
-        [self.container.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+        [self.container.layer setBorderColor:[UIColor d_systemGrayColor].CGColor];
         [self.container.layer setBorderWidth:1];
         [self.container.layer setCornerRadius:5];
     }

@@ -11,7 +11,6 @@
 #import "AppDelegate.h"
 #import "TUIButtonCell.h"
 #import "THeader.h"
-#import "ImSDK.h"
 #import "TTextEditController.h"
 #import "TDateEditController.h"
 #import "NotifySetupController.h"
@@ -25,7 +24,8 @@
 #import "UIImage+TUIKIT.h"
 #import "TUIKit.h"
 #import "THelper.h"
-
+#import "TCUtil.h"
+#import "UIColor+TUIDarkMode.h"
 #import <ImSDK/ImSDK.h>
 
 #define SHEET_COMMON 1
@@ -47,7 +47,7 @@
     return shareInstance;
 }
 
-- (NSString *)getSignature:(TIMUserProfile *)profile
+- (NSString *)getSignature:(V2TIMUserFullInfo *)profile
 {
     NSString *ret = [super getSignature:profile];
     if (ret.length != 0)
@@ -55,19 +55,11 @@
     return @"暂无个性签名";
 }
 
-- (NSString *)getLocation:(TIMUserProfile *)profile
-{
-    NSString *ret = [super getLocation:profile];
-    if (ret.length != 0)
-        return ret;
-    return @"未设置";
-}
-
 @end
 
 @interface ProfileController () <UIActionSheetDelegate>
 @property (nonatomic, strong) NSMutableArray *data;
-@property TIMUserProfile *profile;
+@property V2TIMUserFullInfo *profile;
 @end
 
 @implementation ProfileController
@@ -90,18 +82,23 @@
     self.parentViewController.title = @"个人信息";
 
     //self.tableView.tableFooterView = [[UIView alloc] init];
-    self.tableView.backgroundColor = TSettingController_Background_Color;
+    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     self.clearsSelectionOnViewWillAppear = YES;
 
     [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TCommonAvatarCell class] forCellReuseIdentifier:@"avatarCell"];
-
-    [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
-        self.profile = profile;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onSelfInfoUpdated:) name:TUIKitNotification_onSelfInfoUpdated object:nil];
+    
+    NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
+    [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+        self.profile = infoList.firstObject;
         [self setupData];
-    } fail:^(int code, NSString *msg) {
+    } fail:nil];
+}
 
-    }];
+- (void)onSelfInfoUpdated:(NSNotification *)no {
+    self.profile = no.object;
+    [self setupData];
 }
 
 - (void)setupData
@@ -123,20 +120,10 @@
     nicknameData.cselector = @selector(didSelectChangeNick);
 
     TCommonTextCellData *IDData = [TCommonTextCellData new];
-    IDData.key = @"账号";
-    IDData.value = self.profile.identifier;
+    IDData.key = @"帐号";
+    IDData.value = self.profile.userID;
     IDData.showAccessory = NO;
     [_data addObject:@[nicknameData, IDData]];
-
-    TCommonTextCellData *birthdayData = [TCommonTextCellData new];
-    birthdayData.key = @"生日";
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"YYYY年M月d日";
-    if ([self.profile showBirthday])
-        birthdayData.value = [formatter stringFromDate:[self.profile showBirthday]];
-    else birthdayData.value = @"未设置";
-    birthdayData.showAccessory = YES;
-    birthdayData.cselector = @selector(didSelectBirthday);
 
     TCommonTextCellData *signatureData = [TCommonTextCellData new];
     signatureData.key = @"个性签名";
@@ -150,12 +137,7 @@
     sexData.showAccessory = YES;
     sexData.cselector = @selector(didSelectSex);
 
-    TCommonTextCellData *localData = [TCommonTextCellData new];
-    localData.key = @"所在地";
-    localData.value = [self.profile showLocation];
-    localData.showAccessory = YES;
-    localData.cselector = @selector(didSelectLocal);
-    [_data addObject:@[signatureData, birthdayData, sexData, localData]];
+    [_data addObject:@[signatureData, sexData]];
 
 
     [self.tableView reloadData];
@@ -221,16 +203,18 @@
 
 - (void)didSelectChangeNick
 {
-    TTextEditController *vc = [[TTextEditController alloc] initWithText:self.profile.nickname];
+    TTextEditController *vc = [[TTextEditController alloc] initWithText:self.profile.nickName];
     vc.title = @"修改昵称";
     [self.navigationController pushViewController:vc animated:YES];
     @weakify(self)
     [[RACObserve(vc, textValue) skip:1] subscribeNext:^(NSString *x) {
         @strongify(self)
-        self.profile.nickname = x;
-        [self setupData];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_Nick: x}
-                                                            succ:nil fail:nil];
+        V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
+        info.nickName = x;
+        [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
+            self.profile.nickName = x;
+            [self setupData];
+        } fail:nil];
     }];
 }
 
@@ -243,41 +227,12 @@
     @weakify(self)
     [[RACObserve(vc, textValue) skip:1] subscribeNext:^(NSString *x) {
         @strongify(self)
-        self.profile.selfSignature = [x dataUsingEncoding:NSUTF8StringEncoding];
-        [self setupData];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_SelfSignature: x}
-                                                            succ:nil fail:nil];
-    }];
-}
-
-- (void)didSelectLocal
-{
-    TTextEditController *vc = [[TTextEditController alloc] initWithText:[self.profile showLocation]];
-    vc.title = @"修改所在地";
-    [self.navigationController pushViewController:vc animated:YES];
-    @weakify(self)
-    [[RACObserve(vc, textValue) skip:1] subscribeNext:^(NSString *x) {
-        @strongify(self)
-        self.profile.location = [x dataUsingEncoding:NSUTF8StringEncoding];
-        [self setupData];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_Location: x}
-                                                            succ:nil fail:nil];
-    }];
-}
-
-
-- (void)didSelectBirthday
-{
-    TDateEditController *vc = [[TDateEditController alloc] initWithDate:[self.profile showBirthday]];
-    vc.title = @"修改生日";
-    [self.navigationController pushViewController:vc animated:YES];
-    @weakify(self)
-    [[RACObserve(vc, dateValue) skip:1] subscribeNext:^(NSDate *value) {
-        @strongify(self)
-        [self.profile setShowBirthday:value];
-        [self setupData];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_Birthday: @(self.profile.birthday)}
-                                                            succ:nil fail:nil];
+        V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
+        info.selfSignature = x;
+        [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
+            self.profile.selfSignature = x;
+            [self setupData];
+        } fail:nil];
     }];
 }
 
@@ -299,10 +254,14 @@
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"TUIKit为您选择一个头像" message:nil preferredStyle:UIAlertControllerStyleAlert];
     [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSString *url = [THelper randAvatarUrl];
-        [self.profile setFaceURL:url];
-        [self setupData];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_FaceUrl: self.profile.faceURL}
-                                                            succ:nil fail:nil];
+        V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
+        info.faceURL = url;
+        [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
+            [self.profile setFaceURL:url];
+            [self setupData];
+        } fail:^(int code, NSString *desc) {
+            
+        }];
 
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil]];
@@ -311,19 +270,20 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-
     if (actionSheet.tag == SHEET_SEX) {
-        TIMGender gender = TIM_GENDER_UNKNOWN;
+        V2TIMGender gender = V2TIM_GENDER_UNKNOWN;
         if (buttonIndex == 0) {
-            gender = TIM_GENDER_MALE;
+            gender = V2TIM_GENDER_MALE;
         }
         if (buttonIndex == 1) {
-            gender = TIM_GENDER_FEMALE;
+            gender = V2TIM_GENDER_FEMALE;
         }
-        self.profile.gender = gender;
-        [self setupData];
-        [[TIMFriendshipManager sharedInstance] modifySelfProfile:@{TIMProfileTypeKey_Gender: @(gender)}
-                                                            succ:nil fail:nil];
+        V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
+        info.gender = gender;
+        [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
+            self.profile.gender = gender;
+            [self setupData];
+        } fail:nil];
     }
 }
 

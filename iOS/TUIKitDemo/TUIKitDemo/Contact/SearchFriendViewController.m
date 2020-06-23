@@ -15,9 +15,10 @@
 #import "TIMFriendshipManager.h"
 #import "FriendRequestViewController.h"
 #import "THeader.h"
+#import "UIColor+TUIDarkMode.h"
 
 @interface AddFriendUserView : UIView
-@property (nonatomic) TIMUserProfile *profile;
+@property (nonatomic) V2TIMUserFullInfo *profile;
 @end
 
 @implementation AddFriendUserView
@@ -44,12 +45,11 @@
 /**
  *设置用户信息
  */
-- (void)setProfile:(TIMUserProfile *)profile
+- (void)setProfile:(V2TIMUserFullInfo *)profile
 {
     _profile = profile;
     if (_profile) {
-
-        _idLabel.text = profile.identifier;
+        _idLabel.text = profile.userID;
         _idLabel.mm_sizeToFit().mm_center().mm_left(8);
         _line.mm_height(1).mm_width(self.mm_w).mm_bottom(0);
         _line.hidden = NO;
@@ -57,9 +57,6 @@
         _idLabel.text = @"";
         _line.hidden = YES;
     }
-
-
-    _profile = profile;
 }
 
 @end
@@ -83,7 +80,7 @@
     [super viewDidLoad];
     self.title = @"添加好友";
 
-    self.view.backgroundColor = TSettingController_Background_Color;
+    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
 
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -148,10 +145,8 @@
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSString *inputStr = searchController.searchBar.text ;
     NSLog(@"serach %@", inputStr);
-
-    [[TIMFriendshipManager sharedInstance] getUsersProfile:@[inputStr] forceUpdate:NO succ:^(NSArray<TIMUserProfile *> *profiles) {
-        if (profiles.count)
-            self.userView.profile = profiles[0];
+    [[V2TIMManager sharedInstance] getUsersInfo:@[inputStr] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+        self.userView.profile = infoList.firstObject;
     } fail:^(int code, NSString *msg) {
         self.userView.profile = nil;
     }];
@@ -168,7 +163,7 @@
 
 - (void)handleUserTap:(id)sender
 {
-    if (self.userView.profile)
+    if (self.userView.profile.userID.length > 0)
     {
         FriendRequestViewController *frc = [[FriendRequestViewController alloc] init];
         frc.profile = self.userView.profile;

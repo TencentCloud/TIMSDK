@@ -41,13 +41,13 @@
 
 @implementation TUserProfileController
 {
-    TIMUserProfile *_userProfile;
+    V2TIMUserFullInfo *_userFullInfo;
     ProfileControllerAction _actionType;
     TUIGroupPendencyCellData *_groupPendency;
     TCommonPendencyCellData *_pendency;
 }
 
-@synthesize userProfile = _userProfile;
+@synthesize userFullInfo = _userFullInfo;
 @synthesize actionType = _actionType;
 @synthesize groupPendency = _groupPendency;
 @synthesize pendency = _pendency;
@@ -91,12 +91,12 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TUIProfileCardCellData *personal = [[TUIProfileCardCellData alloc] init];
-            personal.identifier = self.userProfile.identifier;
+            personal.identifier = self.userFullInfo.userID;
             personal.avatarImage = DefaultAvatarImage;
-            personal.avatarUrl = [NSURL URLWithString:self.userProfile.faceURL];
-            personal.name = [self.userProfile showName];
-            personal.genderString = [self.userProfile showGender];
-            personal.signature = [self.userProfile showSignature];
+            personal.avatarUrl = [NSURL URLWithString:self.userFullInfo.faceURL];
+            personal.name = [self.userFullInfo showName];
+            personal.genderString = [self.userFullInfo showGender];
+            personal.signature = [self.userFullInfo showSignature];
             personal.reuseId = @"CardCell";
             personal;
         })];
@@ -128,7 +128,7 @@
     //当用户为陌生人时，在当前视图给出"加好友"按钮
     if (self.actionType == PCA_ADD_FRIEND) {
         TIMFriendCheckInfo *ck = TIMFriendCheckInfo.new;
-        ck.users = @[self.userProfile.identifier];
+        ck.users = @[self.userFullInfo.userID];
         ck.checkType = TIM_FRIEND_CHECK_TYPE_BIDIRECTION;
         [[TIMFriendshipManager sharedInstance] checkFriends:ck succ:^(NSArray<TIMCheckFriendResult *> *results) {
             TIMCheckFriendResult *result = results.firstObject;
@@ -249,9 +249,9 @@
 - (void)onSendMessage
 {
     TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
-    data.convId = self.userProfile.identifier;
-    data.convType = TIM_C2C;
-    data.title = [self.userProfile showName];
+    data.conversationID = [NSString stringWithFormat:@"c2c_%@",self.userFullInfo.userID];
+    data.userID = self.userFullInfo.userID;
+    data.title = [self.userFullInfo showName];
     ChatViewController *chat = [[ChatViewController alloc] init];
     chat.conversationData = data;
     [self.navigationController pushViewController:chat animated:YES];
@@ -263,7 +263,7 @@
 - (void)onAddFriend
 {
     FriendRequestViewController *vc = [FriendRequestViewController new];
-    vc.profile = self.userProfile;
+    vc.profile = self.userFullInfo;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -297,7 +297,7 @@
 
 -(void)didSelectAvatar{
     TUIAvatarViewController *image = [[TUIAvatarViewController alloc] init];
-    image.avatarData.avatarUrl = [NSURL URLWithString:self.userProfile.faceURL];
+    image.avatarData.avatarUrl = [NSURL URLWithString:self.userFullInfo.faceURL];
     NSArray *list = self.dataList;
     NSLog(@"%@",list);
 

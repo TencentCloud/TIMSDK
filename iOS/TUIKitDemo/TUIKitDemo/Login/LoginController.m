@@ -42,7 +42,7 @@
         *  由于破解服务器的成本要高于破解客户端 App，所以服务器计算的方案能够更好地保护您的加密密钥。
         */
         param.userSig = [GenerateTestUserSig genTestUserSig:_userNameTextFeild.text];
-        [[TIMManager sharedInstance] login:param succ:^{
+        [[V2TIMManager sharedInstance] login:param.identifier userSig:param.userSig succ:^{
             AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             NSData *deviceToken = delegate.deviceToken;
             if (deviceToken) {
@@ -73,7 +73,7 @@
             [[NSUserDefaults standardUserDefaults] setObject:param.userSig forKey:Key_UserInfo_Sig];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [ws presentViewController:[((AppDelegate *)[UIApplication sharedApplication].delegate) getMainController] animated:YES completion:nil];
-            });;
+            });
         } fail:^(int code, NSString *msg) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"code:%d msdg:%@ ,请检查 sdkappid,identifier,userSig 是否正确配置",code,msg] message:nil delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
             [alert show];

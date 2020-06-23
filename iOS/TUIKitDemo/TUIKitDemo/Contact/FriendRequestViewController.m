@@ -21,6 +21,7 @@
 #import "TUIKit.h"
 #import "TCommonSwitchCell.h"
 #import "THelper.h"
+#import "TCUtil.h"
 #import "TUIAvatarViewController.h"
 
 @interface FriendRequestViewController () <UITableViewDataSource, UITableViewDelegate>
@@ -64,7 +65,7 @@
     TUIProfileCardCellData *data = [TUIProfileCardCellData new];
     data.name = [self.profile showName];
     data.genderString = [self.profile showGender];
-    data.identifier = self.profile.identifier;
+    data.identifier = self.profile.userID;
     data.signature =  [self.profile showSignature];
     data.avatarImage = DefaultAvatarImage;
     data.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
@@ -215,7 +216,7 @@
     req.addWording = self.addWordTextView.text;
     req.remark = self.nickTextField.text;
     req.group = self.groupNameLabel.text;
-    req.identifier = self.profile.identifier;
+    req.identifier = self.profile.userID;
     req.addSource = @"iOS";
     if (self.singleSwitchData.on) {
         req.addType = TIM_FRIEND_ADD_TYPE_SINGLE;

@@ -39,30 +39,19 @@
     NSString *userSig = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Sig];
     if([appId integerValue] == SDKAPPID && identifier.length != 0 && userSig.length != 0){
         __weak typeof(self) ws = self;
-        TIMLoginParam *param = [[TIMLoginParam alloc] init];
-        param.identifier = identifier;
-        param.userSig = userSig;
-        [[TIMManager sharedInstance] login:param succ:^{
+        [[TUIKit sharedInstance] login:identifier userSig:userSig succ:^{
             if (ws.deviceToken) {
-                TIMTokenParam *param = [[TIMTokenParam alloc] init];
                 /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
                 //企业证书 ID
-                param.busiId = sdkBusiId;
-                [param setToken:ws.deviceToken];
-                [[TIMManager sharedInstance] setToken:param succ:^{
-                    NSLog(@"-----> 上传 token 成功 ");
-                    //推送声音的自定义化设置
-                    TIMAPNSConfig *config = [[TIMAPNSConfig alloc] init];
-                    config.openPush = 0;
-                    config.c2cSound = @"00.caf";
-                    config.groupSound = @"01.caf";
-                    [[TIMManager sharedInstance] setAPNS:config succ:^{
-                        NSLog(@"-----> 设置 APNS 成功");
-                    } fail:^(int code, NSString *msg) {
-                        NSLog(@"-----> 设置 APNS 失败");
-                    }];
+                V2TIMAPNSConfig *confg = [[V2TIMAPNSConfig alloc] init];
+                /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
+                //企业证书 ID
+                confg.businessID = sdkBusiId;
+                confg.token = self.deviceToken;
+                [[V2TIMManager sharedInstance] setAPNS:confg succ:^{
+                     NSLog(@"-----> 设置 APNS 成功");
                 } fail:^(int code, NSString *msg) {
-                    NSLog(@"-----> 上传 token 失败 ");
+                     NSLog(@"-----> 设置 APNS 失败");
                 }];
             }
             ws.window.rootViewController = [self getMainController];
@@ -154,32 +143,7 @@
 
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    __block UIBackgroundTaskIdentifier bgTaskID;
-    bgTaskID = [application beginBackgroundTaskWithExpirationHandler:^ {
-        //不管有没有完成，结束 background_task 任务
-        [application endBackgroundTask: bgTaskID];
-        bgTaskID = UIBackgroundTaskInvalid;
-    }];
-    
-    //获取未读计数
-    int unReadCount = 0;
-    NSArray *convs = [[TIMManager sharedInstance] getConversationList];
-    for (TIMConversation *conv in convs) {
-        if([conv getType] == TIM_SYSTEM){
-            continue;
-        }
-        unReadCount += [conv getUnReadMessageNum];
-    }
-    [UIApplication sharedApplication].applicationIconBadgeNumber = unReadCount;
-    
-    //doBackground
-    TIMBackgroundParam  *param = [[TIMBackgroundParam alloc] init];
-    [param setC2cUnread:unReadCount];
-    [[TIMManager sharedInstance] doBackground:param succ:^() {
-        NSLog(@"doBackgroud Succ");
-    } fail:^(int code, NSString * err) {
-        NSLog(@"Fail: %d->%@", code, err);
-    }];
+    // to do
 }
 
 
@@ -189,11 +153,7 @@
 
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    [[TIMManager sharedInstance] doForeground:^() {
-        NSLog(@"doForegroud Succ");
-    } fail:^(int code, NSString * err) {
-        NSLog(@"Fail: %d->%@", code, err);
-    }];
+    // to do
 }
 
 
@@ -282,10 +242,7 @@ void uncaughtExceptionHandler(NSException*exception){
         NSString *userSig = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Sig];
         if([appId integerValue] == SDKAPPID && identifier.length != 0 && userSig.length != 0){
             __weak typeof(self) ws = self;
-            TIMLoginParam *param = [[TIMLoginParam alloc] init];
-            param.identifier = identifier;
-            param.userSig = userSig;
-            [[TIMManager sharedInstance] login:param succ:^{
+            [[TUIKit sharedInstance] login:identifier userSig:userSig succ:^{
                 if (ws.deviceToken) {
                     TIMTokenParam *param = [[TIMTokenParam alloc] init];
                     /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/

@@ -91,7 +91,7 @@
     vc.title = @"删除联系人";
     NSMutableArray *ids = NSMutableArray.new;
     for (TGroupMemberCellData *cd in members) {
-        if (![cd.identifier isEqualToString:[[TIMManager sharedInstance] getLoginUser]]) {
+        if (![cd.identifier isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
             [ids addObject:cd.identifier];
         }
     }
@@ -116,11 +116,11 @@
  */
 - (void)addGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupInfoController *)controller
 {
-    [[TIMGroupManager sharedInstance] inviteGroupMember:_groupId members:members succ:^(NSArray *members) {
+    [[V2TIMManager sharedInstance] inviteUserToGroup:_groupId userList:members succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
         [THelper makeToast:@"添加成功"];
         [controller updateData];
-    } fail:^(int code, NSString *msg) {
-        [THelper makeToastError:code msg:msg];
+    } fail:^(int code, NSString *desc) {
+        [THelper makeToastError:code msg:desc];
     }];
 }
 
@@ -129,11 +129,11 @@
  */
 - (void)deleteGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupInfoController *)controller
 {
-    [[TIMGroupManager sharedInstance] deleteGroupMemberWithReason:groupId reason:@"" members:members succ:^(NSArray *members) {
+    [[V2TIMManager sharedInstance] kickGroupMember:groupId memberList:members reason:@"" succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
         [THelper makeToast:@"删除成功"];
         [controller updateData];
-    } fail:^(int code, NSString *msg) {
-        [THelper makeToastError:code msg:msg];
+    } fail:^(int code, NSString *desc) {
+        [THelper makeToastError:code msg:desc];
     }];
 }
 
@@ -158,8 +158,11 @@
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"TUIKit为您选择一个头像" message:nil preferredStyle:UIAlertControllerStyleAlert];
     [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSString *url = [THelper randAvatarUrl];
-        [[TIMGroupManager sharedInstance] modifyGroupFaceUrl:groupId url:url succ:^{
-            [controller updateData];
+        V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
+        info.groupID = groupId;
+        info.faceURL = url;
+        [[V2TIMManager sharedInstance] setGroupInfo:info succ:^{
+            [controller updateData];;
         } fail:^(int code, NSString *msg) {
             [THelper makeToastError:code msg:msg];
         }];
