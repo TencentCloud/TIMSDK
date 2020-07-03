@@ -13,7 +13,7 @@
     "cos-js-sdk-v5": "^0.5.22",
     "element-ui": "^2.13.0",
     "mta-h5-analysis": "^2.0.15",
-    "tim-js-sdk": "^2.7.0",
+    "tim-js-sdk": "^2.7.5",
     "trtc-js-sdk": "^4.3.6",
     "vue": "^2.6.11",
     "vuex": "^3.1.2"

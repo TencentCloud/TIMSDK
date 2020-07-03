@@ -279,7 +279,7 @@ export default {
   computed: {
     editable() {
       return (
-        this.groupProfile.type === this.TIM.TYPES.GRP_PRIVATE ||
+        this.groupProfile.type === this.TIM.TYPES.GRP_WORK ||
         [this.TIM.TYPES.GRP_MBR_ROLE_OWNER, this.TIM.TYPES.GRP_MBR_ROLE_ADMIN].includes(this.groupProfile.selfInfo.role)
       )
     },
@@ -290,8 +290,8 @@ export default {
       return this.groupProfile.selfInfo.role === this.TIM.TYPES.GRP_MBR_ROLE_ADMIN
     },
     showDissmissGroup() {
-      // 私有群不能解散
-      return this.isOwner && this.groupProfile.type !== this.TIM.TYPES.GRP_PRIVATE
+      // 好友工作群不能解散
+      return this.isOwner && this.groupProfile.type !== this.TIM.TYPES.GRP_WORK
     }
   },
   watch: {

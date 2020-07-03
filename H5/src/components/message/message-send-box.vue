@@ -415,6 +415,7 @@ export default {
       this.tim
         .sendMessage(message)
         .then(() => {
+          this.$refs.imagePicker.value = null
         })
         .catch(imError => {
           this.$store.commit('showMessage', {
@@ -422,7 +423,6 @@ export default {
             type: 'error'
           })
         })
-      this.$refs.imagePicker.value = null
     },
     sendFile() {
       const message = this.tim.createFileMessage({
@@ -439,6 +439,7 @@ export default {
       this.tim
         .sendMessage(message)
         .then(() => {
+          this.$refs.filePicker.value = null
         })
         .catch(imError => {
           this.$store.commit('showMessage', {
@@ -446,7 +447,6 @@ export default {
             type: 'error'
           })
         })
-      this.$refs.filePicker.value = null
     },
     sendVideo() {
       const message = this.tim.createVideoMessage({
