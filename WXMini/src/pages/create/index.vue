@@ -29,20 +29,20 @@
 const defaultData = {
   selectedIndex: 0,
   range: [{
-    type: wx.TIM.TYPES.GRP_PRIVATE,
-    name: '讨论组'
+    type: wx.TIM.TYPES.GRP_WORK,
+    name: '好友工作群'
   },
   {
     type: wx.TIM.TYPES.GRP_PUBLIC,
-    name: '公开群'
+    name: '陌生人社交群'
   },
   {
-    type: wx.TIM.TYPES.GRP_CHATROOM,
-    name: '聊天室'
+    type: wx.TIM.TYPES.GRP_MEETING,
+    name: '临时会议群'
   },
   {
     type: wx.TIM.TYPES.GRP_AVCHATROOM,
-    name: '音视频聊天室'
+    name: '直播群'
   }
   ],
   groupName: '',
@@ -110,7 +110,7 @@ export default {
     showInfo () {
       wx.showModal({
         title: '提示',
-        content: '音视频聊天室常用于直播聊天场景，只有在主动加群（需要填写群ID）后才能收到消息，重新登录后需要重新加群。\n故在创建音视频聊天室时，必须填写群ID',
+        content: '直播群常用于直播聊天场景，只有在主动加群（需要填写群ID）后才能收到消息，重新登录后需要重新加群。\n故在创建直播群时，必须填写群ID',
         showCancel: false,
         confirmText: '了解'
       })

@@ -89,7 +89,7 @@ export default {
         .then(({ data }) => {
           wx.hideLoading()
           const isJoined = this.groupList.findIndex((group) => group.groupID === this.ID) >= 0
-          if (isJoined || data.group.type === 'AVChatRoom') {
+          if (isJoined || data.group.type === wx.TIM.TYPES.GRP_AVCHATROOM) {
             this.buttonText = '进入群聊'
           } else {
             this.buttonText = '申请加群'
@@ -144,7 +144,7 @@ export default {
   height 100vh
   padding 16px
   background-color $background
-  .search-bar 
+  .search-bar
     display flex
     align-items center
     background-color $white
@@ -153,11 +153,11 @@ export default {
     font-size 14px
     input
       width 100%
-    img 
+    img
       width 14px
       height 14px
       margin-right 10px
-  button 
+  button
     background-color $primary
     color $white
     width 80vw
