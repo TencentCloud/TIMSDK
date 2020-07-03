@@ -36,7 +36,7 @@
 
       <div class="info-item">
         <div class="label">群类型</div>
-        <div class="content">{{ groupProfile.type }}</div>
+        <div class="content">{{ groupType}}</div>
       </div>
       <div class="info-item">
         <div class="label">
@@ -292,6 +292,20 @@ export default {
     showDissmissGroup() {
       // 好友工作群不能解散
       return this.isOwner && this.groupProfile.type !== this.TIM.TYPES.GRP_WORK
+    },
+    groupType() {
+      switch (this.groupProfile.type) {
+        case this.TIM.TYPES.GRP_WORK:
+          return '好友工作群（Work）'
+        case this.TIM.TYPES.GRP_PUBLIC:
+          return '陌生人社交群（Public）'
+        case this.TIM.TYPES.GRP_CHATROOM:
+          return '临时会议群（Meeting）'
+        case this.TIM.TYPES.GRP_AVCHATROOM:
+          return '直播群（AVChatRoom）'
+        default:
+          return ''
+      }
     }
   },
   watch: {
