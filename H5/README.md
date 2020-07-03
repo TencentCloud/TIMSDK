@@ -109,6 +109,16 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### WebIM Demo Change Log
 
+#### 2020/7/3
+
+**Features**
+
+- SDK 版本更新至 2.7.5
+
+**Changes**
+
+- Web demo 更新群名称：好友工作群（Work）、陌生人社交群（Public）、临时会议群（Meeting）和直播群（AVChatRoom）
+
 #### 2020/6/10
 
 **Features**

@@ -9,10 +9,10 @@
       </el-form-item>
       <el-form-item label="群类型">
         <el-select v-model="form.type">
-          <el-option label="Private" value="Private"></el-option>
-          <el-option label="Public" value="Public"></el-option>
-          <el-option label="ChatRoom" value="ChatRoom"></el-option>
-          <el-option label="AVChatRoom" value="AVChatRoom"></el-option>
+          <el-option label="Work" :value="TIM.TYPES.GRP_WORK"></el-option>
+          <el-option label="Public" :value="TIM.TYPES.GRP_PUBLIC"></el-option>
+          <el-option label="Meeting" :value="TIM.TYPES.GRP_MEETING"></el-option>
+          <el-option label="AVChatRoom" :value="TIM.TYPES.GRP_AVCHATROOM"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="群头像地址">
@@ -38,7 +38,7 @@
           multiple
           filterable
           remote
-          :disabled="form.type === 'AVChatRoom'"
+          :disabled="form.type === TIM.TYPES.GRP_AVCHATROOM"
           :remote-method="handleSearchUser"
           :loading="loading"
           placeholder="请输入群成员 userID"
@@ -79,7 +79,7 @@ export default {
       form: {
         groupID: '',
         name: '',
-        type: 'Private',
+        type: this.TIM.TYPES.GRP_WORK,
         avatar: '',
         introduction: '',
         notification: '',
@@ -96,8 +96,8 @@ export default {
   computed: {
     joinOptionDisabled() {
       return [
-        this.TIM.TYPES.GRP_PRIVATE,
-        this.TIM.TYPES.GRP_CHATROOM,
+        this.TIM.TYPES.GRP_WORK,
+        this.TIM.TYPES.GRP_MEETING,
         this.TIM.TYPES.GRP_AVCHATROOM
       ].includes(this.form.type)
     }
@@ -134,7 +134,7 @@ export default {
         ...this.form,
         memberList: this.form.memberList.map(userID => ({ userID }))
       }
-      if (['Private', 'AVChatRoom'].includes(this.form.type)) {
+      if ([this.TIM.TYPES.GRP_WORK, this.TIM.TYPES.GRP_AVCHATROOM].includes(this.form.type)) {
         delete options.joinOption
       }
       return options
