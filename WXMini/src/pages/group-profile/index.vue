@@ -79,16 +79,16 @@ export default {
       groupProfile: state => state.conversation.currentConversation.groupProfile,
       memberList: state => state.group.currentGroupMemberList.slice(0, 12)
     }),
-    // 私有群才能添加群成员
+    // 好友工作群才能添加群成员
     addMemberButtonVisible () {
       if (this.groupProfile) {
-        return this.groupProfile.type === wx.TIM.TYPES.GRP_PRIVATE
+        return this.groupProfile.type === wx.TIM.TYPES.GRP_WORK
       }
       return false
     },
     quitText () {
       if (this.groupProfile &&
-        this.groupProfile.type !== wx.TIM.TYPES.GRP_PRIVATE &&
+        this.groupProfile.type !== wx.TIM.TYPES.GRP_WORK &&
         this.groupProfile.selfInfo &&
         this.groupProfile.selfInfo.role === wx.TIM.TYPES.GRP_MBR_ROLE_OWNER
       ) {
@@ -106,8 +106,8 @@ export default {
       if (!this.groupProfile || !this.groupProfile.selfInfo) {
         return false
       }
-      // 任何成员都可修改私有群的群资料
-      if (this.groupProfile.type === wx.TIM.TYPES.GRP_PRIVATE) {
+      // 任何成员都可修改好友工作群的群资料
+      if (this.groupProfile.type === wx.TIM.TYPES.GRP_WORK) {
         return true
       }
       // 其他类型的群组只有管理员以上身份可以修改
@@ -131,7 +131,7 @@ export default {
         success: (res) => {
           if (res.confirm) {
             // 解散群聊
-            if (this.groupProfile.type !== wx.TIM.TYPES.GRP_PRIVATE && this.groupProfile.selfInfo.role === 'Owner') {
+            if (this.groupProfile.type !== wx.TIM.TYPES.GRP_WORK && this.groupProfile.selfInfo.role === wx.TIM.TYPES.GRP_MBR_ROLE_OWNER) {
               wx.$app.dismissGroup(this.groupProfile.groupID).then(() => {
                 wx.showToast({ title: '解散成功', duration: 800 })
                 setTimeout(() => {
