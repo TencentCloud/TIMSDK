@@ -43,21 +43,21 @@ PODS:
   - Toast-Swift (5.0.1)
   - TXIMSDK_iOS (4.8.50)
   - TXIMSDK_TUIKit_iOS (4.8.50):
-    - AFNetworking
-    - Alamofire
+    - AFNetworking (= 4.0.1)
+    - Alamofire (= 4.9.1)
     - ISVImageScrollView (= 0.1.2)
-    - Material
+    - Material (= 3.1.8)
     - MMLayout (= 0.2.0)
-    - NVActivityIndicatorView
+    - NVActivityIndicatorView (= 4.8.0)
     - ReactiveObjC (= 3.1.1)
-    - RxCocoa
-    - RxSwift
+    - RxCocoa (= 5.1.1)
+    - RxSwift (= 5.1.1)
     - SDWebImage (= 5.5.2)
-    - SnapKit
+    - SnapKit (= 4.2.0)
     - Toast (= 4.0.0)
-    - Toast-Swift
-    - TXIMSDK_iOS
-    - TXLiteAVSDK_TRTC
+    - Toast-Swift (= 5.0.1)
+    - TXIMSDK_iOS (= 4.8.50)
+    - TXLiteAVSDK_TRTC (= 7.3.9138)
   - TXLiteAVSDK_TRTC (7.3.9138)
 
 DEPENDENCIES:
@@ -104,7 +104,7 @@ SPEC CHECKSUMS:
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
   TXIMSDK_iOS: ae26f78e028e01beed47127ea6bde03c11156208
-  TXIMSDK_TUIKit_iOS: e4a382ab4a44a6b7a4bfef234acaf7e14b851281
+  TXIMSDK_TUIKit_iOS: 3c85b07637e2a3e76064259113bbce7a6891c404
   TXLiteAVSDK_TRTC: bc28fa8b49a2150d668d678bcc87889e5c97b75c
 
 PODFILE CHECKSUM: 431b4507d931e1f35c45eef1bcc20d2d9f4731be
