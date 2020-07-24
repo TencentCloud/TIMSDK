@@ -8,6 +8,5 @@ target 'TUIKitDemo' do
   use_modular_headers!
 
   # Pods for Example
-  pod 'MBProgressHUD'
   pod 'TXIMSDK_TUIKit_iOS'
 end

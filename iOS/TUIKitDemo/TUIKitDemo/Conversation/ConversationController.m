@@ -96,6 +96,18 @@
 }
 
 /**
+ *推送默认跳转
+ */
+- (void)pushToChatViewController:(NSString *)groupID userID:(NSString *)userID {
+    ChatViewController *chat = [[ChatViewController alloc] init];
+    TUIConversationCellData *conversationData = [[TUIConversationCellData alloc] init];
+    conversationData.groupID = groupID;
+    conversationData.userID = userID;
+    chat.conversationData = conversationData;
+    [self.navigationController pushViewController:chat animated:YES];
+}
+
+/**
  *在消息列表内，点击了某一具体会话后的响应函数
  */
 - (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCell *)conversation
@@ -103,11 +115,6 @@
     ChatViewController *chat = [[ChatViewController alloc] init];
     chat.conversationData = conversation.convData;
     [self.navigationController pushViewController:chat animated:YES];
-    
-    if ([conversation.convData.groupID isEqualToString:@"im_demo_admin"] || [conversation.convData.userID isEqualToString:@"im_demo_admin"]) {
-    }
-    if ([conversation.convData.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [conversation.convData.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
-    }
 }
 
 /**
@@ -171,7 +178,6 @@
             NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
             [tempArray removeObjectAtIndex:tempArray.count-2];
             self.navigationController.viewControllers = tempArray;
-            
         };
         return;
     }

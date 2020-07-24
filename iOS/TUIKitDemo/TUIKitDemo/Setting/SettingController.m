@@ -20,7 +20,6 @@
 #import "THeader.h"
 #import "TTextEditController.h"
 #import "TDateEditController.h"
-#import "NotifySetupController.h"
 #import "TIMUserProfile+DataProvider.h"
 #import "TUIUserProfileDataProviderService.h"
 #import "TCServiceManager.h"
@@ -167,11 +166,11 @@
         friendApply.value = @"拒绝任何人加好友";
     }
 
-    TCommonTextCellData *messageNotify = [TCommonTextCellData new];
-    messageNotify.key = @"消息提醒";
-    messageNotify.showAccessory = YES;
-    messageNotify.cselector = @selector(didSelectNotifySet);
-    [_data addObject:@[friendApply, messageNotify]];
+//    TCommonTextCellData *messageNotify = [TCommonTextCellData new];
+//    messageNotify.key = @"消息提醒";
+//    messageNotify.showAccessory = YES;
+//    messageNotify.cselector = @selector(didSelectNotifySet);
+    [_data addObject:@[friendApply]];
 
     TCommonTextCellData *about = [TCommonTextCellData new];
     about.key = @"关于腾讯·云通信";
@@ -284,12 +283,12 @@
  */
 - (void)didSelectNotifySet
 {
-    [[TIMManager sharedInstance] getAPNSConfig:^(TIMAPNSConfig *config){
-        NotifySetupController *vc = [[NotifySetupController alloc] init:config];
-        [self.navigationController pushViewController:vc animated:YES];
-    } fail:^(int code, NSString *err){
-
-    }];
+//    [[TIMManager sharedInstance] getAPNSConfig:^(TIMAPNSConfig *config){
+//        NotifySetupController *vc = [[NotifySetupController alloc] init:config];
+//        [self.navigationController pushViewController:vc animated:YES];
+//    } fail:^(int code, NSString *err){
+//
+//    }];
 }
 
 /**

@@ -14,5 +14,8 @@
 #import <UIKit/UIKit.h>
 
 @interface ConversationController : UIViewController
-
+/**
+ *跳转到对应的聊天界面
+ */
+- (void)pushToChatViewController:(NSString *)groupID userID:(NSString *)userID;
 @end
