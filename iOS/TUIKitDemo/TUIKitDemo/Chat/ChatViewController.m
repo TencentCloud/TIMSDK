@@ -58,6 +58,7 @@
 
 
     RAC(self, title) = [RACObserve(_conversationData, title) distinctUntilChanged];
+    [self checkTitle];
 
     NSMutableArray *moreMenus = [NSMutableArray arrayWithArray:_chat.moreMenus];
     [moreMenus addObject:({
@@ -81,6 +82,40 @@
                                                object:nil];
 
 
+}
+
+- (void)checkTitle {
+    if (_conversationData.title.length == 0) {
+        if (_conversationData.userID.length > 0) {
+            _conversationData.title = _conversationData.userID;
+             @weakify(self)
+            [[V2TIMManager sharedInstance] getFriendsInfo:@[_conversationData.userID] succ:^(NSArray<V2TIMFriendInfoResult *> *resultList) {
+                @strongify(self)
+                V2TIMFriendInfoResult *result = resultList.firstObject;
+                if (result.friendInfo && result.friendInfo.friendRemark.length > 0) {
+                    self.conversationData.title = result.friendInfo.friendRemark;
+                } else {
+                    [[V2TIMManager sharedInstance] getUsersInfo:@[self.conversationData.userID] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+                        V2TIMUserFullInfo *info = infoList.firstObject;
+                        if (info && info.nickName.length > 0) {
+                            self.conversationData.title = info.nickName;
+                        }
+                    } fail:nil];
+                }
+            } fail:nil];
+        }
+        if (_conversationData.groupID.length > 0) {
+            _conversationData.title = _conversationData.groupID;
+             @weakify(self)
+            [[V2TIMManager sharedInstance] getGroupsInfo:@[_conversationData.groupID] succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
+                @strongify(self)
+                V2TIMGroupInfoResult *result = groupResultList.firstObject;
+                if (result.info && result.info.groupName.length > 0) {
+                    self.conversationData.title = result.info.groupName;
+                }
+            } fail:nil];
+        }
+    }
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent
@@ -202,6 +237,8 @@
             NSString *businessID = param[@"businessID"];
             if (version == Version && [businessID isEqualToString:@"text_link"]) {
                 MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
+                cellData.innerMessage = msg;
+                cellData.msgID = msg.msgID;
                 cellData.text = param[@"text"];
                 cellData.link = param[@"link"];
                 cellData.avatarUrl = [NSURL URLWithString:msg.faceURL];
@@ -210,6 +247,8 @@
             // 兼容下老版本
             if ([param.allKeys containsObject:@"link"] && [param.allKeys containsObject:@"text"]) {
                 MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
+                cellData.innerMessage = msg;
+                cellData.msgID = msg.msgID;
                 cellData.text = param[@"text"];
                 cellData.link = param[@"link"];
                 cellData.avatarUrl = [NSURL URLWithString:msg.faceURL];

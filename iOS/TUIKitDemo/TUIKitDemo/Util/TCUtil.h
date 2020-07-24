@@ -19,6 +19,8 @@
 
 + (NSData *)dictionary2JsonData:(NSDictionary *)dict;
 
++ (NSString *)dictionary2JsonStr:(NSDictionary *)dict;
+
 + (NSDictionary *)jsonSring2Dictionary:(NSString *)jsonString;
 
 + (NSDictionary *)jsonData2Dictionary:(NSData *)jsonData;

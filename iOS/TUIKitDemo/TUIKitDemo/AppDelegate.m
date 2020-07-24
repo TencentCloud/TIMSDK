@@ -7,17 +7,30 @@
 #import "TUITabBarController.h"
 #import "TUIKit.h"
 #import "THeader.h"
-#import "ImSDK.h"
+#import "TCUtil.h"
+#import "THelper.h"
 #import "GenerateTestUserSig.h"
+#import "ImSDK.h"
 #import <Bugly/Bugly.h>
 
 @interface AppDelegate () <BuglyDelegate>
+@property(nonatomic,strong) NSString *groupID;
+@property(nonatomic,strong) NSString *userID;
+@property(nonatomic,strong) V2TIMSignalingInfo *signalingInfo;
 @end
+
+static AppDelegate *app;
 
 @implementation AppDelegate
 
++ (instancetype)sharedInstance {
+    return app;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    app = self;
+    
     // Override point for customization after application launch.
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserStatus:) name:TUIKitNotification_TIMUserStatusListener object:nil];
@@ -53,6 +66,10 @@
                 } fail:^(int code, NSString *msg) {
                      NSLog(@"-----> 设置 APNS 失败");
                 }];
+                //普通消息推送
+                [self onReceiveNomalMsgAPNs];
+                //音视频消息推送
+                [self onReceiveGroupCallAPNs];
             }
             ws.window.rootViewController = [self getMainController];
         } fail:^(int code, NSString *msg) {
@@ -133,8 +150,107 @@
 
 -(void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
+    // 需要在 Xcode 把 Push Notifications打开
     _deviceToken = deviceToken;
 }
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler
+{
+    // 收到推送普通信息推送（普通消息推送设置代码请参考 TUIMessageController -> sendMessage）
+    //普通消息推送格式（C2C）：
+    //@"ext" :
+    //@"{\"entity\":{\"action\":1,\"chatType\":1,\"content\":\"Hhh\",\"sendTime\":0,\"sender\":\"2019\",\"version\":1}}"
+    //普通消息推送格式（Group）：
+    //@"ext"
+    //@"{\"entity\":{\"action\":1,\"chatType\":2,\"content\":\"Hhh\",\"sendTime\":0,\"sender\":\"@TGS#1PWYXLTGA\",\"version\":1}}"
+    
+    // 收到推送音视频推送（音视频推送设置代码请参考 TUICall+Signal -> sendAPNsForCall）
+    //音视频通话推送格式（C2C）：
+    //@"ext" :
+    //@"{\"entity\":{\"action\":2,\"chatType\":1,\"content\":\"{\\\"action\\\":1,\\\"call_id\\\":\\\"144115224193193423-1595225880-515228569\\\",\\\"call_type\\\":1,\\\"code\\\":0,\\\"duration\\\":0,\\\"invited_list\\\":[\\\"10457\\\"],\\\"room_id\\\":1688911421,\\\"timeout\\\":30,\\\"timestamp\\\":0,\\\"version\\\":4}\",\"sendTime\":1595225881,\"sender\":\"2019\",\"version\":1}}"
+    //音视频通话推送格式（Group）：
+    //@"ext"
+    //@"{\"entity\":{\"action\":2,\"chatType\":2,\"content\":\"{\\\"action\\\":1,\\\"call_id\\\":\\\"144115212826565047-1595506130-2098177837\\\",\\\"call_type\\\":2,\\\"code\\\":0,\\\"duration\\\":0,\\\"group_id\\\":\\\"@TGS#1BUBQNTGS\\\",\\\"invited_list\\\":[\\\"10457\\\"],\\\"room_id\\\":1658793276,\\\"timeout\\\":30,\\\"timestamp\\\":0,\\\"version\\\":4}\",\"sendTime\":1595506130,\"sender\":\"vinson1\",\"version\":1}}"
+    NSDictionary *extParam = [TCUtil jsonSring2Dictionary:userInfo[@"ext"]];
+    NSDictionary *entity = extParam[@"entity"];
+    if (!entity) {
+        return;
+    }
+    // 业务，action : 1 普通文本推送；2 音视频通话推送
+    NSString *action = entity[@"action"];
+    if (!action) {
+        return;
+    }
+    // 聊天类型，chatType : 1 单聊；2 群聊
+    NSString *chatType = entity[@"chatType"];
+    if (!chatType) {
+        return;
+    }
+    // action : 1 普通消息推送
+    if ([action intValue] == APNs_Business_NormalMsg) {
+        if ([chatType intValue] == 1) {   //C2C
+            self.userID = entity[@"sender"];
+        } else if ([chatType intValue] == 2) { //Group
+            self.groupID = entity[@"sender"];
+        }
+        if ([[V2TIMManager sharedInstance] getLoginStatus] == V2TIM_STATUS_LOGINED) {
+            [self onReceiveNomalMsgAPNs];
+        }
+    }
+    // action : 2 音视频通话推送
+    else if ([action intValue] == APNs_Business_Call) {
+        // 单聊中的音视频邀请推送不需处理，APP 启动后，TUIkit 会自动处理
+        if ([chatType intValue] == 1) {   //C2C
+            return;
+        }
+        // 内容
+        NSDictionary *content = [TCUtil jsonSring2Dictionary:entity[@"content"]];
+        if (!content) {
+            return;
+        }
+        UInt64 sendTime = [entity[@"sendTime"] integerValue];
+        uint32_t timeout = [content[@"timeout"] intValue];
+        UInt64 curTime = (UInt64)[[NSDate date] timeIntervalSince1970];
+        if (curTime - sendTime > timeout) {
+            [THelper makeToast:@"通话接收超时"];
+            return;
+        }
+        self.signalingInfo = [[V2TIMSignalingInfo alloc] init];
+        self.signalingInfo.actionType = (SignalingActionType)[content[@"action"] intValue];
+        self.signalingInfo.inviteID = content[@"call_id"];
+        self.signalingInfo.inviter = entity[@"sender"];
+        self.signalingInfo.inviteeList = content[@"invited_list"];
+        self.signalingInfo.groupID = content[@"group_id"];
+        self.signalingInfo.timeout = timeout;
+        self.signalingInfo.data = [TCUtil dictionary2JsonStr:@{SIGNALING_EXTRA_KEY_ROOM_ID : content[@"room_id"], SIGNALING_EXTRA_KEY_VERSION : content[@"version"], SIGNALING_EXTRA_KEY_CALL_TYPE : content[@"call_type"]}];
+        if ([[V2TIMManager sharedInstance] getLoginStatus] == V2TIM_STATUS_LOGINED) {
+            [self onReceiveGroupCallAPNs];
+        }
+    }
+}
+
+- (void)onReceiveNomalMsgAPNs {
+    if (self.groupID.length > 0 || self.userID.length > 0) {
+        UITabBarController *tab = [app getMainController];
+        if (tab.selectedIndex != 0) {
+            [tab setSelectedIndex:0];
+        }
+        self.window.rootViewController = tab;
+        UINavigationController *nav = (UINavigationController *)tab.selectedViewController;
+        ConversationController *vc = (ConversationController *)nav.viewControllers.firstObject;
+        [vc pushToChatViewController:self.groupID userID:self.userID];
+        self.groupID = nil;
+        self.userID = nil;
+    }
+}
+
+- (void)onReceiveGroupCallAPNs {
+    if (self.signalingInfo) {
+        [[TUIKit sharedInstance] onReceiveGroupCallAPNs:self.signalingInfo];
+        self.signalingInfo = nil;
+    }
+}
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

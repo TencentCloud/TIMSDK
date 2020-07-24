@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-  spec.name         = 'TXIMSDK_TUIKit_iOS'
+  spec.name         = 'TXIMSDK_TUIKit_iOS_Professional'
   spec.version      = '4.9.1'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
@@ -11,7 +11,7 @@ Pod::Spec.new do |spec|
   spec.homepage     = 'https://cloud.tencent.com/document/product/269/3794'
   spec.documentation_url = 'https://cloud.tencent.com/document/product/269/9147'
   spec.authors      = 'tencent video cloud'
-  spec.summary      = 'TXIMSDK_TUIKit_iOS'
+  spec.summary      = 'TXIMSDK_TUIKit_iOS_Professional'
   spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
   spec.libraries    = 'stdc++'
 
@@ -19,7 +19,7 @@ Pod::Spec.new do |spec|
   spec.dependency 'SDWebImage','5.5.2'
   spec.dependency 'ReactiveObjC','3.1.1'
   spec.dependency 'Toast','4.0.0'
-  spec.dependency 'TXLiteAVSDK_TRTC','7.4.9203'
+  spec.dependency 'TXLiteAVSDK_Professional','7.4.9203'
   spec.dependency 'TXIMSDK_iOS','4.9.1'
   
   spec.requires_arc = true
@@ -32,4 +32,4 @@ Pod::Spec.new do |spec|
 
 end
 
-# pod trunk push TXIMSDK_TUIKit_iOS.podspec --use-libraries --allow-warnings
+# pod trunk push TXIMSDK_TUIKit_iOS_Professional.podspec --use-libraries --allow-warnings

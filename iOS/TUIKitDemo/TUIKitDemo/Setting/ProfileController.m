@@ -13,7 +13,6 @@
 #import "THeader.h"
 #import "TTextEditController.h"
 #import "TDateEditController.h"
-#import "NotifySetupController.h"
 #import "TIMUserProfile+DataProvider.h"
 #import "TUIUserProfileDataProviderService.h"
 #import "TCServiceManager.h"
@@ -262,7 +261,6 @@
         } fail:^(int code, NSString *desc) {
             
         }];
-
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];

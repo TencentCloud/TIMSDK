@@ -18,7 +18,6 @@
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "THeader.h"
 #import "TTextEditController.h"
-#import "TIMFriendshipManager.h"
 #import "ChatViewController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIKit.h"
