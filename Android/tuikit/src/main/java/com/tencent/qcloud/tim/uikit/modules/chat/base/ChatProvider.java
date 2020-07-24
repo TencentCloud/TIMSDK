@@ -86,6 +86,7 @@ public class ChatProvider implements IChatProvider {
         List<MessageInfo> list = new ArrayList<>();
         for (MessageInfo info : msg) {
             if (checkExist(info)) {
+                updateTIMMessageStatus(info);
                 continue;
             }
             list.add(info);
@@ -147,9 +148,10 @@ public class ChatProvider implements IChatProvider {
         return false;
     }
 
-    public boolean updateTIMMessageStatus(V2TIMMessage message) {
+    public boolean updateTIMMessageStatus(MessageInfo message) {
         for (int i = 0; i < mDataSource.size(); i++) {
-            if (mDataSource.get(i).getId().equals(message.getMsgID())) {
+            if (mDataSource.get(i).getId().equals(message.getId())
+                    && mDataSource.get(i).getStatus() != message.getStatus()) {
                 mDataSource.get(i).setStatus(message.getStatus());
                 updateAdapter(MessageLayout.DATA_CHANGE_TYPE_UPDATE, i);
                 return true;

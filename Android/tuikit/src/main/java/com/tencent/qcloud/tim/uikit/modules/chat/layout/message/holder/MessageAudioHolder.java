@@ -61,6 +61,7 @@ public class MessageAudioHolder extends MessageContentHolder {
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.rightMargin = 24;
             audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
+            audioPlayImage.setRotation(180f);
             audioContentView.removeView(audioPlayImage);
             audioContentView.addView(audioPlayImage);
             unreadAudioText.setVisibility(View.GONE);
@@ -114,6 +115,9 @@ public class MessageAudioHolder extends MessageContentHolder {
                     return;
                 }
                 audioPlayImage.setImageResource(R.drawable.play_voice_message);
+                if (msg.isSelf()) {
+                    audioPlayImage.setRotation(180f);
+                }
                 final AnimationDrawable animationDrawable = (AnimationDrawable) audioPlayImage.getDrawable();
                 animationDrawable.start();
                 msg.setCustomInt(READ);
@@ -126,6 +130,9 @@ public class MessageAudioHolder extends MessageContentHolder {
                             public void run() {
                                 animationDrawable.stop();
                                 audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
+                                if (msg.isSelf()) {
+                                    audioPlayImage.setRotation(180f);
+                                }
                             }
                         });
                     }

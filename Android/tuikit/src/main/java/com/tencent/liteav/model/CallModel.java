@@ -113,6 +113,9 @@ public class CallModel implements Cloneable, Serializable {
 
     public long timestamp;
     public String sender;
+    // 超时时间，单位秒
+    public int timeout;
+    public String data;
 
     @Override
     public Object clone() {
@@ -143,6 +146,7 @@ public class CallModel implements Cloneable, Serializable {
                 callModel.action = CallModel.VIDEO_CALL_ACTION_UNKNOWN;
                 return callModel;
             }
+            callModel.data = signalingInfo.getData();
             if (signalingInfo.getActionType() == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_INVITE && extraMap != null) {
                 callModel.groupId = signalingInfo.getGroupID();
                 callModel.timestamp = msg.getTimestamp();
@@ -203,6 +207,8 @@ public class CallModel implements Cloneable, Serializable {
                 ", invitedList=" + invitedList +
                 ", duration=" + duration +
                 ", code=" + code +
+                ", timestamp=" + timestamp +
+                ", sender=" + sender +
                 '}';
     }
 }

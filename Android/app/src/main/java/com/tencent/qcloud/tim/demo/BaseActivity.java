@@ -35,6 +35,13 @@ public class BaseActivity extends Activity {
             ToastUtil.toastLongMessage("您的帐号已在其它终端登录");
             logout(DemoApplication.instance());
         }
+
+        @Override
+        public void onUserSigExpired() {
+            ToastUtil.toastLongMessage("账号已过期，请重新登录");
+            logout(DemoApplication.instance());
+        }
+
     };
 
     public static void logout(Context context) {

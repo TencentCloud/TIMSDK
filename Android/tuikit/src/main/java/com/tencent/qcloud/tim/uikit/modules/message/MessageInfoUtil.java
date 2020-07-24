@@ -44,6 +44,7 @@ public class MessageInfoUtil {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createTextMessage(message);
 
         info.setExtra(message);
+        info.setMsgTime(System.currentTimeMillis() / 1000);
         info.setSelf(true);
         info.setTimMessage(v2TIMMessage);
         info.setFromUser(V2TIMManager.getInstance().getLoginUser());
@@ -241,19 +242,22 @@ public class MessageInfoUtil {
         return list;
     }
 
-    public static boolean isTyping(V2TIMMessage timMessage) {
-        // 如果有任意一个element是正在输入，则认为这条消息是正在输入。除非测试，正常不可能发这种消息。
-        int elemType = timMessage.getElemType();
-        if (elemType == V2TIMMessage.V2TIM_ELEM_TYPE_CUSTOM) {
-            V2TIMCustomElem customElem = timMessage.getCustomElem();
-            if (isTyping(customElem.getData())) {
+    public static boolean isOnlineIgnoredDialing(byte[] data) {
+        try {
+            String str = new String(data, "UTF-8");
+            MessageCustom custom = new Gson().fromJson(str, MessageCustom.class);
+            if (custom != null
+                    && TextUtils.equals(custom.businessID, MessageCustom.BUSINESS_ID_AV_CALL)) {
                 return true;
             }
+            return false;
+        } catch (Exception e) {
+            TUIKitLog.e(TAG, "parse json error");
         }
         return false;
     }
 
-    private static boolean isTyping(byte[] data) {
+    public static boolean isTyping(byte[] data) {
         try {
             String str = new String(data, "UTF-8");
             MessageTyping typing = new Gson().fromJson(str, MessageTyping.class);
@@ -324,33 +328,46 @@ public class MessageInfoUtil {
                     } else {
                         CallModel callModel = CallModel.convert2VideoCallData(timMessage);
                         if (callModel != null) {
-                            StringBuilder inviteeShowStringBuilder = new StringBuilder();
-                            if (callModel.invitedList != null && callModel.invitedList.size() > 0) {
-                                for (String invitee : callModel.invitedList) {
-                                    inviteeShowStringBuilder.append(invitee).append("、");
-                                }
-                                if (inviteeShowStringBuilder.length() > 0) {
-                                    inviteeShowStringBuilder.delete(inviteeShowStringBuilder.length() - 1, inviteeShowStringBuilder.length());
-                                }
+                            String senderShowName = timMessage.getSender();
+                            if (!TextUtils.isEmpty(timMessage.getNameCard())) {
+                                senderShowName = timMessage.getNameCard();
+                            } else if (!TextUtils.isEmpty(timMessage.getFriendRemark())) {
+                                senderShowName = timMessage.getFriendRemark();
+                            } else if (!TextUtils.isEmpty(timMessage.getNickName())) {
+                                senderShowName = timMessage.getNickName();
                             }
                             switch (callModel.action) {
                                 case CallModel.VIDEO_CALL_ACTION_DIALING:
-                                    content = isGroup ? ("\"" + callModel.sender + "\"" + "发起群通话") : ("发起通话");
+                                    content = isGroup ? ("\"" + senderShowName + "\"" + "发起群通话") : ("发起通话");
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_SPONSOR_CANCEL:
                                     content = isGroup ? "取消群通话" : "取消通话";
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_LINE_BUSY:
-                                    content = isGroup ? ("\"" + inviteeShowStringBuilder.toString() + "\"" + "忙线") : "对方忙线";
+                                    content = isGroup ? ("\"" + senderShowName + "\"" + "忙线") : "对方忙线";
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_REJECT:
-                                    content = isGroup ? ("\"" + inviteeShowStringBuilder.toString() + "\"" + "拒绝群通话") : "拒绝通话";
+                                    content = isGroup ? ("\"" + senderShowName + "\"" + "拒绝群通话") : "拒绝通话";
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_SPONSOR_TIMEOUT:
-                                    content = isGroup ? ("\"" + inviteeShowStringBuilder.toString() + "\"" + "无应答") : "无应答";
+                                    if (isGroup && callModel.invitedList != null && callModel.invitedList.size() == 1
+                                            && callModel.invitedList.get(0).equals(timMessage.getSender())) {
+                                        content = "\"" + senderShowName + "\"" + "无应答";
+                                    } else {
+                                        StringBuilder inviteeShowStringBuilder = new StringBuilder();
+                                        if (callModel.invitedList != null && callModel.invitedList.size() > 0) {
+                                            for (String invitee : callModel.invitedList) {
+                                                inviteeShowStringBuilder.append(invitee).append("、");
+                                            }
+                                            if (inviteeShowStringBuilder.length() > 0) {
+                                                inviteeShowStringBuilder.delete(inviteeShowStringBuilder.length() - 1, inviteeShowStringBuilder.length());
+                                            }
+                                        }
+                                        content = isGroup ? ("\"" + inviteeShowStringBuilder.toString() + "\"" + "无应答") : "无应答";
+                                    }
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_ACCEPT:
-                                    content = isGroup ? ("\"" + inviteeShowStringBuilder.toString() + "\"" + "已接听") : "已接听";
+                                    content = isGroup ? ("\"" + senderShowName + "\"" + "已接听") : "已接听";
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_HANGUP:
                                     content = isGroup ? "结束群通话" : "结束通话，通话时长：" + DateTimeUtil.formatSecondsTo00(callModel.duration);

@@ -2,6 +2,8 @@ package com.tencent.qcloud.tim.uikit.modules.chat.base;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
@@ -12,8 +14,8 @@ import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
+import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
@@ -24,7 +26,6 @@ import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements MessageRevokedManager.MessageRevokeHandler {
 
@@ -83,8 +84,12 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         TUIKitLog.i(TAG, "onRecvNewMessage msgID:" + msg.getMsgID());
         int elemType = msg.getElemType();
         if (elemType == V2TIMMessage.V2TIM_ELEM_TYPE_CUSTOM) {
-            if (MessageInfoUtil.isTyping(msg)) {
+            if (MessageInfoUtil.isTyping(msg.getCustomElem().getData())) {
                 notifyTyping();
+                return;
+            } else if (MessageInfoUtil.isOnlineIgnoredDialing(msg.getCustomElem().getData())) {
+                // 这类消息都是音视频通话邀请的在线消息，忽略
+                TUIKitLog.i(TAG, "ignore online invitee message");
                 return;
             }
         }
@@ -227,14 +232,6 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         });
     }
 
-    public void updateMessageInfoStatus(V2TIMMessage message) {
-        if (!safetyCall()) {
-            TUIKitLog.w(TAG, "updateMessageInfo unSafetyCall");
-            return;
-        }
-        mCurrentProvider.updateTIMMessageStatus(message);
-    }
-
     public void sendMessage(final MessageInfo message, boolean retry, final IUIKitCallBack callBack) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "sendMessage unSafetyCall");
@@ -247,14 +244,13 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         message.setRead(true);
         assembleGroupMessage(message);
 
-        // 离线推送测试代码
-        V2TIMOfflinePushInfo v2TIMOfflinePushInfo = null;
-        if (TUIKit.getConfigs().getGeneralConfig().isTestEnv()) {
-            v2TIMOfflinePushInfo = new V2TIMOfflinePushInfo();
-            v2TIMOfflinePushInfo.setExt(("test" + new Random(100).nextInt()).getBytes());
-            // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
-            v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
-        }
+        OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
+        OfflineMessageBean entity = new OfflineMessageBean();
+        entity.content = message.getExtra().toString();
+        entity.sender = message.getFromUser();
+        entity.nickname = TUIKitConfigs.getConfigs().getGeneralConfig().getUserNickname();
+        entity.faceUrl = TUIKitConfigs.getConfigs().getGeneralConfig().getUserFaceUrl();
+        containerBean.entity = entity;
 
         String userID = "";
         String groupID = "";
@@ -262,9 +258,16 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         if (getCurrentChatInfo().getType() == V2TIMConversation.V2TIM_GROUP) {
             groupID = getCurrentChatInfo().getId();
             isGroup = true;
+            entity.chatType = TIMConversationType.Group.value();
+            entity.sender = groupID;
         } else {
             userID = getCurrentChatInfo().getId();
         }
+
+        V2TIMOfflinePushInfo v2TIMOfflinePushInfo = new V2TIMOfflinePushInfo();
+        v2TIMOfflinePushInfo.setExt(new Gson().toJson(containerBean).getBytes());
+        // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
+        v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
 
         V2TIMMessage v2TIMMessage = message.getTimMessage();
         String msgID = V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, isGroup ? null : userID, isGroup ? groupID : null,

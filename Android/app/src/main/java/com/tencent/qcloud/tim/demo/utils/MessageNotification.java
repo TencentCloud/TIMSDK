@@ -84,9 +84,16 @@ public class MessageNotification {
         if (mManager == null) {
             return;
         }
+        if (TUIKitUtils.ignoreNotification(msg)) {
+            return;
+        }
         mHandler.removeCallbacksAndMessages(null);
 
-        boolean isDialing = TUIKitUtils.isComingCall(msg);
+        CallModel callModel = CallModel.convert2VideoCallData(msg);
+        boolean isDialing = false;
+        if (callModel != null && callModel.action == CallModel.VIDEO_CALL_ACTION_DIALING) {
+            isDialing = true;
+        }
         DemoLog.e(TAG, "isDialing: " + isDialing);
 
         final String tag;
@@ -145,7 +152,6 @@ public class MessageNotification {
         // 小米手机需要在设置里面把【云通信IM】的"后台弹出权限"打开才能点击Notification跳转。
         if (isDialing) {
             launch = new Intent(mContext, MainActivity.class);
-            CallModel callModel = CallModel.convert2VideoCallData(msg);
             launch.putExtra(Constants.CHAT_INFO, callModel);
             launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         } else {

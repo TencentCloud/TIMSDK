@@ -29,7 +29,7 @@ android {
         flatDir {
             dirs 'libs'
         }
-        maven { url "http://maven.oa.com/nexus/content/groups/androidbuild"}
+        maven { url "https://mirrors.tencent.com/repository/maven/tencent_public"}
     }
 
 }
@@ -56,8 +56,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     api 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
 
-    api 'com.tencent.imsdk:imsdk:4.8.50'
-
-// api project(':imsdk')
+api 'com.tencent.imsdk:imsdk:4.9.1'
 }
 
