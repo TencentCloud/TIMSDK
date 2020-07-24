@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.input;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -37,6 +38,7 @@ import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreFragment;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
+import com.tencent.qcloud.tim.uikit.utils.PermissionUtils;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
@@ -295,6 +297,10 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     @Override
     public void startAudioCall() {
+        if (!PermissionUtils.checkPermission(mActivity, Manifest.permission.RECORD_AUDIO)) {
+            TUIKitLog.i(TAG, "startAudioCall checkPermission failed");
+            return;
+        }
         if (mChatLayout.getChatInfo().getType() == V2TIMConversation.V2TIM_C2C) {
             List<UserModel> contactList = new ArrayList<>();
             UserModel model = new UserModel();
@@ -310,6 +316,11 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     @Override
     protected void startVideoCall() {
+        if (!(PermissionUtils.checkPermission(mActivity, Manifest.permission.CAMERA)
+                && PermissionUtils.checkPermission(mActivity, Manifest.permission.RECORD_AUDIO))) {
+            TUIKitLog.i(TAG, "startVideoCall checkPermission failed");
+            return;
+        }
         if (mChatLayout.getChatInfo().getType() == V2TIMConversation.V2TIM_C2C) {
             List<UserModel> contactList = new ArrayList<>();
             UserModel model = new UserModel();

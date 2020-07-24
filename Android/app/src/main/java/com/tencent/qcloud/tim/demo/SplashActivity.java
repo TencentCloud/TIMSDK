@@ -10,10 +10,12 @@ import android.view.WindowManager;
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.login.UserInfo;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
+import com.tencent.qcloud.tim.demo.thirdpush.OfflineMessageDispatcher;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.demo.utils.Utils;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageBean;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageContainerBean;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 public class SplashActivity extends Activity {
@@ -28,10 +30,6 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // 离线推送测试代码
-        Utils.printBundle(getIntent());
-        // 离线推送测试代码结束
-
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
@@ -41,25 +39,15 @@ public class SplashActivity extends Activity {
     }
 
     private void handleData() {
-        if (TextUtils.isEmpty(mUserInfo.getPhone())) {
+        if (mUserInfo != null && mUserInfo.isAutoLogin()) {
+            login();
+        } else {
             mFlashView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     startLogin();
                 }
             }, SPLASH_TIME);
-
-        } else {
-            if (mUserInfo.isAutoLogin()) {
-                login();
-            } else {
-                mFlashView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        startLogin();
-                    }
-                }, SPLASH_TIME);
-            }
         }
     }
 
@@ -90,6 +78,13 @@ public class SplashActivity extends Activity {
     }
 
     private void startMain() {
+        OfflineMessageBean bean = OfflineMessageDispatcher.parseOfflineMessage(getIntent());
+        if (bean != null) {
+            OfflineMessageDispatcher.redirect(bean);
+            finish();
+            return;
+        }
+
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

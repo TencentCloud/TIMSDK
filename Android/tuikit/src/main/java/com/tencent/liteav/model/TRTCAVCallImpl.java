@@ -6,11 +6,21 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
+import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMSignalingListener;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.liteav.beauty.TXBeautyManager;
+import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageBean;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageContainerBean;
+import com.tencent.qcloud.tim.uikit.modules.message.MessageCustom;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.rtmp.ui.TXCloudVideoView;
@@ -39,7 +49,13 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
     /**
      * 超时时间，单位秒
      */
-    private static final long TIME_OUT_COUNT = 30;
+    public static final int TIME_OUT_COUNT = 30;
+
+    /**
+     * room id 的取值范围
+     */
+    private static final int ROOM_ID_MIN = 1;
+    private static final int ROOM_ID_MAX = Integer.MAX_VALUE;
 
     private static ITRTCAVCall sITRTCAVCall;
     private final Context mContext;
@@ -107,49 +123,23 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
 
     private boolean mIsUseFrontCamera;
 
+    private boolean mWaitingLastActivityFinished;
+
+    public boolean isWaitingLastActivityFinished() {
+        return mWaitingLastActivityFinished;
+    }
+
+    public void setWaitingLastActivityFinished(boolean waiting) {
+        mWaitingLastActivityFinished = waiting;
+    }
+
     /**
      * 信令监听器
      */
     private V2TIMSignalingListener mTIMSignallingListener = new V2TIMSignalingListener() {
         @Override
         public void onReceiveNewInvitation(String inviteID, String inviter, String groupID, List<String> inviteeList, String data) {
-            // 收到来电，开始监听 trtc 的消息
-            mTRTCCloud.setListener(mTRTCCloudListener);
-            CallModel callModel = new CallModel();
-            callModel.callId = inviteID;
-            callModel.groupId = groupID;
-            callModel.action = CallModel.VIDEO_CALL_ACTION_DIALING;
-            callModel.invitedList = inviteeList;
-
-            Map<String, Object> extraMap = null;
-            try {
-                extraMap = new Gson().fromJson(data, Map.class);
-                if (extraMap == null) {
-                    TUIKitLog.e(TAG, "onReceiveNewInvitation extraMap is null, ignore");
-                    return;
-                }
-                if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_VERSION)) {
-                    callModel.version = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
-                }
-                if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_CALL_TYPE)) {
-                    callModel.callType = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_TYPE)).intValue();
-                    mCurCallType = callModel.callType;
-                }
-                if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_CALL_END)) {
-                    preExitRoom(null);
-                    return;
-                }
-                if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_ROOM_ID)) {
-                    callModel.roomId = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_ROOM_ID)).intValue();
-                }
-            } catch (JsonSyntaxException e) {
-                TUIKitLog.e(TAG, "onReceiveNewInvitation JsonSyntaxException:" + e);
-            }
-            handleDialing(callModel, inviter);
-
-            if (mCurCallID.equals(callModel.callId)) {
-                mLastCallModel = (CallModel) callModel.clone();
-            }
+            processInvite(inviteID, inviter, groupID, inviteeList, data);
         }
 
         @Override
@@ -214,6 +204,46 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
             preExitRoom(null);
         }
     };
+
+    public void processInvite(String inviteID, String inviter, String groupID, List<String> inviteeList, String data) {
+        // 收到来电，开始监听 trtc 的消息
+        mTRTCCloud.setListener(mTRTCCloudListener);
+        CallModel callModel = new CallModel();
+        callModel.callId = inviteID;
+        callModel.groupId = groupID;
+        callModel.action = CallModel.VIDEO_CALL_ACTION_DIALING;
+        callModel.invitedList = inviteeList;
+
+        Map<String, Object> extraMap = null;
+        try {
+            extraMap = new Gson().fromJson(data, Map.class);
+            if (extraMap == null) {
+                TUIKitLog.e(TAG, "onReceiveNewInvitation extraMap is null, ignore");
+                return;
+            }
+            if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_VERSION)) {
+                callModel.version = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
+            }
+            if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_CALL_TYPE)) {
+                callModel.callType = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_TYPE)).intValue();
+                mCurCallType = callModel.callType;
+            }
+            if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_CALL_END)) {
+                preExitRoom(null);
+                return;
+            }
+            if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_ROOM_ID)) {
+                callModel.roomId = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_ROOM_ID)).intValue();
+            }
+        } catch (JsonSyntaxException e) {
+            TUIKitLog.e(TAG, "onReceiveNewInvitation JsonSyntaxException:" + e);
+        }
+        handleDialing(callModel, inviter);
+
+        if (mCurCallID.equals(callModel.callId)) {
+            mLastCallModel = (CallModel) callModel.clone();
+        }
+    }
 
     /**
      * TRTC的监听器
@@ -693,6 +723,90 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
         return sendModel(user, action, null);
     }
 
+    private void sendOnlineMessageWithOfflinePushInfo(final String user, final CallModel model) {
+        List<String> users = new ArrayList<String>();
+        users.add(V2TIMManager.getInstance().getLoginUser());
+        if (!TextUtils.isEmpty(TUIKitConfigs.getConfigs().getGeneralConfig().getUserNickname())) {
+            sendOnlineMessageWithOfflinePushInfo(user, TUIKitConfigs.getConfigs().getGeneralConfig().getUserNickname(), model);
+            return;
+        }
+        V2TIMManager.getInstance().getUsersInfo(users, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "getUsersInfo err code = " + code + ", desc = " + desc);
+                sendOnlineMessageWithOfflinePushInfo(user, null, model);
+            }
+
+            @Override
+            public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                if (v2TIMUserFullInfos == null || v2TIMUserFullInfos.size() == 0) {
+                    sendOnlineMessageWithOfflinePushInfo(user, null, model);
+                    return;
+                }
+                TUIKitConfigs.getConfigs().getGeneralConfig().setUserNickname(v2TIMUserFullInfos.get(0).getNickName());
+                TUIKitConfigs.getConfigs().getGeneralConfig().setUserFaceUrl(v2TIMUserFullInfos.get(0).getFaceUrl());
+                sendOnlineMessageWithOfflinePushInfo(user, v2TIMUserFullInfos.get(0).getNickName(), model);
+            }
+        });
+    }
+
+    private String getCallId() {
+        return mCurCallID;
+    }
+
+    private void sendOnlineMessageWithOfflinePushInfo(String userId, String nickname, CallModel model) {
+        OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
+        OfflineMessageBean entity = new OfflineMessageBean();
+        entity.content = new Gson().toJson(model);
+        entity.sender = V2TIMManager.getInstance().getLoginUser(); // 发送者肯定是登录账号
+        entity.action = OfflineMessageBean.REDIRECT_ACTION_CALL;
+        entity.sendTime = System.currentTimeMillis() / 1000;
+        entity.nickname = TUIKitConfigs.getConfigs().getGeneralConfig().getUserNickname();
+        entity.faceUrl = TUIKitConfigs.getConfigs().getGeneralConfig().getUserFaceUrl();
+        containerBean.entity = entity;
+        List<String> invitedList = new ArrayList<>();
+        final boolean isGroup = (!TextUtils.isEmpty(model.groupId));
+        if (isGroup) {
+            entity.chatType = TIMConversationType.Group.value();
+            invitedList.addAll(model.invitedList);
+        } else {
+            invitedList.add(userId);
+        }
+
+        V2TIMOfflinePushInfo v2TIMOfflinePushInfo = new V2TIMOfflinePushInfo();
+        v2TIMOfflinePushInfo.setExt(new Gson().toJson(containerBean).getBytes());
+        // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
+        v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
+        v2TIMOfflinePushInfo.setDesc("您有一个通话请求");
+        v2TIMOfflinePushInfo.setTitle(nickname);
+        MessageCustom custom = new MessageCustom();
+        custom.businessID = MessageCustom.BUSINESS_ID_AV_CALL;
+        V2TIMMessage message = V2TIMManager.getMessageManager().createCustomMessage(new Gson().toJson(custom).getBytes());
+
+        for (String receiver: invitedList) {
+            TUIKitLog.i(TAG, "sendOnlineMessage to " + receiver);
+            V2TIMManager.getMessageManager().sendMessage(message, receiver, null, V2TIMMessage.V2TIM_PRIORITY_DEFAULT,
+                    true, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
+
+                        @Override
+                        public void onError(int code, String desc) {
+                            TUIKitLog.e(TAG, "sendOnlineMessage failed, code:" + code + ", desc:" + desc);
+                        }
+
+                        @Override
+                        public void onSuccess(V2TIMMessage v2TIMMessage) {
+                            TUIKitLog.i(TAG, "sendOnlineMessage msgId:" + v2TIMMessage.getMsgID());
+                        }
+
+                        @Override
+                        public void onProgress(int progress) {
+
+                        }
+                    });
+        }
+    }
+
     /**
      * 信令发送函数，当CallModel 存在groupId时会向群组发送信令
      *
@@ -731,7 +845,7 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
                 customMap.put(CallModel.SIGNALING_EXTRA_KEY_ROOM_ID, realCallModel.roomId);
                 String dialingDataStr = new Gson().toJson(customMap);
                 if (isGroup) {
-                    callID = V2TIMManager.getSignalingManager().inviteInGroup(groupId, realCallModel.invitedList, dialingDataStr, (int) TIME_OUT_COUNT, new V2TIMCallback() {
+                    callID = V2TIMManager.getSignalingManager().inviteInGroup(groupId, realCallModel.invitedList, dialingDataStr, TIME_OUT_COUNT, new V2TIMCallback() {
                         @Override
                         public void onError(int code, String desc) {
                             TUIKitLog.e(TAG, "inviteInGroup callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
@@ -739,11 +853,15 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
 
                         @Override
                         public void onSuccess() {
-                            TUIKitLog.d(TAG, "inviteInGroup success callID:" + realCallModel.callId);
+                            TUIKitLog.d(TAG, "inviteInGroup success:" + realCallModel);
+                            realCallModel.callId = getCallId();
+                            realCallModel.timeout = TIME_OUT_COUNT;
+                            realCallModel.version = TUIKitConstants.version;
+                            sendOnlineMessageWithOfflinePushInfo(user, realCallModel);
                         }
                     });
                 } else {
-                    callID = V2TIMManager.getSignalingManager().invite(receiver, dialingDataStr, (int) TIME_OUT_COUNT, new V2TIMCallback() {
+                    callID = V2TIMManager.getSignalingManager().invite(receiver, dialingDataStr, TIME_OUT_COUNT, new V2TIMCallback() {
                         @Override
                         public void onError(int code, String desc) {
                             TUIKitLog.e(TAG, "invite  callID:" + realCallModel.callId + ",error:" + code + " desc:" + desc);
@@ -751,7 +869,11 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
 
                         @Override
                         public void onSuccess() {
-                            TUIKitLog.d(TAG, "invite success callID:" + realCallModel.callId);
+                            TUIKitLog.d(TAG, "invite success:" + realCallModel);
+                            realCallModel.callId = getCallId();
+                            realCallModel.timeout = TIME_OUT_COUNT;
+                            realCallModel.version = TUIKitConstants.version;
+                            sendOnlineMessageWithOfflinePushInfo(user, realCallModel);
                         }
                     });
                 }
@@ -880,7 +1002,7 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
 
     private static int generateRoomID() {
         Random random = new Random();
-        return random.nextInt(Integer.MAX_VALUE);
+        return random.nextInt(ROOM_ID_MAX - ROOM_ID_MIN + 1) + ROOM_ID_MIN;
     }
 
     private class TRTCInteralListenerManager implements TRTCAVCallListener {

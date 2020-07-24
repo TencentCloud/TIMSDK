@@ -2,6 +2,7 @@ package com.tencent.qcloud.tim.uikit.modules.message;
 
 public class MessageCustom {
     public static final String BUSINESS_ID_GROUP_CREATE = "group_create";
+    public static final String BUSINESS_ID_AV_CALL = "av_call";
 
     public int version = 0;
     public String businessID;

@@ -26,6 +26,7 @@ import com.tencent.qcloud.tim.uikit.component.LineControllerView;
 import com.tencent.qcloud.tim.uikit.component.SelectionActivity;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
@@ -128,6 +129,8 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
                 } else {
                     GlideEngine.loadImage(mUserIcon, Uri.parse(v2TIMUserFullInfo.getFaceUrl()));
                 }
+                TUIKitConfigs.getConfigs().getGeneralConfig().setUserFaceUrl(v2TIMUserFullInfo.getFaceUrl());
+                TUIKitConfigs.getConfigs().getGeneralConfig().setUserNickname(v2TIMUserFullInfo.getNickName());
 
                 mModifyNickNameView.setContent(v2TIMUserFullInfo.getNickName());
                 mAccountView.setText(String.format(getResources().getString(R.string.id), v2TIMUserFullInfo.getUserID()));
@@ -238,6 +241,8 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
             @Override
             public void onSuccess() {
                 DemoLog.i(TAG, "modifySelfProfile success");
+                TUIKitConfigs.getConfigs().getGeneralConfig().setUserFaceUrl(mIconUrl);
+                TUIKitConfigs.getConfigs().getGeneralConfig().setUserNickname(mModifyNickNameView.getContent());
             }
         });
     }

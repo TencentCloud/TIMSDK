@@ -3,15 +3,18 @@ package com.tencent.qcloud.tim.demo.main;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
-import com.huawei.android.hms.agent.HMSAgent;
-import com.huawei.android.hms.agent.common.handler.ConnectHandler;
-import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
+import com.heytap.msp.push.HeytapPushManager;
+import com.huawei.agconnect.config.AGConnectServicesConfig;
+import com.huawei.hms.aaid.HmsInstanceId;
+import com.huawei.hms.common.ApiException;
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.liteav.model.CallModel;
 import com.tencent.liteav.model.TRTCAVCallImpl;
 import com.tencent.qcloud.tim.demo.BaseActivity;
@@ -20,7 +23,7 @@ import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.ContactFragment;
 import com.tencent.qcloud.tim.demo.conversation.ConversationFragment;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
-import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIPushReceiver;
+import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService;
 import com.tencent.qcloud.tim.demo.thirdpush.OPPOPushImpl;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
@@ -33,6 +36,7 @@ import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
 
+import androidx.annotation.Nullable;
 
 public class MainActivity extends BaseActivity implements ConversationManagerKit.MessageUnreadWatcher {
 
@@ -62,21 +66,28 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     private void prepareThirdPushToken() {
         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
 
-        if (ThirdPushTokenMgr.USER_GOOGLE_FCM) {
-            return;
-        }
         if (BrandUtil.isBrandHuawei()) {
             // 华为离线推送
-            HMSAgent.connect(this, new ConnectHandler() {
+            new Thread() {
                 @Override
-                public void onConnect(int rst) {
-                    DemoLog.i(TAG, "huawei push HMS connect end:" + rst);
+                public void run() {
+                    try {
+                        // read from agconnect-services.json
+                        String appId = AGConnectServicesConfig.fromContext(MainActivity.this).getString("client/app_id");
+                        String token = HmsInstanceId.getInstance(MainActivity.this).getToken(appId, "HCM");
+                        DemoLog.i(TAG, "huawei get token:" + token);
+                        if(!TextUtils.isEmpty(token)) {
+                            ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
+                            ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
+                        }
+                    } catch (ApiException e) {
+                        DemoLog.e(TAG, "huawei get token failed, " + e);
+                    }
                 }
-            });
-            getHuaWeiPushToken();
-        }
-        if (BrandUtil.isBrandVivo()) {
+            }.start();
+        } else if (BrandUtil.isBrandVivo()) {
             // vivo离线推送
+            DemoLog.i(TAG, "vivo support push: " + PushClient.getInstance(getApplicationContext()).isSupport());
             PushClient.getInstance(getApplicationContext()).turnOnPush(new IPushActionListener() {
                 @Override
                 public void onStateChanged(int state) {
@@ -91,12 +102,13 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
                     }
                 }
             });
-        }
-        if (com.heytap.mcssdk.PushManager.isSupportPush(this)) {
+        } else if (HeytapPushManager.isSupportPush()) {
             // oppo离线推送
             OPPOPushImpl oppo = new OPPOPushImpl();
             oppo.createNotificationChannel(this);
-            com.heytap.mcssdk.PushManager.getInstance().register(this, PrivateConstants.OPPO_PUSH_APPKEY, PrivateConstants.OPPO_PUSH_APPSECRET, oppo);
+            HeytapPushManager.register(this, PrivateConstants.OPPO_PUSH_APPKEY, PrivateConstants.OPPO_PUSH_APPSECRET, oppo);
+        } else if (BrandUtil.isGoogleServiceSupport()) {
+            // 谷歌推送
         }
     }
 
@@ -182,7 +194,7 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
         }
         mMsgUnread.setText(unreadStr);
         // 华为离线推送角标
-        HUAWEIPushReceiver.updateBadge(this, count);
+        HUAWEIHmsMessageService.updateBadge(this, count);
     }
 
     @Override
@@ -213,7 +225,14 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
         if (mCallModel != null) {
             TRTCAVCallImpl impl = (TRTCAVCallImpl) TRTCAVCallImpl.sharedInstance(DemoApplication.instance());
             impl.stopCall();
-            impl.handleDialing(mCallModel, mCallModel.sender);
+            final V2TIMSignalingInfo info = new V2TIMSignalingInfo();
+            info.setInviteID(mCallModel.callId);
+            info.setInviteeList(mCallModel.invitedList);
+            info.setGroupID(mCallModel.groupId);
+            info.setInviter(mCallModel.sender);
+            info.setData(mCallModel.data);
+            ((TRTCAVCallImpl)(TRTCAVCallImpl.sharedInstance(DemoApplication.instance()))).processInvite(
+                    info.getInviteID(), info.getInviter(), info.getGroupID(), info.getInviteeList(), info.getData());
             mCallModel = null;
         }
     }
@@ -238,12 +257,4 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
         super.onDestroy();
     }
 
-    private void getHuaWeiPushToken() {
-        HMSAgent.Push.getToken(new GetTokenHandler() {
-            @Override
-            public void onResult(int rtnCode) {
-                DemoLog.i(TAG, "huawei push get token result code: " + rtnCode);
-            }
-        });
-    }
 }

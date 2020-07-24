@@ -39,7 +39,7 @@ public class LoginForDevActivity extends Activity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_for_dev_layout);
+        setContentView(R.layout.login_for_dev_activity);
 
         mLoginView = findViewById(R.id.login_btn);
         // 用户名可以是任意非空字符，但是前提需要按照下面文档修改代码里的 SDKAPPID 与 PRIVATEKEY

@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.huawei.agconnect'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -64,14 +65,17 @@ dependencies {
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
 
     // HUAWEI push sdk
-    implementation 'com.huawei.android.hms:push:2.6.3.301'
-    implementation 'com.huawei.android.hms:base:2.6.3.301'
+    implementation 'com.huawei.hms:push:5.0.0.300'
     // MEIZU push sdk
-    implementation 'com.meizu.flyme.internet:push-internal:3.6.+@aar'
+    implementation 'com.meizu.flyme.internet:push-internal:3.9.7'
     // google firebase
     implementation('com.google.firebase:firebase-core:17.0.0')
     // google 云消息传递
     implementation ('com.google.firebase:firebase-messaging:19.0.1')
+    // oppo push sdk
+    implementation(name:'oppo_com.heytap.msp-push-2.1.0', ext:'aar')
+    // vivo push sdk
+    implementation(name:'vivo_pushsdk-v2.9.0.0', ext:'aar')
 
     // bugly sdk
     implementation 'com.tencent.bugly:crashreport:latest.release'
@@ -79,6 +83,6 @@ dependencies {
 
     api 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
 
-implementation 'com.tencent.imsdk:tuikit:4.8.50'
+implementation 'com.tencent.imsdk:tuikit:4.9.1'
 // implementation project(':tuikit')
 }

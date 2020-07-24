@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    // 灰色背景
+    <!-- 灰色背景 -->
     <color name="status_bar_color">#EDEDED</color>
     <color name="conversation_top_color">#F2F2F2</color>
     <color name="navigation_bar_color">#F7F7F7</color>
     <color name="slide_bar_hint_color">#CCCCCC</color>
     <color name="chat_background_color">#F4F4F4</color>
 
-    // 黑色字体
+    <!-- 黑色字体-->
     <color name="black_font_color">#181818</color>
     <color name="text_tips_color">#A5A5A5</color>
 
-    // 线
+    <!-- 线 -->
     <color name="chat_title_line_color">#E6E6E6</color>
     <color name="input_title_line_color">#D2D2D2</color>
 
@@ -47,25 +47,25 @@
     <color name="tab_text_selected_color">#006EFF</color>
     <color name="tab_text_normal_color">#888888</color>
 
-    // 积极钮色值
+    <!-- 积极钮色值 -->
     <color name="btn_positive">#00a4ff</color>
     <color name="btn_positive_hover">#006eff</color>
 
-    // 积极按钮文本色值
+    <!-- 积极按钮文本色值 -->
     <color name="text_positive">#ffffff</color>
     <color name="text_positive_hover">#ffffff</color>
 
-    // 消极按钮背景色值
+    <!-- 消极按钮背景色值 -->
     <color name="btn_negative">#ffffff</color>
     <color name="btn_negative_hover">#cc3428</color>
 
-    // 消极按钮文本色值
+    <!-- 消极按钮文本色值 -->
     <color name="text_negative">#fb6155</color>
     <color name="text_negative_hover">#FFFFFF</color>
 
-    // 聊天昵称/时间条背景色值
+    <!-- 聊天昵称/时间条背景色值 -->
 
-    // 聊天发送/光标色值
+    <!-- 聊天发送/光标色值 -->
     <color name="green">#70C160</color>
 
     <color name="colorActivityBackground">#ffffff</color>

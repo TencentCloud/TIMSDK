@@ -1,10 +1,15 @@
 package com.tencent.liteav.trtcvideocalldemo.ui;
 
+import android.Manifest;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Vibrator;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -27,6 +32,8 @@ import com.tencent.liteav.trtcvideocalldemo.ui.videolayout.TRTCVideoLayout;
 import com.tencent.liteav.trtcvideocalldemo.ui.videolayout.TRTCVideoLayoutManager;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tim.uikit.utils.PermissionUtils;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -40,6 +47,9 @@ import java.util.Map;
  * @author guanyifeng
  */
 public class TRTCVideoCallActivity extends AppCompatActivity {
+
+    private static final String TAG = TRTCVideoCallActivity.class.getSimpleName();
+
     public static final int TYPE_BEING_CALLED = 1;
     public static final int TYPE_CALL         = 2;
 
@@ -86,6 +96,9 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
     private boolean                isMuteMic          = false;
     private String mGroupId;
 
+    private Vibrator mVibrator;
+    private Ringtone mRingtone;
+
     /**
      * 拨号的回调
      */
@@ -94,7 +107,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         public void onError(int code, String msg) {
             //发生了错误，报错并退出该页面
             ToastUtil.toastLongMessage("发送错误[" + code + "]:" + msg);
-            finish();
+            finishActivity();
         }
 
         @Override
@@ -226,7 +239,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
             if (mSponsorUserModel != null) {
                 ToastUtil.toastLongMessage(mSponsorUserModel.userName + " 取消了通话");
             }
-            finish();
+            finishActivity();
         }
 
         @Override
@@ -234,12 +247,12 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
             if (mSponsorUserModel != null) {
                 ToastUtil.toastLongMessage(mSponsorUserModel.userName + " 通话超时");
             }
-            finish();
+            finishActivity();
         }
 
         @Override
         public void onCallEnd() {
-            finish();
+            finishActivity();
         }
 
         @Override
@@ -285,6 +298,8 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
      * @param models
      */
     public static void startCallSomeone(Context context, List<UserModel> models) {
+        TUIKitLog.i(TAG, "startCallSomeone");
+        ((TRTCAVCallImpl)TRTCAVCallImpl.sharedInstance(context)).setWaitingLastActivityFinished(false);
         Intent starter = new Intent(context, TRTCVideoCallActivity.class);
         starter.putExtra(PARAM_TYPE, TYPE_CALL);
         starter.putExtra(PARAM_USER, new IntentParams(models));
@@ -298,6 +313,8 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
      * @param models
      */
     public static void startCallSomePeople(Context context, List<UserModel> models, String groupId) {
+        TUIKitLog.i(TAG, "startCallSomePeople");
+        ((TRTCAVCallImpl)TRTCAVCallImpl.sharedInstance(context)).setWaitingLastActivityFinished(false);
         Intent starter = new Intent(context, TRTCVideoCallActivity.class);
         starter.putExtra(PARAM_GROUP_ID, groupId);
         starter.putExtra(PARAM_TYPE, TYPE_CALL);
@@ -313,6 +330,8 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
      * @param beingCallUserModel
      */
     public static void startBeingCall(Context context, UserModel beingCallUserModel, List<UserModel> otherInvitingUserModel) {
+        TUIKitLog.i(TAG, "startBeingCall");
+        ((TRTCAVCallImpl)TRTCAVCallImpl.sharedInstance(context)).setWaitingLastActivityFinished(false);
         Intent starter = new Intent(context, TRTCVideoCallActivity.class);
         starter.putExtra(PARAM_TYPE, TYPE_BEING_CALLED);
         starter.putExtra(PARAM_BEINGCALL_USER, beingCallUserModel);
@@ -324,15 +343,44 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TUIKitLog.i(TAG, "onCreate");
+
+        mCallType = getIntent().getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
+        TUIKitLog.i(TAG, "mCallType: " + mCallType);
+        if (mCallType == TYPE_BEING_CALLED && ((TRTCAVCallImpl)TRTCAVCallImpl.sharedInstance(this)).isWaitingLastActivityFinished()) {
+            // 有些手机禁止后台启动Activity，但是有bug，比如一种场景：对方反复拨打并取消，三次以上极容易从后台启动成功通话界面，
+            // 此时对方再挂断时，此通话Activity调用finish后，上一个从后台启动的Activity就会弹出。此时这个Activity就不能再启动。
+            TUIKitLog.w(TAG, "ignore activity launch");
+            finishActivity();
+            return;
+        }
+
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager != null) {
+            manager.cancelAll();
+        }
+
         // 应用运行时，保持不锁屏、全屏化
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.videocall_activity_online_call);
 
+        PermissionUtils.checkPermission(this, Manifest.permission.CAMERA);
+        PermissionUtils.checkPermission(this, Manifest.permission.RECORD_AUDIO);
+
+        mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        mRingtone = RingtoneManager.getRingtone(this,
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+
         initView();
         initData();
         initListener();
+    }
+
+    private void finishActivity() {
+        ((TRTCAVCallImpl)TRTCAVCallImpl.sharedInstance(this)).setWaitingLastActivityFinished(true);
+        finish();
     }
 
     @Override
@@ -344,10 +392,20 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mITRTCAVCall.closeCamera();
-        mITRTCAVCall.removeListener(mTRTCAVCallListener);
+        if (mVibrator != null) {
+            mVibrator.cancel();
+        }
+        if (mRingtone != null) {
+            mRingtone.stop();
+        }
+        if (mITRTCAVCall != null) {
+            mITRTCAVCall.closeCamera();
+            mITRTCAVCall.removeListener(mTRTCAVCallListener);
+        }
         stopTimeCount();
-        mTimeHandlerThread.quit();
+        if (mTimeHandlerThread != null) {
+            mTimeHandlerThread.quit();
+        }
     }
 
     private void initListener() {
@@ -394,6 +452,8 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                 mOtherInvitingUserModelList = params.mUserModels;
             }
             showWaitingResponseView();
+            mVibrator.vibrate(new long[] { 0, 1000, 1000 }, 0);
+            mRingtone.play();
         } else {
             // 主叫方
             IntentParams params = (IntentParams) intent.getSerializableExtra(PARAM_USER);
@@ -463,14 +523,17 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mVibrator.cancel();
+                mRingtone.stop();
                 mITRTCAVCall.reject();
-                finish();
+                finishActivity();
             }
         });
         mDialingLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //2.接听电话
+                mVibrator.cancel();
+                mRingtone.stop();
                 mITRTCAVCall.accept();
                 showCallingView();
             }
@@ -501,7 +564,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mITRTCAVCall.hangup();
-                finish();
+                finishActivity();
             }
         });
         mDialingLl.setVisibility(View.GONE);
@@ -529,7 +592,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mITRTCAVCall.hangup();
-                finish();
+                finishActivity();
             }
         });
         showTimeCount();
@@ -563,7 +626,9 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
     }
 
     private void stopTimeCount() {
-        mTimeHandler.removeCallbacks(mTimeRunnable);
+        if (mTimeHandler != null) {
+            mTimeHandler.removeCallbacks(mTimeRunnable);
+        }
         mTimeRunnable = null;
     }
 

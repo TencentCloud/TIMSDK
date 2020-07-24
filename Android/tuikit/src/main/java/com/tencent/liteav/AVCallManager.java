@@ -35,40 +35,7 @@ public class AVCallManager {
 
         @Override
         public void onInvited(String sponsor, final List<String> userIdList, boolean isFromGroup, final int callType) {
-            //1. 收到邀请，先到服务器查询
-            ProfileManager.getInstance().getUserInfoByUserId(sponsor, new ProfileManager.GetUserInfoCallback() {
-                @Override
-                public void onSuccess(final UserModel model) {
-                    if (userIdList == null || userIdList.size() == 0) {
-                        if (callType == ITRTCAVCall.TYPE_VIDEO_CALL) {
-                            TRTCVideoCallActivity.startBeingCall(mContext, model, null);
-                        } else if (callType == ITRTCAVCall.TYPE_AUDIO_CALL) {
-                            TRTCAudioCallActivity.startBeingCall(mContext, model, null);
-                        }
-                    } else {
-                        ProfileManager.getInstance().getUserInfoBatch(userIdList, new ProfileManager.GetUserInfoBatchCallback() {
-                            @Override
-                            public void onSuccess(List<UserModel> modelList) {
-                                if (callType == ITRTCAVCall.TYPE_VIDEO_CALL) {
-                                    TRTCVideoCallActivity.startBeingCall(mContext, model, modelList);
-                                } else {
-                                    TRTCAudioCallActivity.startBeingCall(mContext, model, modelList);
-                                }
-                            }
-
-                            @Override
-                            public void onFailed(int code, String msg) {
-                                TUIKitLog.e(TAG, "getUserInfoBatch failed:" + code + ", desc:" + msg);
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onFailed(int code, String msg) {
-                    TUIKitLog.e(TAG, "getUserInfoByUserId failed:" + code + ", desc:" + msg);
-                }
-            });
+            processInvite(sponsor, userIdList, callType);
         }
 
         @Override
@@ -132,6 +99,42 @@ public class AVCallManager {
         }
         // </editor-fold  desc="视频监听代码">
     };
+
+    private void processInvite(String sponsor, final List<String> userIdList, final int callType) {
+        ProfileManager.getInstance().getUserInfoByUserId(sponsor, new ProfileManager.GetUserInfoCallback() {
+            @Override
+            public void onSuccess(final UserModel model) {
+                if (userIdList == null || userIdList.size() == 0) {
+                    if (callType == ITRTCAVCall.TYPE_VIDEO_CALL) {
+                        TRTCVideoCallActivity.startBeingCall(mContext, model, null);
+                    } else if (callType == ITRTCAVCall.TYPE_AUDIO_CALL) {
+                        TRTCAudioCallActivity.startBeingCall(mContext, model, null);
+                    }
+                } else {
+                    ProfileManager.getInstance().getUserInfoBatch(userIdList, new ProfileManager.GetUserInfoBatchCallback() {
+                        @Override
+                        public void onSuccess(List<UserModel> modelList) {
+                            if (callType == ITRTCAVCall.TYPE_VIDEO_CALL) {
+                                TRTCVideoCallActivity.startBeingCall(mContext, model, modelList);
+                            } else {
+                                TRTCAudioCallActivity.startBeingCall(mContext, model, modelList);
+                            }
+                        }
+
+                        @Override
+                        public void onFailed(int code, String msg) {
+                            TUIKitLog.e(TAG, "getUserInfoBatch failed:" + code + ", desc:" + msg);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+                TUIKitLog.e(TAG, "getUserInfoByUserId failed:" + code + ", desc:" + msg);
+            }
+        });
+    }
 
     private AVCallManager() {
     }

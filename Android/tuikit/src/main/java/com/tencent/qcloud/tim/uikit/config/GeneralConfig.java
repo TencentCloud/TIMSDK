@@ -20,6 +20,25 @@ public class GeneralConfig {
     private int sdkAppId = 0;
     private String userId = "";
     private String userSig = "";
+    private String userNickname = "";
+
+    public String getUserNickname() {
+        return userNickname;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
+    }
+
+    public String getUserFaceUrl() {
+        return userFaceUrl;
+    }
+
+    public void setUserFaceUrl(String userFaceUrl) {
+        this.userFaceUrl = userFaceUrl;
+    }
+
+    private String userFaceUrl = "";
 
     private static boolean isSupportAVCall;
     static {

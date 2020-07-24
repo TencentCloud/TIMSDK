@@ -105,15 +105,14 @@ public class TUIKitImpl {
 
             @Override
             public void onSuccess() {
-                callback.onSuccess(null);
-                if (!TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
-                    return;
+                if (TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
+                    UserModel self = new UserModel();
+                    self.userId = userid;
+                    self.userSig = usersig;
+                    ProfileManager.getInstance().setUserModel(self);
+                    AVCallManager.getInstance().init(sAppContext);
                 }
-                UserModel self = new UserModel();
-                self.userId = userid;
-                self.userSig = usersig;
-                ProfileManager.getInstance().setUserModel(self);
-                AVCallManager.getInstance().init(sAppContext);
+                callback.onSuccess(null);
             }
         });
     }

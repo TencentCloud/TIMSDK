@@ -1,5 +1,6 @@
 package com.tencent.liteav.trtcaudiocalldemo.ui;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +36,7 @@ import com.tencent.liteav.trtcaudiocalldemo.ui.audiolayout.TRTCAudioLayout;
 import com.tencent.liteav.trtcaudiocalldemo.ui.audiolayout.TRTCAudioLayoutManager;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tim.uikit.utils.PermissionUtils;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
@@ -108,7 +110,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         public void onError(int code, String msg) {
             //发生了错误，报错并退出该页面
             ToastUtil.toastLongMessage("发生错误[" + code + "]:" + msg);
-            finish();
+            finishActivity();
         }
 
         @Override
@@ -233,7 +235,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             if (mSponsorUserModel != null) {
                 ToastUtil.toastLongMessage(mSponsorUserModel.userName + " 取消了通话");
             }
-            finish();
+            finishActivity();
         }
 
         @Override
@@ -241,12 +243,12 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             if (mSponsorUserModel != null) {
                 ToastUtil.toastLongMessage(mSponsorUserModel.userName + " 通话超时");
             }
-            finish();
+            finishActivity();
         }
 
         @Override
         public void onCallEnd() {
-            finish();
+            finishActivity();
         }
 
         @Override
@@ -278,6 +280,8 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
      * @param models
      */
     public static void startCallSomeone(Context context, List<UserModel> models) {
+        TUIKitLog.i(TAG, "startCallSomeone");
+        ((TRTCAVCallImpl)TRTCAVCallImpl.sharedInstance(context)).setWaitingLastActivityFinished(false);
         Intent starter = new Intent(context, TRTCAudioCallActivity.class);
         starter.putExtra(PARAM_TYPE, TYPE_CALL);
         starter.putExtra(PARAM_USER, new IntentParams(models));
@@ -292,6 +296,8 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
      * @param models
      */
     public static void startCallSomePeople(Context context, List<UserModel> models, String groupId) {
+        TUIKitLog.i(TAG, "startCallSomePeople");
+        ((TRTCAVCallImpl)TRTCAVCallImpl.sharedInstance(context)).setWaitingLastActivityFinished(false);
         Intent starter = new Intent(context, TRTCAudioCallActivity.class);
         starter.putExtra(PARAM_GROUP_ID, groupId);
         starter.putExtra(PARAM_TYPE, TYPE_CALL);
@@ -307,6 +313,8 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
      * @param beingCallUserModel
      */
     public static void startBeingCall(Context context, UserModel beingCallUserModel, List<UserModel> otherInvitingUserModel) {
+        TUIKitLog.i(TAG, "startBeingCall");
+        ((TRTCAVCallImpl)TRTCAVCallImpl.sharedInstance(context)).setWaitingLastActivityFinished(false);
         Intent starter = new Intent(context, TRTCAudioCallActivity.class);
         starter.putExtra(PARAM_TYPE, TYPE_BEING_CALLED);
         starter.putExtra(PARAM_BEINGCALL_USER, beingCallUserModel);
@@ -318,6 +326,17 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TUIKitLog.i(TAG, "onCreate");
+
+        mCallType = getIntent().getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
+        TUIKitLog.i(TAG, "mCallType: " + mCallType);
+        if (mCallType == TYPE_BEING_CALLED && ((TRTCAVCallImpl)TRTCAVCallImpl.sharedInstance(this)).isWaitingLastActivityFinished()) {
+            // 有些手机禁止后台启动Activity，但是有bug，比如一种场景：对方反复拨打并取消，三次以上极容易从后台启动成功通话界面，
+            // 此时对方再挂断时，此通话Activity调用finish后，上一个从后台启动的Activity就会弹出。此时这个Activity就不能再启动。
+            TUIKitLog.w(TAG, "ignore activity launch");
+            finishActivity();
+            return;
+        }
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
@@ -330,6 +349,8 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.audiocall_activity_call_main);
 
+        PermissionUtils.checkPermission(this, Manifest.permission.RECORD_AUDIO);
+
         mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         mRingtone = RingtoneManager.getRingtone(this,
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
@@ -339,8 +360,39 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         initListener();
     }
 
+    private void finishActivity() {
+        ((TRTCAVCallImpl)TRTCAVCallImpl.sharedInstance(this)).setWaitingLastActivityFinished(true);
+        finish();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        TUIKitLog.i(TAG, "onResume");
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        TUIKitLog.i(TAG, "onPause");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        TUIKitLog.i(TAG, "onStart");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        TUIKitLog.i(TAG, "onStop");
+    }
+
     @Override
     public void onBackPressed() {
+        TUIKitLog.i(TAG, "onBackPressed");
         // 退出这个界面的时候，需要挂断
         mITRTCAVCall.hangup();
         super.onBackPressed();
@@ -348,12 +400,21 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        mVibrator.cancel();
-        mRingtone.stop();
+        TUIKitLog.i(TAG, "onDestroy");
         super.onDestroy();
-        mITRTCAVCall.removeListener(mTRTCAudioCallListener);
+        if (mVibrator != null) {
+            mVibrator.cancel();
+        }
+        if (mRingtone != null) {
+            mRingtone.stop();
+        }
+        if (mITRTCAVCall != null) {
+            mITRTCAVCall.removeListener(mTRTCAudioCallListener);
+        }
         stopTimeCount();
-        mTimeHandlerThread.quit();
+        if (mTimeHandlerThread != null) {
+            mTimeHandlerThread.quit();
+        }
     }
 
     private void initListener() {
@@ -461,7 +522,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 mVibrator.cancel();
                 mRingtone.stop();
                 mITRTCAVCall.reject();
-                finish();
+                finishActivity();
             }
         });
         mDialingLl.setOnClickListener(new View.OnClickListener() {
@@ -499,7 +560,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mITRTCAVCall.hangup();
-                finish();
+                finishActivity();
             }
         });
         mDialingLl.setVisibility(View.GONE);
@@ -522,7 +583,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mITRTCAVCall.hangup();
-                finish();
+                finishActivity();
             }
         });
         showTimeCount();
@@ -556,7 +617,9 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
     }
 
     private void stopTimeCount() {
-        mTimeHandler.removeCallbacks(mTimeRunnable);
+        if (mTimeHandler != null) {
+            mTimeHandler.removeCallbacks(mTimeRunnable);
+        }
         mTimeRunnable = null;
     }
 

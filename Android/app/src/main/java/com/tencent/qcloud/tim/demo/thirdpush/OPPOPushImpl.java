@@ -5,13 +5,10 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 
-import com.heytap.mcssdk.callback.PushCallback;
-import com.heytap.mcssdk.mode.SubscribeResult;
+import com.heytap.msp.push.callback.ICallBackResultService;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 
-import java.util.List;
-
-public class OPPOPushImpl implements PushCallback {
+public class OPPOPushImpl implements ICallBackResultService {
 
     private static final String TAG = OPPOPushImpl.class.getSimpleName();
 
@@ -40,51 +37,6 @@ public class OPPOPushImpl implements PushCallback {
     @Override
     public void onGetNotificationStatus(int responseCode, int status) {
         DemoLog.i(TAG, "onGetNotificationStatus responseCode: " + responseCode + " status: " + status);
-    }
-
-    @Override
-    public void onGetAliases(int responseCode, List<SubscribeResult> alias) {
-        DemoLog.i(TAG, "onGetAliases responseCode: " + responseCode + " alias: " + alias);
-    }
-
-    @Override
-    public void onSetAliases(int responseCode, List<SubscribeResult> alias) {
-        DemoLog.i(TAG, "onSetAliases responseCode: " + responseCode + " alias: " + alias);
-    }
-
-    @Override
-    public void onUnsetAliases(int responseCode, List<SubscribeResult> alias) {
-        DemoLog.i(TAG, "onUnsetAliases responseCode: " + responseCode + " alias: " + alias);
-    }
-
-    @Override
-    public void onSetUserAccounts(int responseCode, List<SubscribeResult> accounts) {
-        DemoLog.i(TAG, "onSetUserAccounts responseCode: " + responseCode + " accounts: " + accounts);
-    }
-
-    @Override
-    public void onUnsetUserAccounts(int responseCode, List<SubscribeResult> accounts) {
-        DemoLog.i(TAG, "onUnsetUserAccounts responseCode: " + responseCode + " accounts: " + accounts);
-    }
-
-    @Override
-    public void onGetUserAccounts(int responseCode, List<SubscribeResult> accounts) {
-        DemoLog.i(TAG, "onGetUserAccounts responseCode: " + responseCode + " accounts: " + accounts);
-    }
-
-    @Override
-    public void onSetTags(int responseCode, List<SubscribeResult> tags) {
-        DemoLog.i(TAG, "onSetTags responseCode: " + responseCode + " tags: " + tags);
-    }
-
-    @Override
-    public void onUnsetTags(int responseCode, List<SubscribeResult> tags) {
-        DemoLog.i(TAG, "onUnsetTags responseCode: " + " tags: " + tags);
-    }
-
-    @Override
-    public void onGetTags(int responseCode, List<SubscribeResult> tags) {
-        DemoLog.i(TAG, "onGetTags responseCode: " + responseCode + " tags: " + tags);
     }
 
     public void createNotificationChannel(Context context) {

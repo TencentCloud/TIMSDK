@@ -52,7 +52,7 @@
     <string name="modify_nickname_success">修改昵称成功</string>
     <string name="view_original_image">查看原图</string>
 
-    // 联系人相关
+    <!-- 联系人相关 -->
     <string name="new_friend">新的联系人</string>
     <string name="group">我的群聊</string>
     <string name="blacklist">黑名单</string>
@@ -60,7 +60,7 @@
     <string name="contact_title">通讯录</string>
     <string name="conversation_title">腾讯·云通信</string>
 
-    // 好友资料
+    <!-- 好友资料 -->
     <string name="profile_detail">详细资料</string>
     <string name="profile_id">帐号</string>
     <string name="profile_add_wording">验证消息</string>

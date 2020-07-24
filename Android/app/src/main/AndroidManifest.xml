@@ -202,71 +202,13 @@
         <!-- ********小米推送service和receiver设置end******** -->
 
         <!-- ********华为推送设置start******** -->
-        <meta-data
-            android:name="com.huawei.hms.client.appid"
-            android:value="appid=100642285" />
-
-        <provider
-            android:name="com.huawei.hms.update.provider.UpdateProvider"
-            android:authorities="com.tencent.qcloud.tim.tuikit.hms.update.provider"
-            android:exported="false"
-            android:grantUriPermissions="true" />
-
-        <provider
-            android:name="com.huawei.updatesdk.fileprovider.UpdateSdkFileProvider"
-            android:authorities="com.tencent.qcloud.tim.tuikit.updateSdk.fileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true" />
-
-        <activity
-            android:name="com.huawei.android.hms.agent.common.HMSAgentActivity"
-            android:configChanges="orientation|locale|screenSize|layoutDirection|fontScale"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.Translucent">
-            <meta-data
-                android:name="hwc-theme"
-                android:value="androidhwext:style/Theme.Emui.Translucent" />
-        </activity>
-
-        <activity
-            android:name="com.huawei.hms.activity.BridgeActivity"
-            android:configChanges="orientation|locale|screenSize|layoutDirection|fontScale"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.Translucent">
-            <meta-data
-                android:name="hwc-theme"
-                android:value="androidhwext:style/Theme.Emui.Translucent" />
-        </activity>
-
-        <receiver
-            android:name="com.tencent.qcloud.tim.demo.thirdpush.HUAWEIPushReceiver"
-            android:permission="com.tencent.qcloud.tim.tuikit.permission.PROCESS_PUSH_MSG">
-            <intent-filter>
-
-                <!-- 必须,用于接收token -->
-                <action android:name="com.huawei.android.push.intent.REGISTRATION" />
-                <!-- 必须, 用于接收透传消息 -->
-                <action android:name="com.huawei.android.push.intent.RECEIVE" />
-                <!-- 必须, 用于接收通知栏消息点击事件 此事件不需要开发者处理，只需注册就可以 -->
-                <action android:name="com.huawei.intent.action.PUSH_DELAY_NOTIFY" />
-            </intent-filter>
-        </receiver>
-
         <service
-            android:name="com.huawei.hms.support.api.push.service.HmsMsgService"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":pushservice">
+            android:name="com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.huawei.push.msg.NOTIFY_MSG" />
-                <action android:name="com.huawei.push.msg.PASSBY_MSG" />
+                <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-
         <!-- ********华为推送设置end******** -->
 
         <!-- ********魅族推送设置start******** -->
@@ -310,15 +252,15 @@
 
         <meta-data
             android:name="com.vivo.push.api_key"
-            android:value="a90685ff-ebad-4df3-a265-3d4bb8e3a389" />
+            android:value="" />
         <meta-data
             android:name="com.vivo.push.app_id"
-            android:value="11178" />
+            android:value="" />
         <!-- ********vivo推送设置end******** -->
 
         <!-- ********海外google云消息传递start******** -->
         <service
-            android:name=".thirdpush.GoogleFCMMsgService"
+            android:name="com.tencent.qcloud.tim.demo.thirdpush.GoogleFCMMsgService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -328,21 +270,27 @@
 
         <!-- ********OPPO 推送 start******** -->
         <service
-            android:name="com.heytap.mcssdk.PushService"
+            android:name="com.heytap.msp.push.service.CompatibleDataMessageCallbackService"
+
             android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
             <intent-filter>
                 <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE"/>
             </intent-filter>
-        </service>
+        </service> <!--兼容Q以下版本-->
 
         <service
-            android:name="com.heytap.mcssdk.AppPushService"
-            android:permission="com.heytap.mcs.permission.SEND_MCS_MESSAGE">
+            android:name="com.heytap.msp.push.service.DataMessageCallbackService"
+
+            android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE">
+
             <intent-filter>
                 <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE"/>
+
+                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE"/>
             </intent-filter>
-        </service>
+        </service> <!--兼容Q版本-->
         <!-- ********OPPO 推送 end******** -->
+
     </application>
 
 </manifest>

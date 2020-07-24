@@ -1,8 +1,13 @@
 package com.tencent.qcloud.tim.demo.thirdpush;
 
 import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
 
+import com.tencent.qcloud.tim.demo.DemoApplication;
+import com.tencent.qcloud.tim.demo.SplashActivity;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
@@ -10,6 +15,7 @@ import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageReceiver;
 
 import java.util.List;
+import java.util.Map;
 
 
 public class XiaomiMsgReceiver extends PushMessageReceiver {
@@ -25,7 +31,16 @@ public class XiaomiMsgReceiver extends PushMessageReceiver {
     @Override
     public void onNotificationMessageClicked(Context context, MiPushMessage miPushMessage) {
         DemoLog.d(TAG, "onNotificationMessageClicked miPushMessage " + miPushMessage.toString());
-        // 如果聊天消息，跳转到聊天界面
+        Map<String, String> extra = miPushMessage.getExtra();
+        String ext = extra.get("ext");
+        if (TextUtils.isEmpty(ext)) {
+            DemoLog.w(TAG, "onNotificationMessageClicked: no extra data found");
+            return;
+        }
+        Intent intent = new Intent(DemoApplication.instance(), SplashActivity.class);
+        intent.putExtra("ext", ext);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        DemoApplication.instance().startActivity(intent);
     }
 
     @Override

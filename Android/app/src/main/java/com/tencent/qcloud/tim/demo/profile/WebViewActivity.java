@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tim.demo.profile;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +13,7 @@ import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
 
-public class WebViewActivity extends BaseActivity {
+public class WebViewActivity extends Activity {
 
     private WebView mWebView;
     private TitleBarLayout mTitleBar;
@@ -36,7 +37,6 @@ public class WebViewActivity extends BaseActivity {
         mWebView.loadUrl("https://cloud.tencent.com/product/im");
         mWebView.setWebViewClient(new MyWebViewClient());
     }
-
 
     class MyWebViewClient extends WebViewClient {
         @Override

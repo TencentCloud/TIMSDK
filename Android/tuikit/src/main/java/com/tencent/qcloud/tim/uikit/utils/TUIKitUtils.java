@@ -1,14 +1,12 @@
 package com.tencent.qcloud.tim.uikit.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.liteav.model.CallModel;
+import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
 
 public class TUIKitUtils {
 
-    public static boolean isComingCall(V2TIMMessage msg) {
+    public static boolean ignoreNotification(V2TIMMessage msg) {
         if (msg == null) {
             return false;
         }
@@ -20,20 +18,9 @@ public class TUIKitUtils {
         if (bytes == null) {
             return false;
         }
-        CallModel call = null;
-        try {
-            call = new Gson().fromJson(new String(bytes), CallModel.class);
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-        }
-        if (call == null) {
-            return false;
-        }
-        if (call.version == TUIKitConstants.version
-                && call.action == CallModel.VIDEO_CALL_ACTION_DIALING) {
+        if (MessageInfoUtil.isTyping(bytes) || MessageInfoUtil.isOnlineIgnoredDialing(bytes)) {
             return true;
         }
-
         return false;
     }
 }
