@@ -113,6 +113,12 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 **Features**
 
+- SDK 版本更新至 2.7.6
+
+#### 2020/7/3
+
+**Features**
+
 - SDK 版本更新至 2.7.5
 
 **Changes**
