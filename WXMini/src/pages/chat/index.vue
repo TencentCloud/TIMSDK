@@ -20,9 +20,10 @@
     </i-modal>
     <i-modal title="发送自定义消息" :visible="customModalVisible" @ok="sendCustomMessage" @cancel="customModal">
       <div class="custom-wrapper">
-        <input type="text" class="custom-input" :class="{'input-focus': focusedInput === 'data'}" placeholder="输入数据" v-model.lazy:value="customData" @focus="focusedInput = 'data'" @blur="focusedInput = ''"/>
-        <input type="text" class="custom-input" :class="{'input-focus': focusedInput === 'desc'}" placeholder="输入描述" v-model.lazy:value="customDescription" @focus="focusedInput = 'desc'" @blur="focusedInput = ''"/>
-        <input type="text" class="custom-input" :class="{'input-focus': focusedInput === 'ext'}" placeholder="输入其他" v-model.lazy:value="customExtension" @focus="focusedInput = 'ext'" @blur="focusedInput = ''"/>
+        <!-- 为了修复iOS input框不跟随父容器显隐状态，分别设置渲染条件 -->
+        <input v-if="customModalVisible" type="text" class="custom-input" :class="{'input-focus': focusedInput === 'data'}" placeholder="输入数据" v-model.lazy:value="customData" @focus="focusedInput = 'data'" @blur="focusedInput = ''"/>
+        <input v-if="customModalVisible" type="text" class="custom-input" :class="{'input-focus': focusedInput === 'desc'}" placeholder="输入描述" v-model.lazy:value="customDescription" @focus="focusedInput = 'desc'" @blur="focusedInput = ''"/>
+        <input v-if="customModalVisible" type="text" class="custom-input" :class="{'input-focus': focusedInput === 'ext'}" placeholder="输入其他" v-model.lazy:value="customExtension" @focus="focusedInput = 'ext'" @blur="focusedInput = ''"/>
       </div>
     </i-modal>
     <i-modal title="对IM demo的评分和评价" i-class="custom-modal" :visible="rateModal" @ok="sendSurvey" @cancel="rateModal = false">
@@ -31,7 +32,8 @@
           @change="onChange"
           :value="rate">
         </i-rate>
-        <input type="text" class="custom-input" placeholder="输入评价" v-model.lazy:value="customExtension"/>
+        <!-- 为了修复iOS input框不跟随父容器显隐状态，分别设置渲染条件 -->
+        <input v-if="rateModal" type="text" class="custom-input" placeholder="输入评价" v-model.lazy:value="customExtension"/>
       </div>
     </i-modal>
     <i-modal title="提示"
@@ -245,7 +247,7 @@
               自定义消息
             </div>
           </div>
-          <div class="block" @click="rateModal = true">
+          <div class="block" @click="rateModal = !rateModal">
             <div class="image">
               <image src="/static/images/rating.png" class="icon"/>
             </div>
