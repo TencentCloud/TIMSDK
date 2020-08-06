@@ -850,7 +850,7 @@ TIM_DECL int TIMMsgDelete(const char* conv_id, enum TIMConvType conv_type, const
 TIM_DECL int TIMMsgDownloadElemToPath(const char* json_download_elem_param, const char* path, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 群发消息
+* @brief 群发消息，该接口不支持向群组发送消息。
 *
 * @param json_batch_send_param  群发消息json字符串
 * @param cb 群发消息成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
@@ -1105,8 +1105,8 @@ TIM_DECL int TIMGroupDeleteMember(const char* json_group_delete_param, TIMCommCa
 * @note
 * > 权限说明：
 * >>   此接口可以获取自己所加入的群列表
-* >>   此接口只能获得加入的部分直播大的列表。
-* > 此接口用于获取当前用户已加入的群组列表，返回群组的基础信息。具体返回的群组基本信息字段参考[GroupBaseInfo](TIMCloudDef.h)
+* >>   此接口只能获得加入的部分直播大群的列表。
+* > 此接口用于获取当前用户已加入的群组列表，返回群组的基础信息。具体返回的群组信息字段参考[GroupBaseInfo](TIMCloudDef.h)和[GroupDetailInfo](TIMCloudDef.h)
 */
 TIM_DECL int TIMGroupGetJoinedGroupList(TIMCommCallback cb, const void* user_data);
 
