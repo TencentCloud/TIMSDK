@@ -5,6 +5,7 @@
 #import "AppDelegate.h"
 #import "ImSDK.h"
 #import "GenerateTestUserSig.h"
+#import "ReactiveObjC/ReactiveObjC.h"
 
 @interface LoginController ()
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
@@ -20,7 +21,6 @@
 }
 
 - (IBAction)login:(id)sender {
-    __weak typeof(self) ws = self;
     if (SDKAPPID == 0 || [SECRETKEY isEqual: @""]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Demo 尚未配置 sdkAppid 和加密密钥，请前往 GenerateTestUserSig.h 配置" message:nil delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
         [alert show];
@@ -42,42 +42,8 @@
         *  由于破解服务器的成本要高于破解客户端 App，所以服务器计算的方案能够更好地保护您的加密密钥。
         */
         param.userSig = [GenerateTestUserSig genTestUserSig:_userNameTextFeild.text];
-        [[V2TIMManager sharedInstance] login:param.identifier userSig:param.userSig succ:^{
-            AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            NSData *deviceToken = delegate.deviceToken;
-            if (deviceToken) {
-                TIMTokenParam *param = [[TIMTokenParam alloc] init];
-                /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
-                //企业证书 ID
-                param.busiId = sdkBusiId;
-                [param setToken:deviceToken];
-                [[TIMManager sharedInstance] setToken:param succ:^{
-                    NSLog(@"-----> 上传 token 成功 ");
-                    //推送声音的自定义化设置
-                    TIMAPNSConfig *config = [[TIMAPNSConfig alloc] init];
-                    config.openPush = 0;
-                    config.c2cSound = @"00.caf";
-                    config.groupSound = @"01.caf";
-                    [[TIMManager sharedInstance] setAPNS:config succ:^{
-                        NSLog(@"-----> 设置 APNS 成功");
-                    } fail:^(int code, NSString *msg) {
-                        NSLog(@"-----> 设置 APNS 失败");
-                    }];
-                } fail:^(int code, NSString *msg) {
-                    NSLog(@"-----> 上传 token 失败 ");
-                }];
-            }
-            [[NSUserDefaults standardUserDefaults] setObject:@(SDKAPPID) forKey:Key_UserInfo_Appid];
-            [[NSUserDefaults standardUserDefaults] setObject:param.identifier forKey:Key_UserInfo_User];
-            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Pwd];
-            [[NSUserDefaults standardUserDefaults] setObject:param.userSig forKey:Key_UserInfo_Sig];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [ws presentViewController:[((AppDelegate *)[UIApplication sharedApplication].delegate) getMainController] animated:YES completion:nil];
-            });
-        } fail:^(int code, NSString *msg) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"code:%d msdg:%@ ,请检查 sdkappid,identifier,userSig 是否正确配置",code,msg] message:nil delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
-            [alert show];
-        }];
+        AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [delegate login:param.identifier userSig:param.userSig succ:nil fail:nil];
     }
 }
 
