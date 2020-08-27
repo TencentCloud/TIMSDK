@@ -423,6 +423,7 @@ enum TIMResult {
 */
 enum TIMLogLevel {
     kTIMLog_Off,     // 关闭日志输出
+    kTIMLog_Test,    // 全量日志
     kTIMLog_Verbose, // 开发调试过程中一些详细信息日志
     kTIMLog_Debug,   // 调试日志
     kTIMLog_Info,    // 信息日志
@@ -591,13 +592,14 @@ static const char* kTIMSocks5ProxyInfoPassword = "socks5_proxy_info_password"; /
 * + SOCKS5代理需要在初始化之前设置。设置之后ImSDK发送的所有协议会通过SOCKS5代理服务器发送的即时通信IM后台。
 */
 // Struct SetConfig JsonKey
-static const char* kTIMSetConfigLogLevel           = "set_config_log_level";             // uint [TIMLogLevel](),  只写(选填), 输出到日志文件的日志级别
-static const char* kTIMSetConfigCackBackLogLevel   = "set_config_callback_log_level";    // uint [TIMLogLevel](),  只写(选填), 日志回调的日志级别 
-static const char* kTIMSetConfigIsLogOutputConsole = "set_config_is_log_output_console"; // bool,                  只写(选填), 是否输出到控制台 
-static const char* kTIMSetConfigUserConfig         = "set_config_user_config";           // object [UserConfig](), 只写(选填), 用户配置
-static const char* kTIMSetConfigUserDefineData     = "set_config_user_define_data";      // string,                只写(选填), 自定义数据，如果需要，初始化前设置
-static const char* kTIMSetConfigHttpProxyInfo      = "set_config_http_proxy_info";       // object [HttpProxyInfo](),  只写(选填), 设置HTTP代理，如果需要，在发送图片、文件、语音、视频前设置
-static const char* kTIMSetConfigSocks5ProxyInfo    = "set_config_socks5_proxy_info";     // object [Socks5ProxyInfo](), 只写(选填), 设置SOCKS5代理，如果需要，初始化前设置
+static const char* kTIMSetConfigLogLevel             = "set_config_log_level";                // uint [TIMLogLevel](),  只写(选填), 输出到日志文件的日志级别
+static const char* kTIMSetConfigCackBackLogLevel     = "set_config_callback_log_level";       // uint [TIMLogLevel](),  只写(选填), 日志回调的日志级别 
+static const char* kTIMSetConfigIsLogOutputConsole   = "set_config_is_log_output_console";    // bool,                  只写(选填), 是否输出到控制台 
+static const char* kTIMSetConfigUserConfig           = "set_config_user_config";              // object [UserConfig](), 只写(选填), 用户配置
+static const char* kTIMSetConfigUserDefineData       = "set_config_user_define_data";         // string,                只写(选填), 自定义数据，如果需要，初始化前设置
+static const char* kTIMSetConfigHttpProxyInfo        = "set_config_http_proxy_info";          // object [HttpProxyInfo](),  只写(选填), 设置HTTP代理，如果需要，在发送图片、文件、语音、视频前设置
+static const char* kTIMSetConfigSocks5ProxyInfo      = "set_config_socks5_proxy_info";        // object [Socks5ProxyInfo](), 只写(选填), 设置SOCKS5代理，如果需要，初始化前设置
+static const char* kTIMSetConfigIsOnlyLocalDNSSource = "set_config_is_only_local_dns_source"; // bool,                  只写(选填), 如果为true，SDK内部会在选择最优IP时只使用LocalDNS
 // EndStruct
 /// @}
 
@@ -703,7 +705,7 @@ static const char* kTIMMsgPriority    = "message_priority";      //uint [TIMMsgP
 static const char* kTIMMsgClientTime  = "message_client_time";   //uint64,         读写(选填),       客户端时间
 static const char* kTIMMsgServerTime  = "message_server_time";   //uint64,         读写(选填),       服务端时间
 static const char* kTIMMsgIsFormSelf  = "message_is_from_self";  //bool,           读写(选填),       消息是否来自自己
-static const char* kTIMMsgPlatform    = "message_platform";      //bool,           读写(选填),       消息是否来自自己
+static const char* kTIMMsgPlatform    = "message_platform";      //bool,           读写(选填),       发送消息的平台
 static const char* kTIMMsgIsRead      = "message_is_read";       //bool,           读写(选填),       消息是否已读
 static const char* kTIMMsgIsOnlineMsg = "message_is_online_msg"; //bool,           读写(选填),       消息是否是在线消息，false表示普通消息,true表示阅后即焚消息，默认为false
 static const char* kTIMMsgIsPeerRead  = "message_is_peer_read";  //bool,           只读,            消息是否被会话对方已读
@@ -807,7 +809,7 @@ enum TIMImageLevel {
 // Struct ImageElem JsonKey
 static const char* kTIMImageElemOrigPath        = "image_elem_orig_path";        // string, 读写(必填), 发送图片的路径
 static const char* kTIMImageElemLevel           = "image_elem_level";            // uint[TIMImageLevel](), 读写(必填), 发送图片的质量级别
-static const char* kTIMImageElemFormat          = "image_elem_format";           // int,    读写(必填), 发送图片格式
+static const char* kTIMImageElemFormat          = "image_elem_format";           // int,    读写,       发送图片格式
 static const char* kTIMImageElemOrigId          = "image_elem_orig_id";          // string, 只读,       原图的uuid
 static const char* kTIMImageElemOrigPicHeight   = "image_elem_orig_pic_height";  // int,    只读,       原图的图片高度
 static const char* kTIMImageElemOrigPicWidth    = "image_elem_orig_pic_width";   // int,    只读,       原图的图片宽度
@@ -1245,8 +1247,8 @@ static const char* kTIMCreateGroupParamGroupName        = "create_group_param_gr
 static const char* kTIMCreateGroupParamGroupId          = "create_group_param_group_id";            // string, 只写(选填), 群组ID,不填时创建成功回调会返回一个后台分配的群ID
 static const char* kTIMCreateGroupParamGroupType        = "create_group_param_group_type";          // uint [TIMGroupType](), 只写(选填), 群组类型,默认为Public
 static const char* kTIMCreateGroupParamGroupMemberArray = "create_group_param_group_member_array";  // array [GroupMemberInfo](), 只写(选填), 群组初始成员数组
-static const char* kTIMCreateGroupParamNotification     = "create_group_param_notification";        // string, 只写(选填), 群组公告,
-static const char* kTIMCreateGroupParamIntroduction     = "create_group_param_introduction";        // string, 只写(选填), 群组简介,
+static const char* kTIMCreateGroupParamNotification     = "create_group_param_notification";        // string, 只写(选填), 群组公告
+static const char* kTIMCreateGroupParamIntroduction     = "create_group_param_introduction";        // string, 只写(选填), 群组简介
 static const char* kTIMCreateGroupParamFaceUrl          = "create_group_param_face_url";            // string, 只写(选填), 群组头像URL
 static const char* kTIMCreateGroupParamAddOption        = "create_group_param_add_option";          // uint [TIMGroupAddOption](),   只写(选填), 加群选项，默认为Any
 static const char* kTIMCreateGroupParamMaxMemberCount   = "create_group_param_max_member_num";      // uint,   只写(选填), 群组最大成员数
@@ -1382,15 +1384,15 @@ static const char* kTIMGetGroupInfoResultInfo  = "get_groups_info_result_info"; 
 */
 enum TIMGroupModifyInfoFlag {
     kTIMGroupModifyInfoFlag_None         = 0x00,
-    kTIMGroupModifyInfoFlag_Name         = 0x01,       // 修改群组名称,      
-    kTIMGroupModifyInfoFlag_Notification = 0x01 << 1,  // 修改群公告,        
+    kTIMGroupModifyInfoFlag_Name         = 0x01,       // 修改群组名称      
+    kTIMGroupModifyInfoFlag_Notification = 0x01 << 1,  // 修改群公告       
     kTIMGroupModifyInfoFlag_Introduction = 0x01 << 2,  // 修改群简介         
     kTIMGroupModifyInfoFlag_FaceUrl      = 0x01 << 3,  // 修改群头像URL      
-    kTIMGroupModifyInfoFlag_AddOption    = 0x01 << 4,  // 修改群组添加选项,  
-    kTIMGroupModifyInfoFlag_MaxMmeberNum = 0x01 << 5,  // 修改群最大成员数,  
-    kTIMGroupModifyInfoFlag_Visible      = 0x01 << 6,  // 修改群是否可见,    
-    kTIMGroupModifyInfoFlag_Searchable   = 0x01 << 7,  // 修改群是否被搜索,  
-    kTIMGroupModifyInfoFlag_ShutupAll    = 0x01 << 8,  // 修改群是否全体禁言,
+    kTIMGroupModifyInfoFlag_AddOption    = 0x01 << 4,  // 修改群组添加选项  
+    kTIMGroupModifyInfoFlag_MaxMmeberNum = 0x01 << 5,  // 修改群最大成员数  
+    kTIMGroupModifyInfoFlag_Visible      = 0x01 << 6,  // 修改群是否可见   
+    kTIMGroupModifyInfoFlag_Searchable   = 0x01 << 7,  // 修改群是否被搜索  
+    kTIMGroupModifyInfoFlag_ShutupAll    = 0x01 << 8,  // 修改群是否全体禁言
     kTIMGroupModifyInfoFlag_Custom       = 0x01 << 9,  // 修改群自定义信息
     kTIMGroupModifyInfoFlag_Owner        = 0x01 << 31, // 修改群主
 
@@ -1501,8 +1503,8 @@ enum TIMGroupPendencyHandleResult {
 */
 // Struct GroupPendency JsonKey
 static const char* kTIMGroupPendencyGroupId             = "group_pendency_group_id";                //string,  读写, 群组ID
-static const char* kTIMGroupPendencyFromIdentifier      = "group_pendency_form_identifier";         //string,  读写, 请求者的ID,例如：请求加群:请求者,邀请加群:邀请人。
-static const char* kTIMGroupPendencyToIdentifier        = "group_pendency_to_identifier";           //string,  读写, 判决者的ID,请求加群:"",邀请加群:被邀请人。
+static const char* kTIMGroupPendencyFromIdentifier      = "group_pendency_form_identifier";         //string,  读写, 请求者的ID,例如：请求加群:请求者,邀请加群:邀请人
+static const char* kTIMGroupPendencyToIdentifier        = "group_pendency_to_identifier";           //string,  读写, 判决者的ID,请求加群:"",邀请加群:被邀请人
 static const char* kTIMGroupPendencyAddTime             = "group_pendency_add_time";                //uint64,  只读, 未决信息添加时间
 static const char* kTIMGroupPendencyPendencyType        = "group_pendency_pendency_type";           //uint [TIMGroupPendencyType](),  只读, 未决请求类型
 static const char* kTIMGroupPendencyHandled             = "group_pendency_handled";                 //uint [TIMGroupPendencyHandle](),只读, 群未决处理状态
@@ -1522,7 +1524,7 @@ static const char* kTIMGroupPendencySelfIdentifier      = "group_pendency_self_i
 // Struct GroupPendencyResult JsonKey
 static const char* kTIMGroupPendencyResultNextStartTime = "group_pendency_result_next_start_time";  // uint64, 只读, 下一次拉取的起始时戳,server返回0表示没有更多的数据,否则在下次获取数据时以这个时间戳作为开始时间戳
 static const char* kTIMGroupPendencyResultReadTimeSeq   = "group_pendency_result_read_time_seq";    // uint64, 只读, 已读上报的时间戳
-static const char* kTIMGroupPendencyResultUnReadNum     = "group_pendency_result_unread_num";       // uint,   只读, 未决请求的未读数 ?
+static const char* kTIMGroupPendencyResultUnReadNum     = "group_pendency_result_unread_num";       // uint,   只读, 未决请求的未读数
 static const char* kTIMGroupPendencyResultPendencyArray = "group_pendency_result_pendency_array";   // array [GroupPendency](), 只读, 群未决信息列表
 // EndStruct
 
