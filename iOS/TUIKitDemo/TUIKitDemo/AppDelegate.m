@@ -5,7 +5,6 @@
 #import "ContactsController.h"
 #import "LoginController.h"
 #import "TUITabBarController.h"
-#import "TUIKit.h"
 #import "THeader.h"
 #import "TCUtil.h"
 #import "THelper.h"
@@ -27,6 +26,32 @@ static AppDelegate *app;
     return app;
 }
 
+- (void)login:(NSString *)identifier userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail
+{
+    [[TUIKit sharedInstance] login:identifier userSig:sig succ:^{
+        NSLog(@"-----> 登录成功");
+        [[TUILocalStorage sharedInstance] saveLogin:identifier withAppId:SDKAPPID withUserSig:sig];
+        if (self.deviceToken) {
+            V2TIMAPNSConfig *confg = [[V2TIMAPNSConfig alloc] init];
+            confg.businessID = sdkBusiId;
+            confg.token = self.deviceToken;
+            [[V2TIMManager sharedInstance] setAPNS:confg succ:^{
+                 NSLog(@"-----> 设置 APNS 成功");
+            } fail:^(int code, NSString *msg) {
+                 NSLog(@"-----> 设置 APNS 失败");
+            }];
+        }
+        self.window.rootViewController = [app getMainController];
+        [self onReceiveNomalMsgAPNs];
+        [self onReceiveGroupCallAPNs];
+    } fail:^(int code, NSString *msg) {
+        NSLog(@"-----> 登录失败");
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"code:%d msdg:%@ ,请检查 sdkappid,identifier,userSig 是否正确配置",code,msg] message:nil delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        self.window.rootViewController = [self getLoginController];
+    }];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     app = self;
@@ -46,43 +71,13 @@ static AppDelegate *app;
         [[TUIKit sharedInstance] setupWithAppId:SDKAPPID];
     }
     
-    NSNumber *appId = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Appid];
-    NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_User];
-    //NSString *pwd = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Pwd];
-    NSString *userSig = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Sig];
-    if([appId integerValue] == SDKAPPID && identifier.length != 0 && userSig.length != 0){
-        __weak typeof(self) ws = self;
-        [[TUIKit sharedInstance] login:identifier userSig:userSig succ:^{
-            if (ws.deviceToken) {
-                /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
-                //企业证书 ID
-                V2TIMAPNSConfig *confg = [[V2TIMAPNSConfig alloc] init];
-                /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
-                //企业证书 ID
-                confg.businessID = sdkBusiId;
-                confg.token = self.deviceToken;
-                [[V2TIMManager sharedInstance] setAPNS:confg succ:^{
-                     NSLog(@"-----> 设置 APNS 成功");
-                } fail:^(int code, NSString *msg) {
-                     NSLog(@"-----> 设置 APNS 失败");
-                }];
-                //普通消息推送
-                [self onReceiveNomalMsgAPNs];
-                //音视频消息推送
-                [self onReceiveGroupCallAPNs];
-            }
-            ws.window.rootViewController = [self getMainController];
-        } fail:^(int code, NSString *msg) {
-            [[NSUserDefaults standardUserDefaults] setObject:@(0) forKey:Key_UserInfo_Appid];
-            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_User];
-            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Pwd];
-            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Sig];
-            ws.window.rootViewController = [self getLoginController];
-        }];
-    }
-    else{
-        _window.rootViewController = [self getLoginController];
-    }
+    [[TUILocalStorage sharedInstance] login:^(NSString * _Nonnull identifier, NSUInteger appId, NSString * _Nonnull userSig) {
+        if(appId == SDKAPPID && identifier.length != 0 && userSig.length != 0){
+            [self login:identifier userSig:userSig succ:nil fail:nil];
+        } else {
+            self.window.rootViewController = [self getLoginController];
+        }
+    }];
     return YES;
 }
 
@@ -348,41 +343,20 @@ void uncaughtExceptionHandler(NSException*exception){
  */
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 0){
-        UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        LoginController *login = [board instantiateViewControllerWithIdentifier:@"LoginController"];
-        self.window.rootViewController = login;
+        // 退出
+        [[V2TIMManager sharedInstance] logout:^{
+            NSLog(@"登出成功！");
+        } fail:^(int code, NSString *msg) {
+            NSLog(@"退出登录");
+        }];
+        self.window.rootViewController = [self getLoginController];
     }else if(buttonIndex == 1){
-        /****此处未提供reLogin接口，而是直接使用保存在本地的数据登录，仅适用于Demo体验版本****/
-        NSNumber *appId = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Appid];
-        NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_User];
-        NSString *userSig = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Sig];
-        if([appId integerValue] == SDKAPPID && identifier.length != 0 && userSig.length != 0){
-            __weak typeof(self) ws = self;
-            [[TUIKit sharedInstance] login:identifier userSig:userSig succ:^{
-                if (ws.deviceToken) {
-                    TIMTokenParam *param = [[TIMTokenParam alloc] init];
-                    /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
-                    //企业证书 ID
-                    param.busiId = sdkBusiId;
-                    [param setToken:ws.deviceToken];
-                    [[TIMManager sharedInstance] setToken:param succ:^{
-                        NSLog(@"-----> 上传 token 成功 ");
-                    } fail:^(int code, NSString *msg) {
-                        NSLog(@"-----> 上传 token 失败 ");
-                    }];
-                }
-                ws.window.rootViewController = [self getMainController];
-            } fail:^(int code, NSString *msg) {
-                [[NSUserDefaults standardUserDefaults] setObject:@(0) forKey:Key_UserInfo_Appid];
-                [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_User];
-                [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Pwd];
-                [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Key_UserInfo_Sig];
-                ws.window.rootViewController = [self getLoginController];
-            }];
-        }
-        else{
-            _window.rootViewController = [self getLoginController];
-        }
+        // 重新登录
+        [[TUILocalStorage sharedInstance] login:^(NSString * _Nonnull identifier, NSUInteger appId, NSString * _Nonnull userSig) {
+            [self login:identifier userSig:userSig succ:nil fail:nil];
+        }];
+    } else {
+        self.window.rootViewController = [self getLoginController];
     }
 }
 

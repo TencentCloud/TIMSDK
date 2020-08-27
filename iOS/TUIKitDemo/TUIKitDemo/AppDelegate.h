@@ -1,9 +1,5 @@
 #import <UIKit/UIKit.h>
-
-#define Key_UserInfo_Appid @"Key_UserInfo_Appid"
-#define Key_UserInfo_User  @"Key_UserInfo_User"
-#define Key_UserInfo_Pwd   @"Key_UserInfo_Pwd"
-#define Key_UserInfo_Sig   @"Key_UserInfo_Sig"
+#import "TUIKit.h"
 
 //apns (sdkBusiId 为证书上传控制台后生成，详情请参考文档[离线推送]（https://cloud.tencent.com/document/product/269/44517）)
 #ifdef DEBUG
@@ -23,5 +19,6 @@
 @property (nonatomic, strong) NSData *deviceToken;
 - (UIViewController *)getLoginController;
 - (UITabBarController *)getMainController;
+- (void)login:(NSString *)identifier userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail;
 @end
 
