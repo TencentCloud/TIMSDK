@@ -1,3 +1,5 @@
+公告：TUIKit Android 与 iOS 端开放 Pull Request，merge 成功后会在 README.md 上留下您的大名并超链到您的 Github 主页！
+
 ## 镜像下载
 
 腾讯云分流下载地址： [DOWNLOAD](https://github-1252463788.cos.ap-shanghai.myqcloud.com/imsdk/TIMSDK.zip)
@@ -315,3 +317,8 @@
 
 - 优化 Demo 的离线推送，升级各厂商的推送 SDK 版本
 - 增加音视频离线通话的推送，并可以跳转到接听界面
+
+
+## TUIKit 开源贡献榜
+
+谁是第一位英雄，请现身！
