@@ -80,7 +80,7 @@
 <table>
   <tr>
     <th width="200px" style="text-align:center">平台</th>
-    <th width="360px" style="text-align:center">对比项</th>
+    <th width="260px" style="text-align:center">对比项</th>
     <th width="200px" style="text-align:center">标准版</th>
     <th width="200px" style="text-align:center">精简版</th>
   </tr>
@@ -102,7 +102,7 @@
 <table>
   <tr>
     <th width="200px" style="text-align:center">平台</th>
-    <th width="360px" style="text-align:center">架构</th>
+    <th width="260px" style="text-align:center">架构</th>
     <th width="200px" style="text-align:center">标准版</th>
     <th width="200px" style="text-align:center">精简版</th>
   </tr>
@@ -129,7 +129,7 @@
 <table>
   <tr>
     <th width="200px" style="text-align:center">功能模块</th>
-    <th width="360px" style="text-align:center">功能项</th>
+    <th width="260px" style="text-align:center">功能项</th>
     <th width="200px" style="text-align:center">标准版</th>
     <th width="200px" style="text-align:center">精简版</th>
   </tr>
