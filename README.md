@@ -75,140 +75,191 @@
   - 与标准版相比，精简版在 SDK 体积和安装包增量上都有3倍 - 4倍的缩减。如果您的 App 没有使用到好友列表和会话列表相关的功能，同时又特别关注安装包增量，建议您选择精简版。
 
 ## 标准版与精简版差异对照表
+精简版目前支持 Android 和 iOS 两个平台，后续会逐步增加对 Windows 和 Mac 平台的支持。下面以 Android 和 iOS 平台下的 SDK 为主，对比一下标准版和精简版的差异。
+### SDK 体积大小对比
 <table>
   <tr>
-    <th width="100px" style="text-align:center">功能模块</th>
-	<th width="200px" style="text-align:center">功能项</th>
-    <th width="100px" style="text-align:center">标准版</th>
-    <th width="100px" style="text-align:center">精简版</th>
+    <th width="200px" style="text-align:center">平台</th>
+    <th width="360px" style="text-align:center">对比项</th>
+    <th width="200px" style="text-align:center">标准版</th>
+    <th width="200px" style="text-align:center">精简版</th>
   </tr>
   <tr>
-    <td rowspan='2'  width="100px" style="text-align:center">资料</td>
-	<td width="200px" style="text-align:center">修改自己资料</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
+    <td style="text-align:center">Android</td>
+    <td style="text-align:center">aar 大小</td>
+    <td style="text-align:center">7.8 MB</td>
+    <td style="text-align:center">2.5 MB</td>
   </tr>
   <tr>
-	<td width="200px" style="text-align:center">获取他人资料</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
+    <td style="text-align:center">iOS</td>
+    <td style="text-align:center">framework 大小</td>
+    <td style="text-align:center">57.7 MB</td>
+    <td style="text-align:center">9.2 MB</td>
+  </tr>
+</table>
+
+### App 体积增量对比
+<table>
+  <tr>
+    <th width="200px" style="text-align:center">平台</th>
+    <th width="360px" style="text-align:center">架构</th>
+    <th width="200px" style="text-align:center">标准版</th>
+    <th width="200px" style="text-align:center">精简版</th>
   </tr>
   <tr>
-    <td rowspan='5' width="100px" style="text-align:center">群</td>
-	<td width="200px" style="text-align:center">创建群 销毁群 加群 退群</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
+    <td rowspan='2' style="text-align:center">apk 增量</td>
+    <td style="text-align:center">armeabi-v7a</td>
+    <td style="text-align:center">3.2 MB</td>
+    <td style="text-align:center">934 KB</td>
   </tr>
   <tr>
-    <td width="200px" style="text-align:center">群资料管理</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-  </tr>
-  </tr>
-  <tr>
-    <td width="200px" style="text-align:center">群成员管理</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
+    <td style="text-align:center">arm64-v8a</td>
+    <td style="text-align:center">5.2 MB</td>
+    <td style="text-align:center">1.4 MB</td>
   </tr>
   <tr>
-    <td width="200px" style="text-align:center">群申请列表</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
+    <td style="text-align:center">ipa 增量</td>
+    <td style="text-align:center">arm64</td>
+    <td style="text-align:center">2.1 MB</td>
+    <td style="text-align:center">908 KB</td>
+  </tr>
+</table>
+
+### 功能差异对比
+<table>
+  <tr>
+    <th width="200px" style="text-align:center">功能模块</th>
+    <th width="360px" style="text-align:center">功能项</th>
+    <th width="200px" style="text-align:center">标准版</th>
+    <th width="200px" style="text-align:center">精简版</th>
   </tr>
   <tr>
-    <td width="200px" style="text-align:center">群自定义属性</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
+    <td rowspan='2' style="text-align:center;">资料</td>
+    <td style="text-align:center">修改自己资料</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
-    <td rowspan='5' width="100px" style="text-align:center">消息</td>
-	<td width="200px" style="text-align:center">消息发送与接收</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
+    <td style="text-align:center">获取他人资料</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
-    <td width="200px" style="text-align:center">消息已读与回执</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
+    <td rowspan='5' style="text-align:center">群</td>
+    <td style="text-align:center">创建群 销毁群 加群 退群</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
-    <td width="200px" style="text-align:center">消息撤回</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td width="200px" style="text-align:center">消息多端同步</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td width="200px" style="text-align:center">获取历史消息列表</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td rowspan='1' width="100px" style="text-align:center">信令</td>
-	<td width="200px" style="text-align:center">信令发送与响应</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
+    <td style="text-align:center">群资料管理</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   </tr>
   <tr>
-    <td rowspan='2' width="100px" style="text-align:center">离线推送</td>
-	<td width="200px" style="text-align:center">Android 离线推送</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
+    <td style="text-align:center">群成员管理</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
-  	<td width="200px" style="text-align:center">iOS 离线推送</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-  <tr>
-    <td rowspan='5' width="100px" style="text-align:center">关系链</td>
-	<td width="200px" style="text-align:center">添加好友</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">-</tdh>
+    <td style="text-align:center">群申请列表</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
-  	<td width="200px" style="text-align:center">好友资料管理</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">-</td>
+    <td style="text-align:center">群自定义属性</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
-  	<td width="200px" style="text-align:center">好友申请列表</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">-</td>
+    <td rowspan='5' style="text-align:center">消息</td>
+    <td style="text-align:center">消息发送与接收</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
-  	<td width="200px" style="text-align:center">好友分组</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">-</td>
+    <td style="text-align:center">消息已读与回执</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
-  	<td width="200px" style="text-align:center">好友黑名单</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">-</td>
+    <td style="text-align:center">消息撤回</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
+  </tr>
+  <tr>
+    <td style="text-align:center">消息多端同步</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
+  </tr>
+  <tr>
+    <td style="text-align:center">获取历史消息列表</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
+  </tr>
+  <tr>
+    <td rowspan='1' style="text-align:center">信令</td>
+    <td style="text-align:center">信令发送与响应</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
+  </tr>
+  </tr>
+  <tr>
+    <td rowspan='2' style="text-align:center">离线推送</td>
+    <td style="text-align:center">Android 离线推送</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
+  </tr>
+  <tr>
+    <td style="text-align:center">iOS 离线推送</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">&#10003</td>
+  <tr>
+    <td rowspan='5' style="text-align:center">关系链</td>
+    <td style="text-align:center">添加好友</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">-</tdh>
+  </tr>
+  <tr>
+    <td style="text-align:center">好友资料管理</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">-</td>
+  </tr>
+  <tr>
+    <td style="text-align:center">好友申请列表</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">-</td>
+  </tr>
+  <tr>
+    <td style="text-align:center">好友分组</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">-</td>
+  </tr>
+  <tr>
+    <td style="text-align:center">好友黑名单</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">-</td>
   <tr>
   <tr>
     <td rowspan='4' width="100px" style="text-align:center">会话</td>
-	<td width="200px" style="text-align:center">获取会话列表</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">-</td>
+    <td style="text-align:center">获取会话列表</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">-</td>
   </tr>
   <tr>
-	<td width="200px" style="text-align:center">获取会话未读消息数</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">-</td>
+    <td style="text-align:center">获取会话未读消息数</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">-</td>
   </tr>
   <tr>
-	<td width="200px" style="text-align:center">会话管理</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">-</td>
+    <td style="text-align:center">会话管理</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">-</td>
   </tr>
   <tr>
-	<td width="200px" style="text-align:center">设置会话草稿</td>
-    <td width="100px" style="text-align:center">&#10003</td>
-    <td width="100px" style="text-align:center">-</td>
+    <td style="text-align:center">设置会话草稿</td>
+    <td style="text-align:center">&#10003</td>
+    <td style="text-align:center">-</td>
   </tr>
 </table>
 
