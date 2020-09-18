@@ -64,7 +64,6 @@ public class ProfileFragment extends BaseFragment {
 
                                     private void logout() {
                                         BaseActivity.logout(DemoApplication.instance());
-                                        TUIKit.unInit();
                                         if (getActivity() != null) {
                                             getActivity().finish();
                                         }

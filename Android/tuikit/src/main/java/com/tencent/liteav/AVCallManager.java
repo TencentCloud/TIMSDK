@@ -145,7 +145,9 @@ public class AVCallManager {
     }
 
     public void unInit() {
-        mITRTCAVCall.removeListener(mTRTCAVCallListener);
+        if (mITRTCAVCall != null) {
+            mITRTCAVCall.removeListener(mTRTCAVCallListener);
+        }
         TRTCAVCallImpl.destroySharedInstance();
     }
 

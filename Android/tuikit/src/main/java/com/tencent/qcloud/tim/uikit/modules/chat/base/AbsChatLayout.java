@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tencent.imsdk.conversation.Conversation;
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMTextElem;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
@@ -27,6 +29,8 @@ import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageListAdapt
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
+
+import java.util.List;
 
 
 public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout {
@@ -286,6 +290,7 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
         }
         if (mAdapter != null) {
             mAdapter.setDataSource(provider);
+            getChatManager().setLastMessageInfo(mAdapter.getItemCount() > 0 ? mAdapter.getItem(1) : null);
         }
     }
 

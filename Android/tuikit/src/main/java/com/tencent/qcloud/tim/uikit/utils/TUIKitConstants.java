@@ -72,6 +72,9 @@ public class TUIKitConstants {
         public static final String LIMIT = "limit";
         public static final int TYPE_TEXT = 1;
         public static final int TYPE_LIST = 2;
+
+        public static final String USER_ID_SELECT = "user_id_select";
+        public static final String USER_NAMECARD_SELECT = "user_namecard_select";
     }
 
     public static class ProfileType {

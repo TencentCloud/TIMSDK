@@ -12,9 +12,12 @@ import android.widget.TextView;
 
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tim.uikit.component.indexlib.IndexBar.widget.IndexBar;
 import com.tencent.qcloud.tim.uikit.component.indexlib.suspension.SuspensionDecoration;
@@ -129,6 +132,9 @@ public class ContactListView extends LinearLayout {
                 mData.add((ContactItemBean) new ContactItemBean(getResources().getString(R.string.blacklist)).
                         setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
                 loadFriendListDataAsync();
+                break;
+            case DataSource.GROUP_MEMBER_LIST:
+                loadGroupMembers();
                 break;
             default:
                 break;
@@ -311,6 +317,33 @@ public class ContactListView extends LinearLayout {
         });
     }
 
+    private void loadGroupMembers() {
+        V2TIMManager.getGroupManager().getGroupMemberList(mGroupInfo.getId(), V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL, 0, new V2TIMValueCallback<V2TIMGroupMemberInfoResult>() {
+            @Override
+            public void onError(int code, String desc) {
+                TUIKitLog.e(TAG, "loadGroupMembers failed, code: " + code + "|desc: " + desc);
+            }
+
+            @Override
+            public void onSuccess(V2TIMGroupMemberInfoResult v2TIMGroupMemberInfoResult) {
+                List<V2TIMGroupMemberFullInfo> members = new ArrayList<>();
+                for (int i = 0; i < v2TIMGroupMemberInfoResult.getMemberInfoList().size(); i++) {
+                    //remove self
+                    if (v2TIMGroupMemberInfoResult.getMemberInfoList().get(i).getUserID().equals(V2TIMManager.getInstance().getLoginUser())){
+                        continue;
+                    }
+                    members.add(v2TIMGroupMemberInfoResult.getMemberInfoList().get(i));
+                }
+                mData.clear();
+                for (V2TIMGroupMemberFullInfo info : members) {
+                    ContactItemBean bean = new ContactItemBean();
+                    mData.add(bean.covertTIMGroupMemberFullInfo(info));
+                }
+                setDataSource(mData);
+            }
+        });
+    }
+
     public List<ContactItemBean> getGroupData() {
         return mData;
     }
@@ -329,5 +362,6 @@ public class ContactListView extends LinearLayout {
         public static final int BLACK_LIST = 2;
         public static final int GROUP_LIST = 3;
         public static final int CONTACT_LIST = 4;
+        public static final int GROUP_MEMBER_LIST = 5;
     }
 }

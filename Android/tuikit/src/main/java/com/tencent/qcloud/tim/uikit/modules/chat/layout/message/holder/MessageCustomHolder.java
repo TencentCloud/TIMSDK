@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -40,7 +41,17 @@ public class MessageCustomHolder extends MessageContentHolder implements ICustom
 
     @Override
     public void layoutVariableViews(MessageInfo msg, int position) {
+
+        // 因为recycleview的复用性，可能该holder回收后继续被custom类型的item复用
+        // 但是因为addMessageContentView破坏了msgContentFrame的view结构，所以会造成items的显示错乱。
+        // 这里我们重新添加一下msgBodyText
+        msgContentFrame.removeAllViews();
+        if (msgBodyText.getParent() != null) {
+            ((ViewGroup)msgBodyText.getParent()).removeView(msgBodyText);
+        }
+        msgContentFrame.addView(msgBodyText);
         msgBodyText.setVisibility(View.VISIBLE);
+
         if (msg.getExtra() != null) {
             if (TextUtils.equals("[自定义消息]", msg.getExtra().toString())) {
                 msgBodyText.setText(Html.fromHtml(TUIKitConstants.covert2HTMLString("[不支持的自定义消息]")));

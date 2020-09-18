@@ -24,6 +24,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected TextView messageText;
     protected TextView timelineText;
     protected TextView unreadText;
+    protected TextView atInfoText;
 
     public ConversationCommonHolder(View itemView) {
         super(itemView);
@@ -33,6 +34,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         messageText = rootView.findViewById(R.id.conversation_last_msg);
         timelineText = rootView.findViewById(R.id.conversation_time);
         unreadText = rootView.findViewById(R.id.conversation_unread);
+        atInfoText = rootView.findViewById(R.id.conversation_at_msg);
     }
 
     public void layoutViews(ConversationInfo conversation, int position) {
@@ -77,6 +79,14 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             }
         } else {
             unreadText.setVisibility(View.GONE);
+        }
+
+        if (conversation.getAtInfoText().isEmpty()){
+            atInfoText.setVisibility(View.GONE);
+        } else {
+            atInfoText.setVisibility(View.VISIBLE);
+            atInfoText.setText(conversation.getAtInfoText());
+            atInfoText.setTextColor(Color.RED);
         }
 
         conversationIconView.setRadius(mAdapter.getItemAvatarRadius());

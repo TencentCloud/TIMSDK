@@ -22,6 +22,10 @@
             android:name=".modules.group.info.GroupInfoActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".modules.group.info.StartGroupMemberSelectActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".component.SelectionActivity"
             android:screenOrientation="portrait" />
         <activity
