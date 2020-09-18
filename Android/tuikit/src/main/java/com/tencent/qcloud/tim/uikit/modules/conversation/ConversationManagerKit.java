@@ -3,10 +3,13 @@ package com.tencent.qcloud.tim.uikit.modules.conversation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.tencent.imsdk.TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
+import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -192,6 +195,23 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
             info.setLastMessage(list.get(list.size() - 1));
         }
 
+        int atInfoType = getAtInfoType(conversation);
+        switch (atInfoType){
+            case V2TIMGroupAtInfo.TIM_AT_ME:
+                info.setAtInfoText("[有人@我]");
+                break;
+            case V2TIMGroupAtInfo.TIM_AT_ALL:
+                info.setAtInfoText("[@所有人]");
+                break;
+            case V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME:
+                info.setAtInfoText("[有人@我][@所有人]");
+                break;
+            default:
+                info.setAtInfoText("");
+                break;
+
+        }
+
         info.setTitle(conversation.getShowName());
         if (isGroup) {
             fillConversationUrlForGroup(conversation, info);
@@ -215,6 +235,40 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
         return info;
     }
 
+    private int getAtInfoType(V2TIMConversation conversation){
+        int atInfoType = -1;
+        boolean atMe = false;
+        boolean atAll = false;
+
+        List<V2TIMGroupAtInfo> atInfoList = conversation.getGroupAtInfoList();
+
+        if (atInfoList == null || atInfoList.isEmpty()){
+            return V2TIMGroupAtInfo.TIM_AT_UNKNOWN;
+        }
+
+        for(V2TIMGroupAtInfo atInfo : atInfoList){
+            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ME){
+                atMe = true;
+                continue;
+            }
+            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ALL){
+                atAll = true;
+                continue;
+            }
+        }
+
+        if (atAll && atMe){
+            atInfoType = V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME;
+        } else if (atAll){
+            atInfoType = V2TIMGroupAtInfo.TIM_AT_ALL;
+        } else if (atMe){
+            atInfoType = V2TIMGroupAtInfo.TIM_AT_ME;
+        } else {
+            atInfoType = V2TIMGroupAtInfo.TIM_AT_UNKNOWN;
+        }
+
+        return atInfoType;
+    }
     private void fillConversationUrlForGroup(final V2TIMConversation conversation, final ConversationInfo info) {
         if (TextUtils.isEmpty(conversation.getFaceUrl())) {
             final String savedIcon = getGroupConversationAvatar(conversation.getConversationID());

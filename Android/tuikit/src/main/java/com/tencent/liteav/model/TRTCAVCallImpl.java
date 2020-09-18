@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.v2.V2TIMCallback;
@@ -27,6 +28,8 @@ import com.tencent.rtmp.ui.TXCloudVideoView;
 import com.tencent.trtc.TRTCCloud;
 import com.tencent.trtc.TRTCCloudDef;
 import com.tencent.trtc.TRTCCloudListener;
+
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -139,17 +142,29 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
     private V2TIMSignalingListener mTIMSignallingListener = new V2TIMSignalingListener() {
         @Override
         public void onReceiveNewInvitation(String inviteID, String inviter, String groupID, List<String> inviteeList, String data) {
+            if (!isCallingData(data)) {
+                return;
+            }
+
             processInvite(inviteID, inviter, groupID, inviteeList, data);
         }
 
         @Override
         public void onInviteeAccepted(String inviteID, String invitee, String data) {
             TUIKitLog.d(TAG, "onInviteeAccepted inviteID:" + inviteID + ", invitee:" + invitee);
+            if (!isCallingData(data)) {
+                return;
+            }
+
             mCurInvitedList.remove(invitee);
         }
 
         @Override
         public void onInviteeRejected(String inviteID, String invitee, String data) {
+            if (!isCallingData(data)) {
+                return;
+            }
+
             if (mCurCallID.equals(inviteID)) {
                 try {
                     Map rejectData = new Gson().fromJson(data, Map.class);
@@ -172,6 +187,10 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
 
         @Override
         public void onInvitationCancelled(String inviteID, String inviter, String data) {
+            if (!isCallingData(data)) {
+                return;
+            }
+
             if (mCurCallID.equals(inviteID)) {
                 stopCall();
                 if (mTRTCInteralListenerManager != null) {
@@ -182,6 +201,10 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
 
         @Override
         public void onInvitationTimeout(String inviteID, List<String> inviteeList) {
+            if (inviteID != null && !inviteID.equals(mCurCallID)) {
+                return;
+            }
+
             if (TextUtils.isEmpty(mCurSponsorForMe)) {
                 // 邀请者
                 for (String userID : inviteeList) {
@@ -204,6 +227,19 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
             preExitRoom(null);
         }
     };
+
+    private boolean isCallingData(String data){
+        try{
+            JSONObject jsonObject = new JSONObject(data);
+            if (jsonObject.has(CallModel.SIGNALING_EXTRA_KEY_CALL_TYPE)) {
+                return true;
+            }
+        } catch (Exception e) {
+            TUIKitLog.e(TAG, "isCallingData json parse error");
+        }
+
+        return false;
+    }
 
     public void processInvite(String inviteID, String inviter, String groupID, List<String> inviteeList, String data) {
         // 收到来电，开始监听 trtc 的消息
@@ -463,7 +499,10 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
         mSdkAppId = sdkAppId;
         //1. 未初始化 IM 先初始化 IM
         if (!TIMManager.getInstance().isInited()) {
-            throw new IllegalStateException();
+            if (callback != null) {
+                callback.onError(BaseConstants.ERR_SDK_NOT_INITIALIZED,"not init im");
+            }
+            return;
         }
         //2. 需要将监听器添加到IM上
         V2TIMManager.getSignalingManager().addSignalingListener(mTIMSignallingListener);
@@ -476,9 +515,11 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
             if (callback != null) {
                 callback.onSuccess();
             }
-            return;
+        } else {
+            if (callback != null) {
+                callback.onError(BaseConstants.ERR_SDK_NOT_LOGGED_IN,"not login im");
+            }
         }
-        throw new IllegalStateException();
     }
 
     @Override
@@ -782,6 +823,7 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
         v2TIMOfflinePushInfo.setTitle(nickname);
         MessageCustom custom = new MessageCustom();
         custom.businessID = MessageCustom.BUSINESS_ID_AV_CALL;
+        custom.version = TUIKitConstants.version;
         V2TIMMessage message = V2TIMManager.getMessageManager().createCustomMessage(new Gson().toJson(custom).getBytes());
 
         for (String receiver: invitedList) {

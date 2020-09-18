@@ -1,12 +1,21 @@
 package com.tencent.qcloud.tim.uikit.utils;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 
 public class SharedPreferenceUtils {
@@ -143,7 +152,9 @@ public class SharedPreferenceUtils {
                     }
                     break;
                 default:
-                    Gson gson = new Gson();
+                    Gson gson = new GsonBuilder()
+                            .registerTypeAdapter(Uri.class, new UriSerializer())
+                            .create();
                     for (int i = 0; i < list.size(); i++) {
                         JsonElement obj = gson.toJsonTree(list.get(i));
                         array.add(obj);
@@ -170,13 +181,29 @@ public class SharedPreferenceUtils {
         LinkedList<T> list = new LinkedList<>();
         String json = sp.getString(key, "");
         if (!json.equals("") && json.length() > 0) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Uri.class, new UriSerializer())
+                    .create();
             JsonArray array = new JsonParser().parse(json).getAsJsonArray();
             for (JsonElement elem : array) {
                 list.add(gson.fromJson(elem, cls));
             }
         }
         return list;
+    }
+
+
+    public static class UriSerializer implements JsonSerializer<Uri>, JsonDeserializer<Uri> {
+        @Override
+        public JsonElement serialize(Uri src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.toString());
+        }
+
+        @Override
+        public Uri deserialize(final JsonElement src, final Type srcType,
+                               final JsonDeserializationContext context) throws JsonParseException {
+            return Uri.parse(src.getAsString());
+        }
     }
 
 }

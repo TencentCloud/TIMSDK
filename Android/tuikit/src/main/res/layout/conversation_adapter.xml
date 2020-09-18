@@ -42,15 +42,30 @@
                 android:textColor="@color/conversation_time_color"
                 android:textSize="11.14sp" />
 
+
             <TextView
-                android:id="@+id/conversation_last_msg"
+                android:id="@+id/conversation_at_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginBottom="15.54dp"
+                android:layout_above="@+id/view_line"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/list_bottom_text_bg"
+                android:textSize="12.86sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/conversation_last_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_marginRight="48dp"
                 android:layout_marginBottom="15.54dp"
                 android:layout_above="@+id/view_line"
+                android:layout_toRightOf="@+id/conversation_at_msg"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@color/list_bottom_text_bg"

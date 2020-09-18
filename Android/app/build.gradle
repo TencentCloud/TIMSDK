@@ -83,6 +83,6 @@ dependencies {
 
     api 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
 
-implementation 'com.tencent.imsdk:tuikit:4.9.1'
+implementation 'com.tencent.imsdk:tuikit:5.0.6'
 // implementation project(':tuikit')
 }

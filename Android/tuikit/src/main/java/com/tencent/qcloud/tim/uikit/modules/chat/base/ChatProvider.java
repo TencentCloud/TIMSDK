@@ -178,6 +178,8 @@ public class ChatProvider implements IChatProvider {
             MessageInfo messageInfo = mDataSource.get(i);
             if (messageInfo.getMsgTime() > max.getTimestamp()) {
                 messageInfo.setPeerRead(false);
+            } else if (messageInfo.isPeerRead()) {
+                // do nothing
             } else {
                 messageInfo.setPeerRead(true);
                 updateAdapter(MessageLayout.DATA_CHANGE_TYPE_UPDATE, i);

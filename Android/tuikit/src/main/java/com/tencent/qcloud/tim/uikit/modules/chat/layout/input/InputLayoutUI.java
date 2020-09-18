@@ -64,7 +64,7 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     /**
      * 文本输入框
      */
-    protected EditText mTextInput;
+    protected TIMMentionEditText mTextInput;
 
     protected Activity mActivity;
     protected View mInputMoreLayout;

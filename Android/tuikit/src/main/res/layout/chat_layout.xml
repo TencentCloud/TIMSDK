@@ -35,11 +35,23 @@
         android:id="@+id/chat_message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/chat_input_layout"
         android:layout_below="@+id/chat_notice_layout"
+        android:layout_above="@id/chat_at_text_view"
         android:baselineAligned="false"
         android:clickable="false"
         android:descendantFocusability="blocksDescendants" />
+
+    <TextView
+        android:id="@+id/chat_at_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:text="有人@我"
+        android:visibility="gone"
+        android:layout_above="@+id/chat_input_layout"
+        android:textColor="@color/read_dot_bg"
+        android:background="@color/list_bottom_text_bg"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/btn_margin_right"/>
 
 
     <com.tencent.qcloud.tim.uikit.modules.chat.layout.input.InputLayout

@@ -1,5 +1,8 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.interfaces;
 
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.tencent.qcloud.tim.uikit.base.ILayout;
 import com.tencent.qcloud.tim.uikit.component.NoticeLayout;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
@@ -74,4 +77,6 @@ public interface IChatLayout extends ILayout {
      * @param retry 是否重试
      */
     void sendMessage(MessageInfo msg, boolean retry);
+
+    TextView getAtInfoLayout();
 }

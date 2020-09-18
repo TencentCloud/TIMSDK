@@ -26,7 +26,7 @@
             android:scaleType="fitXY"
             android:src="@drawable/action_audio_selector" />
 
-        <EditText
+        <com.tencent.qcloud.tim.uikit.modules.chat.layout.input.TIMMentionEditText
             android:id="@+id/chat_message_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

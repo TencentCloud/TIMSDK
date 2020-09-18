@@ -63,24 +63,63 @@ public class ConfigHelper {
 //        groupFaces.add(faceConfigs);
 
         CustomFaceConfig config = new CustomFaceConfig();
-        CustomFaceGroup faceConfigs = new CustomFaceGroup();
-        faceConfigs.setPageColumnCount(5);
-        faceConfigs.setPageRowCount(2);
-        faceConfigs.setFaceGroupId(1);
-        faceConfigs.setFaceIconPath("4350/tt01@2x.png");
-        faceConfigs.setFaceIconName("4350");
+
+        CustomFaceGroup faceConfigs_1 = new CustomFaceGroup();
+        faceConfigs_1.setPageColumnCount(5);
+        faceConfigs_1.setPageRowCount(2);
+        faceConfigs_1.setFaceGroupId(1);
+        faceConfigs_1.setFaceIconPath("4350/yz00@2x.png");
+        faceConfigs_1.setFaceIconName("4350");
+        for (int i = 0; i <= 17; i++) {
+            CustomFace customFace = new CustomFace();
+            String index = "" + i;
+            if (i < 10)
+                index = "0" + i;
+            customFace.setAssetPath("4350/yz" + index + "@2x.png");
+            customFace.setFaceName("yz" + index + "@2x");
+            customFace.setFaceWidth(170);
+            customFace.setFaceHeight(170);
+            faceConfigs_1.addCustomFace(customFace);
+        }
+        config.addFaceGroup(faceConfigs_1);
+
+        CustomFaceGroup faceConfigs_2 = new CustomFaceGroup();
+        faceConfigs_2.setPageColumnCount(5);
+        faceConfigs_2.setPageRowCount(2);
+        faceConfigs_2.setFaceGroupId(2);
+        faceConfigs_2.setFaceIconPath("4351/ys00@2x.png");
+        faceConfigs_2.setFaceIconName("4351");
+        for (int i = 0; i <= 15; i++) {
+            CustomFace customFace = new CustomFace();
+            String index = "" + i;
+            if (i < 10)
+                index = "0" + i;
+            customFace.setAssetPath("4351/ys" + index + "@2x.png");
+            customFace.setFaceName("ys" + index + "@2x");
+            customFace.setFaceWidth(170);
+            customFace.setFaceHeight(170);
+            faceConfigs_2.addCustomFace(customFace);
+        }
+        config.addFaceGroup(faceConfigs_2);
+
+        CustomFaceGroup faceConfigs_3 = new CustomFaceGroup();
+        faceConfigs_3.setPageColumnCount(5);
+        faceConfigs_3.setPageRowCount(2);
+        faceConfigs_3.setFaceGroupId(3);
+        faceConfigs_3.setFaceIconPath("4352/gcs00@2x.png");
+        faceConfigs_3.setFaceIconName("4352");
         for (int i = 0; i <= 16; i++) {
             CustomFace customFace = new CustomFace();
             String index = "" + i;
             if (i < 10)
                 index = "0" + i;
-            customFace.setAssetPath("4350/tt" + index + "@2x.png");
-            customFace.setFaceName("tt" + index + "@2x");
+            customFace.setAssetPath("4352/gcs" + index + "@2x.png");
+            customFace.setFaceName("gcs" + index + "@2x");
             customFace.setFaceWidth(170);
             customFace.setFaceHeight(170);
-            faceConfigs.addCustomFace(customFace);
+            faceConfigs_3.addCustomFace(customFace);
         }
-        config.addFaceGroup(faceConfigs);
+        config.addFaceGroup(faceConfigs_3);
 
         return config;
     }

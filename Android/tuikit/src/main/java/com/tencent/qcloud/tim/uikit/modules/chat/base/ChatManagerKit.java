@@ -37,6 +37,8 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
     protected boolean mIsMore;
     private boolean mIsLoading;
 
+    private MessageInfo mLastMessageInfo;
+
     protected void init() {
         destroyChat();
         V2TIMManager.getMessageManager().addAdvancedMsgListener(this);
@@ -195,14 +197,27 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         // GroupChatManagerKit会重写该方法
     }
 
-    public void deleteMessage(int position, MessageInfo messageInfo) {
+    public void deleteMessage(final int position, MessageInfo messageInfo) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "deleteMessage unSafetyCall");
             return;
         }
-        if (messageInfo.remove()) {
-            mCurrentProvider.remove(position);
-        }
+        List<V2TIMMessage> msgs = new ArrayList<>();
+        msgs.add(mCurrentProvider.getDataSource().get(position).getTimMessage());
+        V2TIMManager.getMessageManager().deleteMessages(msgs, new V2TIMCallback(){
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIKitLog.w(TAG, "deleteMessages code:" + code + "|desc:" + desc);
+            }
+
+            @Override
+            public void onSuccess() {
+                TUIKitLog.i(TAG, "deleteMessages success");
+                mCurrentProvider.remove(position);
+                ConversationManagerKit.getInstance().loadConversation(null);
+            }
+        });
     }
 
     public void revokeMessage(final int position, final MessageInfo messageInfo) {
@@ -302,6 +317,7 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
                             callBack.onSuccess(mCurrentProvider);
                         }
                         message.setStatus(MessageInfo.MSG_STATUS_SEND_SUCCESS);
+                        message.setMsgTime(v2TIMMessage.getTimestamp());
                         mCurrentProvider.updateMessageInfo(message);
                     }
                 });
@@ -321,6 +337,27 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
 
     protected void assembleGroupMessage(MessageInfo message) {
         // GroupChatManager会重写该方法
+    }
+
+    public void getAtInfoChatMessages(long atInfoMsgSeq, V2TIMMessage lastMessage, final IUIKitCallBack callBack){
+        final ChatInfo chatInfo = getCurrentChatInfo();
+        if (atInfoMsgSeq == -1 ||  lastMessage == null || lastMessage.getSeq() <= atInfoMsgSeq){
+            return;
+        }
+        if (chatInfo.getType() == V2TIMConversation.V2TIM_GROUP) {
+            V2TIMManager.getMessageManager().getGroupHistoryMessageList(chatInfo.getId(),
+                    (int)(lastMessage.getSeq() - atInfoMsgSeq), lastMessage, new V2TIMValueCallback<List<V2TIMMessage>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    TUIKitLog.e(TAG, "loadChatMessages getGroupHistoryMessageList failed, code = " + code + ", desc = " + desc);
+                }
+
+                @Override
+                public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                    processHistoryMsgs(v2TIMMessages, chatInfo, callBack);
+                }
+            });
+        }
     }
 
     public void loadChatMessages(MessageInfo lastMessage, final IUIKitCallBack callBack) {
@@ -444,5 +481,13 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
             return false;
         }
         return true;
+    }
+
+    public void setLastMessageInfo(MessageInfo mLastMessageInfo) {
+        this.mLastMessageInfo = mLastMessageInfo;
+    }
+
+    public MessageInfo getLastMessageInfo() {
+        return mLastMessageInfo;
     }
 }
