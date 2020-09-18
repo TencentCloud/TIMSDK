@@ -2,5 +2,5 @@
 
 ## 下载地址
 
-[最新C接口下载](https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/4.9.1/cross-platform/TIM_Cross_Platform_Android_latest.zip)
+[最新C接口下载](https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/5.0.6/cross-platform/TIM_Cross_Platform_Android_latest.zip)
 

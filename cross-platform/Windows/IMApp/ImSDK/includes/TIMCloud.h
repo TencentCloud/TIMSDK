@@ -305,6 +305,8 @@ TIM_DECL const char* const TIMGetSDKVersion(void);
 * Json::Value json_http_proxy;
 * json_http_proxy[kTIMHttpProxyInfoIp] = "http://http-proxy.xxxxx.com";
 * json_http_proxy[kTIMHttpProxyInfoPort] = 8888;
+* json_http_proxy[kTIMHttpProxyInfoUserName] = "User-01";
+* json_http_proxy[kTIMHttpProxyInfoPassword] = "123456";
 * Json::Value json_config;
 * json_config[kTIMSetConfigHttpProxyInfo] = json_http_proxy;
 *
@@ -318,6 +320,8 @@ TIM_DECL const char* const TIMGetSDKVersion(void);
 * Json::Value json_http_proxy;
 * json_http_proxy[kTIMHttpProxyInfoIp] = "";
 * json_http_proxy[kTIMHttpProxyInfoPort] = 0;
+* json_http_proxy[kTIMHttpProxyInfoUserName] = "";
+* json_http_proxy[kTIMHttpProxyInfoPassword] = "";
 * Json::Value json_config;
 * json_config[kTIMSetConfigHttpProxyInfo] = json_http_proxy;
 *
@@ -356,7 +360,7 @@ TIM_DECL const char* const TIMGetSDKVersion(void);
 * }, this)) {
 *     //TIMSetConfig接口调用失败
 * }
-* 
+*
 * @note
 * json_config 可以填 NULL 空字符串指针或者""空字符串，此时若回调cb不为空，则通过回调cb，返回当前所有的配置信息。
 * 目前支持设置的配置有http代理的IP和端口、socks5代理的IP和端口、输出日志的级别、获取群信息/群成员信息的默认选项、是否接受消息已读回执事件等。
@@ -791,7 +795,7 @@ TIM_DECL int TIMMsgSaveMsg(const char* conv_id, enum TIMConvType conv_type, cons
 TIM_DECL int TIMMsgGetMsgList(const char* conv_id, enum TIMConvType conv_type, const char* json_get_msg_param, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 删除指定会话的消息
+* @brief 删除指定会话的本地消息
 *
 * @param conv_id   会话的ID
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
@@ -817,10 +821,62 @@ TIM_DECL int TIMMsgGetMsgList(const char* conv_id, enum TIMConvType conv_type, c
 *
 * @note 
 * > 当设置 kTIMMsgDeleteParamMsg 时，在会话中删除指定本地消息
-* > 当未设置 kTIMMsgDeleteParamMsg 时， kTIMMsgDeleteParamIsRamble 为false表示删除会话所有本地消息，true 表示删除会话所有漫游消息(删除漫游消息暂时不支持)
+* > 当未设置 kTIMMsgDeleteParamMsg 时， kTIMMsgDeleteParamIsRamble 为false表示删除会话所有本地消息，true 已不生效。如果要删除漫游消息，请使用[TIMMsgListDelete](TIMCloud.h)
 * > 一般直接使用保存的消息Json，或者通过消息定位符查找得到的Json。不用删除的时候构造消息Json
 */
 TIM_DECL int TIMMsgDelete(const char* conv_id, enum TIMConvType conv_type, const char* json_msgdel_param, TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief 删除指定会话的本地及漫游消息
+*
+* @param conv_id   会话的ID
+* @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
+* @param json_msg_array  消息数组
+* @param cb 删除消息成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+*
+* @example
+* Json::Value json_value_elem; //构造消息文本元素
+* json_value_elem[kTIMElemType] = TIMElemType::kTIMElem_Text;
+* json_value_elem[kTIMTextElemContent] = "this is import msg";
+*
+* Json::Value json_value_msg; //构造消息
+* json_value_msg[kTIMMsgSender] = login_id;
+* json_value_msg[kTIMMsgClientTime] = time(NULL);
+* json_value_msg[kTIMMsgServerTime] = time(NULL);
+* json_value_msg[kTIMMsgElemArray].append(json_value_elem);
+*
+* Json::Value json_value_msgs;  //消息数组
+* json_value_msgs.append(json_value_msg);
+*
+* TIMMsgListDelete("user2", kTIMConv_C2C, json_value_msgs.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
+*
+* }, nullptr);
+*
+* // json_value_msgs.toStyledString().c_str() 得到json_msg_array JSON 字符串如下
+* [
+*    {
+*       "message_client_time" : 1551446728,
+*       "message_elem_array" : [
+*          {
+*             "elem_type" : 0,
+*             "text_elem_content" : "I will be deleted"
+*          }
+*       ],
+*       "message_sender" : "user1",
+*       "message_server_time" : 1551446728
+*    }
+* ]
+*
+* @note
+* 本接口会在删除本地消息的同时也会删除漫游消息。需要注意以下几点：
+* > 建议将之前的消息数组Json保存，然后删除的时候直接调用接口，避免构造消息数组。
+* > 一次最多只能删除 30 条消息。
+* > 一秒钟最多只能调用一次该接口。
+* > 如果该账号在其他设备上拉取过这些消息，那么调用该接口删除后，这些消息仍然会保存在那些设备上，即删除消息不支持多端同步。
+*/
+TIM_DECL int TIMMsgListDelete(const char* conv_id, enum TIMConvType conv_type, const char* json_msg_array, TIMCommCallback cb, const void* user_data);
 
 /**
 * @brief 下载消息内元素到指定文件路径(图片、视频、音频、文件)
