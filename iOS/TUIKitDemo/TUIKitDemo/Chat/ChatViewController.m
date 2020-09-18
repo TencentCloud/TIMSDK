@@ -223,7 +223,7 @@
         MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:MsgDirectionOutgoing];
         cellData.text = text;
         cellData.link = link;
-        cellData.innerMessage = [[V2TIMManager sharedInstance] createCustomMessage:[TCUtil dictionary2JsonData:@{@"version": @(Version),@"businessID": @"text_link",@"text":text,@"link":link}]];
+        cellData.innerMessage = [[V2TIMManager sharedInstance] createCustomMessage:[TCUtil dictionary2JsonData:@{@"version": @(TextLink_Version),@"businessID": TextLink,@"text":text,@"link":link}]];
         [chatController sendMessage:cellData];
     }
 }
@@ -235,17 +235,23 @@
         if (param != nil) {
             NSInteger version = [param[@"version"] integerValue];
             NSString *businessID = param[@"businessID"];
-            if (version == Version && [businessID isEqualToString:@"text_link"]) {
-                MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
-                cellData.innerMessage = msg;
-                cellData.msgID = msg.msgID;
-                cellData.text = param[@"text"];
-                cellData.link = param[@"link"];
-                cellData.avatarUrl = [NSURL URLWithString:msg.faceURL];
-                return cellData;
+            NSString *text = param[@"text"];
+            NSString *link = param[@"link"];
+            if (text.length == 0 || link.length == 0) {
+                return nil;
             }
-            // 兼容下老版本
-            if ([param.allKeys containsObject:@"link"] && [param.allKeys containsObject:@"text"]) {
+            if ([businessID isEqualToString:TextLink]) {
+                if (version <= TextLink_Version) {
+                    MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
+                    cellData.innerMessage = msg;
+                    cellData.msgID = msg.msgID;
+                    cellData.text = param[@"text"];
+                    cellData.link = param[@"link"];
+                    cellData.avatarUrl = [NSURL URLWithString:msg.faceURL];
+                    return cellData;
+                }
+            } else {
+                // 兼容下老版本
                 MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
                 cellData.innerMessage = msg;
                 cellData.msgID = msg.msgID;
