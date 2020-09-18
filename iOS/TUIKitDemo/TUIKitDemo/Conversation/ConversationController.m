@@ -28,7 +28,7 @@
 #import "TIMUserProfile+DataProvider.h"
 #import <ImSDK/ImSDK.h>
 
-@interface ConversationController () <TUIConversationListControllerDelegagte, TPopViewDelegate>
+@interface ConversationController () <TUIConversationListControllerDelegate, TPopViewDelegate>
 @property (nonatomic, strong) TNaviBarIndicatorView *titleView;
 @end
 
@@ -271,7 +271,7 @@
             } else {
                 content = @"创建群组";
             }
-            NSDictionary *dic = @{@"version": @(Version),@"businessID": @"group_create",@"opUser":showName,@"content":@"创建群组"};
+            NSDictionary *dic = @{@"version": @(GroupCreate_Version),@"businessID": GroupCreate,@"opUser":showName,@"content":@"创建群组"};
             NSData *data= [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
             V2TIMMessage *msg = [[V2TIMManager sharedInstance] createCustomMessage:data];
             [[V2TIMManager sharedInstance] sendMessage:msg receiver:nil groupID:groupID priority:V2TIM_PRIORITY_DEFAULT onlineUserOnly:NO offlinePushInfo:nil progress:nil succ:nil fail:nil];
