@@ -1,0 +1,6 @@
+module Toast {
+  umbrella header "Toast-umbrella.h"
+
+  export *
+  module * { export * }
+}

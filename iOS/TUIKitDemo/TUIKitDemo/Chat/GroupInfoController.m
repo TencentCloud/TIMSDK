@@ -21,7 +21,7 @@
 #import "Toast/Toast.h"
 #import "THelper.h"
 #import <ImSDK/ImSDK.h>
-
+#import "UIColor+TUIDarkMode.h"
 @interface GroupInfoController () <TGroupInfoControllerDelegate>
 
 @end
@@ -33,8 +33,10 @@
     TUIGroupInfoController *info = [[TUIGroupInfoController alloc] init];
     info.groupId = _groupId;
     info.delegate = self;
+    info.view.frame = self.view.bounds;
     [self addChildViewController:info];
     [self.view addSubview:info.view];
+    self.view.backgroundColor = [UIColor d_systemBlackColor];
     self.title = @"详细资料";
 }
 
