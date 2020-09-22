@@ -78,6 +78,7 @@
 
 ## 标准版与精简版差异对照表
 精简版目前支持 Android 和 iOS 两个平台，后续会逐步增加对 Windows 和 Mac 平台的支持。下面以 Android 和 iOS 平台下的 SDK 为主，对比一下标准版和精简版的差异。
+
 ### SDK 体积大小对比
 <table>
   <tr>
@@ -265,6 +266,44 @@
   </tr>
 </table>
 
+### 集成方式对比
+#### jcenter 集成 (Android 平台)
+如果使用标准版 SDK，请在 gradle 里添加如下依赖
+```
+dependencies {
+  api 'com.tencent.imsdk:imsdk:版本号'
+}
+```
+如果使用精简版 SDK，请在 gradle 里添加如下依赖
+```
+dependencies {
+  api 'com.tencent.imsdk:imsdk-smart:版本号'
+}
+```
+
+#### cocoaPods 集成 (iOS 平台)
+如果使用标准版 SDK，请您按照如下方式设置 Podfile 文件
+
+```
+platform :ios, '8.0'
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'App' do
+pod 'TXIMSDK_iOS'
+end
+```
+
+如果使用精简版 SDK，请您按照如下方式设置 Podfile 文件
+```
+platform :ios, '8.0'
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'App' do
+pod 'TXIMSDK_Smart_iOS'
+end
+```
+
+更多集成方式请参考 <a href="https://cloud.tencent.com/document/product/269/32673">集成 SDK</a>
 
 ## 标准版 5.0.6 @2020.09.18
 
@@ -322,7 +361,7 @@
 - 修复 AVCallManager、TRTCAVCallImpl 偶现 Crash 的问题
 - 增加新表情包
 
-## 精简版 5.0.105 @2020.09.18
+## 精简版 5.0.106 @2020.09.21
 
 ### SDK
 
