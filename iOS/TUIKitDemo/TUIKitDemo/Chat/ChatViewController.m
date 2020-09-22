@@ -286,10 +286,16 @@
 }
 
 - (void) onChangeUnReadCount:(NSNotification *)notifi{
-    NSInteger count = [notifi.object integerValue];
-    [_unRead setNum:MAX(0, count - self.conversationData.unreadCount)];
+    NSMutableArray *convList = (NSMutableArray *)notifi.object;
+    int unReadCount = 0;
+    for (V2TIMConversation *conv in convList) {
+        // 忽略当前会话的未读数
+        if (![conv.conversationID isEqual:self.conversationData.conversationID]) {
+            unReadCount += conv.unreadCount;
+        }
+    }
+    [_unRead setNum:unReadCount];
 }
-
 ///此处可以修改导航栏按钮的显示位置，但是无法修改响应位置，暂时不建议使用
 - (void)resetBarItemSpacesWithController:(UIViewController *)viewController {
     CGFloat space = 16;
