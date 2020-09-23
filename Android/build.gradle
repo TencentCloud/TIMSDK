@@ -3,7 +3,6 @@
 buildscript {
 
     repositories {
-        maven { url "https://mirrors.tencent.com/repository/maven/tencent_public"}
         google()
         jcenter()
         maven {url 'http://developer.huawei.com/repo/'}
@@ -21,7 +20,6 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url "https://mirrors.tencent.com/repository/maven/tencent_public"}
         google()
         jcenter()
         maven {url 'http://developer.huawei.com/repo/'}
