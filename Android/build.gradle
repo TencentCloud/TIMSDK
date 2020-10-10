@@ -38,7 +38,7 @@ subprojects {
 
 ext {
     compileSdkVersion = 28
-    minSdkVersion = 19
+    minSdkVersion = 21
     targetSdkVersion = 28
     versionCode = 1
 versionName = "5.0.6"
