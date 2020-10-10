@@ -49,7 +49,7 @@ public abstract class MessageLayoutUI extends RecyclerView implements IMessageLa
         setItemViewCacheSize(0);
         setHasFixedSize(true);
         setFocusableInTouchMode(false);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearLayoutManager = new CustomLinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         setLayoutManager(linearLayoutManager);
     }
