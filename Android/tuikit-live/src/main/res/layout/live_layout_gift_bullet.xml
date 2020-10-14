@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <RelativeLayout
+        android:id="@+id/gift_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/live_gift_bullet_bg">
+
+        <com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView
+            android:id="@+id/iv_send_user_icon"
+            android:layout_width="39dp"
+            android:layout_height="39dp"
+            android:layout_margin="3dp"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true" />
+
+        <RelativeLayout
+            android:id="@+id/gift_text_group"
+            android:layout_toRightOf="@id/iv_send_user_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_send_user_name"
+                android:maxLines="1"
+                android:maxWidth="@dimen/live_text_max_show_width"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/live_gift_white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_gift_title"
+                android:maxLines="1"
+                android:maxWidth="@dimen/live_text_max_show_width"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/tv_send_user_name"
+                android:layout_below="@id/tv_send_user_name"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:textColor="@color/live_gift_white"
+                android:textSize="11sp" />
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_gift_icon"
+            android:layout_width="39dp"
+            android:layout_height="39dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/gift_text_group" />
+    </RelativeLayout>
+
+
+</FrameLayout>

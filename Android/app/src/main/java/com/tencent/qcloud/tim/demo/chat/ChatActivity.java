@@ -72,7 +72,7 @@ public class ChatActivity extends BaseActivity {
         if (V2TIMManager.getInstance().getLoginStatus() == V2TIM_STATUS_LOGINED) {
             mChatFragment = new ChatFragment();
             mChatFragment.setArguments(bundle);
-            getFragmentManager().beginTransaction().replace(R.id.empty_view, mChatFragment).commitAllowingStateLoss();
+            getSupportFragmentManager().beginTransaction().replace(R.id.empty_view, mChatFragment).commitAllowingStateLoss();
         } else {
             startSplashActivity(bundle);
         }

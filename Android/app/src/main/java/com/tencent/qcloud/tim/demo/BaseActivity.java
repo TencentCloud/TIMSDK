@@ -1,18 +1,19 @@
 package com.tencent.qcloud.tim.demo;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 import android.view.WindowManager;
 
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.login.UserInfo;
+import com.tencent.qcloud.tim.demo.utils.ClickUtils;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.TUIKit;
@@ -25,7 +26,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 /**
  * 登录状态的Activity都要集成该类，来完成被踢下线等监听处理。
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
 
@@ -88,6 +89,7 @@ public class BaseActivity extends Activity {
     protected void onResume() {
         DemoLog.i(TAG, "onResume");
         super.onResume();
+        ClickUtils.clear();
     }
 
     @Override

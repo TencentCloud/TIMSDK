@@ -2,7 +2,7 @@ package com.tencent.qcloud.tim.uikit.modules.chat.layout.input;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.FragmentManager;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.liteav.SelectContactActivity;
@@ -26,6 +26,7 @@ import com.tencent.liteav.model.ITRTCAVCall;
 import com.tencent.liteav.trtcaudiocalldemo.ui.TRTCAudioCallActivity;
 import com.tencent.liteav.trtcvideocalldemo.ui.TRTCVideoCallActivity;
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKitImpl;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
 import com.tencent.qcloud.tim.uikit.component.face.Emoji;
@@ -37,7 +38,6 @@ import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreFragment;
-import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
 import com.tencent.qcloud.tim.uikit.utils.PermissionUtils;
@@ -48,7 +48,6 @@ import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -399,10 +398,30 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
         }
     }
 
+    @Override
+    protected void startGroupLive() {
+        if (mStartActivityListener != null) {
+            boolean isHandle = mStartActivityListener.handleStartGroupLiveActivity();
+            if (!isHandle) {
+                startDefaultGroupLiveAnchor();
+            }
+        } else {
+            startDefaultGroupLiveAnchor();
+        }
+    }
+
+    private void startDefaultGroupLiveAnchor() {
+        Intent intent = new Intent();
+        intent.setAction("com.tencent.qcloud.tim.tuikit.live.grouplive.anchor");
+        intent.addCategory("android.intent.category.DEFAULT");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("group_id", mChatLayout.getChatInfo().getId());
+        TUIKitImpl.getAppContext().startActivity(intent);
+    }
+
     public void setChatInputHandler(ChatInputHandler handler) {
         this.mChatInputHandler = handler;
     }
-
 
     public void setMessageHandler(MessageHandler handler) {
         this.mMessageHandler = handler;
@@ -550,7 +569,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
     private void showFaceViewGroup() {
         TUIKitLog.i(TAG, "showFaceViewGroup");
         if (mFragmentManager == null) {
-            mFragmentManager = mActivity.getFragmentManager();
+            mFragmentManager = mActivity.getSupportFragmentManager();
         }
         if (mFaceFragment == null) {
             mFaceFragment = new FaceFragment();
@@ -611,7 +630,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
     private void showCustomInputMoreFragment() {
         TUIKitLog.i(TAG, "showCustomInputMoreFragment");
         if (mFragmentManager == null) {
-            mFragmentManager = mActivity.getFragmentManager();
+            mFragmentManager = mActivity.getSupportFragmentManager();
         }
         BaseInputFragment fragment = (BaseInputFragment) mMoreInputEvent;
         hideSoftInput();
@@ -630,7 +649,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
     private void showInputMoreLayout() {
         TUIKitLog.i(TAG, "showInputMoreLayout");
         if (mFragmentManager == null) {
-            mFragmentManager = mActivity.getFragmentManager();
+            mFragmentManager = mActivity.getSupportFragmentManager();
         }
         if (mInputMoreFragment == null) {
             mInputMoreFragment = new InputMoreFragment();
@@ -734,6 +753,8 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
 
     public interface onStartActivityListener {
         void onStartGroupMemberSelectActivity();
+
+        boolean handleStartGroupLiveActivity();
     }
 
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/giftLayout"
+    android:layout_width="match_parent"
+    android:background="@drawable/live_gift_bg_panel"
+    android:layout_height="@dimen/live_gift_panel_height"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/live_layout_gift_panel_container" />
+
+    <RelativeLayout
+        android:id="@+id/giftBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/btn_charge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:clickable="true"
+            android:layout_marginEnd="22dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/live_gift_charge"
+            android:textColor="@color/live_gift_dark_orange" />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/live_voice_room_bg_main_gradient"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/live_voice_room_ic_back">
+
+        <TextView
+            android:id="@+id/main_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:singleLine="true"
+            android:text="创建语音聊天室"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/live_voice_room_bg_item_gradient"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/room_id_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主题"
+            android:textColor="@color/live_voice_room_text_color_second"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/et_room_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="请输入聊天室主题"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/live_voice_room_text_color_second"
+            android:textColorHint="@color/live_voice_room_text_color_hint"
+            app:layout_constraintBottom_toBottomOf="@+id/room_id_tag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/et_user_name"
+            app:layout_constraintTop_toTopOf="@+id/room_id_tag" />
+
+        <View
+            android:id="@+id/view_divide"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/live_voice_room_text_color_hint"
+            app:layout_constraintTop_toBottomOf="@+id/room_id_tag" />
+
+        <TextView
+            android:id="@+id/user_id_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="昵称"
+            android:textColor="@color/live_voice_room_text_color_second"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/room_id_tag"
+            app:layout_constraintTop_toBottomOf="@+id/view_divide" />
+
+        <EditText
+            android:id="@+id/et_user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:hint="请输入昵称"
+            android:textColor="@color/live_voice_room_text_color_second"
+            android:textColorHint="@color/live_voice_room_text_color_hint"
+            app:layout_constraintBottom_toBottomOf="@id/user_id_tag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/user_id_tag"
+            app:layout_constraintTop_toTopOf="@id/user_id_tag" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp">
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="130dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.65" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="1" />
+
+        <TextView
+            android:id="@+id/tv_need_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="上麦需要房主同意"
+            android:textColor="@color/live_voice_room_text_color_disable"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_need_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/live_voice_room_ic_switch"
+            app:layout_constraintEnd_toEndOf="@id/gl_end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:track="@drawable/live_voice_room_ic_switch_track" />
+
+        <TextView
+            android:id="@+id/tv_audio_quality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:text="音质选择"
+            android:textColor="@color/live_voice_room_text_color_disable"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_need_request" />
+
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/gl_end"
+            app:layout_constraintStart_toStartOf="@+id/gl_l"
+            app:layout_constraintTop_toTopOf="@+id/tv_audio_quality">
+
+            <RadioButton
+                android:id="@+id/rb_normal"
+                android:textColor="@color/live_voice_room_text_color_second"
+                style="@style/TUILiveVoiceRoomCreateRadioButtonStyle"
+                android:text="标准" />
+
+            <RadioButton
+                android:id="@+id/rb_music"
+                android:textColor="@color/live_voice_room_text_color_second"
+                style="@style/TUILiveVoiceRoomCreateRadioButtonStyle"
+                android:layout_marginLeft="30dp"
+                android:checked="true"
+                android:text="音乐" />
+        </RadioGroup>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_enter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/live_voice_room_button_border"
+        android:enabled="true"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="创建聊天室"
+        android:textColor="@drawable/live_voice_room_button_text_color"
+        android:textSize="18sp" />
+</LinearLayout>

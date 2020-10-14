@@ -22,6 +22,8 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.login.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
+import com.tencent.qcloud.tim.tuikit.live.base.TUILiveRequestCallback;
 import com.tencent.qcloud.tim.uikit.component.LineControllerView;
 import com.tencent.qcloud.tim.uikit.component.SelectionActivity;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
@@ -243,6 +245,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
                 DemoLog.i(TAG, "modifySelfProfile success");
                 TUIKitConfigs.getConfigs().getGeneralConfig().setUserFaceUrl(mIconUrl);
                 TUIKitConfigs.getConfigs().getGeneralConfig().setUserNickname(mModifyNickNameView.getContent());
+                TUIKitLive.refreshLoginUserInfo(null);
             }
         });
     }

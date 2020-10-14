@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="pic">图片</string>
+    <string name="pic">相册</string>
     <string name="photo">拍照</string>
     <string name="video">摄像</string>
     <string name="file">文件</string>
@@ -73,4 +73,9 @@
     <string name="search_call_hint">输入群成员名称</string>
     <string name="video_call">视频通话</string>
     <string name="audio_call">语音通话</string>
+
+    <string name="live_group_live">群直播</string>
+    <string name="live_group_live_streaming">正在直播</string>
+    <string name="live_group_live_end">结束直播</string>
+    <string name="live_group_user_live">%s的直播</string>
 </resources>
