@@ -172,8 +172,10 @@
 {
     if (cell.switcher.on) {
         [[V2TIMManager sharedInstance] addToBlackList:@[self.friendProfile.userID] succ:nil fail:nil];
+        [TCUtil report:Action_Addblacklist actionSub:@"" code:@(0) msg:@"addblacklist"];
     } else {
         [[V2TIMManager sharedInstance] deleteFromBlackList:@[self.friendProfile.userID] succ:nil fail:nil];
+        [TCUtil report:Action_Deleteblacklist actionSub:@"" code:@(0) msg:@"deleteblacklist"];
     }
 }
 

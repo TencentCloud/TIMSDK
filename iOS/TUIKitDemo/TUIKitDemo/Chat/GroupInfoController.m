@@ -22,7 +22,6 @@
 #import "THelper.h"
 #import <ImSDK/ImSDK.h>
 
-
 @interface GroupInfoController () <TGroupInfoControllerDelegate>
 
 @end
