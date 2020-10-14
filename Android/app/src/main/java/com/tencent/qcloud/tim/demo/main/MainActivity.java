@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo.main;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,6 +22,7 @@ import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.ContactFragment;
 import com.tencent.qcloud.tim.demo.conversation.ConversationFragment;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
+import com.tencent.qcloud.tim.demo.scenes.ScenesFragment;
 import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService;
 import com.tencent.qcloud.tim.demo.thirdpush.OPPOPushImpl;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
@@ -37,6 +37,7 @@ import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 public class MainActivity extends BaseActivity implements ConversationManagerKit.MessageUnreadWatcher {
 
@@ -45,6 +46,7 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     private TextView mConversationBtn;
     private TextView mContactBtn;
     private TextView mProfileSelfBtn;
+    private TextView mScenesBtn;
     private TextView mMsgUnread;
     private View mLastTab;
 
@@ -59,8 +61,9 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         DemoLog.i(TAG, "onNewIntent");
-        mCallModel = (CallModel)intent.getSerializableExtra(Constants.CHAT_INFO);
+        mCallModel = (CallModel) intent.getSerializableExtra(Constants.CHAT_INFO);
     }
 
     private void prepareThirdPushToken() {
@@ -117,8 +120,9 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
         mConversationBtn = findViewById(R.id.conversation);
         mContactBtn = findViewById(R.id.contact);
         mProfileSelfBtn = findViewById(R.id.mine);
+        mScenesBtn = findViewById(R.id.scenes);
         mMsgUnread = findViewById(R.id.msg_total_unread);
-        getFragmentManager().beginTransaction().replace(R.id.empty_view, new ConversationFragment()).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.empty_view, new ConversationFragment()).commitAllowingStateLoss();
         FileUtil.initPath(); // 从application移入到这里，原因在于首次装上app，需要获取一系列权限，如创建文件夹，图片下载需要指定创建好的文件目录，否则会下载本地失败，聊天页面从而获取不到图片、表情
 
         // 未读消息监视器
@@ -154,6 +158,11 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
                 mContactBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.contact_selected), null, null);
                 break;
+            case R.id.scenes_btn_group:
+                current = new ScenesFragment();
+                mScenesBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
+                mScenesBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.live_selected), null, null);
+                break;
             case R.id.myself_btn_group:
                 current = new ProfileFragment();
                 mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
@@ -164,8 +173,8 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
         }
 
         if (current != null && !current.isAdded()) {
-            getFragmentManager().beginTransaction().replace(R.id.empty_view, current).commitAllowingStateLoss();
-            getFragmentManager().executePendingTransactions();
+            getSupportFragmentManager().beginTransaction().replace(R.id.empty_view, current).commitAllowingStateLoss();
+            getSupportFragmentManager().executePendingTransactions();
         } else {
             DemoLog.w(TAG, "fragment added!");
         }
@@ -178,6 +187,8 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
         mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.contact_normal), null, null);
         mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
         mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_normal), null, null);
+        mScenesBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+        mScenesBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.live_normal), null, null);
     }
 
 

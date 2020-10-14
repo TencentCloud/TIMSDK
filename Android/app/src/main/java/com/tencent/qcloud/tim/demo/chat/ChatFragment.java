@@ -2,6 +2,7 @@ package com.tencent.qcloud.tim.demo.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +10,19 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.tencent.imsdk.TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.FriendProfileActivity;
 import com.tencent.qcloud.tim.demo.helper.ChatLayoutHelper;
+import com.tencent.qcloud.tim.demo.scenes.LiveRoomAnchorActivity;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.BaseFragment;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
@@ -33,7 +36,6 @@ import com.tencent.qcloud.tim.uikit.modules.group.info.StartGroupMemberSelectAct
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.View.GONE;
@@ -120,46 +122,63 @@ public class ChatFragment extends BaseFragment {
                 intent.putExtra(TUIKitConstants.Group.GROUP_INFO, groupInfo);
                 startActivityForResult(intent, 1);
             }
+
+            @Override
+            public boolean handleStartGroupLiveActivity() {
+                // 打开群直播
+                LiveRoomAnchorActivity.start(TUIKit.getAppContext(), mChatInfo.getId());
+                // demo层对消息进行处理，不走默认的逻辑
+                return true;
+            }
         });
 
         if (false/*mChatInfo.getType() == V2TIMConversation.V2TIM_GROUP*/) {
-            V2TIMConversation v2TIMConversation = V2TIMManager.getConversationManager().getConversation(mChatInfo.getId());
-            if (v2TIMConversation == null){
-                DemoLog.d(TAG,"getConversation failed");
-                return;
-            }
-            mChatInfo.setAtInfoList(v2TIMConversation.getGroupAtInfoList());
-
-            final V2TIMMessage lastMessage = v2TIMConversation.getLastMessage();
-
-            updateAtInfoLayout();
-            mChatLayout.getAtInfoLayout().setOnClickListener(new View.OnClickListener() {
+            V2TIMManager.getConversationManager().getConversation(mChatInfo.getId(), new V2TIMValueCallback<V2TIMConversation>() {
                 @Override
-                public void onClick(View v) {
-                    final List<V2TIMGroupAtInfo> atInfoList = mChatInfo.getAtInfoList();
-                    if (atInfoList == null || atInfoList.isEmpty()) {
-                        mChatLayout.getAtInfoLayout().setVisibility(GONE);
+                public void onError(int code, String desc) {
+                    Log.e(TAG, "getConversation error:" + code + ", desc:" + desc);
+                }
+
+                @Override
+                public void onSuccess(V2TIMConversation v2TIMConversation) {
+                    if (v2TIMConversation == null){
+                        DemoLog.d(TAG,"getConversation failed");
                         return;
-                    } else {
-                        mChatLayout.getChatManager().getAtInfoChatMessages(atInfoList.get(atInfoList.size() - 1).getSeq(), lastMessage, new IUIKitCallBack() {
-                            @Override
-                            public void onSuccess(Object data) {
-                                mChatLayout.getMessageLayout().scrollToPosition((int) atInfoList.get(atInfoList.size() - 1).getSeq());
-                                LinearLayoutManager mLayoutManager = (LinearLayoutManager) mChatLayout.getMessageLayout().getLayoutManager();
-                                mLayoutManager.scrollToPositionWithOffset((int) atInfoList.get(atInfoList.size() - 1).getSeq(), 0);
-
-                                atInfoList.remove(atInfoList.size() - 1);
-                                mChatInfo.setAtInfoList(atInfoList);
-
-                                updateAtInfoLayout();
-                            }
-
-                            @Override
-                            public void onError(String module, int errCode, String errMsg) {
-                                DemoLog.d(TAG,"getAtInfoChatMessages failed");
-                            }
-                        });
                     }
+                    mChatInfo.setAtInfoList(v2TIMConversation.getGroupAtInfoList());
+
+                    final V2TIMMessage lastMessage = v2TIMConversation.getLastMessage();
+
+                    updateAtInfoLayout();
+                    mChatLayout.getAtInfoLayout().setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final List<V2TIMGroupAtInfo> atInfoList = mChatInfo.getAtInfoList();
+                            if (atInfoList == null || atInfoList.isEmpty()) {
+                                mChatLayout.getAtInfoLayout().setVisibility(GONE);
+                                return;
+                            } else {
+                                mChatLayout.getChatManager().getAtInfoChatMessages(atInfoList.get(atInfoList.size() - 1).getSeq(), lastMessage, new IUIKitCallBack() {
+                                    @Override
+                                    public void onSuccess(Object data) {
+                                        mChatLayout.getMessageLayout().scrollToPosition((int) atInfoList.get(atInfoList.size() - 1).getSeq());
+                                        LinearLayoutManager mLayoutManager = (LinearLayoutManager) mChatLayout.getMessageLayout().getLayoutManager();
+                                        mLayoutManager.scrollToPositionWithOffset((int) atInfoList.get(atInfoList.size() - 1).getSeq(), 0);
+
+                                        atInfoList.remove(atInfoList.size() - 1);
+                                        mChatInfo.setAtInfoList(atInfoList);
+
+                                        updateAtInfoLayout();
+                                    }
+
+                                    @Override
+                                    public void onError(String module, int errCode, String errMsg) {
+                                        DemoLog.d(TAG,"getAtInfoChatMessages failed");
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             });
         }

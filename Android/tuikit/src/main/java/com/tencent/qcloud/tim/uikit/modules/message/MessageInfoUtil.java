@@ -20,11 +20,15 @@ import com.tencent.imsdk.v2.V2TIMSoundElem;
 import com.tencent.imsdk.v2.V2TIMTextElem;
 import com.tencent.imsdk.v2.V2TIMVideoElem;
 import com.tencent.liteav.model.CallModel;
+import com.tencent.liteav.model.LiveModel;
 import com.tencent.qcloud.tim.uikit.utils.DateTimeUtil;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -287,6 +291,16 @@ public class MessageInfoUtil {
         return false;
     }
 
+    public static boolean isLive(MessageInfo messageInfo) {
+        try {
+            JSONObject jsonObject = new JSONObject(new String(messageInfo.getTimMessage().getCustomElem().getData()));
+            return jsonObject.getString("roomType") != null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static MessageInfo createMessageInfo(V2TIMMessage timMessage) {
         if (timMessage == null
                 || timMessage.getStatus() == V2TIMMessage.V2TIM_MSG_STATUS_HAS_DELETED
@@ -339,6 +353,22 @@ public class MessageInfoUtil {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_CREATE);
                         String message = TUIKitConstants.covert2HTMLString(messageCustom.opUser) + messageCustom.content;
                         msgInfo.setExtra(message);
+                    } else if (!TextUtils.isEmpty(messageCustom.businessID) && messageCustom.businessID.equals(MessageCustom.BUSINESS_ID_LIVE_GROUP)) {
+                        Gson liveGson = new Gson();
+                        LiveMessageInfo liveMessageInfo = liveGson.fromJson(data, LiveMessageInfo.class);
+                        String anchorName;
+                        if (!TextUtils.isEmpty(liveMessageInfo.anchorName)) {
+                            anchorName = liveMessageInfo.anchorName;
+                        } else {
+                            anchorName = liveMessageInfo.roomName;
+                        }
+                        content = anchorName + "的直播";
+                        msgInfo.setExtra(content);
+                    } else if (LiveModel.isLiveRoomSignal(messageCustom.data)) {
+                        LiveModel liveModel = LiveModel.convert2LiveData(timMessage);
+                        content = liveModel.message;
+                        msgInfo.setMsgType(MessageInfo.MSG_TYPE_TEXT);
+                        msgInfo.setExtra(content);
                     } else {
                         CallModel callModel = CallModel.convert2VideoCallData(timMessage);
                         if (callModel != null) {

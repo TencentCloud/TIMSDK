@@ -91,7 +91,7 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
                 for (V2TIMConversation v2TIMConversation : v2TIMConversationList) {
                     //将 imsdk v2TIMConversation 转换为 UIKit ConversationInfo
                     ConversationInfo conversationInfo = TIMConversation2ConversationInfo(v2TIMConversation);
-                    if (conversationInfo != null) {
+                    if (conversationInfo != null && !V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(v2TIMConversation.getGroupType())) {
                         mUnreadTotal = mUnreadTotal + conversationInfo.getUnRead();
                         conversationInfo.setType(ConversationInfo.TYPE_COMMON);
                         infos.add(conversationInfo);
@@ -124,7 +124,7 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
             V2TIMConversation v2TIMConversation = v2TIMConversationList.get(i);
             TUIKitLog.v(TAG, "refreshConversation v2TIMConversation " + v2TIMConversation.toString());
             ConversationInfo conversationInfo = TIMConversation2ConversationInfo(v2TIMConversation);
-            if (conversationInfo != null) {
+            if (conversationInfo != null && !V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(v2TIMConversation.getGroupType())) {
                 infos.add(conversationInfo);
             }
         }

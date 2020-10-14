@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="live_tag_first" type="id"></item>
+    <item name="live_tag_second" type="id"></item>
+</resources>
