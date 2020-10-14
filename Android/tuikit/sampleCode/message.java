@@ -123,10 +123,10 @@ public void onRecvNewMessage(V2TIMMessage msg) {
         }
 
         // 设置视频文件路径，这里可以用 uuid 作为标识，避免重复下载
-        String videoPath = "/sdcard/im/video/" + "myUserID" + videoUUID;
+        String videoPath = "/sdcard/im/video/" + "myUserID" + snapshotUUID;
         File videoFile = new File(videoPath);
-        if (!videoFile.exists()) {
-            v2TIMVideoElem.downloadVideo(videoPath, new V2TIMDownloadCallback() {
+        if (!snapshotFile.exists()) {
+            v2TIMVideoElem.downloadSnapshot(videoPath, new V2TIMDownloadCallback() {
                 @Override
                 public void onProgress(V2TIMElem.V2ProgressInfo progressInfo) {
                     // 下载进度回调：已下载大小 v2ProgressInfo.getCurrentSize()；总文件大小 v2ProgressInfo.getTotalSize()

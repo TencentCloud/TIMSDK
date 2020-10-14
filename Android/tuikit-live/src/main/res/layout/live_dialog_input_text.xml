@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_outside_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/rl_inputdlg_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/live_color_input_dialog_bg"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/barrage_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.3"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/barrage_btn"
+                android:layout_width="42dp"
+                android:layout_height="27dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/live_barrage_slider_off" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/live_input_message_divider_margin_left"
+            android:layout_marginRight="@dimen/live_input_message_divider_margin_left"
+            android:layout_marginTop="@dimen/live_input_message_divider_margin_top"
+            android:layout_marginBottom="@dimen/live_input_message_divider_margin_top"
+            android:background="@color/live_color_transparent_black" />
+
+        <EditText
+            android:id="@+id/et_input_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:hint="@string/live_dialog_input_text_hint"
+            android:imeOptions="actionUnspecified"
+            android:inputType="text"
+            android:maxLength="32"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/live_input_message_dialog_text" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/live_input_message_divider_margin_left"
+            android:layout_marginRight="@dimen/live_input_message_divider_margin_left"
+            android:layout_marginTop="@dimen/live_input_message_divider_margin_top"
+            android:layout_marginBottom="@dimen/live_input_message_divider_margin_top"
+            android:background="@color/live_color_transparent_black" />
+
+        <LinearLayout
+            android:id="@+id/confirm_area"
+            android:layout_marginRight="@dimen/live_input_message_divider_margin_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/confirm_btn"
+                android:textSize="@dimen/live_input_message_dialog_text"
+                android:textColor="@color/live_color_send_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/live_send"
+                android:gravity="center" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

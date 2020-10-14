@@ -23,6 +23,9 @@ allprojects {
         google()
         jcenter()
         maven {url 'http://developer.huawei.com/repo/'}
+        flatDir {
+            dirs project(':tuikit-live').file('libs')
+        }
     }
 
     tasks.withType(Javadoc) {
@@ -41,7 +44,7 @@ ext {
     minSdkVersion = 19
     targetSdkVersion = 28
     versionCode = 1
-versionName = "5.0.6"
+    versionName = "5.0.10"
     abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'] //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     arguments = "-DANDROID_STL=c++_static"
     cppFlags = "-std=c++11"

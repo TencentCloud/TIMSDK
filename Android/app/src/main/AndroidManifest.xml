@@ -5,7 +5,6 @@
 
     <uses-sdk tools:overrideLibrary="tv.danmaku.ijk.media.player_arm64, tv.danmaku.ijk.media.player_x86_64"/>
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -81,6 +80,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.tencent.qcloud.tim.demo.scenes.LiveRoomAnchorActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity android:name="com.tencent.qcloud.tim.demo.scenes.LiveRoomAudienceActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
             android:name="com.tencent.qcloud.tim.demo.login.LoginForDevActivity"
             android:screenOrientation="portrait" />
@@ -231,6 +236,13 @@
         <!-- ********魅族推送设置end******** -->
 
         <!-- ********vivo推送设置start******** -->
+        <meta-data
+            android:name="com.vivo.push.api_key"
+            android:value="" />
+        <meta-data
+            android:name="com.vivo.push.app_id"
+            android:value="" />
+
         <service
             android:name="com.vivo.push.sdk.service.CommandClientService"
             android:exported="true" />
@@ -250,12 +262,6 @@
             </intent-filter>
         </receiver>
 
-        <meta-data
-            android:name="com.vivo.push.api_key"
-            android:value="" />
-        <meta-data
-            android:name="com.vivo.push.app_id"
-            android:value="" />
         <!-- ********vivo推送设置end******** -->
 
         <!-- ********海外google云消息传递start******** -->

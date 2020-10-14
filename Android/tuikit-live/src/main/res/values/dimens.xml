@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="live_text_max_show_width">80dp</dimen>
+    <dimen name="live_status_tips">30dp</dimen>
+
+    <!-- 直播间顶部主播信息 -->
+    <dimen name="live_top_anchor_info_round_corner">100dp</dimen>
+    <dimen name="live_top_anchor_info_text_size">12sp</dimen>
+    <dimen name="live_top_anchor_info_height">30dp</dimen>
+    <dimen name="live_top_anchor_avatar_height">38dp</dimen>
+
+    <!-- 直播间底部工具栏 -->
+    <dimen name="live_bottom_toolbar_height">40dp</dimen>
+    <dimen name="live_bottom_toolbar_btn_icon_size">35dp</dimen>
+
+    <dimen name="live_text_size_large">18sp</dimen>
+    <dimen name="live_text_size_middle">14sp</dimen>
+    <dimen name="live_btn_ic_size">30dp</dimen>
+
+    <!-- 直播底部栏 -->
+    <dimen name="live_input_message_dialog_text">16sp</dimen>
+    <dimen name="live_input_message_divider_margin_left">15dp</dimen>
+    <dimen name="live_input_message_divider_margin_top">9dp</dimen>
+
+    <!-- 礼物 -->
+    <dimen name="live_gift_panel_height">270dp</dimen>
+    <dimen name="live_gift_lottie_view_height">400dp</dimen>
+
+    <dimen name="live_heart_anim_bezier_x_rand">50.0dp</dimen>
+    <dimen name="live_heart_anim_length">100.0dp</dimen>
+    <dimen name="live_heart_anim_length_rand">350.0dp</dimen>
+    <integer name="live_heart_anim_bezier_factor">6</integer>
+    <integer name="live_heart_anim_duration">1000</integer>
+</resources>

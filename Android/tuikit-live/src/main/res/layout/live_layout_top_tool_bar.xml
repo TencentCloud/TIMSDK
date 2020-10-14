@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:id="@+id/ll_anchor_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="1dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:paddingEnd="10dp"
+        android:background="@drawable/live_top_anchor_info_bg"
+        android:orientation="horizontal">
+
+        <com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView
+            android:id="@+id/iv_anchor_head"
+            android:layout_width="@dimen/live_top_anchor_avatar_height"
+            android:layout_height="@dimen/live_top_anchor_avatar_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="2dp"
+            android:src="@drawable/live_default_head_img" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_anchor_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:maxWidth="@dimen/live_text_max_show_width"
+                android:minWidth="30dp"
+                android:singleLine="true"
+                android:layout_marginLeft="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                tools:text="@string/live_default_anchor_name" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_experience"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/live_top_experience_bg"
+                        android:paddingStart="7dp"
+                        android:paddingEnd="7dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/live_experience"
+                        android:textColor="@color/live_white"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/tv_empirical_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/live_default_anchor_empirical_value"
+                        android:textColor="@color/live_white"
+                        android:textSize="10sp" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/btn_anchor_follow"
+            android:visibility="gone"
+            android:layout_marginStart="12dp"
+            android:layout_width="40dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/live_subscribe_anchor_btn_bg"
+            android:text="@string/live_btn_follow_anchor"
+            android:textColor="@color/live_color_red"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_audiences_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="8dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_audiences"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="5dp"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/ll_audience_number">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <RelativeLayout
+            android:id="@+id/ll_audience_number"
+            android:layout_width="wrap_content"
+            android:minWidth="40dp"
+            android:layout_height="35dp"
+            android:background="@drawable/live_top_audience_count_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_audience_number"
+                android:maxLines="1"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

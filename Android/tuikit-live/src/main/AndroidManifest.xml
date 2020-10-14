@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tencent.qcloud.tim.tuikit.live">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application>
+        <activity android:name=".modules.liveroom.ui.DefaultGroupLiveAnchorActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+            <intent-filter>
+                <action android:name="com.tencent.qcloud.tim.tuikit.live.grouplive.anchor"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".modules.liveroom.ui.DefaultGroupLiveAudienceActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+            <intent-filter>
+                <action android:name="com.tencent.qcloud.tim.tuikit.live.grouplive.audience"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

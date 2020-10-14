@@ -2,14 +2,20 @@ package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
 
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
+import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
+
+import it.sephiroth.android.library.easing.Linear;
 
 public class MessageCustomHolder extends MessageContentHolder implements ICustomMessageViewGroup {
 
@@ -70,6 +76,24 @@ public class MessageCustomHolder extends MessageContentHolder implements ICustom
             if (properties.getLeftChatContentFontColor() != 0) {
                 msgBodyText.setTextColor(properties.getLeftChatContentFontColor());
             }
+        }
+        boolean live = MessageInfoUtil.isLive(msg);
+        if (live) {
+            ViewGroup.LayoutParams msgContentLinearParams = msgContentLinear.getLayoutParams();
+            msgContentLinearParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            msgContentLinear.setLayoutParams(msgContentLinearParams);
+
+            LinearLayout.LayoutParams msgContentFrameParams = (LinearLayout.LayoutParams) msgContentFrame.getLayoutParams();
+            msgContentFrameParams.width = ScreenUtil.dip2px(220);
+            msgContentFrameParams.gravity = Gravity.RIGHT | Gravity.END;
+            msgContentFrame.setLayoutParams(msgContentFrameParams);
+            if (msg.isSelf()) {
+                msgContentFrame.setBackgroundResource(R.drawable.chat_right_live_group_bg);
+            } else {
+                msgContentFrame.setBackgroundResource(R.drawable.chat_left_live_group_bg);
+            }
+            // 群直播消息不显示已读状态
+            isReadText.setVisibility(View.INVISIBLE);
         }
     }
 

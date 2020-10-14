@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="live_gift_action_sheet_theme" parent="@android:style/Theme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <!-- Input dialog theme. -->
+    <style name="LiveInputDialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="TUILiveDialogFragment" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
+    <style name="TUILiveDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert"/>
+
+    <style name="TUILiveRoomLinkMic">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">180dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="TUILiveVoiceRoomCreateRadioButtonStyle">
+        <item name="android:button">@null</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <declare-styleable name="TUILiveCircleImageView">
+        <attr format="dimension" name="civ_border_width"/>
+        <attr format="color" name="civ_border_color"/>
+        <attr format="boolean" name="civ_border_overlay"/>
+        <attr format="color" name="civ_circle_background_color"/>
+    </declare-styleable>
+
+    <!-- 飘星自定义属性 -->
+    <declare-styleable name="TUILiveRoomHeartLayout">
+        <attr name="initX" format="dimension" />
+        <attr name="initY" format="dimension" />
+        <attr name="xRand" format="dimension" />
+        <attr name="animLengthRand" format="dimension" />
+        <attr name="xPointFactor" format="dimension" />
+        <attr name="animLength" format="dimension" />
+        <attr name="heart_width" format="dimension" />
+        <attr name="heart_height" format="dimension" />
+        <attr name="bezierFactor" format="integer" />
+        <attr name="anim_duration" format="integer" />
+    </declare-styleable>
+
+    <style name="LiveActionSheetDialogStyle" parent="android:Theme.Dialog">
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 浮于Activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- Dialog以外的区域模糊效果 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+</resources>
