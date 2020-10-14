@@ -1,42 +1,72 @@
 PODS:
+  - lottie-ios (2.5.3)
+  - Masonry (1.1.0)
+  - MJExtension (3.2.2)
+  - MJRefresh (3.5.0)
   - MMLayout (0.2.0)
   - ReactiveObjC (3.1.1)
   - SDWebImage (5.9.0):
     - SDWebImage/Core (= 5.9.0)
   - SDWebImage/Core (5.9.0)
+  - SSZipArchive (2.2.3)
   - Toast (4.0.0)
-  - TXIMSDK_iOS (5.0.6)
-  - TXIMSDK_TUIKit_iOS (5.0.7):
+  - TXIMSDK_iOS (5.0.10)
+  - TXIMSDK_TUIKit_iOS (5.0.10):
     - MMLayout (= 0.2.0)
     - ReactiveObjC (= 3.1.1)
     - SDWebImage (= 5.9.0)
     - Toast (= 4.0.0)
-    - TXIMSDK_iOS (= 5.0.6)
-    - TXLiteAVSDK_TRTC (= 7.7.9458)
-  - TXLiteAVSDK_TRTC (7.7.9458)
+    - TXIMSDK_iOS (= 5.0.10)
+    - TXLiteAVSDK_TRTC (= 7.8.9519)
+  - TXIMSDK_TUIKit_live_iOS (5.0.10):
+    - lottie-ios (= 2.5.3)
+    - Masonry (= 1.1.0)
+    - MJExtension (= 3.2.2)
+    - MMLayout (= 0.2.0)
+    - ReactiveObjC (= 3.1.1)
+    - SDWebImage (= 5.9.0)
+    - SSZipArchive (= 2.2.3)
+    - Toast (= 4.0.0)
+    - TXIMSDK_iOS (= 5.0.10)
+    - TXLiteAVSDK_TRTC (= 7.8.9519)
+  - TXLiteAVSDK_TRTC (7.8.9519)
 
 DEPENDENCIES:
+  - MJRefresh
   - TXIMSDK_TUIKit_iOS
+  - TXIMSDK_TUIKit_live_iOS
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
+    - lottie-ios
+    - Masonry
+    - MJExtension
+    - MJRefresh
     - MMLayout
     - ReactiveObjC
     - SDWebImage
+    - SSZipArchive
     - Toast
     - TXIMSDK_iOS
     - TXIMSDK_TUIKit_iOS
+    - TXIMSDK_TUIKit_live_iOS
     - TXLiteAVSDK_TRTC
 
 SPEC CHECKSUMS:
+  lottie-ios: a50d5c0160425cd4b01b852bb9578963e6d92d31
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MJExtension: d9b9c74cbdeb724c1e9ecbb157b318276e62e876
+  MJRefresh: 6afc955813966afb08305477dd7a0d9ad5e79a16
   MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 62ae4a18473520c67b79e9724c31a63599cc9423
+  SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_iOS: cc65f97fb454811757f0d71d54a15726b995c0d7
-  TXIMSDK_TUIKit_iOS: 47d61d60bbe50f1d557ccf17dcef4c85a0a6d456
-  TXLiteAVSDK_TRTC: 87facf366c7d073d8ab4d6249be9291f4d599b83
+  TXIMSDK_iOS: 1d8cdc8af86dbf5b4c211a4c0df64c13ab82528e
+  TXIMSDK_TUIKit_iOS: 3ff57956ce6438c13193b5429af904acfc19260f
+  TXIMSDK_TUIKit_live_iOS: 7a44d98af3f81b9217985481b67aa524104fe3fc
+  TXLiteAVSDK_TRTC: c127880c4dbe844bdc7575a655be8042ce96024a
 
-PODFILE CHECKSUM: 05f4c48e9b6f22b5eacdc29879b509ee65f36304
+PODFILE CHECKSUM: c6c7d57f088ecc75becbf79a03ada7707285671c
 
 COCOAPODS: 1.9.3
