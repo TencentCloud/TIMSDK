@@ -17,7 +17,7 @@
 #import "TUILiveDefaultGiftAdapterImp.h"
 #import "TNaviBarIndicatorView.h"
 #import "TUILiveUserProfile.h"
-#import <TXIMSDK_TUIKit_live_iOS/TUIKitLive.h>
+#import "TUIKitLive.h"
 
 #import <TRTCLiveRoom.h>
 
