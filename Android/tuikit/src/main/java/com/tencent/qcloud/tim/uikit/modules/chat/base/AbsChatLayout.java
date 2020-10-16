@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -79,7 +80,13 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                 }
                 if (msg.getMsgType() == MessageInfo.MSG_TYPE_TEXT) {
                     V2TIMTextElem textElem = msg.getTimMessage().getTextElem();
-                    ClipData clip = ClipData.newPlainText("message", textElem.getText());
+                    String copyContent;
+                    if (textElem == null) {
+                        copyContent = (String) msg.getExtra();
+                    } else {
+                        copyContent = textElem.getText();
+                    }
+                    ClipData clip = ClipData.newPlainText("message", copyContent);
                     clipboard.setPrimaryClip(clip);
                 }
             }

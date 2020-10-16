@@ -24,6 +24,7 @@
 #import "TUIFaceMessageCell.h"
 #import "TUIVideoMessageCell.h"
 #import "TUIFileMessageCell.h"
+#import "TUIGroupLiveMessageCell.h"
 #import "TUserProfileController.h"
 #import "TIMFriendshipManager.h"
 #import "TUIKit.h"
@@ -33,6 +34,17 @@
 #import "TCUtil.h"
 #import "THelper.h"
 #import "TCConstants.h"
+#import "TUILiveRoomAnchorViewController.h"
+#import "TUILiveRoomAudienceViewController.h"
+#import "TUILiveDefaultGiftAdapterImp.h"
+#import "TUIKitLive.h"
+#import "V2TIMManager.h"
+#import "TUILiveUserProfile.h"
+#import "TUILiveRoomManager.h"
+#import "TUILiveHeartBeatManager.h"
+#import "GenerateTestUserSig.h"
+#import "Toast.h"
+
 
 // MLeaksFinder 会对这个类误报，这里需要关闭一下
 @implementation UIImagePickerController (Leak)
@@ -43,7 +55,8 @@
 
 @end
 
-@interface ChatViewController () <TUIChatControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentPickerDelegate>
+@interface ChatViewController () <TUIChatControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentPickerDelegate,
+TUILiveRoomAnchorDelegate>
 @property (nonatomic, strong) TUIChatController *chat;
 @end
 
@@ -212,7 +225,33 @@
 
 - (void)chatController:(TUIChatController *)controller didSendMessage:(TUIMessageCellData *)msgCellData
 {
-    //  to do
+    if ([_conversationData.groupID isEqualToString:@"im_demo_admin"] || [_conversationData.userID isEqualToString:@"im_demo_admin"]) {
+        [TCUtil report:Action_Sendmsg2helper actionSub:@"" code:@(0) msg:@"sendmsg2helper"];
+    }
+    else if ([_conversationData.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [_conversationData.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
+        [TCUtil report:Action_Sendmsg2defaultgrp actionSub:@"" code:@(0) msg:@"sendmsg2defaultgrp"];
+    }
+    if ([msgCellData isKindOfClass:[TUITextMessageCellData class]]) {
+        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendtext code:@(0) msg:@"sendtext"];
+    }
+    else if ([msgCellData isKindOfClass:[TUIVoiceMessageCellData class]]) {
+        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendaudio code:@(0) msg:@"sendaudio"];
+    }
+    else if ([msgCellData isKindOfClass:[TUIFaceMessageCellData class]]) {
+        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendface code:@(0) msg:@"sendface"];
+    }
+    else if ([msgCellData isKindOfClass:[TUIImageMessageCellData class]]) {
+        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendpicture code:@(0) msg:@"sendpicture"];
+    }
+    else if ([msgCellData isKindOfClass:[TUIVideoMessageCellData class]]) {
+        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendvideo code:@(0) msg:@"sendvideo"];
+    }
+    else if ([msgCellData isKindOfClass:[TUIFileMessageCellData class]]) {
+        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendfile code:@(0) msg:@"sendfile"];
+    }
+    else if ([msgCellData isKindOfClass:[TUIGroupLiveMessageCell class]]) {
+        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendgrouplive code:@(0) msg:@"sendgrouplive"];
+    }
 }
 
 - (void)chatController:(TUIChatController *)chatController onSelectMoreCell:(TUIInputMoreCell *)cell
@@ -225,6 +264,23 @@
         cellData.link = link;
         cellData.innerMessage = [[V2TIMManager sharedInstance] createCustomMessage:[TCUtil dictionary2JsonData:@{@"version": @(TextLink_Version),@"businessID": TextLink,@"text":text,@"link":link}]];
         [chatController sendMessage:cellData];
+        
+        if ([_conversationData.groupID isEqualToString:@"im_demo_admin"] || [_conversationData.userID isEqualToString:@"im_demo_admin"]) {
+            [TCUtil report:Action_Sendmsg2helper actionSub:@"" code:@(0) msg:@"sendmsg2helper"];
+        }
+        else if ([_conversationData.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [_conversationData.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
+            [TCUtil report:Action_Sendmsg2defaultgrp actionSub:@"" code:@(0) msg:@"sendmsg2defaultgrp"];
+        }
+        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendcustom code:@(0) msg:@"sendcustom"];
+    } else if ([cell.data.title isEqualToString:@"群直播"]) {
+        cell.disableDefaultSelectAction = YES;
+        NSString *hashStr = [NSString stringWithFormat:@"%@_%@_liveRoom", _conversationData.groupID, [TUILiveUserProfile getLoginUserInfo].userID];
+        int roomId = (hashStr.hash & 0x7FFFFFFF);
+        TUILiveRoomAnchorViewController *anchorVC = [[TUILiveRoomAnchorViewController alloc] initWithRoomId:roomId];
+        [anchorVC enablePK:NO];
+        anchorVC.delegate = self;
+        [anchorVC setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:anchorVC animated:YES];
     }
 }
 
@@ -282,6 +338,35 @@
         if (cellData.link) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cellData.link]];
         }
+    } else if ([cell isKindOfClass:[TUIGroupLiveMessageCell class]]) {
+        cell.disableDefaultSelectAction = YES;
+        NSLog(@"群直播消息");
+        TUIGroupLiveMessageCellData *celldata = [(TUIGroupLiveMessageCell *)cell customData];
+        NSDictionary *roomInfo = celldata.roomInfo;
+        NSString *anchorId = roomInfo[@"anchorId"];
+        if (roomInfo[@"roomId"] && anchorId.length > 0) {
+            if ([anchorId isEqual:[TUILiveUserProfile getLoginUserInfo].userID]) {
+                NSString *hashStr = [NSString stringWithFormat:@"%@_%@_liveRoom", _conversationData.groupID, [TUILiveUserProfile getLoginUserInfo].userID];
+                int roomId = (hashStr.hash & 0x7FFFFFFF);
+                TUILiveRoomAnchorViewController *anchorVC = [[TUILiveRoomAnchorViewController alloc] initWithRoomId:roomId];
+                [anchorVC enablePK:NO];
+                anchorVC.delegate = self;
+                [anchorVC setHidesBottomBarWhenPushed:YES];
+                [self.navigationController pushViewController:anchorVC animated:YES];
+            } else {
+                
+                // 检查群直播是否结束
+                __weak typeof(self) weakSelf = self;
+                [self checkGroupLiveOnline:[NSString stringWithFormat:@"%@", roomInfo[@"roomId"]] completion:^(BOOL online) {
+                    if (!online) {
+                        [self.view makeToast:@"直播已结束"];
+                        return;
+                    }
+                    TUILiveRoomAudienceViewController *audienceVC = [[TUILiveRoomAudienceViewController alloc] initWithRoomId:[roomInfo[@"roomId"] intValue] anchorId:anchorId useCdn:NO cdnUrl:@""];
+                    [weakSelf.navigationController pushViewController:audienceVC animated:YES];
+                }];
+            }
+        }
     }
 }
 
@@ -296,6 +381,7 @@
     }
     [_unRead setNum:unReadCount];
 }
+
 ///此处可以修改导航栏按钮的显示位置，但是无法修改响应位置，暂时不建议使用
 - (void)resetBarItemSpacesWithController:(UIViewController *)viewController {
     CGFloat space = 16;
@@ -330,8 +416,63 @@
     [_chat sendMessage:msg];
 }
 
-//- (void)chatController:(TUIChatController *)controller onSelectMessageAvatar:(TUIMessageCell *)cell
-//{
-//
-//}
+#pragma mark - 群直播相关
+- (void)checkGroupLiveOnline:(NSString *)roomId completion:(void(^)(BOOL online))completion
+{
+    [TUILiveRoomManager.sharedManager getRoomList:SDKAPPID type:@"groupLive" success:^(NSArray<NSString *> * _Nonnull roomIds) {
+        if (completion) {
+            completion([roomIds containsObject:roomId]);
+        }
+    } failed:^(int code, NSString * _Nonnull errorMsg) {
+        if (completion) {
+            completion(NO);
+        }
+    }];
+}
+
+
+
+#pragma mark - TUILiveRoomAnchorDelegate
+- (void)onRoomCreate:(TRTCLiveRoomInfo *)roomInfo {
+    TUIGroupLiveMessageCellData *cellData = [self groupLiveCellDataWith:roomInfo roomStatus:1];
+    [self sendMessage:cellData];
+    
+    [[TUILiveRoomManager sharedManager] createRoom:SDKAPPID type:@"groupLive" roomID:[NSString stringWithFormat:@"%@", roomInfo.roomId] success:^{
+        NSLog(@"----> 业务层创建群直播房间成功: roomId:%@", roomInfo.roomId);
+        [TUILiveHeartBeatManager.shareManager startWithType:@"groupLive" roomId:roomInfo.roomId];
+    } failed:^(int code, NSString * _Nonnull errorMsg) {
+        NSLog(@"----> 业务层创建群直播房间失败，%d, %@", code, errorMsg);
+    }];
+
+}
+
+- (void)onRoomDestroy:(TRTCLiveRoomInfo *)roomInfo {
+    TUIGroupLiveMessageCellData *cellData = [self groupLiveCellDataWith:roomInfo roomStatus:0];
+    [self sendMessage:cellData];
+    
+    [[TUILiveRoomManager sharedManager] destroyRoom:SDKAPPID type:@"groupLive" roomID:[NSString stringWithFormat:@"%@", roomInfo.roomId] success:^{
+        NSLog(@"----> 业务层销毁群直播房间成功");
+        [TUILiveHeartBeatManager.shareManager stop];
+    } failed:^(int code, NSString * _Nonnull errorMsg) {
+        NSLog(@"----> 业务层销毁群直播房间失败，%d, %@", code, errorMsg);
+    }];
+}
+
+- (TUIGroupLiveMessageCellData *)groupLiveCellDataWith:(TRTCLiveRoomInfo *)roomInfo roomStatus:(NSInteger)status {
+    TUIGroupLiveMessageCellData *cellData = [[TUIGroupLiveMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
+    cellData.anchorName = roomInfo.ownerName?:@"";
+    cellData.roomInfo = @{
+        @"roomId":roomInfo.roomId?:@"",
+        @"version":@(AVCall_Version),
+        @"roomName":roomInfo.roomName?:@"",
+        @"roomCover":roomInfo.coverUrl?:@"",
+        @"roomType":@"liveRoom",
+        @"roomStatus":@(status),
+        @"anchorId":roomInfo.ownerId?:@"",
+        @"anchorName":roomInfo.ownerName?:@""
+    };
+    cellData.status = Msg_Status_Init;
+    return cellData;
+}
+
 @end

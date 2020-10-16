@@ -290,4 +290,7 @@
 }
 
 
++ (void)report:(NSString *)action actionSub:(NSString *)actionSub code:(NSNumber *)code  msg:(NSString *)msg {
+    // to do
+}
 @end

@@ -27,6 +27,7 @@
     <string name="tab_contact_tab_text">通讯录</string>
     <string name="tab_conversation_tab_text">消息</string>
     <string name="tab_profile_tab_text">我</string>
+    <string name="tab_scenes_tab_text">直播</string>
 
     // "+"menu相关
     <string name="add_friend">添加好友</string>
@@ -56,4 +57,16 @@
     <string name="test_custom_message">查看详情>></string>
 
     <string name="privacy_text">已同意《<a href="http://privacy.qq.com/">隐私政策</a>》</string>
+
+    <!-- 场景 -->
+    <string name="live_scenes_live_room">视频直播</string>
+    <string name="live_scenes_voice_room">语音聊天室</string>
+    <string name="live_voice_room_room_title" formatted="false">房间号: %d</string>
+    <string name="live_voice_room_numer_format" formatted="false" >%d人在看</string>
+    <string name="live_voice_room_agree">同意</string>
+    <string name="live_voice_room_warning_not_empty">"输入不能为空!"</string>
+    <string name="live_voice_room_send">发送</string>
+    <string name="live_voice_room_already_agree">已同意</string>
+    <string name="live_voice_room_main_title" formatted="false">%1s(%2d)</string>
+    <string name="live_is_over">直播已结束</string>
 </resources>

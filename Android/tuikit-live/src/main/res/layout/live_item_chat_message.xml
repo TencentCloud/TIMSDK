@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="6dp">
+
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/live_chat_level_1"/>-->
+
+        <TextView
+            android:id="@+id/sendcontext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/live_text_size_middle"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:background="@drawable/live_chat_message_bg"
+            android:gravity="start" />
+</LinearLayout>

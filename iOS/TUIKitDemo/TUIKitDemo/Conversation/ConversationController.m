@@ -115,6 +115,13 @@
     ChatViewController *chat = [[ChatViewController alloc] init];
     chat.conversationData = conversation.convData;
     [self.navigationController pushViewController:chat animated:YES];
+    
+    if ([conversation.convData.groupID isEqualToString:@"im_demo_admin"] || [conversation.convData.userID isEqualToString:@"im_demo_admin"]) {
+        [TCUtil report:Action_Clickhelper actionSub:@"" code:@(0) msg:@"clickhelper"];
+    }
+    if ([conversation.convData.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [conversation.convData.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
+        [TCUtil report:Action_Clickdefaultgrp actionSub:@"" code:@(0) msg:@"clickdefaultgrp"];
+    }
 }
 
 /**
@@ -178,6 +185,8 @@
             NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
             [tempArray removeObjectAtIndex:tempArray.count-2];
             self.navigationController.viewControllers = tempArray;
+            
+            [TCUtil report:Action_Createc2c actionSub:@"" code:@(0) msg:@"createc2c"];
         };
         return;
     }
@@ -189,6 +198,7 @@
         vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
             @strongify(self)
             [self addGroup:GroupType_Work addOption:0 withContacts:array];
+            [TCUtil report:Action_Createprivategrp actionSub:@"" code:@(0) msg:@"createprivategrp"];
         };
         return;
     } else if(index == 2){
@@ -199,6 +209,7 @@
         vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
             @strongify(self)
             [self addGroup:GroupType_Public addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
+            [TCUtil report:Action_Createpublicgrp actionSub:@"" code:@(0) msg:@"createpublicgrp"];
         };
         return;
     } else if(index == 3){
@@ -209,6 +220,7 @@
         vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
             @strongify(self)
             [self addGroup:GroupType_Meeting addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
+            [TCUtil report:Action_Createchatroomgrp actionSub:@"" code:@(0) msg:@"createchatroomgrp"];
         };
         return;
     }

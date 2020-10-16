@@ -1,1 +1,1 @@
-include ':app', ':tuikit'
+include ':app', ':tuikit', ':tuikit-live'

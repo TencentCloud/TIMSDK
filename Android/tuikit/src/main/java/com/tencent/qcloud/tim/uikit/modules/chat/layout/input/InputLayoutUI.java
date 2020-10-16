@@ -1,11 +1,11 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.input;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,9 +14,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IInputLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreActionUnit;
 import com.tencent.qcloud.tim.uikit.utils.PermissionUtils;
@@ -66,10 +69,11 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
      */
     protected TIMMentionEditText mTextInput;
 
-    protected Activity mActivity;
+    protected AppCompatActivity mActivity;
     protected View mInputMoreLayout;
     //    protected ShortcutArea mShortcutArea;
     protected View mInputMoreView;
+    protected ChatInfo mChatInfo;
     protected List<InputMoreActionUnit> mInputMoreActionList = new ArrayList<>();
     protected List<InputMoreActionUnit> mInputMoreCustomActionList = new ArrayList<>();
     private AlertDialog mPermissionDialog;
@@ -96,7 +100,7 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     }
 
     private void initViews() {
-        mActivity = (Activity) getContext();
+        mActivity = (AppCompatActivity) getContext();
         inflate(mActivity, R.layout.chat_input_layout, this);
 //        mShortcutArea = findViewById(R.id.shortcut_area);
         mInputMoreView = findViewById(R.id.more_groups);
@@ -165,6 +169,19 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
             mInputMoreActionList.add(action);
         }
 
+        if (mEnableVideoCall) {
+            action = new InputMoreActionUnit();
+            action.setIconResId(R.drawable.ic_more_video_call);
+            action.setTitleId(R.string.video_call);
+            action.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startVideoCall();
+                }
+            });
+            mInputMoreActionList.add(action);
+        }
+
         if (mEnableAudioCall) {
             action = new InputMoreActionUnit();
             action.setIconResId(R.drawable.ic_more_audio_call);
@@ -178,20 +195,20 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
             mInputMoreActionList.add(action);
         }
 
-        if (mEnableVideoCall) {
+        if (TUIKit.getConfigs().isEnableGroupLiveEntry() && mChatInfo != null && mChatInfo.getType() != V2TIMConversation.V2TIM_C2C) {
             action = new InputMoreActionUnit();
-            action.setIconResId(R.drawable.ic_more_video_call);
-            action.setTitleId(R.string.video_call);
+            action.setIconResId(R.drawable.ic_more_group_live);
+            action.setTitleId(R.string.live_group_live);
             action.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startVideoCall();
+                    startGroupLive();
                 }
             });
             mInputMoreActionList.add(action);
         }
-        mInputMoreActionList.addAll(mInputMoreCustomActionList);
 
+        mInputMoreActionList.addAll(mInputMoreCustomActionList);
     }
 
     protected boolean checkPermission(int type) {
@@ -227,6 +244,8 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     protected abstract void startAudioCall();
 
     protected abstract void startVideoCall();
+
+    protected abstract void startGroupLive();
 
     @Override
     public void disableAudioInput(boolean disable) {
@@ -346,5 +365,13 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
 
     public void clearCustomActionList() {
         mInputMoreCustomActionList.clear();
+    }
+
+    public void setChatInfo(ChatInfo chatInfo) {
+        mChatInfo = chatInfo;
+    }
+
+    public ChatInfo getChatInfo() {
+        return mChatInfo;
     }
 }

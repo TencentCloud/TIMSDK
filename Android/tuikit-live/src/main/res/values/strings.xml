@@ -1,0 +1,90 @@
+<resources>
+    <string name="app_name">tuikit-live</string>
+    <string name="live_default_audience_weight">999</string>
+    <string name="live_default_audience_num">999</string>
+    <string name="live_default_anchor_name">阿管</string>
+    <string name="live_default_anchor_empirical_value">2.0万</string>
+    <string name="live_btn_follow_anchor">关注</string>
+    <string name="live_experience">经验</string>
+
+
+    <string name="live_end_tips">直播结束啦!</string>
+    <string name="live_time_tips">直播时长</string>
+    <string name="live_members_tips">观看人数</string>
+    <string name="live_admires_tips">获赞数量</string>
+    <string name="live_btn_return">返回</string>
+    <string name="live_tips">"提示"</string>
+    <string name="live_ok">"确定"</string>
+    <string name="live_cancel">"取消"</string>
+
+    <string name="live_text_voice_quality">"直播音质"</string>
+    <string name="live_hint_live_room_name">"标题有趣能吸引人气"</string>
+    <string name="live_voice_quality_standard">"标准"</string>
+    <string name="live_voice_quality_music">"音乐"</string>
+    <string name="live_btn_start_live">开始直播</string>
+    <string name="live_btn_beauty">美颜</string>
+    <string name="live_room_name_empty">房间名不能为空</string>
+    <string name="live_warning_anchor_exit_room">当前正在直播，是否退出直播？</string>
+    <string name="live_error">错误</string>
+    <string name="live_get_it">知道了</string>
+    <string name="live_send">"发送"</string>
+    <string name="live_dialog_input_text_hint">和大家说点什么吧</string>
+    <string name="live_warning_not_empty">"输入不能为空!"</string>
+    <string name="live_gift_game_currency">游戏币%d</string>
+    <string name="live_gift_charge">充值</string>
+    <string name="live_gift_give_gift">赠送</string>
+    <string name="live_gift_send">送出%s</string>
+    <string name="live_voice_room_create_input_hint">请输入主题和昵称</string>
+
+    <string name="live_message_me">"我"</string>
+    <string name="live_notification">"通知"</string>
+    <string name="live_user_join_live">"%1$s加入直播"</string>
+    <string name="live_user_quit_live">"%1$s退出直播"</string>
+    <string name="live_user_click_like">"%1$s点了个赞"</string>
+    <string name="live_message_send_success">"发送成功"</string>
+    <string name="live_message_send_fail">"消息发生失败[%1$d]:%2$s"</string>
+
+    <string name="live_accept">"接受"</string>
+    <string name="live_refuse">"拒绝"</string>
+
+
+    <string name="live_request_link_mic_anchor">"%1$s请求和您连麦"</string>
+    <string name="live_anchor_accept_link_mic">"主播接受了您的连麦请求，开始连麦"</string>
+    <string name="live_error_request_link_mic">"连麦请求发生错误，%1$s"</string>
+
+    <string name="live_request_link_mic">"%1$s向您发起连麦请求"</string>
+    <string name="live_anchor_refuse_link_request">"主播拒绝了您的连麦请求"</string>
+    <string name="live_warning_link_user_max_limit">"主播端连麦人数超过最大限制"</string>
+
+    <string name="live_request_pk">"%1$s向您发起PK请求"</string>
+    <string name="live_anchor_refuse_pk_request">"主播拒绝了您的PK请求"</string>
+    <string name="live_anchor_handling_other_link">"请稍后，主播正在处理其它人的连麦请求"</string>
+    <string name="live_anchor_handling_other_pk">"请稍后，主播正在处理其它人的PK请求"</string>
+    <string name="live_tips_quit_pk">"onQuitRoomPK"</string>
+    <string name="live_anchor_accept_pk">主播接受PK邀请</string>
+    <string name="live_anchor_reject_pk">主播拒绝邀请</string>
+    <string name="live_wait_link">连麦列表</string>
+    <string name="live_stop_pk">结束PK</string>
+    <string name="live_tips_rest">操作太频繁了，休息一下吧</string>
+    <string name="live_fail_link_mic">连麦失败, %s</string>
+    <string name="live_warning_room_disband">房间已解散</string>
+    <string name="live_wait_anchor_accept">等待主播接受......</string>
+    <string name="live_follow_anchor_success">"关注主播成功"</string>
+
+    <string name="live_anchor_offline">"主播暂时不在线..."</string>
+    <string name="live_beauty_mopi">磨皮</string>
+    <string name="live_create_room_success">创建房间成功</string>
+    <string name="live_create_room_fail">创建房间失败</string>
+    <string name="live_agree">同意</string>
+    <string name="live_reject">拒绝</string>
+    <string name="live_audience_link_mic">申请上麦列表</string>
+    <string name="live_request_time_out">请求超时</string>
+    <string name="live_anchor_accept_pk_timeout">主播超时未响应PK请求</string>
+    <string name="live_anchor_accept">主播同意上麦</string>
+    <string name="live_anchor_reject">主播拒绝上麦</string>
+
+    <string name="report_success">举报成功，我们将在24小时内进行处理</string>
+    <string name="report">举报</string>
+    <string name="live_anchor_view_error">当前连麦人数超过了最大值</string>
+
+</resources>

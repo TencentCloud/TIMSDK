@@ -5,9 +5,11 @@
 #import "ContactsController.h"
 #import "LoginController.h"
 #import "TUITabBarController.h"
+#import "TUILiveSceneViewController.h"
 #import "THeader.h"
 #import "TCUtil.h"
 #import "THelper.h"
+#import "UIColor+TUIDarkMode.h"
 #import "GenerateTestUserSig.h"
 #import "ImSDK.h"
 #import <Bugly/Bugly.h>
@@ -289,26 +291,37 @@ void uncaughtExceptionHandler(NSException*exception){
     NSMutableArray *items = [NSMutableArray array];
     TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
     msgItem.title = @"消息";
-    msgItem.selectedImage = [UIImage imageNamed:TUIKitResource(@"message_pressed")];
-    msgItem.normalImage = [UIImage imageNamed:TUIKitResource(@"message_normal")];
+    msgItem.selectedImage = [UIImage imageNamed:@"session_selected"];
+    msgItem.normalImage = [UIImage imageNamed:@"session_normal"];
     msgItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
+    msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     [items addObject:msgItem];
-    
+
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
     contactItem.title = @"通讯录";
-    contactItem.selectedImage = [UIImage imageNamed:TUIKitResource(@"contacts_pressed")];
-    contactItem.normalImage = [UIImage imageNamed:TUIKitResource(@"contacts_normal")];
+    contactItem.selectedImage = [UIImage imageNamed:@"contact_selected"];
+    contactItem.normalImage = [UIImage imageNamed:@"contact_normal"];
     contactItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
+    contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     [items addObject:contactItem];
+    // 直播Tab添加
+    TUITabBarItem *sceneItem = [[TUITabBarItem alloc] init];
+    sceneItem.title = @"直播";
+    sceneItem.selectedImage = [UIImage imageNamed:@"live_broadcast_camera_on"];
+    sceneItem.normalImage = [UIImage imageNamed:@"live_broadcast_camera_off"];
+    sceneItem.controller = [[TNavigationController alloc] initWithRootViewController:[[TUILiveSceneViewController alloc] init]];
+    sceneItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    [items addObject:sceneItem];
     
     TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
     setItem.title = @"我";
-    setItem.selectedImage = [UIImage imageNamed:TUIKitResource(@"setting_pressed")];
-    setItem.normalImage = [UIImage imageNamed:TUIKitResource(@"setting_normal")];
+    setItem.selectedImage = [UIImage imageNamed:@"myself_selected"];
+    setItem.normalImage = [UIImage imageNamed:@"myself_normal"];
     setItem.controller = [[TNavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
+    setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     [items addObject:setItem];
     tbc.tabBarItems = items;
-    
+
     return tbc;
 }
 

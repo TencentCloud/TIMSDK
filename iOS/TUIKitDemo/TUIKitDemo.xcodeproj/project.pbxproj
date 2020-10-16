@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -21,6 +21,14 @@
 		CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0BDFA8221D53C60083E1B0 /* Bugly.framework */; };
 		CE1A434A22DE07EB008A767E /* PAirSandbox.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434322DE07EB008A767E /* PAirSandbox.m */; };
 		CE1A434C22DE07EB008A767E /* TCUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434822DE07EB008A767E /* TCUtil.m */; };
+		CE1EC0FB2536FCCD005D2695 /* TUILiveRoomListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1EC0DC2536FCCC005D2695 /* TUILiveRoomListViewController.m */; };
+		CE1EC0FC2536FCCD005D2695 /* TUILiveRoomListView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1EC0DE2536FCCC005D2695 /* TUILiveRoomListView.m */; };
+		CE1EC0FD2536FCCD005D2695 /* TUILiveRoomListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1EC0E02536FCCC005D2695 /* TUILiveRoomListCell.m */; };
+		CE1EC0FE2536FCCD005D2695 /* TUILiveTopSegmentView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1EC0E22536FCCC005D2695 /* TUILiveTopSegmentView.m */; };
+		CE1EC0FF2536FCCD005D2695 /* TUILiveRoomInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1EC0E52536FCCC005D2695 /* TUILiveRoomInfo.m */; };
+		CE1EC1002536FCCD005D2695 /* TUILiveRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1EC0E72536FCCC005D2695 /* TUILiveRoomManager.m */; };
+		CE1EC10E2536FCCD005D2695 /* TUILiveHeartBeatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1EC0F82536FCCD005D2695 /* TUILiveHeartBeatManager.m */; };
+		CE1EC10F2536FCCD005D2695 /* TUILiveSceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1EC0FA2536FCCD005D2695 /* TUILiveSceneViewController.m */; };
 		CE37D1C422F9942B0012500D /* GenerateTestUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D1C222F9942B0012500D /* GenerateTestUserSig.m */; };
 		CE37D24A22F9CBC80012500D /* ProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D24822F9CBC80012500D /* ProfileController.m */; };
 		CE685F1523B48F8700A3953C /* 00.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE685F1323B48F8700A3953C /* 00.caf */; };
@@ -71,6 +79,22 @@
 		CE1A434822DE07EB008A767E /* TCUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUtil.m; sourceTree = "<group>"; };
 		CE1A434922DE07EB008A767E /* TCUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCUtil.h; sourceTree = "<group>"; };
 		CE1C55922224F22C00A75262 /* TUIKitDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TUIKitDemo.entitlements; sourceTree = "<group>"; };
+		CE1EC0DA2536FCCC005D2695 /* TUILiveRoomListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListViewController.h; sourceTree = "<group>"; };
+		CE1EC0DB2536FCCC005D2695 /* TUILiveSceneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveSceneViewController.h; sourceTree = "<group>"; };
+		CE1EC0DC2536FCCC005D2695 /* TUILiveRoomListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListViewController.m; sourceTree = "<group>"; };
+		CE1EC0DE2536FCCC005D2695 /* TUILiveRoomListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListView.m; sourceTree = "<group>"; };
+		CE1EC0DF2536FCCC005D2695 /* TUILiveTopSegmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveTopSegmentView.h; sourceTree = "<group>"; };
+		CE1EC0E02536FCCC005D2695 /* TUILiveRoomListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListCell.m; sourceTree = "<group>"; };
+		CE1EC0E12536FCCC005D2695 /* TUILiveRoomInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomInfo.h; sourceTree = "<group>"; };
+		CE1EC0E22536FCCC005D2695 /* TUILiveTopSegmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveTopSegmentView.m; sourceTree = "<group>"; };
+		CE1EC0E32536FCCC005D2695 /* TUILiveRoomListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListView.h; sourceTree = "<group>"; };
+		CE1EC0E42536FCCC005D2695 /* TUILiveRoomListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListCell.h; sourceTree = "<group>"; };
+		CE1EC0E52536FCCC005D2695 /* TUILiveRoomInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomInfo.m; sourceTree = "<group>"; };
+		CE1EC0E72536FCCC005D2695 /* TUILiveRoomManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomManager.m; sourceTree = "<group>"; };
+		CE1EC0E82536FCCC005D2695 /* TUILiveHeartBeatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveHeartBeatManager.h; sourceTree = "<group>"; };
+		CE1EC0F82536FCCD005D2695 /* TUILiveHeartBeatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveHeartBeatManager.m; sourceTree = "<group>"; };
+		CE1EC0F92536FCCD005D2695 /* TUILiveRoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomManager.h; sourceTree = "<group>"; };
+		CE1EC0FA2536FCCD005D2695 /* TUILiveSceneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveSceneViewController.m; sourceTree = "<group>"; };
 		CE2BBCE32421C34D000C4B7A /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = Pods/TXIMSDK_iOS/ImSDK.framework; sourceTree = "<group>"; };
 		CE37D1C222F9942B0012500D /* GenerateTestUserSig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateTestUserSig.m; sourceTree = "<group>"; };
 		CE37D1C322F9942B0012500D /* GenerateTestUserSig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateTestUserSig.h; sourceTree = "<group>"; };
@@ -225,6 +249,46 @@
 			path = Contact;
 			sourceTree = "<group>";
 		};
+		CE1EC0D92536FCCC005D2695 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				CE1EC0DA2536FCCC005D2695 /* TUILiveRoomListViewController.h */,
+				CE1EC0DB2536FCCC005D2695 /* TUILiveSceneViewController.h */,
+				CE1EC0DC2536FCCC005D2695 /* TUILiveRoomListViewController.m */,
+				CE1EC0DD2536FCCC005D2695 /* Custom */,
+				CE1EC0E62536FCCC005D2695 /* Data */,
+				CE1EC0FA2536FCCD005D2695 /* TUILiveSceneViewController.m */,
+			);
+			name = Scenes;
+			path = TUIKitDemo/Scenes;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE1EC0DD2536FCCC005D2695 /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				CE1EC0DE2536FCCC005D2695 /* TUILiveRoomListView.m */,
+				CE1EC0DF2536FCCC005D2695 /* TUILiveTopSegmentView.h */,
+				CE1EC0E02536FCCC005D2695 /* TUILiveRoomListCell.m */,
+				CE1EC0E12536FCCC005D2695 /* TUILiveRoomInfo.h */,
+				CE1EC0E22536FCCC005D2695 /* TUILiveTopSegmentView.m */,
+				CE1EC0E32536FCCC005D2695 /* TUILiveRoomListView.h */,
+				CE1EC0E42536FCCC005D2695 /* TUILiveRoomListCell.h */,
+				CE1EC0E52536FCCC005D2695 /* TUILiveRoomInfo.m */,
+			);
+			path = Custom;
+			sourceTree = "<group>";
+		};
+		CE1EC0E62536FCCC005D2695 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				CE1EC0E72536FCCC005D2695 /* TUILiveRoomManager.m */,
+				CE1EC0E82536FCCC005D2695 /* TUILiveHeartBeatManager.h */,
+				CE1EC0F82536FCCD005D2695 /* TUILiveHeartBeatManager.m */,
+				CE1EC0F92536FCCD005D2695 /* TUILiveRoomManager.h */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		CE37D1C122F9942B0012500D /* Debug */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,6 +322,7 @@
 			children = (
 				CE37D1C122F9942B0012500D /* Debug */,
 				910D900522AE069000C9A318 /* Util */,
+				CE1EC0D92536FCCC005D2695 /* Scenes */,
 				910D8FFE22AE052400C9A318 /* Conversation */,
 				910D8FFB22AE051C00C9A318 /* Login */,
 				91D3AD2C22AA06110036CDE0 /* Utils */,
@@ -300,8 +365,8 @@
 				CF01447E216E1A4900C12E35 /* Sources */,
 				CF01447F216E1A4900C12E35 /* Frameworks */,
 				CF014480216E1A4900C12E35 /* Resources */,
-				61CAB06CE3F1C633914AD722 /* [CP] Embed Pods Frameworks */,
 				EC502815E8EBA074322E99F1 /* [CP] Copy Pods Resources */,
+				4338EF2A772022590ECF208E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -392,17 +457,15 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		61CAB06CE3F1C633914AD722 /* [CP] Embed Pods Frameworks */ = {
+		4338EF2A772022590ECF208E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -415,11 +478,9 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -434,25 +495,33 @@
 			buildActionMask = 2147483647;
 			files = (
 				CECC13CE22B282C7008378A2 /* TCLoginParam.m in Sources */,
+				CE1EC10E2536FCCD005D2695 /* TUILiveHeartBeatManager.m in Sources */,
 				CE1A434A22DE07EB008A767E /* PAirSandbox.m in Sources */,
+				CE1EC1002536FCCD005D2695 /* TUILiveRoomManager.m in Sources */,
 				915AA66A2248DBC600C0C9A0 /* ContactsController.m in Sources */,
 				913C853A2268260100D74B58 /* FriendRequestViewController.m in Sources */,
 				CF01448A216E1A4900C12E35 /* LoginController.m in Sources */,
+				CE1EC0FD2536FCCD005D2695 /* TUILiveRoomListCell.m in Sources */,
 				913C8531226705C300D74B58 /* SearchFriendViewController.m in Sources */,
 				CFEB47782177982B00CFD98C /* GroupMemberController.m in Sources */,
 				91941A5222AE435700123596 /* MyCustomCell.m in Sources */,
+				CE1EC0FC2536FCCD005D2695 /* TUILiveRoomListView.m in Sources */,
 				CE1A434C22DE07EB008A767E /* TCUtil.m in Sources */,
 				CFEB47752177981900CFD98C /* GroupInfoController.m in Sources */,
 				91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */,
 				CE37D24A22F9CBC80012500D /* ProfileController.m in Sources */,
 				CE37D1C422F9942B0012500D /* GenerateTestUserSig.m in Sources */,
+				CE1EC0FF2536FCCD005D2695 /* TUILiveRoomInfo.m in Sources */,
 				CFEB47D02179B82300CFD98C /* SettingController.m in Sources */,
+				CE1EC0FE2536FCCD005D2695 /* TUILiveTopSegmentView.m in Sources */,
 				9176C5BE227A98A300DF5784 /* TUserProfileController.m in Sources */,
 				CFDC2FA5216E2D5E002EAEC2 /* ChatViewController.m in Sources */,
 				91941A4D22AE40C300123596 /* MyCustomCellData.m in Sources */,
 				91D3AD3122AA06440036CDE0 /* Aspects.m in Sources */,
+				CE1EC10F2536FCCD005D2695 /* TUILiveSceneViewController.m in Sources */,
 				910AF70B22925BF000ED5675 /* SearchGroupViewController.m in Sources */,
 				910AF7112292820300ED5675 /* GroupRequestViewController.m in Sources */,
+				CE1EC0FB2536FCCD005D2695 /* TUILiveRoomListViewController.m in Sources */,
 				CF014495216E1A4B00C12E35 /* main.m in Sources */,
 				CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */,
 				CFDC2FA2216E2C8F002EAEC2 /* ConversationController.m in Sources */,
@@ -601,6 +670,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = TUIKitDemo/TUIKitDemo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -622,9 +692,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.qcloud.tim.tuikit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.tuikit.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "Wildcard Dev";
+				PROVISIONING_PROFILE_SPECIFIER = imsdk;
 				SWIFT_OBJC_BRIDGING_HEADER = "TUIKitDemo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -638,10 +708,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = TUIKitDemo/TUIKitDemo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = QE8PS7F45A;
+				DEVELOPMENT_TEAM = 5GHU44CJHG;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -660,9 +731,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.qcloud.tim.tuikit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.tuikit.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = tim2_dev;
+				PROVISIONING_PROFILE_SPECIFIER = imsdk;
 				SWIFT_OBJC_BRIDGING_HEADER = "TUIKitDemo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

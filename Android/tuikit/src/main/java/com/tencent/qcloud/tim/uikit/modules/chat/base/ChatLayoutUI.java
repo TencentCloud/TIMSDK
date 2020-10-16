@@ -94,6 +94,7 @@ public abstract class ChatLayoutUI extends LinearLayout implements IChatLayout {
     @Override
     public void setChatInfo(ChatInfo chatInfo) {
         mChatInfo = chatInfo;
+        mInputLayout.setChatInfo(chatInfo);
         if (chatInfo == null) {
             return;
         }

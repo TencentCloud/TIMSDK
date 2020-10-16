@@ -57,11 +57,17 @@ public class CallModel implements Cloneable, Serializable {
      */
     public static final int VIDEO_CALL_ACTION_ACCEPT          = 7;
 
-    public static String SIGNALING_EXTRA_KEY_CALL_TYPE  = "call_type";
-    public static String SIGNALING_EXTRA_KEY_ROOM_ID    = "room_id";
-    public static String SIGNALING_EXTRA_KEY_LINE_BUSY  = "line_busy";
-    public static String SIGNALING_EXTRA_KEY_CALL_END   = "call_end";
-    public static String SIGNALING_EXTRA_KEY_VERSION    = "version";
+    public static String SIGNALING_EXTRA_VALUE_BUSINESS_ID = "av_call";
+
+    public static String SIGNALING_EXTRA_KEY_BUSINESS_ID = "businessID";
+    public static String SIGNALING_EXTRA_KEY_CALL_TYPE   = "call_type";
+    public static String SIGNALING_EXTRA_KEY_ROOM_ID     = "room_id";
+    public static String SIGNALING_EXTRA_KEY_LINE_BUSY   = "line_busy";
+    public static String SIGNALING_EXTRA_KEY_CALL_END    = "call_end";
+    public static String SIGNALING_EXTRA_KEY_VERSION     = "version";
+
+    @SerializedName("businessID")
+    public String bussinessID;
 
     @SerializedName("version")
     public int version = 0;
@@ -147,6 +153,9 @@ public class CallModel implements Cloneable, Serializable {
                 return callModel;
             }
             callModel.data = signalingInfo.getData();
+            if (extraMap != null) {
+                callModel.bussinessID = (String) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_BUSINESS_ID);
+            }
             if (signalingInfo.getActionType() == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_INVITE && extraMap != null) {
                 callModel.groupId = signalingInfo.getGroupID();
                 callModel.timestamp = msg.getTimestamp();

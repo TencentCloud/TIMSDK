@@ -18,6 +18,7 @@ import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tim.demo.helper.ConfigHelper;
+import com.tencent.qcloud.tim.demo.scenes.net.RoomManager;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
@@ -28,6 +29,7 @@ import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
+import com.tencent.rtmp.TXLiveBase;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
@@ -36,6 +38,9 @@ import androidx.multidex.MultiDex;
 public class DemoApplication extends Application {
 
     private static final String TAG = DemoApplication.class.getSimpleName();
+
+    private final String licenceUrl = "";
+    private final String licenseKey = "";
 
     private static DemoApplication instance;
 
@@ -53,7 +58,7 @@ public class DemoApplication extends Application {
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
         strategy.setAppVersion(TIMManager.getInstance().getVersion());
         CrashReport.initCrashReport(getApplicationContext(), PrivateConstants.BUGLY_APPID, true, strategy);
-
+        TXLiveBase.getInstance().setLicence(instance, licenceUrl, licenseKey);
         /**
          * TUIKit的初始化函数
          *
@@ -62,7 +67,6 @@ public class DemoApplication extends Application {
          * @param configs  TUIKit的相关配置项，一般使用默认即可，需特殊配置参考API文档
          */
         TUIKit.init(this, GenerateTestUserSig.SDKAPPID, new ConfigHelper().getConfigs());
-
         HeytapPushManager.init(this, true);
         if (BrandUtil.isBrandXiaoMi()) {
             // 小米离线推送

@@ -139,4 +139,9 @@ public class ScreenUtil {
         }
         return new int[]{width, height};
     }
+
+    public static int dip2px(float dpValue) {
+        final float scale = TUIKit.getAppContext().getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
 }

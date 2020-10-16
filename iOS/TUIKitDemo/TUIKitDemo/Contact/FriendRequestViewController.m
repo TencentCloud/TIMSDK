@@ -248,6 +248,7 @@
         [self.view hideToastActivity];
         [THelper makeToastError:code msg:msg];
     }];
+    [TCUtil report:Action_Addfriend actionSub:@"" code:@(0) msg:@"addfriend"];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
