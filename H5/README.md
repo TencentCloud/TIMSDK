@@ -109,6 +109,17 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### WebIM Demo Change Log
 
+#### 2020/10/22
+
+**Features**
+
+- SDK 版本更新，支持查询直播群在线人数，发送图片消息接入图片压缩
+- Web Demo增加表情包
+
+**BUG Fixes**
+
+- 修复C2C 消息发送失败显示未读标示问题
+
 #### 2020/7/3
 
 **Features**

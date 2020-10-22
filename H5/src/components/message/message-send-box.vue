@@ -1,10 +1,27 @@
 <template>
   <div id="message-send-box-wrapper" :style="focus ? {'backgroundColor': 'white'} : {}" @drop="dropHandler">
     <div class="send-header-bar">
-      <el-popover placement="top" width="400" trigger="click">
-        <div class="emojis">
+      <el-popover placement="top" width="400" trigger="click" v-model="popoverVisible">
+        <div class="emojis" v-if="emojiShow">
           <div v-for="item in emojiName" class="emoji" :key="item" @click="chooseEmoji(item)">
             <img :src="emojiUrl + emojiMap[item]" style="width:30px;height:30px" />
+          </div>
+        </div>
+        <div id="bigEmojiBox" class="emojis" v-if="bigEmojiShow">
+          <div v-for="(bigItem, _index) in curBigEmojiItemList" class="bigemoji" :key="`big_item_${_index}`" @click="chooseBigEmoji(bigItem)">
+            <img :src="faceUrl + bigItem + '@2x.png'" style="width:100%;height:100%"/>
+          </div>
+        </div>
+        <div class="emoji-tab">
+          <div class="tabs">
+            <div class="single" @click="handleEmojiShow" :class="emojiShow ? 'choosed' : ''">
+              <img :src="smileIcon" style="width:100%;height:100%" />
+            </div>
+            <template v-for="(item, index) in bigEmojiList">
+              <div class="single" @click="handleBigEmojiShow(index)" :class="bigEmojiShow && curItemIndex === index ? 'choosed' : ''" :key="`tab_item_${index}`">
+                <img :src="faceUrl + item.icon + '@2x.png'" style="width:100%;height:100%" />
+              </div>
+            </template>
           </div>
         </div>
         <i class="iconfont icon-smile" slot="reference" title="发表情"></i>
@@ -112,6 +129,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
+import smileIcon from '../../assets/image/smile.png'
 import {
   Form,
   FormItem,
@@ -159,7 +177,28 @@ export default {
       emojiUrl: emojiUrl,
       showAtGroupMember: false,
       atUserID: '',
-      focus: false
+      focus: false,
+      smileIcon: smileIcon,
+      popoverVisible: false,
+      faceUrl: 'https://webim-1252463788.file.myqcloud.com/assets/face-elem/',
+      emojiShow: true,
+      bigEmojiShow: false,
+      bigEmojiList: [
+        {
+          icon: 'yz00',
+          list: ['yz00', 'yz01', 'yz02', 'yz03', 'yz04', 'yz05', 'yz06', 'yz07', 'yz08', 'yz09', 'yz10', 'yz11', 'yz12', 'yz13', 'yz14', 'yz15', 'yz16', 'yz17']
+        },
+        {
+          icon: 'ys00',
+          list: ['ys00', 'ys01', 'ys02', 'ys03', 'ys04', 'ys05', 'ys06', 'ys07', 'ys08', 'ys09', 'ys10', 'ys11', 'ys12', 'ys13', 'ys14', 'ys15']
+        },
+        {
+          icon: 'gcs00',
+          list: ['gcs00', 'gcs01', 'gcs02', 'gcs03', 'gcs04', 'gcs05', 'gcs06', 'gcs07', 'gcs08', 'gcs09', 'gcs10', 'gcs11', 'gcs12', 'gcs13', 'gcs14', 'gcs15', 'gcs16']
+        }
+      ],
+      curItemIndex: 0,
+      curBigEmojiItemList: []
     }
   },
   computed: {
@@ -177,6 +216,37 @@ export default {
     this.$refs['text-input'].removeEventListener('paste', this.handlePaste)
   },
   methods: {
+    handleEmojiShow () {
+      this.emojiShow = true
+      this.bigEmojiShow = false
+    },
+    handleBigEmojiShow(index) {
+      let elm = document.getElementById('bigEmojiBox')
+      elm && (elm.scrollTop = 0)
+      this.curItemIndex = index
+      this.curBigEmojiItemList = this.bigEmojiList[index].list
+      this.emojiShow = false
+      this.bigEmojiShow = true
+    },
+    chooseBigEmoji(item) {
+      this.popoverVisible = false
+      let message = this.tim.createFaceMessage({
+        to: this.toAccount,
+        conversationType: this.currentConversationType,
+        payload: {
+          index: this.curItemIndex + 1,
+          data: `${item}@2x`
+        }
+      })
+      this.$store.commit('pushCurrentMessageList', message)
+      this.$bus.$emit('scroll-bottom')
+      this.tim.sendMessage(message).catch(error => {
+        this.$store.commit('showMessage', {
+          type: 'error',
+          message: error.message
+        })
+      })
+    },
     reEditMessage(payload) {
       this.messageContent = payload
     },
@@ -475,12 +545,39 @@ export default {
   }
 }
 </script>
-
+<style lang="stylus">
+.el-popover
+  padding: 12px 0 0 0 !important;
+</style>
 <style lang="stylus" scoped>
 #message-send-box-wrapper {
   box-sizing: border-box;
   overflow: hidden;
   padding: 3px 20px 20px 20px;
+}
+
+.emoji-tab {
+  box-sizing: border-box;
+  background-color: #e6e6e6a1;
+  padding: 0 20px
+  .tabs{
+    display: flex;
+    height: 29px;
+    flex-direction row
+    box-sizing border-box
+  }
+  .single{
+    display: flex;
+    width: 26px;
+    height: 26px;
+    padding: 2px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    margin: 2px 20px 0 0;
+  }
+  .choosed{
+    background-color: rgba(255,255,255,0.7);
+  }
 }
 
 .emojis {
@@ -490,11 +587,19 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
   overflow-y: scroll;
+  padding: 0 0 0 15px;
 }
 
 .emoji {
   height: 40px;
   width: 40px;
+  box-sizing: border-box;
+}
+
+.bigemoji {
+  height: 60px;
+  width: 60px;
+  padding: 10px;
   box-sizing: border-box;
 }
 

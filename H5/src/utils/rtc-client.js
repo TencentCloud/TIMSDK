@@ -46,10 +46,8 @@ class RtcClient {
       this.isJoined_ = true;
     } catch (error) {
       window.dispatchEvent(new Event('leave'));
-      alert(
-        '进房失败原因：' +
-        error
-      );
+      console.warn('RtcClient.join join room fail:', JSON.stringify(error))
+      alert('进房失败')
       return;
     }
 
