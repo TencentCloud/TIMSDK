@@ -2,7 +2,7 @@
   <div class="chat-bubble" @mousedown.stop @contextmenu.prevent>
     <el-dropdown trigger="" ref="dropdown" v-if="!message.isRevoked" @command="handleCommand">
       <div style="display: flex">
-        <div v-if="isMine" class="message-status">
+        <div v-if="isMine && messageReadByPeer" class="message-status">
           <span>{{messageReadByPeer}}</span>
         </div>
         <div class="message-content" :class="bubbleStyle">
@@ -77,6 +77,9 @@ export default {
       return '你撤回了一条消息'
     },
     messageReadByPeer() {
+      if (this.message.status !== 'success') {
+        return false
+      }
       if (this.message.conversationType === this.TIM.TYPES.CONV_C2C && this.message.isPeerRead) {
         return '已读'
       }

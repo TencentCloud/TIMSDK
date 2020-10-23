@@ -1,7 +1,7 @@
 <template>
   <div class="group-member-list-wrapper">
     <div class="header">
-      <span class="member-count text-ellipsis">群成员：{{currentConversation.groupProfile.memberNum}}</span>
+      <span class="member-count text-ellipsis">群成员：{{currentConversation.groupProfile.memberCount}}</span>
       <popover v-model="addGroupMemberVisible">
         <add-group-member></add-group-member>
         <div slot="reference" class="btn-add-member" title="添加群成员">
@@ -57,7 +57,7 @@ export default {
       currentMemberList: state => state.group.currentMemberList
     }),
     showLoadMore() {
-      return this.members.length < this.groupProfile.memberNum
+      return this.members.length < this.groupProfile.memberCount
     },
     members() {
       return this.currentMemberList.slice(0, this.count)

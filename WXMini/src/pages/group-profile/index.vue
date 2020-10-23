@@ -48,7 +48,7 @@
 
     <!-- 添加群成员 Modal 窗 -->
     <i-modal :i-class="inputFocus ? 'add-member-modal-on-focus add-member-modal' : 'add-member-modal'" title="添加群成员" :visible="addMemberModalVisible" @ok="handleOk" @cancel="addMemberModalVisible = false">
-      <input class="user-id-input" :focus="addMemberModalVisible" v-model="userID" placeholder="请输入 userID" @focus="inputFocus = true" @blur="inputFocus = false"/>
+      <input v-show="addMemberModalVisible" class="user-id-input" :focus="addMemberModalVisible" v-model="userID" placeholder="请输入 userID" @focus="inputFocus = true" @blur="inputFocus = false"/>
     </i-modal>
   </div>
 </template>

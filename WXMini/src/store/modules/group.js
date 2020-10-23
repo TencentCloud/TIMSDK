@@ -26,10 +26,10 @@ const groupModules = {
   },
   actions: {
     getGroupMemberList (context) {
-      const { memberNum, groupID } = context.rootState.conversation.currentConversation.groupProfile
+      const { memberCount, groupID } = context.rootState.conversation.currentConversation.groupProfile
       const { count, isLoading } = context.state
       const offset = context.state.currentGroupMemberList.length
-      const notCompleted = (offset < memberNum)
+      const notCompleted = (offset < memberCount)
       if (notCompleted) {
         if (!isLoading) {
           context.state.isLoading = true
