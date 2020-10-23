@@ -1,6 +1,9 @@
 
 .button-disabled {
-  color: #fff !important;
-  background-color: #006fff !important;
-  opacity: 0.4;
+  color: #c4c4c4 !important;
+  background-color: transparent !important;
+}
+.input-focus {
+  transition: all 0.2s ease-in-out;
+  border-bottom: 2rpx solid #006fff !important;
 }
