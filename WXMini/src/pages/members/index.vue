@@ -1,7 +1,7 @@
 <template>
   <div class="chatting">
     <i-modal title="设置禁言时间" :visible="muteModal" @ok="muteMember" @cancel="cancelMuteModal">
-      <div class="input-wrapper">
+      <div class="input-wrapper" v-show="muteModal">
         <input type="number" class="input" placeholder="单位：秒" v-model.lazy:value="muteTime"/>
       </div>
     </i-modal>
@@ -80,7 +80,7 @@ export default {
   },
   onReachBottom () {
     // 若群成员列表未拉完，则触底时拉下一页
-    if (this.currentGroupMemberList.length !== this.currentGroupProfile.memberNum) {
+    if (this.currentGroupMemberList.length !== this.currentGroupProfile.memberCount) {
       this.getGroupMemberList()
     }
   },

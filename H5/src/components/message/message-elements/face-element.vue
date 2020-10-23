@@ -34,7 +34,7 @@ export default {
       } else {
         name = this.payload.data + '@2x'
       }
-      return `https://imgcache.qq.com/open/qcloud/tim/assets/face-elem/${name}.png`
+      return `https://webim-1252463788.file.myqcloud.com/assets/face-elem/${name}.png`
     }
   }
 }

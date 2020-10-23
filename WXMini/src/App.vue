@@ -8,7 +8,9 @@ export default {
 <style lang="stylus">
 @import "stylus/base.styl"
 .button-disabled
-  color $white !important
-  background-color $primary !important
-  opacity 0.4
+  color $dark-background !important
+  background-color transparent !important
+.input-focus
+  transition: all 0.2s ease-in-out;
+  border-bottom 1px solid $primary !important
 </style>

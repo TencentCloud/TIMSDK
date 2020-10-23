@@ -62,7 +62,7 @@
 
 <script>
 import TYPES from '../../utils/types'
-import { genTestUserSig } from '../../../static/utils/GenerateTestUserSig'
+import {mapState} from 'vuex'
 const ERROR_OPEN_CAMERA = -4 // 打开摄像头失败
 const ERROR_OPEN_MIC = -5 // 打开麦克风失败
 const ERROR_PUSH_DISCONNECT = -6 // 推流连接断开
@@ -93,14 +93,19 @@ export default {
       startTime: 0
     }
   },
+  computed: {
+    ...mapState({
+      rtcConfig: state => state.global.rtcConfig
+    })
+  },
   onShow () {
     // 初始化参数
-    const loginOptions = genTestUserSig(this.userID)
+    const loginOptions = this.rtcConfig
     this.userSig = loginOptions.userSig
-    this.sdkAppID = loginOptions.sdkappid
+    this.sdkAppID = loginOptions.sdkAppID
+    this.userID = loginOptions.userID
     this.isCalling = false
     this.isPending = true
-    // 发起方发起通话，1分钟超时时间
     if (this.userID === this.from) {
       this.timeoutId = setTimeout(() => {
         this.timeout()

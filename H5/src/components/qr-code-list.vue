@@ -23,8 +23,8 @@
         <div class="text">直播电商解决方案</div>
       </div>
       <div class="qr-code-item">
-        <img src="https://main.qcloudimg.com/raw/03ed2f2cb4101d97e234c911b060717a.png" />
-        <div class="text">iOS(密码：123)</div>
+        <img src="https://main.qcloudimg.com/raw/73daa40cef967ba415cdba2cabf4bdc7.png" />
+        <div class="text">iOS</div>
       </div>
       <div class="qr-code-item">
         <img
