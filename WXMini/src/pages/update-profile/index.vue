@@ -176,9 +176,7 @@ export default {
   padding 12px
   .input
     padding 12px
-    border-bottom 1px solid $light-background
-  .input-focus
-    border-bottom 1px solid $primary
+    border-bottom 1px solid $dark-background
   button 
     margin-top 24px
     color $white

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div id="wrapper" v-if="!isLogin" >
-      <login/>
+      <login />
       <qr-code-list/>
     </div>
     <div
@@ -48,9 +48,13 @@ import CallLayer from './components/message/call-layer'
 import { ACTION } from './utils/trtcCustomMessageMap'
 import MTA from './utils/mta'
 
-
 export default {
   title: 'TIMSDK DEMO',
+  data () {
+    return {
+      loginType: 2 // github 登录只使用默认账号登录
+    }
+  },
   components: {
     Login,
     SideBar,
@@ -383,7 +387,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding-top: 100px;
+  padding-top: 60px;
 }
 
 .container
