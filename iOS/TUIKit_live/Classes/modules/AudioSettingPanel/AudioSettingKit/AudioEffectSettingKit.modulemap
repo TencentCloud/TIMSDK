@@ -1,0 +1,4 @@
+module AudioEffectSettingKit {
+    umbrella header "Headers/AudioEffectSettingKit.h"
+    export *
+}
