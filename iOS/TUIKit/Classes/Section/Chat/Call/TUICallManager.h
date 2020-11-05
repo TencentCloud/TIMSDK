@@ -34,5 +34,20 @@
  *  收到群通话邀请 APNs
  */
 - (void)onReceiveGroupCallAPNs:(V2TIMSignalingInfo *)signalingInfo;
+
+/**
+ 检查麦克风授权
+ 
+ @return 是否具有麦克风权限
+ */
+- (BOOL)checkAudioAuthorization;
+
+/**
+ 检测摄像头授权
+ 
+ @return 是否具有摄像头权限
+ */
+- (BOOL)checkVideoAuthorization;
+
 @end
 

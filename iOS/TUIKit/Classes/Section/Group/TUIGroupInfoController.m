@@ -19,6 +19,7 @@
 #import "TIMGroupInfo+DataProvider.h"
 #import "TUIAvatarViewController.h"
 #import "UIColor+TUIDarkMode.h"
+#import "NSBundle+TUIKIT.h"
 
 #define ADD_TAG @"-1"
 #define DEL_TAG @"-2"
@@ -46,7 +47,7 @@
 
 - (void)setupViews
 {
-    self.title = @"详细资料";
+    self.title = TUILocalizableString(TUIKitGroupProfileDetails);
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     //加入此行，会让反馈更加灵敏
@@ -116,8 +117,8 @@
 
         NSMutableArray *memberArray = [NSMutableArray array];
         TCommonTextCellData *countData = [[TCommonTextCellData alloc] init];
-        countData.key = @"群成员";
-        countData.value = [NSString stringWithFormat:@"%d人", self.groupInfo.memberCount];
+        countData.key = TUILocalizableString(TUIKitGroupProfileMember);
+        countData.value = [NSString stringWithFormat:TUILocalizableString(TUIKitGroupProfileMemberCount), self.groupInfo.memberCount];
         countData.cselector = @selector(didSelectMembers);
         countData.showAccessory = YES;
         self.groupMembersCountCellData = countData;
@@ -134,18 +135,18 @@
         //group info
         NSMutableArray *groupInfoArray = [NSMutableArray array];
         TCommonTextCellData *typeData = [[TCommonTextCellData alloc] init];
-        typeData.key = @"群类型";
+        typeData.key = TUILocalizableString(TUIKitGroupProfileType);
         typeData.value = [self.groupInfo showGroupType];
         [groupInfoArray addObject:typeData];
 
         TCommonTextCellData *addOptionData = [[TCommonTextCellData alloc] init];
-        addOptionData.key = @"加群方式";
+        addOptionData.key = TUILocalizableString(TUIKitGroupProfileJoinType);
 
         //私有群禁止加入，只能邀请
         if ([self.groupInfo.groupType isEqualToString:@"Work"]) {
-            addOptionData.value = @"邀请加入";
+            addOptionData.value = TUILocalizableString(TUIKitGroupProfileInviteJoin);
         } else if ([self.groupInfo.groupType isEqualToString:@"Meeting"]) {
-            addOptionData.value = @"自动审批";
+            addOptionData.value = TUILocalizableString(TUIKitGroupProfileAutoApproval);
         } else {
             if ([self.groupInfo isMeOwner]) {
                 addOptionData.cselector = @selector(didSelectAddOption:);
@@ -160,7 +161,7 @@
         //personal info
         NSMutableArray *personalArray = [NSMutableArray array];
         TCommonTextCellData *nickData = [[TCommonTextCellData alloc] init];
-        nickData.key = @"我的群昵称";
+        nickData.key = TUILocalizableString(TUIKitGroupProfileAlias);
         nickData.value = self.selfInfo.nameCard;
         nickData.cselector = @selector(didSelectGroupNick:);
         nickData.showAccessory = YES;
@@ -171,7 +172,7 @@
         if ([[[TUILocalStorage sharedInstance] topConversationList] containsObject:[NSString stringWithFormat:@"group_%@",self.groupId]]) {
             switchData.on = YES;
         }
-        switchData.title = @"置顶聊天";
+        switchData.title = TUILocalizableString(TUIKitGroupProfileStickyOnTop);
         switchData.cswitchSelector = @selector(didSelectOnTop:);
         [personalArray addObject:switchData];
 
@@ -181,7 +182,7 @@
 
         //群删除按钮
         TUIButtonCellData *quitButton = [[TUIButtonCellData alloc] init];
-        quitButton.title = @"删除并退出";
+        quitButton.title = TUILocalizableString(TUIKitGroupProfileDeleteAndExit);
         quitButton.style = ButtonRedText;
         quitButton.cbuttonSelector = @selector(deleteGroup:);
         [buttonArray addObject:quitButton];
@@ -189,7 +190,7 @@
         //群解散按钮
         if ([self.groupInfo canDelete]) {
               TUIButtonCellData *Deletebutton = [[TUIButtonCellData alloc] init];
-              Deletebutton.title = @"解散该群";
+              Deletebutton.title = TUILocalizableString(TUIKitGroupProfileDissolve);
               Deletebutton.style = ButtonRedText;
               Deletebutton.cbuttonSelector = @selector(deleteGroup:);
               [buttonArray addObject:Deletebutton];
@@ -305,18 +306,18 @@
 
 - (void)didSelectAddOption:(UITableViewCell *)cell
 {
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:@"加群方式" preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:TUILocalizableString(TUIKitGroupProfileJoinType) preferredStyle:UIAlertControllerStyleActionSheet];
 
-    [ac addAction:[UIAlertAction actionWithTitle:@"禁止加入" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitGroupProfileJoinDisable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self setGroupAddOpt:V2TIM_GROUP_ADD_FORBID];
     }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"管理员审批" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitGroupProfileAdminApprove) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self setGroupAddOpt:V2TIM_GROUP_ADD_AUTH];
     }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"自动审批" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitGroupProfileAutoApproval) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self setGroupAddOpt:V2TIM_GROUP_ADD_ANY];
     }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
 }
 
@@ -337,7 +338,7 @@
 - (void)didSelectGroupNick:(TCommonTextCell *)cell
 {
     TModifyViewData *data = [[TModifyViewData alloc] init];
-    data.title = @"修改我的群昵称";
+    data.title = TUILocalizableString(TUIKitGroupProfileEditAlias);
     TModifyView *modify = [[TModifyView alloc] init];
     modify.tag = 2;
     modify.delegate = self;
@@ -350,10 +351,10 @@
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     if ([self.groupInfo isPrivate] || [self.groupInfo isMeOwner]) {
-        [ac addAction:[UIAlertAction actionWithTitle:@"修改群名称" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitGroupProfileEditGroupName) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
             TModifyViewData *data = [[TModifyViewData alloc] init];
-            data.title = @"修改群名称";
+            data.title = TUILocalizableString(TUIKitGroupProfileEditGroupName);
             TModifyView *modify = [[TModifyView alloc] init];
             modify.tag = 0;
             modify.delegate = self;
@@ -363,10 +364,10 @@
         }]];
     }
     if ([self.groupInfo isMeOwner]) {
-        [ac addAction:[UIAlertAction actionWithTitle:@"修改群公告" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitGroupProfileEditAnnouncement) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
             TModifyViewData *data = [[TModifyViewData alloc] init];
-            data.title = @"修改群公告";
+            data.title = TUILocalizableString(TUIKitGroupProfileEditAnnouncement);
             TModifyView *modify = [[TModifyView alloc] init];
             modify.tag = 1;
             modify.delegate = self;
@@ -377,12 +378,12 @@
 
     if ([self.delegate respondsToSelector:@selector(groupInfoController:didSelectChangeAvatar:)]) {
         if ([self.groupInfo isMeOwner]) {
-            [ac addAction:[UIAlertAction actionWithTitle:@"修改头像" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitGroupProfileEditAvatar) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self.delegate groupInfoController:self didSelectChangeAvatar:self.groupId];
             }]];
         }
     }
-    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
 
     [self presentViewController:ac animated:YES completion:nil];
 }
@@ -438,9 +439,9 @@
 
 - (void)deleteGroup:(TUIButtonCell *)cell
 {
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:@"退出后不会再接收到此群聊消息" preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:TUILocalizableString(TUIKitGroupProfileDeleteGroupTips) preferredStyle:UIAlertControllerStyleActionSheet];
 
-    [ac addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+    [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
 
         @weakify(self)
         if ([self.groupInfo canDelete]) {
@@ -468,7 +469,7 @@
         }
     }]];
 
-    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
 }
 
@@ -502,7 +503,7 @@
         [_memberData addObject:data];
     }
 
-    self.groupMembersCountCellData.value = [NSString stringWithFormat:@"%lu人", (unsigned long)_memberData.count];
+    self.groupMembersCountCellData.value = [NSString stringWithFormat:TUILocalizableString(TUIKitGroupProfileMemberCountlu), (unsigned long)_memberData.count];
     self.groupMembersCellData.members = [self getShowMembers:_memberData];
 
     [self.tableView reloadData];
@@ -520,7 +521,7 @@
     }
     [_memberData removeObjectsInArray:delArray];
 
-    self.groupMembersCountCellData.value = [NSString stringWithFormat:@"%lu人", (unsigned long)_memberData.count];
+    self.groupMembersCountCellData.value = [NSString stringWithFormat:TUILocalizableString(TUIKitGroupProfileMemberCountlu), (unsigned long)_memberData.count];
     self.groupMembersCellData.members = [self getShowMembers:_memberData];
 
     [self.tableView reloadData];

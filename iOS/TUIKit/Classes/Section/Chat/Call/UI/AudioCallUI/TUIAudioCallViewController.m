@@ -5,6 +5,7 @@
 //  Created by xiangzhang on 2020/7/7.
 //
 
+#import <AudioToolbox/AudioToolbox.h>
 #import "TUIAudioCallViewController.h"
 #import "TUIAudioCallUserCell.h"
 #import "TUIAudioCalledView.h"
@@ -13,6 +14,7 @@
 #import "THelper.h"
 #import "TUICall.h"
 #import "TUICall+TRTC.h"
+#import "NSBundle+TUIKIT.h"
 
 #define kUserCalledView_Width  200
 #define kUserCalledView_Top  200
@@ -31,6 +33,7 @@
 @property(nonatomic,strong) UILabel *callTimeLabel;
 @property(nonatomic,strong) dispatch_source_t timer;
 @property(nonatomic,assign) UInt32 callingTime;
+@property(nonatomic,assign) BOOL playingAlerm; // 播放响铃
 @end
 
 @implementation TUIAudioCallViewController
@@ -78,6 +81,11 @@
     [self reloadData:NO];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self playAlerm];
+}
+
 - (void)disMiss {
     if (self.timer) {
         dispatch_cancel(self.timer);
@@ -87,6 +95,8 @@
     if (self.dismissBlock) {
         self.dismissBlock();
     }
+    
+    [self stopAlerm];
 }
 
 #pragma mark logic
@@ -110,6 +120,9 @@
 - (void)enterUser:(CallUserModel *)user {
     self.curState = AudioCallState_Calling;
     [self updateUser:user animate:YES];
+    if (![user.userId isEqualToString:[TUICallUtils loginUser]]) {    
+        [self stopAlerm];
+    }
 }
 
 - (void)leaveUser:(NSString *)userId {
@@ -312,6 +325,31 @@
     return _userCollectionView;
 }
 
+#pragma mark - 响铃🔔
+// 播放铃声
+- (void)playAlerm {
+    self.playingAlerm = YES;
+    [self loopPlayAlert];
+}
+
+// 结束播放铃声
+- (void)stopAlerm {
+    self.playingAlerm = NO;
+}
+
+// 循环播放声音
+- (void)loopPlayAlert {
+    if (!self.playingAlerm) {
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    AudioServicesPlaySystemSoundWithCompletion(1012, ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf loopPlayAlert];
+        });
+    });
+}
+
 #pragma mark Event
 - (void)hangupClick {
     [[TUICall shareInstance] hangup];
@@ -335,9 +373,9 @@
     [[TUICall shareInstance] mute:micMute];
     [self.mute setImage:[TUICall shareInstance].isMicMute ? [UIImage imageNamed:TUIKitResource(@"ic_mute_on")] : [UIImage imageNamed:TUIKitResource(@"ic_mute")]  forState:UIControlStateNormal];
     if (micMute) {
-        [THelper makeToast:@"开启静音" duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
+        [THelper makeToast:TUILocalizableString(TUIKitCallTurningOnMute) duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
     } else {
-        [THelper makeToast:@"关闭静音" duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
+        [THelper makeToast:TUILocalizableString(TUIKitCallTurningOffMute) duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
     }
 }
 
@@ -346,9 +384,9 @@
     [[TUICall shareInstance] handsFree:handsFreeOn];
     [self.handsfree setImage:[TUICall shareInstance].isHandsFreeOn ? [UIImage imageNamed:TUIKitResource(@"ic_handsfree_on")] : [UIImage imageNamed:TUIKitResource(@"ic_handsfree")]  forState:UIControlStateNormal];
     if (handsFreeOn) {
-        [THelper makeToast:@"使用扬声器" duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
+        [THelper makeToast:TUILocalizableString(TUIKitCallUsingSpeaker) duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
     } else {
-        [THelper makeToast:@"使用听筒" duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
+        [THelper makeToast:TUILocalizableString(TUIKitCallUsingHeadphone) duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
     }
 }
 

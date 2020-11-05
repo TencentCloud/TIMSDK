@@ -9,7 +9,7 @@
 #import "TCAnnotation.h"
 
 NSArray<NSString *>* TCReadConfiguration(char *sectionName,const struct mach_header *mhp);
-static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide)
+static void tc_dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide)
 {
     //register services
     NSArray<NSString *> *services = TCReadConfiguration(TCServiceSectName,mhp);
@@ -34,8 +34,8 @@ static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide)
 
 }
 __attribute__((constructor))
-void initProphet() {
-    _dyld_register_func_for_add_image(dyld_callback);
+void tc_initProphet() {
+    _dyld_register_func_for_add_image(tc_dyld_callback);
 }
 
 NSArray<NSString *>* TCReadConfiguration(char *sectionName,const struct mach_header *mhp)

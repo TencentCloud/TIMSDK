@@ -51,6 +51,11 @@ typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
  */
 @property (nonatomic, strong) UIImage *defaultGroupAvatarImage;
 
+/**
+ * 启用群直播入口 YES：启用 NO：关闭 默认：YES
+ */
+@property(nonatomic, assign) BOOL enableGroupLiveEntry;
+
 + (TUIKitConfig *)defaultConfig;
 
 @end

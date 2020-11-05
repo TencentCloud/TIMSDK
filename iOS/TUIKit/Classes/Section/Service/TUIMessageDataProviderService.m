@@ -21,6 +21,7 @@
 #import "TIMUserProfile+DataProvider.h"
 #import "TUIJoinGroupMessageCellData.h"
 #import "TUICallManager.h"
+#import "NSBundle+TUIKIT.h"
 #import <ImSDK/ImSDK.h>
 
 @TCServiceRegister(TUIMessageDataProviderServiceProtocol, TUIMessageDataProviderService)
@@ -59,7 +60,7 @@
     NSString *str;
     if(msg.status == V2TIM_MSG_STATUS_LOCAL_REVOKED){
         if(msg.isSelf){
-            str = @"你撤回了一条消息";
+            str = TUILocalizableString(TUIKitMessageTipsYouRecallMessage); // @"你撤回了一条消息";
         }
         else if(msg.groupID != nil){
             //对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
@@ -70,10 +71,10 @@
             if (userString.length == 0) {
                 userString = msg.sender;
             }
-            str = [NSString stringWithFormat:@"\"%@\"撤回了一条消息", userString];
+            str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsRecallMessageFormat), userString]; // "\"%@\"撤回了一条消息";
         }
         else if(msg.userID != nil){
-            str = @"对方撤回了一条消息";
+            str = TUILocalizableString(TUIkitMessageTipsOthersRecallMessage);   // @"对方撤回了一条消息";
         }
     } else {
         switch (msg.elemType) {
@@ -89,27 +90,27 @@
                 break;
             case V2TIM_ELEM_TYPE_IMAGE:
             {
-                str = @"[图片]";
+                str = TUILocalizableString(TUIkitMessageTypeImage); // @"[图片]";
             }
                 break;
             case V2TIM_ELEM_TYPE_SOUND:
             {
-                str = @"[语音]";
+                str = TUILocalizableString(TUIKitMessageTypeVoice); // @"[语音]";
             }
                 break;
             case V2TIM_ELEM_TYPE_VIDEO:
             {
-                str = @"[视频]";
+                str = TUILocalizableString(TUIkitMessageTypeVideo); // @"[视频]";
             }
                 break;
             case V2TIM_ELEM_TYPE_FILE:
             {
-                str = @"[文件]";
+                str = TUILocalizableString(TUIkitMessageTypeFile); // @"[文件]";
             }
                 break;
             case V2TIM_ELEM_TYPE_FACE:
             {
-                str = @"[动画表情]";
+                str = TUILocalizableString(TUIKitMessageTypeAnimateEmoji); // @"[动画表情]";
             }
                 break;
             case V2TIM_ELEM_TYPE_GROUP_TIPS:
@@ -121,7 +122,7 @@
                         case V2TIM_GROUP_TIPS_TYPE_JOIN:
                         {
                             if (opUser.length > 0) {
-                                str = [NSString stringWithFormat:@"\"%@\"加入群组", opUser];
+                                str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsJoinGroupFormat), opUser]; // @"\"%@\"加入群组
                             }
                         }
                             break;
@@ -129,14 +130,14 @@
                         {
                             if (userList.count > 0) {
                                 NSString *users = [userList componentsJoinedByString:@"、"];
-                                str = [NSString stringWithFormat:@"\"%@\"邀请\"%@\"加入群组", opUser, users];
+                                str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users]; // \"%@\"邀请\"%@\"加入群组
                             }
                         }
                             break;
                         case V2TIM_GROUP_TIPS_TYPE_QUIT:
                         {
                             if (opUser.length > 0) {
-                                str = [NSString stringWithFormat:@"\"%@\"退出了群聊", opUser];
+                                str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsLeaveGroupFormat), opUser]; // \"%@\"退出了群聊
                             }
                         }
                             break;
@@ -144,7 +145,7 @@
                         {
                             if (userList.count > 0) {
                                 NSString *users = [userList componentsJoinedByString:@"、"];
-                                str = [NSString stringWithFormat:@"\"%@\"将\"%@\"踢出群组", opUser, users];
+                                str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsKickoffGroupFormat), opUser, users]; // \"%@\"将\"%@\"踢出群组
                             }
                         }
                             break;
@@ -152,7 +153,7 @@
                         {
                             if (userList.count > 0) {
                                 NSString *users = [userList componentsJoinedByString:@"、"];
-                                str = [NSString stringWithFormat:@"\"%@\"被设置管理员", users];
+                                str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsSettAdminFormat), users]; // \"%@\"被设置管理员
                             }
                         }
                             break;
@@ -160,7 +161,7 @@
                         {
                             if (userList.count > 0) {
                                 NSString *users = [userList componentsJoinedByString:@"、"];
-                                str = [NSString stringWithFormat:@"\"%@\"被取消管理员", users];
+                                str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsCancelAdminFormat), users]; // \"%@\"被取消管理员
                             }
                         }
                             break;
@@ -171,27 +172,27 @@
                                 switch (info.type) {
                                     case V2TIM_GROUP_INFO_CHANGE_TYPE_NAME:
                                     {
-                                        str = [NSString stringWithFormat:@"%@修改群名为\"%@\"、", str, info.value];
+                                        str = [NSString stringWithFormat:TUILocalizableString(TUIkitMessageTipsEditGroupNameFormat), str, info.value]; // %@修改群名为\"%@\"、
                                     }
                                         break;
                                     case V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION:
                                     {
-                                        str = [NSString stringWithFormat:@"%@修改群简介为\"%@\"、", str, info.value];
+                                        str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsEditGroupIntroFormat), str, info.value]; // %@修改群简介为\"%@\"、
                                     }
                                         break;
                                     case V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION:
                                     {
-                                        str = [NSString stringWithFormat:@"%@修改群公告为\"%@\"、", str, info.value];
+                                        str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsEditGroupAnnounceFormat), str, info.value]; // %@修改群公告为\"%@\"、
                                     }
                                         break;
                                     case V2TIM_GROUP_INFO_CHANGE_TYPE_FACE:
                                     {
-                                        str = [NSString stringWithFormat:@"%@修改群头像、", str];
+                                        str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsEditGroupAvatarFormat), str]; // %@修改群头像、
                                     }
                                         break;
                                     case V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER:
                                     {
-                                        str = [NSString stringWithFormat:@"%@修改群主为\"%@\"、", str, info.value];
+                                        str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, info.value]; // %@修改群主为\"%@\"、
                                     }
                                         break;
                                     default:
@@ -392,88 +393,7 @@
     // 先判断下是不是信令消息
     V2TIMSignalingInfo *info = [[V2TIMManager sharedInstance] getSignallingInfo:message];
     if (info != nil) {
-        NSMutableString *content = [NSMutableString string];
-        NSError *err = nil;
-        NSDictionary *param = nil;
-        if (info.data != nil) {
-            param = [NSJSONSerialization JSONObjectWithData:[info.data dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&err];
-        }
-        switch (info.actionType) {
-            case SignalingActionType_Invite:
-            {
-                // 结束通话
-                if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_CALL_END]) {
-                    int duration = [param[SIGNALING_EXTRA_KEY_CALL_END] intValue];
-                    [content appendString:message.groupID.length > 0 ? @"结束群聊" : [NSString stringWithFormat:@"结束通话，通话时长：%.2d:%.2d",duration / 60,duration % 60]];
-                } else {
-                // 发起通话
-                    if (message.groupID.length > 0) {
-                        [content appendString:[NSString stringWithFormat:@"\"%@\" 发起群通话",[self getShowName:message]]];
-                    } else {
-                        [content appendString:@"发起通话"];
-                    }
-                }
-            }
-                break;
-            case SignalingActionType_Cancel_Invite:
-            {
-                // 取消通话
-                if (message.groupID.length > 0) {
-                    [content appendString:[NSString stringWithFormat:@"\"%@\" 取消群通话",[self getShowName:message]]];
-                } else {
-                    [content appendString:@"取消通话"];
-                }
-            }
-                break;
-            case SignalingActionType_Accept_Invite:
-            {
-                // 接受通话
-                if (message.groupID.length > 0) {
-                    [content appendString:[NSString stringWithFormat:@"\"%@\" 已接听",[self getShowName:message]]];
-                } else {
-                    [content appendString:@"已接听"];
-                }
-            }
-                break;
-            case SignalingActionType_Reject_Invite:
-            {
-                // 拒绝通话
-                if (message.groupID.length > 0) {
-                    if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_LINE_BUSY]) {
-                        [content appendString:[NSString stringWithFormat:@"\"%@\" 忙线",[self getShowName:message]]];
-                    } else {
-                        [content appendString:[NSString stringWithFormat:@"\"%@\" 拒绝通话",[self getShowName:message]]];
-                    }
-                } else {
-                    if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_LINE_BUSY]) {
-                        [content appendString:@"对方忙线"];
-                    } else {
-                        [content appendString:@"拒绝通话"];
-                    }
-                }
-            }
-                break;
-            case SignalingActionType_Invite_Timeout:
-            {
-                // 通话超时
-                if (message.groupID.length > 0) {
-                    for (NSString *invitee in info.inviteeList) {
-                        [content appendString:@"\""];
-                        [content appendString:invitee];
-                        [content appendString:@"\"、"];
-                    }
-                    [content replaceCharactersInRange:NSMakeRange(content.length - 1, 1) withString:@" "];
-                }
-                [content appendString:@"无应答"];
-            }
-                break;
-            default:
-            {
-                [content appendString:@"不能识别的通话指令"];
-            }
-                break;
-        }
-        return content;
+        return [self getCustomSignalingContentWithMessage:message signalingInfo:info];
     }
     NSError *err = nil;
     NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingMutableContainers error:&err];
@@ -483,6 +403,17 @@
         // 判断是不是音视频通话自定义消息
         if ([businessID isEqualToString:AVCall]) {
             return @"";
+        }
+        // 判断是不是群直播自定义消息
+        else if ([businessID isEqualToString:GroupLive]) {
+            // **的直播
+            if ([param.allKeys containsObject:@"anchorName"] && [param.allKeys containsObject:@"anchorId"]) {
+                NSString *anchorName = param[@"anchorName"];
+                if (anchorName.length == 0) {
+                    anchorName = param[@"anchorId"];
+                }
+                return [NSString stringWithFormat:@"[%@的直播]", anchorName];
+            }
         }
         // 判断是不是群创建自定义消息
         else if ([businessID isEqualToString:GroupCreate]) {
@@ -500,11 +431,161 @@
             } if (message.nickName.length > 0) {
                 opUser = message.nickName;
             }
-            return [NSString stringWithFormat:@"\"%@\"创建群组",opUser];
+            return [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsCreateGroupFormat),opUser]; // \"%@\"创建群组
         }
     }
     // 不支持的自定义消息
-    return @"[不支持的自定义消息]";
+    return TUILocalizableString(TUIKitMessageTipsUnsupportCustomMessage); // [不支持的自定义消息]
+}
+
+/// 信令消息对应的自定义文本，默认是音视频通话
+- (NSString *)getCustomSignalingContentWithMessage:(V2TIMMessage *)message signalingInfo:(V2TIMSignalingInfo *)info
+{
+    // 解析透传的data字段
+    NSError *err = nil;
+    NSDictionary *param = nil;
+    if (info.data != nil) {
+        param = [NSJSONSerialization JSONObjectWithData:[info.data dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&err];
+    }
+    
+    // 判断是否为TRTC的信令
+    NSString *liveRoomContent = @"";
+    if ([self isLiveRoomSignalingInfo:info infoData:param withCustomContent:&liveRoomContent]) {
+        return liveRoomContent;
+    }
+    
+    // .... 此处补充其他的业务，业务的区分目前仅仅是以info.data的接口来区分的，所以自行判断
+    
+    
+    // 默认是音视频通话的信令
+    NSMutableString *content = [NSMutableString string];
+    switch (info.actionType) {
+        case SignalingActionType_Invite:
+        {
+            // 结束通话
+            if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_CALL_END]) {
+                int duration = [param[SIGNALING_EXTRA_KEY_CALL_END] intValue];
+                [content appendString:message.groupID.length > 0 ? TUILocalizableString(TUIKitSignalingFinishGroupChat) : [NSString stringWithFormat:TUILocalizableString(TUIKitSignalingFinishConversationAndTimeFormat),duration / 60,duration % 60]]; // 结束通话，通话时长：%.2d:%.2d
+            } else {
+            // 发起通话
+                if (message.groupID.length > 0) {
+                    [content appendString:[NSString stringWithFormat:TUILocalizableString(TUIKitSignalingNewGroupCallFormat),[self getShowName:message]]]; // \"%@\" 发起群通话
+                } else {
+                    [content appendString:TUILocalizableString(TUIKitSignalingNewCall)];
+                }
+            }
+        }
+            break;
+        case SignalingActionType_Cancel_Invite:
+        {
+            // 取消通话
+            if (message.groupID.length > 0) {
+                [content appendString:[NSString stringWithFormat:TUILocalizableString(TUIkitSignalingCancelGroupCallFormat),[self getShowName:message]]]; // \"%@\" 取消群通话
+            } else {
+                [content appendString:TUILocalizableString(TUIkitSignalingCancelCall)];
+            }
+        }
+            break;
+        case SignalingActionType_Accept_Invite:
+        {
+            // 接受通话
+            if (message.groupID.length > 0) {
+                [content appendString:[NSString stringWithFormat:TUILocalizableString(TUIKitSignalingHangonCallFormat),[self getShowName:message]]]; // \"%@\" 已接听
+            } else {
+                [content appendString:TUILocalizableString(TUIkitSignalingHangonCall)]; // 已接听
+            }
+        }
+            break;
+        case SignalingActionType_Reject_Invite:
+        {
+            // 拒绝通话
+            if (message.groupID.length > 0) {
+                if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_LINE_BUSY]) {
+                    [content appendString:[NSString stringWithFormat:TUILocalizableString(TUIKitSignalingBusyFormat),[self getShowName:message]]]; // \"%@\" 忙线
+                } else {
+                    [content appendString:[NSString stringWithFormat:TUILocalizableString(TUIKitSignalingDeclineFormat),[self getShowName:message]]]; // \"%@\" 拒绝通话
+                }
+            } else {
+                if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_LINE_BUSY]) {
+                    [content appendString:TUILocalizableString(TUIKitSignalingCallBusy)]; // 对方忙线
+                } else {
+                    [content appendString:TUILocalizableString(TUIkitSignalingDecline)]; // 拒绝通话
+                }
+            }
+        }
+            break;
+        case SignalingActionType_Invite_Timeout:
+        {
+            // 通话超时
+            if (message.groupID.length > 0) {
+                for (NSString *invitee in info.inviteeList) {
+                    [content appendString:@"\""];
+                    [content appendString:invitee];
+                    [content appendString:@"\"、"];
+                }
+                [content replaceCharactersInRange:NSMakeRange(content.length - 1, 1) withString:@" "];
+            }
+            [content appendString:TUILocalizableString(TUIKitSignalingNoResponse)]; // 无应答
+        }
+            break;
+        default:
+        {
+            [content appendString:TUILocalizableString(TUIkitSignalingUnrecognlize)]; // 不能识别的通话指令
+        }
+            break;
+    }
+    return content;
+}
+
+// 直播间自定义信令文本
+- (BOOL)isLiveRoomSignalingInfo:(V2TIMSignalingInfo *)info infoData:(NSDictionary *)param withCustomContent:(NSString **)content
+{
+    *content = @"";
+    
+    if (param == nil) {
+        return NO;
+    }
+    
+    NSArray *allKeys = param.allKeys;
+    if (![allKeys containsObject:@"businessID"]) {
+        return NO;
+    }
+    
+    NSString *businessId = [param objectForKey:@"businessID"];
+    if (![businessId isEqualToString:Signal_Business_Live]) {
+        return NO;
+    }
+    
+    NSInteger actionCode = [[param objectForKey:@"action"] integerValue];
+    switch (actionCode) {
+        case 100: *content = @"直播间申请上麦"; break;
+        case 101:
+            if (info.actionType == SignalingActionType_Reject_Invite) {
+                *content = @"直播间申请上麦被拒绝";
+            } else if (info.actionType == SignalingActionType_Accept_Invite) {
+                *content = @"直播间同意上麦";
+            }
+            break;
+        case 102: *content = @"直播间申请关闭连麦"; break;
+        case 103: *content = @"直播间关闭连麦"; break;
+        case 200:
+            if (info.actionType == SignalingActionType_Invite) {
+                *content = @"直播间申请PK";
+            }
+            break;
+        case 201:
+            if (info.actionType == SignalingActionType_Reject_Invite) {
+                *content = @"直播间申请PK被拒绝";
+            } else if (info.actionType == SignalingActionType_Accept_Invite) {
+                *content = @"直播间同意PK";
+            }
+            break;
+        case 202: *content = @"直播间退出PK"; break;
+        default:
+            *content = @"不能识别的通话指令";
+            break;
+    }
+    return YES;
 }
 
 - (TUISystemMessageCellData *) getSystemCellData:(V2TIMMessage *)message fromElem:(V2TIMGroupTipsElem *)elem{
@@ -535,11 +616,11 @@
 
     TUISystemMessageCellData *revoke = [[TUISystemMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
     if(message.isSelf){
-        revoke.content = @"你撤回了一条消息";
+        revoke.content = TUILocalizableString(TUIKitMessageTipsYouRecallMessage); // @"你撤回了一条消息";
         revoke.innerMessage = message;
         return revoke;
     } else if (message.userID.length > 0){
-        revoke.content = @"对方撤回了一条消息";
+        revoke.content = TUILocalizableString(TUIkitMessageTipsOthersRecallMessage); // @"对方撤回了一条消息";
         revoke.innerMessage = message;
         return revoke;
     } else if (message.groupID.length > 0) {
@@ -551,7 +632,7 @@
             userName = message.nickName;
         }
         TUIJoinGroupMessageCellData *joinGroupData = [[TUIJoinGroupMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
-        joinGroupData.content = [NSString stringWithFormat:@"\"%@\"撤回了一条消息",userName];
+        joinGroupData.content = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsRecallMessageFormat), userName]; //  @"\"%@\"撤回了一条消息"
         joinGroupData.opUserID = message.sender;
         joinGroupData.opUserName = userName;
         return joinGroupData;

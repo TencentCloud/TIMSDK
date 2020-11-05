@@ -5,6 +5,7 @@
 //  Created by xiangzhang on 2020/7/8.
 //
 
+#import <AVFoundation/AVFoundation.h>
 #import "TUICallManager.h"
 #import "TUICallUtils.h"
 #import "TUISelectMemberViewController.h"
@@ -12,6 +13,7 @@
 #import "TUIVideoCallViewController.h"
 #import "TUIAudioCallViewController.h"
 #import "THelper.h"
+#import "NSBundle+TUIKIT.h"
 
 typedef NS_ENUM(NSInteger,VideoUserRemoveReason){
     VideoUserRemoveReason_Leave = 0,
@@ -212,7 +214,28 @@ typedef NS_ENUM(NSInteger,VideoUserRemoveReason){
     if ([self.callVC isKindOfClass:[TUIAudioCallViewController class]]) {
         [(TUIAudioCallViewController *)self.callVC disMiss];
     }
-    [THelper makeToast:[NSString stringWithFormat:@"%@ 取消了通话",uid]];
+    
+    // 获取个人信息
+    if (uid.length == 0) {
+        [THelper makeToast:[NSString stringWithFormat:TUILocalizableString(TUIKitCallCancelCallingFormat), uid]]; // %@ 取消了通话
+        return;
+    }
+    [V2TIMManager.sharedInstance getUsersInfo:@[uid] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+        if (infoList.count == 0) {
+            [THelper makeToast:[NSString stringWithFormat:TUILocalizableString(TUIKitCallCancelCallingFormat), uid]]; // %@ 取消了通话
+            return;
+        }
+        V2TIMUserFullInfo *info = infoList.firstObject;
+        NSString *name = info.nickName;
+        if (name.length == 0) {
+            name = uid;
+        }
+        [THelper makeToast:[NSString stringWithFormat:TUILocalizableString(TUIKitCallCancelCallingFormat), name]]; // %@ 取消了通话
+        
+    } fail:^(int code, NSString *desc) {
+        [THelper makeToast:[NSString stringWithFormat:TUILocalizableString(TUIKitCallCancelCallingFormat), uid]]; // %@ 取消了通话
+    }];
+    
 }
    
 -(void)onCallingTimeOut {
@@ -282,7 +305,11 @@ typedef NS_ENUM(NSInteger,VideoUserRemoveReason){
             [TUICallUtils getCallUserModel:uid finished:^(CallUserModel * _Nonnull model) {
                 model.isEnter = YES;
                 model.volume = (CGFloat)volume / 100;
-                [videoVC enterUser:model];
+                if ([uid isEqualToString:TUICallUtils.loginUser]) {
+                    [videoVC updateUser:model animate:NO];
+                }else {
+                    [videoVC enterUser:model];
+                }
             }];
         }
     }
@@ -298,4 +325,23 @@ typedef NS_ENUM(NSInteger,VideoUserRemoveReason){
         [videoVC leaveUser:uid];
     }
 }
+
+#pragma mark - 权限检查
+- (BOOL)checkAudioAuthorization {
+    return [self checkAuthorizationStatus:AVMediaTypeAudio];
+}
+
+- (BOOL)checkVideoAuthorization {
+    return [self checkAuthorizationStatus:AVMediaTypeVideo];
+}
+
+- (BOOL)checkAuthorizationStatus:(AVMediaType)mediaType {
+    AVAuthorizationStatus authorStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
+    if (authorStatus == AVAuthorizationStatusRestricted ||
+        authorStatus == AVAuthorizationStatusDenied) {
+        return NO;
+    }
+    return YES;
+}
+
 @end

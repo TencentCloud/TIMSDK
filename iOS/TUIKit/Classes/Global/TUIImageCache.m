@@ -76,7 +76,7 @@
     }
     UIImage *image = [_faceCache objectForKey:path];
     if(!image){
-        image = [UIImage imageNamed:path];
+        image = [UIImage imageWithContentsOfFile:path];
         if (!image) {
             image = [_faceCache objectForKey:TUIKitFace(@"del_normal")];
         }

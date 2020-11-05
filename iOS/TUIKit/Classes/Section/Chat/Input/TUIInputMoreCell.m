@@ -8,6 +8,7 @@
 #import "TUIInputMoreCell.h"
 #import "THeader.h"
 #import "TUIKit.h"
+#import "NSBundle+TUIKIT.h"
 
 
 
@@ -17,6 +18,7 @@ static TUIInputMoreCellData *TUI_Video_MoreCell;
 static TUIInputMoreCellData *TUI_File_MoreCell;
 static TUIInputMoreCellData *TUI_VideoCall_MoreCell;
 static TUIInputMoreCellData *TUI_AudioCall_MoreCell;
+static TUIInputMoreCellData *TUI_GroupLivePlay_MoreCell;
 
 @implementation TUIInputMoreCellData
 
@@ -26,7 +28,7 @@ static TUIInputMoreCellData *TUI_AudioCall_MoreCell;
 {
     if (!TUI_Picture_MoreCell) {
         TUI_Picture_MoreCell = [[TUIInputMoreCellData alloc] init];
-        TUI_Picture_MoreCell.title = @"拍摄";
+        TUI_Picture_MoreCell.title = TUILocalizableString(TUIKitMoreCamera);
         TUI_Picture_MoreCell.image = [UIImage tk_imageNamed:@"more_camera"];
 
     }
@@ -42,7 +44,7 @@ static TUIInputMoreCellData *TUI_AudioCall_MoreCell;
 {
     if (!TUI_Photo_MoreCell) {
         TUI_Photo_MoreCell = [[TUIInputMoreCellData alloc] init];
-        TUI_Photo_MoreCell.title = @"相册";
+        TUI_Photo_MoreCell.title = TUILocalizableString(TUIKitMorePhoto);
         TUI_Photo_MoreCell.image = [UIImage tk_imageNamed:@"more_picture"];
     }
     return TUI_Photo_MoreCell;
@@ -57,7 +59,7 @@ static TUIInputMoreCellData *TUI_AudioCall_MoreCell;
 {
     if (!TUI_Video_MoreCell) {
         TUI_Video_MoreCell = [[TUIInputMoreCellData alloc] init];
-        TUI_Video_MoreCell.title = @"视频";
+        TUI_Video_MoreCell.title = TUILocalizableString(TUIKitMoreVideo);
         TUI_Video_MoreCell.image = [UIImage tk_imageNamed:@"more_video"];
     }
     return TUI_Video_MoreCell;
@@ -72,7 +74,7 @@ static TUIInputMoreCellData *TUI_AudioCall_MoreCell;
 {
     if (!TUI_File_MoreCell) {
         TUI_File_MoreCell = [[TUIInputMoreCellData alloc] init];
-        TUI_File_MoreCell.title = @"文件";
+        TUI_File_MoreCell.title = TUILocalizableString(TUIKitMoreFile);
         TUI_File_MoreCell.image = [UIImage tk_imageNamed:@"more_file"];
     }
     return TUI_File_MoreCell;
@@ -86,8 +88,8 @@ static TUIInputMoreCellData *TUI_AudioCall_MoreCell;
 + (TUIInputMoreCellData *)videoCallData {
     if (!TUI_VideoCall_MoreCell) {
         TUI_VideoCall_MoreCell = [[TUIInputMoreCellData alloc] init];
-        TUI_VideoCall_MoreCell.title = @"视频通话";
-        TUI_VideoCall_MoreCell.image = [UIImage tk_imageNamed:@"more_video"];
+        TUI_VideoCall_MoreCell.title = TUILocalizableString(TUIKitMoreVideoCall); // @"视频通话";
+        TUI_VideoCall_MoreCell.image = [UIImage tk_imageNamed:@"more_video_call"];
     }
     return TUI_VideoCall_MoreCell;
 }
@@ -100,8 +102,8 @@ static TUIInputMoreCellData *TUI_AudioCall_MoreCell;
 + (TUIInputMoreCellData *)audioCallData {
     if (!TUI_AudioCall_MoreCell) {
         TUI_AudioCall_MoreCell = [[TUIInputMoreCellData alloc] init];
-        TUI_AudioCall_MoreCell.title = @"语音通话";
-        TUI_AudioCall_MoreCell.image = [UIImage tk_imageNamed:@"more_video"];
+        TUI_AudioCall_MoreCell.title = TUILocalizableString(TUIKitMoreVoiceCall); // @"语音通话";
+        TUI_AudioCall_MoreCell.image = [UIImage tk_imageNamed:@"more_voice_call"];
     }
     return TUI_AudioCall_MoreCell;
 }
@@ -109,6 +111,15 @@ static TUIInputMoreCellData *TUI_AudioCall_MoreCell;
 + (void)setAudioCallData:(TUIInputMoreCellData *)audioCallData
 {
     TUI_AudioCall_MoreCell = audioCallData;
+}
+
++ (TUIInputMoreCellData *)groupLivePalyData {
+    if (!TUI_GroupLivePlay_MoreCell) {
+        TUI_GroupLivePlay_MoreCell = [[TUIInputMoreCellData alloc] init];
+        TUI_GroupLivePlay_MoreCell.title = TUILocalizableString(TUIKitMoreGroupLive); // @"群直播";
+        TUI_GroupLivePlay_MoreCell.image = [UIImage tk_imageNamed:@"more_group_live"];
+    }
+    return TUI_GroupLivePlay_MoreCell;
 }
 
 @end

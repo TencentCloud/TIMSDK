@@ -67,6 +67,11 @@
  */
 @property (class, nonatomic, assign) TUIInputMoreCellData *audioCallData;
 
+/**
+*  “群直播”单元所对应的数据源。用于存放群直播单元所需的各类信息与数据。
+*/
+@property(class, nonatomic, strong) TUIInputMoreCellData *groupLivePalyData;
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +105,11 @@
  *  存放更多单元所需的信息与数据。
  */
 @property (nonatomic, strong) TUIInputMoreCellData *data;
+
+/**
+ * 是否禁用封装在 TUIKit 内部的默认的选中行为，如群直播默认创建直播间等行为，默认：NO
+ */
+@property (nonatomic, assign) BOOL disableDefaultSelectAction;
 
 /**
  *  根据消息源填充“更多”单元。

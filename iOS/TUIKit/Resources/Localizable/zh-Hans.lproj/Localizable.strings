@@ -1,0 +1,126 @@
+/* 
+  Localizable.strings
+  Chinese Simplized
+
+  Created by harvy on 2020/10/9.
+  
+*/
+
+"TUIKitTipsMostSelectTextFormat" = "最多选择%ld个";
+
+"Confirm" = "确定";
+"Cancel" = "取消";
+"Send" = "发送";
+
+"Monday" = "星期一";
+"Tuesday" = "星期二";
+"Wednesday" = "星期三";
+"Thursday" = "星期四";
+"Friday" = "星期五";
+"Saturday" = "星期六";
+"Sunday" = "星期日";
+"Yesterday" = "昨天";
+
+"Read" = "已读";
+"Unread" = "未读";
+
+"TUIKitInputHoldToTalk" = "按住 说话";
+"TUIKitInputReleaseToSend" = "松开 结束";
+"TUIKitInputReleaseToCancel" = "松开 取消";
+"TUIKitInputNoMicTitle" = "无法访问麦克风";
+"TUIKitInputNoMicTips"  = "开启麦克风权限才能发送语音消息";
+"TUIKitInputNoMicOperateLater" = "以后再说";
+"TUIKitInputNoMicOperateEnable" = "去开启";
+"TUIKitInputBlankMessageTitle" = "不能发送空白消息";
+"TUIKitInputWillFinishRecordInSeconds" = "将在 %ld 秒后结束录制";
+"TUIKitInputRecordSlideToCancel" = "手指上滑，取消发送";
+"TUIKitInputRecordReleaseToCancel" = "松开手指，取消发送";
+"TUIKitInputRecordTimeshort" = "说话时间太短";
+"TUIKitInputRecordTimeLong" = "说话时间太长";
+
+"TUIKitGroupProfileDetails" = "详细资料";
+"TUIKitGroupProfileMember" = "群成员";
+"TUIKitGroupProfileMemberCount" = "%d 人";
+"TUIKitGroupProfileMemberCountlu" = "%lu人";
+"TUIKitGroupProfileType" = "群类型";
+"TUIKitGroupProfileJoinType" = "加群方式";
+"TUIKitGroupProfileInviteJoin" = "邀请加入";
+"TUIKitGroupProfileAutoApproval" = "自动审批";
+"TUIKitGroupProfileAlias" = "我的群昵称";
+"TUIKitGroupProfileStickyOnTop" = "置顶聊天";
+"TUIKitGroupProfileDeleteAndExit" = "删除并退出";
+"TUIKitGroupProfileDissolve" = "解散该群";
+"TUIKitGroupProfileJoinDisable" = "禁止加群";
+"TUIKitGroupProfileAdminApprove" = "管理员审批";
+"TUIKitGroupProfileEditAlias" = "修改我的群昵称";
+"TUIKitGroupProfileEditGroupName" = "修改群名称";
+"TUIKitGroupProfileEditAnnouncement" = "修改群公告";
+"TUIKitGroupProfileEditAvatar" = "修改群头像";
+"TUIKitGroupProfileDeleteGroupTips" = "退出后不会再接收到此群聊消息";
+"TUIKitGroupProfileGroupCountFormat" = "群成员(%ld人)";
+"TUIKitGroupProfileManage" = "管理";
+"TUIKitGroupProfileManageAdd" = "添加成员";
+"TUIKitGroupProfileManageDelete" = "删除成员";
+
+"TUIKitMessageTipsYouRecallMessage" = "您撤回了一条消息";
+"TUIKitMessageTipsRecallMessageFormat" = "\"%@\"撤回了一条消息";
+"TUIkitMessageTipsOthersRecallMessage" = "对方撤回了一条消息";
+"TUIKitMessageTipsJoinGroupFormat" = "\"%@\"加入群组";
+"TUIKitMessageTipsInviteJoinGroupFormat" = "\"%@\"邀请\"%@\"加入群组";
+"TUIKitMessageTipsLeaveGroupFormat" = "\"%@\"退出了群聊";
+"TUIKitMessageTipsKickoffGroupFormat" = "\"%@\"将\"%@\"踢出群组";
+"TUIKitMessageTipsSettAdminFormat" = "\"%@\"被设置管理员";
+"TUIKitMessageTipsCancelAdminFormat" = "\"%@\"被取消管理员";
+"TUIkitMessageTipsEditGroupNameFormat" = "%@修改群名为\"%@\"、";
+"TUIKitMessageTipsEditGroupIntroFormat" = "%@修改群简介为\"%@\"、";
+"TUIKitMessageTipsEditGroupAnnounceFormat" = "%@修改群公告为\"%@\"、";
+"TUIKitMessageTipsEditGroupAvatarFormat" = "%@修改群头像、";
+"TUIKitMessageTipsEditGroupOwnerFormat" = "%@修改群主为\"%@\"、";
+"TUIKitMessageTipsCreateGroupFormat" = "\"%@\"创建群组";
+"TUIKitMessageTipsUnsupportCustomMessage" = "[不支持的自定义消息]";
+
+"TUIKitSignalingFinishGroupChat" = "结束群聊";
+"TUIKitSignalingFinishConversationAndTimeFormat" = "结束通话，通话时长：%.2d:%.2d";
+"TUIKitSignalingNewCall" = "发起通话";
+"TUIKitSignalingNewGroupCallFormat" = "\"%@\" 发起群通话";
+"TUIkitSignalingCancelCall" = "取消通话";
+"TUIkitSignalingCancelGroupCallFormat" = "\"%@\" 取消群通话";
+"TUIkitSignalingHangonCall" = "已接听";
+"TUIKitSignalingHangonCallFormat" = "\"%@\" 已接听";
+"TUIKitSignalingBusyFormat" = "\"%@\" 忙线";
+"TUIKitSignalingDeclineFormat" = "\"%@\" 拒绝通话";
+"TUIKitSignalingCallBusy" = "对方忙线";
+"TUIkitSignalingDecline" = "拒绝通话";
+"TUIKitSignalingNoResponse" = "无应答";
+"TUIkitSignalingUnrecognlize" = "不能识别的通话指令";
+
+"TUIkitMessageTypeImage" = "[图片]";
+"TUIKitMessageTypeVoice" = "[语音]";
+"TUIkitMessageTypeVideo" = "[视频]";
+"TUIkitMessageTypeFile" = "[文件]";
+"TUIKitMessageTypeAnimateEmoji" = "[动画表情]";
+
+"TUIKitMoreCamera" = "拍照";
+"TUIKitMorePhoto" = "相册";
+"TUIKitMoreVideo" = "录像";
+"TUIKitMoreFile" = "文件";
+"TUIKitMoreVideoCall" = "视频通话";
+"TUIKitMoreVoiceCall" = "语音通话";
+"TUIKitMoreGroupLive" = "群直播";
+
+"TUIKitCallInviteYouVideoCall" = "邀请你视频通话";
+"TUIKitCallTurningOnMute" = "开启静音";
+"TUIKitCallTurningOffMute" = "关闭静音";
+"TUIKitCallUsingSpeaker" = "使用扬声器";
+"TUIKitCallUsingHeadphone" = "使用听筒";
+"TUIKitCallCancelCallingFormat" = "%@ 取消了通话";
+
+"TUIKitAtSelectMemberTitle" = "选择群成员";
+
+"TUIKitConversationTipsAtMe" = "[有人@我]";
+"TUIKitConversationTipsAtAll" = "[@所有人]";
+"TUIKitConversationTipsAtMeAndAll" = "[有人@我][@所有人]";
+
+"TUIKitPublicGroup" = "公开群";
+"TUIKitWorkGroup" = "讨论组";
+"TUIKitChatRoom" = "聊天室";

@@ -85,9 +85,23 @@
         @strongify(self)
         self.titleLabel.text = x;
     }];
+    
+    // 修改默认头像
+    if (convData.groupID.length > 0) {
+        // 群组, 则将群组默认头像修改成上次使用的头像
+        NSString *key = [NSString stringWithFormat:@"TUIConversationLastGroupMember_%@", convData.groupID];
+        NSInteger member = [NSUserDefaults.standardUserDefaults integerForKey:key];
+        UIImage *avatar = [self getCacheAvatarForGroup:convData.groupID number:(UInt32)member];
+        if (avatar) {
+            convData.avatarImage = avatar;
+        }
+    }
+    
     [[RACObserve(convData,faceUrl) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSURL *x) {
         @strongify(self)
         if (self.convData.groupID.length > 0) { //群组
+            // fix: 由于getCacheGroupAvatar需要请求网络，断网时，由于并没有设置headImageView，此时当前会话发消息，会话会上移，复用了第一条会话的头像，导致头像错乱
+            self.headImageView.image = self.convData.avatarImage;
             [self getCacheGroupAvatar:^(UIImage *avatar) {
                 if (avatar != nil) { //已缓存群组头像
                     self.headImageView.image = avatar;
@@ -130,18 +144,25 @@
 - (void)prefetchGroupMembers {
     @weakify(self)
     [[V2TIMManager sharedInstance] getGroupMemberList:self.convData.groupID filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:0 succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+        @strongify(self)
         int i = 0;
-        NSMutableArray *groupMembers = [NSMutableArray arrayWithCapacity:1];
+        NSMutableArray *groupMemberAvatars = [NSMutableArray arrayWithCapacity:1];
         for (V2TIMGroupMemberFullInfo* member in memberList) {
-            if (member.userID.length > 0) {
-                [groupMembers addObject:member.userID];
+            if (member.faceURL.length > 0) {
+                [groupMemberAvatars addObject:member.faceURL];
                 i++;
             }
             if (i == 9) {
                 break;
             }
         }
-        [self fetchGroupMembersAvatar:groupMembers];
+        [self createGroupAvatar:groupMemberAvatars];
+        
+        // 存储当前获取到的群组头像信息
+        NSString *key = [NSString stringWithFormat:@"TUIConversationLastGroupMember_%@", self.convData.groupID];
+        [NSUserDefaults.standardUserDefaults setInteger:groupMemberAvatars.count forKey:key];
+        [NSUserDefaults.standardUserDefaults synchronize];
+        
     } fail:^(int code, NSString *msg) {
         @strongify(self)
         [self.headImageView sd_setImageWithURL:[NSURL URLWithString:self.convData.faceUrl]
@@ -149,27 +170,14 @@
     }];
 }
 
-/// 根据头像生成群组图片
-/// @param members 群组用户ids
-- (void)fetchGroupMembersAvatar:(NSArray*)members {
+/// 创建九宫格群头像
+- (void)createGroupAvatar:(NSMutableArray*)groupMemberAvatars{
     @weakify(self)
-    [[V2TIMManager sharedInstance] getUsersInfo:members succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-        NSMutableArray *groupMemberAvatars = [NSMutableArray arrayWithCapacity:1];
-        for (V2TIMGroupMemberFullInfo *profile in infoList) {
-            if (profile.faceURL.length > 0) {
-                [groupMemberAvatars addObject:profile.faceURL];
-            }
-        }
-        [CreatGroupAvatar createGroupAvatar:groupMemberAvatars finished:^(NSData *groupAvatar) {
-            @strongify(self)
-            UIImage *avatar = [UIImage imageWithData:groupAvatar];
-            self.headImageView.image = avatar;
-            [self cacheGroupAvatar:avatar number:(UInt32)members.count];
-        }];
-    } fail:^(int code, NSString *msg) {
+    [CreatGroupAvatar createGroupAvatar:groupMemberAvatars finished:^(NSData *groupAvatar) {
         @strongify(self)
-        [self.headImageView sd_setImageWithURL:[NSURL URLWithString:self.convData.faceUrl]
-                              placeholderImage:self.convData.avatarImage];
+        UIImage *avatar = [UIImage imageWithData:groupAvatar];
+        self.headImageView.image = avatar;
+        [self cacheGroupAvatar:avatar number:(UInt32)groupMemberAvatars.count];
     }];
 }
 
@@ -226,10 +234,36 @@
 
         if (success) {
             avatar= [[UIImage alloc] initWithContentsOfFile:filePath];
+            // 存储当前获取到的群组头像信息
+            NSString *key = [NSString stringWithFormat:@"TUIConversationLastGroupMember_%@", self.convData.groupID];
+            [NSUserDefaults.standardUserDefaults setInteger:memberNum forKey:key];
+            [NSUserDefaults.standardUserDefaults synchronize];
         }
         imageCallBack(avatar);
     } fail:^(int code, NSString *msg) {
         imageCallBack(nil);
     }];
 }
+
+
+/// 同步获取本地缓存的群组头像
+/// @param groupId 群id
+/// @param memberNum 群成员个数, 最多返回9个成员的拼接头像
+- (UIImage *)getCacheAvatarForGroup:(NSString *)groupId number:(UInt32)memberNum {
+    //限定1-9的范围
+    memberNum = MAX(1, memberNum);
+    memberNum = MIN(memberNum, 9);;
+    NSString* tempPath = NSTemporaryDirectory();
+    NSString *filePath = [NSString stringWithFormat:@"%@groupAvatar_%@_%u.png",tempPath,
+                          groupId,(unsigned int)memberNum];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    UIImage *avatar = nil;
+    BOOL success = [fileManager fileExistsAtPath:filePath];
+
+    if (success) {
+        avatar= [[UIImage alloc] initWithContentsOfFile:filePath];
+    }
+    return avatar;
+}
+
 @end

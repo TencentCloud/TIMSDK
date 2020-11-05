@@ -34,6 +34,7 @@
     return self;
 }
 
+
 - (CGFloat)heightOfWidth:(CGFloat)width
 {
     CGFloat height = 0;

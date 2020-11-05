@@ -16,6 +16,7 @@
 #import "TIMGroupInfo+DataProvider.h"
 #import "TIMUserProfile+DataProvider.h"
 #import "UIColor+TUIDarkMode.h"
+#import "NSBundle+TUIKIT.h"
 #import <ImSDK/ImSDK.h>
 
 @interface TUIGroupMemberController ()<TGroupMembersViewDelegate>
@@ -60,7 +61,7 @@
             [self.members addObject:user];
         }
         [self.groupMembersView setData:self.members];
-        NSString *title = [NSString stringWithFormat:@"群成员(%ld人)", (long)self.members.count];
+        NSString *title = [NSString stringWithFormat:TUILocalizableString(TUIKitGroupProfileGroupCountFormat), (long)self.members.count];
         self.title = title;;
     } fail:^(int code, NSString *msg) {
         @strongify(self)
@@ -89,7 +90,7 @@
     //right
     UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [rightButton addTarget:self action:@selector(rightBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    [rightButton setTitle:@"管理" forState:UIControlStateNormal];
+    [rightButton setTitle:TUILocalizableString(TUIKitGroupProfileManage) forState:UIControlStateNormal];
     [rightButton setTitleColor:[UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark] forState:UIControlStateNormal];
     rightButton.titleLabel.font = [UIFont systemFontOfSize:16];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
@@ -112,20 +113,20 @@
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     if ([self.groupInfo canInviteMember]) {
-        [ac addAction:[UIAlertAction actionWithTitle:@"添加成员" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitGroupProfileManageAdd) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             if(self.delegate && [self.delegate respondsToSelector:@selector(groupMemberController:didAddMembersInGroup:hasMembers:)]){
                 [self.delegate groupMemberController:self didAddMembersInGroup:self.groupId hasMembers:self.members];
             }
         }]];
     }
     if ([self.groupInfo canRemoveMember]) {
-        [ac addAction:[UIAlertAction actionWithTitle:@"删除成员" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitGroupProfileManageDelete) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             if(self.delegate && [self.delegate respondsToSelector:@selector(groupMemberController:didDeleteMembersInGroup:hasMembers:)]){
                 [self.delegate groupMemberController:self didDeleteMembersInGroup:self.groupId hasMembers:self.members];
             }
         }]];
     }
-    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
 
     [self presentViewController:ac animated:YES completion:nil];
 }

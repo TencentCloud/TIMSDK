@@ -10,6 +10,7 @@
 #import "THeader.h"
 #import "TUIMenuCell.h"
 #import "UIColor+TUIDarkMode.h"
+#import "NSBundle+TUIKIT.h"
 
 @interface TUIMenuView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSMutableArray *data;
@@ -42,7 +43,7 @@
 
     _sendButton = [[UIButton alloc] init];
     _sendButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
-    [_sendButton setTitle:@"发送" forState:UIControlStateNormal];
+    [_sendButton setTitle:TUILocalizableString(Send) forState:UIControlStateNormal];
     _sendButton.backgroundColor = TMenuView_Send_Color;
     [_sendButton addTarget:self action:@selector(sendUpInside:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_sendButton];
