@@ -60,7 +60,7 @@
 - (void)setupNavigation
 {
     _titleView = [[TNaviBarIndicatorView alloc] init];
-    [_titleView setTitle:@"腾讯·云通信"];
+    [_titleView setTitle:NSLocalizedString(@"AppMainTitle", nil)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNetworkChanged:) name:TUIKitNotification_TIMConnListener object:nil];
@@ -74,19 +74,19 @@
     TUINetStatus status = (TUINetStatus)[notification.object intValue];
     switch (status) {
         case TNet_Status_Succ:
-            [_titleView setTitle:@"腾讯·云通信"];
+            [_titleView setTitle:NSLocalizedString(@"AppMainTitle", nil)];
             [_titleView stopAnimating];
             break;
         case TNet_Status_Connecting:
-            [_titleView setTitle:@"连接中..."];
+            [_titleView setTitle:NSLocalizedString(@"AppMainConnectingTitle", nil)];// 连接中...
             [_titleView startAnimating];
             break;
         case TNet_Status_Disconnect:
-            [_titleView setTitle:@"腾讯·云通信(未连接)"];
+            [_titleView setTitle:NSLocalizedString(@"AppMainDisconnectTitle", nil)]; // 腾讯·云通信(未连接)
             [_titleView stopAnimating];
             break;
         case TNet_Status_ConnFailed:
-            [_titleView setTitle:@"腾讯·云通信(未连接)"];
+            [_titleView setTitle:NSLocalizedString(@"AppMainDisconnectTitle", nil)]; // 腾讯·云通信(未连接)
             [_titleView stopAnimating];
             break;
 
@@ -132,28 +132,28 @@
     NSMutableArray *menus = [NSMutableArray array];
     TPopCellData *friend = [[TPopCellData alloc] init];
     friend.image = TUIKitResource(@"add_friend");
-    friend.title = @"发起会话";
+    friend.title = NSLocalizedString(@"ChatsNewChatText", nil);
     [menus addObject:friend];
 
     TPopCellData *group3 = [[TPopCellData alloc] init];
     group3.image = TUIKitResource(@"create_group");
-    group3.title = @"创建讨论组";
+    group3.title = NSLocalizedString(@"ChatsNewPrivateGroupText", nil);
     [menus addObject:group3];
 
     TPopCellData *group = [[TPopCellData alloc] init];
     group.image = TUIKitResource(@"create_group");
-    group.title = @"创建群聊";
+    group.title = NSLocalizedString(@"ChatsNewGroupText", nil);
     [menus addObject:group];
 
     TPopCellData *room = [[TPopCellData alloc] init];
     room.image = TUIKitResource(@"create_group");
-    room.title = @"创建聊天室";
+    room.title = NSLocalizedString(@"ChatsNewChatRoomText", nil);
     [menus addObject:room];
 
 
     CGFloat height = [TPopCell getHeight] * menus.count + TPopView_Arrow_Size.height;
     CGFloat orginY = StatusBar_Height + NavBar_Height;
-    TPopView *popView = [[TPopView alloc] initWithFrame:CGRectMake(Screen_Width - 145, orginY, 135, height)];
+    TPopView *popView = [[TPopView alloc] initWithFrame:CGRectMake(Screen_Width - 155, orginY, 145, height)];
     CGRect frameInNaviView = [self.navigationController.view convertRect:rightBarButton.frame fromView:rightBarButton.superview];
     popView.arrowPoint = CGPointMake(frameInNaviView.origin.x + frameInNaviView.size.width * 0.5, orginY);
     popView.delegate = self;
@@ -170,7 +170,7 @@
     if(index == 0){
         //发起会话
         TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = @"选择联系人";
+        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
         vc.maxSelectCount = 1;
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
@@ -193,7 +193,7 @@
     else if(index == 1){
         //创建讨论组
         TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = @"选择联系人";
+        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
             @strongify(self)
@@ -204,7 +204,7 @@
     } else if(index == 2){
         //创建群聊
         TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = @"选择联系人";
+        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
             @strongify(self)
@@ -215,7 +215,7 @@
     } else if(index == 3){
         //创建聊天室
         TUIContactSelectController *vc = [TUIContactSelectController new];
-        vc.title = @"选择联系人";
+        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
         [self.navigationController pushViewController:vc animated:YES];
         vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
             @strongify(self)
@@ -275,15 +275,15 @@
             @strongify(self)
             NSString *content = nil;
             if([info.groupType isEqualToString:GroupType_Work]) {
-                content = @"创建讨论组";
+                content = NSLocalizedString(@"ChatsCreatePrivateGroupTips", nil); // @"创建讨论组";
             } else if([info.groupType isEqualToString:GroupType_Public]){
-                content = @"创建群聊";
+                content = NSLocalizedString(@"ChatsCreateGroupTips", nil); // @"创建群聊";
             } else if([info.groupType isEqualToString:GroupType_Meeting]) {
-                content = @"创建聊天室";
+                content = NSLocalizedString(@"ChatsCreateChatRoomTips", nil); // @"创建聊天室";
             } else {
-                content = @"创建群组";
+                content = NSLocalizedString(@"ChatsCreateDefaultTips", nil); // @"创建群组";
             }
-            NSDictionary *dic = @{@"version": @(GroupCreate_Version),@"businessID": GroupCreate,@"opUser":showName,@"content":@"创建群组"};
+            NSDictionary *dic = @{@"version": @(GroupCreate_Version),@"businessID": GroupCreate,@"opUser":showName,@"content":content};
             NSData *data= [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
             V2TIMMessage *msg = [[V2TIMManager sharedInstance] createCustomMessage:data];
             [[V2TIMManager sharedInstance] sendMessage:msg receiver:nil groupID:groupID priority:V2TIM_PRIORITY_DEFAULT onlineUserOnly:NO offlinePushInfo:nil progress:nil succ:nil fail:nil];

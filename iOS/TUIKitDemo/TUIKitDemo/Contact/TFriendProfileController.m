@@ -78,7 +78,7 @@
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
 
-    self.title = @"详细资料";
+    self.title = NSLocalizedString(@"ProfileDetails", nil); // @"详细资料";
 }
 /**
  *初始化视图显示数据
@@ -106,11 +106,11 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TCommonTextCellData *data = TCommonTextCellData.new;
-            data.key = @"备注名";
+            data.key = NSLocalizedString(@"ProfileAlia", nil); // @"备注名";
             data.value = self.friendProfile.friendRemark;
             if (data.value.length == 0)
             {
-                data.value = @"无";
+                data.value = NSLocalizedString(@"None", nil); // @"无";
             }
             data.showAccessory = YES;
             data.cselector = @selector(onChangeRemark:);
@@ -119,7 +119,7 @@
         })];
         [inlist addObject:({
             TCommonSwitchCellData *data = TCommonSwitchCellData.new;
-            data.title = @"加入黑名单";
+            data.title = NSLocalizedString(@"ProfileBlocked", nil); // @"加入黑名单";
             data.on = self.isInBlackList;
             data.cswitchSelector =  @selector(onChangeBlackList:);
             data.reuseId = @"SwitchCell";
@@ -132,7 +132,7 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TCommonSwitchCellData *data = TCommonSwitchCellData.new;
-            data.title = @"置顶聊天";
+            data.title = NSLocalizedString(@"ProfileStickyonTop", nil); // @"置顶聊天";
             if ([[[TUILocalStorage sharedInstance] topConversationList] containsObject:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID]]) {
                 data.on = YES;
             }
@@ -146,7 +146,7 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TUIButtonCellData *data = TUIButtonCellData.new;
-            data.title = @"发送消息";
+            data.title = NSLocalizedString(@"ProfileSendMessages", nil); // @"发送消息";
             data.style = ButtonBule;
             data.cbuttonSelector = @selector(onSendMessage:);
             data.reuseId = @"ButtonCell";
@@ -154,7 +154,7 @@
         })];
         [inlist addObject:({
             TUIButtonCellData *data = TUIButtonCellData.new;
-            data.title = @"删除好友";
+            data.title = NSLocalizedString(@"ProfileDeleteFirend", nil); // @"删除好友";
             data.style = ButtonRedText;
             data.cbuttonSelector =  @selector(onDeleteFriend:);
             data.reuseId = @"ButtonCell";
@@ -185,7 +185,7 @@
 - (void)onChangeRemark:(TCommonTextCell *)cell
 {
     TTextEditController *vc = [[TTextEditController alloc] initWithText:self.friendProfile.friendRemark];
-    vc.title = @"修改备注";
+    vc.title = NSLocalizedString(@"ProfileEditAlia", nil); // @"修改备注";
     vc.textValue = self.friendProfile.friendRemark;
     [self.navigationController pushViewController:vc animated:YES];
 

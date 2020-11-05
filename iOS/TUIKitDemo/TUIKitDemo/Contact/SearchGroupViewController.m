@@ -12,7 +12,6 @@
  */
 #import "SearchGroupViewController.h"
 #import "UIView+MMLayout.h"
-#import "TIMFriendshipManager.h"
 #import "FriendRequestViewController.h"
 #import "GroupRequestViewController.h"
 #import "THeader.h"
@@ -77,7 +76,7 @@
 
 @end
 
-@interface SearchGroupViewController()<UISearchResultsUpdating>
+@interface SearchGroupViewController()<UISearchResultsUpdating, UISearchBarDelegate>
 
 @property (nonatomic,strong) AddGroupItemView *userView;;
 
@@ -85,7 +84,7 @@
 
 
 
-@interface SearchGroupViewController() <UISearchControllerDelegate,UISearchResultsUpdating,UISearchResultsUpdating>
+@interface SearchGroupViewController() <UISearchControllerDelegate, UISearchBarDelegate>
 
 @end
 
@@ -94,7 +93,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"添加群组";
+    self.title = NSLocalizedString(@"ContactsJoinGroup", nil); // @"添加群组";
 
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
 
@@ -106,9 +105,9 @@
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     //设置代理
     self.searchController.delegate = self;
-    self.searchController.searchResultsUpdater = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
     _searchController.searchBar.placeholder = @"群组ID";
+    _searchController.searchBar.delegate = self;
     [self.view addSubview:_searchController.searchBar];
 
     self.userView = [[AddGroupItemView alloc] initWithFrame:CGRectZero];
@@ -153,12 +152,32 @@
     self.userView.groupInfo = nil;
 }
 
-/**
- *searchController中的内容每次更新，都会调用改函数进行一次当前内容的搜索
- */
-- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    NSString *inputStr = searchController.searchBar.text ;
-    NSLog(@"serach %@", inputStr);
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
+{
+    self.searchController.active = YES;
+    return YES;
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    self.searchController.active = NO;
+}
+
+- (void)handleUserTap:(id)sender
+{
+    if (self.userView.groupInfo)
+    {
+        GroupRequestViewController *frc = [[GroupRequestViewController alloc] init];
+        frc.groupInfo = self.userView.groupInfo;
+        [self.navigationController pushViewController:frc animated:YES];
+    }
+}
+
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    NSString *inputStr = searchBar.text ;
     [[V2TIMManager sharedInstance] getGroupsInfo:@[inputStr] succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
         if(groupResultList.count > 0) {
             V2TIMGroupInfoResult *result = groupResultList.firstObject;
@@ -175,22 +194,4 @@
     }];
 }
 
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    self.searchController.active = YES;
-    return YES;
-}
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    self.searchController.active = NO;
-}
-
-- (void)handleUserTap:(id)sender
-{
-    if (self.userView.groupInfo)
-    {
-        GroupRequestViewController *frc = [[GroupRequestViewController alloc] init];
-        frc.groupInfo = self.userView.groupInfo;
-        [self.navigationController pushViewController:frc animated:YES];
-    }
-}
 @end

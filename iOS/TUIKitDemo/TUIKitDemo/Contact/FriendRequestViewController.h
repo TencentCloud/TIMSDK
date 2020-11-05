@@ -11,7 +11,8 @@
  *  本类依赖于腾讯云 TUIKit和IMSDK 实现
  */
 #import <UIKit/UIKit.h>
-#import "TIMFriendshipManager.h"
+
+@import ImSDK;
 
 NS_ASSUME_NONNULL_BEGIN
 

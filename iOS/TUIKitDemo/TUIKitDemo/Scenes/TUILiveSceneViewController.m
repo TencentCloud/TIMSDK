@@ -13,7 +13,6 @@
 #import "UIColor+TUIDarkMode.h"
 #import "TUIKit.h"
 #import "TUILiveRoomManager.h"
-//#import "TCLoginModel.h"
 #import "TUILiveDefaultGiftAdapterImp.h"
 #import "TNaviBarIndicatorView.h"
 #import "TUILiveUserProfile.h"
@@ -62,7 +61,7 @@ isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bo
 - (void)setupNavigation
 {
     _titleView = [[TNaviBarIndicatorView alloc] init];
-    [_titleView setTitle:@"视频直播"];
+    [_titleView setTitle:NSLocalizedString(@"TabBarItemLiveText", nil)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNetworkChanged:) name:TUIKitNotification_TIMConnListener object:nil];
@@ -76,19 +75,19 @@ isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bo
     TUINetStatus status = (TUINetStatus)[notification.object intValue];
     switch (status) {
         case TNet_Status_Succ:
-            [_titleView setTitle:@"视频直播"];
+            [_titleView setTitle:NSLocalizedString(@"TabBarItemLiveText", nil)];
             [_titleView stopAnimating];
             break;
         case TNet_Status_Connecting:
-            [_titleView setTitle:@"连接中..."];
+            [_titleView setTitle:NSLocalizedString(@"TabBarItemLiveConnectingText", nil)];
             [_titleView startAnimating];
             break;
         case TNet_Status_Disconnect:
-            [_titleView setTitle:@"视频直播(未连接)"];
+            [_titleView setTitle:NSLocalizedString(@"TabBarItemLiveDisconnectText", nil)];
             [_titleView stopAnimating];
             break;
         case TNet_Status_ConnFailed:
-            [_titleView setTitle:@"视频直播(未连接)"];
+            [_titleView setTitle:NSLocalizedString(@"TabBarItemLiveDisconnectText", nil)];
             [_titleView stopAnimating];
             break;
 
@@ -169,7 +168,6 @@ isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bo
 }
 
 - (void)createRoomActon:(UIButton *)sender {
-    
     TUILiveRoomAnchorViewController *anchorVC = [[TUILiveRoomAnchorViewController alloc] init];
     anchorVC.delegate = self;
     [anchorVC enablePK:YES];

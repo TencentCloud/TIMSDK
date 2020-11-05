@@ -126,7 +126,7 @@
     BOOL useCdnPlay = [[[NSUserDefaults standardUserDefaults] objectForKey:@"TUIKitDemo_useCdnPlay"] boolValue];
     TUILiveRoomAudienceViewController *audienceVC = nil;
     if (useCdnPlay) {
-        NSString *url = [NSString stringWithFormat:@"http://3891.liveplay.myqcloud.com/live/%d_%d_%@_main.flv", 1400188366, (int)room.roomID, room.ownerId];
+        NSString *url = [NSString stringWithFormat:@"http://tuikit.qcloud.com/live/%d_%d_%@_main.flv", SDKAPPID, (int)room.roomID, room.ownerId];
         audienceVC = [[TUILiveRoomAudienceViewController alloc] initWithRoomId:(int)room.roomID anchorId:room.ownerId useCdn:YES cdnUrl:url];
     } else {
         audienceVC = [[TUILiveRoomAudienceViewController alloc] initWithRoomId:(int)room.roomID anchorId:room.ownerId useCdn:NO cdnUrl:@""];

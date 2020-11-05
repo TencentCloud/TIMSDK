@@ -19,7 +19,6 @@
 #import "THeader.h"
 #import "SearchFriendViewController.h"
 #import "SearchGroupViewController.h"
-#import "TIMFriendshipManager.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "Toast/Toast.h"
@@ -55,7 +54,7 @@
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
     self.navigationItem.rightBarButtonItem = moreItem;
 
-    self.title = @"通讯录";
+    self.title = NSLocalizedString(@"TabBarItemContactText", nil);
 
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
@@ -69,12 +68,12 @@
     NSMutableArray *menus = [NSMutableArray array];
     TPopCellData *friend = [[TPopCellData alloc] init];
     friend.image = TUIKitResource(@"new_friend");
-    friend.title = @"添加好友";
+    friend.title = NSLocalizedString(@"ContactsAddFriends", nil); //@"添加好友";
     [menus addObject:friend];
 
     TPopCellData *group = [[TPopCellData alloc] init];
     group.image = TUIKitResource(@"add_group");
-    group.title = @"添加群组";
+    group.title = NSLocalizedString(@"ContactsJoinGroup", nil);//@"添加群组";
     [menus addObject:group];
 
     CGFloat height = [TPopCell getHeight] * menus.count + TPopView_Arrow_Size.height;

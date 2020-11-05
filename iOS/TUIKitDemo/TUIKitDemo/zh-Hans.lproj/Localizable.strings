@@ -1,0 +1,122 @@
+/*
+  Localizable.strings
+  TUIKitDemo
+
+  Created by harvy on 2020/10/16.
+  Copyright © 2020 Tencent. All rights reserved.
+*/
+
+"cancel" = "取消";
+"Cancel" = "取消";
+"Send" = "发送";
+"Alia" = "备注";
+"Group" = "分组";
+"OK" = "好";
+"Accept" = "同意";
+"Decline" = "拒绝";
+
+"done" = "完成";
+"Done" = "完成";
+
+"logout" = "退出登录";
+
+"Male" = "男";
+"Female" = "女";
+
+"confirm" = "确定";
+
+"save" = "保存";
+"Save" = "保存";
+
+"None" = "无";
+
+"confirm_log_out" = "确定退出吗";
+"no_personal_signature" = "暂无个性签名";
+"no_set" = "未设置";
+"please_fill_in_verification_information" = "请填写验证信息";
+"send_success" = "发送成功";
+"please_fill_in_remarks_group_info" = "请填写备注和分组";
+"my_friend" = "我的朋友";
+"add_success" = "添加成功";
+"delete_success" = "删除成功";
+"choose_avatar_for_you" = "TUIKit为您选择一个头像";
+
+"AppMainTitle" = "腾讯·云通信";
+"AppMainConnectingTitle" = "连接中...";
+"AppMainDisconnectTitle" = "腾讯·云通信(未连接)";
+
+"TabBarItemMessageText" = "消息";
+"TabBarItemContactText" = "通讯录";
+"TabBarItemMeText"      = "我";
+"TabBarItemLiveText"    = "视频直播";
+"TabBarItemLiveConnectingText" = "连接中...";
+"TabBarItemLiveDisconnectText" = "视频直播(未连接)";
+
+"ChatsNewChatText"    = "发起会话";
+"ChatsNewPrivateGroupText"   = "创建讨论组";
+"ChatsNewGroupText"  = "创建群聊";
+"ChatsNewChatRoomText" = "创建聊天室";
+
+"ChatsCreatePrivateGroupTips" = "创建讨论组";
+"ChatsCreateGroupTips" = "创建群聊";
+"ChatsCreateChatRoomTips" = "创建聊天室";
+"ChatsCreateDefaultTips" = "创建群组";
+
+"ChatsSelectContact" = "选择联系人";
+
+"ContactsAddFriends" = "添加好友";
+"ContactsJoinGroup"  = "添加群组";
+"ContactsNewFriends" = "新的联系人";
+"ContactsGroupChats" = "群聊";
+"ContactsBlackList" = "黑名单";
+
+"MeFriendRequest" = "好友申请";
+"MeFriendRequestMethodAgreeAll" = "同意任何用户加好友";
+"MeFriendRequestMethodNeedConfirm" = "需要验证";
+"MeFriendRequestMethodDenyAll" = "拒绝任何人加好友";
+
+"MeAbout" = "关于腾讯·云通信";
+"MeDevelop" = "开发调试";
+"MeReportMemoryLeak" = "内存泄漏上报";
+
+"ProfilePhoto" = "头像";
+"ProfileName"  = "昵称";
+"ProfileAccount" = "账号";
+"ProfileSignature" = "个性签名";
+"ProfileGender" = "性别";
+"ProfileEditName" = "修改昵称";
+"ProfileEditSignture" = "修改个性签名";
+"ProfileEditGender" = "修改性别";
+"ProfileEditAlia" = "修改备注";
+"ProfileDetails" = "详细资料";
+"ProfileAlia" = "备注名";
+"ProfileBlocked" = "加入黑名单";
+"ProfileStickyonTop" = "置顶聊天";
+"ProfileSendMessages" = "发送聊天";
+"ProfileDeleteFirend" = "删除好友";
+
+"LiveDropRefresh" = "下拉刷新";
+"LiveRefreshing" = "刷新中...";
+"LiveOnlineCountFormat" = "%ld在线";
+
+"MoreCustom" = "自定义";
+"MoreCustomViewDetails" = "查看详情>>";
+
+"GroupRequestJoinGroupFormat" = "%@ 申请加入群聊";
+"GroupJoin" = "添加群组";
+
+"FriendRequestFormat" = "我是%@";
+"FriendRequestFillInfo" = "填写信息";
+"FriendOneWay" = "单向好友";
+"FriendAddResultSuccessWait" = "发送成功,等待审核同意";
+"FriendAddResultForbid" = "对方禁止添加";
+"FriendAddResultSuccess" = "已添加到好友列表";
+"FriendAddResultExists" = "好友已存在";
+"FriendAddVerificationMessage" = "验证消息";
+"FriendAddTitle" = "加好友";
+
+"SearchGroupPlaceholder" = "用户ID";
+
+"GroupMember" = "群成员";
+"GroupAddFirend" = "添加联系人";
+"GroupDeleteFriend" = "删除联系人";

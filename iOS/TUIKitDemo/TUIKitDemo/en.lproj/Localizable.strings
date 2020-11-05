@@ -1,0 +1,123 @@
+/*
+  Localizable.strings
+  TUIKitDemo
+
+  Created by harvy on 2020/10/16.
+  Copyright © 2020 Tencent. All rights reserved.
+*/
+
+"cancel" = "cancel";
+"Cancel" = "Cancel";
+"Send" = "Send";
+"Alia" = "Alia";
+"Group" = "Group";
+"OK" = "OK";
+"Accept" = "Accept";
+"Decline" = "Decline";
+
+"done" = "done";
+"Done" = "Done";
+
+"logout" = "log out";
+
+"Male" = "Male";
+"Female" = "Female";
+
+"confirm" = "confirm";
+
+"save" = "save";
+"Save" = "Save";
+
+"None" = "None";
+
+"confirm_log_out" = "Are you sure log out";
+"no_personal_signature" = "No personal signature";
+"no_set" = "No set";
+"please_fill_in_verification_information" = "Please fill in the verification information";
+"send_success" = "send success";
+"please_fill_in_remarks_group_info" = "Please fill in the alias and group information";
+"my_friend" = "My firends";
+"add_success" = "Add success";
+"delete_success" = "Delete success";
+"choose_avatar_for_you" = "TUIKit will set a profile photo for you";
+
+"AppMainTitle" = "Tencent·IM";
+"AppMainConnectingTitle" = "Connecting...";
+"AppMainDisconnectTitle" = "Tencent·IM(Disconnected)";
+
+"TabBarItemMessageText" = "Chats";
+"TabBarItemContactText" = "Contacts";
+"TabBarItemMeText"      = "Me";
+"TabBarItemLiveText"    = "Live";
+"TabBarItemLiveConnectingText" = "Connecting...";
+"TabBarItemLiveDisconnectText" = "Live(Disconnected)";
+
+"ChatsNewChatText"    = "New Chat";
+"ChatsNewPrivateGroupText"   = "Private Group";
+"ChatsNewGroupText"  = "Public Group";
+"ChatsNewChatRoomText" = "Chat Room";
+
+"ChatsCreatePrivateGroupTips" = "create the private group";
+"ChatsCreateGroupTips" = "crate the public group";
+"ChatsCreateChatRoomTips" = "create the chat room";
+"ChatsCreateDefaultTips" = "create the group chat";
+
+"ChatsSelectContact" = "Select Contacts";
+
+"ContactsAddFriends" = "Add Friend";
+"ContactsJoinGroup"  = "Join Group";
+"ContactsNewFriends" = "New Friends";
+"ContactsGroupChats" = "Group Chats";
+"ContactsBlackList" = "Blocked List";
+
+"MeFriendRequest" = "Friend Request";
+"MeFriendRequestMethodAgreeAll" = "Agree All Requests";
+"MeFriendRequestMethodNeedConfirm" = "Need Confirm";
+"MeFriendRequestMethodDenyAll" = "Decline Any Requests";
+
+"MeAbout" = "About Tencent·IM";
+"MeDevelop" = "Develop & Debug";
+"MeReportMemoryLeak" = "Reporting Memory Leak";
+
+"ProfilePhoto" = "Profile Photo";
+"ProfileName"  = "Nickname";
+"ProfileAccount" = "Account";
+"ProfileSignature" = "What's up";
+"ProfileGender" = "Gender";
+"ProfileEditName" = "Editing Nickname";
+"ProfileEditSignture" = "What's up";
+"ProfileEditGender" = "Editing Gender";
+"ProfileEditAlia" = "Editing Alias";
+"ProfileDetails" = "Details";
+"ProfileAlia" = "Alias";
+"ProfileBlocked" = "Blocked";
+"ProfileStickyonTop" = "Sticky on Top";
+"ProfileSendMessages" = "Messages";
+"ProfileDeleteFirend" = "Delete";
+
+"LiveDropRefresh" = "Drag to refresh";
+"LiveRefreshing" = "Refresh...";
+"LiveOnlineCountFormat" = "%ld online";
+"LiveAudioChatRoom" = "Audio Chat Room";
+
+"MoreCustom" = "Customize";
+"MoreCustomViewDetails" = "View details >>";
+
+"GroupRequestJoinGroupFormat" = "%@ request to join group chat";
+"GroupJoin" = "Join group";
+
+"FriendRequestFormat" = "This is %@";
+"FriendRequestFillInfo" = "Fill in information";
+"FriendOneWay" = "One-way friends";
+"FriendAddResultSuccessWait" = "Applying success, waiting for acceptance";
+"FriendAddResultForbid" = "You are forbidden to follow";
+"FriendAddResultSuccess" = "The other has been added to the list";
+"FriendAddResultExists" = "You're already firends";
+"FriendAddVerificationMessage" = "Vertification message";
+"FriendAddTitle" = "Following firend";
+
+"SearchGroupPlaceholder" = "User id";
+
+"GroupMember" = "Group member";
+"GroupAddFirend" = "Add Contact";
+"GroupDeleteFriend" = "Delete Contact";

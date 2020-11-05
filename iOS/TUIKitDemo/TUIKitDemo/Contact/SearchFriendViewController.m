@@ -12,7 +12,6 @@
  */
 #import "SearchFriendViewController.h"
 #import "UIView+MMLayout.h"
-#import "TIMFriendshipManager.h"
 #import "FriendRequestViewController.h"
 #import "THeader.h"
 #import "UIColor+TUIDarkMode.h"
@@ -78,7 +77,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"添加好友";
+    self.title = NSLocalizedString(@"ContactsAddFriends", nil); // @"添加好友";
 
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
 
@@ -92,7 +91,7 @@
     self.searchController.delegate = self;
     self.searchController.searchResultsUpdater = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
-    _searchController.searchBar.placeholder = @"用户ID";
+    _searchController.searchBar.placeholder = NSLocalizedString(@"SearchGroupPlaceholder", nil); // @"用户ID";
     [self.view addSubview:_searchController.searchBar];
     self.searchController.searchBar.mm_sizeToFit();
 

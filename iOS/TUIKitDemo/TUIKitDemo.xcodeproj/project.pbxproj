@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		48B8C89C25543E0D009E392B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48B8C89E25543E0D009E392B /* Localizable.strings */; };
 		910AF70B22925BF000ED5675 /* SearchGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF70A22925BF000ED5675 /* SearchGroupViewController.m */; };
 		910AF7112292820300ED5675 /* GroupRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF7102292820300ED5675 /* GroupRequestViewController.m */; };
 		913C8531226705C300D74B58 /* SearchFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C852E226705C300D74B58 /* SearchFriendViewController.m */; };
@@ -48,6 +49,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		48B8C89D25543E0D009E392B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		48B8C89F25543E10009E392B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		48B8C8A325543E9D009E392B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		492D8F1F0DED1F83086F3E82 /* Pods-TUIKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.release.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.release.xcconfig"; sourceTree = "<group>"; };
 		4A94A8992A0612C1D8FEAB79 /* Pods-TUIKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.debug.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		4ACF80D249FB861F11A39586 /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -340,6 +344,7 @@
 				9176C5C3227A9D3500DF5784 /* PrefixHeader.pch */,
 				CE685F1323B48F8700A3953C /* 00.caf */,
 				CE685F1423B48F8700A3953C /* 01.caf */,
+				48B8C89E25543E0D009E392B /* Localizable.strings */,
 			);
 			path = TUIKitDemo;
 			sourceTree = "<group>";
@@ -365,8 +370,8 @@
 				CF01447E216E1A4900C12E35 /* Sources */,
 				CF01447F216E1A4900C12E35 /* Frameworks */,
 				CF014480216E1A4900C12E35 /* Resources */,
-				EC502815E8EBA074322E99F1 /* [CP] Copy Pods Resources */,
-				4338EF2A772022590ECF208E /* [CP] Embed Pods Frameworks */,
+				3DC16A22BA3D881EFCA87F48 /* [CP] Embed Pods Frameworks */,
+				7DBB512BF069B91F48FBC729 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -425,6 +430,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE685F1623B48F8700A3953C /* 01.caf in Resources */,
+				48B8C89C25543E0D009E392B /* Localizable.strings in Resources */,
 				CF014492216E1A4B00C12E35 /* LaunchScreen.storyboard in Resources */,
 				CF01448F216E1A4B00C12E35 /* Assets.xcassets in Resources */,
 				CE685F1523B48F8700A3953C /* 00.caf in Resources */,
@@ -457,7 +463,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4338EF2A772022590ECF208E /* [CP] Embed Pods Frameworks */ = {
+		3DC16A22BA3D881EFCA87F48 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -472,7 +478,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EC502815E8EBA074322E99F1 /* [CP] Copy Pods Resources */ = {
+		7DBB512BF069B91F48FBC729 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -531,11 +537,21 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		48B8C89E25543E0D009E392B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				48B8C89D25543E0D009E392B /* en */,
+				48B8C89F25543E10009E392B /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		CF01448B216E1A4900C12E35 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				CF01448C216E1A4900C12E35 /* Base */,
 				CF00884C2188772F00AD2879 /* zh-Hans */,
+				48B8C8A325543E9D009E392B /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";

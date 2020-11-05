@@ -76,7 +76,7 @@
     [self.coverImageView sd_setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"live_room_default_cover"]];
     self.anchorNameLabel.text = info.ownerName;
     self.roomNameLabel.text = info.roomName;
-    self.memberCountLabel.text = [NSString stringWithFormat:@"%ld在线", (long)info.memberCount];
+    self.memberCountLabel.text = [NSString stringWithFormat:NSLocalizedString(@"LiveOnlineCountFormat", nil), (long)info.memberCount];
 }
 
 #pragma mark - 视图生命周期
