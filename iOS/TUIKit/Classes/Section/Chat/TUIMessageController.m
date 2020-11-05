@@ -33,6 +33,10 @@
 #import "UIColor+TUIDarkMode.h"
 #import "TUICallUtils.h"
 #import <ImSDK/ImSDK.h>
+#import "TUIGroupLiveMessageCellData.h"
+#import "TUIGroupLiveMessageCell.h"
+#import "NSBundle+TUIKIT.h"
+
 
 #define MAX_MESSAGE_SEP_DLAY (5 * 60)
 
@@ -139,6 +143,7 @@
     [self.tableView registerClass:[TUIVideoMessageCell class] forCellReuseIdentifier:TVideoMessageCell_ReuseId];
     [self.tableView registerClass:[TUIFileMessageCell class] forCellReuseIdentifier:TFileMessageCell_ReuseId];
     [self.tableView registerClass:[TUIJoinGroupMessageCell class] forCellReuseIdentifier:TJoinGroupMessageCell_ReuseId];
+    [self.tableView registerClass:[TUIGroupLiveMessageCell class] forCellReuseIdentifier:TGroupLiveMessageCell_ReuseId];
 
 
     _indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, TMessageController_Header_Height)];
@@ -277,7 +282,31 @@
             }
             continue;
         }
-        // 自定义的消息
+        /// 群直播消息，属于自定义消息中的一种
+        if (msg.customElem.data) {
+            NSDictionary *params = [NSJSONSerialization JSONObjectWithData:msg.customElem.data options:NSJSONReadingAllowFragments error:nil];
+            //[params[@"version"] integerValue] == Version && 
+            if ([params isKindOfClass:NSDictionary.class] && [params[@"businessID"] isKindOfClass:NSString.class] && [params[@"businessID"] isEqualToString:@"group_live"]) {
+                TMsgDirection direction = msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
+                TUIGroupLiveMessageCellData *cellData = [[TUIGroupLiveMessageCellData alloc] initWithDirection:direction];
+                cellData.anchorName = params[@"anchorName"];
+                cellData.roomInfo = params;
+                cellData.direction = direction;
+                cellData.innerMessage = msg;
+                cellData.msgID = msg.msgID;
+                cellData.identifier = msg.sender;
+                cellData.status = Msg_Status_Succ;
+                cellData.name = msg.getShowName;
+                cellData.avatarUrl = [NSURL URLWithString:msg.faceURL];
+                if (dateMsg) {
+                    _msgForDate = msg;
+                    [uiMsgs addObject:dateMsg];
+                }
+                [uiMsgs addObject:cellData];
+                continue;
+            }
+        }
+        // 外部自定义的消息
         if ([self.delegate respondsToSelector:@selector(messageController:onNewMessage:)]) {
             TUIMessageCellData *data = [self.delegate messageController:self onNewMessage:msg];
             if (data) {
@@ -389,7 +418,10 @@
         }
         else if([data isKindOfClass:[TUISystemMessageCellData class]]) {
             data.reuseId = TSystemMessageCell_ReuseId;
+        } else if ([data isKindOfClass:[TUIGroupLiveMessageCellData class]]) {
+            data.reuseId = TGroupLiveMessageCell_ReuseId;
         } else {
+            NSAssert(NO, @"无法解析当前cell");
             return nil;
         }
     }
@@ -531,8 +563,12 @@
 {
     msg.status = status;
     NSInteger index = [_uiMsgs indexOfObject:msg];
-    TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
-    [cell fillWithData:msg];
+    if ([self.tableView numberOfRowsInSection:0] > index) {
+        TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+        [cell fillWithData:msg];
+    } else {
+        NSLog(@"缺少cell");
+    }
 }
 
 - (V2TIMMessage *)transIMMsgFromUIMsg:(TUIMessageCellData *)data
@@ -565,6 +601,8 @@
     else if([data isKindOfClass:[TUIFileMessageCellData class]]){
         TUIFileMessageCellData *uiFile = (TUIFileMessageCellData *)data;
         msg = [[V2TIMManager sharedInstance] createFileMessage:uiFile.path fileName:uiFile.fileName];
+    } else if ([data isKindOfClass:[TUIGroupLiveMessageCellData class]]) {
+        msg = [(TUIGroupLiveMessageCellData *)data generateInnerMessage];
     }
     data.innerMessage = msg;
     return msg;
@@ -817,7 +855,6 @@
     [self.navigationController pushViewController:file animated:YES];
 }
 
-
 - (void)didTapOnRestNameLabel:(TUIJoinGroupMessageCell *)cell withIndex:(NSInteger)index{
     [self jumpToProfileController:cell.joinData.userIDList[index]];
 }
@@ -866,8 +903,8 @@
             TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
             //通过回调时间戳判定当前的未读是否需要改为已读
             time_t msgTime = [cell.messageData.innerMessage.timestamp timeIntervalSince1970];
-            if(msgTime <= receiptTime && ![cell.readReceiptLabel.text isEqualToString:@"已读"]) {
-                cell.readReceiptLabel.text = @"已读";
+            if(msgTime <= receiptTime && ![cell.readReceiptLabel.text isEqualToString:TUILocalizableString(Read)]) {
+                cell.readReceiptLabel.text = TUILocalizableString(Read);
             }
         }
     }

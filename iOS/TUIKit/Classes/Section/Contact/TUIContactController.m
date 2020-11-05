@@ -35,26 +35,25 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     NSMutableArray *list = @[].mutableCopy;
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
         data.icon = [UIImage imageNamed:TUIKitResource(@"new_friend")];
-        data.title = @"新的联系人";
+        data.title = NSLocalizedString(@"ContactsNewFriends", nil); // @"新的联系人";
         data.cselector = @selector(onAddNewFriend:);
         data;
     })];
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
         data.icon = [UIImage imageNamed:TUIKitResource(@"public_group")];
-        data.title = @"群聊";
+        data.title = NSLocalizedString(@"ContactsGroupChats", nil); // @"群聊";
         data.cselector = @selector(onGroupConversation:);
         data;
     })];
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
         data.icon = [UIImage imageNamed:TUIKitResource(@"blacklist")];
-        data.title = @"黑名单";
+        data.title = NSLocalizedString(@"ContactsBlackList", nil); // @"黑名单";
         data.cselector = @selector(onBlackList:);
         data;
     })];
@@ -226,7 +225,7 @@
 - (void)onGroupConversation:(TCommonTableViewCell *)cell
 {
     TUIGroupConversationListController *vc = TUIGroupConversationListController.new;
-    vc.title = @"群聊";
+    vc.title = NSLocalizedString(@"ContactsGroupChats", nil); // @"群聊";
     [self.navigationController pushViewController:vc animated:YES];
 }
 

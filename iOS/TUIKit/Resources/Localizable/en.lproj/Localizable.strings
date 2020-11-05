@@ -1,0 +1,126 @@
+/* 
+  Localizable.strings
+  English
+  
+  Created by harvy on 2020/10/9.
+  
+*/
+
+"TUIKitTipsMostSelectTextFormat" = "Please select no more than %ld";
+
+"Confirm" = "Confirm";
+"Cancel" = "Cancel";
+"Send" = "Send";
+
+"Monday" = "Monday";
+"Tuesday" = "Tuesday";
+"Wednesday" = "Wednesday";
+"Thursday" = "Thursday";
+"Friday" = "Friday";
+"Saturday" = "Saturday";
+"Sunday" = "Sunday";
+"Yesterday" = "Yesterday";
+
+"Read" = "Read";
+"Unread" = "UnRead";
+
+"TUIKitInputHoldToTalk" = "Hold to Talk";
+"TUIKitInputReleaseToSend" = "Release to Send";
+"TUIKitInputReleaseToCancel" = "Release to Cancel";
+"TUIKitInputNoMicTitle" = "Micphone Disabled";
+"TUIKitInputNoMicTips"  = "Enable microphone to send voice messages";
+"TUIKitInputNoMicOperateLater" = "Later";
+"TUIKitInputNoMicOperateEnable" = "Enable";
+"TUIKitInputBlankMessageTitle" = "Blank message is not allowed";
+"TUIKitInputWillFinishRecordInSeconds" = "will finished in %lds";
+"TUIKitInputRecordSlideToCancel" = "Fingers slide up to cancel";
+"TUIKitInputRecordReleaseToCancel" = "Fingers release to cancel";
+"TUIKitInputRecordTimeshort" = "Talk time is too short";
+"TUIKitInputRecordTimeLong" = "Talk time is too long";
+
+"TUIKitGroupProfileDetails" = "Details";
+"TUIKitGroupProfileMember" = "Group Members";
+"TUIKitGroupProfileMemberCount" = "%d person";
+"TUIKitGroupProfileMemberCountlu" = "%lu person";
+"TUIKitGroupProfileType" = "Group Type";
+"TUIKitGroupProfileJoinType" = "Join Type";
+"TUIKitGroupProfileInviteJoin" = "Invited to join";
+"TUIKitGroupProfileAutoApproval" = "Automatic approval";
+"TUIKitGroupProfileAlias" = "Alias";
+"TUIKitGroupProfileStickyOnTop" = "Sticky on Top";
+"TUIKitGroupProfileDeleteAndExit" = "Delete & Exit";
+"TUIKitGroupProfileDissolve" = "Dissolve";
+"TUIKitGroupProfileJoinDisable" = "Disable Join";
+"TUIKitGroupProfileAdminApprove" = "Administrator approval";
+"TUIKitGroupProfileEditAlias" = "Editing mine alias in group";
+"TUIKitGroupProfileEditGroupName" = "Editing group name";
+"TUIKitGroupProfileEditAnnouncement" = "Editing group announcement";
+"TUIKitGroupProfileEditAvatar" = "Editing group profile photo";
+"TUIKitGroupProfileDeleteGroupTips" = "This group chat message will not be received after exiting";
+"TUIKitGroupProfileGroupCountFormat" = "Members(%ld)";
+"TUIKitGroupProfileManage" = "Manage";
+"TUIKitGroupProfileManageAdd" = "Add members";
+"TUIKitGroupProfileManageDelete" = "Delete members";
+
+"TUIKitMessageTipsYouRecallMessage" = "You recalled a message";
+"TUIKitMessageTipsRecallMessageFormat" = "\"%@\" recalled a message";
+"TUIkitMessageTipsOthersRecallMessage" = "The other side recalled a message";
+"TUIKitMessageTipsJoinGroupFormat" = "\"%@\" joined the group";
+"TUIKitMessageTipsInviteJoinGroupFormat" = "\"%@\" invited \"%@\" to join the group";
+"TUIKitMessageTipsLeaveGroupFormat" = "\"%@\" leaved the group";
+"TUIKitMessageTipsKickoffGroupFormat" = "\"%@\"kickoff \"%@\"out of the group";
+"TUIKitMessageTipsSettAdminFormat" = "\"%@\" was set up as an administrator";
+"TUIKitMessageTipsCancelAdminFormat" = "\"%@\" was disqualified as an administrator";
+"TUIkitMessageTipsEditGroupNameFormat" = "%@ changed the group name to \"%@\"、";
+"TUIKitMessageTipsEditGroupIntroFormat" = "%@ modified the group profile to \"%@\"、";
+"TUIKitMessageTipsEditGroupAnnounceFormat" = "%@ modified the group announcement to \"%@\"、";
+"TUIKitMessageTipsEditGroupAvatarFormat" = "%@ modified the group profile photo、";
+"TUIKitMessageTipsEditGroupOwnerFormat" = "%@ modified the group owner for \"%@\"、";
+"TUIKitMessageTipsCreateGroupFormat" = "\"%@\" created group";
+"TUIKitMessageTipsUnsupportCustomMessage" = "[Unsupported customized message]";
+
+"TUIKitSignalingFinishGroupChat" = "Finished group chat";
+"TUIKitSignalingFinishConversationAndTimeFormat" = "Call finished，duration：%.2d:%.2d";
+"TUIKitSignalingNewCall" = "Initiate calling";
+"TUIKitSignalingNewGroupCallFormat" = "\"%@\" intiate group calling";
+"TUIkitSignalingCancelCall" = "Cancel calling";
+"TUIkitSignalingCancelGroupCallFormat" = "\"%@\" cancel group calling";
+"TUIkitSignalingHangonCall" = "Accepted";
+"TUIKitSignalingHangonCallFormat" = "\"%@\" accepted";
+"TUIKitSignalingBusyFormat" = "\"%@\" is busy";
+"TUIKitSignalingDeclineFormat" = "\"%@\" declined calling";
+"TUIKitSignalingCallBusy" = "Calling busy";
+"TUIkitSignalingDecline" = "Calling declined";
+"TUIKitSignalingNoResponse" = "Calling no reponse";
+"TUIkitSignalingUnrecognlize" = "Unrecognized calling instructions";
+
+"TUIkitMessageTypeImage" = "[Image]";
+"TUIKitMessageTypeVoice" = "[Voice]";
+"TUIkitMessageTypeVideo" = "[Video]";
+"TUIkitMessageTypeFile" = "[File]";
+"TUIKitMessageTypeAnimateEmoji" = "[AnimationEmoji]";
+
+"TUIKitMoreCamera" = "Camera";
+"TUIKitMorePhoto" = "Alubum";
+"TUIKitMoreVideo" = "Video";
+"TUIKitMoreFile" = "File";
+"TUIKitMoreVideoCall" = "Video Call";
+"TUIKitMoreVoiceCall" = "Voice Call";
+"TUIKitMoreGroupLive" = "Group Live";
+
+"TUIKitCallInviteYouVideoCall" = "Calling you with video";
+"TUIKitCallTurningOnMute" = "Turning on mute";
+"TUIKitCallTurningOffMute" = "Turning off mute";
+"TUIKitCallUsingSpeaker" = "Using louderspeaker";
+"TUIKitCallUsingHeadphone" = "Using headphone";
+"TUIKitCallCancelCallingFormat" = "%@ cancelled the call";
+
+"TUIKitAtSelectMemberTitle" = "Choose members";
+
+"TUIKitConversationTipsAtMe" = "[@me]";
+"TUIKitConversationTipsAtAll" = "[@all]";
+"TUIKitConversationTipsAtMeAndAll" = "[@me][@all]";
+
+"TUIKitPublicGroup" = "Public group";
+"TUIKitWorkGroup" = "Work group";
+"TUIKitChatRoom" = "Chat room";

@@ -44,7 +44,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"发起呼叫";
+    self.title = self.name?:@"发起呼叫";
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:self.cancelBtn];
@@ -205,6 +205,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     BOOL isSelected = NO;
     UserModel *userSelected = [[UserModel alloc] init];
     if (indexPath.row < self.memberList.count) {
@@ -214,6 +215,15 @@
     }
     
     if (userSelected.userId.length == 0) {
+        return;
+    }
+    
+    if ([userSelected.userId isEqualToString:kImSDK_MesssageAtALL]) {
+        // 清空选择
+        [self.selectedUsers removeAllObjects];
+        [self.selectedUsers addObject:userSelected];
+        // 完成选择
+        [self onNext];
         return;
     }
     
@@ -299,6 +309,7 @@
 
 - (void)getMembers {
     @weakify(self)
+    [self getMembersWithOptionalStyle];
     [[V2TIMManager sharedInstance] getGroupMemberList:self.groupId filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:0 succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
         @strongify(self)
         for (V2TIMGroupMemberFullInfo *info in memberList) {
@@ -323,6 +334,27 @@
         }
         [self.selectTable reloadData];
     } fail:nil];
+}
+
+- (void)getMembersWithOptionalStyle {
+    if (!NSThread.isMainThread) {
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf getMembersWithOptionalStyle];
+        });
+        return;
+    }
+    
+    if (self.optionalStyle == TUISelectMemberOptionalStyleNone) {
+        return;
+    }
+    
+    if (self.optionalStyle & TUISelectMemberOptionalStyleAtAll) {
+        UserModel *model = [[UserModel alloc] init];
+        model.userId = kImSDK_MesssageAtALL;
+        model.name = @"所有人";
+        [self.memberList addObject:model];
+    }
 }
 
 - (BOOL)isUserSelected:(UserModel *)user {

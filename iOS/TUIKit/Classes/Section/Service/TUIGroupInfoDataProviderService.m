@@ -6,6 +6,7 @@
 #import "THeader.h"
 #import <ImSDK/ImSDK.h>
 #import "TUIKit.h"
+#import "NSBundle+TUIKIT.h"
 
 @TCServiceRegister(TUIGroupInfoDataProviderServiceProtocol, TUIGroupInfoDataProviderService)
 
@@ -50,13 +51,13 @@
 
     if(groupInfo.groupType){
         if([groupInfo.groupType isEqualToString:@"Work"]){
-            return @"讨论组";
+            return TUILocalizableString(TUIKitWorkGroup); // @"讨论组";
         }
         else if([groupInfo.groupType isEqualToString:@"Public"]){
-            return @"公开群";
+            return TUILocalizableString(TUIKitPublicGroup); // @"公开群";
         }
         else if([groupInfo.groupType isEqualToString:@"Meeting"]){
-            return @"聊天室";
+            return TUILocalizableString(TUIKitChatRoom); // @"聊天室";
         }
     }
 
@@ -66,13 +67,13 @@
 -(NSString *)getAddOption:(V2TIMGroupAddOpt)option{
     switch (option) {
         case V2TIM_GROUP_ADD_FORBID:
-            return @"禁止加入";
+            return TUILocalizableString(TUIKitGroupProfileJoinDisable); // @"禁止加入";
             break;
         case V2TIM_GROUP_ADD_AUTH:
-            return @"管理员审批";
+            return TUILocalizableString(TUIKitGroupProfileAdminApprove); // @"管理员审批";
             break;
         case V2TIM_GROUP_ADD_ANY:
-            return @"自动审批";
+            return TUILocalizableString(TUIKitGroupProfileAutoApproval); // @"自动审批";
             break;
         default:
             break;

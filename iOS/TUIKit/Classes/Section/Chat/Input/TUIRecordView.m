@@ -8,6 +8,7 @@
 
 #import "TUIRecordView.h"
 #import "THeader.h"
+#import "NSBundle+TUIKIT.h"
 
 @implementation TUIRecordView
 - (id)init
@@ -48,7 +49,7 @@
 - (void)defaultLayout
 {
     CGSize backSize = Record_Background_Size;
-    _title.text = @"手指上滑，取消发送";
+    _title.text = TUILocalizableString(TUIKitInputRecordSlideToCancel);
     CGSize titleSize = [_title sizeThatFits:CGSizeMake(Screen_Width, Screen_Height)];
     if(titleSize.width > backSize.width){
         backSize.width = titleSize.width + 2 * Record_Margin;
@@ -66,25 +67,25 @@
     switch (status) {
         case Record_Status_Recording:
         {
-            _title.text = @"手指上滑，取消发送";
+            _title.text = TUILocalizableString(TUIKitInputRecordSlideToCancel);
             _title.backgroundColor = [UIColor clearColor];
             break;
         }
         case Record_Status_Cancel:
         {
-            _title.text = @"松开手指，取消发送";
+            _title.text = TUILocalizableString(TUIKitInputRecordReleaseToCancel);
             _title.backgroundColor = Record_Title_Background_Color;
             break;
         }
         case Record_Status_TooShort:
         {
-            _title.text = @"说话时间太短";
+            _title.text = TUILocalizableString(TUIKitInputRecordTimeshort);
             _title.backgroundColor = [UIColor clearColor];
             break;
         }
         case Record_Status_TooLong:
         {
-            _title.text = @"说话时间太长";
+            _title.text = TUILocalizableString(TUIKitInputRecordTimeLong);
             _title.backgroundColor = [UIColor clearColor];
             break;
         }

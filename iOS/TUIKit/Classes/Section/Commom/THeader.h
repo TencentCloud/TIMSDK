@@ -6,6 +6,8 @@
 #define GroupCreate @"group_create"
 #define TextLink @"text_link"
 #define AVCall @"av_call"
+#define GroupLive @"group_live"     // 群直播
+
 #define GroupCreate_Version 4       // 创建群自定义消息业务版本
 #define TextLink_Version    4       // 自定义 cell 业务版本（点击跳转官网）
 #define AVCall_Version      4       // 音视频通话业务版本
@@ -14,6 +16,11 @@
 #define APNs_Version             1  //推送版本
 #define APNs_Business_NormalMsg  1  //普通消息推送
 #define APNs_Business_Call       2  //音视频通话推送
+
+//信令业务类型
+#define Signal_Business_ID   @"businessID"
+#define Signal_Business_Call @"av_call"  //音视频通话信令
+#define Signal_Business_Live @"av_live"  //音视频直播信令
 
 #define DefaultAvatarImage ([TUIKit sharedInstance].config.defaultAvatarImage)
 #define DefaultGroupAvatarImage ([TUIKit sharedInstance].config.defaultGroupAvatarImage)
@@ -95,6 +102,9 @@
 #define TVoiceMessageCell_Back_Width_Max (Screen_Width * 0.4)
 #define TVoiceMessageCell_Back_Width_Min 60
 #define TVoiceMessageCell_Duration_Size CGSizeMake(33, 33)
+
+//group_live
+#define TGroupLiveMessageCell_ReuseId @"TGroupLiveMessageCell"
 
 //text view
 #define TTextView_Height (49)

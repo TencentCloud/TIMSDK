@@ -6,6 +6,7 @@
 //
 
 #import "NSDate+TUIKIT.h"
+#import "NSBundle+TUIKIT.h"
 
 @implementation NSDate (TUIKIT)
 
@@ -29,30 +30,30 @@
         } else if((nowCmps.day-myCmps.day)==1) {
             dateFmt.AMSymbol = @"上午";
             dateFmt.PMSymbol = @"下午";
-            dateFmt.dateFormat = @"昨天";
+            dateFmt.dateFormat = TUILocalizableString(Yesterday); // @"昨天";
         } else {
             if ((nowCmps.day-myCmps.day) <=7) {
                 switch (comp.weekday) {
                     case 1:
-                        dateFmt.dateFormat = @"星期日";
+                        dateFmt.dateFormat = TUILocalizableString(Sunday); // @"星期日";
                         break;
                     case 2:
-                        dateFmt.dateFormat = @"星期一";
+                        dateFmt.dateFormat = TUILocalizableString(Monday); // @"星期一";
                         break;
                     case 3:
-                        dateFmt.dateFormat = @"星期二";
+                        dateFmt.dateFormat = TUILocalizableString(Tuesday); // @"星期二";
                         break;
                     case 4:
-                        dateFmt.dateFormat = @"星期三";
+                        dateFmt.dateFormat = TUILocalizableString(Wednesday); // @"星期三";
                         break;
                     case 5:
-                        dateFmt.dateFormat = @"星期四";
+                        dateFmt.dateFormat = TUILocalizableString(Thursday); // @"星期四";
                         break;
                     case 6:
-                        dateFmt.dateFormat = @"星期五";
+                        dateFmt.dateFormat = TUILocalizableString(Friday); // @"星期五";
                         break;
                     case 7:
-                        dateFmt.dateFormat = @"星期六";
+                        dateFmt.dateFormat = TUILocalizableString(Saturday); //@"星期六";
                         break;
                     default:
                         break;

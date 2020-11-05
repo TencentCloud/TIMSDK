@@ -26,6 +26,9 @@
 #import "THelper.h"
 #import "UIColor+TUIDarkMode.h"
 #import "TUICallManager.h"
+#import "TUIKit.h"
+#import "TUIGroupLiveMessageCell.h"
+#import "NSBundle+TUIKIT.h"
 
 @interface TUIChatController () <TMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate>
 @property (nonatomic, strong) TUIConversationCellData *conversationData;
@@ -53,6 +56,9 @@
         [moreMenus addObject:[TUIInputMoreCellData fileData]];
         [moreMenus addObject:[TUIInputMoreCellData videoCallData]];
         [moreMenus addObject:[TUIInputMoreCellData audioCallData]];
+        if ([TUIKit sharedInstance].config.enableGroupLiveEntry && conversationData.groupID.length > 0) {
+            [moreMenus addObject:[TUIInputMoreCellData groupLivePalyData]];
+        }
         _moreMenus = moreMenus;
 
         if (self.conversationData.groupID.length > 0) {
@@ -221,6 +227,8 @@
     if (_conversationData.groupID.length > 0) {
         TUISelectMemberViewController *vc = [[TUISelectMemberViewController alloc] init];
         vc.groupId = _conversationData.groupID;
+        vc.name = TUILocalizableString(TUIKitAtSelectMemberTitle); // @"选择群成员";
+        vc.optionalStyle = TUISelectMemberOptionalStyleAtAll;
         vc.selectedFinished = ^(NSMutableArray<UserModel *> * _Nonnull modelList) {
             NSMutableString *atText = [[NSMutableString alloc] init];
             for (int i = 0; i < modelList.count; i++) {
@@ -256,6 +264,17 @@
     [_messageController sendMessage:message];
 }
 
+- (void)sendMessageDict:(NSDictionary *)msgDict {
+    NSString *className = msgDict[@"className"];
+    Class cellDataClass = NSClassFromString(className);
+    SEL selector = @selector(initWithDict:);
+    if (cellDataClass && [cellDataClass instancesRespondToSelector:selector]) {
+        TUIMessageCellData *msgData = [[cellDataClass alloc] initWithDict:msgDict];
+        msgData.direction = MsgDirectionOutgoing;
+        [self sendMessage:msgData];
+    }
+}
+
 - (void)saveDraft
 {
     NSString *draft = self.inputController.inputBar.inputTextView.text;
@@ -265,6 +284,13 @@
 
 - (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell
 {
+    cell.disableDefaultSelectAction = NO;
+    if(_delegate && [_delegate respondsToSelector:@selector(chatController:onSelectMoreCell:)]){
+        [_delegate chatController:self onSelectMoreCell:cell];
+    }
+    if (cell.disableDefaultSelectAction) {
+        return;
+    }
     if (cell.data == [TUIInputMoreCellData photoData]) {
         [self selectPhotoForSend];
     }
@@ -283,8 +309,11 @@
     if (cell.data == [TUIInputMoreCellData audioCallData]) {
         [self audioCall];
     }
-    if(_delegate && [_delegate respondsToSelector:@selector(chatController:onSelectMoreCell:)]){
-        [_delegate chatController:self onSelectMoreCell:cell];
+    if (cell.data == [TUIInputMoreCellData groupLivePalyData]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyGroupLiveOnSelectMoreCell" object:nil userInfo:@{
+            @"groupID":_conversationData.groupID?:@"",
+            @"msgSender": self,
+        }];
     }
 }
 
@@ -362,12 +391,23 @@
 
 - (void)messageController:(TUIMessageController *)controller onSelectMessageContent:(TUIMessageCell *)cell
 {
+    cell.disableDefaultSelectAction = NO;
     if ([self.delegate respondsToSelector:@selector(chatController:onSelectMessageContent:)]) {
         [self.delegate chatController:self onSelectMessageContent:cell];
+    }
+    if (cell.disableDefaultSelectAction) {
         return;
     }
+    if ([cell isKindOfClass:[TUIGroupLiveMessageCell class]]) {
+        TUIGroupLiveMessageCellData *celldata = [(TUIGroupLiveMessageCell *)cell customData];
+        NSDictionary *roomInfo = celldata.roomInfo;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyGroupLiveOnSelectMessage" object:nil userInfo:@{
+            @"roomInfo": roomInfo,
+            @"groupID": _conversationData.groupID?:@"",
+            @"msgSender": self,
+        }];
+    }
 }
-
 
 - (void)didHideMenuInMessageController:(TUIMessageController *)controller
 {
@@ -416,14 +456,24 @@
 
 - (void)videoCall
 {
+    if (![[TUICallManager shareInstance] checkAudioAuthorization] || ![[TUICallManager shareInstance] checkVideoAuthorization]) {
+        [THelper makeToast:@"请开启麦克风和摄像头权限"];
+        return;
+    }
+    
     [[TUICallManager shareInstance] call:self.conversationData.groupID userID:self.conversationData.userID callType:CallType_Video];
 }
 
 - (void)audioCall
 {
+    if (![[TUICallManager shareInstance] checkAudioAuthorization]) {
+        [THelper makeToast:@"请开启麦克风权限"];
+        return;
+    }
     [[TUICallManager shareInstance] call:self.conversationData.groupID userID:self.conversationData.userID callType:CallType_Audio];
 }
 
+#pragma mark -
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     // 快速点的时候会回调多次

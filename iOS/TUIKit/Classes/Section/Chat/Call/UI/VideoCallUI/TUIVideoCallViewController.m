@@ -5,6 +5,7 @@
 //  Created by xiangzhang on 2020/7/7.
 //
 
+#import <AudioToolbox/AudioToolbox.h>
 #import "TUIVideoCallViewController.h"
 #import "TUIVideoCallUserCell.h"
 #import "TUIVideoRenderView.h"
@@ -13,6 +14,7 @@
 #import "THelper.h"
 #import "TUICall.h"
 #import "TUICall+TRTC.h"
+#import "NSBundle+TUIKIT.h"
 
 #define kSmallVideoWidth 100.0
 
@@ -35,6 +37,7 @@
 @property(nonatomic,strong) NSMutableArray<TUIVideoRenderView *> *renderViews;
 @property(nonatomic,strong) dispatch_source_t timer;
 @property(nonatomic,assign) UInt32 callingTime;
+@property(nonatomic,assign) BOOL playingAlerm; // 播放响铃
 @end
 
 @implementation TUIVideoCallViewController
@@ -97,6 +100,11 @@
     [self updateCallView:NO];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self playAlerm];
+}
+
 - (void)disMiss {
     if (self.timer) {
         dispatch_cancel(self.timer);
@@ -106,6 +114,7 @@
     if (self.dismissBlock) {
         self.dismissBlock();
     }
+    [self stopAlerm];
 }
 
 - (void)dealloc {
@@ -123,6 +132,7 @@
         [renderView addGestureRecognizer:pan];
         [self.renderViews addObject:renderView];
         [[TUICall shareInstance] startRemoteView:user.userId view:renderView];
+        [self stopAlerm];
     }
     self.curState = VideoCallState_Calling;
     [self updateUser:user animate:YES];
@@ -258,9 +268,9 @@
         invite.textAlignment = NSTextAlignmentRight;
         invite.font = [UIFont systemFontOfSize:13];
         invite.textColor = [UIColor whiteColor];
-        invite.text = @"邀请你视频通话";
+        invite.text = TUILocalizableString(TUIKitCallInviteYouVideoCall); // @"邀请你视频通话";
         [self.sponsorPanel addSubview:invite];
-        invite.mm_width(100).mm_height(32).mm_right(userName.mm_r).mm_top(userName.mm_b + 2);
+        invite.mm_sizeToFit().mm_height(32).mm_right(userName.mm_r).mm_top(userName.mm_b + 2);
         //隐藏 accept
         self.accept.hidden = NO;
     } else {
@@ -445,6 +455,30 @@
     return _userCollectionView;
 }
 
+#pragma mark - 响铃🔔
+// 播放铃声
+- (void)playAlerm {
+    self.playingAlerm = YES;
+    [self loopPlayAlert];
+}
+
+// 结束播放铃声
+- (void)stopAlerm {
+    self.playingAlerm = NO;
+}
+
+// 循环播放声音
+- (void)loopPlayAlert {
+    if (!self.playingAlerm) {
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    AudioServicesPlaySystemSoundWithCompletion(1012, ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf loopPlayAlert];
+        });
+    });
+}
 
 #pragma mark click
 
@@ -471,9 +505,9 @@
     [[TUICall shareInstance] mute:micMute];
     [self.mute setImage:[TUICall shareInstance].isMicMute ? [UIImage imageNamed:TUIKitResource(@"ic_mute_on")] : [UIImage imageNamed:TUIKitResource(@"ic_mute")]  forState:UIControlStateNormal];
     if (micMute) {
-        [THelper makeToast:@"开启静音" duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
+        [THelper makeToast:TUILocalizableString(TUIKitCallTurningOnMute) duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
     } else {
-        [THelper makeToast:@"关闭静音" duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
+        [THelper makeToast:TUILocalizableString(TUIKitCallTurningOffMute) duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
     }
 }
 
@@ -482,9 +516,9 @@
     [[TUICall shareInstance] handsFree:handsFreeOn];
     [self.handsfree setImage:[TUICall shareInstance].isHandsFreeOn ? [UIImage imageNamed:TUIKitResource(@"ic_handsfree_on")] : [UIImage imageNamed:TUIKitResource(@"ic_handsfree")]  forState:UIControlStateNormal];
     if (handsFreeOn) {
-        [THelper makeToast:@"使用扬声器" duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
+        [THelper makeToast:TUILocalizableString(TUIKitCallUsingSpeaker) duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
     } else {
-        [THelper makeToast:@"使用听筒" duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
+        [THelper makeToast:TUILocalizableString(TUIKitCallUsingHeadphone) duration:1 position:CGPointMake(self.hangup.mm_centerX, self.hangup.mm_minY - 60)];
     }
 }
 

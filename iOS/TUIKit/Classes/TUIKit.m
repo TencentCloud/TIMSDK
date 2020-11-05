@@ -83,7 +83,48 @@
 {
     _userID = userID;
     _userSig = sig;
+    
+    int sdkAppId = self.sdkAppId;
+    NSString *loginUserId = userID.copy;
+    NSString *loginSig = sig.copy;
     [[V2TIMManager sharedInstance] login:_userID userSig:_userSig succ:^{
+        Class liveClass = NSClassFromString(@"TUIKitLive");
+        if (liveClass) {
+            /// TUIKitLive obeject
+            SEL shareSel = NSSelectorFromString(@"shareInstance");
+            NSMethodSignature *shareMethod = [liveClass methodSignatureForSelector:shareSel];
+            NSInvocation *shareInvocation = [NSInvocation invocationWithMethodSignature:shareMethod];
+            shareInvocation.target = liveClass;
+            shareInvocation.selector = shareSel;
+            [shareInvocation invoke];
+            __autoreleasing NSObject *tuikitObj = nil;
+            [shareInvocation getReturnValue:&tuikitObj];
+            if (tuikitObj && [NSStringFromClass(tuikitObj.class) isEqualToString:@"TUIKitLive"]) {
+                /// 调用[[TUIKitLive shareInstance] setIsAttachedTUIKit:YES]
+                SEL isAttachedSel = NSSelectorFromString(@"setIsAttachedTUIKit:");
+                NSMethodSignature *isAttachedMehtod = [liveClass instanceMethodSignatureForSelector:isAttachedSel];
+                NSInvocation *isAttachedInvocation = [NSInvocation invocationWithMethodSignature:isAttachedMehtod];
+                isAttachedInvocation.target = tuikitObj;
+                isAttachedInvocation.selector = isAttachedSel;
+                BOOL isAttachedTUIKit = YES;
+                [isAttachedInvocation setArgument:&isAttachedTUIKit atIndex:2];
+                [isAttachedInvocation invoke];
+                /// 登录TUIKitLive
+                SEL loginSel = NSSelectorFromString(@"login:userID:userSig:callback:");
+                NSMethodSignature *loginMethodSig = [liveClass instanceMethodSignatureForSelector:loginSel];
+                NSInvocation *loginInvocation = [NSInvocation invocationWithMethodSignature:loginMethodSig];
+                loginInvocation.target = tuikitObj;
+                loginInvocation.selector = loginSel;
+                [loginInvocation setArgument:&sdkAppId atIndex:2];
+                [loginInvocation setArgument:(void *)&loginUserId atIndex:3];
+                [loginInvocation setArgument:(void *)&loginSig atIndex:4];
+                void(^loginCallBack)(int code, NSString * _Nullable message) = ^(int code, NSString * _Nullable message) {
+                    NSLog(@"登录结果：%d，%@", code, message);
+                };
+                [loginInvocation setArgument:&(loginCallBack) atIndex:5];
+                [loginInvocation invoke];
+            }
+        }
         succ();
     } fail:^(int code, NSString *msg) {
         fail(code,msg);
@@ -171,17 +212,41 @@
 }
 
 #pragma mark V2TIMGroupListener
+/// 群消息因为只能添加一个setGroupListener，所以需要通知给TUIKit_Live
+- (void)notify:(NSString *)notifyName buildInfo:(void (^)(void(^safeAddKeyValue)(id key, id value)))infoBuilder {
+    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:2];
+    void(^safeAdd)(id key, id value) = ^(id key, id value) {
+        if (key && value) {
+            userInfo[key] = value;
+        }
+    };
+    infoBuilder(safeAdd);
+    [[NSNotificationCenter defaultCenter] postNotificationName:notifyName object:nil userInfo:userInfo];
+}
 
 - (void)onMemberEnter:(NSString *)groupID memberList:(NSArray<V2TIMGroupMemberInfo *>*)memberList {
     // onMemberEnter
+    [self notify:@"V2TIMGroupNotify_onMemberEnter" buildInfo:^(void (^safeAddKeyValue)(id key, id value)) {
+        safeAddKeyValue(@"groupID", groupID);
+        safeAddKeyValue(@"memberList", memberList);
+    }];
 }
 
 - (void)onMemberLeave:(NSString *)groupID member:(V2TIMGroupMemberInfo *)member {
     // onMemberLeave
+    [self notify:@"V2TIMGroupNotify_onMemberLeave" buildInfo:^(void (^safeAddKeyValue)(id key, id value)) {
+        safeAddKeyValue(@"groupID", groupID);
+        safeAddKeyValue(@"member", member);
+    }];
 }
 
 - (void)onMemberInvited:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser memberList:(NSArray<V2TIMGroupMemberInfo *>*)memberList {
     // onMemberInvited
+    [self notify:@"V2TIMGroupNotify_onMemberInvited" buildInfo:^(void (^safeAddKeyValue)(id key, id value)) {
+        safeAddKeyValue(@"groupID", groupID);
+        safeAddKeyValue(@"opUser", opUser);
+        safeAddKeyValue(@"memberList", memberList);
+    }];
 }
 
 - (void)onMemberKicked:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser memberList:(NSArray<V2TIMGroupMemberInfo *>*)memberList {
@@ -198,25 +263,40 @@
     // onMemberInfoChanged
 }
 
-
 - (void)onGroupCreated:(NSString *)groupID {
     // onGroupCreated
 }
 
 - (void)onGroupDismissed:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser {
+    [self notify:@"V2TIMGroupNotify_onGroupDismissed" buildInfo:^(void (^safeAddKeyValue)(id key, id value)) {
+        safeAddKeyValue(@"groupID", groupID);
+        safeAddKeyValue(@"opUser", opUser);
+    }];
     [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onGroupDismissed object:groupID];
 }
 
 - (void)onGroupRecycled:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser {
+    [self notify:@"V2TIMGroupNotify_onGroupRecycled" buildInfo:^(void (^safeAddKeyValue)(id key, id value)) {
+        safeAddKeyValue(@"groupID", groupID);
+        safeAddKeyValue(@"opUser", opUser);
+    }];
     [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onGroupRecycled object:groupID];
 }
 
 - (void)onGroupInfoChanged:(NSString *)groupID changeInfoList:(NSArray <V2TIMGroupChangeInfo *> *)changeInfoList {
     // onGroupInfoChanged
+    [self notify:@"V2TIMGroupNotify_onGroupInfoChanged" buildInfo:^(void (^safeAddKeyValue)(id key, id value)) {
+        safeAddKeyValue(@"groupID", groupID);
+        safeAddKeyValue(@"changeInfoList", changeInfoList);
+    }];
 }
 
 - (void)onGroupAttributeChanged:(NSString *)groupID attributes:(NSMutableDictionary<NSString *,NSString *> *)attributes {
     // onGroupAttributeChanged
+    [self notify:@"V2TIMGroupNotify_onGroupAttributeChanged" buildInfo:^(void (^safeAddKeyValue)(id key, id value)) {
+        safeAddKeyValue(@"groupID", groupID);
+        safeAddKeyValue(@"attributes", attributes);
+    }];
 }
 
 - (void)onReceiveJoinApplication:(NSString *)groupID member:(V2TIMGroupMemberInfo *)member opReason:(NSString *)opReason {
@@ -233,6 +313,11 @@
 
 - (void)onRevokeAdministrator:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser memberList:(NSArray <V2TIMGroupMemberInfo *> *)memberList {
     // onRevokeAdministrator
+    [self notify:@"V2TIMGroupNotify_onRevokeAdministrator" buildInfo:^(void (^safeAddKeyValue)(id key, id value)) {
+        safeAddKeyValue(@"groupID", groupID);
+        safeAddKeyValue(@"opUser", opUser);
+        safeAddKeyValue(@"memberList", memberList);
+    }];
 }
 
 - (void)onQuitFromGroup:(NSString *)groupID {
@@ -241,6 +326,10 @@
 
 - (void)onReceiveRESTCustomData:(NSString *)groupID data:(NSData *)data {
     // onReceiveRESTCustomData
+    [self notify:@"V2TIMGroupNotify_onReceiveRESTCustomData" buildInfo:^(void (^safeAddKeyValue)(id key, id value)) {
+        safeAddKeyValue(@"groupID", groupID);
+        safeAddKeyValue(@"data", data);
+    }];
 }
 
 

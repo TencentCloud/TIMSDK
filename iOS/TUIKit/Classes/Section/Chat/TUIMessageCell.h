@@ -118,6 +118,11 @@
 @property (nonatomic, strong) UILabel *readReceiptLabel;
 
 /**
+ * 是否禁用封装在 TUIKit 内部的默认的选中行为，如群直播默认创建直播间等行为，默认：NO
+ */
+@property (nonatomic, assign) BOOL disableDefaultSelectAction;
+
+/**
  *  协议委托
  *  负责实现 TMessageCellDelegate 协议中的功能。
  */

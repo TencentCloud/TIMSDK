@@ -9,6 +9,7 @@
 #import "TModifyView.h"
 #import "THeader.h"
 #import "UIColor+TUIDarkMode.h"
+#import "NSBundle+TUIKIT.h"
 
 @implementation TModifyViewData
 @end
@@ -57,7 +58,7 @@
     [_container addSubview:_title];
 
     _cancel = [[UIButton alloc] initWithFrame:CGRectMake(0, containerHeight - buttonHeight, buttonWidth, buttonHeight)];
-    [_cancel setTitle:@"取消" forState:UIControlStateNormal];
+    [_cancel setTitle:TUILocalizableString(Cancel) forState:UIControlStateNormal];
     [_cancel setTitleColor:[UIColor d_systemRedColor] forState:UIControlStateNormal];
     _cancel.titleLabel.font = [UIFont systemFontOfSize:16];
     [_cancel addTarget:self action:@selector(didCancel:) forControlEvents:UIControlEventTouchUpInside];
@@ -72,7 +73,7 @@
     [_container addSubview:_vLine];
 
     _confirm = [[UIButton alloc] initWithFrame:CGRectMake(_vLine.frame.origin.x + _vLine.frame.size.width, _cancel.frame.origin.y, buttonWidth, buttonHeight)];
-    [_confirm setTitle:@"确定" forState:UIControlStateNormal];
+    [_confirm setTitle:TUILocalizableString(Confirm) forState:UIControlStateNormal];
     [_confirm setTitleColor:[UIColor d_systemBlueColor] forState:UIControlStateNormal];
     _confirm.titleLabel.font = [UIFont systemFontOfSize:15];
     [_confirm addTarget:self action:@selector(didConfirm:) forControlEvents:UIControlEventTouchUpInside];

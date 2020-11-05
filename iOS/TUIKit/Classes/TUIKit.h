@@ -23,6 +23,7 @@
 #import "TUILocalStorage.h"
 #import "TUICallManager.h"
 #import "THeader.h"
+#import "TUIFaceCell.h"
 
 @import ImSDK;
 

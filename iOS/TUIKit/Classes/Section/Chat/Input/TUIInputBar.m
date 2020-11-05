@@ -15,6 +15,7 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "UIColor+TUIDarkMode.h"
+#import "NSBundle+TUIKIT.h"
 
 @interface TUIInputBar() <UITextViewDelegate, AVAudioRecorderDelegate>
 @property (nonatomic, strong) TUIRecordView *record;
@@ -79,7 +80,7 @@
     [_recordButton addTarget:self action:@selector(recordBtnCancel:) forControlEvents:UIControlEventTouchUpOutside | UIControlEventTouchCancel];
     [_recordButton addTarget:self action:@selector(recordBtnExit:) forControlEvents:UIControlEventTouchDragExit];
     [_recordButton addTarget:self action:@selector(recordBtnEnter:) forControlEvents:UIControlEventTouchDragEnter];
-    [_recordButton setTitle:@"按住 说话" forState:UIControlStateNormal];
+    [_recordButton setTitle:TUILocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
     [_recordButton setTitleColor:[UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark] forState:UIControlStateNormal];
     _recordButton.hidden = YES;
     [self addSubview:_recordButton];
@@ -195,9 +196,9 @@
     if (permission == AVAudioSessionRecordPermissionDenied || permission == AVAudioSessionRecordPermissionUndetermined) {
         [AVAudioSession.sharedInstance requestRecordPermission:^(BOOL granted) {
             if (!granted) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"无法访问麦克风" message:@"开启麦克风权限才能发送语音消息" preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:@"以后再说" style:UIAlertActionStyleCancel handler:nil]];
-                [ac addAction:[UIAlertAction actionWithTitle:@"去开启" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUILocalizableString(TUIKitInputNoMicTitle) message:TUILocalizableString(TUIKitInputNoMicTips) preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitInputNoMicOperateLater) style:UIAlertActionStyleCancel handler:nil]];
+                [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitInputNoMicOperateEnable) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     UIApplication *app = [UIApplication sharedApplication];
                     NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
                     if ([app canOpenURL:settingsURL]) {
@@ -221,7 +222,7 @@
         _recordStartTime = [NSDate date];
         [_record setStatus:Record_Status_Recording];
         _recordButton.backgroundColor = [UIColor lightGrayColor];
-        [_recordButton setTitle:@"松开 结束" forState:UIControlStateNormal];
+        [_recordButton setTitle:TUILocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal];  // @"松开 结束"
         [self startRecord];
     }
 }
@@ -232,7 +233,7 @@
         return;
     }
     _recordButton.backgroundColor = [UIColor clearColor];
-    [_recordButton setTitle:@"按住 说话" forState:UIControlStateNormal];
+    [_recordButton setTitle:TUILocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal]; // @"按住 说话"
     NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:_recordStartTime];
     if(interval < 1 || interval > 60){
         if(interval < 1){
@@ -263,20 +264,20 @@
 {
     [_record removeFromSuperview];
     _recordButton.backgroundColor = [UIColor clearColor];
-    [_recordButton setTitle:@"按住 说话" forState:UIControlStateNormal];
+    [_recordButton setTitle:TUILocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal]; // @"按住 说话"
     [self cancelRecord];
 }
 
 - (void)recordBtnExit:(UIButton *)sender
 {
     [_record setStatus:Record_Status_Cancel];
-    [_recordButton setTitle:@"松开 取消" forState:UIControlStateNormal];
+    [_recordButton setTitle:TUILocalizableString(TUIKitInputReleaseToCancel) forState:UIControlStateNormal]; //  @"松开 取消"
 }
 
 - (void)recordBtnEnter:(UIButton *)sender
 {
     [_record setStatus:Record_Status_Recording];
-    [_recordButton setTitle:@"松开 结束" forState:UIControlStateNormal];
+    [_recordButton setTitle:TUILocalizableString(TUIKitInputReleaseToSend) forState:UIControlStateNormal]; //  @"松开 结束"
 }
 
 #pragma mark - talk
@@ -319,8 +320,8 @@
         if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendText:)]) {
             NSString *sp = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
             if (sp.length == 0) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"不能发送空白消息" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUILocalizableString(TUIKitInputBlankMessageTitle) message:nil preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
                 [self.mm_viewController presentViewController:ac animated:YES completion:nil];
             } else {
                 [_delegate inputBar:self didSendText:textView.text];
@@ -335,15 +336,17 @@
             if ([textView.text characterAtIndex:range.location] == ']') {
                 NSUInteger location = range.location;
                 NSUInteger length = range.length;
+                int left = 91;     // '[' 对应的ascii码
+                int right = 93;    // ']' 对应的ascii码
                 while (location != 0) {
                     location --;
                     length ++ ;
-                    char c = [textView.text characterAtIndex:location];
-                    if (c == '[') {
+                    int c = (int)[textView.text characterAtIndex:location];     // 将字符转换成ascii码，复制给int  避免越界
+                    if (c == left) {
                         textView.text = [textView.text stringByReplacingCharactersInRange:NSMakeRange(location, length) withString:@""];
                         return NO;
                     }
-                    else if (c == ']') {
+                    else if (c == right) {
                         return YES;
                     }
                 }
@@ -451,7 +454,7 @@
     NSTimeInterval interval = _recorder.currentTime;
     if(interval >= 55 && interval < 60){
         NSInteger seconds = 60 - interval;
-        NSString *secondsString = [NSString stringWithFormat:@"将在 %ld 秒后结束录制",(long)seconds + 1];//此处加long，是为了消除编译器警告。此处 +1 是为了向上取整，优化时间逻辑。
+        NSString *secondsString = [NSString stringWithFormat:TUILocalizableString(TUIKitInputWillFinishRecordInSeconds),(long)seconds + 1];//此处加long，是为了消除编译器警告。此处 +1 是为了向上取整，优化时间逻辑。
         _record.title.text = secondsString;
     }
     if(interval >= 60){

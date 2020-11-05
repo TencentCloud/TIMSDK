@@ -28,8 +28,6 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onRefreshConversations:) name:TUIKitNotification_TIMRefreshListener object:nil];
-
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     [self.view addSubview:_tableView];
@@ -62,21 +60,10 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [self updateConversations];
-}
-
 - (void)updateConversations
 {
     [self.viewModel loadConversation];
 }
-
-- (void)onRefreshConversations:(NSNotification *)notification
-{
-    [self updateConversations];
-}
-
 
 #pragma mark - Table view data source
 

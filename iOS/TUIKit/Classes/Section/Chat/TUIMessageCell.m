@@ -13,6 +13,7 @@
 #import "TUIKit.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "UIColor+TUIDarkMode.h"
+#import "NSBundle+TUIKIT.h"
 
 @interface TUIMessageCell()
 @property (nonatomic, strong) TUIMessageCellData *messageData;
@@ -103,7 +104,7 @@
     //由于tableView的刷新策略，导致部分情况下可能会出现未读label未显示的bug。原因是因为在label显示时，内容为空。
     //label内容的变化不会引起tableView的刷新，但是hiddend状态的变化会引起tableView刷新。
     //所以未读标签选择直接赋值，而不是在发送成功时赋值。显示时机由hidden属性控制。
-    self.readReceiptLabel.text = self.messageData.innerMessage.isPeerRead ? @"已读":@"未读";
+    self.readReceiptLabel.text = self.messageData.innerMessage.isPeerRead ? TUILocalizableString(Read): TUILocalizableString(Unread);
     if(data.status == Msg_Status_Fail){
         [_indicator stopAnimating];
         self.retryView.image = [UIImage imageNamed:TUIKitResource(@"msg_error")];
@@ -178,7 +179,7 @@
         self.indicator.mm_sizeToFit().mm__centerY(_container.mm_centerY).mm_left(_container.mm_x - 8 - _indicator.mm_w);
         self.retryView.frame = self.indicator.frame;
         //这里不能像 retryView 一样直接使用 indicator 的设定，否则内容会显示不全。
-        self.readReceiptLabel.mm_sizeToFitThan(0,self.indicator.mm_w).mm_bottom(self.container.mm_b + cellLayout.bubbleInsets.bottom).mm_left(_container.mm_x - 8 - _indicator.mm_w);
+        self.readReceiptLabel.mm_sizeToFit().mm_bottom(self.container.mm_b + cellLayout.bubbleInsets.bottom).mm_left(_container.mm_x - 8 - _readReceiptLabel.mm_w);
         
     }
 }
@@ -220,6 +221,6 @@
 - (void)prepareForReuse{
     [super prepareForReuse];
     //今后任何关于复用产生的 UI 问题，都可以在此尝试编码解决。
-    _readReceiptLabel.text = @"未读";//一但消息复用，说明即将新消息出现，label内容改为未读。
+    _readReceiptLabel.text = TUILocalizableString(Unread); // @"未读";//一但消息复用，说明即将新消息出现，label内容改为未读。
 }
 @end

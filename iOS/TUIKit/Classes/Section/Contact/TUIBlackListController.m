@@ -29,7 +29,7 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
-    self.title = @"黑名单";
+    self.title = NSLocalizedString(@"ContactsBlackList", nil); // @"黑名单";
     self.tableView.delaysContentTouches = NO;
 
     if (!self.viewModel) {
