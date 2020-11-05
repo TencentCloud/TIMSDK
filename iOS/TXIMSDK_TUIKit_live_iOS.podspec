@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_TUIKit_live_iOS'
-  spec.version      = '5.0.10'
+  spec.version      = '5.1.1'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -14,7 +14,7 @@ Pod::Spec.new do |spec|
   spec.summary      = 'TXIMSDK_TUIKit_live_iOS'
   spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
   
-  spec.dependency 'TXIMSDK_iOS', '5.0.10'
+  spec.dependency 'TXIMSDK_iOS', '5.1.1'
   spec.dependency 'TXLiteAVSDK_TRTC', '7.8.9519'
   spec.dependency 'MMLayout','0.2.0'
   spec.dependency 'SDWebImage','5.9.0'
@@ -27,7 +27,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/5.0.10/TIM_SDK_TUIKIT_LIVE_iOS_latest_framework.zip'}
+  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/5.1.1/TIM_SDK_TUIKIT_LIVE_iOS_latest_framework.zip'}
   spec.source_files = '**/TUIKit_live/Classes/**/*.{h,m,mm}', '**/TUIKit_live/Classes/**/*.{h,c}'
   spec.resource = ['**/TUIKit_live/Resources/FilterResource.bundle', '**/TUIKit_live/Resources/*.xcassets',
     '**/TUIKit_live/Classes/Modules/BeautySettingPanel/Resources/*.{xcassets,mp4}', 
