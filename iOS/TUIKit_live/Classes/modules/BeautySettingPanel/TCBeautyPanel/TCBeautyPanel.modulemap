@@ -1,0 +1,5 @@
+module TCBeautyPanel {
+    umbrella header "Headers/TCBeautyPanel.h"
+    export *
+}
+

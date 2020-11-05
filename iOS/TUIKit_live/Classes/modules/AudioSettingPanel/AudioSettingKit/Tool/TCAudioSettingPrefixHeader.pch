@@ -1,0 +1,19 @@
+//
+//  TCAudioSettingPrefixHeader.pch
+//  AudioSettingKit
+//
+//  Created by abyyxwang on 2020/5/27.
+//  Copyright © 2020 tencent. All rights reserved.
+//
+
+#ifndef TCAudioSettingPrefixHeader_pch
+#define TCAudioSettingPrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import "ASMasonry.h"
+#import "TCASKitTheme.h"
+#import "TCCommonTool.h"
+
+#endif /* TCAudioSettingPrefixHeader_pch */
