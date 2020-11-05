@@ -30,7 +30,7 @@
     if (!_liveRoomButton) {
         _liveRoomButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _liveRoomButton.tag = 2000;
-        [_liveRoomButton setTitle:@"视频直播" forState:UIControlStateNormal];
+        [_liveRoomButton setTitle:NSLocalizedString(@"TabBarItemLiveText", nil) forState:UIControlStateNormal];
         [_liveRoomButton setTitleColor:[UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark] forState:UIControlStateNormal];
     }
     return _liveRoomButton;
@@ -40,7 +40,7 @@
     if (!_voiceRoomButton) {
         _voiceRoomButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _voiceRoomButton.tag = 2001;
-        [_voiceRoomButton setTitle:@"语音聊天室" forState:UIControlStateNormal];
+        [_voiceRoomButton setTitle:NSLocalizedString(@"LiveAudioChatRoom", nil) forState:UIControlStateNormal];
         [_voiceRoomButton setTitleColor:[UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark] forState:UIControlStateNormal];
     }
     return _voiceRoomButton;

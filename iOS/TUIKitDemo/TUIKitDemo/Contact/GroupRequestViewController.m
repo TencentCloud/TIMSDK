@@ -46,7 +46,7 @@
     self.addMsgTextView.font = [UIFont systemFontOfSize:14];
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
     [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-        self.addMsgTextView.text = [NSString stringWithFormat:@"%@ 申请加入群聊", [[infoList firstObject] showName]];
+        self.addMsgTextView.text = [NSString stringWithFormat:NSLocalizedString(@"GroupRequestJoinGroupFormat", nil), [[infoList firstObject] showName]]; // "%@ 申请加入群聊
     } fail:^(int code, NSString *msg) {
     }];
     TUIProfileCardCellData *data = [TUIProfileCardCellData new];
@@ -56,8 +56,8 @@
     data.avatarUrl = [NSURL URLWithString:self.groupInfo.faceURL];
     self.cardCellData = data;
 
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发送" style:UIBarButtonItemStylePlain target:self action:@selector(onSend)];
-    self.title = @"添加群组";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Send", nil) style:UIBarButtonItemStylePlain target:self action:@selector(onSend)];
+    self.title = NSLocalizedString(@"GroupJoin", nil);
 }
 
 /**
@@ -85,7 +85,7 @@
 - (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (section == 1)
-        return @"填写验证信息";
+        return NSLocalizedString(@"please_fill_in_verification_information", nil); // @"填写验证信息";
     return nil;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -125,7 +125,7 @@
     [self.view makeToastActivity:CSToastPositionCenter];
     [[V2TIMManager sharedInstance] joinGroup:self.groupInfo.groupID msg:self.addMsgTextView.text succ:^{
         [self.view hideToastActivity];
-        [self.view makeToast:@"发送成功"
+        [self.view makeToast:NSLocalizedString(@"send_success", nil)
                     duration:3.0
                     position:CSToastPositionBottom];
     } fail:^(int code, NSString *desc) {

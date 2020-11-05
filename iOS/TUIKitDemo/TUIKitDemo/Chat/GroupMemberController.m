@@ -46,7 +46,7 @@
 - (void)groupMemberController:(TUIGroupMemberController *)controller didAddMembersInGroup:(NSString *)groupId hasMembers:(NSMutableArray *)members
 {
     TUIContactSelectController *vc = [[TUIContactSelectController alloc] initWithNibName:nil bundle:nil];
-    vc.title = @"添加联系人";
+    vc.title = NSLocalizedString(@"GroupAddFirend", nil); // @"添加联系人";
     vc.viewModel.disableFilter = ^BOOL(TCommonContactSelectCellData *data) {
         for (TGroupMemberCellData *cd in members) {
             if ([cd.identifier isEqualToString:data.identifier])
@@ -70,7 +70,7 @@
 - (void)groupMemberController:(TUIGroupMemberController *)controller didDeleteMembersInGroup:(NSString *)groupId hasMembers:(NSMutableArray *)members
 {
     TUIContactSelectController *vc = [[TUIContactSelectController alloc] initWithNibName:nil bundle:nil];
-    vc.title = @"删除联系人";
+    vc.title = NSLocalizedString(@"GroupDeleteFriend", nil); // @"删除联系人";
     vc.viewModel.avaliableFilter = ^BOOL(TCommonContactSelectCellData *data) {
         for (TGroupMemberCellData *cd in members) {
             if ([cd.identifier isEqualToString:data.identifier])
@@ -94,7 +94,7 @@
 - (void)addGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupMemberController *)controller
 {
     [[V2TIMManager sharedInstance] inviteUserToGroup:_groupId userList:members succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
-        [THelper makeToast:@"添加成功"];
+        [THelper makeToast:NSLocalizedString(@"add_success", nil)];
         [controller updateData];
     } fail:^(int code, NSString *desc) {
         [THelper makeToastError:code msg:desc];
@@ -104,7 +104,7 @@
 - (void)deleteGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupMemberController *)controller
 {
     [[V2TIMManager sharedInstance] kickGroupMember:groupId memberList:members reason:@"" succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
-        [THelper makeToast:@"删除成功"];
+        [THelper makeToast:NSLocalizedString(@"delete_success", nil)];
         [controller updateData];
     } fail:^(int code, NSString *desc) {
         [THelper makeToastError:code msg:desc];

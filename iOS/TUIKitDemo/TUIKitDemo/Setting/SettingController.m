@@ -64,7 +64,7 @@
     NSString *ret = [super getSignature:profile];
     if (ret.length != 0)
         return ret;
-    return @"暂无个性签名";
+    return NSLocalizedString(@"no_personal_signature", nil); // @"暂无个性签名";
 }
 
 @end
@@ -103,8 +103,8 @@
 
 - (void)setupViews
 {
-    self.title = @"我";
-    self.parentViewController.title = @"我";
+    self.title = NSLocalizedString(@"TabBarItemMeText", nil);
+    self.parentViewController.title = NSLocalizedString(@"TabBarItemMeText", nil);
 
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
@@ -153,17 +153,17 @@
 
 
     TCommonTextCellData *friendApply = [TCommonTextCellData new];
-    friendApply.key = @"好友申请";
+    friendApply.key = NSLocalizedString(@"MeFriendRequest", nil); // @"好友申请";
     friendApply.showAccessory = YES;
     friendApply.cselector = @selector(onEditFriendApply);
-    if (self.profile.allowType == TIM_FRIEND_ALLOW_ANY) {
-        friendApply.value = @"同意任何用户加好友";
+    if (self.profile.allowType == V2TIM_FRIEND_ALLOW_ANY) {
+        friendApply.value = NSLocalizedString(@"MeFriendRequestMethodAgreeAll", nil); // @"同意任何用户加好友";
     }
-    if (self.profile.allowType == TIM_FRIEND_NEED_CONFIRM) {
-        friendApply.value = @"需要验证";
+    if (self.profile.allowType == V2TIM_FRIEND_NEED_CONFIRM) {
+        friendApply.value = NSLocalizedString(@"MeFriendRequestMethodNeedConfirm", nil); // @"需要验证";
     }
-    if (self.profile.allowType == TIM_FRIEND_DENY_ANY) {
-        friendApply.value = @"拒绝任何人加好友";
+    if (self.profile.allowType == V2TIM_FRIEND_DENY_ANY) {
+        friendApply.value = NSLocalizedString(@"MeFriendRequestMethodDenyAll", nil); // @"拒绝任何人加好友";
     }
 
 //    TCommonTextCellData *messageNotify = [TCommonTextCellData new];
@@ -173,25 +173,25 @@
     [_data addObject:@[friendApply]];
 
     TCommonTextCellData *about = [TCommonTextCellData new];
-    about.key = @"关于腾讯·云通信";
+    about.key = NSLocalizedString(@"MeAbout", nil); // @"关于腾讯·云通信";
     about.showAccessory = YES;
     about.cselector = @selector(didSelectAbout);
     [_data addObject:@[about]];
 
     TCommonTextCellData *log = [TCommonTextCellData new];
-    log.key = @"开发调试";
+    log.key = NSLocalizedString(@"MeDevelop", nil); // @"开发调试";
     log.showAccessory = YES;
     log.cselector = @selector(didSelectLog);
     [_data addObject:@[log]];
     
     TCommonSwitchCellData *memory = [TCommonSwitchCellData new];
-    memory.title = @"内存泄露上报";
+    memory.title = NSLocalizedString(@"MeReportMemoryLeak", nil); // @"内存泄露上报";
     memory.on = self.memoryReport;
     memory.cswitchSelector = @selector(onNotifySwitch:);
     [_data addObject:@[memory]];
 
     TUIButtonCellData *button =  [[TUIButtonCellData alloc] init];
-    button.title = @"退出登录";
+    button.title = NSLocalizedString(@"logout", nil); // @"退出登录";
     button.style = ButtonRedText;
     button.cbuttonSelector = @selector(logout:);
     [_data addObject:@[button]];
@@ -296,11 +296,11 @@
  */
 - (void)logout:(TUIButtonCell *)cell
 {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确定退出吗" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"confirm_log_out", nil)/*@"确定退出吗"*/ message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"confirm", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         [self didConfirmLogout];
     }]];
     [self presentViewController:alert animated:YES completion:nil];
@@ -322,10 +322,10 @@
 {
     UIActionSheet *sheet = [[UIActionSheet alloc] init];
     sheet.tag = SHEET_AGREE;
-    [sheet addButtonWithTitle:@"同意任何用户加好友"];
-    [sheet addButtonWithTitle:@"需要验证"];
-    [sheet addButtonWithTitle:@"拒绝任何人加好友"];
-    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:@"取消"]];
+    [sheet addButtonWithTitle:NSLocalizedString(@"MeFriendRequestMethodAgreeAll", nil)];
+    [sheet addButtonWithTitle:NSLocalizedString(@"MeFriendRequestMethodNeedConfirm", nil)];
+    [sheet addButtonWithTitle:NSLocalizedString(@"MeFriendRequestMethodDenyAll", nil)];
+    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"cancel", nil)]];
     [sheet setDelegate:self];
     [sheet showInView:self.view];
     [self setupData];

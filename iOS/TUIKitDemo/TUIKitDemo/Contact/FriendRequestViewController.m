@@ -49,18 +49,25 @@
 
     self.addWordTextView = [[UITextView alloc] initWithFrame:CGRectZero];
     self.addWordTextView.font = [UIFont systemFontOfSize:14];
-    [[TIMFriendshipManager sharedInstance] getSelfProfile:^(TIMUserProfile *profile) {
-        self.addWordTextView.text = [NSString stringWithFormat:@"我是%@", profile.nickname.length?profile.nickname:profile.identifier];
-    } fail:^(int code, NSString *msg) {
 
-    }];
+    NSString * selfUserID = [[V2TIMManager sharedInstance] getLoginUser];
+    [[V2TIMManager sharedInstance] getUsersInfo:@[selfUserID] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+            if (infoList && infoList.count > 0) {
+                V2TIMUserFullInfo * userInfo = [infoList firstObject];
+                if (userInfo) {
+                    self.addWordTextView.text = [NSString stringWithFormat:NSLocalizedString(@"FriendRequestFormat", nil), userInfo.nickName?userInfo.nickName:userInfo.userID];
+                }
+            }
+        } fail:^(int code, NSString *desc) {
+            
+        }];
 
     self.nickTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     self.nickTextField.textAlignment = NSTextAlignmentRight;
 
 
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发送" style:UIBarButtonItemStylePlain target:self action:@selector(onSend)];
-    self.title = @"填写信息";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Send", nil) style:UIBarButtonItemStylePlain target:self action:@selector(onSend)];
+    self.title = NSLocalizedString(@"FriendRequestFillInfo", nil);
 
     TUIProfileCardCellData *data = [TUIProfileCardCellData new];
     data.name = [self.profile showName];
@@ -73,7 +80,7 @@
 
 
     self.singleSwitchData = [TCommonSwitchCellData new];
-    self.singleSwitchData.title = @"单向好友";
+    self.singleSwitchData.title = NSLocalizedString(@"FriendOneWay", nil);
 
 
     @weakify(self)
@@ -140,9 +147,9 @@
 - (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (section == 1)
-        return @"填写验证信息";
+        return NSLocalizedString(@"please_fill_in_verification_information", nil);
     if (section == 2)
-        return @"填写备注与分组";
+        return NSLocalizedString(@"please_fill_in_remarks_group_info", nil);// @"填写备注与分组";
     return nil;
 }
 
@@ -175,7 +182,7 @@
     if (indexPath.section == 2) {
         if (indexPath.row == 0) {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"NickName"];
-            cell.textLabel.text = @"备注";
+            cell.textLabel.text = NSLocalizedString(@"Alia", nil); // @"备注";
             [cell.contentView addSubview:self.nickTextField];
             self.nickTextField.mm_width(cell.contentView.mm_w/2).mm_height(cell.contentView.mm_h).mm_right(20);
             self.nickTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
@@ -183,8 +190,8 @@
         } else {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"GroupName"];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.textLabel.text = @"分组";
-            cell.detailTextLabel.text = @"我的朋友";
+            cell.textLabel.text = NSLocalizedString(@"Group", nil); // @"分组";
+            cell.detailTextLabel.text = NSLocalizedString(@"my_friend", nil); // @"我的朋友";
             self.groupNameLabel = cell.detailTextLabel;
             return cell;
         }
@@ -211,43 +218,44 @@
     [self.view endEditing:YES];
     // display toast with an activity spinner
     [self.view makeToastActivity:CSToastPositionCenter];
-
-    TIMFriendRequest *req = [[TIMFriendRequest alloc] init];
-    req.addWording = self.addWordTextView.text;
-    req.remark = self.nickTextField.text;
-    req.group = self.groupNameLabel.text;
-    req.identifier = self.profile.userID;
-    req.addSource = @"iOS";
+    
+    V2TIMFriendAddApplication *application = [[V2TIMFriendAddApplication alloc] init];
+    application.addWording = self.addWordTextView.text;
+    application.friendRemark = self.nickTextField.text;
+    //application.group = self.groupNameLabel.text;
+    application.userID = self.profile.userID;
+    application.addSource = @"iOS";
     if (self.singleSwitchData.on) {
-        req.addType = TIM_FRIEND_ADD_TYPE_SINGLE;
+        application.addType = V2TIM_FRIEND_TYPE_SINGLE;
     } else {
-        req.addType = TIM_FRIEND_ADD_TYPE_BOTH;
+        application.addType = V2TIM_FRIEND_TYPE_BOTH;
     }
-    [[TIMFriendshipManager sharedInstance] addFriend:req succ:^(TIMFriendResult *result) {
-        NSString *msg = [NSString stringWithFormat:@"%ld", (long)result.result_code];
+    
+    [[V2TIMManager sharedInstance] addFriend:application succ:^(V2TIMFriendOperationResult *result) {
+        NSString *msg = [NSString stringWithFormat:@"%ld", (long)result.resultCode];
         //根据回调类型向用户展示添加结果
-        if (result.result_code == TIM_ADD_FRIEND_STATUS_PENDING) {
-            msg = @"发送成功,等待审核同意";
+        if (result.resultCode == ERR_SVR_FRIENDSHIP_ALLOW_TYPE_NEED_CONFIRM) {
+            msg = NSLocalizedString(@"FriendAddResultSuccessWait", nil); // @"发送成功,等待审核同意";
         }
-        if (result.result_code == TIM_ADD_FRIEND_STATUS_FRIEND_SIDE_FORBID_ADD) {
-            msg = @"对方禁止添加";
+        if (result.resultCode == ERR_SVR_FRIENDSHIP_ALLOW_TYPE_DENY_ANY) {
+            msg = NSLocalizedString(@"FriendAddResultForbid", nil); // @"对方禁止添加";
         }
-        if (result.result_code == 0) {
-            msg = @"已添加到好友列表";
+        if (result.resultCode == 0) {
+            msg = NSLocalizedString(@"FriendAddResultSuccess", nil); // @"已添加到好友列表";
         }
-        if (result.result_code == TIM_FRIEND_PARAM_INVALID) {
-            msg = @"好友已存在";
+        if (result.resultCode == ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS) {
+            msg = NSLocalizedString(@"FriendAddResultExists", nil); // @"好友已存在";
         }
 
         [self.view hideToastActivity];
         [self.view makeToast:msg
                     duration:3.0
                     position:CSToastPositionBottom];
-
-    } fail:^(int code, NSString *msg) {
+    } fail:^(int code, NSString *desc) {
         [self.view hideToastActivity];
-        [THelper makeToastError:code msg:msg];
+        [THelper makeToastError:code msg:desc];
     }];
+
     [TCUtil report:Action_Addfriend actionSub:@"" code:@(0) msg:@"addfriend"];
 }
 

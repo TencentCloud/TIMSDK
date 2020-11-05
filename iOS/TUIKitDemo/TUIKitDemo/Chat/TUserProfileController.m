@@ -67,7 +67,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = @"详细资料";
+    self.title = NSLocalizedString(@"ProfileDetails", nil); // @"详细资料";
     self.clearsSelectionOnViewWillAppear = YES;
 
     [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"TextCell"];
@@ -109,7 +109,7 @@
             NSMutableArray *inlist = @[].mutableCopy;
             [inlist addObject:({
                 TCommonTextCellData *data = TCommonTextCellData.new;
-                data.key = @"验证消息";
+                data.key = NSLocalizedString(@"FriendAddVerificationMessage",  nil); // @"验证消息";
                 if (self.pendency) {
                     data.value = self.pendency.addWording;
                 } else if (self.groupPendency) {
@@ -127,21 +127,16 @@
 
     //当用户为陌生人时，在当前视图给出"加好友"按钮
     if (self.actionType == PCA_ADD_FRIEND) {
-        TIMFriendCheckInfo *ck = TIMFriendCheckInfo.new;
-        ck.users = @[self.userFullInfo.userID];
-        ck.checkType = TIM_FRIEND_CHECK_TYPE_BIDIRECTION;
-        [[TIMFriendshipManager sharedInstance] checkFriends:ck succ:^(NSArray<TIMCheckFriendResult *> *results) {
-            TIMCheckFriendResult *result = results.firstObject;
-            if (result.resultType == TIM_FRIEND_RELATION_TYPE_MY_UNI || result.resultType == TIM_FRIEND_RELATION_TYPE_BOTHWAY) {
+        [[V2TIMManager sharedInstance] checkFriend:self.userFullInfo.userID succ:^(V2TIMFriendCheckResult *result) {
+            if (result.relationType == V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST || result.relationType == V2TIM_FRIEND_RELATION_TYPE_BOTH_WAY) {
                 return;
             }
-
-
+            
             [self.dataList addObject:({
                 NSMutableArray *inlist = @[].mutableCopy;
                 [inlist addObject:({
                     TUIButtonCellData *data = TUIButtonCellData.new;
-                    data.title = @"加好友";
+                    data.title = NSLocalizedString(@"FriendAddTitle", nil); // @"加好友";
                     data.style = ButtonGreen;
                     data.cbuttonSelector = @selector(onAddFriend);
                     data.reuseId = @"ButtonCell";
@@ -149,9 +144,11 @@
                 })];
                 inlist;
             })];
+            
             [self.tableView reloadData];
-        } fail:^(int code, NSString *msg) {
-
+                    
+        } fail:^(int code, NSString *desc) {
+                    
         }];
     }
 
@@ -161,7 +158,7 @@
             NSMutableArray *inlist = @[].mutableCopy;
             [inlist addObject:({
                 TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = @"同意";
+                data.title = NSLocalizedString(@"Accept", nil);
                 data.style = ButtonGreen;
                 data.cbuttonSelector = @selector(onAgreeFriend);
                 data.reuseId = @"ButtonCell";
@@ -169,7 +166,7 @@
             })];
             [inlist addObject:({
                 TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = @"拒绝";
+                data.title = NSLocalizedString(@"Decline", nil);
                 data.style = ButtonRedText;
                 data.cbuttonSelector =  @selector(onRejectFriend);
                 data.reuseId = @"ButtonCell";

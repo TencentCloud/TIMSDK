@@ -30,7 +30,7 @@
         [self.container addSubview:_myTextLabel];
 
         _myLinkLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _myLinkLabel.text = @"查看详情>>";
+        _myLinkLabel.text = NSLocalizedString(@"MoreCustomViewDetails", nil); // @"查看详情>>";
         _myLinkLabel.font = [UIFont systemFontOfSize:15];
         _myLinkLabel.textColor = [UIColor d_systemBlueColor];
         [self.container addSubview:_myLinkLabel];

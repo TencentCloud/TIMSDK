@@ -75,8 +75,8 @@
     self.roomListCollection.delegate = self;
     self.roomListCollection.dataSource = self;
     MJRefreshNormalHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(refreshAction)];
-    [header setTitle:@"下拉刷新" forState:MJRefreshStatePulling];
-    [header setTitle:@"刷新中" forState:MJRefreshStateRefreshing];
+    [header setTitle:NSLocalizedString(@"LiveDropRefresh", nil) forState:MJRefreshStatePulling];
+    [header setTitle:NSLocalizedString(@"LiveRefreshing", nil) forState:MJRefreshStateRefreshing];
     [header setTitle:@"" forState:MJRefreshStateIdle];
     self.roomListCollection.mj_header = header;
 }

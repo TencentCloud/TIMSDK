@@ -290,7 +290,7 @@ void uncaughtExceptionHandler(NSException*exception){
     TUITabBarController *tbc = [[TUITabBarController alloc] init];
     NSMutableArray *items = [NSMutableArray array];
     TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
-    msgItem.title = @"消息";
+    msgItem.title = NSLocalizedString(@"TabBarItemMessageText", nil); //@"消息";
     msgItem.selectedImage = [UIImage imageNamed:@"session_selected"];
     msgItem.normalImage = [UIImage imageNamed:@"session_normal"];
     msgItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
@@ -298,7 +298,7 @@ void uncaughtExceptionHandler(NSException*exception){
     [items addObject:msgItem];
 
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
-    contactItem.title = @"通讯录";
+    contactItem.title = NSLocalizedString(@"TabBarItemContactText", nil);
     contactItem.selectedImage = [UIImage imageNamed:@"contact_selected"];
     contactItem.normalImage = [UIImage imageNamed:@"contact_normal"];
     contactItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
@@ -306,7 +306,7 @@ void uncaughtExceptionHandler(NSException*exception){
     [items addObject:contactItem];
     // 直播Tab添加
     TUITabBarItem *sceneItem = [[TUITabBarItem alloc] init];
-    sceneItem.title = @"直播";
+    sceneItem.title = NSLocalizedString(@"TabBarItemLiveText", nil);
     sceneItem.selectedImage = [UIImage imageNamed:@"live_broadcast_camera_on"];
     sceneItem.normalImage = [UIImage imageNamed:@"live_broadcast_camera_off"];
     sceneItem.controller = [[TNavigationController alloc] initWithRootViewController:[[TUILiveSceneViewController alloc] init]];
@@ -314,7 +314,7 @@ void uncaughtExceptionHandler(NSException*exception){
     [items addObject:sceneItem];
     
     TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
-    setItem.title = @"我";
+    setItem.title = NSLocalizedString(@"TabBarItemMeText", nil);
     setItem.selectedImage = [UIImage imageNamed:@"myself_selected"];
     setItem.normalImage = [UIImage imageNamed:@"myself_normal"];
     setItem.controller = [[TNavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
