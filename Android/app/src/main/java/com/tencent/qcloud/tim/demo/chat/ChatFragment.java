@@ -126,7 +126,7 @@ public class ChatFragment extends BaseFragment {
             @Override
             public boolean handleStartGroupLiveActivity() {
                 // 打开群直播
-                LiveRoomAnchorActivity.start(TUIKit.getAppContext(), mChatInfo.getId());
+                LiveRoomAnchorActivity.start(DemoApplication.instance(), mChatInfo.getId());
                 // demo层对消息进行处理，不走默认的逻辑
                 return true;
             }
@@ -189,15 +189,15 @@ public class ChatFragment extends BaseFragment {
         switch (atInfoType){
             case V2TIMGroupAtInfo.TIM_AT_ME:
                 mChatLayout.getAtInfoLayout().setVisibility(VISIBLE);
-                mChatLayout.getAtInfoLayout().setText("[有人@我]");
+                mChatLayout.getAtInfoLayout().setText(DemoApplication.instance().getString(R.string.ui_at_me));
                 break;
             case V2TIMGroupAtInfo.TIM_AT_ALL:
                 mChatLayout.getAtInfoLayout().setVisibility(VISIBLE);
-                mChatLayout.getAtInfoLayout().setText("[@所有人]");
+                mChatLayout.getAtInfoLayout().setText(DemoApplication.instance().getString(R.string.ui_at_all));
                 break;
             case V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME:
                 mChatLayout.getAtInfoLayout().setVisibility(VISIBLE);
-                mChatLayout.getAtInfoLayout().setText("[有人@我][@所有人]");
+                mChatLayout.getAtInfoLayout().setText(DemoApplication.instance().getString(R.string.ui_at_all_me));
                 break;
             default:
                 mChatLayout.getAtInfoLayout().setVisibility(GONE);
@@ -207,7 +207,7 @@ public class ChatFragment extends BaseFragment {
     }
 
     private int getAtInfoType(List<V2TIMGroupAtInfo> atInfoList) {
-        int atInfoType = -1;
+        int atInfoType = 0;
         boolean atMe = false;
         boolean atAll = false;
 
@@ -221,6 +221,11 @@ public class ChatFragment extends BaseFragment {
                 continue;
             }
             if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ALL) {
+                atAll = true;
+                continue;
+            }
+            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME) {
+                atMe = true;
                 atAll = true;
                 continue;
             }

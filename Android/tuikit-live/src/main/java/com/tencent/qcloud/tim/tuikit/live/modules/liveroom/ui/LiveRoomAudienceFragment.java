@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.liteav.demo.beauty.BeautyParams;
@@ -33,6 +30,7 @@ import com.tencent.qcloud.tim.tuikit.live.component.common.ActionSheetDialog;
 import com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView;
 import com.tencent.qcloud.tim.tuikit.live.component.bottombar.BottomToolBarLayout;
 import com.tencent.qcloud.tim.tuikit.live.component.danmaku.DanmakuManager;
+import com.tencent.qcloud.tim.tuikit.live.component.floatwindow.FloatWindowLayout;
 import com.tencent.qcloud.tim.tuikit.live.component.gift.GiftAdapter;
 import com.tencent.qcloud.tim.tuikit.live.component.gift.imp.GiftInfo;
 import com.tencent.qcloud.tim.tuikit.live.component.gift.GiftPanelDelegate;
@@ -53,14 +51,11 @@ import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoom;
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoomCallback;
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoomDef;
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoomDelegate;
-import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget.LiveAnchorOfflineView;
+import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget.LiveVideoManagerLayout;
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget.LiveVideoView;
-import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget.VideoViewController;
 import com.tencent.qcloud.tim.tuikit.live.utils.PermissionUtils;
 import com.tencent.qcloud.tim.tuikit.live.utils.TUILiveLog;
-import com.tencent.rtmp.ui.TXCloudVideoView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,28 +72,26 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
     private TopToolBarLayout      mLayoutTopToolBar;
     private BottomToolBarLayout   mLayoutBottomToolBar;
     private ChatLayout            mLayoutChatMessage;
-    private TXCloudVideoView      mVideoViewAnchor;         // 显示大主播视频的View
     private IDanmakuView          mDanmakuView;             // 负责弹幕的显示
     private DanmakuManager        mDanmakuManager;          // 弹幕的管理类
     private AlertDialog           mDialogError;             // 错误提示的Dialog
     private TRTCLiveRoom          mLiveRoom;                // 组件类
     private LikeFrequencyControl  mLikeFrequencyControl;    //点赞频率的控制类
-    private LiveAnchorOfflineView mAnchorOfflineView;       //主播不在线
     private GiftAnimatorLayout    mGiftAnimatorLayout;
     private ConstraintLayout      mRootView;
-    private VideoViewController   mTUIVideoViewController;
-    private TXCloudVideoView      mVideoViewPKAnchor;
-    private RelativeLayout        mLayoutPKContainer;
+    private LiveVideoManagerLayout mLayoutVideoManager;
     private HeartLayout           mHeartLayout;
     private CircleImageView       mButtonLink;
     private ImageView             mImagePkLayer;
     private TextView              mStatusTipsView;
     private Button                mButtonReportUser;         //举报按钮
+    private FloatWindowLayout     mLayoutFloatWindow;        //悬浮窗组件
 
     private boolean isEnterRoom     = false;    // 表示当前是否已经进房成功
     private boolean isUseCDNPlay    = false;    // 表示当前是否是CDN模式
     private boolean mIsAnchorEnter  = false;    // 表示主播是否已经进房
     private boolean mIsBeingLinkMic = false;    // 表示当前是否在连麦状态
+    private boolean isFloatRecovery = false;    // 表示是否是从悬浮窗恢复过来的
     private int     mCurrentStatus  = TRTCLiveRoomDef.ROOM_STATUS_NONE;
     private int     mRoomId;
     private long    mLastLinkMicTime;
@@ -114,16 +107,13 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
     private Runnable mShowAnchorLeave = new Runnable() {      //如果一定时间内主播没出现
         @Override
         public void run() {
-            if (mAnchorOfflineView != null) {
-                mAnchorOfflineView.setVisibility(mIsAnchorEnter ? View.GONE : View.VISIBLE);
-                mLayoutBottomToolBar.setVisibility(mIsAnchorEnter ? View.VISIBLE : View.GONE);
-                mButtonReportUser.setVisibility(mIsAnchorEnter ? View.VISIBLE : View.GONE);
-            }
+            mLayoutVideoManager.setAnchorOfflineViewVisibility(mIsAnchorEnter ? View.GONE : View.VISIBLE);
+            mLayoutBottomToolBar.setVisibility(mIsAnchorEnter ? View.VISIBLE : View.GONE);
+            mButtonReportUser.setVisibility(mIsAnchorEnter ? View.VISIBLE : View.GONE);
         }
     };
 
     private TUILiveRoomAudienceLayout.TUILiveRoomAudienceDelegate mLiveRoomAudienceDelegate;
-    private TRTCLiveRoomDef.TRTCLiveRoomInfo                      mRoomInfo             = new TRTCLiveRoomDef.TRTCLiveRoomInfo();
     private TRTCLiveRoomDef.LiveAnchorInfo                        mAnchorInfo           = new TRTCLiveRoomDef.LiveAnchorInfo();
     private TRTCLiveRoomDelegate                                  mTRTCLiveRoomDelegate = new TRTCLiveRoomDelegate() {
         @Override
@@ -146,7 +136,6 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
 
         @Override
         public void onRoomInfoChange(TRTCLiveRoomDef.TRTCLiveRoomInfo roomInfo) {
-            int oldStatus = mCurrentStatus;
             mCurrentStatus = roomInfo.roomStatus;
             // 由于CDN模式下是只播放一路画面，所以不需要做画面的设置
             if (isUseCDNPlay) {
@@ -157,33 +146,16 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
                 }
                 return;
             }
-            // 将PK的界面设置成左右两边
-            // 将PK以外的界面设置成大画面
-            setAnchorViewFull(mCurrentStatus != TRTCLiveRoomDef.ROOM_STATUS_PK);
+            mLayoutVideoManager.updateRoomStatus(roomInfo.roomStatus);
             TUILiveLog.d(TAG, "onRoomInfoChange: " + mCurrentStatus);
-            if (oldStatus == TRTCLiveRoomDef.ROOM_STATUS_PK
-                    && mCurrentStatus != TRTCLiveRoomDef.ROOM_STATUS_PK) {
-                // 上一个状态是PK，需要将界面中的元素恢复
-                LiveVideoView videoView = mTUIVideoViewController.getPKUserView();
-                mVideoViewPKAnchor = videoView.getPlayerVideo();
-                if (mLayoutPKContainer.getChildCount() != 0) {
-                    mLayoutPKContainer.removeView(mVideoViewPKAnchor);
-                    videoView.addView(mVideoViewPKAnchor);
-                    mTUIVideoViewController.clearPKView();
-                    mVideoViewPKAnchor = null;
-                }
-                mImagePkLayer.setVisibility(View.GONE);
-            } else if (mCurrentStatus == TRTCLiveRoomDef.ROOM_STATUS_PK) {
-                LiveVideoView videoView = mTUIVideoViewController.getPKUserView();
-                mVideoViewPKAnchor = videoView.getPlayerVideo();
-                videoView.removeView(mVideoViewPKAnchor);
-                mLayoutPKContainer.addView(mVideoViewPKAnchor);
-                mImagePkLayer.setVisibility(View.VISIBLE);
-            }
         }
 
         @Override
         public void onRoomDestroy(String roomId) {
+            if (FloatWindowLayout.getInstance().mWindowMode == Constants.WINDOW_MODE_FLOAT){
+                FloatWindowLayout.getInstance().closeFloatWindow();
+                return;
+            }
             showErrorAndQuit(0, getString(R.string.live_warning_room_disband));
         }
 
@@ -193,11 +165,9 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
             if (userId.equals(mAnchorId)) {
                 // 如果是大主播的画面
                 mIsAnchorEnter = true;
-                mVideoViewAnchor.setVisibility(View.VISIBLE);
-                mAnchorOfflineView.setVisibility(View.GONE);
                 mButtonReportUser.setVisibility(View.VISIBLE);
                 mHandler.removeCallbacks(mShowAnchorLeave);
-                mLiveRoom.startPlay(userId, mVideoViewAnchor, new TRTCLiveRoomCallback.ActionCallback() {
+                mLayoutVideoManager.startAnchorVideo(userId,true, new TRTCLiveRoomCallback.ActionCallback() {
                     @Override
                     public void onCallback(int code, String msg) {
                         if (code != 0) {
@@ -208,28 +178,18 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
                 initBottomToolBar();
                 updateFollowView(userId);
             } else {
-                LiveVideoView view = mTUIVideoViewController.applyVideoView(userId);
-                if (view == null) {
-                    Toast.makeText(getContext(), R.string.live_warning_link_user_max_limit, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                view.showKickoutBtn(false);
-                mLiveRoom.startPlay(userId, view.getPlayerVideo(), null);
+                mLayoutVideoManager.startAnchorVideo(userId, false, null);
             }
         }
 
         @Override
         public void onAnchorExit(String userId) {
-            if (userId.equals(mRoomInfo.ownerId)) {
-                mVideoViewAnchor.setVisibility(View.GONE);
-                mLiveRoom.stopPlay(userId, null);
-                mAnchorOfflineView.setVisibility(View.VISIBLE);
+            if (userId.equals(mAnchorId)) {
+                mLayoutVideoManager.stopAnchorVideo(userId, true, null);
                 mLayoutBottomToolBar.setVisibility(View.GONE);
                 mButtonReportUser.setVisibility(View.GONE);
             } else {
-                // 这里PK也会回收，但是没关系，因为我们有保护
-                mTUIVideoViewController.recycleVideoView(userId);
-                mLiveRoom.stopPlay(userId, null);
+                mLayoutVideoManager.stopAnchorVideo(userId, false, null);
             }
         }
 
@@ -347,23 +307,33 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if (isEnterRoom) {
-            exitRoom();
+        if (isFloatRecovery) {
+            mLiveRoom.exitRoom(new TRTCLiveRoomCallback.ActionCallback() {
+                @Override
+                public void onCallback(int code, String msg) {
+                    enterRoom();
+                }
+            });
+        } else {
+            if (isEnterRoom) {
+                enterRoom();
+            }
+            enterRoom();
         }
-        enterRoom();
         super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        exitRoom();
         mHandler.removeCallbacks(mShowAnchorLeave);
         mHandler.removeCallbacks(mGetAudienceRunnable);
     }
 
     private void initView(View rootView) {
-        mVideoViewAnchor = rootView.findViewById(R.id.video_view_anchor);
+        // 请求恢复全屏模式
+        updateLiveWindowMode(Constants.WINDOW_MODE_FULL);
+
         mLayoutTopToolBar = rootView.findViewById(R.id.layout_top_toolbar);
         mLayoutBottomToolBar = rootView.findViewById(R.id.layout_bottom_toolbar);
         mLayoutChatMessage = rootView.findViewById(R.id.layout_chat);
@@ -371,17 +341,14 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
         mDanmakuView = rootView.findViewById(R.id.view_danmaku);
         mDanmakuManager.setDanmakuView(mDanmakuView);
         mRootView = rootView.findViewById(R.id.root);
-        mLayoutPKContainer = rootView.findViewById(R.id.layout_pk_container);
         mHeartLayout = rootView.findViewById(R.id.heart_layout);
-        List<LiveVideoView> tuiVideoViewList = new ArrayList<>();
-        tuiVideoViewList.add((LiveVideoView) rootView.findViewById(R.id.video_view_link_mic_1));
-        tuiVideoViewList.add((LiveVideoView) rootView.findViewById(R.id.video_view_link_mic_2));
-        tuiVideoViewList.add((LiveVideoView) rootView.findViewById(R.id.video_view_link_mic_3));
-        mTUIVideoViewController = new VideoViewController(tuiVideoViewList, null);
         mImagePkLayer = rootView.findViewById(R.id.iv_pk_layer);
         mStatusTipsView = rootView.findViewById(R.id.state_tips);
-        mAnchorOfflineView = rootView.findViewById(R.id.layout_anchor_offline);
-        mAnchorOfflineView.setAnchorOfflineCallback(new LiveAnchorOfflineView.AnchorOfflineCallback() {
+        mLayoutTopToolBar.setTopToolBarDelegate(this);
+        mButtonReportUser = rootView.findViewById(R.id.report_user);
+        mLayoutVideoManager = rootView.findViewById(R.id.ll_video_view);
+        mLayoutVideoManager.updateVideoLayoutByWindowStatus();
+        mLayoutVideoManager.setVideoManagerLayoutDelegate(new LiveVideoManagerLayout.VideoManagerLayoutDelegate() {
             @Override
             public void onClose() {
                 if (mLiveRoomAudienceDelegate != null) {
@@ -389,8 +356,6 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
                 }
             }
         });
-        mLayoutTopToolBar.setTopToolBarDelegate(this);
-        mButtonReportUser = rootView.findViewById(R.id.report_user);
         mButtonReportUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -415,22 +380,6 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
             isUseCDNPlay = bundle.getBoolean(Constants.USE_CDN);
             mCdnUrl = bundle.getString(Constants.CDN_URL);
             mAnchorId = bundle.getString(Constants.ANCHOR_ID);
-            mLiveRoom.getRoomInfos(Arrays.asList(mRoomId), new TRTCLiveRoomCallback.RoomInfoCallback() {
-                @Override
-                public void onCallback(int code, String msg, List<TRTCLiveRoomDef.TRTCLiveRoomInfo> list) {
-                    if (code == 0) {
-                        for (TRTCLiveRoomDef.TRTCLiveRoomInfo info : list) {
-                            if (info.roomId == mRoomId) {
-                                mRoomInfo = info;
-                                if (TextUtils.isEmpty(mAnchorId)) {
-                                    mAnchorId = info.ownerId;
-                                }
-                                TUILiveLog.d(TAG, "initData mRoomInfo: " + mRoomInfo.toString());
-                            }
-                        }
-                    }
-                }
-            });
         }
     }
 
@@ -443,7 +392,6 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
             public void onCallback(int code, String msg) {
                 if (code == 0) {
                     isEnterRoom = true;
-                    mAnchorOfflineView.setImageBackground(mRoomInfo.coverUrl);
                     updateTopToolBar();
                 } else {
                     exitRoom();
@@ -512,7 +460,12 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
                         Toast.makeText(getActivity(), R.string.live_tips_rest, Toast.LENGTH_SHORT).show();
                     } else {
                         mLastLinkMicTime = curTime;
-                        startLinkMic();
+                        requestPermissions(PermissionUtils.getLivePermissions(), new OnPermissionGrandCallback() {
+                            @Override
+                            public void onAllPermissionsGrand() {
+                                startLinkMic();
+                            }
+                        });
                     }
                 } else {
                     stopLinkMic();
@@ -549,7 +502,7 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
             }
         });
         // 初始化切换摄像头按钮
-        CircleImageView buttonSwitchCam = new CircleImageView(getContext());
+        CircleImageView buttonSwitchCam = new CircleImageView(TUIKitLive.getAppContext());
         buttonSwitchCam.setImageResource(R.drawable.live_ic_switch_camera_on);
         buttonSwitchCam.setVisibility(mIsBeingLinkMic ? View.VISIBLE : View.GONE);
         buttonSwitchCam.setOnClickListener(new View.OnClickListener() {
@@ -572,9 +525,6 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
     }
 
     private void startLinkMic() {
-        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
-        PermissionUtils.checkAndRequestMorePermissions(mContext, permissions, 0);
-
         mButtonLink.setEnabled(false);
         mButtonLink.setImageResource(R.drawable.live_linkmic_off);
 
@@ -608,7 +558,7 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
     }
 
     private void joinPusher() {
-        LiveVideoView videoView = mTUIVideoViewController.applyVideoView(mSelfUserId);
+        LiveVideoView videoView = mLayoutVideoManager.applyVideoView(mSelfUserId);
         if (videoView == null) {
             Toast.makeText(getActivity(), R.string.live_anchor_view_error, Toast.LENGTH_SHORT).show();
             return;
@@ -647,8 +597,8 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
 
         mLiveRoom.stopCameraPreview();
         mLiveRoom.stopPublish(null);
-        if (mTUIVideoViewController != null) {
-            mTUIVideoViewController.recycleVideoView(mSelfUserId);
+        if (mLayoutVideoManager != null) {
+            mLayoutVideoManager.recycleVideoView(mSelfUserId);
         }
         updateBottomFunctionLayout();
     }
@@ -708,11 +658,12 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
             public void onCallback(int code, String msg, List<TRTCLiveRoomDef.TRTCLiveUserInfo> list) {
                 if (code == 0) {
                     for (TRTCLiveRoomDef.TRTCLiveUserInfo info : list) {
-                        if (info.userId.equals(mRoomInfo.ownerId)) {
+                        if (info.userId.equals(mAnchorId)) {
                             mAnchorInfo.userId = info.userId;
                             mAnchorInfo.userName = info.userName;
                             mAnchorInfo.avatarUrl = info.avatarUrl;
                             mLayoutTopToolBar.setAnchorInfo(mAnchorInfo);
+                            mLayoutVideoManager.updateAnchorOfflineViewBackground(mAnchorInfo.avatarUrl);
                         }
                     }
                 } else {
@@ -820,8 +771,38 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
             mDanmakuManager.destroy();
             mDanmakuManager = null;
         }
-        exitRoom();
+        updateLiveWindowMode(Constants.WINDOW_MODE_FLOAT);
     }
+
+    protected void updateLiveWindowMode(int mode) {
+        if (FloatWindowLayout.getInstance().mWindowMode == mode) return;
+
+        if (mode == Constants.WINDOW_MODE_FLOAT) {
+            FloatWindowLayout.IntentParams intentParams = new FloatWindowLayout.IntentParams(getActivity().getClass(), mRoomId, mAnchorId, isUseCDNPlay, mCdnUrl);
+            boolean result =  FloatWindowLayout.getInstance().showFloatWindow(mLayoutVideoManager.mLayoutRoot, intentParams);
+            if (!result) {
+                exitRoom();
+                return;
+            }
+            FloatWindowLayout.getInstance().mWindowMode = mode;
+            mLayoutVideoManager.updateVideoLayoutByWindowStatus();
+            FloatWindowLayout.getInstance().setFloatWindowLayoutDelegate(new FloatWindowLayout.FloatWindowLayoutDelegate() {
+                @Override
+                public void onClose() {
+                    exitRoom();
+                    if (mLiveRoomAudienceDelegate != null) {
+                        mLiveRoomAudienceDelegate.onClose();
+                    }
+
+                }
+            });
+        } else if (mode == Constants.WINDOW_MODE_FULL) {
+            FloatWindowLayout.getInstance().closeFloatWindow();
+            FloatWindowLayout.getInstance().mWindowMode = mode;
+            isFloatRecovery = true;
+        }
+    }
+
 
     /**
      * 显示错误并且退出直播
@@ -851,26 +832,6 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
             mDialogError.dismiss();
         }
         mDialogError.show();
-    }
-
-    private void setAnchorViewFull(boolean isFull) {
-        if (isFull) {
-            ConstraintSet set = new ConstraintSet();
-            set.clone(mRootView);
-            set.connect(mVideoViewAnchor.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-            set.connect(mVideoViewAnchor.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-            set.connect(mVideoViewAnchor.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-            set.connect(mVideoViewAnchor.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-            set.applyTo(mRootView);
-        } else {
-            ConstraintSet set = new ConstraintSet();
-            set.clone(mRootView);
-            set.connect(mVideoViewAnchor.getId(), ConstraintSet.TOP, R.id.layout_pk_container, ConstraintSet.TOP);
-            set.connect(mVideoViewAnchor.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-            set.connect(mVideoViewAnchor.getId(), ConstraintSet.BOTTOM, R.id.layout_pk_container, ConstraintSet.BOTTOM);
-            set.connect(mVideoViewAnchor.getId(), ConstraintSet.END, R.id.gl_vertical, ConstraintSet.END);
-            set.applyTo(mRootView);
-        }
     }
 
     private void reportUser() {

@@ -213,8 +213,7 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
         }
-        return true;
-
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

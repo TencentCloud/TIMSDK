@@ -83,10 +83,10 @@ public class CircleImageView extends ImageView {
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TUILiveCircleImageView, defStyle, 0);
 
-        mBorderWidth = a.getDimensionPixelSize(R.styleable.TUILiveCircleImageView_civ_border_width, DEFAULT_BORDER_WIDTH);
-        mBorderColor = a.getColor(R.styleable.TUILiveCircleImageView_civ_border_color, DEFAULT_BORDER_COLOR);
-        mBorderOverlay = a.getBoolean(R.styleable.TUILiveCircleImageView_civ_border_overlay, DEFAULT_BORDER_OVERLAY);
-        mCircleBackgroundColor = a.getColor(R.styleable.TUILiveCircleImageView_civ_circle_background_color, DEFAULT_CIRCLE_BACKGROUND_COLOR);
+        mBorderWidth = a.getDimensionPixelSize(R.styleable.TUILiveCircleImageView_tui_civ_border_width, DEFAULT_BORDER_WIDTH);
+        mBorderColor = a.getColor(R.styleable.TUILiveCircleImageView_tui_civ_border_color, DEFAULT_BORDER_COLOR);
+        mBorderOverlay = a.getBoolean(R.styleable.TUILiveCircleImageView_tui_civ_border_overlay, DEFAULT_BORDER_OVERLAY);
+        mCircleBackgroundColor = a.getColor(R.styleable.TUILiveCircleImageView_tui_civ_circle_background_color, DEFAULT_CIRCLE_BACKGROUND_COLOR);
 
         a.recycle();
 

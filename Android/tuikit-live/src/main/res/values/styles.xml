@@ -39,10 +39,10 @@
     </style>
 
     <declare-styleable name="TUILiveCircleImageView">
-        <attr format="dimension" name="civ_border_width"/>
-        <attr format="color" name="civ_border_color"/>
-        <attr format="boolean" name="civ_border_overlay"/>
-        <attr format="color" name="civ_circle_background_color"/>
+        <attr format="dimension" name="tui_civ_border_width"/>
+        <attr format="color" name="tui_civ_border_color"/>
+        <attr format="boolean" name="tui_civ_border_overlay"/>
+        <attr format="color" name="tui_civ_circle_background_color"/>
     </declare-styleable>
 
     <!-- 飘星自定义属性 -->
@@ -73,5 +73,45 @@
         <item name="android:windowNoTitle">true</item>
         <!-- 半透明 -->
         <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+
+      <!-- 自定义loading dialog -->
+    <style name="BeautyLoadingDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!-- 短视频录制主题UI配置-->
+    <style name="BeautyPanelStyle">
+        <!-- 美颜面板 -->
+        <item name="beautyPanelColorPrimary">@color/beauty_color_red</item>
+        <item name="beautyPanelSmoothIcon">@drawable/beauty_ic_smooth</item>
+        <item name="beautyPanelNaturalIcon">@drawable/beauty_ic_natural</item>
+        <item name="beautyPanelPituIcon">@drawable/beauty_ic_pitu</item>
+        <item name="beautyPanelWhiteIcon">@drawable/beauty_ic_white</item>
+        <item name="beautyPanelRuddyIcon">@drawable/beauty_ic_ruddy</item>
+        <item name="beautyPanelBigeyeIcon">@drawable/beauty_ic_bigeye</item>
+        <item name="beautyPanelFaceslimIcon">@drawable/beauty_ic_faceslim</item>
+        <item name="beautyPanelFacevIcon">@drawable/beauty_ic_facev</item>
+        <item name="beautyPanelChinIcon">@drawable/beauty_ic_chin</item>
+        <item name="beautyPanelFaceshortIcon">@drawable/beauty_ic_face_short</item>
+        <item name="beautyPanelNoseslimIcon">@drawable/beauty_ic_noseslim</item>
+        <item name="beautyPanelEyeLightenIcon">@drawable/beauty_ic_eye_bright</item>
+        <item name="beautyPanelToothWhiteIcon">@drawable/beauty_ic_tooth_white</item>
+        <item name="beautyPanelPouchRemoveIcon">@drawable/beauty_ic_pouch_remove</item>
+        <item name="beautyPanelSmileLinesRemoveIcon">@drawable/beauty_ic_smile_lines</item>
+        <item name="beautyPanelWrinkleIcon">@drawable/beauty_ic_wrinkles</item>
+        <item name="beautyPanelForeheadIcon">@drawable/beauty_ic_forehead</item>
+        <item name="beautyPanelEyeDistanceIcon">@drawable/beauty_ic_eye_distance</item>
+        <item name="beautyPanelEyeAngleIcon">@drawable/beauty_ic_eye_angle</item>
+        <item name="beautyPanelMouthShapeIcon">@drawable/beauty_ic_mouse_shape</item>
+        <item name="beautyPanelNoseWingIcon">@drawable/beauty_ic_nose_wing</item>
+        <item name="beautyPanelNosePositionIcon">@drawable/beauty_ic_nose_position</item>
+        <item name="beautyPanelMouseWidthIcon">@drawable/beauty_ic_mouse_width</item>
+        <item name="beautyPanelFaceShapeIcon">@drawable/beauty_ic_face_shape</item>
     </style>
 </resources>

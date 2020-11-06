@@ -56,10 +56,8 @@ public class TopAudienceListAdapter extends RecyclerView.Adapter<TopAudienceList
             return;
         }
         for (TRTCLiveRoomDef.TRTCLiveUserInfo userInfo : userInfoList) {
-            if (userInfo != null && userInfo.userId != null) {
-                mAudienceList.add(userInfo);
-                mAudienceMap.put(userInfo.userId, userInfo);
-            }
+
+            addAudienceUser(userInfo);
         }
         notifyDataSetChanged();
     }

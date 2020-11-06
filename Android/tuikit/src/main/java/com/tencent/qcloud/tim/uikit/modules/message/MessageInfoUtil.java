@@ -21,6 +21,8 @@ import com.tencent.imsdk.v2.V2TIMTextElem;
 import com.tencent.imsdk.v2.V2TIMVideoElem;
 import com.tencent.liteav.model.CallModel;
 import com.tencent.liteav.model.LiveModel;
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.utils.DateTimeUtil;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
@@ -33,6 +35,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MessageInfoUtil {
     private static final String TAG = MessageInfoUtil.class.getSimpleName();
@@ -334,7 +337,7 @@ public class MessageInfoUtil {
                 String message = TUIKitConstants.covert2HTMLString(
                         TextUtils.isEmpty(msgInfo.getGroupNameCard())
                                 ? msgInfo.getFromUser()
-                                : msgInfo.getGroupNameCard()) + "创建群组";
+                                : msgInfo.getGroupNameCard()) + TUIKit.getAppContext().getString(R.string.create_group);;
                 msgInfo.setExtra(message);
             } else {
                 if (isTyping(customElem.getData())) {

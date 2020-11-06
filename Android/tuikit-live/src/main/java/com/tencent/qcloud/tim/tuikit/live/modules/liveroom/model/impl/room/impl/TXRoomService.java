@@ -235,6 +235,15 @@ public class TXRoomService implements ITXRoomService {
             return;
         }
 
+        if (mIsInitIMSDK) {
+            mIsLogin = false;
+            mMySelfIMInfo.clean();
+            if (callback != null) {
+                callback.onCallback(0, "login im success.");
+            }
+            return;
+        }
+
         V2TIMManager.getInstance().logout(new V2TIMCallback() {
             @Override
             public void onError(int i, String s) {

@@ -5,10 +5,13 @@ import android.content.Context;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tim.tuikit.live.base.Constants;
 import com.tencent.qcloud.tim.tuikit.live.base.TUILiveRequestCallback;
+import com.tencent.qcloud.tim.tuikit.live.component.floatwindow.FloatWindowLayout;
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoom;
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoomCallback;
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoomDef;
+import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.impl.room.impl.TXRoomService;
 import com.tencent.qcloud.tim.tuikit.live.utils.TUILiveLog;
 
 import java.util.Arrays;
@@ -85,6 +88,22 @@ public class TUIKitLive {
                 if (callback != null){
                     callback.onSuccess(v2TIMUserFullInfos);
                 }
+            }
+        });
+    }
+
+    public static void logout() {
+        TUILiveLog.d(TAG, "logout sIsAttachedTUIKit: " + sIsAttachedTUIKit);
+
+        // 如果当前观众页悬浮窗，关闭并退房
+        if (FloatWindowLayout.getInstance().mWindowMode == Constants.WINDOW_MODE_FLOAT) {
+            FloatWindowLayout.getInstance().closeFloatWindow();
+            TRTCLiveRoom.sharedInstance(sAppContext).exitRoom(null);
+        }
+
+        TRTCLiveRoom.sharedInstance(sAppContext).logout(new TRTCLiveRoomCallback.ActionCallback() {
+            @Override
+            public void onCallback(int code, String msg) {
             }
         });
     }

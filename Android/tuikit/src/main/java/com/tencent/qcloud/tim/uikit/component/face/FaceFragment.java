@@ -102,6 +102,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
         faceFirstSetTv.setSelected(true);
         faceFirstSetTv.setOnClickListener(this);
         customFaces = FaceManager.getCustomFaceList();
+        mCurrentGroupIndex = 0;
 
         int width = ScreenUtil.getPxByDp(70);
         for (int i = 0; i < customFaces.size(); i++) {

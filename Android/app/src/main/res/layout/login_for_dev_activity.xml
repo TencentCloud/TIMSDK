@@ -27,7 +27,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="60dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:textSize="18sp"
                 android:gravity="center_vertical"
@@ -41,7 +41,7 @@
                 android:textSize="18sp"
                 android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="任意非空字符即可，请参考类注释"
+                android:hint="@string/account_hint"
                 android:textCursorDrawable="@drawable/my_cursor"
                 android:singleLine="true" />
 
@@ -65,7 +65,7 @@
             android:layout_marginTop="60dp"
             android:layout_weight="1"
             android:background="#00a4ff"
-            android:text="登录"
+            android:text="@string/button_login"
             android:textColor="#fff" />
 
 

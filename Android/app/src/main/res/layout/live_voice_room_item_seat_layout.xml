@@ -18,7 +18,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/live_voice_room_ic_head"
-            app:civ_border_width="0dp" />
+            app:tui_civ_border_width="0dp" />
     </FrameLayout>
 
     <TextView

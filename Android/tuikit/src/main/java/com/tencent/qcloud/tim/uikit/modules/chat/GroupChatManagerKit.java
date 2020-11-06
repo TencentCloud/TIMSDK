@@ -10,6 +10,8 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatManagerKit;
@@ -103,7 +105,7 @@ public class GroupChatManagerKit extends ChatManagerKit {
                 messageCustom.version = TUIKitConstants.version;
                 messageCustom.businessID = MessageCustom.BUSINESS_ID_GROUP_CREATE;
                 messageCustom.opUser = V2TIMManager.getInstance().getLoginUser();
-                messageCustom.content = "创建群组";
+                messageCustom.content = TUIKit.getAppContext().getString(R.string.create_group);
                 String data = gson.toJson(messageCustom);
 
                 V2TIMMessage createTips = MessageInfoUtil.buildGroupCustomMessage(data);

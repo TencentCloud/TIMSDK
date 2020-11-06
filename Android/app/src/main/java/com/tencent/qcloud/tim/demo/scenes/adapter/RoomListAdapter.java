@@ -81,7 +81,12 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
                 mTextAnchorName.setText(roomInfo.anchorName);
             }
             mTextMemberCount.setText(roomInfo.memberCount + "在线");
-            GlideEngine.loadImage(mImagePic, roomInfo.coverUrl, R.drawable.live_room_default_cover, 10);
+            if (!TextUtils.isEmpty(roomInfo.coverUrl)) {
+                GlideEngine.loadImage(mImagePic, roomInfo.coverUrl, 0, 10);
+            } else {
+                GlideEngine.loadImage(mImagePic, R.drawable.live_room_default_cover);
+            }
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

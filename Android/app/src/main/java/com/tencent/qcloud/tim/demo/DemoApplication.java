@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.multidex.MultiDex;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
@@ -13,12 +15,10 @@ import com.huawei.hms.push.HmsMessaging;
 import com.meizu.cloud.pushsdk.PushManager;
 import com.meizu.cloud.pushsdk.util.MzSystemUtils;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tim.demo.helper.ConfigHelper;
-import com.tencent.qcloud.tim.demo.scenes.net.RoomManager;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
@@ -32,8 +32,6 @@ import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.rtmp.TXLiveBase;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
-
-import androidx.multidex.MultiDex;
 
 public class DemoApplication extends Application {
 
@@ -56,7 +54,7 @@ public class DemoApplication extends Application {
         MultiDex.install(this);
         // bugly上报
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
-        strategy.setAppVersion(TIMManager.getInstance().getVersion());
+        strategy.setAppVersion(V2TIMManager.getInstance().getVersion());
         CrashReport.initCrashReport(getApplicationContext(), PrivateConstants.BUGLY_APPID, true, strategy);
         TXLiveBase.getInstance().setLicence(instance, licenceUrl, licenseKey);
         /**

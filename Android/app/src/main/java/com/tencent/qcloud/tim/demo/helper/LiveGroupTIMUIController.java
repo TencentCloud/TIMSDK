@@ -2,18 +2,17 @@ package com.tencent.qcloud.tim.demo.helper;
 
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.tencent.liteav.login.ProfileManager;
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.scenes.LiveRoomAnchorActivity;
 import com.tencent.qcloud.tim.demo.scenes.LiveRoomAudienceActivity;
 import com.tencent.qcloud.tim.demo.scenes.net.RoomManager;
 import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
-import com.tencent.qcloud.tim.uikit.TUIKitImpl;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.ICustomMessageViewGroup;
 import com.tencent.qcloud.tim.uikit.modules.message.LiveMessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
@@ -24,7 +23,7 @@ public class LiveGroupTIMUIController {
 
     public static void onDraw(ICustomMessageViewGroup parent, final LiveMessageInfo info, final String groupId) {
         // 把自定义消息view添加到TUIKit内部的父容器里
-        View view = LayoutInflater.from(TUIKitImpl.getAppContext()).inflate(R.layout.message_adapter_content_trtc, null, false);
+        View view = LayoutInflater.from(DemoApplication.instance()).inflate(R.layout.message_adapter_content_trtc, null, false);
         parent.addMessageContentView(view);
 
         TextView textLiveName = view.findViewById(R.id.msg_tv_live_name);
@@ -74,11 +73,11 @@ public class LiveGroupTIMUIController {
     }
 
     private static void createRoom(String groupId) {
-        LiveRoomAnchorActivity.start(TUIKitImpl.getAppContext(), groupId);
+        LiveRoomAnchorActivity.start(DemoApplication.instance(), groupId);
     }
 
     private static void enterRoom(LiveMessageInfo info) {
-        Intent intent = new Intent(TUIKitImpl.getAppContext(), LiveRoomAudienceActivity.class);
+        Intent intent = new Intent(DemoApplication.instance(), LiveRoomAudienceActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(RoomManager.ROOM_TITLE, info.roomName);
         intent.putExtra(RoomManager.GROUP_ID, info.roomId);
@@ -87,6 +86,6 @@ public class LiveGroupTIMUIController {
         intent.putExtra(RoomManager.PUSHER_NAME, info.anchorName);
         intent.putExtra(RoomManager.COVER_PIC, info.roomCover);
         intent.putExtra(RoomManager.PUSHER_AVATAR, info.roomCover);
-        TUIKitImpl.getAppContext().startActivity(intent);
+        DemoApplication.instance().startActivity(intent);
     }
 }

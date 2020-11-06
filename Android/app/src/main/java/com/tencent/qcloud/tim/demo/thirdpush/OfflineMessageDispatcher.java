@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.liteav.model.CallModel;
@@ -90,7 +90,12 @@ public class OfflineMessageDispatcher {
         if (TextUtils.isEmpty(ext)) {
             return null;
         }
-        OfflineMessageContainerBean bean = new Gson().fromJson(ext, OfflineMessageContainerBean.class);
+        OfflineMessageContainerBean bean = null;
+        try {
+            bean = new Gson().fromJson(ext, OfflineMessageContainerBean.class);
+        } catch (Exception e) {
+            DemoLog.w(TAG, "getOfflineMessageBeanFromContainer: " + e.getMessage());
+        }
         if (bean == null) {
             return null;
         }
@@ -134,12 +139,12 @@ public class OfflineMessageDispatcher {
             final CallModel model = new Gson().fromJson(bean.content, CallModel.class);
             DemoLog.i(TAG, "bean: "+ bean + " model: " + model);
             if (model != null) {
-                long timeout = System.currentTimeMillis() / 1000 - bean.sendTime;
+                long timeout = V2TIMManager.getInstance().getServerTime() - bean.sendTime;
                 if (timeout >= model.timeout) {
                     ToastUtil.toastLongMessage("本次通话已超时");
                 } else {
                     if (TextUtils.isEmpty(model.groupId)) {
-                        if (bean.chatType == TIMConversationType.C2C.value()) {
+                        if (bean.chatType == V2TIMConversation.V2TIM_C2C) {
                             // c2c 登录之后会同步消息，所以不需要主动调用通话界面
                         } else {
                             DemoLog.e(TAG, "group call but no group id");

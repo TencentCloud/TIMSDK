@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tim.uikit.R;
-import com.tencent.qcloud.tim.uikit.TUIKitImpl;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.modules.message.LiveMessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
@@ -41,7 +41,7 @@ public class GroupMessageHelper implements IOnCustomMessageDrawListener {
         final LiveMessageInfo info = new Gson().fromJson(new String(elem.getData()), LiveMessageInfo.class);
 
         // 把自定义消息view添加到TUIKit内部的父容器里
-        View view = LayoutInflater.from(TUIKitImpl.getAppContext()).inflate(R.layout.message_adapter_content_trtc, null, false);
+        View view = LayoutInflater.from(TUIKit.getAppContext()).inflate(R.layout.message_adapter_content_trtc, null, false);
         parent.addMessageContentView(view);
 
         TextView textLiveName = view.findViewById(R.id.msg_tv_live_name);
@@ -49,7 +49,7 @@ public class GroupMessageHelper implements IOnCustomMessageDrawListener {
 
         if (info != null) {
             if (!TextUtils.isEmpty(info.anchorName)) {
-                textLiveName.setText(TUIKitImpl.getAppContext().getString(R.string.live_group_user_live, info.anchorName));
+                textLiveName.setText(TUIKit.getAppContext().getString(R.string.live_group_user_live, info.anchorName));
             } else {
                 textLiveName.setText(info.roomName);
             }
@@ -83,10 +83,10 @@ public class GroupMessageHelper implements IOnCustomMessageDrawListener {
         intent.putExtra(PUSHER_NAME, info.anchorName);
         intent.putExtra(COVER_PIC, info.roomCover);
         intent.putExtra(PUSHER_AVATAR, info.roomCover);
-        TUIKitImpl.getAppContext().startActivity(intent);
+        TUIKit.getAppContext().startActivity(intent);
     }
 
     private String getString(@StringRes int stringId) {
-        return TUIKitImpl.getAppContext().getString(stringId);
+        return TUIKit.getAppContext().getString(stringId);
     }
 }

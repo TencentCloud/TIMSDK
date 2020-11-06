@@ -1,81 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pic">Album</string>
+    <string name="photo">Camera</string>
+    <string name="video">Video</string>
+    <string name="file">file</string>
 
-    <string name="pic">相册</string>
-    <string name="photo">拍照</string>
-    <string name="video">摄像</string>
-    <string name="file">文件</string>
+    <string name="cancel">Cancel</string>
+    <string name="sure">OK</string>
 
-    <string name="cancel">取消</string>
-    <string name="sure">确定</string>
+    <string name="un_download">Not Downloaded</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="downloading">Downloading...</string>
+    <string name="sending">sending...</string>
+    <string name="sended">send</string>
+    <string name="has_read">have read</string>
+    <string name="unread">unread</string>
+    <string name="typing">typing...</string>
 
-    <string name="un_download">未下载</string>
-    <string name="downloaded">已下载</string>
-    <string name="downloading">下载中...</string>
-    <string name="sending">发送中...</string>
-    <string name="sended">已发送</string>
-    <string name="has_read">已读</string>
-    <string name="unread">未读</string>
-    <string name="typing">正在输入...</string>
+    <string name="chat_to_top">Sticky on Top</string>
+    <string name="send">Send</string>
 
-    <string name="chat_to_top">置顶聊天</string>
-    <string name="send">发送</string>
+    <string name="group_id">Group ID</string>
+    <string name="group_name">Group Name</string>
+    <string name="group_icon">Modify Group Photo</string>
+    <string name="group_notice">Group Notice</string>
+    <string name="group_members">Group Members</string>
+    <string name="group_type">Group Type</string>
+    <string name="add_group_member">Add Group Member</string>
+    <string name="remove_group_member">Remove Group Member</string>
+    <string name="join_group_type">Join Group Type</string>
+    <string name="in_group_nick_name">My Alias in Group</string>
+    <string name="dissolve">Dissmiss Group</string>
+    <string name="modify_group_name">Modify Group Name</string>
+    <string name="modify_group_notice">Modify Group Notice</string>
+    <string name="modify_nick_name_in_goup">Modify My Alias in Group</string>
+    <string name="create_group">Created Group</string>
 
-    <string name="group_id">群ID</string>
-    <string name="group_name">群聊名称</string>
-    <string name="group_icon">修改群头像</string>
-    <string name="group_notice">群公告</string>
-    <string name="group_members">群成员</string>
-    <string name="group_type">群类型</string>
-    <string name="add_group_member">添加成员</string>
-    <string name="remove_group_member">移除成员</string>
-    <string name="join_group_type">加群方式</string>
-    <string name="in_group_nick_name">我的群昵称</string>
-    <string name="dissolve">解散该群</string>
-    <string name="modify_group_name">修改群名称</string>
-    <string name="modify_group_notice">修改群公告</string>
-    <string name="modify_nick_name_in_goup">修改我的群昵称</string>
+    <string name="group_detail">Group Detail</string>
+    <string name="accept">Accept</string>
+    <string name="refuse">Refuse</string>
+    <string name="group_apply_members">Group Application</string>
+    <string name="accepted">Accepted</string>
+    <string name="refused">Refused</string>
+    <string name="group_apply_tips">%1$d Group Application</string>
+    <string name="group_apply_click_handle">Click Handle</string>
+    <string name="group_remove_member">Remove Group Chat</string>
+    <string name="group_join_type">Join Group Way</string>
+    <string name="modify_group_name_success">Successfully Modified Group Name</string>
+    <string name="modify_group_notice_success">Successfully Modified Group Notice</string>
+    <string name="exit_group">Exit Group</string>
+    <string name="modify_nickname_success">Successfully Modified Nickname</string>
+    <string name="view_original_image">View Original Photo</string>
 
-    <string name="group_detail">群聊详情</string>
-    <string name="accept">同意</string>
-    <string name="refuse">拒绝</string>
-    <string name="group_apply_members">群申请</string>
-    <string name="accepted">已同意</string>
-    <string name="refused">已拒绝</string>
-    <string name="group_apply_tips">%1$d 条入群申请</string>
-    <string name="group_apply_click_handle">点击处理</string>
-    <string name="group_remove_member">移出群聊</string>
-    <string name="group_join_type">加群方式</string>
-    <string name="modify_group_name_success">修改群名称成功</string>
-    <string name="modify_group_notice_success">修改群公告成功</string>
-    <string name="exit_group">退出群聊</string>
-    <string name="modify_nickname_success">修改昵称成功</string>
-    <string name="view_original_image">查看原图</string>
+    <string name="at_all">All</string>
+    <string name="ui_at_all">[@all]</string>
+    <string name="ui_at_me">[@me]</string>
+    <string name="ui_at_all_me">[@All][@me]</string>
+
+    <string name="date_yesterday">yesterday</string>
+    <string name="date_tommorow">tommorow</string>
+    <string name="date_year">year</string>
+    <string name="date_month">month</string>
+    <string name="date_day">day</string>
+    <string name="date_hour">hour</string>
+    <string name="date_minute">minute</string>
+    <string name="date_second">second</string>
+
+    <string name="date_year_short">y</string>
+    <string name="date_month_short">m</string>
+    <string name="date_day_short">d</string>
+    <string name="date_hour_short">h</string>
+    <string name="date_minute_short">m</string>
+    <string name="date_second_short">s</string>
 
     <!-- 联系人相关 -->
-    <string name="new_friend">新的联系人</string>
-    <string name="group">我的群聊</string>
-    <string name="blacklist">黑名单</string>
-    <string name="contact_count">%d位联系人</string>
-    <string name="contact_title">通讯录</string>
-    <string name="conversation_title">腾讯·云通信</string>
+    <string name="new_friend">New Friends</string>
+    <string name="group">Group Chats</string>
+    <string name="blacklist">Blacklist</string>
+    <string name="contact_count">%d Friends</string>
+    <string name="contact_title">Contacts</string>
+    <string name="conversation_title">Tencent·IM</string>
 
     <!-- 好友资料 -->
-    <string name="profile_detail">详细资料</string>
-    <string name="profile_id">帐号</string>
-    <string name="profile_add_wording">验证消息</string>
-    <string name="profile_remark">设置备注</string>
-    <string name="profile_black">加入黑名单</string>
-    <string name="profile_remark_edit">修改备注</string>
-    <string name="profile_chat">发送消息</string>
-    <string name="profile_del">删除好友</string>
+    <string name="profile_detail">Details</string>
+    <string name="profile_id">Account</string>
+    <string name="profile_add_wording">Verification Message</string>
+    <string name="profile_remark">Alias</string>
+    <string name="profile_black">Add Blacklist</string>
+    <string name="profile_remark_edit">Modify Alias</string>
+    <string name="profile_chat">Send Message</string>
+    <string name="profile_del">Delete Friend</string>
 
-    <string name="search_call_hint">输入群成员名称</string>
-    <string name="video_call">视频通话</string>
-    <string name="audio_call">语音通话</string>
+    <string name="search_call_hint">Group Member Name</string>
+    <string name="video_call">Video Call</string>
+    <string name="audio_call">Voice Call</string>
 
-    <string name="live_group_live">群直播</string>
-    <string name="live_group_live_streaming">正在直播</string>
-    <string name="live_group_live_end">结束直播</string>
-    <string name="live_group_user_live">%s的直播</string>
+    <string name="live_group_live">Live Group</string>
+    <string name="live_group_live_streaming">Live Streaming</string>
+    <string name="live_group_live_end">Live Over</string>
+    <string name="live_group_user_live">%s Live</string>
 </resources>

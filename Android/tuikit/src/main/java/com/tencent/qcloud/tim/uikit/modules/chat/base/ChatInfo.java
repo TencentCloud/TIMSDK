@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.base;
 
-import com.tencent.imsdk.TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 

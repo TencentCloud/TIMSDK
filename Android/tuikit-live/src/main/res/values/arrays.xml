@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="beauty_category">
+        <item>美颜</item>
+        <item>滤镜</item>
+        <item>动效</item>
+        <item>美妆</item>
+        <item>手势</item>
+        <item>抠背</item>
+        <item>绿幕</item>
+    </string-array>
+
+    <string-array name="beauty_style">
+        <item>美颜(光滑)</item>
+        <item>美颜(自然)</item>
+        <item>美颜(天天P图)</item>
+    </string-array>
+
+    <string-array name="beauty_type">
+        <item>美颜</item>
+        <item>美白</item>
+        <item>红润</item>
+        <item>大眼</item>
+        <item>瘦脸</item>
+        <item>V脸</item>
+        <item>下巴</item>
+        <item>短脸</item>
+        <item>瘦鼻</item>
+        <item>亮眼</item>
+        <item>白牙</item>
+        <item>祛眼袋</item>
+        <item>祛法令纹</item>
+        <item>祛皱</item>
+        <item>发际线</item>
+        <item>眼距</item>
+        <item>眼角</item>
+        <item>嘴形</item>
+        <item>鼻翼</item>
+        <item>鼻子位置</item>
+        <item>嘴唇厚度</item>
+        <item>脸型</item>
+    </string-array>
+
+    <string-array name="beauty_filter_type">
+        <item>无</item>
+        <item>标准</item>
+        <item>自然</item>
+        <item>白皙</item>
+        <item>樱红</item>
+        <item>云裳</item>
+        <item>纯真</item>
+        <item>白兰</item>
+        <item>元气</item>
+        <item>超脱</item>
+        <item>香氛</item>
+        <item>美白</item>
+        <item>浪漫</item>
+        <item>清新</item>
+        <item>唯美</item>
+        <item>粉嫩</item>
+        <item>怀旧</item>
+        <item>蓝调</item>
+        <item>清凉</item>
+        <item>日系</item>
+    </string-array>
+
+    <string-array name="beauty_motion_type">
+        <item>无</item>
+        <item>Boom</item>
+        <item>霓虹鼠</item>
+        <item>星耳</item>
+        <item>疯狂打call</item>
+        <item>Q星座</item>
+        <item>彩色丝带</item>
+        <item>刘海发带</item>
+        <item>变脸</item>
+        <item>紫色小猫</item>
+        <item>花仙子</item>
+        <item>小公举</item>
+    </string-array>
+
+    <string-array name="beauty_cutout_background">
+        <item>无动效</item>
+        <item>AI抠背</item>
+    </string-array>
+
+    <string-array name="beauty_green_screen">
+        <item>无</item>
+        <item>Good luck</item>
+    </string-array>
+
+    <string-array name="beauty_gesture_type">
+        <item>皮卡丘</item>
+        <item>流星雨</item>
+        <item>控雪</item>
+        <item>电视之星</item>
+        <item>瓶盖挑战</item>
+    </string-array>
+
+    <string-array name="beauty_makeup_type">
+        <item>原宿复古</item>
+        <item>樱桃</item>
+        <item>海洋</item>
+        <item>粉粉霞</item>
+        <item>寡姐妆</item>
+        <item>七夕唇印</item>
+        <item>古风妆</item>
+        <item>小丑女</item>
+        <item>混合妆</item>
+    </string-array>
+</resources>

@@ -49,6 +49,12 @@ public class LiveAnchorOfflineView extends RelativeLayout {
         GlideEngine.loadImage(mAudienceBackground, coverUrl, R.drawable.live_bg_cover);
     }
 
+    public void setCloseBtnVisibility(int visibility) {
+        if (mBtnClose != null) {
+            mBtnClose.setVisibility(visibility);
+        }
+    }
+
     public interface AnchorOfflineCallback {
         void onClose();
     }
