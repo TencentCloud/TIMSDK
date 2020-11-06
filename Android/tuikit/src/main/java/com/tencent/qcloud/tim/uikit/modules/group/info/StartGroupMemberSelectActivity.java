@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
 import com.tencent.qcloud.tim.uikit.modules.contact.ContactItemBean;
@@ -18,6 +19,7 @@ import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StartGroupMemberSelectActivity extends Activity {
@@ -96,6 +98,21 @@ public class StartGroupMemberSelectActivity extends Activity {
         mContactListView = findViewById(R.id.group_create_member_list);
         mContactListView.setGroupInfo(groupInfo);
         mContactListView.loadDataSource(ContactListView.DataSource.GROUP_MEMBER_LIST);
+        mContactListView.setOnItemClickListener(new ContactListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, ContactItemBean contact) {
+                if (position == 0) {
+                    mMembers.clear();
+
+                    Intent i = new Intent();
+                    i.putExtra(TUIKitConstants.Selection.USER_NAMECARD_SELECT, getString(R.string.at_all));
+                    i.putExtra(TUIKitConstants.Selection.USER_ID_SELECT, V2TIMGroupAtInfo.AT_ALL_TAG);
+                    setResult(3, i);
+
+                    finish();
+                }
+            }
+        });
         mContactListView.setOnSelectChangeListener(new ContactListView.OnSelectChangedListener() {
             @Override
             public void onSelectChanged(ContactItemBean contact, boolean selected) {

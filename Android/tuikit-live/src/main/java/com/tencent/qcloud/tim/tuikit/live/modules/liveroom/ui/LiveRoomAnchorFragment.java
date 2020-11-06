@@ -35,7 +35,10 @@ import com.tencent.qcloud.tim.tuikit.live.base.Constants;
 import com.tencent.qcloud.tim.tuikit.live.component.bottombar.BottomToolBarLayout;
 import com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView;
 import com.tencent.qcloud.tim.tuikit.live.component.common.SelectMemberView;
+import com.tencent.qcloud.tim.tuikit.live.component.countdown.CountDownTimerView;
+import com.tencent.qcloud.tim.tuikit.live.component.countdown.ICountDownTimerView;
 import com.tencent.qcloud.tim.tuikit.live.component.danmaku.DanmakuManager;
+import com.tencent.qcloud.tim.tuikit.live.component.floatwindow.FloatWindowLayout;
 import com.tencent.qcloud.tim.tuikit.live.component.gift.GiftAdapter;
 import com.tencent.qcloud.tim.tuikit.live.component.gift.imp.DefaultGiftAdapterImp;
 import com.tencent.qcloud.tim.tuikit.live.component.gift.imp.GiftAnimatorLayout;
@@ -110,6 +113,7 @@ public class LiveRoomAnchorFragment extends BaseFragment {
     private LinkMicListDialog     mLinkMicListDialog;
     private AlertDialog           mRoomPKRequestDialog;
     private ImageView             mImageRedDot;
+    private CountDownTimerView    mCountDownTimerView;  //倒计时view
 
     private TUILiveRoomAnchorLayoutDelegate mLiveRoomAnchorLayoutDelegate;
     private GiftAdapter                     mGiftAdapter;
@@ -131,6 +135,8 @@ public class LiveRoomAnchorFragment extends BaseFragment {
     private String  mRoomName;
     private boolean mIsEnterRoom;
     private int     mCurrentStatus      = TRTCLiveRoomDef.ROOM_STATUS_NONE;
+    private boolean mIsPkStatus;           //当前正在pk
+    private boolean mIsLinkMicStatus;      //当前正在连麦
 
     private TRTCLiveRoomDelegate mTRTCLiveRoomDelegate = new TRTCLiveRoomDelegate() {
         @Override
@@ -174,6 +180,10 @@ public class LiveRoomAnchorFragment extends BaseFragment {
                 }
                 mImagePkLayer.setVisibility(View.GONE);
                 mButtonInvitationPk.setEnabled(true);
+                mIsPkStatus = false;
+            } else if (oldStatus == TRTCLiveRoomDef.ROOM_STATUS_LINK_MIC
+                    && mCurrentStatus != TRTCLiveRoomDef.ROOM_STATUS_LINK_MIC) {
+                mIsLinkMicStatus = false;
             } else if (mCurrentStatus == TRTCLiveRoomDef.ROOM_STATUS_PK) {
                 // 本次状态是PK，需要将一个PK的view挪到右上角
                 mImagePkLayer.setVisibility(View.VISIBLE);
@@ -297,8 +307,13 @@ public class LiveRoomAnchorFragment extends BaseFragment {
                     .setPositiveButton(R.string.live_accept, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            if (mIsLinkMicStatus) {
+                                Toast.makeText(getContext(), R.string.live_link_mic_status, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             dialog.dismiss();
                             mLiveRoom.responseRoomPK(userInfo.userId, true, "");
+                            mIsPkStatus = true;
                         }
                     })
                     .setNegativeButton(R.string.live_refuse, new DialogInterface.OnClickListener() {
@@ -383,9 +398,14 @@ public class LiveRoomAnchorFragment extends BaseFragment {
         mLiveRoom = TRTCLiveRoom.sharedInstance(getContext());
         mLiveRoom.setDelegate(mTRTCLiveRoomDelegate);
         mDanmakuManager = new DanmakuManager(getContext());
-
         mOwnerUserId = V2TIMManager.getInstance().getLoginUser();
         updateAnchorInfo();
+
+        // 如果当前观众页悬浮窗，关闭并退房
+        if (FloatWindowLayout.getInstance().mWindowMode == Constants.WINDOW_MODE_FLOAT) {
+            FloatWindowLayout.getInstance().closeFloatWindow();
+            mLiveRoom.exitRoom(null);
+        }
     }
 
     @Override
@@ -396,7 +416,7 @@ public class LiveRoomAnchorFragment extends BaseFragment {
 
     private void preExitRoom() {
         if (mIsEnterRoom) {
-            showExitInfoDialog("当前正在直播，是否退出直播？", false);
+            showExitInfoDialog(getContext().getString(R.string.live_warning_anchor_exit_room), false);
         } else {
             finishRoom();
         }
@@ -408,7 +428,6 @@ public class LiveRoomAnchorFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.live_fragment_live_room_anchor, container, false);
         initView(view);
         initData();
-        PermissionUtils.checkLivePermission(getActivity());
         return view;
     }
 
@@ -497,6 +516,10 @@ public class LiveRoomAnchorFragment extends BaseFragment {
         mLinkMicListDialog.setOnSelectedCallback(new LinkMicListDialog.onSelectedCallback() {
             @Override
             public void onItemAgree(LinkMicListDialog.MemberEntity memberEntity) {
+                if (mIsPkStatus) {
+                    Toast.makeText(getContext(), R.string.live_pk_status, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (mAnchorUserIdList != null && mAnchorUserIdList.size() >= MAX_LINK_MIC_SIZE) {
                     Toast.makeText(getContext(), R.string.live_warning_link_user_max_limit, Toast.LENGTH_SHORT).show();
                     return;
@@ -505,6 +528,7 @@ public class LiveRoomAnchorFragment extends BaseFragment {
                 mLinkMicListDialog.removeMemberEntity(memberEntity.userId);
                 mLinkMicListDialog.dismiss();
                 judgeRedDotShow();
+                mIsLinkMicStatus = true;
             }
 
             @Override
@@ -540,28 +564,11 @@ public class LiveRoomAnchorFragment extends BaseFragment {
 
             @Override
             public void onStartLive(final String roomName, final int audioQualityType) {
-                // 开始创建房间
-                TRTCLiveRoomDef.TRTCCreateRoomParam roomParam = new TRTCLiveRoomDef.TRTCCreateRoomParam();
-                roomParam.roomName = roomName;
-                roomParam.coverUrl = mAnchorInfo.avatarUrl;
-                mLiveRoom.createRoom(mRoomId, roomParam, new TRTCLiveRoomCallback.ActionCallback() {
+                requestPermissions(PermissionUtils.getLivePermissions(), new OnPermissionGrandCallback() {
                     @Override
-                    public void onCallback(int code, String msg) {
-                        Toast.makeText(getContext(), R.string.live_create_room_success, Toast.LENGTH_SHORT).show();
-                        if (code == 0) {
-                            mIsEnterRoom = true;
-                            onCreateRoomSuccess(audioQualityType);
-                            if (mLiveRoomAnchorLayoutDelegate != null) {
-                                mRoomInfo.roomName = roomName;
-                                mRoomInfo.roomId = mRoomId;
-                                mRoomInfo.ownerId = mOwnerUserId;
-                                mRoomInfo.ownerName = TUIKitLive.getLoginUserInfo().getNickName();
-                                mLiveRoomAnchorLayoutDelegate.onRoomCreate(mRoomInfo);
-                            }
-                        } else {
-                            Toast.makeText(getContext(), R.string.live_create_room_fail, Toast.LENGTH_SHORT).show();
-                            showErrorAndQuit(code, msg);
-                        }
+                    public void onAllPermissionsGrand() {
+                        startPreview();
+                        startLiveCountDown(roomName, audioQualityType);
                     }
                 });
             }
@@ -586,7 +593,51 @@ public class LiveRoomAnchorFragment extends BaseFragment {
                 }
             }
         });
-        startPreview();
+        requestPermissions(PermissionUtils.getLivePermissions(), new OnPermissionGrandCallback() {
+            @Override
+            public void onAllPermissionsGrand() {
+                startPreview();
+            }
+        });
+        mCountDownTimerView = view.findViewById(R.id.countdown_timer_view);
+    }
+
+    private void startLiveCountDown(final String roomName, final int audioQualityType) {
+        mLayoutPreview.setVisibility(View.GONE);
+        mCountDownTimerView.countDownAnimation(CountDownTimerView.DEFAULT_COUNTDOWN_NUMBER);
+        mCountDownTimerView.setOnCountDownListener(new ICountDownTimerView.ICountDownListener() {
+            @Override
+            public void onCountDownComplete() {
+                startLive(roomName, audioQualityType);
+            }
+        });
+    }
+
+    private void startLive(final String roomName, final int audioQualityType) {
+        // 开始创建房间
+        TRTCLiveRoomDef.TRTCCreateRoomParam roomParam = new TRTCLiveRoomDef.TRTCCreateRoomParam();
+        roomParam.roomName = roomName;
+        roomParam.coverUrl = mAnchorInfo.avatarUrl;
+        mLiveRoom.createRoom(mRoomId, roomParam, new TRTCLiveRoomCallback.ActionCallback() {
+            @Override
+            public void onCallback(int code, String msg) {
+                Toast.makeText(getContext(), R.string.live_create_room_success, Toast.LENGTH_SHORT).show();
+                if (code == 0) {
+                    mIsEnterRoom = true;
+                    onCreateRoomSuccess(audioQualityType);
+                    if (mLiveRoomAnchorLayoutDelegate != null) {
+                        mRoomInfo.roomName = roomName;
+                        mRoomInfo.roomId = mRoomId;
+                        mRoomInfo.ownerId = mOwnerUserId;
+                        mRoomInfo.ownerName = TUIKitLive.getLoginUserInfo().getNickName();
+                        mLiveRoomAnchorLayoutDelegate.onRoomCreate(mRoomInfo);
+                    }
+                } else {
+                    Toast.makeText(getContext(), R.string.live_create_room_fail, Toast.LENGTH_SHORT).show();
+                    showErrorAndQuit(code, msg);
+                }
+            }
+        });
     }
 
     private void initData() {
@@ -650,7 +701,12 @@ public class LiveRoomAnchorFragment extends BaseFragment {
         mButtonInvitationPk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPKView();
+                requestPermissions(PermissionUtils.getLivePermissions(), new OnPermissionGrandCallback() {
+                    @Override
+                    public void onAllPermissionsGrand() {
+                        showPKView();
+                    }
+                });
             }
         });
         mButtonInvitationPk.setVisibility(Config.getPKButtonStatus() ? View.VISIBLE : View.GONE);
@@ -863,10 +919,8 @@ public class LiveRoomAnchorFragment extends BaseFragment {
 
     private void onCreateRoomSuccess(int audioQualityType) {
         // 创建房间成功
-        mLayoutPreview.setVisibility(View.GONE);
         mGroupAfterLive.setVisibility(View.VISIBLE);
         mGroupButtomView.setVisibility(View.VISIBLE);
-
         updateTopToolBar();
         mLiveRoom.setAudioQuality(audioQualityType);
         // 创建房间成功，开始推流

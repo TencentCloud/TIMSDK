@@ -3,7 +3,6 @@ package com.tencent.qcloud.tim.uikit.modules.chat.base;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
@@ -273,7 +272,7 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         if (getCurrentChatInfo().getType() == V2TIMConversation.V2TIM_GROUP) {
             groupID = getCurrentChatInfo().getId();
             isGroup = true;
-            entity.chatType = TIMConversationType.Group.value();
+            entity.chatType = V2TIMConversation.V2TIM_GROUP;
             entity.sender = groupID;
         } else {
             userID = getCurrentChatInfo().getId();

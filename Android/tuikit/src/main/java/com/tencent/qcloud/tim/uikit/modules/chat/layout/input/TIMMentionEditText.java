@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 public class TIMMentionEditText extends EditText {
     public static final String TIM_METION_TAG = "@";
-    public static final Pattern TIM_MENTION_PATTERN = Pattern.compile("@[\\u4e00-\\u9fa5\\w\\-]+\\s");//@[^\s]+\s
+    public static final Pattern TIM_MENTION_PATTERN = Pattern.compile("@[^\\s]+\\s");
 
     private Map<String, Pattern> mPatternMap = new HashMap<>();
     private int mTIMMentionTextColor;

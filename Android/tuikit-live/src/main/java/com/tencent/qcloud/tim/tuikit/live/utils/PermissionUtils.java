@@ -262,6 +262,17 @@ public class PermissionUtils {
         return true;
     }
 
+    public static String[] getLivePermissions() {
+        String[] permissions = {
+                Manifest.permission.INTERNET,
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        };
+        return permissions;
+    }
+
     public interface PermissionRequestSuccessCallBack {
         /**
          * 用户已授予权限

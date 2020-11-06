@@ -1,0 +1,223 @@
+<resources>
+    <string name="app_name">tuikit-live</string>
+    <string name="live_default_audience_weight">999</string>
+    <string name="live_default_audience_num">999</string>
+    <string name="live_default_anchor_name">阿管</string>
+    <string name="live_default_anchor_empirical_value">2.0万</string>
+    <string name="live_btn_follow_anchor">关注</string>
+    <string name="live_experience">经验</string>
+
+
+    <string name="live_end_tips">直播结束啦!</string>
+    <string name="live_time_tips">直播时长</string>
+    <string name="live_members_tips">观看人数</string>
+    <string name="live_admires_tips">获赞数量</string>
+    <string name="live_btn_return">返回</string>
+    <string name="live_tips">"提示"</string>
+    <string name="live_ok">"确定"</string>
+    <string name="live_cancel">"取消"</string>
+
+    <string name="live_text_voice_quality">"直播音质"</string>
+    <string name="live_hint_live_room_name">"标题有趣能吸引人气"</string>
+    <string name="live_voice_quality_standard">"标准"</string>
+    <string name="live_voice_quality_music">"音乐"</string>
+    <string name="live_btn_start_live">开始直播</string>
+    <string name="live_btn_beauty">美颜</string>
+    <string name="live_room_name_empty">房间名不能为空</string>
+    <string name="live_warning_anchor_exit_room">当前正在直播，是否退出直播？</string>
+    <string name="live_error">错误</string>
+    <string name="live_get_it">知道了</string>
+    <string name="live_send">"发送"</string>
+    <string name="live_dialog_input_text_hint">和大家说点什么吧</string>
+    <string name="live_warning_not_empty">"输入不能为空!"</string>
+    <string name="live_gift_game_currency">游戏币%d</string>
+    <string name="live_gift_charge">充值</string>
+    <string name="live_gift_give_gift">赠送</string>
+    <string name="live_gift_send">送出%s</string>
+    <string name="live_voice_room_create_input_hint">请输入主题和昵称</string>
+
+    <string name="live_message_me">"我"</string>
+    <string name="live_notification">"通知"</string>
+    <string name="live_user_join_live">"%1$s加入直播"</string>
+    <string name="live_user_quit_live">"%1$s退出直播"</string>
+    <string name="live_user_click_like">"%1$s点了个赞"</string>
+    <string name="live_message_send_success">"发送成功"</string>
+    <string name="live_message_send_fail">"消息发生失败[%1$d]:%2$s"</string>
+
+    <string name="live_accept">"接受"</string>
+    <string name="live_refuse">"拒绝"</string>
+
+
+    <string name="live_request_link_mic_anchor">"%1$s请求和您连麦"</string>
+    <string name="live_anchor_accept_link_mic">"主播接受了您的连麦请求，开始连麦"</string>
+    <string name="live_error_request_link_mic">"连麦请求发生错误，%1$s"</string>
+
+    <string name="live_request_link_mic">"%1$s向您发起连麦请求"</string>
+    <string name="live_anchor_refuse_link_request">"主播拒绝了您的连麦请求"</string>
+    <string name="live_warning_link_user_max_limit">"主播端连麦人数超过最大限制"</string>
+
+    <string name="live_request_pk">"%1$s向您发起PK请求"</string>
+    <string name="live_anchor_refuse_pk_request">"主播拒绝了您的PK请求"</string>
+    <string name="live_anchor_handling_other_link">"请稍后，主播正在处理其它人的连麦请求"</string>
+    <string name="live_anchor_handling_other_pk">"请稍后，主播正在处理其它人的PK请求"</string>
+    <string name="live_tips_quit_pk">"onQuitRoomPK"</string>
+    <string name="live_anchor_accept_pk">主播接受PK邀请</string>
+    <string name="live_anchor_reject_pk">主播拒绝邀请</string>
+    <string name="live_wait_link">连麦列表</string>
+    <string name="live_stop_pk">结束PK</string>
+    <string name="live_tips_rest">操作太频繁了，休息一下吧</string>
+    <string name="live_fail_link_mic">连麦失败, %s</string>
+    <string name="live_warning_room_disband">房间已解散</string>
+    <string name="live_wait_anchor_accept">等待主播接受......</string>
+    <string name="live_follow_anchor_success">"关注主播成功"</string>
+
+    <string name="live_anchor_offline">"主播暂时不在线..."</string>
+    <string name="live_beauty_mopi">磨皮</string>
+    <string name="live_create_room_success">创建房间成功</string>
+    <string name="live_create_room_fail">创建房间失败</string>
+    <string name="live_agree">同意</string>
+    <string name="live_reject">拒绝</string>
+    <string name="live_audience_link_mic">申请上麦列表</string>
+    <string name="live_request_time_out">请求超时</string>
+    <string name="live_anchor_accept_pk_timeout">主播超时未响应PK请求</string>
+    <string name="live_anchor_accept">主播同意上麦</string>
+    <string name="live_anchor_reject">主播拒绝上麦</string>
+
+    <string name="report_success">举报成功，我们将在24小时内进行处理</string>
+    <string name="report">举报</string>
+    <string name="live_anchor_view_error">当前连麦人数超过了最大值</string>
+
+
+    <string name="beauty_confirm">确定</string>
+    <string name="beauty_cancel">取消</string>
+    <string name="beauty_close">关闭</string>
+    <string name="beauty_strength">强度</string>
+    <string name="beauty_setup">设置</string>
+    <string name="beauty_common_none">无</string>
+    <string name="beauty_palm_out">伸出手掌</string>
+
+    <string name="beauty_setting_panel_style">风格</string>
+    <string name="beauty_setting_panel_beauty">美颜</string>
+    <string name="beauty_setting_panel_filter">滤镜</string>
+    <string name="beauty_setting_panel_dynamic_effect">动效</string>
+    <string name="beauty_setting_panel_key">抠背</string>
+    <string name="beauty_setting_panel_green_screen">绿幕</string>
+    <string name="beauty_setting_panel_facebeauty">美妆</string>
+    <string name="beauty_setting_panel_gesture">手势</string>
+
+    <string name="beauty_panel_style_smooth">美颜(光滑)</string>
+    <string name="beauty_panel_style_natural">美颜(自然)</string>
+    <string name="beauty_panel_style_pitu">美颜(天天P图)</string>
+
+    <string name="beauty_panel_beauty">美颜</string>
+    <string name="beauty_panel_white">美白</string>
+    <string name="beauty_panel_ruddy">红润</string>
+    <string name="beauty_panel_bigeye">大眼</string>
+    <string name="beauty_panel_faceslim">瘦脸</string>
+    <string name="beauty_panel_facev">V脸</string>
+    <string name="beauty_panel_chin">下巴</string>
+    <string name="beauty_panel_faceshort">短脸</string>
+    <string name="beauty_panel_noseslim">瘦鼻</string>
+    <string name="beauty_panel_eyelighten">亮眼</string>
+    <string name="beauty_panel_toothwhite">白牙</string>
+    <string name="beauty_panel_pounchremove">祛眼袋</string>
+    <string name="beauty_panel_smilelinesremove">祛法令纹</string>
+    <string name="beauty_panel_wrinkleremove">祛皱</string>
+    <string name="beauty_panel_forehead">发际线</string>
+    <string name="beauty_panel_eyedistance">眼距</string>
+    <string name="beauty_panel_eyeangle">眼角</string>
+    <string name="beauty_panel_mouthshape">嘴形</string>
+    <string name="beauty_panel_nosewing">鼻翼</string>
+    <string name="beauty_panel_noseposition">鼻子位置</string>
+    <string name="beauty_panel_mousewidth">嘴唇厚度</string>
+    <string name="beauty_panel_faceshape">脸型</string>
+
+    <string name="beauty_panel_filter_standard">标准</string>
+    <string name="beauty_panel_filter_ziran">自然</string>
+    <string name="beauty_panel_filter_baixi">白皙</string>
+    <string name="beauty_panel_filter_cheery">樱红</string>
+    <string name="beauty_panel_filter_cloud">云裳</string>
+    <string name="beauty_panel_filter_pure">纯真</string>
+    <string name="beauty_panel_filter_orchid">白兰</string>
+    <string name="beauty_panel_filter_vitality">元气</string>
+    <string name="beauty_panel_filter_super">超脱</string>
+    <string name="beauty_panel_filter_fragrance">香氛</string>
+    <string name="beauty_panel_filter_white">美白</string>
+    <string name="beauty_panel_filter_romantic">浪漫</string>
+    <string name="beauty_panel_filter_fresh">清新</string>
+    <string name="beauty_panel_filter_beautiful">唯美</string>
+    <string name="beauty_panel_filter_pink">粉嫩</string>
+    <string name="beauty_panel_filter_reminiscence">怀旧</string>
+    <string name="beauty_panel_filter_blues">蓝调</string>
+    <string name="beauty_panel_filter_cool">清凉</string>
+    <string name="beauty_panel_filter_Japanese">日系</string>
+
+    <string name="beauty_effect_boom">Boom</string>
+    <string name="beauty_effect_neon_rat">霓虹鼠</string>
+    <string name="beauty_effect_call">疯狂打call</string>
+    <string name="beauty_effect_constellation">Q星座</string>
+    <string name="beauty_effect_ribbon">彩色丝带</string>
+    <string name="beauty_effect_headband">刘海发带</string>
+    <string name="beauty_effect_purple_kitten">紫色小猫</string>
+    <string name="beauty_effect_flower_faerie">花仙子</string>
+    <string name="beauty_effect_princess">小公举</string>
+    <string name="beauty_effect_star_ear">星耳</string>
+    <string name="beauty_effect_face_change">变脸</string>
+
+    <string name="beauty_cutout_background_ai">AI抠背</string>
+
+    <string name="beauty_good_luck">Good luck</string>
+
+    <string name="beauty_gesture_pikaqiu">皮卡丘</string>
+    <string name="beauty_gesture_meteor_shower">流星雨</string>
+    <string name="beauty_gesture_snow_control">控雪</string>
+    <string name="beauty_gesture_tv_star">电视之星</string>
+    <string name="beauty_gesture_bottle_cap_challenge">瓶盖挑战</string>
+
+    <string name="beauty_makeups_cherry">樱桃</string>
+    <string name="beauty_makeups_seas">海洋</string>
+    <string name="beauty_makeups_pink">粉粉霞</string>
+    <string name="beauty_makeups_widow">寡姐妆</string>
+    <string name="beauty_makeups_lip">七夕唇印</string>
+    <string name="beauty_makeups_costume">古风妆</string>
+    <string name="beauty_makeups_ugly">小丑女</string>
+    <string name="beauty_makeups_mixing">混合妆</string>
+    <string name="beauty_makeups_retro">原宿复古</string>
+
+    <string name="beauty_panel_uniforms">校服</string>
+
+    <string name="beauty_video_material_download_progress_material_unzip_failed">素材解压失败</string>
+    <string name="beauty_video_material_download_progress_download_failed">下载失败</string>
+    <string name="beauty_video_material_download_progress_no_enough_storage_space">存储空间不足</string>
+
+    <string name="audio_effect_setting_bgm_title">背景音乐</string>
+    <string name="audio_effect_setting_panel_close">关闭</string>
+    <string name="audio_effect_setting_panel_select_song">选择歌曲</string>
+    <string name="audio_effect_setting_panel_music_volume">音乐音量</string>
+    <string name="audio_effect_setting_panel_mic_volume">人声音量</string>
+    <string name="audio_effect_setting_panel_music_pitch">音乐升降调</string>
+    <string name="audio_effect_setting_panel_changer">变声</string>
+    <string name="audio_effect_setting_panel_reverb">混响效果</string>
+
+    <string name="audio_effect_setting_changetype_original">原声</string>
+    <string name="audio_effect_setting_changetype_child">熊孩子</string>
+    <string name="audio_effect_setting_changetype_luoli">萝莉</string>
+    <string name="audio_effect_setting_changetype_dashu">大叔</string>
+    <string name="audio_effect_setting_changetype_metal">重金属</string>
+    <string name="audio_effect_setting_changetype_sick">感冒</string>
+    <string name="audio_effect_setting_changetype_foreign">外国人</string>
+    <string name="audio_effect_setting_changetype_kunsou">困兽</string>
+    <string name="audio_effect_setting_changetype_feizai">死肥仔</string>
+    <string name="audio_effect_setting_changetype_dianliu">强电流</string>
+    <string name="audio_effect_setting_changetype_machine">重机械</string>
+    <string name="audio_effect_setting_changetype_kongling">空灵</string>
+
+    <string name="audio_effect_setting_reverbtype_origin">无效果</string>
+    <string name="audio_effect_setting_reverbtype_ktv">KTV</string>
+    <string name="audio_effect_setting_reverbtype_room">小房间</string>
+    <string name="audio_effect_setting_reverbtype_meeting">大会堂</string>
+    <string name="audio_effect_setting_reverbtype_lowdeep">低沉</string>
+    <string name="audio_effect_setting_reverbtype_hongliang">洪亮</string>
+    <string name="audio_effect_setting_reverbtype_heavymetal">金属声</string>
+    <string name="audio_effect_setting_reverbtype_cixing">磁性</string>
+</resources>

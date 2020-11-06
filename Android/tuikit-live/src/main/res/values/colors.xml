@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
+    <color name="white">#FFFFFF</color>
+    <color name="white_alpha">#66FFFFFF</color>
+    <color name="black">#000000</color>
+    
+    <color name="beauty_color_red">#FF584C</color>
+    <color name="beauty_color_white">#FFFFFF</color>
     <!-- 基础色值 -->
     <color name="live_black20">#33000000</color> <!--不透明度20%黑-->
     <color name="live_white">#ffffff</color> <!--不透明度20%黑-->

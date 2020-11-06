@@ -134,6 +134,8 @@ public class ContactListView extends LinearLayout {
                 loadFriendListDataAsync();
                 break;
             case DataSource.GROUP_MEMBER_LIST:
+                mData.add((ContactItemBean) new ContactItemBean(getResources().getString(R.string.at_all))
+                        .setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
                 loadGroupMembers();
                 break;
             default:
@@ -334,7 +336,7 @@ public class ContactListView extends LinearLayout {
                     }
                     members.add(v2TIMGroupMemberInfoResult.getMemberInfoList().get(i));
                 }
-                mData.clear();
+
                 for (V2TIMGroupMemberFullInfo info : members) {
                     ContactItemBean bean = new ContactItemBean();
                     mData.add(bean.covertTIMGroupMemberFullInfo(info));

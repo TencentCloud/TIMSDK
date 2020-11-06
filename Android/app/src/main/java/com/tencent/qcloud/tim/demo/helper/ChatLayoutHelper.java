@@ -14,13 +14,13 @@ import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.liteav.login.ProfileManager;
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.scenes.LiveRoomAnchorActivity;
 import com.tencent.qcloud.tim.demo.scenes.LiveRoomAudienceActivity;
 import com.tencent.qcloud.tim.demo.scenes.net.RoomManager;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
-import com.tencent.qcloud.tim.uikit.TUIKitImpl;
 import com.tencent.qcloud.tim.uikit.modules.chat.ChatLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.input.InputLayout;
@@ -287,11 +287,11 @@ public class ChatLayoutHelper {
     }
 
     private static void createRoom(String groupId) {
-        LiveRoomAnchorActivity.start(TUIKitImpl.getAppContext(), groupId);
+        LiveRoomAnchorActivity.start(DemoApplication.instance(), groupId);
     }
 
     private static void enterRoom(LiveMessageInfo info) {
-        Intent intent = new Intent(TUIKitImpl.getAppContext(), LiveRoomAudienceActivity.class);
+        Intent intent = new Intent(DemoApplication.instance(), LiveRoomAudienceActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(RoomManager.ROOM_TITLE, info.roomName);
         intent.putExtra(RoomManager.GROUP_ID, info.roomId);
@@ -300,6 +300,6 @@ public class ChatLayoutHelper {
         intent.putExtra(RoomManager.PUSHER_NAME, info.anchorName);
         intent.putExtra(RoomManager.COVER_PIC, info.roomCover);
         intent.putExtra(RoomManager.PUSHER_AVATAR, info.roomCover);
-        TUIKitImpl.getAppContext().startActivity(intent);
+        DemoApplication.instance().startActivity(intent);
     }
 }

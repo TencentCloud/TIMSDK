@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_video_manager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/live_voice_room_bg_main_gradient">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.tencent.rtmp.ui.TXCloudVideoView
+        android:id="@+id/video_view_anchor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cl_video_manager"
+        app:layout_constraintEnd_toEndOf="@+id/cl_video_manager"
+        app:layout_constraintStart_toStartOf="@+id/cl_video_manager"
+        app:layout_constraintTop_toTopOf="@+id/cl_video_manager" />
+
+    <RelativeLayout
+        android:id="@+id/rl_pk_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/gl_horizontal"
+        app:layout_constraintLeft_toLeftOf="@id/gl_vertical"
+        app:layout_constraintRight_toRightOf="@+id/cl_video_manager"
+        app:layout_constraintTop_toTopOf="@id/cl_video_manager">
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_pk_layer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/live_icon_pk_layer"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/gl_horizontal"
+        app:layout_constraintLeft_toLeftOf="@+id/cl_video_manager"
+        app:layout_constraintRight_toRightOf="@+id/cl_video_manager" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_link_mic_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cl_video_manager"
+        app:layout_constraintRight_toRightOf="@+id/cl_video_manager"
+        app:layout_constraintTop_toTopOf="@+id/cl_video_manager"
+        app:layout_constraintWidth_percent="0.333">
+
+        <com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget.LiveVideoView
+            android:id="@+id/video_link_mic_audience_1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cl_link_mic_container"
+            app:layout_constraintDimensionRatio="2:3"
+            app:layout_constraintLeft_toLeftOf="@+id/cl_link_mic_container"
+            app:layout_constraintRight_toRightOf="@+id/cl_link_mic_container" />
+
+        <com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget.LiveVideoView
+            android:id="@+id/video_link_mic_audience_2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@id/video_link_mic_audience_1"
+            app:layout_constraintDimensionRatio="2:3"
+            app:layout_constraintLeft_toLeftOf="@+id/cl_link_mic_container"
+            app:layout_constraintRight_toRightOf="@+id/cl_link_mic_container" />
+
+        <com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget.LiveVideoView
+            android:id="@+id/video_link_mic_audience_3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@id/video_link_mic_audience_2"
+            app:layout_constraintDimensionRatio="2:3"
+            app:layout_constraintLeft_toLeftOf="@+id/cl_link_mic_container"
+            app:layout_constraintRight_toRightOf="@+id/cl_link_mic_container" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget.LiveAnchorOfflineView
+        android:id="@+id/layout_anchor_offline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

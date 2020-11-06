@@ -5,12 +5,12 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import com.tencent.qcloud.tim.uikit.TUIKit;
+import androidx.core.app.ActivityCompat;
+
+import com.tencent.qcloud.tim.demo.DemoApplication;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.core.app.ActivityCompat;
 
 public class Utils {
 
@@ -22,19 +22,19 @@ public class Utils {
     public static boolean checkPermission(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             List<String> permissions = new ArrayList<>();
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(DemoApplication.instance(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.CAMERA)) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(DemoApplication.instance(), Manifest.permission.CAMERA)) {
                 permissions.add(Manifest.permission.CAMERA);
             }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.RECORD_AUDIO)) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(DemoApplication.instance(), Manifest.permission.RECORD_AUDIO)) {
                 permissions.add(Manifest.permission.RECORD_AUDIO);
             }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.READ_PHONE_STATE)) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(DemoApplication.instance(), Manifest.permission.READ_PHONE_STATE)) {
                 permissions.add(Manifest.permission.READ_PHONE_STATE);
             }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(TUIKit.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(DemoApplication.instance(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
             }
             if (permissions.size() != 0) {

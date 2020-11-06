@@ -8,6 +8,7 @@ import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatProvider;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageListAdapter;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,10 +92,12 @@ public class ChatProvider implements IChatProvider {
             }
             list.add(info);
         }
+        if (list.size() == 0) {
+            return false;
+        }
         boolean flag = mDataSource.addAll(list);
-        updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_BACK, list.size());
+        updateAdapter(MessageLayout.DATA_CHANGE_TYPE_REFRESH, 0);
         return flag;
-
     }
 
     public boolean addMessageInfo(MessageInfo msg) {

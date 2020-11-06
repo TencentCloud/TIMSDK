@@ -82,7 +82,7 @@ public class LoginForDevActivity extends Activity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
         }
-        return true;
+        return super.onKeyDown(keyCode, event);
     }
 
     /**

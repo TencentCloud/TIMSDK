@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.tencent.qcloud.tim.tuikit.live.R;
+import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
 import com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView;
 import com.tencent.qcloud.tim.tuikit.live.component.topbar.adapter.SpacesDecoration;
 import com.tencent.qcloud.tim.tuikit.live.component.topbar.adapter.TopAudienceListAdapter;
@@ -141,9 +142,9 @@ public class TopToolBarLayout extends LinearLayout {
         mTextAnchorName.setText(!TextUtils.isEmpty(anchorInfo.userName) ? anchorInfo.userName : anchorInfo.userId);
 //        mTextAnchorEmpiricalValue.setText(String.valueOf(anchorInfo.empiricalValue));
         if (!TextUtils.isEmpty(anchorInfo.avatarUrl)) {
-            Glide.with(mContext).load(anchorInfo.avatarUrl).into(mImageAnchorIcon);
+            Glide.with(TUIKitLive.getAppContext()).load(anchorInfo.avatarUrl).into(mImageAnchorIcon);
         } else {
-            Glide.with(mContext).load(R.drawable.live_default_head_img).into(mImageAnchorIcon);
+            Glide.with(TUIKitLive.getAppContext()).load(R.drawable.live_default_head_img).into(mImageAnchorIcon);
         }
     }
 

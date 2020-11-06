@@ -3,6 +3,8 @@ package com.tencent.qcloud.tim.uikit.component;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +32,7 @@ public class CustomLinearLayoutManager extends LinearLayoutManager {
             //try catch一下
             super.onLayoutChildren(recycler, state);
         } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
+            TUIKitLog.w("CustomLinearLayoutManager", e.getLocalizedMessage());
         }
 
     }

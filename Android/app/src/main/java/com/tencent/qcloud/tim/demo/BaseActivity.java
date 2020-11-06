@@ -4,12 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.View;
-import android.view.WindowManager;
 
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.login.UserInfo;
@@ -18,7 +17,6 @@ import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -37,13 +35,6 @@ public class BaseActivity extends AppCompatActivity {
             ToastUtil.toastLongMessage("您的帐号已在其它终端登录");
             logout(DemoApplication.instance());
         }
-
-        @Override
-        public void onUserSigExpired() {
-            ToastUtil.toastLongMessage("账号已过期，请重新登录");
-            logout(DemoApplication.instance());
-        }
-
     };
 
     public static void logout(Context context) {

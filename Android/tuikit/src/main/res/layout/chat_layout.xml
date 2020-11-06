@@ -45,7 +45,7 @@
         android:id="@+id/chat_at_text_view"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:text="有人@我"
+        android:text="@string/ui_at_me"
         android:visibility="gone"
         android:layout_above="@+id/chat_input_layout"
         android:textColor="@color/read_dot_bg"

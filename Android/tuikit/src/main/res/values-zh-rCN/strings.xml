@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="pic">图片</string>
+    <string name="photo">拍照</string>
+    <string name="video">摄像</string>
+    <string name="file">文件</string>
+
+    <string name="cancel">取消</string>
+    <string name="sure">确定</string>
+
+    <string name="un_download">未下载</string>
+    <string name="downloaded">已下载</string>
+    <string name="downloading">下载中...</string>
+    <string name="sending">发送中...</string>
+    <string name="sended">已发送</string>
+    <string name="has_read">已读</string>
+    <string name="unread">未读</string>
+    <string name="typing">正在输入...</string>
+
+    <string name="chat_to_top">置顶聊天</string>
+    <string name="send">发送</string>
+
+    <string name="group_id">群ID</string>
+    <string name="group_name">群聊名称</string>
+    <string name="group_icon">修改群头像</string>
+    <string name="group_notice">群公告</string>
+    <string name="group_members">群成员</string>
+    <string name="group_type">群类型</string>
+    <string name="add_group_member">添加成员</string>
+    <string name="remove_group_member">移除成员</string>
+    <string name="join_group_type">加群方式</string>
+    <string name="in_group_nick_name">我的群昵称</string>
+    <string name="dissolve">解散该群</string>
+    <string name="modify_group_name">修改群名称</string>
+    <string name="modify_group_notice">修改群公告</string>
+    <string name="modify_nick_name_in_goup">修改我的群昵称</string>
+    <string name="create_group">创建群组</string>
+
+    <string name="group_detail">群聊详情</string>
+    <string name="accept">同意</string>
+    <string name="refuse">拒绝</string>
+    <string name="group_apply_members">群申请</string>
+    <string name="accepted">已同意</string>
+    <string name="refused">已拒绝</string>
+    <string name="group_apply_tips">%1$d 条入群申请</string>
+    <string name="group_apply_click_handle">点击处理</string>
+    <string name="group_remove_member">移出群聊</string>
+    <string name="group_join_type">加群方式</string>
+    <string name="modify_group_name_success">修改群名称成功</string>
+    <string name="modify_group_notice_success">修改群公告成功</string>
+    <string name="exit_group">退出群聊</string>
+    <string name="modify_nickname_success">修改昵称成功</string>
+    <string name="view_original_image">查看原图</string>
+
+    <string name="at_all">所有人</string>
+    <string name="ui_at_all">[@所有人]</string>
+    <string name="ui_at_me">[有人@我]]</string>
+    <string name="ui_at_all_me">[@所有人][有人@我]</string>
+
+    <string name="date_yesterday">昨天</string>
+    <string name="date_tommorow">明天</string>
+    <string name="date_year">年</string>
+    <string name="date_month">月</string>
+    <string name="date_day">天</string>
+    <string name="date_hour">时</string>
+    <string name="date_minute">分</string>
+    <string name="date_second">秒</string>
+
+    <string name="date_year_short">年</string>
+    <string name="date_month_short">月</string>
+    <string name="date_day_short">天</string>
+    <string name="date_hour_short">时</string>
+    <string name="date_minute_short">分</string>
+    <string name="date_second_short">秒</string>
+
+    <!-- 联系人相关 -->
+    <string name="new_friend">新的联系人</string>
+    <string name="group">我的群聊</string>
+    <string name="blacklist">黑名单</string>
+    <string name="contact_count">%d位联系人</string>
+    <string name="contact_title">通讯录</string>
+    <string name="conversation_title">腾讯·云通信</string>
+
+    <!-- 好友资料 -->
+    <string name="profile_detail">详细资料</string>
+    <string name="profile_id">帐号</string>
+    <string name="profile_add_wording">验证消息</string>
+    <string name="profile_remark">设置备注</string>
+    <string name="profile_black">加入黑名单</string>
+    <string name="profile_remark_edit">修改备注</string>
+    <string name="profile_chat">发送消息</string>
+    <string name="profile_del">删除好友</string>
+
+    <string name="search_call_hint">输入群成员名称</string>
+    <string name="video_call">视频通话</string>
+    <string name="audio_call">语音通话</string>
+
+    <string name="live_group_live">群直播</string>
+    <string name="live_group_live_streaming">正在直播</string>
+    <string name="live_group_live_end">结束直播</string>
+    <string name="live_group_user_live">%s的直播</string>
+</resources>
