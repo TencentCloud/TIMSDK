@@ -88,9 +88,7 @@ dependencies {
     implementation 'com.tencent.bugly:crashreport:latest.release'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
 
-    api 'com.tencent.liteav:LiteAVSDK_Enterprise:1.0.1'
-
-//    api 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
+    api 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
 implementation 'com.tencent.imsdk:tuikit-live:5.1.1'
 implementation 'com.tencent.imsdk:tuikit:5.1.1'
 // implementation project(':tuikit')
