@@ -305,6 +305,15 @@ end
 
 更多集成方式请参考 <a href="https://cloud.tencent.com/document/product/269/32673">集成 SDK</a>
 
+## 标准版 5.1.2 @2020.11.11
+
+### SDK
+
+** iOS/Mac平台**
+
+- iOS 支持 iphone 和 ipad 同时在线
+- Mac 支持 arm64 架构
+
 ## 标准版 5.1.1 @2020.11.05
 
 ### SDK
