@@ -55,7 +55,7 @@
 
     <string name="at_all">所有人</string>
     <string name="ui_at_all">[@所有人]</string>
-    <string name="ui_at_me">[有人@我]]</string>
+    <string name="ui_at_me">[有人@我]</string>
     <string name="ui_at_all_me">[@所有人][有人@我]</string>
 
     <string name="date_yesterday">昨天</string>
