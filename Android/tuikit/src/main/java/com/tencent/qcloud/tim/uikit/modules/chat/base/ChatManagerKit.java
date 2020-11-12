@@ -40,12 +40,11 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
 
     protected void init() {
         destroyChat();
-        V2TIMManager.getMessageManager().addAdvancedMsgListener(this);
-        MessageRevokedManager.getInstance().addHandler(this);
     }
 
     public void destroyChat() {
         mCurrentProvider = null;
+        V2TIMManager.getMessageManager().removeAdvancedMsgListener(this);
     }
 
     public abstract ChatInfo getCurrentChatInfo();
@@ -57,6 +56,8 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         mCurrentProvider = new ChatProvider();
         mIsMore = true;
         mIsLoading = false;
+        V2TIMManager.getMessageManager().addAdvancedMsgListener(this);
+        MessageRevokedManager.getInstance().addHandler(this);
     }
 
     public void onReadReport(List<V2TIMMessageReceipt> receiptList) {
