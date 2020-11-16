@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -91,6 +89,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/page_margin"
                 app:name="@string/chat_to_top"
+                app:isSwitch="true"/>
+
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/do_not_disturb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/page_margin"
+                app:name="消息免打扰"
                 app:isSwitch="true"/>
 
             <Button

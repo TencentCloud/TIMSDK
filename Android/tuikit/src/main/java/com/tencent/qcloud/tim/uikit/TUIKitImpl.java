@@ -11,6 +11,9 @@ import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
+import com.tencent.imsdk.v2.V2TIMConversationManagerImpl;
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
 import com.tencent.imsdk.v2.V2TIMGroupListener;
 import com.tencent.imsdk.v2.V2TIMGroupMemberChangeInfo;
@@ -20,6 +23,8 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
+import com.tencent.imsdk.v2.V2TIMSimpleMsgListener;
+import com.tencent.imsdk.v2.V2TIMUserInfo;
 import com.tencent.liteav.AVCallManager;
 import com.tencent.liteav.login.ProfileManager;
 import com.tencent.liteav.login.UserModel;
@@ -36,6 +41,7 @@ import com.tencent.qcloud.tim.uikit.modules.message.MessageRevokedManager;
 import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
+import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -360,12 +366,12 @@ public class TUIKitImpl {
         });
 
         //添加好友成功后有相关回调，可以自行实现通知
-        /*V2TIMManager.getFriendshipManager().setFriendListener(new V2TIMFriendshipListener() {
+        V2TIMManager.getFriendshipManager().setFriendListener(new V2TIMFriendshipListener() {
             @Override
             public void onFriendListAdded(List<V2TIMFriendInfo> users) {
                 C2CChatManagerKit.getInstance().notifyNewFriend(users);
             }
-        });*/
+        });
 
         V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
             @Override
@@ -383,6 +389,32 @@ public class TUIKitImpl {
             @Override
             public void onRecvMessageRevoked(String msgID) {
                 super.onRecvMessageRevoked(msgID);
+            }
+        });
+
+        V2TIMManager.getInstance().addSimpleMsgListener(new V2TIMSimpleMsgListener() {
+            @Override
+            public void onRecvC2CTextMessage(String msgID, V2TIMUserInfo sender, String text) {
+                super.onRecvC2CTextMessage(msgID, sender, text);
+                TUIKitLog.i(TAG, "onRecvC2CTextMessage:" );
+            }
+
+            @Override
+            public void onRecvC2CCustomMessage(String msgID, V2TIMUserInfo sender, byte[] customData) {
+                super.onRecvC2CCustomMessage(msgID, sender, customData);
+                TUIKitLog.i(TAG, "onRecvC2CCustomMessage:" );
+            }
+
+            @Override
+            public void onRecvGroupTextMessage(String msgID, String groupID, V2TIMGroupMemberInfo sender, String text) {
+                super.onRecvGroupTextMessage(msgID, groupID, sender, text);
+                TUIKitLog.i(TAG, "onRecvGroupTextMessage:" );
+            }
+
+            @Override
+            public void onRecvGroupCustomMessage(String msgID, String groupID, V2TIMGroupMemberInfo sender, byte[] customData) {
+                super.onRecvGroupCustomMessage(msgID, groupID, sender, customData);
+                TUIKitLog.i(TAG, "onRecvGroupCustomMessage:" );
             }
         });
 

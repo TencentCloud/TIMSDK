@@ -35,6 +35,7 @@
     <string name="start_conversation">发起会话</string>
     <string name="create_group_chat">创建群聊</string>
     <string name="create_chat_room">创建聊天室</string>
+    <string name="create_av_cha_room">创建AVChatRoom</string>
     <string name="create_private_group">创建讨论组</string>
     <string name="hint_add_user_id">请输入ID</string>
     <string name="hint_add_wording">请输入验证消息</string>

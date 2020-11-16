@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
@@ -48,12 +49,21 @@ public class LoginForDevActivity extends Activity {
         mUserAccount.setText(UserInfo.getInstance().getUserId());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         Utils.checkPermission(this);
+
         mLoginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+//                String userId = "d15818615228";
+//                String userSig = "eJxlkE1Pg0AURff8CsIWY*aDB9TEBRoiraKAY1A3hDKDGVsHMh0bofG-q9REEt-2nNx78w6WbdsOu7k-rZume1emMkMvHPvMdpBz8gf7XvKqNhXV-B8UH73UoqpbI-QEMQAQhOaO5EIZ2cpfg2MIcehjICScWTu*qaaqY4z3nUEAaDBX5MsE0-jhcplssl5cs5GxDCjbG1JkZTO6a1UoN3vaehfjnmmc48dVF8k46u4W8VqbPFvlaXClONyS9DUpw8gskqHAQfrsLZvtULptfj6rNPLt*BHsIxr4gOl8817onezUJBCEAROKfs6xPq0vYeRdHw__";
+
+//                String userId = "d13812987870";
+//                String userSig = "eJxlkEFPg0AYRO-8CsIVI7sLK4s3gpSgWIoYW0*EsFv40kDpsmjV*N9tqYkkzvW9zCTzpem6bjwn*XVZVfuxU4X66IWh3*oGMq7*YN8DL0pV2JL-g*LYgxRFuVVCThBTSglCcwe46BRs4dfg2GaYeMxl7twa*K6Ypi41zqmDUGq7cwXqCT6Gr0GcBe1D5NPjMq7uDvB57zyloROwPvfxOjejjZlHm126CqQqrSxu-FW6MOXoibqpK8U7C6-HxdBm5UsyHN5hmciWgs0aK-T82aSC9vIIvkEOIgwhNqNvQg6w7yaBIEwxsdE5hvat-QA6VV0q";
+
                 UserInfo.getInstance().setUserId(mUserAccount.getText().toString());
                 // 获取userSig函数
-                String userSig = GenerateTestUserSig.genTestUserSig(mUserAccount.getText().toString());
+                final String userSig = GenerateTestUserSig.genTestUserSig(mUserAccount.getText().toString());
+
                 TUIKit.login(mUserAccount.getText().toString(), userSig, new IUIKitCallBack() {
                     @Override
                     public void onError(String module, final int code, final String desc) {
@@ -68,6 +78,7 @@ public class LoginForDevActivity extends Activity {
                     @Override
                     public void onSuccess(Object data) {
                         UserInfo.getInstance().setAutoLogin(true);
+//                        UserInfo.getInstance().setUserSig(userSig);
                         Intent intent = new Intent(LoginForDevActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

@@ -4,5 +4,6 @@
         <item>Private</item>
         <item>Public</item>
         <item>ChatRoom</item>
+        <item>AVChatRoom</item>
     </string-array>
 </resources>

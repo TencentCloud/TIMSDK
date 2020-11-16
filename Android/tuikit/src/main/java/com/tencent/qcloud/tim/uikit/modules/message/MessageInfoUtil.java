@@ -316,11 +316,13 @@ public class MessageInfoUtil {
         msgInfo.setId(timMessage.getMsgID());
         msgInfo.setPeerRead(timMessage.isPeerRead());
         msgInfo.setFromUser(sender);
+
         if (isGroup) {
             if (!TextUtils.isEmpty(timMessage.getNameCard())) {
                 msgInfo.setGroupNameCard(timMessage.getNameCard());
             }
         }
+
         msgInfo.setMsgTime(timMessage.getTimestamp());
         msgInfo.setSelf(sender.equals(V2TIMManager.getInstance().getLoginUser()));
 

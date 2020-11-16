@@ -48,6 +48,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     private LineControllerView mNickView;
     private LineControllerView mJoinTypeView;
     private LineControllerView mTopSwitchView;
+    private LineControllerView mDoNotDisturb;
     private Button mDissolveBtn;
 
     private GroupInfo mGroupInfo;
@@ -122,11 +123,45 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 mPresenter.setTopConversation(isChecked);
             }
         });
+        // 免打扰
+        mDoNotDisturb = findViewById(R.id.do_not_disturb);
+        mDoNotDisturb.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                doNotDisturbMethid();
+            }
+        });
         // 退群
         mDissolveBtn = findViewById(R.id.group_dissolve_button);
         mDissolveBtn.setOnClickListener(this);
 
         mPresenter = new GroupInfoPresenter(this);
+    }
+
+    private int doNotDisturbType;
+
+    //免打扰实现
+    private void doNotDisturbMethid(){
+        //免打扰类型值
+        // V2TIM_GROUP_RECEIVE_MESSAGE,
+        // V2TIM_GROUP_NOT_RECEIVE_MESSAGE,
+        // V2TIM_GROUP_RECEIVE_NOT_NOTIFY_MESSAGE
+        if (doNotDisturbType == V2TIMGroupInfo.V2TIM_GROUP_NOT_RECEIVE_MESSAGE){
+            doNotDisturbType = V2TIMGroupInfo.V2TIM_GROUP_RECEIVE_MESSAGE;
+        }else {
+            doNotDisturbType = V2TIMGroupInfo.V2TIM_GROUP_NOT_RECEIVE_MESSAGE;
+        }
+        V2TIMManager.getGroupManager().setReceiveMessageOpt(mGroupInfo.getId(), doNotDisturbType, new V2TIMCallback() {
+            @Override
+            public void onError(int code, String desc) {
+                ToastUtil.toastLongMessage("修改免打扰失败, code = " + code + ", info = " + desc);
+            }
+
+            @Override
+            public void onSuccess() {
+                ToastUtil.toastLongMessage("修改免打扰成功");
+            }
+        });
     }
 
     @Override
@@ -285,6 +320,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mJoinTypeView.setContent(mJoinTypes.get(info.getJoinType()));
         mNickView.setContent(mPresenter.getNickName());
         mTopSwitchView.setChecked(mGroupInfo.isTopChat());
+        mDoNotDisturb.setChecked(mGroupInfo.isDoNotDisturb());
 
         mDissolveBtn.setText(R.string.dissolve);
         if (mGroupInfo.isOwner()) {

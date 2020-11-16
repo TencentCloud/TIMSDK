@@ -120,6 +120,10 @@ public class StartGroupChatActivity extends BaseActivity {
                 mTitleBar.setTitle(getResources().getString(R.string.create_chat_room), TitleBarLayout.POSITION.MIDDLE);
                 mJoinType.setVisibility(View.VISIBLE);
                 break;
+            case TUIKitConstants.GroupType.AV_CHAT_ROOM:
+                mTitleBar.setTitle(getResources().getString(R.string.create_av_cha_room), TitleBarLayout.POSITION.MIDDLE);
+                mJoinType.setVisibility(View.VISIBLE);
+                break;
             case TUIKitConstants.GroupType.PRIVATE:
             default:
                 mTitleBar.setTitle(getResources().getString(R.string.create_private_group), TitleBarLayout.POSITION.MIDDLE);

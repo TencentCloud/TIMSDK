@@ -3,13 +3,17 @@ package com.tencent.qcloud.tim.uikit.modules.chat.base;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMMessageManager;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
@@ -96,7 +100,6 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
                 return;
             }
         }
-
         onReceiveMessage(msg);
     }
 
@@ -205,6 +208,7 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         }
         List<V2TIMMessage> msgs = new ArrayList<>();
         msgs.add(mCurrentProvider.getDataSource().get(position).getTimMessage());
+//        V2TIMMessage message = mCurrentProvider.getDataSource().get(position).getTimMessage();
         V2TIMManager.getMessageManager().deleteMessages(msgs, new V2TIMCallback(){
 
             @Override
@@ -281,9 +285,12 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         }
 
         V2TIMOfflinePushInfo v2TIMOfflinePushInfo = new V2TIMOfflinePushInfo();
+        v2TIMOfflinePushInfo.setTitle(message.getFromUser());
+        v2TIMOfflinePushInfo.setDesc("推送内容");
         v2TIMOfflinePushInfo.setExt(new Gson().toJson(containerBean).getBytes());
         // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
         v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
+
 
         V2TIMMessage v2TIMMessage = message.getTimMessage();
         String msgID = V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, isGroup ? null : userID, isGroup ? groupID : null,
@@ -310,6 +317,7 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
                     @Override
                     public void onSuccess(V2TIMMessage v2TIMMessage) {
                         TUIKitLog.v(TAG, "sendMessage onSuccess:" + v2TIMMessage.getMsgID());
+                        V2TIMImageElem imageEle = v2TIMMessage.getImageElem();
                         if (!safetyCall()) {
                             TUIKitLog.w(TAG, "sendMessage unSafetyCall");
                             return;
@@ -447,7 +455,6 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
                 }
             });
         }
-
 
         if (v2TIMMessages.size() < MSG_PAGE_COUNT) {
             mIsMore = false;

@@ -45,7 +45,6 @@ public class HUAWEIHmsMessageService extends HmsMessageService {
         DemoLog.i(TAG, "onMessageDelivered msgId=" + msgId);
     }
 
-
     public static void updateBadge(final Context context, final int number) {
         if (!BrandUtil.isBrandHuawei()) {
             return;

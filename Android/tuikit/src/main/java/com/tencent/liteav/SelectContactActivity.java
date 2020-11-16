@@ -185,6 +185,12 @@ public class SelectContactActivity extends AppCompatActivity {
                     ToastUtil.toastShortMessage("请先选择通话用户");
                     return;
                 }
+
+                UserModel newModel = new UserModel();
+                newModel.userId = "aaa";
+                newModel.userName = "测试aaa";
+                mSelectedModelList.add(newModel);
+
                 if (mCallType == ITRTCAVCall.TYPE_AUDIO_CALL) {
                     TRTCAudioCallActivity.startCallSomePeople(SelectContactActivity.this, mSelectedModelList, mGroupId);
                 } else {

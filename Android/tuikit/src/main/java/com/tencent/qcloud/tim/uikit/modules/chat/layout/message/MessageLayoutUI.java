@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.AttributeSet;
 
+import com.tencent.qcloud.tim.uikit.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tim.uikit.component.action.PopMenuAction;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IMessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IMessageProperties;

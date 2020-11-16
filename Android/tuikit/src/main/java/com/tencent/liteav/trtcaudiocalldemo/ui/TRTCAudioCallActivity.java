@@ -119,6 +119,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 
         @Override
         public void onGroupCallInviteeListUpdate(List<String> userIdList) {
+
         }
 
         @Override

@@ -18,6 +18,7 @@ public class GroupInfo extends ChatInfo {
     private List<GroupMemberInfo> memberDetails;
     private int joinType;
     private String owner;
+    private boolean isDoNotDisturb;
 
     public GroupInfo() {
         setType(V2TIMConversation.V2TIM_GROUP);
@@ -150,6 +151,14 @@ public class GroupInfo extends ChatInfo {
      */
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public boolean isDoNotDisturb() {
+        return isDoNotDisturb;
+    }
+
+    public void setDoNotDisturb(boolean doNotDisturb) {
+        isDoNotDisturb = doNotDisturb;
     }
 
     /**

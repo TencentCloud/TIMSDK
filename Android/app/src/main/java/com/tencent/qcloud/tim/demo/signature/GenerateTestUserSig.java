@@ -41,8 +41,21 @@ public class GenerateTestUserSig {
      * 进入腾讯云云通信[控制台](https://console.cloud.tencent.com/avc ) 创建应用，即可看到 SDKAppId，
      * 它是腾讯云用于区分客户的唯一标识。
      */
-    public static final int SDKAPPID = 0;
+//    //王老师提供的测试账号
+//    public static final int SDKAPPID = 1400187352;
 
+//    //官网测试账号
+//    public static final int SDKAPPID = 1400182283;
+//    //单端登录
+//    public static final int SDKAPPID = 1400380241;
+//    //三端登录
+//    public static final int SDKAPPID = 1400369624;
+//    //多端登录
+//    public static final int SDKAPPID = 1400369620;
+    //离线推送
+    public static final int SDKAPPID = 1400419590;
+//    //客户测试
+//    public static final int SDKAPPID = 1400419590;
 
     /**
      * 签名过期时间，建议不要设置的过短
@@ -51,7 +64,6 @@ public class GenerateTestUserSig {
      * 默认时间：7 x 24 x 60 x 60 = 604800 = 7 天
      */
     private static final int EXPIRETIME = 604800;
-
 
     /**
      * 计算签名用的加密密钥，获取步骤如下：
@@ -63,7 +75,19 @@ public class GenerateTestUserSig {
      * 注意：该方案仅适用于调试Demo，正式上线前请将 UserSig 计算代码和密钥迁移到您的后台服务器上，以避免加密密钥泄露导致的流量盗用。
      * 文档：https://cloud.tencent.com/document/product/269/32688#Server
      */
-    private static final String SECRETKEY = "";
+//    //王老师提供的测试账号
+//    private static final String SECRETKEY = "f442d0cca069bbcc8ced55f4f113b965999b928c78e3cd83495728133a06f4cb";
+
+//    //官网测试账号
+//    private static final String SECRETKEY = "0fc5d36764a052a94be9b34952670edc2756fdd19bfdbb2eff641c57a1073ff7";
+//    //单端登录
+//    private static final String SECRETKEY = "e8f8de1459b2a0eb5eeac130cb4395f5ff9f0e8646c794ac30051d98fcdfbf67";
+//    //三端登录
+//    private static final String SECRETKEY = "703ccef1c01f81f79d146c2a30d3eb7547cdde2d0508d9409186aaf5c5636e64";
+//    //多端登录
+//    private static final String SECRETKEY = "ae0895239df8358ca124d586959b56e08b35723cbfc4a56f81457449a5b8ea19";
+    //离线推送
+    private static final String SECRETKEY = "ddd0e200a35349f6362b37fe8ff2fe2ef90a44d7c3cdd1dcdfa89bdd7a0d3edd";
 
     /**
      * 计算 UserSig 签名

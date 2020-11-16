@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tim.demo.contact;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.text.TextUtils;
@@ -10,14 +11,20 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMFriendApplication;
 import com.tencent.imsdk.v2.V2TIMFriendOperationResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.component.CircleImageView;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
@@ -32,6 +39,7 @@ public class NewFriendListAdapter extends ArrayAdapter<V2TIMFriendApplication> {
 
     private static final String TAG = NewFriendListAdapter.class.getSimpleName();
 
+    private Context context;
     private int mResourceId;
     private View mView;
     private ViewHolder mViewHolder;
@@ -47,6 +55,7 @@ public class NewFriendListAdapter extends ArrayAdapter<V2TIMFriendApplication> {
      */
     public NewFriendListAdapter(Context context, int resource, List<V2TIMFriendApplication> objects) {
         super(context, resource, objects);
+        this.context = context;
         mResourceId = resource;
     }
 
@@ -66,6 +75,38 @@ public class NewFriendListAdapter extends ArrayAdapter<V2TIMFriendApplication> {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(TUIKitConstants.ProfileType.CONTENT, data);
                     DemoApplication.instance().startActivity(intent);
+                }
+            });
+            mView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setIcon(R.drawable.ic_launcher);
+                    builder.setTitle("弹出警告框");
+                    builder.setMessage("确定删除吗？");
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            V2TIMManager.getFriendshipManager().deleteFriendApplication(data, new V2TIMCallback() {
+                                @Override
+                                public void onError(int i, String s) {
+                                    Toast.makeText(context,"删除失败", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onSuccess() {
+                                    Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
+                                    remove(data);
+                                    notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    });
+                    //    设置一个NegativeButton
+                    builder.setNegativeButton("取消", null);
+                    //    显示出该对话框
+                    builder.show();
+                    return false;
                 }
             });
             mViewHolder = new ViewHolder();

@@ -90,8 +90,15 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
                 mUnreadTotal = 0;
                 for (V2TIMConversation v2TIMConversation : v2TIMConversationList) {
                     //将 imsdk v2TIMConversation 转换为 UIKit ConversationInfo
+                    Log.e("TAG","showName"+v2TIMConversation.getShowName());
                     ConversationInfo conversationInfo = TIMConversation2ConversationInfo(v2TIMConversation);
-                    if (conversationInfo != null && !V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(v2TIMConversation.getGroupType())) {
+//                    if (conversationInfo != null && !V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(v2TIMConversation.getGroupType())) {
+//                        mUnreadTotal = mUnreadTotal + conversationInfo.getUnRead();
+//                        conversationInfo.setType(ConversationInfo.TYPE_COMMON);
+//                        infos.add(conversationInfo);
+//                    }
+
+                    if (conversationInfo != null) {
                         mUnreadTotal = mUnreadTotal + conversationInfo.getUnRead();
                         conversationInfo.setType(ConversationInfo.TYPE_COMMON);
                         infos.add(conversationInfo);

@@ -12,6 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
+import com.tencent.imsdk.TIMConversation;
+import com.tencent.imsdk.ext.message.TIMConversationExt;
+import com.tencent.imsdk.manager.BaseManager;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;

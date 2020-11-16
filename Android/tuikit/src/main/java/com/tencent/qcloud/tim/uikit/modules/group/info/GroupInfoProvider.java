@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.uikit.modules.group.info;
 import android.text.TextUtils;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.imsdk.v2.V2TIMGroupApplicationResult;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
@@ -54,14 +55,22 @@ public class GroupInfoProvider {
         loadGroupPublicInfo(groupId, new IUIKitCallBack() {
             @Override
             public void onSuccess(Object data) {
+                V2TIMGroupInfoResult result = (V2TIMGroupInfoResult) data;
+                V2TIMGroupInfo groupInfo = result.getGroupInfo();
 
                 // 设置群的一般信息，比如名称、类型等
-                mGroupInfo.covertTIMGroupDetailInfo((V2TIMGroupInfoResult) data);
+                mGroupInfo.covertTIMGroupDetailInfo(result);
 
                 // 设置是否为置顶聊天
                 boolean isTop = ConversationManagerKit.getInstance().isTopConversation(groupId);
                 mGroupInfo.setTopChat(isTop);
 
+                //消息免打扰
+                if (groupInfo.getGroupAddOpt() == V2TIMGroupInfo.V2TIM_GROUP_NOT_RECEIVE_MESSAGE){
+                    mGroupInfo.setDoNotDisturb(true);
+                }else {
+                    mGroupInfo.setDoNotDisturb(false);
+                }
                 // 异步获取群成员
                 loadGroupMembers(0, callBack);
             }

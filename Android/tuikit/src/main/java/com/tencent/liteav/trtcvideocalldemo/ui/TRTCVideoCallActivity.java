@@ -306,6 +306,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         starter.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(starter);
     }
+
     /**
      * 主动拨打给某些用户
      *

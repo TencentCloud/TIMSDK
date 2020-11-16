@@ -169,7 +169,13 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     @Override
     public int compareTo(@NonNull ConversationInfo other) {
-        return this.lastMessageTime > other.lastMessageTime ? -1 : 1;
+        if (this.lastMessageTime > other.lastMessageTime){
+            return -1;
+        }else if (this.lastMessageTime == other.lastMessageTime){
+            return 0;
+        }else {
+            return 1;
+        }
     }
 
     @Override

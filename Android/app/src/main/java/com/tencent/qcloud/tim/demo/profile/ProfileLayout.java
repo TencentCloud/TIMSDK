@@ -166,6 +166,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
             int index = bytes[bytes.length - 1] % 10;
             String avatarName = "avatar" + index + "_100";
             mIconUrl = "https://imgcache.qq.com/qcloud/public/static/" + avatarName + ".20191230.png";
+//            mIconUrl = "http://static3.kuaiyin123.cn/img/8b2cf8df39ff84add7ceaf041d35e30e.png?x-oss-process=image/resize,m_fixed,h_128,w_128";
             GlideEngine.loadImage(mUserIcon, Uri.parse(mIconUrl));
             updateProfile();
         } else if (v.getId() == R.id.modify_nick_name) {

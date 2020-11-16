@@ -84,6 +84,12 @@ public class Menu {
                     intent.putExtra(TUIKitConstants.GroupType.TYPE, TUIKitConstants.GroupType.CHAT_ROOM);
                     mActivity.startActivity(intent);
                 }
+                if (TextUtils.equals(action.getActionName(), mActivity.getResources().getString(R.string.create_av_cha_room))) {
+                    Intent intent = new Intent(DemoApplication.instance(), StartGroupChatActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(TUIKitConstants.GroupType.TYPE, TUIKitConstants.GroupType.AV_CHAT_ROOM);
+                    mActivity.startActivity(intent);
+                }
                 mMenuWindow.dismiss();
             }
         };
@@ -134,6 +140,12 @@ public class Menu {
 
         action = new PopMenuAction();
         action.setActionName(mActivity.getResources().getString(R.string.create_chat_room));
+        action.setIconResId(R.drawable.group_icon);
+        action.setActionClickListener(popActionClickListener);
+        menuActions.add(action);
+
+        action = new PopMenuAction();
+        action.setActionName(mActivity.getResources().getString(R.string.create_av_cha_room));
         action.setIconResId(R.drawable.group_icon);
         action.setActionClickListener(popActionClickListener);
         menuActions.add(action);

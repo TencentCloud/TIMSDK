@@ -22,7 +22,6 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
 
     public MessageBaseHolder(View itemView) {
         super(itemView);
-
         rootView = itemView;
     }
 

@@ -78,12 +78,18 @@ public class GroupChatManagerKit extends ChatManagerKit {
         v2TIMGroupInfo.setGroupName(chatInfo.getGroupName());
         v2TIMGroupInfo.setGroupAddOpt(chatInfo.getJoinType());
 
-        List<V2TIMCreateGroupMemberInfo> v2TIMCreateGroupMemberInfoList = new ArrayList<>();
-        for (int i = 0; i < chatInfo.getMemberDetails().size(); i++) {
-            GroupMemberInfo groupMemberInfo = chatInfo.getMemberDetails().get(i);
-            V2TIMCreateGroupMemberInfo v2TIMCreateGroupMemberInfo = new V2TIMCreateGroupMemberInfo();
-            v2TIMCreateGroupMemberInfo.setUserID(groupMemberInfo.getAccount());
-            v2TIMCreateGroupMemberInfoList.add(v2TIMCreateGroupMemberInfo);
+        List<V2TIMCreateGroupMemberInfo> v2TIMCreateGroupMemberInfoList = null;
+
+        if (chatInfo.getGroupType().equals("AVChatRoom")){
+            v2TIMGroupInfo.setGroupID("call123456");
+        }else {
+            v2TIMCreateGroupMemberInfoList = new ArrayList<>();
+            for (int i = 0; i < chatInfo.getMemberDetails().size(); i++) {
+                GroupMemberInfo groupMemberInfo = chatInfo.getMemberDetails().get(i);
+                V2TIMCreateGroupMemberInfo v2TIMCreateGroupMemberInfo = new V2TIMCreateGroupMemberInfo();
+                v2TIMCreateGroupMemberInfo.setUserID(groupMemberInfo.getAccount());
+                v2TIMCreateGroupMemberInfoList.add(v2TIMCreateGroupMemberInfo);
+            }
         }
 
         V2TIMManager.getGroupManager().createGroup(v2TIMGroupInfo, v2TIMCreateGroupMemberInfoList, new V2TIMValueCallback<String>() {

@@ -132,7 +132,15 @@ public class GroupInfoAdapter extends BaseAdapter {
                 } else {
                     shootMemberCount = members.size() > NORMAL_CHATROOM_MAX_LIMIT ? NORMAL_CHATROOM_MAX_LIMIT : members.size();
                 }
+            } else if (TextUtils.equals(info.getGroupType(), TUIKitConstants.GroupType.TYPE_AV_CHAT_ROOM)) {
+                if (info.isOwner()) {
+                    shootMemberCount = members.size() > OWNER_CHATROOM_MAX_LIMIT ? OWNER_CHATROOM_MAX_LIMIT : members.size();
+                } else {
+                    shootMemberCount = members.size() > NORMAL_CHATROOM_MAX_LIMIT ? NORMAL_CHATROOM_MAX_LIMIT : members.size();
+                }
             }
+
+
             for (int i = 0; i < shootMemberCount; i++) {
                 mGroupMembers.add(members.get(i));
             }
