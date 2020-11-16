@@ -5,10 +5,7 @@
 }
 .update-profile-wrapper .input.data-v-290a70ef {
   padding: 24rpx;
-  border-bottom: 2rpx solid #f1f1f1;
-}
-.update-profile-wrapper .input-focus.data-v-290a70ef {
-  border-bottom: 2rpx solid #006fff;
+  border-bottom: 2rpx solid #c4c4c4;
 }
 .update-profile-wrapper ._button.data-v-290a70ef {
   margin-top: 48rpx;

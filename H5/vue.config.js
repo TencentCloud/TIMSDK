@@ -11,8 +11,19 @@ module.exports = {
     config.resolve.alias
       .set('@', resolve('src'))
       .set('tim', resolve('src/tim.js'))
+    // 删除预加载
+    config.plugins.delete('preload')
+    config.plugins.delete('prefetch')
+    // 压缩代码
+    config.optimization.minimize(true)
+    // 分割代码
+    config.optimization.splitChunks({
+        chunks: 'all'
+    })
   },
   css: {
+    extract: true,
+    sourceMap: false,
     loaderOptions: {
       stylus: {
         'resolve url': true,

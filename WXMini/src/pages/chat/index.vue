@@ -82,11 +82,11 @@
                 </template>
               </template>
               <template v-else>
-                {{message.nameCard || message.nick || message.from}}
+                {{message.nameCard || message.nick || myInfo.nick || message.from}}
               </template>
             </div>
             <div class="wrapper" @longpress="handleMessage(message)">
-              <div class="name read-receipts" v-if="currentConversation.type === 'C2C' && message.from === myInfo.userID">
+              <div class="name read-receipts" v-if="currentConversation.type === 'C2C' && message.from === myInfo.userID && message.status === 'success'">
                 <template v-if="message.isPeerRead">已读</template>
                 <template v-else>未读</template>
               </div>
@@ -140,7 +140,7 @@
               </div>
               <div class="message" v-else-if="message.type === 'TIMFaceElem'">
                 <div class="custom-elem">
-                  <image :src="message.payload.data.indexOf('@') > 0 ? faceUrl + message.payload.data + '.png' : faceUrl + message.payload.data + '@2x.png'" style="height:90px; width:90px"/>
+                  <image :src="faceUrl + message.payload.data + '.png'" style="height:90px; width:90px"/>
                 </div>
               </div>
               <div class="message" v-else-if="message.type === 'TIMVideoFileElem'">
@@ -159,9 +159,9 @@
         </div>
       </li>
     </div>
-<!--    输入框及选择框部分-->
+<!--  输入框及选择框部分 -->
     <div class="bottom" :style="{ paddingBottom: isIphoneX ? safeBottom + 'px': '' }">
-      <div class="bottom-div" :style="{marginBottom: isFocus ? '10px' : 0}">
+      <div class="bottom-div">
         <div class="btn-left" @click="chooseRecord">
           <icon :src="!isRecord ? '../../../static/images/audio.png' : '../../../static/images/record.png'" :size="28"/>
         </div>
@@ -170,6 +170,7 @@
                  class="input"
                  v-model.lazy:value="messageContent"
                  confirm-type="send"
+                 cursor-spacing="10"
                  :focus="isFocus"
                  @focus="isFocus = true"
                  @blur="isFocus = false"
@@ -204,19 +205,11 @@
             <div class="single" @click="handleEmojiShow" :class="emojiShow ? 'choosed' : ''">
               <image src="/static/images/smile.png" style="width:100%;height:100%"></image>
             </div>
-            <div class="single" @click="handleBigEmojiShow" :class="bigEmojiShow ? 'choosed' : ''">
-              <image :src="faceUrl + 'tt16@2x.png'" style="width:100%;height:100%"></image>
-            </div>
           </div>
         </div>
         <div class="emojis" v-if="emojiShow">
           <div v-for="(emojiItem, index3) in emojiName" class="emoji" :key="emojiItem" @click="chooseEmoji(emojiItem)">
             <image :src="emojiUrl + emojiMap[emojiItem]" style="width:100%;height:100%"/>
-          </div>
-        </div>
-        <div class="emojis" v-if="bigEmojiShow">
-          <div v-for="(bigItem, index4) in bigEmoji" class="bigemoji" :key="bigItem" @click="chooseBigEmoji(bigItem)">
-            <image :src="faceUrl + bigItem + '@2x.png'" style="width:100%;height:100%"/>
           </div>
         </div>
       </div>
@@ -333,8 +326,6 @@ export default {
       isShow: false,
       faceUrl: 'https://webim-1252463788.file.myqcloud.com/assets/face-elem/',
       emojiShow: true,
-      bigEmojiShow: false,
-      bigEmoji: ['tt01', 'tt02', 'tt03', 'tt04', 'tt05', 'tt06', 'tt07', 'tt08', 'tt09', 'tt10', 'tt11', 'tt12', 'tt13', 'tt14', 'tt15', 'tt16'],
       revokeModal: false,
       revokeMessage: {},
       currentTime: 0,
@@ -429,8 +420,15 @@ export default {
   computed: {
     ...mapState({
       currentMessageList: state => {
-        console.log(state.conversation.currentMessageList)
-        return state.conversation.currentMessageList
+        let list = state.conversation.currentMessageList
+        // 对list中的表情包消息进行预处理，template中无法执行js语法
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].type === 'TIMFaceElem') {
+            let data = list[i].payload.data
+            list[i].payload.data = data.indexOf('@2x') > 0 ? data : `${data}@2x`
+          }
+        }
+        return list
       },
       currentConversation: state => state.conversation.currentConversation,
       myInfo: state => state.user.myInfo,
@@ -442,18 +440,75 @@ export default {
     onChange (e) {
       this.rate = e.mp.detail.index
     },
+    // 提示前往设置页
+    toSettingPage (options) {
+      wx.showModal({
+        title: '授权提示',
+        content: options.content,
+        success: (tipRes) => {
+          if (tipRes.confirm) {
+            wx.openSetting({
+              success: (settingRes) => {
+                options.suc && options.suc(settingRes)
+              },
+              fail: () => {
+                options.fail && options.fail()
+              }
+            })
+          } else {
+            options.cancel && options.cancel()
+          }
+        }
+      })
+    },
     // 长按录音，监听在页面最外层div，如果是放在button的话，手指上划离开button后获取距离变化有bug
     handleLongPress (e) {
       this.startPoint = e.touches[0]
       if (e.target.id === 'record') {
-        this.title = '正在录音'
-        this.isRecording = true
-        this.startRecording()
-        this.canSend = true
+        wx.getSetting({
+          success: (res) => {
+            let auth = res.authSetting['scope.record']
+            if (auth === true) { // 用户已经同意授权
+              this.title = '正在录音'
+              this.isRecording = true
+              this.startRecording()
+              this.canSend = true
+            } else if (auth === false) { // 首次发起授权
+              this.toSettingPage({
+                content: '请前往设置页打开麦克风',
+                suc: (res) => { if (!res.authSetting['scope.record']) { this.isRecord = false } },
+                fail: () => { this.isRecord = false },
+                cancel: () => { this.isRecord = false }
+              })
+            }
+          },
+          fail: () => {}
+        })
       }
     },
     chooseRecord () {
       this.isRecord = !this.isRecord
+      if (this.isRecord) {
+        wx.getSetting({
+          success: (res) => {
+            if (res.authSetting['scope.record'] === false) { // 已申请授权，但已被用户拒绝
+              this.toSettingPage({
+                content: '请前往设置页打开麦克风',
+                suc: (res) => { if (!res.authSetting['scope.record']) { this.isRecord = false } },
+                fail: () => { this.isRecord = false },
+                cancel: () => { this.isRecord = false }
+              })
+            }
+          },
+          fail: () => {
+            wx.showToast({
+              title: '获取授权信息失败',
+              icon: 'none',
+              duration: 1500
+            })
+          }
+        })
+      }
     },
     // 录音时的手势上划移动距离对应文案变化
     handleTouchMove (e) {
@@ -476,54 +531,9 @@ export default {
       wx.hideLoading()
       recorderManager.stop()
     },
-    // 开始录音之前要判断一下是否开启权限
+    // 开始录音
     startRecording () {
-      wx.getSetting({
-        success: (res) => {
-          let auth = res.authSetting['scope.record']
-          if (auth === false) { // 已申请过授权，但是用户拒绝
-            wx.openSetting({
-              success: function (res) {
-                let auth = res.authSetting['scope.record']
-                if (auth === true) {
-                  wx.showToast({
-                    title: '授权成功',
-                    icon: 'success',
-                    duration: 1500
-                  })
-                } else {
-                  wx.showToast({
-                    title: '授权失败',
-                    icon: 'none',
-                    duration: 1500
-                  })
-                }
-              }
-            })
-          } else if (auth === true) { // 用户已经同意授权
-            this.isRecording = true
-            recorderManager.start(recordOptions)
-          } else { // 第一次进来，未发起授权
-            wx.authorize({
-              scope: 'scope.record',
-              success: () => {
-                wx.showToast({
-                  title: '授权成功',
-                  icon: 'success',
-                  duration: 1500
-                })
-              }
-            })
-          }
-        },
-        fail: function () {
-          wx.showToast({
-            title: '授权失败',
-            icon: 'none',
-            duration: 1500
-          })
-        }
-      })
+      recorderManager.start(recordOptions)
     },
     // 滚动到列表bottom
     scrollToBottom () {
@@ -713,8 +723,12 @@ export default {
         this.chooseImage(name)
       } else if (name === 'camera') {
         wx.getSetting({
-          success: function (res) {
-            if (!res.authSetting['scope.camera']) { // 无权限，跳转设置权限页面
+          success: (res) => {
+            if (res.authSetting['scope.camera'] === false) { // 已申请授权，但用户已拒绝
+              this.toSettingPage({
+                content: '请前往设置页打开摄像头'
+              })
+            } else if (!res.authSetting['scope.camera']) { // 未申请授权，唤起授权
               wx.authorize({
                 scope: 'scope.camera',
                 success: function () {
@@ -871,24 +885,6 @@ export default {
     },
     handleEmojiShow () {
       this.emojiShow = true
-      this.bigEmojiShow = false
-    },
-    handleBigEmojiShow () {
-      this.emojiShow = false
-      this.bigEmojiShow = true
-    },
-    chooseBigEmoji (item) {
-      let message = wx.$app.createFaceMessage({
-        to: this.$store.getters.toAccount,
-        conversationType: this.$store.getters.currentConversationType,
-        payload: {
-          index: 1,
-          data: item
-        }
-      })
-      this.$store.commit('sendMessage', message)
-      wx.$app.sendMessage(message)
-      this.handleClose()
     },
     // 长按消息触发是否撤回
     handleMessage (message) {
