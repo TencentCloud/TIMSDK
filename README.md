@@ -73,8 +73,9 @@
 
 ## 说明
   - 从 5.0 版本开始，SDK 新增精简版，原有版本称为标准版。
-  - 精简版在标准版的基础上裁剪了好友列表和会话列表两项能力，并对部分业务逻辑做了优化，以实现更高的执行效率，更小的安装包增量。
-  - 与标准版相比，精简版在 SDK 体积和安装包增量上都有3倍 - 4倍的缩减。如果您的 App 没有使用到好友列表和会话列表相关的功能，同时又特别关注安装包增量，建议您选择精简版。
+  - 标准版同时支持旧版 API 和 V2 API；精简版只支持 V2 API，能力上与标准版完全一致。
+  - 在提供的能力上，精简版与标准版完全一致；在 SDK 体积和安装包增量上，精简版与标准版相比有大幅度缩减。
+  - 如果您没有接入过旧版 API，建议您直接使用 V2 API，选择精简版 SDK；如果您已经接入了旧版 API，推荐您升级到 V2 API，逐步切换到精简版 SDK。
 
 ## 标准版与精简版差异对照表
 精简版目前支持 Android 和 iOS 两个平台，后续会逐步增加对 Windows 和 Mac 平台的支持。下面以 Android 和 iOS 平台下的 SDK 为主，对比一下标准版和精简版的差异。
@@ -91,13 +92,13 @@
     <td style="text-align:center">Android</td>
     <td style="text-align:center">aar 大小</td>
     <td style="text-align:center">7.8 MB</td>
-    <td style="text-align:center">2.5 MB</td>
+    <td style="text-align:center">3.1 MB</td>
   </tr>
   <tr>
     <td style="text-align:center">iOS</td>
     <td style="text-align:center">framework 大小</td>
     <td style="text-align:center">57.7 MB</td>
-    <td style="text-align:center">9.2 MB</td>
+    <td style="text-align:center">11.2 MB</td>
   </tr>
 </table>
 
@@ -113,18 +114,18 @@
     <td rowspan='2' style="text-align:center">apk 增量</td>
     <td style="text-align:center">armeabi-v7a</td>
     <td style="text-align:center">3.2 MB</td>
-    <td style="text-align:center">934 KB</td>
+    <td style="text-align:center">1.1 MB</td>
   </tr>
   <tr>
     <td style="text-align:center">arm64-v8a</td>
     <td style="text-align:center">5.2 MB</td>
-    <td style="text-align:center">1.4 MB</td>
+    <td style="text-align:center">1.7 MB</td>
   </tr>
   <tr>
     <td style="text-align:center">ipa 增量</td>
     <td style="text-align:center">arm64</td>
     <td style="text-align:center">2.1 MB</td>
-    <td style="text-align:center">908 KB</td>
+    <td style="text-align:center">1.1 MB</td>
   </tr>
 </table>
 
@@ -311,13 +312,13 @@ end
 
 **通用变更点**
 
-- 已补齐所有 V2 接口
+- 补齐 V2 版本 API 的所有接口
 - 增加会话功能
 - 增加关系链功能
 - 增加群@功能
 - iOS 支持 iPhone 和 iPad 同时在线
 - 发送消息支持多 Element
-- 群资料支持自定义字段
+- 群资料补齐支持自定义字段
 - 修复若干稳定性问题
 
 ## 标准版 5.1.2 @2020.11.11
