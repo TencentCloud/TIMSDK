@@ -221,48 +221,48 @@
     <td rowspan='5' style="text-align:center">关系链</td>
     <td style="text-align:center">添加好友</td>
     <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">-</tdh>
+    <td style="text-align:center">&#10003</tdh>
   </tr>
   <tr>
     <td style="text-align:center">好友资料管理</td>
     <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">-</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
     <td style="text-align:center">好友申请列表</td>
     <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">-</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
     <td style="text-align:center">好友分组</td>
     <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">-</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
     <td style="text-align:center">好友黑名单</td>
     <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">-</td>
+    <td style="text-align:center">&#10003</td>
   <tr>
   <tr>
     <td rowspan='4' width="100px" style="text-align:center">会话</td>
     <td style="text-align:center">获取会话列表</td>
     <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">-</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
     <td style="text-align:center">获取会话未读消息数</td>
     <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">-</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
     <td style="text-align:center">会话管理</td>
     <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">-</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
   <tr>
     <td style="text-align:center">设置会话草稿</td>
     <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">-</td>
+    <td style="text-align:center">&#10003</td>
   </tr>
 </table>
 
@@ -304,6 +304,21 @@ end
 ```
 
 更多集成方式请参考 <a href="https://cloud.tencent.com/document/product/269/32673">集成 SDK</a>
+
+## 精简版 5.1.110 @2020.11.26
+
+### SDK
+
+**通用变更点**
+
+- 已补齐所有 V2 接口
+- 增加会话功能
+- 增加关系链功能
+- 增加群@功能
+- iOS 支持 iPhone 和 iPad 同时在线
+- 发送消息支持多 Element
+- 群资料支持自定义字段
+- 修复若干稳定性问题
 
 ## 标准版 5.1.2 @2020.11.11
 
@@ -378,4 +393,5 @@ end
 ## TUIKit 开源贡献榜
 
 谁是第一位英雄，请现身！
+
 
