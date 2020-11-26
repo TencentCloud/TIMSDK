@@ -71,14 +71,15 @@
 - 为了更好的了解您使用TIMSDK所遇到的问题，方便快速有效定位解决TIMSDK问题，希望您按如下反馈指引反馈issue，方便我们尽快解决您的问题
 - [TIMSDK issue反馈指引](https://github.com/tencentyun/TIMSDK/wiki/TIMSDK-issue%E6%9C%89%E6%95%88%E5%8F%8D%E9%A6%88%E6%A8%A1%E6%9D%BF)
 
-## 说明
-  - 从 5.0 版本开始，SDK 新增精简版，原有版本称为标准版。
-  - 标准版同时支持旧版 API 和 V2 API；精简版只支持 V2 API，能力上与标准版完全一致。
-  - 在提供的能力上，精简版与标准版完全一致；在 SDK 体积和安装包增量上，精简版与标准版相比有大幅度缩减。
-  - 如果您没有接入过旧版 API，建议您直接使用 V2 API，选择精简版 SDK；如果您已经接入了旧版 API，推荐您升级到 V2 API，逐步切换到精简版 SDK。
+
 
 ## 标准版与精简版差异对照表
-精简版目前支持 Android 和 iOS 两个平台，后续会逐步增加对 Windows 和 Mac 平台的支持。下面以 Android 和 iOS 平台下的 SDK 为主，对比一下标准版和精简版的差异。
+  - SDK 从 5.0 版本开始新增精简版，原有版本称为标准版。
+  - 精简版与标准版同时支持 V2 API，在接口提供的能力上完全一致。
+  - 精简版不再支持旧版 API，标准版继续保留对旧版 API 的支持。
+  - 在 SDK 体积和安装包增量上，精简版与标准版相比有大幅度缩减。
+  - 如果您没有接入过旧版 API，建议您直接使用 V2 API，选择精简版 SDK；如果您已经接入了旧版 API，推荐您升级到 V2 API，逐步切换到精简版 SDK。
+  - 精简版目前支持 Android 和 iOS 两个平台，后续会逐步增加对 Windows 和 Mac 平台的支持。
 
 ### SDK 体积大小对比
 <table>
@@ -129,144 +130,6 @@
   </tr>
 </table>
 
-### 功能差异对比
-<table>
-  <tr>
-    <th width="200px" style="text-align:center">功能模块</th>
-    <th width="260px" style="text-align:center">功能项</th>
-    <th width="200px" style="text-align:center">标准版</th>
-    <th width="200px" style="text-align:center">精简版</th>
-  </tr>
-  <tr>
-    <td rowspan='2' style="text-align:center;">资料</td>
-    <td style="text-align:center">修改自己资料</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">获取他人资料</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td rowspan='5' style="text-align:center">群</td>
-    <td style="text-align:center">创建群 销毁群 加群 退群</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">群资料管理</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  </tr>
-  <tr>
-    <td style="text-align:center">群成员管理</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">群申请列表</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">群自定义属性</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td rowspan='5' style="text-align:center">消息</td>
-    <td style="text-align:center">消息发送与接收</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">消息已读与回执</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">消息撤回</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">消息多端同步</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">获取历史消息列表</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td rowspan='1' style="text-align:center">信令</td>
-    <td style="text-align:center">信令发送与响应</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  </tr>
-  <tr>
-    <td rowspan='2' style="text-align:center">离线推送</td>
-    <td style="text-align:center">Android 离线推送</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">iOS 离线推送</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  <tr>
-    <td rowspan='5' style="text-align:center">关系链</td>
-    <td style="text-align:center">添加好友</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</tdh>
-  </tr>
-  <tr>
-    <td style="text-align:center">好友资料管理</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">好友申请列表</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">好友分组</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">好友黑名单</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  <tr>
-  <tr>
-    <td rowspan='4' width="100px" style="text-align:center">会话</td>
-    <td style="text-align:center">获取会话列表</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">获取会话未读消息数</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">会话管理</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-  <tr>
-    <td style="text-align:center">设置会话草稿</td>
-    <td style="text-align:center">&#10003</td>
-    <td style="text-align:center">&#10003</td>
-  </tr>
-</table>
-
 ### 集成方式对比
 #### jcenter 集成 (Android 平台)
 如果使用标准版 SDK，请在 gradle 里添加如下依赖
@@ -312,9 +175,9 @@ end
 
 **通用变更点**
 
-- 补齐 V2 版本 API 的所有接口
-- 增加会话功能
-- 增加关系链功能
+- 补齐 V2 API 的所有接口
+- 补齐会话功能
+- 补齐关系链功能
 - 增加群@功能
 - iOS 支持 iPhone 和 iPad 同时在线
 - 发送消息支持多 Element
@@ -333,63 +196,6 @@ end
 **Android平台**
 - 修复android版本稳定性问题
 - 替换为标准TRTC依赖包
-
-## 标准版 5.1.1 @2020.11.05
-
-### SDK
-
-**iOS/Android平台**
-
-- 增加获取 AVChatRoom 直播群在线人数的接口
-- 增加根据消息唯一 ID 查询消息的接口
-- 增加获取服务器校准时间戳的接口
-- 优化登录速度
-- 优化群资料拉取逻辑
-- 修复退出群组之后拉不到本地消息的问题
-- 修复发送成功的消息被第三方回调修改之后，发送端消息没有及时更新的问题
-- 修复 Metting 会议群在经过控制台配置后，对应的会话仍然不支持未读数的问题
-- 修复 AVChatRoom 直播群偶现收不到消息的问题
-- 修复其它一些偶现的稳定性问题
-
-### TUIkit & Demo
-
-**iOS/Android平台**
-
-- 群成员@ 支持 @所有人
-- TUIKit 组件国际化支持
-- 安卓版本发送图片消息时支持选择视频
-- 优化音视频通话请求超时逻辑
-- 安卓离线推送更新为依赖 TPNS 的包
-- 群直播增加开播动画
-- 群直播增加直播小窗的支持
-
-
-## 精简版 5.0.108 @2020.11.02
-
-### SDK
-
-**通用变更点**
-
-- 修复 iOS 版本稳定性问题
-- 修复 Android 版本偶现消息不回调问题
-
-## 标准版 5.0.10 @2020.10.15
-
-### SDK
-
-**iOS/Android平台**
-
-- 优化信令接口，支持设置在线消息 onlineUserOnly 和离线推送信息 offlinePushInfo 参数
-- 优化获取单个会话接口的异步回调
-- 会话增加获取群类型接口，方便会话列表展示过滤
-
-### TUIKit & Demo
-
-**iOS/Android**
-- 新增群直播功能，连麦、送礼、美颜、变声等功能一应俱全
-- 新增直播大厅，支持连麦、PK、点赞、送礼、美颜、弹幕、好友关注等
-- 优化语音视频信令识别问题
-
 
 ## TUIKit 开源贡献榜
 
