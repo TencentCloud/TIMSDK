@@ -517,9 +517,6 @@ void CIMWnd::OnInitSDKBtn() { //初始化ImSDK
     //获取配置
     Json::Value json_user_config;
     json_user_config[kTIMUserConfigIsReadReceipt] = true;  // 开启已读回执
-    Json::Value json_http_proxy;
-    json_http_proxy[kTIMHttpProxyInfoIp] = "http://127.0.0.1";
-    json_http_proxy[kTIMHttpProxyInfoPort] = 12639;
 
     Json::Value json_socks5_value;
     json_socks5_value[kTIMSocks5ProxyInfoIp] = "111.222.333.444";
@@ -529,7 +526,6 @@ void CIMWnd::OnInitSDKBtn() { //初始化ImSDK
     Json::Value json_config;
     json_config[kTIMSetConfigUserConfig] = json_user_config;
     //json_config[kTIMSetConfigSocks5ProxyInfo] = json_socks5_value;
-    json_config[kTIMSetConfigHttpProxyInfo] = json_http_proxy;
     json_config[kTIMSetConfigUserDefineData] = "1.3.4.5.6.7";
 
     TIMSetConfig(json_config.toStyledString().c_str(), [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
