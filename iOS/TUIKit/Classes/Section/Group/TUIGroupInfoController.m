@@ -52,6 +52,8 @@
     self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     //加入此行，会让反馈更加灵敏
     self.tableView.delaysContentTouches = NO;
+    // iOS 14不显示表格，调试发现表格frame的size为0
+    self.tableView.frame = CGRectMake(0, 0, Screen_Width, Screen_Height);
 }
 
 - (void)updateData
