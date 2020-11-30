@@ -46,7 +46,10 @@
     }];
     [[V2TIMManager sharedInstance] getGroupMemberList:_groupId filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:0 succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
         @strongify(self)
-        for (V2TIMGroupMemberFullInfo *member in memberList) {
+        NSArray<V2TIMGroupMemberFullInfo *> *members = [memberList sortedArrayUsingComparator:^NSComparisonResult(V2TIMGroupMemberFullInfo*  _Nonnull obj1, V2TIMGroupMemberFullInfo*  _Nonnull obj2) {
+            return obj1.joinTime > obj2.joinTime;
+        }];
+        for (V2TIMGroupMemberFullInfo *fullInfo in members) {
             TGroupMemberCellData *user = [[TGroupMemberCellData alloc] init];
             user.identifier = member.userID;
             if (member.nameCard.length > 0) {
