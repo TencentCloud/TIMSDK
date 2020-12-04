@@ -48,5 +48,5 @@ dependencies {
     api 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
 //    embed project(':audioeffectsettingkit')
 //    embed project(':beautysettingkit')
-api 'com.tencent.imsdk:imsdk:5.1.1'
+api 'com.tencent.imsdk:imsdk:5.1.10'
 }
