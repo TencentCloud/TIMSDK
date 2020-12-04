@@ -79,11 +79,13 @@ typedef NS_ENUM(NSInteger,VideoUserRemoveReason){
         };
     } else {
         [TUICallUtils getCallUserModel:self.userId finished:^(CallUserModel * _Nonnull model) {
-            NSMutableArray *inviteeList = [NSMutableArray array];
-            model.userId = self.userId;
-            [inviteeList addObject:model];
-            [self showCallVC:inviteeList sponsor:nil];
-            [[TUICall shareInstance] call:@[self.userId] groupID:nil type:self.type];
+            if (model) {
+                NSMutableArray *inviteeList = [NSMutableArray array];
+                model.userId = self.userId;
+                [inviteeList addObject:model];
+                [self showCallVC:inviteeList sponsor:nil];
+                [[TUICall shareInstance] call:@[self.userId] groupID:nil type:self.type];
+            }
         }];
     }
 }
