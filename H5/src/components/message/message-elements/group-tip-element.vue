@@ -3,8 +3,14 @@
 </template>
 
 <script>
-export default {
+  import {mapState} from 'vuex'
+  export default {
   name: 'GroupTipElement',
+  data() {
+    return {
+      callTips:256
+    }
+  },
   props: {
     payload: {
       type: Object,
@@ -15,13 +21,20 @@ export default {
       required: false
     }
   },
+
   computed: {
+    ...mapState({
+      currentUserProfile: state => state.user.currentUserProfile,
+      userID: state => state.user.userID
+    }),
     text() {
       return this.getGroupTipContent(this.message)
     }
   },
   methods: {
     getGroupTipContent(message) {
+      // 群通话tips
+      let nick = message.nick || ((message.from === this.userID) && this.currentUserProfile.nick) ||  message.from
       const userName = message.nick || message.payload.userIDList.join(',')
       switch (message.payload.operationType) {
         case this.TIM.TYPES.GRP_TIP_MBR_JOIN:
@@ -36,6 +49,12 @@ export default {
           return `群成员：${userName} 被撤销管理员`
         case this.TIM.TYPES.GRP_TIP_GRP_PROFILE_UPDATED:
           return '群资料修改'
+        case this.callTips:
+          if(message.payload.text.indexOf('结束群聊')> -1) {
+            return  `"${message.payload.text}"`
+          }else {
+            return  `"${nick}" ${message.payload.text}`
+          }
         case this.TIM.TYPES.GRP_TIP_MBR_PROFILE_UPDATED:
           for (let member of message.payload.memberList) {
             if (member.muteTime > 0) {
