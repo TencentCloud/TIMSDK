@@ -109,6 +109,14 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### WebIM Demo Change Log
 
+#### 2020/12/04
+
+**Features**
+
+- Web Demo增加群直播功能
+
+- Web Demo新增 1v1 和群语音视频通话,和native互通
+
 #### 2020/10/22
 
 **Features**

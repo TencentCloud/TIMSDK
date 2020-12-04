@@ -46,6 +46,8 @@
 <script>
 import { Form, FormItem, Select, Option } from 'element-ui'
 import logo from '../../assets/image/logo.png'
+import { errorMap } from '../../utils/common'
+import md5 from 'md5'
 export default {
   name: 'Login',
   components: {
@@ -62,6 +64,7 @@ export default {
         callback()
       }
     }
+
     return {
       form: {
         userID: 'user0',
@@ -98,6 +101,7 @@ export default {
           this.loading = false
           this.$store.commit('toggleIsLogin', true)
           this.$store.commit('startComputeCurrent')
+          this.$store.commit('showMessage', { type: 'success', message: '登录成功' })
           this.$store.commit({
             type: 'GET_USER_INFO',
             userID: this.form.userID,
@@ -122,6 +126,35 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.login-wrapper
+  display flex
+  align-items center
+  flex-direction column
+  width 450px
+  background $white
+  color $black
+  border-radius 5px
+  box-shadow: 0 11px 20px 0 rgba(0,0,0,0.3)
+  .row-div
+    display flex
+    justify-content center
+    align-items center
+    flex-direction row
+  .logo
+    width 110px
+    height 110px
+  .loginBox
+    width 320px
+    margin 0 0 20px 0
+    .send-code
+      width 112px
+    .login-im-btn
+      width 100%
+  .loginFooter
+    color: #8c8a8ac7
+    text-align: center
+    padding: 0 0 20px 0
+    cursor: pointer
 .login-wrapper {
   display: flex;
   align-items: center;
