@@ -37,12 +37,12 @@
 #import "TUILiveRoomAudienceViewController.h"
 #import "TUILiveDefaultGiftAdapterImp.h"
 #import "TUIKitLive.h"
-#import "V2TIMManager.h"
 #import "TUILiveUserProfile.h"
 #import "TUILiveRoomManager.h"
 #import "TUILiveHeartBeatManager.h"
 #import "GenerateTestUserSig.h"
 #import "Toast.h"
+#import <ImSDK/ImSDK.h>
 
 
 // MLeaksFinder 会对这个类误报，这里需要关闭一下

@@ -3,7 +3,7 @@
 #import <sys/utsname.h>
 #import "TUIKit.h"
 #import "AppDelegate.h"
-#import "ImSDK.h"
+#import <ImSDK/ImSDK.h>
 #import "GenerateTestUserSig.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 

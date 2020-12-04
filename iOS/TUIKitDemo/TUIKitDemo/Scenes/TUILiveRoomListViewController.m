@@ -18,7 +18,6 @@
 #import "THeader.h"
 #import "UIColor+TUIDarkMode.h"
 #import <ImSDK/ImSDK.h>
-#import "V2TIMManager.h"
 
 @interface TUILiveRoomListViewController ()<TUILiveRoomListDelegate, TUILiveRoomAudienceDelegate>
 
