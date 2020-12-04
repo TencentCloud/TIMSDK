@@ -14,7 +14,19 @@
       <i class="iconfont icon-wenjian" title="发文件" @click="handleSendFileClick"></i>
       <i class="iconfont icon-zidingyi" title="发自定义消息" @click="sendCustomDialogVisible = true"></i>
       <i class="iconfont icon-diaocha" title="小调查" @click="surveyDialogVisible = true"></i>
-      <i class="el-icon-video-camera" v-if="currentConversationType === 'C2C'&& toAccount !== userID" title="视频通话" @click="videoCall"></i>
+      <el-dropdown>
+      <span class="el-dropdown-link">
+      <i class="el-icon-phone-outline" v-if="toAccount !== userID" title="语音通话"></i>
+      </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item  @click.native="trtcCalling('video')">视频通话</el-dropdown-item>
+          <el-dropdown-item  @click.native="trtcCalling('audio')">语音通话</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <div class="group-live-icon-box" v-if="currentConversationType === TIM.TYPES.CONV_GROUP && groupProfile.type !== 'AVChatRoom'" title="群直播" @click="groupLive">
+        <i class="group-live-icon"></i>
+        <i class="group-live-icon-hover"></i>
+      </div>
     </div>
     <el-dialog title="发自定义消息" :visible.sync="sendCustomDialogVisible" width="30%">
       <el-form label-width="100px">
@@ -101,17 +113,26 @@
       type="file"
       id="imagePicker"
       ref="imagePicker"
-      accept=".jpg, .jpeg, .png, .gif"
+      accept=".jpg, .jpeg, .png, .gif, .bmp"
       @change="sendImage"
       style="display:none"
     />
     <input type="file" id="filePicker" ref="filePicker" @change="sendFile" style="display:none" />
     <input type="file" id="videoPicker" ref="videoPicker" @change="sendVideo" style="display:none" accept=".mp4"/>
+    <div class="calling-member-list" v-if="currentConversationType === TIM.TYPES.CONV_GROUP && showCallingMember">
+      <calling-member-list @getList="getList"></calling-member-list>
+      <div class="calling-list-btn">
+        <span class="calling-btn" @click="cancelCalling">取消</span>
+        <span class="calling-btn" @click="callingHandler">确定</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex'
+import smileIcon from '../../assets/image/smile.png'
+import callingMemberList from './trtc-calling/group-member-list'
 import {
   Form,
   FormItem,
@@ -129,6 +150,7 @@ export default {
   name: 'message-send-box',
   props: ['scrollMessageListToButtom'],
   components: {
+    callingMemberList: callingMemberList,
     ElInput: Input,
     ElForm: Form,
     ElFormItem: FormItem,
@@ -141,6 +163,9 @@ export default {
   },
   data() {
     return {
+      callingList: [],
+      callingType: '',
+      showCallingMember: false,
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       messageContent: '',
       isSendCustomMessage: false,
@@ -166,7 +191,8 @@ export default {
     ...mapGetters(['toAccount', 'currentConversationType']),
     ...mapState({
       memberList: state => state.group.currentMemberList,
-      userID: state => state.user.userID
+      userID: state => state.user.userID,
+      groupProfile: state => state.conversation.currentConversation.groupProfile
     })
   },
   mounted() {
@@ -177,6 +203,93 @@ export default {
     this.$refs['text-input'].removeEventListener('paste', this.handlePaste)
   },
   methods: {
+    getList(value) {
+      this.callingList = value
+    },
+    cancelCalling() {
+      this.showCallingMember = false
+    },
+    callingHandler() {
+      if (this.callingList.length < 1) {
+        this.$store.commit('showMessage', {
+          type: 'warning',
+          message: '请选择成员'
+        })
+        return
+      }
+      this.showCallingMember = false
+      let callingData = {
+        memberList:this.callingList,
+        type:this.TIM.TYPES.CONV_GROUP
+      }
+      this.$store.commit('setCallingList',callingData)
+      if (this.callingType === 'video') {
+        this.$bus.$emit('video-call')
+        return
+      }
+      if (this.callingType === 'audio') {
+        this.$bus.$emit('audio-call')
+        return
+      }
+    },
+    trtcCalling(type) {
+      if (type === 'video') {
+        this.callingType = 'video'
+      }
+      if (type === 'audio') {
+        this.callingType = 'audio'
+      }
+      // 呼叫方设置
+      if(this.currentConversationType === 'C2C') {
+        let member = [this.toAccount]
+        let callingData = {
+          memberList:member,
+          type:'C2C'
+        }
+        this.$store.commit('setCallingList',callingData)
+        this.$bus.$emit(`${type}-call`)
+        return
+      }
+      if(this.currentConversationType === this.TIM.TYPES.CONV_GROUP) {
+        this.showCallingMember = true
+      }
+      // this.$store.commit('pushCurrentMessageList', true)
+    },
+    audioCall() {
+      this.$bus.$emit('audio-call')
+      this.$store.commit('showAudioCall',true)
+    },
+    handleEmojiShow () {
+      this.emojiShow = true
+      this.bigEmojiShow = false
+    },
+    handleBigEmojiShow(index) {
+      let elm = document.getElementById('bigEmojiBox')
+      elm && (elm.scrollTop = 0)
+      this.curItemIndex = index
+      this.curBigEmojiItemList = this.bigEmojiList[index].list
+      this.emojiShow = false
+      this.bigEmojiShow = true
+    },
+    chooseBigEmoji(item) {
+      this.popoverVisible = false
+      let message = this.tim.createFaceMessage({
+        to: this.toAccount,
+        conversationType: this.currentConversationType,
+        payload: {
+          index: this.curItemIndex + 1,
+          data: `${item}@2x`
+        }
+      })
+      this.$store.commit('pushCurrentMessageList', message)
+      this.$bus.$emit('scroll-bottom')
+      this.tim.sendMessage(message).catch(error => {
+        this.$store.commit('showMessage', {
+          type: 'error',
+          message: error.message
+        })
+      })
+    },
     reEditMessage(payload) {
       this.messageContent = payload
     },
@@ -397,8 +510,12 @@ export default {
     handleSendVideoClick() {
       this.$refs.videoPicker.click()
     },
-    videoCall() {
-      this.$bus.$emit('video-call')
+    groupLive() {
+      this.$store.commit('updateGroupLiveInfo', {
+        groupID: this.toAccount,
+        anchorID: this.userID,
+      })
+      this.$bus.$emit('open-group-live', { channel: 1 })
     },
     sendImage() {
       const message = this.tim.createImageMessage({
@@ -475,7 +592,6 @@ export default {
   }
 }
 </script>
-
 <style lang="stylus" scoped>
 #message-send-box-wrapper {
   box-sizing: border-box;
@@ -547,5 +663,67 @@ textarea {
     padding: 6px 6px 4px 4px;
     border-radius: 50%;
   }
+}
+.group-live-icon-box {
+    display inline-block
+    position relative
+    top 3px
+    width 25px
+    height 25px
+    margin-right 12px
+    .group-live-icon {
+      display inline-block
+      position absolute
+      top 0
+      left 0
+      width 25px
+      height 25px
+      background url('../../assets/image/live-icon.png') center no-repeat
+      background-size cover
+      z-index 2
+    }
+    .group-live-icon-hover {
+      display inline-block
+      position absolute
+      top 0
+      left 0
+      width 25px
+      height 25px
+      background url('../../assets/image/live-icon-hover.png') center no-repeat
+      background-size cover
+      z-index 1
+    }
+}
+.group-live-icon-box:hover {
+  .group-live-icon {
+    z-index 1
+  }
+  .group-live-icon-hover{
+    z-index 2
+  }
+}
+.calling-member-list {
+  position absolute
+  top 50px
+  background #fff
+  margin-right 20px
+  .calling-list-btn {
+    width 140px
+    display flex
+    float right
+    margin 10px 0
+    .calling-btn {
+      cursor pointer
+      padding 6px 12px
+      background #00A4FF
+      color #ffffff
+      font-size 14px
+      border-radius 20px
+      margin-left 13px
+    }
+  }
+}
+.el-popover {
+  padding: 12px 0 0 0 !important;
 }
 </style>

@@ -27,11 +27,11 @@
           @click="handleLinkClick"
         >登录 即时通信IM 官网，了解更多体验方式</a>
       </div>
-      <call-layer ref="callLayer" class="chat-wrapper"/>
+      <calling  ref="callLayer" class="chat-wrapper"/>
       <image-previewer />
+      <group-live />
     </div>
-    <div class="bg">
-    </div>
+    <div class="bg"></div>
   </div>
 </template>
 
@@ -44,7 +44,8 @@ import Login from './components/user/login'
 import ImagePreviewer from './components/message/image-previewer.vue'
 import QrCodeList from './components/qr-code-list'
 import { translateGroupSystemNotice } from './utils/common'
-import CallLayer from './components/message/call-layer'
+import GroupLive from './components/group-live/index'
+import Calling from './components/message/trtc-calling/calling-index'
 import { ACTION } from './utils/trtcCustomMessageMap'
 import MTA from './utils/mta'
 
@@ -60,28 +61,33 @@ export default {
     SideBar,
     CurrentConversation,
     ImagePreviewer,
-    CallLayer,
-    QrCodeList
+    QrCodeList,
+    GroupLive,
+    Calling,
   },
 
   computed: {
     ...mapState({
       currentUserProfile: state => state.user.currentUserProfile,
       currentConversation: state => state.conversation.currentConversation,
+      videoCall: state => state.conversation.videoCall,
+      audioCall: state => state.conversation.audioCall,
       isLogin: state => state.user.isLogin,
       isSDKReady: state => state.user.isSDKReady,
       isBusy: state => state.video.isBusy,
-      userID: state => state.user.userID
+      userID: state => state.user.userID,
+      userSig: state => state.user.userSig,
+      sdkAppID: state => state.user.sdkAppID
     }),
     // 是否显示 Loading 状态
     showLoading() {
       return !this.isSDKReady
     }
   },
-
   mounted() {
     // 初始化监听器
     this.initListener()
+
   },
 
   watch: {
@@ -89,7 +95,7 @@ export default {
       if (next) {
         MTA.clickStat('link_two', { show: 'true' })
       }
-    }
+    },
   },
 
   methods: {
@@ -114,11 +120,14 @@ export default {
       this.tim.on(this.TIM.EVENT.MESSAGE_READ_BY_PEER, this.onMessageReadByPeer)
 
     },
+
     onReceiveMessage({ data: messageList }) {
       this.handleVideoMessage(messageList)
       this.handleAt(messageList)
       this.handleQuitGroupTip(messageList)
+      this.handleCloseGroupLive(messageList)
       this.$store.commit('pushCurrentMessageList', messageList)
+      this.$store.commit('pushAvChatRoomMessageList', messageList)
     },
     onError({ data }) {
       if (data.message !== 'Network Error') {
@@ -148,6 +157,12 @@ export default {
             })
           })
         this.$store.dispatch('getBlacklist')
+        // 登录trtc calling
+        this.trtcCalling.login({
+          sdkAppID: this.sdkAppID,
+          userID: this.userID,
+          userSig:this.userSig
+        })
       }
     },
     kickedOutReason(type) {
@@ -349,7 +364,26 @@ export default {
           }
         })
       }
-    }
+    },
+    /**
+     * 收到结束直播自定义消息，派发事件关闭组件
+     * @param {Message[]} messageList
+     */
+    handleCloseGroupLive(messageList) {
+      messageList.forEach(message => {
+        if (this.currentConversation.conversationID === message.conversationID && message.type === this.TIM.TYPES.MSG_CUSTOM) {
+          let data = {}
+          try {
+            data = JSON.parse(message.payload.data)
+          } catch(e) {
+            data = {}
+          }
+          if (data.roomId && Number(data.roomStatus) === 0) {
+            this.$bus.$emit('close-group-live')
+          }
+        }
+      })
+    },
   }
 }
 </script>
