@@ -11,8 +11,8 @@
 #import "THelper.h"
 #import "UIColor+TUIDarkMode.h"
 #import "GenerateTestUserSig.h"
-#import "ImSDK.h"
 #import <Bugly/Bugly.h>
+#import <ImSDK/ImSDK.h>
 
 @interface AppDelegate () <BuglyDelegate>
 @property(nonatomic,strong) NSString *groupID;

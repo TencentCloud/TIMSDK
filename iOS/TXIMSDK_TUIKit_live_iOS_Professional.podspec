@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_TUIKit_live_iOS_Professional'
-  spec.version      = '5.1.2'
+  spec.version      = '5.1.10'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -14,7 +14,7 @@ Pod::Spec.new do |spec|
   spec.summary      = 'TXIMSDK_TUIKit_live_iOS_Professional'
   spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
   
-  spec.dependency 'TXIMSDK_iOS', '5.1.2'
+  spec.dependency 'TXIMSDK_iOS', '5.1.10'
   spec.dependency 'TXLiteAVSDK_Professional', '7.8.9519'
   spec.dependency 'MMLayout','0.2.0'
   spec.dependency 'SDWebImage','5.9.0'
@@ -39,3 +39,5 @@ Pod::Spec.new do |spec|
   }
   spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 end
+
+# pod trunk push TXIMSDK_TUIKit_live_iOS_Professional.podspec --use-libraries --allow-warnings
