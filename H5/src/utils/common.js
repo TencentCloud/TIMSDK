@@ -1,3 +1,5 @@
+import TIM from 'tim-js-sdk'
+
 export function translateGroupSystemNotice(message) {
   const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID
   switch (message.payload.operationType) {
@@ -33,4 +35,43 @@ export const errorMap = {
   612: '用户已存在',
   620: '用户不存在',
   621: '密码错误'
+}
+export function filterCallingMessage(currentMessageList) {
+  currentMessageList.forEach((item) => {
+    if (item.callType) {   // 对于自己伪造的消息不需要解析
+      return
+    }
+    if(item.type === TIM.TYPES.MSG_CUSTOM) {
+      let payloadData = {}
+      try {
+        payloadData = JSON.parse(item.payload.data)
+      }catch (e) {
+        payloadData = {}
+      }
+      if(payloadData.businessID === 1) {
+        if(item.conversationType === TIM.TYPES.CONV_GROUP) {
+          if(payloadData.actionType === 5) {
+            item.nick = payloadData.inviteeList ? payloadData.inviteeList.join(','):item.from
+          }
+          let _text = window.trtcCalling.extractCallingInfoFromMessage(item)
+          let group_text = `${_text}`
+          item.type = TIM.TYPES.MSG_GRP_TIP
+          let customData = {
+            operationType: 256,
+            text: group_text,
+            userIDList: []
+          }
+          item.payload = customData//JSON.stringify(customData)
+        }
+        if(item.conversationType === TIM.TYPES.CONV_C2C) {
+          let c2c_text = window.trtcCalling.extractCallingInfoFromMessage(item)
+          let customData = {
+            text: c2c_text
+          }
+          item.payload = customData//JSON.stringify(customData)
+        }
+      }
+    }
+
+  })
 }

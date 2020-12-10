@@ -2,13 +2,19 @@ import tim from 'tim'
 import TIM from 'tim-js-sdk'
 import store from '..'
 import { titleNotify } from '../../utils'
+import { filterCallingMessage } from '../../utils/common'
 const conversationModules = {
   state: {
     currentConversation: {},
     currentMessageList: [],
     nextReqMessageID: '',
     isCompleted: false, // 当前会话消息列表是否已经拉完了所有消息
-    conversationList: []
+    conversationList: [],
+    callingInfo: {
+      memberList: [],
+      type: 'C2C',   //C2C，GROUP
+    },
+    audioCall: false
   },
   getters: {
     toAccount: state => {
@@ -49,6 +55,27 @@ const conversationModules = {
     }
   },
   mutations: {
+    /**
+     * 显示trtcCalling 群通话成员列表
+     * @param {Object} state
+     * @param {Conversation} setCallingList
+     */
+
+    setCallingList(state, value) {
+      state.callingInfo.memberList = value.memberList
+      state.callingInfo.type = value.type
+    },
+
+    /**
+     * 显示trtcCalling 语音通话
+     * @param {Object} state
+     * @param {Conversation} showAudioCall
+     */
+
+    showAudioCall(state, value) {
+      state.audioCall = value
+    },
+
     /**
      * 更新当前会话
      * 调用时机: 切换会话时
@@ -94,8 +121,10 @@ const conversationModules = {
         // 筛选出当前会话的消息
         const result = data.filter(item => item.conversationID === state.currentConversation.conversationID)
         state.currentMessageList = [...state.currentMessageList, ...result]
+        filterCallingMessage(state.currentMessageList)
       } else if (data.conversationID === state.currentConversation.conversationID) {
         state.currentMessageList = [...state.currentMessageList, data]
+        filterCallingMessage(state.currentMessageList)
       }
     },
     /**
@@ -141,6 +170,8 @@ const conversationModules = {
         context.state.isCompleted = imReponse.data.isCompleted
         // 更新当前消息列表，从头部插入
         context.state.currentMessageList = [...imReponse.data.messageList, ...currentMessageList]
+        filterCallingMessage(context.state.currentMessageList)
+
       })
     },
     /**

@@ -12,16 +12,21 @@
       </el-rate>
       <div class="suggestion">{{this.payload.extension}}</div>
     </div>
-    <span class="text" title="您可以自行解析自定义消息" v-else>{{text}}</span>
+    <span class="text" title="您可以自行解析自定义消息" v-else>
+      <template v-if="text.isFromGroupLive && text.isFromGroupLive === 1">
+        <message-group-live-status :liveInfo='text' />
+      </template>
+      <template v-else>{{text}}</template>
+    </span>
   </div>
 </message-bubble>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import MessageBubble from '../message-bubble'
 import { Rate } from 'element-ui'
-import { ACTION } from '../../../utils/trtcCustomMessageMap'
-import { formatDuration } from '../../../utils/formatDuration'
+import MessageGroupLiveStatus from '../message-group-live-status'
 
 export default {
   name: 'CustomElement',
@@ -40,9 +45,13 @@ export default {
   },
   components: {
     MessageBubble,
-    ElRate: Rate
+    ElRate: Rate,
+    MessageGroupLiveStatus
   },
   computed: {
+    ...mapState({
+      currentUserProfile: state => state.user.currentUserProfile
+    }),
     text() {
       return this.translateCustomMessage(this.payload)
     },
@@ -61,25 +70,15 @@ export default {
       if (payload.data === 'group_create') {
         return `${payload.extension}`
       }
-      switch (videoPayload.action) {
-        case ACTION.VIDEO_CALL_ACTION_DIALING:
-          return '[请求通话]'
-        case ACTION.VIDEO_CALL_ACTION_SPONSOR_CANCEL:
-          return '[取消通话]'
-        case ACTION.VIDEO_CALL_ACTION_REJECT:
-          return '[拒绝通话]'
-        case ACTION.VIDEO_CALL_ACTION_SPONSOR_TIMEOUT:
-          return '[无应答]'
-        case ACTION.VIDEO_CALL_ACTION_ACCEPTED:
-          return '[开始通话]'
-        case ACTION.VIDEO_CALL_ACTION_HANGUP:
-          return `[结束通话，通话时长：${formatDuration(videoPayload.duration)}]`
-        case ACTION.VIDEO_CALL_ACTION_LINE_BUSY:
-          return '[正在通话中]'
-        case ACTION.VIDEO_CALL_ACTION_ERROR:
-          return '[设备异常]'
-        default:
-          return '[自定义消息]'
+      if (videoPayload.roomId) {
+        videoPayload.roomId = videoPayload.roomId.toString()
+        videoPayload.isFromGroupLive = 1
+        return videoPayload
+      }
+      if(payload.text) {
+        return payload.text
+      }else{
+        return '[自定义消息]'
       }
     }
   }
