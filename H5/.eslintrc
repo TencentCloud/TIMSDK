@@ -8,7 +8,7 @@
     "eslint:recommended"
   ],
   "rules": {
-    "no-console": 2,
+    "no-console": 'off',
     "quotes": ["error", "single"],
     "semi": ["error","never"],
     "space-before-blocks": "error",
