@@ -70,7 +70,7 @@ let baseWebpackConfig = {
       },
       {
         test: /\.js$/,
-        include: [resolve('src'), resolve('test')],
+        include: [resolve('src'), resolve('test'), resolve('node_modules/tim-wx-sdk')],
         use: [
           'babel-loader',
           {
