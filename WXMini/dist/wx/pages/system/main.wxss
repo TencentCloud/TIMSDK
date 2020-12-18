@@ -1,9 +1,9 @@
 
-.handle.data-v-5e5810f9 {
+.handle.data-v-47258e61 {
   display: flex;
   justify-content: space-between;
 }
-.card.data-v-5e5810f9 {
+.card.data-v-47258e61 {
   font-size: 28rpx;
   margin: 40rpx;
   padding: 40rpx;
@@ -12,11 +12,11 @@
   background-color: #f0faff;
   border-radius: 24rpx;
 }
-.card .time.data-v-5e5810f9 {
+.card .time.data-v-47258e61 {
   font-weight: 600;
   color: #111;
 }
-.button.data-v-5e5810f9 {
+.button.data-v-47258e61 {
   color: #fff;
   background-color: #006fff;
   border-radius: 16rpx;
@@ -24,16 +24,16 @@
   font-size: 32rpx;
   width: 140rpx;
 }
-.delete.data-v-5e5810f9 {
+.delete.data-v-47258e61 {
   background-color: #fb5250;
 }
-.choose.data-v-5e5810f9 {
+.choose.data-v-47258e61 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
 }
-.input.data-v-5e5810f9 {
+.input.data-v-47258e61 {
   text-align: center;
   height: 64rpx;
   background-color: #fff;
