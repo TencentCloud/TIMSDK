@@ -35,6 +35,9 @@ export default {
       myInfo: state => state.user.myInfo
     })
   },
+  onShow () {
+    wx.showTabBar()
+  },
   methods: {
     logout () {
       this.$store.dispatch('resetStore')

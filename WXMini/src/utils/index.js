@@ -1,4 +1,5 @@
 import firstletter from './dict.js'
+import defaultImg from '../../static/images/default_calling_icon.png'
 
 function formatNumber (n) {
   const str = n.toString()
@@ -110,6 +111,30 @@ export function isJSON (str) {
       return false
     }
   }
+}
+
+// 将query对象转化为string
+export function queryString (query) {
+  let qr = ''
+  for (let key in query) {
+    if (query[key]) {
+      qr += `&${key}=${encodeURIComponent(query[key])}`
+    }
+  }
+  return qr.slice(1)
+}
+
+// 查询用户头像，返回Object{userID: avatar}
+export async function getUserProfile (userIDList) {
+  const avatarList = {}
+  const res = await wx.$app.getUserProfile({ userIDList })
+  if (res.code === 0) {
+    const data = res.data || []
+    for (let i = 0; i < data.length; i++) {
+      avatarList[data[i].userID] = data[i].avatar || defaultImg
+    }
+  }
+  return avatarList
 }
 
 export default {

@@ -5,7 +5,6 @@
     "pages/contact/main",
     "pages/own/main",
     "pages/chat/main",
-    "pages/call/main",
     "pages/search/main",
     "pages/create/main",
     "pages/members/main",
@@ -15,7 +14,8 @@
     "pages/groups/main",
     "pages/blacklist/main",
     "pages/profile/main",
-    "pages/update-profile/main"
+    "pages/update-profile/main",
+    "pages/selected-members/main"
   ],
   "window": {
     "backgroundColor": "#ededed",
@@ -52,7 +52,6 @@
     ],
     "position": "bottom"
   },
-
   "networkTimeout": {
     "request": 10000,
     "downloadFile": 10000

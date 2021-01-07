@@ -1,5 +1,5 @@
 import { emojiMap, emojiUrl } from './emojiMap'
-import { formatDuration, isJSON } from './index'
+
 /** 传入message.element（群系统消息SystemMessage，群提示消息GroupTip除外）
  * content = {
  *  type: 'TIMTextElem',
@@ -151,6 +151,13 @@ function parseGroupTip (message) {
         }
       }
       break
+    case 256:
+      let user = message.from
+      if (payload.data === '无应答') {
+        user = payload.userIDList.join(',')
+      }
+      tip = payload.data === '结束群聊' ? '结束群聊' : `"${user}" ${payload.data}`
+      break
   }
   return [{
     name: 'groupTip',
@@ -160,47 +167,6 @@ function parseGroupTip (message) {
 // 解析自定义消息
 function parseCustom (message) {
   let data = message.payload.data
-  if (isJSON(data)) {
-    data = JSON.parse(data)
-    if (data.hasOwnProperty('version') && data.version === 3) {
-      let tip
-      const time = formatDuration(data.duration)
-      switch (data.action) {
-        case -2:
-          tip = '异常挂断'
-          break
-        case 0:
-          tip = '请求通话'
-          break
-        case 1:
-          tip = '取消通话'
-          break
-        case 2:
-          tip = '拒绝通话'
-          break
-        case 3:
-          tip = '无应答'
-          break
-        case 4:
-          tip = '开始通话'
-          break
-        case 5:
-          if (data.duration === 0) {
-            tip = '结束通话'
-          } else {
-            tip = `结束通话，通话时长${time}`
-          }
-          break
-        case 6:
-          tip = '正在通话中'
-          break
-      }
-      return [{
-        name: 'videoCall',
-        text: tip
-      }]
-    }
-  }
   return [{
     name: 'custom',
     text: data

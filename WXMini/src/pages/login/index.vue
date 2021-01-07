@@ -66,10 +66,12 @@ export default {
       this.login(userID)
     },
     login (userID) {
+      let userSig = genTestUserSig(this.userIDList[this.selectedIndex]).userSig
       wx.$app.login({
         userID,
-        userSig: genTestUserSig(this.userIDList[this.selectedIndex]).userSig
+        userSig: userSig
       }).then(() => {
+        this.$store.commit('setRtcConfig', {userID: userID, userSig: userSig, sdkAppID: wx.$sdkAppID})
         wx.switchTab({ url: '../index/main' })
       }).catch(() => {
         this.loading = false

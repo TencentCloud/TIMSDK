@@ -96,6 +96,9 @@ export default {
       wx.navigateTo({ url: '../user-profile/main?userID=' + userID })
     }
   },
+  onShow () {
+    wx.showTabBar()
+  },
   mounted () {
     this.initFriendsList()
   }
