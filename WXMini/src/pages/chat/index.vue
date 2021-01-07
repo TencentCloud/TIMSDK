@@ -1,5 +1,6 @@
 <template>
-  <div class="chat"
+  <div>
+    <div class="chat"
        id="chat"
        :style="{ paddingBottom: isIphoneX ? (safeBottom + 70) + 'px': '70px' }"
        @longpress="handleLongPress"
@@ -127,9 +128,10 @@
                 <div v-else-if="message.payload.data === 'group_create'">
                   <div>{{message.payload.extension}}</div>
                 </div>
-                <div v-else-if="message.virtualDom[0].name === 'videoCall'" class="custom-elem">
+                <div v-else-if="message.virtualDom[0].name === '1v1call'" class="custom-elem">
                   <div>{{message.virtualDom[0].text}}</div>
                 </div>
+                <!-- <div v-else-if="message.payload.description === 'trtccall'" class="custom-elem">{{message.payload.data}}</div> -->
                 <div v-else class="custom-elem">自定义消息</div>
               </div>
               <div class="message" v-else-if="message.type === 'TIMSoundElem'" :url="message.payload.url">
@@ -174,6 +176,7 @@
                  :focus="isFocus"
                  @focus="isFocus = true"
                  @blur="isFocus = false"
+                 @input="inputChange"
                  @confirm='sendMessage'/>
         </div>
         <div class="record"
@@ -258,7 +261,15 @@
               视频
             </div>
           </div>
-          <div class="block" @click="videoCall" v-if="currentConversation.type === 'C2C'">
+          <div class="block" @click="call(1)">
+            <div class="image">
+              <image src="/static/images/voice-call.png" class="icon"/>
+            </div>
+            <div class="name">
+              音频通话
+            </div>
+          </div>
+          <div class="block" @click="call(2)">
             <div class="image">
               <image src="/static/images/video.png" class="icon"/>
             </div>
@@ -270,16 +281,20 @@
       </div>
     </div>
     <div class="float-button-list">
-      <img src="/static/images/camera.png" class="video-icon" v-if="currentConversation.type === 'C2C'" @click="videoCall">
+      <img src="/static/images/camera.png" class="video-icon" v-if="currentConversation.type === 'C2C'" @click="call(2)">
       <img src="/static/images/conversation-profile.png" @click="toDetail">
     </div>
   </div>
+  </div>
+
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { emojiName, emojiMap, emojiUrl } from '../../utils/emojiMap'
-import { throttle } from '../../utils/index'
+import { throttle, getUserProfile } from '../../utils/index'
+import { decodeElement } from '../../utils/decodeElement'
+
 const audioContext = wx.createInnerAudioContext()
 const recorderManager = wx.getRecorderManager()
 const recordOptions = {
@@ -329,22 +344,46 @@ export default {
       revokeModal: false,
       revokeMessage: {},
       currentTime: 0,
-      currentTimeID: ''
+      currentTimeID: '',
+      bigEmojiList: [
+        {
+          icon: 'yz00',
+          list: ['yz00', 'yz01', 'yz02', 'yz03', 'yz04', 'yz05', 'yz06', 'yz07', 'yz08', 'yz09', 'yz10', 'yz11', 'yz12', 'yz13', 'yz14', 'yz15', 'yz16', 'yz17']
+        },
+        {
+          icon: 'ys00',
+          list: ['ys00', 'ys01', 'ys02', 'ys03', 'ys04', 'ys05', 'ys06', 'ys07', 'ys08', 'ys09', 'ys10', 'ys11', 'ys12', 'ys13', 'ys14', 'ys15']
+        },
+        {
+          icon: 'gcs00',
+          list: ['gcs00', 'gcs01', 'gcs02', 'gcs03', 'gcs04', 'gcs05', 'gcs06', 'gcs07', 'gcs08', 'gcs09', 'gcs10', 'gcs11', 'gcs12', 'gcs13', 'gcs14', 'gcs15', 'gcs16']
+        }
+      ],
+      curItemIndex: 0,
+      curBigEmojiItemList: [],
+      groupAt: false,
+      listType: '',
+      groupAtList: [],
+      oldLength: 0,
+      action: 'call', // 标示1v1通话和群通话
+      callType: 1, // 标示语音通话和视频通话
+      showGroupMemberList: false // 群组通话时选择成员列表弹窗组件
     }
   },
   onShow () {
+    wx.setNavigationBarTitle({
+      title: decodeURIComponent(this.set)
+    })
     this.isShow = true
+    this.isRecord = false
     const that = this
     this.currentTimeID = setInterval(function () {
       that.currentTime = new Date().getTime() / 1000
     }, 3000)
   },
   onLoad (options) {
-    this.set = options.toAccount
+    this.set = decodeURIComponent(options.toAccount)
     // 设置header——聊天对象昵称或群名
-    wx.setNavigationBarTitle({
-      title: this.set
-    })
     this.height = this.sysInfo.windowHeight
     let query = wx.createSelectorQuery()
     let that = this
@@ -361,11 +400,6 @@ export default {
         clearInterval(interval)
       }
     }, 600)
-    this.$bus.$off('atUser')
-    this.$bus.$on('atUser', (user) => {
-      this.messageContent += user.userID
-      this.messageContent += ' '
-    })
     recorderManager.onStart(() => {
       console.log('recorder start')
     })
@@ -427,12 +461,35 @@ export default {
             let data = list[i].payload.data
             list[i].payload.data = data.indexOf('@2x') > 0 ? data : `${data}@2x`
           }
+          // 1v1通话消息解析
+          if (state.conversation.currentConversationID.indexOf('C2C') === 0 && list[i].type === 'TIMCustomElem' && list[i].payload.data.indexOf('businessID') > -1) {
+            list[i].virtualDom = [{
+              name: '1v1call',
+              text: wx.$TRTCCallingComponent.extractCallingInfoFromMessage(list[i])
+            }]
+          }
+          // 群组通话消息解析
+          if (state.conversation.currentConversationID.indexOf('GROUP') === 0 && list[i].type === 'TIMCustomElem' && list[i].payload.data.indexOf('businessID') > -1) {
+            // list[i].payload._data = JSON.parse(JSON.stringify(list[i].payload.data)) // 保存data副本便于排查问题
+            const _data = JSON.parse(list[i].payload.data)
+            list[i].payload.data = wx.$TRTCCallingComponent.extractCallingInfoFromMessage(list[i])
+            list[i].payload.userIDList = [..._data.inviteeList] // 用于兼容群提示消息解析
+            list[i].payload.operationType = 256 // 接入侧自定义次code,与消息解析中对齐即可
+            list[i].type = 'TIMGroupTipElem' // 将自定义消息类型重置为群提示消息做渲染
+            list[i].virtualDom = decodeElement(list[i])
+            // console.warn(list[i])
+          }
         }
         return list
       },
+      selectedMember: state => state.conversation.selectedMember,
+      groupProfile: state => state.conversation.currentConversation.groupProfile,
       currentConversation: state => state.conversation.currentConversation,
       myInfo: state => state.user.myInfo,
-      sysInfo: state => state.global.systemInfo
+      sysInfo: state => state.global.systemInfo,
+      currentGroupMemberList: state => {
+        return state.group.currentGroupMemberList
+      }
     }),
     ...mapGetters(['isIphoneX'])
   },
@@ -476,13 +533,22 @@ export default {
             } else if (auth === false) { // 首次发起授权
               this.toSettingPage({
                 content: '请前往设置页打开麦克风',
-                suc: (res) => { if (!res.authSetting['scope.record']) { this.isRecord = false } },
-                fail: () => { this.isRecord = false },
-                cancel: () => { this.isRecord = false }
+                suc: (res) => {
+                  if (!res.authSetting['scope.record']) {
+                    this.isRecord = false
+                  }
+                },
+                fail: () => {
+                  this.isRecord = false
+                },
+                cancel: () => {
+                  this.isRecord = false
+                }
               })
             }
           },
-          fail: () => {}
+          fail: () => {
+          }
         })
       }
     },
@@ -494,9 +560,17 @@ export default {
             if (res.authSetting['scope.record'] === false) { // 已申请授权，但已被用户拒绝
               this.toSettingPage({
                 content: '请前往设置页打开麦克风',
-                suc: (res) => { if (!res.authSetting['scope.record']) { this.isRecord = false } },
-                fail: () => { this.isRecord = false },
-                cancel: () => { this.isRecord = false }
+                suc: (res) => {
+                  if (!res.authSetting['scope.record']) {
+                    this.isRecord = false
+                  }
+                },
+                fail: () => {
+                  this.isRecord = false
+                },
+                cancel: () => {
+                  this.isRecord = false
+                }
               })
             }
           },
@@ -574,6 +648,7 @@ export default {
     loseFocus () {
       this.handleClose()
     },
+
     // 下载文件模态框
     handleModalShow () {
       this.modalVisible = !this.modalVisible
@@ -688,6 +763,27 @@ export default {
       this.isMoreOpen = false
       this.isEmojiOpen = false
     },
+    inputChange (value) {
+      let _value = value.mp.detail.value // 非当前值
+      let newLength = _value.length
+      if (this.oldLength > newLength) {
+        this.oldLength = newLength
+        this.groupAt = false
+        return
+      }
+      this.oldLength = _value.length
+      if (this.currentConversation.type === this.TIM.TYPES.CONV_GROUP && _value.substring(_value.length - 1, _value.length) === '@') {
+        this.groupAt = true
+        this.listType = 'groupAt'
+        this.handleClose()
+        this.isRecord = true
+        wx.navigateTo({ url: '/pages/selected-members/main' })
+      }
+      if (_value.substring(_value.length - 1, _value.length) === ' ' && this.messageContent.indexOf('@ ') !== -1) {
+        this.groupAt = false
+        this.listType = ''
+      }
+    },
     isnull (content) {
       if (content === '') {
         return true
@@ -699,19 +795,39 @@ export default {
     // 发送text message 包含 emoji
     sendMessage () {
       if (!this.isnull(this.messageContent)) {
+        if (this.$store.getters.currentConversationType === this.TIM.TYPES.CONV_GROUP && this.groupAt) {
+          let message = wx.$app.createTextAtMessage({
+            to: this.$store.getters.toAccount,
+            conversationType: this.$store.getters.currentConversationType,
+            payload: {
+              text: this.messageContent,
+              atUserList: this.selectedMember // 'denny' 'lucy' 都是 userID，而非昵称
+            }
+          })
+          let index = this.$store.state.conversation.currentMessageList.length
+          this.$store.commit('sendMessage', message)
+          wx.$app.sendMessage(message).catch(() => {
+            this.$store.commit('changeMessageStatus', index)
+          })
+
+          this.groupAt = false
+          this.messageContent = ''
+          return
+        }
         const message = wx.$app.createTextMessage({
           to: this.$store.getters.toAccount,
           conversationType: this.$store.getters.currentConversationType,
-          payload: { text: this.messageContent }
+          payload: {text: this.messageContent}
         })
         let index = this.$store.state.conversation.currentMessageList.length
         this.$store.commit('sendMessage', message)
-        wx.$app.sendMessage(message).catch(() => {
+        wx.$app.sendMessage(message).then(() => {
+        }).catch(() => {
           this.$store.commit('changeMessageStatus', index)
         })
         this.messageContent = ''
       } else {
-        this.$store.commit('showToast', { title: '消息不能为空' })
+        this.$store.commit('showToast', {title: '消息不能为空'})
       }
       this.isFocus = false
       this.isEmojiOpen = false
@@ -858,29 +974,50 @@ export default {
       max = Math.floor(max)
       return Math.floor(Math.random() * (max - min)) + min
     },
-    videoCall () {
-      const options = {
-        call_id: '',
-        version: 3,
-        room_id: this.getRandomInt(0, 42949),
-        action: 0,
-        duration: 0,
-        invited_list: []
+    call (type) {
+      const currentConversationType = this.$store.getters.currentConversationType
+      this.action = 'call'
+      this.userIDList = []
+      this.callType = type
+      if (currentConversationType === 'GROUP') {
+        this.action = 'groupCall'
+        wx.navigateTo({ url: '/pages/selected-members/main?fr=calling' })
+        // this.selectUserList() // 测试用
+        return
       }
-      let args = JSON.stringify(options)
-      const message = wx.$app.createCustomMessage({
+      this.sendCalling(currentConversationType)
+    },
+    selectUserList () {
+      // this.userIDList = ['aallenguo', '26825']
+      this.sendCalling(this.$store.getters.currentConversationType)
+    },
+    groupCall () {
+      this.userIDList = [...this.selectedMember]
+      this.sendCalling(this.$store.getters.currentConversationType)
+      this.$store.commit('updateSelectedMember', [])
+    },
+    async sendCalling (conversationType) {
+      let isFromGroup = false
+      let userIDList = [this.myInfo.userID, this.$store.getters.toAccount]
+      if (conversationType === 'GROUP') {
+        isFromGroup = true
+        userIDList = [...this.userIDList]
+      }
+      const avatarList = await getUserProfile(userIDList)
+      // console.warn('avatarList--->', avatarList)
+      this.$store.commit('setCalling', true)
+      this.$store.commit('setCallData', {
+        isFromGroup: isFromGroup,
+        action: this.action,
+        sponsor: this.myInfo.userID,
         to: this.$store.getters.toAccount,
-        conversationType: this.$store.getters.currentConversationType,
-        payload: {
-          data: args,
-          description: '',
-          extension: ''
+        userIDList: this.userIDList,
+        avatarList: avatarList,
+        inviteData: {
+          callType: this.callType
         }
       })
-      this.$store.commit('sendMessage', message)
-      wx.$app.sendMessage(message)
-      let url = `../call/main?args=${args}&&from=${message.from}&&to=${message.to}`
-      wx.navigateTo({url})
+      wx.switchTab({ url: '/pages/index/main' })
       this.handleClose()
     },
     handleEmojiShow () {
@@ -912,7 +1049,38 @@ export default {
       this.messageContent = message.payload.text
     }
   },
-  destory () {}
+  watch: {
+    selectedMember (newVal) {
+      if (newVal.length > 0 && this.action === 'groupCall') {
+        // 延时处理避免switchTab时在某些手机上报错：fail no page
+        setTimeout(() => {
+          this.groupCall()
+        }, 500)
+        return
+      }
+      let atList = []
+      if (this.listType === 'groupAt') {
+        newVal.forEach((userId) => {
+          this.currentGroupMemberList.map((item) => {
+            if (userId === item.userID) {
+              atList.push(item.nameCard || item.nick || item.userID)
+            }
+            if (userId === '__kImSDK_MesssageAtALL__') {
+              atList.push('所有人')
+            }
+          })
+        })
+        atList = Array.from(new Set([...atList]))
+        atList.forEach((item, index) => {
+          if (index === 0) {
+            this.messageContent += `${item} `
+          } else {
+            this.messageContent += `@${item} `
+          }
+        })
+      }
+    }
+  }
 }
 </script>
 
@@ -1294,4 +1462,5 @@ li
   top 50%
   transform translateY(45%)
   margin-right -18px
+
 </style>

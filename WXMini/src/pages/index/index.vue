@@ -1,5 +1,6 @@
 <template>
-  <div class="chat-container">
+<div>
+  <div v-show="isShowChatContainer " class="chat-container">
     <div v-if="allConversation.length === 0" class="empty">
       <button type="button" class="empty-button" @click="empty">
         发起一段对话吧
@@ -46,8 +47,11 @@
           <div class="information">
             <div class="username">{{item.groupProfile.name || item.groupProfile.groupID}}</div>
             <div class="content" v-if="!item.lastMessage.isRevoked">
-              <template v-if="item.lastMessage.fromAccount === '@TIM#SYSTEM'">{{item.lastMessage.messageForShow}}</template>
-              <template v-else>{{item.lastMessage.fromAccount}}：{{item.lastMessage.messageForShow}}</template>
+              <div v-if="item.lastMessage.fromAccount === '@TIM#SYSTEM'">{{item.lastMessage.messageForShow}}</div>
+              <div v-else>
+                <span class="remind" style="color: red"  v-if="item.groupAtInfoList.length > 0">{{item.messageAt_Text}}</span>
+                {{item.lastMessage.fromAccount}}：{{item.lastMessage.messageForShow}}
+              </div>
             </div>
             <div class="content" v-else>
               <template v-if="myInfo.userID === item.lastMessage.fromAccount">你撤回了一条消息</template>
@@ -87,22 +91,31 @@
       </div>
     </template>
   </div>
+  <div v-show="!isShowChatContainer"><Calling ref="callingDom" /></div>
+</div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import Calling from '../../components/calling'
 import { throttle } from '../../utils/index'
+
 export default {
   data () {
     return {
+      TRTCCallingComponent: null,
       modalVisible: false,
-      conversation: {}
+      conversation: {},
+      isShowChatContainer: true
     }
   },
   computed: {
     ...mapState({
       allConversation: state => state.conversation.allConversation,
-      isSdkReady: state => state.global.isSdkReady
+      isSdkReady: state => state.global.isSdkReady,
+      isCalling: state => state.global.isCalling,
+      initTRTCCalling: state => state.global.initTRTCCalling,
+      currentPage: state => state.global.currentPage
     }),
     ...mapGetters(['totalUnreadCount', 'myInfo'])
   },
@@ -111,7 +124,38 @@ export default {
     throttle(wx.$app.getConversationList(), 1000)
     wx.stopPullDownRefresh()
   },
+  created () {},
+  mounted () {
+    if (this.initTRTCCalling) {
+      wx.$TRTCCallingComponent = this.$mp.page.selectComponent('#TRTCCalling-component')
+      this.$bindTRTCCallingRoomEvent(wx.$TRTCCallingComponent)
+      wx.$TRTCCallingComponent.login()
+      this.$store.commit('setInitTRTCCalling', false)
+    }
+  },
+  components: {
+    Calling
+  },
   methods: {
+    messageAtMeText () {
+      this.allConversation.forEach((conversation) => {
+        let text = ''
+        if (Array.isArray(conversation.groupAtInfoList) && conversation.groupAtInfoList.length > 0) {
+          conversation.groupAtInfoList.forEach((item) => {
+            if (item.atTypeArray[0] === wx.TIM.TYPES.CONV_AT_ME) {
+              text.indexOf('[@所有人]') !== -1 ? text = '[@所有人][有人@我]' : text = '[有人@我]'
+            }
+            if (item.atTypeArray[0] === wx.TIM.TYPES.CONV_AT_ALL) {
+              text.indexOf('[有人@我]') !== -1 ? text = '[有人@我][@所有人]' : text = '[@所有人]'
+            }
+            if (item.atTypeArray[0] === wx.TIM.TYPES.CONV_AT_ALL_AT_ME) {
+              text = '[@所有人][有人@我]'
+            }
+          })
+          conversation.messageAt_Text = text
+        }
+      })
+    },
     // 长按删除会话
     longTimePress (item) {
       this.conversation = item
@@ -159,6 +203,21 @@ export default {
     empty () {
       let url = '../search/main'
       wx.navigateTo({url})
+    },
+    showChatContainer () {
+      this.isShowChatContainer = true
+    },
+    hideChatContainer () {
+      this.isShowChatContainer = false
+    },
+    updatePageInfo (flag) {
+      if (flag) {
+        wx.setNavigationBarTitle({title: ''})
+        wx.hideTabBar()
+      } else {
+        wx.setNavigationBarTitle({title: '消息'})
+        wx.showTabBar()
+      }
     }
   },
   onLoad () {
@@ -166,10 +225,32 @@ export default {
       wx.showLoading({ title: '正在同步数据', mask: true })
     }
   },
+  onShow () {
+    wx.setKeepScreenOn({
+      keepScreenOn: true
+    })
+    // 当接收端在不在index页时在onshow钩子中监听isCalling变化，控制tabBar
+    this.updatePageInfo(this.isCalling)
+  },
   watch: {
     isSdkReady (newVal) {
       if (newVal) {
         wx.hideLoading()
+      }
+    },
+    allConversation (newVal) {
+      if (newVal) {
+        this.messageAtMeText(newVal)
+      }
+    },
+    isCalling (newVal) {
+      // 当接收端在index页时通过监听isCalling变化，控制UI和tabBar
+      if (this.currentPage === '/pages/index/main') {
+        if (newVal) {
+          this.hideChatContainer()
+          this.$refs.callingDom.handleInvited()
+        }
+        this.updatePageInfo(newVal)
       }
     }
   }

@@ -2,12 +2,20 @@ const globalModules = {
   state: {
     isSdkReady: false,
     isCalling: false,
-    rtcConfig: {}
+    initTRTCCalling: true,
+    rtcConfig: {},
+    callData: {
+      action: '',
+      data: {}
+    },
+    currentPage: ''
   },
   getters: {
     isSdkReady: state => state.isSdkReady,
     isCalling: state => state.isCalling,
-    rtcConfig: state => state.rtcConfig
+    rtcConfig: state => state.rtcConfig,
+    currentPage: state => state.currentPage,
+    callData: state => state.callData
   },
   mutations: {
     showToast (state, payload) {
@@ -23,8 +31,20 @@ const globalModules = {
     setCalling (state, payload) {
       state.isCalling = payload
     },
+    setInitTRTCCalling (state, payload) {
+      state.initTRTCCalling = payload
+    },
     setRtcConfig (state, payload) {
       state.rtcConfig = payload
+    },
+    setCallData (state, payload) {
+      state.callData = {
+        ...state.callData,
+        ...payload
+      }
+    },
+    setCurrentPage (state, payload) {
+      state.currentPage = payload
     }
   },
   actions: {

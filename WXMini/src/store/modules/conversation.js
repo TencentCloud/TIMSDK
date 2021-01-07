@@ -1,6 +1,7 @@
 import { formatTime } from '../../utils/index'
 import { decodeElement } from '../../utils/decodeElement'
-import TIM from 'tim-wx-sdk'
+// import TIM from 'tim-wx-sdk'
+import TIM from '../../../static/component/TRTCCalling/utils/tim-wx-sdk'
 
 const conversationModules = {
   state: {
@@ -10,7 +11,8 @@ const conversationModules = {
     currentMessageList: [], // 当前聊天消息列表
     nextReqMessageID: '', // 下一条消息标志
     isCompleted: false, // 当前会话消息是否已经请求完毕
-    isLoading: false // 是否正在请求
+    isLoading: false, // 是否正在请求
+    selectedMember: [] // 选中的群成员
   },
   getters: {
     allConversation: state => state.allConversation,
@@ -92,6 +94,9 @@ const conversationModules = {
       state.currentConversation = conversation
       state.currentConversationID = conversation.conversationID
     },
+    updateSelectedMember (state, memberList) {
+      state.selectedMember = memberList
+    },
     // 更新当前所有会话列表
     updateAllConversation (state, list) {
       for (let i = 0; i < list.length; i++) {
@@ -110,6 +115,7 @@ const conversationModules = {
       state.nextReqMessageID = '' // 下一条消息标志
       state.isCompleted = false // 当前会话消息是否已经请求完毕
       state.isLoading = false // 是否正在请求
+      state.selectedMember = []
     },
     resetAllConversation (state) {
       state.allConversation = []
