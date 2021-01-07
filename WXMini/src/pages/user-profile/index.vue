@@ -20,7 +20,7 @@
       </i-cell>
     </i-cell-group>
     <div class="action-list"  :style="{'margin-bottom': isIphoneX ? '34px' : 0}">
-      <button class="video-call" @click="videoCall">
+      <button class="video-call" @click="sendCalling">
         音视频通话
         <div class="new-badge">NEW</div>
       </button>
@@ -31,6 +31,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { getUserProfile } from '../../utils/index'
 export default {
   data () {
     return {
@@ -40,7 +41,8 @@ export default {
   },
   computed: {
     ...mapState({
-      blacklist: state => state.user.blacklist
+      blacklist: state => state.user.blacklist,
+      myInfo: state => state.user.myInfo
     }),
     ...mapGetters(['isIphoneX'])
   },
@@ -86,8 +88,27 @@ export default {
       })
       this.$store.commit('sendMessage', message)
       wx.$app.sendMessage(message)
-      let url = `../call/main?args=${args}&&from=${message.from}&&to=${message.to}`
-      wx.navigateTo({url})
+      // let url = `../call/main?args=${args}&&from=${message.from}&&to=${message.to}`
+      // wx.navigateTo({url})
+    },
+    async sendCalling () {
+      let userIDList = [this.myInfo.userID, this.$store.getters.toAccount]
+      const avatarList = await getUserProfile(userIDList)
+      // console.warn('avatarList--->', avatarList)
+      this.$store.commit('setCalling', true)
+      this.$store.commit('setCallData', {
+        isFromGroup: false,
+        action: 'call',
+        sponsor: this.myInfo.userID,
+        to: this.$store.getters.toAccount,
+        userIDList: userIDList,
+        avatarList: avatarList,
+        inviteData: {
+          callType: 2
+        }
+      })
+      wx.switchTab({ url: '/pages/index/main' })
+      // this.handleClose()
     },
     sendMessage () {
       this.$store.dispatch('checkoutConversation', `C2C${this.userProfile.userID}`)

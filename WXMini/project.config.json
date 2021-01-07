@@ -3,7 +3,7 @@
 	"setting": {
 		"urlCheck": false,
 		"es6": true,
-		"enhance": false,
+		"enhance": true,
 		"postcss": true,
 		"preloadBackgroundData": false,
 		"minified": true,
@@ -18,14 +18,22 @@
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,
 		"compileHotReLoad": false,
+		"useMultiFrameRuntime": false,
+		"useApiHook": true,
 		"babelSetting": {
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
 		},
+		"enableEngineNative": false,
+		"bundle": false,
 		"useIsolateContext": true,
 		"useCompilerModule": false,
-		"userConfirmedUseCompilerModuleSwitch": false
+		"userConfirmedUseCompilerModuleSwitch": false,
+		"userConfirmedBundleSwitch": true,
+		"packNpmManually": false,
+		"packNpmRelationList": [],
+		"minifyWXSS": true
 	},
 	"miniprogramRoot": "dist/wx/",
 	"compileType": "miniprogram",
@@ -33,13 +41,12 @@
 	"projectname": "demo",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
+	"libVersion": "2.14.1",
 	"condition": {
 		"search": {
-			"current": -1,
 			"list": []
 		},
 		"conversation": {
-			"current": -1,
 			"list": []
 		},
 		"game": {
@@ -47,7 +54,6 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
 			"list": []
 		}
 	}
