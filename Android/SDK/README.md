@@ -3,7 +3,7 @@
 ## 下载地址
 
 ### 标准版
-[最新 TUIKit aar、TUIKit-live aar 和 最新标准版 IM SDK aar 下载](https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/5.1.10/TIM_SDK_Android_latest_aar.zip)
+[最新 TUIKit aar、TUIKit-live aar 和 最新标准版 IM SDK aar 下载](https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/5.1.20/TIM_SDK_Android_latest_aar.zip)
 
 
 ### 精简版
