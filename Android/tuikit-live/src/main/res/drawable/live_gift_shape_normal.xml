@@ -6,7 +6,7 @@
         android:width="1dp"
         android:color="@color/live_gift_red" />
 
-    <solid android:color="@color/live_gift_select" />
+    <solid android:color="#E5E5E5" />
     <corners android:radius="5dp" />
 
 </shape>

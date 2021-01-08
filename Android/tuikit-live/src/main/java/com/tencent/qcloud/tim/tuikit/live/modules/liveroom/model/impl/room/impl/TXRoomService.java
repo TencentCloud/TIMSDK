@@ -235,7 +235,7 @@ public class TXRoomService implements ITXRoomService {
             return;
         }
 
-        if (mIsInitIMSDK) {
+        if (mIsAttachTuikit) {
             mIsLogin = false;
             mMySelfIMInfo.clean();
             if (callback != null) {

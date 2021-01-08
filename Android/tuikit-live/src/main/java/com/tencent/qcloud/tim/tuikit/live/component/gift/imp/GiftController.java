@@ -16,6 +16,7 @@ import java.util.List;
 public class GiftController {
     private List<GiftInfo> mSelectGiftInfoList;
     private int            mSelectGiftPageIndex = -1;
+    private GiftInfo       mSelectGiftInfo;
 
     public GiftController() {
         mSelectGiftInfoList = new ArrayList<>();
@@ -48,11 +49,7 @@ public class GiftController {
         mGvAdapter.setOnItemClickListener(new GiftPanelAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, GiftInfo giftInfo, int position, int index) {
-                if (giftClickListener != null) {
-                    if (giftInfo.isSelected) {
-                        giftClickListener.onClick(position, giftInfo);
-                    }
-                }
+                mSelectGiftInfo = giftInfo;
                 mSelectGiftPageIndex = index;
             }
         });
@@ -61,6 +58,10 @@ public class GiftController {
 
     public int getSelectPageIndex() {
         return mSelectGiftPageIndex;
+    }
+
+    public GiftInfo getSelectGiftInfo() {
+        return mSelectGiftInfo;
     }
 
     public interface GiftClickListener {

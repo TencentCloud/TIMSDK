@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -103,7 +102,7 @@ public class LiveRoomAnchorFragment extends BaseFragment {
     private TXCloudVideoView      mVideoViewPKAnchor;
     private RelativeLayout        mLayoutPKContainer;
     private SelectMemberView      mSelectMemberView;
-    private Button                mBottomStopPkBtn;
+    private TextView              mBottomStopPkBtn;
     private Group                 mGroupAfterLive;
     private Group                 mGroupButtomView;
     private HeartLayout           mHeartLayout;
@@ -206,6 +205,11 @@ public class LiveRoomAnchorFragment extends BaseFragment {
 
         @Override
         public void onAnchorEnter(final String userId) {
+            if (getContext() == null){
+                TUILiveLog.d(TAG,"getContext is null!");
+                return;
+            }
+
             mAnchorUserIdList.add(userId);
             final LiveVideoView view = mTUIVideoViewController.applyVideoView(userId);
             if (view == null) {
@@ -268,6 +272,11 @@ public class LiveRoomAnchorFragment extends BaseFragment {
 
         @Override
         public void onRequestJoinAnchor(final TRTCLiveRoomDef.TRTCLiveUserInfo userInfo, String reason) {
+            if (getContext() == null){
+                TUILiveLog.d(TAG,"getContext is null!");
+                return;
+            }
+
             if (mAnchorUserIdList != null && mAnchorUserIdList.size() >= MAX_LINK_MIC_SIZE) {
                 mLiveRoom.responseJoinAnchor(userInfo.userId, false, getString(R.string.live_warning_link_user_max_limit));
                 return;
@@ -307,6 +316,11 @@ public class LiveRoomAnchorFragment extends BaseFragment {
                     .setPositiveButton(R.string.live_accept, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            if (getContext() == null){
+                                TUILiveLog.d(TAG,"getContext is null!");
+                                return;
+                            }
+
                             if (mIsLinkMicStatus) {
                                 Toast.makeText(getContext(), R.string.live_link_mic_status, Toast.LENGTH_SHORT).show();
                                 return;
@@ -486,6 +500,11 @@ public class LiveRoomAnchorFragment extends BaseFragment {
                 mLiveRoom.requestRoomPK(memberEntity.roomId, memberEntity.userId, REQUEST_PK_TIME_OUT, new TRTCLiveRoomCallback.ActionCallback() {
                     @Override
                     public void onCallback(int code, String msg) {
+                        if (getContext() == null){
+                            TUILiveLog.d(TAG,"getContext is null!");
+                            return;
+                        }
+
                         mStatusTipsView.setText("");
                         mStatusTipsView.setVisibility(View.GONE);
                         if (code == 0) {
@@ -516,6 +535,11 @@ public class LiveRoomAnchorFragment extends BaseFragment {
         mLinkMicListDialog.setOnSelectedCallback(new LinkMicListDialog.onSelectedCallback() {
             @Override
             public void onItemAgree(LinkMicListDialog.MemberEntity memberEntity) {
+                if (getContext() == null){
+                    TUILiveLog.d(TAG,"getContext is null!");
+                    return;
+                }
+
                 if (mIsPkStatus) {
                     Toast.makeText(getContext(), R.string.live_pk_status, Toast.LENGTH_SHORT).show();
                     return;
@@ -621,6 +645,11 @@ public class LiveRoomAnchorFragment extends BaseFragment {
         mLiveRoom.createRoom(mRoomId, roomParam, new TRTCLiveRoomCallback.ActionCallback() {
             @Override
             public void onCallback(int code, String msg) {
+                if (getContext() == null){
+                    TUILiveLog.d(TAG, "getContext is null!");
+                    return;
+                }
+
                 Toast.makeText(getContext(), R.string.live_create_room_success, Toast.LENGTH_SHORT).show();
                 if (code == 0) {
                     mIsEnterRoom = true;
@@ -744,7 +773,7 @@ public class LiveRoomAnchorFragment extends BaseFragment {
         });
         // 初始化退出房间按钮
         CircleImageView buttonExitRoom = new CircleImageView(getContext());
-        buttonExitRoom.setImageResource(R.drawable.live_ic_close);
+        buttonExitRoom.setImageResource(R.drawable.live_exit_room);
         buttonExitRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -792,7 +821,7 @@ public class LiveRoomAnchorFragment extends BaseFragment {
                                 if (memberEntityList.size() == 0) {
                                     mSelectMemberView.setTitle("暂无可PK主播");
                                 } else {
-                                    mSelectMemberView.setTitle("PK 邀请");
+                                    mSelectMemberView.setTitle("PK列表");
                                 }
                                 mSelectMemberView.setList(memberEntityList);
                             }
@@ -927,6 +956,11 @@ public class LiveRoomAnchorFragment extends BaseFragment {
         mLiveRoom.startPublish("", new TRTCLiveRoomCallback.ActionCallback() {
             @Override
             public void onCallback(int code, String msg) {
+                if (getContext() == null){
+                    TUILiveLog.d(TAG, "getContext is null!");
+                    return;
+                }
+
                 if (code == 0) {
                     mStartTime = System.currentTimeMillis();
                     TUILiveLog.d(TAG, "start live success");

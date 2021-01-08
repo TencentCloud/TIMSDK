@@ -42,7 +42,7 @@ public class LinkMicListDialog extends BottomSheetDialog {
     private Set<String>        mUserIdSet;
 
     public LinkMicListDialog(@NonNull Context context) {
-        super(context);
+        super(context, R.style.live_action_sheet_theme);
         setContentView(R.layout.live_view_select_member);
         initView(context);
     }

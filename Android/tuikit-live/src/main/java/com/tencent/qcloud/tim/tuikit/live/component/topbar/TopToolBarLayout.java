@@ -31,10 +31,8 @@ public class TopToolBarLayout extends LinearLayout {
     private LinearLayout    mLayoutRoot;
     private CircleImageView mImageAnchorIcon;
     private TextView        mTextAnchorName;
-    private TextView        mTextAnchorEmpiricalValue;
     private TextView        mButtonAnchorFollow;
     private TextView        mAudienceNumber;
-    private RelativeLayout  mLayoutAudienceNumber;
     private RecyclerView    mRecycleAudiences;
 
     private TopAudienceListAdapter         mTopAudienceListAdapter;
@@ -63,13 +61,12 @@ public class TopToolBarLayout extends LinearLayout {
 
         initAudienceRecyclerView();
         initAudienceNumberView();
+        updateAudienceNumber();
     }
 
     private void initAnchorInfoView() {
         mImageAnchorIcon = mLayoutRoot.findViewById(R.id.iv_anchor_head);
         mTextAnchorName = mLayoutRoot.findViewById(R.id.tv_anchor_name);
-        mLayoutAudienceNumber = mLayoutRoot.findViewById(R.id.ll_audience_number);
-        mTextAnchorEmpiricalValue = mLayoutRoot.findViewById(R.id.tv_empirical_value);
         mButtonAnchorFollow = mLayoutRoot.findViewById(R.id.btn_anchor_follow);
 
         // 处理主播头像点击事件
@@ -140,7 +137,6 @@ public class TopToolBarLayout extends LinearLayout {
     public void setAnchorInfo(TRTCLiveRoomDef.LiveAnchorInfo anchorInfo) {
         mLiveAnchorInfo = anchorInfo;
         mTextAnchorName.setText(!TextUtils.isEmpty(anchorInfo.userName) ? anchorInfo.userName : anchorInfo.userId);
-//        mTextAnchorEmpiricalValue.setText(String.valueOf(anchorInfo.empiricalValue));
         if (!TextUtils.isEmpty(anchorInfo.avatarUrl)) {
             Glide.with(TUIKitLive.getAppContext()).load(anchorInfo.avatarUrl).into(mImageAnchorIcon);
         } else {
@@ -166,8 +162,8 @@ public class TopToolBarLayout extends LinearLayout {
     private void updateAudienceNumber() {
         int size = mTopAudienceListAdapter.getAudienceListSize();
         Log.d(TAG, "setOnlineNum number = " + size);
-        mAudienceNumber.setText(String.valueOf(size < 0 ? 0 : size));
-        mLayoutAudienceNumber.setVisibility(View.VISIBLE);
+        String audienceNum = mContext.getString(R.string.live_on_line_number, size < 0 ? 0 : size);
+        mAudienceNumber.setText(audienceNum);
     }
 
     public void setTopToolBarDelegate(TopToolBarDelegate delegate) {

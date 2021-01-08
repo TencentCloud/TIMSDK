@@ -87,7 +87,6 @@ public class BottomToolBarLayout extends ConstraintLayout {
     public void setRightButtonsLayout(List<CircleImageView> buttonList) {
         mLayoutFunction.removeAllViews();
         for (CircleImageView button : buttonList) {
-            button.setBackgroundResource(R.drawable.live_bottom_toolbar_btn_bg);
             mLayoutFunction.addView(button, mFunctionLayoutParams);
         }
     }

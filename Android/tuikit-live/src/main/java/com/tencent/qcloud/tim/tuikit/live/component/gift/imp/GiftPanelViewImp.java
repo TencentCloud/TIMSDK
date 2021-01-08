@@ -38,7 +38,7 @@ public class GiftPanelViewImp extends BottomSheetDialog implements IGiftPanelVie
     private GiftInfoDataHandler mGiftInfoDataHandler;
 
     public GiftPanelViewImp(Context context) {
-        super(context, R.style.live_gift_action_sheet_theme);
+        super(context, R.style.live_action_sheet_theme);
         mContext = context;
         mGiftViews = new ArrayList<>();
         setContentView(R.layout.live_dialog_gift_panel);
@@ -55,6 +55,19 @@ public class GiftPanelViewImp extends BottomSheetDialog implements IGiftPanelVie
                 if (mGiftPanelDelegate != null) {
                     Log.d(TAG, "on charge btn click");
                     mGiftPanelDelegate.onChargeClick();
+                }
+            }
+        });
+        findViewById(R.id.btn_send_gift).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mGiftController == null) {
+                    return;
+                }
+                GiftInfo giftInfo = mGiftController.getSelectGiftInfo();
+                if (giftInfo != null && mGiftPanelDelegate != null) {
+                    Log.d(TAG, "onGiftItemClick: " + giftInfo);
+                    mGiftPanelDelegate.onGiftItemClick(giftInfo);
                 }
             }
         });
@@ -90,15 +103,6 @@ public class GiftPanelViewImp extends BottomSheetDialog implements IGiftPanelVie
         if (pageSize > 1) {
             mDotsLayout.getChildAt(0).setSelected(true);
         }
-        mGiftController.setGiftClickListener(new GiftController.GiftClickListener() {
-            @Override
-            public void onClick(int position, GiftInfo giftInfo) {
-                if (mGiftPanelDelegate != null) {
-                    Log.d(TAG, "onGiftItemClick: " + giftInfo);
-                    mGiftPanelDelegate.onGiftItemClick(giftInfo);
-                }
-            }
-        });
     }
 
     /**

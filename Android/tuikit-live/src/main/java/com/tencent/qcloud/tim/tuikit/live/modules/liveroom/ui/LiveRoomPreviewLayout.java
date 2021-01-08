@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ public class LiveRoomPreviewLayout extends ConstraintLayout {
     private RadioButton mRbLiveRoomQualityNormal;
     private RadioButton mRbLiveRoomQualityMusic;
     private PreviewCallback mPreviewCallback;
-    private Button mButtonBeauty;
+    private ImageButton mButtonBeauty;
     private Button mButtonStartRoom;
 
     public LiveRoomPreviewLayout(Context context) {

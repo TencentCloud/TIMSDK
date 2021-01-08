@@ -229,7 +229,11 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
         }
         info.setConversationId(conversation.getConversationID());
         info.setGroup(isGroup);
-        info.setUnRead(conversation.getUnreadCount());
+        // Meeting 和 AVChatRoom 不支持未读数。（Meeting 后台可以配置支持，）
+        if (!V2TIMManager.GROUP_TYPE_MEETING.equals(conversation.getGroupType())
+                && !V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(conversation.getGroupType())) {
+            info.setUnRead(conversation.getUnreadCount());
+        }
         return info;
     }
 

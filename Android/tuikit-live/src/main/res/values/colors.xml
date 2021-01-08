@@ -11,16 +11,22 @@
     <!-- 基础色值 -->
     <color name="live_black20">#33000000</color> <!--不透明度20%黑-->
     <color name="live_white">#ffffff</color> <!--不透明度20%黑-->
-    <color name="live_dark_black">#000000</color>
+    <color name="live_dark_black">#FF111111</color>
+    <color name="live_light_black">#99111111</color>
+    <color name="live_color_orange">#FF9E00</color>
+    <color name="live_color_light_red">#FF5353</color>
+    <color name="live_color_light_red_transform">#CC5353</color>
+    <color name="live_color_line">#FFE5E5E5</color>
 
-    <color name="live_primary">#00A66b</color>
+    <color name="live_primary">#FF5353</color>
     <color name="live_color_red">#FF0000</color>
     <color name="live_color_white">#FFFFFF</color>
     <color name="live_color_grey">#44777777</color>
     <color name="live_color_yellow">#EEEE00</color>
-    <color name="live_color_top_bottom_bg">#99808183</color>
+    <color name="live_color_top_bottom_bg">#4D000000</color>
     <color name="live_color_top_bottom_bg_disabled">#4D4D4D</color>
     <color name="live_color_status_tip">#FF6B82A8</color>
+    <color name="live_color_duration">#FA5151</color>
 
     <!-- 直播间顶部主播信息 -->
     <color name="status_bar_color">#EDEDED</color>
@@ -32,7 +38,7 @@
     <color name="live_color_bg_detail_live">#FF13233F</color>
     <color name="live_color_text_hint">#FF6B82A8</color>
     <color name="live_color_text_blue">#FF0062E3</color>
-    <color name="live_color_shadow">#FF36455C</color>
+    <color name="live_color_shadow">#999999</color>
     <color name="live_color_bg_select_pk">#FF13233F</color>
 
     <!-- 消息/弹幕输入 -->

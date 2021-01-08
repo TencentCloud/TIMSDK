@@ -6,12 +6,13 @@
 
     <TextView
         android:id="@+id/tv_number"
-        android:layout_width="260dp"
-        android:layout_height="300dp"
+        android:background="@drawable/live_count_down_bg"
+        android:layout_width="172dp"
+        android:layout_height="172dp"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:text="3"
-        android:textColor="@color/live_color_red"
-        android:textSize="220dp"
+        android:textColor="@color/white"
+        android:textSize="100sp"
         android:visibility="gone" />
 </RelativeLayout>

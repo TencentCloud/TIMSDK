@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="live_gift_action_sheet_theme" parent="@android:style/Theme">
+    <style name="live_action_sheet_theme" parent="@android:style/Theme">
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 

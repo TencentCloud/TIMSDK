@@ -32,6 +32,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.aar'], dir: '../libs')
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     testImplementation 'junit:junit:4.12'
@@ -45,8 +46,9 @@ dependencies {
     implementation 'com.github.ctiao:DanmakuFlameMaster:0.5.3'
     implementation 'com.airbnb.android:lottie:3.4.2'
     implementation 'com.squareup.okhttp3:okhttp:3.2.0'
-    api 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
+    api 'com.tencent.liteav:LiteAVSDK_TRTC:8.0.9639'
+//    api 'com.tencent.liteav:LiteAVSDK_Enterprise:1.0.1'
 //    embed project(':audioeffectsettingkit')
 //    embed project(':beautysettingkit')
-api 'com.tencent.imsdk:imsdk:5.1.10'
+api 'com.tencent.imsdk:imsdk:5.1.20'
 }

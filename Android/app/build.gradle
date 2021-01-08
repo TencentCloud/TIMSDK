@@ -33,7 +33,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
@@ -54,6 +54,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.aar'], dir: '../libs')
+
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.squareup.okhttp3:okhttp:3.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
@@ -81,16 +83,18 @@ dependencies {
     // vivo
     implementation "com.tencent.tpns:vivo:1.2.1.2-release"
     // 华为
-    implementation 'com.tencent.tpns:huawei:1.2.1.2-release'
+    implementation 'com.tencent.tpns:huawei:1.2.1.3-release'
     implementation 'com.huawei.hms:push:5.0.2.300'
 
     // bugly sdk
     implementation 'com.tencent.bugly:crashreport:latest.release'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
 
-    api 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
-implementation 'com.tencent.imsdk:tuikit-live:5.1.10'
-implementation 'com.tencent.imsdk:tuikit:5.1.10'
+//    api 'com.tencent.liteav:LiteAVSDK_Enterprise:1.0.1'
+
+    api 'com.tencent.liteav:LiteAVSDK_TRTC:8.0.9639'
+implementation 'com.tencent.imsdk:tuikit:5.1.20'
+    implementation 'com.tencent.imsdk:tuikit-live:5.1.20'
 // implementation project(':tuikit')
-// implementation project(':tuikit-live')
+    //implementation project(':tuikit-live')
 }

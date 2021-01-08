@@ -23,14 +23,13 @@
         tools:visibility="visible" />
 
 
-    <com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView
+    <Button
         android:id="@+id/btn_close"
-        android:layout_width="@dimen/live_bottom_toolbar_btn_icon_size"
-        android:layout_height="@dimen/live_bottom_toolbar_btn_icon_size"
+        android:layout_width="@dimen/live_close_btn_width"
+        android:layout_height="@dimen/live_close_btn_width"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="5dp"
-        android:src="@drawable/live_ic_close"
-        android:background="@drawable/live_bottom_toolbar_btn_bg" />
+        android:background="@drawable/live_btn_close_circle" />
 </merge>

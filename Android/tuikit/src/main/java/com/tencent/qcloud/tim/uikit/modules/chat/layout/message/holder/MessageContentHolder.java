@@ -208,7 +208,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
 
         //// 对方已读标识的设置
         if (TUIKitConfigs.getConfigs().getGeneralConfig().isShowRead()) {
-            if (msg.isSelf()) {
+            if (msg.isSelf() && V2TIMMessage.V2TIM_MSG_STATUS_SEND_SUCC == msg.getStatus()) {
                 if (msg.isGroup()) {
                     isReadText.setVisibility(View.GONE);
                 } else {

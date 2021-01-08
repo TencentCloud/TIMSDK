@@ -72,7 +72,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
     private LinearLayout mMainAudioEffectPanel;
     private LinearLayout mBGMPanel;
     private List<BGMItemEntity> mBGMItemEntityList;
-    private TextView mTvClosePanel;
+    private Button   mTvClosePanel;
     private TextView mTvBGMVolume;
     private TextView mTvPitchLevel;
     private TextView mTvMicVolume;
@@ -111,7 +111,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
     private void initView() {
 
         mMainPanel = (LinearLayout) findViewById(R.id.ll_panel);
-        mTvClosePanel = (TextView) findViewById(R.id.tv_close_panel);
+        mTvClosePanel = (Button) findViewById(R.id.tv_close_panel);
         mTvBGMVolume =  (TextView) findViewById(R.id.tv_bgm_volume);
         mTvMicVolume = (TextView) findViewById(R.id.tv_mic_volume);
         mTvPitchLevel = (TextView) findViewById(R.id.tv_pitch_level);
@@ -374,7 +374,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
     private List<ItemEntity> createAudioChangeItems() {
         List<ItemEntity> list = new ArrayList<>();
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_changetype_original), R.drawable.audio_effect_setting_changetype_original_open, AUDIO_VOICECHANGER_TYPE_0));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_changetype_original), R.drawable.live_ic_none_normal, AUDIO_VOICECHANGER_TYPE_0));
         list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_changetype_child), R.drawable.audio_effect_setting_changetype_child, AUDIO_VOICECHANGER_TYPE_1));
         list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_changetype_luoli), R.drawable.audio_effect_setting_changetype_luoli, AUDIO_VOICECHANGER_TYPE_2));
         list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_changetype_dashu), R.drawable.audio_effect_setting_changetype_dashu, AUDIO_VOICECHANGER_TYPE_3));
@@ -391,7 +391,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
     private List<ItemEntity> createReverbItems() {
         List<ItemEntity> list = new ArrayList<>();
-        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_reverbtype_origin), R.drawable.audio_effect_setting_reverbtype_origin_high, AUDIO_REVERB_TYPE_0));
+        list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_reverbtype_origin), R.drawable.live_ic_none_normal, AUDIO_REVERB_TYPE_0));
         list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_reverbtype_ktv), R.drawable.audio_effect_setting_reverbtype_ktv, AUDIO_REVERB_TYPE_1));
         list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_reverbtype_room), R.drawable.audio_effect_setting_reverbtype_room, AUDIO_REVERB_TYPE_2));
         list.add(new ItemEntity(mContext.getResources().getString(R.string.audio_effect_setting_reverbtype_meeting), R.drawable.audio_effect_setting_reverbtype_meeting, AUDIO_REVERB_TYPE_3));
@@ -444,12 +444,12 @@ public class AudioEffectPanel extends BottomSheetDialog {
                 mTitleTv.setText(model.mTitle);
                 if (model.mIsSelected) {
                     mItemImg.setBorderWidth(4);
-                    mItemImg.setBorderColor(mContext.getResources().getColor(R.color.white));
-                    mTitleTv.setTextColor(mContext.getResources().getColor(R.color.white));
+                    mItemImg.setBorderColor(mContext.getResources().getColor(R.color.live_primary));
+                    mTitleTv.setTextColor(mContext.getResources().getColor(R.color.live_dark_black));
                 } else {
                     mItemImg.setBorderWidth(0);
                     mItemImg.setBorderColor(mContext.getResources().getColor(android.R.color.transparent));
-                    mTitleTv.setTextColor(mContext.getResources().getColor(R.color.white_alpha));
+                    mTitleTv.setTextColor(mContext.getResources().getColor(R.color.live_light_black));
                 }
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -522,7 +522,7 @@ public class AudioEffectPanel extends BottomSheetDialog {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private ImageView mItemImg;
+            private Button   mItemImg;
             private TextView mTitleTv;
             private TextView mTextActor;
 
@@ -533,7 +533,6 @@ public class AudioEffectPanel extends BottomSheetDialog {
 
             public void bind(final BGMItemEntity model, final int positon,
                              final OnItemClickListener listener) {
-                mItemImg.setImageResource(R.drawable.audio_effect_setting_bgm_play);
                 mTitleTv.setText(model.mTitle);
                 mTextActor.setText(model.mActor);
                 itemView.setOnClickListener(new View.OnClickListener() {
@@ -542,10 +541,16 @@ public class AudioEffectPanel extends BottomSheetDialog {
                         handleBGM(positon, model);
                     }
                 });
+                mItemImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        handleBGM(positon, model);
+                    }
+                });
             }
 
             private void initView(final View itemView) {
-                mItemImg = (ImageView) itemView.findViewById(R.id.iv_bgm_play);
+                mItemImg = (Button) itemView.findViewById(R.id.iv_bgm_play);
                 mTitleTv = (TextView) itemView.findViewById(R.id.tv_bgm_title);
                 mTextActor = (TextView) itemView.findViewById(R.id.tv_bgm_actor);
             }

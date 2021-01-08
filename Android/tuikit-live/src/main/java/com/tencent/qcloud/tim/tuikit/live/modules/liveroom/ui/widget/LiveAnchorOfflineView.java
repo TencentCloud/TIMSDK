@@ -3,18 +3,18 @@ package com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tim.tuikit.live.R;
-import com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView;
 import com.tencent.qcloud.tim.tuikit.live.utils.GlideEngine;
 
 public class LiveAnchorOfflineView extends RelativeLayout {
     private ImageView             mAudienceBackground;
     private TextView              mTvAnchorLeave;
-    private CircleImageView       mBtnClose;
+    private Button                mBtnClose;
     private AnchorOfflineCallback mAnchorOfflineCallback;
 
     public LiveAnchorOfflineView(Context context) {
@@ -30,7 +30,7 @@ public class LiveAnchorOfflineView extends RelativeLayout {
     private void initView() {
         mAudienceBackground = (ImageView) findViewById(R.id.audience_background);
         mTvAnchorLeave = (TextView) findViewById(R.id.tv_anchor_leave);
-        mBtnClose = (CircleImageView) findViewById(R.id.btn_close);
+        mBtnClose = (Button) findViewById(R.id.btn_close);
         mBtnClose.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

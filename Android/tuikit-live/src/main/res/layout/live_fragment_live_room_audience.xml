@@ -77,18 +77,19 @@
 
     <TextView
         android:id="@+id/state_tips"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/live_status_tips"
-        android:layout_marginBottom="5dp"
-        android:background="@color/live_color_status_tip"
-        android:gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:textColor="@color/live_white"
-        android:textSize="14sp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/layout_bottom_toolbar"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:background="@drawable/live_bg_state_tips"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/live_white"
+        android:textSize="13sp"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/live_status_tips" />
 
     <com.tencent.qcloud.tim.tuikit.live.component.gift.imp.GiftAnimatorLayout
         android:id="@+id/lottie_animator_layout"

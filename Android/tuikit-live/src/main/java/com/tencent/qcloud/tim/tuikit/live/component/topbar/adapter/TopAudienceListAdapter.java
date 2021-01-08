@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +16,6 @@ import com.tencent.qcloud.tim.tuikit.live.utils.GlideEngine;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class TopAudienceListAdapter extends RecyclerView.Adapter<TopAudienceListAdapter.ViewHolder> {
     private static final String TAG = "TopAudienceListAdapter";
@@ -99,7 +97,6 @@ public class TopAudienceListAdapter extends RecyclerView.Adapter<TopAudienceList
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private CircleImageView mImageAudienceIcon;
-        private TextView mTextAudienceWeight;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -107,9 +104,6 @@ public class TopAudienceListAdapter extends RecyclerView.Adapter<TopAudienceList
         }
 
         public void bind(final TRTCLiveRoomDef.TRTCLiveUserInfo audienceInfo, final OnItemClickListener listener) {
-            //用户经验值，目前写一个随机数
-            audienceInfo.audienceWeight = new Random().nextInt(10) + ".0万";
-            mTextAudienceWeight.setText(audienceInfo.audienceWeight);
             if (!TextUtils.isEmpty(audienceInfo.avatarUrl)) {
                 GlideEngine.loadImage(mImageAudienceIcon, audienceInfo.avatarUrl);
             } else {
@@ -126,7 +120,6 @@ public class TopAudienceListAdapter extends RecyclerView.Adapter<TopAudienceList
 
         private void initView(@NonNull final View itemView) {
             mImageAudienceIcon = itemView.findViewById(R.id.iv_audience_head);
-            mTextAudienceWeight = itemView.findViewById(R.id.iv_audience_weight);
         }
     }
 

@@ -38,7 +38,7 @@ public class SelectMemberView extends BottomSheetDialog {
     private int                mSeatIndex;
 
     public SelectMemberView(@NonNull Context context) {
-        super(context);
+        super(context, R.style.live_action_sheet_theme);
         setContentView(R.layout.live_view_select_member);
         initView(context);
     }
@@ -181,11 +181,9 @@ public class SelectMemberView extends BottomSheetDialog {
                 if (model.type == MemberEntity.TYPE_IDEL) {
                     mButtonInvite.setVisibility(View.VISIBLE);
                     mButtonInvite.setText("邀请");
-                    mButtonInvite.setBackgroundColor(context.getResources().getColor(R.color.live_color_text_blue));
                 } else if (model.type == MemberEntity.TYPE_WAIT_AGREE) {
                     mButtonInvite.setVisibility(View.VISIBLE);
                     mButtonInvite.setText("同意");
-                    mButtonInvite.setBackgroundColor(context.getResources().getColor(R.color.live_voice_room_color_text_red));
                 } else {
                     mButtonInvite.setVisibility(View.INVISIBLE);
                 }

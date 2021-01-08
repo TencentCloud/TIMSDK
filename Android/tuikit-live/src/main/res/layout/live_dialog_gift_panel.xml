@@ -6,6 +6,43 @@
     android:layout_height="@dimen/live_gift_panel_height"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:clickable="true"
+            android:layout_centerVertical="true"
+            android:text="直播不易，打赏主播一个小礼物吧"
+            android:textColor="@color/live_dark_black" />
+
+        <Button
+            android:id="@+id/btn_send_gift"
+            android:layout_width="85dp"
+            android:layout_height="31dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/live_confirm_btn_red_bg"
+            android:text="确认打赏"
+            android:textColor="@color/white"
+            android:textSize="13sp"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/live_color_line"
+        android:layout_marginTop="11dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px" />
     <include
         layout="@layout/live_layout_gift_panel_container" />
 
