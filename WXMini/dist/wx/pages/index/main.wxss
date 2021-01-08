@@ -130,7 +130,7 @@
 .delete-button {
   text-align: center;
 }
-.calling-container.data-v-5067cb67 {
+.calling-container.data-v-393548cf {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -138,7 +138,7 @@
   margin: 0;
   display: inline !important;
 }
-.calling-component.data-v-5067cb67 {
+.calling-component.data-v-393548cf {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -146,28 +146,28 @@
   margin: 0;
   z-index: 99;
 }
-.btn-operate.data-v-5067cb67 {
+.btn-operate.data-v-393548cf {
   display: flex;
   justify-content: space-between;
   position: absolute;
   bottom: 5vh;
   width: 100%;
 }
-.call-operate.data-v-5067cb67 {
+.call-operate.data-v-393548cf {
   width: 15vw;
   height: 15vw;
   border-radius: 15vw;
   padding: 10rpx;
   margin: 0 15vw;
 }
-.tips.data-v-5067cb67 {
+.tips.data-v-393548cf {
   width: 100%;
   height: 80rpx;
   line-height: 80rpx;
   text-align: center;
   color: #fff5ee;
 }
-.invite-call.data-v-5067cb67 {
+.invite-call.data-v-393548cf {
   background-image: url("https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png");
   position: absolute;
   top: 0;
@@ -175,14 +175,14 @@
   width: 100vw;
   height: 100vh;
 }
-.invite-call > .btn-operate.data-v-5067cb67 {
+.invite-call > .btn-operate.data-v-393548cf {
   display: flex;
   justify-content: center;
   position: absolute;
   bottom: 5vh;
   width: 100%;
 }
-.incoming-call.data-v-5067cb67 {
+.incoming-call.data-v-393548cf {
   background-image: url("https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png");
   position: absolute;
   top: 0;
@@ -190,14 +190,14 @@
   width: 100vw;
   height: 100vh;
 }
-.incoming-call > image.data-v-5067cb67 {
+.incoming-call > image.data-v-393548cf {
   width: 40vw;
   height: 40vw;
   display: block;
   margin: 20vw 30vw;
   margin-top: 40vw;
 }
-.invite-call > image.data-v-5067cb67 {
+.invite-call > image.data-v-393548cf {
   width: 40vw;
   height: 40vw;
   display: block;
