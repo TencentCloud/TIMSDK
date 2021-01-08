@@ -454,6 +454,10 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
         mButtonLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (getActivity() == null){
+                    TUILiveLog.d(TAG, "getActivity is null");
+                    return;
+                }
                 if (!mIsBeingLinkMic) {
                     long curTime = System.currentTimeMillis();
                     if (curTime < mLastLinkMicTime + LINK_MIC_INTERVAL) {
@@ -513,7 +517,7 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
         });
         // 初始化退出房间按钮
         CircleImageView buttonExitRoom = new CircleImageView(mContext);
-        buttonExitRoom.setImageResource(R.drawable.live_ic_close);
+        buttonExitRoom.setImageResource(R.drawable.live_exit_room);
         buttonExitRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -533,6 +537,11 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
         mLiveRoom.requestJoinAnchor(getString(R.string.live_request_link_mic_anchor, mSelfUserId), REQUEST_LINK_MIC_TIME_OUT, new TRTCLiveRoomCallback.ActionCallback() {
             @Override
             public void onCallback(int code, String msg) {
+                if (getActivity() == null){
+                    TUILiveLog.d(TAG, "getActivity is null");
+                    return;
+                }
+
                 mStatusTipsView.setText("");
                 mStatusTipsView.setVisibility(View.GONE);
                 if (code == 0) {
@@ -575,6 +584,11 @@ public class LiveRoomAudienceFragment extends BaseFragment implements TopToolBar
                     mLiveRoom.startPublish("", new TRTCLiveRoomCallback.ActionCallback() {
                         @Override
                         public void onCallback(int code, String msg) {
+                            if (getActivity() == null){
+                                TUILiveLog.d(TAG, "getActivity is null");
+                                return;
+                            }
+
                             if (code == 0) {
                                 mButtonLink.setEnabled(true);
                                 mIsBeingLinkMic = true;

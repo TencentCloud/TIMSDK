@@ -18,21 +18,21 @@
 
     <Button
         android:id="@+id/btn_close"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="@dimen/live_close_btn_width"
+        android:layout_height="@dimen/live_close_btn_width"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/live_ic_close"
+        android:background="@drawable/live_btn_close_circle"
         app:layout_constraintRight_toRightOf="@+id/cl_float_window"
         app:layout_constraintTop_toTopOf="@+id/cl_float_window" />
 
     <Button
         android:id="@+id/btn_full"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="@dimen/live_close_btn_width"
+        android:layout_height="@dimen/live_close_btn_width"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/live_ic_close"
+        android:background="@drawable/live_btn_close_circle"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="@+id/cl_float_window"
         app:layout_constraintTop_toTopOf="@+id/cl_float_window" />

@@ -25,16 +25,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="10dp"
-                android:src="@drawable/audio_effect_setting_bgm_back" />
+                android:src="@drawable/live_ic_back" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="8"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:padding="10dp"
                 android:text="@string/audio_effect_setting_bgm_title"
-                android:textColor="@android:color/white"
+                android:textColor="@color/live_dark_black"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -54,34 +55,35 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="53dp">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="音效设置"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
-
-
-            <TextView
-                android:id="@+id/tv_close_panel"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:paddingRight="20dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/audio_effect_setting_panel_close"
-                android:textColor="@android:color/white"
+                android:layout_centerInParent="true"
+                android:text="音效设置"
+                android:textColor="@color/live_dark_black"
                 android:textSize="16sp" />
 
-        </FrameLayout>
 
+            <Button
+                android:id="@+id/tv_close_panel"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:background="@drawable/live_btn_close_black"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp" />
+
+        </RelativeLayout>
+
+        <View
+            android:background="@color/live_color_line"
+            android:layout_width="match_parent"
+            android:layout_height="1px" />
 
         <LinearLayout
             android:id="@+id/ll_select_bgm"
@@ -99,11 +101,12 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:visibility="gone"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:textColor="@color/live_dark_black"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tv_bgm"
+                android:textStyle="bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="8"
@@ -111,8 +114,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text="@string/audio_effect_setting_bgm_title"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:textColor="@color/live_dark_black"
+                android:textSize="14sp" />
 
 
             <Button
@@ -126,7 +129,7 @@
                 android:padding="10dp"
                 android:text="@string/audio_effect_setting_panel_select_song"
                 android:visibility="visible"
-                android:textColor="@android:color/white"
+                android:textColor="@color/live_light_black"
                 android:textSize="14sp" />
 
             <TextView
@@ -138,7 +141,7 @@
                 android:paddingBottom="10dp"
                 android:text="00:00"
                 android:visibility="gone"
-                android:textColor="@android:color/white"
+                android:textColor="@color/live_light_black"
                 android:textSize="14sp"/>
 
             <TextView
@@ -150,7 +153,7 @@
                 android:paddingBottom="10dp"
                 android:text="/04:00"
                 android:visibility="gone"
-                android:textColor="@android:color/white"
+                android:textColor="@color/live_light_black"
                 android:textSize="14sp"/>
 
 
@@ -165,6 +168,7 @@
                 android:paddingLeft="10dp"
                 android:visibility="gone"
                 android:paddingRight="20dp"
+                android:textColor="@color/live_light_black"
                 android:src="@drawable/audio_effect_setting_bgm_play"/>
 
         </LinearLayout>
@@ -182,15 +186,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text="@string/audio_effect_setting_panel_music_volume"
-                android:textColor="@android:color/white"
+                android:textColor="@color/live_light_black"
                 android:textSize="14sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:src="@drawable/audio_effect_setting_volume_icon" />
 
             <SeekBar
                 android:id="@+id/sb_bgm_volume"
@@ -202,8 +199,8 @@
                 android:minHeight="3dp"
                 android:padding="10dp"
                 android:progress="100"
-                android:progressDrawable="@drawable/audio_effect_setting_seekbar_shape"
-                android:thumb="@drawable/audio_effect_setting_shape_seekbar_btn" />
+                android:progressDrawable="@drawable/live_seekbar_progress_drawable"
+                android:thumb="@drawable/live_seekbar_progress_thumb" />
 
             <TextView
                 android:id="@+id/tv_bgm_volume"
@@ -213,7 +210,7 @@
                 android:gravity="left"
                 android:padding="10dp"
                 android:text="100"
-                android:textColor="@android:color/white"
+                android:textColor="@color/live_dark_black"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -232,15 +229,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text="@string/audio_effect_setting_panel_mic_volume"
-                android:textColor="@android:color/white"
+                android:textColor="@color/live_dark_black"
                 android:textSize="14sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:src="@drawable/audio_effect_setting_volume_icon" />
 
             <SeekBar
                 android:id="@+id/sb_mic_volume"
@@ -252,8 +242,8 @@
                 android:minHeight="3dp"
                 android:padding="10dp"
                 android:progress="100"
-                android:progressDrawable="@drawable/audio_effect_setting_seekbar_shape"
-                android:thumb="@drawable/audio_effect_setting_shape_seekbar_btn" />
+                android:progressDrawable="@drawable/live_seekbar_progress_drawable"
+                android:thumb="@drawable/live_seekbar_progress_thumb" />
 
             <TextView
                 android:id="@+id/tv_mic_volume"
@@ -263,7 +253,7 @@
                 android:gravity="left"
                 android:padding="10dp"
                 android:text="100"
-                android:textColor="@android:color/white"
+                android:textColor="@color/live_dark_black"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -281,7 +271,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text="@string/audio_effect_setting_panel_music_pitch"
-                android:textColor="@android:color/white"
+                android:textColor="@color/live_dark_black"
                 android:textSize="14sp" />
 
             <SeekBar
@@ -294,8 +284,8 @@
                 android:minHeight="3dp"
                 android:padding="10dp"
                 android:progress="50"
-                android:progressDrawable="@drawable/audio_effect_setting_seekbar_shape"
-                android:thumb="@drawable/audio_effect_setting_shape_seekbar_btn" />
+                android:progressDrawable="@drawable/live_seekbar_progress_drawable"
+                android:thumb="@drawable/live_seekbar_progress_thumb" />
 
             <TextView
                 android:id="@+id/tv_pitch_level"
@@ -305,7 +295,7 @@
                 android:gravity="left"
                 android:padding="10dp"
                 android:text="0"
-                android:textColor="@android:color/white"
+                android:textColor="@color/live_dark_black"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -318,8 +308,9 @@
             android:layout_marginRight="10dp"
             android:gravity="left"
             android:text="@string/audio_effect_setting_panel_changer"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:textColor="@color/live_dark_black"
+            android:textStyle="bold"
+            android:textSize="15sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/audio_change_type_rv"
@@ -337,8 +328,9 @@
             android:layout_marginRight="10dp"
             android:gravity="left"
             android:text="@string/audio_effect_setting_panel_reverb"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:textColor="@color/live_dark_black"
+            android:textStyle="bold"
+            android:textSize="15sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/audio_reverb_type_rv"

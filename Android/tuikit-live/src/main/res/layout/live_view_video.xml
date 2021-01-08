@@ -7,13 +7,13 @@
 
     <Button
         android:id="@+id/btn_kick_out"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="@dimen/live_close_btn_width"
+        android:layout_height="@dimen/live_close_btn_width"
         android:layout_margin="5dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/live_btn_close"
+        android:background="@drawable/live_btn_close_circle"
         android:visibility="gone"
         tools:visibility="visible"/>
 

@@ -73,13 +73,13 @@ public class GiftPanelAdapter extends RecyclerView.Adapter<GiftPanelAdapter.View
         holder.mTextGiftName.setText(giftInfo.title);
         holder.mTextGiftPrice.setText(String.format(mContext.getString(R.string.live_gift_game_currency), giftInfo.price));
         if (giftInfo.isSelected) {
-            holder.mLayoutRootView.setBackgroundResource(R.drawable.live_gift_select_chose);
+            holder.mLayoutRootView.setBackgroundResource(R.drawable.live_gift_shape_normal);
             holder.mTextGiftName.setVisibility(View.GONE);
-            holder.mTextSendBtn.setVisibility(View.VISIBLE);
+//            holder.mTextSendBtn.setVisibility(View.VISIBLE);
         } else {
-            holder.mLayoutRootView.setBackgroundResource(R.drawable.live_gift_shape_tran);
+            holder.mLayoutRootView.setBackground(null);
             holder.mTextGiftName.setVisibility(View.VISIBLE);
-            holder.mTextSendBtn.setVisibility(View.GONE);
+//            holder.mTextSendBtn.setVisibility(View.GONE);
         }
     }
 
@@ -99,7 +99,7 @@ public class GiftPanelAdapter extends RecyclerView.Adapter<GiftPanelAdapter.View
         ImageView    mImageGift;
         TextView     mTextGiftName;
         TextView     mTextGiftPrice;
-        TextView     mTextSendBtn;
+//        TextView     mTextSendBtn;
 
         public ViewHolder(View view) {
             super(view);
@@ -107,7 +107,7 @@ public class GiftPanelAdapter extends RecyclerView.Adapter<GiftPanelAdapter.View
             mImageGift      = (ImageView)    view.findViewById(R.id.iv_gift_icon);
             mTextGiftName   = (TextView)     view.findViewById(R.id.tv_gift_name);
             mTextGiftPrice  = (TextView)     view.findViewById(R.id.tv_gift_price);
-            mTextSendBtn    = (TextView)     view.findViewById(R.id.tv_send);
+//            mTextSendBtn    = (TextView)     view.findViewById(R.id.tv_send);
         }
     }
 

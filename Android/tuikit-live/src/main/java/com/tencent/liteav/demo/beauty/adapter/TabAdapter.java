@@ -1,6 +1,9 @@
 package com.tencent.liteav.demo.beauty.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,6 +12,8 @@ import android.widget.TextView;
 import com.tencent.liteav.demo.beauty.model.BeautyInfo;
 import com.tencent.liteav.demo.beauty.model.TabInfo;
 import com.tencent.liteav.demo.beauty.utils.BeautyUtils;
+import com.tencent.qcloud.tim.tuikit.live.R;
+import com.tencent.qcloud.tim.tuikit.live.utils.UIUtil;
 
 public class TabAdapter extends BaseAdapter implements View.OnClickListener {
 
@@ -70,15 +75,20 @@ public class TabAdapter extends BaseAdapter implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         int index = (int) view.getTag();
-        setCurrentPosition(index, view);
+        if (view instanceof TextView) {
+            setCurrentPosition(index, (TextView) view);
+        }
     }
 
-    private void setCurrentPosition(int position, View view) {
+    private void setCurrentPosition(int position, TextView view) {
         if (mTextSelected != null) {
             BeautyUtils.setTextViewColor(mTextSelected, mBeautyInfo.getBeautyTabNameColorNormal());
+            mTextSelected.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
         }
         mTextSelected = (TextView) view;
         BeautyUtils.setTextViewColor(mTextSelected, mBeautyInfo.getBeautyTabNameColorSelect());
+        Drawable drawable= mContext.getResources().getDrawable(R.drawable.live_tab_view_select);
+        view.setCompoundDrawablesWithIntrinsicBounds(null,null,null,drawable);
         if (mTabClickListener != null) {
             mTabClickListener.onTabChange(getItem(position), position);
         }

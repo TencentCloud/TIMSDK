@@ -16,20 +16,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@android:color/white"
+            android:textColor="@color/live_dark_black"
+            android:textStyle="bold"
             android:textSize="16dp" />
 
-        <TextView
+        <Button
             android:id="@+id/beauty_tv_close"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:background="@drawable/live_btn_close_black"
+            android:layout_width="@dimen/live_close_btn_width"
+            android:layout_height="@dimen/live_close_btn_width"
+            android:layout_marginRight="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="@string/beauty_close"
-            android:textColor="@android:color/white"
             android:textSize="16dp" />
     </RelativeLayout>
 
@@ -63,8 +62,8 @@
             android:paddingEnd="12dp"
             android:paddingRight="12dp"
             android:progress="0"
-            android:progressDrawable="@drawable/beauty_rebuild_seekbar_progress_drawable"
-            android:thumb="@drawable/beauty_rebuild_seekbar_progress_thumb" />
+            android:progressDrawable="@drawable/live_seekbar_progress_drawable"
+            android:thumb="@drawable/live_seekbar_progress_thumb" />
 
         <TextView
             android:id="@+id/beauty_tv_seek_bar_value"

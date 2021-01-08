@@ -89,8 +89,12 @@
         app:layout_constraintTop_toTopOf="@+id/btn_bottom_stop_pk"
         app:layout_constraintEnd_toEndOf="@+id/btn_bottom_stop_pk"/>
 
-    <Button
+    <TextView
         android:id="@+id/btn_bottom_stop_pk"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/live_white"
@@ -208,17 +212,18 @@
 
     <TextView
         android:id="@+id/state_tips"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:visibility="gone"
-        android:background="@color/live_color_status_tip"
+        android:background="@drawable/live_bg_state_tips"
         android:gravity="center_vertical"
-        app:layout_constraintBottom_toTopOf="@id/layout_bottom_toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginBottom="5dp"
+        app:layout_constraintRight_toRightOf="parent"
         android:textColor="@color/live_white"
-        android:textSize="14sp"
-        android:layout_width="match_parent"
+        android:textSize="13sp"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/live_status_tips" />
 
     <com.tencent.qcloud.tim.tuikit.live.component.gift.imp.GiftAnimatorLayout

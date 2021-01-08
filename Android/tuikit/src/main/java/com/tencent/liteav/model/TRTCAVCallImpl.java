@@ -313,7 +313,7 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
             TUIKitLog.d(TAG, "onRemoteUserEnterRoom userId:" + userId);
             mCurRoomRemoteUserSet.add(userId);
             // 只有单聊这个时间才是正确的，因为单聊只会有一个用户进群，群聊这个时间会被后面的人重置
-            mEnterRoomTime = System.currentTimeMillis();
+            mEnterRoomTime = V2TIMManager.getInstance().getServerTime();
             if (mTRTCInteralListenerManager != null) {
                 mTRTCInteralListenerManager.onUserEnter(userId);
             }
@@ -436,6 +436,11 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
             if (!TextUtils.isEmpty(mCurGroupId) && !TextUtils.isEmpty(callModel.groupId)) {
                 if (mCurGroupId.equals(callModel.groupId)) {
                     mCurInvitedList.addAll(callModel.invitedList);
+                    //群组邀请ID会有重复情况，需要去重下
+                    Set<String> set = new HashSet<String>();
+                    set.addAll(mCurInvitedList);
+                    mCurInvitedList = new ArrayList<String>(set);
+
                     if (mTRTCInteralListenerManager != null) {
                         mTRTCInteralListenerManager.onGroupCallInviteeListUpdate(mCurInvitedList);
                     }
@@ -831,7 +836,7 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
 
         final boolean isGroup = (!TextUtils.isEmpty(realCallModel.groupId));
         if (action == CallModel.VIDEO_CALL_ACTION_HANGUP && mEnterRoomTime != 0 && !isGroup) {
-            realCallModel.duration = (int)(System.currentTimeMillis() - mEnterRoomTime) / 1000;
+            realCallModel.duration = (int)(V2TIMManager.getInstance().getServerTime() - mEnterRoomTime);
             mEnterRoomTime = 0;
         }
         String receiver = "";

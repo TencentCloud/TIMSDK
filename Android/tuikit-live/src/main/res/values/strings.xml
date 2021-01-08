@@ -75,13 +75,13 @@
     <string name="live_beauty_mopi">磨皮</string>
     <string name="live_create_room_success">创建房间成功</string>
     <string name="live_create_room_fail">创建房间失败</string>
-    <string name="live_agree">同意</string>
+    <string name="live_agree">接受</string>
     <string name="live_reject">拒绝</string>
-    <string name="live_audience_link_mic">申请上麦列表</string>
+    <string name="live_audience_link_mic">申请连麦列表</string>
     <string name="live_request_time_out">请求超时</string>
     <string name="live_anchor_accept_pk_timeout">主播超时未响应PK请求</string>
-    <string name="live_anchor_accept">主播同意上麦</string>
-    <string name="live_anchor_reject">主播拒绝上麦</string>
+    <string name="live_anchor_accept">主播同意连麦</string>
+    <string name="live_anchor_reject">主播拒绝连麦</string>
 
     <string name="report_success">举报成功，我们将在24小时内进行处理</string>
     <string name="report">举报</string>
@@ -89,6 +89,7 @@
     <string name="live_permission_denied">权限验证失败，请打开相关权限</string>
     <string name="live_pk_status">当前正在PK，无法接受连麦请求</string>
     <string name="live_link_mic_status">当前正在连麦，无法接受PK请求</string>
+    <string name="live_on_line_number">"在线：%d人"</string>
 
     <string name="beauty_confirm">确定</string>
     <string name="beauty_cancel">取消</string>

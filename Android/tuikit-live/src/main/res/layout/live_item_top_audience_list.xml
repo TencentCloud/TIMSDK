@@ -7,25 +7,10 @@
 
     <com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView
         android:id="@+id/iv_audience_head"
-        android:layout_width="@dimen/live_top_anchor_avatar_height"
-        android:layout_height="@dimen/live_top_anchor_avatar_height"
+        android:layout_width="@dimen/live_top_audience_avatar_height"
+        android:layout_height="@dimen/live_top_audience_avatar_height"
         android:layout_centerHorizontal="true"
         android:scaleType="centerCrop"
         android:src="@drawable/live_default_head_img" />
-
-
-    <TextView
-        android:id="@+id/iv_audience_weight"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/iv_audience_head"
-        android:layout_marginTop="-10dp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/live_top_item_experience_bg"
-        android:gravity="center"
-        android:textColor="@android:color/black"
-        android:textSize="10sp" />
 
 </RelativeLayout>

@@ -5,9 +5,8 @@
     android:layout_height="wrap_content"
     android:listSelector="#00000000"
     android:stretchMode="columnWidth"
-    android:numColumns="auto_fit"
     android:gravity="center"
     android:layout_gravity="center"
-    android:horizontalSpacing="10dp"
-    android:verticalSpacing="10dp" >
+    android:horizontalSpacing="12dp"
+    android:verticalSpacing="12dp" >
 </androidx.recyclerview.widget.RecyclerView>

@@ -236,7 +236,8 @@ public class TUIKitImpl {
                 intent.putExtra(GroupListenerConstants.KEY_MEMBER, sGson.toJson(memberList));
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 for (V2TIMGroupMemberInfo v2TIMGroupMemberInfo : memberList) {
-                    if (v2TIMGroupMemberInfo.getUserID().equals(V2TIMManager.getInstance().getLoginUser())) {
+                    String userID = v2TIMGroupMemberInfo.getUserID();
+                    if (userID != null && userID.equals(V2TIMManager.getInstance().getLoginUser())) {
                         GroupChatManagerKit.getInstance().notifyJoinGroup(groupID, false);
                         return;
                     }
@@ -256,7 +257,8 @@ public class TUIKitImpl {
             @Override
             public void onMemberInvited(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
                 for (V2TIMGroupMemberInfo v2TIMGroupMemberInfo : memberList) {
-                    if (v2TIMGroupMemberInfo.getUserID().equals(V2TIMManager.getInstance().getLoginUser())) {
+                    String userID = v2TIMGroupMemberInfo.getUserID();
+                    if (userID != null && userID.equals(V2TIMManager.getInstance().getLoginUser())) {
                         GroupChatManagerKit.getInstance().notifyJoinGroup(groupID, true);
                         return;
                     }
@@ -266,7 +268,8 @@ public class TUIKitImpl {
             @Override
             public void onMemberKicked(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
                 for (V2TIMGroupMemberInfo v2TIMGroupMemberInfo : memberList) {
-                    if (v2TIMGroupMemberInfo.getUserID().equals(V2TIMManager.getInstance().getLoginUser())) {
+                    String userID = v2TIMGroupMemberInfo.getUserID();
+                    if (userID != null && userID.equals(V2TIMManager.getInstance().getLoginUser())) {
                         GroupChatManagerKit.getInstance().notifyKickedFromGroup(groupID);
                         return;
                     }
