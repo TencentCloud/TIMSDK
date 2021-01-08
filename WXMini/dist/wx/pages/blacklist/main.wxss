@@ -1,21 +1,21 @@
 
-.blacklist.data-v-67fa5f29 {
+.blacklist.data-v-2de1ee7e {
   padding: 20rpx 0 8rpx 0;
   background-color: #ededed;
   height: 100vh;
 }
-.slot.data-v-67fa5f29 {
+.slot.data-v-2de1ee7e {
   padding: 0 0 8rpx 20rpx;
   font-size: 24rpx;
   color: #999;
 }
-.none.data-v-67fa5f29 {
+.none.data-v-2de1ee7e {
   padding: 20rpx;
   display: flex;
   justify-content: center;
   color: #495060;
 }
-.wrapper.data-v-67fa5f29 {
+.wrapper.data-v-2de1ee7e {
   display: flex;
   flex-wrap: wrap;
   padding: 8rpx 12rpx;
@@ -24,7 +24,7 @@
   border-top: 2rpx solid #dbdbdb;
   border-bottom: 2rpx solid #dbdbdb;
 }
-.list.data-v-67fa5f29 {
+.list.data-v-2de1ee7e {
   display: flex;
   padding: 20rpx 20rpx;
   background-color: #fff;
@@ -33,11 +33,11 @@
   border-top: 2rpx solid #dbdbdb;
   border-bottom: 2rpx solid #dbdbdb;
 }
-.list .avatar.data-v-67fa5f29 {
+.list .avatar.data-v-2de1ee7e {
   height: 80rpx;
   width: 80rpx;
 }
-.list .name.data-v-67fa5f29 {
+.list .name.data-v-2de1ee7e {
   padding-left: 50rpx;
   line-height: 80rpx;
   font-size: 32rpx;

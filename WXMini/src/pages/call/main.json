@@ -5,8 +5,5 @@
   "disableSwipeBack": true,
   "backgroundColor": "#f8f8f9",
   "enablePullDownRefresh": false,
-  "disableScroll": true,
-  "usingComponents": {
-    "webrtc-room": "../../../static/component/webrtc-room/webrtc-room"
-  }
+  "disableScroll": true
 }

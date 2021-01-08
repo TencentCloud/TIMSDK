@@ -1,1 +1,1 @@
-<import src="/pages/update-profile/index.vue.wxml" /><template is="031a4610" data="{{ ...$root['0'], $root }}"/>
+<import src="/pages/update-profile/index.vue.wxml" /><template is="57020f42" data="{{ ...$root['0'], $root }}"/>

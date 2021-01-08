@@ -1,9 +1,9 @@
 
-.search.data-v-1f364c65 {
+.search.data-v-50187bfd {
   background-color: #ededed;
   padding: 16rpx 16rpx 16rpx 16rpx;
 }
-.input.data-v-1f364c65 {
+.input.data-v-50187bfd {
   text-align: center;
   height: 64rpx;
   background-color: #fff;
@@ -11,13 +11,13 @@
   font-size: 32rpx;
   border: 2rpx solid #dbdbdb;
 }
-.avatar.data-v-1f364c65 {
+.avatar.data-v-50187bfd {
   padding-right: 20rpx;
 }
-.information.data-v-1f364c65 {
+.information.data-v-50187bfd {
   width: 100%;
 }
-.chat.data-v-1f364c65 {
+.chat.data-v-50187bfd {
   line-height: 64rpx;
   padding: 20rpx;
   background-color: #ededed;
@@ -25,34 +25,34 @@
   border-top: 2rpx solid #dbdbdb;
   border-bottom: 2rpx solid #dbdbdb;
 }
-.right.data-v-1f364c65 {
+.right.data-v-50187bfd {
   padding: 0 36rpx 0 16rpx;
 }
-.set.data-v-1f364c65 {
+.set.data-v-50187bfd {
   color: #4082a2;
   font-size: 28rpx;
 }
-.delete.data-v-1f364c65 {
+.delete.data-v-50187bfd {
   color: #c86957;
   font-size: 28rpx;
 }
-.username.data-v-1f364c65 {
+.username.data-v-50187bfd {
   font-size: 28rpx;
   color: #111;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.last.data-v-1f364c65 {
+.last.data-v-50187bfd {
   color: #495060;
   font-size: 24rpx;
 }
-.content.data-v-1f364c65 {
+.content.data-v-50187bfd {
   color: #495060;
   font-size: 24rpx;
   width: 80%;
 }
-.remain.data-v-1f364c65 {
+.remain.data-v-50187bfd {
   color: #fff;
   font-size: 24rpx;
   background-color: #fb5250;

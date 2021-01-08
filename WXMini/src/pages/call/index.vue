@@ -24,22 +24,22 @@
       </div>
       <div class="call" :style="isCalling ? {'display': 'flex', 'height': '100vh', 'width': '100vw'} : {'display': 'none'}">
         <div class="room">
-          <webrtc-room
-            id="webrtcroom"
-            :autoplay="true"
-            :enableCamera="true"
-            :roomID="roomID"
-            :userID="userID"
-            :userSig="userSig"
-            :sdkAppID="sdkAppID"
-            :beauty="beauty"
-            :muted="muted"
-            @RoomEvent="onRoomEvent"
-            smallViewLeft="calc(100vw - 30vw - 2vw)"
-            smallViewTop="20vw"
-            smallViewWidth="30vw"
-            smallViewHeight="30vh">
-          </webrtc-room>
+<!--          <webrtc-room-->
+<!--            id="webrtcroom"-->
+<!--            :autoplay="true"-->
+<!--            :enableCamera="true"-->
+<!--            :roomID="roomID"-->
+<!--            :userID="userID"-->
+<!--            :userSig="userSig"-->
+<!--            :sdkAppID="sdkAppID"-->
+<!--            :beauty="beauty"-->
+<!--            :muted="muted"-->
+<!--            @RoomEvent="onRoomEvent"-->
+<!--            smallViewLeft="calc(100vw - 30vw - 2vw)"-->
+<!--            smallViewTop="20vw"-->
+<!--            smallViewWidth="30vw"-->
+<!--            smallViewHeight="30vh">-->
+<!--          </webrtc-room>-->
           <div class="panel">
             <div class="close-btn">
               <div @click="microphone" class="normal">
