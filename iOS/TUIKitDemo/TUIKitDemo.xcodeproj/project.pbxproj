@@ -370,8 +370,8 @@
 				CF01447E216E1A4900C12E35 /* Sources */,
 				CF01447F216E1A4900C12E35 /* Frameworks */,
 				CF014480216E1A4900C12E35 /* Resources */,
-				3DC16A22BA3D881EFCA87F48 /* [CP] Embed Pods Frameworks */,
-				7DBB512BF069B91F48FBC729 /* [CP] Copy Pods Resources */,
+				72540DBA46A275FCEA0B5010 /* [CP] Embed Pods Frameworks */,
+				35BC93332A95F5789815994C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -463,22 +463,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3DC16A22BA3D881EFCA87F48 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7DBB512BF069B91F48FBC729 /* [CP] Copy Pods Resources */ = {
+		35BC93332A95F5789815994C /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -491,6 +476,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		72540DBA46A275FCEA0B5010 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

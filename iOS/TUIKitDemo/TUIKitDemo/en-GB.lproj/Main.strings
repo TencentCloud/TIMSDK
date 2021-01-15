@@ -1,40 +1,39 @@
 
 /* Class = "UIButton"; normalTitle = "账号密码登录"; ObjectID = "2fk-Js-riJ"; */
-"2fk-Js-riJ.normalTitle" = "log in via account";
+"2fk-Js-riJ.normalTitle" = "账号密码登录";
 
 /* Class = "UIButton"; normalTitle = "登录"; ObjectID = "8jc-YP-vv6"; */
-"8jc-YP-vv6.normalTitle" = "Login";
+"8jc-YP-vv6.normalTitle" = "登录";
 
 /* Class = "UILabel"; text = "登录·即时通信"; ObjectID = "FYr-lV-7eY"; */
-"FYr-lV-7eY.text" = "Login·IM";
+"FYr-lV-7eY.text" = "登录·即时通信";
 
 /* Class = "UIButton"; normalTitle = "+"; ObjectID = "GPZ-iZ-NTr"; */
 "GPZ-iZ-NTr.normalTitle" = "+";
 
 /* Class = "UITextField"; placeholder = "请输入验证码"; ObjectID = "HVD-3G-U4R"; */
-"HVD-3G-U4R.placeholder" = "please input vertify code";
+"HVD-3G-U4R.placeholder" = "请输入验证码";
 
 /* Class = "UITextField"; placeholder = "请输入手机号"; ObjectID = "Sf3-sD-vMh"; */
-"Sf3-sD-vMh.placeholder" = "please input phone number";
+"Sf3-sD-vMh.placeholder" = "请输入手机号";
 
 /* Class = "UIButton"; normalTitle = "获取验证码"; ObjectID = "T2s-k9-52b"; */
-"T2s-k9-52b.normalTitle" = "SMS";
+"T2s-k9-52b.normalTitle" = "获取验证码";
 
 /* Class = "UILabel"; text = "|"; ObjectID = "VD5-Ez-H67"; */
 "VD5-Ez-H67.text" = "|";
 
 /* Class = "UILabel"; text = "验证码"; ObjectID = "ZzM-q6-Wwo"; */
-"ZzM-q6-Wwo.text" = "Code";
+"ZzM-q6-Wwo.text" = "验证码";
 
 /* Class = "UITextView"; text = "86"; ObjectID = "b7c-nQ-0Kl"; */
 "b7c-nQ-0Kl.text" = "86";
 
 /* Class = "UIButton"; normalTitle = "访问官网"; ObjectID = "g0a-sw-KpI"; */
-"g0a-sw-KpI.normalTitle" = "visit official website";
+"g0a-sw-KpI.normalTitle" = "访问官网";
 
 /* Class = "UILabel"; text = "体验群组聊天，音视频对话等 IM 功能"; ObjectID = "h6Y-de-UkQ"; */
-"h6Y-de-UkQ.text" = "Experience group chat and other IM functions";
+"h6Y-de-UkQ.text" = "体验群组聊天，音视频对话等 IM 功能";
 
 /* Class = "UILabel"; text = "手机号"; ObjectID = "lCo-nh-Fc4"; */
-"lCo-nh-Fc4.text" = "Phone";
-
+"lCo-nh-Fc4.text" = "手机号";
