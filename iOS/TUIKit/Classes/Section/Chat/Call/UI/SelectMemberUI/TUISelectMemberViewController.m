@@ -13,6 +13,7 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUICallUtils.h"
 #import "TUIMemberPanelCell.h"
+#import "NSBundle+TUIKIT.h"
 
 #define kUserBorder 44.0
 #define kUserSpacing 2
@@ -44,7 +45,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = self.name?:@"发起呼叫";
+    self.title = self.name?:TUILocalizableString(Make-a-call);
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:self.cancelBtn];
@@ -74,7 +75,7 @@
 - (UIButton *)cancelBtn {
     if (!_cancelBtn.superview) {
          _cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-        [_cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+        [_cancelBtn setTitle:TUILocalizableString(Cancel) forState:UIControlStateNormal];
         [_cancelBtn setTitleColor:[UIColor d_systemBlueColor] forState:UIControlStateNormal];
         [_cancelBtn addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -85,7 +86,7 @@
 - (UIButton *)doneBtn {
     if (!_doneBtn.superview) {
         _doneBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-        [_doneBtn setTitle:@"完成" forState:UIControlStateNormal];
+        [_doneBtn setTitle:TUILocalizableString(Done) forState:UIControlStateNormal];
         [_doneBtn setAlpha:0.5];
         [_doneBtn setTitleColor:[UIColor d_systemBlueColor] forState:UIControlStateNormal];
         [_doneBtn addTarget:self action:@selector(onNext) forControlEvents:UIControlEventTouchUpInside];
@@ -193,7 +194,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"群成员";
+    return TUILocalizableString(TUIKitGroupProfileMember);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
@@ -318,11 +319,11 @@
             }
             UserModel *model = [[UserModel alloc] init];
             model.userId = info.userID;
-            if (info.nameCard != nil) {
+            if (info.nameCard.length > 0) {
                 model.name = info.nameCard;
-            } else if (info.friendRemark != nil) {
+            } else if (info.friendRemark.length > 0) {
                 model.name = info.friendRemark;
-            } else if (info.nickName != nil) {
+            } else if (info.nickName.length > 0) {
                 model.name = info.nickName;
             } else {
                 model.name = info.userID;
@@ -352,7 +353,7 @@
     if (self.optionalStyle & TUISelectMemberOptionalStyleAtAll) {
         UserModel *model = [[UserModel alloc] init];
         model.userId = kImSDK_MesssageAtALL;
-        model.name = @"所有人";
+        model.name = TUILocalizableString(All);
         [self.memberList addObject:model];
     }
 }

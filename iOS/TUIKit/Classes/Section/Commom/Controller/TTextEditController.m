@@ -9,6 +9,7 @@
 #import "TTextEditController.h"
 #import "THeader.h"
 #import "UIColor+TUIDarkMode.h"
+#import "NSBundle+TUIKIT.h"
 
 @interface TTextField : UITextField
 @property int margin;
@@ -55,7 +56,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) style:UIBarButtonItemStylePlain target:self action:@selector(onSave)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TUILocalizableString(Save) style:UIBarButtonItemStylePlain target:self action:@selector(onSave)];
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
 
     _inputTextField = [[TTextField alloc] initWithFrame:CGRectZero];

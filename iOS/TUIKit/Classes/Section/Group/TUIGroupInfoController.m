@@ -448,6 +448,7 @@
             [[V2TIMManager sharedInstance] dismissGroup:self.groupId succ:^{
                 @strongify(self)
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",self.groupId]];
                     if(self.delegate && [self.delegate respondsToSelector:@selector(groupInfoController:didDeleteGroup:)]){
                         [self.delegate groupInfoController:self didDeleteGroup:self.groupId];
                     }
@@ -459,6 +460,7 @@
             [[V2TIMManager sharedInstance] quitGroup:self.groupId succ:^{
                 @strongify(self)
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",self.groupId]];
                     if(self.delegate && [self.delegate respondsToSelector:@selector(groupInfoController:didQuitGroup:)]){
                         [self.delegate groupInfoController:self didQuitGroup:self.groupId];
                     }

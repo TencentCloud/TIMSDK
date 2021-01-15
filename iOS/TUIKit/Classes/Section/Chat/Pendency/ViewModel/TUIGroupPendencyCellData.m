@@ -10,6 +10,7 @@
 #import "Toast/Toast.h"
 #import "THeader.h"
 #import "THelper.h"
+#import "NSBundle+TUIKIT.h"
 @import ImSDK;
 
 @interface TUIGroupPendencyCellData ()
@@ -34,7 +35,7 @@
     _avatarUrl = [NSURL URLWithString:args.fromUserFaceUrl];
     _requestMsg = args.requestMsg;
     if (_requestMsg.length == 0) {
-        _requestMsg = [NSString stringWithFormat:@"%@申请加入群聊", _title];
+        _requestMsg = [NSString stringWithFormat:TUILocalizableString(TUIKitWhoRequestForJoinGroupFormat), _title];
     }
 
     return self;
@@ -42,8 +43,8 @@
 
 - (void)accept
 {
-    [[V2TIMManager sharedInstance] acceptGroupApplication:_pendencyItem reason:@"管理员同意申请" succ:^{
-        [THelper makeToast:@"已发送"];
+    [[V2TIMManager sharedInstance] acceptGroupApplication:_pendencyItem reason:TUILocalizableString(TUIKitAgreedByAdministor) succ:^{
+        [THelper makeToast:TUILocalizableString(Have-been-sent)];
         [[NSNotificationCenter defaultCenter] postNotificationName:TUIGroupPendencyCellData_onPendencyChanged object:nil];;
     } fail:^(int code, NSString *msg) {
         [THelper makeToastError:code msg:msg];
@@ -52,8 +53,8 @@
 }
 - (void)reject
 {
-    [[V2TIMManager sharedInstance] refuseGroupApplication:_pendencyItem reason:@"管理员拒绝申请" succ:^{
-        [THelper makeToast:@"已发送"];
+    [[V2TIMManager sharedInstance] refuseGroupApplication:_pendencyItem reason:TUILocalizableString(TUIkitDiscliedByAdministor) succ:^{
+        [THelper makeToast:TUILocalizableString(Have-been-sent)];
         [[NSNotificationCenter defaultCenter] postNotificationName:TUIGroupPendencyCellData_onPendencyChanged object:nil];;
     } fail:^(int code, NSString *msg) {
         [THelper makeToastError:code msg:msg];

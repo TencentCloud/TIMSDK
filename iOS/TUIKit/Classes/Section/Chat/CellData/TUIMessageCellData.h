@@ -55,12 +55,12 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 /**
  *  信息发送者头像 url
  */
-@property (nonatomic, strong) NSURL *avatarUrl;
+@property (nonatomic, strong) NSURL * __nullable avatarUrl;
 
 /**
  *  信息发送者头像图像
  */
-@property (nonatomic, strong) UIImage *avatarImage;
+@property (nonatomic, strong) UIImage *__nullable avatarImage;
 
 /**
  *  信息发送者昵称

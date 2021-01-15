@@ -9,6 +9,7 @@
 #import "THeader.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "UIColor+TUIDarkMode.h"
+#import "NSBundle+TUIKIT.h"
 
 @interface TDateEditController ()
 
@@ -31,8 +32,8 @@
 {
     [super viewDidLoad];
 
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStylePlain target:self action:@selector(onSave)];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(onCancel)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TUILocalizableString(Save)  style:UIBarButtonItemStylePlain target:self action:@selector(onSave)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TUILocalizableString(Cancel) style:UIBarButtonItemStylePlain target:self action:@selector(onCancel)];
 
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     self.datePicker = [[UIDatePicker alloc] initWithFrame:CGRectZero];

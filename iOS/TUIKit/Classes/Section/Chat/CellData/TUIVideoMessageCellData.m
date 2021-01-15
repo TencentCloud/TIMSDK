@@ -149,10 +149,13 @@
     *isExist = NO;
     if(self.direction == MsgDirectionOutgoing){
         //上传方本地原图是否有效
-        path = [NSString stringWithFormat:@"%@%@", TUIKit_Video_Path, _videoPath.lastPathComponent];
-        if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-            if(!isDir){
-                *isExist = YES;
+        // fix: 如果videPath或者videoItem.uuid等信息为空，导致path即为TUIKit_Video_Path，此时会导致SDK内部下载时将video路径给删掉了
+        if (_videoPath && _videoPath.lastPathComponent.length) {
+            path = [NSString stringWithFormat:@"%@%@", TUIKit_Video_Path, _videoPath.lastPathComponent];
+            if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
+                if(!isDir){
+                    *isExist = YES;
+                }
             }
         }
     }
@@ -160,10 +163,13 @@
     if(!*isExist){
         if(_videoItem){
             //查看本地是否存在
-            path = [NSString stringWithFormat:@"%@%@.%@", TUIKit_Video_Path, _videoItem.uuid, _videoItem.type];
-            if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-                if(!isDir){
-                    *isExist = YES;
+            // fix: 如果videPath或者videoItem.uuid等信息为空，导致path即为TUIKit_Video_Path，此时会导致SDK内部下载时将video路径给删掉了
+            if (_videoItem.uuid && _videoItem.uuid.length && _videoItem.type && _videoItem.type.length) {
+                path = [NSString stringWithFormat:@"%@%@.%@", TUIKit_Video_Path, _videoItem.uuid, _videoItem.type];
+                if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
+                    if(!isDir){
+                        *isExist = YES;
+                    }
                 }
             }
         }
@@ -182,10 +188,12 @@
     *isExist = NO;
     if(self.direction == MsgDirectionOutgoing){
         //上传方本地是否有效
-        path = [NSString stringWithFormat:@"%@%@", TUIKit_Video_Path, _snapshotPath.lastPathComponent];
-        if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-            if(!isDir){
-                *isExist = YES;
+        if (_snapshotPath && _snapshotPath.length) {
+            path = [NSString stringWithFormat:@"%@%@", TUIKit_Video_Path, _snapshotPath.lastPathComponent];
+            if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
+                if(!isDir){
+                    *isExist = YES;
+                }
             }
         }
     }
@@ -193,11 +201,13 @@
     if(!*isExist){
         if(_snapshotItem){
             //查看本地是否存在
-            path = [NSString stringWithFormat:@"%@%@", TUIKit_Video_Path, _snapshotItem.uuid];
-            path = [TUIKit_Video_Path stringByAppendingString:_snapshotItem.uuid];
-            if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-                if(!isDir){
-                    *isExist = YES;
+            if (_snapshotItem.uuid && _snapshotItem.uuid.length) {
+                path = [NSString stringWithFormat:@"%@%@", TUIKit_Video_Path, _snapshotItem.uuid];
+                path = [TUIKit_Video_Path stringByAppendingString:_snapshotItem.uuid];
+                if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
+                    if(!isDir){
+                        *isExist = YES;
+                    }
                 }
             }
         }

@@ -11,6 +11,7 @@
 #import "TCServiceManager.h"
 #import "THeader.h"
 #import "UIColor+TUIDarkMode.h"
+#import "NSBundle+TUIKIT.h"
 
 @import ImSDK;
 
@@ -29,7 +30,7 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
-    self.title = NSLocalizedString(@"ContactsBlackList", nil); // @"黑名单";
+    self.title = TUILocalizableString(TUIKitContactsBlackList); // @"黑名单";
     self.tableView.delaysContentTouches = NO;
 
     if (!self.viewModel) {

@@ -10,6 +10,7 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TScrollView.h"
 #import "MMLayout/UIView+MMLayout.h"
+#import "NSBundle+TUIKIT.h"
 
 @interface TUIImageViewController () <UIScrollViewDelegate>
 @property (nonatomic, strong) UIImageView *imageView;
@@ -70,7 +71,7 @@
         [self.view addSubview:_progress];
 
         _button = [[UIButton alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 80) * 0.5, self.view.frame.size.height - 60, 80, 30)];
-        [_button setTitle:@"查看原图" forState:UIControlStateNormal];
+        [_button setTitle:TUILocalizableString(View-the-original) forState:UIControlStateNormal];
         [_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _button.titleLabel.font = [UIFont systemFontOfSize:13];
         _button.backgroundColor = [UIColor clearColor];

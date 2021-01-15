@@ -376,7 +376,10 @@
 {
     CGFloat height = 0;
     if(_heightCache.count > indexPath.row){
-        return [_heightCache[indexPath.row] floatValue];
+        height = [_heightCache[indexPath.row] floatValue];
+    }
+    if (height) {
+        return height;
     }
     TUIMessageCellData *data = _uiMsgs[indexPath.row];
     height = [data heightOfWidth:Screen_Width];
@@ -669,18 +672,18 @@
 
     NSMutableArray *items = [NSMutableArray array];
     if ([data isKindOfClass:[TUITextMessageCellData class]]) {
-        [items addObject:[[UIMenuItem alloc] initWithTitle:@"复制" action:@selector(onCopyMsg:)]];
+        [items addObject:[[UIMenuItem alloc] initWithTitle:TUILocalizableString(Copy) action:@selector(onCopyMsg:)]];
     }
 
-    [items addObject:[[UIMenuItem alloc] initWithTitle:@"删除" action:@selector(onDelete:)]];
+    [items addObject:[[UIMenuItem alloc] initWithTitle:TUILocalizableString(Delete) action:@selector(onDelete:)]];
     V2TIMMessage *imMsg = data.innerMessage;
     if(imMsg){
         if([imMsg isSelf] && [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < 2 * 60){
-            [items addObject:[[UIMenuItem alloc] initWithTitle:@"撤回" action:@selector(onRevoke:)]];
+            [items addObject:[[UIMenuItem alloc] initWithTitle:TUILocalizableString(Revoke) action:@selector(onRevoke:)]];
         }
     }
     if(imMsg.status == V2TIM_MSG_STATUS_SEND_FAIL){
-        [items addObject:[[UIMenuItem alloc] initWithTitle:@"重发" action:@selector(onReSend:)]];
+        [items addObject:[[UIMenuItem alloc] initWithTitle:TUILocalizableString(Re-send) action:@selector(onReSend:)]];
     }
 
 
@@ -706,11 +709,11 @@
 - (void)onRetryMessage:(TUIMessageCell *)cell
 {
     _reSendUIMsg = cell.messageData;
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确定重发此消息吗？" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"重发" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TUILocalizableString(TUIKitTipsConfirmResendMessage) message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Re-send) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self sendMessage:self.reSendUIMsg];
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    [alert addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Cancel) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
 
     }]];
     [self.navigationController presentViewController:alert animated:YES completion:nil];
@@ -807,6 +810,9 @@
     if (index == NSNotFound)
         return;
     [_uiMsgs removeObject:msg];
+    if (index < self.heightCache.count) {
+        [self.heightCache replaceObjectAtIndex:index withObject:@(0)];
+    }
 
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];

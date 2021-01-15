@@ -12,6 +12,7 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "Toast/Toast.h"
+#import "NSBundle+TUIKIT.h"
 
 @interface TUIFileViewController () <UIDocumentInteractionControllerDelegate>
 @property (nonatomic, strong) UIImageView *image;
@@ -27,7 +28,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
 
-    self.title = @"文件";
+    self.title = TUILocalizableString(File);
     //left
     UIButton *leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [leftButton addTarget:self action:@selector(onBack:) forControlEvents:UIControlEventTouchUpInside];
@@ -68,16 +69,16 @@
         @strongify(self)
         int progress = [x intValue];
         if (progress < 100 && progress > 0) {
-            [self.button setTitle:[NSString stringWithFormat:@"正在下载%d%%", progress] forState:UIControlStateNormal];
+            [self.button setTitle:[NSString stringWithFormat:TUILocalizableString(TUIKitDownloadProgressFormat), progress] forState:UIControlStateNormal];
         } else {
-            [self.button setTitle:@"用其他应用程序打开" forState:UIControlStateNormal];
+            [self.button setTitle:TUILocalizableString(TUIKitOpenWithOtherApp) forState:UIControlStateNormal];
         }
     }];
     if ([_data isLocalExist]) {
-        [self.button setTitle:@"用其他应用程序打开" forState:UIControlStateNormal];
+        [self.button setTitle:TUILocalizableString(TUIKitOpenWithOtherApp) forState:UIControlStateNormal];
 
     } else {
-        [self.button setTitle:@"下载文件" forState:UIControlStateNormal];
+        [self.button setTitle:TUILocalizableString(Download) forState:UIControlStateNormal];
     }
 
 }

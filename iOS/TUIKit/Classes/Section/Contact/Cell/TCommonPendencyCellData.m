@@ -9,6 +9,7 @@
 #import "TIMUserProfile+DataProvider.h"
 #import "Toast/Toast.h"
 #import "THelper.h"
+#import "NSBundle+TUIKIT.h"
 
 @implementation TCommonPendencyCellData
 
@@ -22,7 +23,7 @@
         _title = _identifier;
     }
     if (application.addSource) {
-        _addSource = [NSString stringWithFormat:@"来源: %@", [application.addSource substringFromIndex:@"AddSource_Type_".length]];
+        _addSource = [NSString stringWithFormat:TUILocalizableString(TUIKitAddFriendSourceFormat), [application.addSource substringFromIndex:@"AddSource_Type_".length]];
     }
     _addWording = application.addWording;
     _avatarUrl = [NSURL URLWithString:application.faceUrl];
@@ -39,7 +40,7 @@
 - (void)agree
 {
     [[V2TIMManager sharedInstance] acceptFriendApplication:_application type:V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD succ:^(V2TIMFriendOperationResult *result) {
-        [THelper makeToast:@"已同意好友申请"];
+        [THelper makeToast:TUILocalizableString(TUIKitFriendApplicationApproved)];
     } fail:^(int code, NSString *msg) {
         [THelper makeToastError:code msg:msg];
     }];
@@ -48,7 +49,7 @@
 - (void)reject
 {
     [[V2TIMManager sharedInstance] refuseFriendApplication:_application succ:^(V2TIMFriendOperationResult *result) {
-        [THelper makeToast:@"已拒绝好友申请"];
+        [THelper makeToast:TUILocalizableString(TUIKitFirendRequestRejected)];
     } fail:^(int code, NSString *msg) {
         [THelper makeToastError:code msg:msg];
     }];

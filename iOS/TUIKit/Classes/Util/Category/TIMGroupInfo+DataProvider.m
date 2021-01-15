@@ -57,7 +57,7 @@
 }
 
 -(BOOL) isMeOwner{
-    return [self.owner isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]];
+    return [self.owner isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]] || (self.role == V2TIM_GROUP_MEMBER_ROLE_ADMIN);
 }
 
 -(BOOL) isPrivate{

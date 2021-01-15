@@ -81,7 +81,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 
     UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [_emptyView addSubview:tipsLabel];
-    tipsLabel.text = @"联系人列表空，请先添加好友";
+    tipsLabel.text = TUILocalizableString(TUIKitTipsContactListNil);
     tipsLabel.mm_sizeToFit().mm_center();
 
 

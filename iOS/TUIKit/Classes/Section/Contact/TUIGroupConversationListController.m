@@ -14,6 +14,7 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "UIColor+TUIDarkMode.h"
+#import "NSBundle+TUIKIT.h"
 
 @import ImSDK;
 
@@ -94,7 +95,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return @"删除";
+    return TUILocalizableString(Delete);
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath

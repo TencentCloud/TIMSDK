@@ -12,6 +12,7 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "SDWebImage/UIImageView+WebCache.h"
+#import "NSBundle+TUIKIT.h"
 
 @implementation TUIGroupPendencyCell
 
@@ -68,7 +69,7 @@
     [[RACObserve(pendencyData, isAccepted) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSNumber *isAccepted) {
         @strongify(self)
         if ([isAccepted boolValue]) {
-            [self.agreeButton setTitle:@"已同意" forState:UIControlStateNormal];
+            [self.agreeButton setTitle:TUILocalizableString(Agreed) forState:UIControlStateNormal];
             self.agreeButton.enabled = NO;
             [self.agreeButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
             self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
@@ -77,7 +78,7 @@
     [[RACObserve(pendencyData, isRejectd) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSNumber *isAccepted) {
         @strongify(self)
         if ([isAccepted boolValue]) {
-            [self.agreeButton setTitle:@"已拒绝" forState:UIControlStateNormal];
+            [self.agreeButton setTitle:TUILocalizableString(Disclined) forState:UIControlStateNormal];
             self.agreeButton.enabled = NO;
             [self.agreeButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
             self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
@@ -85,7 +86,7 @@
     }];
 
     if (!(pendencyData.isAccepted || pendencyData.isRejectd)) {
-        [self.agreeButton setTitle:@"同意" forState:UIControlStateNormal];
+        [self.agreeButton setTitle:TUILocalizableString(Agree) forState:UIControlStateNormal];
         self.agreeButton.enabled = YES;
         [self.agreeButton setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
         self.agreeButton.layer.borderColor = [UIColor grayColor].CGColor;

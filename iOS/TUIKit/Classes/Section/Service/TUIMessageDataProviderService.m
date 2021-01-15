@@ -204,6 +204,19 @@
                             }
                         }
                             break;
+                    case V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE:
+                    {
+                        for (V2TIMGroupChangeInfo *info in tips.memberChangeInfoList) {
+                            if ([info isKindOfClass:V2TIMGroupMemberChangeInfo.class]) {
+                                NSString *userId = [(V2TIMGroupMemberChangeInfo *)info userID];
+                                int32_t muteTime = [(V2TIMGroupMemberChangeInfo *)info muteTime];
+                                NSString *myId = V2TIMManager.sharedInstance.getLoginUser;
+                                str = [NSString stringWithFormat:@"%@%@", [userId isEqualToString:myId] ? TUILocalizableString(You) : userId, muteTime == 0 ? TUILocalizableString(TUIKitMessageTipsUnmute): TUILocalizableString(TUIKitMessageTipsMute)];
+                                break;
+                            }
+                        }
+                    }
+                        break;
                         default:
                             break;
                     }
@@ -397,7 +410,7 @@
     }
     NSError *err = nil;
     NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingMutableContainers error:&err];
-    if (param != nil) {
+    if (param != nil && [param isKindOfClass:[NSDictionary class]]) {
         NSInteger version = [param[@"version"] integerValue];
         NSString *businessID = param[@"businessID"];
         // 判断是不是音视频通话自定义消息
@@ -412,7 +425,9 @@
                 if (anchorName.length == 0) {
                     anchorName = param[@"anchorId"];
                 }
-                return [NSString stringWithFormat:@"[%@的直播]", anchorName];
+                NSString *format = TUILocalizableString(TUIKitWhosLiveFormat);
+                format = [NSString stringWithFormat:@"[%@]", format];
+                return [NSString stringWithFormat:format, anchorName];
             }
         }
         // 判断是不是群创建自定义消息
@@ -558,31 +573,31 @@
     
     NSInteger actionCode = [[param objectForKey:@"action"] integerValue];
     switch (actionCode) {
-        case 100: *content = @"直播间申请上麦"; break;
+        case 100: *content = TUILocalizableString(TUIKitSignalingLiveRequestForMic); break;
         case 101:
             if (info.actionType == SignalingActionType_Reject_Invite) {
-                *content = @"直播间申请上麦被拒绝";
+                *content = TUILocalizableString(TUIKitSignalingLiveRequestForMicRejected);
             } else if (info.actionType == SignalingActionType_Accept_Invite) {
-                *content = @"直播间同意上麦";
+                *content = TUILocalizableString(TUIKitSignalingAgreeMicRequest);
             }
             break;
-        case 102: *content = @"直播间申请关闭连麦"; break;
-        case 103: *content = @"直播间关闭连麦"; break;
+        case 102: *content = TUILocalizableString(TUIKitSignalingCloseLinkMicRequest); break;
+        case 103: *content = TUILocalizableString(TUIKitSignalingCloseLinkMic); break;
         case 200:
             if (info.actionType == SignalingActionType_Invite) {
-                *content = @"直播间申请PK";
+                *content = TUILocalizableString(TUIKitSignalingRequestForPK);
             }
             break;
         case 201:
             if (info.actionType == SignalingActionType_Reject_Invite) {
-                *content = @"直播间申请PK被拒绝";
+                *content = TUILocalizableString(TUIKitSignalingRequestForPKRejected);
             } else if (info.actionType == SignalingActionType_Accept_Invite) {
-                *content = @"直播间同意PK";
+                *content = TUILocalizableString(TUIKitSignalingRequestForPKAgree);
             }
             break;
-        case 202: *content = @"直播间退出PK"; break;
+        case 202: *content = TUILocalizableString(TUIKitSignalingPKExit); break;
         default:
-            *content = @"不能识别的通话指令";
+            *content = TUILocalizableString(TUIKitSignalingUnrecognlize);
             break;
     }
     return YES;
