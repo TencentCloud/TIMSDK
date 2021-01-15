@@ -75,19 +75,18 @@
     [self addSubview:self.anchorInfoBackgroundView];
     self.anchorInfoBackgroundView.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.7];
     [self.anchorInfoBackgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(@15);
-        make.top.equalTo(@10);
-        make.bottom.equalTo(@-10);
+        make.left.equalTo(self).offset(14);
+        make.height.mas_equalTo(40);
+        make.centerY.equalTo(self);
         make.width.equalTo(self.anchorInfoBackgroundView.mas_height).multipliedBy(190/44.0);
     }];
     ///主播头像
     self.avatarButton = [self.class newAvatarButton:self.anchorInfo.avatarUrl defaultImage:nil];
     [self.anchorInfoBackgroundView addSubview:self.avatarButton];
     [self.avatarButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(self.anchorInfoBackgroundView).offset(-3);
-        make.left.equalTo(self.anchorInfoBackgroundView).offset(1.5);
+        make.width.height.equalTo(self.anchorInfoBackgroundView.mas_height);
+        make.left.equalTo(self.anchorInfoBackgroundView);
         make.centerY.equalTo(self.anchorInfoBackgroundView);
-        make.width.equalTo(self.avatarButton.mas_height);
     }];
     [self.avatarButton addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -95,40 +94,30 @@
     self.nicknameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
     [self.anchorInfoBackgroundView addSubview:self.nicknameLabel];
     [self.nicknameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.avatarButton.mas_right).offset(10);
+        make.left.equalTo(self.avatarButton.mas_right).offset(5);
         make.bottom.equalTo(self.anchorInfoBackgroundView.mas_centerY);
-        make.height.equalTo(@18);
+        make.height.equalTo(@14);
         make.width.equalTo(self.mas_height).multipliedBy(145/44.0);
     }];
     self.nicknameLabel.backgroundColor = [UIColor clearColor];
     self.nicknameLabel.textColor = [UIColor whiteColor];
-    self.nicknameLabel.font = [UIFont systemFontOfSize:14];
+    self.nicknameLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:12];
     self.nicknameLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     
     self.tagButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 45, 20)];
     [self.anchorInfoBackgroundView addSubview:self.tagButton];
-    self.tagButton.backgroundColor = [UIColor redColor];
+    self.tagButton.backgroundColor = [UIColor clearColor];
     self.tagButton.titleLabel.font = [UIFont systemFontOfSize:11];
     self.tagButton.clipsToBounds = YES;
+    [self.tagButton setTitle:@"在线：" forState:UIControlStateNormal];
+    [self.tagButton setTitle:@"在线：" forState:UIControlStateHighlighted];
     [self.tagButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.avatarButton.mas_right).offset(10);
+        make.left.equalTo(self.avatarButton.mas_right).offset(5);
         make.top.equalTo(self.anchorInfoBackgroundView.mas_centerY);
         make.height.equalTo(@18);
-        make.width.equalTo(@40);
+        make.right.mas_equalTo(self.avatarButton.mas_right).offset(36);
     }];
-    [self.tagButton setTitle:@"经验" forState:UIControlStateNormal];
-    [self.tagButton setTitle:@"经验" forState:UIControlStateHighlighted];
 
-    self.tagNumLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 20)];
-    [self.anchorInfoBackgroundView addSubview:self.tagNumLabel];
-    self.tagNumLabel.font = [UIFont systemFontOfSize:11];
-    self.tagNumLabel.textColor = [UIColor whiteColor];
-    self.tagNumLabel.lineBreakMode = NSLineBreakByClipping;
-    [self.tagNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.tagButton.mas_right).offset(5);
-        make.top.height.equalTo(self.tagButton);
-        make.right.equalTo(self.nicknameLabel);
-    }];
     /// 关注
     self.followButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 44)];
     [self.anchorInfoBackgroundView addSubview:self.followButton];
@@ -146,21 +135,21 @@
     [self.followButton setTitle:@"关注" forState:UIControlStateNormal];
     [self.followButton setTitle:@"关注" forState:UIControlStateHighlighted];
     [self.followButton addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
-    /// TEST
-    self.tagNumLabel.text = @"2140";
 }
 
 - (void)layoutAudienceInfoView {
     /// 观众人数
-    self.onLineNumButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 55, 45)];
+    self.onLineNumButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 55, 12)];
+    [self.onLineNumButton.titleLabel setFont:[UIFont fontWithName:@"PingFangSC-Regular" size:11]];
+    [self.onLineNumButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [self addSubview:self.onLineNumButton];
     [self.onLineNumButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self).offset(-10);
-        make.centerY.equalTo(self.anchorInfoBackgroundView);
-        make.height.equalTo(self.avatarButton);
-        make.width.greaterThanOrEqualTo(self.onLineNumButton.mas_height).multipliedBy(1.25);
+        make.left.equalTo(self.tagButton.mas_right);
+        make.height.equalTo(@12);
+        make.centerY.equalTo(self.tagButton);
+        make.right.equalTo(self.anchorInfoBackgroundView);
     }];
-    self.onLineNumButton.backgroundColor = [TUILiveColor lightGrayColor];
+    self.onLineNumButton.backgroundColor = [UIColor clearColor];
     [self.onLineNumButton addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
     
     self.audienceListView = [[TUILiveTopBarAudienceListView alloc] initWithFrame:self.bounds];
@@ -169,7 +158,7 @@
         make.left.equalTo(self.anchorInfoBackgroundView.mas_right).offset(5);
         make.height.equalTo(self.anchorInfoBackgroundView);
         make.centerY.equalTo(self.anchorInfoBackgroundView);
-        make.right.equalTo(self.onLineNumButton.mas_left).offset(-5);
+        make.right.equalTo(self).offset(-5);
     }];
     [self bringSubviewToFront:self.onLineNumButton];
 }
@@ -198,9 +187,6 @@
     if ([self.nicknameLabel.text length] == 0) {
         self.nicknameLabel.text = @"主播";
     }
-    [self config:self.tagNumLabel weight:self.anchorInfo.weightValue];
-    [self.tagButton setTitle:self.anchorInfo.weightTagName.length>0?self.anchorInfo.weightTagName:@"经验" forState:UIControlStateNormal];
-    [self.tagButton setTitle:self.anchorInfo.weightTagName.length>0?self.anchorInfo.weightTagName:@"经验" forState:UIControlStateHighlighted];
     [self updateAudienceListUI];
 }
 
@@ -233,9 +219,9 @@
 
 - (NSString *)formatStringWithNum:(NSInteger)num {
     if (num >= 10000) {
-        return [NSString stringWithFormat:@"%0.1f万", num/10000.0];
+        return [NSString stringWithFormat:@"%0.1f万人", num/10000.0];
     } else {
-        return [NSString stringWithFormat:@"%ld", num];
+        return [NSString stringWithFormat:@"%ld人", num];
     }
 }
 

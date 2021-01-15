@@ -21,7 +21,6 @@ typedef void(^TUILiveTopToolBarClickBlock)(id toolBar, id info);
 @property(nonatomic, strong) UIButton *avatarButton; /// 主播头像
 @property(nonatomic, strong) UILabel *nicknameLabel; /// 主播昵称
 @property(nonatomic, strong) UIButton *tagButton; /// 主播《经验》标签
-@property(nonatomic, strong) UILabel *tagNumLabel; /// 主播《经验》值
 @property(nonatomic, strong) UIButton *followButton; /// 主播关注按钮
 @property(nonatomic, strong) UIButton *onLineNumButton; /// 在线人数
 @property(nonatomic, strong) TUILiveTopBarAudienceListView *audienceListView;

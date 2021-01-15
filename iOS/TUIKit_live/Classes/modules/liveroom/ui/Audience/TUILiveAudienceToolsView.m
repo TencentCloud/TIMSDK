@@ -98,7 +98,7 @@ typedef NS_ENUM(NSInteger, TUILiveBottomToolBarButtonType) {
                                                         selectedImage:nil];
     swichCameraButton.tag = TUILiveBottomToolBarButtonSwitchCamera;
     self.buttomToolBarSwichCameraButton = swichCameraButton;
-    [self.bottomToolBarRightButtons addObjectsFromArray:@[linkMicButton, likeButton, giftButton, closeButton]];
+    [self.bottomToolBarRightButtons addObjectsFromArray:@[giftButton, linkMicButton, likeButton, closeButton]];
     [bottomToolBar setRightButtons:self.bottomToolBarRightButtons];
     
     //聊天列表

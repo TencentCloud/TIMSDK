@@ -82,7 +82,7 @@
         return;
     }
     UIImageView *imageView = [[UIImageView alloc ] initWithFrame:frame];
-    imageView.image = [[UIImage imageNamed:@"live_audience_room_bottom_bar_like"] imageWithTintColor:[UIColor randomFlatDarkColor]];
+    imageView.image = [[UIImage imageNamed:@"live_heart"] imageWithTintColor:[UIColor randomFlatDarkColor]];
     [superView addSubview:imageView];
     imageView.alpha = 0;
     
@@ -159,7 +159,7 @@
     //比例
     CABasicAnimation *scaleAnim = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
     scaleAnim.fromValue = [NSNumber numberWithFloat:.0];
-    scaleAnim.toValue = [NSNumber numberWithFloat:1];
+    scaleAnim.toValue = [NSNumber numberWithFloat:0.5];
     scaleAnim.removedOnCompletion = NO;
     scaleAnim.fillMode = kCAFillModeForwards;
     scaleAnim.duration = .5;

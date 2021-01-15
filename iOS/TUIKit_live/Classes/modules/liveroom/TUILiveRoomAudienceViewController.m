@@ -862,8 +862,6 @@
         [statusInfoView stopPlay];
         [self.liveRoom stopPlayWithUserID:userID callback:nil];
         [statusInfoView emptyPlayInfo];
-    } else {
-        [self stopLocalPreview];
     }
     if ([self.renderView isNoAnchorInStatusInfoView]) {
         [self.renderView linkFrameRestore];

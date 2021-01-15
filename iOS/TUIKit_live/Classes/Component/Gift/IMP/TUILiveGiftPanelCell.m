@@ -60,9 +60,11 @@
 
 - (void)updateSelected:(BOOL)selected
 {
-    self.sendButton.hidden = !selected;
-    self.nameLabel.text = selected?[NSString stringWithFormat:@"游戏币%zd", self.giftInfo.value]:self.giftInfo.title;
-    self.valueLabel.hidden = selected;
+    self.sendButton.hidden = YES;
+//    self.nameLabel.text = selected?[NSString stringWithFormat:@"游戏币%zd", self.giftInfo.value]:self.giftInfo.title;
+    self.valueLabel.hidden = NO;
+    self.layer.borderColor = UIColor.redColor.CGColor;
+    self.layer.borderWidth = selected ? 1 : 0.0;
 }
 
 - (void)setGiftInfo:(TUILiveGiftInfo *)giftInfo
@@ -98,7 +100,7 @@
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.text = @"火箭";
         [_nameLabel sizeToFit];
-        _nameLabel.textColor = [UIColor whiteColor];
+        _nameLabel.textColor = [UIColor blackColor];
         _nameLabel.font = [UIFont systemFontOfSize:13.0];
     }
     return _nameLabel;
@@ -109,7 +111,7 @@
     if (_valueLabel == nil) {
         _valueLabel = [[UILabel alloc] init];
         _valueLabel.text = @"游戏币2989";
-        _valueLabel.textColor = [UIColor whiteColor];
+        _valueLabel.textColor = [UIColor blackColor];
         _valueLabel.font = [UIFont systemFontOfSize:13.0];
     }
     return _valueLabel;

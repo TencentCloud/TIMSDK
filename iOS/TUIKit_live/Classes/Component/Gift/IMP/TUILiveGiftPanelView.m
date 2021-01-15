@@ -74,15 +74,17 @@ static NSString *const reuseId = @"gift";
     self.backgroundColor = [UIColor clearColor];
     [self.animateView addSubview:self.backgroundView];
     [self.backgroundView addSubview:self.collectionView];
+    self.animateView.layer.cornerRadius = 8.0;
+    self.backgroundView.layer.cornerRadius = 8.0;
     [self.backgroundView addSubview:self.pageControl];
     [self.backgroundView addSubview:self.bottomView];
 
     [self.backgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.bottom.right.mas_equalTo(self.animateView);
+        make.top.leading.bottom.trailing.mas_equalTo(self.animateView);
     }];
 
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self.backgroundView);
+        make.leading.trailing.bottom.mas_equalTo(self.backgroundView);
         make.height.mas_equalTo(kGiftPannelViewBottomViewHeight);
     }];
 
@@ -93,15 +95,65 @@ static NSString *const reuseId = @"gift";
     }];
 
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.backgroundView).offset(10);
-        make.left.right.mas_equalTo(self.backgroundView);
+        make.top.mas_equalTo(self.backgroundView).offset(108);
+        make.leading.trailing.mas_equalTo(self.backgroundView);
         make.bottom.mas_equalTo(self.pageControl.mas_top);
     }];
+    
+    //send gift button
+    UIButton *sendGift = [UIButton new];
+    [sendGift setBackgroundColor:[UIColor colorWithRed:255/255.0 green:83/255.0 blue:83/255.0 alpha:1/1.0]];
+    [[sendGift titleLabel] setFont:[UIFont fontWithName:@"PingFangSC-Medium" size:14]];
+    [sendGift setTitle:@"确认打赏" forState:UIControlStateNormal];
+    [sendGift setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.backgroundView addSubview:sendGift];
+    [sendGift mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(76);
+        make.height.mas_equalTo(32);
+        make.trailing.mas_equalTo(-12);
+        make.centerY.mas_equalTo(self.backgroundView.mas_top).offset(44);
+    }];
+    sendGift.layer.cornerRadius = 16;
+    [sendGift addTarget:self action:@selector(sendSelectedGift) forControlEvents:UIControlEventTouchUpInside];
+    
+    //tip
+    UILabel *giftTip = [UILabel new];
+    giftTip.font = [UIFont fontWithName:@"PingFangSC-Medium" size:18];
+    giftTip.textColor = UIColor.blackColor;
+    giftTip.text = @"直播不易，打赏主播一个小礼物吧";
+    [self.backgroundView addSubview:giftTip];
+    [giftTip setAdjustsFontSizeToFitWidth:YES];
+    [giftTip mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(12);
+        make.centerY.mas_equalTo(sendGift);
+        make.height.mas_equalTo(22);
+        make.trailing.mas_equalTo(sendGift.mas_leading).offset(12);
+    }];
+    
+    //line
+    UIView *line = [UIView new];
+    line.backgroundColor = [UIColor lightGrayColor];
+    [self.backgroundView addSubview:line];
+    [line mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(giftTip.mas_bottom).offset(28);
+        make.leading.trailing.mas_equalTo(self.backgroundView);
+        make.height.mas_equalTo(0.5);
+    }];
+}
+
+- (void)sendSelectedGift {
+    if (self.selectedGift != nil) {
+        if ([self.delegate respondsToSelector:@selector(onGiftItemClick:)]) {
+            [self.delegate onGiftItemClick:self.selectedGift];
+        }
+    } else {
+        [self makeToast:@"请选择一个礼物"];
+    }
 }
 
 - (CGFloat)animateViewHeight
 {
-    return 270;
+    return 368;
 }
 
 - (void)tapCover
@@ -165,6 +217,7 @@ static NSString *const reuseId = @"gift";
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TUILiveGiftPanelCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseId forIndexPath:indexPath];
+    cell.backgroundColor = [UIColor whiteColor];
     if (indexPath.item < 0 || indexPath.item >= self.gifts.count) {
         return cell;
     }
@@ -208,7 +261,7 @@ static NSString *const reuseId = @"gift";
 {
     if (_backgroundView == nil) {
         _backgroundView = [[UIView alloc] init];
-        _backgroundView.backgroundColor = [UIColor blackColor];
+        _backgroundView.backgroundColor = [UIColor whiteColor];
     }
     return _backgroundView;
 }
@@ -220,7 +273,6 @@ static NSString *const reuseId = @"gift";
         if ([self.dataProvider respondsToSelector:@selector(getColumnNum)]) {
             num = [self.dataProvider getColumnNum];
         }
-        
         TUILiveGiftPanelCollectionViewLayout *layout = [[TUILiveGiftPanelCollectionViewLayout alloc] init];
         layout.rows = kGiftRows;
         layout.columns = num;
@@ -229,6 +281,7 @@ static NSString *const reuseId = @"gift";
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, 100, 100) collectionViewLayout:layout];
+        [_collectionView setBackgroundColor:[UIColor whiteColor]];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         _collectionView.pagingEnabled = YES;
@@ -242,8 +295,8 @@ static NSString *const reuseId = @"gift";
 {
     if (_pageControl == nil) {
         _pageControl = [[UIPageControl alloc] init];
-        _pageControl.currentPageIndicatorTintColor = [UIColor yellowColor];
-        _pageControl.pageIndicatorTintColor = [UIColor whiteColor];
+        _pageControl.currentPageIndicatorTintColor = [UIColor grayColor];
+        _pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
         _pageControl.numberOfPages = 1;
         _pageControl.currentPage = 0;
         _pageControl.userInteractionEnabled = NO;

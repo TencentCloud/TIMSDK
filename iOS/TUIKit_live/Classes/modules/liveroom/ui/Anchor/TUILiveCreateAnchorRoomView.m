@@ -16,9 +16,9 @@
 #import "TUILiveUserProfile.h"
 #import <AVFoundation/AVFoundation.h>
 
-#define AUDIO_QUALITY_SELECTED_COLOR [UIColor colorWithRed:76/255.0 green:163/255.0 blue:113/255.0 alpha:1.0]
+#define AUDIO_QUALITY_SELECTED_COLOR [UIColor colorWithRed:250/255.0 green:81/255.0 blue:81/255.0 alpha:1/1.0]
 #define AUDIO_QUALITY_DEFAULT_COLOR  [UIColor colorWithWhite:0.5 alpha:0.6]
-#define BOTTOM_BTN_ICON_WIDTH  35
+#define BOTTOM_BTN_ICON_WIDTH  32
 
 @implementation TUILiveRoomPublishParams
 
@@ -100,27 +100,23 @@
 // 初始化子视图属性
 - (void)constructSubViews {
     _publishBtn = [[UIButton alloc] init];
-    [_publishBtn setBackgroundColor:[TUILiveColor appTintColor]];
+    [_publishBtn setBackgroundColor:AUDIO_QUALITY_SELECTED_COLOR];
     [[_publishBtn layer] setCornerRadius:8];
     [_publishBtn setTitle:@"开始直播" forState:UIControlStateNormal];
     [[_publishBtn titleLabel] setFont:[UIFont systemFontOfSize:22]];
+    [_publishBtn.layer setCornerRadius:22];
     
     _cameraBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_cameraBtn setImage:[UIImage imageNamed:@"live_anchor_camera"] forState:UIControlStateNormal];
+    [_cameraBtn setImage:[UIImage imageNamed:@"live_start_camera"] forState:UIControlStateNormal];
     
     _beautyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [_beautyBtn setImage:[UIImage imageNamed:@"live_anchor_beauty"] forState:UIControlStateNormal];
-    [_beautyBtn setTitle:@"美颜" forState:UIControlStateNormal];
-    [_beautyBtn setTitleColor:[TUILiveColor appTintColor] forState:UIControlStateNormal];
-    [_beautyBtn setBackgroundColor:RGB(255, 255, 255)];
-    _beautyBtn.layer.cornerRadius = 8;
-//    _beautyBtn
+    [_beautyBtn setImage:[UIImage imageNamed:@"live_start_beauty"] forState:UIControlStateNormal];
     
     _closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_closeBtn setImage:[UIImage imageNamed:@"live_anchor_close"] forState:UIControlStateNormal];
+    [_closeBtn setImage:[UIImage imageNamed:@"live_start_close"] forState:UIControlStateNormal];
     
     _createTopPanelView = [[UIView alloc] init];
-    [_createTopPanelView setBackgroundColor:[UIColor colorWithWhite:0.5 alpha:0.4]];
+    [_createTopPanelView setBackgroundColor:[UIColor clearColor]];
     [[_createTopPanelView layer] setCornerRadius:6];
     
     _userAvatar = [[UIImageView alloc] init];
@@ -136,20 +132,20 @@
     
     _audioQualityLabel = [[UILabel alloc] init];
     _audioQualityLabel.text = @"直播音质";
-    _audioQualityLabel.font = [UIFont systemFontOfSize:16];
+    _audioQualityLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:14];
     _audioQualityLabel.textColor = [UIColor whiteColor];
     _audioQualityLabel.textAlignment = NSTextAlignmentCenter;
     
     _standardQualityButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_standardQualityButton setBackgroundColor:AUDIO_QUALITY_DEFAULT_COLOR];
     [_standardQualityButton setTitle:@"标准" forState:UIControlStateNormal];
-    _standardQualityButton.titleLabel.font = [UIFont systemFontOfSize:15];
+    _standardQualityButton.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:10];
     _standardQualityButton.layer.cornerRadius = 8;
     
     _musicQualityButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_musicQualityButton setBackgroundColor:AUDIO_QUALITY_SELECTED_COLOR];
     [_musicQualityButton setTitle:@"音乐" forState:UIControlStateNormal];
-    _musicQualityButton.titleLabel.font = [UIFont systemFontOfSize:15];
+    _musicQualityButton.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:10];
     _musicQualityButton.layer.cornerRadius = 8;
     _musicQualityButton.selected = YES;
 }
@@ -174,11 +170,14 @@
 
 // 视图布局
 - (void)layoutUI {
-    [_publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.mas_bottom).offset(-(IPHONE_X ? 66 : 34));
-        make.height.mas_equalTo(50);
-        make.width.mas_equalTo(160);
-        make.right.equalTo(self.mas_right).offset(-40);
+    [_beautyBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.equalTo(self).offset(12);
+        if (@available(iOS 11.0, *)) {
+            make.top.mas_equalTo(self.safeAreaInsets.top).offset(40);
+        } else {
+            make.top.mas_equalTo(20);
+        }
+        make.width.height.mas_equalTo(32);
     }];
     [_cameraBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         if (@available(iOS 11.0, *)) {
@@ -186,14 +185,8 @@
         } else {
             make.top.mas_equalTo(20);
         }
-        make.trailing.mas_equalTo(-20);
+        make.leading.mas_equalTo(_beautyBtn.mas_trailing).offset(12);
         make.height.width.mas_equalTo(BOTTOM_BTN_ICON_WIDTH);
-    }];
-    [_beautyBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(_publishBtn.mas_centerY);
-        make.left.equalTo(self.mas_left).offset(40);
-        make.height.mas_equalTo(50);
-        make.width.mas_equalTo(120);
     }];
     [_closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         if (@available(iOS 11.0, *)) {
@@ -201,12 +194,18 @@
         } else {
             make.top.mas_equalTo(20);
         }
-        make.leading.mas_equalTo(20);
+        make.trailing.mas_equalTo(-12);
         make.height.width.mas_equalTo(BOTTOM_BTN_ICON_WIDTH);
     }];
+    [_publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.mas_bottom).offset(-(IPHONE_X ? 74 : 40));
+        make.height.mas_equalTo(44);
+        make.width.mas_equalTo(190);
+        make.centerX.mas_equalTo(self);
+    }];
     [_createTopPanelView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self).offset(20);
-        make.trailing.equalTo(self).offset(-20);
+        make.leading.equalTo(self).offset(0);
+        make.trailing.equalTo(self).offset(0);
         make.top.mas_equalTo(110);
         make.bottom.equalTo(self.userAvatar.mas_bottom).offset(10);
     }];
@@ -221,24 +220,23 @@
         make.trailing.mas_equalTo(-12);
         make.top.equalTo(_userAvatar.mas_top).offset(8);
     }];
-    
     [_audioQualityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(70);
-        make.height.mas_equalTo(32);
+        make.width.mas_equalTo(56);
+        make.height.mas_equalTo(18);
         make.leading.equalTo(_roomNameTextField);
         make.top.mas_equalTo(_roomNameTextField.mas_bottom).offset(6);
     }];
     [_standardQualityButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(56);
-        make.height.mas_equalTo(32);
-        make.left.equalTo(_audioQualityLabel.mas_right).offset(6);
-        make.top.mas_equalTo(_roomNameTextField.mas_bottom).offset(4);
+        make.width.mas_equalTo(34);
+        make.height.mas_equalTo(18);
+        make.leading.equalTo(_audioQualityLabel.mas_trailing).offset(6);
+        make.centerY.mas_equalTo(_audioQualityLabel);
     }];
     [_musicQualityButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(56);
-        make.height.mas_equalTo(32);
-        make.left.equalTo(_standardQualityButton.mas_right).offset(8);
-        make.top.mas_equalTo(_roomNameTextField.mas_bottom).offset(4);
+        make.width.mas_equalTo(34);
+        make.height.mas_equalTo(18);
+        make.leading.equalTo(_standardQualityButton.mas_trailing).offset(8);
+        make.centerY.mas_equalTo(_audioQualityLabel);
     }];
 }
 
@@ -269,7 +267,15 @@
         return;
     }
     if (self->_isBeautyShow) {
-        self.beautyBtn.hidden = NO;
+        [_beautyBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.equalTo(self).offset(12);
+            if (@available(iOS 11.0, *)) {
+                make.top.mas_equalTo(self.safeAreaInsets.top).offset(40);
+            } else {
+                make.top.mas_equalTo(20);
+            }
+            make.width.height.mas_equalTo(32);
+        }];
         self.publishBtn.hidden = NO;
         self->_isBeautyShow = NO;
         if (self.viewPresenter && [self.viewPresenter respondsToSelector:@selector(showBeautyPanel:)]) {
@@ -309,7 +315,15 @@
     
     if (self->_isBeautyShow) {
         self->_isBeautyShow = NO;
-        self.beautyBtn.hidden = NO;
+        [_beautyBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.equalTo(self).offset(12);
+            if (@available(iOS 11.0, *)) {
+                make.top.mas_equalTo(self.safeAreaInsets.top).offset(40);
+            } else {
+                make.top.mas_equalTo(20);
+            }
+            make.width.height.mas_equalTo(32);
+        }];
         self.publishBtn.hidden = NO;
         if (self.viewPresenter && [self.viewPresenter respondsToSelector:@selector(showBeautyPanel:)]) {
             [self.viewPresenter showBeautyPanel:NO];
@@ -339,7 +353,16 @@
 }
 
 - (void)clickBeauty:(UIButton *)button {
-    self.beautyBtn.hidden = YES;
+    [self.beautyBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.equalTo(self).offset(0);
+        if (@available(iOS 11.0, *)) {
+            make.top.mas_equalTo(self.safeAreaInsets.top).offset(40);
+        } else {
+            make.top.mas_equalTo(20);
+        }
+        make.width.mas_equalTo(0);
+        make.height.mas_equalTo(32);
+    }];
     self.publishBtn.hidden = YES;
     self->_isBeautyShow = YES;
     if (self.viewPresenter && [self.viewPresenter respondsToSelector:@selector(showBeautyPanel:)]) {
@@ -393,7 +416,15 @@
 
 #pragma mark - pangesture
 - (void)onTap:(UITapGestureRecognizer *)tap {
-    self.beautyBtn.hidden = NO;
+    [_beautyBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.equalTo(self).offset(12);
+        if (@available(iOS 11.0, *)) {
+            make.top.mas_equalTo(self.safeAreaInsets.top).offset(40);
+        } else {
+            make.top.mas_equalTo(20);
+        }
+        make.width.height.mas_equalTo(32);
+    }];
     self.publishBtn.hidden = NO;
     self->_isBeautyShow = NO;
     if (self.viewPresenter && [self.viewPresenter respondsToSelector:@selector(showBeautyPanel:)]) {

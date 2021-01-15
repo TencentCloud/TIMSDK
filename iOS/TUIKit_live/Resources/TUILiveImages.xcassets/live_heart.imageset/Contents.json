@@ -5,11 +5,11 @@
       "scale" : "1x"
     },
     {
-      "filename" : "音乐@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "live_heart@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

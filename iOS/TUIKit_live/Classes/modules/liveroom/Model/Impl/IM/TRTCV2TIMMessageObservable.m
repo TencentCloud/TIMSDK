@@ -53,39 +53,57 @@
     NSDictionary *userInfo = notify.userInfo?:@{};
     if ([notify.name isEqualToString:@"V2TIMGroupNotify_onMemberInvited"]) {
         [self fire:^(id<V2TIMGroupListener> listener) {
-           [listener onMemberInvited:userInfo[@"groupID"] opUser:userInfo[@"opUser"] memberList:userInfo[@"memberList"]];
+            if ([listener respondsToSelector:@selector(onMemberInvited:opUser:memberList:)]) {
+                [listener onMemberInvited:userInfo[@"groupID"] opUser:userInfo[@"opUser"] memberList:userInfo[@"memberList"]];
+            }
         }];
     } else if ([notify.name isEqualToString:@"V2TIMGroupNotify_onMemberEnter"]) {
         [self fire:^(id<V2TIMGroupListener> listener) {
-           [listener onMemberEnter:userInfo[@"groupID"] memberList:userInfo[@"memberList"]];
+            if ([listener respondsToSelector:@selector(onMemberEnter:memberList:)]) {
+                [listener onMemberEnter:userInfo[@"groupID"] memberList:userInfo[@"memberList"]];
+            }
         }];
     } else if ([notify.name isEqualToString:@"V2TIMGroupNotify_onMemberLeave"]) {
         [self fire:^(id<V2TIMGroupListener> listener) {
-            [listener onMemberLeave:userInfo[@"groupID"] member:userInfo[@"member"]];
+            if ([listener respondsToSelector:@selector(onMemberLeave:member:)]) {
+                [listener onMemberLeave:userInfo[@"groupID"] member:userInfo[@"member"]];
+            }
         }];
     } else if ([notify.name isEqualToString:@"V2TIMGroupNotify_onGroupDismissed"]) {
         [self fire:^(id<V2TIMGroupListener> listener) {
-            [listener onGroupDismissed:userInfo[@"groupID"] opUser:userInfo[@"opUser"]];
+            if ([listener respondsToSelector:@selector(onGroupDismissed:opUser:)]) {
+                [listener onGroupDismissed:userInfo[@"groupID"] opUser:userInfo[@"opUser"]];
+            }
         }];
     } else if ([notify.name isEqualToString:@"V2TIMGroupNotify_onGroupRecycled"]) {
         [self fire:^(id<V2TIMGroupListener> listener) {
-            [listener onGroupRecycled:userInfo[@"groupID"] opUser:userInfo[@"opUser"]];
+            if ([listener respondsToSelector:@selector(onGroupRecycled:opUser:)]) {
+                [listener onGroupRecycled:userInfo[@"groupID"] opUser:userInfo[@"opUser"]];
+            }
         }];
     } else if ([notify.name isEqualToString:@"V2TIMGroupNotify_onGroupInfoChanged"]) {
         [self fire:^(id<V2TIMGroupListener> listener) {
-            [listener onGroupInfoChanged:userInfo[@"groupID"] changeInfoList:userInfo[@"changeInfoList"]];
+            if ([listener respondsToSelector:@selector(onGroupInfoChanged:changeInfoList:)]) {
+                [listener onGroupInfoChanged:userInfo[@"groupID"] changeInfoList:userInfo[@"changeInfoList"]];
+            }
         }];
     } else if ([notify.name isEqualToString:@"V2TIMGroupNotify_onGroupAttributeChanged"]) {
         [self fire:^(id<V2TIMGroupListener> listener) {
-            [listener onGroupAttributeChanged:userInfo[@"groupID"] attributes:userInfo[@"attributes"]];
+            if ([listener respondsToSelector:@selector(onGroupAttributeChanged:attributes:)]) {
+                [listener onGroupAttributeChanged:userInfo[@"groupID"] attributes:userInfo[@"attributes"]];
+            }
         }];
     } else if ([notify.name isEqualToString:@"V2TIMGroupNotify_onReceiveRESTCustomData"]) {
         [self fire:^(id<V2TIMGroupListener> listener) {
-            [listener onReceiveRESTCustomData:userInfo[@"groupID"] data:userInfo[@"data"]];
+            if ([listener respondsToSelector:@selector(onReceiveRESTCustomData:data:)]) {
+                [listener onReceiveRESTCustomData:userInfo[@"groupID"] data:userInfo[@"data"]];
+            }
         }];
     } else if ([notify.name isEqualToString:@"V2TIMGroupNotify_onRevokeAdministrator"]) {
         [self fire:^(id<V2TIMGroupListener> listener) {
-            [listener onRevokeAdministrator:userInfo[@"groupID"] opUser:userInfo[@"opUser"] memberList:userInfo[@"opUser"]];
+            if ([listener respondsToSelector:@selector(onRevokeAdministrator:opUser:memberList:)]) {
+                [listener onRevokeAdministrator:userInfo[@"groupID"] opUser:userInfo[@"opUser"] memberList:userInfo[@"opUser"]];
+            }
         }];
     }
 }

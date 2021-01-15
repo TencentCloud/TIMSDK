@@ -47,6 +47,9 @@
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.collectionView.showsHorizontalScrollIndicator = NO;
+    if (@available(iOS 9.0, *)) {
+          self.collectionView.semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
+    }
     [self addSubview:self.collectionView];
     [self.collectionView registerClass:TUILiveAudienceAvatarCell.class forCellWithReuseIdentifier:@"TUILiveAudienceAvatarCell"];
 }

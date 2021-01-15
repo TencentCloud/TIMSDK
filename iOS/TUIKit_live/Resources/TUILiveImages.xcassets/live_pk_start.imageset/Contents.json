@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "live_pk_start.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "live_pk_start@2x.png",
+      "filename" : "pk@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "live_pk_start@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
