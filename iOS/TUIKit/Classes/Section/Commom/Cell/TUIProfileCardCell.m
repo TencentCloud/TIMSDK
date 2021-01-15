@@ -14,6 +14,7 @@
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "UIImage+TUIKIT.h"
 #import "UIColor+TUIDarkMode.h"
+#import "NSBundle+TUIKIT.h"
 
 @implementation TUIProfileCardCellData
 
@@ -23,9 +24,9 @@
     if (self) {
         _avatarImage = DefaultAvatarImage;
         
-        if([_genderString isEqualToString:@"男"]){
+        if([_genderString isEqualToString:TUILocalizableString(Male)]){
             _genderIconImage = [UIImage tk_imageNamed:@"male"];
-        }else if([_genderString isEqualToString:@"女"]){
+        }else if([_genderString isEqualToString:TUILocalizableString(Female)]){
             _genderIconImage = [UIImage tk_imageNamed:@"female"];
         }else{
             //(性别 iCon 在未设置性别时不显示)
@@ -120,9 +121,9 @@
     
     [[RACObserve(data, genderString) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSString *x) {
         @strongify(self)
-        if([x isEqualToString:@"男"]){
+        if([x isEqualToString:TUILocalizableString(Male)]){
             self.genderIcon.image = [UIImage tk_imageNamed:@"male"];
-        }else if([x isEqualToString:@"女"]){
+        }else if([x isEqualToString:TUILocalizableString(Female)]){
             self.genderIcon.image = [UIImage tk_imageNamed:@"female"];
         }else{
             //(性别 iCon 在未设置性别时不显示)

@@ -8,6 +8,7 @@
 
 #import "TUIGroupMembersView.h"
 #import "THeader.h"
+#import "NSBundle+TUIKIT.h"
 
 @interface TUIGroupMembersView () <UISearchBarDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSMutableArray *data;
@@ -80,7 +81,7 @@
 {
     searchBar.showsCancelButton = YES;
     UIButton *cancleBtn = [searchBar valueForKey:@"cancelButton"];
-    [cancleBtn setTitle:@"取消" forState:UIControlStateNormal];
+    [cancleBtn setTitle:TUILocalizableString(Cancel) forState:UIControlStateNormal];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar

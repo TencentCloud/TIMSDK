@@ -10,6 +10,7 @@
 #import "TUICallUtils.h"
 #import "THeader.h"
 #import "ReactiveObjC/ReactiveObjC.h"
+#import "NSBundle+TUIKIT.h"
 
 @implementation TUICall (Signal)
 
@@ -191,7 +192,7 @@
                                   @"version" : @(APNs_Version)};       // 推送版本
     NSDictionary *extParam = @{@"entity" : entityParam};
     V2TIMOfflinePushInfo *info = [[V2TIMOfflinePushInfo alloc] init];
-    info.desc = @"您有一个通话请求";
+    info.desc = TUILocalizableString(TUIKitOfflinePushCallTips); // @"您有一个通话请求";
     info.ext = [TUICallUtils dictionary2JsonStr:extParam];
     return info;
 }
@@ -397,14 +398,14 @@
             if ([self.curInvitingList containsObject:user]) {
                 [self.curInvitingList removeObject:user];
             }
-            [self.delegate onError:-1 msg:@"系统错误"];
+            [self.delegate onError:-1 msg:TUILocalizableString(TUIKitTipsSystemError)];
             [self checkAutoHangUp];
         }
             break;
 
     default:
         {
-             NSLog(@"📳 👻 WTF ????");
+             NSLog(@"📳 👻 unknown error");
         }
             break;
     }

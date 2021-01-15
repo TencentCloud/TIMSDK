@@ -355,11 +355,12 @@
             else if ([textView.text characterAtIndex:range.location] == ' ') {
                 NSUInteger location = range.location;
                 NSUInteger length = range.length;
+                int at = 64;    // '@' 对应的ascii码
                 while (location != 0) {
                     location --;
                     length ++ ;
-                    char c = [textView.text characterAtIndex:location];
-                    if (c == '@') {
+                    int c = (int)[textView.text characterAtIndex:location]; // 将字符转成ascii码，复制给int,避免越界
+                    if (c == at) {
                         NSString *atText = [textView.text substringWithRange:NSMakeRange(location, length)];
                         textView.text = [textView.text stringByReplacingCharactersInRange:NSMakeRange(location, length) withString:@""];
                         if (self.delegate && [self.delegate respondsToSelector:@selector(inputBar:didDeleteAt:)]) {

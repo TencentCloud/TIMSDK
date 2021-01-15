@@ -12,6 +12,7 @@
 #import "THeader.h"
 #import "SDWebImage.h"
 #import "UIImage+TUIKIT.h"
+#import "NSBundle+TUIKIT.h"
 
 @interface TUIGroupLiveMessageCell ()
 //@property(nonatomic, strong) UILabel *titleLabel;
@@ -57,7 +58,7 @@
         self.tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         self.tagLabel.font = [UIFont systemFontOfSize:13];
         self.tagLabel.textColor = [UIColor lightGrayColor];
-        self.tagLabel.text = @" 群直播";
+        self.tagLabel.text = [@" " stringByAppendingString:TUILocalizableString(TUIKitMoreGroupLive)]; // @" 群直播";
         [self.container addSubview:self.tagLabel];
         
         [self.container.layer setMasksToBounds:YES];
@@ -73,11 +74,11 @@
     [super fillWithData:data];
     self.customData = data;
     NSString *name = data.anchorName;
-    NSString *statusStr = [data.roomInfo[@"roomStatus"] boolValue]?@"正在直播":@"结束直播";
+    NSString *statusStr = [data.roomInfo[@"roomStatus"] boolValue]?TUILocalizableString(Living):TUILocalizableString(Live-finished);
     if (name.length > 0) {
-        self.titleLabel.text = [NSString stringWithFormat:@"%@的直播", name];
+        self.titleLabel.text = [NSString stringWithFormat:TUILocalizableString(TUIKitWhosLiveFormat), name];
     } else {
-        self.titleLabel.text = [NSString stringWithFormat:@"%@的直播", data.roomInfo[@"anchorId"]];
+        self.titleLabel.text = [NSString stringWithFormat:TUILocalizableString(TUIKitWhosLiveFormat), data.roomInfo[@"anchorId"]];
     }
     self.statusLabel.text = statusStr;
     if ([data.roomInfo[@"roomCover"] length] > 0) {

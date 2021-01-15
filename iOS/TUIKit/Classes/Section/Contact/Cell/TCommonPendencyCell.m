@@ -11,6 +11,7 @@
 #import "UIColor+TUIDarkMode.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "SDWebImage/UIImageView+WebCache.h"
+#import "NSBundle+TUIKIT.h"
 
 @implementation TCommonPendencyCell
 
@@ -78,11 +79,11 @@
          [self.avatarView sd_setImageWithURL:pendencyData.avatarUrl];
     }
     if (pendencyData.isAccepted) {
-        [self.agreeButton setTitle:@"已同意" forState:UIControlStateNormal];
+        [self.agreeButton setTitle:TUILocalizableString(Agreed) forState:UIControlStateNormal];
         self.agreeButton.enabled = NO;
         self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
     } else {
-        [self.agreeButton setTitle:@"同意" forState:UIControlStateNormal];
+        [self.agreeButton setTitle:TUILocalizableString(Agree) forState:UIControlStateNormal];
         self.agreeButton.enabled = YES;
         self.agreeButton.layer.borderColor = [UIColor grayColor].CGColor;
         self.agreeButton.layer.borderWidth = 1;

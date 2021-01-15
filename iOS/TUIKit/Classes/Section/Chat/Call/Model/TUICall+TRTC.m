@@ -10,6 +10,7 @@
 #import "TUIKit.h"
 #import "TUICallUtils.h"
 #import "THelper.h"
+#import "NSBundle+TUIKIT.h"
 
 @implementation TUICall (Room)
 
@@ -102,7 +103,7 @@
             [self.delegate onCallEnd];
         }
         [self hangup];
-        [THelper makeToast:[NSString stringWithFormat:@"进房失败：%d",result]];
+        [THelper makeToast:[NSString stringWithFormat:TUILocalizableString(TUIKitTipsEnterRoomErrorFormat) ,result]];
     }
 }
 

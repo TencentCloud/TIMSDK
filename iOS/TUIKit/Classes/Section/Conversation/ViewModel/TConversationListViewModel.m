@@ -120,7 +120,9 @@
         data.subTitle = [self getLastDisplayString:conv];
         data.atMsgSeqList = [self getGroupAtMsgSeqList:conv];
         data.time = [self getLastDisplayDate:conv];
-        data.unreadCount = conv.unreadCount;
+        if (NO == [conv.groupType isEqualToString:@"Meeting"]) {
+            data.unreadCount = conv.unreadCount;
+        }
         data.draftText = conv.draftText;
         if (conv.type == V2TIM_C2C) {   // 设置会话的默认头像
             data.avatarImage = DefaultAvatarImage;
@@ -177,7 +179,7 @@
     NSString *groupID = no.object;
     TUIConversationCellData *data = [self cellDataOf:groupID];
     if (data) {
-        [THelper makeToast:[NSString stringWithFormat:@"%@ 群已解散", data.groupID]];
+        [THelper makeToast:[NSString stringWithFormat:TUILocalizableString(TUIKitGroupDismssTipsFormat), data.groupID]];
         [self removeData:data];
     }
 }
@@ -187,7 +189,7 @@
     NSString *groupID = no.object;
     TUIConversationCellData *data = [self cellDataOf:groupID];
     if (data) {
-        [THelper makeToast:[NSString stringWithFormat:@"%@ 群已回收", data.groupID]];
+        [THelper makeToast:[NSString stringWithFormat:TUILocalizableString(TUIKitGroupRecycledTipsFormat), data.groupID]];
         [self removeData:data];
     }
 }
@@ -197,7 +199,7 @@
     NSString *groupID = no.object;
     TUIConversationCellData *data = [self cellDataOf:groupID];
     if (data) {
-        [THelper makeToast:[NSString stringWithFormat:@"您已被踢出 %@ 群", data.groupID]];
+        [THelper makeToast:[NSString stringWithFormat:TUILocalizableString(TUIKitGroupKickOffTipsFormat), data.groupID]];
         [self removeData:data];
     }
 }
@@ -207,7 +209,7 @@
     NSString *groupID = no.object;
     TUIConversationCellData *data = [self cellDataOf:groupID];
     if (data) {
-        [THelper makeToast:[NSString stringWithFormat:@"您已退出 %@ 群", data.groupID]];
+        [THelper makeToast:[NSString stringWithFormat:TUILocalizableString(TUIKitGroupDropoutTipsFormat), data.groupID]];
         [self removeData:data];
     }
 }
@@ -268,7 +270,7 @@
     [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
     
     if(conv.draftText.length > 0){
-        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"[草稿] %@",conv.draftText]]];
+        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:TUILocalizableString(TUIKitMessageTypeDraftFormat),conv.draftText]]];
     } else {
         [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:lastMsgStr]];
     }

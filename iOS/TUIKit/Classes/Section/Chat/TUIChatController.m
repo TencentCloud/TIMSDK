@@ -130,7 +130,7 @@
 
     self.pendencyBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.tipsView addSubview:self.pendencyBtn];
-    [self.pendencyBtn setTitle:@"点击处理" forState:UIControlStateNormal];
+    [self.pendencyBtn setTitle:TUILocalizableString(TUIKitChatPendencyTitle) forState:UIControlStateNormal];
     [self.pendencyBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
     [self.pendencyBtn addTarget:self action:@selector(openPendency:) forControlEvents:UIControlEventTouchUpInside];
     [self.pendencyBtn sizeToFit];
@@ -140,7 +140,7 @@
     [RACObserve(self.pendencyViewModel, unReadCnt) subscribeNext:^(NSNumber *unReadCnt) {
         @strongify(self)
         if ([unReadCnt intValue]) {
-            self.pendencyLabel.text = [NSString stringWithFormat:@"%@条入群请求", unReadCnt];
+            self.pendencyLabel.text = [NSString stringWithFormat:TUILocalizableString(TUIKitChatPendencyRequestToJoinGroupFormat), unReadCnt]; ; // @"%@条入群请求"
             [self.pendencyLabel sizeToFit];
             CGFloat gap = (self.tipsView.mm_w - self.pendencyLabel.mm_w - self.pendencyBtn.mm_w-8)/2;
             self.pendencyLabel.mm_left(gap).mm__centerY(self.tipsView.mm_h/2);
@@ -417,33 +417,38 @@
 // ----------------------------------
 - (void)selectPhotoForSend
 {
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-    picker.delegate = self;
-    [self presentViewController:picker animated:YES completion:nil];
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (void)takePictureForSend
 {
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-    picker.cameraCaptureMode =UIImagePickerControllerCameraCaptureModePhoto;
-    picker.delegate = self;
-
-    [self presentViewController:picker animated:YES completion:nil];
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        picker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (void)takeVideoForSend
 {
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-    picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-    picker.cameraCaptureMode =UIImagePickerControllerCameraCaptureModeVideo;
-    picker.videoQuality = UIImagePickerControllerQualityTypeMedium;
-    [picker setVideoMaximumDuration:15];
-    picker.delegate = self;
-    [self presentViewController:picker animated:YES completion:nil];
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+        picker.cameraCaptureMode =UIImagePickerControllerCameraCaptureModeVideo;
+        picker.videoQuality = UIImagePickerControllerQualityTypeMedium;
+        [picker setVideoMaximumDuration:15];
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (void)selectFileForSend
@@ -457,7 +462,7 @@
 - (void)videoCall
 {
     if (![[TUICallManager shareInstance] checkAudioAuthorization] || ![[TUICallManager shareInstance] checkVideoAuthorization]) {
-        [THelper makeToast:@"请开启麦克风和摄像头权限"];
+        [THelper makeToast:TUILocalizableString(TUIKitMicCamerAuthTips)];
         return;
     }
     
@@ -467,7 +472,7 @@
 - (void)audioCall
 {
     if (![[TUICallManager shareInstance] checkAudioAuthorization]) {
-        [THelper makeToast:@"请开启麦克风权限"];
+        [THelper makeToast:TUILocalizableString(TUIKitMicAuth)];
         return;
     }
     [[TUICallManager shareInstance] call:self.conversationData.groupID userID:self.conversationData.userID callType:CallType_Audio];

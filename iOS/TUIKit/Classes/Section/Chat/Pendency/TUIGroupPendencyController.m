@@ -12,6 +12,7 @@
 #import "Toast/Toast.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
+#import "NSBundle+TUIKIT.h"
 @import ImSDK;
 
 @interface TUIGroupPendencyController ()
@@ -26,7 +27,7 @@
 
     self.tableView.tableFooterView = [UIView new];
 
-    self.title = @"群申请";
+    self.title = TUILocalizableString(TUIKitGroupApplicant);
 }
 
 - (void)dealloc

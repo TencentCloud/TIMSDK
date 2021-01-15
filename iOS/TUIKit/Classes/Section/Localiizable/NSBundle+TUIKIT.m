@@ -45,7 +45,7 @@
             language = @"en";
         }
         
-        // 从MJRefresh.bundle中查找资源
+        // 从bundle中查找资源
         bundle = [NSBundle bundleWithPath:[[NSBundle tk_tuikitBundle] pathForResource:language ofType:@"lproj"]];
     }
     value = [bundle localizedStringForKey:key value:value table:nil];

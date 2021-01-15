@@ -13,6 +13,7 @@
 #import "UIImage+TUIKIT.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIKit.h"
+#import "NSBundle+TUIKIT.h"
 
 static NSString *kReuseIdentifier = @"PickerIdentifier";
 
@@ -53,7 +54,7 @@ static NSString *kReuseIdentifier = @"PickerIdentifier";
     _accessoryBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_accessoryBtn setBackgroundImage:[UIImage tk_imageNamed:@"icon_cell_blue_normal"] forState:UIControlStateNormal];
     [_accessoryBtn setBackgroundImage:[UIImage tk_imageNamed:@"icon_cell_blue_normal"] forState:UIControlStateHighlighted];
-    [_accessoryBtn setTitle:@" 确定 " forState:UIControlStateNormal];
+    [_accessoryBtn setTitle:[NSString stringWithFormat:@" %@ ", TUILocalizableString(Confirm)] forState:UIControlStateNormal]; // @" 确定 "
     [self addSubview:_accessoryBtn];
 }
 

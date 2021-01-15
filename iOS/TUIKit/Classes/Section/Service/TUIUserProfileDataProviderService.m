@@ -13,6 +13,7 @@
 #import "THeader.h"
 #import <ImSDK/ImSDK.h>
 #import "TUIKit.h"
+#import "NSBundle+TUIKIT.h"
 
 @TCServiceRegister(TUIUserProfileDataProviderServiceProtocol, TUIUserProfileDataProviderService)
 
@@ -43,10 +44,10 @@
 - (NSString *)getGender:(V2TIMUserFullInfo *)profile
 {
     if (profile.gender == V2TIM_GENDER_MALE)
-        return @"男";
+        return TUILocalizableString(Male);
     if (profile.gender == V2TIM_GENDER_FEMALE)
-        return @"女";
-    return @"未设置";
+        return TUILocalizableString(Female);
+    return TUILocalizableString(Unsetted);
 }
 
 - (NSString *)getSignature:(V2TIMUserFullInfo *)profile
@@ -60,13 +61,13 @@
 - (NSString *)getAllowType:(V2TIMUserFullInfo *)profile
 {
     if (profile.allowType == V2TIM_FRIEND_ALLOW_ANY) {
-        return @"同意任何用户加好友";
+        return TUILocalizableString(TUIKitAllowTypeAcceptOne);
     }
     if (profile.allowType == V2TIM_FRIEND_NEED_CONFIRM) {
-        return @"需要验证";
+        return TUILocalizableString(TUIKitAllowTypeNeedConfirm);
     }
     if (profile.allowType == V2TIM_FRIEND_DENY_ANY) {
-        return @"拒绝任何人加好友";
+        return TUILocalizableString(TUIKitAllowTypeDeclineAll);
     }
     return nil;
 }
