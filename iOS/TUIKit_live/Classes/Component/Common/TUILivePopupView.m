@@ -33,7 +33,7 @@
     [self addSubview:self.animateView];
     
     [self.animateView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.left.mas_equalTo(self);
+        make.leading.trailing.mas_equalTo(self);
         make.bottom.mas_equalTo(self).offset(self.animateViewHeight);
         make.height.mas_equalTo(self.animateViewHeight);
     }];

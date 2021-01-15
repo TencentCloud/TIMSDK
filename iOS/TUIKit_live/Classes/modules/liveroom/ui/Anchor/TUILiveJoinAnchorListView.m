@@ -33,7 +33,7 @@ typedef void(^JoinCellAction)(BOOL agree);
     if (self) {
         [self constructSubViews];
         [self bindInteraction];
-        self.backgroundColor = UIColor.clearColor;
+        self.backgroundColor = UIColor.whiteColor;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -61,16 +61,20 @@ typedef void(^JoinCellAction)(BOOL agree);
     
     self.acceptBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.acceptBtn setTitle:@"接受" forState:UIControlStateNormal];
-    self.acceptBtn.backgroundColor = [UIColor colorWithRed:0.0 green:98.0 / 255 blue:227 / 255.0 alpha:1.0];
-    self.acceptBtn.layer.cornerRadius = 4.0;
+    self.acceptBtn.backgroundColor =  [UIColor colorWithRed:255/255.0 green:83/255.0 blue:83/255.0 alpha:1/1.0];
+    [self.acceptBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.acceptBtn.layer.cornerRadius = 13.0;
     
     self.rejectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.rejectBtn setTitle:@"拒绝" forState:UIControlStateNormal];
-    self.rejectBtn.backgroundColor = [UIColor colorWithRed:255.0 green:78.0 / 255 blue:66.0 / 255.0 alpha:1.0];
-    self.rejectBtn.layer.cornerRadius = 4.0;
+    self.rejectBtn.backgroundColor = [UIColor whiteColor];
+    [self.rejectBtn.layer setBorderWidth:1];
+    [self.rejectBtn.layer setBorderColor:[UIColor colorWithRed:255/255.0 green:83/255.0 blue:83/255.0 alpha:1/1.0].CGColor];
+    [self.rejectBtn setTitleColor:[UIColor colorWithRed:255/255.0 green:83/255.0 blue:83/255.0 alpha:1/1.0] forState:UIControlStateNormal];
+    self.rejectBtn.layer.cornerRadius = 13.0;
     
     self.infoLabel = [[UILabel alloc] init];
-    self.infoLabel.textColor = UIColor.whiteColor;
+    self.infoLabel.textColor = UIColor.blackColor;
     self.infoLabel.font = [UIFont systemFontOfSize:15.0];
     self.infoLabel.numberOfLines = 2;
 }
@@ -89,27 +93,27 @@ typedef void(^JoinCellAction)(BOOL agree);
 
 - (void)layoutUI {
     [self.coverImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.leading.equalTo(self).offset(10);
-        make.left.equalTo(self).offset(20);
-        make.bottom.equalTo(self).offset(-10);
-        make.width.mas_equalTo(40);
+        make.leading.equalTo(self).offset(20);
+        make.centerY.equalTo(self);
+        make.width.height.mas_equalTo(40);
     }];
     [self.rejectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(15);
-        make.bottom.equalTo(self).offset(-15);
-        make.right.equalTo(self).offset(-20);
-        make.width.mas_equalTo(75);
+        make.centerY.equalTo(self);
+        make.trailing.equalTo(self).offset(-16);
+        make.width.mas_equalTo(60);
+        make.height.mas_equalTo(31);
     }];
     [self.acceptBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(15);
-        make.bottom.equalTo(self).offset(-15);
-        make.right.equalTo(self.rejectBtn.mas_left).offset(-20);
-        make.width.mas_equalTo(75);
+        make.centerY.equalTo(self);
+        make.trailing.equalTo(self.rejectBtn.mas_leading).offset(-12);
+        make.width.mas_equalTo(60);
+        make.height.mas_equalTo(31);
     }];
     [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.equalTo(self.coverImage.mas_trailing).offset(5);
-        make.top.equalTo(self).offset(5);
-        make.bottom.trailing.equalTo(self).offset(-5);
+        make.centerY.equalTo(self);
+        make.trailing.equalTo(self.acceptBtn.mas_leading);
+        make.height.mas_equalTo(40);
     }];
 }
 
@@ -157,7 +161,7 @@ typedef void(^JoinCellAction)(BOOL agree);
         _anchorTableView.dataSource = self;
         _anchorTableView.separatorColor = UIColor.clearColor;
         _anchorTableView.allowsSelection = YES;
-        _anchorTableView.backgroundColor = UIColor.clearColor;
+        _anchorTableView.backgroundColor = UIColor.whiteColor;
     }
     return _anchorTableView;
 }
@@ -240,7 +244,7 @@ typedef void(^JoinCellAction)(BOOL agree);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60;;
+    return 63;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -248,13 +252,14 @@ typedef void(^JoinCellAction)(BOOL agree);
     headerLabel.frame = CGRectMake(0, 40, tableView.bounds.size.width, 50);
     headerLabel.textAlignment = NSTextAlignmentCenter;
     headerLabel.text = @"申请上麦列表";
-    headerLabel.textColor = UIColor.whiteColor;
-    headerLabel.backgroundColor = [UIColor colorWithRed:19.0 / 255.0 green:35.0 / 255.0 blue:63.0 / 255.0 alpha:1.0];
+    headerLabel.textColor = [UIColor blackColor];
+    headerLabel.backgroundColor = [UIColor whiteColor];
     headerLabel.userInteractionEnabled = YES;
     
     UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     cancelBtn.frame = CGRectMake(self.bounds.size.width * 4.0 / 5.0, 0, self.bounds.size.width / 5.0, 40);
     [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+    [cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     cancelBtn.backgroundColor = UIColor.clearColor;
     [cancelBtn addTarget:self action:@selector(hidePanel:) forControlEvents:UIControlEventTouchUpInside];
     [headerLabel addSubview:cancelBtn];

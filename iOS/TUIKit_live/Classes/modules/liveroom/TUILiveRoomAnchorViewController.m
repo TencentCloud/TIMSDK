@@ -709,6 +709,7 @@
         @weakify(self);
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
+            [self.view makeToast:[NSString stringWithFormat:@"收到1个观众的邀请"] duration:2 position:[NSValue valueWithCGPoint:CGPointMake(self.view.center.x, self.view.frame.size.height - 80)]];
             [self.curRequestUserDic setObject:user forKey:user.userId];
             [self.anchorLogicView updateJoinAnchorList:self.curRequestUserDic.allValues needShow:NO];
         });
@@ -816,7 +817,7 @@
         [self closeVC];
         return;
     }
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"当前正在直播中，是否退出" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"当前正在直播，确定退出直播？" message:nil preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *suerAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self.anchorLogicView stopLive];
         [self stopRtmp];
@@ -836,6 +837,12 @@
         clearView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
         [self.view addSubview:clearView];
         [self.view addSubview:resultView];
+        [resultView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(66);
+            make.trailing.mas_equalTo(-66);
+            make.centerY.mas_equalTo(self.view);
+            make.height.mas_equalTo(268);
+        }];
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         

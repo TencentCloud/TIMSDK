@@ -202,9 +202,9 @@
     [self.showLinkMicAndExitPKBtn setTitle:@"连麦列表" forState:UIControlStateNormal];
     [self.showLinkMicAndExitPKBtn setTitle:@"连麦列表" forState:UIControlStateSelected];
     self.showLinkMicAndExitPKBtn.layer.cornerRadius = 15.0;
-    self.showLinkMicAndExitPKBtn.backgroundColor = [TUILiveColor lightGrayColor];
+    self.showLinkMicAndExitPKBtn.backgroundColor = [UIColor colorWithRed:56 / 255.0 green:180 / 255.0 blue:218 / 255.0 alpha:1.0];
     [self.showLinkMicAndExitPKBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.showLinkMicAndExitPKBtn.titleLabel.font = [UIFont systemFontOfSize:18];
+    self.showLinkMicAndExitPKBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     self.showLinkMicAndExitPKBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     self.showLinkMicAndExitPKBtn.selected = YES;
     

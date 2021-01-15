@@ -27,7 +27,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self constructSubViews];
-        self.backgroundColor = UIColor.clearColor;
+        self.backgroundColor = UIColor.whiteColor;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -53,10 +53,12 @@
     self.inviteLabel.textAlignment = NSTextAlignmentCenter;
     self.inviteLabel.userInteractionEnabled = YES;
     self.inviteLabel.textColor = UIColor.whiteColor;
-    self.inviteLabel.backgroundColor = [UIColor colorWithRed:0.0 green:98.0 / 255 blue:227 / 255.0 alpha:1.0];
+    self.inviteLabel.backgroundColor =  [UIColor colorWithRed:255/255.0 green:83/255.0 blue:83/255.0 alpha:1/1.0];
+    self.inviteLabel.layer.cornerRadius = 13.0;
+    self.inviteLabel.clipsToBounds = YES;
     
     self.infoLabel = [[UILabel alloc] init];
-    self.infoLabel.textColor = UIColor.whiteColor;
+    self.infoLabel.textColor = UIColor.blackColor;
     self.infoLabel.font = [UIFont systemFontOfSize:15.0];
     self.infoLabel.numberOfLines = 2;
 }
@@ -69,21 +71,21 @@
 
 - (void)layoutUI {
     [self.coverImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.leading.equalTo(self).offset(10);
-        make.left.equalTo(self).offset(20);
-        make.bottom.equalTo(self).offset(-10);
-        make.width.mas_equalTo(40);
+        make.leading.equalTo(self).offset(20);
+        make.centerY.equalTo(self);
+        make.width.height.mas_equalTo(40);
     }];
     [self.inviteLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(15);
-        make.bottom.equalTo(self).offset(-15);
-        make.right.equalTo(self).offset(-20);
-        make.width.mas_equalTo(75);
+        make.trailing.equalTo(self).offset(-20);
+        make.centerY.mas_equalTo(self);
+        make.width.mas_equalTo(60);
+        make.height.mas_equalTo(31);
     }];
     [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.equalTo(self.coverImage.mas_trailing).offset(5);
-        make.top.equalTo(self).offset(5);
-        make.bottom.trailing.equalTo(self).offset(-5);
+        make.centerY.equalTo(self);
+        make.trailing.equalTo(self.inviteLabel.mas_leading);
+        make.height.mas_equalTo(40);
     }];
 }
 
@@ -94,7 +96,11 @@
     } else {
         [self.coverImage sd_setImageWithURL:[NSURL URLWithString:model.coverUrl]];
     }
-    self.infoLabel.text = [NSString stringWithFormat:@"%@\n%@", model.ownerName, model.roomName];
+    BOOL shouldAddNewLine = NO;
+    if (model.ownerName.length > 0 && model.roomName > 0) {
+        shouldAddNewLine = YES;
+    }
+    self.infoLabel.text = [NSString stringWithFormat:@"%@%@%@", model.ownerName, shouldAddNewLine?@"\n":@"", model.roomName];
 }
 
 @end
@@ -118,7 +124,7 @@
         _anchorTableView.dataSource = self;
         _anchorTableView.separatorColor = UIColor.clearColor;
         _anchorTableView.allowsSelection = YES;
-        _anchorTableView.backgroundColor = UIColor.clearColor;
+        _anchorTableView.backgroundColor = UIColor.whiteColor;
     }
     return _anchorTableView;
 }
@@ -194,7 +200,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60;;
+    return 63;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -213,14 +219,15 @@
     headerLabel.frame = CGRectMake(0, 40, tableView.bounds.size.width, 50);
     headerLabel.textAlignment = NSTextAlignmentCenter;
     headerLabel.text = @"PK邀请";
-    headerLabel.textColor = UIColor.whiteColor;
-    headerLabel.backgroundColor = [UIColor colorWithRed:19.0 / 255.0 green:35.0 / 255.0 blue:63.0 / 255.0 alpha:1.0];
+    headerLabel.textColor = UIColor.blackColor;
+    headerLabel.backgroundColor = UIColor.whiteColor;
     headerLabel.userInteractionEnabled = YES;
     
     UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     cancelBtn.frame = CGRectMake(self.bounds.size.width * 4.0 / 5.0, 0, self.bounds.size.width / 5.0, 40);
     [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
-    cancelBtn.backgroundColor = UIColor.clearColor;
+    [cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    cancelBtn.backgroundColor = UIColor.whiteColor;
     [cancelBtn addTarget:self action:@selector(hidePanel:) forControlEvents:UIControlEventTouchUpInside];
     [headerLabel addSubview:cancelBtn];
     

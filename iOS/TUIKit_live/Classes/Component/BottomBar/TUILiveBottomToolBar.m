@@ -54,7 +54,7 @@
         button.backgroundColor = [TUILiveColor lightGrayColor];
         [button mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(preButton.mas_right).offset(5);
-            make.height.width.equalTo(self.inputButton.mas_height);
+            make.height.width.mas_equalTo(31.5);
             make.centerY.equalTo(self.mas_centerY);
             if ([button isEqual:rightButtons.lastObject]) {
                 make.right.equalTo(self).offset(-15);
@@ -66,18 +66,18 @@
 
 - (void)constructViewHierarchy {
     if (!self.inputButton) {
-        self.inputButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+        self.inputButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 253, 40)];
         [self.inputButton addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
-        [self.inputButton setTitle:@"  说点什么                                                  "
+        [self.inputButton setTitle:@"   说点什么                                                  "
                           forState:UIControlStateNormal];
         self.inputButton.titleLabel.lineBreakMode = NSLineBreakByClipping;
-        self.inputButton.backgroundColor = [TUILiveColor lightGrayColor];
+        self.inputButton.backgroundColor = [UIColor colorWithWhite:0 alpha:0.35];
         [self addSubview:self.inputButton];
     }
 }
 
 + (UIButton *)createButtonWithImage:(nullable UIImage *)image selectedImage:(nullable UIImage *)selectedImage {
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 31.5, 31.5)];
     if (image) {
         [button setImage:image forState:UIControlStateNormal];
     }
