@@ -258,9 +258,11 @@
  */
 - (void)onDeleteFriend:(id)sender
 {
+    __weak typeof(self) weakSelf = self;
     [[V2TIMManager sharedInstance] deleteFromFriendList:@[self.friendProfile.userID] deleteType:V2TIM_FRIEND_TYPE_BOTH succ:^(NSArray<V2TIMFriendOperationResult *> *resultList) {
-        self.modified = YES;
-        [self.navigationController popViewControllerAnimated:YES];
+        weakSelf.modified = YES;
+        [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"c2c_%@",weakSelf.friendProfile.userID]];
+        [weakSelf.navigationController popViewControllerAnimated:YES];
     } fail:nil];
 }
 

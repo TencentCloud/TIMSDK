@@ -66,9 +66,6 @@
 
 "ContactsAddFriends" = "Add Friend";
 "ContactsJoinGroup"  = "Join Group";
-"ContactsNewFriends" = "New Friends";
-"ContactsGroupChats" = "Group Chats";
-"ContactsBlackList" = "Blocked List";
 
 "MeFriendRequest" = "Friend Request";
 "MeFriendRequestMethodAgreeAll" = "Agree All Requests";
