@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.AbsChatLayout;
@@ -76,7 +77,7 @@ public class ChatLayout extends AbsChatLayout implements GroupChatManagerKit.Gro
                         intent.putExtra(TUIKitConstants.Group.GROUP_ID, mGroupInfo.getId());
                         getContext().startActivity(intent);
                     } else {
-                        ToastUtil.toastLongMessage("请稍后再试试~");
+                        ToastUtil.toastLongMessage(TUIKit.getAppContext().getString(R.string.wait_tip));
                     }
                 }
             });

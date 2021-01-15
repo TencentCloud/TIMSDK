@@ -44,9 +44,9 @@ public class CameraActivity extends Activity {
         int state = getIntent().getIntExtra(TUIKitConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_BOTH);
         jCameraView.setFeatures(state);
         if (state == JCameraView.BUTTON_STATE_ONLY_CAPTURE) {
-            jCameraView.setTip("点击拍照");
+            jCameraView.setTip(getString(R.string.tap_capture));
         } else if (state == JCameraView.BUTTON_STATE_ONLY_RECORDER) {
-            jCameraView.setTip("长按摄像");
+            jCameraView.setTip(getString(R.string.tap_video));
         }
 
         jCameraView.setMediaQuality(JCameraView.MEDIA_QUALITY_MIDDLE);
@@ -62,7 +62,7 @@ public class CameraActivity extends Activity {
 
             @Override
             public void AudioPermissionError() {
-                ToastUtil.toastShortMessage("给点录音权限可以?");
+                ToastUtil.toastShortMessage(getString(R.string.audio_permission_error));
             }
         });
         //JCameraView监听

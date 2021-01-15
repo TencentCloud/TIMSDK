@@ -57,7 +57,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastLongMessage("加载消息失败");
+                ToastUtil.toastLongMessage(getContext().getString(R.string.load_msg_error));
             }
         });
     }

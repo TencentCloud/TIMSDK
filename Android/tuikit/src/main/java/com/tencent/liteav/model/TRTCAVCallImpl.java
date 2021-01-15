@@ -15,6 +15,8 @@ import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMSignalingListener;
 import com.tencent.liteav.beauty.TXBeautyManager;
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageBean;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageContainerBean;
@@ -506,7 +508,7 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
 
         String loginUser = mTIMManager.getLoginUser();
         if (loginUser != null &&loginUser.equals(userId)) {
-            TUIKitLog.d(TAG, "IM已经登录过了：" +loginUser);
+            TUIKitLog.d(TAG, TUIKit.getAppContext().getString(R.string.im_logined) +loginUser);
             mCurUserId =loginUser;
             mCurUserSig = userSign;
             if (callback != null) {
@@ -808,7 +810,7 @@ public class TRTCAVCallImpl implements ITRTCAVCall {
         v2TIMOfflinePushInfo.setExt(new Gson().toJson(containerBean).getBytes());
         // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
         v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
-        v2TIMOfflinePushInfo.setDesc("您有一个通话请求");
+        v2TIMOfflinePushInfo.setDesc(TUIKit.getAppContext().getString(R.string.offline_call_tip));
 
         return v2TIMOfflinePushInfo;
     }

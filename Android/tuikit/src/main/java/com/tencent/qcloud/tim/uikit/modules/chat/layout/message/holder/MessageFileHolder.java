@@ -9,6 +9,7 @@ import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMFileElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
@@ -51,7 +52,7 @@ public class MessageFileHolder extends MessageContentHolder {
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.toastLongMessage("文件路径:" + path);
+                ToastUtil.toastLongMessage(TUIKit.getAppContext().getString(R.string.file_path) + path);
             }
         });
         if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_SUCCESS || msg.getStatus() == MessageInfo.MSG_STATUS_NORMAL) {
@@ -90,7 +91,7 @@ public class MessageFileHolder extends MessageContentHolder {
                             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ToastUtil.toastLongMessage("文件路径:" + path);
+                                    ToastUtil.toastLongMessage(TUIKit.getAppContext().getString(R.string.file_path) + path);
 
                                 }
                             });

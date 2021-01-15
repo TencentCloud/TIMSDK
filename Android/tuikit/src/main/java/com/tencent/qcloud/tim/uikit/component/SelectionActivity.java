@@ -110,7 +110,7 @@ public class SelectionActivity extends Activity {
         switch (mSelectionType) {
             case TUIKitConstants.Selection.TYPE_TEXT:
                 if (TextUtils.isEmpty(input.getText().toString()) && title.equals(getResources().getString(R.string.modify_group_name))) {
-                    ToastUtil.toastLongMessage("没有输入昵称，请重新填写");
+                    ToastUtil.toastLongMessage(getString(R.string.input_tip));
                     return;
                 }
 

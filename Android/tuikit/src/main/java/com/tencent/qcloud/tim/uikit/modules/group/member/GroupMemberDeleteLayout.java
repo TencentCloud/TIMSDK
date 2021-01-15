@@ -46,8 +46,8 @@ public class GroupMemberDeleteLayout extends LinearLayout implements IGroupMembe
     private void init() {
         inflate(getContext(), R.layout.group_member_del_layout, this);
         mTitleBar = findViewById(R.id.group_member_title_bar);
-        mTitleBar.setTitle("移除", TitleBarLayout.POSITION.RIGHT);
-        mTitleBar.setTitle("移除成员", TitleBarLayout.POSITION.MIDDLE);
+        mTitleBar.setTitle(getContext().getString(R.string.remove), TitleBarLayout.POSITION.RIGHT);
+        mTitleBar.setTitle(getContext().getString(R.string.remove_member), TitleBarLayout.POSITION.MIDDLE);
         mTitleBar.getRightTitle().setTextColor(Color.BLUE);
         mTitleBar.getRightIcon().setVisibility(View.GONE);
         mTitleBar.setOnRightClickListener(new OnClickListener() {
@@ -58,11 +58,11 @@ public class GroupMemberDeleteLayout extends LinearLayout implements IGroupMembe
                 provider.removeGroupMembers(mDelMembers, new IUIKitCallBack() {
                     @Override
                     public void onSuccess(Object data) {
-                        ToastUtil.toastLongMessage("删除成员成功");
+                        ToastUtil.toastLongMessage(getContext().getString(R.string.remove_tip_suc));
                         post(new Runnable() {
                             @Override
                             public void run() {
-                                mTitleBar.setTitle("移除", TitleBarLayout.POSITION.RIGHT);
+                                mTitleBar.setTitle(getContext().getString(R.string.remove), TitleBarLayout.POSITION.RIGHT);
                                 mAdapter.clear();
                                 mAdapter.notifyDataSetChanged();
 
@@ -72,7 +72,7 @@ public class GroupMemberDeleteLayout extends LinearLayout implements IGroupMembe
 
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
-                        ToastUtil.toastLongMessage("删除成员失败:" + errCode + "=" + errMsg);
+                        ToastUtil.toastLongMessage(getContext().getString(R.string.remove_tip_fail) + errCode + "=" + errMsg);
                     }
                 });
             }
@@ -83,9 +83,9 @@ public class GroupMemberDeleteLayout extends LinearLayout implements IGroupMembe
             public void onSelectChanged(List<GroupMemberInfo> members) {
                 mDelMembers = members;
                 if (mDelMembers.size() > 0) {
-                    mTitleBar.setTitle("移除（" + (mDelMembers.size() + "）"), TitleBarLayout.POSITION.RIGHT);
+                    mTitleBar.setTitle(getContext().getString(R.string.remove) + "（" + (mDelMembers.size() + "）"), TitleBarLayout.POSITION.RIGHT);
                 } else {
-                    mTitleBar.setTitle("移除", TitleBarLayout.POSITION.RIGHT);
+                    mTitleBar.setTitle(getContext().getString(R.string.remove), TitleBarLayout.POSITION.RIGHT);
                 }
             }
         });

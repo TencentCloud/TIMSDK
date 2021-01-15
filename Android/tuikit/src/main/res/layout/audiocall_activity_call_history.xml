@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:singleLine="true"
-            android:text="语音通话"
+            android:text="@string/audio_call"
             android:textColor="@color/colorWhite"
             android:textSize="18sp" />
     </androidx.constraintlayout.widget.Toolbar>
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="点击上方按钮发起呼叫"
+        android:text="@string/button_call"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/text_size_large"
         app:layout_constraintBottom_toBottomOf="parent"

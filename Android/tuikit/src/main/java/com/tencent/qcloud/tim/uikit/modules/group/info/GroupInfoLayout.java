@@ -161,12 +161,12 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 @Override
                 public void onError(int code, String desc) {
                     TUIKitLog.e(TAG, "modify group icon failed, code:" + code + "|desc:" + desc);
-                    ToastUtil.toastLongMessage("修改群头像失败, code = " + code + ", info = " + desc);
+                    ToastUtil.toastLongMessage(getContext().getString(R.string.modify_icon_fail) + ", code = " + code + ", info = " + desc);
                 }
 
                 @Override
                 public void onSuccess() {
-                    ToastUtil.toastLongMessage("修改群头像成功");
+                    ToastUtil.toastLongMessage(getContext().getString(R.string.modify_icon_suc));
                 }
             });
         } else if (v.getId() == R.id.group_notice) {
@@ -194,8 +194,8 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 }
             });
         } else if (v.getId() == R.id.join_type_bar) {
-            if (mGroupTypeView.getContent().equals("聊天室")) {
-                ToastUtil.toastLongMessage("加入聊天室为自动审批，暂不支持修改");
+            if (mGroupTypeView.getContent().equals(getContext().getString(R.string.chat_roon))) {
+                ToastUtil.toastLongMessage(getContext().getString(R.string.chat_roon_tip));
                 return;
             }
             Bundle bundle = new Bundle();
@@ -218,15 +218,15 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                         .builder()
                         .setCancelable(true)
                         .setCancelOutside(true)
-                        .setTitle("您确认解散该群?")
+                        .setTitle(getContext().getString(R.string.dismiss_group_tip))
                         .setDialogWidth(0.75f)
-                        .setPositiveButton("确定", new View.OnClickListener() {
+                        .setPositiveButton(getContext().getString(R.string.sure), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 mPresenter.deleteGroup();
                             }
                         })
-                        .setNegativeButton("取消", new View.OnClickListener() {
+                        .setNegativeButton(getContext().getString(R.string.cancel), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
@@ -238,15 +238,15 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                         .builder()
                         .setCancelable(true)
                         .setCancelOutside(true)
-                        .setTitle("您确认退出该群？")
+                        .setTitle(getContext().getString(R.string.quit_group_tip))
                         .setDialogWidth(0.75f)
-                        .setPositiveButton("确定", new View.OnClickListener() {
+                        .setPositiveButton(getContext().getString(R.string.sure), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 mPresenter.quitGroup();
                             }
                         })
-                        .setNegativeButton("取消", new View.OnClickListener() {
+                        .setNegativeButton(getContext().getString(R.string.cancel), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
@@ -308,12 +308,12 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         }
         if (TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_PRIVATE)
                 || TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_WORK)) {
-            groupText = "讨论组";
+            groupText = getContext().getString(R.string.private_group);
         } else if (TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_PUBLIC)) {
-            groupText = "公开群";
+            groupText = getContext().getString(R.string.public_group);
         } else if (TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_CHAT_ROOM)
                 || TextUtils.equals(groupType, TUIKitConstants.GroupType.TYPE_MEETING)) {
-            groupText = "聊天室";
+            groupText = getContext().getString(R.string.chat_roon);
         }
         return groupText;
     }

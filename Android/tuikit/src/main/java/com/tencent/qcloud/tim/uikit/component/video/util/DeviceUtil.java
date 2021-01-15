@@ -2,6 +2,9 @@ package com.tencent.qcloud.tim.uikit.component.video.util;
 
 import android.os.Build;
 
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
+
 public class DeviceUtil {
 
     private static String[] huaweiRongyao = {
@@ -16,9 +19,9 @@ public class DeviceUtil {
 
     public static String getDeviceInfo() {
         String handSetInfo =
-                "手机型号：" + Build.DEVICE +
-                        "\n系统版本：" + Build.VERSION.RELEASE +
-                        "\nSDK版本：" + Build.VERSION.SDK_INT;
+                TUIKit.getAppContext().getString(R.string.device_info) + Build.DEVICE +
+                        TUIKit.getAppContext().getString(R.string.system_version) + Build.VERSION.RELEASE +
+                        TUIKit.getAppContext().getString(R.string.sdk_version) + Build.VERSION.SDK_INT;
         return handSetInfo;
     }
 

@@ -169,7 +169,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
             @Override
             public void recordShort(final long time) {
-                mCaptureLayout.setTextWithAnimation("录制时间过短");
+                mCaptureLayout.setTextWithAnimation(TUIKit.getAppContext().getString(R.string.record_time_tip));
                 mSwitchCamera.setVisibility(VISIBLE);
                 postDelayed(new Runnable() {
                     @Override

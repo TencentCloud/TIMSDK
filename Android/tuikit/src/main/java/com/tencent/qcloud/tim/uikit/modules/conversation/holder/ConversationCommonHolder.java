@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationIconView;
 import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
@@ -41,15 +42,15 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         MessageInfo lastMsg = conversation.getLastMessage();
         if (lastMsg != null && lastMsg.getStatus() == MessageInfo.MSG_STATUS_REVOKE) {
             if (lastMsg.isSelf()) {
-                lastMsg.setExtra("您撤回了一条消息");
+                lastMsg.setExtra(TUIKit.getAppContext().getString(R.string.revoke_tips_you));
             } else if (lastMsg.isGroup()) {
                 String message = TUIKitConstants.covert2HTMLString(
                         TextUtils.isEmpty(lastMsg.getGroupNameCard())
                                 ? lastMsg.getFromUser()
                                 : lastMsg.getGroupNameCard());
-                lastMsg.setExtra(message + "撤回了一条消息");
+                lastMsg.setExtra(message + TUIKit.getAppContext().getString(R.string.revoke_tips));
             } else {
-                lastMsg.setExtra("对方撤回了一条消息");
+                lastMsg.setExtra(TUIKit.getAppContext().getString(R.string.revoke_tips_other));
             }
         }
 

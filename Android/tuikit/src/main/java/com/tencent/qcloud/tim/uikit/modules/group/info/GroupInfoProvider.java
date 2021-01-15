@@ -12,6 +12,8 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberOperationResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
@@ -256,7 +258,7 @@ public class GroupInfoProvider {
                     for (int i = 0; i < v2TIMGroupMemberOperationResults.size(); i++) {
                         V2TIMGroupMemberOperationResult res = v2TIMGroupMemberOperationResults.get(i);
                         if (res.getResult() == V2TIMGroupMemberOperationResult.OPERATION_RESULT_PENDING) {
-                            callBack.onSuccess("邀请成功，等待对方接受");
+                            callBack.onSuccess(TUIKit.getAppContext().getString(R.string.request_wait));
                             return;
                         }
                         if (res.getResult() > 0) {

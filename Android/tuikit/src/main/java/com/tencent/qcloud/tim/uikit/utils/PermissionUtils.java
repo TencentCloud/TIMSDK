@@ -11,6 +11,9 @@ import android.provider.Settings;
 
 import androidx.core.app.ActivityCompat;
 
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
+
 public class PermissionUtils {
 
     private static final String TAG = PermissionUtils.class.getSimpleName();
@@ -33,8 +36,8 @@ public class PermissionUtils {
     private static void showPermissionDialog(final Context context) {
         if (mPermissionDialog == null) {
             mPermissionDialog = new AlertDialog.Builder(context)
-                    .setMessage("使用该功能，需要开启权限，鉴于您禁用相关权限，请手动设置开启权限")
-                    .setPositiveButton("设置", new DialogInterface.OnClickListener() {
+                    .setMessage(TUIKit.getAppContext().getString(R.string.permission_content))
+                    .setPositiveButton(TUIKit.getAppContext().getString(R.string.setting), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cancelPermissionDialog();
@@ -43,7 +46,7 @@ public class PermissionUtils {
                             context.startActivity(intent);
                         }
                     })
-                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(TUIKit.getAppContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //关闭页面或者做其他操作

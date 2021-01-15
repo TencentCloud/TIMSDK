@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.PopupList;
 import com.tencent.qcloud.tim.uikit.component.action.PopActionClickListener;
 import com.tencent.qcloud.tim.uikit.component.action.PopMenuAction;
@@ -119,7 +120,7 @@ public class MessageLayout extends MessageLayoutUI {
         List<PopMenuAction> actions = new ArrayList<>();
         PopMenuAction action = new PopMenuAction();
         if (msg.getMsgType() == MessageInfo.MSG_TYPE_TEXT) {
-            action.setActionName("复制");
+            action.setActionName(getContext().getString(R.string.copy_action));
             action.setActionClickListener(new PopActionClickListener() {
                 @Override
                 public void onActionClick(int position, Object data) {
@@ -129,7 +130,7 @@ public class MessageLayout extends MessageLayoutUI {
             actions.add(action);
         }
         action = new PopMenuAction();
-        action.setActionName("删除");
+        action.setActionName(getContext().getString(R.string.delete_action));
         action.setActionClickListener(new PopActionClickListener() {
             @Override
             public void onActionClick(int position, Object data) {
@@ -139,7 +140,7 @@ public class MessageLayout extends MessageLayoutUI {
         actions.add(action);
         if (msg.isSelf()) {
             action = new PopMenuAction();
-            action.setActionName("撤回");
+            action.setActionName(getContext().getString(R.string.revoke_action));
             action.setActionClickListener(new PopActionClickListener() {
                 @Override
                 public void onActionClick(int position, Object data) {
@@ -149,7 +150,7 @@ public class MessageLayout extends MessageLayoutUI {
             actions.add(action);
             if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL) {
                 action = new PopMenuAction();
-                action.setActionName("重发");
+                action.setActionName(getContext().getString(R.string.resend_action));
                 action.setActionClickListener(new PopActionClickListener() {
                     @Override
                     public void onActionClick(int position, Object data) {

@@ -45,7 +45,7 @@ public class GroupMemberManagerLayout extends LinearLayout implements IGroupMemb
     private void init() {
         inflate(getContext(), R.layout.group_member_layout, this);
         mTitleBar = findViewById(R.id.group_member_title_bar);
-        mTitleBar.setTitle("管理", TitleBarLayout.POSITION.RIGHT);
+        mTitleBar.setTitle(getContext().getString(R.string.manager), TitleBarLayout.POSITION.RIGHT);
         mTitleBar.getRightIcon().setVisibility(GONE);
         mTitleBar.setOnRightClickListener(new OnClickListener() {
             @Override
@@ -58,7 +58,7 @@ public class GroupMemberManagerLayout extends LinearLayout implements IGroupMemb
 
             @Override
             public void onMemberRemoved(GroupMemberInfo memberInfo) {
-                mTitleBar.setTitle("群成员(" + mGroupInfo.getMemberDetails().size() + ")", TitleBarLayout.POSITION.MIDDLE);
+                mTitleBar.setTitle(getContext().getString(R.string.group_members) + "(" + mGroupInfo.getMemberDetails().size() + ")", TitleBarLayout.POSITION.MIDDLE);
             }
         });
         GridView gridView = findViewById(R.id.group_all_members);
@@ -78,7 +78,7 @@ public class GroupMemberManagerLayout extends LinearLayout implements IGroupMemb
         mGroupInfo = groupInfo;
         mAdapter.setDataSource(groupInfo);
         if (groupInfo != null) {
-            mTitleBar.setTitle("群成员(" + groupInfo.getMemberDetails().size() + ")", TitleBarLayout.POSITION.MIDDLE);
+            mTitleBar.setTitle(getContext().getString(R.string.group_members) + "(" + groupInfo.getMemberDetails().size() + ")", TitleBarLayout.POSITION.MIDDLE);
         }
     }
 

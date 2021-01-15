@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:singleLine="true"
-            android:text="发起呼叫"
+            android:text="@string/launch_call"
             android:textColor="@color/colorWhite"
             android:textSize="18sp" />
 
@@ -37,7 +37,7 @@
             android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="完成"
+            android:text="@string/completed"
             android:textColor="@color/colorWhite"
             android:textSize="16sp" />
     </androidx.appcompat.widget.Toolbar>

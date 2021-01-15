@@ -5,6 +5,8 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 public class CheckPermission {
@@ -43,7 +45,7 @@ public class CheckPermission {
                 audioRecord.stop();
                 audioRecord.release();
                 audioRecord = null;
-                TUIKitLog.i(TAG, "录音机被占用");
+                TUIKitLog.i(TAG, TUIKit.getAppContext().getString(R.string.record_occupied));
             }
             return STATE_RECORDING;
         } else {
@@ -59,7 +61,7 @@ public class CheckPermission {
                     audioRecord = null;
 
                 }
-                TUIKitLog.i(TAG, "录音的结果为空");
+                TUIKitLog.i(TAG, TUIKit.getAppContext().getString(R.string.record_null));
                 return STATE_NO_PERMISSION;
 
             } else {

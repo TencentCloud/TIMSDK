@@ -20,6 +20,7 @@ import com.tencent.imsdk.conversation.Conversation;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMTextElem;
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatLayout;
@@ -208,7 +209,7 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                         mVolumeAnim = (AnimationDrawable) mRecordingIcon.getDrawable();
                         mVolumeAnim.start();
                         mRecordingTips.setTextColor(Color.WHITE);
-                        mRecordingTips.setText("手指上滑，取消发送");
+                        mRecordingTips.setText(TUIKit.getAppContext().getString(R.string.down_cancle_send));
                     }
                 });
             }
@@ -231,9 +232,9 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                         mRecordingIcon.setImageResource(R.drawable.ic_volume_dialog_length_short);
                         mRecordingTips.setTextColor(Color.WHITE);
                         if (status == RECORD_TOO_SHORT) {
-                            mRecordingTips.setText("说话时间太短");
+                            mRecordingTips.setText(TUIKit.getAppContext().getString(R.string.say_time_short));
                         } else {
-                            mRecordingTips.setText("录音失败");
+                            mRecordingTips.setText(TUIKit.getAppContext().getString(R.string.record_fail));
                         }
                     }
                 });
@@ -250,7 +251,7 @@ public abstract class AbsChatLayout extends ChatLayoutUI implements IChatLayout 
                     @Override
                     public void run() {
                         mRecordingIcon.setImageResource(R.drawable.ic_volume_dialog_cancel);
-                        mRecordingTips.setText("松开手指，取消发送");
+                        mRecordingTips.setText(TUIKit.getAppContext().getString(R.string.up_cancle_send));
                     }
                 });
             }

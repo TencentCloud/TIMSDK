@@ -80,7 +80,7 @@ public class PhotoViewActivity extends Activity {
                                         @Override
                                         public void onSuccess() {
                                             mPhotoView.setImageURI(FileUtil.getUriFromPath(file.getPath()));
-                                            mViewOriginalBtn.setText("已完成");
+                                            mViewOriginalBtn.setText(getString(R.string.completed));
                                             mViewOriginalBtn.setOnClickListener(null);
                                         }
                                     });
