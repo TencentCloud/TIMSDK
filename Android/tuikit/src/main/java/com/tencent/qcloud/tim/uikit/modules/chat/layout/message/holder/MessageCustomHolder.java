@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
 import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
@@ -59,8 +60,8 @@ public class MessageCustomHolder extends MessageContentHolder implements ICustom
         msgBodyText.setVisibility(View.VISIBLE);
 
         if (msg.getExtra() != null) {
-            if (TextUtils.equals("[自定义消息]", msg.getExtra().toString())) {
-                msgBodyText.setText(Html.fromHtml(TUIKitConstants.covert2HTMLString("[不支持的自定义消息]")));
+            if (TextUtils.equals(TUIKit.getAppContext().getString(R.string.custom_msg), msg.getExtra().toString())) {
+                msgBodyText.setText(Html.fromHtml(TUIKitConstants.covert2HTMLString(TUIKit.getAppContext().getString(R.string.no_support_custom_msg))));
             } else {
                 msgBodyText.setText(msg.getExtra().toString());
             }

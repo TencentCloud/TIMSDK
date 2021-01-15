@@ -5,6 +5,8 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Handler;
 import android.text.TextUtils;
+
+import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
@@ -55,7 +57,7 @@ public class AudioPlayer {
                     stopInternalRecord();
                     onRecordCompleted(true);
                     mRecordCallback = null;
-                    ToastUtil.toastShortMessage("已达到最大语音长度");
+                    ToastUtil.toastShortMessage(TUIKit.getAppContext().getString(R.string.record_limit_tips));
                 }
             }, TUIKit.getConfigs().getGeneralConfig().getAudioRecordMaxTime() * 1000);
         } catch (Exception e) {
@@ -97,7 +99,7 @@ public class AudioPlayer {
             mPlayer.start();
         } catch (Exception e) {
             TUIKitLog.w(TAG, "startPlay failed", e);
-            ToastUtil.toastLongMessage("语音文件已损坏或不存在");
+            ToastUtil.toastLongMessage(TUIKit.getAppContext().getString(R.string.play_error_tip));
             stopInternalPlay();
             onPlayCompleted(false);
         }

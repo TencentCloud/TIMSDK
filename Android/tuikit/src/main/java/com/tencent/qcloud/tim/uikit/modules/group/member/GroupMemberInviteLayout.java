@@ -52,8 +52,8 @@ public class GroupMemberInviteLayout extends LinearLayout implements IGroupMembe
     private void init() {
         inflate(getContext(), R.layout.group_member_invite_layout, this);
         mTitleBar = findViewById(R.id.group_invite_title_bar);
-        mTitleBar.setTitle("确定", TitleBarLayout.POSITION.RIGHT);
-        mTitleBar.setTitle("添加成员", TitleBarLayout.POSITION.MIDDLE);
+        mTitleBar.setTitle(getContext().getString(R.string.sure), TitleBarLayout.POSITION.RIGHT);
+        mTitleBar.setTitle(getContext().getString(R.string.add_group_member), TitleBarLayout.POSITION.MIDDLE);
         mTitleBar.getRightTitle().setTextColor(Color.BLUE);
         mTitleBar.getRightIcon().setVisibility(View.GONE);
         mTitleBar.setOnRightClickListener(new OnClickListener() {
@@ -67,7 +67,7 @@ public class GroupMemberInviteLayout extends LinearLayout implements IGroupMembe
                         if (data instanceof String) {
                             ToastUtil.toastLongMessage(data.toString());
                         } else {
-                            ToastUtil.toastLongMessage("邀请成员成功");
+                            ToastUtil.toastLongMessage(getContext().getString(R.string.invite_suc));
                         }
                         mInviteMembers.clear();
                         finish();
@@ -75,7 +75,7 @@ public class GroupMemberInviteLayout extends LinearLayout implements IGroupMembe
 
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
-                        ToastUtil.toastLongMessage("邀请成员失败:" + errCode + "=" + errMsg);
+                        ToastUtil.toastLongMessage(getContext().getString(R.string.invite_fail) + errCode + "=" + errMsg);
                     }
                 });
             }
@@ -91,9 +91,9 @@ public class GroupMemberInviteLayout extends LinearLayout implements IGroupMembe
                     mInviteMembers.remove(contact.getId());
                 }
                 if (mInviteMembers.size() > 0) {
-                    mTitleBar.setTitle("确定（" + mInviteMembers.size() + "）", TitleBarLayout.POSITION.RIGHT);
+                    mTitleBar.setTitle(getContext().getString(R.string.sure) + "（" + mInviteMembers.size() + "）", TitleBarLayout.POSITION.RIGHT);
                 } else {
-                    mTitleBar.setTitle("确定", TitleBarLayout.POSITION.RIGHT);
+                    mTitleBar.setTitle(getContext().getString(R.string.sure), TitleBarLayout.POSITION.RIGHT);
                 }
             }
         });

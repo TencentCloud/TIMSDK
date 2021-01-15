@@ -50,5 +50,5 @@ dependencies {
 //    api 'com.tencent.liteav:LiteAVSDK_Enterprise:1.0.1'
 //    embed project(':audioeffectsettingkit')
 //    embed project(':beautysettingkit')
-api 'com.tencent.imsdk:imsdk:5.1.20'
+api 'com.tencent.imsdk:imsdk:5.1.21'
 }

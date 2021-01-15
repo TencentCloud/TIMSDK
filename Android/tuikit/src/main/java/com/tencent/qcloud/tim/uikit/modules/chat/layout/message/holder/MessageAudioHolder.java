@@ -15,6 +15,7 @@ import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSoundElem;
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
@@ -111,7 +112,7 @@ public class MessageAudioHolder extends MessageContentHolder {
                     return;
                 }
                 if (TextUtils.isEmpty(msg.getDataPath())) {
-                    ToastUtil.toastLongMessage("语音文件还未下载完成");
+                    ToastUtil.toastLongMessage(TUIKit.getAppContext().getString(R.string.voice_play_tip));
                     return;
                 }
                 audioPlayImage.setImageResource(R.drawable.play_voice_message);

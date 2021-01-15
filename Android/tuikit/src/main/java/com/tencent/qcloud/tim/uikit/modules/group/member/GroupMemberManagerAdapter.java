@@ -97,7 +97,7 @@ public class GroupMemberManagerAdapter extends BaseAdapter {
 
                             @Override
                             public void onError(String module, int errCode, String errMsg) {
-                                ToastUtil.toastLongMessage("移除成员失败:errCode=" + errCode);
+                                ToastUtil.toastLongMessage(TUIKit.getAppContext().getString(R.string.remove_fail_tip) + ":errCode=" + errCode);
                             }
                         });
                         window.dismiss();

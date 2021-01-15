@@ -13,6 +13,8 @@ import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
@@ -111,12 +113,12 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
             return;
         }
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("已和");
+        stringBuilder.append(TUIKit.getAppContext().getString(R.string.and_and));
         for (V2TIMFriendInfo v2TIMFriendInfo : timFriendInfoList) {
             stringBuilder.append(v2TIMFriendInfo.getUserID()).append(",");
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        stringBuilder.append("成为好友");
+        stringBuilder.append(TUIKit.getAppContext().getString(R.string.be_friend));
         ToastUtil.toastLongMessage(stringBuilder.toString());
     }
 
@@ -228,9 +230,9 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
             @Override
             public void onError(int code, String desc) {
                 if (code == REVOKE_TIME_OUT) {
-                    ToastUtil.toastLongMessage("消息发送已超过2分钟");
+                    ToastUtil.toastLongMessage(TUIKit.getAppContext().getString(R.string.send_two_mins));
                 } else {
-                    ToastUtil.toastLongMessage("撤回失败:" + code + "=" + desc);
+                    ToastUtil.toastLongMessage(TUIKit.getAppContext().getString(R.string.hold_say) + code + "=" + desc);
                 }
             }
 

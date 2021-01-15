@@ -90,7 +90,7 @@ public class SelectContactActivity extends AppCompatActivity {
         mGroupId = getIntent().getStringExtra(GROUP_ID);
         mCallType = getIntent().getIntExtra(CALL_TYPE, ITRTCAVCall.TYPE_AUDIO_CALL);
         if (TextUtils.isEmpty(mGroupId)) {
-            ToastUtil.toastShortMessage("群ID为空");
+            ToastUtil.toastShortMessage(getString(R.string.group_id_null));
             finish();
             return;
         }
@@ -182,7 +182,7 @@ public class SelectContactActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mSelectedModelList.isEmpty()) {
-                    ToastUtil.toastShortMessage("请先选择通话用户");
+                    ToastUtil.toastShortMessage(getString(R.string.select_call_user));
                     return;
                 }
                 if (mCallType == ITRTCAVCall.TYPE_AUDIO_CALL) {
@@ -314,7 +314,7 @@ public class SelectContactActivity extends AppCompatActivity {
         String userId = entity.mUserModel.userId;
         //1.1 判断这个contact是不是自己
         if (userId.equals(mSelfModel.userId)) {
-            ToastUtil.toastShortMessage("不能添加自己");
+            ToastUtil.toastShortMessage(getString(R.string.add_no_me));
             return;
         }
         if (!mUserModelMap.containsKey(userId)) {

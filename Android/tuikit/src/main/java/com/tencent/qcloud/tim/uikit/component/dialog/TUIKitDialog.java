@@ -16,6 +16,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 
 public class TUIKitDialog {
 
@@ -126,7 +127,7 @@ public class TUIKitDialog {
     }
 
     public TUIKitDialog setPositiveButton(final View.OnClickListener listener) {
-        setPositiveButton("确定", listener);
+        setPositiveButton(TUIKit.getAppContext().getString(R.string.sure), listener);
         return this;
     }
 
@@ -152,7 +153,7 @@ public class TUIKitDialog {
 
     public TUIKitDialog setNegativeButton(
             final OnClickListener listener) {
-        setNegativeButton("取消", listener);
+        setNegativeButton(TUIKit.getAppContext().getString(R.string.cancel), listener);
         return this;
     }
 

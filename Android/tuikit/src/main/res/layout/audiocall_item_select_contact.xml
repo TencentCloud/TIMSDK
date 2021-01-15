@@ -29,6 +29,6 @@
         android:layout_marginLeft="10dp"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/text_size_large"
-        tools:text="测试123" />
+        tools:text="test123" />
 
 </LinearLayout>

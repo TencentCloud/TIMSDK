@@ -2,9 +2,9 @@
 <resources>
 
     <string-array name="group_join_type">
-        <item>禁止加群</item>
-        <item>管理员审批</item>
-        <item>自动审批</item>
+        <item>@string/forbid_join</item>
+        <item>@string/manager_judge</item>
+        <item>@string/auto_judge</item>
     </string-array>
 
     <string-array name="emoji_filter">

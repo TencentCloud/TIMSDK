@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.component.video.CameraInterface;
 import com.tencent.qcloud.tim.uikit.component.video.JCameraView;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
@@ -83,12 +85,12 @@ class PreviewState implements State {
 
     @Override
     public void cancle(SurfaceHolder holder, float screenProp) {
-        TUIKitLog.i(TAG, "浏览状态下,没有 cancle 事件");
+        TUIKitLog.i(TAG, TUIKit.getAppContext().getString(R.string.no_event_cancle_tip));
     }
 
     @Override
     public void confirm() {
-        TUIKitLog.i(TAG, "浏览状态下,没有 confirm 事件");
+        TUIKitLog.i(TAG, TUIKit.getAppContext().getString(R.string.no_event_confirm_tip));
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
@@ -43,15 +44,15 @@ public class MessageTipsHolder extends MessageEmptyHolder {
 
         if (msg.getStatus() == MessageInfo.MSG_STATUS_REVOKE) {
             if (msg.isSelf()) {
-                msg.setExtra("您撤回了一条消息");
+                msg.setExtra(TUIKit.getAppContext().getString(R.string.revoke_tips_you));
             } else if (msg.isGroup()) {
                 String message = TUIKitConstants.covert2HTMLString(
                         (TextUtils.isEmpty(msg.getGroupNameCard())
                                 ? msg.getFromUser()
                                 : msg.getGroupNameCard()));
-                msg.setExtra(message + "撤回了一条消息");
+                msg.setExtra(message + TUIKit.getAppContext().getString(R.string.revoke_tips));
             } else {
-                msg.setExtra("对方撤回了一条消息");
+                msg.setExtra(TUIKit.getAppContext().getString(R.string.revoke_tips_other));
             }
         }
 

@@ -109,7 +109,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         @Override
         public void onError(int code, String msg) {
             //发生了错误，报错并退出该页面
-            ToastUtil.toastLongMessage("发生错误[" + code + "]:" + msg);
+            ToastUtil.toastLongMessage(getString(R.string.error)+ "[" + code + "]:" + msg);
             finishActivity();
         }
 
@@ -143,7 +143,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                             @Override
                             public void onFailed(int code, String msg) {
                                 // 获取用户资料失败了，模拟一个用户
-                                ToastUtil.toastLongMessage("获取用户" + userId + "的资料失败");
+                                ToastUtil.toastLongMessage(getString(R.string.get_user_info_tips_before) + userId + getString(R.string.get_user_info_tips_after));
                                 UserModel model = new UserModel();
                                 model.userId = userId;
                                 model.phone = "";
@@ -188,7 +188,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                         UserModel userModel = mCallUserModelMap.remove(userId);
                         if (userModel != null) {
                             mCallUserModelList.remove(userModel);
-                            ToastUtil.toastLongMessage(userModel.userName + "拒绝通话");
+                            ToastUtil.toastLongMessage(userModel.userName + getString(R.string.reject_call));
                         }
                     }
                 }
@@ -208,7 +208,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                         UserModel userModel = mCallUserModelMap.remove(userId);
                         if (userModel != null) {
                             mCallUserModelList.remove(userModel);
-                            ToastUtil.toastLongMessage(userModel.userName + "无响应");
+                            ToastUtil.toastLongMessage(userModel.userName + getString(R.string.no_response));
                         }
                     }
                 }
@@ -225,7 +225,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 UserModel userModel = mCallUserModelMap.remove(userId);
                 if (userModel != null) {
                     mCallUserModelList.remove(userModel);
-                    ToastUtil.toastLongMessage(userModel.userName + "忙线");
+                    ToastUtil.toastLongMessage(userModel.userName + getString(R.string.line_busy));
                 }
             }
         }
@@ -233,7 +233,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         @Override
         public void onCallingCancel() {
             if (mSponsorUserModel != null) {
-                ToastUtil.toastLongMessage(mSponsorUserModel.userName + " 取消了通话");
+                ToastUtil.toastLongMessage(mSponsorUserModel.userName + getString(R.string.cancle_calling));
             }
             finishActivity();
         }
@@ -241,7 +241,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         @Override
         public void onCallingTimeout() {
             if (mSponsorUserModel != null) {
-                ToastUtil.toastLongMessage(mSponsorUserModel.userName + " 通话超时");
+                ToastUtil.toastLongMessage(mSponsorUserModel.userName + getString(R.string.call_time_out));
             }
             finishActivity();
         }
@@ -424,7 +424,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 isMuteMic = !isMuteMic;
                 mITRTCAVCall.setMicMute(isMuteMic);
                 mMuteImg.setActivated(isMuteMic);
-                ToastUtil.toastLongMessage(isMuteMic ? "开启静音" : "关闭静音");
+                ToastUtil.toastLongMessage(isMuteMic ? getString(R.string.open_silent) : getString(R.string.close_silent));
             }
         });
         mHandsfreeLl.setOnClickListener(new View.OnClickListener() {
@@ -433,7 +433,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                 isHandsFree = !isHandsFree;
                 mITRTCAVCall.setHandsFree(isHandsFree);
                 mHandsfreeImg.setActivated(isHandsFree);
-                ToastUtil.toastLongMessage(isHandsFree ? "使用扬声器" : "使用听筒");
+                ToastUtil.toastLongMessage(isHandsFree ? getString(R.string.use_speakers) : getString(R.string.use_handset));
             }
         });
         mMuteImg.setActivated(isMuteMic);

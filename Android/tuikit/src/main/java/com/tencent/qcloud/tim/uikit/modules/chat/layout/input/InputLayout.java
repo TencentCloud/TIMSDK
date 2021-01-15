@@ -140,7 +140,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                         if (mChatInputHandler != null) {
                             mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_START);
                         }
-                        mSendAudioButton.setText("松开结束");
+                        mSendAudioButton.setText(TUIKit.getAppContext().getString(R.string.release_end));
                         AudioPlayer.getInstance().startRecord(new AudioPlayer.Callback() {
                             @Override
                             public void onCompletion(Boolean success) {
@@ -162,7 +162,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                             }
                             mAudioCancel = false;
                         }
-                        mSendAudioButton.setText("松开结束");
+                        mSendAudioButton.setText(TUIKit.getAppContext().getString(R.string.release_end));
                         break;
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
@@ -171,7 +171,7 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                             mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_STOP);
                         }
                         AudioPlayer.getInstance().stopRecord();
-                        mSendAudioButton.setText("按住说话");
+                        mSendAudioButton.setText(TUIKit.getAppContext().getString(R.string.hold_say));
                         break;
                     default:
                         break;

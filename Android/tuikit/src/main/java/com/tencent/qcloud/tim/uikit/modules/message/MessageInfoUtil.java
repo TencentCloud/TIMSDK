@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tim.uikit.modules.message;
 
+import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
@@ -83,7 +84,7 @@ public class MessageInfoUtil {
         MessageInfo info = new MessageInfo();
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createFaceMessage(groupId, faceName.getBytes());
 
-        info.setExtra("[自定义表情]");
+        info.setExtra(TUIKit.getAppContext().getString(R.string.custom_emoji));
         info.setMsgTime(System.currentTimeMillis() / 1000);
         info.setSelf(true);
         info.setTimMessage(v2TIMMessage);
@@ -111,7 +112,7 @@ public class MessageInfoUtil {
         info.setImgHeight(size[1]);
         info.setSelf(true);
         info.setTimMessage(v2TIMMessage);
-        info.setExtra("[图片]");
+        info.setExtra(TUIKit.getAppContext().getString(R.string.picture_extra));
         info.setMsgTime(System.currentTimeMillis() / 1000);
         info.setFromUser(V2TIMManager.getInstance().getLoginUser());
         info.setMsgType(MessageInfo.MSG_TYPE_IMAGE);
@@ -139,7 +140,7 @@ public class MessageInfoUtil {
         info.setDataPath(imgPath);
         info.setDataUri(videoUri);
         info.setTimMessage(v2TIMMessage);
-        info.setExtra("[视频]");
+        info.setExtra(TUIKit.getAppContext().getString(R.string.video_extra));
         info.setMsgTime(System.currentTimeMillis() / 1000);
         info.setFromUser(V2TIMManager.getInstance().getLoginUser());
         info.setMsgType(MessageInfo.MSG_TYPE_VIDEO);
@@ -160,7 +161,7 @@ public class MessageInfoUtil {
         info.setDataPath(recordPath);
         info.setSelf(true);
         info.setTimMessage(v2TIMMessage);
-        info.setExtra("[语音]");
+        info.setExtra(TUIKit.getAppContext().getString(R.string.audio_extra));
         info.setMsgTime(System.currentTimeMillis() / 1000);
         info.setFromUser(V2TIMManager.getInstance().getLoginUser());
         info.setMsgType(MessageInfo.MSG_TYPE_AUDIO);
@@ -183,7 +184,7 @@ public class MessageInfoUtil {
             info.setDataPath(filePath);
             info.setSelf(true);
             info.setTimMessage(v2TIMMessage);
-            info.setExtra("[文件]");
+            info.setExtra(TUIKit.getAppContext().getString(R.string.file_extra));
             info.setMsgTime(System.currentTimeMillis() / 1000);
             info.setFromUser(V2TIMManager.getInstance().getLoginUser());
             info.setMsgType(MessageInfo.MSG_TYPE_FILE);
@@ -207,7 +208,7 @@ public class MessageInfoUtil {
         info.setMsgTime(System.currentTimeMillis() / 1000);
         info.setMsgType(MessageInfo.MSG_TYPE_CUSTOM);
         info.setFromUser(V2TIMManager.getInstance().getLoginUser());
-        info.setExtra("[自定义消息]");
+        info.setExtra(TUIKit.getAppContext().getString(R.string.custom_msg));
         return info;
     }
 
@@ -311,6 +312,11 @@ public class MessageInfoUtil {
             TUIKitLog.e(TAG, "ele2MessageInfo parameters error");
             return null;
         }
+        Context context = TUIKit.getAppContext();
+        if (context == null){
+            TUIKitLog.e(TAG, "context == null");
+            return new MessageInfo();
+        }
         final MessageInfo msgInfo = new MessageInfo();
         boolean isGroup = !TextUtils.isEmpty(timMessage.getGroupID());
         String sender = timMessage.getSender();
@@ -345,7 +351,7 @@ public class MessageInfoUtil {
                     return null;
                 }
                 TUIKitLog.i(TAG, "custom data:" + data);
-                String content = "[自定义消息]";
+                String content = TUIKit.getAppContext().getString(R.string.custom_msg);
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_CUSTOM);
                 msgInfo.setExtra(content);
                 Gson gson = new Gson();
@@ -365,7 +371,7 @@ public class MessageInfoUtil {
                         } else {
                             anchorName = liveMessageInfo.roomName;
                         }
-                        content = anchorName + "的直播";
+                        content = anchorName + TUIKit.getAppContext().getString(R.string.live_room);
                         msgInfo.setExtra(content);
                     } else if (LiveModel.isLiveRoomSignal(messageCustom.data)) {
                         LiveModel liveModel = LiveModel.convert2LiveData(timMessage);
@@ -385,21 +391,21 @@ public class MessageInfoUtil {
                             }
                             switch (callModel.action) {
                                 case CallModel.VIDEO_CALL_ACTION_DIALING:
-                                    content = isGroup ? ("\"" + senderShowName + "\"" + "发起群通话") : ("发起通话");
+                                    content = isGroup ? ("\"" + senderShowName + "\"" + context.getString(R.string.start_group_call)) : (context.getString(R.string.start_call));
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_SPONSOR_CANCEL:
-                                    content = isGroup ? "取消群通话" : "取消通话";
+                                    content = isGroup ? context.getString(R.string.cancle_group_call) : context.getString(R.string.cancle_call);
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_LINE_BUSY:
-                                    content = isGroup ? ("\"" + senderShowName + "\"" + "忙线") : "对方忙线";
+                                    content = isGroup ? ("\"" + senderShowName + "\"" + context.getString(R.string.line_busy)) : context.getString(R.string.other_line_busy);
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_REJECT:
-                                    content = isGroup ? ("\"" + senderShowName + "\"" + "拒绝群通话") : "拒绝通话";
+                                    content = isGroup ? ("\"" + senderShowName + "\"" + context.getString(R.string.reject_group_calls)) : context.getString(R.string.reject_calls);
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_SPONSOR_TIMEOUT:
                                     if (isGroup && callModel.invitedList != null && callModel.invitedList.size() == 1
                                             && callModel.invitedList.get(0).equals(timMessage.getSender())) {
-                                        content = "\"" + senderShowName + "\"" + "无应答";
+                                        content = "\"" + senderShowName + "\"" + context.getString(R.string.no_response_call);
                                     } else {
                                         StringBuilder inviteeShowStringBuilder = new StringBuilder();
                                         if (callModel.invitedList != null && callModel.invitedList.size() > 0) {
@@ -410,17 +416,17 @@ public class MessageInfoUtil {
                                                 inviteeShowStringBuilder.delete(inviteeShowStringBuilder.length() - 1, inviteeShowStringBuilder.length());
                                             }
                                         }
-                                        content = isGroup ? ("\"" + inviteeShowStringBuilder.toString() + "\"" + "无应答") : "无应答";
+                                        content = isGroup ? ("\"" + inviteeShowStringBuilder.toString() + "\"" + context.getString(R.string.no_response_call)) : context.getString(R.string.no_response_call);
                                     }
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_ACCEPT:
-                                    content = isGroup ? ("\"" + senderShowName + "\"" + "已接听") : "已接听";
+                                    content = isGroup ? ("\"" + senderShowName + "\"" + context.getString(R.string.accept_call)) : context.getString(R.string.accept_call);
                                     break;
                                 case CallModel.VIDEO_CALL_ACTION_HANGUP:
-                                    content = isGroup ? "结束群通话" : "结束通话，通话时长：" + DateTimeUtil.formatSecondsTo00(callModel.duration);
+                                    content = isGroup ? context.getString(R.string.stop_group_call) : context.getString(R.string.stop_call_tip) + DateTimeUtil.formatSecondsTo00(callModel.duration);
                                     break;
                                 default:
-                                    content = "不能识别的通话指令";
+                                    content = context.getString(R.string.invalid_command);
                                     break;
                             }
                             if (isGroup) {
@@ -447,7 +453,7 @@ public class MessageInfoUtil {
                         user = user + v2TIMGroupMemberInfo.getUserID();
                     } else {
                         if (i == 2 && v2TIMGroupMemberInfoList.size() > 3) {
-                            user = user + "等";
+                            user = user + context.getString(R.string.etc);
                             break;
                         } else {
                             user = user + "，" + v2TIMGroupMemberInfo.getUserID();
@@ -461,27 +467,27 @@ public class MessageInfoUtil {
             String message = TUIKitConstants.covert2HTMLString(user);
             if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_JOIN) {
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_JOIN);
-                message = message + "加入群组";
+                message = message + context.getString(R.string.join_group);
             }
             if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_INVITE) {
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_JOIN);
-                message = message + "被邀请进群";
+                message = message + context.getString(R.string.invite_joined_group);
             }
             if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_QUIT) {
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_QUITE);
-                message = message + "退出群组";
+                message = message + context.getString(R.string.quit_group);
             }
             if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_KICKED) {
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_KICK);
-                message = message + "被踢出群组";
+                message = message + context.getString(R.string.kick_group_tip);
             }
             if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_SET_ADMIN) {
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                message = message + "被设置管理员";
+                message = message + context.getString(R.string.be_group_manager);
             }
             if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_CANCEL_ADMIN) {
                 msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                message = message + "被取消管理员";
+                message = message + context.getString(R.string.cancle_group_manager);
             }
             if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE) {
                 List<V2TIMGroupChangeInfo> modifyList = groupTipElem.getGroupChangeInfoList();
@@ -490,19 +496,19 @@ public class MessageInfoUtil {
                     int modifyType = modifyInfo.getType();
                     if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_NAME) {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NAME);
-                        message = message + "修改群名称为\"" + modifyInfo.getValue() + "\"";
+                        message = message + context.getString(R.string.modify_group_name_is) + "\"" + modifyInfo.getValue() + "\"";
                     } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION) {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                        message = message + "修改群公告为\"" + modifyInfo.getValue() + "\"";
+                        message = message + context.getString(R.string.modify_notice) + "\"" + modifyInfo.getValue() + "\"";
                     } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER) {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                        message = message + "转让群主给\"" + modifyInfo.getValue() + "\"";
+                        message = message + context.getString(R.string.move_owner) + "\"" + modifyInfo.getValue() + "\"";
                     } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_FACE_URL) {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                        message = message + "修改了群头像";
+                        message = message + context.getString(R.string.modify_group_avatar);
                     } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION) {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                        message = message + "修改群介绍为\"" + modifyInfo.getValue() + "\"";
+                        message = message + context.getString(R.string. modify_notice) + "\"" + modifyInfo.getValue() + "\"";
                     }
                     if (i < modifyList.size() - 1) {
                         message = message + "、";
@@ -515,10 +521,10 @@ public class MessageInfoUtil {
                     long shutupTime = modifyList.get(0).getMuteTime();
                     if (shutupTime > 0) {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                        message = message + "被禁言\"" + DateTimeUtil.formatSeconds(shutupTime) + "\"";
+                        message = message + context.getString(R.string.banned) + "\"" + DateTimeUtil.formatSeconds(shutupTime) + "\"";
                     } else {
                         msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                        message = message + "被取消禁言";
+                        message = message + context.getString(R.string.cancle_banned);
                     }
                 }
             }
@@ -536,7 +542,7 @@ public class MessageInfoUtil {
                     TUIKitLog.e("MessageInfoUtil", "faceElem data is null or index<1");
                     return null;
                 }
-                msgInfo.setExtra("[自定义表情]");
+                msgInfo.setExtra(context.getString(R.string.custom_emoji));
 
 
             } else if (type == V2TIMMessage.V2TIM_ELEM_TYPE_SOUND) {
@@ -576,7 +582,7 @@ public class MessageInfoUtil {
                         msgInfo.setDataPath(path);
                     }
                 }
-                msgInfo.setExtra("[语音]");
+                msgInfo.setExtra(context.getString(R.string.audio_extra));
             } else if (type == V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE) {
                 V2TIMImageElem imageEle = timMessage.getImageElem();
                 String localPath = imageEle.getPath();
@@ -602,7 +608,7 @@ public class MessageInfoUtil {
                         }
                     }
                 }
-                msgInfo.setExtra("[图片]");
+                msgInfo.setExtra(context.getString(R.string.picture_extra));
             } else if (type == V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO) {
                 V2TIMVideoElem videoEle = timMessage.getVideoElem();
                 if (msgInfo.isSelf() && !TextUtils.isEmpty(videoEle.getSnapshotPath())) {
@@ -624,7 +630,7 @@ public class MessageInfoUtil {
                     }
                 }
 
-                msgInfo.setExtra("[视频]");
+                msgInfo.setExtra(context.getString(R.string.video_extra));
             } else if (type == V2TIMMessage.V2TIM_ELEM_TYPE_FILE) {
                 V2TIMFileElem fileElem = timMessage.getFileElem();
                 String filename = fileElem.getUUID();
@@ -660,7 +666,7 @@ public class MessageInfoUtil {
                         msgInfo.setDataPath(path);
                     }
                 }
-                msgInfo.setExtra("[文件]");
+                msgInfo.setExtra(context.getString(R.string.file_extra));
             }
             msgInfo.setMsgType(TIMElemType2MessageInfoType(type));
         }
@@ -669,12 +675,12 @@ public class MessageInfoUtil {
             msgInfo.setStatus(MessageInfo.MSG_STATUS_REVOKE);
             msgInfo.setMsgType(MessageInfo.MSG_STATUS_REVOKE);
             if (msgInfo.isSelf()) {
-                msgInfo.setExtra("您撤回了一条消息");
+                msgInfo.setExtra(context.getString(R.string.revoke_tips_you));
             } else if (msgInfo.isGroup()) {
                 String message = TUIKitConstants.covert2HTMLString(msgInfo.getFromUser());
-                msgInfo.setExtra(message + "撤回了一条消息");
+                msgInfo.setExtra(message + context.getString(R.string.revoke_tips));
             } else {
-                msgInfo.setExtra("对方撤回了一条消息");
+                msgInfo.setExtra(context.getString(R.string.revoke_tips_other));
             }
         } else {
             if (msgInfo.isSelf()) {

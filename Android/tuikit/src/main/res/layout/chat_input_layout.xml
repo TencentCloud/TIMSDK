@@ -46,7 +46,7 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/voice_btn_selector"
-            android:text="按住说话"
+            android:text="@string/hold_say"
             android:textColor="@color/text_color_gray"
             android:visibility="gone" />
 

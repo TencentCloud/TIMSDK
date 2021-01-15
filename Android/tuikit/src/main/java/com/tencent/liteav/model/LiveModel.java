@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import org.json.JSONObject;
@@ -56,7 +58,7 @@ public class LiveModel implements Cloneable, Serializable {
             return null;
         }
         LiveModel liveModel = new LiveModel();
-        liveModel.message = "不能识别的通话指令";
+        liveModel.message = TUIKit.getAppContext().getString(R.string.invalid_command);
         try {
             Map<String, Object> extraMap = new Gson().fromJson(signalingInfo.getData(), Map.class);
             liveModel.data = signalingInfo.getData();
@@ -66,35 +68,35 @@ public class LiveModel implements Cloneable, Serializable {
             liveModel.actionType = actionType;
             switch (code) {
                 case CODE_REQUEST_JOIN_ANCHOR:
-                    liveModel.message = "直播间申请上麦";
+                    liveModel.message = TUIKit.getAppContext().getString(R.string.request_online);
                     break;
                 case CODE_RESPONSE_JOIN_ANCHOR:
                     if (actionType == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_REJECT_INVITE) {
-                        liveModel.message = "直播间申请上麦被拒绝";
+                        liveModel.message = TUIKit.getAppContext().getString(R.string.reject_request_online);
                     } else if (actionType == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_ACCEPT_INVITE) {
-                        liveModel.message = "直播间同意上麦";
+                        liveModel.message = TUIKit.getAppContext().getString(R.string.agree_request_online);
                     }
                     break;
                 case CODE_KICK_OUT_JOIN_ANCHOR:
-                    liveModel.message = "直播间申请关闭连麦";
+                    liveModel.message = TUIKit.getAppContext().getString(R.string.request_close_online);
                     break;
                 case CODE_RESPONSE_KICK_OUT_JOIN_ANCHOR:
-                    liveModel.message = "直播间关闭连麦";
+                    liveModel.message = TUIKit.getAppContext().getString(R.string.close_online);
                     break;
                 case CODE_REQUEST_ROOM_PK:
                     if (actionType == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_INVITE) {
-                        liveModel.message = "直播间申请PK";
+                        liveModel.message = TUIKit.getAppContext().getString(R.string.request_pk);
                     }
                     break;
                 case CODE_RESPONSE_PK:
                     if (actionType == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_REJECT_INVITE) {
-                        liveModel.message = "直播间申请PK被拒绝";
+                        liveModel.message = TUIKit.getAppContext().getString(R.string.reject_request_pk);
                     } else if (actionType == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_ACCEPT_INVITE) {
-                        liveModel.message = "直播间同意PK";
+                        liveModel.message = TUIKit.getAppContext().getString(R.string.agree_request_pk);
                     }
                     break;
                 case CODE_QUIT_ROOM_PK:
-                    liveModel.message = "直播间退出PK";
+                    liveModel.message = TUIKit.getAppContext().getString(R.string.exit_pk);
                     break;
             }
         } catch (Exception e) {
