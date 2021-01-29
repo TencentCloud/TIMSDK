@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Smart_iOS'
-  spec.version      = '5.1.136'
+  spec.version      = '5.1.137'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/restructure/ios/5.1.136/ImSDK_Smart.framework.zip'}
+  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/restructure/ios/5.1.137/ImSDK_Smart.framework.zip'}
   spec.preserve_paths = '**/ImSDK_Smart.framework'
   spec.source_files = '**/ImSDK_Smart.framework/Headers/*.h'
   spec.public_header_files = '**/ImSDK_Smart.framework/Headers/*.h'
