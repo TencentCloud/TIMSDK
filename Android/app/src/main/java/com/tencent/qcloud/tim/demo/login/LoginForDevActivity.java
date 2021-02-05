@@ -59,7 +59,7 @@ public class LoginForDevActivity extends Activity {
                     public void onError(String module, final int code, final String desc) {
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                ToastUtil.toastLongMessage("登录失败, errCode = " + code + ", errInfo = " + desc);
+                                ToastUtil.toastLongMessage(getString(R.string.failed_login_tip) + ", errCode = " + code + ", errInfo = " + desc);
                             }
                         });
                         DemoLog.i(TAG, "imLogin errorCode = " + code + ", errorInfo = " + desc);
@@ -93,7 +93,7 @@ public class LoginForDevActivity extends Activity {
         switch (requestCode) {
             case Utils.REQ_PERMISSION_CODE:
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    ToastUtil.toastLongMessage("未全部授权，部分功能可能无法使用！");
+                    ToastUtil.toastLongMessage(getString(R.string.permission_tip));
                 }
                 break;
             default:

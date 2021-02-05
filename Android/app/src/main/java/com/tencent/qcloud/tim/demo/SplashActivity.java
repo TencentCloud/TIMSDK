@@ -55,7 +55,7 @@ public class SplashActivity extends Activity {
             public void onError(String module, final int code, final String desc) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        ToastUtil.toastLongMessage("登录失败, errCode = " + code + ", errInfo = " + desc);
+                        ToastUtil.toastLongMessage(getString(R.string.failed_login_tip) + ", errCode = " + code + ", errInfo = " + desc);
                         startLogin();
                     }
                 });

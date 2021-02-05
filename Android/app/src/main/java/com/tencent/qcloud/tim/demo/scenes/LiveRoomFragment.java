@@ -114,7 +114,7 @@ public class LiveRoomFragment extends BaseScenesFragment implements View.OnClick
             @Override
             public void onFailed(int code, String msg) {
                 Log.e(TAG, "onFailed: code -> " + code + ", msg -> " + msg);
-                Toast.makeText(getActivity(), "请求网络失败" + msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.online_fail) + msg, Toast.LENGTH_SHORT).show();
                 mSwipeRefreshLayout.setRefreshing(false);
                 refreshView();
             }

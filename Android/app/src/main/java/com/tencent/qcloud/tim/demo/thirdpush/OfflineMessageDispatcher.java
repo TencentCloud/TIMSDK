@@ -13,6 +13,7 @@ import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.liteav.model.CallModel;
 import com.tencent.liteav.model.TRTCAVCallImpl;
 import com.tencent.qcloud.tim.demo.DemoApplication;
+import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.chat.ChatActivity;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
@@ -118,7 +119,7 @@ public class OfflineMessageDispatcher {
                     && bean.action != OfflineMessageBean.REDIRECT_ACTION_CALL) ) {
             PackageManager packageManager = DemoApplication.instance().getPackageManager();
             String label = String.valueOf(packageManager.getApplicationLabel(DemoApplication.instance().getApplicationInfo()));
-            ToastUtil.toastLongMessage("您的应用 " + label + " 版本太低，不支持打开该离线消息");
+            ToastUtil.toastLongMessage(DemoApplication.instance().getString(R.string.you_app) + label + DemoApplication.instance().getString(R.string.low_version));
             DemoLog.e(TAG, "unknown version: " + bean.version + " or action: " + bean.action);
             return null;
         }
@@ -141,7 +142,7 @@ public class OfflineMessageDispatcher {
             if (model != null) {
                 long timeout = V2TIMManager.getInstance().getServerTime() - bean.sendTime;
                 if (timeout >= model.timeout) {
-                    ToastUtil.toastLongMessage("本次通话已超时");
+                    ToastUtil.toastLongMessage(DemoApplication.instance().getString(R.string.call_time_out));
                 } else {
                     if (TextUtils.isEmpty(model.groupId)) {
                         if (bean.chatType == V2TIMConversation.V2TIM_C2C) {

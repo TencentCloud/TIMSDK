@@ -68,7 +68,7 @@ public class ActionsPagerAdapter extends PagerAdapter {
             });
         }
         gridView.setSelector(R.color.transparent);
-        gridView.setHorizontalSpacing(96);
+        gridView.setHorizontalSpacing(80);
         gridView.setVerticalSpacing(60);
         gridView.setGravity(Gravity.CENTER);
         gridView.setTag(Integer.valueOf(position));

@@ -27,9 +27,9 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="90dp"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:gravity="center_vertical"
                 android:text="@string/account"
                 android:textColor="#000" />

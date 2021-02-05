@@ -80,7 +80,7 @@ public class StartC2CChatActivity extends BaseActivity {
 
     public void startConversation() {
         if (mSelectedItem == null || !mSelectedItem.isSelected()) {
-            ToastUtil.toastLongMessage("请选择聊天对象");
+            ToastUtil.toastLongMessage(getString(R.string.select_chat));
             return;
         }
         ChatInfo chatInfo = new ChatInfo();

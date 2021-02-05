@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tim.demo.helper;
 
+import com.tencent.qcloud.tim.demo.DemoApplication;
+import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
 /**
@@ -7,7 +9,7 @@ import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
  */
 public class CustomHelloMessage {
     String businessID = TUIKitConstants.BUSINESS_ID_CUSTOM_HELLO;
-    String text = "欢迎加入云通信IM大家庭！";
+    String text = DemoApplication.instance().getString(R.string.welcome_tip);
     String link = "https://cloud.tencent.com/document/product/269/3794";
 
     int version = TUIKitConstants.JSON_VERSION_UNKNOWN;

@@ -190,7 +190,7 @@ public class ChatLayoutHelper {
                 Gson gson = new Gson();
                 CustomHelloMessage customHelloMessage = new CustomHelloMessage();
                 customHelloMessage.version = TUIKitConstants.version;
-                customHelloMessage.text = "欢迎加入云通信IM大家庭！";
+                customHelloMessage.text = DemoApplication.instance().getString(R.string.welcome_tip);
                 customHelloMessage.link = "https://cloud.tencent.com/document/product/269/3794";
 
                 String data = gson.toJson(customHelloMessage);

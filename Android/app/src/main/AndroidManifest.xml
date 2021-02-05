@@ -301,6 +301,16 @@
         </service> <!--兼容Q版本-->
         <!-- ********OPPO 推送 end******** -->
 
+        <receiver
+            android:name=".LanguageReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.LOCALE_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>
