@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.tencent.qcloud.tim.demo.DemoApplication;
+import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.scenes.adapter.RoomListAdapter;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoom;
@@ -81,14 +83,14 @@ public class RoomManager {
                     public void onFailure(Call call, IOException e) {
                         Log.e(TAG, "onFailure: ", e);
                         if (callback != null) {
-                            callback.onFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            callback.onFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                         }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         if (!response.isSuccessful()) {
-                            doFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            doFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                             return;
                         }
                         String result = response.body().string();
@@ -102,7 +104,7 @@ public class RoomManager {
                                 doFailed(res.errorCode, res.errorMessage);
                             }
                         } else {
-                            doFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            doFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                         }
                     }
 
@@ -148,14 +150,14 @@ public class RoomManager {
                     public void onFailure(Call call, IOException e) {
                         Log.e(TAG, "onFailure: ", e);
                         if (callback != null) {
-                            callback.onFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            callback.onFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                         }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         if (!response.isSuccessful()) {
-                            doFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            doFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                             return;
                         }
                         String result = response.body().string();
@@ -169,7 +171,7 @@ public class RoomManager {
                                 doFailed(res.errorCode, res.errorMessage);
                             }
                         } else {
-                            doFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            doFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                         }
                     }
 
@@ -215,14 +217,14 @@ public class RoomManager {
                     public void onFailure(Call call, IOException e) {
                         Log.e(TAG, "onFailure: ", e);
                         if (callback != null) {
-                            callback.onFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            callback.onFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                         }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         if (!response.isSuccessful()) {
-                            doFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            doFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                             return;
                         }
                         String result = response.body().string();
@@ -236,7 +238,7 @@ public class RoomManager {
                                 doFailed(res.errorCode, res.errorMessage);
                             }
                         } else {
-                            doFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            doFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                         }
                     }
 
@@ -281,14 +283,14 @@ public class RoomManager {
                     public void onFailure(Call call, IOException e) {
                         Log.e(TAG, "onFailure: ", e);
                         if (callback != null) {
-                            callback.onFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            callback.onFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                         }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         if (!response.isSuccessful()) {
-                            doFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            doFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                             return;
                         }
                         String result = response.body().string();
@@ -307,7 +309,7 @@ public class RoomManager {
                                 doFailed(res.errorCode, res.errorMessage);
                             }
                         } else {
-                            doFailed(ERROR_CODE_UNKNOWN, "未知错误");
+                            doFailed(ERROR_CODE_UNKNOWN, DemoApplication.instance().getString(R.string.unknow_error));
                         }
                     }
 

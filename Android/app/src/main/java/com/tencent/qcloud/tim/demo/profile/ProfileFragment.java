@@ -44,9 +44,9 @@ public class ProfileFragment extends BaseFragment {
                         .builder()
                         .setCancelable(true)
                         .setCancelOutside(true)
-                        .setTitle("您确定要退出登录么？")
+                        .setTitle(getString(R.string.logout_tip))
                         .setDialogWidth(0.75f)
-                        .setPositiveButton("确定", new View.OnClickListener() {
+                        .setPositiveButton(getString(R.string.sure), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 TUIKit.logout(new IUIKitCallBack() {
@@ -71,7 +71,7 @@ public class ProfileFragment extends BaseFragment {
                                 } );
                             }
                         })
-                        .setNegativeButton("取消", new View.OnClickListener() {
+                        .setNegativeButton(getString(R.string.cancel), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 

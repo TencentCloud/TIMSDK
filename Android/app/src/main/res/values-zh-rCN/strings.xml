@@ -18,12 +18,14 @@
     <string name="button_login">登录</string>
     <string name="password_login">密码登录</string>
     <string name="official_website">访问官网</string>
-    <string name="debug_mode_summary">IM 账号直接登录界面，此只在 Debug 模式下显示</string>
+    <string name="debug_mode_summary">IM 帐号直接登录界面，此只在 Debug 模式下显示</string>
     <string name="account_hint">任意非空字符即可，请参考类注释</string>
-
+    <string name="repeat_login_tip">您的帐号已在其它终端登录</string>
+    <string name="expired_login_tip">帐号已过期，请重新登录</string>
+    <string name="failed_login_tip">登录失败</string>
     // "我"相关
     <string name="profile">我</string>
-    <string name="id">账号：%1$s</string>
+    <string name="id">帐号：%1$s</string>
     <string name="modify_user_icon">修改头像</string>
     <string name="modify_nick_name">修改昵称</string>
     <string name="modify_signature">修改个性签名</string>
@@ -80,4 +82,51 @@
     <string name="live_voice_room_already_agree">已同意</string>
     <string name="live_voice_room_main_title" formatted="false">%1s(%2d)</string>
     <string name="live_is_over">直播已结束</string>
+
+    <string name="welcome_tip">欢迎加入云通信IM大家庭！</string>
+    <string name="no_support_msg">不支持的自定义消息</string>
+    <string name="live">的直播</string>
+    <string name="living">正在直播</string>
+    <string name="stop_live">结束直播</string>
+    <string name="http_error_invalid">用户名必须以字母开头、字母与数字组合3-23位</string>
+    <string name="http_error_user">用户已存在</string>
+    <string name="http_error_server">服务器错误</string>
+    <string name="http_error_no_user">用户不存在</string>
+    <string name="http_error_password">密码错误</string>
+    <string name="not_retry_more">不要频繁获取验证码</string>
+    <string name="input_phone">请填写正确的手机号</string>
+    <string name="verify_code_fail">获取验证码失败:</string>
+    <string name="send_verify_code">验证码已发送</string>
+    <string name="input_phone_code">请输入手机号和验证码</string>
+    <string name="login_fail_tip">登录失败:</string>
+    <string name="login_suc_tip">登录成功</string>
+    <string name="second">秒</string>
+    <string name="get_verify_code">获取验证码</string>
+    <string name="permission_tip">未全部授权，部分功能可能无法使用！</string>
+    <string name="success">成功</string>
+    <string name="have_be_friend">对方已是您的好友</string>
+    <string name="friend_limit">您的好友数已达系统上限</string>
+    <string name="other_friend_limit">对方的好友数已达系统上限</string>
+    <string name="in_blacklist">被加好友在自己的黑名单中</string>
+    <string name="forbid_add_friend">对方已禁止加好友</string>
+    <string name="set_in_blacklist">您已被被对方设置为黑名单</string>
+    <string name="wait_agree_friend">等待好友审核同意</string>
+    <string name="send_request">加群请求已发送</string>
+    <string name="select_chat">请选择聊天对象</string>
+    <string name="logout_tip">您确定要退出登录么？</string>
+    <string name="sure">确定</string>
+    <string name="cancle">取消</string>
+    <string name="online_fail">请求网络失败</string>
+    <string name="online">在线</string>
+    <string name="unknow_error">未知错误</string>
+    <string name="seat_lock">座位已锁定</string>
+    <string name="find_anchor">主播名还在查找</string>
+    <string name="you_app">您的应用</string>
+    <string name="low_version"> 版本太低，不支持打开该离线消息</string>
+    <string name="call_timeout">本次通话已超时</string>
+    <string name="call_notification">音视频邀请消息通知</string>
+    <string name="background_tip">当程序处于后台时新的来电消息会通过通知栏提醒用户</string>
+    <string name="new_msg_notification">新普通消息通知</string>
+    <string name="new_msg">收到一条新消息</string>
+    <string name="call_nos">通话失去响应</string>
 </resources>

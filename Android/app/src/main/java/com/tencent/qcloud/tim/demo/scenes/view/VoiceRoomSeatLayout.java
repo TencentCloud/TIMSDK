@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
@@ -124,7 +125,7 @@ public class VoiceRoomSeatLayout extends RecyclerView {
                     //close的界面
                     mCircleImageView.setImageResource(R.drawable.live_voice_room_ic_lock);
                     mCircleImageView.setCircleBackgroundColor(context.getResources().getColor(R.color.live_voice_room_circle));
-                    mTextView.setText("座位已锁定");
+                    mTextView.setText(DemoApplication.instance().getString(R.string.seat_lock));
                     mFrameLayoutHeadImg.setForeground(null);
                     return;
                 }
@@ -142,7 +143,7 @@ public class VoiceRoomSeatLayout extends RecyclerView {
                     if (!TextUtils.isEmpty(entity.userName)) {
                         mTextView.setText(entity.userName);
                     } else {
-                        mTextView.setText("主播名还在查找");
+                        mTextView.setText(DemoApplication.instance().getString(R.string.find_anchor));
                     }
                 }
                 if (entity.isMute) {

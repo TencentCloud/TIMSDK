@@ -24,7 +24,7 @@ public class CustomHelloTIMUIController {
 
         // 自定义消息view的实现，这里仅仅展示文本信息，并且实现超链接跳转
         TextView textView = view.findViewById(R.id.test_custom_message_tv);
-        final String text = "不支持的自定义消息";
+        final String text = DemoApplication.instance().getString(R.string.no_support_msg);
         if (data == null) {
             textView.setText(text);
         } else {

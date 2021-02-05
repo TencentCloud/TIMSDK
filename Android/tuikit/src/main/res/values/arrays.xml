@@ -7,7 +7,7 @@
         <item>@string/auto_judge</item>
     </string-array>
 
-    <string-array name="emoji_filter">
+    <string-array name="emoji_filter_key">
         <item>[龇牙]</item>
         <item>[调皮]</item>
         <item>[流汗]</item>
@@ -147,6 +147,148 @@
         <item>[纸巾]</item>
         <item>[手枪]</item>
         <item>[青蛙]</item>
+    </string-array>
+
+    <string-array name="emoji_filter_value">
+        <item>@string/ciya</item>
+        <item>@string/tiaopi</item>
+        <item>@string/liuhan</item>
+        <item>@string/touxiao</item>
+        <item>@string/zaijian</item>
+        <item>@string/qiaoda</item>
+        <item>@string/cahan</item>
+        <item>@string/zhutou</item>
+        <item>@string/meigui</item>
+        <item>@string/liulei</item>
+        <item>@string/daku</item>
+        <item>@string/xu</item>
+        <item>@string/ku</item>
+        <item>@string/zhukuang</item>
+        <item>@string/weiqu</item>
+        <item>@string/bianbian</item>
+        <item>@string/zhadan</item>
+        <item>@string/caidao</item>
+        <item>@string/keai</item>
+        <item>@string/se</item>
+        <item>@string/haixiu</item>
+        <item>@string/deyi</item>
+        <item>@string/tu</item>
+        <item>@string/weixiao</item>
+        <item>@string/nu</item>
+        <item>@string/ganga</item>
+        <item>@string/jingkong</item>
+        <item>@string/lenghan</item>
+        <item>@string/aixin</item>
+        <item>@string/shiai</item>
+        <item>@string/baiyan</item>
+        <item>@string/aoman</item>
+        <item>@string/nanguo</item>
+        <item>@string/jingya</item>
+        <item>@string/yiwen</item>
+        <item>@string/kun</item>
+        <item>@string/memeda</item>
+        <item>@string/hanxiao</item>
+        <item>@string/aiqing</item>
+        <item>@string/suan</item>
+        <item>@string/piezui</item>
+        <item>@string/yinxian</item>
+        <item>@string/fendou</item>
+        <item>@string/fadai</item>
+        <item>@string/youhengheng</item>
+        <item>@string/baobao</item>
+        <item>@string/huaixiao</item>
+        <item>@string/feiwen</item>
+        <item>@string/bishi</item>
+        <item>@string/yun</item>
+        <item>@string/dabing</item>
+        <item>@string/kelian</item>
+        <item>@string/qiang</item>
+        <item>@string/ruo</item>
+        <item>@string/woshou</item>
+        <item>@string/shengli</item>
+        <item>@string/baoquan</item>
+        <item>@string/diaoxie</item>
+        <item>@string/mifan</item>
+        <item>@string/dangao</item>
+        <item>@string/xigua</item>
+        <item>@string/pijiu</item>
+        <item>@string/piaochong</item>
+        <item>@string/gouyin</item>
+        <item>@string/ok_emoji</item>
+        <item>@string/aini</item>
+        <item>@string/kafei</item>
+        <item>@string/yueliang</item>
+        <item>@string/dao</item>
+        <item>@string/fadou</item>
+        <item>@string/chajin</item>
+        <item>@string/quantou</item>
+        <item>@string/xinsuile</item>
+        <item>@string/taiyang</item>
+        <item>@string/liwu</item>
+        <item>@string/piqiu</item>
+        <item>@string/kulou</item>
+        <item>@string/huishou</item>
+        <item>@string/shandian</item>
+        <item>@string/jie</item>
+        <item>@string/kun2</item>
+        <item>@string/zhouma</item>
+        <item>@string/zhemo</item>
+        <item>@string/koubi</item>
+        <item>@string/guzhang</item>
+        <item>@string/qiudale</item>
+        <item>@string/zuohengheng</item>
+        <item>@string/dahaqian</item>
+        <item>@string/kuaikule</item>
+        <item>@string/xia</item>
+        <item>@string/lanqiu</item>
+        <item>@string/pingpang</item>
+        <item>@string/no_emoji</item>
+        <item>@string/tiaotiao</item>
+        <item>@string/ouhuo</item>
+        <item>@string/zuanquan</item>
+        <item>@string/ketou</item>
+        <item>@string/huitou</item>
+        <item>@string/tiaosheng</item>
+        <item>@string/jidong</item>
+        <item>@string/jiewu</item>
+        <item>@string/xianwen</item>
+        <item>@string/zuotaiji</item>
+        <item>@string/youtaiji</item>
+        <item>@string/bizui</item>
+        <item>@string/maomi</item>
+        <item>@string/hongshuangxi</item>
+        <item>@string/bianpao</item>
+        <item>@string/hongdenglong</item>
+        <item>@string/majiang</item>
+        <item>@string/maikefeng</item>
+        <item>@string/lipindai</item>
+        <item>@string/xinfeng</item>
+        <item>@string/xiangqi</item>
+        <item>@string/caidai</item>
+        <item>@string/lazhu</item>
+        <item>@string/baojin</item>
+        <item>@string/bangbangtang</item>
+        <item>@string/naiping</item>
+        <item>@string/miantiao</item>
+        <item>@string/xiangjiao</item>
+        <item>@string/feiji</item>
+        <item>@string/zuochetou</item>
+        <item>@string/chexiang</item>
+        <item>@string/youchetou</item>
+        <item>@string/duoyun</item>
+        <item>@string/xiayu</item>
+        <item>@string/chaopiao</item>
+        <item>@string/xiongmao</item>
+        <item>@string/dengpao</item>
+        <item>@string/fengche</item>
+        <item>@string/naozhong</item>
+        <item>@string/yusan</item>
+        <item>@string/caiqiu</item>
+        <item>@string/zuanjie</item>
+        <item>@string/shafa</item>
+        <item>@string/zhijin</item>
+        <item>@string/shouqiang</item>
+        <item>@string/qingwa</item>
     </string-array>
 
 

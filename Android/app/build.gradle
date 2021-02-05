@@ -93,8 +93,8 @@ dependencies {
 //    api 'com.tencent.liteav:LiteAVSDK_Enterprise:1.0.1'
 
     api 'com.tencent.liteav:LiteAVSDK_TRTC:8.0.9639'
-    implementation 'com.tencent.imsdk:tuikit:5.1.21'
-    implementation 'com.tencent.imsdk:tuikit-live:5.1.21'
+    implementation 'com.tencent.imsdk:tuikit-live:5.1.50'
+    implementation 'com.tencent.imsdk:tuikit:5.1.50'
 // implementation project(':tuikit')
-    //implementation project(':tuikit-live')
+//    implementation project(':tuikit-live')
 }

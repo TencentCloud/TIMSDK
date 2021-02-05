@@ -86,7 +86,10 @@
     <string name="report_success">举报成功，我们将在24小时内进行处理</string>
     <string name="report">举报</string>
     <string name="live_anchor_view_error">当前连麦人数超过了最大值</string>
-
+    <string name="live_permission_denied">权限验证失败，请打开相关权限</string>
+    <string name="live_pk_status">当前正在PK，无法接受连麦请求</string>
+    <string name="live_link_mic_status">当前正在连麦，无法接受PK请求</string>
+    <string name="live_on_line_number">"在线：%d人"</string>
 
     <string name="beauty_confirm">确定</string>
     <string name="beauty_cancel">取消</string>

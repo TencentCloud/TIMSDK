@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.ClickUtils;
 import com.tencent.qcloud.tim.tuikit.live.utils.GlideEngine;
@@ -80,7 +81,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
                 mTextAnchorName.setVisibility(View.VISIBLE);
                 mTextAnchorName.setText(roomInfo.anchorName);
             }
-            mTextMemberCount.setText(roomInfo.memberCount + "在线");
+            mTextMemberCount.setText(roomInfo.memberCount + DemoApplication.instance().getString(R.string.online));
             if (!TextUtils.isEmpty(roomInfo.coverUrl)) {
                 GlideEngine.loadImage(mImagePic, roomInfo.coverUrl, 0, 10);
             } else {

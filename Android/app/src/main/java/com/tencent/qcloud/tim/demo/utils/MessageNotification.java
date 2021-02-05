@@ -65,13 +65,13 @@ public class MessageNotification {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel;
             if (isDialing) {
-                channel = new NotificationChannel(NOTIFICATION_CHANNEL_CALL, "音视频邀请消息通知", NotificationManager.IMPORTANCE_HIGH);
+                channel = new NotificationChannel(NOTIFICATION_CHANNEL_CALL, DemoApplication.instance().getString(R.string.call_notification), NotificationManager.IMPORTANCE_HIGH);
                 channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE), null);
-                channel.setDescription("当程序处于后台时新的来电消息会通过通知栏提醒用户");
+                channel.setDescription(DemoApplication.instance().getString(R.string.background_tip));
                 channel.setVibrationPattern(new long[]{0, 1000, 1000, 1000, 1000});
             } else {
-                channel = new NotificationChannel(NOTIFICATION_CHANNEL_COMMON, "新普通消息通知", NotificationManager.IMPORTANCE_HIGH);
-                channel.setDescription("当程序处于后台时新消息会通过通知栏提醒用户");
+                channel = new NotificationChannel(NOTIFICATION_CHANNEL_COMMON, DemoApplication.instance().getString(R.string.new_msg_notification), NotificationManager.IMPORTANCE_HIGH);
+                channel.setDescription(DemoApplication.instance().getString(R.string.background_tip));
             }
             channel.enableVibration(true);
             channel.enableLights(true);
@@ -118,7 +118,7 @@ public class MessageNotification {
             builder = new Notification.Builder(mContext);
         }
 
-        String tickerStr = "收到一条新消息";
+        String tickerStr = DemoApplication.instance().getString(R.string.new_msg);
         builder.setTicker(tickerStr).setWhen(System.currentTimeMillis());
         V2TIMOfflinePushInfo v2TIMOfflinePushInfo = msg.getOfflinePushInfo();
         String title = null;
@@ -182,7 +182,7 @@ public class MessageNotification {
                     @Override
                     public void run() {
                         mManager.cancel(NOTIFICATION_CHANNEL_CALL, NOTIFICATION_ID_CALL);
-                        builder.setContentText("通话失去响应");
+                        builder.setContentText(DemoApplication.instance().getString(R.string.call_nos));
                         Notification lastNotification = builder.build();
                         lastNotification.flags = Notification.FLAG_ONLY_ALERT_ONCE;
                         lastNotification.defaults = Notification.DEFAULT_ALL;

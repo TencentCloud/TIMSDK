@@ -29,16 +29,16 @@ public class LiveGroupTIMUIController {
         TextView textLiveName = view.findViewById(R.id.msg_tv_live_name);
         TextView textStatus = view.findViewById(R.id.msg_tv_live_status);
 
-        final String text = "不支持的自定义消息";
+        final String text = DemoApplication.instance().getString(R.string.no_support_msg);
         if (info == null) {
 
         } else {
             if (!TextUtils.isEmpty(info.anchorName)) {
-                textLiveName.setText(info.anchorName + "的直播");
+                textLiveName.setText(info.anchorName + DemoApplication.instance().getString(R.string.live));
             } else {
                 textLiveName.setText(info.roomName);
             }
-            textStatus.setText(info.roomStatus == 1 ? "正在直播" : "结束直播");
+            textStatus.setText(info.roomStatus == 1 ? DemoApplication.instance().getString(R.string.living) : DemoApplication.instance().getString(R.string.stop_live));
         }
         view.setClickable(true);
         view.setOnClickListener(new View.OnClickListener() {
