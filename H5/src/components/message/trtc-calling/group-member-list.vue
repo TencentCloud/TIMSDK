@@ -6,13 +6,21 @@
         <div class="scroll-content">
             <div class="group-member-list">
                 <el-checkbox-group v-model="callingList" @change="handleCheckedMembersChange">
-                    <el-checkbox v-for="member in members" :disabled="member.userID===userID" :label="member.userID" :key="member.userID">
+                    <el-checkbox v-if="type === 'groupAt'"  :label="JSON.stringify({userID:this.TIM.TYPES.MSG_AT_ALL,nick:'所有人'})" >
+                        <div class="group-member">
+                            <avatar  :src="''" />
+                            <div class="member-name text-ellipsis">
+                                <span >所有人</span>
+                            </div>
+                        </div>
+                    </el-checkbox>
+                    <el-checkbox v-for="member in members" :disabled="member.userID===userID" :label="JSON.stringify({userID:member.userID,nick:member.nameCard || member.nick || member.userID})" :key="member.userID">
                        <div class="group-member">
-                           <avatar :title=getGroupMemberAvatarText(member.role) :src="member.avatar" />
+                           <avatar  :src="member.avatar" />
                            <div class="member-name text-ellipsis">
-                               <span v-if="member.nameCard" :title=member.nameCard>{{ member.nameCard }}</span>
-                               <span v-else-if="member.nick" :title=member.nick>{{ member.nick }}</span>
-                               <span v-else :title=member.userID>{{ member.userID }}</span>
+                               <span v-if="member.nameCard" >{{ member.nameCard }}</span>
+                               <span v-else-if="member.nick" >{{ member.nick }}</span>
+                               <span v-else >{{ member.userID }}</span>
                            </div>
                        </div>
                     </el-checkbox>
@@ -28,6 +36,7 @@
 <script>
   import { mapState } from 'vuex'
   export default {
+    props:['type'],
     data() {
       return {
         callingList:[],
