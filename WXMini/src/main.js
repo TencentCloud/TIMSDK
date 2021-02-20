@@ -6,7 +6,8 @@ import store from './store/index'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import { queryString, getUserProfile } from './utils'
-import COS from 'cos-wx-sdk-v5'
+import TIMUploadPlugin from 'tim-upload-plugin'
+
 import { SDKAPPID } from '../static/utils/GenerateTestUserSig'
 import TYPES from './utils/types'
 const tim = TIM.create({
@@ -14,7 +15,6 @@ const tim = TIM.create({
 })
 tim.setLogLevel(0)
 wx.$app = tim
-wx.$app.registerPlugin({'cos-wx-sdk': COS})
 wx.store = store
 wx.TIM = TIM
 wx.dayjs = dayjs
@@ -28,6 +28,7 @@ Vue.prototype.$bus = $bus
 Vue.prototype.$bindTRTCCallingRoomEvent = bindTRTCCallingRoomEvent
 
 wx.$sdkAppID = SDKAPPID
+wx.$app.registerPlugin({ 'tim-upload-plugin': TIMUploadPlugin })
 registerEvents(tim)
 
 // 小程序目前对该方法没有对外暴露

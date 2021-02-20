@@ -76,14 +76,14 @@
             <div class="name">
               <template v-if="currentConversation.type === 'C2C'">
                 <template v-if="message.flow === 'in'">
-                  {{currentConversation.userProfile.nick || currentConversation.userProfile.userID}}
+                  {{message.nick || currentConversation.userProfile.userID}}
                 </template>
                 <template v-else>
-                  {{myInfo.nick || myInfo.userID}}
+                  {{message.nick || myInfo.userID}}
                 </template>
               </template>
               <template v-else>
-                {{message.nameCard || message.nick || myInfo.nick || message.from}}
+                {{message.nameCard || message.nick || message.from}}
               </template>
             </div>
             <div class="wrapper" @longpress="handleMessage(message)">
@@ -152,11 +152,18 @@
 
           </div>
           <div>
-            <!-- 自己发的消息头像 -->
-            <i-avatar i-class="avatar" v-if="message.flow === 'out'" :src="myInfo.avatar" shape="square"/>
-            <!-- 收到的消息头像 -->
-            <i-avatar i-class="avatar" shape="square" v-else-if="currentConversation.type === 'C2C'" @click="toDetail" :src="currentConversation.userProfile.avatar"/>
-            <i-avatar i-class="avatar" shape="square" v-else @click="toDetail({ userID: message.from })" :src="message.avatar"/>
+            <template v-if="currentConversation.type === 'C2C'">
+              <!-- 自己发的消息头像 -->
+              <i-avatar i-class="avatar" v-if="message.flow === 'out'" :src="message.avatar" shape="square"/>
+              <!-- 收到的消息头像 -->
+              <i-avatar i-class="avatar" v-else @click="toDetail" :src="message.avatar"  shape="square"/>
+            </template>
+            <template v-else>
+              <!-- 自己发的消息头像 -->
+              <i-avatar i-class="avatar" v-if="message.flow === 'out'" :src="myInfo.avatar" shape="square"/>
+              <!-- 收到的消息头像 -->
+              <i-avatar i-class="avatar" v-else @click="toDetail({ userID: message.from })" :src="message.avatar"  shape="square"/>
+            </template>
           </div>
         </div>
       </li>
@@ -367,12 +374,13 @@ export default {
       oldLength: 0,
       action: 'call', // 标示1v1通话和群通话
       callType: 1, // 标示语音通话和视频通话
-      showGroupMemberList: false // 群组通话时选择成员列表弹窗组件
+      showGroupMemberList: false, // 群组通话时选择成员列表弹窗组件
+      navBarTitle: '' // 页面导航title
     }
   },
   onShow () {
     wx.setNavigationBarTitle({
-      title: decodeURIComponent(this.set)
+      title: decodeURIComponent(this.navBarTitle)
     })
     this.isShow = true
     this.isRecord = false
@@ -382,7 +390,7 @@ export default {
     }, 3000)
   },
   onLoad (options) {
-    this.set = decodeURIComponent(options.toAccount)
+    this.navBarTitle = decodeURIComponent(options.toAccount)
     // 设置header——聊天对象昵称或群名
     this.height = this.sysInfo.windowHeight
     let query = wx.createSelectorQuery()
@@ -478,6 +486,13 @@ export default {
             list[i].type = 'TIMGroupTipElem' // 将自定义消息类型重置为群提示消息做渲染
             list[i].virtualDom = decodeElement(list[i])
             // console.warn(list[i])
+          }
+          // C2C 会话对端更新nick时需要更新会话title
+          if (state.conversation.currentConversationID.indexOf('C2C') === 0 && list[i].flow === 'in' && list[i].nick && this.navBarTitle !== list[i].nick) {
+            this.navBarTitle = list[i].nick
+            wx.setNavigationBarTitle({
+              title: decodeURIComponent(this.navBarTitle)
+            })
           }
         }
         return list
