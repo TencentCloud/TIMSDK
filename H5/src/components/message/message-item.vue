@@ -228,9 +228,7 @@ export default {
     },
     avatar() {
       if (this.currentConversation.type === 'C2C') {
-        return this.isMine
-          ? this.currentUserProfile.avatar
-          : this.currentConversation.userProfile.avatar
+        return this.message.avatar
       } else if (this.currentConversation.type === 'GROUP') {
         return this.isMine
           ? this.currentUserProfile.avatar

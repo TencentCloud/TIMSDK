@@ -36,7 +36,7 @@
           <div class="row-2">
             <div class="summary">
               <div v-if="conversation.lastMessage" class="text-ellipsis">
-                <span class="remind" style="color:red;" v-if="hasMessageAtMe">[有人提到我]</span>
+                <span class="remind"  v-if="hasMessageAtMe">{{messageAtMeText}}</span>
                 <span class="text" :title="conversation.lastMessage.messageForShow">
                   {{messageForShow}}
                 </span>
@@ -61,10 +61,33 @@ export default {
   data() {
     return {
       popoverVisible: false,
-      hasMessageAtMe: false
+      showMessageAtMe_text:''
     }
   },
   computed: {
+    hasMessageAtMe() {
+      return (
+              this.currentConversation.conversationID !==
+              this.conversation.conversationID && this.conversation.groupAtInfoList && this.conversation.groupAtInfoList.length > 0
+      )
+    },
+    messageAtMeText() {
+      let text = ''
+      if (this.conversation.groupAtInfoList.length > 0) {
+        this.conversation.groupAtInfoList.forEach((item) => {
+          if (item.atTypeArray[0] === this.TIM.TYPES.CONV_AT_ME) {
+            text.indexOf('[@所有人]') !== -1 ? text = '[@所有人][有人@我]' : text = '[有人@我]'
+          }
+          if (item.atTypeArray[0] === this.TIM.TYPES.CONV_AT_ALL) {
+            text.indexOf('[有人@我]') !== -1 ? text = '[有人@我][@所有人]' : text = '[@所有人]'
+          }
+          if (item.atTypeArray[0] === this.TIM.TYPES.CONV_AT_ALL_AT_ME) {
+            text = '[@所有人][有人@我]'
+          }
+        })
+      }
+      return text
+    },
     showUnreadCount() {
       if (this.$store.getters.hidden) {
         return this.conversation.unreadCount > 0
@@ -138,15 +161,7 @@ export default {
     ...mapGetters(['toAccount'])
   },
   mounted() {
-    this.$bus.$on('new-messsage-at-me', event => {
-      if (
-        event.data.conversationID === this.conversation.conversationID &&
-        this.conversation.conversationID !==
-          this.currentConversation.conversationID
-      ) {
-        this.hasMessageAtMe = true
-      }
-    })
+
   },
   methods: {
     selectConversation() {
@@ -181,13 +196,6 @@ export default {
     showContextMenu() {
       this.popoverVisible = true
     },
-  },
-  watch: {
-    currentConversation(next) {
-      if (next.conversationID === this.conversation.conversationID) {
-        this.hasMessageAtMe = false
-      }
-    }
   }
 }
 </script>

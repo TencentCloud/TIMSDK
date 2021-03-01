@@ -7,6 +7,6 @@ let options = {
 const trtcCalling = new TRTCCalling(options)
 
 // 4 无日志级别
-trtcCalling.setLogLevel(4)
+trtcCalling.setLogLevel(0)
 
 export default trtcCalling

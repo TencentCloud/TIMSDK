@@ -1,5 +1,5 @@
 import TIM from 'tim-js-sdk'
-import COSSDK from 'cos-js-sdk-v5'
+import TIMUploadPlugin from 'tim-upload-plugin'
 
 // 初始化 SDK 实例
 const tim = TIM.create({
@@ -12,5 +12,5 @@ window.setLogLevel = tim.setLogLevel
 tim.setLogLevel(4)
 
 // 注册 cos
-tim.registerPlugin({'cos-js-sdk':COSSDK})
+tim.registerPlugin({ 'tim-upload-plugin':TIMUploadPlugin })
 export default tim
