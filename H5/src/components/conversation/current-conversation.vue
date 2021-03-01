@@ -71,7 +71,17 @@ export default {
     },
     name() {
       if (this.currentConversation.type === 'C2C') {
-        return this.currentConversation.userProfile.nick || this.toAccount
+        let name = this.currentConversation.userProfile.nick || this.toAccount
+        let list = this.currentMessageList
+        let len = list.length
+        for (let i = len - 1; i >= 0; i--) {
+          // C2C 会话对端更新nick时需要更新会话title
+          if (list[i].flow === 'in' && list[i].nick && name !== list[i].nick) {
+            name = list[i].nick
+            break
+          }
+        }
+        return name
       } else if (this.currentConversation.type === 'GROUP') {
         return this.currentConversation.groupProfile.name || this.toAccount
       } else if (this.currentConversation.conversationID === '@TIM#SYSTEM') {

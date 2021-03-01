@@ -1,9 +1,9 @@
 
-.search.data-v-067d8959 {
+.search.data-v-5c80a41e {
   background-color: #ededed;
   padding: 16rpx 16rpx 16rpx 16rpx;
 }
-.input.data-v-067d8959 {
+.input.data-v-5c80a41e {
   text-align: center;
   height: 64rpx;
   background-color: #fff;
@@ -11,15 +11,15 @@
   font-size: 32rpx;
   border: 2rpx solid #dbdbdb;
 }
-.avatar.data-v-067d8959 {
+.avatar.data-v-5c80a41e {
   display: inline;
   padding-right: 20rpx;
 }
-.information.data-v-067d8959 {
+.information.data-v-5c80a41e {
   display: inline;
   width: 100%;
 }
-.chat.data-v-067d8959 {
+.chat.data-v-5c80a41e {
   line-height: 64rpx;
   padding: 20rpx;
   background-color: #ededed;
@@ -27,18 +27,18 @@
   border-top: 2rpx solid #dbdbdb;
   border-bottom: 2rpx solid #dbdbdb;
 }
-.right.data-v-067d8959 {
+.right.data-v-5c80a41e {
   padding: 0 36rpx 0 16rpx;
 }
-.set.data-v-067d8959 {
+.set.data-v-5c80a41e {
   color: #4082a2;
   font-size: 28rpx;
 }
-.delete.data-v-067d8959 {
+.delete.data-v-5c80a41e {
   color: #c86957;
   font-size: 28rpx;
 }
-.username.data-v-067d8959 {
+.username.data-v-5c80a41e {
   line-height: 60rpx;
   font-size: 28rpx;
   color: #111;
@@ -46,28 +46,28 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.last.data-v-067d8959 {
+.last.data-v-5c80a41e {
   color: #495060;
   font-size: 24rpx;
 }
-.content.data-v-067d8959 {
+.content.data-v-5c80a41e {
   color: #495060;
   font-size: 24rpx;
   width: 80%;
 }
-.remain.data-v-067d8959 {
+.remain.data-v-5c80a41e {
   color: #fff;
   font-size: 24rpx;
   background-color: #fb5250;
   border-radius: 16rpx;
   padding: 4rpx 16rpx;
 }
-.checkbox-member.data-v-067d8959 {
+.checkbox-member.data-v-5c80a41e {
   width: 40rpx;
   height: 40rpx;
   border-radius: 50%;
 }
-.list-btn.data-v-067d8959 {
+.list-btn.data-v-5c80a41e {
   width: 100%;
   display: flex;
   height: 80rpx;
@@ -77,7 +77,7 @@
   background-color: #fff;
   justify-content: space-around;
 }
-.btn-box.data-v-067d8959 {
+.btn-box.data-v-5c80a41e {
   padding: 10rpx 32rpx;
   background-color: #006fff;
   border-radius: 40rpx;
@@ -87,6 +87,6 @@
   font-size: 28rpx;
   margin-top: 10rpx;
 }
-.chatting.data-v-067d8959 {
+.chatting.data-v-5c80a41e {
   padding-bottom: 100rpx;
 }

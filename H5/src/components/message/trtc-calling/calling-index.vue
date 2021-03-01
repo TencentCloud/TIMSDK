@@ -72,8 +72,6 @@
 <script>
   import {mapGetters, mapState} from 'vuex'
   import { formatDuration } from '../../../utils/formatDuration'
-  const LOG_PREFIX = 'calling-index'
-
   export default {
     name: 'CallLayer',
     data() {

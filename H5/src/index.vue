@@ -123,12 +123,12 @@ export default {
 
     onReceiveMessage({ data: messageList }) {
       this.handleVideoMessage(messageList)
-      this.handleAt(messageList)
       this.handleQuitGroupTip(messageList)
       this.handleCloseGroupLive(messageList)
       this.$store.commit('pushCurrentMessageList', messageList)
       this.$store.commit('pushAvChatRoomMessageList', messageList)
     },
+
     onError({ data }) {
       if (data.message !== 'Network Error') {
         this.$store.commit('showMessage', {
@@ -225,40 +225,7 @@ export default {
         }
       })
     },
-    /**
-     * 处理 @ 我的消息
-     * @param {Message[]} messageList
-     */
-    handleAt(messageList) {
-      // 筛选有 @ 符号的文本消息
-      const atTextMessageList = messageList.filter(
-        message =>
-          message.type === this.TIM.TYPES.MSG_TEXT &&
-          message.payload.text.includes('@')
-      )
-      for (let i = 0; i < atTextMessageList.length; i++) {
-        const message = atTextMessageList[i]
-        const matched = message.payload.text.match(/@\w+/g)
-        if (!matched) {
-          continue
-        }
-        // @ 我的
-        if (matched.includes(`@${this.currentUserProfile.userID}`)) {
-          // 当前页面不可见时，调用window.Notification接口，系统级别通知。
-          if (this.$store.getters.hidden) {
-            this.notifyMe(message)
-          }
-          Notification({
-            title: `有人在群${message.conversationID.slice(5)}提到了你`,
-            message: message.payload.text,
-            duration: 3000
-          })
-          this.$bus.$emit('new-messsage-at-me', {
-            data: { conversationID: message.conversationID }
-          })
-        }
-      }
-    },
+
     selectConversation(conversationID) {
       if (conversationID !== this.currentConversation.conversationID) {
         this.$store.dispatch('checkoutConversation',conversationID)

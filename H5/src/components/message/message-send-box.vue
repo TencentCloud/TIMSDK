@@ -67,22 +67,6 @@
         <el-button type="primary" @click="sendSurvey">确 定</el-button>
       </span>
     </el-dialog>
-    <el-popover
-      trigger="manual"
-      v-model="showAtGroupMember"
-      placement="top"
-      style="max-height:500px;overflow-y:scroll;"
-    >
-      <el-radio-group
-        v-model="atUserID"
-        style="display:flex;flex-decoration: column;"
-        v-for="member in memberList"
-        :key="member.userID"
-        @change="handleSelectAtUser"
-      >
-        <el-radio :label="member.userID">{{ member.nameCard || member.nick || member.userID }}</el-radio>
-      </el-radio-group>
-    </el-popover>
     <div class="bottom">
       <textarea
         ref="text-input"
@@ -92,6 +76,7 @@
         class="text-input"
         @focus="focus = true"
         @blur="focus = false"
+        @input="inputChange"
         @keydown.enter.exact.prevent="handleEnter"
         @keyup.ctrl.enter.prevent.exact="handleLine"
         @keydown.up.stop="handleUp"
@@ -120,7 +105,7 @@
     <input type="file" id="filePicker" ref="filePicker" @change="sendFile" style="display:none" />
     <input type="file" id="videoPicker" ref="videoPicker" @change="sendVideo" style="display:none" accept=".mp4"/>
     <div class="calling-member-list" v-if="currentConversationType === TIM.TYPES.CONV_GROUP && showCallingMember">
-      <calling-member-list @getList="getList"></calling-member-list>
+      <calling-member-list @getList="getList" :type="listTpye"></calling-member-list>
       <div class="calling-list-btn">
         <span class="calling-btn" @click="cancelCalling">取消</span>
         <span class="calling-btn" @click="callingHandler">确定</span>
@@ -131,7 +116,6 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import smileIcon from '../../assets/image/smile.png'
 import callingMemberList from './trtc-calling/group-member-list'
 import {
   Form,
@@ -139,8 +123,6 @@ import {
   Input,
   Dialog,
   Popover,
-  RadioGroup,
-  Radio,
   Tooltip,
   Rate
 } from 'element-ui'
@@ -156,15 +138,16 @@ export default {
     ElFormItem: FormItem,
     ElDialog: Dialog,
     ElPopover: Popover,
-    ElRadioGroup: RadioGroup,
-    ElRadio: Radio,
     ElTooltip: Tooltip,
     ElRate: Rate
   },
   data() {
     return {
       callingList: [],
+      groupAtList: [],
+      listTpye:'',
       callingType: '',
+      groupAt:false,
       showCallingMember: false,
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       messageContent: '',
@@ -204,7 +187,14 @@ export default {
   },
   methods: {
     getList(value) {
-      this.callingList = value
+      this.callingList = value.map((item) => {
+        let obj = JSON.parse(item)
+        return obj.userID
+      })
+      this.groupAtList = value.map((item) => {
+        let data = JSON.parse(item)
+        return data.nick
+      })
     },
     cancelCalling() {
       this.showCallingMember = false
@@ -217,22 +207,36 @@ export default {
         })
         return
       }
-      this.showCallingMember = false
-      let callingData = {
-        memberList:this.callingList,
-        type:this.TIM.TYPES.CONV_GROUP
-      }
-      this.$store.commit('setCallingList',callingData)
-      if (this.callingType === 'video') {
-        this.$bus.$emit('video-call')
+      if (this.listTpye === 'groupAt') {
+        this.groupAtList.forEach((item, index) => {
+          if(index===0) {
+            this.messageContent += `${item} `
+          }else{
+            this.messageContent += `@${item} `
+          }
+        })
+        this.showCallingMember = false
+        this.$refs['text-input'].focus()
         return
       }
-      if (this.callingType === 'audio') {
-        this.$bus.$emit('audio-call')
-        return
+      if (this.listTpye === 'calling') {
+        let callingData = {
+          memberList:this.callingList,
+          type:this.TIM.TYPES.CONV_GROUP
+        }
+        this.$store.commit('setCallingList',callingData)
+        if (this.callingType === 'video') {
+          this.$bus.$emit('video-call')
+        }
+        if (this.callingType === 'audio') {
+          this.$bus.$emit('audio-call')
+        }
+        this.showCallingMember = false
       }
+
     },
     trtcCalling(type) {
+      this.listTpye = 'calling'
       if (type === 'video') {
         this.callingType = 'video'
       }
@@ -254,10 +258,6 @@ export default {
         this.showCallingMember = true
       }
       // this.$store.commit('pushCurrentMessageList', true)
-    },
-    audioCall() {
-      this.$bus.$emit('audio-call')
-      this.$store.commit('showAudioCall',true)
     },
     handleEmojiShow () {
       this.emojiShow = true
@@ -293,10 +293,6 @@ export default {
     reEditMessage(payload) {
       this.messageContent = payload
     },
-    handleSelectAtUser() {
-      this.messageContent += this.atUserID + ' '
-      this.showAtGroupMember = false
-    },
     handleUp() {
       const index = this.memberList.findIndex(
         member => member.userID === this.atUserID
@@ -316,10 +312,18 @@ export default {
       this.atUserID = this.memberList[index + 1].userID
     },
     handleEnter() {
-      if (this.showAtGroupMember) {
-        this.handleSelectAtUser()
-      } else {
-        this.sendTextMessage()
+      this.sendTextMessage()
+    },
+    inputChange(value) {
+      if (this.currentConversationType === this.TIM.TYPES.CONV_GROUP && value.data === '@') {
+        this.groupAt = true
+        this.listTpye = 'groupAt'
+        this.showCallingMember = true
+      }
+      if (value.data === ' ' && this.messageContent.indexOf('@ ') !== -1) {
+        this.groupAt = false
+        this.listTpye = ''
+        this.showCallingMember = false
       }
     },
     handleLine() {
@@ -411,6 +415,27 @@ export default {
           message: '不能发送空消息哦！',
           type: 'info'
         })
+        return
+      }
+      if (this.currentConversationType === this.TIM.TYPES.CONV_GROUP && this.groupAt) {
+        let message = this.tim.createTextAtMessage({
+          to: this.toAccount,
+          conversationType: this.TIM.TYPES.CONV_GROUP,
+          payload: {
+            text: this.messageContent,
+            atUserList: this.callingList // 'denny' 'lucy' 都是 userID，而非昵称
+          }
+        })
+        this.$store.commit('pushCurrentMessageList', message)
+        this.$bus.$emit('scroll-bottom')
+        this.tim.sendMessage(message).catch(error => {
+          this.$store.commit('showMessage', {
+            type: 'error',
+            message: error.message
+          })
+        })
+        this.messageContent = ''
+        this.groupAt = false
         return
       }
       const message = this.tim.createTextMessage({

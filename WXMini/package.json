@@ -24,10 +24,11 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "cos-wx-sdk-v5": "^0.7.3",
     "dayjs": "^1.8.17",
     "md5": "^2.3.0",
     "mpvue": "^2.0.0",
+    "tim-upload-plugin": "^1.0.1",
+    "tim-wx-sdk": "^2.9.3",
     "vuex": "^3.1.1"
   },
   "devDependencies": {

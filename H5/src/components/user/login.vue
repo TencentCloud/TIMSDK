@@ -46,8 +46,7 @@
 <script>
 import { Form, FormItem, Select, Option } from 'element-ui'
 import logo from '../../assets/image/logo.png'
-import { errorMap } from '../../utils/common'
-import md5 from 'md5'
+
 export default {
   name: 'Login',
   components: {
