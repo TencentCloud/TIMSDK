@@ -37,6 +37,18 @@ public class GlideEngine implements ImageEngine {
                 .into(imageView);
     }
 
+    public static void loadCornerImageWithoutPlaceHolder(ImageView imageView, String filePath, RequestListener listener, float radius) {
+        CornerTransform transform = new CornerTransform(TUIKit.getAppContext(), radius);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .transform(transform);
+        Glide.with(TUIKit.getAppContext())
+                .load(filePath)
+                .apply(options)
+                .listener(listener)
+                .into(imageView);
+    }
+
     public static void loadImage(ImageView imageView, String filePath, RequestListener listener) {
         Glide.with(TUIKit.getAppContext())
                 .load(filePath)

@@ -140,8 +140,10 @@ public class MessageImageHolder extends MessageContentHolder {
         final V2TIMImageElem imageEle = timMessage.getImageElem();
         final List<V2TIMImageElem.V2TIMImage> imgs = imageEle.getImageList();
         if (!TextUtils.isEmpty(msg.getDataPath())) {
-            GlideEngine.loadCornerImage(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
         } else {
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, "", null, DEFAULT_RADIUS);
+
             for (int i = 0; i < imgs.size(); i++) {
                 final V2TIMImageElem.V2TIMImage img = imgs.get(i);
                 if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB) {
