@@ -25,6 +25,11 @@
 @property (nonatomic, strong) NSString *name;
 
 /**
+ * 表情的本地化名称（国际化属性，如果为空或者length为0，默认显示name）
+ */
+@property (nonatomic, copy) NSString *localizableName;
+
+/**
  *  表情在本地缓存的存储路径。
  */
 @property (nonatomic, strong) NSString *path;

@@ -13,6 +13,7 @@
 #import "TUIInputMoreCell.h"
 #import "TUIImageCache.h"
 #import "UIImage+TUIKIT.h"
+#import "NSBundle+TUIKIT.h"
 
 
 @interface TUIKitConfig ()
@@ -55,6 +56,9 @@
  */
 - (void)defaultFace
 {
+    NSString *language = [NSBundle tk_localizableLanguageKey];
+    NSDictionary *emojisLocalizable = [NSDictionary dictionaryWithContentsOfFile:TUIKitFace(@"emoji/emoji_localizable.plist")];
+    
     NSMutableArray *faceGroups = [NSMutableArray array];
     //emoji group
     NSMutableArray *emojiFaces = [NSMutableArray array];
@@ -63,8 +67,10 @@
         TFaceCellData *data = [[TFaceCellData alloc] init];
         NSString *name = [dic objectForKey:@"face_name"];
         NSString *path = [NSString stringWithFormat:@"emoji/%@", name];
+        NSString *localizableName = [NSBundle tk_emojiLocalizedStringForKey:name];
         data.name = name;
         data.path = TUIKitFace(path);
+        data.localizableName = localizableName;
         [self addFaceToCache:data.path];
         [emojiFaces addObject:data];
     }

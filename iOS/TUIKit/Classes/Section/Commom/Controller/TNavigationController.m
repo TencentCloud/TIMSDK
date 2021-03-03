@@ -28,4 +28,17 @@
     }
     [super pushViewController:viewController animated:animated];
 }
+
+// fix: https://developer.apple.com/forums/thread/660750
+- (NSArray<__kindof UIViewController *> *)popToRootViewControllerAnimated:(BOOL)animated
+{
+    if (@available(iOS 14.0, *)) {
+        for (UIViewController *vc in self.viewControllers) {
+            vc.hidesBottomBarWhenPushed = NO;
+            self.tabBarController.tabBar.hidden = NO;
+        }
+    }
+    return [super popToRootViewControllerAnimated:animated];
+}
+
 @end

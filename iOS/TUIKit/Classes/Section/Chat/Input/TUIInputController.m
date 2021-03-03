@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
 
 @interface TUIInputController () <TTextViewDelegate, TMenuViewDelegate, TFaceViewDelegate, TMoreViewDelegate>
 @property (nonatomic, assign) InputStatus status;
+@property (nonatomic, strong) NSMutableDictionary *localizableDictionary;
 @end
 
 @implementation TUIInputController
@@ -251,8 +252,10 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
 
 - (void)inputBar:(TUIInputBar *)textView didSendText:(NSString *)text
 {
+    // 表情本地化 --> 恢复成实际的中文 key
+    NSString *content = [self faceContentWithLocalizableString:text];
     TUITextMessageCellData *data = [[TUITextMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-    data.content = text;
+    data.content = content;
     if(_delegate && [_delegate respondsToSelector:@selector(inputController:didSendMessage:)]){
         [_delegate inputController:self didSendMessage:data];
     }
@@ -317,9 +320,11 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     if([text isEqualToString:@""]){
         return;
     }
+    // 表情国际化 --> 恢复成实际的中文 key
+    NSString *content = [self faceContentWithLocalizableString:text];
     [_inputBar clearInput];
     TUITextMessageCellData *data = [[TUITextMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-    data.content = text;
+    data.content = content;
     if(_delegate && [_delegate respondsToSelector:@selector(inputController:didSendMessage:)]){
         [_delegate inputController:self didSendMessage:data];
     }
@@ -340,7 +345,12 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     TFaceGroup *group = [TUIKit sharedInstance].config.faceGroups[indexPath.section];
     TFaceCellData *face = group.faces[indexPath.row];
     if(indexPath.section == 0){
-        [_inputBar addEmoji:face.name];
+        // 表情本地化 - 将中文 key 转换成 对应的 本地化语言。eg,英文环境下 [大哭] --> [Cry]
+        NSString *localizableFaceName = face.localizableName.length ? face.localizableName : face.name;
+        @synchronized (self) {
+            self.localizableDictionary[localizableFaceName] = face.name;
+        }
+        [_inputBar addEmoji:localizableFaceName];
     }
     else{
         TUIFaceMessageCellData *data = [[TUIFaceMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
@@ -403,4 +413,45 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     }
     return _menuView;
 }
+
+#pragma mark - 表情国际化
+- (NSString *)faceContentWithLocalizableString:(NSString *)localizableString
+{
+    NSString *content = localizableString;
+    NSString *regex_emoji = @"\\[[a-z\\s*A-Z\\s*0-9!-@\\/\\u4e00-\\u9fa5]+\\]"; //匹配表情
+    NSError *error = nil;
+    NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex_emoji options:NSRegularExpressionCaseInsensitive error:&error];
+    if (re) {
+        NSArray *resultArray = [re matchesInString:content options:0 range:NSMakeRange(0, content.length)];
+        NSMutableArray *waitingReplaceM = [NSMutableArray array];
+        for(NSTextCheckingResult *match in resultArray) {
+            NSRange range = [match range];
+            NSString *subStr = [content substringWithRange:range];
+            [waitingReplaceM addObject:@{
+                @"range":NSStringFromRange(range),
+                @"localizableStr": self.localizableDictionary[subStr]?:subStr
+            }];
+        }
+        
+        if (waitingReplaceM.count != 0) {
+            // 从后往前替换，否则会引起位置问题
+            for (int i = (int)waitingReplaceM.count -1; i >= 0; i--) {
+                NSRange range = NSRangeFromString(waitingReplaceM[i][@"range"]);
+                NSString *localizableStr = waitingReplaceM[i][@"localizableStr"];
+                content = [content stringByReplacingCharactersInRange:range withString:localizableStr];
+            }
+        }
+    }
+    return content;
+}
+
+
+- (NSMutableDictionary *)localizableDictionary
+{
+    if (_localizableDictionary == nil) {
+        _localizableDictionary = [NSMutableDictionary dictionary];
+    }
+    return _localizableDictionary;
+}
+
 @end
