@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "UIRichEdit.h"
 
 #ifdef _USEIMM
@@ -162,7 +162,7 @@ namespace DuiLib {
         unsigned    fTimer                :1;    // A timer is set
         unsigned    fCaptured           :1;
         unsigned    fShowCaret          :1;
-        unsigned    fNeedFreshCaret     :1; // ĞŞÕı¸Ä±ä´óĞ¡ºóµã»÷ÆäËûÎ»ÖÃÔ­À´¹â±ê²»ÄÜÏû³ıµÄÎÊÌâ
+        unsigned    fNeedFreshCaret     :1; // ä¿®æ­£æ”¹å˜å¤§å°åç‚¹å‡»å…¶ä»–ä½ç½®åŸæ¥å…‰æ ‡ä¸èƒ½æ¶ˆé™¤çš„é—®é¢˜
 
         INT         iCaretWidth;
         INT         iCaretHeight;
@@ -1848,8 +1848,8 @@ err:
         }
     }
 
-    // ¶àĞĞ·Çrich¸ñÊ½µÄricheditÓĞÒ»¸ö¹ö¶¯Ìõbug£¬ÔÚ×îºóÒ»ĞĞÊÇ¿ÕĞĞÊ±£¬LineDownºÍSetScrollPosÎŞ·¨¹ö¶¯µ½×îºó
-    // ÒıÈëiPos¾ÍÊÇÎªÁËĞŞÕıÕâ¸öbug
+    // å¤šè¡Œérichæ ¼å¼çš„richeditæœ‰ä¸€ä¸ªæ»šåŠ¨æ¡bugï¼Œåœ¨æœ€åä¸€è¡Œæ˜¯ç©ºè¡Œæ—¶ï¼ŒLineDownå’ŒSetScrollPosæ— æ³•æ»šåŠ¨åˆ°æœ€å
+    // å¼•å…¥iPoså°±æ˜¯ä¸ºäº†ä¿®æ­£è¿™ä¸ªbug
     void CRichEditUI::SetScrollPos(SIZE szPos, bool bMsg)
     {
         int cx = 0;
@@ -2038,7 +2038,7 @@ err:
 
     SIZE CRichEditUI::EstimateSize(SIZE szAvailable)
     {
-        //return CDuiSize(m_rcItem); // ÕâÖÖ·½Ê½ÔÚµÚÒ»´ÎÉèÖÃ´óĞ¡Ö®ºó¾Í´óĞ¡²»±äÁË
+        //return CDuiSize(m_rcItem); // è¿™ç§æ–¹å¼åœ¨ç¬¬ä¸€æ¬¡è®¾ç½®å¤§å°ä¹‹åå°±å¤§å°ä¸å˜äº†
         return CContainerUI::EstimateSize(szAvailable);
     }
 
@@ -2270,7 +2270,7 @@ err:
                 }
             }
         }
-        // »æÖÆÌáÊ¾ÎÄ×Ö
+        // ç»˜åˆ¶æç¤ºæ–‡å­—
         CDuiString sDrawText = GetText();
         if(sDrawText.IsEmpty() && !m_bFocused) {
             DWORD dwTextColor = GetTipValueColor();
@@ -2510,7 +2510,7 @@ err:
         if( uMsg == WM_MOUSEWHEEL && (LOWORD(wParam) & MK_CONTROL) == 0 ) return 0;
 
         if (uMsg == WM_IME_COMPOSITION) {
-            // ½â¾öÎ¢ÈíÊäÈë·¨Î»ÖÃÒì³£µÄÎÊÌâ
+            // è§£å†³å¾®è½¯è¾“å…¥æ³•ä½ç½®å¼‚å¸¸çš„é—®é¢˜
             HIMC hIMC = ImmGetContext(GetManager()->GetPaintWindow());
             if (hIMC)  {
                 POINT point;
@@ -2606,19 +2606,19 @@ err:
                 bWasHandled = false;
                 return 0;
             }
-            //´´½¨Ò»¸öµ¯³öÊ½²Ëµ¥
+            //åˆ›å»ºä¸€ä¸ªå¼¹å‡ºå¼èœå•
             HMENU hPopMenu = CreatePopupMenu();
-            AppendMenu(hPopMenu, 0, ID_RICH_UNDO, _T("³·Ïú(&U)"));
-            AppendMenu(hPopMenu, 0, ID_RICH_REDO, _T("ÖØ×ö(&R)"));
+            AppendMenu(hPopMenu, 0, ID_RICH_UNDO, _T("æ’¤é”€(&U)"));
+            AppendMenu(hPopMenu, 0, ID_RICH_REDO, _T("é‡åš(&R)"));
             AppendMenu(hPopMenu, MF_SEPARATOR, 0, _T(""));
-            AppendMenu(hPopMenu, 0, ID_RICH_CUT, _T("¼ôÇĞ(&X)"));
-            AppendMenu(hPopMenu, 0, ID_RICH_COPY, _T("¸´ÖÆ(&C)"));
-            AppendMenu(hPopMenu, 0, ID_RICH_PASTE, _T("Õ³Ìû(&V)"));
-            AppendMenu(hPopMenu, 0, ID_RICH_CLEAR, _T("Çå¿Õ(&L)"));
+            AppendMenu(hPopMenu, 0, ID_RICH_CUT, _T("å‰ªåˆ‡(&X)"));
+            AppendMenu(hPopMenu, 0, ID_RICH_COPY, _T("å¤åˆ¶(&C)"));
+            AppendMenu(hPopMenu, 0, ID_RICH_PASTE, _T("ç²˜å¸–(&V)"));
+            AppendMenu(hPopMenu, 0, ID_RICH_CLEAR, _T("æ¸…ç©º(&L)"));
             AppendMenu(hPopMenu, MF_SEPARATOR, 0, _T(""));
-            AppendMenu(hPopMenu, 0, ID_RICH_SELECTALL, _T("È«Ñ¡(&A)"));
+            AppendMenu(hPopMenu, 0, ID_RICH_SELECTALL, _T("å…¨é€‰(&A)"));
 
-            //³õÊ¼»¯²Ëµ¥Ïî
+            //åˆå§‹åŒ–èœå•é¡¹
             UINT uUndo = (CanUndo() ? 0 : MF_GRAYED);
             EnableMenuItem(hPopMenu, ID_RICH_UNDO, MF_BYCOMMAND | uUndo);
             UINT uRedo = (CanRedo() ? 0 : MF_GRAYED);

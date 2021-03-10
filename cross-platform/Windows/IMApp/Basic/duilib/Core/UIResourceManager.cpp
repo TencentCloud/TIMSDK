@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "UIResourceManager.h"
 
 namespace DuiLib {
@@ -57,7 +57,7 @@ namespace DuiLib {
         LPCTSTR pstrValue = NULL;
         LPTSTR pstr = NULL;
 
-        //¼ÓÔØÍ¼Æ¬×ÊÔ´
+        //åŠ è½½å›¾ç‰‡èµ„æº
         LPCTSTR pstrId = NULL;
         LPCTSTR pstrPath = NULL;
         for( CMarkupNode node = Root.GetChild() ; node.IsValid(); node = node.GetSibling() ) 
@@ -67,7 +67,7 @@ namespace DuiLib {
             if(ChildNode.IsValid()) LoadResource(node);
             else if ((_tcsicmp(pstrClass,_T("Image")) == 0) && node.HasAttributes())
             {
-                //¼ÓÔØÍ¼Æ¬×ÊÔ´
+                //åŠ è½½å›¾ç‰‡èµ„æº
                 nAttributes = node.GetAttributeCount();
                 for( int i = 0; i < nAttributes; i++ ) 
                 {
@@ -89,7 +89,7 @@ namespace DuiLib {
                 m_mImageHashMap.Insert(pstrId, (LPVOID)new CDuiString(pstrPath));
             }
             else if( _tcsicmp(pstrClass,_T("Xml")) == 0 && node.HasAttributes()) {
-                //¼ÓÔØXMLÅäÖÃÎÄ¼ş
+                //åŠ è½½XMLé…ç½®æ–‡ä»¶
                 nAttributes = node.GetAttributeCount();
                 for( int i = 0; i < nAttributes; i++ ) 
                 {
@@ -177,7 +177,7 @@ namespace DuiLib {
         LPCTSTR pstrValue = NULL;
         LPTSTR pstr = NULL;
 
-        //¼ÓÔØÍ¼Æ¬×ÊÔ´
+        //åŠ è½½å›¾ç‰‡èµ„æº
         LPCTSTR pstrId = NULL;
         LPCTSTR pstrText = NULL;
         for( CMarkupNode node = Root.GetChild() ; node.IsValid(); node = node.GetSibling() ) 
@@ -185,7 +185,7 @@ namespace DuiLib {
             pstrClass = node.GetName();
             if ((_tcsicmp(pstrClass,_T("Text")) == 0) && node.HasAttributes())
             {
-                //¼ÓÔØÍ¼Æ¬×ÊÔ´
+                //åŠ è½½å›¾ç‰‡èµ„æº
                 nAttributes = node.GetAttributeCount();
                 for( int i = 0; i < nAttributes; i++ ) 
                 {
@@ -233,7 +233,7 @@ namespace DuiLib {
     void CResourceManager::ReloadText()
     {
         if(m_pQuerypInterface == NULL) return;
-        //ÖØÔØÎÄ×ÖÃèÊö
+        //é‡è½½æ–‡å­—æè¿°
         LPCTSTR lpstrId = NULL;
         LPCTSTR lpstrText;
         for( int i = 0; i < m_mTextResourceHashMap.GetSize(); i++ )

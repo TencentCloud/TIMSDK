@@ -1,4 +1,4 @@
-#ifndef __UITEXTSCROLLH__
+﻿#ifndef __UITEXTSCROLLH__
 #define __UITEXTSCROLLH__
 
 #pragma once

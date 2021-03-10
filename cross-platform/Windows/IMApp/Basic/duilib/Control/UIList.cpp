@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 
 namespace DuiLib {
 
@@ -435,9 +435,9 @@ namespace DuiLib {
 
     bool CListUI::SelectItem(int iIndex, bool bTakeFocus)
     {
-        // È¡ÏûËùÓĞÑ¡ÔñÏî
+        // å–æ¶ˆæ‰€æœ‰é€‰æ‹©é¡¹
         UnSelectAllItems();
-        // ÅĞ¶ÏÊÇ·ñºÏ·¨ÁĞ±íÏî
+        // åˆ¤æ–­æ˜¯å¦åˆæ³•åˆ—è¡¨é¡¹
         if( iIndex < 0 ) return false;
         CControlUI* pControl = GetItemAt(iIndex);
         if( pControl == NULL ) return false;
@@ -1365,7 +1365,7 @@ namespace DuiLib {
         }
         UINT uListType = m_pOwner->GetListType();
         if(uListType == LT_LIST) {
-            // ¼ÆËãºáÏò³ß´ç
+            // è®¡ç®—æ¨ªå‘å°ºå¯¸
             int nItemCount = m_items.GetSize();
             if (nItemCount > 0)
             {
@@ -2246,7 +2246,7 @@ namespace DuiLib {
             return;
         }
 
-        // ÓÒ¼üÑ¡Ôñ
+        // å³é”®é€‰æ‹©
         if(m_pOwner != NULL)
         {
             if( m_pOwner->GetListInfo()->bRSelected && event.Type == UIEVENT_RBUTTONDOWN )
@@ -2752,7 +2752,7 @@ namespace DuiLib {
             }
             return;
         }
-        // ÓÒ¼üÑ¡Ôñ
+        // å³é”®é€‰æ‹©
         if(m_pOwner != NULL)
         {
             if( m_pOwner->GetListInfo()->bRSelected && event.Type == UIEVENT_RBUTTONDOWN )

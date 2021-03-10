@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "..\Utils\stb_image.h"
@@ -371,7 +371,7 @@ namespace DuiLib {
 
         while (!pData)
         {
-            //¶Á²»µ½Í¼Æ¬, ÔòÖ±½ÓÈ¥¶ÁÈ¡bitmap.m_lpstrÖ¸ÏòµÄÂ·¾¶
+            //è¯»ä¸åˆ°å›¾ç‰‡, åˆ™ç›´æ¥å»è¯»å–bitmap.m_lpstræŒ‡å‘çš„è·¯å¾„
             HANDLE hFile = ::CreateFile(bitmap.m_lpstr, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, \
                 FILE_ATTRIBUTE_NORMAL, NULL);
             if( hFile == INVALID_HANDLE_VALUE ) break;
@@ -551,7 +551,7 @@ namespace DuiLib {
 
         while (!pData)
         {
-            //¶Á²»µ½Í¼Æ¬, ÔòÖ±½ÓÈ¥¶ÁÈ¡bitmap.m_lpstrÖ¸ÏòµÄÂ·¾¶
+            //è¯»ä¸åˆ°å›¾ç‰‡, åˆ™ç›´æ¥å»è¯»å–bitmap.m_lpstræŒ‡å‘çš„è·¯å¾„
             HANDLE hFile = ::CreateFile(bitmap.m_lpstr, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, \
                 FILE_ATTRIBUTE_NORMAL, NULL);
             if( hFile == INVALID_HANDLE_VALUE ) break;
@@ -660,7 +660,7 @@ namespace DuiLib {
 
         while (!pData)
         {
-            //¶Á²»µ½Í¼Æ¬, ÔòÖ±½ÓÈ¥¶ÁÈ¡bitmap.m_lpstrÖ¸ÏòµÄÂ·¾¶
+            //è¯»ä¸åˆ°å›¾ç‰‡, åˆ™ç›´æ¥å»è¯»å–bitmap.m_lpstræŒ‡å‘çš„è·¯å¾„
             HANDLE hFile = ::CreateFile(pstrPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
             if( hFile == INVALID_HANDLE_VALUE ) break;
             dwSize = ::GetFileSize(hFile, NULL);
@@ -731,8 +731,8 @@ namespace DuiLib {
         if ((pManager == NULL) || (hDC == NULL)) 
             return false;
 
-        // 1¡¢aaa.jpg
-        // 2¡¢file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' 
+        // 1ã€aaa.jpg
+        // 2ã€file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' 
         // mask='#FF0000' fade='255' hole='FALSE' xtiled='FALSE' ytiled='FALSE'
 
         CDuiString sImageName = pStrImage;
@@ -1633,7 +1633,7 @@ namespace DuiLib {
 
                 graphics.MeasureString(pstrText, -1, &font, rectF, &stringFormat, &bounds);
 
-                // MeasureString´æÔÚ¼ÆËãÎó²î£¬ÕâÀï¼ÓÒ»ÏñËØ
+                // MeasureStringå­˜åœ¨è®¡ç®—è¯¯å·®ï¼Œè¿™é‡ŒåŠ ä¸€åƒç´ 
                 rc.bottom = rc.top + (long)bounds.Height + 1;
                 rc.right = rc.left + (long)bounds.Width + 1;
             }
@@ -1692,8 +1692,8 @@ namespace DuiLib {
 
     void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, LPCTSTR pstrText, DWORD dwTextColor, RECT* prcLinks, CDuiString* sLinks, int& nLinkRects, int iFont, UINT uStyle)
     {
-        // ¿¼ÂÇµ½ÔÚxml±à¼­Æ÷ÖĞÊ¹ÓÃ<>·ûºÅ²»·½±ã£¬¿ÉÒÔÊ¹ÓÃ{}·ûºÅ´úÌæ
-        // Ö§³Ö±êÇ©Ç¶Ì×£¨Èç<l><b>text</b></l>£©£¬µ«ÊÇ½»²æÇ¶Ì×ÊÇÓ¦¸Ã±ÜÃâµÄ£¨Èç<l><b>text</l></b>£©
+        // è€ƒè™‘åˆ°åœ¨xmlç¼–è¾‘å™¨ä¸­ä½¿ç”¨<>ç¬¦å·ä¸æ–¹ä¾¿ï¼Œå¯ä»¥ä½¿ç”¨{}ç¬¦å·ä»£æ›¿
+        // æ”¯æŒæ ‡ç­¾åµŒå¥—ï¼ˆå¦‚<l><b>text</b></l>ï¼‰ï¼Œä½†æ˜¯äº¤å‰åµŒå¥—æ˜¯åº”è¯¥é¿å…çš„ï¼ˆå¦‚<l><b>text</l></b>ï¼‰
         // The string formatter supports a kind of "mini-html" that consists of various short tags:
         //
         //   Bold:             <b>text</b>
@@ -1783,7 +1783,7 @@ namespace DuiLib {
         bool bInSelected = false;
         int iLineLinkIndex = 0;
 
-        // ÅÅ°æÏ°¹ßÊÇÍ¼ÎÄµ×²¿¶ÔÆë£¬ËùÒÔÃ¿ĞĞ»æÖÆ¶¼Òª·ÖÁ½²½£¬ÏÈ¼ÆËã¸ß¶È£¬ÔÙ»æÖÆ
+        // æ’ç‰ˆä¹ æƒ¯æ˜¯å›¾æ–‡åº•éƒ¨å¯¹é½ï¼Œæ‰€ä»¥æ¯è¡Œç»˜åˆ¶éƒ½è¦åˆ†ä¸¤æ­¥ï¼Œå…ˆè®¡ç®—é«˜åº¦ï¼Œå†ç»˜åˆ¶
         CStdPtrArray aLineFontArray;
         CStdPtrArray aLineColorArray;
         CStdPtrArray aLinePIndentArray;
@@ -1792,7 +1792,7 @@ namespace DuiLib {
         bool bLineInLink = false;
         bool bLineInSelected = false;
         int cyLineHeight = 0;
-        bool bLineDraw = false; // ĞĞµÄµÚ¶ş½×¶Î£º»æÖÆ
+        bool bLineDraw = false; // è¡Œçš„ç¬¬äºŒé˜¶æ®µï¼šç»˜åˆ¶
         while( *pstrText != _T('\0') ) {
             if( pt.x >= rc.right || *pstrText == _T('\n') || bLineEnd ) {
                 if( *pstrText == _T('\n') ) pstrText++;
@@ -2192,7 +2192,7 @@ namespace DuiLib {
                         if( pTm->tmItalic && pFontInfo->bItalic == false ) {
                             ABC abc;
                             ::GetCharABCWidths(hDC, _T(' '), _T(' '), &abc);
-                            pt.x += abc.abcC / 2; // ¼òµ¥ĞŞÕıÒ»ÏÂĞ±Ìå»ìÅÅµÄÎÊÌâ, ÕıÈ·×ö·¨Ó¦¸ÃÊÇhttp://support.microsoft.com/kb/244798/en-us
+                            pt.x += abc.abcC / 2; // ç®€å•ä¿®æ­£ä¸€ä¸‹æ–œä½“æ··æ’çš„é—®é¢˜, æ­£ç¡®åšæ³•åº”è¯¥æ˜¯http://support.microsoft.com/kb/244798/en-us
                         }
                         pTm = &pFontInfo->tm;
                         ::SelectObject(hDC, pFontInfo->hFont);
@@ -2487,9 +2487,9 @@ namespace DuiLib {
 
     void CRenderEngine::CheckAlphaColor(DWORD& dwColor)
     {
-        //RestoreAlphaColorÈÏÎª0x00000000ÊÇÕæÕıµÄÍ¸Ã÷£¬ÆäËü¶¼ÊÇGDI»æÖÆµ¼ÖÂµÄ
-        //ËùÒÔÔÚGDI»æÖÆÖĞ²»ÄÜÓÃ0xFF000000Õâ¸öÑÕÉ«Öµ£¬ÏÖÔÚ´¦ÀíÊÇÈÃËü±ä³ÉRGB(0,0,1)
-        //RGB(0,0,1)ÓëRGB(0,0,0)ºÜÄÑ·Ö³öÀ´
+        //RestoreAlphaColorè®¤ä¸º0x00000000æ˜¯çœŸæ­£çš„é€æ˜ï¼Œå…¶å®ƒéƒ½æ˜¯GDIç»˜åˆ¶å¯¼è‡´çš„
+        //æ‰€ä»¥åœ¨GDIç»˜åˆ¶ä¸­ä¸èƒ½ç”¨0xFF000000è¿™ä¸ªé¢œè‰²å€¼ï¼Œç°åœ¨å¤„ç†æ˜¯è®©å®ƒå˜æˆRGB(0,0,1)
+        //RGB(0,0,1)ä¸RGB(0,0,0)å¾ˆéš¾åˆ†å‡ºæ¥
         if((0x00FFFFFF & dwColor) == 0)
         {
             dwColor += 1;

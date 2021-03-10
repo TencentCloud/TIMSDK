@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #ifdef USE_XIMAGE_EFFECT
 #include "UIGifAnimEx.h"
 #include "../../3rd/CxImage/ximage.h"
@@ -9,16 +9,16 @@ namespace DuiLib
     IMPLEMENT_DUICONTROL(CGifAnimExUI)
     struct CGifAnimExUI::Imp
     {
-        bool                m_bRealStop            ;//Íâ²¿Í£Ö¹ÁË
-        bool                m_bLoadImg            ;//ÊÇ·ñ¼ÓÔØ¹ıÍ¼Æ¬
-        bool                m_bTimer            ;//ÊÇ·ñÆô¶¯¶¨Ê±Æ÷
-        bool                m_bAutoStart        ;//ÊÇ·ñ×Ô¶¯¿ªÊ¼
-        int                    m_nDelay            ;//Ñ­»·ºÁÃëÊı
-        UINT                m_nFrameCount        ;//gifÍ¼Æ¬×ÜÖ¡Êı
-        UINT                m_nFramePosition    ;//µ±Ç°·Åµ½µÚ¼¸Ö¡
-        CxImage*            m_pGifImage            ;//gif¶ÔÏó
+        bool                m_bRealStop            ;//å¤–éƒ¨åœæ­¢äº†
+        bool                m_bLoadImg            ;//æ˜¯å¦åŠ è½½è¿‡å›¾ç‰‡
+        bool                m_bTimer            ;//æ˜¯å¦å¯åŠ¨å®šæ—¶å™¨
+        bool                m_bAutoStart        ;//æ˜¯å¦è‡ªåŠ¨å¼€å§‹
+        int                    m_nDelay            ;//å¾ªç¯æ¯«ç§’æ•°
+        UINT                m_nFrameCount        ;//gifå›¾ç‰‡æ€»å¸§æ•°
+        UINT                m_nFramePosition    ;//å½“å‰æ”¾åˆ°ç¬¬å‡ å¸§
+        CxImage*            m_pGifImage            ;//gifå¯¹è±¡
         CPaintManagerUI*&    m_pManager            ;
-        CGifAnimExUI*            m_pOwer                ;//ÓµÓĞÕß
+        CGifAnimExUI*            m_pOwer                ;//æ‹¥æœ‰è€…
         Imp(CPaintManagerUI* & pManager):m_pManager(pManager),
             m_bLoadImg(false),m_bTimer(false),
             m_nDelay(100),m_pGifImage(NULL),m_nFrameCount(0U),
@@ -78,7 +78,7 @@ namespace DuiLib
                 m_bTimer = true;
             }
         }
-        void StopAnim(bool bGoFirstFrame)//bGoFirstFrame ÊÇ·ñÅÜµ½µÚÒ»Ö¡
+        void StopAnim(bool bGoFirstFrame)//bGoFirstFrame æ˜¯å¦è·‘åˆ°ç¬¬ä¸€å¸§
         {
             if(m_bTimer)
             {

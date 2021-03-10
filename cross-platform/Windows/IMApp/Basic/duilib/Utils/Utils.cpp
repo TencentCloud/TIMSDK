@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "Utils.h"
 #include <atlbase.h>
 #include <atlconv.h>
@@ -890,7 +890,7 @@ namespace DuiLib
                     pItem->pPrev = NULL;
                     pItem->pNext = m_aT[slot];
                     pItem->pNext->pPrev = pItem;
-                    //Ω´item“∆∂Ø÷¡¡¥ÃıÕ∑≤ø
+                    //Â∞ÜitemÁßªÂä®Ëá≥ÈìæÊù°Â§¥ÈÉ®
                     m_aT[slot] = pItem;
                 }
                 return pItem->Data;
@@ -1146,8 +1146,8 @@ namespace DuiLib
     //    if (pStrImage == NULL)
     //        return;
 
-    //    // 1°¢aaa.jpg
-    //    // 2°¢file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' 
+    //    // 1„ÄÅaaa.jpg
+    //    // 2„ÄÅfile='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' 
     //    // mask='#FF0000' fade='255' hole='false' xtiled='false' ytiled='false'
     //    CDuiString sItem;
     //    CDuiString sValue;

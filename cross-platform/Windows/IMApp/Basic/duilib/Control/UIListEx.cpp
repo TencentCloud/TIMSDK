@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "UIListEx.h"
 
 namespace DuiLib {
@@ -106,11 +106,11 @@ namespace DuiLib {
     {    
         CDuiString strName = msg.pSender->GetName();
 
-        //¸´Ñ¡¿ò
+        //å¤é€‰æ¡†
         if(_tcsicmp(msg.sType, _T("listheaditemchecked")) == 0)
         {
             BOOL bCheck = (BOOL)msg.lParam;
-            //ÅĞ¶ÏÊÇ·ñÊÇ±¾LIST·¢ËÍµÄnotify
+            //åˆ¤æ–­æ˜¯å¦æ˜¯æœ¬LISTå‘é€çš„notify
             CListHeaderUI* pHeader = GetHeader();
             for (int i = 0; i < pHeader->GetCount(); i++)
             {
@@ -140,7 +140,7 @@ namespace DuiLib {
             }
         }
 
-        //±à¼­¿ò¡¢×éºÏ¿ò
+        //ç¼–è¾‘æ¡†ã€ç»„åˆæ¡†
         if (_tcsicmp(strName, _T("ListEx_Edit")) == 0 && m_pEditUI && m_nRow >= 0 && m_nColum >= 0)
         {
             if(_tcsicmp(msg.sType, DUI_MSGTYPE_SETFOCUS) == 0)
@@ -156,10 +156,10 @@ namespace DuiLib {
                     pRowCtrl->SetText(m_nColum, sText);
                 }
 
-                //ÖØÖÃµ±Ç°ĞĞÁĞ
+                //é‡ç½®å½“å‰è¡Œåˆ—
                 SetEditRowAndColum(-1, -1);
 
-                //Òş²Ø±à¼­¿ò
+                //éšè—ç¼–è¾‘æ¡†
                 RECT rc = {0,0,0,0};
                 m_pEditUI->SetPos(rc);
                 m_pEditUI->SetVisible(false);
@@ -186,7 +186,7 @@ namespace DuiLib {
                     pRowCtrl->SetText(m_nColum, m_pComboBoxUI->GetText());
                 }
 
-                //Òş²Ø×éºÏ¿ò
+                //éšè—ç»„åˆæ¡†
                 RECT rc = {0,0,0,0};
                 m_pComboBoxUI->SetPos(rc);
             }
@@ -198,7 +198,7 @@ namespace DuiLib {
     }
     void CListExUI::HideEditAndComboCtrl()
     {
-        //Òş²Ø±à¼­¿ò
+        //éšè—ç¼–è¾‘æ¡†
         RECT rc = {0,0,0,0};
         if(m_pEditUI)
         {    
@@ -241,39 +241,39 @@ namespace DuiLib {
         {
             if (CheckColumEditable(nColum) && GetEditUI())
             {
-                //±£´æµ±Ç°ĞĞÁĞ
+                //ä¿å­˜å½“å‰è¡Œåˆ—
                 SetEditRowAndColum(nIndex, nColum);
 
                 m_pEditUI->SetVisible(true);
-                //ÒÆ¶¯Î»ÖÃ
+                //ç§»åŠ¨ä½ç½®
                 m_pEditUI->SetFixedWidth(lpRCColum->right - lpRCColum->left);
                 m_pEditUI->SetFixedHeight(lpRCColum->bottom - lpRCColum->top);
                 m_pEditUI->SetFixedXY(CDuiSize(lpRCColum->left,lpRCColum->top));
                 SIZE szTextSize = CRenderEngine::GetTextSize(m_pManager->GetPaintDC(), m_pManager, _T("TTT"), m_ListInfo.nFont, DT_CALCRECT | DT_SINGLELINE);
                 m_pEditUI->SetTextPadding(CDuiRect(2, (lpRCColum->bottom - lpRCColum->top - szTextSize.cy) / 2, 2, 0));
-                //ÉèÖÃÎÄ×Ö
+                //è®¾ç½®æ–‡å­—
                 m_pEditUI->SetText(lpstrText);
 
                 m_pEditUI->SetFocus();
             }
             else if(CheckColumComboBoxable(nColum) && GetComboBoxUI())
             {
-                //ÖØÖÃ×éºÏ¿ò
+                //é‡ç½®ç»„åˆæ¡†
                 m_pComboBoxUI->RemoveAll();
 
-                //±£´æµ±Ç°ĞĞÁĞ
+                //ä¿å­˜å½“å‰è¡Œåˆ—
                 SetEditRowAndColum(nIndex, nColum);
 
-                //ÉèÖÃÎÄ×Ö
+                //è®¾ç½®æ–‡å­—
                 m_pComboBoxUI->SetText(lpstrText);
 
-                //»ñÈ¡
+                //è·å–
                 if (m_pXCallback)
                 {
                     m_pXCallback->GetItemComboTextArray(m_pComboBoxUI, nIndex, nColum);
                 }
 
-                //ÒÆ¶¯Î»ÖÃ
+                //ç§»åŠ¨ä½ç½®
                 m_pComboBoxUI->SetPos(*lpRCColum);
                 m_pComboBoxUI->SetVisible(TRUE);
             }
@@ -301,7 +301,7 @@ namespace DuiLib {
             return;
         }
 
-        //Èç¹ûÑ¡ÖĞ£¬ÄÇÃ´¼ì²éÊÇ·ñÈ«²¿¶¼´¦ÓÚÑ¡ÖĞ×´Ì¬
+        //å¦‚æœé€‰ä¸­ï¼Œé‚£ä¹ˆæ£€æŸ¥æ˜¯å¦å…¨éƒ¨éƒ½å¤„äºé€‰ä¸­çŠ¶æ€
         if (bChecked)
         {
             BOOL bCheckAll = TRUE;
@@ -1168,7 +1168,7 @@ Label_ForeImage:
             }
         }
 
-        //¼ì²éÊÇ·ñĞèÒªÏÔÊ¾±à¼­¿ò»òÕß×éºÏ¿ò    
+        //æ£€æŸ¥æ˜¯å¦éœ€è¦æ˜¾ç¤ºç¼–è¾‘æ¡†æˆ–è€…ç»„åˆæ¡†    
         CListExUI * pListCtrl = (CListExUI *)m_pOwner;
         int nColum = HitTestColum(event.ptMouse);
         if(event.Type == UIEVENT_BUTTONUP && m_pOwner->IsFocused())
@@ -1182,7 +1182,7 @@ Label_ForeImage:
             pListCtrl->OnListItemClicked(GetIndex(), nColum, &rc, GetText(nColum));
         }
 
-        //¼ì²éÊÇ·ñĞèÒªÏÔÊ¾CheckBox
+        //æ£€æŸ¥æ˜¯å¦éœ€è¦æ˜¾ç¤ºCheckBox
         TListInfoUI* pInfo = m_pOwner->GetListInfo();
         for( int i = 0; i < pInfo->nColumns; i++ )
         {
@@ -1296,7 +1296,7 @@ Label_ForeImage:
             rcItem.top += pInfo->rcTextPadding.top;
             rcItem.bottom -= pInfo->rcTextPadding.bottom;
 
-            //¼ì²éÊÇ·ñĞèÒªÏÔÊ¾CheckBox
+            //æ£€æŸ¥æ˜¯å¦éœ€è¦æ˜¾ç¤ºCheckBox
             if (pListCtrl->CheckColumCheckBoxable(i))
             {
                 RECT rcCheckBox;
@@ -1304,7 +1304,7 @@ Label_ForeImage:
                 rcItem.left += (rcCheckBox.right - rcCheckBox.left);
             }
 
-            CDuiString strText;//²»Ê¹ÓÃLPCTSTR£¬·ñÔòÏŞÖÆÌ«¶à by cddjr 2011/10/20
+            CDuiString strText;//ä¸ä½¿ç”¨LPCTSTRï¼Œå¦åˆ™é™åˆ¶å¤ªå¤š by cddjr 2011/10/20
             if( pCallback ) strText = pCallback->GetItemText(this, m_iIndex, i);
             else strText.Assign(GetText(i));
             if( pInfo->bShowHtml )
