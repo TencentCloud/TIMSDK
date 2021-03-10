@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "UIRing.h"
 
 namespace DuiLib
@@ -56,7 +56,7 @@ namespace DuiLib
             Gdiplus::Graphics graphics(hDC);
             graphics.TranslateTransform(centerPos.X,centerPos.Y);
             graphics.RotateTransform(m_fCurAngle);
-            graphics.TranslateTransform(-centerPos.X, -centerPos.Y);//ªπ‘≠‘¥µ„
+            graphics.TranslateTransform(-centerPos.X, -centerPos.Y);//ËøòÂéüÊ∫êÁÇπ
             graphics.DrawImage(m_pBkimage,rcItem.left,rcItem.top,iWidth,iHeight);
         }
     }

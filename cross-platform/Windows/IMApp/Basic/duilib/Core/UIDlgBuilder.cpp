@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 
 namespace DuiLib {
 
@@ -10,8 +10,8 @@ namespace DuiLib {
     CControlUI* CDialogBuilder::Create(STRINGorID xml, LPCTSTR type, IDialogBuilderCallback* pCallback, 
         CPaintManagerUI* pManager, CControlUI* pParent)
     {
-        //×ÊÔ´IDÎª0-65535£¬Á½¸ö×Ö½Ú£»×Ö·û´®Ö¸ÕëÎª4¸ö×Ö½Ú
-        //×Ö·û´®ÒÔ<¿ªÍ·ÈÏÎªÊÇXML×Ö·û´®£¬·ñÔòÈÏÎªÊÇXMLÎÄ¼ş
+        //èµ„æºIDä¸º0-65535ï¼Œä¸¤ä¸ªå­—èŠ‚ï¼›å­—ç¬¦ä¸²æŒ‡é’ˆä¸º4ä¸ªå­—èŠ‚
+        //å­—ç¬¦ä¸²ä»¥<å¼€å¤´è®¤ä¸ºæ˜¯XMLå­—ç¬¦ä¸²ï¼Œå¦åˆ™è®¤ä¸ºæ˜¯XMLæ–‡ä»¶
         if(HIWORD(xml.m_lpstr) != NULL && *(xml.m_lpstr) != _T('<')) {
             LPCTSTR xmlpath = CResourceManager::GetInstance()->GetXmlPath(xml.m_lpstr);
             if (xmlpath != NULL) {
@@ -384,7 +384,7 @@ namespace DuiLib {
                 if ( !node.GetAttributeValue(_T("source"), szValue, cchLen) ) continue;
                 for ( int i = 0; i < count; i++ ) {
                     CDialogBuilder builder;
-                    if( m_pstrtype != NULL ) { // Ê¹ÓÃ×ÊÔ´dll£¬´Ó×ÊÔ´ÖĞ¶ÁÈ¡
+                    if( m_pstrtype != NULL ) { // ä½¿ç”¨èµ„æºdllï¼Œä»èµ„æºä¸­è¯»å–
                         WORD id = (WORD)_tcstol(szValue, &pstr, 10); 
                         pControl = builder.Create((UINT)id, m_pstrtype, m_pCallback, pManager, pParent);
                     }
@@ -399,7 +399,7 @@ namespace DuiLib {
                 strClass.Format(_T("C%sUI"), pstrClass);
                 pControl = dynamic_cast<CControlUI*>(CControlFactory::GetInstance()->CreateControl(strClass));
 
-                // ¼ì²é²å¼ş
+                // æ£€æŸ¥æ’ä»¶
                 if( pControl == NULL ) {
                     CStdPtrArray* pPlugins = CPaintManagerUI::GetPlugins();
                     LPCREATECONTROL lpCreateControl = NULL;
@@ -411,7 +411,7 @@ namespace DuiLib {
                         }
                     }
                 }
-                // »Øµô´´½¨
+                // å›æ‰åˆ›å»º
                 if( pControl == NULL && m_pCallback != NULL ) {
                     pControl = m_pCallback->CreateControl(pstrClass);
                 }
@@ -419,7 +419,7 @@ namespace DuiLib {
 
             if( pControl == NULL ) {
 #ifdef _DEBUG
-                DUITRACE(_T("Î´Öª¿Ø¼ş:%s"), pstrClass);
+                DUITRACE(_T("æœªçŸ¥æ§ä»¶:%s"), pstrClass);
 #else
                 continue;
 #endif
@@ -430,13 +430,13 @@ namespace DuiLib {
                 _Parse(&node, pControl, pManager);
             }
             // Attach to parent
-            // ÒòÎªÄ³Ğ©ÊôĞÔºÍ¸¸´°¿ÚÏà¹Ø£¬±ÈÈçselected£¬±ØĞëÏÈAddµ½¸¸´°¿Ú
+            // å› ä¸ºæŸäº›å±æ€§å’Œçˆ¶çª—å£ç›¸å…³ï¼Œæ¯”å¦‚selectedï¼Œå¿…é¡»å…ˆAddåˆ°çˆ¶çª—å£
             CTreeViewUI* pTreeView = NULL;
             if( pParent != NULL && pControl != NULL ) {
                 CTreeNodeUI* pParentTreeNode = static_cast<CTreeNodeUI*>(pParent->GetInterface(_T("TreeNode")));
                 CTreeNodeUI* pTreeNode = static_cast<CTreeNodeUI*>(pControl->GetInterface(_T("TreeNode")));
                 pTreeView = static_cast<CTreeViewUI*>(pParent->GetInterface(_T("TreeView")));
-                // TreeNode×Ó½Úµã
+                // TreeNodeå­èŠ‚ç‚¹
                 if(pTreeNode != NULL) {
                     if(pParentTreeNode) {
                         pTreeView = pParentTreeNode->GetTreeView();
@@ -456,11 +456,11 @@ namespace DuiLib {
                         }
                     }
                 }
-                // TreeNode×Ó¿Ø¼ş
+                // TreeNodeå­æ§ä»¶
                 else if(pParentTreeNode != NULL) {
                     pParentTreeNode->GetTreeNodeHoriznotal()->Add(pControl);
                 }
-                // ÆÕÍ¨¿Ø¼ş
+                // æ™®é€šæ§ä»¶
                 else {
                     if( pContainer == NULL ) pContainer = static_cast<IContainerUI*>(pParent->GetInterface(_T("IContainer")));
                     ASSERT(pContainer);

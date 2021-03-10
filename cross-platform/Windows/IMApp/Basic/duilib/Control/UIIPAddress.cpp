@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #pragma comment( lib, "ws2_32.lib" )
 
 DWORD GetLocalIpAddress()   
@@ -60,7 +60,7 @@ namespace DuiLib
         {
             INITCOMMONCONTROLSEX   CommCtrl;
             CommCtrl.dwSize=sizeof(CommCtrl);
-            CommCtrl.dwICC=ICC_INTERNET_CLASSES;//ָ��Class
+            CommCtrl.dwICC=ICC_INTERNET_CLASSES;//指定Class
             if(InitCommonControlsEx(&CommCtrl))
             {
                 RECT rcPos = CalPos();

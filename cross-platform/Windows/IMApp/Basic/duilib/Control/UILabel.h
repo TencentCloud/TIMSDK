@@ -1,4 +1,4 @@
-#ifndef __UILABEL_H__
+﻿#ifndef __UILABEL_H__
 #define __UILABEL_H__
 
 #pragma once

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "UILabel.h"
 
 #include <atlconv.h>
@@ -127,7 +127,7 @@ namespace DuiLib
             m_bNeedEstimateSize = false;
             m_szAvailableLast = szAvailable;
             m_cxyFixedLast = m_cxyFixed;
-            // ×Ô¶¯¼ÆËã¿í¶È
+            // è‡ªåŠ¨è®¡ç®—å®½åº¦
             if ((m_uTextStyle & DT_SINGLELINE) != 0) {
                 if (m_cxyFixedLast.cy == 0) {
                     m_cxyFixedLast.cy = m_pManager->GetFontInfo(m_iFont)->tm.tmHeight + 8;
@@ -147,7 +147,7 @@ namespace DuiLib
                     }
                 }
             }
-            // ×Ô¶¯¼ÆËã¸ß¶È
+            // è‡ªåŠ¨è®¡ç®—é«˜åº¦
             else {
                 if(m_cxyFixedLast.cy == 0) {
                     if(m_bAutoCalcHeight) {

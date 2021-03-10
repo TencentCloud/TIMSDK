@@ -1,4 +1,4 @@
-#ifndef __UIACTIVEX_H__
+﻿#ifndef __UIACTIVEX_H__
 #define __UIACTIVEX_H__
 
 #pragma once
