@@ -7,7 +7,7 @@
       :percentage="percentage"
       :color="percentage => (percentage === 100 ? '#67c23a' : '#409eff')"
     />
-  </message-bubble>  
+  </message-bubble>
 </template>
 
 <script>
@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.image-element 
+.image-element
   max-width 250px
   cursor zoom-in
 

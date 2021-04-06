@@ -41,6 +41,16 @@ export function filterCallingMessage(currentMessageList) {
     if (item.callType) {   // 对于自己伪造的消息不需要解析
       return
     }
+    if (item.type === TIM.TYPES.MSG_MERGER && item.payload.downloadKey !== '') {
+      let promise = window.tim.downloadMergerMessage(item)
+      promise.then(function(imResponse) {
+        // 下载成功后，SDK会更新 message.payload.messageList 等信息
+        item = imResponse
+      }).catch(function(imError) {
+        // 下载失败
+        console.warn('downloadMergerMessage error:', imError)
+      })
+    }
     if(item.type === TIM.TYPES.MSG_CUSTOM) {
       let payloadData = {}
       try {
@@ -75,3 +85,4 @@ export function filterCallingMessage(currentMessageList) {
 
   })
 }
+

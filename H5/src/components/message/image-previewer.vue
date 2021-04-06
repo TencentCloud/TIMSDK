@@ -32,7 +32,8 @@ export default {
       visible: false,
       zoom: 1,
       rotate: 0,
-      minZoom: 0.1
+      minZoom: 0.1,
+      urlFlag: false
     }
   },
   computed: {
@@ -46,15 +47,21 @@ export default {
       }
     },
     previewUrl() {
-      return this.formatUrl(this.imgUrlList[this.index])
+      if(this.urlFlag) {
+        return this.url
+      } else {
+        return this.formatUrl(this.imgUrlList[this.index])
+      }
+      // this.urlFlag ? return this.url :
     }
   },
   mounted() {
     this.$bus.$on('image-preview', this.handlePreview)
   },
   methods: {
-    handlePreview({ url }) {
+    handlePreview({ url, flag = undefined}) {
       this.url = url
+      this.urlFlag = flag ? 'merger' : false
       this.index = this.imgUrlList.findIndex(item => item === url)
       this.visible = true
     },
