@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_TUIKit_live_iOS_Professional'
-  spec.version      = '5.1.56'
+  spec.version      = '5.1.60'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -14,8 +14,8 @@ Pod::Spec.new do |spec|
   spec.summary      = 'TXIMSDK_TUIKit_live_iOS_Professional'
   spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
   
-  spec.dependency 'TXIMSDK_iOS', '5.1.56'
-  spec.dependency 'TXLiteAVSDK_Professional', '7.8.9519'
+  spec.dependency 'TXIMSDK_iOS', '5.1.60'
+  spec.dependency 'TXLiteAVSDK_Professional', '8.5.10022'
   spec.dependency 'MMLayout','0.2.0'
   spec.dependency 'SDWebImage','5.9.0'
   spec.dependency 'ReactiveObjC','3.1.1'
