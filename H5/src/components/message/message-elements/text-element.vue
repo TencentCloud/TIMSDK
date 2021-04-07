@@ -1,10 +1,10 @@
 <template>
   <message-bubble :isMine=isMine :message=message>
     <template v-for="(item, index) in contentList">
-      <span :key="index" v-if="item.name === 'text'">{{ item.text }}</span>
+      <span class="text-box" :key="index" v-if="item.name === 'text'">{{ item.text }}</span>
       <img v-else-if="item.name === 'img'" :src="item.src" width="20px" height="20px" :key="index"/>
     </template>
-  </message-bubble>  
+  </message-bubble>
   <!-- <div class="chat-bubble">
     <div class="message-content" :class="isMine ? 'message-send' : 'message-received'">
       <template v-for="(item, index) in contentList">
@@ -46,6 +46,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .text-box{
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+  }
 // .chat-bubble
 //   position relative
 //   .message-content
@@ -91,8 +96,8 @@ export default {
 //       transform: scale(0);
 //       transform-origin: top right;
 //       animation: bounce 500ms linear both;
-    
-// @keyframes bounce { 
+
+// @keyframes bounce {
 //   0% { transform: matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
 //   4.7% { transform: matrix3d(0.45, 0, 0, 0, 0, 0.45, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
 //   9.41% { transform: matrix3d(0.883, 0, 0, 0, 0, 0.883, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
@@ -105,6 +110,6 @@ export default {
 //   52.15% { transform: matrix3d(0.991, 0, 0, 0, 0, 0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
 //   63.26% { transform: matrix3d(1.007, 0, 0, 0, 0, 1.007, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
 //   85.49% { transform: matrix3d(0.999, 0, 0, 0, 0, 0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-//   100% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); } 
-// }      
+//   100% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+// }
 </style>

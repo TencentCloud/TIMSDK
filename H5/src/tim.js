@@ -2,6 +2,7 @@ import TIM from 'tim-js-sdk'
 import TIMUploadPlugin from 'tim-upload-plugin'
 
 // 初始化 SDK 实例
+
 const tim = TIM.create({
   SDKAppID: window.genTestUserSig('').SDKAppID
 })

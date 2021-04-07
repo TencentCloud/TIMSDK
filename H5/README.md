@@ -109,6 +109,21 @@ Web Demo 使用 `Vue` + `Vuex` + `Element-UI` 开发，你可以参考该 Demo �
 
 ### WebIM Demo Change Log
 
+#### 2020/04/06
+
+**Features**
+
+- Web Demo 支持消息合并转发
+- SDK 版本更新至 2.10.1
+
+#### 2020/03/11
+
+**Features**
+
+- Web Demo 支持自研 upload 插件
+
+- Web Demo 群 @ 功能
+
 #### 2020/12/04
 
 **Features**
