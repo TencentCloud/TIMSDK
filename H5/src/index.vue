@@ -457,4 +457,11 @@ body {
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.1);
 }
+/deep/ .el-popover {
+  width 800px
+  position fixed
+  left 0
+  right 0
+  margin auto
+}
 </style>

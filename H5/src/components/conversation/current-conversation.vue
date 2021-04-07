@@ -19,19 +19,59 @@
             >查看更多</el-button>
           </div>
           <div class="no-more" v-else>没有更多了</div>
-          <message-item v-for="message in currentMessageList" :key="message.ID" :message="message"/>
+          <el-checkbox-group v-model="checkList" v-if="selectMessage">
+            <el-checkbox :label="message.ID" v-for="message in currentMessageList" :key="message.ID" :disabled="message.status==='fail'">
+              <message-item   :message="message"/>
+            </el-checkbox>
+          </el-checkbox-group>
+          <message-item v-else v-for="message in currentMessageList" :key="message.ID" :message="message"/>
         </div>
         <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">回到最新位置</div>
       </div>
       <div class="footer" v-if="showMessageSendBox" >
-        <message-send-box/>
+        <div class="merger-btn"  v-if="selectMessage">
+          <div  class="relay-btn" @click="singleRelay">
+            <img class="relay-icon" src="../../assets/image/sig-relay.png">
+            <span class="relay-title">逐条转发</span>
+          </div>
+          <div  class="relay-btn" @click="mergerRelay">
+            <img class="relay-icon" src="../../assets/image/merger-relay.png">
+            <span class="relay-title">合并转发</span>
+          </div>
+          <div  class="relay-btn" @click="closeSelectMessage">
+            <img class="relay-icon" src="../../assets/image/close-relay.png">
+            <span class="relay-title">取消</span>
+          </div>
+        </div>
+        <message-send-box v-else/>
       </div>
+    </div>
+    <div>
+      <message-relay v-if="isShowConversationList "></message-relay>
     </div>
     <div class="profile" v-if="showConversationProfile" >
       <conversation-profile/>
     </div>
     <!-- 群成员资料组件 -->
     <member-profile-card />
+      <el-popover
+              ref="dropdown"
+              placement="left-start"
+              width="700"
+              v-model="mergerMessagePop">
+         <div class="pop-header">
+           <img src="../../assets/image/back.png" v-if="mergerMessageList.length >1" class="pop-back" @click="mergerMessageBack"/>
+           <span  class="title">{{mergerTitle}}</span>
+           <img src="../../assets/image/close.png" class="pop-close" @click="closeMessagePop"/>
+         </div>
+        <transition
+                name="custom-classes-transition"
+                enter-active-class="animated fadeIn"
+                leave-active-class="animated fadeOut"
+        >
+         <message-merger v-if="mergerMessagePop"></message-merger>
+        </transition>
+      </el-popover>
   </div>
 </template>
 
@@ -41,20 +81,34 @@ import MessageSendBox from '../message/message-send-box'
 import MessageItem from '../message/message-item'
 import ConversationProfile from './conversation-profile.vue'
 import MemberProfileCard from '../group/member-profile-card'
+import MessageMerger from '../message/merger-message/message-merger'
+import MessageRelay from '../message/merger-message/message-relay'
+import close from '../../assets/image/close.png'
+
 export default {
   name: 'CurrentConversation',
   components: {
     MessageSendBox,
     MessageItem,
     ConversationProfile,
-    MemberProfileCard
+    MemberProfileCard,
+    MessageMerger,
+    MessageRelay,
   },
   data() {
     return {
+      close: close,
       isShowScrollButtomTips: false,
       preScrollHeight: 0,
       showConversationProfile: false,
-      timeout: ''
+      timeout: '',
+      checkList: [],
+      // selectMessage: false,
+      selectedMessageList: [],
+      mergerMessagePop: false,
+      mergerMessage: null,
+      positionX: 0,
+      positionY: 0,
     }
   },
   computed: {
@@ -62,7 +116,10 @@ export default {
       currentConversation: state => state.conversation.currentConversation,
       currentUnreadCount: state => state.conversation.currentConversation.unreadCount,
       currentMessageList: state => state.conversation.currentMessageList,
-      isCompleted: state => state.conversation.isCompleted
+      isCompleted: state => state.conversation.isCompleted,
+      mergerMessageList: state => state.conversation.mergerMessageList,
+      isShowConversationList: state => state.conversation.isShowConversationList,
+      selectMessage: state => state.conversation.selectMessage,
     }),
     ...mapGetters(['toAccount', 'hidden']),
     // 是否显示当前会话组件
@@ -91,13 +148,33 @@ export default {
     },
     showMessageSendBox() {
       return this.currentConversation.type !== this.TIM.TYPES.CONV_SYSTEM
+    },
+    mergerTitle() {
+      if (this.mergerMessage) {
+        return this.mergerMessage.payload.title || '聊天记录'
+      } else {
+        return  '聊天记录'
+      }
     }
   },
+
   mounted() {
+    if (this.$refs.dropdown && this.$refs.dropdown.$el) {
+      this.$refs.dropdown.$el.addEventListener('mousedown', this.move)
+    }
     this.$bus.$on('image-loaded', this.onImageLoaded)
     this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom)
+    this.$bus.$on('mergerSelected', this.mergerSelectedHandler)
+    this.$bus.$on('mergerMessageShow', this.mergerShow)
+
+
     if (this.currentConversation.conversationID === '@TIM#SYSTEM') {
       return false
+    }
+  },
+  beforeDestroy() {
+    if (this.$refs.dropdown && this.$refs.dropdown.$el) {
+      this.$refs.dropdown.$el.removeEventListener('mousedown', this.move)
     }
   },
   updated() {
@@ -123,6 +200,73 @@ export default {
     }
   },
   methods: {
+    move(e) {
+      let odiv = this.$refs.dropdown.$el.children[0]//e.target        //获取目标元素
+      //算出鼠标相对元素的位置
+      let disX = e.clientX - odiv.offsetLeft
+      let disY = e.clientY - odiv.offsetTop
+      document.onmousemove = (e)=>{       //鼠标按下并移动的事件
+        //用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
+        let left = e.clientX - disX
+        let top = e.clientY - disY
+
+        //绑定元素位置到positionX和positionY上面
+        this.positionX = top
+        this.positionY = left
+
+        //移动当前元素
+        odiv.style.left = left + 'px'
+        odiv.style.top = top + 'px'
+      }
+      document.onmouseup = () => {
+        document.onmousemove = null
+        document.onmouseup = null
+      }
+    },
+    mergerMessageBack() {
+      let index = this.mergerMessageList.length - 2
+      this.$store.commit('updateMergerMessage', this.mergerMessageList[index])
+      // this.mergerMessageList.pop()
+    },
+    closeMessagePop() {
+      this.mergerMessagePop = false
+      this.$store.commit('resetMergerMessage')
+    },
+    closeSelectMessage() {
+      this.$store.commit('resetSelectedMessage', false)
+    },
+    mergerSelectedHandler() {
+      this.selectedMessageList = []
+      this.checkList = []
+      this.$store.commit('setSelectedMessage', true)
+    },
+    mergerShow(value) {
+      this.mergerMessagePop = true
+      this.mergerMessage = value
+      this.$store.commit('setMergerMessage', value)
+    },
+    mergerRelay() {
+      this.selectedMessage()
+      this.$store.commit('setRelayType', 3)
+    },
+    singleRelay() {
+      this.selectedMessage()
+      this.$store.commit('setRelayType', 2)
+    },
+    selectedMessage () {
+      let messageList = []
+      this.selectedMessageList = []
+      this.checkList.forEach((id) => {
+        messageList = this.currentMessageList.find((item) => {
+          return item.ID === id
+        })
+        this.selectedMessageList.push(messageList)
+      })
+
+      this.$store.commit('showConversationList', true)
+      //this.closeSelectMessage() // TODO
+      this.$store.commit('setSelectedMessageList', this.selectedMessageList)
+    },
     onScroll({ target: { scrollTop } }) {
       let messageListNode = this.$refs['message-list']
       if (!messageListNode) {
@@ -278,8 +422,108 @@ export default {
     color: $primary;
 .footer
   border-top: 1px solid $border-base;
+  .merger-btn {
+    height 150px
+    padding 3px 20px 20px 20px
+    box-sizing border-box
+    display flex
+    justify-content space-between
+    padding-top 50px
+    .relay-btn {
+      display flex
+      flex-direction column
+      justify-content center
+      align-items center
+      width 60px
+      height 50px
+      .relay-icon {
+        display block
+        border-radius 50%
+        width 30px
+        height 30px
+        background-color #ffffff
+        margin-bottom 5px
+      }
+      .relay-title {
+        display block
+        font-size 13px
+      }
+    }
+  }
+
 .show-more {
   text-align: right;
   padding: 10px 20px 0 0;
 }
+/deep/ .el-checkbox {
+  width 100%
+  font-weight 300
+  margin-right 0
+  white-space normal
+}
+/deep/ .el-checkbox__label {
+  width 100%
+  padding-right 20px
+  box-sizing border-box
+}
+
+/deep/ .el-popover {
+  cursor pointer
+  width 700px
+  position fixed
+  left 30vw
+  /*right 0*/
+  margin 0
+  background-color #F7F7F7
+  padding 0
+  top 15vh
+}
+/deep/ .el-checkbox__inner {
+  width 18px
+  height 18px
+  border-radius 50%
+}
+/deep/ .el-checkbox__inner::after {
+  height 8px
+  left 6px
+  top 2px
+}
+/deep/ .el-checkbox__label {
+  line-height normal
+  margin -10px 0
+  margin-left 10px
+}
+ /deep/ .el-checkbox__input {
+   position absolute
+   top 30px
+   left -10px
+ }
+  .pop-header {
+    /*display flex*/
+    position relative
+    /*justify-content space-between*/
+    margin-bottom 10px
+    border-bottom 1px solid #DEDEDE
+    background-color #F3F3F3
+    padding 8px 8px
+    & img {
+      display block
+      width 22px
+      height 22px
+      cursor pointer
+      position absolute
+      top 8px
+    }
+    .title {
+      display block
+      text-align center
+    }
+    .pop-close {
+      right 5px
+    }
+    .pop-back {
+      left  5px
+    }
+  }
+
 </style>

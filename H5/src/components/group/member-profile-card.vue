@@ -130,6 +130,7 @@ export default {
     .avatar {
       width: 60px;
       height: 60px;
+      min-width 60px;
       margin-right: 12px;
     }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="chat-bubble" @mousedown.stop @contextmenu.prevent>
-    <el-dropdown trigger="" ref="dropdown" v-if="!message.isRevoked" @command="handleCommand">
+    <el-dropdown trigger="" ref="dropdown" placement="bottom-start" v-if="!message.isRevoked" @command="handleCommand">
       <div style="display: flex">
         <div v-if="isMine && messageReadByPeer" class="message-status">
           <span>{{messageReadByPeer}}</span>
@@ -10,8 +10,9 @@
         </div>
       </div>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="revoke" v-if="isMine">撤回</el-dropdown-item>
-        <!-- <el-dropdown-item command="delete">删除</el-dropdown-item> -->
+        <el-dropdown-item command="revoke" v-if="isMine&&!isTimeout">撤回</el-dropdown-item>
+        <el-dropdown-item command="relay" v-show="message.status !=='fail'">转发</el-dropdown-item>
+        <el-dropdown-item command="merger" v-show="message.status !=='fail'">多选</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
     <div class="group-tip-element-wrapper" v-if="message.isRevoked">
@@ -22,11 +23,18 @@
 </template>
 
 <script>
-export default {
+
+  export default {
   name: 'MessageBubble',
+  components: {
+  },
   data() {
     return {
-      isTimeout: false
+      isTimeout: false,
+      showConversationList: false,
+      relayMessage: {},
+      selectedConversation: [],
+      testMergerMessage: {}
     }
   },
   props: {
@@ -53,6 +61,8 @@ export default {
     if (this.$refs.dropdown && this.$refs.dropdown.$el) {
       this.$refs.dropdown.$el.removeEventListener('mousedown', this.handleDropDownMousedown)
     }
+  },
+  updated() {
   },
   computed: {
     bubbleStyle() {
@@ -103,9 +113,6 @@ export default {
   },
   methods: {
     handleDropDownMousedown(e) {
-      if (!this.isMine || this.isTimeout) {
-        return
-      }
       if (e.buttons === 2) {
         if (this.$refs.dropdown.visible) {
           this.$refs.dropdown.hide()
@@ -126,7 +133,14 @@ export default {
             })
           })
           break
-        case 'delete':
+        case 'relay':
+          this.showConversationList = true
+          this.$store.commit('setRelayType', 1)
+          this.$store.commit('showConversationList', true)
+          this.$store.commit('setRelayMessage', this.message)
+          break
+        case 'merger':
+          this.$bus.$emit('mergerSelected',true)
           break
         default:
           break
@@ -148,8 +162,31 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .conversation-container {
+    position absolute
+    top 0
+    left 0px
+    width 100%
+    background-color #fff
+    z-index 999
+  }
+  .conversation-list-btn {
+    width 140px
+    display flex
+    float right
+    margin 10px 0
+    .conversation-btn {
+      cursor pointer
+      padding 6px 12px
+      background #00A4FF
+      color #ffffff
+      font-size 14px
+      border-radius 20px
+      margin-left 13px
+    }
+  }
 .chat-bubble
-  position relative
+  /*position relative*/
   .message-status
     display: flex;
     min-width: 25px;
@@ -167,6 +204,7 @@ export default {
     word-break break-all
     padding 10px
     box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
+    /*overflow hidden*/
     span
       white-space pre-wrap
       margin 0
@@ -209,12 +247,22 @@ export default {
   .el-dropdown {
     vertical-align: top;
     display flex
+    outline none
+    border none
+    /deep/ .focusing {
+      outline none
+      border none
+    }
   }
   .el-dropdown + .el-dropdown {
     margin-left: 15px;
   }
   .el-icon-arrow-down {
     font-size: 12px;
+  }
+
+  /deep/ .el-dropdown .el-dropdown-selfdefine:focus:active, .el-dropdown .el-dropdown-selfdefine:focus:not(.focusing) {
+    outline-width: 0;
   }
 .group-tip-element-wrapper
   background $white

@@ -14,7 +14,14 @@ const conversationModules = {
       memberList: [],
       type: 'C2C',   //C2C，GROUP
     },
-    audioCall: false
+    audioCall: false,
+    isShowConversationList: false,
+    selectedMessageList:[],
+    relayType: 1,   // 1: 转发  2: 逐条转发 3: 合并转发
+    mergerMessageList: [],
+    mergerMessage: {},
+    relayMessage: {},
+    selectMessage: false,
   },
   getters: {
     toAccount: state => {
@@ -60,12 +67,54 @@ const conversationModules = {
      * @param {Object} state
      * @param {Conversation} setCallingList
      */
-
     setCallingList(state, value) {
       state.callingInfo.memberList = value.memberList
       state.callingInfo.type = value.type
     },
 
+    /**
+     * 显示trtcCalling 语音通话
+     * @param {Object} state
+     * @param {Conversation} showAudioCall
+     */
+
+    showConversationList(state, value) {
+      state.isShowConversationList = value
+    },
+    setSelectedMessageList(state, value) {
+      state.selectedMessageList = value
+    },
+    setRelayType(state, value) {
+      state.relayType = value
+    },
+    setMergerMessage(state, value) {
+      state.mergerMessage = value
+      state.mergerMessageList = [...state.mergerMessageList, value]
+    },
+    setRelayMessage(state, value) {
+      state.relayMessage = value
+    },
+    updateMergerMessage(state, value) {
+      state.mergerMessage = value
+      state.mergerMessageList.pop()
+
+    },
+    setSelectedMessage(state, value) {
+      state.selectMessage = value
+    },
+    resetSelectedMessage(state, value) {
+      state.selectMessage = value
+      Object.assign(state, {
+        selectedMessageList: [],
+      })
+    },
+    resetMergerMessage(state, value) {
+      state.mergerMessagePop = value
+      Object.assign(state, {
+        mergerMessage: {},
+        mergerMessageList: [],
+      })
+    },
     /**
      * 显示trtcCalling 语音通话
      * @param {Object} state
@@ -182,6 +231,7 @@ const conversationModules = {
      */
     checkoutConversation(context, conversationID) {
       context.commit('resetCurrentMemberList')
+      context.commit('resetSelectedMessage', false)
       // 1.切换会话前，将切换前的会话进行已读上报
       if (context.state.currentConversation.conversationID) {
         const prevConversationID = context.state.currentConversation.conversationID

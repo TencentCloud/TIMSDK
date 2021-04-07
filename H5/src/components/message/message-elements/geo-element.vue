@@ -1,4 +1,5 @@
 <template>
+<!--  位置消息-->
   <message-bubble :isMine="isMine" :message=message>
     <a class="geo-element" :href="href" target="_blank" title="点击查看详情">
       <span class="el-icon-location-outline">{{payload.description}}</span>

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { MessageBox, Row, Col, Button, Input, Loading, Dialog, Dropdown, DropdownMenu, DropdownItem, Checkbox, CheckboxGroup } from 'element-ui'
+import { MessageBox, Row, Col, Button, Input, Loading, Dialog, Dropdown, DropdownMenu, DropdownItem, Checkbox, CheckboxGroup, Divider, Popover } from 'element-ui'
 import Avatar from './components/avatar.vue'
 import Index from './index.vue'
 import store from './store/index'
@@ -9,6 +9,8 @@ import TWebLive from 'tweblive'
 import VueClipboard from 'vue-clipboard2'
 import './assets/icon/iconfont.css'
 import './assets/icon/tim.css'
+import './assets/css/animate.css'
+
 import trtcCalling from './trtc-calling'
 import TRTCCalling from 'trtc-calling-js'
 
@@ -37,6 +39,8 @@ Vue.use(DropdownItem)
 Vue.use(VueClipboard)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
+Vue.use(Divider)
+Vue.use(Popover)
 Vue.component('avatar', Avatar)
 new Vue({
   render: h => h(Index)
