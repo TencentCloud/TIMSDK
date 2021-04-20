@@ -163,21 +163,6 @@
   </tr>
 </table>
 
-### 集成方式对比
-#### jcenter 集成 (Android 平台)
-如果使用标准版 SDK，请在 gradle 里添加如下依赖
-```
-dependencies {
-  api 'com.tencent.imsdk:imsdk:版本号'
-}
-```
-如果使用精简版 SDK，请在 gradle 里添加如下依赖
-```
-dependencies {
-  api 'com.tencent.imsdk:imsdk-smart:版本号'
-}
-```
-
 ## 最新精简版 5.3.425 @2021.04.19
 
 ### SDK
