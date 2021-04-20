@@ -8,7 +8,10 @@
 ### 精简版
 [最新 ImSDK_Smart.framework下载](https://im.sdk.qcloud.com/download/smart/5.3.425/ImSDK_Smart_5.3.425.framework.zip)
 
-### 精简版（支持 bitcode）
-[最新 ImSDK_Smart.framework下载](https://im.sdk.qcloud.com/download/smart/5.3.425/ImSDK_Smart_5.3.425_Bitcode.framework.zip)
+### 精简版 bitcode 版本
+[最新 ImSDK_Smart_Bitcode.framework下载](https://im.sdk.qcloud.com/download/smart/5.3.425/ImSDK_Smart_5.3.425_Bitcode.framework.zip)
+
+### 精简版 xcframework 版本（支持 mac catalyst）
+[最新 ImSDK_Smart.xcframework.zip下载](https://im.sdk.qcloud.com/download/smart/5.3.425/ImSDK_Smart_5.3.425.xcframework.zip)
 
 ### [标准版与精简版差异对比](https://github.com/tencentyun/TIMSDK#%E6%A0%87%E5%87%86%E7%89%88%E4%B8%8E%E7%B2%BE%E7%AE%80%E7%89%88%E5%B7%AE%E5%BC%82%E5%AF%B9%E6%AF%94)

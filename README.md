@@ -4,6 +4,38 @@
 
 腾讯云分流下载地址： [DOWNLOAD](https://github-1252463788.cos.ap-shanghai.myqcloud.com/imsdk/TIMSDK.zip)
 
+## SDK下载
+
+<table>
+<tr>
+<th width="94px" style="text-align:center" >终端 SDK</td>
+ <th width="0px" style="text-align:center" >下载地址</td>
+<th width="0px"  style="text-align:center">集成指引文档</td>
+<th width="175px" style="text-align:center">更新日志</td>
+</tr>
+<tr>
+<td style="text-align:center">Android  </td>
+<td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/Android/SDK">Github(推荐)</a></td>
+<td style="text-align:left" ><a href="https://cloud.tencent.com/document/product/269/37059">【极速集成】导入TUIKit (Android)</a><br><a href="https://cloud.tencent.com/document/product/269/32679">【常规集成】快速导入到工程 (Android)</a></td>
+<td style="text-align:center" rowspan='4'><a href="https://cloud.tencent.com/document/product/269/1606">更新日志(终端)</a> </td>
+</tr>
+<tr>
+<td style="text-align:center">iOS  </td>
+<td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/iOS/ImSDK">Github(推荐)</a></td>
+<td style="text-align:left" ><a href="https://cloud.tencent.com/document/product/269/37060">【极速集成】导入TUIKit (iOS)</a><br><a href="https://cloud.tencent.com/document/product/269/32675">【常规集成】快速导入到工程  (iOS)</a></td>
+</tr>
+<tr>
+<td style="text-align:center">Mac  </td>
+<td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/Mac/ImSDK">Github(推荐)</a></td>
+<td style="text-align:left" ><a href="https://cloud.tencent.com/document/product/269/32676">【常规集成】快速导入到工程 (Mac)</a></td>
+</tr>
+<tr>
+<td style="text-align:center">Windows  </td>
+<td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/cross-platform/Windows">Github(推荐)</a></td>
+<td style="text-align:left" ><a href="https://cloud.tencent.com/document/product/269/33489">【常规集成】快速导入到工程 (Windows)</a></td>
+</tr>
+</table>
+
 ## TUIKit集成
 
 <table >
