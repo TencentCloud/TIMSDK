@@ -178,30 +178,6 @@ dependencies {
 }
 ```
 
-#### cocoaPods 集成 (iOS 平台)
-如果使用标准版 SDK，请您按照如下方式设置 Podfile 文件
-
-```
-platform :ios, '8.0'
-source 'https://github.com/CocoaPods/Specs.git'
-
-target 'App' do
-pod 'TXIMSDK_iOS'
-end
-```
-
-如果使用精简版 SDK，请您按照如下方式设置 Podfile 文件
-```
-platform :ios, '8.0'
-source 'https://github.com/CocoaPods/Specs.git'
-
-target 'App' do
-pod 'TXIMSDK_Smart_iOS'
-end
-```
-
-更多集成方式请参考 <a href="https://cloud.tencent.com/document/product/269/32673">集成 SDK</a>
-
 ## 最新精简版 5.3.425 @2021.04.19
 
 ### SDK
