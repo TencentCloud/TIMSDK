@@ -12,7 +12,7 @@
 
 ### [标准版与精简版差异对比](https://github.com/tencentyun/TIMSDK#%E6%A0%87%E5%87%86%E7%89%88%E4%B8%8E%E7%B2%BE%E7%AE%80%E7%89%88%E5%B7%AE%E5%BC%82%E5%AF%B9%E6%AF%94)
 
-#### jcenter 集成 (Android 平台)
+#### maven 集成 (Android 平台)
  如果使用标准版 SDK，请在 gradle 里添加如下依赖
  ```
  dependencies {
