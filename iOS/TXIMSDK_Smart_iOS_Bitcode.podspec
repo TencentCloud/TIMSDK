@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Smart_iOS_Bitcode'
-  spec.version      = '5.3.425'
+  spec.version      = '5.3.435'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.qcloud.com/download/smart/5.3.425/ImSDK_Smart_5.3.425_Bitcode.framework.zip'}
+  spec.source = { :http => 'https://im.sdk.qcloud.com/download/smart/5.3.435/ImSDK_Smart_5.3.435_Bitcode.framework.zip'}
   spec.preserve_paths = '**/ImSDK_Smart.framework'
   spec.source_files = '**/ImSDK_Smart.framework/Headers/*.h'
   spec.public_header_files = '**/ImSDK_Smart.framework/Headers/*.h'
@@ -27,3 +27,4 @@ Pod::Spec.new do |spec|
   }
   spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 end
+
