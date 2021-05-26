@@ -1,4 +1,3 @@
-本文介绍如何快速跑通即时通信 IM 的体验 Demo。
 
 ## 步骤1：创建应用
 1. 登录即时通信 IM [控制台](https://console.cloud.tencent.com/avc)。
