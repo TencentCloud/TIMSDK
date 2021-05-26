@@ -1,4 +1,4 @@
-
+aaaaa
 ## 步骤1：创建应用
 1. 登录即时通信 IM [控制台](https://console.cloud.tencent.com/avc)。
 >?如果您已有应用，请记录其 SDKAppID 并 [配置应用](#step2)。
