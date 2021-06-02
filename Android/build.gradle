@@ -6,6 +6,7 @@ buildscript {
         maven { url "https://mirrors.tencent.com/repository/maven/tencent_public"}
         google()
         jcenter()
+        mavenCentral()
         maven {url 'http://developer.huawei.com/repo/'}
     }
     dependencies {
@@ -26,6 +27,7 @@ allprojects {
         maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
         google()
         jcenter()
+        mavenCentral()
         maven {url 'http://developer.huawei.com/repo/'}
         flatDir {
             dirs project(':tuikit-live').file('libs')
