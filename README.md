@@ -105,22 +105,22 @@
 
 
 
-## 标准版与精简版差异对比
-- SDK 从5.0版本开始新增精简版，原有版本称为标准版。
-- 精简版与标准版同时支持 V2 API，在接口能力上完全一致。
-- 精简版不再支持旧版 API，标准版继续支持旧版 API。
-- 在 SDK 体积和安装包增量上，精简版与标准版相比有大幅度缩减。
-- 精简版目前支持 Android 、iOS、Mac  三个平台，后续会逐步增加对 Windows 平台的支持。
-- 如果您没有接入过旧版 API，建议您直接使用 V2 API，选择精简版 SDK。
-- 如果您已经接入了旧版 API，推荐您升级到 V2 API，逐步切换到精简版 SDK。
+## 基础版与增强版差异对比
+- SDK 从 5.4 版本开始，原有精简版改名为增强版，原有标准版改名为基础版。
+- 增强版与基础版同时支持 V2 API；但增强版不再支持旧版 API，标准版继续支持旧版 API。
+- 如果您没有接入过旧版 API，建议您直接使用 V2 API，选择增强版 SDK。
+- 如果您已经接入了旧版 API，推荐您升级到 V2 API，逐步切换到增强版 SDK。
+- 在 SDK 体积和安装包增量上，增强版与标准版相比有大幅度缩减。
+- 在 SDK 功能支持上，增强版与标准版相比提供了更多新功能特性。
+- 后续新功能开发，只在增加版上提供支持；基础版后续只做例行维护与现有问题修复。
 
 ### SDK 体积大小对比
 <table>
   <tr>
     <th width="200px" style="text-align:center">平台</th>
     <th width="260px" style="text-align:center">对比项</th>
-    <th width="200px" style="text-align:center">标准版</th>
-    <th width="200px" style="text-align:center">精简版</th>
+    <th width="200px" style="text-align:center">基础版</th>
+    <th width="200px" style="text-align:center">增强版</th>
   </tr>
   <tr>
     <td style="text-align:center">Android</td>
@@ -141,8 +141,8 @@
   <tr>
     <th width="200px" style="text-align:center">平台</th>
     <th width="260px" style="text-align:center">架构</th>
-    <th width="200px" style="text-align:center">标准版</th>
-    <th width="200px" style="text-align:center">精简版</th>
+    <th width="200px" style="text-align:center">基础版</th>
+    <th width="200px" style="text-align:center">增强版</th>
   </tr>
   <tr>
     <td rowspan='2' style="text-align:center">apk 增量</td>
@@ -175,7 +175,7 @@
 - 获取会话未读总数时过滤掉设置了免打扰的群会话
 - 修复 iOS 平台 Http 请求偶现 Crash 的问题
 
-## 最新标准版 5.1.62 @2021.05.20
+## 最新基础版 5.1.62 @2021.05.20
 
 ### SDK
 
