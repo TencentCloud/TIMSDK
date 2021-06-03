@@ -2,14 +2,14 @@
 
 ## 下载地址
 
-### 标准版
+### 基础版
 [最新 ImSDKForMac.framework 下载](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_Mac_latest_framework.zip)
 
-### 精简版
-[最新 ImSDKForMac_Smart.framework 下载](https://im.sdk.qcloud.com/download/smart/5.3.435/ImSDKForMac_Smart_5.3.435.framework.zip)
+### 增强版
+[最新 ImSDKForMac_Plus.framework 下载](https://im.sdk.qcloud.com/download/plus/5.4.666/ImSDKForMac_Plus_5.4.666.framework.zip)
 
 ## cocoaPods 集成
-如果使用标准版 SDK，请您按照如下方式设置 Podfile 文件
+如果使用基础版 SDK，请您按照如下方式设置 Podfile 文件
 
 ```
 source 'https://github.com/CocoaPods/Specs.git'
@@ -22,14 +22,14 @@ end
 
 ```
 
-如果使用精简版 SDK，请您按照如下方式设置 Podfile 文件
+如果使用增强版 SDK，请您按照如下方式设置 Podfile 文件
 
 ```
 source 'https://github.com/CocoaPods/Specs.git'
 platform :macos, '10.10'
 
 target 'TUIKitDemo' do
-   pod 'TXIMSDK_Smart_Mac'
+   pod 'TXIMSDK_Plus_Mac'
 
 end
 
