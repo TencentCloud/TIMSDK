@@ -2,6 +2,8 @@ package com.tencent.qcloud.tim.uikit.modules.chat.base;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tim.uikit.modules.conversation.base.DraftInfo;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,9 +16,15 @@ public class ChatInfo implements Serializable {
     private String chatName;
     private int type = V2TIMConversation.V2TIM_C2C;
     private String id;
+    private String groupType;
     private boolean isTopChat;
+    private V2TIMMessage mLocateTimMessage;
 
     private static List<V2TIMGroupAtInfo> atInfoList;
+    /**
+     * 草稿
+     */
+    private DraftInfo draft;
 
     public ChatInfo() {
 
@@ -77,6 +85,20 @@ public class ChatInfo implements Serializable {
     }
 
     /**
+     * 获取群组类型
+     */
+    public String getGroupType() {
+        return groupType;
+    }
+
+    /**
+     * 设置群组类型
+     */
+    public void setGroupType(String groupType) {
+        this.groupType = groupType;
+    }
+
+    /**
      * 是否为置顶的会话
      *
      * @return
@@ -101,4 +123,21 @@ public class ChatInfo implements Serializable {
     public void setAtInfoList(List<V2TIMGroupAtInfo> atInfoList) {
         this.atInfoList = atInfoList;
     }
+
+    public void setLocateTimMessage(V2TIMMessage mLocateTimMessage) {
+        this.mLocateTimMessage = mLocateTimMessage;
+    }
+
+    public V2TIMMessage getLocateTimMessage() {
+        return mLocateTimMessage;
+    }
+
+    public void setDraft(DraftInfo draft) {
+        this.draft = draft;
+    }
+
+    public DraftInfo getDraft() {
+        return this.draft;
+    }
+
 }

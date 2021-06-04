@@ -1,8 +1,8 @@
 package com.tencent.qcloud.tim.tuikit.live.utils;
 
-import com.tencent.imsdk.log.QLog;
+import com.tencent.imsdk.common.IMLog;
 
-public class TUILiveLog extends QLog {
+public class TUILiveLog extends IMLog {
 
     private static final String PRE = "TUIKit-Live-";
 
@@ -17,7 +17,7 @@ public class TUILiveLog extends QLog {
      * @param strInfo 消息
      */
     public static void v(String strTag, String strInfo) {
-        QLog.v(mixTag(strTag), strInfo);
+        IMLog.v(mixTag(strTag), strInfo);
     }
 
     /**
@@ -27,7 +27,7 @@ public class TUILiveLog extends QLog {
      * @param strInfo 消息
      */
     public static void d(String strTag, String strInfo) {
-        QLog.d(mixTag(strTag), strInfo);
+        IMLog.d(mixTag(strTag), strInfo);
     }
 
     /**
@@ -37,7 +37,7 @@ public class TUILiveLog extends QLog {
      * @param strInfo 消息
      */
     public static void i(String strTag, String strInfo) {
-        QLog.i(mixTag(strTag), strInfo);
+        IMLog.i(mixTag(strTag), strInfo);
     }
 
     /**
@@ -47,7 +47,7 @@ public class TUILiveLog extends QLog {
      * @param strInfo 消息
      */
     public static void w(String strTag, String strInfo) {
-        QLog.w(mixTag(strTag), strInfo);
+        IMLog.w(mixTag(strTag), strInfo);
     }
 
     /**
@@ -57,7 +57,7 @@ public class TUILiveLog extends QLog {
      * @param strInfo 消息
      */
     public static void w(String strTag, String strInfo, Throwable e) {
-        QLog.w(mixTag(strTag), strInfo + e.getMessage());
+        IMLog.w(mixTag(strTag), strInfo + e.getMessage());
     }
 
     /**
@@ -67,7 +67,7 @@ public class TUILiveLog extends QLog {
      * @param strInfo 消息
      */
     public static void e(String strTag, String strInfo) {
-        QLog.e(mixTag(strTag), strInfo);
+        IMLog.e(mixTag(strTag), strInfo);
     }
 
 }

@@ -5,26 +5,35 @@ import android.content.Context;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.liteav.AVCallManager;
 import com.tencent.qcloud.tim.tuikit.live.base.Constants;
 import com.tencent.qcloud.tim.tuikit.live.base.TUILiveRequestCallback;
 import com.tencent.qcloud.tim.tuikit.live.component.floatwindow.FloatWindowLayout;
+import com.tencent.qcloud.tim.tuikit.live.helper.TUIKitLiveChatController;
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoom;
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoomCallback;
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoomDef;
-import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.impl.room.impl.TXRoomService;
 import com.tencent.qcloud.tim.tuikit.live.utils.TUILiveLog;
+import com.tencent.qcloud.tim.uikit.base.TUIChatControllerListener;
+import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
+import com.tencent.qcloud.tim.uikit.base.TUIConversationControllerListener;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TUIKitLive {
 
     private static final String TAG = "TUIKit";
 
-    private static Context              sAppContext;
-    private static long                 sSdkAppId;
-    private static V2TIMUserFullInfo    sLoginUserInfo;
-    private static boolean              sIsAttachedTUIKit = false;
+    private static Context sAppContext;
+    private static long sSdkAppId;
+    private static V2TIMUserFullInfo sLoginUserInfo;
+    private static boolean sIsAttachedTUIKit = false;
+
+    private static TUIChatControllerListener sTUIChatControllerListener;
+    private static TUIConversationControllerListener sTUIConversationControllerListener;
 
     /**
      * TUIKitLive的初始化函数
@@ -33,12 +42,28 @@ public class TUIKitLive {
      */
     public static void init(Context context) {
         sAppContext = context;
+        registerListeners();
+    }
+
+    private static void registerListeners() {
+        sTUIChatControllerListener = new TUIKitLiveChatController();
+        sTUIConversationControllerListener = new TUIKitLiveChatController.TUIKitLiveConversationController();
+        TUIKitListenerManager.getInstance().addChatListener(sTUIChatControllerListener);
+        TUIKitListenerManager.getInstance().addConversationListener(sTUIConversationControllerListener);
+    }
+
+    private static void unregisterDelegates() {
+        TUIKitListenerManager.getInstance().removeChatListener(sTUIChatControllerListener);
+        TUIKitListenerManager.getInstance().removeMessageListener(sTUIConversationControllerListener);
+        sTUIChatControllerListener = null;
+        sTUIConversationControllerListener = null;
     }
 
     /**
      * 释放一些资源等，一般可以在退出登录时调用
      */
     public static void unInit() {
+        unregisterDelegates();
     }
 
     /**
@@ -50,7 +75,7 @@ public class TUIKitLive {
         return sAppContext;
     }
 
-    public static void login(int appid, final String userId, String userSig, final LoginCallback callback) {
+    public static void login(final int appid, final String userId, final String userSig, final LoginCallback callback) {
         TUILiveLog.d(TAG, "sIsAttachedTUIKit: " + sIsAttachedTUIKit);
         sSdkAppId = appid;
         TRTCLiveRoomDef.TRTCLiveRoomConfig config = new TRTCLiveRoomDef.TRTCLiveRoomConfig();
@@ -58,13 +83,13 @@ public class TUIKitLive {
         TRTCLiveRoom.sharedInstance(sAppContext).login(appid, userId, userSig, config, new TRTCLiveRoomCallback.ActionCallback() {
             @Override
             public void onCallback(int code, String msg) {
-                if (callback != null){
+                if (callback != null) {
                     callback.onCallback(code, msg);
                 }
             }
         });
-
         refreshLoginUserInfo(null);
+        AVCallManager.getInstance().init(appid, userId, userSig);
     }
 
     public static void refreshLoginUserInfo(final TUILiveRequestCallback callback) {
@@ -72,7 +97,7 @@ public class TUIKitLive {
         V2TIMManager.getInstance().getUsersInfo(Arrays.asList(userId), new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
             @Override
             public void onError(int code, String desc) {
-                if (callback != null){
+                if (callback != null) {
                     callback.onError(code, desc);
                 }
             }
@@ -85,7 +110,7 @@ public class TUIKitLive {
 
                 sLoginUserInfo = v2TIMUserFullInfos.get(0);
 
-                if (callback != null){
+                if (callback != null) {
                     callback.onSuccess(v2TIMUserFullInfos);
                 }
             }
@@ -106,9 +131,10 @@ public class TUIKitLive {
             public void onCallback(int code, String msg) {
             }
         });
+        AVCallManager.getInstance().unInit();
     }
 
-    public static V2TIMUserFullInfo getLoginUserInfo(){
+    public static V2TIMUserFullInfo getLoginUserInfo() {
         return sLoginUserInfo;
     }
 
@@ -116,7 +142,8 @@ public class TUIKitLive {
         return sSdkAppId;
     }
 
-    public interface LoginCallback  {
+    public interface LoginCallback {
         void onCallback(int code, String msg);
     }
+
 }

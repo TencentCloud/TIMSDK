@@ -12,8 +12,8 @@ public class TUIKitConstants {
     public static final String IMAGE_HEIGHT = "image_height";
     public static final String VIDEO_TIME = "video_time";
     public static final String CAMERA_VIDEO_PATH = "camera_video_path";
-    public static final String IMAGE_DATA = "image_data";
-    public static final String SELF_MESSAGE = "self_message";
+    public static final String IMAGE_PREVIEW_PATH = "image_preview_path";
+    public static final String IS_ORIGIN_IMAGE = "is_origin_image";
     public static final String CAMERA_TYPE = "camera_type";
     public static String SD_CARD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static String APP_DIR = TUIKit.getConfigs().getGeneralConfig().getAppCacheDir() != null
@@ -29,6 +29,22 @@ public class TUIKitConstants {
     public static String CRASH_LOG_DIR = APP_DIR + "/crash/";
     public static String UI_PARAMS = "ilive_ui_params";
     public static String SOFT_KEY_BOARD_HEIGHT = "soft_key_board_height";
+
+    public static final String FORWARD_SELECT_CONVERSATION_KEY = "forward_select_conversation_key";
+    public static final int FORWARD_SELECT_ACTIVTY_CODE = 101;
+    public static final int FORWARD_SELECT_MEMBERS_CODE = 102;
+    public static final int FORWARD_CREATE_GROUP_CODE = 103;
+    public static final String FORWARD_MERGE_MESSAGE_KEY = "forward_merge_message_key";
+
+    public static final String CHAT_INFO = "chatInfo";
+    public static final String SEARCH_LIST_TYPE = "search_list_type";
+    public static final String SEARCH_DATA_RESULT = "search_data_result";
+    public static final String SEARCH_KEY_WORDS = "search_key_words";
+    public static final String SEARCH_DATA_BEAN = "search_data_bean";
+
+    public static final int GET_MESSAGE_FORWARD = 0;
+    public static final int GET_MESSAGE_BACKWARD = 1;
+    public static final int GET_MESSAGE_TWO_WAY = 2;
 
     /**
      * 1: 仅仅是一个带链接的文本消息
@@ -97,7 +113,7 @@ public class TUIKitConstants {
         public static final String TYPE_PRIVATE = "Private";
         public static final String TYPE_WORK = "Work";
         public static final String TYPE_PUBLIC = "Public";
-        // 新版本的会议（Work）等同于旧版本的聊天室（ChatRoom）
+        // 新版本的会议（Meeting）等同于旧版本的聊天室（ChatRoom）
         public static final String TYPE_CHAT_ROOM = "ChatRoom";
         public static final String TYPE_MEETING = "Meeting";
     }

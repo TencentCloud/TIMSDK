@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:paddingTop="12dp"
+    android:paddingLeft="14.85dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/conversation_avatar_height" >
+
+        <ImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="@dimen/conversation_avatar_width"
+            android:layout_height="@dimen/conversation_avatar_height"
+            android:clickable="false"
+            android:focusable="false"
+            android:src="@drawable/default_user_icon"/>
+
+        <RelativeLayout
+            android:layout_toRightOf="@id/ivAvatar"
+            android:layout_width="match_parent"
+            android:paddingTop="1.37dp"
+            android:paddingLeft="11.43dp"
+            android:paddingRight="18.11dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/conversation_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/black_font_color"
+                android:text="aaa"
+                android:textSize="16.3sp" />
+
+            <TextView
+                android:id="@+id/conversation_sub_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="48dp"
+                android:layout_marginBottom="2dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="aaa"
+                android:textColor="@color/list_bottom_text_bg"
+                android:textSize="12.86sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:background="@color/split_lint_color" />
+
+</LinearLayout>

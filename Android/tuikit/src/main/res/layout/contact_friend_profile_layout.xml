@@ -74,6 +74,14 @@
         app:isSwitch="true"
         app:name="@string/profile_black" />
 
+    <com.tencent.qcloud.tim.uikit.component.LineControllerView
+        android:id="@+id/msg_rev_opt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:isSwitch="true"
+        app:name="@string/profile_msgrev_opt" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

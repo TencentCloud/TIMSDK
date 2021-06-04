@@ -25,7 +25,9 @@ import java.util.regex.Pattern;
 
 public class TIMMentionEditText extends EditText {
     public static final String TIM_METION_TAG = "@";
+    public static final String TIM_METION_TAG_FULL = "＠";
     public static final Pattern TIM_MENTION_PATTERN = Pattern.compile("@[^\\s]+\\s");
+    public static final Pattern TIM_MENTION_PATTERN_FULL = Pattern.compile("＠[^\\s]+\\s");
 
     private Map<String, Pattern> mPatternMap = new HashMap<>();
     private int mTIMMentionTextColor;
@@ -125,6 +127,7 @@ public class TIMMentionEditText extends EditText {
         //mTIMMentionTextColor = Color.RED;
         mPatternMap.clear();
         mPatternMap.put(TIM_METION_TAG, TIM_MENTION_PATTERN);
+        mPatternMap.put(TIM_METION_TAG_FULL, TIM_MENTION_PATTERN_FULL);
         //setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         addTextChangedListener(new MentionTextWatcher());
     }

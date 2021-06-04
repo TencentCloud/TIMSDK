@@ -82,6 +82,13 @@
                     app:name="@string/modify_signature" />
 
                 <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                    android:id="@+id/modify_birthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:name="@string/modify_birthday" />
+
+                <com.tencent.qcloud.tim.uikit.component.LineControllerView
                     android:id="@+id/modify_allow_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

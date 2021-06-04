@@ -2,10 +2,9 @@ package com.tencent.qcloud.tim.demo.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -178,6 +177,7 @@ public class StartGroupChatActivity extends BaseActivity {
                 ChatInfo chatInfo = new ChatInfo();
                 chatInfo.setType(V2TIMConversation.V2TIM_GROUP);
                 chatInfo.setId(data.toString());
+                chatInfo.setGroupType(groupInfo.getGroupType());
                 chatInfo.setChatName(groupInfo.getGroupName());
                 Intent intent = new Intent(DemoApplication.instance(), ChatActivity.class);
                 intent.putExtra(Constants.CHAT_INFO, chatInfo);

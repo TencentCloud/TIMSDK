@@ -1,24 +1,30 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.message;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.uikit.base.IBaseViewHolder;
+import com.tencent.qcloud.tim.uikit.base.TUIChatControllerListener;
+import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatProvider;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.GroupMessageHelper;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.IOnCustomMessageDrawListener;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.IGroupMessageClickListener;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageBaseHolder;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageContentHolder;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageCustomHolder;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageEmptyHolder;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageHeaderHolder;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
-import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
 import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -29,24 +35,73 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     private boolean mLoading = true;
     private MessageLayout mRecycleView;
     private List<MessageInfo> mDataSource = new ArrayList<>();
-    private MessageLayout.OnItemClickListener mOnItemClickListener;
-    private IOnCustomMessageDrawListener mOnCustomMessageDrawListener;
-    private IGroupMessageClickListener mIGroupMessageClickListener;
+    private MessageLayout.OnItemLongClickListener mOnItemLongClickListener;
 
-    public void setOnCustomMessageDrawListener(IOnCustomMessageDrawListener listener) {
-        mOnCustomMessageDrawListener = listener;
+    //消息转发
+    private HashMap<String, Boolean> mSelectedPositions = new HashMap<String, Boolean>();
+    private boolean isShowMutiSelectCheckBox = false;
+
+    private int mHighShowPosition;
+
+    //获得选中条目的结果，msgid
+    public ArrayList<MessageInfo> getSelectedItem() {
+        if (mSelectedPositions == null || mSelectedPositions.size() == 0) {
+            return null;
+        }
+        ArrayList<MessageInfo> selectList = new ArrayList<>();
+        for (int i = 0; i < getItemCount()-1; i++) {
+            if (isItemChecked(mDataSource.get(i).getId())) {
+                selectList.add(mDataSource.get(i));
+            }
+        }
+
+        return selectList;
     }
 
-    public void setIGroupMessageClickListener(IGroupMessageClickListener IGroupMessageClickListener) {
-        mIGroupMessageClickListener = IGroupMessageClickListener;
+    public boolean getShowMutiSelectCheckBox(){
+        return isShowMutiSelectCheckBox;
     }
 
-    public MessageLayout.OnItemClickListener getOnItemClickListener() {
-        return this.mOnItemClickListener;
+    public void setShowMutiSelectCheckBox(boolean show){
+        isShowMutiSelectCheckBox = show;
+
+        if(!isShowMutiSelectCheckBox && mSelectedPositions != null){
+            mSelectedPositions.clear();
+        }
     }
 
-    public void setOnItemClickListener(MessageLayout.OnItemClickListener listener) {
-        this.mOnItemClickListener = listener;
+    //设置给定位置条目的选择状态
+    public void setItemChecked(String msgID, boolean isChecked) {
+        if (mSelectedPositions == null) {
+            return;
+        }
+
+        mSelectedPositions.put(msgID, isChecked);
+    }
+
+    //根据位置判断条目是否选中
+    private boolean isItemChecked(String id) {
+        if (mSelectedPositions.size() <= 0) {
+            return false;
+        }
+
+        if (mSelectedPositions.containsKey(id)) {
+            return mSelectedPositions.get(id);
+        } else {
+            return false;
+        }
+    }
+
+    public MessageLayout.OnItemLongClickListener getOnItemClickListener() {
+        return this.mOnItemLongClickListener;
+    }
+
+    public void setOnItemClickListener(MessageLayout.OnItemLongClickListener listener) {
+        this.mOnItemLongClickListener = listener;
+    }
+
+    public void setHighShowPosition(int mHighShowPosition) {
+        this.mHighShowPosition = mHighShowPosition;
     }
 
     @NonNull
@@ -59,31 +114,116 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         final MessageInfo msg = getItem(position);
-        MessageBaseHolder baseHolder = (MessageBaseHolder) holder;
-        baseHolder.setOnItemClickListener(mOnItemClickListener);
-        switch (getItemViewType(position)) {
-            case MSG_TYPE_HEADER_VIEW:
-                ((MessageHeaderHolder) baseHolder).setLoadingStatus(mLoading);
-                break;
-            case MessageInfo.MSG_TYPE_TEXT:
-            case MessageInfo.MSG_TYPE_IMAGE:
-            case MessageInfo.MSG_TYPE_VIDEO:
-            case MessageInfo.MSG_TYPE_CUSTOM_FACE:
-            case MessageInfo.MSG_TYPE_AUDIO:
-            case MessageInfo.MSG_TYPE_FILE:
-                break;
-            default:
-                break;
-        }
-        baseHolder.layoutViews(msg, position);
-        // 对于自定义消息，需要在正常布局之后，交给外部调用者重新加载渲染
-        if (getItemViewType(position) == MessageInfo.MSG_TYPE_CUSTOM) {
-            MessageCustomHolder customHolder = (MessageCustomHolder) holder;
-            if (MessageInfoUtil.isLive(msg)) {
-                new GroupMessageHelper(mIGroupMessageClickListener).onDraw(customHolder, msg);
-            } else if (mOnCustomMessageDrawListener != null) {
-                mOnCustomMessageDrawListener.onDraw(customHolder, msg);
+        if (holder instanceof MessageBaseHolder) {
+            final MessageBaseHolder baseHolder = (MessageBaseHolder) holder;
+            baseHolder.setOnItemClickListener(mOnItemLongClickListener);
+            String msgId = "";
+            if (msg != null) {
+                msgId = msg.getId();
             }
+
+            switch (getItemViewType(position)) {
+                case MSG_TYPE_HEADER_VIEW:
+                    ((MessageHeaderHolder) baseHolder).setLoadingStatus(mLoading);
+                    break;
+                case MessageInfo.MSG_TYPE_TEXT:
+                case MessageInfo.MSG_TYPE_IMAGE:
+                case MessageInfo.MSG_TYPE_VIDEO:
+                case MessageInfo.MSG_TYPE_CUSTOM_FACE:
+                case MessageInfo.MSG_TYPE_AUDIO:
+                case MessageInfo.MSG_TYPE_FILE:
+                case MessageInfo.MSG_TYPE_MERGE: {
+                    if (position == mHighShowPosition) {
+                    /*ValueAnimator animator = ValueAnimator.ofInt(TUIKit.getAppContext().getResources().getColor(R.color.chat_background_color),TUIKit.getAppContext().getResources().getColor(R.color.green));
+                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            int curValue = (int)animation.getAnimatedValue();
+                            ((MessageEmptyHolder) baseHolder).mContentLayout.setBackgroundColor(curValue);
+                        }
+                    });
+                    animator.setRepeatMode(ValueAnimator.REVERSE);
+                    animator.setRepeatCount(ValueAnimator.INFINITE);
+                    animator.setDuration(3000);
+                    animator.start();*/
+
+                        final Handler mHandlerData = new Handler();
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                ((MessageEmptyHolder) baseHolder).mContentLayout.setBackgroundColor(TUIKit.getAppContext().getResources().getColor(R.color.line));
+                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((MessageEmptyHolder) baseHolder).mContentLayout.setBackgroundColor(TUIKit.getAppContext().getResources().getColor(R.color.chat_background_color));
+                                    }
+                                }, 600);
+                            }
+                        };
+
+                        mHandlerData.postDelayed(runnable, 200);
+                    }
+                }
+                break;
+                default:
+                    break;
+            }
+            baseHolder.layoutViews(msg, position);
+            setCheckBoxStatus(position, msgId, baseHolder);
+        }
+        // 对于自定义消息，需要在正常布局之后，交给外部调用者重新加载渲染
+        if (holder instanceof IBaseViewHolder) {
+            if (holder instanceof MessageCustomHolder) {
+                ((MessageCustomHolder) holder).setShowMutiSelect(isShowMutiSelectCheckBox);
+            }
+            bindCustomHolder(position, msg, (IBaseViewHolder) holder);
+        }
+    }
+
+    private void bindCustomHolder(int position, MessageInfo msg, IBaseViewHolder customHolder) {
+        for(TUIChatControllerListener chatListener : TUIKitListenerManager.getInstance().getTUIChatListeners()) {
+            if (chatListener.bindCommonViewHolder(customHolder, msg, position)) {
+                return;
+            }
+        }
+    }
+
+    // 设置多选框的选中状态和点击事件
+    private void setCheckBoxStatus(final int position, final String msgId, MessageBaseHolder baseHolder) {
+        if (!(baseHolder instanceof MessageEmptyHolder) || ((MessageEmptyHolder) baseHolder).mMutiSelectCheckBox == null) {
+            return;
+        }
+        if (!isShowMutiSelectCheckBox) {
+            ((MessageEmptyHolder) baseHolder).mMutiSelectCheckBox.setVisibility(View.GONE);
+        } else {
+            ((MessageEmptyHolder) baseHolder).mMutiSelectCheckBox.setVisibility(View.VISIBLE);
+
+            //设置条目状态
+            ((MessageEmptyHolder) baseHolder).mMutiSelectCheckBox.setChecked(isItemChecked(msgId));
+            //checkBox的监听
+            ((MessageEmptyHolder) baseHolder).mMutiSelectCheckBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isItemChecked(msgId)) {
+                        setItemChecked(msgId, false);
+                    } else {
+                        setItemChecked(msgId, true);
+                    }
+                }
+            });
+
+            //条目view的监听
+            baseHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isItemChecked(msgId)) {
+                        setItemChecked(msgId, false);
+                    } else {
+                        setItemChecked(msgId, true);
+                    }
+                    notifyItemChanged(position);
+                }
+            });
         }
     }
 
@@ -120,7 +260,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 } else if (type == MessageLayout.DATA_CHANGE_TYPE_ADD_BACK) {
                     notifyItemRangeInserted(mDataSource.size() + 1, value);
                     notifyDataSetChanged();
-                    mRecycleView.scrollToEnd();
+                    mRecycleView.onMsgAddBack();
                 } else if (type == MessageLayout.DATA_CHANGE_TYPE_UPDATE) {
                     notifyItemChanged(value + 1);
                 } else if (type == MessageLayout.DATA_CHANGE_TYPE_LOAD || type == MessageLayout.DATA_CHANGE_TYPE_ADD_FRONT) {
@@ -138,7 +278,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 } else if (type == MessageLayout.DATA_CHANGE_TYPE_DELETE) {
                     notifyItemRemoved(value + 1);
                     notifyDataSetChanged();
-                    mRecycleView.scrollToEnd();
+                } else if (type == MessageLayout.DATA_CHANGE_SCROLL_TO_POSITION) {
+                    notifyDataSetChanged();
+                    mRecycleView.scrollToPositon(value);
+                    mRecycleView.setHighShowPosition(value);
                 }
             }
         }, 100);
@@ -166,6 +309,22 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             provider.setAdapter(this);
         }
         notifyDataSourceChanged(MessageLayout.DATA_CHANGE_TYPE_REFRESH, getItemCount());
+
+        mSelectedPositions.clear();
+    }
+
+    public int getLastMessagePosition(V2TIMMessage lastlastMessage) {
+        int positon = 0;
+        if (mDataSource == null || mDataSource.isEmpty()) {
+            return positon;
+        }
+
+        for (int i =0; i < mDataSource.size(); i++) {
+            if (mDataSource.get(i).getTimMessage().getMsgID() == lastlastMessage.getMsgID()) {
+                positon = i;
+            }
+        }
+        return positon + 1;
     }
 
     public MessageInfo getItem(int position) {

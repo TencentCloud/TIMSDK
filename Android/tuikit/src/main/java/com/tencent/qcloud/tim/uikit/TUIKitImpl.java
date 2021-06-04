@@ -20,9 +20,6 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
-import com.tencent.liteav.AVCallManager;
-import com.tencent.liteav.login.ProfileManager;
-import com.tencent.liteav.login.UserModel;
 import com.tencent.qcloud.tim.uikit.base.GroupListenerConstants;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
@@ -111,13 +108,6 @@ public class TUIKitImpl {
 
             @Override
             public void onSuccess() {
-                if (TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
-                    UserModel self = new UserModel();
-                    self.userId = userid;
-                    self.userSig = usersig;
-                    ProfileManager.getInstance().setUserModel(self);
-                    AVCallManager.getInstance().init(sAppContext);
-                }
                 loginTUIKitLive(TUIKitConfigs.getConfigs().getGeneralConfig().getSDKAppId(),
                         userid,
                         usersig);
@@ -136,11 +126,6 @@ public class TUIKitImpl {
             @Override
             public void onSuccess() {
                 callback.onSuccess(null);
-                if (!TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
-                    return;
-                }
-                Intent intent = new Intent(sAppContext, AVCallManager.class);
-                sAppContext.stopService(intent);
                 logoutTUIKitLive();
             }
         });
@@ -223,6 +208,11 @@ public class TUIKitImpl {
                 for (IMEventListener listener : sIMEventListeners) {
                     listener.onRefreshConversation(conversationList);
                 }
+            }
+
+            @Override
+            public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
+                ConversationManagerKit.getInstance().updateTotalUnreadMessageCount(totalUnreadCount);
             }
         });
 
@@ -394,10 +384,6 @@ public class TUIKitImpl {
 
     public static void unInit() {
         ConversationManagerKit.getInstance().destroyConversation();
-        if (!TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
-            return;
-        }
-        AVCallManager.getInstance().unInit();
         unInitTUIKitLive();
     }
 

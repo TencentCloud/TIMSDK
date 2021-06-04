@@ -272,7 +272,6 @@ public class PermissionUtils {
         };
         return permissions;
     }
-
     public interface PermissionRequestSuccessCallBack {
         /**
          * 用户已授予权限

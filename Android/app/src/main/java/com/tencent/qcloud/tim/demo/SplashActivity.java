@@ -3,6 +3,8 @@ package com.tencent.qcloud.tim.demo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -14,6 +16,7 @@ import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageBean;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageContainerBean;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 public class SplashActivity extends Activity {
@@ -70,18 +73,22 @@ public class SplashActivity extends Activity {
     }
 
     private void startLogin() {
-        Intent intent = new Intent(SplashActivity.this, LoginForDevActivity.class);
+Intent intent = new Intent(SplashActivity.this, LoginForDevActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void startMain() {
+        DemoLog.i(TAG, "startMain" );
+
         OfflineMessageBean bean = OfflineMessageDispatcher.parseOfflineMessage(getIntent());
         if (bean != null) {
+            DemoLog.i(TAG, "startMain offlinePush bean is " + bean);
             OfflineMessageDispatcher.redirect(bean);
             finish();
             return;
         }
+        DemoLog.i(TAG, "startMain offlinePush bean is null" );
 
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         startActivity(intent);

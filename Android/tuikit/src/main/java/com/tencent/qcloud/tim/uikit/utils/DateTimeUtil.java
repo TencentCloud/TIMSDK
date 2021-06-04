@@ -5,6 +5,8 @@ import android.content.Context;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -107,5 +109,23 @@ public class DateTimeUtil {
         } else {
             return "00:" + (second > 10 ? (second + "") : ("0" + second));
         }
+    }
+
+    /**
+     * 将字符串转为时间戳
+     * @param dateString
+     * @param pattern
+     * @return
+     */
+    public static long getStringToDate(String dateString, String pattern) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+        Date date = new Date();
+        try{
+            date = dateFormat.parse(dateString);
+        } catch(ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return date.getTime();
     }
 }

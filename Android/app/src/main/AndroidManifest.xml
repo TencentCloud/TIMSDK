@@ -63,7 +63,7 @@
 
     <application
         android:name="com.tencent.qcloud.tim.demo.DemoApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -97,6 +97,8 @@
             android:windowSoftInputMode="adjustResize|stateHidden">
 
             <!-- 华为离线推送打开应用内页面 -->
+            <!-- 小米离线推送打开应用内页面 -->
+            <!-- VIVO离线推送打开应用内页面 -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <data
@@ -118,6 +120,11 @@
                 <data
                     android:scheme="pushscheme"
                     android:host="com.tencent.qcloud"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="com.tencent.action.chat.activity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
         </activity>
@@ -150,6 +157,10 @@
             android:name="com.tencent.qcloud.tim.demo.menu.StartGroupChatActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <activity
+            android:name="com.tencent.qcloud.tim.demo.forward.ForwardChatActivity"
+            android:screenOrientation="portrait" />
 
         <!-- ********小米推送service和receiver设置start******** -->
         <service
@@ -218,7 +229,7 @@
 
         <meta-data tools:replace="android:value"
             android:name="com.huawei.hms.client.appid"
-            android:value="" />
+android:value= ""/>
         <!-- ********华为推送设置end******** -->
 
         <!-- ********魅族推送设置start******** -->
@@ -262,10 +273,10 @@
 
         <meta-data tools:replace="android:value"
             android:name="com.vivo.push.api_key"
-            android:value="" />
+android:value= ""/>
         <meta-data tools:replace="android:value"
             android:name="com.vivo.push.app_id"
-            android:value="" />
+android:value= ""/>
         <!-- ********vivo推送设置end******** -->
 
         <!-- ********海外google云消息传递start******** -->

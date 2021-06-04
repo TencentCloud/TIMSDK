@@ -6,12 +6,14 @@ import android.text.TextUtils;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tim.uikit.base.IBaseInfo;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 
-public class MessageInfo {
+public class MessageInfo implements IBaseInfo, Serializable {
     private final String TAG = "MessageInfo";
 
     public static final int MSG_TYPE_MIME = 0x1;
@@ -49,6 +51,10 @@ public class MessageInfo {
      * 自定义消息
      */
     public static final int MSG_TYPE_CUSTOM = 0x80;
+    /**
+     * 转发消息
+     */
+    public static final int MSG_TYPE_MERGE = 0x81;
 
     /**
      * 提示类信息
@@ -82,10 +88,6 @@ public class MessageInfo {
      * 群通知更新提示消息
      */
     public static final int MSG_TYPE_GROUP_MODIFY_NOTICE = 0x107;
-    /**
-     * 群音视频呼叫提示消息
-     */
-    public static final int MSG_TYPE_GROUP_AV_CALL_NOTICE = 0x108;
 
     /**
      * 消息未读状态
@@ -144,7 +146,7 @@ public class MessageInfo {
     private int imgWidth;
     private int imgHeight;
     private boolean peerRead;
-
+    private boolean isIgnoreShow = false;
     private V2TIMMessage timMessage;
 
     /**
@@ -469,5 +471,13 @@ public class MessageInfo {
 
     public void setPeerRead(boolean peerRead) {
         this.peerRead = peerRead;
+    }
+
+    public void setIgnoreShow(boolean ignoreShow) {
+        isIgnoreShow = ignoreShow;
+    }
+
+    public boolean getIsIgnoreShow() {
+        return isIgnoreShow;
     }
 }

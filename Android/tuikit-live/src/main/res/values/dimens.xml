@@ -68,4 +68,10 @@
     <dimen name="live_heart_anim_length_rand">350.0dp</dimen>
     <integer name="live_heart_anim_bezier_factor">6</integer>
     <integer name="live_heart_anim_duration">1000</integer>
+
+
+    <dimen name="small_image_size">30dp</dimen>
+    <dimen name="small_image_left_margin">5dp</dimen>
+    <dimen name="contact_avatar_width">40.48dp</dimen>
+
 </resources>

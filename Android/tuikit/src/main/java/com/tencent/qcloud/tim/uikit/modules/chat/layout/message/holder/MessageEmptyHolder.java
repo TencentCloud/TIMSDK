@@ -1,7 +1,9 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
 
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
@@ -14,6 +16,9 @@ public abstract class MessageEmptyHolder extends MessageBaseHolder {
 
     public TextView chatTimeText;
     public FrameLayout msgContentFrame;
+    public CheckBox mMutiSelectCheckBox;
+    public RelativeLayout rightGroupLayout;
+    public RelativeLayout mContentLayout;
 
     public MessageEmptyHolder(View itemView) {
         super(itemView);
@@ -21,6 +26,9 @@ public abstract class MessageEmptyHolder extends MessageBaseHolder {
 
         chatTimeText = itemView.findViewById(R.id.chat_time_tv);
         msgContentFrame = itemView.findViewById(R.id.msg_content_fl);
+        mMutiSelectCheckBox = itemView.findViewById(R.id.select_checkbox);
+        rightGroupLayout = itemView.findViewById(R.id.right_group_layout);
+        mContentLayout = itemView.findViewById(R.id.messsage_content_layout);
         initVariableLayout();
     }
 

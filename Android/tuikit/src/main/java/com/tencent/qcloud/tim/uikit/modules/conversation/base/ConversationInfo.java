@@ -1,10 +1,10 @@
 package com.tencent.qcloud.tim.uikit.modules.conversation.base;
 
 import android.graphics.Bitmap;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
-import com.tencent.imsdk.conversation.Conversation;
-import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
 import java.io.Serializable;
@@ -15,6 +15,9 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     public static final int TYPE_COMMON = 1;
     public static final int TYPE_CUSTOM = 2;
+
+    public static final int TYPE_FORWAR_SELECT = 3;
+    public static final int TYPE_RECENT_LABEL = 4;
     /**
      * 会话类型，自定义会话or普通会话
      */
@@ -75,6 +78,21 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
      * 会话界面显示的@提示消息
      */
     private String atInfoText;
+
+    /**
+     * 会话界面显示消息免打扰图标
+     */
+    private boolean showDisturbIcon;
+
+    /**
+     * 草稿
+     */
+    private DraftInfo draft;
+
+    /**
+     * 群类型
+     */
+    private String groupType;
 
     public ConversationInfo() {
 
@@ -167,11 +185,43 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         return atInfoText;
     }
 
+    public boolean isShowDisturbIcon() {
+        return showDisturbIcon;
+    }
+
+    public void setShowDisturbIcon(boolean showDisturbIcon) {
+        this.showDisturbIcon = showDisturbIcon;
+    }
+
+    public void setDraft(DraftInfo draft) {
+        this.draft = draft;
+    }
+
+    public DraftInfo getDraft() {
+        return this.draft;
+    }
+
+    public String getGroupType() {
+        return groupType;
+    }
+
+    public void setGroupType(String groupType) {
+        this.groupType = groupType;
+    }
+
     @Override
     public int compareTo(@NonNull ConversationInfo other) {
-        if (this.lastMessageTime > other.lastMessageTime) {
+        long thisLastMessageTime = this.lastMessageTime;
+        long otherLastMessageTime = other.lastMessageTime;
+        if (this.draft != null && !TextUtils.isEmpty(this.draft.getDraftText())) {
+            thisLastMessageTime = Math.max(this.lastMessageTime, this.getDraft().getDraftTime());
+        }
+        if (other.getDraft() != null && !TextUtils.isEmpty(other.getDraft().getDraftText())) {
+            otherLastMessageTime = Math.max(other.lastMessageTime, other.getDraft().getDraftTime());
+        }
+        if (thisLastMessageTime > otherLastMessageTime) {
             return -1;
-        } else if (this.lastMessageTime == other.lastMessageTime) {
+        } else if (thisLastMessageTime == otherLastMessageTime) {
             return 0;
         } else {
             return 1;
@@ -192,6 +242,8 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
                 ", top=" + top +
                 ", lastMessageTime=" + lastMessageTime +
                 ", lastMessage=" + lastMessage +
+                ", draftText=" + draft +
+                ", groupType=" + groupType +
                 '}';
     }
 }

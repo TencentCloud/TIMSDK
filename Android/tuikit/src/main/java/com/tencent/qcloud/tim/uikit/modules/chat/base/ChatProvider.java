@@ -62,8 +62,8 @@ public class ChatProvider implements IChatProvider {
 
     @Override
     public boolean deleteMessageList(List<MessageInfo> messages) {
-        for (int i = 0; i < mDataSource.size(); i++) {
-            for (int j = 0; j < messages.size(); j++) {
+        for (int i = mDataSource.size() -1; i >= 0 ; i--) {
+            for (int j = messages.size() -1; j >= 0; j--) {
                 if (mDataSource.get(i).getId().equals(messages.get(j).getId())) {
                     mDataSource.remove(i);
                     updateAdapter(MessageLayout.DATA_CHANGE_TYPE_DELETE, i);
@@ -77,27 +77,6 @@ public class ChatProvider implements IChatProvider {
     @Override
     public boolean updateMessageList(List<MessageInfo> messages) {
         return false;
-    }
-
-    public boolean addMessageInfoList(List<MessageInfo> msg) {
-        if (msg == null || msg.size() == 0) {
-            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_LOAD, 0);
-            return true;
-        }
-        List<MessageInfo> list = new ArrayList<>();
-        for (MessageInfo info : msg) {
-            if (checkExist(info)) {
-                updateTIMMessageStatus(info);
-                continue;
-            }
-            list.add(info);
-        }
-        if (list.size() == 0) {
-            return false;
-        }
-        boolean flag = mDataSource.addAll(list);
-        updateAdapter(MessageLayout.DATA_CHANGE_TYPE_REFRESH, 0);
-        return flag;
     }
 
     public boolean addMessageInfo(MessageInfo msg) {

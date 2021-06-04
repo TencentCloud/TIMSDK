@@ -12,6 +12,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.tencent.imsdk.v2.V2TIMDownloadCallback;
 import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMFaceElem;
@@ -25,6 +31,7 @@ import com.tencent.qcloud.tim.uikit.component.photoview.PhotoViewActivity;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tim.uikit.component.video.VideoViewActivity;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
@@ -32,6 +39,7 @@ import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -44,6 +52,7 @@ public class MessageImageHolder extends MessageContentHolder {
     private ImageView videoPlayBtn;
     private TextView videoDurationText;
     private boolean mClicking;
+    private String mImagePath = null;
 
     public MessageImageHolder(View itemView) {
         super(itemView);
@@ -139,11 +148,14 @@ public class MessageImageHolder extends MessageContentHolder {
         }
         final V2TIMImageElem imageEle = timMessage.getImageElem();
         final List<V2TIMImageElem.V2TIMImage> imgs = imageEle.getImageList();
-        if (!TextUtils.isEmpty(msg.getDataPath())) {
-            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
+        String imagePath = msg.getDataPath();
+        String originImagePath = ImageUtil.getOriginImagePath(msg);
+        if (!TextUtils.isEmpty(originImagePath)) {
+            imagePath = originImagePath;
+        }
+        if (!TextUtils.isEmpty(imagePath)) {
+            GlideEngine.loadCornerImage(contentImage, imagePath, null, DEFAULT_RADIUS);
         } else {
-            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, "", null, DEFAULT_RADIUS);
-
             for (int i = 0; i < imgs.size(); i++) {
                 final V2TIMImageElem.V2TIMImage img = imgs.get(i);
                 if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB) {
@@ -153,7 +165,11 @@ public class MessageImageHolder extends MessageContentHolder {
                         }
                         downloadEles.add(img.getUUID());
                     }
-                    final String path = TUIKitConstants.IMAGE_DOWNLOAD_DIR + img.getUUID();
+                    final String path = ImageUtil.generateImagePath(img.getUUID(), V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB);
+                    // 如果contentImage的路径和当前图片路径不同，说明图片未加载过或者recyclerView复用了之前的缓存，为了避免显示错乱需要清空
+                    if (!path.equals(mImagePath)) {
+                        GlideEngine.clear(contentImage);
+                    }
                     img.downloadImage(path, new V2TIMDownloadCallback() {
                         @Override
                         public void onProgress(V2TIMElem.V2ProgressInfo progressInfo) {
@@ -171,7 +187,19 @@ public class MessageImageHolder extends MessageContentHolder {
                         public void onSuccess() {
                             downloadEles.remove(img.getUUID());
                             msg.setDataPath(path);
-                            GlideEngine.loadCornerImage(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
+                            GlideEngine.loadCornerImage(contentImage, msg.getDataPath(), new RequestListener() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
+                                    mImagePath = null;
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
+                                    mImagePath = path;
+                                    return false;
+                                }
+                            }, DEFAULT_RADIUS);
                         }
                     });
                     break;
@@ -181,25 +209,33 @@ public class MessageImageHolder extends MessageContentHolder {
         contentImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String localImgPath = ImageUtil.getOriginImagePath(msg);
+                boolean isOriginImg = localImgPath != null;
+                // 点击后的预览图片路径 如果是原图直接放原图，否则用缩略图
+                String previewImgPath = localImgPath;
                 for (int i = 0; i < imgs.size(); i++) {
                     V2TIMImageElem.V2TIMImage img = imgs.get(i);
                     if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN) {
                         PhotoViewActivity.mCurrentOriginalImage = img;
-                        break;
+                    }
+                    if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB) {
+                        if (!isOriginImg) {
+                            previewImgPath = ImageUtil.generateImagePath(img.getUUID(), V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB);
+                        }
                     }
                 }
                 Intent intent = new Intent(TUIKit.getAppContext(), PhotoViewActivity.class);
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(TUIKitConstants.IMAGE_DATA, msg.getDataPath());
-                intent.putExtra(TUIKitConstants.SELF_MESSAGE, msg.isSelf());
+                intent.putExtra(TUIKitConstants.IMAGE_PREVIEW_PATH, previewImgPath);
+                intent.putExtra(TUIKitConstants.IS_ORIGIN_IMAGE, isOriginImg);
                 TUIKit.getAppContext().startActivity(intent);
             }
         });
         contentImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onMessageLongClick(view, position, msg);
+                if (onItemLongClickListener != null) {
+                    onItemLongClickListener.onMessageLongClick(view, position, msg);
                 }
                 return true;
             }

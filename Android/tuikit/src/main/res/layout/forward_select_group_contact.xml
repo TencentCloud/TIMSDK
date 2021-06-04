@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
+        android:id="@+id/group_create_title_bar"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="@dimen/page_title_height" />
+
+    <com.tencent.qcloud.tim.uikit.component.LineControllerView
+        android:id="@+id/group_type_join"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/group_create_title_bar"
+        android:layout_marginTop="1dp"
+        android:visibility="gone"
+        app:name="@string/group_join_type" />
+
+    <com.tencent.qcloud.tim.uikit.modules.contact.ContactListView
+        android:id="@+id/group_create_member_list"
+        android:layout_below="@+id/group_create_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/btn_height"/>
+
+    <RelativeLayout
+        android:id="@+id/forward_contact_select_list_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="14.85dp"
+        android:paddingRight="14.85dp"
+        android:orientation="horizontal">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/forward_contact_select_list"
+            android:layout_width="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/forward_margin"/>
+
+        <TextView
+            android:id="@+id/btn_msg_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/btn_margin_right"
+            android:text="@string/sure"
+            android:textColor="@color/bg_positive_btn"
+            android:textSize="14sp"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

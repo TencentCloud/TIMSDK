@@ -38,6 +38,6 @@
 
     <dimen name="text_size_large">18sp</dimen>
     <dimen name="text_size_middle">14sp</dimen>
-    <dimen name="small_image_size">30dp</dimen>
-    <dimen name="small_image_left_margin">5dp</dimen>
+
+    <dimen name="forward_margin">55dp</dimen>
 </resources>

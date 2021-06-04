@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chat_background_color">
+
+    <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
+        android:id="@+id/chat_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_below="@+id/chat_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:background="@color/chat_title_line_color" />
+
+    <com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout
+        android:id="@+id/chat_message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_line"
+        android:baselineAligned="false"
+        android:clickable="false"
+        android:descendantFocusability="blocksDescendants" />
+
+</RelativeLayout>

@@ -43,7 +43,56 @@
     <string name="live_user_click_like">"%1$s liked"</string>
     <string name="live_message_send_success">"Sent"</string>
     <string name="live_message_send_fail">"Failed to send message [%1$d]:%2$s"</string>
+    <string name="live_add_no_me">Can not add yourself</string>
+    <string name="live_select_call_user">Please select user to call first</string>
+    <string name="group_id_null">group id is null</string>
+    <string name="send_error">Sending error</string>
+    <string name="get_user_info_tips_before">Failed to get info for user </string>
+    <string name="get_user_info_tips_after"></string>
+    <string name="reject_calls">Decline Call</string>
+    <string name="no_response">no response</string>
+    <string name="line_busy">Line busy</string>
+    <string name="cancle_calling">cancle calling</string>
+    <string name="call_time_out">time out</string>
+    <string name="open_silent">open silent</string>
+    <string name="close_silent">close silent</string>
+    <string name="use_speakers">use speakers</string>
+    <string name="use_handset">use the handset</string>
+    <string name="error">ERROR</string>
+    <string name="reject_call">reject</string>
+    <string name="invalid_command">invalid command</string>
+    <string name="request_online">request online on live</string>
+    <string name="reject_request_online">reject request for online on live</string>
+    <string name="agree_request_online">agree request for online on live</string>
+    <string name="request_close_online">request closing online on live</string>
+    <string name="close_online">close online on live</string>
+    <string name="request_pk">request PK on live</string>
+    <string name="reject_request_pk">reject request for PK on live</string>
+    <string name="agree_request_pk">agree request for PK on live</string>
+    <string name="exit_pk">exit PK on live</string>
+    <string name="im_logined">IM has logined for user:</string>
+    <string name="offline_call_tip">You have a calling request</string>
+    <string name="them_exist">They are also here.</string>
+    <string name="launch_call">Start Call</string>
+    <string name="group_members">Group Members</string>
+    <string name="search_call_hint">Enter Group Member\'s Name</string>
+    <string name="video_call">Video Call</string>
+    <string name="audio_call">Voice Call</string>
+    <string name="completed">completed</string>
+    <string name="video_call_tips">invites you to a video call...</string>
+    <string name="live_group_live">Live Group</string>
+    <string name="live_room">\'s live stream</string>
+    <string name="start_group_call">Start Group Call</string>
+    <string name="start_call">Start Call</string>
+    <string name="cancle_group_call">Cancel Group Call</string>
+    <string name="cancle_call">Cancel Call</string>
+    <string name="other_line_busy">Line busy</string>
+    <string name="reject_group_calls">Decline Group Call</string>
+    <string name="no_response_call">No answer</string>
+    <string name="accept_call">Answered</string>
 
+    <string name="stop_group_call">End Group Call</string>
+    <string name="stop_call_tip">Call ended. Duration:</string>
     <string name="live_accept">"Accept"</string>
     <string name="live_refuse">"Decline"</string>
 
@@ -82,6 +131,7 @@
     <string name="live_anchor_accept_pk_timeout">The host is not responding. PK request has timed out.</string>
     <string name="live_anchor_accept">The host agreed to co-anchor.</string>
     <string name="live_anchor_reject">The host declined to co-anchor.</string>
+
 
     <string name="report_success">Report successful. We will process it within 24 hours.</string>
     <string name="report">Report</string>

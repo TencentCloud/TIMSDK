@@ -2,7 +2,7 @@ package com.tencent.qcloud.tim.uikit.modules.chat.layout.message;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,8 +13,6 @@ import com.tencent.qcloud.tim.uikit.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tim.uikit.component.action.PopMenuAction;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IMessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IMessageProperties;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.IGroupMessageClickListener;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.IOnCustomMessageDrawListener;
 import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
 
 import java.util.ArrayList;
@@ -22,7 +20,7 @@ import java.util.List;
 
 public abstract class MessageLayoutUI extends RecyclerView implements IMessageLayout {
 
-    protected MessageLayout.OnItemClickListener mOnItemClickListener;
+    protected MessageLayout.OnItemLongClickListener mOnItemLongClickListener;
     protected MessageLayout.OnLoadMoreHandler mHandler;
     protected MessageLayout.OnEmptySpaceClickListener mEmptySpaceClickListener;
     protected MessageListAdapter mAdapter;
@@ -237,23 +235,13 @@ public abstract class MessageLayoutUI extends RecyclerView implements IMessageLa
     }
 
     @Override
-    public void setOnCustomMessageDrawListener(IOnCustomMessageDrawListener listener) {
-        mAdapter.setOnCustomMessageDrawListener(listener);
-    }
-
-    @Override
-    public void setIGroupMessageClickListener(IGroupMessageClickListener listener) {
-        mAdapter.setIGroupMessageClickListener(listener);
-    }
-
-    @Override
-    public MessageLayout.OnItemClickListener getOnItemClickListener() {
+    public MessageLayout.OnItemLongClickListener getOnItemClickListener() {
         return mAdapter.getOnItemClickListener();
     }
 
     @Override
-    public void setOnItemClickListener(MessageLayout.OnItemClickListener listener) {
-        mOnItemClickListener = listener;
+    public void setOnItemClickListener(MessageLayout.OnItemLongClickListener listener) {
+        mOnItemLongClickListener = listener;
         mAdapter.setOnItemClickListener(listener);
     }
 

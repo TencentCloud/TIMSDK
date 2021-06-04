@@ -93,6 +93,14 @@
                 app:name="@string/chat_to_top"
                 app:isSwitch="true"/>
 
+            <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                android:id="@+id/msg_rev_option"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/page_margin"
+                app:name="@string/profile_msgrev_opt"
+                app:isSwitch="true"/>
+
             <Button
                 android:id="@+id/group_dissolve_button"
                 style="?android:attr/borderlessButtonStyle"

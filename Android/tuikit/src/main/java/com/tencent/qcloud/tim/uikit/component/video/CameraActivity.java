@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tim.uikit.component.video;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -17,6 +18,7 @@ import com.tencent.qcloud.tim.uikit.component.video.listener.ErrorListener;
 import com.tencent.qcloud.tim.uikit.component.video.listener.JCameraListener;
 import com.tencent.qcloud.tim.uikit.component.video.util.DeviceUtil;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
+import com.tencent.qcloud.tim.uikit.utils.PermissionUtils;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
@@ -24,6 +26,7 @@ import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 public class CameraActivity extends Activity {
 
     private static final String TAG = CameraActivity.class.getSimpleName();
+    private static final int REQUEST_CODE_PHOTO_AND_VIDEO = 1000;
     public static IUIKitCallBack mCallBack;
     private JCameraView jCameraView;
 
@@ -108,11 +111,48 @@ public class CameraActivity extends Activity {
         jCameraView.setRightClickListener(new ClickListener() {
             @Override
             public void onClick() {
-                ToastUtil.toastShortMessage("Right");
+                startSendPhoto();
             }
         });
         //jCameraView.setVisibility(View.GONE);
         TUIKitLog.i(TAG, DeviceUtil.getDeviceModel());
+    }
+
+    private boolean checkPermission() {
+        if (!PermissionUtils.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            return false;
+        }
+        if (!PermissionUtils.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            return false;
+        }
+        return true;
+    }
+
+    private void startSendPhoto() {
+        TUIKitLog.i(TAG, "startSendPhoto");
+        if (!checkPermission()) {
+            TUIKitLog.i(TAG, "startSendPhoto checkPermission failed");
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        String[] mimeTypes = {"image/*", "video/*"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        startActivityForResult(intent, REQUEST_CODE_PHOTO_AND_VIDEO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_PHOTO_AND_VIDEO) {
+            if (resultCode != RESULT_OK) {
+                return;
+            }
+            setResult(RESULT_OK, data);
+            finish();
+        }
     }
 
     @Override

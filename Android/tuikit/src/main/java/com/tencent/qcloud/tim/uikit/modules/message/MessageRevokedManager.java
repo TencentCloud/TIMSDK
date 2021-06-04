@@ -21,7 +21,7 @@ public class MessageRevokedManager extends V2TIMAdvancedMsgListener {
     @Override
     public void onRecvMessageRevoked(String msgID) {
         for (int i = 0; i < mHandlers.size(); i++) {
-            mHandlers.get(i).handleInvoke(msgID);
+            mHandlers.get(i).handleRevoke(msgID);
         }
     }
 
@@ -36,6 +36,6 @@ public class MessageRevokedManager extends V2TIMAdvancedMsgListener {
     }
 
     public interface MessageRevokeHandler {
-        void handleInvoke(String msgID);
+        void handleRevoke(String msgID);
     }
 }

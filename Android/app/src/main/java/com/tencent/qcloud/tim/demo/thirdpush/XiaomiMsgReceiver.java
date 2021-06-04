@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.SplashActivity;
+import com.tencent.qcloud.tim.demo.chat.ChatActivity;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 import com.xiaomi.mipush.sdk.ErrorCode;
@@ -37,7 +38,7 @@ public class XiaomiMsgReceiver extends PushMessageReceiver {
             DemoLog.w(TAG, "onNotificationMessageClicked: no extra data found");
             return;
         }
-        Intent intent = new Intent(DemoApplication.instance(), SplashActivity.class);
+        Intent intent = new Intent(DemoApplication.instance(), ChatActivity.class);
         intent.putExtra("ext", ext);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         DemoApplication.instance().startActivity(intent);

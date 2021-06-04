@@ -2,29 +2,27 @@ package com.tencent.qcloud.tim.uikit.modules.conversation.holder;
 
 import android.graphics.Color;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
+import com.tencent.qcloud.tim.uikit.base.TUIConversationControllerListener;
 import com.tencent.qcloud.tim.uikit.component.face.FaceManager;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.input.TIMMentionEditText;
 import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationIconView;
 import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
+import com.tencent.qcloud.tim.uikit.modules.conversation.base.DraftInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.DateTimeUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +35,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected TextView timelineText;
     protected TextView unreadText;
     protected TextView atInfoText;
+    protected ImageView disturbView;
 
     public ConversationCommonHolder(View itemView) {
         super(itemView);
@@ -47,6 +46,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         timelineText = rootView.findViewById(R.id.conversation_time);
         unreadText = rootView.findViewById(R.id.conversation_unread);
         atInfoText = rootView.findViewById(R.id.conversation_at_msg);
+        disturbView = rootView.findViewById(R.id.not_disturb);
     }
 
     public void layoutViews(ConversationInfo conversation, int position) {
@@ -74,16 +74,34 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         titleText.setText(conversation.getTitle());
         messageText.setText("");
         timelineText.setText("");
-        if (lastMsg != null) {
-            if (lastMsg.getExtra() != null) {
-                String result = emojiJudge(lastMsg.getExtra().toString());
-                messageText.setText(Html.fromHtml(result));
-                messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
+        DraftInfo draftInfo = conversation.getDraft();
+        if (draftInfo != null && !TextUtils.isEmpty(draftInfo.getDraftText())) {
+            messageText.setText(draftInfo.getDraftText());
+            timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(draftInfo.getDraftTime() * 1000)));
+        } else {
+            if (lastMsg != null) {
+                // 如果最后一条消息是自定义消息，由消息创建者决定显示什么字符
+                if (lastMsg.getMsgType() > MessageInfo.MSG_STATUS_REVOKE) {
+                    for(TUIConversationControllerListener conversationListener : TUIKitListenerManager.getInstance().getTUIConversationListeners()) {
+                        CharSequence displayStr = conversationListener.getConversationDisplayString(lastMsg);
+                        if (displayStr != null) {
+                            messageText.setText(displayStr);
+                            messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
+                            break;
+                        }
+                    }
+                } else {
+                    if (lastMsg.getExtra() != null) {
+                        String result = emojiJudge(lastMsg.getExtra().toString());
+                        messageText.setText(Html.fromHtml(result));
+                        messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
+                    }
+                    timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(lastMsg.getMsgTime() * 1000)));
+                }
             }
-            timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(lastMsg.getMsgTime() * 1000)));
         }
 
-        if (conversation.getUnRead() > 0) {
+        if (conversation.getUnRead() > 0 && !conversation.isShowDisturbIcon()) {
             unreadText.setVisibility(View.VISIBLE);
             if (conversation.getUnRead() > 99) {
                 unreadText.setText("99+");
@@ -94,12 +112,18 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             unreadText.setVisibility(View.GONE);
         }
 
-        if (conversation.getAtInfoText().isEmpty()){
-            atInfoText.setVisibility(View.GONE);
-        } else {
+        if (draftInfo != null && !TextUtils.isEmpty(draftInfo.getDraftText())) {
             atInfoText.setVisibility(View.VISIBLE);
-            atInfoText.setText(conversation.getAtInfoText());
+            atInfoText.setText(R.string.drafts);
             atInfoText.setTextColor(Color.RED);
+        } else {
+            if (conversation.getAtInfoText().isEmpty()) {
+                atInfoText.setVisibility(View.GONE);
+            } else {
+                atInfoText.setVisibility(View.VISIBLE);
+                atInfoText.setText(conversation.getAtInfoText());
+                atInfoText.setTextColor(Color.RED);
+            }
         }
 
         conversationIconView.setRadius(mAdapter.getItemAvatarRadius());
@@ -118,6 +142,12 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 
         if (conversation.getIconUrlList() != null) {
             conversationIconView.setConversation(conversation);
+        }
+
+        if (conversation.isShowDisturbIcon()) {
+            disturbView.setVisibility(View.VISIBLE);
+        } else {
+            disturbView.setVisibility(View.GONE);
         }
 
         //// 由子类设置指定消息类型的views

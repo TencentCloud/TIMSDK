@@ -13,10 +13,12 @@ import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
+import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.AbsChatLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatManagerKit;
+import com.tencent.qcloud.tim.uikit.modules.chat.layout.input.InputLayout;
 import com.tencent.qcloud.tim.uikit.modules.group.apply.GroupApplyInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.apply.GroupApplyManagerActivity;
 import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfo;
@@ -48,6 +50,7 @@ public class ChatLayout extends AbsChatLayout implements GroupChatManagerKit.Gro
 
     public void setChatInfo(ChatInfo chatInfo) {
         super.setChatInfo(chatInfo);
+        mChatInfo = chatInfo;
         if (chatInfo == null) {
             return;
         }
@@ -64,9 +67,12 @@ public class ChatLayout extends AbsChatLayout implements GroupChatManagerKit.Gro
             GroupInfo groupInfo = new GroupInfo();
             groupInfo.setId(chatInfo.getId());
             groupInfo.setChatName(chatInfo.getChatName());
+            groupInfo.setGroupType(chatInfo.getGroupType());
             mGroupChatManager.setCurrentChatInfo(groupInfo);
             mGroupInfo = groupInfo;
-            loadChatMessages(null);
+            mChatInfo = mGroupInfo;
+            loadChatMessages(chatInfo.getLocateTimMessage(), chatInfo.getLocateTimMessage() == null ? TUIKitConstants.GET_MESSAGE_FORWARD : TUIKitConstants.GET_MESSAGE_TWO_WAY);
+            getConversationLastMessage("group_" + chatInfo.getId());
             loadApplyList();
             getTitleBar().getRightIcon().setImageResource(R.drawable.chat_group);
             getTitleBar().setOnRightClickListener(new View.OnClickListener() {
@@ -89,11 +95,14 @@ public class ChatLayout extends AbsChatLayout implements GroupChatManagerKit.Gro
                     getContext().startActivity(intent);
                 }
             });
+            TUIKitListenerManager.getInstance().setMessageSender(mGroupChatManager);
         } else {
             getTitleBar().getRightIcon().setImageResource(R.drawable.chat_c2c);
             mC2CChatManager = C2CChatManagerKit.getInstance();
             mC2CChatManager.setCurrentChatInfo(chatInfo);
-            loadChatMessages(null);
+            loadChatMessages(chatInfo.getLocateTimMessage(), chatInfo.getLocateTimMessage() == null ? TUIKitConstants.GET_MESSAGE_FORWARD : TUIKitConstants.GET_MESSAGE_TWO_WAY);
+            getConversationLastMessage("c2c_" + chatInfo.getId());
+            TUIKitListenerManager.getInstance().setMessageSender(mC2CChatManager);
         }
     }
 

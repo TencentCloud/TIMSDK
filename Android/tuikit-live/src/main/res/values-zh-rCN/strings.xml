@@ -43,6 +43,55 @@
     <string name="live_user_click_like">"%1$s点了个赞"</string>
     <string name="live_message_send_success">"发送成功"</string>
     <string name="live_message_send_fail">"消息发生失败[%1$d]:%2$s"</string>
+    <string name="live_add_no_me">不能添加自己</string>
+    <string name="live_select_call_user">请先选择通话用户</string>
+    <string name="group_id_null">群ID为空</string>
+    <string name="send_error">发送错误</string>
+    <string name="get_user_info_tips_before">获取用户</string>
+    <string name="get_user_info_tips_after">的资料失败</string>
+    <string name="reject_calls">拒绝通话</string>
+    <string name="no_response">无响应</string>
+    <string name="line_busy">忙线</string>
+    <string name="cancle_calling"> 取消了通话</string>
+    <string name="call_time_out"> 通话超时</string>
+    <string name="open_silent">开启静音</string>
+    <string name="close_silent">关闭静音</string>
+    <string name="use_speakers">使用扬声器</string>
+    <string name="use_handset">使用听筒</string>
+    <string name="error">发生错误</string>
+    <string name="reject_call">拒绝通话</string>
+    <string name="invalid_command">不能识别的通话指令</string>
+    <string name="request_online">直播间申请上麦</string>
+    <string name="reject_request_online">直播间申请上麦被拒绝</string>
+    <string name="agree_request_online">直播间同意上麦</string>
+    <string name="request_close_online">直播间申请关闭连麦</string>
+    <string name="close_online">直播间关闭连麦</string>
+    <string name="request_pk">直播间申请PK</string>
+    <string name="reject_request_pk">直播间申请PK被拒绝</string>
+    <string name="agree_request_pk">直播间同意PK</string>
+    <string name="exit_pk">直播间退出PK</string>
+    <string name="im_logined">IM已经登录过了:</string>
+    <string name="offline_call_tip">您有一个通话请求</string>
+    <string name="them_exist">他们也在</string>
+    <string name="launch_call">发起呼叫</string>
+    <string name="group_members">群成员</string>
+    <string name="search_call_hint">输入群成员名称</string>
+    <string name="video_call">视频通话</string>
+    <string name="audio_call">语音通话</string>
+    <string name="completed">已完成</string>
+    <string name="video_call_tips">邀请您进行视频通话...</string>
+    <string name="live_room">的直播</string>
+    <string name="start_group_call">发起群通话</string>
+    <string name="start_call">发起通话</string>
+    <string name="cancle_group_call">取消群通话</string>
+    <string name="cancle_call">取消通话</string>
+    <string name="other_line_busy">对方忙线</string>
+    <string name="reject_group_calls">拒绝群通话</string>
+    <string name="no_response_call">无应答</string>
+    <string name="accept_call">已接听</string>
+    <string name="stop_group_call">结束群通话</string>
+    <string name="stop_call_tip">结束通话，通话时长：</string>
+    <string name="live_group_live">群直播</string>
 
     <string name="live_accept">"接受"</string>
     <string name="live_refuse">"拒绝"</string>
@@ -82,6 +131,8 @@
     <string name="live_anchor_accept_pk_timeout">主播超时未响应PK请求</string>
     <string name="live_anchor_accept">主播同意连麦</string>
     <string name="live_anchor_reject">主播拒绝连麦</string>
+
+
 
     <string name="report_success">举报成功，我们将在24小时内进行处理</string>
     <string name="report">举报</string>

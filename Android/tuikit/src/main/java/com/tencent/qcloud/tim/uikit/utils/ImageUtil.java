@@ -13,7 +13,11 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.tencent.imsdk.v2.V2TIMImageElem;
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -445,6 +449,77 @@ public class ImageUtil {
         canvas.drawBitmap(bitmap, src, dst, paint); //以Mode.SRC_IN模式合并bitmap和已经draw了的Circle
 
         return output;
+    }
+
+    // 图片文件先在本地做旋转，返回旋转之后的图片文件路径
+    public static String getImagePathAfterRotate(final Uri uri) {
+        try {
+            InputStream is = TUIKit.getAppContext().getContentResolver()
+                    .openInputStream(uri);
+            Bitmap originBitmap = BitmapFactory.decodeStream(is, null, null);
+            int degree = ImageUtil.getBitmapDegree(uri);
+            if (degree == 0) {
+                return FileUtil.getPathFromUri(uri);
+            } else {
+                Bitmap newBitmap = ImageUtil.rotateBitmapByDegree(originBitmap, degree);
+                String oldName = FileUtil.getFileName(TUIKit.getAppContext(), uri);
+                File newImageFile = FileUtil.generateFileName(oldName, FileUtil.getDocumentCacheDir(TUIKit.getAppContext()));
+                if (newImageFile == null) {
+                    return FileUtil.getPathFromUri(uri);
+                }
+                ImageUtil.storeBitmap(newImageFile, newBitmap);
+                newBitmap.recycle();
+                return newImageFile.getAbsolutePath();
+            }
+        }catch (FileNotFoundException e) {
+            return FileUtil.getPathFromUri(uri);
+        }
+    }
+
+    /**
+     * 获取 MessageInfo 中原图的路径
+     * @param msg
+     * @return
+     */
+    public static String getOriginImagePath(final MessageInfo msg) {
+        if (msg == null) {
+            return null;
+        }
+        V2TIMMessage v2TIMMessage = msg.getTimMessage();
+        if (v2TIMMessage == null) {
+            return null;
+        }
+        V2TIMImageElem v2TIMImageElem = v2TIMMessage.getImageElem();
+        if (v2TIMImageElem == null) {
+            return null;
+        }
+        String localImgPath = MessageInfoUtil.getLocalImagePath(msg);
+        if (localImgPath == null) {
+            String originUUID = null;
+            for(V2TIMImageElem.V2TIMImage image : v2TIMImageElem.getImageList()) {
+                if (image.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN) {
+                    originUUID = image.getUUID();
+                    break;
+                }
+            }
+            String originPath = generateImagePath(originUUID, V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN);
+            File file = new File(originPath);
+            if (file.exists()) {
+                localImgPath = originPath;
+            }
+        }
+        return localImgPath;
+    }
+
+    /**
+     * 根据图片 UUID 和 类型得到图片文件路径
+     * @param uuid 图片 UUID
+     * @param imageType 图片类型 V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB , V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN ,
+     *                  V2TIMImageElem.V2TIM_IMAGE_TYPE_LARGE
+     * @return 图片文件路径
+     */
+    public static String generateImagePath(String uuid, int imageType) {
+        return TUIKitConstants.IMAGE_DOWNLOAD_DIR + uuid + "_" + imageType;
     }
 
     public static class CopyImageInfo {

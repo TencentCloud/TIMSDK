@@ -35,6 +35,7 @@
     <string name="allow_type_need_confirm">Anyone upon Request</string>
     <string name="exit">Log Out</string>
     <string name="about_im">About Instant Messaging</string>
+    <string name="modify_birthday">birthday</string>
 
     // 主页Tab相关
     <string name="tab_contact_tab_text">Contacts</string>
@@ -68,6 +69,7 @@
 
     <string name="test_custom_action">Custom Messages</string>
     <string name="test_custom_message">View Details>></string>
+    <string name="test_excluded_from_unread_count_action">Message excluded from unread count</string>
 
     <string name="privacy_text">Agreed to <a href="http://privacy.qq.com/">Privacy Policy</a></string>
 
@@ -129,4 +131,5 @@
     <string name="new_msg_notification">New Messages</string>
     <string name="new_msg">You\'ve received a new message.</string>
     <string name="call_nos">No response</string>
+    <string name="clear_conversation_message">Clear messages</string>
 </resources>

@@ -3,7 +3,6 @@ package com.tencent.qcloud.tim.uikit.modules.chat.interfaces;
 import com.tencent.qcloud.tim.uikit.component.action.PopMenuAction;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageListAdapter;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.IGroupMessageClickListener;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.IOnCustomMessageDrawListener;
 
 import java.util.List;
@@ -26,14 +25,14 @@ public interface IMessageLayout extends IMessageProperties {
      *
      * @return
      */
-    MessageLayout.OnItemClickListener getOnItemClickListener();
+    MessageLayout.OnItemLongClickListener getOnItemClickListener();
 
     /**
-     * 设置消息列表的事件监听器 {@link MessageLayout.OnItemClickListener}
+     * 设置消息列表的事件监听器 {@link MessageLayout.OnItemLongClickListener}
      *
      * @param listener
      */
-    void setOnItemClickListener(MessageLayout.OnItemClickListener listener);
+    void setOnItemClickListener(MessageLayout.OnItemLongClickListener listener);
 
     /**
      * 获取 PopMenu 的 Action 列表
@@ -48,17 +47,4 @@ public interface IMessageLayout extends IMessageProperties {
      * @param action 菜单选项 {@link PopMenuAction}, 可以自定义图片、文字以及点击事件
      */
     void addPopAction(PopMenuAction action);
-
-    /**
-     * 设置自定义的消息渲染时的回调，当TUIKit内部在刷新自定义消息时会调用这个回调
-     *
-     * @param listener {@link IOnCustomMessageDrawListener}
-     */
-    void setOnCustomMessageDrawListener(IOnCustomMessageDrawListener listener);
-
-    /**
-     * 设置群直播消息点击事件回调
-     * @param listener {@link IGroupMessageClickListener}
-     */
-    void setIGroupMessageClickListener(IGroupMessageClickListener listener);
 }
