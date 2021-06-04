@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.InputMoreActionUnit;
 
 import java.util.List;
 

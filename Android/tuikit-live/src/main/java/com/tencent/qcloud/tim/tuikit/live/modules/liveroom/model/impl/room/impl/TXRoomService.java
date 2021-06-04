@@ -1825,7 +1825,9 @@ public class TXRoomService implements ITXRoomService {
     }
 
     public void checkFollowState(String userId, final TRTCLiveRoomCallback.RoomFollowStateCallback callback) {
-        V2TIMManager.getFriendshipManager().checkFriend(userId, V2TIMFriendInfo.V2TIM_FRIEND_TYPE_SINGLE, new V2TIMValueCallback<V2TIMFriendCheckResult>() {
+        List<String> userIDList = new ArrayList<>();
+        userIDList.add(userId);
+        V2TIMManager.getFriendshipManager().checkFriend(userIDList, V2TIMFriendInfo.V2TIM_FRIEND_TYPE_SINGLE, new V2TIMValueCallback<List<V2TIMFriendCheckResult>>() {
             @Override
             public void onError(int code, String desc) {
                 Log.d(TAG, "check follow state onError: " + code);
@@ -1833,15 +1835,20 @@ public class TXRoomService implements ITXRoomService {
             }
 
             @Override
-            public void onSuccess(V2TIMFriendCheckResult v2TIMFriendCheckResult) {
-                if (v2TIMFriendCheckResult != null) {
-                    int resultType = v2TIMFriendCheckResult.getResultType();
-                    Log.d(TAG, "check follow state Success result type is : " + resultType);
-                    if (resultType == V2TIMFriendCheckResult.V2TIM_FRIEND_RELATION_TYPE_NONE) {
-                        callback.isNotFollowed();
-                    } else {
-                        callback.isFollowed();
+            public void onSuccess(List<V2TIMFriendCheckResult> v2FriendCheckResults) {
+                if (v2FriendCheckResults != null && v2FriendCheckResults.size() != 0) {
+                    V2TIMFriendCheckResult v2TIMFriendCheckResult = v2FriendCheckResults.get(0);
+                    if (v2TIMFriendCheckResult != null) {
+                        int resultType = v2TIMFriendCheckResult.getResultType();
+                        Log.d(TAG, "check follow state Success result type is : " + resultType);
+                        if (resultType == V2TIMFriendCheckResult.V2TIM_FRIEND_RELATION_TYPE_NONE) {
+                            callback.isNotFollowed();
+                        } else {
+                            callback.isFollowed();
+                        }
                     }
+                } else {
+                    Log.d(TAG, "checkFriend() v2FriendCheckResults is null");
                 }
             }
         });

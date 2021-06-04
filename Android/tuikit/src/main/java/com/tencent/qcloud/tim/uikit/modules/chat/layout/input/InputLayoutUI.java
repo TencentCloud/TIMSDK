@@ -14,14 +14,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.uikit.R;
-import com.tencent.qcloud.tim.uikit.TUIKit;
-import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
+import com.tencent.qcloud.tim.uikit.base.TUIChatControllerListener;
+import com.tencent.qcloud.tim.uikit.base.IBaseAction;
+import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IInputLayout;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreActionUnit;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.InputMoreActionUnit;
 import com.tencent.qcloud.tim.uikit.utils.PermissionUtils;
 
 import java.util.ArrayList;
@@ -81,8 +81,6 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     private boolean mCaptureDisable;
     private boolean mVideoRecordDisable;
     private boolean mSendFileDisable;
-    private boolean mEnableAudioCall;
-    private boolean mEnableVideoCall;
 
     public InputLayoutUI(Context context) {
         super(context);
@@ -117,98 +115,84 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
 
     protected void assembleActions() {
         mInputMoreActionList.clear();
-        InputMoreActionUnit action = new InputMoreActionUnit();
+        InputMoreActionUnit actionUnit;
         if (!mSendPhotoDisable) {
-            action.setIconResId(R.drawable.ic_more_picture);
-            action.setTitleId(R.string.pic);
-            action.setOnClickListener(new OnClickListener() {
+            actionUnit = new InputMoreActionUnit() {
                 @Override
-                public void onClick(View view) {
+                public void onAction(String chatInfoId, int chatType) {
                     startSendPhoto();
                 }
-            });
-            mInputMoreActionList.add(action);
+            };
+            actionUnit.setIconResId(R.drawable.ic_more_picture);
+            actionUnit.setTitleId(R.string.pic);
+            mInputMoreActionList.add(actionUnit);
         }
 
         if (!mCaptureDisable) {
-            action = new InputMoreActionUnit();
-            action.setIconResId(R.drawable.ic_more_camera);
-            action.setTitleId(R.string.photo);
-            action.setOnClickListener(new OnClickListener() {
+            actionUnit = new InputMoreActionUnit() {
                 @Override
-                public void onClick(View v) {
+                public void onAction(String chatInfoId, int chatType) {
                     startCapture();
                 }
-            });
-            mInputMoreActionList.add(action);
+            };
+            actionUnit.setIconResId(R.drawable.ic_more_camera);
+            actionUnit.setTitleId(R.string.photo);
+            mInputMoreActionList.add(actionUnit);
         }
 
         if (!mVideoRecordDisable) {
-            action = new InputMoreActionUnit();
-            action.setIconResId(R.drawable.ic_more_video);
-            action.setTitleId(R.string.video);
-            action.setOnClickListener(new OnClickListener() {
+            actionUnit = new InputMoreActionUnit() {
                 @Override
-                public void onClick(View v) {
+                public void onAction(String chatInfoId, int chatType) {
                     startVideoRecord();
                 }
-            });
-            mInputMoreActionList.add(action);
+            };
+            actionUnit.setIconResId(R.drawable.ic_more_video);
+            actionUnit.setTitleId(R.string.video);
+            mInputMoreActionList.add(actionUnit);
         }
 
         if (!mSendFileDisable) {
-            action = new InputMoreActionUnit();
-            action.setIconResId(R.drawable.ic_more_file);
-            action.setTitleId(R.string.file);
-            action.setOnClickListener(new OnClickListener() {
+            actionUnit = new InputMoreActionUnit() {
                 @Override
-                public void onClick(View v) {
+                public void onAction(String chatInfoId, int chatType) {
                     startSendFile();
                 }
-            });
-            mInputMoreActionList.add(action);
+            };
+            actionUnit.setIconResId(R.drawable.ic_more_file);
+            actionUnit.setTitleId(R.string.file);
+            mInputMoreActionList.add(actionUnit);
         }
 
-        if (mEnableVideoCall) {
-            action = new InputMoreActionUnit();
-            action.setIconResId(R.drawable.ic_more_video_call);
-            action.setTitleId(R.string.video_call);
-            action.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startVideoCall();
-                }
-            });
-            mInputMoreActionList.add(action);
-        }
-
-        if (mEnableAudioCall) {
-            action = new InputMoreActionUnit();
-            action.setIconResId(R.drawable.ic_more_audio_call);
-            action.setTitleId(R.string.audio_call);
-            action.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startAudioCall();
-                }
-            });
-            mInputMoreActionList.add(action);
-        }
-
-        if (TUIKit.getConfigs().isEnableGroupLiveEntry() && mChatInfo != null && mChatInfo.getType() != V2TIMConversation.V2TIM_C2C) {
-            action = new InputMoreActionUnit();
-            action.setIconResId(R.drawable.ic_more_group_live);
-            action.setTitleId(R.string.live_group_live);
-            action.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startGroupLive();
-                }
-            });
-            mInputMoreActionList.add(action);
-        }
-
+        addActionsFromListeners();
         mInputMoreActionList.addAll(mInputMoreCustomActionList);
+    }
+
+    private void addActionsFromListeners() {
+        if (mChatInfo == null) {
+            return;
+        }
+
+        for(TUIChatControllerListener chatListener : TUIKitListenerManager.getInstance().getTUIChatListeners()) {
+            List<IBaseAction> actionList = chatListener.onRegisterMoreActions();
+            if (actionList == null) {
+                continue;
+            }
+            for (final IBaseAction action : actionList) {
+                final InputMoreActionUnit actionUnit;
+                if (action instanceof InputMoreActionUnit) {
+                    actionUnit = (InputMoreActionUnit) action;
+                } else {
+                    continue;
+                }
+                // 让注册者决定当前聊天类型下此 Action 是否应该显示
+                if (!actionUnit.isEnable(mChatInfo.getType())) {
+                    continue;
+                }
+                actionUnit.setChatInfo(mChatInfo);
+                mInputMoreActionList.add(actionUnit);
+            }
+        }
     }
 
     protected boolean checkPermission(int type) {
@@ -240,12 +224,6 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     protected abstract void startVideoRecord();
 
     protected abstract void startSendFile();
-
-    protected abstract void startAudioCall();
-
-    protected abstract void startVideoCall();
-
-    protected abstract void startGroupLive();
 
     @Override
     public void disableAudioInput(boolean disable) {
@@ -307,28 +285,6 @@ abstract class InputLayoutUI extends LinearLayout implements IInputLayout {
     @Override
     public void disableSendFileAction(boolean disable) {
         mSendFileDisable = disable;
-    }
-
-    @Override
-    public boolean enableAudioCall() {
-        if (TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
-            mEnableAudioCall = true;
-            return true;
-        } else {
-            mEnableAudioCall = false;
-            return false;
-        }
-    }
-
-    @Override
-    public boolean enableVideoCall() {
-        if (TUIKitConfigs.getConfigs().getGeneralConfig().isSupportAVCall()) {
-            mEnableVideoCall = true;
-            return true;
-        } else {
-            mEnableVideoCall = false;
-            return false;
-        }
     }
 
     @Override

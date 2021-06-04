@@ -57,6 +57,7 @@
     <string name="ui_at_all">[@所有人]</string>
     <string name="ui_at_me">[有人@我]</string>
     <string name="ui_at_all_me">[@所有人][有人@我]</string>
+    <string name="drafts">[草稿]</string>
 
     <string name="date_yesterday">昨天</string>
     <string name="date_tommorow">明天</string>
@@ -91,22 +92,39 @@
     <string name="profile_remark_edit">修改备注</string>
     <string name="profile_chat">发送消息</string>
     <string name="profile_del">删除好友</string>
+    <string name="profile_msgrev_opt">消息免打扰</string>
 
     <string name="search_call_hint">输入群成员名称</string>
-    <string name="video_call">视频通话</string>
-    <string name="audio_call">语音通话</string>
 
-    <string name="live_group_live">群直播</string>
     <string name="live_group_live_streaming">正在直播</string>
     <string name="live_group_live_end">结束直播</string>
     <string name="live_group_user_live">%s的直播</string>
 
+    <!-- 消息转发 -->
+    <string name="titlebar_mutiselect">多选</string>
+    <string name="titlebar_cancle">取消</string>
+    <string name="titlebar_close">关闭</string>
+    <string name="titlebar_back">返回</string>
+    <string name="forward_alert_title">您确定进行转发吗?</string>
+    <string name="forward_tip">请选择要操作的消息！</string>
+    <string name="forward_mode_onebyone">逐条转发</string>
+    <string name="forward_mode_merge">合并转发</string>
+    <string name="forward_list_label">最近聊天</string>
+    <string name="forward_button">转发</string>
+    <string name="delete_button">删除</string>
+    <string name="forward_chats"> 群聊的聊天记录</string>
+    <string name="and_text">和</string>
+    <string name="forward_chats_c2c">的聊天记录</string>
+    <string name="forward_compatible_text">不支持合并转发消息，请升级到新版本。</string>
+    <string name="forward_select_new_chat">创建新聊天</string>
+    <string name="forward_select_from_contact">从通讯录选择</string>
+    <string name="forward_failed_tip">发送失败消息不支持转发！</string>
+    <string name="forward_extra">[聊天记录]</string>
+    <string name="forward_oneByOne_limit_number_tip">转发消息过多，暂不支持逐条转发</string>
+
+
     <string name="tap_capture">点击拍照</string>
     <string name="tap_video">长按摄像</string>
-    <string name="group_id_null">群ID为空</string>
-    <string name="select_call_user">请先选择通话用户</string>
-    <string name="add_no_me">不能添加自己</string>
-
     <string name="invalid_command">不能识别的通话指令</string>
     <string name="request_online">直播间申请上麦</string>
     <string name="reject_request_online">直播间申请上麦被拒绝</string>
@@ -118,19 +136,10 @@
     <string name="agree_request_pk">直播间同意PK</string>
     <string name="exit_pk">直播间退出PK</string>
     <string name="im_logined">IM已经登录过了:</string>
-    <string name="offline_call_tip">您有一个通话请求</string>
-    <string name="error">发生错误</string>
-    <string name="get_user_info_tips_before">获取用户</string>
-    <string name="get_user_info_tips_after">的资料失败</string>
     <string name="reject_call">拒绝通话</string>
     <string name="no_response">无响应</string>
     <string name="line_busy">忙线</string>
-    <string name="cancle_calling"> 取消了通话</string>
     <string name="call_time_out"> 通话超时</string>
-    <string name="open_silent">开启静音</string>
-    <string name="close_silent">关闭静音</string>
-    <string name="use_speakers">使用扬声器</string>
-    <string name="use_handset">使用听筒</string>
     <string name="record_limit_tips">已达到最大语音长度</string>
     <string name="play_error_tip">语音文件已损坏或不存在</string>
     <string name="input_tip">没有输入昵称，请重新填写</string>
@@ -198,18 +207,7 @@
     <string name="video_extra">[视频]</string>
     <string name="audio_extra">[语音]</string>
     <string name="file_extra">[文件]</string>
-    <string name="live_room">的直播</string>
-    <string name="start_group_call">发起群通话</string>
-    <string name="start_call">发起通话</string>
-    <string name="cancle_group_call">取消群通话</string>
-    <string name="cancle_call">取消通话</string>
-    <string name="other_line_busy">对方忙线</string>
-    <string name="reject_group_calls">拒绝群通话</string>
-    <string name="reject_calls">拒绝通话</string>
-    <string name="no_response_call">无应答</string>
-    <string name="accept_call">已接听</string>
-    <string name="stop_group_call">结束群通话</string>
-    <string name="stop_call_tip">结束通话，通话时长：</string>
+
     <string name="etc">等</string>
     <string name="join_group">加入群组</string>
     <string name="invite_joined_group">被邀请进群</string>
@@ -229,10 +227,22 @@
     <string name="them_exist">他们也在</string>
     <string name="launch_call">发起呼叫</string>
     <string name="default_friend">默认好友</string>
-    <string name="video_call_tips">邀请您进行视频通话...</string>
     <string name="forbid_join">禁止加群</string>
     <string name="manager_judge">管理员审批</string>
     <string name="auto_judge">自动审批...</string>
-    <string name="send_error">发送错误</string>
 
+
+    <!-- 搜索 -->
+    <string name="search">搜索</string>
+    <string name="contact_subtitle">联系人</string>
+    <string name="group_subtitle">群组</string>
+    <string name="chat_record">聊天记录</string>
+    <string name="more_contact_label">更多联系人</string>
+    <string name="more_group_label">更多群聊</string>
+    <string name="more_conversation_label">更多聊天记录</string>
+    <string name="chat_record_reference">相关聊天记录</string>
+    <string name="chat_records">条相关聊天记录</string>
+    <string name="nick_name">昵称: </string>
+    <string name="include_group_id">包含群 ID: </string>
+    <string name="include_group_member">包含群成员: </string>
 </resources>

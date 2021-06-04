@@ -20,7 +20,7 @@ public class DefaultGiftAdapterImp extends GiftAdapter implements HttpGetRequest
     private static final String TAG = "DefaultGiftAdapterImp";
 
     private static final int    CORE_POOL_SIZE = 5;
-    private static final String GIFT_DATA_URL = "https://liteav-test-1252463788.cos.ap-guangzhou.myqcloud.com/gift_data.json";
+    private static final String GIFT_DATA_URL = "https://liteav.sdk.qcloud.com/app/res/picture/live/gift/gift_data.json";
 
     private GiftBeanThreadPool      mGiftBeanThreadPool;
     private OnGiftListQueryCallback mOnGiftListQueryCallback;

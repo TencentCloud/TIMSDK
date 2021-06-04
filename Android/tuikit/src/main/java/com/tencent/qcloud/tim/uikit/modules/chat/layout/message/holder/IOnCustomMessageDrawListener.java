@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
 
+import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
 /**
@@ -13,6 +14,6 @@ public interface IOnCustomMessageDrawListener {
      * @param parent 使用者需要把自己定义的view加到parent里
      * @param info   消息体
      */
-    void onDraw(ICustomMessageViewGroup parent, MessageInfo info);
+    void onDraw(ICustomMessageViewGroup parent, MessageInfo info, int position);
 
 }

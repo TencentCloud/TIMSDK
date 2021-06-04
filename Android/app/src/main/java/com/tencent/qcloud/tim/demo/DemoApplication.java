@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.demo;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.multidex.MultiDex;
@@ -19,6 +20,7 @@ import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tim.demo.helper.ConfigHelper;
+import com.tencent.qcloud.tim.demo.helper.HelloChatController;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
@@ -28,7 +30,9 @@ import com.tencent.qcloud.tim.demo.utils.MessageNotification;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
+import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitUtils;
 import com.tencent.rtmp.TXLiveBase;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -37,8 +41,6 @@ public class DemoApplication extends Application {
 
     private static final String TAG = DemoApplication.class.getSimpleName();
 
-    private final String licenceUrl = "";
-    private final String licenseKey = "";
 
     private static DemoApplication instance;
 
@@ -56,7 +58,11 @@ public class DemoApplication extends Application {
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
         strategy.setAppVersion(V2TIMManager.getInstance().getVersion());
         CrashReport.initCrashReport(getApplicationContext(), PrivateConstants.BUGLY_APPID, true, strategy);
-        TXLiveBase.getInstance().setLicence(instance, licenceUrl, licenseKey);
+        // 是否进测试环境
+        final SharedPreferences sharedPreferences = getSharedPreferences("TUIKIT_DEMO_SETTINGS", MODE_PRIVATE);
+        boolean enter_test_environment = sharedPreferences.getBoolean("test_environment", false);
+        V2TIMManager.getInstance().callExperimentalAPI("setTestEnvironment", new Boolean(enter_test_environment), null);
+
         /**
          * TUIKit的初始化函数
          *
@@ -65,6 +71,7 @@ public class DemoApplication extends Application {
          * @param configs  TUIKit的相关配置项，一般使用默认即可，需特殊配置参考API文档
          */
         TUIKit.init(this, GenerateTestUserSig.SDKAPPID, new ConfigHelper().getConfigs());
+        registerCustomListeners();
         HeytapPushManager.init(this, true);
         if (BrandUtil.isBrandXiaoMi()) {
             // 小米离线推送
@@ -109,13 +116,11 @@ public class DemoApplication extends Application {
         };
 
         registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
+    }
 
-//        if (BuildConfig.DEBUG) {
-//            if (LeakCanary.isInAnalyzerProcess(this)) {
-//                return;
-//            }
-//            LeakCanary.install(this);
-//        }
+    private static void registerCustomListeners() {
+        TUIKitListenerManager.getInstance().addChatListener(new HelloChatController());
+        TUIKitListenerManager.getInstance().addConversationListener(new HelloChatController.HelloConversationController());
     }
 
     class StatisticActivityLifecycleCallback implements ActivityLifecycleCallbacks {
@@ -124,8 +129,12 @@ public class DemoApplication extends Application {
         private IMEventListener mIMEventListener = new IMEventListener() {
             @Override
             public void onNewMessage(V2TIMMessage msg) {
-                MessageNotification notification = MessageNotification.getInstance();
-                notification.notify(msg);
+                String imSdkVersion = V2TIMManager.getInstance().getVersion();
+                // IMSDK 5.0.1及以后版本 doBackground 之后同时会离线推送
+                if (TUIKitUtils.compareVersion(imSdkVersion, "5.0.1") < 0) {
+                    MessageNotification notification = MessageNotification.getInstance();
+                    notification.notify(msg);
+                }
             }
         };
 

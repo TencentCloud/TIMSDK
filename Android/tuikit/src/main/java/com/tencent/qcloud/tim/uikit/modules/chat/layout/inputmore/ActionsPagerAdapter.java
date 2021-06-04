@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.InputMoreActionUnit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class ActionsPagerAdapter extends PagerAdapter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int index = ((Integer) parent.getTag()) * ITEM_COUNT_PER_GRID_VIEW + position;
-                mInputMoreList.get(index).getOnClickListener().onClick(view);
+                mInputMoreList.get(index).getOnClickListener().onClick();
             }
         });
 

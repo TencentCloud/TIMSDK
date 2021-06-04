@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tim.tuikit.live.utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.MutableContextWrapper;
 import android.content.res.Configuration;
@@ -23,6 +24,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public final class UIUtil {
 
@@ -445,4 +447,21 @@ public final class UIUtil {
 
         return formatTime;
     }
+
+    public static boolean isAppRunningForeground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = activityManager.getRunningAppProcesses();
+        if (runningAppProcessInfos == null) {
+            return false;
+        }
+        String packageName = context.getPackageName();
+        for (ActivityManager.RunningAppProcessInfo appProcessInfo : runningAppProcessInfos) {
+            if (appProcessInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                    && appProcessInfo.processName.equals(packageName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

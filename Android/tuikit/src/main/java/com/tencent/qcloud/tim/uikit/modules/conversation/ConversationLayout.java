@@ -49,17 +49,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
 
         final IConversationAdapter adapter = new ConversationListAdapter();
         mConversationList.setAdapter(adapter);
-        ConversationManagerKit.getInstance().loadConversation(new IUIKitCallBack() {
-            @Override
-            public void onSuccess(Object data) {
-                adapter.setDataProvider((ConversationProvider) data);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastLongMessage(getContext().getString(R.string.load_msg_error));
-            }
-        });
+        mConversationList.loadConversation(0);
     }
 
     public TitleBarLayout getTitleBar() {
@@ -85,12 +75,17 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     }
 
     @Override
-    public void setConversationTop(int position, ConversationInfo conversation) {
-        ConversationManagerKit.getInstance().setConversationTop(position, conversation);
+    public void setConversationTop(ConversationInfo conversation, IUIKitCallBack callBack) {
+        ConversationManagerKit.getInstance().setConversationTop(conversation, callBack);
     }
 
     @Override
     public void deleteConversation(int position, ConversationInfo conversation) {
         ConversationManagerKit.getInstance().deleteConversation(position, conversation);
+    }
+
+    @Override
+    public void clearConversationMessage(int position, ConversationInfo conversation) {
+        ConversationManagerKit.getInstance().clearConversationMessage(position, conversation);
     }
 }

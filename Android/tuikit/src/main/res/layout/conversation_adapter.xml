@@ -8,6 +8,16 @@
     android:paddingLeft="14.85dp"
     android:orientation="horizontal">
 
+    <CheckBox
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/select_checkbox"
+        android:button="@drawable/checkbox_selector"
+        android:layout_marginRight="6.23dp"
+        android:visibility="gone" />
+
         <com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationIconView
             android:id="@+id/conversation_icon"
             android:layout_width="@dimen/conversation_avatar_width"
@@ -71,6 +81,18 @@
                 android:textColor="@color/list_bottom_text_bg"
                 android:textSize="12.86sp" />
 
+            <ImageView
+                android:id="@+id/not_disturb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_above="@+id/view_line"
+                android:layout_marginBottom="15.54dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:visibility="gone"
+                android:src="@drawable/ic_disturb" />
 
             <com.tencent.qcloud.tim.uikit.component.UnreadCountTextView
                 android:id="@+id/conversation_unread"

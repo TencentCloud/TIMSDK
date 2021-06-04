@@ -2,11 +2,10 @@ package com.tencent.qcloud.tim.demo.contact;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.text.TextUtils;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.demo.BaseActivity;
@@ -68,6 +67,7 @@ public class GroupListActivity extends BaseActivity {
             public void onItemClick(int position, ContactItemBean contact) {
                 ChatInfo chatInfo = new ChatInfo();
                 chatInfo.setType(V2TIMConversation.V2TIM_GROUP);
+                chatInfo.setGroupType(contact.getGroupType());
                 String chatName = contact.getId();
                 if (!TextUtils.isEmpty(contact.getRemark())) {
                     chatName = contact.getRemark();

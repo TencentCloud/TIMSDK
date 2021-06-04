@@ -103,8 +103,8 @@ public class GroupInfoPresenter {
         });
     }
 
-    public void setTopConversation(boolean flag) {
-        mProvider.setTopConversation(flag);
+    public void setTopConversation(boolean flag, IUIKitCallBack callBack) {
+        mProvider.setTopConversation(flag, callBack);
     }
 
     public void quitGroup() {

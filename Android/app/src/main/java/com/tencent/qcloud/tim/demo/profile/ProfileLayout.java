@@ -1,19 +1,20 @@
 package com.tencent.qcloud.tim.demo.profile;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -23,7 +24,6 @@ import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.login.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
-import com.tencent.qcloud.tim.tuikit.live.base.TUILiveRequestCallback;
 import com.tencent.qcloud.tim.uikit.component.LineControllerView;
 import com.tencent.qcloud.tim.uikit.component.SelectionActivity;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
@@ -33,9 +33,9 @@ import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class ProfileLayout extends LinearLayout implements View.OnClickListener {
 
@@ -49,11 +49,14 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
     private LineControllerView mModifyNickNameView;
     private LineControllerView mModifyAllowTypeView;
     private LineControllerView mModifySignatureView;
+    private LineControllerView mModifyBirthdayView;
     private LineControllerView mAboutIM;
     private ArrayList<String> mJoinTypeTextList = new ArrayList<>();
     private ArrayList<Integer> mJoinTypeIdList = new ArrayList<>();
     private int mJoinTypeIndex = 2;
     private String mIconUrl;
+    private int count = 0;
+    private long lastClickTime = 0;
 
     public ProfileLayout(Context context) {
         super(context);
@@ -97,6 +100,9 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         mAboutIM = findViewById(R.id.about_im);
         mAboutIM.setCanNav(true);
         mAboutIM.setOnClickListener(this);
+        mModifyBirthdayView = findViewById(R.id.modify_birthday);
+        mModifyBirthdayView.setCanNav(true);
+        mModifyBirthdayView.setOnClickListener(this);
 
         mJoinTypeTextList.add(getResources().getString(R.string.allow_type_allow_any));
         mJoinTypeTextList.add(getResources().getString(R.string.allow_type_deny_any));
@@ -135,7 +141,17 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
                 TUIKitConfigs.getConfigs().getGeneralConfig().setUserNickname(v2TIMUserFullInfo.getNickName());
 
                 mModifyNickNameView.setContent(v2TIMUserFullInfo.getNickName());
+
+                String birthday = String.valueOf(v2TIMUserFullInfo.getBirthday());
+                if (TextUtils.isEmpty(birthday) || birthday.length() < 8) {
+                    birthday = "19700101";
+                }
+                StringBuilder sb=new StringBuilder(birthday);
+                sb.insert(4,"-");
+                sb.insert(7,"-");
+                mModifyBirthdayView.setContent(sb.toString());
                 mAccountView.setText(String.format(getResources().getString(R.string.id), v2TIMUserFullInfo.getUserID()));
+
                 mModifySignatureView.setContent(v2TIMUserFullInfo.getSelfSignature());
                 mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_need_confirm));
                 if (v2TIMUserFullInfo.getAllowType() == V2TIMUserFullInfo.V2TIM_FRIEND_ALLOW_ANY) {
@@ -208,6 +224,36 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         } else if (v.getId() == R.id.about_im) {
             Intent intent = new Intent((Activity) getContext(), WebViewActivity.class);
             ((Activity) getContext()).startActivity(intent);
+        } else if (v.getId() == R.id.modify_birthday) {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            //日历控件
+            DatePickerDialog dp = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker datePicker, int iyear, int monthOfYear, int dayOfMonth) {
+                    String year, month, day;
+
+                    year = String.valueOf(iyear);
+                    if(monthOfYear < 10){
+                        month = "0" + monthOfYear;
+                    } else {
+                        month = String.valueOf(monthOfYear);
+                    }
+
+                    if(dayOfMonth < 10){
+                        day  = "0" + dayOfMonth ;
+                    } else {
+                        day = String.valueOf(dayOfMonth);
+                    }
+                    String birthday = year + "-" + month + "-" + day;
+                    mModifyBirthdayView.setContent(birthday);
+                    updateProfile();
+                }
+            }, year, month, day);
+            dp.show();
         }
     }
 
@@ -224,6 +270,11 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         // 昵称
         String nickName = mModifyNickNameView.getContent();
         v2TIMUserFullInfo.setNickname(nickName);
+
+        // 生日
+        String birthday = mModifyBirthdayView.getContent();
+        String birthdayValue = birthday.replace("-","");;
+        v2TIMUserFullInfo.setBirthday(Long.valueOf(birthdayValue));
 
         // 个性签名
         String signature = mModifySignatureView.getContent();

@@ -13,6 +13,7 @@ public class GroupMemberInfo implements Serializable {
     private String location;
     private String birthday;
     private String nameCard;
+    private String nickName;
     private boolean isTopChat;
     private boolean isFriend;
     private long joinTime;
@@ -67,6 +68,14 @@ public class GroupMemberInfo implements Serializable {
         return nameCard;
     }
 
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getNickName() {
+        return this.nickName;
+    }
+
     public boolean isTopChat() {
         return isTopChat;
     }
@@ -115,6 +124,8 @@ public class GroupMemberInfo implements Serializable {
         }
         setAccount(info.getUserID());
         setNameCard(info.getNameCard());
+        setIconUrl(info.getFaceUrl());
+        setNickName(info.getNickName());
         return this;
     }
 }

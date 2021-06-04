@@ -1,7 +1,7 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.layout.message;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +16,7 @@ import com.tencent.qcloud.tim.uikit.component.PopupList;
 import com.tencent.qcloud.tim.uikit.component.action.PopActionClickListener;
 import com.tencent.qcloud.tim.uikit.component.action.PopMenuAction;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class MessageLayout extends MessageLayoutUI {
     public static final int DATA_CHANGE_TYPE_UPDATE = 4;
     public static final int DATA_CHANGE_TYPE_DELETE = 5;
     public static final int DATA_CHANGE_TYPE_CLEAR = 6;
-
+    public static final int DATA_CHANGE_SCROLL_TO_POSITION = 7;
 
     public MessageLayout(Context context) {
         super(context);
@@ -113,6 +114,29 @@ public class MessageLayout extends MessageLayoutUI {
         }, 10000); // 10s后无操作自动消失
     }
 
+    public void onMsgAddBack() {
+        if (mAdapter != null) {
+            // 如果当前显示最后一条消息，则消息刷新跳转到底部，否则不跳转
+            if (isLastItemVisibleCompleted()) {
+                scrollToEnd();
+            }
+        }
+    }
+
+    public boolean isLastItemVisibleCompleted() {
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getLayoutManager();
+        if (linearLayoutManager == null) {
+            return false;
+        }
+        int lastPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+        int childCount = linearLayoutManager.getChildCount();
+        int firstPosition = linearLayoutManager.findFirstVisibleItemPosition();
+        if (lastPosition >= firstPosition + childCount - 1) {
+            return true;
+        }
+        return false;
+    }
+
     private void initPopActions(final MessageInfo msg) {
         if (msg == null) {
             return;
@@ -140,15 +164,16 @@ public class MessageLayout extends MessageLayoutUI {
         actions.add(action);
         if (msg.isSelf()) {
             action = new PopMenuAction();
-            action.setActionName(getContext().getString(R.string.revoke_action));
-            action.setActionClickListener(new PopActionClickListener() {
-                @Override
-                public void onActionClick(int position, Object data) {
-                    mOnPopActionClickListener.onRevokeMessageClick(position, (MessageInfo) data);
-                }
-            });
-            actions.add(action);
-            if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL) {
+            if (msg.getStatus() != MessageInfo.MSG_STATUS_SEND_FAIL) {
+                action.setActionName(getContext().getString(R.string.revoke_action));
+                action.setActionClickListener(new PopActionClickListener() {
+                    @Override
+                    public void onActionClick(int position, Object data) {
+                        mOnPopActionClickListener.onRevokeMessageClick(position, (MessageInfo) data);
+                    }
+                });
+                actions.add(action);
+            } else {
                 action = new PopMenuAction();
                 action.setActionName(getContext().getString(R.string.resend_action));
                 action.setActionClickListener(new PopActionClickListener() {
@@ -160,6 +185,32 @@ public class MessageLayout extends MessageLayoutUI {
                 actions.add(action);
             }
         }
+
+        //多选
+        action = new PopMenuAction();
+        action.setActionName(getContext().getString(R.string.titlebar_mutiselect));
+        action.setActionClickListener(new PopActionClickListener() {
+            @Override
+            public void onActionClick(int position, Object data) {
+                mOnPopActionClickListener.onMultiSelectMessageClick(position, (MessageInfo) data);
+            }
+        });
+        actions.add(action);
+
+        //转发
+        if (msg.getStatus() != MessageInfo.MSG_STATUS_SEND_FAIL) {
+            action = new PopMenuAction();
+            action.setActionName(getContext().getString(R.string.forward_button));
+            action.setActionClickListener(new PopActionClickListener() {
+                @Override
+                public void onActionClick(int position, Object data) {
+                    mOnPopActionClickListener.onForwardMessageClick(position, (MessageInfo) data);
+                }
+            });
+            actions.add(action);
+        }
+
+
         mPopActions.clear();
         mPopActions.addAll(actions);
         mPopActions.addAll(mMorePopActions);
@@ -182,16 +233,36 @@ public class MessageLayout extends MessageLayoutUI {
                     if (getAdapter() instanceof MessageListAdapter) {
                         ((MessageListAdapter) getAdapter()).showLoading();
                     }
-                    mHandler.loadMore();
+                    mHandler.loadMore(TUIKitConstants.GET_MESSAGE_FORWARD);
+                } else if (lastPosition == getAdapter().getItemCount() -1 && !isListEnd(lastPosition)){
+                    if (getAdapter() instanceof MessageListAdapter) {
+                        ((MessageListAdapter) getAdapter()).showLoading();
+                    }
+                    mHandler.loadMore(TUIKitConstants.GET_MESSAGE_BACKWARD);
                 }
             }
         }
     }
 
+    private boolean isListEnd(int lastPosition) {
+       return mHandler.isListEnd(lastPosition);
+    }
 
     public void scrollToEnd() {
         if (getAdapter() != null) {
             scrollToPosition(getAdapter().getItemCount() - 1);
+        }
+    }
+
+    public void scrollToPositon(int position) {
+        if (getAdapter() != null && position < getAdapter().getItemCount()) {
+            scrollToPosition(position);
+        }
+    }
+
+    public void setHighShowPosition(int position) {
+        if (mAdapter != null) {
+            mAdapter.setHighShowPosition(position);
         }
     }
 
@@ -217,32 +288,33 @@ public class MessageLayout extends MessageLayoutUI {
 
     @Override
     public void postSetAdapter(MessageListAdapter adapter) {
-        mAdapter.setOnItemClickListener(new MessageLayout.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new OnItemLongClickListener() {
             @Override
             public void onMessageLongClick(View view, int position, MessageInfo messageInfo) {
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onMessageLongClick(view, position, messageInfo);
+                if (mOnItemLongClickListener != null) {
+                    mOnItemLongClickListener.onMessageLongClick(view, position, messageInfo);
                 }
             }
 
             @Override
             public void onUserIconClick(View view, int position, MessageInfo info) {
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onUserIconClick(view, position, info);
+                if (mOnItemLongClickListener != null) {
+                    mOnItemLongClickListener.onUserIconClick(view, position, info);
                 }
             }
         });
     }
 
     public interface OnLoadMoreHandler {
-        void loadMore();
+        void loadMore(int type);
+        boolean isListEnd(int postion);
     }
 
     public interface OnEmptySpaceClickListener {
         void onClick();
     }
 
-    public interface OnItemClickListener {
+    public interface OnItemLongClickListener {
         void onMessageLongClick(View view, int position, MessageInfo messageInfo);
 
         void onUserIconClick(View view, int position, MessageInfo messageInfo);
@@ -257,5 +329,9 @@ public class MessageLayout extends MessageLayoutUI {
         void onDeleteMessageClick(int position, MessageInfo msg);
 
         void onRevokeMessageClick(int position, MessageInfo msg);
+
+        void onMultiSelectMessageClick(int position, MessageInfo msg);
+
+        void onForwardMessageClick(int position, MessageInfo msg);
     }
 }

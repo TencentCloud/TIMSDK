@@ -7,18 +7,18 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.heytap.msp.push.HeytapPushManager;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.common.ApiException;
-import com.tencent.imsdk.v2.V2TIMCallback;
-import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.imsdk.v2.V2TIMSignalingInfo;
-import com.tencent.liteav.model.CallModel;
 import com.tencent.liteav.model.TRTCAVCallImpl;
 import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.chat.ChatActivity;
 import com.tencent.qcloud.tim.demo.contact.ContactFragment;
 import com.tencent.qcloud.tim.demo.conversation.ConversationFragment;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
@@ -31,13 +31,12 @@ import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
+import com.tencent.liteav.model.CallModel;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 public class MainActivity extends BaseActivity implements ConversationManagerKit.MessageUnreadWatcher {
 
@@ -50,20 +49,20 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     private TextView mMsgUnread;
     private View mLastTab;
 
-    private CallModel mCallModel;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         DemoLog.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         prepareThirdPushToken();
+        initView();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         DemoLog.i(TAG, "onNewIntent");
-        mCallModel = (CallModel) intent.getSerializableExtra(Constants.CHAT_INFO);
+        prepareThirdPushToken();
+        initView();
     }
 
     private void prepareThirdPushToken() {
@@ -225,25 +224,27 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     protected void onStart() {
         DemoLog.i(TAG, "onStart");
         super.onStart();
-        initView();
     }
 
     @Override
     protected void onResume() {
         DemoLog.i(TAG, "onResume");
         super.onResume();
-        if (mCallModel != null) {
-            TRTCAVCallImpl impl = (TRTCAVCallImpl) TRTCAVCallImpl.sharedInstance(DemoApplication.instance());
-            impl.stopCall();
-            final V2TIMSignalingInfo info = new V2TIMSignalingInfo();
-            info.setInviteID(mCallModel.callId);
-            info.setInviteeList(mCallModel.invitedList);
-            info.setGroupID(mCallModel.groupId);
-            info.setInviter(mCallModel.sender);
-            info.setData(mCallModel.data);
-            ((TRTCAVCallImpl)(TRTCAVCallImpl.sharedInstance(DemoApplication.instance()))).processInvite(
-                    info.getInviteID(), info.getInviter(), info.getGroupID(), info.getInviteeList(), info.getData());
-            mCallModel = null;
+        handleOfflinePush();
+    }
+
+    private void handleOfflinePush() {
+        boolean isFromOfflinePush = getIntent().getBooleanExtra(Constants.IS_OFFLINE_PUSH_JUMP, false);
+        if (isFromOfflinePush) {
+            final CallModel model = (CallModel) getIntent().getSerializableExtra(Constants.CALL_MODEL);
+            if (model != null) {
+                if (TextUtils.isEmpty(model.groupId)) {
+                    DemoLog.e(TAG, "AVCall groupId is empty");
+                } else {
+                    ((TRTCAVCallImpl) (TRTCAVCallImpl.sharedInstance(DemoApplication.instance()))).
+                            processInvite(model.callId, model.sender, model.groupId, model.invitedList, model.data);
+                }
+            }
         }
     }
 
@@ -256,13 +257,13 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     @Override
     protected void onStop() {
         DemoLog.i(TAG, "onStop");
-        ConversationManagerKit.getInstance().destroyConversation();
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         DemoLog.i(TAG, "onDestroy");
+        ConversationManagerKit.getInstance().destroyConversation();
         mLastTab = null;
         super.onDestroy();
     }

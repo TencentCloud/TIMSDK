@@ -21,6 +21,8 @@ public class GeneralConfig {
     private String userId = "";
     private String userSig = "";
     private String userNickname = "";
+    private boolean excludedFromUnreadCount;
+    private boolean excludedFromLastMessage;
 
     public String getUserNickname() {
         return userNickname;
@@ -39,16 +41,6 @@ public class GeneralConfig {
     }
 
     private String userFaceUrl = "";
-
-    private static boolean isSupportAVCall;
-    static {
-        try {
-            Class.forName("com.tencent.trtc.TRTCCloud");
-            isSupportAVCall = true;
-        } catch (Exception e) {
-            isSupportAVCall = false;
-        }
-    }
 
     /**
      * 获取是否打印日志
@@ -172,10 +164,6 @@ public class GeneralConfig {
         this.testEnv = testEnv;
     }
 
-    public boolean isSupportAVCall() {
-        return isSupportAVCall;
-    }
-
     public void setSDKAppId(int sdkAppId) {
         this.sdkAppId = sdkAppId;
     }
@@ -200,4 +188,19 @@ public class GeneralConfig {
         this.userSig = userSig;
     }
 
+    public boolean isExcludedFromUnreadCount() {
+        return excludedFromUnreadCount;
+    }
+
+    public void setExcludedFromUnreadCount(boolean excludedFromUnreadCount) {
+        this.excludedFromUnreadCount = excludedFromUnreadCount;
+    }
+
+    public boolean isExcludedFromLastMessage() {
+        return excludedFromLastMessage;
+    }
+
+    public void setExcludedFromLastMessage(boolean excludedFromLastMessage) {
+        this.excludedFromLastMessage = excludedFromLastMessage;
+    }
 }

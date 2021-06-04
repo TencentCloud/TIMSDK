@@ -18,6 +18,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
     private String nickname;
     private String avatarurl;
     private boolean isGroup;
+    private String groupType;
     private boolean isFriend = true;
     private boolean isEnable = true;
 
@@ -126,6 +127,14 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         isGroup = group;
     }
 
+    public String getGroupType() {
+        return groupType;
+    }
+
+    public void setGroupType(String groupType) {
+        this.groupType = groupType;
+    }
+
     public boolean isFriend() {
         return isFriend;
     }
@@ -150,6 +159,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         setRemark(group.getGroupName());
         setAvatarurl(group.getFaceUrl());
         setGroup(true);
+        setGroupType(group.getGroupType());
         return this;
     }
 

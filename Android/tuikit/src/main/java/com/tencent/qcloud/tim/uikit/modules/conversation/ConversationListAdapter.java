@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
@@ -23,6 +24,11 @@ import java.util.List;
 
 public class ConversationListAdapter extends IConversationAdapter {
 
+    public static final int ITEM_TYPE_HEADER_SEARCH = 101;
+    public static final int ITEM_TYPE_FOOTER_LOADING = -99;
+    public static final int HEADER_COUNT = 1;
+    public static final int FOOTER_COUNT = 1;
+
     private boolean mHasShowUnreadDot = true;
     private int mItemAvatarRadius = ScreenUtil.getPxByDp(5);
     private int mTopTextSize;
@@ -31,6 +37,8 @@ public class ConversationListAdapter extends IConversationAdapter {
     private List<ConversationInfo> mDataSource = new ArrayList<>();
     private ConversationListLayout.OnItemClickListener mOnItemClickListener;
     private ConversationListLayout.OnItemLongClickListener mOnItemLongClickListener;
+
+    private boolean mIsLoading = false;
 
     public ConversationListAdapter() {
 
@@ -60,9 +68,14 @@ public class ConversationListAdapter extends IConversationAdapter {
         // 创建不同的 ViewHolder
         View view;
         // 根据ViewType来创建条目
-        if (viewType == ConversationInfo.TYPE_CUSTOM) {
+        if (viewType == ITEM_TYPE_HEADER_SEARCH) {
+            return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.conversation_search_adapter, parent, false));
+        }else if (viewType == ConversationInfo.TYPE_CUSTOM) {
             view = inflater.inflate(R.layout.conversation_custom_adapter, parent, false);
             holder = new ConversationCustomHolder(view);
+        } else if (viewType == ITEM_TYPE_FOOTER_LOADING) {
+            view = inflater.inflate(R.layout.loading_progress_bar, parent, false);
+            return new FooterViewHolder(view);
         } else {
             view = inflater.inflate(R.layout.conversation_adapter, parent, false);
             holder = new ConversationCommonHolder(view);
@@ -76,11 +89,20 @@ public class ConversationListAdapter extends IConversationAdapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final ConversationInfo conversationInfo = getItem(position);
-        ConversationBaseHolder baseHolder = (ConversationBaseHolder) holder;
+        ConversationBaseHolder baseHolder = null;
+        if (conversationInfo != null) {
+            baseHolder = (ConversationBaseHolder) holder;
+        }
 
         switch (getItemViewType(position)) {
             case ConversationInfo.TYPE_CUSTOM:
                 break;
+            case ITEM_TYPE_FOOTER_LOADING: {
+                if (holder instanceof FooterViewHolder) {
+                    ((ConversationBaseHolder) holder).layoutViews(null, position);
+                }
+                break;
+            }
             default:
                 //设置点击和长按事件
                 if (mOnItemClickListener != null) {
@@ -102,7 +124,9 @@ public class ConversationListAdapter extends IConversationAdapter {
                 }
                 break;
         }
-        baseHolder.layoutViews(conversationInfo, position);
+        if (baseHolder != null) {
+            baseHolder.layoutViews(conversationInfo, position);
+        }
     }
 
     @Override
@@ -113,20 +137,25 @@ public class ConversationListAdapter extends IConversationAdapter {
     }
 
     public ConversationInfo getItem(int position) {
-        if (mDataSource.size() == 0)
+        if (mDataSource.size() == 0 || position == 0 || position == getItemCount() - 1) {
             return null;
-        return mDataSource.get(position);
+        }
+        return mDataSource.get(position - HEADER_COUNT);
     }
 
     @Override
     public int getItemCount() {
-        return mDataSource.size();
+        return mDataSource.size() + HEADER_COUNT + FOOTER_COUNT;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mDataSource != null) {
-            ConversationInfo conversation = mDataSource.get(position);
+        if (position == 0) {
+            return ITEM_TYPE_HEADER_SEARCH;
+        } else if (position == getItemCount() - 1) {
+            return ITEM_TYPE_FOOTER_LOADING;
+        } else if (mDataSource != null) {
+            ConversationInfo conversation = mDataSource.get(position - HEADER_COUNT);
             return conversation.getType();
         }
         return 1;
@@ -134,20 +163,20 @@ public class ConversationListAdapter extends IConversationAdapter {
 
     public void addItem(int position, ConversationInfo info) {
         mDataSource.add(position, info);
-        notifyItemInserted(position);
+        notifyItemInserted(position + HEADER_COUNT);
         notifyDataSetChanged();
     }
 
     public void removeItem(int position) {
         mDataSource.remove(position);
-        notifyItemRemoved(position);
+        notifyItemRemoved(position + HEADER_COUNT);
         notifyDataSetChanged();
     }
 
     public void notifyDataSourceChanged(String info) {
         for (int i = 0; i < mDataSource.size(); i++) {
             if (TextUtils.equals(info, mDataSource.get(i).getConversationId())) {
-                notifyItemChanged(i);
+                notifyItemChanged(i + HEADER_COUNT);
                 return;
             }
         }
@@ -192,4 +221,39 @@ public class ConversationListAdapter extends IConversationAdapter {
     public boolean hasItemUnreadDot() {
         return mHasShowUnreadDot;
     }
+
+    public void setIsLoading(boolean isLoading) {
+        this.mIsLoading = isLoading;
+        notifyItemChanged(getItemCount() - 1);
+    }
+
+    //header
+    class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public HeaderViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+    }
+
+    //footer
+    class FooterViewHolder extends ConversationBaseHolder {
+        public FooterViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void layoutViews(ConversationInfo conversationInfo, int position) {
+            RecyclerView.LayoutParams param = (RecyclerView.LayoutParams) rootView.getLayoutParams();
+            if (mIsLoading) {
+                param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                param.width = LinearLayout.LayoutParams.MATCH_PARENT;
+                rootView.setVisibility(View.VISIBLE);
+            } else {
+                param.height = 0;
+                param.width = 0;
+                rootView.setVisibility(View.GONE);
+            }
+            rootView.setLayoutParams(param);
+        }
+    }
+
 }

@@ -9,14 +9,16 @@ import android.widget.TextView;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.ICustomMessageViewGroup;
+import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 public class CustomHelloTIMUIController {
 
     private static final String TAG = CustomHelloTIMUIController.class.getSimpleName();
 
-    public static void onDraw(ICustomMessageViewGroup parent, final CustomHelloMessage data) {
+    public static void onDraw(ICustomMessageViewGroup parent, final CustomHelloMessage data, final int position, final MessageLayout.OnItemLongClickListener onItemLongClickListener, final MessageInfo info) {
 
         // 把自定义消息view添加到TUIKit内部的父容器里
         View view = LayoutInflater.from(DemoApplication.instance()).inflate(R.layout.test_custom_message_layout1, null, false);
@@ -45,6 +47,15 @@ public class CustomHelloTIMUIController {
                 intent.setData(content_url);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 DemoApplication.instance().startActivity(intent);
+            }
+        });
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (onItemLongClickListener != null){
+                    onItemLongClickListener.onMessageLongClick(v, position, info);
+                }
+                return false;
             }
         });
     }

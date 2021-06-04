@@ -1,26 +1,29 @@
 package com.tencent.qcloud.tim.uikit.modules.group.info;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
+
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.BaseFragment;
+import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberDeleteFragment;
 import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInviteFragment;
 import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberManagerFragment;
 import com.tencent.qcloud.tim.uikit.modules.group.member.IGroupMemberRouter;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 
 public class GroupInfoFragment extends BaseFragment {
 
     private View mBaseView;
     private GroupInfoLayout mGroupInfoLayout;
+
+    private IUIKitCallBack mIUIKitCallBack;
 
     @Nullable
     @Override
@@ -31,8 +34,20 @@ public class GroupInfoFragment extends BaseFragment {
     }
 
     private void initView() {
+        mIUIKitCallBack = new IUIKitCallBack() {
+            @Override
+            public void onSuccess(Object data) {
+
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                ToastUtil.toastShortMessage(module + ", Error code = " + errCode + ", desc = " + errMsg);
+            }
+        };
         mGroupInfoLayout = mBaseView.findViewById(R.id.group_info_layout);
         mGroupInfoLayout.setGroupId(getArguments().getString(TUIKitConstants.Group.GROUP_ID));
+        mGroupInfoLayout.setUICallback(mIUIKitCallBack);
         mGroupInfoLayout.setRouter(new IGroupMemberRouter() {
             @Override
             public void forwardListMember(GroupInfo info) {

@@ -3,7 +3,7 @@ package com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.InputMoreActionUnit;
 
 import java.util.ArrayList;
 import java.util.List;

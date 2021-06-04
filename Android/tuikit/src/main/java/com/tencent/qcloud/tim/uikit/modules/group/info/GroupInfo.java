@@ -1,8 +1,10 @@
 package com.tencent.qcloud.tim.uikit.modules.group.info;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
 
@@ -18,6 +20,7 @@ public class GroupInfo extends ChatInfo {
     private List<GroupMemberInfo> memberDetails;
     private int joinType;
     private String owner;
+    private boolean messageReceiveOption;
 
     public GroupInfo() {
         setType(V2TIMConversation.V2TIM_GROUP);
@@ -153,6 +156,24 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
+     * 获取消息接收选项
+     *
+     * @return
+     */
+    public boolean getMessageReceiveOption() {
+        return messageReceiveOption;
+    }
+
+    /**
+     * 设置消息接收选项
+     *
+     * @param messageReceiveOption, true,免打扰； false，接收消息
+     */
+    public void setMessageReceiveOption(boolean messageReceiveOption) {
+        this.messageReceiveOption = messageReceiveOption;
+    }
+
+    /**
      * 从SDK转化为TUIKit的群信息bean
      *
      * @param infoResult
@@ -170,6 +191,7 @@ public class GroupInfo extends ChatInfo {
         setGroupType(infoResult.getGroupInfo().getGroupType());
         setOwner(infoResult.getGroupInfo().getOwner());
         setJoinType(infoResult.getGroupInfo().getGroupAddOpt());
+        setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE ? true : false);
         return this;
     }
 }

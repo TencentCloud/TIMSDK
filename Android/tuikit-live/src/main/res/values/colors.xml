@@ -82,5 +82,7 @@
     <color name="live_voice_room_color_text_red">#FF4E42</color>
 
     <color name="live_action_sheet_blue">#037BFF</color>
+    <color name="colorPrimary">#00A66b</color>
+    <color name="colorShade">#33000000</color>
 
 </resources>

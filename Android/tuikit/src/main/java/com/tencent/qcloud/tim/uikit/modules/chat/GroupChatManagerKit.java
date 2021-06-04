@@ -13,6 +13,7 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
+import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatManagerKit;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
@@ -20,7 +21,6 @@ import com.tencent.qcloud.tim.uikit.modules.group.apply.GroupApplyInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfo;
 import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfoProvider;
 import com.tencent.qcloud.tim.uikit.modules.group.member.GroupMemberInfo;
-import com.tencent.qcloud.tim.uikit.modules.message.LiveMessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageCustom;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
@@ -128,34 +128,6 @@ public class GroupChatManagerKit extends ChatManagerKit {
                         TUIKitLog.e(TAG, "sendTipsMessage failed, code: " + errCode + "|desc: " + errMsg);
                     }
                 });
-            }
-        });
-    }
-
-    public void sendLiveGroupMessage(String groupID, LiveMessageInfo info, final IUIKitCallBack callBack) {
-        Gson gson = new Gson();
-        String data = gson.toJson(info);
-        MessageInfo messageInfo = MessageInfoUtil.buildCustomMessage(data);
-        V2TIMManager.getMessageManager().sendMessage(messageInfo.getTimMessage(), null, groupID, V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, null, new V2TIMSendCallback<V2TIMMessage>() {
-            @Override
-            public void onProgress(int progress) {
-
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-                TUIKitLog.e(TAG, "sendLiveGroupMessage fail:" + code + "=" + desc);
-                if (callBack != null) {
-                    callBack.onError("", code, desc);
-                }
-            }
-
-            @Override
-            public void onSuccess(V2TIMMessage v2TIMMessage) {
-                TUIKitLog.i(TAG, "sendLiveGroupMessage onSuccess");
-                if (callBack != null) {
-                    callBack.onSuccess(v2TIMMessage);
-                }
             }
         });
     }

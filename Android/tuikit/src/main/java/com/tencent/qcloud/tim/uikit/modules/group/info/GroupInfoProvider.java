@@ -217,8 +217,8 @@ public class GroupInfoProvider {
         return null;
     }
 
-    public void setTopConversation(boolean flag) {
-        ConversationManagerKit.getInstance().setConversationTop(mGroupInfo.getId(), flag);
+    public void setTopConversation(boolean flag, IUIKitCallBack callBack) {
+        ConversationManagerKit.getInstance().setConversationTop(mGroupInfo.getId(), flag, callBack);
     }
 
     public void quitGroup(final IUIKitCallBack callBack) {

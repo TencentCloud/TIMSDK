@@ -11,25 +11,21 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
-import com.tencent.imsdk.v2.V2TIMCustomElem;
-import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.liteav.login.ProfileManager;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.scenes.LiveRoomAnchorActivity;
 import com.tencent.qcloud.tim.demo.scenes.LiveRoomAudienceActivity;
 import com.tencent.qcloud.tim.demo.scenes.net.RoomManager;
-import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
+import com.tencent.qcloud.tim.tuikit.live.helper.TUIKitLiveChatController;
 import com.tencent.qcloud.tim.uikit.modules.chat.ChatLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.input.InputLayout;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreActionUnit;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.InputMoreActionUnit;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.ICustomMessageViewGroup;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.IGroupMessageClickListener;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.IOnCustomMessageDrawListener;
-import com.tencent.qcloud.tim.uikit.modules.message.LiveMessageInfo;
+import com.tencent.qcloud.tim.tuikit.live.helper.LiveGroupMessageClickListener;
+import com.tencent.liteav.model.LiveMessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
@@ -40,9 +36,20 @@ public class ChatLayoutHelper {
     private static final String TAG = ChatLayoutHelper.class.getSimpleName();
 
     private Context mContext;
+    private String groupId;
 
     public ChatLayoutHelper(Context context) {
         mContext = context;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public void customizeMessageLayout(final MessageLayout messageLayout) {
+        if (messageLayout == null) {
+            return;
+        }
     }
 
     public void customizeChatLayout(final ChatLayout layout) {
@@ -106,10 +113,7 @@ public class ChatLayoutHelper {
 //        messageLayout.setTipsMessageFontColor(0xFF7E848C);
 //
         // 设置自定义的消息渲染时的回调
-        messageLayout.setOnCustomMessageDrawListener(new CustomMessageDraw());
-
-        // 设置点击群消息
-        messageLayout.setIGroupMessageClickListener(new IGroupMessageClickListener() {
+        TUIKitLiveChatController.setLiveGroupMessageClickListener(new LiveGroupMessageClickListener() {
 
             @Override
             public boolean handleLiveMessage(LiveMessageInfo info, String groupId) {
@@ -122,6 +126,7 @@ public class ChatLayoutHelper {
                 return true;
             }
         });
+
 //
 //        // 新增一个PopMenuAction
 //        PopMenuAction action = new PopMenuAction();
@@ -134,8 +139,8 @@ public class ChatLayoutHelper {
 //        });
 //        messageLayout.addPopAction(action);
 //
-//        final MessageLayout.OnItemClickListener l = messageLayout.getOnItemClickListener();
-//        messageLayout.setOnItemClickListener(new MessageLayout.OnItemClickListener() {
+//        final MessageLayout.OnItemLongClickListener l = messageLayout.getOnItemClickListener();
+//        messageLayout.setOnItemClickListener(new MessageLayout.OnItemLongClickListener() {
 //            @Override
 //            public void onMessageLongClick(View view, int position, MessageInfo messageInfo) {
 //                l.onMessageLongClick(view, position, messageInfo);
@@ -176,17 +181,15 @@ public class ChatLayoutHelper {
 //        inputLayout.disableSendFileAction(true);
 //        inputLayout.disableSendPhotoAction(true);
 //        inputLayout.disableVideoRecordAction(true);
-        inputLayout.enableAudioCall();
-        inputLayout.enableVideoCall();
 
         // TODO 可以自己增加一些功能，可以打开下面代码测试
         // 增加一个欢迎提示富文本
-        InputMoreActionUnit unit = new InputMoreActionUnit();
+        InputMoreActionUnit unit = new InputMoreActionUnit() {};
         unit.setIconResId(R.drawable.custom);
         unit.setTitleId(R.string.test_custom_action);
-        unit.setOnClickListener(new View.OnClickListener() {
+        unit.setOnClickListener(unit.new OnActionClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick() {
                 Gson gson = new Gson();
                 CustomHelloMessage customHelloMessage = new CustomHelloMessage();
                 customHelloMessage.version = TUIKitConstants.version;
@@ -237,39 +240,6 @@ public class ChatLayoutHelper {
             return baseView;
         }
 
-    }
-
-    public class CustomMessageDraw implements IOnCustomMessageDrawListener {
-
-        /**
-         * 自定义消息渲染时，会调用该方法，本方法实现了自定义消息的创建，以及交互逻辑
-         *
-         * @param parent 自定义消息显示的父View，需要把创建的自定义消息view添加到parent里
-         * @param info   消息的具体信息
-         */
-        @Override
-        public void onDraw(ICustomMessageViewGroup parent, MessageInfo info) {
-            // 获取到自定义消息的json数据
-            if (info.getTimMessage().getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_CUSTOM) {
-                return;
-            }
-            V2TIMCustomElem elem = info.getTimMessage().getCustomElem();
-            // 自定义的json数据，需要解析成bean实例
-            CustomHelloMessage data = null;
-            try {
-                data = new Gson().fromJson(new String(elem.getData()), CustomHelloMessage.class);
-            } catch (Exception e) {
-                DemoLog.w(TAG, "invalid json: " + new String(elem.getData()) + " " + e.getMessage());
-            }
-            if (data == null) {
-                DemoLog.e(TAG, "No Custom Data: " + new String(elem.getData()));
-            } else if (data.version == TUIKitConstants.JSON_VERSION_1
-                    || (data.version == TUIKitConstants.JSON_VERSION_4 && data.businessID.equals("text_link"))) {
-                CustomHelloTIMUIController.onDraw(parent, data);
-            } else {
-                DemoLog.w(TAG, "unsupported version: " + data);
-            }
-        }
     }
 
     private static void checkRoomExist(final LiveMessageInfo info) {

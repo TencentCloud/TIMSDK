@@ -12,7 +12,7 @@ import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
 public class MessageTipsHolder extends MessageEmptyHolder {
 
-    private TextView mChatTipsTv;
+    protected TextView mChatTipsTv;
 
     public MessageTipsHolder(View itemView) {
         super(itemView);
@@ -58,7 +58,7 @@ public class MessageTipsHolder extends MessageEmptyHolder {
 
         if (msg.getStatus() == MessageInfo.MSG_STATUS_REVOKE
                 || (msg.getMsgType() >= MessageInfo.MSG_TYPE_GROUP_CREATE
-                && msg.getMsgType() <= MessageInfo.MSG_TYPE_GROUP_AV_CALL_NOTICE)) {
+                && msg.getMsgType() <= MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE)) {
             if (msg.getExtra() != null) {
                 mChatTipsTv.setText(Html.fromHtml(msg.getExtra().toString()));
             }

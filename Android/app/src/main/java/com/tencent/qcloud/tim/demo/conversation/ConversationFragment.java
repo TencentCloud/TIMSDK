@@ -2,15 +2,14 @@ package com.tencent.qcloud.tim.demo.conversation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+
+import androidx.annotation.Nullable;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.demo.DemoApplication;
@@ -19,15 +18,19 @@ import com.tencent.qcloud.tim.demo.chat.ChatActivity;
 import com.tencent.qcloud.tim.demo.menu.Menu;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.uikit.base.BaseFragment;
+import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
 import com.tencent.qcloud.tim.uikit.component.action.PopActionClickListener;
 import com.tencent.qcloud.tim.uikit.component.action.PopDialogAdapter;
 import com.tencent.qcloud.tim.uikit.component.action.PopMenuAction;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationLayout;
+import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationListAdapter;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationListLayout;
 import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
+import com.tencent.qcloud.tim.uikit.modules.search.SearchMainActivity;
 import com.tencent.qcloud.tim.uikit.utils.PopWindowUtil;
+import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,13 +66,27 @@ public class ConversationFragment extends BaseFragment {
             @Override
             public void onItemClick(View view, int position, ConversationInfo conversationInfo) {
                 //此处为demo的实现逻辑，更根据会话类型跳转到相关界面，开发者可根据自己的应用场景灵活实现
-                startChatActivity(conversationInfo);
+                if (position == 0){
+                    //search
+                    Intent intent = new Intent(getContext(), SearchMainActivity.class);
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    startChatActivity(conversationInfo);
+                }
             }
         });
         mConversationLayout.getConversationList().setOnItemLongClickListener(new ConversationListLayout.OnItemLongClickListener() {
             @Override
             public void OnItemLongClick(View view, int position, ConversationInfo conversationInfo) {
-                startPopShow(view, position, conversationInfo);
+                if (position == 0){
+                    //search
+                    Intent intent = new Intent(getContext(), SearchMainActivity.class);
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    startPopShow(view, position - ConversationListAdapter.HEADER_COUNT, conversationInfo);
+                }
             }
         });
         initTitleAction();
@@ -90,7 +107,6 @@ public class ConversationFragment extends BaseFragment {
     }
 
     private void initPopMenuAction() {
-
         // 设置长按conversation显示PopAction
         List<PopMenuAction> conversationPopActions = new ArrayList<PopMenuAction>();
         PopMenuAction action = new PopMenuAction();
@@ -98,7 +114,17 @@ public class ConversationFragment extends BaseFragment {
         action.setActionClickListener(new PopActionClickListener() {
             @Override
             public void onActionClick(int position, Object data) {
-                mConversationLayout.setConversationTop(position, (ConversationInfo) data);
+                mConversationLayout.setConversationTop((ConversationInfo) data, new IUIKitCallBack() {
+                    @Override
+                    public void onSuccess(Object data) {
+
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        ToastUtil.toastLongMessage(module + ", Error code = " + errCode + ", desc = " + errMsg);
+                    }
+                });
             }
         });
         conversationPopActions.add(action);
@@ -111,6 +137,17 @@ public class ConversationFragment extends BaseFragment {
         });
         action.setActionName(getResources().getString(R.string.chat_delete));
         conversationPopActions.add(action);
+
+        action = new PopMenuAction();
+        action.setActionName(getResources().getString(R.string.clear_conversation_message));
+        action.setActionClickListener(new PopActionClickListener() {
+            @Override
+            public void onActionClick(int position, Object data) {
+                mConversationLayout.clearConversationMessage(position, (ConversationInfo) data);
+            }
+        });
+        conversationPopActions.add(action);
+
         mConversationPopActions.clear();
         mConversationPopActions.addAll(conversationPopActions);
     }
@@ -171,8 +208,10 @@ public class ConversationFragment extends BaseFragment {
     private void startChatActivity(ConversationInfo conversationInfo) {
         ChatInfo chatInfo = new ChatInfo();
         chatInfo.setType(conversationInfo.isGroup() ? V2TIMConversation.V2TIM_GROUP : V2TIMConversation.V2TIM_C2C);
+        chatInfo.setGroupType(conversationInfo.isGroup() ? conversationInfo.getGroupType() : "");
         chatInfo.setId(conversationInfo.getId());
         chatInfo.setChatName(conversationInfo.getTitle());
+        chatInfo.setDraft(conversationInfo.getDraft());
         Intent intent = new Intent(DemoApplication.instance(), ChatActivity.class);
         intent.putExtra(Constants.CHAT_INFO, chatInfo);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

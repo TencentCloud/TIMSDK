@@ -219,10 +219,10 @@ public class FileUtil {
                 };
 
                 for (String contentUriPrefix : contentUriPrefixesToTry) {
-                    Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
+                    Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.parseLong(id));
                     try {
                         String path = getDataColumn(context, contentUri, null, null);
-                        if (path != null) {
+                        if (path != null && Build.VERSION.SDK_INT < 29) {
                             return path;
                         }
                     } catch (Exception e) {
@@ -231,8 +231,7 @@ public class FileUtil {
                 }
 
                 // 在某些android8+的手机上，无法获取路径，所以用拷贝的方式，获取新文件名，然后把文件发出去
-                String destinationPath = getPathByCopyFile(context, uri);
-                return destinationPath;
+                return getPathByCopyFile(context, uri);
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
@@ -254,7 +253,7 @@ public class FileUtil {
                 final String[] selectionArgs = new String[]{split[1]};
 
                 String path = getDataColumn(context, contentUri, selection, selectionArgs);
-                if (TextUtils.isEmpty(path)) {
+                if (TextUtils.isEmpty(path) || Build.VERSION.SDK_INT >= 29) {
                     path = getPathByCopyFile(context, uri);
                 }
                 return path;
@@ -263,7 +262,7 @@ public class FileUtil {
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
             String path = getDataColumn(context, uri, null, null);
-            if (TextUtils.isEmpty(path)) {
+            if (TextUtils.isEmpty(path) || Build.VERSION.SDK_INT >= 29) {
                 // 在某些华为android9+的手机上，无法获取路径，所以用拷贝的方式，获取新文件名，然后把文件发出去
                 path = getPathByCopyFile(context, uri);
             }
@@ -291,7 +290,7 @@ public class FileUtil {
     }
 
     @Nullable
-    private static File generateFileName(@Nullable String name, File directory) {
+    public static File generateFileName(@Nullable String name, File directory) {
         if (name == null) {
             return null;
         }
@@ -329,7 +328,7 @@ public class FileUtil {
         return file;
     }
 
-    private static String getFileName(@NonNull Context context, Uri uri) {
+    public static String getFileName(@NonNull Context context, Uri uri) {
         String mimeType = context.getContentResolver().getType(uri);
         String filename = null;
 
@@ -357,7 +356,7 @@ public class FileUtil {
         return filename.substring(index + 1);
     }
 
-    private static File getDocumentCacheDir(@NonNull Context context) {
+    public static File getDocumentCacheDir(@NonNull Context context) {
         File dir = new File(context.getCacheDir(), DOCUMENTS_DIR);
         if (!dir.exists()) {
             dir.mkdirs();

@@ -8,7 +8,6 @@ public class TUIKitConfigs {
     private GeneralConfig generalConfig;
     private CustomFaceConfig customFaceConfig;
     private V2TIMSDKConfig sdkConfig;
-    private boolean mEnableGroupLiveEntry = true;
 
     private TUIKitConfigs() {
 
@@ -85,18 +84,4 @@ public class TUIKitConfigs {
         this.sdkConfig = timSdkConfig;
         return this;
     }
-
-    /**
-     * 群直播入口开关
-     *
-     * @param enableGroupLiveEntry true：有入口，false：无入口。默认 true
-     */
-    public void setEnableGroupLiveEntry(boolean enableGroupLiveEntry) {
-        mEnableGroupLiveEntry = enableGroupLiveEntry;
-    }
-
-    public boolean isEnableGroupLiveEntry() {
-        return mEnableGroupLiveEntry;
-    }
-
 }

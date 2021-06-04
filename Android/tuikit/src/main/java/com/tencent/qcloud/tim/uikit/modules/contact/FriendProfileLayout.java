@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -15,13 +12,17 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMFriendApplication;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMFriendOperationResult;
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMReceiveMessageOptInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
@@ -56,6 +57,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     private LineControllerView mRemarkView;
     private LineControllerView mAddBlackView;
     private LineControllerView mChatTopView;
+    private LineControllerView mMessageOptionView;
     private TextView mDeleteView;
     private TextView mChatView;
 
@@ -67,6 +69,8 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     private String mNickname;
     private String mRemark;
     private String mAddWords;
+
+    private IUIKitCallBack mIUICallback;
 
     public FriendProfileLayout(Context context) {
         super(context);
@@ -94,6 +98,8 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         mAddWordingView.setSingleLine(false);
         mRemarkView = findViewById(R.id.remark);
         mRemarkView.setOnClickListener(this);
+        mMessageOptionView = findViewById(R.id.msg_rev_opt);
+        mMessageOptionView.setOnClickListener(this);
         mChatTopView = findViewById(R.id.chat_to_top);
         mAddBlackView = findViewById(R.id.blackList);
         mDeleteView = findViewById(R.id.btnDel);
@@ -119,8 +125,21 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             mChatTopView.setChecked(ConversationManagerKit.getInstance().isTopConversation(mId));
             mChatTopView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    ConversationManagerKit.getInstance().setConversationTop(mId, isChecked);
+                public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
+                    ConversationManagerKit.getInstance().setConversationTop(mId, isChecked, new IUIKitCallBack() {
+                        @Override
+                        public void onSuccess(Object data) {
+
+                        }
+
+                        @Override
+                        public void onError(String module, int errCode, String errMsg) {
+                            buttonView.setChecked(false);
+                            if (mIUICallback != null) {
+                                mIUICallback.onError(module, errCode, errMsg);
+                            }
+                        }
+                    });
                 }
             });
             loadUserProfile();
@@ -145,6 +164,8 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             if (!TextUtils.isEmpty(mContactInfo.getAvatarurl())) {
                 GlideEngine.loadImage(mHeadImageView, Uri.parse(mContactInfo.getAvatarurl()));
             }
+
+            updateMessageOptionView();
         } else if (data instanceof V2TIMFriendApplication) {
             mFriendApplication = (V2TIMFriendApplication) data;
             mId = mFriendApplication.getUserID();
@@ -153,6 +174,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             mAddWordingView.setContent(mFriendApplication.getAddWording());
             mRemarkView.setVisibility(GONE);
             mAddBlackView.setVisibility(GONE);
+            mMessageOptionView.setVisibility(GONE);
             mDeleteView.setText(R.string.refuse);
             mDeleteView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -176,6 +198,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             mAddWordingView.setContent(item.getRequestMsg());
             mRemarkView.setVisibility(GONE);
             mAddBlackView.setVisibility(GONE);
+            mMessageOptionView.setVisibility(GONE);
             mDeleteView.setText(R.string.refuse);
             mDeleteView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -200,6 +223,62 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         mIDView.setContent(mId);
     }
 
+    public void setUICallback(IUIKitCallBack callback) {
+        this.mIUICallback = callback;
+    }
+
+    private void updateMessageOptionView() {
+        mMessageOptionView.setVisibility(VISIBLE);
+        //get
+        final ArrayList userIdList = new ArrayList();
+        userIdList.add(mId);
+        V2TIMManager.getMessageManager().getC2CReceiveMessageOpt(userIdList, new V2TIMValueCallback<List<V2TIMReceiveMessageOptInfo>>(){
+            @Override
+            public void onSuccess(List<V2TIMReceiveMessageOptInfo> V2TIMReceiveMessageOptInfos) {
+                if (V2TIMReceiveMessageOptInfos == null || V2TIMReceiveMessageOptInfos.isEmpty()) {
+                    TUIKitLog.d(TAG, "getC2CReceiveMessageOpt null");
+                    return;
+                }
+                V2TIMReceiveMessageOptInfo V2TIMReceiveMessageOptInfo = V2TIMReceiveMessageOptInfos.get(0);
+                int option = V2TIMReceiveMessageOptInfo.getC2CReceiveMessageOpt();
+
+                TUIKitLog.d(TAG, "getC2CReceiveMessageOpt option = " + option);
+                mMessageOptionView.setChecked(option == V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE ? true : false);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIKitLog.d(TAG, "getC2CReceiveMessageOpt onError code = " + code + ", desc = " + desc);
+                mMessageOptionView.setChecked(false);
+            }
+        });
+
+        //set
+        mMessageOptionView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int option;
+                if (isChecked) {
+                    option = V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE;
+                } else {
+                    option = V2TIMMessage.V2TIM_RECEIVE_MESSAGE;
+                }
+
+                V2TIMManager.getMessageManager().setC2CReceiveMessageOpt(userIdList, option, new V2TIMCallback(){
+                    @Override
+                    public void onSuccess() {
+                        TUIKitLog.d(TAG, "setC2CReceiveMessageOpt onSuccess");
+                    }
+
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIKitLog.d(TAG, "setC2CReceiveMessageOpt onError code = " + code + ", desc = " + desc);
+                    }
+                });
+            }
+        });
+    }
+
     private void updateViews(ContactItemBean bean) {
         mContactInfo = bean;
         mChatTopView.setVisibility(View.VISIBLE);
@@ -209,8 +288,21 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         }
         mChatTopView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ConversationManagerKit.getInstance().setConversationTop(mId, isChecked);
+            public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
+                ConversationManagerKit.getInstance().setConversationTop(mId, isChecked, new IUIKitCallBack() {
+                    @Override
+                    public void onSuccess(Object data) {
+
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        buttonView.setChecked(false);
+                        if (mIUICallback != null) {
+                            mIUICallback.onError(module, errCode, errMsg);
+                        }
+                    }
+                });
             }
         });
         mId = bean.getId();
@@ -220,6 +312,10 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             mRemarkView.setContent(bean.getRemark());
             mAddBlackView.setVisibility(VISIBLE);
             mAddBlackView.setChecked(bean.isBlackList());
+            mMessageOptionView.setVisibility(VISIBLE);
+
+            updateMessageOptionView();
+
             mAddBlackView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -235,6 +331,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             mRemarkView.setVisibility(GONE);
             mAddBlackView.setVisibility(GONE);
             mDeleteView.setVisibility(GONE);
+            mMessageOptionView.setVisibility(GONE);
         }
 
         if (!TextUtils.isEmpty(mNickname)) {

@@ -72,10 +72,19 @@ public class GroupInfoAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(info.getIconUrl())) {
             GlideEngine.loadImage(holder.memberIcon, info.getIconUrl(), null);
         }
-        if (!TextUtils.isEmpty(info.getAccount())) {
-            holder.memberName.setText(info.getAccount());
+        // 显示优先级 群名片->昵称->账号
+        if (!TextUtils.isEmpty(info.getNameCard())) {
+            holder.memberName.setText(info.getNameCard());
         } else {
-            holder.memberName.setText("");
+            if (!TextUtils.isEmpty(info.getNickName())) {
+                holder.memberName.setText(info.getNickName());
+            } else {
+                if (!TextUtils.isEmpty(info.getAccount())) {
+                    holder.memberName.setText(info.getAccount());
+                } else {
+                    holder.memberName.setText("");
+                }
+            }
         }
         view.setOnClickListener(null);
         holder.memberIcon.setBackground(null);

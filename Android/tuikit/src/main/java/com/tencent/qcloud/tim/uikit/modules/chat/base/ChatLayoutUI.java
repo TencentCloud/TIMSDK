@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.uikit.modules.chat.base;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,8 +28,12 @@ public abstract class ChatLayoutUI extends LinearLayout implements IChatLayout {
     private MessageLayout mMessageLayout;
     private InputLayout mInputLayout;
     private NoticeLayout mNoticeLayout;
-    private ChatInfo mChatInfo;
+    protected ChatInfo mChatInfo;
     private TextView mChatAtInfoLayout;
+
+    private LinearLayout mForwardLayout;
+    private Button mForwardButton;
+    private Button mDeleteButton;
 
     public ChatLayoutUI(Context context) {
         super(context);
@@ -59,11 +64,25 @@ public abstract class ChatLayoutUI extends LinearLayout implements IChatLayout {
         mNoticeLayout = findViewById(R.id.chat_notice_layout);
         mChatAtInfoLayout = findViewById(R.id.chat_at_text_view);
 
+        mForwardLayout = findViewById(R.id.forward_layout);
+        mForwardButton = findViewById(R.id.forward_button);
+        mDeleteButton = findViewById(R.id.delete_button);
+
         init();
     }
 
     protected void init() {
 
+    }
+
+    public LinearLayout getForwardLayout() {
+        return mForwardLayout;
+    }
+    public Button getForwardButton() {
+        return mForwardButton;
+    }
+    public Button getDeleteButton() {
+        return mDeleteButton;
     }
 
     @Override
@@ -113,7 +132,7 @@ public abstract class ChatLayoutUI extends LinearLayout implements IChatLayout {
     }
 
     @Override
-    public void loadMessages() {
+    public void loadMessages(int type) {
 
     }
 

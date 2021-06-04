@@ -5,7 +5,7 @@ import android.widget.EditText;
 
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.input.InputLayout;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.inputmore.InputMoreActionUnit;
+import com.tencent.qcloud.tim.uikit.modules.chat.base.InputMoreActionUnit;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 
 /**
@@ -77,10 +77,6 @@ public interface IInputLayout {
      * @param disable
      */
     void disableSendFileAction(boolean disable);
-
-    boolean enableAudioCall();
-
-    boolean enableVideoCall();
 
     /**
      * 增加更多面板上的事件单元

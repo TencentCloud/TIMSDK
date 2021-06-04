@@ -23,6 +23,11 @@ import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.TUILiveRoomAnchorLayo
 import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoomDef;
 import com.tencent.qcloud.tim.tuikit.live.utils.PermissionUtils;
 import com.tencent.qcloud.tim.tuikit.live.utils.TUILiveLog;
+import com.tencent.qcloud.tim.uikit.base.IBaseMessageSender;
+import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
+import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
+import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +122,11 @@ public class DefaultGroupLiveAnchorActivity extends AppCompatActivity implements
     }
 
     private void sendLiveGroupMessage(TRTCLiveRoomDef.TRTCLiveRoomInfo roomInfo, int roomStatus) {
+        IBaseMessageSender messageSender = TUIKitListenerManager.getInstance().getMessageSender();
+        if (messageSender == null) {
+            TUILiveLog.e(TAG, "sendLiveGroupMessage error ,messageSender is null");
+            return;
+        }
         LiveMessageInfo liveMessageInfo = new LiveMessageInfo();
         liveMessageInfo.version = 1;
         liveMessageInfo.roomId = roomInfo.roomId;
@@ -127,20 +137,16 @@ public class DefaultGroupLiveAnchorActivity extends AppCompatActivity implements
         liveMessageInfo.anchorId = roomInfo.ownerId;
         liveMessageInfo.anchorName = roomInfo.ownerName;
         String data = new Gson().toJson(liveMessageInfo);
-        V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createCustomMessage(data.getBytes());
-        V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, null, mGroupID, V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, null, new V2TIMSendCallback<V2TIMMessage>() {
+        MessageInfo messageInfo = MessageInfoUtil.buildCustomMessage(data);
+        messageSender.sendMessage(messageInfo, null, mGroupID, true, false, new IUIKitCallBack() {
             @Override
-            public void onProgress(int progress) {
-
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-            }
-
-            @Override
-            public void onSuccess(V2TIMMessage v2TIMMessage) {
+            public void onSuccess(Object data) {
                 TUILiveLog.d(TAG, "sendLiveGroupMessage onSuccess");
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+
             }
         });
     }

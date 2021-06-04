@@ -10,8 +10,6 @@ import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
-import com.tencent.liteav.model.CallModel;
-import com.tencent.liteav.model.TRTCAVCallImpl;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.chat.ChatActivity;
@@ -22,6 +20,7 @@ import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageBean;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageContainerBean;
+import com.tencent.liteav.model.CallModel;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageHelper;
@@ -131,25 +130,29 @@ public class OfflineMessageDispatcher {
             ChatInfo chatInfo = new ChatInfo();
             chatInfo.setType(bean.chatType);
             chatInfo.setId(bean.sender);
-            Intent intent = new Intent(DemoApplication.instance(), ChatActivity.class);
-            intent.putExtra(Constants.CHAT_INFO, chatInfo);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            DemoApplication.instance().startActivity(intent);
+            chatInfo.setChatName(bean.nickname);
+            Intent chatIntent = new Intent(DemoApplication.instance(), ChatActivity.class);
+            chatIntent.putExtra(Constants.CHAT_INFO, chatInfo);
+            chatIntent.putExtra(Constants.IS_OFFLINE_PUSH_JUMP, true);
+            chatIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent mainIntent = new Intent(DemoApplication.instance(), MainActivity.class);
+            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            DemoApplication.instance().startActivities(new Intent[]{mainIntent, chatIntent});
             return true;
         } else if (bean.action == OfflineMessageBean.REDIRECT_ACTION_CALL) {
             final CallModel model = new Gson().fromJson(bean.content, CallModel.class);
             DemoLog.i(TAG, "bean: "+ bean + " model: " + model);
             if (model != null) {
+                model.sender = bean.sender;
+                model.data = bean.content;
                 long timeout = V2TIMManager.getInstance().getServerTime() - bean.sendTime;
                 if (timeout >= model.timeout) {
                     ToastUtil.toastLongMessage(DemoApplication.instance().getString(R.string.call_time_out));
                 } else {
                     if (TextUtils.isEmpty(model.groupId)) {
-                        if (bean.chatType == V2TIMConversation.V2TIM_C2C) {
-                            // c2c 登录之后会同步消息，所以不需要主动调用通话界面
-                        } else {
-                            DemoLog.e(TAG, "group call but no group id");
-                        }
+                            Intent mainIntent = new Intent(DemoApplication.instance(), MainActivity.class);
+                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            DemoApplication.instance().startActivity(mainIntent);
                     } else {
                         V2TIMSignalingInfo info = new V2TIMSignalingInfo();
                         info.setInviteID(model.callId);
@@ -165,18 +168,17 @@ public class OfflineMessageDispatcher {
 
                             @Override
                             public void onSuccess() {
-                                ((TRTCAVCallImpl)(TRTCAVCallImpl.sharedInstance(DemoApplication.instance()))).
-                                        processInvite(model.callId, bean.sender, model.groupId, model.invitedList, bean.content);
+                                Intent mainIntent = new Intent(DemoApplication.instance(), MainActivity.class);
+                                mainIntent.putExtra(Constants.CALL_MODEL, model);
+                                mainIntent.putExtra(Constants.IS_OFFLINE_PUSH_JUMP, true);
+                                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                DemoApplication.instance().startActivity(mainIntent);
                             }
                         });
-                        return true;
                     }
                 }
             }
         }
-        Intent intent = new Intent(DemoApplication.instance(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        DemoApplication.instance().startActivity(intent);
         return true;
     }
 }

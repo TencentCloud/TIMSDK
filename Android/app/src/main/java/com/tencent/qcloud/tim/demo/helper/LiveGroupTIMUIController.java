@@ -14,7 +14,7 @@ import com.tencent.qcloud.tim.demo.scenes.LiveRoomAudienceActivity;
 import com.tencent.qcloud.tim.demo.scenes.net.RoomManager;
 import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.ICustomMessageViewGroup;
-import com.tencent.qcloud.tim.uikit.modules.message.LiveMessageInfo;
+import com.tencent.liteav.model.LiveMessageInfo;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 public class LiveGroupTIMUIController {
