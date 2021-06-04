@@ -92,24 +92,16 @@
 
 </table>
 
-
-## 接口升级
-
-- [iOS v2 v3 v4](https://github.com/tencentyun/TIMSDK/wiki/iOS-IMSDK-%E6%8E%A5%E5%8F%A3%E5%8F%98%E5%8C%96%EF%BC%88v2---v3---v4%EF%BC%89)
-- [Android v2 v3 v4](https://github.com/tencentyun/TIMSDK/wiki/Android-IMSDK-%E6%8E%A5%E5%8F%A3%E5%8F%98%E5%8C%96%EF%BC%88v2---v3---v4%EF%BC%89)
-- [Windows v2 v4](https://github.com/tencentyun/TIMSDK/wiki/Windows-IMSDK-%E6%8E%A5%E5%8F%A3%E5%8F%98%E5%8C%96%EF%BC%88v2---v4%EF%BC%89)
-
 ## 问题反馈
 - 为了更好的了解您使用TIMSDK所遇到的问题，方便快速有效定位解决TIMSDK问题，希望您按如下反馈指引反馈issue，方便我们尽快解决您的问题
 - [TIMSDK issue反馈指引](https://github.com/tencentyun/TIMSDK/wiki/TIMSDK-issue%E6%9C%89%E6%95%88%E5%8F%8D%E9%A6%88%E6%A8%A1%E6%9D%BF)
 
 
-
 ## 基础版与增强版差异对比
 - SDK 从 5.4 版本开始，原有精简版改名为增强版，原有标准版改名为基础版。
-- 增强版与基础版同时支持 V2 API；但增强版不再支持旧版 API，基础版继续支持旧版 API。
-- 如果您没有接入过旧版 API，建议您直接使用 V2 API，选择增强版 SDK。
-- 如果您已经接入了旧版 API，推荐您升级到 V2 API，逐步切换到增强版 SDK。
+- 增强版与基础版同时支持 [V2 API](https://cloud.tencent.com/document/product/269/44477)；但增强版不再支持旧版 API，基础版继续支持旧版 API。
+- 如果您没有接入过旧版 API，建议您直接使用 [V2 API](https://cloud.tencent.com/document/product/269/44477)，选择增强版 SDK。
+- 如果您已经接入了旧版 API，推荐您升级到 [V2 API](https://cloud.tencent.com/document/product/269/44477)，逐步切换到增强版 SDK。
 - 在 SDK 体积和安装包增量上，增强版与基础版相比有大幅度缩减。
 - 在 SDK 功能支持上，增强版与基础版相比提供了更多新功能特性。
 - 后续新功能开发，只在增强版上提供支持；基础版后续只做例行维护与现有问题修复。
