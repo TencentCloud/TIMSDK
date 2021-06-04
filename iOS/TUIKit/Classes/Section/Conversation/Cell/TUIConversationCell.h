@@ -56,6 +56,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *timeLabel;
 
 /**
+ *  消息免打扰
+ */
+@property (nonatomic, strong) UIImageView *disturbImageView;
+
+/**
  *  未读视图
  *  如果当前会话有消息未读的话，则在会话单元右侧显示红底白字的原型图标来展示未读数量。
  */
@@ -68,6 +73,12 @@ NS_ASSUME_NONNULL_BEGIN
  *  数据源的详细信息请参考 \Section\Conversation\Cell\TUIConversationCellData.h
  */
 @property (atomic, strong) TUIConversationCellData *convData;
+
+/**
+ * 会话选中图标
+ * 多选场景中用来标识是否选中会话
+ */
+@property (nonatomic, strong) UIImageView *selectedIcon;
 
 /**
  *  填充数据

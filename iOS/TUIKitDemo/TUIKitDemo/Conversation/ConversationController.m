@@ -23,12 +23,10 @@
 #import "TIMUserProfile+DataProvider.h"
 #import "TNaviBarIndicatorView.h"
 #import "TUIKit.h"
-#import "THelper.h"
 #import "TCUtil.h"
 #import "TIMUserProfile+DataProvider.h"
-#import <ImSDK/ImSDK.h>
 
-@interface ConversationController () <TUIConversationListControllerDelegate, TPopViewDelegate>
+@interface ConversationController () <TUIConversationListControllerListener, TPopViewDelegate>
 @property (nonatomic, strong) TNaviBarIndicatorView *titleView;
 @end
 
@@ -36,8 +34,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[TUIKitListenerManager sharedInstance] addConversationListControllerListener:self];
+    
     TUIConversationListController *conv = [[TUIConversationListController alloc] init];
-    conv.delegate = self;
     [self addChildViewController:conv];
     [self.view addSubview:conv.view];
 
@@ -52,6 +51,25 @@
     self.navigationItem.rightBarButtonItem = moreItem;
 
     [self setupNavigation];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
+}
+
+- (void)dealloc
+{
+    [[TUIKitListenerManager sharedInstance] removeConversationListControllerListener:self];
+    [NSNotificationCenter.defaultCenter removeObserver:self];
+}
+
+- (void)onFriendInfoChanged:(NSNotification *)notice
+{
+    for (UIViewController *vc in self.childViewControllers) {
+        if ([vc isKindOfClass:TUIConversationListController.class]) {
+            TConversationListViewModel *viewModel = [(TUIConversationListController *)vc viewModel];
+            [viewModel loadConversation];
+            break;
+        }
+    }
 }
 
 /**
@@ -99,29 +117,29 @@
  *推送默认跳转
  */
 - (void)pushToChatViewController:(NSString *)groupID userID:(NSString *)userID {
+
+    UIViewController *topVc = self.navigationController.topViewController;
+    BOOL isSameTarget = NO;
+    BOOL isInChat = NO;
+    if ([topVc isKindOfClass:ChatViewController.class]) {
+        TUIConversationCellData *cellData = [(ChatViewController *)topVc conversationData];
+        isSameTarget = [cellData.groupID isEqualToString:groupID] || [cellData.userID isEqualToString:userID];
+        isInChat = YES;
+    }
+    if (isInChat && isSameTarget) {
+        return;
+    }
+    
+    if (isInChat && !isSameTarget) {
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+    
     ChatViewController *chat = [[ChatViewController alloc] init];
     TUIConversationCellData *conversationData = [[TUIConversationCellData alloc] init];
     conversationData.groupID = groupID;
     conversationData.userID = userID;
     chat.conversationData = conversationData;
     [self.navigationController pushViewController:chat animated:YES];
-}
-
-/**
- *在消息列表内，点击了某一具体会话后的响应函数
- */
-- (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCell *)conversation
-{
-    ChatViewController *chat = [[ChatViewController alloc] init];
-    chat.conversationData = conversation.convData;
-    [self.navigationController pushViewController:chat animated:YES];
-    
-    if ([conversation.convData.groupID isEqualToString:@"im_demo_admin"] || [conversation.convData.userID isEqualToString:@"im_demo_admin"]) {
-        [TCUtil report:Action_Clickhelper actionSub:@"" code:@(0) msg:@"clickhelper"];
-    }
-    if ([conversation.convData.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [conversation.convData.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
-        [TCUtil report:Action_Clickdefaultgrp actionSub:@"" code:@(0) msg:@"clickdefaultgrp"];
-    }
 }
 
 /**
@@ -306,4 +324,47 @@
         // to do
     }];
 }
+
+#pragma mark TUIConversationListControllerListener
+
+/**
+ * 获取会话展示信息回调
+ */
+- (NSString *)getConversationDisplayString:(V2TIMConversation *)conversation {
+    V2TIMMessage *msg = conversation.lastMessage;
+    if (msg.customElem == nil || msg.customElem.data == nil) {
+        return nil;
+    }
+    NSDictionary *param = [TCUtil jsonData2Dictionary:msg.customElem.data];
+    if (param != nil && [param isKindOfClass:[NSDictionary class]]) {
+        NSString *businessID = param[@"businessID"];
+        // 判断是不是自定义跳转消息
+        if ([businessID isEqualToString:TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
+            return param[@"text"];
+        }
+        // 判断是不是群创建自定义消息
+        else if ([businessID isEqualToString:GroupCreate] || [param.allKeys containsObject:GroupCreate]) {
+            return [NSString stringWithFormat:@"\"%@\"%@",param[@"opUser"],param[@"content"]];
+        }
+    }
+    return nil;
+}
+
+/**
+ *  点击会话回调
+ */
+- (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCell *)conversationCell
+{
+    ChatViewController *chat = [[ChatViewController alloc] init];
+    chat.conversationData = conversationCell.convData;
+    [self.navigationController pushViewController:chat animated:YES];
+    
+    if ([conversationCell.convData.groupID isEqualToString:@"im_demo_admin"] || [conversationCell.convData.userID isEqualToString:@"im_demo_admin"]) {
+        [TCUtil report:Action_Clickhelper actionSub:@"" code:@(0) msg:@"clickhelper"];
+    }
+    if ([conversationCell.convData.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [conversationCell.convData.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
+        [TCUtil report:Action_Clickdefaultgrp actionSub:@"" code:@(0) msg:@"clickdefaultgrp"];
+    }
+}
+
 @end

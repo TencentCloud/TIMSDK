@@ -2,25 +2,19 @@
 #ifndef THeader_h
 #define THeader_h
 
+@import ImSDK_Plus;
+
 //自定义消息业务版本号
 #define GroupCreate @"group_create"
 #define TextLink @"text_link"
-#define AVCall @"av_call"
-#define GroupLive @"group_live"     // 群直播
 
 #define GroupCreate_Version 4       // 创建群自定义消息业务版本
 #define TextLink_Version    4       // 自定义 cell 业务版本（点击跳转官网）
-#define AVCall_Version      4       // 音视频通话业务版本
 
 //推送业务版本号
 #define APNs_Version             1  //推送版本
 #define APNs_Business_NormalMsg  1  //普通消息推送
 #define APNs_Business_Call       2  //音视频通话推送
-
-//信令业务类型
-#define Signal_Business_ID   @"businessID"
-#define Signal_Business_Call @"av_call"  //音视频通话信令
-#define Signal_Business_Live @"av_live"  //音视频直播信令
 
 #define DefaultAvatarImage ([TUIKit sharedInstance].config.defaultAvatarImage)
 #define DefaultGroupAvatarImage ([TUIKit sharedInstance].config.defaultGroupAvatarImage)
@@ -106,6 +100,12 @@
 //group_live
 #define TGroupLiveMessageCell_ReuseId @"TGroupLiveMessageCell"
 
+//relay message cell
+#define TRelayMessageCell_ReuserId @"TRelayMessageCell"
+#define TRelayMessageCell_Text_PADDING (200)
+#define TRelayMessageCell_Text_Height_Max (100)
+#define TRelayMessageCell_Text_Width_Max (Screen_Width - TRelayMessageCell_Text_PADDING)
+
 //text view
 #define TTextView_Height (49)
 #define TTextView_Button_Size CGSizeMake(30, 30)
@@ -158,6 +158,7 @@
 #define TConversationCell_Height 72
 #define TConversationCell_Margin 12
 #define TConversationCell_Margin_Text 14
+#define TConversationCell_Margin_Disturb 16
 
 //AudioCall cell
 #define TUIAudioCallUserCell_ReuseId @"TUIAudioCallUserCell"
@@ -322,12 +323,13 @@
 #define TUIKitNotification_onBlackListAdded @"TUIKitNotification_onBlackListAdded"
 #define TUIKitNotification_onBlackListDeleted @"TUIKitNotification_onBlackListDeleted"
 #define TUIKitNotification_onRecvMessageReceipts @"TUIKitNotification_onRecvMessageReceipts"
-#define TUIKitNotification_onChangeUnReadCount @"TUIKitNotification_onChangeUnReadCount"
 #define TUIKitNotification_onGroupDismissed @"TUIKitNotification_onGroupDismissed"
 #define TUIKitNotification_onGroupRecycled @"TUIKitNotification_onGroupRecycled"
 #define TUIKitNotification_onKickOffFromGroup @"TUIKitNotification_onKickOffFromGroup"
 #define TUIKitNotification_onLeaveFromGroup @"TUIKitNotification_onLeaveFromGroup"
 #define TUIKitNotification_onReceiveJoinApplication @"TUIKitNotification_onReceiveJoinApplication"
+#define TUIKitNotification_onMessageStatusChanged @"TUIKitNotification_onMessageStatusChanged"
+#define TUIKitNotification_onTotalUnreadMessageCountChanged @"TUIKitNotifiction_onTotalUnreadMessageCountChanged"
 
 //path
 #define TUIKit_DB_Path [NSHomeDirectory() stringByAppendingString:@"/Documents/com_tencent_imsdk_data/"]

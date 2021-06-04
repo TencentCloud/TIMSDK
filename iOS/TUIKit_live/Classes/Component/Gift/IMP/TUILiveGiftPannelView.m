@@ -6,7 +6,7 @@
 //
 
 #import "Masonry.h"
-#import "UIView+Toast.h"
+#import "THelper.h"
 
 #import "TUILiveGiftPanelView.h"
 #import "TUILiveGiftDataSource.h"
@@ -114,7 +114,7 @@ static NSString *const reuseId = @"gift";
         __weak typeof(self) weakSelf = self;
         [self.dataProvider queryGiftInfoList:^(NSArray<TUILiveGiftInfo *> * _Nullable list, NSString * _Nullable errMsg) {
             if (errMsg.length) {
-                [self makeToast:errMsg];
+                [THelper makeToast:errMsg];
                 return;
             }
             weakSelf.gifts = [NSArray arrayWithArray:list?:@[]];

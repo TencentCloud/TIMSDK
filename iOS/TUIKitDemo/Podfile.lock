@@ -2,7 +2,7 @@ PODS:
   - lottie-ios (2.5.3)
   - Masonry (1.1.0)
   - MJExtension (3.2.2)
-  - MJRefresh (3.5.0)
+  - MJRefresh (3.6.1)
   - MMLayout (0.2.0)
   - ReactiveObjC (3.1.1)
   - SDWebImage (5.9.0):
@@ -10,26 +10,21 @@ PODS:
   - SDWebImage/Core (5.9.0)
   - SSZipArchive (2.2.3)
   - Toast (4.0.0)
-  - TXIMSDK_iOS (5.1.21)
-  - TXIMSDK_TUIKit_iOS (5.1.21):
+  - TXIMSDK_Plus_iOS (5.4.666)
+  - TXIMSDK_TUIKit_iOS (5.4.666):
     - MMLayout (= 0.2.0)
     - ReactiveObjC (= 3.1.1)
     - SDWebImage (= 5.9.0)
     - Toast (= 4.0.0)
-    - TXIMSDK_iOS (= 5.1.21)
-    - TXLiteAVSDK_TRTC (= 7.8.9519)
-  - TXIMSDK_TUIKit_live_iOS (5.1.21):
+    - TXIMSDK_Plus_iOS (= 5.4.666)
+  - TXIMSDK_TUIKit_live_iOS (5.4.666):
     - lottie-ios (= 2.5.3)
     - Masonry (= 1.1.0)
     - MJExtension (= 3.2.2)
-    - MMLayout (= 0.2.0)
-    - ReactiveObjC (= 3.1.1)
-    - SDWebImage (= 5.9.0)
     - SSZipArchive (= 2.2.3)
-    - Toast (= 4.0.0)
-    - TXIMSDK_iOS (= 5.1.21)
-    - TXLiteAVSDK_TRTC (= 7.8.9519)
-  - TXLiteAVSDK_TRTC (7.8.9519)
+    - TXIMSDK_TUIKit_iOS (= 5.4.666)
+    - TXLiteAVSDK_TRTC (= 8.5.10022)
+  - TXLiteAVSDK_TRTC (8.5.10022)
 
 DEPENDENCIES:
   - MJRefresh
@@ -47,7 +42,7 @@ SPEC REPOS:
     - SDWebImage
     - SSZipArchive
     - Toast
-    - TXIMSDK_iOS
+    - TXIMSDK_Plus_iOS
     - TXIMSDK_TUIKit_iOS
     - TXIMSDK_TUIKit_live_iOS
     - TXLiteAVSDK_TRTC
@@ -56,16 +51,16 @@ SPEC CHECKSUMS:
   lottie-ios: a50d5c0160425cd4b01b852bb9578963e6d92d31
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MJExtension: d9b9c74cbdeb724c1e9ecbb157b318276e62e876
-  MJRefresh: 6afc955813966afb08305477dd7a0d9ad5e79a16
+  MJRefresh: d2c1970d1cf6e77fcfcdfe76c943dfab8dbfa5c1
   MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 62ae4a18473520c67b79e9724c31a63599cc9423
   SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_iOS: 7659d94e2f684bd132b12f565782c93ec2691fe1
-  TXIMSDK_TUIKit_iOS: 410663a2e7cddecbe4bbdeeb8710e68e93eb97dd
-  TXIMSDK_TUIKit_live_iOS: 9e47494d990d0cd1a8c49ea64d36aa0abc460235
-  TXLiteAVSDK_TRTC: c127880c4dbe844bdc7575a655be8042ce96024a
+  TXIMSDK_Plus_iOS: 4db13c8646d4f58d8ae558488f9523a2efd4ef6a
+  TXIMSDK_TUIKit_iOS: 667138c26fccc58e06663536aa45adbe042c5a6d
+  TXIMSDK_TUIKit_live_iOS: 3737cceb813691064589b31d9a717ea5700812e0
+  TXLiteAVSDK_TRTC: 52c1085c546ca7871950a815edf733196af645c1
 
 PODFILE CHECKSUM: c6c7d57f088ecc75becbf79a03ada7707285671c
 

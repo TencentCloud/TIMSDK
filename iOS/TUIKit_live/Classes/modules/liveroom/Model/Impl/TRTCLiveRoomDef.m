@@ -7,7 +7,7 @@
 //
 
 #import "TRTCLiveRoomDef.h"
-#import <ImSDK/ImSDK.h>
+#import "THeader.h"
 
 @implementation TRTCCreateRoomParam
 

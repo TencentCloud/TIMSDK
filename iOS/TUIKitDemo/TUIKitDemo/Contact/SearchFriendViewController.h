@@ -11,7 +11,7 @@
  *  本类依赖于腾讯云 TUIKit和IMSDK 实现
  */
 #import <UIKit/UIKit.h>
-@import ImSDK;
+@import ImSDK_Plus;
 
 @interface SearchFriendSearchResultViewController : UIViewController
 

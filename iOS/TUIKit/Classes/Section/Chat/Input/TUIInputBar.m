@@ -372,8 +372,8 @@
             }
         }
     }
-    // 监听 @ 字符的输入
-    else if ([text isEqualToString:@"@"]) {
+    // 监听 @ 字符的输入，包含全角/半角
+    else if ([text isEqualToString:@"@"] || [text isEqualToString:@"＠"]) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputBarDidInputAt:)]) {
             [self.delegate inputBarDidInputAt:self];
         }

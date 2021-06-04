@@ -8,9 +8,8 @@
 #import "TContactSelectViewModel.h"
 #import "TCommonContactSelectCellData.h"
 #import "NSString+TUICommon.h"
-#import "THeader.h"
+#import "TUIKit.h"
 #import "ReactiveObjC.h"
-@import ImSDK;
 
 @interface TContactSelectViewModel()
 @property NSDictionary<NSString *, NSArray<TCommonContactSelectCellData *> *> *dataDict;

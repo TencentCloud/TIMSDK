@@ -30,7 +30,7 @@
 #import "ChatViewController.h"
 #import "TUIContactSelectController.h"
 #import "TIMUserProfile+DataProvider.h"
-#import <ImSDK/ImSDK.h>
+@import ImSDK_Plus;
 
 
 @interface ContactsController () <TPopViewDelegate>

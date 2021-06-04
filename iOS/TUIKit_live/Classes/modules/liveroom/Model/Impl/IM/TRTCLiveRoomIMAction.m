@@ -8,9 +8,10 @@
 
 #import "TRTCLiveRoomIMAction.h"
 #import "TXLiveRoomCommonDef.h"
-#import <ImSDK/ImSDK.h>
 #import "TRTCLiveRoomDef.h"
 #import "MJExtension.h"
+
+#import "THeader.h"
 
 typedef NS_ENUM(NSUInteger, ConvType) {
     ConvTypeUser,

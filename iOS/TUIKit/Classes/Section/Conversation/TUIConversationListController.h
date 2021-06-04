@@ -18,6 +18,8 @@
 #import <UIKit/UIKit.h>
 #import "TUIConversationCell.h"
 #import "TConversationListViewModel.h"
+#import "THeader.h"
+@class TUISearchBar;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,20 +28,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                  TUIConversationListControllerDelegate
+//                  TUIConversationListControllerListener
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-@protocol TUIConversationListControllerDelegate <NSObject>
+@protocol TUIConversationListControllerListener <NSObject>
 
 /**
- *  在消息列表中，点击了具体某一会话后的回调。
+ *  在会话列表中，获取会话展示信息时候回调。
+ *
+ *  @param conversation 会话单元数据
+ */
+- (NSString *)getConversationDisplayString:(V2TIMConversation *)conversation;
+
+/**
+ *  在会话列表中，点击了具体某一会话后的回调。
  *  您可以通过该回调响应用户的点击操作，跳转到该会话对应的聊天界面。
  *
  *  @param conversationController 委托者，当前所在的消息列表。
- *  @param conversation 被选中的会话单元
+ *  @param conversationCell 被选中的会话单元
  */
-- (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCell *)conversation;
+- (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCell *)conversationCell;
 @end
 
 /**
@@ -63,9 +72,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UITableView *tableView;
 
 /**
- *  委托类，负责实现 TUIConversationListControllerDelegate 的委托函数。
+ *  全局搜索条
  */
-@property (nonatomic, weak) id<TUIConversationListControllerDelegate> delegate;
+@property (nonatomic, strong) TUISearchBar *searchBar;
+
+/**
+ *  委托类，负责实现 TUIConversationListControllerListener 的委托函数。（已废弃，请使用 TUIKitListenerManager -> addConversationListControllerListener 方法监听）
+ */
+//@property (nonatomic, weak) id<TUIConversationListControllerListener> delegate;
 
 /**
  *  消息列表的视图模型

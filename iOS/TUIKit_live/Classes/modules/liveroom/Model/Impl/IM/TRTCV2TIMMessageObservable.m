@@ -7,8 +7,7 @@
 //
 
 #import "TRTCV2TIMMessageObservable.h"
-#import <ImSDK/V2TIMManager.h>
-//#import "V2TIMManager.h"
+#import "THeader.h"
 
 @interface TRTCV2TIMMessageObservable ()
 @property(nonatomic, strong) NSMutableArray<id<V2TIMGroupListener>> *observers;

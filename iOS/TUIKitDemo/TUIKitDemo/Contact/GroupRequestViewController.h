@@ -12,7 +12,7 @@
  * 本类依赖于腾讯云 TUIKit和IMSDK 实现
  */
 #import <UIKit/UIKit.h>
-#import <ImSDK/ImSDK.h>
+@import ImSDK_Plus;
 
 NS_ASSUME_NONNULL_BEGIN
 

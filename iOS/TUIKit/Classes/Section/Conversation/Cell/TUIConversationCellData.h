@@ -7,7 +7,7 @@
  ******************************************************************************/
 
 #import "TCommonCell.h"
-#import <ImSDK/ImSDK.h>
+#import "THeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,6 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  如果是群会话，groupID 为群 ID
  */
 @property (nonatomic, strong) NSString *groupID;
+
+/**
+ *  群类型
+ */
+@property (nonatomic, strong) NSString *groupType;
 
 /**
  *  如果是单聊会话，userID 对方用户 ID
@@ -93,6 +98,24 @@ NS_ASSUME_NONNULL_BEGIN
  *  YES：会话置顶；NO：会话未置顶。
  */
 @property BOOL isOnTop;
+
+/**
+ * 显示消息多选flag
+ * 会话列表中，默认不显示选择按钮。
+ * 在消息转发场景下，列表 cell 被复用至选择会话页面，当点选“多选”按钮时，会话列表变为可多选状态
+ * YES: 可多选，展示多选视图；NO:不可多选，展示默认视图
+ */
+@property (nonatomic, assign) BOOL showCheckBox;
+
+/**
+ * 显示是否选中 flag，默认是 NO
+ */
+@property (nonatomic, assign) BOOL selected;
+
+/**
+ *  消息是否免打扰
+ */
+@property (nonatomic, assign) BOOL isNotDisturb;
 
 @end
 

@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <ImSDK/V2TIMManager.h>
+#import "THeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

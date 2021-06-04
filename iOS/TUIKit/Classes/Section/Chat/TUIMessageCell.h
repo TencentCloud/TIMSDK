@@ -14,8 +14,6 @@
 #import <UIKit/UIKit.h>
 #import "TUIMessageCellData.h"
 
-
-
 @class TUIMessageCell;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -78,6 +76,18 @@
 @interface TUIMessageCell : TCommonTableViewCell
 
 /**
+ * 消息选中图标
+ * 多选场景中用来标识是否选中消息
+ */
+@property (nonatomic, strong) UIImageView *selectedIcon;
+
+/**
+ * 消息选择视图
+ * 当激活多选时，该视图会覆盖在这个cell上，点击该视图会触发消息的选中/取消选中
+ */
+@property (nonatomic, strong) UIButton *selectedView;
+
+/**
  *  头像视图
  */
 @property (nonatomic, strong) UIImageView *avatarView;
@@ -118,6 +128,12 @@
 @property (nonatomic, strong) UILabel *readReceiptLabel;
 
 /**
+ * 消息时间标签控件，默认不显示，位于消息 cell 的最右侧
+ * 在消息转发场景下，打开转发的消息列表，会在消息的最右侧显示当前消息的时间。
+ */
+@property (nonatomic, strong) UILabel *timeLabel;
+
+/**
  * 是否禁用封装在 TUIKit 内部的默认的选中行为，如群直播默认创建直播间等行为，默认：NO
  */
 @property (nonatomic, assign) BOOL disableDefaultSelectAction;
@@ -135,5 +151,13 @@
  *  @param  data 填充数据源
  */
 - (void)fillWithData:(TCommonCellData *)data;
+
+/**
+ * 设置匹配到关键字后的高亮效果，主要用于消息搜索后跳转，子类重写
+ * 基类提供默认高亮效果，子类可自由实现
+ *
+ * @param keyword 高亮关键字
+ */
+- (void)highlightWhenMatchKeyword:(NSString *)keyword;
 
 @end

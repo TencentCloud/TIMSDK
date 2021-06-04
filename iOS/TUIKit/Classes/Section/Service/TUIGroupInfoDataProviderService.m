@@ -3,8 +3,6 @@
 #import "TIMGroupInfo+DataProvider.h"
 #import "TCServiceManager.h"
 #import "NSString+TUICommon.h"
-#import "THeader.h"
-#import <ImSDK/ImSDK.h>
 #import "TUIKit.h"
 #import "NSBundle+TUIKIT.h"
 

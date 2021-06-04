@@ -8,19 +8,16 @@
 #import "TConversationListViewModel.h"
 #import "TUILocalStorage.h"
 #import "TUIKit.h"
-#import "THeader.h"
-#import "THelper.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "TIMMessage+DataProvider.h"
 #import "UIColor+TUIDarkMode.h"
 #import "NSBundle+TUIKIT.h"
-
-@import ImSDK;
+#import "TUIKitListenerManager.h"
 
 @interface TConversationListViewModel ()
-@property BOOL isLoadFinished;
-@property BOOL isLoading;
+@property (nonatomic, assign) uint64_t nextSeq;
+@property (nonatomic, assign) uint64_t isFinished;
 @property (nonatomic, strong) NSMutableArray *localConvList;
 @end
 
@@ -44,6 +41,9 @@
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didTopConversationListChanged:) name:kTopConversationListChangedNotification object:nil];
         self.localConvList = [[NSMutableArray alloc] init];
+        self.pagePullCount = 100;
+        self.nextSeq = 0;
+        self.isFinished = NO;
         [self loadConversation];
     }
     return self;
@@ -75,12 +75,18 @@
 
 - (void)loadConversation
 {
+    if (self.isFinished) {
+        return;
+    }
     @weakify(self)
-    [[V2TIMManager sharedInstance] getConversationList:0 count:INT_MAX succ:^(NSArray<V2TIMConversation *> *list, uint64_t lastTS, BOOL isFinished) {
+    [[V2TIMManager sharedInstance] getConversationList:self.nextSeq count:self.pagePullCount succ:^(NSArray<V2TIMConversation *> *list, uint64_t nextSeq, BOOL isFinished) {
         @strongify(self)
+        self.nextSeq = nextSeq;
+        self.isFinished = isFinished;
         [self updateConversation:list];
     } fail:^(int code, NSString *msg) {
-        // 拉取会话列表失败
+        self.isFinished = YES;
+        NSLog(@"getConversationList failed, code:%d msg:%@", code, msg);
     }];
 }
 
@@ -114,16 +120,17 @@
         TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
         data.conversationID = conv.conversationID;
         data.groupID = conv.groupID;
+        data.groupType = conv.groupType;
         data.userID = conv.userID;
         data.title = conv.showName;
         data.faceUrl = conv.faceUrl;
         data.subTitle = [self getLastDisplayString:conv];
         data.atMsgSeqList = [self getGroupAtMsgSeqList:conv];
         data.time = [self getLastDisplayDate:conv];
-        if (NO == [conv.groupType isEqualToString:@"Meeting"]) {
-            data.unreadCount = conv.unreadCount;
-        }
+        data.isOnTop = conv.isPinned;
+        data.unreadCount = conv.unreadCount;
         data.draftText = conv.draftText;
+        data.isNotDisturb = (conv.recvOpt == V2TIM_NOT_RECEIVE_MESSAGE);
         if (conv.type == V2TIM_C2C) {   // 设置会话的默认头像
             data.avatarImage = DefaultAvatarImage;
         } else {
@@ -135,8 +142,6 @@
     // UI 会话列表根据 lastMessage 时间戳重新排序
     [self sortDataList:dataList];
     self.dataList = dataList;
-    // 更新未读数
-    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onChangeUnReadCount object:self.localConvList];
 }
 
 - (BOOL)filteConversation:(V2TIMConversation *)conv
@@ -147,7 +152,7 @@
     }
     
     // 屏蔽异常会话
-    if ([self getLastDisplayString:conv] == nil || [self getLastDisplayDate:conv] == nil) {
+    if ([self getLastDisplayDate:conv] == nil) {
         if (conv.unreadCount != 0) {
             // 修复 在某种情况下会出现data.time为nil且还有未读会话的情况，实际上是lastMessage为空(v1conv的lastmessage)，导致出现界面不显示当前会话，聊天界面却显示未读的情况
             // 如果碰到这种情况，直接设置成已读
@@ -259,7 +264,18 @@
 
 - (NSMutableAttributedString *)getLastDisplayString:(V2TIMConversation *)conv
 {
-    NSString *lastMsgStr = [conv.lastMessage getDisplayString];
+    NSString *lastMsgStr = @"";
+    for (id<TUIConversationListControllerListener> delegate in [TUIKitListenerManager sharedInstance].convListeners) {
+        if (delegate && [delegate respondsToSelector:@selector(getConversationDisplayString:)]) {
+            lastMsgStr = [delegate getConversationDisplayString:conv];
+            if (lastMsgStr.length > 0) {
+                break;
+            }
+        }
+    }
+    if (lastMsgStr.length == 0) {
+        lastMsgStr = [conv.lastMessage getDisplayString];
+    }
     // 如果没有 lastMsg 和草稿，直接返回 nil
     if (lastMsgStr.length == 0 && conv.draftText.length == 0) {
         return nil;
@@ -270,7 +286,8 @@
     [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
     
     if(conv.draftText.length > 0){
-        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:TUILocalizableString(TUIKitMessageTypeDraftFormat),conv.draftText]]];
+        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:TUILocalizableString(TUIKitMessageTypeDraftFormat) attributes:@{NSForegroundColorAttributeName:[UIColor d_systemRedColor]}]];
+        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:conv.draftText attributes:@{NSForegroundColorAttributeName:[UIColor d_systemGrayColor]}]];
     } else {
         [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:lastMsgStr]];
     }
@@ -300,6 +317,24 @@
 
 - (void)sortDataList:(NSMutableArray<TUIConversationCellData *> *)dataList
 {
+#ifndef SDKPlaceTop
+#define SDKPlaceTop   // SDK 内部通过active_time以及IsPlaceHead进行置顶操作，反之是TUIKit通过TUILocalStoreage存储toConversationList来进行置顶操作
+#endif
+    
+#ifdef SDKPlaceTop
+    // 将会话进行排序
+    // 置顶的排在上面，其余的按照时间倒叙。
+    // 置顶列表内部也按照时间倒叙
+    [dataList sortUsingComparator:^NSComparisonResult(TUIConversationCellData *obj1, TUIConversationCellData *obj2) {
+        if (obj1.isOnTop && !obj2.isOnTop) {
+            return NSOrderedAscending;
+        }else if (!obj1.isOnTop && obj2.isOnTop) {
+            return NSOrderedDescending;
+        }else {
+            return [obj2.time compare:obj1.time];
+        }
+    }];
+#else
     // 按时间排序，最近会话在上
     [dataList sortUsingComparator:^NSComparisonResult(TUIConversationCellData *obj1, TUIConversationCellData *obj2) {
         return [obj2.time compare:obj1.time];
@@ -324,6 +359,7 @@
             existTopListSize++;
         }
     }
+#endif
 }
 
 - (void)removeData:(TUIConversationCellData *)data

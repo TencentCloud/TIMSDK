@@ -5,7 +5,7 @@
 
 #import "TCServiceProtocol.h"
 @import UIKit;
-#import <ImSDK/ImSDK.h>
+#import "THeader.h"
 
 
 @protocol TUIGroupInfoDataProviderServiceProtocol <NSObject>

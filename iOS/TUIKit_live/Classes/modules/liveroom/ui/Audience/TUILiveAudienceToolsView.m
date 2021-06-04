@@ -16,8 +16,7 @@
 #import "TUILiveRoomAudienceViewController.h"
 #import "TUILiveLikeHeartCreator.h"
 #import "TUILiveMsgBarrageView.h"
-#import "TUIKitLive.h"
-#import <ImSDK/V2TIMManager+Friendship.h>
+#import "TLiveHeader.h"
 #import "TUILiveUtil.h"
 #import "TUILiveUserProfile.h"
 #import "TUILiveRoomAudienceViewController+FloatView.h"

@@ -9,13 +9,15 @@
 #import "TUILiveUserProfile.h"
 #import "TUILiveRoomAnchorViewController.h"
 #import "TUILiveRoomAudienceViewController.h"
-
-@protocol TUIKitMessageSenderProtocol <NSObject>
-- (void)sendMessageDict:(NSDictionary *)msgDict;
-@end
+#import "TUIChatController.h"
+#import "TUIGroupLiveMessageCellData.h"
+#import "TLiveHeader.h"
+#import "NSBundle+TUIKIT.h"
+#import "UIImage+TUIKIT.h"
 
 @interface TUILiveGroupLiveMessageHandle () <TUILiveRoomAnchorDelegate>
-@property(nonatomic, weak) id<TUIKitMessageSenderProtocol> msgSender;
+@property(nonatomic, weak) TUIChatController *msgSender;
+@property(nonatomic, weak) id<TUILiveRoomAnchorDelegate> delegate;
 @end
 
 @implementation TUILiveGroupLiveMessageHandle
@@ -37,8 +39,8 @@
 }
 
 - (void)startObserver {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNotifyGroupLiveSelectMessage:) name:@"kTUINotifyGroupLiveOnSelectMessage" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNotifyGroupLiveSelectMoreCell:) name:@"kTUINotifyGroupLiveOnSelectMoreCell" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNotifyGroupLiveSelectMessage:) name:GroupLiveOnSelectMessage object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNotifyGroupLiveSelectMoreCell:) name:MenusServiceAction object:nil];
 }
 
 - (void)stopObserver {
@@ -73,18 +75,24 @@
 }
 
 - (void)onNotifyGroupLiveSelectMoreCell:(NSNotification *)notify {
-    NSDictionary *info = notify.userInfo;
-    NSString *groupID = info[@"groupID"];
-    self.msgSender = info[@"msgSender"];
-    NSString *curUserId = [TUILiveUserProfile getLoginUserInfo].userID;
-    NSString *hashStr = [NSString stringWithFormat:@"%@_%@_liveRoom", groupID, curUserId];
-    int roomId = (hashStr.hash & 0x7FFFFFFF);
-    TUILiveRoomAnchorViewController *anchorVC = [[TUILiveRoomAnchorViewController alloc] initWithRoomId:roomId];
-    [anchorVC enablePK:NO];
-    anchorVC.delegate = self;
-    [anchorVC setHidesBottomBarWhenPushed:YES];
-    UIViewController *rootVC = [UIApplication sharedApplication].delegate.window.rootViewController;
-    [rootVC presentViewController:anchorVC animated:YES completion:nil];
+    self.delegate = (id<TUILiveRoomAnchorDelegate>)notify.object;
+    NSDictionary *info = (NSDictionary *)notify.userInfo;
+    if (info && [info isKindOfClass:[NSDictionary class]]) {
+        NSString *serviceID = info[@"serviceID"];
+        if ([serviceID isEqualToString:ServiceIDForGroupLive]) {
+            NSString *groupID = info[@"groupID"];
+            self.msgSender = info[@"msgSender"];
+            NSString *curUserId = [TUILiveUserProfile getLoginUserInfo].userID;
+            NSString *hashStr = [NSString stringWithFormat:@"%@_%@_liveRoom", groupID, curUserId];
+            int roomId = (hashStr.hash & 0x7FFFFFFF);
+            TUILiveRoomAnchorViewController *anchorVC = [[TUILiveRoomAnchorViewController alloc] initWithRoomId:roomId];
+            [anchorVC enablePK:NO];
+            anchorVC.delegate = self;
+            [anchorVC setHidesBottomBarWhenPushed:YES];
+            UIViewController *rootVC = [UIApplication sharedApplication].delegate.window.rootViewController;
+            [rootVC presentViewController:anchorVC animated:YES completion:nil];
+        }
+    }
 }
 
 #pragma mark - TUILiveRoomAnchorDelegate
@@ -98,10 +106,15 @@
         @"anchorId":roomInfo.ownerId?:@"",
         @"anchorName":roomInfo.ownerName?:@"",
         @"cellStatus":@(0),
-        @"className":@"TUIGroupLiveMessageCellData"
     };
-    if (self.msgSender && [self.msgSender respondsToSelector:@selector(sendMessageDict:)]) {
-        [self.msgSender sendMessageDict:msgDict];
+    
+    TUIGroupLiveMessageCellData *msgData = [[TUIGroupLiveMessageCellData alloc] initWithDict:msgDict];
+    msgData.direction = MsgDirectionOutgoing;
+    msgData.innerMessage = [msgData createInnerMessage];
+    [self.msgSender sendMessage:msgData];
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onRoomCreate:)]) {
+        [self.delegate onRoomCreate:roomInfo];
     }
 }
 
@@ -115,15 +128,30 @@
         @"anchorId":roomInfo.ownerId?:@"",
         @"anchorName":roomInfo.ownerName?:@"",
         @"cellStatus":@(0),
-        @"className":@"TUIGroupLiveMessageCellData"
     };
-    if (self.msgSender && [self.msgSender respondsToSelector:@selector(sendMessageDict:)]) {
-        [self.msgSender sendMessageDict:msgDict];
+    
+    TUIGroupLiveMessageCellData *msgData = [[TUIGroupLiveMessageCellData alloc] initWithDict:msgDict];
+    msgData.direction = MsgDirectionOutgoing;
+    msgData.innerMessage = [msgData createInnerMessage];
+    [self.msgSender sendMessage:msgData];
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onRoomDestroy:)]) {
+        [self.delegate onRoomDestroy:roomInfo];
+    }
+}
+
+- (void)getPKRoomIDList:(TUILiveOnRoomListCallback _Nullable)callback {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(getPKRoomIDList:)]) {
+        [self.delegate getPKRoomIDList:callback];
     }
 }
 
 - (void)onRoomError:(TRTCLiveRoomInfo *)roomInfo errorCode:(NSInteger)errorCode errorMessage:(NSString *)errorMessage {
-    NSLog(@"TUILiveKit# onRoomError：%d,%@", errorCode, errorMessage);
+    NSLog(@"TUILiveKit# onRoomError：%ld,%@", (long)errorCode, errorMessage);
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onRoomError:errorCode:errorMessage:)]) {
+        [self.delegate onRoomError:roomInfo errorCode:errorCode errorMessage:errorMessage];
+    }
 }
 
 @end

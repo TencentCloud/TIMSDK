@@ -17,7 +17,7 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "Toast/Toast.h"
 #import "THelper.h"
-#import <ImSDK/ImSDK.h>
+@import ImSDK_Plus;
 
 @interface GroupMemberController () <TGroupMemberControllerDelegagte>
 

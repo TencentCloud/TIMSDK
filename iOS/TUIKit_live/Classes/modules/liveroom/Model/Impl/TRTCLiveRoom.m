@@ -13,8 +13,9 @@
 #import "TRTCLiveRoomIMAction.h"
 #import "TRTCCloudAnction.h"
 #import "MJExtension.h"
-#import <ImSDK/ImSDK.h>
 #import "TRTCV2TIMMessageObservable.h"
+
+#import "THeader.h"
 
 static double trtcLiveSendMsgTimeOut = 60;
 static double trtcLiveHandleMsgTimeOut = 10;

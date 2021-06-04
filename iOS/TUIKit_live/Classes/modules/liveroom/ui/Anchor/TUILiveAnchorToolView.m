@@ -17,7 +17,7 @@
 #import "TUILiveLikeHeartCreator.h"
 #import "TUILiveAnchorPKListView.h"
 #import "TUILiveJoinAnchorListView.h"
-#import "TUIKitLive.h"
+#import "TLiveHeader.h"
 #import "TUILiveUserProfile.h"
 #import "TUILiveColor.h"
 

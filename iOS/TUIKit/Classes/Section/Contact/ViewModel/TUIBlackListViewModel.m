@@ -6,7 +6,7 @@
 //
 
 #import "TUIBlackListViewModel.h"
-@import ImSDK;
+#import "THeader.h"
 
 @interface TUIBlackListViewModel()
 @property NSArray<TCommonContactCellData *> *blackListData;

@@ -5,7 +5,7 @@
 //  Created by annidyfeng on 2019/6/11.
 //
 
-#import <ImSDK/ImSDK.h>
+#import "THeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

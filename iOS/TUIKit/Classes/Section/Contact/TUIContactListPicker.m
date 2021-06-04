@@ -90,11 +90,23 @@ static NSString *kReuseIdentifier = @"PickerIdentifier";
     return cell;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    if (indexPath.item >= self.selectArray.count) {
+        return;
+    }
+    TCommonContactSelectCellData *data = self.selectArray[indexPath.item];
+    if (self.onCancel) {
+        self.onCancel(data);
+    }
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
 
-    self.accessoryBtn.mm_width(44).mm_height(30).mm_right(15).mm_top(13);
+    self.accessoryBtn.mm_sizeToFit().mm_height(30).mm_right(15).mm_top(13);
     self.collectionView.mm_left(15).mm_height(40).mm_width(self.accessoryBtn.mm_x - 30).mm__centerY(self.accessoryBtn.mm_centerY);
 
 }

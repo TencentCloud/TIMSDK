@@ -18,8 +18,8 @@ typedef void (^loginBlock) (NSString *user, NSUInteger appId, NSString *userSig)
 + (instancetype)sharedInstance;
 
 - (NSArray *)topConversationList;
-- (void)addTopConversation:(NSString *)conv;
-- (void)removeTopConversation:(NSString *)conv;
+- (void)addTopConversation:(NSString *)conv callback:(void(^ __nullable)(BOOL success, NSString * __nullable errorMessage))callback;
+- (void)removeTopConversation:(NSString *)conv callback:(void(^ __nullable)(BOOL success, NSString * __nullable errorMessage))callback;
 
 - (void)logout;
 - (void)login:(loginBlock)callback;

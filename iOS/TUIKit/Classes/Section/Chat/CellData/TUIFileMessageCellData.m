@@ -6,10 +6,8 @@
 //
 
 #import "TUIFileMessageCellData.h"
-#import "THeader.h"
 #import "TUIKit.h"
 #import "ReactiveObjC/ReactiveObjC.h"
-#import <ImSDK/ImSDK.h>
 
 @interface TUIFileMessageCellData ()
 @property (nonatomic, strong) NSMutableArray *progressBlocks;

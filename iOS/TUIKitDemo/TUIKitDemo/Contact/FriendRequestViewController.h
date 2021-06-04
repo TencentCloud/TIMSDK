@@ -12,7 +12,7 @@
  */
 #import <UIKit/UIKit.h>
 
-@import ImSDK;
+@import ImSDK_Plus;
 
 NS_ASSUME_NONNULL_BEGIN
 

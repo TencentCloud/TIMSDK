@@ -10,9 +10,8 @@
 #import "Masonry.h"
 #import "TUILiveUtil.h"
 #import "SDWebImage.h"
-#import "TUIKitLive.h"
-#import "Toast.h"
-#import "TUIKitLive.h"
+#import "TLiveHeader.h"
+#import "THelper.h"
 #import "TUILiveUserProfile.h"
 #import <AVFoundation/AVFoundation.h>
 
@@ -302,13 +301,13 @@
     // 权限检查
     if (![self checkAudioAuthorization]) {
         [self endEditing:YES];
-        [self makeToast:@"权限验证失败，请打开麦克风权限"];
+        [THelper makeToast:@"权限验证失败，请打开麦克风权限"];
         return;
     }
     
     if (![self checkVideoAuthorization]) {
         [self endEditing:YES];
-        [self makeToast:@"权限验证失败，请打开摄像头权限"];
+        [THelper makeToast:@"权限验证失败，请打开摄像头权限"];
         return;
     }
     
@@ -333,7 +332,7 @@
         [_roomNameTextField resignFirstResponder];
     }
     if (_roomNameTextField.text.length <= 0) {
-        [self makeToast:@"房间名不能为空"];
+        [THelper makeToast:@"房间名不能为空"];
         return;
     }
     // 开始组装创建房间参数

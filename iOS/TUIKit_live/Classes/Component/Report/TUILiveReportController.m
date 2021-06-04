@@ -7,7 +7,7 @@
 
 #import "TUILiveReportController.h"
 #import "TUILiveUserProfile.h"
-#import "UIView+Toast.h"
+#import "THelper.h"
 
 @interface TUILiveReportController ()
 
@@ -110,7 +110,7 @@
         });
         return;
     }
-    [UIApplication.sharedApplication.keyWindow makeToast:result];
+    [THelper makeToast:result];
 }
 
 

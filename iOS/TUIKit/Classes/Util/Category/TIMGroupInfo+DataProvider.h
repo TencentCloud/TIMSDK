@@ -8,7 +8,7 @@
  *  在使用时，本类别和 TIMUserProfile 使用方式一样，在拉取了 TIMGroupInfo 后，通过 [myGroupInfo functionName] 即可使用。
  *
  **********/
-#import "ImSDK/ImSDK.h"
+#import "THeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

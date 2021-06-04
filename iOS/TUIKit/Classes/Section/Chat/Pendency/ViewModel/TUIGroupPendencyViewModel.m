@@ -9,10 +9,7 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "TUIGroupPendencyCellData.h"
-#import "THeader.h"
 #import "TUIKit.h"
-#import "THelper.h"
-@import ImSDK;
 
 @interface TUIGroupPendencyViewModel()
 

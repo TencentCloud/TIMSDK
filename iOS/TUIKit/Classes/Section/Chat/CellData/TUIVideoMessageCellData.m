@@ -6,11 +6,8 @@
 //
 
 #import "TUIVideoMessageCellData.h"
-#import "THeader.h"
-#import "THelper.h"
 #import "TUIKit.h"
 #import "ReactiveObjC/ReactiveObjC.h"
-#import <ImSDK/ImSDK.h>
 
 @implementation TUIVideoItem
 @end

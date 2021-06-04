@@ -13,7 +13,7 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "NSBundle+TUIKIT.h"
-@import ImSDK;
+#import "THeader.h"
 
 @interface TUIGroupPendencyController ()
 

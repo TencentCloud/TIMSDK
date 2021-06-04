@@ -8,7 +8,7 @@
 #import "TUINewFriendViewModel.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 
-@import ImSDK;
+#import "THeader.h"
 
 @interface TUINewFriendViewModel()
 

@@ -14,6 +14,7 @@
 #import "MMLayout/UIView+MMLayout.h"
 #import "UIColor+TUIDarkMode.h"
 #import "NSBundle+TUIKIT.h"
+#import "NSDate+TUIKIT.h"
 
 @interface TUIMessageCell()
 @property (nonatomic, strong) TUIMessageCellData *messageData;
@@ -69,6 +70,22 @@
         _readReceiptLabel.textColor = [UIColor d_systemGrayColor];
         _readReceiptLabel.lineBreakMode = NSLineBreakByCharWrapping;
         [self.contentView addSubview:_readReceiptLabel];
+        
+        // selectedIcon
+        _selectedIcon = [[UIImageView alloc] init];
+        [self.contentView addSubview:_selectedIcon];
+        
+        // selectedView
+        _selectedView = [UIButton buttonWithType:UIButtonTypeCustom];
+        _selectedView.backgroundColor = [UIColor clearColor];
+        [_selectedView addTarget:self action:@selector(onSelectMessage:) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:_selectedView];
+        
+        // timeLabel
+        _timeLabel = [[UILabel alloc] init];
+        _timeLabel.textColor = [UIColor darkGrayColor];
+        _timeLabel.font = [UIFont systemFontOfSize:11.0];
+        [self.contentView addSubview:_timeLabel];
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -130,6 +147,23 @@
         }
         self.retryView.image = nil;
     }
+    
+    NSString *imageName = (data.showCheckBox && data.selected) ? TUIKitResource(@"icon_contact_select_selected") : TUIKitResource(@"icon_contact_select_normal");
+    self.selectedIcon.image = [UIImage imageNamed:imageName];
+    
+    _timeLabel.text = [data.innerMessage.timestamp tk_messageString];
+    
+    // 高亮文本 - 此处异步是为了让其执行顺序与子类一致
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakSelf highlightWhenMatchKeyword:data.highlightKeyword];
+    });
+}
+
+- (void)highlightWhenMatchKeyword:(NSString *)keyword
+{
+    // 默认高亮效果，背景颜色加深
+    self.contentView.backgroundColor = keyword.length ? [UIColor colorWithRed:225/255.0 green:225/255.0 blue:225/255.0 alpha:1] : nil;
 }
 
 - (void)layoutSubviews
@@ -143,9 +177,39 @@
         _nameLabel.mm_height(0);
     }
     
+    _selectedView.mm_x = 0;
+    _selectedView.mm_y = 0;
+    _selectedView.mm_w = self.contentView.mm_w;
+    _selectedView.mm_h = self.contentView.mm_h;
+    if (self.messageData.showCheckBox) {
+        _selectedIcon.mm_width(20).mm_height(20);
+        _selectedIcon.mm_x = 10;
+        _selectedIcon.mm_centerY = _avatarView.mm_centerY;
+        _selectedIcon.hidden = NO;
+        _selectedView.hidden = NO;
+    } else {
+        _selectedIcon.mm_width(0).mm_height(0);
+        _selectedIcon.mm_x = 0;
+        _selectedIcon.mm_y = 0;
+        _selectedIcon.hidden = YES;
+        _selectedView.hidden = YES;
+    }
+    
+    if (self.messageData.showMessageTime) {
+        _timeLabel.mm_sizeToFit();
+        _timeLabel.mm_y = self.avatarView.mm_y;
+        _timeLabel.mm_x = self.contentView.bounds.size.width - 10 - _timeLabel.mm_w;
+        _timeLabel.hidden = NO;
+    } else {
+        _timeLabel.mm_y = 0;
+        _timeLabel.mm_r = 0;
+        _timeLabel.mm_sizeToFit();
+        _timeLabel.hidden = YES;
+    }
+    
     TUIMessageCellLayout *cellLayout = self.messageData.cellLayout;
     if (self.messageData.direction == MsgDirectionIncoming) {
-        self.avatarView.mm_x = cellLayout.avatarInsets.left;
+        self.avatarView.mm_x = _selectedIcon.mm_maxX + cellLayout.avatarInsets.left;
         self.avatarView.mm_y = cellLayout.avatarInsets.top;
         self.avatarView.mm_w = cellLayout.avatarSize.width;
         self.avatarView.mm_h = cellLayout.avatarSize.height;
@@ -173,7 +237,7 @@
         CGSize csize = [self.messageData contentSize];
         CGFloat ctop = cellLayout.messageInsets.top + _nameLabel.mm_h;
         self.container.mm_width(csize.width).mm_height(csize.height)
-        .mm_right(cellLayout.messageInsets.right+self.mm_w-self.avatarView.mm_x).mm_top(ctop);
+        .mm_right(cellLayout.messageInsets.right+self.contentView.mm_w-self.avatarView.mm_x).mm_top(ctop);
         
         self.nameLabel.mm_right(_container.mm_r);
         self.indicator.mm_sizeToFit().mm__centerY(_container.mm_centerY).mm_left(_container.mm_x - 8 - _indicator.mm_w);

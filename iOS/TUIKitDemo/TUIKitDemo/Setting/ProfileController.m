@@ -25,7 +25,7 @@
 #import "THelper.h"
 #import "TCUtil.h"
 #import "UIColor+TUIDarkMode.h"
-#import <ImSDK/ImSDK.h>
+@import ImSDK_Plus;
 
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2

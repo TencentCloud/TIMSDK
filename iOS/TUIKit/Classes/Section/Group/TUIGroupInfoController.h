@@ -13,7 +13,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                         TUIChatControllerDelegate
+//                         TUIChatControllerListener
 //
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -88,7 +88,7 @@
 @property (nonatomic, strong) NSString *groupId;
 
 /**
- *  协议委托，负责实现上文中说明的 TUIChatControllerDelegate。
+ *  协议委托，负责实现上文中说明的 TUIChatControllerListener。
  */
 @property (nonatomic, weak) id<TGroupInfoControllerDelegate> delegate;
 

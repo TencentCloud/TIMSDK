@@ -10,7 +10,6 @@
 #import "TUILiveCreateAnchorRoomView.h"
 #import "TUILiveAnchorToolView.h"
 #import "Masonry.h"
-#import "Toast/Toast.h"
 #import "TRTCLiveRoom.h"
 #import "TUIKitLive.h"
 #import "TXLiveRoomCommonDef.h"
@@ -411,7 +410,7 @@
         if (code != 0) {
             // TODO: 跑错误事件
             NSLog(@"%@", message);
-            [self.view makeToast:message];
+            [THelper makeToast:message];
         }
     }];
     
@@ -709,7 +708,7 @@
         @weakify(self);
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
-            [self.view makeToast:[NSString stringWithFormat:@"收到1个观众的邀请"] duration:2 position:[NSValue valueWithCGPoint:CGPointMake(self.view.center.x, self.view.frame.size.height - 80)]];
+            [THelper makeToast:[NSString stringWithFormat:@"收到1个观众的邀请"] duration:2 position:CGPointMake(self.view.center.x, self.view.frame.size.height - 80)];
             [self.curRequestUserDic setObject:user forKey:user.userId];
             [self.anchorLogicView updateJoinAnchorList:self.curRequestUserDic.allValues needShow:NO];
         });
@@ -798,7 +797,7 @@
             }];
             
         } else {
-            [self.view makeToast:@"创建房间失败，请检查房间名是否合法，网络是否正常。" duration:2.0 position:CSToastPositionCenter];
+            [THelper makeToast:@"创建房间失败，请检查房间名是否合法，网络是否正常。" duration:2.0 idposition:CSToastPositionCenter];
         }
     }];
 }
