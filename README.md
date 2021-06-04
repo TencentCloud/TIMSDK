@@ -92,11 +92,6 @@
 
 </table>
 
-## 问题反馈
-- 为了更好的了解您使用TIMSDK所遇到的问题，方便快速有效定位解决TIMSDK问题，希望您按如下反馈指引反馈issue，方便我们尽快解决您的问题
-- [TIMSDK issue反馈指引](https://github.com/tencentyun/TIMSDK/wiki/TIMSDK-issue%E6%9C%89%E6%95%88%E5%8F%8D%E9%A6%88%E6%A8%A1%E6%9D%BF)
-
-
 ## 基础版与增强版差异对比
 - SDK 从 5.4 版本开始，原有精简版改名为增强版，原有标准版改名为基础版。
 - 增强版与基础版同时支持 [V2 API](https://cloud.tencent.com/document/product/269/44477)；但增强版不再支持旧版 API，基础版继续支持旧版 API。
@@ -181,3 +176,6 @@
 
 - 修复已知问题
 
+## 问题反馈
+- 为了更好的了解您使用TIMSDK所遇到的问题，方便快速有效定位解决TIMSDK问题，希望您按如下反馈指引反馈issue，方便我们尽快解决您的问题
+- [TIMSDK issue反馈指引](https://github.com/tencentyun/TIMSDK/wiki/TIMSDK-issue%E6%9C%89%E6%95%88%E5%8F%8D%E9%A6%88%E6%A8%A1%E6%9D%BF)
