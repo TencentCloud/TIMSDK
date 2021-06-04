@@ -8,10 +8,8 @@
 #import "TUIGroupPendencyCellData.h"
 #import "TIMUserProfile+DataProvider.h"
 #import "Toast/Toast.h"
-#import "THeader.h"
-#import "THelper.h"
+#import "TUIKit.h"
 #import "NSBundle+TUIKIT.h"
-@import ImSDK;
 
 @interface TUIGroupPendencyCellData ()
 @property V2TIMUserFullInfo *fromUserProfile;

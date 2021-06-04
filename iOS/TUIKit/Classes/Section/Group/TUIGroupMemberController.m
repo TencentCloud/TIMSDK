@@ -8,16 +8,13 @@
 
 #import "TUIGroupMemberController.h"
 #import "TUIGroupMemberCell.h"
-#import "THeader.h"
+#import "TUIKit.h"
 #import "TAddCell.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
-#import "Toast/Toast.h"
 #import "TIMGroupInfo+DataProvider.h"
 #import "TIMUserProfile+DataProvider.h"
 #import "UIColor+TUIDarkMode.h"
-#import "NSBundle+TUIKIT.h"
-#import <ImSDK/ImSDK.h>
 
 @interface TUIGroupMemberController ()<TGroupMembersViewDelegate>
 @property (nonatomic, strong) NSMutableArray<TGroupMemberCellData *> *members;
@@ -42,7 +39,7 @@
         }
     } fail:^(int code, NSString *msg) {
         @strongify(self)
-        [self.view makeToast:msg];
+        [THelper makeToast:msg];
     }];
     [[V2TIMManager sharedInstance] getGroupMemberList:_groupId filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:0 succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
         @strongify(self)
@@ -65,7 +62,7 @@
         self.title = title;;
     } fail:^(int code, NSString *msg) {
         @strongify(self)
-        [self.view makeToast:msg];
+        [THelper makeToast:msg];
     }];
 }
 

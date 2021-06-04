@@ -8,9 +8,6 @@
 #import "TCommonContactCellData.h"
 #import "TIMUserProfile+DataProvider.h"
 #import "TUIKit.h"
-#import "THeader.h"
-
-@import ImSDK;
 
 @implementation TCommonContactCellData
 {

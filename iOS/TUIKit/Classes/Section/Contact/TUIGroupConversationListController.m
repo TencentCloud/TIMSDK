@@ -7,7 +7,6 @@
 
 #import "TUIGroupConversationListController.h"
 #import "TUIConversationListController.h"
-#import "THeader.h"
 #import "TUIKit.h"
 #import "TUILocalStorage.h"
 #import "TIMUserProfile+DataProvider.h"
@@ -15,8 +14,6 @@
 #import "MMLayout/UIView+MMLayout.h"
 #import "UIColor+TUIDarkMode.h"
 #import "NSBundle+TUIKIT.h"
-
-@import ImSDK;
 
 static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
@@ -146,7 +143,8 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 {
     TUIConversationCellData *conversationData = [[TUIConversationCellData alloc] init];
     conversationData.groupID = cell.contactData.identifier;
-    TUIChatController *chat = [[TUIChatController alloc] initWithConversation:conversationData];
+    TUIChatController *chat = [[TUIChatController alloc] init];
+    [chat setConversationData:conversationData];
     chat.title = cell.contactData.title;
     [self.navigationController pushViewController:chat animated:YES];
 }

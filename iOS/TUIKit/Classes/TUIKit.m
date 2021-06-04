@@ -1,7 +1,4 @@
 #import "TUIKit.h"
-#import "THeader.h"
-
-@import ImSDK;
 
 @interface TUIKit () <V2TIMSDKListener,V2TIMAdvancedMsgListener,V2TIMConversationListener,V2TIMGroupListener,V2TIMFriendshipListener>
 @end
@@ -11,6 +8,8 @@
     UInt32    _sdkAppid;
     NSString  *_userID;
     NSString  *_userSig;
+    NSString  *_nickName;
+    NSString  *_faceUrl;
 }
 
 + (instancetype)sharedInstance
@@ -28,6 +27,7 @@
     self = [super init];
     if (self) {
         _config = [TUIKitConfig defaultConfig];
+        _enableToast = YES;
         [self createCachePath];
     }
     return self;
@@ -63,7 +63,6 @@
     [[V2TIMManager sharedInstance] setConversationListener:self];
     [[V2TIMManager sharedInstance] setGroupListener:self];
     [[V2TIMManager sharedInstance] setFriendListener:self];
-    [[TUICallManager shareInstance] initCall];
 }
 
 - (void)setupWithAppId:(UInt32)sdkAppId logLevel:(V2TIMLogLevel)logLevel
@@ -76,7 +75,6 @@
     [[V2TIMManager sharedInstance] setConversationListener:self];
     [[V2TIMManager sharedInstance] setGroupListener:self];
     [[V2TIMManager sharedInstance] setFriendListener:self];
-    [[TUICallManager shareInstance] initCall];
 }
 
 - (void)login:(NSString *)userID userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail
@@ -87,6 +85,7 @@
     int sdkAppId = self.sdkAppId;
     NSString *loginUserId = userID.copy;
     NSString *loginSig = sig.copy;
+    __weak typeof(self) weakSelf = self;
     [[V2TIMManager sharedInstance] login:_userID userSig:_userSig succ:^{
         Class liveClass = NSClassFromString(@"TUIKitLive");
         if (liveClass) {
@@ -125,6 +124,13 @@
                 [loginInvocation invoke];
             }
         }
+        
+        // 获取当前登录用户的信息
+        [[V2TIMManager sharedInstance] getUsersInfo:@[weakSelf.userID] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+            V2TIMUserFullInfo *info = infoList.firstObject;
+            weakSelf.nickName = info.nickName;
+            weakSelf.faceUrl = info.faceURL;
+        } fail:nil];
         succ();
     } fail:^(int code, NSString *msg) {
         fail(code,msg);
@@ -132,7 +138,27 @@
 }
 
 - (void)onReceiveGroupCallAPNs:(V2TIMSignalingInfo *)signalingInfo {
-    [[TUICallManager shareInstance] onReceiveGroupCallAPNs:signalingInfo];
+    Class callClass = NSClassFromString(@"TUIKitLive");
+    if (callClass) {
+        SEL shareSel = NSSelectorFromString(@"shareInstance");
+        NSMethodSignature *shareMethod = [callClass methodSignatureForSelector:shareSel];
+        NSInvocation *shareInovation = [NSInvocation invocationWithMethodSignature:shareMethod];
+        shareInovation.target = callClass;
+        shareInovation.selector = shareSel;
+        [shareInovation invoke];
+        __autoreleasing NSObject *callObj = nil;
+        [shareInovation getReturnValue:&callObj];
+        if (callObj && [NSStringFromClass(callObj.class) isEqualToString:@"TUIKitLive"]) {
+            /// 调用 [[TUIKitLive shareInstance] onReceiveGroupCallAPNs:signalingInfo];
+            SEL isAttachedSel = NSSelectorFromString(@"onReceiveGroupCallAPNs:");
+            NSMethodSignature *isAttachedMehtod = [callClass instanceMethodSignatureForSelector:isAttachedSel];
+            NSInvocation *isAttachedInvocation = [NSInvocation invocationWithMethodSignature:isAttachedMehtod];
+            isAttachedInvocation.target = callObj;
+            isAttachedInvocation.selector = isAttachedSel;
+            [isAttachedInvocation setArgument:(void *)&signalingInfo atIndex:2];
+            [isAttachedInvocation invoke];
+        }
+    }
 }
 
 - (UInt32)sdkAppId {
@@ -145,6 +171,22 @@
 
 - (NSString *)userSig {
     return _userSig;
+}
+
+- (NSString *)faceUrl {
+    return _faceUrl;
+}
+
+- (void)setFaceUrl:(NSString *)faceUrl {
+    _faceUrl = faceUrl;
+}
+
+- (NSString *)nickName {
+    return _nickName;
+}
+
+- (void)setNickName:(NSString *)nickName {
+    _nickName = nickName;
 }
 
 #pragma mark  V2TIMSDKListener
@@ -195,6 +237,10 @@
 
 - (void)onConversationChanged:(NSArray<V2TIMConversation*> *) conversationList {
     [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMRefreshListener_Changed object:conversationList];
+}
+
+- (void)onTotalUnreadMessageCountChanged:(UInt64)totalUnreadCount {
+    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onTotalUnreadMessageCountChanged object:@(totalUnreadCount)];
 }
 
 #pragma mark V2TIMAdvancedMsgListener

@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <ImSDK/ImSDK.h>
+@import ImSDK_Plus;
 
 /**
  *  用来管理用户的登录信息，如登录信息的缓存、过期判断等

@@ -6,15 +6,10 @@
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
 
-#import "THelper.h"
 #import "EMVoiceConverter.h"
 #import "TUIKit.h"
-#import "Toast/Toast.h"
 #import "TUIError.h"
 #import "SDWebImage/UIImage+GIF.h"
-#import "UIImage+TUIKIT.h"
-
-@import ImSDK;
 
 @implementation THelper
 
@@ -167,34 +162,51 @@
     });
 }
 
++ (NSString *)randAvatarUrl
+{
+    return [NSString stringWithFormat:@"https://picsum.photos/id/%d/200/200", rand()%999];
+}
+
 + (void)makeToast:(NSString *)str
 {
-    [[UIApplication sharedApplication].keyWindow makeToast:str];
+    if ([TUIKit sharedInstance].enableToast) {
+        [[UIApplication sharedApplication].keyWindow makeToast:str];
+    }
 }
 
 + (void)makeToast:(NSString *)str duration:(NSTimeInterval)duration position:(CGPoint)position
 {
-    [[UIApplication sharedApplication].keyWindow makeToast:str duration:duration position:[NSValue valueWithCGPoint:position]];
+    if ([TUIKit sharedInstance].enableToast) {
+        [[UIApplication sharedApplication].keyWindow makeToast:str duration:duration position:[NSValue valueWithCGPoint:position]];
+    }
+}
+
++ (void)makeToast:(NSString *)str duration:(NSTimeInterval)duration idposition:(id)position
+{
+    if ([TUIKit sharedInstance].enableToast) {
+        [[UIApplication sharedApplication].keyWindow makeToast:str duration:duration position:position];
+    }
 }
 
 + (void)makeToastError:(NSInteger)error msg:(NSString *)msg
 {
-    [[UIApplication sharedApplication].keyWindow makeToast:[TUIError strError:error msg:msg]];
+    if ([TUIKit sharedInstance].enableToast) {
+        [[UIApplication sharedApplication].keyWindow makeToast:[TUIError strError:error msg:msg]];
+    }
 }
 
 + (void)makeToastActivity
 {
-    [[UIApplication sharedApplication].keyWindow makeToastActivity:CSToastPositionCenter];
+    if ([TUIKit sharedInstance].enableToast) {
+        [[UIApplication sharedApplication].keyWindow makeToastActivity:CSToastPositionCenter];
+    }
 }
 
 + (void)hideToastActivity
 {
-    [[UIApplication sharedApplication].keyWindow hideToastActivity];
-}
-
-+ (NSString *)randAvatarUrl
-{
-    return [NSString stringWithFormat:@"https://picsum.photos/id/%d/200/200", rand()%999];
+    if ([TUIKit sharedInstance].enableToast) {
+        [[UIApplication sharedApplication].keyWindow hideToastActivity];
+    }
 }
 
 @end

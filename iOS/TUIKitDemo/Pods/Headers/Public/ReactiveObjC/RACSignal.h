@@ -1,1 +1,0 @@
-../../../ReactiveObjC/ReactiveObjC/RACSignal.h

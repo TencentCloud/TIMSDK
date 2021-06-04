@@ -7,18 +7,19 @@
 
 #import "TUIConversationListController.h"
 #import "TUIConversationCell.h"
-#import "THeader.h"
 #import "TUIKit.h"
 #import "TUILocalStorage.h"
 #import "TIMUserProfile+DataProvider.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "UIColor+TUIDarkMode.h"
+#import "TUISearchBar.h"
+#import "TUISearchViewController.h"
+#import "TNavigationController.h"
 #import "NSBundle+TUIKIT.h"
-@import ImSDK;
 
 static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
-@interface TUIConversationListController () <UIGestureRecognizerDelegate, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate>
+@interface TUIConversationListController () <UIGestureRecognizerDelegate, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, TUISearchBarDelegate>
 @end
 
 @implementation TUIConversationListController
@@ -40,6 +41,9 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 - (void)setupViews
 {
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    _searchBar = [[TUISearchBar alloc] initWithEntrance:YES];
+    _searchBar.delegate = self;
+    _searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 44);
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     _tableView.tableFooterView = [[UIView alloc] init];
     _tableView.backgroundColor = self.view.backgroundColor;
@@ -47,6 +51,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [_tableView registerClass:[TUIConversationCell class] forCellReuseIdentifier:kConversationCell_ReuseId];
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    _tableView.tableHeaderView = self.searchBar;
     [self.view addSubview:_tableView];
 
     @weakify(self)
@@ -62,6 +67,15 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
         _viewModel = [TConversationListViewModel new];
     }
     return _viewModel;
+}
+
+#pragma mark - TUISearchBarDelegate
+- (void)searchBarDidEnterSearch:(TUISearchBar *)searchBar
+{
+    TUISearchViewController *vc = [[TUISearchViewController alloc] init];
+    TNavigationController *nav = [[TNavigationController alloc] initWithRootViewController:vc];
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self presentViewController:nav animated:NO completion:nil];
 }
 
 #pragma mark - Table view data source
@@ -80,14 +94,56 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     return YES;
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return UITableViewCellEditingStyleDelete;
-}
+    NSMutableArray *rowActions = [NSMutableArray array];
+    TUIConversationCellData *cellData = self.viewModel.dataList[indexPath.row];
+    __weak typeof(self) weakSelf = self;
+    
+    {
+        UITableViewRowAction *action = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:TUILocalizableString(Delete) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+            [tableView beginUpdates];
+            [weakSelf.viewModel removeData:cellData];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+            [tableView endUpdates];
+        }];
+        action.backgroundColor = [UIColor colorWithRed:242/255.0 green:77/255.0 blue:76/255.0 alpha:1.0];
+        [rowActions addObject:action];
+    }
+    
+    {
+        UITableViewRowAction *action = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:cellData.isOnTop?TUILocalizableString(CancelStickonTop):TUILocalizableString(StickyonTop) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+            if (cellData.isOnTop) {
+                [TUILocalStorage.sharedInstance removeTopConversation:cellData.conversationID callback:nil];
+            } else {
+                [TUILocalStorage.sharedInstance addTopConversation:cellData.conversationID callback:nil];
+            }
+        }];
+        action.backgroundColor = [UIColor colorWithRed:242/255.0 green:147/255.0 blue:64/255.0 alpha:1.0];
+        [rowActions addObject:action];
+    }
+    
+    {
+        UITableViewRowAction *action = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:TUILocalizableString(ClearHistoryChatMessage) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+            if (cellData.groupID.length) {
+                [V2TIMManager.sharedInstance clearGroupHistoryMessage:cellData.groupID succ:^{
+                    NSLog(@"clear group history messages, success");
+                } fail:^(int code, NSString *desc) {
+                    NSLog(@"clear group history messages, error|code:%d|desc:%@", code, desc);
+                }];
+            } else {
+                [V2TIMManager.sharedInstance clearC2CHistoryMessage:cellData.userID succ:^{
+                    NSLog(@"clear c2c history messages, success");
+                } fail:^(int code, NSString *desc) {
+                    NSLog(@"clear c2c history messages, error|code:%d|desc:%@", code, desc);
+                }];
+            }
 
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return TUILocalizableString(Delete);
+        }];
+        action.backgroundColor = [UIColor colorWithRed:32/255.0 green:124/255.0 blue:231/255.0 alpha:1.0];
+        [rowActions addObject:action];
+    }
+    return rowActions;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
@@ -95,21 +151,12 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     return NO;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [tableView beginUpdates];
-        TUIConversationCellData *conv = self.viewModel.dataList[indexPath.row];
-        [self.viewModel removeData:conv];
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
-        [tableView endUpdates];
-    }
-}
-
 - (void)didSelectConversation:(TUIConversationCell *)cell
 {
-    if(_delegate && [_delegate respondsToSelector:@selector(conversationListController:didSelectConversation:)]){
-        [_delegate conversationListController:self didSelectConversation:cell];
+    for (id<TUIConversationListControllerListener> delegate in [TUIKitListenerManager sharedInstance].convListeners) {
+        if (delegate && [delegate respondsToSelector:@selector(conversationListController:didSelectConversation:)]) {
+            [delegate conversationListController:self didSelectConversation:cell];
+        }
     }
 }
 
@@ -154,4 +201,8 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     return UIModalPresentationNone;
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self.viewModel loadConversation];
+}
 @end

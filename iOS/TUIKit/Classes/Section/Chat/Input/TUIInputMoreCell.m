@@ -22,8 +22,6 @@ static TUIInputMoreCellData *TUI_GroupLivePlay_MoreCell;
 
 @implementation TUIInputMoreCellData
 
-
-
 + (TUIInputMoreCellData *)pictureData
 {
     if (!TUI_Picture_MoreCell) {
@@ -83,43 +81,6 @@ static TUIInputMoreCellData *TUI_GroupLivePlay_MoreCell;
 + (void)setFileData:(TUIInputMoreCellData *)fileData
 {
     TUI_File_MoreCell = fileData;
-}
-
-+ (TUIInputMoreCellData *)videoCallData {
-    if (!TUI_VideoCall_MoreCell) {
-        TUI_VideoCall_MoreCell = [[TUIInputMoreCellData alloc] init];
-        TUI_VideoCall_MoreCell.title = TUILocalizableString(TUIKitMoreVideoCall); // @"视频通话";
-        TUI_VideoCall_MoreCell.image = [UIImage tk_imageNamed:@"more_video_call"];
-    }
-    return TUI_VideoCall_MoreCell;
-}
-
-+ (void)setVideoCallData:(TUIInputMoreCellData *)videoCallData
-{
-    TUI_VideoCall_MoreCell = videoCallData;
-}
-
-+ (TUIInputMoreCellData *)audioCallData {
-    if (!TUI_AudioCall_MoreCell) {
-        TUI_AudioCall_MoreCell = [[TUIInputMoreCellData alloc] init];
-        TUI_AudioCall_MoreCell.title = TUILocalizableString(TUIKitMoreVoiceCall); // @"语音通话";
-        TUI_AudioCall_MoreCell.image = [UIImage tk_imageNamed:@"more_voice_call"];
-    }
-    return TUI_AudioCall_MoreCell;
-}
-
-+ (void)setAudioCallData:(TUIInputMoreCellData *)audioCallData
-{
-    TUI_AudioCall_MoreCell = audioCallData;
-}
-
-+ (TUIInputMoreCellData *)groupLivePalyData {
-    if (!TUI_GroupLivePlay_MoreCell) {
-        TUI_GroupLivePlay_MoreCell = [[TUIInputMoreCellData alloc] init];
-        TUI_GroupLivePlay_MoreCell.title = TUILocalizableString(TUIKitMoreGroupLive); // @"群直播";
-        TUI_GroupLivePlay_MoreCell.image = [UIImage tk_imageNamed:@"more_group_live"];
-    }
-    return TUI_GroupLivePlay_MoreCell;
 }
 
 @end

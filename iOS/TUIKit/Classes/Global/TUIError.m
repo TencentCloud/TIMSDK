@@ -7,7 +7,6 @@
 
 #import "TUIError.h"
 #import "NSBundle+TUIKIT.h"
-@import ImSDK;
 
 @implementation TUIError
 

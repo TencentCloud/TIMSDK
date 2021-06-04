@@ -1,1 +1,0 @@
-../../../ISVImageScrollView/ISVImageScrollView/Classes/ISVImageScrollView.h

@@ -13,6 +13,7 @@
 #import "TUIImageCache.h"
 #import "UIImage+TUIKIT.h"
 #import "NSDate+TUIKIT.h"
+#import "NSBundle+TUIKIT.h"
 #import "TUIChatController.h"
 #import "TUIBubbleMessageCell.h"
 #import "TIMUserProfile+DataProvider.h"
@@ -21,12 +22,10 @@
 #import "TUIFriendProfileControllerServiceProtocol.h"
 #import "TCServiceManager.h"
 #import "TUILocalStorage.h"
-#import "TUICallManager.h"
 #import "THeader.h"
+#import "THelper.h"
 #import "TUIFaceCell.h"
-
-@import ImSDK;
-
+#import "TUIKitListenerManager.h"
 
 /**
  *  TUIKit用户状态枚举
@@ -89,9 +88,14 @@ typedef void (^TSucc)(void);
 - (void)onReceiveGroupCallAPNs:(V2TIMSignalingInfo *)signalingInfo;
 
 /**
- *  TUIKit配置类，包含默认表情、默认图标资源等
+ *  TUIKit 配置类，包含默认表情、默认图标资源等
  */
-@property TUIKitConfig *config;
+@property (nonatomic, strong) TUIKitConfig *config;
+
+/**
+ *  TUIKit Toast 弹框提示，YES：启用  NO：关闭 默认：YES
+ */
+@property (nonatomic, assign) BOOL enableToast;
 
 /**
  *  TUIKit 网络状态
@@ -113,6 +117,16 @@ typedef void (^TSucc)(void);
  *  userSig
  */
 @property (readonly) NSString *userSig;
+
+/**
+ * nickName
+ */
+@property (readonly) NSString *nickName;
+
+/**
+ * faceUrl
+ */
+@property (readonly) NSString *faceUrl;
 
 @end
 

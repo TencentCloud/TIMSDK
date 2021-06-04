@@ -16,13 +16,11 @@
 #import "TCommonSwitchCell.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "SDWebImage/UIImageView+WebCache.h"
-#import "THeader.h"
 #import "TTextEditController.h"
 #import "ChatViewController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "TUIKit.h"
 #import "TUIAvatarViewController.h"
-#import "THelper.h"
+#import "TUIKit.h"
 #import "TCUtil.h"
 
 @TCServiceRegister(TUIFriendProfileControllerServiceProtocol, TFriendProfileController)
@@ -32,6 +30,7 @@
 @property BOOL isInBlackList;
 @property BOOL modified;
 @property V2TIMUserFullInfo *userFullInfo;
+@property V2TIMReceiveMessageOpt receiveOpt;
 @end
 
 @implementation TFriendProfileController
@@ -66,6 +65,17 @@
             }
         }
         [self loadData];;
+    } fail:nil];
+    
+    [[V2TIMManager sharedInstance] getC2CReceiveMessageOpt:@[self.friendProfile.userID]
+                                                      succ:^(NSArray<V2TIMUserReceiveMessageOptInfo *> *optList) {
+        for (V2TIMReceiveMessageOptInfo *info in optList) {
+            if ([info.userID isEqual:self.friendProfile.userID]) {
+                self.receiveOpt = info.receiveOpt;
+                [self loadData];
+                break;
+            }
+        }
     } fail:nil];
 
     self.userFullInfo = self.friendProfile.userFullInfo;
@@ -132,16 +142,40 @@
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
             TCommonSwitchCellData *data = TCommonSwitchCellData.new;
+            data.title = NSLocalizedString(@"ProfileMessageDoNotDisturb", nil); // @"消息免打扰";
+            data.on = (self.receiveOpt == V2TIM_NOT_RECEIVE_MESSAGE);
+            data.cswitchSelector =  @selector(onMessageDoNotDisturb:);
+            data.reuseId = @"SwitchCell";
+            data;
+        })];
+        
+        [inlist addObject:({
+            TCommonSwitchCellData *data = TCommonSwitchCellData.new;
             data.title = NSLocalizedString(@"ProfileStickyonTop", nil); // @"置顶聊天";
+            data.on = NO;
+#ifndef SDKPlaceTop
+#define SDKPlaceTop
+#endif
+#ifdef SDKPlaceTop
+            __weak typeof(self) weakSelf = self;
+            [V2TIMManager.sharedInstance getConversation:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID] succ:^(V2TIMConversation *conv) {
+                data.on = conv.isPinned;
+                [weakSelf.tableView reloadData];
+            } fail:^(int code, NSString *desc) {
+                
+            }];
+#else
             if ([[[TUILocalStorage sharedInstance] topConversationList] containsObject:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID]]) {
                 data.on = YES;
             }
+#endif
             data.cswitchSelector =  @selector(onTopMostChat:);
             data.reuseId = @"SwitchCell";
             data;
         })];
         inlist;
     })];
+    
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
@@ -195,7 +229,8 @@
         self.modified = YES;
         self.friendProfile.friendRemark = value;
         [[V2TIMManager sharedInstance] setFriendInfo:self.friendProfile succ:^{
-            [self loadData];;
+            [self loadData];
+            [NSNotificationCenter.defaultCenter postNotificationName:@"FriendInfoChangedNotification" object:self.friendProfile];
         } fail:nil];
     }];
 
@@ -261,7 +296,7 @@
     __weak typeof(self) weakSelf = self;
     [[V2TIMManager sharedInstance] deleteFromFriendList:@[self.friendProfile.userID] deleteType:V2TIM_FRIEND_TYPE_BOTH succ:^(NSArray<V2TIMFriendOperationResult *> *resultList) {
         weakSelf.modified = YES;
-        [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"c2c_%@",weakSelf.friendProfile.userID]];
+        [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"c2c_%@",weakSelf.friendProfile.userID] callback:nil];
         [weakSelf.navigationController popViewControllerAnimated:YES];
     } fail:nil];
 }
@@ -281,14 +316,42 @@
 }
 
 /**
+ *操作 消息免打扰 开关后执行的函数
+ */
+- (void)onMessageDoNotDisturb:(TCommonSwitchCell *)cell
+{
+    V2TIMReceiveMessageOpt opt;
+    if (cell.switcher.on) {
+        opt = V2TIM_NOT_RECEIVE_MESSAGE;
+    } else {
+        opt = V2TIM_RECEIVE_MESSAGE;
+    }
+    [[V2TIMManager sharedInstance] setC2CReceiveMessageOpt:@[self.friendProfile.userID] opt:opt succ:nil fail:nil];
+}
+
+/**
  *操作 置顶 开关后执行的函数，将对应好友添加/移除置顶队列
  */
 - (void)onTopMostChat:(TCommonSwitchCell *)cell
 {
     if (cell.switcher.on) {
-        [[TUILocalStorage sharedInstance] addTopConversation:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID]];
+        [[TUILocalStorage sharedInstance] addTopConversation:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID] callback:^(BOOL success, NSString * _Nonnull errorMessage) {
+            if (success) {
+                return;
+            }
+            // 操作失败，还原
+            cell.switcher.on = !cell.switcher.isOn;
+            [THelper makeToast:errorMessage];
+        }];
     } else {
-        [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID]];
+        [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID] callback:^(BOOL success, NSString * _Nonnull errorMessage) {
+            if (success) {
+                return;
+            }
+            // 操作失败，还原
+            cell.switcher.on = !cell.switcher.isOn;
+            [THelper makeToast:errorMessage];
+        }];
     }
 }
 

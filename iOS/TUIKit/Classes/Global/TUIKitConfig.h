@@ -52,9 +52,14 @@ typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
 @property (nonatomic, strong) UIImage *defaultGroupAvatarImage;
 
 /**
- * 启用群直播入口 YES：启用 NO：关闭 默认：YES
+ * 发消息不计入未读数 YES：启用 NO：关闭 默认：NO
  */
-@property(nonatomic, assign) BOOL enableGroupLiveEntry;
+@property(nonatomic, assign) BOOL isExcludedFromUnreadCount;
+
+/**
+ * 发消息不更新会话的lastMesage，YES: 不更新，NO:更新。默认 NO。
+ */
+@property(nonatomic, assign) BOOL isExcludedFromLastMessage;
 
 + (TUIKitConfig *)defaultConfig;
 

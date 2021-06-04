@@ -16,6 +16,12 @@
 
 @class TUIConversationCellData;
 @class TUIMessageController;
+
+typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
+    TUIMultiResultOptionAll     = 0,                            // 获取所有选中的结果
+    TUIMultiResultOptionFiterUnsupportRelay = 1 << 0,           // 过滤掉不支持转发
+};
+
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                         TMessageControllerDelegate
@@ -23,9 +29,9 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 /**
- *  我们不建议您直接修改 MessageController 中的回调委托。
- *  MessageController 的回调委托在 ChatController 中实现，负责大部分核心功能。如果您对此修改，可能会对一系列回调委托的调用关系造成破坏。
- *  如果您需要实现 onNewMessage、onShowMessageData 的回调，您可以参照 Section\Chat\TUIChatController.h 中的链接与注释进行调用并实现自定义消息处理。
+ * 我们不建议您直接修改 MessageController 中的回调委托。
+ * MessageController 的回调委托在 ChatController 中实现，负责大部分核心功能。如果您对此修改，可能会对一系列回调委托的调用关系造成破坏。
+ * 如果您需要实现 onNewMessage、onShowMessageData 的回调，您可以参照 Section\Chat\TUIChatController.h 中的链接与注释进行调用并实现自定义消息处理。
  */
 @protocol TMessageControllerDelegate <NSObject>
 
@@ -96,6 +102,14 @@
 - (void)messageController:(TUIMessageController *)controller onSelectMessageContent:(TUIMessageCell *)cell;
 
 /**
+ * 长按消息内容弹窗菜单栏，点击菜单选项
+ *
+ * @param controller 委托者，消息控制器
+ * @param menuType 点击的菜单类型，支持的类型: 0 - 多选；1 - 转发。
+ * @param data 当前长按的消息数据
+ */
+- (void)messageController:(TUIMessageController *)controller onSelectMessageMenu:(NSInteger)menuType withData:(TUIMessageCellData *)data;
+/**
  *  点击入群消息中用户名称时的回调委托。例如：“小明加入群组”，本回调在用户点击“小明”时触发。
  *
  *  @param controller 委托者，消息控制器
@@ -130,6 +144,14 @@
 - (void)sendMessage:(TUIMessageCellData *)msg;
 
 /**
+ *  转发消息
+ *  本函数整合调用了 IM SDK 的消息转发接口，可以轻松接入 SDK。
+ *
+ *  @param msg 消息单元数据
+ */
+- (void)forwardMessage:(TUIMessageCellData *)msg;
+
+/**
  *  滚动至底部
  *  通过对 tableView 进行设置，使当前视图滚动至底部。
  *  建议在需要返回至消息视图底部或者需要浏览最新信息时调用，比如每次发送消息、接收消息、撤回消息、删除消息时。
@@ -148,5 +170,68 @@
  *
  */
 - (void)setConversation:(TUIConversationCellData *)conversationData;
+
+/**
+ * 开启多选模式
+ *
+ * @param enable 是否开启多选模式
+ */
+- (void)enableMultiSelectedMode:(BOOL)enable;
+
+/**
+ * 开启多选模式后，获取当前选中的结果
+ * 如果多选模式关闭，返回空数组
+ *
+ * @param option 获取结果的选项
+ * @return 选中的数据
+ */
+- (NSArray<TUIMessageCellData *> *)multiSelectedResult:(TUIMultiResultOption)option;
+
+/**
+ * 批量删除消息
+ *
+ * @param uiMsgs 待删除的数据
+ */
+- (void)deleteMessages:(NSArray<TUIMessageCellData *> *)uiMsgs;
+
+#pragma mark - public属性及方法，子类及扩展类可用，主要用于V2TUIMessageController
+/**
+ * 用来显示时间cell
+ */
+@property (nonatomic, strong) V2TIMMessage *msgForDate;
+/**
+ * 是否第一次加载
+ */
+@property (nonatomic, assign) BOOL firstLoad;
+
+/**
+ * 当前会话信息
+ */
+@property (nonatomic, strong) TUIConversationCellData *conversationData;
+
+/**
+ * 当前数据源
+ */
+@property (nonatomic, strong) NSMutableArray *uiMsgs;
+
+/**
+ * 当前cell高度缓存
+ */
+@property (nonatomic, strong) NSMutableArray *heightCache;
+
+/**
+ * 下拉指示器
+ */
+@property (nonatomic, strong, readonly) UIActivityIndicatorView *indicatorView;
+
+/**
+ * 批量将V2TIMessage转换成TUIMessageCellData
+ */
+- (NSMutableArray *)transUIMsgFromIMMsg:(NSArray *)msgs;
+
+/**
+ * 没有更多消息
+ */
+@property (nonatomic, assign) BOOL noMoreMsg;
 
 @end

@@ -30,6 +30,7 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "MyCustomCell.h"
+#import "GroupCreateCell.h"
 #import "TCUtil.h"
 #import "THelper.h"
 #import "TCConstants.h"
@@ -43,7 +44,8 @@
 #import "TUILiveHeartBeatManager.h"
 #import "GenerateTestUserSig.h"
 #import "Toast.h"
-
+#import "TUIKitListenerManager.h"
+#import "NSBundle+TUIKIT.h"
 
 // MLeaksFinder 会对这个类误报，这里需要关闭一下
 @implementation UIImagePickerController (Leak)
@@ -54,8 +56,7 @@
 
 @end
 
-@interface ChatViewController () <TUIChatControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentPickerDelegate,
-TUILiveRoomAnchorDelegate>
+@interface ChatViewController () <TUIChatControllerListener, TUILiveRoomAnchorDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentPickerDelegate>
 @property (nonatomic, strong) TUIChatController *chat;
 @end
 
@@ -63,24 +64,19 @@ TUILiveRoomAnchorDelegate>
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _chat = [[TUIChatController alloc] initWithConversation:self.conversationData];
-    _chat.delegate = self;
+    
+    [[TUIKitListenerManager sharedInstance] addChatControllerListener:self];
+    [[TUIKitLive shareInstance] setGroupLiveDelegate:self];
+    
+    _chat = [[TUIChatController alloc] init];
+    [_chat setConversationData:self.conversationData];
     [self addChildViewController:_chat];
     [self.view addSubview:_chat.view];
-
-
+    
     RAC(self, title) = [RACObserve(_conversationData, title) distinctUntilChanged];
-    [self checkTitle];
+    [self checkTitle:NO];
 
-    NSMutableArray *moreMenus = [NSMutableArray arrayWithArray:_chat.moreMenus];
-    [moreMenus addObject:({
-        TUIInputMoreCellData *data = [TUIInputMoreCellData new];
-        data.image = [UIImage tk_imageNamed:@"more_custom"];
-        data.title = NSLocalizedString(@"MoreCustom", nil);
-        data;
-    })];
-    _chat.moreMenus = moreMenus;
-
+    // 导航栏
     [self setupNavigator];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onRefreshNotification:)
@@ -90,67 +86,26 @@ TUILiveRoomAnchorDelegate>
     //添加未读计数的监听
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onChangeUnReadCount:)
-                                                 name:TUIKitNotification_onChangeUnReadCount
+                                                 name:TUIKitNotification_onTotalUnreadMessageCountChanged
                                                object:nil];
 
-
-}
-
-- (void)checkTitle {
-    if (_conversationData.title.length == 0) {
-        if (_conversationData.userID.length > 0) {
-            _conversationData.title = _conversationData.userID;
-             @weakify(self)
-            [[V2TIMManager sharedInstance] getFriendsInfo:@[_conversationData.userID] succ:^(NSArray<V2TIMFriendInfoResult *> *resultList) {
-                @strongify(self)
-                V2TIMFriendInfoResult *result = resultList.firstObject;
-                if (result.friendInfo && result.friendInfo.friendRemark.length > 0) {
-                    self.conversationData.title = result.friendInfo.friendRemark;
-                } else {
-                    [[V2TIMManager sharedInstance] getUsersInfo:@[self.conversationData.userID] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-                        V2TIMUserFullInfo *info = infoList.firstObject;
-                        if (info && info.nickName.length > 0) {
-                            self.conversationData.title = info.nickName;
-                        }
-                    } fail:nil];
-                }
-            } fail:nil];
-        }
-        if (_conversationData.groupID.length > 0) {
-            _conversationData.title = _conversationData.groupID;
-             @weakify(self)
-            [[V2TIMManager sharedInstance] getGroupsInfo:@[_conversationData.groupID] succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
-                @strongify(self)
-                V2TIMGroupInfoResult *result = groupResultList.firstObject;
-                if (result.info && result.info.groupName.length > 0) {
-                    self.conversationData.title = result.info.groupName;
-                }
-            } fail:nil];
-        }
-    }
-}
-
-- (void)willMoveToParentViewController:(UIViewController *)parent
-{
-    if (parent == nil) {
-        [_chat saveDraft];
-    }
-}
-
-// 聊天窗口标题由上层维护，需要自行设置标题
-- (void)onRefreshNotification:(NSNotification *)notifi
-{
-    NSArray<V2TIMConversation *> *convs = notifi.object;
-    for (V2TIMConversation *conv in convs) {
-        if ([conv.conversationID isEqualToString:self.conversationData.conversationID]) {
-            self.conversationData.title = conv.showName;
-            break;
-        }
-    }
+    // 刷新未读数
+    __weak typeof(self) weakSelf = self;
+    [V2TIMManager.sharedInstance getTotalUnreadMessageCount:^(UInt64 totalCount) {
+        NSNotification *notice = [[NSNotification alloc] initWithName:TUIKitNotification_onTotalUnreadMessageCountChanged
+                                                               object:@(totalCount)
+                                                             userInfo:nil];
+        [weakSelf onChangeUnReadCount:notice];
+    } fail:^(int code, NSString *desc) {
+        
+    }];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
 }
 
 - (void)dealloc
 {
+    [[TUIKitListenerManager sharedInstance] removeChatControllerListener:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -222,6 +177,77 @@ TUILiveRoomAnchorDelegate>
     }
 }
 
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+    if (parent == nil) {
+        [_chat saveDraft];
+    }
+}
+
+// 聊天窗口标题由上层维护，需要自行设置标题
+- (void)onRefreshNotification:(NSNotification *)notifi
+{
+    NSArray<V2TIMConversation *> *convs = notifi.object;
+    for (V2TIMConversation *conv in convs) {
+        if ([conv.conversationID isEqualToString:self.conversationData.conversationID]) {
+            self.conversationData.title = conv.showName;
+            break;
+        }
+    }
+}
+
+- (void) onChangeUnReadCount:(NSNotification *)notifi{
+    id obj = notifi.object;
+    if (![obj isKindOfClass:NSNumber.class]) {
+        return;
+    }
+    
+    // 此处异步的原因：当前聊天页面连续频繁收到消息，可能还没标记已读，此时也会收到未读数变更。理论上此时未读数不会包括当前会话的。
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakSelf.unRead setNum:[obj integerValue]];
+    });
+}
+
+- (void)onFriendInfoChanged:(NSNotification *)notice
+{
+    [self checkTitle:YES];
+}
+
+- (void)checkTitle:(BOOL)force {
+    if (force || _conversationData.title.length == 0) {
+        if (_conversationData.userID.length > 0) {
+            _conversationData.title = _conversationData.userID;
+             @weakify(self)
+            [[V2TIMManager sharedInstance] getFriendsInfo:@[_conversationData.userID] succ:^(NSArray<V2TIMFriendInfoResult *> *resultList) {
+                @strongify(self)
+                V2TIMFriendInfoResult *result = resultList.firstObject;
+                if (result.friendInfo && result.friendInfo.friendRemark.length > 0) {
+                    self.conversationData.title = result.friendInfo.friendRemark;
+                } else {
+                    [[V2TIMManager sharedInstance] getUsersInfo:@[self.conversationData.userID] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+                        V2TIMUserFullInfo *info = infoList.firstObject;
+                        if (info && info.nickName.length > 0) {
+                            self.conversationData.title = info.nickName;
+                        }
+                    } fail:nil];
+                }
+            } fail:nil];
+        }
+        if (_conversationData.groupID.length > 0) {
+            _conversationData.title = _conversationData.groupID;
+             @weakify(self)
+            [[V2TIMManager sharedInstance] getGroupsInfo:@[_conversationData.groupID] succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
+                @strongify(self)
+                V2TIMGroupInfoResult *result = groupResultList.firstObject;
+                if (result.info && result.info.groupName.length > 0) {
+                    self.conversationData.title = result.info.groupName;
+                }
+            } fail:nil];
+        }
+    }
+}
+
 - (void)chatController:(TUIChatController *)controller didSendMessage:(TUIMessageCellData *)msgCellData
 {
     if ([_conversationData.groupID isEqualToString:@"im_demo_admin"] || [_conversationData.userID isEqualToString:@"im_demo_admin"]) {
@@ -253,6 +279,19 @@ TUILiveRoomAnchorDelegate>
     }
 }
 
+- (NSArray <TUIInputMoreCellData *> *)chatController:(TUIChatController *)chatController onRegisterMoreCell:(MoreCellPriority *)priority {
+    // 更多菜单
+    NSMutableArray *moreMenus = [NSMutableArray array];
+    [moreMenus addObject:({
+        TUIInputMoreCellData *data = [TUIInputMoreCellData new];
+        data.image = [UIImage tk_imageNamed:@"more_custom"];
+        data.title = NSLocalizedString(@"MoreCustom", nil);
+        data;
+    })];
+    *priority = MoreCellPriority_Nomal;
+    return moreMenus;
+}
+
 - (void)chatController:(TUIChatController *)chatController onSelectMoreCell:(TUIInputMoreCell *)cell
 {
     if ([cell.data.title isEqualToString:NSLocalizedString(@"MoreCustom", nil)]) {
@@ -271,15 +310,6 @@ TUILiveRoomAnchorDelegate>
             [TCUtil report:Action_Sendmsg2defaultgrp actionSub:@"" code:@(0) msg:@"sendmsg2defaultgrp"];
         }
         [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendcustom code:@(0) msg:@"sendcustom"];
-    } else if ([cell.data.title isEqualToString:@"群直播"]) {
-        cell.disableDefaultSelectAction = YES;
-        NSString *hashStr = [NSString stringWithFormat:@"%@_%@_liveRoom", _conversationData.groupID, [TUILiveUserProfile getLoginUserInfo].userID];
-        int roomId = (hashStr.hash & 0x7FFFFFFF);
-        TUILiveRoomAnchorViewController *anchorVC = [[TUILiveRoomAnchorViewController alloc] initWithRoomId:roomId];
-        [anchorVC enablePK:NO];
-        anchorVC.delegate = self;
-        [anchorVC setHidesBottomBarWhenPushed:YES];
-        [self.navigationController pushViewController:anchorVC animated:YES];
     }
 }
 
@@ -288,31 +318,21 @@ TUILiveRoomAnchorDelegate>
     if (msg.elemType == V2TIM_ELEM_TYPE_CUSTOM) {
         NSDictionary *param = [TCUtil jsonData2Dictionary:msg.customElem.data];
         if (param != nil) {
-            NSInteger version = [param[@"version"] integerValue];
             NSString *businessID = param[@"businessID"];
-            NSString *text = param[@"text"];
-            NSString *link = param[@"link"];
-            if (text.length == 0 || link.length == 0) {
-                return nil;
-            }
-            if ([businessID isEqualToString:TextLink]) {
-                if (version <= TextLink_Version) {
-                    MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
-                    cellData.innerMessage = msg;
-                    cellData.msgID = msg.msgID;
-                    cellData.text = param[@"text"];
-                    cellData.link = param[@"link"];
-                    cellData.avatarUrl = [NSURL URLWithString:msg.faceURL];
-                    return cellData;
-                }
-            } else {
-                // 兼容下老版本
+            // 判断是不是自定义跳转消息
+            if ([businessID isEqualToString:TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
                 MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
                 cellData.innerMessage = msg;
                 cellData.msgID = msg.msgID;
                 cellData.text = param[@"text"];
                 cellData.link = param[@"link"];
                 cellData.avatarUrl = [NSURL URLWithString:msg.faceURL];
+                return cellData;
+            }
+            // 判断是不是群创建自定义消息
+            else if ([businessID isEqualToString:GroupCreate] || [param.allKeys containsObject:GroupCreate]) {
+                GroupCreateCellData *cellData = [[GroupCreateCellData alloc] initWithDirection:msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
+                cellData.content = [NSString stringWithFormat:@"\"%@\"%@",param[@"opUser"],param[@"content"]];
                 return cellData;
             }
         }
@@ -326,6 +346,10 @@ TUILiveRoomAnchorDelegate>
         MyCustomCell *myCell = [[MyCustomCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MyCell"];
         [myCell fillWithData:(MyCustomCellData *)data];
         return myCell;
+    } else if ([data isKindOfClass:[GroupCreateCellData class]]) {
+        GroupCreateCell *groupCell = [[GroupCreateCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"GroupCreateCell"];
+        [groupCell fillWithData:(GroupCreateCellData *)data];
+        return groupCell;
     }
     return nil;
 }
@@ -337,107 +361,29 @@ TUILiveRoomAnchorDelegate>
         if (cellData.link) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cellData.link]];
         }
-    } else if ([cell isKindOfClass:[TUIGroupLiveMessageCell class]]) {
-        cell.disableDefaultSelectAction = YES;
-        NSLog(@"群直播消息");
-        TUIGroupLiveMessageCellData *celldata = [(TUIGroupLiveMessageCell *)cell customData];
-        NSDictionary *roomInfo = celldata.roomInfo;
-        NSString *anchorId = roomInfo[@"anchorId"];
-        if (roomInfo[@"roomId"] && anchorId.length > 0) {
-            if ([anchorId isEqual:[TUILiveUserProfile getLoginUserInfo].userID]) {
-                NSString *hashStr = [NSString stringWithFormat:@"%@_%@_liveRoom", _conversationData.groupID, [TUILiveUserProfile getLoginUserInfo].userID];
-                int roomId = (hashStr.hash & 0x7FFFFFFF);
-                TUILiveRoomAnchorViewController *anchorVC = [[TUILiveRoomAnchorViewController alloc] initWithRoomId:roomId];
-                [anchorVC enablePK:NO];
-                anchorVC.delegate = self;
-                [anchorVC setHidesBottomBarWhenPushed:YES];
-                [self.navigationController pushViewController:anchorVC animated:YES];
-            } else {
-                
-                // 检查群直播是否结束
-                __weak typeof(self) weakSelf = self;
-                [self checkGroupLiveOnline:[NSString stringWithFormat:@"%@", roomInfo[@"roomId"]] completion:^(BOOL online) {
-                    if (!online) {
-                        [self.view makeToast:@"直播已结束"];
-                        return;
-                    }
-                    TUILiveRoomAudienceViewController *audienceVC = [[TUILiveRoomAudienceViewController alloc] initWithRoomId:[roomInfo[@"roomId"] intValue] anchorId:anchorId useCdn:NO cdnUrl:@""];
-                    [weakSelf.navigationController pushViewController:audienceVC animated:YES];
-                }];
+    }
+}
+
+- (NSString *)chatController:(TUIChatController *)controller onGetMessageAbstact:(V2TIMMessage *)msg {
+    if (msg.elemType == V2TIM_ELEM_TYPE_CUSTOM) {
+        NSDictionary *param = [TCUtil jsonData2Dictionary:msg.customElem.data];
+        if (param != nil) {
+            NSString *businessID = param[@"businessID"];
+            // 判断是不是自定义跳转消息
+            if ([businessID isEqualToString:TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
+                return param[@"text"];
+            }
+            // 判断是不是群创建自定义消息
+            else if ([businessID isEqualToString:GroupCreate] || [param.allKeys containsObject:GroupCreate]) {
+                return [NSString stringWithFormat:@"\"%@\"%@",param[@"opUser"],param[@"content"]];
             }
         }
     }
+    return nil;
 }
-
-- (void) onChangeUnReadCount:(NSNotification *)notifi{
-    NSMutableArray *convList = (NSMutableArray *)notifi.object;
-    int unReadCount = 0;
-    for (V2TIMConversation *conv in convList) {
-        // 忽略当前会话的未读数
-        if (![conv.conversationID isEqual:self.conversationData.conversationID]) {
-            if (NO == [conv.groupType isEqualToString:@"Meeting"]) {
-                unReadCount += conv.unreadCount;
-            }
-        }
-    }
-    [_unRead setNum:unReadCount];
-}
-
-///此处可以修改导航栏按钮的显示位置，但是无法修改响应位置，暂时不建议使用
-- (void)resetBarItemSpacesWithController:(UIViewController *)viewController {
-    CGFloat space = 16;
-    for (UIBarButtonItem *buttonItem in viewController.navigationItem.leftBarButtonItems) {
-        if (buttonItem.customView == nil) { continue; }
-        /// 根据实际情况(自己项目UIBarButtonItem的层级)获取button
-        UIButton *itemBtn = nil;
-        if ([buttonItem.customView isKindOfClass:[UIButton class]]) {
-            itemBtn = (UIButton *)buttonItem.customView;
-        }
-        /// 设置button图片/文字偏移
-        itemBtn.contentEdgeInsets = UIEdgeInsetsMake(0, -space,0, 0);
-        itemBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -space,0, 0);
-        itemBtn.titleEdgeInsets = UIEdgeInsetsMake(0, -space,0, 0);
-        /// 改变button事件响应区域
-        // itemBtn.hitEdgeInsets = UIEdgeInsetsMake(0, -space, 0, space);
-    }
-    for (UIBarButtonItem *buttonItem in viewController.navigationItem.rightBarButtonItems) {
-        if (buttonItem.customView == nil) { continue; }
-        UIButton *itemBtn = nil;
-        if ([buttonItem.customView isKindOfClass:[UIButton class]]) {
-            itemBtn = (UIButton *)buttonItem.customView;
-        }
-        itemBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 0,0, -space);
-        itemBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 0,0, -space);
-        itemBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 0,0, -space);
-        //itemBtn.hitEdgeInsets = UIEdgeInsetsMake(0, space, 0, -space);
-    }
-}
-
-- (void)sendMessage:(TUIMessageCellData*)msg {
-    [_chat sendMessage:msg];
-}
-
-#pragma mark - 群直播相关
-- (void)checkGroupLiveOnline:(NSString *)roomId completion:(void(^)(BOOL online))completion
-{
-    [TUILiveRoomManager.sharedManager getRoomList:SDKAPPID type:@"groupLive" success:^(NSArray<NSString *> * _Nonnull roomIds) {
-        if (completion) {
-            completion([roomIds containsObject:roomId]);
-        }
-    } failed:^(int code, NSString * _Nonnull errorMsg) {
-        if (completion) {
-            completion(NO);
-        }
-    }];
-}
-
-
 
 #pragma mark - TUILiveRoomAnchorDelegate
 - (void)onRoomCreate:(TRTCLiveRoomInfo *)roomInfo {
-    TUIGroupLiveMessageCellData *cellData = [self groupLiveCellDataWith:roomInfo roomStatus:1];
-    [self sendMessage:cellData];
-    
     [[TUILiveRoomManager sharedManager] createRoom:SDKAPPID type:@"groupLive" roomID:[NSString stringWithFormat:@"%@", roomInfo.roomId] success:^{
         NSLog(@"----> 业务层创建群直播房间成功: roomId:%@", roomInfo.roomId);
         [TUILiveHeartBeatManager.shareManager startWithType:@"groupLive" roomId:roomInfo.roomId];
@@ -448,9 +394,6 @@ TUILiveRoomAnchorDelegate>
 }
 
 - (void)onRoomDestroy:(TRTCLiveRoomInfo *)roomInfo {
-    TUIGroupLiveMessageCellData *cellData = [self groupLiveCellDataWith:roomInfo roomStatus:0];
-    [self sendMessage:cellData];
-    
     [[TUILiveRoomManager sharedManager] destroyRoom:SDKAPPID type:@"groupLive" roomID:[NSString stringWithFormat:@"%@", roomInfo.roomId] success:^{
         NSLog(@"----> 业务层销毁群直播房间成功");
         [TUILiveHeartBeatManager.shareManager stop];
@@ -475,5 +418,4 @@ TUILiveRoomAnchorDelegate>
     cellData.status = Msg_Status_Init;
     return cellData;
 }
-
 @end

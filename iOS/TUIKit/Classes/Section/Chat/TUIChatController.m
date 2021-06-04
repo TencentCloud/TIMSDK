@@ -13,62 +13,100 @@
 #import "MMLayout/UIView+MMLayout.h"
 #import "TUIGroupPendencyViewModel.h"
 #import "TUIMessageController.h"
-#import "TUISelectMemberViewController.h"
+#import "TUISelectGroupMemberViewController.h"
 #import "TUITextMessageCellData.h"
 #import "TUIImageMessageCellData.h"
 #import "TUIVideoMessageCellData.h"
 #import "TUIFileMessageCellData.h"
+#import "TUIVoiceMessageCellData.h"
 #import "TUIGroupPendencyController.h"
 #import "TUIFriendProfileControllerServiceProtocol.h"
 #import "TUIUserProfileControllerServiceProtocol.h"
 #import "TCServiceManager.h"
-#import "Toast/Toast.h"
-#import "THelper.h"
 #import "UIColor+TUIDarkMode.h"
-#import "TUICallManager.h"
 #import "TUIKit.h"
-#import "TUIGroupLiveMessageCell.h"
-#import "NSBundle+TUIKIT.h"
+#import "TUIMessageMultiChooseView.h"
+#import "TUIConversationSelectController.h"
+#import "TUIMessageDataProviderService.h"
+#import "TIMMessage+DataProvider.h"
+#import "V2TUIMessageController.h"
+#import "TUIKitListenerManager.h"
 
-@interface TUIChatController () <TMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate>
-@property (nonatomic, strong) TUIConversationCellData *conversationData;
+@interface TUIChatController () <TMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate>
 @property (nonatomic, strong) UIView *tipsView;
 @property (nonatomic, strong) UILabel *pendencyLabel;
 @property (nonatomic, strong) UIButton *pendencyBtn;
 @property (nonatomic, strong) UIButton *atBtn;
+@property (nonatomic, strong) TUIMessageMultiChooseView *multiChooseView;
 @property (nonatomic, strong) TUIGroupPendencyViewModel *pendencyViewModel;
 @property (nonatomic, strong) NSMutableArray<UserModel *> *atUserList;
 @property (nonatomic, assign) BOOL responseKeyboard;
+// @{@"serviceID" : serviceID, @"title" : @"视频通话", @"image" : image}
+@property (nonatomic, strong) NSMutableArray<NSDictionary *> *resgisterParam;
 @end
 
 @implementation TUIChatController
-
-- (instancetype)initWithConversation:(TUIConversationCellData *)conversationData;
 {
-    self = [super initWithNibName:nil bundle:nil];
-    if (self) {
-        _conversationData = conversationData;
+    TUIConversationCellData *_conversationData;
+}
 
-        NSMutableArray *moreMenus = [NSMutableArray array];
-        [moreMenus addObject:[TUIInputMoreCellData photoData]];
-        [moreMenus addObject:[TUIInputMoreCellData pictureData]];
-        [moreMenus addObject:[TUIInputMoreCellData videoData]];
-        [moreMenus addObject:[TUIInputMoreCellData fileData]];
-        [moreMenus addObject:[TUIInputMoreCellData videoCallData]];
-        [moreMenus addObject:[TUIInputMoreCellData audioCallData]];
-        if ([TUIKit sharedInstance].config.enableGroupLiveEntry && conversationData.groupID.length > 0) {
-            [moreMenus addObject:[TUIInputMoreCellData groupLivePalyData]];
+- (void)setConversationData:(TUIConversationCellData *)conversationData {
+    _conversationData = conversationData;
+    self.resgisterParam = [NSMutableArray array];
+    
+    NSMutableArray *moreMenus = [NSMutableArray array];
+    [moreMenus addObject:[TUIInputMoreCellData photoData]];
+    [moreMenus addObject:[TUIInputMoreCellData pictureData]];
+    [moreMenus addObject:[TUIInputMoreCellData videoData]];
+    [moreMenus addObject:[TUIInputMoreCellData fileData]];
+    
+    NSMutableArray *highMenus = [NSMutableArray array];
+    NSMutableArray *nomalMenus = [NSMutableArray array];
+    NSMutableArray *lowMenus = [NSMutableArray array];
+    NSMutableArray *lowestMenus = [NSMutableArray array];
+    for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+        if (delegate && [delegate respondsToSelector:@selector(chatController:onRegisterMoreCell:)]) {
+            MoreCellPriority priority = MoreCellPriority_Low;
+            NSArray *menusData = [delegate chatController:self onRegisterMoreCell:&priority];
+            BOOL isInvalidData = NO;
+            for (NSObject *data in menusData) {
+                if (![data isKindOfClass:[TUIInputMoreCellData class]]) {
+                    isInvalidData = YES;
+                    break;
+                }
+            }
+            if (isInvalidData) {
+                NSLog(@"input cell data is invalid");
+                continue;
+            }
+            if (priority == MoreCellPriority_High) {
+                [highMenus addObjectsFromArray:menusData];
+            } else if (priority == MoreCellPriority_Nomal) {
+                [nomalMenus addObjectsFromArray:menusData];
+            } else if (priority == MoreCellPriority_Low) {
+                [lowMenus addObjectsFromArray:menusData];
+            }  else if (priority == MoreCellPriority_Lowest) {
+                [lowestMenus addObjectsFromArray:menusData];
+            }
         }
-        _moreMenus = moreMenus;
-
-        if (self.conversationData.groupID.length > 0) {
-            _pendencyViewModel = [TUIGroupPendencyViewModel new];
-            _pendencyViewModel.groupId = _conversationData.groupID;
-        }
-        
-        self.atUserList = [NSMutableArray array];
     }
-    return self;
+    [moreMenus addObjectsFromArray:highMenus];
+    [moreMenus addObjectsFromArray:nomalMenus];
+    [moreMenus addObjectsFromArray:lowMenus];
+    [moreMenus addObjectsFromArray:lowestMenus];
+    
+    _moreMenus = moreMenus;
+
+    if (self.conversationData.groupID.length > 0) {
+        _pendencyViewModel = [TUIGroupPendencyViewModel new];
+        _pendencyViewModel.groupId = _conversationData.groupID;
+    }
+    
+    self.atUserList = [NSMutableArray array];
+}
+
+- (TUIConversationCellData *)conversationData {
+    return _conversationData;
 }
 
 - (void)viewDidLoad {
@@ -84,6 +122,7 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.responseKeyboard = NO;
+    [self openMultiChooseBoard:NO];
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent
@@ -99,7 +138,15 @@
 
     @weakify(self)
     //message
-    _messageController = [[TUIMessageController alloc] init];
+    if (self.locateMessage) {
+        V2TUIMessageController *vc = [[V2TUIMessageController alloc] init];
+        vc.hightlightKeyword = self.highlightKeyword;
+        vc.locateMessage = self.locateMessage;
+        _messageController = vc;
+        
+    }else {
+        _messageController = [[TUIMessageController alloc] init];
+    }
     _messageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight);
     _messageController.delegate = self;
     [self addChildViewController:_messageController];
@@ -216,8 +263,11 @@
         [self.atUserList removeAllObjects];
     }
     [_messageController sendMessage:msg];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-        [self.delegate chatController:self didSendMessage:msg];
+    
+    for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+        if (delegate && [delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
+            [delegate chatController:self didSendMessage:msg];
+        }
     }
 }
 
@@ -225,7 +275,10 @@
 {
     // 检测到 @ 字符的输入
     if (_conversationData.groupID.length > 0) {
-        TUISelectMemberViewController *vc = [[TUISelectMemberViewController alloc] init];
+        if ([self.navigationController.topViewController isKindOfClass:TUISelectGroupMemberViewController.class]) {
+            return;
+        }
+        TUISelectGroupMemberViewController *vc = [[TUISelectGroupMemberViewController alloc] init];
         vc.groupId = _conversationData.groupID;
         vc.name = TUILocalizableString(TUIKitAtSelectMemberTitle); // @"选择群成员";
         vc.optionalStyle = TUISelectMemberOptionalStyleAtAll;
@@ -264,17 +317,6 @@
     [_messageController sendMessage:message];
 }
 
-- (void)sendMessageDict:(NSDictionary *)msgDict {
-    NSString *className = msgDict[@"className"];
-    Class cellDataClass = NSClassFromString(className);
-    SEL selector = @selector(initWithDict:);
-    if (cellDataClass && [cellDataClass instancesRespondToSelector:selector]) {
-        TUIMessageCellData *msgData = [[cellDataClass alloc] initWithDict:msgDict];
-        msgData.direction = MsgDirectionOutgoing;
-        [self sendMessage:msgData];
-    }
-}
-
 - (void)saveDraft
 {
     NSString *draft = self.inputController.inputBar.inputTextView.text;
@@ -285,35 +327,27 @@
 - (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell
 {
     cell.disableDefaultSelectAction = NO;
-    if(_delegate && [_delegate respondsToSelector:@selector(chatController:onSelectMoreCell:)]){
-        [_delegate chatController:self onSelectMoreCell:cell];
+    
+    for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+        if(delegate && [delegate respondsToSelector:@selector(chatController:onSelectMoreCell:)]){
+            [delegate chatController:self onSelectMoreCell:cell];
+        }
     }
+    
     if (cell.disableDefaultSelectAction) {
         return;
     }
     if (cell.data == [TUIInputMoreCellData photoData]) {
         [self selectPhotoForSend];
     }
-    if (cell.data == [TUIInputMoreCellData videoData]) {
+    else if (cell.data == [TUIInputMoreCellData videoData]) {
         [self takeVideoForSend];
     }
-    if (cell.data == [TUIInputMoreCellData fileData]) {
+    else if (cell.data == [TUIInputMoreCellData fileData]) {
         [self selectFileForSend];
     }
-    if (cell.data == [TUIInputMoreCellData pictureData]) {
+    else if (cell.data == [TUIInputMoreCellData pictureData]) {
         [self takePictureForSend];
-    }
-    if (cell.data == [TUIInputMoreCellData videoCallData]) {
-        [self videoCall];
-    }
-    if (cell.data == [TUIInputMoreCellData audioCallData]) {
-        [self audioCall];
-    }
-    if (cell.data == [TUIInputMoreCellData groupLivePalyData]) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyGroupLiveOnSelectMoreCell" object:nil userInfo:@{
-            @"groupID":_conversationData.groupID?:@"",
-            @"msgSender": self,
-        }];
     }
 }
 
@@ -333,16 +367,26 @@
 
 - (TUIMessageCellData *)messageController:(TUIMessageController *)controller onNewMessage:(V2TIMMessage *)data
 {
-    if ([self.delegate respondsToSelector:@selector(chatController:onNewMessage:)]) {
-        return [self.delegate chatController:self onNewMessage:data];
+    for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+        if ([delegate respondsToSelector:@selector(chatController:onNewMessage:)]) {
+            TUIMessageCellData *cellData = [delegate chatController:self onNewMessage:data];
+            if (cellData) {
+                return cellData;
+            }
+        }
     }
     return nil;
 }
 
 - (TUIMessageCell *)messageController:(TUIMessageController *)controller onShowMessageData:(TUIMessageCellData *)data
 {
-    if ([self.delegate respondsToSelector:@selector(chatController:onShowMessageData:)]) {
-        return [self.delegate chatController:self onShowMessageData:data];
+    for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+        if ([delegate respondsToSelector:@selector(chatController:onShowMessageData:)]) {
+            TUIMessageCell *cell = [delegate chatController:self onShowMessageData:data];
+            if (cell) {
+                return cell;
+            }
+        }
     }
     return nil;
 }
@@ -352,9 +396,11 @@
     if (cell.messageData.identifier == nil)
         return;
 
-    if ([self.delegate respondsToSelector:@selector(chatController:onSelectMessageAvatar:)]) {
-        [self.delegate chatController:self onSelectMessageAvatar:cell];
-        return;
+    for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+        if ([delegate respondsToSelector:@selector(chatController:onSelectMessageAvatar:)]) {
+            [delegate chatController:self onSelectMessageAvatar:cell];
+            return;
+        }
     }
 
     @weakify(self)
@@ -392,21 +438,20 @@
 - (void)messageController:(TUIMessageController *)controller onSelectMessageContent:(TUIMessageCell *)cell
 {
     cell.disableDefaultSelectAction = NO;
-    if ([self.delegate respondsToSelector:@selector(chatController:onSelectMessageContent:)]) {
-        [self.delegate chatController:self onSelectMessageContent:cell];
+    
+    for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+        if ([delegate respondsToSelector:@selector(chatController:onSelectMessageContent:)]) {
+            [delegate chatController:self onSelectMessageContent:cell];
+        }
     }
     if (cell.disableDefaultSelectAction) {
         return;
     }
-    if ([cell isKindOfClass:[TUIGroupLiveMessageCell class]]) {
-        TUIGroupLiveMessageCellData *celldata = [(TUIGroupLiveMessageCell *)cell customData];
-        NSDictionary *roomInfo = celldata.roomInfo;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyGroupLiveOnSelectMessage" object:nil userInfo:@{
-            @"roomInfo": roomInfo,
-            @"groupID": _conversationData.groupID?:@"",
-            @"msgSender": self,
-        }];
-    }
+}
+
+- (void)messageController:(TUIMessageController *)controller onSelectMessageMenu:(NSInteger)menuType withData:(TUIMessageCellData *)data
+{
+    [self onSelectMessageMenu:menuType withData:data];
 }
 
 - (void)didHideMenuInMessageController:(TUIMessageController *)controller
@@ -459,25 +504,6 @@
 
 }
 
-- (void)videoCall
-{
-    if (![[TUICallManager shareInstance] checkAudioAuthorization] || ![[TUICallManager shareInstance] checkVideoAuthorization]) {
-        [THelper makeToast:TUILocalizableString(TUIKitMicCamerAuthTips)];
-        return;
-    }
-    
-    [[TUICallManager shareInstance] call:self.conversationData.groupID userID:self.conversationData.userID callType:CallType_Video];
-}
-
-- (void)audioCall
-{
-    if (![[TUICallManager shareInstance] checkAudioAuthorization]) {
-        [THelper makeToast:TUILocalizableString(TUIKitMicAuth)];
-        return;
-    }
-    [[TUICallManager shareInstance] call:self.conversationData.groupID userID:self.conversationData.userID callType:CallType_Audio];
-}
-
 #pragma mark -
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
@@ -511,8 +537,10 @@
             uiImage.length = data.length;
             [self sendMessage:uiImage];
             
-            if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-                [self.delegate chatController:self didSendMessage:uiImage];
+            for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+                if (delegate && [delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
+                    [delegate chatController:self didSendMessage:uiImage];
+                }
             }
         }
         else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){
@@ -594,8 +622,10 @@
     uiVideo.uploadProgress = 0;
     [self sendMessage:uiVideo];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-        [self.delegate chatController:self didSendMessage:uiVideo];
+    for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+        if (delegate && [delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
+            [delegate chatController:self didSendMessage:uiVideo];
+        }
     }
 }
 
@@ -625,8 +655,10 @@
             uiFile.uploadProgress = 0;
             [self sendMessage:uiFile];
             
-            if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-                [self.delegate chatController:self didSendMessage:uiFile];
+            for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+                if (delegate && [delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
+                    [delegate chatController:self didSendMessage:uiFile];
+                }
             }
         }
     }];
@@ -638,4 +670,325 @@
 {
     [controller dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark - 消息菜单操作: 多选 & 转发
+- (void)onSelectMessageMenu:(NSInteger)menuType withData:(TUIMessageCellData *)data {
+    if (menuType == 0) {
+        // 多选: 打开多选面板
+        [self openMultiChooseBoard:YES];
+    } else if (menuType == 1) {
+        // 转发
+        if (data == nil) {
+            return;
+        }
+        
+        NSMutableArray *uiMsgs = [NSMutableArray arrayWithArray:@[data]];
+        [self prepareForwardMessages:uiMsgs];
+        
+    }
+}
+
+// 打开、关闭 多选面板
+- (void)openMultiChooseBoard:(BOOL)open
+{
+    [self.view endEditing:YES];
+    
+    if (_multiChooseView) {
+        [_multiChooseView removeFromSuperview];
+    }
+    
+    if (open) {
+        _multiChooseView = [[TUIMessageMultiChooseView alloc] init];
+        _multiChooseView.frame = self.view.bounds;
+        _multiChooseView.delegate = self;
+        _multiChooseView.titleLabel.text = self.conversationData.title;
+        [UIApplication.sharedApplication.keyWindow addSubview:_multiChooseView];
+    } else {
+        [self.messageController enableMultiSelectedMode:NO];
+    }
+}
+
+- (void)messageMultiChooseViewOnCancelClicked:(TUIMessageMultiChooseView *)multiChooseView
+{
+    [self openMultiChooseBoard:NO];
+    [self.messageController enableMultiSelectedMode:NO];
+}
+
+- (void)messageMultiChooseViewOnRelayClicked:(TUIMessageMultiChooseView *)multiChooseView
+{
+    NSArray *uiMsgs = [self.messageController multiSelectedResult:TUIMultiResultOptionAll];
+    [self prepareForwardMessages:uiMsgs];
+}
+
+- (void)messageMultiChooseViewOnDeleteClicked:(TUIMessageMultiChooseView *)multiChooseView
+{
+    NSArray *uiMsgs = [self.messageController multiSelectedResult:TUIMultiResultOptionAll];
+    if (uiMsgs.count == 0) {
+        [THelper makeToast:TUILocalizableString(TUIKitRelayNoMessageTips)];
+        return;
+    }
+    
+    // 删除
+    [self.messageController deleteMessages:uiMsgs];
+}
+
+// 准备转发消息
+- (void)prepareForwardMessages:(NSArray<TUIMessageCellData *> *)uiMsgs
+{
+    if (uiMsgs.count == 0) {
+        [THelper makeToast:TUILocalizableString(TUIKitRelayNoMessageTips)];
+        return;
+    }
+    
+    BOOL hasUnsupportMsg = NO;
+    for (TUIMessageCellData *data in uiMsgs) {
+        if (data.status != Msg_Status_Succ) {
+            hasUnsupportMsg = YES;
+            break;
+        }
+    }
+    
+    if (hasUnsupportMsg) {
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TUILocalizableString(TUIKitRelayUnsupportForward) message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [vc addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Confirm) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }]];
+        [self presentViewController:vc animated:YES completion:nil];
+        return;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    void(^chooseTarget)(BOOL) = ^(BOOL mergeForward){
+        TUIConversationSelectController *vc = [TUIConversationSelectController showIn:self];
+        __weak typeof(vc) weakVc = vc;
+        vc.callback = ^(NSArray<TUIConversationCellData *> * _Nonnull targets, void (^ _Nonnull completHandler)(BOOL)) {
+            
+            UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:TUILocalizableString(TUIKitRelayConfirmForward) message:nil preferredStyle:UIAlertControllerStyleAlert];
+            [alertVc addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Cancel) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if (completHandler) {
+                    completHandler(NO);
+                }
+            }]];
+            [alertVc addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Confirm) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [weakSelf forwardMessages:uiMsgs toTargets:targets merge:mergeForward];
+                if (completHandler) {
+                    completHandler(YES);
+                }
+            }]];
+            
+            [weakVc presentViewController:alertVc animated:YES completion:nil];
+        };
+    };
+    
+    UIAlertController *tipsVc = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    [tipsVc addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitRelayOneByOneForward) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if (uiMsgs.count <= 30) {
+            chooseTarget(NO);
+            return;
+        }
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TUILocalizableString(TUIKitRelayOneByOnyOverLimit) message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [vc addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
+        [vc addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            chooseTarget(YES);
+        }]];
+        [weakSelf presentViewController:vc animated:YES completion:nil];
+    }]];
+    [tipsVc addAction:[UIAlertAction actionWithTitle:TUILocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        chooseTarget(YES);
+    }]];
+    [tipsVc addAction:[UIAlertAction actionWithTitle:TUILocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:tipsVc animated:YES completion:nil];
+}
+
+// 转发消息到目标会话
+- (void)forwardMessages:(NSArray<TUIMessageCellData *> *)uiMsgs toTargets:(NSArray<TUIConversationCellData *> *)targets merge:(BOOL)merge
+{
+    if (uiMsgs.count == 0 || targets.count == 0) {
+        return ;
+    }
+   
+    __weak typeof(self) weakSelf = self;
+    dispatch_apply(targets.count, dispatch_get_global_queue(0, 0), ^(size_t index) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        TUIConversationCellData *convCellData = targets[index];
+        NSTimeInterval timeInterval = convCellData.groupID.length?0.09:0.05;
+        [strongSelf getForwardOrMergeMessages:merge originMessages:uiMsgs callback:^(BOOL success, NSArray<V2TIMMessage *> *msgs) {
+            if (!success) {
+                return;
+            }
+            
+            // 发送到当前聊天窗口
+            if ([convCellData.conversationID isEqualToString:self.conversationData.conversationID]) {
+                for (V2TIMMessage *imMsg in msgs) {
+                    TUIMessageCellData *uiMsg = nil;
+                    if (imMsg.elemType == V2TIM_ELEM_TYPE_CUSTOM) {
+                        uiMsg = [self messageController:self.messageController onNewMessage:imMsg];
+                    }
+                    if (uiMsg == nil) {
+                        uiMsg = imMsg.cellData;
+                    }
+                    uiMsg.innerMessage = imMsg;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // 下面的函数涉及到 UI 的刷新，要放在主线程操作
+                        [strongSelf.messageController sendMessage:uiMsg];
+                    });
+                    // 此处做延时是因为需要保证批量逐条转发时，能够保证接收端的顺序一致
+                    [NSThread sleepForTimeInterval:timeInterval];
+                }
+                return;
+            }
+            // 发送到其他聊天
+            for (V2TIMMessage *message in msgs) {
+                // 设置离线推送
+                 V2TIMOfflinePushInfo *pushInfo = [[V2TIMOfflinePushInfo alloc] init];
+                 NSDictionary *ext = @{
+                     @"entity": @{
+                             @"action": @1,
+                             @"content": message.getDisplayString,
+                             @"sender": TUIKit.sharedInstance.userID,
+                             @"nickname": TUIKit.sharedInstance.nickName?:TUIKit.sharedInstance.userID,
+                             @"faceUrl": TUIKit.sharedInstance.faceUrl?:@"",
+                             @"chatType": convCellData.groupID.length?@(V2TIM_GROUP):@(V2TIM_C2C)
+                     }
+                 };
+                NSData *data = [NSJSONSerialization dataWithJSONObject:ext options:NSJSONWritingPrettyPrinted error:nil];
+                pushInfo.ext = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                pushInfo.AndroidOPPOChannelID = @"tuikit";
+                [V2TIMManager.sharedInstance sendMessage:message
+                                                receiver:convCellData.userID
+                                                 groupID:convCellData.groupID
+                                                priority:V2TIM_PRIORITY_NORMAL
+                                          onlineUserOnly:nil
+                                         offlinePushInfo:pushInfo
+                                                progress:nil
+                                                    succ:^{
+                    // 发送到其他聊天的消息需要广播消息发送状态，方便进入对应聊天后刷新消息状态
+                    [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged object:message.msgID];
+                }
+                                                    fail:^(int code, NSString *desc){
+                    [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged object:message.msgID];
+                }];
+                // 此处做延时是因为需要保证批量逐条转发时，能够保证接收端的顺序一致
+                [NSThread sleepForTimeInterval:timeInterval];
+            }
+        }];
+    });
+}
+
+- (void)getForwardOrMergeMessages:(BOOL)merge
+                   originMessages:(NSArray<TUIMessageCellData *> *)uiMsgs
+                         callback:(void(^)(BOOL success, NSArray<V2TIMMessage *> *results))callback
+{
+    if (uiMsgs.count == 0) {
+        if (callback) {
+            callback(NO, @[]);
+        }
+        return ;
+    }
+    
+    // 获取消息列表
+    NSMutableArray *tmpMsgs = [NSMutableArray array];
+    for (TUIMessageCellData *uiMsg in uiMsgs) {
+        V2TIMMessage *msg = uiMsg.innerMessage;
+        if (msg) {
+            [tmpMsgs addObject:msg];
+        }
+    }
+    NSArray *msgs = [NSArray arrayWithArray:tmpMsgs];
+    
+    // 排序-按照时间先后顺序以及seq顺序转发
+    msgs = [msgs sortedArrayUsingComparator:^NSComparisonResult(V2TIMMessage *obj1, V2TIMMessage *obj2) {
+        if ([obj1.timestamp timeIntervalSince1970] == [obj2.timestamp timeIntervalSince1970]) {
+            return obj1.seq > obj2.seq;
+        }else {
+            return [obj1.timestamp compare:obj2.timestamp];
+        }
+    }];
+    
+    // 逐条转发消息
+    if (!merge) {
+        
+        NSMutableArray *forwardMsgs = [NSMutableArray array];
+        for (V2TIMMessage *msg in msgs) {
+            V2TIMMessage *forwardMessage = [V2TIMManager.sharedInstance createForwardMessage:msg];
+            if (forwardMessage) {
+                [forwardMsgs addObject:forwardMessage];
+            }
+        }
+        if (callback) {
+            callback(YES, forwardMsgs);
+        }
+        return;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    NSString *loginUserId = [V2TIMManager.sharedInstance getLoginUser];
+    [V2TIMManager.sharedInstance getUsersInfo:@[loginUserId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+        // 创建转发消息
+        NSString *myName = loginUserId;
+        if (infoList.firstObject.nickName.length > 0) {
+            myName = infoList.firstObject.nickName;
+        }
+        NSString *title = @"";
+        if (weakSelf.conversationData.groupID.length) {
+            title = TUILocalizableString(TUIKitRelayGroupChatHistory);
+        } else {
+            title = [NSString stringWithFormat:TUILocalizableString(TUIKitRelayChatHistoryForSomebodyFormat), weakSelf.conversationData.title, myName];
+        }
+        NSMutableArray *abstactList = [NSMutableArray array];
+        if (uiMsgs.count > 0) {
+            [abstactList addObject:[weakSelf abstractDisplayMessage:msgs[0]]];
+        }
+        if (uiMsgs.count > 1) {
+            [abstactList addObject:[weakSelf abstractDisplayMessage:msgs[1]]];
+        }
+        if (uiMsgs.count > 2) {
+            [abstactList addObject:[weakSelf abstractDisplayMessage:msgs[2]]];
+        }
+        NSString *compatibleText = TUILocalizableString(TUIKitRelayCompatibleText);
+        V2TIMMessage *mergeMessage = [V2TIMManager.sharedInstance createMergerMessage:msgs title:title abstractList:abstactList compatibleText:compatibleText];
+        if (mergeMessage == nil) {
+            if (callback) {
+                callback(NO, @[]);
+            }
+            return;
+        }
+        if (callback) {
+            callback(YES, @[mergeMessage]);
+        }
+        
+    } fail:^(int code, NSString *desc) {
+        if (callback) {
+            callback(NO, @[]);
+        }
+    }];
+}
+
+- (NSString *)abstractDisplayMessage:(V2TIMMessage *)msg
+{
+    // 合并转发的消息只支持 nickName
+    NSString *desc = @"";
+    if (msg.nickName.length > 0) {
+        desc = msg.nickName;
+    } else if(msg.sender.length > 0) {
+        desc = msg.sender;
+    }
+    NSString *display = @"";
+    for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+        if (delegate && [delegate respondsToSelector:@selector(chatController:onGetMessageAbstact:)]) {
+            display = [delegate chatController:self onGetMessageAbstact:msg];
+            if (display.length > 0) {
+                break;
+            }
+        }
+    }
+    if (display.length == 0) {
+        display = [TUIMessageDataProviderService.shareInstance getDisplayString:msg];
+    }
+    if (desc.length > 0 && display.length > 0) {
+        desc = [desc stringByAppendingFormat:@":%@", display];
+    }
+    return desc;
+}
+
 @end

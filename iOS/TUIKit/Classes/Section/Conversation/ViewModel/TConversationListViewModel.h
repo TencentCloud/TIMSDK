@@ -20,6 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TConversationListViewModel : NSObject
 
 /**
+ * 分页拉取的会话数量，默认是 100
+ */
+@property (nonatomic, assign) int pagePullCount;
+
+/**
  * 会话数据
  */
 @property (strong) NSArray<TUIConversationCellData *> *dataList;

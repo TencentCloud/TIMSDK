@@ -13,7 +13,7 @@
 "Send" = "Send";
 "Save" = "Save";
 "You" = "You";
-"you" = "You";
+"you" = "you";
 "Male" = "Male";
 "Female" = "Female";
 "File" = "Files";
@@ -87,6 +87,7 @@
 "TUIKitGroupProfileInviteJoin" = "Invite";
 "TUIKitGroupProfileAutoApproval" = "Auto Approval";
 "TUIKitGroupProfileAlias" = "My Alias in Group";
+"TUIKitGroupProfileMessageDoNotDisturb" = "Message Do Not Disturb";
 "TUIKitGroupProfileStickyOnTop" = "Sticky on Top";
 "TUIKitGroupProfileDeleteAndExit" = "Delete and Leave";
 "TUIKitGroupProfileDissolve" = "Disband Group";
@@ -146,7 +147,7 @@
 "TUIkitMessageTypeVideo" = "[Video]";
 "TUIkitMessageTypeFile" = "[File]";
 "TUIKitMessageTypeAnimateEmoji" = "[Animated Sticker]";
-"TUIKitMessageTypeDraftFormat" = "[Draft] %@";
+"TUIKitMessageTypeDraftFormat" = "[Drafts]";
 
 "TUIKitMoreCamera" = "Take Photo";
 "TUIKitMorePhoto" = "Album";
@@ -482,3 +483,49 @@
 "TUIKitErrorRequestNoNetOnReq" = "No network connection when sending request. Try again once network connection is restored.";
 "TUIKitErrorRequestNoNetOnRsp" = "No network connection when sending response. Try again once network connection is restored.";
 "TUIKitErrorRequestOnverLoaded" = "Request queue is full.";
+
+/***************************** 消息转发 & 消息搜索 *************************/
+// 补充
+"Multiple" = "Multiple";
+"Forward" = "Forward";
+"Delete" = "Delete";
+"Copy" = "Copy";
+"Revoke" = "Revoke";
+"Resend" = "Resend";
+"Search" = "Search";
+"TUIKitCallMicCamAuthTips" = "Please granted the prillage to mic and camera";
+"TUIKitCallMicAuthTips" = "Please granted the prillage to mic";
+"TUIKitMessageTipsSureToResend" = "Sure to re-send message?";
+
+// 消息转发
+"TUIKitRelayNoMessageTips" = "Please select one message at least";
+"TUIKitRelayRecentMessages" = "Recent messages";
+"TUIKitRelayChatHistory" = "History";
+"TUIKitRelaySepcialForbid" = "Audio messages and other special messages cannot be forwarded.";
+"TUIKitRelayConfirmForward" = "Forward to?";
+"TUIKitRelayOneByOneForward" = "One-by-one forward";
+"TUIKitRelayCombineForwad" = "Combine and forward";
+"TUIKitRelayGroupChatHistory" = "Chat history for group";
+"TUIKitRelayChatHistoryForSomebodyFormat" = "Chat history for %@ and %@";
+"TUIKitRelayErrorForwardFormat" = "@\"Forward error, code:%d, desc:%@\"";
+"TUIKitRelayTargetCreateNewChat" = "Create new chat";
+"TUIKitRelayTargetSelectFromContacts" = "Select from Contacts";
+"TUIKitRelayTargetCrateGroupError" = "Create group error";
+"TUIKitRelayTargetNoneTips" = "Contact or conversation cannot null";
+"TUIKitRelayLayerLimitTips" = "Sorry，the message has over-limit layers";
+"TUIKitRelayCompatibleText" = "Unsupported merged message, please upgrade to the latest version.";
+"TUIKitRelayUnsupportForward" = "Messages that failed to be sent do not support forwarding";
+"TUIKitRelayOneByOnyOverLimit" = "Too many forwarded messages, one by one forwarding is not currently supported";
+
+// 消息搜索
+"TUIKitSearchItemHeaderTitleContact" = "Contact";
+"TUIKitSearchItemFooterTitleContact" = "More contacts";
+"TUIKitSearchItemHeaderTitleGroup" = "Group";
+"TUIKitSearchItemFooterTitleGroup" = "More Groups";
+"TUIkitSearchItemHeaderTitleChatHistory" = "Chat history";
+"TUIKitSearchItemFooterTitleChatHistory" = "More chat history";
+"TUIKitSearchResultMatchFormat" = "Included:%@";
+"TUIKitSearchResultMatchGroupIDFormat" = "Inclued group ID:%@";
+"TUIKitSearchResultMatchGroupMember" = "Inclued group member:";
+"TUIKitSearchResultDisplayChatHistoryCountFormat" = "%zd of chat history";
+/***************************** 消息转发 & 消息搜索 *************************/

@@ -14,15 +14,15 @@
 #import "TUIFaceMessageCell.h"
 #import "TUIVideoMessageCell.h"
 #import "TUIFileMessageCell.h"
+#import "TUIMergeMessageCell.h"
 #import "TUIFaceView.h"
 #import "TUIKit.h"
 #import "NSString+TUICommon.h"
 #import "TIMMessage+DataProvider.h"
 #import "TIMUserProfile+DataProvider.h"
 #import "TUIJoinGroupMessageCellData.h"
-#import "TUICallManager.h"
 #import "NSBundle+TUIKIT.h"
-#import <ImSDK/ImSDK.h>
+#import "TUIKitListenerManager.h"
 
 @TCServiceRegister(TUIMessageDataProviderServiceProtocol, TUIMessageDataProviderService)
 
@@ -87,7 +87,7 @@
                 break;
             case V2TIM_ELEM_TYPE_CUSTOM:
             {
-                str = [self getCustomElemContent:msg];
+                str = TUILocalizableString(TUIKitMessageTipsUnsupportCustomMessage);; // 不支持的自定义消息;
             }
                 break;
             case V2TIM_ELEM_TYPE_IMAGE:
@@ -124,7 +124,13 @@
                         case V2TIM_GROUP_TIPS_TYPE_JOIN:
                         {
                             if (opUser.length > 0) {
-                                str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsJoinGroupFormat), opUser]; // @"\"%@\"加入群组
+                                if ((userList.count == 0) ||
+                                    (userList.count == 1 && [opUser isEqualToString:userList.firstObject])) {
+                                    str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsJoinGroupFormat), opUser]; // @"\"%@\"加入群组
+                                } else {
+                                    NSString *users = [userList componentsJoinedByString:@"、"];
+                                    str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users]; // \"%@\"邀请\"%@\"加入群组
+                                }
                             }
                         }
                             break;
@@ -224,6 +230,11 @@
                     }
             }
                 break;
+            case V2TIM_ELEM_TYPE_MERGER:
+            {
+                str = [NSString stringWithFormat:@"[%@]", TUILocalizableString(TUIKitRelayChatHistory)];
+            }
+                break;
             default:
                 break;
         }
@@ -258,11 +269,6 @@
             data = [self getTextCellData:message fromElem:message.textElem];
         }
             break;
-        case V2TIM_ELEM_TYPE_CUSTOM:
-        {
-            data = [self getCustomCellData:message fromElem:message.customElem];
-        }
-            break;
         case V2TIM_ELEM_TYPE_IMAGE:
         {
             data = [self getImageCellData:message fromElem:message.imageElem];
@@ -291,6 +297,11 @@
         case V2TIM_ELEM_TYPE_GROUP_TIPS:
         {
             data = [self getSystemCellData:message fromElem:message.groupTipsElem];
+        }
+            break;
+        case V2TIM_ELEM_TYPE_MERGER:
+        {
+            data = [self getMergerCellData:message fromElem:message.mergerElem];
         }
             break;
         default:
@@ -381,228 +392,19 @@
     return fileData;
 }
 
--(TUIMessageCellData *)getCustomCellData:(V2TIMMessage *)message fromElem:(V2TIMCustomElem *)elem {
-    if (elem == nil || elem.data == nil || elem.data.length == 0) {
-        return nil;
-    }
-    if (message.groupID.length > 0) {
-        TUISystemMessageCellData *cellData = [[TUISystemMessageCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
-        cellData.content = [self getCustomElemContent:message];
-        return cellData;
-    } else {
-        TUITextMessageCellData *cellData = [[TUITextMessageCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
-        NSString *content = [self getCustomElemContent:message];
-        if (content.length > 0) {
-            cellData.content = content;
-        } else {
-            cellData = nil;
-        }
-        return cellData;
-    }
-}
-
-- (NSString *)getCustomElemContent:(V2TIMMessage *)message {
-    if (message.customElem == nil || message.customElem.data == nil) {
-        return nil;
-    }
-    // 先判断下是不是信令消息
-    V2TIMSignalingInfo *info = [[V2TIMManager sharedInstance] getSignallingInfo:message];
-    if (info != nil) {
-        return [self getCustomSignalingContentWithMessage:message signalingInfo:info];
-    }
-    NSError *err = nil;
-    NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingMutableContainers error:&err];
-    if (param != nil && [param isKindOfClass:[NSDictionary class]]) {
-        NSInteger version = [param[@"version"] integerValue];
-        NSString *businessID = param[@"businessID"];
-        // 判断是不是音视频通话自定义消息
-        if ([businessID isEqualToString:AVCall]) {
-            return @"";
-        }
-        // 判断是不是群直播自定义消息
-        else if ([businessID isEqualToString:GroupLive]) {
-            // **的直播
-            if ([param.allKeys containsObject:@"anchorName"] && [param.allKeys containsObject:@"anchorId"]) {
-                NSString *anchorName = param[@"anchorName"];
-                if (anchorName.length == 0) {
-                    anchorName = param[@"anchorId"];
-                }
-                NSString *format = TUILocalizableString(TUIKitWhosLiveFormat);
-                format = [NSString stringWithFormat:@"[%@]", format];
-                return [NSString stringWithFormat:format, anchorName];
-            }
-        }
-        // 判断是不是群创建自定义消息
-        else if ([businessID isEqualToString:GroupCreate]) {
-            if (version <= GroupCreate_Version) {
-                return [NSString stringWithFormat:@"\"%@\"%@",param[@"opUser"],param[@"content"]];
-            }
-        }
-        // 老版本的群创建自定义消息 businessID ，这里要兼容下
-        else if ([param.allKeys containsObject:GroupCreate]) {
-            NSString *opUser = message.sender;
-            if (message.nameCard.length > 0) {
-                opUser = message.nameCard;
-            } else if (message.friendRemark.length > 0) {
-                opUser = message.friendRemark;
-            } if (message.nickName.length > 0) {
-                opUser = message.nickName;
-            }
-            return [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsCreateGroupFormat),opUser]; // \"%@\"创建群组
-        }
-    }
-    // 不支持的自定义消息
-    return TUILocalizableString(TUIKitMessageTipsUnsupportCustomMessage); // [不支持的自定义消息]
-}
-
-/// 信令消息对应的自定义文本，默认是音视频通话
-- (NSString *)getCustomSignalingContentWithMessage:(V2TIMMessage *)message signalingInfo:(V2TIMSignalingInfo *)info
-{
-    // 解析透传的data字段
-    NSError *err = nil;
-    NSDictionary *param = nil;
-    if (info.data != nil) {
-        param = [NSJSONSerialization JSONObjectWithData:[info.data dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&err];
+- (TUIMessageCellData *)getMergerCellData:(V2TIMMessage *)message fromElem:(V2TIMMergerElem *)elem {
+    
+    if (elem.layersOverLimit) {
+        TUITextMessageCellData *limitCell = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+        limitCell.content = TUILocalizableString(TUIKitRelayLayerLimitTips);
+        return limitCell;
     }
     
-    // 判断是否为TRTC的信令
-    NSString *liveRoomContent = @"";
-    if ([self isLiveRoomSignalingInfo:info infoData:param withCustomContent:&liveRoomContent]) {
-        return liveRoomContent;
-    }
-    
-    // .... 此处补充其他的业务，业务的区分目前仅仅是以info.data的接口来区分的，所以自行判断
-    
-    
-    // 默认是音视频通话的信令
-    NSMutableString *content = [NSMutableString string];
-    switch (info.actionType) {
-        case SignalingActionType_Invite:
-        {
-            // 结束通话
-            if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_CALL_END]) {
-                int duration = [param[SIGNALING_EXTRA_KEY_CALL_END] intValue];
-                [content appendString:message.groupID.length > 0 ? TUILocalizableString(TUIKitSignalingFinishGroupChat) : [NSString stringWithFormat:TUILocalizableString(TUIKitSignalingFinishConversationAndTimeFormat),duration / 60,duration % 60]]; // 结束通话，通话时长：%.2d:%.2d
-            } else {
-            // 发起通话
-                if (message.groupID.length > 0) {
-                    [content appendString:[NSString stringWithFormat:TUILocalizableString(TUIKitSignalingNewGroupCallFormat),[self getShowName:message]]]; // \"%@\" 发起群通话
-                } else {
-                    [content appendString:TUILocalizableString(TUIKitSignalingNewCall)];
-                }
-            }
-        }
-            break;
-        case SignalingActionType_Cancel_Invite:
-        {
-            // 取消通话
-            if (message.groupID.length > 0) {
-                [content appendString:[NSString stringWithFormat:TUILocalizableString(TUIkitSignalingCancelGroupCallFormat),[self getShowName:message]]]; // \"%@\" 取消群通话
-            } else {
-                [content appendString:TUILocalizableString(TUIkitSignalingCancelCall)];
-            }
-        }
-            break;
-        case SignalingActionType_Accept_Invite:
-        {
-            // 接受通话
-            if (message.groupID.length > 0) {
-                [content appendString:[NSString stringWithFormat:TUILocalizableString(TUIKitSignalingHangonCallFormat),[self getShowName:message]]]; // \"%@\" 已接听
-            } else {
-                [content appendString:TUILocalizableString(TUIkitSignalingHangonCall)]; // 已接听
-            }
-        }
-            break;
-        case SignalingActionType_Reject_Invite:
-        {
-            // 拒绝通话
-            if (message.groupID.length > 0) {
-                if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_LINE_BUSY]) {
-                    [content appendString:[NSString stringWithFormat:TUILocalizableString(TUIKitSignalingBusyFormat),[self getShowName:message]]]; // \"%@\" 忙线
-                } else {
-                    [content appendString:[NSString stringWithFormat:TUILocalizableString(TUIKitSignalingDeclineFormat),[self getShowName:message]]]; // \"%@\" 拒绝通话
-                }
-            } else {
-                if ([param.allKeys containsObject:SIGNALING_EXTRA_KEY_LINE_BUSY]) {
-                    [content appendString:TUILocalizableString(TUIKitSignalingCallBusy)]; // 对方忙线
-                } else {
-                    [content appendString:TUILocalizableString(TUIkitSignalingDecline)]; // 拒绝通话
-                }
-            }
-        }
-            break;
-        case SignalingActionType_Invite_Timeout:
-        {
-            // 通话超时
-            if (message.groupID.length > 0) {
-                for (NSString *invitee in info.inviteeList) {
-                    [content appendString:@"\""];
-                    [content appendString:invitee];
-                    [content appendString:@"\"、"];
-                }
-                [content replaceCharactersInRange:NSMakeRange(content.length - 1, 1) withString:@" "];
-            }
-            [content appendString:TUILocalizableString(TUIKitSignalingNoResponse)]; // 无应答
-        }
-            break;
-        default:
-        {
-            [content appendString:TUILocalizableString(TUIkitSignalingUnrecognlize)]; // 不能识别的通话指令
-        }
-            break;
-    }
-    return content;
-}
-
-// 直播间自定义信令文本
-- (BOOL)isLiveRoomSignalingInfo:(V2TIMSignalingInfo *)info infoData:(NSDictionary *)param withCustomContent:(NSString **)content
-{
-    *content = @"";
-    
-    if (param == nil) {
-        return NO;
-    }
-    
-    NSArray *allKeys = param.allKeys;
-    if (![allKeys containsObject:@"businessID"]) {
-        return NO;
-    }
-    
-    NSString *businessId = [param objectForKey:@"businessID"];
-    if (![businessId isEqualToString:Signal_Business_Live]) {
-        return NO;
-    }
-    
-    NSInteger actionCode = [[param objectForKey:@"action"] integerValue];
-    switch (actionCode) {
-        case 100: *content = TUILocalizableString(TUIKitSignalingLiveRequestForMic); break;
-        case 101:
-            if (info.actionType == SignalingActionType_Reject_Invite) {
-                *content = TUILocalizableString(TUIKitSignalingLiveRequestForMicRejected);
-            } else if (info.actionType == SignalingActionType_Accept_Invite) {
-                *content = TUILocalizableString(TUIKitSignalingAgreeMicRequest);
-            }
-            break;
-        case 102: *content = TUILocalizableString(TUIKitSignalingCloseLinkMicRequest); break;
-        case 103: *content = TUILocalizableString(TUIKitSignalingCloseLinkMic); break;
-        case 200:
-            if (info.actionType == SignalingActionType_Invite) {
-                *content = TUILocalizableString(TUIKitSignalingRequestForPK);
-            }
-            break;
-        case 201:
-            if (info.actionType == SignalingActionType_Reject_Invite) {
-                *content = TUILocalizableString(TUIKitSignalingRequestForPKRejected);
-            } else if (info.actionType == SignalingActionType_Accept_Invite) {
-                *content = TUILocalizableString(TUIKitSignalingRequestForPKAgree);
-            }
-            break;
-        case 202: *content = TUILocalizableString(TUIKitSignalingPKExit); break;
-        default:
-            *content = TUILocalizableString(TUIKitSignalingUnrecognlize);
-            break;
-    }
-    return YES;
+    TUIMergeMessageCellData *relayData = [[TUIMergeMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    relayData.title = elem.title;
+    relayData.abstractList = [NSArray arrayWithArray:elem.abstractList];
+    relayData.mergerElem = elem;
+    return relayData;
 }
 
 - (TUISystemMessageCellData *) getSystemCellData:(V2TIMMessage *)message fromElem:(V2TIMGroupTipsElem *)elem{
@@ -694,7 +496,7 @@
 #pragma mark - 表情国际化
 - (NSString *)localizableStringWithFaceContent:(NSString *)faceContent
 {
-    NSString *content = faceContent;
+    NSString *content = faceContent?:@"";
     NSString *regex_emoji = @"\\[[a-zA-Z0-9\\/\\u4e00-\\u9fa5]+\\]"; //匹配表情
     NSError *error = nil;
     NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex_emoji options:NSRegularExpressionCaseInsensitive error:&error];

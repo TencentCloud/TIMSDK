@@ -25,9 +25,8 @@
 #import "TUILiveGiftAnimator.h"
 #import "TUILiveHitTestView.h"
 #import "SDWebImage.h"
-#import "TUIKitLive.h"
+#import "TLiveHeader.h"
 #import "TUILiveGiftInfoDataHandler.h"
-#import <ImSDK/V2TIMManager+Friendship.h>
 #import "TUILiveGiftDataSource.h"
 #import "TUILiveDefaultGiftAdapterImp.h"
 #import "TUILiveUserProfile.h"
@@ -664,8 +663,8 @@
     [self.toolsView changePKState:(self.liveInfo.roomStatus == TRTCLiveRoomLiveStatusRoomPK)];
     [self updateVideoParentViewFrame];
     if (anchorInfo.userId) {
-        [[V2TIMManager sharedInstance] checkFriend:anchorInfo.userId succ:^(V2TIMFriendCheckResult *result) {
-            if (result.relationType != V2TIM_FRIEND_RELATION_TYPE_NONE) {
+        [[V2TIMManager sharedInstance] checkFriend:@[anchorInfo.userId] checkType:V2TIM_FRIEND_TYPE_SINGLE succ:^(NSArray<V2TIMFriendCheckResult *> *resultList) {
+            if (resultList.count && resultList.firstObject.relationType != V2TIM_FRIEND_RELATION_TYPE_NONE) {
                 self.toolsView.topToolBar.hasFollowed = YES;
             }
         } fail:^(int code, NSString *desc) {

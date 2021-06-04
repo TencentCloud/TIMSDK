@@ -7,7 +7,6 @@
 //
 
 #import "TUIContactController.h"
-#import "THeader.h"
 #import "TUIKit.h"
 #import "NSString+TUICommon.h"
 #import "TUIFriendProfileControllerServiceProtocol.h"
@@ -23,12 +22,11 @@
 #import "UIColor+TUIDarkMode.h"
 #import "NSBundle+TUIKIT.h"
 
-@import ImSDK;
 
 #define kContactCellReuseId @"ContactCellReuseId"
 #define kContactActionCellReuseId @"ContactActionCellReuseId"
 
-@interface TUIContactController () <UITableViewDelegate,UITableViewDataSource,TUIConversationListControllerDelegate>
+@interface TUIContactController () <UITableViewDelegate,UITableViewDataSource,TUIConversationListControllerListener>
 @property NSArray<TUIContactActionCellData *> *firstGroupData;
 @end
 
@@ -237,10 +235,11 @@
 }
 
 
-- (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCell *)conversation;
+- (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCell *)conversationCell
 {
-    TUIChatController *chat = [[TUIChatController alloc] initWithConversation:conversation.convData];
-    chat.title = conversation.convData.title;
+    TUIChatController *chat = [[TUIChatController alloc] init];
+    [chat setConversationData:conversationCell.convData];
+    chat.title = conversationCell.convData.title;
     [self.navigationController pushViewController:chat animated:YES];
 }
 

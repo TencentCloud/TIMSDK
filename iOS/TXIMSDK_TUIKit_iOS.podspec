@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_TUIKit_iOS'
-  spec.version      = '5.1.60'
+  spec.version      = '5.4.666'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -19,12 +19,11 @@ Pod::Spec.new do |spec|
   spec.dependency 'SDWebImage','5.9.0'
   spec.dependency 'ReactiveObjC','3.1.1'
   spec.dependency 'Toast','4.0.0'
-  spec.dependency 'TXLiteAVSDK_TRTC','8.5.10022'
-  spec.dependency 'TXIMSDK_iOS','5.1.60'
+  spec.dependency 'TXIMSDK_Plus_iOS','5.4.666'
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://imsdk-1252463788.cos.ap-guangzhou.myqcloud.com/5.1.56/TIM_SDK_TUIKIT_iOS_latest_framework.zip'}
+  spec.source = { :http => 'https://im.sdk.qcloud.com/download/tuikit/5.4.666/TUIKit_iOS_5.4.666.zip'}
   spec.source_files = '**/TUIKit/Classes/**/*.{h,m,mm}'
   # spec.vendored_frameworks = ''
   spec.vendored_libraries = ['**/TUIKit/Classes/third/voiceConvert/opencore-amrnb/libopencore-amrnb.a', '**/TUIKit/Classes/third/voiceConvert/opencore-amrwb/libopencore-amrwb.a']

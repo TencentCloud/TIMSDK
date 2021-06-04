@@ -30,7 +30,7 @@
         if (resultCode == 0) {
             success();
         } else {
-            failed(resultCode, resultDict[@"errorMessage"] ?: @"创建失败");
+            failed(resultCode, resultDict[@"errorMessage"] ?: NSLocalizedString(@"ErrrorTipsCreate", nil));
         }
     }];
 }
@@ -41,7 +41,7 @@
         if (resultCode == 0) {
             success();
         } else {
-            failed(resultCode, resultDict[@"errorMessage"] ?: @"销毁失败");
+            failed(resultCode, resultDict[@"errorMessage"] ?: NSLocalizedString(@"ErrorTipsDestory", nil));
         }
     }];
 }
@@ -59,7 +59,7 @@
             }
             success(temp);
         } else {
-            failed(resultCode, resultDict[@"errorMessage"] ?: @"销毁失败");
+            failed(resultCode, resultDict[@"errorMessage"] ?: NSLocalizedString(@"ErrorTipsDestory", nil));
         }
     }];
 }
@@ -77,7 +77,7 @@
             }
         } else {
             if (failed) {
-                failed(resultCode, resultDict[@"errorMessage"] ?: @"心跳失败");
+                failed(resultCode, resultDict[@"errorMessage"] ?: NSLocalizedString(@"ErrirTipsHeart", nil));
             }
         }
     }];

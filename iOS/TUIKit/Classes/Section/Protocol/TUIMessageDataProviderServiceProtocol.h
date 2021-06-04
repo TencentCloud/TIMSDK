@@ -5,7 +5,7 @@
  *
  ******************************************************************************/
 #import <Foundation/Foundation.h>
-#import <ImSDK/ImSDK.h>
+#import "THeader.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @class TIMMessage;
@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class TUIVideoMessageCellData;
 @class TUIFileMessageCellData;
 @class TUISystemMessageCellData;
+@class TUIRelayMessageCellData;
 
 @protocol TUIMessageDataProviderServiceProtocol <NSObject>
 - (NSString *)getShowName:(V2TIMMessage *)message;
@@ -54,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (TUISystemMessageCellData *) getSystemCellData:(V2TIMMessage *)message fromElem:(V2TIMGroupTipsElem *)elem;
 
 - (TUISystemMessageCellData *) getRevokeCellData:(V2TIMMessage *)message;
+
+- (TUIRelayMessageCellData *)getMergerCellData:(V2TIMMessage *)message fromElem:(V2TIMMergerElem *)elem;
 @end
 
 NS_ASSUME_NONNULL_END

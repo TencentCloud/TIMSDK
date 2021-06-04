@@ -24,7 +24,6 @@
  *  而数据源则负责存储一系列“更多”单元所需的信息由数据。
  */
 @interface TUIInputMoreCellData : NSObject
-
 /**
  *  单元图标
  *  各个单元的图标有所不同，用于形象表示该单元所对应的功能。
@@ -56,21 +55,6 @@
  *  “文件”单元所对应的数据源。用于存放文件单元所需的各类信息与数据。
  */
 @property (class, nonatomic, assign) TUIInputMoreCellData *fileData;
-
-/**
- *  “视频通话”单元所对应的数据源。用于存放视频通话单元所需的各类信息与数据。
- */
-@property (class, nonatomic, assign) TUIInputMoreCellData *videoCallData;
-
-/**
- *  “语音通话”单元所对应的数据源。用于存放语音通话单元所需的各类信息与数据。
- */
-@property (class, nonatomic, assign) TUIInputMoreCellData *audioCallData;
-
-/**
-*  “群直播”单元所对应的数据源。用于存放群直播单元所需的各类信息与数据。
-*/
-@property(class, nonatomic, strong) TUIInputMoreCellData *groupLivePalyData;
 
 @end
 

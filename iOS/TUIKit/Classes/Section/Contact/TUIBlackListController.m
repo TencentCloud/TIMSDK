@@ -9,11 +9,8 @@
 #import "ReactiveObjC.h"
 #import "TUIFriendProfileControllerServiceProtocol.h"
 #import "TCServiceManager.h"
-#import "THeader.h"
 #import "UIColor+TUIDarkMode.h"
 #import "NSBundle+TUIKIT.h"
-
-@import ImSDK;
 
 @interface TUIBlackListController ()
 

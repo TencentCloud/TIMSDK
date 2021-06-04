@@ -17,8 +17,6 @@
 #import "THeader.h"
 #import "NSBundle+TUIKIT.h"
 
-@import ImSDK;
-
 @interface TUINewFriendViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property UITableView *tableView;
 @property UIButton  *moreBtn;

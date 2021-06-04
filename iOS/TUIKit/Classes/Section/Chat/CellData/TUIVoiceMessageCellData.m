@@ -6,11 +6,8 @@
 //
 
 #import "TUIVoiceMessageCellData.h"
-#import "THeader.h"
 #import "TUIKit.h"
-#import "THelper.h"
 #import "ReactiveObjC/ReactiveObjC.h"
-#import <ImSDK/ImSDK.h>
 @import AVFoundation;
 
 @interface TUIVoiceMessageCellData ()<AVAudioPlayerDelegate>

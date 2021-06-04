@@ -33,7 +33,7 @@
 #import "TUIAvatarViewController.h"
 #import "TCommonSwitchCell.h"
 #import "TCUtil.h"
-#import <ImSDK/ImSDK.h>
+@import ImSDK_Plus;
 #import "UIColor+TUIDarkMode.h"
 
 #define SHEET_COMMON 1

@@ -23,6 +23,8 @@ typedef void(^TUILiveOnRoomListCallback)(NSArray<NSString *> * pkRoomIDList);
 
 @protocol TUILiveRoomAnchorDelegate <NSObject>
 
+@optional
+
 /// 主播间创建成功回调
 - (void)onRoomCreate:(TRTCLiveRoomInfo *)roomInfo;
 

@@ -9,7 +9,7 @@
 #import "TUILiveDefaultGiftAdapterImp.h"
 #import "TUILiveGiftData.h"
 
-#define kGiftUrl @"https://liteav-test-1252463788.cos.ap-guangzhou.myqcloud.com/gift_data.json"
+#define kGiftUrl @"https://liteav.sdk.qcloud.com/app/res/picture/live/gift/gift_data.json"
 
 @interface TUILiveDefaultGiftAdapterImp ()
 

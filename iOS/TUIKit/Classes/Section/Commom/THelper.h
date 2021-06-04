@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "UIView+Toast.h"
 
 typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 
@@ -21,10 +22,11 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (BOOL)convertAmr:(NSString*)amrPath toWav:(NSString*)wavPath;
 + (BOOL)convertWav:(NSString*)wavPath toAmr:(NSString*)amrPath;
 + (void)asyncDecodeImage:(NSString *)path complete:(TAsyncImageComplete)complete;
++ (NSString *)randAvatarUrl;
 + (void)makeToast:(NSString *)str;
 + (void)makeToast:(NSString *)str duration:(NSTimeInterval)duration position:(CGPoint)position;
++ (void)makeToast:(NSString *)str duration:(NSTimeInterval)duration idposition:(id)position;
 + (void)makeToastError:(NSInteger)error msg:(NSString *)msg;
 + (void)makeToastActivity;
 + (void)hideToastActivity;
-+ (NSString *)randAvatarUrl;
 @end

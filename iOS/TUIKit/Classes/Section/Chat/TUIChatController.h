@@ -9,7 +9,7 @@
  * TUIChatController 类用于实现聊天视图的总控制器，负责将输入、消息控制器、更多视图等进行统一控制。
  * 本文件中声明的类与协议，能够有效的帮助您实现自定义消息格式。
  *
- * TUIChatControllerDelegate 负责提供聊天控制器的部分回调委托。包括接收新消息、显示新消息和某一“更多”单元被点击的回调。
+ * TUIChatControllerListener 负责提供聊天控制器的部分回调委托。包括接收新消息、显示新消息和某一“更多”单元被点击的回调。
  *
  ******************************************************************************/
 #import <UIKit/UIKit.h>
@@ -19,19 +19,28 @@
 
 @class TUIChatController;
 
+/**
+ *  moreCell 优先级，优先级越好，排列越靠前
+ */
+typedef NS_ENUM(NSInteger, MoreCellPriority) {
+    MoreCellPriority_High                   = 0,  ///< 高优先级
+    MoreCellPriority_Nomal                  = 1,  ///< 中优先级
+    MoreCellPriority_Low                    = 2,  ///< 低优先级
+    MoreCellPriority_Lowest                 = 3,  ///< 最低优先级
+};;
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                         TUIChatControllerDelegate
+//                         TUIChatControllerListener
 //
 /////////////////////////////////////////////////////////////////////////////////
 
 /**
- *  TUIChatControllerDelegate 协议
+ *  TUIChatControllerListener 协议
  *  此协议旨在帮助开发者根据自身需求实现自定义消息。
  *  自定义消息的的具体实现方法，请参照链接 https://github.com/tencentyun/TIMSDK/wiki/TUIKit-iOS%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B6%88%E6%81%AF
  */
-@protocol TUIChatControllerDelegate <NSObject>
+@protocol TUIChatControllerListener <NSObject>
 
 /**
  *  发送新消息时的回调
@@ -104,8 +113,17 @@
  */
 - (TUIMessageCell *)chatController:(TUIChatController *)controller onShowMessageData:(TUIMessageCellData *)cellData;
 
+
 /**
- *  点击某一“更多”单元的回调委托。
+ *  “更多” 单元注册回调。
+ *
+ *  @param chatController 委托者，当前聊天控制器。
+ *  @return 返回需要注册的 “更多” 单元。
+ */
+- (NSArray <TUIInputMoreCellData *> *)chatController:(TUIChatController *)chatController onRegisterMoreCell:(MoreCellPriority *)priority;
+
+/**
+ *  “更多”单元点击回调。
  *  当您点击某一“更多”单元后回执行该回调，您可以通过该回调实现对“更多”视图的定制。
  *  比如您在更多视图4个单元的基础上，添加了一个名为 myMoreCell 的第5个单元，则您可以按下列代码实现该自定义单元的响应回调。
  * <pre>
@@ -137,6 +155,15 @@
  *  @param cell 所点击的消息单元
  */
 - (void)chatController:(TUIChatController *)controller onSelectMessageContent:(TUIMessageCell *)cell;
+
+/**
+ *    获取消息摘要回调（主要用于消息合并转发）
+ *
+ *  @param controller 会话对象
+ *  @param message  消息对象
+ *  @return 返回消息摘要信息
+ */
+- (NSString *)chatController:(TUIChatController *)controller onGetMessageAbstact:(V2TIMMessage *)message;
 
 @end
 
@@ -184,9 +211,10 @@
 @property TUIInputController *inputController;
 
 /**
- *  被委托类，负责实现并执行 TUIChatControllerDelegate 的委托函数
+ *  被委托类，负责实现并执行 TUIChatControllerListener 的委托函数（已弃用，请使用 TUIKitListenerManager -> addChatControllerListener 方法监听）
  */
-@property (weak) id<TUIChatControllerDelegate> delegate;
+//@property (weak) id<TUIChatControllerListener> delegate;
+
 
 /**
  *  更多菜单视图数据的数据组
@@ -195,13 +223,9 @@
 @property NSArray<TUIInputMoreCellData *> *moreMenus;
 
 /**
- *  初始化函数。
- *  根据所选会话初始化当前界面。
- *  初始化内容包括对资源图标的加载、历史消息的恢复，以及 MessageController、InputController 和“更多”视图的相关初始化操作。
- *
- *  @param conversationData 会话数据
+ *  设置会话数据
  */
-- (instancetype)initWithConversation:(TUIConversationCellData *)conversationData;
+@property (nonatomic, strong) TUIConversationCellData *conversationData;
 
 /**
  *  发送自定义的个性化消息
@@ -230,7 +254,7 @@
  *  </pre>
  *
  *  调用 sendMessage() 之后，消息会被发送出去，但是如果仅完成这一步，个性化消息并不能展示在气泡区，
- *  需要继续监听 TUIChatControllerDelegate 中的 onNewMessage 和 onShowMessageData 回调才能完成个性化消息的展示。
+ *  需要继续监听 TUIChatControllerListener 中的 onNewMessage 和 onShowMessageData 回调才能完成个性化消息的展示。
  *
  *  @param message 需要发送的消息数据源。包括消息内容、发送者的头像、发送者昵称、消息字体与颜色等等。详细信息请参考 Section\Chat\CellData\TUIMessageCellData.h
  */
@@ -243,5 +267,16 @@
  *  需要注意的是，目前版本仅能保存未发送的文本消息作为草稿。
  */
 - (void)saveDraft;
+
+#pragma mark - 用于消息搜索场景
+/**
+ 高亮文本，在搜索场景下，当highlightKeyword不为空时，且与locateMessage匹配时，打开聊天会话页面会高亮显示当前的cell
+ */
+@property (nonatomic, copy) NSString *highlightKeyword;
+
+/**
+ * 定位消息，在搜索场景下，当locateMessage不为空时，打开聊天会话页面会自动定位到此处
+ */
+@property (nonatomic, strong) V2TIMMessage *locateMessage;
 
 @end

@@ -6,12 +6,11 @@
 //
 
 #import "TUIGroupConversationListViewModel.h"
+#import "THeader.h"
 #import "TUILocalStorage.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "NSString+TUICommon.h"
-
-@import ImSDK;
 
 @interface TUIGroupConversationListViewModel ()
 @property BOOL isLoadFinished;

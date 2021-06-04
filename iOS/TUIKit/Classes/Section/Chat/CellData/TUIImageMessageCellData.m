@@ -6,12 +6,9 @@
 //
 
 #import "TUIImageMessageCellData.h"
-#import "THelper.h"
-#import "THeader.h"
+#import "TUIKit.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "SDWebImage/SDImageCache.h"
-
-#import <ImSDK/ImSDK.h>
 
 @implementation TUIImageItem
 @end

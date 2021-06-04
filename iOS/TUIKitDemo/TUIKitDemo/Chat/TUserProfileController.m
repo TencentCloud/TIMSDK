@@ -31,7 +31,7 @@
 #import "TCommonPendencyCellData.h"
 #import "TUIImageViewController.h"
 #import "TUIAvatarViewController.h"
-#import <ImSDK/ImSDK.h>
+
 
 @TCServiceRegister(TUIUserProfileControllerServiceProtocol, TUserProfileController)
 
@@ -127,7 +127,11 @@
 
     //当用户为陌生人时，在当前视图给出"加好友"按钮
     if (self.actionType == PCA_ADD_FRIEND) {
-        [[V2TIMManager sharedInstance] checkFriend:self.userFullInfo.userID succ:^(V2TIMFriendCheckResult *result) {
+        [[V2TIMManager sharedInstance] checkFriend:@[self.userFullInfo.userID] checkType:V2TIM_FRIEND_TYPE_BOTH succ:^(NSArray<V2TIMFriendCheckResult *> *resultList) {
+            if (resultList.count == 0) {
+                return;
+            }
+            V2TIMFriendCheckResult *result = resultList.firstObject;
             if (result.relationType == V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST || result.relationType == V2TIM_FRIEND_RELATION_TYPE_BOTH_WAY) {
                 return;
             }
@@ -148,7 +152,7 @@
             [self.tableView reloadData];
                     
         } fail:^(int code, NSString *desc) {
-                    
+            NSLog(@"");
         }];
     }
 

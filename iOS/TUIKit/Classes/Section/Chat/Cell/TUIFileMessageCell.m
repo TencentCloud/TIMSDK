@@ -11,7 +11,6 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIKit.h"
 #import "UIColor+TUIDarkMode.h"
-#import <ImSDK/ImSDK.h>
 
 @implementation TUIFileMessageCell
 

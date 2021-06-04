@@ -17,7 +17,6 @@
 #import "GenerateTestUserSig.h"
 #import "THeader.h"
 #import "UIColor+TUIDarkMode.h"
-#import <ImSDK/ImSDK.h>
 
 @interface TUILiveRoomListViewController ()<TUILiveRoomListDelegate, TUILiveRoomAudienceDelegate>
 

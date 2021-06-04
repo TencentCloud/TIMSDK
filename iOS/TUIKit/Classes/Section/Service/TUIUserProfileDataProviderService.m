@@ -10,8 +10,6 @@
 #import "TCServiceManager.h"
 #import "NSString+TUICommon.h"
 #import "SDWebImage/UIImageView+WebCache.h"
-#import "THeader.h"
-#import <ImSDK/ImSDK.h>
 #import "TUIKit.h"
 #import "NSBundle+TUIKIT.h"
 

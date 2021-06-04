@@ -7,9 +7,8 @@
 
 #import "TContactViewModel.h"
 #import "NSString+TUICommon.h"
-#import "THeader.h"
+#import "TUIKit.h"
 #import "TUILocalStorage.h"
-@import ImSDK;
 
 @interface TContactViewModel()
 @property NSDictionary<NSString *, NSArray<TCommonContactCellData *> *> *dataDict;
@@ -35,6 +34,7 @@
 - (void)loadContacts
 {
     self.isLoadFinished = NO;
+    __weak typeof(self) weakSelf = self;
     [[V2TIMManager sharedInstance] getFriendList:^(NSArray<V2TIMFriendInfo *> *infoList) {
         NSMutableDictionary *dataDict = @{}.mutableCopy;
         NSMutableArray *groupList = @[].mutableCopy;
@@ -64,10 +64,9 @@
         for (NSMutableArray *list in [dataDict allValues]) {
             [list sortUsingSelector:@selector(compare:)];
         }
-
-        self.groupList = groupList;
-        self.dataDict = dataDict;
-        self.isLoadFinished = YES;;
+        weakSelf.groupList = groupList;
+        weakSelf.dataDict = dataDict;
+        weakSelf.isLoadFinished = YES;
     } fail:nil];
 
     // 好友请求
@@ -76,15 +75,17 @@
 
 - (void)loadFriendApplication
 {
+    __weak typeof(self) weakSelf = self;
     [[V2TIMManager sharedInstance] getFriendApplicationList:^(V2TIMFriendApplicationResult *result) {
-        self.pendencyCnt = result.unreadCount;
+        weakSelf.pendencyCnt = result.unreadCount;
     } fail:nil];
 }
 
 - (void)clearApplicationCnt
 {
+    __weak typeof(self) weakSelf = self;
     [[V2TIMManager sharedInstance] setFriendApplicationRead:^{
-        self.pendencyCnt = 0;
+        weakSelf.pendencyCnt = 0;
     } fail:nil];
 }
 @end

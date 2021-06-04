@@ -9,7 +9,7 @@
  *******/
 
 #import <Foundation/Foundation.h>
-#import <ImSDK/ImSDK.h>
+#import "THeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class TUITextMessageCellData;
@@ -91,7 +91,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (TUIFileMessageCellData *) fileCellDataFromElem:(V2TIMFileElem *)elem;
 
-
+/**
+ * 返回 TUISystemMessageCellData
+*/
 - (TUISystemMessageCellData *) revokeCellData;
 
 //TODO  实现 group_create 等 TUIKit 中的系统/群组消息，方便今后修改。

@@ -4,7 +4,6 @@
 #import "TUIGroupMemberCell.h"
 #import "TUIButtonCell.h"
 #import "TCommonSwitchCell.h"
-#import "THeader.h"
 #import "TUIGroupMemberController.h"
 #import "TModifyView.h"
 #import "TAddCell.h"
@@ -14,17 +13,12 @@
 #import "TUIKit.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
-#import "Toast/Toast.h"
-#import "THelper.h"
 #import "TIMGroupInfo+DataProvider.h"
 #import "TUIAvatarViewController.h"
 #import "UIColor+TUIDarkMode.h"
-#import "NSBundle+TUIKIT.h"
 
 #define ADD_TAG @"-1"
 #define DEL_TAG @"-2"
-
-@import ImSDK;
 
 @interface TUIGroupInfoController () <TModifyViewDelegate, TGroupMembersCellDelegate>
 @property (nonatomic, strong) NSMutableArray *data;
@@ -167,11 +161,31 @@
         nickData.showAccessory = YES;
         self.groupNickNameCellData = nickData;
         [personalArray addObject:nickData];
+        
+        TCommonSwitchCellData *messageSwitchData = [[TCommonSwitchCellData alloc] init];
+        messageSwitchData.on = (self.groupInfo.recvOpt == V2TIM_NOT_RECEIVE_MESSAGE);
+        messageSwitchData.title = TUILocalizableString(TUIKitGroupProfileMessageDoNotDisturb);
+        messageSwitchData.cswitchSelector = @selector(didSelectOnNotDisturb:);
+        [personalArray addObject:messageSwitchData];
 
         TCommonSwitchCellData *switchData = [[TCommonSwitchCellData alloc] init];
+        
+#ifndef SDKPlaceTop
+#define SDKPlaceTop
+#endif
+#ifdef SDKPlaceTop
+        __weak typeof(self) weakSelf = self;
+        [V2TIMManager.sharedInstance getConversation:[NSString stringWithFormat:@"group_%@",self.groupId] succ:^(V2TIMConversation *conv) {
+            switchData.on = conv.isPinned;
+            [weakSelf.tableView reloadData];
+        } fail:^(int code, NSString *desc) {
+            NSLog(@"");
+        }];
+#else
         if ([[[TUILocalStorage sharedInstance] topConversationList] containsObject:[NSString stringWithFormat:@"group_%@",self.groupId]]) {
             switchData.on = YES;
         }
+#endif
         switchData.title = TUILocalizableString(TUIKitGroupProfileStickyOnTop);
         switchData.cswitchSelector = @selector(didSelectOnTop:);
         [personalArray addObject:switchData];
@@ -388,12 +402,37 @@
     [self presentViewController:ac animated:YES completion:nil];
 }
 
+- (void)didSelectOnNotDisturb:(TCommonSwitchCell *)cell
+{
+    V2TIMReceiveMessageOpt opt;
+    if (cell.switcher.on) {
+        opt = V2TIM_NOT_RECEIVE_MESSAGE;
+    } else {
+        opt = V2TIM_RECEIVE_MESSAGE;
+    }
+    [[V2TIMManager sharedInstance] setGroupReceiveMessageOpt:self.groupId opt:opt succ:nil fail:nil];
+}
+
 - (void)didSelectOnTop:(TCommonSwitchCell *)cell
 {
     if (cell.switcher.on) {
-        [[TUILocalStorage sharedInstance] addTopConversation:[NSString stringWithFormat:@"group_%@",_groupId]];
+        [[TUILocalStorage sharedInstance] addTopConversation:[NSString stringWithFormat:@"group_%@",_groupId] callback:^(BOOL success, NSString * _Nonnull errorMessage) {
+            if (success) {
+                return;
+            }
+            // 设置失败，还原
+            cell.switcher.on = !cell.switcher.isOn;
+            [THelper makeToast:errorMessage];
+        }];
     } else {
-        [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",_groupId]];
+        [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",_groupId] callback:^(BOOL success, NSString * _Nonnull errorMessage) {
+            if (success) {
+                return;
+            }
+            // 设置失败，还原
+            cell.switcher.on = !cell.switcher.isOn;
+            [THelper makeToast:errorMessage];
+        }];
     }
 }
 
@@ -448,7 +487,7 @@
             [[V2TIMManager sharedInstance] dismissGroup:self.groupId succ:^{
                 @strongify(self)
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",self.groupId]];
+                    [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",self.groupId] callback:nil];
                     if(self.delegate && [self.delegate respondsToSelector:@selector(groupInfoController:didDeleteGroup:)]){
                         [self.delegate groupInfoController:self didDeleteGroup:self.groupId];
                     }
@@ -460,7 +499,7 @@
             [[V2TIMManager sharedInstance] quitGroup:self.groupId succ:^{
                 @strongify(self)
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",self.groupId]];
+                    [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",self.groupId] callback:nil];
                     if(self.delegate && [self.delegate respondsToSelector:@selector(groupInfoController:didQuitGroup:)]){
                         [self.delegate groupInfoController:self didQuitGroup:self.groupId];
                     }

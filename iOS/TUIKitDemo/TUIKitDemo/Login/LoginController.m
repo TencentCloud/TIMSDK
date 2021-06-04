@@ -3,9 +3,10 @@
 #import <sys/utsname.h>
 #import "TUIKit.h"
 #import "AppDelegate.h"
-#import <ImSDK/ImSDK.h>
 #import "GenerateTestUserSig.h"
 #import "ReactiveObjC/ReactiveObjC.h"
+
+@import ImSDK_Plus;
 
 @interface LoginController ()
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
@@ -30,8 +31,6 @@
         [alert show];
     }
     else{
-        TIMLoginParam *param = [[TIMLoginParam alloc] init];
-        param.identifier = _userNameTextFeild.text;
         //genTestUserSig 方法仅用于本地测试，请不要将如下代码发布到您的线上正式版本的 App 中，原因如下：
         /*
         *  本文件中的代码虽然能够正确计算出 UserSig，但仅适合快速调通 SDK 的基本功能，不适合线上产品，
@@ -41,9 +40,8 @@
         *  正确的做法是将 UserSig 的计算代码和加密密钥放在您的业务服务器上，然后由 App 按需向您的服务器获取实时算出的 UserSig。
         *  由于破解服务器的成本要高于破解客户端 App，所以服务器计算的方案能够更好地保护您的加密密钥。
         */
-        param.userSig = [GenerateTestUserSig genTestUserSig:_userNameTextFeild.text];
         AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [delegate login:param.identifier userSig:param.userSig succ:nil fail:nil];
+        [delegate login:_userNameTextFeild.text userSig:[GenerateTestUserSig genTestUserSig:_userNameTextFeild.text] succ:nil fail:nil];
     }
 }
 

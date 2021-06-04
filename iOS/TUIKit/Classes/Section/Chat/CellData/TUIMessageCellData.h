@@ -8,7 +8,7 @@
  ******************************************************************************/
 #import "TCommonCell.h"
 #import "TUIMessageCellLayout.h"
-#import <ImSDK/ImSDK.h>
+#import "THeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -75,6 +75,18 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  YES：展示昵称；NO：不展示昵称。
  */
 @property (nonatomic, assign) BOOL showName;
+
+/**
+ * 显示消息多选flag
+ * 消息列表中，默认不显示选择按钮，当长按消息弹出多选按钮并点击后，消息列表变为可多选状态
+ * YES: 可多选，展示多选视图；NO:不可多选，展示默认视图
+ */
+@property (nonatomic, assign) BOOL showCheckBox;
+
+/**
+ * 显示是否选中 flag
+ */
+@property (nonatomic, assign) BOOL selected;
 
 /**
  *  消息 @ 用户列表
@@ -154,6 +166,17 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 * 是否显示已读回执
 */
 @property (nonatomic, assign) BOOL showReadReceipt;
+
+/**
+* 是否显示消息时间
+*/
+@property (nonatomic, assign) BOOL showMessageTime;
+
+/**
+ * 高亮关键字，当改关键字不为空时，会短暂高亮显示，主要用在消息搜索场景中
+ */
+@property (nonatomic, copy) NSString * __nullable highlightKeyword;
+
 /**
  *  内容大小
  *  返回一个气泡内容的视图大小。

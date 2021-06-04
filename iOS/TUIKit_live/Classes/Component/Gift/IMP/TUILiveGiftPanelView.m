@@ -6,7 +6,7 @@
 //
 
 #import "Masonry.h"
-#import "UIView+Toast.h"
+#import "THelper.h"
 
 #import "TUILiveGiftPanelView.h"
 #import "TUILiveGiftDataSource.h"
@@ -147,7 +147,7 @@ static NSString *const reuseId = @"gift";
             [self.delegate onGiftItemClick:self.selectedGift];
         }
     } else {
-        [self makeToast:@"请选择一个礼物"];
+        [THelper makeToast:@"请选择一个礼物"];
     }
 }
 
@@ -167,7 +167,7 @@ static NSString *const reuseId = @"gift";
         __weak typeof(self) weakSelf = self;
         [self.dataProvider queryGiftInfoList:^(NSArray<TUILiveGiftInfo *> * _Nullable list, NSString * _Nullable errMsg) {
             if (errMsg.length) {
-                [self makeToast:errMsg];
+                [THelper makeToast:errMsg];
                 return;
             }
             weakSelf.gifts = [NSArray arrayWithArray:list?:@[]];

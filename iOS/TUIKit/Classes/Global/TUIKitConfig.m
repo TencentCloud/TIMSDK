@@ -33,8 +33,8 @@
         _avatarCornerRadius = 5.f;
         _defaultAvatarImage = [UIImage tk_imageNamed:@"default_c2c_head"];
         _defaultGroupAvatarImage = [UIImage tk_imageNamed:@"default_group_head"];
-        _enableGroupLiveEntry = YES;
-        
+        _isExcludedFromUnreadCount = NO;
+        _isExcludedFromLastMessage = NO;
         [self defaultResourceCache];
         [self defaultFace];
     }
