@@ -3,7 +3,7 @@
 ## 下载地址
 
 ### 基础版
-[最新 TUIKit、TUIKit-live 和最新基础版 IM SDK 下载](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_Android_latest_aar.zip)
+[最新基础版 IM SDK 下载](https://im.sdk.qcloud.com/download/standard/5.1.62/imsdk-5.1.62.aar)
 
 
 ### 增强版
