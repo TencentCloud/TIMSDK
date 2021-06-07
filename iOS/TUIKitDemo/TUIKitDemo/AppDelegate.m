@@ -11,7 +11,6 @@
 #import "ConversationController.h"
 #import "SettingController.h"
 #import "ContactsController.h"
-#import "TUILiveSceneViewController.h"
 #import "TUITabBarController.h"
 #import "LoginController.h"
 #import "TUIKit.h"
@@ -19,9 +18,13 @@
 #import "Aspects.h"
 #import "TCUtil.h"
 #import "UIColor+TUIDarkMode.h"
-#import "TUIKitLive.h"
 #import "GenerateTestUserSig.h"
+
+#if ENABLELIVE
+#import "TUILiveSceneViewController.h"
 #import "TXLiveBase.h"
+#import "TUIKitLive.h"
+#endif
 
 @interface AppDelegate () <UIAlertViewDelegate,BuglyDelegate>
 @property(nonatomic,strong) NSString *groupID;
@@ -75,7 +78,9 @@ static AppDelegate *app;
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserStatus:) name:TUIKitNotification_TIMUserStatusListener object:nil];
     
+#if ENABLELIVE
     [TXLiveBase setLicenceURL:@"http://license.vod2.myqcloud.com/license/v1/3e0ffdeec6f69f2ebb0033705d4b33e5/TXLiveSDK.licence" key:@"439c61a21e71e1af31024c2700f95b52"];
+#endif
     
     BOOL test_environment = [[NSUserDefaults standardUserDefaults] integerForKey:@"test_environment"];
     [[V2TIMManager sharedInstance] callExperimentalAPI:@"setTestEnvironment" param:[NSNumber numberWithBool:test_environment] succ:nil fail:nil];
@@ -306,6 +311,7 @@ static AppDelegate *app;
             [self onReceiveNomalMsgAPNs];
         }
     }
+#if ENABLELIVE
     // action : 2 音视频通话推送
     else if ([action intValue] == APNs_Business_Call) {
         // 单聊中的音视频邀请推送不需处理，APP 启动后，TUIkit 会自动处理
@@ -336,6 +342,7 @@ static AppDelegate *app;
             [self onReceiveGroupCallAPNs];
         }
     }
+#endif
 }
 
 - (void)onReceiveNomalMsgAPNs {
@@ -430,6 +437,8 @@ void uncaughtExceptionHandler(NSException*exception){
     contactItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
     contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     [items addObject:contactItem];
+    
+#if ENABLELIVE
     // 直播Tab添加
     TUITabBarItem *sceneItem = [[TUITabBarItem alloc] init];
     sceneItem.title = NSLocalizedString(@"TabBarItemLiveText", nil);
@@ -438,6 +447,7 @@ void uncaughtExceptionHandler(NSException*exception){
     sceneItem.controller = [[TNavigationController alloc] initWithRootViewController:[[TUILiveSceneViewController alloc] init]];
     sceneItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     [items addObject:sceneItem];
+#endif
     
     TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
     setItem.title = NSLocalizedString(@"TabBarItemMeText", nil);

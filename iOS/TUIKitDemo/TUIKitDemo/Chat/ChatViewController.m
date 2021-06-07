@@ -24,7 +24,6 @@
 #import "TUIFaceMessageCell.h"
 #import "TUIVideoMessageCell.h"
 #import "TUIFileMessageCell.h"
-#import "TUIGroupLiveMessageCell.h"
 #import "TUserProfileController.h"
 #import "TUIKit.h"
 #import "ReactiveObjC/ReactiveObjC.h"
@@ -34,18 +33,22 @@
 #import "TCUtil.h"
 #import "THelper.h"
 #import "TCConstants.h"
-#import "TUILiveRoomAnchorViewController.h"
-#import "TUILiveRoomAudienceViewController.h"
-#import "TUILiveDefaultGiftAdapterImp.h"
-#import "TUIKitLive.h"
 #import "V2TIMManager.h"
-#import "TUILiveUserProfile.h"
-#import "TUILiveRoomManager.h"
-#import "TUILiveHeartBeatManager.h"
 #import "GenerateTestUserSig.h"
 #import "Toast.h"
 #import "TUIKitListenerManager.h"
 #import "NSBundle+TUIKIT.h"
+
+#if ENABLELIVE
+#import "TUIGroupLiveMessageCell.h"
+#import "TUILiveRoomAnchorViewController.h"
+#import "TUILiveRoomAudienceViewController.h"
+#import "TUILiveDefaultGiftAdapterImp.h"
+#import "TUIKitLive.h"
+#import "TUILiveUserProfile.h"
+#import "TUILiveRoomManager.h"
+#import "TUILiveHeartBeatManager.h"
+#endif
 
 // MLeaksFinder 会对这个类误报，这里需要关闭一下
 @implementation UIImagePickerController (Leak)
@@ -56,7 +59,14 @@
 
 @end
 
-@interface ChatViewController () <TUIChatControllerListener, TUILiveRoomAnchorDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentPickerDelegate>
+@interface ChatViewController () <
+TUIChatControllerListener,
+#if ENABLELIVE
+TUILiveRoomAnchorDelegate,
+#endif
+UIImagePickerControllerDelegate,
+UINavigationControllerDelegate,
+UIDocumentPickerDelegate>
 @property (nonatomic, strong) TUIChatController *chat;
 @end
 
@@ -66,7 +76,10 @@
     [super viewDidLoad];
     
     [[TUIKitListenerManager sharedInstance] addChatControllerListener:self];
+    
+#if ENABLELIVE
     [[TUIKitLive shareInstance] setGroupLiveDelegate:self];
+#endif
     
     _chat = [[TUIChatController alloc] init];
     [_chat setConversationData:self.conversationData];
@@ -274,9 +287,11 @@
     else if ([msgCellData isKindOfClass:[TUIFileMessageCellData class]]) {
         [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendfile code:@(0) msg:@"sendfile"];
     }
+#if ENABLELIVE
     else if ([msgCellData isKindOfClass:[TUIGroupLiveMessageCell class]]) {
         [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendgrouplive code:@(0) msg:@"sendgrouplive"];
     }
+#endif
 }
 
 - (NSArray <TUIInputMoreCellData *> *)chatController:(TUIChatController *)chatController onRegisterMoreCell:(MoreCellPriority *)priority {
@@ -319,6 +334,9 @@
         NSDictionary *param = [TCUtil jsonData2Dictionary:msg.customElem.data];
         if (param != nil) {
             NSString *businessID = param[@"businessID"];
+            if (![businessID isKindOfClass:[NSString class]]) {
+                return nil;
+            }
             // 判断是不是自定义跳转消息
             if ([businessID isEqualToString:TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
                 MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
@@ -382,6 +400,7 @@
     return nil;
 }
 
+#if ENABLELIVE
 #pragma mark - TUILiveRoomAnchorDelegate
 - (void)onRoomCreate:(TRTCLiveRoomInfo *)roomInfo {
     [[TUILiveRoomManager sharedManager] createRoom:SDKAPPID type:@"groupLive" roomID:[NSString stringWithFormat:@"%@", roomInfo.roomId] success:^{
@@ -418,4 +437,5 @@
     cellData.status = Msg_Status_Init;
     return cellData;
 }
+#endif
 @end
