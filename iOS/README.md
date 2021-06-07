@@ -91,7 +91,7 @@ pod repo update
 4. 进入 iOS/TUIKitDemo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
 
 ## 步骤5：编译运行（不包含音视频通话和群直播）
-1.进入 iOS/TUIKitDemo 文件夹，修改 `Podfile` 文件，屏蔽 `TXIMSDK_TUIKit_live_iOS` pod 集成。
+1.进入 iOS/TUIKitDemo 文件夹，修改 `Podfile` 文件，屏蔽 `TXIMSDK_TUIKit_live_iOS` pod  集成，然后执行 `pod install` 命令。
 ```
   pod 'TXIMSDK_TUIKit_iOS'
 #  pod 'TXIMSDK_TUIKit_live_iOS' （不需要再集成该库）
