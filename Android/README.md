@@ -63,7 +63,12 @@
 >正确的 UserSig 签发方式是将 UserSig 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 UserSig 时由您的 App 向业务服务器发起请求获取动态 UserSig。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。
 
 ## 步骤4：编译运行
-用各端的 IDE 直接编译运行即可。
+用 Android Studio 导入工程直接编译运行即可。
 
+## 步骤5：编译运行（不包含音视频通话和群直播）
+1. 进入`Android/app`文件夹，修改 `build.gradle` 文件，删除`implementation project(':tuikit-live')`那一行，然后重新同步一下工程。
 
+2. 打开 `Android/app/src/main/java/com/tencent/qcloud/tim/demo` 文件夹，手动删除其中的 `scenes` 文件夹。
+
+3. 编译运行。
 

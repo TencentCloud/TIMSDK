@@ -21,9 +21,10 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.helper.TUIKitLiveListenerManager;
+import com.tencent.qcloud.tim.demo.helper.IBaseLiveListener;
 import com.tencent.qcloud.tim.demo.login.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
 import com.tencent.qcloud.tim.uikit.component.LineControllerView;
 import com.tencent.qcloud.tim.uikit.component.SelectionActivity;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
@@ -168,6 +169,22 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
                 }
             }
         });
+
+        // test activity start
+        mTitleBar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (System.currentTimeMillis() - lastClickTime > 1000) {
+                    count = 0;
+                    lastClickTime = System.currentTimeMillis();
+                } else {
+                    count++;
+                }
+                if (count == 4) {
+                }
+            }
+        });
+        // test activity end
     }
 
     @Override
@@ -296,7 +313,10 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
                 DemoLog.i(TAG, "modifySelfProfile success");
                 TUIKitConfigs.getConfigs().getGeneralConfig().setUserFaceUrl(mIconUrl);
                 TUIKitConfigs.getConfigs().getGeneralConfig().setUserNickname(mModifyNickNameView.getContent());
-                TUIKitLive.refreshLoginUserInfo(null);
+                IBaseLiveListener baseLiveListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
+                if (baseLiveListener != null) {
+                    baseLiveListener.refreshUserInfo();
+                }
             }
         });
     }

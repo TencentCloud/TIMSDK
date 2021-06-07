@@ -14,15 +14,14 @@ import com.heytap.msp.push.HeytapPushManager;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.common.ApiException;
-import com.tencent.liteav.model.TRTCAVCallImpl;
+
 import com.tencent.qcloud.tim.demo.BaseActivity;
-import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.demo.chat.ChatActivity;
 import com.tencent.qcloud.tim.demo.contact.ContactFragment;
 import com.tencent.qcloud.tim.demo.conversation.ConversationFragment;
+import com.tencent.qcloud.tim.demo.helper.TUIKitLiveListenerManager;
+import com.tencent.qcloud.tim.demo.helper.IBaseLiveListener;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
-import com.tencent.qcloud.tim.demo.scenes.ScenesFragment;
 import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService;
 import com.tencent.qcloud.tim.demo.thirdpush.OPPOPushImpl;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
@@ -31,12 +30,12 @@ import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
-import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
-import com.tencent.liteav.model.CallModel;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
+
+import static com.tencent.qcloud.tim.demo.DemoApplication.isSceneEnable;
 
 public class MainActivity extends BaseActivity implements ConversationManagerKit.MessageUnreadWatcher {
 
@@ -136,6 +135,17 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
             tabClick(tmp);
             mLastTab = tmp;
         }
+        initScene();
+    }
+
+    private void initScene() {
+        if (!isSceneEnable) {
+            View sceneBtn = findViewById(R.id.scenes_btn_group);
+            if (sceneBtn == null) {
+                return;
+            }
+            sceneBtn.setVisibility(View.GONE);
+        }
     }
 
     public void tabClick(View view) {
@@ -158,9 +168,12 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
                 mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.contact_selected), null, null);
                 break;
             case R.id.scenes_btn_group:
-                current = new ScenesFragment();
-                mScenesBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                mScenesBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.live_selected), null, null);
+                IBaseLiveListener baseLiveListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
+                if (baseLiveListener != null) {
+                    current = baseLiveListener.getSceneFragment();
+                    mScenesBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
+                    mScenesBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.live_selected), null, null);
+                }
                 break;
             case R.id.myself_btn_group:
                 current = new ProfileFragment();
@@ -236,14 +249,9 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     private void handleOfflinePush() {
         boolean isFromOfflinePush = getIntent().getBooleanExtra(Constants.IS_OFFLINE_PUSH_JUMP, false);
         if (isFromOfflinePush) {
-            final CallModel model = (CallModel) getIntent().getSerializableExtra(Constants.CALL_MODEL);
-            if (model != null) {
-                if (TextUtils.isEmpty(model.groupId)) {
-                    DemoLog.e(TAG, "AVCall groupId is empty");
-                } else {
-                    ((TRTCAVCallImpl) (TRTCAVCallImpl.sharedInstance(DemoApplication.instance()))).
-                            processInvite(model.callId, model.sender, model.groupId, model.invitedList, model.data);
-                }
+            IBaseLiveListener baseLiveListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
+            if (baseLiveListener != null) {
+                baseLiveListener.handleOfflinePushCall(getIntent());
             }
         }
     }

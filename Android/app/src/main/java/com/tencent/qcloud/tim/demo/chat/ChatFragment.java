@@ -21,10 +21,8 @@ import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.FriendProfileActivity;
 import com.tencent.qcloud.tim.demo.forward.ForwardChatActivity;
 import com.tencent.qcloud.tim.demo.helper.ChatLayoutHelper;
-import com.tencent.qcloud.tim.demo.scenes.LiveRoomAnchorActivity;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.tuikit.live.helper.TUIKitLiveChatController;
 import com.tencent.qcloud.tim.uikit.base.BaseFragment;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.component.AudioPlayer;
@@ -169,14 +167,6 @@ public class ChatFragment extends BaseFragment {
                 intent.putExtra(TUIKitConstants.Group.GROUP_INFO, groupInfo);
                 startActivityForResult(intent, 1);
             }
-        });
-
-        TUIKitLiveChatController.setGroupLiveHandler(new TUIKitLiveChatController.GroupLiveHandler() {
-            @Override
-            public boolean startGroupLive(String groupId) {
-                LiveRoomAnchorActivity.start(DemoApplication.instance(), mChatInfo.getId());
-                // demo层对消息进行处理，不走默认的逻辑
-                return true;            }
         });
 
         if (false/*mChatInfo.getType() == V2TIMConversation.V2TIM_GROUP*/) {

@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tim.demo.helper;
+package com.tencent.qcloud.tim.demo.scenes;
 
 import android.content.Intent;
 import android.text.TextUtils;
@@ -9,8 +9,6 @@ import android.widget.TextView;
 import com.tencent.liteav.login.ProfileManager;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.demo.scenes.LiveRoomAnchorActivity;
-import com.tencent.qcloud.tim.demo.scenes.LiveRoomAudienceActivity;
 import com.tencent.qcloud.tim.demo.scenes.net.RoomManager;
 import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.ICustomMessageViewGroup;
