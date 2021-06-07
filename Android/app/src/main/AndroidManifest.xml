@@ -321,7 +321,10 @@ android:value= ""/>
             </intent-filter>
         </receiver>
 
-
+        <!--可选：配置首次启动应用时不自动启动推送服务进程，直到调用 XGPushManager.registerPush 接口才开始启动-->
+        <meta-data
+            android:name="XG_SERVICE_PULL_UP_OFF"
+            android:value="true" />
     </application>
 
 </manifest>

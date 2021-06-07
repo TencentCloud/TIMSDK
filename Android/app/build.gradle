@@ -25,6 +25,12 @@ android {
             abiFilters = []
             abiFilters.addAll(rootProject.ext.abiFilters)
         }
+
+        manifestPlaceholders = [
+                // TPNS 推送服务 accessId、accessKey
+                XG_ACCESS_ID : "",
+                XG_ACCESS_KEY: ""
+        ]
     }
 
     buildTypes {
@@ -69,17 +75,20 @@ dependencies {
     implementation('com.google.firebase:firebase-core:17.0.0')
     // google 云消息传递
     implementation ('com.google.firebase:firebase-messaging:19.0.1')
-    // tpns推送
+
+    // TPNS 推送，最新版本号可参考 [Android SDK 发布动态](https://cloud.tencent.com/document/product/548/44520)
+    // 主包
+    implementation 'com.tencent.tpns:tpns:1.2.5.0-release'
     // 小米
-    implementation "com.tencent.tpns:xiaomi:1.2.1.2-release"
+    implementation "com.tencent.tpns:xiaomi:1.2.5.0-release"
     // 魅族
-    implementation "com.tencent.tpns:meizu:1.2.1.2-release"
+    implementation "com.tencent.tpns:meizu:1.2.5.0-release"
     // OPPO
-    implementation "com.tencent.tpns:oppo:1.2.1.2-release"
+    implementation "com.tencent.tpns:oppo:1.2.5.0-release"
     // vivo
-    implementation "com.tencent.tpns:vivo:1.2.1.2-release"
+    implementation "com.tencent.tpns:vivo:1.2.5.0-release"
     // 华为
-    implementation 'com.tencent.tpns:huawei:1.2.1.3-release'
+    implementation 'com.tencent.tpns:huawei:1.2.5.0-release'
     implementation 'com.huawei.hms:push:5.0.2.300'
 
     // bugly sdk

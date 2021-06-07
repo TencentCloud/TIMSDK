@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -13,6 +14,8 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.tencent.android.tpush.XGIOperateCallback;
+import com.tencent.android.tpush.XGPushManager;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
@@ -22,6 +25,7 @@ import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
+import java.util.Arrays;
 /**
  * <p>
  * Demo的登录Activity
@@ -68,6 +72,23 @@ public class LoginForDevActivity extends Activity {
 
                     @Override
                     public void onSuccess(Object data) {
+
+                        // 重要：IM 登录用户账号时，调用 TPNS 账号绑定接口绑定业务账号，即可以此账号为目标进行 TPNS 离线推送
+                        XGPushManager.AccountInfo accountInfo = new XGPushManager.AccountInfo(
+                                XGPushManager.AccountType.UNKNOWN.getValue(), UserInfo.getInstance().getUserId());
+                        XGPushManager.upsertAccounts(LoginForDevActivity.this, Arrays.asList(accountInfo),
+                                new XGIOperateCallback() {
+                            @Override
+                            public void onSuccess(Object o, int i) {
+                                Log.w(TAG, "upsertAccounts success");
+                            }
+
+                            @Override
+                            public void onFail(Object o, int i, String s) {
+                                Log.w(TAG, "upsertAccounts failed");
+                            }
+                        });
+
                         UserInfo.getInstance().setAutoLogin(true);
                         Intent intent = new Intent(LoginForDevActivity.this, MainActivity.class);
                         startActivity(intent);
