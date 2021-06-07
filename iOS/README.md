@@ -67,7 +67,7 @@
 ```
 pod --version
 ```
-  如果提示 pod 不存在，或则 pod 版本小于 1.7.5，请执行以下命令安装最新 pod。
+  如果提示 pod 不存在，或者 pod 版本小于 1.7.5，请执行以下命令安装最新 pod。
 ```
 //更换源
 gem sources --remove https://rubygems.org/
@@ -91,16 +91,16 @@ pod repo update
 4. 进入 iOS/TUIKitDemo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
 
 ## 步骤5：编译运行（不包含音视频通话和群直播）
-1.进入 iOS/TUIKitDemo 文件夹，修改 `Podfile` 文件，屏蔽 `TXIMSDK_TUIKit_live_iOS` pod  集成，然后执行 `pod install` 命令。
+1. 进入 iOS/TUIKitDemo 文件夹，修改 `Podfile` 文件，屏蔽 `TXIMSDK_TUIKit_live_iOS` pod  集成，然后执行 `pod install` 命令。
 ```
   pod 'TXIMSDK_TUIKit_iOS'
 #  pod 'TXIMSDK_TUIKit_live_iOS' （不需要再集成该库）
 ```
 
-2、打开 `TUIKitDemo.xcworkspace` 工程，手动删除 `Scenes` 文件夹。
+2. 打开 `TUIKitDemo.xcworkspace` 工程，手动删除 `Scenes` 文件夹。
 ![](https://main.qcloudimg.com/raw/4215baa0f812d87ab86e02cc09754e9d.png)
 
-4、进入 `TUIKitDemo` 的 `Building Setting` 界面，设置 `ENABLELIVE` 为 0，关闭音视频相关逻辑。
+3. 进入 `TUIKitDemo` 的 `Building Setting` 界面，设置 `ENABLELIVE` 为 0，关闭音视频相关逻辑。
 ![](https://main.qcloudimg.com/raw/56d471f8fb414d11a274f1a7c9e311c0.png)
 
-5、编译运行。
+4. 编译运行。
