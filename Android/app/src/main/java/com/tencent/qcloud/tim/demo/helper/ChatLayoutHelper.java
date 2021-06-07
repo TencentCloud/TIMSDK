@@ -11,21 +11,13 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
-import com.tencent.liteav.login.ProfileManager;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.demo.scenes.LiveRoomAnchorActivity;
-import com.tencent.qcloud.tim.demo.scenes.LiveRoomAudienceActivity;
-import com.tencent.qcloud.tim.demo.scenes.net.RoomManager;
-import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
-import com.tencent.qcloud.tim.tuikit.live.helper.TUIKitLiveChatController;
 import com.tencent.qcloud.tim.uikit.modules.chat.ChatLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.input.InputLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.InputMoreActionUnit;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
-import com.tencent.qcloud.tim.tuikit.live.helper.LiveGroupMessageClickListener;
-import com.tencent.liteav.model.LiveMessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
@@ -112,20 +104,6 @@ public class ChatLayoutHelper {
 //        // 设置提示的字体颜色
 //        messageLayout.setTipsMessageFontColor(0xFF7E848C);
 //
-        // 设置自定义的消息渲染时的回调
-        TUIKitLiveChatController.setLiveGroupMessageClickListener(new LiveGroupMessageClickListener() {
-
-            @Override
-            public boolean handleLiveMessage(LiveMessageInfo info, String groupId) {
-                String selfUserId = ProfileManager.getInstance().getUserModel().userId;
-                if (String.valueOf(info.anchorId).equals(selfUserId)) {
-                    createRoom(groupId);
-                } else {
-                    checkRoomExist(info);
-                }
-                return true;
-            }
-        });
 
 //
 //        // 新增一个PopMenuAction
@@ -242,34 +220,4 @@ public class ChatLayoutHelper {
 
     }
 
-    private static void checkRoomExist(final LiveMessageInfo info) {
-        RoomManager.getInstance().checkRoomExist(RoomManager.TYPE_GROUP_LIVE, info.roomId, new RoomManager.ActionCallback() {
-            @Override
-            public void onSuccess() {
-                enterRoom(info);
-            }
-
-            @Override
-            public void onFailed(int code, String msg) {
-                ToastUtil.toastShortMessage(TUIKitLive.getAppContext().getString(R.string.live_is_over));
-            }
-        });
-    }
-
-    private static void createRoom(String groupId) {
-        LiveRoomAnchorActivity.start(DemoApplication.instance(), groupId);
-    }
-
-    private static void enterRoom(LiveMessageInfo info) {
-        Intent intent = new Intent(DemoApplication.instance(), LiveRoomAudienceActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(RoomManager.ROOM_TITLE, info.roomName);
-        intent.putExtra(RoomManager.GROUP_ID, info.roomId);
-        intent.putExtra(RoomManager.USE_CDN_PLAY, false);
-        intent.putExtra(RoomManager.ANCHOR_ID, info.anchorId);
-        intent.putExtra(RoomManager.PUSHER_NAME, info.anchorName);
-        intent.putExtra(RoomManager.COVER_PIC, info.roomCover);
-        intent.putExtra(RoomManager.PUSHER_AVATAR, info.roomCover);
-        DemoApplication.instance().startActivity(intent);
-    }
 }

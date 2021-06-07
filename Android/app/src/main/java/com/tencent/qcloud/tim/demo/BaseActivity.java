@@ -16,10 +16,8 @@ import com.tencent.qcloud.tim.demo.login.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.ClickUtils;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -56,8 +54,6 @@ Intent intent = new Intent(context, LoginForDevActivity.class);
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constants.LOGOUT, true);
         context.startActivity(intent);
-
-        TUIKitLive.logout();
     }
 
     @Override

@@ -230,6 +230,7 @@
     <string name="forbid_join">禁止加群</string>
     <string name="manager_judge">管理员审批</string>
     <string name="auto_judge">自动审批...</string>
+    <string name="audio_call">语音通话</string>
 
 
     <!-- 搜索 -->

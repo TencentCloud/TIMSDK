@@ -2,6 +2,7 @@ package com.tencent.qcloud.tim.demo;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,21 +33,28 @@ import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
 import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
+import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitUtils;
-import com.tencent.rtmp.TXLiveBase;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class DemoApplication extends Application {
 
     private static final String TAG = DemoApplication.class.getSimpleName();
 
+    private final String licenseUrl = "";
+    private final String licenseKey = "";
 
     private static DemoApplication instance;
 
     public static DemoApplication instance() {
         return instance;
     }
+
+    public static boolean isSceneEnable = false;
 
     @Override
     public void onCreate() {
@@ -58,6 +66,7 @@ public class DemoApplication extends Application {
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
         strategy.setAppVersion(V2TIMManager.getInstance().getVersion());
         CrashReport.initCrashReport(getApplicationContext(), PrivateConstants.BUGLY_APPID, true, strategy);
+
         // 是否进测试环境
         final SharedPreferences sharedPreferences = getSharedPreferences("TUIKIT_DEMO_SETTINGS", MODE_PRIVATE);
         boolean enter_test_environment = sharedPreferences.getBoolean("test_environment", false);
@@ -116,6 +125,7 @@ public class DemoApplication extends Application {
         };
 
         registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
+        initSceneManager();
     }
 
     private static void registerCustomListeners() {
@@ -224,6 +234,17 @@ public class DemoApplication extends Application {
         @Override
         public void onActivityDestroyed(Activity activity) {
 
+        }
+    }
+
+    private void initSceneManager() {
+        try {
+            Class<?> classz = Class.forName("com.tencent.qcloud.tim.demo.scenes.SceneManager");
+            Method method = classz.getMethod("init", DemoApplication.class, String.class, String.class);
+            method.invoke(null, instance, licenseUrl, licenseKey);
+            isSceneEnable = true;
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            TUIKitLog.e(TAG, "initTUIKitLive error: " + e.getMessage());
         }
     }
 }

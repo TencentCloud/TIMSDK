@@ -6,4 +6,6 @@
 
     <color name="test_blue">#338BFF</color>
     <color name="colorCloud">#006EFF</color>
+    <color name="colorShade">#33000000</color>
+
 </resources>

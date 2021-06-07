@@ -230,6 +230,7 @@
     <string name="forbid_join">Prohibited from Joining</string>
     <string name="manager_judge">Admin Approval</string>
     <string name="auto_judge">Auto Approval...</string>
+    <string name="audio_call">Voice Call</string>
 
 
     <!-- 搜索 -->
