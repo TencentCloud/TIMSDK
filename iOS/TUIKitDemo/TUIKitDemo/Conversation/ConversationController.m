@@ -338,6 +338,9 @@
     NSDictionary *param = [TCUtil jsonData2Dictionary:msg.customElem.data];
     if (param != nil && [param isKindOfClass:[NSDictionary class]]) {
         NSString *businessID = param[@"businessID"];
+        if (![businessID isKindOfClass:[NSString class]]) {
+            return nil;
+        }
         // 判断是不是自定义跳转消息
         if ([businessID isEqualToString:TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
             return param[@"text"];

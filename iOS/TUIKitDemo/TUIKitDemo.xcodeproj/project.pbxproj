@@ -24,14 +24,14 @@
 		CE1A434C22DE07EB008A767E /* TCUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434822DE07EB008A767E /* TCUtil.m */; };
 		CE2238C5266A09E000C52512 /* GroupCreateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238C2266A09DC00C52512 /* GroupCreateCell.m */; };
 		CE2238C6266A09E000C52512 /* GroupCreateCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238C3266A09DF00C52512 /* GroupCreateCellData.m */; };
-		CE2238DB266A0A3800C52512 /* TUILiveRoomListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238CB266A0A3800C52512 /* TUILiveRoomListViewController.m */; };
-		CE2238DC266A0A3800C52512 /* TUILiveRoomListView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238CD266A0A3800C52512 /* TUILiveRoomListView.m */; };
-		CE2238DD266A0A3800C52512 /* TUILiveRoomListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238CF266A0A3800C52512 /* TUILiveRoomListCell.m */; };
-		CE2238DE266A0A3800C52512 /* TUILiveTopSegmentView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238D1266A0A3800C52512 /* TUILiveTopSegmentView.m */; };
-		CE2238DF266A0A3800C52512 /* TUILiveRoomInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238D4266A0A3800C52512 /* TUILiveRoomInfo.m */; };
-		CE2238E0266A0A3800C52512 /* TUILiveRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238D6266A0A3800C52512 /* TUILiveRoomManager.m */; };
-		CE2238E1266A0A3800C52512 /* TUILiveHeartBeatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238D8266A0A3800C52512 /* TUILiveHeartBeatManager.m */; };
-		CE2238E2266A0A3800C52512 /* TUILiveSceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238DA266A0A3800C52512 /* TUILiveSceneViewController.m */; };
+		CE223A6D266DBCF700C52512 /* TUILiveRoomListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A5D266DBCF700C52512 /* TUILiveRoomListViewController.m */; };
+		CE223A6E266DBCF700C52512 /* TUILiveRoomListView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A5F266DBCF700C52512 /* TUILiveRoomListView.m */; };
+		CE223A6F266DBCF700C52512 /* TUILiveRoomListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A61266DBCF700C52512 /* TUILiveRoomListCell.m */; };
+		CE223A70266DBCF700C52512 /* TUILiveTopSegmentView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A63266DBCF700C52512 /* TUILiveTopSegmentView.m */; };
+		CE223A71266DBCF700C52512 /* TUILiveRoomInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A66266DBCF700C52512 /* TUILiveRoomInfo.m */; };
+		CE223A72266DBCF700C52512 /* TUILiveRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A68266DBCF700C52512 /* TUILiveRoomManager.m */; };
+		CE223A73266DBCF700C52512 /* TUILiveHeartBeatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A6A266DBCF700C52512 /* TUILiveHeartBeatManager.m */; };
+		CE223A74266DBCF700C52512 /* TUILiveSceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A6C266DBCF700C52512 /* TUILiveSceneViewController.m */; };
 		CE37D1C422F9942B0012500D /* GenerateTestUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D1C222F9942B0012500D /* GenerateTestUserSig.m */; };
 		CE37D24A22F9CBC80012500D /* ProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D24822F9CBC80012500D /* ProfileController.m */; };
 		CE685F1523B48F8700A3953C /* 00.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE685F1323B48F8700A3953C /* 00.caf */; };
@@ -89,22 +89,22 @@
 		CE2238C2266A09DC00C52512 /* GroupCreateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupCreateCell.m; sourceTree = "<group>"; };
 		CE2238C3266A09DF00C52512 /* GroupCreateCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupCreateCellData.m; sourceTree = "<group>"; };
 		CE2238C4266A09E000C52512 /* GroupCreateCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupCreateCellData.h; sourceTree = "<group>"; };
-		CE2238C9266A0A3800C52512 /* TUILiveRoomListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListViewController.h; sourceTree = "<group>"; };
-		CE2238CA266A0A3800C52512 /* TUILiveSceneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveSceneViewController.h; sourceTree = "<group>"; };
-		CE2238CB266A0A3800C52512 /* TUILiveRoomListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListViewController.m; sourceTree = "<group>"; };
-		CE2238CD266A0A3800C52512 /* TUILiveRoomListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListView.m; sourceTree = "<group>"; };
-		CE2238CE266A0A3800C52512 /* TUILiveTopSegmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveTopSegmentView.h; sourceTree = "<group>"; };
-		CE2238CF266A0A3800C52512 /* TUILiveRoomListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListCell.m; sourceTree = "<group>"; };
-		CE2238D0266A0A3800C52512 /* TUILiveRoomInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomInfo.h; sourceTree = "<group>"; };
-		CE2238D1266A0A3800C52512 /* TUILiveTopSegmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveTopSegmentView.m; sourceTree = "<group>"; };
-		CE2238D2266A0A3800C52512 /* TUILiveRoomListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListView.h; sourceTree = "<group>"; };
-		CE2238D3266A0A3800C52512 /* TUILiveRoomListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListCell.h; sourceTree = "<group>"; };
-		CE2238D4266A0A3800C52512 /* TUILiveRoomInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomInfo.m; sourceTree = "<group>"; };
-		CE2238D6266A0A3800C52512 /* TUILiveRoomManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomManager.m; sourceTree = "<group>"; };
-		CE2238D7266A0A3800C52512 /* TUILiveHeartBeatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveHeartBeatManager.h; sourceTree = "<group>"; };
-		CE2238D8266A0A3800C52512 /* TUILiveHeartBeatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveHeartBeatManager.m; sourceTree = "<group>"; };
-		CE2238D9266A0A3800C52512 /* TUILiveRoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomManager.h; sourceTree = "<group>"; };
-		CE2238DA266A0A3800C52512 /* TUILiveSceneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveSceneViewController.m; sourceTree = "<group>"; };
+		CE223A5B266DBCF700C52512 /* TUILiveRoomListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListViewController.h; sourceTree = "<group>"; };
+		CE223A5C266DBCF700C52512 /* TUILiveSceneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveSceneViewController.h; sourceTree = "<group>"; };
+		CE223A5D266DBCF700C52512 /* TUILiveRoomListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListViewController.m; sourceTree = "<group>"; };
+		CE223A5F266DBCF700C52512 /* TUILiveRoomListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListView.m; sourceTree = "<group>"; };
+		CE223A60266DBCF700C52512 /* TUILiveTopSegmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveTopSegmentView.h; sourceTree = "<group>"; };
+		CE223A61266DBCF700C52512 /* TUILiveRoomListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListCell.m; sourceTree = "<group>"; };
+		CE223A62266DBCF700C52512 /* TUILiveRoomInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomInfo.h; sourceTree = "<group>"; };
+		CE223A63266DBCF700C52512 /* TUILiveTopSegmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveTopSegmentView.m; sourceTree = "<group>"; };
+		CE223A64266DBCF700C52512 /* TUILiveRoomListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListView.h; sourceTree = "<group>"; };
+		CE223A65266DBCF700C52512 /* TUILiveRoomListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListCell.h; sourceTree = "<group>"; };
+		CE223A66266DBCF700C52512 /* TUILiveRoomInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomInfo.m; sourceTree = "<group>"; };
+		CE223A68266DBCF700C52512 /* TUILiveRoomManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomManager.m; sourceTree = "<group>"; };
+		CE223A69266DBCF700C52512 /* TUILiveHeartBeatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveHeartBeatManager.h; sourceTree = "<group>"; };
+		CE223A6A266DBCF700C52512 /* TUILiveHeartBeatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveHeartBeatManager.m; sourceTree = "<group>"; };
+		CE223A6B266DBCF700C52512 /* TUILiveRoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomManager.h; sourceTree = "<group>"; };
+		CE223A6C266DBCF700C52512 /* TUILiveSceneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveSceneViewController.m; sourceTree = "<group>"; };
 		CE2BBCE32421C34D000C4B7A /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = Pods/TXIMSDK_iOS/ImSDK.framework; sourceTree = "<group>"; };
 		CE37D1C222F9942B0012500D /* GenerateTestUserSig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateTestUserSig.m; sourceTree = "<group>"; };
 		CE37D1C322F9942B0012500D /* GenerateTestUserSig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateTestUserSig.h; sourceTree = "<group>"; };
@@ -263,41 +263,41 @@
 			path = Contact;
 			sourceTree = "<group>";
 		};
-		CE2238C8266A0A3800C52512 /* Scenes */ = {
+		CE223A5A266DBCF700C52512 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				CE2238C9266A0A3800C52512 /* TUILiveRoomListViewController.h */,
-				CE2238CA266A0A3800C52512 /* TUILiveSceneViewController.h */,
-				CE2238CB266A0A3800C52512 /* TUILiveRoomListViewController.m */,
-				CE2238CC266A0A3800C52512 /* Custom */,
-				CE2238D5266A0A3800C52512 /* Data */,
-				CE2238DA266A0A3800C52512 /* TUILiveSceneViewController.m */,
+				CE223A5B266DBCF700C52512 /* TUILiveRoomListViewController.h */,
+				CE223A5C266DBCF700C52512 /* TUILiveSceneViewController.h */,
+				CE223A5D266DBCF700C52512 /* TUILiveRoomListViewController.m */,
+				CE223A5E266DBCF700C52512 /* Custom */,
+				CE223A67266DBCF700C52512 /* Data */,
+				CE223A6C266DBCF700C52512 /* TUILiveSceneViewController.m */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
 		};
-		CE2238CC266A0A3800C52512 /* Custom */ = {
+		CE223A5E266DBCF700C52512 /* Custom */ = {
 			isa = PBXGroup;
 			children = (
-				CE2238CD266A0A3800C52512 /* TUILiveRoomListView.m */,
-				CE2238CE266A0A3800C52512 /* TUILiveTopSegmentView.h */,
-				CE2238CF266A0A3800C52512 /* TUILiveRoomListCell.m */,
-				CE2238D0266A0A3800C52512 /* TUILiveRoomInfo.h */,
-				CE2238D1266A0A3800C52512 /* TUILiveTopSegmentView.m */,
-				CE2238D2266A0A3800C52512 /* TUILiveRoomListView.h */,
-				CE2238D3266A0A3800C52512 /* TUILiveRoomListCell.h */,
-				CE2238D4266A0A3800C52512 /* TUILiveRoomInfo.m */,
+				CE223A5F266DBCF700C52512 /* TUILiveRoomListView.m */,
+				CE223A60266DBCF700C52512 /* TUILiveTopSegmentView.h */,
+				CE223A61266DBCF700C52512 /* TUILiveRoomListCell.m */,
+				CE223A62266DBCF700C52512 /* TUILiveRoomInfo.h */,
+				CE223A63266DBCF700C52512 /* TUILiveTopSegmentView.m */,
+				CE223A64266DBCF700C52512 /* TUILiveRoomListView.h */,
+				CE223A65266DBCF700C52512 /* TUILiveRoomListCell.h */,
+				CE223A66266DBCF700C52512 /* TUILiveRoomInfo.m */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
 		};
-		CE2238D5266A0A3800C52512 /* Data */ = {
+		CE223A67266DBCF700C52512 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				CE2238D6266A0A3800C52512 /* TUILiveRoomManager.m */,
-				CE2238D7266A0A3800C52512 /* TUILiveHeartBeatManager.h */,
-				CE2238D8266A0A3800C52512 /* TUILiveHeartBeatManager.m */,
-				CE2238D9266A0A3800C52512 /* TUILiveRoomManager.h */,
+				CE223A68266DBCF700C52512 /* TUILiveRoomManager.m */,
+				CE223A69266DBCF700C52512 /* TUILiveHeartBeatManager.h */,
+				CE223A6A266DBCF700C52512 /* TUILiveHeartBeatManager.m */,
+				CE223A6B266DBCF700C52512 /* TUILiveRoomManager.h */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -333,7 +333,7 @@
 		CF014484216E1A4900C12E35 /* TUIKitDemo */ = {
 			isa = PBXGroup;
 			children = (
-				CE2238C8266A0A3800C52512 /* Scenes */,
+				CE223A5A266DBCF700C52512 /* Scenes */,
 				CE37D1C122F9942B0012500D /* Debug */,
 				910D900522AE069000C9A318 /* Util */,
 				910D8FFE22AE052400C9A318 /* Conversation */,
@@ -510,15 +510,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				CECC13CE22B282C7008378A2 /* TCLoginParam.m in Sources */,
-				CE2238E1266A0A3800C52512 /* TUILiveHeartBeatManager.m in Sources */,
-				CE2238DF266A0A3800C52512 /* TUILiveRoomInfo.m in Sources */,
+				CE223A73266DBCF700C52512 /* TUILiveHeartBeatManager.m in Sources */,
+				CE223A71266DBCF700C52512 /* TUILiveRoomInfo.m in Sources */,
 				CE1A434A22DE07EB008A767E /* PAirSandbox.m in Sources */,
 				915AA66A2248DBC600C0C9A0 /* ContactsController.m in Sources */,
 				913C853A2268260100D74B58 /* FriendRequestViewController.m in Sources */,
 				CF01448A216E1A4900C12E35 /* LoginController.m in Sources */,
 				CE2238C6266A09E000C52512 /* GroupCreateCellData.m in Sources */,
 				CE2238C5266A09E000C52512 /* GroupCreateCell.m in Sources */,
-				CE2238DC266A0A3800C52512 /* TUILiveRoomListView.m in Sources */,
+				CE223A6E266DBCF700C52512 /* TUILiveRoomListView.m in Sources */,
 				913C8531226705C300D74B58 /* SearchFriendViewController.m in Sources */,
 				CFEB47782177982B00CFD98C /* GroupMemberController.m in Sources */,
 				91941A5222AE435700123596 /* MyCustomCell.m in Sources */,
@@ -527,20 +527,20 @@
 				91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */,
 				CE37D24A22F9CBC80012500D /* ProfileController.m in Sources */,
 				CE37D1C422F9942B0012500D /* GenerateTestUserSig.m in Sources */,
-				CE2238DE266A0A3800C52512 /* TUILiveTopSegmentView.m in Sources */,
+				CE223A70266DBCF700C52512 /* TUILiveTopSegmentView.m in Sources */,
 				CFEB47D02179B82300CFD98C /* SettingController.m in Sources */,
 				9176C5BE227A98A300DF5784 /* TUserProfileController.m in Sources */,
 				CFDC2FA5216E2D5E002EAEC2 /* ChatViewController.m in Sources */,
-				CE2238E2266A0A3800C52512 /* TUILiveSceneViewController.m in Sources */,
+				CE223A74266DBCF700C52512 /* TUILiveSceneViewController.m in Sources */,
 				91941A4D22AE40C300123596 /* MyCustomCellData.m in Sources */,
-				CE2238E0266A0A3800C52512 /* TUILiveRoomManager.m in Sources */,
+				CE223A72266DBCF700C52512 /* TUILiveRoomManager.m in Sources */,
 				91D3AD3122AA06440036CDE0 /* Aspects.m in Sources */,
 				910AF70B22925BF000ED5675 /* SearchGroupViewController.m in Sources */,
 				910AF7112292820300ED5675 /* GroupRequestViewController.m in Sources */,
-				CE2238DD266A0A3800C52512 /* TUILiveRoomListCell.m in Sources */,
+				CE223A6F266DBCF700C52512 /* TUILiveRoomListCell.m in Sources */,
 				CF014495216E1A4B00C12E35 /* main.m in Sources */,
 				CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */,
-				CE2238DB266A0A3800C52512 /* TUILiveRoomListViewController.m in Sources */,
+				CE223A6D266DBCF700C52512 /* TUILiveRoomListViewController.m in Sources */,
 				CFDC2FA2216E2C8F002EAEC2 /* ConversationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -708,6 +708,11 @@
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"ENABLELIVE=1",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../TUIKit/TUIKit/**",
@@ -746,6 +751,11 @@
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Pods/TXIMSDK_iOS",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"ENABLELIVE=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
