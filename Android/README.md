@@ -67,8 +67,8 @@
 
 ## 步骤5：编译运行（不包含音视频通话和群直播）
 1. 进入`Android/app`文件夹，修改 `build.gradle` 文件，删除`implementation project(':tuikit-live')`那一行，然后重新同步一下工程。
-
+![](https://main.qcloudimg.com/raw/a86639cbed2f633ba7ad1df94c2c3338.png)
 2. 打开 `Android/app/src/main/java/com/tencent/qcloud/tim/demo` 文件夹，手动删除其中的 `scenes` 文件夹。
-
+![](https://main.qcloudimg.com/raw/652143f80268e184b92f775af2c092f9.png)
 3. 编译运行。
 
