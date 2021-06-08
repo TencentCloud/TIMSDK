@@ -78,10 +78,6 @@ static AppDelegate *app;
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserStatus:) name:TUIKitNotification_TIMUserStatusListener object:nil];
     
-#if ENABLELIVE
-    [TXLiveBase setLicenceURL:@"http://license.vod2.myqcloud.com/license/v1/3e0ffdeec6f69f2ebb0033705d4b33e5/TXLiveSDK.licence" key:@"439c61a21e71e1af31024c2700f95b52"];
-#endif
-    
     BOOL test_environment = [[NSUserDefaults standardUserDefaults] integerForKey:@"test_environment"];
     [[V2TIMManager sharedInstance] callExperimentalAPI:@"setTestEnvironment" param:[NSNumber numberWithBool:test_environment] succ:nil fail:nil];
     
