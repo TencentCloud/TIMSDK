@@ -62,10 +62,12 @@
 >本文提到的获取 UserSig 的方案是在客户端代码中配置 SECRETKEY，该方法中 SECRETKEY 很容易被反编译逆向破解，一旦您的密钥泄露，攻击者就可以盗用您的腾讯云流量，因此**该方法仅适合本地跑通 Demo 和功能调试**。
 >正确的 UserSig 签发方式是将 UserSig 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 UserSig 时由您的 App 向业务服务器发起请求获取动态 UserSig。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。
 
-## 步骤4：编译运行
+## 步骤4：编译运行（全部功能）
 用 Android Studio 导入工程直接编译运行即可。
 
-## 步骤5：编译运行（不包含音视频通话和群直播）
+## 步骤5：编译运行（移除音视频通话和群直播）
+如果不想集成音视频相关的功能，请您按照下面的步骤移除对音视频的依赖，再编译运行。
+
 1. 进入`Android/app`文件夹，修改 `build.gradle` 文件，删除`implementation project(':tuikit-live')`那一行，然后重新同步一下工程。
 ![](https://main.qcloudimg.com/raw/a86639cbed2f633ba7ad1df94c2c3338.png)
 2. 打开 `Android/app/src/main/java/com/tencent/qcloud/tim/demo` 文件夹，手动删除其中的 `scenes` 文件夹。
