@@ -62,7 +62,7 @@
 >!本文提到的获取 UserSig 的方案是在客户端代码中配置 SECRETKEY，该方法中 SECRETKEY 很容易被反编译逆向破解，一旦您的密钥泄露，攻击者就可以盗用您的腾讯云流量，因此**该方法仅适合本地跑通 Demo 和功能调试**。
 >正确的 UserSig 签发方式是将 UserSig 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 UserSig 时由您的 App 向业务服务器发起请求获取动态 UserSig。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig)。
 
-## 步骤4：编译运行（全量功能，包含音视频通话和群直播）
+## 步骤4：编译运行（全部功能）
 1. 终端执行以下命令，检查 pod 版本。
 ```
 pod --version
@@ -90,7 +90,9 @@ pod repo update
 ```
 4. 进入 iOS/TUIKitDemo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
 
-## 步骤5：编译运行（不包含音视频通话和群直播）
+## 步骤5：编译运行（移除音视频通话和群直播）
+如果不想集成音视频相关的功能，请您按照下面的步骤移除对音视频的依赖，再编译运行。
+
 1. 进入 iOS/TUIKitDemo 文件夹，修改 `Podfile` 文件，屏蔽 `TXIMSDK_TUIKit_live_iOS` pod  集成，然后执行 `pod install` 命令。
 ```
   pod 'TXIMSDK_TUIKit_iOS'
