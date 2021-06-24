@@ -33,7 +33,6 @@
 #import "TCUtil.h"
 #import "THelper.h"
 #import "TCConstants.h"
-#import "V2TIMManager.h"
 #import "GenerateTestUserSig.h"
 #import "Toast.h"
 #import "TUIKitListenerManager.h"
@@ -49,6 +48,8 @@
 #import "TUILiveRoomManager.h"
 #import "TUILiveHeartBeatManager.h"
 #endif
+
+@import ImSDK_Plus;
 
 // MLeaksFinder 会对这个类误报，这里需要关闭一下
 @implementation UIImagePickerController (Leak)
