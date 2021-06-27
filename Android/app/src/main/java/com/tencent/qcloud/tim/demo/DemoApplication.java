@@ -16,6 +16,7 @@ import com.heytap.msp.push.HeytapPushManager;
 import com.huawei.hms.push.HmsMessaging;
 import com.meizu.cloud.pushsdk.PushManager;
 import com.meizu.cloud.pushsdk.util.MzSystemUtils;
+import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -81,48 +82,56 @@ public class DemoApplication extends Application {
          */
         TUIKit.init(this, GenerateTestUserSig.SDKAPPID, new ConfigHelper().getConfigs());
         registerCustomListeners();
-        HeytapPushManager.init(this, true);
-        if (BrandUtil.isBrandXiaoMi()) {
-            // 小米离线推送
-            MiPushClient.registerPush(this, PrivateConstants.XM_PUSH_APPID, PrivateConstants.XM_PUSH_APPKEY);
-        } else if (BrandUtil.isBrandHuawei()) {
-            // 华为离线推送，设置是否接收Push通知栏消息调用示例
-            HmsMessaging.getInstance(this).turnOnPush().addOnCompleteListener(new com.huawei.hmf.tasks.OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(com.huawei.hmf.tasks.Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        DemoLog.i(TAG, "huawei turnOnPush Complete");
-                    } else {
-                        DemoLog.e(TAG, "huawei turnOnPush failed: ret=" + task.getException().getMessage());
-                    }
-                }
-            });
-        } else if (MzSystemUtils.isBrandMeizu(this)) {
-            // 魅族离线推送
-            PushManager.register(this, PrivateConstants.MZ_PUSH_APPID, PrivateConstants.MZ_PUSH_APPKEY);
-        } else if (BrandUtil.isBrandVivo()) {
-            // vivo离线推送
-            PushClient.getInstance(getApplicationContext()).initialize();
-        } else if (HeytapPushManager.isSupportPush()) {
-            // oppo离线推送，因为需要登录成功后向我们后台设置token，所以注册放在MainActivity中做
-        } else if (BrandUtil.isGoogleServiceSupport()) {
-            FirebaseInstanceId.getInstance().getInstanceId()
-                    .addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<InstanceIdResult>() {
-                        @Override
-                        public void onComplete(Task<InstanceIdResult> task) {
-                            if (!task.isSuccessful()) {
-                                DemoLog.w(TAG, "getInstanceId failed exception = " + task.getException());
-                                return;
-                            }
 
-                            // Get new Instance ID token
-                            String token = task.getResult().getToken();
-                            DemoLog.i(TAG, "google fcm getToken = " + token);
 
-                            ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
-                        }
-                    });
-        };
+        // 关闭 TPNS SDK 拉活其他 app 的功能
+        // ref: https://cloud.tencent.com/document/product/548/36674#.E5.A6.82.E4.BD.95.E5.85.B3.E9.97.AD-tpns-.E7.9A.84.E4.BF.9D.E6.B4.BB.E5.8A.9F.E8.83.BD.EF.BC.9F
+        XGPushConfig.enablePullUpOtherApp(this, false);
+
+
+        // 厂商注册可以都由 TPNS SDK 内部完成；离线推送点击回调由于实现不同，可仍按 IM 离线推送集成文档对应部分完成
+//        HeytapPushManager.init(this, true);
+//        if (BrandUtil.isBrandXiaoMi()) {
+//            // 小米离线推送
+//            MiPushClient.registerPush(this, PrivateConstants.XM_PUSH_APPID, PrivateConstants.XM_PUSH_APPKEY);
+//        } else if (BrandUtil.isBrandHuawei()) {
+//            // 华为离线推送，设置是否接收Push通知栏消息调用示例
+//            HmsMessaging.getInstance(this).turnOnPush().addOnCompleteListener(new com.huawei.hmf.tasks.OnCompleteListener<Void>() {
+//                @Override
+//                public void onComplete(com.huawei.hmf.tasks.Task<Void> task) {
+//                    if (task.isSuccessful()) {
+//                        DemoLog.i(TAG, "huawei turnOnPush Complete");
+//                    } else {
+//                        DemoLog.e(TAG, "huawei turnOnPush failed: ret=" + task.getException().getMessage());
+//                    }
+//                }
+//            });
+//        } else if (MzSystemUtils.isBrandMeizu(this)) {
+//            // 魅族离线推送
+//            PushManager.register(this, PrivateConstants.MZ_PUSH_APPID, PrivateConstants.MZ_PUSH_APPKEY);
+//        } else if (BrandUtil.isBrandVivo()) {
+//            // vivo离线推送
+//            PushClient.getInstance(getApplicationContext()).initialize();
+//        } else if (HeytapPushManager.isSupportPush()) {
+//            // oppo离线推送，因为需要登录成功后向我们后台设置token，所以注册放在MainActivity中做
+//        } else if (BrandUtil.isGoogleServiceSupport()) {
+//            FirebaseInstanceId.getInstance().getInstanceId()
+//                    .addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<InstanceIdResult>() {
+//                        @Override
+//                        public void onComplete(Task<InstanceIdResult> task) {
+//                            if (!task.isSuccessful()) {
+//                                DemoLog.w(TAG, "getInstanceId failed exception = " + task.getException());
+//                                return;
+//                            }
+//
+//                            // Get new Instance ID token
+//                            String token = task.getResult().getToken();
+//                            DemoLog.i(TAG, "google fcm getToken = " + token);
+//
+//                            ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
+//                        }
+//                    });
+//        };
 
         registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
         initSceneManager();

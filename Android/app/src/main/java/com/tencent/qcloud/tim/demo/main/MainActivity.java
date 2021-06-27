@@ -67,50 +67,51 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     private void prepareThirdPushToken() {
         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
 
-        if (BrandUtil.isBrandHuawei()) {
-            // 华为离线推送
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        // read from agconnect-services.json
-                        String appId = AGConnectServicesConfig.fromContext(MainActivity.this).getString("client/app_id");
-                        String token = HmsInstanceId.getInstance(MainActivity.this).getToken(appId, "HCM");
-                        DemoLog.i(TAG, "huawei get token:" + token);
-                        if(!TextUtils.isEmpty(token)) {
-                            ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
-                            ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
-                        }
-                    } catch (ApiException e) {
-                        DemoLog.e(TAG, "huawei get token failed, " + e);
-                    }
-                }
-            }.start();
-        } else if (BrandUtil.isBrandVivo()) {
-            // vivo离线推送
-            DemoLog.i(TAG, "vivo support push: " + PushClient.getInstance(getApplicationContext()).isSupport());
-            PushClient.getInstance(getApplicationContext()).turnOnPush(new IPushActionListener() {
-                @Override
-                public void onStateChanged(int state) {
-                    if (state == 0) {
-                        String regId = PushClient.getInstance(getApplicationContext()).getRegId();
-                        DemoLog.i(TAG, "vivopush open vivo push success regId = " + regId);
-                        ThirdPushTokenMgr.getInstance().setThirdPushToken(regId);
-                        ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
-                    } else {
-                        // 根据vivo推送文档说明，state = 101 表示该vivo机型或者版本不支持vivo推送，链接：https://dev.vivo.com.cn/documentCenter/doc/156
-                        DemoLog.i(TAG, "vivopush open vivo push fail state = " + state);
-                    }
-                }
-            });
-        } else if (HeytapPushManager.isSupportPush()) {
-            // oppo离线推送
-            OPPOPushImpl oppo = new OPPOPushImpl();
-            oppo.createNotificationChannel(this);
-            HeytapPushManager.register(this, PrivateConstants.OPPO_PUSH_APPKEY, PrivateConstants.OPPO_PUSH_APPSECRET, oppo);
-        } else if (BrandUtil.isGoogleServiceSupport()) {
-            // 谷歌推送
-        }
+        // 厂商注册可以都由 TPNS SDK 内部完成；离线推送点击回调由于实现不同，可仍按 IM 离线推送集成文档对应部分完成
+//        if (BrandUtil.isBrandHuawei()) {
+//            // 华为离线推送
+//            new Thread() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        // read from agconnect-services.json
+//                        String appId = AGConnectServicesConfig.fromContext(MainActivity.this).getString("client/app_id");
+//                        String token = HmsInstanceId.getInstance(MainActivity.this).getToken(appId, "HCM");
+//                        DemoLog.i(TAG, "huawei get token:" + token);
+//                        if(!TextUtils.isEmpty(token)) {
+//                            ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
+//                            ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
+//                        }
+//                    } catch (ApiException e) {
+//                        DemoLog.e(TAG, "huawei get token failed, " + e);
+//                    }
+//                }
+//            }.start();
+//        } else if (BrandUtil.isBrandVivo()) {
+//            // vivo离线推送
+//            DemoLog.i(TAG, "vivo support push: " + PushClient.getInstance(getApplicationContext()).isSupport());
+//            PushClient.getInstance(getApplicationContext()).turnOnPush(new IPushActionListener() {
+//                @Override
+//                public void onStateChanged(int state) {
+//                    if (state == 0) {
+//                        String regId = PushClient.getInstance(getApplicationContext()).getRegId();
+//                        DemoLog.i(TAG, "vivopush open vivo push success regId = " + regId);
+//                        ThirdPushTokenMgr.getInstance().setThirdPushToken(regId);
+//                        ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
+//                    } else {
+//                        // 根据vivo推送文档说明，state = 101 表示该vivo机型或者版本不支持vivo推送，链接：https://dev.vivo.com.cn/documentCenter/doc/156
+//                        DemoLog.i(TAG, "vivopush open vivo push fail state = " + state);
+//                    }
+//                }
+//            });
+//        } else if (HeytapPushManager.isSupportPush()) {
+//            // oppo离线推送
+//            OPPOPushImpl oppo = new OPPOPushImpl();
+//            oppo.createNotificationChannel(this);
+//            HeytapPushManager.register(this, PrivateConstants.OPPO_PUSH_APPKEY, PrivateConstants.OPPO_PUSH_APPSECRET, oppo);
+//        } else if (BrandUtil.isGoogleServiceSupport()) {
+//            // 谷歌推送
+//        }
     }
 
     private void initView() {
