@@ -13,15 +13,12 @@
  */
 #import "GroupRequestViewController.h"
 #import "TIMUserProfile+DataProvider.h"
-#import "Toast/Toast.h"
 #import <ReactiveObjC.h>
 #import "MMLayout/UIView+MMLayout.h"
 #import "TIMUserProfile+DataProvider.h"
 #import "TUIProfileCardCell.h"
-#import "THeader.h"
 #import "UIImage+TUIKIT.h"
 #import "TUIKit.h"
-#import "THelper.h"
 #import "TCUtil.h"
 #import "TUIAvatarViewController.h"
 
@@ -122,14 +119,14 @@
 - (void)onSend
 {
     // display toast with an activity spinner
-    [self.view makeToastActivity:CSToastPositionCenter];
+    [THelper makeToastActivity];
     [[V2TIMManager sharedInstance] joinGroup:self.groupInfo.groupID msg:self.addMsgTextView.text succ:^{
-        [self.view hideToastActivity];
-        [self.view makeToast:NSLocalizedString(@"send_success", nil)
-                    duration:3.0
-                    position:CSToastPositionBottom];
+        [THelper hideToastActivity];
+        [THelper makeToast:NSLocalizedString(@"send_success", nil)
+                 duration:3.0
+                 idposition:CSToastPositionBottom];
     } fail:^(int code, NSString *desc) {
-        [self.view hideToastActivity];
+        [THelper hideToastActivity];
         [THelper makeToastError:code msg:desc];
     }];
     [TCUtil report:Action_Addgroup actionSub:@"" code:@(0) msg:@"addgroup"];

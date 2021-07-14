@@ -16,8 +16,7 @@
 #import "TUIContactSelectController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "Toast/Toast.h"
-#import "THelper.h"
-@import ImSDK_Plus;
+#import "TUIKit.h"
 
 @interface GroupMemberController () <TGroupMemberControllerDelegagte>
 

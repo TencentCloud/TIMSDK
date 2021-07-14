@@ -13,16 +13,12 @@
 #import "FriendRequestViewController.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "TUIProfileCardCell.h"
-#import "THeader.h"
 #import "TIMUserProfile+DataProvider.h"
-#import "Toast/Toast.h"
-#import <ReactiveObjC.h>
-#import "UIImage+TUIKIT.h"
-#import "TUIKit.h"
 #import "TCommonSwitchCell.h"
-#import "THelper.h"
-#import "TCUtil.h"
 #import "TUIAvatarViewController.h"
+#import <ReactiveObjC.h>
+#import "TUIKit.h"
+#import "TCUtil.h"
 
 @interface FriendRequestViewController () <UITableViewDataSource, UITableViewDelegate>
 @property UITableView *tableView;
@@ -217,7 +213,7 @@
 {
     [self.view endEditing:YES];
     // display toast with an activity spinner
-    [self.view makeToastActivity:CSToastPositionCenter];
+    [THelper makeToastActivity];
     
     V2TIMFriendAddApplication *application = [[V2TIMFriendAddApplication alloc] init];
     application.addWording = self.addWordTextView.text;
@@ -247,12 +243,10 @@
             msg = NSLocalizedString(@"FriendAddResultExists", nil); // @"好友已存在";
         }
 
-        [self.view hideToastActivity];
-        [self.view makeToast:msg
-                    duration:3.0
-                    position:CSToastPositionBottom];
+        [THelper hideToastActivity];
+        [THelper makeToast:msg duration:3.0 idposition:CSToastPositionBottom];
     } fail:^(int code, NSString *desc) {
-        [self.view hideToastActivity];
+        [THelper hideToastActivity];
         [THelper makeToastError:code msg:desc];
     }];
 

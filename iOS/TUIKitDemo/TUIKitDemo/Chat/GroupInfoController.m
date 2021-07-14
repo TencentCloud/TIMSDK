@@ -19,8 +19,7 @@
 #import "TUIContactSelectController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "Toast/Toast.h"
-#import "THelper.h"
-@import ImSDK_Plus;
+#import "TUIKit.h"
 
 @interface GroupInfoController () <TGroupInfoControllerDelegate>
 
@@ -143,7 +142,7 @@
  */
 - (void)groupInfoController:(TUIGroupInfoController *)controller didDeleteGroup:(NSString *)groupId
 {
-    [self.navigationController popToViewController:[self.navigationController.viewControllers firstObject] animated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 /**
@@ -151,7 +150,7 @@
  */
 - (void)groupInfoController:(TUIGroupInfoController *)controller didQuitGroup:(NSString *)groupId
 {
-    [self.navigationController popToViewController:[self.navigationController.viewControllers firstObject] animated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)groupInfoController:(TUIGroupInfoController *)controller didSelectChangeAvatar:(NSString *)groupId

@@ -30,7 +30,6 @@
 #import "ChatViewController.h"
 #import "TUIContactSelectController.h"
 #import "TIMUserProfile+DataProvider.h"
-@import ImSDK_Plus;
 
 
 @interface ContactsController () <TPopViewDelegate>
@@ -58,6 +57,12 @@
 
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
+}
+
+- (void)onFriendInfoChanged:(NSNotification *)notice
+{
+    [self.viewModel loadContacts];
 }
 
 /**

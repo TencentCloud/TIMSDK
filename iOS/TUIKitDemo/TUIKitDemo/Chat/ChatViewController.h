@@ -19,5 +19,5 @@
 @interface ChatViewController : UIViewController
 @property (nonatomic, strong) TUIConversationCellData *conversationData;
 @property (nonatomic, strong) TUnReadView *unRead;
-- (void)sendMessage:(TUIMessageCellData*)msg;
+@property (nonatomic, strong) V2TIMMessage *waitToSendMsg;
 @end
