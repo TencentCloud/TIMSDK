@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_TUIKit_live_iOS_Professional'
-  spec.version      = '5.4.666'
+  spec.version      = '5.5.892'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -14,7 +14,7 @@ Pod::Spec.new do |spec|
   spec.summary      = 'TXIMSDK_TUIKit_live_iOS_Professional'
   spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
   
-  spec.dependency 'TXIMSDK_TUIKit_iOS', '5.4.666'
+  spec.dependency 'TXIMSDK_TUIKit_iOS', '5.5.892'
   spec.dependency 'TXLiteAVSDK_Professional', '8.5.10022'
   spec.dependency 'Masonry', '1.1.0'
   spec.dependency 'MJExtension', '3.2.2'
@@ -23,7 +23,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.qcloud.com/download/tuikit/5.4.666/TUIKit_live_iOS_5.4.666.zip'}
+  spec.source = { :http => 'https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/tuikit/5.5.892/TUIKit_live_iOS_5.5.892.zip'}
   spec.source_files = '**/TUIKit_live/Classes/**/*.{h,m,mm}', '**/TUIKit_live/Classes/**/*.{h,c}'
   spec.resource = ['**/TUIKit_live/Resources/FilterResource.bundle', '**/TUIKit_live/Resources/*.xcassets',
     '**/TUIKit_live/Classes/Modules/BeautySettingPanel/Resources/*.{xcassets,mp4}', 

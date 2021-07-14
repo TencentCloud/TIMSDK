@@ -164,23 +164,18 @@ static BOOL match(NSArray *keywords, NSString *text)
     memberParam.isSearchMemberNameCard = searchParam.isSearchMemberNameCard;
     memberParam.isSearchMemberRemark = searchParam.isSearchMemberRemark;
     
-    [V2TIMManager.sharedInstance searchGroupMembers:memberParam succ:^(NSArray<NSDictionary<NSString *,NSArray<V2TIMGroupMemberFullInfo *> *> *> *memberList) {
+    [V2TIMManager.sharedInstance searchGroupMembers:memberParam succ:^(NSDictionary<NSString *,NSArray<V2TIMGroupMemberFullInfo *> *> *memberList) {
         NSMutableArray<TUISearchGroupResult *> *resultSet = [NSMutableArray array];
         NSMutableArray *groupIds = [NSMutableArray array];
-        for (NSDictionary *param in memberList) {
-            NSString *groupId = param.allKeys.firstObject;
-            if (groupId == nil) {
-                continue;
-            }
+        [memberList enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull groupId, NSArray<V2TIMGroupMemberFullInfo *> * _Nonnull obj, BOOL * _Nonnull stop) {
             [groupIds addObject:groupId];
-            
             TUISearchGroupResult *result = [[TUISearchGroupResult alloc] init];
             result.groupId = groupId;
             result.matchField = TUISearchGroupMatchFieldMember;
             result.matchValue = nil;
-            result.memberInfos = param[groupId];
+            result.memberInfos = obj;
             [resultSet addObject:result];
-        }
+        }];
         
         NSMutableDictionary *groupInfoMap = [NSMutableDictionary dictionary];
         dispatch_group_t group = dispatch_group_create();

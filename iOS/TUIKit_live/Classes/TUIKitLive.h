@@ -8,6 +8,7 @@
 #import "TUILiveRoomAnchorViewController.h"
 #import "TUILiveRoomAudienceViewController.h"
 #import "TRTCLiveRoom.h"
+#import "TXLiveBase.h"
 #import "TUILiveConfig.h"
 #import "TUICallManager.h"
 #import "TUIKit.h"

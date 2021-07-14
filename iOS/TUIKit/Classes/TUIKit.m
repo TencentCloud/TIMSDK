@@ -257,6 +257,10 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMMessageRevokeListener object:msgID];
 }
 
+- (void)onRecvMessageModified:(V2TIMMessage *)msg {
+    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMMessageModifiedListener object:msg];
+}
+
 #pragma mark V2TIMGroupListener
 /// 群消息因为只能添加一个setGroupListener，所以需要通知给TUIKit_Live
 - (void)notify:(NSString *)notifyName buildInfo:(void (^)(void(^safeAddKeyValue)(id key, id value)))infoBuilder {

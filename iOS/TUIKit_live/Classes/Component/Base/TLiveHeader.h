@@ -33,4 +33,7 @@
 #define SIGNALING_EXTRA_KEY_LINE_BUSY   @"line_busy"
 #define SIGNALING_EXTRA_KEY_CALL_END    @"call_end"
 
+// 来自 TUIKit 的通知
+#define TUILive_From_UIKit_TIMUserStatusListener @"TUIKitNotification_TIMUserStatusListener"
+
 #endif /* TLiveHeader_h */
