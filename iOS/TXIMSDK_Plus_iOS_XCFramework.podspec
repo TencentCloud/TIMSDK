@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Plus_iOS_XCFramework'
-  spec.version      = '5.4.666'
+  spec.version      = '5.5.892'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.qcloud.com/download/plus/5.4.666/ImSDK_Plus_5.4.666.xcframework.zip'}
+  spec.source = { :http => 'https://im.sdk.qcloud.com/download/plus/5.5.892/ImSDK_Plus_5.5.892.xcframework.zip'}
   spec.vendored_frameworks = '**/ImSDK_Plus.xcframework'
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
