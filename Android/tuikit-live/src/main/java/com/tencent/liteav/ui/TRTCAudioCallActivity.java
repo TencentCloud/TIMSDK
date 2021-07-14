@@ -557,7 +557,9 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         //2. 展示对方的画面
         for (UserModel userModel : mCallUserModelList) {
             TRTCAudioLayout layout = addUserToManager(userModel);
-            layout.startLoading();
+            if (layout != null) {
+                layout.startLoading();
+            }
         }
         //3. 设置底部栏
         mHangupLl.setVisibility(View.VISIBLE);
@@ -659,6 +661,9 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 
     private TRTCAudioLayout addUserToManager(final UserModel userModel) {
         final TRTCAudioLayout layout = mLayoutManagerTrtc.allocAudioCallLayout(userModel.userId);
+        if (layout == null) {
+            return null;
+        }
         layout.setUserId(userModel.userName);
         GlideEngine.loadImage(layout.getImageView(), userModel.userAvatar, R.drawable.live_default_head_img, RADIUS);
         updateUserView(userModel, layout);

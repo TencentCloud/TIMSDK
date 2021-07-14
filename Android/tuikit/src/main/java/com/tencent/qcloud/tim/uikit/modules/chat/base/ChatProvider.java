@@ -1,14 +1,10 @@
 package com.tencent.qcloud.tim.uikit.modules.chat.base;
 
-import android.text.TextUtils;
-
-import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.qcloud.tim.uikit.modules.chat.interfaces.IChatProvider;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageListAdapter;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +26,7 @@ public class ChatProvider implements IChatProvider {
     public boolean addMessageList(List<MessageInfo> msgs, boolean front) {
         List<MessageInfo> list = new ArrayList<>();
         for (MessageInfo info : msgs) {
-            if (checkExist(info)) {
+            if (checkExistPosition(info) >= 0) {
                 continue;
             }
             list.add(info);
@@ -46,18 +42,16 @@ public class ChatProvider implements IChatProvider {
         return flag;
     }
 
-    private boolean checkExist(MessageInfo msg) {
+    private int checkExistPosition(MessageInfo msg) {
         if (msg != null) {
             String msgId = msg.getId();
             for (int i = mDataSource.size() - 1; i >= 0; i--) {
-                if (mDataSource.get(i).getId().equals(msgId)
-                        && mDataSource.get(i).getUniqueId() == msg.getUniqueId()
-                        && TextUtils.equals(mDataSource.get(i).getExtra().toString(), msg.getExtra().toString())) {
-                    return true;
+                if (mDataSource.get(i).getId().equals(msgId)) {
+                    return i;
                 }
             }
         }
-        return false;
+        return -1;
     }
 
     @Override
@@ -79,17 +73,22 @@ public class ChatProvider implements IChatProvider {
         return false;
     }
 
-    public boolean addMessageInfo(MessageInfo msg) {
+    public boolean addMessageInfo(MessageInfo msg, boolean isModifiedByServer) {
         if (msg == null) {
             updateAdapter(MessageLayout.DATA_CHANGE_TYPE_LOAD, 0);
             return true;
         }
-        if (checkExist(msg)) {
-            return true;
+
+        int existPosition = checkExistPosition(msg);
+        if (existPosition >= 0 && isModifiedByServer) {
+            // 被服务器修改了消息内容，消息会通过 onRecvMessageModified 回调出来，因此需要替换原有消息
+            mDataSource.set(existPosition, msg);
+            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_REFRESH, 1);
+        } else {
+            mDataSource.add(msg);
+            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_BACK, 1);
         }
-        boolean flag = mDataSource.add(msg);
-        updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_BACK, 1);
-        return flag;
+        return true;
     }
 
     public boolean deleteMessageInfo(MessageInfo msg) {
@@ -115,7 +114,7 @@ public class ChatProvider implements IChatProvider {
         if (!found) {
             return false;
         }
-        return addMessageInfo(message);
+        return addMessageInfo(message, false);
     }
 
     public boolean updateMessageInfo(MessageInfo message) {

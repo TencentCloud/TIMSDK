@@ -13,33 +13,4 @@
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowDisablePreview">true</item>
     </style>
-
-    <style name="TRTCVoiceRoomDialogTheme" parent="@android:style/Theme.Holo.Dialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
-    </style>
-
-    <style name="TRTCVoiceRoomInputDialog">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:background">#00000000</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:backgroundDimEnabled">false</item>
-    </style>
-
-    <style name="TRTCVoiceRoomButtonStyle">
-        <item name="android:layout_width">30dp</item>
-        <item name="android:layout_height">30dp</item>
-        <item name="android:scaleType">fitXY</item>
-        <item name="android:background">@android:color/transparent</item>
-    </style>
-
-    <style name="TUILiveScenesTabLayoutStyle">
-        <item name="android:textSize">16.3sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/black_font_color</item>
-    </style>
 </resources>

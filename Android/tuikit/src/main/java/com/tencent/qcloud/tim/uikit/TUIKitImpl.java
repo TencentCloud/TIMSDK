@@ -20,6 +20,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
+import com.tencent.imsdk.v2.V2TIMTextElem;
 import com.tencent.qcloud.tim.uikit.base.GroupListenerConstants;
 import com.tencent.qcloud.tim.uikit.base.IMEventListener;
 import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
@@ -60,7 +61,6 @@ public class TUIKitImpl {
      * @param configs  TUIKit的相关配置项，一般使用默认即可，需特殊配置参考API文档
      */
     public static void init(Context context, int sdkAppID, TUIKitConfigs configs) {
-        TUIKitLog.e(TAG, "init tuikit version: " + BuildConfig.VERSION_NAME);
         sAppContext = context;
         sConfigs = configs;
         if (sConfigs.getGeneralConfig() == null) {
@@ -376,6 +376,11 @@ public class TUIKitImpl {
             @Override
             public void onRecvMessageRevoked(String msgID) {
                 super.onRecvMessageRevoked(msgID);
+            }
+
+            @Override
+            public void onRecvMessageModified(V2TIMMessage msg) {
+                TUIKitLog.i(TAG, "onRecvMessageModified msgID:" + msg.getMsgID());
             }
         });
 

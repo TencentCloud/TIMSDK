@@ -144,7 +144,10 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
         if (infos.size() > 0) {
             dataSource.addAll(infos);
         }
-        mProvider.setDataSource(sortConversations(dataSource));
+        Collections.sort(dataSource);
+        ArrayList<ConversationInfo> conversationInfos = new ArrayList<>();
+        conversationInfos.addAll(dataSource);
+        mProvider.setDataSource(conversationInfos);
     }
 
     public void updateTotalUnreadMessageCount(long totalUnreadCount) {
@@ -236,6 +239,7 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
             info.setUnRead(conversation.getUnreadCount());
         }
         info.setTop(conversation.isPinned());
+        info.setOrderKey(conversation.getOrderKey());
         return info;
     }
 

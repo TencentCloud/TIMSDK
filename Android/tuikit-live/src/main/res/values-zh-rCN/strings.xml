@@ -97,6 +97,19 @@
     <string name="live_refuse">"拒绝"</string>
 
 
+    // 场景
+    <string name="live_scenes_live_room">视频直播</string>
+    <string name="live_scenes_voice_room">语音聊天室</string>
+    <string name="live_voice_room_room_title" formatted="false">房间号: %d</string>
+    <string name="live_voice_room_numer_format" formatted="false" >%d人在看</string>
+    <string name="live_voice_room_agree">同意</string>
+    <string name="live_voice_room_warning_not_empty">"输入不能为空!"</string>
+    <string name="live_voice_room_send">发送</string>
+    <string name="live_voice_room_already_agree">已同意</string>
+    <string name="live_voice_room_main_title" formatted="false">%1s(%2d)</string>
+    <string name="live_is_over">直播已结束</string>
+
+
     <string name="live_request_link_mic_anchor">"%1$s请求和您连麦"</string>
     <string name="live_anchor_accept_link_mic">"主播接受了您的连麦请求，开始连麦"</string>
     <string name="live_error_request_link_mic">"连麦请求发生错误，%1$s"</string>

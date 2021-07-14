@@ -13,7 +13,7 @@ import java.util.Iterator;
  *
  */
 public class TRTCAudioLayoutManager extends RelativeLayout {
-    public static final  int                         MAX_USER   = 9;
+    public static final  int                         MAX_USER   = 8;
     private final static String                      TAG        = TRTCAudioLayoutManager.class.getSimpleName();
     private              ArrayList<TRTCLayoutEntity> mLayoutEntityList;
     private              boolean                     mInitParam = false;

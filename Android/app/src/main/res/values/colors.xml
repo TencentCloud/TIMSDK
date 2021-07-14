@@ -8,4 +8,5 @@
     <color name="colorCloud">#006EFF</color>
     <color name="colorShade">#33000000</color>
 
+    <color name="colorCloudShallow">#84C1FF</color>
 </resources>

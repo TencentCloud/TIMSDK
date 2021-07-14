@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.demo.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -14,7 +15,10 @@ import com.heytap.msp.push.HeytapPushManager;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.common.ApiException;
-
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.ContactFragment;
@@ -34,6 +38,8 @@ import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
+
+import java.util.List;
 
 import static com.tencent.qcloud.tim.demo.DemoApplication.isSceneEnable;
 
@@ -107,6 +113,8 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
             // oppo离线推送
             OPPOPushImpl oppo = new OPPOPushImpl();
             oppo.createNotificationChannel(this);
+            // oppo接入文档要求，应用必须要调用init(...)接口，才能执行后续操作。
+            HeytapPushManager.init(this, false);
             HeytapPushManager.register(this, PrivateConstants.OPPO_PUSH_APPKEY, PrivateConstants.OPPO_PUSH_APPSECRET, oppo);
         } else if (BrandUtil.isGoogleServiceSupport()) {
             // 谷歌推送
@@ -179,6 +187,28 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
                 current = new ProfileFragment();
                 mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_selected), null, null);
+
+                V2TIMMessageListGetOption getOption = new V2TIMMessageListGetOption();
+//                getOption.setUserID("vinson1");
+                getOption.setGroupID("@TGS#2DM7RBLGO");
+                getOption.setLastMsgSeq(18634);
+
+                getOption.setCount(20);
+                getOption.setGetType(V2TIMMessageListGetOption.V2TIM_GET_CLOUD_NEWER_MSG);
+                getOption.setGetTimeBegin(0);
+                getOption.setGetTimePeriod(0);
+                V2TIMManager.getMessageManager().getHistoryMessageList(getOption, new V2TIMValueCallback<List<V2TIMMessage>>() {
+                    @Override
+                    public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                        Log.i(TAG, "getHistoryMessageList size:"+v2TIMMessages.size());
+                    }
+
+                    @Override
+                    public void onError(int code, String desc) {
+
+                    }
+                });
+
                 break;
             default:
                 break;

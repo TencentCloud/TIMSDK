@@ -94,6 +94,11 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
      */
     private String groupType;
 
+    /**
+     * 会话排序键值
+     */
+    private long orderKey;
+
     public ConversationInfo() {
 
     }
@@ -209,19 +214,21 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.groupType = groupType;
     }
 
+    public void setOrderKey(long orderKey) {
+        this.orderKey = orderKey;
+    }
+
+    public long getOrderKey() {
+        return orderKey;
+    }
+
     @Override
     public int compareTo(@NonNull ConversationInfo other) {
-        long thisLastMessageTime = this.lastMessageTime;
-        long otherLastMessageTime = other.lastMessageTime;
-        if (this.draft != null && !TextUtils.isEmpty(this.draft.getDraftText())) {
-            thisLastMessageTime = Math.max(this.lastMessageTime, this.getDraft().getDraftTime());
-        }
-        if (other.getDraft() != null && !TextUtils.isEmpty(other.getDraft().getDraftText())) {
-            otherLastMessageTime = Math.max(other.lastMessageTime, other.getDraft().getDraftTime());
-        }
-        if (thisLastMessageTime > otherLastMessageTime) {
+        long thisOrderKey = this.orderKey;
+        long otherOrderKey = other.orderKey;
+        if (thisOrderKey > otherOrderKey) {
             return -1;
-        } else if (thisLastMessageTime == otherLastMessageTime) {
+        } else if (thisOrderKey == otherOrderKey) {
             return 0;
         } else {
             return 1;

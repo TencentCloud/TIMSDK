@@ -73,18 +73,6 @@
 
     <string name="privacy_text">Agreed to <a href="http://privacy.qq.com/">Privacy Policy</a></string>
 
-    // 场景
-    <string name="live_scenes_live_room">Video Live Stream</string>
-    <string name="live_scenes_voice_room">Voice Chat Room</string>
-    <string name="live_voice_room_room_title" formatted="false">Room ID: %d</string>
-    <string name="live_voice_room_numer_format" formatted="false" >%d viewers</string>
-    <string name="live_voice_room_agree">Agree</string>
-    <string name="live_voice_room_warning_not_empty">"Content can't be empty."</string>
-    <string name="live_voice_room_send">Send</string>
-    <string name="live_voice_room_already_agree">Agreed</string>
-    <string name="live_voice_room_main_title" formatted="false">%1s (%2d)</string>
-    <string name="live_is_over">Live stream ended</string>
-
     <string name="welcome_tip">Thank you for joining Instant Messaging!</string>
     <string name="no_support_msg">Unsupported custom messages</string>
     <string name="live">\'s live stream</string>
@@ -132,4 +120,16 @@
     <string name="new_msg">You\'ve received a new message.</string>
     <string name="call_nos">No response</string>
     <string name="clear_conversation_message">Clear messages</string>
+    <string name="login_password_tips">1~16 characters(letters+numbers)</string>
+    <string name="login_user_tips">Letters start, 4~24 characters(letters+numbers)</string>
+
+    <string name="login_agree_content">I have read and agreed to the "Privacy Regulations" and "User Agreement".</string>
+    <string name="login_agree_content_key1">"Privacy Regulations"</string>
+    <string name="login_agree_content_key2">"User Agreement"</string>
+    <string name="im_privacy">Privacy Regulations</string>
+    <string name="im_statement">Disclaimer</string>
+    <string name="im_statement_content">IM ("this product") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, the audio and video interactions of this product are archived throughout the entire audio and video interactions. Any pornography, abusive, violent, and politically related content is strictly prohibited during use.</string>
+    <string name="im_privacy_tips">Please read and approve the agreement first</string>
+
+    <string name="get_verify_code_error">Failed to get verifcation code！(%d)</string>
 </resources>
