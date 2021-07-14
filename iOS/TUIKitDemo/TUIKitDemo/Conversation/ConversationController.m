@@ -63,10 +63,28 @@
 
 - (void)onFriendInfoChanged:(NSNotification *)notice
 {
+    V2TIMFriendInfo *friendInfo = notice.object;
+    if (friendInfo == nil) {
+        return;
+    }
     for (UIViewController *vc in self.childViewControllers) {
         if ([vc isKindOfClass:TUIConversationListController.class]) {
+            // 此处需要优化，目前修改备注通知均是demo层发出来的，所以.....
             TConversationListViewModel *viewModel = [(TUIConversationListController *)vc viewModel];
-            [viewModel loadConversation];
+            for (TUIConversationCellData *cellData in viewModel.dataList) {
+                if ([cellData.userID isEqualToString:friendInfo.userID]) {
+                    NSString *title = friendInfo.friendRemark;
+                    if (title.length == 0) {
+                        title = friendInfo.userFullInfo.nickName;
+                    }
+                    if (title.length == 0) {
+                        title = friendInfo.userID;
+                    }
+                    cellData.title = title;
+                    [[(TUIConversationListController *)vc tableView] reloadData];
+                    break;
+                }
+            }
             break;
         }
     }
@@ -304,14 +322,13 @@
             NSDictionary *dic = @{@"version": @(GroupCreate_Version),@"businessID": GroupCreate,@"opUser":showName,@"content":content};
             NSData *data= [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
             V2TIMMessage *msg = [[V2TIMManager sharedInstance] createCustomMessage:data];
-            [[V2TIMManager sharedInstance] sendMessage:msg receiver:nil groupID:groupID priority:V2TIM_PRIORITY_DEFAULT onlineUserOnly:NO offlinePushInfo:nil progress:nil succ:nil fail:nil];
-
             //创建成功后，默认跳转到群组对应的聊天界面
             TUIConversationCellData *cellData = [[TUIConversationCellData alloc] init];
             cellData.groupID = groupID;
             cellData.title = groupName;
             ChatViewController *chat = [[ChatViewController alloc] init];
             chat.conversationData = cellData;
+            chat.waitToSendMsg = msg;
             [self.navigationController pushViewController:chat animated:YES];
 
             NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];

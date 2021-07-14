@@ -33,10 +33,12 @@
 #import "TCUtil.h"
 #import "THelper.h"
 #import "TCConstants.h"
+#import "V2TIMManager.h"
 #import "GenerateTestUserSig.h"
 #import "Toast.h"
 #import "TUIKitListenerManager.h"
 #import "NSBundle+TUIKIT.h"
+#import "TIMMessage+DataProvider.h"
 
 #if ENABLELIVE
 #import "TUIGroupLiveMessageCell.h"
@@ -48,8 +50,6 @@
 #import "TUILiveRoomManager.h"
 #import "TUILiveHeartBeatManager.h"
 #endif
-
-@import ImSDK_Plus;
 
 // MLeaksFinder 会对这个类误报，这里需要关闭一下
 @implementation UIImagePickerController (Leak)
@@ -115,6 +115,24 @@ UIDocumentPickerDelegate>
     }];
     
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    // 发送第一条消息
+    if (self.waitToSendMsg) {
+        TUIMessageCellData *uiMsg = [self.waitToSendMsg cellData];
+        if (uiMsg == nil) {
+            uiMsg = [self chatController:self.chat onNewMessage:self.waitToSendMsg];
+        }
+        if (uiMsg == nil) {
+            return;
+        }
+        uiMsg.innerMessage = self.waitToSendMsg;
+        [self.chat sendMessage:uiMsg];
+        self.waitToSendMsg = nil;
+    }
 }
 
 - (void)dealloc
@@ -313,10 +331,13 @@ UIDocumentPickerDelegate>
     if ([cell.data.title isEqualToString:NSLocalizedString(@"MoreCustom", nil)]) {
         NSString *text = @"欢迎加入腾讯·云通信大家庭！";
         NSString *link = @"https://cloud.tencent.com/document/product/269/3794";
+        NSData *customData = [TCUtil dictionary2JsonData:@{@"version": @(TextLink_Version),@"businessID": TextLink,@"text":text,@"link":link}];
         MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:MsgDirectionOutgoing];
         cellData.text = text;
         cellData.link = link;
-        cellData.innerMessage = [[V2TIMManager sharedInstance] createCustomMessage:[TCUtil dictionary2JsonData:@{@"version": @(TextLink_Version),@"businessID": TextLink,@"text":text,@"link":link}]];
+        cellData.innerMessage = [V2TIMManager.sharedInstance createCustomMessage:customData
+                                                                            desc:text
+                                                                       extension:text];
         [chatController sendMessage:cellData];
         
         if ([_conversationData.groupID isEqualToString:@"im_demo_admin"] || [_conversationData.userID isEqualToString:@"im_demo_admin"]) {
