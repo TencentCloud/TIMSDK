@@ -226,13 +226,24 @@ public class MessageInfoUtil {
     }
 
     /**
-     * 创建一条消息
+     * 创建一条自定义消息
      *
      * @param data 自定义消息内容，可以是任何内容
      * @return
      */
     public static MessageInfo buildCustomMessage(String data) {
-        V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createCustomMessage(data.getBytes());
+        return buildCustomMessage(data, null, null);
+    }
+
+    /**
+     * 创建一条自定义消息
+     * @param data 自定义消息内容，可以是任何内容
+     * @param description 自定义消息描述内容，可以被搜索到
+     * @param extension 扩展内容
+     * @return
+     */
+    public static MessageInfo buildCustomMessage(String data, String description, byte[] extension) {
+        V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createCustomMessage(data.getBytes(), description, extension);
         MessageInfo info = null;
 
         for(TUIChatControllerListener chatListener : TUIKitListenerManager.getInstance().getTUIChatListeners()) {

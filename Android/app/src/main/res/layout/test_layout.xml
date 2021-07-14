@@ -6,7 +6,7 @@
     android:background="@color/status_bar_color"
     android:orientation="vertical" >
     <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
-        android:id="@+id/test_tital_bar"
+        android:id="@+id/test_title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
 
@@ -33,4 +33,18 @@
         android:layout_marginTop="10dp"
         app:isSwitch="true"
         app:name="不更新会话lastmsg" />
+
+    <com.tencent.qcloud.tim.uikit.component.LineControllerView
+        android:id="@+id/test_get_history_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:name="点击进入历史消息拉取测试页面 --->" />
+
+    <com.tencent.qcloud.tim.uikit.component.LineControllerView
+        android:id="@+id/test_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:name="点击进入搜索测试页面 --->" />
 </LinearLayout>

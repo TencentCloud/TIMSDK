@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tim.demo.helper;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +14,8 @@ import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.uikit.modules.chat.ChatLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.BaseInputFragment;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.input.InputLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.base.InputMoreActionUnit;
+import com.tencent.qcloud.tim.uikit.modules.chat.layout.input.InputLayout;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
@@ -175,7 +174,7 @@ public class ChatLayoutHelper {
                 customHelloMessage.link = "https://cloud.tencent.com/document/product/269/3794";
 
                 String data = gson.toJson(customHelloMessage);
-                MessageInfo info = MessageInfoUtil.buildCustomMessage(data);
+                MessageInfo info = MessageInfoUtil.buildCustomMessage(data, customHelloMessage.text, null);
                 layout.sendMessage(info, false);
             }
         });

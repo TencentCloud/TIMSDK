@@ -287,9 +287,13 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                 }
 
                 String videoPath = FileUtil.getPathFromUri((Uri) data);
-                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoPath);
+                String fileExtension = FileUtil.getFileExtensionFromUrl(videoPath);
                 String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-                if (mimeType != null && mimeType.contains("video")){
+                if (TextUtils.isEmpty(mimeType)) {
+                    TUIKitLog.e(TAG, "mimeType is empty.");
+                    return;
+                }
+                if (mimeType.contains("video")){
                     MessageInfo msg = buildVideoMessage(FileUtil.getPathFromUri((Uri) data));
                     if (msg == null){
                         TUIKitLog.e(TAG, "start send video error data: " + data);
@@ -297,12 +301,14 @@ public class InputLayout extends InputLayoutUI implements View.OnClickListener, 
                         mMessageHandler.sendMessage(msg);
                         hideSoftInput();
                     }
-                } else {
+                } else if (mimeType.contains("image")){
                     MessageInfo info = MessageInfoUtil.buildImageMessage((Uri) data, true);
                     if (mMessageHandler != null) {
                         mMessageHandler.sendMessage(info);
                         hideSoftInput();
                     }
+                } else {
+                    TUIKitLog.e(TAG, "Send photo or video failed , invalid mimeType : " + mimeType);
                 }
             }
 

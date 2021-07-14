@@ -290,9 +290,12 @@ public class SelectContactActivity extends AppCompatActivity {
     }
 
     private void removeContact(String userId) {
+        int positionInSelectedList = -1;
+        int positionInMemberList = -1;
         //1. 删除在map中的model
         if (mUserModelMap.containsKey(userId)) {
             UserModel model = mUserModelMap.remove(userId);
+            positionInSelectedList = mSelectedModelList.indexOf(model);
             mSelectedModelList.remove(model);
             ContactEntity recentEntity = mGroupMemberList.get(userId);
             if (recentEntity != null) {
@@ -301,13 +304,17 @@ public class SelectContactActivity extends AppCompatActivity {
             for (ContactEntity entity : mUserModelList) {
                 if (entity.mUserModel.userId.equals(userId)) {
                     entity.isSelected = false;
+                    positionInMemberList = mUserModelList.indexOf(entity);
                     break;
                 }
             }
         }
         //2. 通知界面刷新
-        mGroupMemberListAdapter.notifyDataSetChanged();
-        mSelectedMemberListAdapter.notifyDataSetChanged();
+        if (positionInMemberList == -1 || positionInSelectedList == -1) {
+            return;
+        }
+        mGroupMemberListAdapter.notifyItemChanged(positionInMemberList);
+        mSelectedMemberListAdapter.notifyItemRemoved(positionInSelectedList);
     }
 
     private void completeBtnEnable() {
@@ -315,7 +322,10 @@ public class SelectContactActivity extends AppCompatActivity {
     }
 
     private void addContact(ContactEntity entity) {
+        int positionInSelectedList = -1;
+        int positionInMemberList = -1;
         //1. 把对应的model增加到map中
+
         String userId = entity.mUserModel.userId;
         //1.1 判断这个contact是不是自己
         if (userId.equals(mSelfModel.userId)) {
@@ -325,11 +335,16 @@ public class SelectContactActivity extends AppCompatActivity {
         if (!mUserModelMap.containsKey(userId)) {
             mUserModelMap.put(userId, entity.mUserModel);
             mSelectedModelList.add(entity.mUserModel);
+            positionInSelectedList = mSelectedModelList.indexOf(entity.mUserModel);
         }
+        positionInMemberList = mUserModelList.indexOf(entity);
         entity.isSelected = true;
         //2. 通知界面刷新
-        mGroupMemberListAdapter.notifyDataSetChanged();
-        mSelectedMemberListAdapter.notifyDataSetChanged();
+        if (positionInMemberList == -1 || positionInSelectedList == -1) {
+            return;
+        }
+        mGroupMemberListAdapter.notifyItemChanged(positionInMemberList);
+        mSelectedMemberListAdapter.notifyItemInserted(positionInSelectedList);
     }
 
     public static class SelectedMemberListAdapter extends
@@ -367,6 +382,7 @@ public class SelectContactActivity extends AppCompatActivity {
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             private ImageView mAvatarImg;
+            private String userId;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -375,13 +391,17 @@ public class SelectContactActivity extends AppCompatActivity {
 
             public void bind(final UserModel model,
                              final OnItemClickListener listener) {
-                GlideEngine.loadImage(mAvatarImg, model.userAvatar, R.drawable.live_default_head_img, RADIUS);
+                if (!model.userId.equals(userId)) {
+                    GlideEngine.clear(mAvatarImg);
+                    GlideEngine.loadImage(mAvatarImg, model.userAvatar, R.drawable.live_default_head_img, RADIUS);
+                }
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         listener.onItemClick(getLayoutPosition());
                     }
                 });
+                userId = model.userId;
             }
 
             private void initView(@NonNull final View itemView) {
@@ -410,6 +430,7 @@ public class SelectContactActivity extends AppCompatActivity {
             private Button mContactCb;
             private ImageView mAvatarImg;
             private TextView mUserNameTv;
+            private String userId;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -420,7 +441,10 @@ public class SelectContactActivity extends AppCompatActivity {
 
             public void bind(final SelectContactActivity.ContactEntity model,
                              final OnItemClickListener listener) {
-                GlideEngine.loadImage(mAvatarImg, model.mUserModel.userAvatar, R.drawable.live_default_head_img, RADIUS);
+                if (!model.mUserModel.userId.equals(userId)) {
+                    GlideEngine.clear(mAvatarImg);
+                    GlideEngine.loadImage(mAvatarImg, model.mUserModel.userAvatar, R.drawable.live_default_head_img, RADIUS);
+                }
                 mUserNameTv.setText(model.mUserModel.userName);
                 if (model.isSelected) {
                     mContactCb.setActivated(true);
@@ -439,6 +463,7 @@ public class SelectContactActivity extends AppCompatActivity {
                         listener.onItemClick(getLayoutPosition());
                     }
                 });
+                userId = model.mUserModel.userId;
             }
         }
 

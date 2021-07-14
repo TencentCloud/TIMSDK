@@ -31,6 +31,7 @@ import com.tencent.qcloud.tim.uikit.component.photoview.PhotoViewActivity;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tim.uikit.component.video.VideoViewActivity;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+import com.tencent.qcloud.tim.uikit.utils.DateTimeUtil;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
@@ -39,7 +40,6 @@ import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -285,10 +285,7 @@ public class MessageImageHolder extends MessageContentHolder {
             });
         }
 
-        String durations = "00:" + videoEle.getDuration();
-        if (videoEle.getDuration() < 10) {
-            durations = "00:0" + videoEle.getDuration();
-        }
+        String durations = DateTimeUtil.formatSecondsTo00(videoEle.getDuration());
         videoDurationText.setText(durations);
 
         final String videoPath = TUIKitConstants.VIDEO_DOWNLOAD_DIR + videoEle.getVideoUUID();

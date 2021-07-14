@@ -6,9 +6,11 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -51,7 +53,6 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
     private static final int READ_REPORT_INTERVAL = 1000; // 单位： 毫秒
 
     protected static final int MSG_PAGE_COUNT = 20;
-    protected static final int REVOKE_TIME_OUT = 6223;
     protected ChatProvider mCurrentProvider;
 
     protected boolean mIsMore;
@@ -149,7 +150,12 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
             }
         }
 
-        onReceiveMessage(msg);
+        onReceiveMessage(msg, false);
+    }
+
+    @Override
+    public void onRecvMessageModified(V2TIMMessage msg) {
+        onReceiveMessage(msg, true);
     }
 
     private void notifyTyping() {
@@ -174,17 +180,17 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         ToastUtil.toastLongMessage(stringBuilder.toString());
     }
 
-    protected void onReceiveMessage(final V2TIMMessage msg) {
+    protected void onReceiveMessage(final V2TIMMessage msg, boolean isModifiedByServer) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "onReceiveMessage unSafetyCall");
             return;
         }
-        addMessage(msg);
+        addMessage(msg, isModifiedByServer);
     }
 
     protected abstract boolean isGroup();
 
-    protected void addMessage(V2TIMMessage msg) {
+    protected void addMessage(V2TIMMessage msg, boolean isModifiedByServer) {
         if (!safetyCall()) {
             TUIKitLog.w(TAG, "addMessage unSafetyCall");
             return;
@@ -213,7 +219,7 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
             } else {
                 return;
             }
-            mCurrentProvider.addMessageInfo(messageInfo);
+            mCurrentProvider.addMessageInfo(messageInfo, isModifiedByServer);
             if (isChatFragmentShow()) {
                 messageInfo.setRead(true);
             }
@@ -397,7 +403,7 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         V2TIMManager.getMessageManager().revokeMessage(messageInfo.getTimMessage(), new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
-                if (code == REVOKE_TIME_OUT) {
+                if (code == BaseConstants.ERR_SVR_MSG_REVOKE_TIME_LIMIT || code == BaseConstants.ERR_SVR_GROUP_REVOKE_MSG_TIME_LIMIT) {
                     ToastUtil.toastLongMessage(TUIKit.getAppContext().getString(R.string.send_two_mins));
                 } else {
                     ToastUtil.toastLongMessage(TUIKit.getAppContext().getString(R.string.revoke_fail) + code + "=" + desc);
@@ -512,7 +518,7 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
             if (retry) {
                 mCurrentProvider.resendMessageInfo(message);
             } else {
-                mCurrentProvider.addMessageInfo(message);
+                mCurrentProvider.addMessageInfo(message, false);
             }
         }
     }
@@ -603,7 +609,8 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
             int type = v2TIMMessage.getElemType();
             String userid = v2TIMMessage.getSender();
             if (type == V2TIMMessage.V2TIM_ELEM_TYPE_CUSTOM) {
-                abstractList.add(userid + ":" + context.getString(R.string.custom_msg));
+                V2TIMCustomElem customElem = v2TIMMessage.getCustomElem();
+                abstractList.add(userid + ":" + customElem.getDescription());
             } else if (type == V2TIMMessage.V2TIM_ELEM_TYPE_GROUP_TIPS) {
             } else if (type == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT) {
                 V2TIMTextElem txtEle = v2TIMMessage.getTextElem();
@@ -774,7 +781,7 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         }
         mIsLoading = true;
         if (!mIsMore) {
-            mCurrentProvider.addMessageInfo(null);
+            mCurrentProvider.addMessageInfo(null, false);
             callBack.onSuccess(null);
             mIsLoading = false;
             return;
@@ -1147,7 +1154,7 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
             message.setId(msgID);
             if (message.getMsgType() < MessageInfo.MSG_TYPE_TIPS || message.getMsgType() > MessageInfo.MSG_STATUS_REVOKE) {
                 message.setStatus(MessageInfo.MSG_STATUS_SENDING);
-                mCurrentProvider.addMessageInfo(message);
+                mCurrentProvider.addMessageInfo(message, false);
             }
         }
     }

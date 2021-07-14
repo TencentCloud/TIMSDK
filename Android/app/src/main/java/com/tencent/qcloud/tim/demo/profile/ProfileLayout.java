@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.demo.profile;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,18 +14,24 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.helper.TUIKitLiveListenerManager;
 import com.tencent.qcloud.tim.demo.helper.IBaseLiveListener;
 import com.tencent.qcloud.tim.demo.login.UserInfo;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
+import com.tencent.qcloud.tim.tuikit.live.utils.TUILiveLog;
 import com.tencent.qcloud.tim.uikit.component.LineControllerView;
 import com.tencent.qcloud.tim.uikit.component.SelectionActivity;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
@@ -51,6 +58,8 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
     private LineControllerView mModifyAllowTypeView;
     private LineControllerView mModifySignatureView;
     private LineControllerView mModifyBirthdayView;
+    private LineControllerView mIMPrivacyView;
+    private LineControllerView mIMStatementView;
     private LineControllerView mAboutIM;
     private ArrayList<String> mJoinTypeTextList = new ArrayList<>();
     private ArrayList<Integer> mJoinTypeIdList = new ArrayList<>();
@@ -98,6 +107,12 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         mModifyAllowTypeView = findViewById(R.id.modify_allow_type);
         mModifyAllowTypeView.setCanNav(true);
         mModifyAllowTypeView.setOnClickListener(this);
+        mIMPrivacyView = findViewById(R.id.im_privacy);
+        mIMPrivacyView.setCanNav(true);
+        mIMPrivacyView.setOnClickListener(this);
+        mIMStatementView = findViewById(R.id.im_statement);
+        mIMStatementView.setCanNav(true);
+        mIMStatementView.setOnClickListener(this);
         mAboutIM = findViewById(R.id.about_im);
         mAboutIM.setCanNav(true);
         mAboutIM.setOnClickListener(this);
@@ -271,6 +286,31 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
                 }
             }, year, month, day);
             dp.show();
+        } else if (v.getId() == R.id.im_privacy) {
+            Intent intent = new Intent();
+            intent.setAction("android.intent.action.VIEW");
+            Uri content_url = Uri.parse(Constants.IM_PRIVACY_PROTECTION);
+            intent.setData(content_url);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            DemoApplication.instance().startActivity(intent);
+        } else if (v.getId() == R.id.im_statement) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                    .setTitle(getContext().getString(R.string.im_statement))
+                    .setMessage(getContext().getString(R.string.im_statement_content))
+                    .setPositiveButton(getContext().getString(R.string.sure), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (getContext() == null){
+                                TUILiveLog.d(TAG,"getContext is null!");
+                                return;
+                            }
+
+                            dialog.dismiss();
+                        }
+                    });
+
+            AlertDialog mDialogStatement = builder.create();
+            mDialogStatement.show();
         }
     }
 

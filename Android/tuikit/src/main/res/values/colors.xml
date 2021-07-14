@@ -73,4 +73,6 @@
     <color name="colorPrimary">#00A66b</color>
     <color name="textSecond">#737373</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorShallow">#9E9EA1</color>
+
 </resources>

@@ -73,18 +73,6 @@
 
     <string name="privacy_text">已同意《<a href="http://privacy.qq.com/">隐私政策</a>》</string>
 
-    // 场景
-    <string name="live_scenes_live_room">视频直播</string>
-    <string name="live_scenes_voice_room">语音聊天室</string>
-    <string name="live_voice_room_room_title" formatted="false">房间号: %d</string>
-    <string name="live_voice_room_numer_format" formatted="false" >%d人在看</string>
-    <string name="live_voice_room_agree">同意</string>
-    <string name="live_voice_room_warning_not_empty">"输入不能为空!"</string>
-    <string name="live_voice_room_send">发送</string>
-    <string name="live_voice_room_already_agree">已同意</string>
-    <string name="live_voice_room_main_title" formatted="false">%1s(%2d)</string>
-    <string name="live_is_over">直播已结束</string>
-
     <string name="welcome_tip">欢迎加入云通信IM大家庭！</string>
     <string name="no_support_msg">不支持的自定义消息</string>
     <string name="live">的直播</string>
@@ -132,4 +120,17 @@
     <string name="new_msg">收到一条新消息</string>
     <string name="call_nos">通话失去响应</string>
     <string name="clear_conversation_message">清空消息</string>
+    <string name="login_password_tips">1~16个字符（字母+数字）</string>
+    <string name="login_user_tips">字母开头，4~24个字母+数字</string>
+
+    <string name="login_agree_content">我已阅读并同意《隐私条例》和《用户协议》。</string>
+    <string name="login_agree_content_key1">《隐私条例》</string>
+    <string name="login_agree_content_key2">《用户协议》</string>
+    <string name="im_privacy">隐私条例</string>
+    <string name="im_statement">免责声明</string>
+    <string name="im_statement_content">IM（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。</string>
+    <string name="im_privacy_tips">请先阅读并同意协议</string>
+
+    <string name="get_verify_code_error">获取验证码错误，请刷新重试！(%d)</string>
+
 </resources>

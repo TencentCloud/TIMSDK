@@ -96,6 +96,20 @@
                     app:name="@string/add_rule" />
 
                 <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                    android:id="@+id/im_privacy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:name="@string/im_privacy" />
+
+                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                    android:id="@+id/im_statement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:name="@string/im_statement" />
+
+                <com.tencent.qcloud.tim.uikit.component.LineControllerView
                     android:id="@+id/about_im"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

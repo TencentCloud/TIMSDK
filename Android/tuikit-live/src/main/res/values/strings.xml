@@ -96,6 +96,17 @@
     <string name="live_accept">"Accept"</string>
     <string name="live_refuse">"Decline"</string>
 
+    // 场景
+    <string name="live_scenes_live_room">Video Live Stream</string>
+    <string name="live_scenes_voice_room">Voice Chat Room</string>
+    <string name="live_voice_room_room_title" formatted="false">Room ID: %d</string>
+    <string name="live_voice_room_numer_format" formatted="false" >%d viewers</string>
+    <string name="live_voice_room_agree">Agree</string>
+    <string name="live_voice_room_warning_not_empty">"Content can't be empty."</string>
+    <string name="live_voice_room_send">Send</string>
+    <string name="live_voice_room_already_agree">Agreed</string>
+    <string name="live_voice_room_main_title" formatted="false">%1s (%2d)</string>
+    <string name="live_is_over">Live stream ended</string>
 
     <string name="live_request_link_mic_anchor">"%1$s requested to co-anchor with you."</string>
     <string name="live_anchor_accept_link_mic">"Host accepted your co-anchoring request. Start now."</string>
