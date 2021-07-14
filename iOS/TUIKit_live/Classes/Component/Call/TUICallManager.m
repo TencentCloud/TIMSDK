@@ -16,6 +16,7 @@
 #import "TLiveHeader.h"
 #import "NSBundle+TUIKIT.h"
 #import "UIImage+TUIKIT.h"
+#import "TUIKit.h"
 
 typedef NS_ENUM(NSInteger,VideoUserRemoveReason){
     VideoUserRemoveReason_Leave = 0,
@@ -46,6 +47,7 @@ typedef NS_ENUM(NSInteger,VideoUserRemoveReason){
     if (self) {
         [[TUICall shareInstance] setDelegate:self];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menusServiceAction:) name:MenusServiceAction object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userStatusChanged:) name:TUILive_From_UIKit_TIMUserStatusListener object:nil];
     }
     return self;
 }
@@ -84,6 +86,26 @@ typedef NS_ENUM(NSInteger,VideoUserRemoveReason){
             return;
         }
         [self call:userInfo[@"groupID"] userID:userInfo[@"userID"] callType:callType];
+    }
+}
+
+- (void)userStatusChanged:(NSNotification *)notification
+{
+    TUIUserStatus status = [notification.object integerValue];
+    switch (status) {
+        case TUser_Status_ForceOffline:
+        case TUser_Status_SigExpired:
+        {
+            // 如果当前正在通话：主动挂断    - 本地登录态已被清理，信令无法发出，可通过 TRTC 的退房事件来通知对端
+            // 如果当前是被叫且还没接通：拒绝 - 本地登录态已被清理，信令无法发出，无效
+            // 如果当前是主叫且还没接通：取消 - 本地登录态已被清理，信令无法发出，无效
+            // 直接取消通话页面，此时由于本地登录态已经被清理掉，正常的挂断逻辑将无法走通
+            [TUICall.shareInstance hangup]; // 在通话中，通过trtc退房来让对端知道已断线
+            [self onCallingCancel:@""];
+        }
+            break;
+        default:
+            break;
     }
 }
 
@@ -248,6 +270,12 @@ typedef NS_ENUM(NSInteger,VideoUserRemoveReason){
 
 -(void)onCallingCancel:(NSString *)uid {
     NSLog(@"📳 onCallingCancel");
+    
+    if (self.callVC == nil) {
+        // 非通话界面，无需处理
+        return;
+    }
+    
     if ([self.callVC isKindOfClass:[TUIVideoCallViewController class]]) {
         [(TUIVideoCallViewController *)self.callVC disMiss];
     }

@@ -117,6 +117,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) BOOL isNotDisturb;
 
+/**
+ * 会话排序的 orderKey
+ */
+@property (nonatomic, assign) NSUInteger orderKey;
+
 @end
 
 NS_ASSUME_NONNULL_END

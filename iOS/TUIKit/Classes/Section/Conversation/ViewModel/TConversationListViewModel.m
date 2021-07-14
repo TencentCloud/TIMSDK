@@ -131,6 +131,7 @@
         data.unreadCount = conv.unreadCount;
         data.draftText = conv.draftText;
         data.isNotDisturb = (conv.recvOpt == V2TIM_NOT_RECEIVE_MESSAGE);
+        data.orderKey = conv.orderKey;
         if (conv.type == V2TIM_C2C) {   // 设置会话的默认头像
             data.avatarImage = DefaultAvatarImage;
         } else {
@@ -139,7 +140,7 @@
         
         [dataList addObject:data];
     }
-    // UI 会话列表根据 lastMessage 时间戳重新排序
+    // UI 会话列表根据 orderKey 重新排序
     [self sortDataList:dataList];
     self.dataList = dataList;
 }
@@ -317,49 +318,9 @@
 
 - (void)sortDataList:(NSMutableArray<TUIConversationCellData *> *)dataList
 {
-#ifndef SDKPlaceTop
-#define SDKPlaceTop   // SDK 内部通过active_time以及IsPlaceHead进行置顶操作，反之是TUIKit通过TUILocalStoreage存储toConversationList来进行置顶操作
-#endif
-    
-#ifdef SDKPlaceTop
-    // 将会话进行排序
-    // 置顶的排在上面，其余的按照时间倒叙。
-    // 置顶列表内部也按照时间倒叙
     [dataList sortUsingComparator:^NSComparisonResult(TUIConversationCellData *obj1, TUIConversationCellData *obj2) {
-        if (obj1.isOnTop && !obj2.isOnTop) {
-            return NSOrderedAscending;
-        }else if (!obj1.isOnTop && obj2.isOnTop) {
-            return NSOrderedDescending;
-        }else {
-            return [obj2.time compare:obj1.time];
-        }
+        return obj1.orderKey < obj2.orderKey;
     }];
-#else
-    // 按时间排序，最近会话在上
-    [dataList sortUsingComparator:^NSComparisonResult(TUIConversationCellData *obj1, TUIConversationCellData *obj2) {
-        return [obj2.time compare:obj1.time];
-    }];
-
-    // 将置顶会话固定在最上面
-    NSArray *topList = [[TUILocalStorage sharedInstance] topConversationList];
-    int existTopListSize = 0;
-    for (NSString *convID in topList) {
-        int userIdx = -1;
-        for (int i = 0; i < dataList.count; i++) {
-            if ([dataList[i].conversationID isEqualToString:convID]) {
-                userIdx = i;
-                dataList[i].isOnTop = YES;
-                break;
-            }
-        }
-        if (userIdx >= 0 && userIdx != existTopListSize) {
-            TUIConversationCellData *data = dataList[userIdx];
-            [dataList removeObjectAtIndex:userIdx];
-            [dataList insertObject:data atIndex:existTopListSize];
-            existTopListSize++;
-        }
-    }
-#endif
 }
 
 - (void)removeData:(TUIConversationCellData *)data
