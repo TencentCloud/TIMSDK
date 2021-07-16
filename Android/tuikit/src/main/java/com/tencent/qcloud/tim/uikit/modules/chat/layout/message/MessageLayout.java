@@ -31,6 +31,7 @@ public class MessageLayout extends MessageLayoutUI {
     public static final int DATA_CHANGE_TYPE_DELETE = 5;
     public static final int DATA_CHANGE_TYPE_CLEAR = 6;
     public static final int DATA_CHANGE_SCROLL_TO_POSITION = 7;
+    public static final int DATA_CHANGE_TYPE_NEW_MESSAGE = 8;
 
     public MessageLayout(Context context) {
         super(context);
