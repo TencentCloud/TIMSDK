@@ -86,7 +86,7 @@ public class ChatProvider implements IChatProvider {
             updateAdapter(MessageLayout.DATA_CHANGE_TYPE_REFRESH, 1);
         } else {
             mDataSource.add(msg);
-            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_ADD_BACK, 1);
+            updateAdapter(MessageLayout.DATA_CHANGE_TYPE_NEW_MESSAGE, 1);
         }
         return true;
     }

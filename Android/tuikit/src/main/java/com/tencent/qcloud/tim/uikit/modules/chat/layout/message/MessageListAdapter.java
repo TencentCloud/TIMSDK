@@ -260,7 +260,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 } else if (type == MessageLayout.DATA_CHANGE_TYPE_ADD_BACK) {
                     notifyItemRangeInserted(mDataSource.size() + 1, value);
                     notifyDataSetChanged();
-                    mRecycleView.onMsgAddBack();
                 } else if (type == MessageLayout.DATA_CHANGE_TYPE_UPDATE) {
                     notifyItemChanged(value + 1);
                 } else if (type == MessageLayout.DATA_CHANGE_TYPE_LOAD || type == MessageLayout.DATA_CHANGE_TYPE_ADD_FRONT) {
@@ -282,6 +281,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                     notifyDataSetChanged();
                     mRecycleView.scrollToPositon(value);
                     mRecycleView.setHighShowPosition(value);
+                } else if (type == MessageLayout.DATA_CHANGE_TYPE_NEW_MESSAGE) {
+                    notifyItemRangeInserted(mDataSource.size() + 1, value);
+                    notifyDataSetChanged();
+                    mRecycleView.onMsgAddBack();
                 }
             }
         }, 100);
