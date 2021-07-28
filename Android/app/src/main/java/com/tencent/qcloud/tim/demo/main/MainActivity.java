@@ -188,27 +188,6 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
                 mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_selected), null, null);
 
-                V2TIMMessageListGetOption getOption = new V2TIMMessageListGetOption();
-//                getOption.setUserID("vinson1");
-                getOption.setGroupID("@TGS#2DM7RBLGO");
-                getOption.setLastMsgSeq(18634);
-
-                getOption.setCount(20);
-                getOption.setGetType(V2TIMMessageListGetOption.V2TIM_GET_CLOUD_NEWER_MSG);
-                getOption.setGetTimeBegin(0);
-                getOption.setGetTimePeriod(0);
-                V2TIMManager.getMessageManager().getHistoryMessageList(getOption, new V2TIMValueCallback<List<V2TIMMessage>>() {
-                    @Override
-                    public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
-                        Log.i(TAG, "getHistoryMessageList size:"+v2TIMMessages.size());
-                    }
-
-                    @Override
-                    public void onError(int code, String desc) {
-
-                    }
-                });
-
                 break;
             default:
                 break;
