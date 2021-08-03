@@ -17,7 +17,7 @@
 ### 增强版 xcframework 版本（支持 mac catalyst、支持 bitcode）
 [最新 ImSDK_Plus_Bitcode.xcframework.zip下载](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/5.5.897/ImSDK_Plus_5.5.897_Bitcode.xcframework.zip)
 
-### [基础版与增强版差异对比](https://github.com/tencentyun/TIMSDK#%E6%A0%87%E5%87%86%E7%89%88%E4%B8%8E%E7%B2%BE%E7%AE%80%E7%89%88%E5%B7%AE%E5%BC%82%E5%AF%B9%E6%AF%94)
+### [基础版与增强版差异对比](https://github.com/tencentyun/TIMSDK#%E5%9F%BA%E7%A1%80%E7%89%88%E4%B8%8E%E5%A2%9E%E5%BC%BA%E7%89%88%E5%B7%AE%E5%BC%82%E5%AF%B9%E6%AF%94)
 
 ## cocoaPods 集成
 如果使用基础版 SDK，请您按照如下方式设置 Podfile 文件
