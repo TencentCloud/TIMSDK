@@ -1,11 +1,13 @@
 
 # 目录介绍：
+```
 └─ fluter 
    ├─ IMSDK                     // SDK 目录
    ├─ Demo                      // Demo 目录
    │  ├─im_api_example          // 接口测试Demo（主要进行SDK的测试）
    │  ├─TencentIMFlutterDemo    // IM测试Demo（进行功能体验）
    └─ README.md                 // 现在你就在读这个文件呀～
+```
 
 
 # 项目一、Flutter IM 的体验 Demo（TencentIMFlutterDemo）
