@@ -2,7 +2,7 @@
 
 ## 镜像下载
 
-腾讯云分流下载地址： [DOWNLOAD](https://im.sdk.qcloud.com/github/TIMSDK.zip)
+腾讯云分流下载地址： [DOWNLOAD](https://im.sdk.qcloud.com/download/github/TIMSDK.zip)
 
 ## SDK下载
 
