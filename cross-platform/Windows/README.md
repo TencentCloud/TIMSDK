@@ -2,7 +2,7 @@
 
 ## 下载地址
 
-[最新C接口下载](https://im.sdk.qcloud.com/download/standard/5.1.62/cross-platform/TIM_Cross_Platform_Windows_latest.zip)
+[最新C接口下载](https://im.sdk.qcloud.com/download/plus/5.5.897/cross_platform/ImSDK_Windows_5.5.897.zip)
 
 ## TIMSDK for Windows
 
