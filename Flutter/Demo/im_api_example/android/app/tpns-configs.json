@@ -1,0 +1,13 @@
+{
+    "tpns": {
+        "access_id": "1500015941",
+        "access_key": "A7CH63Q4QBZB"
+    },
+    "com.tpns.im_demo": {
+        "channel": {
+            "enable": true
+        }
+    },
+    "debug": false,
+    "version": "1.2.3.1"
+}

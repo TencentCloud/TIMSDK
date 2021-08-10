@@ -1,0 +1,24 @@
+dartdoc:
+  categories: 
+    "Manager":
+      markdown: ./doc/manager.md
+      name: Manager
+    "Models":
+      markdown: ./doc/models.md
+      name: Models
+    "Enums":
+      markdown: ./doc/enums.md
+      name: Enums
+  categoryOrder: ["Manager","Enums","Models"]
+  # examplePathPrefix: 'examples'
+  # includeExternal: ['bin/unusually_located_library.dart']
+  nodoc: ['lib/tencent_im_sdk_plugin.dart']
+  # linkTo:
+  #   url: "https://my.dartdocumentationsite.org/dev/%v%"
+  showUndocumentedCategories: true
+  ignore:
+    - ambiguous-doc-reference
+  errors:
+    - unresolved-doc-reference
+  warnings:
+    - tool-error
