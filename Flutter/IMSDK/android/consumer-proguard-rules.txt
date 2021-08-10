@@ -1,0 +1,7 @@
+# 腾讯云IM
+-keepclassmembers enum * { *; }
+-keep class androidx.lifecycle.** { *; }
+-keep class com.tencent.imsdk.** { *; }
+-keep class com.qq.qcloud.tencent_im_sdk_plugin.** { *; }
+-keep class com.qq.qcloud.tencent_im_sdk_plugin.manager.** { *; }
+ 
