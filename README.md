@@ -150,6 +150,9 @@
   </tr>
 </table>
 
+## IMSDK 升级 V2API 接口指引
+
+[接口升级指引](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
 ## 最新增强版 5.5.897 @2021.07.29
 
