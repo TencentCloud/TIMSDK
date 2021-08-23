@@ -39,5 +39,20 @@ class ConversationListener: NSObject, V2TIMConversationListener {
 		}
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onNewConversation, method: "conversationListener", data: cs)
 	}
+
+	/// 同步服务开始
+	public func onSyncServerStart() {
+		TencentImSDKPlugin.invokeListener(type: ListenerType.onSyncServerStart, method: "conversationListener", data: nil)
+	}
+	
+	/// 同步服务完成
+	public func onSyncServerFinish() {
+		TencentImSDKPlugin.invokeListener(type: ListenerType.onSyncServerFinish, method: "conversationListener", data: nil)
+	}
+	
+	/// 同步服务失败
+	public func onSyncServerFailed() {
+		TencentImSDKPlugin.invokeListener(type: ListenerType.onSyncServerFailed, method: "conversationListener", data: nil)
+	}
 	
 }

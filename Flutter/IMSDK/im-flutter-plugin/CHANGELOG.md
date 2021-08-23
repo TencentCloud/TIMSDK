@@ -366,3 +366,12 @@ setGroupReceiveMessageOpt、getC2CReceiveMessageOpt、getConversationListByConve
 
 ## 3.3.2
 * Android权限修改
+
+## 3.3.3
+* 打包时支持混淆
+
+## 3.3.4
+* 修正path返回
+
+## 3.3.5
+* ios修复onSyncServerStart等事件

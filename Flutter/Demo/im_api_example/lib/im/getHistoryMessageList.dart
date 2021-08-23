@@ -24,8 +24,8 @@ class GetHistoryMessageListState extends State<GetHistoryMessageList> {
         .v2TIMManager
         .getMessageManager()
         .getHistoryMessageList(
-            userID: users.isNotEmpty ? users.first : "",
-            groupID: group.isNotEmpty ? group.first : "",
+            userID: users.isNotEmpty ? users.first : null,
+            groupID: group.isNotEmpty ? group.first : null,
             count: 20,
             lastMsgID: lastMsgID,
             getType: type);
