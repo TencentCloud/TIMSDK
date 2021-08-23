@@ -84,7 +84,7 @@ class SendSoundMessageState extends State<SendSoundMessage> {
   start() async {
     String tempPath = (await getTemporaryDirectory()).path;
     int random = new Random().nextInt(10000);
-    String path = "$tempPath/sendSoundMessage_$random.mp3";
+    String path = "$tempPath/sendSoundMessage_$random.acc";
     File soundFile = new File(path);
     soundFile.createSync();
     try {

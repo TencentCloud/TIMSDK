@@ -42,19 +42,4 @@ class SDKListener: NSObject, V2TIMSDKListener {
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onSelfInfoUpdated, method: "initSDKListener", data: V2UserFullInfoEntity.getDict(info: Info))
 	}
 	
-	/// 同步服务开始
-	public func onSyncServerStart() {
-		TencentImSDKPlugin.invokeListener(type: ListenerType.onSyncServerStart, method: "initSDKListener", data: nil)
-	}
-	
-	/// 同步服务完成
-	public func onSyncServerFinish() {
-		TencentImSDKPlugin.invokeListener(type: ListenerType.onSyncServerFinish, method: "initSDKListener", data: nil)
-	}
-	
-	/// 同步服务失败
-	public func onSyncServerFailed() {
-		TencentImSDKPlugin.invokeListener(type: ListenerType.onSyncServerFailed, method: "initSDKListener", data: nil)
-	}
-	
 }
