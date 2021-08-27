@@ -13,7 +13,6 @@
         app:duration_max="10000"
         app:iconLeft="@drawable/ic_back"
         app:iconMargin="20dp"
-        app:iconRight="@drawable/ic_photo"
         app:iconSize="30dp"
         app:iconSrc="@drawable/ic_camera" />
 </LinearLayout>
