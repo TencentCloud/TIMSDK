@@ -46,6 +46,8 @@
     self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     //加入此行，会让反馈更加灵敏
     self.tableView.delaysContentTouches = NO;
+    // iOS 14不显示表格，调试发现表格frame的size为0
+    self.tableView.frame = CGRectMake(0, 0, Screen_Width, Screen_Height);
 }
 
 - (void)updateData
@@ -64,7 +66,10 @@
     }];
     [[V2TIMManager sharedInstance] getGroupMemberList:self.groupId filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:0 succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
         @strongify(self)
-        for (V2TIMGroupMemberFullInfo *fullInfo in memberList) {
+        NSArray<V2TIMGroupMemberFullInfo *> *members = [memberList sortedArrayUsingComparator:^NSComparisonResult(V2TIMGroupMemberFullInfo*  _Nonnull obj1, V2TIMGroupMemberFullInfo*  _Nonnull obj2) {
+            return obj1.joinTime > obj2.joinTime;
+        }];
+        for (V2TIMGroupMemberFullInfo *fullInfo in members) {
             if([fullInfo.userID isEqualToString:[V2TIMManager sharedInstance].getLoginUser]){
                 self.selfInfo = fullInfo;
             }
