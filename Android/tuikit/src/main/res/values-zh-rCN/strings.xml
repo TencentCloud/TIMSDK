@@ -14,6 +14,7 @@
     <string name="downloading">下载中...</string>
     <string name="sending">发送中...</string>
     <string name="sended">已发送</string>
+    <string name="send_failed">发送失败</string>
     <string name="has_read">已读</string>
     <string name="unread">未读</string>
     <string name="typing">正在输入...</string>
@@ -246,4 +247,6 @@
     <string name="nick_name">昵称: </string>
     <string name="include_group_id">包含群 ID: </string>
     <string name="include_group_member">包含群成员: </string>
+
+    <string name="open_file_tips">选择要打开此文件的应用</string>
 </resources>

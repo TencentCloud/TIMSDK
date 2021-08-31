@@ -80,8 +80,12 @@ public class SynthesizedImageView extends ShadeImageView {
         teamHeadSynthesizer.setImageId(id);
     }
 
-    public void load() {
-        teamHeadSynthesizer.load();
+    public void load(String imageId) {
+        teamHeadSynthesizer.load(imageId);
+    }
+
+    public void clear() {
+        teamHeadSynthesizer.clearImage();
     }
 
 }

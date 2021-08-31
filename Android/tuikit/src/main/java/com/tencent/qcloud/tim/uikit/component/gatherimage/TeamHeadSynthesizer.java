@@ -1,69 +1,50 @@
 package com.tencent.qcloud.tim.uikit.component.gatherimage;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
-import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tim.uikit.R;
-import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
-import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationProvider;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
 import com.tencent.qcloud.tim.uikit.utils.MD5Utils;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.ThreadHelper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
 public class TeamHeadSynthesizer implements Synthesizer {
 
-    String currentTargetID;//当前多图合成的唯一ID，用来做缓存处理，以及判断合成图片是否需要变更，如果多个url有变动，currentTargetID也会发生变动，需要重新生成
     /**
      * 多图片数据
      */
     MultiImageData multiImageData;
     Context mContext;
-    int targetImageSize;//目标图片宽高
-    int maxWidth, maxHeight;//最大宽度，最大高度
+
     ImageView imageView;
-    int bgColor = Color.parseColor("#cfd3d8");
-    boolean loadOk;//加载完毕
-    private String mImageId = "";
-    private final String SP_IMAGE = "conversation_group_face";
+
+    // currentImageId 只在主线程中设置和获取，是安全的
+    private String currentImageId = "";
     Callback callback = new Callback() {
         @Override
-        public void onCall(Object obj, String targetID, boolean complete) {
-            //判断回调结果的任务id是否为同一批次的任务
-            if (!TextUtils.equals(currentTargetID, targetID)) {
+        public void onCall(Bitmap bitmap, String targetID) {
+            // 异步加载结束之后可能当前 view 已经被复用，不能再设置上次请求的 bitmap
+            if (!TextUtils.equals(getImageId(), targetID)) {
                 return;
             }
-            if (obj instanceof File) {
-                if (complete) {
-                    loadOk = true;
-                }
-                imageView.setImageBitmap(BitmapFactory.decodeFile(((File) obj).getAbsolutePath()));
-            } else if (obj instanceof Bitmap) {
-                if (complete) {
-                    loadOk = true;
-                }
-                imageView.setImageBitmap(((Bitmap) obj));
-            }
+            imageView.setImageBitmap(bitmap);
         }
     };
-    private int mRowCount; //行数
-    private int mColumnCount;  //列数
-    private int mGap = 6; //宫格间距
+
 
     public TeamHeadSynthesizer(Context mContext, ImageView imageView) {
         this.mContext = mContext;
@@ -75,17 +56,9 @@ public class TeamHeadSynthesizer implements Synthesizer {
         multiImageData = new MultiImageData();
     }
 
-    public int getMaxWidth() {
-        return maxWidth;
-    }
-
     public void setMaxWidthHeight(int maxWidth, int maxHeight) {
-        this.maxWidth = maxWidth;
-        this.maxHeight = maxHeight;
-    }
-
-    public int getMaxHeight() {
-        return maxHeight;
+        multiImageData.maxWidth = maxWidth;
+        multiImageData.maxHeight = maxHeight;
     }
 
     public MultiImageData getMultiImageData() {
@@ -100,20 +73,12 @@ public class TeamHeadSynthesizer implements Synthesizer {
         multiImageData.setDefaultImageResId(defaultImageResId);
     }
 
-    public int getBgColor() {
-        return bgColor;
-    }
-
     public void setBgColor(int bgColor) {
-        this.bgColor = bgColor;
+        multiImageData.bgColor = bgColor;
     }
 
-    public int getGap() {
-        return mGap;
-    }
-
-    public void setGap(int mGap) {
-        this.mGap = mGap;
+    public void setGap(int gap) {
+        multiImageData.gap = gap;
     }
 
     /**
@@ -138,31 +103,31 @@ public class TeamHeadSynthesizer implements Synthesizer {
     }
 
     @Override
-    public Bitmap synthesizeImageList() {
-        Bitmap mergeBitmap = Bitmap.createBitmap(maxWidth, maxHeight, Bitmap.Config.ARGB_8888);
+    public Bitmap synthesizeImageList(MultiImageData imageData) {
+        Bitmap mergeBitmap = Bitmap.createBitmap(imageData.maxWidth, imageData.maxHeight, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mergeBitmap);
-        drawDrawable(canvas);
+        drawDrawable(canvas, imageData);
         canvas.save();
         canvas.restore();
         return mergeBitmap;
     }
 
     @Override
-    public boolean asyncLoadImageList() {
+    public boolean asyncLoadImageList(MultiImageData imageData) {
         boolean loadSuccess = true;
-        List<Object> imageUrls = multiImageData.getImageUrls();
+        List<Object> imageUrls = imageData.getImageUrls();
         for (int i = 0; i < imageUrls.size(); i++) {
             Bitmap defaultIcon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_user_icon);
             //下载图片
             try {
-                Bitmap bitmap = asyncLoadImage(imageUrls.get(i), targetImageSize);
-                multiImageData.putBitmap(bitmap, i);
+                Bitmap bitmap = asyncLoadImage(imageUrls.get(i), imageData.targetImageSize);
+                imageData.putBitmap(bitmap, i);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                multiImageData.putBitmap(defaultIcon, i);
+                imageData.putBitmap(defaultIcon, i);
             } catch (ExecutionException e) {
                 e.printStackTrace();
-                multiImageData.putBitmap(defaultIcon, i);
+                imageData.putBitmap(defaultIcon, i);
             }
         }
         //下载完毕
@@ -170,71 +135,71 @@ public class TeamHeadSynthesizer implements Synthesizer {
     }
 
     @Override
-    public void drawDrawable(Canvas canvas) {
+    public void drawDrawable(Canvas canvas, MultiImageData imageData) {
         //画背景
-        canvas.drawColor(bgColor);
+        canvas.drawColor(imageData.bgColor);
         //画组合图片
-        int size = multiImageData.size();
-        int t_center = (maxHeight + mGap) / 2;//中间位置以下的顶点（有宫格间距）
-        int b_center = (maxHeight - mGap) / 2;//中间位置以上的底部（有宫格间距）
-        int l_center = (maxWidth + mGap) / 2;//中间位置以右的左部（有宫格间距）
-        int r_center = (maxWidth - mGap) / 2;//中间位置以左的右部（有宫格间距）
-        int center = (maxHeight - targetImageSize) / 2;//中间位置以上顶部（无宫格间距）
+        int size = imageData.size();
+        int t_center = (imageData.maxHeight + imageData.gap) / 2;//中间位置以下的顶点（有宫格间距）
+        int b_center = (imageData.maxHeight - imageData.gap) / 2;//中间位置以上的底部（有宫格间距）
+        int l_center = (imageData.maxWidth + imageData.gap) / 2;//中间位置以右的左部（有宫格间距）
+        int r_center = (imageData.maxWidth - imageData.gap) / 2;//中间位置以左的右部（有宫格间距）
+        int center = (imageData.maxHeight - imageData.targetImageSize) / 2;//中间位置以上顶部（无宫格间距）
         for (int i = 0; i < size; i++) {
-            int rowNum = i / mColumnCount;//当前行数
-            int columnNum = i % mColumnCount;//当前列数
+            int rowNum = i / imageData.columnCount;//当前行数
+            int columnNum = i % imageData.columnCount;//当前列数
 
-            int left = ((int) (targetImageSize * (mColumnCount == 1 ? columnNum + 0.5 : columnNum) + mGap * (columnNum + 1)));
-            int top = ((int) (targetImageSize * (mColumnCount == 1 ? rowNum + 0.5 : rowNum) + mGap * (rowNum + 1)));
-            int right = left + targetImageSize;
-            int bottom = top + targetImageSize;
+            int left = ((int) (imageData.targetImageSize * (imageData.columnCount == 1 ? columnNum + 0.5 : columnNum) + imageData.gap * (columnNum + 1)));
+            int top = ((int) (imageData.targetImageSize * (imageData.columnCount == 1 ? rowNum + 0.5 : rowNum) + imageData.gap * (rowNum + 1)));
+            int right = left + imageData.targetImageSize;
+            int bottom = top + imageData.targetImageSize;
 
-            Bitmap bitmap = multiImageData.getBitmap(i);
+            Bitmap bitmap = imageData.getBitmap(i);
             if (size == 1) {
                 drawBitmapAtPosition(canvas, left, top, right, bottom, bitmap);
             } else if (size == 2) {
-                drawBitmapAtPosition(canvas, left, center, right, center + targetImageSize, bitmap);
+                drawBitmapAtPosition(canvas, left, center, right, center + imageData.targetImageSize, bitmap);
             } else if (size == 3) {
                 if (i == 0) {
-                    drawBitmapAtPosition(canvas, center, top, center + targetImageSize, bottom, bitmap);
+                    drawBitmapAtPosition(canvas, center, top, center + imageData.targetImageSize, bottom, bitmap);
                 } else {
-                    drawBitmapAtPosition(canvas, mGap * i + targetImageSize * (i - 1), t_center, mGap * i + targetImageSize * i, t_center + targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * i + imageData.targetImageSize * (i - 1), t_center, imageData.gap * i + imageData.targetImageSize * i, t_center + imageData.targetImageSize, bitmap);
                 }
             } else if (size == 4) {
                 drawBitmapAtPosition(canvas, left, top, right, bottom, bitmap);
             } else if (size == 5) {
                 if (i == 0) {
-                    drawBitmapAtPosition(canvas, r_center - targetImageSize, r_center - targetImageSize, r_center, r_center, bitmap);
+                    drawBitmapAtPosition(canvas, r_center - imageData.targetImageSize, r_center - imageData.targetImageSize, r_center, r_center, bitmap);
                 } else if (i == 1) {
-                    drawBitmapAtPosition(canvas, l_center, r_center - targetImageSize, l_center + targetImageSize, r_center, bitmap);
+                    drawBitmapAtPosition(canvas, l_center, r_center - imageData.targetImageSize, l_center + imageData.targetImageSize, r_center, bitmap);
                 } else {
-                    drawBitmapAtPosition(canvas, mGap * (i - 1) + targetImageSize * (i - 2), t_center, mGap * (i - 1) + targetImageSize * (i - 1), t_center +
-                            targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i - 1) + imageData.targetImageSize * (i - 2), t_center, imageData.gap * (i - 1) + imageData.targetImageSize * (i - 1), t_center +
+                            imageData.targetImageSize, bitmap);
                 }
             } else if (size == 6) {
                 if (i < 3) {
-                    drawBitmapAtPosition(canvas, mGap * (i + 1) + targetImageSize * i, b_center - targetImageSize, mGap * (i + 1) + targetImageSize * (i + 1), b_center, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i + 1) + imageData.targetImageSize * i, b_center - imageData.targetImageSize, imageData.gap * (i + 1) + imageData.targetImageSize * (i + 1), b_center, bitmap);
                 } else {
-                    drawBitmapAtPosition(canvas, mGap * (i - 2) + targetImageSize * (i - 3), t_center, mGap * (i - 2) + targetImageSize * (i - 2), t_center +
-                            targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i - 2) + imageData.targetImageSize * (i - 3), t_center, imageData.gap * (i - 2) + imageData.targetImageSize * (i - 2), t_center +
+                            imageData.targetImageSize, bitmap);
                 }
             } else if (size == 7) {
                 if (i == 0) {
-                    drawBitmapAtPosition(canvas, center, mGap, center + targetImageSize, mGap + targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, center, imageData.gap, center + imageData.targetImageSize, imageData.gap + imageData.targetImageSize, bitmap);
                 } else if (i > 0 && i < 4) {
-                    drawBitmapAtPosition(canvas, mGap * i + targetImageSize * (i - 1), center, mGap * i + targetImageSize * i, center + targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * i + imageData.targetImageSize * (i - 1), center, imageData.gap * i + imageData.targetImageSize * i, center + imageData.targetImageSize, bitmap);
                 } else {
-                    drawBitmapAtPosition(canvas, mGap * (i - 3) + targetImageSize * (i - 4), t_center + targetImageSize / 2, mGap * (i - 3) + targetImageSize * (i - 3), t_center + targetImageSize / 2 + targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i - 3) + imageData.targetImageSize * (i - 4), t_center + imageData.targetImageSize / 2, imageData.gap * (i - 3) + imageData.targetImageSize * (i - 3), t_center + imageData.targetImageSize / 2 + imageData.targetImageSize, bitmap);
                 }
             } else if (size == 8) {
                 if (i == 0) {
-                    drawBitmapAtPosition(canvas, r_center - targetImageSize, mGap, r_center, mGap + targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, r_center - imageData.targetImageSize, imageData.gap, r_center, imageData.gap + imageData.targetImageSize, bitmap);
                 } else if (i == 1) {
-                    drawBitmapAtPosition(canvas, l_center, mGap, l_center + targetImageSize, mGap + targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, l_center, imageData.gap, l_center + imageData.targetImageSize, imageData.gap + imageData.targetImageSize, bitmap);
                 } else if (i > 1 && i < 5) {
-                    drawBitmapAtPosition(canvas, mGap * (i - 1) + targetImageSize * (i - 2), center, mGap * (i - 1) + targetImageSize * (i - 1), center + targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i - 1) + imageData.targetImageSize * (i - 2), center, imageData.gap * (i - 1) + imageData.targetImageSize * (i - 1), center + imageData.targetImageSize, bitmap);
                 } else {
-                    drawBitmapAtPosition(canvas, mGap * (i - 4) + targetImageSize * (i - 5), t_center + targetImageSize / 2, mGap * (i - 4) + targetImageSize * (i - 4), t_center + targetImageSize / 2 + targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i - 4) + imageData.targetImageSize * (i - 5), t_center + imageData.targetImageSize / 2, imageData.gap * (i - 4) + imageData.targetImageSize * (i - 4), t_center + imageData.targetImageSize / 2 + imageData.targetImageSize, bitmap);
                 }
             } else if (size == 9) {
                 drawBitmapAtPosition(canvas, left, top, right, bottom, bitmap);
@@ -278,43 +243,70 @@ public class TeamHeadSynthesizer implements Synthesizer {
     }
 
     public void setImageId(String id) {
-        mImageId = id;
+        currentImageId = id;
     }
 
-    public void load() {
+    public String getImageId() {
+        return currentImageId;
+    }
+
+    /**
+     * 加载图片
+     * @param imageId 发起图片加载请求时的图片 ID
+     */
+    public void load(String imageId) {
         if (multiImageData.size() == 0) {
+            // 发起请求时的图片 id 和当前图片 id 不一致，说明发生了复用，此时不应该再设置图像
+            if (imageId != null && !TextUtils.equals(imageId, currentImageId)) {
+                return;
+            }
             imageView.setImageResource(getDefaultImage());
             return;
         }
 
         if (multiImageData.size() == 1) {
-            GlideEngine.loadImage(imageView, multiImageData.getImageUrls().get(0));
+            // 发起请求时的图片 id 和当前图片 id 不一致，说明发生了复用，此时不应该再设置图像
+            if (imageId != null && !TextUtils.equals(imageId, currentImageId)) {
+                return;
+            }
+            GlideEngine.loadUserIcon(imageView, multiImageData.getImageUrls().get(0));
             return;
         }
 
-        String newTargetID = buildTargetSynthesizedId();
-        if (loadOk && null != imageView.getDrawable() && TextUtils.equals(currentTargetID, newTargetID)) {
-            //两次加载的图片是一样的，而且已经加载成功了，图片没有被回收,此时无需重复加载
-            return;
+        // 异步加载图像前先清空内容，避免闪烁
+        clearImage();
+
+        // 初始化图片信息，由于是异步加载和合成头像，这里需要传给合成线程一个局部对象，只在异步加载线程中使用
+        // 这样在图片被复用时外部线程再次设置 url 就不会覆盖此局部对象
+        MultiImageData copyMultiImageData;
+        try {
+            copyMultiImageData = multiImageData.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            List urlList = new ArrayList();
+            if (multiImageData.imageUrls != null) {
+                urlList.addAll(multiImageData.imageUrls);
+            }
+            copyMultiImageData = new MultiImageData(urlList, multiImageData.defaultImageResId);
         }
-        currentTargetID = newTargetID;
-        //初始化图片信息
         int[] gridParam = calculateGridParam(multiImageData.size());
-        mRowCount = gridParam[0];
-        mColumnCount = gridParam[1];
-        targetImageSize = (maxWidth - (mColumnCount + 1) * mGap) / (mColumnCount == 1 ? 2 : mColumnCount);//图片尺寸
-        //imageView.setImageResource(multiImageData.getDefaultImageResId());
+        copyMultiImageData.rowCount = gridParam[0];
+        copyMultiImageData.columnCount = gridParam[1];
+        copyMultiImageData.targetImageSize = (copyMultiImageData.maxWidth - (copyMultiImageData.columnCount + 1)
+                * copyMultiImageData.gap) / (copyMultiImageData.columnCount == 1 ? 2 : copyMultiImageData.columnCount);//图片尺寸
+        final String finalImageId = imageId;
+        final MultiImageData finalCopyMultiImageData = copyMultiImageData;
         ThreadHelper.INST.execute(new Runnable() {
             @Override
             public void run() {
                 //根据id获取存储的文件路径
-                final File file = new File(TUIKitConstants.IMAGE_BASE_DIR + TeamHeadSynthesizer.this.currentTargetID);
+                final File file = new File(TUIKitConstants.IMAGE_BASE_DIR + finalImageId);
                 boolean cacheBitmapExists = false;
+                Bitmap existsBitmap = null;
                 if (file.exists() && file.isFile()) {
                     //文件存在，加载到内存
                     BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-                    BitmapFactory.decodeFile(file.getPath(), options);
+                    existsBitmap = BitmapFactory.decodeFile(file.getPath(), options);
                     if (options.outWidth > 0 && options.outHeight > 0) {
                         //当前文件是图片
                         cacheBitmapExists = true;
@@ -322,27 +314,32 @@ public class TeamHeadSynthesizer implements Synthesizer {
                 }
                 if (!cacheBitmapExists) {
                     // 收集图片
-                    asyncLoadImageList();
+                    asyncLoadImageList(finalCopyMultiImageData);
                     // 合成图片
-                    final Bitmap bitmap = synthesizeImageList();
+                    final Bitmap bitmap = synthesizeImageList(finalCopyMultiImageData);
                     ImageUtil.storeBitmap(file, bitmap);
-                    ConversationManagerKit.getInstance().setGroupConversationAvatar(mImageId, file.getAbsolutePath());
+                    ConversationManagerKit.getInstance().setGroupConversationAvatar(finalImageId, file.getAbsolutePath());
                     imageView.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onCall(bitmap, currentTargetID, true);
+                            callback.onCall(bitmap, finalImageId);
                         }
                     });
                 } else {
+                    final Bitmap finalExistsBitmap = existsBitmap;
                     imageView.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onCall(file, currentTargetID, true);
+                            callback.onCall(finalExistsBitmap, finalImageId);
                         }
                     });
                 }
             }
         });
+    }
+
+    public void clearImage() {
+        GlideEngine.clear(imageView);
     }
 
     /**
@@ -360,7 +357,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
     }
 
     interface Callback {
-        void onCall(Object object, String targetID, boolean complete);
+        void onCall(Bitmap bitmap, String targetID);
     }
 
 }

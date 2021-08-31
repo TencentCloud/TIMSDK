@@ -149,6 +149,8 @@ public class MessageInfo implements IBaseInfo, Serializable {
     private boolean isIgnoreShow = false;
     private V2TIMMessage timMessage;
 
+    private int downloadStatus;
+
     /**
      * 获取消息唯一标识
      *
@@ -245,6 +247,15 @@ public class MessageInfo implements IBaseInfo, Serializable {
      */
     public void setStatus(int status) {
         this.status = status;
+    }
+
+
+    public int getDownloadStatus() {
+        return downloadStatus;
+    }
+
+    public void setDownloadStatus(int downloadStatus) {
+        this.downloadStatus = downloadStatus;
     }
 
     /**

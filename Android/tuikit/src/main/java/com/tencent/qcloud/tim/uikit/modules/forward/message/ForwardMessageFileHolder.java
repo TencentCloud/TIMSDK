@@ -46,27 +46,47 @@ public class ForwardMessageFileHolder extends ForwardMessageBaseHolder {
         }
         final V2TIMFileElem fileElem = message.getFileElem();
         final String path = msg.getDataPath();
-        fileNameText.setText(fileElem.getFileName());
+        final String fileName = fileElem.getFileName();
+        fileNameText.setText(fileName);
         String size = FileUtil.FormetFileSize(fileElem.getFileSize());
         fileSizeText.setText(size);
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.toastLongMessage("文件路径:" + path);
+                FileUtil.openFile(path, fileName);
             }
         });
-        if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_SUCCESS || msg.getStatus() == MessageInfo.MSG_STATUS_NORMAL) {
+
+        if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_SUCCESS
+                && msg.getDownloadStatus() == MessageInfo.MSG_STATUS_DOWNLOADED) {
             fileStatusText.setText(R.string.sended);
-        } else if (msg.getStatus() == MessageInfo.MSG_STATUS_DOWNLOADING) {
-            fileStatusText.setText(R.string.downloading);
-        } else if (msg.getStatus() == MessageInfo.MSG_STATUS_DOWNLOADED) {
-            fileStatusText.setText(R.string.downloaded);
-        } else if (msg.getStatus() == MessageInfo.MSG_STATUS_UN_DOWNLOAD) {
-            fileStatusText.setText(R.string.un_download);
+        } else if (msg.getStatus() == MessageInfo.MSG_STATUS_SENDING) {
+            fileStatusText.setText(R.string.sending);
+        } else if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL) {
+            fileStatusText.setText(R.string.send_failed);
+        } else {
+            if (msg.getDownloadStatus() == MessageInfo.MSG_STATUS_DOWNLOADING) {
+                fileStatusText.setText(R.string.downloading);
+            } else if (msg.getDownloadStatus() == MessageInfo.MSG_STATUS_DOWNLOADED) {
+                if (!msg.isSelf()) {
+                    fileStatusText.setText(R.string.downloaded);
+                } else {
+                    fileStatusText.setText(R.string.sended);
+                }
+            } else if (msg.getDownloadStatus() == MessageInfo.MSG_STATUS_UN_DOWNLOAD) {
+                fileStatusText.setText(R.string.un_download);
+            }
+        }
+
+        if (msg.getDownloadStatus() == MessageInfo.MSG_STATUS_UN_DOWNLOAD) {
             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    msg.setStatus(MessageInfo.MSG_STATUS_DOWNLOADING);
+                    if (msg.getDownloadStatus() == MessageInfo.MSG_STATUS_DOWNLOADING
+                            || msg.getDownloadStatus() == MessageInfo.MSG_STATUS_DOWNLOADED) {
+                        return;
+                    }
+                    msg.setDownloadStatus(MessageInfo.MSG_STATUS_DOWNLOADING);
                     sendingProgress.setVisibility(View.VISIBLE);
                     fileStatusText.setText(R.string.downloading);
                     fileElem.downloadFile(path, new V2TIMDownloadCallback() {
@@ -85,14 +105,17 @@ public class ForwardMessageFileHolder extends ForwardMessageBaseHolder {
                         @Override
                         public void onSuccess() {
                             msg.setDataPath(path);
-                            fileStatusText.setText(R.string.downloaded);
-                            msg.setStatus(MessageInfo.MSG_STATUS_DOWNLOADED);
+                            if (!msg.isSelf()) {
+                                fileStatusText.setText(R.string.downloaded);
+                            } else {
+                                fileStatusText.setText(R.string.sended);
+                            }
+                            msg.setDownloadStatus(MessageInfo.MSG_STATUS_DOWNLOADED);
                             sendingProgress.setVisibility(View.GONE);
                             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ToastUtil.toastLongMessage("文件路径:" + path);
-
+                                    FileUtil.openFile(path, fileName);
                                 }
                             });
                         }
@@ -101,5 +124,4 @@ public class ForwardMessageFileHolder extends ForwardMessageBaseHolder {
             });
         }
     }
-
 }

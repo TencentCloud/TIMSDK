@@ -142,7 +142,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (!TextUtils.isEmpty(path)) {
                 GlideEngine.loadImage(contactViewHolder.mUserIconView, path, null);
             } else {
-                contactViewHolder.mUserIconView.setImageResource(R.drawable.default_head);
+                contactViewHolder.mUserIconView.setImageResource(R.drawable.default_user_icon);
             }
             if (text != null) {
                 if (mViewType == CONVERSATION_TYPE) {

@@ -5,6 +5,7 @@ import com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationInfo;
 import com.tencent.qcloud.tim.uikit.modules.conversation.interfaces.IConversationAdapter;
 import com.tencent.qcloud.tim.uikit.modules.conversation.interfaces.IConversationProvider;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class ConversationProvider implements IConversationProvider {
 
     private ArrayList<ConversationInfo> mDataSource = new ArrayList();
-    private ConversationListAdapter mAdapter;
+    private final List<WeakReference<ConversationListAdapter>> mAdapterList = new ArrayList<>();
 
     @Override
     public List<ConversationInfo> getDataSource() {
@@ -149,21 +150,27 @@ public class ConversationProvider implements IConversationProvider {
     public void clear() {
         mDataSource.clear();
         updateAdapter();
-        mAdapter = null;
+        mAdapterList.clear();
     }
 
     /**
      * 会话会话列界面，在数据源更新的地方调用
      */
     public void updateAdapter() {
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
+        for(WeakReference<ConversationListAdapter> weakReference : mAdapterList) {
+            IConversationAdapter adapter = weakReference.get();
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 
     public void updateAdapter(String id) {
-        if (mAdapter != null) {
-            mAdapter.notifyDataSourceChanged(id);
+        for(WeakReference<ConversationListAdapter> weakReference : mAdapterList) {
+            ConversationListAdapter adapter = weakReference.get();
+            if (adapter != null) {
+                adapter.notifyDataSourceChanged(id);
+            }
         }
     }
 
@@ -174,6 +181,9 @@ public class ConversationProvider implements IConversationProvider {
      */
     @Override
     public void attachAdapter(IConversationAdapter adapter) {
-        this.mAdapter = (ConversationListAdapter) adapter;
+        if (adapter instanceof ConversationListAdapter) {
+            WeakReference<ConversationListAdapter> adapterWeakReference = new WeakReference<>((ConversationListAdapter) adapter);
+            this.mAdapterList.add(adapterWeakReference);
+        }
     }
 }

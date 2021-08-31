@@ -38,4 +38,8 @@ public class DeviceUtil {
         }
         return false;
     }
+
+    public static boolean isVivoX21() {
+        return "vivo X21".equalsIgnoreCase(Build.MODEL);
+    }
 }

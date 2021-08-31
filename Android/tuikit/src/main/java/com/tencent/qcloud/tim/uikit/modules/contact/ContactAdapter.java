@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.tencent.imsdk.v2.V2TIMFriendApplicationResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
@@ -19,8 +21,6 @@ import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngi
 import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
 
 import java.util.List;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
@@ -124,9 +124,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         } else {
             if (TextUtils.isEmpty(contactBean.getAvatarurl())) {
                 if (contactBean.isGroup()) {
-                    holder.avatar.setImageResource(R.drawable.default_head);
+                    holder.avatar.setImageResource(R.drawable.default_user_icon);
                 } else {
-                    holder.avatar.setImageResource(R.drawable.default_head);
+                    holder.avatar.setImageResource(R.drawable.default_user_icon);
                 }
             } else {
                 GlideEngine.loadImage(holder.avatar, Uri.parse(contactBean.getAvatarurl()));

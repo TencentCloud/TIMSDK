@@ -96,8 +96,8 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                         messageText.setText(Html.fromHtml(result));
                         messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
                     }
-                    timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(lastMsg.getMsgTime() * 1000)));
                 }
+                timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(lastMsg.getMsgTime() * 1000)));
             }
         }
 
@@ -140,9 +140,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             unreadText.setVisibility(View.GONE);
         }
 
-        if (conversation.getIconUrlList() != null) {
-            conversationIconView.setConversation(conversation);
-        }
+        conversationIconView.setConversation(conversation);
 
         if (conversation.isShowDisturbIcon()) {
             disturbView.setVisibility(View.VISIBLE);

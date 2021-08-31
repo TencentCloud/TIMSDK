@@ -52,18 +52,10 @@ public class TUIKitLive {
         TUIKitListenerManager.getInstance().addConversationListener(sTUIConversationControllerListener);
     }
 
-    private static void unregisterDelegates() {
-        TUIKitListenerManager.getInstance().removeChatListener(sTUIChatControllerListener);
-        TUIKitListenerManager.getInstance().removeMessageListener(sTUIConversationControllerListener);
-        sTUIChatControllerListener = null;
-        sTUIConversationControllerListener = null;
-    }
-
     /**
      * 释放一些资源等，一般可以在退出登录时调用
      */
     public static void unInit() {
-        unregisterDelegates();
     }
 
     /**

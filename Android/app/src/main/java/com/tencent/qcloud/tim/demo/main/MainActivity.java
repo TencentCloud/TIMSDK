@@ -3,7 +3,6 @@ package com.tencent.qcloud.tim.demo.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -15,16 +14,12 @@ import com.heytap.msp.push.HeytapPushManager;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.common.ApiException;
-import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
-import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.contact.ContactFragment;
 import com.tencent.qcloud.tim.demo.conversation.ConversationFragment;
-import com.tencent.qcloud.tim.demo.helper.TUIKitLiveListenerManager;
 import com.tencent.qcloud.tim.demo.helper.IBaseLiveListener;
+import com.tencent.qcloud.tim.demo.helper.TUIKitLiveListenerManager;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
 import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService;
 import com.tencent.qcloud.tim.demo.thirdpush.OPPOPushImpl;
@@ -38,8 +33,6 @@ import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
 import com.tencent.qcloud.tim.uikit.utils.FileUtil;
 import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
-
-import java.util.List;
 
 import static com.tencent.qcloud.tim.demo.DemoApplication.isSceneEnable;
 
@@ -187,7 +180,6 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
                 current = new ProfileFragment();
                 mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_selected), null, null);
-
                 break;
             default:
                 break;

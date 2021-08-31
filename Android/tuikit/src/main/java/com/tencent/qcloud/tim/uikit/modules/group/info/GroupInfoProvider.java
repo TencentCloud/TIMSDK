@@ -136,11 +136,8 @@ public class GroupInfoProvider {
                 }
                 mGroupMembers.addAll(members);
                 mGroupInfo.setMemberDetails(mGroupMembers);
-                if (v2TIMGroupMemberInfoResult.getNextSeq() != 0){
-                    loadGroupMembers(v2TIMGroupMemberInfoResult.getNextSeq(), callBack);
-                } else {
-                    callBack.onSuccess(mGroupInfo);
-                }
+                mGroupInfo.setNextSeq(v2TIMGroupMemberInfoResult.getNextSeq());
+                callBack.onSuccess(mGroupInfo);
             }
         });
     }

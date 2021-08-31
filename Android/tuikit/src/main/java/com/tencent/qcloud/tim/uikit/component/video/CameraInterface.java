@@ -357,6 +357,13 @@ public class CameraInterface implements Camera.PreviewCallback {
         this.mHolder = holder;
         if (mCamera != null) {
             try {
+                if (DeviceUtil.isVivoX21()) {
+                    if (mCamera != null) {
+                        mCamera.release();
+                        mCamera = null;
+                    }
+                    openCamera(SELECTED_CAMERA);
+                }
                 mParams = mCamera.getParameters();
                 Camera.Size previewSize = CameraParamUtil.getInstance().getPreviewSize(mParams
                         .getSupportedPreviewSizes(), 1000, screenProp);
@@ -518,7 +525,16 @@ public class CameraInterface implements Camera.PreviewCallback {
         mCamera.setParameters(mParams);
         mCamera.unlock();
         mediaRecorder.reset();
-        mediaRecorder.setCamera(mCamera);
+        if (DeviceUtil.isVivoX21()) {
+            mCamera.release();
+            mCamera = null;
+            openCamera(SELECTED_CAMERA);
+            mCamera.setDisplayOrientation(90);
+            mCamera.unlock();
+            mediaRecorder.setCamera(mCamera);
+        } else {
+            mediaRecorder.setCamera(mCamera);
+        }
         mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);

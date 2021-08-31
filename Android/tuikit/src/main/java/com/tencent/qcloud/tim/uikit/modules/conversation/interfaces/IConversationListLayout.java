@@ -86,4 +86,11 @@ public interface IConversationListLayout {
      */
     void setAdapter(IConversationAdapter adapter);
 
+    /**
+     * 是否显示搜索框
+     *
+     * @param show
+     */
+    void showSearchBar(boolean show);
+
 }

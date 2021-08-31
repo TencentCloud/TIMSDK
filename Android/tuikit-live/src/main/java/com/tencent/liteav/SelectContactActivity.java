@@ -76,6 +76,7 @@ public class SelectContactActivity extends AppCompatActivity {
     private UserModel mSelfModel;
     private String mGroupId;
     private int mCallType = ITRTCAVCall.TYPE_AUDIO_CALL;
+    private long mNextSeq = 0;
 
     public static void start(Context context, String groupId, int type) {
         Intent starter = new Intent(context, SelectContactActivity.class);
@@ -91,6 +92,7 @@ public class SelectContactActivity extends AppCompatActivity {
         setContentView(R.layout.audiocall_activity_select_contact);
         mGroupId = getIntent().getStringExtra(GROUP_ID);
         mCallType = getIntent().getIntExtra(CALL_TYPE, ITRTCAVCall.TYPE_AUDIO_CALL);
+        mNextSeq =0;
         if (TextUtils.isEmpty(mGroupId)) {
             ToastUtil.toastShortMessage(getString(R.string.group_id_null));
             finish();
@@ -151,6 +153,37 @@ public class SelectContactActivity extends AppCompatActivity {
             }
         });
         mGroupMemberListRv.setAdapter(mGroupMemberListAdapter);
+        mGroupMemberListRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int lastCompletelyVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
+                //TUILiveLog.i(TAG, "lastCompletelyVisibleItemPosition: "+lastCompletelyVisibleItemPosition);
+                if(lastCompletelyVisibleItemPosition==layoutManager.getItemCount()-1) {
+                    TUILiveLog.i(TAG, "arrive foot");
+
+                    if (mNextSeq != 0) {
+                        loadGroupMembers(mNextSeq, new ITUILiveCallBack() {
+                            @Override
+                            public void onSuccess(Object data) {
+                                mUserModelList.clear();
+                                mUserModelList.addAll(mGroupMemberList.values());
+                                mGroupMemberListAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onError(String module, int errCode, String errMsg) {
+                                mUserModelList.clear();
+                                mGroupMemberListAdapter.notifyDataSetChanged();
+                                TUILiveLog.e(TAG, "loadGroupMembers failed, module:" + module + "|errCode:" + errCode + "|errMsg:" + errMsg);
+                            }
+                        });
+                    }
+                }
+            }
+        });
 
         mSearchEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -262,11 +295,8 @@ public class SelectContactActivity extends AppCompatActivity {
                     entity.mUserModel = userModel;
                     mGroupMemberList.put(entity.mUserModel.userId, entity);
                 }
-                if (v2TIMGroupMemberInfoResult.getNextSeq() != 0) {
-                    loadGroupMembers(v2TIMGroupMemberInfoResult.getNextSeq(), callBack);
-                } else {
-                    callBack.onSuccess(mGroupId);
-                }
+                mNextSeq = v2TIMGroupMemberInfoResult.getNextSeq();
+                callBack.onSuccess(mGroupId);
             }
         });
     }

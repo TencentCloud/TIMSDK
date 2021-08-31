@@ -69,9 +69,7 @@ public class ForwardCommonHolder extends ForwardBaseHolder {
             unreadText.setVisibility(View.GONE);
         }
 
-        if (conversation.getIconUrlList() != null) {
-            conversationIconView.setConversation(conversation);
-        }
+        conversationIconView.setConversation(conversation);
 
         //// 由子类设置指定消息类型的views
         layoutVariableViews(conversation, position);

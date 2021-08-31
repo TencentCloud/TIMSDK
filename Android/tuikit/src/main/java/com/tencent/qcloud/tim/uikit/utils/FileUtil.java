@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.uikit.utils;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -15,7 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
+import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.TUIKit;
 
 import java.io.BufferedOutputStream;
@@ -655,6 +658,33 @@ public class FileUtil {
         }
 
         return "";
+    }
+
+    public static void openFile(String path, String fileName) {
+        Uri uri = TUIKitFileProvider.getUriForFile(TUIKit.getAppContext(),
+                TUIKit.getAppContext().getApplicationInfo().packageName + ".uikit.fileprovider",
+                new File(path));
+        if (uri == null) {
+            TUIKitLog.e("FileUtil", "openFile failed , uri is null");
+            return;
+        }
+        String fileExtension;
+        if (TextUtils.isEmpty(fileName)) {
+            fileExtension = FileUtil.getFileExtensionFromUrl(path);
+        } else {
+            fileExtension = FileUtil.getFileExtensionFromUrl(fileName);
+        }
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setDataAndType(uri, mimeType);
+        try {
+            Intent chooserIntent = Intent.createChooser(intent, TUIKit.getAppContext().getString(R.string.open_file_tips));
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            TUIKit.getAppContext().startActivity(chooserIntent);
+        } catch (Exception e) {
+            TUIKitLog.e("FileUtil", "openFile failed , " + e.getMessage());
+        }
     }
 
 }

@@ -14,7 +14,6 @@ import java.util.List;
 public class UserIconView extends RelativeLayout {
 
     private SynthesizedImageView mIconView;
-    private DynamicChatUserIconView mDynamicView;
     private int mDefaultImageResId;
     private int mIconRadius;
 
@@ -33,20 +32,8 @@ public class UserIconView extends RelativeLayout {
         init(attrs);
     }
 
-    public void setDynamicChatIconView(DynamicChatUserIconView dynamicView) {
-        mDynamicView = dynamicView;
-        mDynamicView.setLayout(this);
-        mDynamicView.setMainViewId(R.id.profile_icon_group);
-        if (mDynamicView.getIconRadius() >= 0) {
-            mIconView.setRadius(mDynamicView.getIconRadius());
-        }
-    }
-
     public void invokeInformation(MessageInfo messageInfo) {
-        mIconView.load();
-        if (mDynamicView != null) {
-            mDynamicView.parseInformation(messageInfo);
-        }
+        mIconView.load(null);
     }
 
     private void init(AttributeSet attributeSet) {
@@ -80,7 +67,7 @@ public class UserIconView extends RelativeLayout {
     }
 
     public void setIconUrls(List<Object> iconUrls) {
-        mIconView.displayImage(iconUrls).load();
+        mIconView.displayImage(iconUrls).load(null);
     }
 
 }

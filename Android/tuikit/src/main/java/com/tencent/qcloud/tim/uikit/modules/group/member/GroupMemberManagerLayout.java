@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -15,6 +16,8 @@ import android.widget.LinearLayout;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
 import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfo;
+import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfoFragment;
+import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfoLayout;
 import com.tencent.qcloud.tim.uikit.modules.group.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tim.uikit.utils.PopWindowUtil;
 
@@ -26,6 +29,7 @@ public class GroupMemberManagerLayout extends LinearLayout implements IGroupMemb
     private GroupMemberManagerAdapter mAdapter;
     private IGroupMemberRouter mGroupMemberManager;
     private GroupInfo mGroupInfo;
+    private GroupInfoFragment.GroupMembersListener mGroupMembersListener;
 
     public GroupMemberManagerLayout(Context context) {
         super(context);
@@ -63,6 +67,34 @@ public class GroupMemberManagerLayout extends LinearLayout implements IGroupMemb
         });
         GridView gridView = findViewById(R.id.group_all_members);
         gridView.setAdapter(mAdapter);
+
+        // 监听listview滚到最底部
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    // 当不滚动时
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        // 判断滚动到底部
+                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                            if (mGroupMembersListener != null && mGroupInfo.getNextSeq() != 0) {
+                                mGroupMembersListener.loadMoreGroupMember(mGroupInfo.getNextSeq());
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+            }
+        });
+    }
+
+    public void setGroupMembersListener(GroupInfoFragment.GroupMembersListener listener) {
+        mGroupMembersListener = listener;
     }
 
     public TitleBarLayout getTitleBar() {
