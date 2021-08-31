@@ -6,7 +6,7 @@
 [最新基础版 IM SDK 下载](https://im.sdk.qcloud.com/download/standard/5.1.65/imsdk-5.1.65.aar)
 
 ### 增强版
-[最新增强版 IM SDK 下载](https://im.sdk.qcloud.com/download/plus/5.5.897/imsdk-plus-5.5.897.aar)
+[最新增强版 IM SDK 下载](https://im.sdk.qcloud.com/download/plus/5.6.1200/imsdk-plus-5.6.1200.aar)
 
 ### [基础版与增强版差异对比](https://github.com/tencentyun/TIMSDK#%E5%9F%BA%E7%A1%80%E7%89%88%E4%B8%8E%E5%A2%9E%E5%BC%BA%E7%89%88%E5%B7%AE%E5%BC%82%E5%AF%B9%E6%AF%94)
 
