@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_left"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:paddingTop="12dp"
+    android:paddingLeft="14.85dp"
+    android:orientation="horizontal">
+
+    <CheckBox
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/select_checkbox"
+        android:button="@drawable/checkbox_selector"
+        android:layout_marginRight="6.23dp"
+        android:visibility="gone" />
+
+        <com.tencent.qcloud.tim.uikit.modules.conversation.base.ConversationIconView
+            android:id="@+id/conversation_icon"
+            android:layout_width="@dimen/conversation_avatar_width"
+            android:layout_height="@dimen/conversation_avatar_height" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:paddingTop="1.37dp"
+            android:paddingLeft="11.43dp"
+            android:paddingRight="18.11dp"
+            android:layout_height="62.3dp">
+
+            <TextView
+                android:id="@+id/conversation_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top|left"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/black_font_color"
+                android:text="aaa"
+                android:textSize="16.3sp" />
+
+            <TextView
+                android:id="@+id/conversation_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:textColor="@color/conversation_time_color"
+                android:textSize="11.14sp" />
+
+
+            <TextView
+                android:id="@+id/conversation_at_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="15.54dp"
+                android:layout_above="@+id/view_line"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/list_bottom_text_bg"
+                android:textSize="12.86sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/conversation_last_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="48dp"
+                android:layout_marginBottom="15.54dp"
+                android:layout_above="@+id/view_line"
+                android:layout_toRightOf="@+id/conversation_at_msg"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/list_bottom_text_bg"
+                android:textSize="12.86sp" />
+
+            <ImageView
+                android:id="@+id/not_disturb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_above="@+id/view_line"
+                android:layout_marginBottom="15.54dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:visibility="gone"
+                android:src="@drawable/ic_disturb" />
+
+            <com.tencent.qcloud.tim.uikit.component.UnreadCountTextView
+                android:id="@+id/conversation_unread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_above="@+id/view_line"
+                android:layout_marginBottom="15.54dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="#fff"
+                android:textSize="10sp" />
+
+            <View
+                android:id="@+id/view_line"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="0.3dp"
+                android:background="@color/split_lint_color" />
+        </RelativeLayout>
+
+</LinearLayout>

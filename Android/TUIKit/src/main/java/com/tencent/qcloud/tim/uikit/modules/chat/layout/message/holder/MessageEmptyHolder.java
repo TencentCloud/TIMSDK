@@ -1,0 +1,82 @@
+package com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder;
+
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.tencent.qcloud.tim.uikit.R;
+import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+import com.tencent.qcloud.tim.uikit.utils.DateTimeUtil;
+
+import java.util.Date;
+
+public abstract class MessageEmptyHolder extends MessageBaseHolder {
+
+    public TextView chatTimeText;
+    public FrameLayout msgContentFrame;
+    public CheckBox mMutiSelectCheckBox;
+    public RelativeLayout rightGroupLayout;
+    public RelativeLayout mContentLayout;
+
+    public MessageEmptyHolder(View itemView) {
+        super(itemView);
+        rootView = itemView;
+
+        chatTimeText = itemView.findViewById(R.id.chat_time_tv);
+        msgContentFrame = itemView.findViewById(R.id.msg_content_fl);
+        mMutiSelectCheckBox = itemView.findViewById(R.id.select_checkbox);
+        rightGroupLayout = itemView.findViewById(R.id.right_group_layout);
+        mContentLayout = itemView.findViewById(R.id.messsage_content_layout);
+        initVariableLayout();
+    }
+
+    public abstract int getVariableLayout();
+
+    private void setVariableLayout(int resId) {
+        if (msgContentFrame.getChildCount() == 0) {
+            View.inflate(rootView.getContext(), resId, msgContentFrame);
+        }
+        initVariableViews();
+    }
+
+    private void initVariableLayout() {
+        if (getVariableLayout() != 0) {
+            setVariableLayout(getVariableLayout());
+        }
+    }
+
+    public abstract void initVariableViews();
+
+    @Override
+    public void layoutViews(final MessageInfo msg, final int position) {
+
+        //// 时间线设置
+        if (properties.getChatTimeBubble() != null) {
+            chatTimeText.setBackground(properties.getChatTimeBubble());
+        }
+        if (properties.getChatTimeFontColor() != 0) {
+            chatTimeText.setTextColor(properties.getChatTimeFontColor());
+        }
+        if (properties.getChatTimeFontSize() != 0) {
+            chatTimeText.setTextSize(properties.getChatTimeFontSize());
+        }
+
+        if (position > 1) {
+            MessageInfo last = mAdapter.getItem(position - 1);
+            if (last != null) {
+                if (msg.getMsgTime() - last.getMsgTime() >= 5 * 60) {
+                    chatTimeText.setVisibility(View.VISIBLE);
+                    chatTimeText.setText(DateTimeUtil.getTimeFormatText(new Date(msg.getMsgTime() * 1000)));
+                } else {
+                    chatTimeText.setVisibility(View.GONE);
+                }
+            }
+        } else {
+            chatTimeText.setVisibility(View.VISIBLE);
+            chatTimeText.setText(DateTimeUtil.getTimeFormatText(new Date(msg.getMsgTime() * 1000)));
+        }
+    }
+
+}
