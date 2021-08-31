@@ -32,9 +32,11 @@
  */
 @property (nonatomic, strong) NSString *name;
 /**
- *  群成员头像
+ *  群成员头像及url
  */
 @property (nonatomic, strong) UIImage *avatarImage;
+@property (nonatomic, strong) NSString *avatarUrl;
+
 /**
  *  成员标签，作为不同状态的标识符。
  *  tag = 1，该成员可以添加，待添加进群。可以理解为未进群且为邀请者联系人的用户 tag 赋值为1。
@@ -80,8 +82,7 @@
  *  设置数据
  *  根据传入的 data 设置单元的头像和群昵称标签。
  *  本函数同时会执行一次布局设置，设置好单元的大小、边距等布局信息。
- *
- *  @param data 传入的群成员单元数据源
  */
-- (void)setData:(TGroupMemberCellData *)data;
+@property (nonatomic, strong) TGroupMemberCellData *data;
+
 @end

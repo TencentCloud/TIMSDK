@@ -24,8 +24,17 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 @implementation TUIConversationListController
 
+- (instancetype)init
+{
+    if (self = [super init]) {
+        self.showSearchBar = YES;
+    }
+    return self;
+}
 
-- (void)viewDidLoad {
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
 
     [self setupViews];
@@ -34,16 +43,14 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setupViews
 {
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
-    _searchBar = [[TUISearchBar alloc] initWithEntrance:YES];
-    _searchBar.delegate = self;
-    _searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 44);
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     _tableView.tableFooterView = [[UIView alloc] init];
     _tableView.backgroundColor = self.view.backgroundColor;
@@ -51,8 +58,14 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [_tableView registerClass:[TUIConversationCell class] forCellReuseIdentifier:kConversationCell_ReuseId];
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    _tableView.tableHeaderView = self.searchBar;
     [self.view addSubview:_tableView];
+    
+    if (self.showSearchBar) {
+        self.searchBar = [[TUISearchBar alloc] initWithEntrance:YES];
+        self.searchBar.delegate = self;
+        self.searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 44);
+        self.tableView.tableHeaderView = self.searchBar;
+    }
 
     @weakify(self)
     [RACObserve(self.viewModel, dataList) subscribeNext:^(id  _Nullable x) {

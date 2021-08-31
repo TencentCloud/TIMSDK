@@ -24,13 +24,21 @@
  *  @param groupMember 选择的成员的对应群成员信息源，包含对应群成员的 ID、头像、群昵称等。
  */
 - (void)groupMembersView:(TUIGroupMembersView *)groupMembersView didSelectGroupMember:(TGroupMemberCellData *)groupMember;
+
+/**
+ *  加载更多数据
+ *
+ *  @param groupMembersView 委托者，当前群成员视图。
+ *  @param completion 完成加载后的数据回调
+ */
+- (void)groupMembersView:(TUIGroupMembersView *)groupMembersView didLoadMoreData:(void(^)(NSArray<TGroupMemberCellData *> *))completion;
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                       TUIGroupMembersView
 //
-/////////////////////////////////////////////////////////////////////////////////
+/// //////////////////////////////////////////////////////////////////////////////
 @interface TUIGroupMembersView : UIView
 
 /**
@@ -54,6 +62,11 @@
  *  委托类，负责实现 TGroupMembersViewDelegate 委托。
  */
 @property (nonatomic, weak) id<TGroupMembersViewDelegate> delegate;
+
+/**
+ * 上拉加载更多的指示器
+ */
+@property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
 
 /**
  *  设置数据。根据传入的数据对当前视图进行设置。

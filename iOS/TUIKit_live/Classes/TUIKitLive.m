@@ -76,9 +76,8 @@
 }
 
 - (void)logout:(TUILiveRequestCallback)callback {
-    if ([self isFloatWindwoShow]) {
-        [self exitFloatWindow];
-    }
+    [self exitFloatWindow];
+    
     if ([TUIKitLive shareInstance].isAttachedTUIKit) {
         return;
     }

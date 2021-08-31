@@ -36,7 +36,7 @@
 
     _title = args.groupName;
     _avatarImage = DefaultGroupAvatarImage;
-
+    _avatarUrl = [NSURL URLWithString:args.faceURL];
     _identifier = args.groupID;
 
     return self;

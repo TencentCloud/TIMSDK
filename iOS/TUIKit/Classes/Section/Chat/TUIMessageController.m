@@ -369,6 +369,8 @@
                 data.name = data.identifier;
                 if (msg.nameCard.length > 0) {
                     data.name = msg.nameCard;
+                } else if (msg.friendRemark.length > 0) {
+                    data.name = msg.friendRemark;
                 } else if (msg.nickName.length > 0){
                     data.name = msg.nickName;
                 }
@@ -412,6 +414,8 @@
             data.name = data.identifier;
             if (msg.nameCard.length > 0) {
                 data.name = msg.nameCard;
+            } else if (msg.friendRemark.length > 0) {
+                data.name = msg.friendRemark;
             } else if (msg.nickName.length > 0){
                 data.name = msg.nickName;
             }
@@ -566,10 +570,8 @@
         return;
     }
     @weakify(self)
-    // 会议群不支持设置该参数
-    if (![_conversationData.groupType isEqualToString:GroupType_Meeting]) {
-        imMsg.isExcludedFromUnreadCount = [TUIKit sharedInstance].config.isExcludedFromUnreadCount;
-    }
+
+    imMsg.isExcludedFromUnreadCount = [TUIKit sharedInstance].config.isExcludedFromUnreadCount;
     imMsg.isExcludedFromLastMessage = [TUIKit sharedInstance].config.isExcludedFromLastMessage;
     
     // 设置离线推送

@@ -23,6 +23,7 @@
 @property(nonatomic,strong) UIButton *doneBtn;
 @property(nonatomic,strong) UICollectionView *userPanel;
 @property(nonatomic,strong) UITableView *selectTable;
+@property(nonatomic,strong) UIActivityIndicatorView *indicatorView;
 @property(nonatomic,strong) NSMutableArray <UserModel *>*selectedUsers;
 
 @property(nonatomic,assign) CGFloat topStartPosition;
@@ -33,6 +34,8 @@
 @property(nonatomic,assign) NSInteger userPanelRowCount;
 
 @property(nonatomic,strong) NSMutableArray *memberList;
+@property(nonatomic,assign) NSInteger pageIndex;
+@property(nonatomic,assign) BOOL isNoData;
 @end
 
 @implementation TUISelectGroupMemberViewController {
@@ -65,6 +68,8 @@
     self.topStartPosition = topPadding + (navBarHeight > 0 ? navBarHeight : 44);
     self.memberList = [NSMutableArray array];
     self.selectedUsers = [NSMutableArray array];
+    self.indicatorView.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMessageController_Header_Height);
+    self.selectTable.tableFooterView = self.indicatorView;
     [self getMembers];
 }
 
@@ -129,6 +134,14 @@
         _selectTable.mm_width(self.view.mm_w).mm_top(self.topStartPosition + 10).mm_flexToBottom(0);
     }
     return _selectTable;
+}
+
+- (UIActivityIndicatorView *)indicatorView {
+    if (_indicatorView == nil) {
+        _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _indicatorView.hidesWhenStopped = YES;
+    }
+    return _indicatorView;
 }
 
 ///更新 UI
@@ -240,6 +253,28 @@
     [self updateUserPanel];
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if(scrollView.contentOffset.y > 0 && (scrollView.contentOffset.y >= scrollView.bounds.origin.y)){
+        if (self.indicatorView.isAnimating) {
+            return;
+        }
+        [self.indicatorView startAnimating];
+        __weak typeof(self) weakSelf = self;
+        [self loadData:^(BOOL success, NSString *desc, NSArray<UserModel *> *datas) {
+            [weakSelf.indicatorView stopAnimating];
+            if (!success) {
+                return;
+            }
+            [weakSelf.memberList addObjectsFromArray:datas];
+            [weakSelf.selectTable reloadData];
+            [weakSelf.selectTable layoutIfNeeded];
+            if (datas.count == 0) {
+                [weakSelf.selectTable setContentOffset:CGPointMake(0, scrollView.contentOffset.y - TMessageController_Header_Height) animated:YES];
+            }
+        }];
+    }
+}
 
 #pragma mark UICollectionViewDelegate
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -310,8 +345,27 @@
 - (void)getMembers {
     @weakify(self)
     [self getMembersWithOptionalStyle];
-    [[V2TIMManager sharedInstance] getGroupMemberList:self.groupId filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:0 succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
-        @strongify(self)
+    [self loadData:^(BOOL success, NSString *desc, NSArray<UserModel *> *datas) {
+        if (!success) {
+            return;
+        }
+        self_weak_.memberList = [NSMutableArray arrayWithArray:datas];
+        [self_weak_.selectTable reloadData];
+    }];
+}
+
+- (void)loadData:(void(^)(BOOL, NSString *, NSArray<UserModel *> *))completion {
+    if (self.isNoData) {
+        if (completion) {
+            completion(YES, @"there is no more data", @[]);
+        }
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    [[V2TIMManager sharedInstance] getGroupMemberList:self.groupId filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:self.pageIndex succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+        weakSelf.pageIndex = nextSeq;
+        weakSelf.isNoData = (nextSeq == 0);
+        NSMutableArray *arrayM = [NSMutableArray array];
         for (V2TIMGroupMemberFullInfo *info in memberList) {
             if ([info.userID isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
                 continue;
@@ -330,10 +384,16 @@
             if (info.faceURL != nil) {
                 model.avatar = info.faceURL;
             }
-            [self.memberList addObject:model];
+            [arrayM addObject:model];
         }
-        [self.selectTable reloadData];
-    } fail:nil];
+        if (completion) {
+            completion(YES, nil, [NSArray arrayWithArray:arrayM]);
+        }
+    } fail:^(int code, NSString *desc) {
+        if (completion) {
+            completion(NO, desc, @[]);
+        }
+    }];
 }
 
 - (void)getMembersWithOptionalStyle {
