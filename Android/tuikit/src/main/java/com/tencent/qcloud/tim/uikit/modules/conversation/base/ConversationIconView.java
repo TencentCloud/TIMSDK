@@ -15,6 +15,7 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
+import com.tencent.qcloud.tim.uikit.utils.BackgroundTasks;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
 import com.tencent.qcloud.tim.uikit.utils.ScreenUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
@@ -67,7 +68,7 @@ public class ConversationIconView extends RelativeLayout {
      */
     public void setIconUrls(final List<Object> iconUrls, final String conversationId) {
         // 需要在主线程中执行，以免写缓存出现问题
-        post(new Runnable() {
+        BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (mIconView instanceof SynthesizedImageView) {
