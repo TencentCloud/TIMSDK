@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <attr name="toolbar" format="reference" />
+    <attr name="album.dropdown.title.color" format="reference|color" />
+    <attr name="album.dropdown.count.color" format="reference|color" />
+    <attr name="album.element.color" format="reference|color" />
+    <attr name="album.thumbnail.placeholder" format="reference|color" />
+    <attr name="album.emptyView" format="reference" />
+    <attr name="album.emptyView.textColor" format="reference|color" />
+    <attr name="listPopupWindowStyle" format="reference" />
+    <attr name="page.bg" format="reference|color" />
+    <attr name="bottomToolbar.bg" format="reference|color" />
+    <attr name="bottomToolbar.preview.textColor" format="reference|color" />
+    <attr name="bottomToolbar.apply.textColor" format="reference|color" />
+    <attr name="preview.bottomToolbar.back.textColor" format="reference|color" />
+    <attr name="preview.bottomToolbar.apply.textColor" format="reference|color" />
+    <attr name="item.placeholder" format="reference|color" />
+    <attr name="item.checkCircle.backgroundColor" format="reference|color" />
+    <attr name="item.checkCircle.borderColor" format="reference|color" />
+    <attr name="capture.textColor" format="reference|color" />
+
+    <attr name="indexBarTextSize" format="dimension" />
+
+    <declare-styleable name="IndexBar">
+        <attr name="indexBarTextSize" />
+        <attr name="indexBarPressBackground" format="color" />
+    </declare-styleable>
+
+    <attr name="iconSize" format="dimension" />
+    <attr name="iconMargin" format="dimension" />
+    <attr name="iconSrc" format="reference" />
+    <attr name="iconLeft" format="reference" />
+    <attr name="iconRight" format="reference" />
+    <attr name="duration_max" format="integer" />
+    <declare-styleable name="JCameraView">
+        <attr name="iconSize" />
+        <attr name="iconMargin" />
+        <attr name="iconSrc" />
+        <attr name="iconLeft" />
+        <attr name="iconRight" />
+        <attr name="duration_max" />
+    </declare-styleable>
+
+    <declare-styleable name="pickerview">
+        <attr name="wheelview_gravity">
+            <enum name="center" value="17" />
+            <enum name="left" value="3" />
+            <enum name="right" value="5" />
+        </attr>
+        <attr name="wheelview_textSize" format="dimension" />
+        <attr name="wheelview_textColorOut" format="color" />
+        <attr name="wheelview_textColorCenter" format="color" />
+        <attr name="wheelview_dividerColor" format="color" />
+        <attr name="wheelview_lineSpacingMultiplier" format="float" />
+    </declare-styleable>
+
+
+    <declare-styleable name="ShadeImageView">
+        <attr name="shadeRadio" format="dimension" />
+        <attr name="shadeWidth" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SynthesizedImageView">
+        <!--合成图片的背景-->
+        <attr name="synthesized_image_bg" format="color" />
+        <!--合成图片的默认图片-->
+        <attr name="synthesized_default_image" format="reference" />
+        <!--合成图片的尺寸-->
+        <attr name="synthesized_image_size" format="dimension" />
+        <!--多图片之间的空隙间隔-->
+        <attr name="synthesized_image_gap" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="UserIconView">
+        <!--默认头像-->
+        <attr name="default_image" format="reference" />
+        <attr name="image_radius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="LineControllerView">
+        <!-- 名称 -->
+        <attr name="name" format="string"/>
+        <!-- 内容或当前状态 -->
+        <attr name="subject" format="string"/>
+        <!-- 是否是列表中最后一个 -->
+        <attr name="isBottom" format="boolean"/>
+        <!-- 是否可以跳转 -->
+        <attr name="canNav" format="boolean"/>
+        <!-- 是否是开关 -->
+        <attr name="isSwitch" format="boolean"/>
+    </declare-styleable>
+</resources>

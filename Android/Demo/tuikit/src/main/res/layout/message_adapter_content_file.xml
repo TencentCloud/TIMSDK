@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="260dp"
+    android:layout_height="match_parent"
+    android:minHeight="66.8dp"
+    android:paddingLeft="11.35dp"
+    android:paddingRight="11.35dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11.6dp"
+        android:paddingBottom="11.6dp"
+        android:layout_marginRight="13.34dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/file_name_tv"
+            android:layout_width="wrap_content"
+            android:includeFontPadding="false"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_font_color"
+            android:textSize="16.5sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4.25dp">
+
+            <TextView
+                android:id="@+id/file_size_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/black_font_color"
+                android:textSize="11sp" />
+
+
+            <TextView
+                android:id="@+id/file_status_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:includeFontPadding="false"
+                android:text="@string/un_download"
+                android:textColor="@color/black_font_color"
+                android:textSize="11sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/file_icon_iv"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/file_icon"/>
+
+</LinearLayout>

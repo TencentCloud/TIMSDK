@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <View
+        android:background="@color/live_color_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_bgm_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:textStyle="bold"
+                android:textColor="@color/live_dark_black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_bgm_actor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/live_light_black"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/iv_bgm_play"
+            android:layout_gravity="center_vertical"
+            android:layout_width="60dp"
+            android:layout_height="31dp"
+            android:background="@drawable/live_confirm_btn_red_bg"
+            android:text="使用"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:layout_marginEnd="10dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

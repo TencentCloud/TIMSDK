@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.RelativeLayout">
+
+    <ImageView
+        android:id="@+id/audience_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tv_anchor_leave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/live_anchor_offline"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        tools:visibility="visible" />
+
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="@dimen/live_close_btn_width"
+        android:layout_height="@dimen/live_close_btn_width"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/live_btn_close_circle" />
+</merge>

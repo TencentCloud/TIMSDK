@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/selectable_contact_item"
+    android:layout_width="match_parent"
+    android:layout_height="57.5dp"
+    android:background="#fcfcfc"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:paddingLeft="17.3dp">
+
+        <CheckBox
+            android:id="@+id/contact_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:button="@drawable/checkbox_selector"
+            android:clickable="false"
+            android:focusable="false"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="@dimen/contact_avatar_width"
+            android:layout_height="@dimen/contact_avatar_height"
+            android:clickable="false"
+            android:focusable="false"
+            android:src="@drawable/default_user_icon" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp">
+
+            <TextView
+                android:id="@+id/tvCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:textSize="16.3sp"
+                android:clickable="false"
+                android:focusable="false"
+                android:textColor="@color/black_font_color"
+                tools:text="@string/default_friend" />
+
+            <com.tencent.qcloud.tim.uikit.component.UnreadCountTextView
+                android:id="@+id/conversation_unread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="24dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="#fff"
+                android:textSize="10sp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="73.78dp"
+        android:background="@color/split_lint_color" />
+
+</RelativeLayout>

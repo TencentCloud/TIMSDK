@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/live_fl_voice_room_item_img_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp">
+
+        <com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView
+            android:id="@+id/live_civ_voice_room_item_head"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/live_voice_room_ic_head"
+            app:tui_civ_border_width="0dp" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/live_tv_voice_room_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:textColor="#56749E"
+        android:textSize="@dimen/text_size_middle"
+        tools:text="123123" />
+</LinearLayout>

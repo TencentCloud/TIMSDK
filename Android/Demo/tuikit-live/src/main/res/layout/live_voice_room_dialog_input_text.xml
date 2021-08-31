@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_outside_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/rl_inputdlg_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="#B4FFFFFF"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <EditText
+            android:id="@+id/et_input_message"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionUnspecified"
+            android:inputType="text"
+            android:maxLength="32"
+            android:textColor="@color/live_voice_room_color_black"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+        <View android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginStart="6dp"
+            android:background="@color/live_voice_room_color_transparent_black"/>
+
+        <LinearLayout
+            android:id="@+id/confirm_area"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/confrim_btn"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:background="@drawable/live_voice_room_bg_button_border"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:text="@string/live_voice_room_send" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

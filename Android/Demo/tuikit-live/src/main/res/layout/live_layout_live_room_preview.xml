@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/gl_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_close_before_live">
+
+        <com.tencent.liteav.audiosettingkit.CircleImageView
+            android:id="@+id/img_live_room_cover"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/live_ic_avatar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--    <TextView-->
+        <!--        android:id="@+id/tv_live_room_name"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginLeft="10dp"-->
+        <!--        android:text="@string/trtcliveroom_text_room_name"-->
+        <!--        android:textColor="@color/colorWhite"-->
+        <!--        android:textSize="@dimen/trtcliveroom_text_size_large"-->
+        <!--        android:textStyle="bold"-->
+        <!--        app:layout_constraintStart_toEndOf="@+id/img_live_room_cover"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/img_live_room_cover" />-->
+
+        <EditText
+            android:id="@+id/et_live_room_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="7dp"
+            android:background="@null"
+            android:hint="@string/live_hint_live_room_name"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColorHint="@color/live_voice_room_text_color_second"
+            android:textCursorDrawable="@drawable/live_bg_preview_edittext"
+            android:textColor="@color/live_white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/img_live_room_cover"
+            app:layout_constraintTop_toTopOf="@+id/img_live_room_cover" />
+
+        <TextView
+            android:id="@+id/tv_live_room_quality_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/live_text_voice_quality"
+            android:textColor="@color/live_white"
+            android:textSize="@dimen/live_text_size_middle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/img_live_room_cover"
+            app:layout_constraintTop_toBottomOf="@+id/et_live_room_name" />
+
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_live_room_quality_tag"
+            app:layout_constraintStart_toEndOf="@+id/tv_live_room_quality_tag"
+            app:layout_constraintTop_toTopOf="@+id/tv_live_room_quality_tag">
+
+            <RadioButton
+                android:id="@+id/rb_live_room_quality_normal"
+                android:layout_width="34dp"
+                android:layout_height="18dp"
+                android:background="@drawable/live_bg_preview_rb_quality"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/live_voice_quality_standard"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_live_room_quality_tag"
+                app:layout_constraintStart_toEndOf="@+id/tv_live_room_quality_tag"
+                app:layout_constraintTop_toTopOf="@+id/tv_live_room_quality_tag" />
+
+            <RadioButton
+                android:id="@+id/rb_live_room_quality_music"
+                android:layout_width="34dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/live_bg_preview_rb_quality"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:text="@string/live_voice_quality_music"
+                android:textSize="10sp"
+                android:textColor="@color/white" />
+        </RadioGroup>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <ImageButton
+        android:id="@+id/btn_beauty"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="45dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/live_icon_beauty"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_start_room"
+        android:layout_width="190dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="74dp"
+        android:background="@drawable/live_bg_preview_start_btn_border"
+        android:text="@string/live_btn_start_live"
+        android:textColor="@color/white"
+        android:textSize="@dimen/live_text_size_large"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_switch_cam"
+        android:layout_marginTop="45dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/live_icon_camera"
+        android:layout_marginLeft="20dp"
+        android:onClick="onClick"
+        app:layout_constraintStart_toEndOf="@id/btn_beauty"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_close_before_live"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="45dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/live_btn_close_white"
+        android:onClick="onClick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</merge>

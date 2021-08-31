@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/live_voice_room_bg_main_gradient"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_after_live"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="btn_bottom_stop_pk,layout_top_toolbar,layout_bottom_toolbar,layout_chat,view_danmaku"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_bottom_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="btn_bottom_stop_pk,layout_bottom_toolbar,layout_chat,view_danmaku, heart_layout"/>
+
+
+    <!--    <com.tencent.liteav.demo.beauty.view.BeautyPanel-->
+<!--        android:id="@+id/beauty_panel"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:clickable="true"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent" />-->
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.tencent.rtmp.ui.TXCloudVideoView
+        android:id="@+id/video_view_anchor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/layout_pk_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/gl_horizontal"
+        app:layout_constraintLeft_toLeftOf="@id/gl_vertical"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_top_toolbar" />
+
+    <ImageView
+        android:id="@+id/iv_pk_layer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/live_icon_pk_layer"
+        app:layout_constraintBottom_toTopOf="@+id/gl_horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:visibility="visible"/>
+
+    <ImageView
+        android:id="@+id/img_badge"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:visibility="gone"
+        android:src="@drawable/live_shape_red_dot"
+        app:layout_constraintTop_toTopOf="@+id/btn_bottom_stop_pk"
+        app:layout_constraintEnd_toEndOf="@+id/btn_bottom_stop_pk"/>
+
+    <TextView
+        android:id="@+id/btn_bottom_stop_pk"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/live_white"
+        android:text="@string/live_wait_link"
+        android:textSize="@dimen/live_text_size_middle"
+        android:visibility="gone"
+        android:background="@drawable/live_bg_bottom_link_btn"
+        app:layout_constraintBottom_toTopOf="@+id/layout_bottom_toolbar"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--连麦：播放小窗口定义 开始-->
+    <!--连麦：第一个播放小窗口-->
+    <com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget.LiveVideoView
+        android:id="@+id/video_view_link_mic_1"
+        style="@style/TUILiveRoomLinkMic"
+        app:layout_constraintBottom_toTopOf="@+id/btn_bottom_stop_pk"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--连麦：第二个播放小窗口-->
+    <com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget.LiveVideoView
+        android:id="@+id/video_view_link_mic_2"
+        style="@style/TUILiveRoomLinkMic"
+        app:layout_constraintBottom_toTopOf="@+id/video_view_link_mic_1"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--连麦：第三个播放小窗口-->
+    <com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.widget.LiveVideoView
+        android:id="@+id/video_view_link_mic_3"
+        style="@style/TUILiveRoomLinkMic"
+        app:layout_constraintBottom_toTopOf="@+id/video_view_link_mic_2"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <!--连麦：播放小窗口定义 结束-->
+
+
+    <!--    <com.tencent.liteav.liveroom.ui.anchor.AnchorPKSelectView-->
+    <!--        android:id="@+id/anchor_pk_select_view"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="@color/trtcliveroom_color_bg_select_pk"-->
+    <!--        android:visibility="gone"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+    <!--点赞动画-->
+    <com.tencent.qcloud.tim.tuikit.live.component.like.HeartLayout
+        android:id="@+id/heart_layout"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@id/layout_bottom_toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="gone" />
+
+    <com.tencent.qcloud.tim.tuikit.live.modules.liveroom.ui.LiveRoomPreviewLayout
+        android:id="@+id/layout_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+<!--    <com.tencent.liteav.audiosettingkit.AudioEffectPanel-->
+<!--        android:id="@+id/anchor_audio_panel"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        tools:visibility="gone" />-->
+
+    <master.flame.danmaku.ui.widget.DanmakuView
+        android:id="@+id/view_danmaku"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.tencent.qcloud.tim.tuikit.live.component.message.ChatLayout
+        android:id="@+id/layout_chat"
+        android:layout_width="200dp"
+        android:layout_height="180dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        tools:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/layout_bottom_toolbar"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <com.tencent.qcloud.tim.tuikit.live.component.topbar.TopToolBarLayout
+        android:id="@+id/layout_top_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.tencent.qcloud.tim.tuikit.live.component.bottombar.BottomToolBarLayout
+        android:id="@+id/layout_bottom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="20dp"
+        android:layout_height="@dimen/live_bottom_toolbar_height"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/state_tips"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:visibility="gone"
+        android:background="@drawable/live_bg_state_tips"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/live_white"
+        android:textSize="13sp"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/live_status_tips" />
+
+    <com.tencent.qcloud.tim.tuikit.live.component.gift.imp.GiftAnimatorLayout
+        android:id="@+id/lottie_animator_layout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/live_gift_panel_height"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_gift_lottie_view_height" />
+
+    <com.tencent.qcloud.tim.tuikit.live.component.countdown.CountDownTimerView
+        android:id="@+id/countdown_timer_view"
+        android:background="@android:color/transparent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

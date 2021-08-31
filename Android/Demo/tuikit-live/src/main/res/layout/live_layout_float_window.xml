@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_float_window"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/live_voice_room_bg_main_gradient">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_display_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cl_float_window"
+        app:layout_constraintEnd_toEndOf="@+id/cl_float_window"
+        app:layout_constraintStart_toStartOf="@+id/cl_float_window"
+        app:layout_constraintTop_toTopOf="@+id/cl_float_window" />
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="@dimen/live_close_btn_width"
+        android:layout_height="@dimen/live_close_btn_width"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/live_btn_close_circle"
+        app:layout_constraintRight_toRightOf="@+id/cl_float_window"
+        app:layout_constraintTop_toTopOf="@+id/cl_float_window" />
+
+    <Button
+        android:id="@+id/btn_full"
+        android:layout_width="@dimen/live_close_btn_width"
+        android:layout_height="@dimen/live_close_btn_width"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/live_btn_close_circle"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@+id/cl_float_window"
+        app:layout_constraintTop_toTopOf="@+id/cl_float_window" />
+
+    <Button
+        android:id="@+id/btn_volume"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/audio_effect_setting_volume_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/cl_float_window"
+        app:layout_constraintLeft_toLeftOf="@+id/cl_float_window"
+        android:visibility="gone"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

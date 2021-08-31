@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="beauty_category">
+        <item>Beautify</item>
+        <item>Filters</item>
+        <item>Effect</item>
+        <item>Makeup</item>
+        <item>Gesture</item>
+        <item>Cutout</item>
+        <item>Green Backdrop</item>
+    </string-array>
+
+    <string-array name="beauty_style">
+        <item>Beautify (Smooth)</item>
+        <item>Beautify (Natural)</item>
+        <item>Beautify (tu.qq.com)</item>
+    </string-array>
+
+    <string-array name="beauty_type">
+        <item>Beautify</item>
+        <item>Whitening</item>
+        <item>Ruddy</item>
+        <item>Enlarge Eyes</item>
+        <item>Slim Face</item>
+        <item>V-shaped Face</item>
+        <item>Chin</item>
+        <item>Shorten Face</item>
+        <item>Slim Nose</item>
+        <item>Brighten Eyes</item>
+        <item>Whiten Teeth</item>
+        <item>Remove Under Eye Bags</item>
+        <item>Remove Smile Lines</item>
+        <item>Remove Wrinkles</item>
+        <item>Hairline</item>
+        <item>Eye Distance</item>
+        <item>Canthus</item>
+        <item>Lip Shape</item>
+        <item>Nose Wing</item>
+        <item>Nose Position</item>
+        <item>Lip Thickness</item>
+        <item>Face Shape</item>
+    </string-array>
+
+    <string-array name="beauty_filter_type">
+        <item>None</item>
+        <item>Standard</item>
+        <item>Natural</item>
+        <item>Fair</item>
+        <item>Cherry red</item>
+        <item>Traditional Chinese Chic</item>
+        <item>Pure</item>
+        <item>Michelia Alba</item>
+        <item>Vigor</item>
+        <item>Extraordinary</item>
+        <item>Fragrance</item>
+        <item>Whitening</item>
+        <item>Romance</item>
+        <item>Fresh</item>
+        <item>Elegant</item>
+        <item>Rosy</item>
+        <item>Vintage</item>
+        <item>Blues</item>
+        <item>Cool</item>
+        <item>Japanese</item>
+    </string-array>
+
+    <string-array name="beauty_motion_type">
+        <item>None</item>
+        <item>Boom</item>
+        <item>Neon Mouse</item>
+        <item>Starry Earings</item>
+        <item>Cheer for You</item>
+        <item>Cute Constellation</item>
+        <item>Color Ribbon</item>
+        <item>Bang Belt</item>
+        <item>Face Change</item>
+        <item>Purple Kitty</item>
+        <item>Flower Fairy</item>
+        <item>Princess</item>
+    </string-array>
+
+    <string-array name="beauty_cutout_background">
+        <item>No Effect</item>
+        <item>AI Cutout</item>
+    </string-array>
+
+    <string-array name="beauty_green_screen">
+        <item>None</item>
+        <item>Good Luck</item>
+    </string-array>
+
+    <string-array name="beauty_gesture_type">
+        <item>Pikachu</item>
+        <item>Shooting Stars</item>
+        <item>Snow Control</item>
+        <item>Telstar</item>
+        <item>Bottle Cap Challenge</item>
+    </string-array>
+
+    <string-array name="beauty_makeup_type">
+        <item>Harajuku Vintage</item>
+        <item>Cherry</item>
+        <item>Ocean</item>
+        <item>Pink Sunglow</item>
+        <item>Scarlett Johansson</item>
+        <item>Lipstick on Valentine\'s Day</item>
+        <item>Ancientry</item>
+        <item>Harley Quinn</item>
+        <item>Mixed</item>
+    </string-array>
+</resources>

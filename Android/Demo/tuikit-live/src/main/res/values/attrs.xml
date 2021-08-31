@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="BeautyPanelStyle">
+        <!-- 美颜面板 -->
+        <attr name="beautyPanelColorPrimary" format="reference"/>
+        <attr name="beautyPanelSmoothIcon" format="reference" />
+        <attr name="beautyPanelNaturalIcon" format="reference" />
+        <attr name="beautyPanelPituIcon" format="reference" />
+        <attr name="beautyPanelWhiteIcon" format="reference" />
+        <attr name="beautyPanelRuddyIcon" format="reference" />
+        <attr name="beautyPanelBigeyeIcon" format="reference" />
+        <attr name="beautyPanelFaceslimIcon" format="reference" />
+        <attr name="beautyPanelFacevIcon" format="reference" />
+        <attr name="beautyPanelChinIcon" format="reference" />
+        <attr name="beautyPanelFaceshortIcon" format="reference" />
+        <attr name="beautyPanelNoseslimIcon" format="reference" />
+        <attr name="beautyPanelEyeLightenIcon" format="reference" />
+        <attr name="beautyPanelToothWhiteIcon" format="reference" />
+        <attr name="beautyPanelPouchRemoveIcon" format="reference" />
+        <attr name="beautyPanelSmileLinesRemoveIcon" format="reference" />
+        <attr name="beautyPanelWrinkleIcon" format="reference" />
+        <attr name="beautyPanelForeheadIcon" format="reference" />
+        <attr name="beautyPanelEyeDistanceIcon" format="reference" />
+        <attr name="beautyPanelEyeAngleIcon" format="reference" />
+        <attr name="beautyPanelMouthShapeIcon" format="reference" />
+        <attr name="beautyPanelNoseWingIcon" format="reference" />
+        <attr name="beautyPanelNosePositionIcon" format="reference" />
+        <attr name="beautyPanelMouseWidthIcon" format="reference" />
+        <attr name="beautyPanelFaceShapeIcon" format="reference" />
+    </declare-styleable>
+</resources>

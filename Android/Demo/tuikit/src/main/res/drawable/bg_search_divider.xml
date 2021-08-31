@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="line">
+    <!-- 透明背景 -->
+    <solid android:color="@color/colorDivider"/>
+    <!-- 横向分隔区域的宽与纵向分隔区域的高 -->
+    <stroke android:width="1px"/>
+</shape>
