@@ -325,6 +325,20 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         });
     }
 
+    public void getGroupMembers(long nextSeq) {
+        mPresenter.getGroupMembers(nextSeq, new IUIKitCallBack() {
+            @Override
+            public void onSuccess(Object data) {
+                setGroupInfo((GroupInfo) data);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+
+            }
+        });
+    }
+
     private void setGroupInfo(GroupInfo info) {
         if (info == null) {
             return;
@@ -412,5 +426,4 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     public void setParentLayout(Object parent) {
 
     }
-
 }

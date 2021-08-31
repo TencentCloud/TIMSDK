@@ -2,11 +2,8 @@ package com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -28,7 +25,19 @@ public class GlideEngine implements ImageEngine {
         CornerTransform transform = new CornerTransform(TUIKit.getAppContext(), radius);
         RequestOptions options = new RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.default_head)
+                .placeholder(R.drawable.default_user_icon)
+                .transform(transform);
+        Glide.with(TUIKit.getAppContext())
+                .load(filePath)
+                .apply(options)
+                .listener(listener)
+                .into(imageView);
+    }
+
+    public static void loadCornerImageWithoutPlaceHolder(ImageView imageView, String filePath, RequestListener listener, float radius) {
+        CornerTransform transform = new CornerTransform(TUIKit.getAppContext(), radius);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
                 .transform(transform);
         Glide.with(TUIKit.getAppContext())
                 .load(filePath)
@@ -41,6 +50,7 @@ public class GlideEngine implements ImageEngine {
         Glide.with(TUIKit.getAppContext())
                 .load(filePath)
                 .listener(listener)
+                .apply(new RequestOptions().error(R.drawable.default_user_icon))
                 .into(imageView);
     }
 
@@ -84,7 +94,17 @@ public class GlideEngine implements ImageEngine {
         }
         Glide.with(TUIKit.getAppContext())
                 .load(uri)
-                .apply(new RequestOptions().error(R.drawable.default_head))
+                .apply(new RequestOptions().error(R.drawable.default_user_icon))
+                .into(imageView);
+    }
+
+    public static void loadUserIcon(ImageView imageView, Object uri) {
+        if (uri == null) {
+            return;
+        }
+        Glide.with(TUIKit.getAppContext())
+                .load(uri)
+                .apply(new RequestOptions().centerCrop().error(R.drawable.default_user_icon))
                 .into(imageView);
     }
 
@@ -94,7 +114,7 @@ public class GlideEngine implements ImageEngine {
         }
         return Glide.with(TUIKit.getAppContext()).asBitmap()
                 .load(imageUrl)
-                .apply(new RequestOptions().error(R.drawable.default_head))
+                .apply(new RequestOptions().error(R.drawable.default_user_icon))
                 .into(targetImageSize, targetImageSize)
                 .get();
     }

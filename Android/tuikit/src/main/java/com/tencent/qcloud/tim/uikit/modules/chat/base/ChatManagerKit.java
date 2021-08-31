@@ -261,7 +261,6 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
             public void onSuccess() {
                 TUIKitLog.i(TAG, "deleteMessages success");
                 mCurrentProvider.remove(position);
-                ConversationManagerKit.getInstance().loadConversation(0, null);
             }
         });
     }
@@ -287,7 +286,6 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
             public void onSuccess() {
                 TUIKitLog.i(TAG, "deleteMessages success");
                 mCurrentProvider.deleteMessageList(messageInfos);
-                ConversationManagerKit.getInstance().loadConversation(0, null);
             }
         });
     }
@@ -314,7 +312,6 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
                 for(int i = positions.size() -1 ; i >= 0; i--) {
                     mCurrentProvider.remove(positions.get(i));
                 }
-                ConversationManagerKit.getInstance().loadConversation(0, null);
             }
         });
     }
@@ -417,7 +414,6 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
                     return;
                 }
                 mCurrentProvider.updateMessageRevoked(messageInfo.getId());
-                ConversationManagerKit.getInstance().loadConversation(0, null);
             }
         });
     }
@@ -444,12 +440,10 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
 
         String userID = "";
         String groupID = "";
-        String groupType = "";
         boolean isGroup = false;
         if (getCurrentChatInfo().getType() == V2TIMConversation.V2TIM_GROUP) {
             ChatInfo chatInfo = getCurrentChatInfo();
             groupID = chatInfo.getId();
-            groupType = chatInfo.getGroupType();
             isGroup = true;
             entity.chatType = V2TIMConversation.V2TIM_GROUP;
             entity.sender = groupID;
@@ -463,14 +457,7 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
 
         final V2TIMMessage v2TIMMessage = message.getTimMessage();
-        if (!isGroup) {
-            v2TIMMessage.setExcludedFromUnreadCount(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
-        } else if (!TextUtils.isEmpty(groupType) &&
-                (!groupType.equals(TUIKitConstants.GroupType.TYPE_CHAT_ROOM) ||
-                        !groupType.equals(TUIKitConstants.GroupType.TYPE_MEETING))) {
-            v2TIMMessage.setExcludedFromUnreadCount(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
-        }
-
+        v2TIMMessage.setExcludedFromUnreadCount(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
         v2TIMMessage.setExcludedFromLastMessage(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
 
         String msgID = V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, isGroup ? null : userID, isGroup ? groupID : null,
@@ -505,6 +492,9 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
                             callBack.onSuccess(mCurrentProvider);
                         }
                         message.setStatus(MessageInfo.MSG_STATUS_SEND_SUCCESS);
+                        if (message.getMsgType() == MessageInfo.MSG_TYPE_FILE) {
+                            message.setDownloadStatus(MessageInfo.MSG_STATUS_DOWNLOADED);
+                        }
                         message.setMsgTime(v2TIMMessage.getTimestamp());
                         mCurrentProvider.updateMessageInfo(message);
                     }
@@ -530,6 +520,9 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         }
 
         V2TIMMessage forwardMessage = message.getTimMessage();
+        forwardMessage.setExcludedFromUnreadCount(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
+        forwardMessage.setExcludedFromLastMessage(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
+
         String msgID = V2TIMManager.getMessageManager().sendMessage(forwardMessage, isGroup ? null : id, isGroup ? id : null,
                 V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
                     @Override
@@ -1089,26 +1082,21 @@ public abstract class ChatManagerKit extends V2TIMAdvancedMsgListener implements
         }
         if (baseInfo instanceof MessageInfo) {
             final MessageInfo message = (MessageInfo) baseInfo;
-            String groupType = "";
-            if (isGroup) {
-                ChatInfo chatInfo = getCurrentChatInfo();
-                groupType = chatInfo.getGroupType();
-            }
-            if (!isGroup) {
-                message.getTimMessage().setExcludedFromUnreadCount(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
-            } else if (!TextUtils.isEmpty(groupType) &&
-                    (!groupType.equals(TUIKitConstants.GroupType.TYPE_CHAT_ROOM) ||
-                            !groupType.equals(TUIKitConstants.GroupType.TYPE_MEETING))) {
-                message.getTimMessage().setExcludedFromUnreadCount(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
-            }
 
+            message.getTimMessage().setExcludedFromUnreadCount(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
             message.getTimMessage().setExcludedFromLastMessage(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
-
             message.setSelf(true);
             message.setRead(true);
             assembleGroupMessage(message);
             TUIKitLog.i(TAG, "sendMessage to " + receiver);
-            String msgID = V2TIMManager.getMessageManager().sendMessage(((MessageInfo) baseInfo).getTimMessage(),
+
+            final V2TIMMessage v2TIMMessage = ((MessageInfo) baseInfo).getTimMessage();
+            if (!onlineUserOnly) {
+                v2TIMMessage.setExcludedFromUnreadCount(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
+                v2TIMMessage.setExcludedFromLastMessage(TUIKitConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
+            }
+
+            String msgID = V2TIMManager.getMessageManager().sendMessage(v2TIMMessage,
                     isGroup ? null : receiver, isGroup ? receiver : null, V2TIMMessage.V2TIM_PRIORITY_DEFAULT,
                     onlineUserOnly, pushInfo, new V2TIMSendCallback<V2TIMMessage>() {
 

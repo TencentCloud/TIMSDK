@@ -39,6 +39,8 @@ public class ConversationListAdapter extends IConversationAdapter {
     private ConversationListLayout.OnItemLongClickListener mOnItemLongClickListener;
 
     private boolean mIsLoading = false;
+    // 是否显示搜索框
+    private boolean mShowSearchBar = true;
 
     public ConversationListAdapter() {
 
@@ -58,6 +60,10 @@ public class ConversationListAdapter extends IConversationAdapter {
             provider.attachAdapter(this);
         }
         notifyDataSetChanged();
+    }
+
+    public void showSearchBar(boolean show) {
+        mShowSearchBar = show;
     }
 
     @NonNull
@@ -103,6 +109,11 @@ public class ConversationListAdapter extends IConversationAdapter {
                 }
                 break;
             }
+            case ITEM_TYPE_HEADER_SEARCH: {
+                if (holder instanceof HeaderViewHolder) {
+                    ((ConversationBaseHolder) holder).layoutViews(null, position);
+                }
+            }
             default:
                 //设置点击和长按事件
                 if (mOnItemClickListener != null) {
@@ -131,8 +142,9 @@ public class ConversationListAdapter extends IConversationAdapter {
 
     @Override
     public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        // ViewHolder 被回收时要清空头像 view 并且停止异步加载头像
         if (holder instanceof ConversationCommonHolder) {
-            ((ConversationCommonHolder) holder).conversationIconView.setBackground(null);
+            ((ConversationCommonHolder) holder).conversationIconView.clearImage();
         }
     }
 
@@ -228,9 +240,24 @@ public class ConversationListAdapter extends IConversationAdapter {
     }
 
     //header
-    class HeaderViewHolder extends RecyclerView.ViewHolder {
+    class HeaderViewHolder extends ConversationBaseHolder {
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
+        }
+
+        @Override
+        public void layoutViews(ConversationInfo conversationInfo, int position) {
+            RecyclerView.LayoutParams param = (RecyclerView.LayoutParams) rootView.getLayoutParams();
+            if (mShowSearchBar) {
+                param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                param.width = LinearLayout.LayoutParams.MATCH_PARENT;
+                rootView.setVisibility(View.VISIBLE);
+            } else {
+                param.height = 0;
+                param.width = 0;
+                rootView.setVisibility(View.GONE);
+            }
+            rootView.setLayoutParams(param);
         }
     }
 

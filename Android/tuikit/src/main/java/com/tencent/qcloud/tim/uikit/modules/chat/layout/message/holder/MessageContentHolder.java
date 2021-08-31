@@ -59,8 +59,8 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             leftUserIcon.setDefaultImageResId(properties.getAvatar());
             rightUserIcon.setDefaultImageResId(properties.getAvatar());
         } else {
-            leftUserIcon.setDefaultImageResId(R.drawable.default_head);
-            rightUserIcon.setDefaultImageResId(R.drawable.default_head);
+            leftUserIcon.setDefaultImageResId(R.drawable.default_user_icon);
+            rightUserIcon.setDefaultImageResId(R.drawable.default_user_icon);
         }
         if (properties.getAvatarRadius() != 0) {
             leftUserIcon.setRadius(properties.getAvatarRadius());
@@ -127,6 +127,9 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             } else {
                 leftUserIcon.setIconUrls(urllist);
             }
+        } else {
+            rightUserIcon.setIconUrls(null);
+            leftUserIcon.setIconUrls(null);
         }
 
         if (msg.isSelf()) {

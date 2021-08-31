@@ -45,6 +45,8 @@ public class ConversationFragment extends BaseFragment {
     private PopupWindow mConversationPopWindow;
     private List<PopMenuAction> mConversationPopActions = new ArrayList<>();
     private Menu mMenu;
+    // 是否显示搜索框
+    private boolean mShowSearchBar = true;
 
     @Nullable
     @Override
@@ -60,6 +62,8 @@ public class ConversationFragment extends BaseFragment {
         mMenu = new Menu(getActivity(), (TitleBarLayout) mConversationLayout.getTitleBar(), Menu.MENU_TYPE_CONVERSATION);
         // 会话列表面板的默认UI和交互初始化
         mConversationLayout.initDefault();
+        // 是否显示搜索框
+        mConversationLayout.showSearchBar(mShowSearchBar);
         // 通过API设置ConversataonLayout各种属性的样例，开发者可以打开注释，体验效果
 //        ConversationLayoutHelper.customizeConversation(mConversationLayout);
         mConversationLayout.getConversationList().setOnItemClickListener(new ConversationListLayout.OnItemClickListener() {

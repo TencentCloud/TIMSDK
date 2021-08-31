@@ -1,7 +1,10 @@
 package com.tencent.qcloud.tim.uikit.component.gatherimage;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +13,7 @@ import java.util.Map;
  * 多张图片数据
  */
 
-public class MultiImageData {
+public class MultiImageData implements Cloneable{
     final static int maxSize = 9;
     //图片地址链接
     List<Object> imageUrls;
@@ -18,6 +21,14 @@ public class MultiImageData {
     int defaultImageResId;
     //下载下来的图片地址
     Map<Integer, Bitmap> bitmapMap;
+    int bgColor = Color.parseColor("#cfd3d8");
+
+
+    int targetImageSize;//目标图片宽高
+    int maxWidth, maxHeight;//最大宽度，最大高度
+    int rowCount; //行数
+    int columnCount;  //列数
+    int gap = 6; //宫格间距
 
     public MultiImageData() {
     }
@@ -77,4 +88,17 @@ public class MultiImageData {
         }
     }
 
+    @Override
+    protected MultiImageData clone() throws CloneNotSupportedException {
+        MultiImageData multiImageData = (MultiImageData) super.clone();
+        if (imageUrls != null) {
+            multiImageData.imageUrls = new ArrayList<>(imageUrls.size());
+            multiImageData.imageUrls.addAll(imageUrls);
+        }
+        if (bitmapMap != null) {
+            multiImageData.bitmapMap = new HashMap<>();
+            multiImageData.bitmapMap.putAll(bitmapMap);
+        }
+        return multiImageData;
+    }
 }

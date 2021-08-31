@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ConversationManagerKit implements MessageRevokedManager.MessageRevokeHandler {
+public class ConversationManagerKit {
 
     private final static String TAG = ConversationManagerKit.class.getSimpleName();
     private final static String SP_IMAGE = "_conversation_group_face";
@@ -53,7 +53,6 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
 
     private void init() {
         TUIKitLog.i(TAG, "init");
-        MessageRevokedManager.getInstance().addHandler(this);
     }
 
     /**
@@ -108,7 +107,7 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
      * @param v2TIMConversationList 需要刷新的会话列表
      */
     public void onRefreshConversation(List<V2TIMConversation> v2TIMConversationList) {
-        TUIKitLog.v(TAG, "onRefreshConversation conversations:" + v2TIMConversationList);
+        TUIKitLog.i(TAG, "onRefreshConversation conversations:" + v2TIMConversationList);
         if (mProvider == null) {
             return;
         }
@@ -213,17 +212,19 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
         }
 
         info.setTitle(conversation.getShowName());
+        List<Object> faceList = new ArrayList<>();
         if (isGroup) {
-            fillConversationUrlForGroup(conversation, info);
+            if (!TextUtils.isEmpty(conversation.getFaceUrl())) {
+                faceList.add(conversation.getFaceUrl());
+            }
         } else {
-            List<Object> faceList = new ArrayList<>();
             if (TextUtils.isEmpty(conversation.getFaceUrl())) {
-                faceList.add(R.drawable.default_head);
+                faceList.add(R.drawable.default_user_icon);
             } else {
                 faceList.add(conversation.getFaceUrl());
             }
-            info.setIconUrlList(faceList);
         }
+        info.setIconUrlList(faceList);
         if (isGroup) {
             info.setId(conversation.getGroupID());
             info.setGroupType(conversation.getGroupType());
@@ -282,48 +283,7 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
 
         return atInfoType;
     }
-    private void fillConversationUrlForGroup(final V2TIMConversation conversation, final ConversationInfo info) {
-        if (TextUtils.isEmpty(conversation.getFaceUrl())) {
-            final String savedIcon = getGroupConversationAvatar(conversation.getConversationID());
-            if (TextUtils.isEmpty(savedIcon)) {
-                fillFaceUrlList(conversation.getGroupID(), info);
-            } else {
-                List<Object> list = new ArrayList<>();
-                list.add(savedIcon);
-                info.setIconUrlList(list);
-            }
-        } else {
-            List<Object> list = new ArrayList<>();
-            list.add(conversation.getFaceUrl());
-            info.setIconUrlList(list);
-        }
-    }
 
-    private void fillFaceUrlList(final String groupID, final ConversationInfo info) {
-        V2TIMManager.getGroupManager().getGroupMemberList(groupID, V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL, 0, new V2TIMValueCallback<V2TIMGroupMemberInfoResult>() {
-            @Override
-            public void onError(int code, String desc) {
-                TUIKitLog.e(TAG, "getGroupMemberList failed! groupID:" + groupID + "|code:" + code + "|desc: " + desc);
-            }
-
-            @Override
-            public void onSuccess(V2TIMGroupMemberInfoResult v2TIMGroupMemberInfoResult) {
-                List<V2TIMGroupMemberFullInfo> v2TIMGroupMemberFullInfoList = v2TIMGroupMemberInfoResult.getMemberInfoList();
-                int faceSize = v2TIMGroupMemberFullInfoList.size() > 9 ? 9 : v2TIMGroupMemberFullInfoList.size();
-                List<Object> urlList = new ArrayList<>();
-                for (int i = 0; i < faceSize; i++) {
-                    V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = v2TIMGroupMemberFullInfoList.get(i);
-                    if (TextUtils.isEmpty(v2TIMGroupMemberFullInfo.getFaceUrl())) {
-                        urlList.add(R.drawable.default_head);
-                    } else {
-                        urlList.add(v2TIMGroupMemberFullInfo.getFaceUrl());
-                    }
-                }
-                info.setIconUrlList(urlList);
-                mProvider.updateAdapter(info.getConversationId());
-            }
-        });
-    }
 
     /**
      * 将某个会话置顶
@@ -571,20 +531,6 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
     }
 
     /**
-     * 消息撤回回调
-     *
-     * @param msgID
-     */
-    @Override
-    public void handleRevoke(String msgID) {
-        TUIKitLog.i(TAG, "handleInvoke msgID:" + msgID);
-        if (mProvider != null) {
-            loadConversation(0, null);
-        }
-    }
-
-
-    /**
      * 添加未读计数监听器
      *
      * @param messageUnreadWatcher
@@ -624,22 +570,25 @@ public class ConversationManagerKit implements MessageRevokedManager.MessageRevo
         }
     }
 
-    public String getGroupConversationAvatar(String groupId) {
+    public String getGroupConversationAvatar(String conversationId) {
         SharedPreferences sp = TUIKit.getAppContext().getSharedPreferences(
                 TUIKitConfigs.getConfigs().getGeneralConfig().getSDKAppId() + SP_IMAGE, Context.MODE_PRIVATE);
-        final String savedIcon = sp.getString(groupId, "");
+        final String savedIcon = sp.getString(conversationId, "");
         if (!TextUtils.isEmpty(savedIcon) && new File(savedIcon).isFile() && new File(savedIcon).exists()) {
             return savedIcon;
         }
         return "";
     }
 
-    public void setGroupConversationAvatar(String groupId, String url) {
+    public void setGroupConversationAvatar(String conversationId, String url) {
         SharedPreferences sp = TUIKit.getAppContext().getSharedPreferences(
                 TUIKitConfigs.getConfigs().getGeneralConfig().getSDKAppId() + SP_IMAGE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(groupId, url);
-        editor.apply();
+        editor.putString(conversationId, url);
+        boolean success = editor.commit();
+        if (!success) {
+            TUIKitLog.e(TAG, "setGroupConversationAvatar failed , id : " + conversationId + " , url : " + url);
+        }
     }
 
     /**

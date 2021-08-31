@@ -21,6 +21,7 @@ public class GroupInfo extends ChatInfo {
     private int joinType;
     private String owner;
     private boolean messageReceiveOption;
+    private long mNextSeq = 0;
 
     public GroupInfo() {
         setType(V2TIMConversation.V2TIM_GROUP);
@@ -122,9 +123,6 @@ public class GroupInfo extends ChatInfo {
      * @return
      */
     public int getMemberCount() {
-        if (memberDetails != null) {
-            return memberDetails.size();
-        }
         return memberCount;
     }
 
@@ -171,6 +169,14 @@ public class GroupInfo extends ChatInfo {
      */
     public void setMessageReceiveOption(boolean messageReceiveOption) {
         this.messageReceiveOption = messageReceiveOption;
+    }
+
+    public long getNextSeq() {
+        return mNextSeq;
+    }
+
+    public void setNextSeq(long mNextSeq) {
+        this.mNextSeq = mNextSeq;
     }
 
     /**

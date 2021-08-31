@@ -71,6 +71,8 @@ public class GroupInfoAdapter extends BaseAdapter {
         final GroupMemberInfo info = getItem(i);
         if (!TextUtils.isEmpty(info.getIconUrl())) {
             GlideEngine.loadImage(holder.memberIcon, info.getIconUrl(), null);
+        } else {
+            GlideEngine.loadImage(holder.memberIcon, null, null);
         }
         // 显示优先级 群名片->昵称->账号
         if (!TextUtils.isEmpty(info.getNameCard())) {

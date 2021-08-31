@@ -9,18 +9,18 @@ public interface Synthesizer {
     /**
      * 图片合成
      */
-    Bitmap synthesizeImageList();
+    Bitmap synthesizeImageList(MultiImageData imageData);
 
     /**
      * 异步下载图片列表
      */
-    boolean asyncLoadImageList();
+    boolean asyncLoadImageList(MultiImageData imageData);
 
     /**
      * 画合成的图片
      *
      * @param canvas
      */
-    void drawDrawable(Canvas canvas);
+    void drawDrawable(Canvas canvas, MultiImageData imageData);
 
 }

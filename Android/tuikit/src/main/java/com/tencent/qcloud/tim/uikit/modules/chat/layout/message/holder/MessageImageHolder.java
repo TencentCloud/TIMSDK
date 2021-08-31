@@ -154,8 +154,9 @@ public class MessageImageHolder extends MessageContentHolder {
             imagePath = originImagePath;
         }
         if (!TextUtils.isEmpty(imagePath)) {
-            GlideEngine.loadCornerImage(contentImage, imagePath, null, DEFAULT_RADIUS);
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, imagePath, null, DEFAULT_RADIUS);
         } else {
+            GlideEngine.clear(contentImage);
             for (int i = 0; i < imgs.size(); i++) {
                 final V2TIMImageElem.V2TIMImage img = imgs.get(i);
                 if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB) {
@@ -187,7 +188,7 @@ public class MessageImageHolder extends MessageContentHolder {
                         public void onSuccess() {
                             downloadEles.remove(img.getUUID());
                             msg.setDataPath(path);
-                            GlideEngine.loadCornerImage(contentImage, msg.getDataPath(), new RequestListener() {
+                            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), new RequestListener() {
                                 @Override
                                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
                                     mImagePath = null;
@@ -255,8 +256,9 @@ public class MessageImageHolder extends MessageContentHolder {
         final V2TIMVideoElem videoEle = timMessage.getVideoElem();
 
         if (!TextUtils.isEmpty(msg.getDataPath())) {
-            GlideEngine.loadCornerImage(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
         } else {
+            GlideEngine.clear(contentImage);
             synchronized (downloadEles) {
                 if (!downloadEles.contains(videoEle.getSnapshotUUID())) {
                     downloadEles.add(videoEle.getSnapshotUUID());
@@ -280,7 +282,7 @@ public class MessageImageHolder extends MessageContentHolder {
                 public void onSuccess() {
                     downloadEles.remove(videoEle.getSnapshotUUID());
                     msg.setDataPath(path);
-                    GlideEngine.loadCornerImage(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
+                    GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
                 }
             });
         }

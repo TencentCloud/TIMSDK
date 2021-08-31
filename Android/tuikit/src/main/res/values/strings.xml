@@ -14,6 +14,7 @@
     <string name="downloading">Downloading...</string>
     <string name="sending">Sending...</string>
     <string name="sended">Sent</string>
+    <string name="send_failed">Send Failed</string>
     <string name="has_read">Read</string>
     <string name="unread">Unread</string>
     <string name="typing">Typing...</string>
@@ -246,4 +247,6 @@
     <string name="nick_name">nick name: </string>
     <string name="include_group_id">contain group ID: </string>
     <string name="include_group_member">contain group member: </string>
+
+    <string name="open_file_tips">Select the app to open this file</string>
 </resources>

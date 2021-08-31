@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.uikit.modules.contact;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.AttributeSet;
@@ -44,6 +45,7 @@ public class ContactListView extends LinearLayout {
     private SuspensionDecoration mDecoration;
     private ProgressBar mContactLoadingBar;
     private GroupInfo mGroupInfo;
+    private long mNextSeq = 0;
 
     /**
      * 右侧边栏导航区域
@@ -76,9 +78,26 @@ public class ContactListView extends LinearLayout {
         mManager = new CustomLinearLayoutManager(getContext());
         mRv.setLayoutManager(mManager);
 
+        mNextSeq = 0;
         mAdapter = new ContactAdapter(mData);
         mRv.setAdapter(mAdapter);
         mRv.addItemDecoration(mDecoration = new SuspensionDecoration(getContext(), mData));
+        mRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int lastCompletelyVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
+                //TUILiveLog.i(TAG, "lastCompletelyVisibleItemPosition: "+lastCompletelyVisibleItemPosition);
+                if(lastCompletelyVisibleItemPosition==layoutManager.getItemCount()-1) {
+                    TUIKitLog.i(TAG, "arrive foot");
+                    if (mNextSeq != 0) {
+                        loadGroupMembers(mNextSeq);
+                    }
+                }
+            }
+        });
         mTvSideBarHint = findViewById(R.id.contact_tvSideBarHint);
         mIndexBar = findViewById(R.id.contact_indexBar);
         mIndexBar.setPressedShowTextView(mTvSideBarHint)
@@ -136,7 +155,7 @@ public class ContactListView extends LinearLayout {
             case DataSource.GROUP_MEMBER_LIST:
                 mData.add((ContactItemBean) new ContactItemBean(getResources().getString(R.string.at_all))
                         .setTop(true).setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
-                loadGroupMembers();
+                loadGroupMembers(0);
                 break;
             default:
                 break;
@@ -319,8 +338,8 @@ public class ContactListView extends LinearLayout {
         });
     }
 
-    private void loadGroupMembers() {
-        V2TIMManager.getGroupManager().getGroupMemberList(mGroupInfo.getId(), V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL, 0, new V2TIMValueCallback<V2TIMGroupMemberInfoResult>() {
+    private void loadGroupMembers(long nextSeqseq) {
+        V2TIMManager.getGroupManager().getGroupMemberList(mGroupInfo.getId(), V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL, nextSeqseq, new V2TIMValueCallback<V2TIMGroupMemberInfoResult>() {
             @Override
             public void onError(int code, String desc) {
                 TUIKitLog.e(TAG, "loadGroupMembers failed, code: " + code + "|desc: " + desc);
@@ -341,6 +360,8 @@ public class ContactListView extends LinearLayout {
                     ContactItemBean bean = new ContactItemBean();
                     mData.add(bean.covertTIMGroupMemberFullInfo(info));
                 }
+
+                mNextSeq = v2TIMGroupMemberInfoResult.getNextSeq();
                 setDataSource(mData);
             }
         });

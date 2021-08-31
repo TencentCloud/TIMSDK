@@ -22,7 +22,7 @@ public class GroupInfoFragment extends BaseFragment {
 
     private View mBaseView;
     private GroupInfoLayout mGroupInfoLayout;
-
+    private GroupMemberManagerFragment groupMemberManagerFragment;
     private IUIKitCallBack mIUIKitCallBack;
 
     @Nullable
@@ -51,11 +51,18 @@ public class GroupInfoFragment extends BaseFragment {
         mGroupInfoLayout.setRouter(new IGroupMemberRouter() {
             @Override
             public void forwardListMember(GroupInfo info) {
-                GroupMemberManagerFragment fragment = new GroupMemberManagerFragment();
+                groupMemberManagerFragment = new GroupMemberManagerFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(TUIKitConstants.Group.GROUP_INFO, info);
-                fragment.setArguments(bundle);
-                forward(fragment, false);
+                groupMemberManagerFragment.setArguments(bundle);
+                forward(groupMemberManagerFragment, false);
+
+                groupMemberManagerFragment.setGroupMembersListener(new GroupMembersListener() {
+                    @Override
+                    public void loadMoreGroupMember(long nextSeq) {
+                        mGroupInfoLayout.getGroupMembers(nextSeq);
+                    }
+                });
             }
 
             @Override
@@ -76,6 +83,9 @@ public class GroupInfoFragment extends BaseFragment {
                 forward(fragment, false);
             }
         });
+    }
 
+    public interface GroupMembersListener {
+        void loadMoreGroupMember(long nextSeq);
     }
 }

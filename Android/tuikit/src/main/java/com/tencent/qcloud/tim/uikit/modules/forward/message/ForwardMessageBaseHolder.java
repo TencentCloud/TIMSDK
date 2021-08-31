@@ -1,11 +1,9 @@
 package com.tencent.qcloud.tim.uikit.modules.forward.message;
 
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,19 +13,9 @@ import com.tencent.qcloud.tim.uikit.TUIKit;
 import com.tencent.qcloud.tim.uikit.base.IBaseViewHolder;
 import com.tencent.qcloud.tim.uikit.base.TUIChatControllerListener;
 import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
-import com.tencent.qcloud.tim.uikit.component.face.FaceManager;
-import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayout;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageLayoutUI;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.MessageListAdapter;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageAudioHolder;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageContentHolder;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageCustomHolder;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageEmptyHolder;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageFileHolder;
 import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageForwardHolder;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageImageHolder;
-import com.tencent.qcloud.tim.uikit.modules.chat.layout.message.holder.MessageTextHolder;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
 
 import java.util.ArrayList;
@@ -58,8 +46,8 @@ public abstract class ForwardMessageBaseHolder extends MessageContentHolder {
             leftUserIcon.setDefaultImageResId(properties.getAvatar());
             rightUserIcon.setDefaultImageResId(properties.getAvatar());
         } else {
-            leftUserIcon.setDefaultImageResId(R.drawable.default_head);
-            rightUserIcon.setDefaultImageResId(R.drawable.default_head);
+            leftUserIcon.setDefaultImageResId(R.drawable.default_user_icon);
+            rightUserIcon.setDefaultImageResId(R.drawable.default_user_icon);
         }
         if (properties.getAvatarRadius() != 0) {
             leftUserIcon.setRadius(properties.getAvatarRadius());

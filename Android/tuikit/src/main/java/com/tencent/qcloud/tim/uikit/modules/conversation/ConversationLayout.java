@@ -52,6 +52,10 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         mConversationList.loadConversation(0);
     }
 
+    public void showSearchBar(boolean show) {
+        mConversationList.showSearchBar(show);
+    }
+
     public TitleBarLayout getTitleBar() {
         return mTitleBarLayout;
     }

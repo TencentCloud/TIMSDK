@@ -15,8 +15,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        app:isSwitch="true"
-        app:name="进入测试环境" />
+        app:name="切换后台环境" />
+
+    <LinearLayout
+        android:id="@+id/custom_cloud_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/white"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/ip_edit"
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:hint="ip/domain"
+            android:text=""/>
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/port_edit"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:hint="port"
+            android:text="0"/>
+    </LinearLayout>
 
     <com.tencent.qcloud.tim.uikit.component.LineControllerView
         android:id="@+id/test_excluded_from_unread_count"

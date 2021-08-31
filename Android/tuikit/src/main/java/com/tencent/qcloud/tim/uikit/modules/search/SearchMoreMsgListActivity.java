@@ -93,7 +93,7 @@ public class SearchMoreMsgListActivity extends BaseActvity {
                 if (!TextUtils.isEmpty(mSearchDataBean.getIconPath())) {
                     GlideEngine.loadImage(mConversationIcon, mSearchDataBean.getIconPath(), null);
                 } else {
-                    mConversationIcon.setImageResource(R.drawable.default_head);
+                    mConversationIcon.setImageResource(R.drawable.default_user_icon);
                 }
                 mConversationTitle.setText(mSearchDataBean.getTitle());
 

@@ -90,8 +90,8 @@ public class TUIKitImpl {
                 }
             }
         }
-        initIM(context, sdkAppID);
         initTUIKitLive(context);
+        initIM(context, sdkAppID);
         BackgroundTasks.initInstance();
         FileUtil.initPath(); // 取决于app什么时候获取到权限，即使在application中初始化，首次安装时，存在获取不到权限，建议app端在activity中再初始化一次，确保文件目录完整创建
         FaceManager.loadFaceFiles();

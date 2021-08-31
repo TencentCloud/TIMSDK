@@ -101,7 +101,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (!TextUtils.isEmpty(path)) {
                 GlideEngine.loadImage(contactViewHolder.mUserIconView, path, null);
             } else {
-                contactViewHolder.mUserIconView.setImageResource(R.drawable.default_head);
+                contactViewHolder.mUserIconView.setImageResource(R.drawable.default_user_icon);
             }
             if (text != null) {
                 //设置span

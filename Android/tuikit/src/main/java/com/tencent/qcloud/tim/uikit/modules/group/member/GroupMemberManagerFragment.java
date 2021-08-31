@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.tencent.qcloud.tim.uikit.R;
 import com.tencent.qcloud.tim.uikit.base.BaseFragment;
 import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfo;
+import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfoFragment;
+import com.tencent.qcloud.tim.uikit.modules.group.info.GroupInfoLayout;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 
 /**
@@ -21,6 +23,7 @@ public class GroupMemberManagerFragment extends BaseFragment {
     private GroupMemberManagerLayout mMemberLayout;
     private View mBaseView;
     private GroupInfo mGroupInfo;
+    private GroupInfoFragment.GroupMembersListener mGroupMembersListener;
 
     @Nullable
     @Override
@@ -66,5 +69,10 @@ public class GroupMemberManagerFragment extends BaseFragment {
             }
         });
 
+        mMemberLayout.setGroupMembersListener(mGroupMembersListener);
+    }
+
+    public void setGroupMembersListener(GroupInfoFragment.GroupMembersListener listener) {
+        mGroupMembersListener = listener;
     }
 }

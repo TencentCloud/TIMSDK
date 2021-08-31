@@ -12,6 +12,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.tencent.imsdk.v2.V2TIMDownloadCallback;
 import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMFaceElem;
@@ -25,6 +31,7 @@ import com.tencent.qcloud.tim.uikit.component.photoview.PhotoViewActivity;
 import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tim.uikit.component.video.VideoViewActivity;
 import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
+import com.tencent.qcloud.tim.uikit.utils.DateTimeUtil;
 import com.tencent.qcloud.tim.uikit.utils.ImageUtil;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
@@ -147,8 +154,9 @@ public class ForwardMessageImageHolder extends ForwardMessageBaseHolder {
             imagePath = originImagePath;
         }
         if (!TextUtils.isEmpty(imagePath)) {
-            GlideEngine.loadCornerImage(contentImage, imagePath, null, DEFAULT_RADIUS);
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, imagePath, null, DEFAULT_RADIUS);
         } else {
+            GlideEngine.clear(contentImage);
             for (int i = 0; i < imgs.size(); i++) {
                 final V2TIMImageElem.V2TIMImage img = imgs.get(i);
                 if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB) {
@@ -172,17 +180,27 @@ public class ForwardMessageImageHolder extends ForwardMessageBaseHolder {
 
                         @Override
                         public void onError(int code, String desc) {
-                            mImagePath = null;
                             downloadEles.remove(img.getUUID());
                             TUIKitLog.e("MessageListAdapter img getImage", code + ":" + desc);
                         }
 
                         @Override
                         public void onSuccess() {
-                            mImagePath = path;
                             downloadEles.remove(img.getUUID());
                             msg.setDataPath(path);
-                            GlideEngine.loadCornerImage(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
+                            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), new RequestListener() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
+                                    mImagePath = null;
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
+                                    mImagePath = path;
+                                    return false;
+                                }
+                            }, DEFAULT_RADIUS);
                         }
                     });
                     break;
@@ -195,10 +213,7 @@ public class ForwardMessageImageHolder extends ForwardMessageBaseHolder {
                 String localImgPath = ImageUtil.getOriginImagePath(msg);
                 boolean isOriginImg = localImgPath != null;
                 // 点击后的预览图片路径 如果是原图直接放原图，否则用缩略图
-                String previewImgPath = null;
-                if (isOriginImg) {
-                    previewImgPath = localImgPath;
-                }
+                String previewImgPath = localImgPath;
                 for (int i = 0; i < imgs.size(); i++) {
                     V2TIMImageElem.V2TIMImage img = imgs.get(i);
                     if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN) {
@@ -241,8 +256,9 @@ public class ForwardMessageImageHolder extends ForwardMessageBaseHolder {
         final V2TIMVideoElem videoEle = timMessage.getVideoElem();
 
         if (!TextUtils.isEmpty(msg.getDataPath())) {
-            GlideEngine.loadCornerImage(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
         } else {
+            GlideEngine.clear(contentImage);
             synchronized (downloadEles) {
                 if (!downloadEles.contains(videoEle.getSnapshotUUID())) {
                     downloadEles.add(videoEle.getSnapshotUUID());
@@ -266,15 +282,12 @@ public class ForwardMessageImageHolder extends ForwardMessageBaseHolder {
                 public void onSuccess() {
                     downloadEles.remove(videoEle.getSnapshotUUID());
                     msg.setDataPath(path);
-                    GlideEngine.loadCornerImage(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
+                    GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
                 }
             });
         }
 
-        String durations = "00:" + videoEle.getDuration();
-        if (videoEle.getDuration() < 10) {
-            durations = "00:0" + videoEle.getDuration();
-        }
+        String durations = DateTimeUtil.formatSecondsTo00(videoEle.getDuration());
         videoDurationText.setText(durations);
 
         final String videoPath = TUIKitConstants.VIDEO_DOWNLOAD_DIR + videoEle.getVideoUUID();
@@ -305,7 +318,7 @@ public class ForwardMessageImageHolder extends ForwardMessageBaseHolder {
                 mClicking = true;
                 //以下代码为zanhanding修改，用于fix点击发送失败视频后无法播放，并且红色感叹号消失的问题
                 final File videoFile = new File(videoPath);
-                if (videoFile.exists()) {//若存在本地文件则优先获取本地文件
+                if (videoFile.exists() && videoEle.getVideoSize() == videoFile.length()) {//若存在本地文件则优先获取本地文件
                     mAdapter.notifyItemChanged(position);
                     mClicking = false;
                     play(msg);
@@ -333,7 +346,7 @@ public class ForwardMessageImageHolder extends ForwardMessageBaseHolder {
 
             @Override
             public void onError(int code, String desc) {
-                ToastUtil.toastLongMessage("下载视频失败:" + code + "=" + desc);
+                ToastUtil.toastLongMessage(TUIKit.getAppContext().getString(R.string.download_file_error) + code + "=" + desc);
                 msg.setStatus(MessageInfo.MSG_STATUS_DOWNLOADED);
                 sendingProgress.setVisibility(View.GONE);
                 statusImage.setVisibility(View.VISIBLE);

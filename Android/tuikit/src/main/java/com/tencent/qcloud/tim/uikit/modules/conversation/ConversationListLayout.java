@@ -93,6 +93,11 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
     }
 
     @Override
+    public void showSearchBar(boolean show) {
+        mAdapter.showSearchBar(show);
+    }
+
+    @Override
     public void setOnItemClickListener(OnItemClickListener listener) {
         mAdapter.setOnItemClickListener(listener);
     }

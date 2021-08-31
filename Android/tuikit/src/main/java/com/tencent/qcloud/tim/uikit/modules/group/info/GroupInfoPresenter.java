@@ -34,6 +34,22 @@ public class GroupInfoPresenter {
         });
     }
 
+    public void getGroupMembers(long nextSeq, final IUIKitCallBack callBack) {
+        mProvider.loadGroupMembers(nextSeq, new IUIKitCallBack() {
+            @Override
+            public void onSuccess(Object data) {
+                callBack.onSuccess(data);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIKitLog.e("loadGroupInfo", errCode + ":" + errMsg);
+                callBack.onError(module, errCode, errMsg);
+                ToastUtil.toastLongMessage(errMsg);
+            }
+        });
+    }
+
     public void modifyGroupName(final String name) {
         mProvider.modifyGroupInfo(name, TUIKitConstants.Group.MODIFY_GROUP_NAME, new IUIKitCallBack() {
             @Override
