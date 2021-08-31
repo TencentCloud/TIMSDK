@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="icon_margin">10dp</dimen>
+    <dimen name="icon_width">40dp</dimen>
+    <dimen name="icon_height">40dp</dimen>
+    
+    <dimen name="beauty_title">18sp</dimen>
+    <dimen name="beauty_sub_content">14sp</dimen>
+
+    <dimen name="beauty_h1">9sp</dimen>
+    <dimen name="beauty_h2">10sp</dimen>
+    <dimen name="beauty_h3">11sp</dimen>
+    <dimen name="beauty_h4">12sp</dimen>
+    <dimen name="beauty_h5">13sp</dimen>
+    <dimen name="beauty_h6">14sp</dimen>
+    <dimen name="beauty_h7">15sp</dimen>
+    <dimen name="beauty_h8">16sp</dimen>
+    <dimen name="beauty_h9">17sp</dimen>
+    <dimen name="beauty_h10">18sp</dimen>
+    <dimen name="beauty_h11">19sp</dimen>
+    <dimen name="beauty_h12">20sp</dimen>
+
+    <dimen name="beauty_live_btn_size">35dp</dimen>
+
+    <dimen name="beauty_qav_multi_video_friend_item_width">60dp</dimen>
+    <dimen name="beauty_qav_grid_view_item_width_audio">75dp</dimen>
+    <dimen name="beauty_ugc_item_thumb_height">60dp</dimen>
+    <dimen name="beauty_ugc_cut_margin">10dp</dimen>
+    <dimen name="beauty_ugc_aspect_width">50dp</dimen>
+    <dimen name="beauty_ugc_aspect_divider">18dp</dimen>
+    <dimen name="beauty_ugc_progress_cursor">2dp</dimen>
+    <dimen name="beauty_ugc_progress_min_pos">2dp</dimen>
+    <dimen name="beauty_ugc_progress_divider">1dp</dimen>
+    <dimen name="beauty_video_progress_height">50dp</dimen>
+    <dimen name="beauty_video_thumbnail_width">50dp</dimen>
+
+    <dimen name="live_text_max_show_width">80dp</dimen>
+    <dimen name="live_status_tips">46dp</dimen>
+    <dimen name="live_close_btn_width">25dp</dimen>
+
+    <!-- 直播间顶部主播信息 -->
+    <dimen name="live_top_anchor_info_round_corner">100dp</dimen>
+    <dimen name="live_top_anchor_info_text_size">12sp</dimen>
+    <dimen name="live_top_anchor_info_height">30dp</dimen>
+    <dimen name="live_top_anchor_avatar_height">36dp</dimen>
+    <dimen name="live_top_audience_avatar_height">27dp</dimen>
+
+    <!-- 直播间底部工具栏 -->
+    <dimen name="live_bottom_toolbar_height">34dp</dimen>
+    <dimen name="live_bottom_toolbar_btn_icon_size">32dp</dimen>
+
+    <dimen name="live_text_size_large">18sp</dimen>
+    <dimen name="live_text_size_middle">14sp</dimen>
+    <dimen name="live_btn_ic_size">30dp</dimen>
+
+    <!-- 直播底部栏 -->
+    <dimen name="live_input_message_dialog_text">16sp</dimen>
+    <dimen name="live_input_message_divider_margin_left">15dp</dimen>
+    <dimen name="live_input_message_divider_margin_top">9dp</dimen>
+
+    <!-- 礼物 -->
+    <dimen name="live_gift_panel_height">300dp</dimen>
+    <dimen name="live_gift_lottie_view_height">400dp</dimen>
+
+    <dimen name="live_heart_anim_bezier_x_rand">50.0dp</dimen>
+    <dimen name="live_heart_anim_length">100.0dp</dimen>
+    <dimen name="live_heart_anim_length_rand">350.0dp</dimen>
+    <integer name="live_heart_anim_bezier_factor">6</integer>
+    <integer name="live_heart_anim_duration">1000</integer>
+
+
+    <dimen name="small_image_size">30dp</dimen>
+    <dimen name="small_image_left_margin">5dp</dimen>
+    <dimen name="contact_avatar_width">40.48dp</dimen>
+
+</resources>

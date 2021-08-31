@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/status_bar_color"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contact_member_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.tencent.qcloud.tim.uikit.component.indexlib.IndexBar.widget.IndexBar
+        android:id="@+id/contact_indexBar"
+        android:layout_width="24dp"
+        android:layout_marginTop="54dp"
+        android:layout_marginBottom="40.8dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical|right"
+        app:indexBarPressBackground="@color/partTranslucent"
+        app:indexBarTextSize="12sp" />
+
+    <TextView
+        android:id="@+id/contact_tvSideBarHint"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_side_bar_bg"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="40sp"
+        android:visibility="gone"
+        tools:text="A"
+        tools:visibility="visible" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:id="@+id/contact_loading_bar"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+</FrameLayout>

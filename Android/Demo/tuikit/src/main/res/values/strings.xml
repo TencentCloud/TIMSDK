@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="pic">Images</string>
+    <string name="photo">Take Photo</string>
+    <string name="video">Record Video</string>
+    <string name="file">Files</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="sure">OK</string>
+
+    <string name="un_download">Not downloaded</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="downloading">Downloading...</string>
+    <string name="sending">Sending...</string>
+    <string name="sended">Sent</string>
+    <string name="send_failed">Send Failed</string>
+    <string name="has_read">Read</string>
+    <string name="unread">Unread</string>
+    <string name="typing">Typing...</string>
+
+    <string name="chat_to_top">Sticky on Top</string>
+    <string name="send">Send</string>
+
+    <string name="group_id">Group ID</string>
+    <string name="group_name">Group Chat Name</string>
+    <string name="group_icon">Change Group Profile Photo</string>
+    <string name="group_notice">Group Notice</string>
+    <string name="group_members">Group Members</string>
+    <string name="group_type">Group Type</string>
+    <string name="add_group_member">Add Member</string>
+    <string name="remove_group_member">Delete Member</string>
+    <string name="join_group_type">Group Joining Method</string>
+    <string name="in_group_nick_name">My Alias in Group</string>
+    <string name="dissolve">Disband Group</string>
+    <string name="modify_group_name">Edit Group Name</string>
+    <string name="modify_group_notice">Edit Group Notice</string>
+    <string name="modify_nick_name_in_goup">Edit My Alias in Group</string>
+    <string name="create_group">Create Group</string>
+
+    <string name="group_detail">Group Chat Details</string>
+    <string name="accept">Agree</string>
+    <string name="refuse">Decline</string>
+    <string name="group_apply_members">Request to Join Group</string>
+    <string name="accepted">Agreed</string>
+    <string name="refused">Declined</string>
+    <string name="group_apply_tips">%1$d group joining request(s)</string>
+    <string name="group_apply_click_handle">Tap to Process</string>
+    <string name="group_remove_member">Remove</string>
+    <string name="group_join_type">Group Joining Method</string>
+    <string name="modify_group_name_success">Edited</string>
+    <string name="modify_group_notice_success">Edited</string>
+    <string name="exit_group">Leave</string>
+    <string name="modify_nickname_success">Edited</string>
+    <string name="view_original_image">View Full Image</string>
+
+    <string name="at_all">All</string>
+    <string name="ui_at_all">[@All]</string>
+    <string name="ui_at_me">[You were mentioned]</string>
+    <string name="ui_at_all_me">[@All][You were mentioned]</string>
+    <string name="drafts">[Drafts]</string>
+
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_tommorow">Tomorrow</string>
+    <string name="date_year">YYYY</string>
+    <string name="date_month">MM</string>
+    <string name="date_day">DD</string>
+    <string name="date_hour">HH</string>
+    <string name="date_minute">MM</string>
+    <string name="date_second">SS</string>
+
+    <string name="date_year_short">YYYY</string>
+    <string name="date_month_short">MM</string>
+    <string name="date_day_short">DD</string>
+    <string name="date_hour_short">HH</string>
+    <string name="date_minute_short">MM</string>
+    <string name="date_second_short">SS</string>
+
+    <!-- 联系人相关 -->
+    <string name="new_friend">New Contacts</string>
+    <string name="group">My Group Chats</string>
+    <string name="blacklist">Blocked List</string>
+    <string name="contact_count">%d contact(s)</string>
+    <string name="contact_title">Contacts</string>
+    <string name="conversation_title">Tencent·Instant Messaging</string>
+
+    <!-- 好友资料 -->
+    <string name="profile_detail">Details</string>
+    <string name="profile_id">Account</string>
+    <string name="profile_add_wording">Verification Message</string>
+    <string name="profile_remark">Set Alias</string>
+    <string name="profile_black">Block</string>
+    <string name="profile_remark_edit">Edit Alias</string>
+    <string name="profile_chat">Send Message</string>
+    <string name="profile_del">Delete Friend</string>
+    <string name="profile_msgrev_opt">Message Do Not Disturb</string>
+
+    <string name="search_call_hint">Enter Group Member\'s Name</string>
+
+    <string name="live_group_live_streaming">Live Streaming</string>
+    <string name="live_group_live_end">Live Over</string>
+    <string name="live_group_user_live">%s Live</string>
+
+    <!-- 消息转发 -->
+    <string name="titlebar_mutiselect">MultiSelect</string>
+    <string name="titlebar_cancle">Cancel</string>
+    <string name="titlebar_close">Close</string>
+    <string name="titlebar_back">Back</string>
+    <string name="forward_alert_title">Are you sure to forward the message?</string>
+    <string name="forward_tip">please select message!</string>
+    <string name="forward_mode_onebyone">One-by-one forward</string>
+    <string name="forward_mode_merge">Combine and forward</string>
+    <string name="forward_list_label">Recent Conversations</string>
+    <string name="forward_button">Forward</string>
+    <string name="delete_button">Delete</string>
+    <string name="forward_chats"> Group Chat History</string>
+    <string name="and_text">and</string>
+    <string name="forward_chats_c2c">Chat History</string>
+    <string name="forward_compatible_text">Does not support merging and forwarding messages，please upgrade to the new version.</string>
+    <string name="forward_select_new_chat">Create new chat</string>
+    <string name="forward_select_from_contact">Select from contact</string>
+    <string name="forward_failed_tip">No Support for send failed message.</string>
+    <string name="forward_extra">[Chat Record]</string>
+    <string name="forward_oneByOne_limit_number_tip">Too many forwarded messages, one by one forwarding is not currently supported</string>
+
+
+    <string name="tap_capture">tap to take photo</string>
+    <string name="tap_video">hold to record video</string>
+    <string name="invalid_command">invalid command</string>
+    <string name="request_online">request online on live</string>
+    <string name="reject_request_online">reject request for online on live</string>
+    <string name="agree_request_online">agree request for online on live</string>
+    <string name="request_close_online">request closing online on live</string>
+    <string name="close_online">close online on live</string>
+    <string name="request_pk">request PK on live</string>
+    <string name="reject_request_pk">reject request for PK on live</string>
+    <string name="agree_request_pk">agree request for PK on live</string>
+    <string name="exit_pk">exit PK on live</string>
+    <string name="im_logined">IM has logined for user:</string>
+    <string name="reject_call">reject</string>
+    <string name="no_response">no response</string>
+    <string name="line_busy">Line busy</string>
+    <string name="call_time_out">time out</string>
+    <string name="record_limit_tips">Maximum voice length reached</string>
+    <string name="play_error_tip">The voice file is damaged or does not exist</string>
+    <string name="input_tip">No nickname entered, please fill in again</string>
+    <string name="completed">completed</string>
+    <string name="audio_permission_error">Need audio permission</string>
+    <string name="tap_tips">tap for photo, hold for record</string>
+    <string name="record_time_tip">record time is too short</string>
+    <string name="no_event_cancle_tip">no cancle event on browser</string>
+    <string name="no_event_confirm_tip">no confirm event on browser</string>
+    <string name="record_occupied">record occupied</string>
+    <string name="record_null">record is null</string>
+    <string name="device_info">device info:</string>
+    <string name="system_version">\n system version:</string>
+    <string name="sdk_version">\n SDK version:</string>
+    <string name="wait_tip">please try again later</string>
+    <string name="join_group_tip">You have been invited to the group: </string>
+    <string name="joined_tip">You have joined the group: </string>
+    <string name="reject_join_tip">You are rejected from joining the group: </string>
+    <string name="kick_group">You have been kicked out of the group: </string>
+    <string name="dismiss_tip_before">Your group</string>
+    <string name="dismiss_tip_after">is disbanded.</string>
+    <string name="get_system_notice">Received a custom system notification: </string>
+    <string name="down_cancle_send">Slide up to cancel</string>
+    <string name="say_time_short">Message too short</string>
+    <string name="record_fail">Recording failed</string>
+    <string name="up_cancle_send">Release to Cancel</string>
+    <string name="and_and"> </string>
+    <string name="be_friend">is your friend now.</string>
+    <string name="send_two_mins">Message sent more than 2 min ago</string>
+    <string name="revoke_fail">Failed to recall</string>
+    <string name="release_end">Release to Send</string>
+    <string name="hold_say">Hold to Talk</string>
+    <string name="copy_action">Copy</string>
+    <string name="delete_action">Delete</string>
+    <string name="revoke_action">Recall</string>
+    <string name="resend_action">Resend</string>
+    <string name="voice_play_tip">Voice file not downloaded.</string>
+    <string name="custom_msg">[Custom Messages]</string>
+    <string name="no_support_custom_msg">[Unsupported Custom Messages]</string>
+    <string name="file_path">File path:</string>
+    <string name="download_file_error">Failed to download video: </string>
+    <string name="revoke_tips_you">You recalled a message.</string>
+    <string name="revoke_tips">recalled a message.</string>
+    <string name="revoke_tips_other">The other user recalled a message.</string>
+    <string name="load_msg_error">Failed to load message</string>
+    <string name="modify_icon_fail">Editing failed</string>
+    <string name="modify_icon_suc">Edited</string>
+    <string name="chat_roon">Chatroom</string>
+    <string name="chat_roon_tip">The request to join chat room is reviewed automatically. Unable to modify it.</string>
+    <string name="dismiss_group_tip">Disband the group?</string>
+    <string name="quit_group_tip">Leave the group?</string>
+    <string name="private_group">Discussion Group</string>
+    <string name="public_group">Public Group</string>
+    <string name="request_wait">Invitation sent. Waiting for response.</string>
+    <string name="remove">Remove</string>
+    <string name="remove_member">Delete Member</string>
+    <string name="remove_tip_suc">Deleted</string>
+    <string name="remove_tip_fail">Deletion failed: </string>
+    <string name="invite_suc">Member invited</string>
+    <string name="invite_fail">Invitation failed:</string>
+    <string name="remove_fail_tip">Removal failed</string>
+    <string name="manager">Manage</string>
+    <string name="custom_emoji">[Custom Sticker]</string>
+    <string name="picture_extra">[Image]</string>
+    <string name="video_extra">[Video]</string>
+    <string name="audio_extra">[Voice]</string>
+    <string name="file_extra">[File]</string>
+
+    <string name="etc">, etc.</string>
+    <string name="join_group">Join Group</string>
+    <string name="invite_joined_group">is invited to the group.</string>
+    <string name="quit_group">Leave Group</string>
+    <string name="kick_group_tip">is removed from the group.</string>
+    <string name="be_group_manager">is set as admin.</string>
+    <string name="cancle_group_manager">\'s admin status is terminated.</string>
+    <string name="modify_group_name_is">Change the group name to</string>
+    <string name="modify_notice">Change the group notice to</string>
+    <string name="move_owner">Transfer group ownership to</string>
+    <string name="modify_group_avatar">changed the group profile photo.</string>
+    <string name="banned">is blocked from posting</string>
+    <string name="cancle_banned">is unblocked and can post now</string>
+    <string name="permission_content">To use this feature, you need to grant permission. Since you have disabled related permission, please manually enable the permission.</string>
+    <string name="setting">Settings</string>
+    <string name="button_call">Tap above button to start a call</string>
+    <string name="them_exist">They are also here.</string>
+    <string name="launch_call">Start Call</string>
+    <string name="default_friend">Default Friends</string>
+    <string name="forbid_join">Prohibited from Joining</string>
+    <string name="manager_judge">Admin Approval</string>
+    <string name="auto_judge">Auto Approval...</string>
+    <string name="audio_call">Voice Call</string>
+
+
+    <!-- 搜索 -->
+    <string name="search">Search</string>
+    <string name="contact_subtitle">Contact</string>
+    <string name="group_subtitle">Group</string>
+    <string name="chat_record">Chat Record</string>
+    <string name="more_contact_label">More Contacts</string>
+    <string name="more_group_label">More Group Chat</string>
+    <string name="more_conversation_label">More Conversations</string>
+    <string name="chat_record_reference">Chat Record</string>
+    <string name="chat_records">Chat Records</string>
+    <string name="nick_name">nick name: </string>
+    <string name="include_group_id">contain group ID: </string>
+    <string name="include_group_member">contain group member: </string>
+
+    <string name="open_file_tips">Select the app to open this file</string>
+</resources>

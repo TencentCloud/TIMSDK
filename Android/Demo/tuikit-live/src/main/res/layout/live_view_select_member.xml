@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/live_confirm_dialog_bg">
+
+    <TextView
+        android:id="@+id/tv_pusher_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/live_dark_black"
+        android:textStyle="bold"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="21dp"
+        android:layout_height="21dp"
+        android:layout_alignBottom="@+id/tv_pusher_tag"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/live_btn_close_black" />
+
+    <View
+        android:layout_below="@id/tv_pusher_tag"
+        android:background="@color/live_color_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_pusher_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tv_pusher_tag"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="20dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+</RelativeLayout>

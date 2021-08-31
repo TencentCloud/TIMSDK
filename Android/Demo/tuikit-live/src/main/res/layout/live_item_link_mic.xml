@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_pk_select"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="@android:color/transparent">
+
+    <com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/live_confirm_dialog_bg"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/live_bg_cover"
+        app:layout_constraintBottom_toBottomOf="@+id/cl_pk_select"
+        app:layout_constraintLeft_toLeftOf="@id/cl_pk_select"
+        app:layout_constraintTop_toTopOf="@+id/cl_pk_select" />
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginLeft="8dp"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/iv_avatar"
+        app:layout_constraintTop_toTopOf="@+id/cl_pk_select"
+        tools:text="主播" />
+
+    <Button
+        android:id="@+id/btn_agree"
+        android:layout_width="60dp"
+        android:layout_height="31dp"
+        android:background="@drawable/live_confirm_btn_red_bg"
+        android:text="@string/live_agree"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_reject"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_reject"
+        app:layout_constraintTop_toTopOf="@+id/btn_reject" />
+
+    <Button
+        android:id="@+id/btn_reject"
+        android:layout_width="60dp"
+        android:layout_height="31dp"
+        android:background="@drawable/live_confirm_btn_disagree"
+        android:text="@string/live_reject"
+        android:textColor="@color/live_color_light_red"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cl_pk_select"
+        app:layout_constraintRight_toRightOf="@+id/cl_pk_select"
+        app:layout_constraintTop_toTopOf="@+id/cl_pk_select" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

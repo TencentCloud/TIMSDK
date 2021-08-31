@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chart_face_gv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:horizontalSpacing="16dp"
+    android:listSelector="#00000000"
+    android:numColumns="auto_fit"
+    android:stretchMode="columnWidth">
+    <!-- android:columnWidth="90dp" -->
+</GridView>

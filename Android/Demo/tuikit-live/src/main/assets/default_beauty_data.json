@@ -1,0 +1,819 @@
+{
+  "beauty_bg": "#ff13233f",
+  "beauty_tab_name_color_normal": "#ff888888",
+  "beauty_tab_name_color_select": "#ffffffff",
+  "beauty_tab_name_width": -2,
+  "beauty_tab_name_height": -2,
+  "beauty_tab_name_size": 14,
+  "beauty_tab_list": [
+    {
+      "tab_id": 1,
+      "tab_type": 10001,
+      "tab_name": "美颜",
+      "tab_item_name_size": 10,
+      "tab_item_name_color_normal": "#ff888888",
+      "tab_item_name_color_select": "#ffffffff",
+      "tab_item_icon_width": 54,
+      "tab_item_icon_height": 54,
+      "tab_item_level_hint_color": "#ffffffff",
+      "tab_item_level_hint_size": 16,
+      "tab_item_level_value_color": "#ffffffff",
+      "tab_item_level_value_size": 14,
+      "tab_item_level_progress_drawable": "@beauty_progress_drawable",
+      "tab_item_level_progress_thumb": "@beauty_thumb",
+      "tab_item_list": [
+        {
+          "item_id": 1,
+          "item_type": 20101,
+          "item_name": "@beauty_panel_style_smooth",
+          "item_material_url": "",
+          "item_level": 4,
+          "item_icon_normal": "@beauty_ic_smooth",
+          "item_icon_select": "@beauty_ic_smooth"
+        },
+        {
+          "item_id": 2,
+          "item_type": 20102,
+          "item_name": "@beauty_panel_style_natural",
+          "item_material_url": "",
+          "item_level": 4,
+          "item_icon_normal": "@beauty_ic_natural",
+          "item_icon_select": "@beauty_ic_natural"
+        },
+        {
+          "item_id": 3,
+          "item_type": 20103,
+          "item_name": "@beauty_panel_style_pitu",
+          "item_material_url": "",
+          "item_level": 4,
+          "item_icon_normal": "@beauty_ic_pitu",
+          "item_icon_select": "@beauty_ic_pitu"
+        },
+        {
+          "item_id": 4,
+          "item_type": 20104,
+          "item_name": "@beauty_panel_white",
+          "item_material_url": "",
+          "item_level": 1,
+          "item_icon_normal": "@beauty_ic_white",
+          "item_icon_select": "@beauty_ic_white"
+        },
+        {
+          "item_id": 5,
+          "item_type": 20105,
+          "item_name": "@beauty_panel_ruddy",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_ruddy",
+          "item_icon_select": "@beauty_ic_ruddy"
+        },
+        {
+          "item_id": 6,
+          "item_type": 20106,
+          "item_name": "@beauty_panel_bigeye",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_bigeye",
+          "item_icon_select": "@beauty_ic_bigeye"
+        },
+        {
+          "item_id": 7,
+          "item_type": 20107,
+          "item_name": "@beauty_panel_faceslim",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_faceslim",
+          "item_icon_select": "@beauty_ic_faceslim"
+        },
+        {
+          "item_id": 8,
+          "item_type": 20108,
+          "item_name": "@beauty_panel_facev",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_facev",
+          "item_icon_select": "@beauty_ic_facev"
+        },
+        {
+          "item_id": 9,
+          "item_type": 20109,
+          "item_name": "@beauty_panel_chin",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_chin",
+          "item_icon_select": "@beauty_ic_chin"
+        },
+        {
+          "item_id": 10,
+          "item_type": 20110,
+          "item_name": "@beauty_panel_faceshort",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_face_short",
+          "item_icon_select": "@beauty_ic_face_short"
+        },
+        {
+          "item_id": 11,
+          "item_type": 20111,
+          "item_name": "@beauty_panel_noseslim",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_noseslim",
+          "item_icon_select": "@beauty_ic_noseslim"
+        },
+        {
+          "item_id": 12,
+          "item_type": 20112,
+          "item_name": "@beauty_panel_eyelighten",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_eye_bright",
+          "item_icon_select": "@beauty_ic_eye_bright"
+        },
+        {
+          "item_id": 13,
+          "item_type": 20113,
+          "item_name": "@beauty_panel_toothwhite",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_tooth_white",
+          "item_icon_select": "@beauty_ic_tooth_white"
+        },
+        {
+          "item_id": 14,
+          "item_type": 20114,
+          "item_name": "@beauty_panel_wrinkleremove",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_wrinkles",
+          "item_icon_select": "@beauty_ic_wrinkles"
+        },
+        {
+          "item_id": 15,
+          "item_type": 20115,
+          "item_name": "@beauty_panel_pounchremove",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_pouch_remove",
+          "item_icon_select": "@beauty_ic_pouch_remove"
+        },
+        {
+          "item_id": 16,
+          "item_type": 20116,
+          "item_name": "@beauty_panel_smilelinesremove",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_smile_lines",
+          "item_icon_select": "@beauty_ic_smile_lines"
+        },
+        {
+          "item_id": 17,
+          "item_type": 20117,
+          "item_name": "@beauty_panel_forehead",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_forehead",
+          "item_icon_select": "@beauty_ic_forehead"
+        },
+        {
+          "item_id": 18,
+          "item_type": 20118,
+          "item_name": "@beauty_panel_eyedistance",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_eye_distance",
+          "item_icon_select": "@beauty_ic_eye_distance"
+        },
+        {
+          "item_id": 19,
+          "item_type": 20119,
+          "item_name": "@beauty_panel_eyeangle",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_eye_angle",
+          "item_icon_select": "@beauty_ic_eye_angle"
+        },
+        {
+          "item_id": 20,
+          "item_type": 20120,
+          "item_name": "@beauty_panel_mouthshape",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_mouse_shape",
+          "item_icon_select": "@beauty_ic_mouse_shape"
+        },
+        {
+          "item_id": 21,
+          "item_type": 20121,
+          "item_name": "@beauty_panel_nosewing",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_nose_wing",
+          "item_icon_select": "@beauty_ic_nose_wing"
+        },
+        {
+          "item_id": 22,
+          "item_type": 20122,
+          "item_name": "@beauty_panel_noseposition",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_nose_position",
+          "item_icon_select": "@beauty_ic_nose_position"
+        },
+        {
+          "item_id": 23,
+          "item_type": 20123,
+          "item_name": "@beauty_panel_mousewidth",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_mouse_width",
+          "item_icon_select": "@beauty_ic_mouse_width"
+        },
+        {
+          "item_id": 24,
+          "item_type": 20124,
+          "item_name": "@beauty_panel_faceshape",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_face_shape",
+          "item_icon_select": "@beauty_ic_face_shape"
+        }
+      ]
+    },
+    {
+      "tab_id": 2,
+      "tab_type": 10002,
+      "tab_name": "滤镜",
+      "tab_item_name_size": 10,
+      "tab_item_name_color_normal": "#ff888888",
+      "tab_item_name_color_select": "#ffffffff",
+      "tab_item_icon_width": 54,
+      "tab_item_icon_height": 54,
+      "tab_item_level_hint_color": "#ffffffff",
+      "tab_item_level_hint_size": 16,
+      "tab_item_level_value_color": "#ffffffff",
+      "tab_item_level_value_size": 14,
+      "tab_item_level_progress_drawable": "@beauty_progress_drawable",
+      "tab_item_level_progress_thumb": "@beauty_thumb",
+      "tab_item_list": [
+        {
+          "item_id": 1,
+          "item_type": 20201,
+          "item_name": "@beauty_common_none",
+          "item_material_url": "",
+          "item_level": 0,
+          "item_icon_normal": "@beauty_ic_common_none",
+          "item_icon_select": "@beauty_ic_common_none"
+        },
+        {
+          "item_id": 2,
+          "item_type": 20202,
+          "item_name": "@beauty_panel_filter_baixi",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_baixi",
+          "item_icon_select": "@beauty_baixi"
+        },
+        {
+          "item_id": 3,
+          "item_type": 20203,
+          "item_name": "@beauty_panel_filter_standard",
+          "item_material_url": "",
+          "item_level": 4,
+          "item_icon_normal": "@beauty_biaozhun",
+          "item_icon_select": "@beauty_biaozhun"
+        },{
+          "item_id": 4,
+          "item_type": 20204,
+          "item_name": "@beauty_panel_filter_ziran",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_ziran",
+          "item_icon_select": "@beauty_ziran"
+        },
+        {
+          "item_id": 5,
+          "item_type": 20205,
+          "item_name": "@beauty_panel_filter_cheery",
+          "item_material_url": "",
+          "item_level": 8,
+          "item_icon_normal": "@beauty_yinghong",
+          "item_icon_select": "@beauty_yinghong"
+        },
+        {
+          "item_id": 6,
+          "item_type": 20206,
+          "item_name": "@beauty_panel_filter_cloud",
+          "item_material_url": "",
+          "item_level": 8,
+          "item_icon_normal": "@beauty_yunshang",
+          "item_icon_select": "@beauty_yunshang"
+        },
+        {
+          "item_id": 7,
+          "item_type": 20207,
+          "item_name": "@beauty_panel_filter_pure",
+          "item_material_url": "",
+          "item_level": 8,
+          "item_icon_normal": "@beauty_chunzhen",
+          "item_icon_select": "@beauty_chunzhen"
+        },
+        {
+          "item_id": 8,
+          "item_type": 20208,
+          "item_name": "@beauty_panel_filter_orchid",
+          "item_material_url": "",
+          "item_level": 9,
+          "item_icon_normal": "@beauty_bailan",
+          "item_icon_select": "@beauty_bailan"
+        },
+        {
+          "item_id": 9,
+          "item_type": 20209,
+          "item_name": "@beauty_panel_filter_vitality",
+          "item_material_url": "",
+          "item_level": 8,
+          "item_icon_normal": "@beauty_yuanqi",
+          "item_icon_select": "@beauty_yuanqi"
+        },
+        {
+          "item_id": 10,
+          "item_type": 20210,
+          "item_name": "@beauty_panel_filter_super",
+          "item_material_url": "",
+          "item_level": 9,
+          "item_icon_normal": "@beauty_chaotuo",
+          "item_icon_select": "@beauty_chaotuo"
+        },
+        {
+          "item_id": 11,
+          "item_type": 20211,
+          "item_name": "@beauty_panel_filter_fragrance",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_xiangfen",
+          "item_icon_select": "@beauty_xiangfen"
+        },
+        {
+          "item_id": 12,
+          "item_type": 20212,
+          "item_name": "@beauty_panel_filter_white",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_fwhite",
+          "item_icon_select": "@beauty_fwhite"
+        },
+        {
+          "item_id": 13,
+          "item_type": 20213,
+          "item_name": "@beauty_panel_filter_romantic",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_langman",
+          "item_icon_select": "@beauty_langman"
+        },
+        {
+          "item_id": 14,
+          "item_type": 20214,
+          "item_name": "@beauty_panel_filter_fresh",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_qingxin",
+          "item_icon_select": "@beauty_qingxin"
+        },
+        {
+          "item_id": 15,
+          "item_type": 20215,
+          "item_name": "@beauty_panel_filter_beautiful",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_weimei",
+          "item_icon_select": "@beauty_weimei"
+        },
+        {
+          "item_id": 16,
+          "item_type": 20216,
+          "item_name": "@beauty_panel_filter_pink",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_fennen",
+          "item_icon_select": "@beauty_fennen"
+        },
+        {
+          "item_id": 17,
+          "item_type": 20217,
+          "item_name": "@beauty_panel_filter_reminiscence",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_huaijiu",
+          "item_icon_select": "@beauty_huaijiu"
+        },
+        {
+          "item_id": 18,
+          "item_type": 20218,
+          "item_name": "@beauty_panel_filter_blues",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_landiao",
+          "item_icon_select": "@beauty_landiao"
+        },
+        {
+          "item_id": 19,
+          "item_type": 20219,
+          "item_name": "@beauty_panel_filter_cool",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_qingliang",
+          "item_icon_select": "@beauty_qingliang"
+        },
+        {
+          "item_id": 20,
+          "item_type": 20220,
+          "item_name": "@beauty_panel_filter_Japanese",
+          "item_material_url": "",
+          "item_level": 5,
+          "item_icon_normal": "@beauty_rixi",
+          "item_icon_select": "@beauty_rixi"
+        }
+      ]
+    },
+    {
+      "tab_id": 3,
+      "tab_type": 10003,
+      "tab_name": "动效",
+      "tab_item_name_size": 10,
+      "tab_item_name_color_normal": "#ff888888",
+      "tab_item_name_color_select": "#ffffffff",
+      "tab_item_icon_width": 54,
+      "tab_item_icon_height": 54,
+      "tab_item_level_hint_color": "#ffffffff",
+      "tab_item_level_hint_size": 16,
+      "tab_item_level_value_color": "#ffffffff",
+      "tab_item_level_value_size": 14,
+      "tab_item_level_progress_drawable": "@beauty_progress_drawable",
+      "tab_item_level_progress_thumb": "@beauty_thumb",
+      "tab_item_list": [
+        {
+          "item_id": 1,
+          "item_type": 20301,
+          "item_name": "@beauty_common_none",
+          "item_material_url": "",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_common_none",
+          "item_icon_select": "@beauty_ic_common_none"
+        },
+        {
+          "item_id": 2,
+          "item_type": 20302,
+          "item_name": "@beauty_effect_boom",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_boomAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_effect_boom",
+          "item_icon_select": "@beauty_ic_effect_boom"
+        },
+        {
+          "item_id": 3,
+          "item_type": 20302,
+          "item_name": "@beauty_effect_neon_rat",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_nihongshuAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_effect_neon_rat",
+          "item_icon_select": "@beauty_ic_effect_neon_rat"
+        },
+        {
+          "item_id": 4,
+          "item_type": 20302,
+          "item_name": "@beauty_effect_call",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_fengkuangdacallAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_effect_call",
+          "item_icon_select": "@beauty_ic_effect_call"
+        },
+        {
+          "item_id": 5,
+          "item_type": 20302,
+          "item_name": "@beauty_effect_constellation",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_QxingzuoAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_effect_constellation",
+          "item_icon_select": "@beauty_ic_effect_constellation"
+        },
+        {
+          "item_id": 6,
+          "item_type": 20302,
+          "item_name": "@beauty_effect_ribbon",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_caidaiAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_effect_ribbon",
+          "item_icon_select": "@beauty_ic_effect_ribbon"
+        },
+        {
+          "item_id": 7,
+          "item_type": 20302,
+          "item_name": "@beauty_effect_headband",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_liuhaifadaiAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_effect_headband",
+          "item_icon_select": "@beauty_ic_effect_headband"
+        },
+        {
+          "item_id": 8,
+          "item_type": 20302,
+          "item_name": "@beauty_effect_purple_kitten",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_purplecatAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_effect_purple_cat",
+          "item_icon_select": "@beauty_ic_effect_purple_cat"
+        },
+        {
+          "item_id": 9,
+          "item_type": 20302,
+          "item_name": "@beauty_effect_flower_faerie",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_huaxianziAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_effect_flower_fairy",
+          "item_icon_select": "@beauty_ic_effect_flower_fairy"
+        },
+        {
+          "item_id": 10,
+          "item_type": 20302,
+          "item_name": "@beauty_effect_princess",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_baby_agetestAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_effect_princess",
+          "item_icon_select": "@beauty_ic_effect_princess"
+        },
+        {
+          "item_id": 11,
+          "item_type": 20302,
+          "item_name": "@beauty_effect_star_ear",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_starearAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_effect_star_ear",
+          "item_icon_select": "@beauty_ic_effect_star_ear"
+        },
+        {
+          "item_id": 12,
+          "item_type": 20302,
+          "item_name": "@beauty_effect_face_change",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_lianpuAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_effect_face_change",
+          "item_icon_select": "@beauty_ic_effect_face_change"
+        }
+      ]
+    },
+    {
+      "tab_id": 4,
+      "tab_type": 10004,
+      "tab_name": "美妆",
+      "tab_item_name_size": 10,
+      "tab_item_name_color_normal": "#ff888888",
+      "tab_item_name_color_select": "#ffffffff",
+      "tab_item_icon_width": 54,
+      "tab_item_icon_height": 54,
+      "tab_item_level_hint_color": "#ffffffff",
+      "tab_item_level_hint_size": 16,
+      "tab_item_level_value_color": "#ffffffff",
+      "tab_item_level_value_size": 14,
+      "tab_item_level_progress_drawable": "@beauty_progress_drawable",
+      "tab_item_level_progress_thumb": "@beauty_thumb",
+      "tab_item_list": [
+        {
+          "item_id": 1,
+          "item_type": 20401,
+          "item_name": "@beauty_common_none",
+          "item_material_url": "",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_common_none",
+          "item_icon_select": "@beauty_ic_common_none"
+        },
+        {
+          "item_id": 2,
+          "item_type": 20402,
+          "item_name": "@beauty_makeups_cherry",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_cherriesAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_makeups_cherry",
+          "item_icon_select": "@beauty_ic_makeups_cherry"
+        },
+        {
+          "item_id": 3,
+          "item_type": 20402,
+          "item_name": "@beauty_makeups_seas",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_haiyang2Android.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_makeups_seas",
+          "item_icon_select": "@beauty_ic_makeups_seas"
+        },
+        {
+          "item_id": 4,
+          "item_type": 20402,
+          "item_name": "@beauty_makeups_pink",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_fenfenxia_squareAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_makeups_pink",
+          "item_icon_select": "@beauty_ic_makeups_pink"
+        },
+        {
+          "item_id": 5,
+          "item_type": 20402,
+          "item_name": "@beauty_makeups_widow",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_guajiezhuangAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_makeups_widow",
+          "item_icon_select": "@beauty_ic_makeups_widow"
+        },
+        {
+          "item_id": 6,
+          "item_type": 20402,
+          "item_name": "@beauty_makeups_lip",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_qixichunAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_makeups_lip",
+          "item_icon_select": "@beauty_ic_makeups_lip"
+        },
+        {
+          "item_id": 7,
+          "item_type": 20402,
+          "item_name": "@beauty_makeups_costume",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_gufengzhuangAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_makeups_costume",
+          "item_icon_select": "@beauty_ic_makeups_costume"
+        },
+        {
+          "item_id": 8,
+          "item_type": 20402,
+          "item_name": "@beauty_makeups_ugly",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_dxxiaochounvAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_makeups_ugly",
+          "item_icon_select": "@beauty_ic_makeups_ugly"
+        },
+        {
+          "item_id": 9,
+          "item_type": 20402,
+          "item_name": "@beauty_makeups_mixing",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_remix1Android.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_makeups_mixing",
+          "item_icon_select": "@beauty_ic_makeups_mixing"
+        },
+        {
+          "item_id": 10,
+          "item_type": 20402,
+          "item_name": "@beauty_makeups_retro",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/180/video_yuansufugu.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_makeups_retro",
+          "item_icon_select": "@beauty_ic_makeups_retro"
+        }
+      ]
+    },
+    {
+      "tab_id": 5,
+      "tab_type": 10005,
+      "tab_name": "手势",
+      "tab_item_name_size": 10,
+      "tab_item_name_color_normal": "#ff888888",
+      "tab_item_name_color_select": "#ffffffff",
+      "tab_item_icon_width": 54,
+      "tab_item_icon_height": 54,
+      "tab_item_level_hint_color": "#ffffffff",
+      "tab_item_level_hint_size": 16,
+      "tab_item_level_value_color": "#ffffffff",
+      "tab_item_level_value_size": 14,
+      "tab_item_level_progress_drawable": "@beauty_progress_drawable",
+      "tab_item_level_progress_thumb": "@beauty_thumb",
+      "tab_item_list": [
+        {
+          "item_id": 1,
+          "item_type": 20501,
+          "item_name": "@beauty_common_none",
+          "item_material_url": "",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_common_none",
+          "item_icon_select": "@beauty_ic_common_none"
+        },
+        {
+          "item_id": 2,
+          "item_type": 20502,
+          "item_name": "@beauty_gesture_pikaqiu",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/181/video_pikachu.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_gesture_pikachu",
+          "item_icon_select": "@beauty_ic_gesture_pikachu"
+        },
+        {
+          "item_id": 3,
+          "item_type": 20502,
+          "item_name": "@beauty_gesture_meteor_shower",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_liuxingyuAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_gesture_meteor_shower",
+          "item_icon_select": "@beauty_ic_gesture_meteor_shower"
+        },
+        {
+          "item_id": 4,
+          "item_type": 20502,
+          "item_name": "@beauty_gesture_snow_control",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_kongxue2Android.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_gesture_snow_control",
+          "item_icon_select": "@beauty_ic_gesture_snow_control"
+        },
+        {
+          "item_id": 5,
+          "item_type": 20502,
+          "item_name": "@beauty_gesture_tv_star",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_dianshizhixingAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_gesture_tv_star",
+          "item_icon_select": "@beauty_ic_gesture_tv_star"
+        },
+        {
+          "item_id": 6,
+          "item_type": 20502,
+          "item_name": "@beauty_gesture_bottle_cap_challenge",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/video_bottle1Android.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_gesture_bottle_cap_challenge",
+          "item_icon_select": "@beauty_ic_gesture_bottle_cap_challenge"
+        }
+      ]
+    },
+    {
+      "tab_id": 6,
+      "tab_type": 10006,
+      "tab_name": "抠背",
+      "tab_item_name_size": 10,
+      "tab_item_name_color_normal": "#ff888888",
+      "tab_item_name_color_select": "#ffffffff",
+      "tab_item_icon_width": 54,
+      "tab_item_icon_height": 54,
+      "tab_item_level_hint_color": "#ffffffff",
+      "tab_item_level_hint_size": 16,
+      "tab_item_level_value_color": "#ffffffff",
+      "tab_item_level_value_size": 14,
+      "tab_item_level_progress_drawable": "@beauty_progress_drawable",
+      "tab_item_level_progress_thumb": "@beauty_thumb",
+      "tab_item_list": [
+        {
+          "item_id": 1,
+          "item_type": 20601,
+          "item_name": "@beauty_common_none",
+          "item_material_url": "",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_common_none",
+          "item_icon_select": "@beauty_ic_common_none"
+        },
+        {
+          "item_id": 2,
+          "item_type": 20602,
+          "item_name": "@beauty_cutout_background_ai",
+          "item_material_url": "http://dldir1.qq.com/hudongzhibo/AISpecial/Android/170/video_xiaofuAndroid.zip",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_cutout_background_ai",
+          "item_icon_select": "@beauty_ic_cutout_background_ai"
+        }
+      ]
+    },
+    {
+      "tab_id": 7,
+      "tab_type": 10007,
+      "tab_name": "绿幕",
+      "tab_item_name_size": 10,
+      "tab_item_name_color_normal": "#ff888888",
+      "tab_item_name_color_select": "#ffffffff",
+      "tab_item_icon_width": 54,
+      "tab_item_icon_height": 54,
+      "tab_item_level_hint_color": "#ffffffff",
+      "tab_item_level_hint_size": 16,
+      "tab_item_level_value_color": "#ffffffff",
+      "tab_item_level_value_size": 14,
+      "tab_item_level_progress_drawable": "@beauty_progress_drawable",
+      "tab_item_level_progress_thumb": "@beauty_thumb",
+      "tab_item_list": [
+        {
+          "item_id": 1,
+          "item_type": 20701,
+          "item_name": "@beauty_common_none",
+          "item_material_url": "",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_common_none",
+          "item_icon_select": "@beauty_ic_common_none"
+        },
+        {
+          "item_id": 2,
+          "item_type": 20702,
+          "item_name": "@beauty_good_luck",
+          "item_material_url": "",
+          "item_level": -1,
+          "item_icon_normal": "@beauty_ic_goodluck",
+          "item_icon_select": "@beauty_ic_goodluck"
+        }
+      ]
+    }
+  ]
+}

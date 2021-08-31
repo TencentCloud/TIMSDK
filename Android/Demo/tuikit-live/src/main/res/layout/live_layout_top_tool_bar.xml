@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="12dp"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:id="@+id/ll_anchor_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/live_top_anchor_info_bg"
+        android:orientation="horizontal"
+        android:paddingStart="1dp"
+        android:paddingTop="1dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="1dp">
+
+        <com.tencent.qcloud.tim.tuikit.live.component.common.CircleImageView
+            android:id="@+id/iv_anchor_head"
+            android:layout_width="@dimen/live_top_anchor_avatar_height"
+            android:layout_height="@dimen/live_top_anchor_avatar_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="2dp"
+            android:src="@drawable/live_default_head_img" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:layout_marginStart="3dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_anchor_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:maxWidth="@dimen/live_text_max_show_width"
+                android:maxLines="1"
+                android:minWidth="30dp"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                tools:text="@string/live_default_anchor_name" />
+
+            <TextView
+                android:id="@+id/tv_audience_number"
+                android:layout_below="@id/tv_anchor_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:maxLines="1"
+                android:textColor="@color/live_white"
+                android:textSize="11sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/btn_anchor_follow"
+            android:layout_width="40dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/live_subscribe_anchor_btn_bg"
+            android:gravity="center"
+            android:text="@string/live_btn_follow_anchor"
+            android:textColor="@color/live_color_red"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/ll_audiences_info"
+        android:gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_audiences"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </RelativeLayout>
+
+</LinearLayout>

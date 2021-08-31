@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval" android:id="@android:id/background" >
+            <solid android:color="#7e000000" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/live_voice_room_ic_mute_seat" android:top="20dp" android:right="20dp"
+        android:bottom="20dp"
+        android:left="20dp"  >
+    </item>
+</layer-list>

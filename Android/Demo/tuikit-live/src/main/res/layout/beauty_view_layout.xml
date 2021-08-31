@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/beauty_rl_title"
+        android:layout_width="match_parent"
+        android:layout_height="52dp">
+
+        <TextView
+            android:id="@+id/beauty_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/live_dark_black"
+            android:textStyle="bold"
+            android:textSize="16dp" />
+
+        <Button
+            android:id="@+id/beauty_tv_close"
+            android:background="@drawable/live_btn_close_black"
+            android:layout_width="@dimen/live_close_btn_width"
+            android:layout_height="@dimen/live_close_btn_width"
+            android:layout_marginRight="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/beauty_rl_seek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_below="@+id/beauty_rl_title"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/beauty_tv_seek_bar_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="20dp"
+            android:text="@string/beauty_strength"
+            android:textColor="@android:color/white" />
+
+        <SeekBar
+            android:id="@+id/beauty_seek_bar_third"
+            android:layout_width="274dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="false"
+            android:max="9"
+            android:maxHeight="2dp"
+            android:minHeight="2dp"
+            android:paddingStart="28dp"
+            android:paddingLeft="28dp"
+            android:paddingEnd="12dp"
+            android:paddingRight="12dp"
+            android:progress="0"
+            android:progressDrawable="@drawable/live_seekbar_progress_drawable"
+            android:thumb="@drawable/live_seekbar_progress_thumb" />
+
+        <TextView
+            android:id="@+id/beauty_tv_seek_bar_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="20dp"
+            android:text="0"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/beauty_rl_item"
+        android:layout_width="match_parent"
+        android:layout_height="116dp"
+        android:layout_below="@+id/beauty_rl_seek_bar"
+        android:orientation="horizontal">
+
+        <com.tencent.liteav.demo.beauty.view.TCHorizontalScrollView
+            android:id="@+id/beauty_horizontal_picker_second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="5dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@android:id/content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal" />
+        </com.tencent.liteav.demo.beauty.view.TCHorizontalScrollView>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/beauty_rl_tab"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_below="@+id/beauty_rl_item"
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.tencent.liteav.demo.beauty.view.TCHorizontalScrollView
+            android:id="@+id/beauty_horizontal_picker_view_first"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@android:id/content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal" />
+        </com.tencent.liteav.demo.beauty.view.TCHorizontalScrollView>
+    </LinearLayout>
+</RelativeLayout>

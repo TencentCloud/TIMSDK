@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <color name="white">#FFFFFF</color>
+    <color name="white_alpha">#66FFFFFF</color>
+    <color name="black">#000000</color>
+    
+    <color name="beauty_color_red">#FF584C</color>
+    <color name="beauty_color_white">#FFFFFF</color>
+    <!-- 基础色值 -->
+    <color name="live_black20">#33000000</color> <!--不透明度20%黑-->
+    <color name="live_white">#ffffff</color> <!--不透明度20%黑-->
+    <color name="live_dark_black">#FF111111</color>
+    <color name="live_light_black">#99111111</color>
+    <color name="live_color_orange">#FF9E00</color>
+    <color name="live_color_light_red">#FF5353</color>
+    <color name="live_color_light_red_transform">#CC5353</color>
+    <color name="live_color_line">#FFE5E5E5</color>
+
+    <color name="live_primary">#FF5353</color>
+    <color name="live_color_red">#FF0000</color>
+    <color name="live_color_white">#FFFFFF</color>
+    <color name="live_color_grey">#44777777</color>
+    <color name="live_color_yellow">#EEEE00</color>
+    <color name="live_color_top_bottom_bg">#4D000000</color>
+    <color name="live_color_top_bottom_bg_disabled">#4D4D4D</color>
+    <color name="live_color_status_tip">#FF6B82A8</color>
+    <color name="live_color_duration">#FA5151</color>
+
+    <!-- 直播间顶部主播信息 -->
+    <color name="status_bar_color">#EDEDED</color>
+    <color name="conversation_top_color">#F2F2F2</color>
+    <color name="navigation_bar_color">#F7F7F7</color>
+    <color name="slide_bar_hint_color">#CCCCCC</color>
+    <color name="chat_background_color">#F4F4F4</color>
+
+    <color name="live_color_bg_detail_live">#FF13233F</color>
+    <color name="live_color_text_hint">#FF6B82A8</color>
+    <color name="live_color_text_blue">#FF0062E3</color>
+    <color name="live_color_shadow">#999999</color>
+    <color name="live_color_bg_select_pk">#FF13233F</color>
+
+    <!-- 消息/弹幕输入 -->
+    <color name="live_color_send_name">#FF2B7DE2</color>
+    <color name="live_color_transparent_black">#44777777</color>
+    <color name="live_color_input_dialog_bg">#FFFFFF</color>
+    <color name="live_color_send_name0">#FF9966CC</color>
+    <color name="live_color_send_name1">#FFF12B5B</color>
+    <color name="live_color_send_name2">#FF2B7DE2</color>
+    <color name="live_color_send_name3">#FF006599</color>
+    <color name="live_color_send_name4">#FFFF7906</color>
+    <color name="live_color_send_name5">#FF1FBCB6</color>
+    <color name="live_color_send_name6">#FFFFAE1F</color>
+    <color name="live_color_send_name7">#FFFF437D</color>
+    <color name="live_color_accent">#FF00A66B</color>
+    <color name="live_color_send_btn">#00A66b</color>
+
+
+    <!-- 礼物 -->
+    <color name="live_gift_dialog_background">#E6000000</color>
+    <color name="live_gift_dark_orange">#FF8C00</color>
+    <color name="live_gift_white">#FFFFFF</color>
+    <color name="live_gift_red">#FF0000</color>
+    <color name="live_gift_select">#303030</color>
+    <color name="live_gift_dark_black">#000000</color>
+    <color name="live_git_bullet_layout">#40000000</color>
+    <color name="live_gift_button_press">#FF8989</color>
+    <color name="live_gift_transparent">#00000000</color>
+
+    <color name="live_voice_room_circle">#020714</color>
+    <color name="live_voice_room_text_color_disable">#56749E</color>
+    <color name="live_voice_room_text_color_second">#EBF4FF</color>
+    <color name="live_voice_room_text_color_hint">#6B82A8</color>
+    <color name="live_voice_room_transparent">#00000000</color>
+    <color name="live_voice_room_btn_text">@color/live_voice_room_text_color_disable</color>
+    <color name="live_voice_room_color_text_blue">#FF0062E3</color>
+
+    <color name="live_voice_room_color_black">#FF000000</color>
+    <color name="live_voice_room_color_transparent_black">#44777777</color>
+    <!--输入框颜色-->
+    <color name="live_voice_room_color_text_red">#FF4E42</color>
+
+    <color name="live_action_sheet_blue">#037BFF</color>
+    <color name="colorPrimary">#00A66b</color>
+    <color name="colorShade">#33000000</color>
+
+</resources>

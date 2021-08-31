@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_gift_root"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/iv_gift_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/tv_gift_name"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/live_dark_black"
+        android:layout_gravity="center_horizontal"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_gift_price"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/live_dark_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/live_gift_give_gift"
+        android:textColor="@color/live_gift_dark_orange"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+</LinearLayout>
