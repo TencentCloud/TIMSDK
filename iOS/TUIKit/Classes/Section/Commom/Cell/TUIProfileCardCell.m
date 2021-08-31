@@ -70,28 +70,28 @@
         self.avatar.layer.masksToBounds = YES;
         self.avatar.layer.cornerRadius = [TUIKit sharedInstance].config.avatarCornerRadius;
     }
-    [self addSubview:_avatar];
+    [self.contentView addSubview:_avatar];
     
     //CGSize genderIconSize = CGSizeMake(20, 20);
     _genderIcon = [[UIImageView alloc] init];
     _genderIcon.contentMode = UIViewContentModeScaleAspectFit;
     _genderIcon.image = self.cardData.genderIconImage;
-    [self addSubview:_genderIcon];
+    [self.contentView addSubview:_genderIcon];
     
     _name = [[UILabel alloc] init];
     [_name setFont:[UIFont systemFontOfSize:15]];
     [_name setTextColor:[UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark]];
-    [self addSubview:_name];
+    [self.contentView addSubview:_name];
     
     _identifier = [[UILabel alloc] init];
     [_identifier setFont:[UIFont systemFontOfSize:14]];
     [_identifier setTextColor:[UIColor d_systemGrayColor]];
-    [self addSubview:_identifier];
+    [self.contentView addSubview:_identifier];
     
     _signature = [[UILabel alloc] init];
     [_signature setFont:[UIFont systemFontOfSize:14]];
     [_signature setTextColor:[UIColor d_systemGrayColor]];
-    [self addSubview:_signature];
+    [self.contentView addSubview:_signature];
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }

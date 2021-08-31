@@ -1409,6 +1409,9 @@ static double trtcLiveCheckStatusTimeOut = 3;
 
 #pragma mark - V2TIMAdvancedMsgListener
 - (void)onRecvNewMessage:(V2TIMMessage *)msg {
+    if (msg.groupID.length == 0 || ![msg.groupID isEqual:self.roomID]) {
+        return;
+    }
     if (msg.elemType == V2TIM_ELEM_TYPE_CUSTOM) {
         V2TIMCustomElem *elem = msg.customElem;
         NSData *data = elem.data;

@@ -51,17 +51,24 @@
 
 - (void)setData:(TGroupMemberCellData *)data
 {
-    if (data.avatarImage) {
-        self.head.image = data.avatarImage;
-    } else {
-        self.head.image = DefaultAvatarImage;
-        [[V2TIMManager sharedInstance] getUsersInfo:@[data.identifier] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-            if (infoList.firstObject) {
-                [self.head sd_setImageWithURL:[NSURL URLWithString:infoList.firstObject.faceURL] placeholderImage:DefaultAvatarImage];
-            };
-        } fail:nil];
-    }
+    _data = data;
 
+    if (data.avatarUrl) {
+        // 外部有传入头像路径，直接使用路径加载，防止头像闪烁
+        [self.head sd_setImageWithURL:[NSURL URLWithString:data.avatarUrl] placeholderImage:data.avatarImage?:DefaultAvatarImage];
+    } else {
+        // 如果外部只传入了 user_id，则使用默认的id形式加载
+        if (data.avatarImage) {
+            self.head.image = data.avatarImage;
+        } else {
+            self.head.image = DefaultAvatarImage;
+            [[V2TIMManager sharedInstance] getUsersInfo:@[data.identifier] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+                if (infoList.firstObject) {
+                    [self.head sd_setImageWithURL:[NSURL URLWithString:infoList.firstObject.faceURL] placeholderImage:DefaultAvatarImage];
+                };
+            } fail:nil];
+        }
+    }
     if (data.name.length) {
         self.name.text = data.name;
     } else {

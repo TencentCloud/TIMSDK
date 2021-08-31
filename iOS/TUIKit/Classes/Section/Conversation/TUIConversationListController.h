@@ -23,6 +23,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, TUISearchType) {
+    TUISearchTypeContact     = 0,    // 联系人搜索
+    TUISearchTypeGroup       = 1,    // 群聊搜索
+    TUISearchTypeChatHistory = 2     // 聊天记录搜索
+};
+
 
 @class TUIConversationListController;
 
@@ -49,6 +55,21 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param conversationCell 被选中的会话单元
  */
 - (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCell *)conversationCell;
+
+/**
+ *  全局搜索中，点击了某个具体的搜索项
+ *  您可以通过该回调响应用户的点击操作，根据搜索类型跳转到对应界面。
+ *
+ *  @param searchVC 当前的搜索页面，可通过该页面的导航控制器跳转
+ *  @param searchType 点击的搜索类型
+ *  @param searchItem 点击的搜索数据类型，联系人-V2TIMFriendInfo，群聊-V2TIMGroupInfo，聊天记录-V2TIMMessage
+ *  @param conversationCellData 附加的会话cellData，TUIKit 已经为您构造好了，方便您直接跳转到聊天页面
+ */
+- (void)searchController:(UIViewController *)searchVC
+                withKey:(NSString *)searchKey
+           didSelectType:(TUISearchType)searchType
+                    item:(NSObject *)searchItem
+    conversationCellData:(TUIConversationCellData *)conversationCellData;
 @end
 
 /**
@@ -86,6 +107,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  视图模型能够协助消息列表界面实现数据的加载、移除、过滤等多种功能。替界面分摊部分的业务逻辑运算。
  */
 @property (nonatomic, strong) TConversationListViewModel *viewModel;
+
+/**
+ * 是否显示搜索条，默认显示搜索条
+ */
+@property (nonatomic, assign) BOOL showSearchBar;
 
 @end
 

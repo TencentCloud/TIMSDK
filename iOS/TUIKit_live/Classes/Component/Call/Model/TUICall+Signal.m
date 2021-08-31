@@ -48,7 +48,7 @@
                     @strongify(self)
                     // 发起 Apns 推送,群组的邀请，需要单独对每个被邀请人发起推送
                     for (NSString *invitee in realModel.invitedList) {
-                        [self sendAPNsForGroupCall:invitee inviteeList:realModel.invitedList callID:self.callID  groupid:realModel.groupid roomid:realModel.roomid];
+                        [self sendAPNsForCall:invitee inviteeList:realModel.invitedList callID:self.callID  groupid:realModel.groupid roomid:realModel.roomid];
                     }
                 } fail:^(int code, NSString *desc) {
                     @strongify(self)
@@ -58,9 +58,12 @@
                 }];
                 self.callID = callID;
             } else {
-                V2TIMOfflinePushInfo *info = [self getOfflinePushInfo:realModel.invitedList.firstObject inviteeList:realModel.invitedList callID:self.callID groupid:realModel.groupid roomid:realModel.roomid];
                 @weakify(self)
-                callID = [[V2TIMManager sharedInstance] invite:realModel.invitedList.firstObject data:data onlineUserOnly:NO offlinePushInfo:info timeout:SIGNALING_EXTRA_KEY_TIME_OUT succ:nil fail:^(int code, NSString *desc) {
+                callID = [[V2TIMManager sharedInstance] invite:realModel.invitedList.firstObject data:data onlineUserOnly:NO offlinePushInfo:nil timeout:SIGNALING_EXTRA_KEY_TIME_OUT succ:^ {
+                    @strongify(self)
+                    // 由于在发起邀请之前，无法获取callID,需要成功邀请之后另外再单独发起推送
+                    [self sendAPNsForCall:realModel.invitedList.firstObject inviteeList:realModel.invitedList callID:self.callID groupid:realModel.groupid roomid:realModel.roomid];
+                } fail:^(int code, NSString *desc) {
                     @strongify(self)
                     if (self.delegate) {
                         [self.delegate onError:code msg:desc];
@@ -157,7 +160,7 @@
     return callID;
 }
 
-- (void)sendAPNsForGroupCall:(NSString *)receiver inviteeList:(NSArray *)inviteeList callID:(NSString *)callID groupid:(NSString *)groupid roomid:(UInt32)roomid{
+- (void)sendAPNsForCall:(NSString *)receiver inviteeList:(NSArray *)inviteeList callID:(NSString *)callID groupid:(NSString *)groupid roomid:(UInt32)roomid{
     V2TIMOfflinePushInfo *info = [self getOfflinePushInfo:receiver inviteeList:inviteeList callID:callID groupid:groupid roomid:roomid];
     V2TIMMessage *msg = [[V2TIMManager sharedInstance] createCustomMessage:[TUICallUtils dictionary2JsonData:@{@"version" : @(AVCall_Version) , @"businessID" : AVCall}]];
     [[V2TIMManager sharedInstance] sendMessage:msg receiver:receiver groupID:nil priority:V2TIM_PRIORITY_HIGH onlineUserOnly:YES offlinePushInfo:info progress:nil succ:nil fail:nil];

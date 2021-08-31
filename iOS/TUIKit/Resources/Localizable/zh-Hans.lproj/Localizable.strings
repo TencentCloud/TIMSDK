@@ -152,6 +152,7 @@
 "TUIKitMoreCamera" = "拍照";
 "TUIKitMorePhoto" = "相册";
 "TUIKitMoreVideo" = "录像";
+"TUIKitMoreVideoCaptureDurationTip" = "录制时间过短";
 "TUIKitMoreFile" = "文件";
 "TUIKitMoreVideoCall" = "视频通话";
 "TUIKitMoreVoiceCall" = "语音通话";

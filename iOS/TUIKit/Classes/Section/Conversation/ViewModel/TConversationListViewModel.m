@@ -40,6 +40,8 @@
                                                  selector:@selector(onLeaveFromGroup:) name:TUIKitNotification_onLeaveFromGroup object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didTopConversationListChanged:) name:kTopConversationListChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(onGroupInfoChanged:) name:TUIKitNotification_onGroupInfoChanged object:nil];
         self.localConvList = [[NSMutableArray alloc] init];
         self.pagePullCount = 100;
         self.nextSeq = 0;
@@ -52,6 +54,35 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)onGroupInfoChanged:(NSNotification *)notify
+{
+    NSDictionary *userInfo = notify.userInfo;
+    if (![userInfo.allKeys containsObject:@"groupID"] || ![userInfo.allKeys containsObject:@"changeInfoList"]) {
+        return;
+    }
+    NSString *groupID = [userInfo objectForKey:@"groupID"];
+    if (groupID.length == 0) {
+        return;
+    }
+    NSString *conversationID = [NSString stringWithFormat:@"group_%@", groupID];
+    TUIConversationCellData *tmpData = nil;
+    for (TUIConversationCellData *cellData in self.dataList) {
+        if ([cellData.conversationID isEqual:conversationID]) {
+            tmpData = cellData;
+            break;
+        }
+    }
+    if (tmpData == nil) {
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    [V2TIMManager.sharedInstance getConversation:conversationID succ:^(V2TIMConversation *conv) {
+        [weakSelf updateConversation:@[conv]];
+    } fail:^(int code, NSString *desc) {
+        
+    }];
 }
 
 - (void)didTopConversationListChanged:(NSNotification *)no

@@ -33,8 +33,9 @@
 #import "TIMMessage+DataProvider.h"
 #import "V2TUIMessageController.h"
 #import "TUIKitListenerManager.h"
+#import "TUICameraViewController.h"
 
-@interface TUIChatController () <TMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate>
+@interface TUIChatController () <TMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate, TUICameraViewControllerDelegate>
 @property (nonatomic, strong) UIView *tipsView;
 @property (nonatomic, strong) UILabel *pendencyLabel;
 @property (nonatomic, strong) UIButton *pendencyBtn;
@@ -476,27 +477,19 @@
 
 - (void)takePictureForSend
 {
-    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-        picker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
-        picker.delegate = self;
-        [self presentViewController:picker animated:YES completion:nil];
-    }
+    TUICameraViewController *vc = [[TUICameraViewController alloc] init];
+    vc.type = TUICameraMediaTypePhoto;
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)takeVideoForSend
 {
-    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-        picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-        picker.cameraCaptureMode =UIImagePickerControllerCameraCaptureModeVideo;
-        picker.videoQuality = UIImagePickerControllerQualityTypeMedium;
-        [picker setVideoMaximumDuration:15];
-        picker.delegate = self;
-        [self presentViewController:picker animated:YES completion:nil];
-    }
+    TUICameraViewController *vc = [[TUICameraViewController alloc] init];
+    vc.type = TUICameraMediaTypeVideo;
+    vc.videoMinimumDuration = 1.5;
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)selectFileForSend
@@ -507,7 +500,32 @@
 
 }
 
-#pragma mark -
+#pragma mark - TUICameraViewControllerDelegate
+- (void)cameraViewController:(TUICameraViewController *)controller didFinishPickingMediaWithVideoURL:(NSURL *)url {
+    [self transcodeIfNeed:url];
+}
+
+- (void)cameraViewController:(TUICameraViewController *)controller didFinishPickingMediaWithImage:(UIImage *)image {
+    NSData *data = UIImageJPEGRepresentation(image, 0.75);
+    NSString *path = [TUIKit_Image_Path stringByAppendingString:[THelper genImageName:nil]];
+    [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
+    
+    TUIImageMessageCellData *uiImage = [[TUIImageMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
+    uiImage.path = path;
+    uiImage.length = data.length;
+    [self sendMessage:uiImage];
+    
+    for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
+        if (delegate && [delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
+            [delegate chatController:self didSendMessage:uiImage];
+        }
+    }
+}
+
+- (void)cameraViewControllerDidCancel:(TUICameraViewController *)controller {
+}
+
+#pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     // 快速点的时候会回调多次
@@ -685,10 +703,20 @@
         // mp4 直接发送
         [self sendVideoWithUrl:url];
     } else {
-        // 非 mp4 文件 => map4 文件
+        // 非 mp4 文件 => mp4 文件
         NSString* tempPath = NSTemporaryDirectory();
         NSURL *urlName = [url URLByDeletingPathExtension];
         NSURL *newUrl = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@%@.mp4", tempPath,[urlName.lastPathComponent stringByRemovingPercentEncoding]]];
+        
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if ([fileManager fileExistsAtPath:newUrl.path]){
+            NSError *error;
+            BOOL success = [fileManager removeItemAtPath:newUrl.path error:&error];
+            if (!success || error) {
+                NSAssert1(NO, @"removeItemFail: %@", error.localizedDescription);
+                return;
+            }
+        }
         // mov to mp4
         AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:url options:nil];
         AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset presetName:AVAssetExportPresetHighestQuality];
@@ -1069,6 +1097,8 @@
         for (V2TIMMessage *msg in msgs) {
             V2TIMMessage *forwardMessage = [V2TIMManager.sharedInstance createForwardMessage:msg];
             if (forwardMessage) {
+                forwardMessage.isExcludedFromUnreadCount = [TUIKit sharedInstance].config.isExcludedFromUnreadCount;
+                forwardMessage.isExcludedFromLastMessage = [TUIKit sharedInstance].config.isExcludedFromLastMessage;
                 [forwardMsgs addObject:forwardMessage];
             }
         }
@@ -1110,6 +1140,8 @@
             }
             return;
         }
+        mergeMessage.isExcludedFromUnreadCount = [TUIKit sharedInstance].config.isExcludedFromUnreadCount;
+        mergeMessage.isExcludedFromLastMessage = [TUIKit sharedInstance].config.isExcludedFromLastMessage;
         if (callback) {
             callback(YES, @[mergeMessage]);
         }

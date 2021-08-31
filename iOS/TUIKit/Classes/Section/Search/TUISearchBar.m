@@ -47,6 +47,11 @@
 {
     [super layoutSubviews];
     self.searchBar.frame = CGRectMake(10, 5, self.mm_w - 10 - 10, self.mm_h - 5 - 5);
+    if ([self.searchBar isFirstResponder]) {
+        [self.searchBar setPositionAdjustment:UIOffsetZero forSearchBarIcon:UISearchBarIconSearch];
+    } else {
+        [self.searchBar setPositionAdjustment:UIOffsetMake(0.5 * (self.mm_w - 10 - 10) - 40, 0) forSearchBarIcon:UISearchBarIconSearch];
+    }
 }
 
 #pragma mark - UISearchBarDelegate

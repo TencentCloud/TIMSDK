@@ -19,6 +19,8 @@
 @interface TUIGroupMemberController ()<TGroupMembersViewDelegate>
 @property (nonatomic, strong) NSMutableArray<TGroupMemberCellData *> *members;
 @property V2TIMGroupInfo *groupInfo;
+@property (nonatomic, assign) NSUInteger index;
+@property (nonatomic, assign) BOOL isNoMoreData;
 @end
 
 @implementation TUIGroupMemberController
@@ -38,11 +40,32 @@
             self.groupInfo = groupResultList[0].info;
         }
     } fail:^(int code, NSString *msg) {
-        @strongify(self)
         [THelper makeToast:msg];
     }];
-    [[V2TIMManager sharedInstance] getGroupMemberList:_groupId filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:0 succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+    
+    [self loadDatas:^(BOOL success, NSString *err, NSArray *datas) {
         @strongify(self)
+        if (!success) {
+            [THelper makeToast:err];
+            return;
+        }
+        [self.members addObjectsFromArray:datas];
+        [self.groupMembersView setData:self.members];
+        NSString *title = [NSString stringWithFormat:TUILocalizableString(TUIKitGroupProfileGroupCountFormat), (long)self.members.count];
+        self.title = title;;
+    }];
+}
+
+- (void)loadDatas:(void(^)(BOOL success, NSString *err, NSArray *datas))completion
+{
+    @weakify(self)
+    [[V2TIMManager sharedInstance] getGroupMemberList:_groupId filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:self.index succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+        @strongify(self)
+        self.index = nextSeq;
+        self.isNoMoreData = (nextSeq == 0);
+        NSMutableArray *arrayM = [NSMutableArray array];
+        NSMutableArray *ids = [NSMutableArray array];
+        NSMutableDictionary *map = [NSMutableDictionary dictionary];
         for (V2TIMGroupMemberFullInfo *member in memberList) {
             TGroupMemberCellData *user = [[TGroupMemberCellData alloc] init];
             user.identifier = member.userID;
@@ -55,14 +78,35 @@
             } else {
                 user.name = member.userID;
             }
-            [self.members addObject:user];
+            [arrayM addObject:user];
+            [ids addObject:user.identifier];
+            if (user.identifier && user) {
+                map[user.identifier] = user;
+            }
         }
-        [self.groupMembersView setData:self.members];
-        NSString *title = [NSString stringWithFormat:TUILocalizableString(TUIKitGroupProfileGroupCountFormat), (long)self.members.count];
-        self.title = title;;
+        // 批量获取头像 faceURL
+        [[V2TIMManager sharedInstance] getUsersInfo:ids succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+            NSArray *userIDs =  map.allKeys;
+            for (V2TIMUserFullInfo *info in infoList) {
+                if (![userIDs containsObject:info.userID]) {
+                    continue;
+                }
+                TGroupMemberCellData *user = map[info.userID];
+                user.avatarUrl = info.faceURL;
+            }
+            if (completion) {
+                completion(YES, @"", arrayM);
+            }
+        } fail:^(int code, NSString *desc) {
+            if (completion) {
+                completion(NO, desc, @[]);
+            }
+        }];
+        
     } fail:^(int code, NSString *msg) {
-        @strongify(self)
-        [THelper makeToast:msg];
+        if (completion) {
+            completion(NO, msg, @[]);
+        }
     }];
 }
 
@@ -127,6 +171,27 @@
 
     [self presentViewController:ac animated:YES completion:nil];
 }
+
+- (void)groupMembersView:(TUIGroupMembersView *)groupMembersView didLoadMoreData:(void (^)(NSArray<TGroupMemberCellData *> *))completion
+{
+    // 分页加载更多数据
+    if (self.isNoMoreData) {
+        if (completion) {
+            completion(@[]);
+        }
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    [self loadDatas:^(BOOL success, NSString *err, NSArray *datas) {
+        if (datas && datas.count) {
+            [weakSelf.members addObjectsFromArray:datas];
+        }
+        if (completion) {
+            completion(datas);
+        }
+    }];
+}
+
 
 /*
 - (BOOL)isMeOwner

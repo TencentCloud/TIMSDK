@@ -331,6 +331,7 @@
 #define TUIKitNotification_onReceiveJoinApplication @"TUIKitNotification_onReceiveJoinApplication"
 #define TUIKitNotification_onMessageStatusChanged @"TUIKitNotification_onMessageStatusChanged"
 #define TUIKitNotification_onTotalUnreadMessageCountChanged @"TUIKitNotifiction_onTotalUnreadMessageCountChanged"
+#define TUIKitNotification_onGroupInfoChanged @"V2TIMGroupNotify_onGroupInfoChanged"
 
 //path
 #define TUIKit_DB_Path [NSHomeDirectory() stringByAppendingString:@"/Documents/com_tencent_imsdk_data/"]
