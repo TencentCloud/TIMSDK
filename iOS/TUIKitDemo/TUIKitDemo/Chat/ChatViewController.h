@@ -20,4 +20,8 @@
 @property (nonatomic, strong) TUIConversationCellData *conversationData;
 @property (nonatomic, strong) TUnReadView *unRead;
 @property (nonatomic, strong) V2TIMMessage *waitToSendMsg;
+
+#pragma mark - 用于消息搜索场景
+@property (nonatomic, copy) NSString *highlightKeyword;
+@property (nonatomic, strong) V2TIMMessage *locateMessage;
 @end

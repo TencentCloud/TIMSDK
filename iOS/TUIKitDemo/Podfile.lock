@@ -2,7 +2,7 @@ PODS:
   - lottie-ios (2.5.3)
   - Masonry (1.1.0)
   - MJExtension (3.2.2)
-  - MJRefresh (3.6.1)
+  - MJRefresh (3.7.2)
   - MMLayout (0.2.0)
   - ReactiveObjC (3.1.1)
   - SDWebImage (5.9.0):
@@ -10,19 +10,19 @@ PODS:
   - SDWebImage/Core (5.9.0)
   - SSZipArchive (2.2.3)
   - Toast (4.0.0)
-  - TXIMSDK_Plus_iOS (5.4.666)
-  - TXIMSDK_TUIKit_iOS (5.4.666):
+  - TXIMSDK_Plus_iOS (5.6.1200)
+  - TXIMSDK_TUIKit_iOS (5.6.1200):
     - MMLayout (= 0.2.0)
     - ReactiveObjC (= 3.1.1)
     - SDWebImage (= 5.9.0)
     - Toast (= 4.0.0)
-    - TXIMSDK_Plus_iOS (= 5.4.666)
-  - TXIMSDK_TUIKit_live_iOS (5.4.666):
+    - TXIMSDK_Plus_iOS (= 5.6.1200)
+  - TXIMSDK_TUIKit_live_iOS (5.6.1200):
     - lottie-ios (= 2.5.3)
     - Masonry (= 1.1.0)
     - MJExtension (= 3.2.2)
     - SSZipArchive (= 2.2.3)
-    - TXIMSDK_TUIKit_iOS (= 5.4.666)
+    - TXIMSDK_TUIKit_iOS (= 5.6.1200)
     - TXLiteAVSDK_TRTC (= 8.5.10022)
   - TXLiteAVSDK_TRTC (8.5.10022)
 
@@ -51,15 +51,15 @@ SPEC CHECKSUMS:
   lottie-ios: a50d5c0160425cd4b01b852bb9578963e6d92d31
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MJExtension: d9b9c74cbdeb724c1e9ecbb157b318276e62e876
-  MJRefresh: d2c1970d1cf6e77fcfcdfe76c943dfab8dbfa5c1
+  MJRefresh: 30997d30b347c8e9508a4db11e3a690da0c9b85a
   MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 62ae4a18473520c67b79e9724c31a63599cc9423
   SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TXIMSDK_Plus_iOS: 4db13c8646d4f58d8ae558488f9523a2efd4ef6a
-  TXIMSDK_TUIKit_iOS: 667138c26fccc58e06663536aa45adbe042c5a6d
-  TXIMSDK_TUIKit_live_iOS: 3737cceb813691064589b31d9a717ea5700812e0
+  TXIMSDK_Plus_iOS: 1bfe351c84e3dad80e9c8e182267f87f6295f715
+  TXIMSDK_TUIKit_iOS: 3d5c579d8712f3ad4820b50be1a32c08cb127c30
+  TXIMSDK_TUIKit_live_iOS: 1cff33458c7b50b9ad5165a6a1dd31eb19a5aaad
   TXLiteAVSDK_TRTC: 52c1085c546ca7871950a815edf733196af645c1
 
 PODFILE CHECKSUM: c6c7d57f088ecc75becbf79a03ada7707285671c
