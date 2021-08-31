@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_dialog"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/forward_one_by_one"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:drawablePadding="16dp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/forward_mode_onebyone"
+        android:textColor="#666666"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/forward_merge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:drawablePadding="16dp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/forward_mode_merge"
+        android:textColor="#666666"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/cancel_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:drawablePadding="16dp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/cancel"
+        android:textColor="#666666"
+        android:textSize="14sp"/>
+</LinearLayout>

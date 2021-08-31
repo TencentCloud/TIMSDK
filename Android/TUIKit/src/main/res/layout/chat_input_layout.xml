@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/navigation_bar_color"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/input_title_line_color" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="57dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/voice_input_switch"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/action_audio_selector" />
+
+        <com.tencent.qcloud.tim.uikit.modules.chat.layout.input.TIMMentionEditText
+            android:id="@+id/chat_message_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/msg_editor_border"
+            android:maxHeight="120dp"
+            android:minHeight="30dp"
+            android:textCursorDrawable="@drawable/my_cursor"
+            android:padding="5dp" />
+
+        <Button
+            android:id="@+id/chat_voice_input"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/voice_btn_selector"
+            android:text="@string/hold_say"
+            android:textColor="@color/text_color_gray"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/face_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/action_face_selector" />
+
+        <ImageView
+            android:id="@+id/more_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/action_more_selector" />
+
+        <Button
+            android:id="@+id/send_btn"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:background="@drawable/message_send_border"
+            android:text="@string/send"
+            android:textColor="#fff"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/more_groups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+</LinearLayout>

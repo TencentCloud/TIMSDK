@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/btn_margin_bottom"
+    android:clickable="true">
+
+    <ImageView
+        android:id="@+id/ivAvatar"
+        android:layout_width="@dimen/contact_avatar_width"
+        android:layout_height="@dimen/contact_avatar_height"
+        android:clickable="false"
+        android:focusable="false"
+        android:src="@drawable/default_user_icon" />
+
+</LinearLayout>
+

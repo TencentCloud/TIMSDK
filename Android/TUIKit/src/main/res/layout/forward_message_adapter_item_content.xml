@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:paddingLeft="12.6dp"
+    android:paddingRight="12.6dp"
+    android:paddingTop="12.6dp"
+    android:paddingBottom="12.6dp">
+
+    <TextView
+        android:id="@+id/chat_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8.98dp"
+        android:layout_marginBottom="20.58dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/text_tips_color"
+        android:textSize="12.6sp"
+        android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/select_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_time_tv"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="6.23dp"
+        android:button="@drawable/checkbox_selector"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/right_group_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_time_tv"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="3.68dp"
+        android:orientation="horizontal">
+
+        <com.tencent.qcloud.tim.uikit.component.gatherimage.UserIconView
+            android:id="@+id/left_user_icon_view"
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="6.23dp"
+            android:visibility="gone"
+            app:default_image="@drawable/default_user_icon"
+            app:image_radius="20dp" />
+
+        <com.tencent.qcloud.tim.uikit.component.gatherimage.UserIconView
+            android:id="@+id/right_user_icon_view"
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="6.23dp"
+            android:visibility="gone"
+            app:default_image="@drawable/default_user_icon"
+            app:image_radius="20dp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/user_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/right_group_layout"
+        android:layout_below="@+id/chat_time_tv"
+        android:layout_marginLeft="6.67dp"
+        android:layout_marginBottom="3.68dp"
+        android:textColor="@color/text_tips_color"
+        android:textSize="12.6sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/msg_content_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_toRightOf="@+id/right_group_layout"
+        android:layout_below="@+id/user_name_tv"
+        android:layout_marginTop="3.68dp"
+        android:layout_marginBottom="3.68dp"
+        android:orientation="horizontal">
+
+        <com.tencent.qcloud.tim.uikit.component.UnreadCountTextView
+            android:id="@+id/audio_unread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/message_sending_pb"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/is_read_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="6dp"
+            android:textColor="@color/text_gray1"
+            android:textSize="11sp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/message_status_iv"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/message_send_fail"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/msg_content_fl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/split_lint_color" />
+
+
+</RelativeLayout>

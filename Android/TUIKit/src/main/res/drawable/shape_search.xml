@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- 连框颜色值 -->
+<item>
+    <shape>
+        <solid android:color="#ece9e9" />
+        <corners android:radius="5dp"/>
+    </shape>
+</item>
+<!-- 主体背景颜色值 -->
+<item android:bottom="1dp"
+    android:start="1dp"
+    android:right="1dp"
+    android:left="1dp"> 
+    <shape>
+        <solid android:color="#fff" />
+        <corners android:radius="5dp"/>
+    </shape>
+</item>
+
+</layer-list>
