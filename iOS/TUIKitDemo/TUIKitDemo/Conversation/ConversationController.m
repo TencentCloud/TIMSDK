@@ -387,4 +387,28 @@
     }
 }
 
+
+- (void)searchController:(UIViewController *)searchVC
+                withKey:(NSString *)searchKey
+           didSelectType:(TUISearchType)searchType
+                    item:(NSObject *)searchItem
+    conversationCellData:(TUIConversationCellData *)conversationCellData
+{
+    if (searchType == TUISearchTypeChatHistory && [searchItem isKindOfClass:V2TIMMessage.class]) {
+        // 点击搜索到的聊天消息
+        ChatViewController *chatVc = [[ChatViewController alloc] init];
+        [chatVc setConversationData:conversationCellData];
+        chatVc.title = conversationCellData.title;
+        chatVc.highlightKeyword = searchKey;
+        chatVc.locateMessage = (V2TIMMessage *)searchItem;
+        [searchVC.navigationController pushViewController:chatVc animated:YES];
+    } else {
+        // 点击搜索到的群组和联系人
+        ChatViewController *chatVc = [[ChatViewController alloc] init];
+        [chatVc setConversationData:conversationCellData];
+        chatVc.title = conversationCellData.title;
+        [searchVC.navigationController pushViewController:chatVc animated:YES];
+    }
+}
+
 @end
