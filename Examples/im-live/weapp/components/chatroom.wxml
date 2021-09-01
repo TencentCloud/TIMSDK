@@ -1,4 +1,0 @@
-
-<scroll-view id="message-area" scroll-into-view="{{viewID}}" scroll-y="{{true}}" scroll-with-animation="{{true}}" scroll-anchoring="{{true}}" class="chatroom-scoll">
-    <message-item bind_init="_initComponent" wx:for="{{ message }}" wx:for-index="index" wx:for-item="item" wx:key="index" key="{{ item.id }}" item="{{ item }}" id="{{item.id}}"></message-item>
-</scroll-view>

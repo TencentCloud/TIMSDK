@@ -1,8 +1,0 @@
-{
-    "navigationBarBackgroundColor": "#ffffff",
-    "component": true,
-    "usingComponents": {
-        "roomlists": "./../../components/roomLists",
-        "login": "./../../components/login"
-    }
-}
