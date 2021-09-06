@@ -1,3 +1,0 @@
-[submodule "test/yaml-spec"]
-	path = test/yaml-spec
-	url = https://connec@github.com/connec/yaml-spec.git

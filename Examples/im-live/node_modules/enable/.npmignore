@@ -1,8 +1,0 @@
-test/
-Makefile
-.travis.yml
-logo.png
-.jshintignore
-.jshintrc
-.gitingore
-coverage/
