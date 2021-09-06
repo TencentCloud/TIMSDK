@@ -1,4 +1,0 @@
-
-<view class="like-wraper">
-    <view data-wpy-evt="23-0" bind:tap="_proxy" class="animation  {{ [ animation ? 'start' : '' ] }}"></view>
-</view>

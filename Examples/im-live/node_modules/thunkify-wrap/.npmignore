@@ -1,5 +1,0 @@
-.jshint*
-test/
-.gitignore
-.travis.yml
-Makefile
