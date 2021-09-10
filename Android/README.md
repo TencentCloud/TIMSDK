@@ -27,29 +27,30 @@
      </tr>
   <tr>      
       <td>Android</td>   
-      <td>Android/app/src/main/java/com/tencent/qcloud/tim/demo/signature/GenerateTestUserSig.java</td>   
+      <td>Android/Demo/app/src/main/java/com/tencent/qcloud/tim/demo/signature/GenerateTestUserSig.java</td>   
      </tr> 
   <tr>
       <td>iOS</td>   
-      <td>iOS/TUIKitDemo/TUIKitDemo/Debug/GenerateTestUserSig.h</td>
+      <td>iOS/Demo/TUIKitDemo/Debug/GenerateTestUserSig.h</td>
      </tr> 
   <tr>      
       <td>Mac</td>   
-      <td>Mac/TUIKitDemo/TUIKitDemo/Debug/GenerateTestUserSig.h</td>   
+      <td>Mac/Demo/TUIKitDemo/Debug/GenerateTestUserSig.h</td>   
      </tr>  
   <tr>      
       <td>Windows</td>   
-      <td>cross-platform/Windows/IMApp/IMApp/GenerateTestUserSig.h</td>   
+      <td>Windows/Demo/IMApp/GenerateTestUserSig.h</td>   
      </tr>  
   <tr>      
       <td>Web（通用）</td>   
-      <td>H5/js/debug/GenerateTestUserSig.js</td>   
+      <td>Web/Demo/public/debug/GenerateTestUserSig.js</td>   
      </tr>  
   <tr>      
       <td>小程序</td>   
-      <td>WXMini/debug/GenerateTestUserSig.js</td>   
+      <td>MiniProgram/Demo/static/utils/GenerateTestUserSig.js</td>   
      </tr>  
 </table>
+
 
  >本文以使用 Android Studio 打开 Android 工程为例。
   >
@@ -68,9 +69,9 @@
 ## 步骤5：编译运行（移除音视频通话和群直播）
 如果不想集成音视频相关的功能，请您按照下面的步骤移除对音视频的依赖，再编译运行。
 
-1. 进入`Android/app`文件夹，修改 `build.gradle` 文件，删除`implementation project(':tuikit-live')`那一行，然后重新同步一下工程。
+1. 进入`Android/Demo/app`文件夹，修改 `build.gradle` 文件，删除`implementation project(':tuikit-live')`那一行，然后重新同步一下工程。
 ![](https://main.qcloudimg.com/raw/a86639cbed2f633ba7ad1df94c2c3338.png)
-2. 打开 `Android/app/src/main/java/com/tencent/qcloud/tim/demo` 文件夹，手动删除其中的 `scenes` 文件夹。
+2. 打开 `Android/Demo/app/src/main/java/com/tencent/qcloud/tim/demo` 文件夹，手动删除其中的 `scenes` 文件夹。
 ![](https://main.qcloudimg.com/raw/19c0bf9bee6e55605ee156151d3c3df2.png)
 3. 编译运行。
 
