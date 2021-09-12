@@ -4,7 +4,7 @@ TUIKit 基于小程序原生开发，我们提供了 IM 聊天、在线客服、
 
 ### 效果展示
 
-![](https://web.sdk.qcloud.com/component/TUIKit/assets/tuikit-github-1.png)
+![800px](https://web.sdk.qcloud.com/component/TUIKit/assets/tuikit-github-1.png)
 
 ###  一分钟跑通 TUIKit
 
@@ -42,10 +42,10 @@ cd TIMSDK/MiniProgram/TUIKit
 ####  步骤5：编译运行
 1. 打开微信开发者工具，选择【小程序】，单击新建图标，选择【导入项目】。
 2. 填写您微信小程序的 AppID，单击【导入】。
-![](https://web.sdk.qcloud.com/component/TUIKit/assets/tuikit-github-3.png)
+![800px](https://web.sdk.qcloud.com/component/TUIKit/assets/tuikit-github-3.png)
 >!此处应输入您微信小程序的 AppID，而非 SDKAppID。
 3. 单击【预览】，生成二维码，通过手机微信扫码二维码即可进入小程序。
-![](https://web.sdk.qcloud.com/component/TUIKit/assets/github-tuikit.png)
+![800px](https://web.sdk.qcloud.com/component/TUIKit/assets/github-tuikit.png)
 
 ### 常见问题
 
