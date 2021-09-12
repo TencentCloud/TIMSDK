@@ -1,0 +1,359 @@
+.container {
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	/* background-image: url(https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png); */
+	margin: 0;
+}
+  
+.trtc-calling-index {
+  width: 100vw;
+  height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+  
+.trtc-calling-index-title {
+	position: relative;
+	display: flex;
+	width: 100%;
+	margin-top: 3.8vh;
+	justify-content: center;
+}
+
+.trtc-calling-index-title .title {
+	margin: 0;
+	font-family: PingFangSC-Regular;
+	font-size: 16px;
+	color: #000000;
+	letter-spacing: 0;
+	line-height: 36px;
+	padding: 1.2vh;
+}
+
+.btn-goback{
+	position: absolute;
+	left: 2vw;
+	top: 1.2vh;
+	width: 8vw;
+	height: 8vw;
+	z-index: 9;
+}
+
+.trtc-calling-index-search {
+	flex: 1;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.trtc-calling-index-search > .search {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	box-sizing: border-box;
+	padding: 16px;
+}
+
+.btn-search {
+	text-align: center;
+	width: 60px;
+	height: 40px;
+	line-height: 40px;
+	background: #0A6CFF;
+	color: #ffffff;
+	border-radius: 20px;
+}
+
+.search-result {
+	width: 90%;
+	height: 40px;
+	margin-left: 5%;
+}
+
+.input-box {
+	flex: 1;
+	box-sizing: border-box;
+	margin-right: 20px;
+	height: 40px;
+	background: #F4F5F9;
+	color: #666666;
+	border-radius: 20px;
+	padding: 9px 16px;
+	display: flex;
+	align-items: center;
+}
+.icon-right {
+	width: 8px;
+	height: 12px;
+	margin: 0 4px;
+}
+.input-search-user {
+	flex: 1;
+	box-sizing: border-box;
+}
+.input-label {
+	display: flex;
+	align-items: center;
+	padding-right: 5px;
+}
+.input-label-plus {
+	padding-bottom: 3px;
+}
+.input-search-user[placeholder]{	
+	font-family: PingFangSC-Regular;
+	font-size: 16px;
+	color: #8A898E;
+	letter-spacing: 0;
+	font-weight: 400;
+}
+
+.user-to-call {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 50px;
+	margin: 0;
+	padding: 16px 0;
+}
+
+.userInfo-box {
+	display: flex;
+	align-items: center;
+	font-size: 12px;
+	color: #333333;
+	letter-spacing: 0;
+	font-weight: 500;
+}
+.userInfo-box>.userInfo-avatar {
+	width: 50px;
+	height: 50px;
+	border-radius: 50px;
+}
+.userInfo-box>.userInfo-name {
+	padding-left: 8px;
+	max-width: 160px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.btn-userinfo-call {
+	width: 60px;
+	height: 40px;
+	text-align: center;
+	background: #0A6CFF;
+	border-radius: 20px;
+	line-height: 40px;
+	margin: 10px 0;
+	color: rgba(255, 255, 255);
+}
+
+.hidden {
+	display: none;
+}
+
+.trtc-calling {
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	background-image: url(https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png);
+	margin: 0;
+	z-index: 99;
+}
+
+.user-to-call > image {
+	height: 50px;
+	line-height: 50px;
+	border-radius:50px
+}
+
+/* .title-number {
+	height: 20px;
+	margin-top: 3%;
+	padding: 5px 0;
+	border-top: 1px solid rgba(255, 255, 255, 0.11);
+	font-size: 12px;
+} */
+.search-selfInfo {
+	position: relative;
+	padding: 0 28px;
+	font-family: PingFangSC-Regular;
+	font-size: 14px;
+	color: #333333;
+	letter-spacing: 0;
+	font-weight: 400;
+	display: flex;
+	align-items: center;
+}
+.search-selfInfo::before {
+	position: absolute;
+	content: "";
+	width: 4px;
+	height: 12px;
+	background: #9A9A9A;
+	border: 1px solid #979797;
+	border-radius: 2px;
+	margin: auto 0;
+	left: 16px;
+	top: 0;
+	bottom: 0;
+}
+.search-selfInfo-phone{
+	padding-left: 8px;
+}
+
+
+/* .incoming-call {
+	width: 100vw;
+	height: 100vh;
+} */
+
+.btn-operate {
+	display: flex;
+	justify-content: space-between;
+	position: absolute;
+	bottom: 5vh;
+	width: 100%;
+}
+.btn-operate-item{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.btn-operate-item text {
+	padding: 8px 0;
+	font-size: 18px;
+	color: #FFFFFF;
+	letter-spacing: 0;
+	font-weight: 400;
+}
+
+.call-operate {
+	width: 15vw;
+	height: 15vw;
+	border-radius: 15vw;
+	padding: 5px;
+	margin: 0 15vw;
+}
+
+.tips {
+	font-size: 20px;
+	color: #FFFFFF;
+	letter-spacing: 0;
+	text-align: right;
+	text-shadow: 0 1px 2px rgba(0,0,0,0.40);
+	font-weight: 600;
+}
+.tips-subtitle {
+	font-family: PingFangSC-Regular;
+	font-size: 14px;
+	color: #FFFFFF;
+	letter-spacing: 0;
+	text-align: right;
+	text-shadow: 0 1px 2px rgba(0,0,0,0.30);
+	font-weight: 400;
+}
+
+.invite-call {
+	/* background-image: url(https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png); */
+	background: #ffffff;
+	position: absolute;
+	top: 0;
+	z-index: 100;
+	width: 100vw;
+	height: 100vh;
+}
+.invite-call .local-video {
+	width: 100vw;
+	height: 100vh;
+}
+.invite-call .invite-calling {
+	position: absolute;
+	top: 0;
+	z-index: 101;
+	width: 100vw;
+	height: 100vh;
+}
+.invite-calling-header {
+	margin-top:107px;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 16px;
+	
+}
+.invite-calling-header-left image {
+	width: 32px;
+	height: 32px;
+}
+.invite-calling-header-right {
+	display: flex;
+	align-items: center;
+}
+.invite-calling-header-message {
+	display: flex;
+	flex-direction: column;
+	padding: 0 16px;
+}
+.invite-calling-header-right image {
+	width: 100px;
+	height: 100px;
+	border-radius: 12px;
+}
+.invite-calling .btn-operate{
+	display: flex;
+	justify-content: center;
+	position: absolute;
+	bottom: 5vh;
+	width: 100%;
+}
+
+/* .invite-call-box > image {
+	width: 40vw;
+	height: 40vw;
+	display: block;
+	margin: 20vw 30vw;
+	margin-top: 40vw;
+}
+
+.invite-call-box > image {
+	width: 120px;
+	height: 120px;
+	border-radius: 12px;
+	display: block;
+	margin: 140px auto 15px;
+} */
+.search-default {
+	flex: 1;
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+}
+
+.search-default-box {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding-bottom: 50vh;
+}
+
+.search-default-img {
+	width: 64px;
+	height: 66px;
+}
+
+.search-default-message {
+	width: 126px;
+	padding: 16px;
+	font-family: PingFangSC-Regular;
+	font-size: 14px;
+	color: #8A898E;
+	letter-spacing: 0;
+	text-align: center;
+	font-weight: 400;
+}
+

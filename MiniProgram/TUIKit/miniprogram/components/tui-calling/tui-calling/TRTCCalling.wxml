@@ -1,0 +1,23 @@
+<import src="./template/audio-template/audio-template"></import>
+<import src="./template/video-template/video-template"></import>
+<import src="./template/calling-template/calling-template"></import>
+
+<view class="TUICalling {{callStatus === 'idle' ?'hidden':''}}">
+  <view class="TRTCCaling-container">
+    <view wx:if="{{config.type === 1 && active}}" class="TRTCCalling-call-audio">
+      <!-- 语音通话 以下为语音通话模版 您可以根据您业务需求进行扩展，此处仅进行基础能力的展示 -->
+      <view style="width: 100%; height: 100%">
+        <template is='audio-template' data="{{streamList, pusherConfig, _handleConnectErrorImage, callStatus, chatTime, soundMode, _pusherNetStatus, _playNetStatus, _pusherStateChangeHandler, _pusherAudioVolumeNotify, _playerStateChange, _playerAudioVolumeNotify, _toggleAudio, _hangUp, _toggleSoundMode}}"></template>
+      </view>
+    </view>
+    <view wx:if="{{config.type === 2 && pusherConfig.pushUrl !== '' && active}}" class="TRTCCalling-call">
+      <!-- 视频通话 以下为视频通话模版 您可以根据您业务需求进行扩展，此处仅进行基础能力的展示-->
+      <view style="width: 100%; height: 100%">
+        <template is='video-template' data="{{streamList, pusherConfig, callStatus, chatTime, soundMode, screen, _toggleViewSize, _pusherNetStatus, _playNetStatus, _pusherStateChangeHandler, _pusherAudioVolumeNotify, _playerStateChange, _playerAudioVolumeNotify, _toggleAudio, _hangUp, _toggleSoundMode,_toggleCamera, _toggleSwitchCamera}}"></template>
+      </view>
+    </view>
+  </view>
+  <view  class="TRTCCaling-container" wx:if="{{callStatus === 'calling'}}">
+      <template is='calling-template' data="{{accept,_hangUp,reject,config,_handleErrorImage,remoteUsers,isSponsor,pusherConfig,_toggleSwitchCamera}}"></template>
+  </view>
+</view>

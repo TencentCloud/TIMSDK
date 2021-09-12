@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>单选-hover</title>
+    <desc>Created with Sketch.</desc>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="消息列表-添加-发起会话" transform="translate(-20.000000, -186.000000)">
+            <g id="编组-4" transform="translate(20.000000, 186.000000)">
+                <g id="编组-2">
+                    <circle id="椭圆形备份" fill="#006EFF" cx="12" cy="12" r="12"></circle>
+                    <polyline id="路径" stroke="#FFFFFF" stroke-width="2" transform="translate(11.792893, 10.121320) rotate(-45.000000) translate(-11.792893, -10.121320) " points="16.2928932 13.1213203 7.29289322 13.1213203 7.29289322 7.12132034"></polyline>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

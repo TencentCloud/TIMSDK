@@ -1,0 +1,84 @@
+<view class="TUI-message-input-container">
+    <view class="TUI-commom-function">
+        <view class="TUI-commom-function-item" wx:for="{{commonFunction}}" wx:key="index" data-function="{{item}}" bindtap="handleCommonFunctions">{{item.name}}</view>
+    </view>
+    <view class="TUI-message-input">
+        <image class="TUI-icon" bindtap="switchAudio" src="{{isAudio ? '/static/assets/keyboard.svg' : '/static/assets/audio.svg'}}" />
+        <view wx:if="{{!isAudio}}" class="TUI-message-input-main">
+            <input class="TUI-message-input-area" adjust-position="{{true}}" cursor-spacing="20"
+                value="{{message}}" bindinput="onInputValueChange" maxlength="140" type="text"
+                placeholder="" placeholder-class="input-placeholder"
+                bindfocus="inputBindFocus"
+                bindblur="inputBindBlur" />
+        </view>
+        <view wx:else class="TUI-message-input-main"
+            bind:longpress="handleLongPress"
+            bind:touchmove="handleTouchMove"
+            bind:touchend="handleTouchEnd"
+            style="display: flex; justify-content: center; font-size: 32rpx; font-family: PingFangSC-Regular;">
+            <text >{{text}}</text>
+        </view>
+        <view class="TUI-message-input-functions" hover-class="none">
+            <image class="TUI-icon" bindtap="handleEmoji" src="/static/assets/face-emoji.svg" />
+            <view wx:if="{{!sendMessageBtn}}" bindtap="handleExtensions">
+                <image class="TUI-icon" src="/static/assets/more.svg" />
+            </view>
+            <view wx:else class="TUI-sendMessage-btn" bindtap="sendTextMessage">
+                发送
+            </view>
+        </view>
+    </view>
+    <view wx:if="{{displayFlag === 'emoji'}}" class="TUI-Emoji-area">
+        <TUI-Emoji bind:enterEmoji="appendMessage" />
+    </view>
+    <view wx:if="{{displayFlag === 'extension'}}" class="TUI-Extensions">
+        <!-- TODO: 这里功能还没实现 -->
+<!--        <camera device-position="back" flash="off" binderror="error" style="width: 100%; height: 300px;"></camera>-->
+        <view class="TUI-Extension-slot" bindtap="handleSendPicture">
+            <image class="TUI-Extension-icon" src="/static/assets/take-photo.svg" />
+            <view class="TUI-Extension-slot-name">拍摄照片</view>
+        </view>
+        <view class="TUI-Extension-slot" bindtap="handleSendImage">
+            <image class="TUI-Extension-icon" src="/static/assets/send-img.svg" />
+            <view class="TUI-Extension-slot-name">发送图片</view>
+        </view>
+        <view class="TUI-Extension-slot" bindtap="handleShootVideo">
+            <image class="TUI-Extension-icon" src="/static/assets/take-video.svg" />
+            <view class="TUI-Extension-slot-name">拍摄视频</view>
+        </view>
+                <view class="TUI-Extension-slot" bindtap="handleSendVideo">
+            <image class="TUI-Extension-icon" src="/static/assets/send-video.svg" />
+            <view class="TUI-Extension-slot-name">发送视频</view>
+        </view>
+        <view class="TUI-Extension-slot" data-value="{{1}}"   bindtap="handleCalling" >
+            <image class="TUI-Extension-icon" src="/static/assets/audio-calling.svg" />
+            <view class="TUI-Extension-slot-name">语音通话</view>
+        </view>
+        <view class="TUI-Extension-slot" data-value="{{2}}"   bindtap="handleCalling" >
+            <image class="TUI-Extension-icon" src="/static/assets/video-calling.svg" />
+            <view class="TUI-Extension-slot-name">视频通话</view>
+        </view>
+        <view class="TUI-Extension-slot" bindtap="handleServiceEvaluation">
+            <image class="TUI-Extension-icon" src="/static/assets/service-assess.svg" />
+            <view class="TUI-Extension-slot-name">服务评价</view>
+        </view>
+        <view class="TUI-Extension-slot" bindtap="handleSendOrder">
+            <image class="TUI-Extension-icon" src="/static/assets/send-order.svg" />
+            <view class="TUI-Extension-slot-name">发送订单</view>
+        </view>
+    </view>
+    <TUI-Common-Words class="tui-cards" display="{{displayCommonWords}}" bind:sendMessage="$handleSendTextMessage" bind:close="$handleCloseCards" />
+    <TUI-Order-List class="tui-cards" display="{{displayOrderList}}" bind:sendCustomMessage="$handleSendCustomMessage" bind:close="$handleCloseCards"/>
+    <TUI-Service-Evaluation class="tui-cards" display="{{displayServiceEvaluation}}" bind:sendCustomMessage="$handleSendCustomMessage" bind:close="$handleCloseCards"/>
+</view>
+<view class="record-modal" wx:if="{{popupToggle}}"   bind:longpress="handleLongPress"
+            bind:touchmove="handleTouchMove"
+            bind:touchend="handleTouchEnd">
+    <view   class="wrapper">
+        <view class="modal-loading">
+        </view>
+    </view>
+    <view class="modal-title">
+    {{title}}
+    </view>
+</view>

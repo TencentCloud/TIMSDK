@@ -1,0 +1,25 @@
+<view class="TUI-Create-conversation-container">
+  <view class="tui-navigatorbar">
+    <image class="tui-navigatorbar-back" bindtap="goBack" src="../../../static/assets/ic_back_white.svg" />
+    <view class="conversation-title">发起会话</view>
+  </view>
+  <view class="tui-search-area">
+    <view class="tui-search-bar">
+      <image class="tui-searchcion" src="../../../static/assets/serach-icon.svg" />
+      <input class="tui-search-bar-input" value="{{userID}}" placeholder="请输入用户ID" bindinput='userIDInput' bindconfirm="getuserProfile"  bindblur="getuserProfile"/>
+
+    </view>
+    <view class="tui-showID">您的用户ID  {{userInfo.userID}}</view>
+  </view>
+  <view class="tui-person-to-invite" wx:if="{{searchUser.userID}}" >
+    <image bindtap="handleChoose" class="tui-normal-choose" src="{{searchUser.isChoose ? '../../../static/assets/single-choice-hover.svg' : '../../../static/assets/single-choice-normal.svg'}}" />
+    <view class="tui-person-profile">
+      <image class="tui-person-profile-avatar" src="{{searchUser.avatar || 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/avatar_21.png' }}" />
+      <view>
+        <view class="tui-person-profile-nick">{{searchUser.nick}}</view>
+        <view class="tui-person-profile-userID">用户ID：{{searchUser.userID}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="tui-confirm-btn" bindtap="bindConfirmInvite">确认邀请</view>
+</view>

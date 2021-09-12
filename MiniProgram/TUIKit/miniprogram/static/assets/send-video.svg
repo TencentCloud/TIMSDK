@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>发送视频</title>
+    <desc>Created with Sketch.</desc>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="在线客服-更多功能" transform="translate(-291.000000, -568.000000)">
+            <g id="编组-19" transform="translate(291.000000, 568.000000)">
+                <g id="编组-11">
+                    <rect id="矩形备份-6" fill="#FFFFFF" x="0" y="0" width="64" height="64" rx="4"></rect>
+                    <rect id="矩形备份-13" fill="#444444" x="18" y="21" width="28" height="23" rx="2"></rect>
+                    <g id="编组-4" transform="translate(21.000000, 40.000000)" fill="#FFFFFF">
+                        <path d="M3,0 L2,3 L0,3 L1,0 L3,0 Z M7,0 L6,3 L4,3 L5,0 L7,0 Z M11,0 L10,3 L8,3 L9,0 L11,0 Z M15,0 L14,3 L12,3 L13,0 L15,0 Z M19,0 L18,3 L16,3 L17,0 L19,0 Z M23,0 L22,3 L20,3 L21,0 L23,0 Z" id="形状结合"></path>
+                    </g>
+                    <g id="编组-4备份" transform="translate(20.000000, 22.000000)" fill="#FFFFFF">
+                        <path d="M3,0 L2,3 L0,3 L1,0 L3,0 Z M7,0 L6,3 L4,3 L5,0 L7,0 Z M11,0 L10,3 L8,3 L9,0 L11,0 Z M15,0 L14,3 L12,3 L13,0 L15,0 Z M19,0 L18,3 L16,3 L17,0 L19,0 Z M23,0 L22,3 L20,3 L21,0 L23,0 Z" id="形状结合"></path>
+                    </g>
+                    <path d="M32.5,30.8492574 L29.8316655,35 L35.1683345,35 L32.5,30.8492574 Z" id="三角形" stroke="#FFFFFF" stroke-width="2" fill="#FFFFFF" transform="translate(32.500000, 32.500000) rotate(-270.000000) translate(-32.500000, -32.500000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

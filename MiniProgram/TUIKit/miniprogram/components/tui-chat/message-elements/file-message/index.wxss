@@ -1,0 +1,57 @@
+.TUI-fileMessage {
+  display: flex;
+  padding: 10rpx 24rpx;
+  background-color: #fff;
+  border-radius: 2px 10px 10px 10px;
+  border: 1px solid #D9D9D9;
+}
+.fileMessage{
+  display: flex;
+}
+.fileMessage-box{
+  display: flex;
+  background: white;
+  align-items: center;
+  height: 150rpx;
+}
+.file-icon {
+  width: 80rpx;
+  height: 80rpx;
+}
+.pop{
+    position: fixed;
+    width: 50%;
+    bottom: 400rpx;
+    margin-left: 90rpx;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 99999;
+}
+.text-box{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 112rpx;
+}
+.download-confirm{
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: #E85454;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 22px;
+}
+.abandon{
+  opacity: 0.8;
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 22px;
+}
+.file-title {
+  max-width: 53vw;
+  display: inline;
+  word-wrap: break-word;
+  word-break: break-all;
+}

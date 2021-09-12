@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="375px" height="268px" viewBox="0 0 375 268" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>背景</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="81.9277858%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#006EFF" offset="0%"></stop>
+            <stop stop-color="#00C8DC" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="主页" fill="url(#linearGradient-1)">
+            <g id="编组-4" transform="translate(-315.000000, -732.000000)">
+                <circle id="蒙版" cx="500" cy="500" r="500"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

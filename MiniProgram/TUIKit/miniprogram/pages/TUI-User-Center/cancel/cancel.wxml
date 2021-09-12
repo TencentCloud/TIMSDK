@@ -1,0 +1,24 @@
+<!--miniprogram/pages/cancelaton/cancel.wxml-->
+<view class="container">
+    <view class="main">
+        <image class="image" src="../../../static/images/cancellation.png" />
+        <text selectable="false" space="false" decode="false">
+            注销后，您将无法使用当前账号，相关数据也将删除无法找回。当前账户：{{userInfo.userID}}
+        </text>
+      <view class="cancellation"  bind:tap="handleCancellation">
+          <view class="confirm-cancellation">确认注销</view>
+      </view>
+    </view>
+  </view>
+<view class="mask" wx:if="{{toggle}}" catch:tap="close">
+    <view class="popup">
+        <view class="popup-main">
+            <text>确定要注销账户吗?</text>
+        </view>
+        <view class="popup-footer">
+           <button class="submit" catch:tap="submit">注销</button>
+            <button class="cancel"  catch:tap="close">取消</button>
+
+        </view>
+    </view>
+</view>

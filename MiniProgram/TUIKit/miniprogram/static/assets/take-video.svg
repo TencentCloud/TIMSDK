@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>拍摄视频</title>
+    <desc>Created with Sketch.</desc>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="在线客服-更多功能" transform="translate(-201.000000, -568.000000)">
+            <g id="编组-18" transform="translate(201.000000, 568.000000)">
+                <g id="编组-10">
+                    <rect id="矩形备份-5" fill="#FFFFFF" x="0" y="0" width="64" height="64" rx="4"></rect>
+                    <path d="M37,22 C38.1045695,22 39,22.8954305 39,24 L39,29 L47.5527864,24.7236068 C48.0467649,24.4766175 48.6474379,24.6768419 48.8944272,25.1708204 C48.9638549,25.3096758 49,25.4627889 49,25.618034 L49,39.381966 C49,39.9342508 48.5522847,40.381966 48,40.381966 C47.8447549,40.381966 47.6916418,40.3458209 47.5527864,40.2763932 L39,36 L39,41 C39,42.1045695 38.1045695,43 37,43 L18,43 C16.8954305,43 16,42.1045695 16,41 L16,24 C16,22.8954305 16.8954305,22 18,22 L37,22 Z" id="形状结合" fill="#444444"></path>
+                    <circle id="椭圆形备份" fill="#FFFFFF" cx="22" cy="28" r="2"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,19 @@
+.TUI-Emoji {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  margin-left: 4vw;
+}
+
+.TUI-emoji-image {
+  width: 9vw;
+  height: 9vw;
+  margin: 2vw;
+}
+
+.TUI-emoji-image > image {
+  width: 100%;
+  height: 100%;
+}

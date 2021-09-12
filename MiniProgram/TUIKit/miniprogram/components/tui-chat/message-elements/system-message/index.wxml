@@ -1,0 +1,15 @@
+<view class="container">
+  <view wx:if="{{message.payload.operationType === 1}}" class="card handle">
+    <view>
+      <view class="time" >{{messageTime}}</view>
+      {{renderDom}}
+    </view>
+    <view class="choose">
+      <view class="button" bindtap="handleClick">处理</view>
+    </view>
+  </view>
+  <view class="card" wx:else>
+    <view class="time">{{messageTime}}</view>
+    {{renderDom}}
+  </view>
+</view>

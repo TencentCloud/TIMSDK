@@ -1,0 +1,82 @@
+<!--miniprogram/components/tui-group/group-profile/index.wxml-->
+<view class="group-information-box" bindshow="getgroupProfile">
+    <view class="group-box">
+        <text class="group-ID">群ID:{{conversation.groupProfile.groupID}}</text>
+        <view  bindtap="showmore" >
+        <text class="group-member">聊天成员:{{conversation.groupProfile.memberCount}}人</text>
+        <image wx:if="{{notShow}}"class=" icon-right" src="../../../static/assets/down.svg"/>
+        <image wx:if="{{isShow}}" class=" icon-right" src="../../../static/assets/up.svg" />
+        </view>
+    </view>
+    <view hidden="{{hidden}}" class="showdetail">
+
+         <view class="box" wx:for="{{groupmemberprofile}}" wx:if="{{index<3}}"  wx:key="id" data-value="{{item}}" >
+            <image class="profile-box" src= '{{item.avatar|| "https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/avatar_21.png"}}'/>
+             <text class="nick-box">{{item.nick||item.userID}}</text>
+          </view>
+        <view class="box" wx:if="{{Showmore}}">
+            <image class="profile-box" src="../../../static/assets/show.svg" bindtap="showmoreMember"/>
+            <text class="nick-box">更多</text>
+        </view>
+        <view class="left-box">
+         <view class="box-group" wx:if="{{addShow}}">
+            <image class="addmember" src="../../../static/assets/addgroup.svg" bindtap="addMember"/>
+            <text class="addmember-text">添加成员</text>
+        </view>
+        <view class="box-group-quit">
+            <image class="quitgroup" src="../../../static/assets/quitgroup.svg" catchtap="quitGroup"/>
+            <text class="quitgroup-text">退出群聊</text>
+        </view>
+    </view>
+    </view>
+</view>
+<view class="pop-container">
+<view class="popup-mask" wx:if="{{popupToggle}}" catchtap="handleEditToggle">
+    <view class="pop-main" >
+        <view class="pop-main-header">
+        <text class="group-member-text">群成员</text>
+        <text class="close" catchtap="close">关闭</text>
+        </view>
+    <view class="image-list" >
+    <view class="image-nick-box" wx:for="{{groupmemberprofile}}" wx:key="id" data-value="{{item}}">
+        <image class="image" src='{{item.avatar|| "https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/avatar_21.png"}}' />
+        <text class="groupmembername" >{{item.nick||item.userID}}</text>
+    </view>
+    </view>
+    </view>
+</view>
+</view>
+<view class="pop-container">
+<view class="quitpop-mask" wx:if="{{quitpopupToggle}}">
+<view class="quitpop">
+    <view class=" quit-box">
+        <view class="text-box">
+        <text class="confirmQuitgroup-text">退出群聊后会同步删除历史聊天记录，是否要退出群聊？</text>
+    </view>
+    <view class="text-box-qiut" catchtap="quitgroupConfirm">
+        <text class="quitgroup-confirm" >退出</text>
+    </view>
+    <view class="text-box-cancle" bindtap="quitgroupAbandon">
+        <text class="quitgroup-abandon" >取消</text>
+    </view>
+</view>
+</view>
+
+</view>
+</view>
+<view class="mask" wx:if="{{addpopupToggle}}" >
+    <view class="popup">
+        <view class="popup-main">
+            <text>添加群成员</text>
+            <input class="input" type="number"  placeholder="请输入userID" bindinput='binduserIDInput' placeholder-style="color:#BBBBBB;"/>
+        </view>
+        <view class="popup-footer">
+           <button class="submit" catch:tap="submit">确认</button>
+            <button class="cancel"  catch:tap="close">取消</button>
+
+        </view>
+    </view>
+</view>
+
+
+
