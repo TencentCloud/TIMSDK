@@ -4,7 +4,7 @@ TUIKit 基于小程序原生开发，我们提供了 IM 聊天、在线客服、
 
 ### 效果展示
 
-![](https://web.sdk.qcloud.com/component/TUIKit/assets/tuikit-github-1.png)
+![](https://web.sdk.qcloud.com/component/TUIKit/assets/tuikit-github-1.jpg)
 
 ###  一分钟跑通 TUIKit
 
