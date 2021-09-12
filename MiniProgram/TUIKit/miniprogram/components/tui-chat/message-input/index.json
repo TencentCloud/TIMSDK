@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "TUI-Emoji": "../message-elements/emoji/index",
+    "TUI-Common-Words": "../message-private/common-words/index",
+    "TUI-Order-List": "../message-private/order-list/index",
+    "TUI-Service-Evaluation": "../message-private/service-evaluation/index"
+  }
+}

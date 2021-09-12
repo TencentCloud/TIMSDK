@@ -1,0 +1,23 @@
+<view class="container">
+  <image class="background-image" src="../../static/assets/background.svg"/>
+  <view class="counter-warp">
+    <view class="counter-main">
+      <view class="header-content">
+        <image src="../../static/images/im.png" class="icon" />
+        <view class="text">
+          <view class="text-header">登录 · 即时通信</view>
+          <view class="text-content">体验群组聊天，视频对话等IM功能</view>
+        </view>
+      </view>
+      <view class="tui-scene-router">
+        <view class="scene-item-card" wx:for="{{sceneList}}" wx:key="index" data-item="{{item}}" bindtap="handleOnPageNavigate">
+          <image class="tui-scene-icon" src="{{item.iconUrl}}"/>
+          <view class="tui-scene-name">{{item.name}}</view>
+          <image class="tui-scene-link" src="../../static/assets/detail.svg" />
+        </view>
+      </view>
+    </view>
+    <view class="foot" bindtap="learnMore">了解更多 IM 功能</view>
+  </view>
+
+</view>

@@ -1,0 +1,4 @@
+<view class="audio-message {{isMine?'my-audio':''}}">
+  <view class="audio "  bindtap="handlePlayAudioMessage" style="width: {{120 + message.renderDom[0].second * 7}}rpx">" {{renderDom[0].second}}</view>
+</view>
+

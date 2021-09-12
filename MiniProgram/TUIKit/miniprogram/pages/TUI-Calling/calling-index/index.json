@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+  },
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "TRTC",
+  "navigationBarTextStyle": "black",
+  "disableScroll": true
+}

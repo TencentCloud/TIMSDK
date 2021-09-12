@@ -1,0 +1,3 @@
+<view class="TUI-faceMessage" bindtap="previewImage">
+  <image class="face-message" src="{{renderDom.src}}" />
+</view>

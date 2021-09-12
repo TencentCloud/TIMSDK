@@ -1,0 +1,13 @@
+<!--miniprogram/pages/about/about.wxml-->
+<view class="container">
+    <view class="title"></view>
+    <view class="list">
+        <view class="list-item" wx:for="{{list}}" wx:key="index" data-item="{{item}}"  bindtap='handleRouter'>
+            <view class="aside-left">
+                <text>{{item.name}}</text>
+            </view>
+            <image wx:if="{{item.path}}" class="icon aside-right" src="../../../static/images/right.png"  lazy-load="true" />
+            <text wx:else>{{item.value}}</text>
+        </view>
+    </view>
+</view>

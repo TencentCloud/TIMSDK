@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "tui-calling": "../tui-calling/TRTCCalling"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "component": true,
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "TUI-TextMessage": "../message-elements/text-message/index",
+    "TUI-ImageMessage": "../message-elements/image-message/index",
+    "TUI-VideoMessage": "../message-elements/video-message/index",
+    "TUI-AudioMessage": "../message-elements/audio-message/index",
+    "TUI-CustomMessage": "../message-elements/custom-message/index",
+    "TUI-TipMessage": "../message-elements/tip-message/index",
+    "TUI-SystemMessage": "../message-elements/system-message/index",
+    "TUI-FaceMessage": "../message-elements/face-message/index",
+    "TUI-FileMessage": "../message-elements/file-message/index"
+  }
+}
