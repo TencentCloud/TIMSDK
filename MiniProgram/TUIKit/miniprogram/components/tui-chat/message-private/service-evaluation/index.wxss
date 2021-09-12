@@ -1,0 +1,73 @@
+.tui-cards-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  top: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: flex-end;
+}
+
+.service-evaluation {
+  flex: 1;
+  background: #FFFFFF;
+  padding: 48rpx 40rpx;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  font-family: PingFangSC-Regular;
+}
+.btn {
+  width: auto !important;
+  padding: 0;
+  margin: 0 !important;
+  background: none;
+}
+.header label {
+  font-size: 18px;
+  color: #000000;
+  letter-spacing: 0;
+  line-height: 25px;
+}
+.header .btn {
+  font-size: 16px;
+  color: #006EFF;
+  letter-spacing: 0;
+  line-height: 24px;
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  padding: 48rpx 0;
+}
+.main-evaluation-score {
+  padding: 0 60rpx 48rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.main-evaluation-score .score-star {
+  width: 72rpx;
+  height: 72rpx;
+}
+.main textarea {
+  background: #F8F8F8;
+  border: 0 solid #D9D9D9;
+  border-radius: 4px;
+  font-size: 14px;
+  padding: 16rpx 32rpx;
+}
+.textarea-placeholder {
+  color: #B0B0B0;
+}
+.footer .btn {
+  width: 100%;
+  padding: 26rpx 0;
+  background: #006EFF;
+  border-radius: 24px;
+  border-radius: 24px;
+  font-size: 16px;
+  color: #FFFFFF;
+}

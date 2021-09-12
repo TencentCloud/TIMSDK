@@ -1,0 +1,23 @@
+<!--TODO: 默认图片在 cos 上添加 -->
+<movable-area wx:if="{{conversation.conversationID}}" class="t-conversation-item-container" >
+  <movable-view class="t-conversation-item" direction="horizontal" bindchange="handleTouchMove" damping="100" x="{{xScale}}" >
+   <view class="avatar-box">
+       <image class="t-conversation-item-avatar"  src="{{setConversationAvatar}}" binderror="handleimageerro">
+       </image>
+     <view class="unread" wx:if="{{conversation.unreadCount !== 0}}">
+       <view class="read-text" wx:if="{{conversation.unreadCount > 99}}">99+</view>
+       <view class="read-text" wx:else>{{conversation.unreadCount}}</view>
+     </view>
+   </view>
+    <view class="t-conversation-item-content">
+      <label class="tui-conversation-item-name">{{conversationName}}</label>
+      <view class="tui-conversation-lastMessage">
+        <text>{{conversation.lastMessage.messageForShow}}</text>
+      </view>
+    </view>
+    <view class="t-conversation-item-info">
+      {{conversation.lastMessage.timeago}}
+    </view>
+    <view class="t-conversation-delete" catchtap="deleteConversation">删除</view>
+  </movable-view>
+</movable-area>

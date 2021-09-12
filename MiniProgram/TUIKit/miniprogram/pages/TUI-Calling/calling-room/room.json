@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "TUI-calling": "/components/tui-calling/tui-calling/TRTCCalling"
+  },
+  "navigationStyle": "custom",
+  "navigationBarTextStyle": "black"
+}

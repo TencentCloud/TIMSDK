@@ -1,0 +1,32 @@
+<view wx:if="{{displayTag}}" class="tui-cards-container">
+  <view class="tui-cards-box">
+    <view class="tui-cards-title">
+      <view>请选择你要发送的订单</view>
+      <view style="color: #006EFF; font-family: PingFangSC-Regular;" class="tui-cards-close" bindtap="handleClose">关闭</view>
+    </view>
+    <view class="tui-search-bar">
+      <image class="tui-searchcion" src="../../../../static/assets/serach-icon.svg" />
+      <input class="tui-search-bar-input" value="{{words}}" placeholder="搜索" bindinput='wordsInput'/>
+    </view>
+    <scroll-view class="tui-order-list" scroll-y="true" enable-flex="true">
+      <view class="tui-order-item" wx:key="index" wx:for="{{orderMatch}}"  >
+        <view class="order-title">
+          <view class="order-number">订单编号: {{item.orderNum}}</view>
+          <view class="order-time">{{item.time}}</view>
+        </view>
+        <view class="order-info">
+          <image class="order-image" src="{{item.imageUrl}}" />
+          <view class="order-content">
+            <view class="order-content-title">{{item.title}}</view>
+            <view class="order-content-description">{{item.description}}</view>
+            <view style="display: flex; flex-wrap: no-wrap; justify-content: space-between;">
+              <view class="order-content-price">{{item.price}}</view>
+              <view class="btn-send-order" data-order="{{item}}" catch:tap="sendMessage">
+              <text class="btn-send-text">发送此订单</text></view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

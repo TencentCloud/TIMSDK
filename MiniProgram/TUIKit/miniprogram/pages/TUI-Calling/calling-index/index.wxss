@@ -1,0 +1,88 @@
+.container {
+  padding: 20rpx 0;
+  background: #F4F5F9;
+  background-repeat:no-repeat;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.container .title{
+  position: relative;
+  width: 100vw;
+  font-size: 18px;
+  color: #000000;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 28px;
+  font-weight: 600;
+  background: #FFFFFF;
+  margin-top: 3.8vh;
+  padding: 1.2vh 0;
+}
+.btn-goback{
+	position: absolute;
+	left: 2vw;
+	top: 1.2vh;
+	width: 8vw;
+	height: 8vw;
+	z-index: 9;
+}
+.tips {
+  color: #ffffff;
+  font-size: 12px;
+  text-align: center;
+}
+.guide-box {
+  width: 100vw;
+  box-sizing: border-box;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.single-box {
+  flex: 1;
+  border-radius: 10px;
+  background-color: #ffffff;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+.icon {
+  display: block;
+  width: 180px;
+  height: 144px;
+}
+.single-content {
+  padding: 36px 30px 36px 20px;
+  color: #333333;
+}
+.label {
+  display: block;
+  font-size: 18px;
+  color: #333333;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+.desc {
+  display: block;
+  font-size: 14px;
+  color: #333333;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+.logo-box {
+  position: absolute;
+  width: 100vw;
+  bottom: 36rpx;
+  text-align: center;
+}
+.logo {
+  width: 160rpx;
+  height: 44rpx;
+}

@@ -1,0 +1,82 @@
+.tui-common-words-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  top: 0;
+  background: rgba(0,0,0,0.5);
+}
+
+.tui-common-words-box {
+  position: absolute;
+  width: 100%;
+  height: 60%;
+  bottom: 0;
+  background: rgba(255,255,255,1);
+  padding-bottom: 68rpx;
+  z-index: 200;
+}
+
+.tui-common-words-title {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  padding-left: 40rpx;
+  padding-right: 40rpx;
+  padding-top: 48rpx;
+  font-family: PingFangSC-Medium;
+  font-size: 36rpx;
+  color: #000000;
+  letter-spacing: 0;
+  line-height: 50rpx;
+}
+
+.tui-search-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  margin: 32rpx 40rpx;
+  width: 670rpx;
+  height: 80rpx;
+  background: #FFFFFF;
+  border-radius: 40rpx;
+  border-radius: 40rpx;
+  background-color: #F8F8F8;
+}
+
+.tui-searchcion {
+  display: inline-block;
+  margin-left: 24rpx;
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.tui-search-bar-input {
+  margin-left: 16rpx;
+  line-height: 40rpx;
+  font-size: 28rpx;
+  width: 100%;
+  display: inline-block;
+}
+
+.tui-common-words-list {
+  position: absolute;
+  top: 242rpx;
+  bottom: 68rpx;
+  width: 750rpx;
+}
+
+.tui-common-words-item {
+  width: 750rpx;
+  height: 112rpx;
+  border-bottom: 2rpx solid #EEF0F3;
+  background-color: #FFFFFF;
+  font-family: PingFangSC-Regular;
+  font-size: 32rpx;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 44rpx;
+  padding: 0 40rpx;
+  display: flex;
+  align-items: center;
+}

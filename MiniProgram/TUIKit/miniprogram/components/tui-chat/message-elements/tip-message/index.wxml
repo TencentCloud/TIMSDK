@@ -1,0 +1,3 @@
+<view class="tip-message">
+  <view class="text-message">{{renderDom[0].text}}</view>
+</view>

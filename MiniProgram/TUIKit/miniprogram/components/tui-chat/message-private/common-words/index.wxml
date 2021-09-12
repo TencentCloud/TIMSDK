@@ -1,0 +1,15 @@
+<view wx:if="{{displayTag}}" class="tui-common-words-container">
+  <view class="tui-common-words-box">
+    <view class="tui-common-words-title">
+      <view>请选择你要发送的常用语</view>
+      <view style="color: #006EFF; font-family: PingFangSC-Regular;" class="tui-common-words-close" bindtap="handleClose">关闭</view>
+    </view>
+    <view class="tui-search-bar">
+      <image class="tui-searchcion" src="../../../../static/assets/serach-icon.svg" />
+      <input class="tui-search-bar-input" value="{{words}}" placeholder="请输入您想要提出的问题" bindinput='wordsInput'/>
+    </view>
+    <scroll-view class="tui-common-words-list" scroll-y="true" enable-flex="true">
+      <view class="tui-common-words-item" wx:key="index" bindtap="sendMessage" data-words="{{item}}" wx:for="{{commonWordsMatch}}">{{item}}</view>
+    </scroll-view>
+  </view>
+</view>

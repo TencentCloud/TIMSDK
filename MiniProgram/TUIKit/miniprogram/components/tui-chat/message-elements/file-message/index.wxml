@@ -1,0 +1,16 @@
+<view class="TUI-fileMessage">
+  <view class="fileMessage">
+    <view class="fileMessage-box">
+    <image class="file-icon" src="../../../../static/images/file.png" />
+    <label  bindtap="download" class="file-title">{{filePayload.fileName}}</label>
+    </view>
+  </view>
+</view>
+<view class="pop" wx:if="{{Show}}">
+  <view class="text-box">
+        <text class="download-confirm" catchtap="downloadConfirm">下载</text>
+    </view>
+    <view class="text-box">
+        <text class="abandon" bindtap="cancel">取消</text>
+    </view>
+</view>

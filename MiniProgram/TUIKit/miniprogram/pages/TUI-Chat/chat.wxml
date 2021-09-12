@@ -1,0 +1,17 @@
+<view class="container">
+  <TUI-calling class="calling" id="tui-calling" bind:sendMessage="sendMessage"></TUI-calling>
+  <view class="tui-chatroom-navigatorbar">
+    <image class="tui-chatroom-navigatorbar-back" bindtap="goBack" src="../../static/assets/ic_back_white.svg" />
+    <!-- 先查 remark；无 remark 查 (c2c)nick/(group)name；最后查 (c2c)userID/(group)groupID -->
+    <view class="conversation-title">{{conversationName}}</view>
+  </view>
+  <view class="group-profile">
+    <TUI-group-profile id="groip-profile" wx:if="{{isShow}}" conversation="{{conversation}}"></TUI-group-profile>
+  </view>
+  <view class="message-list" bindtap="triggerClose">
+    <TUI-message-list id="message-list" conversation="{{conversation}}"></TUI-message-list>
+  </view>
+  <view class="message-input" wx:if="{{showChat}}">
+    <TUI-message-input id="message-input" conversation="{{conversation}}" bind:sendMessage="sendMessage" bind:handleCall="handleCall"></TUI-message-input>
+  </view>
+</view>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>首页-hover</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#006EFF" offset="0%"></stop>
+            <stop stop-color="#00C8DC" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="主页" transform="translate(-82.000000, -733.000000)">
+            <g id="编组-12" transform="translate(82.000000, 733.000000)">
+                <g id="编组">
+                    <rect id="矩形" x="0" y="0" width="24" height="24"></rect>
+                    <path d="M12.5387112,3.36933778 L20.5540054,8.70320776 C20.8326051,8.8886051 21,9.20107186 21,9.53572082 L21,20 C21,20.5522847 20.5522847,21 20,21 L14,20.9998508 L14,17 C14,15.9456382 13.1841222,15.0818349 12.1492623,15.0054857 L12,15 C10.8954305,15 10,15.8954305 10,17 L10,17 L10,20.9998508 L4,21 C3.44771525,21 3,20.5522847 3,20 L3,9.53464559 C3,9.20058889 3.16680687,8.88859367 3.44460367,8.7030598 L11.4293095,3.37026506 C11.765022,3.14605067 12.2026243,3.1456849 12.5387112,3.36933778 Z" id="形状结合" fill="url(#linearGradient-1)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "t-captcha":"plugin://myPlugin/t-captcha"
+  }
+}
