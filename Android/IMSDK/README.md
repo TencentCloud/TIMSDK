@@ -3,7 +3,7 @@
 ## 下载地址
 
 ### 基础版
-[最新基础版 IM SDK 下载](https://im.sdk.qcloud.com/download/standard/5.1.65/imsdk-5.1.65.aar)
+[最新基础版 IM SDK 下载](https://im.sdk.qcloud.com/download/standard/5.1.66/imsdk-5.1.66.aar)
 
 ### 增强版
 [最新增强版 IM SDK 下载](https://im.sdk.qcloud.com/download/plus/5.6.1202/imsdk-plus-5.6.1202.aar)
