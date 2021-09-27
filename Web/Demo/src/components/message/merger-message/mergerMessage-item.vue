@@ -140,7 +140,7 @@
         } else {
           name = this.payload.data + '@2x'
         }
-        return `https://webim-1252463788.file.myqcloud.com/assets/face-elem/${name}.png`
+        return `https://web.sdk.qcloud.com/im/assets/face-elem/${name}.png`
       },
       // 时间换算
       date() {

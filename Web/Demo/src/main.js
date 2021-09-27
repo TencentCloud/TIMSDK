@@ -1,10 +1,10 @@
 import Vue from 'vue'
-import { MessageBox, Row, Col, Button, Input, Loading, Dialog, Dropdown, DropdownMenu, DropdownItem, Checkbox, CheckboxGroup, Divider, Popover } from 'element-ui'
+import { MessageBox, Row, Col, Button, Input, Loading, Dialog, Dropdown, DropdownMenu, DropdownItem, Checkbox, CheckboxGroup, Divider, Popover, Collapse, CollapseItem, Form, FormItem, Select, Option, Menu, MenuItem, MenuItemGroup, Submenu, Tooltip} from 'element-ui'
 import Avatar from './components/avatar.vue'
 import Index from './index.vue'
 import store from './store/index'
 import tim from 'tim'
-import TIM from 'tim-js-sdk'
+import TIM from 'tim-js-sdk/tim-js-friendship.js'
 import TWebLive from 'tweblive'
 import VueClipboard from 'vue-clipboard2'
 import './assets/icon/iconfont.css'
@@ -41,6 +41,17 @@ Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
 Vue.use(Divider)
 Vue.use(Popover)
+Vue.use(Collapse)
+Vue.use(CollapseItem)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(Menu)
+Vue.use(MenuItem)
+Vue.use(MenuItemGroup)
+Vue.use(Submenu)
+Vue.use(Tooltip)
 Vue.component('avatar', Avatar)
 new Vue({
   render: h => h(Index)

@@ -714,7 +714,7 @@
         background-color $success
 
     .refuse
-        background center no-repeat url("../../../assets/image/close.png")
+        background center no-repeat url("../../../assets/image/hangup.png")
         background-size 70%
         background-color $danger
 

@@ -24,7 +24,6 @@
           class="official-link"
           href="https://cloud.tencent.com/product/im"
           target="_blank"
-          @click="handleLinkClick"
         >登录 即时通信IM 官网，了解更多体验方式</a>
       </div>
       <calling  ref="callLayer" class="chat-wrapper"/>
@@ -47,7 +46,6 @@ import { translateGroupSystemNotice } from './utils/common'
 import GroupLive from './components/group-live/index'
 import Calling from './components/message/trtc-calling/calling-index'
 import { ACTION } from './utils/trtcCustomMessageMap'
-import MTA from './utils/mta'
 
 export default {
   title: 'TIMSDK DEMO',
@@ -91,11 +89,6 @@ export default {
   },
 
   watch: {
-    isLogin(next) {
-      if (next) {
-        MTA.clickStat('link_two', { show: 'true' })
-      }
-    },
   },
 
   methods: {
@@ -118,7 +111,23 @@ export default {
       this.tim.on(this.TIM.EVENT.NET_STATE_CHANGE, this.onNetStateChange)
       // 已读回执
       this.tim.on(this.TIM.EVENT.MESSAGE_READ_BY_PEER, this.onMessageReadByPeer)
+      // 黑名单更新
+      this.tim.on(this.TIM.EVENT.FRIEND_LIST_UPDATED, this.onFriendListUpdated)
 
+      this.tim.on(this.TIM.EVENT.FRIEND_APPLICATION_LIST_UPDATED, this.onFriendApplicationListUpdated)
+
+      this.tim.on(this.TIM.EVENT.FRIEND_GROUP_LIST_UPDATED, this.onFriendGroupListUpdated)
+
+    },
+    onFriendApplicationListUpdated(data) {
+      this.$store.commit('updateApplicationList', data.data.friendApplicationList)
+      this.$store.commit('updateUnreadCount', data.data.unreadCount)
+    },
+    onFriendListUpdated(data) {
+      this.$store.commit('updateFriendList', data.data)
+    },
+    onFriendGroupListUpdated(data) {
+      this.$store.commit('updateFriendGroupList', data.data)
     },
 
     onReceiveMessage({ data: messageList }) {
@@ -192,6 +201,7 @@ export default {
     onNetStateChange(event) {
       this.$store.commit('showMessage', this.checkoutNetState(event.data.state))
     },
+
     onKickOut(event) {
       this.$store.commit('showMessage', {
         message: `${this.kickedOutReason(event.data.type)}被踢出，请重新登录。`,
@@ -203,6 +213,7 @@ export default {
     onUpdateConversationList(event) {
       this.$store.commit('updateConversationList', event.data)
     },
+
     onUpdateGroupList(event) {
       this.$store.commit('updateGroupList', event.data)
     },
@@ -299,7 +310,7 @@ export default {
     },
     handleNotify(message) {
       const notification = new window.Notification('有人提到了你', {
-        icon: 'https://webim-1252463788.file.myqcloud.com/demo/img/logo.dc3be0d4.png',
+        icon: 'https://web.sdk.qcloud.com/im/assets/images/logo.png',
         body: message.payload.text
       })
       notification.onclick = () => {
@@ -307,9 +318,6 @@ export default {
         this.$store.dispatch('checkoutConversation', message.conversationID)
         notification.close()
       }
-    },
-    handleLinkClick() {
-      MTA.clickStat('link_two', { click: 'true' })
     },
     /**
      * 收到有群成员退群/被踢出的groupTip时，需要将相关群成员从当前会话的群成员列表中移除
