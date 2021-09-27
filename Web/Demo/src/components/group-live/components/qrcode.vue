@@ -27,11 +27,12 @@ export default {
   },
   methods: {
     generateQRcode() {
-      const streamID = `${this.user.sdkAppID}_${this.roomID}_${this.anchorID}_main`
-      const flv = `https://tuikit.qcloud.com/live/${streamID}.flv`
-      const hls = `https://tuikit.qcloud.com/live/${streamID}.m3u8` 
-      this.playUrl = `https://webim-1252463788.cos.ap-shanghai.myqcloud.com/tweblivedemo/0.3.2-cdn-player/index.html?flv=${encodeURIComponent(flv)}&hls=${encodeURIComponent(hls)}&roomid=${this.roomID}`
-      return QRCode.toDataURL(this.playUrl)
+      // 群直播暂时没有分享二维码功能，以下代码注释，避免lint error
+      // const streamID = `${this.user.sdkAppID}_${this.roomID}_${this.anchorID}_main`
+      // const flv = `https://tuikit.qcloud.com/live/${streamID}.flv`
+      // const hls = `https://tuikit.qcloud.com/live/${streamID}.m3u8` 
+      // this.playUrl = ''
+      return QRCode.toDataURL('')
     }
   }
 }

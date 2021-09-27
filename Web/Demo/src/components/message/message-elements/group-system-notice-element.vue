@@ -11,7 +11,7 @@
               <el-radio label="Reject">拒绝</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="附言：">
+          <el-form-item label="附言：" v-show="this.payload.operationType === 1">
             <el-input
               type="textarea"
               resize="none"
@@ -75,28 +75,46 @@ export default {
       return '系统通知'
     },
     isJoinGroupRequest() {
-      return this.payload.operationType === 1
+      return this.payload.operationType === 1 || this.payload.operationType === 12
     }
   },
   methods: {
     handleGroupApplication() {
-      this.tim
-        .handleGroupApplication({
+      if(this.payload.operationType === 12) {
+        this.tim.callExperimentalAPI('handleGroupInvitation', {
           handleAction: this.form.handleAction,
-          handleMessage: this.form.handleMessage,
           message: this.message
-        })
-        .then(() => {
+        }).then(() => {
           this.showDialog = false
           this.$store.commit('removeMessage', this.message)
-        })
-        .catch(error => {
+        }).catch(error => {
           this.$store.commit('showMessage', {
             type: 'error',
             message: error.message
           })
           this.showDialog = false
         })
+      }
+      if(this.payload.operationType === 1) {
+        this.tim
+                .handleGroupApplication({
+                  handleAction: this.form.handleAction,
+                  handleMessage: this.form.handleMessage,
+                  message: this.message
+                })
+                .then(() => {
+                  this.showDialog = false
+                  this.$store.commit('removeMessage', this.message)
+                })
+                .catch(error => {
+                  this.$store.commit('showMessage', {
+                    type: 'error',
+                    message: error.message
+                  })
+                  this.showDialog = false
+                })
+      }
+
     }
   }
 }

@@ -157,9 +157,14 @@
       },
       setAbstractList(message) {
         let nick = message.nick || message.from
+        let text = ''
         switch (message.type) {
           case this.TIM.TYPES.MSG_TEXT:
-            return `${nick}: ${message.payload.text}`
+            text = message.payload.text || ''
+            if (text.length > 20) {
+              text = text.slice(0, 20)
+            }
+            return `${nick}: ${text}`
           case this.TIM.TYPES.MSG_MERGER:
             return `${nick}: [聊天记录]`
           case this.TIM.TYPES.MSG_IMAGE:

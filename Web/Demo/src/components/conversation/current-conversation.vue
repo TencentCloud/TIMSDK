@@ -1,5 +1,6 @@
 <template>
   <div class="current-conversation-wrapper">
+    <FriendProfile style="position: relative"/>
     <div class="current-conversation" @scroll="onScroll" v-if="showCurrentConversation">
       <div class="header">
         <div class="name">{{ name }}</div>
@@ -83,6 +84,7 @@ import ConversationProfile from './conversation-profile.vue'
 import MemberProfileCard from '../group/member-profile-card'
 import MessageMerger from '../message/merger-message/message-merger'
 import MessageRelay from '../message/merger-message/message-relay'
+import FriendProfile from '../friend/friend-container'
 import close from '../../assets/image/close.png'
 
 export default {
@@ -94,6 +96,7 @@ export default {
     MemberProfileCard,
     MessageMerger,
     MessageRelay,
+    FriendProfile
   },
   data() {
     return {
@@ -120,25 +123,30 @@ export default {
       mergerMessageList: state => state.conversation.mergerMessageList,
       isShowConversationList: state => state.conversation.isShowConversationList,
       selectMessage: state => state.conversation.selectMessage,
+      friendContent: state => state.friend.friendContent,
     }),
     ...mapGetters(['toAccount', 'hidden']),
     // 是否显示当前会话组件
     showCurrentConversation() {
       return !!this.currentConversation.conversationID
     },
+    showFriendContent() {
+      return this.friendContent
+    },
     name() {
       if (this.currentConversation.type === 'C2C') {
-        let name = this.currentConversation.userProfile.nick || this.toAccount
-        let list = this.currentMessageList
-        let len = list.length
-        for (let i = len - 1; i >= 0; i--) {
-          // C2C 会话对端更新nick时需要更新会话title
-          if (list[i].flow === 'in' && list[i].nick && name !== list[i].nick) {
-            name = list[i].nick
-            break
-          }
-        }
-        return name
+        // let name = this.currentConversation.userProfile.nick || this.toAccount
+        // let list = this.currentMessageList
+        // let len = list.length
+        // for (let i = len - 1; i >= 0; i--) {
+        //   // C2C 会话对端更新nick时需要更新会话title
+        //   if (list[i].flow === 'in' && list[i].nick && name !== list[i].nick) {
+        //     name = list[i].nick
+        //     break
+        //   }
+        // }
+        return this.currentConversation.remark || this.currentConversation.userProfile.nick || this.currentConversation.userProfile.userID
+
       } else if (this.currentConversation.type === 'GROUP') {
         return this.currentConversation.groupProfile.name || this.toAccount
       } else if (this.currentConversation.conversationID === '@TIM#SYSTEM') {

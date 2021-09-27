@@ -1,5 +1,5 @@
 import tim from 'tim'
-import TIM from 'tim-js-sdk'
+import TIM from 'tim-js-sdk/tim-js-friendship'
 import store from '..'
 import { titleNotify } from '../../utils'
 import { filterCallingMessage } from '../../utils/common'
@@ -232,6 +232,7 @@ const conversationModules = {
     checkoutConversation(context, conversationID) {
       context.commit('resetCurrentMemberList')
       context.commit('resetSelectedMessage', false)
+      context.commit('resetFriendContent')
       // 1.切换会话前，将切换前的会话进行已读上报
       if (context.state.currentConversation.conversationID) {
         const prevConversationID = context.state.currentConversation.conversationID
