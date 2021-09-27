@@ -9,17 +9,18 @@
     "lint": "node node_modules/@vue/cli-service/bin/vue-cli-service.js lint src --ext .vue,.js --fix"
   },
   "dependencies": {
+    "axios": "^0.20.0",
     "core-js": "^2.6.11",
-    "cos-js-sdk-v5": "^0.5.22",
     "element-ui": "^2.13.0",
-    "mta-h5-analysis": "^2.0.15",
+    "qrcode": "^1.4.4",
     "tim-js-sdk": "^2.14.0",
-    "trtc-js-sdk": "^4.7.1",
-    "tsignaling": "^0.7.0",
+    "tim-upload-plugin": "^1.0.1",
     "trtc-calling-js": "^1.0.0",
+    "trtc-js-sdk": "^4.7.1",
+    "tsignaling": "^0.6.0",
+    "tweblive": "^1.1.1",
     "vue": "^2.6.11",
-    "vuex": "^3.1.2",
-    "vue-clipboard2": "^0.3.1"
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.12.1",
