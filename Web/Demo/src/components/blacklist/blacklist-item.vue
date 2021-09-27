@@ -1,11 +1,8 @@
 <template>
-  <div class="blacklist-item-wrapper">
-    <img
-      class="avatar"
-      :src="profile.avatar ? profile.avatar : 'http://imgcache.qq.com/open/qcloud/video/act/webim-avatar/avatar-2.png'"
-    />
+  <div class="blacklist-item-wrapper" @click="resetContent">
+    <avatar :src="profile.avatar" />
     <div class="item">{{profile.nick||profile.userID}}</div>
-    <el-button type="text" @click="removeFromBlacklist">取消拉黑</el-button>
+    <div  class="cancel-btn" @click="removeFromBlacklist">取消</div>
   </div>
 </template>
 
@@ -31,6 +28,11 @@ export default {
             message: error.message
           })
         })
+    },
+    resetContent() {
+      this.$store.commit('resetCurrentConversation')
+      this.$store.commit('resetFriendContent')
+      this.$store.commit('resetApplicationContent')
     }
   }
 }
@@ -48,15 +50,34 @@ export default {
 }
 
 .blacklist-item-wrapper {
-  padding-bottom: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  padding-top 15px
+  padding-bottom 15px
+  display flex
+  align-items center
+  justify-content flex-start
+  position relative
+  &:hover {
+    background-color $background
+  }
+  .cancel-btn {
+    position absolute
+    right 5px
+    width 40px
+    height 24px
+    font-size 13px
+    color #ffffff
+    border-radius 12px
+    line-height 24px
+    text-align center
+    background-color #00a4ff
+  }
 }
 
 .avatar {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  flex-shrink: 0
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
 }
 </style>

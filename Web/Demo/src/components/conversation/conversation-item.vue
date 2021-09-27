@@ -15,7 +15,7 @@
               <div class="text-ellipsis">
                 <span :title="conversation.userProfile.nick || conversation.userProfile.userID"
                   v-if="conversation.type ===  TIM.TYPES.CONV_C2C"
-                  >{{conversation.userProfile.nick || conversation.userProfile.userID}}
+                  >{{conversation.remark || conversation.userProfile.nick || conversation.userProfile.userID}}
                 </span>
                 <span :title="conversation.groupProfile.name || conversation.groupProfile.groupID"
                   v-else-if="conversation.type ===  TIM.TYPES.CONV_GROUP"
@@ -201,8 +201,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
-
 .conversation-item-container
   padding 15px 20px
   cursor pointer

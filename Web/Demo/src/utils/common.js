@@ -1,4 +1,4 @@
-import TIM from 'tim-js-sdk'
+import TIM from 'tim-js-sdk/tim-js-friendship'
 
 export function translateGroupSystemNotice(message) {
   const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID
@@ -23,6 +23,12 @@ export function translateGroupSystemNotice(message) {
       return `你被${message.payload.operatorID}设置为群：${groupName}的管理员`
     case 10:
       return `你被${message.payload.operatorID}撤销群：${groupName}的管理员身份`
+    case 12:
+      return `${message.payload.operatorID}邀请你加群：${groupName}`
+    case 13:
+      return `${message.payload.operatorID}同意加群：${groupName}`
+    case 14:
+      return `${message.payload.operatorID}拒接加群：${groupName}`
     case 255:
       return '自定义群系统通知: ' + message.payload.userDefinedField
   }

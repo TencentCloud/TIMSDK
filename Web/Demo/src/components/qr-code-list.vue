@@ -6,7 +6,6 @@
         href="https://cloud.tencent.com/product/im"
         class="link"
         target="_blank"
-        @click="handlClick"
       >访问官网</a>
     </div>
     <div class="qr-code-wrapper">
@@ -37,17 +36,13 @@
 </template>
 
 <script>
-import MTA from '../utils/mta'
 
 export default {
   name: 'qr-code-list',
   mounted() {
-    MTA.clickStat('link_one', { show: 'true' })
   },
   methods: {
-    handlClick() {
-      MTA.clickStat('link_one', { click: 'true' })
-    }
+
   }
 }
 </script>
