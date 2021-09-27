@@ -1,3 +1,4 @@
+
 <template>
   <div class="login-wrapper">
     <img class="logo" :src="logo" />

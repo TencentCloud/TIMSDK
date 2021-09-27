@@ -6,6 +6,8 @@
         <span class="nick text-ellipsis">{{ profile.nick || profile.userID }}</span>
         <span class="iconfont" :class="genderClass"></span>
       </div>
+      <div><span class="nick text-ellipsis">{{ profile.userID }}</span>
+      </div>
     </div>
   </div>
 </template>

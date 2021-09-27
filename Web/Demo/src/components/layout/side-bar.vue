@@ -25,7 +25,12 @@
           class="iconfont icon-contact"
           :class="{ active: showFriendList }"
           title="好友列表"
-        ></div>
+        >
+          <sup class="unread" v-if="applicationUnreadCount !== 0">
+            <template v-if="applicationUnreadCount > 99">99+</template>
+            <template v-else>{{applicationUnreadCount}}</template>
+          </sup>
+        </div>
         <div
           id="black-list"
           class="iconfont icon-blacklist"
@@ -85,6 +90,7 @@ export default {
     ...mapGetters(['totalUnreadCount']),
     ...mapState({
       userID: state => state.user.userID,
+      applicationUnreadCount: state => state.friend.unreadCount,
     }),
     showConversationList() {
       return this.active === activeName.CONVERSATION_LIST
@@ -104,10 +110,17 @@ export default {
       )
     }
   },
+  mounted() {
+    this.$bus.$on('checkoutConversation',()=>{
+      this.checkoutActive(activeName.CONVERSATION_LIST)
+    })
+
+  },
   methods: {
     checkoutActive(name) {
       this.active = name
     },
+
     handleClick(event) {
       switch (event.target.id) {
         case activeName.CONVERSATION_LIST:

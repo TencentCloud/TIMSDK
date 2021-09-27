@@ -167,7 +167,27 @@ export default {
       emojiUrl: emojiUrl,
       showAtGroupMember: false,
       atUserID: '',
-      focus: false
+      focus: false,
+      popoverVisible: false,
+      faceUrl: 'https://web.sdk.qcloud.com/im/assets/face-elem/',
+      emojiShow: true,
+      bigEmojiShow: false,
+      bigEmojiList: [
+        {
+          icon: 'yz00',
+          list: ['yz00', 'yz01', 'yz02', 'yz03', 'yz04', 'yz05', 'yz06', 'yz07', 'yz08', 'yz09', 'yz10', 'yz11', 'yz12', 'yz13', 'yz14', 'yz15', 'yz16', 'yz17']
+        },
+        {
+          icon: 'ys00',
+          list: ['ys00', 'ys01', 'ys02', 'ys03', 'ys04', 'ys05', 'ys06', 'ys07', 'ys08', 'ys09', 'ys10', 'ys11', 'ys12', 'ys13', 'ys14', 'ys15']
+        },
+        {
+          icon: 'gcs00',
+          list: ['gcs00', 'gcs01', 'gcs02', 'gcs03', 'gcs04', 'gcs05', 'gcs06', 'gcs07', 'gcs08', 'gcs09', 'gcs10', 'gcs11', 'gcs12', 'gcs13', 'gcs14', 'gcs15', 'gcs16']
+        }
+      ],
+      curItemIndex: 0,
+      curBigEmojiItemList: []
     }
   },
   computed: {

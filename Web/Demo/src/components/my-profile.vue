@@ -15,6 +15,13 @@
             <el-radio :label="TIM.TYPES.GENDER_UNKNOWN">不显示</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="好友申请">
+          <el-radio-group v-model="form.allowType">
+            <el-radio :label="TIM.TYPES.ALLOW_TYPE_ALLOW_ANY">允许直接加为好友</el-radio>
+            <el-radio :label="TIM.TYPES.ALLOW_TYPE_NEED_CONFIRM">需要验证</el-radio>
+            <el-radio :label="TIM.TYPES.ALLOW_TYPE_DENY_ANY">不允许任何人添加好友</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showEditMyProfile = false">取 消</el-button>
@@ -50,7 +57,7 @@ export default {
   data() {
     return {
       showEditMyProfile: false,
-      form: { avatar: '', nick: '', gender: '' }
+      form: { avatar: '', nick: '', gender: '',allowType: '' }
     }
   },
   computed: {
@@ -102,8 +109,8 @@ export default {
         })
     },
     handleEdit() {
-      const { avatar, nick, gender } = this.currentUserProfile
-      Object.assign(this.form, { avatar, nick, gender })
+      const { avatar, nick, gender, allowType } = this.currentUserProfile
+      Object.assign(this.form, { avatar, nick, gender, allowType })
       this.showEditMyProfile = true
     }
   }
@@ -120,8 +127,8 @@ export default {
     width: 100%;
     height: 100%;
   .popover
-    padding none 
-    border none 
+    padding none
+    border none
     border-radius 30px
 .my-avatar
   cursor pointer

@@ -1,4 +1,4 @@
-import TIM from 'tim-js-sdk'
+import TIM from 'tim-js-sdk/tim-js-friendship.js'
 import TIMUploadPlugin from 'tim-upload-plugin'
 
 // 初始化 SDK 实例

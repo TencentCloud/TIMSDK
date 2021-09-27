@@ -10,7 +10,6 @@ import groupLive from './modules/groupLive'
 import {Message} from 'element-ui'
 
 Vue.use(Vuex)
-
 export default new Vuex.Store({
   state: {
     current: Date.now(), // 当前时间
@@ -20,7 +19,7 @@ export default new Vuex.Store({
   getters: {
     hidden(state) {
       // eslint-disable-next-line no-unused-vars
-      const temp = state.current 
+      const temp = state.current
       if (typeof document.hasFocus !== 'function') {
         return document.hidden
       }
