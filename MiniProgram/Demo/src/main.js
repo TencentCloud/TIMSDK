@@ -31,6 +31,13 @@ wx.$sdkAppID = SDKAPPID
 wx.$app.registerPlugin({ 'tim-upload-plugin': TIMUploadPlugin })
 registerEvents(tim)
 
+// 初始化后拉取会话列表
+tim.on(TIM.EVENT.SDK_READY, () => {
+  wx.$app.getConversationList().then((event) => {
+    store.commit('updateAllConversation', event.data.conversationList)
+  })
+})
+
 // 小程序目前对该方法没有对外暴露
 wx.onAppRoute((res) => {
   const { path, query } = res
