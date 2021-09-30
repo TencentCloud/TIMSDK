@@ -11,7 +11,7 @@
 ### [基础版与增强版差异对比](https://github.com/tencentyun/TIMSDK#%E5%9F%BA%E7%A1%80%E7%89%88%E4%B8%8E%E5%A2%9E%E5%BC%BA%E7%89%88%E5%B7%AE%E5%BC%82%E5%AF%B9%E6%AF%94)
 
 ### C 接口版
-[最新C接口下载](https://im.sdk.qcloud.com/download/standard/5.1.62/cross-platform/TIM_Cross_Platform_Android_latest.zip)
+[最新C接口下载](https://im.sdk.cloud.tencent.cn/download/plus/5.7.1435/cross_platform/ImSDK_Android_C_5.7.1435.zip)
 
 #### maven 集成 (Android 平台)
  如果使用基础版 SDK，请在 gradle 里添加如下依赖
