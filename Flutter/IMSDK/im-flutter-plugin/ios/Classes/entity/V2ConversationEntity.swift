@@ -40,8 +40,9 @@ class V2ConversationEntity: V2TIMConversation {
 			_ -> Dictionary<String, Any> in
 			
 			var dict = self.getDict(info: info)
-			
-			dict["lastMessage"] = try await(V2MessageEntity(message: info.lastMessage).getDictAll())
+            if(dict["lastMessage"] != nil){
+                dict["lastMessage"] = try Hydra.await(V2MessageEntity(message: info.lastMessage).getDictAll())
+            }
 			return dict
 		}).then({
 			data in

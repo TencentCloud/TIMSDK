@@ -21,7 +21,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  tencent_im_sdk_plugin: ^3.2.0
+  tencent_im_sdk_plugin: ^3.4.4
   cupertino_icons: ^1.0.3
   dio: ^4.0.0
   json_annotation: ^4.0.1

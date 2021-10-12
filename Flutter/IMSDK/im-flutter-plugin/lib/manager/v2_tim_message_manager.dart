@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:tencent_im_sdk_plugin/enum/V2TimAdvancedMsgListener.dart';
 import 'package:tencent_im_sdk_plugin/enum/history_message_get_type.dart';
 import 'package:tencent_im_sdk_plugin/enum/offlinePushInfo.dart';
-import 'package:tencent_im_sdk_plugin/models/V2TimReceiveMessageOptInfo.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_param.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_result.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_receive_message_opt_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
@@ -538,7 +540,7 @@ class V2TIMMessageManager {
     );
   }
 
-  ///获取用户消息接收选项
+  ///查询针对某个用户的 C2C 消息接收选项
   ///
   ///
   Future<V2TimValueCallback<List<V2TimReceiveMessageOptInfo>>>
@@ -959,6 +961,94 @@ class V2TIMMessageManager {
               "data": data,
               "userID": userID,
               "sender": sender,
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 清空单聊本地及云端的消息（不删除会话）
+  ///
+  /// 5.4.666 及以上版本支持
+  ///
+  /// 注意
+  /// 请注意：
+  /// 会话内的消息在本地删除的同时，在服务器也会同步删除。
+  ///
+  Future<V2TimCallback> clearC2CHistoryMessage({
+    required String userID,
+  }) async {
+    return V2TimCallback.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "clearC2CHistoryMessage",
+          _buildParam(
+            {
+              "userID": userID,
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 清空群聊本地及云端的消息（不删除会话）
+  ///
+  /// 5.4.666 及以上版本支持
+  ///
+  /// 注意
+  /// 请注意：
+  /// 会话内的消息在本地删除的同时，在服务器也会同步删除。
+  ///
+  Future<V2TimCallback> clearGroupHistoryMessage({
+    required String groupID,
+  }) async {
+    return V2TimCallback.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "clearGroupHistoryMessage",
+          _buildParam(
+            {
+              "groupID": groupID,
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 搜索本地消息
+  ///
+  Future<V2TimValueCallback<V2TimMessageSearchResult>> searchLocalMessages({
+    required V2TimMessageSearchParam searchParam,
+  }) async {
+    return V2TimValueCallback<V2TimMessageSearchResult>.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "searchLocalMessages",
+          _buildParam(
+            {
+              "searchParam": searchParam.toJson(),
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 根据 messageID 查询指定会话中的本地消息
+  ///
+  Future<V2TimValueCallback<List<V2TimMessage>>> findMessages({
+    required List<String> messageIDList,
+  }) async {
+    return V2TimValueCallback<List<V2TimMessage>>.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "findMessages",
+          _buildParam(
+            {
+              "messageIDList": messageIDList,
             },
           ),
         ),

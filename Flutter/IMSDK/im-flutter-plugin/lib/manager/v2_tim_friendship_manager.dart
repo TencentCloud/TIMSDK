@@ -9,6 +9,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_group.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_search_param.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 
 ///关系链接口，包含了好友的添加和删除，黑名单的添加和删除等逻辑
@@ -553,6 +554,27 @@ class V2TIMFriendshipManager {
             {
               "groupName": groupName,
               "userIDList": userIDList,
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 搜索好友
+  ///
+  /// 接口返回本地存储的用户资料，可以根据 V2TIMFriendInfoResult 中的 relation 来判断是否为好友。
+  ///
+  Future<V2TimValueCallback<List<V2TimFriendInfoResult>>> searchFriends({
+    required V2TimFriendSearchParam searchParam,
+  }) async {
+    return V2TimValueCallback<List<V2TimFriendInfoResult>>.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "searchFriends",
+          buildParam(
+            {
+              "searchParam": searchParam.toJson(),
             },
           ),
         ),

@@ -771,8 +771,8 @@ class V2TIMManager {
   ///
   /// ```
   /// priority	设置消息的优先级，我们没有办法所有消息都能 100% 送达每一个用户，但高优先级的消息会有更高的送达成功率。
-  /// V2TIMMessage.V2TIM_PRIORITY_HIGH：云端会优先传输，适用于在群里发送重要消息，比如主播发送的文本消息等。
-  /// V2TIMMessage.V2TIM_PRIORITY_NORMAL：云端按默认优先级传输，适用于在群里发送非重要消息，比如观众发送的弹幕消息等。
+  /// V2TIMMessage.V2TIM_PRIORITY_HIGH = 1：云端会优先传输，适用于在群里发送重要消息，比如主播发送的文本消息等。
+  /// V2TIMMessage.V2TIM_PRIORITY_NORMAL = 2：云端按默认优先级传输，适用于在群里发送非重要消息，比如观众发送的弹幕消息等。
   /// ```
   ///
   /// 返回
@@ -813,8 +813,8 @@ class V2TIMManager {
   ///
   /// ```
   /// priority	设置消息的优先级，我们没有办法所有消息都能 100% 送达每一个用户，但高优先级的消息会有更高的送达成功率。
-  /// V2TIMMessage.V2TIM_PRIORITY_HIGH：云端会优先传输，适用于在群里发送重要信令，比如连麦邀请，PK邀请、礼物赠送等关键性信令。
-  /// V2TIMMessage.V2TIM_PRIORITY_NORMAL：云端按默认优先级传输，适用于在群里发送非重要信令，比如观众的点赞提醒等等。
+  /// V2TIMMessage.V2TIM_PRIORITY_HIGH = 1：云端会优先传输，适用于在群里发送重要信令，比如连麦邀请，PK邀请、礼物赠送等关键性信令。
+  /// V2TIMMessage.V2TIM_PRIORITY_NORMAL = 2：云端按默认优先级传输，适用于在群里发送非重要信令，比如观众的点赞提醒等等。
   /// ```
   /// 返回
   ///
@@ -1011,6 +1011,33 @@ class V2TIMManager {
               "gender": userFullInfo.gender,
               "allowType": userFullInfo.allowType,
               "customInfo": userFullInfo.customInfo
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 实验性 API 接口
+  ///
+  /// 参数
+  /// api	接口名称
+  /// param	接口参数
+  // 注意
+  /// 该接口提供一些实验性功能
+  ///
+  Future<V2TimValueCallback<Object>> callExperimentalAPI({
+    required String api,
+    Object? param,
+  }) async {
+    return V2TimValueCallback<Object>.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "callExperimentalAPI",
+          buildParam(
+            {
+              "api": api,
+              "param": param,
             },
           ),
         ),

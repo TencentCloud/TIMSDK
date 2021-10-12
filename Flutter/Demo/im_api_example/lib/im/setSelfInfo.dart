@@ -176,7 +176,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                                         },
                                       ),
                                       BottomSheetAction(
-                                        title: const Text('不允许所有人加我好友'),
+                                        title: const Text('加我好友需我确认'),
                                         onPressed: () {
                                           setState(() {
                                             allowType = 1;
@@ -185,7 +185,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                                         },
                                       ),
                                       BottomSheetAction(
-                                        title: const Text('加我好友需我确认'),
+                                        title: const Text('不允许所有人加我好友'),
                                         onPressed: () {
                                           setState(() {
                                             allowType = 2;

@@ -13,6 +13,11 @@ public class GroupMemberOperationResultEntity :NSObject{
      *  结果
      */
     var result : Int?;
+
+    /**
+    *  兼容example，example统一使用的memberID和userId相同
+    */
+    var memberID : String?;
     
     override init() {
     }
@@ -21,5 +26,6 @@ public class GroupMemberOperationResultEntity :NSObject{
         super.init();
         self.userID = result.userID;
         self.result = result.result.rawValue;
+        self.memberID = result.userID;
     }
 }

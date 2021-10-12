@@ -10,7 +10,9 @@ import com.tencent.imsdk.v2.V2TIMFriendGroup;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMFriendInfoResult;
 import com.tencent.imsdk.v2.V2TIMFriendOperationResult;
+import com.tencent.imsdk.v2.V2TIMFriendSearchParam;
 import com.tencent.imsdk.v2.V2TIMFriendshipListener;
+import com.tencent.imsdk.v2.V2TIMGroupMemberSearchParam;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import io.flutter.plugin.common.MethodCall;
@@ -519,5 +521,36 @@ public class FriendshipManager {
             }
         });
     }
+    public void searchFriends(MethodCall methodCall,final MethodChannel.Result result){
+        HashMap<String,Object> param =  CommonUtil.getParam(methodCall,result,"searchParam");
+        V2TIMFriendSearchParam  searchParam = new V2TIMFriendSearchParam();
+        if(param.get("keywordList")!=null){
+            searchParam.setKeywordList((List<String>) param.get("keywordList"));
+        }
 
+        if(param.get("isSearchUserID")!=null){
+            searchParam.setSearchUserID((Boolean) param.get("isSearchUserID"));
+        }
+        if(param.get("isSearchNickName")!=null){
+            searchParam.setSearchNickName((Boolean) param.get("isSearchNickName"));
+        }
+        if(param.get("isSearchRemark")!=null){
+            searchParam.setSearchRemark((Boolean) param.get("isSearchRemark"));
+        }
+        V2TIMManager.getFriendshipManager().searchFriends(searchParam, new V2TIMValueCallback<List<V2TIMFriendInfoResult>>() {
+            @Override
+            public void onSuccess(List<V2TIMFriendInfoResult> v2TIMFriendInfoResults) {
+                LinkedList<HashMap<String,Object>> infoList = new LinkedList<>();
+                for(int i = 0;i<v2TIMFriendInfoResults.size();i++){
+                    infoList.add(CommonUtil.convertV2TIMFriendInfoResultToMap(v2TIMFriendInfoResults.get(i)));
+                }
+                CommonUtil.returnSuccess(result,infoList);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                CommonUtil.returnError(result,code,desc);
+            }
+        });
+    }
 }

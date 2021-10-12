@@ -8,6 +8,8 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
 import com.tencent.imsdk.v2.V2TIMMessageManager;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
+import com.tencent.imsdk.v2.V2TIMMessageSearchParam;
+import com.tencent.imsdk.v2.V2TIMMessageSearchResult;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMReceiveMessageOptInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
@@ -107,7 +109,7 @@ public class MessageManager {
             if(desc!=null){
                 offlinePushInfo.setDesc(desc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -183,7 +185,7 @@ public class MessageManager {
             if(offlineDesc!=null){
                 offlinePushInfo.setDesc(offlineDesc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -256,7 +258,7 @@ public class MessageManager {
             if(offlineDesc!=null){
                 offlinePushInfo.setDesc(offlineDesc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -336,7 +338,7 @@ public class MessageManager {
             if(offlineDesc!=null){
                 offlinePushInfo.setDesc(offlineDesc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -416,7 +418,7 @@ public class MessageManager {
             if(offlineDesc!=null){
                 offlinePushInfo.setDesc(offlineDesc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -491,7 +493,7 @@ public class MessageManager {
             if(offlineDesc!=null){
                 offlinePushInfo.setDesc(offlineDesc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -567,7 +569,7 @@ public class MessageManager {
             if(offlineDesc!=null){
                 offlinePushInfo.setDesc(offlineDesc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -642,7 +644,7 @@ public class MessageManager {
             if(offlineDesc!=null){
                 offlinePushInfo.setDesc(offlineDesc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -716,7 +718,7 @@ public class MessageManager {
             if(offlineDesc!=null){
                 offlinePushInfo.setDesc(offlineDesc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -792,7 +794,7 @@ public class MessageManager {
             if(offlineDesc!=null){
                 offlinePushInfo.setDesc(offlineDesc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -879,7 +881,7 @@ public class MessageManager {
             if(offlineDesc!=null){
                 offlinePushInfo.setDesc(offlineDesc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -1451,5 +1453,94 @@ public class MessageManager {
         });
 
     }
+    public void clearC2CHistoryMessage(final MethodCall methodCall, final MethodChannel.Result result){
+        String userID = CommonUtil.getParam(methodCall,result,"userID");
+        V2TIMManager.getMessageManager().clearC2CHistoryMessage(userID, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                CommonUtil.returnSuccess(result,null);
+            }
 
+            @Override
+            public void onError(int code, String desc) {
+                CommonUtil.returnError(result,code,desc);
+            }
+        });
+    }
+
+    public void clearGroupHistoryMessage(final MethodCall methodCall, final MethodChannel.Result result){
+        String groupID = CommonUtil.getParam(methodCall,result,"groupID");
+        V2TIMManager.getMessageManager().clearGroupHistoryMessage(groupID, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                CommonUtil.returnSuccess(result,null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                CommonUtil.returnError(result,code,desc);
+            }
+        });
+    }
+
+    public void searchLocalMessages(final MethodCall methodCall, final MethodChannel.Result result){
+        HashMap<String,Object> searchParam = CommonUtil.getParam(methodCall,result,"searchParam");
+        V2TIMMessageSearchParam param = new V2TIMMessageSearchParam();
+        if(searchParam.get("conversationID")!=null){
+            param.setConversationID((String) searchParam.get("conversationID"));
+        }
+        if(searchParam.get("keywordList")!=null){
+            param.setKeywordList((List<String>) searchParam.get("keywordList"));
+        }
+        if(searchParam.get("type")!=null){
+            param.setKeywordListMatchType((Integer) searchParam.get("type"));
+        }
+        if(searchParam.get("userIDList")!=null){
+            param.setSenderUserIDList((List<String>) searchParam.get("userIDList"));
+        }
+        if(searchParam.get("messageTypeList")!=null){
+            param.setMessageTypeList((List<Integer>) searchParam.get("messageTypeList"));
+        }
+        if(searchParam.get("searchTimePosition")!=null){
+            param.setSearchTimePosition((Integer) searchParam.get("searchTimePosition"));
+        }
+        if(searchParam.get("searchTimePeriod")!=null){
+            param.setSearchTimePeriod((Integer) searchParam.get("searchTimePeriod"));
+        }
+        if(searchParam.get("pageSize")!=null){
+            param.setPageSize((Integer) searchParam.get("pageSize"));
+        }
+        if(searchParam.get("pageIndex")!=null){
+            param.setPageIndex((Integer) searchParam.get("pageIndex"));
+        }
+        V2TIMManager.getMessageManager().searchLocalMessages(param, new V2TIMValueCallback<V2TIMMessageSearchResult>() {
+            @Override
+            public void onSuccess(V2TIMMessageSearchResult v2TIMMessageSearchResult) {
+                CommonUtil.returnSuccess(result,CommonUtil.convertV2TIMMessageSearchResultToMap(v2TIMMessageSearchResult));
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                CommonUtil.returnError(result,code,desc);
+            }
+        });
+    }
+    public void findMessages(final MethodCall methodCall, final MethodChannel.Result result){
+        List<String> messageIDList = CommonUtil.getParam(methodCall,result,"messageIDList");
+        V2TIMManager.getMessageManager().findMessages(messageIDList, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                LinkedList<HashMap<String,Object>> messageList = new LinkedList<>();
+                for (int i = 0;i<v2TIMMessages.size();i++){
+                    messageList.add(CommonUtil.convertV2TIMMessageToMap(v2TIMMessages.get(i)));
+                }
+                CommonUtil.returnSuccess(result,messageList);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                CommonUtil.returnError(result,code,desc);
+            }
+        });
+    }
 }

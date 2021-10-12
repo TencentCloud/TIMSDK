@@ -165,7 +165,7 @@ class ConversationSelectorState extends State<ConversationSelector> {
     V2TimValueCallback<V2TimConversationResult> res = await TencentImSDKPlugin
         .v2TIMManager
         .getConversationManager()
-        .getConversationList(nextSeq: "0", count: 20);
+        .getConversationList(nextSeq: "0", count: 300);
     EasyLoading.dismiss();
     if (res.code != 0) {
       Utils.toastError(res.code, res.desc);

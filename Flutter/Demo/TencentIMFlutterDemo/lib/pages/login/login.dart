@@ -836,8 +836,8 @@ class _LoginFormState extends State<LoginForm> {
               autofocus: false,
               controller: telEtController,
               decoration: InputDecoration(
-                labelText: "用户名",
-                hintText: "请输入用户名",
+                labelText: Config.productEnv ? "手机号" : "用户名",
+                hintText: Config.productEnv ? "请输入手机号" : "请输入用户名",
                 icon: Icon(Icons.phone_android),
               ),
               keyboardType: TextInputType.number,
@@ -905,7 +905,8 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                   ),
                   Container(
-                    width: 300,
+                      child: Expanded(
+                          child: Container(
                     child: Text.rich(
                       TextSpan(
                           style: TextStyle(
@@ -962,7 +963,7 @@ class _LoginFormState extends State<LoginForm> {
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.clip,
                     ),
-                  )
+                  )))
                 ],
               ),
             ),

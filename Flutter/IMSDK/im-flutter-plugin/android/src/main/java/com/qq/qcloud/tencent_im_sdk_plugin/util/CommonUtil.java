@@ -33,8 +33,11 @@ import com.tencent.imsdk.v2.V2TIMLocationElem;
 import com.tencent.imsdk.v2.V2TIMMergerElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
+import com.tencent.imsdk.v2.V2TIMMessageSearchResult;
+import com.tencent.imsdk.v2.V2TIMMessageSearchResultItem;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMReceiveMessageOptInfo;
+import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.imsdk.v2.V2TIMSoundElem;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMUserInfo;
@@ -192,7 +195,7 @@ public class CommonUtil {
         try{
             offlinePushInfo.put("desc",info.getDesc());
             offlinePushInfo.put("title",info.getTitle());
-            offlinePushInfo.put("isDisablePush",info.isDisablePush());
+            offlinePushInfo.put("disablePush",info.isDisablePush());
         }catch (Exception e){
             
         }
@@ -649,8 +652,54 @@ public class CommonUtil {
         rinfo.put("conversationList",clist);
         return rinfo;
     }
+    public static HashMap<String,Object> convertV2TIMMessageSearchResultItemToMap(V2TIMMessageSearchResultItem info){
+        HashMap<String,Object> rinfo = new HashMap<String,Object>();
 
+        List<V2TIMMessage> messages =  info.getMessageList();
+        LinkedList<HashMap<String,Object>> messageList = new LinkedList<>();
 
+        rinfo.put("conversationID",info.getConversationID());
+        rinfo.put("messageCount",info.getMessageCount());
+        for(int i = 0;i<messages.size();i++){
+            messageList.add(CommonUtil.convertV2TIMMessageToMap(messages.get(i)));
+        }
+        rinfo.put("messageList",messageList);
+        return  rinfo;
+    }
+    public static HashMap<String,Object> convertV2TIMMessageSearchResultToMap(V2TIMMessageSearchResult info){
+        HashMap<String,Object> rinfo = new HashMap<String,Object>();
+        rinfo.put("totalCount",info.getTotalCount());
+        LinkedList<HashMap<String,Object>> searchList = new LinkedList<>();
+        List<V2TIMMessageSearchResultItem> sList = info.getMessageSearchResultItems();
+        for(int i = 0;i<sList.size();i++){
+            searchList.add(CommonUtil.convertV2TIMMessageSearchResultItemToMap(sList.get(i)));
+        }
+        rinfo.put("messageSearchResultItems",searchList);
+        return  rinfo;
+    }
+    public static HashMap<String,Object> convertV2TIMSignalingInfoToMap(V2TIMSignalingInfo info){
+        HashMap<String,Object> rinfo = new HashMap<String,Object>();
+        rinfo.put("actionType",info.getActionType());
+        rinfo.put("businessID",info.getBusinessID());
+        rinfo.put("data",info.getData());
+        rinfo.put("groupID",info.getGroupID());
+        rinfo.put("inviteeList",info.getInviteeList());
+        rinfo.put("inviteID",info.getInviteID());
+        rinfo.put("inviter",info.getInviter());
+        rinfo.put("timeout",info.getTimeout());
+        if(info.getOfflinePushInfo() != null)
+        rinfo.put("offlinePushInfo",CommonUtil.converV2TIMOfflinePushInfoToMap(info.getOfflinePushInfo()));
+        return rinfo;
+    }
+    public static HashMap<String,Object> converV2TIMOfflinePushInfoToMap(V2TIMOfflinePushInfo info){
+        HashMap<String,Object> rinfo = new HashMap<String,Object>();
+
+        rinfo.put("title",info.getTitle());
+        rinfo.put("desc",info.getDesc());
+        rinfo.put("ext",info.getExt());
+
+        return rinfo;
+    }
     /**
      * 运行主线程返回错误结果执行
      *

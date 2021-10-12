@@ -3,7 +3,7 @@
 /// {@category Models}
 ///
 class V2TimFriendOperationResult {
-  late String userID;
+  late String? userID;
   late int? resultCode;
   late String? resultInfo;
 

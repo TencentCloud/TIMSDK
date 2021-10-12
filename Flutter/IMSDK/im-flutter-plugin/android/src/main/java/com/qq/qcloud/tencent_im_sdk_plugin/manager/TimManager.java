@@ -547,6 +547,22 @@ public class TimManager {
         });
 
     }
+    public void callExperimentalAPI(MethodCall methodCall, final MethodChannel.Result result){
+        String api = methodCall.argument("api");
+        Object param = methodCall.argument("param");
+        V2TIMManager.getInstance().callExperimentalAPI(api, param, new V2TIMValueCallback<Object>() {
+
+            @Override
+            public void onSuccess(Object o) {
+                CommonUtil.returnSuccess(result,o);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                CommonUtil.returnError(result,code,desc);
+            }
+        });
+    }
     private <T> T getParam(MethodCall methodCall, MethodChannel.Result result, String param) {
         T par = methodCall.argument(param);
         if (par == null) {

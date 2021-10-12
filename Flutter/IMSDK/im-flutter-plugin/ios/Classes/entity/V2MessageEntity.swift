@@ -65,6 +65,7 @@ public class V2MessageEntity {
 		})
 	}
 
+	// ios差异化问题，message不会返回这两个字段就不进行设置
 	func getDictAll(progress: Int? = 100, status: Int? = nil) -> Promise<Dictionary<String, Any>> {
 		return async({
 			_ -> Dictionary<String, Any> in
@@ -101,6 +102,10 @@ public class V2MessageEntity {
 				self.mergerElem!["messageList"] = list
 				dict["mergerElem"] = self.mergerElem
 			}
+            
+            if self.v2message.groupAtUserList == nil {
+                dict["groupAtUserList"] = []
+            }	
 			
 			return dict
 		}).then({ $0 })
@@ -143,7 +148,7 @@ public class V2MessageEntity {
 		
 		return result
 	}
-	
+	// V2TIMMessage没有 progress和priority 字段
 	init(message : V2TIMMessage) {
 		let base = NSTemporaryDirectory()
 		self.msgID = message.msgID;
@@ -205,7 +210,6 @@ public class V2MessageEntity {
 				item["width"] = image.width;
 				item["height"] = image.height;
 				item["url"] = image.url;
-				
 				if !fileManager.fileExists(atPath: path) && (item["url"] as! String).count > 10 {
 					image.downloadImage(path, progress: {
 						(curSize, totalSize) -> Void in
@@ -252,8 +256,8 @@ public class V2MessageEntity {
 		
 		// 5视频消息
 		if let elem = message.videoElem {
-			let pathSnapshot = base + "\(message.videoElem.snapshotUUID)";
-			let pathVideo = base + "\(message.videoElem.videoUUID)";
+			let pathSnapshot = message.videoElem.snapshotPath ?? base + "\(message.videoElem.snapshotUUID)";
+			let pathVideo = message.videoElem.videoPath ?? base + "\(message.videoElem.videoUUID)";
 			let fileManager = FileManager.default;
 			var videoUrl: String? = nil;
 			var snapshotUrl: String? = nil;
@@ -294,13 +298,13 @@ public class V2MessageEntity {
 		if let elem = message.fileElem {
 			self.fileElem = [
 				"UUID": message.fileElem.uuid,
-				"path": base + (message.fileElem.uuid ?? ""),
-				"url": base + (message.fileElem.uuid ?? ""),
+				"path": message.fileElem.path ?? base + (message.fileElem.uuid ?? ""),
+				"url": message.fileElem.path ?? base + (message.fileElem.uuid ?? ""),
 				"fileName": message.fileElem.filename!,
 				"fileSize": message.fileElem.fileSize
 			]
 			
-			let path = base + "\(message.fileElem.uuid)";
+            let path = message.fileElem.path ?? base + "\(message.fileElem.uuid)";
 			let fileManager = FileManager.default;
 			
 			if !fileManager.fileExists(atPath: path) {
@@ -339,12 +343,12 @@ public class V2MessageEntity {
 			self.groupTipsElem = [
 				"groupID": message.groupTipsElem.groupID!,
 				"type": message.groupTipsElem.type.rawValue,
-				"opMember": V2GroupMemberFullInfoEntity.getDict(simpleInfo: message.groupTipsElem.opMember!),
+				"opMember": TIMGroupMemberInfo.getDict(simpleInfo: message.groupTipsElem.opMember!),
 				"memberCount": message.groupTipsElem.memberCount
 			];
 			
 			for info in message.groupTipsElem.memberList {
-				let item = V2GroupMemberFullInfoEntity.getDict(simpleInfo: info)
+				let item = TIMGroupMemberInfo.getDict(simpleInfo: info)
 				memberList.append(item)
 			}
 			

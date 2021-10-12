@@ -13,6 +13,10 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart'
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_result.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_receive_message_opt_info.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_result.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_signaling_info.dart';
 import 'v2_tim_user_full_info.dart';
 
 import 'dart:convert';
@@ -109,6 +113,17 @@ class V2TimValueCallback<T> {
         fromJsonData = (json['data'] as List).map((e) {
           return V2TimConversation.fromJson(e);
         }).toList() as T;
+      } else if (T == _getT<List<V2TimReceiveMessageOptInfo>>()) {
+        fromJsonData = (json['data'] as List).map((e) {
+          return V2TimReceiveMessageOptInfo.fromJson(e);
+        }).toList() as T;
+      } else if (T == V2TimMessageSearchResult) {
+        fromJsonData = V2TimMessageSearchResult.fromJson(json['data']) as T;
+      } else if (T == V2GroupMemberInfoSearchResult) {
+        fromJsonData = V2GroupMemberInfoSearchResult.fromJson(
+            json['data']); // V2TimSignalingInfo
+      } else if (T == V2TimSignalingInfo) {
+        fromJsonData = V2TimSignalingInfo.fromJson(json['data']);
       } else
         fromJsonData = json['data'];
     }
@@ -190,7 +205,11 @@ class V2TimValueCallback<T> {
         toJsonData = (this.data as List)
             .map((e) => (e as V2TimMessage).toJson())
             .toList();
-      else
+      else if (T == V2TimMessageSearchResult) {
+        toJsonData = (this.data as V2TimMessageSearchResult).toJson();
+      } else if (T == V2TimSignalingInfo) {
+        toJsonData = (this.data as V2TimSignalingInfo).toJson();
+      } else
         toJsonData = this.data;
       data['data'] = toJsonData;
     }

@@ -41,12 +41,18 @@ class MessageManager {
 		let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as! String;
 		let data = customData.data(using: String.Encoding.utf8, allowLossyConversion: true);
 		
-		
-		V2TIMManager.sharedInstance()?.sendC2CCustomMessage(data, to: userID, succ: {
+        var msgID = "";
+		let id = V2TIMManager.sharedInstance()?.sendC2CCustomMessage(data, to: userID, succ: {
 			() -> Void in
 			
-			CommonUtils.resultSuccess(call: call, result: result)
+            V2TIMManager.sharedInstance()?.findMessages([msgID], succ: {
+                (msgs) -> Void in
+                var dict = V2MessageEntity.init(message: msgs![0]).getDict()
+                CommonUtils.resultSuccess(call: call, result: result, data: dict)
+            }, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
 		}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
+        
+        msgID = id!
 	}
 	
 	func sendGroupTextMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -57,7 +63,6 @@ class MessageManager {
 		
 		let msgID = V2TIMManager.sharedInstance()?.sendGroupTextMessage(text, to: groupID, priority: V2TIMMessagePriority(rawValue: priority)!, succ: {
 			() -> Void in
-			
 			let msg = TencentImUtils.createMessage(call: call, result: result, type: 1);
 			var data = V2MessageEntity.init(message: msg).getDict()
 			data["text"] = text
@@ -65,6 +70,7 @@ class MessageManager {
 			data["status"] = 2
 			data["msgID"] = msgid;
 			data["groupID"] = groupID;
+			data["priority"] = priority;
 			data["sender"] = V2TIMManager.sharedInstance()?.getLoginUser();
 			CommonUtils.resultSuccess(call: call, result: result, data: data)
 			
@@ -100,7 +106,10 @@ class MessageManager {
 				
 				let ret = try Hydra.await(V2MessageEntity.init(message: message).getDictAll())
 				return ret
-			}).then({ CommonUtils.resultSuccess(call: call, result: result, data: $0) })
+			}).then({
+                        var _data = $0;
+                        _data["priority"] = priority;
+                        CommonUtils.resultSuccess(call: call, result: result, data: _data) })
 		}
 		
 		let progressfn = {
@@ -108,7 +117,6 @@ class MessageManager {
 			
 			var msg = V2MessageEntity.init(message: message).getDict()
 			msg["progress"] = progress
-			
 			TencentImSDKPlugin.invokeListener(
 				type: ListenerType.onSendMessageProgress, method: "advancedMsgListener",
 				data: ["progress": progress, "message": msg]
@@ -161,6 +169,7 @@ class MessageManager {
 	
 	func reSendMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
 		if let msgID = CommonUtils.getParam(call: call, result: result, param: "msgID") as? String {
+			// 注意：这个findMessages 返回的对象是V2TIMMessage类型，其中不返回优先级 导致我们无法顺利拿到priority
 			V2TIMManager.sharedInstance()?.findMessages(msgID == "" ? [""] : [msgID], succ: {
 				(msgs) -> Void in
 				
@@ -218,7 +227,7 @@ class MessageManager {
 		if let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? [String] {
 			V2TIMManager.sharedInstance()?.getC2CReceiveMessageOpt(userIDList, succ: {
 				let dict = $0!.map { [
-					"c2CReceiveMessageOpt": $0.receiveOpt,
+                    "c2CReceiveMessageOpt": Int($0.receiveOpt.rawValue),
 					"userID": $0.userID ?? ""
 				] }
 				CommonUtils.resultSuccess(call: call, result: result, data: dict)
@@ -259,7 +268,7 @@ class MessageManager {
 				
 				for i in msgs! {
 					
-					messageList.append(try await(V2MessageEntity.init(message: i).getDictAll()))
+					messageList.append(try Hydra.await(V2MessageEntity.init(message: i).getDictAll()))
 				}
 				CommonUtils.resultSuccess(call: call, result: result, data: messageList)
 				
@@ -323,7 +332,7 @@ class MessageManager {
 			async({ _ -> Int in
 				for i in msgs! {
 
-					messageList.append(try await(V2MessageEntity.init(message: i).getDictAll()))
+					messageList.append(try Hydra.await(V2MessageEntity.init(message: i).getDictAll()))
 				}
 				CommonUtils.resultSuccess(call: call, result: result, data: messageList)
 
@@ -365,7 +374,7 @@ class MessageManager {
 				
 				for i in msgs! {
 					
-					messageList.append(try await(V2MessageEntity.init(message: i).getDictAll()))
+					messageList.append(try Hydra.await(V2MessageEntity.init(message: i).getDictAll()))
 				}
 				CommonUtils.resultSuccess(call: call, result: result, data: messageList)
 				
@@ -431,7 +440,24 @@ class MessageManager {
 			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
 		}
 	}
+
+	func clearC2CHistoryMessage(call: FlutterMethodCall, result: @escaping FlutterResult){
+		if let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String {
+            V2TIMManager.sharedInstance().clearC2CHistoryMessage(userID, succ: {
+                () -> Void in
+                CommonUtils.resultSuccess(call: call, result: result);
+            }, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+		}
+	}
 	
+	func clearGroupHistoryMessage(call: FlutterMethodCall, result: @escaping FlutterResult){
+		if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String {
+            V2TIMManager.sharedInstance().clearGroupHistoryMessage(groupID, succ: {
+                CommonUtils.resultSuccess(call: call, result: result);
+            }, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+		}
+	}
+
 	func insertGroupMessageToLocalStorage(call: FlutterMethodCall, result: @escaping FlutterResult) {
 		if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
 		   let sender = CommonUtils.getParam(call: call, result: result, param: "sender") as? String {
@@ -515,4 +541,99 @@ class MessageManager {
 			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
 		}
 	}
+
+	func searchLocalMessages(call: FlutterMethodCall, result: @escaping FlutterResult){
+
+        let searchParam = CommonUtils.getParam(call: call, result: result, param: "searchParam") as! [String: Any];
+        //var l = searchParam["xx"] as! Int;
+        let messageSearchParam = V2TIMMessageSearchParam();
+        
+        if(searchParam["keywordList"] != nil){
+            messageSearchParam.keywordList = searchParam["keywordList"] as? [String];
+        }
+        if(searchParam["conversationID"] != nil){
+            messageSearchParam.conversationID = searchParam["conversationID"] as? String ?? nil;
+        }
+        if(searchParam["messageTypeList"] != nil){
+            messageSearchParam.messageTypeList = searchParam["messageTypeList"] as? [NSNumber];
+        }
+        if(searchParam["type"] != nil){
+
+            messageSearchParam.keywordListMatchType = searchParam["type"] as! Int == 0 ? V2TIMKeywordListMatchType.KEYWORD_LIST_MATCH_TYPE_OR : V2TIMKeywordListMatchType.KEYWORD_LIST_MATCH_TYPE_AND;
+        }
+        if(searchParam["pageSize"] != nil){
+            messageSearchParam.pageSize = searchParam["pageSize"] as! UInt;
+        }
+
+        if let searchTimePosition = searchParam["searchTimePosition"] as? UInt {
+            messageSearchParam.searchTimePosition = searchTimePosition;
+        }
+        else {
+           messageSearchParam.searchTimePosition = 0;
+        }
+
+
+        if(searchParam["pageIndex"] != nil){
+            messageSearchParam.pageIndex = searchParam["pageIndex"] as! UInt;
+        }
+
+        if let searchTimePeriod = searchParam["searchTimePeriod"] as? UInt {
+            messageSearchParam.searchTimePeriod = searchTimePeriod;
+        }
+        else {
+           messageSearchParam.searchTimePeriod = 0;
+        }
+        
+        if(searchParam["userIDList"] != nil){
+            messageSearchParam.senderUserIDList = searchParam["userIDList"] as? [String];
+        }
+        
+        
+        V2TIMManager.sharedInstance().searchLocalMessages(messageSearchParam, succ: {
+                (res) -> Void in
+            let list = res?.messageSearchResultItems ?? [];
+            var map = [String: Any]();
+            map.updateValue(res?.totalCount, forKey: "totalCount");
+            map.updateValue(res?.messageSearchResultItems ?? [], forKey: "messageSearchResultItems");
+            for(index,element) in list.enumerated(){
+                
+            };
+            CommonUtils.resultSuccess(call: call, result: result, data: map);
+            }, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+        
+	}
+    
+    
+	func findMessages(call: FlutterMethodCall, result: @escaping FlutterResult){
+		if let messageIDList = CommonUtils.getParam(call: call, result: result, param: "messageIDList") as? [String] {
+            V2TIMManager.sharedInstance().findMessages(messageIDList, succ: {
+				(msgs) -> Void in
+                var messageList: [[String: Any]] = []
+                
+                async({
+                    _ -> Int in
+                    
+                    for i in msgs! {
+                        
+                        messageList.append(try Hydra.await(V2MessageEntity.init(message: i).getDictAll()))
+                    }
+                    CommonUtils.resultSuccess(call: call, result: result, data: messageList) 
+                    return 1
+                }).then({
+                    value in
+                })
+            }, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+		}
+	}
+	/*
+					V2TIMManager.sharedInstance()?.findMessages([msgID], succ: {
+					(msgs) -> Void in
+					
+					let dict = V2MessageEntity.init(message: msgs![0]).getDict()
+					CommonUtils.resultSuccess(call: call, result: result, data: dict)
+				}, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+			 }, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+	
+	*/
+
 }	

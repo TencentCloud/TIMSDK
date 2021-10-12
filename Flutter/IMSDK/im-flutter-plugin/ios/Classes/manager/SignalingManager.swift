@@ -85,30 +85,55 @@ class SignalingManager {
 		}
 	}
 
-	// TODO:待原生sdk和安卓开发完成再行添加
-	public func getSignallingInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
-		// if let nextSeq = CommonUtils.getParam(call: call, result: result, param: "nextSeq") as? UInt64,
-		// 	let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
-		// 	V2TIMManager.sharedInstance().getSignallingInfo(nextSeq, count: count, succ: {
-		// 		conversations, nextSeq, finished in
-				
-		// 		let dict = V2ConversationResultEntity.init(conversations: conversations!, nextSeq: nextSeq, finished: finished).getDict();
-		// 		CommonUtils.resultSuccess(call: call, result: result, data: dict);
-		// 	}, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
-		// }
+    // TODO 底层ios的名字是getSignallingInfo, 因此我调用的时候是两个ll
+	public func getSignalingInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let messageID = CommonUtils.getParam(call: call, result: result, param: "msgID") as? String {
+            V2TIMManager.sharedInstance().findMessages([messageID], succ: {
+                msgs in
+                if(msgs!.isEmpty) {
+                    CommonUtils.resultSuccess(call: call, result: result, data: "messages no found");
+                }else{
+                    let signalInfo = V2TIMManager.sharedInstance().getSignallingInfo(msgs![0]);
+                    
+                    var resultMap = [String:Any]();
+
+                    if(signalInfo != nil){
+                        resultMap = V2TIMSignalingInfoEntiry.getDict(info: signalInfo!);
+
+                        CommonUtils.resultSuccess(call: call, result: result, data: resultMap)
+                    }else {CommonUtils.resultSuccess(call: call, result: result, data: signalInfo)}
+                    
+                }
+            }, fail:  TencentImUtils.returnErrorClosures(call: call, result: result))
+        };
 	}
 	
-	// TODO:待原生sdk和安卓开发完成再行添加
 	public func addInvitedSignaling(call: FlutterMethodCall, result: @escaping FlutterResult) {
-		// if let nextSeq = CommonUtils.getParam(call: call, result: result, param: "nextSeq") as? UInt64,
-		// 	let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
-		// 	V2TIMManager.sharedInstance().addInvitedSignaling(nextSeq, count: count, succ: {
-		// 		conversations, nextSeq, finished in
-				
-		// 		let dict = V2ConversationResultEntity.init(conversations: conversations!, nextSeq: nextSeq, finished: finished).getDict();
-		// 		CommonUtils.resultSuccess(call: call, result: result, data: dict);
-		// 	}, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
-		// }
+        let info = CommonUtils.getParam(call: call, result: result, param: "info") as! [String: Any];
+        let param = V2TIMSignalingInfo();
+        if(info["inviteID"] != nil) {  // 邀请 ID
+            param.inviteID = info["inviteID"] as? String;
+        }
+        if(info["groupID"] != nil) {     // 发起邀请所在群组
+            param.groupID = info["groupID"] as? String;
+        }
+        if(info["inviteeList"] != nil) {    // 被邀请人列表
+         
+            param.inviteeList = info["inviteeList"] as? NSMutableArray;
+        }
+        if(info["data"] != nil) { // 
+            param.data = info["data"] as? String;
+        }
+        if(info["timeout"] != nil) {
+            param.timeout = info["timeout"] as! UInt32;
+        }
+        if(info["actionType"] != nil) {
+            SignalingActionType(rawValue:info["actionType"] as! Int);
+        }
+        // 注意：ios不需要businessID
+        V2TIMManager.sharedInstance().addInvitedSignaling(param, succ: {
+            CommonUtils.resultSuccess(call: call, result: result, data: "ok");
+        }, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
 	}
 
 

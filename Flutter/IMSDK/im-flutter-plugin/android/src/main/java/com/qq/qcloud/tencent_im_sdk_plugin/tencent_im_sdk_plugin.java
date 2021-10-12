@@ -2,6 +2,10 @@ package com.qq.qcloud.tencent_im_sdk_plugin;
 
 
 import android.content.Context;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.qq.qcloud.tencent_im_sdk_plugin.manager.ConversationManager;
 import com.qq.qcloud.tencent_im_sdk_plugin.manager.FriendshipManager;
 import com.qq.qcloud.tencent_im_sdk_plugin.manager.GroupManager;
@@ -12,26 +16,23 @@ import com.qq.qcloud.tencent_im_sdk_plugin.manager.TimManager;
 import com.qq.qcloud.tencent_im_sdk_plugin.util.CommonUtil;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 
-
-
-
-
-
-
-
-
-/** tencent_im_sdk_plugin */
+/**
+ * tencent_im_sdk_plugin
+ */
 public class
-tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler {
-  /**
+tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware {
+    /**
      * 日志签名
      */
     public static String TAG = "tencent_im_sdk_plugin";
@@ -52,6 +53,7 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
     private static FriendshipManager friendshipManager;
     private static OfflinePushManager offlinePushManager;
     public static TimManager timManager;
+
     public tencent_im_sdk_plugin() {
     }
 
@@ -64,15 +66,15 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
         tencent_im_sdk_plugin.conversationManager = new ConversationManager(channel);
         tencent_im_sdk_plugin.friendshipManager = new FriendshipManager(channel);
         tencent_im_sdk_plugin.offlinePushManager = new OfflinePushManager(channel);
-        tencent_im_sdk_plugin.timManager = new TimManager(channel,context);
+        tencent_im_sdk_plugin.timManager = new TimManager(channel, context);
 //        JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.mask;
 
     }
 
     @Override
     public void onAttachedToEngine(FlutterPlugin.FlutterPluginBinding flutterPluginBinding) {
-        final MethodChannel channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "tencent_im_sdk_plugin");
-        channel.setMethodCallHandler(new tencent_im_sdk_plugin(flutterPluginBinding.getApplicationContext(), channel));
+        Log.i(TAG, "onAttachedToEngine");
+        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "tencent_im_sdk_plugin");
 
     }
 
@@ -89,13 +91,13 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
 
-        String TIMManagerName =  CommonUtil.getParam(call,result,"TIMManagerName");
+        String TIMManagerName = CommonUtil.getParam(call, result, "TIMManagerName");
         Field field = null;
         Method method = null;
         try {
             field = tencent_im_sdk_plugin.class.getDeclaredField(TIMManagerName);
-            method = field.get(new Object()).getClass().getDeclaredMethod(call.method,MethodCall.class,Result.class);
-            method.invoke(field.get(new Object()),call,result);
+            method = field.get(new Object()).getClass().getDeclaredMethod(call.method, MethodCall.class, Result.class);
+            method.invoke(field.get(new Object()), call, result);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
@@ -110,6 +112,33 @@ tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler 
 
     @Override
     public void onDetachedFromEngine(FlutterPluginBinding binding) {
-        channel.setMethodCallHandler(null);
+        Log.i(TAG, "onDetachedFromEngine");
+        channel = null;
+    }
+
+    @Override
+    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        Log.i(TAG, "onAttachedToActivity");
+        channel.setMethodCallHandler(new tencent_im_sdk_plugin(binding.getActivity().getApplicationContext(), channel));
+    }
+
+
+    @Override
+    public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+        Log.i(TAG, "onReattachedToActivityForConfigChanges");
+        channel.setMethodCallHandler(new tencent_im_sdk_plugin(binding.getActivity().getApplicationContext(), channel));
+    }
+
+    @Override
+    public void onDetachedFromActivityForConfigChanges() {
+        Log.i(TAG, "onDetachedFromActivityForConfigChanges");
+        channel = null;
+    }
+
+
+    @Override
+    public void onDetachedFromActivity() {
+        Log.i(TAG, "onDetachedFromActivity");
+        channel = null;
     }
 }

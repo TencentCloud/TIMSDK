@@ -1,9 +1,11 @@
 //
 //  AdvancedMsgListener.swift
 //  tencent_im_sdk_plugin
+
 //
 //  Created by 林智 on 2020/12/18.
-//
+//  let data = try Hydra.await(V2MessageEntity.init(message: msg!).getDictAll());
+// TencentImSDKPlugin.invokeListener(type: ListenerType.onRecvNewMessage, method: "advancedMsgListener", data: data)
 
 import Foundation
 import ImSDK_Plus
@@ -12,15 +14,14 @@ import Hydra
 class AdvancedMsgListener: NSObject, V2TIMAdvancedMsgListener {
 	/// 新消息通知
 	public func onRecvNewMessage(_ msg: V2TIMMessage!) {
-		async({
-			_ -> Int in
-			TencentImSDKPlugin.invokeListener(type: ListenerType.onRecvNewMessage, method: "advancedMsgListener", data: try await(V2MessageEntity.init(message: msg!).getDictAll()))
-			
-			return 1
-		}).then({
-			value in
-		})
-		
+            let promise =  Promise<Int>(in: .main,{ resolve, reject, _ in
+                V2MessageEntity.init(message: msg!).getDictAll().then(in: .main,{ res in
+                    TencentImSDKPlugin.invokeListener(type: ListenerType.onRecvNewMessage, method: "advancedMsgListener", data: res)
+                    resolve(1);
+                })
+            })
+        
+        HydraThreadManager.subsc(promise: promise);
 	}
 	
 	/// C2C已读回执

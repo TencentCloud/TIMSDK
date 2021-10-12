@@ -1,10 +1,12 @@
 class V2TimReceiveMessageOptInfo {
   late int? c2CReceiveMessageOpt;
   late String userID;
+
   V2TimReceiveMessageOptInfo({
     this.c2CReceiveMessageOpt,
     required this.userID,
   });
+
   V2TimReceiveMessageOptInfo.fromJson(Map<String, dynamic> jsonStr) {
     this.c2CReceiveMessageOpt = jsonStr['c2CReceiveMessageOpt'];
     this.userID = jsonStr['userID'];

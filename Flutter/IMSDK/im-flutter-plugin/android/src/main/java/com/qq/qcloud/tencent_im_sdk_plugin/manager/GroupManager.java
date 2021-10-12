@@ -10,7 +10,10 @@ import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberOperationResult;
+import com.tencent.imsdk.v2.V2TIMGroupMemberSearchParam;
+import com.tencent.imsdk.v2.V2TIMGroupSearchParam;
 import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessageSearchParam;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 
 
@@ -531,5 +534,83 @@ public class GroupManager {
             }
         });
     }
+
+    public void searchGroups(MethodCall methodCall,final MethodChannel.Result result){
+        HashMap<String,Object> searchParam = CommonUtil.getParam(methodCall,result,"searchParam");
+        V2TIMGroupSearchParam param = new V2TIMGroupSearchParam();
+        if(searchParam.get("keywordList")!=null){
+            param.setKeywordList((List<String>) searchParam.get("keywordList"));
+        }
+        if(searchParam.get("isSearchGroupID")!=null){
+            param.setSearchGroupID((Boolean) searchParam.get("isSearchGroupID"));
+        }
+        if(searchParam.get("isSearchGroupName")!=null){
+            param.setSearchGroupName((Boolean) searchParam.get("isSearchGroupName"));
+        }
+        V2TIMManager.getGroupManager().searchGroups(param, new V2TIMValueCallback<List<V2TIMGroupInfo>>() {
+            @Override
+            public void onSuccess(List<V2TIMGroupInfo> v2TIMGroupInfos) {
+                LinkedList<HashMap<String,Object>> infoList = new LinkedList<>();
+                for(int i = 0;i<v2TIMGroupInfos.size();i++){
+                    infoList.add(CommonUtil.convertV2TIMGroupInfoToMap(v2TIMGroupInfos.get(i)));
+                }
+                CommonUtil.returnSuccess(result,infoList);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                CommonUtil.returnError(result,code,desc);
+            }
+        });
+    }
+    public void searchGroupMembers(MethodCall methodCall,final MethodChannel.Result result){
+        HashMap<String,Object> param = CommonUtil.getParam(methodCall,result,"param");
+        V2TIMGroupMemberSearchParam searchParam = new V2TIMGroupMemberSearchParam ();
+        if(param.get("keywordList")!=null){
+            searchParam.setKeywordList((List<String>) param.get("keywordList"));
+        }
+        if(param.get("groupIDList")!=null){
+            searchParam.setGroupIDList((List<String>) param.get("groupIDList"));
+        }
+        if(param.get("isSearchMemberUserID")!=null){
+            searchParam.setSearchMemberUserID((Boolean) param.get("isSearchMemberUserID"));
+        }
+        if(param.get("isSearchMemberNickName")!=null){
+            searchParam.setSearchMemberNickName((Boolean) param.get("isSearchMemberNickName"));
+        }
+        if(param.get("isSearchMemberRemark")!=null){
+            searchParam.setSearchMemberRemark((Boolean) param.get("isSearchMemberRemark"));
+        }
+        if(param.get("isSearchMemberNameCard")!=null){
+            searchParam.setSearchMemberNameCard((Boolean) param.get("isSearchMemberNameCard"));
+        }
+
+        V2TIMManager.getGroupManager().searchGroupMembers(searchParam, new V2TIMValueCallback<HashMap<String, List<V2TIMGroupMemberFullInfo>>>() {
+            @Override
+            public void onSuccess(HashMap<String, List<V2TIMGroupMemberFullInfo>> stringListHashMap) {
+                Iterator it = stringListHashMap.entrySet().iterator();
+                HashMap<String,LinkedList<HashMap<String,Object>>> res = new HashMap();
+                while (it.hasNext()) {
+                    Map.Entry entry =(Map.Entry) it.next();
+                    String key = (String) entry.getKey();
+                    List<V2TIMGroupMemberFullInfo> value = (List<V2TIMGroupMemberFullInfo>) entry.getValue();
+                    LinkedList<HashMap<String,Object>> resItem = new LinkedList<>();
+                    for(int i =0;i<value.size();i++){
+                        resItem.add(CommonUtil.convertV2TIMGroupMemberFullInfoToMap(value.get(i)));
+
+                    }
+
+                    res.put(key,resItem);
+                }
+                CommonUtil.returnSuccess(result,res);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                CommonUtil.returnError(result,code,desc);
+            }
+        });
+    }
+
 
 }

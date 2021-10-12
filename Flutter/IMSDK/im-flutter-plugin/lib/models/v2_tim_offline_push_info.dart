@@ -5,25 +5,25 @@
 class V2TimOfflinePushInfo {
   late String? title;
   late String? desc;
-  late bool? isDisablePush;
+  late bool? disablePush;
 
   V2TimOfflinePushInfo({
     this.title,
     this.desc,
-    this.isDisablePush,
+    this.disablePush,
   });
 
   V2TimOfflinePushInfo.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     desc = json['desc'];
-    isDisablePush = json['isDisablePush'];
+    disablePush = json['disablePush'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = this.title;
     data['desc'] = this.desc;
-    data['isDisablePush'] = this.isDisablePush;
+    data['disablePush'] = this.disablePush;
     return data;
   }
 }
@@ -31,5 +31,5 @@ class V2TimOfflinePushInfo {
 // {
 //   "title":"",
 //   "desc":"",
-//   "isDisablePush":true
+//   "disablePush":true
 // }
