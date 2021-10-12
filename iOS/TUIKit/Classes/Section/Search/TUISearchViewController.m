@@ -246,7 +246,7 @@ static NSString * const HFId = @"HFId";
     }
     for (id<TUIConversationListControllerListener> delegate in TUIKitListenerManager.sharedInstance.convListeners) {
         if ([delegate respondsToSelector:@selector(searchController:withKey:didSelectType:item:conversationCellData:)]) {
-            TUISearchType type = module == TUISearchResultModuleContact ? TUISearchTypeContact : TUISearchTypeChatHistory;
+            TUISearchType type = module == TUISearchResultModuleContact ? TUISearchTypeContact : TUISearchTypeGroup;
             [delegate searchController:self withKey:self.searchBar.searchBar.text didSelectType:type item:cellModel.context conversationCellData:conv];
         }
     }
