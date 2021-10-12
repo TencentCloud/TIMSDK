@@ -398,5 +398,72 @@ class GroupManager {
 			CommonUtils.resultSuccess(call: call, result: result)
 		}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
 	}
-	
-}
+
+	func searchGroups(call: FlutterMethodCall, result: @escaping FlutterResult){
+        let searchParam = CommonUtils.getParam(call: call, result: result, param: "searchParam") as! [String: Any];
+        let groupSearchParam = V2TIMGroupSearchParam();
+        
+        if(searchParam["keywordList"] != nil){
+            groupSearchParam.keywordList = searchParam["keywordList"] as? [String];
+        }
+        if(searchParam["isSearchGroupID"] != nil){
+            groupSearchParam.isSearchGroupID = searchParam["isSearchGroupID"] as! Bool;
+        }
+        if(searchParam["isSearchGroupName"] != nil){
+            groupSearchParam.isSearchGroupName = searchParam["isSearchGroupName"] as! Bool;
+        }
+        
+            V2TIMManager.sharedInstance().searchGroups(groupSearchParam, succ: {
+				array in
+                var list = [[String: Any]]();
+                for item in array! {
+                    list.append( V2GroupInfoEntity.getDict(info: item) );
+                }
+				CommonUtils.resultSuccess(call: call, result: result, data: list)
+			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+	}
+
+	func searchGroupMembers(call: FlutterMethodCall, result: @escaping FlutterResult){
+        let searchParam = CommonUtils.getParam(call: call, result: result, param: "param") as! [String: Any];
+        let groupMemberSearchParam = V2TIMGroupMemberSearchParam();
+        
+        if(searchParam["keywordList"] != nil){
+            groupMemberSearchParam.keywordList = searchParam["keywordList"] as? [String];
+        }
+        if(searchParam["groupIDList"] != nil){
+            groupMemberSearchParam.groupIDList = searchParam["groupIDList"] as? [String];
+            if groupMemberSearchParam.groupIDList.isEmpty {
+                groupMemberSearchParam.groupIDList = nil;
+            }
+        }
+        if(searchParam["isSearchMemberUserID"] != nil){
+            groupMemberSearchParam.isSearchMemberUserID = searchParam["isSearchMemberUserID"] as! Bool;
+        }
+        if(searchParam["isSearchGroupName"] != nil){
+            groupMemberSearchParam.isSearchMemberNickName = searchParam["isSearchGroupName"] as! Bool;
+        }
+        if(searchParam["isSearchMemberRemark"] != nil){
+            groupMemberSearchParam.isSearchMemberRemark = searchParam["isSearchMemberRemark"] as! Bool;
+        }
+        if(searchParam["isSearchMemberNameCard"] != nil){
+            groupMemberSearchParam.isSearchMemberNameCard = searchParam["isSearchMemberNameCard"] as! Bool;
+        }
+            V2TIMManager.sharedInstance().searchGroupMembers(groupMemberSearchParam, succ: {
+                (array) -> Void in
+                
+                var resMap = [String: [Any]]();
+                // 第一层Map
+                for (key, value) in array! {
+                    var tempArr: [Any] = [];
+                    // 第二层数组
+                    for value01 in value {
+                        tempArr.append(V2GroupMemberFullInfoEntity.getDict(info: value01));
+                    }
+                    resMap.updateValue(tempArr, forKey: key)
+                }
+                
+                CommonUtils.resultSuccess(call: call, result: result, data: resMap)
+            }, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+	}
+ }
+

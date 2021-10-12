@@ -1,5 +1,5 @@
 import  ImSDK_Plus
-
+import Hydra
 //  腾讯云工具类
 
 public class TencentImUtils {
@@ -114,3 +114,48 @@ public typealias GetTimMessage = (_ message: V2TIMMessage?) -> Void;
 *  获取TIM消息成功回调
 */
 public typealias GetMessage = (_ message: V2MessageEntity) -> Void;
+
+/* 
+    onReciveMessage时防止线程进入过多而导致线程卡死的问题，
+    而为Hydra封装的一个线程数量管理类
+    处理逻辑类似发布订阅，中间多加了一个limit数量的限制，使得第一次进入时避免开启的线程数量过大而导致的卡死💀
+*/
+public class HydraThreadManager {
+   static var limit: Int = 20;
+   static var bufferArr: [Promise<Int>] = [];
+   static var curThreadNum = 0;
+    
+    
+    public static func getThreadLimit()-> Int {
+        return self.limit;
+    }
+    
+    // 发布
+    private static func emit(promise:Promise<Int>) -> Void {
+        if(limit > curThreadNum){
+        curThreadNum += 1;
+        promise.then( { value in
+                curThreadNum = curThreadNum - 1;
+
+                if(bufferArr.count > 0){
+                    let temp = bufferArr[0];
+                    bufferArr.remove(at: 0);
+                    emit(promise: temp);
+                }
+            })
+        }else {subsc(promise:promise);}
+    }
+    
+    // 订阅
+    public static func subsc(promise:Promise<Int>) -> Void {
+        
+        // 当前buffer不足不足
+        if(limit <= curThreadNum){
+            bufferArr.append(promise);
+        // 当前buffer充足
+        }else{
+            emit(promise: promise)
+        }
+    }
+
+}

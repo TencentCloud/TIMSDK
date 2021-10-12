@@ -375,3 +375,44 @@ setGroupReceiveMessageOpt、getC2CReceiveMessageOpt、getConversationListByConve
 
 ## 3.3.5
 * ios修复onSyncServerStart等事件
+
+## 3.3.6
+* ios bug修复
+
+## 3.3.7
+* ios bug修复
+
+## 3.3.8
+* ios 修复饭初始化crash
+
+## 3.3.9
+* 兼容firebase
+* 升级底层sdk
+
+## 3.4.0
+* 修复disable字段错误
+
+## 3.4.1
+* 修复群tips信息不完善
+
+## 3.4.2
+* disablePush字段对齐
+
+## 3.4.3
+* Hydra命名空间
+
+## 3.4.4
+* Hydra命名空间
+
+## 3.4.5
+* 新增接口
+* callExperimentalAPI 
+* clearC2CHistoryMessage
+* clearGroupHistoryMessage
+* searchLocalMessages
+* findMessages
+* searchGroups
+* searchGroupMembers
+* getSignalingInfo
+* addInvitedSignaling
+* searchFriends

@@ -47,15 +47,15 @@ class SetOfflinePushConfigState extends State<SetOfflinePushConfig> {
   //   XgFlutterPlugin().setEnableDebug(true);
 
   //   // /// 添加回调事件
-  //   XgFlutterPlugin().addEventHandler(
-  //     onRegisteredDeviceToken: (String msg) async {
-  //       print("onRegisteredDeviceToken $msg");
-  //       Provider.of<Event>(context, listen: false).addEvents(
-  //         new Map<String, dynamic>.from(
-  //           {"type": "onRegisteredDeviceToken", "data": msg},
-  //         ),
-  //       );
-  //     },
+  // XgFlutterPlugin().addEventHandler(
+  //   onRegisteredDeviceToken: (String msg) async {
+  //     print("onRegisteredDeviceToken $msg");
+  //     Provider.of<Event>(context, listen: false).addEvents(
+  //       new Map<String, dynamic>.from(
+  //         {"type": "onRegisteredDeviceToken", "data": msg},
+  //       ),
+  //     );
+  //   },
   //     onRegisteredDone: (String msg) async {
   //       print("onRegisteredDone $msg");
   //       Provider.of<Event>(context, listen: false).addEvents(

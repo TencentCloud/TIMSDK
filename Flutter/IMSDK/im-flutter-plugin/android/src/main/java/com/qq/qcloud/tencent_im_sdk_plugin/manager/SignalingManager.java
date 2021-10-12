@@ -5,9 +5,12 @@ import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
+import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.imsdk.v2.V2TIMSignalingListener;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import io.flutter.plugin.common.MethodCall;
@@ -104,7 +107,7 @@ public class SignalingManager {
             if(desc!=null){
                 offlinePushInfo.setDesc(desc);
             }
-            if(offlinePushInfoParams.get("disable")!=null){
+            if(offlinePushInfoParams.get("disablePush")!=null){
                 offlinePushInfo.disablePush(disablePush);
             }
             if(ext!=null){
@@ -209,9 +212,68 @@ public class SignalingManager {
         });
     }
     public void getSignalingInfo(MethodCall methodCall, final MethodChannel.Result result){
-        V2TIMManager.getSignalingManager().getSignalingInfo(new V2TIMMessage());
+        String msgID = CommonUtil.getParam(methodCall,result,"msgID");
+        List<String> messageIdList = new LinkedList<>();
+        messageIdList.add(msgID);
+        V2TIMManager.getMessageManager().findMessages(messageIdList, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                if(v2TIMMessages.size()!=1){
+                    CommonUtil.returnError(result,-1,"message not found");
+                }else{
+                    V2TIMSignalingInfo singnalInfo = V2TIMManager.getSignalingManager().getSignalingInfo(v2TIMMessages.get(0));
+                    if(singnalInfo == null) {
+                        CommonUtil.returnSuccess(result, null);
+                        return;
+                    }
+                    CommonUtil.returnSuccess(result,CommonUtil.convertV2TIMSignalingInfoToMap(singnalInfo));
+                }
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                CommonUtil.returnError(result,code,desc);
+            }
+        });
+
     }
     public void addInvitedSignaling(MethodCall methodCall, final MethodChannel.Result result){
-        //这个方法可能被删掉了
+        HashMap<String,Object> info = CommonUtil.getParam(methodCall,result,"info");
+        V2TIMSignalingInfo param = new V2TIMSignalingInfo();
+        if(info.get("inviteID")!=null){
+            param.setInviteID((String) info.get("inviteID"));
+        }
+        if(info.get("groupID")!=null){
+            param.setGroupID((String) info.get("groupID"));
+        }
+        if(info.get("inviter")!=null){
+            param.setInviter((String) info.get("inviter"));
+        }
+        if(info.get("inviteeList")!=null){
+            param.setInviteeList((List<String>) info.get("inviteeList"));
+        }
+        if(info.get("data")!=null){
+            param.setData((String) info.get("data"));
+        }
+        if(info.get("timeout")!=null){
+            param.setTimeout((Integer) info.get("timeout"));
+        }
+        if(info.get("actionType")!=null){
+            param.setActionType((Integer) info.get("actionType"));
+        }
+        if(info.get("businessID")!=null){
+            param.setBusinessID((Integer) info.get("businessID"));
+        }
+        V2TIMManager.getSignalingManager().addInvitedSignaling(param, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                CommonUtil.returnSuccess(result,null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                CommonUtil.returnError(result,code,desc);
+            }
+        });
     }
 }

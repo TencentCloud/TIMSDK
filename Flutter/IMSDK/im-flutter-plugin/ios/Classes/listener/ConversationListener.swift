@@ -7,27 +7,29 @@
 
 import Foundation
 import ImSDK_Plus
+import Hydra
 
 class ConversationListener: NSObject, V2TIMConversationListener {
 	/// 会话刷新
 	public func onConversationChanged(_ conversationList: [V2TIMConversation]!) {
-		var cs: [[String: Any]] = [];
+	// 	var cs: [[String: Any]] = [];
 		
-		for item in conversationList {
-			cs.append(V2ConversationEntity.getDict(info: item));
-		}
-		TencentImSDKPlugin.invokeListener(type: ListenerType.onConversationChanged, method: "conversationListener", data: cs)
+	// 	for item in conversationList {
+	// 		cs.append(V2ConversationEntity.getDict(info: item));
+	// 	}
+	// 	TencentImSDKPlugin.invokeListener(type: ListenerType.onConversationChanged, method: "conversationListener", data: cs)
 		
-//		async({
-//			_ -> Int in
-//			for item in conversationList {
-//				cs.append(try await (V2ConversationEntity.getDictAll(info: item)));
-//			}
-//			self.invokeListener(type: ListenerType.onConversationChanged, method: "conversationListener", data: cs)
-//			return 1
-//		}).then({
-//			value in
-//		})
+	async({
+			_ -> Int in
+            var cs: [[String: Any]] = [];
+			for item in conversationList {
+				cs.append(try Hydra.await (V2ConversationEntity.getDictAll(info: item)));
+			}
+            TencentImSDKPlugin.invokeListener(type: ListenerType.onConversationChanged, method: "conversationListener", data: cs)
+			return 1
+		}).then({
+			value in
+		})
 		
 	}
 	

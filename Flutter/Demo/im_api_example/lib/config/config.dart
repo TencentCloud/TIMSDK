@@ -1,6 +1,7 @@
 import 'package:im_api_example/im/addEventListener.dart';
 import 'package:im_api_example/im/addFriend.dart';
 import 'package:im_api_example/im/addFriendsToFriendGroup.dart';
+import 'package:im_api_example/im/addInvitedSignaling.dart';
 import 'package:im_api_example/im/addToBlackList.dart';
 import 'package:im_api_example/im/checkFriend.dart';
 import 'package:im_api_example/im/createFriendGroup.dart';
@@ -34,6 +35,7 @@ import 'package:im_api_example/im/getJoinedGroupList.dart';
 import 'package:im_api_example/im/getLoginStatus.dart';
 import 'package:im_api_example/im/getLoginUser.dart';
 import 'package:im_api_example/im/getServerTime.dart';
+import 'package:im_api_example/im/getSignalingInfo.dart';
 import 'package:im_api_example/im/getTotalUnreadMessageCount.dart';
 import 'package:im_api_example/im/getUsersInfo.dart';
 import 'package:im_api_example/im/getVersion.dart';
@@ -81,6 +83,15 @@ import 'package:im_api_example/im/setLocalCustomInt.dart';
 import 'package:im_api_example/im/setOfflinePushConfig.dart';
 import 'package:im_api_example/im/setSelfInfo.dart';
 import 'package:im_api_example/im/transferGroupOwner.dart';
+import 'package:im_api_example/im/callExperimentalAPI.dart';
+import 'package:im_api_example/im/clearC2CHistoryMessage.dart';
+import 'package:im_api_example/im/clearGroupHistoryMessage.dart';
+import 'package:im_api_example/im/searchLocalMessages.dart';
+import 'package:im_api_example/im/findMessages.dart';
+import 'package:im_api_example/im/searchGroups.dart';
+import 'package:im_api_example/im/searchGroupMembers.dart';
+import 'package:im_api_example/im/searchFriends.dart';
+import 'package:im_api_example/im/getC2CReceiveMessageOpt.dart';
 
 class Config {
   static const String appName = "API Example For Flutter";
@@ -222,6 +233,13 @@ class Config {
           "apiDesc": "设置个人信息",
           "detailRoute": SetSelfInfo(),
           "codeFile": "lib/im/setSelfInfo.dart",
+        },
+        {
+          "apiName": "callExperimentalAPI",
+          "apiNameCN": "试验性接口",
+          "apiDesc": "试验性接口",
+          "detailRoute": CallExperimentalAPI(),
+          "codeFile": "lib/im/callExperimentalAPIState.dart",
         },
       ]
     },
@@ -466,6 +484,41 @@ class Config {
           "detailRoute": InsertC2CMessageToLocalStorage(),
           "codeFile": "lib/im/insertC2CMessageToLocalStorage.dart",
         },
+        {
+          "apiName": "clearC2CHistoryMessage",
+          "apiNameCN": "清空单聊本地及云端的消息",
+          "apiDesc": "清空单聊本地及云端的消息",
+          "detailRoute": ClearC2CHistoryMessage(),
+          "codeFile": "lib/im/clearC2CHistoryMessage.dart",
+        },
+        {
+          "apiName": "getC2CReceiveMessageOpt",
+          "apiNameCN": "获取用户消息接收选项",
+          "apiDesc": "获取用户消息接收选项",
+          "detailRoute": GetC2CReceiveMessageOpt(),
+          "codeFile": "lib/im/getC2CReceiveMessageOpt.dart",
+        },
+        {
+          "apiName": "clearGroupHistoryMessage",
+          "apiNameCN": "清空群组单聊本地及云端的消息",
+          "apiDesc": "清空群组单聊本地及云端的消息",
+          "detailRoute": ClearGroupHistoryMessage(),
+          "codeFile": "lib/im/clearGroupHistoryMessage.dart",
+        },
+        {
+          "apiName": "searchLocalMessages",
+          "apiNameCN": "搜索本地消息",
+          "apiDesc": "搜索本地消息",
+          "detailRoute": SearchLocalMessages(),
+          "codeFile": "lib/im/searchLocalMessages.dart",
+        },
+        {
+          "apiName": "findMessages",
+          "apiNameCN": "查询指定会话中的本地消息",
+          "apiDesc": "查询指定会话中的本地消息",
+          "detailRoute": FindMessages(),
+          "codeFile": "lib/im/findMessages.dart",
+        },
       ]
     },
     {
@@ -584,6 +637,13 @@ class Config {
           "detailRoute": DeleteFriendsFromFriendGroup(),
           "codeFile": "lib/im/deleteFriendsFromFriendGroup.dart",
         },
+        {
+          "apiName": "searchFriends",
+          "apiNameCN": "搜索好友",
+          "apiDesc": "搜索好友",
+          "detailRoute": SearchFriends(),
+          "codeFile": "lib/im/searchFriends.dart",
+        },
       ]
     },
     {
@@ -681,6 +741,20 @@ class Config {
           "detailRoute": TransferGroupOwner(),
           "codeFile": "lib/im/transferGroupOwner.dart",
         },
+        {
+          "apiName": "searchGroups",
+          "apiNameCN": "搜索群列表",
+          "apiDesc": "搜索群列表",
+          "detailRoute": SearchGroups(),
+          "codeFile": "lib/im/searchGroups.dart",
+        },
+        {
+          "apiName": "searchGroupMembers",
+          "apiNameCN": "搜索群成员",
+          "apiDesc": "搜索群成员",
+          "detailRoute": SearchGroupMembers(),
+          "codeFile": "lib/im/searchGroupMembers.dart",
+        }
       ]
     },
     {
@@ -701,8 +775,23 @@ class Config {
           "detailRoute": InviteInGroup(),
           "codeFile": "lib/im/inviteInGroup.dart",
         },
+        {
+          "apiName": "getSignallingInfo",
+          "apiNameCN": "获取信令信息",
+          "apiDesc": "获取信令信息",
+          "detailRoute": GetSignalingInfo(),
+          "codeFile": "lib/im/getSignalingInfo.dart",
+        },
+        {
+          "apiName": "addInvitedSignaling",
+          "apiNameCN": "添加邀请信令",
+          "apiDesc": "添加邀请信令（可以用于群离线推送消息触发的邀请信令）",
+          "detailRoute": AddInvitedSignaling(),
+          "codeFile": "lib/im/addInvitedSignaling.dart",
+        },
       ]
     },
+    // AddInvitedSignaling
     {
       "apiManager": "V2TimMessageManager",
       "managerName": "离线推送模块",

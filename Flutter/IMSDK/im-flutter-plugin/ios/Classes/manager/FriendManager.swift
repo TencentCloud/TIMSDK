@@ -344,7 +344,7 @@ class FriendManager {
 				let i = [
 					"userID": item.userID!,
 					"resultCode": item.resultCode,
-					"resultInfo": item.resultInfo
+					"resultInfo": item.resultInfo ?? ""
 				] as [String : Any]
 				res.append(i)
 			}
@@ -365,12 +365,43 @@ class FriendManager {
 				let i = [
 					"userID": item.userID!,
 					"resultCode": item.resultCode,
-					"resultInfo": item.resultInfo
+					"resultInfo": item.resultInfo ?? ""
 				] as [String : Any]
 				res.append(i)
 			}
 			
 			CommonUtils.resultSuccess(call: call, result: result, data: JsonUtil.getDictionaryOrArrayFromObject(res));
 		}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
+    }
+
+		func searchFriends(call: FlutterMethodCall, result: @escaping FlutterResult){
+        
+            let searchParam = CommonUtils.getParam(call: call, result: result, param: "searchParam") as! [String: Any];
+			let friendSearchParam = V2TIMFriendSearchParam();
+            if (searchParam["keywordList"] != nil) {
+                friendSearchParam.keywordList = searchParam["keywordList"] as? [String] ?? friendSearchParam.keywordList;
+            }
+            if (searchParam["isSearchNickName"] != nil) {
+                friendSearchParam.isSearchNickName = searchParam["isSearchNickName"] as? Bool ?? friendSearchParam.isSearchNickName;
+            }
+            if(searchParam["isSearchUserID"] != nil) {
+                friendSearchParam.isSearchUserID = searchParam["isSearchUserID"] as? Bool ?? friendSearchParam.isSearchUserID;
+            }
+            if(searchParam["isSearchRemark"] != nil) {
+                friendSearchParam.isSearchRemark = searchParam["isSearchRemark"] as? Bool ?? friendSearchParam.isSearchRemark;
+            }
+
+            V2TIMManager.sharedInstance().searchFriends(friendSearchParam, succ: {
+                res in
+                var resultData: [[String: Any]] = [];
+                if(!res!.isEmpty){
+                    for item in res! {
+                        resultData.append(V2FriendInfoResultEntity.getDict(info: item));
+                    }
+                }
+               
+                CommonUtils.resultSuccess(call: call, result: result, data: resultData)
+            }, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
+        
 	}
 }

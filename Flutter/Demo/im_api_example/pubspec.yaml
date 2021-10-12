@@ -27,7 +27,7 @@ dependencies:
   provider: ^5.0.0
   gradient_ui_widgets: ^1.0.2-nullsafety
   modal_bottom_sheet: ^2.0.0
-  tencent_im_sdk_plugin: ^3.3.2
+  tencent_im_sdk_plugin: ^3.5.0
   flutter_syntax_view: ^4.0.0
   loading_indicator: ^2.0.1
   crypto: ^3.0.1
@@ -39,7 +39,7 @@ dependencies:
   pretty_json: ^2.0.0 
   adaptive_action_sheet: ^2.0.0
   image_picker: ^0.7.4
-  video_thumbnail: ^0.3.3
+  video_thumbnail: ^0.4.3
   path_provider: ^2.0.1
   record: ^2.1.1
   geolocator: ^7.0.3

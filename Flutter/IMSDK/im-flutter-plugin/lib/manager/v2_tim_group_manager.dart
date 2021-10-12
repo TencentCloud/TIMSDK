@@ -8,6 +8,9 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_full_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_operation_result.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_param.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_result.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_search_param.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 
 /// 群组高级接口，包含了群组的高级功能，例如群成员邀请、非群成员申请进群等操作接口。
@@ -318,14 +321,17 @@ class V2TIMGroupManager {
 
   ///获取指定群属性，keys 传 null 则获取所有群属性。
   ///
-  Future<V2TimValueCallback<int>> getGroupOnlineMemberCount(
-      {required String groupID}) async {
+  Future<V2TimValueCallback<int>> getGroupOnlineMemberCount({
+    required String groupID,
+  }) async {
     return V2TimValueCallback<int>.fromJson(
       formatJson(
         await _channel.invokeMethod(
           "getGroupOnlineMemberCount",
           buildParam(
-            {"groupID": groupID},
+            {
+              "groupID": groupID,
+            },
           ),
         ),
       ),
@@ -651,6 +657,42 @@ class V2TIMGroupManager {
           ),
         ),
       ),
+    );
+  }
+
+  /// 搜索群资料
+  ///
+  Future<V2TimValueCallback<List<V2TimGroupInfo>>> searchGroups({
+    required V2TimGroupSearchParam searchParam,
+  }) async {
+    return V2TimValueCallback<List<V2TimGroupInfo>>.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "searchGroups",
+          buildParam(
+            {
+              "searchParam": searchParam.toJson(),
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 搜索群成员
+  /// TODO这里安卓和ios有差异化，ios能根据组名返回key:list但 安卓但key是""为空，我设为default
+  Future<V2TimValueCallback<V2GroupMemberInfoSearchResult>> searchGroupMembers({
+    required V2TimGroupMemberSearchParam param,
+  }) async {
+    return V2TimValueCallback<V2GroupMemberInfoSearchResult>.fromJson(
+      formatJson(await _channel.invokeMethod(
+        "searchGroupMembers",
+        buildParam(
+          {
+            "param": param.toJson(),
+          },
+        ),
+      )),
     );
   }
 

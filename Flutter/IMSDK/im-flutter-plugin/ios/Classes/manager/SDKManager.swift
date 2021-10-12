@@ -100,7 +100,8 @@ class SDKManager {
 	* 获取版本号
 	*/
 	public func unInitSDK(call: FlutterMethodCall, result: @escaping FlutterResult) {
-		CommonUtils.resultSuccess(call: call, result: result);
+		V2TIMManager.sharedInstance().unInitSDK()
+		CommonUtils.resultSuccess(call: call, result: result, data:"");
 	}
 	
 	
@@ -112,11 +113,11 @@ class SDKManager {
 		if let sdkAppID = CommonUtils.getParam(call: call, result: result, param: "sdkAppID") as? Int32,
 		   let logLevel = CommonUtils.getParam(call: call, result: result, param: "logLevel") as? Int {
 			let config = V2TIMSDKConfig()
-			
+			    
 			config.logLevel = V2TIMLogLevel(rawValue: logLevel)!
-			V2TIMManager.sharedInstance().initSDK(sdkAppID, config: config, listener: sdkListenr)
+			let data = V2TIMManager.sharedInstance().initSDK(sdkAppID, config: config, listener: sdkListenr)
 			
-			CommonUtils.resultSuccess(call: call, result: result);
+            CommonUtils.resultSuccess(call: call, result: result, data: data);
 		}
 	}
 	
@@ -205,6 +206,16 @@ class SDKManager {
 			CommonUtils.resultSuccess(call: call, result: result, data: res);
 			
 		}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
+	}
+	
+	public func callExperimentalAPI(call: FlutterMethodCall, result: @escaping FlutterResult) {
+       if let api = CommonUtils.getParam(call: call, result: result, param: "api") as? String,
+          let param = CommonUtils.getParam(call: call, result: result, param: "param") as? NSObject{
+        V2TIMManager.sharedInstance().callExperimentalAPI(api, param: param as! NSObject?, succ: {value in
+            CommonUtils.resultSuccess(call: call, result: result, data: value);
+        }, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
+       }
+       
 	}
 
 	public func setUnreadCount(call: FlutterMethodCall, result: @escaping FlutterResult) {

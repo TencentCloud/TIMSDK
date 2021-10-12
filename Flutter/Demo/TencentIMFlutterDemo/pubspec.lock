@@ -692,7 +692,7 @@ packages:
       name: tencent_im_sdk_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.9"
+    version: "3.4.4"
   term_glyph:
     dependency: transitive
     description:

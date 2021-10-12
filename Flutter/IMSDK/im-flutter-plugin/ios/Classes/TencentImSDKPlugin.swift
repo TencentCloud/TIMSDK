@@ -336,6 +336,9 @@ public class TencentImSDKPlugin: NSObject, FlutterPlugin, UNUserNotificationCent
 		case "getC2CHistoryMessageList":
 			messageManager!.getC2CHistoryMessageList(call: call, result: result)
 			break
+		case "clearC2CHistoryMessage":
+			messageManager!.clearC2CHistoryMessage(call: call, result: result)
+			break
 		case "getGroupHistoryMessageList":
 			messageManager!.getGroupHistoryMessageList(call: call, result: result)
 			break
@@ -375,6 +378,9 @@ public class TencentImSDKPlugin: NSObject, FlutterPlugin, UNUserNotificationCent
 		case "setUnreadCount":
 			sdkManager!.setUnreadCount(call: call, result: result)
 			break
+		case "callExperimentalAPI":
+            sdkManager!.callExperimentalAPI(call: call, result: result)
+            break
 		case "invite":
 			signalingManager!.invite(call: call, result: result)
 			break
@@ -390,12 +396,30 @@ public class TencentImSDKPlugin: NSObject, FlutterPlugin, UNUserNotificationCent
 		case "reject":
 			signalingManager!.reject(call: call, result: result)
 			break
-		case "getSignallingInfo":
-			signalingManager!.getSignallingInfo(call: call, result: result)
+		case "getSignalingInfo":
+			signalingManager!.getSignalingInfo(call: call, result: result)
 			break
 		case "addInvitedSignaling":
 			signalingManager!.addInvitedSignaling(call: call, result: result)
 			break
+		case "clearGroupHistoryMessage":
+			messageManager!.clearGroupHistoryMessage(call: call, result: result)
+			break
+		case "searchLocalMessages":
+			messageManager!.searchLocalMessages(call: call, result: result)
+			break
+		case "findMessages":
+			messageManager!.findMessages(call: call, result: result)
+			break
+		case "searchGroups":
+			groupManager!.searchGroups(call: call, result: result)
+			break
+		case "searchGroupMembers":
+			groupManager!.searchGroupMembers(call: call, result: result)
+			break
+		case "searchFriends":
+			friendManager!.searchFriends(call: call, result: result)
+			break	
 		default:
 			result(FlutterMethodNotImplemented);
 		}
