@@ -4,7 +4,6 @@
   "description": "基于 TIM 实现场景化接入方案",
   "main": "index.js",
   "dependencies": {
-    "tim-js-sdk-ws": "^2.12.0"
   },
   "scripts": {
     "checkfile": "node ./scripts/check-file-sensitive-information.js",
