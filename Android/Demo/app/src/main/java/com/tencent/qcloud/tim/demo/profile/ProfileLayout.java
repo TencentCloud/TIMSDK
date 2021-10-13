@@ -14,36 +14,32 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.demo.helper.TUIKitLiveListenerManager;
-import com.tencent.qcloud.tim.demo.helper.IBaseLiveListener;
-import com.tencent.qcloud.tim.demo.login.UserInfo;
+import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
-import com.tencent.qcloud.tim.tuikit.live.utils.TUILiveLog;
-import com.tencent.qcloud.tim.uikit.component.LineControllerView;
-import com.tencent.qcloud.tim.uikit.component.SelectionActivity;
-import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
-import com.tencent.qcloud.tim.uikit.component.picture.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tim.uikit.config.TUIKitConfigs;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitConstants;
-import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
+import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
+import com.tencent.qcloud.tuicore.component.LineControllerView;
+import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class ProfileLayout extends LinearLayout implements View.OnClickListener {
 
@@ -65,6 +61,9 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
     private ArrayList<Integer> mJoinTypeIdList = new ArrayList<>();
     private int mJoinTypeIndex = 2;
     private String mIconUrl;
+    private String mBirthday;
+    private String mSignature;
+    private String mNickName;
     private int count = 0;
     private long lastClickTime = 0;
 
@@ -87,13 +86,12 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         inflate(getContext(), R.layout.profile_layout, this);
 
         mUserIcon = findViewById(R.id.self_icon);
-        GlideEngine.loadImage(mUserIcon, UserInfo.getInstance().getAvatar());
         mAccountView = findViewById(R.id.self_account);
 
         mTitleBar = findViewById(R.id.self_info_title_bar);
         mTitleBar.getLeftGroup().setVisibility(GONE);
         mTitleBar.getRightGroup().setVisibility(GONE);
-        mTitleBar.setTitle(getResources().getString(R.string.profile), TitleBarLayout.POSITION.MIDDLE);
+        mTitleBar.setTitle(getResources().getString(R.string.profile), ITitleBarLayout.Position.MIDDLE);
 
         mModifyUserIconView = findViewById(R.id.modify_user_icon);
         mModifyUserIconView.setCanNav(false);
@@ -130,77 +128,70 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         String selfUserID = V2TIMManager.getInstance().getLoginUser();
 
         mAccountView.setText(String.format(getResources().getString(R.string.id), selfUserID));
-
-        List<String> userList = new ArrayList<>();
-        userList.add(selfUserID);
-        V2TIMManager.getInstance().getUsersInfo(userList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
-            @Override
-            public void onError(int code, String desc) {
-                DemoLog.e(TAG, "initSelfProfile err code = " + code + ", desc = " + desc);
-                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
-            }
-
+        List<String> selfIdList = new ArrayList<>();
+        selfIdList.add(selfUserID);
+        V2TIMManager.getInstance().getUsersInfo(selfIdList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
             @Override
             public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
-                if (v2TIMUserFullInfos == null || v2TIMUserFullInfos.size() == 0) {
-                    DemoLog.e(TAG, "getUsersInfo success but is empty");
-                    return;
-                }
-                V2TIMUserFullInfo v2TIMUserFullInfo = v2TIMUserFullInfos.get(0);
-                DemoLog.i(TAG, "initSelfProfile success, v2TIMUserFullInfo = " + v2TIMUserFullInfo.toString());
-                if (TextUtils.isEmpty(v2TIMUserFullInfo.getFaceUrl())) {
-                    GlideEngine.loadImage(mUserIcon, R.drawable.default_user_icon);
-                } else {
-                    GlideEngine.loadImage(mUserIcon, Uri.parse(v2TIMUserFullInfo.getFaceUrl()));
-                }
-                TUIKitConfigs.getConfigs().getGeneralConfig().setUserFaceUrl(v2TIMUserFullInfo.getFaceUrl());
-                TUIKitConfigs.getConfigs().getGeneralConfig().setUserNickname(v2TIMUserFullInfo.getNickName());
-
-                mModifyNickNameView.setContent(v2TIMUserFullInfo.getNickName());
-
-                String birthday = String.valueOf(v2TIMUserFullInfo.getBirthday());
-                if (TextUtils.isEmpty(birthday) || birthday.length() < 8) {
-                    birthday = "19700101";
-                }
-                StringBuilder sb=new StringBuilder(birthday);
-                sb.insert(4,"-");
-                sb.insert(7,"-");
-                mModifyBirthdayView.setContent(sb.toString());
-                mAccountView.setText(String.format(getResources().getString(R.string.id), v2TIMUserFullInfo.getUserID()));
-
-                mModifySignatureView.setContent(v2TIMUserFullInfo.getSelfSignature());
-                mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_need_confirm));
-                if (v2TIMUserFullInfo.getAllowType() == V2TIMUserFullInfo.V2TIM_FRIEND_ALLOW_ANY) {
-                    mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_allow_any));
-                    mJoinTypeIndex = 0;
-                } else if (v2TIMUserFullInfo.getAllowType() == V2TIMUserFullInfo.V2TIM_FRIEND_DENY_ANY) {
-                    mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_deny_any));
-                    mJoinTypeIndex = 1;
-                } else if (v2TIMUserFullInfo.getAllowType() == V2TIMUserFullInfo.V2TIM_FRIEND_NEED_CONFIRM) {
-                    mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_need_confirm));
-                    mJoinTypeIndex = 2;
-                } else {
-                    mModifyAllowTypeView.setContent("");
-                }
+                setUserInfo(v2TIMUserFullInfos.get(0));
             }
-        });
 
-        // test activity start
-        mTitleBar.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (System.currentTimeMillis() - lastClickTime > 1000) {
-                    count = 0;
-                    lastClickTime = System.currentTimeMillis();
-                } else {
-                    count++;
-                }
-                if (count == 4) {
-                }
+            public void onError(int code, String desc) {
+
             }
         });
-        // test activity end
+        setUserInfoListener();
     }
+
+    private void setUserInfo(V2TIMUserFullInfo info) {
+        mIconUrl = info.getFaceUrl();
+        if (TextUtils.isEmpty(mIconUrl)) {
+            GlideEngine.loadImage(mUserIcon, R.drawable.default_user_icon);
+        } else {
+            GlideEngine.loadImage(mUserIcon, Uri.parse(mIconUrl));
+        }
+        mNickName = info.getNickName();
+        mModifyNickNameView.setContent(mNickName);
+
+        String birthday = String.valueOf(info.getBirthday());
+        if (TextUtils.isEmpty(birthday) || birthday.length() < 8) {
+            birthday = "19700101";
+        }
+        StringBuilder sb=new StringBuilder(birthday);
+        sb.insert(4,"-");
+        sb.insert(7,"-");
+        mBirthday = sb.toString();
+        mModifyBirthdayView.setContent(mBirthday);
+        mAccountView.setText(String.format(getResources().getString(R.string.id), info.getUserID()));
+
+        mSignature = info.getSelfSignature();
+        mModifySignatureView.setContent(mSignature);
+        mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_need_confirm));
+        int allowType = info.getAllowType();
+        if (allowType == V2TIMUserFullInfo.V2TIM_FRIEND_ALLOW_ANY) {
+            mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_allow_any));
+            mJoinTypeIndex = 0;
+        } else if (allowType == V2TIMUserFullInfo.V2TIM_FRIEND_DENY_ANY) {
+            mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_deny_any));
+            mJoinTypeIndex = 1;
+        } else if (allowType == V2TIMUserFullInfo.V2TIM_FRIEND_NEED_CONFIRM) {
+            mModifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_need_confirm));
+            mJoinTypeIndex = 2;
+        } else {
+            mModifyAllowTypeView.setContent("");
+        }
+    }
+
+    private void setUserInfoListener() {
+        V2TIMManager.getInstance().addIMSDKListener(new V2TIMSDKListener() {
+            @Override
+            public void onSelfInfoUpdated(V2TIMUserFullInfo info) {
+                setUserInfo(info);
+            }
+        });
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -210,11 +201,10 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
                 DemoLog.e(TAG, "selfUserID:" + selfUserID);
                 return;
             }
-            byte[] bytes = selfUserID.getBytes();
-            int index = bytes[bytes.length - 1] % 10;
+
+            int index = new Random().nextInt() % 10;
             String avatarName = "avatar" + index + "_100";
             mIconUrl = "https://imgcache.qq.com/qcloud/public/static/" + avatarName + ".20191230.png";
-            GlideEngine.loadImage(mUserIcon, Uri.parse(mIconUrl));
             updateProfile();
         } else if (v.getId() == R.id.modify_nick_name) {
             Bundle bundle = new Bundle();
@@ -224,7 +214,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
             SelectionActivity.startTextSelection((Activity) getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
                 @Override
                 public void onReturn(Object text) {
-                    mModifyNickNameView.setContent(text.toString());
+                    mNickName = text.toString();
                     updateProfile();
                 }
             });
@@ -236,7 +226,6 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
             SelectionActivity.startListSelection((Activity) getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
                 @Override
                 public void onReturn(Object text) {
-                    mModifyAllowTypeView.setContent(mJoinTypeTextList.get((Integer) text));
                     mJoinTypeIndex = (Integer) text;
                     updateProfile();
                 }
@@ -249,7 +238,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
             SelectionActivity.startTextSelection((Activity) getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
                 @Override
                 public void onReturn(Object text) {
-                    mModifySignatureView.setContent(text.toString());
+                    mSignature = text.toString();
                     updateProfile();
                 }
             });
@@ -281,7 +270,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
                         day = String.valueOf(dayOfMonth);
                     }
                     String birthday = year + "-" + month + "-" + day;
-                    mModifyBirthdayView.setContent(birthday);
+                    mBirthday = birthday;
                     updateProfile();
                 }
             }, year, month, day);
@@ -301,7 +290,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (getContext() == null){
-                                TUILiveLog.d(TAG,"getContext is null!");
+                                DemoLog.d(TAG,"getContext is null!");
                                 return;
                             }
 
@@ -325,17 +314,15 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
         }
 
         // 昵称
-        String nickName = mModifyNickNameView.getContent();
-        v2TIMUserFullInfo.setNickname(nickName);
+        v2TIMUserFullInfo.setNickname(mNickName);
 
         // 生日
-        String birthday = mModifyBirthdayView.getContent();
+        String birthday = TextUtils.isEmpty(mBirthday) ? "" : mBirthday;
         String birthdayValue = birthday.replace("-","");;
         v2TIMUserFullInfo.setBirthday(Long.valueOf(birthdayValue));
 
         // 个性签名
-        String signature = mModifySignatureView.getContent();
-        v2TIMUserFullInfo.setSelfSignature(signature);
+        v2TIMUserFullInfo.setSelfSignature(mSignature);
 
         // 加我验证方式
         int allowType = mJoinTypeIdList.get(mJoinTypeIndex);
@@ -351,12 +338,6 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
             @Override
             public void onSuccess() {
                 DemoLog.i(TAG, "modifySelfProfile success");
-                TUIKitConfigs.getConfigs().getGeneralConfig().setUserFaceUrl(mIconUrl);
-                TUIKitConfigs.getConfigs().getGeneralConfig().setUserNickname(mModifyNickNameView.getContent());
-                IBaseLiveListener baseLiveListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
-                if (baseLiveListener != null) {
-                    baseLiveListener.refreshUserInfo();
-                }
             }
         });
     }

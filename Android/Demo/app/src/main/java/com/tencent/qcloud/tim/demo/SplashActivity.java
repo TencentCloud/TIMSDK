@@ -3,21 +3,19 @@ package com.tencent.qcloud.tim.demo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.qcloud.tim.demo.bean.OfflineMessageBean;
+import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
-import com.tencent.qcloud.tim.demo.login.UserInfo;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.thirdpush.OfflineMessageDispatcher;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.uikit.TUIKit;
-import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
-import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageBean;
-import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageContainerBean;
-import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
+import com.tencent.qcloud.tuicore.util.BackgroundTasks;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 public class SplashActivity extends Activity {
 
@@ -43,7 +41,7 @@ public class SplashActivity extends Activity {
         if (mUserInfo != null && mUserInfo.isAutoLogin()) {
             login();
         } else {
-            mFlashView.postDelayed(new Runnable() {
+            BackgroundTasks.getInstance().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     startLogin();
@@ -53,9 +51,9 @@ public class SplashActivity extends Activity {
     }
 
     private void login() {
-        TUIKit.login(mUserInfo.getUserId(), mUserInfo.getUserSig(), new IUIKitCallBack() {
+        TUIKit.login(mUserInfo.getUserId(), mUserInfo.getUserSig(), new V2TIMCallback() {
             @Override
-            public void onError(String module, final int code, final String desc) {
+            public void onError(final int code, final String desc) {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         ToastUtil.toastLongMessage(getString(R.string.failed_login_tip) + ", errCode = " + code + ", errInfo = " + desc);
@@ -66,20 +64,20 @@ public class SplashActivity extends Activity {
             }
 
             @Override
-            public void onSuccess(Object data) {
+            public void onSuccess() {
                 startMain();
             }
         });
     }
 
     private void startLogin() {
-Intent intent = new Intent(SplashActivity.this, LoginForDevActivity.class);
+        Intent intent = new Intent(SplashActivity.this, LoginForDevActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void startMain() {
-        DemoLog.i(TAG, "startMain" );
+        DemoLog.i(TAG, "MainActivity" );
 
         OfflineMessageBean bean = OfflineMessageDispatcher.parseOfflineMessage(getIntent());
         if (bean != null) {
@@ -88,9 +86,9 @@ Intent intent = new Intent(SplashActivity.this, LoginForDevActivity.class);
             finish();
             return;
         }
-        DemoLog.i(TAG, "startMain offlinePush bean is null" );
 
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        intent.putExtras(getIntent());
         startActivity(intent);
         finish();
     }

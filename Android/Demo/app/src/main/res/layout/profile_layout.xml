@@ -7,7 +7,7 @@
     android:background="@color/status_bar_color"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
         android:id="@+id/self_info_title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
@@ -60,56 +60,56 @@
                 android:orientation="vertical">
 
 
-                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                <com.tencent.qcloud.tuicore.component.LineControllerView
                     android:id="@+id/modify_user_icon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     app:name="@string/modify_user_icon" />
 
-                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                <com.tencent.qcloud.tuicore.component.LineControllerView
                     android:id="@+id/modify_nick_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     app:name="@string/modify_nick_name" />
 
-                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                <com.tencent.qcloud.tuicore.component.LineControllerView
                     android:id="@+id/modify_signature"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     app:name="@string/modify_signature" />
 
-                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                <com.tencent.qcloud.tuicore.component.LineControllerView
                     android:id="@+id/modify_birthday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     app:name="@string/modify_birthday" />
 
-                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                <com.tencent.qcloud.tuicore.component.LineControllerView
                     android:id="@+id/modify_allow_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     app:name="@string/add_rule" />
 
-                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                <com.tencent.qcloud.tuicore.component.LineControllerView
                     android:id="@+id/im_privacy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     app:name="@string/im_privacy" />
 
-                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                <com.tencent.qcloud.tuicore.component.LineControllerView
                     android:id="@+id/im_statement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     app:name="@string/im_statement" />
 
-                <com.tencent.qcloud.tim.uikit.component.LineControllerView
+                <com.tencent.qcloud.tuicore.component.LineControllerView
                     android:id="@+id/about_im"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

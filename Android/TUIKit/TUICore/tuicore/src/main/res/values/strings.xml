@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_file_tips">Select the app to open this file</string>
+
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_year_short">YYYY</string>
+    <string name="date_month_short">MM</string>
+    <string name="date_day_short">DD</string>
+    <string name="date_hour_short">HH</string>
+    <string name="date_minute_short">MM</string>
+    <string name="date_second_short">SS</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="sure">OK</string>
+
+    <string name="group_apply_click_handle">Tap to Process</string>
+
+</resources>

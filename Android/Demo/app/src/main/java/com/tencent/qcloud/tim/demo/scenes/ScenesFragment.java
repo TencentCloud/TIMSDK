@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.scenes.view.ScenesLayout;
-import com.tencent.qcloud.tim.uikit.base.BaseFragment;
+import com.tencent.qcloud.tim.uikit.live.base.BaseFragment;
 
 public class ScenesFragment extends BaseFragment {
 

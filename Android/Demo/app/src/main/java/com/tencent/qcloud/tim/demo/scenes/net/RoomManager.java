@@ -11,9 +11,9 @@ import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.scenes.adapter.RoomListAdapter;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
-import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoom;
-import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoomCallback;
-import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoomDef;
+import com.tencent.qcloud.tim.uikit.live.modules.liveroom.model.TRTCLiveRoom;
+import com.tencent.qcloud.tim.uikit.live.modules.liveroom.model.TRTCLiveRoomCallback;
+import com.tencent.qcloud.tim.uikit.live.modules.liveroom.model.TRTCLiveRoomDef;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,6 +49,7 @@ public class RoomManager {
 
     public static final String ROOM_TITLE = "room_title";
     public static final String GROUP_ID = "group_id";
+    public static final String ROOM_ID = "room_id";
     public static final String USE_CDN_PLAY = "use_cdn_play";
     public static final String PUSHER_NAME = "pusher_name";
     public static final String COVER_PIC = "cover_pic";

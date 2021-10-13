@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trtccalling_audio_call">语音通话</string>
+    <string name="trtccalling_btn_cancel">取消</string>
+    <string name="trtccalling_call_time_default">00:01</string>
+    <string name="trtccalling_called_time_format">%02d:%02d</string>
+    <string name="trtccalling_contact_default_name">测试123</string>
+    <string name="trtccalling_invite_audio_call">邀请您进行语音通话…</string>
+    <string name="trtccalling_invite_video_call">邀请您进行视频通话…</string>
+    <string name="trtccalling_inviting_tag">他们也在</string>
+    <string name="trtccalling_other_party_network_low_quality">对方网络不佳</string>
+    <string name="trtccalling_search">搜索</string>
+    <string name="trtccalling_self_network_low_quality">己方网络不佳</string>
+    <string name="trtccalling_self_phone">您的手机号:</string>
+    <string name="trtccalling_start_call">呼叫</string>
+    <string name="trtccalling_switch_audio_call">切到语音通话</string>
+    <string name="trtccalling_switch_camera_hint">请先打开摄像头</string>
+    <string name="trtccalling_text_camera">摄像头</string>
+    <string name="trtccalling_text_dialing">接听</string>
+    <string name="trtccalling_text_hangup">挂断</string>
+    <string name="trtccalling_text_microphone">麦克风</string>
+    <string name="trtccalling_text_reject">拒接</string>
+    <string name="trtccalling_text_speaker">扬声器</string>
+    <string name="trtccalling_tips_start_audio">请先打开麦克风权限</string>
+    <string name="trtccalling_tips_start_camera_audio">请先打开摄像头与麦克风权限</string>
+    <string name="trtccalling_title_have_a_call_invitation">您有一个通话请求</string>
+    <string name="trtccalling_toast_call_error_msg">发生错误[%1$d]:%2$s</string>
+    <string name="trtccalling_toast_disable_camera">关闭摄像头</string>
+    <string name="trtccalling_toast_disable_mute">关闭静音</string>
+    <string name="trtccalling_toast_enable_camera">开启摄像头</string>
+    <string name="trtccalling_toast_enable_mute">开启静音</string>
+    <string name="trtccalling_toast_search_fail">搜索失败:%1$s</string>
+    <string name="trtccalling_toast_switch_camera">切换摄像头</string>
+    <string name="trtccalling_toast_use_handset">使用听筒</string>
+    <string name="trtccalling_toast_use_speaker">使用扬声器</string>
+    <string name="trtccalling_toast_user_busy">%1$s忙线</string>
+    <string name="trtccalling_toast_user_cancel_call">%1$s取消了通话</string>
+    <string name="trtccalling_toast_user_end">%s 结束通话</string>
+    <string name="trtccalling_toast_user_not_response">%1$s无响应</string>
+    <string name="trtccalling_toast_user_reject_call">%1$s拒绝通话</string>
+    <string name="trtccalling_toast_user_timeout">%1$s通话超时</string>
+    <string name="trtccalling_user_kicked_offline">您已被踢下线，请重新登录</string>
+    <string name="trtccalling_user_sig_expired">您的用户签名信息已过期</string>
+    <string name="trtccalling_video_call">视频通话</string>
+    <string name="trtccalling_waiting_be_accepted">正在等待对方接受邀请...</string>
+</resources>

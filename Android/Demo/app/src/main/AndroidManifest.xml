@@ -86,12 +86,15 @@
         <activity android:name="com.tencent.qcloud.tim.demo.scenes.LiveRoomAudienceActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTask"/>
+
         <activity
             android:name="com.tencent.qcloud.tim.demo.login.LoginForDevActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+
         <activity
-            android:name="com.tencent.qcloud.tim.demo.chat.ChatActivity"
+            android:name="com.tencent.qcloud.tim.demo.main.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden">
@@ -122,45 +125,13 @@
                     android:host="com.tencent.qcloud"/>
             </intent-filter>
 
-            <intent-filter>
-                <action android:name="com.tencent.action.chat.activity"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-
         </activity>
-        <activity
-            android:name="com.tencent.qcloud.tim.demo.main.MainActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.tencent.qcloud.tim.demo.menu.AddMoreActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.tencent.qcloud.tim.demo.contact.FriendProfileActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.tencent.qcloud.tim.demo.contact.NewFriendActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.tencent.qcloud.tim.demo.contact.BlackListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.tencent.qcloud.tim.demo.contact.GroupListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.tencent.qcloud.tim.demo.menu.StartC2CChatActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name="com.tencent.qcloud.tim.demo.profile.WebViewActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.tencent.qcloud.tim.demo.menu.StartGroupChatActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
-        <activity
-            android:name="com.tencent.qcloud.tim.demo.forward.ForwardChatActivity"
-            android:screenOrientation="portrait" />
+
 
         <!-- ********小米推送service和receiver设置start******** -->
         <service
@@ -229,7 +200,7 @@
 
         <meta-data tools:replace="android:value"
             android:name="com.huawei.hms.client.appid"
-android:value= ""/>
+            android:value="" />
         <!-- ********华为推送设置end******** -->
 
         <!-- ********魅族推送设置start******** -->
@@ -273,10 +244,10 @@ android:value= ""/>
 
         <meta-data tools:replace="android:value"
             android:name="com.vivo.push.api_key"
-android:value= ""/>
+            android:value="" />
         <meta-data tools:replace="android:value"
             android:name="com.vivo.push.app_id"
-android:value= ""/>
+            android:value="" />
         <!-- ********vivo推送设置end******** -->
 
         <!-- ********海外google云消息传递start******** -->
@@ -321,7 +292,9 @@ android:value= ""/>
             </intent-filter>
         </receiver>
 
-
+        <activity
+            android:name=".profile.SelectionActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

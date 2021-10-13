@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_color_gray">#696969</color>
+
+    <color name="status_bar_color">#EDEDED</color>
+    <color name="navigation_bar_color">#F7F7F7</color>
+
+    <color name="read_dot_bg">#f74c31</color>
+
+    <color name="black_font_color">#181818</color>
+    <color name="font_blue">#066fff</color>
+    <color name="black">#000000</color>
+    <color name="line">#DDDDDD</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text_gray1">#777777</color>
+    <color name="dialog_line_bg">#c6c6c6</color>
+
+</resources>

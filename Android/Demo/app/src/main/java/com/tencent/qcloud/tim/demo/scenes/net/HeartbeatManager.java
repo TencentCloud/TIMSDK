@@ -6,7 +6,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.tencent.qcloud.tim.tuikit.live.TUIKitLive;
+import com.tencent.qcloud.tim.uikit.live.TUILiveService;
+
 
 public class HeartbeatManager implements Runnable {
 
@@ -34,7 +35,7 @@ public class HeartbeatManager implements Runnable {
     }
 
     public void start(@NonNull String type, int roomId) {
-        Log.i(TAG, "start heartbeat: appId -> " + TUIKitLive.getSdkAppId() + ", type -> " + type + ", roomId -> " + roomId);
+        Log.i(TAG, "start heartbeat: appId -> " + TUILiveService.getSdkAppId() + ", type -> " + type + ", roomId -> " + roomId);
         mType = type;
         mRoomId = roomId;
         mHandlerThread = new HandlerThread(HEARTBEAT_THREAD_NAME);
@@ -45,7 +46,7 @@ public class HeartbeatManager implements Runnable {
     }
 
     public void stop() {
-        Log.i(TAG, "stop heartbeat: appId -> " + TUIKitLive.getSdkAppId() + ", type -> " + mType + ", roomId -> " + mRoomId);
+        Log.i(TAG, "stop heartbeat: appId -> " + TUILiveService.getSdkAppId() + ", type -> " + mType + ", roomId -> " + mRoomId);
         if (mHeartbeatHandler != null) {
             mHeartbeatHandler.removeCallbacks(this);
         }

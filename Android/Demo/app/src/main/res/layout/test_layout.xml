@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/status_bar_color"
     android:orientation="vertical" >
-    <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
         android:id="@+id/test_title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
 
-    <com.tencent.qcloud.tim.uikit.component.LineControllerView
+    <com.tencent.qcloud.tuicore.component.LineControllerView
         android:id="@+id/test_enter_test_environment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             android:text="0"/>
     </LinearLayout>
 
-    <com.tencent.qcloud.tim.uikit.component.LineControllerView
+    <com.tencent.qcloud.tuicore.component.LineControllerView
         android:id="@+id/test_excluded_from_unread_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
         app:isSwitch="true"
         app:name="不计入未读数" />
 
-    <com.tencent.qcloud.tim.uikit.component.LineControllerView
+    <com.tencent.qcloud.tuicore.component.LineControllerView
         android:id="@+id/test_not_as_conversation_last_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,14 +68,14 @@
         app:isSwitch="true"
         app:name="不更新会话lastmsg" />
 
-    <com.tencent.qcloud.tim.uikit.component.LineControllerView
+    <com.tencent.qcloud.tuicore.component.LineControllerView
         android:id="@+id/test_get_history_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:name="点击进入历史消息拉取测试页面 --->" />
 
-    <com.tencent.qcloud.tim.uikit.component.LineControllerView
+    <com.tencent.qcloud.tuicore.component.LineControllerView
         android:id="@+id/test_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

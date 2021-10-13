@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_color_black">#000</color>
+    <color name="status_bar_color">#EDEDED</color>
+    <!-- 积极钮色值 -->
+    <color name="btn_positive">#00a4ff</color>
+    <color name="btn_positive_hover">#006eff</color>
+
+    <!-- 消极按钮背景色值 -->
+    <color name="btn_negative">#ffffff</color>
+    <color name="btn_negative_hover">#cc3428</color>
+
+    <color name="text_color_gray">#696969</color>
+    <color name="item_split_color">#cccccc</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="green">#70C160</color>
+    <color name="text_gray1">#777777</color>
+    <color name="black_font_color">#181818</color>
+
+    <color name="line">#DDDDDD</color>
+    <color name="dialog_line_bg">#c6c6c6</color>
+    <color name="font_blue">#066fff</color>
+
+</resources>

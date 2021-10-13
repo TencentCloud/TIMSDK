@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="5976598919945601918" name="abc_action_bar_home_description">"Navegar para a página inicial"</string>
+    <string msgid="8388173803310557296" name="abc_action_bar_up_description">"Navegar para cima"</string>
+    <string msgid="3937310113216875497" name="abc_action_menu_overflow_description">"Mais opções"</string>
+    <string msgid="4692188335987374352" name="abc_action_mode_done">"Concluído"</string>
+    <string msgid="1189761859438369441" name="abc_activity_chooser_view_see_all">"Ver tudo"</string>
+    <string msgid="2165779757652331008" name="abc_activitychooserview_choose_application">"Selecionar um app"</string>
+    <string msgid="4215997306490295099" name="abc_capital_off">"DESATIVADO"</string>
+    <string msgid="884982626291842264" name="abc_capital_on">"ATIVADO"</string>
+    <string msgid="8833365367933412986" name="abc_menu_alt_shortcut_label">"Alt+"</string>
+    <string msgid="2223301931652355242" name="abc_menu_ctrl_shortcut_label">"Ctrl+"</string>
+    <string msgid="838001238306846836" name="abc_menu_delete_shortcut_label">"delete"</string>
+    <string msgid="7986526966204849475" name="abc_menu_enter_shortcut_label">"enter"</string>
+    <string msgid="375214403600139847" name="abc_menu_function_shortcut_label">"Function+"</string>
+    <string msgid="4192209724446364286" name="abc_menu_meta_shortcut_label">"Meta+"</string>
+    <string msgid="4741552369836443843" name="abc_menu_shift_shortcut_label">"Shift+"</string>
+    <string msgid="5473865519181928982" name="abc_menu_space_shortcut_label">"espaço"</string>
+    <string msgid="6180552449598693998" name="abc_menu_sym_shortcut_label">"Sym+"</string>
+    <string msgid="5520303668377388990" name="abc_prepend_shortcut_label">"Menu+"</string>
+    <string msgid="7208076849092622260" name="abc_search_hint">"Pesquisar…"</string>
+    <string msgid="3741173234950517107" name="abc_searchview_description_clear">"Limpar consulta"</string>
+    <string msgid="693312494995508443" name="abc_searchview_description_query">"Consulta de pesquisa"</string>
+    <string msgid="3417662926640357176" name="abc_searchview_description_search">"Pesquisar"</string>
+    <string msgid="1486535517437947103" name="abc_searchview_description_submit">"Enviar consulta"</string>
+    <string msgid="2293578557972875415" name="abc_searchview_description_voice">"Pesquisa por voz"</string>
+    <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"Compartilhar com"</string>
+    <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"Compartilhar com <ns1:g id="APPLICATION_NAME">%s</ns1:g>"</string>
+    <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"Recolher"</string>
+    <string name="hms_abort" priority="translator">"Parar"</string>
+    <string name="hms_abort_message" priority="translator">"Parar o download?"</string>
+    <string name="hms_bindfaildlg_message" priority="translator">"%1$s não pode usar o HMS Core. Inicie o Otimizador (Gerenciamento do telefone) ou vá para Configurações, ative todas as permissões para %2$s (incluindo início automático e início secundário) e tente novamente."</string>
+    <string name="hms_cancel" priority="translator">"Cancelar"</string>
+    <string name="hms_check_failure" priority="translator">"Falha ao verificar atualizações."</string>
+    <string name="hms_check_no_update" priority="translator">"Sua versão está atualizada."</string>
+    <string name="hms_checking" priority="translator">"Verificando atualizações..."</string>
+    <string name="hms_confirm" priority="translator">"OK"</string>
+    <string name="hms_download_failure" priority="translator">"Falha no download do pacote de HMS Core."</string>
+    <string name="hms_download_no_space" priority="translator">"Não há espaço livre suficiente. O download não pode ser concluído."</string>
+    <string name="hms_download_retry" priority="translator">"Falha no download. Tentar novamente?"</string>
+    <string name="hms_downloading" priority="translator">"Fazendo o download dos HMS Core | progresso: %d%%"</string>
+    <string name="hms_downloading_loading" priority="LT">"Baixando"</string>
+    <string name="hms_downloading_new" priority="LT">"Baixando HMS Core"</string>
+    <string name="hms_gamebox_name" priority="LT">"Centro de jogos"</string>
+    <string name="hms_install" priority="translator">"Instalar"</string>
+    <string name="hms_install_message" priority="translator">"Os HMS Core deve ser instalados para usar este recurso. Instalar?"</string>
+    <string name="hms_push_channel" priority="translator">"Padrão"</string>
+    <string name="hms_retry" priority="translator">"Tentar novamente"</string>
+    <string name="hms_update" priority="translator">"Atualizar"</string>
+    <string name="hms_update_continue" priority="LT">"Baixar"</string>
+    <string name="hms_update_message" priority="translator">"Para usar este recurso, faça a atualização para a versão mais recente dos HMS Core. Atualizar agora?"</string>
+    <string name="hms_update_message_new" priority="LT">"Este serviço requer a última versão do seguinte aplicativo:\n\n%1$s"</string>
+    <string name="hms_update_nettype" priority="LT">"Sem conexão Wi-Fi. Baixar usando dados móveis?"</string>
+    <string name="hms_update_title" priority="translator">"HMS Core"</string>
+    <string msgid="6264217191555673260" name="search_menu_title">"Pesquisar"</string>
+    <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="upsdk_app_dl_installing" priority="LT">"Download do AppGallery em execução"</string>
+    <string name="upsdk_app_download_info_new" priority="translator">"Instalar"</string>
+    <string name="upsdk_app_size" priority="LT">"Tamanho"</string>
+    <string name="upsdk_app_version" priority="LT">"Versão"</string>
+    <string name="upsdk_cancel" priority="translator">"Cancelar"</string>
+    <string name="upsdk_checking_update_prompt" priority="LT">"Verificando atualizações…"</string>
+    <string name="upsdk_choice_update" priority="LT">"Atualização disponível. Faça download e instale a versão mais recente."</string>
+    <string name="upsdk_connect_server_fail_prompt_toast" priority="translator">"Não é possível conectar ao servidor. Tente novamente mais tarde."</string>
+    <string name="upsdk_detail" priority="translator">"Detalhes"</string>
+    <string name="upsdk_getting_message_fail_prompt_toast" priority="translator">"Não é possível recuperar informações. Tente novamente mais tarde."</string>
+    <string name="upsdk_install" priority="LT">"Instale o AppGallery para atualizar. Instalar agora?"</string>
+    <string name="upsdk_no_available_network_prompt_toast" priority="translator">"S/ con Int. Erro de rede. Verif.config.rede."</string>
+    <string name="upsdk_ota_app_name" priority="LT">"Aplicativo"</string>
+    <string name="upsdk_ota_cancel" priority="translator">"Depois"</string>
+    <string name="upsdk_ota_force_cancel_new" priority="LT">"Sair"</string>
+    <string name="upsdk_ota_notify_updatebtn" priority="translator">"Atualizar"</string>
+    <string name="upsdk_ota_title" priority="LT">"Nova versão"</string>
+    <string name="upsdk_storage_utils" priority="LT">"%1$s MB"</string>
+    <string name="upsdk_third_app_dl_cancel_download_prompt_ex" priority="translator">"Cancelar a instalação?"</string>
+    <string name="upsdk_third_app_dl_install_failed" priority="translator">"Falha na instalação."</string>
+    <string name="upsdk_third_app_dl_sure_cancel_download" priority="translator">"Sim"</string>
+    <string name="upsdk_update_check_no_new_version" priority="Reviewed">"Sua versão está atualizada."</string>
+    <string name="upsdk_updating" priority="translator">"Atualiz."</string>
+</resources>

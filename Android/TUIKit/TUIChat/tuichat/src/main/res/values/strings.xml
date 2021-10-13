@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="pic">Images</string>
+    <string name="photo">Take Photo</string>
+    <string name="video">Record Video</string>
+    <string name="file">Files</string>
+
+    <string name="release_end">Release to Send</string>
+    <string name="hold_say">Hold to Talk</string>
+
+    <string name="copy_action">Copy</string>
+    <string name="delete_action">Delete</string>
+    <string name="revoke_action">Recall</string>
+    <string name="resend_action">Resend</string>
+
+    <!-- 消息转发 -->
+
+    <string name="titlebar_back">Back</string>
+    <string name="forward_tip">please select message!</string>
+    <string name="forward_mode_onebyone">One-by-one forward</string>
+    <string name="forward_mode_merge">Combine and forward</string>
+    <string name="forward_button">Forward</string>
+    <string name="delete_button">Delete</string>
+    <string name="forward_chats">Group Chat History</string>
+    <string name="and_text">and</string>
+    <string name="forward_chats_c2c">Chat History</string>
+    <string name="forward_compatible_text">Does not support merging and forwarding messages，please upgrade to the new version.</string>
+
+    <string name="forward_failed_tip">No Support for send failed message.</string>
+    <string name="forward_oneByOne_limit_number_tip">Too many forwarded messages, one by one forwarding is not currently supported</string>
+
+    <string name="and_and"> </string>
+    <string name="be_friend">is your friend now.</string>
+
+    <string name="join_group_tip">You have been invited to the group: </string>
+    <string name="joined_tip">You have joined the group: </string>
+    <string name="reject_join_tip">You are rejected from joining the group: </string>
+    <string name="kick_group">You have been kicked out of the group: </string>
+
+
+    <string name="send_two_mins">Message sent more than 2 min ago</string>
+    <string name="revoke_fail">Failed to recall</string>
+
+    <string name="wait_tip">please try again later</string>
+    <string name="group_apply_tips">%1$d group joining request(s)</string>
+
+    <string name="dismiss_tip_before">Your group</string>
+    <string name="dismiss_tip_after">is disbanded.</string>
+    <string name="get_system_notice">Received a custom system notification: </string>
+
+    <string name="down_cancle_send">Slide up to cancel</string>
+    <string name="say_time_short">Message too short</string>
+    <string name="record_fail">Recording failed</string>
+    <string name="up_cancle_send">Release to Cancel</string>
+
+    <string name="send">Send</string>
+
+    <string name="custom_msg">[Custom Messages]</string>
+    <string name="custom_emoji">[Custom Sticker]</string>
+    <string name="picture_extra">[Image]</string>
+    <string name="video_extra">[Video]</string>
+    <string name="audio_extra">[Voice]</string>
+    <string name="file_extra">[File]</string>
+
+    <string name="forward_extra">[Chat Record]</string>
+    <string name="revoke_tips_you">You recalled a message.</string>
+    <string name="revoke_tips">recalled a message.</string>
+    <string name="revoke_tips_other">The other user recalled a message.</string>
+
+    <string name="create_group">Create Group</string>
+    <string name="etc">, etc.</string>
+    <string name="join_group">Join Group</string>
+    <string name="invite_joined_group">is invited to the group.</string>
+    <string name="quit_group">Leave Group</string>
+    <string name="kick_group_tip">is removed from the group.</string>
+    <string name="be_group_manager">is set as admin.</string>
+    <string name="cancle_group_manager">\'s admin status is terminated.</string>
+    <string name="modify_group_name_is">Change the group name to</string>
+    <string name="modify_notice">Change the group notice to</string>
+    <string name="modify_shut_up_all">shut up all group members</string>
+    <string name="modify_cancel_shut_up_all">cancel to shut up all group members</string>
+    <string name="move_owner">Transfer group ownership to</string>
+    <string name="modify_group_avatar">changed the group profile photo.</string>
+    <string name="banned">is blocked from posting</string>
+    <string name="cancle_banned">is unblocked and can post now</string>
+
+    <string name="typing">Typing...</string>
+    <string name="cancel">Cancel</string>
+    <string name="titlebar_mutiselect">MultiSelect</string>
+    <string name="audio_permission_error">Need audio permission</string>
+    <string name="record_occupied">record occupied</string>
+    <string name="record_null">record is null</string>
+    <string name="record_limit_tips">Maximum voice length reached</string>
+    <string name="play_error_tip">The voice file is damaged or does not exist</string>
+    <string name="input_tip">No nickname entered, please fill in again</string>
+
+    <string name="has_read">Read</string>
+    <string name="unread">Unread</string>
+
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_tommorow">Tomorrow</string>
+    <string name="date_year">YYYY</string>
+    <string name="date_month">MM</string>
+    <string name="date_day">DD</string>
+    <string name="date_hour">HH</string>
+    <string name="date_minute">MM</string>
+    <string name="date_second">SS</string>
+
+    <string name="date_year_short">YYYY</string>
+    <string name="date_month_short">MM</string>
+    <string name="date_day_short">DD</string>
+    <string name="date_hour_short">HH</string>
+    <string name="date_minute_short">MM</string>
+    <string name="date_second_short">SS</string>
+
+    <string name="no_support_custom_msg">[Unsupported Custom Messages]</string>
+
+    <string name="un_download">Not downloaded</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="downloading">Downloading...</string>
+    <string name="send_failed">Send Failed</string>
+    <string name="sended">Sent</string>
+    <string name="sending">Sending...</string>
+    <string name="open_file_tips">Select the app to open this file</string>
+    <string name="download_file_error">Failed to download video: </string>
+    <string name="voice_play_tip">Voice file not downloaded.</string>
+
+    <string name="device_info">device info:</string>
+    <string name="system_version">\n system version:</string>
+    <string name="sdk_version">\n SDK version:</string>
+
+    <string name="permission_content">To use this feature, you need to grant permission. Since you have disabled related permission, please manually enable the permission.</string>
+    <string name="setting">Settings</string>
+    <string name="sure">OK</string>
+
+    <string name="no_event_cancle_tip">no cancle event on browser</string>
+    <string name="no_event_confirm_tip">no confirm event on browser</string>
+
+    <string name="record_time_tip">record time is too short</string>
+    <string name="tap_tips">tap for photo, hold for record</string>
+    <string name="tap_capture">tap to take photo</string>
+    <string name="tap_video">hold to record video</string>
+
+    <string name="completed">completed</string>
+    <string name="view_original_image">View Full Image</string>
+
+    <string name="ui_at_all">[@All]</string>
+    <string name="ui_at_me">[You were mentioned]</string>
+    <string name="ui_at_all_me">[@All][You were mentioned]</string>
+    <string name="drafts">[Drafts]</string>
+
+    <string name="group_apply_click_handle">Tap to Process</string>
+    <string name="no_support_msg">Unsupported custom messages</string>
+
+    <string name="live">\'s live stream</string>
+    <string name="live_group_live_streaming">Live Streaming</string>
+    <string name="live_group_live_end">Live Over</string>
+    <string name="live_group_user_live">%s Live</string>
+    <string name="live_group_live">Live Group</string>
+
+
+    <string name="start_group_call">Start Group Call</string>
+    <string name="start_call">Start Call</string>
+    <string name="cancle_group_call">Cancel Group Call</string>
+    <string name="cancle_call">Cancel Call</string>
+    <string name="other_line_busy">Line busy</string>
+    <string name="reject_group_calls">Decline Group Call</string>
+    <string name="no_response_call">No answer</string>
+    <string name="accept_call">Answered</string>
+    <string name="line_busy">Line busy</string>
+    <string name="reject_call">reject</string>
+    <string name="invalid_command">invalid command</string>
+    <string name="stop_group_call">End Group Call</string>
+    <string name="stop_call_tip">Call ended. Duration:</string>
+    <string name="reject_calls">Decline Call</string>
+
+    <string name="test_custom_message">View Details>></string>
+
+    <string name="test_custom_action">Custom Messages</string>
+    <string name="welcome_tip">Thank you for joining Instant Messaging!</string>
+
+</resources>

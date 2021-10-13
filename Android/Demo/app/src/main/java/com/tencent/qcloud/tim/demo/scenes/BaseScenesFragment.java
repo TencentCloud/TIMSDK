@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tim.uikit.base.BaseFragment;
+import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
 
 public class BaseScenesFragment extends BaseFragment {
 

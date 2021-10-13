@@ -13,8 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
+
 import com.tencent.qcloud.tim.demo.utils.ClickUtils;
-import com.tencent.qcloud.tim.tuikit.live.utils.GlideEngine;
+import com.tencent.qcloud.tim.uikit.live.utils.GlideEngine;
 
 import java.util.List;
 

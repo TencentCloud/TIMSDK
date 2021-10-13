@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="contact_subtitle">联系人</string>
+    <string name="group_subtitle">群组</string>
+    <string name="chat_record">聊天记录</string>
+    <string name="more_contact_label">更多联系人</string>
+    <string name="more_group_label">更多群聊</string>
+    <string name="more_conversation_label">更多聊天记录</string>
+    <string name="chat_record_reference">相关聊天记录</string>
+    <string name="chat_records">条相关聊天记录</string>
+    <string name="nick_name">昵称: </string>
+    <string name="include_group_id">包含群 ID: </string>
+    <string name="include_group_member">包含群成员: </string>
+    <string name="ui_at_all">[@所有人]</string>
+    <string name="ui_at_me">[有人@我]</string>
+    <string name="ui_at_all_me">[@所有人][有人@我]</string>
+    <string name="open_file_tips">选择要打开此文件的应用</string>
+
+    <string name="custom_msg">[自定义消息]</string>
+    <string name="custom_emoji">[自定义表情]</string>
+    <string name="picture_extra">[图片]</string>
+    <string name="video_extra">[视频]</string>
+    <string name="audio_extra">[语音]</string>
+    <string name="file_extra">[文件]</string>
+    <string name="forward_extra">[聊天记录]</string>
+    <string name="revoke_tips_you">您撤回了一条消息</string>
+    <string name="revoke_tips">撤回了一条消息</string>
+    <string name="revoke_tips_other">对方撤回了一条消息</string>
+    <string name="create_group">创建群组</string>
+    <string name="etc">等</string>
+    <string name="join_group">加入群组</string>
+    <string name="invite_joined_group">被邀请进群</string>
+    <string name="quit_group">退出群组</string>
+    <string name="kick_group_tip">被踢出群组</string>
+    <string name="be_group_manager">被设置管理员</string>
+    <string name="cancle_group_manager">被取消管理员</string>
+    <string name="modify_group_name_is">修改群名称为</string>
+    <string name="modify_notice">修改群公告为</string>
+    <string name="move_owner">转让群主给</string>
+    <string name="modify_group_avatar">修改了群头像</string>
+    <string name="banned">被禁言</string>
+    <string name="cancle_banned">被取消禁言</string>
+
+    <!-- 搜索 -->
+    <string name="search">搜索</string>
+    <string name="cancle">取消</string>
+
+    <string name="live">的直播</string>
+    <string name="start_group_call">发起群通话</string>
+    <string name="start_call">发起通话</string>
+    <string name="cancle_group_call">取消群通话</string>
+    <string name="cancle_call">取消通话</string>
+    <string name="other_line_busy">对方忙线</string>
+    <string name="reject_group_calls">拒绝群通话</string>
+    <string name="no_response_call">无应答</string>
+    <string name="accept_call">已接听</string>
+    <string name="stop_group_call">结束群通话</string>
+    <string name="stop_call_tip">结束通话，通话时长：</string>
+    <string name="line_busy">忙线</string>
+    <string name="reject_call">拒绝通话</string>
+    <string name="invalid_command">不能识别的通话指令</string>
+    <string name="reject_calls">拒绝通话</string>
+    <string name="modify_shut_up_all">禁言全员</string>
+    <string name="modify_cancel_shut_up_all">取消禁言全员</string>
+</resources>

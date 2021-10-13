@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 联系人相关 -->
+    <string name="new_friend">新的联系人</string>
+    <string name="group">我的群聊</string>
+    <string name="blacklist">黑名单</string>
+    <string name="contact_count">%d位联系人</string>
+    <string name="contact_title">通讯录</string>
+
+    <string name="no_friend_apply">暂无好友申请</string>
+    <string name="at_all">所有人</string>
+
+    <string name="success">成功</string>
+    <string name="have_be_friend">对方已是您的好友</string>
+    <string name="friend_limit">您的好友数已达系统上限</string>
+    <string name="other_friend_limit">对方的好友数已达系统上限</string>
+    <string name="in_blacklist">被加好友在自己的黑名单中</string>
+    <string name="forbid_add_friend">对方已禁止加好友</string>
+    <string name="set_in_blacklist">您已被被对方设置为黑名单</string>
+    <string name="wait_agree_friend">等待好友审核同意</string>
+    <string name="send_request">加群请求已发送</string>
+
+
+    // 新朋友
+    <string name="request_agree">同意</string>
+    <string name="request_accepted">已接受</string>
+    <string name="request_waiting">等待验证</string>
+    <string name="profile_detail">详细资料</string>
+    <string name="profile_remark_edit">修改备注</string>
+
+    <!-- 好友资料 -->
+    <string name="profile_id">帐号</string>
+    <string name="profile_add_wording">验证消息</string>
+    <string name="profile_remark">设置备注</string>
+    <string name="profile_black">加入黑名单</string>
+    <string name="profile_chat">发送消息</string>
+    <string name="profile_del">删除好友</string>
+
+    <string name="select_chat">请选择聊天对象</string>
+    // 群信息相关
+    <string name="tips_empty_group_member">请选择群成员</string>
+    <string name="tips_empty_group_type">请选择加群方式</string>
+
+    <string name="accept">同意</string>
+    <string name="refuse">拒绝</string>
+    <string name="accepted">已同意</string>
+    <string name="refused">已拒绝</string>
+
+    <string name="cancel">取消</string>
+    <string name="sure">确定</string>
+
+    <string name="chat_to_top">置顶聊天</string>
+
+    // "+"menu相关
+    <string name="add_friend">添加好友</string>
+    <string name="add_group">添加群聊</string>
+    <string name="start_conversation">发起会话</string>
+    <string name="create_group_chat">创建群聊</string>
+    <string name="create_chat_room">创建聊天室</string>
+    <string name="create_private_group">创建讨论组</string>
+    <string name="hint_add_user_id">请输入ID</string>
+    <string name="hint_add_wording">请输入验证消息</string>
+    <string name="contact_add">添加</string>
+    <string name="user_id">对方ID</string>
+    <string name="add_wording">验证消息</string>
+    <string name="create_group">创建群组</string>
+
+
+    <string name="modify_group_name">修改群名称</string>
+    <string name="add_group_member">添加成员</string>
+    <string name="group_join_type">加群方式</string>
+    <string name="forbid_join">禁止加群</string>
+    <string name="manager_judge">管理员审批</string>
+    <string name="auto_judge">自动审批...</string>
+    <string name="input_tip">没有输入昵称，请重新填写</string>
+    <string name="profile_msgrev_opt">消息免打扰</string>
+
+</resources>

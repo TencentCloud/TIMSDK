@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/xlm/Code/TIMSDK/Android/Demo/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-television-v13/values-television-v13.xml",
+            "map": [
+                {
+                    "source": "/Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/res/values-television-v13/values-television-v13.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,108,162",
+                        "endColumns": "52,53,52",
+                        "endOffsets": "103,157,210"
+                    }
+                }
+            ]
+        }
+    ]
+}

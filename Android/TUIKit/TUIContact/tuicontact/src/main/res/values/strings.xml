@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 联系人相关 -->
+    <string name="new_friend">New Contacts</string>
+    <string name="group">My Group Chats</string>
+    <string name="blacklist">Blocked List</string>
+    <string name="contact_count">%d contact(s)</string>
+    <string name="contact_title">Contacts</string>
+
+    <string name="no_friend_apply">No friend request</string>
+    <string name="at_all">All</string>
+
+    <string name="success">Successful</string>
+    <string name="have_be_friend">You\'re already friends.</string>
+    <string name="friend_limit">The number of your friends exceeds the limit.</string>
+    <string name="other_friend_limit">The number of the other user\'s friends exceeds the limit.</string>
+    <string name="in_blacklist">You have blocked this user.</string>
+    <string name="forbid_add_friend">This user has disabled friend request.</string>
+    <string name="set_in_blacklist">You have been blocked.</string>
+    <string name="wait_agree_friend">Request sent</string>
+    <string name="send_request">Request sent</string>
+
+    // 新朋友
+    <string name="request_agree">Accept</string>
+    <string name="request_accepted">Accepted</string>
+    <string name="request_waiting">Pending</string>
+    <string name="profile_detail">Details</string>
+    <string name="profile_remark_edit">Edit Alias</string>
+
+    <!-- 好友资料 -->
+    <string name="profile_id">Account</string>
+    <string name="profile_add_wording">Verification Message</string>
+    <string name="profile_remark">Set Alias</string>
+    <string name="profile_black">Block</string>
+    <string name="profile_chat">Send Message</string>
+    <string name="profile_del">Delete Friend</string>
+
+    <string name="select_chat">Select chat user</string>
+
+    <string name="chat_to_top">Sticky on Top</string>
+
+    // 群信息相关
+    <string name="tips_empty_group_member">Select group members</string>
+    <string name="tips_empty_group_type">Select group joining method</string>
+
+    <string name="accept">Agree</string>
+    <string name="refuse">Decline</string>
+    <string name="accepted">Agreed</string>
+    <string name="refused">Declined</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="sure">OK</string>
+
+    <string name="add_friend">Add to Contacts</string>
+    <string name="add_group">Add Group Chat</string>
+    <string name="start_conversation">New Chat</string>
+    <string name="create_group_chat">Create Group Chat</string>
+    <string name="create_chat_room">Create Chat Room</string>
+    <string name="create_private_group">Create Discussion Group</string>
+    <string name="hint_add_user_id">Enter ID</string>
+    <string name="hint_add_wording">Enter verification message</string>
+    <string name="contact_add">Add</string>
+    <string name="user_id">ID</string>
+    <string name="add_wording">Verification Message</string>
+    <string name="create_group">Create Group</string>
+
+    <string name="modify_group_name">Edit Group Name</string>
+    <string name="add_group_member">Add Member</string>
+    <string name="group_join_type">Group Joining Method</string>
+    <string name="forbid_join">Prohibited from Joining</string>
+    <string name="manager_judge">Admin Approval</string>
+    <string name="auto_judge">Auto Approval...</string>
+    <string name="input_tip">No nickname entered, please fill in again</string>
+    <string name="profile_msgrev_opt">Message Do Not Disturb</string>
+
+</resources>

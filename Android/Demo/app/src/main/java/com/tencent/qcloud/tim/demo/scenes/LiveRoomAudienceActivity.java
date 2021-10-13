@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.tuikit.live.base.Constants;
-import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.TUILiveRoomAudienceLayout;
+import com.tencent.qcloud.tim.uikit.live.base.Constants;
+import com.tencent.qcloud.tim.uikit.live.modules.liveroom.TUILiveRoomAudienceLayout;
 
 public class LiveRoomAudienceActivity extends AppCompatActivity {
     private static final String TAG = "LiveAudienceActivity";
@@ -41,7 +41,7 @@ public class LiveRoomAudienceActivity extends AppCompatActivity {
         mTUILiveRoomAudienceLayout = findViewById(R.id.layout_room_audience);
 
         Intent intent = getIntent();
-        int roomId = intent.getIntExtra(Constants.GROUP_ID, 0);
+        int roomId = intent.getIntExtra(Constants.ROOM_ID, 0);
         String anchorId = intent.getStringExtra(Constants.ANCHOR_ID);
 
         mTUILiveRoomAudienceLayout.initWithRoomId(getSupportFragmentManager(), roomId, anchorId, false, "");

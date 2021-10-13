@@ -69,9 +69,9 @@
 ## 步骤5：编译运行（移除音视频通话和群直播）
 如果不想集成音视频相关的功能，请您按照下面的步骤移除对音视频的依赖，再编译运行。
 
-1. 进入`Android/Demo/app`文件夹，修改 `build.gradle` 文件，删除`implementation project(':tuikit-live')`那一行，然后重新同步一下工程。
-![](https://main.qcloudimg.com/raw/a86639cbed2f633ba7ad1df94c2c3338.png)
+1. 进入 `Android/Demo/app` 文件夹，修改 `build.gradle` 文件，删除 `implementation project(':tuilive')` 那一行，然后重新同步一下工程。
+![](https://main.qcloudimg.com/raw/be6032d58731ff300851d0e39712e013.png)
 2. 打开 `Android/Demo/app/src/main/java/com/tencent/qcloud/tim/demo` 文件夹，手动删除其中的 `scenes` 文件夹。
-![](https://main.qcloudimg.com/raw/19c0bf9bee6e55605ee156151d3c3df2.png)
+![](https://main.qcloudimg.com/raw/93749240380d47daef8f652644143b86.png)
 3. 编译运行。
 

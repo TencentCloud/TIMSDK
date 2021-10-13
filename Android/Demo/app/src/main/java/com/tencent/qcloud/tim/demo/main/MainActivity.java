@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tim.demo.main;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,34 +11,40 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.heytap.msp.push.HeytapPushManager;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.common.ApiException;
-import com.tencent.qcloud.tim.demo.BaseActivity;
+import com.tencent.imsdk.v2.V2TIMConversationListener;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.demo.contact.ContactFragment;
-import com.tencent.qcloud.tim.demo.conversation.ConversationFragment;
-import com.tencent.qcloud.tim.demo.helper.IBaseLiveListener;
-import com.tencent.qcloud.tim.demo.helper.TUIKitLiveListenerManager;
+import com.tencent.qcloud.tim.demo.TUIKitLiveListenerManager;
+import com.tencent.qcloud.tim.demo.bean.OfflineMessageBean;
+import com.tencent.qcloud.tim.demo.component.interfaces.IBaseLiveListener;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
 import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService;
 import com.tencent.qcloud.tim.demo.thirdpush.OPPOPushImpl;
+import com.tencent.qcloud.tim.demo.thirdpush.OfflineMessageDispatcher;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
-import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
-import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
-import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
-import com.tencent.qcloud.tim.uikit.utils.FileUtil;
+import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuikit.tuicontact.ui.pages.TUIContactFragment;
+import com.tencent.qcloud.tuikit.tuiconversation.ui.page.TUIConversationFragment;
 import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.tencent.qcloud.tim.demo.DemoApplication.isSceneEnable;
 
-public class MainActivity extends BaseActivity implements ConversationManagerKit.MessageUnreadWatcher {
+public class MainActivity extends BaseLightActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -47,6 +55,8 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     private TextView mMsgUnread;
     private View mLastTab;
 
+    private ViewPager2 mainViewPager;
+    List<Fragment> fragments;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         DemoLog.i(TAG, "onCreate");
@@ -59,8 +69,8 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         DemoLog.i(TAG, "onNewIntent");
+        setIntent(intent);
         prepareThirdPushToken();
-        initView();
     }
 
     private void prepareThirdPushToken() {
@@ -121,12 +131,26 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
         mProfileSelfBtn = findViewById(R.id.mine);
         mScenesBtn = findViewById(R.id.scenes);
         mMsgUnread = findViewById(R.id.msg_total_unread);
-        getSupportFragmentManager().beginTransaction().replace(R.id.empty_view, new ConversationFragment()).commitAllowingStateLoss();
-        FileUtil.initPath(); // 从application移入到这里，原因在于首次装上app，需要获取一系列权限，如创建文件夹，图片下载需要指定创建好的文件目录，否则会下载本地失败，聊天页面从而获取不到图片、表情
 
-        // 未读消息监视器
-        ConversationManagerKit.getInstance().addUnreadWatcher(this);
-        GroupChatManagerKit.getInstance();
+        fragments = new ArrayList<>();
+        fragments.add(new TUIConversationFragment());
+        fragments.add(new TUIContactFragment());
+        IBaseLiveListener baseLiveListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
+        if (baseLiveListener != null) {
+            fragments.add(baseLiveListener.getSceneFragment());
+        }
+        fragments.add(new ProfileFragment());
+
+        mainViewPager = findViewById(R.id.view_pager);
+        FragmentAdapter fragmentAdapter = new FragmentAdapter(this);
+        fragmentAdapter.setFragmentList(fragments);
+        // 关闭左右滑动切换页面
+        mainViewPager.setUserInputEnabled(false);
+        // 设置缓存数量为4 避免销毁重建
+        mainViewPager.setOffscreenPageLimit(4);
+        mainViewPager.setAdapter(fragmentAdapter);
+        mainViewPager.setCurrentItem(0, false);
+
         if (mLastTab == null) {
             mLastTab = findViewById(R.id.conversation_btn_group);
         } else {
@@ -140,44 +164,51 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     }
 
     private void initScene() {
+        View sceneBtn = findViewById(R.id.scenes_btn_group);
         if (!isSceneEnable) {
-            View sceneBtn = findViewById(R.id.scenes_btn_group);
             if (sceneBtn == null) {
                 return;
             }
             sceneBtn.setVisibility(View.GONE);
         }
+        // 屏蔽直播大厅入口
+        sceneBtn.setVisibility(View.GONE);
     }
 
     public void tabClick(View view) {
+
         DemoLog.i(TAG, "tabClick last: " + mLastTab + " current: " + view);
         if (mLastTab != null && mLastTab.getId() == view.getId()) {
             return;
         }
         mLastTab = view;
         resetMenuState();
-        Fragment current = null;
         switch (view.getId()) {
             case R.id.conversation_btn_group:
-                current = new ConversationFragment();
+                mainViewPager.setCurrentItem(0, false);
                 mConversationBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.conversation_selected), null, null);
                 break;
             case R.id.contact_btn_group:
-                current = new ContactFragment();
+                mainViewPager.setCurrentItem(1, false);
                 mContactBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.contact_selected), null, null);
                 break;
             case R.id.scenes_btn_group:
-                IBaseLiveListener baseLiveListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
-                if (baseLiveListener != null) {
-                    current = baseLiveListener.getSceneFragment();
-                    mScenesBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                    mScenesBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.live_selected), null, null);
+                if (fragments.size() != 4) {
+                    return;
+                } else {
+                    mainViewPager.setCurrentItem(2, false);
                 }
+                mScenesBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
+                mScenesBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.live_selected), null, null);
                 break;
             case R.id.myself_btn_group:
-                current = new ProfileFragment();
+                if (fragments.size() != 4) {
+                    mainViewPager.setCurrentItem(2, false);
+                } else {
+                    mainViewPager.setCurrentItem(3, false);
+                }
                 mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_selected), null, null);
                 break;
@@ -185,12 +216,6 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
                 break;
         }
 
-        if (current != null && !current.isAdded()) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.empty_view, current).commitAllowingStateLoss();
-            getSupportFragmentManager().executePendingTransactions();
-        } else {
-            DemoLog.w(TAG, "fragment added!");
-        }
     }
 
     private void resetMenuState() {
@@ -205,21 +230,24 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     }
 
 
-    @Override
-    public void updateUnread(int count) {
-        if (count > 0) {
-            mMsgUnread.setVisibility(View.VISIBLE);
-        } else {
-            mMsgUnread.setVisibility(View.GONE);
+    private final V2TIMConversationListener unreadListener = new V2TIMConversationListener() {
+        @Override
+        public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
+            if (totalUnreadCount > 0) {
+                mMsgUnread.setVisibility(View.VISIBLE);
+            } else {
+                mMsgUnread.setVisibility(View.GONE);
+            }
+            String unreadStr = "" + totalUnreadCount;
+            if (totalUnreadCount > 100) {
+                unreadStr = "99+";
+            }
+            mMsgUnread.setText(unreadStr);
+            // 华为离线推送角标
+            HUAWEIHmsMessageService.updateBadge(MainActivity.this, (int) totalUnreadCount);
         }
-        String unreadStr = "" + count;
-        if (count > 100) {
-            unreadStr = "99+";
-        }
-        mMsgUnread.setText(unreadStr);
-        // 华为离线推送角标
-        HUAWEIHmsMessageService.updateBadge(this, count);
-    }
+    };
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -244,15 +272,55 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     protected void onResume() {
         DemoLog.i(TAG, "onResume");
         super.onResume();
+        registerUnreadListener();
+
         handleOfflinePush();
     }
 
+    private void registerUnreadListener() {
+        V2TIMManager.getConversationManager().addConversationListener(unreadListener);
+        V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new V2TIMValueCallback<Long>() {
+            @Override
+            public void onSuccess(Long aLong) {
+                runOnUiThread(() -> unreadListener.onTotalUnreadMessageCountChanged(aLong));
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+
+            }
+        });
+    }
+
     private void handleOfflinePush() {
-        boolean isFromOfflinePush = getIntent().getBooleanExtra(Constants.IS_OFFLINE_PUSH_JUMP, false);
-        if (isFromOfflinePush) {
-            IBaseLiveListener baseLiveListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
-            if (baseLiveListener != null) {
-                baseLiveListener.handleOfflinePushCall(getIntent());
+        if (V2TIMManager.getInstance().getLoginStatus() == V2TIMManager.V2TIM_STATUS_LOGOUT) {
+            Bundle bundle = new Bundle();
+            if (getIntent() != null && getIntent().getExtras() != null) {
+                bundle.putAll(getIntent().getExtras());
+            }
+            TUIKit.startActivity("SplashActivity", bundle);
+            finish();
+            return;
+        }
+
+        final OfflineMessageBean bean = OfflineMessageDispatcher.parseOfflineMessage(getIntent());
+        if (bean != null) {
+            setIntent(null);
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (manager != null) {
+                manager.cancelAll();
+            }
+
+            if (bean.action == OfflineMessageBean.REDIRECT_ACTION_CHAT) {
+                if (TextUtils.isEmpty(bean.sender)) {
+                    return;
+                }
+                TUIKit.startChat(bean.sender, bean.nickname, bean.chatType);
+            } else if (bean.action == OfflineMessageBean.REDIRECT_ACTION_CALL) {
+                IBaseLiveListener baseCallListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
+                if (baseCallListener != null) {
+                    baseCallListener.handleOfflinePushCall(bean);
+                }
             }
         }
     }
@@ -261,6 +329,7 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     protected void onPause() {
         DemoLog.i(TAG, "onPause");
         super.onPause();
+        V2TIMManager.getConversationManager().removeConversationListener(unreadListener);
     }
 
     @Override
@@ -272,7 +341,6 @@ public class MainActivity extends BaseActivity implements ConversationManagerKit
     @Override
     protected void onDestroy() {
         DemoLog.i(TAG, "onDestroy");
-        ConversationManagerKit.getInstance().destroyConversation();
         mLastTab = null;
         super.onDestroy();
     }

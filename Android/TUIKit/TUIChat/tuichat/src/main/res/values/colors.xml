@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chat_background_color">#F4F4F4</color>
+    <!-- 线 -->
+    <color name="chat_title_line_color">#E6E6E6</color>
+    <color name="input_title_line_color">#D2D2D2</color>
+
+    <color name="voice_pressed">#DEDEDE</color>
+    <color name="voice_normal">#ffffff</color>
+    <color name="test_blue">#338BFF</color>
+
+    <color name="status_bar_color">#EDEDED</color>
+    <color name="line">#DDDDDD</color>
+    <color name="navigation_bar_color">#F7F7F7</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="green">#70C160</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text_color_gray">#696969</color>
+    <color name="black_font_color">#181818</color>
+    <color name="text_tips_color">#A5A5A5</color>
+
+    <color name="list_bottom_text_bg">#999999</color>
+    <color name="font_blue">#066fff</color>
+
+    <color name="text_gray1">#777777</color>
+    <color name="split_lint_color">#D9D9D9</color>
+
+    <color name="black">#000000</color>
+    <color name="dialog_line_bg">#c6c6c6</color>
+
+</resources>

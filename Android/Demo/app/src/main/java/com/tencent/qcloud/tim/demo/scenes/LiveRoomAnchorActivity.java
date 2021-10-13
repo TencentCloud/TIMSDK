@@ -13,28 +13,19 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.imsdk.v2.V2TIMSendCallback;
-import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.scenes.net.HeartbeatManager;
 import com.tencent.qcloud.tim.demo.scenes.net.RoomManager;
-import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.TUILiveRoomAnchorLayout;
-import com.tencent.qcloud.tim.tuikit.live.modules.liveroom.model.TRTCLiveRoomDef;
-import com.tencent.qcloud.tim.tuikit.live.utils.PermissionUtils;
-import com.tencent.qcloud.tim.uikit.base.IBaseMessageSender;
-import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
-import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
-import com.tencent.qcloud.tim.uikit.modules.chat.GroupChatManagerKit;
-import com.tencent.liteav.model.LiveMessageInfo;
-import com.tencent.qcloud.tim.uikit.modules.message.MessageInfo;
-import com.tencent.qcloud.tim.uikit.modules.message.MessageInfoUtil;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
+import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.uikit.live.base.LiveMessageInfo;
+import com.tencent.qcloud.tim.uikit.live.modules.liveroom.TUILiveRoomAnchorLayout;
+import com.tencent.qcloud.tim.uikit.live.modules.liveroom.model.TRTCLiveRoomDef;
+import com.tencent.qcloud.tim.uikit.live.utils.PermissionUtils;
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 
 import java.util.List;
 
-public class LiveRoomAnchorActivity extends BaseActivity implements TUILiveRoomAnchorLayout.TUILiveRoomAnchorLayoutDelegate {
+public class LiveRoomAnchorActivity extends BaseLightActivity implements TUILiveRoomAnchorLayout.TUILiveRoomAnchorLayoutDelegate {
 
     private static final String TAG = "LiveRoomAnchorActivity";
     private TUILiveRoomAnchorLayout mLayoutTuiLiverRomAnchor;
@@ -156,24 +147,14 @@ public class LiveRoomAnchorActivity extends BaseActivity implements TUILiveRoomA
         liveMessageInfo.version = 1;
         liveMessageInfo.roomId = roomInfo.roomId;
         liveMessageInfo.roomName = roomInfo.roomName;
-        liveMessageInfo.roomType = RoomManager.TYPE_LIVE_ROOM;
+        liveMessageInfo.roomType =  RoomManager.TYPE_LIVE_ROOM;
         liveMessageInfo.roomCover = roomInfo.coverUrl;
         liveMessageInfo.roomStatus = roomStatus;
         liveMessageInfo.anchorId = roomInfo.ownerId;
         liveMessageInfo.anchorName = roomInfo.ownerName;
-        sendLiveGroupMessage(mGroupID, liveMessageInfo, null);
+        String data = new Gson().toJson(liveMessageInfo);
+
+        TUIKit.sendLiveGroupMessage(data);
     }
 
-
-    public void sendLiveGroupMessage(String groupID, LiveMessageInfo info, final IUIKitCallBack callBack) {
-        IBaseMessageSender baseMessageSender = TUIKitListenerManager.getInstance().getMessageSender();
-        if (baseMessageSender == null) {
-            DemoLog.e(TAG, "sendLiveGroupMessage failed messageSender is null");
-            return;
-        }
-        Gson gson = new Gson();
-        String data = gson.toJson(info);
-        MessageInfo messageInfo = MessageInfoUtil.buildCustomMessage(data);
-        baseMessageSender.sendMessage(messageInfo, null, groupID, true, false, callBack);
-    }
 }

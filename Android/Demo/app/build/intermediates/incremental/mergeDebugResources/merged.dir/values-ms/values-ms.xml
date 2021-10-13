@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="mtrl_badge_content_description">
+    <item quantity="one">%d pemberitahuan baharu</item>
+    <item quantity="other">%d pemberitahuan baharu</item>
+  </plurals>
+    <string msgid="5976598919945601918" name="abc_action_bar_home_description">"Navigasi laman utama"</string>
+    <string msgid="8388173803310557296" name="abc_action_bar_up_description">"Navigasi ke atas"</string>
+    <string msgid="3937310113216875497" name="abc_action_menu_overflow_description">"Lagi pilihan"</string>
+    <string msgid="4692188335987374352" name="abc_action_mode_done">"Selesai"</string>
+    <string msgid="1189761859438369441" name="abc_activity_chooser_view_see_all">"Lihat semua"</string>
+    <string msgid="2165779757652331008" name="abc_activitychooserview_choose_application">"Pilih apl"</string>
+    <string msgid="4215997306490295099" name="abc_capital_off">"MATI"</string>
+    <string msgid="884982626291842264" name="abc_capital_on">"HIDUP"</string>
+    <string msgid="8833365367933412986" name="abc_menu_alt_shortcut_label">"Alt+"</string>
+    <string msgid="2223301931652355242" name="abc_menu_ctrl_shortcut_label">"Ctrl+"</string>
+    <string msgid="838001238306846836" name="abc_menu_delete_shortcut_label">"delete"</string>
+    <string msgid="7986526966204849475" name="abc_menu_enter_shortcut_label">"enter"</string>
+    <string msgid="375214403600139847" name="abc_menu_function_shortcut_label">"Fungsi+"</string>
+    <string msgid="4192209724446364286" name="abc_menu_meta_shortcut_label">"Meta+"</string>
+    <string msgid="4741552369836443843" name="abc_menu_shift_shortcut_label">"Shift+"</string>
+    <string msgid="5473865519181928982" name="abc_menu_space_shortcut_label">"ruang"</string>
+    <string msgid="6180552449598693998" name="abc_menu_sym_shortcut_label">"Sym+"</string>
+    <string msgid="5520303668377388990" name="abc_prepend_shortcut_label">"Menu+"</string>
+    <string msgid="7208076849092622260" name="abc_search_hint">"Cari…"</string>
+    <string msgid="3741173234950517107" name="abc_searchview_description_clear">"Kosongkan pertanyaan"</string>
+    <string msgid="693312494995508443" name="abc_searchview_description_query">"Pertanyaan carian"</string>
+    <string msgid="3417662926640357176" name="abc_searchview_description_search">"Cari"</string>
+    <string msgid="1486535517437947103" name="abc_searchview_description_submit">"Serah pertanyaan"</string>
+    <string msgid="2293578557972875415" name="abc_searchview_description_voice">"Carian suara"</string>
+    <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"Kongsi dengan"</string>
+    <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"Kongsi dengan <ns1:g id="APPLICATION_NAME">%s</ns1:g>"</string>
+    <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"Runtuhkan"</string>
+    <string name="bottomsheet_action_expand_halfway">Kembangkan helaian bawah</string>
+    <string name="character_counter_content_description">Aksara dimasukkan %1$d daripada %2$d</string>
+    <string name="character_counter_overflowed_content_description">Melebihi had aksara %1$d daripada %2$d</string>
+    <string name="clear_text_end_icon_content_description">Kosongkan teks</string>
+    <string msgid="8585111718777012708" name="common_google_play_services_enable_button">"Dayakan"</string>
+    <string msgid="7045129128108380659" name="common_google_play_services_enable_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> tidak akan berfungsi melainkan anda mendayakan perkhidmatan Google Play."</string>
+    <string msgid="3147157405986503375" name="common_google_play_services_enable_title">"Dayakan perkhidmatan Google Play"</string>
+    <string msgid="9115728400623041681" name="common_google_play_services_install_button">"Pasang"</string>
+    <string msgid="8179894293032530091" name="common_google_play_services_install_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> tidak akan berfungsi tanpa perkhidmatan Google Play dan perkhidmatan ini tiada pada peranti anda."</string>
+    <string msgid="7442193194585196676" name="common_google_play_services_install_title">"Dapatkan perkhidmatan Google Play"</string>
+    <string msgid="4293541511340436975" name="common_google_play_services_notification_channel_name">"Ketersediaan perkhidmatan Google Play"</string>
+    <string msgid="180394615667698242" name="common_google_play_services_notification_ticker">"Ralat perkhidmatan Google Play"</string>
+    <string msgid="2518680582564677258" name="common_google_play_services_unknown_issue">"<ns1:g id="APP_NAME">%1$s</ns1:g> menghadapi masalah berhubung perkhidmatan Google Play. Sila cuba lagi."</string>
+    <string msgid="5501187292256987189" name="common_google_play_services_unsupported_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> tidak akan berfungsi tanpa perkhidmatan Google Play dan perkhidmatan ini tidak disokong oleh peranti anda."</string>
+    <string msgid="8172070149091615356" name="common_google_play_services_update_button">"Kemas kini"</string>
+    <string msgid="7773943415006962566" name="common_google_play_services_update_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> tidak akan berfungsi kecuali anda mengemas kini perkhidmatan Google Play."</string>
+    <string msgid="8706675115216073244" name="common_google_play_services_update_title">"Kemaskinikan perkhidmatan Google Play"</string>
+    <string msgid="7894275749778928941" name="common_google_play_services_updating_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> tidak akan berfungsi tanpa perkhidmatan Google Play dan perkhidmatan ini sedang dikemaskinikan."</string>
+    <string msgid="2804989272736383918" name="common_google_play_services_wear_update_text">"Versi baharu perkhidmatan Google Play diperlukan. Kemas kini automatik akan dijalankan sebentar lagi."</string>
+    <string msgid="5201977337835724196" name="common_open_on_phone">"Buka pada telefon"</string>
+    <string msgid="3441753203274453993" name="common_signin_button_text">"Log masuk"</string>
+    <string msgid="669893613918351210" name="common_signin_button_text_long">"Log masuk dengan Google"</string>
+    <string name="error_icon_content_description">Ralat</string>
+    <string name="exposed_dropdown_menu_content_description">Tunjukkan menu lungsur</string>
+    <string msgid="4133737464567140336" name="fcm_fallback_notification_channel_label">"Pelbagai"</string>
+    <string name="hms_abort" priority="translator">"Hentikan"</string>
+    <string name="hms_abort_message" priority="translator">"Hentikan muat turun?"</string>
+    <string name="hms_bindfaildlg_message" priority="translator">"%1$s tidak dapat menggunakan HMS Core. Sila lancarkan Pengoptimum (Pengurus Telefon) atau pergi ke Tetapan, dayakan semua kebenaran untuk %2$s (termasuk auto-lancar dan pelancaran sekunder), dan cuba lagi."</string>
+    <string name="hms_cancel" priority="translator">"Batalkan"</string>
+    <string name="hms_check_failure" priority="translator">"Gagal menyemak kemas kini."</string>
+    <string name="hms_check_no_update" priority="translator">"Versi anda adalah yang terkini."</string>
+    <string name="hms_checking" priority="translator">"Menyemak kemas kini..."</string>
+    <string name="hms_confirm" priority="translator">"OK"</string>
+    <string name="hms_download_failure" priority="translator">"Gagal memuat turun pakej HMS Core."</string>
+    <string name="hms_download_no_space" priority="translator">"Tiada ruang kosong yang cukup. Muat turun tidak dapat diselesaikan."</string>
+    <string name="hms_download_retry" priority="translator">"Muat turun gagal. Cuba lagi?"</string>
+    <string name="hms_downloading" priority="translator">"Memuat turun HMS Core\nkemajuan: %d%%"</string>
+    <string name="hms_downloading_loading" priority="LT">"Memuat turun"</string>
+    <string name="hms_downloading_new" priority="LT">"Memuat turun HMS Core"</string>
+    <string name="hms_gamebox_name" priority="LT">"HUAWEI GameCenter"</string>
+    <string name="hms_install" priority="translator">"Pasang"</string>
+    <string name="hms_install_message" priority="translator">"HMS Core mesti dipasang untuk menggunakan fungsi ini. Pasang?"</string>
+    <string name="hms_push_channel" priority="translator">"Lalai"</string>
+    <string name="hms_retry" priority="translator">"Cuba lagi"</string>
+    <string name="hms_update" priority="translator">"Kemas kini"</string>
+    <string name="hms_update_continue" priority="LT">"Muat turun"</string>
+    <string name="hms_update_message" priority="translator">"Kemas kini kepada versi terkini HMS Core untuk menggunakan fungsi ini. Kemas kini sekarang?"</string>
+    <string name="hms_update_message_new" priority="LT">"Perkhidmatan ini memerlukan versi terkini aplikasi yang berikut:\n\n%1$s"</string>
+    <string name="hms_update_nettype" priority="LT">"Tiada sambungan Wi-Fi. Muat turun dengan data mudah alih?"</string>
+    <string name="hms_update_title" priority="translator">"HMS Core"</string>
+    <string name="icon_content_description">Ikon Dialog</string>
+    <string name="item_view_role_description">Tab</string>
+    <string name="material_clock_toggle_content_description">Pilih AM atau PM</string>
+    <string name="material_hour_selection">Pilih jam</string>
+    <string name="material_hour_suffix">Pukul %1$s</string>
+    <string name="material_minute_selection">Pilih minit</string>
+    <string name="material_minute_suffix">%1$s minit</string>
+    <string name="material_timepicker_am">PG</string>
+    <string name="material_timepicker_clock_mode_description">Beralih ke mod jam untuk input masa.</string>
+    <string name="material_timepicker_hour">Jam</string>
+    <string name="material_timepicker_minute">Minit</string>
+    <string name="material_timepicker_pm">P/M</string>
+    <string name="material_timepicker_select_time">Pilih masa</string>
+    <string name="material_timepicker_text_input_mode_description">Beralih ke mod input teks untuk input masa.</string>
+    <string name="mtrl_badge_numberless_content_description">Pemberitahuan baharu</string>
+    <string name="mtrl_chip_close_icon_content_description">Alih keluar %1$s</string>
+    <string name="mtrl_exceed_max_badge_number_content_description">Lebih daripada %1$d pemberitahuan baharu</string>
+    <string name="mtrl_picker_a11y_next_month">Tukar kepada bulan seterusnya</string>
+    <string name="mtrl_picker_a11y_prev_month">Tukar kepada bulan sebelumnya</string>
+    <string name="mtrl_picker_announce_current_selection">Pilihan semasa: %1$s</string>
+    <string name="mtrl_picker_confirm">@android:string/ok</string>
+    <string name="mtrl_picker_date_header_selected">%1$s</string>
+    <string name="mtrl_picker_date_header_title">Pilih Tarikh</string>
+    <string name="mtrl_picker_date_header_unselected">Tarikh dipilih</string>
+    <string name="mtrl_picker_day_of_week_column_header">Lajur hari: %1$s</string>
+    <string name="mtrl_picker_invalid_format">Format tidak sah.</string>
+    <string name="mtrl_picker_invalid_format_example">Contoh: %1$s</string>
+    <string name="mtrl_picker_invalid_format_use">Gunakan: %1$s</string>
+    <string name="mtrl_picker_invalid_range">Julat tidak sah.</string>
+    <string name="mtrl_picker_navigate_to_year_description">Navigasi ke tahun %1$s</string>
+    <string name="mtrl_picker_out_of_range">Di luar julat: %1$s</string>
+    <string name="mtrl_picker_range_header_only_end_selected">Tarikh mula – %1$s</string>
+    <string name="mtrl_picker_range_header_only_start_selected">%1$s – Tarikh tamat</string>
+    <string name="mtrl_picker_range_header_selected">%1$s – %2$s</string>
+    <string name="mtrl_picker_range_header_title">Pilih Julat</string>
+    <string name="mtrl_picker_range_header_unselected">Tarikh mula – Tarikh tamat</string>
+    <string name="mtrl_picker_save">Simpan</string>
+    <string name="mtrl_picker_text_input_date_hint">Tarikh</string>
+    <string name="mtrl_picker_text_input_date_range_end_hint">Tarikh tamat</string>
+    <string name="mtrl_picker_text_input_date_range_start_hint">Tarikh mula</string>
+    <string name="mtrl_picker_text_input_day_abbr">h</string>
+    <string name="mtrl_picker_text_input_month_abbr">b</string>
+    <string name="mtrl_picker_text_input_year_abbr">t</string>
+    <string name="mtrl_picker_toggle_to_calendar_input_mode">Beralih kepada mod input kalendar</string>
+    <string name="mtrl_picker_toggle_to_day_selection">Ketik untuk beralih kepada pemilihan hari</string>
+    <string name="mtrl_picker_toggle_to_text_input_mode">Beralih kepada mod input teks</string>
+    <string name="mtrl_picker_toggle_to_year_selection">Ketik untuk beralih kepada pemilihan tahun</string>
+    <string name="password_toggle_content_description">Tunjukkan kata laluan</string>
+    <string msgid="6264217191555673260" name="search_menu_title">"Cari"</string>
+    <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="upsdk_app_dl_installing" priority="LT">"Memuat turun AppGallery"</string>
+    <string name="upsdk_app_download_info_new" priority="translator">"Pasang"</string>
+    <string name="upsdk_app_size" priority="translator">"Saiz"</string>
+    <string name="upsdk_app_version" priority="translator">"Versi"</string>
+    <string name="upsdk_cancel" priority="translator">"Batalkan"</string>
+    <string name="upsdk_checking_update_prompt" priority="LT">"Menyemak kemas kini..."</string>
+    <string name="upsdk_choice_update" priority="LT">"Kemas kini tersedia. Sila muat turun dan pasang versi terkini."</string>
+    <string name="upsdk_connect_server_fail_prompt_toast" priority="translator">"Tidak dapat bersambung ke pelayan. Sila cuba sebentar lagi."</string>
+    <string name="upsdk_detail" priority="translator">"Butiran"</string>
+    <string name="upsdk_getting_message_fail_prompt_toast" priority="translator">"Tidak dapat mendapatkan balik maklumat. Sila cuba sebentar lagi."</string>
+    <string name="upsdk_install" priority="LT">"Pasang AppGallery untuk mengemas kini. Pasang sekarang?"</string>
+    <string name="upsdk_no_available_network_prompt_toast" priority="translator">"Tiada sambungan Internet. Sila semak tetapan rangkaian anda."</string>
+    <string name="upsdk_ota_app_name" priority="LT">"Aplikasi"</string>
+    <string name="upsdk_ota_cancel" priority="translator">"Kemudian"</string>
+    <string name="upsdk_ota_force_cancel_new" priority="LT">"Keluar"</string>
+    <string name="upsdk_ota_notify_updatebtn" priority="translator">"Kemas kini"</string>
+    <string name="upsdk_ota_title" priority="translator">"Versi baru"</string>
+    <string name="upsdk_storage_utils" priority="LT">"%1$s MB"</string>
+    <string name="upsdk_third_app_dl_cancel_download_prompt_ex" priority="translator">"Batalkan pemasangan?"</string>
+    <string name="upsdk_third_app_dl_install_failed" priority="translator">"Pemasangan gagal."</string>
+    <string name="upsdk_third_app_dl_sure_cancel_download" priority="translator">"Ya"</string>
+    <string name="upsdk_update_check_no_new_version" priority="LT">"Versi anda adalah yang terkini."</string>
+    <string name="upsdk_updating" priority="translator">"Mengemas kini"</string>
+</resources>

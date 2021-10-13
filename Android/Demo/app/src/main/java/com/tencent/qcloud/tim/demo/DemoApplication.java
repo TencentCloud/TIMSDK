@@ -2,7 +2,6 @@ package com.tencent.qcloud.tim.demo;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,25 +17,27 @@ import com.meizu.cloud.pushsdk.PushManager;
 import com.meizu.cloud.pushsdk.util.MzSystemUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.qcloud.tim.demo.helper.ConfigHelper;
-import com.tencent.qcloud.tim.demo.helper.HelloChatController;
+import com.tencent.imsdk.v2.V2TIMSDKListener;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.demo.utils.MessageNotification;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
+import com.tencent.qcloud.tim.demo.bean.UserInfo;
+
 import com.tencent.qcloud.tim.uikit.TUIKit;
-import com.tencent.qcloud.tim.uikit.base.IMEventListener;
-import com.tencent.qcloud.tim.uikit.base.TUIKitListenerManager;
-import com.tencent.qcloud.tim.uikit.modules.conversation.ConversationManagerKit;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitLog;
-import com.tencent.qcloud.tim.uikit.utils.TUIKitUtils;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -55,6 +56,7 @@ public class DemoApplication extends Application {
     }
 
     public static boolean isSceneEnable = false;
+    public static int testEnvironment = 0;
 
     @Override
     public void onCreate() {
@@ -67,11 +69,6 @@ public class DemoApplication extends Application {
         strategy.setAppVersion(V2TIMManager.getInstance().getVersion());
         CrashReport.initCrashReport(getApplicationContext(), PrivateConstants.BUGLY_APPID, true, strategy);
 
-        // 是否进测试环境
-        final SharedPreferences sharedPreferences = getSharedPreferences("TUIKIT_DEMO_SETTINGS", MODE_PRIVATE);
-        boolean enter_test_environment = sharedPreferences.getBoolean("test_environment", false);
-        V2TIMManager.getInstance().callExperimentalAPI("setTestEnvironment", new Boolean(enter_test_environment), null);
-
         /**
          * TUIKit的初始化函数
          *
@@ -79,8 +76,7 @@ public class DemoApplication extends Application {
          * @param sdkAppID 您在腾讯云注册应用时分配的sdkAppID
          * @param configs  TUIKit的相关配置项，一般使用默认即可，需特殊配置参考API文档
          */
-        TUIKit.init(this, GenerateTestUserSig.SDKAPPID, new ConfigHelper().getConfigs());
-        registerCustomListeners();
+        TUIKit.init(this, GenerateTestUserSig.SDKAPPID, null, null);
         HeytapPushManager.init(this, true);
         if (BrandUtil.isBrandXiaoMi()) {
             // 小米离线推送
@@ -122,37 +118,49 @@ public class DemoApplication extends Application {
                             ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
                         }
                     });
-        };
+        }
 
         registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
         initSceneManager();
+        initLoginStatusListener();
     }
 
-    private static void registerCustomListeners() {
-        TUIKitListenerManager.getInstance().addChatListener(new HelloChatController());
-        TUIKitListenerManager.getInstance().addConversationListener(new HelloChatController.HelloConversationController());
+    public void initLoginStatusListener() {
+        V2TIMManager.getInstance().addIMSDKListener(loginStatusListener);
+    }
+
+    private final V2TIMSDKListener loginStatusListener = new V2TIMSDKListener() {
+        @Override
+        public void onKickedOffline() {
+            ToastUtil.toastLongMessage(DemoApplication.instance().getString(R.string.repeat_login_tip));
+            logout();
+        }
+
+        @Override
+        public void onUserSigExpired() {
+            ToastUtil.toastLongMessage(DemoApplication.instance().getString(R.string.expired_login_tip));
+            logout();
+        }
+    };
+
+    public void logout() {
+        DemoLog.i(TAG, "logout");
+        UserInfo.getInstance().setToken("");
+        UserInfo.getInstance().setAutoLogin(false);
+        Intent intent = new Intent(this, LoginForDevActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("LOGOUT", true);
+        startActivity(intent);
     }
 
     class StatisticActivityLifecycleCallback implements ActivityLifecycleCallbacks {
         private int foregroundActivities = 0;
         private boolean isChangingConfiguration;
-        private IMEventListener mIMEventListener = new IMEventListener() {
-            @Override
-            public void onNewMessage(V2TIMMessage msg) {
-                String imSdkVersion = V2TIMManager.getInstance().getVersion();
-                // IMSDK 5.0.1及以后版本 doBackground 之后同时会离线推送
-                if (TUIKitUtils.compareVersion(imSdkVersion, "5.0.1") < 0) {
-                    MessageNotification notification = MessageNotification.getInstance();
-                    notification.notify(msg);
-                }
-            }
-        };
 
-        private ConversationManagerKit.MessageUnreadWatcher mUnreadWatcher = new ConversationManagerKit.MessageUnreadWatcher() {
+        private final V2TIMConversationListener unreadListener = new V2TIMConversationListener() {
             @Override
-            public void updateUnread(int count) {
-                // 华为离线推送角标
-                HUAWEIHmsMessageService.updateBadge(DemoApplication.this, count);
+            public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
+                HUAWEIHmsMessageService.updateBadge(DemoApplication.this, (int) totalUnreadCount);
             }
         };
 
@@ -184,9 +192,8 @@ public class DemoApplication extends Application {
                         DemoLog.i(TAG, "doForeground success");
                     }
                 });
-                TUIKit.removeIMEventListener(mIMEventListener);
-                ConversationManagerKit.getInstance().removeUnreadWatcher(mUnreadWatcher);
-                MessageNotification.getInstance().cancelTimeout();
+
+                V2TIMManager.getConversationManager().removeConversationListener(unreadListener);
             }
             isChangingConfiguration = false;
         }
@@ -207,21 +214,30 @@ public class DemoApplication extends Application {
             if (foregroundActivities == 0) {
                 // 应用切到后台
                 DemoLog.i(TAG, "application enter background");
-                int unReadCount = ConversationManagerKit.getInstance().getUnreadTotal();
-                V2TIMManager.getOfflinePushManager().doBackground(unReadCount, new V2TIMCallback() {
+                V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new V2TIMValueCallback<Long>() {
                     @Override
-                    public void onError(int code, String desc) {
-                        DemoLog.e(TAG, "doBackground err = " + code + ", desc = " + desc);
+                    public void onSuccess(Long aLong) {
+                        int totalCount = aLong.intValue();
+                        V2TIMManager.getOfflinePushManager().doBackground(totalCount, new V2TIMCallback() {
+                            @Override
+                            public void onError(int code, String desc) {
+                                DemoLog.e(TAG, "doBackground err = " + code + ", desc = " + desc);
+                            }
+
+                            @Override
+                            public void onSuccess() {
+                                DemoLog.i(TAG, "doBackground success");
+                            }
+                        });
                     }
 
                     @Override
-                    public void onSuccess() {
-                        DemoLog.i(TAG, "doBackground success");
+                    public void onError(int code, String desc) {
+
                     }
                 });
-                // 应用退到后台，消息转化为系统通知
-                TUIKit.addIMEventListener(mIMEventListener);
-                ConversationManagerKit.getInstance().addUnreadWatcher(mUnreadWatcher);
+
+                V2TIMManager.getConversationManager().addConversationListener(unreadListener);
             }
             isChangingConfiguration = activity.isChangingConfigurations();
         }
@@ -244,7 +260,8 @@ public class DemoApplication extends Application {
             method.invoke(null, instance, licenseUrl, licenseKey);
             isSceneEnable = true;
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            TUIKitLog.e(TAG, "initTUIKitLive error: " + e.getMessage());
+            DemoLog.e(TAG, "initTUIKitLive error: " + e.getMessage());
         }
     }
+
 }

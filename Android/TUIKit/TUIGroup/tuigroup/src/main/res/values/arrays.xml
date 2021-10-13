@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="group_join_type">
+        <item>@string/forbid_join</item>
+        <item>@string/manager_judge</item>
+        <item>@string/auto_judge</item>
+    </string-array>
+
+
+</resources>

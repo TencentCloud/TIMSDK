@@ -5,8 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.tencent.qcloud.tim.uikit.component.face.FaceManager;
-
 public class LanguageReceiver extends BroadcastReceiver {
 
     @Override

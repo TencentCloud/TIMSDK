@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="date_yesterday">昨天</string>
+    <string name="date_tommorow">明天</string>
+    <string name="date_year">年</string>
+    <string name="date_month">月</string>
+    <string name="date_day">天</string>
+    <string name="date_hour">时</string>
+    <string name="date_minute">分</string>
+    <string name="date_second">秒</string>
+
+    <string name="date_year_short">年</string>
+    <string name="date_month_short">月</string>
+    <string name="date_day_short">天</string>
+    <string name="date_hour_short">时</string>
+    <string name="date_minute_short">分</string>
+    <string name="date_second_short">秒</string>
+
+    <string name="load_msg_error">加载消息失败</string>
+
+    <string name="conversation_title">腾讯·云通信</string>
+
+    <string name="chat_top">置顶聊天</string>
+    <string name="chat_delete">删除聊天</string>
+    <string name="quit_chat_top">取消置顶</string>
+    <string name="clear_conversation_message">清空消息</string>
+
+    <string name="forward_select_new_chat">创建新聊天</string>
+    <string name="forward_select_from_contact">从通讯录选择</string>
+    <string name="titlebar_cancle">取消</string>
+    <string name="titlebar_close">关闭</string>
+    <string name="forward_alert_title">您确定进行转发吗?</string>
+
+    <string name="forward_list_label">最近聊天</string>
+
+    <string name="forward_extra">[聊天记录]</string>
+    <string name="revoke_tips_you">您撤回了一条消息</string>
+    <string name="revoke_tips">撤回了一条消息</string>
+    <string name="revoke_tips_other">对方撤回了一条消息</string>
+
+    <string name="cancel">取消</string>
+    <string name="sure">确定</string>
+
+    <string name="ui_at_all">[@所有人]</string>
+    <string name="ui_at_me">[有人@我]</string>
+    <string name="ui_at_all_me">[@所有人][有人@我]</string>
+    <string name="drafts">[草稿]</string>
+    <string name="custom_msg">[自定义消息]</string>
+    <string name="custom_emoji">[自定义表情]</string>
+    <string name="picture_extra">[图片]</string>
+    <string name="video_extra">[视频]</string>
+    <string name="audio_extra">[语音]</string>
+    <string name="file_extra">[文件]</string>
+
+    <string name="add_friend">添加好友</string>
+    <string name="add_group">添加群聊</string>
+    <string name="start_conversation">发起会话</string>
+    <string name="create_group_chat">创建群聊</string>
+    <string name="create_chat_room">创建聊天室</string>
+    <string name="create_private_group">创建讨论组</string>
+    <string name="hint_add_user_id">请输入ID</string>
+    <string name="hint_add_wording">请输入验证消息</string>
+    <string name="contact_add">添加</string>
+    <string name="user_id">对方ID</string>
+    <string name="add_wording">验证消息</string>
+
+    <string name="create_group">创建群组</string>
+    <string name="etc">等</string>
+    <string name="join_group">加入群组</string>
+    <string name="invite_joined_group">被邀请进群</string>
+    <string name="quit_group">退出群组</string>
+    <string name="kick_group_tip">被踢出群组</string>
+    <string name="be_group_manager">被设置管理员</string>
+    <string name="cancle_group_manager">被取消管理员</string>
+    <string name="modify_group_name_is">修改群名称为</string>
+    <string name="modify_notice">修改群公告为</string>
+    <string name="modify_shut_up_all">禁言全员</string>
+    <string name="modify_cancel_shut_up_all">取消禁言全员</string>
+    <string name="move_owner">转让群主给</string>
+    <string name="modify_group_avatar">修改了群头像</string>
+    <string name="banned">被禁言</string>
+    <string name="cancle_banned">被取消禁言</string>
+
+    <string name="titlebar_mutiselect">多选</string>
+    <string name="group_apply_click_handle">点击处理</string>
+
+    <string name="search">搜索</string>
+
+    <string name="live">的直播</string>
+
+    <string name="start_group_call">发起群通话</string>
+    <string name="start_call">发起通话</string>
+    <string name="cancle_group_call">取消群通话</string>
+    <string name="cancle_call">取消通话</string>
+    <string name="other_line_busy">对方忙线</string>
+    <string name="reject_group_calls">拒绝群通话</string>
+    <string name="no_response_call">无应答</string>
+    <string name="accept_call">已接听</string>
+    <string name="stop_group_call">结束群通话</string>
+    <string name="stop_call_tip">结束通话，通话时长：</string>
+    <string name="line_busy">忙线</string>
+    <string name="reject_call">拒绝通话</string>
+    <string name="invalid_command">不能识别的通话指令</string>
+    <string name="reject_calls">拒绝通话</string>
+</resources>

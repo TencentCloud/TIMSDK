@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hms_abort" priority="translator">"रोकू"</string>
+    <string name="hms_abort_message" priority="translator">"डाउनलोड करब रोकू?"</string>
+    <string name="hms_bindfaildlg_message" priority="translator">"HMS Core सभक उपयोग करबामे %1$s असफल भय गेल। ऑप्टिमाइजर (फोन प्रबंधक) शुरू करू वा सेटिंग्समे जाउ, %2$s क लेल सभटा अनुमति सक्षम करू (स्वतः प्रारंभ आ द्वितीयक प्रारंभ सहित), आ पुनः प्रयास करू।"</string>
+    <string name="hms_cancel" priority="translator">"रद्द करू"</string>
+    <string name="hms_check_failure" priority="translator">"अपडेटक लेल जाँच करबामे असमर्थ।"</string>
+    <string name="hms_check_no_update" priority="translator">"अहांक वर्जन अप टू डेट अछि।"</string>
+    <string name="hms_checking" priority="translator">"नवीनतमक लेल जाँच करैत अछि…"</string>
+    <string name="hms_confirm" priority="translator">"ठीक"</string>
+    <string name="hms_download_failure" priority="translator">"HMS Core पैकेज डाउनलोड करबामे असफल भय गेल।"</string>
+    <string name="hms_download_no_space" priority="translator">"पर्याप्त खाली जगह नहि। डाउनलोड पूरा नहि भय सकत।"</string>
+    <string name="hms_download_retry" priority="translator">"डाउनलोड असफल भय गेल। पुनः प्रयास करू?"</string>
+    <string name="hms_downloading" priority="translator">"HMS Core सभक\nप्रगति डाउनलोड करैत: %d%%"</string>
+    <string name="hms_downloading_loading" priority="LT">"डाउनलोड भ रहल अछि"</string>
+    <string name="hms_downloading_new" priority="translator">"HMS Core डाउनलोड कय रहल अछि"</string>
+    <string name="hms_gamebox_name" priority="LT">"HUAWEI GameCenter"</string>
+    <string name="hms_install" priority="translator">"स्थापित करू"</string>
+    <string name="hms_install_message" priority="translator">"एहि सुविधाक उपयोग करबाक लेल HMS Coreके स्थापना आवश्यक अछि। स्थापित करू?"</string>
+    <string name="hms_push_channel" priority="translator">"डिफ़ॉल्ट"</string>
+    <string name="hms_retry" priority="translator">"पुन:प्रयास करू"</string>
+    <string name="hms_update" priority="translator">"अपडेट करू"</string>
+    <string name="hms_update_continue" priority="LT">"डाउनलोड करू"</string>
+    <string name="hms_update_message" priority="translator">"एहि सुविधाक उपयोग करबाक लेल HMS Core कय नवीनतम संस्करणमे बदलू। एखन अपडेट करू?"</string>
+    <string name="hms_update_message_new" priority="translator">"एहि सेवा केर निम्न एप केर नवीनतम संस्करण चाही:\n\n%1$s"</string>
+    <string name="hms_update_nettype" priority="LT">"कोनो Wi-Fi कनेक्शन नहि। मोबाइल डेटाक उपयोग कए डाउनलोड करी?"</string>
+    <string name="hms_update_title" priority="translator">"HMS Core"</string>
+    <string name="upsdk_app_dl_installing" priority="translator">"AppGallery डाउनलोड कय रहल अछि"</string>
+    <string name="upsdk_app_download_info_new" priority="translator">"स्थापित करू"</string>
+    <string name="upsdk_app_size" priority="translator">"आकार"</string>
+    <string name="upsdk_app_version" priority="translator">"संस्करण"</string>
+    <string name="upsdk_cancel" priority="translator">"रद्द करू"</string>
+    <string name="upsdk_checking_update_prompt" priority="LT">"नवीनतमक लेल जाँच करैत अछि…"</string>
+    <string name="upsdk_choice_update" priority="translator">"अपडेट उपलब्ध अछि। कृपाकय डाउनलोड करू आ नवीनतम संस्करण स्थापित करू।"</string>
+    <string name="upsdk_connect_server_fail_prompt_toast" priority="translator">"सर्वरसँ जोड़वामे असमर्थ। कृपया फेर स बाद में प्रयास करब।"</string>
+    <string name="upsdk_detail" priority="translator">"विवरण सब"</string>
+    <string name="upsdk_getting_message_fail_prompt_toast" priority="translator">"जानकारी ढूँढयमे असमर्थ अछि। कृपया फेर स बाद में प्रयास करब।"</string>
+    <string name="upsdk_install" priority="translator">"अपडेट करबाक लेल AppGallery स्थापित करू। एखन स्थापना करू?"</string>
+    <string name="upsdk_no_available_network_prompt_toast" priority="translator">"कोनो इंटरनेट सम्पर्क नहि। कृपाकय अपन नेटवर्क सेटिंग्स केर जाँच करू।"</string>
+    <string name="upsdk_ota_app_name" priority="translator">"एप"</string>
+    <string name="upsdk_ota_cancel" priority="translator">"बादमे"</string>
+    <string name="upsdk_ota_force_cancel_new" priority="translator">"बाहर जाउ"</string>
+    <string name="upsdk_ota_notify_updatebtn" priority="translator">"अपडेट करू"</string>
+    <string name="upsdk_ota_title" priority="translator">"नवीन संस्करण"</string>
+    <string name="upsdk_storage_utils" priority="LT">"%1$s MB"</string>
+    <string name="upsdk_third_app_dl_cancel_download_prompt_ex" priority="translator">"स्थापना रद्द करू?"</string>
+    <string name="upsdk_third_app_dl_install_failed" priority="translator">"स्थापना करबामे असफल भेल।"</string>
+    <string name="upsdk_third_app_dl_sure_cancel_download" priority="translator">"हँ"</string>
+    <string name="upsdk_update_check_no_new_version" priority="Reviewed">"अहांक वर्जन अप टू डेट अछि।"</string>
+    <string name="upsdk_updating" priority="translator">"अपडेट कय रहल"</string>
+</resources>

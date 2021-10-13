@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="mtrl_badge_content_description">
+    <item quantity="one">%d اعلان جدید</item>
+    <item quantity="other">%d اعلان جدید</item>
+  </plurals>
+    <string msgid="5976598919945601918" name="abc_action_bar_home_description">"پیمایش به صفحه اصلی"</string>
+    <string msgid="8388173803310557296" name="abc_action_bar_up_description">"رفتن به بالا"</string>
+    <string msgid="3937310113216875497" name="abc_action_menu_overflow_description">"گزینه‌های بیشتر"</string>
+    <string msgid="4692188335987374352" name="abc_action_mode_done">"تمام"</string>
+    <string msgid="1189761859438369441" name="abc_activity_chooser_view_see_all">"دیدن همه"</string>
+    <string msgid="2165779757652331008" name="abc_activitychooserview_choose_application">"انتخاب برنامه"</string>
+    <string msgid="4215997306490295099" name="abc_capital_off">"خاموش"</string>
+    <string msgid="884982626291842264" name="abc_capital_on">"روشن"</string>
+    <string msgid="8833365367933412986" name="abc_menu_alt_shortcut_label">"‎Alt+‎"</string>
+    <string msgid="2223301931652355242" name="abc_menu_ctrl_shortcut_label">"‎Ctrl+‎"</string>
+    <string msgid="838001238306846836" name="abc_menu_delete_shortcut_label">"حذف"</string>
+    <string msgid="7986526966204849475" name="abc_menu_enter_shortcut_label">"enter"</string>
+    <string msgid="375214403600139847" name="abc_menu_function_shortcut_label">"‎Function+‎"</string>
+    <string msgid="4192209724446364286" name="abc_menu_meta_shortcut_label">"‎Meta+‎"</string>
+    <string msgid="4741552369836443843" name="abc_menu_shift_shortcut_label">"‎Shift+‎"</string>
+    <string msgid="5473865519181928982" name="abc_menu_space_shortcut_label">"فاصله"</string>
+    <string msgid="6180552449598693998" name="abc_menu_sym_shortcut_label">"‎Sym+‎"</string>
+    <string msgid="5520303668377388990" name="abc_prepend_shortcut_label">"منو+"</string>
+    <string msgid="7208076849092622260" name="abc_search_hint">"جستجو…‏"</string>
+    <string msgid="3741173234950517107" name="abc_searchview_description_clear">"پاک کردن پُرسمان"</string>
+    <string msgid="693312494995508443" name="abc_searchview_description_query">"درخواست جستجو"</string>
+    <string msgid="3417662926640357176" name="abc_searchview_description_search">"جستجو"</string>
+    <string msgid="1486535517437947103" name="abc_searchview_description_submit">"ارسال پُرسمان"</string>
+    <string msgid="2293578557972875415" name="abc_searchview_description_voice">"جستجوی گفتاری"</string>
+    <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"هم‌رسانی با"</string>
+    <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"هم‌رسانی با <ns1:g id="APPLICATION_NAME">%s</ns1:g>"</string>
+    <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"کوچک کردن"</string>
+    <string name="bottomsheet_action_expand_halfway">گسترده کردن تا نیمه</string>
+    <string name="character_counter_content_description">نویسه‌های واردشده %1$d از %2$d</string>
+    <string name="character_counter_overflowed_content_description">محدودیت نویسه از حد مجاز %1$d از %2$d بیشتر شده است</string>
+    <string name="clear_text_end_icon_content_description">پاک کردن نوشتار</string>
+    <string msgid="8585111718777012708" name="common_google_play_services_enable_button">"فعال کردن"</string>
+    <string msgid="7045129128108380659" name="common_google_play_services_enable_text">"‏تا وقتی سرویس‌های Google Play را فعال نکنید، <ns1:g id="APP_NAME">%1$s</ns1:g> کار نمی‌کند."</string>
+    <string msgid="3147157405986503375" name="common_google_play_services_enable_title">"‏‫فعال کردن سرویس‌های Google Play"</string>
+    <string msgid="9115728400623041681" name="common_google_play_services_install_button">"نصب"</string>
+    <string msgid="8179894293032530091" name="common_google_play_services_install_text">"‏<ns1:g id="APP_NAME">%1$s</ns1:g> بدون خدمات Google Play که در دستگاه شما وجود ندارد اجرا نمی‌شود."</string>
+    <string msgid="7442193194585196676" name="common_google_play_services_install_title">"‏دریافت سرویس‌های Google Play"</string>
+    <string msgid="4293541511340436975" name="common_google_play_services_notification_channel_name">"‏قابلیت دسترسی خدمات Google Play"</string>
+    <string msgid="180394615667698242" name="common_google_play_services_notification_ticker">"‏خطا در خدمات Google Play"</string>
+    <string msgid="2518680582564677258" name="common_google_play_services_unknown_issue">"‏<ns1:g id="APP_NAME">%1$s</ns1:g> برای استفاده از خدمات Google Play با مشکل روبرو است. لطفاً دوباره امتحان کنید."</string>
+    <string msgid="5501187292256987189" name="common_google_play_services_unsupported_text">"‏<ns1:g id="APP_NAME">%1$s</ns1:g> بدون خدمات Google Play که در دستگاه شما پشتیبانی نمی‌شود، اجرا نخواهد شد."</string>
+    <string msgid="8172070149091615356" name="common_google_play_services_update_button">"به‌روزرسانی"</string>
+    <string msgid="7773943415006962566" name="common_google_play_services_update_text">"‏تاز مانی که سرویس‌های Google Play را به‌روزرسانی نکنید، <ns1:g id="APP_NAME">%1$s</ns1:g> اجرا نمی‌شود."</string>
+    <string msgid="8706675115216073244" name="common_google_play_services_update_title">"‏‫به‌روزرسانی سرویس‌های Google Play"</string>
+    <string msgid="7894275749778928941" name="common_google_play_services_updating_text">"‏<ns1:g id="APP_NAME">%1$s</ns1:g> بدون سرویس‌های Google Play که درحال حاضر درحال به‌روزرسانی هستند، کار نمی‌کند."</string>
+    <string msgid="2804989272736383918" name="common_google_play_services_wear_update_text">"‏نسخه جدید سرویس‌های Google Play نیاز است. به‌زودی به‌طور خودکار به‌روزرسانی می‌شود."</string>
+    <string msgid="5201977337835724196" name="common_open_on_phone">"باز کردن در تلفن"</string>
+    <string msgid="3441753203274453993" name="common_signin_button_text">"ورود به سیستم"</string>
+    <string msgid="669893613918351210" name="common_signin_button_text_long">"‏ورود به سیستم با Google‎"</string>
+    <string name="error_icon_content_description">خطا</string>
+    <string name="exposed_dropdown_menu_content_description">نمایش منوی کرکره‌ای</string>
+    <string msgid="4133737464567140336" name="fcm_fallback_notification_channel_label">"موارد دیگر"</string>
+    <string name="hms_abort" priority="translator">"توقف"</string>
+    <string name="hms_abort_message" priority="translator">"دانلود متوقف شود؟"</string>
+    <string name="hms_bindfaildlg_message" priority="translator">"%1$s قادر به استفاده از HMS Core نیست. «بهینه‌ساز» (مدیر تلفن) را راه‌اندازی کنید یا به «تنظیمات» بروید، همۀ مجوزها (از جمله راه‌اندازی خودکار و راه‌اندازی ثانویه) را برای %2$s فعال کنید، و دوباره امتحان کنید."</string>
+    <string name="hms_cancel" priority="translator">"لغو"</string>
+    <string name="hms_check_failure" priority="translator">"به‌روزرسانی‌های نرم‌افزار بررسی نشد."</string>
+    <string name="hms_check_no_update" priority="translator">"نسخۀ شما به‌روز است."</string>
+    <string name="hms_checking" priority="translator">"در حال بررسی به‌روزرسانی‌ها..."</string>
+    <string name="hms_confirm" priority="translator">"تأييد"</string>
+    <string name="hms_download_failure" priority="translator">"دانلود بسته HMS Core انجام نشد."</string>
+    <string name="hms_download_no_space" priority="translator">"فضای آزاد کافی موجود نيست. تکميل دانلود ممکن نيست."</string>
+    <string name="hms_download_retry" priority="translator">"دانلود ناموفق بود. دوباره سعی کنيد؟"</string>
+    <string name="hms_downloading" priority="translator">"در حال دانلود HMS Core | پیشرفت: %d%%"</string>
+    <string name="hms_downloading_loading" priority="LT">"در حال دانلود"</string>
+    <string name="hms_downloading_new" priority="LT">"در حال دانلود HMS Core"</string>
+    <string name="hms_gamebox_name" priority="LT">"HUAWEI GameCenter"</string>
+    <string name="hms_install" priority="translator">"نصب"</string>
+    <string name="hms_install_message" priority="translator">"برای استفاده از این ویژگی، HMS Core باید نصب شود. نصب شود؟"</string>
+    <string name="hms_push_channel" priority="translator">"پيش‌فرض"</string>
+    <string name="hms_retry" priority="translator">"تلاش مجدد"</string>
+    <string name="hms_update" priority="translator">"به‌روزرسانى"</string>
+    <string name="hms_update_continue" priority="LT">"دانلود"</string>
+    <string name="hms_update_message" priority="translator">"برای استفاده از این ویژگی، به آخرین نسخه از HMS Core به‌روزرسانی کنید. اکنون به‌روزرسانی شود؟"</string>
+    <string name="hms_update_message_new" priority="LT">"این سرویس به آخرین نسخۀ برنامۀ ذیل نیاز دارد:\n\n%1$s"</string>
+    <string name="hms_update_nettype" priority="LT">"اتصال Wi-Fi وجود ندارد. با استفاده از دادۀ تلفن همراه دانلود شود؟"</string>
+    <string name="hms_update_title" priority="LT">"HMS Core"</string>
+    <string name="icon_content_description">نماد کادر گفتگو</string>
+    <string name="item_view_role_description">برگه</string>
+    <string name="material_clock_toggle_content_description">انتخاب .ق.ظ. یا ب.ظ.</string>
+    <string name="material_hour_selection">انتخاب ساعت</string>
+    <string name="material_hour_suffix">ساعت %1$s</string>
+    <string name="material_minute_selection">انتخاب دقیقه</string>
+    <string name="material_minute_suffix">%1$s دقیقه</string>
+    <string name="material_timepicker_am">ق.ظ</string>
+    <string name="material_timepicker_clock_mode_description">برای وارد کردن زمان، به حالت ساعت تغییر وضعیت دهید.</string>
+    <string name="material_timepicker_hour">ساعت</string>
+    <string name="material_timepicker_minute">دقیقه</string>
+    <string name="material_timepicker_pm">ب.ظ</string>
+    <string name="material_timepicker_select_time">انتخاب زمان</string>
+    <string name="material_timepicker_text_input_mode_description">برای وارد کردن زمان، به حالت ورودی نوشتاری تغییر وضعیت دهید.</string>
+    <string name="mtrl_badge_numberless_content_description">اعلان جدید</string>
+    <string name="mtrl_chip_close_icon_content_description">برداشتن %1$s</string>
+    <string name="mtrl_exceed_max_badge_number_content_description">بیش از %1$d اعلان جدید</string>
+    <string name="mtrl_picker_a11y_next_month">تغییر به ماه بعدی</string>
+    <string name="mtrl_picker_a11y_prev_month">تغییر به ماه قبلی</string>
+    <string name="mtrl_picker_announce_current_selection">انتخاب کنونی: %1$s</string>
+    <string name="mtrl_picker_confirm">@android:string/ok</string>
+    <string name="mtrl_picker_date_header_selected">%1$s</string>
+    <string name="mtrl_picker_date_header_title">انتخاب تاریخ</string>
+    <string name="mtrl_picker_date_header_unselected">تاریخ انتخابی</string>
+    <string name="mtrl_picker_day_of_week_column_header">ستون روز: %1$s</string>
+    <string name="mtrl_picker_invalid_format">قالب نامعتبر است.</string>
+    <string name="mtrl_picker_invalid_format_example">مثال: %1$s</string>
+    <string name="mtrl_picker_invalid_format_use">قالب: %1$s</string>
+    <string name="mtrl_picker_invalid_range">محدوده نامعتبر است.</string>
+    <string name="mtrl_picker_navigate_to_year_description">رفتن به سال %1$s</string>
+    <string name="mtrl_picker_out_of_range">خارج از محدوده: %1$s</string>
+    <string name="mtrl_picker_range_header_only_end_selected">تاریخ شروع – %1$s</string>
+    <string name="mtrl_picker_range_header_only_start_selected">%1$s – تاریخ پایان</string>
+    <string name="mtrl_picker_range_header_selected">%1$s – %2$s</string>
+    <string name="mtrl_picker_range_header_title">انتخاب محدوده</string>
+    <string name="mtrl_picker_range_header_unselected">تاریخ شروع – تاریخ پایان</string>
+    <string name="mtrl_picker_save">ذخیره</string>
+    <string name="mtrl_picker_text_input_date_hint">تاریخ</string>
+    <string name="mtrl_picker_text_input_date_range_end_hint">تاریخ پایان</string>
+    <string name="mtrl_picker_text_input_date_range_start_hint">تاریخ شروع</string>
+    <string name="mtrl_picker_text_input_day_abbr">d</string>
+    <string name="mtrl_picker_text_input_month_abbr">m</string>
+    <string name="mtrl_picker_text_input_year_abbr">y</string>
+    <string name="mtrl_picker_toggle_to_calendar_input_mode">رفتن به روش ورودی تقویم</string>
+    <string name="mtrl_picker_toggle_to_day_selection">رفتن به رفتن به حالت انتخاب روز ضربه بزنید</string>
+    <string name="mtrl_picker_toggle_to_text_input_mode">رفتن به حالت ورودی نوشتاری</string>
+    <string name="mtrl_picker_toggle_to_year_selection">برای رفتن به حالت انتخاب سال ضربه بزنید</string>
+    <string name="password_toggle_content_description">نمایش گذرواژه</string>
+    <string msgid="6264217191555673260" name="search_menu_title">"جستجو"</string>
+    <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="upsdk_app_dl_installing" priority="LT">"در حال دانلود AppGallery"</string>
+    <string name="upsdk_app_download_info_new" priority="translator">"نصب"</string>
+    <string name="upsdk_app_size" priority="translator">"اندازه"</string>
+    <string name="upsdk_app_version" priority="translator">"نسخه"</string>
+    <string name="upsdk_cancel" priority="translator">"لغو"</string>
+    <string name="upsdk_checking_update_prompt" priority="LT">"در حال بررسی به‌روزرسانی‌ها…"</string>
+    <string name="upsdk_choice_update" priority="LT">"به‌روز‌رسانی موجود است. لطفاً جدیدترین نسخه را دانلود و نصب کنید."</string>
+    <string name="upsdk_connect_server_fail_prompt_toast" priority="translator">"اتصال به سرور مقدور نیست. لطفاً بعداً دوباره امتحان کنید."</string>
+    <string name="upsdk_detail" priority="translator">"جزئیات"</string>
+    <string name="upsdk_getting_message_fail_prompt_toast" priority="translator">"بازیابی اطلاعات مقدور نیست. لطفاً بعداً دوباره امتحان کنید."</string>
+    <string name="upsdk_install" priority="LT">"برای به‌روزرسانی، AppGallery را نصب کنید. اکنون نصب شود؟"</string>
+    <string name="upsdk_no_available_network_prompt_toast" priority="translator">"اتصال اينترنتی موجود نیست. لطفاً تنظیمات شبکۀ خود را بررسی کنید."</string>
+    <string name="upsdk_ota_app_name" priority="LT">"برنامه"</string>
+    <string name="upsdk_ota_cancel" priority="translator">"بعداً"</string>
+    <string name="upsdk_ota_force_cancel_new" priority="LT">"خروج"</string>
+    <string name="upsdk_ota_notify_updatebtn" priority="translator">"به‌روزرسانى"</string>
+    <string name="upsdk_ota_title" priority="translator">"نسخۀ جدید"</string>
+    <string name="upsdk_storage_utils" priority="LT">"%1$s مگابایت"</string>
+    <string name="upsdk_third_app_dl_cancel_download_prompt_ex" priority="translator">"نصب لغو شود؟"</string>
+    <string name="upsdk_third_app_dl_install_failed" priority="translator">"نصب انجام نشد."</string>
+    <string name="upsdk_third_app_dl_sure_cancel_download" priority="translator">"بله"</string>
+    <string name="upsdk_update_check_no_new_version" priority="Reviewed">"نسخۀ شما به‌روز است."</string>
+    <string name="upsdk_updating" priority="translator">"در حال به‌روزرسانی"</string>
+</resources>

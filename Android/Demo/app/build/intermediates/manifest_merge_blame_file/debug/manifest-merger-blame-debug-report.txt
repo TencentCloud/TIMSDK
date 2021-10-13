@@ -1,0 +1,1445 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.tencent.qcloud.tim.tuikit"
+4    android:versionCode="1"
+5    android:versionName="5.7.1435" >
+6
+7    <uses-sdk
+7-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:6:5-110
+8        android:minSdkVersion="19"
+8-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:6:5-110
+9        android:targetSdkVersion="28" />
+9-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:6:5-110
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:8:5-67
+11-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:8:22-64
+12    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+12-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:9:5-76
+12-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:9:22-73
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:10:5-79
+13-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:10:22-76
+14    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+14-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:11:5-81
+14-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:11:22-78
+15    <uses-permission android:name="android.permission.CAMERA" />
+15-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:12:5-65
+15-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:12:22-62
+16    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+16-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:13:5-71
+16-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:13:22-68
+17    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+17-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:14:5-80
+17-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:14:22-77
+18    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+18-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:15:5-75
+18-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:15:22-72
+19    <uses-permission android:name="android.permission.READ_LOGS" />
+19-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:16:5-68
+19-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:16:22-65
+20    <uses-permission android:name="android.permission.VIBRATE" />
+20-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:17:5-66
+20-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:17:22-63
+21    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+21-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:18:5-83
+21-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:18:22-80
+22    <uses-permission android:name="android.permission.BLUETOOTH" />
+22-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:19:5-68
+22-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:19:22-65
+23    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+23-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:20:5-78
+23-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:20:22-75
+24
+25    <!-- ********OPPO 推送 start******** -->
+26    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
+26-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:23:5-85
+26-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:23:22-83
+27    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" />
+27-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:24:5-84
+27-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:24:22-82
+28    <!-- ********OPPO 推送 end******** -->
+29
+30    <uses-feature android:name="android.hardware.Camera" />
+30-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:27:5-59
+30-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:27:19-57
+31    <uses-feature android:name="android.hardware.camera.autofocus" />
+31-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:28:5-70
+31-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:28:19-67
+32
+33    <!-- ********华为推送权限设置******** -->
+34    <permission
+34-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:31:5-33:55
+35        android:name="com.tencent.qcloud.tim.tuikit.permission.PROCESS_PUSH_MSG"
+35-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:32:9-81
+36        android:protectionLevel="signatureOrSystem" />
+36-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:33:9-52
+37
+38    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+38-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:34:5-93
+38-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:34:22-90
+39    <uses-permission android:name="com.tencent.qcloud.tim.tuikit.permission.PROCESS_PUSH_MSG" />
+39-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:36:5-97
+39-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:36:22-94
+40
+41    <!-- ********小米推送权限设置******** -->
+42    <permission
+42-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:39:5-41:47
+43        android:name="com.tencent.qcloud.tim.tuikit.permission.MIPUSH_RECEIVE"
+43-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:40:9-79
+44        android:protectionLevel="signature" />
+44-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:41:9-44
+45
+46    <uses-permission android:name="com.tencent.qcloud.tim.tuikit.permission.MIPUSH_RECEIVE" />
+46-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:43:5-95
+46-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:43:22-92
+47
+48    <!-- ********魅族推送权限设置******** -->
+49    <!-- 兼容flyme5.0以下版本，魅族内部集成pushSDK必填，不然无法收到消息 -->
+50    <uses-permission android:name="com.meizu.flyme.push.permission.RECEIVE" />
+50-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:47:5-79
+50-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:47:22-76
+51
+52    <permission
+52-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:49:5-51:47
+53        android:name="com.tencent.qcloud.tim.tuikit.push.permission.MESSAGE"
+53-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:50:9-77
+54        android:protectionLevel="signature" />
+54-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:51:9-44
+55
+56    <uses-permission android:name="com.tencent.qcloud.tim.tuikit.push.permission.MESSAGE" />
+56-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:53:5-93
+56-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:53:22-90
+57
+58    <!-- 兼容flyme3.0配置权限 -->
+59    <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE" />
+59-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:56:5-73
+59-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:56:22-70
+60
+61    <permission
+61-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:58:5-60:47
+62        android:name="com.tencent.qcloud.tim.tuikit.permission.C2D_MESSAGE"
+62-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:59:9-76
+63        android:protectionLevel="signature" />
+63-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:60:9-44
+64
+65    <uses-permission android:name="com.tencent.qcloud.tim.tuikit.permission.C2D_MESSAGE" />
+65-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:62:5-92
+65-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:62:22-89
+66    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+66-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:5-80
+66-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:22-77
+67    <uses-permission android:name="android.permission.WAKE_LOCK" />
+67-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:11:5-68
+67-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:11:22-65
+68
+69    <uses-feature android:name="android.hardware.camera" /> <!-- PUSH_PROVIDER and PUSH_WRITE_PROVIDER are both provider registered permissions for the notification switch. -->
+69-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:5-60
+69-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:19-57
+70    <!-- The SDK's notification bar switch, EMUI 9.x becomes write to the local sp, sharing the file through the provider to the push-rom, which reads the sp file to get the status of the notification bar switch. -->
+71    <permission
+71-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:14:5-16:55
+72        android:name="com.tencent.qcloud.tim.tuikit.permission.PUSH_PROVIDER"
+72-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:15:9-65
+73        android:protectionLevel="signatureOrSystem" />
+73-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:16:9-52
+74    <permission
+74-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:17:5-19:55
+75        android:name="com.tencent.qcloud.tim.tuikit.permission.PUSH_WRITE_PROVIDER"
+75-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:18:9-71
+76        android:protectionLevel="signatureOrSystem" />
+76-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:19:9-52
+77
+78    <uses-permission android:name="com.tencent.qcloud.tim.tuikit.permission.PUSH_PROVIDER" />
+78-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:22:5-81
+78-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:22:22-78
+79    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+79-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:23:5-77
+79-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:23:22-74
+80    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+80-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:26:5-82
+80-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:26:22-79
+81    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+81-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:26:5-110
+81-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:26:22-107
+82    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" /> <!-- 应用市场9.0版本必须使用该权限获取用户的服务地 -->
+82-->[com.tencent.liteav:LiteAVSDK_TRTC:9.2.10641] /Users/xlm/.gradle/caches/transforms-2/files-2.1/fb66b44ce267c1ffadc026a31f87683a/LiteAVSDK_TRTC-9.2.10641/AndroidManifest.xml:28:5-76
+82-->[com.tencent.liteav:LiteAVSDK_TRTC:9.2.10641] /Users/xlm/.gradle/caches/transforms-2/files-2.1/fb66b44ce267c1ffadc026a31f87683a/LiteAVSDK_TRTC-9.2.10641/AndroidManifest.xml:28:22-73
+83    <uses-permission android:name="com.huawei.appmarket.service.commondata.permission.GET_COMMON_DATA" />
+83-->[com.huawei.hms:availableupdate:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/2bddb16c3bc4c58bd192a0d9108cd79f/availableupdate-5.0.0.301/AndroidManifest.xml:18:5-106
+83-->[com.huawei.hms:availableupdate:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/2bddb16c3bc4c58bd192a0d9108cd79f/availableupdate-5.0.0.301/AndroidManifest.xml:18:22-103
+84
+85    <application
+85-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:64:5-298:19
+86        android:name="com.tencent.qcloud.tim.demo.DemoApplication"
+86-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:65:9-67
+87        android:allowBackup="false"
+87-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:66:9-36
+88        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+88-->[androidx.core:core:1.5.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/8a76e5b4a10c7e6c482ab54b8bb0ca1c/core-1.5.0/AndroidManifest.xml:24:18-86
+89        android:debuggable="true"
+90        android:icon="@drawable/ic_launcher"
+90-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:67:9-45
+91        android:label="@string/app_name"
+91-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:68:9-41
+92        android:supportsRtl="true"
+92-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:69:9-35
+93        android:theme="@style/AppTheme"
+93-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:70:9-40
+94        android:usesCleartextTraffic="true" >
+94-->[com.tencent.liteav:LiteAVSDK_TRTC:9.2.10641] /Users/xlm/.gradle/caches/transforms-2/files-2.1/fb66b44ce267c1ffadc026a31f87683a/LiteAVSDK_TRTC-9.2.10641/AndroidManifest.xml:33:9-44
+95        <activity
+95-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:71:9-81:20
+96            android:name="com.tencent.qcloud.tim.demo.SplashActivity"
+96-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:72:13-70
+97            android:screenOrientation="portrait"
+97-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:73:13-49
+98            android:theme="@style/SplashTheme" >
+98-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:74:13-47
+99            <intent-filter>
+99-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:75:13-80:29
+100                <action android:name="android.intent.action.VIEW" />
+100-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:76:17-69
+100-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:76:25-66
+101                <action android:name="android.intent.action.MAIN" />
+101-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:77:17-69
+101-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:77:25-66
+102
+103                <category android:name="android.intent.category.LAUNCHER" />
+103-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:79:17-77
+103-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:79:27-74
+104            </intent-filter>
+105        </activity>
+106        <activity
+106-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:83:9-85:76
+107            android:name="com.tencent.qcloud.tim.demo.scenes.LiveRoomAnchorActivity"
+107-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:83:19-91
+108            android:configChanges="orientation|keyboardHidden|screenSize"
+108-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:85:13-74
+109            android:screenOrientation="portrait" />
+109-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:84:13-49
+110        <activity
+110-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:86:9-89:46
+111            android:name="com.tencent.qcloud.tim.demo.scenes.LiveRoomAudienceActivity"
+111-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:86:19-93
+112            android:configChanges="orientation|keyboardHidden|screenSize"
+112-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:88:13-74
+113            android:launchMode="singleTask"
+113-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:89:13-44
+114            android:screenOrientation="portrait" />
+114-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:87:13-49
+115        <activity
+115-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:91:9-94:52
+116            android:name="com.tencent.qcloud.tim.demo.login.LoginForDevActivity"
+116-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:92:13-81
+117            android:launchMode="singleTask"
+117-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:93:13-44
+118            android:screenOrientation="portrait" />
+118-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:94:13-49
+119        <activity
+119-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:96:9-128:20
+120            android:name="com.tencent.qcloud.tim.demo.main.MainActivity"
+120-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:97:13-73
+121            android:launchMode="singleTask"
+121-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:98:13-44
+122            android:screenOrientation="portrait"
+122-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:99:13-49
+123            android:windowSoftInputMode="adjustResize|stateHidden" >
+123-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:100:13-67
+124
+125            <!-- 华为离线推送打开应用内页面 -->
+126            <!-- 小米离线推送打开应用内页面 -->
+127            <!-- VIVO离线推送打开应用内页面 -->
+128            <intent-filter>
+128-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:105:13-111:29
+129                <action android:name="android.intent.action.VIEW" />
+129-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:76:17-69
+129-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:76:25-66
+130
+131                <data
+131-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:107:17-110:51
+132                    android:host="com.tencent.qcloud"
+132-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:108:21-54
+133                    android:path="/detail"
+133-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:109:21-43
+134                    android:scheme="pushscheme" />
+134-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:110:21-48
+135            </intent-filter>
+136
+137            <!-- OPPO离线推送的intent action方式必须配置category且不能有data数据 -->
+138            <intent-filter>
+138-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:114:13-117:29
+139                <action android:name="android.intent.action.VIEW" />
+139-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:76:17-69
+139-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:76:25-66
+140
+141                <category android:name="android.intent.category.DEFAULT" />
+141-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:17-76
+141-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:27-73
+142            </intent-filter>
+143
+144            <!-- OPPO离线推送的scheme url方式必须配置action和category -->
+145            <intent-filter>
+145-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:120:13-126:29
+146                <action android:name="android.intent.action.VIEW" />
+146-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:76:17-69
+146-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:76:25-66
+147
+148                <category android:name="android.intent.category.DEFAULT" />
+148-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:17-76
+148-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:27-73
+149
+150                <data
+150-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:107:17-110:51
+151                    android:host="com.tencent.qcloud"
+151-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:108:21-54
+152                    android:scheme="pushscheme" />
+152-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:110:21-48
+153            </intent-filter>
+154        </activity>
+155        <activity
+155-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:130:9-132:52
+156            android:name="com.tencent.qcloud.tim.demo.profile.WebViewActivity"
+156-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:131:13-79
+157            android:screenOrientation="portrait" />
+157-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:132:13-49
+158
+159        <!-- ********小米推送service和receiver设置start******** -->
+160        <service
+160-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:137:9-140:46
+161            android:name="com.xiaomi.push.service.XMPushService"
+161-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:138:13-65
+162            android:enabled="true"
+162-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:139:13-35
+163            android:process=":pushservice" />
+163-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:140:13-43
+164        <service
+164-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:141:9-146:46
+165            android:name="com.xiaomi.push.service.XMJobService"
+165-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:142:13-64
+166            android:enabled="true"
+166-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:143:13-35
+167            android:exported="false"
+167-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:144:13-37
+168            android:permission="android.permission.BIND_JOB_SERVICE"
+168-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:145:13-69
+169            android:process=":pushservice" />
+169-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:146:13-43
+170
+171        <!-- 注：此service必须在3.0.1版本以后（包括3.0.1版本）加入 -->
+172        <service
+172-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:149:9-152:39
+173            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+173-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:150:13-68
+174            android:enabled="true"
+174-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:151:13-35
+175            android:exported="true" />
+175-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:152:13-36
+176        <service
+176-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:153:9-155:38
+177            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+177-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:154:13-70
+178            android:enabled="true" />
+178-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:155:13-35
+179
+180        <!-- 注：此service必须在2.2.5版本以后（包括2.2.5版本）加入 -->
+181        <receiver
+181-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:158:9-166:20
+182            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
+182-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:159:13-83
+183            android:exported="true" >
+183-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:160:13-36
+184            <intent-filter>
+184-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:161:13-165:29
+185                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+185-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:162:17-79
+185-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:162:25-76
+186
+187                <category android:name="android.intent.category.DEFAULT" />
+187-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:17-76
+187-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:27-73
+188            </intent-filter>
+189        </receiver>
+190        <receiver
+190-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:167:9-174:20
+191            android:name="com.xiaomi.push.service.receivers.PingReceiver"
+191-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:168:13-74
+192            android:exported="false"
+192-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:169:13-37
+193            android:process=":pushservice" >
+193-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:170:13-43
+194            <intent-filter>
+194-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:171:13-173:29
+195                <action android:name="com.xiaomi.push.PING_TIMER" />
+195-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:172:17-69
+195-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:172:25-66
+196            </intent-filter>
+197        </receiver>
+198
+199        <!-- 自实现小米推送的接收广播 -->
+200        <receiver
+200-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:177:9-189:20
+201            android:name="com.tencent.qcloud.tim.demo.thirdpush.XiaomiMsgReceiver"
+201-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:178:13-83
+202            android:exported="true" >
+202-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:179:13-36
+203            <intent-filter>
+203-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:180:13-182:29
+204                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+204-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:181:17-76
+204-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:181:25-73
+205            </intent-filter>
+206            <intent-filter>
+206-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:183:13-185:29
+207                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+207-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:184:17-76
+207-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:184:25-73
+208            </intent-filter>
+209            <intent-filter>
+209-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:186:13-188:29
+210                <action android:name="com.xiaomi.mipush.ERROR" />
+210-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:187:17-66
+210-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:187:25-63
+211            </intent-filter>
+212        </receiver>
+213        <!-- ********小米推送service和receiver设置end******** -->
+214
+215
+216        <!-- ********华为推送设置start******** -->
+217        <service
+217-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:193:9-199:19
+218            android:name="com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService"
+218-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:194:13-89
+219            android:exported="false" >
+219-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:195:13-37
+220            <intent-filter>
+220-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:196:13-198:29
+221                <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
+221-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:197:17-80
+221-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:197:25-78
+222            </intent-filter>
+223        </service>
+224
+225        <meta-data
+225-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:201:9-203:32
+226            android:name="com.huawei.hms.client.appid"
+226-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:202:13-55
+227            android:value="" />
+227-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:203:13-29
+228        <!-- ********华为推送设置end******** -->
+229
+230
+231        <!-- ********魅族推送设置start******** -->
+232        <receiver android:name="com.tencent.qcloud.tim.demo.thirdpush.MEIZUPushReceiver" >
+232-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:207:9-222:20
+232-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:207:19-89
+233            <intent-filter>
+233-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:208:13-221:29
+234
+235                <!-- 接收push消息 -->
+236                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
+236-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:211:17-78
+236-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:211:25-75
+237                <!-- 接收register消息 -->
+238                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />
+238-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:213:17-88
+238-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:213:25-85
+239                <!-- 接收unregister消息 -->
+240                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />
+240-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:215:17-90
+240-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:215:25-87
+241                <!-- 兼容低版本Flyme3推送服务配置 -->
+242                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
+242-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:217:17-77
+242-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:217:25-74
+243                <action android:name="com.meizu.c2dm.intent.RECEIVE" />
+243-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:218:17-72
+243-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:218:25-69
+244
+245                <category android:name="com.tencent.qcloud.tim.demo.thirdpush" />
+245-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:220:17-82
+245-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:220:27-79
+246            </intent-filter>
+247        </receiver>
+248        <!-- ********魅族推送设置end******** -->
+249
+250
+251        <!-- ********vivo推送设置start******** -->
+252        <service
+252-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:226:9-228:39
+253            android:name="com.vivo.push.sdk.service.CommandClientService"
+253-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:227:13-74
+254            android:exported="true" />
+254-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:228:13-36
+255
+256        <activity
+256-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:230:9-234:75
+257            android:name="com.vivo.push.sdk.LinkProxyClientActivity"
+257-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:231:13-69
+258            android:exported="false"
+258-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:232:13-37
+259            android:screenOrientation="portrait"
+259-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:233:13-49
+260            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+260-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:234:13-72
+261
+262        <!-- push应用定义消息receiver声明 -->
+263        <receiver android:name="com.tencent.qcloud.tim.demo.thirdpush.VIVOPushMessageReceiverImpl" >
+263-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:237:9-243:20
+263-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:237:19-99
+264            <intent-filter>
+264-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:238:13-242:29
+265
+266                <!-- 接收push消息 -->
+267                <action android:name="com.vivo.pushclient.action.RECEIVE" />
+267-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:241:17-77
+267-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:241:25-74
+268            </intent-filter>
+269        </receiver>
+270
+271        <meta-data
+271-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:245:9-247:32
+272            android:name="com.vivo.push.api_key"
+272-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:246:13-49
+273            android:value="" />
+273-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:247:13-29
+274        <meta-data
+274-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:248:9-250:32
+275            android:name="com.vivo.push.app_id"
+275-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:249:13-48
+276            android:value="" />
+276-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:250:13-29
+277        <!-- ********vivo推送设置end******** -->
+278
+279
+280        <!-- ********海外google云消息传递start******** -->
+281        <service
+281-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:254:9-260:19
+282            android:name="com.tencent.qcloud.tim.demo.thirdpush.GoogleFCMMsgService"
+282-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:255:13-85
+283            android:exported="false" >
+283-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:256:13-37
+284            <intent-filter>
+284-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:257:13-259:29
+285                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+285-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:258:17-78
+285-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:258:25-75
+286            </intent-filter>
+287        </service>
+288        <!-- ********海外google云消息传递end******** -->
+289
+290
+291        <!-- ********OPPO 推送 start******** -->
+292        <service
+292-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:264:9-271:19
+293            android:name="com.heytap.msp.push.service.CompatibleDataMessageCallbackService"
+293-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:265:13-92
+294            android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE" >
+294-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:267:13-77
+295            <intent-filter>
+295-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:268:13-270:29
+296                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
+296-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:269:17-84
+296-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:269:25-82
+297            </intent-filter>
+298        </service> <!-- 兼容Q以下版本 -->
+299
+300        <service
+300-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:273:9-283:19
+301            android:name="com.heytap.msp.push.service.DataMessageCallbackService"
+301-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:274:13-82
+302            android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE" >
+302-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:276:13-77
+303            <intent-filter>
+303-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:278:13-282:29
+304                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE" />
+304-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:279:17-83
+304-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:279:25-81
+305                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE" />
+305-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:281:17-81
+305-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:281:25-79
+306            </intent-filter>
+307        </service> <!-- 兼容Q版本 -->
+308        <!-- ********OPPO 推送 end******** -->
+309
+310        <receiver
+310-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:286:9-293:20
+311            android:name="com.tencent.qcloud.tim.demo.LanguageReceiver"
+311-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:287:13-45
+312            android:enabled="true"
+312-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:288:13-35
+313            android:exported="false" >
+313-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:289:13-37
+314            <intent-filter android:priority="1000" >
+314-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:290:13-292:29
+314-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:290:28-51
+315                <action android:name="android.intent.action.LOCALE_CHANGED" />
+315-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:291:17-78
+315-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:291:25-76
+316            </intent-filter>
+317        </receiver>
+318
+319        <activity
+319-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:295:9-297:52
+320            android:name="com.tencent.qcloud.tim.demo.profile.SelectionActivity"
+320-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:296:13-54
+321            android:screenOrientation="portrait" />
+321-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:297:13-49
+322        <activity
+322-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:20:9-29:20
+323            android:name="com.tencent.qcloud.tim.uikit.live.modules.liveroom.ui.DefaultGroupLiveAnchorActivity"
+323-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:21:13-112
+324            android:configChanges="orientation|keyboardHidden|screenSize"
+324-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:22:13-74
+325            android:screenOrientation="portrait" >
+325-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:23:13-49
+326            <intent-filter>
+326-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:24:13-28:29
+327                <action android:name="com.tencent.qcloud.tim.tuikit.live.grouplive.anchor" />
+327-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:25:17-94
+327-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:25:25-91
+328
+329                <category android:name="android.intent.category.DEFAULT" />
+329-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:17-76
+329-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:27-73
+330            </intent-filter>
+331        </activity>
+332        <activity
+332-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:30:9-39:20
+333            android:name="com.tencent.qcloud.tim.uikit.live.modules.liveroom.ui.DefaultGroupLiveAudienceActivity"
+333-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:31:13-114
+334            android:configChanges="orientation|keyboardHidden|screenSize"
+334-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:32:13-74
+335            android:screenOrientation="portrait" >
+335-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:33:13-49
+336            <intent-filter>
+336-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:34:13-38:29
+337                <action android:name="com.tencent.qcloud.tim.tuikit.live.grouplive.audience" />
+337-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:35:17-96
+337-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:35:25-93
+338
+339                <category android:name="android.intent.category.DEFAULT" />
+339-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:17-76
+339-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:27-73
+340            </intent-filter>
+341        </activity>
+342
+343        <provider
+343-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:41:9-45:40
+344            android:name="com.tencent.qcloud.tim.uikit.live.TUILiveService"
+344-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:42:13-76
+345            android:authorities="com.tencent.qcloud.tim.tuikit.TUILive.Init"
+345-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:43:13-64
+346            android:enabled="true"
+346-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:44:13-35
+347            android:exported="false" />
+347-->[:tuilive] /Users/xlm/Code/TIMSDK/Android/Demo/tuilive/build/intermediates/library_manifest/debug/AndroidManifest.xml:45:13-37
+348
+349        <activity
+349-->[:tuiconversation] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIConversation/tuiconversation/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:9-14:52
+350            android:name="com.tencent.qcloud.tuikit.tuiconversation.ui.page.TUIForwardSelectActivity"
+350-->[:tuiconversation] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIConversation/tuiconversation/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-102
+351            android:screenOrientation="portrait" />
+351-->[:tuiconversation] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIConversation/tuiconversation/build/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-49
+352
+353        <provider
+353-->[:tuiconversation] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIConversation/tuiconversation/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:9-20:40
+354            android:name="com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService"
+354-->[:tuiconversation] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIConversation/tuiconversation/build/intermediates/library_manifest/debug/AndroidManifest.xml:17:13-92
+355            android:authorities="com.tencent.qcloud.tim.tuikit.TUIConversation.Init"
+355-->[:tuiconversation] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIConversation/tuiconversation/build/intermediates/library_manifest/debug/AndroidManifest.xml:18:13-72
+356            android:enabled="true"
+356-->[:tuiconversation] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIConversation/tuiconversation/build/intermediates/library_manifest/debug/AndroidManifest.xml:19:13-35
+357            android:exported="false" />
+357-->[:tuiconversation] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIConversation/tuiconversation/build/intermediates/library_manifest/debug/AndroidManifest.xml:20:13-37
+358
+359        <activity
+359-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:9-14:52
+360            android:name="com.tencent.qcloud.tuikit.tuicontact.ui.pages.AddMoreActivity"
+360-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-89
+361            android:screenOrientation="portrait" />
+361-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-49
+362        <activity
+362-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:15:9-17:52
+363            android:name="com.tencent.qcloud.tuikit.tuicontact.ui.pages.FriendProfileActivity"
+363-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:13-95
+364            android:screenOrientation="portrait" />
+364-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:17:13-49
+365        <activity
+365-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:18:9-20:52
+366            android:name="com.tencent.qcloud.tuikit.tuicontact.ui.pages.NewFriendActivity"
+366-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:19:13-91
+367            android:screenOrientation="portrait" />
+367-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:20:13-49
+368        <activity
+368-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:21:9-23:52
+369            android:name="com.tencent.qcloud.tuikit.tuicontact.ui.pages.BlackListActivity"
+369-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:22:13-91
+370            android:screenOrientation="portrait" />
+370-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:23:13-49
+371        <activity
+371-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:24:9-26:52
+372            android:name="com.tencent.qcloud.tuikit.tuicontact.ui.pages.GroupListActivity"
+372-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:25:13-91
+373            android:screenOrientation="portrait" />
+373-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:26:13-49
+374        <activity
+374-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:27:9-29:52
+375            android:name="com.tencent.qcloud.tuikit.tuicontact.ui.pages.StartC2CChatActivity"
+375-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:28:13-94
+376            android:screenOrientation="portrait" />
+376-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:29:13-49
+377        <activity
+377-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:30:9-33:73
+378            android:name="com.tencent.qcloud.tuikit.tuicontact.ui.pages.StartGroupChatActivity"
+378-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:31:13-96
+379            android:screenOrientation="portrait"
+379-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:32:13-49
+380            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+380-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:33:13-70
+381        <activity
+381-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:34:9-37:52
+382            android:name="com.tencent.qcloud.tuikit.tuicontact.ui.pages.ForwardSelectGroupActivity"
+382-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:35:13-100
+383            android:launchMode="singleInstance"
+383-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:36:13-48
+384            android:screenOrientation="portrait" />
+384-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:37:13-49
+385        <activity
+385-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:38:9-41:52
+386            android:name="com.tencent.qcloud.tuikit.tuicontact.ui.pages.StartGroupMemberSelectActivity"
+386-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:39:13-104
+387            android:launchMode="singleInstance"
+387-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:40:13-48
+388            android:screenOrientation="portrait" />
+388-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:41:13-49
+389        <activity
+389-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:42:9-44:52
+390            android:name="com.tencent.qcloud.tuikit.tuicontact.ui.pages.SelectionActivity"
+390-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:43:13-91
+391            android:screenOrientation="portrait" />
+391-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:44:13-49
+392
+393        <provider
+393-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:46:9-50:40
+394            android:name="com.tencent.qcloud.tuikit.tuicontact.TUIContactService"
+394-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:47:13-82
+395            android:authorities="com.tencent.qcloud.tim.tuikit.TUIContact.Init"
+395-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:48:13-67
+396            android:enabled="true"
+396-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:49:13-35
+397            android:exported="false" />
+397-->[:tuicontact] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIContact/tuicontact/build/intermediates/library_manifest/debug/AndroidManifest.xml:50:13-37
+398
+399        <activity
+399-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:9-14:52
+400            android:name="com.tencent.qcloud.tuikit.tuichat.ui.page.TUIForwardChatActivity"
+400-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-92
+401            android:screenOrientation="portrait" />
+401-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-49
+402        <activity
+402-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:15:9-19:70
+403            android:name="com.tencent.qcloud.tuikit.tuichat.ui.page.TUIC2CChatActivity"
+403-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:13-88
+404            android:launchMode="singleTask"
+404-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:17:13-44
+405            android:screenOrientation="portrait"
+405-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:18:13-49
+406            android:windowSoftInputMode="adjustResize|stateHidden" />
+406-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:19:13-67
+407        <activity
+407-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:20:9-24:70
+408            android:name="com.tencent.qcloud.tuikit.tuichat.ui.page.TUIGroupChatActivity"
+408-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:21:13-90
+409            android:launchMode="singleTask"
+409-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:22:13-44
+410            android:screenOrientation="portrait"
+410-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:23:13-49
+411            android:windowSoftInputMode="adjustResize|stateHidden" />
+411-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:24:13-67
+412        <activity
+412-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:25:9-27:52
+413            android:name="com.tencent.qcloud.tuikit.tuichat.component.camera.CameraActivity"
+413-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:26:13-93
+414            android:screenOrientation="portrait" />
+414-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:27:13-49
+415        <activity
+415-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:28:9-30:77
+416            android:name="com.tencent.qcloud.tuikit.tuichat.component.video.VideoViewActivity"
+416-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:29:13-95
+417            android:configChanges="keyboardHidden|orientation|screenSize" />
+417-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:30:13-74
+418        <activity
+418-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:31:9-33:52
+419            android:name="com.tencent.qcloud.tuikit.tuichat.component.photoview.PhotoViewActivity"
+419-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:32:13-99
+420            android:screenOrientation="portrait" />
+420-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:33:13-49
+421
+422        <provider
+422-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:35:9-39:40
+423            android:name="com.tencent.qcloud.tuikit.tuichat.TUIChatService"
+423-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:36:13-76
+424            android:authorities="com.tencent.qcloud.tim.tuikit.TUIChat.Init"
+424-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:37:13-64
+425            android:enabled="true"
+425-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:38:13-35
+426            android:exported="false" />
+426-->[:tuichat] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIChat/tuichat/build/intermediates/library_manifest/debug/AndroidManifest.xml:39:13-37
+427
+428        <activity
+428-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:9-14:52
+429            android:name="com.tencent.qcloud.tuikit.tuisearch.ui.page.SearchMainActivity"
+429-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-90
+430            android:screenOrientation="portrait" />
+430-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-49
+431        <activity
+431-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:15:9-17:52
+432            android:name="com.tencent.qcloud.tuikit.tuisearch.ui.page.SearchMoreListActivity"
+432-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:13-94
+433            android:screenOrientation="portrait" />
+433-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:17:13-49
+434        <activity
+434-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:18:9-20:52
+435            android:name="com.tencent.qcloud.tuikit.tuisearch.ui.page.SearchMoreMsgListActivity"
+435-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:19:13-97
+436            android:screenOrientation="portrait" />
+436-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:20:13-49
+437
+438        <provider
+438-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:22:9-26:40
+439            android:name="com.tencent.qcloud.tuikit.tuisearch.TUISearchService"
+439-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:23:13-80
+440            android:authorities="com.tencent.qcloud.tim.tuikit.TUISearch.Init"
+440-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:24:13-66
+441            android:enabled="true"
+441-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:25:13-35
+442            android:exported="false" />
+442-->[:tuisearch] /Users/xlm/Code/TIMSDK/tui-components/Android/TUISearch/tuisearch/build/intermediates/library_manifest/debug/AndroidManifest.xml:26:13-37
+443
+444        <activity
+444-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:9-14:52
+445            android:name="com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupInfoActivity"
+445-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-88
+446            android:screenOrientation="portrait" />
+446-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-49
+447        <activity
+447-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:15:9-18:73
+448            android:name="com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupApplyManagerActivity"
+448-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:13-96
+449            android:screenOrientation="portrait"
+449-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:17:13-49
+450            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+450-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:18:13-70
+451        <activity
+451-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:19:9-21:52
+452            android:name="com.tencent.qcloud.tuikit.tuigroup.ui.page.SelectionActivity"
+452-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:20:13-88
+453            android:screenOrientation="portrait" />
+453-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:21:13-49
+454
+455        <provider
+455-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:23:9-27:40
+456            android:name="com.tencent.qcloud.tuikit.tuigroup.TUIGroupService"
+456-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:24:13-78
+457            android:authorities="com.tencent.qcloud.tim.tuikit.TUIGroup.Init"
+457-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:25:13-65
+458            android:enabled="true"
+458-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:26:13-35
+459            android:exported="false" />
+459-->[:tuigroup] /Users/xlm/Code/TIMSDK/tui-components/Android/TUIGroup/tuigroup/build/intermediates/library_manifest/debug/AndroidManifest.xml:27:13-37
+460
+461        <activity
+461-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:20:9-24:66
+462            android:name="com.tencent.liteav.trtccalling.ui.audiocall.TRTCAudioCallActivity"
+462-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:21:13-93
+463            android:launchMode="singleTop"
+463-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:22:13-43
+464            android:screenOrientation="portrait"
+464-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:23:13-49
+465            android:theme="@style/Theme.AppCompat.NoActionBar" />
+465-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:24:13-63
+466        <activity
+466-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:25:9-29:66
+467            android:name="com.tencent.liteav.trtccalling.ui.videocall.TRTCVideoCallActivity"
+467-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:26:13-93
+468            android:launchMode="singleTop"
+468-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:27:13-43
+469            android:screenOrientation="portrait"
+469-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:28:13-49
+470            android:theme="@style/Theme.AppCompat.NoActionBar" />
+470-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:29:13-63
+471
+472        <provider
+472-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:31:9-35:40
+473            android:name="com.tencent.liteav.trtccalling.model.impl.ServiceInitializer"
+473-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:32:13-88
+474            android:authorities="com.tencent.qcloud.tim.tuikit.ServiceInitializer"
+474-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:33:13-70
+475            android:enabled="true"
+475-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:34:13-35
+476            android:exported="false" />
+476-->[:tuicalling] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICalling/tuicalling/build/intermediates/library_manifest/debug/AndroidManifest.xml:35:13-37
+477        <provider
+477-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:9-16:40
+478            android:name="com.tencent.qcloud.tuicore.ServiceInitializer"
+478-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-73
+479            android:authorities="com.tencent.qcloud.tim.tuikit.TUICore.Init"
+479-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-64
+480            android:enabled="true"
+480-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:15:13-35
+481            android:exported="false" />
+481-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:13-37
+482        <provider
+482-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:17:9-25:20
+483            android:name="com.tencent.qcloud.tuicore.util.TUIFileProvider"
+483-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:18:13-75
+484            android:authorities="com.tencent.qcloud.tim.tuikit.tuicore.fileprovider"
+484-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:19:13-72
+485            android:exported="false"
+485-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:20:13-37
+486            android:grantUriPermissions="true" >
+486-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:21:13-47
+487            <meta-data
+487-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:22:13-24:61
+488                android:name="android.support.FILE_PROVIDER_PATHS"
+488-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:23:17-67
+489                android:resource="@xml/file_paths_public" />
+489-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:24:17-58
+490        </provider>
+491
+492        <activity
+492-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:10:9-15:75
+493            android:name="com.blankj.utilcode.util.PermissionUtils$PermissionActivity"
+493-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:11:13-87
+494            android:configChanges="orientation|keyboardHidden|screenSize"
+494-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:12:13-74
+495            android:multiprocess="true"
+495-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:13:13-40
+496            android:theme="@style/ActivityTranslucent"
+496-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:14:13-55
+497            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+497-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:15:13-72
+498
+499        <provider
+499-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:17:9-26:20
+500            android:name="com.blankj.utilcode.util.Utils$FileProvider4UtilCode"
+500-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:18:13-80
+501            android:authorities="com.tencent.qcloud.tim.tuikit.utilcode.provider"
+501-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:19:13-69
+502            android:exported="false"
+502-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:20:13-37
+503            android:grantUriPermissions="true"
+503-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:21:13-47
+504            android:multiprocess="true" >
+504-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:22:13-40
+505            <meta-data
+505-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:22:13-24:61
+506                android:name="android.support.FILE_PROVIDER_PATHS"
+506-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:23:17-67
+507                android:resource="@xml/util_code_provider_paths" />
+507-->[:tuicore] /Users/xlm/Code/TIMSDK/tui-components/Android/TUICore/tuicore/build/intermediates/library_manifest/debug/AndroidManifest.xml:24:17-58
+508        </provider>
+509
+510        <service android:name="com.blankj.utilcode.util.MessengerUtils$ServerService" >
+510-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:28:9-32:19
+510-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:28:18-86
+511            <intent-filter>
+511-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:29:13-31:29
+512                <action android:name="com.tencent.qcloud.tim.tuikit.messenger" />
+512-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:30:17-69
+512-->[com.blankj:utilcode:1.25.9] /Users/xlm/.gradle/caches/transforms-2/files-2.1/edc0636868074e53297add1d3384e6ce/jetified-utilcode-1.25.9/AndroidManifest.xml:30:25-66
+513            </intent-filter>
+514        </service>
+515        <!--
+516             FirebaseMessagingService performs security checks at runtime,
+517             but set to not exported to explicitly avoid allowing another app to call it.
+518        -->
+519        <service
+519-->[com.google.firebase:firebase-messaging:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b5b6e22d892ac0519f29ad0747746236/jetified-firebase-messaging-19.0.1/AndroidManifest.xml:28:9-34:19
+520            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+520-->[com.google.firebase:firebase-messaging:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b5b6e22d892ac0519f29ad0747746236/jetified-firebase-messaging-19.0.1/AndroidManifest.xml:29:13-82
+521            android:exported="false" >
+521-->[com.google.firebase:firebase-messaging:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b5b6e22d892ac0519f29ad0747746236/jetified-firebase-messaging-19.0.1/AndroidManifest.xml:30:13-37
+522            <intent-filter android:priority="-500" >
+522-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:257:13-259:29
+523                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+523-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:258:17-78
+523-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:258:25-75
+524            </intent-filter>
+525        </service>
+526
+527        <receiver
+527-->[com.tencent.tpns:xiaomi:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/85ecb2af63cb320a58c40fb861dc5c56/xiaomi-1.2.1.2-release/AndroidManifest.xml:55:9-67:20
+528            android:name="com.tencent.android.mipush.XMPushMessageReceiver"
+528-->[com.tencent.tpns:xiaomi:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/85ecb2af63cb320a58c40fb861dc5c56/xiaomi-1.2.1.2-release/AndroidManifest.xml:56:13-76
+529            android:exported="true" >
+529-->[com.tencent.tpns:xiaomi:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/85ecb2af63cb320a58c40fb861dc5c56/xiaomi-1.2.1.2-release/AndroidManifest.xml:57:13-36
+530            <intent-filter>
+530-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:180:13-182:29
+531                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+531-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:181:17-76
+531-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:181:25-73
+532            </intent-filter>
+533            <intent-filter>
+533-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:183:13-185:29
+534                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+534-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:184:17-76
+534-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:184:25-73
+535            </intent-filter>
+536            <intent-filter>
+536-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:186:13-188:29
+537                <action android:name="com.xiaomi.mipush.ERROR" />
+537-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:187:17-66
+537-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:187:25-63
+538            </intent-filter>
+539        </receiver> <!-- 注：魅族push 需要的 begin -->
+540        <service
+540-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:31:9-33:39
+541            android:name="com.meizu.cloud.pushsdk.NotificationService"
+541-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:32:13-71
+542            android:exported="true" />
+542-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:33:13-36
+543
+544        <receiver android:name="com.meizu.cloud.pushsdk.SystemReceiver" >
+544-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:35:9-41:20
+544-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:35:19-72
+545            <intent-filter>
+545-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:36:13-40:29
+546                <action android:name="com.meizu.cloud.pushservice.action.PUSH_SERVICE_START" />
+546-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:37:17-96
+546-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:37:25-93
+547
+548                <category android:name="android.intent.category.DEFAULT" />
+548-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:17-76
+548-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:116:27-73
+549            </intent-filter>
+550        </receiver> <!-- 默认的自定义广播接收器，用于自定义处理魅族push消息广播，receiver的name为自定义的广播接收类 start -->
+551        <!-- 注：如果你想自定义处理魅族push消息广播, 那么这个receiver换成你的自定义广播(要按魅族push要求继承MzPushMessageReceiver) -->
+552        <receiver android:name="com.tencent.android.mzpush.MZPushMessageReceiver" >
+552-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:45:9-60:20
+552-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:45:19-82
+553            <intent-filter>
+553-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:46:13-59:29
+554
+555                <!-- 接收push消息 -->
+556                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
+556-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:211:17-78
+556-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:211:25-75
+557                <!-- 接收register消息 -->
+558                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />
+558-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:213:17-88
+558-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:213:25-85
+559                <!-- 接收unregister消息 -->
+560                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />
+560-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:215:17-90
+560-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:215:25-87
+561                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
+561-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:217:17-77
+561-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:217:25-74
+562                <action android:name="com.meizu.c2dm.intent.RECEIVE" />
+562-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:218:17-72
+562-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:218:25-69
+563                <!-- 你的应用包名 -->
+564                <category android:name="com.tencent.qcloud.tim.tuikit" >
+564-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:57:17-58:28
+564-->[com.tencent.tpns:meizu:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02a0ddde68209d9031425c09219fcb22/jetified-meizu-1.2.1.2-release/AndroidManifest.xml:57:27-58
+565                </category>
+566            </intent-filter>
+567        </receiver> <!-- push应用定义消息receiver声明 -->
+568        <receiver android:name="com.tencent.android.vivopush.VivoPushMessageReceiver" >
+568-->[com.tencent.tpns:vivo:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/79f9539e8b8d6e4dab301a01d9f2fe1e/vivo-1.2.1.2-release/AndroidManifest.xml:23:9-29:20
+568-->[com.tencent.tpns:vivo:1.2.1.2-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/79f9539e8b8d6e4dab301a01d9f2fe1e/vivo-1.2.1.2-release/AndroidManifest.xml:23:19-86
+569            <intent-filter>
+569-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:238:13-242:29
+570
+571                <!-- 接收push消息 -->
+572                <action android:name="com.vivo.pushclient.action.RECEIVE" />
+572-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:241:17-77
+572-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:241:25-74
+573            </intent-filter>
+574        </receiver> <!-- 接入HMS SDK 3.0.0需要注册该Service，此Service类需要开发者自己定义，继承于com.huawei.hms.push.HmsMessageService类并实现其中的方法 -->
+575        <service
+575-->[com.tencent.tpns:huawei:1.2.1.3-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/9c22681295fd5ff12da28ed08030a763/huawei-1.2.1.3-release/AndroidManifest.xml:14:9-20:19
+576            android:name="com.huawei.android.hms.tpns.HWHmsMessageService"
+576-->[com.tencent.tpns:huawei:1.2.1.3-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/9c22681295fd5ff12da28ed08030a763/huawei-1.2.1.3-release/AndroidManifest.xml:15:13-75
+577            android:exported="false" >
+577-->[com.tencent.tpns:huawei:1.2.1.3-release] /Users/xlm/.gradle/caches/transforms-2/files-2.1/9c22681295fd5ff12da28ed08030a763/huawei-1.2.1.3-release/AndroidManifest.xml:16:13-37
+578            <intent-filter>
+578-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:196:13-198:29
+579                <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
+579-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:197:17-80
+579-->/Users/xlm/Code/TIMSDK/Android/Demo/app/src/main/AndroidManifest.xml:197:25-78
+580            </intent-filter>
+581        </service>
+582
+583        <receiver
+583-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:26:9-37:20
+584            android:name="com.huawei.hms.support.api.push.PushMsgReceiver"
+584-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:27:13-75
+585            android:directBootAware="true"
+585-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:28:13-43
+586            android:permission="com.tencent.qcloud.tim.tuikit.permission.PROCESS_PUSH_MSG" >
+586-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:29:13-78
+587            <intent-filter>
+587-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:30:13-36:29
+588
+589                <!-- Mandatory, be used to receive notification bar message click event. -->
+590                <action android:name="com.huawei.intent.action.PUSH_DELAY_NOTIFY" />
+590-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:33:17-85
+590-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:33:25-82
+591                <!-- Optional, compatible with old huawei phones. -->
+592                <action android:name="com.huawei.intent.action.PUSH" />
+592-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:35:17-72
+592-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:35:25-69
+593            </intent-filter>
+594        </receiver>
+595        <receiver
+595-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:38:9-49:20
+596            android:name="com.huawei.hms.support.api.push.PushReceiver"
+596-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:39:13-72
+597            android:directBootAware="true"
+597-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:40:13-43
+598            android:permission="com.tencent.qcloud.tim.tuikit.permission.PROCESS_PUSH_MSG" >
+598-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:41:13-78
+599            <intent-filter>
+599-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:42:13-48:29
+600
+601                <!-- Mandatory, be used to receive tokens. -->
+602                <action android:name="com.huawei.android.push.intent.REGISTRATION" />
+602-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:45:17-86
+602-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:45:25-83
+603                <!-- Mandatory, be used to receive messages. -->
+604                <action android:name="com.huawei.android.push.intent.RECEIVE" />
+604-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:47:17-81
+604-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:47:25-78
+605            </intent-filter>
+606        </receiver> <!-- Definition of receiving service for notification bar and pass-through message of non-huawei mobile phone. -->
+607        <service
+607-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:52:9-62:19
+608            android:name="com.huawei.hms.support.api.push.service.HmsMsgService"
+608-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:53:13-81
+609            android:directBootAware="true"
+609-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:54:13-43
+610            android:enabled="true"
+610-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:55:13-35
+611            android:exported="true"
+611-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:56:13-36
+612            android:process=":pushservice" >
+612-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:57:13-43
+613            <intent-filter>
+613-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:58:13-61:29
+614                <action android:name="com.huawei.push.msg.NOTIFY_MSG" />
+614-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:59:17-73
+614-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:59:25-70
+615                <action android:name="com.huawei.push.msg.PASSBY_MSG" />
+615-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:60:17-73
+615-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:60:25-70
+616            </intent-filter>
+617        </service>
+618
+619        <provider
+619-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:64:9-70:89
+620            android:name="com.huawei.hms.support.api.push.PushProvider"
+620-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:65:13-72
+621            android:authorities="com.tencent.qcloud.tim.tuikit.huawei.push.provider"
+621-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:66:13-72
+622            android:exported="true"
+622-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:67:13-36
+623            android:permission="com.tencent.qcloud.tim.tuikit.permission.PUSH_PROVIDER"
+623-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:68:13-75
+624            android:readPermission="com.tencent.qcloud.tim.tuikit.permission.PUSH_PROVIDER"
+624-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:69:13-79
+625            android:writePermission="com.tencent.qcloud.tim.tuikit.permission.PUSH_WRITE_PROVIDER" />
+625-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:70:13-86
+626
+627        <meta-data
+627-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:72:9-74:46
+628            android:name="com.huawei.hms.client.service.name:push"
+628-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:73:13-67
+629            android:value="push:5.0.2.300" />
+629-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:74:13-43
+630        <meta-data
+630-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:75:9-77:33
+631            android:name="com.huawei.hms.min_api_level:push:push"
+631-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:76:13-66
+632            android:value="1" />
+632-->[com.huawei.hms:push:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/cbbee07b45d4d7fa2d457cb5246f78a6/push-5.0.2.300/AndroidManifest.xml:77:13-30
+633
+634        <service
+634-->[com.google.android.gms:play-services-measurement-api:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/9a23ded7e822cca3f46737f2e43aca96/play-services-measurement-api-17.0.0/AndroidManifest.xml:27:9-33:19
+635            android:name="com.google.firebase.components.ComponentDiscoveryService"
+635-->[com.google.android.gms:play-services-measurement-api:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/9a23ded7e822cca3f46737f2e43aca96/play-services-measurement-api-17.0.0/AndroidManifest.xml:28:13-84
+636            android:exported="false" >
+636-->[com.google.android.gms:play-services-measurement-api:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/9a23ded7e822cca3f46737f2e43aca96/play-services-measurement-api-17.0.0/AndroidManifest.xml:29:13-37
+637            <meta-data
+637-->[com.google.android.gms:play-services-measurement-api:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/9a23ded7e822cca3f46737f2e43aca96/play-services-measurement-api-17.0.0/AndroidManifest.xml:30:13-32:85
+638                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+638-->[com.google.android.gms:play-services-measurement-api:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/9a23ded7e822cca3f46737f2e43aca96/play-services-measurement-api-17.0.0/AndroidManifest.xml:31:17-139
+639                android:value="com.google.firebase.components.ComponentRegistrar" />
+639-->[com.google.android.gms:play-services-measurement-api:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/9a23ded7e822cca3f46737f2e43aca96/play-services-measurement-api-17.0.0/AndroidManifest.xml:32:17-82
+640            <meta-data
+640-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:32:13-34:85
+641                android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
+641-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:33:17-96
+642                android:value="com.google.firebase.components.ComponentRegistrar" />
+642-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:34:17-82
+643        </service>
+644
+645        <receiver
+645-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:37:9-44:20
+646            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+646-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:38:13-78
+647            android:exported="true"
+647-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:39:13-36
+648            android:permission="com.google.android.c2dm.permission.SEND" >
+648-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:40:13-73
+649            <intent-filter>
+649-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:41:13-43:29
+650                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+650-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:42:17-81
+650-->[com.google.firebase:firebase-iid:19.0.1] /Users/xlm/.gradle/caches/transforms-2/files-2.1/6590eaf69223e192e8a9e9853adbf2d9/firebase-iid-19.0.1/AndroidManifest.xml:42:25-78
+651            </intent-filter>
+652        </receiver>
+653
+654        <provider
+654-->[com.google.firebase:firebase-common:18.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/ffe8cb4ccef46b52a7609d026f806d62/firebase-common-18.0.0/AndroidManifest.xml:12:9-16:39
+655            android:name="com.google.firebase.provider.FirebaseInitProvider"
+655-->[com.google.firebase:firebase-common:18.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/ffe8cb4ccef46b52a7609d026f806d62/firebase-common-18.0.0/AndroidManifest.xml:13:13-77
+656            android:authorities="com.tencent.qcloud.tim.tuikit.firebaseinitprovider"
+656-->[com.google.firebase:firebase-common:18.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/ffe8cb4ccef46b52a7609d026f806d62/firebase-common-18.0.0/AndroidManifest.xml:14:13-72
+657            android:exported="false"
+657-->[com.google.firebase:firebase-common:18.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/ffe8cb4ccef46b52a7609d026f806d62/firebase-common-18.0.0/AndroidManifest.xml:15:13-37
+658            android:initOrder="100" />
+658-->[com.google.firebase:firebase-common:18.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/ffe8cb4ccef46b52a7609d026f806d62/firebase-common-18.0.0/AndroidManifest.xml:16:13-36
+659
+660        <activity
+660-->[com.google.android.gms:play-services-base:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02bc5779c1ea05145e87707e6c13ec31/play-services-base-17.0.0/AndroidManifest.xml:23:9-26:75
+661            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+661-->[com.google.android.gms:play-services-base:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02bc5779c1ea05145e87707e6c13ec31/play-services-base-17.0.0/AndroidManifest.xml:24:13-79
+662            android:exported="false"
+662-->[com.google.android.gms:play-services-base:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02bc5779c1ea05145e87707e6c13ec31/play-services-base-17.0.0/AndroidManifest.xml:25:13-37
+663            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+663-->[com.google.android.gms:play-services-base:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/02bc5779c1ea05145e87707e6c13ec31/play-services-base-17.0.0/AndroidManifest.xml:26:13-72
+664
+665        <receiver
+665-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:29:9-33:20
+666            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+666-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:30:13-85
+667            android:enabled="true"
+667-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:31:13-35
+668            android:exported="false" >
+668-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:32:13-37
+669        </receiver>
+670        <receiver
+670-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:34:9-42:20
+671            android:name="com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver"
+671-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:35:13-100
+672            android:enabled="true"
+672-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:36:13-35
+673            android:exported="true"
+673-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:37:13-36
+674            android:permission="android.permission.INSTALL_PACKAGES" >
+674-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:38:13-69
+675            <intent-filter>
+675-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:39:13-41:29
+676                <action android:name="com.android.vending.INSTALL_REFERRER" />
+676-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:40:17-79
+676-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:40:25-76
+677            </intent-filter>
+678        </receiver>
+679
+680        <service
+680-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:44:9-47:40
+681            android:name="com.google.android.gms.measurement.AppMeasurementService"
+681-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:45:13-84
+682            android:enabled="true"
+682-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:46:13-35
+683            android:exported="false" />
+683-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:47:13-37
+684        <service
+684-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:48:9-52:72
+685            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+685-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:49:13-87
+686            android:enabled="true"
+686-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:50:13-35
+687            android:exported="false"
+687-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:51:13-37
+688            android:permission="android.permission.BIND_JOB_SERVICE" />
+688-->[com.google.android.gms:play-services-measurement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f12ee2c27f241da72016fef530f3e4c8/play-services-measurement-17.0.0/AndroidManifest.xml:52:13-69
+689
+690        <meta-data
+690-->[com.google.android.gms:play-services-basement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f55d367471238c4c9ce0f07804a61c3d/jetified-play-services-basement-17.0.0/AndroidManifest.xml:23:9-25:69
+691            android:name="com.google.android.gms.version"
+691-->[com.google.android.gms:play-services-basement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f55d367471238c4c9ce0f07804a61c3d/jetified-play-services-basement-17.0.0/AndroidManifest.xml:24:13-58
+692            android:value="@integer/google_play_services_version" />
+692-->[com.google.android.gms:play-services-basement:17.0.0] /Users/xlm/.gradle/caches/transforms-2/files-2.1/f55d367471238c4c9ce0f07804a61c3d/jetified-play-services-basement-17.0.0/AndroidManifest.xml:25:13-66
+693
+694        <provider
+694-->[com.huawei.hms:opendevice:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/3d30d11df77e3a7459025216b84aae99/jetified-opendevice-5.0.2.300/AndroidManifest.xml:10:9-13:40
+695            android:name="com.huawei.hms.aaid.InitProvider"
+695-->[com.huawei.hms:opendevice:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/3d30d11df77e3a7459025216b84aae99/jetified-opendevice-5.0.2.300/AndroidManifest.xml:11:13-60
+696            android:authorities="com.tencent.qcloud.tim.tuikit.aaidinitprovider"
+696-->[com.huawei.hms:opendevice:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/3d30d11df77e3a7459025216b84aae99/jetified-opendevice-5.0.2.300/AndroidManifest.xml:12:13-68
+697            android:exported="false" />
+697-->[com.huawei.hms:opendevice:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/3d30d11df77e3a7459025216b84aae99/jetified-opendevice-5.0.2.300/AndroidManifest.xml:13:13-37
+698
+699        <meta-data
+699-->[com.huawei.hms:opendevice:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/3d30d11df77e3a7459025216b84aae99/jetified-opendevice-5.0.2.300/AndroidManifest.xml:15:9-17:52
+700            android:name="com.huawei.hms.client.service.name:opendevice"
+700-->[com.huawei.hms:opendevice:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/3d30d11df77e3a7459025216b84aae99/jetified-opendevice-5.0.2.300/AndroidManifest.xml:16:13-73
+701            android:value="opendevice:5.0.2.300" />
+701-->[com.huawei.hms:opendevice:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/3d30d11df77e3a7459025216b84aae99/jetified-opendevice-5.0.2.300/AndroidManifest.xml:17:13-49
+702        <meta-data
+702-->[com.huawei.hms:opendevice:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/3d30d11df77e3a7459025216b84aae99/jetified-opendevice-5.0.2.300/AndroidManifest.xml:18:9-20:33
+703            android:name="com.huawei.hms.min_api_level:opendevice:push"
+703-->[com.huawei.hms:opendevice:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/3d30d11df77e3a7459025216b84aae99/jetified-opendevice-5.0.2.300/AndroidManifest.xml:19:13-72
+704            android:value="1" />
+704-->[com.huawei.hms:opendevice:5.0.2.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/3d30d11df77e3a7459025216b84aae99/jetified-opendevice-5.0.2.300/AndroidManifest.xml:20:13-30
+705
+706        <uses-library
+706-->[com.huawei.android.hms:security-ssl:1.1.5.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b06104e60083749ed4bfc4c17a0580c4/jetified-security-ssl-1.1.5.301/AndroidManifest.xml:10:9-12:40
+707            android:name="org.apache.http.legacy"
+707-->[com.huawei.android.hms:security-ssl:1.1.5.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b06104e60083749ed4bfc4c17a0580c4/jetified-security-ssl-1.1.5.301/AndroidManifest.xml:11:13-50
+708            android:required="false" />
+708-->[com.huawei.android.hms:security-ssl:1.1.5.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b06104e60083749ed4bfc4c17a0580c4/jetified-security-ssl-1.1.5.301/AndroidManifest.xml:12:13-37
+709
+710        <activity
+710-->[com.tencent.liteav:LiteAVSDK_TRTC:9.2.10641] /Users/xlm/.gradle/caches/transforms-2/files-2.1/fb66b44ce267c1ffadc026a31f87683a/LiteAVSDK_TRTC-9.2.10641/AndroidManifest.xml:34:9-36:86
+711            android:name="com.tencent.liteav.video.TXScreenCapture$TXScreenCaptureAssistantActivity"
+711-->[com.tencent.liteav:LiteAVSDK_TRTC:9.2.10641] /Users/xlm/.gradle/caches/transforms-2/files-2.1/fb66b44ce267c1ffadc026a31f87683a/LiteAVSDK_TRTC-9.2.10641/AndroidManifest.xml:35:13-101
+712            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+712-->[com.tencent.liteav:LiteAVSDK_TRTC:9.2.10641] /Users/xlm/.gradle/caches/transforms-2/files-2.1/fb66b44ce267c1ffadc026a31f87683a/LiteAVSDK_TRTC-9.2.10641/AndroidManifest.xml:36:13-83
+713        <!--
+714        为后续统计第三方app集成了哪些Kit，因此需要Kit在自己的AndroidManifest.xml文件中定义业务标签元数据，
+715        流水线打包时会替换成HMSVER对应的版本号，不要手动修改
+716        -->
+717        <meta-data
+717-->[com.huawei.hms:base:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/dc965f190213536d8691c4959fbcfa8e/base-5.0.0.301/AndroidManifest.xml:18:9-20:46
+718            android:name="com.huawei.hms.client.service.name:base"
+718-->[com.huawei.hms:base:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/dc965f190213536d8691c4959fbcfa8e/base-5.0.0.301/AndroidManifest.xml:19:13-67
+719            android:value="base:5.0.0.301" /> <!-- SDK依赖的HMSCore的最低api level元数据 -->
+719-->[com.huawei.hms:base:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/dc965f190213536d8691c4959fbcfa8e/base-5.0.0.301/AndroidManifest.xml:20:13-43
+720        <meta-data
+720-->[com.huawei.hms:base:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/dc965f190213536d8691c4959fbcfa8e/base-5.0.0.301/AndroidManifest.xml:23:9-25:33
+721            android:name="com.huawei.hms.min_api_level:base:hmscore"
+721-->[com.huawei.hms:base:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/dc965f190213536d8691c4959fbcfa8e/base-5.0.0.301/AndroidManifest.xml:24:13-69
+722            android:value="1" /> <!-- 用于判断是否集成了本lib -->
+722-->[com.huawei.hms:base:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/dc965f190213536d8691c4959fbcfa8e/base-5.0.0.301/AndroidManifest.xml:25:13-30
+723        <meta-data
+723-->[com.huawei.hms:availableupdate:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/2bddb16c3bc4c58bd192a0d9108cd79f/availableupdate-5.0.0.301/AndroidManifest.xml:23:9-25:35
+724            android:name="availableLoaded"
+724-->[com.huawei.hms:availableupdate:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/2bddb16c3bc4c58bd192a0d9108cd79f/availableupdate-5.0.0.301/AndroidManifest.xml:24:13-43
+725            android:value="yes" />
+725-->[com.huawei.hms:availableupdate:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/2bddb16c3bc4c58bd192a0d9108cd79f/availableupdate-5.0.0.301/AndroidManifest.xml:25:13-32
+726
+727        <provider
+727-->[com.huawei.hms:availableupdate:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/2bddb16c3bc4c58bd192a0d9108cd79f/availableupdate-5.0.0.301/AndroidManifest.xml:27:9-32:20
+728            android:name="com.huawei.hms.update.provider.UpdateProvider"
+728-->[com.huawei.hms:availableupdate:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/2bddb16c3bc4c58bd192a0d9108cd79f/availableupdate-5.0.0.301/AndroidManifest.xml:28:13-73
+729            android:authorities="com.tencent.qcloud.tim.tuikit.hms.update.provider"
+729-->[com.huawei.hms:availableupdate:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/2bddb16c3bc4c58bd192a0d9108cd79f/availableupdate-5.0.0.301/AndroidManifest.xml:29:13-71
+730            android:exported="false"
+730-->[com.huawei.hms:availableupdate:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/2bddb16c3bc4c58bd192a0d9108cd79f/availableupdate-5.0.0.301/AndroidManifest.xml:30:13-37
+731            android:grantUriPermissions="true" >
+731-->[com.huawei.hms:availableupdate:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/2bddb16c3bc4c58bd192a0d9108cd79f/availableupdate-5.0.0.301/AndroidManifest.xml:31:13-47
+732        </provider>
+733
+734        <activity
+734-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:10:9-21:20
+735            android:name="com.huawei.hms.activity.BridgeActivity"
+735-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:11:13-66
+736            android:configChanges="orientation|locale|layoutDirection|fontScale|screenSize|smallestScreenSize|screenLayout"
+736-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:12:13-124
+737            android:excludeFromRecents="true"
+737-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:13:13-46
+738            android:exported="false"
+738-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:14:13-37
+739            android:hardwareAccelerated="true"
+739-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:15:13-47
+740            android:screenOrientation="behind"
+740-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:16:13-47
+741            android:theme="@android:style/Theme.Translucent" >
+741-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:17:13-61
+742            <meta-data
+742-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:18:13-20:77
+743                android:name="hwc-theme"
+743-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:19:17-41
+744                android:value="androidhwext:style/Theme.Emui.Translucent" />
+744-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:20:17-74
+745        </activity>
+746        <activity
+746-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:22:9-26:20
+747            android:name="com.huawei.hms.activity.EnableServiceActivity"
+747-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:23:13-73
+748            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout"
+748-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:24:13-106
+749            android:exported="false" >
+749-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:25:13-37
+750        </activity>
+751
+752        <provider
+752-->[com.huawei.agconnect:agconnect-core:1.4.0.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b37ddf28b8a6bf9df85b172969d58082/agconnect-core-1.4.0.300/AndroidManifest.xml:11:9-14:40
+753            android:name="com.huawei.agconnect.core.provider.AGConnectInitializeProvider"
+753-->[com.huawei.agconnect:agconnect-core:1.4.0.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b37ddf28b8a6bf9df85b172969d58082/agconnect-core-1.4.0.300/AndroidManifest.xml:12:13-90
+754            android:authorities="com.tencent.qcloud.tim.tuikit.AGCInitializeProvider"
+754-->[com.huawei.agconnect:agconnect-core:1.4.0.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b37ddf28b8a6bf9df85b172969d58082/agconnect-core-1.4.0.300/AndroidManifest.xml:13:13-73
+755            android:exported="false" />
+755-->[com.huawei.agconnect:agconnect-core:1.4.0.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b37ddf28b8a6bf9df85b172969d58082/agconnect-core-1.4.0.300/AndroidManifest.xml:14:13-37
+756
+757        <service
+757-->[com.huawei.agconnect:agconnect-core:1.4.0.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b37ddf28b8a6bf9df85b172969d58082/agconnect-core-1.4.0.300/AndroidManifest.xml:16:9-18:40
+758            android:name="com.huawei.agconnect.core.ServiceDiscovery"
+758-->[com.huawei.agconnect:agconnect-core:1.4.0.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b37ddf28b8a6bf9df85b172969d58082/agconnect-core-1.4.0.300/AndroidManifest.xml:17:13-70
+759            android:exported="false" />
+759-->[com.huawei.agconnect:agconnect-core:1.4.0.300] /Users/xlm/.gradle/caches/transforms-2/files-2.1/b37ddf28b8a6bf9df85b172969d58082/agconnect-core-1.4.0.300/AndroidManifest.xml:18:13-37
+760
+761        <activity
+761-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:21:9-29:20
+762            android:name="com.huawei.updatesdk.service.otaupdate.AppUpdateActivity"
+762-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:22:13-84
+763            android:configChanges="orientation|screenSize"
+763-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:23:13-59
+764            android:exported="false"
+764-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:24:13-37
+765            android:theme="@style/upsdkDlDialog" >
+765-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:25:13-49
+766            <meta-data
+766-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:18:13-20:77
+767                android:name="hwc-theme"
+767-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:19:17-41
+768                android:value="androidhwext:style/Theme.Emui.Translucent.NoTitleBar" />
+768-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:20:17-74
+769        </activity>
+770        <activity
+770-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:30:9-38:20
+771            android:name="com.huawei.updatesdk.support.pm.PackageInstallerActivity"
+771-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:31:13-84
+772            android:configChanges="orientation|keyboardHidden|screenSize"
+772-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:32:13-74
+773            android:exported="false"
+773-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:33:13-37
+774            android:theme="@style/upsdkDlDialog" >
+774-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:34:13-49
+775            <meta-data
+775-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:18:13-20:77
+776                android:name="hwc-theme"
+776-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:19:17-41
+777                android:value="androidhwext:style/Theme.Emui.Translucent" />
+777-->[com.huawei.hms:ui:5.0.0.301] /Users/xlm/.gradle/caches/transforms-2/files-2.1/a03696b6eafd77eec0b040e5b1efb566/ui-5.0.0.301/AndroidManifest.xml:20:17-74
+778        </activity>
+779
+780        <provider
+780-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:40:9-45:20
+781            android:name="com.huawei.updatesdk.fileprovider.UpdateSdkFileProvider"
+781-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:41:13-83
+782            android:authorities="com.tencent.qcloud.tim.tuikit.updateSdk.fileProvider"
+782-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:42:13-74
+783            android:exported="false"
+783-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:43:13-37
+784            android:grantUriPermissions="true" >
+784-->[com.huawei.hms:update:2.0.6.302] /Users/xlm/.gradle/caches/transforms-2/files-2.1/52e43325445592f0004ae57762083c73/update-2.0.6.302/AndroidManifest.xml:44:13-47
+785        </provider>
+786    </application>
+787
+788</manifest>

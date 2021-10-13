@@ -1,13 +1,7 @@
 package com.tencent.qcloud.tim.demo.thirdpush;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.text.TextUtils;
 
-import com.tencent.qcloud.tim.demo.DemoApplication;
-import com.tencent.qcloud.tim.demo.SplashActivity;
-import com.tencent.qcloud.tim.demo.chat.ChatActivity;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.vivo.push.model.UPSNotificationMessage;
 import com.vivo.push.sdk.OpenClientPushMessageReceiver;

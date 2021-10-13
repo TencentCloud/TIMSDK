@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tencent.qcloud.tuicore">
+
+    <application>
+        <provider
+            android:name=".ServiceInitializer"
+            android:authorities="${applicationId}.TUICore.Init"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <provider
+            android:name=".util.TUIFileProvider"
+            android:authorities="${applicationId}.tuicore.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths_public"/>
+        </provider>
+    </application>
+</manifest>

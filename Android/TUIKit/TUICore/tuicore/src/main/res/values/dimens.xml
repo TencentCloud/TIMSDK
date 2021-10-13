@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="page_margin">10dp</dimen>
+
+    <dimen name="switch_thumb_padding">2dp</dimen>
+    <dimen name="switch_thumb_width">23dp</dimen>
+    <dimen name="switch_thumb_height">23dp</dimen>
+    <dimen name="switch_thumb_radius">20dp</dimen>
+</resources>

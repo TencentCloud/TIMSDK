@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"
+    android:useLevel="false">
+    <!-- 实心 -->
+    <solid android:color="@color/trtccalling_color_head_background" />
+    <!-- 圆角 -->
+    <corners android:radius="5dp" />
+    <!-- 边距 -->
+    <padding
+        android:bottom="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp" />
+</shape>
