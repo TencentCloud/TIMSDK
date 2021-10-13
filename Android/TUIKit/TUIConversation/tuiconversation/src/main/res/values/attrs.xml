@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="UserIconView">
+        <!--默认头像-->
+        <attr name="default_image" format="reference" />
+        <attr name="image_radius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SynthesizedImageView">
+        <!--合成图片的背景-->
+        <attr name="synthesized_image_bg" format="color" />
+        <!--合成图片的默认图片-->
+        <attr name="synthesized_default_image" format="reference" />
+        <!--合成图片的尺寸-->
+        <attr name="synthesized_image_size" format="dimension" />
+        <!--多图片之间的空隙间隔-->
+        <attr name="synthesized_image_gap" format="dimension" />
+    </declare-styleable>
+</resources>

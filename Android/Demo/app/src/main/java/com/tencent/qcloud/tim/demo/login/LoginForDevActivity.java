@@ -13,14 +13,15 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.Utils;
 import com.tencent.qcloud.tim.uikit.TUIKit;
-import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
-import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 /**
  * <p>
@@ -55,9 +56,9 @@ public class LoginForDevActivity extends Activity {
                 // 获取userSig函数
                 String userSig = GenerateTestUserSig.genTestUserSig(mUserAccount.getText().toString());
                 UserInfo.getInstance().setUserSig(userSig);
-                TUIKit.login(mUserAccount.getText().toString(), userSig, new IUIKitCallBack() {
+                TUIKit.login(mUserAccount.getText().toString(), userSig, new V2TIMCallback() {
                     @Override
-                    public void onError(String module, final int code, final String desc) {
+                    public void onError(final int code, final String desc) {
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 ToastUtil.toastLongMessage(getString(R.string.failed_login_tip) + ", errCode = " + code + ", errInfo = " + desc);
@@ -67,7 +68,7 @@ public class LoginForDevActivity extends Activity {
                     }
 
                     @Override
-                    public void onSuccess(Object data) {
+                    public void onSuccess() {
                         UserInfo.getInstance().setAutoLogin(true);
                         Intent intent = new Intent(LoginForDevActivity.this, MainActivity.class);
                         startActivity(intent);

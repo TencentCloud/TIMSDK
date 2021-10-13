@@ -7,11 +7,12 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/empty_view"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight = "1"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,14 +41,14 @@
                 android:textSize="12sp"
                 android:text="@string/tab_conversation_tab_text" />
 
-            <com.tencent.qcloud.tim.uikit.component.UnreadCountTextView
+            <com.tencent.qcloud.tuicore.component.UnreadCountTextView
                 android:id="@+id/msg_total_unread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="50dp"
+                android:layout_toEndOf="@id/conversation"
                 android:layout_marginTop="5dp"
+                android:layout_marginStart="-20dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:minWidth="18.4dp"

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hms_abort" priority="translator">"ရပ္"</string>
+    <string name="hms_abort_message" priority="translator">"ေဒါင္းလုဒ္ကိုရပ္မည္လား?"</string>
+    <string name="hms_bindfaildlg_message" priority="translator">"%1$s သည္ HMS Core ကို သုံး၍ မရႏိုင္ပါ။ အေကာင္းဆုံး ျမွင့္တင္ေရး (ဖုန္းမန္ေနဂ်ာ)ကို ဖြင့္ပါ သို႔မဟုတ္ ဆက္တင္သို႔ သြားပါ၊ ထို႔ေနာက္ %2$s အတြက္ ခြင့္ျပဳခ်က္မ်ား (ေအာ္တို ဖြင့္ျခင္းႏွင့္ ဆင့္ပြား ဖြင့္မႈ အပါအဝင္) အားလုံးကို ဖြင့္ေပးျပီး ထပ္ၾကိဳးစားၾကည့္ပါ။"</string>
+    <string name="hms_cancel" priority="LT">"ဖ်က္သိမ္းမည္"</string>
+    <string name="hms_check_failure" priority="translator">"အသစ္မြမ္းမံမႈမ်ားကို စစ္ေဆးျခင္း မေအာင္ျမင္ခဲ့ပါ။"</string>
+    <string name="hms_check_no_update" priority="translator">"သင့္ဗားရွင္းသည္ အပ္ဒိတ္ျဖစ္ေနပါျပီ။"</string>
+    <string name="hms_checking" priority="translator">"အပ္ဒိတ္မ်ားအတြက္ စစ္ေနပါသည္…"</string>
+    <string name="hms_confirm" priority="translator">"အိုေက"</string>
+    <string name="hms_download_failure" priority="translator">"HMS Core ပက္ေက့ခ်္ကို ေဒါင္းလုဒ္ဆြဲျခင္း မေအာင္ျမင္ခဲ့ပါ။"</string>
+    <string name="hms_download_no_space" priority="translator">"ေနရာလြတ္ မေလာက္ပါ။ ေဒါင္းလုဒ္မၿပီးစီးႏုိင္ပါ။"</string>
+    <string name="hms_download_retry" priority="translator">"ေဒါင္းလုဒ္ဆြဲျခင္း မေအာင္ျမင္ခဲ့ပါ။ ထပ္ႀကိဳးစားမည္လား?"</string>
+    <string name="hms_downloading" priority="translator">"HMS Core ကို ေဒါင္းလုဒ္ဆြဲေနသည္ | တိုးတက္မႈ- %d%%"</string>
+    <string name="hms_downloading_loading" priority="LT">"ေဒါင္းလုဒ္လုပ္ေနဆဲ"</string>
+    <string name="hms_downloading_new" priority="LT">"HMS Core အား ေဒါင္းလုဒ္ဆြဲေနပါသည္"</string>
+    <string name="hms_gamebox_name" priority="LT">"HUAWEI GameCenter"</string>
+    <string name="hms_install" priority="LT">"ထည့္သြင္းမည္"</string>
+    <string name="hms_install_message" priority="translator">"ဤအဂၤါရပ္ကိုသံုးရန္ HMS Core ကို ထည့္သြင္းထားရမည္။ ထည့္သြင္းမည္လား။"</string>
+    <string name="hms_retry" priority="translator">"ျပန္ႀကိဳးစား"</string>
+    <string name="hms_update" priority="translator">"အပ္ဒိတ္"</string>
+    <string name="hms_update_continue" priority="LT">"ေဒါင္းလုဒ္"</string>
+    <string name="hms_update_message" priority="translator">"ဤအဂၤါရပ္ကိုအသံုးျပဳရန္ HMS Core ၏ ေနာက္ဆံုးထြက္ဗား႐ွင္းသို႔ အသစ္မြမ္းမံပါ။ ယခုအသစ္မြမ္းမံမည္လား။"</string>
+    <string name="hms_update_message_new" priority="translator">"ဤဝန္ေဆာင္မႈသည္ ေဖာ္ျပပါ အက္ပ္၏ ေနာက္ဆုံး ဗားရွင္းကို လိုအပ္ပါသည္ - \n\n%1$s"</string>
+    <string name="hms_update_nettype" priority="LT">"Wi-Fi ခ်ိတ္ဆက္မႈ မရွိပါ။ မိုဘိုင္းေဒတာ သုံး၍ ေဒါင္းလုဒ္လုပ္မည္လား။"</string>
+    <string name="hms_update_title" priority="translator">"HMS Core"</string>
+    <string name="upsdk_app_dl_installing" priority="LT">"AppGallery အား ေဒါင္းလုဒ္ဆြဲေနပါသည္"</string>
+    <string name="upsdk_app_download_info_new" priority="translator">"ထည့္သြင္းမည္"</string>
+    <string name="upsdk_app_size" priority="translator">"အရြယ္အစား"</string>
+    <string name="upsdk_app_version" priority="translator">"ဗားရွင္း"</string>
+    <string name="upsdk_cancel" priority="LT">"မပယ္ဖ်က္ပါ"</string>
+    <string name="upsdk_checking_update_prompt" priority="LT">"အပ္ဒိတ္အတြက္ စစ္ေဆးေနဆဲ..."</string>
+    <string name="upsdk_choice_update" priority="LT">"အပ္ဒိတ္ ရရွိႏိုင္ပါျပီ။ ေနာက္ဆုံး ဗားရွင္းအား ေဒါင္းလုဒ္ဆြဲျပီး ထည့္သြင္းေပးပါ။"</string>
+    <string name="upsdk_connect_server_fail_prompt_toast" priority="translator">"ဆာဗာႏွင့္ ခ်ိတ္ဆက္၍ မရႏိုင္ပါ။ ေက်းဇူးျပဳ၍ ေနာက္မွ ထပ္မံႀကိဳးစားပါ။"</string>
+    <string name="upsdk_detail" priority="translator">"အေသးစိတ္ အခ်က္အလက္မ်ား"</string>
+    <string name="upsdk_getting_message_fail_prompt_toast" priority="translator">"အခ်က္အလက္မ်ားကို ျပန္လည္ရယူ၍ ရႏိုင္မည္ မဟုတ္ပါ။ ေက်းဇူးျပဳ၍ ေနာက္မွ ထပ္မံႀကိဳးစားပါ။"</string>
+    <string name="upsdk_install" priority="LT">"အပ္ဒိတ္လုပ္ရန္ AppGallery ကို ထည့္သြင္းပါ။ ယခု ထည့္သြင္းမည္လား။"</string>
+    <string name="upsdk_no_available_network_prompt_toast" priority="translator">"အင္တာနက္ ခ်ိတ္ဆက္မႈ မရွိပါ။ ေက်းဇူးျပဳ၍ သင့္ကြန္ရက္ဆက္တင္ကို စစ္ေဆးပါ။"</string>
+    <string name="upsdk_ota_app_name" priority="LT">"အက္ပ္"</string>
+    <string name="upsdk_ota_cancel" priority="translator">"ေနာက္မွ"</string>
+    <string name="upsdk_ota_force_cancel_new" priority="LT">"ထြက္မည္"</string>
+    <string name="upsdk_ota_notify_updatebtn" priority="translator">"အပ္ဒိတ္"</string>
+    <string name="upsdk_ota_title" priority="translator">"ဗား႐ွင္းအသစ္"</string>
+    <string name="upsdk_storage_utils" priority="LT">"%1$s MB"</string>
+    <string name="upsdk_third_app_dl_cancel_download_prompt_ex" priority="translator">"ထည့္သြင္းမႈအား ပယ္ဖ်က္မည္လား။"</string>
+    <string name="upsdk_third_app_dl_install_failed" priority="translator">"ထည့္သြင္းမႈ မေအာင္ျမင္ခဲ့ပါ။"</string>
+    <string name="upsdk_third_app_dl_sure_cancel_download" priority="translator">"ပယ္ဖ်က္မည္"</string>
+    <string name="upsdk_update_check_no_new_version" priority="Reviewed">"သင့္ဗားရွင္းသည္ အပ္ဒိတ္ျဖစ္ေနပါျပီ။"</string>
+    <string name="upsdk_updating" priority="translator">"အပ္ဒိတ္လုပ္ေနဆဲ"</string>
+</resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="iconSize" format="dimension" />
+    <attr name="iconMargin" format="dimension" />
+    <attr name="iconSrc" format="reference" />
+    <attr name="iconLeft" format="reference" />
+    <attr name="iconRight" format="reference" />
+    <attr name="duration_max" format="integer" />
+
+    <declare-styleable name="JCameraView">
+        <attr name="iconSize" />
+        <attr name="iconMargin" />
+        <attr name="iconSrc" />
+        <attr name="iconLeft" />
+        <attr name="iconRight" />
+        <attr name="duration_max" />
+    </declare-styleable>
+
+
+
+    <declare-styleable name="SynthesizedImageView">
+        <!--合成图片的背景-->
+        <attr name="synthesized_image_bg" format="color" />
+        <!--合成图片的默认图片-->
+        <attr name="synthesized_default_image" format="reference" />
+        <!--合成图片的尺寸-->
+        <attr name="synthesized_image_size" format="dimension" />
+        <!--多图片之间的空隙间隔-->
+        <attr name="synthesized_image_gap" format="dimension" />
+    </declare-styleable>
+</resources>

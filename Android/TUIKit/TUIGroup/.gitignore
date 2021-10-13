@@ -1,0 +1,12 @@
+# OS X Files
+.DS_Store
+**/.DS_Store
+
+
+# Gradle files
+*/.gradle/
+
+# IDEA Files
+/tuigroup/.idea/
+/tuigroup/build/
+local.properties

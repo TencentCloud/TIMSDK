@@ -1,0 +1,15 @@
+package com.tencent.qcloud.tuikit.tuisearch;
+
+public class TUISearchConstants {
+    public static final String SEARCH_LIST_TYPE = "search_list_type";
+    public static final String SEARCH_KEY_WORDS = "search_key_words";
+    public static final String SEARCH_DATA_BEAN = "search_data_bean";
+
+    public static final String CHAT_INFO = "chatInfo";
+    public static final int JSON_VERSION_4       = 4;
+    public static int version = JSON_VERSION_4;
+    public static String covert2HTMLString(String original) {
+        return "\"<font color=\"#5B6B92\">" + original + "</font>\"";
+    }
+
+}

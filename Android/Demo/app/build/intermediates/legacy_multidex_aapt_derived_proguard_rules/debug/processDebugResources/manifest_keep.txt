@@ -1,0 +1,4 @@
+# Referenced at /Users/xlm/Code/TIMSDK/Android/Demo/app/build/intermediates/merged_manifests/debug/AndroidManifest.xml:85
+-keep class androidx.core.app.CoreComponentFactory { <init>(); }
+# Referenced at /Users/xlm/Code/TIMSDK/Android/Demo/app/build/intermediates/merged_manifests/debug/AndroidManifest.xml:85
+-keep class com.tencent.qcloud.tim.demo.DemoApplication { <init>(); }

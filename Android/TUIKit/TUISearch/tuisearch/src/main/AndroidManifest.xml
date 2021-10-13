@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tencent.qcloud.tuikit.tuisearch">
+
+    <application>
+        <activity
+            android:name=".ui.page.SearchMainActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.page.SearchMoreListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.page.SearchMoreMsgListActivity"
+            android:screenOrientation="portrait" />
+
+        <provider
+            android:name=".TUISearchService"
+            android:authorities="${applicationId}.TUISearch.Init"
+            android:enabled="true"
+            android:exported="false"/>
+
+    </application>
+</manifest>

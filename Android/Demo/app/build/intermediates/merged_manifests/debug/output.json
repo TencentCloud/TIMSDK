@@ -1,0 +1,1 @@
+[{"outputType":{"type":"MERGED_MANIFESTS"},"apkData":{"type":"MAIN","splits":[],"versionCode":1,"versionName":"5.7.1435","enabled":true,"outputFile":"TUIKitDemo-debug.apk","fullName":"debug","baseName":"debug"},"path":"AndroidManifest.xml","properties":{"packageId":"com.tencent.qcloud.tim.tuikit","split":"","minSdkVersion":"19"}}]

@@ -6,19 +6,17 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.demo.chat.ChatActivity;
-import com.tencent.qcloud.tim.demo.helper.TUIKitLiveListenerManager;
-import com.tencent.qcloud.tim.demo.helper.IBaseLiveListener;
-import com.tencent.qcloud.tim.demo.main.MainActivity;
+import com.tencent.qcloud.tim.demo.TUIKitLiveListenerManager;
+import com.tencent.qcloud.tim.demo.bean.OfflineMessageBean;
+import com.tencent.qcloud.tim.demo.bean.OfflineMessageContainerBean;
+import com.tencent.qcloud.tim.demo.component.interfaces.IBaseLiveListener;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
-import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.uikit.modules.chat.base.ChatInfo;
-import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageBean;
-import com.tencent.qcloud.tim.uikit.modules.chat.base.OfflineMessageContainerBean;
-import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
+import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageHelper;
 
@@ -124,17 +122,10 @@ public class OfflineMessageDispatcher {
 
     public static boolean redirect(final OfflineMessageBean bean) {
         if (bean.action == OfflineMessageBean.REDIRECT_ACTION_CHAT) {
-            ChatInfo chatInfo = new ChatInfo();
-            chatInfo.setType(bean.chatType);
-            chatInfo.setId(bean.sender);
-            chatInfo.setChatName(bean.nickname);
-            Intent chatIntent = new Intent(DemoApplication.instance(), ChatActivity.class);
-            chatIntent.putExtra(Constants.CHAT_INFO, chatInfo);
-            chatIntent.putExtra(Constants.IS_OFFLINE_PUSH_JUMP, true);
-            chatIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Intent mainIntent = new Intent(DemoApplication.instance(), MainActivity.class);
-            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            DemoApplication.instance().startActivities(new Intent[]{mainIntent, chatIntent});
+            if (TextUtils.isEmpty(bean.sender)) {
+                return true;
+            }
+            TUIKit.startChat(bean.sender, bean.nickname, bean.chatType);
             return true;
         } else if (bean.action == OfflineMessageBean.REDIRECT_ACTION_CALL) {
             IBaseLiveListener baseCallListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();

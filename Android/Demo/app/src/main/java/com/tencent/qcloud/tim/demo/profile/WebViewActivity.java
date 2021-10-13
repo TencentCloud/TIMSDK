@@ -9,9 +9,9 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.tencent.qcloud.tim.demo.BaseActivity;
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.uikit.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 
 public class WebViewActivity extends Activity {
 
@@ -24,7 +24,7 @@ public class WebViewActivity extends Activity {
         setContentView(R.layout.profile_about_activity);
 
         mTitleBar = findViewById(R.id.webview_title);
-        mTitleBar.setTitle(getResources().getString(R.string.about_im), TitleBarLayout.POSITION.MIDDLE);
+        mTitleBar.setTitle(getResources().getString(R.string.about_im), ITitleBarLayout.Position.MIDDLE);
         mTitleBar.getRightIcon().setVisibility(View.GONE);
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override

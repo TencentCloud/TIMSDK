@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="mtrl_badge_content_description">
+    <item quantity="zero">%d jaunu paziņojumu</item>
+    <item quantity="one">%d jauns paziņojums</item>
+    <item quantity="other">%d jauni paziņojumi</item>
+  </plurals>
+    <string msgid="5976598919945601918" name="abc_action_bar_home_description">"Pārvietoties uz sākuma ekrānu"</string>
+    <string msgid="8388173803310557296" name="abc_action_bar_up_description">"Pārvietoties uz augšu"</string>
+    <string msgid="3937310113216875497" name="abc_action_menu_overflow_description">"Citas opcijas"</string>
+    <string msgid="4692188335987374352" name="abc_action_mode_done">"Gatavs"</string>
+    <string msgid="1189761859438369441" name="abc_activity_chooser_view_see_all">"Skatīt visu"</string>
+    <string msgid="2165779757652331008" name="abc_activitychooserview_choose_application">"Izvēlieties lietotni"</string>
+    <string msgid="4215997306490295099" name="abc_capital_off">"IZSLĒGT"</string>
+    <string msgid="884982626291842264" name="abc_capital_on">"IESLĒGT"</string>
+    <string msgid="8833365367933412986" name="abc_menu_alt_shortcut_label">"Alternēšanas taustiņš +"</string>
+    <string msgid="2223301931652355242" name="abc_menu_ctrl_shortcut_label">"Vadīšanas taustiņš +"</string>
+    <string msgid="838001238306846836" name="abc_menu_delete_shortcut_label">"dzēšanas taustiņš"</string>
+    <string msgid="7986526966204849475" name="abc_menu_enter_shortcut_label">"ievadīšanas taustiņš"</string>
+    <string msgid="375214403600139847" name="abc_menu_function_shortcut_label">"Funkcijas taustiņš +"</string>
+    <string msgid="4192209724446364286" name="abc_menu_meta_shortcut_label">"Meta taustiņš +"</string>
+    <string msgid="4741552369836443843" name="abc_menu_shift_shortcut_label">"Pārslēgšanas taustiņš +"</string>
+    <string msgid="5473865519181928982" name="abc_menu_space_shortcut_label">"atstarpes taustiņš"</string>
+    <string msgid="6180552449598693998" name="abc_menu_sym_shortcut_label">"Simbolu taustiņš +"</string>
+    <string msgid="5520303668377388990" name="abc_prepend_shortcut_label">"Poga Izvēlne +"</string>
+    <string msgid="7208076849092622260" name="abc_search_hint">"Meklējiet…"</string>
+    <string msgid="3741173234950517107" name="abc_searchview_description_clear">"Notīrīt vaicājumu"</string>
+    <string msgid="693312494995508443" name="abc_searchview_description_query">"Meklēšanas vaicājums"</string>
+    <string msgid="3417662926640357176" name="abc_searchview_description_search">"Meklēt"</string>
+    <string msgid="1486535517437947103" name="abc_searchview_description_submit">"Iesniegt vaicājumu"</string>
+    <string msgid="2293578557972875415" name="abc_searchview_description_voice">"Meklēt ar balsi"</string>
+    <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"Kopīgot ar:"</string>
+    <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"Kopīgot ar lietojumprogrammu <ns1:g id="APPLICATION_NAME">%s</ns1:g>"</string>
+    <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"Sakļaut"</string>
+    <string name="bottomsheet_action_expand_halfway">Izvērst līdz pusei</string>
+    <string name="character_counter_content_description">Ievadītās rakstzīmes: %1$d no %2$d</string>
+    <string name="character_counter_overflowed_content_description">Pārsniegts rakstzīmju skaita ierobežojums (%1$d no %2$d)</string>
+    <string name="clear_text_end_icon_content_description">Notīrīt tekstu</string>
+    <string msgid="8585111718777012708" name="common_google_play_services_enable_button">"Iespējot"</string>
+    <string msgid="7045129128108380659" name="common_google_play_services_enable_text">"Lai lietotne <ns1:g id="APP_NAME">%1$s</ns1:g> darbotos, ir jāiespējo Google Play pakalpojumi."</string>
+    <string msgid="3147157405986503375" name="common_google_play_services_enable_title">"Google Play pakalpojumu iespējošana"</string>
+    <string msgid="9115728400623041681" name="common_google_play_services_install_button">"Instalēt"</string>
+    <string msgid="8179894293032530091" name="common_google_play_services_install_text">"Lai lietotne <ns1:g id="APP_NAME">%1$s</ns1:g> darbotos, ierīcē ir jāinstalē Google Play pakalpojumi."</string>
+    <string msgid="7442193194585196676" name="common_google_play_services_install_title">"Google Play pakalpojumu iegūšana"</string>
+    <string msgid="4293541511340436975" name="common_google_play_services_notification_channel_name">"Google Play pakalpojumu pieejamība"</string>
+    <string msgid="180394615667698242" name="common_google_play_services_notification_ticker">"Google Play pakalpojumu kļūda"</string>
+    <string msgid="2518680582564677258" name="common_google_play_services_unknown_issue">"Lietotnē <ns1:g id="APP_NAME">%1$s</ns1:g> ir radusies problēma ar Google Play pakalpojumu darbību. Lūdzu, mēģiniet vēlreiz."</string>
+    <string msgid="5501187292256987189" name="common_google_play_services_unsupported_text">"Lai lietotne <ns1:g id="APP_NAME">%1$s</ns1:g> darbotos, ir nepieciešami Google Play pakalpojumi, taču jūsu ierīce tos neatbalsta."</string>
+    <string msgid="8172070149091615356" name="common_google_play_services_update_button">"Atjaunināt"</string>
+    <string msgid="7773943415006962566" name="common_google_play_services_update_text">"Lai lietotne <ns1:g id="APP_NAME">%1$s</ns1:g> darbotos, jums ir jāatjaunina Google Play pakalpojumi."</string>
+    <string msgid="8706675115216073244" name="common_google_play_services_update_title">"Google Play pakalpojumu atjaunināšana"</string>
+    <string msgid="7894275749778928941" name="common_google_play_services_updating_text">"Lai lietotne <ns1:g id="APP_NAME">%1$s</ns1:g> darbotos, ir jāinstalē Google Play pakalpojumi. Pašlaik notiek to atjaunināšana."</string>
+    <string msgid="2804989272736383918" name="common_google_play_services_wear_update_text">"Ir nepieciešama jauna Google Play pakalpojumu versija. Drīzumā tā tiks instalēta."</string>
+    <string msgid="5201977337835724196" name="common_open_on_phone">"Atvērt tālrunī"</string>
+    <string msgid="3441753203274453993" name="common_signin_button_text">"Pierakstīties"</string>
+    <string msgid="669893613918351210" name="common_signin_button_text_long">"Pierakstīties ar Google kontu"</string>
+    <string name="error_icon_content_description">Kļūda</string>
+    <string name="exposed_dropdown_menu_content_description">Rādīt nolaižamo izvēlni</string>
+    <string msgid="4133737464567140336" name="fcm_fallback_notification_channel_label">"Dažādi"</string>
+    <string name="hms_abort" priority="translator">"Apturēt"</string>
+    <string name="hms_abort_message" priority="translator">"Vai apturēt lejupielādi?"</string>
+    <string name="hms_bindfaildlg_message" priority="translator">"%1$s nevar lietot HMS Core. Aktivizējiet lietotni Optimizer (Tālruņa pārvaldnieks) vai atveriet sadaļu Iestatījumi, iespējojiet visas atļaujas saistībā ar %2$s (tostarp automātisko palaišanu un sekundāro palaišanu) un mēģiniet vēlreiz."</string>
+    <string name="hms_cancel" priority="translator">"Atcelt"</string>
+    <string name="hms_check_failure" priority="translator">"Neizdevās pārbaudīt, vai nav atjauninājumu."</string>
+    <string name="hms_check_no_update" priority="translator">"Jūsu versija ir atjaunināta."</string>
+    <string name="hms_checking" priority="translator">"Meklē atjauninājumus…"</string>
+    <string name="hms_confirm" priority="translator">"Labi"</string>
+    <string name="hms_download_failure" priority="translator">"Neizdevās lejupielādēt HMS Core pakotni."</string>
+    <string name="hms_download_no_space" priority="translator">"Nepietiek brīvas vietas. Lejupielādi nevar pabeigt."</string>
+    <string name="hms_download_retry" priority="translator">"Lejupielāde neizdevās. Vai mēģināt vēlreiz?"</string>
+    <string name="hms_downloading" priority="translator">"Notiek HMS Core lejupielādēšana | norise: %d%%"</string>
+    <string name="hms_downloading_loading" priority="LT">"Notiek lejupielāde"</string>
+    <string name="hms_downloading_new" priority="LT">"HMS Core lejupielāde"</string>
+    <string name="hms_gamebox_name" priority="LT">"GameCenter"</string>
+    <string name="hms_install" priority="translator">"Instalēt"</string>
+    <string name="hms_install_message" priority="translator">"Lai lietotu šo funkciju, ir jābūt instalētam pakalpojumam HMS Core. Vai instalēt?"</string>
+    <string name="hms_push_channel" priority="translator">"Noklusējums"</string>
+    <string name="hms_retry" priority="translator">"Mēģināt vēlreiz"</string>
+    <string name="hms_update" priority="translator">"Atjaunināt"</string>
+    <string name="hms_update_continue" priority="LT">"Lejupielādēt"</string>
+    <string name="hms_update_message" priority="translator">"Lai lietotu šo funkciju, atjauniniet uz HMS Core jaunāko versiju. Vai atjaunināt tūlīt?"</string>
+    <string name="hms_update_message_new" priority="translator">"Šim pak. nepieciešama šīs lietotnes jaunākā versija:\n\n%1$s"</string>
+    <string name="hms_update_nettype" priority="LT">"Nav Wi-Fi savienojuma. Vai lejupielādēt, izmantojot mobilos datus?"</string>
+    <string name="hms_update_title" priority="translator">"HMS Core"</string>
+    <string name="icon_content_description">Dialoglodziņa ikona</string>
+    <string name="item_view_role_description">Cilne</string>
+    <string name="material_clock_toggle_content_description">Atlasiet “AM” (priekšpusdienā) vai “PM” (pēcpusdienā).</string>
+    <string name="material_hour_selection">Atlasiet stundu</string>
+    <string name="material_hour_suffix">plkst. %1$s</string>
+    <string name="material_minute_selection">Atlasiet minūtes.</string>
+    <string name="material_minute_suffix">%1$s min</string>
+    <string name="material_timepicker_am">AM</string>
+    <string name="material_timepicker_clock_mode_description">Lai ievadītu laiku, ieslēdziet pulksteņa režīmu.</string>
+    <string name="material_timepicker_hour">Stunda</string>
+    <string name="material_timepicker_minute">Minūte</string>
+    <string name="material_timepicker_pm">PM</string>
+    <string name="material_timepicker_select_time">Laika atlasīšana</string>
+    <string name="material_timepicker_text_input_mode_description">Lai ievadītu laiku, ieslēdziet teksta ievades režīmu.</string>
+    <string name="mtrl_badge_numberless_content_description">Jauns paziņojums</string>
+    <string name="mtrl_chip_close_icon_content_description">Noņemt: %1$s</string>
+    <string name="mtrl_exceed_max_badge_number_content_description">Vairāk nekā %1$d jauni paziņojumi</string>
+    <string name="mtrl_picker_a11y_next_month">Pāriet uz nākamo mēnesi</string>
+    <string name="mtrl_picker_a11y_prev_month">Pāriet uz iepriekšējo mēnesi</string>
+    <string name="mtrl_picker_announce_current_selection">Pašreizējā atlase: %1$s</string>
+    <string name="mtrl_picker_confirm">@android:string/ok</string>
+    <string name="mtrl_picker_date_header_selected">%1$s</string>
+    <string name="mtrl_picker_date_header_title">Atlasiet datumu</string>
+    <string name="mtrl_picker_date_header_unselected">Atlasītais datums</string>
+    <string name="mtrl_picker_day_of_week_column_header">Dienu sleja: %1$s</string>
+    <string name="mtrl_picker_invalid_format">Nederīgs formāts.</string>
+    <string name="mtrl_picker_invalid_format_example">Piemērs: %1$s</string>
+    <string name="mtrl_picker_invalid_format_use">Izmantojiet: %1$s</string>
+    <string name="mtrl_picker_invalid_range">Nederīgs diapazons.</string>
+    <string name="mtrl_picker_navigate_to_year_description">Pāriet uz šo gadu: %1$s</string>
+    <string name="mtrl_picker_out_of_range">Ārpus diapazona: %1$s</string>
+    <string name="mtrl_picker_range_header_only_end_selected">Sākuma datums–%1$s</string>
+    <string name="mtrl_picker_range_header_only_start_selected">%1$s–beigu datums</string>
+    <string name="mtrl_picker_range_header_selected">%1$s–%2$s</string>
+    <string name="mtrl_picker_range_header_title">Atlasiet diapazonu</string>
+    <string name="mtrl_picker_range_header_unselected">Sākuma datums–beigu datums</string>
+    <string name="mtrl_picker_save">Saglabāt</string>
+    <string name="mtrl_picker_text_input_date_hint">Datums</string>
+    <string name="mtrl_picker_text_input_date_range_end_hint">Beigu datums</string>
+    <string name="mtrl_picker_text_input_date_range_start_hint">Sākuma datums</string>
+    <string name="mtrl_picker_text_input_day_abbr">d</string>
+    <string name="mtrl_picker_text_input_month_abbr">m</string>
+    <string name="mtrl_picker_text_input_year_abbr">g</string>
+    <string name="mtrl_picker_toggle_to_calendar_input_mode">Pārslēgties uz kalendāra ievades režīmu</string>
+    <string name="mtrl_picker_toggle_to_day_selection">Pieskarties, lai pārslēgtos uz dienas atlasīšanu</string>
+    <string name="mtrl_picker_toggle_to_text_input_mode">Pārslēgties uz teksta ievades režīmu</string>
+    <string name="mtrl_picker_toggle_to_year_selection">Pieskarties, lai pārslēgtos uz gada atlasīšanu</string>
+    <string name="password_toggle_content_description">Rādīt paroli</string>
+    <string msgid="6264217191555673260" name="search_menu_title">"Meklēt"</string>
+    <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="upsdk_app_dl_installing" priority="LT">"AppGallery lejupielāde"</string>
+    <string name="upsdk_app_download_info_new" priority="translator">"Instalēt"</string>
+    <string name="upsdk_app_size" priority="translator">"Liel."</string>
+    <string name="upsdk_app_version" priority="translator">"Vers."</string>
+    <string name="upsdk_cancel" priority="translator">"Atcelt"</string>
+    <string name="upsdk_checking_update_prompt" priority="LT">"Notiek atjauninājumu meklēšana…"</string>
+    <string name="upsdk_choice_update" priority="LT">"Ir pieejams atjaunin. Lejupiel. un inst. jaunāko versiju."</string>
+    <string name="upsdk_connect_server_fail_prompt_toast" priority="translator">"Nevar izveidot savienojumu ar serveri. Vēlāk mēģiniet vēlreiz."</string>
+    <string name="upsdk_detail" priority="translator">"Detaliz."</string>
+    <string name="upsdk_getting_message_fail_prompt_toast" priority="translator">"Nevar izgūt inform. Vēlāk mēģ. vēlr."</string>
+    <string name="upsdk_install" priority="LT">"Lai atjauninātu, instalējiet AppGallery. Vai instalēt tūlīt?"</string>
+    <string name="upsdk_no_available_network_prompt_toast" priority="translator">"Nav intern. sav. Pārb. tīkla iestatījumus."</string>
+    <string name="upsdk_ota_app_name" priority="LT">"Lietotne"</string>
+    <string name="upsdk_ota_cancel" priority="translator">"Vēlāk"</string>
+    <string name="upsdk_ota_force_cancel_new" priority="LT">"Iziet"</string>
+    <string name="upsdk_ota_notify_updatebtn" priority="translator">"Atjaunināt"</string>
+    <string name="upsdk_ota_title" priority="translator">"Jauna versija"</string>
+    <string name="upsdk_storage_utils" priority="translator">"%1$s MB"</string>
+    <string name="upsdk_third_app_dl_cancel_download_prompt_ex" priority="translator">"Vai atcelt instal.?"</string>
+    <string name="upsdk_third_app_dl_install_failed" priority="translator">"Instalēšana neizdevās."</string>
+    <string name="upsdk_third_app_dl_sure_cancel_download" priority="translator">"Jā"</string>
+    <string name="upsdk_update_check_no_new_version" priority="Reviewed">"Jūsu versija ir atjaunināta."</string>
+    <string name="upsdk_updating" priority="translator">"Atjaunināšana"</string>
+</resources>

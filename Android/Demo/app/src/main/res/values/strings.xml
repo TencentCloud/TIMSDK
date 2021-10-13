@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">Instant Messaging (IM)</string>
 
-    // 云通信
-    <string name="chat_top">Sticky on Top</string>
-    <string name="chat_delete">Delete Chat</string>
-    <string name="quit_chat_top">Remove from Top</string>
+    <string name="welcome_tip">Thank you for joining Instant Messaging!</string>
+    <string name="test_custom_action">Custom Messages</string>
+
+    <string name="test_custom_message">View Details>></string>
+
 
     // 登录相关
     <string name="account">Username</string>
@@ -20,9 +21,11 @@
     <string name="official_website">Visit Us</string>
     <string name="debug_mode_summary">IM login screen that is only visible in debug mode.</string>
     <string name="account_hint">Use any non-empty character. Refer to the class comments.</string>
+
     <string name="repeat_login_tip">Your account has been logged in on another device.</string>
     <string name="expired_login_tip">Account expired. Log in again.</string>
     <string name="failed_login_tip">Login failed</string>
+
     // "我"相关
     <string name="profile">Me</string>
     <string name="id">Account: %1$s</string>
@@ -43,37 +46,17 @@
     <string name="tab_profile_tab_text">Me</string>
     <string name="tab_scenes_tab_text">Live Stream</string>
 
-    // "+"menu相关
-    <string name="add_friend">Add to Contacts</string>
-    <string name="add_group">Add Group Chat</string>
-    <string name="start_conversation">New Chat</string>
-    <string name="create_group_chat">Create Group Chat</string>
-    <string name="create_chat_room">Create Chat Room</string>
-    <string name="create_private_group">Create Discussion Group</string>
-    <string name="hint_add_user_id">Enter ID</string>
-    <string name="hint_add_wording">Enter verification message</string>
-    <string name="contact_add">Add</string>
-    <string name="user_id">ID</string>
-    <string name="add_wording">Verification Message</string>
-
-    // 群信息相关
-    <string name="tips_empty_group_member">Select group members</string>
-    <string name="tips_empty_group_type">Select group joining method</string>
-    <string name="no_friend_apply">No friend request</string>
 
 
-    // 新朋友
-    <string name="request_agree">Accept</string>
-    <string name="request_accepted">Accepted</string>
-    <string name="request_waiting">Pending</string>
 
-    <string name="test_custom_action">Custom Messages</string>
-    <string name="test_custom_message">View Details>></string>
+
+
+
+
     <string name="test_excluded_from_unread_count_action">Message excluded from unread count</string>
 
     <string name="privacy_text">Agreed to <a href="http://privacy.qq.com/">Privacy Policy</a></string>
 
-    <string name="welcome_tip">Thank you for joining Instant Messaging!</string>
     <string name="no_support_msg">Unsupported custom messages</string>
     <string name="live">\'s live stream</string>
     <string name="living">In Progress</string>
@@ -93,24 +76,13 @@
     <string name="second">s</string>
     <string name="get_verify_code">Send Code</string>
     <string name="permission_tip">Not fully authorized. Some features may not be available.</string>
-    <string name="success">Successful</string>
-    <string name="have_be_friend">You\'re already friends.</string>
-    <string name="friend_limit">The number of your friends exceeds the limit.</string>
-    <string name="other_friend_limit">The number of the other user\'s friends exceeds the limit.</string>
-    <string name="in_blacklist">You have blocked this user.</string>
-    <string name="forbid_add_friend">This user has disabled friend request.</string>
-    <string name="set_in_blacklist">You have been blocked.</string>
-    <string name="wait_agree_friend">Request sent</string>
-    <string name="send_request">Request sent</string>
-    <string name="select_chat">Select chat user</string>
+
     <string name="logout_tip">Log out now?</string>
     <string name="sure">OK</string>
     <string name="cancle">Cancel</string>
     <string name="online_fail">Network request failed</string>
     <string name="online">Online</string>
     <string name="unknow_error">Unknown error</string>
-    <string name="seat_lock">Seat locked</string>
-    <string name="find_anchor">Searching for the host name</string>
     <string name="you_app">Your App</string>
     <string name="low_version"> The version is too low. Unable to open the offline message.</string>
     <string name="call_timeout">Call timed out</string>
@@ -119,7 +91,6 @@
     <string name="new_msg_notification">New Messages</string>
     <string name="new_msg">You\'ve received a new message.</string>
     <string name="call_nos">No response</string>
-    <string name="clear_conversation_message">Clear messages</string>
     <string name="login_password_tips">1~16 characters(letters+numbers)</string>
     <string name="login_user_tips">Letters start, 4~24 characters(letters+numbers)</string>
 
@@ -132,4 +103,10 @@
     <string name="im_privacy_tips">Please read and approve the agreement first</string>
 
     <string name="get_verify_code_error">Failed to get verifcation code！(%d)</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="modify_group_name">Edit Group Name</string>
+    <string name="input_tip">No nickname entered, please fill in again</string>
+    <string name="call_time_out">time out</string>
+
 </resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="trtccalling_text_size_large">16sp</dimen>
+    <dimen name="trtccalling_text_size_middle">14sp</dimen>
+    <dimen name="trtccalling_small_image_size">30dp</dimen>
+    <dimen name="trtccalling_small_image_left_margin">5dp</dimen>
+    <dimen name="trtccalling_text_size_hint">12sp</dimen>
+</resources>

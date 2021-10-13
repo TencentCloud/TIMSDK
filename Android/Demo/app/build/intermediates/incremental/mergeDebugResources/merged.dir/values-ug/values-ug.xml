@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hms_abort" priority="translator">"توختىتىش"</string>
+    <string name="hms_abort_message" priority="translator">"چۈشۈرۈشنى توختىتامسىز؟"</string>
+    <string name="hms_bindfaildlg_message" priority="translator">"نۆۋەتتە %1$s مۇلازىمىتى HMS Core ئىشلىتەلمەيدۇ. باشقۇرغۇچ ياكى تەڭشەكتە %2$s ئۈچۈن بارلىق ئىجازەتنى ئېچىڭ («ئۆزلۈكىدىن قوزغىلىش» ۋە «باغلانما قوزغىتىش» مۇ شۇنىڭ ئىچىدە)."</string>
+    <string name="hms_cancel" priority="LT">"بىكار قىلىش"</string>
+    <string name="hms_check_failure" priority="translator">"كەچۈرۈڭ، HMS Core يېڭىلانمىسى تەكشۈرۈلمىدى."</string>
+    <string name="hms_check_no_update" priority="translator">"بۇ ئەڭ يېڭى نەشرى"</string>
+    <string name="hms_checking" priority="translator">"يېڭى نەشرىنى تەكشۈرۈۋاتىدۇ..."</string>
+    <string name="hms_confirm" priority="translator">"بىلدىم"</string>
+    <string name="hms_download_failure" priority="translator">"كەچۈرۈڭ، HMS Core قاچىلاش بوغچىسى چۈشمىدى."</string>
+    <string name="hms_download_no_space" priority="translator">"بوشلۇق يېتەرسىز، چۈشمەيدۇ."</string>
+    <string name="hms_download_retry" priority="translator">"كەچۈرۈڭ، HMS Core چۈشمىدى، قايتا سىنامسىز؟"</string>
+    <string name="hms_downloading" priority="translator">"نۆۋەتتە HMS Core چۈشۈۋاتىدۇ | %d%% تاماملاندى"</string>
+    <string name="hms_downloading_loading" priority="LT">"يۈكلەۋاتىدۇ"</string>
+    <string name="hms_downloading_new" priority="translator">"نۆۋەتتە HMS Core يۈكلىنىۋاتىدۇ"</string>
+    <string name="hms_gamebox_name" priority="translator">"شياۋمى ئويۇن مەركىزى"</string>
+    <string name="hms_install" priority="LT">"قاچىلاش"</string>
+    <string name="hms_install_message" priority="translator">"ئۈسكۈنىگە HMS Core قاچىلانمىغان، بۇ ئىقتىدار شۇنى قاچىلىغاندىن كېيىن ئىشلەيدۇ. قاچىلامسىز؟"</string>
+    <string name="hms_push_channel" priority="translator">"سۈكۈتتىكى"</string>
+    <string name="hms_retry" priority="translator">"قايتا سىناش"</string>
+    <string name="hms_update" priority="translator">"يېڭلاش"</string>
+    <string name="hms_update_continue" priority="LT">"داۋاملىق چۈشۈرۈش"</string>
+    <string name="hms_update_message" priority="translator">"ئۈسكۈنىدىكى HMS Core نىڭ نەشرى بەك تۆۋەن، يېڭىلاش كېرەك. يېڭىلامسىز؟"</string>
+    <string name="hms_update_message_new" priority="translator">"بۇ مۇلازىمەتنى ئىشلىتىش ئۈچۈن تۆۋەندىكى ئەپنىڭ ئەڭ يېڭى نەشرىنى قاچىلاش كېرەك: \n\n·%1$s"</string>
+    <string name="hms_update_nettype" priority="LT">"نۆۋەتتىكىسى Wi-Fi تورى ئەمەس. چۈشۈرۈشنى داۋاملاشتۇرامسىز؟"</string>
+    <string name="hms_update_title" priority="translator">"HMS Core"</string>
+    <string name="upsdk_app_dl_installing" priority="translator">"خۇاۋېي ئەپ بازىرى چۈشۈۋاتىدۇ"</string>
+    <string name="upsdk_app_download_info_new" priority="translator">"قاچىلاش"</string>
+    <string name="upsdk_app_size" priority="LT">"سىغىم"</string>
+    <string name="upsdk_app_version" priority="LT">"نەشرى"</string>
+    <string name="upsdk_cancel" priority="translator">"بىكار قىلىش"</string>
+    <string name="upsdk_checking_update_prompt" priority="LT">"يېڭىلانما تەكشۈرۈۋاتىدۇ..."</string>
+    <string name="upsdk_choice_update" priority="translator">"ئىشلەتكىلى بولىدىغان يېڭىلانما بار، تېز دەرىجىسىنى ئۆستۈرۈۋېلىڭ."</string>
+    <string name="upsdk_connect_server_fail_prompt_toast" priority="translator">"مۇلازىمىتېرغا ئۇلانمىدى، سەل تۇرۇپ قايتا سىناڭ"</string>
+    <string name="upsdk_detail" priority="translator">"تەپسىلات"</string>
+    <string name="upsdk_getting_message_fail_prompt_toast" priority="translator">"ئۇچۇرغا ئېرىشەلمىدى، سەل تۇرۇپ قايتا سىناڭ"</string>
+    <string name="upsdk_install" priority="translator">"خۇاۋېي ئورگان ئەپ بازىرىنى ئىشلەتكەندىلا ئاندىن دەرىجىسىنى ئۆستۈرۈشكە بولىدۇ، داۋاملاشتۇرامسىز؟"</string>
+    <string name="upsdk_no_available_network_prompt_toast" priority="translator">"تور ئۇلانمىدى، تور تەڭشىكىنى تەكشۈرۈڭ"</string>
+    <string name="upsdk_ota_app_name" priority="translator">"ئەپ"</string>
+    <string name="upsdk_ota_cancel" priority="LT">"كېيىنچە"</string>
+    <string name="upsdk_ota_force_cancel_new" priority="translator">"ئەپتىن چېكىنىش"</string>
+    <string name="upsdk_ota_notify_updatebtn" priority="LT">"يېڭىلاش"</string>
+    <string name="upsdk_ota_title" priority="translator">"يېڭى نەشرى بايقالدى"</string>
+    <string name="upsdk_storage_utils" priority="translator">"%1$sMB"</string>
+    <string name="upsdk_third_app_dl_cancel_download_prompt_ex" priority="translator">"قاچىلاشنى بىكار قىلامسىز؟"</string>
+    <string name="upsdk_third_app_dl_install_failed" priority="translator">"قاچىلانمىدى"</string>
+    <string name="upsdk_third_app_dl_sure_cancel_download" priority="translator">"جەزملەش"</string>
+    <string name="upsdk_update_check_no_new_version" priority="Reviewed">"بۇ ئەڭ يېڭى نەشرى"</string>
+    <string name="upsdk_updating" priority="translator">"يېڭىلىنىۋاتىدۇ"</string>
+</resources>

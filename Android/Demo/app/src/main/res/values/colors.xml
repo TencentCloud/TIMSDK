@@ -4,9 +4,53 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="test_blue">#338BFF</color>
     <color name="colorCloud">#006EFF</color>
     <color name="colorShade">#33000000</color>
 
+    <color name="tab_text_selected_color">#006EFF</color>
+    <color name="tab_text_normal_color">#888888</color>
     <color name="colorCloudShallow">#84C1FF</color>
+
+    <color name="colorActivityBackground">#ffffff</color>
+    <color name="colorDivider">#737373</color>
+    <color name="textSecond">#737373</color>
+    <color name="colorWhite">#ffffff</color>
+
+    <color name="btn_blue_standard_color">#338BFF</color>
+    <color name="item_split_color">#cccccc</color>
+
+    <color name="colorShallow">#9E9EA1</color>
+    <color name="line">#DDDDDD</color>
+    <color name="transparent">#00000000</color>
+    <!-- 积极按钮文本色值 -->
+    <color name="text_positive">#ffffff</color>
+    <color name="text_positive_hover">#ffffff</color>
+
+    <!-- 积极钮色值 -->
+    <color name="btn_positive">#00a4ff</color>
+    <color name="btn_positive_hover">#006eff</color>
+
+    <!-- 消极按钮背景色值 -->
+    <color name="btn_negative">#ffffff</color>
+    <color name="btn_negative_hover">#cc3428</color>
+
+    <!-- 消极按钮文本色值 -->
+    <color name="text_negative">#fb6155</color>
+    <color name="text_negative_hover">#FFFFFF</color>
+
+    <color name="font_blue">#066fff</color>
+    <color name="green">#70C160</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text_color_gray">#696969</color>
+    <color name="black_font_color">#181818</color>
+    <color name="text_tips_color">#A5A5A5</color>
+
+    <color name="text_gray1">#777777</color>
+    <color name="split_lint_color">#D9D9D9</color>
+
+    <color name="black">#000000</color>
+    <color name="dialog_line_bg">#c6c6c6</color>
+    <color name="test_blue">#338BFF</color>
+    <color name="read_dot_bg">#f74c31</color>
+
 </resources>

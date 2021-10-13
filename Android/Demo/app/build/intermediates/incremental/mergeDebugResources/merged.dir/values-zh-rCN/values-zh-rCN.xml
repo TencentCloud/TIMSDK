@@ -1,0 +1,847 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="mtrl_badge_content_description">
+    <item quantity="one">%d 条新通知</item>
+    <item quantity="other">%d 条新通知</item>
+  </plurals>
+    <string msgid="5976598919945601918" name="abc_action_bar_home_description">"转到首页"</string>
+    <string msgid="8388173803310557296" name="abc_action_bar_up_description">"转到上一层级"</string>
+    <string msgid="3937310113216875497" name="abc_action_menu_overflow_description">"更多选项"</string>
+    <string msgid="4692188335987374352" name="abc_action_mode_done">"完成"</string>
+    <string msgid="1189761859438369441" name="abc_activity_chooser_view_see_all">"查看全部"</string>
+    <string msgid="2165779757652331008" name="abc_activitychooserview_choose_application">"选择应用"</string>
+    <string msgid="4215997306490295099" name="abc_capital_off">"关闭"</string>
+    <string msgid="884982626291842264" name="abc_capital_on">"开启"</string>
+    <string msgid="8833365367933412986" name="abc_menu_alt_shortcut_label">"Alt+"</string>
+    <string msgid="2223301931652355242" name="abc_menu_ctrl_shortcut_label">"Ctrl+"</string>
+    <string msgid="838001238306846836" name="abc_menu_delete_shortcut_label">"Delete 键"</string>
+    <string msgid="7986526966204849475" name="abc_menu_enter_shortcut_label">"Enter 键"</string>
+    <string msgid="375214403600139847" name="abc_menu_function_shortcut_label">"Fn+"</string>
+    <string msgid="4192209724446364286" name="abc_menu_meta_shortcut_label">"Meta+"</string>
+    <string msgid="4741552369836443843" name="abc_menu_shift_shortcut_label">"Shift+"</string>
+    <string msgid="5473865519181928982" name="abc_menu_space_shortcut_label">"空格键"</string>
+    <string msgid="6180552449598693998" name="abc_menu_sym_shortcut_label">"Sym+"</string>
+    <string msgid="5520303668377388990" name="abc_prepend_shortcut_label">"Menu+"</string>
+    <string msgid="7208076849092622260" name="abc_search_hint">"搜索…"</string>
+    <string msgid="3741173234950517107" name="abc_searchview_description_clear">"清除查询"</string>
+    <string msgid="693312494995508443" name="abc_searchview_description_query">"搜索查询"</string>
+    <string msgid="3417662926640357176" name="abc_searchview_description_search">"搜索"</string>
+    <string msgid="1486535517437947103" name="abc_searchview_description_submit">"提交查询"</string>
+    <string msgid="2293578557972875415" name="abc_searchview_description_voice">"语音搜索"</string>
+    <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"分享对象"</string>
+    <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"与<ns1:g id="APPLICATION_NAME">%s</ns1:g>分享"</string>
+    <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"收起"</string>
+    <string name="about_im">关于即时通信IM</string>
+    <string name="accept">同意</string>
+    <string name="accept_call">已接听</string>
+    <string name="accepted">已同意</string>
+    <string name="account">用户名</string>
+    <string name="account_hint">任意非空字符即可，请参考类注释</string>
+    <string name="add_friend">添加好友</string>
+    <string name="add_group">添加群聊</string>
+    <string name="add_group_member">添加成员</string>
+    <string name="add_rule">加我为好友时</string>
+    <string name="add_wording">验证消息</string>
+    <string name="agree_request_online">直播间同意上麦</string>
+    <string name="agree_request_pk">直播间同意PK</string>
+    <string name="aini">[爱你]</string>
+    <string name="aiqing">[爱情]</string>
+    <string name="aixin">[爱心]</string>
+    <string name="allow_type_allow_any">允许任何人</string>
+    <string name="allow_type_deny_any">拒绝任何人</string>
+    <string name="allow_type_need_confirm">需要验证</string>
+    <string name="and_and">已和</string>
+    <string name="and_text">和</string>
+    <string name="aoman">[傲慢]</string>
+    <string name="app_name">云通信IM</string>
+    <string name="at_all">所有人</string>
+    <string name="audio_effect_setting_bgm_title">背景音乐</string>
+    <string name="audio_effect_setting_changetype_child">熊孩子</string>
+    <string name="audio_effect_setting_changetype_dashu">大叔</string>
+    <string name="audio_effect_setting_changetype_dianliu">强电流</string>
+    <string name="audio_effect_setting_changetype_feizai">死肥仔</string>
+    <string name="audio_effect_setting_changetype_foreign">外国人</string>
+    <string name="audio_effect_setting_changetype_kongling">空灵</string>
+    <string name="audio_effect_setting_changetype_kunsou">困兽</string>
+    <string name="audio_effect_setting_changetype_luoli">萝莉</string>
+    <string name="audio_effect_setting_changetype_machine">重机械</string>
+    <string name="audio_effect_setting_changetype_metal">重金属</string>
+    <string name="audio_effect_setting_changetype_original">原声</string>
+    <string name="audio_effect_setting_changetype_sick">感冒</string>
+    <string name="audio_effect_setting_panel_changer">变声</string>
+    <string name="audio_effect_setting_panel_close">关闭</string>
+    <string name="audio_effect_setting_panel_mic_volume">人声音量</string>
+    <string name="audio_effect_setting_panel_music_pitch">音乐升降调</string>
+    <string name="audio_effect_setting_panel_music_volume">音乐音量</string>
+    <string name="audio_effect_setting_panel_reverb">混响效果</string>
+    <string name="audio_effect_setting_panel_select_song">选择歌曲</string>
+    <string name="audio_effect_setting_reverbtype_cixing">磁性</string>
+    <string name="audio_effect_setting_reverbtype_heavymetal">金属声</string>
+    <string name="audio_effect_setting_reverbtype_hongliang">洪亮</string>
+    <string name="audio_effect_setting_reverbtype_ktv">KTV</string>
+    <string name="audio_effect_setting_reverbtype_lowdeep">低沉</string>
+    <string name="audio_effect_setting_reverbtype_meeting">大会堂</string>
+    <string name="audio_effect_setting_reverbtype_origin">无效果</string>
+    <string name="audio_effect_setting_reverbtype_room">小房间</string>
+    <string name="audio_extra">[语音]</string>
+    <string name="audio_permission_error">需要打开录音权限</string>
+    <string name="auto_judge">自动审批...</string>
+    <string name="background_tip">当程序处于后台时新的来电消息会通过通知栏提醒用户</string>
+    <string name="baiyan">[白眼]</string>
+    <string name="bangbangtang">[棒棒糖]</string>
+    <string name="banned">被禁言</string>
+    <string name="baobao">[抱抱]</string>
+    <string name="baojin">[爆筋]</string>
+    <string name="baoquan">[抱拳]</string>
+    <string name="be_friend">成为好友</string>
+    <string name="be_group_manager">被设置管理员</string>
+    <string name="beauty_cancel">取消</string>
+    <string name="beauty_close">关闭</string>
+    <string name="beauty_common_none">无</string>
+    <string name="beauty_confirm">确定</string>
+    <string name="beauty_cutout_background_ai">AI抠背</string>
+    <string name="beauty_effect_boom">Boom</string>
+    <string name="beauty_effect_call">疯狂打call</string>
+    <string name="beauty_effect_constellation">Q星座</string>
+    <string name="beauty_effect_face_change">变脸</string>
+    <string name="beauty_effect_flower_faerie">花仙子</string>
+    <string name="beauty_effect_headband">刘海发带</string>
+    <string name="beauty_effect_neon_rat">霓虹鼠</string>
+    <string name="beauty_effect_princess">小公举</string>
+    <string name="beauty_effect_purple_kitten">紫色小猫</string>
+    <string name="beauty_effect_ribbon">彩色丝带</string>
+    <string name="beauty_effect_star_ear">星耳</string>
+    <string name="beauty_gesture_bottle_cap_challenge">瓶盖挑战</string>
+    <string name="beauty_gesture_meteor_shower">流星雨</string>
+    <string name="beauty_gesture_pikaqiu">皮卡丘</string>
+    <string name="beauty_gesture_snow_control">控雪</string>
+    <string name="beauty_gesture_tv_star">电视之星</string>
+    <string name="beauty_good_luck">Good luck</string>
+    <string name="beauty_makeups_cherry">樱桃</string>
+    <string name="beauty_makeups_costume">古风妆</string>
+    <string name="beauty_makeups_lip">七夕唇印</string>
+    <string name="beauty_makeups_mixing">混合妆</string>
+    <string name="beauty_makeups_pink">粉粉霞</string>
+    <string name="beauty_makeups_retro">原宿复古</string>
+    <string name="beauty_makeups_seas">海洋</string>
+    <string name="beauty_makeups_ugly">小丑女</string>
+    <string name="beauty_makeups_widow">寡姐妆</string>
+    <string name="beauty_palm_out">伸出手掌</string>
+    <string name="beauty_panel_beauty">美颜</string>
+    <string name="beauty_panel_bigeye">大眼</string>
+    <string name="beauty_panel_chin">下巴</string>
+    <string name="beauty_panel_eyeangle">眼角</string>
+    <string name="beauty_panel_eyedistance">眼距</string>
+    <string name="beauty_panel_eyelighten">亮眼</string>
+    <string name="beauty_panel_faceshape">脸型</string>
+    <string name="beauty_panel_faceshort">短脸</string>
+    <string name="beauty_panel_faceslim">瘦脸</string>
+    <string name="beauty_panel_facev">V脸</string>
+    <string name="beauty_panel_filter_Japanese">日系</string>
+    <string name="beauty_panel_filter_baixi">白皙</string>
+    <string name="beauty_panel_filter_beautiful">唯美</string>
+    <string name="beauty_panel_filter_blues">蓝调</string>
+    <string name="beauty_panel_filter_cheery">樱红</string>
+    <string name="beauty_panel_filter_cloud">云裳</string>
+    <string name="beauty_panel_filter_cool">清凉</string>
+    <string name="beauty_panel_filter_fragrance">香氛</string>
+    <string name="beauty_panel_filter_fresh">清新</string>
+    <string name="beauty_panel_filter_orchid">白兰</string>
+    <string name="beauty_panel_filter_pink">粉嫩</string>
+    <string name="beauty_panel_filter_pure">纯真</string>
+    <string name="beauty_panel_filter_reminiscence">怀旧</string>
+    <string name="beauty_panel_filter_romantic">浪漫</string>
+    <string name="beauty_panel_filter_standard">标准</string>
+    <string name="beauty_panel_filter_super">超脱</string>
+    <string name="beauty_panel_filter_vitality">元气</string>
+    <string name="beauty_panel_filter_white">美白</string>
+    <string name="beauty_panel_filter_ziran">自然</string>
+    <string name="beauty_panel_forehead">发际线</string>
+    <string name="beauty_panel_mousewidth">嘴唇厚度</string>
+    <string name="beauty_panel_mouthshape">嘴形</string>
+    <string name="beauty_panel_noseposition">鼻子位置</string>
+    <string name="beauty_panel_noseslim">瘦鼻</string>
+    <string name="beauty_panel_nosewing">鼻翼</string>
+    <string name="beauty_panel_pounchremove">祛眼袋</string>
+    <string name="beauty_panel_ruddy">红润</string>
+    <string name="beauty_panel_smilelinesremove">祛法令纹</string>
+    <string name="beauty_panel_style_natural">美颜(自然)</string>
+    <string name="beauty_panel_style_pitu">美颜(天天P图)</string>
+    <string name="beauty_panel_style_smooth">美颜(光滑)</string>
+    <string name="beauty_panel_toothwhite">白牙</string>
+    <string name="beauty_panel_uniforms">校服</string>
+    <string name="beauty_panel_white">美白</string>
+    <string name="beauty_panel_wrinkleremove">祛皱</string>
+    <string name="beauty_setting_panel_beauty">美颜</string>
+    <string name="beauty_setting_panel_dynamic_effect">动效</string>
+    <string name="beauty_setting_panel_facebeauty">美妆</string>
+    <string name="beauty_setting_panel_filter">滤镜</string>
+    <string name="beauty_setting_panel_gesture">手势</string>
+    <string name="beauty_setting_panel_green_screen">绿幕</string>
+    <string name="beauty_setting_panel_key">抠背</string>
+    <string name="beauty_setting_panel_style">风格</string>
+    <string name="beauty_setup">设置</string>
+    <string name="beauty_strength">强度</string>
+    <string name="beauty_video_material_download_progress_download_failed">下载失败</string>
+    <string name="beauty_video_material_download_progress_material_unzip_failed">素材解压失败</string>
+    <string name="beauty_video_material_download_progress_no_enough_storage_space">存储空间不足</string>
+    <string name="bianbian">[便便]</string>
+    <string name="bianpao">[鞭炮]</string>
+    <string name="bishi">[鄙视]</string>
+    <string name="bizui">[闭嘴]</string>
+    <string name="blacklist">黑名单</string>
+    <string name="bottomsheet_action_expand_halfway">展开到一半高度</string>
+    <string name="button_login">登录</string>
+    <string name="cahan">[擦汗]</string>
+    <string name="caidai">[彩带]</string>
+    <string name="caidao">[菜刀]</string>
+    <string name="caiqiu">[彩球]</string>
+    <string name="call_nos">通话失去响应</string>
+    <string name="call_notification">音视频邀请消息通知</string>
+    <string name="call_time_out"> 通话超时</string>
+    <string name="call_timeout">本次通话已超时</string>
+    <string name="cancel">取消</string>
+    <string name="cancle">取消</string>
+    <string name="cancle_banned">被取消禁言</string>
+    <string name="cancle_call">取消通话</string>
+    <string name="cancle_group_call">取消群通话</string>
+    <string name="cancle_group_manager">被取消管理员</string>
+    <string name="chajin">[差劲]</string>
+    <string name="chaopiao">[钞票]</string>
+    <string name="character_counter_content_description">输入了 %1$d 个字符（上限为 %2$d 个）</string>
+    <string name="character_counter_overflowed_content_description">超出字符数限制（共 %1$d 个，上限为 %2$d 个）</string>
+    <string name="chat_delete">删除聊天</string>
+    <string name="chat_record">聊天记录</string>
+    <string name="chat_record_reference">相关聊天记录</string>
+    <string name="chat_records">条相关聊天记录</string>
+    <string name="chat_room">聊天室</string>
+    <string name="chat_room_tip">加入聊天室为自动审批，暂不支持修改</string>
+    <string name="chat_to_top">置顶聊天</string>
+    <string name="chat_top">置顶聊天</string>
+    <string name="chexiang">[车厢]</string>
+    <string name="ciya">[龇牙]</string>
+    <string name="clear_conversation_message">清空消息</string>
+    <string name="clear_text_end_icon_content_description">清除文字</string>
+    <string name="close_online">直播间关闭连麦</string>
+    <string msgid="8585111718777012708" name="common_google_play_services_enable_button">"启用"</string>
+    <string msgid="7045129128108380659" name="common_google_play_services_enable_text">"您必须先启用 Google Play 服务，然后才能运行<ns1:g id="APP_NAME">%1$s</ns1:g>。"</string>
+    <string msgid="3147157405986503375" name="common_google_play_services_enable_title">"启用 Google Play 服务"</string>
+    <string msgid="9115728400623041681" name="common_google_play_services_install_button">"安装"</string>
+    <string msgid="8179894293032530091" name="common_google_play_services_install_text">"您的设备没有安装 Google Play 服务，因此无法运行<ns1:g id="APP_NAME">%1$s</ns1:g>。"</string>
+    <string msgid="7442193194585196676" name="common_google_play_services_install_title">"获取 Google Play 服务"</string>
+    <string msgid="4293541511340436975" name="common_google_play_services_notification_channel_name">"Google Play 服务的适用范围"</string>
+    <string msgid="180394615667698242" name="common_google_play_services_notification_ticker">"Google Play服务出错"</string>
+    <string msgid="2518680582564677258" name="common_google_play_services_unknown_issue">"<ns1:g id="APP_NAME">%1$s</ns1:g>无法访问 Google Play 服务，请重试。"</string>
+    <string msgid="5501187292256987189" name="common_google_play_services_unsupported_text">"您的设备不支持 Google Play 服务，因此无法运行<ns1:g id="APP_NAME">%1$s</ns1:g>。"</string>
+    <string msgid="8172070149091615356" name="common_google_play_services_update_button">"更新"</string>
+    <string msgid="7773943415006962566" name="common_google_play_services_update_text">"您必须先更新 Google Play 服务，然后才能运行<ns1:g id="APP_NAME">%1$s</ns1:g>。"</string>
+    <string msgid="8706675115216073244" name="common_google_play_services_update_title">"更新 Google Play 服务"</string>
+    <string msgid="7894275749778928941" name="common_google_play_services_updating_text">"Google Play 服务当前正在更新，因此您无法运行<ns1:g id="APP_NAME">%1$s</ns1:g>。"</string>
+    <string msgid="2804989272736383918" name="common_google_play_services_wear_update_text">"必须使用新版 Google Play 服务。该服务很快就会自行更新。"</string>
+    <string msgid="5201977337835724196" name="common_open_on_phone">"在手机上打开"</string>
+    <string msgid="3441753203274453993" name="common_signin_button_text">"登录"</string>
+    <string msgid="669893613918351210" name="common_signin_button_text_long">"使用 Google 帐号登录"</string>
+    <string name="completed">已完成</string>
+    <string name="contact_add">添加</string>
+    <string name="contact_count">%d位联系人</string>
+    <string name="contact_subtitle">联系人</string>
+    <string name="contact_title">通讯录</string>
+    <string name="conversation_title">腾讯·云通信</string>
+    <string name="copy_action">复制</string>
+    <string name="create_chat_room">创建聊天室</string>
+    <string name="create_group">创建群组</string>
+    <string name="create_group_chat">创建群聊</string>
+    <string name="create_private_group">创建讨论组</string>
+    <string name="custom_emoji">[自定义表情]</string>
+    <string name="custom_msg">[自定义消息]</string>
+    <string name="dabing">[大兵]</string>
+    <string name="dahaqian">[打哈欠]</string>
+    <string name="daku">[大哭]</string>
+    <string name="dangao">[蛋糕]</string>
+    <string name="dao">[刀]</string>
+    <string name="date_day">天</string>
+    <string name="date_day_short">天</string>
+    <string name="date_hour">时</string>
+    <string name="date_hour_short">时</string>
+    <string name="date_minute">分</string>
+    <string name="date_minute_short">分</string>
+    <string name="date_month">月</string>
+    <string name="date_month_short">月</string>
+    <string name="date_second">秒</string>
+    <string name="date_second_short">秒</string>
+    <string name="date_tommorow">明天</string>
+    <string name="date_year">年</string>
+    <string name="date_year_short">年</string>
+    <string name="date_yesterday">昨天</string>
+    <string name="debug_mode_summary">IM 帐号直接登录界面，此只在 Debug 模式下显示</string>
+    <string name="delete_action">删除</string>
+    <string name="delete_button">删除</string>
+    <string name="dengpao">[灯泡]</string>
+    <string name="device_info">手机型号:</string>
+    <string name="deyi">[得意]</string>
+    <string name="diaoxie">[凋谢]</string>
+    <string name="dismiss_group_tip">您确认解散该群?</string>
+    <string name="dismiss_tip_after">已解散</string>
+    <string name="dismiss_tip_before">您所在的群</string>
+    <string name="dissolve">解散该群</string>
+    <string name="down_cancle_send">手指上滑，取消发送</string>
+    <string name="download_file_error">下载视频失败: </string>
+    <string name="downloaded">已下载</string>
+    <string name="downloading">下载中...</string>
+    <string name="drafts">[草稿]</string>
+    <string name="duoyun">[多云]</string>
+    <string name="error_icon_content_description">错误</string>
+    <string name="etc">等</string>
+    <string name="exit">退出登录</string>
+    <string name="exit_group">退出群聊</string>
+    <string name="exit_pk">直播间退出PK</string>
+    <string name="expired_login_tip">帐号已过期，请重新登录</string>
+    <string name="exposed_dropdown_menu_content_description">显示下拉菜单</string>
+    <string name="fadai">[发呆]</string>
+    <string name="fadou">[发抖]</string>
+    <string name="failed_login_tip">登录失败</string>
+    <string msgid="4133737464567140336" name="fcm_fallback_notification_channel_label">"其他"</string>
+    <string name="feiji">[飞机]</string>
+    <string name="feiwen">[飞吻]</string>
+    <string name="fendou">[奋斗]</string>
+    <string name="fengche">[风车]</string>
+    <string name="file">文件</string>
+    <string name="file_extra">[文件]</string>
+    <string name="find_anchor">主播名还在查找</string>
+    <string name="forbid_add_friend">对方已禁止加好友</string>
+    <string name="forbid_join">禁止加群</string>
+    <string name="forward_alert_title">您确定进行转发吗?</string>
+    <string name="forward_button">转发</string>
+    <string name="forward_chats">群聊的聊天记录</string>
+    <string name="forward_chats_c2c">的聊天记录</string>
+    <string name="forward_compatible_text">不支持合并转发消息，请升级到新版本。</string>
+    <string name="forward_extra">[聊天记录]</string>
+    <string name="forward_failed_tip">发送失败消息不支持转发！</string>
+    <string name="forward_list_label">最近聊天</string>
+    <string name="forward_mode_merge">合并转发</string>
+    <string name="forward_mode_onebyone">逐条转发</string>
+    <string name="forward_oneByOne_limit_number_tip">转发消息过多，暂不支持逐条转发</string>
+    <string name="forward_select_from_contact">从通讯录选择</string>
+    <string name="forward_select_new_chat">创建新聊天</string>
+    <string name="forward_tip">请选择要操作的消息！</string>
+    <string name="friend_limit">您的好友数已达系统上限</string>
+    <string name="ganga">[尴尬]</string>
+    <string name="get_system_notice">收到自定义系统通知: </string>
+    <string name="get_verify_code">获取验证码</string>
+    <string name="get_verify_code_error">获取验证码错误，请刷新重试！(%d)</string>
+    <string name="gouyin">[勾引]</string>
+    <string name="group">我的群聊</string>
+    <string name="group_apply_click_handle">点击处理</string>
+    <string name="group_apply_members">群申请</string>
+    <string name="group_apply_tips">%1$d 条入群申请</string>
+    <string name="group_detail">群聊详情</string>
+    <string name="group_icon">修改群头像</string>
+    <string name="group_id">群ID</string>
+    <string name="group_join_type">加群方式</string>
+    <string name="group_members">群成员</string>
+    <string name="group_name">群聊名称</string>
+    <string name="group_notice">群公告</string>
+    <string name="group_remove_member">移出群聊</string>
+    <string name="group_subtitle">群组</string>
+    <string name="group_type">群类型</string>
+    <string name="guzhang">[鼓掌]</string>
+    <string name="haixiu">[害羞]</string>
+    <string name="hanxiao">[憨笑]</string>
+    <string name="has_read">已读</string>
+    <string name="have_be_friend">对方已是您的好友</string>
+    <string name="hint_add_user_id">请输入ID</string>
+    <string name="hint_add_wording">请输入验证消息</string>
+    <string name="hms_abort" priority="translator">"终止"</string>
+    <string name="hms_abort_message" priority="translator">"是否终止下载？"</string>
+    <string name="hms_bindfaildlg_message" priority="LT">"%1$s无法正常使用 HMS Core。请尝试打开“手机管家”或“设置”，开启%2$s的所有权限 (“自启动”、“关联启动”等)，并重试。"</string>
+    <string name="hms_cancel" priority="translator">"取消"</string>
+    <string name="hms_check_failure" priority="translator">"检查 HMS Core 更新失败。"</string>
+    <string name="hms_check_no_update" priority="LT">"已是最新版本"</string>
+    <string name="hms_checking" priority="LT">"正在检测新版本..."</string>
+    <string name="hms_confirm" priority="translator">"知道了"</string>
+    <string name="hms_download_failure" priority="translator">"下载 HMS Core 安装包失败。"</string>
+    <string name="hms_download_no_space" priority="translator">"剩余空间不足，无法下载。"</string>
+    <string name="hms_download_retry" priority="translator">"下载 HMS Core 失败。是否重试？"</string>
+    <string name="hms_downloading" priority="translator">"正在下载 HMS Core | 已完成：%d%%"</string>
+    <string name="hms_downloading_loading" priority="LT">"正在加载"</string>
+    <string name="hms_downloading_new" priority="LT">"正在加载 HMS Core"</string>
+    <string name="hms_gamebox_name" priority="translator">"游戏中心"</string>
+    <string name="hms_install" priority="translator">"安装"</string>
+    <string name="hms_install_message" priority="translator">"您尚未安装 HMS Core，安装之后才可用此功能。是否安装？"</string>
+    <string name="hms_push_channel" priority="LT">"默认"</string>
+    <string name="hms_retry" priority="translator">"重试"</string>
+    <string name="hms_update" priority="translator">"更新"</string>
+    <string name="hms_update_continue" priority="translator">"继续下载"</string>
+    <string name="hms_update_message" priority="translator">"HMS Core 版本太旧，更新到最新版本才可用此功能。是否更新？"</string>
+    <string name="hms_update_message_new" priority="LT">"该服务需安装以下应用的最新版本才能使用：\n\n·%1$s"</string>
+    <string name="hms_update_nettype" priority="translator">"当前为非 Wi-Fi 网络。是否继续下载？"</string>
+    <string name="hms_update_title" priority="translator">"HMS Core"</string>
+    <string name="hold_say">按住说话</string>
+    <string name="hongdenglong">[红灯笼]</string>
+    <string name="hongshuangxi">[红双喜]</string>
+    <string name="http_error_invalid">用户名必须以字母开头、字母与数字组合3-23位</string>
+    <string name="http_error_no_user">用户不存在</string>
+    <string name="http_error_password">密码错误</string>
+    <string name="http_error_server">服务器错误</string>
+    <string name="http_error_user">用户已存在</string>
+    <string name="huaixiao">[坏笑]</string>
+    <string name="huishou">[挥手]</string>
+    <string name="huitou">[回头]</string>
+    <string name="icon_content_description">对话框图标</string>
+    <string name="id">帐号：%1$s</string>
+    <string name="im_privacy">隐私条例</string>
+    <string name="im_privacy_tips">请先阅读并同意协议</string>
+    <string name="im_statement">免责声明</string>
+    <string name="im_statement_content">IM（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。</string>
+    <string name="in_blacklist">被加好友在自己的黑名单中</string>
+    <string name="in_group_nick_name">我的群昵称</string>
+    <string name="include_group_id">包含群 ID: </string>
+    <string name="include_group_member">包含群成员: </string>
+    <string name="input_number">请输入手机号</string>
+    <string name="input_phone">请填写正确的手机号</string>
+    <string name="input_phone_code">请输入手机号和验证码</string>
+    <string name="input_tip">没有输入昵称，请重新填写</string>
+    <string name="input_verification">请输入短信验证码</string>
+    <string name="invalid_command">不能识别的通话指令</string>
+    <string name="invite_fail">邀请成员失败:</string>
+    <string name="invite_joined_group">被邀请进群</string>
+    <string name="invite_suc">邀请成员成功</string>
+    <string name="item_view_role_description">标签页</string>
+    <string name="jidong">[激动]</string>
+    <string name="jie">[饥饿]</string>
+    <string name="jiewu">[街舞]</string>
+    <string name="jingkong">[惊恐]</string>
+    <string name="jingya">[惊讶]</string>
+    <string name="join_group">加入群组</string>
+    <string name="join_group_tip">您已被邀请进群: </string>
+    <string name="join_group_type">加群方式</string>
+    <string name="joined_tip">您已加入群: </string>
+    <string name="kafei">[咖啡]</string>
+    <string name="keai">[可爱]</string>
+    <string name="kelian">[可怜]</string>
+    <string name="ketou">[磕头]</string>
+    <string name="kick_group">您已被踢出群: </string>
+    <string name="kick_group_tip">被踢出群组</string>
+    <string name="koubi">[抠鼻]</string>
+    <string name="ku">[酷]</string>
+    <string name="kuaikule">[快哭了]</string>
+    <string name="kulou">[骷髅]</string>
+    <string name="kun">[困]</string>
+    <string name="kun2">[困]</string>
+    <string name="lanqiu">[篮球]</string>
+    <string name="lazhu">[蜡烛]</string>
+    <string name="lenghan">[冷汗]</string>
+    <string name="line_busy">忙线</string>
+    <string name="lipindai">[礼品袋]</string>
+    <string name="liuhan">[流汗]</string>
+    <string name="liulei">[流泪]</string>
+    <string name="live">的直播</string>
+    <string name="live_accept">"接受"</string>
+    <string name="live_admires_tips">获赞数量</string>
+    <string name="live_agree">接受</string>
+    <string name="live_anchor_accept">主播同意连麦</string>
+    <string name="live_anchor_accept_link_mic">"主播接受了您的连麦请求，开始连麦"</string>
+    <string name="live_anchor_accept_pk">主播接受PK邀请</string>
+    <string name="live_anchor_accept_pk_timeout">主播超时未响应PK请求</string>
+    <string name="live_anchor_handling_other_link">"请稍后，主播正在处理其它人的连麦请求"</string>
+    <string name="live_anchor_handling_other_pk">"请稍后，主播正在处理其它人的PK请求"</string>
+    <string name="live_anchor_offline">"主播暂时不在线..."</string>
+    <string name="live_anchor_refuse_link_request">"主播拒绝了您的连麦请求"</string>
+    <string name="live_anchor_refuse_pk_request">"主播拒绝了您的PK请求"</string>
+    <string name="live_anchor_reject">主播拒绝连麦</string>
+    <string name="live_anchor_reject_pk">主播拒绝邀请</string>
+    <string name="live_anchor_view_error">当前连麦人数超过了最大值</string>
+    <string name="live_audience_link_mic">申请连麦列表</string>
+    <string name="live_beauty_mopi">磨皮</string>
+    <string name="live_btn_beauty">美颜</string>
+    <string name="live_btn_follow_anchor">关注</string>
+    <string name="live_btn_return">返回</string>
+    <string name="live_btn_start_live">开始直播</string>
+    <string name="live_cancel">"取消"</string>
+    <string name="live_create_room_fail">创建房间失败</string>
+    <string name="live_create_room_success">创建房间成功</string>
+    <string name="live_default_anchor_empirical_value">2.0万</string>
+    <string name="live_default_anchor_name">阿管</string>
+    <string name="live_default_audience_num">999</string>
+    <string name="live_default_audience_weight">999</string>
+    <string name="live_dialog_input_text_hint">和大家说点什么吧</string>
+    <string name="live_end_tips">直播结束啦!</string>
+    <string name="live_error">错误</string>
+    <string name="live_error_request_link_mic">"连麦请求发生错误，%1$s"</string>
+    <string name="live_experience">经验</string>
+    <string name="live_fail_link_mic">连麦失败, %s</string>
+    <string name="live_follow_anchor_success">"关注主播成功"</string>
+    <string name="live_get_it">知道了</string>
+    <string name="live_gift_charge">充值</string>
+    <string name="live_gift_game_currency">游戏币%d</string>
+    <string name="live_gift_give_gift">赠送</string>
+    <string name="live_gift_send">送出%s</string>
+    <string name="live_group_live">群直播</string>
+    <string name="live_group_live_end">结束直播</string>
+    <string name="live_group_live_streaming">正在直播</string>
+    <string name="live_group_user_live">%s的直播</string>
+    <string name="live_hint_live_room_name">"标题有趣能吸引人气"</string>
+    <string name="live_is_over">直播已结束</string>
+    <string name="live_link_mic_status">当前正在连麦，无法接受PK请求</string>
+    <string name="live_members_tips">观看人数</string>
+    <string name="live_message_me">"我"</string>
+    <string name="live_message_send_fail">"消息发生失败[%1$d]:%2$s"</string>
+    <string name="live_message_send_success">"发送成功"</string>
+    <string name="live_notification">"通知"</string>
+    <string name="live_ok">"确定"</string>
+    <string name="live_on_line_number">"在线：%d人"</string>
+    <string name="live_permission_denied">权限验证失败，请打开相关权限</string>
+    <string name="live_pk_status">当前正在PK，无法接受连麦请求</string>
+    <string name="live_refuse">"拒绝"</string>
+    <string name="live_reject">拒绝</string>
+    <string name="live_request_link_mic">"%1$s向您发起连麦请求"</string>
+    <string name="live_request_link_mic_anchor">"%1$s请求和您连麦"</string>
+    <string name="live_request_pk">"%1$s向您发起PK请求"</string>
+    <string name="live_request_time_out">请求超时</string>
+    <string name="live_room">的直播</string>
+    <string name="live_room_name_empty">房间名不能为空</string>
+    <string name="live_scenes_live_room">视频直播</string>
+    <string name="live_scenes_voice_room">语音聊天室</string>
+    <string name="live_send">"发送"</string>
+    <string name="live_stop_pk">结束PK</string>
+    <string name="live_text_voice_quality">"直播音质"</string>
+    <string name="live_time_tips">直播时长</string>
+    <string name="live_tips">"提示"</string>
+    <string name="live_tips_quit_pk">"onQuitRoomPK"</string>
+    <string name="live_tips_rest">操作太频繁了，休息一下吧</string>
+    <string name="live_user_click_like">"%1$s点了个赞"</string>
+    <string name="live_user_join_live">"%1$s加入直播"</string>
+    <string name="live_user_quit_live">"%1$s退出直播"</string>
+    <string name="live_voice_quality_music">"音乐"</string>
+    <string name="live_voice_quality_standard">"标准"</string>
+    <string name="live_voice_room_agree">同意</string>
+    <string name="live_voice_room_already_agree">已同意</string>
+    <string name="live_voice_room_create_input_hint">请输入主题和昵称</string>
+    <string formatted="false" name="live_voice_room_main_title">%1s(%2d)</string>
+    <string formatted="false" name="live_voice_room_numer_format">%d人在看</string>
+    <string formatted="false" name="live_voice_room_room_title">房间号: %d</string>
+    <string name="live_voice_room_send">发送</string>
+    <string name="live_voice_room_warning_not_empty">"输入不能为空!"</string>
+    <string name="live_wait_anchor_accept">等待主播接受......</string>
+    <string name="live_wait_link">连麦列表</string>
+    <string name="live_warning_anchor_exit_room">当前正在直播，是否退出直播？</string>
+    <string name="live_warning_link_user_max_limit">"主播端连麦人数超过最大限制"</string>
+    <string name="live_warning_not_empty">"输入不能为空!"</string>
+    <string name="live_warning_room_disband">房间已解散</string>
+    <string name="living">正在直播</string>
+    <string name="liwu">[礼物]</string>
+    <string name="load_msg_error">加载消息失败</string>
+    <string name="login_agree_content">我已阅读并同意《隐私条例》和《用户协议》。</string>
+    <string name="login_agree_content_key1">《隐私条例》</string>
+    <string name="login_agree_content_key2">《用户协议》</string>
+    <string name="login_fail_tip">登录失败:</string>
+    <string name="login_password_tips">1~16个字符（字母+数字）</string>
+    <string name="login_sub_title">体验群组聊天，音视频对话等 IM 功能</string>
+    <string name="login_suc_tip">登录成功</string>
+    <string name="login_title">登录·即时通信</string>
+    <string name="login_user_tips">字母开头，4~24个字母+数字</string>
+    <string name="logout_tip">您确定要退出登录么？</string>
+    <string name="low_version"> 版本太低，不支持打开该离线消息</string>
+    <string name="maikefeng">[麦克风]</string>
+    <string name="majiang">[麻将]</string>
+    <string name="manager">管理</string>
+    <string name="manager_judge">管理员审批</string>
+    <string name="maomi">[猫咪]</string>
+    <string name="material_clock_toggle_content_description">选择上午或下午</string>
+    <string name="material_hour_selection">选择小时</string>
+    <string name="material_hour_suffix">%1$s 点</string>
+    <string name="material_minute_selection">选择分钟</string>
+    <string name="material_minute_suffix">%1$s 分</string>
+    <string name="material_timepicker_am">上午</string>
+    <string name="material_timepicker_clock_mode_description">切换到时钟模式来输入时间。</string>
+    <string name="material_timepicker_hour">小时</string>
+    <string name="material_timepicker_minute">分钟</string>
+    <string name="material_timepicker_pm">下午</string>
+    <string name="material_timepicker_select_time">选择时间</string>
+    <string name="material_timepicker_text_input_mode_description">切换到文字输入模式来输入时间。</string>
+    <string name="meigui">[玫瑰]</string>
+    <string name="memeda">[么么哒]</string>
+    <string name="miantiao">[面条]</string>
+    <string name="mifan">[米饭]</string>
+    <string name="modify_birthday">生日</string>
+    <string name="modify_cancel_shut_up_all">取消禁言全员</string>
+    <string name="modify_group_avatar">修改了群头像</string>
+    <string name="modify_group_name">修改群名称</string>
+    <string name="modify_group_name_is">修改群名称为</string>
+    <string name="modify_group_name_success">修改群名称成功</string>
+    <string name="modify_group_notice">修改群公告</string>
+    <string name="modify_group_notice_success">修改群公告成功</string>
+    <string name="modify_icon_fail">修改群头像失败</string>
+    <string name="modify_icon_suc">修改群头像成功</string>
+    <string name="modify_nick_name">修改昵称</string>
+    <string name="modify_nick_name_in_goup">修改我的群昵称</string>
+    <string name="modify_nickname_success">修改昵称成功</string>
+    <string name="modify_notice">修改群公告为</string>
+    <string name="modify_shut_up_all">禁言全员</string>
+    <string name="modify_signature">修改个性签名</string>
+    <string name="modify_user_icon">修改头像</string>
+    <string name="more_contact_label">更多联系人</string>
+    <string name="more_conversation_label">更多聊天记录</string>
+    <string name="more_group_label">更多群聊</string>
+    <string name="move_owner">转让群主给</string>
+    <string name="mtrl_badge_numberless_content_description">新通知</string>
+    <string name="mtrl_chip_close_icon_content_description">移除%1$s</string>
+    <string name="mtrl_exceed_max_badge_number_content_description">有 %1$d 条以上的新通知</string>
+    <string name="mtrl_picker_a11y_next_month">转到下个月</string>
+    <string name="mtrl_picker_a11y_prev_month">转到上个月</string>
+    <string name="mtrl_picker_announce_current_selection">当前的选择是：%1$s</string>
+    <string name="mtrl_picker_confirm">@android:string/ok</string>
+    <string name="mtrl_picker_date_header_selected">%1$s</string>
+    <string name="mtrl_picker_date_header_title">请选择日期</string>
+    <string name="mtrl_picker_date_header_unselected">选定的日期</string>
+    <string name="mtrl_picker_day_of_week_column_header">表示周几的列：%1$s</string>
+    <string name="mtrl_picker_invalid_format">格式无效。</string>
+    <string name="mtrl_picker_invalid_format_example">示例：%1$s</string>
+    <string name="mtrl_picker_invalid_format_use">使用：%1$s</string>
+    <string name="mtrl_picker_invalid_range">范围无效。</string>
+    <string name="mtrl_picker_navigate_to_year_description">转到 %1$s 年</string>
+    <string name="mtrl_picker_out_of_range">不在允许的范围内：%1$s</string>
+    <string name="mtrl_picker_range_header_only_end_selected">开始日期 – %1$s</string>
+    <string name="mtrl_picker_range_header_only_start_selected">%1$s – 结束日期</string>
+    <string name="mtrl_picker_range_header_selected">%1$s - %2$s</string>
+    <string name="mtrl_picker_range_header_title">请选择范围</string>
+    <string name="mtrl_picker_range_header_unselected">开始日期 - 结束日期</string>
+    <string name="mtrl_picker_save">保存</string>
+    <string name="mtrl_picker_text_input_date_hint">日期</string>
+    <string name="mtrl_picker_text_input_date_range_end_hint">结束日期</string>
+    <string name="mtrl_picker_text_input_date_range_start_hint">开始日期</string>
+    <string name="mtrl_picker_text_input_day_abbr">d</string>
+    <string name="mtrl_picker_text_input_month_abbr">m</string>
+    <string name="mtrl_picker_text_input_year_abbr">y</string>
+    <string name="mtrl_picker_toggle_to_calendar_input_mode">切换到日历输入模式</string>
+    <string name="mtrl_picker_toggle_to_day_selection">点按即可切换到选择某天</string>
+    <string name="mtrl_picker_toggle_to_text_input_mode">切换到文本字段输入模式</string>
+    <string name="mtrl_picker_toggle_to_year_selection">点按即可切换到选择某年</string>
+    <string name="naiping">[奶瓶]</string>
+    <string name="nanguo">[难过]</string>
+    <string name="naozhong">[闹钟]</string>
+    <string name="new_friend">新的联系人</string>
+    <string name="new_msg">收到一条新消息</string>
+    <string name="new_msg_notification">新普通消息通知</string>
+    <string name="nick_name">昵称: </string>
+    <string name="no_emoji">[NO]</string>
+    <string name="no_event_cancle_tip">浏览状态下,没有 cancle 事件</string>
+    <string name="no_event_confirm_tip">浏览状态下,没有 confirm 事件</string>
+    <string name="no_friend_apply">暂无好友申请</string>
+    <string name="no_response_call">无应答</string>
+    <string name="no_support_custom_msg">[不支持的自定义消息]</string>
+    <string name="no_support_msg">不支持的自定义消息</string>
+    <string name="not_retry_more">不要频繁获取验证码</string>
+    <string name="nu">[怒]</string>
+    <string name="official_website">访问官网</string>
+    <string name="ok_emoji">[OK]</string>
+    <string name="online">在线</string>
+    <string name="online_fail">请求网络失败</string>
+    <string name="open_file_tips">选择要打开此文件的应用</string>
+    <string name="other_friend_limit">对方的好友数已达系统上限</string>
+    <string name="other_line_busy">对方忙线</string>
+    <string name="ouhuo">[怄火]</string>
+    <string name="password">密码</string>
+    <string name="password_login">密码登录</string>
+    <string name="password_toggle_content_description">显示密码</string>
+    <string name="permission_content">使用该功能，需要开启权限，鉴于您禁用相关权限，请手动设置开启权限</string>
+    <string name="permission_tip">未全部授权，部分功能可能无法使用！</string>
+    <string name="photo">拍照</string>
+    <string name="piaochong">[瓢虫]</string>
+    <string name="pic">图片</string>
+    <string name="picture_extra">[图片]</string>
+    <string name="piezui">[撇嘴]</string>
+    <string name="pijiu">[啤酒]</string>
+    <string name="pingpang">[乒乓]</string>
+    <string name="piqiu">[皮球]</string>
+    <string name="play_error_tip">语音文件已损坏或不存在</string>
+    <string name="privacy_text">已同意《<a href="http://privacy.qq.com/">隐私政策</a>》</string>
+    <string name="private_group">讨论组</string>
+    <string name="profile">我</string>
+    <string name="profile_add_wording">验证消息</string>
+    <string name="profile_black">加入黑名单</string>
+    <string name="profile_chat">发送消息</string>
+    <string name="profile_del">删除好友</string>
+    <string name="profile_detail">详细资料</string>
+    <string name="profile_id">帐号</string>
+    <string name="profile_msgrev_opt">消息免打扰</string>
+    <string name="profile_remark">设置备注</string>
+    <string name="profile_remark_edit">修改备注</string>
+    <string name="public_group">公开群</string>
+    <string name="qiang">[强]</string>
+    <string name="qiaoda">[敲打]</string>
+    <string name="qingwa">[青蛙]</string>
+    <string name="qiudale">[糗大了]</string>
+    <string name="quantou">[拳头]</string>
+    <string name="quit_chat_top">取消置顶</string>
+    <string name="quit_group">退出群组</string>
+    <string name="quit_group_tip">您确认退出该群？</string>
+    <string name="record_fail">录音失败</string>
+    <string name="record_limit_tips">已达到最大语音长度</string>
+    <string name="record_null">录音的结果为空</string>
+    <string name="record_occupied">录音机被占用</string>
+    <string name="record_time_tip">录制时间过短</string>
+    <string name="refuse">拒绝</string>
+    <string name="refused">已拒绝</string>
+    <string name="reject_call">拒绝通话</string>
+    <string name="reject_calls">拒绝通话</string>
+    <string name="reject_group_calls">拒绝群通话</string>
+    <string name="reject_join_tip">您被拒绝加入群: </string>
+    <string name="reject_request_online">直播间申请上麦被拒绝</string>
+    <string name="reject_request_pk">直播间申请PK被拒绝</string>
+    <string name="release_end">松开结束</string>
+    <string name="remove">移除</string>
+    <string name="remove_fail_tip">移除成员失败</string>
+    <string name="remove_group_member">移除成员</string>
+    <string name="remove_member">移除成员</string>
+    <string name="remove_tip_fail">删除成员失败: </string>
+    <string name="remove_tip_suc">删除成员成功</string>
+    <string name="repeat_login_tip">您的帐号已在其它终端登录</string>
+    <string name="report">举报</string>
+    <string name="report_success">举报成功，我们将在24小时内进行处理</string>
+    <string name="request_accepted">已接受</string>
+    <string name="request_agree">同意</string>
+    <string name="request_close_online">直播间申请关闭连麦</string>
+    <string name="request_online">直播间申请上麦</string>
+    <string name="request_pk">直播间申请PK</string>
+    <string name="request_wait">邀请成功，等待对方接受</string>
+    <string name="request_waiting">等待验证</string>
+    <string name="resend_action">重发</string>
+    <string name="revoke_action">撤回</string>
+    <string name="revoke_fail">撤回失败</string>
+    <string name="revoke_tips">撤回了一条消息</string>
+    <string name="revoke_tips_other">对方撤回了一条消息</string>
+    <string name="revoke_tips_you">您撤回了一条消息</string>
+    <string name="ruo">[弱]</string>
+    <string name="say_time_short">说话时间太短</string>
+    <string name="sdk_version">\nSDK版本:</string>
+    <string name="se">[色]</string>
+    <string name="search">搜索</string>
+    <string name="search_call_hint">输入群成员名称</string>
+    <string msgid="6264217191555673260" name="search_menu_title">"搜索"</string>
+    <string name="seat_lock">座位已锁定</string>
+    <string name="second">秒</string>
+    <string name="select_chat">请选择聊天对象</string>
+    <string name="send">发送</string>
+    <string name="send_failed">发送失败</string>
+    <string name="send_request">加群请求已发送</string>
+    <string name="send_two_mins">消息发送已超过2分钟</string>
+    <string name="send_verify_code">验证码已发送</string>
+    <string name="sended">已发送</string>
+    <string name="sending">发送中...</string>
+    <string name="set_in_blacklist">您已被被对方设置为黑名单</string>
+    <string name="setting">设置</string>
+    <string name="shafa">[沙发]</string>
+    <string name="shandian">[闪电]</string>
+    <string name="shengli">[胜利]</string>
+    <string name="shiai">[示爱]</string>
+    <string name="shouqiang">[手枪]</string>
+    <string name="start_call">发起通话</string>
+    <string name="start_conversation">发起会话</string>
+    <string name="start_group_call">发起群通话</string>
+    <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="stop_call_tip">结束通话，通话时长：</string>
+    <string name="stop_group_call">结束群通话</string>
+    <string name="stop_live">结束直播</string>
+    <string name="suan">[衰]</string>
+    <string name="success">成功</string>
+    <string name="sure">确定</string>
+    <string name="system_version">\n系统版本:</string>
+    <string name="tab_contact_tab_text">通讯录</string>
+    <string name="tab_conversation_tab_text">消息</string>
+    <string name="tab_profile_tab_text">我</string>
+    <string name="tab_scenes_tab_text">直播</string>
+    <string name="taiyang">[太阳]</string>
+    <string name="tap_capture">点击拍照</string>
+    <string name="tap_tips">轻触拍照，长按摄像</string>
+    <string name="tap_video">长按摄像</string>
+    <string name="test_custom_action">自定义消息</string>
+    <string name="test_custom_message">查看详情>></string>
+    <string name="test_excluded_from_unread_count_action">不计入未读数消息</string>
+    <string name="tiaopi">[调皮]</string>
+    <string name="tiaosheng">[跳绳]</string>
+    <string name="tiaotiao">[跳跳]</string>
+    <string name="tips_empty_group_member">请选择群成员</string>
+    <string name="tips_empty_group_type">请选择加群方式</string>
+    <string name="titlebar_back">返回</string>
+    <string name="titlebar_cancle">取消</string>
+    <string name="titlebar_close">关闭</string>
+    <string name="titlebar_mutiselect">多选</string>
+    <string name="touxiao">[偷笑]</string>
+    <string name="tu">[吐]</string>
+    <string name="typing">正在输入...</string>
+    <string name="ui_at_all">[@所有人]</string>
+    <string name="ui_at_all_me">[@所有人][有人@我]</string>
+    <string name="ui_at_me">[有人@我]</string>
+    <string name="un_download">未下载</string>
+    <string name="unknow_error">未知错误</string>
+    <string name="unread">未读</string>
+    <string name="up_cancle_send">松开手指，取消发送</string>
+    <string name="upsdk_app_dl_installing" priority="LT">"正在下载华为应用市场"</string>
+    <string name="upsdk_app_download_info_new" priority="LT">"安装"</string>
+    <string name="upsdk_app_size" priority="LT">"大小"</string>
+    <string name="upsdk_app_version" priority="LT">"版本"</string>
+    <string name="upsdk_cancel" priority="LT">"取消"</string>
+    <string name="upsdk_checking_update_prompt" priority="LT">"正在检查更新..."</string>
+    <string name="upsdk_choice_update" priority="LT">"有可用更新，快去升级吧。"</string>
+    <string name="upsdk_connect_server_fail_prompt_toast" priority="translator">"无法连接服务器，请稍后重试"</string>
+    <string name="upsdk_detail" priority="LT">"详情"</string>
+    <string name="upsdk_getting_message_fail_prompt_toast" priority="translator">"无法获取信息，请稍后重试"</string>
+    <string name="upsdk_install" priority="LT">"需要使用华为官方应用市场才能升级，是否现在安装？"</string>
+    <string name="upsdk_no_available_network_prompt_toast" priority="translator">"网络未连接，请检查网络设置"</string>
+    <string name="upsdk_ota_app_name" priority="translator">"应用"</string>
+    <string name="upsdk_ota_cancel" priority="LT">"以后再说"</string>
+    <string name="upsdk_ota_force_cancel_new" priority="translator">"退出应用"</string>
+    <string name="upsdk_ota_notify_updatebtn" priority="LT">"立即更新"</string>
+    <string name="upsdk_ota_title" priority="LT">"发现新版本"</string>
+    <string name="upsdk_storage_utils" priority="translator">"%1$s MB"</string>
+    <string name="upsdk_third_app_dl_cancel_download_prompt_ex" priority="translator">"是否取消安装？"</string>
+    <string name="upsdk_third_app_dl_install_failed" priority="translator">"安装失败"</string>
+    <string name="upsdk_third_app_dl_sure_cancel_download" priority="translator">"确认"</string>
+    <string name="upsdk_update_check_no_new_version" priority="LT">"已是最新版本"</string>
+    <string name="upsdk_updating" priority="LT">"正在更新"</string>
+    <string name="user_id">对方ID</string>
+    <string name="verification_code">获取验证码</string>
+    <string name="verify_code_fail">获取验证码失败:</string>
+    <string name="video">摄像</string>
+    <string name="video_extra">[视频]</string>
+    <string name="view_original_image">查看原图</string>
+    <string name="voice_play_tip">语音文件还未下载完成</string>
+    <string name="wait_agree_friend">等待好友审核同意</string>
+    <string name="wait_tip">请稍后再试试</string>
+    <string name="weiqu">[委屈]</string>
+    <string name="weixiao">[微笑]</string>
+    <string name="welcome_tip">欢迎加入云通信IM大家庭！</string>
+    <string name="woshou">[握手]</string>
+    <string name="xia">[吓]</string>
+    <string name="xiangjiao">[香蕉]</string>
+    <string name="xiangqi">[象棋]</string>
+    <string name="xianwen">[献吻]</string>
+    <string name="xiayu">[下雨]</string>
+    <string name="xigua">[西瓜]</string>
+    <string name="xinfeng">[信封]</string>
+    <string name="xinsuile">[心碎了]</string>
+    <string name="xiongmao">[熊猫]</string>
+    <string name="xu">[嘘]</string>
+    <string name="yinxian">[阴险]</string>
+    <string name="yiwen">[疑问]</string>
+    <string name="you_app">您的应用</string>
+    <string name="youchetou">[右车头]</string>
+    <string name="youhengheng">[右哼哼]</string>
+    <string name="youtaiji">[右太极]</string>
+    <string name="yueliang">[月亮]</string>
+    <string name="yun">[晕]</string>
+    <string name="yusan">[雨伞]</string>
+    <string name="zaijian">[再见]</string>
+    <string name="zhadan">[炸弹]</string>
+    <string name="zhemo">[折磨]</string>
+    <string name="zhijin">[纸巾]</string>
+    <string name="zhouma">[咒骂]</string>
+    <string name="zhukuang">[抓狂]</string>
+    <string name="zhutou">[猪头]</string>
+    <string name="zuanjie">[钻戒]</string>
+    <string name="zuanquan">[转圈]</string>
+    <string name="zuochetou">[左车头]</string>
+    <string name="zuohengheng">[左哼哼]</string>
+    <string name="zuotaiji">[左太极]</string>
+</resources>

@@ -1,0 +1,12 @@
+# OS X Files
+.DS_Store
+**/.DS_Store
+
+
+# Gradle files
+*/Android/.gradle/
+
+# IDEA Files
+*/Android/.idea/
+
+*/Android/local.properties

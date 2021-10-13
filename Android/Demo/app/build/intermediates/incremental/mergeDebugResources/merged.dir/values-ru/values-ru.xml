@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="mtrl_badge_content_description">
+    <item quantity="one">%d новое уведомление</item>
+    <item quantity="few">%d новых уведомления</item>
+    <item quantity="many">%d новых уведомлений</item>
+    <item quantity="other">%d нового уведомления</item>
+  </plurals>
+    <string msgid="5976598919945601918" name="abc_action_bar_home_description">"Перейти на главный экран"</string>
+    <string msgid="8388173803310557296" name="abc_action_bar_up_description">"Перейти вверх"</string>
+    <string msgid="3937310113216875497" name="abc_action_menu_overflow_description">"Ещё"</string>
+    <string msgid="4692188335987374352" name="abc_action_mode_done">"Готово"</string>
+    <string msgid="1189761859438369441" name="abc_activity_chooser_view_see_all">"Показать все"</string>
+    <string msgid="2165779757652331008" name="abc_activitychooserview_choose_application">"Выберите приложение"</string>
+    <string msgid="4215997306490295099" name="abc_capital_off">"ВЫКЛ"</string>
+    <string msgid="884982626291842264" name="abc_capital_on">"ВКЛ"</string>
+    <string msgid="8833365367933412986" name="abc_menu_alt_shortcut_label">"Alt +"</string>
+    <string msgid="2223301931652355242" name="abc_menu_ctrl_shortcut_label">"Ctrl +"</string>
+    <string msgid="838001238306846836" name="abc_menu_delete_shortcut_label">"Delete"</string>
+    <string msgid="7986526966204849475" name="abc_menu_enter_shortcut_label">"Ввод"</string>
+    <string msgid="375214403600139847" name="abc_menu_function_shortcut_label">"Fn +"</string>
+    <string msgid="4192209724446364286" name="abc_menu_meta_shortcut_label">"Meta +"</string>
+    <string msgid="4741552369836443843" name="abc_menu_shift_shortcut_label">"Shift +"</string>
+    <string msgid="5473865519181928982" name="abc_menu_space_shortcut_label">"Пробел"</string>
+    <string msgid="6180552449598693998" name="abc_menu_sym_shortcut_label">"Sym +"</string>
+    <string msgid="5520303668377388990" name="abc_prepend_shortcut_label">"Меню +"</string>
+    <string msgid="7208076849092622260" name="abc_search_hint">"Введите запрос"</string>
+    <string msgid="3741173234950517107" name="abc_searchview_description_clear">"Удалить запрос"</string>
+    <string msgid="693312494995508443" name="abc_searchview_description_query">"Поисковый запрос"</string>
+    <string msgid="3417662926640357176" name="abc_searchview_description_search">"Поиск"</string>
+    <string msgid="1486535517437947103" name="abc_searchview_description_submit">"Отправить запрос"</string>
+    <string msgid="2293578557972875415" name="abc_searchview_description_voice">"Голосовой поиск"</string>
+    <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"Поделиться с помощью"</string>
+    <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"Поделиться с помощью <ns1:g id="APPLICATION_NAME">%s</ns1:g>"</string>
+    <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"Свернуть"</string>
+    <string name="bottomsheet_action_expand_halfway">Развернуть наполовину</string>
+    <string name="character_counter_content_description">Введено символов: %1$d из %2$d</string>
+    <string name="character_counter_overflowed_content_description">Превышено ограничение на количество символов (%1$d из %2$d)</string>
+    <string name="clear_text_end_icon_content_description">Очистить текстовое поле</string>
+    <string msgid="8585111718777012708" name="common_google_play_services_enable_button">"Включить"</string>
+    <string msgid="7045129128108380659" name="common_google_play_services_enable_text">"Для работы приложения \"<ns1:g id="APP_NAME">%1$s</ns1:g>\" требуется включить сервисы Google Play."</string>
+    <string msgid="3147157405986503375" name="common_google_play_services_enable_title">"Включите сервисы Google Play"</string>
+    <string msgid="9115728400623041681" name="common_google_play_services_install_button">"Установить"</string>
+    <string msgid="8179894293032530091" name="common_google_play_services_install_text">"Для работы приложения \"<ns1:g id="APP_NAME">%1$s</ns1:g>\" требуется установить сервисы Google Play."</string>
+    <string msgid="7442193194585196676" name="common_google_play_services_install_title">"Установите сервисы Google Play"</string>
+    <string msgid="4293541511340436975" name="common_google_play_services_notification_channel_name">"Доступность сервисов Google Play"</string>
+    <string msgid="180394615667698242" name="common_google_play_services_notification_ticker">"Ошибка сервисов Google Play"</string>
+    <string msgid="2518680582564677258" name="common_google_play_services_unknown_issue">"Приложению \"<ns1:g id="APP_NAME">%1$s</ns1:g>\" не удается подключиться к сервисам Google Play. Повторите попытку."</string>
+    <string msgid="5501187292256987189" name="common_google_play_services_unsupported_text">"Для работы с приложением \"<ns1:g id="APP_NAME">%1$s</ns1:g>\" требуются сервисы Google Play. Они не поддерживаются на вашем устройстве."</string>
+    <string msgid="8172070149091615356" name="common_google_play_services_update_button">"Обновить"</string>
+    <string msgid="7773943415006962566" name="common_google_play_services_update_text">"Чтобы запустить приложение \"<ns1:g id="APP_NAME">%1$s</ns1:g>\", обновите сервисы Google Play."</string>
+    <string msgid="8706675115216073244" name="common_google_play_services_update_title">"Обновите сервисы Google Play"</string>
+    <string msgid="7894275749778928941" name="common_google_play_services_updating_text">"Сервисы Google Play, необходимые для работы приложения \"<ns1:g id="APP_NAME">%1$s</ns1:g>\", в настоящий момент обновляются."</string>
+    <string msgid="2804989272736383918" name="common_google_play_services_wear_update_text">"Версия сервисов Google Play устарела. Они автоматически обновятся в ближайшее время."</string>
+    <string msgid="5201977337835724196" name="common_open_on_phone">"Открыть на телефоне"</string>
+    <string msgid="3441753203274453993" name="common_signin_button_text">"Войти"</string>
+    <string msgid="669893613918351210" name="common_signin_button_text_long">"Войти через аккаунт Google"</string>
+    <string name="error_icon_content_description">Ошибка</string>
+    <string name="exposed_dropdown_menu_content_description">Показать раскрывающееся меню</string>
+    <string msgid="4133737464567140336" name="fcm_fallback_notification_channel_label">"Другое"</string>
+    <string name="hms_abort" priority="translator">"Остановить"</string>
+    <string name="hms_abort_message" priority="translator">"Остановить загрузку?"</string>
+    <string name="hms_bindfaildlg_message" priority="translator">"%1$s не может использовать HMS Core. Перейдите в Диспетчер (Диспетчер телефона) или Настройки, предоставьте все права для %2$s (включая автозапуск и косвенный запуск) и повторите попытку."</string>
+    <string name="hms_cancel" priority="translator">"Отмена"</string>
+    <string name="hms_check_failure" priority="translator">"Сбой проверки обновлений."</string>
+    <string name="hms_check_no_update" priority="translator">"Это последняя версия."</string>
+    <string name="hms_checking" priority="translator">"Проверка обновлений..."</string>
+    <string name="hms_confirm" priority="translator">"OK"</string>
+    <string name="hms_download_failure" priority="translator">"Сбой загрузки пакета HMS Core."</string>
+    <string name="hms_download_no_space" priority="translator">"Недостаточно памяти. Невозможно завершить загрузку."</string>
+    <string name="hms_download_retry" priority="translator">"Сбой загрузки. Повторить попытку?"</string>
+    <string name="hms_downloading" priority="translator">"Загрузка HMS Core\nВыполнено: %d%%"</string>
+    <string name="hms_downloading_loading" priority="LT">"Загрузка"</string>
+    <string name="hms_downloading_new" priority="LT">"Загрузка HMS Core"</string>
+    <string name="hms_gamebox_name" priority="LT">"HUAWEI GameCenter"</string>
+    <string name="hms_install" priority="translator">"Установить"</string>
+    <string name="hms_install_message" priority="translator">"Для использования этой функции необходимо установить HMS Core. Установить?"</string>
+    <string name="hms_push_channel" priority="translator">"По умолчанию"</string>
+    <string name="hms_retry" priority="translator">"Повтор"</string>
+    <string name="hms_update" priority="translator">"Обновить"</string>
+    <string name="hms_update_continue" priority="LT">"Загрузить"</string>
+    <string name="hms_update_message" priority="translator">"Чтобы использовать эту функцию, необходимо обновить HMS Core до последней версии. Обновить?"</string>
+    <string name="hms_update_message_new" priority="LT">"Для работы этой службы требуется последняя версия приложения:\n\n%1$s"</string>
+    <string name="hms_update_nettype" priority="LT">"Нет Wi-Fi-соединения. Загрузить по мобильной сети передачи данных?"</string>
+    <string name="hms_update_title" priority="translator">"HMS Core"</string>
+    <string name="icon_content_description">Значок диалогового окна</string>
+    <string name="item_view_role_description">Вкладка</string>
+    <string name="material_clock_toggle_content_description">Выберите AM (до полудня) или PM (после полудня)</string>
+    <string name="material_hour_selection">Выберите час</string>
+    <string name="material_hour_suffix">%1$s ч.</string>
+    <string name="material_minute_selection">Выберите минуты</string>
+    <string name="material_minute_suffix">%1$s мин.</string>
+    <string name="material_timepicker_am">AM</string>
+    <string name="material_timepicker_clock_mode_description">Чтобы ввести время, перейдите в режим часов.</string>
+    <string name="material_timepicker_hour">Час</string>
+    <string name="material_timepicker_minute">Минуты</string>
+    <string name="material_timepicker_pm">PM</string>
+    <string name="material_timepicker_select_time">Выбор времени</string>
+    <string name="material_timepicker_text_input_mode_description">Чтобы ввести время, перейдите в режим ввода текста.</string>
+    <string name="mtrl_badge_numberless_content_description">Новое уведомление</string>
+    <string name="mtrl_chip_close_icon_content_description">Удалить \"%1$s\"</string>
+    <string name="mtrl_exceed_max_badge_number_content_description">Новых уведомлений больше %1$d</string>
+    <string name="mtrl_picker_a11y_next_month">Перейти к следующему месяцу</string>
+    <string name="mtrl_picker_a11y_prev_month">Перейти к предыдущему месяцу</string>
+    <string name="mtrl_picker_announce_current_selection">Выбранный элемент: %1$s</string>
+    <string name="mtrl_picker_confirm">@android:string/ok</string>
+    <string name="mtrl_picker_date_header_selected">%1$s</string>
+    <string name="mtrl_picker_date_header_title">Выберите дату</string>
+    <string name="mtrl_picker_date_header_unselected">Выбранная дата</string>
+    <string name="mtrl_picker_day_of_week_column_header">Столбец со днями недели: %1$s</string>
+    <string name="mtrl_picker_invalid_format">Недействительный формат.</string>
+    <string name="mtrl_picker_invalid_format_example">Пример: %1$s</string>
+    <string name="mtrl_picker_invalid_format_use">Используйте: %1$s</string>
+    <string name="mtrl_picker_invalid_range">Недопустимый диапазон.</string>
+    <string name="mtrl_picker_navigate_to_year_description">Перейти к %1$s году</string>
+    <string name="mtrl_picker_out_of_range">Вне диапазона: %1$s</string>
+    <string name="mtrl_picker_range_header_only_end_selected">Дата начала – %1$s</string>
+    <string name="mtrl_picker_range_header_only_start_selected">%1$s – дата окончания</string>
+    <string name="mtrl_picker_range_header_selected">%1$s – %2$s</string>
+    <string name="mtrl_picker_range_header_title">Выберите диапазон дат</string>
+    <string name="mtrl_picker_range_header_unselected">Дата начала – дата окончания</string>
+    <string name="mtrl_picker_save">Сохранить</string>
+    <string name="mtrl_picker_text_input_date_hint">Дата</string>
+    <string name="mtrl_picker_text_input_date_range_end_hint">Дата окончания</string>
+    <string name="mtrl_picker_text_input_date_range_start_hint">Дата начала</string>
+    <string name="mtrl_picker_text_input_day_abbr">д</string>
+    <string name="mtrl_picker_text_input_month_abbr">м</string>
+    <string name="mtrl_picker_text_input_year_abbr">г</string>
+    <string name="mtrl_picker_toggle_to_calendar_input_mode">Перейти в режим выбора дней</string>
+    <string name="mtrl_picker_toggle_to_day_selection">Нажмите, чтобы перейти к выбору дня</string>
+    <string name="mtrl_picker_toggle_to_text_input_mode">Перейти в режим ввода текста</string>
+    <string name="mtrl_picker_toggle_to_year_selection">Нажмите, чтобы перейти к выбору года</string>
+    <string name="password_toggle_content_description">Показать пароль</string>
+    <string msgid="6264217191555673260" name="search_menu_title">"Поиск"</string>
+    <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">">999"</string>
+    <string name="upsdk_app_dl_installing" priority="LT">"Загрузка AppGallery"</string>
+    <string name="upsdk_app_download_info_new" priority="translator">"Установить"</string>
+    <string name="upsdk_app_size" priority="translator">"Размер"</string>
+    <string name="upsdk_app_version" priority="LT">"Версия"</string>
+    <string name="upsdk_cancel" priority="translator">"Отмена"</string>
+    <string name="upsdk_checking_update_prompt" priority="LT">"Проверка обновлений…"</string>
+    <string name="upsdk_choice_update" priority="LT">"Доступно обновление. Загрузите и установите его."</string>
+    <string name="upsdk_connect_server_fail_prompt_toast" priority="translator">"Сбой подключения к серверу. Повторите попытку позднее."</string>
+    <string name="upsdk_detail" priority="translator">"Сведения"</string>
+    <string name="upsdk_getting_message_fail_prompt_toast" priority="translator">"Сбой получения данных. Повторите попытку позднее."</string>
+    <string name="upsdk_install" priority="LT">"Для обновления установите AppGallery. Установить?"</string>
+    <string name="upsdk_no_available_network_prompt_toast" priority="translator">"Нет интернет-соединения. Проверьте настройки сети."</string>
+    <string name="upsdk_ota_app_name" priority="LT">"Приложение"</string>
+    <string name="upsdk_ota_cancel" priority="translator">"Позже"</string>
+    <string name="upsdk_ota_force_cancel_new" priority="LT">"Выйти"</string>
+    <string name="upsdk_ota_notify_updatebtn" priority="translator">"Обновить"</string>
+    <string name="upsdk_ota_title" priority="translator">"Новая версия"</string>
+    <string name="upsdk_storage_utils" priority="LT">"%1$s МБ"</string>
+    <string name="upsdk_third_app_dl_cancel_download_prompt_ex" priority="translator">"Отменить установку?"</string>
+    <string name="upsdk_third_app_dl_install_failed" priority="translator">"Сбой установки."</string>
+    <string name="upsdk_third_app_dl_sure_cancel_download" priority="translator">"Да"</string>
+    <string name="upsdk_update_check_no_new_version" priority="LT">"Это последняя версия."</string>
+    <string name="upsdk_updating" priority="translator">"Обновление"</string>
+</resources>

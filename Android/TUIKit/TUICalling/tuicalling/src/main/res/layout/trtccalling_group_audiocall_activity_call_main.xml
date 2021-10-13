@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/trtccalling_color_audiocall_background">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_guide_line"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <com.tencent.liteav.trtccalling.ui.audiocall.audiolayout.TRTCGroupAudioLayoutManager
+        android:id="@+id/trtc_layout_manager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/top_guide_line" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_inviting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tv_inviting_tag,ll_img_container"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/tv_inviting_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/trtccalling_color_gray"
+        android:textSize="@dimen/trtccalling_text_size_middle"
+        android:text="@string/trtccalling_waiting_be_accepted"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trtc_layout_manager" />
+
+    <LinearLayout
+        android:id="@+id/ll_img_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_inviting_tag" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/trtccalling_color_main"
+        android:textStyle="bold"
+        android:textSize="@dimen/trtccalling_text_size_middle"
+        app:layout_constraintBottom_toTopOf="@+id/ll_hangup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="@string/trtccalling_call_time_default" />
+
+    <LinearLayout
+        android:id="@+id/ll_mute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom"
+        app:layout_constraintEnd_toStartOf="@+id/ll_hangup"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/img_mute"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:src="@drawable/trtccalling_bg_mute_mic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/trtccalling_text_microphone"
+            android:textColor="@color/trtccalling_color_second"
+            android:textSize="@dimen/trtccalling_text_size_hint" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_hangup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom"
+        app:layout_constraintEnd_toStartOf="@+id/ll_handsfree"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ll_mute">
+
+        <ImageView
+            android:id="@+id/img_hangup"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/trtccalling_bg_hangup" />
+
+        <TextView
+            android:id="@+id/tv_hangup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/trtccalling_text_hangup"
+            android:textColor="@color/trtccalling_color_second"
+            android:textSize="@dimen/trtccalling_text_size_hint" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_handsfree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom"
+        app:layout_constraintEnd_toStartOf="@+id/ll_dialing"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ll_hangup">
+
+        <ImageView
+            android:id="@+id/img_handsfree"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:src="@drawable/trtccalling_bg_handsfree" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/trtccalling_text_speaker"
+            android:textColor="@color/trtccalling_color_second"
+            android:textSize="@dimen/trtccalling_text_size_hint" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_dialing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ll_handsfree">
+
+        <ImageView
+            android:id="@+id/img_dialing"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/trtccalling_bg_dialing" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/trtccalling_text_dialing"
+            android:textColor="@color/trtccalling_color_second"
+            android:textSize="@dimen/trtccalling_text_size_hint" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bottom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.98084813" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

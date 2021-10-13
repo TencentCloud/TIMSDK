@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="mtrl_badge_content_description">
+    <item quantity="one">%d uus märguanne</item>
+    <item quantity="other">%d uut märguannet</item>
+  </plurals>
+    <string msgid="5976598919945601918" name="abc_action_bar_home_description">"Liigu avalehele"</string>
+    <string msgid="8388173803310557296" name="abc_action_bar_up_description">"Liigu üles"</string>
+    <string msgid="3937310113216875497" name="abc_action_menu_overflow_description">"Rohkem valikuid"</string>
+    <string msgid="4692188335987374352" name="abc_action_mode_done">"Valmis"</string>
+    <string msgid="1189761859438369441" name="abc_activity_chooser_view_see_all">"Kuva kõik"</string>
+    <string msgid="2165779757652331008" name="abc_activitychooserview_choose_application">"Valige rakendus"</string>
+    <string msgid="4215997306490295099" name="abc_capital_off">"VÄLJAS"</string>
+    <string msgid="884982626291842264" name="abc_capital_on">"SEES"</string>
+    <string msgid="8833365367933412986" name="abc_menu_alt_shortcut_label">"Alt +"</string>
+    <string msgid="2223301931652355242" name="abc_menu_ctrl_shortcut_label">"Ctrl +"</string>
+    <string msgid="838001238306846836" name="abc_menu_delete_shortcut_label">"kustuta"</string>
+    <string msgid="7986526966204849475" name="abc_menu_enter_shortcut_label">"sisestusklahv"</string>
+    <string msgid="375214403600139847" name="abc_menu_function_shortcut_label">"Funktsiooniklahv +"</string>
+    <string msgid="4192209724446364286" name="abc_menu_meta_shortcut_label">"Meta +"</string>
+    <string msgid="4741552369836443843" name="abc_menu_shift_shortcut_label">"Tõstuklahv +"</string>
+    <string msgid="5473865519181928982" name="abc_menu_space_shortcut_label">"tühik"</string>
+    <string msgid="6180552449598693998" name="abc_menu_sym_shortcut_label">"Sym +"</string>
+    <string msgid="5520303668377388990" name="abc_prepend_shortcut_label">"Menüü +"</string>
+    <string msgid="7208076849092622260" name="abc_search_hint">"Otsige …"</string>
+    <string msgid="3741173234950517107" name="abc_searchview_description_clear">"Päringu tühistamine"</string>
+    <string msgid="693312494995508443" name="abc_searchview_description_query">"Otsingupäring"</string>
+    <string msgid="3417662926640357176" name="abc_searchview_description_search">"Otsing"</string>
+    <string msgid="1486535517437947103" name="abc_searchview_description_submit">"Päringu esitamine"</string>
+    <string msgid="2293578557972875415" name="abc_searchview_description_voice">"Häälotsing"</string>
+    <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"Jaga:"</string>
+    <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"Jagamine rakendusega <ns1:g id="APPLICATION_NAME">%s</ns1:g>"</string>
+    <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"Ahendamine"</string>
+    <string name="bottomsheet_action_expand_halfway">Laiendamine poolenisti</string>
+    <string name="character_counter_content_description">Sisestatud tähemärgid: %1$d/%2$d</string>
+    <string name="character_counter_overflowed_content_description">Tähemärgipiirang on ületatud: %1$d/%2$d</string>
+    <string name="clear_text_end_icon_content_description">Kustuta tekst</string>
+    <string msgid="8585111718777012708" name="common_google_play_services_enable_button">"Luba"</string>
+    <string msgid="7045129128108380659" name="common_google_play_services_enable_text">"Rakendus <ns1:g id="APP_NAME">%1$s</ns1:g> töötab ainult siis, kui lubate Google Play teenused."</string>
+    <string msgid="3147157405986503375" name="common_google_play_services_enable_title">"Google Play teenuste lubamine"</string>
+    <string msgid="9115728400623041681" name="common_google_play_services_install_button">"Installi"</string>
+    <string msgid="8179894293032530091" name="common_google_play_services_install_text">"Rakendus <ns1:g id="APP_NAME">%1$s</ns1:g> töötab ainult koos Google Play teenustega, mida teie seadmes pole."</string>
+    <string msgid="7442193194585196676" name="common_google_play_services_install_title">"Google Play teenuste hankimine"</string>
+    <string msgid="4293541511340436975" name="common_google_play_services_notification_channel_name">"Google Play teenuste saadavalolek"</string>
+    <string msgid="180394615667698242" name="common_google_play_services_notification_ticker">"Viga Google Play teenustes"</string>
+    <string msgid="2518680582564677258" name="common_google_play_services_unknown_issue">"Rakendusel <ns1:g id="APP_NAME">%1$s</ns1:g> on probleeme Google Play teenustega. Proovige uuesti."</string>
+    <string msgid="5501187292256987189" name="common_google_play_services_unsupported_text">"Rakendus <ns1:g id="APP_NAME">%1$s</ns1:g> töötab ainult koos Google Play teenustega, mida teie seadmes ei toetata."</string>
+    <string msgid="8172070149091615356" name="common_google_play_services_update_button">"Värskenda"</string>
+    <string msgid="7773943415006962566" name="common_google_play_services_update_text">"Rakenduse <ns1:g id="APP_NAME">%1$s</ns1:g> töötamiseks peate värskendama Google Play teenuseid."</string>
+    <string msgid="8706675115216073244" name="common_google_play_services_update_title">"Google Play teenuste värskendamine"</string>
+    <string msgid="7894275749778928941" name="common_google_play_services_updating_text">"Rakendus <ns1:g id="APP_NAME">%1$s</ns1:g> töötab ainult koos Google Play teenustega, mida praegu värskendatakse."</string>
+    <string msgid="2804989272736383918" name="common_google_play_services_wear_update_text">"Vajalik on Google Play teenuste uus versioon. See värskendab end peagi."</string>
+    <string msgid="5201977337835724196" name="common_open_on_phone">"Ava telefonis"</string>
+    <string msgid="3441753203274453993" name="common_signin_button_text">"Logi sisse"</string>
+    <string msgid="669893613918351210" name="common_signin_button_text_long">"Logi sisse Google\'i kontoga"</string>
+    <string name="error_icon_content_description">Viga</string>
+    <string name="exposed_dropdown_menu_content_description">Kuva rippmenüü</string>
+    <string msgid="4133737464567140336" name="fcm_fallback_notification_channel_label">"Muu"</string>
+    <string name="hms_abort" priority="translator">"Peata"</string>
+    <string name="hms_abort_message" priority="translator">"Peatada allalaadimine?"</string>
+    <string name="hms_bindfaildlg_message" priority="translator">"%1$s ei saa HMS Core'i kasutada. Käivitage Optimeerija (Telefonihaldur) või minge menüüsse Sätted, lubage teenuse %2$s kõik õigused (sh automaatkäivitus ja teisene käivitus) ja proovige uuesti."</string>
+    <string name="hms_cancel" priority="translator">"Tühista"</string>
+    <string name="hms_check_failure" priority="translator">"Värskenduste kontrollimine nurjus."</string>
+    <string name="hms_check_no_update" priority="translator">"Teie versioon on ajakohane."</string>
+    <string name="hms_checking" priority="translator">"Värskenduste kontrollimine…"</string>
+    <string name="hms_confirm" priority="translator">"OK"</string>
+    <string name="hms_download_failure" priority="translator">"HMS Core'i paketi allalaadimine nurjus."</string>
+    <string name="hms_download_no_space" priority="translator">"Pole piisavalt vaba ruumi. Allalaadimist ei saa lõpetada."</string>
+    <string name="hms_download_retry" priority="translator">"Allalaadimine nurjus. Kas proovida uuesti?"</string>
+    <string name="hms_downloading" priority="translator">"HMS Core'i allalaadimine | edenemine: %d%%"</string>
+    <string name="hms_downloading_loading" priority="LT">"Allalaadimine"</string>
+    <string name="hms_downloading_new" priority="LT">"HMS Core'i allalaadimine"</string>
+    <string name="hms_gamebox_name" priority="LT">"HUAWEI GameCenter"</string>
+    <string name="hms_install" priority="translator">"Installi"</string>
+    <string name="hms_install_message" priority="translator">"Selle funktsiooni kasutamiseks peab HMS Core olema installitud. Installida?"</string>
+    <string name="hms_push_channel" priority="translator">"Vaikesäte"</string>
+    <string name="hms_retry" priority="translator">"Proovi uuesti"</string>
+    <string name="hms_update" priority="translator">"Värskenda"</string>
+    <string name="hms_update_continue" priority="LT">"Laadi alla"</string>
+    <string name="hms_update_message" priority="translator">"Selle funktsiooni kasutamiseks värskendage HMS Core uusimale versioonile. Kas värskendada kohe?"</string>
+    <string name="hms_update_message_new" priority="LT">"See teenus vajab järgmise rakenduse uusimat versiooni:\n\n%1$s"</string>
+    <string name="hms_update_nettype" priority="LT">"Wi-Fi-ühendust ei ole. Kas laadida alla mobiilandmeside abil?"</string>
+    <string name="hms_update_title" priority="translator">"HMS Core"</string>
+    <string name="icon_content_description">Dialoogi ikoon</string>
+    <string name="item_view_role_description">Vaheleht</string>
+    <string name="material_clock_toggle_content_description">Valige AM või PM</string>
+    <string name="material_hour_selection">Valige tund</string>
+    <string name="material_hour_suffix">Kell %1$s</string>
+    <string name="material_minute_selection">Minutite valimine</string>
+    <string name="material_minute_suffix">%1$s minutit</string>
+    <string name="material_timepicker_am">AM</string>
+    <string name="material_timepicker_clock_mode_description">Aktiveerige kellaaja sisestamiseks kellarežiim.</string>
+    <string name="material_timepicker_hour">Tunnid</string>
+    <string name="material_timepicker_minute">Minut</string>
+    <string name="material_timepicker_pm">PM</string>
+    <string name="material_timepicker_select_time">Aja valimine</string>
+    <string name="material_timepicker_text_input_mode_description">Aktiveerige kellaaja sisestamiseks tekstisisestusrežiim.</string>
+    <string name="mtrl_badge_numberless_content_description">Uus märguanne</string>
+    <string name="mtrl_chip_close_icon_content_description">Üksuse %1$s eemaldamine</string>
+    <string name="mtrl_exceed_max_badge_number_content_description">Rohkem kui %1$d uut märguannet</string>
+    <string name="mtrl_picker_a11y_next_month">Vaheta järgmisele kuule</string>
+    <string name="mtrl_picker_a11y_prev_month">Vaheta eelmisele kuule</string>
+    <string name="mtrl_picker_announce_current_selection">Praegune valik: %1$s</string>
+    <string name="mtrl_picker_confirm">@android:string/ok</string>
+    <string name="mtrl_picker_date_header_selected">%1$s</string>
+    <string name="mtrl_picker_date_header_title">Valige kuupäev</string>
+    <string name="mtrl_picker_date_header_unselected">Valitud kuupäev</string>
+    <string name="mtrl_picker_day_of_week_column_header">Päevade veerg: %1$s</string>
+    <string name="mtrl_picker_invalid_format">Sobimatu vorming.</string>
+    <string name="mtrl_picker_invalid_format_example">Näide: %1$s</string>
+    <string name="mtrl_picker_invalid_format_use">Kasutage: %1$s</string>
+    <string name="mtrl_picker_invalid_range">Sobimatu vahemik.</string>
+    <string name="mtrl_picker_navigate_to_year_description">Mine aastasse %1$s</string>
+    <string name="mtrl_picker_out_of_range">Vahemikust väljas: %1$s</string>
+    <string name="mtrl_picker_range_header_only_end_selected">Alguskuupäev – %1$s</string>
+    <string name="mtrl_picker_range_header_only_start_selected">%1$s – lõppkuupäev</string>
+    <string name="mtrl_picker_range_header_selected">%1$s–%2$s</string>
+    <string name="mtrl_picker_range_header_title">Valige vahemik</string>
+    <string name="mtrl_picker_range_header_unselected">Alguskuupäev – lõppkuupäev</string>
+    <string name="mtrl_picker_save">Salvesta</string>
+    <string name="mtrl_picker_text_input_date_hint">Kuupäev</string>
+    <string name="mtrl_picker_text_input_date_range_end_hint">Lõppkuupäev</string>
+    <string name="mtrl_picker_text_input_date_range_start_hint">Alguskuupäev</string>
+    <string name="mtrl_picker_text_input_day_abbr">p</string>
+    <string name="mtrl_picker_text_input_month_abbr">k</string>
+    <string name="mtrl_picker_text_input_year_abbr">a</string>
+    <string name="mtrl_picker_toggle_to_calendar_input_mode">Lülitu kalendrisisestusrežiimile</string>
+    <string name="mtrl_picker_toggle_to_day_selection">Puudutage, et lülituda päeva valimisele</string>
+    <string name="mtrl_picker_toggle_to_text_input_mode">Lülitu tekstisisestusrežiimile</string>
+    <string name="mtrl_picker_toggle_to_year_selection">Puudutage, et lülituda aasta valimisele</string>
+    <string name="password_toggle_content_description">Parooli kuvamine</string>
+    <string msgid="6264217191555673260" name="search_menu_title">"Otsing"</string>
+    <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="upsdk_app_dl_installing" priority="LT">"AppGallery allalaadimine"</string>
+    <string name="upsdk_app_download_info_new" priority="translator">"Installi"</string>
+    <string name="upsdk_app_size" priority="translator">"Maht"</string>
+    <string name="upsdk_app_version" priority="translator">"Versioon"</string>
+    <string name="upsdk_cancel" priority="translator">"Tühista"</string>
+    <string name="upsdk_checking_update_prompt" priority="LT">"Värskenduste otsimine…"</string>
+    <string name="upsdk_choice_update" priority="LT">"Saadaval on värskendus. Laadige alla ja installige uusim versioon."</string>
+    <string name="upsdk_connect_server_fail_prompt_toast" priority="translator">"Serveriga ei saa ühendust luua. Proovige hiljem uuesti."</string>
+    <string name="upsdk_detail" priority="translator">"Üksikasjad"</string>
+    <string name="upsdk_getting_message_fail_prompt_toast" priority="translator">"Andmeid ei saa hankida. Proovige hiljem uuesti."</string>
+    <string name="upsdk_install" priority="LT">"Värskendamiseks installige AppGallery. Installida kohe?"</string>
+    <string name="upsdk_no_available_network_prompt_toast" priority="translator">"Interneti-ühendus puudub. Kontrollige võrgusätteid."</string>
+    <string name="upsdk_ota_app_name" priority="LT">"Rakendus"</string>
+    <string name="upsdk_ota_cancel" priority="translator">"Hiljem"</string>
+    <string name="upsdk_ota_force_cancel_new" priority="LT">"Välju"</string>
+    <string name="upsdk_ota_notify_updatebtn" priority="translator">"Värskenda"</string>
+    <string name="upsdk_ota_title" priority="translator">"Uus versioon"</string>
+    <string name="upsdk_storage_utils" priority="LT">"%1$s MB"</string>
+    <string name="upsdk_third_app_dl_cancel_download_prompt_ex" priority="translator">"Tühistada installimine?"</string>
+    <string name="upsdk_third_app_dl_install_failed" priority="translator">"Installimine nurjus."</string>
+    <string name="upsdk_third_app_dl_sure_cancel_download" priority="translator">"Jah"</string>
+    <string name="upsdk_update_check_no_new_version" priority="Reviewed">"Teie versioon on ajakohane."</string>
+    <string name="upsdk_updating" priority="translator">"Värskendamine"</string>
+</resources>

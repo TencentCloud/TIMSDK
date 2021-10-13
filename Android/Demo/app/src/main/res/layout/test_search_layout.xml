@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/status_bar_color" >
 
-    <com.tencent.qcloud.tim.uikit.component.TitleBarLayout
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
         android:id="@+id/test_search_title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />

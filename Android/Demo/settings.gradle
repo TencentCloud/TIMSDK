@@ -1,1 +1,27 @@
-include ':app', ':tuikit', ':tuikit-live'
+include ':app'
+
+include ':tuikit'
+project(':tuikit').projectDir = new File(settingsDir, '../TUIKit/TUIKit')
+
+include ':tuicore'
+project(':tuicore').projectDir = new File(settingsDir, '../TUIKit/TUICore/tuicore')
+
+include ':tuichat'
+project(':tuichat').projectDir = new File(settingsDir, '../TUIKit/TUIChat/tuichat')
+
+include ':tuicontact'
+project(':tuicontact').projectDir = new File(settingsDir, '../TUIKit/TUIContact/tuicontact')
+
+include ':tuiconversation'
+project(':tuiconversation').projectDir = new File(settingsDir, '../TUIKit/TUIConversation/tuiconversation')
+
+include ':tuisearch'
+project(':tuisearch').projectDir = new File(settingsDir, '../TUIKit/TUISearch/tuisearch')
+
+include ':tuigroup'
+project(':tuigroup').projectDir = new File(settingsDir, '../TUIKit/TUIGroup/tuigroup')
+
+include ':tuicalling'
+project(':tuicalling').projectDir = new File(settingsDir, '../TUIKit/TUICalling/tuicalling')
+
+include ':tuilive'

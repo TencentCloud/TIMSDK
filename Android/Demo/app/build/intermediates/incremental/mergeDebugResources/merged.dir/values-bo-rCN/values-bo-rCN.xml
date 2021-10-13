@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hms_abort" priority="translator">"མཚམས་འཇོག"</string>
+    <string name="hms_abort_message" priority="translator">"ཕབ་ལེན་མཚམས་འཇོག་བྱེད་འདོད་དམ།"</string>
+    <string name="hms_bindfaildlg_message" priority="translator">"%1$s ཡིས་HMS Coreདག་བེད་སྤྱོད་བྱེད་ཐུབ་ཀྱི་མིན་འདུག ཁ་པར་སྟངས་འཛིན་ཡོ་ཆས་འགོ་འཛུགས་བྱེད་པའམ། ཡང་ན། སྒྲིག་བཀོད་སྟེང་བསྐྱོད། %2$s ཆེད་ཆོག་མཆན་ཆ་ཚང་ནུས་ལྡན་བཟོ་ (རང་འགུལ་འགོ་འཛུགས་དང་འགོ་འཛུགས་ཕལ་པ་འཚུད་པ་ཡིན།) བ་དང་། ཡང་བསྐྱར་འབད་རྩོལ་བྱ།"</string>
+    <string name="hms_cancel" priority="translator">"ཕྱིར་འཐེན།"</string>
+    <string name="hms_check_failure" priority="translator">"HMS Coreགསར་བསྐྱར་ལ་ཞིབ་དཔྱད་ཚད་ལེན་ལེགས་མི་འགྲུབ།"</string>
+    <string name="hms_check_no_update" priority="translator">"པར་གཞི་གསར་ཤོས་རེད་འདུག"</string>
+    <string name="hms_checking" priority="translator">"པར་གཞི་གསར་པ་ཞིབ་དཔྱད་ཚད་ལེན་བྱེད་བཞིན་པ།"</string>
+    <string name="hms_confirm" priority="translator">"ཆོག"</string>
+    <string name="hms_download_failure" priority="translator">"HMS Coreདོ་བོར་ཕབ་ལེན་ལེགས་མི་འགྲུབ།"</string>
+    <string name="hms_download_no_space" priority="translator">"བེད་སྤྱོད་ཆོག་པའི་བར་སྟོང་མི་འདང་། ཕབ་ལེན་པར་ལེགས་འགྲུབ་བྱེད་མི་ཐུབ།"</string>
+    <string name="hms_download_retry" priority="translator">"HMS Coreཕབ་ལེན་ལེགས་མི་འགྲུབ། ཡང་བསྐྱར་གྱིས་ཚོད་ལྟ་བྱེད་འདོད་དམ།"</string>
+    <string name="hms_downloading" priority="translator">"གོ་རིམ་HMS Coreལ་ཕབ་ལེན་བྱེད་བཞིན། %d%%"</string>
+    <string name="hms_downloading_loading" priority="LT">"སྣོན་འཇུག་བྱེད་བཞིན་པ།"</string>
+    <string name="hms_downloading_new" priority="LT">"HMS Coreཕབ་ལེན་བཞིན་པ།"</string>
+    <string name="hms_gamebox_name" priority="translator">"རོལ་རྩེད་ལྟེ་གནས།"</string>
+    <string name="hms_install" priority="translator">"སྒྲིག་འཇུག"</string>
+    <string name="hms_install_message" priority="translator">"ཁྱད་ཆོས་འདི་བེད་སྤྱོད་བྱེད་པར་HMS Coreདག་སྒྲིག་འཇུག་བྱེད་དགོས་པ་ཡིན། སྒྲིག་འཇུག་བྱེད་འདོད་དམ།"</string>
+    <string name="hms_push_channel" priority="translator">"ཐོག་མ།"</string>
+    <string name="hms_retry" priority="translator">"ཡང་བསྐྱར་བྱེད་རོགས།"</string>
+    <string name="hms_update" priority="translator">"གསར་བསྐྱར།"</string>
+    <string name="hms_update_continue" priority="LT">"མུ་མཐུད་དུ་ཕབ་ལེན་བྱེད།"</string>
+    <string name="hms_update_message" priority="translator">"HMS Coreགསར་ཤོས་ལ་གསར་བསྐྱར་བྱས་ནས་ཁྱད་ཆོས་འདི་སྤྱོད་བྱེད། ད་ལྟར་གསར་བསྐྱར་བྱེད་འདོད་དམ།"</string>
+    <string name="hms_update_message_new" priority="LT">"ཞབས་ཞུ་འདི་ལ་གཤམ་གྱི་ཉེར་སྤྱོད་ཀྱི་རིམ་པ་གསར་ཤོས་དེ་སྒྲིག་འཇུག་བྱེད་དགོས་འདུག：\n\n·%1$s"</string>
+    <string name="hms_update_nettype" priority="LT">"མིག་སྔར་ Wi-Fi མིན་པའི་དྲ་རྒྱ་ཡིན། མུ་མཐུད་དུ་ཕབ་ལེན་བྱེད་དམ།"</string>
+    <string name="hms_update_title" priority="translator">"HMS Core"</string>
+    <string name="upsdk_app_dl_installing" priority="translator">"ཧྭ་ཝེའི་ཉེར་སྤྱོད་ཁྲོམ་ར་ཕབ་ལེན་བཞིན་པ།"</string>
+    <string name="upsdk_app_download_info_new" priority="translator">"སྒྲིག་འཇུག"</string>
+    <string name="upsdk_app_size" priority="translator">"ཆ་ཚད།"</string>
+    <string name="upsdk_app_version" priority="LT">"པར་གཞི།"</string>
+    <string name="upsdk_cancel" priority="translator">"ཕྱིར་འཐེན།"</string>
+    <string name="upsdk_checking_update_prompt" priority="LT">"གསར་སྒྱུར་ལ་ཞིབ་བཤེར་བྱེད་བཞིན་ཡོད།"</string>
+    <string name="upsdk_choice_update" priority="LT">"གསར་སྒྱུར་ཐོབ་རུང་འདུག རིམ་པ་གསར་ཤོས་ཕབ་ལེན་གནང་བ་དང་སྒྲིག་འཇུག་གནང་རོགས།"</string>
+    <string name="upsdk_connect_server_fail_prompt_toast" priority="translator">"ཞབས་ཞུའི་ཡོ་ཆས་སྟེང་སྦྲེལ་མཐུད་མ་ཐུབ་པས། ཏོག་ཙམ་ནས་ཚོད་ལྟ་གནང་རོགས།"</string>
+    <string name="upsdk_detail" priority="translator">"ཞིབ་ཕྲ།"</string>
+    <string name="upsdk_getting_message_fail_prompt_toast" priority="translator">"ཆ་འཕྲིན་བསྐྱར་སོན་མ་ཐུབ། རྗེས་སུ་ཡང་བསྐྱར་འབད་རྩོལ་གནང་རོགས།"</string>
+    <string name="upsdk_install" priority="translator">"གསར་སྒྱུར་བྱེད་པར་ཧྭ་ཝེའི་ཉེར་སྤྱོད་ཁྲོམ་ར་སྒྲིག་འཇུག་བྱ། ད་ལྟ་སྒྲིག་འཇུག་བྱེད་དམ།"</string>
+    <string name="upsdk_no_available_network_prompt_toast" priority="translator">"དྲ་རྒྱའི་སྦྲེལ་མཐུད་མིན་འདུག ཁྱེད་ཀྱི་དྲ་ལམ་སྒྲིག་བཀོད་དག་ཞིབ་བཤེར་གནང་རོགས།"</string>
+    <string name="upsdk_ota_app_name" priority="LT">"ཉེར་སྤྱོད།"</string>
+    <string name="upsdk_ota_cancel" priority="translator">"རྗེས་མ།"</string>
+    <string name="upsdk_ota_force_cancel_new" priority="LT">"ཕྱིར་ཐོན།"</string>
+    <string name="upsdk_ota_notify_updatebtn" priority="translator">"གསར་སྒྱུར།"</string>
+    <string name="upsdk_ota_title" priority="translator">"རིམ་པ་གསར་པ།"</string>
+    <string name="upsdk_storage_utils" priority="LT">"%1$s MB"</string>
+    <string name="upsdk_third_app_dl_cancel_download_prompt_ex" priority="translator">"སྒྲིག་འཇུག་ཕྱིར་འཐེན་བྱེད་དམ།"</string>
+    <string name="upsdk_third_app_dl_install_failed" priority="translator">"སྒྲིག་འཇུག་མི་ཐུབ།"</string>
+    <string name="upsdk_third_app_dl_sure_cancel_download" priority="translator">"གཏན་འཁེལ།"</string>
+    <string name="upsdk_update_check_no_new_version" priority="Reviewed">"པར་གཞི་གསར་ཤོས་ཡིན།"</string>
+    <string name="upsdk_updating" priority="translator">"གསར་སྒྱུར་བཞིན་པ།"</string>
+</resources>

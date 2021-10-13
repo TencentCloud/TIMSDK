@@ -1,0 +1,99 @@
+package com.tencent.qcloud.tuikit.tuichat.ui.page;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
+import com.tencent.qcloud.tuikit.tuichat.bean.MergeMessageElemBean;
+import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
+import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ForwardPresenter;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageAdapter;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+
+public class TUIForwardChatActivity extends BaseLightActivity {
+
+    private static final String TAG = TUIForwardChatActivity.class.getSimpleName();
+
+    private TitleBarLayout mTitleBar;
+    private MessageRecyclerView mFowardChatMessageRecyclerView;
+    private MessageAdapter mForwardChatAdapter;
+
+    private MessageInfo mMessageInfo;
+    private String mTitle;
+
+    private ForwardPresenter presenter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.forward_chat_layout);
+        mFowardChatMessageRecyclerView = (MessageRecyclerView) findViewById(R.id.chat_message_layout);
+        mFowardChatMessageRecyclerView.setLayoutManager(new CustomLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mForwardChatAdapter = new MessageAdapter();
+        mForwardChatAdapter.setForwardMode(true);
+        presenter = new ForwardPresenter();
+        presenter.setMessageListAdapter(mForwardChatAdapter);
+
+        mFowardChatMessageRecyclerView.setAdapter(mForwardChatAdapter);
+
+        mTitleBar = (TitleBarLayout) findViewById(R.id.chat_title_bar);
+        mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        mFowardChatMessageRecyclerView.setOnItemClickListener(new OnItemLongClickListener() {
+            @Override
+            public void onMessageLongClick(View view, int position, MessageInfo messageInfo) {
+
+            }
+
+            @Override
+            public void onUserIconClick(View view, int position, MessageInfo messageInfo) {
+                if (null == messageInfo) {
+                    return;
+                }
+
+                MergeMessageElemBean mergeMessageElemBean = MergeMessageElemBean.createMergeMessageElemBean(messageInfo);
+                if (mergeMessageElemBean != null){
+                    Intent intent = new Intent(getBaseContext(), TUIForwardChatActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageInfo);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        init();
+    }
+
+    private void init(){
+        Intent intent = getIntent();
+        if (intent != null) {
+            mTitleBar.setTitle(mTitle, ITitleBarLayout.Position.MIDDLE);
+            mTitleBar.getRightGroup().setVisibility(View.GONE);
+
+            mMessageInfo = (MessageInfo) intent.getSerializableExtra(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY);
+            if (null == mMessageInfo) {
+                TUIChatLog.e(TAG, "mMessageInfo is null");
+                return;
+            }
+            MergeMessageElemBean mergeMessageElemBean = MergeMessageElemBean.createMergeMessageElemBean(mMessageInfo);
+            presenter.downloadMergerMessage(mergeMessageElemBean);
+        }
+    }
+
+}

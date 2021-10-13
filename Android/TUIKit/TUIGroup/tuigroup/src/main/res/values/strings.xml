@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="group_id">Group ID</string>
+    <string name="group_name">Group Chat Name</string>
+    <string name="group_icon">Change Group Profile Photo</string>
+    <string name="group_notice">Group Notice</string>
+    <string name="group_members">Group Members</string>
+    <string name="group_type">Group Type</string>
+    <string name="add_group_member">Add Member</string>
+    <string name="remove_group_member">Delete Member</string>
+    <string name="join_group_type">Group Joining Method</string>
+    <string name="in_group_nick_name">My Alias in Group</string>
+    <string name="dissolve">Disband Group</string>
+    <string name="modify_group_notice">Edit Group Notice</string>
+    <string name="modify_nick_name_in_goup">Edit My Alias in Group</string>
+
+    <string name="group_detail">Group Chat Details</string>
+
+    <string name="group_apply_members">Request to Join Group</string>
+
+    <string name="group_remove_member">Remove</string>
+    <string name="modify_group_name_success">Edited</string>
+    <string name="modify_group_notice_success">Edited</string>
+    <string name="exit_group">Leave</string>
+    <string name="modify_nickname_success">Edited</string>
+
+    <string name="search_call_hint">Enter Group Member\'s Name</string>
+
+
+
+    <string name="modify_icon_fail">Editing failed</string>
+    <string name="modify_icon_suc">Edited</string>
+    <string name="chat_room">Chatroom</string>
+    <string name="chat_room_tip">The request to join chat room is reviewed automatically. Unable to modify it.</string>
+    <string name="dismiss_group_tip">Disband the group?</string>
+    <string name="quit_group_tip">Leave the group?</string>
+    <string name="private_group">Discussion Group</string>
+    <string name="public_group">Public Group</string>
+    <string name="request_wait">Invitation sent. Waiting for response.</string>
+    <string name="remove">Remove</string>
+    <string name="remove_member">Delete Member</string>
+    <string name="remove_tip_suc">Deleted</string>
+    <string name="remove_tip_fail">Deletion failed: </string>
+    <string name="invite_suc">Member invited</string>
+    <string name="invite_fail">Invitation failed:</string>
+    <string name="remove_fail_tip">Removal failed</string>
+    <string name="manager">Manage</string>
+
+    <string name="forbid_join">Prohibited from Joining</string>
+    <string name="manager_judge">Admin Approval</string>
+    <string name="auto_judge">Auto Approval...</string>
+
+    <string name="modify_group_name">Edit Group Name</string>
+    <string name="group_join_type">Group Joining Method</string>
+
+    <string name="sure">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="accept">Agree</string>
+    <string name="refuse">Decline</string>
+    <string name="accepted">Agreed</string>
+    <string name="refused">Declined</string>
+
+    <string name="input_tip">No nickname entered, please fill in again</string>
+
+    <string name="chat_to_top">Sticky on Top</string>
+    <string name="profile_msgrev_opt">Message Do Not Disturb</string>
+
+    <string name="join_group_tip">You have been invited to the group: </string>
+    <string name="joined_tip">You have joined the group: </string>
+    <string name="reject_join_tip">You are rejected from joining the group: </string>
+    <string name="kick_group">You have been kicked out of the group: </string>
+    <string name="dismiss_tip_before">Your group</string>
+    <string name="dismiss_tip_after">is disbanded.</string>
+    <string name="get_system_notice">Received a custom system notification: </string>
+</resources>

@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo.profile;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -10,15 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
-import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.qcloud.tim.demo.BaseActivity;
-import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.bean.UserInfo;
+import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.uikit.TUIKit;
-import com.tencent.qcloud.tim.uikit.base.BaseFragment;
-import com.tencent.qcloud.tim.uikit.base.IUIKitCallBack;
-import com.tencent.qcloud.tim.uikit.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tim.uikit.utils.ToastUtil;
+import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 
 public class ProfileFragment extends BaseFragment {
@@ -49,27 +46,29 @@ public class ProfileFragment extends BaseFragment {
                         .setPositiveButton(getString(R.string.sure), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                TUIKit.logout(new IUIKitCallBack() {
+                                Thread logoutThread = new Thread(() -> TUIKit.logout(new V2TIMCallback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
 
                                     @Override
-                                    public void onSuccess(Object data) {
-                                        logout();
+                                    public void onError(int code, String desc) {
+                                        ToastUtil.toastLongMessage("logout fail: " + code + "=" + desc);
                                     }
-
-                                    @Override
-                                    public void onError(String module, int errCode, String errMsg) {
-                                        ToastUtil.toastLongMessage("logout fail: " + errCode + "=" + errMsg);
-                                        logout();
-                                    }
-
-                                    private void logout() {
-                                        BaseActivity.logout(DemoApplication.instance());
-                                        if (getActivity() != null) {
-                                            getActivity().finish();
-                                        }
-                                    }
-                                } );
+                                }));
+                                logoutThread.setName("Logout-Thread");
+                                logoutThread.start();
+                                UserInfo.getInstance().setToken("");
+                                UserInfo.getInstance().setAutoLogin(false);
+                                Bundle bundle = new Bundle();
+                                bundle.putBoolean(TUIKitConstants.LOGOUT, true);
+                                TUIKit.startActivity("LoginForDevActivity", bundle);
+                                if (getActivity() != null) {
+                                    getActivity().finish();
+                                }
                             }
+
                         })
                         .setNegativeButton(getString(R.string.cancel), new View.OnClickListener() {
                             @Override
@@ -78,7 +77,6 @@ public class ProfileFragment extends BaseFragment {
                             }
                         })
                         .show();
-
             }
         });
 

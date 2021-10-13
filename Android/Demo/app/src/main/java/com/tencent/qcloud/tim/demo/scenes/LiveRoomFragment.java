@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.tencent.liteav.login.ProfileManager;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.scenes.adapter.RoomListAdapter;
 import com.tencent.qcloud.tim.demo.scenes.net.RoomManager;
@@ -73,7 +73,7 @@ public class LiveRoomFragment extends BaseScenesFragment implements View.OnClick
         mRoomListAdapter = new RoomListAdapter(getContext(), mRoomInfoList, new RoomListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, RoomListAdapter.ScenesRoomInfo roomInfo) {
-                String selfUserId = ProfileManager.getInstance().getUserModel().userId;
+                String selfUserId = V2TIMManager.getInstance().getLoginUser();
                 if (roomInfo.anchorId.equals(selfUserId)) {
                     createRoom();
                 } else {
@@ -132,7 +132,7 @@ public class LiveRoomFragment extends BaseScenesFragment implements View.OnClick
     private void enterRoom(RoomListAdapter.ScenesRoomInfo info) {
         Intent intent = new Intent(getActivity(), LiveRoomAudienceActivity.class);
         intent.putExtra(RoomManager.ROOM_TITLE, info.roomName);
-        intent.putExtra(RoomManager.GROUP_ID, Integer.valueOf(info.roomId));
+        intent.putExtra(RoomManager.ROOM_ID, Integer.valueOf(info.roomId));
         intent.putExtra(RoomManager.USE_CDN_PLAY, false);
         intent.putExtra(RoomManager.ANCHOR_ID, info.anchorId);
         intent.putExtra(RoomManager.PUSHER_NAME, info.anchorName);
