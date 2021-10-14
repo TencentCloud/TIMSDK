@@ -81,22 +81,23 @@ pod setup
 ```
 2. 终端执行以下命令，加载 ImSDK 库。
 ```
-cd iOS/TUIKitDemo
+cd iOS/Demo
 pod install
 ```
 3. 如果安装失败，运行以下命令更新本地的 CocoaPods 仓库列表
 ```
 pod repo update
 ```
-4. 进入 iOS/TUIKitDemo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
+4. 进入 iOS/Demo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
 
 ## 步骤5：编译运行（移除音视频通话和群直播）
 如果不想集成音视频相关的功能，请您按照下面的步骤移除对音视频的依赖，再编译运行。
 
-1. 进入 iOS/TUIKitDemo 文件夹，修改 `Podfile` 文件，屏蔽 `TXIMSDK_TUIKit_live_iOS` pod  集成，然后执行 `pod install` 命令。
+1. 进入 iOS/Demo 文件夹，修改 `Podfile` 文件，屏蔽 `TXIMSDK_TUIKit_live_iOS` 和 `TUICalling`pod  集成，然后执行 `pod install` 命令。
 ```
   pod 'TXIMSDK_TUIKit_iOS'
 #  pod 'TXIMSDK_TUIKit_live_iOS' （不需要再集成该库）
+#  pod 'TUICalling' （不需要再集成该库）
 ```
 
 2. 打开 `TUIKitDemo.xcworkspace` 工程，手动删除 `Scenes` 文件夹。
