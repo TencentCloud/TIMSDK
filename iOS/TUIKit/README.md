@@ -14,7 +14,7 @@
 
 [最新 TUISearch 下载](https://im.sdk.qcloud.com/download/tuikit/5.7.1435/TUISearch_iOS.zip)
 
-[最新 TUISearch 下载](https://im.sdk.qcloud.com/download/tuikit/5.7.1435/TUICalling_iOS.zip)
+[最新 TUICalling 下载](https://im.sdk.qcloud.com/download/tuikit/5.7.1435/TUICalling_iOS.zip)
 
 [最新 TUICore 下载](https://im.sdk.qcloud.com/download/tuikit/5.7.1435/TUICore_iOS.zip)
 
