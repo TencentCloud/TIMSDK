@@ -145,18 +145,22 @@
     // 聊天页面, 视频通话按钮
     if (isNeedVideoCall) {
         NSDictionary *extentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall param:param];
-        TUIInputMoreCellData *videoCallMenusData = [TUIInputMoreCellData new];
-        videoCallMenusData.key = TUIInputMoreCellKey_VideoCall;
-        videoCallMenusData.extentionView = [extentionInfo tui_objectForKey:TUICore_TUIChatExtension_GetMoreCellInfo_View asClass:UIView.class];
-        [moreMenus addObject:videoCallMenusData];
+        if(extentionInfo) {
+            TUIInputMoreCellData *videoCallMenusData = [TUIInputMoreCellData new];
+            videoCallMenusData.key = TUIInputMoreCellKey_VideoCall;
+            videoCallMenusData.extentionView = [extentionInfo tui_objectForKey:TUICore_TUIChatExtension_GetMoreCellInfo_View asClass:UIView.class];
+            [moreMenus addObject:videoCallMenusData];
+        }
     }
     // 聊天页面, 语音通话按钮
     if (isNeedAudioCall) {
         NSDictionary *extentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall param:param];
-        TUIInputMoreCellData *audioCallMenusData = [TUIInputMoreCellData new];
-        audioCallMenusData.key = TUIInputMoreCellKey_AudioCall;
-        audioCallMenusData.extentionView = [extentionInfo tui_objectForKey:TUICore_TUIChatExtension_GetMoreCellInfo_View asClass:UIView.class];
-        [moreMenus addObject:audioCallMenusData];
+        if(extentionInfo) {
+            TUIInputMoreCellData *audioCallMenusData = [TUIInputMoreCellData new];
+            audioCallMenusData.key = TUIInputMoreCellKey_AudioCall;
+            audioCallMenusData.extentionView = [extentionInfo tui_objectForKey:TUICore_TUIChatExtension_GetMoreCellInfo_View asClass:UIView.class];
+            [moreMenus addObject:audioCallMenusData];
+        }
     }
     // 聊天页面, 群直播按钮
     if (isNeedGroupLive && groupID.length > 0) {
