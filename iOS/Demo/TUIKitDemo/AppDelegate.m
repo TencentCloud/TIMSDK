@@ -7,26 +7,32 @@
 //
 
 #import "AppDelegate.h"
-#import "TNavigationController.h"
 #import "ConversationController.h"
 #import "SettingController.h"
 #import "ContactsController.h"
-#import "TUITabBarController.h"
-#import "LoginController.h"
+#import "TCConstants.h"
+#import "TUIDefine.h"
 #import "TUIKit.h"
 #import <Bugly/Bugly.h>
 #import "Aspects.h"
+#import <QAPM/QAPM.h>
 #import "TCUtil.h"
-#import "UIColor+TUIDarkMode.h"
+#import "TUILoginCache.h"
+#import "TUIDarkModel.h"
 #import "GenerateTestUserSig.h"
+#import "TUILoginCache.h"
 
 #if ENABLELIVE
 #import "TUILiveSceneViewController.h"
-#import "TXLiveBase.h"
 #import "TUIKitLive.h"
+#import "TRTCSignalFactory.h"
+#import "TXLiveBase.h"
 #endif
 
-@interface AppDelegate () <UIAlertViewDelegate,BuglyDelegate>
+#import "TestViewController.h"
+
+
+@interface AppDelegate () <UIAlertViewDelegate,BuglyDelegate,QAPMYellowProfileDelegate, V2TIMConversationListener, V2TIMSDKListener>
 @property(nonatomic,strong) NSString *groupID;
 @property(nonatomic,strong) NSString *userID;
 @property(nonatomic,strong) V2TIMSignalingInfo *signalingInfo;
@@ -36,6 +42,9 @@ static AppDelegate *app;
 
 @implementation AppDelegate
 {
+    dispatch_source_t _timer;
+    uint64_t          _beginTime;
+    uint64_t          _endTime;
     NSUInteger        _unReadCount;
 }
 
@@ -63,6 +72,8 @@ static AppDelegate *app;
         [self onReceiveNomalMsgAPNs];
         [self onReceiveGroupCallAPNs];
         [self setupTotalUnreadCount];
+        
+        [TUITool makeToast:NSLocalizedString(@"AppLoginSucc", nil) duration:1];
     } fail:^(int code, NSString *msg) {
         NSLog(@"-----> 登录失败");
         fail(code, msg);
@@ -76,12 +87,17 @@ static AppDelegate *app;
 
     // Override point for customization after application launch.
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserStatus:) name:TUIKitNotification_TIMUserStatusListener object:nil];
     
-    BOOL test_environment = [[NSUserDefaults standardUserDefaults] integerForKey:@"test_environment"];
-    [[V2TIMManager sharedInstance] callExperimentalAPI:@"setTestEnvironment" param:[NSNumber numberWithBool:test_environment] succ:nil fail:nil];
+    [[TUIKit sharedInstance] setupWithAppId:SDKAPPID];
+    [[V2TIMManager sharedInstance] addIMSDKListener:self];
     
+#if ENABLELIVE
+    [TXLiveBase setLicenceURL:LicenceURL key:LicenceKey];
+#endif
+    
+    [self setupServerInfo];
     [self setupBugly];
+    [self setupQAPM];
     [self registNotification];
     [self setupCustomSticker];
 
@@ -98,9 +114,7 @@ static AppDelegate *app;
         vc.navigationItem.title = @"";
     } error:NULL];
 
-    [[TUIKit sharedInstance] setupWithAppId:SDKAPPID];
-
-    [[TUILocalStorage sharedInstance] login:^(NSString * _Nonnull identifier, NSUInteger appId, NSString * _Nonnull userSig) {
+    [[TUILoginCache sharedInstance] login:^(NSString * _Nonnull identifier, NSUInteger appId, NSString * _Nonnull userSig) {
         if(appId == SDKAPPID && identifier.length != 0 && userSig.length != 0){
             [self login:identifier userSig:userSig succ:nil fail:^(int code, NSString *msg) {
                 self.window.rootViewController = [self getLoginController];
@@ -109,17 +123,66 @@ static AppDelegate *app;
             self.window.rootViewController = [self getLoginController];
         }
     }];
+    
+    //上报安装启动事件
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:installApp]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:installApp];
+        [TCUtil report:Action_Install actionSub:@"" code:@(0) msg:@"im demo install success"];
+    }
+    [TCUtil report:Action_Startup actionSub:@"" code:@(0) msg:@"im demo startup success"];
+    _beginTime = [[NSDate date] timeIntervalSince1970];
     return YES;
+}
+
+- (void)setupServerInfo
+{
+    if (TUIDemoCurrentServer == TUIDemoServerTypePrivate ||
+        TUIDemoCurrentServer == TUIDemoServerTypeCustomPrivate) {
+        // 私有化
+        NSString *serverPublicKey = @"0436ddd1de2ec99e57f8a796745bf5c639fe038d65f9df155e3cbc622d0b1b75a40ee49074920e56c6012f90c77be69f7f";
+        
+        NSString *ip = TUIDemoIsTestEnvironment?@"120.232.196.158":@"58.212.179.249";
+        NSNumber *port = @(80);
+        if (TUIDemoCurrentServer == TUIDemoServerTypeCustomPrivate) {
+            // 自定义私有化
+            ip = [GenerateTestUserSig customPrivateServer]?:@"";
+            port = @([GenerateTestUserSig customPrivatePort])?:@0;
+        }
+        
+        NSArray *longconnectionAddressList = @[
+            @{
+                @"ip": ip,
+                @"port": port
+            }
+        ];
+        NSMutableDictionary *dictParam = [NSMutableDictionary new];
+        [dictParam setValue:serverPublicKey forKey:@"serverPublicKey"];
+        [dictParam setValue:longconnectionAddressList forKey:@"longconnectionAddressList"];
+        NSData *dataParam = [NSJSONSerialization dataWithJSONObject:dictParam options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *strParam = [[NSString alloc]initWithData:dataParam encoding:NSUTF8StringEncoding];
+        [[V2TIMManager sharedInstance] callExperimentalAPI:@"setCustomServerInfo" param:strParam succ:^(NSObject *result) {
+            NSLog(@"success");
+        } fail:^(int code, NSString *desc) {
+            NSLog(@"errorCode:%d errorMessage:%@", code, desc);
+        }];
+    } else {
+        [[V2TIMManager sharedInstance] callExperimentalAPI:@"setTestEnvironment" param:[NSNumber numberWithBool:TUIDemoIsTestEnvironment] succ:nil fail:nil];
+    }
+    
+    NSLog(@"%s, type:%zd, test:%d customPrivateIP:%@, customPrivatePort:%zd", __func__, TUIDemoCurrentServer,
+                                                                              TUIDemoIsTestEnvironment,
+                                                                              [GenerateTestUserSig customPrivateServer],
+                                                                              [GenerateTestUserSig customPrivatePort]);
 }
 
 - (void)setupCustomSticker
 {
-    NSMutableArray *faceGroups = [NSMutableArray arrayWithArray:TUIKitConfig.defaultConfig.faceGroups];
+    NSMutableArray *faceGroups = [NSMutableArray arrayWithArray:TUIConfig.defaultConfig.faceGroups];
     
     //4350 group
     NSMutableArray *faces4350 = [NSMutableArray array];
     for (int i = 0; i <= 17; i++) {
-        TFaceCellData *data = [[TFaceCellData alloc] init];
+        TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
         NSString *name = [NSString stringWithFormat:@"yz%02d", i];
         NSString *path = [NSString stringWithFormat:@"4350/%@", name];
         data.name = name;
@@ -127,59 +190,59 @@ static AppDelegate *app;
         [faces4350 addObject:data];
     }
     if(faces4350.count != 0){
-        TFaceGroup *group4350 = [[TFaceGroup alloc] init];
+        TUIFaceGroup *group4350 = [[TUIFaceGroup alloc] init];
         group4350.groupIndex = 1;
-        group4350.groupPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4350/"]; //TUIKitFace(@"4350/");
+        group4350.groupPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4350/"]; //TUIChatFaceImagePath(@"4350/");
         group4350.faces = faces4350;
         group4350.rowCount = 2;
         group4350.itemCountPerRow = 5;
-        group4350.menuPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4350/menu"]; // TUIKitFace(@"4350/menu");
+        group4350.menuPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4350/menu"]; // TUIChatFaceImagePath(@"4350/menu");
         [faceGroups addObject:group4350];
     }
     
     //4351 group
     NSMutableArray *faces4351 = [NSMutableArray array];
     for (int i = 0; i <= 15; i++) {
-        TFaceCellData *data = [[TFaceCellData alloc] init];
+        TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
         NSString *name = [NSString stringWithFormat:@"ys%02d", i];
         NSString *path = [NSString stringWithFormat:@"4351/%@", name];
         data.name = name;
-        data.path = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:path]; // TUIKitFace(path);
+        data.path = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:path]; // TUIChatFaceImagePath(path);
         [faces4351 addObject:data];
     }
     if(faces4351.count != 0){
-        TFaceGroup *group4351 = [[TFaceGroup alloc] init];
+        TUIFaceGroup *group4351 = [[TUIFaceGroup alloc] init];
         group4351.groupIndex = 2;
-        group4351.groupPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4351/"]; // TUIKitFace(@"4351/");
+        group4351.groupPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4351/"]; // TUIChatFaceImagePath(@"4351/");
         group4351.faces = faces4351;
         group4351.rowCount = 2;
         group4351.itemCountPerRow = 5;
-        group4351.menuPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4351/menu"]; //TUIKitFace(@"4351/menu");
+        group4351.menuPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4351/menu"]; //TUIChatFaceImagePath(@"4351/menu");
         [faceGroups addObject:group4351];
     }
     
     //4352 group
     NSMutableArray *faces4352 = [NSMutableArray array];
     for (int i = 0; i <= 16; i++) {
-        TFaceCellData *data = [[TFaceCellData alloc] init];
+        TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
         NSString *name = [NSString stringWithFormat:@"gcs%02d", i];
         NSString *path = [NSString stringWithFormat:@"4352/%@", name];
         data.name = name;
-        data.path = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:path]; // TUIKitFace(path);
+        data.path = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:path]; // TUIChatFaceImagePath(path);
         [faces4352 addObject:data];
     }
     if(faces4352.count != 0){
-        TFaceGroup *group4352 = [[TFaceGroup alloc] init];
+        TUIFaceGroup *group4352 = [[TUIFaceGroup alloc] init];
         group4352.groupIndex = 3;
-        group4352.groupPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4352/"]; //TUIKitFace(@"4352/");
+        group4352.groupPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4352/"]; //TUIChatFaceImagePath(@"4352/");
         group4352.faces = faces4352;
         group4352.rowCount = 2;
         group4352.itemCountPerRow = 5;
-        group4352.menuPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4352/menu"]; // TUIKitFace(@"4352/menu");
+        group4352.menuPath = [[[NSBundle mainBundle] pathForResource:@"CustomFaceResource" ofType:@"bundle"] stringByAppendingPathComponent:@"4352/menu"]; // TUIChatFaceImagePath(@"4352/menu");
         [faceGroups addObject:group4352];
     }
     
-    TUIKitConfig.defaultConfig.faceGroups = faceGroups;
+    TUIConfig.defaultConfig.faceGroups = faceGroups;
 }
 
 - (void)setupBugly {
@@ -231,16 +294,65 @@ static AppDelegate *app;
 
 }
 
+void loggerFunc(QAPMLoggerLevel level, const char* log) {
+
+    NSLog(@"QAPM log level: %zd, log info:%s", level, log);
+
+}
+
 - (void)setupTotalUnreadCount
 {
     // 查询总的消息未读数
     __weak typeof(self) weakSelf = self;
     [V2TIMManager.sharedInstance getTotalUnreadMessageCount:^(UInt64 totalCount) {
-        NSNotification *notice = [NSNotification notificationWithName:TUIKitNotification_onTotalUnreadMessageCountChanged object:@(totalCount)];
-        [weakSelf onTotalUnreadCountChanged:notice];
+        [weakSelf onTotalUnreadCountChanged:totalCount];
     } fail:^(int code, NSString *desc) {
         
     }];
+}
+
+- (void)setupQAPM
+{
+    /// 设置QAPM 日志输出
+    [QAPM registerLogCallback:loggerFunc];
+
+    /// 外网可开启功能： QAPMMonitorTypeBlue | QAPMMonitorTypeMaxMemoryStatistic
+    /// 内网可以根据需要打开
+    [QAPMConfig getInstance].enableMonitorTypeOptions =
+    QAPMMonitorTypeBlue                         /// Blue(检测卡顿功能)
+    | QAPMMonitorTypeYellow                     /// Yellow(检测VC泄露功能)
+    | QAPMMonitorTypeQQLeak                     /// QQLeak(检测内存对象泄露功能), 建议研发流程内使用，详情见该定义注释
+    | QAPMMonitorTypeResourceMonitor            /// 资源使用情况监控功能（每隔1s采集一次资源）
+    | QAPMMonitorTypeMaxMemoryStatistic         /// 内存最大使用值监控(触顶率)
+    | QAPMMonitorTypeBigChunkMemoryMonitor      /// 大块内存分配监控功能
+    ;
+    
+    [QAPMConfig getInstance].yellowConfig.leakInterval = 1;
+    [QAPMConfig getInstance].yellowConfig.UIViewLeakEnable = YES;
+    [QAPMYellowProfile setYellowProfileDelegate:self];
+    
+    [QAPMConfig getInstance].userId = [NSString stringWithFormat:@"User: %@", [UIDevice currentDevice].name];
+    [QAPMConfig getInstance].customerAppVersion = [[V2TIMManager sharedInstance] getVersion];
+
+    /// 启动QAPM
+    [QAPM startWithAppKey:@"53aeed1a-734"];
+    
+    //延迟启动内存泄露采集开关
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [QAPMQQLeakProfile startStackLogging];
+    });
+}
+
+- (void)handleVCLeak:(UIViewController *)vc oprSeq:(NSString *)seq stackInfo:(NSString *)stack {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"发现内存泄露:%@",vc] message:seq preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil]];
+    [self.window.rootViewController presentViewController:ac animated:YES completion:nil];
+}
+
+- (void)handleUIViewLeak:(UIView *)view detail:(NSString *)detail hierarchyInfo:(NSString *)hierarchy stackInfo:(NSString *)stack {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"发现内存泄露:%@",view] message:hierarchy preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil]];
+    [self.window.rootViewController presentViewController:ac animated:YES completion:nil];
 }
 
 - (void)registNotification
@@ -255,7 +367,7 @@ static AppDelegate *app;
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert)];
     }
     
-    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onTotalUnreadCountChanged:) name:TUIKitNotification_onTotalUnreadMessageCountChanged object:nil];
+    [[V2TIMManager sharedInstance] addConversationListener:self];
 }
 
 -(void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
@@ -323,7 +435,7 @@ static AppDelegate *app;
         uint32_t timeout = [content[@"timeout"] intValue];
         UInt64 curTime = [[V2TIMManager sharedInstance] getServerTime];
         if (curTime - sendTime > timeout) {
-            [THelper makeToast:@"通话接收超时"];
+            [TUITool makeToast:@"通话接收超时"];
             return;
         }
         self.signalingInfo = [[V2TIMSignalingInfo alloc] init];
@@ -340,7 +452,6 @@ static AppDelegate *app;
     }
 #endif
 }
-
 - (void)onReceiveNomalMsgAPNs {
     NSLog(@"---> receive normal msg apns, groupId:%@, userId:%@", self.groupID, self.userID);
     // 异步处理，防止出现时序问题, 特别是当前正在登录操作中
@@ -386,11 +497,14 @@ static AppDelegate *app;
 
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+    _endTime = [[NSDate date] timeIntervalSince1970];
+    [TCUtil report:Action_Staytime actionSub:@"" code:@(_endTime - _beginTime) msg:@"app staytime"];
     UIApplication.sharedApplication.applicationIconBadgeNumber = _unReadCount;
 }
 
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+    _beginTime = [[NSDate date] timeIntervalSince1970];
     UIApplication.sharedApplication.applicationIconBadgeNumber = _unReadCount;
 }
 
@@ -399,9 +513,12 @@ static AppDelegate *app;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
+    if (_timer) {
+        dispatch_cancel(_timer);
+        _timer = nil;
+    }
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
 
 void uncaughtExceptionHandler(NSException*exception){
     NSLog(@"CRASH: %@", exception);
@@ -422,7 +539,7 @@ void uncaughtExceptionHandler(NSException*exception){
     msgItem.title = NSLocalizedString(@"TabBarItemMessageText", nil); //@"消息";
     msgItem.selectedImage = [UIImage imageNamed:@"session_selected"];
     msgItem.normalImage = [UIImage imageNamed:@"session_normal"];
-    msgItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
+    msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
     msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     [items addObject:msgItem];
 
@@ -430,26 +547,26 @@ void uncaughtExceptionHandler(NSException*exception){
     contactItem.title = NSLocalizedString(@"TabBarItemContactText", nil);
     contactItem.selectedImage = [UIImage imageNamed:@"contact_selected"];
     contactItem.normalImage = [UIImage imageNamed:@"contact_normal"];
-    contactItem.controller = [[TNavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
+    contactItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
     contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     [items addObject:contactItem];
     
 #if ENABLELIVE
     // 直播Tab添加
-    TUITabBarItem *sceneItem = [[TUITabBarItem alloc] init];
-    sceneItem.title = NSLocalizedString(@"TabBarItemLiveText", nil);
-    sceneItem.selectedImage = [UIImage imageNamed:@"live_broadcast_camera_on"];
-    sceneItem.normalImage = [UIImage imageNamed:@"live_broadcast_camera_off"];
-    sceneItem.controller = [[TNavigationController alloc] initWithRootViewController:[[TUILiveSceneViewController alloc] init]];
-    sceneItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
-    [items addObject:sceneItem];
+//    TUITabBarItem *sceneItem = [[TUITabBarItem alloc] init];
+//    sceneItem.title = NSLocalizedString(@"TabBarItemLiveText", nil);
+//    sceneItem.selectedImage = [UIImage imageNamed:@"live_broadcast_camera_on"];
+//    sceneItem.normalImage = [UIImage imageNamed:@"live_broadcast_camera_off"];
+//    sceneItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[TUILiveSceneViewController alloc] init]];
+//    sceneItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+//    [items addObject:sceneItem];
 #endif
     
     TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
     setItem.title = NSLocalizedString(@"TabBarItemMeText", nil);
     setItem.selectedImage = [UIImage imageNamed:@"myself_selected"];
     setItem.normalImage = [UIImage imageNamed:@"myself_normal"];
-    setItem.controller = [[TNavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
+    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
     setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     [items addObject:setItem];
     tbc.tabBarItems = items;
@@ -457,13 +574,8 @@ void uncaughtExceptionHandler(NSException*exception){
     return tbc;
 }
 
-- (void)onTotalUnreadCountChanged:(NSNotification *)notice
-{
-    id object = notice.object;
-    if (![object isKindOfClass:NSNumber.class]) {
-        return;
-    }
-    NSUInteger total = [object integerValue];
+- (void)onTotalUnreadCountChanged:(UInt64)totalUnreadCount {
+    NSUInteger total = totalUnreadCount;
     TUITabBarController *tab = (TUITabBarController *)UIApplication.sharedApplication.keyWindow.rootViewController;
     if (![tab isKindOfClass:TUITabBarController.class]) {
         return;
@@ -473,9 +585,8 @@ void uncaughtExceptionHandler(NSException*exception){
     _unReadCount = total;
 }
 
-- (void)onUserStatus:(NSNotification *)notification
+- (void)onUserStatus:(TUIUserStatus)status
 {
-    TUIUserStatus status = [notification.object integerValue];
     switch (status) {
         case TUser_Status_ForceOffline:
         {
@@ -502,18 +613,18 @@ void uncaughtExceptionHandler(NSException*exception){
 {
     if (buttonIndex == 0)
     {
-        // 退出
-        [[V2TIMManager sharedInstance] logout:^{
+        [[TUIKit sharedInstance] logout:^{
             NSLog(@"登出成功！");
         } fail:^(int code, NSString *msg) {
             NSLog(@"退出登录");
         }];
+        
         self.window.rootViewController = [self getLoginController];
     }
     else
     {
         // 重新登录
-        [[TUILocalStorage sharedInstance] login:^(NSString * _Nonnull identifier, NSUInteger appId, NSString * _Nonnull userSig) {
+        [[TUILoginCache sharedInstance] login:^(NSString * _Nonnull identifier, NSUInteger appId, NSString * _Nonnull userSig) {
             [self login:identifier userSig:userSig succ:^{
                 NSLog(@"登录成功！");
                 self.window.rootViewController = [self getMainController];
@@ -525,4 +636,18 @@ void uncaughtExceptionHandler(NSException*exception){
     }
 }
 
+#pragma mark - V2TIMConversationListener
+- (void)onTotalUnreadMessageCountChanged:(UInt64) totalUnreadCount {
+    [self onTotalUnreadCountChanged:totalUnreadCount];
+}
+
+#pragma mark - V2TIMSDKListener
+
+- (void)onKickedOffline {
+    [self onUserStatus:TUser_Status_ForceOffline];
+}
+
+- (void)onUserSigExpired {
+    [self onUserStatus:TUser_Status_SigExpired];
+}
 @end

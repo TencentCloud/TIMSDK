@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.1.1</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>1.1.1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -28,9 +28,13 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>云通讯IM需要访问您的相机权限，开启后才能发送图片或视频</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string></string>
+	<string>云通讯IM需要访问您的麦克风权限，开启后才能发送语音</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>云通讯IM需要访问您的相册权限，开启后保存图片或视频</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>云通讯IM需要访问您的相册权限，开启后才能发送图片或视频</string>
 	<key>UILaunchStoryboardName</key>
 	<string>Main</string>
 	<key>UIMainStoryboardFile</key>

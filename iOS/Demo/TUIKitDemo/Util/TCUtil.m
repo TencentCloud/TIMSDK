@@ -13,7 +13,7 @@
 #define ENABLE_SHARE 1
 
 #import "TCUtil.h"
-#import "NSString+TUICommon.h"
+#import "NSString+TUIUtil.h"
 #import <mach/mach.h>
 #import <Accelerate/Accelerate.h>
 #import <mach/mach.h>
@@ -22,8 +22,23 @@
 #import "TCLoginParam.h"
 #import "TCConstants.h"
 #import <CommonCrypto/CommonDigest.h>
+#import "TUIKit.h"
+
+static BOOL ShouldReport = NO;
+static const NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 @implementation TCUtil
+
+#ifndef DEBUG
++ (void)load {
+    NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
+    if ([bundleID isEqualToString:@"com.tencent.tuikit.demo"]) {
+        ShouldReport = YES;
+    }
+}
+#endif
+
+#define CHECK_STRING_NULL(x) (x == nil) ? @"" : x
 
 + (NSData *)dictionary2JsonData:(NSDictionary *)dict
 {
@@ -124,6 +139,81 @@
             ];
 }
 
++ (void)report:(NSString *)action actionSub:(NSString *)actionSub code:(NSNumber *)code  msg:(NSString *)msg
+{
+    if (!ShouldReport) {
+        return;
+    }
+    NSString *userName = [[V2TIMManager sharedInstance] getLoginUser];
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    [param setObject:@"imdemo" forKey:@"bussiness"];
+    [param setObject:@"ios" forKey:@"platform"];
+    [param setObject:CHECK_STRING_NULL(userName) forKey:@"userName"];
+    [param setObject:CHECK_STRING_NULL(action) forKey:@"action"];
+    [param setObject:CHECK_STRING_NULL(actionSub) forKey:@"actionsub"];
+    [param setObject:code forKey:@"action_result_code"];
+    [param setObject:CHECK_STRING_NULL(msg) forKey:@"action_result_msg"];
+    [self report:param handler:^(int resultCode, NSString *message) {
+        //to do
+    }];
+}
+
++ (void)report:(NSMutableDictionary *)param handler:(void (^)(int resultCode, NSString *message))handler;
+{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSData* data = [TCUtil dictionary2JsonData:param];
+        if (data == nil)
+        {
+            NSLog(@"sendHttpRequest failed，参数转成json格式失败");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(kError_ConvertJsonFailed, nil);
+            });
+            return;
+        }
+        
+        NSMutableString *strUrl = [[NSMutableString alloc] initWithString:DEFAULT_ELK_HOST];
+        
+        NSURL *URL = [NSURL URLWithString:strUrl];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
+        
+        if (data)
+        {
+            [request setValue:[NSString stringWithFormat:@"%ld",(long)[data length]] forHTTPHeaderField:@"Content-Length"];
+            [request setHTTPMethod:@"POST"];
+            [request setValue:@"application/json; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
+            [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+            
+            [request setHTTPBody:data];
+        }
+        
+        [request setTimeoutInterval:kHttpTimeout];
+        
+        
+        NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error != nil)
+            {
+                NSLog(@"internalSendRequest failed，NSURLSessionDataTask return error code:%d, des:%@", [error code], [error description]);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    handler(kError_HttpError, nil);
+                });
+            }
+            else
+            {
+                NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([responseString isEqualToString:@"ok"]) {
+                        handler(0, responseString);
+                    }else{
+                        handler(-1, responseString);
+                    }
+                });
+            }
+        }];
+        
+        [task resume];
+    });
+}
+
 + (void)asyncSendHttpRequest:(NSString*)command token:(NSString*)token params:(NSDictionary*)params handler:(void (^)(int resultCode, NSString* message, NSDictionary* resultDict))handler
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -132,7 +222,7 @@
         {
             NSLog(@"sendHttpRequest failed，参数转成json格式失败");
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(kError_ConvertJsonFailed, @"参数错误", nil);
+                handler(kError_ConvertJsonFailed, NSLocalizedString(@"ErrorTipsParamtersValid", nil), nil);
             });
             return;
         }
@@ -165,7 +255,7 @@
             {
                 NSLog(@"internalSendRequest failed，NSURLSessionDataTask return error code:%d, des:%@", [error code], [error description]);
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    handler(kError_HttpError, @"服务请求失败", nil);
+                    handler(kError_HttpError, NSLocalizedString(@"ErrorTipsServerRequest", nil), nil);
                 });
             }
             else
@@ -289,8 +379,15 @@
     return httpsURL;
 }
 
-
-+ (void)report:(NSString *)action actionSub:(NSString *)actionSub code:(NSNumber *)code  msg:(NSString *)msg {
-    // to do
++(NSString *) randomStringWithLength: (int) len {
+    NSMutableString *randomString = [NSMutableString stringWithCapacity:
+                                     len];
+    for (int i=0; i<len; i++) {
+         [randomString appendFormat: @"%C",
+          [letters characterAtIndex:
+           arc4random_uniform((uint32_t)[letters length])]];
+    }
+    return randomString;
 }
+
 @end

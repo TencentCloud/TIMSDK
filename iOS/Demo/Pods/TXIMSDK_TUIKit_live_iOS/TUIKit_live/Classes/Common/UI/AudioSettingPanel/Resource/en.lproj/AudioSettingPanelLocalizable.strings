@@ -1,0 +1,21 @@
+/* 
+  Localizable.strings
+  AudioSettingKit
+
+  Created by abyyxwang on 2020/5/26.
+  Copyright © 2020 tencent. All rights reserved.
+*/
+
+"ASKit.Common.Close" = "关闭";
+// 主菜单
+"ASKit.MainMenu.Title" = "音效设置";
+"ASKit.MainMenu.BGM" = "背景音乐";
+"ASKit.MainMenu.SelectMusic" = "选择歌曲";
+"ASKit.MainMenu.MusicVolum" = "音乐音量";
+"ASKit.MainMenu.PersonVolum" = "人声音量";
+"ASKit.MainMenu.PersonPitch" = "音乐升降调";
+
+"ASKit.MainMenu.VoiceChangeTitle" = "变声";
+"ASKit.MainMenu.Reverberation" = "混响";
+
+"ASKit.MusicSelectMenu.Title" = "背景音乐";

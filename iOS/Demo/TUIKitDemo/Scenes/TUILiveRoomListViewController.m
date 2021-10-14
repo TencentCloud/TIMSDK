@@ -12,11 +12,11 @@
 #import "TUILiveRoomManager.h"
 #import <Masonry/Masonry.h>
 #import "TUILiveRoomListView.h"
-#import "TUIKitLive.h"
 #import "TRTCLiveRoom.h"
 #import "GenerateTestUserSig.h"
-#import "THeader.h"
-#import "UIColor+TUIDarkMode.h"
+#import "TUIDarkModel.h"
+#import "TUIKit.h"
+#import "TUIKitLive.h"
 
 @interface TUILiveRoomListViewController ()<TUILiveRoomListDelegate, TUILiveRoomAudienceDelegate>
 

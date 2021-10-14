@@ -15,7 +15,7 @@
 #import "TUIGroupMemberController.h"
 #import "TUIContactSelectController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "Toast/Toast.h"
+#import "UIView+TUIToast.h"
 #import "TUIKit.h"
 
 @interface GroupMemberController () <TGroupMemberControllerDelegagte>
@@ -46,8 +46,8 @@
 {
     TUIContactSelectController *vc = [[TUIContactSelectController alloc] initWithNibName:nil bundle:nil];
     vc.title = NSLocalizedString(@"GroupAddFirend", nil); // @"添加联系人";
-    vc.viewModel.disableFilter = ^BOOL(TCommonContactSelectCellData *data) {
-        for (TGroupMemberCellData *cd in members) {
+    vc.viewModel.disableFilter = ^BOOL(TUICommonContactSelectCellData *data) {
+        for (TUIGroupMemberCellData *cd in members) {
             if ([cd.identifier isEqualToString:data.identifier])
                 return YES;
         }
@@ -55,10 +55,10 @@
     };
     @weakify(self)
     [self.navigationController pushViewController:vc animated:YES];
-    vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *selectArray) {
+    vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *selectArray) {
         @strongify(self)
         NSMutableArray *list = @[].mutableCopy;
-        for (TCommonContactSelectCellData *data in selectArray) {
+        for (TUICommonContactSelectCellData *data in selectArray) {
             [list addObject:data.identifier];
         }
         [self.navigationController popToViewController:self animated:YES];
@@ -70,8 +70,8 @@
 {
     TUIContactSelectController *vc = [[TUIContactSelectController alloc] initWithNibName:nil bundle:nil];
     vc.title = NSLocalizedString(@"GroupDeleteFriend", nil); // @"删除联系人";
-    vc.viewModel.avaliableFilter = ^BOOL(TCommonContactSelectCellData *data) {
-        for (TGroupMemberCellData *cd in members) {
+    vc.viewModel.avaliableFilter = ^BOOL(TUICommonContactSelectCellData *data) {
+        for (TUIGroupMemberCellData *cd in members) {
             if ([cd.identifier isEqualToString:data.identifier])
                 return YES;
         }
@@ -79,10 +79,10 @@
     };
     @weakify(self)
     [self.navigationController pushViewController:vc animated:YES];
-    vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *selectArray) {
+    vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *selectArray) {
         @strongify(self)
         NSMutableArray *list = @[].mutableCopy;
-        for (TCommonContactSelectCellData *data in selectArray) {
+        for (TUICommonContactSelectCellData *data in selectArray) {
             [list addObject:data.identifier];
         }
         [self.navigationController popToViewController:self animated:YES];
@@ -93,20 +93,18 @@
 - (void)addGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupMemberController *)controller
 {
     [[V2TIMManager sharedInstance] inviteUserToGroup:_groupId userList:members succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
-        [THelper makeToast:NSLocalizedString(@"add_success", nil)];
-        [controller updateData];
+        [TUITool makeToast:NSLocalizedString(@"add_success", nil)];
     } fail:^(int code, NSString *desc) {
-        [THelper makeToastError:code msg:desc];
+        [TUITool makeToastError:code msg:desc];
     }];
 }
 
 - (void)deleteGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupMemberController *)controller
 {
     [[V2TIMManager sharedInstance] kickGroupMember:groupId memberList:members reason:@"" succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
-        [THelper makeToast:NSLocalizedString(@"delete_success", nil)];
-        [controller updateData];
+        [TUITool makeToast:NSLocalizedString(@"delete_success", nil)];
     } fail:^(int code, NSString *desc) {
-        [THelper makeToastError:code msg:desc];
+        [TUITool makeToastError:code msg:desc];
     }];
 }
 @end

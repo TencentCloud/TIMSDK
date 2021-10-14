@@ -7,7 +7,7 @@
 //
 
 #import "TUILiveRoomListCell.h"
-#import "THeader.h"
+#import "TUIKit.h"
 #import <Masonry/Masonry.h>
 #import <SDWebImage/SDWebImage.h>
 // Data Model

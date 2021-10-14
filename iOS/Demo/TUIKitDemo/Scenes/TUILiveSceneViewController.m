@@ -7,18 +7,19 @@
 //
 
 #import "TUILiveSceneViewController.h"
-#import "TNaviBarIndicatorView.h"
+#import "TUINaviBarIndicatorView.h"
 #import "TUILiveRoomListViewController.h"
-#import "THeader.h"
-#import "UIColor+TUIDarkMode.h"
+#import "TUIDarkModel.h"
 #import "TUIKit.h"
 #import "TUILiveRoomManager.h"
+#import "TCLoginModel.h"
 #import "TUILiveDefaultGiftAdapterImp.h"
-#import "TNaviBarIndicatorView.h"
 #import "TUILiveUserProfile.h"
 #import "TUIKitLive.h"
-
+#import "TUILiveRoomAnchorViewController.h"
+#import "TUITool.h"
 #import <TRTCLiveRoom.h>
+#import "TUIDefine.h"
 
 #import <Masonry.h>
 #import "GenerateTestUserSig.h"
@@ -34,9 +35,9 @@ isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bo
 }\
 (isPhoneX);})
 
-@interface TUILiveSceneViewController ()<UIScrollViewDelegate, TUILiveRoomAnchorDelegate>
+@interface TUILiveSceneViewController ()<UIScrollViewDelegate, TUILiveRoomAnchorDelegate, V2TIMSDKListener>
 
-@property (nonatomic, strong) TNaviBarIndicatorView *titleView;
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 
 @property(strong, nonatomic) TUILiveRoomListViewController* liveRoomListController;
 
@@ -60,40 +61,41 @@ isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bo
  */
 - (void)setupNavigation
 {
-    _titleView = [[TNaviBarIndicatorView alloc] init];
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
     [_titleView setTitle:NSLocalizedString(@"TabBarItemLiveText", nil)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNetworkChanged:) name:TUIKitNotification_TIMConnListener object:nil];
+    [[V2TIMManager sharedInstance] addIMSDKListener:self];
 }
 
 /**
  *初始化导航栏Title，不同连接状态下Title显示内容不同
  */
-- (void)onNetworkChanged:(NSNotification *)notification
+- (void)onNetworkChanged:(TUINetStatus)status
 {
-    TUINetStatus status = (TUINetStatus)[notification.object intValue];
-    switch (status) {
-        case TNet_Status_Succ:
-            [_titleView setTitle:NSLocalizedString(@"TabBarItemLiveText", nil)];
-            [_titleView stopAnimating];
-            break;
-        case TNet_Status_Connecting:
-            [_titleView setTitle:NSLocalizedString(@"TabBarItemLiveConnectingText", nil)];
-            [_titleView startAnimating];
-            break;
-        case TNet_Status_Disconnect:
-            [_titleView setTitle:NSLocalizedString(@"TabBarItemLiveDisconnectText", nil)];
-            [_titleView stopAnimating];
-            break;
-        case TNet_Status_ConnFailed:
-            [_titleView setTitle:NSLocalizedString(@"TabBarItemLiveDisconnectText", nil)];
-            [_titleView stopAnimating];
-            break;
-
-        default:
-            break;
-    }
+    [TUITool dispatchMainAsync:^{
+        switch (status) {
+            case TNet_Status_Succ:
+                [self.titleView setTitle:NSLocalizedString(@"TabBarItemLiveText", nil)];
+                [self.titleView stopAnimating];
+                break;
+            case TNet_Status_Connecting:
+                [self.titleView setTitle:NSLocalizedString(@"TabBarItemLiveConnectingText", nil)];
+                [self.titleView startAnimating];
+                break;
+            case TNet_Status_Disconnect:
+                [self.titleView setTitle:NSLocalizedString(@"TabBarItemLiveDisconnectText", nil)];
+                [self.titleView stopAnimating];
+                break;
+            case TNet_Status_ConnFailed:
+                [self.titleView setTitle:NSLocalizedString(@"TabBarItemLiveDisconnectText", nil)];
+                [self.titleView stopAnimating];
+                break;
+                
+            default:
+                break;
+        }
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -173,6 +175,19 @@ isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bo
     [anchorVC enablePK:YES];
     [anchorVC setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:anchorVC animated:YES];
+}
+
+#pragma mark - V2TIMSDKListener
+- (void)onConnecting {
+    [self onNetworkChanged:TNet_Status_Connecting];
+}
+
+- (void)onConnectSuccess {
+    [self onNetworkChanged:TNet_Status_Succ];
+}
+
+- (void)onConnectFailed:(int)code err:(NSString*)err {
+    [self onNetworkChanged:TNet_Status_ConnFailed];
 }
 
 #pragma mark - TUILiveRoomAnchorDelegate

@@ -1,0 +1,6 @@
+module TUISearch {
+  umbrella header "TUISearch-umbrella.h"
+
+  export *
+  module * { export * }
+}

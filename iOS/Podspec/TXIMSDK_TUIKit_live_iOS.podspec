@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_TUIKit_live_iOS'
-  spec.version      = '5.6.1200'
+  spec.version      = '5.7.1435'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -13,22 +13,35 @@ Pod::Spec.new do |spec|
   spec.authors      = 'tencent video cloud'
   spec.summary      = 'TXIMSDK_TUIKit_live_iOS'
   spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
+  spec.requires_arc = true
+  spec.static_framework = true
   
-  spec.dependency 'TXIMSDK_TUIKit_iOS', '5.6.1200'
-  spec.dependency 'TXLiteAVSDK_TRTC', '8.5.10022'
+  spec.dependency 'TXIMSDK_TUIKit_iOS', '5.7.1435'
   spec.dependency 'Masonry', '1.1.0'
   spec.dependency 'MJExtension', '3.2.2'
   spec.dependency 'SSZipArchive', '2.2.3'
   spec.dependency 'lottie-ios', '2.5.3'
+  spec.source = { :http => 'https://im.sdk.qcloud.com/download/tuikit/5.7.1435/TUIKit_live_iOS.zip'}
 
-  spec.requires_arc = true
+  spec.default_subspec = 'TRTC'
+  spec.subspec 'TRTC' do |trtc|
+    trtc.dependency 'TXLiteAVSDK_TRTC', '9.2.10637'
+    trtc.source_files = '**/TUIKit_live/Classes/**/*.{h,c,m,mm}'
+    trtc.resource = ['**/TUIKit_live/Resources/FilterResource.bundle', '**/TUIKit_live/Resources/*.xcassets',
+    '**/TUIKit_live/Classes/Common/UI/BeautySettingPanel/Resources/*.{xcassets,mp4}', 
+    '**/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/*.{xcassets,strings}', 
+    '**/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/**/*.{xcassets,strings}']
+  end
 
-  spec.source = { :http => 'https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/tuikit/5.6.1200/TUIKit_live_iOS_5.6.1200.zip'}
-  spec.source_files = '**/TUIKit_live/Classes/**/*.{h,m,mm}', '**/TUIKit_live/Classes/**/*.{h,c}'
-  spec.resource = ['**/TUIKit_live/Resources/FilterResource.bundle', '**/TUIKit_live/Resources/*.xcassets',
-    '**/TUIKit_live/Classes/Modules/BeautySettingPanel/Resources/*.{xcassets,mp4}', 
-    '**/TUIKit_live/Classes/Modules/AudioSettingPanel/Resource/*.{xcassets,strings}', 
-    '**/TUIKit_live/Classes/Modules/AudioSettingPanel/Resource/**/*.{xcassets,strings}']
+  spec.subspec 'Professional' do |professional|
+    professional.dependency 'TXLiteAVSDK_Professional', '9.2.10637'
+    professional.source_files = '**/TUIKit_live/Classes/**/*.{h,c,m,mm}'
+    professional.resource = ['**/TUIKit_live/Resources/FilterResource.bundle', '**/TUIKit_live/Resources/*.xcassets',
+    '**/TUIKit_live/Classes/Common/UI/BeautySettingPanel/Resources/*.{xcassets,mp4}', 
+    '**/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/*.{xcassets,strings}', 
+    '**/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/**/*.{xcassets,strings}']
+  end
+  
   
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'

@@ -11,7 +11,6 @@
 
 // Include any system framework and library headers here that should be included in all compilation units.
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
-#import "MMLayout/UIView+MMLayout.h"
-#import "ImSDK/ImSDK.h"
+#import "UIView+TUILayout.h"
 #import "ReactiveObjC.h"
 #endif /* PrefixHeader_pch */

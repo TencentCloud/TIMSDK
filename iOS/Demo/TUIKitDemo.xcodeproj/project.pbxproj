@@ -7,36 +7,69 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		48B8C89C25543E0D009E392B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48B8C89E25543E0D009E392B /* Localizable.strings */; };
-		910AF70B22925BF000ED5675 /* SearchGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF70A22925BF000ED5675 /* SearchGroupViewController.m */; };
+		480C761122DCA2F7007495EC /* FriendRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C85392268260100D74B58 /* FriendRequestViewController.m */; };
+		480C761322DCA33F007495EC /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFDC2FA4216E2D5E002EAEC2 /* ChatViewController.m */; };
+		480C761522DCA38A007495EC /* ContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 915AA6692248DBC600C0C9A0 /* ContactsController.m */; };
+		480C761622DCA3A7007495EC /* TFriendProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */; };
+		480C761922DCA3EB007495EC /* SearchFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C852E226705C300D74B58 /* SearchFriendViewController.m */; };
+		480C761A22DCA3EB007495EC /* SearchGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF70A22925BF000ED5675 /* SearchGroupViewController.m */; };
+		48250E04266675BD006D4C8B /* TestForHistoryMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48250E01266675BD006D4C8B /* TestForHistoryMessageViewController.m */; };
+		48250E05266675BD006D4C8B /* TestForHistoryMessageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48250E03266675BD006D4C8B /* TestForHistoryMessageViewController.xib */; };
+		487D4B8E22E15B8A00FD54BC /* ProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D4B8D22E15B8A00FD54BC /* ProfileController.m */; };
+		488193D626CBB0440093BFBB /* TestForGroupAttributeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488193D326CBB0440093BFBB /* TestForGroupAttributeViewController.xib */; };
+		488193D726CBB0440093BFBB /* TestForGroupAttributeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 488193D526CBB0440093BFBB /* TestForGroupAttributeViewController.m */; };
+		48CE0A9B2629796700754C8C /* verification.html in Resources */ = {isa = PBXBuildFile; fileRef = 48CE0A9A2629796700754C8C /* verification.html */; };
+		48D7D3BD2539DE4C0044E957 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48C93F722539DB1600FDB5CF /* Localizable.strings */; };
+		48DF2C46253FE1B800BC522F /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 48DF2C45253FE1B800BC522F /* NotificationService.m */; };
+		48DF2C4A253FE1B800BC522F /* pushservice.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DF2C42253FE1B800BC522F /* pushservice.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		48DF2CF82542E0EA00BC522F /* CustomFaceResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 48DF2CF72542E0EA00BC522F /* CustomFaceResource.bundle */; };
+		48EF83852685785000BFA480 /* TestForSearchMessageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48EF83822685785000BFA480 /* TestForSearchMessageViewController.xib */; };
+		48EF83862685785000BFA480 /* TestForSearchMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48EF83842685785000BFA480 /* TestForSearchMessageViewController.m */; };
 		910AF7112292820300ED5675 /* GroupRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF7102292820300ED5675 /* GroupRequestViewController.m */; };
-		913C8531226705C300D74B58 /* SearchFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C852E226705C300D74B58 /* SearchFriendViewController.m */; };
-		913C853A2268260100D74B58 /* FriendRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C85392268260100D74B58 /* FriendRequestViewController.m */; };
-		915AA66A2248DBC600C0C9A0 /* ContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 915AA6692248DBC600C0C9A0 /* ContactsController.m */; };
+		910D900122AE057E00C9A318 /* TCLoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 910D900022AE057E00C9A318 /* TCLoginModel.m */; };
+		910D900422AE05A100C9A318 /* TCLoginParam.m in Sources */ = {isa = PBXBuildFile; fileRef = 910D900222AE05A100C9A318 /* TCLoginParam.m */; };
 		9176C5BE227A98A300DF5784 /* TUserProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9176C5BC227A98A300DF5784 /* TUserProfileController.m */; };
-		91941A4D22AE40C300123596 /* MyCustomCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = 91941A4C22AE40C300123596 /* MyCustomCellData.m */; };
-		91941A5222AE435700123596 /* MyCustomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91941A5122AE435700123596 /* MyCustomCell.m */; };
-		91D3AD3122AA06440036CDE0 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = 91D3AD2F22AA06430036CDE0 /* Aspects.m */; };
-		91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */; };
-		CC66376147F9780AC76154C2 /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ACF80D249FB861F11A39586 /* libPods-TUIKitDemo.a */; };
+		BCF739AA621A7AF4B48F1525 /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */; };
 		CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0BDFA8221D53C60083E1B0 /* Bugly.framework */; };
-		CE1A434A22DE07EB008A767E /* PAirSandbox.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434322DE07EB008A767E /* PAirSandbox.m */; };
-		CE1A434C22DE07EB008A767E /* TCUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1A434822DE07EB008A767E /* TCUtil.m */; };
-		CE2238C5266A09E000C52512 /* GroupCreateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238C2266A09DC00C52512 /* GroupCreateCell.m */; };
-		CE2238C6266A09E000C52512 /* GroupCreateCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2238C3266A09DF00C52512 /* GroupCreateCellData.m */; };
-		CE223A6D266DBCF700C52512 /* TUILiveRoomListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A5D266DBCF700C52512 /* TUILiveRoomListViewController.m */; };
-		CE223A6E266DBCF700C52512 /* TUILiveRoomListView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A5F266DBCF700C52512 /* TUILiveRoomListView.m */; };
-		CE223A6F266DBCF700C52512 /* TUILiveRoomListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A61266DBCF700C52512 /* TUILiveRoomListCell.m */; };
-		CE223A70266DBCF700C52512 /* TUILiveTopSegmentView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A63266DBCF700C52512 /* TUILiveTopSegmentView.m */; };
-		CE223A71266DBCF700C52512 /* TUILiveRoomInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A66266DBCF700C52512 /* TUILiveRoomInfo.m */; };
-		CE223A72266DBCF700C52512 /* TUILiveRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A68266DBCF700C52512 /* TUILiveRoomManager.m */; };
-		CE223A73266DBCF700C52512 /* TUILiveHeartBeatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A6A266DBCF700C52512 /* TUILiveHeartBeatManager.m */; };
-		CE223A74266DBCF700C52512 /* TUILiveSceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223A6C266DBCF700C52512 /* TUILiveSceneViewController.m */; };
-		CE37D1C422F9942B0012500D /* GenerateTestUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D1C222F9942B0012500D /* GenerateTestUserSig.m */; };
-		CE37D24A22F9CBC80012500D /* ProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE37D24822F9CBC80012500D /* ProfileController.m */; };
-		CE685F1523B48F8700A3953C /* 00.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE685F1323B48F8700A3953C /* 00.caf */; };
-		CE685F1623B48F8700A3953C /* 01.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE685F1423B48F8700A3953C /* 01.caf */; };
-		CECC13CE22B282C7008378A2 /* TCLoginParam.m in Sources */ = {isa = PBXBuildFile; fileRef = CECC13CD22B282C7008378A2 /* TCLoginParam.m */; };
+		CE0EE6492303EC2500DFDFF6 /* QAPM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0EE6482303EC2500DFDFF6 /* QAPM.framework */; };
+		CE0EE64B2303EC3C00DFDFF6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0EE64A2303EC3C00DFDFF6 /* CoreLocation.framework */; };
+		CE1051CB263572F400DFA7B3 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1051C9263572F400DFA7B3 /* TestViewController.m */; };
+		CE1051CC263572F400DFA7B3 /* TestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE1051CA263572F400DFA7B3 /* TestViewController.xib */; };
+		CE195279247FA63600209863 /* test.png in Resources */ = {isa = PBXBuildFile; fileRef = CE195278247FA63600209863 /* test.png */; };
+		CE223B07266DFD4500C52512 /* TUILiveRoomListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223AF7266DFD4500C52512 /* TUILiveRoomListViewController.m */; };
+		CE223B08266DFD4500C52512 /* TUILiveRoomListView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223AF9266DFD4500C52512 /* TUILiveRoomListView.m */; };
+		CE223B09266DFD4500C52512 /* TUILiveRoomListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223AFB266DFD4500C52512 /* TUILiveRoomListCell.m */; };
+		CE223B0A266DFD4500C52512 /* TUILiveTopSegmentView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223AFD266DFD4500C52512 /* TUILiveTopSegmentView.m */; };
+		CE223B0B266DFD4500C52512 /* TUILiveRoomInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223B00266DFD4500C52512 /* TUILiveRoomInfo.m */; };
+		CE223B0C266DFD4500C52512 /* TUILiveRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223B02266DFD4500C52512 /* TUILiveRoomManager.m */; };
+		CE223B0D266DFD4500C52512 /* TUILiveHeartBeatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223B04266DFD4500C52512 /* TUILiveHeartBeatManager.m */; };
+		CE223B0E266DFD4500C52512 /* TUILiveSceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE223B06266DFD4500C52512 /* TUILiveSceneViewController.m */; };
+		CE2BBC61241F7B1B000C4B7A /* V2GroupTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2BBC5F241F7B1B000C4B7A /* V2GroupTestViewController.m */; };
+		CE2BBC62241F7B1B000C4B7A /* V2GroupTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE2BBC60241F7B1B000C4B7A /* V2GroupTestViewController.xib */; };
+		CE2BBC88241FA5BD000C4B7A /* V2FriendTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2BBC86241FA5BD000C4B7A /* V2FriendTestViewController.m */; };
+		CE2BBC89241FA5BD000C4B7A /* V2FriendTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE2BBC87241FA5BD000C4B7A /* V2FriendTestViewController.xib */; };
+		CE2BBC9A24207D9D000C4B7A /* V2ManageTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2BBC9824207D9D000C4B7A /* V2ManageTestViewController.m */; };
+		CE2BBC9B24207D9D000C4B7A /* V2ManageTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE2BBC9924207D9D000C4B7A /* V2ManageTestViewController.xib */; };
+		CE440CD626E072530085EB57 /* GenerateTestUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CBB26E072530085EB57 /* GenerateTestUserSig.m */; };
+		CE440CD726E072530085EB57 /* TUINaviBarIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CBE26E072530085EB57 /* TUINaviBarIndicatorView.m */; };
+		CE440CD926E072530085EB57 /* TUICommonAvatarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CC026E072530085EB57 /* TUICommonAvatarCell.m */; };
+		CE440CDA26E072530085EB57 /* TUIDateEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CC626E072530085EB57 /* TUIDateEditController.m */; };
+		CE440CDB26E072530085EB57 /* PAirSandbox.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CC726E072530085EB57 /* PAirSandbox.m */; };
+		CE440CDC26E072530085EB57 /* TUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CCA26E072530085EB57 /* TUITabBarController.m */; };
+		CE440CDD26E072530085EB57 /* TUITextEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CCB26E072530085EB57 /* TUITextEditController.m */; };
+		CE440CDE26E072530085EB57 /* TPopCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CCC26E072530085EB57 /* TPopCell.m */; };
+		CE440CDF26E072530085EB57 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CCD26E072530085EB57 /* Aspects.m */; };
+		CE440CE026E072530085EB57 /* TCUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CCE26E072530085EB57 /* TCUtil.m */; };
+		CE440CE126E072530085EB57 /* TPopView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CD426E072530085EB57 /* TPopView.m */; };
+		CE440CE226E072530085EB57 /* TUILoginCache.m in Sources */ = {isa = PBXBuildFile; fileRef = CE440CD526E072530085EB57 /* TUILoginCache.m */; };
+		CE48482027019FC800F53B16 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48481F27019FC800F53B16 /* main.m */; };
+		CEAA67302424C87F0076C08E /* test.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CEAA672F2424C87F0076C08E /* test.m4a */; };
+		CEAA67342424C8B20076C08E /* test.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CEAA67332424C8B20076C08E /* test.mp4 */; };
+		CED9761D243C9D5700082605 /* 00.caf in Resources */ = {isa = PBXBuildFile; fileRef = CED9761B243C9D5700082605 /* 00.caf */; };
+		CED9761E243C9D5700082605 /* 01.caf in Resources */ = {isa = PBXBuildFile; fileRef = CED9761C243C9D5700082605 /* 01.caf */; };
+		CEE776232654F8A00091012B /* GroupCreateCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE776202654F8A00091012B /* GroupCreateCellData.m */; };
+		CEE776242654F8A00091012B /* GroupCreateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE776212654F8A00091012B /* GroupCreateCell.m */; };
+		CEF98E0926E5FD8900EC6A20 /* TUIDemo.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CEF98E0826E5FD8900EC6A20 /* TUIDemo.bundle */; };
 		CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014486216E1A4900C12E35 /* AppDelegate.m */; };
 		CF01448A216E1A4900C12E35 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014489216E1A4900C12E35 /* LoginController.m */; };
 		CF01448D216E1A4900C12E35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF01448B216E1A4900C12E35 /* Main.storyboard */; };
@@ -44,23 +77,78 @@
 		CF014492216E1A4B00C12E35 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF014490216E1A4B00C12E35 /* LaunchScreen.storyboard */; };
 		CF014495216E1A4B00C12E35 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CF014494216E1A4B00C12E35 /* main.m */; };
 		CFDC2FA2216E2C8F002EAEC2 /* ConversationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFDC2FA1216E2C8F002EAEC2 /* ConversationController.m */; };
-		CFDC2FA5216E2D5E002EAEC2 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFDC2FA4216E2D5E002EAEC2 /* ChatViewController.m */; };
 		CFEB47752177981900CFD98C /* GroupInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47742177981900CFD98C /* GroupInfoController.m */; };
 		CFEB47782177982B00CFD98C /* GroupMemberController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47772177982B00CFD98C /* GroupMemberController.m */; };
 		CFEB47D02179B82300CFD98C /* SettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFEB47CF2179B82300CFD98C /* SettingController.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		48DF2C48253FE1B800BC522F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CF01447A216E1A4900C12E35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48DF2C41253FE1B800BC522F;
+			remoteInfo = pushservice;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		48DF2C4F253FE1B800BC522F /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				48DF2C4A253FE1B800BC522F /* pushservice.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE48481B27019FC800F53B16 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		48B8C89D25543E0D009E392B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		48B8C89F25543E10009E392B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		48B8C8A325543E9D009E392B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
-		492D8F1F0DED1F83086F3E82 /* Pods-TUIKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.release.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.release.xcconfig"; sourceTree = "<group>"; };
-		4A94A8992A0612C1D8FEAB79 /* Pods-TUIKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.debug.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		4ACF80D249FB861F11A39586 /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		30722D34BE1DD45B2ACBD3BB /* Pods-TUIKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.release.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.release.xcconfig"; sourceTree = "<group>"; };
+		480C761722DCA3C3007495EC /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = ../ImSDK/Framework/ImSDK.framework; sourceTree = "<group>"; };
+		48250E01266675BD006D4C8B /* TestForHistoryMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestForHistoryMessageViewController.m; sourceTree = "<group>"; };
+		48250E02266675BD006D4C8B /* TestForHistoryMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestForHistoryMessageViewController.h; sourceTree = "<group>"; };
+		48250E03266675BD006D4C8B /* TestForHistoryMessageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestForHistoryMessageViewController.xib; sourceTree = "<group>"; };
+		487D4B8C22E15B8A00FD54BC /* ProfileController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProfileController.h; sourceTree = "<group>"; };
+		487D4B8D22E15B8A00FD54BC /* ProfileController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileController.m; sourceTree = "<group>"; };
+		488193D326CBB0440093BFBB /* TestForGroupAttributeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestForGroupAttributeViewController.xib; sourceTree = "<group>"; };
+		488193D426CBB0440093BFBB /* TestForGroupAttributeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestForGroupAttributeViewController.h; sourceTree = "<group>"; };
+		488193D526CBB0440093BFBB /* TestForGroupAttributeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestForGroupAttributeViewController.m; sourceTree = "<group>"; };
+		48C93EE2253934FB00FDB5CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		48C93F712539DB1600FDB5CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		48C93F742539DB3200FDB5CF /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		48C93F752539DB3400FDB5CF /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		48CE0A9A2629796700754C8C /* verification.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = verification.html; sourceTree = "<group>"; };
+		48D7D3E62539E0120044E957 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		48DF2C42253FE1B800BC522F /* pushservice.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = pushservice.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		48DF2C44253FE1B800BC522F /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
+		48DF2C45253FE1B800BC522F /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
+		48DF2C47253FE1B800BC522F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48DF2CF72542E0EA00BC522F /* CustomFaceResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = CustomFaceResource.bundle; sourceTree = "<group>"; };
+		48EF83822685785000BFA480 /* TestForSearchMessageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestForSearchMessageViewController.xib; sourceTree = "<group>"; };
+		48EF83832685785000BFA480 /* TestForSearchMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestForSearchMessageViewController.h; sourceTree = "<group>"; };
+		48EF83842685785000BFA480 /* TestForSearchMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestForSearchMessageViewController.m; sourceTree = "<group>"; };
+		8D757F7318DC3B846A870603 /* Pods-TUIKitDemo.dailybuild.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.dailybuild.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.dailybuild.xcconfig"; sourceTree = "<group>"; };
 		910AF70922925BF000ED5675 /* SearchGroupViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchGroupViewController.h; sourceTree = "<group>"; };
 		910AF70A22925BF000ED5675 /* SearchGroupViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchGroupViewController.m; sourceTree = "<group>"; };
 		910AF70F2292820300ED5675 /* GroupRequestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupRequestViewController.h; sourceTree = "<group>"; };
 		910AF7102292820300ED5675 /* GroupRequestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupRequestViewController.m; sourceTree = "<group>"; };
+		910D8FFF22AE057E00C9A318 /* TCLoginModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCLoginModel.h; sourceTree = "<group>"; };
+		910D900022AE057E00C9A318 /* TCLoginModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLoginModel.m; sourceTree = "<group>"; };
+		910D900222AE05A100C9A318 /* TCLoginParam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLoginParam.m; sourceTree = "<group>"; };
+		910D900322AE05A100C9A318 /* TCLoginParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCLoginParam.h; sourceTree = "<group>"; };
 		913C852C226705C200D74B58 /* SearchFriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchFriendViewController.h; sourceTree = "<group>"; };
 		913C852E226705C300D74B58 /* SearchFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchFriendViewController.m; sourceTree = "<group>"; };
 		913C85382268260100D74B58 /* FriendRequestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendRequestViewController.h; sourceTree = "<group>"; };
@@ -70,53 +158,78 @@
 		9176C5BC227A98A300DF5784 /* TUserProfileController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUserProfileController.m; sourceTree = "<group>"; };
 		9176C5BD227A98A300DF5784 /* TUserProfileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUserProfileController.h; sourceTree = "<group>"; };
 		9176C5C3227A9D3500DF5784 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		91941A4B22AE40C300123596 /* MyCustomCellData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyCustomCellData.h; sourceTree = "<group>"; };
-		91941A4C22AE40C300123596 /* MyCustomCellData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyCustomCellData.m; sourceTree = "<group>"; };
-		91941A5022AE435700123596 /* MyCustomCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyCustomCell.h; sourceTree = "<group>"; };
-		91941A5122AE435700123596 /* MyCustomCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyCustomCell.m; sourceTree = "<group>"; };
-		91D3AD2F22AA06430036CDE0 /* Aspects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Aspects.m; sourceTree = "<group>"; };
-		91D3AD3022AA06440036CDE0 /* Aspects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Aspects.h; sourceTree = "<group>"; };
 		91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TFriendProfileController.m; sourceTree = "<group>"; };
 		91FE93E32276EF0F00C17D6C /* TFriendProfileController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TFriendProfileController.h; sourceTree = "<group>"; };
 		CE0BDFA8221D53C60083E1B0 /* Bugly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bugly.framework; sourceTree = "<group>"; };
-		CE1A434322DE07EB008A767E /* PAirSandbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAirSandbox.m; sourceTree = "<group>"; };
-		CE1A434622DE07EB008A767E /* TCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCConstants.h; sourceTree = "<group>"; };
-		CE1A434722DE07EB008A767E /* PAirSandbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAirSandbox.h; sourceTree = "<group>"; };
-		CE1A434822DE07EB008A767E /* TCUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUtil.m; sourceTree = "<group>"; };
-		CE1A434922DE07EB008A767E /* TCUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCUtil.h; sourceTree = "<group>"; };
+		CE0EE6482303EC2500DFDFF6 /* QAPM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QAPM.framework; sourceTree = "<group>"; };
+		CE0EE64A2303EC3C00DFDFF6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		CE1051C8263572F400DFA7B3 /* TestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
+		CE1051C9263572F400DFA7B3 /* TestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
+		CE1051CA263572F400DFA7B3 /* TestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestViewController.xib; sourceTree = "<group>"; };
+		CE195278247FA63600209863 /* test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test.png; sourceTree = "<group>"; };
 		CE1C55922224F22C00A75262 /* TUIKitDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TUIKitDemo.entitlements; sourceTree = "<group>"; };
-		CE2238C1266A09DB00C52512 /* GroupCreateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupCreateCell.h; sourceTree = "<group>"; };
-		CE2238C2266A09DC00C52512 /* GroupCreateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupCreateCell.m; sourceTree = "<group>"; };
-		CE2238C3266A09DF00C52512 /* GroupCreateCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupCreateCellData.m; sourceTree = "<group>"; };
-		CE2238C4266A09E000C52512 /* GroupCreateCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupCreateCellData.h; sourceTree = "<group>"; };
-		CE223A5B266DBCF700C52512 /* TUILiveRoomListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListViewController.h; sourceTree = "<group>"; };
-		CE223A5C266DBCF700C52512 /* TUILiveSceneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveSceneViewController.h; sourceTree = "<group>"; };
-		CE223A5D266DBCF700C52512 /* TUILiveRoomListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListViewController.m; sourceTree = "<group>"; };
-		CE223A5F266DBCF700C52512 /* TUILiveRoomListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListView.m; sourceTree = "<group>"; };
-		CE223A60266DBCF700C52512 /* TUILiveTopSegmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveTopSegmentView.h; sourceTree = "<group>"; };
-		CE223A61266DBCF700C52512 /* TUILiveRoomListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListCell.m; sourceTree = "<group>"; };
-		CE223A62266DBCF700C52512 /* TUILiveRoomInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomInfo.h; sourceTree = "<group>"; };
-		CE223A63266DBCF700C52512 /* TUILiveTopSegmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveTopSegmentView.m; sourceTree = "<group>"; };
-		CE223A64266DBCF700C52512 /* TUILiveRoomListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListView.h; sourceTree = "<group>"; };
-		CE223A65266DBCF700C52512 /* TUILiveRoomListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListCell.h; sourceTree = "<group>"; };
-		CE223A66266DBCF700C52512 /* TUILiveRoomInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomInfo.m; sourceTree = "<group>"; };
-		CE223A68266DBCF700C52512 /* TUILiveRoomManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomManager.m; sourceTree = "<group>"; };
-		CE223A69266DBCF700C52512 /* TUILiveHeartBeatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveHeartBeatManager.h; sourceTree = "<group>"; };
-		CE223A6A266DBCF700C52512 /* TUILiveHeartBeatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveHeartBeatManager.m; sourceTree = "<group>"; };
-		CE223A6B266DBCF700C52512 /* TUILiveRoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomManager.h; sourceTree = "<group>"; };
-		CE223A6C266DBCF700C52512 /* TUILiveSceneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveSceneViewController.m; sourceTree = "<group>"; };
-		CE2BBCE32421C34D000C4B7A /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = Pods/TXIMSDK_iOS/ImSDK.framework; sourceTree = "<group>"; };
-		CE37D1C222F9942B0012500D /* GenerateTestUserSig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateTestUserSig.m; sourceTree = "<group>"; };
-		CE37D1C322F9942B0012500D /* GenerateTestUserSig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateTestUserSig.h; sourceTree = "<group>"; };
-		CE37D24822F9CBC80012500D /* ProfileController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileController.m; sourceTree = "<group>"; };
-		CE37D24922F9CBC80012500D /* ProfileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileController.h; sourceTree = "<group>"; };
-		CE685F1323B48F8700A3953C /* 00.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 00.caf; sourceTree = "<group>"; };
-		CE685F1423B48F8700A3953C /* 01.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 01.caf; sourceTree = "<group>"; };
-		CE71516924A1A3240076BAC5 /* TUIKitDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TUIKitDemo-Bridging-Header.h"; sourceTree = "<group>"; };
-		CECC13CC22B282C7008378A2 /* TCLoginParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCLoginParam.h; sourceTree = "<group>"; };
-		CECC13CD22B282C7008378A2 /* TCLoginParam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLoginParam.m; sourceTree = "<group>"; };
-		CF00884C2188772F00AD2879 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
-		CF00884D2188773000AD2879 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		CE223AF5266DFD4500C52512 /* TUILiveRoomListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListViewController.h; sourceTree = "<group>"; };
+		CE223AF6266DFD4500C52512 /* TUILiveSceneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveSceneViewController.h; sourceTree = "<group>"; };
+		CE223AF7266DFD4500C52512 /* TUILiveRoomListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListViewController.m; sourceTree = "<group>"; };
+		CE223AF9266DFD4500C52512 /* TUILiveRoomListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListView.m; sourceTree = "<group>"; };
+		CE223AFA266DFD4500C52512 /* TUILiveTopSegmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveTopSegmentView.h; sourceTree = "<group>"; };
+		CE223AFB266DFD4500C52512 /* TUILiveRoomListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomListCell.m; sourceTree = "<group>"; };
+		CE223AFC266DFD4500C52512 /* TUILiveRoomInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomInfo.h; sourceTree = "<group>"; };
+		CE223AFD266DFD4500C52512 /* TUILiveTopSegmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveTopSegmentView.m; sourceTree = "<group>"; };
+		CE223AFE266DFD4500C52512 /* TUILiveRoomListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListView.h; sourceTree = "<group>"; };
+		CE223AFF266DFD4500C52512 /* TUILiveRoomListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomListCell.h; sourceTree = "<group>"; };
+		CE223B00266DFD4500C52512 /* TUILiveRoomInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomInfo.m; sourceTree = "<group>"; };
+		CE223B02266DFD4500C52512 /* TUILiveRoomManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveRoomManager.m; sourceTree = "<group>"; };
+		CE223B03266DFD4500C52512 /* TUILiveHeartBeatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveHeartBeatManager.h; sourceTree = "<group>"; };
+		CE223B04266DFD4500C52512 /* TUILiveHeartBeatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveHeartBeatManager.m; sourceTree = "<group>"; };
+		CE223B05266DFD4500C52512 /* TUILiveRoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILiveRoomManager.h; sourceTree = "<group>"; };
+		CE223B06266DFD4500C52512 /* TUILiveSceneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILiveSceneViewController.m; sourceTree = "<group>"; };
+		CE2BBC5E241F7B1B000C4B7A /* V2GroupTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = V2GroupTestViewController.h; sourceTree = "<group>"; };
+		CE2BBC5F241F7B1B000C4B7A /* V2GroupTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = V2GroupTestViewController.m; sourceTree = "<group>"; };
+		CE2BBC60241F7B1B000C4B7A /* V2GroupTestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = V2GroupTestViewController.xib; sourceTree = "<group>"; };
+		CE2BBC85241FA5BD000C4B7A /* V2FriendTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = V2FriendTestViewController.h; sourceTree = "<group>"; };
+		CE2BBC86241FA5BD000C4B7A /* V2FriendTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = V2FriendTestViewController.m; sourceTree = "<group>"; };
+		CE2BBC87241FA5BD000C4B7A /* V2FriendTestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = V2FriendTestViewController.xib; sourceTree = "<group>"; };
+		CE2BBC9724207D9D000C4B7A /* V2ManageTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = V2ManageTestViewController.h; sourceTree = "<group>"; };
+		CE2BBC9824207D9D000C4B7A /* V2ManageTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = V2ManageTestViewController.m; sourceTree = "<group>"; };
+		CE2BBC9924207D9D000C4B7A /* V2ManageTestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = V2ManageTestViewController.xib; sourceTree = "<group>"; };
+		CE2D5CCC248E1B4E000E53E7 /* TUIKitDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TUIKitDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		CE440CBB26E072530085EB57 /* GenerateTestUserSig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateTestUserSig.m; sourceTree = "<group>"; };
+		CE440CBC26E072530085EB57 /* TUITextEditController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUITextEditController.h; sourceTree = "<group>"; };
+		CE440CBD26E072530085EB57 /* TUITabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUITabBarController.h; sourceTree = "<group>"; };
+		CE440CBE26E072530085EB57 /* TUINaviBarIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUINaviBarIndicatorView.m; sourceTree = "<group>"; };
+		CE440CC026E072530085EB57 /* TUICommonAvatarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUICommonAvatarCell.m; sourceTree = "<group>"; };
+		CE440CC126E072530085EB57 /* TCUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCUtil.h; sourceTree = "<group>"; };
+		CE440CC226E072530085EB57 /* Aspects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Aspects.h; sourceTree = "<group>"; };
+		CE440CC326E072530085EB57 /* TPopCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPopCell.h; sourceTree = "<group>"; };
+		CE440CC426E072530085EB57 /* TUILoginCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUILoginCache.h; sourceTree = "<group>"; };
+		CE440CC526E072530085EB57 /* TPopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPopView.h; sourceTree = "<group>"; };
+		CE440CC626E072530085EB57 /* TUIDateEditController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIDateEditController.m; sourceTree = "<group>"; };
+		CE440CC726E072530085EB57 /* PAirSandbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAirSandbox.m; sourceTree = "<group>"; };
+		CE440CC826E072530085EB57 /* TCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCConstants.h; sourceTree = "<group>"; };
+		CE440CC926E072530085EB57 /* GenerateTestUserSig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateTestUserSig.h; sourceTree = "<group>"; };
+		CE440CCA26E072530085EB57 /* TUITabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUITabBarController.m; sourceTree = "<group>"; };
+		CE440CCB26E072530085EB57 /* TUITextEditController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUITextEditController.m; sourceTree = "<group>"; };
+		CE440CCC26E072530085EB57 /* TPopCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPopCell.m; sourceTree = "<group>"; };
+		CE440CCD26E072530085EB57 /* Aspects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Aspects.m; sourceTree = "<group>"; };
+		CE440CCE26E072530085EB57 /* TCUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCUtil.m; sourceTree = "<group>"; };
+		CE440CCF26E072530085EB57 /* TUICommonAvatarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUICommonAvatarCell.h; sourceTree = "<group>"; };
+		CE440CD126E072530085EB57 /* TUINaviBarIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUINaviBarIndicatorView.h; sourceTree = "<group>"; };
+		CE440CD226E072530085EB57 /* PAirSandbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAirSandbox.h; sourceTree = "<group>"; };
+		CE440CD326E072530085EB57 /* TUIDateEditController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIDateEditController.h; sourceTree = "<group>"; };
+		CE440CD426E072530085EB57 /* TPopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPopView.m; sourceTree = "<group>"; };
+		CE440CD526E072530085EB57 /* TUILoginCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUILoginCache.m; sourceTree = "<group>"; };
+		CE48481D27019FC800F53B16 /* publishToGit */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = publishToGit; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE48481F27019FC800F53B16 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CEAA672F2424C87F0076C08E /* test.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.m4a; sourceTree = "<group>"; };
+		CEAA67332424C8B20076C08E /* test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.mp4; sourceTree = "<group>"; };
+		CED9761B243C9D5700082605 /* 00.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 00.caf; sourceTree = "<group>"; };
+		CED9761C243C9D5700082605 /* 01.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 01.caf; sourceTree = "<group>"; };
+		CEE7761F2654F89F0091012B /* GroupCreateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupCreateCell.h; sourceTree = "<group>"; };
+		CEE776202654F8A00091012B /* GroupCreateCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupCreateCellData.m; sourceTree = "<group>"; };
+		CEE776212654F8A00091012B /* GroupCreateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupCreateCell.m; sourceTree = "<group>"; };
+		CEE776222654F8A00091012B /* GroupCreateCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupCreateCellData.h; sourceTree = "<group>"; };
+		CEF98E0826E5FD8900EC6A20 /* TUIDemo.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TUIDemo.bundle; sourceTree = "<group>"; };
 		CF014482216E1A4900C12E35 /* TUIKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TUIKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF014485216E1A4900C12E35 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CF014486216E1A4900C12E35 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -137,37 +250,69 @@
 		CFEB47772177982B00CFD98C /* GroupMemberController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupMemberController.m; sourceTree = "<group>"; };
 		CFEB47CE2179B82300CFD98C /* SettingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingController.h; sourceTree = "<group>"; };
 		CFEB47CF2179B82300CFD98C /* SettingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingController.m; sourceTree = "<group>"; };
+		D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TUIKitDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFA1E52ABCCAE78D060D1E3D /* Pods-TUIKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.debug.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		48DF2C3F253FE1B800BC522F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE48481A27019FC800F53B16 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CF01447F216E1A4900C12E35 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE0EE64B2303EC3C00DFDFF6 /* CoreLocation.framework in Frameworks */,
 				CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */,
-				CC66376147F9780AC76154C2 /* libPods-TUIKitDemo.a in Frameworks */,
+				CE0EE6492303EC2500DFDFF6 /* QAPM.framework in Frameworks */,
+				BCF739AA621A7AF4B48F1525 /* libPods-TUIKitDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		46BF8BF62A4989382EFC56F0 /* Pods */ = {
+		0EAC6405FA3E1068F8C9B7B0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				4A94A8992A0612C1D8FEAB79 /* Pods-TUIKitDemo.debug.xcconfig */,
-				492D8F1F0DED1F83086F3E82 /* Pods-TUIKitDemo.release.xcconfig */,
+				FFA1E52ABCCAE78D060D1E3D /* Pods-TUIKitDemo.debug.xcconfig */,
+				30722D34BE1DD45B2ACBD3BB /* Pods-TUIKitDemo.release.xcconfig */,
+				8D757F7318DC3B846A870603 /* Pods-TUIKitDemo.dailybuild.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		48DF2C43253FE1B800BC522F /* pushservice */ = {
+			isa = PBXGroup;
+			children = (
+				48DF2C44253FE1B800BC522F /* NotificationService.h */,
+				48DF2C45253FE1B800BC522F /* NotificationService.m */,
+				48DF2C47253FE1B800BC522F /* Info.plist */,
+			);
+			path = pushservice;
 			sourceTree = "<group>";
 		};
 		910D8FFB22AE051C00C9A318 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				48CE0A9A2629796700754C8C /* verification.html */,
+				910D900322AE05A100C9A318 /* TCLoginParam.h */,
+				910D900222AE05A100C9A318 /* TCLoginParam.m */,
+				910D8FFF22AE057E00C9A318 /* TCLoginModel.h */,
+				910D900022AE057E00C9A318 /* TCLoginModel.m */,
 				CF014488216E1A4900C12E35 /* LoginController.h */,
 				CF014489216E1A4900C12E35 /* LoginController.m */,
-				CECC13CC22B282C7008378A2 /* TCLoginParam.h */,
-				CECC13CD22B282C7008378A2 /* TCLoginParam.m */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -179,18 +324,6 @@
 				CFDC2FA1216E2C8F002EAEC2 /* ConversationController.m */,
 			);
 			path = Conversation;
-			sourceTree = "<group>";
-		};
-		910D900522AE069000C9A318 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				CE1A434722DE07EB008A767E /* PAirSandbox.h */,
-				CE1A434322DE07EB008A767E /* PAirSandbox.m */,
-				CE1A434622DE07EB008A767E /* TCConstants.h */,
-				CE1A434922DE07EB008A767E /* TCUtil.h */,
-				CE1A434822DE07EB008A767E /* TCUtil.m */,
-			);
-			path = Util;
 			sourceTree = "<group>";
 		};
 		9176C5B9227A987300DF5784 /* Chat */ = {
@@ -212,10 +345,34 @@
 		9176C5CD227AE37D00DF5784 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				488193D426CBB0440093BFBB /* TestForGroupAttributeViewController.h */,
+				488193D526CBB0440093BFBB /* TestForGroupAttributeViewController.m */,
+				488193D326CBB0440093BFBB /* TestForGroupAttributeViewController.xib */,
+				48EF83832685785000BFA480 /* TestForSearchMessageViewController.h */,
+				48EF83842685785000BFA480 /* TestForSearchMessageViewController.m */,
+				48EF83822685785000BFA480 /* TestForSearchMessageViewController.xib */,
+				48250E02266675BD006D4C8B /* TestForHistoryMessageViewController.h */,
+				48250E01266675BD006D4C8B /* TestForHistoryMessageViewController.m */,
+				48250E03266675BD006D4C8B /* TestForHistoryMessageViewController.xib */,
 				CFEB47CE2179B82300CFD98C /* SettingController.h */,
 				CFEB47CF2179B82300CFD98C /* SettingController.m */,
-				CE37D24922F9CBC80012500D /* ProfileController.h */,
-				CE37D24822F9CBC80012500D /* ProfileController.m */,
+				487D4B8C22E15B8A00FD54BC /* ProfileController.h */,
+				487D4B8D22E15B8A00FD54BC /* ProfileController.m */,
+				CE1051C8263572F400DFA7B3 /* TestViewController.h */,
+				CE1051C9263572F400DFA7B3 /* TestViewController.m */,
+				CE1051CA263572F400DFA7B3 /* TestViewController.xib */,
+				CE2BBC9724207D9D000C4B7A /* V2ManageTestViewController.h */,
+				CE2BBC9824207D9D000C4B7A /* V2ManageTestViewController.m */,
+				CE2BBC9924207D9D000C4B7A /* V2ManageTestViewController.xib */,
+				CE2BBC5E241F7B1B000C4B7A /* V2GroupTestViewController.h */,
+				CE2BBC5F241F7B1B000C4B7A /* V2GroupTestViewController.m */,
+				CE2BBC60241F7B1B000C4B7A /* V2GroupTestViewController.xib */,
+				CE2BBC85241FA5BD000C4B7A /* V2FriendTestViewController.h */,
+				CE2BBC86241FA5BD000C4B7A /* V2FriendTestViewController.m */,
+				CE2BBC87241FA5BD000C4B7A /* V2FriendTestViewController.xib */,
+				CEAA67332424C8B20076C08E /* test.mp4 */,
+				CEAA672F2424C87F0076C08E /* test.m4a */,
+				CE195278247FA63600209863 /* test.png */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -223,25 +380,12 @@
 		91941A4A22AE409F00123596 /* Custom */ = {
 			isa = PBXGroup;
 			children = (
-				91941A4B22AE40C300123596 /* MyCustomCellData.h */,
-				91941A4C22AE40C300123596 /* MyCustomCellData.m */,
-				91941A5022AE435700123596 /* MyCustomCell.h */,
-				91941A5122AE435700123596 /* MyCustomCell.m */,
-				CE2238C1266A09DB00C52512 /* GroupCreateCell.h */,
-				CE2238C2266A09DC00C52512 /* GroupCreateCell.m */,
-				CE2238C4266A09E000C52512 /* GroupCreateCellData.h */,
-				CE2238C3266A09DF00C52512 /* GroupCreateCellData.m */,
+				CEE7761F2654F89F0091012B /* GroupCreateCell.h */,
+				CEE776212654F8A00091012B /* GroupCreateCell.m */,
+				CEE776222654F8A00091012B /* GroupCreateCellData.h */,
+				CEE776202654F8A00091012B /* GroupCreateCellData.m */,
 			);
 			path = Custom;
-			sourceTree = "<group>";
-		};
-		91D3AD2C22AA06110036CDE0 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				91D3AD3022AA06440036CDE0 /* Aspects.h */,
-				91D3AD2F22AA06430036CDE0 /* Aspects.m */,
-			);
-			path = Utils;
 			sourceTree = "<group>";
 		};
 		91FE93E12276EEEE00C17D6C /* Contact */ = {
@@ -263,62 +407,112 @@
 			path = Contact;
 			sourceTree = "<group>";
 		};
-		CE223A5A266DBCF700C52512 /* Scenes */ = {
+		CE223AF4266DFD4500C52512 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				CE223A5B266DBCF700C52512 /* TUILiveRoomListViewController.h */,
-				CE223A5C266DBCF700C52512 /* TUILiveSceneViewController.h */,
-				CE223A5D266DBCF700C52512 /* TUILiveRoomListViewController.m */,
-				CE223A5E266DBCF700C52512 /* Custom */,
-				CE223A67266DBCF700C52512 /* Data */,
-				CE223A6C266DBCF700C52512 /* TUILiveSceneViewController.m */,
+				CE223AF5266DFD4500C52512 /* TUILiveRoomListViewController.h */,
+				CE223AF6266DFD4500C52512 /* TUILiveSceneViewController.h */,
+				CE223AF7266DFD4500C52512 /* TUILiveRoomListViewController.m */,
+				CE223AF8266DFD4500C52512 /* Custom */,
+				CE223B01266DFD4500C52512 /* Data */,
+				CE223B06266DFD4500C52512 /* TUILiveSceneViewController.m */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
 		};
-		CE223A5E266DBCF700C52512 /* Custom */ = {
+		CE223AF8266DFD4500C52512 /* Custom */ = {
 			isa = PBXGroup;
 			children = (
-				CE223A5F266DBCF700C52512 /* TUILiveRoomListView.m */,
-				CE223A60266DBCF700C52512 /* TUILiveTopSegmentView.h */,
-				CE223A61266DBCF700C52512 /* TUILiveRoomListCell.m */,
-				CE223A62266DBCF700C52512 /* TUILiveRoomInfo.h */,
-				CE223A63266DBCF700C52512 /* TUILiveTopSegmentView.m */,
-				CE223A64266DBCF700C52512 /* TUILiveRoomListView.h */,
-				CE223A65266DBCF700C52512 /* TUILiveRoomListCell.h */,
-				CE223A66266DBCF700C52512 /* TUILiveRoomInfo.m */,
+				CE223AFE266DFD4500C52512 /* TUILiveRoomListView.h */,
+				CE223AF9266DFD4500C52512 /* TUILiveRoomListView.m */,
+				CE223AFA266DFD4500C52512 /* TUILiveTopSegmentView.h */,
+				CE223AFD266DFD4500C52512 /* TUILiveTopSegmentView.m */,
+				CE223AFF266DFD4500C52512 /* TUILiveRoomListCell.h */,
+				CE223AFB266DFD4500C52512 /* TUILiveRoomListCell.m */,
+				CE223AFC266DFD4500C52512 /* TUILiveRoomInfo.h */,
+				CE223B00266DFD4500C52512 /* TUILiveRoomInfo.m */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
 		};
-		CE223A67266DBCF700C52512 /* Data */ = {
+		CE223B01266DFD4500C52512 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				CE223A68266DBCF700C52512 /* TUILiveRoomManager.m */,
-				CE223A69266DBCF700C52512 /* TUILiveHeartBeatManager.h */,
-				CE223A6A266DBCF700C52512 /* TUILiveHeartBeatManager.m */,
-				CE223A6B266DBCF700C52512 /* TUILiveRoomManager.h */,
+				CE223B02266DFD4500C52512 /* TUILiveRoomManager.m */,
+				CE223B03266DFD4500C52512 /* TUILiveHeartBeatManager.h */,
+				CE223B04266DFD4500C52512 /* TUILiveHeartBeatManager.m */,
+				CE223B05266DFD4500C52512 /* TUILiveRoomManager.h */,
 			);
 			path = Data;
 			sourceTree = "<group>";
 		};
-		CE37D1C122F9942B0012500D /* Debug */ = {
+		CE440CBA26E072530085EB57 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				CE37D1C222F9942B0012500D /* GenerateTestUserSig.m */,
-				CE37D1C322F9942B0012500D /* GenerateTestUserSig.h */,
+				CE440CC826E072530085EB57 /* TCConstants.h */,
+				CE440CC226E072530085EB57 /* Aspects.h */,
+				CE440CCD26E072530085EB57 /* Aspects.m */,
+				CE440CC926E072530085EB57 /* GenerateTestUserSig.h */,
+				CE440CBB26E072530085EB57 /* GenerateTestUserSig.m */,
+				CE440CBC26E072530085EB57 /* TUITextEditController.h */,
+				CE440CBD26E072530085EB57 /* TUITabBarController.h */,
+				CE440CD126E072530085EB57 /* TUINaviBarIndicatorView.h */,
+				CE440CBE26E072530085EB57 /* TUINaviBarIndicatorView.m */,
+				CE440CCF26E072530085EB57 /* TUICommonAvatarCell.h */,
+				CE440CC026E072530085EB57 /* TUICommonAvatarCell.m */,
+				CE440CC326E072530085EB57 /* TPopCell.h */,
+				CE440CCC26E072530085EB57 /* TPopCell.m */,
+				CE440CC526E072530085EB57 /* TPopView.h */,
+				CE440CD426E072530085EB57 /* TPopView.m */,
+				CE440CD226E072530085EB57 /* PAirSandbox.h */,
+				CE440CC726E072530085EB57 /* PAirSandbox.m */,
+				CE440CCA26E072530085EB57 /* TUITabBarController.m */,
+				CE440CCB26E072530085EB57 /* TUITextEditController.m */,
+				CE440CC126E072530085EB57 /* TCUtil.h */,
+				CE440CCE26E072530085EB57 /* TCUtil.m */,
+				CE440CD326E072530085EB57 /* TUIDateEditController.h */,
+				CE440CC626E072530085EB57 /* TUIDateEditController.m */,
+				CE440CC426E072530085EB57 /* TUILoginCache.h */,
+				CE440CD526E072530085EB57 /* TUILoginCache.m */,
 			);
-			path = Debug;
+			path = Util;
+			sourceTree = "<group>";
+		};
+		CE48481E27019FC800F53B16 /* publishToGit */ = {
+			isa = PBXGroup;
+			children = (
+				CE48481F27019FC800F53B16 /* main.m */,
+			);
+			path = publishToGit;
+			sourceTree = "<group>";
+		};
+		CED97617243C9D3700082605 /* PushSound */ = {
+			isa = PBXGroup;
+			children = (
+				CED9761B243C9D5700082605 /* 00.caf */,
+				CED9761C243C9D5700082605 /* 01.caf */,
+			);
+			path = PushSound;
+			sourceTree = "<group>";
+		};
+		CEF98DD526E5C0A900EC6A20 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CEF98E0826E5FD8900EC6A20 /* TUIDemo.bundle */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		CF014479216E1A4900C12E35 = {
 			isa = PBXGroup;
 			children = (
 				CF014484216E1A4900C12E35 /* TUIKitDemo */,
+				48DF2C43253FE1B800BC522F /* pushservice */,
+				CE48481E27019FC800F53B16 /* publishToGit */,
 				CF014483216E1A4900C12E35 /* Products */,
 				CF0144A1216E1A6400C12E35 /* Frameworks */,
-				46BF8BF62A4989382EFC56F0 /* Pods */,
-				CE71516924A1A3240076BAC5 /* TUIKitDemo-Bridging-Header.h */,
+				0EAC6405FA3E1068F8C9B7B0 /* Pods */,
+				CE2D5CCC248E1B4E000E53E7 /* TUIKitDemo-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -326,6 +520,8 @@
 			isa = PBXGroup;
 			children = (
 				CF014482216E1A4900C12E35 /* TUIKitDemo.app */,
+				48DF2C42253FE1B800BC522F /* pushservice.appex */,
+				CE48481D27019FC800F53B16 /* publishToGit */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -333,15 +529,15 @@
 		CF014484216E1A4900C12E35 /* TUIKitDemo */ = {
 			isa = PBXGroup;
 			children = (
-				CE223A5A266DBCF700C52512 /* Scenes */,
-				CE37D1C122F9942B0012500D /* Debug */,
-				910D900522AE069000C9A318 /* Util */,
+				48DF2CF72542E0EA00BC522F /* CustomFaceResource.bundle */,
+				CE440CBA26E072530085EB57 /* Util */,
+				CE223AF4266DFD4500C52512 /* Scenes */,
 				910D8FFE22AE052400C9A318 /* Conversation */,
 				910D8FFB22AE051C00C9A318 /* Login */,
-				91D3AD2C22AA06110036CDE0 /* Utils */,
 				9176C5B9227A987300DF5784 /* Chat */,
 				9176C5CD227AE37D00DF5784 /* Setting */,
 				91FE93E12276EEEE00C17D6C /* Contact */,
+				CED97617243C9D3700082605 /* PushSound */,
 				CE1C55922224F22C00A75262 /* TUIKitDemo.entitlements */,
 				CF014485216E1A4900C12E35 /* AppDelegate.h */,
 				CF014486216E1A4900C12E35 /* AppDelegate.m */,
@@ -351,9 +547,8 @@
 				CF014493216E1A4B00C12E35 /* Info.plist */,
 				CF014494216E1A4B00C12E35 /* main.m */,
 				9176C5C3227A9D3500DF5784 /* PrefixHeader.pch */,
-				CE685F1323B48F8700A3953C /* 00.caf */,
-				CE685F1423B48F8700A3953C /* 01.caf */,
-				48B8C89E25543E0D009E392B /* Localizable.strings */,
+				CEF98DD526E5C0A900EC6A20 /* Resources */,
+				48C93F722539DB1600FDB5CF /* Localizable.strings */,
 			);
 			path = TUIKitDemo;
 			sourceTree = "<group>";
@@ -361,9 +556,11 @@
 		CF0144A1216E1A6400C12E35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE0EE64A2303EC3C00DFDFF6 /* CoreLocation.framework */,
+				CE0EE6482303EC2500DFDFF6 /* QAPM.framework */,
+				480C761722DCA3C3007495EC /* ImSDK.framework */,
 				CE0BDFA8221D53C60083E1B0 /* Bugly.framework */,
-				CE2BBCE32421C34D000C4B7A /* ImSDK.framework */,
-				4ACF80D249FB861F11A39586 /* libPods-TUIKitDemo.a */,
+				D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -371,6 +568,41 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		48DF2C41253FE1B800BC522F /* pushservice */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48DF2C4B253FE1B800BC522F /* Build configuration list for PBXNativeTarget "pushservice" */;
+			buildPhases = (
+				48DF2C3E253FE1B800BC522F /* Sources */,
+				48DF2C3F253FE1B800BC522F /* Frameworks */,
+				48DF2C40253FE1B800BC522F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = pushservice;
+			productName = pushservice;
+			productReference = 48DF2C42253FE1B800BC522F /* pushservice.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		CE48481C27019FC800F53B16 /* publishToGit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE48482127019FC800F53B16 /* Build configuration list for PBXNativeTarget "publishToGit" */;
+			buildPhases = (
+				CE48481927019FC800F53B16 /* Sources */,
+				CE48481A27019FC800F53B16 /* Frameworks */,
+				CE48481B27019FC800F53B16 /* CopyFiles */,
+				CE4848252701A03000F53B16 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = publishToGit;
+			productName = publishToGit;
+			productReference = CE48481D27019FC800F53B16 /* publishToGit */;
+			productType = "com.apple.product-type.tool";
+		};
 		CF014481216E1A4900C12E35 /* TUIKitDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CF014498216E1A4B00C12E35 /* Build configuration list for PBXNativeTarget "TUIKitDemo" */;
@@ -379,12 +611,14 @@
 				CF01447E216E1A4900C12E35 /* Sources */,
 				CF01447F216E1A4900C12E35 /* Frameworks */,
 				CF014480216E1A4900C12E35 /* Resources */,
-				72540DBA46A275FCEA0B5010 /* [CP] Embed Pods Frameworks */,
-				35BC93332A95F5789815994C /* [CP] Copy Pods Resources */,
+				F9F8A5EA3CBCD9A4B2E821AB /* [CP] Copy Pods Resources */,
+				48DF2C4F253FE1B800BC522F /* Embed App Extensions */,
+				AC78EE56CEA9485C33F0F521 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				48DF2C49253FE1B800BC522F /* PBXTargetDependency */,
 			);
 			name = TUIKitDemo;
 			productName = TUIKitDemo;
@@ -397,15 +631,22 @@
 		CF01447A216E1A4900C12E35 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				DefaultBuildSystemTypeForWorkspace = Original;
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = Tencent;
 				TargetAttributes = {
+					48DF2C41253FE1B800BC522F = {
+						CreatedOnToolsVersion = 11.7;
+					};
+					CE48481C27019FC800F53B16 = {
+						CreatedOnToolsVersion = 13.0;
+					};
 					CF014481216E1A4900C12E35 = {
 						CreatedOnToolsVersion = 9.4.1;
 						LastSwiftMigration = 1150;
 						SystemCapabilities = {
 							com.apple.Push = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.Siri = {
 								enabled = 0;
@@ -429,21 +670,43 @@
 			projectRoot = "";
 			targets = (
 				CF014481216E1A4900C12E35 /* TUIKitDemo */,
+				48DF2C41253FE1B800BC522F /* pushservice */,
+				CE48481C27019FC800F53B16 /* publishToGit */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		48DF2C40253FE1B800BC522F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CF014480216E1A4900C12E35 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE685F1623B48F8700A3953C /* 01.caf in Resources */,
-				48B8C89C25543E0D009E392B /* Localizable.strings in Resources */,
+				48D7D3BD2539DE4C0044E957 /* Localizable.strings in Resources */,
+				CE1051CC263572F400DFA7B3 /* TestViewController.xib in Resources */,
+				CED9761D243C9D5700082605 /* 00.caf in Resources */,
 				CF014492216E1A4B00C12E35 /* LaunchScreen.storyboard in Resources */,
+				CEAA67342424C8B20076C08E /* test.mp4 in Resources */,
+				48250E05266675BD006D4C8B /* TestForHistoryMessageViewController.xib in Resources */,
+				48EF83852685785000BFA480 /* TestForSearchMessageViewController.xib in Resources */,
+				CE2BBC9B24207D9D000C4B7A /* V2ManageTestViewController.xib in Resources */,
+				48CE0A9B2629796700754C8C /* verification.html in Resources */,
+				CEAA67302424C87F0076C08E /* test.m4a in Resources */,
 				CF01448F216E1A4B00C12E35 /* Assets.xcassets in Resources */,
-				CE685F1523B48F8700A3953C /* 00.caf in Resources */,
+				CEF98E0926E5FD8900EC6A20 /* TUIDemo.bundle in Resources */,
+				CE2BBC62241F7B1B000C4B7A /* V2GroupTestViewController.xib in Resources */,
 				CF01448D216E1A4900C12E35 /* Main.storyboard in Resources */,
+				488193D626CBB0440093BFBB /* TestForGroupAttributeViewController.xib in Resources */,
+				CED9761E243C9D5700082605 /* 01.caf in Resources */,
+				48DF2CF82542E0EA00BC522F /* CustomFaceResource.bundle in Resources */,
+				CE2BBC89241FA5BD000C4B7A /* V2FriendTestViewController.xib in Resources */,
+				CE195279247FA63600209863 /* test.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -472,22 +735,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		35BC93332A95F5789815994C /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		72540DBA46A275FCEA0B5010 /* [CP] Embed Pods Frameworks */ = {
+		AC78EE56CEA9485C33F0F521 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -502,57 +750,127 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		CE4848252701A03000F53B16 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd TUIKitDemo/Util\nsed -i \"\" \"s/public_SDKAPPID =.*/public_SDKAPPID = 0;/\" GenerateTestUserSig.h\nsed -i \"\" \"s/singapore_SDKAPPID =.*/singapore_SDKAPPID = 0;/\" GenerateTestUserSig.h\nsed -i \"\" \"s/korea_SDKAPPID.*/korea_SDKAPPID = 0;/\" GenerateTestUserSig.h\nsed -i \"\" \"s/germany_SDKAPPID.*/germany_SDKAPPID = 0;/\" GenerateTestUserSig.h\nsed -i \"\" \"s/public_SECRETKEY.*/public_SECRETKEY = @\\\"\\\";/\" GenerateTestUserSig.h\nsed -i \"\" \"s/singapore_SECRETKEY.*/singapore_SECRETKEY = @\\\"\\\";/\" GenerateTestUserSig.h\nsed -i \"\" \"s/korea_SECRETKEY.*/korea_SECRETKEY = @\\\"\\\";/\" GenerateTestUserSig.h\nsed -i \"\" \"s/germany_SECRETKEY.*/germany_SECRETKEY = @\\\"\\\";/\" GenerateTestUserSig.h\n\nsed -i \"\" \"s/kHttpServerAddr.*/kHttpServerAddr @\\\"\\\"/\" TCConstants.h\nsed -i \"\" \"s/kHttpSmsImageAddr.*/kHttpSmsImageAddr @\\\"\\\"/\" TCConstants.h\nsed -i \"\" \"s/kHttpSmsLoginAddr_public.*/kHttpSmsLoginAddr_public @\\\"\\\"/\" TCConstants.h\nsed -i \"\" \"s/kHttpSmsLoginAddr_singapore.*/kHttpSmsLoginAddr_singapore @\\\"\\\"/\" TCConstants.h\nsed -i \"\" \"s/DEFAULT_ELK_HOST.*/DEFAULT_ELK_HOST @\\\"\\\"/\" TCConstants.h\nsed -i \"\" \"s/LicenceURL.*/LicenceURL @\\\"\\\"/\" TCConstants.h\nsed -i \"\" \"s/LicenceKey.*/LicenceKey @\\\"\\\"/\" TCConstants.h\n";
+		};
+		F9F8A5EA3CBCD9A4B2E821AB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		48DF2C3E253FE1B800BC522F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48DF2C46253FE1B800BC522F /* NotificationService.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE48481927019FC800F53B16 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE48482027019FC800F53B16 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CF01447E216E1A4900C12E35 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CECC13CE22B282C7008378A2 /* TCLoginParam.m in Sources */,
-				CE223A73266DBCF700C52512 /* TUILiveHeartBeatManager.m in Sources */,
-				CE223A71266DBCF700C52512 /* TUILiveRoomInfo.m in Sources */,
-				CE1A434A22DE07EB008A767E /* PAirSandbox.m in Sources */,
-				915AA66A2248DBC600C0C9A0 /* ContactsController.m in Sources */,
-				913C853A2268260100D74B58 /* FriendRequestViewController.m in Sources */,
+				480C761922DCA3EB007495EC /* SearchFriendViewController.m in Sources */,
+				CE223B0B266DFD4500C52512 /* TUILiveRoomInfo.m in Sources */,
+				CE440CDC26E072530085EB57 /* TUITabBarController.m in Sources */,
+				CE223B07266DFD4500C52512 /* TUILiveRoomListViewController.m in Sources */,
+				CEE776232654F8A00091012B /* GroupCreateCellData.m in Sources */,
+				CE440CDF26E072530085EB57 /* Aspects.m in Sources */,
+				CE2BBC61241F7B1B000C4B7A /* V2GroupTestViewController.m in Sources */,
+				CE2BBC88241FA5BD000C4B7A /* V2FriendTestViewController.m in Sources */,
+				CE440CE026E072530085EB57 /* TCUtil.m in Sources */,
+				CE440CDA26E072530085EB57 /* TUIDateEditController.m in Sources */,
+				480C761A22DCA3EB007495EC /* SearchGroupViewController.m in Sources */,
+				CE440CD626E072530085EB57 /* GenerateTestUserSig.m in Sources */,
+				48250E04266675BD006D4C8B /* TestForHistoryMessageViewController.m in Sources */,
+				CE223B08266DFD4500C52512 /* TUILiveRoomListView.m in Sources */,
+				CE440CD726E072530085EB57 /* TUINaviBarIndicatorView.m in Sources */,
+				CE440CDB26E072530085EB57 /* PAirSandbox.m in Sources */,
+				CE1051CB263572F400DFA7B3 /* TestViewController.m in Sources */,
+				480C761622DCA3A7007495EC /* TFriendProfileController.m in Sources */,
+				480C761522DCA38A007495EC /* ContactsController.m in Sources */,
+				CEE776242654F8A00091012B /* GroupCreateCell.m in Sources */,
+				CE440CDD26E072530085EB57 /* TUITextEditController.m in Sources */,
+				480C761322DCA33F007495EC /* ChatViewController.m in Sources */,
+				480C761122DCA2F7007495EC /* FriendRequestViewController.m in Sources */,
+				48EF83862685785000BFA480 /* TestForSearchMessageViewController.m in Sources */,
+				CE440CE226E072530085EB57 /* TUILoginCache.m in Sources */,
 				CF01448A216E1A4900C12E35 /* LoginController.m in Sources */,
-				CE2238C6266A09E000C52512 /* GroupCreateCellData.m in Sources */,
-				CE2238C5266A09E000C52512 /* GroupCreateCell.m in Sources */,
-				CE223A6E266DBCF700C52512 /* TUILiveRoomListView.m in Sources */,
-				913C8531226705C300D74B58 /* SearchFriendViewController.m in Sources */,
+				CE440CDE26E072530085EB57 /* TPopCell.m in Sources */,
+				CE223B0E266DFD4500C52512 /* TUILiveSceneViewController.m in Sources */,
+				CE223B0C266DFD4500C52512 /* TUILiveRoomManager.m in Sources */,
+				488193D726CBB0440093BFBB /* TestForGroupAttributeViewController.m in Sources */,
 				CFEB47782177982B00CFD98C /* GroupMemberController.m in Sources */,
-				91941A5222AE435700123596 /* MyCustomCell.m in Sources */,
-				CE1A434C22DE07EB008A767E /* TCUtil.m in Sources */,
+				CE440CE126E072530085EB57 /* TPopView.m in Sources */,
 				CFEB47752177981900CFD98C /* GroupInfoController.m in Sources */,
-				91FE93E42276EF0F00C17D6C /* TFriendProfileController.m in Sources */,
-				CE37D24A22F9CBC80012500D /* ProfileController.m in Sources */,
-				CE37D1C422F9942B0012500D /* GenerateTestUserSig.m in Sources */,
-				CE223A70266DBCF700C52512 /* TUILiveTopSegmentView.m in Sources */,
+				CE223B0A266DFD4500C52512 /* TUILiveTopSegmentView.m in Sources */,
+				CE223B09266DFD4500C52512 /* TUILiveRoomListCell.m in Sources */,
+				487D4B8E22E15B8A00FD54BC /* ProfileController.m in Sources */,
 				CFEB47D02179B82300CFD98C /* SettingController.m in Sources */,
+				910D900122AE057E00C9A318 /* TCLoginModel.m in Sources */,
+				CE2BBC9A24207D9D000C4B7A /* V2ManageTestViewController.m in Sources */,
 				9176C5BE227A98A300DF5784 /* TUserProfileController.m in Sources */,
-				CFDC2FA5216E2D5E002EAEC2 /* ChatViewController.m in Sources */,
-				CE223A74266DBCF700C52512 /* TUILiveSceneViewController.m in Sources */,
-				91941A4D22AE40C300123596 /* MyCustomCellData.m in Sources */,
-				CE223A72266DBCF700C52512 /* TUILiveRoomManager.m in Sources */,
-				91D3AD3122AA06440036CDE0 /* Aspects.m in Sources */,
-				910AF70B22925BF000ED5675 /* SearchGroupViewController.m in Sources */,
+				910D900422AE05A100C9A318 /* TCLoginParam.m in Sources */,
 				910AF7112292820300ED5675 /* GroupRequestViewController.m in Sources */,
-				CE223A6F266DBCF700C52512 /* TUILiveRoomListCell.m in Sources */,
 				CF014495216E1A4B00C12E35 /* main.m in Sources */,
+				CE223B0D266DFD4500C52512 /* TUILiveHeartBeatManager.m in Sources */,
 				CF014487216E1A4900C12E35 /* AppDelegate.m in Sources */,
-				CE223A6D266DBCF700C52512 /* TUILiveRoomListViewController.m in Sources */,
+				CE440CD926E072530085EB57 /* TUICommonAvatarCell.m in Sources */,
 				CFDC2FA2216E2C8F002EAEC2 /* ConversationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		48DF2C49253FE1B800BC522F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48DF2C41253FE1B800BC522F /* pushservice */;
+			targetProxy = 48DF2C48253FE1B800BC522F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
-		48B8C89E25543E0D009E392B /* Localizable.strings */ = {
+		48C93F722539DB1600FDB5CF /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				48B8C89D25543E0D009E392B /* en */,
-				48B8C89F25543E10009E392B /* zh-Hans */,
+				48C93F712539DB1600FDB5CF /* en */,
+				48C93F752539DB3400FDB5CF /* zh-Hans */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -561,8 +879,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				CF01448C216E1A4900C12E35 /* Base */,
-				CF00884C2188772F00AD2879 /* zh-Hans */,
-				48B8C8A325543E9D009E392B /* en */,
+				48C93EE2253934FB00FDB5CF /* en */,
+				48D7D3E62539E0120044E957 /* zh-Hans */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -571,7 +889,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				CF014491216E1A4B00C12E35 /* Base */,
-				CF00884D2188773000AD2879 /* zh-Hans */,
+				48C93F742539DB3200FDB5CF /* zh-Hans */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -579,6 +897,220 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		48DF2C4C253FE1B800BC522F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 5GHU44CJHG;
+				INFOPLIST_FILE = pushservice/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.tuikit.demo.pushservice;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = impushservice;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		48DF2C4D253FE1B800BC522F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 5GHU44CJHG;
+				INFOPLIST_FILE = pushservice/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.tuikit.demo.pushservice;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = impushservice;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		48DF2C4E253FE1B800BC522F /* DailyBuild */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Tencent Technology (Shenzhen) Co., Ltd";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HKB8WPFBR9;
+				INFOPLIST_FILE = pushservice/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.tuikit.demo.pushservice;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DailyBuild;
+		};
+		CE48482227019FC800F53B16 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5GHU44CJHG;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CE48482327019FC800F53B16 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5GHU44CJHG;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		CE48482427019FC800F53B16 /* DailyBuild */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5GHU44CJHG;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = DailyBuild;
+		};
+		CEE33A982319258300E0E717 /* DailyBuild */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = DailyBuild;
+		};
+		CEE33A992319258300E0E717 /* DailyBuild */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8D757F7318DC3B846A870603 /* Pods-TUIKitDemo.dailybuild.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = TUIKitDemo/TUIKitDemo.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Tencent Technology (Shenzhen) Co., Ltd";
+				CODE_SIGN_STYLE = Manual;
+				COMPRESS_PNG_FILES = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = HKB8WPFBR9;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"ENABLELIVE=1",
+					"PUBLISHGIT=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../TUIKit/TUIKit/**",
+					"$(SRCROOT)/../../../source/project/ios/imsdk/IMMessageExt/include/**",
+					"$(SRCROOT)/../../../source/project/ios/imsdk/ImSDK/include/**",
+				);
+				INFOPLIST_FILE = TUIKitDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.tuikit.demo.db;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "com.tencent.tuikit.demo.db InHouse";
+				STRIP_PNG_TEXT = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "TUIKitDemo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = (
+					"${SRCROOT}",
+					"\"$(SRCROOT)/../ImSDK/Framework/ImSDK.framework/Headers\"/**",
+					"/Users/changqing/Documents/iOS_git/TUIKit_iOS/ImSDK/Framework/ImSDK.framework/Headers/**",
+					"/Users/changqing/Documents/iOS_git/TUIKit_iOS/ImSDK/Framework/ImSDK.framework/**",
+				);
+			};
+			name = DailyBuild;
+		};
 		CF014496216E1A4B00C12E35 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -693,13 +1225,14 @@
 		};
 		CF014499216E1A4B00C12E35 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A94A8992A0612C1D8FEAB79 /* Pods-TUIKitDemo.debug.xcconfig */;
+			baseConfigurationReference = FFA1E52ABCCAE78D060D1E3D /* Pods-TUIKitDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = TUIKitDemo/TUIKitDemo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
+				COMPRESS_PNG_FILES = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5GHU44CJHG;
 				ENABLE_BITCODE = NO;
@@ -712,14 +1245,16 @@
 					"$(inherited)",
 					"COCOAPODS=1",
 					"ENABLELIVE=1",
+					"PUBLISHGIT=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../TUIKit/TUIKit/**",
-					"$(SRCROOT)/../ImSDK/Framework/ImSDK.framework/Headers/**",
+					"$(SRCROOT)/../../../source/project/ios/imsdk/IMMessageExt/include/**",
+					"$(SRCROOT)/../../../source/project/ios/imsdk/ImSDK/include/**",
 				);
 				INFOPLIST_FILE = TUIKitDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -727,22 +1262,30 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.tuikit.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = imsdk;
+				STRIP_PNG_TEXT = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "TUIKitDemo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = (
+					"${SRCROOT}",
+					"\"$(SRCROOT)/../ImSDK/Framework/ImSDK.framework/Headers\"/**",
+					"/Users/changqing/Documents/iOS_git/TUIKit_iOS/ImSDK/Framework/ImSDK.framework/Headers/**",
+					"/Users/changqing/Documents/iOS_git/TUIKit_iOS/ImSDK/Framework/ImSDK.framework/**",
+				);
 			};
 			name = Debug;
 		};
 		CF01449A216E1A4B00C12E35 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 492D8F1F0DED1F83086F3E82 /* Pods-TUIKitDemo.release.xcconfig */;
+			baseConfigurationReference = 30722D34BE1DD45B2ACBD3BB /* Pods-TUIKitDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = TUIKitDemo/TUIKitDemo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
+				COMPRESS_PNG_FILES = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5GHU44CJHG;
 				ENABLE_BITCODE = NO;
@@ -750,20 +1293,21 @@
 					"$(inherited)",
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/Pods/TXIMSDK_iOS",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
 					"ENABLELIVE=1",
+					"PUBLISHGIT=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../TUIKit/TUIKit/**",
-					"$(SRCROOT)/../ImSDK/Framework/ImSDK.framework/Headers/**",
+					"$(SRCROOT)/../../../source/project/ios/imsdk/IMMessageExt/include/**",
+					"$(SRCROOT)/../../../source/project/ios/imsdk/ImSDK/include/**",
 				);
 				INFOPLIST_FILE = TUIKitDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -771,20 +1315,48 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.tuikit.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = imsdk;
+				STRIP_PNG_TEXT = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "TUIKitDemo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = (
+					"${SRCROOT}",
+					"\"$(SRCROOT)/../ImSDK/Framework/ImSDK.framework/Headers\"/**",
+					"/Users/changqing/Documents/iOS_git/TUIKit_iOS/ImSDK/Framework/ImSDK.framework/Headers/**",
+					"/Users/changqing/Documents/iOS_git/TUIKit_iOS/ImSDK/Framework/ImSDK.framework/**",
+				);
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		48DF2C4B253FE1B800BC522F /* Build configuration list for PBXNativeTarget "pushservice" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48DF2C4C253FE1B800BC522F /* Debug */,
+				48DF2C4D253FE1B800BC522F /* Release */,
+				48DF2C4E253FE1B800BC522F /* DailyBuild */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE48482127019FC800F53B16 /* Build configuration list for PBXNativeTarget "publishToGit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE48482227019FC800F53B16 /* Debug */,
+				CE48482327019FC800F53B16 /* Release */,
+				CE48482427019FC800F53B16 /* DailyBuild */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CF01447D216E1A4900C12E35 /* Build configuration list for PBXProject "TUIKitDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CF014496216E1A4B00C12E35 /* Debug */,
 				CF014497216E1A4B00C12E35 /* Release */,
+				CEE33A982319258300E0E717 /* DailyBuild */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -794,6 +1366,7 @@
 			buildConfigurations = (
 				CF014499216E1A4B00C12E35 /* Debug */,
 				CF01449A216E1A4B00C12E35 /* Release */,
+				CEE33A992319258300E0E717 /* DailyBuild */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

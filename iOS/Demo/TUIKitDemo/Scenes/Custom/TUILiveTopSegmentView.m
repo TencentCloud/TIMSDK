@@ -8,8 +8,8 @@
 
 #import "TUILiveTopSegmentView.h"
 #import <Masonry/Masonry.h>
-#import "THeader.h"
-#import "UIColor+TUIDarkMode.h"
+#import "TUIKit.h"
+#import "TUIDarkModel.h"
 
 @interface TUILiveTopSegmentView ()
 

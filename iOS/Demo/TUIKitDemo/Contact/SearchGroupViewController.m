@@ -11,11 +11,9 @@
  *  本类依赖于腾讯云 TUIKit和IMSDK 实现
  */
 #import "SearchGroupViewController.h"
-#import "UIView+MMLayout.h"
 #import "FriendRequestViewController.h"
 #import "GroupRequestViewController.h"
-#import "THeader.h"
-#import "UIColor+TUIDarkMode.h"
+#import "TUIKit.h"
 
 // MLeaksFinder 会对这个类误报，这里需要关闭一下
 @implementation UISearchController (Leak)

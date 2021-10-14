@@ -16,20 +16,18 @@
 #import "TUIContactController.h"
 #import "TPopView.h"
 #import "TPopCell.h"
-#import "THeader.h"
+#import "TUIKit.h"
 #import "SearchFriendViewController.h"
 #import "SearchGroupViewController.h"
-#import "MMLayout/UIView+MMLayout.h"
-#import "ReactiveObjC/ReactiveObjC.h"
-#import "Toast/Toast.h"
 #import "TFriendProfileController.h"
 #import "TUIConversationCell.h"
-#import "TUIConversationListController.h"
 #import "TUIBlackListController.h"
 #import "TUINewFriendViewController.h"
 #import "ChatViewController.h"
 #import "TUIContactSelectController.h"
-#import "TIMUserProfile+DataProvider.h"
+#import "TFriendProfileController.h"
+#import "TUserProfileController.h"
+#import "TUICommonModel.h"
 
 
 @interface ContactsController () <TPopViewDelegate>
@@ -48,7 +46,7 @@
 
 
     UIButton *moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-    [moreButton setImage:[UIImage imageNamed:TUIKitResource(@"more")] forState:UIControlStateNormal];
+    [moreButton setImage:[UIImage imageNamed:TUIDemoImagePath(@"more")] forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(onRightItem:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
     self.navigationItem.rightBarButtonItem = moreItem;
@@ -72,12 +70,12 @@
 {
     NSMutableArray *menus = [NSMutableArray array];
     TPopCellData *friend = [[TPopCellData alloc] init];
-    friend.image = TUIKitResource(@"new_friend");
+    friend.image = TUIContactImagePath(@"new_friend");
     friend.title = NSLocalizedString(@"ContactsAddFriends", nil); //@"添加好友";
     [menus addObject:friend];
 
     TPopCellData *group = [[TPopCellData alloc] init];
-    group.image = TUIKitResource(@"add_group");
+    group.image = TUIDemoImagePath(@"add_group");
     group.title = NSLocalizedString(@"ContactsJoinGroup", nil);//@"添加群组";
     [menus addObject:group];
 
@@ -105,7 +103,29 @@
     }
 }
 
+- (void)onSelectFriend:(TUICommonContactCell *)cell
+{
+    TUICommonContactCellData *data = cell.contactData;
 
+    TFriendProfileController *vc = [[TFriendProfileController alloc] init];
+    vc.friendProfile = data.friendProfile;
+    [self.navigationController pushViewController:(UIViewController *)vc animated:YES];
+}
+- (void)onAddNewFriend:(TUICommonTableViewCell *)cell
+{
+    TUINewFriendViewController *vc = TUINewFriendViewController.new;
+    vc.cellClickBlock = ^(TUICommonPendencyCell * _Nonnull cell) {
+        TUserProfileController *controller = [[TUserProfileController alloc] init];
+        [[V2TIMManager sharedInstance] getUsersInfo:@[cell.pendencyData.identifier] succ:^(NSArray<V2TIMUserFullInfo *> *profiles) {
+            controller.userFullInfo = profiles.firstObject;
+            controller.pendency = cell.pendencyData;
+            controller.actionType = PCA_PENDENDY_CONFIRM;
+            [self.navigationController pushViewController:(UIViewController *)controller animated:YES];
+        } fail:nil];
+    };
+    [self.navigationController pushViewController:vc animated:YES];
+    [self.viewModel clearApplicationCnt];
+}
 
 
 

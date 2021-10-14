@@ -13,12 +13,15 @@
  *
  */
 #import <UIKit/UIKit.h>
-#import "TUIChatController.h"
-#import "TUnReadView.h"
+#import "TUIBaseChatViewController.h"
+#import "TUICommonModel.h"
+#import "TUIChatConversationModel.h"
 @class TUIMessageCellData;
+
 @interface ChatViewController : UIViewController
-@property (nonatomic, strong) TUIConversationCellData *conversationData;
-@property (nonatomic, strong) TUnReadView *unRead;
+
+@property (nonatomic, strong) TUIChatConversationModel *conversationData;
+@property (nonatomic, strong) TUIUnReadView *unRead;
 @property (nonatomic, strong) V2TIMMessage *waitToSendMsg;
 
 #pragma mark - 用于消息搜索场景

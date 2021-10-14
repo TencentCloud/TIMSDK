@@ -12,25 +12,23 @@
  *  本类依赖于腾讯云 TUIKit和IMSDK 实现
  */
 #import "TFriendProfileController.h"
-#import "TCommonTextCell.h"
-#import "TCommonSwitchCell.h"
-#import "MMLayout/UIView+MMLayout.h"
+#import "TUICommonTextCell.h"
+#import "TUICommonSwitchCell.h"
+#import "UIView+TUILayout.h"
 #import "SDWebImage/UIImageView+WebCache.h"
-#import "TTextEditController.h"
+#import "TUITextEditController.h"
 #import "ChatViewController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIAvatarViewController.h"
+#import "TUIConversationCellData.h"
+#import "TUICommonModel.h"
 #import "TUIKit.h"
 #import "TCUtil.h"
 
-@TCServiceRegister(TUIFriendProfileControllerServiceProtocol, TFriendProfileController)
-
 @interface TFriendProfileController ()
 @property NSArray<NSArray *> *dataList;
-@property BOOL isInBlackList;
 @property BOOL modified;
 @property V2TIMUserFullInfo *userFullInfo;
-@property V2TIMReceiveMessageOpt receiveOpt;
 @end
 
 @implementation TFriendProfileController
@@ -48,7 +46,6 @@
     [super willMoveToParentViewController:parent];
     if (parent == nil) {
         if (self.modified) {
-//            [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onFriendInfoUpdate object:self.friendProfile];
         }
     }
 }
@@ -56,39 +53,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self addLongPressGesture];
-    [[V2TIMManager sharedInstance] getBlackList:^(NSArray<V2TIMFriendInfo *> *infoList) {
-        for (V2TIMFriendInfo *friend in infoList) {
-            if ([friend.userID isEqualToString:self.friendProfile.userID])
-            {
-                self.isInBlackList = true;
-                break;
-            }
-        }
-        [self loadData];;
-    } fail:nil];
-    
-    [[V2TIMManager sharedInstance] getC2CReceiveMessageOpt:@[self.friendProfile.userID]
-                                                      succ:^(NSArray<V2TIMUserReceiveMessageOptInfo *> *optList) {
-        for (V2TIMReceiveMessageOptInfo *info in optList) {
-            if ([info.userID isEqual:self.friendProfile.userID]) {
-                self.receiveOpt = info.receiveOpt;
-                [self loadData];
-                break;
-            }
-        }
-    } fail:nil];
 
     self.userFullInfo = self.friendProfile.userFullInfo;
 
-    [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"TextCell"];
-    [self.tableView registerClass:[TCommonSwitchCell class] forCellReuseIdentifier:@"SwitchCell"];
+    [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"TextCell"];
+    [self.tableView registerClass:[TUICommonSwitchCell class] forCellReuseIdentifier:@"SwitchCell"];
     [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"CardCell"];
     [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
 
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
-
     self.title = NSLocalizedString(@"ProfileDetails", nil); // @"详细资料";
+    
+    [self loadData];
 }
 /**
  *初始化视图显示数据
@@ -115,7 +92,7 @@
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
-            TCommonTextCellData *data = TCommonTextCellData.new;
+            TUICommonTextCellData *data = TUICommonTextCellData.new;
             data.key = NSLocalizedString(@"ProfileAlia", nil); // @"备注名";
             data.value = self.friendProfile.friendRemark;
             if (data.value.length == 0)
@@ -128,11 +105,21 @@
             data;
         })];
         [inlist addObject:({
-            TCommonSwitchCellData *data = TCommonSwitchCellData.new;
+            TUICommonSwitchCellData *data = TUICommonSwitchCellData.new;
             data.title = NSLocalizedString(@"ProfileBlocked", nil); // @"加入黑名单";
-            data.on = self.isInBlackList;
             data.cswitchSelector =  @selector(onChangeBlackList:);
             data.reuseId = @"SwitchCell";
+            __weak typeof(self) weakSelf = self;
+            [[V2TIMManager sharedInstance] getBlackList:^(NSArray<V2TIMFriendInfo *> *infoList) {
+                for (V2TIMFriendInfo *friend in infoList) {
+                    if ([friend.userID isEqualToString:self.friendProfile.userID])
+                    {
+                        data.on = true;
+                        [weakSelf.tableView reloadData];
+                        break;
+                    }
+                }
+            } fail:nil];
             data;
         })];
         inlist;
@@ -141,16 +128,26 @@
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
-            TCommonSwitchCellData *data = TCommonSwitchCellData.new;
+            TUICommonSwitchCellData *data = TUICommonSwitchCellData.new;
             data.title = NSLocalizedString(@"ProfileMessageDoNotDisturb", nil); // @"消息免打扰";
-            data.on = (self.receiveOpt == V2TIM_NOT_RECEIVE_MESSAGE);
             data.cswitchSelector =  @selector(onMessageDoNotDisturb:);
             data.reuseId = @"SwitchCell";
+            __weak typeof(self) weakSelf = self;
+            [[V2TIMManager sharedInstance] getC2CReceiveMessageOpt:@[self.friendProfile.userID]
+                                                              succ:^(NSArray<V2TIMUserReceiveMessageOptInfo *> *optList) {
+                for (V2TIMReceiveMessageOptInfo *info in optList) {
+                    if ([info.userID isEqual:self.friendProfile.userID]) {
+                        data.on = (info.receiveOpt == V2TIM_NOT_RECEIVE_MESSAGE);
+                        [weakSelf.tableView reloadData];
+                        break;
+                    }
+                }
+            } fail:nil];
             data;
         })];
         
         [inlist addObject:({
-            TCommonSwitchCellData *data = TCommonSwitchCellData.new;
+            TUICommonSwitchCellData *data = TUICommonSwitchCellData.new;
             data.title = NSLocalizedString(@"ProfileStickyonTop", nil); // @"置顶聊天";
             data.on = NO;
 #ifndef SDKPlaceTop
@@ -165,7 +162,7 @@
                 
             }];
 #else
-            if ([[[TUILocalStorage sharedInstance] topConversationList] containsObject:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID]]) {
+            if ([[[TUIConversationPin sharedInstance] topConversationList] containsObject:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID]]) {
                 data.on = YES;
             }
 #endif
@@ -202,7 +199,7 @@
 }
 
 #pragma mark - Table view data source
-- (void)onChangeBlackList:(TCommonSwitchCell *)cell
+- (void)onChangeBlackList:(TUICommonSwitchCell *)cell
 {
     if (cell.switcher.on) {
         [[V2TIMManager sharedInstance] addToBlackList:@[self.friendProfile.userID] succ:nil fail:nil];
@@ -216,9 +213,9 @@
 /**
  *点击 修改备注 按钮后所执行的函数。包含数据的获取与请求回调
  */
-- (void)onChangeRemark:(TCommonTextCell *)cell
+- (void)onChangeRemark:(TUICommonTextCell *)cell
 {
-    TTextEditController *vc = [[TTextEditController alloc] initWithText:self.friendProfile.friendRemark];
+    TUITextEditController *vc = [[TUITextEditController alloc] initWithText:self.friendProfile.friendRemark];
     vc.title = NSLocalizedString(@"ProfileEditAlia", nil); // @"修改备注";
     vc.textValue = self.friendProfile.friendRemark;
     [self.navigationController pushViewController:vc animated:YES];
@@ -263,14 +260,14 @@
         [cell fillWithData:(TUIButtonCellData *)data];
         return cell;
 
-    }  else if([data isKindOfClass:[TCommonTextCellData class]]) {
-        TCommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
-        [cell fillWithData:(TCommonTextCellData *)data];
+    }  else if([data isKindOfClass:[TUICommonTextCellData class]]) {
+        TUICommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
+        [cell fillWithData:(TUICommonTextCellData *)data];
         return cell;
 
-    }  else if([data isKindOfClass:[TCommonSwitchCellData class]]) {
-        TCommonSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SwitchCell" forIndexPath:indexPath];
-        [cell fillWithData:(TCommonSwitchCellData *)data];
+    }  else if([data isKindOfClass:[TUICommonSwitchCellData class]]) {
+        TUICommonSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SwitchCell" forIndexPath:indexPath];
+        [cell fillWithData:(TUICommonSwitchCellData *)data];
         return cell;
     }
 
@@ -279,7 +276,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    TCommonCellData *data = self.dataList[indexPath.section][indexPath.row];
+    TUICommonCellData *data = self.dataList[indexPath.section][indexPath.row];
     return [data heightOfWidth:Screen_Width];
 }
 
@@ -296,7 +293,7 @@
     __weak typeof(self) weakSelf = self;
     [[V2TIMManager sharedInstance] deleteFromFriendList:@[self.friendProfile.userID] deleteType:V2TIM_FRIEND_TYPE_BOTH succ:^(NSArray<V2TIMFriendOperationResult *> *resultList) {
         weakSelf.modified = YES;
-        [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"c2c_%@",weakSelf.friendProfile.userID] callback:nil];
+        [[TUIConversationPin sharedInstance] removeTopConversation:[NSString stringWithFormat:@"c2c_%@",weakSelf.friendProfile.userID] callback:nil];
         [weakSelf.navigationController popViewControllerAnimated:YES];
     } fail:nil];
 }
@@ -306,7 +303,7 @@
  */
 - (void)onSendMessage:(id)sender
 {
-    TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
+    TUIChatConversationModel *data = [[TUIChatConversationModel alloc] init];
     data.conversationID = [NSString stringWithFormat:@"c2c_%@",self.userFullInfo.userID];
     data.userID = self.friendProfile.userID;
     data.title = [self.friendProfile.userFullInfo showName];
@@ -318,7 +315,7 @@
 /**
  *操作 消息免打扰 开关后执行的函数
  */
-- (void)onMessageDoNotDisturb:(TCommonSwitchCell *)cell
+- (void)onMessageDoNotDisturb:(TUICommonSwitchCell *)cell
 {
     V2TIMReceiveMessageOpt opt;
     if (cell.switcher.on) {
@@ -332,25 +329,25 @@
 /**
  *操作 置顶 开关后执行的函数，将对应好友添加/移除置顶队列
  */
-- (void)onTopMostChat:(TCommonSwitchCell *)cell
+- (void)onTopMostChat:(TUICommonSwitchCell *)cell
 {
     if (cell.switcher.on) {
-        [[TUILocalStorage sharedInstance] addTopConversation:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID] callback:^(BOOL success, NSString * _Nonnull errorMessage) {
+        [[TUIConversationPin sharedInstance] addTopConversation:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID] callback:^(BOOL success, NSString * _Nonnull errorMessage) {
             if (success) {
                 return;
             }
             // 操作失败，还原
             cell.switcher.on = !cell.switcher.isOn;
-            [THelper makeToast:errorMessage];
+            [TUITool makeToast:errorMessage];
         }];
     } else {
-        [[TUILocalStorage sharedInstance] removeTopConversation:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID] callback:^(BOOL success, NSString * _Nonnull errorMessage) {
+        [[TUIConversationPin sharedInstance] removeTopConversation:[NSString stringWithFormat:@"c2c_%@",self.friendProfile.userID] callback:^(BOOL success, NSString * _Nonnull errorMessage) {
             if (success) {
                 return;
             }
             // 操作失败，还原
             cell.switcher.on = !cell.switcher.isOn;
-            [THelper makeToast:errorMessage];
+            [TUITool makeToast:errorMessage];
         }];
     }
 }
@@ -369,14 +366,14 @@
         NSIndexPath *pathAtView = [self.tableView indexPathForRowAtPoint:point];
         NSObject *data = [self.tableView cellForRowAtIndexPath:pathAtView];
 
-        //长按 TCommonTextCell，可以复制 cell 内的字符串。
-        if([data isKindOfClass:[TCommonTextCell class]]){
-            TCommonTextCell *textCell = (TCommonTextCell *)data;
+        //长按 TUICommonTextCell，可以复制 cell 内的字符串。
+        if([data isKindOfClass:[TUICommonTextCell class]]){
+            TUICommonTextCell *textCell = (TUICommonTextCell *)data;
             if(textCell.textData.value && ![textCell.textData.value isEqualToString:@"未设置"]){
                 UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
                 pasteboard.string = textCell.textData.value;
                 NSString *toastString = [NSString stringWithFormat:@"已将 %@ 复制到粘贴板",textCell.textData.key];
-                [THelper makeToast:toastString];
+                [TUITool makeToast:toastString];
             }
         }else if([data isKindOfClass:[TUIProfileCardCell class]]){
             //长按 profileCard，复制好友的账号。
@@ -385,7 +382,7 @@
                 UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
                 pasteboard.string = profileCard.cardData.identifier;
                 NSString *toastString = [NSString stringWithFormat:@"已将该用户账号复制到粘贴板"];
-                [THelper makeToast:toastString];
+                [TUITool makeToast:toastString];
             }
 
         }
