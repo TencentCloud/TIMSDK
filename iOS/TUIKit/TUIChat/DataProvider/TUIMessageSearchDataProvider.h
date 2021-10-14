@@ -1,0 +1,35 @@
+//
+//  TUIMessageSearchDataProvider.h
+//  TXIMSDK_TUIKit_iOS
+//
+//  Created by kayev on 2021/7/8.
+//
+
+#import "TUIMessageDataProvider.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface TUIMessageSearchDataProvider : TUIMessageDataProvider
+
+@property (nonatomic) BOOL isOlderNoMoreMsg;
+@property (nonatomic) BOOL isNewerNoMoreMsg;
+@property (nonatomic) V2TIMMessage *msgForOlderGet;
+@property (nonatomic) V2TIMMessage *msgForNewerGet;
+
+
+/// 加载指定的历史消息
+- (void)loadMessageWithSearchMsg:(V2TIMMessage *)searchMsg
+                ConversationInfo:(TUIChatConversationModel *)conversation
+                    SucceedBlock:(void (^)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))SucceedBlock
+                       FailBlock:(V2TIMFail)FailBlock;
+
+- (void)loadMessageWithIsRequestOlderMsg:(BOOL)orderType
+                        ConversationInfo:(TUIChatConversationModel *)conversation
+                            SucceedBlock:(void (^)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, BOOL isFirstLoad, NSArray<TUIMessageCellData *> *newUIMsgs))SucceedBlock
+                               FailBlock:(V2TIMFail)FailBlock;
+
+- (void)removeAllSearchData;
+
+@end
+
+NS_ASSUME_NONNULL_END

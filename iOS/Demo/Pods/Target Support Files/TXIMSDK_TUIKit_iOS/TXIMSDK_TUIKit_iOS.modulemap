@@ -1,0 +1,6 @@
+module TXIMSDK_TUIKit_iOS {
+  umbrella header "TXIMSDK_TUIKit_iOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -17,59 +17,38 @@
 #import "AppDelegate.h"
 #import "TUIProfileCardCell.h"
 #import "TUIButtonCell.h"
-#import "THeader.h"
-#import "TTextEditController.h"
-#import "TDateEditController.h"
-#import "TIMUserProfile+DataProvider.h"
-#import "TUIUserProfileDataProviderService.h"
-#import "TCServiceManager.h"
-#import "TCommonTextCell.h"
-#import "MMLayout/UIView+MMLayout.h"
+#import "TUITextEditController.h"
+#import "TUIDateEditController.h"
+#import "TUICommonTextCell.h"
+#import "UIView+TUILayout.h"
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "UIImage+TUIKIT.h"
 #import "TUIKit.h"
 #import "ProfileController.h"
 #import "PAirSandbox.h"
 #import "TUIAvatarViewController.h"
-#import "TCommonSwitchCell.h"
+#import "TUICommonSwitchCell.h"
 #import "TCUtil.h"
-@import ImSDK_Plus;
-#import "UIColor+TUIDarkMode.h"
+#import <QAPM/QAPM.h>
+#import "V2ManageTestViewController.h"
+#import "V2GroupTestViewController.h"
+#import "V2FriendTestViewController.h"
+#import "TUIDarkModel.h"
+#import "TestViewController.h"
+#import "TUILoginCache.h"
+#import "TUICommonModel.h"
+
+#if ENABLELIVE
+#import "TUIKitLive.h"
+#import "TUILiveUserProfile.h"
+#endif
 
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2
 #define SHEET_SEX    3
 #define SHEET_V2API  4
 
-@interface MyUserProfileExpresser : TUIUserProfileDataProviderService
-@end
 
-@implementation MyUserProfileExpresser
-
-+ (id)shareInstance
-{
-    static MyUserProfileExpresser *shareInstance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        shareInstance = [[self alloc] init];
-    });
-    return shareInstance;
-}
-
-/**
- *获取签名
- */
-- (NSString *)getSignature:(V2TIMUserFullInfo *)profile
-{
-    NSString *ret = [super getSignature:profile];
-    if (ret.length != 0)
-        return ret;
-    return NSLocalizedString(@"no_personal_signature", nil); // @"暂无个性签名";
-}
-
-@end
-
-@interface SettingController () <UIActionSheetDelegate>
+@interface SettingController () <UIActionSheetDelegate, V2TIMSDKListener>
 @property (nonatomic, strong) NSMutableArray *data;
 @property (nonatomic, strong) dispatch_source_t timer;
 @property (nonatomic, assign) BOOL memoryReport;
@@ -81,7 +60,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[TCServiceManager shareInstance] registerService:@protocol(TUIUserProfileDataProviderServiceProtocol) implClass:[MyUserProfileExpresser class]];
     [self setupViews];
 
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
@@ -105,15 +83,21 @@
 {
     self.title = NSLocalizedString(@"TabBarItemMeText", nil);
     self.parentViewController.title = NSLocalizedString(@"TabBarItemMeText", nil);
+    
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapTest:)];
+    tap.numberOfTapsRequired = 5;
+    [self.parentViewController.view addGestureRecognizer:tap];
 
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
 
-    [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"textCell"];
+    [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"personalCell"];
     [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"buttonCell"];
-    [self.tableView registerClass:[TCommonSwitchCell class] forCellReuseIdentifier:@"switchCell"];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onSelfInfoUpdated:) name:TUIKitNotification_onSelfInfoUpdated object:nil];
+    [self.tableView registerClass:[TUICommonSwitchCell class] forCellReuseIdentifier:@"switchCell"];
+    
+    [[V2TIMManager sharedInstance] addIMSDKListener:self];
     
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
     if (loginUser.length > 0) {
@@ -126,8 +110,17 @@
     }
 }
 
-- (void)onSelfInfoUpdated:(NSNotification *)no {
-    self.profile = no.object;
+- (void)onTapTest:(UIGestureRecognizer *)recognizer
+{
+    TestViewController *vc = [[TestViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+#pragma mark - V2TIMSDKListener
+- (void)onSelfInfoUpdated:(V2TIMUserFullInfo *)Info {
+    self.profile = Info;
     [self setupData];
 }
 
@@ -152,7 +145,7 @@
     [_data addObject:@[personal]];
 
 
-    TCommonTextCellData *friendApply = [TCommonTextCellData new];
+    TUICommonTextCellData *friendApply = [TUICommonTextCellData new];
     friendApply.key = NSLocalizedString(@"MeFriendRequest", nil); // @"好友申请";
     friendApply.showAccessory = YES;
     friendApply.cselector = @selector(onEditFriendApply);
@@ -170,21 +163,34 @@
 //    messageNotify.key = @"消息提醒";
 //    messageNotify.showAccessory = YES;
 //    messageNotify.cselector = @selector(didSelectNotifySet);
+//    [_data addObject:@[friendApply, messageNotify]];
     [_data addObject:@[friendApply]];
 
-    TCommonTextCellData *about = [TCommonTextCellData new];
+    TUICommonTextCellData *about = [TUICommonTextCellData new];
     about.key = NSLocalizedString(@"MeAbout", nil); // @"关于腾讯·云通信";
     about.showAccessory = YES;
     about.cselector = @selector(didSelectAbout);
     [_data addObject:@[about]];
 
-    TCommonTextCellData *log = [TCommonTextCellData new];
+    TUICommonTextCellData *log = [TUICommonTextCellData new];
     log.key = NSLocalizedString(@"MeDevelop", nil); // @"开发调试";
     log.showAccessory = YES;
     log.cselector = @selector(didSelectLog);
     [_data addObject:@[log]];
     
-    TCommonSwitchCellData *memory = [TCommonSwitchCellData new];
+    TUICommonTextCellData *privacy = [TUICommonTextCellData new];
+    privacy.key = NSLocalizedString(@"MePrivacy", nil); // @"隐私条例";
+    privacy.showAccessory = YES;
+    privacy.cselector = @selector(didSelectPrivacy);
+    [_data addObject:@[privacy]];
+    
+    TUICommonTextCellData *disclaimer = [TUICommonTextCellData new];
+    disclaimer.key = NSLocalizedString(@"MeDisclaimer", nil); // @"免责声明";
+    disclaimer.showAccessory = YES;
+    disclaimer.cselector = @selector(didSelectDisclaimer);
+    [_data addObject:@[disclaimer]];
+    
+    TUICommonSwitchCellData *memory = [TUICommonSwitchCellData new];
     memory.title = NSLocalizedString(@"MeReportMemoryLeak", nil); // @"内存泄露上报";
     memory.on = self.memoryReport;
     memory.cswitchSelector = @selector(onNotifySwitch:);
@@ -228,7 +234,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableArray *array = _data[indexPath.section];
-    TCommonCellData *data = array[indexPath.row];
+    TUICommonCellData *data = array[indexPath.row];
 
     return [data heightOfWidth:Screen_Width];
 }
@@ -255,14 +261,14 @@
         }
         [cell fillWithData:(TUIButtonCellData *)data];
         return cell;
-    }  else if([data isKindOfClass:[TCommonTextCellData class]]) {
-        TCommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textCell" forIndexPath:indexPath];
-        [cell fillWithData:(TCommonTextCellData *)data];
+    }  else if([data isKindOfClass:[TUICommonTextCellData class]]) {
+        TUICommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textCell" forIndexPath:indexPath];
+        [cell fillWithData:(TUICommonTextCellData *)data];
         return cell;
     }
-    else if([data isKindOfClass:[TCommonSwitchCellData class]]) {
-        TCommonSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell" forIndexPath:indexPath];
-        [cell fillWithData:(TCommonSwitchCellData *)data];
+    else if([data isKindOfClass:[TUICommonSwitchCellData class]]) {
+        TUICommonSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell" forIndexPath:indexPath];
+        [cell fillWithData:(TUICommonSwitchCellData *)data];
         return cell;
     }
     return nil;
@@ -275,20 +281,6 @@
     ProfileController *test = [[ProfileController alloc] init];
     [self.navigationController pushViewController:test animated:YES];
 
-}
-
-/**
- *点击 消息提醒 后执行的函数，使用户能够对消息提醒模式作出设置
- *消息提醒视图可以阅读 NotifySetupController.m 详细了解
- */
-- (void)didSelectNotifySet
-{
-//    [[TIMManager sharedInstance] getAPNSConfig:^(TIMAPNSConfig *config){
-//        NotifySetupController *vc = [[NotifySetupController alloc] init:config];
-//        [self.navigationController pushViewController:vc animated:YES];
-//    } fail:^(int code, NSString *err){
-//
-//    }];
 }
 
 /**
@@ -308,11 +300,13 @@
 
 - (void)didConfirmLogout
 {
-    [[V2TIMManager sharedInstance] logout:^{
-        [self didLogoutInSettingController:self];;
+    [[TUIKit sharedInstance] logout:^{
+        [self didLogoutInSettingController:self];
     } fail:^(int code, NSString *msg) {
         NSLog(@"退出登录失败");
     }];
+    
+    [TCUtil report:Action_Logout actionSub:@"" code:@(0) msg:@"logout"];
 }
 
 /**
@@ -333,7 +327,7 @@
 
 - (void)didLogoutInSettingController:(SettingController *)controller
 {
-    [[TUILocalStorage sharedInstance] logout];
+    [[TUILoginCache sharedInstance] logout];
     UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     LoginController *login = [board instantiateViewControllerWithIdentifier:@"LoginController"];
     self.view.window.rootViewController = login;
@@ -351,6 +345,7 @@
     } else {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://cloud.tencent.com/product/im"]];
     }
+    [TCUtil report:Action_Clickaboutsdk actionSub:@"" code:@(0) msg:@"clickaboutsdk"];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -362,41 +357,85 @@
         [self setupData];
         V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
         info.allowType = [NSNumber numberWithInteger:buttonIndex].intValue;
-        [[V2TIMManager sharedInstance] setSelfInfo:info succ:nil fail:nil];
+        [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
+#if ENABLELIVE
+            [TUILiveUserProfile getLoginUserInfo].allowType = info.allowType;
+#endif
+        } fail:nil];
+        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifyallowtype code:@(0) msg:@"modifyallowtype"];
     }
     else if (actionSheet.tag == SHEET_V2API) {
-//        if (buttonIndex == 0) {
-//            V2ManageTestViewController *vc = [[V2ManageTestViewController alloc] initWithNibName:@"V2ManageTestViewController" bundle:nil];
-//            [self presentViewController:vc animated:YES completion:nil];
-//        }
-//        else if (buttonIndex == 1) {
-//            V2GroupTestViewController *vc = [[V2GroupTestViewController alloc] initWithNibName:@"V2GroupTestViewController" bundle:nil];
-//            [self presentViewController:vc animated:YES completion:nil];
-//        }
-//        else if (buttonIndex == 2) {
-//            V2FriendTestViewController *vc = [[V2FriendTestViewController alloc] initWithNibName:@"V2FriendTestViewController" bundle:nil];
-//            [self presentViewController:vc animated:YES completion:nil];
-//        }
+        if (buttonIndex == 0) {
+            V2ManageTestViewController *vc = [[V2ManageTestViewController alloc] initWithNibName:@"V2ManageTestViewController" bundle:nil];
+            [self presentViewController:vc animated:YES completion:nil];
+        }
+        else if (buttonIndex == 1) {
+            V2GroupTestViewController *vc = [[V2GroupTestViewController alloc] initWithNibName:@"V2GroupTestViewController" bundle:nil];
+            [self presentViewController:vc animated:YES completion:nil];
+        }
+        else if (buttonIndex == 2) {
+            V2FriendTestViewController *vc = [[V2FriendTestViewController alloc] initWithNibName:@"V2FriendTestViewController" bundle:nil];
+            [self presentViewController:vc animated:YES completion:nil];
+        }
+        else if (buttonIndex == 3) {
+            //直播开关 CDN 播放
+            BOOL useCdnPlay = [[[NSUserDefaults standardUserDefaults] objectForKey:@"TUIKitDemo_useCdnPlay"] boolValue];
+            [[NSUserDefaults standardUserDefaults] setObject:@(!useCdnPlay) forKey:@"TUIKitDemo_useCdnPlay"];
+            NSString *message = [NSString stringWithFormat:@"已%@使用CDN播放", !useCdnPlay?@"启用":@"停用"];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"直播CDN播放" message:message preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                
+            }]];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
     }
 
 }
 - (void)didSelectLog
 {
-//#ifdef DEBUG
-//    UIActionSheet *sheet = [[UIActionSheet alloc] init];
-//    sheet.tag = SHEET_V2API;
-//    [sheet addButtonWithTitle:@"manager + apns + message + conv"];
-//    [sheet addButtonWithTitle:@"group"];
-//    [sheet addButtonWithTitle:@"friend"];
-//    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:@"取消"]];
-//    [sheet setDelegate:self];
-//    [sheet showInView:self.view];
-//#else
+#ifdef DEBUG
+    UIActionSheet *sheet = [[UIActionSheet alloc] init];
+    sheet.tag = SHEET_V2API;
+    [sheet addButtonWithTitle:@"manager + apns + message + conv"];
+    [sheet addButtonWithTitle:@"group"];
+    [sheet addButtonWithTitle:@"friend"];
+    [sheet addButtonWithTitle:@"group live cdn"];
+    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"cancel", nil)]];
+    [sheet setDelegate:self];
+    [sheet showInView:self.view];
+#else
     [[PAirSandbox sharedInstance] showSandboxBrowser];
-//#endif
+    [TCUtil report:Action_Clickdebug actionSub:@"" code:@(0) msg:@"clickdebug"];
+#endif
 }
 
-- (void)onNotifySwitch:(TCommonSwitchCell *)cell
+- (void)didSelectPrivacy
+{
+    NSString *privacyStr = @"https://web.sdk.qcloud.com/document/Tencent-IM-Privacy-Protection-Guidelines.html";
+    if (@available(iOS 10.0, *)) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:privacyStr]
+                                           options:@{} completionHandler:^(BOOL success) {
+                                               if (success) {
+                                                   NSLog(@"Opened url");
+                                               }
+                                           }];
+    } else {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:privacyStr]];
+    }
+}
+
+- (void)didSelectDisclaimer
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"MeDisclaimer", nil)  // 免责声明
+                                                                   message:NSLocalizedString(@"MeDisclaimerContent", nil)
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"confirm", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)onNotifySwitch:(TUICommonSwitchCell *)cell
 {
     //定时去上报内存泄露，1min 上报一次
     if (cell.switcher.isOn) {
@@ -405,7 +444,7 @@
         uint64_t intevel = 5 * NSEC_PER_SEC;
         dispatch_source_set_timer(_timer, start, intevel, 0 * NSEC_PER_SEC);
         dispatch_source_set_event_handler(_timer, ^{
-            //[QAPMQQLeakProfile executeLeakCheck];
+            [QAPMQQLeakProfile executeLeakCheck];
         });
         dispatch_resume(_timer);
         self.memoryReport = YES;
@@ -416,6 +455,7 @@
         }
         self.memoryReport = NO;
     }
+    [TCUtil report:Action_Clickmemoryreport actionSub:@"" code:@(0) msg:@"clickmemoryreport"];
 }
 
 /**

@@ -11,14 +11,15 @@
  *  本类依赖于腾讯云 TUIKit和IMSDK 实现
  */
 #import "FriendRequestViewController.h"
-#import "MMLayout/UIView+MMLayout.h"
+#import "UIView+TUILayout.h"
 #import "TUIProfileCardCell.h"
-#import "TIMUserProfile+DataProvider.h"
-#import "TCommonSwitchCell.h"
+#import "TUICommonModel.h"
+#import "TUICommonSwitchCell.h"
 #import "TUIAvatarViewController.h"
 #import <ReactiveObjC.h>
 #import "TUIKit.h"
 #import "TCUtil.h"
+#import "TUIDefine.h"
 
 @interface FriendRequestViewController () <UITableViewDataSource, UITableViewDelegate>
 @property UITableView *tableView;
@@ -27,7 +28,7 @@
 @property UILabel *groupNameLabel;
 @property BOOL keyboardShown;
 @property TUIProfileCardCellData *cardCellData;
-@property TCommonSwitchCellData *singleSwitchData;
+@property TUICommonSwitchCellData *singleSwitchData;
 @end
 
 @implementation FriendRequestViewController
@@ -75,7 +76,7 @@
     self.cardCellData = data;
 
 
-    self.singleSwitchData = [TCommonSwitchCellData new];
+    self.singleSwitchData = [TUICommonSwitchCellData new];
     self.singleSwitchData.title = NSLocalizedString(@"FriendOneWay", nil);
 
 
@@ -193,7 +194,7 @@
         }
     }
     if (indexPath.section == 3) {
-        TCommonSwitchCell *cell = [[TCommonSwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SwitchCell"];
+        TUICommonSwitchCell *cell = [[TUICommonSwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SwitchCell"];
         [cell fillWithData:self.singleSwitchData];
         return cell;
     }
@@ -213,7 +214,7 @@
 {
     [self.view endEditing:YES];
     // display toast with an activity spinner
-    [THelper makeToastActivity];
+    [TUITool makeToastActivity];
     
     V2TIMFriendAddApplication *application = [[V2TIMFriendAddApplication alloc] init];
     application.addWording = self.addWordTextView.text;
@@ -243,11 +244,11 @@
             msg = NSLocalizedString(@"FriendAddResultExists", nil); // @"好友已存在";
         }
 
-        [THelper hideToastActivity];
-        [THelper makeToast:msg duration:3.0 idposition:CSToastPositionBottom];
+        [TUITool hideToastActivity];
+        [TUITool makeToast:msg duration:3.0 idposition:TUICSToastPositionBottom];
     } fail:^(int code, NSString *desc) {
-        [THelper hideToastActivity];
-        [THelper makeToastError:code msg:desc];
+        [TUITool hideToastActivity];
+        [TUITool makeToastError:code msg:desc];
     }];
 
     [TCUtil report:Action_Addfriend actionSub:@"" code:@(0) msg:@"addfriend"];

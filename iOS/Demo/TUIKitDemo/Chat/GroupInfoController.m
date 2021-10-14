@@ -18,10 +18,10 @@
 #import "TUIGroupMemberCell.h"
 #import "TUIContactSelectController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "Toast/Toast.h"
+#import "UIView+TUIToast.h"
 #import "TUIKit.h"
 
-@interface GroupInfoController () <TGroupInfoControllerDelegate>
+@interface GroupInfoController () <TUIGroupInfoControllerDelegate>
 
 @end
 
@@ -56,12 +56,12 @@
 /**
  *点击添加群成员后的响应函数->进入添加群成员视图
  */
-- (void)groupInfoController:(TUIGroupInfoController *)controller didAddMembersInGroup:(NSString *)groupId members:(NSArray<TGroupMemberCellData *> *)members
+- (void)groupInfoController:(TUIGroupInfoController *)controller didAddMembersInGroup:(NSString *)groupId members:(NSArray<TUIGroupMemberCellData *> *)members
 {
     TUIContactSelectController *vc = [[TUIContactSelectController alloc] initWithNibName:nil bundle:nil];
     vc.title = NSLocalizedString(@"GroupAddFirend", nil); // @"添加联系人";
-    vc.viewModel.disableFilter = ^BOOL(TCommonContactSelectCellData *data) {
-        for (TGroupMemberCellData *cd in members) {
+    vc.viewModel.disableFilter = ^BOOL(TUICommonContactSelectCellData *data) {
+        for (TUIGroupMemberCellData *cd in members) {
             if ([cd.identifier isEqualToString:data.identifier])
                 return YES;
         }
@@ -70,10 +70,10 @@
     @weakify(self)
     [self.navigationController pushViewController:vc animated:YES];
     //添加成功后默认返回群组聊天界面
-    vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *selectArray) {
+    vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *selectArray) {
         @strongify(self)
         NSMutableArray *list = @[].mutableCopy;
-        for (TCommonContactSelectCellData *data in selectArray) {
+        for (TUICommonContactSelectCellData *data in selectArray) {
             [list addObject:data.identifier];
         }
         [self.navigationController popToViewController:self animated:YES];
@@ -85,12 +85,12 @@
  *点击删除群成员后的响应函数->进入删除群成员视图
  *删除群成员按钮为群成员头像队列后的 "-" 按钮
  */
-- (void)groupInfoController:(TUIGroupInfoController *)controller didDeleteMembersInGroup:(NSString *)groupId members:(NSArray<TGroupMemberCellData *> *)members
+- (void)groupInfoController:(TUIGroupInfoController *)controller didDeleteMembersInGroup:(NSString *)groupId members:(NSArray<TUIGroupMemberCellData *> *)members
 {
     TUIContactSelectController *vc = [[TUIContactSelectController alloc] initWithNibName:nil bundle:nil];
     vc.title = NSLocalizedString(@"GroupDeleteFriend", nil); // @"删除联系人";
     NSMutableArray *ids = NSMutableArray.new;
-    for (TGroupMemberCellData *cd in members) {
+    for (TUIGroupMemberCellData *cd in members) {
         if (![cd.identifier isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
             [ids addObject:cd.identifier];
         }
@@ -100,10 +100,10 @@
     @weakify(self)
     [self.navigationController pushViewController:vc animated:YES];
     //删除成功后默认返回群组聊天界面
-    vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *selectArray) {
+    vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *selectArray) {
         @strongify(self)
         NSMutableArray *list = @[].mutableCopy;
-        for (TCommonContactSelectCellData *data in selectArray) {
+        for (TUICommonContactSelectCellData *data in selectArray) {
             [list addObject:data.identifier];
         }
         [self.navigationController popToViewController:self animated:YES];
@@ -117,10 +117,10 @@
 - (void)addGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupInfoController *)controller
 {
     [[V2TIMManager sharedInstance] inviteUserToGroup:_groupId userList:members succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
-        [THelper makeToast:NSLocalizedString(@"add_success", nil)];
+        [TUITool makeToast:NSLocalizedString(@"add_success", nil)];
         [controller updateData];
     } fail:^(int code, NSString *desc) {
-        [THelper makeToastError:code msg:desc];
+        [TUITool makeToastError:code msg:desc];
     }];
 }
 
@@ -130,10 +130,10 @@
 - (void)deleteGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupInfoController *)controller
 {
     [[V2TIMManager sharedInstance] kickGroupMember:groupId memberList:members reason:@"" succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
-        [THelper makeToast:NSLocalizedString(@"delete_success", nil)];
+        [TUITool makeToast:NSLocalizedString(@"delete_success", nil)];
         [controller updateData];
     } fail:^(int code, NSString *desc) {
-        [THelper makeToastError:code msg:desc];
+        [TUITool makeToastError:code msg:desc];
     }];
 }
 
@@ -157,14 +157,14 @@
 {
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"choose_avatar_for_you", nil) message:nil preferredStyle:UIAlertControllerStyleAlert];
     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSString *url = [THelper randAvatarUrl];
+        NSString *url = [TUITool randAvatarUrl];
         V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
         info.groupID = groupId;
         info.faceURL = url;
         [[V2TIMManager sharedInstance] setGroupInfo:info succ:^{
             [controller updateData];;
         } fail:^(int code, NSString *msg) {
-            [THelper makeToastError:code msg:msg];
+            [TUITool makeToastError:code msg:msg];
         }];
     }]];
     [self presentViewController:ac animated:YES completion:nil];

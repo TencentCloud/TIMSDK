@@ -16,36 +16,30 @@
 #import "ChatViewController.h"
 #import "TPopView.h"
 #import "TPopCell.h"
-#import "THeader.h"
-#import "Toast/Toast.h"
+#import "TUIDefine.h"
+#import "TUITool.h"
 #import "TUIContactSelectController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "TIMUserProfile+DataProvider.h"
-#import "TNaviBarIndicatorView.h"
+#import "TUINaviBarIndicatorView.h"
 #import "TUIKit.h"
 #import "TCUtil.h"
-#import "TIMUserProfile+DataProvider.h"
 
-@interface ConversationController () <TUIConversationListControllerListener, TPopViewDelegate>
-@property (nonatomic, strong) TNaviBarIndicatorView *titleView;
+@interface ConversationController () <TUIConversationListControllerListener, TPopViewDelegate, V2TIMSDKListener>
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation ConversationController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[TUIKitListenerManager sharedInstance] addConversationListControllerListener:self];
-    
+
     TUIConversationListController *conv = [[TUIConversationListController alloc] init];
+    conv.delegate = self;
     [self addChildViewController:conv];
     [self.view addSubview:conv.view];
 
-    //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
-    conv.tableView.delaysContentTouches = NO;
-
-
     UIButton *moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-    [moreButton setImage:[UIImage imageNamed:TUIKitResource(@"more")] forState:UIControlStateNormal];
+    [moreButton setImage:[UIImage imageNamed:TUIDemoImagePath(@"more")] forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
     self.navigationItem.rightBarButtonItem = moreItem;
@@ -57,7 +51,6 @@
 
 - (void)dealloc
 {
-    [[TUIKitListenerManager sharedInstance] removeConversationListControllerListener:self];
     [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
@@ -70,8 +63,8 @@
     for (UIViewController *vc in self.childViewControllers) {
         if ([vc isKindOfClass:TUIConversationListController.class]) {
             // 此处需要优化，目前修改备注通知均是demo层发出来的，所以.....
-            TConversationListViewModel *viewModel = [(TUIConversationListController *)vc viewModel];
-            for (TUIConversationCellData *cellData in viewModel.dataList) {
+            TUIConversationListDataProvider *dataProvider = [(TUIConversationListController *)vc dataProvider];
+            for (TUIConversationCellData *cellData in dataProvider.dataList) {
                 if ([cellData.userID isEqualToString:friendInfo.userID]) {
                     NSString *title = friendInfo.friendRemark;
                     if (title.length == 0) {
@@ -95,42 +88,42 @@
  */
 - (void)setupNavigation
 {
-    _titleView = [[TNaviBarIndicatorView alloc] init];
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
     [_titleView setTitle:NSLocalizedString(@"AppMainTitle", nil)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNetworkChanged:) name:TUIKitNotification_TIMConnListener object:nil];
+    [[V2TIMManager sharedInstance] addIMSDKListener:self];
 }
 
 /**
  *初始化导航栏Title，不同连接状态下Title显示内容不同
  */
-- (void)onNetworkChanged:(NSNotification *)notification
+- (void)onNetworkChanged:(TUINetStatus)status
 {
-    TUINetStatus status = (TUINetStatus)[notification.object intValue];
-    switch (status) {
-        case TNet_Status_Succ:
-            [_titleView setTitle:NSLocalizedString(@"AppMainTitle", nil)];
-            [_titleView stopAnimating];
-            break;
-        case TNet_Status_Connecting:
-            [_titleView setTitle:NSLocalizedString(@"AppMainConnectingTitle", nil)];// 连接中...
-            [_titleView startAnimating];
-            break;
-        case TNet_Status_Disconnect:
-            [_titleView setTitle:NSLocalizedString(@"AppMainDisconnectTitle", nil)]; // 腾讯·云通信(未连接)
-            [_titleView stopAnimating];
-            break;
-        case TNet_Status_ConnFailed:
-            [_titleView setTitle:NSLocalizedString(@"AppMainDisconnectTitle", nil)]; // 腾讯·云通信(未连接)
-            [_titleView stopAnimating];
-            break;
-
-        default:
-            break;
-    }
+    [TUITool dispatchMainAsync:^{
+        switch (status) {
+            case TNet_Status_Succ:
+                [self.titleView setTitle:NSLocalizedString(@"AppMainTitle", nil)];
+                [self.titleView stopAnimating];
+                break;
+            case TNet_Status_Connecting:
+                [self.titleView setTitle:NSLocalizedString(@"AppMainConnectingTitle", nil)];// 连接中...
+                [self.titleView startAnimating];
+                break;
+            case TNet_Status_Disconnect:
+                [self.titleView setTitle:NSLocalizedString(@"AppMainDisconnectTitle", nil)]; // 腾讯·云通信(未连接)
+                [self.titleView stopAnimating];
+                break;
+            case TNet_Status_ConnFailed:
+                [self.titleView setTitle:NSLocalizedString(@"AppMainDisconnectTitle", nil)]; // 腾讯·云通信(未连接)
+                [self.titleView stopAnimating];
+                break;
+                
+            default:
+                break;
+        }
+    }];
 }
-
 /**
  *推送默认跳转
  */
@@ -140,7 +133,7 @@
     BOOL isSameTarget = NO;
     BOOL isInChat = NO;
     if ([topVc isKindOfClass:ChatViewController.class]) {
-        TUIConversationCellData *cellData = [(ChatViewController *)topVc conversationData];
+        TUIChatConversationModel *cellData = [(ChatViewController *)topVc conversationData];
         isSameTarget = [cellData.groupID isEqualToString:groupID] || [cellData.userID isEqualToString:userID];
         isInChat = YES;
     }
@@ -153,7 +146,7 @@
     }
     
     ChatViewController *chat = [[ChatViewController alloc] init];
-    TUIConversationCellData *conversationData = [[TUIConversationCellData alloc] init];
+    TUIChatConversationModel *conversationData = [[TUIChatConversationModel alloc] init];
     conversationData.groupID = groupID;
     conversationData.userID = userID;
     chat.conversationData = conversationData;
@@ -167,22 +160,22 @@
 {
     NSMutableArray *menus = [NSMutableArray array];
     TPopCellData *friend = [[TPopCellData alloc] init];
-    friend.image = TUIKitResource(@"add_friend");
+    friend.image = TUIDemoImagePath(@"add_friend");
     friend.title = NSLocalizedString(@"ChatsNewChatText", nil);
     [menus addObject:friend];
 
     TPopCellData *group3 = [[TPopCellData alloc] init];
-    group3.image = TUIKitResource(@"create_group");
+    group3.image = TUIDemoImagePath(@"create_group");
     group3.title = NSLocalizedString(@"ChatsNewPrivateGroupText", nil);
     [menus addObject:group3];
 
     TPopCellData *group = [[TPopCellData alloc] init];
-    group.image = TUIKitResource(@"create_group");
+    group.image = TUIDemoImagePath(@"create_group");
     group.title = NSLocalizedString(@"ChatsNewGroupText", nil);
     [menus addObject:group];
 
     TPopCellData *room = [[TPopCellData alloc] init];
-    room.image = TUIKitResource(@"create_group");
+    room.image = TUIDemoImagePath(@"create_group");
     room.title = NSLocalizedString(@"ChatsNewChatRoomText", nil);
     [menus addObject:room];
 
@@ -209,9 +202,9 @@
         vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
         vc.maxSelectCount = 1;
         [self.navigationController pushViewController:vc animated:YES];
-        vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
+        vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
-            TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
+            TUIChatConversationModel *data = [[TUIChatConversationModel alloc] init];
             data.userID = array.firstObject.identifier;
             data.title = array.firstObject.title;
             ChatViewController *chat = [[ChatViewController alloc] init];
@@ -231,7 +224,7 @@
         TUIContactSelectController *vc = [TUIContactSelectController new];
         vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
         [self.navigationController pushViewController:vc animated:YES];
-        vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
+        vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
             [self addGroup:GroupType_Work addOption:0 withContacts:array];
             [TCUtil report:Action_Createprivategrp actionSub:@"" code:@(0) msg:@"createprivategrp"];
@@ -242,7 +235,7 @@
         TUIContactSelectController *vc = [TUIContactSelectController new];
         vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
         [self.navigationController pushViewController:vc animated:YES];
-        vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
+        vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
             [self addGroup:GroupType_Public addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
             [TCUtil report:Action_Createpublicgrp actionSub:@"" code:@(0) msg:@"createpublicgrp"];
@@ -253,7 +246,7 @@
         TUIContactSelectController *vc = [TUIContactSelectController new];
         vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
         [self.navigationController pushViewController:vc animated:YES];
-        vc.finishBlock = ^(NSArray<TCommonContactSelectCellData *> *array) {
+        vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
             [self addGroup:GroupType_Meeting addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
             [TCUtil report:Action_Createchatroomgrp actionSub:@"" code:@(0) msg:@"createchatroomgrp"];
@@ -271,9 +264,9 @@
  *addOption:创建后加群时的选项          TIM_GROUP_ADD_FORBID       禁止任何人加群
                                      TIM_GROUP_ADD_AUTH        加群需要管理员审批
                                      TIM_GROUP_ADD_ANY         任何人可以加群
- *withContacts:群成员的信息数组。数组内每一个元素分别包含了对应成员的头像、ID等信息。具体信息可参照 TCommonContactSelectCellData 定义
+ *withContacts:群成员的信息数组。数组内每一个元素分别包含了对应成员的头像、ID等信息。具体信息可参照 TUICommonContactSelectCellData 定义
  */
-- (void)addGroup:(NSString *)groupType addOption:(V2TIMGroupAddOpt)addOption withContacts:(NSArray<TCommonContactSelectCellData *>  *)contacts
+- (void)addGroup:(NSString *)groupType addOption:(V2TIMGroupAddOpt)addOption withContacts:(NSArray<TUICommonContactSelectCellData *>  *)contacts
 {
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
     [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
@@ -284,7 +277,7 @@
         NSMutableString *groupName = [NSMutableString stringWithString:showName];
         NSMutableArray *members = [NSMutableArray array];
         //遍历contacts，初始化群组成员信息、群组名称信息
-        for (TCommonContactSelectCellData *item in contacts) {
+        for (TUICommonContactSelectCellData *item in contacts) {
             V2TIMCreateGroupMemberInfo *member = [[V2TIMCreateGroupMemberInfo alloc] init];
             member.userID = item.identifier;
             member.role = V2TIM_GROUP_MEMBER_ROLE_MEMBER;
@@ -323,11 +316,11 @@
             NSData *data= [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
             V2TIMMessage *msg = [[V2TIMManager sharedInstance] createCustomMessage:data];
             //创建成功后，默认跳转到群组对应的聊天界面
-            TUIConversationCellData *cellData = [[TUIConversationCellData alloc] init];
-            cellData.groupID = groupID;
-            cellData.title = groupName;
+            TUIChatConversationModel *conversationData = [[TUIChatConversationModel alloc] init];
+            conversationData.groupID = groupID;
+            conversationData.title = groupName;
             ChatViewController *chat = [[ChatViewController alloc] init];
-            chat.conversationData = cellData;
+            chat.conversationData = conversationData;
             chat.waitToSendMsg = msg;
             [self.navigationController pushViewController:chat animated:YES];
 
@@ -335,7 +328,7 @@
             [tempArray removeObjectAtIndex:tempArray.count-2];
             self.navigationController.viewControllers = tempArray;
         } fail:^(int code, NSString *msg) {
-            [THelper makeToastError:code msg:msg];
+            [TUITool makeToastError:code msg:msg];
         }];
     } fail:^(int code, NSString *msg) {
         // to do
@@ -376,7 +369,7 @@
 - (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCell *)conversationCell
 {
     ChatViewController *chat = [[ChatViewController alloc] init];
-    chat.conversationData = conversationCell.convData;
+    chat.conversationData = [self getConversationModel:conversationCell.convData];
     [self.navigationController pushViewController:chat animated:YES];
     
     if ([conversationCell.convData.groupID isEqualToString:@"im_demo_admin"] || [conversationCell.convData.userID isEqualToString:@"im_demo_admin"]) {
@@ -397,7 +390,7 @@
     if (searchType == TUISearchTypeChatHistory && [searchItem isKindOfClass:V2TIMMessage.class]) {
         // 点击搜索到的聊天消息
         ChatViewController *chatVc = [[ChatViewController alloc] init];
-        [chatVc setConversationData:conversationCellData];
+        [chatVc setConversationData:[self getConversationModel:conversationCellData]];
         chatVc.title = conversationCellData.title;
         chatVc.highlightKeyword = searchKey;
         chatVc.locateMessage = (V2TIMMessage *)searchItem;
@@ -405,10 +398,36 @@
     } else {
         // 点击搜索到的群组和联系人
         ChatViewController *chatVc = [[ChatViewController alloc] init];
-        [chatVc setConversationData:conversationCellData];
+        [chatVc setConversationData:[self getConversationModel:conversationCellData]];
         chatVc.title = conversationCellData.title;
         [searchVC.navigationController pushViewController:chatVc animated:YES];
     }
 }
 
+- (TUIChatConversationModel *)getConversationModel:(TUIConversationCellData *)data {
+    TUIChatConversationModel *model = [[TUIChatConversationModel alloc] init];
+    model.conversationID = data.conversationID;
+    model.userID = data.userID;
+    model.groupType = data.groupType;
+    model.groupID = data.groupID;
+    model.userID = data.userID;
+    model.title = data.title;
+    model.faceUrl = data.faceUrl;
+    model.avatarImage = data.avatarImage;
+    model.draftText = data.draftText;
+    return model;
+}
+
+#pragma mark - V2TIMSDKListener
+- (void)onConnecting {
+    [self onNetworkChanged:TNet_Status_Connecting];
+}
+
+- (void)onConnectSuccess {
+    [self onNetworkChanged:TNet_Status_Succ];
+}
+
+- (void)onConnectFailed:(int)code err:(NSString*)err {
+    [self onNetworkChanged:TNet_Status_ConnFailed];
+}
 @end

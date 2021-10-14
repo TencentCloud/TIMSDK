@@ -6,115 +6,162 @@
   Copyright © 2020 Tencent. All rights reserved.
 */
 
-"cancel" = "cancel";
+"cancel" = "Cancel";
 "Cancel" = "Cancel";
 "Send" = "Send";
-"Alia" = "Alia";
-"Group" = "Group";
+"Alia" = "Remark";
+"Group" = "List";
 "OK" = "OK";
-"Accept" = "Accept";
+"Accept" = "Agree";
 "Decline" = "Decline";
+"Password" = "Password";
 
-"done" = "done";
-"Done" = "Done";
+"done" = "OK";
+"Done" = "OK";
 
-"logout" = "log out";
+"logout" = "Log Out";
+"login" = "Log In";
 
 "Male" = "Male";
 "Female" = "Female";
 
-"confirm" = "confirm";
+"confirm" = "OK";
 
-"save" = "save";
+"save" = "Save";
 "Save" = "Save";
 
 "None" = "None";
 
-"confirm_log_out" = "Are you sure log out";
-"no_personal_signature" = "No personal signature";
-"no_set" = "No set";
-"please_fill_in_verification_information" = "Please fill in the verification information";
-"send_success" = "send success";
-"please_fill_in_remarks_group_info" = "Please fill in the alias and group information";
-"my_friend" = "My firends";
-"add_success" = "Add success";
-"delete_success" = "Delete success";
-"choose_avatar_for_you" = "TUIKit will set a profile photo for you";
+"confirm_log_out" = "Leave now?";
+"no_personal_signature" = "What's Up not set";
+"no_set" = "Not set";
+"please_fill_in_verification_information" = "Enter verification information";
+"send_success" = "Sent";
+"please_fill_in_remarks_group_info" = "Enter remark and list name";
+"my_friend" = "My Friends";
+"add_success" = "Added";
+"delete_success" = "Deleted";
+"choose_avatar_for_you" = "TUIKit chooses a profile photo for you.";
 
-"AppMainTitle" = "Tencent·IM";
-"AppMainConnectingTitle" = "Connecting...";
-"AppMainDisconnectTitle" = "Tencent·IM(Disconnected)";
+"AppLoginSucc" = "Successfully logged in";
 
-"TabBarItemMessageText" = "Chats";
+"AppMainTitle" = "Tencent·Instant Messaging";
+"AppMainConnectingTitle" = "Connecting…";
+"AppMainDisconnectTitle" = "Tencent·Instant Messaging (not connected)";
+
+"TabBarItemMessageText" = "Message";
 "TabBarItemContactText" = "Contacts";
 "TabBarItemMeText"      = "Me";
-"TabBarItemLiveText"    = "Live";
-"TabBarItemLiveConnectingText" = "Connecting...";
-"TabBarItemLiveDisconnectText" = "Live(Disconnected)";
+"TabBarItemLiveText"    = "Video Live Stream";
+"TabBarItemLiveConnectingText" = "Connecting…";
+"TabBarItemLiveDisconnectText" = "Video Live Stream (not connected)";
 
 "ChatsNewChatText"    = "New Chat";
-"ChatsNewPrivateGroupText"   = "Private Group";
-"ChatsNewGroupText"  = "Public Group";
-"ChatsNewChatRoomText" = "Chat Room";
+"ChatsNewPrivateGroupText"   = "Create Discussion Group";
+"ChatsNewGroupText"  = "Create Group Chat";
+"ChatsNewChatRoomText" = "Create Chat Room";
 
-"ChatsCreatePrivateGroupTips" = "create the private group";
-"ChatsCreateGroupTips" = "crate the public group";
-"ChatsCreateChatRoomTips" = "create the chat room";
-"ChatsCreateDefaultTips" = "create the group chat";
+"ChatsCreatePrivateGroupTips" = "Create Discussion Group";
+"ChatsCreateGroupTips" = "Create Group Chat";
+"ChatsCreateChatRoomTips" = "Create Chat Room";
+"ChatsCreateDefaultTips" = "Create Group";
 
-"ChatsSelectContact" = "Select Contacts";
+"ChatsSelectContact" = "Select Contact";
 
-"ContactsAddFriends" = "Add Friend";
-"ContactsJoinGroup"  = "Join Group";
+"ContactsAddFriends" = "Add to Contacts";
+"ContactsJoinGroup"  = "Add Group";
 
 "MeFriendRequest" = "Friend Request";
-"MeFriendRequestMethodAgreeAll" = "Agree All Requests";
-"MeFriendRequestMethodNeedConfirm" = "Need Confirm";
-"MeFriendRequestMethodDenyAll" = "Decline Any Requests";
+"MeFriendRequestMethodAgreeAll" = "Allow any user to add you as friend";
+"MeFriendRequestMethodNeedConfirm" = "Anyone upon Request";
+"MeFriendRequestMethodDenyAll" = "Decline friend request from any user";
 
-"MeAbout" = "About Tencent·IM";
-"MeDevelop" = "Develop & Debug";
-"MeReportMemoryLeak" = "Reporting Memory Leak";
+"MeAbout" = "About Tencent·Instant Messaging";
+"MeDevelop" = "Develop and Debug";
+"MeReportMemoryLeak" = "Report Memory Leak";
 
 "ProfilePhoto" = "Profile Photo";
-"ProfileName"  = "Nickname";
+"ProfileName"  = "Name";
 "ProfileAccount" = "Account";
-"ProfileSignature" = "What's up";
+"ProfileSignature" = "What's Up";
 "ProfileGender" = "Gender";
-"ProfileEditName" = "Editing Nickname";
-"ProfileEditSignture" = "What's up";
-"ProfileEditGender" = "Editing Gender";
-"ProfileEditAlia" = "Editing Alias";
+"ProfileEditName" = "Edit Name";
+"ProfileEditSignture" = "Edit What's Up";
+"ProfileEditGender" = "Edit Gender";
+"ProfileEditAlia" = "Edit Alias";
 "ProfileDetails" = "Details";
 "ProfileAlia" = "Alias";
-"ProfileBlocked" = "Blocked";
+"ProfileBlocked" = "Block";
+"ProfileMessageDoNotDisturb" = "Message Do Not Disturb";
 "ProfileStickyonTop" = "Sticky on Top";
-"ProfileSendMessages" = "Messages";
-"ProfileDeleteFirend" = "Delete";
+"ProfileSendMessages" = "Send Message";
+"ProfileDeleteFirend" = "Delete Friend";
 
-"LiveDropRefresh" = "Drag to refresh";
-"LiveRefreshing" = "Refresh...";
-"LiveOnlineCountFormat" = "%ld online";
-"LiveAudioChatRoom" = "Audio Chat Room";
+"LiveDropRefresh" = "Swipe down to refresh";
+"LiveRefreshing" = "Refreshing...";
+"LiveOnlineCountFormat" = "%ld is online.";
 
-"MoreCustom" = "Customize";
-"MoreCustomViewDetails" = "View details >>";
+"GroupRequestJoinGroupFormat" = "%@ requests to join group chat.";
+"GroupJoin" = "Add Group";
 
-"GroupRequestJoinGroupFormat" = "%@ request to join group chat";
-"GroupJoin" = "Join group";
+"FriendRequestFormat" = "I'm %@";
+"FriendRequestFillInfo" = "Enter Information";
+"FriendOneWay" = "One-way Friend";
+"FriendAddResultSuccessWait" = "Sent successfully. Wait for approval.";
+"FriendAddResultForbid" = "The other user disabled friend request.";
+"FriendAddResultSuccess" = "Added to friend list";
+"FriendAddResultExists" = "Friend already exists.";
+"FriendAddVerificationMessage" = "Verification Message";
+"FriendAddTitle" = "Add Friend";
 
-"FriendRequestFormat" = "This is %@";
-"FriendRequestFillInfo" = "Fill in information";
-"FriendOneWay" = "One-way friends";
-"FriendAddResultSuccessWait" = "Applying success, waiting for acceptance";
-"FriendAddResultForbid" = "You are forbidden to follow";
-"FriendAddResultSuccess" = "The other has been added to the list";
-"FriendAddResultExists" = "You're already firends";
-"FriendAddVerificationMessage" = "Vertification message";
-"FriendAddTitle" = "Following firend";
+"SearchGroupPlaceholder" = "User ID";
 
-"SearchGroupPlaceholder" = "User id";
-
-"GroupMember" = "Group member";
+"GroupMember" = "Group Members";
 "GroupAddFirend" = "Add Contact";
 "GroupDeleteFriend" = "Delete Contact";
+
+"ErrrorTipsCreate" = "Creation failed";
+"ErrorTipsDestory" = "Termination failed";
+"ErrirTipsHeart" = "Heartbeat failed";
+"ErrorTipsParamtersValid" = "Parameter conversion failed";
+"ErrorTipsServerRequest" = "Service request failed";
+"ErrorTipsOpFailed" = "Operation failed. Check network.";
+"ErrorTipsInvalidUser" = "Invalid username format";
+"ErrorTIpsInvalidUserPwd" = "Invalid username or password";
+"ErrorTipsUsernameExists" = "Username already exists.";
+"ErrorTipsServer" = "Server error";
+"ErrorTipsUsernameNull" = "User does not exist.";
+"ErrorTipsPwdError" = "Incorrect password";
+
+"TipsCheckCodeHasSent" = "Verification code sent";
+"TipsGetCheckcode" = "Send Code";
+"TipsCheckCodeFailedFormat" = "Failed to get verification code. Code: %d errMsg: %@";
+"TipsPhoneCodeNotNull" = "Mobile number and verification code are required.";
+"TipsPhoneNotMathc" = "This mobile number is not the one that receives the verification code. Please confirm.";
+"TipsLoginErrorWithUserIdfailed" = "Login failed. Failed to get userId or userSig.";
+"TipsLoginErrorFormat" = "Login failed. Code: %d errMsg: %@";
+"TipsLoginWithAccountPassword" = "Log in via password";
+"TipsLoginWithAccountDirectly" = "Log in without password";
+"TipsOldVersionRegisterAccount" =  "Users who use older versions and have a registered account can log in by directly entering the account name and password.";
+
+"exclued_from_unread_count" = "IgnoreReadCountMsg";
+
+"birthday" = "Birthday";
+
+// ---- 2021-04-22 新增
+"TipsPhoneNotNull" = "Mobile number is required.";
+"StickyonTop" = "Sticky on Top";
+"CancelStickonTop" = "Remove from Top";
+"ClearHistoryChatMessage" = "Clear messages";
+
+// ---- 2021-06-15 新增
+"LoginAgreementFormat" = "I have read and agreed to the %@ and %@.";
+"LoginAgreementParamPrivacy" = "\"Privacy Regulations\"";
+"LoginAgreementParamUser" = "\"User Agreement\"";
+
+"MePrivacy" = "Privacy Regulations";
+"MeDisclaimer" = "Disclaimer";
+"MeDisclaimerContent" = "IM (\"this product\") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, the audio and video interactions of this product are archived throughout the entire audio and video interactions. Any pornography, abusive, violent, and politically related content is strictly prohibited during use.";
+"TipsAgreementError" = "Please read and approve the agreement first";
+
+"GetSmsErrorFormat" = "Failed to get verifcation code！(%@)";

@@ -12,12 +12,10 @@
  * 本类依赖于腾讯云 TUIKit和IMSDK 实现
  */
 #import "GroupRequestViewController.h"
-#import "TIMUserProfile+DataProvider.h"
+#import "TUICommonModel.h"
 #import <ReactiveObjC.h>
-#import "MMLayout/UIView+MMLayout.h"
-#import "TIMUserProfile+DataProvider.h"
+#import "UIView+TUILayout.h"
 #import "TUIProfileCardCell.h"
-#import "UIImage+TUIKIT.h"
 #import "TUIKit.h"
 #import "TCUtil.h"
 #import "TUIAvatarViewController.h"
@@ -119,15 +117,15 @@
 - (void)onSend
 {
     // display toast with an activity spinner
-    [THelper makeToastActivity];
+    [TUITool makeToastActivity];
     [[V2TIMManager sharedInstance] joinGroup:self.groupInfo.groupID msg:self.addMsgTextView.text succ:^{
-        [THelper hideToastActivity];
-        [THelper makeToast:NSLocalizedString(@"send_success", nil)
+        [TUITool hideToastActivity];
+        [TUITool makeToast:NSLocalizedString(@"send_success", nil)
                  duration:3.0
-                 idposition:CSToastPositionBottom];
+                 idposition:TUICSToastPositionBottom];
     } fail:^(int code, NSString *desc) {
-        [THelper hideToastActivity];
-        [THelper makeToastError:code msg:desc];
+        [TUITool hideToastActivity];
+        [TUITool makeToastError:code msg:desc];
     }];
     [TCUtil report:Action_Addgroup actionSub:@"" code:@(0) msg:@"addgroup"];
 }

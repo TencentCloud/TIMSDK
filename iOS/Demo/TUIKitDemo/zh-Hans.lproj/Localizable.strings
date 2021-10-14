@@ -14,11 +14,13 @@
 "OK" = "好";
 "Accept" = "同意";
 "Decline" = "拒绝";
+"Password" = "密码";
 
 "done" = "完成";
 "Done" = "完成";
 
 "logout" = "退出登录";
+"login" = "登录";
 
 "Male" = "男";
 "Female" = "女";
@@ -40,6 +42,8 @@
 "add_success" = "添加成功";
 "delete_success" = "删除成功";
 "choose_avatar_for_you" = "TUIKit为您选择一个头像";
+
+"AppLoginSucc" = "已成功登录";
 
 "AppMainTitle" = "腾讯·云通信";
 "AppMainConnectingTitle" = "连接中...";
@@ -66,9 +70,6 @@
 
 "ContactsAddFriends" = "添加好友";
 "ContactsJoinGroup"  = "添加群组";
-"ContactsNewFriends" = "新的联系人";
-"ContactsGroupChats" = "群聊";
-"ContactsBlackList" = "黑名单";
 
 "MeFriendRequest" = "好友申请";
 "MeFriendRequestMethodAgreeAll" = "同意任何用户加好友";
@@ -91,16 +92,14 @@
 "ProfileDetails" = "详细资料";
 "ProfileAlia" = "备注名";
 "ProfileBlocked" = "加入黑名单";
+"ProfileMessageDoNotDisturb" = "消息免打扰";
 "ProfileStickyonTop" = "置顶聊天";
-"ProfileSendMessages" = "发送聊天";
+"ProfileSendMessages" = "发送消息";
 "ProfileDeleteFirend" = "删除好友";
 
 "LiveDropRefresh" = "下拉刷新";
 "LiveRefreshing" = "刷新中...";
 "LiveOnlineCountFormat" = "%ld在线";
-
-"MoreCustom" = "自定义";
-"MoreCustomViewDetails" = "查看详情>>";
 
 "GroupRequestJoinGroupFormat" = "%@ 申请加入群聊";
 "GroupJoin" = "添加群组";
@@ -120,3 +119,49 @@
 "GroupMember" = "群成员";
 "GroupAddFirend" = "添加联系人";
 "GroupDeleteFriend" = "删除联系人";
+
+"ErrrorTipsCreate" = "创建失败";
+"ErrorTipsDestory" = "销毁失败"; 
+"ErrirTipsHeart" = "心跳失败";
+"ErrorTipsParamtersValid" = "参数失败";
+"ErrorTipsServerRequest" = "服务请求失败";
+"ErrorTipsOpFailed" = "操作失败，请检查网络";
+"ErrorTipsInvalidUser" = "用户名格式错误";
+"ErrorTIpsInvalidUserPwd" = "用户名或密码不合法";
+"ErrorTipsUsernameExists" = "用户名已存在";
+"ErrorTipsServer" = "服务器错误";
+"ErrorTipsUsernameNull" = "用户不存在";
+"ErrorTipsPwdError" = "密码错误";
+
+"TipsCheckCodeHasSent" = "验证码已发出";
+"TipsGetCheckcode" = "获取验证码";
+"TipsCheckCodeFailedFormat" = "获取验证码失败，code：%d errMsg:%@";
+"TipsPhoneCodeNotNull" = "手机号和验证码不能为空";
+"TipsPhoneNotMathc" = "当前手机号与获取验证码手机号不一致，请确认";
+"TipsLoginErrorWithUserIdfailed" = "登录失败,userId or userSig 获取失败";
+"TipsLoginErrorFormat" = "登录失败，code：%d errMsg:%@";
+"TipsLoginWithAccountPassword" = "账号密码登录";
+"TipsLoginWithAccountDirectly" = "账号直接登录";
+"TipsOldVersionRegisterAccount" =  "老版本用户如果注册了账号密码，可以直接输入账号密码登录";
+
+"exclued_from_unread_count" = "不计入未读数消息";
+
+"birthday" = "生日";
+
+// ---- 2021-04-22 新增
+"TipsPhoneNotNull" = "手机号不能为空";
+"StickyonTop" = "置顶";
+"CancelStickonTop" = "取消置顶";
+"ClearHistoryChatMessage" = "清空消息";
+
+// ---- 2021-06-15 新增
+"LoginAgreementFormat" = "我已阅读并同意%@和%@。";
+"LoginAgreementParamPrivacy" = "《隐私条例》";
+"LoginAgreementParamUser" = "《用户协议》";
+
+"MePrivacy" = "隐私条例";
+"MeDisclaimer" = "免责声明";
+"MeDisclaimerContent" = "IM（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。";
+"TipsAgreementError" = "请先阅读并同意协议";
+
+"GetSmsErrorFormat" = "获取验证码错误，请刷新重试！(%@)";

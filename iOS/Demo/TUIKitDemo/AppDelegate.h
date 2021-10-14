@@ -1,7 +1,20 @@
-#import <UIKit/UIKit.h>
-#import "TUIKit.h"
+//
+//  AppDelegate.h
+//  TUIKitDemo
+//
+//  Created by kennethmiao on 2018/10/10.
+//  Copyright © 2018年 Tencent. All rights reserved.
+//
 
-//apns (sdkBusiId 为证书上传控制台后生成，详情请参考文档[离线推送]（https://cloud.tencent.com/document/product/269/44517）)
+#import <UIKit/UIKit.h>
+#import "TUITabBarController.h"
+#import "LoginController.h"
+#import "TUIKit.h"
+#import "GenerateTestUserSig.h"
+#import "TUILogin.h"
+//sdkappid 请查看 GenerateTestUserSig.h
+
+//apns
 #ifdef DEBUG
 #define sdkBusiId 15108
 #else
@@ -9,7 +22,9 @@
 #endif
 
 //bugly
-#define BUGLY_APP_ID      @"e965e5d928"
+#define BUGLY_APP_ID @"0a3cbc2dfe"
+
+#define installApp     @"_installApp_"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -17,8 +32,10 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong) NSData *deviceToken;
+
 - (UIViewController *)getLoginController;
 - (UITabBarController *)getMainController;
+
 - (void)login:(NSString *)identifier userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail;
 @end
 

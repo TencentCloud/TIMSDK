@@ -10,83 +10,57 @@
 #import "LoginController.h"
 #import "AppDelegate.h"
 #import "TUIButtonCell.h"
-#import "THeader.h"
-#import "TTextEditController.h"
-#import "TDateEditController.h"
-#import "TIMUserProfile+DataProvider.h"
-#import "TUIUserProfileDataProviderService.h"
-#import "TCServiceManager.h"
-#import "TCommonTextCell.h"
-#import "TCommonAvatarCell.h"
-#import "MMLayout/UIView+MMLayout.h"
+#import "TUITextEditController.h"
+#import "TUIDateEditController.h"
+#import "TUICommonModel.h"
+#import "TUICommonTextCell.h"
+#import "TUICommonModel.h"
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "UIImage+TUIKIT.h"
 #import "TUIKit.h"
-#import "THelper.h"
 #import "TCUtil.h"
-#import "UIColor+TUIDarkMode.h"
-@import ImSDK_Plus;
+#import "TUIDefine.h"
+#import "TUICommonAvatarCell.h"
 
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2
 #define SHEET_SEX    3
 
-@interface UserProfileExpresser : TUIUserProfileDataProviderService
-@end
-
-@implementation UserProfileExpresser
-
-+ (id)shareInstance
-{
-    static UserProfileExpresser *shareInstance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        shareInstance = [[self alloc] init];
-    });
-    return shareInstance;
-}
-
-- (NSString *)getSignature:(V2TIMUserFullInfo *)profile
-{
-    NSString *ret = [super getSignature:profile];
-    if (ret.length != 0)
-        return ret;
-    return @"暂无个性签名";
-}
-
-@end
-
-@interface ProfileController () <UIActionSheetDelegate>
+@interface ProfileController () <UIActionSheetDelegate, V2TIMSDKListener>
 @property (nonatomic, strong) NSMutableArray *data;
 @property V2TIMUserFullInfo *profile;
+@property (nonatomic, weak) UIDatePicker *picker;
+@property (nonatomic, strong) UIView *datePicker;
 @end
 
-@implementation ProfileController
+@implementation ProfileController {
+    NSDateFormatter *_dateFormatter;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[TCServiceManager shareInstance] registerService:@protocol(TUIUserProfileDataProviderServiceProtocol) implClass:[UserProfileExpresser class]];
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     [self addLongPressGesture];//添加长按手势
     [self setupViews];
 
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
+    _dateFormatter = [[NSDateFormatter alloc] init];
+    _dateFormatter.dateFormat = @"yyyy-MM-dd";
 }
 //实现该委托，保证数据刷新，同时保证 cell 的 select 能够符合显示逻辑
 
 - (void)setupViews
 {
-    self.title = @"个人信息";
-    self.parentViewController.title = @"个人信息";
+    self.title = NSLocalizedString(@"ProfileDetails", nil); // @"个人信息";
+    self.parentViewController.title = NSLocalizedString(@"ProfileDetails", nil); // @"个人信息";
 
     //self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     self.clearsSelectionOnViewWillAppear = YES;
 
-    [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"textCell"];
-    [self.tableView registerClass:[TCommonAvatarCell class] forCellReuseIdentifier:@"avatarCell"];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onSelfInfoUpdated:) name:TUIKitNotification_onSelfInfoUpdated object:nil];
+    [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
+    [self.tableView registerClass:[TUICommonAvatarCell class] forCellReuseIdentifier:@"avatarCell"];
+    [[V2TIMManager sharedInstance] addIMSDKListener:self];
     
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
     [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
@@ -95,52 +69,66 @@
     } fail:nil];
 }
 
-- (void)onSelfInfoUpdated:(NSNotification *)no {
-    self.profile = no.object;
-    [self setupData];
-}
-
 - (void)setupData
 {
 
     _data = [NSMutableArray array];
 
-    TCommonAvatarCellData *avatarData = [TCommonAvatarCellData new];
-    avatarData.key = @"头像";
+    TUICommonAvatarCellData *avatarData = [TUICommonAvatarCellData new];
+    avatarData.key = NSLocalizedString(@"ProfilePhoto", nil); // @"头像";
     avatarData.showAccessory = YES;
     avatarData.cselector = @selector(didSelectAvatar);
     avatarData.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
     [_data addObject:@[avatarData]];
 
-    TCommonTextCellData *nicknameData = [TCommonTextCellData new];
-    nicknameData.key = @"昵称";
+    TUICommonTextCellData *nicknameData = [TUICommonTextCellData new];
+    nicknameData.key = NSLocalizedString(@"ProfileName", nil); // @"昵称";
     nicknameData.value = self.profile.showName;
     nicknameData.showAccessory = YES;
     nicknameData.cselector = @selector(didSelectChangeNick);
 
-    TCommonTextCellData *IDData = [TCommonTextCellData new];
-    IDData.key = @"帐号";
+    TUICommonTextCellData *IDData = [TUICommonTextCellData new];
+    IDData.key = NSLocalizedString(@"ProfileAccount", nil); // @"帐号";
     IDData.value = self.profile.userID;
     IDData.showAccessory = NO;
     [_data addObject:@[nicknameData, IDData]];
 
-    TCommonTextCellData *signatureData = [TCommonTextCellData new];
-    signatureData.key = @"个性签名";
+    TUICommonTextCellData *signatureData = [TUICommonTextCellData new];
+    signatureData.key = NSLocalizedString(@"ProfileSignature", nil); // @"个性签名";
     signatureData.value = self.profile.showSignature;
     signatureData.showAccessory = YES;
     signatureData.cselector = @selector(didSelectChangeSignature);
 
-    TCommonTextCellData *sexData = [TCommonTextCellData new];
-    sexData.key = @"性别";
+    TUICommonTextCellData *sexData = [TUICommonTextCellData new];
+    sexData.key = NSLocalizedString(@"ProfileGender", nil); // @"性别";
     sexData.value = [self.profile showGender];
     sexData.showAccessory = YES;
     sexData.cselector = @selector(didSelectSex);
+    
+    TUICommonTextCellData *birthdayData = [TUICommonTextCellData new];
+    birthdayData.key = NSLocalizedString(@"birthday", nil); // @"生日";
+    birthdayData.value = [_dateFormatter stringFromDate:NSDate.new];
+    if (self.profile.birthday) {
+        NSInteger year = self.profile.birthday / 10000;
+        NSInteger month = (self.profile.birthday - year * 10000) / 100;
+        NSInteger day = (self.profile.birthday - year * 10000 - month * 100);
+        birthdayData.value = [NSString stringWithFormat:@"%04zd-%02zd-%02zd", year, month, day];
+    }
+    birthdayData.showAccessory = YES;
+    birthdayData.cselector = @selector(didSelectBirthday);
 
-    [_data addObject:@[signatureData, sexData]];
+    [_data addObject:@[signatureData, sexData, birthdayData]];
 
 
     [self.tableView reloadData];
 }
+
+#pragma mark - V2TIMSDKListener
+- (void)onSelfInfoUpdated:(V2TIMUserFullInfo *)Info {
+    self.profile = Info;
+    [self setupData];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -168,7 +156,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableArray *array = _data[indexPath.section];
-    TCommonCellData *data = array[indexPath.row];
+    TUICommonCellData *data = array[indexPath.row];
 
     return [data heightOfWidth:Screen_Width];
 }
@@ -187,13 +175,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *array = _data[indexPath.section];
     NSObject *data = array[indexPath.row];
-    if([data isKindOfClass:[TCommonTextCellData class]]) {
-        TCommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textCell" forIndexPath:indexPath];
-        [cell fillWithData:(TCommonTextCellData *)data];
+    if([data isKindOfClass:[TUICommonTextCellData class]]) {
+        TUICommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textCell" forIndexPath:indexPath];
+        [cell fillWithData:(TUICommonTextCellData *)data];
         return cell;
-    }  else if([data isKindOfClass:[TCommonAvatarCellData class]]){
-        TCommonAvatarCell *cell = [tableView dequeueReusableCellWithIdentifier:@"avatarCell" forIndexPath:indexPath];
-        [cell fillWithData:(TCommonAvatarCellData *)data];
+    }  else if([data isKindOfClass:[TUICommonAvatarCellData class]]){
+        TUICommonAvatarCell *cell = [tableView dequeueReusableCellWithIdentifier:@"avatarCell" forIndexPath:indexPath];
+        [cell fillWithData:(TUICommonAvatarCellData *)data];
         return cell;
     }
     return nil;
@@ -202,8 +190,8 @@
 
 - (void)didSelectChangeNick
 {
-    TTextEditController *vc = [[TTextEditController alloc] initWithText:self.profile.nickName];
-    vc.title = @"修改昵称";
+    TUITextEditController *vc = [[TUITextEditController alloc] initWithText:self.profile.nickName];
+    vc.title = NSLocalizedString(@"ProfileEditName", nil); // @"修改昵称";
     [self.navigationController pushViewController:vc animated:YES];
     @weakify(self)
     [[RACObserve(vc, textValue) skip:1] subscribeNext:^(NSString *x) {
@@ -214,13 +202,14 @@
             self.profile.nickName = x;
             [self setupData];
         } fail:nil];
+        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifynick code:@(0) msg:@"modifynick"];
     }];
 }
 
 - (void)didSelectChangeSignature
 {
-    TTextEditController *vc = [[TTextEditController alloc] initWithText:[self.profile showSignature]];
-    vc.title = @"修改个性签名";
+    TUITextEditController *vc = [[TUITextEditController alloc] initWithText:[self.profile showSignature]];
+    vc.title = NSLocalizedString(@"ProfileEditSignture", nil); // @"修改个性签名";
     [self.navigationController pushViewController:vc animated:YES];
 
     @weakify(self)
@@ -232,6 +221,7 @@
             self.profile.selfSignature = x;
             [self setupData];
         } fail:nil];
+        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifysignature code:@(0) msg:@"modifysignature"];
     }];
 }
 
@@ -239,10 +229,10 @@
 {
     UIActionSheet *sheet = [[UIActionSheet alloc] init];
     sheet.tag = SHEET_SEX;
-    sheet.title = @"修改性别";
-    [sheet addButtonWithTitle:@"男"];
-    [sheet addButtonWithTitle:@"女"];
-    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:@"取消"]];
+    sheet.title = NSLocalizedString(@"ProfileEditGender", nil); // @"修改性别";
+    [sheet addButtonWithTitle:NSLocalizedString(@"Male", nil)];
+    [sheet addButtonWithTitle:NSLocalizedString(@"Female", nil)];
+    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"Canel", nil)]];
     [sheet setDelegate:self];
     [sheet showInView:self.view];
 }
@@ -250,9 +240,9 @@
 - (void)didSelectAvatar
 {
     //点击头像的响应函数，换头像，上传头像URL
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"TUIKit为您选择一个头像" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSString *url = [THelper randAvatarUrl];
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"choose_avatar_for_you", nil) message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *url = [TUITool randAvatarUrl];
         V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
         info.faceURL = url;
         [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
@@ -261,8 +251,10 @@
         } fail:^(int code, NSString *desc) {
             
         }];
+        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifyfaceurl code:@(0) msg:@"modifyfaceurl"];
+
     }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil]];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
 }
 
@@ -282,6 +274,7 @@
             self.profile.gender = gender;
             [self setupData];
         } fail:nil];
+        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifygender code:@(0) msg:@"modifygender"];
     }
 }
 
@@ -299,14 +292,14 @@
         NSIndexPath *pathAtView = [self.tableView indexPathForRowAtPoint:point];
         NSObject *data = [self.tableView cellForRowAtIndexPath:pathAtView];
 
-        //长按 TCommonTextCell，可以复制 cell 内的字符串。
-        if([data isKindOfClass:[TCommonTextCell class]]){
-            TCommonTextCell *textCell = (TCommonTextCell *)data;
-            if(textCell.textData.value && ![textCell.textData.value isEqualToString:@"未设置"]){
+        //长按 TUICommonTextCell，可以复制 cell 内的字符串。
+        if([data isKindOfClass:[TUICommonTextCell class]]){
+            TUICommonTextCell *textCell = (TUICommonTextCell *)data;
+            if(textCell.textData.value && ![textCell.textData.value isEqualToString:NSLocalizedString(@"no_set", nil)]){
                 UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
                 pasteboard.string = textCell.textData.value;
-                NSString *toastString = [NSString stringWithFormat:@"已将 %@ 复制到粘贴板",textCell.textData.key];
-                [THelper makeToast:toastString];
+                NSString *toastString = [NSString stringWithFormat:@"copy %@",textCell.textData.key];
+                [TUITool makeToast:toastString];
             }
         }else if([data isKindOfClass:[TUIProfileCardCell class]]){
             //长按 profileCard，复制自己的账号。
@@ -314,12 +307,77 @@
             if(profileCard.cardData.identifier){
                 UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
                 pasteboard.string = profileCard.cardData.identifier;
-                NSString *toastString = [NSString stringWithFormat:@"已将该用户账号复制到粘贴板"];
-                [THelper makeToast:toastString];
+                NSString *toastString = [NSString stringWithFormat:@"copy"];
+                [TUITool makeToast:toastString];
             }
 
         }
     }
 }
+
+- (void)didSelectBirthday
+{
+    [self hideDatePicker];
+    [UIApplication.sharedApplication.keyWindow addSubview:self.datePicker];
+}
+
+- (UIView *)datePicker
+{
+    if (_datePicker == nil) {
+        UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height)];
+        cover.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        [cover addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDatePicker)]];
+        
+        UIView *menuView = [[UIView alloc] init];
+        menuView.backgroundColor = [UIColor whiteColor];
+        menuView.frame = CGRectMake(0, UIScreen.mainScreen.bounds.size.height - 340, UIScreen.mainScreen.bounds.size.width, 40);
+        [cover addSubview:menuView];
+        
+        UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [cancelButton setTitle:@"cancel" forState:UIControlStateNormal];
+        [cancelButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+        cancelButton.frame = CGRectMake(10, 0, 60, 35);
+        [cancelButton addTarget:self action:@selector(hideDatePicker) forControlEvents:UIControlEventTouchUpInside];
+        [menuView addSubview:cancelButton];
+        
+        UIButton *okButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [okButton setTitle:@"ok" forState:UIControlStateNormal];
+        [okButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+        okButton.frame = CGRectMake(cover.bounds.size.width - 10 - 60, 0, 60, 35);
+        [okButton addTarget:self action:@selector(onOKDatePicker) forControlEvents:UIControlEventTouchUpInside];
+        [menuView addSubview:okButton];
+        
+        UIDatePicker *picker = [[UIDatePicker alloc] init];
+        picker.backgroundColor = [UIColor whiteColor];
+        picker.datePickerMode = UIDatePickerModeDate;
+        picker.frame = CGRectMake(0, CGRectGetMaxY(menuView.frame), cover.bounds.size.width, 300);
+        [cover addSubview:picker];
+        self.picker = picker;
+        
+        _datePicker = cover;
+    }
+    return _datePicker;
+}
+
+- (void)hideDatePicker
+{
+    [self.datePicker removeFromSuperview];
+}
+
+- (void)onOKDatePicker
+{
+    [self hideDatePicker];
+    NSDate *date = self.picker.date;
+    NSString *dateStr = [_dateFormatter stringFromDate:date];
+    dateStr = [dateStr stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    int birthday = [dateStr intValue];
+    V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
+    info.birthday = birthday;
+    [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
+        self.profile.birthday = birthday;
+        [self setupData];
+    } fail:nil];
+}
+
 
 @end

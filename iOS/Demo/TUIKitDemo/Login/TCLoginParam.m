@@ -1,3 +1,13 @@
+//
+//  TCLoginParam.m
+//  TCLVBIMDemo
+//
+//  Created by dackli on 16/8/4.
+//  Copyright © 2016年 tencent. All rights reserved.
+//
+/** 腾讯云IM Demo用户登录信息类
+ *  用来管理用户的登录信息，如登录信息的缓存、过期判断等
+ */
 #import "TCLoginParam.h"
 #import "TCUtil.h"
 
@@ -18,7 +28,7 @@
             NSString *useridKey = [defaults objectForKey:kLoginParamKey];
             if (useridKey) {
                 NSString *strLoginParam = [defaults objectForKey:useridKey];
-                NSDictionary *dic = [TCUtil jsonData2Dictionary: strLoginParam];
+                NSDictionary *dic = [TCUtil jsonSring2Dictionary: strLoginParam];
                 if (dic) {
                     mgr = [[TCLoginParam alloc] init];
                     mgr.tokenTime = [[dic objectForKey:@"tokenTime"] longValue];
@@ -32,7 +42,9 @@
     return mgr;
 }
 
-
+/**
+ *从本地获取用户登录资料
+ */
 + (instancetype)loadFromLocal {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (defaults == nil) {
@@ -41,7 +53,7 @@
     NSString *useridKey = [defaults objectForKey:kLoginParamKey];
     if (useridKey) {
         NSString *strLoginParam = [defaults objectForKey:useridKey];
-        NSDictionary *dic = [TCUtil jsonData2Dictionary: strLoginParam];
+        NSDictionary *dic = [TCUtil jsonSring2Dictionary: strLoginParam];
         if (dic) {
             TCLoginParam *param = [[TCLoginParam alloc] init];
             param.tokenTime = [[dic objectForKey:@"tokenTime"] longValue];
@@ -54,15 +66,18 @@
     return [[TCLoginParam alloc] init];
 }
 
+/**
+ *将用户登录资料保存至本地
+ */
 - (void)saveToLocal {
     if (self.tokenTime == 0) {
         self.tokenTime = [[NSDate date] timeIntervalSince1970];
     }
-    
+
     if (![self isValid]) {
         return;
     }
-    
+
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     [dic setObject:@(self.tokenTime) forKey:@"tokenTime"];
     [dic setObject:self.identifier forKey:@"identifier"];
@@ -72,23 +87,27 @@
 #else
     [dic setObject:@(0) forKey:@"isLastAppExt"];
 #endif
-    
+
     NSData *data = [TCUtil dictionary2JsonData: dic];
     NSString *strLoginParam = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSString *useridKey = [NSString stringWithFormat:@"%@_LoginParam", self.identifier];
-    
+
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];;
     if (defaults == nil) {
         defaults = [NSUserDefaults standardUserDefaults];
     }
-    
+
     [defaults setObject:useridKey forKey:kLoginParamKey];
-    
+
     // save login param
     [defaults setObject:strLoginParam forKey:useridKey];
     [defaults synchronize];
 }
 
+/**
+ *登录身份过期的判断。在Demo中默认登录身份永不过期。
+ *客户也可参照下方函数中的注释代码编写过期判断，根据自己的需求编写过期判断
+ */
 - (BOOL)isExpired {
 //    time_t curTime = [[NSDate date] timeIntervalSince1970];
 //    if (curTime - self.tokenTime > 10 * 24 * 3600) {
@@ -97,6 +116,9 @@
     return NO;
 }
 
+/**
+ *判断登录信息是否有效
+ */
 - (BOOL)isValid {
     if (self.identifier == nil || self.identifier.length == 0) {
         return NO;

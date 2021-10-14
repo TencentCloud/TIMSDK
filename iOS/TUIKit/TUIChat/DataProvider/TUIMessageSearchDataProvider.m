@@ -1,0 +1,205 @@
+//
+//  TUIMessageSearchDataProvider.m
+//  TXIMSDK_TUIKit_iOS
+//
+//  Created by kayev on 2021/7/8.
+//
+
+#import "TUIMessageSearchDataProvider.h"
+#import "TUIMessageDataProvider+ProtectedAPI.h"
+
+@implementation TUIMessageSearchDataProvider
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _isOlderNoMoreMsg = NO;
+        _isNewerNoMoreMsg = NO;
+    }
+    return self;
+}
+
+- (void)loadMessageWithSearchMsg:(V2TIMMessage *)searchMsg
+                ConversationInfo:(TUIChatConversationModel *)conversation
+                    SucceedBlock:(void (^)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))SucceedBlock
+                       FailBlock:(V2TIMFail)FailBlock {
+    if(self.isLoadingData) {
+        FailBlock(ERR_SUCC, @"正在刷新中");
+        return;
+    }
+    self.isLoadingData = YES;
+    
+    dispatch_group_t group = dispatch_group_create();
+    __block NSArray *olders = @[];
+    __block NSArray *newers = @[];
+    __block BOOL isOldLoadFail = NO;
+    __block BOOL isNewLoadFail = NO;
+    __block int failCode = 0;
+    __block NSString *failDesc = nil;
+    
+    // 以定位消息为起点，加载最旧的10条消息
+    {
+        dispatch_group_enter(group);
+        V2TIMMessageListGetOption *option = [[V2TIMMessageListGetOption alloc] init];
+        option.getType = V2TIM_GET_LOCAL_OLDER_MSG;
+        option.count = self.pageCount;
+        option.groupID = conversation.groupID;
+        option.userID = conversation.userID;
+        option.lastMsg = searchMsg;
+        [V2TIMManager.sharedInstance getHistoryMessageList:option succ:^(NSArray<V2TIMMessage *> *msgs) {
+            msgs = msgs.reverseObjectEnumerator.allObjects;
+            olders = msgs?:@[];
+            if (olders.count < self.pageCount) {
+                self.isOlderNoMoreMsg = YES;
+            }
+            dispatch_group_leave(group);
+        } fail:^(int code, NSString *desc) {
+            isOldLoadFail = YES;
+            failCode = code;
+            failDesc = desc;
+            dispatch_group_leave(group);
+        }];
+    }
+    // 以定位消息为起点，加载最新的10条消息
+    {
+        dispatch_group_enter(group);
+        V2TIMMessageListGetOption *option = [[V2TIMMessageListGetOption alloc] init];
+        option.getType = V2TIM_GET_LOCAL_NEWER_MSG;
+        option.count = self.pageCount;
+        option.groupID = conversation.groupID;
+        option.userID = conversation.userID;
+        option.lastMsg = searchMsg;
+        [V2TIMManager.sharedInstance getHistoryMessageList:option succ:^(NSArray<V2TIMMessage *> *msgs) {
+            newers = msgs?:@[];
+            if (newers.count < self.pageCount) {
+                self.isNewerNoMoreMsg = YES;
+            }
+            dispatch_group_leave(group);
+        } fail:^(int code, NSString *desc) {
+            isNewLoadFail = YES;
+            failCode = code;
+            failDesc = desc;
+            dispatch_group_leave(group);
+        }];
+    }
+    @weakify(self)
+    
+    dispatch_group_notify(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        @strongify(self)
+        self.isLoadingData = NO;
+        if (isOldLoadFail || isNewLoadFail) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                FailBlock(failCode, failDesc);
+            });
+        }
+        self.isFirstLoad = NO;
+        
+        NSMutableArray *results = [NSMutableArray array];
+        [results addObjectsFromArray:olders];
+        [results addObject:searchMsg];
+        [results addObjectsFromArray:newers];
+        self.msgForOlderGet = results.firstObject;
+        self.msgForNewerGet = results.lastObject;
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.heightCache_ removeAllObjects];
+            [self.uiMsgs_ removeAllObjects];
+            
+            NSMutableArray *uiMsgs = [self transUIMsgFromIMMsg:results.reverseObjectEnumerator.allObjects];
+            [self.uiMsgs_ addObjectsFromArray:uiMsgs];
+            
+            SucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.uiMsgs_);
+        });
+    });
+}
+
+
+- (void)loadMessageWithIsRequestOlderMsg:(BOOL)orderType
+                        ConversationInfo:(TUIChatConversationModel *)conversation
+                            SucceedBlock:(void (^)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, BOOL isFirstLoad, NSArray<TUIMessageCellData *> *newUIMsgs))SucceedBlock
+                               FailBlock:(V2TIMFail)FailBlock {
+    
+    self.isLoadingData = YES;
+    
+    int requestCount = self.pageCount;
+    V2TIMMessageListGetOption *option = [[V2TIMMessageListGetOption alloc] init];
+    option.userID = conversation.userID;
+    option.groupID = conversation.groupID;
+    option.getType = orderType ? V2TIM_GET_LOCAL_OLDER_MSG : V2TIM_GET_LOCAL_NEWER_MSG;
+    option.count = requestCount;
+    option.lastMsg = orderType ? self.msgForOlderGet : self.msgForNewerGet;
+    @weakify(self);
+    [V2TIMManager.sharedInstance getHistoryMessageList:option succ:^(NSArray<V2TIMMessage *> *msgs) {
+        @strongify(self);
+        if (!orderType) {
+            // 逆序
+            msgs = msgs.reverseObjectEnumerator.allObjects;
+        }
+        
+        // 更新lastMsg标志位
+        if (msgs.count != 0) {
+            if (orderType) {
+                self.msgForOlderGet = msgs.lastObject;
+                if (self.msgForNewerGet == nil) {
+                    self.msgForNewerGet = msgs.firstObject;
+                }
+            } else {
+                if (self.msgForOlderGet == nil) {
+                    self.msgForOlderGet = msgs.lastObject;
+                }
+                self.msgForNewerGet = msgs.firstObject;
+            }
+        }
+        
+        // 更新无数据标志
+        if (msgs.count < requestCount) {
+            if (orderType) {
+                self.isOlderNoMoreMsg = YES;
+            } else {
+                self.isNewerNoMoreMsg = YES;
+            }
+        }
+        
+        // 转换数据
+        NSMutableArray<TUIMessageCellData *> *uiMsgs = [self transUIMsgFromIMMsg:msgs];
+        
+        if (orderType) {
+            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
+            [self.uiMsgs_ insertObjects:uiMsgs atIndexes:indexSet];
+        } else {
+            [self.uiMsgs_ addObjectsFromArray:uiMsgs];
+        }
+        
+        // 回调
+        SucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.isFirstLoad, uiMsgs);
+        
+        self.isLoadingData = NO;
+        self.isFirstLoad = NO;
+
+    } fail:^(int code, NSString *desc) {
+        self.isLoadingData = NO;
+    }];
+}
+
+- (void)removeAllSearchData {
+    [self.uiMsgs_ removeAllObjects];
+    self.isNewerNoMoreMsg = NO;
+    self.isOlderNoMoreMsg = NO;
+    self.isFirstLoad = YES;
+    self.msgForNewerGet = nil;
+    self.msgForOlderGet = nil;
+}
+
+#pragma mark - Override
+- (void)onRecvNewMessage:(V2TIMMessage *)msg {
+    if (self.isNewerNoMoreMsg == NO) {
+        // 如果当前历史列表还没有加载到最新的一条数据, 则不处理新消息.
+        // 如果处理的话, 会导致新消息加到历史列表中, 出现位置错乱问题.
+        return;
+    }
+    
+    [super onRecvNewMessage:msg];
+}
+
+@end

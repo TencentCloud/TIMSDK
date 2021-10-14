@@ -1,0 +1,6 @@
+framework module ImSDK_Plus {
+  umbrella header "ImSDK_Plus.h"
+
+  export *
+  module * { export * }
+}

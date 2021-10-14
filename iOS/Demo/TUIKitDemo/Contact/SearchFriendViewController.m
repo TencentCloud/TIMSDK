@@ -11,10 +11,8 @@
  *  本类依赖于腾讯云 TUIKit和IMSDK 实现
  */
 #import "SearchFriendViewController.h"
-#import "UIView+MMLayout.h"
 #import "FriendRequestViewController.h"
-#import "THeader.h"
-#import "UIColor+TUIDarkMode.h"
+#import "TUIKit.h"
 
 @interface AddFriendUserView : UIView
 @property (nonatomic) V2TIMUserFullInfo *profile;

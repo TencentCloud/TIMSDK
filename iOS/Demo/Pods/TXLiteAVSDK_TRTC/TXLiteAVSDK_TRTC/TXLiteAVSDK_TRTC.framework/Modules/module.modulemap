@@ -1,0 +1,13 @@
+framework module TXLiteAVSDK_TRTC {
+    umbrella header "TXLiteAVSDK.h"
+    exclude header "TXLiteAVEncodedDataProcessingListener.h"
+    exclude header "TXLiteAVBuffer.h"
+    exclude header "cpp_interface/ITRTCCloud.h"
+    exclude header "cpp_interface/ITRTCStatistics.h"
+    exclude header "cpp_interface/ITXAudioEffectManager.h"
+    exclude header "cpp_interface/ITXDeviceManager.h"
+    exclude header "cpp_interface/TRTCCloudCallback.h"
+    exclude header "cpp_interface/TRTCTypeDef.h"
+    exclude header "cpp_interface/TXLiteAVCode.h"
+    export *
+}

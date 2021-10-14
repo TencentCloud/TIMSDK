@@ -16,41 +16,27 @@
 #import "TUserProfileController.h"
 #import "TUIProfileCardCell.h"
 #import "TUIButtonCell.h"
-#import "THeader.h"
-#import "TTextEditController.h"
+#import "TUITextEditController.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "SDWebImage/UIImageView+WebCache.h"
-#import "MMLayout/UIView+MMLayout.h"
+#import "UIView+TUILayout.h"
 #import "ChatViewController.h"
 #import "FriendRequestViewController.h"
-#import "TCommonTextCell.h"
-#import "TIMUserProfile+DataProvider.h"
-#import "Toast/Toast.h"
-#import "TUIKit.h"
+#import "TUICommonTextCell.h"
+#import "TUICommonModel.h"
+#import "UIView+TUIToast.h"
 #import "TUIGroupPendencyCellData.h"
-#import "TCommonPendencyCellData.h"
-#import "TUIImageViewController.h"
+#import "TUICommonPendencyCellData.h"
 #import "TUIAvatarViewController.h"
+#import "TUIConversationCellData.h"
+#import "TUIKit.h"
 
 
-@TCServiceRegister(TUIUserProfileControllerServiceProtocol, TUserProfileController)
-
-@interface TUserProfileController ()
+@interface TUserProfileController ()<TUIProfileCardDelegate>
 @property NSMutableArray<NSArray *> *dataList;
 @end
 
 @implementation TUserProfileController
-{
-    V2TIMUserFullInfo *_userFullInfo;
-    ProfileControllerAction _actionType;
-    TUIGroupPendencyCellData *_groupPendency;
-    TCommonPendencyCellData *_pendency;
-}
-
-@synthesize userFullInfo = _userFullInfo;
-@synthesize actionType = _actionType;
-@synthesize groupPendency = _groupPendency;
-@synthesize pendency = _pendency;
 
 - (instancetype)init
 {
@@ -70,7 +56,7 @@
     self.title = NSLocalizedString(@"ProfileDetails", nil); // @"详细资料";
     self.clearsSelectionOnViewWillAppear = YES;
 
-    [self.tableView registerClass:[TCommonTextCell class] forCellReuseIdentifier:@"TextCell"];
+    [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"CardCell"];
     [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
 
@@ -108,7 +94,7 @@
         [list addObject:({
             NSMutableArray *inlist = @[].mutableCopy;
             [inlist addObject:({
-                TCommonTextCellData *data = TCommonTextCellData.new;
+                TUICommonTextCellData *data = TUICommonTextCellData.new;
                 data.key = NSLocalizedString(@"FriendAddVerificationMessage",  nil); // @"验证消息";
                 if (self.pendency) {
                     data.value = self.pendency.addWording;
@@ -222,10 +208,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    TCommonCellData *data = self.dataList[indexPath.section][indexPath.row];
-    TCommonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
+    TUICommonCellData *data = self.dataList[indexPath.section][indexPath.row];
+    TUICommonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
     //如果是 profileCard 的话，添加委托。
-    if([cell isKindOfClass:[TUIProfileCardCell class]]){
+    if ([cell isKindOfClass:[TUIProfileCardCell class]]) {
         TUIProfileCardCell *cardCell = (TUIProfileCardCell *)cell;
         cardCell.delegate = self;
         cell = cardCell;
@@ -237,7 +223,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    TCommonCellData *data = self.dataList[indexPath.section][indexPath.row];
+    TUICommonCellData *data = self.dataList[indexPath.section][indexPath.row];
     return [data heightOfWidth:Screen_Width];
 }
 
@@ -249,7 +235,7 @@
  */
 - (void)onSendMessage
 {
-    TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
+    TUIChatConversationModel *data = [[TUIChatConversationModel alloc] init];
     data.conversationID = [NSString stringWithFormat:@"c2c_%@",self.userFullInfo.userID];
     data.userID = self.userFullInfo.userID;
     data.title = [self.userFullInfo showName];
@@ -296,7 +282,7 @@
     return [UIApplication sharedApplication].keyWindow;
 }
 
--(void)didSelectAvatar{
+- (void)didSelectAvatar {
     TUIAvatarViewController *image = [[TUIAvatarViewController alloc] init];
     image.avatarData.avatarUrl = [NSURL URLWithString:self.userFullInfo.faceURL];
     NSArray *list = self.dataList;
@@ -308,7 +294,7 @@
 /**
  *  点击头像查看大图的委托实现
  */
--(void)didTapOnAvatar:(TUIProfileCardCell *)cell{
+- (void)didTapOnAvatar:(TUIProfileCardCell *)cell {
     TUIAvatarViewController *image = [[TUIAvatarViewController alloc] init];
     image.avatarData = cell.cardData;
     [self.navigationController pushViewController:image animated:YES];

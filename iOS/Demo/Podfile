@@ -9,7 +9,8 @@ target 'TUIKitDemo' do
   use_modular_headers!
 
   # Pods for Example
-  pod 'TXIMSDK_TUIKit_iOS'
-  pod 'TXIMSDK_TUIKit_live_iOS'
+  pod 'TXIMSDK_TUIKit_iOS', '5.7.1435'
+  pod 'TXIMSDK_TUIKit_live_iOS', '5.7.1435'
+  pod 'TUICalling', '9.2'
   pod 'MJRefresh'
 end
