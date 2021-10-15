@@ -1080,6 +1080,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
+					"ENABLECALL=1",
 					"ENABLELIVE=1",
 					"PUBLISHGIT=1",
 				);
@@ -1244,6 +1245,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
+					"ENABLECALL=1",
 					"ENABLELIVE=1",
 					"PUBLISHGIT=1",
 				);
@@ -1297,6 +1299,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
+					"ENABLECALL=1",
 					"ENABLELIVE=1",
 					"PUBLISHGIT=1",
 				);

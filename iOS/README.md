@@ -64,11 +64,11 @@
 
 ## 步骤4：编译运行（全部功能）
 1. 终端执行以下命令，检查 pod 版本。
-```
+```objectivec
 pod --version
 ```
   如果提示 pod 不存在，或者 pod 版本小于 1.7.5，请执行以下命令安装最新 pod。
-```
+```objectivec
 //更换源
 gem sources --remove https://rubygems.org/
 gem sources --add https://gems.ruby-china.com/
@@ -90,20 +90,34 @@ pod repo update
 ```
 4. 进入 iOS/Demo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
 
-## 步骤5：编译运行（移除音视频通话和群直播）
-如果不想集成音视频相关的功能，请您按照下面的步骤移除对音视频的依赖，再编译运行。
+## 步骤5：编译运行（移除音视频通话功能）
+如果您不想集成音视频通话功能，可以按照下面的步骤移除:
+1. 进入 iOS/Demo 文件夹，修改 `Podfile` 文件，屏蔽 `TUICalling` pod  集成，然后执行 `pod install` 命令。
+```
+  pod 'TXIMSDK_TUIKit_iOS'
+#  pod 'TUICalling' （不需要再集成该库）
+```
 
-1. 进入 iOS/Demo 文件夹，修改 `Podfile` 文件，屏蔽 `TXIMSDK_TUIKit_live_iOS` 和 `TUICalling`pod  集成，然后执行 `pod install` 命令。
+2. 进入 `TUIKitDemo` 的 `Building Setting` 界面，设置 `ENABLECALL` 为 0，关闭音视频通话相关逻辑。
+![](https://main.qcloudimg.com/raw/d03964a3a8949609036c70973157f341.png)
+
+## 步骤6：编译运行（移除群直播功能）
+如果您不想集成群直播功能，可以按照下面的步骤移除:
+1. 进入 iOS/Demo 文件夹，修改 `Podfile` 文件，屏蔽 `TXIMSDK_TUIKit_live_iOS` pod  集成，然后执行 `pod install` 命令。
 ```
   pod 'TXIMSDK_TUIKit_iOS'
 #  pod 'TXIMSDK_TUIKit_live_iOS' （不需要再集成该库）
-#  pod 'TUICalling' （不需要再集成该库）
 ```
 
 2. 打开 `TUIKitDemo.xcworkspace` 工程，手动删除 `Scenes` 文件夹。
 ![](https://main.qcloudimg.com/raw/4215baa0f812d87ab86e02cc09754e9d.png)
 
-3. 进入 `TUIKitDemo` 的 `Building Setting` 界面，设置 `ENABLELIVE` 为 0，关闭音视频相关逻辑。
+3. 进入 `TUIKitDemo` 的 `Building Setting` 界面，设置 `ENABLELIVE` 为 0，关闭群直播相关逻辑。
 ![](https://main.qcloudimg.com/raw/56d471f8fb414d11a274f1a7c9e311c0.png)
 
-4. 编译运行。
+## 步骤7：编译运行（移除搜索功能）
+如果您不想集成搜索功能，可以通过代码设置屏蔽搜索功能:
+```objectivec
+TUIConversationListController *conv = [[TUIConversationListController alloc] init];
+conv.isEnableSearch = NO;
+```

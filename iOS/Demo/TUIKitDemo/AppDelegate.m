@@ -22,10 +22,13 @@
 #import "GenerateTestUserSig.h"
 #import "TUILoginCache.h"
 
+#if ENABLECALL
+#import "TRTCSignalFactory.h"
+#endif
+
 #if ENABLELIVE
 #import "TUILiveSceneViewController.h"
 #import "TUIKitLive.h"
-#import "TRTCSignalFactory.h"
 #import "TXLiveBase.h"
 #endif
 
@@ -419,7 +422,7 @@ void loggerFunc(QAPMLoggerLevel level, const char* log) {
             [self onReceiveNomalMsgAPNs];
         }
     }
-#if ENABLELIVE
+#if ENABLECALL
     // action : 2 音视频通话推送
     else if ([action intValue] == APNs_Business_Call) {
         // 单聊中的音视频邀请推送不需处理，APP 启动后，TUIkit 会自动处理
