@@ -27,7 +27,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload() {
-    wx.$TUIKit.off(wx.$TUIKitEvent.SDK_READY, this.onConversationListUpdated)
+    wx.$TUIKit.off(wx.$TUIKitEvent.CONVERSATION_LIST_UPDATED, this.onConversationListUpdated)
   },
 
   handleRoute(event) {
