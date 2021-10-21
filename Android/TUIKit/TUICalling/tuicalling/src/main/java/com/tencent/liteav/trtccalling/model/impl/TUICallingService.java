@@ -76,7 +76,7 @@ final class TUICallingService implements ITUIService, ITUIExtension, TUICallingM
     }
 
     @Override
-    public Map<String, Object> onGetExtensionInfo(String key, Map<String, Object> param) {
+    public Map<String, Object> onGetExtensionInfo(final String key, Map<String, Object> param) {
         Log.d(TAG, String.format("onGetExtensionInfo, key=%s, param=%s", key, null == param ? "" : param.toString()));
         Context inflateContext = (Context) param.get(TUIConstants.TUIChat.CONTEXT);
         if (inflateContext == null) {
@@ -97,7 +97,7 @@ final class TUICallingService implements ITUIService, ITUIExtension, TUICallingM
             ((TextView) unitView.findViewById(R.id.textView)).setText(inflateContext.getString(R.string.trtccalling_video_call));
             actionId = TUIConstants.TUICalling.ACTION_ID_VIDEO_CALL;
         }
-        String chatId = (String) param.get(TUIConstants.TUIChat.CHAT_ID);
+        final String chatId = (String) param.get(TUIConstants.TUIChat.CHAT_ID);
         int chatType = (int) param.get(TUIConstants.TUIChat.CHAT_TYPE);
         if (chatType == V2TIMConversation.V2TIM_GROUP) {
             unitView.setClickable(false);

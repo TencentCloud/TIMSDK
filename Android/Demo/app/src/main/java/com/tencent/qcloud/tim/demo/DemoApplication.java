@@ -31,7 +31,7 @@ import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 
-import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -39,24 +39,15 @@ import com.xiaomi.mipush.sdk.MiPushClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 public class DemoApplication extends Application {
 
     private static final String TAG = DemoApplication.class.getSimpleName();
-
-    private final String licenseUrl = "";
-    private final String licenseKey = "";
 
     private static DemoApplication instance;
 
     public static DemoApplication instance() {
         return instance;
     }
-
-    public static boolean isSceneEnable = false;
-    public static int testEnvironment = 0;
 
     @Override
     public void onCreate() {
@@ -76,7 +67,7 @@ public class DemoApplication extends Application {
          * @param sdkAppID 您在腾讯云注册应用时分配的sdkAppID
          * @param configs  TUIKit的相关配置项，一般使用默认即可，需特殊配置参考API文档
          */
-        TUIKit.init(this, GenerateTestUserSig.SDKAPPID, null, null);
+        TUIUtils.init(this, GenerateTestUserSig.SDKAPPID, null, null);
         HeytapPushManager.init(this, true);
         if (BrandUtil.isBrandXiaoMi()) {
             // 小米离线推送
@@ -121,7 +112,6 @@ public class DemoApplication extends Application {
         }
 
         registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
-        initSceneManager();
         initLoginStatusListener();
     }
 
@@ -252,16 +242,4 @@ public class DemoApplication extends Application {
 
         }
     }
-
-    private void initSceneManager() {
-        try {
-            Class<?> classz = Class.forName("com.tencent.qcloud.tim.demo.scenes.SceneManager");
-            Method method = classz.getMethod("init", DemoApplication.class, String.class, String.class);
-            method.invoke(null, instance, licenseUrl, licenseKey);
-            isSceneEnable = true;
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            DemoLog.e(TAG, "initTUIKitLive error: " + e.getMessage());
-        }
-    }
-
 }

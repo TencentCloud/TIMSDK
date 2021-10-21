@@ -476,8 +476,8 @@ public class TUIGroupCallAudioView extends BaseTUICallView {
         int squareWidth = getResources().getDimensionPixelOffset(R.dimen.trtccalling_small_image_size);
         int leftMargin = getResources().getDimensionPixelOffset(R.dimen.trtccalling_small_image_left_margin);
         for (int index = 0; index < mOtherInvitingUserInfoList.size() && index < MAX_SHOW_INVITING_USER; index++) {
-            UserModel userModel = mOtherInvitingUserInfoList.get(index);
-            ImageView imageView = new ImageView(mContext);
+            final UserModel userModel = mOtherInvitingUserInfoList.get(index);
+            final ImageView imageView = new ImageView(mContext);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(squareWidth, squareWidth);
             if (index != 0) {
                 layoutParams.leftMargin = leftMargin;

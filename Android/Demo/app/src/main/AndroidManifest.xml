@@ -80,14 +80,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.tencent.qcloud.tim.demo.scenes.LiveRoomAnchorActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity android:name="com.tencent.qcloud.tim.demo.scenes.LiveRoomAudienceActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"/>
-
         <activity
             android:name="com.tencent.qcloud.tim.demo.login.LoginForDevActivity"
             android:launchMode="singleTask"

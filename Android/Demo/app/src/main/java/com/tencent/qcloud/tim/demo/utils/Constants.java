@@ -18,27 +18,4 @@ public class Constants {
 
     public static final String IM_PRIVACY_PROTECTION = "https://web.sdk.qcloud.com/document/Tencent-IM-Privacy-Protection-Guidelines.html";
     public static final String IM_USER_AGREEMENT = "https://web.sdk.qcloud.com/document/Tencent-IM-User-Agreement.html";
-
-    // 公有云正式环境
-    public static final int TEST_ENVIRONMENT_PUBLIC = 0;
-    // 公有云测试环境
-    public static final int TEST_ENVIRONMENT_PUBLIC_TEST = 1;
-    // 私有化正式环境
-    public static final int TEST_ENVIRONMENT_PRIVATE = 2;
-    // 私有化测试环境
-    public static final int TEST_ENVIRONMENT_PRIVATE_TEST = 3;
-    // 新加坡正式环境
-    public static final int TEST_ENVIRONMENT_SINGAPORE = 4;
-    // 新加坡测试环境
-    public static final int TEST_ENVIRONMENT_SINGAPORE_TEST = 5;
-    // 韩国正式环境
-    public static final int TEST_ENVIRONMENT_KOREA = 6;
-    // 韩国测试环境
-    public static final int TEST_ENVIRONMENT_KOREA_TEST = 7;
-    // 德国正式环境
-    public static final int TEST_ENVIRONMENT_GERMANY = 8;
-    // 德国测试环境
-    public static final int TEST_ENVIRONMENT_GERMANY_TEST = 9;
-    // 自定义私有云环境
-    public static final int TEST_ENVIRONMENT_CUSTOME = 10;
 }

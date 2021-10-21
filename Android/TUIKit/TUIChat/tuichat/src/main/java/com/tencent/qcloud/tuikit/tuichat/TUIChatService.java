@@ -265,7 +265,6 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
     private void initCustomFace() {
         chatConfig = TUIChatConfigs.getConfigs();
         CustomFaceConfig config = new CustomFaceConfig();
-
         chatConfig.setCustomFaceConfig(config);
         FaceManager.loadFaceFiles();
     }

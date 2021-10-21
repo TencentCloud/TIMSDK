@@ -13,7 +13,7 @@ import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.thirdpush.OfflineMessageDispatcher;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
@@ -51,7 +51,7 @@ public class SplashActivity extends Activity {
     }
 
     private void login() {
-        TUIKit.login(mUserInfo.getUserId(), mUserInfo.getUserSig(), new V2TIMCallback() {
+        TUIUtils.login(mUserInfo.getUserId(), mUserInfo.getUserSig(), new V2TIMCallback() {
             @Override
             public void onError(final int code, final String desc) {
                 runOnUiThread(new Runnable() {

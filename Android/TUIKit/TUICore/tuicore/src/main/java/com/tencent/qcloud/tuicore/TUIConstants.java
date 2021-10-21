@@ -19,6 +19,7 @@ public final class TUIConstants {
         // 新版本的会议（Meeting）等同于旧版本的聊天室（ChatRoom）
         public static final String TYPE_CHAT_ROOM = "ChatRoom";
         public static final String TYPE_MEETING = "Meeting";
+        public static final String TYPE_COMMUNITY = "Community";
     }
 
     /**

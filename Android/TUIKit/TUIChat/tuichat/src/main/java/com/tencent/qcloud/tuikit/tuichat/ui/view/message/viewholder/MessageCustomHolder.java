@@ -88,8 +88,6 @@ public class MessageCustomHolder extends MessageContentHolder implements ICustom
         // 欢迎消息
         if (TextUtils.equals(businessId, TUIChatConstants.BUSINESS_ID_CUSTOM_HELLO)) {
             drawCustomHelloMessage(msg, position);
-        } else if (TextUtils.equals(businessId, TUIConstants.TUILive.CUSTOM_MESSAGE_BUSINESS_ID)) { // 群直播消息
-            drawLiveMessage(msg, position);
         } else {
 
             // 因为recycleview的复用性，可能该holder回收后继续被custom类型的item复用
@@ -212,89 +210,6 @@ public class MessageCustomHolder extends MessageContentHolder implements ICustom
                 return false;
             }
         });
-    }
-
-    private void drawLiveMessage(MessageInfo messageInfo, int position) {
-        ViewGroup.LayoutParams msgContentLinearParams = msgContentLinear.getLayoutParams();
-        msgContentLinearParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        msgContentLinear.setLayoutParams(msgContentLinearParams);
-
-        LinearLayout.LayoutParams msgContentFrameParams = (LinearLayout.LayoutParams) msgContentFrame.getLayoutParams();
-        msgContentFrameParams.width = ScreenUtil.dip2px(220);
-        msgContentFrameParams.gravity = Gravity.RIGHT | Gravity.END;
-        msgContentFrame.setLayoutParams(msgContentFrameParams);
-        if (messageInfo.isSelf()) {
-            msgContentFrame.setBackgroundResource(R.drawable.chat_right_live_group_bg);
-        } else {
-            msgContentFrame.setBackgroundResource(R.drawable.chat_left_live_group_bg);
-        }
-        // 群直播消息不显示已读状态
-        isReadText.setVisibility(View.INVISIBLE);
-
-
-        String data = new String(messageInfo.getCustomElemData());
-        HashMap customJsonMap = new Gson().fromJson(data, HashMap.class);
-
-        if (customJsonMap == null) {
-            return;
-        }
-        String anchorName = (String) customJsonMap.get(TUIConstants.TUILive.ANCHOR_NAME);
-        String anchorId = (String) customJsonMap.get(TUIConstants.TUILive.ANCHOR_ID);
-        String roomName = (String) customJsonMap.get(TUIConstants.TUILive.ROOM_NAME);
-        Double roomStatus = (Double) customJsonMap.get(TUIConstants.TUILive.ROOM_STATUS);
-        int roomId = Double.valueOf(String.valueOf(customJsonMap.get(TUIConstants.TUILive.ROOM_ID))).intValue();
-        String roomCover = (String) customJsonMap.get(TUIConstants.TUILive.COVER_PIC);
-
-        // 把自定义消息view添加到TUIKit内部的父容器里
-        View view = LayoutInflater.from(TUIChatService.getAppContext()).inflate(R.layout.message_adapter_content_trtc, null, false);
-        addMessageContentView(view);
-
-        TextView textLiveName = view.findViewById(R.id.msg_tv_live_name);
-        TextView textStatus = view.findViewById(R.id.msg_tv_live_status);
-
-
-        if (!TextUtils.isEmpty(anchorName)) {
-            textLiveName.setText(TUIChatService.getAppContext().getString(R.string.live_group_user_live, anchorName));
-        } else if (!TextUtils.isEmpty(anchorId)) {
-            textLiveName.setText(TUIChatService.getAppContext().getString(R.string.live_group_user_live, anchorId));
-        } else {
-            textLiveName.setText(roomName);
-        }
-        if (roomStatus != null) {
-            textStatus.setText(roomStatus.intValue() == 1 ? getString(R.string.live_group_live_streaming) : getString(R.string.live_group_live_end));
-        }
-
-        view.setClickable(true);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HashMap<String, Object> param = new HashMap<>();
-                param.put(TUIConstants.TUILive.ROOM_NAME, roomName);
-                param.put(TUIConstants.TUILive.ROOM_ID, roomId);
-                param.put(TUIConstants.TUILive.GROUP_ID, messageInfo.getGroupId());
-                param.put(TUIConstants.TUILive.USE_CDN_PLAY, false);
-                param.put(TUIConstants.TUILive.ANCHOR_ID, anchorId);
-                param.put(TUIConstants.TUILive.PUSHER_NAME, anchorName);
-                param.put(TUIConstants.TUILive.COVER_PIC, roomCover);
-                param.put(TUIConstants.TUILive.PUSHER_AVATAR, roomCover);
-                TUICore.callService(TUIConstants.TUILive.SERVICE_NAME, TUIConstants.TUILive.METHOD_START_AUDIENCE, param);
-            }
-        });
-
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                OnItemLongClickListener onItemLongClickListener = getOnItemClickListener();
-                if (onItemLongClickListener != null) {
-                    onItemLongClickListener.onMessageLongClick(v, position, messageInfo);
-                }
-                return false;
-            }
-        });
-    }
-
-    private String getString(@StringRes int stringId) {
-        return TUIChatService.getAppContext().getString(stringId);
     }
 
 }

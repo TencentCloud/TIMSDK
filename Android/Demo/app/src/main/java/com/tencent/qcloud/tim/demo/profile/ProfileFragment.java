@@ -12,7 +12,7 @@ import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
-import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -46,7 +46,7 @@ public class ProfileFragment extends BaseFragment {
                         .setPositiveButton(getString(R.string.sure), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Thread logoutThread = new Thread(() -> TUIKit.logout(new V2TIMCallback() {
+                                Thread logoutThread = new Thread(() -> TUIUtils.logout(new V2TIMCallback() {
                                     @Override
                                     public void onSuccess() {
 
@@ -63,7 +63,7 @@ public class ProfileFragment extends BaseFragment {
                                 UserInfo.getInstance().setAutoLogin(false);
                                 Bundle bundle = new Bundle();
                                 bundle.putBoolean(TUIKitConstants.LOGOUT, true);
-                                TUIKit.startActivity("LoginForDevActivity", bundle);
+                                TUIUtils.startActivity("LoginForDevActivity", bundle);
                                 if (getActivity() != null) {
                                     getActivity().finish();
                                 }

@@ -19,8 +19,8 @@ import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.demo.utils.Utils;
-import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.demo.utils.PermissionUtils;
+import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 /**
@@ -48,7 +48,7 @@ public class LoginForDevActivity extends Activity {
         mUserAccount = findViewById(R.id.login_user);
         mUserAccount.setText(UserInfo.getInstance().getUserId());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        Utils.checkPermission(this);
+        PermissionUtils.checkPermission(this);
         mLoginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,7 +56,7 @@ public class LoginForDevActivity extends Activity {
                 // 获取userSig函数
                 String userSig = GenerateTestUserSig.genTestUserSig(mUserAccount.getText().toString());
                 UserInfo.getInstance().setUserSig(userSig);
-                TUIKit.login(mUserAccount.getText().toString(), userSig, new V2TIMCallback() {
+                TUIUtils.login(mUserAccount.getText().toString(), userSig, new V2TIMCallback() {
                     @Override
                     public void onError(final int code, final String desc) {
                         runOnUiThread(new Runnable() {
@@ -93,7 +93,7 @@ public class LoginForDevActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case Utils.REQ_PERMISSION_CODE:
+            case PermissionUtils.REQ_PERMISSION_CODE:
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     ToastUtil.toastLongMessage(getString(R.string.permission_tip));
                 }

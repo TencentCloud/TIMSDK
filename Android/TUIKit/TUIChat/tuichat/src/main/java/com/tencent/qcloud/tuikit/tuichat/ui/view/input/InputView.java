@@ -997,26 +997,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             });
             mInputMoreActionList.add(unit);
         }
-
-        Map<String, Object> liveExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_LIVE, param);
-        if (liveExtension != null) {
-            Integer icon = (Integer) liveExtension.get(TUIConstants.TUIChat.INPUT_MORE_ICON);
-            Integer title = (Integer) liveExtension.get(TUIConstants.TUIChat.INPUT_MORE_TITLE);
-            Integer id = (Integer) liveExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
-            InputMoreActionUnit unit = new InputMoreActionUnit();
-            unit.setActionId(id);
-            unit.setIconResId(icon);
-            unit.setTitleId(title);
-            unit.setPriority(0);
-            unit.setOnClickListener(unit.new OnActionClickListener() {
-                @Override
-                public void onClick() {
-                    onCustomActionClick(unit.getActionId());
-                }
-            });
-            mInputMoreActionList.add(unit);
-        }
-
     }
 
     private void onCustomActionClick(int id) {

@@ -142,6 +142,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
             }
         });
         setUserInfoListener();
+
     }
 
     private void setUserInfo(V2TIMUserFullInfo info) {
@@ -202,9 +203,7 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
                 return;
             }
 
-            int index = new Random().nextInt() % 10;
-            String avatarName = "avatar" + index + "_100";
-            mIconUrl = "https://imgcache.qq.com/qcloud/public/static/" + avatarName + ".20191230.png";
+            mIconUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
             updateProfile();
         } else if (v.getId() == R.id.modify_nick_name) {
             Bundle bundle = new Bundle();

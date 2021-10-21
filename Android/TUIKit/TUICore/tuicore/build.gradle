@@ -32,4 +32,5 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
     api 'com.tencent.imsdk:imsdk-plus:5.7.1435'
+//    api project(':imsdk-plus')
 }

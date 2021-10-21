@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
@@ -38,7 +38,7 @@ public class XiaomiMsgReceiver extends PushMessageReceiver {
 
         Bundle bundle = new Bundle();
         bundle.putString("ext", ext);
-        TUIKit.startActivity("MainActivity", bundle);
+        TUIUtils.startActivity("MainActivity", bundle);
     }
 
     @Override

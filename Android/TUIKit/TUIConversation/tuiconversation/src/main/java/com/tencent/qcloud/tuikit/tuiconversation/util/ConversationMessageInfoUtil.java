@@ -160,9 +160,6 @@ public class ConversationMessageInfoUtil {
         if (TextUtils.equals(businessId, "text_link")) {
             msgInfo.setMsgType(ConversationMessageInfo.MSG_TYPE_CUSTOM);
             msgInfo.setExtra(customJsonMap.get("text"));
-        } else if (TextUtils.equals(businessId, TUIConstants.TUILive.CUSTOM_MESSAGE_BUSINESS_ID)) { // 群直播消息
-            msgInfo.setMsgType(ConversationMessageInfo.MSG_TYPE_CUSTOM);
-            setLiveExtra(msgInfo, customJsonMap);
         } else if (signalingInfo != null) { // 信令消息
             try {
                 HashMap signalDataMap = gson.fromJson(signalingInfo.getData(), HashMap.class);
@@ -276,27 +273,6 @@ public class ConversationMessageInfoUtil {
         }
         messageInfo.setExtra(content);
     }
-
-    private static void setLiveExtra(ConversationMessageInfo messageInfo, HashMap customJsonMap) {
-        if (messageInfo == null || customJsonMap == null) {
-            return;
-        }
-        String content;
-        String anchorName = (String) customJsonMap.get("anchorName");
-        String anchorId = (String) customJsonMap.get("anchorId");
-        String roomName = (String) customJsonMap.get("roomName");
-
-        if (TextUtils.isEmpty(anchorName)) {
-            if (!TextUtils.isEmpty(anchorId)) {
-                anchorName = anchorId;
-            } else {
-                anchorName = roomName;
-            }
-        }
-        content = "[" + anchorName + TUIConversationService.getAppContext().getString(R.string.live) + "]";
-        messageInfo.setExtra(content);
-    }
-
 
     public static String getDisplayName(V2TIMMessage timMessage) {
         String displayName;

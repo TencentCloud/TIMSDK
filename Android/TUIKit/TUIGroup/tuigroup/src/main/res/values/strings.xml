@@ -33,6 +33,7 @@
     <string name="modify_icon_suc">Edited</string>
     <string name="chat_room">Chatroom</string>
     <string name="chat_room_tip">The request to join chat room is reviewed automatically. Unable to modify it.</string>
+    <string name="community_group">Community</string>
     <string name="dismiss_group_tip">Disband the group?</string>
     <string name="quit_group_tip">Leave the group?</string>
     <string name="private_group">Discussion Group</string>
