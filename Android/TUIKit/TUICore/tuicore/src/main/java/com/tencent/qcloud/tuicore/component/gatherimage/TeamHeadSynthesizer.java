@@ -40,7 +40,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
             if (!TextUtils.equals(getImageId(), targetID)) {
                 return;
             }
-            imageView.setImageBitmap(bitmap);
+            GlideEngine.loadUserIcon(imageView, bitmap);
         }
     };
 
@@ -259,7 +259,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
             if (imageId != null && !TextUtils.equals(imageId, currentImageId)) {
                 return;
             }
-            imageView.setImageResource(getDefaultImage());
+            GlideEngine.loadUserIcon(imageView, getDefaultImage());
             return;
         }
 

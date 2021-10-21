@@ -76,7 +76,7 @@ public class ChatProvider {
             @Override
             public void onError(int code, String desc) {
                 TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
-                TUIChatLog.e(TAG, "loadChatMessages getC2CHistoryMessageList failed, code = " + code + ", desc = " + desc);
+                TUIChatLog.e(TAG, "loadChatMessages getGroupHistoryMessageList failed, code = " + code + ", desc = " + desc);
             }
 
             @Override

@@ -56,6 +56,7 @@
     <string name="start_conversation">New Chat</string>
     <string name="create_group_chat">Create Group Chat</string>
     <string name="create_chat_room">Create Chat Room</string>
+    <string name="create_community">Create Community</string>
     <string name="create_private_group">Create Discussion Group</string>
     <string name="hint_add_user_id">Enter ID</string>
     <string name="hint_add_wording">Enter verification message</string>

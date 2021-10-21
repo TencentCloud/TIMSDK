@@ -143,6 +143,7 @@ public class TUIConversationFragment extends BaseFragment {
         action.setIconResId(R.drawable.group_icon);
         action.setActionClickListener(popActionClickListener);
         menuActions.add(action);
+
         mMenu.setMenuAction(menuActions);
     }
 

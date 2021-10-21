@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.util.AttributeSet;
 import android.view.View;
@@ -46,6 +47,10 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
         CustomLinearLayoutManager linearLayoutManager = new CustomLinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         setLayoutManager(linearLayoutManager);
+        SimpleItemAnimator animator = (SimpleItemAnimator) getItemAnimator();
+        if (animator != null) {
+            animator.setSupportsChangeAnimations(false);
+        }
     }
 
     @Override

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/live_voice_room_ic_msg_on" android:state_activated="true" android:state_selected="true" />
-    <item android:drawable="@drawable/live_voice_room_ic_msg_off" android:state_activated="true" android:state_selected="false" />
-    <item android:drawable="@drawable/live_voice_room_ic_msg_off" android:state_activated="false" />
-</selector>

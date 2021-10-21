@@ -50,6 +50,9 @@ import com.tencent.trtc.TRTCCloud;
 import com.tencent.trtc.TRTCCloudDef;
 import com.tencent.trtc.TRTCCloudListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -252,6 +255,7 @@ public class TRTCCallingImpl extends TRTCCalling {
             if (inviteID.equals(mCurCallID)) {
                 playHangupMusic();
                 stopCall();
+                exitRoom();
                 if (mTRTCInternalListenerManager != null) {
                     mTRTCInternalListenerManager.onCallingCancel();
                 }
@@ -331,11 +335,13 @@ public class TRTCCallingImpl extends TRTCCalling {
 
     private boolean isCallingData(SignallingData signallingData) {
         String businessId = signallingData.getBusinessID();
-        //如果是老版本直接反馈true
+        // 判断新/旧版信令
         if (!isNewSignallingVersion(signallingData)) {
-            if (!TextUtils.isEmpty(businessId)) { // 旧版calling信令不包括businessId字段
+            if (!TextUtils.isEmpty(businessId)) {
+                // 是旧版信令，但不是calling信令，则返回false。（备注：旧版calling信令不包括businessId字段）
                 return false;
             }
+            // 是旧版calling信令，则返回true
             return true;
         }
         return CallModel.VALUE_BUSINESS_ID.equals(businessId);
@@ -1021,6 +1027,7 @@ public class TRTCCallingImpl extends TRTCCalling {
         mTRTCCloud.setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER);
         mTRTCCloud.startLocalAudio();
         // 收到来电，开始监听 trtc 的消息
+        setFramework(5);
         mTRTCCloud.setListener(mTRTCCloudListener);
         mTRTCCloud.enterRoom(TRTCParams, mCurCallType == TRTCCalling.TYPE_VIDEO_CALL ? TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL : TRTCCloudDef.TRTC_APP_SCENE_AUDIOCALL);
     }
@@ -1837,5 +1844,18 @@ public class TRTCCallingImpl extends TRTCCalling {
             }
         }
         return false;
+    }
+
+    private void setFramework(int framework) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("api", "setFramework");
+            JSONObject params = new JSONObject();
+            params.put("framework", framework);
+            jsonObject.put("params", params);
+            mTRTCCloud.callExperimentalAPI(jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -149,12 +149,16 @@ public class GroupInfoAdapter extends BaseAdapter {
                 } else {
                     shootMemberCount = members.size() > NORMAL_CHATROOM_MAX_LIMIT ? NORMAL_CHATROOM_MAX_LIMIT : members.size();
                 }
+            } else if (TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_COMMUNITY)) {
+                shootMemberCount = members.size();
             }
+
             for (int i = 0; i < shootMemberCount; i++) {
                 mGroupMembers.add(members.get(i));
             }
             if (TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_PRIVATE)
-                    || TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_WORK)) {
+                    || TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_WORK)
+                    || TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_COMMUNITY)) {
                 // 公开群/聊天室 只有APP管理员可以邀请他人入群
                 GroupMemberInfo add = new GroupMemberInfo();
                 add.setMemberType(ADD_TYPE);

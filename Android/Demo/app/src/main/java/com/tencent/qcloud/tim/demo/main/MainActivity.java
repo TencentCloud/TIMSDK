@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.gson.Gson;
 import com.heytap.msp.push.HeytapPushManager;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
@@ -20,10 +21,10 @@ import com.huawei.hms.common.ApiException;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.demo.TUIKitLiveListenerManager;
+import com.tencent.qcloud.tim.demo.bean.CallModel;
 import com.tencent.qcloud.tim.demo.bean.OfflineMessageBean;
-import com.tencent.qcloud.tim.demo.component.interfaces.IBaseLiveListener;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
 import com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService;
 import com.tencent.qcloud.tim.demo.thirdpush.OPPOPushImpl;
@@ -32,8 +33,9 @@ import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
-import com.tencent.qcloud.tim.uikit.TUIKit;
+import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.ui.pages.TUIContactFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.page.TUIConversationFragment;
 import com.vivo.push.IPushActionListener;
@@ -42,8 +44,6 @@ import com.vivo.push.PushClient;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tencent.qcloud.tim.demo.DemoApplication.isSceneEnable;
-
 public class MainActivity extends BaseLightActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -51,7 +51,6 @@ public class MainActivity extends BaseLightActivity {
     private TextView mConversationBtn;
     private TextView mContactBtn;
     private TextView mProfileSelfBtn;
-    private TextView mScenesBtn;
     private TextView mMsgUnread;
     private View mLastTab;
 
@@ -129,16 +128,11 @@ public class MainActivity extends BaseLightActivity {
         mConversationBtn = findViewById(R.id.conversation);
         mContactBtn = findViewById(R.id.contact);
         mProfileSelfBtn = findViewById(R.id.mine);
-        mScenesBtn = findViewById(R.id.scenes);
         mMsgUnread = findViewById(R.id.msg_total_unread);
 
         fragments = new ArrayList<>();
         fragments.add(new TUIConversationFragment());
         fragments.add(new TUIContactFragment());
-        IBaseLiveListener baseLiveListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
-        if (baseLiveListener != null) {
-            fragments.add(baseLiveListener.getSceneFragment());
-        }
         fragments.add(new ProfileFragment());
 
         mainViewPager = findViewById(R.id.view_pager);
@@ -160,19 +154,6 @@ public class MainActivity extends BaseLightActivity {
             tabClick(tmp);
             mLastTab = tmp;
         }
-        initScene();
-    }
-
-    private void initScene() {
-        View sceneBtn = findViewById(R.id.scenes_btn_group);
-        if (!isSceneEnable) {
-            if (sceneBtn == null) {
-                return;
-            }
-            sceneBtn.setVisibility(View.GONE);
-        }
-        // 屏蔽直播大厅入口
-        sceneBtn.setVisibility(View.GONE);
     }
 
     public void tabClick(View view) {
@@ -193,15 +174,6 @@ public class MainActivity extends BaseLightActivity {
                 mainViewPager.setCurrentItem(1, false);
                 mContactBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.contact_selected), null, null);
-                break;
-            case R.id.scenes_btn_group:
-                if (fragments.size() != 4) {
-                    return;
-                } else {
-                    mainViewPager.setCurrentItem(2, false);
-                }
-                mScenesBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                mScenesBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.live_selected), null, null);
                 break;
             case R.id.myself_btn_group:
                 if (fragments.size() != 4) {
@@ -225,8 +197,6 @@ public class MainActivity extends BaseLightActivity {
         mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.contact_normal), null, null);
         mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
         mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_normal), null, null);
-        mScenesBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-        mScenesBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.live_normal), null, null);
     }
 
 
@@ -298,7 +268,7 @@ public class MainActivity extends BaseLightActivity {
             if (getIntent() != null && getIntent().getExtras() != null) {
                 bundle.putAll(getIntent().getExtras());
             }
-            TUIKit.startActivity("SplashActivity", bundle);
+            TUIUtils.startActivity("SplashActivity", bundle);
             finish();
             return;
         }
@@ -315,12 +285,25 @@ public class MainActivity extends BaseLightActivity {
                 if (TextUtils.isEmpty(bean.sender)) {
                     return;
                 }
-                TUIKit.startChat(bean.sender, bean.nickname, bean.chatType);
+                TUIUtils.startChat(bean.sender, bean.nickname, bean.chatType);
             } else if (bean.action == OfflineMessageBean.REDIRECT_ACTION_CALL) {
-                IBaseLiveListener baseCallListener = TUIKitLiveListenerManager.getInstance().getBaseCallListener();
-                if (baseCallListener != null) {
-                    baseCallListener.handleOfflinePushCall(bean);
-                }
+                handleOfflinePushCall(bean);
+            }
+        }
+    }
+
+    void handleOfflinePushCall(OfflineMessageBean bean) {
+        if (bean == null || bean.content == null) {
+            return;
+        }
+        final CallModel model = new Gson().fromJson(bean.content, CallModel.class);
+        DemoLog.i(TAG, "bean: " + bean + " model: " + model);
+        if (model != null) {
+            long timeout = V2TIMManager.getInstance().getServerTime() - bean.sendTime;
+            if (timeout >= model.timeout) {
+                ToastUtil.toastLongMessage(DemoApplication.instance().getString(R.string.call_time_out));
+            } else {
+                TUIUtils.startCall(bean.sender, bean.content);
             }
         }
     }

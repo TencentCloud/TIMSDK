@@ -1,8 +1,5 @@
 include ':app'
 
-include ':tuikit'
-project(':tuikit').projectDir = new File(settingsDir, '../TUIKit/TUIKit')
-
 include ':tuicore'
 project(':tuicore').projectDir = new File(settingsDir, '../TUIKit/TUICore/tuicore')
 
@@ -23,5 +20,3 @@ project(':tuigroup').projectDir = new File(settingsDir, '../TUIKit/TUIGroup/tuig
 
 include ':tuicalling'
 project(':tuicalling').projectDir = new File(settingsDir, '../TUIKit/TUICalling/tuicalling')
-
-include ':tuilive'

@@ -31,6 +31,7 @@
     <string name="modify_icon_suc">修改群头像成功</string>
     <string name="chat_room">聊天室</string>
     <string name="chat_room_tip">加入聊天室为自动审批，暂不支持修改</string>
+    <string name="community_group">社区</string>
     <string name="dismiss_group_tip">您确认解散该群?</string>
     <string name="quit_group_tip">您确认退出该群？</string>
     <string name="private_group">讨论组</string>

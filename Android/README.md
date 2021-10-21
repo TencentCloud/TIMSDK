@@ -67,9 +67,9 @@
 用 Android Studio 导入工程直接编译运行即可。
 
 ## 步骤5：编译运行（移除音视频通话）
-如果您不需要音视频通话功能，只需要在 `tuikit 模块` 的 `build.gradle` 文件中删除音视频通话模块集成代码即可：
+如果您不需要音视频通话功能，只需要在 `app 模块` 的 `build.gradle` 文件中删除音视频通话模块集成代码即可：
 
-![](https://main.qcloudimg.com/raw/02f15bac5324805f327a78587c143aab.jpeg)
+![](https://qcloudimg.tencent-cloud.cn/raw/165720d20832f59f1060f58744f05df3.jpeg)
 
 ```groovy
 api project(':tuicalling')
@@ -78,19 +78,10 @@ api project(':tuicalling')
 
 <img src="https://main.qcloudimg.com/raw/24fa3b50325f158489fda04556c79329.png" width="500"/>
 
-## 步骤6：编译运行（移除群直播）
-如果不想集成群直播相关的功能，请您按照下面的步骤移除对群直播的依赖，再编译运行。
+## 步骤6：编译运行（移除搜索模块）
+如果您不需要搜索功能，那么只需要在 `app 模块` 的 `build.gradle` 文件中删除下面一行即可：
 
-1. 进入 `Android/Demo/app` 文件夹，修改 `build.gradle` 文件，删除 `implementation project(':tuilive')` 那一行，然后重新同步一下工程。
-![](https://main.qcloudimg.com/raw/be6032d58731ff300851d0e39712e013.png)
-2. 打开 `Android/Demo/app/src/main/java/com/tencent/qcloud/tim/demo` 文件夹，手动删除其中的 `scenes` 文件夹。
-![](https://main.qcloudimg.com/raw/7c316a2111528c76efaa0a499cd6de14.png)
-3. 编译运行。
-
-## 步骤7：编译运行（移除搜索模块）
-如果您不需要搜索功能，那么只需要在 `tuikit 模块` 的 `build.gradle` 文件中删除下面一行即可：
-
-![](https://main.qcloudimg.com/raw/a12b6d6cc98b39a3eab5e101fee9dd0e.jpeg)
+![](https://qcloudimg.tencent-cloud.cn/raw/571213fddf6c70354dd6f01b05d29e2f.jpeg)
 
 ```groovy
 api project(':tuisearch')
