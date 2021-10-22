@@ -1,13 +1,10 @@
 PODS:
-  - lottie-ios (2.5.3)
   - Masonry (1.1.0)
-  - MJExtension (3.2.2)
   - MJRefresh (3.7.2)
   - ReactiveObjC (3.1.1)
   - SDWebImage (5.9.0):
     - SDWebImage/Core (= 5.9.0)
   - SDWebImage/Core (5.9.0)
-  - SSZipArchive (2.2.3)
   - TUICalling (9.2):
     - Masonry
     - TUICalling/TRTC (= 9.2)
@@ -173,43 +170,23 @@ PODS:
   - TUISearch/UI (5.7.1435):
     - TUISearch/DataProvider
   - TXIMSDK_Plus_iOS (5.7.1435)
-  - TXIMSDK_TUIKit_iOS (5.7.1435):
-    - TUIChat (= 5.7.1435)
-    - TUIContact (= 5.7.1435)
-    - TUIConversation (= 5.7.1435)
-    - TUIGroup (= 5.7.1435)
-    - TUISearch (= 5.7.1435)
-  - TXIMSDK_TUIKit_live_iOS (5.7.1435):
-    - lottie-ios (= 2.5.3)
-    - Masonry (= 1.1.0)
-    - MJExtension (= 3.2.2)
-    - SSZipArchive (= 2.2.3)
-    - TXIMSDK_TUIKit_iOS (= 5.7.1435)
-    - TXIMSDK_TUIKit_live_iOS/TRTC (= 5.7.1435)
-  - TXIMSDK_TUIKit_live_iOS/TRTC (5.7.1435):
-    - lottie-ios (= 2.5.3)
-    - Masonry (= 1.1.0)
-    - MJExtension (= 3.2.2)
-    - SSZipArchive (= 2.2.3)
-    - TXIMSDK_TUIKit_iOS (= 5.7.1435)
-    - TXLiteAVSDK_TRTC (= 9.2.10637)
   - TXLiteAVSDK_TRTC (9.2.10637)
 
 DEPENDENCIES:
   - MJRefresh
   - TUICalling (= 9.2)
-  - TXIMSDK_TUIKit_iOS (= 5.7.1435)
-  - TXIMSDK_TUIKit_live_iOS (= 5.7.1435)
+  - TUIChat (= 5.7.1435)
+  - TUIContact (= 5.7.1435)
+  - TUIConversation (= 5.7.1435)
+  - TUIGroup (= 5.7.1435)
+  - TUISearch (= 5.7.1435)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - lottie-ios
     - Masonry
-    - MJExtension
     - MJRefresh
     - ReactiveObjC
     - SDWebImage
-    - SSZipArchive
     - TUICalling
     - TUIChat
     - TUIContact
@@ -218,18 +195,13 @@ SPEC REPOS:
     - TUIGroup
     - TUISearch
     - TXIMSDK_Plus_iOS
-    - TXIMSDK_TUIKit_iOS
-    - TXIMSDK_TUIKit_live_iOS
     - TXLiteAVSDK_TRTC
 
 SPEC CHECKSUMS:
-  lottie-ios: a50d5c0160425cd4b01b852bb9578963e6d92d31
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
-  MJExtension: d9b9c74cbdeb724c1e9ecbb157b318276e62e876
   MJRefresh: 30997d30b347c8e9508a4db11e3a690da0c9b85a
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 62ae4a18473520c67b79e9724c31a63599cc9423
-  SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   TUICalling: 9469815b75613fbe56cd4bf480dfc14d96c2b5c7
   TUIChat: b19d781228d43e4dd3de56c7759e170ef39fac61
   TUIContact: 87021efcdbf24116e72ca697c962d6578046441f
@@ -238,10 +210,8 @@ SPEC CHECKSUMS:
   TUIGroup: e655402d6deb05e6a6803c6dd537f8e50c95af50
   TUISearch: e0942183aaac69df68a625ef5ba2fda99dc16e9d
   TXIMSDK_Plus_iOS: 4b7c1097ea9899f7bf95fa90e2cb4471389f93dd
-  TXIMSDK_TUIKit_iOS: 6344745c565730b33d380e73f07c794956289759
-  TXIMSDK_TUIKit_live_iOS: 9309c0e565f3318f23518fd376b599f256a9590d
   TXLiteAVSDK_TRTC: 58e4dc8582a31c90deb3e8bf86242a7949a7903a
 
-PODFILE CHECKSUM: 4dbb23c00496c04e40f1b651621ead1f2bbbe547
+PODFILE CHECKSUM: 973c17f1cfff03f0b7bf45c34c9a5322438a6c5e
 
 COCOAPODS: 1.9.3

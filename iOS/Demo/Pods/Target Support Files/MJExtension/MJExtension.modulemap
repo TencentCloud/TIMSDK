@@ -1,6 +1,0 @@
-module MJExtension {
-  umbrella header "MJExtension-umbrella.h"
-
-  export *
-  module * { export * }
-}

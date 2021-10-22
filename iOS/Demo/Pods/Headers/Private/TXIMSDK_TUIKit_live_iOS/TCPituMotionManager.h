@@ -1,1 +1,0 @@
-../../../TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/BeautySettingPanel/TCBeautyPanel/Model/TCPituMotionManager.h

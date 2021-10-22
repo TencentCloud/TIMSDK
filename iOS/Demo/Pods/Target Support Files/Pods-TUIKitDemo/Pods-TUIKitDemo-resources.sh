@@ -107,13 +107,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "${PODS_ROOT}/TUICore/TUICore/Resources/TUIKitLocalizable.bundle"
   install_resource "${PODS_ROOT}/TUIGroup/TUIGroup/Resources/TUIGroup.bundle"
   install_resource "${PODS_ROOT}/TUISearch/TUISearch/Resources/TUISearch.bundle"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Resources/FilterResource.bundle"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Resources/TUILiveImages.xcassets"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/BeautySettingPanel/Resources/goodluck.mp4"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/BeautySettingPanel/Resources/Media.xcassets"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/TCAudioSettingKit.xcassets"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/en.lproj/AudioSettingPanelLocalizable.strings"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/zh-Hans.lproj/AudioSettingPanelLocalizable.strings"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle"
@@ -126,13 +119,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "${PODS_ROOT}/TUICore/TUICore/Resources/TUIKitLocalizable.bundle"
   install_resource "${PODS_ROOT}/TUIGroup/TUIGroup/Resources/TUIGroup.bundle"
   install_resource "${PODS_ROOT}/TUISearch/TUISearch/Resources/TUISearch.bundle"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Resources/FilterResource.bundle"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Resources/TUILiveImages.xcassets"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/BeautySettingPanel/Resources/goodluck.mp4"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/BeautySettingPanel/Resources/Media.xcassets"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/TCAudioSettingKit.xcassets"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/en.lproj/AudioSettingPanelLocalizable.strings"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/zh-Hans.lproj/AudioSettingPanelLocalizable.strings"
 fi
 if [[ "$CONFIGURATION" == "DailyBuild" ]]; then
   install_resource "${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle"
@@ -145,13 +131,6 @@ if [[ "$CONFIGURATION" == "DailyBuild" ]]; then
   install_resource "${PODS_ROOT}/TUICore/TUICore/Resources/TUIKitLocalizable.bundle"
   install_resource "${PODS_ROOT}/TUIGroup/TUIGroup/Resources/TUIGroup.bundle"
   install_resource "${PODS_ROOT}/TUISearch/TUISearch/Resources/TUISearch.bundle"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Resources/FilterResource.bundle"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Resources/TUILiveImages.xcassets"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/BeautySettingPanel/Resources/goodluck.mp4"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/BeautySettingPanel/Resources/Media.xcassets"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/TCAudioSettingKit.xcassets"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/en.lproj/AudioSettingPanelLocalizable.strings"
-  install_resource "${PODS_ROOT}/TXIMSDK_TUIKit_live_iOS/TUIKit_live/Classes/Common/UI/AudioSettingPanel/Resource/zh-Hans.lproj/AudioSettingPanelLocalizable.strings"
 fi
 
 mkdir -p "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
