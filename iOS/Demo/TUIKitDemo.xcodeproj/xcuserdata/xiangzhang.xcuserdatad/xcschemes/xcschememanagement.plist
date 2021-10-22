@@ -12,12 +12,12 @@
 		<key>publishToGit.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>21</integer>
+			<integer>17</integer>
 		</dict>
 		<key>pushservice.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>22</integer>
+			<integer>16</integer>
 		</dict>
 		<key>test (iOS).xcscheme_^#shared#^_</key>
 		<dict>

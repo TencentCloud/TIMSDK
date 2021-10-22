@@ -1,1 +1,0 @@
-../../../Target Support Files/TXIMSDK_TUIKit_iOS/TXIMSDK_TUIKit_iOS-umbrella.h

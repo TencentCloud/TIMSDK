@@ -2,8 +2,6 @@
 
 ## 下载地址
 
-[最新 TUIKit 下载](https://im.sdk.qcloud.com/download/tuikit/5.7.1435/TUIKit_iOS.zip)
-
 [最新 TUIChat 下载](https://im.sdk.qcloud.com/download/tuikit/5.7.1435/TUIChat_iOS.zip)
 
 [最新 TUIConversation 下载](https://im.sdk.qcloud.com/download/tuikit/5.7.1435/TUIConversation_iOS.zip)
