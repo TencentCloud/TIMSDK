@@ -1,0 +1,92 @@
+.t-conversation-item-container {
+  width: 100vw;
+  height: 150rpx;
+  background-color: #FFFFFF;
+}
+
+.t-conversation-item {
+  width: 100vw;
+  height: 150rpx;
+  display: flex;
+  left: 0;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  border-bottom: 2rpx solid #EEF0F3;
+}
+.avatar-box{
+  position: relative;
+  display: inline-flex;
+}
+.t-conversation-item-avatar{
+  position: relative;
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 14rpx;
+  /*padding-left: 40rpx;*/
+  /*padding-right: 24rpx;*/
+  /*padding-bottom: 28rpx;*/
+  /*padding-top: 28rpx;*/
+  margin: 0 16rpx;
+  overflow: auto;
+}
+.t-conversation-item-content {
+  max-width: 60%;
+  flex: 1;
+  padding-left: 20rpx;
+}
+.t-conversation-item-info {
+  line-height: 34rpx;
+  font-size: 24rpx;
+  color: #999999;
+  margin-right: 30rpx;
+}
+
+.t-error {
+  background-color: #fb5250;
+  color: #fff;
+}
+
+.t-conversation-delete {
+  width: 144rpx;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #E85454;
+  color: #FFFFFF;
+  line-height: 44rpx;
+  font-size: 32rpx;
+}
+
+.tui-conversation-item-name {
+  line-height: 53rpx;
+  font-size: 36rpx;
+  font-family: 'PingFangSC-Regular';
+  color: #333333;
+}
+
+.tui-conversation-lastMessage {
+  line-height: 40rpx;
+  font-size: 28rpx;
+  font-family: 'PingFangSC-Regular';
+  color: #999999;
+  max-width: 90%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.unread {
+  top: -10rpx;
+  right: 0rpx;
+  position: absolute;
+  padding: 0 10rpx;
+  height: 15px;
+  border-radius: 16rpx;
+  color: #ffffff;
+  background-color: red;
+}
+.read-text {
+  line-height: 15px;
+  font-size: 10px;
+}

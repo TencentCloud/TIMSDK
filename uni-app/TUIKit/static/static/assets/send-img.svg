@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>发送照片</title>
+    <desc>Created with Sketch.</desc>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="在线客服-更多功能" transform="translate(-110.000000, -568.000000)">
+            <g id="编组-17" transform="translate(110.000000, 568.000000)">
+                <g id="编组-9">
+                    <rect id="矩形备份" fill="#FFFFFF" x="0" y="0" width="64" height="64" rx="4"></rect>
+                    <path d="M43,21 C44.6568542,21 46,22.3431458 46,24 L46,24 L46,41 C46,42.6568542 44.6568542,44 43,44 L43,44 L21,44 C19.3431458,44 18,42.6568542 18,41 L18,41 L18,24 C18,22.3431458 19.3431458,21 21,21 L21,21 Z M43,23 L21,23 C20.4477153,23 20,23.4477153 20,24 L20,24 L20,35.005981 L26.0319192,31.9271194 L29.543,33.948 L36.9230783,28.9185728 L44,33.279 L44,24 C44,23.4871642 43.6139598,23.0644928 43.1166211,23.0067277 L43,23 Z M26,26 C27.1045695,26 28,26.8954305 28,28 C28,29.1045695 27.1045695,30 26,30 C24.8954305,30 24,29.1045695 24,28 C24,26.8954305 24.8954305,26 26,26 Z" id="形状结合" fill="#444444" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,12 @@
+/* miniprogram/webview/webview.wxss */
+.page{
+    background-color:#006EFF;
+}
+.webview{
+    background-color:white;
+    font-family: PingFangSC-Regular;
+    font-size: 16px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 24px;
+}
