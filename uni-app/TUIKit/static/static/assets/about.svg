@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>关于</title>
+    <desc>Created with Sketch.</desc>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1-个人中心" transform="translate(-28.000000, -436.000000)">
+            <g id="编组-16" transform="translate(28.000000, 436.000000)">
+                <g id="编组-4">
+                    <rect id="矩形" x="0" y="0" width="16" height="16"></rect>
+                    <circle id="椭圆形" stroke="#006EFF" stroke-width="2" cx="8" cy="8" r="7"></circle>
+                    <rect id="矩形" fill="#006EFF" opacity="0.4" x="7" y="4" width="2" height="2"></rect>
+                    <rect id="矩形备份-6" fill="#006EFF" opacity="0.4" x="7" y="7" width="2" height="5"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,17 @@
+{
+  "name": "云通信 IM",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "cos-wx-sdk-v5": "^1.0.10",
+    "tim-wx-sdk": "^2.15.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

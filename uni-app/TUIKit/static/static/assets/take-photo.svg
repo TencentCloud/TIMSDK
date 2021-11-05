@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>拍摄照片</title>
+    <desc>Created with Sketch.</desc>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="在线客服-更多功能" transform="translate(-20.000000, -568.000000)">
+            <g id="编组-16" transform="translate(20.000000, 568.000000)">
+                <g id="编组-8">
+                    <rect id="矩形" fill="#FFFFFF" x="0" y="0" width="64" height="64" rx="4"></rect>
+                    <path d="M35.763932,21 C36.5214761,21 37.2140024,21.4280048 37.5527864,22.1055728 L38.499,24 L44,24 C45.1045695,24 46,24.8954305 46,26 L46,42 C46,43.1045695 45.1045695,44 44,44 L20,44 C18.8954305,44 18,43.1045695 18,42 L18,26 C18,24.8954305 18.8954305,24 20,24 L25.5,24 L26.4472136,22.1055728 C26.7859976,21.4280048 27.4785239,21 28.236068,21 L35.763932,21 Z" id="形状结合" fill="#444444"></path>
+                    <circle id="椭圆形" stroke="#FFFFFF" stroke-width="2" cx="32" cy="34" r="5"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

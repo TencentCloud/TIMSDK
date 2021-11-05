@@ -1,0 +1,100 @@
+{
+	"pages": [
+		{
+			"path": "pages/TUI-Login/login",
+			"style": {}
+		},
+		{
+			"path": "pages/TUI-Index/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/TUI-Conversation/conversation/conversation",
+			"style": {
+				"navigationBarTitleText": "会话列表",
+				"navigationBarBackgroundColor": "#006EFF",
+				"backgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/TUI-Chat/chat",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/TUI-Conversation/create-conversation/create",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/TUI-User-Center/mine/mine",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/TUI-User-Center/about/about",
+			"style": {}
+		},
+		{
+			"path": "pages/TUI-User-Center/personal/personal",
+			"style": {}
+		},
+		{
+			"path": "pages/TUI-User-Center/cancel/cancel",
+			"style": {}
+		},
+		{
+			"path": "pages/TUI-User-Center/webview/webview",
+			"style": {}
+		},
+
+		{
+			"path": "pages/TUI-Group/create-group/create",
+			"style": {}
+		},
+		{
+			"path": "pages/TUI-Group/join-group/join",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}
+	],
+	"plugins": {
+		"myPlugin": {
+			"version": "1.0.0",
+			"provider": "wx649acbec87e200b4"
+		}
+	},
+	"tabBar": {
+		"list": [
+			{
+				"pagePath": "pages/TUI-Index/index",
+				"text": "首页",
+				"iconPath": "/static/static/images/homepage-normal.png",
+				"selectedIconPath": "/static/static/images/homepage-hover.png"
+			},
+			{
+				"pagePath": "pages/TUI-User-Center/mine/mine",
+				"text": "我的",
+				"iconPath": "/static/static/images/mine-normal.png",
+				"selectedIconPath": "/static/static/images/mine-hover.png"
+			}
+		]
+	},
+	"sitemapLocation": "sitemap.json",
+	"style": "v2",
+	"globalStyle": {
+		"backgroundColor": "#F6F6F6",
+		"backgroundTextStyle": "light",
+		"navigationBarBackgroundColor": "#F6F6F6",
+		"navigationBarTitleText": "TUIKit",
+		"navigationBarTextStyle": "black"
+	},
+	"subPackages": []
+}
