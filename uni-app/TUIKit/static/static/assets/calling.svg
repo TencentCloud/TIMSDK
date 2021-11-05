@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>实时通话</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#006EFF" offset="0%"></stop>
+            <stop stop-color="#006EFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="主页" transform="translate(-44.000000, -325.000000)">
+            <g id="编组-10" transform="translate(44.000000, 325.000000)">
+                <g id="编组-7">
+                    <rect id="矩形" x="0" y="0" width="48" height="48"></rect>
+                    <path d="M32.5,14 L42.2763932,33.5527864 C42.5233825,34.0467649 42.3231581,34.6474379 41.8291796,34.8944272 C41.6903242,34.9638549 41.5372111,35 41.381966,35 L23.618034,35 C23.0657492,35 22.618034,34.5522847 22.618034,34 C22.618034,33.8447549 22.6541791,33.6916418 22.7236068,33.5527864 L32.5,14 L32.5,14 Z" id="三角形" stroke="#006EFF" stroke-width="2" transform="translate(32.500000, 24.500000) rotate(-90.000000) translate(-32.500000, -24.500000) "></path>
+                    <rect id="矩形" fill="#FFFFFF" x="15" y="16" width="15" height="18"></rect>
+                    <rect id="矩形" stroke="#006EFF" stroke-width="2" x="6" y="11" width="25" height="27" rx="4"></rect>
+                    <rect id="矩形" fill="url(#linearGradient-1)" opacity="0.2" x="10" y="14" width="25" height="27" rx="2"></rect>
+                    <circle id="椭圆形" fill="#00C8DC" cx="13" cy="19" r="2"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
