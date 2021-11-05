@@ -3,10 +3,10 @@
 
 ### uni-app TUIKit  在线客服场景
 
-提供了示例客服群➕示例好友的基础模版，在线客服场景功能包括：
-- 支持发送文本消息、图片消息，语音消息、视频消息等常见消息。
-- 支持常用语，订单，服务评价等自定义消息。
-- 支持创建群聊会话，群成员管理等。
+提供了示例客服群 ➕ 示例好友的基础模版，在线客服场景功能包括：
+- 支持发送文本消息、图片消息、语音消息、视频消息等常见消息。
+- 支持常用语、订单、服务评价等自定义消息。
+- 支持创建群聊会话、群成员管理等。
 
 ### uni-app TUIKit 支持平台
 - 安卓
@@ -35,40 +35,49 @@
 - 1、下载 [HBuilderX 编辑器 ](https://www.dcloud.io/hbuilderx.html)
 
 >!
-> 项目中 HBuilderX 目前使用的最新版本，如果此前下载过 HBuilderX，为保证开发环境统一请更新到最新版本
+> 项目中 HBuilderX 目前使用的最新版本，如果此前下载过 HBuilderX，为保证开发环境统一请更新到最新版本。
 >
 
-- 2、[DCloud 开发者中心注册](https://dev.dcloud.net.cn/)
-之后登陆 HBuilderX 编辑器。
+- 2、[DCloud 开发者中心注册](https://dev.dcloud.net.cn/)之后登陆 HBuilderX 编辑器
 
 #### 步骤2：创建应用
 1. 登录 [即时通信 IM 控制台](https://console.cloud.tencent.com/im)。
->?如果您已有应用，请记录其 SDKAppID 并 [获取密钥信息](#step2)。
+>!如果您已有应用，请记录其 SDKAppID 并 [获取密钥信息](#step2)。
 >同一个腾讯云账号，最多可创建100个即时通信 IM 应用。若已有100个应用，您可以先 [停用并删除](https://cloud.tencent.com/document/product/269/32578#.E5.81.9C.E7.94.A8.2F.E5.88.A0.E9.99.A4.E5.BA.94.E7.94.A8) 无需使用的应用后再创建新的应用。**应用删除后，该 SDKAppID 对应的所有数据和服务不可恢复，请谨慎操作。**
 >
 2. 单击**+添加新应用**。
 3. 在**创建应用**对话框中输入您的应用名称，单击**确定**。
-  创建完成后，可在控制台总览页查看新建应用的状态、业务版本、SDKAppID、创建时间以及到期时间。请记录 SDKAppID 信息。
+  创建完成后，可在控制台总览页查看新建应用的状态、业务版本、SDKAppID、创建时间以及到期时间。
+  请记录 SDKAppID 信息。
+  
   ![](https://main.qcloudimg.com/raw/2753962b67754a9ebb2a2a5b8042f2ef.png)
 
-4. 获取密钥信息
-- 单击目标应用卡片，进入应用的基础配置页面，
+4. 获取密钥信息。
+- 单击目标应用卡片，进入应用的基础配置页面。
 - 在**基本信息**区域，单击**显示密钥**，复制并保存密钥信息。
 >!请妥善保管密钥信息，谨防泄露。
 
 
 #### 步骤3：下载并配置 uni-app TUIKit  源码
 
-1. 在【github地址】下载 uni-app TUIKit 代码
+1. 下载 uni-app TUIKit 代码。
 
-2. 将 uni-app TUIKit 工程文件，导入自己的 HBuilderX 工程（版本3.2.11.20211021-alpha）
+```javascript
+# 命令行执行
+git clone https://github.com/tencentyun/TIMSDK.git
+
+# 进入 uni-app TUIKit 项目
+cd TIMSDK/uni-app/TUIKit
+```
+
+2. 将 uni-app TUIKit 工程文件，导入自己的 HBuilderX 工程（版本3.2.11.20211021-alpha）。
 
      请参考官方 [uni-app 开发](https://uniapp.dcloud.io/quickstart-hx)
 
-3. 设置 GenerateTestUserSig 文件中的相关参数：
+3. 设置 GenerateTestUserSig 文件中的相关参数。
 
 - 找到并打开 `debug/GenerateTestUserSig.js` 文件。
-- 设置 `GenerateTestUserSig.js` 文件中的相关参数：
+- 设置 `GenerateTestUserSig.js` 文件中的相关参数。
   <ul><li>SDKAPPID：默认为0，请设置为实际的 SDKAppID。</li>
   <li>SECRETKEY：默认为空字符串，请设置为实际的密钥信息。</li></ul> 
   <img src="https://main.qcloudimg.com/raw/575902219de19b4f2d4595673fa755d4.png">
@@ -78,14 +87,14 @@
 >- 正确的 `UserSig` 签发方式是将 `UserSig` 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 `UserSig` 时由您的 App 向业务服务器发起请求获取动态 `UserSig`。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/647/17275#Server)。
 
 ####  步骤4：编译运行
-####  
+
  请参考官方 [uni-app 运行](https://uniapp.dcloud.io/quickstart-hx?id=%e8%bf%90%e8%a1%8cuni-app)
 
 ####  步骤5：打包发布
 
  请参考官方 [uni-app 打包](https://uniapp.dcloud.io/quickstart-hx?id=%e5%8f%91%e5%b8%83uni-app)
-- 1、原生App-云打包：HBuilderX 编辑器 → 发行 → 原生 App-云打包 （app图标，启动页等详细配置可在 manifest.json 进行配置）
-- 2、原生App-离线打包：HBuilderX 编辑器 → 发行 → 生成本地打包 App 资源 （详细打包方案请看 iOS、Android 本地打包指南。）
+- 原生App-云打包：HBuilderX 编辑器 → 发行 → 原生 App-云打包 （app图标，启动页等详细配置可在 manifest.json 进行配置）。
+- 原生App-离线打包：HBuilderX 编辑器 → 发行 → 生成本地打包 App 资源 （详细打包方案请看 iOS、Android 本地打包指南）。
 
 ### 常见问题
 
@@ -112,8 +121,8 @@
 	import TIM from 'tim-wx-sdk/tim-wx-friendship.js';
 ```
 >！
->- 1、请将im sdk 升级到 [2.15.0](https://cloud.tencent.com/document/product/269/38492)，该版本支持了iOS 语音播放
->- 2、若同步依赖过程中出现问题，请切换 npm 源后再次重试。
+>- 请将im sdk 升级到 [2.15.0](https://cloud.tencent.com/document/product/269/38492)，该版本支持了iOS 语音播放
+>- 若同步依赖过程中出现问题，请切换 npm 源后再次重试。
 ```javascript
 	切换 cnpm 源
 	>npm config set registry http://r.cnpmjs.org/
@@ -145,15 +154,17 @@
    <ul>   <li>通过本地起定时器记录时间，计算出 duration </li>
    <li>本地计算文件大小，fileSize ＝ (音频码率) x 时间长度(单位:秒) / 8，粗略估算。</li></ul>
    </font>
- 详细代码请参考 TUIKit-uni-app 【github地址】
+ 详细代码请参考 [uni-app TUIKit](https://github.com/tencentyun/TIMSDK/tree/master/uni-app)
 >！
-  语音消息对象中必须包括 `duration` 和 `fileSize`，如果没有 `fileSize`，语音消息时长是一串错误的数字
->
+>- 语音消息对象中必须包括 `duration` 和 `fileSize`，如果没有 `fileSize`，语音消息时长是一串错误的数字
+
+  
+
 
 **5、video 视频消息层级过高无法滑动怎么办？**
 
   在项目中通过视频图片代替，没有直接渲染 `video`，在播放时渲染的方式规避了层级过高问题
-  详细代码请参考 TUIKit-uni-app 【github地址】
+  详细代码请参考 [uni-app TUIKit](https://github.com/tencentyun/TIMSDK/tree/master/uni-app)
 >！
 官方 [原生组件说明](https://uniapp.dcloud.io/component/native-component)
 >
