@@ -154,17 +154,18 @@ cd TIMSDK/uni-app/TUIKit
    <ul>   <li>通过本地起定时器记录时间，计算出 duration </li>
    <li>本地计算文件大小，fileSize ＝ (音频码率) x 时间长度(单位:秒) / 8，粗略估算。</li></ul>
    </font>
+   
  详细代码请参考 [uni-app TUIKit](https://github.com/tencentyun/TIMSDK/tree/master/uni-app)
+
 >！
 >- 语音消息对象中必须包括 `duration` 和 `fileSize`，如果没有 `fileSize`，语音消息时长是一串错误的数字
-
-  
-
 
 **5、video 视频消息层级过高无法滑动怎么办？**
 
   在项目中通过视频图片代替，没有直接渲染 `video`，在播放时渲染的方式规避了层级过高问题
+  
   详细代码请参考 [uni-app TUIKit](https://github.com/tencentyun/TIMSDK/tree/master/uni-app)
+  
 >！
 官方 [原生组件说明](https://uniapp.dcloud.io/component/native-component)
 >
