@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,9 +47,30 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
 
     private boolean mIsLoading = false;
 
+    // 长按高亮显示
+    private boolean isClick = false;
+    private int currentPosition = -1;
+
     private View searchView;
     public ConversationListAdapter() {
 
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public boolean isClick() {
+        return isClick;
+    }
+
+    public void setClick(boolean click) {
+        isClick = click;
+    }
+
+    public void setCurrentPosition(int currentPosition , boolean isClick) {
+        this.currentPosition = currentPosition;
+        this.isClick = isClick;
     }
 
     public void setShowMultiSelectCheckBox(boolean show) {
@@ -202,6 +224,19 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
             setCheckBoxStatus(position, conversationInfo, baseHolder);
         }
 
+        if (getCurrentPosition() == position && isClick()){
+            baseHolder.itemView.setBackgroundResource(R.color.split_lint_color);
+        } else {
+            if (conversationInfo == null) {
+                return;
+            }
+            if (conversationInfo.isTop() && !isForwardFragment) {
+                baseHolder.itemView.setBackgroundColor(baseHolder.rootView.getResources().getColor(R.color.conversation_top_color));
+            } else {
+                baseHolder.itemView.setBackgroundColor(Color.WHITE);
+            }
+        }
+
     }
 
     private void setOnClickListener(RecyclerView.ViewHolder holder, int position, ConversationInfo conversationInfo) {
@@ -222,6 +257,8 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
                 @Override
                 public boolean onLongClick(View view) {
                     mOnItemLongClickListener.OnItemLongClick(view, position, conversationInfo);
+                    setCurrentPosition(position, true);
+                    notifyItemChanged(position);
                     return true;
                 }
             });

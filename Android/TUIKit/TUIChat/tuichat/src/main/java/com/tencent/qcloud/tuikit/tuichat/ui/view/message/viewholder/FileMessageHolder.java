@@ -7,19 +7,23 @@ import android.widget.TextView;
 import com.tencent.qcloud.tuicore.util.FileUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.bean.FileElemBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
-public class MessageFileHolder extends MessageContentHolder {
+public class FileMessageHolder extends MessageContentHolder {
 
     private TextView fileNameText;
     private TextView fileSizeText;
     private TextView fileStatusText;
     private ImageView fileIconImage;
 
-    public MessageFileHolder(View itemView) {
+    public FileMessageHolder(View itemView) {
         super(itemView);
+        fileNameText = itemView.findViewById(R.id.file_name_tv);
+        fileSizeText = itemView.findViewById(R.id.file_size_tv);
+        fileStatusText = itemView.findViewById(R.id.file_status_tv);
+        fileIconImage = itemView.findViewById(R.id.file_icon_iv);
     }
 
     @Override
@@ -28,23 +32,12 @@ public class MessageFileHolder extends MessageContentHolder {
     }
 
     @Override
-    public void initVariableViews() {
-        fileNameText = rootView.findViewById(R.id.file_name_tv);
-        fileSizeText = rootView.findViewById(R.id.file_size_tv);
-        fileStatusText = rootView.findViewById(R.id.file_status_tv);
-        fileIconImage = rootView.findViewById(R.id.file_icon_iv);
-    }
-
-    @Override
-    public void layoutVariableViews(final MessageInfo msg, final int position) {
-        FileElemBean fileElemBean = FileElemBean.createFileElemBean(msg);
-        if (fileElemBean == null) {
-            return;
-        }
-        final String path = msg.getDataPath();
-        fileNameText.setText(fileElemBean.getFileName());
-        String size = FileUtil.formatFileSize(fileElemBean.getFileSize());
-        final String fileName = fileElemBean.getFileName();
+    public void layoutVariableViews(final TUIMessageBean msg, final int position) {
+        FileMessageBean message = (FileMessageBean) msg;
+        final String path = message.getDataPath();
+        fileNameText.setText(message.getFileName());
+        String size = FileUtil.formatFileSize(message.getFileSize());
+        final String fileName = message.getFileName();
         fileSizeText.setText(size);
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,39 +46,39 @@ public class MessageFileHolder extends MessageContentHolder {
             }
         });
 
-        if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_SUCCESS
-                && msg.getDownloadStatus() == MessageInfo.MSG_STATUS_DOWNLOADED) {
+        if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS
+                && message.getDownloadStatus() == FileMessageBean.MSG_STATUS_DOWNLOADED) {
             fileStatusText.setText(R.string.sended);
-        } else if (msg.getStatus() == MessageInfo.MSG_STATUS_SENDING) {
+        } else if (message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
             fileStatusText.setText(R.string.sending);
-        } else if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL) {
+        } else if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
             fileStatusText.setText(R.string.send_failed);
         } else {
-            if (msg.getDownloadStatus() == MessageInfo.MSG_STATUS_DOWNLOADING) {
+            if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADING) {
                 fileStatusText.setText(R.string.downloading);
-            } else if (msg.getDownloadStatus() == MessageInfo.MSG_STATUS_DOWNLOADED) {
-                if (!msg.isSelf()) {
+            } else if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADED) {
+                if (!message.isSelf()) {
                     fileStatusText.setText(R.string.downloaded);
                 } else {
                     fileStatusText.setText(R.string.sended);
                 }
-            } else if (msg.getDownloadStatus() == MessageInfo.MSG_STATUS_UN_DOWNLOAD) {
+            } else if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_UN_DOWNLOAD) {
                 fileStatusText.setText(R.string.un_download);
             }
         }
 
-        if (msg.getDownloadStatus() == MessageInfo.MSG_STATUS_UN_DOWNLOAD) {
+        if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_UN_DOWNLOAD) {
             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (msg.getDownloadStatus() == MessageInfo.MSG_STATUS_DOWNLOADING
-                            || msg.getDownloadStatus() == MessageInfo.MSG_STATUS_DOWNLOADED) {
+                    if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADING
+                            || message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADED) {
                         return;
                     }
-                    msg.setDownloadStatus(MessageInfo.MSG_STATUS_DOWNLOADING);
+                    message.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADING);
                     sendingProgress.setVisibility(View.VISIBLE);
                     fileStatusText.setText(R.string.downloading);
-                    fileElemBean.downloadFile(path, new FileElemBean.FileDownloadCallback() {
+                    message.downloadFile(path, new FileMessageBean.FileDownloadCallback() {
                         @Override
                         public void onProgress(long currentSize, long totalSize) {
                             TUIChatLog.i("downloadSound progress current:", currentSize + ", total:" + totalSize);
@@ -100,13 +93,13 @@ public class MessageFileHolder extends MessageContentHolder {
 
                         @Override
                         public void onSuccess() {
-                            msg.setDataPath(path);
-                            if (!msg.isSelf()) {
+                            message.setDataPath(path);
+                            if (!message.isSelf()) {
                                 fileStatusText.setText(R.string.downloaded);
                             } else {
                                 fileStatusText.setText(R.string.sended);
                             }
-                            msg.setDownloadStatus(MessageInfo.MSG_STATUS_DOWNLOADED);
+                            message.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADED);
                             sendingProgress.setVisibility(View.GONE);
                             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                                 @Override

@@ -25,18 +25,4 @@ public class TUIConversationUtils {
             callBack.onSuccess(data);
         }
     }
-
-    public static String getConversationIdByUserId(String id, boolean isGroup) {
-        String conversationIdPrefix = isGroup ? CONVERSATION_GROUP_PREFIX : CONVERSATION_C2C_PREFIX;
-        return conversationIdPrefix + id;
-    }
-
-    public static boolean isC2CChat(int chatType) {
-        return chatType == V2TIMConversation.V2TIM_C2C;
-    }
-
-    public static boolean isGroupChat(int chatType) {
-        return chatType == V2TIMConversation.V2TIM_GROUP;
-    }
-
 }

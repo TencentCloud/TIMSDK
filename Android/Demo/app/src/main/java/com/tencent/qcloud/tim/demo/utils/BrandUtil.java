@@ -33,13 +33,17 @@ public class BrandUtil {
     }
 
     /**
-     * 判断是否是oppo设备
+     * 判断是否是 oppo 设备, 包含子品牌
      *
      * @return
      */
     public static boolean isBrandOppo() {
-        return "oppo".equalsIgnoreCase(Build.BRAND)
-                || "oppo".equalsIgnoreCase(Build.MANUFACTURER);
+        return "oppo".equalsIgnoreCase(Build.BRAND) ||
+                "realme".equalsIgnoreCase(Build.BRAND) ||
+                "oneplus".equalsIgnoreCase(Build.BRAND) ||
+                "oppo".equalsIgnoreCase(Build.MANUFACTURER) ||
+                "realme".equalsIgnoreCase(Build.MANUFACTURER) ||
+                "oneplus".equalsIgnoreCase(Build.MANUFACTURER);
     }
 
     /**

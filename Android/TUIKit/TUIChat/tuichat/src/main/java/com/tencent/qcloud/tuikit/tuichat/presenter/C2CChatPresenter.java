@@ -6,8 +6,8 @@ import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
@@ -44,7 +44,7 @@ public class C2CChatPresenter extends ChatPresenter {
             }
 
             @Override
-            public void onRecvNewMessage(MessageInfo message) {
+            public void onRecvNewMessage(TUIMessageBean message) {
                 if (chatInfo == null || !TextUtils.equals(message.getUserId(), chatInfo.getId())) {
                     TUIChatLog.i(TAG, "receive a new message , not belong to current chat.");
                 } else {
@@ -69,7 +69,7 @@ public class C2CChatPresenter extends ChatPresenter {
      * @param lastMessageInfo 拉取消息的起始点
      */
     @Override
-    public void loadMessage(int type, MessageInfo lastMessageInfo) {
+    public void loadMessage(int type, TUIMessageBean lastMessageInfo) {
         if (chatInfo == null || isLoading) {
             return;
         }
@@ -78,10 +78,10 @@ public class C2CChatPresenter extends ChatPresenter {
         String chatId = chatInfo.getId();
         // 向前拉取更旧的消息
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD) {
-            provider.loadC2CMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<List<MessageInfo>>() {
+            provider.loadC2CMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<List<TUIMessageBean>>() {
 
                 @Override
-                public void onSuccess(List<MessageInfo> data) {
+                public void onSuccess(List<TUIMessageBean> data) {
                     TUIChatLog.i(TAG, "load c2c message success " + data.size());
                     if (lastMessageInfo == null) {
                         isHaveMoreNewMessage = false;
@@ -101,7 +101,7 @@ public class C2CChatPresenter extends ChatPresenter {
 
     // 加载消息成功之后会调用此方法
     @Override
-    protected void onMessageLoadCompleted(List<MessageInfo> data, int getType) {
+    protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {
         c2cReadReport(chatInfo.getId());
         processLoadedMessage(data, getType);
     }

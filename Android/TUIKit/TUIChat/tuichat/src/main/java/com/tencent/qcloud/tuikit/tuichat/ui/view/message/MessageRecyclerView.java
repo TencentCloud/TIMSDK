@@ -7,18 +7,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tuicore.component.PopupList;
 import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
+import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageProperties;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageLayout;
@@ -107,7 +113,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         return super.onInterceptTouchEvent(e);
     }
 
-    public void showItemPopMenu(final int index, final MessageInfo messageInfo, View view) {
+    public void showItemPopMenu(final int index, final TUIMessageBean messageInfo, View view) {
         initPopActions(messageInfo);
         if (mPopActions.size() == 0) {
             return;
@@ -165,18 +171,18 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         return false;
     }
 
-    private void initPopActions(final MessageInfo msg) {
+    private void initPopActions(final TUIMessageBean msg) {
         if (msg == null) {
             return;
         }
         List<PopMenuAction> actions = new ArrayList<>();
         PopMenuAction action = new PopMenuAction();
-        if (msg.getMsgType() == MessageInfo.MSG_TYPE_TEXT) {
+        if (msg instanceof TextMessageBean) {
             action.setActionName(getContext().getString(R.string.copy_action));
             action.setActionClickListener(new PopActionClickListener() {
                 @Override
                 public void onActionClick(int position, Object data) {
-                    mOnPopActionClickListener.onCopyClick(position, (MessageInfo) data);
+                    mOnPopActionClickListener.onCopyClick(position, (TUIMessageBean) data);
                 }
             });
             actions.add(action);
@@ -186,18 +192,18 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         action.setActionClickListener(new PopActionClickListener() {
             @Override
             public void onActionClick(int position, Object data) {
-                mOnPopActionClickListener.onDeleteMessageClick(position, (MessageInfo) data);
+                mOnPopActionClickListener.onDeleteMessageClick(position, (TUIMessageBean) data);
             }
         });
         actions.add(action);
         if (msg.isSelf()) {
             action = new PopMenuAction();
-            if (msg.getStatus() != MessageInfo.MSG_STATUS_SEND_FAIL) {
+            if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
                 action.setActionName(getContext().getString(R.string.revoke_action));
                 action.setActionClickListener(new PopActionClickListener() {
                     @Override
                     public void onActionClick(int position, Object data) {
-                        mOnPopActionClickListener.onRevokeMessageClick(position, (MessageInfo) data);
+                        mOnPopActionClickListener.onRevokeMessageClick(position, (TUIMessageBean) data);
                     }
                 });
                 actions.add(action);
@@ -207,7 +213,25 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
                 action.setActionClickListener(new PopActionClickListener() {
                     @Override
                     public void onActionClick(int position, Object data) {
-                        mOnPopActionClickListener.onSendMessageClick(msg, true);
+                        new TUIKitDialog(getContext())
+                                .builder()
+                                .setCancelable(true)
+                                .setCancelOutside(true)
+                                .setTitle(getContext().getString(R.string.resend_tips))
+                                .setDialogWidth(0.75f)
+                                .setPositiveButton(getContext().getString(R.string.sure), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        mOnPopActionClickListener.onSendMessageClick(msg, true);
+                                    }
+                                })
+                                .setNegativeButton(getContext().getString(R.string.cancel), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                    }
+                                })
+                                .show();
                     }
                 });
                 actions.add(action);
@@ -220,19 +244,19 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         action.setActionClickListener(new PopActionClickListener() {
             @Override
             public void onActionClick(int position, Object data) {
-                mOnPopActionClickListener.onMultiSelectMessageClick(position, (MessageInfo) data);
+                mOnPopActionClickListener.onMultiSelectMessageClick(position, (TUIMessageBean) data);
             }
         });
         actions.add(action);
 
         //转发
-        if (msg.getStatus() != MessageInfo.MSG_STATUS_SEND_FAIL) {
+        if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
             action = new PopMenuAction();
             action.setActionName(getContext().getString(R.string.forward_button));
             action.setActionClickListener(new PopActionClickListener() {
                 @Override
                 public void onActionClick(int position, Object data) {
-                    mOnPopActionClickListener.onForwardMessageClick(position, (MessageInfo) data);
+                    mOnPopActionClickListener.onForwardMessageClick(position, (TUIMessageBean) data);
                 }
             });
             actions.add(action);
@@ -317,16 +341,23 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     public void postSetAdapter(MessageAdapter adapter) {
         mAdapter.setOnItemClickListener(new OnItemLongClickListener() {
             @Override
-            public void onMessageLongClick(View view, int position, MessageInfo messageInfo) {
+            public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {
                 if (mOnItemLongClickListener != null) {
                     mOnItemLongClickListener.onMessageLongClick(view, position, messageInfo);
                 }
             }
 
             @Override
-            public void onUserIconClick(View view, int position, MessageInfo info) {
+            public void onUserIconClick(View view, int position, TUIMessageBean info) {
                 if (mOnItemLongClickListener != null) {
                     mOnItemLongClickListener.onUserIconClick(view, position, info);
+                }
+            }
+
+            @Override
+            public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
+                if (mOnItemLongClickListener != null) {
+                    mOnItemLongClickListener.onUserIconLongClick(view, position, messageInfo);
                 }
             }
         });
@@ -553,16 +584,16 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
 
     public interface OnPopActionClickListener {
 
-        void onCopyClick(int position, MessageInfo msg);
+        void onCopyClick(int position, TUIMessageBean msg);
 
-        void onSendMessageClick(MessageInfo msg, boolean retry);
+        void onSendMessageClick(TUIMessageBean msg, boolean retry);
 
-        void onDeleteMessageClick(int position, MessageInfo msg);
+        void onDeleteMessageClick(int position, TUIMessageBean msg);
 
-        void onRevokeMessageClick(int position, MessageInfo msg);
+        void onRevokeMessageClick(int position, TUIMessageBean msg);
 
-        void onMultiSelectMessageClick(int position, MessageInfo msg);
+        void onMultiSelectMessageClick(int position, TUIMessageBean msg);
 
-        void onForwardMessageClick(int position, MessageInfo msg);
+        void onForwardMessageClick(int position, TUIMessageBean msg);
     }
 }

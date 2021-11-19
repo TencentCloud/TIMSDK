@@ -31,6 +31,12 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
-    api 'com.tencent.imsdk:imsdk-plus:5.7.1435'
-//    api project(':imsdk-plus')
+    def projects = this.rootProject.getAllprojects().stream().map{project->project.name}.collect()
+    println "all projects : {$projects}"
+    if (projects.contains("imsdk-plus")) {
+        api project(':imsdk-plus')
+    } else {
+        api 'com.tencent.imsdk:imsdk-plus:5.8.1668'
+    }
+
 }

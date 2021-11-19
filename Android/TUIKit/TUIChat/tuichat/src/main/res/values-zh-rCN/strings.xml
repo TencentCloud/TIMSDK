@@ -178,4 +178,6 @@
     <string name="test_custom_action">自定义消息</string>
     <string name="welcome_tip">欢迎加入云通信IM大家庭！</string>
 
+    <string name="resend_tips">确定重发吗？</string>
+
 </resources>

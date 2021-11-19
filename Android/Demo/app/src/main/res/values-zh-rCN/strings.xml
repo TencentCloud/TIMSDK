@@ -40,6 +40,17 @@
     <string name="about_im">关于即时通信IM</string>
     <string name="modify_birthday">生日</string>
 
+    <string name="conversation_title">腾讯·云通信</string>
+    <string name="contact_title">通讯录</string>
+    <string name="add_friend">添加好友</string>
+    <string name="add_group">添加群聊</string>
+    <string name="start_conversation">发起会话</string>
+    <string name="create_group_chat">创建群聊</string>
+    <string name="create_chat_room">创建聊天室</string>
+    <string name="create_community">创建社区</string>
+    <string name="create_private_group">创建讨论组</string>
+
+
     // 主页Tab相关
     <string name="tab_contact_tab_text">通讯录</string>
     <string name="tab_conversation_tab_text">消息</string>
@@ -101,5 +112,8 @@
     <string name="modify_group_name">修改群名称</string>
     <string name="input_tip">没有输入昵称，请重新填写</string>
     <string name="call_time_out"> 通话超时</string>
+    
+    <string name="mark_all_message_as_read_succ">清空未读成功</string>
+    <string name="mark_all_message_as_read_err_format">清空未读失败, %d, %s</string>
 
 </resources>

@@ -52,10 +52,6 @@ public class ForwardSelectLayout extends RelativeLayout implements IConversation
     }
 
     public void initDefault() {
-        titleBarLayout.setTitle(getResources().getString(R.string.conversation_title), ITitleBarLayout.Position.MIDDLE);
-        titleBarLayout.getLeftGroup().setVisibility(View.GONE);
-        titleBarLayout.setRightIcon(R.drawable.conversation_more);
-
         final ConversationListAdapter adapter = new ConversationListAdapter();
         adapter.setForwardFragment(true);
         conversationList.setAdapter((IConversationListAdapter) adapter);

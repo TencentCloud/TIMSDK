@@ -47,7 +47,6 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
 
     private ImageView mUserIcon;
     private TextView mAccountView;
-    private TitleBarLayout mTitleBar;
 
     private LineControllerView mModifyUserIconView;
     private LineControllerView mModifyNickNameView;
@@ -64,8 +63,6 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
     private String mBirthday;
     private String mSignature;
     private String mNickName;
-    private int count = 0;
-    private long lastClickTime = 0;
 
     public ProfileLayout(Context context) {
         super(context);
@@ -87,11 +84,6 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
 
         mUserIcon = findViewById(R.id.self_icon);
         mAccountView = findViewById(R.id.self_account);
-
-        mTitleBar = findViewById(R.id.self_info_title_bar);
-        mTitleBar.getLeftGroup().setVisibility(GONE);
-        mTitleBar.getRightGroup().setVisibility(GONE);
-        mTitleBar.setTitle(getResources().getString(R.string.profile), ITitleBarLayout.Position.MIDDLE);
 
         mModifyUserIconView = findViewById(R.id.modify_user_icon);
         mModifyUserIconView.setCanNav(false);
@@ -142,7 +134,6 @@ public class ProfileLayout extends LinearLayout implements View.OnClickListener 
             }
         });
         setUserInfoListener();
-
     }
 
     private void setUserInfo(V2TIMUserFullInfo info) {

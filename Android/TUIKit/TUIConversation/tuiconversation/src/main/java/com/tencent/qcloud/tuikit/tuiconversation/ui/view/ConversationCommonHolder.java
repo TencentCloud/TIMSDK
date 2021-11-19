@@ -10,18 +10,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
-import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
-import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationMessageInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationMessageInfoUtil;
-import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +32,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected TextView titleText;
     protected TextView messageText;
     protected TextView timelineText;
-    protected TextView unreadText;
+    protected UnreadCountTextView unreadText;
     protected TextView atInfoText;
     protected ImageView disturbView;
     protected CheckBox multiSelectCheckBox;
@@ -56,21 +56,6 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     }
 
     public void layoutViews(ConversationInfo conversation, int position) {
-        ConversationMessageInfo lastMsg = conversation.getLastMessage();
-        if (lastMsg != null && lastMsg.getStatus() == ConversationMessageInfo.MSG_STATUS_REVOKE) {
-            if (lastMsg.isSelf()) {
-                lastMsg.setExtra(TUIConversationService.getAppContext().getString(R.string.revoke_tips_you));
-            } else if (lastMsg.isGroup()) {
-                String message = TUIConversationConstants.covert2HTMLString(
-                        TextUtils.isEmpty(lastMsg.getGroupNameCard())
-                                ? lastMsg.getFromUser()
-                                : lastMsg.getGroupNameCard());
-                lastMsg.setExtra(message + TUIConversationService.getAppContext().getString(R.string.revoke_tips));
-            } else {
-                lastMsg.setExtra(TUIConversationService.getAppContext().getString(R.string.revoke_tips_other));
-            }
-        }
-
         if (conversation.isTop() && !isForwardMode) {
             leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.conversation_top_color));
         } else {
@@ -85,26 +70,33 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             messageText.setText(draftInfo.getDraftText());
             timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(draftInfo.getDraftTime() * 1000)));
         } else {
-            if (lastMsg != null) {
-                // 如果最后一条消息是自定义消息, 获取要显示的字符
-                if (lastMsg.getMsgType() == ConversationMessageInfo.MSG_TYPE_CUSTOM) {
-                    CharSequence displayStr = ConversationMessageInfoUtil.getConversationDisplayString(lastMsg);
-                    if (displayStr != null) {
-                        messageText.setText(displayStr);
-                        messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
-                    }
-                } else {
-                    if (lastMsg.getExtra() != null) {
-                        String result = emojiJudge(lastMsg.getExtra().toString());
-                        messageText.setText(Html.fromHtml(result));
-                        messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
-                    }
-                }
-                timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(lastMsg.getMsgTime() * 1000)));
+            HashMap<String, Object> param = new HashMap<>();
+            param.put(TUIConstants.TUIChat.V2TIMMESSAGE, conversation.getLastMessage());
+            String lastMsgDisplayString = (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
+            // 如果最后一条消息是自定义消息, 获取要显示的字符
+            if (lastMsgDisplayString != null) {
+                String result = emojiJudge(lastMsgDisplayString);
+                messageText.setText(Html.fromHtml(result));
+                messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
+            }
+            if (conversation.getLastMessage() != null) {
+                timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(conversation.getLastMessageTime() * 1000)));
             }
         }
 
-        if (conversation.getUnRead() > 0 && !conversation.isShowDisturbIcon()) {
+        if (conversation.isShowDisturbIcon()) {
+            if (conversation.getUnRead() > 0) {
+                unreadText.setVisibility(View.VISIBLE);
+                unreadText.setText("");
+
+                if (messageText.getText() != null) {
+                    String text = messageText.getText().toString();
+                    messageText.setText("[" + conversation.getUnRead() + rootView.getContext().getString(R.string.message_num) + "] " + text);
+                }
+            } else {
+                unreadText.setVisibility(View.GONE);
+            }
+        }else if (conversation.getUnRead() > 0) {
             unreadText.setVisibility(View.VISIBLE);
             if (conversation.getUnRead() > 99) {
                 unreadText.setText("99+");
@@ -145,7 +137,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 
         conversationIconView.setConversation(conversation);
 
-        if (conversation.isShowDisturbIcon()) {
+        if (conversation.isShowDisturbIcon() && !isForwardMode) {
             disturbView.setVisibility(View.VISIBLE);
         } else {
             disturbView.setVisibility(View.GONE);

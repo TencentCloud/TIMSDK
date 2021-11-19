@@ -45,7 +45,6 @@ public class TUIConversationFragment extends BaseFragment {
     private PopDialogAdapter mConversationPopAdapter;
     private PopupWindow mConversationPopWindow;
     private List<PopMenuAction> mConversationPopActions = new ArrayList<>();
-    private Menu mMenu;
 
     private ConversationPresenter presenter;
     @Nullable
@@ -59,8 +58,7 @@ public class TUIConversationFragment extends BaseFragment {
     private void initView() {
         // 从布局文件中获取会话列表面板
         mConversationLayout = mBaseView.findViewById(R.id.conversation_layout);
-        initMenu();
-        
+
         presenter = new ConversationPresenter();
         presenter.setConversationListener();
         mConversationLayout.setPresenter(presenter);
@@ -83,81 +81,19 @@ public class TUIConversationFragment extends BaseFragment {
                 startPopShow(view, conversationInfo);
             }
         });
-        initTitleAction();
+
         initPopMenuAction();
+        restoreConversationItemBackground();
     }
 
-    private void initMenu() {
-        mMenu = new Menu(getActivity(), (TitleBarLayout) mConversationLayout.getTitleBar());
 
-        PopActionClickListener popActionClickListener = new PopActionClickListener() {
-            @Override
-            public void onActionClick(int position, Object data) {
-                PopMenuAction action = (PopMenuAction) data;
-                if (TextUtils.equals(action.getActionName(), getResources().getString(R.string.start_conversation))) {
-                    TUICore.startActivity("StartC2CChatActivity", null);
-                }
 
-                if (TextUtils.equals(action.getActionName(), getResources().getString(R.string.create_private_group))) {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.PRIVATE);
-                    TUICore.startActivity("StartGroupChatActivity", bundle);
-                }
-                if (TextUtils.equals(action.getActionName(), getResources().getString(R.string.create_group_chat))) {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.PUBLIC);
-                    TUICore.startActivity("StartGroupChatActivity", bundle);
-                }
-                if (TextUtils.equals(action.getActionName(), getResources().getString(R.string.create_chat_room))) {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.CHAT_ROOM);
-                    TUICore.startActivity("StartGroupChatActivity", bundle);
-                }
-                mMenu.hide();
-            }
-        };
-
-        // 设置右上角+号显示PopAction
-        List<PopMenuAction> menuActions = new ArrayList<PopMenuAction>();
-
-        PopMenuAction action = new PopMenuAction();
-
-        action.setActionName(getResources().getString(R.string.start_conversation));
-        action.setActionClickListener(popActionClickListener);
-        action.setIconResId(R.drawable.create_c2c);
-        menuActions.add(action);
-        action = new PopMenuAction();
-        action.setActionName(getResources().getString(R.string.create_private_group));
-        action.setIconResId(R.drawable.group_icon);
-        action.setActionClickListener(popActionClickListener);
-        menuActions.add(action);
-
-        action = new PopMenuAction();
-        action.setActionName(getResources().getString(R.string.create_group_chat));
-        action.setIconResId(R.drawable.group_icon);
-        action.setActionClickListener(popActionClickListener);
-        menuActions.add(action);
-
-        action = new PopMenuAction();
-        action.setActionName(getResources().getString(R.string.create_chat_room));
-        action.setIconResId(R.drawable.group_icon);
-        action.setActionClickListener(popActionClickListener);
-        menuActions.add(action);
-
-        mMenu.setMenuAction(menuActions);
-    }
-
-    private void initTitleAction() {
-        mConversationLayout.getTitleBar().setOnRightClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mMenu.isShowing()) {
-                    mMenu.hide();
-                } else {
-                    mMenu.show();
-                }
-            }
-        });
+    public void restoreConversationItemBackground() {
+        if (mConversationLayout.getConversationList().getAdapter() !=  null &&
+                mConversationLayout.getConversationList().getAdapter().isClick()) {
+            mConversationLayout.getConversationList().getAdapter().setClick(false);
+            mConversationLayout.getConversationList().getAdapter().notifyItemChanged(mConversationLayout.getConversationList().getAdapter().getCurrentPosition());
+        }
     }
 
     private void initPopMenuAction() {
@@ -226,6 +162,7 @@ public class TUIConversationFragment extends BaseFragment {
                     action.getActionClickListener().onActionClick(position, conversationInfo);
                 }
                 mConversationPopWindow.dismiss();
+                restoreConversationItemBackground();
             }
         });
 
@@ -246,6 +183,12 @@ public class TUIConversationFragment extends BaseFragment {
         mConversationPopList.setAdapter(mConversationPopAdapter);
         mConversationPopAdapter.setDataSource(mConversationPopActions);
         mConversationPopWindow = PopWindowUtil.popupWindow(itemPop, mBaseView, (int) locationX, (int) locationY);
+        mConversationPopWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                restoreConversationItemBackground();
+            }
+        });
         BackgroundTasks.getInstance().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -114,6 +114,7 @@ public class GlideEngine implements ImageEngine {
         }
         Glide.with(TUILogin.getAppContext())
                 .load(uri)
+                .placeholder(R.drawable.default_user_icon)
                 .apply(new RequestOptions().centerCrop().error(R.drawable.default_user_icon))
                 .into(imageView);
     }

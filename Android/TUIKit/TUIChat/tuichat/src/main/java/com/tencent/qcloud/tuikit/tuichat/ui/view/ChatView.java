@@ -33,7 +33,9 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuicore.component.NoticeLayout;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
@@ -50,7 +52,6 @@ import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import com.tencent.qcloud.tuicore.TUICore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -62,7 +63,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     protected MessageAdapter mAdapter;
     private ForwardSelectActivityListener mForwardSelectActivityListener;
 
-    private MessageInfo mConversationLastMessage;
+    private TUIMessageBean mConversationLastMessage;
 
     private AnimationDrawable mVolumeAnim;
     private Runnable mTypingRunnable = null;
@@ -264,9 +265,9 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         }
     }
 
-    public void loadMessages(MessageInfo lastMessageInfo, int type) {
+    public void loadMessages(TUIMessageBean lastMessage, int type) {
         if (presenter != null) {
-            presenter.loadMessage(type, lastMessageInfo);
+            presenter.loadMessage(type, lastMessage);
         }
     }
 
@@ -313,40 +314,40 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     private void initListener() {
         getMessageLayout().setPopActionClickListener(new MessageRecyclerView.OnPopActionClickListener() {
             @Override
-            public void onCopyClick(int position, MessageInfo msg) {
+            public void onCopyClick(int position, TUIMessageBean msg) {
                 ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 if (clipboard == null || msg == null) {
                     return;
                 }
-                if (msg.getMsgType() == MessageInfo.MSG_TYPE_TEXT) {
-                    String copyContent = (String) msg.getExtra();
+                if (msg instanceof TextMessageBean) {
+                    String copyContent = ((TextMessageBean) msg).getText();
                     ClipData clip = ClipData.newPlainText("message", copyContent);
                     clipboard.setPrimaryClip(clip);
                 }
             }
 
             @Override
-            public void onSendMessageClick(MessageInfo msg, boolean retry) {
+            public void onSendMessageClick(TUIMessageBean msg, boolean retry) {
                 sendMessage(msg, retry);
             }
 
             @Override
-            public void onDeleteMessageClick(int position, MessageInfo msg) {
+            public void onDeleteMessageClick(int position, TUIMessageBean msg) {
                 deleteMessage(position, msg);
             }
 
             @Override
-            public void onRevokeMessageClick(int position, MessageInfo msg) {
+            public void onRevokeMessageClick(int position, TUIMessageBean msg) {
                 revokeMessage(position, msg);
             }
 
             @Override
-            public void onMultiSelectMessageClick(int position, MessageInfo msg) {
+            public void onMultiSelectMessageClick(int position, TUIMessageBean msg) {
                 multiSelectMessage(position, msg);
             }
 
             @Override
-            public void onForwardMessageClick(int position, MessageInfo msg){
+            public void onForwardMessageClick(int position, TUIMessageBean msg){
                 forwardMessage(position, msg);
             }
         });
@@ -519,7 +520,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         });
         getInputLayout().setMessageHandler(new InputView.MessageHandler() {
             @Override
-            public void sendMessage(MessageInfo msg) {
+            public void sendMessage(TUIMessageBean msg) {
                 ChatView.this.sendMessage(msg, false);
             }
         });
@@ -553,9 +554,9 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     }
 
     public void getConversationLastMessage(String id) {
-        presenter.getConversationLastMessage(id, new IUIKitCallback<MessageInfo>() {
+        presenter.getConversationLastMessage(id, new IUIKitCallback<TUIMessageBean>() {
             @Override
-            public void onSuccess(MessageInfo data) {
+            public void onSuccess(TUIMessageBean data) {
                 if (data == null) {
                     Log.d(TAG, "getConversationLastMessage failed");
                     return;
@@ -570,7 +571,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         });
     }
 
-    protected void deleteMessage(int position, MessageInfo msg) {
+    protected void deleteMessage(int position, TUIMessageBean msg) {
         presenter.deleteMessage(position, msg);
     }
 
@@ -578,7 +579,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         presenter.deleteMessages(positions);
     }
 
-    protected void deleteMessageInfos(final List<MessageInfo> msgIds) {
+    protected void deleteMessageInfos(final List<TUIMessageBean> msgIds) {
         presenter.deleteMessageInfos(msgIds);
     }
 
@@ -586,15 +587,15 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         return presenter.checkFailedMessages(positions);
     }
 
-    protected boolean checkFailedMessageInfos(final List<MessageInfo> msgIds){
+    protected boolean checkFailedMessageInfos(final List<TUIMessageBean> msgIds){
         return presenter.checkFailedMessageInfos(msgIds);
     }
 
-    protected void revokeMessage(int position, MessageInfo msg) {
+    protected void revokeMessage(int position, TUIMessageBean msg) {
         presenter.revokeMessage(position, msg);
     }
 
-    protected void multiSelectMessage(int position, MessageInfo msg) {
+    protected void multiSelectMessage(int position, TUIMessageBean msg) {
         if(mAdapter != null){
             mInputView.hideSoftInput();
             mAdapter.setShowMultiSelectCheckBox(true);
@@ -605,7 +606,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         }
     }
 
-    protected void forwardMessage(int position, MessageInfo msg) {
+    protected void forwardMessage(int position, TUIMessageBean msg) {
         if (mAdapter != null) {
             mInputView.hideSoftInput();
             mAdapter.setItemChecked(msg.getId(), true);
@@ -675,8 +676,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         getDeleteButton().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                List<MessageInfo> msgIds = new ArrayList<MessageInfo>();
-                msgIds =  mAdapter.getSelectedItem();
+                List<TUIMessageBean> msgIds =  mAdapter.getSelectedItem();
 
                 if(msgIds == null || msgIds.isEmpty()){
                     ToastUtil.toastShortMessage("please select message!");
@@ -695,7 +695,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
             return;
         }
 
-        final List<MessageInfo> messageInfoList = mAdapter.getSelectedItem();
+        final List<TUIMessageBean> messageInfoList = mAdapter.getSelectedItem();
         if(messageInfoList == null || messageInfoList.isEmpty()){
             ToastUtil.toastShortMessage(getContext().getString(R.string.forward_tip));
             return;
@@ -750,7 +750,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         });
     }
 
-    private void showForwardLimitDialog(final Dialog bottomDialog, final List<MessageInfo> messageInfoList) {
+    private void showForwardLimitDialog(final Dialog bottomDialog, final List<TUIMessageBean> messageInfoList) {
         TUIKitDialog tipsDialog = new TUIKitDialog(getContext())
                 .builder()
                 .setCancelable(true)
@@ -774,7 +774,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         tipsDialog.show();
     }
 
-    private void startSelectForwardActivity(int mode, List<MessageInfo> msgIds){
+    private void startSelectForwardActivity(int mode, List<TUIMessageBean> msgIds){
         if (mForwardSelectActivityListener != null) {
             mForwardSelectActivityListener.onStartForwardSelectActivity(mode, msgIds);
         }
@@ -785,7 +785,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     }
 
     @Override
-    public void sendMessage(MessageInfo msg, boolean retry) {
+    public void sendMessage(TUIMessageBean msg, boolean retry) {
         presenter.sendMessage(msg, retry, new IUIKitCallback() {
             @Override
             public void onSuccess(Object data) {
@@ -818,6 +818,6 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     }
 
     public interface ForwardSelectActivityListener {
-        public void onStartForwardSelectActivity(int mode, List<MessageInfo> msgIds);
+        public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds);
     }
 }

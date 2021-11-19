@@ -11,13 +11,13 @@ import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MessageContentHolder extends MessageEmptyHolder {
+public abstract class MessageContentHolder extends MessageBaseHolder {
 
     public UserIconView leftUserIcon;
     public UserIconView rightUserIcon;
@@ -32,7 +32,6 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
 
     public MessageContentHolder(View itemView) {
         super(itemView);
-        rootView = itemView;
 
         leftUserIcon = itemView.findViewById(R.id.left_user_icon_view);
         rightUserIcon = itemView.findViewById(R.id.right_user_icon_view);
@@ -45,7 +44,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
     }
 
     @Override
-    public void layoutViews(final MessageInfo msg, final int position) {
+    public void layoutViews(final TUIMessageBean msg, final int position) {
         super.layoutViews(msg, position);
 
         if (isForwardMode) {
@@ -124,7 +123,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         } else if (!TextUtils.isEmpty(msg.getNickName())) {
             usernameText.setText(msg.getNickName());
         } else {
-            usernameText.setText(msg.getFromUser());
+            usernameText.setText(msg.getSender());
         }
 
         if (!TextUtils.isEmpty(msg.getFaceUrl())) {
@@ -148,8 +147,8 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             sendingProgress.setVisibility(View.GONE);
         } else {
             if (msg.isSelf()) {
-                if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL
-                        || msg.getStatus() == MessageInfo.MSG_STATUS_SEND_SUCCESS
+                if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL
+                        || msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS
                         || msg.isPeerRead()) {
                     sendingProgress.setVisibility(View.GONE);
                 } else {
@@ -195,6 +194,13 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
                         onItemLongClickListener.onUserIconClick(view, position, msg);
                     }
                 });
+                leftUserIcon.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        onItemLongClickListener.onUserIconLongClick(view, position, msg);
+                        return true;
+                    }
+                });
                 rightUserIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -204,7 +210,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             }
 
             //// 发送状态的设置
-            if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL) {
+            if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
                 statusImage.setVisibility(View.VISIBLE);
                 msgContentFrame.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -244,7 +250,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         } else {
             //// 对方已读标识的设置
             if (TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead()) {
-                if (msg.isSelf() && MessageInfo.MSG_STATUS_SEND_SUCCESS == msg.getStatus()) {
+                if (msg.isSelf() && TUIMessageBean.MSG_STATUS_SEND_SUCCESS == msg.getStatus()) {
                     if (msg.isGroup()) {
                         isReadText.setVisibility(View.GONE);
                     } else {
@@ -271,5 +277,5 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         layoutVariableViews(msg, position);
     }
 
-    public abstract void layoutVariableViews(final MessageInfo msg, final int position);
+    public abstract void layoutVariableViews(final TUIMessageBean msg, final int position);
 }

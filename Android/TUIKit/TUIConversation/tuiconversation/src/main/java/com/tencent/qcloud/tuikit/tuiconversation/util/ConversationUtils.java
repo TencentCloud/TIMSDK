@@ -1,26 +1,17 @@
 package com.tencent.qcloud.tuikit.tuiconversation.util;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
-import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
-import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.qcloud.tuicore.TUIConfig;
-import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
-import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationMessageInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,10 +63,7 @@ public class ConversationUtils {
             info.setLastMessageTime(time);
         } else {
             info.setLastMessageTime(message.getTimestamp());
-        }
-        ConversationMessageInfo conversationMessageInfo = ConversationMessageInfoUtil.convertTIMMessage2MessageInfo(message);
-        if (conversationMessageInfo != null) {
-            info.setLastMessage(conversationMessageInfo);
+            info.setLastMessage(message);
         }
 
         int atInfoType = getAtInfoType(conversation);
@@ -117,7 +105,11 @@ public class ConversationUtils {
             info.setId(conversation.getUserID());
         }
 
-        info.setShowDisturbIcon(conversation.getRecvOpt() == V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE);
+        if (V2TIMManager.GROUP_TYPE_MEETING.equals(conversation.getGroupType())) {
+            info.setShowDisturbIcon(false);
+        } else {
+            info.setShowDisturbIcon(conversation.getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE);
+        }
         info.setConversationId(conversation.getConversationID());
         info.setGroup(isGroup);
         // AVChatRoom 不支持未读数。
@@ -169,11 +161,8 @@ public class ConversationUtils {
         return atInfoType;
     }
 
-
     public static boolean isNeedUpdate(ConversationInfo conversationInfo) {
         return V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(conversationInfo.getGroupType());
     }
-
-
 
 }

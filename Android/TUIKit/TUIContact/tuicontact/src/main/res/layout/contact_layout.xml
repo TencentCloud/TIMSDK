@@ -3,11 +3,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
-        android:id="@+id/contact_titlebar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView
         android:id="@+id/contact_listview"
         android:layout_width="match_parent"

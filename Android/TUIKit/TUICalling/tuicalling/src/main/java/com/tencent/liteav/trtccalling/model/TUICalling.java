@@ -30,13 +30,12 @@ public interface TUICalling {
     /**
      * 设置铃声(建议在30s以内)
      *
-     * @param filePath
-     * 是否设置成功
+     * @param filePath 接听方铃音路径
      */
     void setCallingBell(String filePath);
 
     /**
-     * 开启静音模式
+     * 开启静音模式（接听方不响铃音）
      * @param enable
      */
     void enableMuteMode(boolean enable);

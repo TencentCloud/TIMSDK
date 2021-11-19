@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuiconversation.bean;
 import androidx.annotation.NonNull;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMMessage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     /**
      * 最后一条消息，MessageInfo对象
      */
-    private ConversationMessageInfo lastMessage;
+    private V2TIMMessage lastMessage;
 
     /**
      * 会话界面显示的@提示消息
@@ -189,11 +190,11 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.type = type;
     }
 
-    public ConversationMessageInfo getLastMessage() {
+    public V2TIMMessage getLastMessage() {
         return lastMessage;
     }
 
-    public void setLastMessage(ConversationMessageInfo lastMessage) {
+    public void setLastMessage(V2TIMMessage lastMessage) {
         this.lastMessage = lastMessage;
     }
 

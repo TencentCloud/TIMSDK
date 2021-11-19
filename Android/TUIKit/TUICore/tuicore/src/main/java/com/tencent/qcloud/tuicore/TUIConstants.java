@@ -72,6 +72,8 @@ public final class TUIConstants {
         public static final String METHOD_SEND_MESSAGE = "sendMessage";
         // 结束聊天
         public static final String METHOD_EXIT_CHAT = "exitChat";
+        // 获取消息摘要 用来显示在会话列表
+        public static final String METHOD_GET_DISPLAY_STRING = "getDisplayString";
 
         // 更多输入按钮扩展
         public static final String EXTENSION_INPUT_MORE_CUSTOM_MESSAGE = "inputMoreCustomMessage";
@@ -104,6 +106,7 @@ public final class TUIConstants {
         public static final String OWNER = "owner";
         public static final String MEMBER_DETAILS = "memberDetails";
         public static final String IS_GROUP_CHAT = "isGroupChat";
+        public static final String V2TIMMESSAGE = "v2TIMMessage";
 
 
         // 发送自定义消息字段

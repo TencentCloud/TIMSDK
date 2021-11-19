@@ -7,11 +7,6 @@
     android:background="@color/status_bar_color"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuicore.component.TitleBarLayout
-        android:id="@+id/self_info_title_bar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/page_title_height" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

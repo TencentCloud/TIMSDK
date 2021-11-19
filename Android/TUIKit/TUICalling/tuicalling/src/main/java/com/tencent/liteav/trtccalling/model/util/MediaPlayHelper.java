@@ -6,8 +6,12 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
+
+import java.io.File;
 import java.io.IOException;
 
 public class MediaPlayHelper {
@@ -18,11 +22,17 @@ public class MediaPlayHelper {
     private final MediaPlayer mMediaPlayer;
     private       Handler     mHandler;
     private       int         mResId;
+    private       String      mResPath;
 
     public MediaPlayHelper(Context context) {
         mContext = context;
         mMediaPlayer = new MediaPlayer();
         mResId = -1;
+        mResPath = "";
+    }
+
+    public void start(String path) {
+        start(path, -1, 0);
     }
 
     public void start(int resId) {
@@ -30,13 +40,22 @@ public class MediaPlayHelper {
     }
 
     public void start(int resId, long duration) {
+        start("", resId, duration);
+    }
+
+    private void start(String resPath, int resId, long duration) {
         preHandler();
-        if (mResId == resId) {
+        if ((-1 != resId && (mResId == resId)) || (!TextUtils.isEmpty(resPath) && TextUtils.equals(mResPath, resPath))) {
             return;
         }
-        mResId = resId;
-        AssetFileDescriptor afd = mContext.getResources().openRawResourceFd(resId);
-        if (afd == null) return;
+        AssetFileDescriptor afd = null;
+        if (TextUtils.isEmpty(resPath) || !new File(resPath).exists()) {
+            mResId = resId;
+            afd = mContext.getResources().openRawResourceFd(resId);
+            if (afd == null) return;
+        } else {
+            mResPath = resPath;
+        }
         try {
             if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.stop();
@@ -44,9 +63,15 @@ public class MediaPlayHelper {
             mMediaPlayer.setOnCompletionListener(null);
             mMediaPlayer.reset();
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mMediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            if (null != afd) {
+                TRTCLogger.d(TAG, "play:" + resId);
+                mMediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            } else {
+                TRTCLogger.d(TAG, "play:" + mResPath);
+                mMediaPlayer.setDataSource(mResPath);
+            }
         } catch (IOException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            TRTCLogger.e(TAG, Log.getStackTraceString(e));
         }
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -60,7 +85,7 @@ public class MediaPlayHelper {
                 try {
                     mMediaPlayer.prepare();
                 } catch (IOException e) {
-                    Log.e(TAG, Log.getStackTraceString(e));
+                    TRTCLogger.e(TAG, Log.getStackTraceString(e));
                 }
                 mMediaPlayer.start();
             }
@@ -89,7 +114,7 @@ public class MediaPlayHelper {
     }
 
     public void stop() {
-        if (null == mHandler || -1 == getResId()) {
+        if (null == mHandler || (-1 == getResId()) && TextUtils.isEmpty(mResPath)) {
             return;
         }
         mHandler.post(new Runnable() {
@@ -98,6 +123,7 @@ public class MediaPlayHelper {
                 if (mMediaPlayer.isPlaying()) {
                     mMediaPlayer.stop();
                     mResId = -1;
+                    mResPath = "";
                 }
             }
         });

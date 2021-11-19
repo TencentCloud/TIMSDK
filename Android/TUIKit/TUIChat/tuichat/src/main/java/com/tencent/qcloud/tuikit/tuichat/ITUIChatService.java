@@ -15,6 +15,10 @@ public interface ITUIChatService extends ITUIService, ITUINotification {
      * 2、退出聊天
      * @param method TUIConstants.TUIChat.METHOD_EXIT_CHAT
      * @param param {TUIConstants.TUIChat.CHAT_ID : String, TUIConstants.TUIChat.IS_GROUP_CHAT : Boolean}
+     *
+     * 3、获取消息摘要
+     * @param method TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING
+     * @param param {TUIConstants.TUIChat.V2TIMMESSAGE : V2TIMMessage}
      */
     @Override
     Object onCall(String method, Map<String, Object> param);

@@ -3,9 +3,9 @@ package com.tencent.qcloud.tuikit.tuichat.ui.interfaces;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.component.interfaces.ILayout;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
 import com.tencent.qcloud.tuicore.component.NoticeLayout;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
@@ -75,7 +75,7 @@ public interface IChatLayout extends ILayout {
      * @param msg   消息
      * @param retry 是否重试
      */
-    void sendMessage(MessageInfo msg, boolean retry);
+    void sendMessage(TUIMessageBean msg, boolean retry);
 
     TextView getAtInfoLayout();
 }

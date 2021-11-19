@@ -6,19 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageContentHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageEmptyHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageHeaderHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageBaseHolder;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageViewHolderFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     private static final String TAG = MessageAdapter.class.getSimpleName();
     private boolean mLoading = true;
     private MessageRecyclerView mRecycleView;
-    private List<MessageInfo> mDataSource = new ArrayList<>();
+    private List<TUIMessageBean> mDataSource = new ArrayList<>();
     private OnItemLongClickListener mOnItemLongClickListener;
 
     //消息转发
@@ -47,12 +49,12 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         isForwardMode = forwardMode;
     }
 
-    //获得选中条目的结果，msgid
-    public ArrayList<MessageInfo> getSelectedItem() {
+    //获得选中条目的结果，msgId
+    public ArrayList<TUIMessageBean> getSelectedItem() {
         if (mSelectedPositions == null || mSelectedPositions.size() == 0) {
             return null;
         }
-        ArrayList<MessageInfo> selectList = new ArrayList<>();
+        ArrayList<TUIMessageBean> selectList = new ArrayList<>();
         for (int i = 0; i < getItemCount() - 1; i++) {
             if (isItemChecked(mDataSource.get(i).getId())) {
                 selectList.add(mDataSource.get(i));
@@ -107,7 +109,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder holder = MessageEmptyHolder.Factory.getInstance(parent, this, viewType);
+        RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(parent, this, viewType);
         if (holder instanceof MessageContentHolder) {
             ((MessageContentHolder) holder).isForwardMode = isForwardMode;
         }
@@ -116,7 +118,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
-        final MessageInfo msg = getItem(position);
+        final TUIMessageBean msg = getItem(position);
         if (holder instanceof MessageBaseHolder) {
             final MessageBaseHolder baseHolder = (MessageBaseHolder) holder;
             baseHolder.setOnItemClickListener(mOnItemLongClickListener);
@@ -133,24 +135,17 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                         ((MessageHeaderHolder) baseHolder).setLoadingStatus(mLoading);
                     }
                     break;
-                case MessageInfo.MSG_TYPE_TEXT:
-                case MessageInfo.MSG_TYPE_IMAGE:
-                case MessageInfo.MSG_TYPE_VIDEO:
-                case MessageInfo.MSG_TYPE_CUSTOM_FACE:
-                case MessageInfo.MSG_TYPE_AUDIO:
-                case MessageInfo.MSG_TYPE_FILE:
-                case MessageInfo.MSG_TYPE_CUSTOM:
-                case MessageInfo.MSG_TYPE_MERGE: {
+                default:
                     if (position == mHighShowPosition) {
                         final Handler mHandlerData = new Handler();
                         Runnable runnable = new Runnable() {
                             @Override
                             public void run() {
-                                ((MessageEmptyHolder) baseHolder).mContentLayout.setBackgroundColor(TUIChatService.getAppContext().getResources().getColor(R.color.line));
+                                baseHolder.mContentLayout.setBackgroundColor(TUIChatService.getAppContext().getResources().getColor(R.color.line));
                                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        ((MessageEmptyHolder) baseHolder).mContentLayout.setBackgroundColor(TUIChatService.getAppContext().getResources().getColor(R.color.chat_background_color));
+                                        baseHolder.mContentLayout.setBackgroundColor(TUIChatService.getAppContext().getResources().getColor(R.color.chat_background_color));
                                         mHighShowPosition = -1;
                                     }
                                 }, 600);
@@ -159,9 +154,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
                         mHandlerData.postDelayed(runnable, 200);
                     }
-                }
-                break;
-                default:
                     break;
             }
             baseHolder.layoutViews(msg, position);
@@ -171,18 +163,18 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
     // 设置多选框的选中状态和点击事件
     private void setCheckBoxStatus(final int position, final String msgId, MessageBaseHolder baseHolder) {
-        if (!(baseHolder instanceof MessageEmptyHolder) || ((MessageEmptyHolder) baseHolder).mMutiSelectCheckBox == null) {
+        if (baseHolder.mMutiSelectCheckBox == null) {
             return;
         }
         if (!isShowMultiSelectCheckBox) {
-            ((MessageEmptyHolder) baseHolder).mMutiSelectCheckBox.setVisibility(View.GONE);
+            baseHolder.mMutiSelectCheckBox.setVisibility(View.GONE);
         } else {
-            ((MessageEmptyHolder) baseHolder).mMutiSelectCheckBox.setVisibility(View.VISIBLE);
+            baseHolder.mMutiSelectCheckBox.setVisibility(View.VISIBLE);
 
             //设置条目状态
-            ((MessageEmptyHolder) baseHolder).mMutiSelectCheckBox.setChecked(isItemChecked(msgId));
+            baseHolder.mMutiSelectCheckBox.setChecked(isItemChecked(msgId));
             //checkBox的监听
-            ((MessageEmptyHolder) baseHolder).mMutiSelectCheckBox.setOnClickListener(new View.OnClickListener() {
+            baseHolder.mMutiSelectCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (isItemChecked(msgId)) {
@@ -234,7 +226,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     }
 
     @Override
-    public void onViewNeedRefresh(final int type, MessageInfo locateMessage) {
+    public void onViewNeedRefresh(final int type, TUIMessageBean locateMessage) {
         BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -265,11 +257,9 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                     mRecycleView.onMsgAddBack();
                 } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE) {
                     notifyDataSetChanged();
-                } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_LOAD || type == MessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT) {
+                } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT) {
                     //加载条目为数0，只更新动画
-                    if (value == 0) {
-                        notifyItemChanged(0);
-                    } else {
+                    if (value != 0) {
                         //加载过程中有可能之前第一条与新加载的最后一条的时间间隔不超过5分钟，时间条目需去掉，所以这里的刷新要多一个条目
                         if (getItemCount() > value) {
                             notifyItemRangeInserted(0, value);
@@ -280,9 +270,20 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_DELETE) {
                     notifyItemRemoved(value);
                     notifyDataSetChanged();
+                } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_LOAD) {
+                    notifyDataSetChanged();
+                    RecyclerView.LayoutManager layoutManager = mRecycleView.getLayoutManager();
+                    if (layoutManager instanceof LinearLayoutManager && mDataSource != null && !mDataSource.isEmpty()) {
+                        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(mDataSource.size() - 1, 0);
+                    }
                 }
+                refreshLoadView();
             }
         }, 100);
+    }
+
+    private void refreshLoadView() {
+        notifyItemChanged(0);
     }
 
     @Override
@@ -295,12 +296,16 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         if (position == 0) {
             return MSG_TYPE_HEADER_VIEW;
         }
-        MessageInfo msg = getItem(position);
-        return msg.getMsgType();
+        TUIMessageBean msg = getItem(position);
+        // 撤回消息显示为 TIPS 类型
+        if (msg.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
+            return TUIChatService.getInstance().getViewType(TipsMessageBean.class);
+        }
+        return TUIChatService.getInstance().getViewType(msg.getClass());
     }
 
     @Override
-    public void onDataSourceChanged(List<MessageInfo> dataSource) {
+    public void onDataSourceChanged(List<TUIMessageBean> dataSource) {
         mDataSource = dataSource;
     }
 
@@ -313,29 +318,28 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     }
 
 
-    public int getMessagePosition(MessageInfo messageInfo) {
+    public int getMessagePosition(TUIMessageBean message) {
         int positon = 0;
         if (mDataSource == null || mDataSource.isEmpty()) {
             return positon;
         }
 
         for (int i = 0; i < mDataSource.size(); i++) {
-            if (mDataSource.get(i) == messageInfo) {
+            if (mDataSource.get(i) == message) {
                 positon = i;
             }
         }
         return positon + 1;
     }
 
-    public MessageInfo getItem(int position) {
+    public TUIMessageBean getItem(int position) {
         if (position == 0 || mDataSource == null || mDataSource.size() == 0) {
             return null;
         }
         if (position >= mDataSource.size() + 1) {
             return null;
         }
-        MessageInfo info = mDataSource.get(position - 1);
-        return info;
+        return mDataSource.get(position - 1);
     }
 
 }

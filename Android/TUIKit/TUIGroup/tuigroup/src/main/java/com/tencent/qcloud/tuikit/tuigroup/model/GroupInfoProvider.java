@@ -165,6 +165,7 @@ public class GroupInfoProvider {
     public void modifyMyGroupNickname(GroupInfo groupInfo, final String nickname, final IUIKitCallback callBack) {
         if (groupInfo == null) {
             ToastUtil.toastLongMessage("modifyMyGroupNickname fail: NO GROUP");
+            return;
         }
 
         V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = new V2TIMGroupMemberFullInfo();
@@ -400,7 +401,7 @@ public class GroupInfoProvider {
     public void setGroupReceiveMessageOpt(String groupId, boolean isReceive, IUIKitCallback callBack) {
         int option;
         if (!isReceive) {
-            option = V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE;
+            option = V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE;
         } else {
             option = V2TIMMessage.V2TIM_RECEIVE_MESSAGE;
         }

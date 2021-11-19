@@ -198,7 +198,7 @@ public class GroupInfo extends ChatInfo {
         setGroupType(infoResult.getGroupInfo().getGroupType());
         setOwner(infoResult.getGroupInfo().getOwner());
         setJoinType(infoResult.getGroupInfo().getGroupAddOpt());
-        setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE ? true : false);
+        setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE ? true : false);
         return this;
     }
 }

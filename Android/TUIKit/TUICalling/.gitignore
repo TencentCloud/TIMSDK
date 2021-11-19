@@ -10,3 +10,5 @@
 /tuicalling/.idea/
 /tuicalling/build/
 local.properties
+/.codecc/
+/build.yml

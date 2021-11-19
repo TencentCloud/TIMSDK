@@ -152,7 +152,9 @@ public class TRTCCallingImpl extends TRTCCalling {
     private SensorManager       mSensorManager;
     private SensorEventListener mSensorEventListener;
 
-    private boolean mIsBeingCalled = true;
+    private boolean mIsBeingCalled   = true;   // 默认是被叫
+    private boolean mEnableMuteMode  = false;  // 是否开启静音模式
+    private String  mCallingBellPath = "";     // 被叫铃音路径
 
     private int mUserType = USER_TYPE_NONE;
 
@@ -236,7 +238,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                         mTRTCInternalListenerManager.onReject(invitee);
                     }
                 }
-                TRTCLogger.d(TAG, "mIsInRoom="+mIsInRoom);
+                TRTCLogger.d(TAG, "mIsInRoom=" + mIsInRoom);
                 preExitRoom(null);
                 stopDialingMusic();
                 unregisterSensorEventListener();
@@ -574,11 +576,16 @@ public class TRTCCallingImpl extends TRTCCalling {
 
         @Override
         public void onEnterRoom(long result) {
-            TRTCLogger.d(TAG, "onEnterRoom result:" + result);
+            TRTCLogger.d(TAG, "onEnterRoom result:" + result + " , mCurSponsorForMe = " + mCurSponsorForMe
+                    + " , mIsBeingCalled = " + mIsBeingCalled);
             if (result < 0) {
                 stopCall();
             } else {
                 mIsInRoom = true;
+                //如果自己是被叫,接收到通话请求后进房,进房成功后发送accept信令给主叫端;如果自己是主叫,不处理
+                if (mIsBeingCalled) {
+                    sendModel(mCurSponsorForMe, CallModel.VIDEO_CALL_ACTION_ACCEPT);
+                }
             }
         }
 
@@ -676,6 +683,7 @@ public class TRTCCallingImpl extends TRTCCalling {
         TRTCLogger.d(TAG, "stopCall");
         isOnCalling = false;
         mIsInRoom = false;
+        mIsBeingCalled = true;
         mEnterRoomTime = 0;
         mCurCallID = "";
         mCurRoomID = 0;
@@ -965,7 +973,7 @@ public class TRTCCallingImpl extends TRTCCalling {
      * 在用户超时、拒绝、忙线、有人退出房间时需要进行判断
      */
     private void preExitRoom(String leaveUser) {
-        TRTCLogger.i(TAG, "preExitRoom: " + mCurRoomRemoteUserSet + " " + mCurInvitedList + " mIsInRoom=" + mIsInRoom+ " leaveUser=" + leaveUser);
+        TRTCLogger.i(TAG, "preExitRoom: " + mCurRoomRemoteUserSet + " " + mCurInvitedList + " mIsInRoom=" + mIsInRoom + " leaveUser=" + leaveUser);
         if (mCurRoomRemoteUserSet.isEmpty() && mCurInvitedList.isEmpty()) {
             // 当没有其他用户在房间里了，则结束通话。
             if (!TextUtils.isEmpty(leaveUser) && mIsInRoom) {
@@ -995,7 +1003,6 @@ public class TRTCCallingImpl extends TRTCCalling {
 
     @Override
     public void accept() {
-        sendModel(mCurSponsorForMe, CallModel.VIDEO_CALL_ACTION_ACCEPT);
         enterTRTCRoom();
         stopRing();
     }
@@ -1225,6 +1232,16 @@ public class TRTCCallingImpl extends TRTCCalling {
         mTIMSignallingListener.onReceiveNewInvitation(inviteID, sender, groupId, invitedList, json);
     }
 
+    @Override
+    public void setCallingBell(String filePath) {
+        mCallingBellPath = filePath;
+    }
+
+    @Override
+    public void enableMuteMode(boolean enable) {
+        mEnableMuteMode = enable;
+    }
+
     private String sendModel(final String user, int action) {
         return sendModel(user, action, null, null);
     }
@@ -1344,6 +1361,7 @@ public class TRTCCallingImpl extends TRTCCalling {
         }
         final SignallingData signallingData = createSignallingData();
         signallingData.setCallType(realCallModel.callType);
+        signallingData.setRoomId(realCallModel.roomId);
         GsonBuilder gsonBuilder = new GsonBuilder();
         // signalling
         switch (realCallModel.action) {
@@ -1365,7 +1383,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                     callID = sendGroupInvite(groupId, realCallModel.invitedList, dialingDataStr, TIME_OUT_COUNT, new V2TIMCallback() {
                         @Override
                         public void onError(int code, String desc) {
-                            TRTCLogger.e(TAG, "inviteInGroup callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
+                            TRTCLogger.e(TAG, "inviteInGroup failed callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
                         }
 
                         @Override
@@ -1387,7 +1405,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                     callID = sendInvite(receiver, dialingDataStr, pushInfo, TIME_OUT_COUNT, new V2TIMCallback() {
                         @Override
                         public void onError(int code, String desc) {
-                            TRTCLogger.e(TAG, "invite  callID:" + realCallModel.callId + ",error:" + code + " desc:" + desc);
+                            TRTCLogger.e(TAG, "invite failed callID:" + realCallModel.callId + ",error:" + code + " desc:" + desc);
                         }
 
                         @Override
@@ -1407,7 +1425,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                 acceptInvite(realCallModel.callId, acceptDataStr, new V2TIMCallback() {
                     @Override
                     public void onError(int code, String desc) {
-                        TRTCLogger.e(TAG, "accept callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
+                        TRTCLogger.e(TAG, "accept failed callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
                     }
 
                     @Override
@@ -1423,7 +1441,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                 rejectInvite(realCallModel.callId, rejectDataStr, new V2TIMCallback() {
                     @Override
                     public void onError(int code, String desc) {
-                        TRTCLogger.e(TAG, "reject callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
+                        TRTCLogger.e(TAG, "reject failed callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
                     }
 
                     @Override
@@ -1442,12 +1460,12 @@ public class TRTCCallingImpl extends TRTCCalling {
                 rejectInvite(realCallModel.callId, lineBusyMapStr, new V2TIMCallback() {
                     @Override
                     public void onError(int code, String desc) {
-                        TRTCLogger.e(TAG, "reject  callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
+                        TRTCLogger.e(TAG, "line_busy failed callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
                     }
 
                     @Override
                     public void onSuccess() {
-                        TRTCLogger.d(TAG, "reject success callID:" + realCallModel.callId);
+                        TRTCLogger.d(TAG, "line_busy success callID:" + realCallModel.callId);
                     }
                 });
                 break;
@@ -1458,7 +1476,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                 cancelInvite(realCallModel.callId, cancelMapStr, new V2TIMCallback() {
                     @Override
                     public void onError(int code, String desc) {
-                        TRTCLogger.e(TAG, "cancel callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
+                        TRTCLogger.e(TAG, "cancel failde callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
                     }
 
                     @Override
@@ -1478,7 +1496,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                     sendGroupInvite(groupId, realCallModel.invitedList, hangupMapStr, 0, new V2TIMCallback() {
                         @Override
                         public void onError(int code, String desc) {
-                            TRTCLogger.e(TAG, "inviteInGroup-->hangup callID: " + realCallModel.callId + ", error:" + code + " desc:" + desc);
+                            TRTCLogger.e(TAG, "inviteInGroup-->hangup failed callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
                         }
 
                         @Override
@@ -1490,7 +1508,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                     sendInvite(receiver, hangupMapStr, null, 0, new V2TIMCallback() {
                         @Override
                         public void onError(int code, String desc) {
-                            TRTCLogger.e(TAG, "invite-->hangup callID: " + realCallModel.callId + ", error:" + code + " desc:" + desc);
+                            TRTCLogger.e(TAG, "invite-->hangup failed callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
                         }
 
                         @Override
@@ -1511,7 +1529,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                 sendInvite(receiver, switchAudioCall, null, TIME_OUT_COUNT, new V2TIMCallback() {
                     @Override
                     public void onError(int code, String desc) {
-                        TRTCLogger.e(TAG, "invite-->switchAudioCall callID: " + realCallModel.callId + ", error:" + code + " desc:" + desc);
+                        TRTCLogger.e(TAG, "invite-->switchAudioCall failed callID: " + realCallModel.callId + ", error:" + code + " desc:" + desc);
                     }
 
                     @Override
@@ -1531,7 +1549,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                 acceptInvite(realCallModel.callId, acceptSwitchAudioDataStr, new V2TIMCallback() {
                     @Override
                     public void onError(int code, String desc) {
-                        TRTCLogger.e(TAG, "accept switch audio call callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
+                        TRTCLogger.e(TAG, "accept switch audio call failed callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
                     }
 
                     @Override
@@ -1553,7 +1571,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                 rejectInvite(realCallModel.callId, rejectSwitchAudioMapStr, new V2TIMCallback() {
                     @Override
                     public void onError(int code, String desc) {
-                        TRTCLogger.e(TAG, "reject switch to audio callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
+                        TRTCLogger.e(TAG, "reject switch to audio failed callID:" + realCallModel.callId + ", error:" + code + " desc:" + desc);
                     }
 
                     @Override
@@ -1573,7 +1591,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                 model == null) {
             mLastCallModel = (CallModel) realCallModel.clone();
         }
-        TRTCLogger.d(TAG, "callID="+callID);
+        TRTCLogger.d(TAG, "callID=" + callID);
         return callID;
     }
 
@@ -1781,10 +1799,14 @@ public class TRTCCallingImpl extends TRTCCalling {
     }
 
     private void startRing() {
-        if (null == mMediaPlayHelper) {
+        if (null == mMediaPlayHelper || mEnableMuteMode) {
             return;
         }
-        mMediaPlayHelper.start(R.raw.phone_ringing);
+        if (TextUtils.isEmpty(mCallingBellPath)) {
+            mMediaPlayHelper.start(R.raw.phone_ringing);
+        } else {
+            mMediaPlayHelper.start(mCallingBellPath);
+        }
     }
 
     private void stopRing() {

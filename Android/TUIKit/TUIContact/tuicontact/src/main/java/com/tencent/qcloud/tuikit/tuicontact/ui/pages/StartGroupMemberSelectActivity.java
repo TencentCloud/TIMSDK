@@ -19,6 +19,7 @@ import com.tencent.qcloud.tuikit.tuicontact.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StartGroupMemberSelectActivity extends Activity {
@@ -38,30 +39,28 @@ public class StartGroupMemberSelectActivity extends Activity {
         init();
     }
 
-    private String getMembersNameCard(){
+    private ArrayList<String> getMembersNameCard(){
         if (mMembers.size() == 0) {
-            return "";
+            return new ArrayList<>();
         }
 
-        String nameCardString = "";
+        ArrayList<String> nameCards = new ArrayList<>();
         for(int i = 0; i < mMembers.size(); i++){
-            nameCardString += mMembers.get(i).getNameCard();
-            nameCardString += " ";
+            nameCards.add(mMembers.get(i).getNameCard());
         }
-        return nameCardString;
+        return nameCards;
     }
 
-    private String getMembersUserId(){
+    private ArrayList<String> getMembersUserId(){
         if (mMembers.size() == 0) {
-            return "";
+            return new ArrayList<>();
         }
 
-        String userIdString = "";
+        ArrayList<String> userIds = new ArrayList<>();
         for(int i = 0; i < mMembers.size(); i++){
-            userIdString += mMembers.get(i).getAccount();
-            userIdString += " ";
+            userIds.add(mMembers.get(i).getAccount());
         }
-        return userIdString;
+        return userIds;
     }
 
     private void init() {
@@ -84,8 +83,8 @@ public class StartGroupMemberSelectActivity extends Activity {
                     friendIdList.add(memberInfo.getAccount());
                 }
                 i.putExtra(TUIContactConstants.Selection.LIST, (Serializable) friendIdList);
-                i.putExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, getMembersNameCard());
-                i.putExtra(TUIContactConstants.Selection.USER_ID_SELECT, getMembersUserId());
+                i.putStringArrayListExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, getMembersNameCard());
+                i.putStringArrayListExtra(TUIContactConstants.Selection.USER_ID_SELECT, getMembersUserId());
                 i.putExtras(getIntent());
                 setResult(3, i);
 
@@ -123,8 +122,8 @@ public class StartGroupMemberSelectActivity extends Activity {
                         mMembers.clear();
 
                         Intent i = new Intent();
-                        i.putExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, getString(R.string.at_all));
-                        i.putExtra(TUIContactConstants.Selection.USER_ID_SELECT, TUIContactConstants.Selection.SELECT_ALL);
+                        i.putStringArrayListExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, new ArrayList<String>(Arrays.asList(getString(R.string.at_all))));
+                        i.putStringArrayListExtra(TUIContactConstants.Selection.USER_ID_SELECT, new ArrayList<String>(Arrays.asList(TUIContactConstants.Selection.SELECT_ALL)));
                         setResult(3, i);
 
                         finish();

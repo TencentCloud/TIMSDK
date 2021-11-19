@@ -59,9 +59,9 @@ public class TUIChatConfigs {
 
     /**
      * 设置自定义表情包配置
-     *
+     * @note
+     *  需要注意的是， TUIKit 里面的表情包都是有版权限制的，购买的 IM 服务不包括表情包的使用权，请在上线的时候替换成自己的表情包，否则会面临法律风险
      * @param customFaceConfig
-     * @return
      */
     public TUIChatConfigs setCustomFaceConfig(CustomFaceConfig customFaceConfig) {
         this.customFaceConfig = customFaceConfig;
