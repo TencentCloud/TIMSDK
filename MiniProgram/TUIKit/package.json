@@ -8,7 +8,8 @@
   "scripts": {
     "checkfile": "node ./scripts/check-file-sensitive-information.js",
     "lint": "./node_modules/.bin/eslint ./miniprogram",
-    "fix": "./node_modules/.bin/eslint --fix ./miniprogram"
+    "fix": "./node_modules/.bin/eslint --fix ./miniprogram",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
@@ -23,6 +24,8 @@
     "eslint-config-tencent": "^1.0.1",
     "eslint-plugin-import": "^2.23.4",
     "fs-sync": "^1.0.6",
+    "husky": "^7.0.2",
+    "lint-staged": "^11.2.3",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-builtins": "^2.1.2",
@@ -36,5 +39,8 @@
     "url": "https://git.woa.com/jassenzhang/TUIKit-IM-Mini.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
+  }
 }

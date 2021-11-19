@@ -11,7 +11,7 @@
     <view class="custom-content">
       <view class="custom-content-title">{{renderDom[0].title}}</view>
       <view class="custom-content-description" wx:for="{{renderDom[0].item}}" wx:key="index" id="{{item.key}}">{{item.key}}</view>
-      <view class="custom-content-description">{{renderDom[0].description}}</view>
+      <text class="custom-content-description">{{renderDom[0].description}}</text>
     </view>
   </view>
   <view wx:if="{{renderDom[0].type ==='evaluation'}}"  class="custom-message {{isMine?'my-custom':''}}">
@@ -24,6 +24,9 @@
     </view>
   </view>
   <view wx:if="{{renderDom[0].type ==='group_create'}}" class="custom-message {{isMine?'my-custom':''}}" >
+    <view class="custom-content-text">{{renderDom[0].text}}</view>
+  </view>
+  <view wx:if="{{renderDom[0].type ==='c2cCalling' || renderDom[0].type ==='groupCalling'}}" class="custom-message {{isMine?'my-custom':''}}" >
     <view class="custom-content-text">{{renderDom[0].text}}</view>
   </view>
   <view wx:if="{{renderDom[0].type ==='notSupport'}}" class="message-body-span text-message" >

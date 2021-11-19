@@ -1,5 +1,5 @@
 import logger from '../../utils/logger'
-
+const app = getApp()
 Page({
 
   /**
@@ -10,24 +10,46 @@ Page({
     conversation: {},
     messageList: [],
     isShow: false,
+    showImage: false,
     showChat: true,
     conversationID: '',
+    config: {
+      sdkAppID: '',
+      userID: '',
+      userSig: '',
+      type: 1,
+      tim: null,
+    },
+    unreadCount: 0,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    // conversationID: C2C、 GROUP
-    logger.log(` TUI-chat | onLoad | conversationID: ${options.conversationID}`)
-    const { conversationID } = options
+    const { config } = this.data
+    config.sdkAppID = app.globalData.SDKAppID
+    config.userID = app.globalData.userInfo.userID
+    config.userSig = app.globalData.userInfo.userSig
+    config.tim = wx.$TUIKit
     this.setData({
-      conversationID,
+      config,
+    }, () => {
+      this.TRTCCalling = this.selectComponent('#tui-calling')
+      this.TRTCCalling.init()
     })
-    wx.$TUIKit.setMessageRead({ conversationID }).then(() => {
-      logger.log('TUI-chat | setMessageRead  | ok')
+    // conversationID: C2C、 GROUP
+    logger.log(`| TUI-chat | onLoad | conversationInfomation: ${options.conversationInfomation}`)
+    const   payloadData = JSON.parse(options.conversationInfomation)
+    const unreadCount = payloadData.unreadCount ? payloadData.unreadCount : 0
+    this.setData({
+      conversationID: payloadData.conversationID,
+      unreadCount,
     })
-    wx.$TUIKit.getConversationProfile(conversationID).then((res) => {
+    wx.$TUIKit.setMessageRead({ conversationID: this.data.conversationID }).then(() => {
+      logger.log('| TUI-chat | setMessageRead | ok')
+    })
+    wx.$TUIKit.getConversationProfile(this.data.conversationID).then((res) => {
       const { conversation } = res.data
       this.setData({
         conversationName: this.getConversationName(conversation),
@@ -35,6 +57,12 @@ Page({
         isShow: conversation.type === 'GROUP',
       })
     })
+  },
+  /**
+ * 生命周期函数--监听页面卸载
+ */
+  onUnload() {
+    this.TRTCCalling.destroyed()
   },
   getConversationName(conversation) {
     if (conversation.type === '@TIM#SYSTEM') {
@@ -50,7 +78,6 @@ Page({
       return conversation.groupProfile.name || conversation.groupProfile.groupID
     }
   },
-
   sendMessage(event) {
     // 将自己发送的消息写进消息列表里面
     this.selectComponent('#message-list').updateMessageList(event.detail.message)
@@ -59,7 +86,11 @@ Page({
     this.selectComponent('#message-input').handleClose()
   },
   handleCall(event) {
-    this.selectComponent('#tui-calling').handleCall(event.detail)
+    if (event.detail.groupID) {
+      this.TRTCCalling.groupCall(event.detail)
+    } else {
+      this.TRTCCalling.call(event.detail)
+    }
   },
   goBack() {
     const pages = getCurrentPages() // 当前页面栈
@@ -75,8 +106,12 @@ Page({
 
       })
     }
+    this.TRTCCalling.destroyed()
     wx.$TUIKit.setMessageRead({
       conversationID: this.data.conversationID,
     }).then(() => {})
+  },
+  changeMemberCount(event) {
+    this.selectComponent('#groip-profile').updateMemberCount(event.detail.groupOptionsNumber)
   },
 })

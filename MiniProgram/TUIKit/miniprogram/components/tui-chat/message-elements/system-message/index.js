@@ -9,8 +9,6 @@ Component({
       type: Object,
       value: '',
       observer(newVal) {
-        console.log(parseGroupSystemNotice(newVal), '999')
-        console.log(caculateTimeago(newVal.time * 1000))
         this.setData({
           message: newVal,
           messageTime: caculateTimeago(newVal.time * 1000),
@@ -25,6 +23,7 @@ Component({
    */
   data: {
     message: {},
+    options: '处理',
     messageTime: '',
     renderDom: '',
   },
@@ -40,35 +39,39 @@ Component({
    * 组件的方法列表
    */
   methods: {
-
-
-  },
-
-  handleClick() {
-    wx.showActionSheet({
-      itemList: ['同意', '拒绝'],
-      success: res => {
-        const option = {
-          handleAction: 'Agree',
-          handleMessage: '欢迎进群',
-          message: this.data.message,
-        }
-        if (res.tapIndex === 1) {
-          option.handleAction = 'Reject'
-          option.handleMessage = '拒绝申请'
-        }
-        wx.$TUIKit.handleGroupApplication(option)
-          .then(() => {
-            wx.showToast({ title: option.handleAction === 'Agree' ? '已同意申请' : '已拒绝申请' })
+    handleClick() {
+      wx.showActionSheet({
+        itemList: ['同意', '拒绝'],
+        success: res => {
+          this.triggerEvent('changeSystemMessageList', {
+            message: this.data.message,
           })
-          .catch((error) => {
-            wx.showToast({
-              title: error.message || '处理失败',
-              icon: 'none',
+          const option = {
+            handleAction: 'Agree',
+            handleMessage: '欢迎进群',
+            message: this.data.message,
+          }
+          if (res.tapIndex === 1) {
+            this.triggerEvent('changeSystemMessageList', {
+              message: this.data.message,
             })
-          })
-      },
-    })
+            option.handleAction = 'Reject'
+            option.handleMessage = '拒绝申请'
+          }
+          wx.$TUIKit.handleGroupApplication(option)
+            .then(() => {
+              wx.showToast({ title: option.handleAction === 'Agree' ? '已同意申请' : '已拒绝申请' })
+            })
+            .catch((error) => {
+              wx.showToast({
+                title: error.message || '处理失败',
+                icon: 'none',
+              })
+            })
+        },
+      })
+    },
+
   },
 
 

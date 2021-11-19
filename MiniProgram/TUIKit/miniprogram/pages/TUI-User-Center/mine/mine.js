@@ -42,9 +42,9 @@ Page({
       url: '../personal/personal',
     })
   },
+  // 退出登陆
   quit() {
-    // TUIKit xxxx | mine | quit | xxxx
-    logger.log('| TUI-User-Center | mine  | quit-logout ')
+    logger.log('| TUI-User-Center | mine | quit-logout ')
     wx.$TUIKit.logout().then(() => {
       wx.clearStorage()
       app.resetLoginData()

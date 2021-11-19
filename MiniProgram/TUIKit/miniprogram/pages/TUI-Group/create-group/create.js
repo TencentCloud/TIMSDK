@@ -21,78 +21,27 @@ Page({
 
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  },
-  showtype() {
+  // 展示群列表
+  showGroupTypeList() {
     this.setData({
       popupToggle: true,
     })
   },
-  bindgroupIDInput(e) {
+  // 获取输入的群ID
+  bindGroupIDInput(e) {
     const id = e.detail.value
     this.setData({
       groupID: id,
     })
   },
-  bindgroupnameInput(e) {
+  // 获取输入的群名称
+  bindGroupNameInput(e) {
     const groupname = e.detail.value
     this.setData({
       name: groupname,
     })
   },
+  // 创建群聊时，传点击事件对应的值
   click(e) {
     this.setData({
       groupType: e.currentTarget.dataset.value.groupType,
@@ -101,9 +50,9 @@ Page({
       popupToggle: false,
     })
   },
-
+  // 确认创建群聊
   bindConfirmCreate() {
-    logger.log(`TUI-Group | create-group | bindConfirmCreate | groupID: ${this.data.groupID}`)
+    logger.log(`| TUI-Group | create-group | bindConfirmCreate | groupID: ${this.data.groupID}`)
     const promise =  wx.$TUIKit.createGroup({
       type: this.data.Type,
       name: this.data.name,
@@ -111,9 +60,11 @@ Page({
     })
     promise.then((imResponse) => { // 创建成功
       // 创建的群的资料
-      const { groupID } = imResponse.data.group
+      const payloadData = {
+        conversationID: `GROUP${imResponse.data.group.groupID}`,
+      }
       wx.navigateTo({
-        url: `../../TUI-Chat/chat?conversationID=GROUP${groupID}`,
+        url: `../../TUI-Chat/chat?conversationInfomation=${JSON.stringify(payloadData)}`,
       })
     }).catch(() => {
       wx.showToast({
@@ -122,6 +73,7 @@ Page({
       })
     })
   },
+  // 点击空白区域关闭弹窗
   handleChooseToggle() {
     this.setData({
       popupToggle: false,

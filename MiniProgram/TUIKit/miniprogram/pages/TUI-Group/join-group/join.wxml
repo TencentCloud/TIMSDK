@@ -7,11 +7,11 @@
   <view class="tui-search-area">
     <view class="tui-search-bar">
       <image class="tui-searchcion" src="../../../static/assets/serach-icon.svg" />
-      <input class="tui-search-bar-input" value="{{groupID}}" placeholder="请输入群ID" bindinput='groupIDInput' bindconfirm="searchGroupByID"  bindblur="searchGroupByID"/>
+      <input class="tui-search-bar-input" value="{{groupID}}" placeholder="请输入群ID" bindinput='getGroupIDInput' bindconfirm="searchGroupByID"  bindblur="searchGroupByID"/>
     </view>
   </view>
-  <view class="tui-person-to-invite" wx:if="{{searchGroup.groupID}}" >
-    <image bindtap="handleChoose" class="tui-normal-choose" src="{{searchGroup.isChoose ? '../../../static/assets/single-choice-hover.svg' : '../../../static/assets/single-choice-normal.svg'}}" />
+  <view class="tui-person-to-invite" wx:if="{{searchGroup.groupID}}" bindtap="handleChoose">
+    <image  class="tui-normal-choose" src="{{searchGroup.isChoose ? '../../../static/assets/single-choice-hover.svg' : '../../../static/assets/single-choice-normal.svg'}}" />
     <view class="tui-person-profile">
       <image class="tui-person-profile-avatar" src="{{searchGroup.group.avatar || '../../../static/assets/gruopavatar.svg' }}" />
       <view>

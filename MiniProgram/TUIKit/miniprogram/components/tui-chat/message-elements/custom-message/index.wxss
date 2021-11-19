@@ -27,6 +27,7 @@
   color: #006EFF;
   letter-spacing: 0;
   margin-bottom: 12rpx;
+  word-break: break-word;
 }
 
 .custom-content-price {

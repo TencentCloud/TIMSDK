@@ -18,7 +18,7 @@ export function isTokenValided(expiresIn) {
  * @returns {Promise}
  */
 export function setTokenStorage(options) {
-  logger.log(`TUIKit | TUI-utils | setTokenStorage | options:${options}`)
+  logger.log(`| TUIKit | TUI-utils | setTokenStorage | options:${options}`)
   return new Promise((resolve, reject) => {
     const data = {
       expiresIn: Date.now() + VALID_SPAN,

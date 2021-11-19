@@ -62,5 +62,6 @@ Component({
         message: e.currentTarget.dataset.words,
       })
     },
+
   },
 })

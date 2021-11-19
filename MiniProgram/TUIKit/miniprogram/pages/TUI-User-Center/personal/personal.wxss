@@ -65,7 +65,6 @@
   z-index: 999;
 }
 .listimage{
-
   width: 16px;
   height: 16px;
   position: absolute;
@@ -133,9 +132,9 @@ border-radius: 20px;
 }
 .popup-main-avatar {
   width: 100vw;
-  height: 70%;
+  max-height: 60%;
   background: #FFFFFF;
-  padding: 32px 20px;
+  overflow: auto;
 }
 .popup-main-header-avatar{
   display: flex;
@@ -148,10 +147,7 @@ border-radius: 20px;
   height: 510px;
 }
 .popup-main-header-title-avatar{
-  margin-bottom: 24px;
-  padding-left: 10px ;
-  width: 104px;
-  height: 25px;
+  padding-left: 20px ;
 }
 .button-avatar {
   /* width: 32px;
@@ -168,12 +164,15 @@ border-radius: 20px;
   margin-right: 28px;
 }
 .image-list{
+  box-sizing: border-box;
+  padding-left: 10px;
   padding-top: 16px;
   width: 100%;
-  height: 800px;
- overflow: hidden;
-  padding-left: 10px;
+  max-height: 1600rpx;
 
+}
+.pop-main-header-avatar{
+  padding-top: 30rpx
 }
 .image-avatar{
   width: 68px;

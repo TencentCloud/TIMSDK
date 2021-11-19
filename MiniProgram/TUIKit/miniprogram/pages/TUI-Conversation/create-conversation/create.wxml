@@ -11,8 +11,8 @@
     </view>
     <view class="tui-showID">您的用户ID  {{userInfo.userID}}</view>
   </view>
-  <view class="tui-person-to-invite" wx:if="{{searchUser.userID}}" >
-    <image bindtap="handleChoose" class="tui-normal-choose" src="{{searchUser.isChoose ? '../../../static/assets/single-choice-hover.svg' : '../../../static/assets/single-choice-normal.svg'}}" />
+  <view class="tui-person-to-invite" wx:if="{{searchUser.userID}}" bindtap="handleChoose" >
+    <image  class="tui-normal-choose" src="{{searchUser.isChoose ? '../../../static/assets/single-choice-hover.svg' : '../../../static/assets/single-choice-normal.svg'}}" />
     <view class="tui-person-profile">
       <image class="tui-person-profile-avatar" src="{{searchUser.avatar || 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/avatar_21.png' }}" />
       <view>

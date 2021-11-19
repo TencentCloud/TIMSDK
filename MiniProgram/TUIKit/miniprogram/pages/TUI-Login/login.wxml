@@ -15,8 +15,8 @@
           <input class="input" type="text" placeholder="请输入用户名" bindinput='bindUserIDInput' placeholder-style="color:#BBBBBB;"/>
         </view>
       </view>
-      <view class="private-protocol-box">
-          <view class="private-protocol-switch" bindtap="onAgreePrivateProtocol">
+      <view class="private-protocol-box" bindtap="onAgreePrivateProtocol">
+          <view class="private-protocol-switch" >
             <image wx:if="{{privateAgree}}" src="../../static/images/selected.png" lazy-load="true"  />
             <image wx:else src="../../static/images/select.png" lazy-load="true" />
           </view>
@@ -29,10 +29,4 @@
     </view>
   </view>
 </view>
-<t-captcha
-   id="captcha"
-   app-id="2041948510"
-   bindverify="handlerVerify"
-   bindready="handlerReady"
-   bindclose="handlerClose"
-   binderror="handlerError" />
+

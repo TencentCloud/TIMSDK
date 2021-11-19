@@ -4,7 +4,7 @@
     <view class="view-image-text" bindtap="personal">
       <image class="image-radius"  src='{{config.avatar?config.avatar: "https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/avatar_21.png"}}' />
      <view class="text-container">
-      <view  class="name">{{config.nick?config.nick:"提莫"}}
+      <view  class="name">{{config.nick}}
       <text class="hasname" wx:if="{{hasname}}">(暂无昵称) </text></view>
        <view class="ID">userID:{{config.userID}}</view>
       </view>

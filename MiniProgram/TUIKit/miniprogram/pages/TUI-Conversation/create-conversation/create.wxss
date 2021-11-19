@@ -13,11 +13,11 @@
 }
 
 .tui-navigatorbar-back{
-  position: absolute;
-  width: 48rpx;
-  height: 48rpx;
-  left: 24rpx;
-  bottom: 20rpx;
+   position: absolute;
+    width: 60rpx;
+    height: 60rpx;
+    left: 24rpx;
+    bottom: 15rpx;
 }
 
 .conversation-title {

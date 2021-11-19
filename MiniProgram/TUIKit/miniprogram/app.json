@@ -12,7 +12,8 @@
     "pages/TUI-Calling/calling-index/index",
     "pages/TUI-Calling/calling-room/room",
     "pages/TUI-Group/create-group/create",
-    "pages/TUI-Group/join-group/join"
+    "pages/TUI-Group/join-group/join",
+    "pages/TUI-Group/memberprofile-group/memberprofile"
   ],
   "plugins": {
     "myPlugin": {

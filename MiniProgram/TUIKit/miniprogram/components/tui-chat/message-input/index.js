@@ -55,7 +55,6 @@ Component({
             })
           } else {
             // res.tempFilePath 存储录音文件的临时路径
-            console.log(res.tempFilePath)
             const message = wx.$TUIKit.createAudioMessage({
               to: this.getToAccount(),
               conversationType: this.data.conversation.type,
@@ -83,13 +82,14 @@ Component({
    * 组件的方法列表
    */
   methods: {
+    // 打开录音开关
     switchAudio() {
       this.setData({
         isAudio: !this.data.isAudio,
         text: '按住说话',
       })
     },
-
+    // 长按录音
     handleLongPress(e) {
       this.recorderManager.start({
         duration: 60000, // 录音的时长，单位 ms，最大值 600000（10 分钟）
@@ -144,7 +144,7 @@ Component({
       wx.hideLoading()
       this.recorderManager.stop()
     },
-
+    // 选中表情消息
     handleEmoji() {
       let targetFlag = 'emoji'
       if (this.data.displayFlag === 'emoji') {
@@ -154,6 +154,7 @@ Component({
         displayFlag: targetFlag,
       })
     },
+    // 选自定义消息
     handleExtensions() {
       let targetFlag = 'extension'
       if (this.data.displayFlag === 'extension') {
@@ -216,7 +217,6 @@ Component({
               },
               onProgress: percent => {
                 message.percent = percent
-                console.log(message, '777')
               },
             })
             this.$sendTIMMessage(message)
@@ -277,6 +277,7 @@ Component({
           icon: 'none',
         })
         return
+        
       }
       const type = e.currentTarget.dataset.value
       const { userID } = this.data.conversation.userProfile
@@ -291,7 +292,6 @@ Component({
 
     sendTextMessage(msg, flag) {
       const to = this.getToAccount()
-      console.log(to)
       const text = flag ? msg : this.data.message
       const message = wx.$TUIKit.createTextMessage({
         to,

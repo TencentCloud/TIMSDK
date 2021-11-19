@@ -5,7 +5,7 @@
       {{renderDom}}
     </view>
     <view class="choose">
-      <view class="button" bindtap="handleClick">处理</view>
+      <view class="button" bindtap="handleClick"> {{options}}</view>
     </view>
   </view>
   <view class="card" wx:else>

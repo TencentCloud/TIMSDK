@@ -113,7 +113,6 @@ Page({
   },
 
   click(e) {
-    console.log(e.currentTarget.dataset.value)
     this.setData({
       avatar: e.currentTarget.dataset.value.URL,
     })
