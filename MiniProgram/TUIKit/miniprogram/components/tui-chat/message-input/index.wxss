@@ -38,7 +38,6 @@
 .TUI-message-input-main {
     background-color: #fff;
     flex: 1;
-    height: 66rpx;
     margin: 0 10rpx;
     padding: 0 5rpx;
     border-radius: 5rpx;
@@ -47,7 +46,7 @@
 }
 .TUI-message-input-area {
     width: 100%;
-    height: 100%;
+    height: 100%
 }
 .TUI-icon {
     width: 56rpx;
@@ -74,6 +73,7 @@
 .TUI-Extension-icon {
     width: 128rpx;
     height: 128rpx;
+    border-radius: 25%;
 }
 
 .TUI-sendMessage-btn {

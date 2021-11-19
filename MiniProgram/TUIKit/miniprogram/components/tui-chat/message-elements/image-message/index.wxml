@@ -1,3 +1,3 @@
 <view class="TUI-ImageMessage" bindtap="previewImage">
-  <image class="image-message {{isMine?'my-image':''}}" mode="widthFix" src="{{renderDom[0].src}}" />
+  <image class="image-message {{isMine?'my-image':''}}"  mode="aspectFill" src="{{renderDom[0].src}}" />
 </view>

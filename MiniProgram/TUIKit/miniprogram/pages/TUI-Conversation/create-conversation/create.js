@@ -33,17 +33,20 @@ Page({
   onShow() {
 
   },
+  // 回退
   goBack() {
     wx.navigateBack({
       delta: 1,
     })
   },
+  // 获取输入的 UserID
   userIDInput(e) {
     this.setData({
       userID: e.detail.value,
       searchUser: {},
     })
   },
+  // 获取该 UserID 对应的个人资料
   getuserProfile() {
     wx.$TUIKit.getUserProfile({
       userIDList: [this.data.userID],
@@ -63,16 +66,21 @@ Page({
       }
     })
   },
+  // 选择发起会话
   handleChoose() {
     this.data.searchUser.isChoose = !this.data.searchUser.isChoose
     this.setData({
       searchUser: this.data.searchUser,
     })
   },
+  // 确认邀请
   bindConfirmInvite() {
     if (this.data.searchUser.isChoose) {
+      const payloadData = {
+        conversationID: `C2C${this.data.searchUser.userID}`,
+      }
       wx.navigateTo({
-        url: `../../TUI-Chat/chat?conversationID=C2C${this.data.searchUser.userID}`,
+        url: `../../TUI-Chat/chat?conversationInfomation=${JSON.stringify(payloadData)}`,
       })
     } else {
       wx.showToast({

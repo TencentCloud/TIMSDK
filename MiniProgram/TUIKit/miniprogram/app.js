@@ -2,9 +2,6 @@ import TIM from './static/tim-wx'
 import TIMUploadPlugin from './static/tim-upload-plugin'
 import logger from './utils/logger'
 import { SDKAPPID } from './debug/GenerateTestUserSig'
-
-
-
 // app.js
 App({
   onLaunch() {

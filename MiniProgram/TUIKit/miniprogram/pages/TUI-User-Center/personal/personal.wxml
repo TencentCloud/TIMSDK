@@ -21,17 +21,20 @@
             <label class="popup-main-header-title">修改昵称</label>
             <button class="button" catchtap="handleEditSubmit" disabled="{{!nick}}">确认</button>
         </view>
-        <input  class="popup-main-input" type="text" value="{{nick}}"  bindinput='bindEditInput' />
+        <input  class="popup-main-input" type="text" value="{{nick}}"  bindinput='bindEditInput' maxlength="20" placeholder="最大输入长度为20" />
         <label class="text">仅限中文、字母、数字和下划线，2-20个字</label>
     </view>
 </view>
-<view class="popup-mask-avatar"  wx:if="{{popupToggleAvatar}}" catchtap="handleEditToggleAvatar">
+    <view class="popup-mask-avatar"  wx:if="{{popupToggleAvatar}}" catch:tap="handleEditToggleAvatar"  >
     <view class="popup-main-avatar" catchtap="handleCatchTap">
-      <view class="pop-main-header-avatar" data-item="{{item}}">
+      <view class="pop-main-header-avatar"> 
          <label class="popup-main-header-title-avatar">设置头像</label>
          <label class="button-avatar" catchtap="handleEditSubmitAvatar">确认</label>
-        <view class="image-list"> <image wx:for="{{avatarList}}" wx:key="id" class="image-avatar {{item.URL === avatar && 'image-avatar-active'}}" src="{{item.URL}}" data-value="{{item}}" bindtap="click"></image></view>
+        <view class="image-list"> 
+        <view>
+        <image wx:for="{{avatarList}}" wx:key="id" class="image-avatar {{item.URL === avatar && 'image-avatar-active'}}" src="{{item.URL}}" data-value="{{item}}" bindtap="click"></image>
+        </view>
+        </view>
       </view>
-    </view>
-</view>
-
+      </view>
+  </view>

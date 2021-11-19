@@ -1,8 +1,0 @@
-<view class="tui-calling">
-  <tui-calling
-          id="TRTCCalling-component"
-          config="{{callingConfig}}"
-          backgroundMute="{{true}}">
-  </tui-calling>
-</view>
-

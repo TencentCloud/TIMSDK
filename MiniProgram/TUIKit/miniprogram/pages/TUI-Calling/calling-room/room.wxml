@@ -19,7 +19,7 @@
             {{country}}
             <image class="icon-right" src="../../Resources/right.png" lazy-load="false" />
           </view> -->
-          <input class="input-search-user" maxlength="11" type="number" bindinput="userIDToSearchInput" placeholder="搜索用户ID" />
+          <input class="input-search-user" maxlength="11" type="number" id="{{123}}" bindinput="userIDToSearchInput" placeholder="搜索用户ID" />
         </view>
         <view class="btn-search" bindtap="searchUser" >搜索</view>
       </view>
@@ -37,6 +37,9 @@
           </view>
           <view wx:if="{{config.userID === remoteUserInfo.userID }}">自己</view>
           <view wx:else class="btn-userinfo-call" bindtap="call">呼叫</view>
+        </view>
+        <view wx:else="{{remoteUserInfo.userID}}" class="user-to-call">
+          <text class="userInfo-name">该用户暂未注册</text>
         </view>
       </view>
       <view wx:else class="search-default">

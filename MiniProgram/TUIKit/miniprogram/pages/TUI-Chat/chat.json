@@ -2,7 +2,7 @@
   "usingComponents": {
     "TUI-message-list": "/components/tui-chat/message-list/index",
     "TUI-message-input": "/components/tui-chat/message-input/index",
-    "TUI-calling": "/components/tui-calling/calling-index/index",
+    "TUI-calling": "/components/TUICalling/TUICalling",
     "TUI-group-profile": "/components/tui-group/group-profile/index"
   },
   "navigationStyle": "custom"

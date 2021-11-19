@@ -1,3 +1,7 @@
+.container{
+  width: 100%;
+  height: 100%
+}
 .message-list-container {
   width: 100%;
   height: 100%;
@@ -6,11 +10,13 @@
   /*max-width: 60vw;*/
   padding: 16rpx 0;
 }
+.t-message{
+  position: relative
+}
 .t-recieve-message {
   display: flex;
   flex-direction: row;
   justify-items: flex-start;
-  align-items: center;
   width: 100vw;
 }
 .t-message-avatar {
@@ -21,10 +27,10 @@
   height: 80rpx;
 }
 .t-self-message {
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  /*align-items: center;*/
   width: 100vw;
 }
 .t-self-message-body {
@@ -60,4 +66,161 @@
   height: 40px;
   top: -40px;
   right: 0;
+}
+.label-pop{
+  position: absolute;
+  top: -15px;
+  left: 70px;
+  background: white;
+  width: 200rpx;
+}
+.label-pop-mask {
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.label-recieve-body{
+    position: absolute;
+    top: -25px;
+    left: 65px;
+    width: 100rpx;
+    background: black;
+    padding-right: 3px;
+    padding-left: 3px;
+    background-color: black;
+    z-index: 100;
+    box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+    border-radius: 8rpx;
+}
+.label-recieve-body:after{
+    content: "";
+    display: block;
+    border-width: 20px;
+    position: absolute;
+    bottom: -27px;
+    left:  14px;
+    border-style: solid dashed dashed;
+    border-color: black transparent transparent;
+    font-size: 0;
+    line-height: 0;
+    margin-left: 9px;
+    border-top-width: 8px;
+    border-right-width: 3px;
+    border-bottom-width: 20px;
+    border-left-width: 3px;
+    border-top-style: solid;
+    border-right-style: dashed;
+    border-bottom-style: dashed;
+    border-left-style: dashed;
+    border-top-color: black;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+}
+.label-self-body{
+    position: absolute;
+    top:  -25px;
+    right: 50px;
+    background: black;
+    padding-right: 3px;
+    padding-left: 3px;
+    background-color: black;
+    z-index: 100;
+    box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+    border-radius: 8rpx;
+}
+.label-self-body:after{
+    content: "";
+    display: block;
+    border-width: 20px;
+    position: absolute;
+    bottom: -27px;
+    left: 30px;
+    border-style: solid dashed dashed;
+    border-color: black transparent transparent;
+    font-size: 0;
+    line-height: 0;
+    margin-left: 9px;
+    border-top-width: 8px;
+    border-right-width: 3px;
+    border-bottom-width: 20px;
+    border-left-width: 3px;
+    border-top-style: solid;
+    border-right-style: dashed;
+    border-bottom-style: dashed;
+    border-left-style: dashed;
+    border-top-color: black;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+}
+.deletemessage{
+  font-size: 14px;
+  color: white;
+}
+.revokemessage{
+  font-size: 14px;
+  color: white; 
+}
+.notice{
+  display: flex;
+  justify-content: center;
+  }
+.content{
+    background-color:white;
+    border-radius: 8px;
+    font-size: 14px;
+    color: blue;
+    padding: 6px 8px;
+  }
+.new-message-item{
+  position: absolute;
+  right: 30px;
+  bottom: 180px;
+  background: black;
+  padding-right: 3px;
+  padding-left: 3px;
+  background-color: black;
+  z-index: 6;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+  border-radius: 8rpx;
+}
+.new-message-box{
+  display: flex;
+  font-size: 14px;
+  color: white;
+  padding: 2px;
+}
+.icon-left{
+    height: 28rpx;
+    width: 28rpx;
+    color: black;
+    background-color: black;
+    padding-top: 2px;
+}
+.videomessage-show{
+  background: black
+}
+.change-message{
+  width: 100%;
+  height: 200rpx
+}
+.unread-message-item{
+  position: absolute;
+  right: 30px;
+  top: 180px;
+  background: black;
+  padding-right: 3px;
+  padding-left: 3px;
+  background-color: black;
+  z-index: 9;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+  border-radius: 8rpx;
+}
+.unread-message-box{
+  display: flex;
+  font-size: 14px;
+  color: white;
+  padding: 2px;
 }

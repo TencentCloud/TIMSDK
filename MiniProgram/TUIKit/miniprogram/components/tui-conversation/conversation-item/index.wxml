@@ -1,6 +1,6 @@
 <!--TODO: 默认图片在 cos 上添加 -->
 <movable-area wx:if="{{conversation.conversationID}}" class="t-conversation-item-container" >
-  <movable-view class="t-conversation-item" direction="horizontal" bindchange="handleTouchMove" damping="100" x="{{xScale}}" >
+  <movable-view wx:if="{{!conversation.isPinned}}"class="t-conversation-item" bind:touchend="handleTouchEnd" direction="horizontal" bindchange="handleTouchMove" damping="100" x="{{xScale}}" inertia out-of-bounds>
    <view class="avatar-box">
        <image class="t-conversation-item-avatar"  src="{{setConversationAvatar}}" binderror="handleimageerro">
        </image>
@@ -11,13 +11,50 @@
    </view>
     <view class="t-conversation-item-content">
       <label class="tui-conversation-item-name">{{conversationName}}</label>
+      <view class="tui-conversation-box">
+      <view class="tui-conversation-lastName" wx:if="{{conversation.type === 'GROUP'}}">
+        <text>{{showName}}:</text>
+      </view>
       <view class="tui-conversation-lastMessage">
-        <text>{{conversation.lastMessage.messageForShow}}</text>
+        <text>{{showMessage}}</text>
+      </view>
       </view>
     </view>
     <view class="t-conversation-item-info">
       {{conversation.lastMessage.timeago}}
     </view>
+    <view class="t-conversation-box">
+    <view  class="t-conversation-pinconversation" catchtap="pinConversation">{{showPin}}</view>
     <view class="t-conversation-delete" catchtap="deleteConversation">删除</view>
+    </view>
+  </movable-view>
+   <movable-view wx:else class="t-conversation-pinneditem" direction="horizontal" bind:touchend="handleTouchEnd" bindchange="handleTouchMove" damping="100" x="{{xScale}}" inertia out-of-bounds >
+   <view class="avatar-box">
+       <image class="t-conversation-item-avatar"  src="{{setConversationAvatar}}" binderror="handleimageerro">
+       </image>
+     <view class="unread" wx:if="{{conversation.unreadCount !== 0}}">
+       <view class="read-text" wx:if="{{conversation.unreadCount > 99}}">99+</view>
+       <view class="read-text" wx:else>{{conversation.unreadCount}}</view>
+     </view>
+   </view>
+    <view class="t-conversation-item-content">
+      <label class="tui-conversation-item-name">{{conversationName}}</label>
+      <view class="tui-conversation-box">
+      <view class="tui-conversation-lastName" wx:if="{{conversation.type === 'GROUP'}}">
+        <text>{{showName}}:</text>
+      </view>
+      <view class="tui-conversation-lastMessage">
+        <text>{{showMessage}}</text>
+      </view>
+      </view>
+    </view>
+    <view class="t-conversation-item-info">
+      {{conversation.lastMessage.timeago}}
+    </view>
+    <view class="t-conversation-box">
+    <view  class="t-conversation-pinconversation" catchtap="pinConversation">{{showPin}}</view>
+    <view class="t-conversation-delete" catchtap="deleteConversation">删除</view>
+    </view>
   </movable-view>
 </movable-area>
+
