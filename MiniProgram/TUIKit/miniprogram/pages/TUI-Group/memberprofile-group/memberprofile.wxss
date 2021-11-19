@@ -1,0 +1,103 @@
+/* miniprogram/pages/TUI-Group/memberprofile-group/memberprofile.wxss */
+.container {
+  background: #EEF0F3;
+  background-repeat:no-repeat;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+}
+.item-avatar{
+  background-color: #006EFF;
+  padding-top: 106px;
+  display: flex;
+  width: 100%;
+  justify-content: left;
+  align-items: center;
+}
+.item{
+  display: flex;
+  width: 100%;
+  justify-content: left;
+  align-items: center;
+}
+.avatar{
+  background: #FFFFFF;
+  position: relative;
+  width: 100%;
+  height: 56px;
+  padding-left: 20px;
+  border-bottom: 1px solid  #EEF0F3;
+  border-top: 8px solid #FFFFFF;
+}
+.nickname{
+  position: relative;
+  background: #FFFFFF;
+  width: 100%;
+  height: 56px;
+  padding-left: 20px;
+  border-bottom: 1px solid  #EEF0F3;
+  border-top: 10px solid #FFFFFF;
+}
+.aside-left {
+  display: flex;
+  align-items: center;
+  float: left;
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 56px;
+
+}
+.image_radius{
+  float: right;
+  width: 40px;
+  height: 40px;
+  padding-right: 48px;
+  padding-top: 8px;
+}
+.aside-right{
+  float: right;
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: #999999;
+  letter-spacing: 0;
+  text-align: right;
+  line-height: 56px;
+  padding-right: 48px;
+  z-index: 999;
+}
+.listimage{
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 20px;
+  right: 10px;
+}
+.icon-left-box{
+  width: 120rpx;
+  height: 120rpx;
+}
+.icon-left{
+    height: 60rpx;
+    width: 60rpx;
+    padding-left: 20px;
+}
+.item-title{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    top: 51px;
+    height: 48rpx;
+    width: 100%;
+}
+.title{
+    height: 48rpx;
+    font-size: 36rpx;
+    padding-left: 106px;
+}

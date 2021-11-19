@@ -3,9 +3,8 @@
   height: 150rpx;
   background-color: #FFFFFF;
 }
-
 .t-conversation-item {
-  width: 120vw;
+  width: 140vw;
   height: 150rpx;
   display: flex;
   left: 0;
@@ -13,6 +12,17 @@
   justify-content: flex-start;
   box-sizing: border-box;
   border-bottom: 2rpx solid #EEF0F3;
+}
+.t-conversation-pinneditem{
+  width: 140vw;
+  height: 150rpx;
+  display: flex;
+  left: 0;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  border-bottom: 1rpx solid #999999;
+  background-color: #EEF0F3
 }
 .avatar-box{
   position: relative;
@@ -48,7 +58,6 @@
 
 .t-conversation-delete {
   width: 144rpx;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,7 +66,16 @@
   line-height: 44rpx;
   font-size: 32rpx;
 }
-
+.t-conversation-pinconversation{
+    width: 144rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #006EFF;
+    color: #FFFFFF;
+    line-height: 44rpx;
+    font-size: 32rpx;
+}
 .tui-conversation-item-name {
   line-height: 50rpx;
   font-size: 36rpx;
@@ -84,4 +102,17 @@
 .read-text {
   line-height: 15px;
   font-size: 10px;
+}
+.tui-conversation-box{
+  display: flex;
+}
+.tui-conversation-lastName{
+  line-height: 40rpx;
+  font-size: 28rpx;
+  font-family: 'PingFangSC-Regular';
+  color: #999999;
+}
+.t-conversation-box{
+  height: 150rpx;
+  display: flex
 }

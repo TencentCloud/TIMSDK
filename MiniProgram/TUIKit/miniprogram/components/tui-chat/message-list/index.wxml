@@ -1,7 +1,18 @@
-<scroll-view class="message-list-container" scroll-y="true" scroll-into-view="{{scrollView}}" refresher-enabled="{{true}}" bindrefresherrefresh="refresh" refresher-triggered="{{triggered}}">
+<view class="container">
+<scroll-view  class="message-list-container" scroll-y="true" scroll-top='{{topNum}}'  scroll-into-view="{{jumpAim}}" refresher-enabled="{{true}}" bindrefresherrefresh="refresh" refresher-triggered="{{triggered}}" lower-threshold="200" bindscroll="handleScroll" bindscrolltolower="scrollHandler">
     <view class="no-message" wx:if="{{isCompleted}}">没有更多啦</view>
-    <view class="t-message" wx:if="{{conversation.type !== '@TIM#SYSTEM'}}" wx:for="{{messageList}}" wx:key="index" id="{{item.ID}}">
-        <view class="t-message-item">
+    <view class="t-message" wx:if="{{conversation.type !== '@TIM#SYSTEM'}}" wx:for="{{messageList}}" wx:key="index" id="{{item.ID}}" data-index ='{{index}}'  >
+        <view class="t-message-item"   wx:if="{{!item.isDeleted && !item.isRevoked}}" bindtap="handleEditToggleAvatar" >
+            <view wx:if="{{Show}}" catchtap="handleEditToggleAvatar">
+            <view class="label-pop"  wx:if="{{messageID === item.ID}}" class="{{item.isSelf ? 'label-self-body' : 'label-recieve-body'}}" >
+                <view class="label-pop-mask" >
+                    <view class="deletemessage" catchtap="DeleteMessage" > <text> 删除</text>
+                    </view>
+                    <view  class="revokemessage" wx:if="{{item.isSelf}}" bindtap="RevokeMessage"><text> ｜撤回</text>
+                    </view>
+                </view>
+                </view>
+            </view>
             <TUI-TipMessage  wx:if="{{item.type === 'TIMGroupTipElem'}}" message="{{item}}"/>
             <view  wx:if="{{item.type !== 'TIMGroupTipElem'}}"   class="{{item.isSelf ? 't-self-message':'t-recieve-message'}}">
                 <image class="t-message-avatar" wx:if="{{!item.isSelf}}" src="{{item.avatar || 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/avatar_21.png'}}" />
@@ -9,7 +20,7 @@
                     <view wx:if="{{item.isPeerRead}}" >已读</view>
                     <view wx:else>未读</view>
                 </view>
-                <view class="" class="{{item.isSelf ? 't-self-message-body':'t-recieve-message-body'}}">
+                <view  class="{{item.isSelf ? 't-self-message-body':'t-recieve-message-body'}}"  bind:longpress="handleLongPress" data-index ='{{index}}' id="{{item.ID}}" message-value="{{item}}" >
                     <TUI-TextMessage wx:if="{{item.type === 'TIMTextElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>
                     <TUI-ImageMessage wx:if="{{item.type === 'TIMImageElem'}}" message="{{item}}" isMine="{{item.isSelf}}" />
                     <TUI-VideoMessage wx:if="{{item.type === 'TIMVideoFileElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>
@@ -23,6 +34,30 @@
         </view>
     </view>
     <view class="t-message" wx:if="{{conversation.type === '@TIM#SYSTEM'}}"  wx:for="{{messageList}}" wx:key="index" id="{{filterSystemMessageID}}" data-value="{{item.ID}}">
-        <TUI-SystemMessage  message="{{item}}"></TUI-SystemMessage>
+        <TUI-SystemMessage  message="{{item}}" bind:changeSystemMessageList="changeSystemMessageList"></TUI-SystemMessage>
     </view>
 </scroll-view>
+</view>
+ <view wx:if="{{isRevoke}}">
+     <view class="notice">
+     <view class="content">
+    <text>{{showName}}:撤回了一条消息</text>
+    </view>
+    </view>
+ </view>
+<view wx:if="{{showDownJump}}" bindtap="handleJumpNewMessage">
+    <view class="new-message-item" > 
+    <view class="new-message-box">
+    <image class="icon-left" src="../../../static/assets/down.svg"/>
+    <text>{{showNewMessageCount.length}}条新消息</text>
+    </view>
+    </view>
+</view>
+<view wx:if="{{showUpJump}}" bindtap="handleJumpUnreadMessage">
+    <view class="unread-message-item" > 
+    <view class="unread-message-box">
+    <image class="icon-left" src="../../../static/assets/up.svg"/>
+    <text>{{unreadCount}}条未读</text>
+    </view>
+    </view>
+</view>

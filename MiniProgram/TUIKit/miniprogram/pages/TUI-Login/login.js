@@ -27,12 +27,13 @@ Page({
 
   onShow() {
   },
-
+  // Token没过期可以利用Token登陆
   loginWithToken() {
     wx.switchTab({
       url: '../TUI-Index/index',
     })
   },
+  // 回退
   onBack() {
     wx.navigateTo({
       url: '../TUI-Index/TUI-Index',

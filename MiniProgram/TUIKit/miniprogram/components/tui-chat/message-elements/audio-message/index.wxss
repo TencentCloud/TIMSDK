@@ -19,3 +19,14 @@
   align-items: center;
   justify-content: flex-end;
 }
+.image{
+  width: 16px;
+  height: 16px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.my-image{
+    width: 16px;
+    height: 16px;
+    transform:rotate(180deg)
+}

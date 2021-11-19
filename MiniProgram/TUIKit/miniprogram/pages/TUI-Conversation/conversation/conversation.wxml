@@ -8,7 +8,7 @@
    </view>
    <view class="conversation-list-area">
      <scroll-view class="scoll-view" scroll-y="true">
-       <TUI-conversation-item wx:for="{{conversationList}}" wx:key="index" id="{{item.conversationID}}" data-type="{{item.type}}" conversation="{{item}}" bindtap="handleRoute"></TUI-conversation-item>
+       <TUI-conversation-item wx:for="{{conversationList}}" wx:key="index" id="{{item.conversationID}}" data-type="{{item.type}}" conversation="{{item}}" bindtap="handleRoute" bind:transCheckID="transCheckID" charge="{{transChenckID===item.conversationID}}"></TUI-conversation-item>
      </scroll-view>
    </view>
  </view>
@@ -19,7 +19,7 @@
   </view>
   <view class="bottom-back">
       <view class="bottom-area">
-        <image bindtap="showMore" class="btn-show-more" src="../../../static/assets/add.svg" />
+        <image bindtap="showSelectedTag" class="btn-show-more" src="../../../static/assets/add.svg" />
         <view bindtap="learnMore" class="im-link">了解更多IM功能</view>
       </view>
   </view>

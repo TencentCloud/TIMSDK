@@ -74,15 +74,14 @@ Component({
     },
     sendMessage(e) {
       const { order } = e.currentTarget.dataset
-      this.triggerEvent('sendCustomMessage', {
+      this.triggerEvent('sendCustomMessage', { // 传递给父组件，在父组件处调用SDK的接口，来进行自定消息的发送
         payload: {
-          // data 字段作为表示，可以自定义
-          data: 'order',
-          description: order.description, // 获取骰子点数
+          data: 'order', // data字段用于标识该消息类型
+          description: order.description, // 获取自定义消息的具体描述
           extension: JSON.stringify({
             title: order.title,
             imageUrl: order.imageUrl,
-            price: order.price }),
+            price: order.price }), // 自定义消息的具体内容
         },
       })
     },

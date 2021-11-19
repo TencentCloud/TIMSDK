@@ -1,6 +1,6 @@
 <!--miniprogram/pages/TUI-Group/create-group/create.wxml-->
 <view class="container">
-    <view class="item" catchtap="showtype">
+    <view class="item" catchtap="showGroupTypeList">
         <view class="group-type" >
          <view class="icon-box">
             <text class="icon">*</text>
@@ -14,7 +14,7 @@
     <view class="item">
         <view class="group-ID">
             <text class="aside-left">群ID</text>
-              <input class="input" type="number"  placeholder="请输入群ID" bindinput='bindgroupIDInput' placeholder-style="color:#BBBBBB;"/>
+              <input class="input" type="number"  placeholder="请输入群ID" bindinput='bindGroupIDInput' placeholder-style="color:#BBBBBB;"/>
         </view>
     </view>
     <view class="item">
@@ -23,7 +23,7 @@
             <text class="icon">*</text>
             <text class="aside-left">群名称</text>
             </view>
-             <input class="inputname"   placeholder="请输入群名称" bindinput='bindgroupnameInput' placeholder-style="color:#BBBBBB;"/>
+             <input class="inputname"   placeholder="请输入群名称" bindinput='bindGroupNameInput' placeholder-style="color:#BBBBBB;"/>
         </view>
     </view>
      <view class="group-create" bindtap="bindConfirmCreate">发起群聊</view>

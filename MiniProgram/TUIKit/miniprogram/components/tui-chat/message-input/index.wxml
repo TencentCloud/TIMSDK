@@ -5,11 +5,12 @@
     <view class="TUI-message-input">
         <image class="TUI-icon" bindtap="switchAudio" src="{{isAudio ? '/static/assets/keyboard.svg' : '/static/assets/audio.svg'}}" />
         <view wx:if="{{!isAudio}}" class="TUI-message-input-main">
-            <input class="TUI-message-input-area" adjust-position="{{true}}" cursor-spacing="20"
-                value="{{message}}" bindinput="onInputValueChange" maxlength="140" type="text"
-                placeholder="" placeholder-class="input-placeholder"
+            <textarea  class="TUI-message-input-area" adjust-position="{{true}}" cursor-spacing="20"
+                value="{{message}}" bindinput="onInputValueChange" maxlength="140" type="text" auto-height="{{true}}"
+                placeholder="" placeholder-class="input-placeholder" confirm-type="send" show-confirm-bar="{{false}}"
                 bindfocus="inputBindFocus"
-                bindblur="inputBindBlur" />
+                bindblur="inputBindBlur" 
+                bindconfirm="sendTextMessage"/>
         </view>
         <view wx:else class="TUI-message-input-main"
             bind:longpress="handleLongPress"

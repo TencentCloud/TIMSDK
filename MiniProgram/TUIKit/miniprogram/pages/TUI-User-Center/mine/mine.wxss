@@ -27,8 +27,7 @@
   border-radius: 4px;
   border-radius: 4px;
   z-index: 1;
-
-  margin-top: 110px;
+  margin-top: 94px;
 }
 .image-radius {
   padding-left: 43rpx;

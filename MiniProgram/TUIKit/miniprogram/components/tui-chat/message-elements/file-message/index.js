@@ -43,7 +43,6 @@ Component({
           wx.openDocument({
             filePath,
             success() {
-              console.log('打开文档成功')
             },
           })
         },
