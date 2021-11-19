@@ -1,9 +1,5 @@
 公告：TUIKit Android 与 iOS 端开放 Pull Request，merge 成功后会在 README.md 上留下您的大名并超链到您的 Github 主页！
 
-## 镜像下载
-
-腾讯云分流下载地址： [DOWNLOAD](https://im.sdk.qcloud.com/download/github/TIMSDK.zip)
-
 ## SDK下载
 
 <table>
