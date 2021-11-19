@@ -76,3 +76,19 @@
     return CGSizeMake(headSize.width, headSize.height + TGroupMemberCell_Name_Height + TGroupMemberCell_Margin);
 }
 @end
+
+@interface IUGroupView : UIView
+@property(nonatomic, strong) UIView *view;
+@end
+
+@implementation IUGroupView
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+        [self addSubview:self.view];
+    }
+    return self;
+}
+@end

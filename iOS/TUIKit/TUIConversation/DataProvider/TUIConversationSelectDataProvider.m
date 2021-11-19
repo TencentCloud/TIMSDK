@@ -162,16 +162,18 @@
         [[V2TIMManager sharedInstance] createGroup:info memberList:members succ:^(NSString *groupID) {
             //创建成功后，在群内推送创建成功的信息
             NSString *content = nil;
-            if([info.groupType isEqualToString:GroupType_Work]) {
+            if([info.groupType isEqualToString:@"Work"]) {
                 content = NSLocalizedString(@"ChatsCreatePrivateGroupTips", nil); // @"创建讨论组";
-            } else if([info.groupType isEqualToString:GroupType_Public]){
+            } else if([info.groupType isEqualToString:@"Public"]){
                 content = NSLocalizedString(@"ChatsCreateGroupTips", nil); // @"创建群聊";
-            } else if([info.groupType isEqualToString:GroupType_Meeting]) {
+            } else if([info.groupType isEqualToString:@"Meeting"]) {
                 content = NSLocalizedString(@"ChatsCreateChatRoomTips", nil); // @"创建聊天室";
+            } else if([info.groupType isEqualToString:@"Community"]) {
+                content = NSLocalizedString(@"ChatsCreateCommunityTips", nil); // @"创建社区";
             } else {
                 content = NSLocalizedString(@"ChatsCreateDefaultTips", nil); // @"创建群组";
             }
-            NSDictionary *dic = @{@"version": @(GroupCreate_Version),@"businessID": GroupCreate,@"opUser":showName,@"content":content};
+            NSDictionary *dic = @{@"version": @(GroupCreate_Version),BussinessID: BussinessID_GroupCreate,@"opUser":showName,@"content":content};
             NSData *data= [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
             V2TIMMessage *msg = [[V2TIMManager sharedInstance] createCustomMessage:data];
             [[V2TIMManager sharedInstance] sendMessage:msg receiver:nil groupID:groupID priority:V2TIM_PRIORITY_DEFAULT onlineUserOnly:NO offlinePushInfo:nil progress:nil succ:nil fail:nil];

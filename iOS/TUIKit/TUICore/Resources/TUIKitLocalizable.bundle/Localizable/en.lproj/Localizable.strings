@@ -177,6 +177,7 @@
 "TUIKitPublicGroup" = "Public Group";
 "TUIKitWorkGroup" = "Discussion Group";
 "TUIKitChatRoom" = "Chatroom";
+"TUIKitCommunity" = "Community";
 
 "TUIKitContactsNewFriends" = "New Contacts";
 "TUIKitContactsGroupChats" = "Group Chat";
