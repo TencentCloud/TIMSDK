@@ -42,8 +42,14 @@
         _subTitleLabel.textColor = [UIColor d_systemGrayColor];
         [self.contentView addSubview:_subTitleLabel];
         
-        _disturbImageView = [[UIImageView alloc] init];
-        [self.contentView addSubview:_disturbImageView];
+        _notDisturbRedDot = [[UIView alloc] init];
+        _notDisturbRedDot.backgroundColor = [UIColor redColor];
+        _notDisturbRedDot.layer.cornerRadius = TConversationCell_Margin_Disturb_Dot / 2.0;
+        _notDisturbRedDot.layer.masksToBounds = YES;
+        [self.contentView addSubview:_notDisturbRedDot];
+        
+        _notDisturbView = [[UIImageView alloc] init];
+        [self.contentView addSubview:_notDisturbView];
 
         [self setSeparatorInset:UIEdgeInsetsMake(0, TConversationCell_Margin, 0, 0)];
 
@@ -65,12 +71,19 @@
     self.subTitleLabel.attributedText = convData.subTitle;
     
     if (convData.isNotDisturb) {
-        self.disturbImageView.hidden = NO;
+        // 免打扰状态，如果没有未读消息，不展示小红点
+        if (0 == convData.unreadCount) {
+            self.notDisturbRedDot.hidden = YES;
+        } else {
+            self.notDisturbRedDot.hidden = NO;
+        }
+        self.notDisturbView.hidden = NO;
         self.unReadView.hidden = YES;
         UIImage *image = [UIImage d_imageWithImageLight:TUIConversationImagePath(@"message_not_disturb") dark:TUIConversationImagePath(@"message_not_disturb_dark")];
-        [self.disturbImageView setImage:image];
+        [self.notDisturbView setImage:image];
     } else {
-        self.disturbImageView.hidden = YES;
+        self.notDisturbRedDot.hidden = YES;
+        self.notDisturbView.hidden = YES;
         self.unReadView.hidden = NO;
         [self.unReadView setNum:convData.unreadCount];
     }
@@ -169,9 +182,26 @@
 
     self.timeLabel.mm_sizeToFit().mm_top(TConversationCell_Margin_Text).mm_right(TConversationCell_Margin + 4);
     self.titleLabel.mm_sizeToFitThan(120, 30).mm_top(TConversationCell_Margin_Text - 5).mm_left(self.headImageView.mm_maxX+TConversationCell_Margin);
-    self.unReadView.mm_right(TConversationCell_Margin + 4).mm_bottom(TConversationCell_Margin - 1);
-    self.disturbImageView.mm_width(TConversationCell_Margin_Disturb).mm_height(TConversationCell_Margin_Disturb).mm_right(16).mm_bottom(15);
-    self.subTitleLabel.mm_sizeToFit().mm_left(self.titleLabel.mm_x).mm_bottom(TConversationCell_Margin_Text).mm_flexToRight(self.mm_w-self.unReadView.mm_x);
+    self.subTitleLabel.mm_sizeToFit().mm_left(self.titleLabel.mm_x).mm_bottom(TConversationCell_Margin_Text).mm_flexToRight(2 * TConversationCell_Margin_Text);
+    self.unReadView.mm_right(self.headImageView.mm_r - 5).mm_top(self.headImageView.mm_y - 5);
+    self.notDisturbRedDot.mm_width(TConversationCell_Margin_Disturb_Dot).mm_height(TConversationCell_Margin_Disturb_Dot).mm_right(self.headImageView.mm_r - 3).mm_top(self.headImageView.mm_y - 3);
+    self.notDisturbView.mm_width(TConversationCell_Margin_Disturb).mm_height(TConversationCell_Margin_Disturb).mm_right(16).mm_bottom(15);
 }
 
+@end
+
+@interface IUConversationView : UIView
+@property(nonatomic, strong) UIView *view;
+@end
+
+@implementation IUConversationView
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+        [self addSubview:self.view];
+    }
+    return self;
+}
 @end

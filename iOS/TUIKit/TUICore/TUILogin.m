@@ -14,11 +14,11 @@ static NSString *g_faceUrl = nil;
 
 + (void)initWithSdkAppID:(int)sdkAppID {
     // sdkappid 如果发生了变化要先 unInitSDK，否则 initSDK 会失败
-    if (sdkAppID != g_sdkAppID) {
+    if (0 != g_sdkAppID && sdkAppID != g_sdkAppID) {
         [self logout:nil fail:nil];
         [[V2TIMManager sharedInstance] unInitSDK];
-        g_sdkAppID = sdkAppID;
     }
+    g_sdkAppID = sdkAppID;
     V2TIMSDKConfig *config = [[V2TIMSDKConfig alloc] init];
     config.logLevel = V2TIM_LOG_INFO;
     [[V2TIMManager sharedInstance] initSDK:sdkAppID config:config listener:nil];

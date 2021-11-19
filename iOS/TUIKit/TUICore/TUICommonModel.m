@@ -1073,6 +1073,21 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 @end
 
+@interface IUCoreView : UIView
+@property(nonatomic, strong) UIView *view;
+@end
+
+@implementation IUCoreView
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+        [self addSubview:self.view];
+    }
+    return self;
+}
+@end
 
 @implementation TUINavigationController
 
@@ -1104,3 +1119,4 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 }
 
 @end
+

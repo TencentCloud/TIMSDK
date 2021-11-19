@@ -20,8 +20,9 @@
 //                             自定义消息业务版本号
 //
 /////////////////////////////////////////////////////////////////////////////////
-#define GroupCreate @"group_create"
-#define TextLink @"text_link"
+#define BussinessID @"businessID"
+#define BussinessID_GroupCreate @"group_create"
+#define BussinessID_TextLink @"text_link"
 
 #define GroupCreate_Version 4       // 创建群自定义消息业务版本
 #define TextLink_Version    4       // 自定义 cell 业务版本（点击跳转官网）
@@ -104,6 +105,8 @@
 #define TUIInputMoreCellKey_Link @"TUIInputMoreCellKey_Link"
 
 //cell
+#define TMessageCell_Name @"TMessageCell_Name"
+#define TMessageCell_Data_Name @"TMessageCell_Data_Name"
 #define TMessageCell_Head_Width 45
 #define TMessageCell_Head_Height 45
 #define TMessageCell_Head_Size CGSizeMake(45, 45)
@@ -170,9 +173,6 @@
 //group live cell
 #define TGroupLiveMessageCell_ReuseId @"TGroupLiveMessageCell"
 
-//link cell
-#define TLinkMessageCell_ReuseId @"TLinkMessageCell"
-
 //relay message cell
 #define TRelayMessageCell_ReuserId @"TRelayMessageCell"
 #define TRelayMessageCell_Text_PADDING (200)
@@ -232,6 +232,7 @@
 #define TConversationCell_Margin 12
 #define TConversationCell_Margin_Text 14
 #define TConversationCell_Margin_Disturb 16
+#define TConversationCell_Margin_Disturb_Dot 10
 
 //AudioCall cell
 #define TUIAudioCallUserCell_ReuseId @"TUIAudioCallUserCell"

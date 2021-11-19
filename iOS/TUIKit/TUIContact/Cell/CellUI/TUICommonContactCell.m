@@ -55,3 +55,19 @@
 }
 
 @end
+
+@interface IUContactView : UIView
+@property(nonatomic, strong) UIView *view;
+@end
+
+@implementation IUContactView
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+        [self addSubview:self.view];
+    }
+    return self;
+}
+@end

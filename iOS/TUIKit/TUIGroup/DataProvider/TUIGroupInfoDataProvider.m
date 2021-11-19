@@ -168,11 +168,13 @@
         self.groupNickNameCellData = nickData;
         [personalArray addObject:nickData];
         
-        TUICommonSwitchCellData *messageSwitchData = [[TUICommonSwitchCellData alloc] init];
-        messageSwitchData.on = (self.groupInfo.recvOpt == V2TIM_NOT_RECEIVE_MESSAGE);
-        messageSwitchData.title = TUIKitLocalizableString(TUIKitGroupProfileMessageDoNotDisturb);
-        messageSwitchData.cswitchSelector = @selector(didSelectOnNotDisturb:);
-        [personalArray addObject:messageSwitchData];
+        if (![self.groupInfo.groupType isEqualToString:GroupType_Meeting]) {
+            TUICommonSwitchCellData *messageSwitchData = [[TUICommonSwitchCellData alloc] init];
+            messageSwitchData.on = (self.groupInfo.recvOpt == V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE);
+            messageSwitchData.title = TUIKitLocalizableString(TUIKitGroupProfileMessageDoNotDisturb);
+            messageSwitchData.cswitchSelector = @selector(didSelectOnNotDisturb:);
+            [personalArray addObject:messageSwitchData];
+        }
 
         TUICommonSwitchCellData *switchData = [[TUICommonSwitchCellData alloc] init];
         
@@ -370,6 +372,9 @@
         }
         else if([groupInfo.groupType isEqualToString:@"Meeting"]){
             return TUIKitLocalizableString(TUIKitChatRoom); // @"聊天室";
+        }
+        else if([groupInfo.groupType isEqualToString:@"Community"]){
+            return TUIKitLocalizableString(TUIKitCommunity); // @"社区";
         }
     }
 

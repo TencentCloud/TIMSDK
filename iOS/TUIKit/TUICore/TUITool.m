@@ -202,6 +202,10 @@
         return nil;
     }
     
+    if ([date isEqualToDate:[NSDate distantPast]]) {
+        return @"";
+    }
+    
     NSCalendar *calendar = [ NSCalendar currentCalendar ];
     int unit = NSCalendarUnitDay | NSCalendarUnitMonth |  NSCalendarUnitYear ;
     NSDateComponents *nowCmps = [calendar components:unit fromDate:[ NSDate date ]];
