@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.helper;
 
+import android.text.TextUtils;
+
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
 
@@ -66,6 +68,10 @@ public class IndexBarDataHelperImpl implements IIndexBarDataHelper {
             BaseIndexPinyinBean indexPinyinBean = datas.get(i);
             if (indexPinyinBean.isNeedToPinyin()) {
                 //以下代码设置城市拼音首字母
+                if (TextUtils.isEmpty(indexPinyinBean.getBaseIndexPinyin())) {
+                    indexPinyinBean.setBaseIndexTag("#");
+                    continue;
+                }
                 String tagString = indexPinyinBean.getBaseIndexPinyin().substring(0, 1);
                 if (tagString.matches("[A-Z]")) {//如果是A-Z字母开头
                     indexPinyinBean.setBaseIndexTag(tagString);

@@ -28,6 +28,7 @@ public class TUIConversationConstants {
         public static final int PRIVATE = 0;
         public static final int PUBLIC = 1;
         public static final int CHAT_ROOM = 2;
+        public static final int COMMUNITY = 3;
 
     }
 

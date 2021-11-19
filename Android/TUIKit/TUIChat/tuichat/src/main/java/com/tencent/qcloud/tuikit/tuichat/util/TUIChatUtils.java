@@ -5,7 +5,7 @@ import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
 import java.io.File;
 
@@ -50,11 +50,11 @@ public class TUIChatUtils {
      * @param msg
      * @return
      */
-    public static String getOriginImagePath(final MessageInfo msg) {
+    public static String getOriginImagePath(final TUIMessageBean msg) {
         if (msg == null) {
             return null;
         }
-        V2TIMMessage v2TIMMessage = msg.getTimMessage();
+        V2TIMMessage v2TIMMessage = msg.getV2TIMMessage();
         if (v2TIMMessage == null) {
             return null;
         }
@@ -62,7 +62,7 @@ public class TUIChatUtils {
         if (v2TIMImageElem == null) {
             return null;
         }
-        String localImgPath = ChatMessageInfoUtil.getLocalImagePath(msg);
+        String localImgPath = ChatMessageParser.getLocalImagePath(msg);
         if (localImgPath == null) {
             String originUUID = null;
             for(V2TIMImageElem.V2TIMImage image : v2TIMImageElem.getImageList()) {

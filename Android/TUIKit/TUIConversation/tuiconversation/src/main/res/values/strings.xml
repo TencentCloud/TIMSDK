@@ -18,8 +18,6 @@
 
 
     <string name="load_msg_error">Failed to load message</string>
-    <string name="conversation_title">Tencent·Instant Messaging</string>
-
 
     // 云通信
     <string name="chat_top">Sticky on Top</string>
@@ -54,12 +52,6 @@
     <string name="audio_extra">[Voice]</string>
     <string name="file_extra">[File]</string>
 
-    <string name="add_friend">Add to Contacts</string>
-    <string name="add_group">Add Group Chat</string>
-    <string name="start_conversation">New Chat</string>
-    <string name="create_group_chat">Create Group Chat</string>
-    <string name="create_chat_room">Create Chat Room</string>
-    <string name="create_private_group">Create Discussion Group</string>
     <string name="hint_add_user_id">Enter ID</string>
     <string name="hint_add_wording">Enter verification message</string>
     <string name="contact_add">Add</string>
@@ -105,4 +97,5 @@
     <string name="stop_call_tip">Call ended. Duration:</string>
     <string name="reject_calls">Decline Call</string>
 
+    <string name="message_num">messages</string>
 </resources>

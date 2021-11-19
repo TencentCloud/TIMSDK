@@ -121,6 +121,10 @@ public class StartGroupChatActivity extends BaseLightActivity {
                 mTitleBar.setTitle(getResources().getString(R.string.create_chat_room), ITitleBarLayout.Position.MIDDLE);
                 mJoinType.setVisibility(View.VISIBLE);
                 break;
+            case TUIContactConstants.GroupType.COMMUNITY:
+                mTitleBar.setTitle(getResources().getString(R.string.create_community), ITitleBarLayout.Position.MIDDLE);
+                mJoinType.setVisibility(View.VISIBLE);
+                break;
             case TUIContactConstants.GroupType.PRIVATE:
             default:
                 mTitleBar.setTitle(getResources().getString(R.string.create_private_group), ITitleBarLayout.Position.MIDDLE);

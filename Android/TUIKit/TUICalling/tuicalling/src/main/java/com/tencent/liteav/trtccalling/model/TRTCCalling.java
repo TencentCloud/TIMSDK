@@ -224,4 +224,17 @@ public abstract class TRTCCalling {
      * @param content
      */
     public abstract void receiveNewInvitation(String sender, String content);
+
+    /**
+     * 设置铃声(建议在30s以内)
+     *
+     * @param filePath 接听方铃音路径
+     */
+    public abstract void setCallingBell(String filePath);
+
+    /**
+     * 开启静音模式（接听方不响铃音）
+     * @param enable
+     */
+    public abstract void enableMuteMode(boolean enable);
 }

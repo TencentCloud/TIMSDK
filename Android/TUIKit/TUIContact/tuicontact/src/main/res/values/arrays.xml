@@ -4,6 +4,7 @@
         <item>Private</item>
         <item>Public</item>
         <item>ChatRoom</item>
+        <item>Community</item>
     </string-array>
 
     <string-array name="group_join_type">

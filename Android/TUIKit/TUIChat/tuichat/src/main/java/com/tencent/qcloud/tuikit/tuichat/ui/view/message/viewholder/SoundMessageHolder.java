@@ -15,14 +15,14 @@ import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.SoundElemBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.File;
 
-public class MessageAudioHolder extends MessageContentHolder {
+public class SoundMessageHolder extends MessageContentHolder {
 
     private static final int AUDIO_MIN_WIDTH = ScreenUtil.getPxByDp(60);
     private static final int AUDIO_MAX_WIDTH = ScreenUtil.getPxByDp(250);
@@ -34,8 +34,11 @@ public class MessageAudioHolder extends MessageContentHolder {
     private ImageView audioPlayImage;
     private LinearLayout audioContentView;
 
-    public MessageAudioHolder(View itemView) {
+    public SoundMessageHolder(View itemView) {
         super(itemView);
+        audioTimeText = itemView.findViewById(R.id.audio_time_tv);
+        audioPlayImage = itemView.findViewById(R.id.audio_play_iv);
+        audioContentView = itemView.findViewById(R.id.audio_content_ll);
     }
 
     @Override
@@ -43,19 +46,14 @@ public class MessageAudioHolder extends MessageContentHolder {
         return R.layout.message_adapter_content_audio;
     }
 
-    @Override
-    public void initVariableViews() {
-        audioTimeText = rootView.findViewById(R.id.audio_time_tv);
-        audioPlayImage = rootView.findViewById(R.id.audio_play_iv);
-        audioContentView = rootView.findViewById(R.id.audio_content_ll);
-    }
 
     @Override
-    public void layoutVariableViews(final MessageInfo msg, final int position) {
+    public void layoutVariableViews(final TUIMessageBean msg, final int position) {
+        SoundMessageBean message = (SoundMessageBean) msg;
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_VERTICAL);
-        if (msg.isSelf()) {
+        if (message.isSelf()) {
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.rightMargin = 24;
             audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
@@ -70,7 +68,7 @@ public class MessageAudioHolder extends MessageContentHolder {
             audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
             audioContentView.removeView(audioPlayImage);
             audioContentView.addView(audioPlayImage, 0);
-            if (msg.getCustomInt() == UNREAD) {
+            if (message.getCustomInt() == UNREAD) {
                 LinearLayout.LayoutParams unreadParams = (LinearLayout.LayoutParams) isReadText.getLayoutParams();
                 unreadParams.gravity = Gravity.CENTER_VERTICAL;
                 unreadParams.leftMargin = 10;
@@ -82,17 +80,11 @@ public class MessageAudioHolder extends MessageContentHolder {
         }
         audioContentView.setLayoutParams(params);
 
-        SoundElemBean soundElemBean = SoundElemBean.createSoundElemBean(msg);
-        if (soundElemBean == null) {
-            return;
-        }
-        int duration = (int) soundElemBean.getDuration();
+        int duration = (int) message.getDuration();
         if (duration == 0) {
             duration = 1;
         }
-        if (TextUtils.isEmpty(msg.getDataPath())) {
-            getSound(msg, soundElemBean);
-        }
+
         ViewGroup.LayoutParams audioParams = msgContentFrame.getLayoutParams();
         audioParams.width = AUDIO_MIN_WIDTH + ScreenUtil.getPxByDp(duration * 6);
         if (audioParams.width > AUDIO_MAX_WIDTH) {
@@ -107,19 +99,20 @@ public class MessageAudioHolder extends MessageContentHolder {
                     AudioPlayer.getInstance().stopPlay();
                     return;
                 }
-                if (TextUtils.isEmpty(msg.getDataPath())) {
-                    ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.voice_play_tip));
+                if (TextUtils.isEmpty(message.getDataPath())) {
+                    ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.voice_play_tip));
+                    getSound(message);
                     return;
                 }
                 audioPlayImage.setImageResource(R.drawable.play_voice_message);
-                if (msg.isSelf()) {
+                if (message.isSelf()) {
                     audioPlayImage.setRotation(180f);
                 }
                 final AnimationDrawable animationDrawable = (AnimationDrawable) audioPlayImage.getDrawable();
                 animationDrawable.start();
-                msg.setCustomInt(READ);
+                message.setCustomInt(READ);
                 unreadAudioText.setVisibility(View.GONE);
-                AudioPlayer.getInstance().startPlay(msg.getDataPath(), new AudioPlayer.Callback() {
+                AudioPlayer.getInstance().startPlay(message.getDataPath(), new AudioPlayer.Callback() {
                     @Override
                     public void onCompletion(Boolean success) {
                         audioPlayImage.post(new Runnable() {
@@ -127,7 +120,7 @@ public class MessageAudioHolder extends MessageContentHolder {
                             public void run() {
                                 animationDrawable.stop();
                                 audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
-                                if (msg.isSelf()) {
+                                if (message.isSelf()) {
                                     audioPlayImage.setRotation(180f);
                                 }
                             }
@@ -138,11 +131,11 @@ public class MessageAudioHolder extends MessageContentHolder {
         });
     }
 
-    private void getSound(final MessageInfo msgInfo, SoundElemBean soundElemBean) {
-        final String path = TUIConfig.getRecordDownloadDir() + soundElemBean.getUUID();
+    private void getSound(final SoundMessageBean messageBean) {
+        final String path = TUIConfig.getRecordDownloadDir() + messageBean.getUUID();
         File file = new File(path);
         if (!file.exists()) {
-            soundElemBean.downloadSound(path, new SoundElemBean.SoundDownloadCallback() {
+            messageBean.downloadSound(path, new SoundMessageBean.SoundDownloadCallback() {
                 @Override
                 public void onProgress(long currentSize, long totalSize) {
                     TUIChatLog.i("downloadSound progress current:", currentSize + ", total:" + totalSize);
@@ -151,15 +144,16 @@ public class MessageAudioHolder extends MessageContentHolder {
                 @Override
                 public void onError(int code, String desc) {
                     TUIChatLog.e("getSoundToFile failed code = ", code + ", info = " + desc);
+                    ToastUtil.toastLongMessage("getSoundToFile failed code = " + code + ", info = " + desc);
                 }
 
                 @Override
                 public void onSuccess() {
-                    msgInfo.setDataPath(path);
+                    messageBean.setDataPath(path);
                 }
             });
         } else {
-            msgInfo.setDataPath(path);
+            messageBean.setDataPath(path);
         }
     }
 

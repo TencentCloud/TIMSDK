@@ -35,7 +35,7 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
@@ -46,7 +46,7 @@ import com.tencent.qcloud.tuikit.tuichat.component.camera.CameraActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.camera.view.JCameraView;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IChatLayout;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.inputmore.InputMoreFragment;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuichat.util.PermissionUtils;
@@ -271,7 +271,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         mTextInput.setOnMentionInputListener(new TIMMentionEditText.OnMentionInputListener() {
             @Override
             public void onMentionCharacterInput(String tag) {
-                if ((tag.equals(TIMMentionEditText.TIM_METION_TAG) || tag.equals(TIMMentionEditText.TIM_METION_TAG_FULL))
+                if ((tag.equals(TIMMentionEditText.TIM_MENTION_TAG) || tag.equals(TIMMentionEditText.TIM_MENTION_TAG_FULL))
                         && TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType())) {
                     if (mStartActivityListener != null) {
                         mStartActivityListener.onStartGroupMemberSelectActivity();
@@ -281,53 +281,106 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         });
     }
 
-    public void updateInputText(String names, String ids){
-        if (names == null || ids == null || names.isEmpty() || ids.isEmpty()){
+    public void addInputText(String name, String id){
+        if (id == null || id.isEmpty()){
+            return;
+        }
+
+        ArrayList<String> nameList = new ArrayList<String>() {
+            {
+                add(name);
+            }
+        };
+        ArrayList<String> idList = new ArrayList<String>() {
+            {
+                add(id);
+            }
+        };
+
+        updateAtUserInfoMap(nameList, idList);
+        if (mTextInput != null) {
+            Map<String, String> displayAtNameMap = new HashMap<>();
+            displayAtNameMap.put(TIMMentionEditText.TIM_MENTION_TAG + displayInputString, id);
+            mTextInput.setMentionMap(displayAtNameMap);
+            int selectedIndex = mTextInput.getSelectionEnd();
+            if (selectedIndex != -1) {
+                String insertStr = TIMMentionEditText.TIM_MENTION_TAG + displayInputString;
+                String text = mTextInput.getText().insert(selectedIndex, insertStr).toString();
+                FaceManager.handlerEmojiText(mTextInput, text, true);
+                mTextInput.setSelection(selectedIndex + insertStr.length());
+            }
+        }
+    }
+
+    public void updateInputText(ArrayList<String> names, ArrayList<String> ids){
+        if (ids == null || ids.isEmpty()){
             return;
         }
 
         updateAtUserInfoMap(names, ids);
         if (mTextInput != null) {
-            mTextInput.setText(mTextInput.getText() + displayInputString);
-            mTextInput.setSelection(mTextInput.getText().length());
+            Map<String, String> displayAtNameList = getDisplayAtNameMap(names, ids);
+            mTextInput.setMentionMap(displayAtNameList);
+
+            int selectedIndex = mTextInput.getSelectionEnd();
+            if (selectedIndex != -1) {
+                String text = mTextInput.getText().insert(selectedIndex, displayInputString).toString();
+                FaceManager.handlerEmojiText(mTextInput, text, true);
+                mTextInput.setSelection(selectedIndex + displayInputString.length());
+            }
         }
     }
 
-    private void updateAtUserInfoMap(String names, String ids){
+    private Map<String, String> getDisplayAtNameMap(List<String> names, List<String> ids) {
+        Map<String, String> displayNameList = new HashMap<>();
+        String mentionTag = TIMMentionEditText.TIM_MENTION_TAG;
+        if (mTextInput != null) {
+            Editable editable = mTextInput.getText();
+            int selectionIndex = mTextInput.getSelectionEnd();
+            if (editable != null && selectionIndex > 0) {
+                String text = editable.toString();
+                if (!TextUtils.isEmpty(text)) {
+                    mentionTag = text.substring(selectionIndex - 1, selectionIndex);
+                }
+            }
+        }
+
+        for (int i = 0; i < ids.size(); i++) {
+            if (i == 0) {
+                if (TextUtils.isEmpty(names.get(0))) {
+                    displayNameList.put(mentionTag + ids.get(0) + " ", ids.get(0));
+                } else {
+                    displayNameList.put(mentionTag + names.get(0) + " ", ids.get(0));
+                }
+                continue;
+            }
+            String str = TIMMentionEditText.TIM_MENTION_TAG;
+            if (TextUtils.isEmpty(names.get(i))) {
+                str += ids.get(i);
+            } else {
+                str += names.get(i);
+            }
+            str += " ";
+            displayNameList.put(str, ids.get(i));
+        }
+        return displayNameList;
+    }
+
+    private void updateAtUserInfoMap(ArrayList<String> names, ArrayList<String> ids){
         displayInputString = "";
 
-        if (ids.equals(TUIChatConstants.Selection.SELECT_ALL)){
-            atUserInfoMap.put(names, ids);
+        for (int i = 0; i < ids.size(); i++) {
+            atUserInfoMap.put(ids.get(i), names.get(i));
 
             //for display
-            displayInputString += names;
-            displayInputString += " ";
-            displayInputString += TIMMentionEditText.TIM_METION_TAG;
-        } else {
-            String[] listName = names.split(" ");
-            String[] listId = ids.split(" ");
-
-            //此处防止昵称和ID不对等
-            boolean isListName = (listName.length >= listId.length ? true : false);
-            int i = 0;
-            if (isListName) {
-                for (i = 0; i < listId.length; i++) {
-                    atUserInfoMap.put(listName[i], listId[i]);
-
-                    //for display
-                    displayInputString += listName[i];
-                    displayInputString += " ";
-                    displayInputString += TIMMentionEditText.TIM_METION_TAG;
-                }
+            if (TextUtils.isEmpty(names.get(i))) {
+                displayInputString += ids.get(i);
+                displayInputString += " ";
+                displayInputString += TIMMentionEditText.TIM_MENTION_TAG;
             } else {
-                for (i = 0; i < listName.length; i++) {
-                    atUserInfoMap.put(listName[i], listId[i]);
-
-                    //for display
-                    displayInputString += listName[i];
-                    displayInputString += " ";
-                    displayInputString += TIMMentionEditText.TIM_METION_TAG;
-                }
+                displayInputString += names.get(i);
+                displayInputString += " ";
+                displayInputString += TIMMentionEditText.TIM_MENTION_TAG;
             }
         }
 
@@ -376,15 +429,16 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                     return;
                 }
 
-                String videoPath = FileUtil.getPathFromUri((Uri) data);
-                String fileExtension = FileUtil.getFileExtensionFromUrl(videoPath);
+                String fileName = FileUtil.getFileName(TUIChatService.getAppContext(), (Uri) data);
+                String fileExtension = FileUtil.getFileExtensionFromUrl(fileName);
                 String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
                 if (TextUtils.isEmpty(mimeType)) {
                     TUIChatLog.e(TAG, "mimeType is empty.");
                     return;
                 }
                 if (mimeType.contains("video")){
-                    MessageInfo msg = buildVideoMessage(FileUtil.getPathFromUri((Uri) data));
+                    String videoPath = FileUtil.getPathFromUri((Uri) data);
+                    TUIMessageBean msg = buildVideoMessage(videoPath);
                     if (msg == null){
                         TUIChatLog.e(TAG, "start send video error data: " + data);
                     } else if (mMessageHandler != null) {
@@ -392,7 +446,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                         hideSoftInput();
                     }
                 } else if (mimeType.contains("image")){
-                    MessageInfo info = ChatMessageInfoUtil.buildImageMessage((Uri) data, true);
+                    TUIMessageBean info = ChatMessageBuilder.buildImageMessage((Uri) data);
                     if (mMessageHandler != null) {
                         mMessageHandler.sendMessage(info);
                         hideSoftInput();
@@ -410,8 +464,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         });
     }
 
-    private MessageInfo buildVideoMessage(String mUri)
-    {
+    private TUIMessageBean buildVideoMessage(String mUri) {
         android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
         try {
             mmr.setDataSource(mUri);
@@ -428,7 +481,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             int imgWidth = bitmap.getWidth();
             int imgHeight = bitmap.getHeight();
             long duration = Long.valueOf(sDuration);
-            MessageInfo msg = ChatMessageInfoUtil.buildVideoMessage(imgPath, videoPath, imgWidth, imgHeight, duration);
+            TUIMessageBean msg = ChatMessageBuilder.buildVideoMessage(imgPath, videoPath, imgWidth, imgHeight, duration);
 
             return msg;
         } catch (Exception ex)
@@ -453,7 +506,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             @Override
             public void onSuccess(Object data) {
                 Uri contentUri = Uri.fromFile(new File(data.toString()));
-                MessageInfo msg = ChatMessageInfoUtil.buildImageMessage(contentUri, true);
+                TUIMessageBean msg = ChatMessageBuilder.buildImageMessage(contentUri);
                 if (mMessageHandler != null) {
                     mMessageHandler.sendMessage(msg);
                     hideSoftInput();
@@ -486,7 +539,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 int imgWidth = videoData.getIntExtra(TUIChatConstants.IMAGE_WIDTH, 0);
                 int imgHeight = videoData.getIntExtra(TUIChatConstants.IMAGE_HEIGHT, 0);
                 long duration = videoData.getLongExtra(TUIChatConstants.VIDEO_TIME, 0);
-                MessageInfo msg = ChatMessageInfoUtil.buildVideoMessage(imgPath, videoPath, imgWidth, imgHeight, duration);
+                TUIMessageBean msg = ChatMessageBuilder.buildVideoMessage(imgPath, videoPath, imgWidth, imgHeight, duration);
                 if (mMessageHandler != null) {
                     mMessageHandler.sendMessage(msg);
                     hideSoftInput();
@@ -514,7 +567,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         mInputMoreFragment.setCallback(new IUIKitCallback() {
             @Override
             public void onSuccess(Object data) {
-                MessageInfo info = ChatMessageInfoUtil.buildFileMessage((Uri) data);
+                TUIMessageBean info = ChatMessageBuilder.buildFileMessage((Uri) data);
                 if (mMessageHandler != null) {
                     mMessageHandler.sendMessage(info);
                     hideSoftInput();
@@ -618,37 +671,21 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         } else if (view.getId() == R.id.send_btn) {
             if (mSendEnable) {
                 if (mMessageHandler != null) {
-                    if(TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !atUserInfoMap.isEmpty()) {
+                    if(TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
                         //发送时通过获取输入框匹配上@的昵称list，去从map中获取ID list。
-                        List<String> atUserList = updateAtUserList(mTextInput.getMentionList(true));
-                        if (atUserList == null || atUserList.isEmpty()) {
-                            mMessageHandler.sendMessage(ChatMessageInfoUtil.buildTextMessage(mTextInput.getText().toString().trim()));
+                        List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
+                        if (atUserList.isEmpty()) {
+                            mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
                         }else {
-                            mMessageHandler.sendMessage(ChatMessageInfoUtil.buildTextAtMessage(atUserList, mTextInput.getText().toString().trim()));
+                            mMessageHandler.sendMessage(ChatMessageBuilder.buildTextAtMessage(atUserList, mTextInput.getText().toString().trim()));
                         }
                     }else {
-                        mMessageHandler.sendMessage(ChatMessageInfoUtil.buildTextMessage(mTextInput.getText().toString().trim()));
+                        mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
                     }
                 }
                 mTextInput.setText("");
             }
         }
-    }
-
-    private List<String> updateAtUserList(List<String> atMentionList){
-        if (atMentionList == null || atMentionList.isEmpty()){
-            return null;
-        }
-
-        List<String> atUserIdList = new ArrayList<>();
-        for (String name : atMentionList){
-            if (atUserInfoMap.containsKey(name)){
-                atUserIdList.add(atUserInfoMap.get(name));
-            }
-        }
-        atUserInfoMap.clear();
-
-        return atUserIdList;
     }
 
     private void showSoftInput() {
@@ -724,7 +761,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
 
             @Override
             public void onCustomFaceClick(int groupIndex, Emoji emoji) {
-                mMessageHandler.sendMessage(ChatMessageInfoUtil.buildCustomFaceMessage(groupIndex, emoji.getFilter()));
+                mMessageHandler.sendMessage(ChatMessageBuilder.buildFaceMessage(groupIndex, emoji.getFilter()));
             }
         });
         mFragmentManager.beginTransaction().replace(R.id.more_groups, mFaceFragment).commitAllowingStateLoss();
@@ -805,7 +842,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         }
 
         if (mMessageHandler != null && success) {
-            mMessageHandler.sendMessage(ChatMessageInfoUtil.buildAudioMessage(AudioPlayer.getInstance().getPath(), duration));
+            mMessageHandler.sendMessage(ChatMessageBuilder.buildAudioMessage(AudioPlayer.getInstance().getPath(), duration));
         }
     }
 
@@ -952,7 +989,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             InputMoreActionUnit audioUnit = new InputMoreActionUnit();
             audioUnit.setActionId(audioActionId);
             audioUnit.setUnitView(audioView);
-            audioUnit.setPriority(1);
+            audioUnit.setPriority(2);
             audioUnit.setOnClickListener(audioUnit.new OnActionClickListener() {
                 @Override
                 public void onClick() {
@@ -1144,7 +1181,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     }
 
     public interface MessageHandler {
-        void sendMessage(MessageInfo msg);
+        void sendMessage(TUIMessageBean msg);
     }
 
     public interface ChatInputHandler {

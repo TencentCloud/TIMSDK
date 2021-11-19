@@ -1,8 +1,8 @@
 package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuikit.tuichat.bean.MergeMessageElemBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.model.ForwardProvider;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
@@ -25,14 +25,14 @@ public class ForwardPresenter {
         this.messageListAdapter = messageListAdapter;
     }
 
-    public void downloadMergerMessage(MergeMessageElemBean mergeMessageElemBean) {
-        if (mergeMessageElemBean != null){
-            if (mergeMessageElemBean.isLayersOverLimit()){
+    public void downloadMergerMessage(MergeMessageBean messageBean) {
+        if (messageBean != null){
+            if (messageBean.isLayersOverLimit()){
                 TUIChatLog.e(TAG, "merge message Layers Over Limit");
             } else {
-                provider.downloadMergerMessage(mergeMessageElemBean, new IUIKitCallback<List<MessageInfo>>() {
+                provider.downloadMergerMessage(messageBean, new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
-                    public void onSuccess(List<MessageInfo> data) {
+                    public void onSuccess(List<TUIMessageBean> data) {
                         if (messageListAdapter != null){
                             messageListAdapter.onDataSourceChanged(data);
                             messageListAdapter.onViewNeedRefresh(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, data.size());

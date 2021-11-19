@@ -2,10 +2,8 @@ package com.tencent.qcloud.tuikit.tuichat.ui.view.input;
 
 import android.content.Context;
 import android.text.Editable;
-import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
@@ -15,24 +13,20 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 public class TIMMentionEditText extends EditText {
-    public static final String TIM_METION_TAG = "@";
-    public static final String TIM_METION_TAG_FULL = "＠";
-    public static final Pattern TIM_MENTION_PATTERN = Pattern.compile("@[^\\s]+\\s");
-    public static final Pattern TIM_MENTION_PATTERN_FULL = Pattern.compile("＠[^\\s]+\\s");
+    public static final String TIM_MENTION_TAG = "@";
+    public static final String TIM_MENTION_TAG_FULL = "＠";
 
-    private Map<String, Pattern> mPatternMap = new HashMap<>();
-    private int mTIMMentionTextColor;
+    private List<String> mentionTagList = new ArrayList<>();
 
     private boolean mIsSelected;
     private Range mLastSelectedRange;
     private List<Range> mRangeArrayList = new ArrayList<>();
+    private Map<String, String> mentionList = new HashMap<>();
 
     private OnMentionInputListener mOnMentionInputListener;
 
@@ -58,7 +52,7 @@ public class TIMMentionEditText extends EditText {
 
     @Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
-        colorMentionString();
+        setMentionStringRange();
     }
 
     @Override
@@ -92,45 +86,27 @@ public class TIMMentionEditText extends EditText {
         }
     }
 
-    public void setTIMMentionTextColor(int color) {
-        mTIMMentionTextColor = color;
-    }
-
-    public List<String> getMentionList(boolean excludeMentionCharacter) {
-        List<String> mentionList = new ArrayList<>();
-        if (TextUtils.isEmpty(getText().toString())) {
-            return mentionList;
-        }
-
-        for (Map.Entry<String, Pattern> entry : mPatternMap.entrySet()) {
-            Matcher matcher = entry.getValue().matcher(getText().toString());
-            while (matcher.find()) {
-                String mentionText = matcher.group();
-                if (excludeMentionCharacter) {
-                    mentionText = mentionText.substring(1, mentionText.length()-1);
-                }
-                if (!mentionList.contains(mentionText)) {
-                    mentionList.add(mentionText);
-                }
-            }
-        }
-        return mentionList;
-    }
-
     public void setOnMentionInputListener(OnMentionInputListener onMentionInputListener) {
         mOnMentionInputListener = onMentionInputListener;
     }
 
     private void init() {
-        //mTIMMentionTextColor = Color.RED;
-        mPatternMap.clear();
-        mPatternMap.put(TIM_METION_TAG, TIM_MENTION_PATTERN);
-        mPatternMap.put(TIM_METION_TAG_FULL, TIM_MENTION_PATTERN_FULL);
-        //setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mentionTagList.clear();
+        mentionTagList.add(TIM_MENTION_TAG);
+        mentionTagList.add(TIM_MENTION_TAG_FULL);
         addTextChangedListener(new MentionTextWatcher());
     }
 
-    private void colorMentionString() {
+    public void setMentionMap(Map<String, String> mentionList) {
+        this.mentionList.putAll(mentionList);
+    }
+
+    public List<String> getMentionIdList() {
+        return new ArrayList<>(mentionList.values());
+    }
+
+    private void setMentionStringRange() {
+        updateMentionList();
         mIsSelected = false;
         if (mRangeArrayList != null) {
             mRangeArrayList.clear();
@@ -141,28 +117,44 @@ public class TIMMentionEditText extends EditText {
             return;
         }
 
-        //clear
-        ForegroundColorSpan[] oldSpans = spannableText.getSpans(0, spannableText.length(), ForegroundColorSpan.class);
-        for (ForegroundColorSpan oldSpan : oldSpans) {
-            spannableText.removeSpan(oldSpan);
-        }
-
         String text = spannableText.toString();
-        int lastMentionIndex = -1;
-        for (Map.Entry<String, Pattern> entry : mPatternMap.entrySet()) {
-            Matcher matcher = entry.getValue().matcher(text);
-            while (matcher.find()) {
-                String mentionText = matcher.group();
-                int start;
-                if (lastMentionIndex != -1) {
-                    start = text.indexOf(mentionText, lastMentionIndex);
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        for (String name : mentionList.keySet()) {
+            if (TextUtils.isEmpty(name)) {
+                continue;
+            }
+            int nameStartIndex = 0;
+            while (true) {
+                int findIndex = text.indexOf(name, nameStartIndex);
+                if (findIndex == -1) {
+                    break;
                 } else {
-                    start = text.indexOf(mentionText);
+                    int end = findIndex + name.length();
+                    mRangeArrayList.add(new Range(findIndex, end));
+                    nameStartIndex = end;
                 }
-                int end = start + mentionText.length();
-                spannableText.setSpan(null/*new ForegroundColorSpan(mTIMMentionTextColor)*/, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                lastMentionIndex = end;
-                mRangeArrayList.add(new Range(start, end));
+            }
+
+        }
+    }
+
+    private void updateMentionList() {
+        if (mentionList == null) {
+            return;
+        }
+        Editable spannableText = getText();
+        if (spannableText == null) {
+            return;
+        }
+        String text = spannableText.toString();
+        if (TextUtils.isEmpty(text)) {
+            mentionList.clear();
+        }
+        for (String name : new ArrayList<>(mentionList.keySet())) {
+            if (!text.contains(name)) {
+                mentionList.remove(name);
             }
         }
     }
@@ -201,9 +193,9 @@ public class TIMMentionEditText extends EditText {
         public void onTextChanged(CharSequence charSequence, int index, int i1, int count) {
             if (count == 1 && !TextUtils.isEmpty(charSequence) && hasFocus()) {
                 char mentionChar = charSequence.toString().charAt(index);
-                for (Map.Entry<String, Pattern> entry : mPatternMap.entrySet()) {
-                    if (entry.getKey().equals(String.valueOf(mentionChar)) && mOnMentionInputListener != null) {
-                        mOnMentionInputListener.onMentionCharacterInput(entry.getKey());
+                for (String mentionTag: mentionTagList) {
+                    if (mentionTag.equals(String.valueOf(mentionChar)) && mOnMentionInputListener != null) {
+                        mOnMentionInputListener.onMentionCharacterInput(mentionTag);
                     }
                 }
             }

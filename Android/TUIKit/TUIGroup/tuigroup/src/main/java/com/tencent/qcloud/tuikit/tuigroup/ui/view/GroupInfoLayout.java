@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
@@ -329,14 +330,19 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mJoinTypeView.setContent(mJoinTypes.get(info.getJoinType()));
         mNickView.setContent(mPresenter.getNickName());
         mTopSwitchView.setChecked(mGroupInfo.isTopChat());
-        mMsgRevOptionSwitchView.setChecked(mGroupInfo.getMessageReceiveOption());
 
-        mMsgRevOptionSwitchView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
-                mPresenter.setGroupReceiveMessageOpt(mGroupInfo, isChecked);
-            }
-        });
+        if (V2TIMManager.GROUP_TYPE_MEETING.equals(info.getGroupType())) {
+            mMsgRevOptionSwitchView.setVisibility(GONE);
+        } else {
+            mMsgRevOptionSwitchView.setChecked(mGroupInfo.getMessageReceiveOption());
+
+            mMsgRevOptionSwitchView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
+                    mPresenter.setGroupReceiveMessageOpt(mGroupInfo, isChecked);
+                }
+            });
+        }
 
         mDissolveBtn.setText(R.string.dissolve);
         if (mGroupInfo.isOwner()) {
@@ -366,6 +372,8 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         } else if (TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_CHAT_ROOM)
                 || TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_MEETING)) {
             groupText = getContext().getString(R.string.chat_room);
+        } else if (TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_COMMUNITY)) {
+            groupText = getContext().getString(R.string.community_group);
         }
         return groupText;
     }

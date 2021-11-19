@@ -5,7 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:clipChildren="false"
     android:orientation="vertical">
+
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+        android:id="@+id/main_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
@@ -18,8 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="57.18dp"
         android:background="#f7f7f7"
+        android:clipChildren="false"
         android:orientation="horizontal">
-
 
         <RelativeLayout
             android:id="@+id/conversation_btn_group"

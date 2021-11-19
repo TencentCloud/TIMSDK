@@ -251,7 +251,7 @@ public class ContactProvider {
                 int option = V2TIMReceiveMessageOptInfo.getC2CReceiveMessageOpt();
 
                 TUIContactLog.d(TAG, "getC2CReceiveMessageOpt option = " + option);
-                ContactUtils.callbackOnSuccess(callback, option == V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE);
+                ContactUtils.callbackOnSuccess(callback, option == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE);
             }
 
             @Override
@@ -265,7 +265,7 @@ public class ContactProvider {
     public void  setC2CReceiveMessageOpt(List<String> userIdList, boolean isReceiveMessage, IUIKitCallback<Void> callback) {
         int option;
         if (isReceiveMessage) {
-            option = V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE;
+            option = V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE;
         } else {
             option = V2TIMMessage.V2TIM_RECEIVE_MESSAGE;
         }

@@ -1,7 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.interfaces;
 
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public interface C2CChatEventListener {
     void onReadReport(List<MessageReceiptInfo> receiptList);
     void handleRevoke(String msgId);
-    void onRecvNewMessage(MessageInfo message);
+    void onRecvNewMessage(TUIMessageBean message);
     void exitC2CChat(String chatId);
     void onFriendNameChanged(String userId, String newName);
 

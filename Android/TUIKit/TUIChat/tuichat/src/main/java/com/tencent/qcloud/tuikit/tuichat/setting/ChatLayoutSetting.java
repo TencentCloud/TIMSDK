@@ -5,14 +5,13 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomHelloMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
 public class ChatLayoutSetting {
 
@@ -166,7 +165,7 @@ public class ChatLayoutSetting {
                 customHelloMessage.version = TUIChatConstants.version;
 
                 String data = gson.toJson(customHelloMessage);
-                MessageInfo info = ChatMessageInfoUtil.buildCustomMessage(data, customHelloMessage.text, customHelloMessage.text.getBytes());
+                TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(data, customHelloMessage.text, customHelloMessage.text.getBytes());
                 layout.sendMessage(info, false);
             }
         });

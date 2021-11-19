@@ -7,10 +7,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class TUIGroupChatFragment extends TUIBaseChatFragment {
@@ -44,6 +47,35 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
         chatView.setPresenter(presenter);
         presenter.setGroupInfo(groupInfo);
         chatView.setChatInfo(groupInfo);
+        chatView.getMessageLayout().setOnItemClickListener(new OnItemLongClickListener() {
+            @Override
+            public void onMessageLongClick(View view, int position, TUIMessageBean messageBean) {
+                //因为adapter中第一条为加载条目，位置需减1
+                chatView.getMessageLayout().showItemPopMenu(position - 1, messageBean, view);
+            }
+
+            @Override
+            public void onUserIconClick(View view, int position, TUIMessageBean messageBean) {
+                if (null == messageBean) {
+                    return;
+                }
+
+                ChatInfo info = new ChatInfo();
+                info.setId(messageBean.getSender());
+
+                Bundle bundle = new Bundle();
+                bundle.putString("chatId", info.getId());
+                TUICore.startActivity("FriendProfileActivity", bundle);
+
+            }
+
+            @Override
+            public void onUserIconLongClick(View view, int position, TUIMessageBean messageBean) {
+                String result_id = messageBean.getV2TIMMessage().getSender();
+                String result_name = messageBean.getV2TIMMessage().getNickName();
+                chatView.getInputLayout().addInputText(result_name, result_id);
+            }
+        });
     }
 
     public void setPresenter(GroupChatPresenter presenter) {

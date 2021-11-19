@@ -10,9 +10,9 @@ import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
-import com.tencent.qcloud.tuikit.tuichat.bean.MergeMessageElemBean;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ForwardPresenter;
@@ -28,7 +28,7 @@ public class TUIForwardChatActivity extends BaseLightActivity {
     private MessageRecyclerView mFowardChatMessageRecyclerView;
     private MessageAdapter mForwardChatAdapter;
 
-    private MessageInfo mMessageInfo;
+    private MergeMessageBean mMessageInfo;
     private String mTitle;
 
     private ForwardPresenter presenter;
@@ -56,25 +56,28 @@ public class TUIForwardChatActivity extends BaseLightActivity {
 
         mFowardChatMessageRecyclerView.setOnItemClickListener(new OnItemLongClickListener() {
             @Override
-            public void onMessageLongClick(View view, int position, MessageInfo messageInfo) {
+            public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {
 
             }
 
             @Override
-            public void onUserIconClick(View view, int position, MessageInfo messageInfo) {
-                if (null == messageInfo) {
+            public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
+                if (!(messageInfo instanceof MergeMessageBean)) {
                     return;
                 }
 
-                MergeMessageElemBean mergeMessageElemBean = MergeMessageElemBean.createMergeMessageElemBean(messageInfo);
-                if (mergeMessageElemBean != null){
-                    Intent intent = new Intent(getBaseContext(), TUIForwardChatActivity.class);
-                    Bundle bundle=new Bundle();
-                    bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageInfo);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getBaseContext(), TUIForwardChatActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageInfo);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
+
+            @Override
+            public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
+
+            }
+
         });
 
         init();
@@ -86,13 +89,12 @@ public class TUIForwardChatActivity extends BaseLightActivity {
             mTitleBar.setTitle(mTitle, ITitleBarLayout.Position.MIDDLE);
             mTitleBar.getRightGroup().setVisibility(View.GONE);
 
-            mMessageInfo = (MessageInfo) intent.getSerializableExtra(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY);
+            mMessageInfo = (MergeMessageBean) intent.getSerializableExtra(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY);
             if (null == mMessageInfo) {
                 TUIChatLog.e(TAG, "mMessageInfo is null");
                 return;
             }
-            MergeMessageElemBean mergeMessageElemBean = MergeMessageElemBean.createMergeMessageElemBean(mMessageInfo);
-            presenter.downloadMergerMessage(mergeMessageElemBean);
+            presenter.downloadMergerMessage(mMessageInfo);
         }
     }
 

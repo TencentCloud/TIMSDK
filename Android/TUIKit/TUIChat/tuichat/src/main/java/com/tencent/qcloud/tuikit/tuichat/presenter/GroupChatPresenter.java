@@ -12,7 +12,8 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageCustom;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
@@ -61,11 +62,11 @@ public class GroupChatPresenter extends ChatPresenter {
             }
 
             @Override
-            public void onRecvNewMessage(MessageInfo messageInfo) {
-                if (groupInfo == null || !TextUtils.equals(messageInfo.getGroupId(), groupInfo.getId())) {
+            public void onRecvNewMessage(TUIMessageBean message) {
+                if (groupInfo == null || !TextUtils.equals(message.getGroupId(), groupInfo.getId())) {
                     TUIChatLog.i(TAG, "receive a new message , not belong to current chat.");
                 } else {
-                    GroupChatPresenter.this.onRecvNewMessage(messageInfo);
+                    GroupChatPresenter.this.onRecvNewMessage(message);
                 }
             }
 
@@ -81,17 +82,17 @@ public class GroupChatPresenter extends ChatPresenter {
     }
 
     @Override
-    public void loadMessage(int type, MessageInfo lastMessageInfo) {
+    public void loadMessage(int type, TUIMessageBean lastMessageInfo) {
         if (groupInfo == null || isLoading) {
             return;
         }
         isLoading = true;
         String chatId = groupInfo.getId();
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD) {
-            provider.loadGroupMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<List<MessageInfo>>() {
+            provider.loadGroupMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<List<TUIMessageBean>>() {
 
                 @Override
-                public void onSuccess(List<MessageInfo> data) {
+                public void onSuccess(List<TUIMessageBean> data) {
                     TUIChatLog.i(TAG, "load group message success " + data.size());
                     if (lastMessageInfo == null) {
                         isHaveMoreNewMessage = false;
@@ -111,7 +112,7 @@ public class GroupChatPresenter extends ChatPresenter {
 
     // 加载消息成功之后会调用此方法
     @Override
-    protected void onMessageLoadCompleted(List<MessageInfo> data, int getType) {
+    protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {
         groupReadReport(groupInfo.getId());
         processLoadedMessage(data, getType);
     }
@@ -157,9 +158,9 @@ public class GroupChatPresenter extends ChatPresenter {
     }
 
     private void sendGroupTipsMessage(String groupId, String message, final IUIKitCallback<String> callBack) {
-        provider.sendGroupTipsMessage(groupId, message, new IUIKitCallback<MessageInfo>() {
+        provider.sendGroupTipsMessage(groupId, message, new IUIKitCallback<TUIMessageBean>() {
             @Override
-            public void onSuccess(MessageInfo data) {
+            public void onSuccess(TUIMessageBean data) {
                 TUIChatUtils.callbackOnSuccess(callBack, groupId);
             }
 
@@ -170,26 +171,19 @@ public class GroupChatPresenter extends ChatPresenter {
         });
     }
 
-    protected void addMessageInfo(MessageInfo messageInfo) {
+    protected void addMessageInfo(TUIMessageBean messageInfo) {
         super.addMessageInfo(messageInfo);
         addGroupMessage(messageInfo);
     }
 
 
-    private void addGroupMessage(MessageInfo msgInfo) {
-        if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_JOIN
-                || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_QUITE
-                || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_KICK
-                || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NAME
-                || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE) {
-            if (msgInfo.getMessageInfoElemType() != MessageInfo.MSG_TYPE_TIPS) {
-                return;
-            }
-        } else {
+    private void addGroupMessage(TUIMessageBean message) {
+        if (!(message instanceof TipsMessageBean)) {
             return;
         }
-        if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_JOIN) {
-            provider.addJoinGroupMessage(msgInfo, new IUIKitCallback<List<GroupMemberInfo>>() {
+        TipsMessageBean tipsMessage = (TipsMessageBean) message;
+        if (tipsMessage.getTipType() == TipsMessageBean.MSG_TYPE_GROUP_JOIN) {
+            provider.addJoinGroupMessage(tipsMessage, new IUIKitCallback<List<GroupMemberInfo>>() {
                 @Override
                 public void onSuccess(List<GroupMemberInfo> data) {
                     currentGroupMembers.addAll(data);
@@ -202,8 +196,8 @@ public class GroupChatPresenter extends ChatPresenter {
                 }
             });
 
-        } else if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_QUITE || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_KICK) {
-            provider.addLeaveGroupMessage(msgInfo, new IUIKitCallback<List<String>>() {
+        } else if (tipsMessage.getTipType() == TipsMessageBean.MSG_TYPE_GROUP_QUITE || tipsMessage.getTipType() == TipsMessageBean.MSG_TYPE_GROUP_KICK) {
+            provider.addLeaveGroupMessage(tipsMessage, new IUIKitCallback<List<String>>() {
                 @Override
                 public void onSuccess(List<String> data) {
                     for (String memberUserId : data) {
@@ -222,17 +216,17 @@ public class GroupChatPresenter extends ChatPresenter {
 
                 }
             });
-        } else if (msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NAME || msgInfo.getMsgType() == MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE) {
-            provider.addModifyGroupMessage(msgInfo, new IUIKitCallback<Pair<Integer, String>>() {
+        } else if (tipsMessage.getTipType() == TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NAME || tipsMessage.getTipType() == TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE) {
+            provider.addModifyGroupMessage(tipsMessage, new IUIKitCallback<Pair<Integer, String>>() {
                 @Override
                 public void onSuccess(Pair<Integer, String> data) {
-                    if (data.first == MessageInfo.MSG_TYPE_GROUP_MODIFY_NAME) {
+                    if (data.first == TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NAME) {
                         groupInfo.setGroupName(data.second);
                         if (chatNotifyHandler != null) {
                             chatNotifyHandler.onGroupNameChanged(data.second);
                         }
                     }
-                    if (data.first == MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE) {
+                    if (data.first == TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE) {
                         groupInfo.setNotice(data.second);
                     }
                 }
@@ -245,9 +239,8 @@ public class GroupChatPresenter extends ChatPresenter {
         }
     }
 
-    protected void assembleGroupMessage(MessageInfo message) {
+    protected void assembleGroupMessage(TUIMessageBean message) {
         message.setGroup(true);
-        message.setFromUser(TUILogin.getLoginUser());
     }
 
     public void onGroupForceExit(String groupId) {

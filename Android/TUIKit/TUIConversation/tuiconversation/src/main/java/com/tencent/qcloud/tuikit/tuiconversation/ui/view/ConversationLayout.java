@@ -22,7 +22,6 @@ import java.util.Map;
 
 public class ConversationLayout extends RelativeLayout implements IConversationLayout {
 
-    private TitleBarLayout mTitleBarLayout;
     private ConversationListLayout mConversationList;
     private ConversationPresenter presenter;
     public ConversationLayout(Context context) {
@@ -52,15 +51,10 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
      */
     private void init() {
         inflate(getContext(), R.layout.conversation_layout, this);
-        mTitleBarLayout = findViewById(R.id.conversation_title);
         mConversationList = findViewById(R.id.conversation_list);
     }
 
     public void initDefault() {
-        mTitleBarLayout.setTitle(getResources().getString(R.string.conversation_title), ITitleBarLayout.Position.MIDDLE);
-        mTitleBarLayout.getLeftGroup().setVisibility(View.GONE);
-        mTitleBarLayout.setRightIcon(R.drawable.conversation_more);
-
         final ConversationListAdapter adapter = new ConversationListAdapter();
         initSearchView(adapter);
         mConversationList.setAdapter((IConversationListAdapter) adapter);
@@ -81,10 +75,6 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
                 adapter.setSearchView(searchView);
             }
         }
-    }
-    
-    public TitleBarLayout getTitleBar() {
-        return mTitleBarLayout;
     }
 
     @Override
@@ -116,5 +106,10 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         if (presenter != null) {
             presenter.clearConversationMessage(conversation);
         }
+    }
+
+    @Override
+    public TitleBarLayout getTitleBar() {
+        return null;
     }
 }

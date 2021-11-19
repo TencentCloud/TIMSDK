@@ -115,7 +115,7 @@ public class ConversationUtils {
             info.setId(conversation.getUserID());
         }
 
-        info.setShowDisturbIcon(conversation.getRecvOpt() == V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE ? true : false);
+        info.setShowDisturbIcon(conversation.getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE ? true : false);
         info.setConversationId(conversation.getConversationID());
         info.setGroup(isGroup);
         // AVChatRoom 不支持未读数。
@@ -204,7 +204,6 @@ public class ConversationUtils {
                     }
                 }
                 info.setIconUrlList(urlList);
-//                mProvider.updateAdapter(info.getConversationId());
             }
         });
     }
@@ -218,23 +217,6 @@ public class ConversationUtils {
             return savedIcon;
         }
         return "";
-    }
-
-//    public static ChatInfo getChatInfoByConversationInfo(ConversationInfo conversationInfo) {
-//        if (conversationInfo == null) {
-//            return null;
-//        }
-//        ChatInfo chatInfo = new ChatInfo();
-//        chatInfo.setType(conversationInfo.isGroup() ? V2TIMConversation.V2TIM_GROUP : V2TIMConversation.V2TIM_C2C);
-//        chatInfo.setGroupType(conversationInfo.isGroup() ? conversationInfo.getGroupType() : "");
-//        chatInfo.setId(conversationInfo.getId());
-//        chatInfo.setChatName(conversationInfo.getTitle());
-//        chatInfo.setDraft(conversationInfo.getDraft());
-//        return chatInfo;
-//    }
-
-    public static boolean isNeedUpdate(ConversationInfo conversationInfo) {
-        return V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(conversationInfo.getGroupType());
     }
 
 }

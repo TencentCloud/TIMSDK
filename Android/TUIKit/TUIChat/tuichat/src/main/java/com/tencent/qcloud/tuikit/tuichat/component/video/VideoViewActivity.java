@@ -114,6 +114,15 @@ public class VideoViewActivity extends Activity {
         TUIChatLog.i(TAG, "onStop");
         super.onStop();
         if (mVideoView != null) {
+            mVideoView.pause();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TUIChatLog.i(TAG, "onStop");
+        if (mVideoView != null) {
             mVideoView.stop();
         }
     }

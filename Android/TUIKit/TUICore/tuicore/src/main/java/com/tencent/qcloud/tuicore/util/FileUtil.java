@@ -71,7 +71,7 @@ public class FileUtil {
         try {
             int sdkVersion = Build.VERSION.SDK_INT;
             if (sdkVersion >= 19) {
-                path = getPath(TUILogin.getAppContext(), uri);
+                path = getPathByCopyFile(TUILogin.getAppContext(), uri);
             } else {
                 path = getRealFilePath(uri);
             }

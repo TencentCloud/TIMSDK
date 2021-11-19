@@ -2,12 +2,18 @@ package com.tencent.qcloud.tuicore;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * 公共配置，如文件路径配置、用户信息
@@ -196,4 +202,64 @@ public class TUIConfig {
         return appContext;
     }
 
+    public static void setSceneOptimizParams(final String scene){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String packageName = "";
+                    String sdkAPPId = TUILogin.getSdkAppId() + "";
+                    String userId = TUILogin.getUserId();
+                    if(getAppContext() != null){
+                        packageName = getAppContext().getPackageName();
+                    }
+
+                    URL url = new URL("https://demos.trtc.tencent-cloud.com/prod/base/v1/events/stat");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(5000);
+                    conn.setReadTimeout(5000);
+                    conn.setDoOutput(true);
+                    conn.setDoInput(true);
+                    conn.setUseCaches(false);
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/json");
+
+                    JSONObject msgObject = new JSONObject();
+                    msgObject.put("sdkappid", sdkAPPId);
+                    msgObject.put("bundleId", "");
+                    msgObject.put("component", scene);
+                    msgObject.put("package", packageName);
+
+                    JSONObject bodyObject = new JSONObject();
+                    bodyObject.put("userId", userId);
+                    bodyObject.put("event", "useScenario");
+                    bodyObject.put("msg", msgObject);
+                    String paramStr = String.valueOf(bodyObject);
+
+                    OutputStream out = conn.getOutputStream();
+                    out.write(paramStr.getBytes());
+                    out.flush();
+                    out.close();
+                    if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        InputStream is = conn.getInputStream();
+                        ByteArrayOutputStream message = new ByteArrayOutputStream();
+                        int len = 0;
+                        byte buffer[] = new byte[1024];
+                        while ((len = is.read(buffer)) != -1) {
+                            message.write(buffer, 0, len);
+                        }
+                        String msg = new String(message.toByteArray());
+                        Log.d("setSceneOptimizParams", "msg:" + msg);
+                        is.close();
+                        message.close();
+                        conn.disconnect();
+                    } else {
+                        Log.d("setSceneOptimizParams", "ResponseCode:" + conn.getResponseCode());
+                    }
+                } catch (Exception e) {
+                    Log.d("TUICore", "setSceneOptimizParams exception");
+                }
+            }
+        }).start();
+    }
 }

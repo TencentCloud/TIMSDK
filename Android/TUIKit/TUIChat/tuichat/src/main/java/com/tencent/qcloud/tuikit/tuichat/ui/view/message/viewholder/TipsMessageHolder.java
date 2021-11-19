@@ -8,14 +8,16 @@ import android.widget.TextView;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 
-public class MessageTipsHolder extends MessageEmptyHolder {
+public class TipsMessageHolder extends MessageBaseHolder {
 
     protected TextView mChatTipsTv;
 
-    public MessageTipsHolder(View itemView) {
+    public TipsMessageHolder(View itemView) {
         super(itemView);
+        mChatTipsTv = itemView.findViewById(R.id.chat_tips_tv);
     }
 
     @Override
@@ -24,12 +26,7 @@ public class MessageTipsHolder extends MessageEmptyHolder {
     }
 
     @Override
-    public void initVariableViews() {
-        mChatTipsTv = rootView.findViewById(R.id.chat_tips_tv);
-    }
-
-    @Override
-    public void layoutViews(MessageInfo msg, int position) {
+    public void layoutViews(TUIMessageBean msg, int position) {
         super.layoutViews(msg, position);
 
         if (properties.getTipsMessageBubble() != null) {
@@ -42,26 +39,26 @@ public class MessageTipsHolder extends MessageEmptyHolder {
             mChatTipsTv.setTextSize(properties.getTipsMessageFontSize());
         }
 
-        if (msg.getStatus() == MessageInfo.MSG_STATUS_REVOKE) {
+        if (msg.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
             if (msg.isSelf()) {
                 msg.setExtra(TUIChatService.getAppContext().getString(R.string.revoke_tips_you));
             } else if (msg.isGroup()) {
-                String message = TUIChatConstants.covert2HTMLString(
-                        (TextUtils.isEmpty(msg.getGroupNameCard())
-                                ? msg.getFromUser()
-                                : msg.getGroupNameCard()));
-                msg.setExtra(message + TUIChatService.getAppContext().getString(R.string.revoke_tips));
+                String sender = TUIChatConstants.covert2HTMLString(
+                        (TextUtils.isEmpty(msg.getNameCard())
+                                ? msg.getSender()
+                                : msg.getNameCard()));
+                msg.setExtra(sender + TUIChatService.getAppContext().getString(R.string.revoke_tips));
             } else {
                 msg.setExtra(TUIChatService.getAppContext().getString(R.string.revoke_tips_other));
             }
         }
 
-        if (msg.getStatus() == MessageInfo.MSG_STATUS_REVOKE
-                || (msg.getMsgType() >= MessageInfo.MSG_TYPE_TIPS
-                && msg.getMsgType() <= MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE)) {
+        if (msg.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
             if (msg.getExtra() != null) {
-                mChatTipsTv.setText(Html.fromHtml(msg.getExtra().toString()));
+                mChatTipsTv.setText(Html.fromHtml(msg.getExtra()));
             }
+        } else if (msg instanceof TipsMessageBean) {
+            mChatTipsTv.setText(Html.fromHtml( ((TipsMessageBean) msg).getText()));
         }
     }
 

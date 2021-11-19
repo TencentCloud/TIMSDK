@@ -180,4 +180,5 @@
     <string name="test_custom_action">Custom Messages</string>
     <string name="welcome_tip">Thank you for joining Instant Messaging!</string>
 
+    <string name="resend_tips">Are you sure to resend ?</string>
 </resources>
