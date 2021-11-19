@@ -36,7 +36,7 @@
     "packNpmRelationList": [],
     "minifyWXSS": true
   },
-  "appid": "wx649acbec87e200b4",
+  "appid": "",
   "projectname": "IM-TUIKit",
   "libVersion": "2.14.1",
   "compileType": "miniprogram",
