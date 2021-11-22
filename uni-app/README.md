@@ -26,34 +26,6 @@
 <td><img src="TUIKit/wx-uniapp.gif" height = "400"/></td>
 </tr>
 </table>
-## 腾讯云即时通信 IM 跨平台利器 ---  uni-app TUIKit
-基于 Web IM SDK 在 HBuilderX 中编译 Android、iOS 应用以及小程序应用，可实现一套代码多端打包。
-
-### uni-app TUIKit  在线客服场景
-
-提供了示例客服群 ➕ 示例好友的基础模版，在线客服场景功能包括：
-- 支持发送文本消息、图片消息、语音消息、视频消息等常见消息。
-- 支持常用语、订单、服务评价等自定义消息。
-- 支持创建群聊会话、群成员管理等。
-
-### uni-app TUIKit 支持平台
-- 安卓
-- iOS
-- 微信小程序
-
-### 效果展示：
-<table>
-<tr>
-   <th>安卓演示：</th>
-   <th>iOS 演示：</th>
-   <th>微信小程序演示：</th>
- </tr>
-<tr>
-<td><img src="TUIKit/android-uniapp.gif" height = "400"/></td>
-<td><img src="TUIKit/ios-uniapp.gif" height = "400"/></td>
-<td><img src="TUIKit/wx-uniapp.gif" height = "400"/></td>
-</tr>
-</table>
 
 ### 快速跑通
 
