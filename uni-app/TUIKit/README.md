@@ -21,9 +21,9 @@
    <th>微信小程序演示：</th>
  </tr>
 <tr>
-<td><img src="TUIKit/android-uniapp.gif" height = "400"/></td>
-<td><img src="TUIKit/ios-uniapp.gif" height = "400"/></td>
-<td><img src="TUIKit/wx-uniapp.gif" height = "400"/></td>
+<td><img src="android-uniapp.gif" height = "400"/></td>
+<td><img src="ios-uniapp.gif" height = "400"/></td>
+<td><img src="wx-uniapp.gif" height = "400"/></td>
 </tr>
 </table>
 
@@ -214,6 +214,6 @@ v2.10.2及以下版本，使用 HTTP，HTTP 版本须添加以下域名：
 - [SDK 更新日志](https://cloud.tencent.com/document/product/269/38492)
 - [uni-app TUIKit 源码](https://github.com/tencentyun/TIMSDK/tree/master/uni-app)
 - [快速集成 uni-app TUIKit](https://cloud.tencent.com/document/product/269/64507)
-- [一分钟跑通 Demo (uni-app](https://cloud.tencent.com/document/product/269/64506)
+- [一分钟跑通 Demo (uni-app)](https://cloud.tencent.com/document/product/269/64506)
 - [快速集成微信小程序原生 TUIKit](https://cloud.tencent.com/document/product/269/62766)
 - [微信小程序原生 TUIKit 源码](https://github.com/tencentyun/TIMSDK/tree/master/MiniProgram)
