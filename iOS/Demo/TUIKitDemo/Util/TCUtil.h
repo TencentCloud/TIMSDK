@@ -28,6 +28,7 @@
 #define Action_Createprivategrp   @"createprivategrp"           //创建讨论组
 #define Action_Createpublicgrp    @"createpublicgrp"            //创建群聊
 #define Action_Createchatroomgrp  @"createchatroomgrp"          //创建聊天室
+#define Action_Createcommunitygrp @"createcommunitygrp"         //创建社区
 #define Action_Addfriend          @"addfriend"                  //添加好友
 #define Action_Addgroup           @"addgroup"                   //添加群组
 #define Action_Addblacklist       @"addblacklist"               //添加黑名单

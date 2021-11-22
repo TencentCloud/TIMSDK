@@ -43,7 +43,7 @@
     [moreButton addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
     self.navigationItem.rightBarButtonItem = moreItem;
-
+    
     [self setupNavigation];
     
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
@@ -178,6 +178,11 @@
     room.image = TUIDemoImagePath(@"create_group");
     room.title = NSLocalizedString(@"ChatsNewChatRoomText", nil);
     [menus addObject:room];
+    
+    TPopCellData *community = [[TPopCellData alloc] init];
+    community.image = TUIDemoImagePath(@"create_group");
+    community.title = NSLocalizedString(@"ChatsNewCommunityText", nil);
+    [menus addObject:community];
 
 
     CGFloat height = [TPopCell getHeight] * menus.count + TPopView_Arrow_Size.height;
@@ -252,6 +257,17 @@
             [TCUtil report:Action_Createchatroomgrp actionSub:@"" code:@(0) msg:@"createchatroomgrp"];
         };
         return;
+    } else if(index == 4){
+        //创建社区
+        TUIContactSelectController *vc = [TUIContactSelectController new];
+        vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
+        [self.navigationController pushViewController:vc animated:YES];
+        vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
+            @strongify(self)
+            [self addGroup:GroupType_Community addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
+            [TCUtil report:Action_Createcommunitygrp actionSub:@"" code:@(0) msg:@"createcommunitygrp"];
+        };
+        return;
     }
     else {
         return;
@@ -309,10 +325,12 @@
                 content = NSLocalizedString(@"ChatsCreateGroupTips", nil); // @"创建群聊";
             } else if([info.groupType isEqualToString:GroupType_Meeting]) {
                 content = NSLocalizedString(@"ChatsCreateChatRoomTips", nil); // @"创建聊天室";
+            } else if([info.groupType isEqualToString:GroupType_Community]) {
+                content = NSLocalizedString(@"ChatsCreateCommunityTips", nil); // @"创建社区";
             } else {
                 content = NSLocalizedString(@"ChatsCreateDefaultTips", nil); // @"创建群组";
             }
-            NSDictionary *dic = @{@"version": @(GroupCreate_Version),@"businessID": GroupCreate,@"opUser":showName,@"content":content};
+            NSDictionary *dic = @{@"version": @(GroupCreate_Version),BussinessID: BussinessID_GroupCreate,@"opUser":showName,@"content":content};
             NSData *data= [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
             V2TIMMessage *msg = [[V2TIMManager sharedInstance] createCustomMessage:data];
             //创建成功后，默认跳转到群组对应的聊天界面
@@ -352,11 +370,15 @@
             return nil;
         }
         // 判断是不是自定义跳转消息
-        if ([businessID isEqualToString:TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
-            return param[@"text"];
+        if ([businessID isEqualToString:BussinessID_TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
+            NSString *desc = param[@"text"];
+            if (msg.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
+                desc = @"You recalled a message";
+            }
+            return desc;
         }
         // 判断是不是群创建自定义消息
-        else if ([businessID isEqualToString:GroupCreate] || [param.allKeys containsObject:GroupCreate]) {
+        else if ([businessID isEqualToString:BussinessID_GroupCreate] || [param.allKeys containsObject:BussinessID_GroupCreate]) {
             return [NSString stringWithFormat:@"\"%@\"%@",param[@"opUser"],param[@"content"]];
         }
     }

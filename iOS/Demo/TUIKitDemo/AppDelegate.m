@@ -98,7 +98,6 @@ static AppDelegate *app;
     [TXLiveBase setLicenceURL:LicenceURL key:LicenceKey];
 #endif
     
-    [self setupServerInfo];
     [self setupBugly];
     [self setupQAPM];
     [self registNotification];
@@ -135,47 +134,6 @@ static AppDelegate *app;
     [TCUtil report:Action_Startup actionSub:@"" code:@(0) msg:@"im demo startup success"];
     _beginTime = [[NSDate date] timeIntervalSince1970];
     return YES;
-}
-
-- (void)setupServerInfo
-{
-    if (TUIDemoCurrentServer == TUIDemoServerTypePrivate ||
-        TUIDemoCurrentServer == TUIDemoServerTypeCustomPrivate) {
-        // 私有化
-        NSString *serverPublicKey = @"0436ddd1de2ec99e57f8a796745bf5c639fe038d65f9df155e3cbc622d0b1b75a40ee49074920e56c6012f90c77be69f7f";
-        
-        NSString *ip = TUIDemoIsTestEnvironment?@"120.232.196.158":@"58.212.179.249";
-        NSNumber *port = @(80);
-        if (TUIDemoCurrentServer == TUIDemoServerTypeCustomPrivate) {
-            // 自定义私有化
-            ip = [GenerateTestUserSig customPrivateServer]?:@"";
-            port = @([GenerateTestUserSig customPrivatePort])?:@0;
-        }
-        
-        NSArray *longconnectionAddressList = @[
-            @{
-                @"ip": ip,
-                @"port": port
-            }
-        ];
-        NSMutableDictionary *dictParam = [NSMutableDictionary new];
-        [dictParam setValue:serverPublicKey forKey:@"serverPublicKey"];
-        [dictParam setValue:longconnectionAddressList forKey:@"longconnectionAddressList"];
-        NSData *dataParam = [NSJSONSerialization dataWithJSONObject:dictParam options:NSJSONWritingPrettyPrinted error:nil];
-        NSString *strParam = [[NSString alloc]initWithData:dataParam encoding:NSUTF8StringEncoding];
-        [[V2TIMManager sharedInstance] callExperimentalAPI:@"setCustomServerInfo" param:strParam succ:^(NSObject *result) {
-            NSLog(@"success");
-        } fail:^(int code, NSString *desc) {
-            NSLog(@"errorCode:%d errorMessage:%@", code, desc);
-        }];
-    } else {
-        [[V2TIMManager sharedInstance] callExperimentalAPI:@"setTestEnvironment" param:[NSNumber numberWithBool:TUIDemoIsTestEnvironment] succ:nil fail:nil];
-    }
-    
-    NSLog(@"%s, type:%zd, test:%d customPrivateIP:%@, customPrivatePort:%zd", __func__, TUIDemoCurrentServer,
-                                                                              TUIDemoIsTestEnvironment,
-                                                                              [GenerateTestUserSig customPrivateServer],
-                                                                              [GenerateTestUserSig customPrivatePort]);
 }
 
 - (void)setupCustomSticker

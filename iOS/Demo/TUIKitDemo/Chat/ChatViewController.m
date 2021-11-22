@@ -128,16 +128,7 @@ UIDocumentPickerDelegate>
     [super viewDidAppear:animated];
     // 发送第一条消息
     if (self.waitToSendMsg) {
-        
-        TUIMessageCellData *uiMsg = [TUIMessageDataProvider getCellData:self.waitToSendMsg];
-        if (uiMsg == nil) {
-            uiMsg = [self chatController:self.chat onNewMessage:self.waitToSendMsg];
-        }
-        if (uiMsg == nil) {
-            return;
-        }
-        uiMsg.innerMessage = self.waitToSendMsg;
-        [self.chat sendMessage:uiMsg];
+        [self.chat sendMessage:self.waitToSendMsg];
         self.waitToSendMsg = nil;
     }
 }
@@ -196,37 +187,36 @@ UIDocumentPickerDelegate>
 }
 
 #pragma mark - TUIChatControllerListener
-- (void)chatController:(TUIBaseChatViewController *)controller didSendMessage:(TUIMessageCellData *)msgCellData
+- (void)chatController:(TUIBaseChatViewController *)controller didSendMessage:(V2TIMMessage *)message
 {
-    if ([_conversationData.groupID isEqualToString:@"im_demo_admin"] || [_conversationData.userID isEqualToString:@"im_demo_admin"]) {
+    if ([message.groupID isEqualToString:@"im_demo_admin"] || [message.userID isEqualToString:@"im_demo_admin"]) {
         [TCUtil report:Action_Sendmsg2helper actionSub:@"" code:@(0) msg:@"sendmsg2helper"];
     }
-    else if ([_conversationData.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [_conversationData.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
+    else if ([message.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [message.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
         [TCUtil report:Action_Sendmsg2defaultgrp actionSub:@"" code:@(0) msg:@"sendmsg2defaultgrp"];
     }
-    if ([msgCellData isKindOfClass:[TUITextMessageCellData class]]) {
-        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendtext code:@(0) msg:@"sendtext"];
+    switch (message.elemType) {
+        case V2TIM_ELEM_TYPE_TEXT:
+            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendtext code:@(0) msg:@"sendtext"];
+            break;
+        case V2TIM_ELEM_TYPE_SOUND:
+            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendaudio code:@(0) msg:@"sendaudio"];
+            break;
+        case V2TIM_ELEM_TYPE_FACE:
+            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendface code:@(0) msg:@"sendface"];
+            break;
+        case V2TIM_ELEM_TYPE_IMAGE:
+            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendpicture code:@(0) msg:@"sendpicture"];
+            break;
+        case V2TIM_ELEM_TYPE_VIDEO:
+            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendvideo code:@(0) msg:@"sendvideo"];
+            break;
+        case V2TIM_ELEM_TYPE_FILE:
+            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendfile code:@(0) msg:@"sendfile"];
+            break;
+        default:
+            break;
     }
-    else if ([msgCellData isKindOfClass:[TUIVoiceMessageCellData class]]) {
-        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendaudio code:@(0) msg:@"sendaudio"];
-    }
-    else if ([msgCellData isKindOfClass:[TUIFaceMessageCellData class]]) {
-        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendface code:@(0) msg:@"sendface"];
-    }
-    else if ([msgCellData isKindOfClass:[TUIImageMessageCellData class]]) {
-        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendpicture code:@(0) msg:@"sendpicture"];
-    }
-    else if ([msgCellData isKindOfClass:[TUIVideoMessageCellData class]]) {
-        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendvideo code:@(0) msg:@"sendvideo"];
-    }
-    else if ([msgCellData isKindOfClass:[TUIFileMessageCellData class]]) {
-        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendfile code:@(0) msg:@"sendfile"];
-    }
-#if ENABLELIVE
-    else if ([msgCellData isKindOfClass:[TUIGroupLiveMessageCell class]]) {
-        [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendgrouplive code:@(0) msg:@"sendgrouplive"];
-    }
-#endif
 }
 
 - (void)chatController:(TUIBaseChatViewController *)chatController onSelectMoreCell:(TUIInputMoreCell *)cell
@@ -242,7 +232,7 @@ UIDocumentPickerDelegate>
 
 - (TUIMessageCellData *)chatController:(TUIBaseChatViewController *)controller onNewMessage:(V2TIMMessage *)msg
 {
-    if (msg.elemType == V2TIM_ELEM_TYPE_CUSTOM) {
+    if (V2TIM_ELEM_TYPE_CUSTOM == msg.elemType) {
         NSDictionary *param = [TCUtil jsonData2Dictionary:msg.customElem.data];
         if (param != nil) {
             NSString *businessID = param[@"businessID"];
@@ -250,7 +240,7 @@ UIDocumentPickerDelegate>
                 return nil;
             }
             // 判断是不是群创建自定义消息
-            if ([businessID isEqualToString:GroupCreate] || [param.allKeys containsObject:GroupCreate]) {
+            if ([businessID isEqualToString:BussinessID_GroupCreate] || [param.allKeys containsObject:BussinessID_GroupCreate]) {
                 GroupCreateCellData *cellData = [[GroupCreateCellData alloc] initWithDirection:msg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
                 cellData.content = [NSString stringWithFormat:@"\"%@\"%@",param[@"opUser"],param[@"content"]];
                 return cellData;
@@ -280,12 +270,12 @@ UIDocumentPickerDelegate>
 
 - (NSString *)chatController:(TUIBaseChatViewController *)controller onGetMessageAbstact:(V2TIMMessage *)message
 {
-    if (message.elemType == V2TIM_ELEM_TYPE_CUSTOM) {
+    if (V2TIM_ELEM_TYPE_CUSTOM == message.elemType) {
         NSDictionary *param = [TCUtil jsonData2Dictionary:message.customElem.data];
         if (param != nil) {
             NSString *businessID = param[@"businessID"];
             // 判断是不是群创建自定义消息
-            if ([businessID isEqualToString:GroupCreate] || [param.allKeys containsObject:GroupCreate]) {
+            if ([businessID isEqualToString:BussinessID_GroupCreate] || [param.allKeys containsObject:BussinessID_GroupCreate]) {
                 return [NSString stringWithFormat:@"\"%@\"%@",param[@"opUser"],param[@"content"]];
             }
         }

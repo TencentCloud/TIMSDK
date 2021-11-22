@@ -137,7 +137,7 @@
                                                               succ:^(NSArray<V2TIMUserReceiveMessageOptInfo *> *optList) {
                 for (V2TIMReceiveMessageOptInfo *info in optList) {
                     if ([info.userID isEqual:self.friendProfile.userID]) {
-                        data.on = (info.receiveOpt == V2TIM_NOT_RECEIVE_MESSAGE);
+                        data.on = (info.receiveOpt == V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE);
                         [weakSelf.tableView reloadData];
                         break;
                     }
@@ -319,7 +319,7 @@
 {
     V2TIMReceiveMessageOpt opt;
     if (cell.switcher.on) {
-        opt = V2TIM_NOT_RECEIVE_MESSAGE;
+        opt = V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE;
     } else {
         opt = V2TIM_RECEIVE_MESSAGE;
     }
