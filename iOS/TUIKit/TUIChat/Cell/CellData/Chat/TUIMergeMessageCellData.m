@@ -6,6 +6,7 @@
 //
 
 #import "TUIMergeMessageCellData.h"
+#import "TUITextMessageCellData.h"
 #import "TUIDefine.h"
 
 #ifndef CGFLOAT_CEIL
@@ -18,12 +19,24 @@
 
 @implementation TUIMergeMessageCellData
 
-- (instancetype)initWithDirection:(TMsgDirection)direction {
-    self = [super initWithDirection:direction];
-    if (self) {
-        self.reuseId = TRelayMessageCell_ReuserId;
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
+    V2TIMMergerElem *elem = message.mergerElem;
+    if (elem.layersOverLimit) {
+        TUITextMessageCellData *limitCell = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+        limitCell.content = TUIKitLocalizableString(TUIKitRelayLayerLimitTips);
+        return limitCell;
     }
-    return self;
+    
+    TUIMergeMessageCellData *relayData = [[TUIMergeMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    relayData.title = elem.title;
+    relayData.abstractList = [NSArray arrayWithArray:elem.abstractList];
+    relayData.mergerElem = elem;
+    relayData.reuseId = TRelayMessageCell_ReuserId;
+    return relayData;
+}
+
++ (NSString *)getDisplayString:(V2TIMMessage *)message {
+    return [NSString stringWithFormat:@"[%@]", TUIKitLocalizableString(TUIKitRelayChatHistory)];
 }
 
 - (CGSize)contentSize

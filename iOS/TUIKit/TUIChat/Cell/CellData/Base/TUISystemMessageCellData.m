@@ -18,7 +18,6 @@
         _contentFont = [UIFont systemFontOfSize:13];
         _contentColor = [UIColor d_systemGrayColor];
         self.cellLayout =  [TUIMessageCellLayout systemMessageLayout];
-        self.reuseId = TSystemMessageCell_ReuseId;
     }
     return self;
 }

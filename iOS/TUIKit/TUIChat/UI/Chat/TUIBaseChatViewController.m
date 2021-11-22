@@ -125,7 +125,7 @@
 
 #pragma mark - Public Methods
 
-- (void)sendMessage:(TUIMessageCellData *)message
+- (void)sendMessage:(V2TIMMessage *)message
 {
     [self.messageController sendMessage:message];
 }
@@ -218,7 +218,7 @@
     } completion:nil];
 }
 
-- (void)inputController:(TUIInputController *)inputController didSendMessage:(TUIMessageCellData *)msg
+- (void)inputController:(TUIInputController *)inputController didSendMessage:(V2TIMMessage *)msg
 {
     [self.messageController sendMessage:msg];
     if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
@@ -276,10 +276,10 @@
     return NO;
 }
 
-- (TUIMessageCellData *)messageController:(TUIMessageController *)controller onNewMessage:(V2TIMMessage *)data
+- (TUIMessageCellData *)messageController:(TUIMessageController *)controller onNewMessage:(V2TIMMessage *)message
 {
     if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:onNewMessage:)]) {
-        return [self.delegate chatController:self onNewMessage:data];
+        return [self.delegate chatController:self onNewMessage:message];
     }
     return nil;
 }
@@ -392,13 +392,10 @@
             NSString *path = [TUIKit_Image_Path stringByAppendingString:[TUITool genImageName:nil]];
             [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
             
-            TUIImageMessageCellData *uiImage = [[TUIImageMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-            uiImage.path = path;
-            uiImage.length = data.length;
-            [self sendMessage:uiImage];
-
+            V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
+            [self sendMessage:message];
             if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-                [self.delegate chatController:self didSendMessage:uiImage];
+                [self.delegate chatController:self didSendMessage:message];
             }
         }
         else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){
@@ -588,11 +585,10 @@
 
 - (void)sendVideoWithUrl:(NSURL*)url {
     [TUITool dispatchMainAsync:^{
-        TUIVideoMessageCellData *uiVideo = [TUIMessageDataProvider getVideoCellDataWithURL:url];
-        [self sendMessage:uiVideo];
-        
+        V2TIMMessage *message = [TUIMessageDataProvider getVideoMessageWithURL:url];
+        [self sendMessage:message];
         if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-            [self.delegate chatController:self didSendMessage:uiVideo];
+            [self.delegate chatController:self didSendMessage:message];
         }
     }];
 }
@@ -631,15 +627,11 @@
         [[NSFileManager defaultManager] createFileAtPath:filePath contents:fileData attributes:nil];
         if([[NSFileManager defaultManager] fileExistsAtPath:filePath]){
             unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
-            TUIFileMessageCellData *uiFile = [[TUIFileMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-            uiFile.path = filePath;
-            uiFile.fileName = fileName;
-            uiFile.length = (int)fileSize;
-            uiFile.uploadProgress = 0;
-            [self sendMessage:uiFile];
             
+            V2TIMMessage *message = [[V2TIMManager sharedInstance] createFileMessage:filePath fileName:fileName];
+            [self sendMessage:message];
             if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-                [self.delegate chatController:self didSendMessage:uiFile];
+                [self.delegate chatController:self didSendMessage:message];
             }
         }
     }];
@@ -662,13 +654,10 @@
     NSString *path = [TUIKit_Image_Path stringByAppendingString:[TUITool genImageName:nil]];
     [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
     
-    TUIImageMessageCellData *uiImage = [[TUIImageMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-    uiImage.path = path;
-    uiImage.length = data.length;
-    [self sendMessage:uiImage];
-    
+    V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
+    [self sendMessage:message];
     if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-        [self.delegate chatController:self didSendMessage:uiImage];
+        [self.delegate chatController:self didSendMessage:message];
     }
 }
 
@@ -850,17 +839,9 @@
         // 发送到当前聊天窗口
         if ([convCellData.conversationID isEqualToString:self.conversationData.conversationID]) {
             for (V2TIMMessage *imMsg in msgs) {
-                TUIMessageCellData *uiMsg = nil;
-                if (imMsg.elemType == V2TIM_ELEM_TYPE_CUSTOM) {
-                    uiMsg = [self messageController:self.messageController onNewMessage:imMsg];
-                }
-                if (uiMsg == nil) {
-                    uiMsg = [TUIMessageDataProvider getCellData:imMsg];
-                }
-                uiMsg.innerMessage = imMsg;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 下面的函数涉及到 UI 的刷新，要放在主线程操作
-                    [self.messageController sendMessage:uiMsg];
+                    [self.messageController sendMessage:imMsg];
                 });
                 // 此处做延时是因为需要保证批量逐条转发时，能够保证接收端的顺序一致
                 [NSThread sleepForTimeInterval:timeInterval];

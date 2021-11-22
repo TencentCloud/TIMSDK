@@ -41,13 +41,11 @@
 /**
  *  当前 InputCOntroller 发送信息时的回调。
  *  一般由 InputBar 中的发送信息回调进一步调用。
- *  您可以通过该回调实现：将该信息（TUIMessageCellData）执行发送。
- *  TUIKit 的默认实现中，在本回调的实现函数中调用了 TUIMessageController 中的已经封装好的 sendMessage 函数进行消息发送。
  *
  *  @param  inputController 委托者，当前参与交互的视图控制器。
  *  @param msg 当前控制器所获取并准备发送的消息。
  */
-- (void)inputController:(TUIInputController *)inputController didSendMessage:(TUIMessageCellData *)msg;
+- (void)inputController:(TUIInputController *)inputController didSendMessage:(V2TIMMessage *)msg;
 
 /**
  *  点击某一具体“更多”单元后的回调。

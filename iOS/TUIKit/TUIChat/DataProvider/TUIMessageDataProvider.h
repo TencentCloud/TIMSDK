@@ -98,12 +98,9 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 
 - (CGFloat)getCellDataHeightAtIndex:(NSUInteger)index Width:(CGFloat)width;
 
-#pragma mark - CellData
++ (NSArray *)getCustomMessageInfo;
+
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message;
-
-+ (TUIVideoMessageCellData *)getVideoCellDataWithURL:(NSURL *)url;
-
-+ (void)configCellData:(TUIMessageCellData *)cellData withIMMsg:(V2TIMMessage *)imMsg;
 
 @end
 
@@ -134,11 +131,13 @@ ReceiveReadMsgWithUserID:(NSString *)userId
                   succ:(nullable V2TIMSucc)succ
                   fail:(nullable V2TIMFail)fail;
 
-+ (V2TIMMessage *)customMessageWithJsonData:(NSData *)data;
++ (V2TIMMessage *)getCustomMessageWithJsonData:(NSData *)data;
 
-+ (NSString *)getShowName:(V2TIMMessage *)imMsg;
++ (V2TIMMessage *)getVideoMessageWithURL:(NSURL *)url;
 
-+ (NSString *)getDisplayString:(V2TIMMessage *)msg;
++ (NSString *)getShowName:(V2TIMMessage *)message;
+
++ (NSString *)getDisplayString:(V2TIMMessage *)message;
 
 @end
 

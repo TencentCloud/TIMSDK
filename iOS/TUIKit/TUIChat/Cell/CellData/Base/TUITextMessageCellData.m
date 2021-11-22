@@ -26,6 +26,56 @@
 
 @implementation TUITextMessageCellData
 
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
+    TUITextMessageCellData *textData = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    textData.content = message.textElem.text;
+    textData.reuseId = TTextMessageCell_ReuseId;
+    return textData;
+}
+
++ (NSString *)getDisplayString:(V2TIMMessage *)message {
+    // 处理表情的国际化
+    NSString *content = message.textElem.text;
+    return [self localizableStringWithFaceContent:content];
+}
+
+#pragma mark - 表情国际化
++ (NSString *)localizableStringWithFaceContent:(NSString *)faceContent
+{
+    NSString *content = faceContent?:@"";
+    NSString *regex_emoji = @"\\[[a-zA-Z0-9\\/\\u4e00-\\u9fa5]+\\]"; //匹配表情
+    NSError *error = nil;
+    NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex_emoji options:NSRegularExpressionCaseInsensitive error:&error];
+    if (re) {
+        NSArray *resultArray = [re matchesInString:content options:0 range:NSMakeRange(0, content.length)];
+        TUIFaceGroup *group = [TUIConfig defaultConfig].faceGroups[0];
+        NSMutableArray *waitingReplaceM = [NSMutableArray array];
+        for(NSTextCheckingResult *match in resultArray) {
+            NSRange range = [match range];
+            NSString *subStr = [content substringWithRange:range];
+            for (TUIFaceCellData *face in group.faces) {
+                if ([face.name isEqualToString:subStr]) {
+                    [waitingReplaceM addObject:@{
+                        @"range":NSStringFromRange(range),
+                        @"localizableStr": face.localizableName.length?face.localizableName:face.name
+                    }];
+                    break;
+                }
+            }
+        }
+        
+        if (waitingReplaceM.count) {
+            // 从后往前替换，否则会引起位置问题
+            for (int i = (int)waitingReplaceM.count -1; i >= 0; i--) {
+                NSRange range = NSRangeFromString(waitingReplaceM[i][@"range"]);
+                NSString *localizableStr = waitingReplaceM[i][@"localizableStr"];
+                content = [content stringByReplacingCharactersInRange:range withString:localizableStr];
+            }
+        }
+    }
+    return content;
+}
+
 - (instancetype)initWithDirection:(TMsgDirection)direction
 {
     self = [super initWithDirection:direction];
@@ -39,7 +89,6 @@
             _textFont = [[self class] outgoingTextFont];
             self.cellLayout = [TUIMessageCellLayout outgoingTextMessageLayout];
         }
-        self.reuseId = TTextMessageCell_ReuseId;
     }
     return self;
 }

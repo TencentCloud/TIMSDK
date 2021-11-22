@@ -54,3 +54,19 @@
     return CGSizeMake(menuSize.width, menuSize.height + TMoreCell_Title_Height);
 }
 @end
+
+@interface IUChatView : UIView
+@property(nonatomic, strong) UIView *view;
+@end
+
+@implementation IUChatView
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+        [self addSubview:self.view];
+    }
+    return self;
+}
+@end
