@@ -11,11 +11,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIMessageDataProvider (Call)
-// msg 获取 celldata
+// 判断是否为 "音视频通话" 自定义消息
++ (BOOL)isCallMessage:(V2TIMMessage *)message;
+
+// 获取 TUIMessageCellData
 + (TUIMessageCellData *)getCallCellData:(V2TIMMessage *)message;
 
-// message 获取展示文本，主要用于展示会话最后一条消息
-+ (NSString *)getCallDisplayString:(V2TIMMessage *)message;
+// 获取会话最后一条消息的展示文本
++ (NSString *)getCallMessageDisplayString:(V2TIMMessage *)message;
 @end
 
 NS_ASSUME_NONNULL_END

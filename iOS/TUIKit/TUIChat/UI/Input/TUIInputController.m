@@ -255,10 +255,9 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
 {
     // 表情本地化 --> 恢复成实际的中文 key
     NSString *content = [self faceContentWithLocalizableString:text];
-    TUITextMessageCellData *data = [[TUITextMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-    data.content = content;
+    V2TIMMessage *message = [[V2TIMManager sharedInstance] createTextMessage:content];
     if(_delegate && [_delegate respondsToSelector:@selector(inputController:didSendMessage:)]){
-        [_delegate inputController:self didSendMessage:data];
+        [_delegate inputController:self didSendMessage:message];
     }
 }
 
@@ -267,14 +266,9 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     NSURL *url = [NSURL fileURLWithPath:path];
     AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:url options:nil];
     int duration = (int)CMTimeGetSeconds(audioAsset.duration);
-    int length = (int)[[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil] fileSize];
-
-    TUIVoiceMessageCellData *voice = [[TUIVoiceMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-    voice.path = path;
-    voice.duration = duration;
-    voice.length = length;
+    V2TIMMessage *message = [[V2TIMManager sharedInstance] createSoundMessage:path duration:duration];
     if(_delegate && [_delegate respondsToSelector:@selector(inputController:didSendMessage:)]){
-        [_delegate inputController:self didSendMessage:voice];
+        [_delegate inputController:self didSendMessage:message];
     }
 }
 
@@ -324,10 +318,9 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     // 表情国际化 --> 恢复成实际的中文 key
     NSString *content = [self faceContentWithLocalizableString:text];
     [_inputBar clearInput];
-    TUITextMessageCellData *data = [[TUITextMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-    data.content = content;
+    V2TIMMessage *message = [[V2TIMManager sharedInstance] createTextMessage:content];
     if(_delegate && [_delegate respondsToSelector:@selector(inputController:didSendMessage:)]){
-        [_delegate inputController:self didSendMessage:data];
+        [_delegate inputController:self didSendMessage:message];
     }
 }
 
@@ -354,12 +347,11 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
         [_inputBar addEmoji:localizableFaceName];
     }
     else{
-        TUIFaceMessageCellData *data = [[TUIFaceMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-        data.groupIndex = group.groupIndex;
-        data.path = face.path;
-        data.faceName = face.name;
-        if(_delegate && [_delegate respondsToSelector:@selector(inputController:didSendMessage:)]){
-            [_delegate inputController:self didSendMessage:data];
+        if (face.name) {
+            V2TIMMessage *message = [[V2TIMManager sharedInstance] createFaceMessage:group.groupIndex data:[face.name dataUsingEncoding:NSUTF8StringEncoding]];
+            if(_delegate && [_delegate respondsToSelector:@selector(inputController:didSendMessage:)]){
+                [_delegate inputController:self didSendMessage:message];
+            }
         }
     }
 }

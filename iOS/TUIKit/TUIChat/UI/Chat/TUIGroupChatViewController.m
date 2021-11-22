@@ -15,6 +15,7 @@
 #import "TUILinkCellData.h"
 #import "TUIMessageDataProvider.h"
 #import "TUICommonModel.h"
+#import "TUILogin.h"
 #import "TUICore.h"
 #import "TUIDefine.h"
 #import "NSDictionary+TUISafe.h"
@@ -156,6 +157,7 @@
                 [atText appendString:[NSString stringWithFormat:@"@%@ ",model.name]];
             }
         }
+        
         NSString *inputText = self.inputController.inputBar.inputTextView.text;
         self.inputController.inputBar.inputTextView.text = [NSString stringWithFormat:@"%@%@ ",inputText,atText];
         [self.inputController.inputBar updateTextViewFrame];
@@ -208,22 +210,22 @@
 
 
 #pragma mark - TInputControllerDelegate
-- (void)inputController:(TUIInputController *)inputController didSendMessage:(TUIMessageCellData *)msg
+- (void)inputController:(TUIInputController *)inputController didSendMessage:(V2TIMMessage *)msg
 {
-    // @
-    if ([msg isKindOfClass:[TUITextMessageCellData class]]) {
-        NSMutableArray *userIDList = [NSMutableArray array];
+    // 文本消息如果有 @ 用户，需要 createTextAtMessage
+    if (msg.elemType == V2TIM_ELEM_TYPE_TEXT) {
+        NSMutableArray *atUserList = [NSMutableArray array];
         for (TUIUserModel *model in self.atUserList) {
-            [userIDList addObject:model.userId];
+            if (model.userId) {
+                [atUserList addObject:model.userId];
+            }
         }
-        if (userIDList.count > 0) {
-            [msg setAtUserList:userIDList];
+        if (atUserList.count > 0) {
+            msg = [[V2TIMManager sharedInstance] createTextAtMessage:msg.textElem.text atUserList:atUserList];
         }
         //消息发送完后 atUserList 要重置
         [self.atUserList removeAllObjects];
     }
-    
-    
     [super inputController:inputController didSendMessage:msg];
 }
 
@@ -296,20 +298,44 @@
                                                             userInfo:param];
     }
     else if ([key isEqualToString:TUIInputMoreCellKey_Link]) {  // 自定义消息
-        NSString *text = TUIKitLocalizableString(TUIKitWelcome);;
+        NSString *text = TUIKitLocalizableString(TUIKitWelcome);
         NSString *link = @"https://cloud.tencent.com/document/product/269/3794";
-        TUILinkCellData *cellData = [[TUILinkCellData alloc] initWithDirection:MsgDirectionOutgoing];
-        cellData.text = text;
-        cellData.link = link;
         NSError *error = nil;
-        NSData *data = [NSJSONSerialization dataWithJSONObject:@{@"version": @(TextLink_Version),@"businessID": TextLink,@"text":text,@"link":link} options:0 error:&error];
+        NSDictionary *param = @{BussinessID: BussinessID_TextLink, @"text":text, @"link":link};
+        NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
         if(error)
         {
             NSLog(@"[%@] Post Json Error", [self class]);
             return;
         }
-        cellData.innerMessage = [TUIMessageDataProvider customMessageWithJsonData:data];
-        [self sendMessage:cellData];
+        V2TIMMessage *message = [TUIMessageDataProvider getCustomMessageWithJsonData:data];
+        [self sendMessage:message];
+    }
+}
+
+#pragma mark - TUIMessageControllerDelegate
+- (void)messageController:(TUIMessageController *)controller onLongSelectMessageAvatar:(TUIMessageCell *)cell {
+    if (!cell || !cell.messageData || !cell.messageData.identifier) {
+        return;
+    }
+    if ([cell.messageData.identifier isEqualToString:[TUILogin getUserID]]) {
+        return;
+    }
+    BOOL atUserExist = NO;
+    for (TUIUserModel *model in self.atUserList) {
+        if ([model.userId isEqualToString:cell.messageData.identifier]) {
+            atUserExist = YES;
+            break;
+        }
+    }
+    if (!atUserExist) {
+        TUIUserModel *user = [[TUIUserModel alloc] init];
+        user.userId = cell.messageData.identifier;
+        user.name = cell.messageData.name;
+        [self.atUserList addObject:user];
+        NSString *inputText = self.inputController.inputBar.inputTextView.text ? : @"";
+        self.inputController.inputBar.inputTextView.text = [NSString stringWithFormat:@"%@@%@ ",inputText, user.name];
+        [self.inputController.inputBar.inputTextView becomeFirstResponder];
     }
 }
 

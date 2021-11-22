@@ -44,7 +44,19 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  */
 @interface TUIMessageCellData : TUICommonCellData
 
-// 消息唯一 ID
+/**
+ *  根据 message 获取 cellData
+ */
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message;
+
+/**
+ *  根据 message 获取展示字符串
+ */
++ (NSString *)getDisplayString:(V2TIMMessage *)message;
+
+/**
+ *  消息唯一 ID
+ */
 @property (nonatomic, strong) NSString *msgID;
 
 /**

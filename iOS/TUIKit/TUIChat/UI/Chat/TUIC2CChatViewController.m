@@ -34,18 +34,16 @@
     if([key isEqualToString:TUIInputMoreCellKey_Link]) {  // 自定义消息
         NSString *text = TUIKitLocalizableString(TUIKitWelcome);
         NSString *link = @"https://cloud.tencent.com/document/product/269/3794";
-        TUILinkCellData *cellData = [[TUILinkCellData alloc] initWithDirection:MsgDirectionOutgoing];
-        cellData.text = text;
-        cellData.link = link;
         NSError *error = nil;
-        NSData *data = [NSJSONSerialization dataWithJSONObject:@{@"version": @(TextLink_Version),@"businessID": TextLink,@"text":text,@"link":link} options:0 error:&error];
+        NSDictionary *param = @{BussinessID: BussinessID_TextLink, @"text":text, @"link":link};
+        NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
         if(error)
         {
             NSLog(@"[%@] Post Json Error", [self class]);
             return;
         }
-        cellData.innerMessage = [TUIMessageDataProvider customMessageWithJsonData:data];
-        [self sendMessage:cellData];
+        V2TIMMessage *message = [TUIMessageDataProvider getCustomMessageWithJsonData:data];
+        [self sendMessage:message];
     }
 }
 

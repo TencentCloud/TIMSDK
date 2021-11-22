@@ -13,6 +13,20 @@
 
 @implementation TUILinkCellData
 
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message{
+    NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:nil];
+    TUILinkCellData *cellData = [[TUILinkCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
+    cellData.msgID = message.msgID;
+    cellData.text = param[@"text"];
+    cellData.link = param[@"link"];
+    cellData.avatarUrl = [NSURL URLWithString:message.faceURL];
+    return cellData;
+}
+
++ (NSString *)getDisplayString:(V2TIMMessage *)message {
+    NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:nil];
+    return param[@"text"];
+}
 
 - (CGSize)contentSize
 {

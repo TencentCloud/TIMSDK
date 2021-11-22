@@ -11,15 +11,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIMessageDataProvider (Live)
-// msg 获取 celldata
+// 判断是否为 "群直播" 自定义消息
++ (BOOL)isLiveMessage:(V2TIMMessage *)message;
+
+// 获取 TUIMessageCellData
 + (TUIMessageCellData *)getLiveCellData:(V2TIMMessage *)message;
 
-// celldata 获取 cell
-+ (TUIMessageCell *)getLiveCellWithCellData:(TUIMessageCellData *)cellData;
-
-// message 获取展示文本，主要用于展示会话最后一条消息
-+ (NSString *)getLiveDisplayString:(V2TIMMessage *)message;
-
+// 获取会话最后一条消息的展示文本
++ (NSString *)getLiveMessageDisplayString:(V2TIMMessage *)message;
 @end
 
 NS_ASSUME_NONNULL_END

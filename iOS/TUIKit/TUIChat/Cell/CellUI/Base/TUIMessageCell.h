@@ -58,6 +58,13 @@
  *  @param cell 委托者，消息单元
  */
 - (void)onSelectMessageAvatar:(TUIMessageCell *)cell;
+
+/**
+ *  长按消息单元中消息头像的回调
+ *  
+ *  @param cell 委托者，消息单元
+ */
+- (void)onLongSelectMessageAvatar:(TUIMessageCell *)cell;
 @end
 
 /////////////////////////////////////////////////////////////////////////////////

@@ -30,7 +30,6 @@
 #import "TUIChatConversationModel.h"
 #import "TUIMessageDataProvider+Call.h"
 #import "TUIMessageDataProvider+Live.h"
-#import "TUIMessageDataProvider+Link.h"
 
 @interface TUIMessageController () <TUIMessageCellDelegate,
 TUIJoinGroupMessageCellDelegate,
@@ -125,7 +124,17 @@ TUIMessageDataProviderDataSource>
     [self.tableView registerClass:[TUIJoinGroupMessageCell class] forCellReuseIdentifier:TJoinGroupMessageCell_ReuseId];
     [self.tableView registerClass:[TUIMergeMessageCell class] forCellReuseIdentifier:TRelayMessageCell_ReuserId];
     [self.tableView registerClass:[TUIGroupLiveMessageCell class] forCellReuseIdentifier:TGroupLiveMessageCell_ReuseId];
-    [self.tableView registerClass:[TUILinkCell class] forCellReuseIdentifier:TLinkMessageCell_ReuseId];
+    
+    // 自定义消息注册 cell
+    NSArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
+    for (NSDictionary *messageInfo in customMessageInfo) {
+        NSString *bussinessID = messageInfo[BussinessID];
+        NSString *cellName = messageInfo[TMessageCell_Name];
+        Class cls = NSClassFromString(cellName);
+        if (cls && bussinessID) {
+            [self.tableView registerClass:cls forCellReuseIdentifier:bussinessID];
+        }
+    }
 
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, TMessageController_Header_Height)];
     self.indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
@@ -217,6 +226,7 @@ TUIMessageDataProviderDataSource>
     if ([self.delegate respondsToSelector:@selector(messageController:onNewMessage:)]) {
         TUIMessageCellData *customCellData = [self.delegate messageController:self onNewMessage:msg];
         if (customCellData) {
+            customCellData.innerMessage = msg;
             return customCellData;
         }
     }
@@ -295,18 +305,6 @@ ReceiveReadMsgWithUserID:(NSString *)userId
             return cell;
         }
     }
-    // 群直播自定义消息
-    if (!cell) {
-        cell = [TUIMessageDataProvider getLiveCellWithCellData:data];
-    }
-    // 点击链接跳转自定义消息
-    if (!cell) {
-        cell = [TUIMessageDataProvider getLinkCellWithCellData:data];
-    }
-    if (cell) {
-        cell.delegate = self;
-        return cell;
-    }
     
     if (!data.reuseId) {
         NSAssert(NO, @"无法解析当前cell");
@@ -348,8 +346,7 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     }
 }
 
-- (void)sendMessage:(TUIMessageCellData *)cellData
-{
+- (void)sendUIMessage:(TUIMessageCellData *)cellData {
     @weakify(self);
     [self.messageDataProvider sendUIMsg:cellData
                          toConversation:self.conversationData
@@ -375,6 +372,21 @@ ReceiveReadMsgWithUserID:(NSString *)userId
         [TUITool makeToastError:code msg:desc];
         [self changeMsg:cellData status:Msg_Status_Fail];
     }];
+}
+
+- (void)sendMessage:(V2TIMMessage *)message
+{
+    TUIMessageCellData *cellData = nil;
+    if (message.elemType == V2TIM_ELEM_TYPE_CUSTOM) {
+        cellData = [self.delegate messageController:self onNewMessage:message];
+        cellData.innerMessage = message;
+    }
+    if (!cellData) {
+        cellData = [TUIMessageDataProvider getCellData:message];
+    }
+    if (cellData) {
+        [self sendUIMessage:cellData];
+    }
 }
 
 /// 更新发送的状态
@@ -499,13 +511,20 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     });
 }
 
+- (void)onLongSelectMessageAvatar:(TUIMessageCell *)cell {
+    if(_delegate && [_delegate respondsToSelector:@selector(messageController:onLongSelectMessageAvatar:)]){
+        [_delegate messageController:self onLongSelectMessageAvatar:cell];
+    }
+}
+
 - (void)onRetryMessage:(TUIMessageCell *)cell
 {
     _reSendUIMsg = cell.messageData;
+    __weak typeof(self) weakSelf = self;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitTipsConfirmResendMessage) message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Re-send) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self sendMessage:self.reSendUIMsg];
-    }]];
+        [weakSelf sendUIMessage:weakSelf.reSendUIMsg];
+    }]] ;
     [alert addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
 
     }]];
@@ -571,7 +590,7 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 
 - (void)onReSend:(id)sender
 {
-    [self sendMessage:_menuUIMsg];
+    [self sendUIMessage:_menuUIMsg];
 }
 
 - (void)onMulitSelect:(id)sender
