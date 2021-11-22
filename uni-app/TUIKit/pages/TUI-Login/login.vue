@@ -106,21 +106,6 @@ export default {
       });
     },
 
-    // 手机号输入
-    bindPhoneInput(e) {
-      const val = e.detail.value;
-      this.setData({
-        // 不加 86 会导致接口校验错误, 有国际化需求的时候这里要改动下
-        phone: `86${val}`
-      });
-
-      if (val !== '') {
-        this.setData({
-          hidden: false,
-          btnValue: '获取验证码'
-        });
-      }
-    },
   // 输入userID
   bindUserIDInput(e) {
 	const val = e.detail.value
@@ -128,12 +113,6 @@ export default {
 	  userID: val,
 	})
   },
-    // 验证码输入
-    bindCodeInput(e) {
-      this.setData({
-        code: e.detail.value
-      });
-    },
 
     onAgreePrivateProtocol() {
       this.setData({
@@ -155,123 +134,7 @@ export default {
       });
     },
 
-    // 获取验证码
-    handlerVerify(ev) {
-      if (ev.detail.ret === 0) {
-        const ticket = `${ev.detail.ticket}`;
-        const phone = `${this.phone}`;
-        uni.request({
-          url: 'https://service-c2zjvuxa-1252463788.gz.apigw.tencentcs.com/release/smsImg',
-          method: 'POST',
-          data: {
-            phone,
-            ticket,
-            type: 'wxmini'
-          },
-          header: {
-            'content-type': 'application/x-www-form-urlencoded'
-          },
-          success: res => {
-            logger.log('TUIKit | TUI-login | handlerVerify  | ok');
-            const data = res.data.data.sessionId;
-
-            switch (res.data.errorCode) {
-              case 0:
-                this.timer();
-                uni.setStorage({
-                  key: 'sessionID',
-                  data
-                });
-                this.setData({
-                  sessionID: data
-                });
-                uni.showToast({
-                  title: '验证码已发送',
-                  icon: 'success',
-                  duration: 1000,
-                  mask: true
-                });
-                break;
-
-              case -1001:
-              case -1002:
-                uni.showToast({
-                  title: '请输入正确的手机号',
-                  icon: 'none',
-                  duration: 1000,
-                  mask: true
-                });
-                break;
-
-              case -1003:
-                uni.showToast({
-                  title: '验证码发送失败',
-                  icon: 'none',
-                  duration: 1000,
-                  mask: true
-                });
-                break;
-
-              default:
-                break;
-            }
-
-            this.lastTime = new Date().getTime();
-          },
-          fail: () => {
-            uni.showToast({
-              title: '发送验证码失败',
-              icon: 'none',
-              duration: 1000
-            });
-          }
-        });
-      }
-    },
-
-    getCode() {
-      const now = new Date();
-      const nowTime = now.getTime();
-
-      if (this.phone !== '') {
-        if (nowTime - this.lastTime > 10000) {
-          this.selectComponent('#captcha').show();
-        }
-      } else {
-        uni.showToast({
-          title: '请输入手机号'
-        });
-      }
-    },
-
-    // 计时器
-    timer() {
-      const promise = new Promise(resolve => {
-        const setTimer = setInterval(() => {
-          const second = this.second - 1;
-          this.setData({
-            second,
-            btnValue: `${second}s`,
-            btnDisabled: true
-          });
-
-          if (this.second <= 0) {
-            this.setData({
-              second: 60,
-              btnValue: '获取验证码',
-              btnDisabled: false
-            });
-            resolve(setTimer);
-          }
-        }, 1000);
-      });
-      promise.then(setTimer => {
-        clearInterval(setTimer);
-      });
-    },
-
     login() {
-		console.log(this.userID, 'login')
 	  const userID = this.userID
 	  const userSig = genTestUserSig(userID).userSig
 	  logger.log(`TUI-login | login  | userSig:${userSig} userID:${userID}`)
@@ -292,28 +155,6 @@ export default {
 		})
 	  }
     },
-
-    // 国家区号选择组件开关
-    onToggleCountryIndicator() {
-      this.setData({
-        countryIndicatorStatus: true
-      });
-    },
-
-    onCountryIndicatorClose(event) {
-      this.setData({
-        countryIndicatorStatus: event.detail.status
-      });
-    },
-
-    // 国家区号确定选择
-    handleIndicator(event) {
-      this.setData({
-        country: event.detail.country,
-        indicatorValue: event.detail.indicatorValue
-      });
-    }
-
   }
 };
 </script>
