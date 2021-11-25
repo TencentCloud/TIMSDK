@@ -92,6 +92,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         initService();
         initEvent();
         initIMListener();
+        FaceManager.loadFaceFiles();
     }
 
     // 初始化自定义消息类型
