@@ -37,6 +37,7 @@ import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DemoApplication extends Application {
@@ -67,6 +68,28 @@ public class DemoApplication extends Application {
          * @param sdkAppID 您在腾讯云注册应用时分配的sdkAppID
          * @param configs  TUIKit的相关配置项，一般使用默认即可，需特殊配置参考API文档
          */
+        try {
+            JSONObject buildInfoJson = new JSONObject();
+            buildInfoJson.put("buildBrand", BrandUtil.getBuildBrand());
+            buildInfoJson.put("buildManufacturer", BrandUtil.getBuildManufacturer());
+            buildInfoJson.put("buildModel", BrandUtil.getBuildModel());
+            buildInfoJson.put("buildVersionRelease", BrandUtil.getBuildVersionRelease());
+            buildInfoJson.put("buildVersionSDKInt", BrandUtil.getBuildVersionSDKInt());
+            // 工信部要求 app 在运行期间只能获取一次设备信息。因此 app 获取设备信息设置给 SDK 后，SDK 使用该值并且不再调用系统接口。
+            V2TIMManager.getInstance().callExperimentalAPI("setBuildInfo", buildInfoJson.toString(), new V2TIMValueCallback<Object>() {
+                @Override
+                public void onSuccess(Object o) {
+                    DemoLog.i(TAG, "setBuildInfo success");
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    DemoLog.i(TAG, "setBuildInfo code:" + code + " desc:" + desc);
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         TUIUtils.init(this, GenerateTestUserSig.SDKAPPID, null, null);
         HeytapPushManager.init(this, true);
         if (BrandUtil.isBrandXiaoMi()) {

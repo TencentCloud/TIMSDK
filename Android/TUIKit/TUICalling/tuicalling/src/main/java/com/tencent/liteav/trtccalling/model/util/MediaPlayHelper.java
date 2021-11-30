@@ -43,45 +43,48 @@ public class MediaPlayHelper {
         start("", resId, duration);
     }
 
-    private void start(String resPath, int resId, long duration) {
+    private void start(String resPath, final int resId, long duration) {
         preHandler();
         if ((-1 != resId && (mResId == resId)) || (!TextUtils.isEmpty(resPath) && TextUtils.equals(mResPath, resPath))) {
             return;
         }
-        AssetFileDescriptor afd = null;
+        AssetFileDescriptor afd0 = null;
         if (TextUtils.isEmpty(resPath) || !new File(resPath).exists()) {
             mResId = resId;
-            afd = mContext.getResources().openRawResourceFd(resId);
-            if (afd == null) return;
+            afd0 = mContext.getResources().openRawResourceFd(resId);
+            if (afd0 == null) {
+                return;
+            }
         } else {
             mResPath = resPath;
         }
-        try {
-            if (mMediaPlayer.isPlaying()) {
-                mMediaPlayer.stop();
-            }
-            mMediaPlayer.setOnCompletionListener(null);
-            mMediaPlayer.reset();
-            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            if (null != afd) {
-                TRTCLogger.d(TAG, "play:" + resId);
-                mMediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-            } else {
-                TRTCLogger.d(TAG, "play:" + mResPath);
-                mMediaPlayer.setDataSource(mResPath);
-            }
-        } catch (IOException e) {
-            TRTCLogger.e(TAG, Log.getStackTraceString(e));
-        }
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                stop();
-            }
-        });
+        final AssetFileDescriptor afd = afd0;
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                if (mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.stop();
+                }
+                mMediaPlayer.setOnCompletionListener(null);
+                mMediaPlayer.reset();
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                try {
+                    if (null != afd) {
+                        TRTCLogger.d(TAG, "play:" + resId);
+                        mMediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+                    } else {
+                        TRTCLogger.d(TAG, "play:" + mResPath);
+                        mMediaPlayer.setDataSource(mResPath);
+                    }
+                } catch (IOException e) {
+                    TRTCLogger.e(TAG, Log.getStackTraceString(e));
+                }
+                mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        stop();
+                    }
+                });
                 try {
                     mMediaPlayer.prepare();
                 } catch (IOException e) {

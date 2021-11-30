@@ -102,22 +102,6 @@ public abstract class TRTCCalling {
      */
     public abstract void removeDelegate(TRTCCallingDelegate delegate);
 
-
-    /**
-     * 登录IM接口，所有功能需要先进行登录后才能使用
-     *
-     * @param sdkAppId
-     * @param userId
-     * @param userSig
-     * @param callback
-     */
-    public abstract void login(int sdkAppId, final String userId, String userSig, final ActionCallBack callback);
-
-    /**
-     * 登出接口，登出后无法再进行拨打操作
-     */
-    public abstract void logout(final ActionCallBack callBack);
-
     /**
      * C2C邀请通话，被邀请方会收到 {@link TRTCCallingDelegate#onInvited } 的回调
      * 如果当前处于通话中，可以调用该函数以邀请第三方进入通话

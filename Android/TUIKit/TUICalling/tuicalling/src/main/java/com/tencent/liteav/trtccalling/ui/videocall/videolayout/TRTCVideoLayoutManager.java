@@ -107,7 +107,7 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
      * @param userId
      * @return
      */
-    public TRTCVideoLayout findCloudViewView(String userId) {
+    public TRTCVideoLayout findCloudView(String userId) {
         if (userId == null) return null;
         for (TRTCLayoutEntity layoutEntity : mLayoutEntityList) {
             if (layoutEntity.userId.equals(userId)) {

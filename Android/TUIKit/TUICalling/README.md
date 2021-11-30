@@ -175,5 +175,3 @@ TRTC SDK 6.6 版本（2019年08月）开始启用新的签名算法 HMAC-SHA256�
 #### 3. 防火墙有什么限制？
 由于 SDK 使用 UDP 协议进行音视频传输，所以在对 UDP 有拦截的办公网络下无法使用。如遇到类似问题，请参考 [应对公司防火墙限制](https://cloud.tencent.com/document/product/647/34399) 排查并解决。
 
-#### 4. Android Support 和 AndroidX 兼容问题如何处理？
-App 源码中引用的依赖为 Android Support 库，若您的项目中使用的 AndroidX，则会出现无法兼容的问题，这个时候可以将 App 中的依赖转换为 AndroidX，转换方法请参考 [Android Support 迁移 AndroidX 指南](https://github.com/tencentyun/TUICalling/blob/main/Android/AndroidSupport迁移AndroidX指南.md)。

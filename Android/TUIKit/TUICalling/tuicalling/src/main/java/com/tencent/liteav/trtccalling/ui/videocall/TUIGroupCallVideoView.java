@@ -23,6 +23,7 @@ import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TUICalling;
 import com.tencent.liteav.trtccalling.model.impl.UserModel;
 import com.tencent.liteav.trtccalling.model.impl.base.CallingInfoManager;
+import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
 import com.tencent.liteav.trtccalling.model.util.EventHandler;
 import com.tencent.liteav.trtccalling.model.util.ImageLoader;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
@@ -183,6 +184,10 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
                 mTRTCCalling.setMicMute(mIsMuteMic);
                 mMuteImg.setActivated(mIsMuteMic);
                 ToastUtils.showLong(mIsMuteMic ? R.string.trtccalling_toast_enable_mute : R.string.trtccalling_toast_disable_mute);
+                TRTCGroupVideoLayout layout = mLayoutManagerTrtc.findVideoCallLayout(mSelfModel.userId);
+                if (null != layout) {
+                    layout.muteMic(mIsMuteMic);
+                }
             }
         });
         mSwitchCameraImg.setOnClickListener(new View.OnClickListener() {
@@ -194,7 +199,6 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
                 }
                 mIsFrontCamera = !mIsFrontCamera;
                 mTRTCCalling.switchCamera(mIsFrontCamera);
-                mSwitchCameraImg.setActivated(mIsFrontCamera);
                 ToastUtils.showLong(R.string.trtccalling_toast_switch_camera);
             }
         });
@@ -206,16 +210,18 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
                 if (videoLayout == null) {
                     return;
                 }
-                if (!mIsCameraOpen) {
-                    mTRTCCalling.openCamera(mIsFrontCamera, videoLayout.getVideoView());
-                    videoLayout.setVideoAvailable(true);
-                    mIsCameraOpen = true;
-                    mOpenCameraImg.setActivated(false);
-                } else {
+                if (mIsCameraOpen) {
                     mTRTCCalling.closeCamera();
                     videoLayout.setVideoAvailable(false);
                     mIsCameraOpen = false;
                     mOpenCameraImg.setActivated(true);
+                    mSwitchCameraImg.setVisibility(GONE);
+                } else {
+                    mTRTCCalling.openCamera(mIsFrontCamera, videoLayout.getVideoView());
+                    videoLayout.setVideoAvailable(true);
+                    mIsCameraOpen = true;
+                    mOpenCameraImg.setActivated(false);
+                    mSwitchCameraImg.setVisibility(VISIBLE);
                 }
                 ToastUtils.showLong(mIsCameraOpen ? R.string.trtccalling_toast_enable_camera : R.string.trtccalling_toast_disable_camera);
             }
@@ -408,17 +414,23 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
     }
 
     @Override
-    public void onUserAudioAvailable(String userId, boolean isVideoAvailable) {
-
+    public void onUserAudioAvailable(String userId, boolean isAudioAvailable) {
+        TRTCLogger.d(TAG, "onUserAudioAvailable, userId=" + userId + ", isAudioAvailable=" + isAudioAvailable);
+        TRTCGroupVideoLayout layout = mLayoutManagerTrtc.findVideoCallLayout(userId);
+        if (layout != null) {
+            layout.muteMic(!isAudioAvailable);
+        }
     }
 
     @Override
     public void onUserVoiceVolume(Map<String, Integer> volumeMap) {
         for (Map.Entry<String, Integer> entry : volumeMap.entrySet()) {
             String userId = entry.getKey();
+            int volume = entry.getValue();
             TRTCGroupVideoLayout layout = mLayoutManagerTrtc.findVideoCallLayout(userId);
             if (layout != null) {
-                layout.setAudioVolumeProgress(entry.getValue());
+                layout.setAudioVolumeProgress(volume);
+                layout.setAudioVolume(volume);
             }
         }
     }
@@ -656,14 +668,6 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         mInvitingGroup.setVisibility(View.GONE);
     }
 
-    private void showVideoView(final UserModel userInfo) {
-        TRTCGroupVideoLayout videoLayout = addUserToManager(userInfo);
-        if (videoLayout == null) {
-            return;
-        }
-        videoLayout.setVideoAvailable(!mIsAudioMode);
-        videoLayout.setRemoteIconAvailable(mIsAudioMode);
-    }
 
     private void showRemoteUserView() {
 
