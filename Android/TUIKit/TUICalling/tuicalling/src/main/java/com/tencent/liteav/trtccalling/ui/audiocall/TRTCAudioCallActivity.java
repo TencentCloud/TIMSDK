@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 
@@ -14,10 +16,14 @@ import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
 public class TRTCAudioCallActivity extends Activity {
 
     private BaseTUICallView mCallView;
+    private Window          mWindow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //通话界面不黑屏
+        mWindow = this.getWindow();
+        mWindow.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Intent intent = getIntent();
         TUICalling.Role role = (TUICalling.Role) intent.getExtras().get(TUICallingConstants.PARAM_NAME_ROLE);
@@ -54,5 +60,10 @@ public class TRTCAudioCallActivity extends Activity {
         } else {
             return userIDs.length >= 1 || isFromGroup;
         }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }

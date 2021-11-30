@@ -1,35 +1,42 @@
 package com.tencent.qcloud.tim.demo.utils;
 
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 
 public class BrandUtil {
+    private static String buildBrand = "";
+    private static String buildManufacturer = "";
+    private static String buildModel = "";
+    private static String buildVersionRelease = "";
+    private static int buildVersionSDKInt = 0;
+
     /**
      * 判断是否为小米设备
      */
     public static boolean isBrandXiaoMi() {
-        return "xiaomi".equalsIgnoreCase(Build.BRAND)
-                || "xiaomi".equalsIgnoreCase(Build.MANUFACTURER);
+        return "xiaomi".equalsIgnoreCase(getBuildBrand())
+                || "xiaomi".equalsIgnoreCase(getBuildManufacturer());
     }
 
     /**
      * 判断是否为华为设备
      */
     public static boolean isBrandHuawei() {
-        return "huawei".equalsIgnoreCase(Build.BRAND)
-                || "huawei".equalsIgnoreCase(Build.MANUFACTURER);
+        return "huawei".equalsIgnoreCase(getBuildBrand())
+                || "huawei".equalsIgnoreCase(getBuildManufacturer());
     }
 
     /**
      * 判断是否为魅族设备
      */
     public static boolean isBrandMeizu() {
-        return "meizu".equalsIgnoreCase(Build.BRAND)
-                || "meizu".equalsIgnoreCase(Build.MANUFACTURER)
-                || "22c4185e".equalsIgnoreCase(Build.BRAND);
+        return "meizu".equalsIgnoreCase(getBuildBrand())
+                || "meizu".equalsIgnoreCase(getBuildManufacturer())
+                || "22c4185e".equalsIgnoreCase(getBuildBrand());
     }
 
     /**
@@ -38,12 +45,12 @@ public class BrandUtil {
      * @return
      */
     public static boolean isBrandOppo() {
-        return "oppo".equalsIgnoreCase(Build.BRAND) ||
-                "realme".equalsIgnoreCase(Build.BRAND) ||
-                "oneplus".equalsIgnoreCase(Build.BRAND) ||
-                "oppo".equalsIgnoreCase(Build.MANUFACTURER) ||
-                "realme".equalsIgnoreCase(Build.MANUFACTURER) ||
-                "oneplus".equalsIgnoreCase(Build.MANUFACTURER);
+        return "oppo".equalsIgnoreCase(getBuildBrand()) ||
+                "realme".equalsIgnoreCase(getBuildBrand()) ||
+                "oneplus".equalsIgnoreCase(getBuildBrand()) ||
+                "oppo".equalsIgnoreCase(getBuildManufacturer()) ||
+                "realme".equalsIgnoreCase(getBuildManufacturer()) ||
+                "oneplus".equalsIgnoreCase(getBuildManufacturer());
     }
 
     /**
@@ -52,8 +59,8 @@ public class BrandUtil {
      * @return
      */
     public static boolean isBrandVivo() {
-        return "vivo".equalsIgnoreCase(Build.BRAND)
-                || "vivo".equalsIgnoreCase(Build.MANUFACTURER);
+        return "vivo".equalsIgnoreCase(getBuildBrand())
+                || "vivo".equalsIgnoreCase(getBuildManufacturer());
     }
 
     /**
@@ -65,5 +72,45 @@ public class BrandUtil {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(DemoApplication.instance());
         return resultCode == ConnectionResult.SUCCESS;
+    }
+
+    public static String getBuildBrand() {
+        if (TextUtils.isEmpty(buildBrand)) {
+            buildBrand = Build.BRAND;
+        }
+
+        return buildBrand;
+    }
+
+    public static String getBuildManufacturer() {
+        if (TextUtils.isEmpty(buildManufacturer)) {
+            buildManufacturer = Build.MANUFACTURER;
+        }
+
+        return buildManufacturer;
+    }
+
+    public static String getBuildModel() {
+        if (TextUtils.isEmpty(buildModel)) {
+            buildModel = Build.MODEL;
+        }
+
+        return buildModel;
+    }
+
+    public static String getBuildVersionRelease() {
+        if (TextUtils.isEmpty(buildVersionRelease)) {
+            buildVersionRelease = Build.VERSION.RELEASE;
+        }
+
+        return buildVersionRelease;
+    }
+
+    public static int getBuildVersionSDKInt() {
+        if (buildVersionSDKInt == 0) {
+            buildVersionSDKInt = Build.VERSION.SDK_INT;
+        }
+
+        return buildVersionSDKInt;
     }
 }

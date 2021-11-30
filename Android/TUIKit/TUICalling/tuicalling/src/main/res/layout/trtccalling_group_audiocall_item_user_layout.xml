@@ -38,12 +38,12 @@
 
     <ImageView
         android:id="@+id/iv_audio_input"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="4dp"
         android:visibility="gone"
-        android:background="@drawable/trtccalling_audio_input_display" />
+        android:background="@drawable/trtccalling_ic_mutemic_enable" />
 </merge>

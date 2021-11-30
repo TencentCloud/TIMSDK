@@ -37,6 +37,6 @@ dependencies {
     api "de.hdodenhof:circleimageview:3.1.0"
     api "com.google.code.gson:gson:2.3.1"
     api "com.blankj:utilcode:1.25.9"
-    api "com.tencent.liteav:LiteAVSDK_TRTC:9.2.10641"
+    api "com.tencent.liteav:LiteAVSDK_TRTC:9.3.10768"
     api project(':tuicore')
 }

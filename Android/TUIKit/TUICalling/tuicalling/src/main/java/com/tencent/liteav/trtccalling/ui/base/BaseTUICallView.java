@@ -165,7 +165,7 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
     }
 
     @Override
-    public void onUserAudioAvailable(String userId, boolean isVideoAvailable) {
+    public void onUserAudioAvailable(String userId, boolean isAudioAvailable) {
 
     }
 
