@@ -2,7 +2,7 @@
 
 ## 下载地址
 
-[最新C接口下载](https://im.sdk.cloud.tencent.cn/download/plus/5.8.1668/cross_platform/ImSDK_Windows_C_5.8.1668.zip)
+[最新C接口下载](https://im.sdk.cloud.tencent.cn/download/plus/5.8.1672/cross_platform/ImSDK_Windows_C_5.8.1672.zip)
 
 ## TIMSDK for Windows
 
