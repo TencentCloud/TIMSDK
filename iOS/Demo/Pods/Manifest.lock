@@ -1,183 +1,183 @@
 PODS:
   - Masonry (1.1.0)
-  - MJRefresh (3.7.2)
+  - MJRefresh (3.7.5)
   - ReactiveObjC (3.1.1)
   - SDWebImage (5.12.1):
     - SDWebImage/Core (= 5.12.1)
   - SDWebImage/Core (5.12.1)
-  - TUICalling (9.2.2):
+  - TUICalling (9.3.0):
     - Masonry
-    - TUICalling/TRTC (= 9.2.2)
+    - TUICalling/TRTC (= 9.3.0)
     - TUICore
-  - TUICalling/TRTC (9.2.2):
+  - TUICalling/TRTC (9.3.0):
     - Masonry
     - TUICore
-    - TXLiteAVSDK_TRTC (= 9.2.10637)
-  - TUIChat (5.8.1668):
-    - TUIChat/Cell (= 5.8.1668)
-    - TUIChat/DataProvider (= 5.8.1668)
-    - TUIChat/Service (= 5.8.1668)
-    - TUIChat/UI (= 5.8.1668)
-    - TUIChat/VoiceConvert (= 5.8.1668)
-    - TUICore (= 5.8.1668)
-  - TUIChat/Cell (5.8.1668):
-    - TUIChat/Cell/CellData (= 5.8.1668)
-    - TUIChat/Cell/CellUI (= 5.8.1668)
-    - TUICore (= 5.8.1668)
-  - TUIChat/Cell/CellData (5.8.1668):
-    - TUIChat/Cell/CellData/Base (= 5.8.1668)
-    - TUIChat/Cell/CellData/Chat (= 5.8.1668)
-    - TUIChat/Cell/CellData/Custom (= 5.8.1668)
-    - TUICore (= 5.8.1668)
-  - TUIChat/Cell/CellData/Base (5.8.1668):
+    - TXLiteAVSDK_TRTC
+  - TUIChat (5.8.1672):
+    - TUIChat/Cell (= 5.8.1672)
+    - TUIChat/DataProvider (= 5.8.1672)
+    - TUIChat/Service (= 5.8.1672)
+    - TUIChat/UI (= 5.8.1672)
+    - TUIChat/VoiceConvert (= 5.8.1672)
+    - TUICore (= 5.8.1672)
+  - TUIChat/Cell (5.8.1672):
+    - TUIChat/Cell/CellData (= 5.8.1672)
+    - TUIChat/Cell/CellUI (= 5.8.1672)
+    - TUICore (= 5.8.1672)
+  - TUIChat/Cell/CellData (5.8.1672):
+    - TUIChat/Cell/CellData/Base (= 5.8.1672)
+    - TUIChat/Cell/CellData/Chat (= 5.8.1672)
+    - TUIChat/Cell/CellData/Custom (= 5.8.1672)
+    - TUICore (= 5.8.1672)
+  - TUIChat/Cell/CellData/Base (5.8.1672):
     - TUIChat/VoiceConvert
-    - TUICore (= 5.8.1668)
-  - TUIChat/Cell/CellData/Chat (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/Cell/CellData/Chat (5.8.1672):
     - TUIChat/Cell/CellData/Base
-    - TUICore (= 5.8.1668)
-  - TUIChat/Cell/CellData/Custom (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/Cell/CellData/Custom (5.8.1672):
     - TUIChat/Cell/CellData/Chat
-    - TUICore (= 5.8.1668)
-  - TUIChat/Cell/CellUI (5.8.1668):
-    - TUIChat/Cell/CellUI/Base (= 5.8.1668)
-    - TUIChat/Cell/CellUI/Chat (= 5.8.1668)
-    - TUIChat/Cell/CellUI/Custom (= 5.8.1668)
-    - TUICore (= 5.8.1668)
-  - TUIChat/Cell/CellUI/Base (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/Cell/CellUI (5.8.1672):
+    - TUIChat/Cell/CellUI/Base (= 5.8.1672)
+    - TUIChat/Cell/CellUI/Chat (= 5.8.1672)
+    - TUIChat/Cell/CellUI/Custom (= 5.8.1672)
+    - TUICore (= 5.8.1672)
+  - TUIChat/Cell/CellUI/Base (5.8.1672):
     - TUIChat/Cell/CellData
-    - TUICore (= 5.8.1668)
-  - TUIChat/Cell/CellUI/Chat (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/Cell/CellUI/Chat (5.8.1672):
     - TUIChat/Cell/CellUI/Base
-    - TUICore (= 5.8.1668)
-  - TUIChat/Cell/CellUI/Custom (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/Cell/CellUI/Custom (5.8.1672):
     - TUIChat/Cell/CellUI/Chat
-    - TUICore (= 5.8.1668)
-  - TUIChat/DataProvider (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/DataProvider (5.8.1672):
     - TUIChat/Cell
-    - TUICore (= 5.8.1668)
-  - TUIChat/Service (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/Service (5.8.1672):
     - TUIChat/UI
-    - TUICore (= 5.8.1668)
-  - TUIChat/UI (5.8.1668):
-    - TUIChat/UI/Base (= 5.8.1668)
-    - TUIChat/UI/Chat (= 5.8.1668)
-    - TUIChat/UI/Forward (= 5.8.1668)
-    - TUIChat/UI/Input (= 5.8.1668)
-    - TUIChat/UI/Pendency (= 5.8.1668)
-    - TUICore (= 5.8.1668)
-  - TUIChat/UI/Base (5.8.1668):
-    - TUIChat/UI/Base/Camera (= 5.8.1668)
-    - TUIChat/UI/Base/Media (= 5.8.1668)
-    - TUICore (= 5.8.1668)
-  - TUIChat/UI/Base/Camera (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/UI (5.8.1672):
+    - TUIChat/UI/Base (= 5.8.1672)
+    - TUIChat/UI/Chat (= 5.8.1672)
+    - TUIChat/UI/Forward (= 5.8.1672)
+    - TUIChat/UI/Input (= 5.8.1672)
+    - TUIChat/UI/Pendency (= 5.8.1672)
+    - TUICore (= 5.8.1672)
+  - TUIChat/UI/Base (5.8.1672):
+    - TUIChat/UI/Base/Camera (= 5.8.1672)
+    - TUIChat/UI/Base/Media (= 5.8.1672)
+    - TUICore (= 5.8.1672)
+  - TUIChat/UI/Base/Camera (5.8.1672):
     - TUIChat/DataProvider
-    - TUICore (= 5.8.1668)
-  - TUIChat/UI/Base/Media (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/UI/Base/Media (5.8.1672):
     - TUIChat/UI/Base/Camera
-    - TUICore (= 5.8.1668)
-  - TUIChat/UI/Chat (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/UI/Chat (5.8.1672):
     - TUIChat/UI/Forward
     - TUIChat/UI/Input
     - TUIChat/UI/Pendency
-    - TUICore (= 5.8.1668)
-  - TUIChat/UI/Forward (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/UI/Forward (5.8.1672):
     - TUIChat/UI/Base
-    - TUICore (= 5.8.1668)
-  - TUIChat/UI/Input (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/UI/Input (5.8.1672):
     - TUIChat/UI/Base
-    - TUICore (= 5.8.1668)
-  - TUIChat/UI/Pendency (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/UI/Pendency (5.8.1672):
     - TUIChat/UI/Base
-    - TUICore (= 5.8.1668)
-  - TUIChat/VoiceConvert (5.8.1668):
-    - TUICore (= 5.8.1668)
-  - TUIContact (5.8.1668):
-    - TUIContact/Cell (= 5.8.1668)
-    - TUIContact/DataProvider (= 5.8.1668)
-    - TUIContact/Service (= 5.8.1668)
-    - TUIContact/UI (= 5.8.1668)
-  - TUIContact/Cell (5.8.1668):
-    - TUIContact/Cell/CellData (= 5.8.1668)
-    - TUIContact/Cell/CellUI (= 5.8.1668)
-  - TUIContact/Cell/CellData (5.8.1668):
-    - TUICore (= 5.8.1668)
-  - TUIContact/Cell/CellUI (5.8.1668):
+    - TUICore (= 5.8.1672)
+  - TUIChat/VoiceConvert (5.8.1672):
+    - TUICore (= 5.8.1672)
+  - TUIContact (5.8.1672):
+    - TUIContact/Cell (= 5.8.1672)
+    - TUIContact/DataProvider (= 5.8.1672)
+    - TUIContact/Service (= 5.8.1672)
+    - TUIContact/UI (= 5.8.1672)
+  - TUIContact/Cell (5.8.1672):
+    - TUIContact/Cell/CellData (= 5.8.1672)
+    - TUIContact/Cell/CellUI (= 5.8.1672)
+  - TUIContact/Cell/CellData (5.8.1672):
+    - TUICore (= 5.8.1672)
+  - TUIContact/Cell/CellUI (5.8.1672):
     - TUIContact/Cell/CellData
-  - TUIContact/DataProvider (5.8.1668):
+  - TUIContact/DataProvider (5.8.1672):
     - TUIContact/Cell
-  - TUIContact/Service (5.8.1668):
+  - TUIContact/Service (5.8.1672):
     - TUIContact/UI
-  - TUIContact/UI (5.8.1668):
+  - TUIContact/UI (5.8.1672):
     - TUIContact/DataProvider
-  - TUIConversation (5.8.1668):
-    - TUIConversation/Cell (= 5.8.1668)
-    - TUIConversation/DataProvider (= 5.8.1668)
-    - TUIConversation/Service (= 5.8.1668)
-    - TUIConversation/UI (= 5.8.1668)
-  - TUIConversation/Cell (5.8.1668):
-    - TUIConversation/Cell/CellData (= 5.8.1668)
-    - TUIConversation/Cell/CellUI (= 5.8.1668)
-  - TUIConversation/Cell/CellData (5.8.1668):
-    - TUICore (= 5.8.1668)
-  - TUIConversation/Cell/CellUI (5.8.1668):
+  - TUIConversation (5.8.1672):
+    - TUIConversation/Cell (= 5.8.1672)
+    - TUIConversation/DataProvider (= 5.8.1672)
+    - TUIConversation/Service (= 5.8.1672)
+    - TUIConversation/UI (= 5.8.1672)
+  - TUIConversation/Cell (5.8.1672):
+    - TUIConversation/Cell/CellData (= 5.8.1672)
+    - TUIConversation/Cell/CellUI (= 5.8.1672)
+  - TUIConversation/Cell/CellData (5.8.1672):
+    - TUICore (= 5.8.1672)
+  - TUIConversation/Cell/CellUI (5.8.1672):
     - TUIConversation/Cell/CellData
-  - TUIConversation/DataProvider (5.8.1668):
+  - TUIConversation/DataProvider (5.8.1672):
     - TUIConversation/Cell
-  - TUIConversation/Service (5.8.1668):
+  - TUIConversation/Service (5.8.1672):
     - TUIConversation/UI
-  - TUIConversation/UI (5.8.1668):
+  - TUIConversation/UI (5.8.1672):
     - TUIConversation/DataProvider
-  - TUICore (5.8.1668):
+  - TUICore (5.8.1672):
     - ReactiveObjC
     - SDWebImage
-    - TXIMSDK_Plus_iOS (= 5.8.1668)
-  - TUIGroup (5.8.1668):
-    - TUIGroup/Cell (= 5.8.1668)
-    - TUIGroup/DataProvider (= 5.8.1668)
-    - TUIGroup/Service (= 5.8.1668)
-    - TUIGroup/UI (= 5.8.1668)
-  - TUIGroup/Cell (5.8.1668):
-    - TUIGroup/Cell/CellData (= 5.8.1668)
-    - TUIGroup/Cell/CellUI (= 5.8.1668)
-  - TUIGroup/Cell/CellData (5.8.1668):
-    - TUICore (= 5.8.1668)
-  - TUIGroup/Cell/CellUI (5.8.1668):
+    - TXIMSDK_Plus_iOS (= 5.8.1672)
+  - TUIGroup (5.8.1672):
+    - TUIGroup/Cell (= 5.8.1672)
+    - TUIGroup/DataProvider (= 5.8.1672)
+    - TUIGroup/Service (= 5.8.1672)
+    - TUIGroup/UI (= 5.8.1672)
+  - TUIGroup/Cell (5.8.1672):
+    - TUIGroup/Cell/CellData (= 5.8.1672)
+    - TUIGroup/Cell/CellUI (= 5.8.1672)
+  - TUIGroup/Cell/CellData (5.8.1672):
+    - TUICore (= 5.8.1672)
+  - TUIGroup/Cell/CellUI (5.8.1672):
     - TUIGroup/Cell/CellData
-  - TUIGroup/DataProvider (5.8.1668):
+  - TUIGroup/DataProvider (5.8.1672):
     - TUIGroup/Cell
-  - TUIGroup/Service (5.8.1668):
+  - TUIGroup/Service (5.8.1672):
     - TUIGroup/UI
-  - TUIGroup/UI (5.8.1668):
+  - TUIGroup/UI (5.8.1672):
     - TUIGroup/DataProvider
-  - TUISearch (5.8.1668):
-    - TUISearch/Cell (= 5.8.1668)
-    - TUISearch/DataProvider (= 5.8.1668)
-    - TUISearch/Service (= 5.8.1668)
-    - TUISearch/UI (= 5.8.1668)
-  - TUISearch/Cell (5.8.1668):
-    - TUISearch/Cell/CellData (= 5.8.1668)
-    - TUISearch/Cell/CellUI (= 5.8.1668)
-  - TUISearch/Cell/CellData (5.8.1668):
-    - TUICore (= 5.8.1668)
-  - TUISearch/Cell/CellUI (5.8.1668):
+  - TUISearch (5.8.1672):
+    - TUISearch/Cell (= 5.8.1672)
+    - TUISearch/DataProvider (= 5.8.1672)
+    - TUISearch/Service (= 5.8.1672)
+    - TUISearch/UI (= 5.8.1672)
+  - TUISearch/Cell (5.8.1672):
+    - TUISearch/Cell/CellData (= 5.8.1672)
+    - TUISearch/Cell/CellUI (= 5.8.1672)
+  - TUISearch/Cell/CellData (5.8.1672):
+    - TUICore (= 5.8.1672)
+  - TUISearch/Cell/CellUI (5.8.1672):
     - TUISearch/Cell/CellData
-  - TUISearch/DataProvider (5.8.1668):
+  - TUISearch/DataProvider (5.8.1672):
     - TUISearch/Cell
-  - TUISearch/Service (5.8.1668):
+  - TUISearch/Service (5.8.1672):
     - TUISearch/UI
-  - TUISearch/UI (5.8.1668):
+  - TUISearch/UI (5.8.1672):
     - TUISearch/DataProvider
-  - TXIMSDK_Plus_iOS (5.8.1668)
-  - TXLiteAVSDK_TRTC (9.2.10637)
+  - TXIMSDK_Plus_iOS (5.8.1672)
+  - TXLiteAVSDK_TRTC (9.3.10765)
 
 DEPENDENCIES:
   - MJRefresh
   - TUICalling
-  - TUIChat (= 5.8.1668)
-  - TUIContact (= 5.8.1668)
-  - TUIConversation (= 5.8.1668)
-  - TUIGroup (= 5.8.1668)
-  - TUISearch (= 5.8.1668)
+  - TUIChat (= 5.8.1672)
+  - TUIContact (= 5.8.1672)
+  - TUIConversation (= 5.8.1672)
+  - TUIGroup (= 5.8.1672)
+  - TUISearch (= 5.8.1672)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -197,19 +197,19 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
-  MJRefresh: 30997d30b347c8e9508a4db11e3a690da0c9b85a
+  MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 4dc3e42d9ec0c1028b960a33ac6b637bb432207b
-  TUICalling: 1a0e9bc8a5f365eb29ec4414bb9cc60b3b75fc6b
-  TUIChat: 5dc9c41341c14d00c110654cd4a56e8a1b736552
-  TUIContact: 5103cc8b9f4af13106278ff7197afb2a218f2f88
-  TUIConversation: 6540005c393d588a817266555d38ed776195779c
-  TUICore: 95aa12ff43678dc6ec2b1378b3fd0bd60861c7cd
-  TUIGroup: 6a7dfef581c35c953a051450a3b90231ae7a7fae
-  TUISearch: 262207a934b17a89a63c29a3c7d3c21ab472b685
-  TXIMSDK_Plus_iOS: e61e34c3dc6606549bff41b2abd7e2575af3813e
-  TXLiteAVSDK_TRTC: 58e4dc8582a31c90deb3e8bf86242a7949a7903a
+  TUICalling: 082df002a6d5fd28392a62ba8506d21437f60f3f
+  TUIChat: 4170b9df4636a42588920b0579c970eed5985be1
+  TUIContact: 546e6af448d478b2b95d89ae2f3e2cf3a12ad545
+  TUIConversation: 6375a670d92d5046c0e6623e34405f35187684b3
+  TUICore: 43df8f1b74ffc18478b34081708ace7b9a36cb9c
+  TUIGroup: 89d34258f07fb169f015fda4c467c1b39c57f953
+  TUISearch: 18b87e3b1ce056c9a07faa3a79dec486d85701fd
+  TXIMSDK_Plus_iOS: b5661ed7ad6b984509d85494ba444fa599d4d380
+  TXLiteAVSDK_TRTC: a383e8a7a5bee76d99e10802ceb94908b0de8e33
 
-PODFILE CHECKSUM: 64cbfca927a52dd7ac89c211cb745a98bf6b2a5f
+PODFILE CHECKSUM: 28e9fe9a080e0c981d0fca471a80dd2c6945f3f4
 
 COCOAPODS: 1.9.3

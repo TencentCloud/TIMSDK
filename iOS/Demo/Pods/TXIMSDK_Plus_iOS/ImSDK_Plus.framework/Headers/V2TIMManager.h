@@ -34,6 +34,7 @@ extern NSString *const GroupType_Work;
 extern NSString *const GroupType_Public;
 extern NSString *const GroupType_Meeting;
 extern NSString *const GroupType_AVChatRoom;
+extern NSString *const GroupType_Community;
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -276,9 +277,11 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
  *  - "Work"       ：工作群，成员上限 200  人，不支持由用户主动加入，需要他人邀请入群，适合用于类似微信中随意组建的工作群（对应老版本的 Private 群）。
  *  - "Public"     ：公开群，成员上限 2000 人，任何人都可以申请加群，但加群需群主或管理员审批，适合用于类似 QQ 中由群主管理的兴趣群。
  *  - "Meeting"    ：会议群，成员上限 6000 人，任何人都可以自由进出，且加群无需被审批，适合用于视频会议和在线培训等场景（对应老版本的 ChatRoom 群）。
+ *  - "Community"  ：社群，成员上限 100000 人，任何人都可以自由进出，且加群无需被审批，适合用于知识分享和游戏交流等超大社区群聊场景。5.8 版本开始支持，需要您购买旗舰版套餐。
  *  - "AVChatRoom" ：直播群，人数无上限，任何人都可以自由进出，消息吞吐量大，适合用作直播场景中的高并发弹幕聊天室。
  *
- *  @param groupID 自定义群组 ID，可以传 nil。传 nil 时系统会自动分配 groupID，并通过 succ 回调返回
+ *  @param groupID 自定义群组 ID，可以传 nil。传 nil 时系统会自动分配 groupID，并通过 succ 回调返回。
+ *                 "Community" 类型自定义群组 ID 必须以 "@TGS#_" 作为前缀。
  *  @param groupName 群名称，不能为 nil，最长30字节
  *
  *  @note 请注意如下特殊逻辑:
@@ -554,8 +557,8 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 /// 首先要在 [控制台](https://console.cloud.tencent.com/im) (功能配置 -> 群成员自定义字段) 配置用户自定义字段，然后再调用该接口进行设置。
 @property(nonatomic,strong) NSDictionary<NSString *,NSData *> * customInfo;
 
-/// 群成员角色,修改群成员角色请调用 V2TIMManager+Group.h -> setGroupMemberRole 接口
-@property(nonatomic,assign,readonly) V2TIMGroupMemberRole role;
+/// 群成员角色(V2TIMGroupMemberRole),修改群成员角色请调用 V2TIMManager+Group.h -> setGroupMemberRole 接口
+@property(nonatomic,assign,readonly) uint32_t role;
 
 /// 群成员禁言结束时间戳，禁言用户请调用 V2TIMManager+Group.h -> muteGroupMember 接口
 @property(nonatomic,assign,readonly) uint32_t muteUntil;

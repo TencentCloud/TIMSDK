@@ -7,6 +7,7 @@
 
 #import "TUIFileMessageCellData.h"
 #import "TUIDefine.h"
+#import "NSString+TUIUtil.h"
 
 @interface TUIFileMessageCellData ()
 @property (nonatomic, strong) NSMutableArray *progressBlocks;
@@ -14,6 +15,21 @@
 @end
 
 @implementation TUIFileMessageCellData
+
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
+    V2TIMFileElem *elem = message.fileElem;
+    TUIFileMessageCellData *fileData = [[TUIFileMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    fileData.path = [elem.path safePathString];
+    fileData.fileName = elem.filename;
+    fileData.length = elem.fileSize;
+    fileData.uuid = elem.uuid;
+    fileData.reuseId = TFileMessageCell_ReuseId;
+    return fileData;
+}
+
++ (NSString *)getDisplayString:(V2TIMMessage *)message {
+    return TUIKitLocalizableString(TUIkitMessageTypeFile); // @"[文件]";
+}
 
 - (instancetype)initWithDirection:(TMsgDirection)direction {
     self = [super initWithDirection:direction];
@@ -23,7 +39,6 @@
         _isDownloading = NO;
         _progressBlocks = [NSMutableArray array];
         _responseBlocks = [NSMutableArray array];
-        self.reuseId = TFileMessageCell_ReuseId;
     }
     return self;
 }

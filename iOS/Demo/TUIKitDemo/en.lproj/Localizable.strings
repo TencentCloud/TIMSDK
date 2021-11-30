@@ -60,11 +60,13 @@
 "ChatsNewPrivateGroupText"   = "Create Discussion Group";
 "ChatsNewGroupText"  = "Create Group Chat";
 "ChatsNewChatRoomText" = "Create Chat Room";
+"ChatsNewCommunityText" = "Create Community";
 
 "ChatsCreatePrivateGroupTips" = "Create Discussion Group";
 "ChatsCreateGroupTips" = "Create Group Chat";
 "ChatsCreateChatRoomTips" = "Create Chat Room";
 "ChatsCreateDefaultTips" = "Create Group";
+"ChatsCreateCommunityTips" = "Create Community";
 
 "ChatsSelectContact" = "Select Contact";
 
@@ -165,3 +167,6 @@
 "TipsAgreementError" = "Please read and approve the agreement first";
 
 "GetSmsErrorFormat" = "Failed to get verifcation code！(%@)";
+
+"MarkAllMessageAsReadSucc" = "Success to mark all as read";
+"MarkAllMessageAsReadErrFormat" = "Error, %d, %@";

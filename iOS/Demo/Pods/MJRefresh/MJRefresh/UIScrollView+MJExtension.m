@@ -1,6 +1,6 @@
 //  代码地址: https://github.com/CoderMJLee/MJRefresh
 //  UIScrollView+Extension.m
-//  MJRefreshExample
+//  MJRefresh
 //
 //  Created by MJ Lee on 14-5-28.
 //  Copyright (c) 2014年 小码哥. All rights reserved.
@@ -16,7 +16,7 @@
 
 static BOOL respondsToAdjustedContentInset_;
 
-+ (void)initialize
++ (void)load
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

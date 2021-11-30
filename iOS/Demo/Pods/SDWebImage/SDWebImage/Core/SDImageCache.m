@@ -194,71 +194,73 @@ static NSString * _defaultDiskCacheDirectory;
         [self.memoryCache setObject:image forKey:key cost:cost];
     }
     
-    if (toDisk) {
-        dispatch_async(self.ioQueue, ^{
-            @autoreleasepool {
-                NSData *data = imageData;
-                if (!data && [image conformsToProtocol:@protocol(SDAnimatedImage)]) {
-                    // If image is custom animated image class, prefer its original animated data
-                    data = [((id<SDAnimatedImage>)image) animatedImageData];
-                }
-                if (!data && image) {
-                    // Check image's associated image format, may return .undefined
-                    SDImageFormat format = image.sd_imageFormat;
-                    if (format == SDImageFormatUndefined) {
-                        // If image is animated, use GIF (APNG may be better, but has bugs before macOS 10.14)
-                        if (image.sd_isAnimated) {
-                            format = SDImageFormatGIF;
-                        } else {
-                            // If we do not have any data to detect image format, check whether it contains alpha channel to use PNG or JPEG format
-                            if ([SDImageCoderHelper CGImageContainsAlpha:image.CGImage]) {
-                                format = SDImageFormatPNG;
-                            } else {
-                                format = SDImageFormatJPEG;
-                            }
-                        }
-                    }
-                    data = [[SDImageCodersManager sharedManager] encodedDataWithImage:image format:format options:nil];
-                }
-                [self _storeImageDataToDisk:data forKey:key];
-                if (image) {
-                    // Check extended data
-                    id extendedObject = image.sd_extendedObject;
-                    if ([extendedObject conformsToProtocol:@protocol(NSCoding)]) {
-                        NSData *extendedData;
-                        if (@available(iOS 11, tvOS 11, macOS 10.13, watchOS 4, *)) {
-                            NSError *error;
-                            extendedData = [NSKeyedArchiver archivedDataWithRootObject:extendedObject requiringSecureCoding:NO error:&error];
-                            if (error) {
-                                NSLog(@"NSKeyedArchiver archive failed with error: %@", error);
-                            }
-                        } else {
-                            @try {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                                extendedData = [NSKeyedArchiver archivedDataWithRootObject:extendedObject];
-#pragma clang diagnostic pop
-                            } @catch (NSException *exception) {
-                                NSLog(@"NSKeyedArchiver archive failed with exception: %@", exception);
-                            }
-                        }
-                        if (extendedData) {
-                            [self.diskCache setExtendedData:extendedData forKey:key];
-                        }
-                    }
-                }
-            }
-            
-            if (completionBlock) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completionBlock();
-                });
-            }
-        });
-    } else {
+    if (!toDisk) {
         if (completionBlock) {
             completionBlock();
         }
+        return;
+    }
+    dispatch_async(self.ioQueue, ^{
+        @autoreleasepool {
+            NSData *data = imageData;
+            if (!data && [image conformsToProtocol:@protocol(SDAnimatedImage)]) {
+                // If image is custom animated image class, prefer its original animated data
+                data = [((id<SDAnimatedImage>)image) animatedImageData];
+            }
+            if (!data && image) {
+                // Check image's associated image format, may return .undefined
+                SDImageFormat format = image.sd_imageFormat;
+                if (format == SDImageFormatUndefined) {
+                    // If image is animated, use GIF (APNG may be better, but has bugs before macOS 10.14)
+                    if (image.sd_isAnimated) {
+                        format = SDImageFormatGIF;
+                    } else {
+                        // If we do not have any data to detect image format, check whether it contains alpha channel to use PNG or JPEG format
+                        format = [SDImageCoderHelper CGImageContainsAlpha:image.CGImage] ? SDImageFormatPNG : SDImageFormatJPEG;
+                    }
+                }
+                data = [[SDImageCodersManager sharedManager] encodedDataWithImage:image format:format options:nil];
+            }
+            [self _storeImageDataToDisk:data forKey:key];
+            [self _archivedDataWithImage:image forKey:key];
+        }
+        
+        if (completionBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionBlock();
+            });
+        }
+    });
+}
+
+- (void)_archivedDataWithImage:(UIImage *)image forKey:(NSString *)key {
+    if (!image) {
+        return;
+    }
+    // Check extended data
+    id extendedObject = image.sd_extendedObject;
+    if (![extendedObject conformsToProtocol:@protocol(NSCoding)]) {
+        return;
+    }
+    NSData *extendedData;
+    if (@available(iOS 11, tvOS 11, macOS 10.13, watchOS 4, *)) {
+        NSError *error;
+        extendedData = [NSKeyedArchiver archivedDataWithRootObject:extendedObject requiringSecureCoding:NO error:&error];
+        if (error) {
+            NSLog(@"NSKeyedArchiver archive failed with error: %@", error);
+        }
+    } else {
+        @try {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+            extendedData = [NSKeyedArchiver archivedDataWithRootObject:extendedObject];
+#pragma clang diagnostic pop
+        } @catch (NSException *exception) {
+            NSLog(@"NSKeyedArchiver archive failed with exception: %@", exception);
+        }
+    }
+    if (extendedData) {
+        [self.diskCache setExtendedData:extendedData forKey:key];
     }
 }
 
@@ -281,7 +283,7 @@ static NSString * _defaultDiskCacheDirectory;
     });
 }
 
-// Make sure to call form io queue by caller
+// Make sure to call from io queue by caller
 - (void)_storeImageDataToDisk:(nullable NSData *)imageData forKey:(nullable NSString *)key {
     if (!imageData || !key) {
         return;
@@ -316,7 +318,7 @@ static NSString * _defaultDiskCacheDirectory;
     return exists;
 }
 
-// Make sure to call form io queue by caller
+// Make sure to call from io queue by caller
 - (BOOL)_diskImageDataExistsWithKey:(nullable NSString *)key {
     if (!key) {
         return NO;
@@ -359,7 +361,13 @@ static NSString * _defaultDiskCacheDirectory;
 - (nullable UIImage *)imageFromDiskCacheForKey:(nullable NSString *)key options:(SDImageCacheOptions)options context:(nullable SDWebImageContext *)context {
     NSData *data = [self diskImageDataForKey:key];
     UIImage *diskImage = [self diskImageForKey:key data:data options:options context:context];
-    if (diskImage && self.config.shouldCacheImagesInMemory) {
+    
+    BOOL shouldCacheToMomery = YES;
+    if (context[SDWebImageContextStoreCacheType]) {
+        SDImageCacheType cacheType = [context[SDWebImageContextStoreCacheType] integerValue];
+        shouldCacheToMomery = (cacheType == SDImageCacheTypeAll || cacheType == SDImageCacheTypeMemory);
+    }
+    if (diskImage && self.config.shouldCacheImagesInMemory && shouldCacheToMomery) {
         NSUInteger cost = diskImage.sd_memoryCost;
         [self.memoryCache setObject:diskImage forKey:key cost:cost];
     }
@@ -374,6 +382,28 @@ static NSString * _defaultDiskCacheDirectory;
 - (nullable UIImage *)imageFromCacheForKey:(nullable NSString *)key options:(SDImageCacheOptions)options context:(nullable SDWebImageContext *)context {
     // First check the in-memory cache...
     UIImage *image = [self imageFromMemoryCacheForKey:key];
+    if (image) {
+        if (options & SDImageCacheDecodeFirstFrameOnly) {
+            // Ensure static image
+            Class animatedImageClass = image.class;
+            if (image.sd_isAnimated || ([animatedImageClass isSubclassOfClass:[UIImage class]] && [animatedImageClass conformsToProtocol:@protocol(SDAnimatedImage)])) {
+#if SD_MAC
+                image = [[NSImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:kCGImagePropertyOrientationUp];
+#else
+                image = [[UIImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:image.imageOrientation];
+#endif
+            }
+        } else if (options & SDImageCacheMatchAnimatedImageClass) {
+            // Check image class matching
+            Class animatedImageClass = image.class;
+            Class desiredImageClass = context[SDWebImageContextAnimatedImageClass];
+            if (desiredImageClass && ![animatedImageClass isSubclassOfClass:desiredImageClass]) {
+                image = nil;
+            }
+        }
+    }
+    
+    // Since we don't need to query imageData, return image if exist
     if (image) {
         return image;
     }
@@ -414,38 +444,43 @@ static NSString * _defaultDiskCacheDirectory;
 }
 
 - (nullable UIImage *)diskImageForKey:(nullable NSString *)key data:(nullable NSData *)data options:(SDImageCacheOptions)options context:(SDWebImageContext *)context {
-    if (data) {
-        UIImage *image = SDImageCacheDecodeImageData(data, key, [[self class] imageOptionsFromCacheOptions:options], context);
-        if (image) {
-            // Check extended data
-            NSData *extendedData = [self.diskCache extendedDataForKey:key];
-            if (extendedData) {
-                id extendedObject;
-                if (@available(iOS 11, tvOS 11, macOS 10.13, watchOS 4, *)) {
-                    NSError *error;
-                    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:extendedData error:&error];
-                    unarchiver.requiresSecureCoding = NO;
-                    extendedObject = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
-                    if (error) {
-                        NSLog(@"NSKeyedUnarchiver unarchive failed with error: %@", error);
-                    }
-                } else {
-                    @try {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                        extendedObject = [NSKeyedUnarchiver unarchiveObjectWithData:extendedData];
-#pragma clang diagnostic pop
-                    } @catch (NSException *exception) {
-                        NSLog(@"NSKeyedUnarchiver unarchive failed with exception: %@", exception);
-                    }
-                }
-                image.sd_extendedObject = extendedObject;
-            }
-        }
-        return image;
-    } else {
+    if (!data) {
         return nil;
     }
+    UIImage *image = SDImageCacheDecodeImageData(data, key, [[self class] imageOptionsFromCacheOptions:options], context);
+    [self _unarchiveObjectWithImage:image forKey:key];
+    return image;
+}
+
+- (void)_unarchiveObjectWithImage:(UIImage *)image forKey:(NSString *)key {
+    if (!image) {
+        return;
+    }
+    // Check extended data
+    NSData *extendedData = [self.diskCache extendedDataForKey:key];
+    if (!extendedData) {
+        return;
+    }
+    id extendedObject;
+    if (@available(iOS 11, tvOS 11, macOS 10.13, watchOS 4, *)) {
+        NSError *error;
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:extendedData error:&error];
+        unarchiver.requiresSecureCoding = NO;
+        extendedObject = [unarchiver decodeTopLevelObjectForKey:NSKeyedArchiveRootObjectKey error:&error];
+        if (error) {
+            NSLog(@"NSKeyedUnarchiver unarchive failed with error: %@", error);
+        }
+    } else {
+        @try {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+            extendedObject = [NSKeyedUnarchiver unarchiveObjectWithData:extendedData];
+#pragma clang diagnostic pop
+        } @catch (NSException *exception) {
+            NSLog(@"NSKeyedUnarchiver unarchive failed with exception: %@", exception);
+        }
+    }
+    image.sd_extendedObject = extendedObject;
 }
 
 - (nullable NSOperation *)queryCacheOperationForKey:(NSString *)key done:(SDImageCacheQueryCompletionBlock)doneBlock {
@@ -532,9 +567,14 @@ static NSString * _defaultDiskCacheDirectory;
                 // the image is from in-memory cache, but need image data
                 diskImage = image;
             } else if (diskData) {
+                BOOL shouldCacheToMomery = YES;
+                if (context[SDWebImageContextStoreCacheType]) {
+                    SDImageCacheType cacheType = [context[SDWebImageContextStoreCacheType] integerValue];
+                    shouldCacheToMomery = (cacheType == SDImageCacheTypeAll || cacheType == SDImageCacheTypeMemory);
+                }
                 // decode image data only if in-memory cache missed
                 diskImage = [self diskImageForKey:key data:diskData options:options context:context];
-                if (diskImage && self.config.shouldCacheImagesInMemory) {
+                if (shouldCacheToMomery && diskImage && self.config.shouldCacheImagesInMemory) {
                     NSUInteger cost = diskImage.sd_memoryCost;
                     [self.memoryCache setObject:diskImage forKey:key cost:cost];
                 }
@@ -654,7 +694,14 @@ static NSString * _defaultDiskCacheDirectory;
 
 #if SD_UIKIT || SD_MAC
 - (void)applicationWillTerminate:(NSNotification *)notification {
-    [self deleteOldFilesWithCompletionBlock:nil];
+    // On iOS/macOS, the async opeartion to remove exipred data will be terminated quickly
+    // Try using the sync operation to ensure we reomve the exipred data
+    if (!self.config.shouldRemoveExpiredDataWhenTerminate) {
+        return;
+    }
+    dispatch_sync(self.ioQueue, ^{
+        [self.diskCache removeExpiredData];
+    });
 }
 #endif
 

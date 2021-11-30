@@ -124,7 +124,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 - (void)getGroupsInfo:(NSArray<NSString *> *)groupIDList succ:(V2TIMGroupInfoResultListSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  2.2 搜索群列表（5.4.666 及以上版本支持）
+ *  2.2 搜索群列表（5.4.666 及以上版本支持，需要您购买旗舰版套餐）
  *
  *  SDK 会搜索群名称包含于关键字列表 keywordList 的所有群并返回群信息列表。关键字列表最多支持5个。
  */
@@ -153,16 +153,22 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 
 /**
  *  2.5 设置群属性，已有该群属性则更新其 value 值，没有该群属性则添加该群属性。
+ *  @note
+ *   - 目前只支持 AVChatRoom；
  */
 - (void)setGroupAttributes:(NSString*)groupID attributes:(NSDictionary<NSString *,NSString *> *)attributes succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
  *  2.6 删除群指定属性，keys 传 nil 则清空所有群属性。
+ *  @note
+ *   - 目前只支持 AVChatRoom；
  */
 - (void)deleteGroupAttributes:(NSString*)groupID keys:(NSArray<NSString *> *)keys succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
  *  2.7 获取群指定属性，keys 传 nil 则获取所有群属性。
+ *  @note
+ *   - 目前只支持 AVChatRoom；
  */
 - (void)getGroupAttributes:(NSString*)groupID keys:(NSArray<NSString *> *)keys succ:(V2TIMGroupAttributeListSucc)succ fail:(V2TIMFail)fail;
 
@@ -186,7 +192,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 /**
  *  3.1 获取群成员列表
  *
- *  @param filter   指定群成员类型
+ *  @param filter   指定群成员类型（V2TIMGroupMemberFilter）。
  *  @param nextSeq  分页拉取标志，第一次拉取填0，回调成功如果 nextSeq 不为零，需要分页，传入再次拉取，直至为 0。
  *
  *  @note 直播群（AVChatRoom）的特殊限制：
@@ -194,7 +200,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
  *  - 群成员资料信息仅支持 userID | nickName | faceURL | role 字段。
  *  - role 字段不支持管理员角色，如果您的业务逻辑依赖于管理员角色，可以使用群自定义字段 groupAttributes 管理该角色。
  */
-- (void)getGroupMemberList:(NSString*)groupID filter:(V2TIMGroupMemberFilter)filter nextSeq:(uint64_t)nextSeq succ:(V2TIMGroupMemberInfoResultSucc)succ fail:(V2TIMFail)fail;
+- (void)getGroupMemberList:(NSString*)groupID filter:(uint32_t)filter nextSeq:(uint64_t)nextSeq succ:(V2TIMGroupMemberInfoResultSucc)succ fail:(V2TIMFail)fail;
 
 /**
  *  3.2 指定的群成员资料
@@ -202,7 +208,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 - (void)getGroupMembersInfo:(NSString*)groupID memberList:(NSArray<NSString*>*)memberList succ:(V2TIMGroupMemberInfoListSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  3.3 搜索指定的群成员资料（5.4.666 及以上版本支持）
+ *  3.3 搜索指定的群成员资料（5.4.666 及以上版本支持，需要您购买旗舰版套餐）
  *
  *  SDK 会在本地搜索指定群 ID 列表中，群成员信息（名片、好友备注、昵称、userID）包含于关键字列表 keywordList 的所有群成员并返回群 ID 和群成员列表的 map，关键字列表最多支持5个。
  *
@@ -251,7 +257,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
  *  - 会议群（Meeting）切换群成员角色之后，不会有 onGrantAdministrator 和 onRevokeAdministrator 通知回调
  *  - 切换的角色支持普通群成员（ V2TIM_GROUP_MEMBER_ROLE_MEMBER） 和管理员（V2TIM_GROUP_MEMBER_ROLE_ADMIN
  */
-- (void)setGroupMemberRole:(NSString*)groupID member:(NSString *)userID newRole:(V2TIMGroupMemberRole)role succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
+- (void)setGroupMemberRole:(NSString*)groupID member:(NSString *)userID newRole:(uint32_t)role succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
  *  3.9 转让群主
@@ -370,8 +376,8 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 /// @note 各类群成员人数限制详见: https://cloud.tencent.com/document/product/269/1502#.E7.BE.A4.E7.BB.84.E9.99.90.E5.88.B6.E5.B7.AE.E5.BC.82
 @property(nonatomic,assign,readonly) uint32_t memberMaxCount;
 
-/// 当前用户在此群组中的角色，切换角色请调用 setGroupMemberRole 接口
-@property(nonatomic,assign,readonly) V2TIMGroupMemberRole role;
+/// 当前用户在此群组中的角色（V2TIMGroupMemberRole），切换角色请调用 setGroupMemberRole 接口
+@property(nonatomic,assign,readonly) uint32_t role;
 
 /// 当前用户在此群组中的消息接收选项,修改群消息接收选项请调用 setGroupReceiveMessageOpt 接口
 @property(nonatomic,assign,readonly) V2TIMReceiveMessageOpt recvOpt;
@@ -470,7 +476,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
  * 2. 工作群（Work）不支持设置 role 为管理员。
  * 3. 所有的群都不支持设置 role 为群主。
  */
-@property(nonatomic,assign) V2TIMGroupMemberRole role;
+@property(nonatomic,assign) uint32_t role;
 
 @end
 

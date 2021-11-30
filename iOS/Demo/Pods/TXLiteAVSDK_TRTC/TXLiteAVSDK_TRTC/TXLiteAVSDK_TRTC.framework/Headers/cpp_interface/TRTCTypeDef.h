@@ -947,33 +947,69 @@ struct TRTCVolumeInfo {
 };
 
 /**
- * 5.7 网络测速结果
+ * 5.7 测速参数
  *
- * 您可以在用户进入房间前通过 {@link startSpeedTest} 接口进行测速（注意：请不要在通话中调用），
- * 测速结果会每2 - 3秒钟返回一次，每次返回一个 IP 地址的测试结果。
+ * 您可以在用户进入房间前通过 {@link startSpeedTest} 接口测试网速（注意：请不要在通话中调用）。
+ */
+struct TRTCSpeedTestParams {
+    ///应用标识，请参考 {@link TRTCParams} 中的相关说明。
+    int sdkAppId;
+
+    ///用户标识，请参考 {@link TRTCParams} 中的相关说明。
+    const char *userId;
+
+    ///用户签名，请参考 {@link TRTCParams} 中的相关说明。
+    const char *userSig;
+
+    ///预期的上行带宽（kbps，取值范围： 10 ～ 5000，为 0 时不测试）。
+    int expectedUpBandwidth;
+
+    ///预期的下行带宽（kbps，取值范围： 10 ～ 5000，为 0 时不测试）。
+    int expectedDownBandwidth;
+
+    TRTCSpeedTestParams() : sdkAppId(0), userId(nullptr), userSig(nullptr), expectedUpBandwidth(0), expectedDownBandwidth(0) {
+    }
+};
+
+/**
+ * 5.8 网络测速结果
+ *
+ * 您可以在用户进入房间前通过 {@link startSpeedTest:} 接口进行测速（注意：请不要在通话中调用）。
  */
 struct TRTCSpeedTestResult {
-    ///服务器 IP 地址
+    ///测试是否成功。
+    bool success;
+
+    ///带宽测试错误信息。
+    const char *errMsg;
+
+    ///服务器 IP 地址。
     const char *ip;
 
-    ///内部通过评估算法测算出的网络质量，网络质量越好得分越高。
+    ///内部通过评估算法测算出的网络质量，更多信息请参见 {@link TRTCQuality}。
     TRTCQuality quality;
 
-    ///上行丢包率，取值范围是 [0 - 1.0]，例如 0.3 表示每向服务器发送10个数据包可能会在中途丢失3个。
+    ///上行丢包率，取值范围是 [0 - 1.0]，例如 0.3 表示每向服务器发送 10 个数据包可能会在中途丢失 3 个。
     float upLostRate;
 
-    ///下行丢包率，取值范围是 [0 - 1.0]，例如 0.2 表示每从服务器收取10个数据包可能会在中途丢失2个。
+    ///下行丢包率，取值范围是 [0 - 1.0]，例如 0.2 表示每从服务器收取 10 个数据包可能会在中途丢失 2 个。
     float downLostRate;
 
     ///延迟（毫秒），指当前设备到 TRTC 服务器的一次网络往返时间，该值越小越好，正常数值范围是10ms - 100ms。
     int rtt;
 
-    TRTCSpeedTestResult() : ip(nullptr), quality(TRTCQuality_Unknown), upLostRate(0.0f), downLostRate(0.0f), rtt(0) {
+    ///上行带宽（kbps，-1：无效值）。
+    int availableUpBandwidth;
+
+    ///下行带宽（kbps，-1：无效值）。
+    int availableDownBandwidth;
+
+    TRTCSpeedTestResult() : success(false), errMsg(nullptr), ip(nullptr), quality(TRTCQuality_Unknown), upLostRate(0.0f), downLostRate(0.0f), rtt(0), availableUpBandwidth(0), availableDownBandwidth(0) {
     }
 };
 
 /**
- * 5.9 视频帧信息
+ * 5.10 视频帧信息
  *
  * TRTCVideoFrame 用来描述一帧视频画面的裸数据，也就是编码前或者解码后的视频画面数据。
  */
@@ -1011,7 +1047,7 @@ struct TRTCVideoFrame {
 };
 
 /**
- * 5.10 音频帧数据
+ * 5.11 音频帧数据
  */
 struct TRTCAudioFrame {
     ///【字段含义】音频帧的格式
@@ -1037,7 +1073,7 @@ struct TRTCAudioFrame {
 };
 
 /**
- * 5.11 云端混流中各路画面的描述信息
+ * 5.12 云端混流中各路画面的描述信息
  *
  * TRTCMixUser 用于指定云端混流中每一路视频画面的位置、大小、图层以及流类型等信息。
  */
@@ -1077,7 +1113,7 @@ struct TRTCMixUser {
 };
 
 /**
- * 5.12 云端混流的排版布局和转码参数
+ * 5.13 云端混流的排版布局和转码参数
  *
  * 用于指定混流时各路画面的排版位置信息和云端转码的编码参数。
  */
@@ -1171,7 +1207,7 @@ struct TRTCTranscodingConfig {
 };
 
 /**
- * 5.13 向非腾讯云 CDN 上发布音视频流时需设置的转推参数
+ * 5.14 向非腾讯云 CDN 上发布音视频流时需设置的转推参数
  *
  * TRTC 的后台服务支持通过标准 RTMP 协议，将其中的音视频流发布到第三方直播 CDN 服务商。
  * 如果您使用腾讯云直播 CDN 服务，可无需关注此参数，直接使用 {@link startPublish} 接口即可。
@@ -1195,7 +1231,7 @@ struct TRTCPublishCDNParam {
 };
 
 /**
- * 5.14 本地音频文件的录制参数
+ * 5.15 本地音频文件的录制参数
  *
  * 该参数用于在音频录制接口 {@link startAudioRecording} 中指定录制参数。
  */
@@ -1215,7 +1251,7 @@ struct TRTCAudioRecordingParams {
 };
 
 /**
- * 5.15 本地媒体文件的录制参数
+ * 5.16 本地媒体文件的录制参数
  *
  * 该参数用于在本地媒体文件的录制接口 {@link startLocalRecording} 中指定录制相关参数。
  * 接口 startLocalRecording 是接口 startAudioRecording 的能力加强版本，前者可以录制视频文件，后者只能录制音频文件。
@@ -1235,7 +1271,7 @@ struct TRTCLocalRecordingParams {
 };
 
 /**
- * 5.16 音效参数（已废弃）
+ * 5.17 音效参数（已废弃）
  *
  * TRTC 中的“音效”特指一些短暂的音频文件，通常仅有几秒钟的播放时间，比如“鼓掌声”、“欢笑声”等。
  * 该参数用于在早期版本的音效播放接口 {@link TRTCCloud#playAudioEffect} 中指定音效文件（即短音频文件）的路径和播放次数等。
@@ -1269,7 +1305,7 @@ struct TRTCAudioEffectParam {
 };
 
 /**
- * 5.17 房间切换参数
+ * 5.18 房间切换参数
  *
  * 该参数用于切换房间接口{@link switchRoom}，可以让用户从一个房间快速切换到另一个房间。
  */
@@ -1298,7 +1334,7 @@ struct TRTCSwitchRoomConfig {
 };
 
 /**
- * 5.18 音频自定义回调的格式参数
+ * 5.19 音频自定义回调的格式参数
  *
  * 该参数用于在音频自定义回调相关的接口中，设置 SDK 回调出来的音频数据的相关格式（包括采样率、声道数等）。
  */
@@ -1320,7 +1356,7 @@ struct TRTCAudioFrameCallbackFormat {
 };
 
 /**
- * 5.20 屏幕分享的目标信息（仅适用于桌面系统）
+ * 5.21 屏幕分享的目标信息（仅适用于桌面系统）
  *
  * 在用户进行屏幕分享时，可以选择抓取整个桌面，也可以仅抓取某个程序的窗口。
  * TRTCScreenCaptureSourceInfo 用于描述待分享目标的信息，包括 ID、名称、缩略图等，该结构体中的字段信息均是只读的。
@@ -1360,7 +1396,7 @@ struct TRTCScreenCaptureSourceInfo {
 };
 
 /**
- * 5.21 可分享的屏幕和窗口的列表
+ * 5.22 可分享的屏幕和窗口的列表
  *
  * 此结构体的作用相当于 std::vector<TRTCScreenCaptureSourceInfo>，用于解决不同版本的 STL 容器的二进制兼容问题。
  */
@@ -1385,7 +1421,7 @@ class ITRTCScreenCaptureSourceList {
 };
 
 /**
- * 5.22 屏幕分享的进阶控制参数
+ * 5.23 屏幕分享的进阶控制参数
  *
  * 该参数用于屏幕分享相关的接口{@link selectScreenCaptureTarget}，用于在指定分享目标时设定一系列进阶控制参数。
  * 比如：是否采集鼠标、是否要采集子窗口、是否要在被分享目标周围绘制一个边框等。

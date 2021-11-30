@@ -111,7 +111,7 @@ static TCLoginModel *_sharedInstance = nil;
 
 - (void)getUserSig:(NSString *)user callback:(void (^)(NSString *sig))callback
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"", SDKAPPID]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://123.206.118.43/conf_svr_sdk/conference_server/public/api/conference?sdkappid=%d", SDKAPPID]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
     request.HTTPMethod = @"POST";
     NSDictionary *param = @{@"cmd":@"open_account_svc", @"sub_cmd":@"fetch_sig", @"id":user};
@@ -232,7 +232,7 @@ static TCLoginModel *_sharedInstance = nil;
 - (NSString *)getSmsUrl:(RequestType)type param:(NSDictionary *)param{
     switch (type) {
         case RequestType_GetSms:
-            return [NSString stringWithFormat:@"%@?phone=%@&ticket=%@&randstr=%@",kHttpSmsImageAddr,param[@"phone"],param[@"ticket"],param[@"randstr"]];
+            return [NSString stringWithFormat:@"%@?type=im&phone=%@&ticket=%@&randstr=%@",kHttpSmsImageAddr,param[@"phone"],param[@"ticket"],param[@"randstr"]];
             break;
         case RequestType_Smslogin:{            
             NSString *host = (TUIDemoCurrentServer == TUIDemoServerTypeSingapore) ? kHttpSmsLoginAddr_singapore : kHttpSmsLoginAddr_public;

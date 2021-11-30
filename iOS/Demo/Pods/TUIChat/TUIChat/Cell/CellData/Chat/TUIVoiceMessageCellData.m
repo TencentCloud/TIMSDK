@@ -17,6 +17,20 @@
 
 @implementation TUIVoiceMessageCellData
 
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
+    V2TIMSoundElem *elem = message.soundElem;
+    TUIVoiceMessageCellData *soundData = [[TUIVoiceMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    soundData.duration = elem.duration;
+    soundData.length = elem.dataSize;
+    soundData.uuid = elem.uuid;
+    soundData.reuseId = TVoiceMessageCell_ReuseId;
+    return soundData;
+}
+
++ (NSString *)getDisplayString:(V2TIMMessage *)message {
+    return TUIKitLocalizableString(TUIKitMessageTypeVoice); // @"[语音]";
+}
+
 - (instancetype)initWithDirection:(TMsgDirection)direction
 {
     self = [super initWithDirection:direction];
@@ -38,7 +52,6 @@
                                       [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_sender_playing_3")], nil];
             _voiceTop = [[self class] outgoingVoiceTop];
         }
-        self.reuseId = TVoiceMessageCell_ReuseId;
     }
 
     return self;
@@ -51,20 +64,24 @@
     *isExist = NO;
     if(self.direction == MsgDirectionOutgoing) {
         //上传方本地是否有效
-        path = [NSString stringWithFormat:@"%@%@", TUIKit_Voice_Path, _path.lastPathComponent];
-        if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-            if(!isDir){
-                *isExist = YES;
+        if (_path.length) {
+            path = [NSString stringWithFormat:@"%@%@", TUIKit_Voice_Path, _path.lastPathComponent];
+            if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
+                if(!isDir){
+                    *isExist = YES;
+                }
             }
         }
     }
 
     if(!*isExist) {
         //查看本地是否存在
-        path = [NSString stringWithFormat:@"%@%@.amr", TUIKit_Voice_Path, _uuid];
-        if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-            if(!isDir){
-                *isExist = YES;
+        if (_uuid.length) {
+            path = [NSString stringWithFormat:@"%@%@.amr", TUIKit_Voice_Path, _uuid];
+            if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
+                if(!isDir){
+                    *isExist = YES;
+                }
             }
         }
     }
@@ -103,6 +120,7 @@
 - (void)playVoiceMessage
 {
     if (self.isPlaying) {
+        [self stopVoiceMessage];
         return;
     }
     self.isPlaying = YES;
@@ -110,7 +128,11 @@
     if(self.innerMessage.localCustomInt == 0)
         self.innerMessage.localCustomInt = 1;
 
+    V2TIMSoundElem *imSound = [self getIMSoundElem];
     BOOL isExist = NO;
+    if (self.uuid.length == 0) {
+        self.uuid = imSound.uuid;
+    }
     NSString *path = [self getVoicePath:&isExist];
     if(isExist) {
         [self playInternal:path];
@@ -119,7 +141,6 @@
             return;
         }
         //网络下载
-        V2TIMSoundElem *imSound = [self getIMSoundElem];
         self.isDownloading = YES;
         @weakify(self)
         [imSound downloadSound:path progress:^(NSInteger curSize, NSInteger totalSize) {
@@ -127,7 +148,7 @@
         }  succ:^{
             @strongify(self)
             self.isDownloading = NO;
-            [self playInternal:path];;
+            [self playInternal:path];
         } fail:^(int code, NSString *msg) {
             @strongify(self)
             self.isDownloading= NO;

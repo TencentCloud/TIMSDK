@@ -9,6 +9,7 @@
 #import "TUIConfig.h"
 #import "TUIDefine.h"
 #import "TUICommonModel.h"
+#import "TUILogin.h"
 
 @interface TUIConfig ()
 
@@ -95,5 +96,45 @@
     [[TUIImageCache sharedInstance] addFaceToCache:path];
 }
 
-
+#pragma mark - Sence
+- (void)setSceneOptimizParams:(NSString *)path
+{
+    
+    NSURL *url = [NSURL URLWithString:@"https://demos.trtc.tencent-cloud.com/prod/base/v1/events/stat"];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    req.HTTPMethod = @"POST";
+    NSDictionary *msgData = @{@"sdkappid":@([TUILogin getSdkAppID]),
+                              @"bundleId":NSBundle.mainBundle.bundleIdentifier ?: @"",
+                              @"package":@"",
+                              @"component":path
+    };
+    NSDictionary *param = @{@"userid":[TUILogin getUserID],
+                            @"event":@"useScenario",
+                            @"msg":msgData
+    };
+    NSData *data = [NSJSONSerialization dataWithJSONObject:param options:NSJSONWritingPrettyPrinted error:nil];
+    if (!data) {
+        return;
+    }
+    req.HTTPBody = data;
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    config.HTTPAdditionalHeaders = @{@"api-key" : @"API_KEY", @"Content-Type" : @"application/json"};
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    [[session dataTaskWithRequest:req completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (data) {
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+            long code = [dic[@"errorCode"] longValue];
+            if (code == 0) {
+                NSLog(@"scene param [%@] success", path);
+            }
+            else {
+                NSString *msg = dic[@"errorMessage"];
+                NSLog(@"scene param [%@] failed: [%ld] %@", path, code, msg);
+            }
+        }
+        else {
+            NSLog(@"scene param [%@] error: res data nil", path);
+        }
+    }] resume];
+}
 @end

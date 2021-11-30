@@ -8,7 +8,6 @@
     if (self) {
         self.userNameList = [NSMutableArray array];
         self.userIDList = [NSMutableArray array];
-        self.reuseId = TJoinGroupMessageCell_ReuseId;
     }
     return self;
 }

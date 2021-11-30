@@ -182,7 +182,7 @@
         data.isOnTop = conv.isPinned;
         data.unreadCount = conv.unreadCount;
         data.draftText = conv.draftText;
-        data.isNotDisturb = (conv.recvOpt == V2TIM_NOT_RECEIVE_MESSAGE);
+        data.isNotDisturb = ![conv.groupType isEqualToString:GroupType_Meeting] && (V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE == conv.recvOpt);
         data.orderKey = conv.orderKey;
         data.avatarImage = (conv.type == V2TIM_C2C ? DefaultAvatarImage : DefaultGroupAvatarImage);
         [dataList addObject:data];
@@ -286,7 +286,12 @@
     if (lastMsgStr.length == 0 && conv.draftText.length == 0) {
         return nil;
     }
-    // 获取群 @ 展示信息
+    // 如果设置了免打扰，需要展示免打扰消息数量
+    // Meeting 群默认就是 V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE 状态，UI 上不特殊处理
+    if (![conv.groupType isEqualToString:GroupType_Meeting] && V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE == conv.recvOpt && conv.unreadCount > 0) {
+        lastMsgStr = [NSString stringWithFormat:@"[%d条] %@", conv.unreadCount,lastMsgStr];
+    }
+    // 如果有群 @ ，需要展示群 @ 信息
     NSString *atStr = [self getGroupAtTipString:conv];
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",atStr]];
     NSDictionary *attributeDict = @{NSForegroundColorAttributeName:[UIColor d_systemRedColor]};

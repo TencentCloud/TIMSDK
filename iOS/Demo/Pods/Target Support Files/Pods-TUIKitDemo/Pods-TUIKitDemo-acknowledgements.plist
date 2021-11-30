@@ -100,7 +100,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		</dict>
 		<dict>
 			<key>FooterText</key>
-			<string>Copyright (c) 2009-2018 Olivier Poitrey rs@dailymotion.com
+			<string>Copyright (c) 2009-2020 Olivier Poitrey rs@dailymotion.com
  
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -218,7 +218,7 @@ THE SOFTWARE.
 		</dict>
 		<dict>
 			<key>FooterText</key>
-			<string>copyright 2017 tencent Ltd. All rights reserveffffd.
+			<string>copyright 2017 tencent Ltd. All rights reserved.
 </string>
 			<key>License</key>
 			<string>Proprietary</string>

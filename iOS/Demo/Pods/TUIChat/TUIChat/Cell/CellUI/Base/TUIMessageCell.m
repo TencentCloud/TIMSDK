@@ -28,6 +28,8 @@
         [self.contentView addSubview:_avatarView];
         UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSelectMessageAvatar:)];
         [_avatarView addGestureRecognizer:tap1];
+        UILongPressGestureRecognizer *tap2 = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongSelectMessageAvatar:)];
+        [_avatarView addGestureRecognizer:tap2];
         [_avatarView setUserInteractionEnabled:YES];
 
         //nameLabel
@@ -273,6 +275,13 @@
 {
     if(_delegate && [_delegate respondsToSelector:@selector(onSelectMessageAvatar:)]){
         [_delegate onSelectMessageAvatar:self];
+    }
+}
+
+- (void)onLongSelectMessageAvatar:(UIGestureRecognizer *)recognizer
+{
+    if(_delegate && [_delegate respondsToSelector:@selector(onLongSelectMessageAvatar:)]){
+        [_delegate onLongSelectMessageAvatar:self];
     }
 }
 

@@ -13,20 +13,35 @@
 
 @implementation TUIMessageDataProvider (Live)
 
-+ (TUIMessageCellData *)getLiveCellData:(V2TIMMessage *)message {
-    /// 群直播自定义消息
++ (BOOL)isLiveMessage:(V2TIMMessage *)message {
     if (message.customElem.data) {
         NSDictionary *params = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:nil];
         //[params[@"version"] integerValue] == Version &&
         if ([params isKindOfClass:NSDictionary.class] && [params[@"businessID"] isKindOfClass:NSString.class] && [params[@"businessID"] isEqualToString:@"group_live"]) {
-            TMsgDirection direction = message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
-            TUIGroupLiveMessageCellData *cellData = [[TUIGroupLiveMessageCellData alloc] initWithDirection:direction];
-            cellData.anchorName = params[@"anchorName"];
-            cellData.roomInfo = params;
-            cellData.status = Msg_Status_Succ;
-            cellData.reuseId = TGroupLiveMessageCell_ReuseId;
-            return cellData;
+            return YES;
         }
+    }
+    
+    /// 群直播信令文本
+    NSString *content = [self getLiveSignalingContentWithMessage:message];
+    if (content.length > 0) {
+        return YES;
+    }
+    return NO;
+}
+
++ (TUIMessageCellData *)getLiveCellData:(V2TIMMessage *)message {
+    /// 群直播自定义消息
+    NSDictionary *params = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:nil];
+    //[params[@"version"] integerValue] == Version &&
+    if ([params isKindOfClass:NSDictionary.class] && [params[@"businessID"] isKindOfClass:NSString.class] && [params[@"businessID"] isEqualToString:@"group_live"]) {
+        TMsgDirection direction = message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
+        TUIGroupLiveMessageCellData *cellData = [[TUIGroupLiveMessageCellData alloc] initWithDirection:direction];
+        cellData.anchorName = params[@"anchorName"];
+        cellData.roomInfo = params;
+        cellData.status = Msg_Status_Succ;
+        cellData.reuseId = TGroupLiveMessageCell_ReuseId;
+        return cellData;
     }
     
     /// 群直播信令文本
@@ -43,16 +58,7 @@
     return nil;
 }
 
-+ (TUIMessageCell *)getLiveCellWithCellData:(TUIMessageCellData *)cellData {
-    if ([cellData isKindOfClass:[TUIGroupLiveMessageCellData class]]) {
-        TUIGroupLiveMessageCell *liveCell = [[TUIGroupLiveMessageCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TGroupLiveMessageCell_ReuseId];
-        [liveCell fillWithData:(TUIGroupLiveMessageCellData *)cellData];
-        return liveCell;
-    }
-    return nil;
-}
-
-+ (NSString *)getLiveDisplayString:(V2TIMMessage *)message {
++ (NSString *)getLiveMessageDisplayString:(V2TIMMessage *)message {
     if (message.customElem == nil || message.customElem.data == nil) {
         return nil;
     }

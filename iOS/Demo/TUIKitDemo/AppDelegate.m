@@ -22,23 +22,24 @@
 #import "GenerateTestUserSig.h"
 #import "TUILoginCache.h"
 
-#if ENABLECALL
-#import "TRTCSignalFactory.h"
-#endif
-
 #if ENABLELIVE
 #import "TUILiveSceneViewController.h"
 #import "TUIKitLive.h"
-#import "TXLiveBase.h"
+#import "TRTCSignalFactory.h"
+@import TXLiteAVSDK_TRTC;
 #endif
 
 #import "TestViewController.h"
+#import "TUIBadgeView.h"
 
 
 @interface AppDelegate () <UIAlertViewDelegate,BuglyDelegate,QAPMYellowProfileDelegate, V2TIMConversationListener, V2TIMSDKListener>
 @property(nonatomic,strong) NSString *groupID;
 @property(nonatomic,strong) NSString *userID;
 @property(nonatomic,strong) V2TIMSignalingInfo *signalingInfo;
+
+@property (nonatomic, weak) TUIBadgeView *badgeView;
+
 @end
 
 static AppDelegate *app;
@@ -90,7 +91,9 @@ static AppDelegate *app;
 
     // Override point for customization after application launch.
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-    
+
+    [self setupServerInfo];
+    [self setupDeviceInfo];
     [[TUIKit sharedInstance] setupWithAppId:SDKAPPID];
     [[V2TIMManager sharedInstance] addIMSDKListener:self];
     
@@ -134,6 +137,65 @@ static AppDelegate *app;
     [TCUtil report:Action_Startup actionSub:@"" code:@(0) msg:@"im demo startup success"];
     _beginTime = [[NSDate date] timeIntervalSince1970];
     return YES;
+}
+
+- (void)setupServerInfo
+{
+    if (TUIDemoCurrentServer == TUIDemoServerTypePrivate ||
+        TUIDemoCurrentServer == TUIDemoServerTypeCustomPrivate) {
+        // 私有化
+        NSString *serverPublicKey = @"0436ddd1de2ec99e57f8a796745bf5c639fe038d65f9df155e3cbc622d0b1b75a40ee49074920e56c6012f90c77be69f7f";
+        
+        NSString *ip = TUIDemoIsTestEnvironment?@"120.232.196.158":@"58.212.179.249";
+        NSNumber *port = @(80);
+        if (TUIDemoCurrentServer == TUIDemoServerTypeCustomPrivate) {
+            // 自定义私有化
+            ip = [GenerateTestUserSig customPrivateServer]?:@"";
+            port = @([GenerateTestUserSig customPrivatePort])?:@0;
+        }
+        
+        NSArray *longconnectionAddressList = @[
+            @{
+                @"ip": ip,
+                @"port": port
+            }
+        ];
+        NSMutableDictionary *dictParam = [NSMutableDictionary new];
+        [dictParam setValue:serverPublicKey forKey:@"serverPublicKey"];
+        [dictParam setValue:longconnectionAddressList forKey:@"longconnectionAddressList"];
+        NSData *dataParam = [NSJSONSerialization dataWithJSONObject:dictParam options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *strParam = [[NSString alloc]initWithData:dataParam encoding:NSUTF8StringEncoding];
+        [[V2TIMManager sharedInstance] callExperimentalAPI:@"setCustomServerInfo" param:strParam succ:^(NSObject *result) {
+            NSLog(@"success");
+        } fail:^(int code, NSString *desc) {
+            NSLog(@"errorCode:%d errorMessage:%@", code, desc);
+        }];
+    } else {
+        [[V2TIMManager sharedInstance] callExperimentalAPI:@"setTestEnvironment" param:[NSNumber numberWithBool:TUIDemoIsTestEnvironment] succ:nil fail:nil];
+    }
+    
+    NSLog(@"%s, type:%zd, test:%d customPrivateIP:%@, customPrivatePort:%zd", __func__, TUIDemoCurrentServer,
+                                                                              TUIDemoIsTestEnvironment,
+                                                                              [GenerateTestUserSig customPrivateServer],
+                                                                              [GenerateTestUserSig customPrivatePort]);
+}
+
+- (void)setupDeviceInfo {
+    NSString *deviceModel = [TUITool deviceModel];
+    NSString *deviceVersion = [TUITool deviceVersion];
+
+    NSDictionary *dict = @{
+        @"deviceModel":deviceModel,
+        @"deviceVersion":deviceVersion
+    };
+
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *param = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    [V2TIMManager.sharedInstance callExperimentalAPI:@"setDeviceInfo" param:param succ:^(NSObject *result) {
+        NSLog(@"set device info success");
+    } fail:^(int code, NSString *desc) {
+        NSLog(@"%@", [NSString stringWithFormat:@"set device info failed, %d, %@", code, desc]);
+    }];
 }
 
 - (void)setupCustomSticker
@@ -249,7 +311,7 @@ static AppDelegate *app;
     // Set the customizd tag thats config in your APP registerd on the  bugly.qq.com
     // [Bugly setTag:1799];
 
-    [Bugly setUserIdentifier:[NSString stringWithFormat:@"User: %@", [UIDevice currentDevice].name]];
+    [Bugly setUserIdentifier:[NSString stringWithFormat:@"User: %@", [TUITool deviceName]]];
 
     [Bugly setUserValue:[NSProcessInfo processInfo].processName forKey:@"Process"];
 
@@ -292,7 +354,7 @@ void loggerFunc(QAPMLoggerLevel level, const char* log) {
     [QAPMConfig getInstance].yellowConfig.UIViewLeakEnable = YES;
     [QAPMYellowProfile setYellowProfileDelegate:self];
     
-    [QAPMConfig getInstance].userId = [NSString stringWithFormat:@"User: %@", [UIDevice currentDevice].name];
+    [QAPMConfig getInstance].userId = [NSString stringWithFormat:@"User: %@", [TUITool deviceName]];
     [QAPMConfig getInstance].customerAppVersion = [[V2TIMManager sharedInstance] getVersion];
 
     /// 启动QAPM
@@ -318,7 +380,7 @@ void loggerFunc(QAPMLoggerLevel level, const char* log) {
 
 - (void)registNotification
 {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
+    if ([[TUITool deviceVersion] floatValue] >= 8.0)
     {
         [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
         [[UIApplication sharedApplication] registerForRemoteNotifications];
@@ -380,7 +442,7 @@ void loggerFunc(QAPMLoggerLevel level, const char* log) {
             [self onReceiveNomalMsgAPNs];
         }
     }
-#if ENABLECALL
+#if ENABLELIVE
     // action : 2 音视频通话推送
     else if ([action intValue] == APNs_Business_Call) {
         // 单聊中的音视频邀请推送不需处理，APP 启动后，TUIkit 会自动处理
@@ -502,6 +564,12 @@ void uncaughtExceptionHandler(NSException*exception){
     msgItem.normalImage = [UIImage imageNamed:@"session_normal"];
     msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
     msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    msgItem.badgeView = [[TUIBadgeView alloc] init];
+    @weakify(self)
+    msgItem.badgeView.clearCallback = ^{
+        @strongify(self)
+        [self clearUnreadMessage];
+    };
     [items addObject:msgItem];
 
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
@@ -535,6 +603,19 @@ void uncaughtExceptionHandler(NSException*exception){
     return tbc;
 }
 
+- (void)clearUnreadMessage {
+    @weakify(self)
+    [V2TIMManager.sharedInstance markAllMessageAsRead:^{
+        @strongify(self)
+        [TUITool makeToast:NSLocalizedString(@"MarkAllMessageAsReadSucc", nil)];
+        [self onTotalUnreadCountChanged:0];
+    } fail:^(int code, NSString *desc) {
+        @strongify(self)
+        [TUITool makeToast:[NSString stringWithFormat:NSLocalizedString(@"MarkAllMessageAsReadErrFormat", nil), code, desc]];
+        [self onTotalUnreadCountChanged:self->_unReadCount];
+    }];
+}
+
 - (void)onTotalUnreadCountChanged:(UInt64)totalUnreadCount {
     NSUInteger total = totalUnreadCount;
     TUITabBarController *tab = (TUITabBarController *)UIApplication.sharedApplication.keyWindow.rootViewController;
@@ -542,7 +623,7 @@ void uncaughtExceptionHandler(NSException*exception){
         return;
     }
     TUITabBarItem *item = tab.tabBarItems.firstObject;
-    item.controller.tabBarItem.badgeValue = total ? [NSString stringWithFormat:@"%@", total > 99 ? @"99+" : @(total)] : nil;
+    item.badgeView.title = total ? [NSString stringWithFormat:@"%@", total > 99 ? @"99+" : @(total)] : nil;
     _unReadCount = total;
 }
 

@@ -4,7 +4,6 @@
 #import "TUIMessageDataProvider.h"
 #import "TUIMessageDataProvider+Call.h"
 #import "TUIMessageDataProvider+Live.h"
-#import "TUIMessageDataProvider+Link.h"
 #import "TUITextMessageCellData.h"
 #import "TUISystemMessageCellData.h"
 #import "TUIVoiceMessageCellData.h"
@@ -14,13 +13,14 @@
 #import "TUIFileMessageCellData.h"
 #import "TUIMergeMessageCellData.h"
 #import "TUIFaceMessageCellData.h"
+#import "TUIJoinGroupMessageCellData.h"
 #import "TUIFaceView.h"
 #import "TUIDefine.h"
-#import "TUIJoinGroupMessageCellData.h"
 #import "TUITool.h"
 #import "TUILogin.h"
 #import "NSString+TUIUtil.h"
-#import "TUITool.h"
+
+static NSArray *customMessageInfo = nil;
 
 @interface TUIMessageDataProvider ()<V2TIMAdvancedMsgListener>
 @property (nonatomic) TUIChatConversationModel *conversationModel;
@@ -35,6 +35,18 @@
 @end
 
 @implementation TUIMessageDataProvider
+
++ (void)load {
+    customMessageInfo = @[@{BussinessID : BussinessID_TextLink,
+                            TMessageCell_Name : @"TUILinkCell",
+                            TMessageCell_Data_Name : @"TUILinkCellData"
+                          },
+    ];
+}
+
++ (NSArray *)getCustomMessageInfo {
+    return customMessageInfo;
+}
 
 - (instancetype)initWithConversationModel:(TUIChatConversationModel *)conversationModel {
     self = [super init];
@@ -134,7 +146,6 @@
                 self.msgForDate = msg;
                 [uiMsgs addObject:dateMsg];
             }
-            [TUIMessageDataProvider configCellData:cellData withIMMsg:msg];
             [uiMsgs addObject:cellData];
         }
     }
@@ -278,9 +289,6 @@
         BOOL isReSent = NO;
         if (uiMsg.status == Msg_Status_Init) {
             //新消息
-            if (!imMsg) {
-                imMsg = [TUIMessageDataProvider getIMMsgFromCellData:uiMsg];
-            }
             dateMsg = [self getSystemMsgFromDate:imMsg.timestamp];
         } else if (imMsg) {
             //重发
@@ -483,165 +491,116 @@
     switch (message.elemType) {
         case V2TIM_ELEM_TYPE_TEXT:
         {
-            data = [self getTextCellData:message fromElem:message.textElem];
+            data = [TUITextMessageCellData getCellData:message];
         }
             break;
         case V2TIM_ELEM_TYPE_IMAGE:
         {
-            data = [self getImageCellData:message fromElem:message.imageElem];
+            data = [TUIImageMessageCellData getCellData:message];
         }
             break;
         case V2TIM_ELEM_TYPE_SOUND:
         {
-            data = [self getVoiceCellData:message fromElem:message.soundElem];
+            data = [TUIVoiceMessageCellData getCellData:message];
         }
             break;
         case V2TIM_ELEM_TYPE_VIDEO:
         {
-            data = [self getVideoCellData:message fromElem:message.videoElem];
+            data = [TUIVideoMessageCellData getCellData:message];
         }
             break;
         case V2TIM_ELEM_TYPE_FILE:
         {
-            data = [self getFileCellData:message fromElem:message.fileElem];
+            data = [TUIFileMessageCellData getCellData:message];
         }
             break;
         case V2TIM_ELEM_TYPE_FACE:
         {
-            data = [self geTUIFaceCellData:message fromElem:message.faceElem];
+            data = [TUIFaceMessageCellData getCellData:message];
         }
             break;
         case V2TIM_ELEM_TYPE_GROUP_TIPS:
         {
-            data = [self getSystemCellData:message fromElem:message.groupTipsElem];
+            data = [self getSystemCellData:message];
         }
             break;
         case V2TIM_ELEM_TYPE_MERGER:
         {
-            data = [self getMergerCellData:message fromElem:message.mergerElem];
+            data = [TUIMergeMessageCellData getCellData:message];
         }
             break;
         case V2TIM_ELEM_TYPE_CUSTOM:
         {
-            // 音视频通话自定义消息
-            data = [self getCallCellData:message];
-            
-            // 群直播自定义消息
-            if (!data) {
+            if ([self isCallMessage:message]) {
+                data = [self getCallCellData:message];
+            }
+            else if ([self isLiveMessage:message]) {
                 data = [self getLiveCellData:message];
             }
-            // 点击链接跳转自定义消息
-            if (!data) {
-                data = [self getLinkCellData:message];
+            else {
+                data = [self getCustomCellData:message];
             }
         }
             break;
+
         default:
             break;
     }
     if (data) {
+        data.innerMessage = message;
+        data.msgID = message.msgID;
+        data.direction = message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
+        data.identifier = message.sender;
+        data.name = [TUIMessageDataProvider getShowName:message];
         data.avatarUrl = [NSURL URLWithString:message.faceURL];
+        // 满足 -> 1、群消息 2、非自己的消息 3、非系统消息 ->展示 showName
+        if (message.groupID.length > 0 && !message.isSelf
+           && ![data isKindOfClass:[TUISystemMessageCellData class]]) {
+            data.showName = YES;
+        }
+        // 更新消息状态
+        switch (message.status) {
+            case V2TIM_MSG_STATUS_SEND_SUCC:
+                data.status = Msg_Status_Succ;
+                break;
+            case V2TIM_MSG_STATUS_SEND_FAIL:
+                data.status = Msg_Status_Fail;
+                break;
+            case V2TIM_MSG_STATUS_SENDING:
+                data.status = Msg_Status_Sending_2;
+                break;
+            default:
+                break;
+        }
     }
     return data;
 }
 
-+ (TUITextMessageCellData *) getTextCellData:(V2TIMMessage *)message  fromElem:(V2TIMTextElem *)elem {
-    TUITextMessageCellData *textData = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-    textData.content = elem.text;
-    return textData;
-}
-
-+ (TUIFaceMessageCellData *) geTUIFaceCellData:(V2TIMMessage *)message  fromElem:(V2TIMFaceElem *)elem{
-    TUIFaceMessageCellData *faceData = [[TUIFaceMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-    faceData.groupIndex = elem.index;
-    faceData.faceName = [[NSString alloc] initWithData:elem.data encoding:NSUTF8StringEncoding];
-    for (TUIFaceGroup *group in [TUIConfig defaultConfig].faceGroups) {
-        if(group.groupIndex == faceData.groupIndex){
-            NSString *path = [group.groupPath stringByAppendingPathComponent:faceData.faceName];
-            faceData.path = path;
-            break;
++ (TUIMessageCellData *)getCustomCellData:(V2TIMMessage *)message{
+    NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:nil];
+    if (!param || ![param isKindOfClass:[NSDictionary class]]) {
+        return nil;
+    }
+    NSString *businessID = param[BussinessID];
+    if (!businessID || ![businessID isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    for (NSDictionary *messageInfo in customMessageInfo) {
+        if ([businessID isEqualToString:messageInfo[BussinessID]]) {
+            NSString *cellDataName = messageInfo[TMessageCell_Data_Name];
+            Class cls = NSClassFromString(cellDataName);
+            if (cls && [cls respondsToSelector:@selector(getCellData:)]) {
+                TUIMessageCellData *data = [cls getCellData:message];
+                data.reuseId = businessID;
+                return data;
+            }
         }
     }
-    return faceData;
+    return nil;
 }
 
-+ (TUIImageMessageCellData *) getImageCellData:(V2TIMMessage *)message fromElem:(V2TIMImageElem *)elem{
-    TUIImageMessageCellData *imageData = [[TUIImageMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-    imageData.path = [elem.path safePathString];
-    imageData.items = [NSMutableArray array];
-    for (V2TIMImage *item in elem.imageList) {
-        TUIImageItem *itemData = [[TUIImageItem alloc] init];
-        itemData.uuid = item.uuid;
-        itemData.size = CGSizeMake(item.width, item.height);
-//        itemData.url = item.url;
-        if(item.type == V2TIM_IMAGE_TYPE_THUMB){
-            itemData.type = TImage_Type_Thumb;
-        }
-        else if(item.type == V2TIM_IMAGE_TYPE_LARGE){
-            itemData.type = TImage_Type_Large;
-        }
-        else if(item.type == V2TIM_IMAGE_TYPE_ORIGIN){
-            itemData.type = TImage_Type_Origin;
-        }
-        [imageData.items addObject:itemData];
-    }
-    return imageData;
-}
-
-+ (TUIVoiceMessageCellData *) getVoiceCellData:(V2TIMMessage *) message fromElem:(V2TIMSoundElem *) elem{
-    TUIVoiceMessageCellData *soundData = [[TUIVoiceMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-    soundData.duration = elem.duration;
-    soundData.length = elem.dataSize;
-    soundData.uuid = elem.uuid;
-    return soundData;
-}
-
-+ (TUIVideoMessageCellData *) getVideoCellData:(V2TIMMessage *)message fromElem:(V2TIMVideoElem *) elem{
-    TUIVideoMessageCellData *videoData = [[TUIVideoMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-    videoData.videoPath = [elem.videoPath safePathString];
-    videoData.snapshotPath = [elem.snapshotPath safePathString];
-
-    videoData.videoItem = [[TUIVideoItem alloc] init];
-    videoData.videoItem.uuid = elem.videoUUID;
-    videoData.videoItem.type = elem.videoType;
-    videoData.videoItem.length = elem.videoSize;
-    videoData.videoItem.duration = elem.duration;
-
-    videoData.snapshotItem = [[TUISnapshotItem alloc] init];
-    videoData.snapshotItem.uuid = elem.snapshotUUID;
-//    videoData.snapshotItem.type = elem.snaps;
-    videoData.snapshotItem.length = elem.snapshotSize;
-    videoData.snapshotItem.size = CGSizeMake(elem.snapshotWidth, elem.snapshotHeight);
-
-    return videoData;
-}
-
-+ (TUIFileMessageCellData *) getFileCellData:(V2TIMMessage *)message fromElem:(V2TIMFileElem *)elem{
-    TUIFileMessageCellData *fileData = [[TUIFileMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-    fileData.path = [elem.path safePathString];
-    fileData.fileName = elem.filename;
-    fileData.length = elem.fileSize;
-    fileData.uuid = elem.uuid;
-    return fileData;
-}
-
-+ (TUIMessageCellData *)getMergerCellData:(V2TIMMessage *)message fromElem:(V2TIMMergerElem *)elem {
-    
-    if (elem.layersOverLimit) {
-        TUITextMessageCellData *limitCell = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-        limitCell.content = TUIKitLocalizableString(TUIKitRelayLayerLimitTips);
-        return limitCell;
-    }
-    
-    TUIMergeMessageCellData *relayData = [[TUIMergeMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-    relayData.title = elem.title;
-    relayData.abstractList = [NSArray arrayWithArray:elem.abstractList];
-    relayData.mergerElem = elem;
-    return relayData;
-}
-
-+ (TUISystemMessageCellData *) getSystemCellData:(V2TIMMessage *)message fromElem:(V2TIMGroupTipsElem *)elem{
-    V2TIMGroupTipsElem *tip = (V2TIMGroupTipsElem *)elem;
++ (TUISystemMessageCellData *) getSystemCellData:(V2TIMMessage *)message{
+    V2TIMGroupTipsElem *tip = message.groupTipsElem;
     NSString *opUserName = [self getOpUserName:tip.opMember];
     NSMutableArray<NSString *> *userNameList = [self getUserNameList:tip.memberList];
     NSMutableArray<NSString *> *userIDList = [self getUserIDList:tip.memberList];
@@ -652,11 +611,13 @@
         joinGroupData.opUserID = tip.opMember.userID;
         joinGroupData.userNameList = userNameList;
         joinGroupData.userIDList = userIDList;
+        joinGroupData.reuseId = TJoinGroupMessageCell_ReuseId;
         return joinGroupData;
     } else {
         //其他群Tips消息正常处理
         TUISystemMessageCellData *sysdata = [[TUISystemMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
         sysdata.content = [self getDisplayString:message];
+        sysdata.reuseId = TSystemMessageCell_ReuseId;
         if (sysdata.content.length) {
             return sysdata;
         }
@@ -664,9 +625,10 @@
     return nil;
 }
 
-+ (TUISystemMessageCellData *) getRevokeCellData:(V2TIMMessage *)message{
++ (TUISystemMessageCellData *)getRevokeCellData:(V2TIMMessage *)message{
 
     TUISystemMessageCellData *revoke = [[TUISystemMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    revoke.reuseId = TSystemMessageCell_ReuseId;
     if(message.isSelf){
         revoke.content = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage); // @"你撤回了一条消息";
         revoke.innerMessage = message;
@@ -682,46 +644,10 @@
         joinGroupData.content = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName]; //  @"\"%@\"撤回了一条消息"
         joinGroupData.opUserID = message.sender;
         joinGroupData.opUserName = userName;
+        joinGroupData.reuseId = TJoinGroupMessageCell_ReuseId;
         return joinGroupData;
     }
     return nil;
-}
-
-+ (TUIVideoMessageCellData *)getVideoCellDataWithURL:(NSURL *)url {
-    NSData *videoData = [NSData dataWithContentsOfURL:url];
-    NSString *videoPath = [NSString stringWithFormat:@"%@%@.mp4", TUIKit_Video_Path, [TUITool genVideoName:nil]];
-    [[NSFileManager defaultManager] createFileAtPath:videoPath contents:videoData attributes:nil];
-    
-    NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
-    AVURLAsset *urlAsset =  [AVURLAsset URLAssetWithURL:url options:opts];
-    NSInteger duration = (NSInteger)urlAsset.duration.value / urlAsset.duration.timescale;
-    AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:urlAsset];
-    gen.appliesPreferredTrackTransform = YES;
-    gen.maximumSize = CGSizeMake(192, 192);
-    NSError *error = nil;
-    CMTime actualTime;
-    CMTime time = CMTimeMakeWithSeconds(0.0, 10);
-    CGImageRef imageRef = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
-    UIImage *image = [[UIImage alloc] initWithCGImage:imageRef];
-    CGImageRelease(imageRef);
-    
-    NSData *imageData = UIImagePNGRepresentation(image);
-    NSString *imagePath = [TUIKit_Video_Path stringByAppendingString:[TUITool genSnapshotName:nil]];
-    [[NSFileManager defaultManager] createFileAtPath:imagePath contents:imageData attributes:nil];
-    
-    TUIVideoMessageCellData *uiVideo = [[TUIVideoMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-    uiVideo.snapshotPath = imagePath;
-    uiVideo.snapshotItem = [[TUISnapshotItem alloc] init];
-    UIImage *snapshot = [UIImage imageWithContentsOfFile:imagePath];
-    uiVideo.snapshotItem.size = snapshot.size;
-    uiVideo.snapshotItem.length = imageData.length;
-    uiVideo.videoPath = videoPath;
-    uiVideo.videoItem = [[TUIVideoItem alloc] init];
-    uiVideo.videoItem.duration = duration;
-    uiVideo.videoItem.length = videoData.length;
-    uiVideo.videoItem.type = url.pathExtension;
-    uiVideo.uploadProgress = 0;
-    return uiVideo;
 }
 
 - (nullable TUISystemMessageCellData *)getSystemMsgFromDate:(NSDate *)date {
@@ -734,74 +660,6 @@
     }
     return nil;
 }
-
-+ (void)configCellData:(TUIMessageCellData *)cellData withIMMsg:(V2TIMMessage *)imMsg {
-    if (!cellData) {
-        return;
-    }
-    cellData.innerMessage = imMsg;
-    cellData.msgID = imMsg.msgID;
-    cellData.direction = imMsg.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
-    cellData.identifier = imMsg.sender;
-    cellData.name = [TUIMessageDataProvider getShowName:imMsg];
-    cellData.avatarUrl = [NSURL URLWithString:imMsg.faceURL];
-    // 满足 -> 1、群消息 2、非自己的消息 3、非系统消息 ->展示 showName
-    if (imMsg.groupID.length > 0 && !imMsg.isSelf
-       && ![cellData isKindOfClass:[TUISystemMessageCellData class]]) {
-        cellData.showName = YES;
-    }
-    switch (imMsg.status) {
-        case V2TIM_MSG_STATUS_SEND_SUCC:
-            cellData.status = Msg_Status_Succ;
-            break;
-        case V2TIM_MSG_STATUS_SEND_FAIL:
-            cellData.status = Msg_Status_Fail;
-            break;
-        case V2TIM_MSG_STATUS_SENDING:
-            cellData.status = Msg_Status_Sending_2;
-            break;
-        default:
-            break;
-    }
-}
-
-
-+ (V2TIMMessage *)getIMMsgFromCellData:(TUIMessageCellData *)data
-{
-    V2TIMMessage *msg = nil;
-    if([data isKindOfClass:[TUITextMessageCellData class]]){
-        TUITextMessageCellData *text = (TUITextMessageCellData *)data;
-        if (text.atUserList.count > 0) {
-            msg = [[V2TIMManager sharedInstance] createTextAtMessage:text.content atUserList:text.atUserList];
-        } else {
-            msg = [[V2TIMManager sharedInstance] createTextMessage:text.content];
-        }
-    }
-    else if([data isKindOfClass:[TUIFaceMessageCellData class]]){
-        TUIFaceMessageCellData *image = (TUIFaceMessageCellData *)data;
-        msg = [[V2TIMManager sharedInstance] createFaceMessage:(int)image.groupIndex data:[image.faceName dataUsingEncoding:NSUTF8StringEncoding]];
-    }
-    else if([data isKindOfClass:[TUIImageMessageCellData class]]){
-        TUIImageMessageCellData *uiImage = (TUIImageMessageCellData *)data;
-        msg = [[V2TIMManager sharedInstance] createImageMessage:uiImage.path];
-    }
-    else if([data isKindOfClass:[TUIVideoMessageCellData class]]){
-        TUIVideoMessageCellData *uiVideo = (TUIVideoMessageCellData *)data;
-        msg = [[V2TIMManager sharedInstance] createVideoMessage:uiVideo.videoPath type:uiVideo.videoItem.type duration:(int)uiVideo.videoItem.duration snapshotPath:uiVideo.snapshotPath];
-    }
-    else if([data isKindOfClass:[TUIVoiceMessageCellData class]]){
-        TUIVoiceMessageCellData *uiSound = (TUIVoiceMessageCellData *)data;
-        msg = [[V2TIMManager sharedInstance] createSoundMessage:uiSound.path duration:uiSound.duration];
-    }
-    else if([data isKindOfClass:[TUIFileMessageCellData class]]){
-        TUIFileMessageCellData *uiFile = (TUIFileMessageCellData *)data;
-        msg = [[V2TIMManager sharedInstance] createFileMessage:uiFile.path fileName:uiFile.fileName];
-    }
-    data.innerMessage = msg;
-    return msg;
-
-}
-
 
 + (NSString *)getOpUserName:(V2TIMGroupMemberInfo *)info{
     NSString *opUser;
@@ -835,43 +693,6 @@
         [userIDList addObject:info.userID];
     }
     return userIDList;
-}
-
-#pragma mark - 表情国际化
-+ (NSString *)localizableStringWithFaceContent:(NSString *)faceContent
-{
-    NSString *content = faceContent?:@"";
-    NSString *regex_emoji = @"\\[[a-zA-Z0-9\\/\\u4e00-\\u9fa5]+\\]"; //匹配表情
-    NSError *error = nil;
-    NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex_emoji options:NSRegularExpressionCaseInsensitive error:&error];
-    if (re) {
-        NSArray *resultArray = [re matchesInString:content options:0 range:NSMakeRange(0, content.length)];
-        TUIFaceGroup *group = [TUIConfig defaultConfig].faceGroups[0];
-        NSMutableArray *waitingReplaceM = [NSMutableArray array];
-        for(NSTextCheckingResult *match in resultArray) {
-            NSRange range = [match range];
-            NSString *subStr = [content substringWithRange:range];
-            for (TUIFaceCellData *face in group.faces) {
-                if ([face.name isEqualToString:subStr]) {
-                    [waitingReplaceM addObject:@{
-                        @"range":NSStringFromRange(range),
-                        @"localizableStr": face.localizableName.length?face.localizableName:face.name
-                    }];
-                    break;
-                }
-            }
-        }
-        
-        if (waitingReplaceM.count) {
-            // 从后往前替换，否则会引起位置问题
-            for (int i = (int)waitingReplaceM.count -1; i >= 0; i--) {
-                NSRange range = NSRangeFromString(waitingReplaceM[i][@"range"]);
-                NSString *localizableStr = waitingReplaceM[i][@"localizableStr"];
-                content = [content stringByReplacingCharactersInRange:range withString:localizableStr];
-            }
-        }
-    }
-    return content;
 }
 
 @end
@@ -951,223 +772,280 @@
     [[V2TIMManager sharedInstance] deleteMessages:msgList succ:succ fail:fail];
 }
 
-+ (V2TIMMessage *)customMessageWithJsonData:(NSData *)data {
++ (V2TIMMessage *)getCustomMessageWithJsonData:(NSData *)data {
     return [[V2TIMManager sharedInstance] createCustomMessage:data];
 }
 
-+ (NSString *)getShowName:(V2TIMMessage *)imMsg {
-    NSString *showName = imMsg.sender;
-    if (imMsg.nameCard.length > 0) {
-        showName = imMsg.nameCard;
-    } else if (imMsg.friendRemark.length > 0) {
-        showName = imMsg.friendRemark;
-    } else if (imMsg.nickName.length > 0) {
-        showName = imMsg.nickName;
++ (V2TIMMessage *)getVideoMessageWithURL:(NSURL *)url {
+    NSData *videoData = [NSData dataWithContentsOfURL:url];
+    NSString *videoPath = [NSString stringWithFormat:@"%@%@.mp4", TUIKit_Video_Path, [TUITool genVideoName:nil]];
+    [[NSFileManager defaultManager] createFileAtPath:videoPath contents:videoData attributes:nil];
+    
+    NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+    AVURLAsset *urlAsset =  [AVURLAsset URLAssetWithURL:url options:opts];
+    NSInteger duration = (NSInteger)urlAsset.duration.value / urlAsset.duration.timescale;
+    AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:urlAsset];
+    gen.appliesPreferredTrackTransform = YES;
+    gen.maximumSize = CGSizeMake(192, 192);
+    NSError *error = nil;
+    CMTime actualTime;
+    CMTime time = CMTimeMakeWithSeconds(0.0, 10);
+    CGImageRef imageRef = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
+    UIImage *image = [[UIImage alloc] initWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    
+    NSData *imageData = UIImagePNGRepresentation(image);
+    NSString *imagePath = [TUIKit_Video_Path stringByAppendingString:[TUITool genSnapshotName:nil]];
+    [[NSFileManager defaultManager] createFileAtPath:imagePath contents:imageData attributes:nil];
+    
+    V2TIMMessage *message = [[V2TIMManager sharedInstance] createVideoMessage:videoPath type:url.pathExtension duration:duration snapshotPath:imagePath];
+    return message;
+}
+
++ (NSString *)getShowName:(V2TIMMessage *)message {
+    NSString *showName = message.sender;
+    if (message.nameCard.length > 0) {
+        showName = message.nameCard;
+    } else if (message.friendRemark.length > 0) {
+        showName = message.friendRemark;
+    } else if (message.nickName.length > 0) {
+        showName = message.nickName;
     }
     return showName;
 }
 
-+ (NSString *)getDisplayString:(V2TIMMessage *)msg
++ (NSString *)getDisplayString:(V2TIMMessage *)message
 {
     NSString *str;
-    if(msg.status == V2TIM_MSG_STATUS_LOCAL_REVOKED){
-        if(msg.isSelf){
-            str = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage); // @"你撤回了一条消息";
-        }
-        else if(msg.groupID != nil){
-            //对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
-            NSString *userString = msg.nameCard;;
-            if(userString.length == 0){
-                userString = msg.nickName;
-            }
-            if (userString.length == 0) {
-                userString = msg.sender;
-            }
-            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userString]; // "\"%@\"撤回了一条消息";
-        }
-        else if(msg.userID != nil){
-            str = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage);   // @"对方撤回了一条消息";
-        }
+    if(message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED){
+        str = [self getRevokeDispayString:message];
     } else {
-        switch (msg.elemType) {
+        switch (message.elemType) {
             case V2TIM_ELEM_TYPE_TEXT:
             {
-                // 处理表情的国际化
-                NSString *content = msg.textElem.text;
-                str = [self localizableStringWithFaceContent:content];
+                str = [TUITextMessageCellData getDisplayString:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_IMAGE:
+            {
+                str = [TUIImageMessageCellData getDisplayString:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_SOUND:
+            {
+                str = [TUIVoiceMessageCellData getDisplayString:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_VIDEO:
+            {
+                str = [TUIVideoMessageCellData getDisplayString:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_FILE:
+            {
+                str = [TUIFileMessageCellData getDisplayString:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_FACE:
+            {
+                str = [TUIFaceMessageCellData getDisplayString:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_MERGER:
+            {
+                str = [TUIMergeMessageCellData getDisplayString:message];
+            }
+                break;
+            case V2TIM_ELEM_TYPE_GROUP_TIPS:
+            {
+                str = [self getGroupTipsDisplayString:message];
             }
                 break;
             case V2TIM_ELEM_TYPE_CUSTOM:
             {
-                // 处理自定义消息
-                str = [TUIMessageDataProvider getCallDisplayString:msg];
-                if (!str) {
-                    str = [TUIMessageDataProvider getLiveDisplayString:msg];
+                if ([self isCallMessage:message]) {
+                    str = [self getCallMessageDisplayString:message];
                 }
-                if (!str) {
-                    str = [TUIMessageDataProvider getLinkDisplayString:msg];
+                else if ([self isLiveMessage:message]) {
+                    str = [self getLiveMessageDisplayString:message];
+                }
+                else {
+                    str = [self getCustomDisplayString:message];
                 }
                 if (!str) {
                     str = TUIKitLocalizableString(TUIKitMessageTipsUnsupportCustomMessage); // 不支持的自定义消息;
                 }
             }
                 break;
-            case V2TIM_ELEM_TYPE_IMAGE:
-            {
-                str = TUIKitLocalizableString(TUIkitMessageTypeImage); // @"[图片]";
-            }
-                break;
-            case V2TIM_ELEM_TYPE_SOUND:
-            {
-                str = TUIKitLocalizableString(TUIKitMessageTypeVoice); // @"[语音]";
-            }
-                break;
-            case V2TIM_ELEM_TYPE_VIDEO:
-            {
-                str = TUIKitLocalizableString(TUIkitMessageTypeVideo); // @"[视频]";
-            }
-                break;
-            case V2TIM_ELEM_TYPE_FILE:
-            {
-                str = TUIKitLocalizableString(TUIkitMessageTypeFile); // @"[文件]";
-            }
-                break;
-            case V2TIM_ELEM_TYPE_FACE:
-            {
-                str = TUIKitLocalizableString(TUIKitMessageTypeAnimateEmoji); // @"[动画表情]";
-            }
-                break;
-            case V2TIM_ELEM_TYPE_GROUP_TIPS:
-            {
-                V2TIMGroupTipsElem *tips = msg.groupTipsElem;
-                NSString *opUser = [self getOpUserName:tips.opMember];
-                NSMutableArray<NSString *> *userList = [self getUserNameList:tips.memberList];
-                switch (tips.type) {
-                        case V2TIM_GROUP_TIPS_TYPE_JOIN:
-                        {
-                            if (opUser.length > 0) {
-                                if ((userList.count == 0) ||
-                                    (userList.count == 1 && [opUser isEqualToString:userList.firstObject])) {
-                                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsJoinGroupFormat), opUser]; // @"\"%@\"加入群组
-                                } else {
-                                    NSString *users = [userList componentsJoinedByString:@"、"];
-                                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users]; // \"%@\"邀请\"%@\"加入群组
-                                }
-                            }
-                        }
-                            break;
-                        case V2TIM_GROUP_TIPS_TYPE_INVITE:
-                        {
-                            if (userList.count > 0) {
-                                NSString *users = [userList componentsJoinedByString:@"、"];
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users]; // \"%@\"邀请\"%@\"加入群组
-                            }
-                        }
-                            break;
-                        case V2TIM_GROUP_TIPS_TYPE_QUIT:
-                        {
-                            if (opUser.length > 0) {
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsLeaveGroupFormat), opUser]; // \"%@\"退出了群聊
-                            }
-                        }
-                            break;
-                        case V2TIM_GROUP_TIPS_TYPE_KICKED:
-                        {
-                            if (userList.count > 0) {
-                                NSString *users = [userList componentsJoinedByString:@"、"];
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsKickoffGroupFormat), opUser, users]; // \"%@\"将\"%@\"踢出群组
-                            }
-                        }
-                            break;
-                        case V2TIM_GROUP_TIPS_TYPE_SET_ADMIN:
-                        {
-                            if (userList.count > 0) {
-                                NSString *users = [userList componentsJoinedByString:@"、"];
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsSettAdminFormat), users]; // \"%@\"被设置管理员
-                            }
-                        }
-                            break;
-                        case V2TIM_GROUP_TIPS_TYPE_CANCEL_ADMIN:
-                        {
-                            if (userList.count > 0) {
-                                NSString *users = [userList componentsJoinedByString:@"、"];
-                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsCancelAdminFormat), users]; // \"%@\"被取消管理员
-                            }
-                        }
-                            break;
-                        case V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE:
-                        {
-                            str = [NSString stringWithFormat:@"\"%@\"", opUser];
-                            for (V2TIMGroupChangeInfo *info in tips.groupChangeInfoList) {
-                                switch (info.type) {
-                                    case V2TIM_GROUP_INFO_CHANGE_TYPE_NAME:
-                                    {
-                                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIkitMessageTipsEditGroupNameFormat), str, info.value]; // %@修改群名为\"%@\"、
-                                    }
-                                        break;
-                                    case V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION:
-                                    {
-                                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupIntroFormat), str, info.value]; // %@修改群简介为\"%@\"、
-                                    }
-                                        break;
-                                    case V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION:
-                                    {
-                                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAnnounceFormat), str, info.value]; // %@修改群公告为\"%@\"、
-                                    }
-                                        break;
-                                    case V2TIM_GROUP_INFO_CHANGE_TYPE_FACE:
-                                    {
-                                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAvatarFormat), str]; // %@修改群头像、
-                                    }
-                                        break;
-                                    case V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER:
-                                    {
-                                        // %@修改群主为\"%@\"、
-                                        if (userList.count) {
-                                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, userList.firstObject];
-                                        } else {
-                                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, info.value];
-                                        }
-
-                                    }
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                            if (str.length > 0) {
-                                str = [str substringToIndex:str.length - 1];
-                            }
-                        }
-                            break;
-                    case V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE:
-                    {
-                        for (V2TIMGroupChangeInfo *info in tips.memberChangeInfoList) {
-                            if ([info isKindOfClass:V2TIMGroupMemberChangeInfo.class]) {
-                                NSString *userId = [(V2TIMGroupMemberChangeInfo *)info userID];
-                                int32_t muteTime = [(V2TIMGroupMemberChangeInfo *)info muteTime];
-                                NSString *myId = V2TIMManager.sharedInstance.getLoginUser;
-                                str = [NSString stringWithFormat:@"%@%@", [userId isEqualToString:myId] ? TUIKitLocalizableString(You) : userId, muteTime == 0 ? TUIKitLocalizableString(TUIKitMessageTipsUnmute): TUIKitLocalizableString(TUIKitMessageTipsMute)];
-                                break;
-                            }
-                        }
-                    }
-                        break;
-                        default:
-                            break;
-                    }
-            }
-                break;
-            case V2TIM_ELEM_TYPE_MERGER:
-            {
-                str = [NSString stringWithFormat:@"[%@]", TUIKitLocalizableString(TUIKitRelayChatHistory)];
-            }
-                break;
             default:
                 break;
         }
     }
-    
     return str;
+}
+
++ (NSString *)getRevokeDispayString:(V2TIMMessage *)message {
+    NSString *str = nil;
+    if(message.isSelf){
+        str = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage); // @"你撤回了一条消息";
+    }
+    else if(message.groupID != nil){
+        //对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
+        NSString *userString = message.nameCard;;
+        if(userString.length == 0){
+            userString = message.nickName;
+        }
+        if (userString.length == 0) {
+            userString = message.sender;
+        }
+        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsRecallMessageFormat), userString]; // "\"%@\"撤回了一条消息";
+    }
+    else if(message.userID != nil){
+        str = TUIKitLocalizableString(TUIkitMessageTipsOthersRecallMessage);   // @"对方撤回了一条消息";
+    }
+    return str;
+}
+
++ (NSString *)getGroupTipsDisplayString:(V2TIMMessage *)message {
+    V2TIMGroupTipsElem *tips = message.groupTipsElem;
+    NSString *opUser = [self getOpUserName:tips.opMember];
+    NSMutableArray<NSString *> *userList = [self getUserNameList:tips.memberList];
+    NSString *str = nil;
+    switch (tips.type) {
+            case V2TIM_GROUP_TIPS_TYPE_JOIN:
+            {
+                if (opUser.length > 0) {
+                    if ((userList.count == 0) ||
+                        (userList.count == 1 && [opUser isEqualToString:userList.firstObject])) {
+                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsJoinGroupFormat), opUser]; // @"\"%@\"加入群组
+                    } else {
+                        NSString *users = [userList componentsJoinedByString:@"、"];
+                        str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users]; // \"%@\"邀请\"%@\"加入群组
+                    }
+                }
+            }
+                break;
+            case V2TIM_GROUP_TIPS_TYPE_INVITE:
+            {
+                if (userList.count > 0) {
+                    NSString *users = [userList componentsJoinedByString:@"、"];
+                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users]; // \"%@\"邀请\"%@\"加入群组
+                }
+            }
+                break;
+            case V2TIM_GROUP_TIPS_TYPE_QUIT:
+            {
+                if (opUser.length > 0) {
+                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsLeaveGroupFormat), opUser]; // \"%@\"退出了群聊
+                }
+            }
+                break;
+            case V2TIM_GROUP_TIPS_TYPE_KICKED:
+            {
+                if (userList.count > 0) {
+                    NSString *users = [userList componentsJoinedByString:@"、"];
+                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsKickoffGroupFormat), opUser, users]; // \"%@\"将\"%@\"踢出群组
+                }
+            }
+                break;
+            case V2TIM_GROUP_TIPS_TYPE_SET_ADMIN:
+            {
+                if (userList.count > 0) {
+                    NSString *users = [userList componentsJoinedByString:@"、"];
+                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsSettAdminFormat), users]; // \"%@\"被设置管理员
+                }
+            }
+                break;
+            case V2TIM_GROUP_TIPS_TYPE_CANCEL_ADMIN:
+            {
+                if (userList.count > 0) {
+                    NSString *users = [userList componentsJoinedByString:@"、"];
+                    str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsCancelAdminFormat), users]; // \"%@\"被取消管理员
+                }
+            }
+                break;
+            case V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE:
+            {
+                str = [NSString stringWithFormat:@"\"%@\"", opUser];
+                for (V2TIMGroupChangeInfo *info in tips.groupChangeInfoList) {
+                    switch (info.type) {
+                        case V2TIM_GROUP_INFO_CHANGE_TYPE_NAME:
+                        {
+                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIkitMessageTipsEditGroupNameFormat), str, info.value]; // %@修改群名为\"%@\"、
+                        }
+                            break;
+                        case V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION:
+                        {
+                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupIntroFormat), str, info.value]; // %@修改群简介为\"%@\"、
+                        }
+                            break;
+                        case V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION:
+                        {
+                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAnnounceFormat), str, info.value]; // %@修改群公告为\"%@\"、
+                        }
+                            break;
+                        case V2TIM_GROUP_INFO_CHANGE_TYPE_FACE:
+                        {
+                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAvatarFormat), str]; // %@修改群头像、
+                        }
+                            break;
+                        case V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER:
+                        {
+                            // %@修改群主为\"%@\"、
+                            if (userList.count) {
+                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, userList.firstObject];
+                            } else {
+                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, info.value];
+                            }
+
+                        }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (str.length > 0) {
+                    str = [str substringToIndex:str.length - 1];
+                }
+            }
+                break;
+        case V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE:
+        {
+            for (V2TIMGroupChangeInfo *info in tips.memberChangeInfoList) {
+                if ([info isKindOfClass:V2TIMGroupMemberChangeInfo.class]) {
+                    NSString *userId = [(V2TIMGroupMemberChangeInfo *)info userID];
+                    int32_t muteTime = [(V2TIMGroupMemberChangeInfo *)info muteTime];
+                    NSString *myId = V2TIMManager.sharedInstance.getLoginUser;
+                    str = [NSString stringWithFormat:@"%@%@", [userId isEqualToString:myId] ? TUIKitLocalizableString(You) : userId, muteTime == 0 ? TUIKitLocalizableString(TUIKitMessageTipsUnmute): TUIKitLocalizableString(TUIKitMessageTipsMute)];
+                    break;
+                }
+            }
+        }
+            break;
+            default:
+                break;
+        }
+    return str;
+}
+
++ (NSString *)getCustomDisplayString:(V2TIMMessage *)message{
+    NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:nil];
+    if (!param || ![param isKindOfClass:[NSDictionary class]]) {
+        return nil;
+    }
+    NSString *businessID = param[BussinessID];
+    if (!businessID || ![businessID isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    for (NSDictionary *messageInfo in customMessageInfo) {
+        if ([businessID isEqualToString:messageInfo[BussinessID]]) {
+            NSString *cellDataName = messageInfo[TMessageCell_Data_Name];
+            Class cls = NSClassFromString(cellDataName);
+            if (cls && [cls respondsToSelector:@selector(getDisplayString:)]) {
+                return [cls getDisplayString:message];
+            }
+        }
+    }
+    return nil;
 }
 @end

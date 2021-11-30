@@ -12,13 +12,6 @@
 #import "SDWebImageDownloaderResponseModifier.h"
 #import "SDWebImageDownloaderDecryptor.h"
 
-// iOS 8 Foundation.framework extern these symbol but the define is in CFNetwork.framework. We just fix this without import CFNetwork.framework
-#if ((__IPHONE_OS_VERSION_MIN_REQUIRED && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0) || (__MAC_OS_X_VERSION_MIN_REQUIRED && __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_11))
-const float NSURLSessionTaskPriorityHigh = 0.75;
-const float NSURLSessionTaskPriorityDefault = 0.5;
-const float NSURLSessionTaskPriorityLow = 0.25;
-#endif
-
 static NSString *const kProgressCallbackKey = @"progress";
 static NSString *const kCompletedCallbackKey = @"completed";
 
@@ -151,7 +144,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 - (void)start {
     @synchronized (self) {
         if (self.isCancelled) {
-            self.finished = YES;
+            if (!self.isFinished) self.finished = YES;
             // Operation cancelled by user before sending the request
             [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorCancelled userInfo:@{NSLocalizedDescriptionKey : @"Operation cancelled by user before sending the request"}]];
             [self reset];
@@ -198,7 +191,15 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
             }
             if (cachedResponse) {
                 self.cachedData = cachedResponse.data;
+                self.response = cachedResponse.response;
             }
+        }
+        
+        if (!session.delegate) {
+            // Session been invalid and has no delegate at all
+            [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorInvalidDownloadOperation userInfo:@{NSLocalizedDescriptionKey : @"Session delegate is nil and invalid"}]];
+            [self reset];
+            return;
         }
         
         self.dataTask = [session dataTaskWithRequest:self.request];
@@ -225,8 +226,9 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
             [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStartNotification object:strongSelf];
         });
     } else {
+        if (!self.isFinished) self.finished = YES;
         [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorInvalidDownloadOperation userInfo:@{NSLocalizedDescriptionKey : @"Task can't be initialized"}]];
-        [self done];
+        [self reset];
     }
 }
 
@@ -239,22 +241,28 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 - (void)cancelInternal {
     if (self.isFinished) return;
     [super cancel];
+    
+    __block typeof(self) strongSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:strongSelf];
+    });
 
     if (self.dataTask) {
+        // Cancel the URLSession, `URLSession:task:didCompleteWithError:` delegate callback will be ignored
         [self.dataTask cancel];
-        __block typeof(self) strongSelf = self;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:strongSelf];
-        });
-
-        // As we cancelled the task, its callback won't be called and thus won't
-        // maintain the isFinished and isExecuting flags.
+        self.dataTask = nil;
+    }
+    
+    // NSOperation disallow setFinished=YES **before** operation's start method been called
+    // We check for the initialized status, which is isExecuting == NO && isFinished = NO
+    // Ony update for non-intialized status, which is !(isExecuting == NO && isFinished = NO), or if (self.isExecuting || self.isFinished) {...}
+    if (self.isExecuting || self.isFinished) {
         if (self.isExecuting) self.executing = NO;
         if (!self.isFinished) self.finished = YES;
-    } else {
-        // Operation cancelled by user during sending the request
-        [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorCancelled userInfo:@{NSLocalizedDescriptionKey : @"Operation cancelled by user during sending the request"}]];
     }
+    
+    // Operation cancelled by user during sending the request
+    [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorCancelled userInfo:@{NSLocalizedDescriptionKey : @"Operation cancelled by user during sending the request"}]];
 
     [self reset];
 }
@@ -316,7 +324,9 @@ didReceiveResponse:(NSURLResponse *)response
         response = [self.responseModifier modifiedResponseWithResponse:response];
         if (!response) {
             valid = NO;
-            self.responseError = [NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorInvalidDownloadResponse userInfo:@{NSLocalizedDescriptionKey : @"Download marked as failed because response is nil"}];
+            self.responseError = [NSError errorWithDomain:SDWebImageErrorDomain
+                                                     code:SDWebImageErrorInvalidDownloadResponse
+                                                 userInfo:@{NSLocalizedDescriptionKey : @"Download marked as failed because response is nil"}];
         }
     }
     
@@ -325,18 +335,42 @@ didReceiveResponse:(NSURLResponse *)response
     self.expectedSize = expected;
     self.response = response;
     
-    NSInteger statusCode = [response respondsToSelector:@selector(statusCode)] ? ((NSHTTPURLResponse *)response).statusCode : 200;
-    // Status code should between [200,400)
-    BOOL statusCodeValid = statusCode >= 200 && statusCode < 400;
+    // Check status code valid (defaults [200,400))
+    NSInteger statusCode = [response isKindOfClass:NSHTTPURLResponse.class] ? ((NSHTTPURLResponse *)response).statusCode : 0;
+    BOOL statusCodeValid = YES;
+    if (valid && statusCode > 0 && self.acceptableStatusCodes) {
+        statusCodeValid = [self.acceptableStatusCodes containsIndex:statusCode];
+    }
     if (!statusCodeValid) {
         valid = NO;
-        self.responseError = [NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorInvalidDownloadStatusCode userInfo:@{NSLocalizedDescriptionKey : @"Download marked as failed because response status code is not in 200-400", SDWebImageErrorDownloadStatusCodeKey : @(statusCode)}];
+        self.responseError = [NSError errorWithDomain:SDWebImageErrorDomain
+                                                 code:SDWebImageErrorInvalidDownloadStatusCode
+                                             userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Download marked as failed because of invalid response status code %ld", (long)statusCode],
+                                                        SDWebImageErrorDownloadStatusCodeKey : @(statusCode),
+                                                        SDWebImageErrorDownloadResponseKey : response}];
+    }
+    // Check content type valid (defaults nil)
+    NSString *contentType = [response isKindOfClass:NSHTTPURLResponse.class] ? ((NSHTTPURLResponse *)response).MIMEType : nil;
+    BOOL contentTypeValid = YES;
+    if (valid && contentType.length > 0 && self.acceptableContentTypes) {
+        contentTypeValid = [self.acceptableContentTypes containsObject:contentType];
+    }
+    if (!contentTypeValid) {
+        valid = NO;
+        self.responseError = [NSError errorWithDomain:SDWebImageErrorDomain
+                                                 code:SDWebImageErrorInvalidDownloadContentType
+                                             userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Download marked as failed because of invalid response content type %@", contentType],
+                                                        SDWebImageErrorDownloadContentTypeKey : contentType,
+                                                        SDWebImageErrorDownloadResponseKey : response}];
     }
     //'304 Not Modified' is an exceptional one
     //URLSession current behavior will return 200 status code when the server respond 304 and URLCache hit. But this is not a standard behavior and we just add a check
-    if (statusCode == 304 && !self.cachedData) {
+    if (valid && statusCode == 304 && !self.cachedData) {
         valid = NO;
-        self.responseError = [NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorCacheNotModified userInfo:@{NSLocalizedDescriptionKey : @"Download response status code is 304 not modified and ignored"}];
+        self.responseError = [NSError errorWithDomain:SDWebImageErrorDomain
+                                                 code:SDWebImageErrorCacheNotModified
+                                             userInfo:@{NSLocalizedDescriptionKey: @"Download response status code is 304 not modified and ignored",
+                                                        SDWebImageErrorDownloadResponseKey : response}];
     }
     
     if (valid) {
@@ -386,15 +420,21 @@ didReceiveResponse:(NSURLResponse *)response
     
     // Using data decryptor will disable the progressive decoding, since there are no support for progressive decrypt
     BOOL supportProgressive = (self.options & SDWebImageDownloaderProgressiveLoad) && !self.decryptor;
-    if (supportProgressive) {
+    // Progressive decoding Only decode partial image, full image in `URLSession:task:didCompleteWithError:`
+    if (supportProgressive && !finished) {
         // Get the image data
         NSData *imageData = [self.imageData copy];
         
         // keep maximum one progressive decode process during download
         if (self.coderQueue.operationCount == 0) {
             // NSOperation have autoreleasepool, don't need to create extra one
+            @weakify(self);
             [self.coderQueue addOperationWithBlock:^{
-                UIImage *image = SDImageLoaderDecodeProgressiveImageData(imageData, self.request.URL, finished, self, [[self class] imageOptionsFromDownloaderOptions:self.options], self.context);
+                @strongify(self);
+                if (!self) {
+                    return;
+                }
+                UIImage *image = SDImageLoaderDecodeProgressiveImageData(imageData, self.request.URL, NO, self, [[self class] imageOptionsFromDownloaderOptions:self.options], self.context);
                 if (image) {
                     // We do not keep the progressive decoding image even when `finished`=YES. Because they are for view rendering but not take full function from downloader options. And some coders implementation may not keep consistent between progressive decoding and normal decoding.
                     
@@ -452,7 +492,7 @@ didReceiveResponse:(NSURLResponse *)response
         [self done];
     } else {
         if ([self callbacksForKey:kCompletedCallbackKey].count > 0) {
-            NSData *imageData = [self.imageData copy];
+            NSData *imageData = self.imageData;
             self.imageData = nil;
             // data decryptor
             if (imageData && self.decryptor) {
@@ -463,15 +503,30 @@ didReceiveResponse:(NSURLResponse *)response
                  *  then we should check if the cached data is equal to image data
                  */
                 if (self.options & SDWebImageDownloaderIgnoreCachedResponse && [self.cachedData isEqualToData:imageData]) {
-                    self.responseError = [NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorCacheNotModified userInfo:@{NSLocalizedDescriptionKey : @"Downloaded image is not modified and ignored"}];
+                    self.responseError = [NSError errorWithDomain:SDWebImageErrorDomain
+                                                             code:SDWebImageErrorCacheNotModified
+                                                         userInfo:@{NSLocalizedDescriptionKey : @"Downloaded image is not modified and ignored",
+                                                                    SDWebImageErrorDownloadResponseKey : self.response}];
                     // call completion block with not modified error
                     [self callCompletionBlocksWithError:self.responseError];
                     [self done];
                 } else {
                     // decode the image in coder queue, cancel all previous decoding process
                     [self.coderQueue cancelAllOperations];
+                    @weakify(self);
                     [self.coderQueue addOperationWithBlock:^{
-                        UIImage *image = SDImageLoaderDecodeImageData(imageData, self.request.URL, [[self class] imageOptionsFromDownloaderOptions:self.options], self.context);
+                        @strongify(self);
+                        if (!self) {
+                            return;
+                        }
+                        // check if we already use progressive decoding, use that to produce faster decoding
+                        id<SDProgressiveImageCoder> progressiveCoder = SDImageLoaderGetProgressiveCoder(self);
+                        UIImage *image;
+                        if (progressiveCoder) {
+                            image = SDImageLoaderDecodeProgressiveImageData(imageData, self.request.URL, YES, self, [[self class] imageOptionsFromDownloaderOptions:self.options], self.context);
+                        } else {
+                            image = SDImageLoaderDecodeImageData(imageData, self.request.URL, [[self class] imageOptionsFromDownloaderOptions:self.options], self.context);
+                        }
                         CGSize imageSize = image.size;
                         if (imageSize.width == 0 || imageSize.height == 0) {
                             NSString *description = image == nil ? @"Downloaded image decode failed" : @"Downloaded image has 0 pixels";
@@ -510,7 +565,9 @@ didReceiveResponse:(NSURLResponse *)response
                 credential = self.credential;
                 disposition = NSURLSessionAuthChallengeUseCredential;
             } else {
-                disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+                // Web Server like Nginx can set `ssl_verify_client` to optional but not always on
+                // We'd better use default handling here
+                disposition = NSURLSessionAuthChallengePerformDefaultHandling;
             }
         } else {
             disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;

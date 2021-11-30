@@ -297,6 +297,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)onStatistics:(TRTCStatistics *)statistics;
 
+/**
+ * 4.3 网速测试的结果回调
+ *
+ * 该统计回调由 {@link startSpeedTest:} 触发。
+ *
+ * @param result 网速测试数据数据，包括丢包、往返延迟、上下行的带宽速率，详情请参考 {@link TRTCSpeedTestResult}。
+ */
+- (void)onSpeedTestResult:(TRTCSpeedTestResult *)result;
+
 /// @}
 /////////////////////////////////////////////////////////////////////////////////
 //

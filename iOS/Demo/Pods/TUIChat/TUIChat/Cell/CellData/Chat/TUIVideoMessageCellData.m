@@ -7,7 +7,7 @@
 
 #import "TUIVideoMessageCellData.h"
 #import "TUIDefine.h"
-
+#import "NSString+TUIUtil.h"
 @implementation TUIVideoItem
 @end
 
@@ -24,13 +24,37 @@
 
 @implementation TUIVideoMessageCellData
 
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
+    V2TIMVideoElem *elem = message.videoElem;
+    TUIVideoMessageCellData *videoData = [[TUIVideoMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    videoData.videoPath = [elem.videoPath safePathString];
+    videoData.snapshotPath = [elem.snapshotPath safePathString];
+
+    videoData.videoItem = [[TUIVideoItem alloc] init];
+    videoData.videoItem.uuid = elem.videoUUID;
+    videoData.videoItem.type = elem.videoType;
+    videoData.videoItem.length = elem.videoSize;
+    videoData.videoItem.duration = elem.duration;
+
+    videoData.snapshotItem = [[TUISnapshotItem alloc] init];
+    videoData.snapshotItem.uuid = elem.snapshotUUID;
+//    videoData.snapshotItem.type = elem.snaps;
+    videoData.snapshotItem.length = elem.snapshotSize;
+    videoData.snapshotItem.size = CGSizeMake(elem.snapshotWidth, elem.snapshotHeight);
+    videoData.reuseId = TVideoMessageCell_ReuseId;
+    return videoData;
+}
+
++ (NSString *)getDisplayString:(V2TIMMessage *)message {
+    return TUIKitLocalizableString(TUIkitMessageTypeVideo); // @"[视频]";
+}
+
 - (instancetype)initWithDirection:(TMsgDirection)direction {
     self = [super initWithDirection:direction];
     if (self) {
         _uploadProgress = 100;
         _isDownloadingVideo = NO;
         _isDownloadingSnapshot = NO;
-        self.reuseId = TVideoMessageCell_ReuseId;
     }
     return self;
 }

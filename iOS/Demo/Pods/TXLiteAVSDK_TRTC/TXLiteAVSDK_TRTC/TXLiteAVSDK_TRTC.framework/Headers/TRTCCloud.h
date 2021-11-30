@@ -1,7 +1,7 @@
 /**
  * Module:   TRTCCloud @ TXLiteAVSDK
  * Function: 腾讯云 TRTC 主功能接口
- * Version: 9.2.10637
+ * Version: 9.3.10765
  */
 #import <Foundation/Foundation.h>
 #import <VideoToolbox/VideoToolbox.h>
@@ -1352,19 +1352,16 @@
 /// @{
 
 /**
- * 12.1 开始进行网络测速（进入房间前使用）
+ * 12.1 开始进行网速测试（进入房间前使用）
  *
- * TRTC 由于涉及的是对传输时延要求很苛刻的实时音视频传输服务，因此对网络的稳定性要求会比较高。
- * 很多用户在网络环境达不到 TRTC 的最低使用门槛时，直接进入房间可能会导致非常不好的用户体验。
- * 推荐的做法是在用户进入房间前进行网络测速，当用户网络较差时通过 UI 交互提醒用户切换到更加稳定的网络（比如 WiFi 切换到 4G ）后再进入房间。
+ * @param params 测速选项
+ * @return 接口调用结果，< 0：失败
  * @note
- * 1. 测速本身会消耗一定的流量，所以也会产生少量额外的流量费用。
- * 2. 请在进入房间前进行测速，在房间中测速会影响正常的音视频传输效果，而且由于干扰过多，测速结果也不准确。
- * @param sdkAppId 应用标识，请参考 {@link TRTCParams} 中的相关说明。
- * @param userId 用户标识，请参考 {@link TRTCParams} 中的相关说明。
- * @param userSig 用户签名，请参考 {@link TRTCParams} 中的相关说明。
+ * 1. 带宽测试本身会消耗一定的流量，所以也会产生少量额外的流量费用。
+ * 2. 请在进入房间前进行网速测试，在房间中网速测试会影响正常的音视频传输效果，而且由于干扰过多，网速测试结果也不准确。
+ * 3. 同一时间只允许一项网速测试任务运行。
  */
-- (void)startSpeedTest:(uint32_t)sdkAppId userId:(NSString *)userId userSig:(NSString *)userSig completion:(void (^)(TRTCSpeedTestResult *result, NSInteger completedCount, NSInteger totalCount))completion;
+- (int)startSpeedTest:(TRTCSpeedTestParams *)params;
 
 /**
  * 12.2 停止网络测速
@@ -2156,6 +2153,16 @@
  * @deprecated v8.9 版本开始不推荐使用，建议使用 muteRemoteVideoStream(userId, streamType, mute) 接口替代之。
  */
 - (void)muteRemoteVideoStream:(NSString *)userId mute:(BOOL)mute __attribute__((deprecated("use muteRemoteVideoStream:userid,streamType:mute: instead")));
+
+/**
+ *  开始进行网络测速（进入房间前使用）
+ *
+ * @deprecated v9.2 版本开始不推荐使用，建议使用 startSpeedTest(params) 接口替代之。
+ */
+- (void)startSpeedTest:(uint32_t)sdkAppId
+                userId:(NSString *)userId
+               userSig:(NSString *)userSig
+            completion:(void (^)(TRTCSpeedTestResult *result, NSInteger completedCount, NSInteger totalCount))completion __attribute__((deprecated("use startSpeedTest: instead")));
 
 /// @}
 @end

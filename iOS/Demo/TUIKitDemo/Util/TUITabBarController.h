@@ -7,6 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TUIBadgeView.h"
+
+@class TUIBadgeView;
 
 
 @interface TUITabBarItem : NSObject
@@ -14,6 +17,7 @@
 @property (nonatomic, strong) UIImage *selectedImage;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) UIViewController *controller;
+@property (nonatomic, strong) TUIBadgeView *badgeView;
 @end
 
 @interface TUITabBarController : UITabBarController

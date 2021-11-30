@@ -118,7 +118,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupAtType) {
 /**
  *  1.9 获取所有会话的未读消息总数（5.3.425 及以上版本支持）
  * @note
- *  - 未读总数会减去设置为免打扰的会话的未读数，即消息接收选项设置为 V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE 的会话。
+ *  - 未读总数会减去设置为免打扰的会话的未读数，即消息接收选项设置为 V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE 或 V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE 的会话。
  */
 - (void)getTotalUnreadMessageCount:(V2TIMTotalUnreadMessageCountSucc)succ fail:(V2TIMFail)fail;
 
@@ -164,7 +164,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupAtType) {
 /**
  * 会话未读总数变更通知（5.3.425 及以上版本支持）
  * @note
- *  - 未读总数会减去设置为免打扰的会话的未读数，即消息接收选项设置为 V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE 的会话。
+ *  - 未读总数会减去设置为免打扰的会话的未读数，即消息接收选项设置为 V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE 或 V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE 的会话。
  */
 - (void)onTotalUnreadMessageCountChanged:(UInt64) totalUnreadCount;
 

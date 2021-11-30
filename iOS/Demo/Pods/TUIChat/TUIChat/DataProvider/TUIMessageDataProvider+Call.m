@@ -12,36 +12,37 @@
 #import "TUIDefine.h"
 
 @implementation TUIMessageDataProvider (Call)
-
-+ (TUIMessageCellData *)getCallCellData:(V2TIMMessage *)message {
++ (BOOL)isCallMessage:(V2TIMMessage *)message {
     /// 音视频通话信令文本，比如 “xxx 发起群通话”，“xxx接收群通话” 等
     NSString *content = [self getCallSignalingContentWithMessage:message];
     if (content.length > 0) {
-        TMsgDirection direction = message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
-        if (message.userID.length > 0) {
-            TUITextMessageCellData *cellData = [[TUITextMessageCellData alloc] initWithDirection:direction];
-            cellData.content = content;
-            V2TIMMessage *innerMessage = [V2TIMManager.sharedInstance createTextMessage:content];
-            cellData.innerMessage = innerMessage;
-            cellData.reuseId = TTextMessageCell_ReuseId;
-            return cellData;
-        } else {
-            TUISystemMessageCellData *cellData = [[TUISystemMessageCellData alloc] initWithDirection:direction];
-            cellData.content = content;
-            V2TIMMessage *innerMessage = [V2TIMManager.sharedInstance createTextMessage:content];
-            cellData.innerMessage = innerMessage;
-            cellData.reuseId = TSystemMessageCell_ReuseId;
-            return cellData;
-        }
+        return YES;
+    }
+    return NO;
+}
+
++ (TUIMessageCellData *)getCallCellData:(V2TIMMessage *)message{
+    NSString *content = [self getCallSignalingContentWithMessage:message];
+    TMsgDirection direction = message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
+    if (message.userID.length > 0) {
+        TUITextMessageCellData *cellData = [[TUITextMessageCellData alloc] initWithDirection:direction];
+        cellData.content = content;
+        V2TIMMessage *innerMessage = [V2TIMManager.sharedInstance createTextMessage:content];
+        cellData.innerMessage = innerMessage;
+        cellData.reuseId = TTextMessageCell_ReuseId;
+        return cellData;
+    } else {
+        TUISystemMessageCellData *cellData = [[TUISystemMessageCellData alloc] initWithDirection:direction];
+        cellData.content = content;
+        V2TIMMessage *innerMessage = [V2TIMManager.sharedInstance createTextMessage:content];
+        cellData.innerMessage = innerMessage;
+        cellData.reuseId = TSystemMessageCell_ReuseId;
+        return cellData;
     }
     return nil;
 }
 
-
-+ (NSString *)getCallDisplayString:(V2TIMMessage *)message {
-    if (message.customElem == nil || message.customElem.data == nil) {
-        return nil;
-    }
++ (NSString *)getCallMessageDisplayString:(V2TIMMessage *)message {
     return [self getCallSignalingContentWithMessage:message];
 }
 

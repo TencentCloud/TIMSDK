@@ -209,7 +209,17 @@
     [self.tableView registerClass:[TUIJoinGroupMessageCell class] forCellReuseIdentifier:TJoinGroupMessageCell_ReuseId];
     [self.tableView registerClass:[TUIMergeMessageCell class] forCellReuseIdentifier:TRelayMessageCell_ReuserId];
     [self.tableView registerClass:[TUIGroupLiveMessageCell class] forCellReuseIdentifier:TGroupLiveMessageCell_ReuseId];
-    [self.tableView registerClass:[TUILinkCell class] forCellReuseIdentifier:TLinkMessageCell_ReuseId];
+    
+    // 自定义消息注册 cell
+    NSArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
+    for (NSDictionary *messageInfo in customMessageInfo) {
+        NSString *bussinessID = messageInfo[BussinessID];
+        NSString *cellName = messageInfo[TMessageCell_Name];
+        Class cls = NSClassFromString(cellName);
+        if (cls && bussinessID) {
+            [self.tableView registerClass:cls forCellReuseIdentifier:bussinessID];
+        }
+    }
     
     self.tableView.contentInset = UIEdgeInsetsMake(5, 0, 0, 0);
 }
@@ -221,13 +231,8 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat height = 0;
-//    if(_heightCache.count > indexPath.row){
-//        return [_heightCache[indexPath.row] floatValue];
-//    }
     TUIMessageCellData *data = _uiMsgs[indexPath.row];
-    height = [data heightOfWidth:Screen_Width];
-//    [_heightCache insertObject:[NSNumber numberWithFloat:height] atIndex:indexPath.row];
+    CGFloat height = [data heightOfWidth:Screen_Width];
     return height;
 }
 
@@ -243,43 +248,9 @@
             return cell;
         }
     }
-    if (!data.reuseId) {
-        if([data isKindOfClass:[TUITextMessageCellData class]]) {
-            data.reuseId = TTextMessageCell_ReuseId;
-        }
-        else if([data isKindOfClass:[TUIFaceMessageCellData class]]) {
-            data.reuseId = TFaceMessageCell_ReuseId;
-        }
-        else if([data isKindOfClass:[TUIImageMessageCellData class]]) {
-            data.reuseId = TImageMessageCell_ReuseId;
-        }
-        else if([data isKindOfClass:[TUIVideoMessageCellData class]]) {
-            data.reuseId = TVideoMessageCell_ReuseId;
-        }
-        else if([data isKindOfClass:[TUIVoiceMessageCellData class]]) {
-            data.reuseId = TVoiceMessageCell_ReuseId;
-        }
-        else if([data isKindOfClass:[TUIFileMessageCellData class]]) {
-            data.reuseId = TFileMessageCell_ReuseId;
-        }
-        else if([data isKindOfClass:[TUIJoinGroupMessageCellData class]]){//入群小灰条对应的数据源
-            data.reuseId = TJoinGroupMessageCell_ReuseId;
-        }
-        else if([data isKindOfClass:[TUISystemMessageCellData class]]) {
-            data.reuseId = TSystemMessageCell_ReuseId;
-        }
-        else if ([data isKindOfClass:[TUIMergeMessageCellData class]]) {
-            data.reuseId = TRelayMessageCell_ReuserId;
-        }
-        else {
-            NSAssert(NO, @"无法解析当前cell");
-            return nil;
-        }
-    }
     cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
     cell.delegate = self;
     [cell fillWithData:_uiMsgs[indexPath.row]];
-
     return cell;
 }
 

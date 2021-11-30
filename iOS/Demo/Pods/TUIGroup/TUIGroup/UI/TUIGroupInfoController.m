@@ -227,7 +227,7 @@
 {
     V2TIMReceiveMessageOpt opt;
     if (cell.switcher.on) {
-        opt = V2TIM_NOT_RECEIVE_MESSAGE;
+        opt = V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE;
     } else {
         opt = V2TIM_RECEIVE_MESSAGE;
     }

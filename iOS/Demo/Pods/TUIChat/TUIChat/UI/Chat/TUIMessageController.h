@@ -49,13 +49,11 @@ typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
  *  如果您需要实现 onNewMessage、onShowMessageData 的回调，您可以参照 Section\Chat\TUIChatController.h 中的链接与注释进行调用并实现自定义消息处理。
  */
 @property (nonatomic, weak) id<TUIMessageControllerDelegate> delegate;
+
 /**
  *  发送消息
- *  本函数整合调用了 IM SDK 的发送接口，可以轻松接入 SDK。
- *
- *  @param msg 消息单元数据
  */
-- (void)sendMessage:(TUIMessageCellData *)msg;
+- (void)sendMessage:(V2TIMMessage *)msg;
 
 /**
  *  滚动至底部
