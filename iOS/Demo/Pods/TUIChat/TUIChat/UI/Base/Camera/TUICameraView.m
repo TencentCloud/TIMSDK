@@ -87,18 +87,10 @@ static CGFloat progressLayerLineWidth = 5.0;
         [self setupUI];
         
         self.lastRect = self.bounds;
-        if (@available(iOS 11.0, *)) {
-            self.contentView.frame = CGRectMake(self.safeAreaInsets.left,
-                                                self.safeAreaInsets.top,
-                                                self.bounds.size.width - self.safeAreaInsets.left - self.safeAreaInsets.right,
-                                                self.bounds.size.height - self.safeAreaInsets.top - self.safeAreaInsets.bottom);
-        } else {
-            CGFloat contentViewY = MIN([UIApplication sharedApplication].statusBarFrame.size.height, [UIApplication sharedApplication].statusBarFrame.size.width);
-            self.contentView.frame = CGRectMake(0,
-                                                contentViewY,
-                                                self.bounds.size.width,
-                                                self.bounds.size.height - contentViewY);
-        }
+        self.contentView.frame = CGRectMake(0,
+                                            0,
+                                            self.bounds.size.width,
+                                            self.bounds.size.height);
         
         CGFloat previewViewWidth = self.contentView.bounds.size.width;
         CGFloat previewViewHeight;

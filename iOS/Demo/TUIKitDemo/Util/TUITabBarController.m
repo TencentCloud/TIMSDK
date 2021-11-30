@@ -31,7 +31,7 @@
     //tab bar items
     NSMutableArray *controllers = [NSMutableArray array];
     for (TUITabBarItem *item in _tabBarItems) {
-        item.controller.tabBarItem = [[UITabBarItem alloc] initWithTitle:item.title image:item.normalImage selectedImage:[item.selectedImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+        item.controller.tabBarItem = [[UITabBarItem alloc] initWithTitle:item.title image:[item.normalImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] selectedImage:[item.selectedImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
         [item.controller.tabBarItem setTitlePositionAdjustment:UIOffsetMake(0, -4)];
         [controllers addObject:item.controller];
     }
@@ -44,5 +44,34 @@
     CGRect newFrame = CGRectMake(0, self.view.frame.size.height - height,
                                  self.view.frame.size.width, height);
     [self.tabBar setFrame:newFrame];
+   
 }
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    for (TUITabBarItem *item in _tabBarItems) {
+        UIView *tabItemView = [self getTabBarContentView:item.controller.tabBarItem];
+        CGRect frame = [self.tabBar convertRect:tabItemView.frame fromView:tabItemView.superview];
+        item.badgeView.center = CGPointMake(CGRectGetMaxX(frame), frame.origin.y);
+        [self.tabBar addSubview:item.badgeView];
+    }
+}
+
+
+- (UIView *)getTabBarContentView:(UITabBarItem *)tabBarItem {
+    UIView *bottomView = [tabBarItem valueForKeyPath:@"_view"];
+    UIView *contentView = bottomView;
+    if (bottomView) {
+        __block UIView *targetView = bottomView;
+        [bottomView.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([subview isKindOfClass:NSClassFromString(@"UITabBarSwappableImageView")]) {
+                targetView = subview;
+                *stop = YES;
+            }
+        }];
+        contentView = targetView;
+    }
+    return contentView;
+}
+
 @end

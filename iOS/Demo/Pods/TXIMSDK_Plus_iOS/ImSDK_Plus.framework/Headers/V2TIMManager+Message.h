@@ -2,7 +2,7 @@
 //
 //                     腾讯云通信服务 IMSDK
 //
-//  模块名称：V2TIMManager+MsgExt
+//  模块名称：V2TIMManager+Message
 //
 //  消息高级接口，里面包含了所有高级消息的创建、收发逻辑
 //
@@ -403,23 +403,32 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 
 /**
  *  5.5 设置单聊消息已读
+ *
+ *  @note 从 5.8 版本开始，当 userID 为 nil 时，标记所有单聊消息为已读状态
  */
 - (void)markC2CMessageAsRead:(NSString *)userID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
  *  5.6 设置群组消息已读
+ *
+ *  @note 从 5.8 版本开始，当 groupID 为 nil 时，标记所有群组消息为已读状态
  */
 - (void)markGroupMessageAsRead:(NSString *)groupID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  5.7 删除本地消息
+ *  5.7 标记所有消息为已读 （5.8 及其以上版本支持）
+ */
+- (void)markAllMessageAsRead:(V2TIMSucc)succ fail:(V2TIMFail)fail;
+
+/**
+ *  5.8 删除本地消息
  *
  *  @note 该接口只能删除本地历史，消息删除后，SDK 会在本地把这条消息标记为已删除状态，getHistoryMessage 不能再拉取到，如果程序卸载重装，本地会失去对这条消息的删除标记，getHistoryMessage 还能再拉取到该条消息。
  */
 - (void)deleteMessageFromLocalStorage:(V2TIMMessage *)msg succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  5.8 删除本地及云端的消息
+ *  5.9 删除本地及云端的消息
  *
  *  @note 该接口会在 deleteMessageFromLocalStorage 的基础上，同步删除云端存储的消息，且无法恢复。需要注意的是：
  *  - 一次最多只能删除 30 条消息
@@ -430,7 +439,7 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 - (void)deleteMessages:(NSArray<V2TIMMessage *>*)msgList succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  5.9 清空单聊本地及云端的消息（不删除会话）
+ *  5.10 清空单聊本地及云端的消息（不删除会话）
  * <p>5.4.666 及以上版本支持
  *
  * @note 请注意：
@@ -439,7 +448,7 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 - (void)clearC2CHistoryMessage:(NSString *)userID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  5.10 清空群聊本地及云端的消息（不删除会话）
+ *  5.11 清空群聊本地及云端的消息（不删除会话）
  * <p>5.4.666 及以上版本支持
  *
  * @note 请注意：
@@ -448,7 +457,7 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 - (void)clearGroupHistoryMessage:(NSString *)groupID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  5.11 向群组消息列表中添加一条消息
+ *  5.12 向群组消息列表中添加一条消息
  *
  *  该接口主要用于满足向群组聊天会话中插入一些提示性消息的需求，比如“您已经退出该群”，这类消息有展示
  *  在聊天消息区的需求，但并没有发送给其他人的必要。
@@ -460,7 +469,7 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 - (NSString *)insertGroupMessageToLocalStorage:(V2TIMMessage *)msg to:(NSString *)groupID sender:(NSString *)sender succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  5.12 向C2C消息列表中添加一条消息
+ *  5.13 向C2C消息列表中添加一条消息
  *
  *  该接口主要用于满足向C2C聊天会话中插入一些提示性消息的需求，比如“您已成功发送消息”，这类消息有展示
  *  在聊天消息区的需求，但并没有发送给对方的必要。
@@ -472,16 +481,16 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 - (NSString *)insertC2CMessageToLocalStorage:(V2TIMMessage *)msg to:(NSString *)userID sender:(NSString *)sender succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  5.13 根据 messageID 查询指定会话中的本地消息
+ *  5.14 根据 messageID 查询指定会话中的本地消息
  *  @param messageIDList 消息 ID 列表
  */
 - (void)findMessages:(NSArray<NSString *>*)messageIDList succ:(V2TIMMessageListSucc)succ fail:(V2TIMFail)fail;
 
 /**
- * 5.14 搜索本地消息（5.4.666 及以上版本支持）
+ * 5.15 搜索本地消息（5.4.666 及以上版本支持，需要您购买旗舰版套餐）
  * @param param 消息搜索参数，详见 V2TIMMessageSearchParam 的定义
 */
- -(void)searchLocalMessages:(V2TIMMessageSearchParam *)param succ:(V2TIMSearchMessageListSucc)succ fail:(V2TIMFail)fail;
+ - (void)searchLocalMessages:(V2TIMMessageSearchParam *)param succ:(V2TIMSearchMessageListSucc)succ fail:(V2TIMFail)fail;
 @end
 
 

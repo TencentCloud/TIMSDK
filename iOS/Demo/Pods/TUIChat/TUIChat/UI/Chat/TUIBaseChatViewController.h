@@ -47,9 +47,9 @@ typedef NS_ENUM(NSInteger, MoreCellPriority) {
  *  发送新消息时的回调
  *
  *  @param controller 委托者，当前聊天控制器。
- *  @param msgCellData TUIMessageCellData 即将发送的 msgCellData 。
+ *  @param msg 消息。
  */
-- (void)chatController:(TUIBaseChatViewController *)controller didSendMessage:(TUIMessageCellData *)msgCellData;
+- (void)chatController:(TUIBaseChatViewController *)controller didSendMessage:(V2TIMMessage *)msg;
 
 /**
  *  接收新消息时的回调，用于甄别自定义消息
@@ -266,37 +266,9 @@ typedef NS_ENUM(NSInteger, MoreCellPriority) {
 @property (nonatomic) BOOL isEnableLink;
 
 /**
- *  发送自定义的个性化消息
- *
- *  TUIKit 已经实现了基本的文本、表情、图片、文字和视频的发送逻辑，如果已经能够满足您的需求，可以不关注此接口。
- *  如果您想要发送我们暂不支持的个性化消息，就需要使用该接口对消息进行自定义。
- *
- *  您可以参考一下代码示例来对自定义消息进行包装：
- *
- *  <pre>
- *      //实例化您的自定义消息数据源，并对消息数据源中的必要属性进行复制
- *      MyCustomCellData *cellData = [[MyCustomCellData alloc] initWithDirection:MsgDirectionOutgoing];
- *
- *      //创建 cellData 的 innerMessage（十分重要）。此处的 innerMessage 为 IM SDK 收发消息的核心元素之一。
- *      cellData.innerMessage = [[TIMMessage alloc] init];
- *
- *      //创建自定义元素，并添加进 innerMessage 中。
- *      TIMCustomElem * custom_elem = [[TIMCustomElem alloc] init];
- *      NSString * text = @"<xml><text>这是我的自定义消息</text><link>www.qq.com</link></xml>";
- *      NSData *data = [text dataUsingEncoding:NSUTF8StringEncoding];
- *      [custom_elem setData:data];
- *      [cellData.innerMessage addElem:custom_elem];
- *
- *      //自此，自定义消息数据源包装完毕，调用 sendMessage 发送自定义消息。
- *      [chatController sendMessage:cellData];
- *  </pre>
- *
- *  调用 sendMessage() 之后，消息会被发送出去，但是如果仅完成这一步，个性化消息并不能展示在气泡区，
- *  需要继续监听 TUIChatControllerListener 中的 onNewMessage 和 onShowMessageData 回调才能完成个性化消息的展示。
- *
- *  @param message 需要发送的消息数据源。包括消息内容、发送者的头像、发送者昵称、消息字体与颜色等等。详细信息请参考 Section\Chat\CellData\TUIMessageCellData.h
+ *  发送消息
  */
-- (void)sendMessage:(TUIMessageCellData *)message;
+- (void)sendMessage:(V2TIMMessage *)message;
 
 /**
  *  保存草稿。

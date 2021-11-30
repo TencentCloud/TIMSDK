@@ -1,5 +1,6 @@
 
 #import "TUIMovieManager.h"
+#import "TUIDefine.h"
 
 @interface TUIMovieManager()
 {
@@ -29,59 +30,74 @@
 
 - (void)start:(void(^)(NSError *error))handle {
 
-    [self removeFile:self->_movieURL];
-        
-    NSError *error;
-    if (!self->_movieWriter) {
-        self->_movieWriter = [[AVAssetWriter alloc] initWithURL:self->_movieURL fileType:AVFileTypeQuickTimeMovie error:&error];
-    }
-    handle(error);
+    @weakify(self)
+    dispatch_async(_movieWritingQueue, ^{
+        @strongify(self)
+        [self removeFile:self->_movieURL];
+        NSError *error;
+        if (!self->_movieWriter) {
+            self->_movieWriter = [[AVAssetWriter alloc] initWithURL:self->_movieURL fileType:AVFileTypeQuickTimeMovie error:&error];
+        }
+        handle(error);
+    });
+    
 }
 
 - (void)stop:(void(^)(NSURL *url, NSError *error))handle{
-    _readyToRecordVideo = NO;
-    _readyToRecordAudio = NO;
-    
-    if (self->_movieWriter && self->_movieWriter.status == AVAssetWriterStatusWriting) {
+    @weakify(self)
+    dispatch_async(_movieWritingQueue, ^{
+        @strongify(self)
+        self->_readyToRecordVideo = NO;
+        self->_readyToRecordAudio = NO;
         
-        [self->_movieWriter finishWritingWithCompletionHandler:^() {
+        if (self->_movieWriter && self->_movieWriter.status == AVAssetWriterStatusWriting) {
+            @weakify(self)
+            [self->_movieWriter finishWritingWithCompletionHandler:^() {
+                @strongify(self)
+                @weakify(self)
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    @strongify(self)
+                    if (self->_movieWriter.status == AVAssetWriterStatusCompleted) {
+                        handle(self->_movieURL, nil);
+                    } else {
+                        handle(nil, self->_movieWriter.error);
+                    }
+                    self->_movieWriter = nil;
+                });
+            }];
+        } else {
+            [self->_movieWriter cancelWriting];
+            self->_movieWriter = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (self->_movieWriter.status == AVAssetWriterStatusCompleted) {
-                    handle(self->_movieURL, nil);
-                } else {
-                    handle(nil, self->_movieWriter.error);
-                }
-                self->_movieWriter = nil;
+                handle(nil, [NSError errorWithDomain:@"com.tui.Movie.Writing" code:0 userInfo:@{NSLocalizedDescriptionKey:@"AVAssetWriter状态错误"}]);
             });
-        }];
-    } else {
-        [self->_movieWriter cancelWriting];
-        self->_movieWriter = nil;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            handle(nil, [NSError errorWithDomain:@"com.tui.Movie.Writing" code:0 userInfo:@{NSLocalizedDescriptionKey:@"AVAssetWriter状态错误"}]);
-        });
-    }
+        }
+    });
+    
 }
 
 - (void)writeData:(AVCaptureConnection *)connection video:(AVCaptureConnection*)video audio:(AVCaptureConnection *)audio buffer:(CMSampleBufferRef)buffer {
-    
     CFRetain(buffer);
-    if (connection == video){
-        if (!self->_readyToRecordVideo){
-            self->_readyToRecordVideo = [self setupAssetWriterVideoInput:CMSampleBufferGetFormatDescription(buffer)] == nil;
+    @weakify(self)
+    dispatch_async(_movieWritingQueue, ^{
+        @strongify(self)
+        if (connection == video){
+            if (!self->_readyToRecordVideo){
+                self->_readyToRecordVideo = [self setupAssetWriterVideoInput:CMSampleBufferGetFormatDescription(buffer)] == nil;
+            }
+            if ([self inputsReadyToRecord]){
+                [self writeSampleBuffer:buffer ofType:AVMediaTypeVideo];
+            }
+        } else if (connection == audio){
+            if (!self->_readyToRecordAudio) {
+                self->_readyToRecordAudio = [self setupAssetWriterAudioInput:CMSampleBufferGetFormatDescription(buffer)] == nil;
+            }
+            if ([self inputsReadyToRecord]){
+                [self writeSampleBuffer:buffer ofType:AVMediaTypeAudio];
+            }
         }
-        if ([self inputsReadyToRecord]){
-            [self writeSampleBuffer:buffer ofType:AVMediaTypeVideo];
-        }
-    } else if (connection == audio){
-        if (!self->_readyToRecordAudio) {
-            self->_readyToRecordAudio = [self setupAssetWriterAudioInput:CMSampleBufferGetFormatDescription(buffer)] == nil;
-        }
-        if ([self inputsReadyToRecord]){
-            [self writeSampleBuffer:buffer ofType:AVMediaTypeAudio];
-        }
-    }
-    CFRelease(buffer);
+        CFRelease(buffer);
+    });
 }
 
 - (void)writeSampleBuffer:(CMSampleBufferRef)sampleBuffer ofType:(NSString *)mediaType{
@@ -94,14 +110,14 @@
     }
     if (_movieWriter.status == AVAssetWriterStatusWriting){
         if (mediaType == AVMediaTypeVideo){
-            if (!_movieVideoInput.readyForMoreMediaData){
+            if (!_movieVideoInput.isReadyForMoreMediaData){
                 return;
             }
             if (![_movieVideoInput appendSampleBuffer:sampleBuffer]) {
                 NSLog(@"%@", _movieWriter.error);
             }
         } else if (mediaType == AVMediaTypeAudio) {
-            if (!_movieAudioInput.readyForMoreMediaData) {
+            if (!_movieAudioInput.isReadyForMoreMediaData) {
                 return;
             }
             if (![_movieAudioInput appendSampleBuffer:sampleBuffer]) {

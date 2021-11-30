@@ -328,6 +328,7 @@ typedef enum TXLiteAVWarning
     WARNING_AUDIO_RECORDING_WRITE_FAIL              = 7001,     ///<  音频录制写入文件失败
     WARNING_ROOM_DISCONNECT                         = 5101,     ///<  网络断开连接
     WARNING_IGNORE_UPSTREAM_FOR_AUDIENCE            = 6001,     ///<  当前是观众角色，忽略上行音视频数据
+    WARNING_MICROPHONE_HOWLING_DETECTED             = 7002,     ///<  录制音频时监测到啸叫。请调节两台客户端之间的距离或降低播放音量，检测到啸叫后，5s后会再次进行重新检测
     
     // - Remove From Head
     WARNING_NET_BUSY                                = 1101,     ///< 网络状况不佳：上行带宽太小，上传数据受阻

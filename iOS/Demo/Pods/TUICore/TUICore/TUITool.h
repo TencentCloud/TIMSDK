@@ -37,4 +37,9 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (NSString *)genVoiceName:(NSString *)uuid withExtension:(NSString *)extent;
 + (void)asyncDecodeImage:(NSString *)path complete:(TAsyncImageComplete)complete;
 + (NSString *)randAvatarUrl;
+
+// 设备
++ (NSString *)deviceModel;
++ (NSString *)deviceVersion;
++ (NSString *)deviceName;
 @end

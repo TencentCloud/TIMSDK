@@ -36,7 +36,7 @@
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     spaceItem.width = -10.0f;
-    if (([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0)) {
+    if (([[TUITool deviceVersion] floatValue] >= 11.0)) {
         leftButton.contentEdgeInsets =UIEdgeInsetsMake(0, -15, 0, 0);
         leftButton.imageEdgeInsets =UIEdgeInsetsMake(0, -15, 0, 0);
     }

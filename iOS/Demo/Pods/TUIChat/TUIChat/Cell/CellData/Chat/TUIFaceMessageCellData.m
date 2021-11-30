@@ -10,12 +10,24 @@
 
 @implementation TUIFaceMessageCellData
 
-- (instancetype)initWithDirection:(TMsgDirection)direction {
-    self = [super initWithDirection:direction];
-    if (self) {
-        self.reuseId = TFaceMessageCell_ReuseId;
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
+    V2TIMFaceElem *elem = message.faceElem;
+    TUIFaceMessageCellData *faceData = [[TUIFaceMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    faceData.groupIndex = elem.index;
+    faceData.faceName = [[NSString alloc] initWithData:elem.data encoding:NSUTF8StringEncoding];
+    for (TUIFaceGroup *group in [TUIConfig defaultConfig].faceGroups) {
+        if(group.groupIndex == faceData.groupIndex){
+            NSString *path = [group.groupPath stringByAppendingPathComponent:faceData.faceName];
+            faceData.path = path;
+            break;
+        }
     }
-    return self;
+    faceData.reuseId = TFaceMessageCell_ReuseId;
+    return faceData;
+}
+
++ (NSString *)getDisplayString:(V2TIMMessage *)message {
+    return TUIKitLocalizableString(TUIKitMessageTypeAnimateEmoji); // @"[动画表情]";
 }
 
 - (CGSize)contentSize

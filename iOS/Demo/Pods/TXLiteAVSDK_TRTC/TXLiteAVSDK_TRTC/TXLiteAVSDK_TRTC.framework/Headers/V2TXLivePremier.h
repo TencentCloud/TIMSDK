@@ -21,22 +21,22 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol V2TXLivePremier <NSObject>
 
 /**
- * 1. 获取 SDK 版本号
+ * 获取 SDK 版本号
  */
 + (NSString *)getSDKVersionStr;
 
 /**
- * 2. 设置 V2TXLivePremier 回调接口
+ * 设置 V2TXLivePremier 回调接口
  */
 + (void)setObserver:(id<V2TXLivePremierObserver>)observer;
 
 /**
- * 3. 设置 Log 的配置信息
+ * 设置 Log 的配置信息
  */
 + (V2TXLiveCode)setLogConfig:(V2TXLiveLogConfig *)config;
 
 /**
- * 4. 设置 SDK 接入环境
+ * 设置 SDK 接入环境
  *
  * @note 如您的应用无特殊需求，请不要调用此接口进行设置。
  * @param env 目前支持 “default” 和 “GDPR” 两个参数
@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (V2TXLiveCode)setEnvironment:(const char *)env;
 
 /**
- * 5. 设置 SDK 的授权 License
+ * 设置 SDK 的授权 License
  *
  * 文档地址：https://cloud.tencent.com/document/product/454/34750
  * @param url licence的地址
@@ -57,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 
 /**
- * 6. 设置 SDK sock5 代理配置
+ * 设置 SDK sock5 代理配置
  *
  * @param host sock5 代理服务器的地址
  * @param port sock5 代理服务器的端口

@@ -110,7 +110,7 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 
 
 /**
- * 2.4 搜索好友（5.4.666 及以上版本支持）
+ * 2.4 搜索好友（5.4.666 及以上版本支持，需要您购买旗舰版套餐）
 
  * @note 接口返回本地存储的用户资料，可以根据 V2TIMFriendInfoResult 中的 getRelation 来判断是否为好友。
  */

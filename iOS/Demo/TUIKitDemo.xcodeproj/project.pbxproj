@@ -36,6 +36,7 @@
 		CE1051CB263572F400DFA7B3 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1051C9263572F400DFA7B3 /* TestViewController.m */; };
 		CE1051CC263572F400DFA7B3 /* TestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE1051CA263572F400DFA7B3 /* TestViewController.xib */; };
 		CE195279247FA63600209863 /* test.png in Resources */ = {isa = PBXBuildFile; fileRef = CE195278247FA63600209863 /* test.png */; };
+		CE2863A92756200000AF9687 /* TUIBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2863A82756200000AF9687 /* TUIBadgeView.m */; };
 		CE2BBC61241F7B1B000C4B7A /* V2GroupTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2BBC5F241F7B1B000C4B7A /* V2GroupTestViewController.m */; };
 		CE2BBC62241F7B1B000C4B7A /* V2GroupTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE2BBC60241F7B1B000C4B7A /* V2GroupTestViewController.xib */; };
 		CE2BBC88241FA5BD000C4B7A /* V2FriendTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2BBC86241FA5BD000C4B7A /* V2FriendTestViewController.m */; };
@@ -161,6 +162,8 @@
 		CE1051CA263572F400DFA7B3 /* TestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestViewController.xib; sourceTree = "<group>"; };
 		CE195278247FA63600209863 /* test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test.png; sourceTree = "<group>"; };
 		CE1C55922224F22C00A75262 /* TUIKitDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TUIKitDemo.entitlements; sourceTree = "<group>"; };
+		CE2863A72756200000AF9687 /* TUIBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIBadgeView.h; sourceTree = "<group>"; };
+		CE2863A82756200000AF9687 /* TUIBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIBadgeView.m; sourceTree = "<group>"; };
 		CE2BBC5E241F7B1B000C4B7A /* V2GroupTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = V2GroupTestViewController.h; sourceTree = "<group>"; };
 		CE2BBC5F241F7B1B000C4B7A /* V2GroupTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = V2GroupTestViewController.m; sourceTree = "<group>"; };
 		CE2BBC60241F7B1B000C4B7A /* V2GroupTestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = V2GroupTestViewController.xib; sourceTree = "<group>"; };
@@ -389,6 +392,8 @@
 		CE440CBA26E072530085EB57 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				CE2863A72756200000AF9687 /* TUIBadgeView.h */,
+				CE2863A82756200000AF9687 /* TUIBadgeView.m */,
 				CE440CC826E072530085EB57 /* TCConstants.h */,
 				CE440CC226E072530085EB57 /* Aspects.h */,
 				CE440CCD26E072530085EB57 /* Aspects.m */,
@@ -780,6 +785,7 @@
 				910D900122AE057E00C9A318 /* TCLoginModel.m in Sources */,
 				CE2BBC9A24207D9D000C4B7A /* V2ManageTestViewController.m in Sources */,
 				9176C5BE227A98A300DF5784 /* TUserProfileController.m in Sources */,
+				CE2863A92756200000AF9687 /* TUIBadgeView.m in Sources */,
 				910D900422AE05A100C9A318 /* TCLoginParam.m in Sources */,
 				910AF7112292820300ED5675 /* GroupRequestViewController.m in Sources */,
 				CF014495216E1A4B00C12E35 /* main.m in Sources */,

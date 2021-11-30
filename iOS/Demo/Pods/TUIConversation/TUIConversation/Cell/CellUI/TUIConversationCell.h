@@ -56,9 +56,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *timeLabel;
 
 /**
- *  消息免打扰
+ *  消息免打扰红点
  */
-@property (nonatomic, strong) UIImageView *disturbImageView;
+@property (nonatomic, strong) UIView *notDisturbRedDot;
+
+/**
+ *  消息免打扰图标
+ */
+@property (nonatomic, strong) UIImageView *notDisturbView;
 
 /**
  *  未读视图

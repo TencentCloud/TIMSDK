@@ -1007,4 +1007,31 @@
     return name;
 }
 
++ (NSString *)deviceModel {
+    static NSString *deviceModel;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        deviceModel = [[UIDevice currentDevice] model];
+    });
+    return deviceModel;
+}
+
++ (NSString *)deviceVersion {
+    static NSString *deviceVersion;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        deviceVersion = [[UIDevice currentDevice] systemVersion];
+    });
+    return deviceVersion;
+}
+
++ (NSString *)deviceName {
+    static NSString *deviceName;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        deviceName = [[UIDevice currentDevice] name];
+    });
+    return deviceName;
+}
+
 @end

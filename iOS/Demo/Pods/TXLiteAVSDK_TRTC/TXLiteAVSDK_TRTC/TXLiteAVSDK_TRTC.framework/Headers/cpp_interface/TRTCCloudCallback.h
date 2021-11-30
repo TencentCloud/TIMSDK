@@ -316,6 +316,16 @@ class ITRTCCloudCallback {
     virtual void onStatistics(const TRTCStatistics& statistics) {
     }
 
+    /**
+     * 4.3 网速测试的结果回调
+     *
+     * 该统计回调由 {@link startSpeedTest:} 触发。
+     *
+     * @param result 网速测试数据数据，包括丢包、往返延迟、上下行的带宽速率，详情请参考 {@link TRTCSpeedTestResult}。
+     */
+    virtual void onSpeedTestResult(const TRTCSpeedTestResult& result) {
+    }
+
     /// @}
     /////////////////////////////////////////////////////////////////////////////////
     //
@@ -354,18 +364,6 @@ class ITRTCCloudCallback {
      * SDK 会在跟云端的连接断开时抛出 {@link onConnectionLost}，之后会努力跟云端重新建立连接并抛出{@link onTryToReconnect}，连接恢复后会抛出本事件回调。
      */
     virtual void onConnectionRecovery() {
-    }
-
-    /**
-     * 5.4 服务器测速的结果回调
-     *
-     * 当您调用 {@link startSpeedTest} 启动服务器测速后，SDK 多次抛出测速的结果回调。
-     * SDK 会对多台云端服务器的 IP 进行测速，每个 IP 对应的测速结果都会通过本回调接口通知给您。
-     * @param currentResult 当前完成的测速结果
-     * @param finishedCount 已完成测速的服务器数量
-     * @param totalCount 需要测速的服务器总数量
-     */
-    virtual void onSpeedTest(const TRTCSpeedTestResult& currentResult, uint32_t finishedCount, uint32_t totalCount) {
     }
 
     /// @}
@@ -797,6 +795,23 @@ class ITRTCCloudCallback {
  */
 #ifdef _WIN32
     virtual __declspec(deprecated("use ITXAudioEffectManager.ITXMusicPlayObserver instead")) void onPlayBGMComplete(TXLiteAVError errCode) {
+    }
+#endif
+
+/**
+ * 服务器测速的结果回调（已废弃）
+ *
+ * @deprecated 新版本开始不推荐使用，建议使用 {@link onSpeedTestResult:} 接口替代之。
+ */
+#ifdef _WIN32
+    virtual __declspec(deprecated("use onSpeedTestResult instead")) void onSpeedTest(const TRTCSpeedTestResult& currentResult, uint32_t finishedCount, uint32_t totalCount) {
+    }
+#elif defined(__APPLE__)
+    virtual void onSpeedTest(const TRTCSpeedTestResult& currentResult, uint32_t finishedCount, uint32_t totalCount) {
+    }
+    __attribute__((deprecated("use onSpeedTestResult instead")));
+#else
+    virtual void onSpeedTest(const TRTCSpeedTestResult& currentResult, uint32_t finishedCount, uint32_t totalCount) {
     }
 #endif
 

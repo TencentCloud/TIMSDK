@@ -97,6 +97,10 @@
     [self.tableView registerClass:[TUIButtonCell class] forCellReuseIdentifier:@"buttonCell"];
     [self.tableView registerClass:[TUICommonSwitchCell class] forCellReuseIdentifier:@"switchCell"];
     
+    if (@available(iOS 15.0, *)) {
+        self.tableView.sectionHeaderTopPadding = 0;
+    }
+    
     [[V2TIMManager sharedInstance] addIMSDKListener:self];
     
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];

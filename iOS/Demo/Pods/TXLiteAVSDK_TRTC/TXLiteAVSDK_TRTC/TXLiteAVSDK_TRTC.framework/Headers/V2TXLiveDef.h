@@ -265,7 +265,6 @@ typedef NS_ENUM(NSInteger, V2TXLiveBufferType) {
 
 @end
 
-/// @}
 /////////////////////////////////////////////////////////////////////////////////
 //
 //          （二）音频相关类型定义
@@ -372,8 +371,8 @@ typedef NS_ENUM(NSInteger, V2TXLiveAudioQuality) {
 @property(nonatomic, assign) NSUInteger audioBitrate;
 
 @end
-
 /// @}
+
 /////////////////////////////////////////////////////////////////////////////////
 //
 //          （四）连接状态相关枚举值定义
@@ -400,8 +399,8 @@ typedef NS_ENUM(NSInteger, V2TXLivePushStatus) {
     V2TXLivePushStatusReconnecting,
 
 };
-
 /// @}
+
 /////////////////////////////////////////////////////////////////////////////////
 //
 //          (五) 音视频状态有关的枚举值的定义
@@ -641,4 +640,5 @@ typedef NS_ENUM(NSInteger, V2TXLiveLogLevel) {
 @end
 /// @}
 
+/// @}
 /// @}

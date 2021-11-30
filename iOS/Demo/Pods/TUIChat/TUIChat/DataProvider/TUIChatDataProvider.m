@@ -8,7 +8,21 @@
 #import "TUICore.h"
 #import "NSDictionary+TUISafe.h"
 
+#define Input_SendBtn_Key @"Input_SendBtn_Key"
+#define Input_SendBtn_Title @"Input_SendBtn_Title"
+#define Input_SendBtn_ImageName @"Input_SendBtn_ImageName"
+
+static NSArray *customInputBtnInfo = nil;
+
 @implementation TUIChatDataProvider
++ (void)load {
+    // 以下代码需要您自己实现
+    customInputBtnInfo = @[@{Input_SendBtn_Key : TUIInputMoreCellKey_Link,  // 按钮唯一标识
+                             Input_SendBtn_Title :  TUIKitLocalizableString(TUIKitMoreLink), // 按钮文本信息
+                             Input_SendBtn_ImageName : @"more_link"// 图片名称，图片需要放在 TUIChat.bundle 中
+                            }
+    ];
+}
 
 // 转发消息到目标会话
 - (void)getForwardMessageWithCellDatas:(NSArray<TUIMessageCellData *> *)uiMsgs
@@ -166,15 +180,20 @@
         liveMenusData.image = [UIImage d_imageNamed:@"more_group_live" bundle:TUIChatBundle];
         [moreMenus addObject:liveMenusData];
     }
-    // 聊天页面, 自定义消息按钮
-    if (isNeedLink) {
+    // 自定义消息
+    for (NSDictionary *buttonInfo in customInputBtnInfo) {
+        NSString *key = buttonInfo[Input_SendBtn_Key];
+        NSString *title = buttonInfo[Input_SendBtn_Title];
+        NSString *imageName = buttonInfo[Input_SendBtn_ImageName];
+        if ([key isEqualToString:TUIInputMoreCellKey_Link] && !isNeedLink) {
+            break;
+        }
         TUIInputMoreCellData *linkMenusData = [TUIInputMoreCellData new];
-        linkMenusData.key = TUIInputMoreCellKey_Link;
-        linkMenusData.title = TUIKitLocalizableString(TUIKitMoreLink);
-        linkMenusData.image = [UIImage d_imageNamed:@"more_link" bundle:TUIChatBundle];
+        linkMenusData.key = key;
+        linkMenusData.title = title;
+        linkMenusData.image = [UIImage d_imageNamed:imageName bundle:TUIChatBundle];
         [moreMenus addObject:linkMenusData];
     }
-    
     return moreMenus;
 }
 

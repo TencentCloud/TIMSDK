@@ -7,6 +7,7 @@
 
 #import "TUIImageMessageCellData.h"
 #import "TUIDefine.h"
+#import "NSString+TUIUtil.h"
 
 @implementation TUIImageItem
 @end
@@ -17,11 +18,39 @@
 
 @implementation TUIImageMessageCellData
 
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
+    V2TIMImageElem *elem = message.imageElem;
+    TUIImageMessageCellData *imageData = [[TUIImageMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    imageData.path = [elem.path safePathString];
+    imageData.items = [NSMutableArray array];
+    for (V2TIMImage *item in elem.imageList) {
+        TUIImageItem *itemData = [[TUIImageItem alloc] init];
+        itemData.uuid = item.uuid;
+        itemData.size = CGSizeMake(item.width, item.height);
+//        itemData.url = item.url;
+        if(item.type == V2TIM_IMAGE_TYPE_THUMB){
+            itemData.type = TImage_Type_Thumb;
+        }
+        else if(item.type == V2TIM_IMAGE_TYPE_LARGE){
+            itemData.type = TImage_Type_Large;
+        }
+        else if(item.type == V2TIM_IMAGE_TYPE_ORIGIN){
+            itemData.type = TImage_Type_Origin;
+        }
+        [imageData.items addObject:itemData];
+    }
+    imageData.reuseId = TImageMessageCell_ReuseId;
+    return imageData;
+}
+
++ (NSString *)getDisplayString:(V2TIMMessage *)message {
+    return TUIKitLocalizableString(TUIkitMessageTypeImage); // @"[图片]";
+}
+
 - (instancetype)initWithDirection:(TMsgDirection)direction {
     self = [super initWithDirection:direction];
     if (self) {
         _uploadProgress = 100;
-        self.reuseId = TImageMessageCell_ReuseId;
     }
     return self;
 }

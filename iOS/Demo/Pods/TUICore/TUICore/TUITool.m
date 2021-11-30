@@ -202,6 +202,10 @@
         return nil;
     }
     
+    if ([date isEqualToDate:[NSDate distantPast]]) {
+        return @"";
+    }
+    
     NSCalendar *calendar = [ NSCalendar currentCalendar ];
     int unit = NSCalendarUnitDay | NSCalendarUnitMonth |  NSCalendarUnitYear ;
     NSDateComponents *nowCmps = [calendar components:unit fromDate:[ NSDate date ]];
@@ -1001,6 +1005,33 @@
     }
     NSString *name = [NSString stringWithFormat:@"%d_%@_file_%@", [TUILogin getSdkAppID], identifier, uuid];
     return name;
+}
+
++ (NSString *)deviceModel {
+    static NSString *deviceModel;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        deviceModel = [[UIDevice currentDevice] model];
+    });
+    return deviceModel;
+}
+
++ (NSString *)deviceVersion {
+    static NSString *deviceVersion;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        deviceVersion = [[UIDevice currentDevice] systemVersion];
+    });
+    return deviceVersion;
+}
+
++ (NSString *)deviceName {
+    static NSString *deviceName;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        deviceName = [[UIDevice currentDevice] name];
+    });
+    return deviceName;
 }
 
 @end

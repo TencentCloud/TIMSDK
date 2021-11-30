@@ -15,7 +15,7 @@
  *  TUIConfig 实现了配置文件的默认初始化，您可以根据您的需求在此更改默认配置，或通过此类修改配置
  *  配置文件包括表情、默认图标等等
  *
- *  需要注意的是 TUIKit 里面的表情包都是有版权限制的，请在上线的时候替换成自己的表情包，否则会面临法律风险
+ *  需要注意的是， TUIKit 里面的表情包都是有版权限制的，购买的 IM 服务不包括表情包的使用权，请在上线的时候替换成自己的表情包，否则会面临法律风险
  */
 
 #import <Foundation/Foundation.h>
@@ -37,7 +37,7 @@ typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
  */
 + (TUIConfig *)defaultConfig;
 /**
- * 表情列表（需要注意的是 TUIKit 里面的表情包都是有版权限制的，请在上线的时候替换成自己的表情包，否则会面临法律风险）
+ * 表情列表（需要注意的是， TUIKit 里面的表情包都是有版权限制的，购买的 IM 服务不包括表情包的使用权，请在上线的时候替换成自己的表情包，否则会面临法律风险）
  */
 @property (nonatomic, strong) NSArray<TUIFaceGroup *> *faceGroups;
 /**
@@ -72,4 +72,5 @@ typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
  */
 @property(nonatomic, assign) BOOL enableToast;
 
+- (void)setSceneOptimizParams:(NSString *)path;
 @end

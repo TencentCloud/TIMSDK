@@ -51,7 +51,6 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _movieManager  = [[TUIMovieManager alloc]  init];
         _motionManager = [[TUIMotionManager alloc] init];
         _cameraManager = [[TUICameraManager alloc] init];
         
@@ -320,12 +319,20 @@
 #pragma mark - -录制视频
 // 开始录像
 -(void)startRecordVideoAction:(TUICameraView *)cameraView {
-    
+   
+    // 每次重新创建，避免之前的信息未释放导致的 Crash
+    _movieManager  = [[TUIMovieManager alloc]  init];
     _recording = YES;
     _movieManager.currentDevice = [self activeCamera];
     _movieManager.currentOrientation = [self currentVideoOrientation];
+    @weakify(self)
     [_movieManager start:^(NSError * _Nonnull error) {
-        if (error) [self showErrorStr:error.localizedDescription];
+        @strongify(self)
+        @weakify(self)
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self)
+            if (error) [self showErrorStr:error.localizedDescription];
+        });
     }];
 }
 
@@ -333,29 +340,33 @@
 -(void)stopRecordVideoAction:(TUICameraView *)cameraView RecordDuration:(CGFloat)duration {
     
     _recording = NO;
-    __weak __typeof(self) weakSelf = self;
+    @weakify(self)
     [_movieManager stop:^(NSURL * _Nonnull url, NSError * _Nonnull error) {
-        if (duration < self.videoMinimumDuration) {
-            [self showErrorStr:TUIKitLocalizableString(TUIKitMoreVideoCaptureDurationTip)];
-        }
-        else if (error) {
-            [self showErrorStr:error.localizedDescription];
-        }
-        else {
-            
-            TUICaptureVideoPreviewViewController *videoPreviewController = [[TUICaptureVideoPreviewViewController alloc] initWithVideoURL:url];
-            [weakSelf.navigationController pushViewController:videoPreviewController animated:YES];
-            videoPreviewController.commitBlock = ^{
-                __strong __typeof(weakSelf) strongSelf = weakSelf;
-                [strongSelf.delegate cameraViewController:strongSelf didFinishPickingMediaWithVideoURL:url];
-                
-                [strongSelf popViewControllerAnimated:YES];
-            };
-            videoPreviewController.cancelBlock = ^{
-                __strong __typeof(weakSelf) strongSelf = weakSelf;
-                [strongSelf.navigationController popViewControllerAnimated:YES];
-            };
-        }
+        @strongify(self)
+        @weakify(self)
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self)
+            if (duration < self.videoMinimumDuration) {
+                [self showErrorStr:TUIKitLocalizableString(TUIKitMoreVideoCaptureDurationTip)];
+            }
+            else if (error) {
+                [self showErrorStr:error.localizedDescription];
+            }
+            else {
+                TUICaptureVideoPreviewViewController *videoPreviewController = [[TUICaptureVideoPreviewViewController alloc] initWithVideoURL:url];
+                [self.navigationController pushViewController:videoPreviewController animated:YES];
+                @weakify(self)
+                videoPreviewController.commitBlock = ^{
+                    @strongify(self)
+                    [self.delegate cameraViewController:self didFinishPickingMediaWithVideoURL:url];
+                    [self popViewControllerAnimated:YES];
+                };
+                videoPreviewController.cancelBlock = ^{
+                    @strongify(self)
+                    [self.navigationController popViewControllerAnimated:YES];
+                };
+            }
+        });
     }];
 }
 

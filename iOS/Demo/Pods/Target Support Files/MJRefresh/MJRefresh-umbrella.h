@@ -31,6 +31,7 @@
 #import "MJRefreshConfig.h"
 #import "MJRefreshConst.h"
 #import "NSBundle+MJRefresh.h"
+#import "UICollectionViewLayout+MJRefresh.h"
 #import "UIScrollView+MJExtension.h"
 #import "UIScrollView+MJRefresh.h"
 #import "UIView+MJExtension.h"

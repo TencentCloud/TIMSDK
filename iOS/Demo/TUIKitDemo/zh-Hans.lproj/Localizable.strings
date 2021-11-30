@@ -60,11 +60,13 @@
 "ChatsNewPrivateGroupText"   = "创建讨论组";
 "ChatsNewGroupText"  = "创建群聊";
 "ChatsNewChatRoomText" = "创建聊天室";
+"ChatsNewCommunityText" = "创建社区";
 
 "ChatsCreatePrivateGroupTips" = "创建讨论组";
 "ChatsCreateGroupTips" = "创建群聊";
 "ChatsCreateChatRoomTips" = "创建聊天室";
 "ChatsCreateDefaultTips" = "创建群组";
+"ChatsCreateCommunityTips" = "创建社区";
 
 "ChatsSelectContact" = "选择联系人";
 
@@ -165,3 +167,6 @@
 "TipsAgreementError" = "请先阅读并同意协议";
 
 "GetSmsErrorFormat" = "获取验证码错误，请刷新重试！(%@)";
+
+"MarkAllMessageAsReadSucc" = "清空未读成功";
+"MarkAllMessageAsReadErrFormat" = "清空未读失败, %d, %@";

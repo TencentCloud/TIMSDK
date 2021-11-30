@@ -17,6 +17,12 @@
 
 @optional
 
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                   直播播放器事件回调
+//
+/////////////////////////////////////////////////////////////////////////////////
+
 /**
  * 直播播放器错误通知，播放器出现错误时，会回调该通知
  *
@@ -88,7 +94,7 @@
  *
  * @param player     回调该通知的播放器对象
  * @param videoFrame 视频帧数据 {@link V2TXLiveVideoFrame}
- * @note  调用 [enableCustomRendering](@ref V2TXLivePlayer#enableCustomRendering:pixelFormat:bufferType:) 开启自定义渲染之后，会收到这个回调通知
+ * @note  需要您调用 [enableObserveVideoFrame](@ref V2TXLivePlayer#enableObserveVideoFrame:pixelFormat:bufferType:) 开启回调开关
  */
 - (void)onRenderVideoFrame:(id<V2TXLivePlayer>)player frame:(V2TXLiveVideoFrame *)videoFrame;
 

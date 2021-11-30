@@ -48,7 +48,6 @@
 #import "TUIChatDataProvider.h"
 #import "TUIGroupPendencyViewDataProvider.h"
 #import "TUIMessageDataProvider+Call.h"
-#import "TUIMessageDataProvider+Link.h"
 #import "TUIMessageDataProvider+Live.h"
 #import "TUIMessageDataProvider+ProtectedAPI.h"
 #import "TUIMessageDataProvider.h"

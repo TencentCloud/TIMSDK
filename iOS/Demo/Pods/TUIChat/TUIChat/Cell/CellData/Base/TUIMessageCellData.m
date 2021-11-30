@@ -10,6 +10,16 @@
 
 @implementation TUIMessageCellData
 
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
+    // 子类实现
+    return nil;
+}
+
++ (NSString *)getDisplayString:(V2TIMMessage *)message {
+    // 子类实现
+    return nil;
+}
+
 - (instancetype)initWithDirection:(TMsgDirection)direction
 {
     self = [super init];
