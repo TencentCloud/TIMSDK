@@ -60,18 +60,18 @@ class V2TIMMessageManager {
 
   /// 添加高级消息的事件监听器
   ///
-  void addAdvancedMsgListener({
+  Future<void> addAdvancedMsgListener({
     required V2TimAdvancedMsgListener listener,
-  }) {
+  }) async {
     advancedMsgListener = listener;
-    _channel.invokeMethod("addAdvancedMsgListener", _buildParam({}));
+    await _channel.invokeMethod("addAdvancedMsgListener", _buildParam({}));
   }
 
   /// 移除高级消息监听器
   ///
-  void removeAdvancedMsgListener() {
+  Future<void> removeAdvancedMsgListener() async {
     advancedMsgListener = new V2TimAdvancedMsgListener();
-    _channel.invokeMethod("removeAdvancedMsgListener", _buildParam({}));
+    await _channel.invokeMethod("removeAdvancedMsgListener", _buildParam({}));
   }
 
   ///发送图片消息

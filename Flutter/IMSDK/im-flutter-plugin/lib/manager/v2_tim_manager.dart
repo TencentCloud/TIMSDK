@@ -1118,27 +1118,27 @@ class V2TIMManager {
   /// ```
   /// 图片消息、视频消息、语音消息等高级消息的监听，请参考: V2TIMMessageManager.addAdvancedMsgListener(V2TIMAdvancedMsgListener) 。
   /// ```
-  void addSimpleMsgListener({
+  Future<void> addSimpleMsgListener({
     required V2TimSimpleMsgListener listener,
-  }) {
+  }) async {
     this.simpleMsgListener = listener;
-    _channel.invokeMethod("addSimpleMsgListener", buildParam({}));
+    await _channel.invokeMethod("addSimpleMsgListener", buildParam({}));
   }
 
   /// 移除基本消息（文本消息和自定义消息）的事件监听器
   ///
-  void removeSimpleMsgListener() {
+  Future<void> removeSimpleMsgListener() async {
     this.simpleMsgListener = new V2TimSimpleMsgListener();
-    _channel.invokeMethod("removeSimpleMsgListener", buildParam({}));
+    await _channel.invokeMethod("removeSimpleMsgListener", buildParam({}));
   }
 
   /// 设置群组监听器
   ///
-  void setGroupListener({
+  Future<void> setGroupListener({
     required V2TimGroupListener listener,
-  }) {
+  }) async {
     groupListener = listener;
-    _channel.invokeMethod("setGroupListener", buildParam({}));
+    await _channel.invokeMethod("setGroupListener", buildParam({}));
   }
 
   /// 设置apns监听

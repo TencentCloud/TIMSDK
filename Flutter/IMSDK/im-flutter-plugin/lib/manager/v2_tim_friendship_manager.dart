@@ -72,11 +72,11 @@ class V2TIMFriendshipManager {
 
   ///设置关系链监听器
   ///
-  void setFriendListener({
+  Future<void> setFriendListener({
     required V2TimFriendshipListener listener,
-  }) {
+  }) async {
     this.friendListener = listener;
-    _channel.invokeMethod("setFriendListener", buildParam({}));
+    await _channel.invokeMethod("setFriendListener", buildParam({}));
   }
 
   ///获取好友列表

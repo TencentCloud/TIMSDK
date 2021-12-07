@@ -32,11 +32,11 @@ class V2TIMConversationManager {
   V2TIMConversationManager(channel) {
     this._channel = channel;
   }
-  void setConversationListener({
+  Future<void> setConversationListener({
     required V2TimConversationListener listener,
-  }) {
+  }) async {
     this.conversationListener = listener;
-    _channel.invokeMethod("setConversationListener", buildParam({}));
+    await _channel.invokeMethod("setConversationListener", buildParam({}));
   }
 
   ///   获取会话列表

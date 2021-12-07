@@ -39,19 +39,19 @@ class V2TIMSignalingManager {
 
   ///添加信令监听
   ///
-  void addSignalingListener({
+  Future<void> addSignalingListener({
     required V2TimSignalingListener listener,
-  }) {
+  }) async {
     this.signalingListener = listener;
-    _channel.invokeMethod("addSignalingListener", buildParam({}));
+    await _channel.invokeMethod("addSignalingListener", buildParam({}));
   }
 
   ///移除信令监听
   ///
-  void removeSignalingListener({
+  Future<void> removeSignalingListener({
     required Function listener,
-  }) {
-    _channel.invokeMethod("removeSignalingListener", buildParam({}));
+  }) async {
+    await _channel.invokeMethod("removeSignalingListener", buildParam({}));
   }
 
   Future<V2TimValueCallback<String>> invite({
