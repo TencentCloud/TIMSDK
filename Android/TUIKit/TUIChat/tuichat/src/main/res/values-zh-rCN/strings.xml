@@ -31,6 +31,7 @@
     <string name="forward_compatible_text">不支持合并转发消息，请升级到新版本。</string>
 
     <string name="forward_failed_tip">发送失败消息不支持转发！</string>
+    <string name="forward_chat_record">聊天记录</string>
     <string name="forward_oneByOne_limit_number_tip">转发消息过多，暂不支持逐条转发</string>
 
     <string name="and_and">已和</string>

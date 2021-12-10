@@ -26,6 +26,7 @@
     <string name="add_group_allready_member">The user is a group member</string>
     <string name="add_group_not_found">The group does not exist</string>
     <string name="add_group_full_member">The number of group members has reached the limit</string>
+    <string name="contact_search">Search</string>
 
     // 新朋友
     <string name="request_agree">Accept</string>

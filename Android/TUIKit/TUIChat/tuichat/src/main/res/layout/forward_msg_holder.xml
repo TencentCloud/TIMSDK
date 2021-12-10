@@ -42,7 +42,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/chat_record"
+        android:text="@string/forward_chat_record"
         android:layout_marginTop="8dp"
         android:textColor="#888888"
         android:textSize="8.6sp" />
