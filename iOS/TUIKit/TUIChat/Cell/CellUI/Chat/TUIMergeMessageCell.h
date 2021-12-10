@@ -33,6 +33,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) TUIMergeMessageCellData *relayData;
 
 /**
+ * 水平分割线
+ */
+@property (nonatomic, strong) UIView *separtorView;
+
+/**
+ * 底部提示语
+ */
+@property (nonatomic, strong) UILabel *bottomTipsLabel;
+
+/**
  * 填充UI
  *
  * @param data 数据

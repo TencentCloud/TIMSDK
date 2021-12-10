@@ -31,6 +31,16 @@
     return TUIKitLocalizableString(TUIKitMessageTypeVoice); // @"[语音]";
 }
 
+- (Class)getReplyQuoteViewDataClass
+{
+    return NSClassFromString(@"TUIVoiceReplyQuoteViewData");
+}
+
+- (Class)getReplyQuoteViewClass
+{
+    return NSClassFromString(@"TUIVoiceReplyQuoteView");
+}
+
 - (instancetype)initWithDirection:(TMsgDirection)direction
 {
     self = [super initWithDirection:direction];
@@ -107,10 +117,10 @@
     CGFloat bubbleHeight = TVoiceMessageCell_Duration_Size.height;
     if (self.direction == MsgDirectionIncoming) {
         bubbleWidth = MAX(bubbleWidth, [TUIBubbleMessageCellData incommingBubble].size.width);
-        bubbleHeight = [TUIBubbleMessageCellData incommingBubble].size.height;
+        bubbleHeight = self.voiceImage.size.height + 2 * self.voiceTop; //[TUIBubbleMessageCellData incommingBubble].size.height;
     } else {
         bubbleWidth = MAX(bubbleWidth, [TUIBubbleMessageCellData outgoingBubble].size.width);
-        bubbleHeight = [TUIBubbleMessageCellData outgoingBubble].size.height;
+        bubbleHeight = self.voiceImage.size.height + 2 * self.voiceTop; // [TUIBubbleMessageCellData outgoingBubble].size.height;
     }
     return CGSizeMake(bubbleWidth+TVoiceMessageCell_Duration_Size.width, bubbleHeight);
 //    CGFloat width = bubbleWidth + TVoiceMessageCell_Duration_Size.width;

@@ -22,6 +22,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) NSString *title;
 @property SEL cbuttonSelector;
 @property TUIButtonStyle style;
+@property (nonatomic, strong) UIColor *textColor;
 @end
 
 @interface TUIButtonCell : TUICommonTableViewCell

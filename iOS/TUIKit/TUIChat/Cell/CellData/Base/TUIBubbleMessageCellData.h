@@ -38,6 +38,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property UIImage *highlightedBubble;
 
+/**
+ *  气泡图标（动画闪烁）
+ */
+@property UIImage *animateHighlightBubble_alpha50;
+@property UIImage *animateHighlightBubble_alpha20;
+
 
 /**
  *  发送气泡图标（正常）

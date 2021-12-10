@@ -29,7 +29,7 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])
     {
         _titleLabel = self.textLabel;
-        _titleLabel.textColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark];
+        _titleLabel.textColor = [UIColor d_colorWithColorLight:TText_Color dark:UIColor.lightGrayColor];
         
         _switcher = [[UISwitch alloc] init];
         //将开关开启时的颜色改为蓝色

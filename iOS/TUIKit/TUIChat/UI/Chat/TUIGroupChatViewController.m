@@ -221,7 +221,9 @@
             }
         }
         if (atUserList.count > 0) {
+            NSData *cloudCustomData = msg.cloudCustomData;
             msg = [[V2TIMManager sharedInstance] createTextAtMessage:msg.textElem.text atUserList:atUserList];
+            msg.cloudCustomData = cloudCustomData;
         }
         //消息发送完后 atUserList 要重置
         [self.atUserList removeAllObjects];

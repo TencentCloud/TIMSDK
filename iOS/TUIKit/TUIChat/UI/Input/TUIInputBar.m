@@ -135,6 +135,7 @@
     voiceFrame.origin.y = originY;
     _micButton.frame = voiceFrame;
 
+    _keyboardButton.frame = _faceButton.frame;
 
     if(_delegate && [_delegate respondsToSelector:@selector(inputBar:didChangeInputHeight:)]){
         [_delegate inputBar:self didChangeInputHeight:offset];
@@ -386,6 +387,14 @@
     return YES;
 }
 
+- (void)onDeleteBackward:(TUIResponderTextView *)textView
+{
+    // 点击键盘上的删除按钮
+    if (self.delegate && [self.delegate respondsToSelector:@selector(inputBarDidDeleteBackward:)]) {
+        [self.delegate inputBarDidDeleteBackward:self];
+    }
+}
+
 - (void)clearInput
 {
     _inputTextView.text = @"";
@@ -416,6 +425,11 @@
 - (void)updateTextViewFrame
 {
     [self textViewDidChange:[UITextView new]];
+}
+
+- (void)changeToKeyboard
+{
+    [self clickKeyboardBtn:self.keyboardButton];
 }
 
 - (void)startRecord

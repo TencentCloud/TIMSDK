@@ -105,6 +105,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)messageController:(TUIMessageController *)controller onSelectMessageMenu:(NSInteger)menuType withData:(TUIMessageCellData *)data;
 
+/**
+ * 即将回复消息（一般是长按消息内容后点击回复按钮触发）
+ */
+- (void)messageController:(TUIMessageController *)controller onRelyMessage:(TUIMessageCellData *)data;
+
 @end
 
 NS_ASSUME_NONNULL_END

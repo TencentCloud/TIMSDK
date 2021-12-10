@@ -74,11 +74,33 @@
 
 + (UIImage *)d_imageNamed:(NSString *)imageName bundle:(NSString *)bundleName;
 {
-    NSString *path = [TUIBundlePath(bundleName) stringByAppendingPathComponent:imageName];
-    return [UIImage d_imageWithImageLight:path dark:[NSString stringWithFormat:@"%@_dark",path]];
+    
+    NSString *path = nil;
+    if ([bundleName isEqualToString:TUIDemoBundle]) {
+        path = TUIDemoImagePath(imageName);
+    } else if ([bundleName isEqualToString:TUICoreBundle]) {
+        path = TUICoreImagePath(imageName);
+    } else if ([bundleName isEqualToString:TUIChatBundle]) {
+        path = TUIChatImagePath(imageName);
+    } else if ([bundleName isEqualToString:TUIChatFaceBundle]) {
+        path = TUIChatFaceImagePath(imageName);
+    } else if ([bundleName isEqualToString:TUIConversationBundle]) {
+        path = TUIConversationImagePath(imageName);
+    } else if ([bundleName isEqualToString:TUIContactBundle]) {
+        path = TUIContactImagePath(imageName);
+    } else if ([bundleName isEqualToString:TUISearchBundle]) {
+        path = TUISearchImagePath(imageName);
+    } else if ([bundleName isEqualToString:TUIGroupBundle]) {
+        path = TUIGroupImagePath(imageName);
+    }
+    if (path) {
+        return [UIImage d_imageWithImageLight:path dark:[NSString stringWithFormat:@"%@_dark",path]];
+    }
+    return nil;
 }
 
 + (void)d_fixResizableImage{
+    [[NSBundle mainBundle] pathForResource:@"" ofType:@"bundle"].length > 0 ;
     if (@available(iOS 13.0, *)) {
         Class klass = UIImage.class;
         SEL selector = @selector(resizableImageWithCapInsets:resizingMode:);
@@ -163,4 +185,24 @@
     }
     return nil;
 }
+
++ (UIImage *)d_imageWithImageLightImg:(UIImage *)lightImage dark:(UIImage *)darkImage
+{
+    if (!lightImage) {
+        return nil;
+    }
+    if (@available(iOS 13.0, *)) {
+        UITraitCollection *const scaleTraitCollection = [UITraitCollection currentTraitCollection];
+        UITraitCollection *const darkUnscaledTraitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleDark];
+        UITraitCollection *const darkScaledTraitCollection = [UITraitCollection traitCollectionWithTraitsFromCollections:@[scaleTraitCollection, darkUnscaledTraitCollection]];
+        UIImage *image = [lightImage imageWithConfiguration:[lightImage.configuration configurationWithTraitCollection:[UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleLight]]];
+        darkImage = [darkImage imageWithConfiguration:[darkImage.configuration configurationWithTraitCollection:[UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleDark]]];
+        [image.imageAsset registerImage:darkImage withTraitCollection:darkScaledTraitCollection];
+        return image;
+    } else {
+        return lightImage;
+    }
+    return nil;
+}
+
 @end

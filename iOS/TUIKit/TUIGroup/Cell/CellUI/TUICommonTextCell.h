@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSString *key;
 @property NSString *value;
 @property BOOL showAccessory;
+@property UIColor *keyColor;
+@property UIColor *valueColor;
+
+@property (nonatomic, assign) UIEdgeInsets keyEdgeInsets;
 
 @end
 

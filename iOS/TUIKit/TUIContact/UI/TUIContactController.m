@@ -70,8 +70,6 @@
     [_tableView registerClass:[TUICommonContactCell class] forCellReuseIdentifier:kContactCellReuseId];
     [_tableView registerClass:[TUIContactActionCell class] forCellReuseIdentifier:kContactActionCellReuseId];
     
-    [[V2TIMManager sharedInstance] addFriendListener:self];
-    
     @weakify(self)
     [RACObserve(self.viewModel, isLoadFinished) subscribeNext:^(id finished) {
         @strongify(self)
@@ -101,30 +99,6 @@
 
 - (void)onFriendApplicationListChanged {
     [_viewModel loadFriendApplication];
-}
-#pragma mark - V2TIMFriendshipListener
-- (void)onFriendApplicationListAdded:(NSArray<V2TIMFriendApplication *> *)applicationList {
-    [self onFriendApplicationListChanged];
-}
-
-- (void)onFriendApplicationListDeleted:(NSArray *)userIDList {
-    [self onFriendApplicationListChanged];
-}
-
-- (void)onFriendApplicationListRead {
-    [self onFriendApplicationListChanged];
-}
-
-- (void)onFriendListAdded:(NSArray<V2TIMFriendInfo *>*)infoList {
-    [self onFriendListChanged];
-}
-
-- (void)onFriendListDeleted:(NSArray*)userIDList {
-    [self onFriendListChanged];
-}
-
-- (void)onFriendProfileChanged:(NSArray<V2TIMFriendInfo *> *)infoList {
-    [self onFriendListChanged];
 }
 
 #pragma mark - UITableView

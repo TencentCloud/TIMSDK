@@ -16,16 +16,17 @@
 @interface TModifyViewData : NSObject
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *content;
+@property (nonatomic, strong) NSString *desc;
+@property (nonatomic, assign) BOOL enableNull;
 @end
 
 @interface TUIModifyView : UIView
 @property (nonatomic, strong) UIView *container;
 @property (nonatomic, strong) UILabel *title;
-@property (nonatomic, strong) UITextView *content;
-@property (nonatomic, strong) UIButton *cancel;
+@property (nonatomic, strong) UITextField *content;
+@property (nonatomic, strong) UILabel *descLabel;
 @property (nonatomic, strong) UIButton *confirm;
 @property (nonatomic, strong) UIView *hLine;
-@property (nonatomic, strong) UIView *vLine;
 @property (nonatomic, weak) id<TModifyViewDelegate> delegate;
 - (void)setData:(TModifyViewData *)data;
 - (void)showInWindow:(UIWindow *)window;

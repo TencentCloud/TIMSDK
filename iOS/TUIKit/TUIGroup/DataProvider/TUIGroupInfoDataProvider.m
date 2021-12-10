@@ -51,6 +51,14 @@
     [self getGroupInfo];
 }
 
+- (void)updateGroupAvatar:(NSString *)url succ:(V2TIMSucc)succ fail:(V2TIMFail)fail
+{
+    V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
+    info.groupID = self.groupID;
+    info.faceURL = url;
+    [V2TIMManager.sharedInstance setGroupInfo:info succ:succ fail:fail];
+}
+
 - (void)getGroupInfo {
     @weakify(self)
     [[V2TIMManager sharedInstance] getGroupsInfo:@[self.groupID] succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
@@ -159,15 +167,15 @@
         [dataList addObject:groupInfoArray];
 
         //personal info
-        NSMutableArray *personalArray = [NSMutableArray array];
         TUICommonTextCellData *nickData = [[TUICommonTextCellData alloc] init];
         nickData.key = TUIKitLocalizableString(TUIKitGroupProfileAlias);
         nickData.value = self.selfInfo.nameCard;
         nickData.cselector = @selector(didSelectGroupNick:);
         nickData.showAccessory = YES;
         self.groupNickNameCellData = nickData;
-        [personalArray addObject:nickData];
+        [dataList addObject:@[nickData]];
         
+        NSMutableArray *personalArray = [NSMutableArray array];
         if (![self.groupInfo.groupType isEqualToString:GroupType_Meeting]) {
             TUICommonSwitchCellData *messageSwitchData = [[TUICommonSwitchCellData alloc] init];
             messageSwitchData.on = (self.groupInfo.recvOpt == V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE);
@@ -202,6 +210,13 @@
         [dataList addObject:personalArray];
 
         NSMutableArray *buttonArray = [NSMutableArray array];
+        // 清空聊天记录
+        TUIButtonCellData *clearHistory = [[TUIButtonCellData alloc] init];
+        clearHistory.title = TUIKitLocalizableString(TUIKitClearAllChatHistory);
+        clearHistory.style = ButtonRedText;
+        clearHistory.cbuttonSelector = @selector(didClearAllHistory:);
+        [buttonArray addObject:clearHistory];
+        
 
         //群删除按钮
         TUIButtonCellData *quitButton = [[TUIButtonCellData alloc] init];
@@ -264,6 +279,12 @@
 - (void)didDeleteGroup:(TUIButtonCell *)cell {
     if (self.delegate && [self.delegate respondsToSelector:@selector(didDeleteGroup:)]) {
         [self.delegate didDeleteGroup:cell];
+    }
+}
+
+- (void)didClearAllHistory:(TUIButtonCell *)cell {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didClearAllHistory:)]) {
+        [self.delegate didClearAllHistory:cell];
     }
 }
 
@@ -348,6 +369,7 @@
     [[V2TIMManager sharedInstance] setGroupMemberInfo:self.groupID info:info succ:^{
         @strongify(self)
         self.groupNickNameCellData.value = nameCard;
+        self.selfInfo.nameCard = nameCard;
     } fail:^(int code, NSString *msg) {
         [TUITool makeToastError:code msg:msg];
     }];
@@ -359,6 +381,10 @@
 
 - (void)quitGroup:(V2TIMSucc)succ fail:(V2TIMFail)fail {
     [[V2TIMManager sharedInstance] quitGroup:self.groupID succ:succ fail:fail];
+}
+
+- (void)clearAllHistory:(V2TIMSucc)succ fail:(V2TIMFail)fail {
+    [V2TIMManager.sharedInstance clearGroupHistoryMessage:self.groupID succ:succ fail:fail];
 }
 
 + (NSString *)getGroupTypeName:(V2TIMGroupInfo *)groupInfo {

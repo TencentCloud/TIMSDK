@@ -22,7 +22,7 @@
     [super viewDidLoad];
 
     self.title = TUIKitLocalizableString(TUIKitContactsNewFriends); // @"新的联系人";
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:242/255.0 green:243/255.0 blue:245/255.0 alpha:1/1.0] dark:TController_Background_Color_Dark];
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     [self.view addSubview:_tableView];
     _tableView.delegate = self;
@@ -78,6 +78,7 @@
     TUICommonPendencyCellData *data = self.viewModel.dataList[indexPath.row];
     data.cselector = @selector(cellClick:);
     data.cbuttonSelector = @selector(btnClick:);
+    data.cRejectButtonSelector = @selector(rejectBtnClick:);
     [cell fillWithData:data];
     return cell;
 }
@@ -107,6 +108,12 @@
 - (void)btnClick:(TUICommonPendencyCell *)cell
 {
     [self.viewModel agreeData:cell.pendencyData];
+    [self.tableView reloadData];
+}
+
+- (void)rejectBtnClick:(TUICommonPendencyCell *)cell
+{
+    [self.viewModel rejectData:cell.pendencyData];
     [self.tableView reloadData];
 }
 

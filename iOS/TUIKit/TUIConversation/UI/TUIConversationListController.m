@@ -53,8 +53,10 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [_tableView registerClass:[TUIConversationCell class] forCellReuseIdentifier:kConversationCell_ReuseId];
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    _tableView.estimatedRowHeight = TConversationCell_Height;
+    _tableView.rowHeight = TConversationCell_Height;
     if (searchBar) {
-        [searchBar setFrame: CGRectMake(0, 0, self.view.bounds.size.width, 44)];
+        [searchBar setFrame: CGRectMake(0, 0, self.view.bounds.size.width, 60)];
         _tableView.tableHeaderView = searchBar;
     }
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
@@ -96,11 +98,6 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     return self.dataProvider.dataList.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return [self.dataProvider.dataList[indexPath.row] heightOfWidth:Screen_Width];
-}
-
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
@@ -108,6 +105,10 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (@available(iOS 11.0, *)) {
+        return nil;
+    }
+    
     NSMutableArray *rowActions = [NSMutableArray array];
     TUIConversationCellData *cellData = self.dataProvider.dataList[indexPath.row];
     __weak typeof(self) weakSelf = self;
@@ -147,6 +148,51 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
         [rowActions addObject:action];
     }
     return rowActions;
+}
+
+// available ios 11 +
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0)) {
+    __weak typeof(self) weakSelf = self;
+    TUIConversationCellData *cellData = self.dataProvider.dataList[indexPath.row];
+    NSMutableArray *arrayM = [NSMutableArray array];
+    [arrayM addObject:({
+        UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:TUIKitLocalizableString(Delete) handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+            [tableView beginUpdates];
+            [weakSelf.dataProvider removeData:cellData];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+            [tableView endUpdates];
+        }];
+        action.backgroundColor = RGB(242, 77, 76);
+        action;
+    })];
+    
+    [arrayM addObject:({
+        UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:cellData.isOnTop?TUIKitLocalizableString(CancelStickonTop):TUIKitLocalizableString(StickyonTop) handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+            if (cellData.isOnTop) {
+                [TUIConversationPin.sharedInstance removeTopConversation:cellData.conversationID callback:nil];
+            } else {
+                [TUIConversationPin.sharedInstance addTopConversation:cellData.conversationID callback:nil];
+            }
+        }];
+        action.backgroundColor = RGB(242, 147, 64);
+        action;
+    })];
+    
+    [arrayM addObject:({
+        UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:TUIKitLocalizableString(ClearHistoryChatMessage) handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+            if (cellData.groupID.length) {
+                [self.dataProvider clearGroupHistoryMessage:cellData.groupID];
+            } else {
+                [self.dataProvider clearC2CHistoryMessage:cellData.userID];
+            }
+        }];
+        action.backgroundColor = RGB(32, 124, 231);
+        action;
+    })];
+    
+    UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:[NSArray arrayWithArray:arrayM]];
+    configuration.performsFirstActionWithFullSwipe = NO;
+    return configuration;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath

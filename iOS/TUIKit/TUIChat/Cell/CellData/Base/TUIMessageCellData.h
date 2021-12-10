@@ -55,6 +55,12 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 + (NSString *)getDisplayString:(V2TIMMessage *)message;
 
 /**
+ * 获取消息回复自定义引用的布局及其数据的类
+ */
+- (Class)getReplyQuoteViewDataClass;
+- (Class)getReplyQuoteViewClass;
+
+/**
  *  消息唯一 ID
  */
 @property (nonatomic, strong) NSString *msgID;

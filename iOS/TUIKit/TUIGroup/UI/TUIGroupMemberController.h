@@ -9,6 +9,7 @@
 #import "TUIGroupMembersView.h"
 
 @class TUIGroupMemberController;
+@class V2TIMGroupInfo;
 
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -69,9 +70,19 @@
  */
 @property (nonatomic, strong) NSString *groupId;
 
+/*
+ *  群信息
+ */
+@property (nonatomic, strong) V2TIMGroupInfo *groupInfo;
+
 /**
  *  委托类，负责实现 TGroupMemberControllerDelegagte 协议中的委托。
  */
 @property (nonatomic, weak) id<TGroupMemberControllerDelegagte> delegate;
+
+/**
+ * 刷新数据源
+ */
+- (void)refreshData;
 
 @end

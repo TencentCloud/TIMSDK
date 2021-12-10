@@ -70,7 +70,7 @@ static TUIMessageCellLayout *sIncommingTextMessageLayout;
 {
     if (!sIncommingTextMessageLayout) {
         sIncommingTextMessageLayout = [[TUIMessageCellLayout alloc] init:YES];
-        sIncommingTextMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 14, .bottom = 16, .left = 16, .right = 16};
+        sIncommingTextMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 12, .bottom = 12, .left = 16, .right = 16};
     }
     return sIncommingTextMessageLayout;
 }
@@ -81,7 +81,7 @@ static TUIMessageCellLayout *sOutgingTextMessageLayout;
 {
     if (!sOutgingTextMessageLayout) {
         sOutgingTextMessageLayout = [[TUIMessageCellLayout alloc] init:NO];
-        sOutgingTextMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 14, .bottom = 16, .left = 16, .right = 16};
+        sOutgingTextMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 12, .bottom = 12, .left = 16, .right = 16};
     }
     return sOutgingTextMessageLayout;
 }
@@ -95,7 +95,7 @@ static TUIMessageCellLayout *sIncommingVoiceMessageLayout;
 {
     if (!sIncommingVoiceMessageLayout) {
         sIncommingVoiceMessageLayout = [[TUIMessageCellLayout alloc] init:YES];
-        sIncommingVoiceMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 14, .bottom = 20, .left = 19, .right = 22};
+        sIncommingVoiceMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 12, .bottom = 12, .left = 16, .right = 16};
     }
     return sIncommingVoiceMessageLayout;
 }

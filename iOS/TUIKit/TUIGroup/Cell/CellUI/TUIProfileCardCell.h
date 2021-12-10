@@ -23,6 +23,7 @@
 @property (nonatomic, strong) UIImage *genderIconImage;
 @property (nonatomic, strong) NSString *genderString;
 @property BOOL showAccessory;
+@property BOOL showSignature;
 @end
 
 @interface TUIProfileCardCell : TUICommonTableViewCell

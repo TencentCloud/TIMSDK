@@ -26,6 +26,7 @@
 #import "TUICore.h"
 #import "TUIDefine.h"
 #import "NSDictionary+TUISafe.h"
+#import "NSString+emoji.h"
 
 @interface TUIBaseChatViewController () <TUIMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate, TUIChatDataProviderForwardDelegate, TUICameraViewControllerDelegate, TUINotificationProtocol>
 @property (nonatomic, strong) TUIMessageMultiChooseView *multiChooseView;
@@ -37,6 +38,8 @@
 @property (nonatomic, weak) UIViewController *forwardConversationSelectVC;
 @property (nonatomic) NSArray<TUIMessageCellData *> *forwardSelectUIMsgs;
 @property (nonatomic) BOOL isMergeForward;
+
+@property (nonatomic, assign) BOOL firstAppear;
 
 @end
 
@@ -61,18 +64,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.firstAppear = YES;
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
 
     //message
-    if (self.locateMessage) {
+//    if (self.locateMessage) {
         TUIMessageSearchController *vc = [[TUIMessageSearchController alloc] init];
         vc.hightlightKeyword = self.highlightKeyword;
         vc.locateMessage = self.locateMessage;
         _messageController = vc;
         
-    }else {
-        _messageController = [[TUIMessageController alloc] init];
-    }
+//    }else {
+//        _messageController = [[TUIMessageController alloc] init];
+//    }
     _messageController.delegate = self;
     [_messageController setConversation:self.conversationData];
     _messageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight);
@@ -89,7 +93,6 @@
     }];
     _inputController.view.frame = CGRectMake(0, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight, self.view.frame.size.width, TTextView_Height + Bottom_SafeHeight);
     _inputController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    _inputController.inputBar.inputTextView.text = self.conversationData.draftText;
     [self addChildViewController:_inputController];
     [self.view addSubview:_inputController.view];
     
@@ -108,12 +111,34 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.responseKeyboard = YES;
+    if (self.firstAppear) {
+        [self loadDraft];
+        self.firstAppear = NO;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.responseKeyboard = NO;
     [self openMultiChooseBoard:NO];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    if (self.inputController.status == Input_Status_Input ||
+        self.inputController.status == Input_Status_Input_Keyboard) {
+        // 在后台默默关闭键盘 + 调整 tableview 的尺寸为全屏
+        CGPoint offset = self.messageController.tableView.contentOffset;
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.responseKeyboard = YES;
+            [UIApplication.sharedApplication.keyWindow endEditing:YES];
+            [weakSelf inputController:weakSelf.inputController didChangeHeight:CGRectGetMaxY(weakSelf.inputController.inputBar.frame) + Bottom_SafeHeight];
+            [weakSelf.messageController.tableView setContentOffset:offset];
+        });
+    }
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent
@@ -132,8 +157,65 @@
 
 - (void)saveDraft
 {
-    [TUIChatDataProvider saveDraftWithConversationID:self.conversationData.conversationID
-                                              Text:self.inputController.inputBar.inputTextView.text];
+    NSString *content = self.inputController.inputBar.inputTextView.text;
+    if (self.inputController.replyData) {
+        NSDictionary *dict = @{
+            @"content" : content?:@"",
+            @"messageReply" : @{
+                    @"messageID"       : self.inputController.replyData.msgID?:@"",
+                    @"messageAbstract" : [self.inputController.replyData.msgAbstract?:@"" getInternationalStringWithfaceContent],
+                    @"messageSender"   : self.inputController.replyData.sender?:@"",
+                    @"messageType"     : @(self.inputController.replyData.type),
+                    @"version"         : @(kDraftMessageReplyVersion)
+            }
+        };
+        NSError *error = nil;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+        if (error == nil) {
+            content = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        }
+    }
+    [TUIChatDataProvider saveDraftWithConversationID:self.conversationData.conversationID Text:content];
+}
+
+- (void)loadDraft
+{
+    NSString *draft = self.conversationData.draftText;
+    if (draft.length == 0) {
+        return;
+    }
+    
+    NSError *error = nil;
+    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:[draft dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
+    if (error || jsonDict == nil) {
+        self.inputController.inputBar.inputTextView.text = draft;
+        return;
+    }
+    
+    // 显示草稿
+    NSString *draftContent = [jsonDict.allKeys containsObject:@"content"] ? jsonDict[@"content"] : @"";
+    self.inputController.inputBar.inputTextView.text = draftContent;
+    
+    // 显示消息回复预览
+    if ([jsonDict isKindOfClass:NSDictionary.class] && [jsonDict.allKeys containsObject:@"messageReply"]) {
+        NSDictionary *reply = jsonDict[@"messageReply"];
+        if ([reply isKindOfClass:NSDictionary.class] &&
+            [reply.allKeys containsObject:@"messageID"] &&
+            [reply.allKeys containsObject:@"messageAbstract"] &&
+            [reply.allKeys containsObject:@"messageSender"] &&
+            [reply.allKeys containsObject:@"messageType"] &&
+            [reply.allKeys containsObject:@"version"]) {
+            NSInteger version = [reply[@"version"] integerValue];
+            if (version <= kDraftMessageReplyVersion) {
+                TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
+                replyData.msgID       = reply[@"messageID"];
+                replyData.msgAbstract = reply[@"messageAbstract"];
+                replyData.sender      = reply[@"messageSender"];
+                replyData.type        = [reply[@"messageType"] integerValue];
+                [self.inputController showReplyPreview:replyData];
+            }
+        }
+    }
 }
 
 #pragma mark - Getters & Setters
@@ -874,8 +956,32 @@
     }];
 }
 
-- (NSString *)forwardTitleWithMyName:(NSString *)nameStr {
+- (NSString *)forwardTitleWithMyName:(NSString *)nameStr
+{
     return @"";
+}
+
+#pragma mark - 消息回复
+- (void)messageController:(TUIMessageController *)controller onRelyMessage:(nonnull TUIMessageCellData *)data
+{
+    NSString *desc = @"";
+    if (data.innerMessage.elemType == V2TIM_ELEM_TYPE_FILE) {
+        desc = data.innerMessage.fileElem.filename;
+    } else if (data.innerMessage.elemType == V2TIM_ELEM_TYPE_MERGER) {
+        desc = data.innerMessage.mergerElem.title;
+    } else if (data.innerMessage.elemType == V2TIM_ELEM_TYPE_CUSTOM) {
+        desc = [TUIMessageDataProvider getDisplayString:data.innerMessage];
+    } else if (data.innerMessage.elemType == V2TIM_ELEM_TYPE_TEXT) {
+        desc = data.innerMessage.textElem.text;
+    }
+    
+    TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
+    replyData.msgID = data.msgID;
+    replyData.msgAbstract = desc;
+    replyData.sender = data.name;
+    replyData.type = (NSInteger)data.innerMessage.elemType;
+    replyData.originMessage = data.innerMessage;
+    [self.inputController showReplyPreview:replyData];
 }
 
 #pragma mark - Privete Methods

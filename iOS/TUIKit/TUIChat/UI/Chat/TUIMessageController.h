@@ -18,6 +18,7 @@
 
 @class TUIConversationCellData;
 @class TUIMessageController;
+@class TUIReplyMessageCell;
 
 typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
     TUIMultiResultOptionAll     = 0,                            // 获取所有选中的结果
@@ -97,5 +98,10 @@ typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
  * @param uiMsgs 待删除的数据
  */
 - (void)deleteMessages:(NSArray<TUIMessageCellData *> *)uiMsgs;
+
+/**
+ * 子类实现点击回复消息
+ */
+- (void)showReplyMessage:(TUIReplyMessageCell *)cell;
 
 @end

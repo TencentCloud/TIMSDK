@@ -9,7 +9,7 @@
 #import "TUIDefine.h"
 #import "NSString+TUIUtil.h"
 
-@interface TUIContactViewDataProvider()
+@interface TUIContactViewDataProvider() <V2TIMFriendshipListener>
 @property NSDictionary<NSString *, NSArray<TUICommonContactCellData *> *> *dataDict;
 @property NSArray *groupList;
 @property BOOL isLoadFinished;
@@ -21,6 +21,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
+        [[V2TIMManager sharedInstance] addFriendListener:self];
     }
     return self;
 }
@@ -92,4 +93,31 @@
         (self).pendencyCnt = 0;
     } fail:nil];
 }
+
+#pragma mark - V2TIMFriendshipListener
+- (void)onFriendApplicationListAdded:(NSArray<V2TIMFriendApplication *> *)applicationList {
+    [self loadFriendApplication];
+}
+
+- (void)onFriendApplicationListDeleted:(NSArray *)userIDList {
+    [self loadFriendApplication];
+}
+
+- (void)onFriendApplicationListRead {
+    [self loadFriendApplication];
+}
+
+- (void)onFriendListAdded:(NSArray<V2TIMFriendInfo *>*)infoList {
+    [self loadContacts];
+}
+
+- (void)onFriendListDeleted:(NSArray*)userIDList {
+    [self loadContacts];
+}
+
+- (void)onFriendProfileChanged:(NSArray<V2TIMFriendInfo *> *)infoList {
+    [self loadContacts];
+}
+
+
 @end

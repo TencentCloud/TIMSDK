@@ -8,6 +8,12 @@
 #import "TUIVideoMessageCell.h"
 #import "TUIDefine.h"
 
+@interface TUIVideoMessageCell ()
+
+@property (nonatomic, strong) UIView *animateHighlightView;
+
+@end
+
 @implementation TUIVideoMessageCell
 
 
@@ -99,6 +105,51 @@
     [super layoutSubviews];
     _play.mm_width(TVideoMessageCell_Play_Size.width).mm_height(TVideoMessageCell_Play_Size.height).mm_center();
     _duration.mm_sizeToFitThan(20, 20).mm_right(TVideoMessageCell_Margin_3).mm_bottom(TVideoMessageCell_Margin_3);
+}
+
+- (void)highlightWhenMatchKeyword:(NSString *)keyword
+{
+    // 默认高亮效果，闪烁
+    if (keyword) {
+        // 显示高亮动画
+        if (self.highlightAnimating) {
+            return;
+        }
+        [self animate:3];
+    }
+}
+
+// 默认高亮动画
+- (void)animate:(int)times
+{
+    times--;
+    if (times < 0) {
+        [self.animateHighlightView removeFromSuperview];
+        self.highlightAnimating = NO;
+        return;
+    }
+    self.highlightAnimating = YES;
+    self.animateHighlightView.frame = self.thumb.bounds;
+    self.animateHighlightView.alpha = 0.1;
+    [self.thumb addSubview:self.animateHighlightView];
+    [UIView animateWithDuration:0.25 animations:^{
+        self.animateHighlightView.alpha = 0.5;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.animateHighlightView.alpha = 0.1;
+        } completion:^(BOOL finished) {
+            [self animate:times];
+        }];
+    }];
+}
+
+- (UIView *)animateHighlightView
+{
+    if (_animateHighlightView == nil) {
+        _animateHighlightView = [[UIView alloc] init];
+        _animateHighlightView.backgroundColor = [UIColor orangeColor];
+    }
+    return _animateHighlightView;
 }
 
 @end

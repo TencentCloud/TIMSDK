@@ -17,20 +17,15 @@
 #import "TUIDefine.h"
 #import "TUIDefine.h"
 #import "TUIDarkModel.h"
+#import "TUIMessageDataProvider.h"
+#import "NSString+emoji.h"
 #import <AVFoundation/AVFoundation.h>
-
-
-typedef NS_ENUM(NSUInteger, InputStatus) {
-    Input_Status_Input,
-    Input_Status_Input_Face,
-    Input_Status_Input_More,
-    Input_Status_Input_Keyboard,
-    Input_Status_Input_Talk,
-};
 
 @interface TUIInputController () <TTextViewDelegate, TMenuViewDelegate, TFaceViewDelegate, TMoreViewDelegate>
 @property (nonatomic, assign) InputStatus status;
-@property (nonatomic, strong) NSMutableDictionary *localizableDictionary;
+@property (nonatomic, assign) CGRect keyboardFrame;
+// 当前正在回复的消息
+@property (nonatomic, strong) TUIReplyPreviewData *replyData;
 @end
 
 @implementation TUIInputController
@@ -66,8 +61,8 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
 {
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TInput_Background_Color dark:TInput_Background_Color_Dark];
     _status = Input_Status_Input;
-
-    _inputBar = [[TUIInputBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, TTextView_Height)];
+    
+    _inputBar = [[TUIInputBar alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.replyPreviewBar.frame), self.view.frame.size.width, TTextView_Height)];
     _inputBar.delegate = self;
     [self.view addSubview:_inputBar];
 }
@@ -76,7 +71,10 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
 {
     // http://tapd.oa.com/20398462/bugtrace/bugs/view?bug_id=1020398462072883317&url_cache_key=b8dc0f6bee40dbfe0e702ef8cebd5d81
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:_inputBar.frame.size.height + Bottom_SafeHeight];
+        [_delegate inputController:self didChangeHeight:CGRectGetMaxY(_inputBar.frame) + Bottom_SafeHeight];
+    }
+    if (_status == Input_Status_Input_Keyboard) {
+        _status = Input_Status_Input;
     }
 }
 
@@ -99,8 +97,9 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
 {
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:keyboardFrame.size.height + _inputBar.frame.size.height];
+        [_delegate inputController:self didChangeHeight:keyboardFrame.size.height + CGRectGetMaxY(_inputBar.frame)];
     }
+    self.keyboardFrame = keyboardFrame;
 }
 
 - (void)hideFaceAnimation
@@ -141,7 +140,7 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     __weak typeof(self) ws = self;
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         CGRect newFrame = ws.faceView.frame;
-        newFrame.origin.y = ws.inputBar.frame.origin.y + ws.inputBar.frame.size.height;
+        newFrame.origin.y = CGRectGetMaxY(ws.inputBar.frame); //ws.inputBar.frame.origin.y + ws.inputBar.frame.size.height;
         ws.faceView.frame = newFrame;
 
         newFrame = ws.menuView.frame;
@@ -190,7 +189,7 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     [self hideMoreAnimation];
     _status = Input_Status_Input_Talk;
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:TTextView_Height + Bottom_SafeHeight];
+        [_delegate inputController:self didChangeHeight:CGRectGetMaxY(_inputBar.frame) + Bottom_SafeHeight];
     }
 }
 
@@ -206,7 +205,7 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     [self showMoreAnimation];
     _status = Input_Status_Input_More;
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:_inputBar.frame.size.height + self.moreView.frame.size.height + Bottom_SafeHeight];
+        [_delegate inputController:self didChangeHeight:CGRectGetMaxY(_inputBar.frame) + self.moreView.frame.size.height + Bottom_SafeHeight];
     }
 }
 
@@ -219,11 +218,11 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
         [self hideMoreAnimation];
     }
     [_inputBar.inputTextView resignFirstResponder];
-    [self showFaceAnimation];
     _status = Input_Status_Input_Face;
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:_inputBar.frame.size.height + self.faceView.frame.size.height + self.menuView.frame.size.height + Bottom_SafeHeight];
+        [_delegate inputController:self didChangeHeight:CGRectGetMaxY(_inputBar.frame) + self.faceView.frame.size.height + self.menuView.frame.size.height + Bottom_SafeHeight];
     }
+    [self showFaceAnimation];
 }
 
 - (void)inputBarDidTouchKeyboard:(TUIInputBar *)textView
@@ -253,11 +252,33 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
 
 - (void)inputBar:(TUIInputBar *)textView didSendText:(NSString *)text
 {
-    // 表情本地化 --> 恢复成实际的中文 key
-    NSString *content = [self faceContentWithLocalizableString:text];
+    // 表情国际化 --> 恢复成实际的中文 key
+    NSString *content = [text getInternationalStringWithfaceContent];
     V2TIMMessage *message = [[V2TIMManager sharedInstance] createTextMessage:content];
+    [self appendReplyDataIfNeeded:message];
     if(_delegate && [_delegate respondsToSelector:@selector(inputController:didSendMessage:)]){
         [_delegate inputController:self didSendMessage:message];
+    }
+}
+
+- (void)appendReplyDataIfNeeded:(V2TIMMessage *)message
+{
+    if (self.replyData) {
+        NSDictionary *dict = @{
+            @"messageReply": @{
+                    @"messageID"       : self.replyData.msgID?:@"",
+                    @"messageAbstract" : [self.replyData.msgAbstract?:@"" getInternationalStringWithfaceContent],
+                    @"messageSender"   : self.replyData.sender?:@"",
+                    @"messageType"     : @(self.replyData.type),
+                    @"version"         : @(kMessageReplyVersion)
+            }
+        };
+        NSError *error = nil;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+        if (error == nil) {
+            message.cloudCustomData = data;
+        }
+        [self exitReply];
     }
 }
 
@@ -286,6 +307,14 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     }
 }
 
+- (void)inputBarDidDeleteBackward:(TUIInputBar *)textView
+{
+    // 点击键盘上的删除按钮
+    if (textView.inputTextView.text.length == 0) {
+        [self exitReply];
+    }
+}
+
 - (void)reset
 {
     if(_status == Input_Status_Input){
@@ -300,8 +329,61 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     _status = Input_Status_Input;
     [_inputBar.inputTextView resignFirstResponder];
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
-        [_delegate inputController:self didChangeHeight:_inputBar.frame.size.height + Bottom_SafeHeight];
+        [_delegate inputController:self didChangeHeight:CGRectGetMaxY(_inputBar.frame) + Bottom_SafeHeight];
     }
+}
+
+- (void)showReplyPreview:(TUIReplyPreviewData *)data
+{
+    self.replyData = data;
+    [self.replyPreviewBar removeFromSuperview];
+    [self.view addSubview:self.replyPreviewBar];
+    self.inputBar.lineView.hidden = YES;
+    
+    self.replyPreviewBar.previewData = data;
+    
+    self.replyPreviewBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMenuView_Menu_Height);
+    self.inputBar.mm_y = CGRectGetMaxY(self.replyPreviewBar.frame);
+    if (self.status == Input_Status_Input_Keyboard) {
+        CGFloat keyboradHeight = self.keyboardFrame.size.height;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
+            [self.delegate inputController:self didChangeHeight:CGRectGetMaxY(self.inputBar.frame) + keyboradHeight];
+        }
+    } else if (self.status == Input_Status_Input_Face ||
+               self.status == Input_Status_Input_Talk) {
+        [self.inputBar changeToKeyboard];
+    } else {
+        [self.inputBar.inputTextView becomeFirstResponder];
+    }
+}
+
+- (void)exitReply
+{
+    if (self.replyData == nil) {
+        return;
+    }
+    self.replyData = nil;
+    __weak typeof(self) weakSelf = self;
+    [UIView animateWithDuration:0.25 animations:^{
+        weakSelf.replyPreviewBar.hidden = YES;
+        weakSelf.inputBar.mm_y = 0;
+        
+        if (weakSelf.status == Input_Status_Input_Keyboard) {
+            CGFloat keyboradHeight = weakSelf.keyboardFrame.size.height;
+            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
+                [weakSelf.delegate inputController:weakSelf didChangeHeight:CGRectGetMaxY(weakSelf.inputBar.frame) + keyboradHeight];
+            }
+        } else {
+            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
+                [weakSelf.delegate inputController:weakSelf didChangeHeight:CGRectGetMaxY(weakSelf.inputBar.frame) + Bottom_SafeHeight];
+            }
+        }
+        
+    } completion:^(BOOL finished) {
+        [weakSelf.replyPreviewBar removeFromSuperview];
+        weakSelf.replyPreviewBar = nil;
+        self.inputBar.lineView.hidden = NO;
+    }];
 }
 
 - (void)menuView:(TUIMenuView *)menuView didSelectItemAtIndex:(NSInteger)index
@@ -316,9 +398,10 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
         return;
     }
     // 表情国际化 --> 恢复成实际的中文 key
-    NSString *content = [self faceContentWithLocalizableString:text];
+    NSString *content = [text getInternationalStringWithfaceContent];
     [_inputBar clearInput];
     V2TIMMessage *message = [[V2TIMManager sharedInstance] createTextMessage:content];
+    [self appendReplyDataIfNeeded:message];
     if(_delegate && [_delegate respondsToSelector:@selector(inputController:didSendMessage:)]){
         [_delegate inputController:self didSendMessage:message];
     }
@@ -341,9 +424,6 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     if(indexPath.section == 0){
         // 表情本地化 - 将中文 key 转换成 对应的 本地化语言。eg,英文环境下 [大哭] --> [Cry]
         NSString *localizableFaceName = face.localizableName.length ? face.localizableName : face.name;
-        @synchronized (self) {
-            self.localizableDictionary[localizableFaceName] = face.name;
-        }
         [_inputBar addEmoji:localizableFaceName];
     }
     else{
@@ -407,44 +487,16 @@ typedef NS_ENUM(NSUInteger, InputStatus) {
     return _menuView;
 }
 
-#pragma mark - 表情国际化
-- (NSString *)faceContentWithLocalizableString:(NSString *)localizableString
+- (TUIReplyPreviewBar *)replyPreviewBar
 {
-    NSString *content = localizableString;
-    NSString *regex_emoji = @"\\[[a-z\\s*A-Z\\s*0-9!-@\\/\\u4e00-\\u9fa5]+\\]"; //匹配表情
-    NSError *error = nil;
-    NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex_emoji options:NSRegularExpressionCaseInsensitive error:&error];
-    if (re) {
-        NSArray *resultArray = [re matchesInString:content options:0 range:NSMakeRange(0, content.length)];
-        NSMutableArray *waitingReplaceM = [NSMutableArray array];
-        for(NSTextCheckingResult *match in resultArray) {
-            NSRange range = [match range];
-            NSString *subStr = [content substringWithRange:range];
-            [waitingReplaceM addObject:@{
-                @"range":NSStringFromRange(range),
-                @"localizableStr": self.localizableDictionary[subStr]?:subStr
-            }];
-        }
-        
-        if (waitingReplaceM.count != 0) {
-            // 从后往前替换，否则会引起位置问题
-            for (int i = (int)waitingReplaceM.count -1; i >= 0; i--) {
-                NSRange range = NSRangeFromString(waitingReplaceM[i][@"range"]);
-                NSString *localizableStr = waitingReplaceM[i][@"localizableStr"];
-                content = [content stringByReplacingCharactersInRange:range withString:localizableStr];
-            }
-        }
+    if (_replyPreviewBar == nil) {
+        _replyPreviewBar = [[TUIReplyPreviewBar alloc] init];
+        __weak typeof(self) weakSelf = self;
+        _replyPreviewBar.onClose = ^{
+            [weakSelf exitReply];
+        };
     }
-    return content;
-}
-
-
-- (NSMutableDictionary *)localizableDictionary
-{
-    if (_localizableDictionary == nil) {
-        _localizableDictionary = [NSMutableDictionary dictionary];
-    }
-    return _localizableDictionary;
+    return _replyPreviewBar;
 }
 
 @end

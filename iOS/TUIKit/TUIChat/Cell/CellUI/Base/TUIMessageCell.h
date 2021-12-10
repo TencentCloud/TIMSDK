@@ -152,6 +152,11 @@
 @property (nonatomic, weak) id<TUIMessageCellDelegate> delegate;
 
 /**
+ * 是否正在进行高亮闪烁动画
+ */
+@property (nonatomic, assign) BOOL highlightAnimating;
+
+/**
  *  单元填充函数
  *  根据data填充消息单元
  *
@@ -166,5 +171,10 @@
  * @param keyword 高亮关键字
  */
 - (void)highlightWhenMatchKeyword:(NSString *)keyword;
+
+/**
+ 高亮闪烁的 view
+ */
+- (UIView *)highlightAnimateView;
 
 @end

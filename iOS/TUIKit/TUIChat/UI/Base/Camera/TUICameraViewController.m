@@ -82,6 +82,11 @@
     }
 }
 
+- (void)dealloc
+{
+    [self stopCaptureSession];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     

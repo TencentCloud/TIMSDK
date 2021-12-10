@@ -12,7 +12,6 @@
 
 @interface TUIMessageCell()
 @property (nonatomic, strong) TUIMessageCellData *messageData;
-//已读回执 label
 
 @end
 
@@ -158,9 +157,42 @@
 
 - (void)highlightWhenMatchKeyword:(NSString *)keyword
 {
-    // 默认高亮效果，背景颜色加深
-    self.contentView.backgroundColor = keyword.length ? [UIColor colorWithRed:225/255.0 green:225/255.0 blue:225/255.0 alpha:1] : nil;
+    // 默认高亮效果，闪烁
+    if (keyword) {
+        // 显示高亮动画
+        if (self.highlightAnimating) {
+            return;
+        }
+        [self animate:3 originColor:self.highlightAnimateView.backgroundColor];
+    }
 }
+
+- (UIView *)highlightAnimateView
+{
+    return self.container;
+}
+
+// 默认高亮动画
+- (void)animate:(int)times originColor:(UIColor *)originColor
+{
+    times--;
+    if (times < 0) {
+        self.highlightAnimateView.backgroundColor = originColor;
+        self.highlightAnimating = NO;
+        return;
+    }
+    self.highlightAnimating = YES;
+    [UIView animateWithDuration:0.25 animations:^{
+        self.highlightAnimateView.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.5];
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.highlightAnimateView.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.2];
+        } completion:^(BOOL finished) {
+            [self animate:times originColor:originColor];
+        }];
+    }];
+}
+
 
 - (void)layoutSubviews
 {

@@ -85,4 +85,6 @@
  *  修复图片拉伸导致深色模式适配失效的问题
  */
 + (void)d_fixResizableImage;
+
++ (UIImage *)d_imageWithImageLightImg:(UIImage *)lightImage dark:(UIImage *)darkImage;
 @end

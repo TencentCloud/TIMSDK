@@ -46,6 +46,7 @@
         for (V2TIMFriendApplication *item in result.applicationList) {
             if (item.type == V2TIM_FRIEND_APPLICATION_COME_IN) {
                 TUICommonPendencyCellData *data = [[TUICommonPendencyCellData alloc] initWithPendency:item];
+                data.hideSource = YES;
                 [list addObject:data];
             }
         }
@@ -68,4 +69,16 @@
     [[V2TIMManager sharedInstance] acceptFriendApplication:data.application type:V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD succ:nil fail:nil];
     data.isAccepted = YES;
 }
+
+- (void)rejectData:(TUICommonPendencyCellData *)data
+{
+    [V2TIMManager.sharedInstance refuseFriendApplication:data.application succ:^(V2TIMFriendOperationResult *result) {
+        
+    } fail:^(int code, NSString *desc) {
+        
+    }];
+    
+    data.isRejected = YES;
+}
+
 @end

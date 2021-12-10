@@ -11,7 +11,6 @@
 @class TUIVideoMessageCellData;
 @class TUIFileMessageCellData;
 @class TUISystemMessageCellData;
-@class TUIRelayMessageCellData;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,7 +27,8 @@ typedef NS_ENUM(NSUInteger, TUIMessageDataProviderDataSourceChangeType) {
 - (void)dataProviderDataSourceWillChange:(TUIMessageDataProvider *)dataProvider;
 - (void)dataProviderDataSourceChange:(TUIMessageDataProvider *)dataProvider
                             withType:(TUIMessageDataProviderDataSourceChangeType)type
-                             atIndex:(NSUInteger)index;
+                             atIndex:(NSUInteger)index
+                           animation:(BOOL)animation;
 - (void)dataProviderDataSourceDidChange:(TUIMessageDataProvider *)dataProvider;
 
 @optional
@@ -102,6 +102,8 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message;
 
+// 预处理回复消息(异步加载原始消息以及下载对应的缩略图)
+- (void)preProcessReplyMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback;
 @end
 
 @interface TUIMessageDataProvider (IMSDK)

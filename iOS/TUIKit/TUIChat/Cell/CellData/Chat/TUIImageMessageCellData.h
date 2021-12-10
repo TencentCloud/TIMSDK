@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^TUIImageMessageDownloadCallback)(void);
+
 /**
  *  图像类别枚举
  */
@@ -140,6 +142,7 @@ typedef NS_ENUM(NSInteger, TUIImageType)
  *  5、下载成功后，会生成图像 path 并存储下来。
  */
 - (void)downloadImage:(TUIImageType)type;
+- (void)downloadImage:(TUIImageType)type finish:(TUIImageMessageDownloadCallback)finish;
 
 /**
  *  解码图像，并将图像赋值到对应类型的变量（缩略图、大图或者原图）中。

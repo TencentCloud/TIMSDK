@@ -103,6 +103,12 @@
  *  @param textView 委托者，当前与用户交互的 InputBar。
  */
 - (void)inputBarDidTouchKeyboard:(TUIInputBar *)textView;
+
+/**
+ * 点击键盘上的删除按钮
+ */
+- (void)inputBarDidDeleteBackward:(TUIInputBar *)textView;
+
 @end
 
 
@@ -202,4 +208,10 @@
  *  更新 textView 坐标
  */
 - (void)updateTextViewFrame;
+
+/**
+ * 切换到键盘
+ */
+- (void)changeToKeyboard;
+
 @end

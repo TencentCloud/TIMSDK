@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-char pinyinFirstLetter(unsigned short hanzi);
+char TUIPinyinFirstLetter(unsigned short hanzi);
 
 @interface NSString (TUIUtil)
 

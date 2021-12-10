@@ -13,8 +13,17 @@
 #import "TUIMenuView.h"
 #import "TUIMoreView.h"
 #import "TUIMessageCell.h"
+#import "TUIReplyPreviewBar.h"
 
 @class TUIInputController;
+
+typedef NS_ENUM(NSUInteger, InputStatus) {
+    Input_Status_Input,
+    Input_Status_Input_Face,
+    Input_Status_Input_More,
+    Input_Status_Input_Keyboard,
+    Input_Status_Input_Talk,
+};
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -96,6 +105,16 @@
 @interface TUIInputController : UIViewController
 
 /**
+ * 输入框上方的预览视图，拥有消息回复场景
+ */
+@property (nonatomic, strong) TUIReplyPreviewBar *replyPreviewBar;
+
+/**
+ * 当前正在回复的消息
+ */
+@property (nonatomic, strong, readonly) TUIReplyPreviewData *replyData;;
+
+/**
  *  输入条
  *  输入条中包含文本输入框、语音按钮、“更多”按钮、表情按钮等一系列交互组件，并提供了这些组件的对应回调委托。
  *  详细信息请参考 Section\Chat\Input\TUIInputBar.h
@@ -134,4 +153,15 @@
  *  即无论当前 InputController 处于何种状态，都将其重置为初始化后的状态。
  */
 - (void)reset;
+
+/**
+ * 显示/隐藏消息回复输入框的预览条
+ */
+- (void)showReplyPreview:(TUIReplyPreviewData *)data;
+- (void)exitReply;
+
+/**
+ * 当前的输入框状态
+ */
+@property (nonatomic, assign, readonly) InputStatus status;
 @end

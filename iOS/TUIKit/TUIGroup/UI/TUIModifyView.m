@@ -9,10 +9,21 @@
 #import "TUIModifyView.h"
 #import "TUIDefine.h"
 
+#define kContainerWidth Screen_Width
+#define kContainerHeight kContainerWidth * 3 / 4
+
 @implementation TModifyViewData
+- (instancetype)init {
+    if (self = [super init]) {
+        self.enableNull = YES;
+    }
+    return self;
+}
 @end
 
-@interface TUIModifyView () <UITextViewDelegate>
+@interface TUIModifyView () <UITextFieldDelegate, UIGestureRecognizerDelegate>
+@property (nonatomic, assign) BOOL keyboardShowing;
+@property (nonatomic, strong) TModifyViewData *data;
 @end
 
 @implementation TUIModifyView
@@ -28,25 +39,24 @@
 - (void)setupViews
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
 
     self.frame = [UIScreen mainScreen].bounds;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
+    tap.delegate = self;
     [self addGestureRecognizer:tap];
 
     self.backgroundColor = [UIColor d_colorWithColorLight:TModifyView_Background_Color dark:TModifyView_Background_Color_Dark];
 
-    CGFloat containerWidth = Screen_Width * 2 / 3;
-    CGFloat containerHeight = containerWidth * 3 / 4;
-    _container = [[UIView alloc] initWithFrame:CGRectMake((Screen_Width - containerWidth) * 0.5, (Screen_Height - containerHeight) * 0.5, containerWidth, containerHeight)];
+    _container = [[UIView alloc] initWithFrame:CGRectMake(0, Screen_Height, kContainerWidth, kContainerHeight)];
     _container.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
     _container.layer.cornerRadius = 8;
     [_container.layer setMasksToBounds:YES];
     [self addSubview:_container];
 
 
-    CGFloat buttonHeight = 50;
-    CGFloat buttonWidth = (containerWidth - TLine_Heigh) * 0.5;
+    CGFloat buttonHeight = 46;
     CGFloat titleHeight = 60;
 
     _title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, _container.frame.size.width, titleHeight)];
@@ -54,67 +64,88 @@
     _title.textColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark];
     _title.textAlignment = NSTextAlignmentCenter;
     [_container addSubview:_title];
-
-    _cancel = [[UIButton alloc] initWithFrame:CGRectMake(0, containerHeight - buttonHeight, buttonWidth, buttonHeight)];
-    [_cancel setTitle:TUIKitLocalizableString(Cancel) forState:UIControlStateNormal];
-    [_cancel setTitleColor:[UIColor d_systemRedColor] forState:UIControlStateNormal];
-    _cancel.titleLabel.font = [UIFont systemFontOfSize:16];
-    [_cancel addTarget:self action:@selector(didCancel:) forControlEvents:UIControlEventTouchUpInside];
-    [_container addSubview:_cancel];
-
-    _hLine = [[UIView alloc] initWithFrame:CGRectMake(0, _cancel.frame.origin.y - TLine_Heigh, _container.frame.size.width, TLine_Heigh)];
+    
+    _hLine = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_title.frame), kContainerWidth, TLine_Heigh)];
     _hLine.backgroundColor = [UIColor d_colorWithColorLight:TLine_Color dark:TLine_Color_Dark];
     [_container addSubview:_hLine];
-
-    _vLine = [[UIView alloc] initWithFrame:CGRectMake(_cancel.frame.origin.x + _cancel.frame.size.width, _cancel.frame.origin.y, TLine_Heigh, _cancel.frame.size.height)];
-    _vLine.backgroundColor = [UIColor d_colorWithColorLight:TLine_Color dark:TLine_Color_Dark];
-    [_container addSubview:_vLine];
-
-    _confirm = [[UIButton alloc] initWithFrame:CGRectMake(_vLine.frame.origin.x + _vLine.frame.size.width, _cancel.frame.origin.y, buttonWidth, buttonHeight)];
-    [_confirm setTitle:TUIKitLocalizableString(Confirm) forState:UIControlStateNormal];
-    [_confirm setTitleColor:[UIColor d_systemBlueColor] forState:UIControlStateNormal];
-    _confirm.titleLabel.font = [UIFont systemFontOfSize:15];
-    [_confirm addTarget:self action:@selector(didConfirm:) forControlEvents:UIControlEventTouchUpInside];
-    [_container addSubview:_confirm];
-
+    
     CGFloat contentMargin = 20;
     CGFloat contentWidth = _container.frame.size.width - 2 * contentMargin;
-    CGFloat contentY = _title.frame.origin.y + _title.frame.size.height;
-    CGFloat contentheight = _hLine.frame.origin.y - contentY - contentMargin;
-    _content = [[UITextView alloc] initWithFrame:CGRectMake(contentMargin, contentY, contentWidth, contentheight)];
+    CGFloat contentY = CGRectGetMaxY(_hLine.frame) + 17;
+    CGFloat contentheight = 40;
+    _content = [[UITextField alloc] initWithFrame:CGRectMake(contentMargin, contentY, contentWidth, contentheight)];
     _content.delegate = self;
+    _content.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1/1.0] dark:UIColor.darkGrayColor];
     [_content setFont:[UIFont systemFontOfSize:16]];
     [_content.layer setMasksToBounds:YES];
     [_content.layer setCornerRadius:4.0f];
-    [_content.layer setBorderWidth:0.5f];
-    [_content.layer setBorderColor:[UIColor d_colorWithColorLight:TLine_Color dark:TLine_Color_Dark].CGColor];
     [_content setReturnKeyType:UIReturnKeyDone];
+    [_content addTarget:self action:@selector(textChanged) forControlEvents:UIControlEventEditingChanged];
     [_container addSubview:_content];
+    
+    _descLabel = [[UILabel alloc] initWithFrame:CGRectMake(_content.frame.origin.x, CGRectGetMaxY(_content.frame) + 17, contentWidth, contentheight)];
+    _descLabel.textColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
+    _descLabel.font = [UIFont systemFontOfSize:13.0];
+    _descLabel.numberOfLines = 0;
+    _descLabel.text = @"desc";
+    [_container addSubview:_descLabel];
+    
+    _confirm = [[UIButton alloc] initWithFrame:CGRectMake(_content.frame.origin.x, CGRectGetMaxY(_descLabel.frame) + 30, contentWidth, buttonHeight)];
+    [_confirm setTitle:TUIKitLocalizableString(Confirm) forState:UIControlStateNormal];
+    [_confirm setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _confirm.titleLabel.font = [UIFont systemFontOfSize:15];
+    _confirm.layer.cornerRadius = 3;
+    _confirm.layer.masksToBounds = YES;
+    _confirm.imageView.contentMode = UIViewContentModeScaleToFill;
+    [self enableConfirmButton:self.data.enableNull];
+    [_confirm addTarget:self action:@selector(didConfirm:) forControlEvents:UIControlEventTouchUpInside];
+    [_container addSubview:_confirm];
 }
-
 
 - (void)setData:(TModifyViewData *)data
 {
     _title.text = data.title;
     _content.text = data.content;
+    _descLabel.text = data.desc;
+    _data = data;
+ 
+    CGRect rect = [data.desc boundingRectWithSize:CGSizeMake(self.content.bounds.size.width, CGFLOAT_MAX)
+                                          options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                       attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13.0]}
+                                          context:nil];
+    CGRect frame = _descLabel.frame;
+    frame.size.height = rect.size.height;
+    _descLabel.frame = frame;
+    
+    [self textChanged];
 }
 
 - (void)showInWindow:(UIWindow *)window
 {
     [window addSubview:self];
+    [self layoutIfNeeded];
+    CGFloat height = CGRectGetMaxY(self.confirm.frame) + 50;
 
     __weak typeof(self) ws = self;
-    self.alpha = 0;;
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        ws.alpha = 1;
+        ws.container.frame = CGRectMake(0, Screen_Height - height, kContainerWidth, height);
     } completion:nil];
 }
 
 - (void)onTap:(UIGestureRecognizer *)recognizer
 {
     [_content resignFirstResponder];
+    
+    // 延时处理
+    if (!self.keyboardShowing) {
+        [self hide];
+    }
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    return [touch.view isEqual:self];
+}
 
 - (void)hide
 {
@@ -152,9 +183,15 @@
     return YES;
 }
 
+- (void)textChanged
+{
+    [self enableConfirmButton:(self.content.text.length || self.data.enableNull)];
+}
+
 - (void)keyboardWillChangeFrame:(NSNotification *)notification
 {
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    self.keyboardShowing = keyboardFrame.size.height > 0;
     [self animateContainer:keyboardFrame.size.height];
 }
 
@@ -163,14 +200,32 @@
     [self animateContainer:0];
 }
 
+- (void)keyboardDidHide:(NSNotification *)notice
+{
+    self.keyboardShowing = NO;
+}
+
 - (void)animateContainer:(CGFloat)keyboardHeight
 {
+    CGFloat height = CGRectGetMaxY(self.confirm.frame) + 50;
     CGRect frame = _container.frame;
-    frame.origin.y = (self.frame.size.height - keyboardHeight - frame.size.height) * 0.5;
+    frame.origin.y = Screen_Height - height - keyboardHeight; //(self.frame.size.height - keyboardHeight - frame.size.height) * 0.5;
     __weak typeof(self) ws = self;
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         ws.container.frame = frame;
     } completion:nil];
 }
+
+- (void)enableConfirmButton:(BOOL)enable
+{
+    if (enable) {
+        _confirm.backgroundColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+        _confirm.enabled = YES;
+    } else {
+        _confirm.backgroundColor = [UIColor colorWithRed:190/255.0 green:215/255.0 blue:251/255.0 alpha:1/1.0];
+        _confirm.enabled = NO;
+    }
+}
+
 @end
 

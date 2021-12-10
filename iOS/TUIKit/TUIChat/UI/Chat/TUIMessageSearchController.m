@@ -6,6 +6,9 @@
 #import "TUIDefine.h"
 #import "TUITextMessageCell.h"
 #import "TUIMessageSearchDataProvider.h"
+#import "TUIReplyMessageCellData.h"
+#import "TUIReplyMessageCell.h"
+#import "TUIGlobalization.h"
 
 #define MSG_GET_COUNT 20
 
@@ -101,7 +104,7 @@
     self.messageDataProvider = [[TUIMessageSearchDataProvider alloc] initWithConversationModel:self.conversationData];
     self.messageDataProvider.dataSource = self;
     if (self.locateMessage) {
-        [self loadLocateMessages];
+        [self loadLocateMessages:YES];
     } else {
         [[self messageSearchDataProvider] removeAllSearchData];
         [self loadMessages:YES];
@@ -114,7 +117,7 @@
 }
 
 // 加载定位消息
-- (void)loadLocateMessages
+- (void)loadLocateMessages:(BOOL)firstLoad
 {
     @weakify(self);
     [[self messageSearchDataProvider] loadMessageWithSearchMsg:self.locateMessage
@@ -124,12 +127,19 @@
         self.indicatorView.mm_h = 0;
         self.bottomIndicatorView.mm_h = 0;
         [self.tableView reloadData];
+        if (!firstLoad) {
+            // 在消息回复等跳转场景中，先将 tableview 滚动到最底部，再结合 scrollLocateMessage 来实现滚动定位效果
+            NSInteger index = self.messageDataProvider.uiMsgs.count > 0 ? self.messageDataProvider.uiMsgs.count - 1 : 0;
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
+                                  atScrollPosition:UITableViewScrollPositionBottom
+                                          animated:NO];
+        }
         [self.tableView layoutIfNeeded];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self)
             // 滚动到指定位置
-            [self scrollLocateMessage];
+            [self scrollLocateMessage:firstLoad];
             // 关键字高亮
             [self highlightKeyword];
         });
@@ -138,15 +148,17 @@
     }];
 }
 
-- (void)scrollLocateMessage
+- (void)scrollLocateMessage:(BOOL)firstLoad
 {
     // 先找到 locateMsg 的坐标偏移
     CGFloat offsetY = 0;
+    NSInteger index = 0;
     for (TUIMessageCellData *uiMsg in [self messageSearchDataProvider].uiMsgs) {
         if ([uiMsg.innerMessage.msgID isEqualToString:self.locateMessage.msgID]) {
             break;
         }
         offsetY += [uiMsg heightOfWidth:Screen_Width];
+        index++;
     }
     
     // 再偏移半个 tableview 的高度
@@ -155,8 +167,14 @@
         offsetY = TMessageController_Header_Height + 0.1;
     }
 
-    if (offsetY > TMessageController_Header_Height + 0.1) {
-        [self.tableView scrollRectToVisible:CGRectMake(0, self.tableView.contentOffset.y + offsetY, Screen_Width, self.tableView.bounds.size.height) animated:NO];
+    if (offsetY > TMessageController_Header_Height) {
+        if (firstLoad) {
+            [self.tableView scrollRectToVisible:CGRectMake(0, self.tableView.contentOffset.y + offsetY, Screen_Width, self.tableView.bounds.size.height) animated:NO];
+        } else {
+            if (self.tableView.contentOffset.y > offsetY) {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+            }
+        }
     }
 }
 
@@ -173,25 +191,22 @@
         return;
     }
     
-    CGFloat time = 0.5;
-    UITableViewRowAnimation animation = UITableViewRowAnimationFade;
-    if ([cellData isKindOfClass:TUITextMessageCellData.class]) {
-        time = 2;
-        animation = UITableViewRowAnimationNone;
-    }
     
+    @weakify(self)
     dispatch_async(dispatch_get_main_queue(), ^{
+        @strongify(self)
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[[self messageDataProvider].uiMsgs indexOfObject:cellData] inSection:0];
-        cellData.highlightKeyword = self.hightlightKeyword;
+        cellData.highlightKeyword = self.hightlightKeyword.length?self.hightlightKeyword:@"hightlight";
         TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         [cell fillWithData:cellData];
-    });
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[[self messageDataProvider].uiMsgs indexOfObject:cellData] inSection:0];
-        cellData.highlightKeyword = nil;
-        TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        [cell fillWithData:cellData];
+        @weakify(self)
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            @strongify(self)
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[[self messageDataProvider].uiMsgs indexOfObject:cellData] inSection:0];
+            cellData.highlightKeyword = nil;
+            TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            [cell fillWithData:cellData];
+        });
     });
 }
 
@@ -237,7 +252,7 @@
         [self.tableView layoutIfNeeded];
         
         if (isFirstLoad) {
-            [self scrollToBottom:YES];
+            [self scrollToBottom:NO];
         } else {
             if (order) {
                 CGFloat visibleHeight = 0;
@@ -257,5 +272,63 @@
         
     }];
 }
+
+- (void)showReplyMessage:(TUIReplyMessageCell *)cell
+{
+    [UIApplication.sharedApplication.keyWindow endEditing:YES];
+    TUIReplyMessageCellData *cellData = cell.replyData;
+    // 查询原始消息 - 在数据源里头调用
+    [(TUIMessageSearchDataProvider *)self.messageDataProvider findMessages:@[cellData.originMsgID?:@""] callback:^(BOOL success, NSString * _Nonnull desc, NSArray<V2TIMMessage *> * _Nonnull msgs) {
+        if (!success) {
+            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            return;
+        }
+        V2TIMMessage *message = msgs.firstObject;
+        if (message == nil) {
+            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            return;
+        }
+        
+        // 判断消息是否被删除或者撤回
+        if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
+            [TUITool makeToast:TUIKitLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+            return;
+        }
+        [self locateAssignMessage:message matchKeyWord:cellData.msgAbstract];
+    }];
+}
+
+
+- (void)locateAssignMessage:(V2TIMMessage *)message matchKeyWord:(NSString *)keyword
+{
+    if (message == nil) {
+        return;
+    }
+    self.locateMessage = message;
+    self.hightlightKeyword = keyword;
+    
+    // 当前消息已经处于加载状态
+    BOOL memoryExist = NO;
+    for (TUIMessageCellData *cellData in self.messageDataProvider.uiMsgs) {
+        if ([cellData.innerMessage.msgID isEqual:message.msgID]) {
+            memoryExist = YES;
+            break;
+        }
+    }
+    if (memoryExist) {
+        // 直接滚动
+        [self scrollLocateMessage:NO];
+        // 高亮
+        [self highlightKeyword];
+        return;
+    }
+    
+    // 滚动
+    TUIMessageSearchDataProvider *provider = (TUIMessageSearchDataProvider *)self.messageDataProvider;
+    provider.isNewerNoMoreMsg = NO;
+    provider.isOlderNoMoreMsg = NO;
+    [self loadLocateMessages:NO];
+}
+
 
 @end

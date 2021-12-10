@@ -14,6 +14,7 @@
 
 @interface TUIImageMessageCellData ()
 @property (nonatomic, assign) BOOL isDownloading;
+@property (nonatomic, copy) TUIImageMessageDownloadCallback onFinish;
 @end
 
 @implementation TUIImageMessageCellData
@@ -45,6 +46,16 @@
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
     return TUIKitLocalizableString(TUIkitMessageTypeImage); // @"[图片]";
+}
+
+- (Class)getReplyQuoteViewDataClass
+{
+    return NSClassFromString(@"TUIImageReplyQuoteViewData");
+}
+
+- (Class)getReplyQuoteViewClass
+{
+    return NSClassFromString(@"TUIImageReplyQuoteView");
 }
 
 - (instancetype)initWithDirection:(TMsgDirection)direction {
@@ -84,7 +95,11 @@
     return path;
 }
 
-
+- (void)downloadImage:(TUIImageType)type finish:(TUIImageMessageDownloadCallback)finish
+{
+    self.onFinish = finish;
+    [self downloadImage:type];
+}
 
 - (void)downloadImage:(TUIImageType)type
 {
@@ -142,19 +157,23 @@
         return;
     }
 
+    __weak typeof(self) weakSelf = self;
     void (^finishBlock)(UIImage *) = ^(UIImage *image){
         if (type == TImage_Type_Thumb) {
-            self.thumbImage = image;
-            self.thumbProgress = 100;
-            self.uploadProgress = 100;
+            weakSelf.thumbImage = image;
+            weakSelf.thumbProgress = 100;
+            weakSelf.uploadProgress = 100;
         }
         if (type == TImage_Type_Large) {
-            self.largeImage = image;
-            self.largeProgress = 100;
+            weakSelf.largeImage = image;
+            weakSelf.largeProgress = 100;
         }
         if (type == TImage_Type_Origin) {
-            self.originImage = image;
-            self.originProgress = 100;
+            weakSelf.originImage = image;
+            weakSelf.originProgress = 100;
+        }
+        if (weakSelf.onFinish) {
+            weakSelf.onFinish();
         }
     };
 

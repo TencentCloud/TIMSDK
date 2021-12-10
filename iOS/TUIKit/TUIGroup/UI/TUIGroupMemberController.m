@@ -25,12 +25,20 @@
     [self setupViews];
     
     self.dataProvider = [[TUIGroupMemberDataProvider alloc] initWithGroupID:self.groupId];
+    self.dataProvider.groupInfo = self.groupInfo;
+    
+    [self refreshData];
+}
+
+- (void)refreshData
+{
     @weakify(self)
     [self.dataProvider loadDatas:^(BOOL success, NSString * _Nonnull err, NSArray * _Nonnull datas) {
         @strongify(self)
         [self.groupMembersView setData:datas];
         NSString *title = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitGroupProfileGroupCountFormat), (long)datas.count];
         self.title = title;
+        self.members = [NSMutableArray arrayWithArray:datas];
     }];
 }
 
