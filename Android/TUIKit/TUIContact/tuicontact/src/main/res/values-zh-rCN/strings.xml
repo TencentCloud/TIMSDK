@@ -11,6 +11,8 @@
     <string name="at_all">所有人</string>
 
     <string name="success">成功</string>
+    <string name="contact_add_failed">添加失败</string>
+    <string name="contact_add_success">添加成功</string>
     <string name="have_be_friend">对方已是您的好友</string>
     <string name="friend_limit">您的好友数已达系统上限</string>
     <string name="other_friend_limit">对方的好友数已达系统上限</string>
@@ -20,6 +22,10 @@
     <string name="wait_agree_friend">等待好友审核同意</string>
     <string name="send_request">加群请求已发送</string>
 
+    <string name="add_group_permission_deny">禁止加群</string>
+    <string name="add_group_allready_member">已经是群成员</string>
+    <string name="add_group_not_found">群组不存在</string>
+    <string name="add_group_full_member">群已满员</string>
 
     // 新朋友
     <string name="request_agree">同意</string>
@@ -27,14 +33,26 @@
     <string name="request_waiting">等待验证</string>
     <string name="profile_detail">详细资料</string>
     <string name="profile_remark_edit">修改备注</string>
+    <string name="contact_friend_remark">备注</string>
+    <string name="contact_friend_group">分组</string>
+    <string name="contact_set_add_wording">请填写验证信息</string>
+    <string name="contact_set_remark_and_group">请填写备注和分组</string>
+    <string name="contact_add_wording">验证信息</string>
+    <string name="contact_my_friend">我的朋友</string>
 
     <!-- 好友资料 -->
     <string name="profile_id">帐号</string>
     <string name="profile_add_wording">验证消息</string>
-    <string name="profile_remark">设置备注</string>
+    <string name="profile_remark">备注名</string>
     <string name="profile_black">加入黑名单</string>
     <string name="profile_chat">发送消息</string>
-    <string name="profile_del">删除好友</string>
+    <string name="profile_voice_chat">语音通话</string>
+    <string name="profile_video_chat">视频通话</string>
+    <string name="profile_delete_friend">删除好友</string>
+
+    <string name="contact_signature_tag">个性签名：</string>
+    <string name="contact_account_tag">ID：</string>
+    <string name="contact_group_type_tag">群类型：</string>
 
     <string name="select_chat">请选择聊天对象</string>
     // 群信息相关
@@ -60,6 +78,8 @@
     <string name="create_private_group">创建讨论组</string>
     <string name="create_community">创建社群</string>
     <string name="hint_add_user_id">请输入ID</string>
+    <string name="hint_search_user_id">搜索用户ID</string>
+    <string name="hint_search_group_id">搜索群组ID</string>
     <string name="hint_add_wording">请输入验证消息</string>
     <string name="contact_add">添加</string>
     <string name="user_id">对方ID</string>
@@ -72,7 +92,7 @@
     <string name="group_join_type">加群方式</string>
     <string name="forbid_join">禁止加群</string>
     <string name="manager_judge">管理员审批</string>
-    <string name="auto_judge">自动审批...</string>
+    <string name="auto_judge">自动审批</string>
     <string name="input_tip">没有输入昵称，请重新填写</string>
     <string name="profile_msgrev_opt">消息免打扰</string>
 

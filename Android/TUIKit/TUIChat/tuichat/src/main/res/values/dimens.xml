@@ -15,4 +15,48 @@
     <dimen name="item_width">49.35dp</dimen>
 
     <dimen name="forward_text_max_length">180dp</dimen>
+
+    <dimen name="chat_message_content_max_width">235dp</dimen>
+
+    <dimen name="chat_message_bg_stoke_width">1dp</dimen>
+    <dimen name="chat_item_padding_bottom">7dp</dimen>
+    <dimen name="chat_message_text_size">15.55sp</dimen>
+    <dimen name="chat_input_editor_height">32.64dp</dimen>
+    <dimen name="chat_input_icon_size">26.88dp</dimen>
+
+    <dimen name="chat_input_text_size">15.55sp</dimen>
+
+    <dimen name="reply_msg_padding">8dp</dimen>
+    <dimen name="reply_line_margin_right">7.78dp</dimen>
+
+    <dimen name="reply_sender_margin_top">3.29dp</dimen>
+
+    <dimen name="reply_text_size">15.55sp</dimen>
+    <dimen name="reply_origin_text_size">12.07sp</dimen>
+
+    <dimen name="reply_message_content_max_width">175dp</dimen>
+    <dimen name="reply_message_content_min_width">100dp</dimen>
+    <dimen name="reply_message_image_size">50dp</dimen>
+
+    <dimen name="reply_abstract_padding_bottom">4.39dp</dimen>
+    <dimen name="reply_abstract_margin_bottom">4.39dp</dimen>
+    <dimen name="reply_abstract_margin_right">8dp</dimen>
+    <dimen name="reply_abstract_margin_left">6dp</dimen>
+    <dimen name="reply_merge_text_size">12sp</dimen>
+    <dimen name="reply_icon_size">16dp</dimen>
+
+    <dimen name="chat_pop_menu_padding_top">15.48dp</dimen>
+    <dimen name="chat_pop_menu_padding_left_right">16.32dp</dimen>
+    <dimen name="chat_pop_menu_padding_bottom">10.96dp</dimen>
+    <dimen name="chat_pop_menu_item_height">35.8dp</dimen>
+    <dimen name="chat_pop_menu_icon_size">19.3dp</dimen>
+    <dimen name="chat_pop_menu_icon_margin_top">15.48dp</dimen>
+    <dimen name="chat_pop_menu_font_size">9.6sp</dimen>
+    <dimen name="chat_pop_menu_text_margin_top">3.92dp</dimen>
+    <dimen name="chat_pop_menu_indicator_height">7dp</dimen>
+    <dimen name="chat_pop_menu_radius">8dp</dimen>
+    <dimen name="chat_pop_menu_item_space_width">38dp</dimen>
+    <dimen name="chat_pop_menu_item_space_height">26dp</dimen>
+
+
 </resources>

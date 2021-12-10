@@ -10,9 +10,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.component.gatherimage.UserIconView;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,8 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
 
     public boolean isForwardMode = false;
 
+    protected ChatPresenter presenter;
+
     public MessageContentHolder(View itemView) {
         super(itemView);
 
@@ -41,6 +45,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         sendingProgress = itemView.findViewById(R.id.message_sending_pb);
         isReadText = itemView.findViewById(R.id.is_read_tv);
         unreadAudioText = itemView.findViewById(R.id.audio_unread);
+    }
+
+    public void setPresenter(ChatPresenter chatPresenter) {
+        this.presenter = chatPresenter;
     }
 
     @Override
@@ -71,8 +79,9 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             leftUserIcon.setRadius(properties.getAvatarRadius());
             rightUserIcon.setRadius(properties.getAvatarRadius());
         } else {
-            leftUserIcon.setRadius(5);
-            rightUserIcon.setRadius(5);
+            int radius = ScreenUtil.dip2px(4);
+            leftUserIcon.setRadius(radius);
+            rightUserIcon.setRadius(radius);
         }
         if (properties.getAvatarSize() != null && properties.getAvatarSize().length == 2) {
             ViewGroup.LayoutParams params = leftUserIcon.getLayoutParams();
@@ -160,7 +169,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
 
         if (isForwardMode) {
-            msgContentFrame.setBackgroundResource(R.drawable.chat_left_live_group_bg);
+            msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_bg);
             statusImage.setVisibility(View.GONE);
         } else {
             //// 聊天气泡设置
@@ -168,14 +177,14 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
                     msgContentFrame.setBackground(properties.getRightBubble().getConstantState().newDrawable());
                 } else {
-                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_myself);
+                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_self_bg);
                 }
             } else {
                 if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
                     msgContentFrame.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
                     msgContentFrame.setLayoutParams(msgContentFrame.getLayoutParams());
                 } else {
-                    msgContentFrame.setBackgroundResource(R.drawable.chat_other_bg);
+                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_bg);
                 }
             }
 
@@ -220,17 +229,28 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                         }
                     }
                 });
+                statusImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onItemLongClickListener != null) {
+                            onItemLongClickListener.onSendFailBtnClick(statusImage, position, msg);
+                        }
+                    }
+                });
             } else {
                 msgContentFrame.setOnClickListener(null);
                 statusImage.setVisibility(View.GONE);
             }
         }
 
+        int padding = msgContentFrame.getResources().getDimensionPixelSize(R.dimen.chat_item_padding_bottom);
+        msgContentFrame.setPadding(padding, padding, padding, padding);
+
         if (isForwardMode) {
             msgContentLinear.removeView(msgContentFrame);
             msgContentLinear.addView(msgContentFrame);
         } else {
-            //// 左右边的消息需要调整一下内容的位置
+            // 左右边的消息需要调整一下内容的位置，使已读标签位置显示正确
             if (msg.isSelf()) {
                 msgContentLinear.removeView(msgContentFrame);
                 msgContentLinear.addView(msgContentFrame);
@@ -239,6 +259,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 msgContentLinear.addView(msgContentFrame, 0);
             }
         }
+
         if (rightGroupLayout != null) {
             rightGroupLayout.setVisibility(View.VISIBLE);
         }
@@ -255,9 +276,6 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                         isReadText.setVisibility(View.GONE);
                     } else {
                         isReadText.setVisibility(View.VISIBLE);
-                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) isReadText.getLayoutParams();
-                        params.gravity = Gravity.CENTER_VERTICAL;
-                        isReadText.setLayoutParams(params);
                         if (msg.isPeerRead()) {
                             isReadText.setText(R.string.has_read);
                         } else {

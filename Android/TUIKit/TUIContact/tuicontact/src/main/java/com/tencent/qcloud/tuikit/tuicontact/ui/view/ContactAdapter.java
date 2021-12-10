@@ -102,7 +102,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.new_friend), contactBean.getId())) {
             holder.avatar.setImageResource(R.drawable.group_new_friend);
 
-            presenter.loadFriendApplicationList(new IUIKitCallback<Integer>() {
+            presenter.getFriendApplicationUnreadCount(new IUIKitCallback<Integer>() {
                 @Override
                 public void onSuccess(Integer data) {
                     if (data == 0) {
@@ -124,15 +124,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         } else if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.blacklist), contactBean.getId())) {
             holder.avatar.setImageResource(R.drawable.group_black_list);
         } else {
-            if (TextUtils.isEmpty(contactBean.getAvatarUrl())) {
-                if (contactBean.isGroup()) {
-                    holder.avatar.setImageResource(R.drawable.default_user_icon);
-                } else {
-                    holder.avatar.setImageResource(R.drawable.default_user_icon);
-                }
-            } else {
-                GlideEngine.loadImage(holder.avatar, Uri.parse(contactBean.getAvatarUrl()));
-            }
+            int radius = holder.itemView.getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
+            GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), radius);
         }
 
     }

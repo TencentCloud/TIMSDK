@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/demo_profile_bg"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+        android:id="@+id/self_detail_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/face_url_area"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/demo_self_detail_face_area_height"
+                android:background="#FFFFFF"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/modify_user_icon_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="@dimen/demo_profile_face_margin_right"
+                    android:textSize="@dimen/demo_self_profile_text_size"
+                    android:textColor="@color/demo_self_detail_icon_title_bg"
+                    android:text="@string/modify_user_icon" />
+
+                <LinearLayout
+                    android:gravity="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                        android:id="@+id/self_icon"
+                        android:layout_width="@dimen/demo_profile_face_size"
+                        android:layout_height="@dimen/demo_profile_face_size"
+                        android:layout_marginEnd="@dimen/demo_profile_face_margin_right"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop" />
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/modify_nick_name_lv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_profile_item_height"
+                android:layout_marginTop="10dp"
+                app:canNav="true"
+                app:name="@string/modify_nick_name" />
+
+            <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/modify_account_lv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_profile_item_height"
+                app:isTop="true"
+                app:name="@string/modify_account" />
+
+            <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/modify_signature_lv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_profile_item_height"
+                android:layout_marginTop="10dp"
+                app:canNav="true"
+                app:name="@string/modify_signature" />
+
+            <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/modify_gender_lv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_profile_item_height"
+                app:canNav="true"
+                app:isTop="true"
+                app:name="@string/modify_gender" />
+
+            <com.tencent.qcloud.tuicore.component.LineControllerView
+                android:id="@+id/modify_birthday_lv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_profile_item_height"
+                app:canNav="true"
+                app:isTop="true"
+                app:name="@string/modify_birthday" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+</LinearLayout>

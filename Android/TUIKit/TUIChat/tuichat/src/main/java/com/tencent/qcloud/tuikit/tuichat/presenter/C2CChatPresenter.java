@@ -10,6 +10,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.List;
 
@@ -23,7 +24,6 @@ public class C2CChatPresenter extends ChatPresenter {
     public C2CChatPresenter() {
         super();
         TUIChatLog.i(TAG, "C2CChatPresenter Init");
-        initListener();
     }
 
     public void initListener() {
@@ -61,6 +61,7 @@ public class C2CChatPresenter extends ChatPresenter {
             }
         };
         TUIChatService.getInstance().setChatEventListener(chatEventListener);
+        initMessageSender();
     }
 
     /**
@@ -69,7 +70,7 @@ public class C2CChatPresenter extends ChatPresenter {
      * @param lastMessageInfo 拉取消息的起始点
      */
     @Override
-    public void loadMessage(int type, TUIMessageBean lastMessageInfo) {
+    public void loadMessage(int type, TUIMessageBean lastMessageInfo, IUIKitCallback<List<TUIMessageBean>> callback) {
         if (chatInfo == null || isLoading) {
             return;
         }
@@ -86,16 +87,18 @@ public class C2CChatPresenter extends ChatPresenter {
                     if (lastMessageInfo == null) {
                         isHaveMoreNewMessage = false;
                     }
+                    TUIChatUtils.callbackOnSuccess(callback, data);
                     onMessageLoadCompleted(data, type);
                 }
 
                 @Override
                 public void onError(String module, int errCode, String errMsg) {
                     TUIChatLog.e(TAG, "load c2c message failed " + errCode + "  " + errMsg);
+                    TUIChatUtils.callbackOnError(callback, errCode, errMsg);
                 }
             });
         } else { // 向后拉更新的消息 或者 前后同时拉消息
-            loadHistoryMessageList(chatId, false, type, MSG_PAGE_COUNT, lastMessageInfo);
+            loadHistoryMessageList(chatId, false, type, MSG_PAGE_COUNT, lastMessageInfo, callback);
         }
     }
 

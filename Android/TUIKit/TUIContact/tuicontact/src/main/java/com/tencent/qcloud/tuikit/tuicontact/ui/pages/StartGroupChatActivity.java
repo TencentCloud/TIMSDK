@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -135,9 +136,9 @@ public class StartGroupChatActivity extends BaseLightActivity {
 
     private void showJoinTypePickerView() {
         Bundle bundle = new Bundle();
-        bundle.putString(TUIContactConstants.Selection.TITLE, getResources().getString(R.string.group_join_type));
-        bundle.putStringArrayList(TUIContactConstants.Selection.LIST, mJoinTypes);
-        bundle.putInt(TUIContactConstants.Selection.DEFAULT_SELECT_ITEM_INDEX, mJoinTypeIndex);
+        bundle.putString(SelectionActivity.Selection.TITLE, getResources().getString(R.string.group_join_type));
+        bundle.putStringArrayList(SelectionActivity.Selection.LIST, mJoinTypes);
+        bundle.putInt(SelectionActivity.Selection.DEFAULT_SELECT_ITEM_INDEX, mJoinTypeIndex);
         SelectionActivity.startListSelection(this, bundle, new SelectionActivity.OnResultReturnListener() {
             @Override
             public void onReturn(Object text) {

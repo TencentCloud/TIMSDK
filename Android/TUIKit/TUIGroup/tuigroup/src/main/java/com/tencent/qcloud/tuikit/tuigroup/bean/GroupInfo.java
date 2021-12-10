@@ -205,6 +205,7 @@ public class GroupInfo extends ChatInfo {
         setOwner(infoResult.getGroupInfo().getOwner());
         setJoinType(infoResult.getGroupInfo().getGroupAddOpt());
         setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE ? true : false);
+        setFaceUrl(infoResult.getGroupInfo().getFaceUrl());
         return this;
     }
 }

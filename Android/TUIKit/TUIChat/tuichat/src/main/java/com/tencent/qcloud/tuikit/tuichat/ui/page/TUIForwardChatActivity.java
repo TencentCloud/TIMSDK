@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -43,8 +45,10 @@ public class TUIForwardChatActivity extends BaseLightActivity {
         mForwardChatAdapter.setForwardMode(true);
         presenter = new ForwardPresenter();
         presenter.setMessageListAdapter(mForwardChatAdapter);
+        mForwardChatAdapter.setPresenter(presenter);
 
         mFowardChatMessageRecyclerView.setAdapter(mForwardChatAdapter);
+        mFowardChatMessageRecyclerView.setPresenter(presenter);
 
         mTitleBar = (TitleBarLayout) findViewById(R.id.chat_title_bar);
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
@@ -77,7 +81,6 @@ public class TUIForwardChatActivity extends BaseLightActivity {
             public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
 
             }
-
         });
 
         init();

@@ -137,6 +137,7 @@ public final class TUIConstants {
         public static final String METHOD_GET_TOTAL_UNREAD_COUNT = "getTotalUnreadCount";
         public static final String METHOD_UPDATE_TOTAL_UNREAD_COUNT = "updateTotalUnreadCount";
         public static final String METHOD_DELETE_CONVERSATION = "deleteConversation";
+        public static final String METHOD_CLEAR_CONVERSATION_MESSAGE = "clearConversationMessage";
 
         public static final String EVENT_UNREAD = "eventTotalUnreadCount";
         public static final String EVENT_SUB_KEY_UNREAD_CHANGED = "unreadCountChanged";
@@ -147,6 +148,7 @@ public final class TUIConstants {
         public static final String CONVERSATION_ID = "conversationId";
         public static final String IS_SET_TOP = "isSetTop";
         public static final String IS_TOP = "isTop";
+        public static final String IS_GROUP = "isGroup";
         public static final String TOTAL_UNREAD_COUNT = "totalUnreadCount";
         public static final String CONTEXT = "context";
         public static final String SEARCH_VIEW = "searchView";
@@ -247,6 +249,7 @@ public final class TUIConstants {
         public static final String EVENT_SUB_KEY_JOIN_GROUP = "eventSubKeyJoinGroup";
         public static final String EVENT_SUB_KEY_INVITED_GROUP = "eventSubKeyInvitedGroup";
         public static final String EVENT_SUB_KEY_GROUP_INFO_CHANGED = "eventSubKeyGroupInfoChanged";
+        public static final String EVENT_SUB_KEY_CLEAR_MESSAGE = "eventSubKeyGroupClearMessage";
 
         public static final String GROUP_ID = "groupId";
         public static final String GROUP_NAME = "groupName";

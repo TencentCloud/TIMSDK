@@ -35,7 +35,6 @@ public class GroupChatPresenter extends ChatPresenter {
     public GroupChatPresenter() {
         super();
         TUIChatLog.i(TAG, "GroupChatPresenter Init");
-        initListener();
     }
 
     public void initListener() {
@@ -49,6 +48,13 @@ public class GroupChatPresenter extends ChatPresenter {
             @Override
             public void exitGroupChat(String chatId) {
                 GroupChatPresenter.this.onExitChat(chatId);
+            }
+
+            @Override
+            public void clearGroupMessage(String chatId) {
+                if (TextUtils.equals(chatId, groupInfo.getId())) {
+                    GroupChatPresenter.this.clearMessage();
+                }
             }
 
             @Override
@@ -79,10 +85,11 @@ public class GroupChatPresenter extends ChatPresenter {
             }
         };
         TUIChatService.getInstance().setGroupChatEventListener(groupChatEventListener);
+        initMessageSender();
     }
 
     @Override
-    public void loadMessage(int type, TUIMessageBean lastMessageInfo) {
+    public void loadMessage(int type, TUIMessageBean lastMessageInfo, IUIKitCallback<List<TUIMessageBean>> callback) {
         if (groupInfo == null || isLoading) {
             return;
         }
@@ -98,15 +105,17 @@ public class GroupChatPresenter extends ChatPresenter {
                         isHaveMoreNewMessage = false;
                     }
                     onMessageLoadCompleted(data, type);
+                    TUIChatUtils.callbackOnSuccess(callback, data);
                 }
 
                 @Override
                 public void onError(String module, int errCode, String errMsg) {
                     TUIChatLog.e(TAG, "load group message failed " + errCode + "  " + errMsg);
+                    TUIChatUtils.callbackOnError(callback, errCode, errMsg);
                 }
             });
         } else { // 向后拉更新的消息 或者 前后同时拉消息
-            loadHistoryMessageList(chatId, true, type, MSG_PAGE_COUNT, lastMessageInfo);
+            loadHistoryMessageList(chatId, true, type, MSG_PAGE_COUNT, lastMessageInfo, callback);
         }
     }
 

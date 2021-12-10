@@ -12,9 +12,15 @@ import com.tencent.qcloud.tuicore.util.FileUtil;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.VideoReplyQuoteBean;
 
 import java.io.File;
 
+/**
+ * 视频消息
+ */
 public class VideoMessageBean extends TUIMessageBean {
     private String dataUri;
     private String dataPath;
@@ -205,5 +211,10 @@ public class VideoMessageBean extends TUIMessageBean {
         void onSuccess();
 
         void onError(int code, String desc);
+    }
+
+    @Override
+    public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
+        return VideoReplyQuoteBean.class;
     }
 }

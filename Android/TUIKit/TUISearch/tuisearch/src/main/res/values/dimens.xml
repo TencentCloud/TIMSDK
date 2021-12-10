@@ -16,4 +16,8 @@
 
     <dimen name="item_height">49.35dp</dimen>
     <dimen name="item_width">49.35dp</dimen>
+
+    <dimen name="search_bar_width">329.28dp</dimen>
+    <dimen name="search_bar_height">38.4dp</dimen>
+    <dimen name="search_bar_margin">15.36dp</dimen>
 </resources>

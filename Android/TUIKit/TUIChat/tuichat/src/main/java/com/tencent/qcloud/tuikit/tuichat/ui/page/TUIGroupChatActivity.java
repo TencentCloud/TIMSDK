@@ -32,6 +32,7 @@ public class TUIGroupChatActivity extends TUIBaseChatActivity{
         bundle.putSerializable(TUIChatConstants.CHAT_INFO, groupInfo);
         chatFragment.setArguments(bundle);
         presenter = new GroupChatPresenter();
+        presenter.initListener();
         chatFragment.setPresenter(presenter);
         getSupportFragmentManager().beginTransaction().replace(R.id.empty_view, chatFragment).commitAllowingStateLoss();
     }

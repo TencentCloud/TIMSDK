@@ -14,6 +14,8 @@
     <string name="revoke_action">撤回</string>
     <string name="resend_action">重发</string>
 
+    <string name="copy_success_tip">复制成功</string>
+
     <!-- 消息转发 -->
 
     <string name="titlebar_back">返回</string>
@@ -21,6 +23,7 @@
     <string name="forward_mode_onebyone">逐条转发</string>
     <string name="forward_mode_merge">合并转发</string>
     <string name="forward_button">转发</string>
+    <string name="reply_button">回复</string>
     <string name="delete_button">删除</string>
     <string name="forward_chats">群聊的聊天记录</string>
     <string name="and_text">和</string>
@@ -56,11 +59,14 @@
     <string name="send">发送</string>
 
     <string name="custom_msg">[自定义消息]</string>
-    <string name="custom_emoji">[自定义表情]</string>
+    <string name="custom_emoji">[动画表情]</string>
     <string name="picture_extra">[图片]</string>
     <string name="video_extra">[视频]</string>
     <string name="audio_extra">[语音]</string>
     <string name="file_extra">[文件]</string>
+    <string name="location_extra">[地理位置]</string>
+
+    <string name="locate_origin_msg_failed_tip">无法定位到原消息</string>
 
     <string name="forward_extra">[聊天记录]</string>
     <string name="revoke_tips_you">您撤回了一条消息</string>

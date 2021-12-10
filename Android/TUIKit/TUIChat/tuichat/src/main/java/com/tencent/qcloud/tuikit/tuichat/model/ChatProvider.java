@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.model;
 
 import android.util.Log;
 import android.util.Pair;
+import android.view.View;
 
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
@@ -16,6 +17,7 @@ import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMGroupTipsElem;
 import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMergerElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
@@ -29,6 +31,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageContainerBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
@@ -509,4 +512,39 @@ public class ChatProvider {
             }
         });
     }
+
+    public void findMessage(List<String> msgIds, IUIKitCallback<List<TUIMessageBean>> callback) {
+        V2TIMManager.getMessageManager().findMessages(msgIds, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onSuccess(List<V2TIMMessage> messages) {
+                List<TUIMessageBean> messageBeans = ChatMessageParser.parseMessageList(messages);
+                TUIChatUtils.callbackOnSuccess(callback, messageBeans);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatUtils.callbackOnError(callback, code, desc);
+            }
+        });
+
+    }
+
+    public void downloadMergerMessage(MergeMessageBean messageBean, IUIKitCallback<List<TUIMessageBean>> callback) {
+        V2TIMMergerElem mergerElem = messageBean.getMergerElem();
+        if (mergerElem != null) {
+            mergerElem.downloadMergerMessage(new V2TIMValueCallback<List<V2TIMMessage>>() {
+                @Override
+                public void onSuccess(List<V2TIMMessage> messageList) {
+                    List<TUIMessageBean> messageInfoList = ChatMessageParser.parseMessageList(messageList);
+                    TUIChatUtils.callbackOnSuccess(callback, messageInfoList);
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    TUIChatUtils.callbackOnError(callback, "MergeMessageElemBean", code, desc);
+                }
+            });
+        }
+    }
+
 }

@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
@@ -17,13 +19,10 @@ import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
-import com.tencent.qcloud.tuikit.tuiconversation.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ConversationCommonHolder extends ConversationBaseHolder {
 
@@ -57,7 +56,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 
     public void layoutViews(ConversationInfo conversation, int position) {
         if (conversation.isTop() && !isForwardMode) {
-            leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.conversation_top_color));
+            leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.conversation_item_top_color));
         } else {
             leftItemLayout.setBackgroundColor(Color.WHITE);
         }
@@ -66,8 +65,22 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         messageText.setText("");
         timelineText.setText("");
         DraftInfo draftInfo = conversation.getDraft();
-        if (draftInfo != null && !TextUtils.isEmpty(draftInfo.getDraftText())) {
-            messageText.setText(draftInfo.getDraftText());
+        String draftText = "";
+        if (draftInfo != null) {
+            Gson gson = new Gson();
+            HashMap draftJsonMap;
+            draftText = draftInfo.getDraftText();
+            try {
+                draftJsonMap = gson.fromJson(draftInfo.getDraftText(), HashMap.class);
+                if (draftJsonMap != null) {
+                    draftText = (String) draftJsonMap.get("content");
+                }
+            } catch (JsonSyntaxException e) {
+                TUIConversationLog.e("ConversationCommonHolder", " getDraftJsonMap error ");
+            }
+        }
+        if (draftInfo != null) {
+            messageText.setText(draftText);
             timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(draftInfo.getDraftTime() * 1000)));
         } else {
             HashMap<String, Object> param = new HashMap<>();
@@ -75,8 +88,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             String lastMsgDisplayString = (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
             // 如果最后一条消息是自定义消息, 获取要显示的字符
             if (lastMsgDisplayString != null) {
-                String result = emojiJudge(lastMsgDisplayString);
-                messageText.setText(Html.fromHtml(result));
+                messageText.setText(Html.fromHtml(lastMsgDisplayString));
                 messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
             }
             if (conversation.getLastMessage() != null) {
@@ -107,7 +119,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             unreadText.setVisibility(View.GONE);
         }
 
-        if (draftInfo != null && !TextUtils.isEmpty(draftInfo.getDraftText())) {
+        if (draftInfo != null) {
             atInfoText.setVisibility(View.VISIBLE);
             atInfoText.setText(R.string.drafts);
             atInfoText.setTextColor(Color.RED);
@@ -152,88 +164,6 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 
         //// 由子类设置指定消息类型的views
         layoutVariableViews(conversation, position);
-    }
-
-
-    private static String emojiJudge(String text){
-        if (TextUtils.isEmpty(text)){
-            return "";
-        }
-
-        String[] emojiList = FaceManager.getEmojiFilters();
-        if (emojiList ==null || emojiList.length == 0){
-            return text;
-        }
-
-        SpannableStringBuilder sb = new SpannableStringBuilder(text);
-        String regex = "\\[(\\S+?)\\]";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(text);
-        ArrayList<EmojiData> emojiDataArrayList = new ArrayList<>();
-        //遍历找到匹配字符并存储
-        int lastMentionIndex = -1;
-        while (m.find()) {
-            String emojiName = m.group();
-            int start;
-            if (lastMentionIndex != -1) {
-                start = text.indexOf(emojiName, lastMentionIndex);
-            } else {
-                start = text.indexOf(emojiName);
-            }
-            int end = start + emojiName.length();
-            lastMentionIndex = end;
-
-            int index = findeEmoji(emojiName);
-            String[] emojiListValues = FaceManager.getEmojiFiltersValues();
-            if (index != -1 && emojiListValues != null && emojiListValues.length >= index){
-                emojiName = emojiListValues[index];
-            }
-
-
-            EmojiData emojiData =new EmojiData();
-            emojiData.setStart(start);
-            emojiData.setEnd(end);
-            emojiData.setEmojiText(emojiName);
-
-            emojiDataArrayList.add(emojiData);
-        }
-
-        //倒叙替换
-        if (emojiDataArrayList.isEmpty()){
-            return text;
-        }
-        for (int i = emojiDataArrayList.size() - 1; i >= 0; i--){
-            EmojiData emojiData = emojiDataArrayList.get(i);
-            String emojiName = emojiData.getEmojiText();
-            int start = emojiData.getStart();
-            int end = emojiData.getEnd();
-
-            if (!TextUtils.isEmpty(emojiName) && start != -1 && end != -1) {
-                sb.replace(start, end, emojiName);
-            }
-        }
-        return sb.toString();
-    }
-
-    private static int findeEmoji(String text){
-        int result = -1;
-        if (TextUtils.isEmpty(text)){
-            return result;
-        }
-
-        String[] emojiList = FaceManager.getEmojiFilters();
-        if (emojiList ==null || emojiList.length == 0){
-            return result;
-        }
-
-        for (int i = 0; i < emojiList.length; i++){
-            if (text.equals(emojiList[i])){
-                result = i;
-                break;
-            }
-        }
-
-        return result;
     }
 
     public void layoutVariableViews(ConversationInfo conversationInfo, int position) {

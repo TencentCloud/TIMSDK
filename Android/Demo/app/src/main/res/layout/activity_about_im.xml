@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/demo_profile_bg"
+    tools:context=".profile.AboutIMActivity">
+
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+        android:id="@+id/about_im_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.tencent.qcloud.tuicore.component.LineControllerView
+        android:id="@+id/about_sdk_version_lv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_profile_item_height"
+        app:name="@string/demo_about_sdk_version" />
+
+    <com.tencent.qcloud.tuicore.component.LineControllerView
+        android:id="@+id/about_im_privacy_lv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_profile_item_height"
+        app:canNav="true"
+        app:isTop="true"
+        app:name="@string/im_privacy" />
+    <com.tencent.qcloud.tuicore.component.LineControllerView
+        android:id="@+id/about_user_agreement_lv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_profile_item_height"
+        app:canNav="true"
+        app:isTop="true"
+        app:name="@string/im_user_agreement" />
+    <com.tencent.qcloud.tuicore.component.LineControllerView
+        android:id="@+id/about_statement_lv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_profile_item_height"
+        app:canNav="true"
+        app:isTop="true"
+        app:name="@string/im_statement" />
+
+    <com.tencent.qcloud.tuicore.component.LineControllerView
+        android:id="@+id/about_im_lv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_profile_item_height"
+        app:canNav="true"
+        app:isTop="true"
+        app:name="@string/demo_about_im" />
+
+</LinearLayout>

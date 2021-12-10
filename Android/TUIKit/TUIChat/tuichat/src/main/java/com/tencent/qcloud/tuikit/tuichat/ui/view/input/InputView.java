@@ -2,19 +2,24 @@ package com.tencent.qcloud.tuikit.tuichat.ui.view.input;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -27,14 +32,19 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.FileUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
+import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
@@ -49,6 +59,7 @@ import com.tencent.qcloud.tuikit.tuichat.ui.view.input.inputmore.InputMoreFragme
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.DraftInfo;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.PermissionUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
@@ -144,7 +155,13 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     private Map<String,String> atUserInfoMap = new HashMap<>();
     private String displayInputString;
 
-    ChatPresenter presenter;
+    private ChatPresenter presenter;
+
+    private boolean isReplyModel = false;
+    private View replyLayout;
+    private TextView replyTv;
+    private ImageView replyCloseBtn;
+    private ReplyPreviewBean replyPreviewBean;
 
     public InputView(Context context) {
         super(context);
@@ -176,8 +193,27 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         mMoreInputButton = findViewById(R.id.more_btn);
         mSendTextButton = findViewById(R.id.send_btn);
         mTextInput = findViewById(R.id.chat_message_input);
-
+        replyLayout = findViewById(R.id.reply_preview_bar);
+        replyTv = findViewById(R.id.reply_text);
+        replyCloseBtn = findViewById(R.id.reply_close_btn);
         // 子类实现所有的事件处理
+
+        int iconSize = getResources().getDimensionPixelSize(R.dimen.chat_input_icon_size);
+        ViewGroup.LayoutParams layoutParams = mEmojiInputButton.getLayoutParams();
+        layoutParams.width = iconSize;
+        layoutParams.height = iconSize;
+        mEmojiInputButton.setLayoutParams(layoutParams);
+
+        layoutParams = mAudioInputSwitchButton.getLayoutParams();
+        layoutParams.width = iconSize;
+        layoutParams.height = iconSize;
+        mAudioInputSwitchButton.setLayoutParams(layoutParams);
+
+        layoutParams = mMoreInputButton.getLayoutParams();
+        layoutParams.width = iconSize;
+        layoutParams.height = iconSize;
+        mMoreInputButton.setLayoutParams(layoutParams);
+
         init();
     }
 
@@ -199,12 +235,19 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 return false;
             }
         });
+
         mTextInput.setOnKeyListener(new OnKeyListener() {
             @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if (keyCode == KeyEvent.KEYCODE_DEL && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (isReplyModel && TextUtils.isEmpty(mTextInput.getText().toString())) {
+                        exitReply();
+                    }
+                }
                 return false;
             }
         });
+
         mTextInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -279,6 +322,13 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 }
             }
         });
+
+        replyCloseBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitReply();
+            }
+        });
     }
 
     public void addInputText(String name, String id){
@@ -309,6 +359,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 FaceManager.handlerEmojiText(mTextInput, text, true);
                 mTextInput.setSelection(selectedIndex + insertStr.length());
             }
+            showSoftInput();
         }
     }
 
@@ -328,6 +379,13 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 FaceManager.handlerEmojiText(mTextInput, text, true);
                 mTextInput.setSelection(selectedIndex + displayInputString.length());
             }
+            // @ 之后要显示软键盘。Activity 没有 onResume 导致无法显示软键盘
+            BackgroundTasks.getInstance().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showSoftInput();
+                }
+            }, 200);
         }
     }
 
@@ -615,7 +673,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 mCurrentState = STATE_SOFT_INPUT;
             }
             if (mCurrentState == STATE_VOICE_INPUT) {
-                mAudioInputSwitchButton.setImageResource(R.drawable.action_textinput_selector);
                 mSendAudioButton.setVisibility(VISIBLE);
                 mTextInput.setVisibility(GONE);
                 hideSoftInput();
@@ -639,7 +696,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 mTextInput.setVisibility(VISIBLE);
             } else {
                 mCurrentState = STATE_FACE_INPUT;
-                mEmojiInputButton.setImageResource(R.drawable.action_textinput_selector);
                 showFaceViewGroup();
             }
         } else if (view.getId() == R.id.more_btn) {//若点击右边的“+”号按钮
@@ -671,16 +727,26 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         } else if (view.getId() == R.id.send_btn) {
             if (mSendEnable) {
                 if (mMessageHandler != null) {
-                    if(TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
-                        //发送时通过获取输入框匹配上@的昵称list，去从map中获取ID list。
-                        List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
-                        if (atUserList.isEmpty()) {
-                            mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
-                        }else {
-                            mMessageHandler.sendMessage(ChatMessageBuilder.buildTextAtMessage(atUserList, mTextInput.getText().toString().trim()));
+                    if (isReplyModel && replyPreviewBean != null) {
+                        if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
+                            List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
+                            mMessageHandler.sendMessage(ChatMessageBuilder.buildAtReplyMessage(mTextInput.getText().toString().trim(), atUserList, replyPreviewBean));
+                        } else {
+                            mMessageHandler.sendMessage(ChatMessageBuilder.buildReplyMessage(mTextInput.getText().toString().trim(), replyPreviewBean));
                         }
-                    }else {
-                        mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
+                        exitReply();
+                    } else {
+                        if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
+                            //发送时通过获取输入框匹配上@的昵称list，去从map中获取ID list。
+                            List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
+                            if (atUserList.isEmpty()) {
+                                mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
+                            } else {
+                                mMessageHandler.sendMessage(ChatMessageBuilder.buildTextAtMessage(atUserList, mTextInput.getText().toString().trim()));
+                            }
+                        } else {
+                            mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
+                        }
                     }
                 }
                 mTextInput.setText("");
@@ -688,14 +754,20 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         }
     }
 
-    private void showSoftInput() {
-        TUIChatLog.v(TAG, "showSoftInput");
+    public void showSoftInput() {
+        TUIChatLog.i(TAG, "showSoftInput");
         hideInputMoreLayout();
         mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
-        mEmojiInputButton.setImageResource(R.drawable.ic_input_face_normal);
+        mEmojiInputButton.setImageResource(R.drawable.chat_input_face);
+        mCurrentState = STATE_SOFT_INPUT;
+        mSendAudioButton.setVisibility(GONE);
+        mTextInput.setVisibility(VISIBLE);
+
         mTextInput.requestFocus();
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mTextInput, 0);
+        if (!isSoftInputShown()) {
+            imm.toggleSoftInput(0, 0);
+        }
         if (mChatInputHandler != null) {
             postDelayed(new Runnable() {
                 @Override
@@ -712,6 +784,29 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
         mTextInput.clearFocus();
         mInputMoreView.setVisibility(View.GONE);
+    }
+
+    private boolean isSoftInputShown() {
+        View decorView = ((Activity) getContext()).getWindow().getDecorView();
+        int screenHeight = decorView.getHeight();
+        Rect rect = new Rect();
+        decorView.getWindowVisibleDisplayFrame(rect);
+        return screenHeight - rect.bottom - getNavigateBarHeight() >= 0;
+    }
+
+    // 兼容有导航键的情况
+    private int getNavigateBarHeight() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager windowManager  = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(metrics);
+        int usableHeight = metrics.heightPixels;
+        windowManager.getDefaultDisplay().getRealMetrics(metrics);
+        int realHeight = metrics.heightPixels;
+        if (realHeight > usableHeight) {
+            return realHeight - usableHeight;
+        } else {
+            return 0;
+        }
     }
 
     private void showFaceViewGroup() {
@@ -889,9 +984,16 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             return;
         }
 
-        final String content = mTextInput.getText().toString();
+        String draftText = mTextInput.getText().toString();
+        if (isReplyModel && replyPreviewBean != null) {
+            Gson gson = new Gson();
+            Map<String, String> draftMap = new HashMap<>();
+            draftMap.put("content", draftText);
+            draftMap.put("reply", gson.toJson(replyPreviewBean));
+            draftText = gson.toJson(draftMap);
+        }
         if (presenter != null) {
-            presenter.setDraft(content);
+            presenter.setDraft(draftText);
         }
     }
 
@@ -900,7 +1002,24 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         if (chatInfo != null) {
             DraftInfo draftInfo = chatInfo.getDraft();
             if (draftInfo != null && !TextUtils.isEmpty(draftInfo.getDraftText()) && mTextInput != null) {
-                mTextInput.setText(draftInfo.getDraftText());
+                Gson gson = new Gson();
+                HashMap draftJsonMap;
+                String content = draftInfo.getDraftText();
+                try {
+                    draftJsonMap = gson.fromJson(draftInfo.getDraftText(), HashMap.class);
+                    if (draftJsonMap != null) {
+                        content = (String) draftJsonMap.get("content");
+                        String draftStr = (String) draftJsonMap.get("reply");
+                        ReplyPreviewBean bean = gson.fromJson(draftStr, ReplyPreviewBean.class);
+                        if (bean != null) {
+                            showReplyPreview(bean);
+                        }
+                    }
+                } catch (JsonSyntaxException e) {
+                    TUIChatLog.e(TAG, " getCustomJsonMap error ");
+                }
+
+                mTextInput.setText(content);
                 mTextInput.setSelection(mTextInput.getText().length());
             }
         }
@@ -1165,6 +1284,36 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         }
     }
 
+    public void showReplyPreview(ReplyPreviewBean previewBean) {
+        isReplyModel = true;
+        replyPreviewBean = previewBean;
+        String replyMessageAbstract = previewBean.getMessageAbstract();
+        String msgTypeStr = ChatMessageParser.getMsgTypeStr(previewBean.getMessageType());
+        // 如果是回复文字消息，缩略显示文件名中间部分
+        if (previewBean.getOriginalMessageBean() instanceof FileMessageBean) {
+            replyTv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+        } else {
+            replyTv.setEllipsize(TextUtils.TruncateAt.END);
+        }
+        String text = previewBean.getMessageSender() + " : " + msgTypeStr + " " + replyMessageAbstract;
+        text = FaceManager.emojiJudge(text);
+        replyTv.setText(text);
+        replyLayout.setVisibility(View.VISIBLE);
+        if (mMessageHandler != null) {
+            mMessageHandler.scrollToEnd();
+        }
+
+        showSoftInput();
+    }
+
+
+
+    public void exitReply() {
+        isReplyModel = false;
+        replyPreviewBean = null;
+        replyLayout.setVisibility(View.GONE);
+    }
+
     protected void showEmojiInputButton(int visibility) {
         if (mEmojiInputDisable) {
             return;
@@ -1182,6 +1331,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
 
     public interface MessageHandler {
         void sendMessage(TUIMessageBean msg);
+        void scrollToEnd();
     }
 
     public interface ChatInputHandler {

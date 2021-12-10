@@ -28,6 +28,7 @@ public class TUIC2CChatActivity extends TUIBaseChatActivity {
         bundle.putSerializable(TUIChatConstants.CHAT_INFO, chatInfo);
         chatFragment.setArguments(bundle);
         presenter = new C2CChatPresenter();
+        presenter.initListener();
         chatFragment.setPresenter(presenter);
         getSupportFragmentManager().beginTransaction().replace(R.id.empty_view, chatFragment).commitAllowingStateLoss();
     }

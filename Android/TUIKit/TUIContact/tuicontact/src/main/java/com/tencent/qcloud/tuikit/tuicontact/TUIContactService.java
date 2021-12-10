@@ -114,6 +114,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
                 List<ContactItemBean> contactItemBeanList = new ArrayList<>();
                 for(V2TIMFriendInfo v2TIMFriendInfo : users) {
                     ContactItemBean contactItemBean = new ContactItemBean();
+                    contactItemBean.setFriend(true);
                     contactItemBean.covertTIMFriend(v2TIMFriendInfo);
                     contactItemBeanList.add(contactItemBean);
                 }
@@ -162,6 +163,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
                 List<ContactItemBean> contactItemBeanList = new ArrayList<>();
                 for(V2TIMFriendInfo v2TIMFriendInfo : infoList) {
                     ContactItemBean contactItemBean = new ContactItemBean();
+                    contactItemBean.setFriend(true);
                     contactItemBean.covertTIMFriend(v2TIMFriendInfo);
                     contactItemBeanList.add(contactItemBean);
                 }

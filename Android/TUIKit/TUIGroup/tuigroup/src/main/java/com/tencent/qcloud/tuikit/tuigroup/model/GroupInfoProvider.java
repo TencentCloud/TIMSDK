@@ -290,28 +290,6 @@ public class GroupInfoProvider {
         });
     }
 
-//    public void loadGroupInfo(IBaseInfo baseInfo) {
-//        if (baseInfo instanceof GroupInfo) {
-//            loadGroupInfo(((GroupInfo) baseInfo).getId(), null);
-//        }
-//    }
-//
-//    public void acceptApply(IBaseInfo baseInfo, IUIKitCallback callBack) {
-//        if (baseInfo instanceof GroupApplyInfo) {
-//            acceptApply((GroupApplyInfo) baseInfo, callBack);
-//        }
-//    }
-//
-//    public void refuseApply(IBaseInfo baseInfo, IUIKitCallback callBack) {
-//        if (baseInfo instanceof GroupApplyInfo) {
-//            refuseApply((GroupApplyInfo) baseInfo, callBack);
-//        }
-//    }
-
-    public void loadGroupApplies(IUIKitCallback callBack) {
-
-    }
-
     public List<GroupApplyInfo> getApplyList() {
         return null;
     }

@@ -12,6 +12,7 @@ import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMFriendOperationResult;
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
+import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -33,7 +34,9 @@ import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ContactProvider {
     private static final String TAG = ContactProvider.class.getSimpleName();
@@ -58,6 +61,7 @@ public class ContactProvider {
                         TUIContactLog.i(TAG, "loadFriendListDataAsync->getFriendList:" + v2TIMFriendInfos.size());
                         for (V2TIMFriendInfo timFriendInfo : v2TIMFriendInfos) {
                             ContactItemBean info = new ContactItemBean();
+                            info.setFriend(true);
                             info.covertTIMFriend(timFriendInfo);
                             contactItemBeanList.add(info);
                         }
@@ -161,9 +165,15 @@ public class ContactProvider {
     }
 
     public void addFriend(String userId, String addWording, IUIKitCallback<Pair<Integer, String>> callback) {
+        addFriend(userId, addWording, null, null, callback);
+    }
+
+    public void addFriend(String userId, String addWording, String friendGroup, String remark, IUIKitCallback<Pair<Integer, String>> callback) {
         V2TIMFriendAddApplication v2TIMFriendAddApplication = new V2TIMFriendAddApplication(userId);
         v2TIMFriendAddApplication.setAddWording(addWording);
         v2TIMFriendAddApplication.setAddSource("android");
+        v2TIMFriendAddApplication.setFriendGroup(friendGroup);
+        v2TIMFriendAddApplication.setFriendRemark(remark);
         V2TIMManager.getFriendshipManager().addFriend(v2TIMFriendAddApplication, new V2TIMValueCallback<V2TIMFriendOperationResult>() {
             @Override
             public void onError(int code, String desc) {
@@ -212,6 +222,21 @@ public class ContactProvider {
                     applicationBeanList.add(bean);
                 }
                 ContactUtils.callbackOnSuccess(callback, applicationBeanList);
+            }
+        });
+    }
+
+    public void getFriendApplicationListUnreadCount(IUIKitCallback<Integer> callback) {
+        V2TIMManager.getFriendshipManager().getFriendApplicationList(new V2TIMValueCallback<V2TIMFriendApplicationResult>() {
+            @Override
+            public void onError(int code, String desc) {
+                TUIContactLog.e(TAG, "getPendencyList err code = " + code + ", desc = " + desc);
+                ContactUtils.callbackOnError(callback, TAG, code, desc);
+            }
+
+            @Override
+            public void onSuccess(V2TIMFriendApplicationResult v2TIMFriendApplicationResult) {
+                ContactUtils.callbackOnSuccess(callback, v2TIMFriendApplicationResult.getUnreadCount());
             }
         });
     }
@@ -284,6 +309,30 @@ public class ContactProvider {
         });
     }
 
+    public void getGroupInfo(List<String> groupIds, IUIKitCallback<List<GroupInfo>> callback) {
+        V2TIMManager.getGroupManager().getGroupsInfo(groupIds, new V2TIMValueCallback<List<V2TIMGroupInfoResult>>() {
+            @Override
+            public void onSuccess(List<V2TIMGroupInfoResult> v2TIMGroupInfoResults) {
+                List<GroupInfo> groupInfos = new ArrayList<>();
+                for (V2TIMGroupInfoResult result : v2TIMGroupInfoResults) {
+                    GroupInfo groupInfo = new GroupInfo();
+                    groupInfo.setId(result.getGroupInfo().getGroupID());
+                    groupInfo.setFaceUrl(result.getGroupInfo().getFaceUrl());
+                    groupInfo.setGroupName(result.getGroupInfo().getGroupName());
+                    groupInfo.setMemberCount(result.getGroupInfo().getMemberCount());
+                    groupInfo.setGroupType(result.getGroupInfo().getGroupType());
+                    groupInfos.add(groupInfo);
+                }
+                ContactUtils.callbackOnSuccess(callback, groupInfos);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                ContactUtils.callbackOnError(callback, code, desc);
+            }
+        });
+    }
+
     public void getUserInfo(List<String> userIdList, IUIKitCallback<List<ContactItemBean>> callback) {
         V2TIMManager.getInstance().getUsersInfo(userIdList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
             @Override
@@ -300,15 +349,15 @@ public class ContactProvider {
                     contactItemBean.setNickName(userFullInfo.getNickName());
                     contactItemBean.setId(userFullInfo.getUserID());
                     contactItemBean.setAvatarUrl(userFullInfo.getFaceUrl());
+                    contactItemBean.setSignature(userFullInfo.getSelfSignature());
                     contactItemBeanList.add(contactItemBean);
                 }
-
                 ContactUtils.callbackOnSuccess(callback, contactItemBeanList);
             }
         });
     }
 
-    public void getBlackList(String id, IUIKitCallback<Boolean> callback) {
+    public void isInBlackList(String id, IUIKitCallback<Boolean> callback) {
         V2TIMManager.getFriendshipManager().getBlackList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
             @Override
             public void onError(int code, String desc) {
@@ -322,15 +371,16 @@ public class ContactProvider {
                     for (V2TIMFriendInfo friendInfo : v2TIMFriendInfos) {
                         if (TextUtils.equals(friendInfo.getUserID(), id)) {
                             ContactUtils.callbackOnSuccess(callback, true);
-                            break;
+                            return;
                         }
                     }
                 }
+                ContactUtils.callbackOnSuccess(callback, false);
             }
         });
     }
 
-    public void getFriendList(String id, IUIKitCallback<ContactItemBean> callback) {
+    public void isFriend(String id, ContactItemBean bean, IUIKitCallback<Boolean> callback) {
         V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
             @Override
             public void onError(int code, String desc) {
@@ -343,15 +393,15 @@ public class ContactProvider {
                 if (v2TIMFriendInfos != null && v2TIMFriendInfos.size() > 0) {
                     for (V2TIMFriendInfo friendInfo : v2TIMFriendInfos) {
                         if (TextUtils.equals(friendInfo.getUserID(), id)) {
-                            ContactItemBean bean = new ContactItemBean();
                             bean.setFriend(true);
                             bean.setRemark(friendInfo.getFriendRemark());
                             bean.setAvatarUrl(friendInfo.getUserProfile().getFaceUrl());
-                            ContactUtils.callbackOnSuccess(callback, bean);
+                            ContactUtils.callbackOnSuccess(callback, true);
                             return;
                         }
                     }
                 }
+                ContactUtils.callbackOnSuccess(callback, false);
             }
         });
     }
@@ -521,6 +571,20 @@ public class ContactProvider {
     public void refuseJoinGroupApply(ContactGroupApplyInfo info, String reason, IUIKitCallback<Void> callback) {
         V2TIMGroupApplication application = info.getTimGroupApplication();
         V2TIMManager.getGroupManager().refuseGroupApplication(application, reason, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                ContactUtils.callbackOnSuccess(callback, null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                ContactUtils.callbackOnError(callback, code, desc);
+            }
+        });
+    }
+
+    public void setGroupApplicationRead(IUIKitCallback<Void> callback) {
+        V2TIMManager.getGroupManager().setGroupApplicationRead(new V2TIMCallback() {
             @Override
             public void onSuccess() {
                 ContactUtils.callbackOnSuccess(callback, null);

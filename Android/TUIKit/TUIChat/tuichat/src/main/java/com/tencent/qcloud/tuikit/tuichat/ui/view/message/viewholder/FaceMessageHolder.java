@@ -1,6 +1,8 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -61,4 +63,21 @@ public class FaceMessageHolder extends MessageContentHolder {
             contentImage.setImageBitmap(bitmap);
         }
     }
+
+    @Override
+    public void setHighLightBackground(int color) {
+        Drawable drawable = contentImage.getDrawable();
+        if (drawable != null) {
+            drawable.setColorFilter(color, PorterDuff.Mode.SRC_OVER);
+        }
+    }
+
+    @Override
+    public void clearHighLightBackground() {
+        Drawable drawable = contentImage.getDrawable();
+        if (drawable != null) {
+            drawable.setColorFilter(null);
+        }
+    }
+
 }

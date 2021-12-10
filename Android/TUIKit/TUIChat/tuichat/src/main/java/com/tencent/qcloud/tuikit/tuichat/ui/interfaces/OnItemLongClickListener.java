@@ -10,4 +10,8 @@ public interface OnItemLongClickListener {
     void onUserIconClick(View view, int position, TUIMessageBean messageInfo);
 
     void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo);
+
+    default void onReplyMessageClick(View view, int position, String originMsgId) {}
+
+    default void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {};
 }

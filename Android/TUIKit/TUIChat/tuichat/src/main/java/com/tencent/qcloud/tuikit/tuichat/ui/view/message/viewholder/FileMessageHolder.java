@@ -33,6 +33,7 @@ public class FileMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
+        sendingProgress.setVisibility(View.GONE);
         FileMessageBean message = (FileMessageBean) msg;
         final String path = message.getDataPath();
         fileNameText.setText(message.getFileName());
@@ -45,6 +46,27 @@ public class FileMessageHolder extends MessageContentHolder {
                 FileUtil.openFile(path, fileName);
             }
         });
+
+        if (isForwardMode) {
+            msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
+            statusImage.setVisibility(View.GONE);
+        } else {
+            //// 聊天气泡设置
+            if (msg.isSelf()) {
+                if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
+                    msgContentFrame.setBackground(properties.getRightBubble().getConstantState().newDrawable());
+                } else {
+                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_self_cavity_bg);
+                }
+            } else {
+                if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
+                    msgContentFrame.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
+                    msgContentFrame.setLayoutParams(msgContentFrame.getLayoutParams());
+                } else {
+                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
+                }
+            }
+        }
 
         if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS
                 && message.getDownloadStatus() == FileMessageBean.MSG_STATUS_DOWNLOADED) {

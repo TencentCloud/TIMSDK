@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
@@ -67,14 +68,17 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
                 }
             });
             mViewHolder = new ViewHolder();
-            mViewHolder.avatar = (CircleImageView) mView.findViewById(R.id.avatar);
+            mViewHolder.avatar = mView.findViewById(R.id.avatar);
             mViewHolder.name = mView.findViewById(R.id.name);
             mViewHolder.des = mView.findViewById(R.id.description);
             mViewHolder.agree = mView.findViewById(R.id.agree);
+            mViewHolder.reject = mView.findViewById(R.id.reject);
+            mViewHolder.result = mView.findViewById(R.id.result_tv);
             mView.setTag(mViewHolder);
         }
         Resources res = getContext().getResources();
-        mViewHolder.avatar.setImageResource(R.drawable.ic_personal_member);
+        int radius = mView.getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
+        GlideEngine.loadUserIcon(mViewHolder.avatar, data.getFaceUrl(), radius);
         mViewHolder.name.setText(TextUtils.isEmpty(data.getNickName()) ? data.getUserId() : data.getNickName());
         mViewHolder.des.setText(data.getAddWording());
         switch (data.getAddType()) {
@@ -83,13 +87,16 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
                 mViewHolder.agree.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final TextView vv = (TextView) v;
-                        doResponse(vv, data);
+                        doResponse(mViewHolder, data, true);
                     }
                 });
-                break;
-            case FriendApplicationBean.FRIEND_APPLICATION_SEND_OUT:
-                mViewHolder.agree.setText(res.getString(R.string.request_waiting));
+                mViewHolder.reject.setText(res.getString(R.string.refuse));
+                mViewHolder.reject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doResponse(mViewHolder, data, false);
+                    }
+                });
                 break;
             case FriendApplicationBean.FRIEND_APPLICATION_BOTH:
                 mViewHolder.agree.setText(res.getString(R.string.request_accepted));
@@ -98,21 +105,43 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
         return mView;
     }
 
-    private void doResponse(final TextView view, FriendApplicationBean data) {
+    private void doResponse(final ViewHolder viewHolder, FriendApplicationBean data, boolean isAccept) {
         if (presenter != null) {
-            presenter.acceptFriendApplication(data, new IUIKitCallback<Void>(){
-                @Override
-                public void onSuccess(Void data) {
-                    if (view != null) {
-                        view.setText(TUIContactService.getAppContext().getResources().getString(R.string.request_accepted));
+            if (isAccept) {
+                presenter.acceptFriendApplication(data, new IUIKitCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void data) {
+                        if (viewHolder != null) {
+                            viewHolder.agree.setVisibility(View.GONE);
+                            viewHolder.reject.setVisibility(View.GONE);
+                            viewHolder.result.setVisibility(View.VISIBLE);
+                        }
                     }
-                }
 
-                @Override
-                public void onError(String module, int errCode, String errMsg) {
-                    ToastUtil.toastShortMessage("Error code = " + errCode + ", desc = " + errMsg);
-                }
-            });
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        ToastUtil.toastShortMessage("Error code = " + errCode + ", desc = " + errMsg);
+                    }
+                });
+            } else {
+                presenter.refuseFriendApplication(data, new IUIKitCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void data) {
+                        if (viewHolder != null) {
+                            viewHolder.agree.setVisibility(View.GONE);
+                            viewHolder.reject.setVisibility(View.GONE);
+                            viewHolder.result.setVisibility(View.VISIBLE);
+                            viewHolder.result.setText(TUIContactService.getAppContext().getResources().getString(R.string.refused));
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        ToastUtil.toastShortMessage("Error code = " + errCode + ", desc = " + errMsg);
+                    }
+                });
+            }
         }
 
     }
@@ -125,7 +154,9 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
         ImageView avatar;
         TextView name;
         TextView des;
-        Button agree;
+        TextView agree;
+        TextView reject;
+        TextView result;
     }
 
 }

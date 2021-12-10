@@ -285,8 +285,11 @@
         </receiver>
 
         <activity
-            android:name=".profile.SelectionActivity"
+            android:name=".profile.SelfDetailActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".profile.AboutIMActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

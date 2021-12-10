@@ -50,14 +50,5 @@ public class CustomLinkMessageHolder extends MessageContentHolder {
             }
         });
 
-        msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (onItemLongClickListener != null) {
-                    onItemLongClickListener.onMessageLongClick(v, position, msg);
-                }
-                return false;
-            }
-        });
     }
 }

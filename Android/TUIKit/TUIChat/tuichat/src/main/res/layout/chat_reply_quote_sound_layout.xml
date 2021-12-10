@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--音频消息-->
+    <LinearLayout
+        android:id="@+id/sound_msg_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/sound_msg_icon_iv"
+            android:src="@drawable/voice_msg_playing_3"
+            android:layout_width="@dimen/reply_icon_size"
+            android:layout_height="@dimen/reply_icon_size"
+            android:layout_marginRight="@dimen/reply_msg_padding"
+            android:layout_marginEnd="@dimen/reply_msg_padding" />
+
+        <TextView
+            android:id="@+id/sound_msg_time_tv"
+            android:textColor="@color/reply_msg_abstract_text_color"
+            android:textSize="@dimen/reply_origin_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</FrameLayout>

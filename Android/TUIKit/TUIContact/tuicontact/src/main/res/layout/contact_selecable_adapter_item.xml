@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/selectable_contact_item"
     android:layout_width="match_parent"
-    android:layout_height="57.5dp"
-    android:background="#fcfcfc"
+    android:layout_height="58.5dp"
+    android:background="#FFFFFF"
     android:focusable="true"
     android:orientation="vertical">
 
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:paddingLeft="17.3dp">
+        android:paddingLeft="15.36dp">
 
         <CheckBox
             android:id="@+id/contact_check_box"
@@ -25,18 +25,17 @@
             android:focusable="false"
             android:visibility="gone" />
 
-        <ImageView
+        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
             android:id="@+id/ivAvatar"
             android:layout_width="@dimen/contact_avatar_width"
             android:layout_height="@dimen/contact_avatar_height"
             android:clickable="false"
-            android:focusable="false"
-            android:src="@drawable/default_user_icon" />
+            android:focusable="false" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="16dp">
+            android:paddingLeft="11.5dp">
 
             <TextView
                 android:id="@+id/tvCity"
@@ -44,7 +43,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
-                android:textSize="16.3sp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textSize="17.28sp"
                 android:clickable="false"
                 android:focusable="false"
                 android:textColor="@color/black_font_color"

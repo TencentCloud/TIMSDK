@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="chat_background_color">#F4F4F4</color>
+    <color name="chat_background_color">#FFFFFF</color>
+
+    <color name="chat_bubble_other_color">#ECECEC</color>
+    <color name="chat_bubble_self_color">#DCEAFD</color>
+
     <!-- 线 -->
     <color name="chat_title_line_color">#E6E6E6</color>
     <color name="input_title_line_color">#D2D2D2</color>
+
+    <color name="chat_input_layout_bg">#EBF0F6</color>
+    <color name="chat_title_bar_bg">#EBF0F6</color>
 
     <color name="voice_pressed">#DEDEDE</color>
     <color name="voice_normal">#ffffff</color>
     <color name="test_blue">#338BFF</color>
 
-    <color name="status_bar_color">#EDEDED</color>
     <color name="line">#DDDDDD</color>
     <color name="navigation_bar_color">#F7F7F7</color>
     <color name="transparent">#00000000</color>
@@ -26,7 +32,23 @@
     <color name="text_gray1">#777777</color>
     <color name="split_lint_color">#D9D9D9</color>
 
-    <color name="black">#000000</color>
+    <color name="black">#333030</color>
     <color name="dialog_line_bg">#c6c6c6</color>
+
+    <color name="chat_text_color">#000000</color>
+    <color name="chat_message_bubble_bg_stoke_color">#DDDDDD</color>
+
+    <color name="reply_preview_text_color">#EBF0F6</color>
+    <color name="reply_msg_sender_text_color">#FF888888</color>
+    <color name="reply_msg_abstract_text_color">#FF888888</color>
+
+    <color name="reply_abstract_bg">#0D444444</color>
+    <color name="reply_abstract_line_bg">#1A444444</color>
+    <color name="reply_msg_text">#FF888888</color>
+
+    <color name="chat_message_bubble_high_light_light_color">#33FF9800</color>
+    <color name="chat_message_bubble_high_light_dark_color">#80FF9800</color>
+
+    <color name="chat_unread_count_tip_color">#AABCD1</color>
 
 </resources>

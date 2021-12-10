@@ -6,9 +6,15 @@ import android.util.Pair;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
+import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
+import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.model.ContactProvider;
 import com.tencent.qcloud.tuikit.tuicontact.ui.interfaces.IAddMoreActivity;
+import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddMorePresenter {
     private static final String TAG = AddMorePresenter.class.getSimpleName();
@@ -87,4 +93,39 @@ public class AddMorePresenter {
             }
         });
     }
+
+
+    public void getUserInfo(String userId, IUIKitCallback<ContactItemBean> callback) {
+        List<String> userIdList = new ArrayList<>();
+        userIdList.add(userId);
+        provider.getUserInfo(userIdList, new IUIKitCallback<List<ContactItemBean>>() {
+            @Override
+            public void onSuccess(List<ContactItemBean> data) {
+                ContactUtils.callbackOnSuccess(callback, data.get(0));
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                ContactUtils.callbackOnError(callback, errCode, errMsg);
+            }
+        });
+    }
+
+    public void getGroupInfo(String groupId, IUIKitCallback<GroupInfo> callback) {
+        List<String> groupIds = new ArrayList<>();
+        groupIds.add(groupId);
+        provider.getGroupInfo(groupIds, new IUIKitCallback<List<GroupInfo>>() {
+            @Override
+            public void onSuccess(List<GroupInfo> data) {
+                ContactUtils.callbackOnSuccess(callback, data.get(0));
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                ContactUtils.callbackOnError(callback, errCode, errMsg);
+
+            }
+        });
+    }
+
 }

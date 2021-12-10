@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,12 +27,12 @@ public class GroupInfoAdapter extends BaseAdapter {
 
     private static final int ADD_TYPE = -100;
     private static final int DEL_TYPE = -101;
-    private static final int OWNER_PRIVATE_MAX_LIMIT = 10;  //讨论组,owner可以添加成员和删除成员，
-    private static final int OWNER_PUBLIC_MAX_LIMIT = 11;   //公开群,owner不可以添加成员，但是可以删除成员
-    private static final int OWNER_CHATROOM_MAX_LIMIT = 11; //聊天室,owner不可以添加成员，但是可以删除成员
-    private static final int NORMAL_PRIVATE_MAX_LIMIT = 11; //讨论组,普通人可以添加成员
-    private static final int NORMAL_PUBLIC_MAX_LIMIT = 12;  //公开群,普通人没有权限添加成员和删除成员
-    private static final int NORMAL_CHATROOM_MAX_LIMIT = 12; //聊天室,普通人没有权限添加成员和删除成员
+    private static final int OWNER_PRIVATE_MAX_LIMIT = 8;  //讨论组,owner可以添加成员和删除成员，
+    private static final int OWNER_PUBLIC_MAX_LIMIT = 9;   //公开群,owner不可以添加成员，但是可以删除成员
+    private static final int OWNER_CHATROOM_MAX_LIMIT = 9; //聊天室,owner不可以添加成员，但是可以删除成员
+    private static final int NORMAL_PRIVATE_MAX_LIMIT = 9; //讨论组,普通人可以添加成员
+    private static final int NORMAL_PUBLIC_MAX_LIMIT = 10;  //公开群,普通人没有权限添加成员和删除成员
+    private static final int NORMAL_CHATROOM_MAX_LIMIT = 10; //聊天室,普通人没有权限添加成员和删除成员
 
     private List<GroupMemberInfo> mGroupMembers = new ArrayList<>();
     private IGroupMemberRouter mTailListener;
@@ -66,7 +67,7 @@ public class GroupInfoAdapter extends BaseAdapter {
     public View getView(final int i, View view, final ViewGroup viewGroup) {
         MyViewHolder holder;
         if (view == null) {
-            view = LayoutInflater.from(TUIGroupService.getAppContext()).inflate(R.layout.group_member_adpater, viewGroup, false);
+            view = LayoutInflater.from(TUIGroupService.getAppContext()).inflate(R.layout.group_member_item_layout, viewGroup, false);
             holder = new MyViewHolder();
             holder.memberIcon = view.findViewById(R.id.group_member_icon);
             holder.memberName = view.findViewById(R.id.group_member_name);
@@ -75,11 +76,7 @@ public class GroupInfoAdapter extends BaseAdapter {
             holder = (MyViewHolder) view.getTag();
         }
         final GroupMemberInfo info = getItem(i);
-        if (!TextUtils.isEmpty(info.getIconUrl())) {
-            GlideEngine.loadImage(holder.memberIcon, info.getIconUrl());
-        } else {
-            GlideEngine.clear(holder.memberIcon);
-        }
+        GlideEngine.loadImage(holder.memberIcon, info.getIconUrl());
         // 显示优先级 群名片->昵称->账号
         if (!TextUtils.isEmpty(info.getNameCard())) {
             holder.memberName.setText(info.getNameCard());
@@ -119,7 +116,6 @@ public class GroupInfoAdapter extends BaseAdapter {
                 }
             });
         }
-
         return view;
     }
 

@@ -14,6 +14,8 @@
     <string name="revoke_action">Recall</string>
     <string name="resend_action">Resend</string>
 
+    <string name="copy_success_tip">Copy Success</string>
+
     <!-- 消息转发 -->
 
     <string name="titlebar_back">Back</string>
@@ -21,6 +23,7 @@
     <string name="forward_mode_onebyone">One-by-one forward</string>
     <string name="forward_mode_merge">Combine and forward</string>
     <string name="forward_button">Forward</string>
+    <string name="reply_button">Reply</string>
     <string name="delete_button">Delete</string>
     <string name="forward_chats">Group Chat History</string>
     <string name="and_text">and</string>
@@ -57,11 +60,14 @@
     <string name="send">Send</string>
 
     <string name="custom_msg">[Custom Messages]</string>
-    <string name="custom_emoji">[Custom Sticker]</string>
+    <string name="custom_emoji">[Animated Sticker]</string>
     <string name="picture_extra">[Image]</string>
     <string name="video_extra">[Video]</string>
     <string name="audio_extra">[Voice]</string>
     <string name="file_extra">[File]</string>
+    <string name="location_extra">[Location]</string>
+
+    <string name="locate_origin_msg_failed_tip">Unable to locate the original message</string>
 
     <string name="forward_extra">[Chat Record]</string>
     <string name="revoke_tips_you">You recalled a message.</string>

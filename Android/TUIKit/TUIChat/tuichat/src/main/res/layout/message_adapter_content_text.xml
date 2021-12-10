@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:minHeight="36dp"
+    android:minHeight="30dp"
     android:orientation="horizontal">
 
     <TextView
@@ -11,12 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:textColor="@color/black_font_color"
+        android:textColor="@color/chat_text_color"
         android:paddingLeft="7dp"
         android:paddingRight="7dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:maxWidth="276dp"
-        android:textSize="16.5sp" />
+        android:textSize="@dimen/chat_message_text_size" />
 </LinearLayout>
 

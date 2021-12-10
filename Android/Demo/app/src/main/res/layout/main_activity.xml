@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/demo_title_bar_bg"
     android:clipChildren="false"
     android:orientation="vertical">
 
@@ -22,8 +22,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="57.18dp"
-        android:background="#f7f7f7"
+        android:layout_height="65dp"
+        android:background="@color/demo_navigate_bar_bg"
         android:clipChildren="false"
         android:orientation="horizontal">
 
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/conversation_selected"
+                android:drawableTop="@drawable/demo_conversation_selected"
                 android:textColor="@color/tab_text_selected_color"
                 android:drawablePadding="3dp"
                 android:gravity="center"
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@id/conversation"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="1dp"
                 android:layout_marginStart="-20dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
@@ -77,12 +77,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:drawableTop="@drawable/contact_normal"
+                android:drawableTop="@drawable/demo_contact_not_selected"
                 android:drawablePadding="3dp"
                 android:gravity="center"
                 android:textSize="12sp"
                 android:text="@string/tab_contact_tab_text" />
 
+            <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+                android:id="@+id/new_friend_total_unread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@id/contact"
+                android:layout_marginTop="1dp"
+                android:layout_marginStart="-20dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:minWidth="18.4dp"
+                android:minHeight="18.4dp"
+                android:textColor="#fff"
+                android:textSize="13.6sp"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -97,7 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:drawableTop="@drawable/myself_normal"
+                android:drawableTop="@drawable/demo_profile_not_selected"
                 android:drawablePadding="3dp"
                 android:textSize="12sp"
                 android:gravity="center"

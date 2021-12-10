@@ -1,8 +1,10 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.page;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 
@@ -35,7 +37,10 @@ public abstract class TUIBaseChatActivity extends BaseLightActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(getResources().getColor(R.color.chat_title_bar_bg));
+        }
         chat(getIntent());
     }
 

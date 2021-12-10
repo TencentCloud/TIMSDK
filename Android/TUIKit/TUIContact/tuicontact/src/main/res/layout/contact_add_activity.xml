@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
 
@@ -10,72 +11,164 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
 
-    <LinearLayout
+    <!-- search-->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal">
+        android:layout_gravity="center" >
 
         <TextView
-            android:layout_width="70dp"
-            android:layout_height="45dp"
-            android:gravity="center_vertical"
-            android:text="@string/user_id"
-            android:textColor="#000" />
-
-        <EditText
-            android:id="@+id/user_id"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:iconifiedByDefault="false"
-            android:textSize="@dimen/btn_text_size"
-            android:padding="10dp"
-            android:maxLength="30"
-            android:singleLine="true"
-            android:textCursorDrawable="@drawable/my_cursor"
-            android:hint="@string/hint_add_user_id" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="70dp"
-            android:layout_height="45dp"
-            android:gravity="center_vertical"
-            android:text="@string/add_wording"
-            android:textColor="#000" />
-
-        <EditText
-            android:id="@+id/add_wording"
+            android:id="@+id/search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:textSize="@dimen/btn_text_size"
-            android:padding="10dp"
-            android:maxLength="100"
-            android:textCursorDrawable="@drawable/my_cursor"
-            android:hint="@string/hint_add_wording" />
-    </LinearLayout>
+            android:textColor="#444444"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="@string/search"
+            android:textSize="15.36sp" />
 
-    <Button
+        <LinearLayout
+            android:focusable="true"
+            android:layout_toLeftOf="@+id/search_button"
+            android:focusableInTouchMode="true"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/contact_shape_search"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_marginLeft="5dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/contact_imgv_search" />
+            <EditText
+                android:id="@+id/search_edit"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:background="@null"
+                android:imeOptions="actionSearch"
+                android:hint="@string/hint_search_user_id"
+                android:lines="1"
+                android:textSize="16sp"
+                android:singleLine="true" />
+            <ImageView
+                android:layout_marginRight="3dp"
+                android:id="@+id/imgv_delete"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:src="@drawable/contact_imgv_delete"
+                android:visibility="gone" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/friend_detail_area"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginTop="@dimen/btn_margin_top"
-        android:layout_marginLeft="@dimen/btn_margin_left"
-        android:layout_marginRight="@dimen/btn_margin_right"
-        android:background="@color/bg_negative_btn"
-        android:text="@string/contact_add"
-        android:onClick="add"
-        android:textColor="#fb6155" />
+        android:layout_height="@dimen/contact_profile_self_height"
+        android:background="#FFFFFF"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/page_margin"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+            android:id="@+id/friend_icon"
+            android:layout_width="@dimen/contact_profile_face_size"
+            android:layout_height="@dimen/contact_profile_face_size"
+            android:layout_gravity="start"
+            android:scaleType="centerCrop"
+            android:layout_marginLeft="@dimen/contact_profile_face_margin_left"
+            android:layout_marginRight="@dimen/contact_profile_face_margin_right"
+            android:layout_marginTop="@dimen/contact_profile_face_margin_top" />
+
+        <TextView
+            android:id="@+id/friend_nick_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/friend_icon"
+            android:layout_toEndOf="@id/friend_icon"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/contact_profile_nick_name_text_size"
+            tools:text="林" />
+
+        <TextView
+            android:id="@+id/friend_account_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/friend_nick_name"
+            android:layout_below="@id/friend_nick_name"
+            android:layout_marginTop="@dimen/contact_profile_text_margin"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/contact_profile_account_text_size"
+            android:text="@string/contact_account_tag" />
+
+        <TextView
+            android:id="@+id/friend_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/friend_account_tag"
+            android:layout_toEndOf="@id/friend_account_tag"
+            android:layout_below="@id/friend_nick_name"
+            android:gravity="center_vertical"
+            android:textColor="@color/font_blue"
+            android:textSize="@dimen/contact_profile_account_text_size"
+            tools:text="99618" />
+
+        <TextView
+            android:id="@+id/group_type_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/friend_account_tag"
+            android:layout_below="@id/friend_account_tag"
+            android:layout_marginTop="@dimen/contact_profile_text_margin"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/contact_profile_account_text_size"
+            android:text="@string/contact_group_type_tag" />
+
+
+        <TextView
+            android:id="@+id/group_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/group_type_tag"
+            android:layout_alignTop="@id/group_type_tag"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/contact_profile_signature_text_size"
+            tools:text="相信光" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/id_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15.36dp"
+        android:gravity="center"
+        android:textSize="11.52sp"
+        android:textColor="#444444"
+        tools:text="我的 ID"/>
+
+
+    <TextView
+        android:id="@+id/not_found_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15.36dp"
+        android:gravity="center"
+        android:textSize="11.52sp"
+        android:textColor="#444444"
+        tools:text="该用户不存在"/>
 
 </LinearLayout>

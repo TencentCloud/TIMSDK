@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,13 @@ public class PopMenuAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(TUIConfig.getAppContext()).inflate(R.layout.pop_menu_adapter, parent, false);
             holder = new ViewHolder();
             holder.menu_icon = convertView.findViewById(R.id.pop_menu_icon);
+
+            int iconSize = ScreenUtil.dip2px(20);
+            ViewGroup.LayoutParams params = holder.menu_icon.getLayoutParams();
+            params.width = iconSize;
+            params.height = iconSize;
+            holder.menu_icon.setLayoutParams(params);
+
             holder.menu_lable = convertView.findViewById(R.id.pop_menu_label);
             convertView.setTag(holder);
         } else {// 有直接获得ViewHolder

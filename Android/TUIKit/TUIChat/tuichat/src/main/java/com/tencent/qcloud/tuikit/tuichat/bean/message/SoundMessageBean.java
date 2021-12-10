@@ -7,10 +7,16 @@ import com.tencent.imsdk.v2.V2TIMSoundElem;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.SoundReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.File;
 
+/**
+ * 语音消息
+ */
 public class SoundMessageBean extends TUIMessageBean {
     private String dataPath;
     private V2TIMSoundElem soundElem;
@@ -145,6 +151,11 @@ public class SoundMessageBean extends TUIMessageBean {
         void onSuccess();
 
         void onError(int code, String desc);
+    }
+
+    @Override
+    public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
+        return SoundReplyQuoteBean.class;
     }
 
 }

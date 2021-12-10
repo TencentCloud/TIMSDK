@@ -12,6 +12,7 @@
     <string name="join_group_type">Group Joining Method</string>
     <string name="in_group_nick_name">My Alias in Group</string>
     <string name="dissolve">Disband Group</string>
+    <string name="clear_message">Clear Message</string>
     <string name="modify_group_notice">Edit Group Notice</string>
     <string name="modify_nick_name_in_goup">Edit My Alias in Group</string>
 
@@ -28,7 +29,6 @@
     <string name="search_call_hint">Enter Group Member\'s Name</string>
 
 
-
     <string name="modify_icon_fail">Editing failed</string>
     <string name="modify_icon_suc">Edited</string>
     <string name="chat_room">Chatroom</string>
@@ -36,6 +36,8 @@
     <string name="community_group">Community</string>
     <string name="dismiss_group_tip">Disband the group?</string>
     <string name="quit_group_tip">Leave the group?</string>
+    <string name="clear_group_msg_tip">Clear History Message？</string>
+
     <string name="private_group">Discussion Group</string>
     <string name="public_group">Public Group</string>
     <string name="request_wait">Invitation sent. Waiting for response.</string>
@@ -47,10 +49,11 @@
     <string name="invite_fail">Invitation failed:</string>
     <string name="remove_fail_tip">Removal failed</string>
     <string name="manager">Manage</string>
+    <string name="group_manager">Manage Group</string>
 
     <string name="forbid_join">Prohibited from Joining</string>
     <string name="manager_judge">Admin Approval</string>
-    <string name="auto_judge">Auto Approval...</string>
+    <string name="auto_judge">Auto Approval</string>
 
     <string name="modify_group_name">Edit Group Name</string>
     <string name="group_join_type">Group Joining Method</string>
@@ -75,4 +78,8 @@
     <string name="dismiss_tip_before">Your group</string>
     <string name="dismiss_tip_after">is disbanded.</string>
     <string name="get_system_notice">Received a custom system notification: </string>
+
+    <string name="group_account_tag">ID : </string>
+    <string name="group_view_more_group_members">View more group members</string>
+
 </resources>

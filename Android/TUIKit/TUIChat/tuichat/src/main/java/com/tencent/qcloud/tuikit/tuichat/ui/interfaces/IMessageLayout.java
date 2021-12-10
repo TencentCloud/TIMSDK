@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.interfaces;
 
 import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
+import com.tencent.qcloud.tuikit.tuichat.component.popmenu.ChatPopMenu;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 
@@ -38,12 +39,12 @@ public interface IMessageLayout extends IMessageProperties {
      *
      * @return
      */
-    List<PopMenuAction> getPopActions();
+    List<ChatPopMenu.ChatPopMenuAction> getPopActions();
 
     /**
      * 给 PopMenu 加入一条自定义 action
      *
      * @param action 菜单选项 {@link PopMenuAction}, 可以自定义图片、文字以及点击事件
      */
-    void addPopAction(PopMenuAction action);
+    void addPopAction(ChatPopMenu.ChatPopMenuAction action);
 }

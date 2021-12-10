@@ -28,4 +28,9 @@
         <!--多图片之间的空隙间隔-->
         <attr name="synthesized_image_gap" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="max_width_style">
+        <attr name="maxWidth" format="dimension" />
+    </declare-styleable>
+
 </resources>

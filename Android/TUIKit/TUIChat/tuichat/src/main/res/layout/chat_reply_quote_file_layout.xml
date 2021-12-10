@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--文件消息-->
+    <LinearLayout
+        android:id="@+id/file_msg_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/file_msg_icon_iv"
+            android:src="@drawable/file_icon"
+            android:layout_width="@dimen/reply_icon_size"
+            android:layout_height="@dimen/reply_icon_size" />
+
+        <TextView
+            android:id="@+id/file_msg_name_tv"
+            android:ellipsize="middle"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/reply_msg_abstract_text_color"
+            android:layout_marginLeft="@dimen/reply_abstract_margin_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/reply_origin_text_size"
+            android:singleLine="true" />
+    </LinearLayout>
+</FrameLayout>

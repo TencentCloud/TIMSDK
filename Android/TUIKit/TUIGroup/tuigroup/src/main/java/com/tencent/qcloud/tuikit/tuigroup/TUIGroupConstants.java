@@ -22,12 +22,8 @@ public class TUIGroupConstants {
         public static final String CONTENT = "content";
         public static final String TYPE = "type";
         public static final String TITLE = "title";
-        public static final String INIT_CONTENT = "init_content";
-        public static final String DEFAULT_SELECT_ITEM_INDEX = "default_select_item_index";
         public static final String LIST = "list";
         public static final String LIMIT = "limit";
-        public static final int TYPE_TEXT = 1;
-        public static final int TYPE_LIST = 2;
 
     }
 }

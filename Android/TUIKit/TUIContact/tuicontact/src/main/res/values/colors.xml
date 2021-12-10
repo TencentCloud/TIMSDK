@@ -4,7 +4,6 @@
     <color name="slide_bar_hint_color">#CCCCCC</color>
     <color name="title_bar_font_color">#016fff</color>
 
-    <color name="status_bar_color">#EDEDED</color>
     <color name="line">#DDDDDD</color>
     <color name="navigation_bar_color">#F7F7F7</color>
     <color name="transparent">#00000000</color>
@@ -40,5 +39,10 @@
     <color name="text_negative_hover">#FFFFFF</color>
 
     <color name="read_dot_bg">#f74c31</color>
+
+    <color name="contact_profile_btn_positive_color">#147AFF</color>
+    <color name="contact_profile_btn_negative_color">#FF584C</color>
+
+    <color name="contact_profile_btn_pressed_color">#E6E9EB</color>
 
 </resources>

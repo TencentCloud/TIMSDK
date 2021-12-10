@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Pair;
 
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
@@ -19,15 +18,13 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.LocationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFace;
-import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFaceConfig;
-import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFaceGroup;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
@@ -35,6 +32,7 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IBaseMessageSender;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.TotalUnreadCountListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CustomLinkMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FaceMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FileMessageHolder;
@@ -42,6 +40,7 @@ import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MergeMessage
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.ImageMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.LocationMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageBaseHolder;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.ReplyMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.SoundMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.TextMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.TipsMessageHolder;
@@ -74,6 +73,8 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
     private WeakReference<C2CChatEventListener> c2CChatEventListener;
 
     private WeakReference<IBaseMessageSender> messageSender;
+
+    private WeakReference<TotalUnreadCountListener> unreadCountListener;
 
     private final Map<String, Class<? extends TUIMessageBean>> messageBusinessIdMap = new HashMap<>();
 
@@ -142,13 +143,13 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         addDefaultMessageType(TextMessageBean.class, TextMessageHolder.class);
         addDefaultMessageType(TipsMessageBean.class, TipsMessageHolder.class);
         addDefaultMessageType(VideoMessageBean.class, VideoMessageHolder.class);
+        addDefaultMessageType(ReplyMessageBean.class, ReplyMessageHolder.class);
     }
 
     private void addDefaultMessageType(Class<? extends TUIMessageBean> beanClazz, Class<? extends MessageBaseHolder> holderClazz) {
         viewType++;
         messageViewTypeMap.put(beanClazz, viewType);
         messageViewHolderMap.put(viewType, holderClazz);
-
     }
 
     private void initService() {
@@ -172,6 +173,10 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_RECYCLE, this);
         // 好友备注修改通知
         TUICore.registerEvent(TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED, TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_REMARK_CHANGED, this);
+        // 清空群消息通知
+        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, this);        // 清空群消息通知
+        // 总未读数改变通知
+        TUICore.registerEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, this);
     }
 
     @Override
@@ -256,6 +261,12 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
                         groupChatEventListener.onGroupForceExit(groupId);
                     }
                 }
+            } else if (TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE)) {
+                String groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
+                GroupChatEventListener groupChatEventListener = getGroupChatEventListener();
+                if (groupChatEventListener != null) {
+                    groupChatEventListener.clearGroupMessage(groupId);
+                }
             }
         } else if (key.equals(TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED)) {
             if (subKey.equals(TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_REMARK_CHANGED)) {
@@ -267,6 +278,14 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
                 C2CChatEventListener c2CChatEventListener = getC2CChatEventListener();
                 if (c2CChatEventListener != null) {
                     c2CChatEventListener.onFriendNameChanged(id, remark);
+                }
+            }
+        } else if (key.equals(TUIConstants.TUIConversation.EVENT_UNREAD)) {
+            if (subKey.equals(TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED)) {
+                long unreadCount = (long) param.get(TUIConstants.TUIConversation.TOTAL_UNREAD_COUNT);
+                TotalUnreadCountListener totalUnreadCountListener = getUnreadCountListener();
+                if (totalUnreadCountListener != null) {
+                    totalUnreadCountListener.onTotalUnreadCountChanged(unreadCount);
                 }
             }
         }
@@ -387,6 +406,18 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
 
     public void setMessageSender(IBaseMessageSender baseMessageSender) {
         messageSender = new WeakReference<>(baseMessageSender);
+    }
+
+    public void setUnreadCountListener(TotalUnreadCountListener unreadCountListener) {
+        this.unreadCountListener = new WeakReference<>(unreadCountListener);
+    }
+
+
+    public TotalUnreadCountListener getUnreadCountListener() {
+        if (unreadCountListener != null) {
+            return unreadCountListener.get();
+        }
+        return null;
     }
 
     public IBaseMessageSender getMessageSender() {

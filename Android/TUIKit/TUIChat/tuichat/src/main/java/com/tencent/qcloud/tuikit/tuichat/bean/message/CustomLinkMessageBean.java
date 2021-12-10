@@ -5,9 +5,14 @@ import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 
 import java.util.HashMap;
 
+/**
+ * 自定义超链接消息
+ */
 public class CustomLinkMessageBean extends TUIMessageBean {
 
     private String text;
@@ -42,5 +47,10 @@ public class CustomLinkMessageBean extends TUIMessageBean {
 
     public String getLink() {
         return link;
+    }
+
+    @Override
+    public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
+        return CustomLinkReplyQuoteBean.class;
     }
 }

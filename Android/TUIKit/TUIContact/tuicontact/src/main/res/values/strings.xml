@@ -11,6 +11,8 @@
     <string name="at_all">All</string>
 
     <string name="success">Successful</string>
+    <string name="contact_add_failed">Failed</string>
+    <string name="contact_add_success">Successful</string>
     <string name="have_be_friend">You\'re already friends.</string>
     <string name="friend_limit">The number of your friends exceeds the limit.</string>
     <string name="other_friend_limit">The number of the other user\'s friends exceeds the limit.</string>
@@ -20,20 +22,37 @@
     <string name="wait_agree_friend">Request sent</string>
     <string name="send_request">Request sent</string>
 
+    <string name="add_group_permission_deny">Prohibited from Joining</string>
+    <string name="add_group_allready_member">The user is a group member</string>
+    <string name="add_group_not_found">The group does not exist</string>
+    <string name="add_group_full_member">The number of group members has reached the limit</string>
+
     // 新朋友
     <string name="request_agree">Accept</string>
     <string name="request_accepted">Accepted</string>
     <string name="request_waiting">Pending</string>
     <string name="profile_detail">Details</string>
     <string name="profile_remark_edit">Edit Alias</string>
+    <string name="contact_friend_remark">Set Alias</string>
+    <string name="contact_friend_group">Group</string>
+    <string name="contact_set_add_wording">Verification Message</string>
+    <string name="contact_add_wording">Verification Message</string>
+    <string name="contact_set_remark_and_group">Remark And Group</string>
+
 
     <!-- 好友资料 -->
     <string name="profile_id">Account</string>
     <string name="profile_add_wording">Verification Message</string>
-    <string name="profile_remark">Set Alias</string>
+    <string name="profile_remark">Remark</string>
     <string name="profile_black">Block</string>
     <string name="profile_chat">Send Message</string>
-    <string name="profile_del">Delete Friend</string>
+    <string name="profile_delete_friend">Delete Friend</string>
+    <string name="profile_voice_chat">Audio Call</string>
+    <string name="profile_video_chat">Video Call</string>
+    <string name="contact_signature_tag">Signature : </string>
+    <string name="contact_account_tag">ID : </string>
+    <string name="contact_group_type_tag">Group Type : </string>
+    <string name="contact_my_friend">My Friend</string>
 
     <string name="select_chat">Select chat user</string>
 
@@ -59,8 +78,11 @@
     <string name="create_community">Create Community</string>
     <string name="create_private_group">Create Discussion Group</string>
     <string name="hint_add_user_id">Enter ID</string>
+    <string name="hint_search_user_id">Search User ID</string>
+    <string name="hint_search_group_id">Search Group ID</string>
     <string name="hint_add_wording">Enter verification message</string>
     <string name="contact_add">Add</string>
+    <string name="contact_refuse">Refuse</string>
     <string name="user_id">ID</string>
     <string name="add_wording">Verification Message</string>
     <string name="create_group">Create Group</string>
@@ -70,7 +92,7 @@
     <string name="group_join_type">Group Joining Method</string>
     <string name="forbid_join">Prohibited from Joining</string>
     <string name="manager_judge">Admin Approval</string>
-    <string name="auto_judge">Auto Approval...</string>
+    <string name="auto_judge">Auto Approval</string>
     <string name="input_tip">No nickname entered, please fill in again</string>
     <string name="profile_msgrev_opt">Message Do Not Disturb</string>
 

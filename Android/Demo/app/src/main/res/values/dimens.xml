@@ -16,4 +16,23 @@
     <dimen name="switch_thumb_width">23dp</dimen>
     <dimen name="switch_thumb_height">23dp</dimen>
     <dimen name="switch_thumb_radius">20dp</dimen>
+
+
+    <dimen name="demo_title_bar_icon_size">23.04dp</dimen>
+    <dimen name="demo_profile_self_height">90.24dp</dimen>
+    <dimen name="demo_profile_face_size">46.08dp</dimen>
+    <dimen name="demo_profile_item_height">46.08dp</dimen>
+    <dimen name="demo_profile_face_radius">4.61dp</dimen>
+    <dimen name="demo_profile_face_margin_left">5.36dp</dimen>
+    <dimen name="demo_profile_face_margin_right">15.36dp</dimen>
+    <dimen name="demo_profile_face_margin_top">-12dp</dimen>
+    <dimen name="demo_profile_nick_name_text_size">17.28sp</dimen>
+    <dimen name="demo_profile_account_text_size">12.48sp</dimen>
+    <dimen name="demo_profile_signature_text_size">12.48sp</dimen>
+    <dimen name="demo_profile_text_margin">11.84dp</dimen>
+    <dimen name="demo_logout_btn_height">53.76dp</dimen>
+
+    <dimen name="demo_self_profile_text_size">15.36sp</dimen>
+    <dimen name="demo_self_detail_face_area_height">69.6dp</dimen>
+
 </resources>

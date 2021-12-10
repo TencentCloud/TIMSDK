@@ -1,6 +1,8 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -207,4 +209,21 @@ public class VideoMessageHolder extends MessageContentHolder {
         TUIChatService.getAppContext().startActivity(intent);
     }
 
+
+    @Override
+    public void setHighLightBackground(int color) {
+        Drawable drawable = contentImage.getDrawable();
+        if (drawable != null) {
+            drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        }
+    }
+
+
+    @Override
+    public void clearHighLightBackground() {
+        Drawable drawable = contentImage.getDrawable();
+        if (drawable != null) {
+            drawable.setColorFilter(null);
+        }
+    }
 }

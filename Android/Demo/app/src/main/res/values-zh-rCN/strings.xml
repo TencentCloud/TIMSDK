@@ -11,6 +11,12 @@
     <string name="account">用户名</string>
     <string name="password">密码</string>
 
+
+    <string name="demo_login_country_label">国家/地区</string>
+    <string name="demo_login_zh_cn">中国大陆</string>
+    <string name="demo_login_mobile_phone_number">手机号</string>
+    <string name="demo_login_verification_code_label">验证码</string>
+
     <string name="login_title">登录·即时通信</string>
     <string name="login_sub_title">体验群组聊天，音视频对话等 IM 功能</string>
     <string name="input_number">请输入手机号</string>
@@ -28,17 +34,39 @@
 
     // "我"相关
     <string name="profile">我</string>
-    <string name="id">帐号：%1$s</string>
-    <string name="modify_user_icon">修改头像</string>
-    <string name="modify_nick_name">修改昵称</string>
-    <string name="modify_signature">修改个性签名</string>
+    <string name="modify_user_icon">头像</string>
+    <string name="modify_nick_name">昵称</string>
     <string name="add_rule">加我为好友时</string>
     <string name="allow_type_allow_any">允许任何人</string>
     <string name="allow_type_deny_any">拒绝任何人</string>
     <string name="allow_type_need_confirm">需要验证</string>
     <string name="exit">退出登录</string>
-    <string name="about_im">关于即时通信IM</string>
+    <string name="about_im">关于腾讯云·通信</string>
     <string name="modify_birthday">生日</string>
+    <string name="modify_gender">性别</string>
+    <string name="modify_signature">个性签名</string>
+    <string name="modify_account">账号</string>
+
+    <string name="modify_theme">更换主题</string>
+    <string name="modify_language">切换语言</string>
+
+    <string name="demo_simplified_Chinese">简体中文</string>
+    <string name="demo_theme_light">轻快</string>
+    <string name="demo_signature_tag">个性签名：</string>
+    <string name="demo_account_tag">ID：</string>
+
+    <string name="demo_about_sdk_version">SDK版本</string>
+    <string name="demo_about_im">关于</string>
+
+    <string name="demo_self_detail_gender_male">男</string>
+    <string name="demo_self_detail_gender_female">女</string>
+    <string name="demo_self_detail_gender_unknown">未知</string>
+
+    <string name="demo_self_detail_modify_nickname">修改昵称</string>
+    <string name="demo_self_detail_modify_signature">修改个性签名</string>
+    <string name="demo_self_detail_modify_gender">修改性别</string>
+
+    <string name="demo_self_detail_modify_nickname_rule">仅限中文、字母、数字和下划线</string>
 
     <string name="conversation_title">腾讯·云通信</string>
     <string name="contact_title">通讯录</string>
@@ -103,6 +131,7 @@
     <string name="login_agree_content_key2">《用户协议》</string>
     <string name="im_privacy">隐私条例</string>
     <string name="im_statement">免责声明</string>
+    <string name="im_user_agreement">用户协议</string>
     <string name="im_statement_content">IM（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。</string>
     <string name="im_privacy_tips">请先阅读并同意协议</string>
 

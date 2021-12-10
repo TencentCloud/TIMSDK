@@ -1,11 +1,15 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 
+/**
+ * 文本消息
+ */
 public class TextMessageBean extends TUIMessageBean {
     private String text;
-
-    public TextMessageBean() {}
 
     @Override
     public String onGetDisplayString() {
@@ -26,5 +30,10 @@ public class TextMessageBean extends TUIMessageBean {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    @Override
+    public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
+        return TextReplyQuoteBean.class;
     }
 }
