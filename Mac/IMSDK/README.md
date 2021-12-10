@@ -6,10 +6,10 @@
 [最新 ImSDKForMac.framework 下载](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_Mac_latest_framework.zip)
 
 ### 增强版
-[最新 ImSDKForMac_Plus.framework 下载](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/5.8.1672/ImSDKForMac_Plus_5.8.1672.framework.zip)
+[最新 ImSDKForMac_Plus.framework 下载](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/5.8.1696/ImSDKForMac_Plus_5.8.1696.framework.zip)
 
 ### C接口版
-[最新C接口下载](https://im.sdk.qcloud.com/download/plus/5.8.1672/cross_platform/ImSDK_Mac_C_5.8.1672.framework.zip)
+[最新C接口下载](https://im.sdk.qcloud.com/download/plus/5.8.1696/cross_platform/ImSDK_Mac_C_5.8.1696.framework.zip)
 
 ## cocoaPods 集成
 如果使用基础版 SDK，请您按照如下方式设置 Podfile 文件
