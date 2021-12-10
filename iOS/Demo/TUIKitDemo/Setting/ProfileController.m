@@ -51,8 +51,7 @@
 
 - (void)setupViews
 {
-    self.title = NSLocalizedString(@"ProfileDetails", nil); // @"个人信息";
-    self.parentViewController.title = NSLocalizedString(@"ProfileDetails", nil); // @"个人信息";
+    self.navigationItem.title = NSLocalizedString(@"ProfileDetails", nil); // @"个人信息";
 
     //self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];

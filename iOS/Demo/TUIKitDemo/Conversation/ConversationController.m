@@ -38,9 +38,12 @@
     [self addChildViewController:conv];
     [self.view addSubview:conv.view];
 
-    UIButton *moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+    UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton setImage:[UIImage imageNamed:TUIDemoImagePath(@"more")] forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    moreButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [moreButton.widthAnchor constraintEqualToConstant:20].active = YES;
+    [moreButton.heightAnchor constraintEqualToConstant:20].active = YES;
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
     self.navigationItem.rightBarButtonItem = moreItem;
     
@@ -160,27 +163,27 @@
 {
     NSMutableArray *menus = [NSMutableArray array];
     TPopCellData *friend = [[TPopCellData alloc] init];
-    friend.image = TUIDemoImagePath(@"add_friend");
+    friend.image = TUIDemoImagePath(@"new_chat");
     friend.title = NSLocalizedString(@"ChatsNewChatText", nil);
     [menus addObject:friend];
 
     TPopCellData *group3 = [[TPopCellData alloc] init];
-    group3.image = TUIDemoImagePath(@"create_group");
+    group3.image = TUIDemoImagePath(@"new_groupchat");
     group3.title = NSLocalizedString(@"ChatsNewPrivateGroupText", nil);
     [menus addObject:group3];
 
     TPopCellData *group = [[TPopCellData alloc] init];
-    group.image = TUIDemoImagePath(@"create_group");
+    group.image = TUIDemoImagePath(@"new_groupchat");
     group.title = NSLocalizedString(@"ChatsNewGroupText", nil);
     [menus addObject:group];
 
     TPopCellData *room = [[TPopCellData alloc] init];
-    room.image = TUIDemoImagePath(@"create_group");
+    room.image = TUIDemoImagePath(@"new_groupchat");
     room.title = NSLocalizedString(@"ChatsNewChatRoomText", nil);
     [menus addObject:room];
     
     TPopCellData *community = [[TPopCellData alloc] init];
-    community.image = TUIDemoImagePath(@"create_group");
+    community.image = TUIDemoImagePath(@"new_groupchat");
     community.title = NSLocalizedString(@"ChatsNewCommunityText", nil);
     [menus addObject:community];
 
@@ -258,7 +261,7 @@
         };
         return;
     } else if(index == 4){
-        //创建社区
+        //创建社群
         TUIContactSelectController *vc = [TUIContactSelectController new];
         vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
         [self.navigationController pushViewController:vc animated:YES];
@@ -326,7 +329,7 @@
             } else if([info.groupType isEqualToString:GroupType_Meeting]) {
                 content = NSLocalizedString(@"ChatsCreateChatRoomTips", nil); // @"创建聊天室";
             } else if([info.groupType isEqualToString:GroupType_Community]) {
-                content = NSLocalizedString(@"ChatsCreateCommunityTips", nil); // @"创建社区";
+                content = NSLocalizedString(@"ChatsCreateCommunityTips", nil); // @"创建社群";
             } else {
                 content = NSLocalizedString(@"ChatsCreateDefaultTips", nil); // @"创建群组";
             }

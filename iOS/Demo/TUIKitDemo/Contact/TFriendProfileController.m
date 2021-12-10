@@ -24,6 +24,7 @@
 #import "TUICommonModel.h"
 #import "TUIKit.h"
 #import "TCUtil.h"
+#import "TUICore.h"
 
 @interface TFriendProfileController ()
 @property NSArray<NSArray *> *dataList;
@@ -63,7 +64,7 @@
 
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
-    self.title = NSLocalizedString(@"ProfileDetails", nil); // @"详细资料";
+    self.navigationItem.title = NSLocalizedString(@"ProfileDetails", nil); // @"详细资料";
     
     [self loadData];
 }
@@ -84,6 +85,7 @@
             personal.genderString = [self.userFullInfo showGender];
             personal.signature = [self.userFullInfo showSignature];
             personal.reuseId = @"CardCell";
+            personal.showSignature = YES;
             personal;
         })];
         inlist;
@@ -102,24 +104,6 @@
             data.showAccessory = YES;
             data.cselector = @selector(onChangeRemark:);
             data.reuseId = @"TextCell";
-            data;
-        })];
-        [inlist addObject:({
-            TUICommonSwitchCellData *data = TUICommonSwitchCellData.new;
-            data.title = NSLocalizedString(@"ProfileBlocked", nil); // @"加入黑名单";
-            data.cswitchSelector =  @selector(onChangeBlackList:);
-            data.reuseId = @"SwitchCell";
-            __weak typeof(self) weakSelf = self;
-            [[V2TIMManager sharedInstance] getBlackList:^(NSArray<V2TIMFriendInfo *> *infoList) {
-                for (V2TIMFriendInfo *friend in infoList) {
-                    if ([friend.userID isEqualToString:self.friendProfile.userID])
-                    {
-                        data.on = true;
-                        [weakSelf.tableView reloadData];
-                        break;
-                    }
-                }
-            } fail:nil];
             data;
         })];
         inlist;
@@ -176,13 +160,66 @@
     [list addObject:({
         NSMutableArray *inlist = @[].mutableCopy;
         [inlist addObject:({
+            TUICommonSwitchCellData *data = TUICommonSwitchCellData.new;
+            data.title = NSLocalizedString(@"ProfileBlocked", nil); // @"加入黑名单";
+            data.cswitchSelector =  @selector(onChangeBlackList:);
+            data.reuseId = @"SwitchCell";
+            __weak typeof(self) weakSelf = self;
+            [[V2TIMManager sharedInstance] getBlackList:^(NSArray<V2TIMFriendInfo *> *infoList) {
+                for (V2TIMFriendInfo *friend in infoList) {
+                    if ([friend.userID isEqualToString:self.friendProfile.userID])
+                    {
+                        data.on = true;
+                        [weakSelf.tableView reloadData];
+                        break;
+                    }
+                }
+            } fail:nil];
+            data;
+        })];
+        inlist;
+    })];
+
+    
+    [list addObject:({
+        NSMutableArray *inlist = @[].mutableCopy;
+        [inlist addObject:({
             TUIButtonCellData *data = TUIButtonCellData.new;
             data.title = NSLocalizedString(@"ProfileSendMessages", nil); // @"发送消息";
-            data.style = ButtonBule;
+            data.style = ButtonWhite;
+            data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
             data.cbuttonSelector = @selector(onSendMessage:);
             data.reuseId = @"ButtonCell";
             data;
         })];
+        NSString *groupID = nil;
+        NSString *userID = self.userFullInfo.userID;
+        NSDictionary *param = @{TUICore_TUIChatExtension_GetMoreCellInfo_GroupID : groupID ? groupID : @"",TUICore_TUIChatExtension_GetMoreCellInfo_UserID : userID ? userID : @""};
+        NSDictionary *videoExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall param:param];
+        NSDictionary *audioExtentionInfo = [TUICore getExtensionInfo:TUICore_TUIChatExtension_GetMoreCellInfo_AudioCall param:param];
+        if (audioExtentionInfo) {
+            // 集成了 音频
+            [inlist addObject:({
+                TUIButtonCellData *data = TUIButtonCellData.new;
+                data.title = TUIKitLocalizableString(TUIKitMoreVoiceCall); // @"语音通话";
+                data.style = ButtonWhite;
+                data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+                data.cbuttonSelector = @selector(onVoiceCall:);
+                data.reuseId = @"ButtonCell";
+                data;
+            })];
+        }
+        if (videoExtentionInfo) {
+            [inlist addObject:({
+                TUIButtonCellData *data = TUIButtonCellData.new;
+                data.title = TUIKitLocalizableString(TUIKitMoreVideoCall); // @"视频通话";
+                data.style = ButtonWhite;
+                data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+                data.cbuttonSelector = @selector(onVideoCall:);
+                data.reuseId = @"ButtonCell";
+                data;
+            })];
+        }
         [inlist addObject:({
             TUIButtonCellData *data = TUIButtonCellData.new;
             data.title = NSLocalizedString(@"ProfileDeleteFirend", nil); // @"删除好友";
@@ -241,6 +278,18 @@
     return self.dataList[section].count;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view = [[UIView alloc] init];
+    view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    return view;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 0;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     NSObject *data = self.dataList[indexPath.section][indexPath.row];
@@ -284,6 +333,27 @@
 
 }
 
+- (void)onVoiceCall:(id)sender
+{
+    NSDictionary *param = @{
+        TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[self.userFullInfo.userID?:@""],
+        TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : @"0"
+    };
+    [TUICore callService:TUICore_TUICallingService
+                  method:TUICore_TUICallingService_ShowCallingViewMethod
+                   param:param];
+}
+
+- (void)onVideoCall:(id)sender
+{
+    NSDictionary *param = @{
+        TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[self.userFullInfo.userID?:@""],
+        TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : @"1"
+    };
+    [TUICore callService:TUICore_TUICallingService
+                  method:TUICore_TUICallingService_ShowCallingViewMethod
+                   param:param];
+}
 
 /**
  *点击 删除好友 后执行的函数，包括好友信息获取和请求回调

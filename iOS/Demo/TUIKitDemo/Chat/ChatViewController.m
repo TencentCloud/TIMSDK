@@ -143,7 +143,7 @@ UIDocumentPickerDelegate>
     //left
     _unRead = [[TUIUnReadView alloc] init];
 
-    //_unRead.backgroundColor = [UIColor grayColor];//可通过此处将未读标记设置为灰色，类似微信，但目前仍使用红色未读视图
+    _unRead.backgroundColor = [UIColor colorWithRed:170/255.0 green:188/255.0 blue:209/255.0 alpha:1/1.0];   // 默认使用红色未读视图
     UIBarButtonItem *urBtn = [[UIBarButtonItem alloc] initWithCustomView:_unRead];
     self.navigationItem.leftBarButtonItems = @[urBtn];
     //既显示返回按钮，又显示未读视图
@@ -152,14 +152,9 @@ UIDocumentPickerDelegate>
     //right，根据当前聊天页类型设置右侧按钮格式
     UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [rightButton addTarget:self action:@selector(rightBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    if(_conversationData.userID.length > 0){
-        [rightButton setImage:[UIImage d_imageNamed:@"person_nav" bundle:TUIDemoBundle] forState:UIControlStateNormal];
-        //[rightButton setImage:[UIImage d_imageNamed:@"person_nav_hover"] forState:UIControlStateHighlighted];
-    }
-    else if(_conversationData.groupID.length > 0){
-        [rightButton setImage:[UIImage d_imageNamed:(@"group_nav") bundle:TUIDemoBundle] forState:UIControlStateNormal];
-        //[rightButton setImage:[UIImage d_imageNamed:(@"group_nav_hover")] forState:UIControlStateHighlighted];
-    }
+    [rightButton setTitle:@"···" forState:UIControlStateNormal];
+    [rightButton setTitleColor:[UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1.0] forState:UIControlStateNormal];
+    rightButton.titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItems = @[rightItem];
 }
@@ -275,7 +270,7 @@ UIDocumentPickerDelegate>
         if (param != nil) {
             NSString *businessID = param[@"businessID"];
             // 判断是不是群创建自定义消息
-            if ([businessID isEqualToString:BussinessID_GroupCreate] || [param.allKeys containsObject:BussinessID_GroupCreate]) {
+            if ([businessID isKindOfClass:NSString.class] && ([businessID isEqualToString:BussinessID_GroupCreate] || [param.allKeys containsObject:BussinessID_GroupCreate])) {
                 return [NSString stringWithFormat:@"\"%@\"%@",param[@"opUser"],param[@"content"]];
             }
         }

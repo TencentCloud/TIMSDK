@@ -45,10 +45,11 @@
 /**
  *点击 群成员 按钮后的响应函数
  */
-- (void)groupInfoController:(TUIGroupInfoController *)controller didSelectMembersInGroup:(NSString *)groupId
+- (void)groupInfoController:(TUIGroupInfoController *)controller didSelectMembersInGroup:(NSString *)groupId groupInfo:(V2TIMGroupInfo *)groupInfo
 {
     GroupMemberController *membersController = [[GroupMemberController alloc] init];
     membersController.groupId = groupId;
+    membersController.groupInfo = groupInfo;
     membersController.title = NSLocalizedString(@"GroupMember", nil); // @"群成员";
     [self.navigationController pushViewController:membersController animated:YES];
 }

@@ -107,6 +107,7 @@
     _searchController.searchBar.placeholder = @"群组ID";
     _searchController.searchBar.delegate = self;
     [self.view addSubview:_searchController.searchBar];
+    [self setSearchIconCenter:YES];
 
     self.userView = [[AddGroupItemView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.userView];
@@ -115,6 +116,17 @@
     [[UITapGestureRecognizer alloc] initWithTarget:self
                                             action:@selector(handleUserTap:)];
     [self.userView addGestureRecognizer:singleFingerTap];
+}
+
+- (void)setSearchIconCenter:(BOOL)center
+{
+    if (center) {
+        CGSize size = [self.searchController.searchBar.placeholder sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14.0]}];
+        CGFloat width = size.width + 60;
+        [self.searchController.searchBar setPositionAdjustment:UIOffsetMake(0.5  *(self.searchController.searchBar.bounds.size.width - width), 0) forSearchBarIcon:UISearchBarIconSearch];
+    } else {
+        [self.searchController.searchBar setPositionAdjustment:UIOffsetZero forSearchBarIcon:UISearchBarIconSearch];
+    }
 }
 
 #pragma mark - UISearchControllerDelegate
@@ -128,6 +140,16 @@
 
     self.searchController.searchBar.mm_top([self safeAreaTopGap]);
     self.userView.mm_top(self.searchController.searchBar.mm_maxY).mm_height(44).mm_width(Screen_Width);
+}
+
+- (void)willPresentSearchController:(UISearchController *)searchController
+{
+    [self setSearchIconCenter:NO];
+}
+
+- (void)willDismissSearchController:(UISearchController *)searchController
+{
+    [self setSearchIconCenter:YES];
 }
 
 - (CGFloat)safeAreaTopGap

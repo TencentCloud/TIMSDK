@@ -20,6 +20,8 @@
 
 @interface GroupMemberController () <TGroupMemberControllerDelegagte>
 
+@property (nonatomic, weak) TUIGroupMemberController *memberVc;
+
 @end
 
 @implementation GroupMemberController
@@ -28,9 +30,11 @@
     [super viewDidLoad];
     TUIGroupMemberController *members = [[TUIGroupMemberController alloc] init];
     members.groupId = _groupId;
+    members.groupInfo = _groupInfo;
     members.delegate = self;
     [self addChildViewController:members];
     [self.view addSubview:members.view];
+    self.memberVc = members;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -70,6 +74,13 @@
 {
     TUIContactSelectController *vc = [[TUIContactSelectController alloc] initWithNibName:nil bundle:nil];
     vc.title = NSLocalizedString(@"GroupDeleteFriend", nil); // @"删除联系人";
+    NSMutableArray *ids = NSMutableArray.new;
+    for (TUIGroupMemberCellData *cd in members) {
+        if (![cd.identifier isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
+            [ids addObject:cd.identifier];
+        }
+    }
+    [vc setSourceIds:ids];
     vc.viewModel.avaliableFilter = ^BOOL(TUICommonContactSelectCellData *data) {
         for (TUIGroupMemberCellData *cd in members) {
             if ([cd.identifier isEqualToString:data.identifier])
@@ -92,8 +103,11 @@
 
 - (void)addGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupMemberController *)controller
 {
+    @weakify(self)
     [[V2TIMManager sharedInstance] inviteUserToGroup:_groupId userList:members succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
+        @strongify(self)
         [TUITool makeToast:NSLocalizedString(@"add_success", nil)];
+        [self.memberVc refreshData];
     } fail:^(int code, NSString *desc) {
         [TUITool makeToastError:code msg:desc];
     }];
@@ -101,8 +115,11 @@
 
 - (void)deleteGroupId:(NSString *)groupId memebers:(NSArray *)members controller:(TUIGroupMemberController *)controller
 {
+    @weakify(self)
     [[V2TIMManager sharedInstance] kickGroupMember:groupId memberList:members reason:@"" succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
+        @strongify(self)
         [TUITool makeToast:NSLocalizedString(@"delete_success", nil)];
+        [self.memberVc refreshData];
     } fail:^(int code, NSString *desc) {
         [TUITool makeToastError:code msg:desc];
     }];
