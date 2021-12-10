@@ -61,7 +61,7 @@ public class GroupMemberManagerAdapter extends BaseAdapter {
     public View getView(final int i, View view, final ViewGroup viewGroup) {
         MyViewHolder holder;
         if (view == null) {
-            view = LayoutInflater.from(TUIGroupService.getAppContext()).inflate(R.layout.group_member_adpater, viewGroup, false);
+            view = LayoutInflater.from(TUIGroupService.getAppContext()).inflate(R.layout.group_member_item_layout, viewGroup, false);
             holder = new MyViewHolder();
             holder.memberIcon = view.findViewById(R.id.group_member_icon);
             holder.memberName = view.findViewById(R.id.group_member_name);
@@ -70,9 +70,23 @@ public class GroupMemberManagerAdapter extends BaseAdapter {
             holder = (MyViewHolder) view.getTag();
         }
         final GroupMemberInfo info = getItem(i);
-        if (!TextUtils.isEmpty(info.getIconUrl()))
-            GlideEngine.loadImage(holder.memberIcon, info.getIconUrl());
-        holder.memberName.setText(info.getAccount());
+        GlideEngine.loadImage(holder.memberIcon, info.getIconUrl());
+
+        // 显示优先级 群名片->昵称->账号
+        if (!TextUtils.isEmpty(info.getNameCard())) {
+            holder.memberName.setText(info.getNameCard());
+        } else {
+            if (!TextUtils.isEmpty(info.getNickName())) {
+                holder.memberName.setText(info.getNickName());
+            } else {
+                if (!TextUtils.isEmpty(info.getAccount())) {
+                    holder.memberName.setText(info.getAccount());
+                } else {
+                    holder.memberName.setText("");
+                }
+            }
+        }
+
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

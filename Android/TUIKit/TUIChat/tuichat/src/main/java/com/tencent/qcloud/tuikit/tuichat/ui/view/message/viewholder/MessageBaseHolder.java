@@ -1,5 +1,10 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
+import android.animation.Animator;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
@@ -30,7 +35,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     public RelativeLayout rightGroupLayout;
     public RelativeLayout mContentLayout;
 
-
+    private ValueAnimator highLightAnimator;
     public MessageBaseHolder(View itemView) {
         super(itemView);
         chatTimeText = itemView.findViewById(R.id.chat_time_tv);
@@ -93,6 +98,72 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         } else {
             chatTimeText.setVisibility(View.VISIBLE);
             chatTimeText.setText(DateTimeUtil.getTimeFormatText(new Date(msg.getMessageTime() * 1000)));
+        }
+    }
+
+    public void stopHighLight() {
+        if (highLightAnimator != null) {
+            highLightAnimator.cancel();
+        }
+        clearHighLightBackground();
+    }
+
+    // 选中高亮，设置动画改变背景
+    public void startHighLight() {
+        int highLightColorDark = itemView.getResources().getColor(R.color.chat_message_bubble_high_light_dark_color);
+        int highLightColorLight = itemView.getResources().getColor(R.color.chat_message_bubble_high_light_light_color);
+
+        if (highLightAnimator == null) {
+            ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+            highLightAnimator = new ValueAnimator();
+            highLightAnimator.setIntValues(highLightColorDark, highLightColorLight);
+            highLightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    Integer color = (Integer) animation.getAnimatedValue();
+                    setHighLightBackground(color);
+                }
+            });
+            highLightAnimator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    clearHighLightBackground();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    clearHighLightBackground();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            highLightAnimator.setEvaluator(argbEvaluator);
+            highLightAnimator.setRepeatCount(3);
+            highLightAnimator.setDuration(250);
+            highLightAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        }
+        highLightAnimator.start();
+    }
+
+    public void setHighLightBackground(int color) {
+        Drawable drawable = msgContentFrame.getBackground();
+        if (drawable != null) {
+            drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        }
+    }
+
+    public void clearHighLightBackground() {
+        Drawable drawable = msgContentFrame.getBackground();
+        if (drawable != null) {
+            drawable.setColorFilter(null);
         }
     }
 

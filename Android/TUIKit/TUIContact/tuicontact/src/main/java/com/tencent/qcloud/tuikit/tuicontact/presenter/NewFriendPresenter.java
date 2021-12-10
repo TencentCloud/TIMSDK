@@ -77,7 +77,11 @@ public class NewFriendPresenter {
         provider.loadFriendApplicationList(new IUIKitCallback<List<FriendApplicationBean>>() {
             @Override
             public void onSuccess(List<FriendApplicationBean> data) {
-                dataSource.addAll(data);
+                for (FriendApplicationBean friendApplicationBean : data) {
+                    if (friendApplicationBean.getAddType() == FriendApplicationBean.FRIEND_APPLICATION_COME_IN) {
+                        dataSource.add(friendApplicationBean);
+                    }
+                }
                 notifyDataSourceChanged();
             }
 
@@ -108,4 +112,22 @@ public class NewFriendPresenter {
         });
     }
 
+    public void refuseFriendApplication(FriendApplicationBean friendApplicationBean, IUIKitCallback<Void> callback) {
+        provider.refuseFriendApplication(friendApplicationBean, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                ContactUtils.callbackOnSuccess(callback, null);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIContactLog.e(TAG, "acceptFriendApplication error " + errCode + "  " + errMsg);
+            }
+        });
+    }
+
+
+    public void setFriendApplicationListAllRead(IUIKitCallback<Void> callback) {
+        provider.setGroupApplicationRead(callback);
+    }
 }

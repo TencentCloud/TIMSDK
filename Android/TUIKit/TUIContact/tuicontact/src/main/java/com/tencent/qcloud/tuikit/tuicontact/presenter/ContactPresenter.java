@@ -212,11 +212,21 @@ public class ContactPresenter {
         notifyDataSourceChanged();
     }
 
+    public void getFriendApplicationUnreadCount(IUIKitCallback<Integer> callback) {
+        provider.getFriendApplicationListUnreadCount(callback);
+    }
+
     public void loadFriendApplicationList(IUIKitCallback<Integer> callback) {
         provider.loadFriendApplicationList(new IUIKitCallback<List<FriendApplicationBean>>() {
             @Override
             public void onSuccess(List<FriendApplicationBean> data) {
-                ContactUtils.callbackOnSuccess(callback, data.size());
+                int size = 0;
+                for (FriendApplicationBean friendApplicationBean : data) {
+                    if (friendApplicationBean.getAddType() == FriendApplicationBean.FRIEND_APPLICATION_COME_IN) {
+                        size++;
+                    }
+                }
+                ContactUtils.callbackOnSuccess(callback, size);
             }
 
             @Override

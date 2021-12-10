@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/navigation_bar_color"
+    android:background="@color/chat_input_layout_bg"
     android:orientation="vertical">
 
     <View
@@ -10,18 +10,24 @@
         android:layout_height="1px"
         android:background="@color/input_title_line_color" />
 
+    <com.tencent.qcloud.tuikit.tuichat.ui.view.input.ReplyPreviewBar
+        android:id="@+id/reply_preview_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="57dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/voice_input_switch"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/chat_input_icon_size"
+            android:layout_height="@dimen/chat_input_icon_size"
             android:layout_margin="5dp"
             android:scaleType="fitXY"
             android:src="@drawable/action_audio_selector" />
@@ -33,8 +39,9 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/msg_editor_border"
+            android:textSize="@dimen/chat_input_text_size"
             android:maxHeight="120dp"
-            android:minHeight="30dp"
+            android:minHeight="@dimen/chat_input_editor_height"
             android:textCursorDrawable="@drawable/my_cursor"
             android:padding="5dp" />
 
@@ -52,16 +59,16 @@
 
         <ImageView
             android:id="@+id/face_btn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/chat_input_icon_size"
+            android:layout_height="@dimen/chat_input_icon_size"
             android:layout_margin="5dp"
             android:scaleType="fitXY"
             android:src="@drawable/action_face_selector" />
 
         <ImageView
             android:id="@+id/more_btn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/chat_input_icon_size"
+            android:layout_height="@dimen/chat_input_icon_size"
             android:layout_margin="5dp"
             android:scaleType="fitXY"
             android:src="@drawable/action_more_selector" />
@@ -69,7 +76,7 @@
         <Button
             android:id="@+id/send_btn"
             android:layout_width="40dp"
-            android:layout_height="30dp"
+            android:layout_height="@dimen/chat_input_icon_size"
             android:background="@drawable/message_send_border"
             android:text="@string/send"
             android:textColor="#fff"

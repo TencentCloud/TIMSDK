@@ -32,7 +32,7 @@ public class BlackListActivity extends BaseLightActivity {
 
     private void init() {
         mTitleBar = findViewById(R.id.black_list_titlebar);
-        mTitleBar.setTitle(getResources().getString(R.string.blacklist), ITitleBarLayout.Position.LEFT);
+        mTitleBar.setTitle(getResources().getString(R.string.blacklist), ITitleBarLayout.Position.MIDDLE);
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -10,11 +10,17 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ImageReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 图片消息
+ */
 public class ImageMessageBean  extends TUIMessageBean {
 
     /**
@@ -249,5 +255,10 @@ public class ImageMessageBean  extends TUIMessageBean {
 
             void onError(int code, String desc);
         }
+    }
+
+    @Override
+    public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
+        return ImageReplyQuoteBean.class;
     }
 }

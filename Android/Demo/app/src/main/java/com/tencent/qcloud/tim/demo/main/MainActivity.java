@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -23,6 +26,9 @@ import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.common.ApiException;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
+import com.tencent.imsdk.v2.V2TIMFriendApplication;
+import com.tencent.imsdk.v2.V2TIMFriendApplicationResult;
+import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.DemoApplication;
@@ -38,7 +44,6 @@ import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
-import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
@@ -64,6 +69,7 @@ public class MainActivity extends BaseLightActivity {
     private TextView mContactBtn;
     private TextView mProfileSelfBtn;
     private TextView mMsgUnread;
+    private TextView mNewFriendUnread;
     private View mLastTab;
 
     private TitleBarLayout mainTitleBar;
@@ -71,6 +77,9 @@ public class MainActivity extends BaseLightActivity {
 
     private ViewPager2 mainViewPager;
     private List<Fragment> fragments;
+
+    private int count = 0;
+    private long lastClickTime = 0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         DemoLog.i(TAG, "onCreate");
@@ -140,12 +149,19 @@ public class MainActivity extends BaseLightActivity {
 
     private void initView() {
         setContentView(R.layout.main_activity);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(getResources().getColor(R.color.demo_title_bar_bg));
+        }
+
         mainTitleBar = findViewById(R.id.main_title_bar);
         initMenuAction();
         mConversationBtn = findViewById(R.id.conversation);
         mContactBtn = findViewById(R.id.contact);
         mProfileSelfBtn = findViewById(R.id.mine);
         mMsgUnread = findViewById(R.id.msg_total_unread);
+        mNewFriendUnread = findViewById(R.id.new_friend_total_unread);
 
         fragments = new ArrayList<>();
         fragments.add(new TUIConversationFragment());
@@ -176,6 +192,13 @@ public class MainActivity extends BaseLightActivity {
     }
 
     private void initMenuAction() {
+        mainTitleBar.setBackgroundColor(getResources().getColor(R.color.demo_title_bar_bg));
+        int titleBarIconSize = getResources().getDimensionPixelSize(R.dimen.demo_title_bar_icon_size);
+        mainTitleBar.getLeftIcon().setMaxHeight(titleBarIconSize);
+        mainTitleBar.getLeftIcon().setMaxWidth(titleBarIconSize);
+        mainTitleBar.getRightIcon().setMaxHeight(titleBarIconSize);
+        mainTitleBar.getRightIcon().setMaxWidth(titleBarIconSize);
+        mainTitleBar.setBackgroundColor(getResources().getColor(R.color.demo_title_bar_bg));
         mainTitleBar.setOnRightClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -267,19 +290,19 @@ public class MainActivity extends BaseLightActivity {
                 mainViewPager.setCurrentItem(0, false);
                 setConversationTitleBar();
                 mConversationBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.conversation_selected), null, null);
+                mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_conversation_selected), null, null);
                 break;
             case R.id.contact_btn_group:
                 mainViewPager.setCurrentItem(1, false);
                 setContactTitleBar();
                 mContactBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.contact_selected), null, null);
+                mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_contact_selected), null, null);
                 break;
             case R.id.myself_btn_group:
                 mainViewPager.setCurrentItem(2, false);
                 setProfileTitleBar();
                 mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_selected), null, null);
+                mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_profile_selected), null, null);
                 break;
             default:
                 break;
@@ -290,7 +313,7 @@ public class MainActivity extends BaseLightActivity {
         mainTitleBar.setTitle(getResources().getString(R.string.conversation_title), ITitleBarLayout.Position.MIDDLE);
         mainTitleBar.getLeftGroup().setVisibility(View.GONE);
         mainTitleBar.getRightGroup().setVisibility(View.VISIBLE);
-        mainTitleBar.setRightIcon(R.drawable.more_btn);
+        mainTitleBar.setRightIcon(R.drawable.demo_add_icon);
         setConversationMenu();
     }
 
@@ -368,7 +391,7 @@ public class MainActivity extends BaseLightActivity {
         mainTitleBar.setTitle(getResources().getString(R.string.contact_title), ITitleBarLayout.Position.MIDDLE);
         mainTitleBar.getLeftGroup().setVisibility(View.GONE);
         mainTitleBar.getRightGroup().setVisibility(View.VISIBLE);
-        mainTitleBar.getRightIcon().setImageResource(R.drawable.more_btn);
+        mainTitleBar.getRightIcon().setImageResource(R.drawable.demo_add_icon);
         setContactMenu();
     }
 
@@ -394,13 +417,13 @@ public class MainActivity extends BaseLightActivity {
         };
         PopMenuAction action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.add_friend));
-        action.setIconResId(R.drawable.group_new_friend);
+        action.setIconResId(R.drawable.demo_add_friend);
         action.setActionClickListener(popActionClickListener);
         menuActionList.add(action);
 
         action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.add_group));
-        action.setIconResId(R.drawable.ic_contact_join_group);
+        action.setIconResId(R.drawable.demo_add_group);
         action.setActionClickListener(popActionClickListener);
         menuActionList.add(action);
         menu.setMenuAction(menuActionList);
@@ -414,11 +437,11 @@ public class MainActivity extends BaseLightActivity {
 
     private void resetMenuState() {
         mConversationBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-        mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.conversation_normal), null, null);
+        mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_conversation_not_selected), null, null);
         mContactBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-        mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.contact_normal), null, null);
+        mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_contact_not_selected), null, null);
         mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-        mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.myself_normal), null, null);
+        mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_profile_not_selected), null, null);
     }
 
 
@@ -440,6 +463,22 @@ public class MainActivity extends BaseLightActivity {
         }
     };
 
+    private final V2TIMFriendshipListener friendshipListener = new V2TIMFriendshipListener() {
+        @Override
+        public void onFriendApplicationListAdded(List<V2TIMFriendApplication> applicationList) {
+            refreshFriendApplicationUnreadCount();
+        }
+
+        @Override
+        public void onFriendApplicationListDeleted(List<String> userIDList) {
+            refreshFriendApplicationUnreadCount();
+        }
+
+        @Override
+        public void onFriendApplicationListRead() {
+            refreshFriendApplicationUnreadCount();
+        }
+    };
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -475,6 +514,38 @@ public class MainActivity extends BaseLightActivity {
             @Override
             public void onSuccess(Long aLong) {
                 runOnUiThread(() -> unreadListener.onTotalUnreadMessageCountChanged(aLong));
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+
+            }
+        });
+
+        V2TIMManager.getFriendshipManager().addFriendListener(friendshipListener);
+        refreshFriendApplicationUnreadCount();
+    }
+
+    private void refreshFriendApplicationUnreadCount() {
+        V2TIMManager.getFriendshipManager().getFriendApplicationList(new V2TIMValueCallback<V2TIMFriendApplicationResult>() {
+            @Override
+            public void onSuccess(V2TIMFriendApplicationResult v2TIMFriendApplicationResult) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int unreadCount = v2TIMFriendApplicationResult.getUnreadCount();
+                        if (unreadCount > 0) {
+                            mNewFriendUnread.setVisibility(View.VISIBLE);
+                        } else {
+                            mNewFriendUnread.setVisibility(View.GONE);
+                        }
+                        String unreadStr = "" + unreadCount;
+                        if (unreadCount > 100) {
+                            unreadStr = "99+";
+                        }
+                        mNewFriendUnread.setText(unreadStr);
+                    }
+                });
             }
 
             @Override
@@ -535,6 +606,7 @@ public class MainActivity extends BaseLightActivity {
         DemoLog.i(TAG, "onPause");
         super.onPause();
         V2TIMManager.getConversationManager().removeConversationListener(unreadListener);
+        V2TIMManager.getFriendshipManager().removeFriendListener(friendshipListener);
     }
 
     @Override

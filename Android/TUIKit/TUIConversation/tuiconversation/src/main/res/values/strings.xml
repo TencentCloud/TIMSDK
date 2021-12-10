@@ -46,11 +46,6 @@
     <string name="ui_at_all_me">[@All][You were mentioned]</string>
     <string name="drafts">[Drafts]</string>
     <string name="custom_msg">[Custom Messages]</string>
-    <string name="custom_emoji">[Custom Sticker]</string>
-    <string name="picture_extra">[Image]</string>
-    <string name="video_extra">[Video]</string>
-    <string name="audio_extra">[Voice]</string>
-    <string name="file_extra">[File]</string>
 
     <string name="hint_add_user_id">Enter ID</string>
     <string name="hint_add_wording">Enter verification message</string>

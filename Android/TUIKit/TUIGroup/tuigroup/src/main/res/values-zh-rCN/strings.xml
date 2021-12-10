@@ -12,6 +12,7 @@
     <string name="join_group_type">加群方式</string>
     <string name="in_group_nick_name">我的群昵称</string>
     <string name="dissolve">解散该群</string>
+    <string name="clear_message">清除聊天记录</string>
     <string name="modify_group_notice">修改群公告</string>
     <string name="modify_nick_name_in_goup">修改我的群昵称</string>
 
@@ -34,6 +35,7 @@
     <string name="community_group">社群</string>
     <string name="dismiss_group_tip">您确认解散该群?</string>
     <string name="quit_group_tip">您确认退出该群？</string>
+    <string name="clear_group_msg_tip">确认清除聊天记录？</string>
     <string name="private_group">讨论组</string>
     <string name="public_group">公开群</string>
     <string name="request_wait">邀请成功，等待对方接受</string>
@@ -45,10 +47,11 @@
     <string name="invite_fail">邀请成员失败:</string>
     <string name="remove_fail_tip">移除成员失败</string>
     <string name="manager">管理</string>
+    <string name="group_manager">群管理</string>
 
     <string name="forbid_join">禁止加群</string>
     <string name="manager_judge">管理员审批</string>
-    <string name="auto_judge">自动审批...</string>
+    <string name="auto_judge">自动审批</string>
 
     <string name="modify_group_name">修改群名称</string>
     <string name="group_join_type">加群方式</string>
@@ -73,4 +76,8 @@
     <string name="dismiss_tip_before">您所在的群</string>
     <string name="dismiss_tip_after">已解散</string>
     <string name="get_system_notice">收到自定义系统通知: </string>
+
+    <string name="group_account_tag">ID：</string>
+    <string name="group_view_more_group_members">查看更多群成员</string>
+
 </resources>

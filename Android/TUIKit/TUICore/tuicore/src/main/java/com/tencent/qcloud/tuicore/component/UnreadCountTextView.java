@@ -37,16 +37,22 @@ public class UnreadCountTextView extends AppCompatTextView {
     private void init() {
         mPaint = new Paint();
         mPaint.setColor(getResources().getColor(R.color.read_dot_bg));
+        mPaint.setAntiAlias(true);
         setTextColor(Color.WHITE);
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.6f);
     }
 
+    public void setPaintColor(int color) {
+        if (mPaint != null) {
+            mPaint.setColor(color);
+        }
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
         if (getText().length() == 0) {
             // 没有字符，就在本View中心画一个小圆点
-            int l = (getMeasuredWidth() - ScreenUtil.getPxByDp(10)) / 2;
+            int l = (getMeasuredWidth() - ScreenUtil.getPxByDp(6)) / 2;
             int t = l;
             int r = getMeasuredWidth() - l;
             int b = r;

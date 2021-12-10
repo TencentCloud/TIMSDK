@@ -7,6 +7,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 
 import java.io.Serializable;
 
@@ -244,10 +245,22 @@ public abstract class TUIMessageBean implements Serializable {
           return downloadStatus;
      }
 
+     public int getMsgType() {
+          if (v2TIMMessage != null) {
+               return v2TIMMessage.getElemType();
+          } else {
+               return V2TIMMessage.V2TIM_ELEM_TYPE_NONE;
+          }
+     }
+
 
      public void setV2TIMMessage(V2TIMMessage v2TIMMessage) {
           this.v2TIMMessage = v2TIMMessage;
           setCommonAttribute(v2TIMMessage);
           onProcessMessage(v2TIMMessage);
+     }
+
+     public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
+          return null;
      }
 }

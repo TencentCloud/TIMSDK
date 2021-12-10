@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/status_bar_color"
+    android:background="@color/demo_profile_bg"
     android:orientation="vertical">
 
     <ScrollView
@@ -16,98 +16,115 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/self_detail_area"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="#fff"
+                android:layout_height="@dimen/demo_profile_self_height"
+                android:background="#FFFFFF"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="@dimen/page_margin">
 
-                <ImageView
+                <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
                     android:id="@+id/self_icon"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp" />
+                    android:layout_width="@dimen/demo_profile_face_size"
+                    android:layout_height="@dimen/demo_profile_face_size"
+                    android:layout_gravity="start"
+                    android:scaleType="centerCrop"
+                    android:layout_marginLeft="@dimen/demo_profile_face_margin_left"
+                    android:layout_marginRight="@dimen/demo_profile_face_margin_right"
+                    android:layout_marginTop="@dimen/demo_profile_face_margin_top" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/self_nick_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/self_icon"
+                        android:layout_toEndOf="@id/self_icon"
+                        android:layout_marginBottom="@dimen/demo_profile_text_margin"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/demo_profile_nick_name_text_size"
+                        tools:text="林"/>
+
+                    <TextView
+                        android:id="@+id/self_account_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@id/self_nick_name"
+                        android:layout_below="@id/self_nick_name"
+                        android:layout_toEndOf="@id/self_icon"
+                        android:layout_marginTop="-8dp"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/demo_profile_account_text_size"
+                        android:text="@string/demo_account_tag" />
 
                     <TextView
                         android:id="@+id/self_account"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_alignTop="@+id/self_account_tag"
+                        android:layout_toEndOf="@id/self_account_tag"
+                        android:layout_below="@id/self_nick_name"
                         android:gravity="center_vertical"
-                        android:textSize="12sp"
-                        android:text="" />
+                        android:textSize="@dimen/demo_profile_account_text_size"
+                        tools:text="99618" />
 
-                </LinearLayout>
+                    <TextView
+                        android:id="@+id/self_signature_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@id/self_account_tag"
+                        android:layout_below="@id/self_account_tag"
+                        android:layout_marginTop="3.8dp"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/demo_profile_account_text_size"
+                        android:text="@string/demo_signature_tag" />
 
-            </LinearLayout>
+
+                <TextView
+                        android:id="@+id/self_signature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/self_signature_tag"
+                        android:layout_alignTop="@id/self_signature_tag"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/demo_profile_signature_text_size"
+                        tools:text="相信光" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-
-                <com.tencent.qcloud.tuicore.component.LineControllerView
-                    android:id="@+id/modify_user_icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:name="@string/modify_user_icon" />
-
-                <com.tencent.qcloud.tuicore.component.LineControllerView
-                    android:id="@+id/modify_nick_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:name="@string/modify_nick_name" />
-
-                <com.tencent.qcloud.tuicore.component.LineControllerView
-                    android:id="@+id/modify_signature"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:name="@string/modify_signature" />
-
-                <com.tencent.qcloud.tuicore.component.LineControllerView
-                    android:id="@+id/modify_birthday"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:name="@string/modify_birthday" />
-
                 <com.tencent.qcloud.tuicore.component.LineControllerView
                     android:id="@+id/modify_allow_type"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/demo_profile_item_height"
                     android:layout_marginTop="10dp"
                     app:name="@string/add_rule" />
 
-                <com.tencent.qcloud.tuicore.component.LineControllerView
-                    android:id="@+id/im_privacy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:name="@string/im_privacy" />
 
                 <com.tencent.qcloud.tuicore.component.LineControllerView
-                    android:id="@+id/im_statement"
+                    android:id="@+id/modify_theme"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/demo_profile_item_height"
                     android:layout_marginTop="10dp"
-                    app:name="@string/im_statement" />
+                    android:visibility="gone"
+                    app:name="@string/modify_theme" />
+                <com.tencent.qcloud.tuicore.component.LineControllerView
+                    android:id="@+id/modify_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/demo_profile_item_height"
+                    android:visibility="gone"
+                    app:isTop="true"
+                    app:name="@string/modify_language" />
 
                 <com.tencent.qcloud.tuicore.component.LineControllerView
                     android:id="@+id/about_im"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/demo_profile_item_height"
                     android:layout_marginTop="10dp"
                     app:name="@string/about_im" />
 
@@ -115,11 +132,8 @@
                     android:id="@+id/logout_btn"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/btn_margin_left"
-                    android:layout_marginRight="@dimen/btn_margin_right"
-                    android:layout_marginBottom="@dimen/btn_margin_bottom"
                     android:layout_marginTop="10dp"
-                    android:layout_height="@dimen/btn_height_large"
+                    android:layout_height="@dimen/demo_logout_btn_height"
                     android:layout_alignParentBottom="true"
                     android:background="@color/bg_negative_btn"
                     android:text="@string/exit"

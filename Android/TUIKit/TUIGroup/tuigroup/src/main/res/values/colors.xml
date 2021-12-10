@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="text_color_black">#000</color>
-    <color name="status_bar_color">#EDEDED</color>
     <!-- 积极钮色值 -->
     <color name="btn_positive">#00a4ff</color>
     <color name="btn_positive_hover">#006eff</color>
@@ -22,5 +21,7 @@
     <color name="line">#DDDDDD</color>
     <color name="dialog_line_bg">#c6c6c6</color>
     <color name="font_blue">#066fff</color>
+
+    <color name="group_profile_member_name_text_color">#888888</color>
 
 </resources>

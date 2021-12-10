@@ -3,6 +3,10 @@
     package="com.tencent.qcloud.tuicore">
 
     <application>
+        <activity
+            android:name=".component.activities.SelectionActivity"
+            android:screenOrientation="portrait" />
+
         <provider
             android:name=".ServiceInitializer"
             android:authorities="${applicationId}.TUICore.Init"

@@ -28,6 +28,7 @@ public class TUIConfig {
     private static int selfAllowType = 0;
     private static long selfBirthDay = 0L;
     private static String selfSignature = "";
+    private static int gender;
 
     private static final String RECORD_DIR_SUFFIX = "/record/";
     private static final String RECORD_DOWNLOAD_DIR_SUFFIX = "/record/download/";
@@ -136,6 +137,14 @@ public class TUIConfig {
         TUIConfig.selfSignature = selfSignature;
     }
 
+    public static void setGender(int gender) {
+        TUIConfig.gender = gender;
+    }
+
+    public static int getGender() {
+        return gender;
+    }
+
     /**
      * 设置登录用户信息
      */
@@ -145,6 +154,7 @@ public class TUIConfig {
         TUIConfig.selfAllowType = userFullInfo.getAllowType();
         TUIConfig.selfBirthDay = userFullInfo.getBirthday();
         TUIConfig.selfSignature = userFullInfo.getSelfSignature();
+        TUIConfig.gender = userFullInfo.getGender();
     }
 
     /**

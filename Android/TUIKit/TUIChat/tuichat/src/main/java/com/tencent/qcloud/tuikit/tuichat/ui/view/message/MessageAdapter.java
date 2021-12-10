@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message;
 
-import android.os.Handler;
-import android.os.Looper;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,10 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
-import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageContentHolder;
@@ -44,6 +43,12 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     private int mHighShowPosition;
 
     private boolean isForwardMode = false;
+
+    private ChatPresenter presenter;
+
+    public void setPresenter(ChatPresenter chatPresenter) {
+        this.presenter = chatPresenter;
+    }
 
     public void setForwardMode(boolean forwardMode) {
         isForwardMode = forwardMode;
@@ -112,6 +117,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(parent, this, viewType);
         if (holder instanceof MessageContentHolder) {
             ((MessageContentHolder) holder).isForwardMode = isForwardMode;
+            ((MessageContentHolder) holder).setPresenter(presenter);
         }
         return holder;
     }
@@ -136,23 +142,9 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                     }
                     break;
                 default:
-                    if (position == mHighShowPosition) {
-                        final Handler mHandlerData = new Handler();
-                        Runnable runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                baseHolder.mContentLayout.setBackgroundColor(TUIChatService.getAppContext().getResources().getColor(R.color.line));
-                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        baseHolder.mContentLayout.setBackgroundColor(TUIChatService.getAppContext().getResources().getColor(R.color.chat_background_color));
-                                        mHighShowPosition = -1;
-                                    }
-                                }, 600);
-                            }
-                        };
-
-                        mHandlerData.postDelayed(runnable, 200);
+                    if (position == mHighShowPosition && baseHolder.mContentLayout != null) {
+                        baseHolder.startHighLight();
+                        mHighShowPosition = -1;
                     }
                     break;
             }
@@ -222,6 +214,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
         if (holder instanceof MessageContentHolder) {
             ((MessageContentHolder) holder).msgContentFrame.setBackground(null);
+            ((MessageContentHolder) holder).stopHighLight();
         }
     }
 
@@ -231,11 +224,23 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             @Override
             public void run() {
                 mLoading = false;
-                if (type == MessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION) {
+                if (type == MessageRecyclerView.DATA_CHANGE_LOCATE_TO_POSITION) {
                     notifyDataSetChanged();
                     int position = getMessagePosition(locateMessage);
                     mRecycleView.scrollToPosition(position);
                     mRecycleView.setHighShowPosition(position);
+                } else if (type == MessageRecyclerView.SCROLL_TO_POSITION) {
+                    int position = getMessagePosition(locateMessage);
+                    mRecycleView.setHighShowPosition(position);
+                    mRecycleView.scrollToPosition(position);
+                    notifyItemChanged(position);
+                } else if (type == MessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION) {
+                    notifyDataSetChanged();
+                    int position = getMessagePosition(locateMessage);
+                    mRecycleView.setHighShowPosition(position);
+                    mRecycleView.scrollToEnd();
+                    mRecycleView.smoothScrollToPosition(position);
+                    notifyItemChanged(position);
                 }
             }
         });
@@ -325,7 +330,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         }
 
         for (int i = 0; i < mDataSource.size(); i++) {
-            if (mDataSource.get(i) == message) {
+            if (TextUtils.equals(mDataSource.get(i).getId(), message.getId())) {
                 positon = i;
             }
         }

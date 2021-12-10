@@ -34,7 +34,7 @@ public class ConversationPresenter {
 
     private final List<ConversationInfo> loadedConversationInfoList = new ArrayList<>();
 
-    private int totalUnreadCount;
+    private long totalUnreadCount;
 
     public ConversationPresenter() {
         provider = new ConversationProvider();
@@ -45,6 +45,11 @@ public class ConversationPresenter {
             @Override
             public void deleteConversation(String chatId, boolean isGroup) {
                 ConversationPresenter.this.deleteConversation(chatId, isGroup);
+            }
+
+            @Override
+            public void clearConversationMessage(String chatId, boolean isGroup) {
+                ConversationPresenter.this.clearConversationMessage(chatId, isGroup);
             }
 
             @Override
@@ -63,7 +68,7 @@ public class ConversationPresenter {
             }
 
             @Override
-            public int getUnreadTotal() {
+            public long getUnreadTotal() {
                 return totalUnreadCount;
             }
 
@@ -284,7 +289,7 @@ public class ConversationPresenter {
      *
      * @param unreadTotal
      */
-    public void updateUnreadTotal(int unreadTotal) {
+    public void updateUnreadTotal(long unreadTotal) {
         TUIConversationLog.i(TAG, "updateUnreadTotal:" + unreadTotal);
         totalUnreadCount = unreadTotal;
         HashMap<String, Object> param = new HashMap<>();
@@ -406,6 +411,20 @@ public class ConversationPresenter {
         }
 
         provider.clearHistoryMessage(conversation.getId(), conversation.isGroup(), new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+
+            }
+        });
+    }
+
+    public void clearConversationMessage(String chatId, boolean isGroup) {
+        provider.clearHistoryMessage(chatId, isGroup, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
 

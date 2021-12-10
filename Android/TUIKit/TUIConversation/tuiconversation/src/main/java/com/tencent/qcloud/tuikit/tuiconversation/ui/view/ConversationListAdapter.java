@@ -184,7 +184,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
             view = inflater.inflate(R.layout.conversation_forward_label_adapter, parent, false);
             return new ForwardLabelHolder(view);
         } else {
-            view = inflater.inflate(R.layout.conversation_adapter, parent, false);
+            view = inflater.inflate(R.layout.conversation_list_item_layout, parent, false);
             holder = new ConversationCommonHolder(view);
             ((ConversationCommonHolder) holder).setForwardMode(isForwardFragment);
         }
@@ -225,13 +225,13 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         }
 
         if (getCurrentPosition() == position && isClick()){
-            baseHolder.itemView.setBackgroundResource(R.color.split_lint_color);
+            baseHolder.itemView.setBackgroundResource(R.color.conversation_item_clicked_color);
         } else {
             if (conversationInfo == null) {
                 return;
             }
             if (conversationInfo.isTop() && !isForwardFragment) {
-                baseHolder.itemView.setBackgroundColor(baseHolder.rootView.getResources().getColor(R.color.conversation_top_color));
+                baseHolder.itemView.setBackgroundColor(baseHolder.rootView.getResources().getColor(R.color.conversation_item_top_color));
             } else {
                 baseHolder.itemView.setBackgroundColor(Color.WHITE);
             }

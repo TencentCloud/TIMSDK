@@ -22,6 +22,7 @@ public class TUIChatConstants {
     public static final int GET_MESSAGE_FORWARD = 0;
     public static final int GET_MESSAGE_BACKWARD = 1;
     public static final int GET_MESSAGE_TWO_WAY = 2;
+    public static final int GET_MESSAGE_LOCATE = 3;
 
     public static final String CHAT_INFO = "chatInfo";
 

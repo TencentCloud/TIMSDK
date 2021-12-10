@@ -5,26 +5,29 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tuicore.component.PopupList;
 import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageProperties;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.component.popmenu.ChatPopMenu;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageLayout;
@@ -41,17 +44,24 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     public static final int DATA_CHANGE_TYPE_UPDATE = 4;
     public static final int DATA_CHANGE_TYPE_DELETE = 5;
     public static final int DATA_CHANGE_TYPE_CLEAR = 6;
-    public static final int DATA_CHANGE_SCROLL_TO_POSITION = 7;
+    // 先刷新消息再定位到消息位置
+    public static final int DATA_CHANGE_LOCATE_TO_POSITION = 7;
     public static final int DATA_CHANGE_NEW_MESSAGE = 8;
+    // 直接滚动到消息位置
+    public static final int SCROLL_TO_POSITION = 9;
+    // 先刷新消息再滚动到消息位置
+    public static final int DATA_CHANGE_SCROLL_TO_POSITION = 10;
 
     protected OnItemLongClickListener mOnItemLongClickListener;
     protected MessageRecyclerView.OnLoadMoreHandler mHandler;
     protected MessageRecyclerView.OnEmptySpaceClickListener mEmptySpaceClickListener;
     protected MessageAdapter mAdapter;
-    protected List<PopMenuAction> mPopActions = new ArrayList<>();
-    protected List<PopMenuAction> mMorePopActions = new ArrayList<>();
+    protected List<ChatPopMenu.ChatPopMenuAction> mPopActions = new ArrayList<>();
+    protected List<ChatPopMenu.ChatPopMenuAction> mMorePopActions = new ArrayList<>();
     protected MessageRecyclerView.OnPopActionClickListener mOnPopActionClickListener;
     private final MessageProperties properties = MessageProperties.getInstance();
+
+    private ChatPresenter presenter;
 
     public MessageRecyclerView(Context context) {
         super(context);
@@ -73,44 +83,44 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         setItemViewCacheSize(0);
         setHasFixedSize(true);
         setFocusableInTouchMode(false);
+        setFocusable(true);
+        setClickable(true);
         LinearLayoutManager linearLayoutManager = new CustomLinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         setLayoutManager(linearLayoutManager);
+        SimpleItemAnimator animator = (SimpleItemAnimator) getItemAnimator();
+        if (animator != null) {
+            animator.setSupportsChangeAnimations(false);
+        }
+        setClickEmptySpaceEvent();
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent e) {
-        if (e.getAction() == MotionEvent.ACTION_UP) {
-            View child = findChildViewUnder(e.getX(), e.getY());
-            if (child == null) {
-                if (mEmptySpaceClickListener != null)
+    public void setPresenter(ChatPresenter presenter) {
+        this.presenter = presenter;
+    }
+
+    private void setClickEmptySpaceEvent() {
+        GestureDetector.OnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                if (mEmptySpaceClickListener != null) {
                     mEmptySpaceClickListener.onClick();
-            } else if (child instanceof ViewGroup) {
-                ViewGroup group = (ViewGroup) child;
-                final int count = group.getChildCount();
-                float x = e.getRawX();
-                float y = e.getRawY();
-                View touchChild = null;
-                for (int i = count - 1; i >= 0; i--) {
-                    final View innerChild = group.getChildAt(i);
-                    int position[] = new int[2];
-                    innerChild.getLocationOnScreen(position);
-                    if (x >= position[0]
-                            && x <= position[0] + innerChild.getMeasuredWidth()
-                            && y >= position[1]
-                            && y <= position[1] + innerChild.getMeasuredHeight()) {
-                        touchChild = innerChild;
-                        break;
-                    }
+                    return true;
                 }
-                if (touchChild == null) {
-                    if (mEmptySpaceClickListener != null) {
-                        mEmptySpaceClickListener.onClick();
-                    }
-                }
+                return false;
             }
-        }
-        return super.onInterceptTouchEvent(e);
+        };
+
+        GestureDetector gestureDetector = new GestureDetector(getContext(), gestureListener);
+        setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v instanceof RecyclerView) {
+                    gestureDetector.onTouchEvent(event);
+                }
+                return false;
+            }
+        });
     }
 
     public void showItemPopMenu(final int index, final TUIMessageBean messageInfo, View view) {
@@ -119,30 +129,17 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
             return;
         }
 
-        final PopupList popupList = new PopupList(getContext());
-        List<String> mItemList = new ArrayList<>();
-        for (PopMenuAction action : mPopActions) {
-            mItemList.add(action.getActionName());
-        }
-        popupList.show(view, mItemList, new PopupList.PopupListListener() {
-            @Override
-            public boolean showPopupList(View adapterView, View contextView, int contextPosition) {
-                return true;
-            }
+        ChatPopMenu chatPopMenu = new ChatPopMenu(getContext());
+        chatPopMenu.setChatPopMenuActionList(mPopActions);
+        int[] location = new int[2];
+        getLocationOnScreen(location);
+        chatPopMenu.show(view, location[1]);
 
-            @Override
-            public void onPopupListClick(View contextView, int contextPosition, int position) {
-                PopMenuAction action = mPopActions.get(position);
-                if (action.getActionClickListener() != null) {
-                    action.getActionClickListener().onActionClick(index, messageInfo);
-                }
-            }
-        });
         postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (popupList != null) {
-                    popupList.hidePopupListWindow();
+                if (chatPopMenu != null) {
+                    chatPopMenu.hide();
                 }
             }
         }, 10000); // 10s后无操作自动消失
@@ -175,93 +172,53 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         if (msg == null) {
             return;
         }
-        List<PopMenuAction> actions = new ArrayList<>();
-        PopMenuAction action = new PopMenuAction();
-        if (msg instanceof TextMessageBean) {
+        List<ChatPopMenu.ChatPopMenuAction> actions = new ArrayList<>();
+        ChatPopMenu.ChatPopMenuAction action = new ChatPopMenu.ChatPopMenuAction();
+        if (msg instanceof TextMessageBean || msg instanceof ReplyMessageBean) {
             action.setActionName(getContext().getString(R.string.copy_action));
-            action.setActionClickListener(new PopActionClickListener() {
-                @Override
-                public void onActionClick(int position, Object data) {
-                    mOnPopActionClickListener.onCopyClick(position, (TUIMessageBean) data);
-                }
-            });
+            action.setActionIcon(R.drawable.pop_menu_copy);
+            action.setActionClickListener(() -> mOnPopActionClickListener.onCopyClick(msg));
             actions.add(action);
         }
-        action = new PopMenuAction();
+        action = new ChatPopMenu.ChatPopMenuAction();
         action.setActionName(getContext().getString(R.string.delete_action));
-        action.setActionClickListener(new PopActionClickListener() {
-            @Override
-            public void onActionClick(int position, Object data) {
-                mOnPopActionClickListener.onDeleteMessageClick(position, (TUIMessageBean) data);
-            }
-        });
+        action.setActionIcon(R.drawable.pop_menu_delete);
+        action.setActionClickListener(() -> mOnPopActionClickListener.onDeleteMessageClick(msg));
         actions.add(action);
         if (msg.isSelf()) {
-            action = new PopMenuAction();
+            action = new ChatPopMenu.ChatPopMenuAction();
             if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
                 action.setActionName(getContext().getString(R.string.revoke_action));
-                action.setActionClickListener(new PopActionClickListener() {
-                    @Override
-                    public void onActionClick(int position, Object data) {
-                        mOnPopActionClickListener.onRevokeMessageClick(position, (TUIMessageBean) data);
-                    }
-                });
-                actions.add(action);
-            } else {
-                action = new PopMenuAction();
-                action.setActionName(getContext().getString(R.string.resend_action));
-                action.setActionClickListener(new PopActionClickListener() {
-                    @Override
-                    public void onActionClick(int position, Object data) {
-                        new TUIKitDialog(getContext())
-                                .builder()
-                                .setCancelable(true)
-                                .setCancelOutside(true)
-                                .setTitle(getContext().getString(R.string.resend_tips))
-                                .setDialogWidth(0.75f)
-                                .setPositiveButton(getContext().getString(R.string.sure), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        mOnPopActionClickListener.onSendMessageClick(msg, true);
-                                    }
-                                })
-                                .setNegativeButton(getContext().getString(R.string.cancel), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-                                    }
-                                })
-                                .show();
-                    }
-                });
+                action.setActionIcon(R.drawable.pop_menu_revoke);
+                action.setActionClickListener(() -> mOnPopActionClickListener.onRevokeMessageClick(msg));
                 actions.add(action);
             }
         }
 
         //多选
-        action = new PopMenuAction();
+        action = new ChatPopMenu.ChatPopMenuAction();
         action.setActionName(getContext().getString(R.string.titlebar_mutiselect));
-        action.setActionClickListener(new PopActionClickListener() {
-            @Override
-            public void onActionClick(int position, Object data) {
-                mOnPopActionClickListener.onMultiSelectMessageClick(position, (TUIMessageBean) data);
-            }
-        });
+        action.setActionIcon(R.drawable.pop_menu_multi_select);
+        action.setActionClickListener(()-> mOnPopActionClickListener.onMultiSelectMessageClick(msg));
         actions.add(action);
 
         //转发
         if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-            action = new PopMenuAction();
+            action = new ChatPopMenu.ChatPopMenuAction();
             action.setActionName(getContext().getString(R.string.forward_button));
-            action.setActionClickListener(new PopActionClickListener() {
-                @Override
-                public void onActionClick(int position, Object data) {
-                    mOnPopActionClickListener.onForwardMessageClick(position, (TUIMessageBean) data);
-                }
-            });
+            action.setActionIcon(R.drawable.pop_menu_forward);
+            action.setActionClickListener(()-> mOnPopActionClickListener.onForwardMessageClick(msg));
             actions.add(action);
         }
 
+        // 回复
+        if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+            action = new ChatPopMenu.ChatPopMenuAction();
+            action.setActionName(getContext().getString(R.string.reply_button));
+            action.setActionIcon(R.drawable.pop_menu_reply);
+            action.setActionClickListener(()-> mOnPopActionClickListener.onReplyMessageClick(msg));
+            actions.add(action);
+        }
 
         mPopActions.clear();
         mPopActions.addAll(actions);
@@ -312,6 +269,12 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         }
     }
 
+    public void smoothScrollToPosition(int position) {
+        if (getAdapter() != null && position < getAdapter().getItemCount()) {
+            super.smoothScrollToPosition(position);
+        }
+    }
+
     public void setHighShowPosition(int position) {
         if (mAdapter != null) {
             mAdapter.setHighShowPosition(position);
@@ -338,7 +301,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         mOnPopActionClickListener = listener;
     }
 
-    public void postSetAdapter(MessageAdapter adapter) {
+    public void setAdapterListener() {
         mAdapter.setOnItemClickListener(new OnItemLongClickListener() {
             @Override
             public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {
@@ -360,9 +323,55 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
                     mOnItemLongClickListener.onUserIconLongClick(view, position, messageInfo);
                 }
             }
+
+            @Override
+            public void onReplyMessageClick(View view, int position, String originMsgId) {
+                // 点击转发消息进行跳转
+                locateOriginMessage(originMsgId);
+            }
+
+            @Override
+            public void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {
+                new TUIKitDialog(getContext())
+                        .builder()
+                        .setCancelable(true)
+                        .setCancelOutside(true)
+                        .setTitle(getContext().getString(R.string.resend_tips))
+                        .setDialogWidth(0.75f)
+                        .setPositiveButton(getContext().getString(R.string.sure), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mOnPopActionClickListener.onSendMessageClick(messageInfo, true);
+                            }
+                        })
+                        .setNegativeButton(getContext().getString(R.string.cancel), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        })
+                        .show();
+            }
         });
     }
 
+    private void locateOriginMessage(String originMsgId) {
+        if (TextUtils.isEmpty(originMsgId)) {
+            ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip));
+            return;
+        }
+        presenter.locateMessage(originMsgId, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip));
+            }
+        });
+    }
 
     @Override
     public int getAvatarRadius() {
@@ -552,30 +561,29 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     @Override
     public void setOnItemClickListener(OnItemLongClickListener listener) {
         mOnItemLongClickListener = listener;
-        mAdapter.setOnItemClickListener(listener);
+        setAdapterListener();
     }
 
     @Override
     public void setAdapter(MessageAdapter adapter) {
         super.setAdapter(adapter);
         mAdapter = adapter;
-        postSetAdapter(adapter);
     }
 
     @Override
-    public List<PopMenuAction> getPopActions() {
+    public List<ChatPopMenu.ChatPopMenuAction> getPopActions() {
         return mPopActions;
     }
 
     @Override
-    public void addPopAction(PopMenuAction action) {
+    public void addPopAction(ChatPopMenu.ChatPopMenuAction action) {
         mMorePopActions.add(action);
     }
 
 
     public interface OnLoadMoreHandler {
         void loadMore(int type);
-        boolean isListEnd(int postion);
+        boolean isListEnd(int position);
     }
 
     public interface OnEmptySpaceClickListener {
@@ -584,16 +592,18 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
 
     public interface OnPopActionClickListener {
 
-        void onCopyClick(int position, TUIMessageBean msg);
+        void onCopyClick(TUIMessageBean msg);
 
         void onSendMessageClick(TUIMessageBean msg, boolean retry);
 
-        void onDeleteMessageClick(int position, TUIMessageBean msg);
+        void onDeleteMessageClick(TUIMessageBean msg);
 
-        void onRevokeMessageClick(int position, TUIMessageBean msg);
+        void onRevokeMessageClick(TUIMessageBean msg);
 
-        void onMultiSelectMessageClick(int position, TUIMessageBean msg);
+        void onMultiSelectMessageClick(TUIMessageBean msg);
 
-        void onForwardMessageClick(int position, TUIMessageBean msg);
+        void onForwardMessageClick(TUIMessageBean msg);
+
+        void onReplyMessageClick(TUIMessageBean msg);
     }
 }

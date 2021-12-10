@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -313,10 +314,11 @@ public class FileUtil {
             is = context.getContentResolver().openInputStream(uri);
             bos = new BufferedOutputStream(new FileOutputStream(destinationPath, false));
             byte[] buf = new byte[1024];
-            is.read(buf);
-            do {
-                bos.write(buf);
-            } while (is.read(buf) != -1);
+
+            int actualBytes;
+            while ((actualBytes = is.read(buf)) != -1) {
+                bos.write(buf, 0, actualBytes);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

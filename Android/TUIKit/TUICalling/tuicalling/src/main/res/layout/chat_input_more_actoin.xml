@@ -6,14 +6,14 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="52dp"
-        android:layout_height="52dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
+            android:layout_width="61.44dp"
+            android:layout_height="61.44dp"
             android:scaleType="centerInside" />
     </LinearLayout>
 
@@ -22,8 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3.8dp"
         android:textColor="@color/text_color_gray"
-        android:textSize="9sp" />
+        android:textSize="11.52sp" />
 
 </LinearLayout>

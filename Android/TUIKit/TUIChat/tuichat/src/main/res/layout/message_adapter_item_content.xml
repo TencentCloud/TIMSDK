@@ -4,7 +4,7 @@
     android:id="@+id/messsage_content_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
+    android:clickable="false"
     android:paddingBottom="12.6dp"
     android:paddingLeft="12.6dp"
     android:paddingRight="12.6dp">
@@ -36,7 +36,7 @@
         android:id="@+id/right_group_layout"
         android:layout_below="@+id/chat_time_tv"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_width="wrap_content">
 
 
         <com.tencent.qcloud.tuicore.component.gatherimage.UserIconView
@@ -98,22 +98,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="6dp"
+                android:layout_marginBottom="1dp"
                 android:textColor="@color/text_gray1"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="bottom"
                 android:textSize="11sp"/>
 
             <ImageView
                 android:id="@+id/message_status_iv"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/message_send_fail"
                 android:visibility="gone" />
 
-            <FrameLayout
+            <com.tencent.qcloud.tuikit.tuichat.ui.view.message.MaxWidthFrameLayout
                 android:id="@+id/msg_content_fl"
+                app:maxWidth="@dimen/chat_message_content_max_width"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

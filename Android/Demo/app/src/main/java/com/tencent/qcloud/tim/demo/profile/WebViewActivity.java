@@ -1,11 +1,13 @@
 package com.tencent.qcloud.tim.demo.profile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -23,8 +25,12 @@ public class WebViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_about_activity);
 
+        Intent intent = getIntent();
+        String title = intent.getStringExtra("title");
+        String url = intent.getStringExtra("url");
+
         mTitleBar = findViewById(R.id.webview_title);
-        mTitleBar.setTitle(getResources().getString(R.string.about_im), ITitleBarLayout.Position.MIDDLE);
+        mTitleBar.setTitle(title, ITitleBarLayout.Position.MIDDLE);
         mTitleBar.getRightIcon().setVisibility(View.GONE);
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override
@@ -32,9 +38,14 @@ public class WebViewActivity extends Activity {
                 finish();
             }
         });
+
         mWebView = (WebView) findViewById(R.id.wv_view);
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.loadUrl("https://cloud.tencent.com/product/im");
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setJavaScriptEnabled(true);
+        mWebView.loadUrl(url);
+
         mWebView.setWebViewClient(new MyWebViewClient());
     }
 

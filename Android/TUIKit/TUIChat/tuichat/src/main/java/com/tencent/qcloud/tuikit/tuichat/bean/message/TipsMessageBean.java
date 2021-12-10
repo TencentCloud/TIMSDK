@@ -14,6 +14,9 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 
 import java.util.List;
 
+/**
+ * 提示消息
+ */
 public class TipsMessageBean extends TUIMessageBean {
     /**
      * 群创建提示消息
@@ -46,9 +49,6 @@ public class TipsMessageBean extends TUIMessageBean {
 
     private String text;
     private int tipType;
-
-    public TipsMessageBean() {
-    }
 
     @Override
     public String onGetDisplayString() {

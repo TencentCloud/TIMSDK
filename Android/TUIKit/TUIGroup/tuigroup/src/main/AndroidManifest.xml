@@ -13,10 +13,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
-        <activity
-            android:name=".ui.page.SelectionActivity"
-            android:screenOrientation="portrait" />
-
         <provider
             android:name=".TUIGroupService"
             android:authorities="${applicationId}.TUIGroup.Init"

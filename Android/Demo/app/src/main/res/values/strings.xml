@@ -11,6 +11,12 @@
     <string name="account">Username</string>
     <string name="password">Password</string>
 
+    <string name="demo_login_country_label">国家/地区</string>
+    <string name="demo_login_zh_cn">中国大陆</string>
+    <string name="demo_login_mobile_phone_number">Phone Number</string>
+    <string name="demo_login_verification_code_label">Verification Code</string>
+
+
     <string name="login_title">Log in to IM</string>
     <string name="login_sub_title">Use Group Chat, Voice/Video Call, and various IM features</string>
     <string name="input_number">Enter mobile number</string>
@@ -28,10 +34,10 @@
 
     // "我"相关
     <string name="profile">Me</string>
-    <string name="id">Account: %1$s</string>
-    <string name="modify_user_icon">Change Profile Photo</string>
-    <string name="modify_nick_name">Edit Name</string>
-    <string name="modify_signature">Edit What\'s Up</string>
+    <string name="modify_user_icon">Profile Photo</string>
+    <string name="modify_nick_name">Nick Name</string>
+    <string name="modify_signature">Signature</string>
+    <string name="modify_account">Account</string>
     <string name="add_rule">Who Can Add Me</string>
     <string name="allow_type_allow_any">Everyone</string>
     <string name="allow_type_deny_any">Nobody</string>
@@ -39,13 +45,35 @@
     <string name="exit">Log Out</string>
     <string name="about_im">About Instant Messaging</string>
     <string name="modify_birthday">birthday</string>
+    <string name="modify_gender">Gender</string>
+
+    <string name="modify_theme">Modify Theme</string>
+    <string name="modify_language">Modify Language</string>
+
+    <string name="demo_simplified_Chinese">Simplified Chinese</string>
+    <string name="demo_theme_light">light</string>
+
+    <string name="demo_signature_tag">Signature : </string>
+    <string name="demo_account_tag">ID : </string>
+
+    <string name="demo_about_sdk_version">SDK Version</string>
+    <string name="demo_about_im">About</string>
+
+    <string name="demo_self_detail_gender_male">Male</string>
+    <string name="demo_self_detail_gender_female">Female</string>
+    <string name="demo_self_detail_gender_unknown">Unknown</string>
+
+    <string name="demo_self_detail_modify_nickname">Modify NickName</string>
+    <string name="demo_self_detail_modify_signature">Modify Signature</string>
+    <string name="demo_self_detail_modify_gender">Modify Gender</string>
+
+    <string name="demo_self_detail_modify_nickname_rule">Only for chinese, charactors, numbers and underline.</string>
 
     // 主页Tab相关
     <string name="tab_contact_tab_text">Contacts</string>
     <string name="tab_conversation_tab_text">Message</string>
     <string name="tab_profile_tab_text">Me</string>
     <string name="tab_scenes_tab_text">Live Stream</string>
-
 
 
     <string name="conversation_title">Tencent·Instant Messaging</string>
@@ -105,6 +133,8 @@
     <string name="login_agree_content_key2">"User Agreement"</string>
     <string name="im_privacy">Privacy Regulations</string>
     <string name="im_statement">Disclaimer</string>
+    <string name="im_user_agreement">User Agreement</string>
+
     <string name="im_statement_content">IM ("this product") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, the audio and video interactions of this product are archived throughout the entire audio and video interactions. Any pornography, abusive, violent, and politically related content is strictly prohibited during use.</string>
     <string name="im_privacy_tips">Please read and approve the agreement first</string>
 

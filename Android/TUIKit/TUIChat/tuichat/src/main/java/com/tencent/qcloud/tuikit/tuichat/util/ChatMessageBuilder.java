@@ -1,17 +1,21 @@
 package com.tencent.qcloud.tuikit.tuichat.util;
 
 import android.net.Uri;
+import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.util.FileUtil;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
@@ -20,7 +24,9 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatMessageBuilder {
 
@@ -30,7 +36,6 @@ public class ChatMessageBuilder {
         TextMessageBean textMessageBean = new TextMessageBean();
         textMessageBean.setCommonAttribute(v2TIMMessage);
         textMessageBean.onProcessMessage(v2TIMMessage);
-        textMessageBean.setExtra(textMessageBean.getText());
         return textMessageBean;
     }
 
@@ -39,7 +44,6 @@ public class ChatMessageBuilder {
         TextAtMessageBean textAtMessageBean = new TextAtMessageBean();
         textAtMessageBean.setCommonAttribute(v2TIMMessage);
         textAtMessageBean.onProcessMessage(v2TIMMessage);
-        textAtMessageBean.setExtra(textAtMessageBean.getText());
         return textAtMessageBean;
     }
 
@@ -55,7 +59,6 @@ public class ChatMessageBuilder {
         FaceMessageBean message = new FaceMessageBean();
         message.setCommonAttribute(v2TIMMessage);
         message.onProcessMessage(v2TIMMessage);
-        message.setExtra(TUIChatService.getAppContext().getString(R.string.custom_emoji));
         return message;
     }
 
@@ -77,7 +80,6 @@ public class ChatMessageBuilder {
         messageBean.setDataPath(path);
         messageBean.setImgWidth(size[0]);
         messageBean.setImgHeight(size[1]);
-        messageBean.setExtra(TUIChatService.getAppContext().getString(R.string.picture_extra));
         return messageBean;
     }
 
@@ -102,7 +104,6 @@ public class ChatMessageBuilder {
         messageBean.setImgHeight(height);
         messageBean.setDataPath(imgPath);
         messageBean.setDataUri(videoUri);
-        messageBean.setExtra(TUIChatService.getAppContext().getString(R.string.video_extra));
         return messageBean;
     }
 
@@ -120,7 +121,6 @@ public class ChatMessageBuilder {
         messageBean.onProcessMessage(v2TIMMessage);
 
         messageBean.setDataPath(recordPath);
-        messageBean.setExtra(TUIChatService.getAppContext().getString(R.string.audio_extra));
         return messageBean;
     }
 
@@ -140,7 +140,6 @@ public class ChatMessageBuilder {
             messageBean.onProcessMessage(v2TIMMessage);
 
             messageBean.setDataPath(filePath);
-            messageBean.setExtra(TUIChatService.getAppContext().getString(R.string.file_extra));
             return messageBean;
         }
         return null;
@@ -167,11 +166,11 @@ public class ChatMessageBuilder {
                                                    String title,
                                                    List<String> abstractList,
                                                    String compatibleText) {
-        if (messageInfoList == null || messageInfoList.isEmpty()){
+        if (messageInfoList == null || messageInfoList.isEmpty()) {
             return null;
         }
         List<V2TIMMessage> msgList = new ArrayList<>();
-        for(int i = 0; i < messageInfoList.size(); i++){
+        for (int i = 0; i < messageInfoList.size(); i++) {
             msgList.add(messageInfoList.get(i).getV2TIMMessage());
         }
         V2TIMMessage mergeMsg = V2TIMManager.getMessageManager()
@@ -180,15 +179,15 @@ public class ChatMessageBuilder {
         MergeMessageBean messageBean = new MergeMessageBean();
         messageBean.setCommonAttribute(mergeMsg);
         messageBean.onProcessMessage(mergeMsg);
-        messageBean.setExtra(TUIChatService.getAppContext().getString(R.string.forward_extra));
         return messageBean;
     }
 
     /**
      * 创建一条自定义消息
-     * @param data 自定义消息内容，可以是任何内容
+     *
+     * @param data        自定义消息内容，可以是任何内容
      * @param description 自定义消息描述内容，可以被搜索到
-     * @param extension 扩展内容
+     * @param extension   扩展内容
      * @return
      */
     public static TUIMessageBean buildCustomMessage(String data, String description, byte[] extension) {
@@ -212,6 +211,44 @@ public class ChatMessageBuilder {
 
     public static TUIMessageBean buildMessage(V2TIMMessage message) {
         return ChatMessageParser.parseMessage(message);
+    }
+
+    public static TUIMessageBean buildAtReplyMessage(String content, List<String> atList, ReplyPreviewBean previewBean) {
+        V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createTextAtMessage(content, atList);
+        return buildReplyMessage(v2TIMMessage, previewBean);
+    }
+
+    public static TUIMessageBean buildReplyMessage(String content, ReplyPreviewBean previewBean) {
+        V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createTextMessage(content);
+        return buildReplyMessage(v2TIMMessage, previewBean);
+    }
+
+    private static TUIMessageBean buildReplyMessage(V2TIMMessage v2TIMMessage, ReplyPreviewBean previewBean) {
+        Map<String, ReplyPreviewBean> cloudData = new HashMap<>();
+        Gson gson = new Gson();
+        cloudData.put("messageReply", previewBean);
+        v2TIMMessage.setCloudCustomData(gson.toJson(cloudData));
+
+        ReplyMessageBean replyMessageBean = new ReplyMessageBean(previewBean);
+        replyMessageBean.setCommonAttribute(v2TIMMessage);
+        replyMessageBean.onProcessMessage(v2TIMMessage);
+        return replyMessageBean;
+    }
+
+    public static ReplyPreviewBean buildReplyPreviewBean(TUIMessageBean messageBean) {
+        String messageAbstract = ChatMessageParser.getReplyMessageAbstract(messageBean);
+        String sender = messageBean.getNickName();
+        if (TextUtils.isEmpty(sender)) {
+            sender = messageBean.getSender();
+        }
+        ReplyPreviewBean previewBean = new ReplyPreviewBean();
+        previewBean.setOriginalMessageBean(messageBean);
+        previewBean.setMessageID(messageBean.getId());
+        previewBean.setMessageAbstract(messageAbstract);
+        previewBean.setMessageSender(sender);
+        previewBean.setMessageType(messageBean.getMsgType());
+
+        return previewBean;
     }
 
 }

@@ -4,8 +4,14 @@ import com.tencent.imsdk.v2.V2TIMFaceElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.FaceReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
+/**
+ * 表情消息
+ */
 public class FaceMessageBean extends TUIMessageBean {
 
     private V2TIMFaceElem faceElem;
@@ -41,4 +47,8 @@ public class FaceMessageBean extends TUIMessageBean {
         }
     }
 
+    @Override
+    public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
+        return FaceReplyQuoteBean.class;
+    }
 }

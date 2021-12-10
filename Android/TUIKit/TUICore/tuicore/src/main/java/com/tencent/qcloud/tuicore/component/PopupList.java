@@ -249,8 +249,9 @@ public class PopupList {
             if (mPopupWindowHeight == 0) {
                 mPopupWindowHeight = getViewHeight(popupListContainer) + mIndicatorHeight;
             }
-            mPopupWindow = new PopupWindow(contentView, mPopupWindowWidth, mPopupWindowHeight, true);
+            mPopupWindow = new PopupWindow(contentView, mPopupWindowWidth, mPopupWindowHeight, false);
             mPopupWindow.setTouchable(true);
+            mPopupWindow.setOutsideTouchable(true);
             mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         }
         int[] location = new int[2];

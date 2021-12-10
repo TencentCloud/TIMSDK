@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorCloud">#006EFF</color>
+    <color name="colorCloud">#147AFF</color>
     <color name="colorShade">#33000000</color>
 
     <color name="tab_text_selected_color">#006EFF</color>
@@ -52,5 +52,16 @@
     <color name="dialog_line_bg">#c6c6c6</color>
     <color name="test_blue">#338BFF</color>
     <color name="read_dot_bg">#f74c31</color>
+
+    <color name="demo_self_detail_icon_title_bg">#444444</color>
+
+    <color name="demo_title_bar_bg">#EBF0F6</color>
+    <color name="demo_navigate_bar_bg">#EBF0F6</color>
+    <color name="demo_popup_card_bg">#FFFFFF</color>
+    <color name="demo_popup_card_positive_normal_bg">#147AFF</color>
+    <color name="demo_popup_card_positive_pressed_bg">#B9D7FF</color>
+    <color name="demo_popup_card_line_bg">#E4E5E9</color>
+
+    <color name="demo_profile_bg">#E6E9EB</color>
 
 </resources>

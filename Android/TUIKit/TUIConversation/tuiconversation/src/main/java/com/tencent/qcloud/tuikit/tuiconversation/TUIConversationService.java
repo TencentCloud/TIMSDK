@@ -59,6 +59,8 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_RECYCLE, this);
         // 好友备注修改通知
         TUICore.registerEvent(TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED, TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_REMARK_CHANGED, this);
+        // 清空群消息通知
+        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
     }
 
     @Override
@@ -135,6 +137,12 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                         }
                         break;
                     }
+                }
+            } else if (TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE)) {
+                String groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
+                ConversationEventListener eventListener = getConversationEventListener();
+                if (eventListener != null) {
+                    eventListener.clearConversationMessage(groupId, true);
                 }
             }
         } else if (key.equals(TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED)) {

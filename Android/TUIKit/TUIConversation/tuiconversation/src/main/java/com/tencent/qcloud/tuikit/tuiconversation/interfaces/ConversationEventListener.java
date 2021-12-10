@@ -10,10 +10,11 @@ import java.util.List;
  */
 public interface ConversationEventListener {
     void deleteConversation(String chatId, boolean isGroup);
+    void clearConversationMessage(String chatId, boolean isGroup);
     void deleteConversation(String conversationId);
     void setConversationTop(String chatId, boolean isChecked, IUIKitCallback<Void> iuiKitCallBack);
     boolean isTopConversation(String chatId);
-    int getUnreadTotal();
+    long getUnreadTotal();
     void updateTotalUnreadMessageCount(long count);
     void onNewConversation(List<ConversationInfo> conversationList);
     void onConversationChanged(List<ConversationInfo> conversationList);

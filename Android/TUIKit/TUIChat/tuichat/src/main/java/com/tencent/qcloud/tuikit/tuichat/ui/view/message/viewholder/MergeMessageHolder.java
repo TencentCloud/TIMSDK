@@ -10,6 +10,7 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 
 import java.util.List;
 
@@ -36,12 +37,28 @@ public class MergeMessageHolder extends MessageContentHolder{
         if (msg == null){
             return;
         }
-        //// 聊天气泡设置
-        if (msg.isSelf()) {
-            msgContentFrame.setBackgroundResource(R.drawable.chat_right_live_group_bg);
+
+        if (isForwardMode) {
+            msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
+            statusImage.setVisibility(View.GONE);
         } else {
-            msgContentFrame.setBackgroundResource(R.drawable.chat_left_live_group_bg);
+            //// 聊天气泡设置
+            if (msg.isSelf()) {
+                if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
+                    msgContentFrame.setBackground(properties.getRightBubble().getConstantState().newDrawable());
+                } else {
+                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_self_cavity_bg);
+                }
+            } else {
+                if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
+                    msgContentFrame.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
+                    msgContentFrame.setLayoutParams(msgContentFrame.getLayoutParams());
+                } else {
+                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
+                }
+            }
         }
+
         mForwardMsgLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -66,6 +83,7 @@ public class MergeMessageHolder extends MessageContentHolder{
         for (int i = 0; i < abstractList.size(); i++) {
             content += abstractList.get(i) + "\n";
         }
+        content = FaceManager.emojiJudge(content);
         msgForwardContent.setText(content);
     }
 

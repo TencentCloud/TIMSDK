@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuicore.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.view.Gravity;
@@ -10,6 +11,8 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.tencent.qcloud.tuicore.R;
+
 public class PopWindowUtil {
 
     public static AlertDialog buildFullScreenDialog(Activity activity) {
@@ -17,7 +20,7 @@ public class PopWindowUtil {
             if (activity.isDestroyed())
                 return null;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.TUIKit_AlertDialogStyle);
         builder.setTitle("");
         builder.setCancelable(true);
         AlertDialog dialog = builder.create();
@@ -25,7 +28,7 @@ public class PopWindowUtil {
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        dialog.getWindow().setBackgroundDrawable(null);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         return dialog;
     }
 

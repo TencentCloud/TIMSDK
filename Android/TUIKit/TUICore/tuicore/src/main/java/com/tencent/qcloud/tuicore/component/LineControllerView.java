@@ -23,6 +23,7 @@ public class LineControllerView extends LinearLayout {
 
     private String mName;
     private boolean mIsBottom;
+    private boolean mIsTop;
     private String mContent;
     private boolean mIsJump;
     private boolean mIsSwitch;
@@ -40,6 +41,7 @@ public class LineControllerView extends LinearLayout {
             mName = ta.getString(R.styleable.LineControllerView_name);
             mContent = ta.getString(R.styleable.LineControllerView_subject);
             mIsBottom = ta.getBoolean(R.styleable.LineControllerView_isBottom, false);
+            mIsTop = ta.getBoolean(R.styleable.LineControllerView_isTop, false);
             mIsJump = ta.getBoolean(R.styleable.LineControllerView_canNav, false);
             mIsSwitch = ta.getBoolean(R.styleable.LineControllerView_isSwitch, false);
             setUpView();
@@ -54,7 +56,9 @@ public class LineControllerView extends LinearLayout {
         mContentText = findViewById(R.id.content);
         mContentText.setText(mContent);
         View bottomLine = findViewById(R.id.bottomLine);
+        View topLine = findViewById(R.id.top_line);
         bottomLine.setVisibility(mIsBottom ? VISIBLE : GONE);
+        topLine.setVisibility(mIsTop ? VISIBLE : GONE);
         mNavArrowView = findViewById(R.id.rightArrow);
         mNavArrowView.setVisibility(mIsJump ? VISIBLE : GONE);
         RelativeLayout contentLayout = findViewById(R.id.contentText);

@@ -6,8 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
 
+import androidx.annotation.DrawableRes;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.tencent.qcloud.tuicore.R;
@@ -109,14 +112,30 @@ public class GlideEngine implements ImageEngine {
     }
 
     public static void loadUserIcon(ImageView imageView, Object uri) {
-        if (uri == null) {
-            return;
-        }
+        loadUserIcon(imageView, uri, 0);
+    }
+
+    public static void loadUserIcon(ImageView imageView, Object uri, int radius) {
         Glide.with(TUILogin.getAppContext())
                 .load(uri)
                 .placeholder(R.drawable.default_user_icon)
                 .apply(new RequestOptions().centerCrop().error(R.drawable.default_user_icon))
                 .into(imageView);
+    }
+
+    public static void loadUserIcon(ImageView imageView, Object uri, int defaultResId, int radius) {
+        Glide.with(TUILogin.getAppContext())
+                .load(uri)
+                .placeholder(defaultResId)
+                .apply(new RequestOptions().centerCrop().error(defaultResId))
+                .into(imageView);
+    }
+
+    private static RequestBuilder<Drawable> loadTransform(Context context, @DrawableRes int placeholderId, float radius) {
+        return Glide.with(context)
+                .load(placeholderId)
+                .apply(new RequestOptions().centerCrop()
+                        .transform(new CornerTransform(context, radius)));
     }
 
     public static Bitmap loadBitmap(Object imageUrl, int targetImageSize) throws InterruptedException, ExecutionException {

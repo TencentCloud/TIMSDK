@@ -2,25 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingTop="8dp"
+    android:paddingTop="11.52dp"
     android:focusable="true"
-    android:paddingBottom="8dp">
+    android:paddingBottom="11.52dp">
 
-    <com.tencent.qcloud.tuikit.tuicontact.component.CircleImageView
+    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
         android:id="@+id/avatar"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginLeft="10dp" />
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginLeft="15.36dp" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="11.52dp"
         android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:gravity="start"
         android:orientation="vertical">
 
         <TextView
@@ -28,28 +29,50 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="17.28sp" />
 
         <TextView
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:maxLines="3"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/text_gray1"
-            android:textSize="14sp" />
+            android:textSize="11.52sp" />
     </LinearLayout>
 
-    <Button
+    <TextView
         android:id="@+id/agree"
+        android:layout_width="51.84dp"
+        android:layout_height="28.8dp"
+        android:background="@drawable/agree_btn_bg"
+        android:textColor="@color/white"
+        android:textSize="15.36sp"
+        android:gravity="center"
+        android:layout_marginRight="9.6dp"
+        android:layout_gravity="center"
+        tools:text="同意"/>
+
+    <TextView
+        android:id="@+id/reject"
+        android:layout_width="51.84dp"
+        android:layout_height="28.8dp"
+        android:background="@drawable/reject_btn_bg"
+        android:textColor="@color/font_blue"
+        android:textSize="15.36sp"
+        android:layout_marginRight="15.36dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        tools:text="拒绝"/>
+
+    <TextView
+        android:id="@+id/result_tv"
+        android:textSize="15.36sp"
+        android:text="@string/accepted"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/btn_height"
-        android:background="@color/bg_positive_btn"
-        android:textColor="@color/positive_text"
-        android:textSize="@dimen/btn_text_size"
-        android:paddingLeft="@dimen/btn_padding_left"
-        android:paddingRight="@dimen/btn_padding_right"
-        android:layout_marginRight="@dimen/btn_margin_right"
-        android:layout_gravity="center"/>
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15.36dp"
+        android:visibility="gone"/>
 
 </LinearLayout>

@@ -18,4 +18,6 @@ public interface GroupChatEventListener {
     void onGroupNameChanged(String groupId, String newName);
 
     void exitGroupChat(String chatId);
+
+    void clearGroupMessage(String chatId);
 }

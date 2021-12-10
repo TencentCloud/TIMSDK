@@ -24,7 +24,7 @@
     <string name="date_second_short">SS</string>
     <string name="date_yesterday">Yesterday</string>
     <string name="custom_msg">[Custom Messages]</string>
-    <string name="custom_emoji">[Custom Sticker]</string>
+    <string name="custom_emoji">[Animated Sticker]</string>
     <string name="picture_extra">[Image]</string>
     <string name="video_extra">[Video]</string>
     <string name="audio_extra">[Voice]</string>

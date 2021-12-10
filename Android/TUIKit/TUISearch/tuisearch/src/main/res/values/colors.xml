@@ -4,7 +4,6 @@
     <color name="conversation_time_color">#b2b2b2</color>
     <color name="custom_transparent">#B3000000</color>
 
-    <color name="status_bar_color">#EDEDED</color>
     <color name="line">#DDDDDD</color>
     <color name="navigation_bar_color">#F7F7F7</color>
     <color name="transparent">#00000000</color>
@@ -28,5 +27,8 @@
     <color name="btn_positive_hover">#006eff</color>
 
     <color name="read_dot_bg">#f74c31</color>
+
+    <color name="search_bar_bg">#EBF0F6</color>
+    <color name="search_tip_text_color">#CCCCCC</color>
 
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="contact_avatar_width">40.48dp</dimen>
-    <dimen name="contact_avatar_height">40.48dp</dimen>
+    <dimen name="contact_avatar_width">38.4dp</dimen>
+    <dimen name="contact_avatar_height">38.4dp</dimen>
     <dimen name="btn_text_size">14dp</dimen>
 
     <dimen name="btn_margin_top">36dp</dimen>
@@ -22,4 +22,24 @@
     <dimen name="switch_thumb_width">23dp</dimen>
     <dimen name="switch_thumb_height">23dp</dimen>
     <dimen name="switch_thumb_radius">20dp</dimen>
+
+    <dimen name="contact_profile_item_height">46.08dp</dimen>
+    <dimen name="contact_profile_btn_height">53.76dp</dimen>
+    <dimen name="contact_profile_signature_text_size">12.48sp</dimen>
+    <dimen name="contact_profile_account_text_size">12.48sp</dimen>
+    <dimen name="contact_profile_face_radius">4.61dp</dimen>
+    <dimen name="contact_profile_face_margin_left">5.36dp</dimen>
+    <dimen name="contact_profile_face_margin_right">15.36dp</dimen>
+    <dimen name="contact_profile_face_margin_top">-12dp</dimen>
+    <dimen name="contact_profile_face_size">46.08dp</dimen>
+    <dimen name="contact_profile_self_height">90.24dp</dimen>
+    <dimen name="contact_profile_nick_name_text_size">17.28sp</dimen>
+    <dimen name="contact_profile_text_margin">3.84dp</dimen>
+    <dimen name="contact_profile_btn_text_size">16.32sp</dimen>
+
+    <dimen name="search_bar_width">329.28dp</dimen>
+    <dimen name="search_bar_height">38.4dp</dimen>
+    <dimen name="search_bar_margin">15.36dp</dimen>
+    <dimen name="contact_add_item_height">90.24dp</dimen>
+
 </resources>

@@ -18,4 +18,5 @@ public class Constants {
 
     public static final String IM_PRIVACY_PROTECTION = "https://web.sdk.qcloud.com/document/Tencent-IM-Privacy-Protection-Guidelines.html";
     public static final String IM_USER_AGREEMENT = "https://web.sdk.qcloud.com/document/Tencent-IM-User-Agreement.html";
+    public static final String IM_ABOUT = "https://cloud.tencent.com/product/im";
 }

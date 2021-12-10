@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuicore.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,7 +23,7 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
     private ImageView mLeftIcon;
     private ImageView mRightIcon;
     private RelativeLayout mTitleLayout;
-
+    private UnreadCountTextView unreadCountTextView;
 
     public TitleBarLayout(Context context) {
         super(context);
@@ -49,10 +50,24 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
         mCenterTitle = findViewById(R.id.page_title);
         mLeftIcon = findViewById(R.id.page_title_left_icon);
         mRightIcon = findViewById(R.id.page_title_right_icon);
+        unreadCountTextView = findViewById(R.id.new_message_total_unread);
+
         LayoutParams params = (LayoutParams) mTitleLayout.getLayoutParams();
         params.height = ScreenUtil.getPxByDp(50);
         mTitleLayout.setLayoutParams(params);
         setBackgroundColor(getResources().getColor(R.color.status_bar_color));
+
+        int iconSize = ScreenUtil.dip2px(20);
+        ViewGroup.LayoutParams iconParams = mLeftIcon.getLayoutParams();
+        iconParams.width = iconSize;
+        iconParams.height = iconSize;
+        mLeftIcon.setLayoutParams(iconParams);
+        iconParams = mRightIcon.getLayoutParams();
+        iconParams.width = iconSize;
+        iconParams.height = iconSize;
+
+        mRightIcon.setLayoutParams(iconParams);
+
     }
 
     @Override
@@ -123,5 +138,9 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
     @Override
     public TextView getRightTitle() {
         return mRightTitle;
+    }
+
+    public UnreadCountTextView getUnreadCountTextView() {
+        return unreadCountTextView;
     }
 }

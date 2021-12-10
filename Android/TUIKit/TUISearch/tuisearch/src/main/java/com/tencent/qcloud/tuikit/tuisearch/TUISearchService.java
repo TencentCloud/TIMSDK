@@ -33,7 +33,7 @@ public class TUISearchService extends ServiceInitializer implements ITUISearchSe
         if (param != null) {
             Context context = (Context) param.get(TUIConstants.TUIConversation.CONTEXT);
             if (context != null) {
-                View searchView = LayoutInflater.from(context).inflate(R.layout.conversation_search_adapter, null);
+                View searchView = LayoutInflater.from(context).inflate(R.layout.search_bar_layout, null);
                 searchView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
