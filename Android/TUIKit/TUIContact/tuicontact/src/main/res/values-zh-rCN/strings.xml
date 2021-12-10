@@ -21,6 +21,7 @@
     <string name="set_in_blacklist">您已被被对方设置为黑名单</string>
     <string name="wait_agree_friend">等待好友审核同意</string>
     <string name="send_request">加群请求已发送</string>
+    <string name="contact_search">搜索</string>
 
     <string name="add_group_permission_deny">禁止加群</string>
     <string name="add_group_allready_member">已经是群成员</string>
