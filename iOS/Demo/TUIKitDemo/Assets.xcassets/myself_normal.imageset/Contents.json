@@ -5,17 +5,18 @@
       "scale" : "1x"
     },
     {
+      "filename" : "myself_normal@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "myself_normal@3x.png",
       "idiom" : "universal",
-      "filename" : "myself_normal.png",
       "scale" : "3x"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }

@@ -92,6 +92,7 @@
     _searchController.searchBar.placeholder = NSLocalizedString(@"SearchGroupPlaceholder", nil); // @"用户ID";
     [self.view addSubview:_searchController.searchBar];
     self.searchController.searchBar.mm_sizeToFit();
+    [self setSearchIconCenter:YES];
 
     self.userView = [[AddFriendUserView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.userView];
@@ -102,7 +103,23 @@
     [self.userView addGestureRecognizer:singleFingerTap];
 }
 
+- (void)setSearchIconCenter:(BOOL)center
+{
+    if (center) {
+        CGSize size = [self.searchController.searchBar.placeholder sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14.0]}];
+        CGFloat width = size.width + 60;
+        [self.searchController.searchBar setPositionAdjustment:UIOffsetMake(0.5  *(self.searchController.searchBar.bounds.size.width - width), 0) forSearchBarIcon:UISearchBarIconSearch];
+    } else {
+        [self.searchController.searchBar setPositionAdjustment:UIOffsetZero forSearchBarIcon:UISearchBarIconSearch];
+    }
+}
+
 #pragma mark - UISearchControllerDelegate
+
+- (void)willPresentSearchController:(UISearchController *)searchController
+{
+    [self setSearchIconCenter:NO];
+}
 
 - (void)didPresentSearchController:(UISearchController *)searchController
 {
@@ -111,6 +128,11 @@
 
     self.searchController.searchBar.mm_top([self safeAreaTopGap]);
     self.userView.mm_top(self.searchController.searchBar.mm_maxY).mm_height(44).mm_width(Screen_Width);
+}
+
+- (void)willDismissSearchController:(UISearchController *)searchController
+{
+    [self setSearchIconCenter:YES];
 }
 
 /**

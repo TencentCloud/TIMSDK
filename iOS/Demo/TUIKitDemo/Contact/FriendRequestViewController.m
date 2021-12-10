@@ -37,11 +37,14 @@
     [super viewDidLoad];
 
     //初始化视图内的组件
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     [self.view addSubview:self.tableView];
     self.tableView.frame = self.view.frame;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 0, 0, 0)];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
 
 
     self.addWordTextView = [[UITextView alloc] initWithFrame:CGRectZero];
@@ -63,7 +66,6 @@
     self.nickTextField.textAlignment = NSTextAlignmentRight;
 
 
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Send", nil) style:UIBarButtonItemStylePlain target:self action:@selector(onSend)];
     self.title = NSLocalizedString(@"FriendRequestFillInfo", nil);
 
     TUIProfileCardCellData *data = [TUIProfileCardCellData new];
@@ -73,6 +75,7 @@
     data.signature =  [self.profile showSignature];
     data.avatarImage = DefaultAvatarImage;
     data.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
+    data.showSignature = YES;
     self.cardCellData = data;
 
 
@@ -141,13 +144,22 @@
     return 4;
 }
 
-- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if (section == 1)
-        return NSLocalizedString(@"please_fill_in_verification_information", nil);
-    if (section == 2)
-        return NSLocalizedString(@"please_fill_in_remarks_group_info", nil);// @"填写备注与分组";
-    return nil;
+    UILabel *label = [[UILabel alloc] init];
+    label.textColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
+    label.font = [UIFont systemFontOfSize:14.0];
+    if (section == 1) {
+        label.text = [NSString stringWithFormat:@"   %@", NSLocalizedString(@"please_fill_in_verification_information", nil)];
+    } else if (section == 2) {
+        label.text = [NSString stringWithFormat:@"   %@", NSLocalizedString(@"please_fill_in_remarks_group_info", nil)];// @"填写备注与分组";
+    }
+    return label;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return section == 0 ? 0 : 38;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -181,8 +193,16 @@
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"NickName"];
             cell.textLabel.text = NSLocalizedString(@"Alia", nil); // @"备注";
             [cell.contentView addSubview:self.nickTextField];
+            
+            UIView *separtor = [[UIView alloc] init];
+            separtor.backgroundColor = [UIColor groupTableViewBackgroundColor];
+            [cell.contentView addSubview:separtor];
+            separtor.mm_width(tableView.mm_w).mm_bottom(0).mm_left(0).mm_height(1);
+            
             self.nickTextField.mm_width(cell.contentView.mm_w/2).mm_height(cell.contentView.mm_h).mm_right(20);
             self.nickTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
+            
+            
             return cell;
         } else {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"GroupName"];
@@ -190,12 +210,24 @@
             cell.textLabel.text = NSLocalizedString(@"Group", nil); // @"分组";
             cell.detailTextLabel.text = NSLocalizedString(@"my_friend", nil); // @"我的朋友";
             self.groupNameLabel = cell.detailTextLabel;
+            
+            UIView *separtor = [[UIView alloc] init];
+            separtor.backgroundColor = [UIColor groupTableViewBackgroundColor];
+            [cell.contentView addSubview:separtor];
+            separtor.mm_width(tableView.mm_w).mm_bottom(0).mm_left(0).mm_height(1);
+            
             return cell;
         }
     }
     if (indexPath.section == 3) {
-        TUICommonSwitchCell *cell = [[TUICommonSwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SwitchCell"];
-        [cell fillWithData:self.singleSwitchData];
+        TUIButtonCell *cell = [[TUIButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"send"];
+        TUIButtonCellData *data = [[TUIButtonCellData alloc] init];
+        data.style = ButtonWhite;
+        data.title = NSLocalizedString(@"Send", nil);
+        data.cselector = @selector(onSend);
+        data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+        [cell fillWithData:data];
+        
         return cell;
     }
 

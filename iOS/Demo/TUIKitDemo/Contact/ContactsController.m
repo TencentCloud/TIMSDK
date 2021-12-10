@@ -48,6 +48,8 @@
     UIButton *moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     [moreButton setImage:[UIImage imageNamed:TUIDemoImagePath(@"more")] forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(onRightItem:) forControlEvents:UIControlEventTouchUpInside];
+    [moreButton.widthAnchor constraintEqualToConstant:20].active = YES;
+    [moreButton.heightAnchor constraintEqualToConstant:20].active = YES;
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
     self.navigationItem.rightBarButtonItem = moreItem;
 
@@ -75,7 +77,7 @@
 {
     NSMutableArray *menus = [NSMutableArray array];
     TPopCellData *friend = [[TPopCellData alloc] init];
-    friend.image = TUIContactImagePath(@"new_friend");
+    friend.image = TUIDemoImagePath(@"add_friend");
     friend.title = NSLocalizedString(@"ContactsAddFriends", nil); //@"添加好友";
     [menus addObject:friend];
 

@@ -12,7 +12,9 @@
  *
  */
 #import <UIKit/UIKit.h>
+@class V2TIMGroupInfo;
 
 @interface GroupMemberController : UIViewController
 @property (nonatomic, strong) NSString *groupId;
+@property (nonatomic, strong) V2TIMGroupInfo *groupInfo;
 @end

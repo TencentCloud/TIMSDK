@@ -53,7 +53,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = NSLocalizedString(@"ProfileDetails", nil); // @"详细资料";
+    self.navigationItem.title = NSLocalizedString(@"ProfileDetails", nil); // @"详细资料";
     self.clearsSelectionOnViewWillAppear = YES;
 
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"TextCell"];
@@ -62,6 +62,7 @@
 
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
     [self loadData];
 }
@@ -96,6 +97,8 @@
             [inlist addObject:({
                 TUICommonTextCellData *data = TUICommonTextCellData.new;
                 data.key = NSLocalizedString(@"FriendAddVerificationMessage",  nil); // @"验证消息";
+                data.keyColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
+                data.valueColor = [UIColor colorWithRed:68/255.0 green:68/255.0 blue:68/255.0 alpha:1/1.0];
                 if (self.pendency) {
                     data.value = self.pendency.addWording;
                 } else if (self.groupPendency) {
@@ -127,7 +130,7 @@
                 [inlist addObject:({
                     TUIButtonCellData *data = TUIButtonCellData.new;
                     data.title = NSLocalizedString(@"FriendAddTitle", nil); // @"加好友";
-                    data.style = ButtonGreen;
+                    data.style = ButtonWhite;
                     data.cbuttonSelector = @selector(onAddFriend);
                     data.reuseId = @"ButtonCell";
                     data;
@@ -149,7 +152,8 @@
             [inlist addObject:({
                 TUIButtonCellData *data = TUIButtonCellData.new;
                 data.title = NSLocalizedString(@"Accept", nil);
-                data.style = ButtonGreen;
+                data.style = ButtonWhite;
+                data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
                 data.cbuttonSelector = @selector(onAgreeFriend);
                 data.reuseId = @"ButtonCell";
                 data;
@@ -173,7 +177,8 @@
             [inlist addObject:({
                 TUIButtonCellData *data = TUIButtonCellData.new;
                 data.title = @"同意";
-                data.style = ButtonGreen;
+                data.style = ButtonWhite;
+                data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
                 data.cbuttonSelector = @selector(onAgreeGroup);
                 data.reuseId = @"ButtonCell";
                 data;
@@ -228,6 +233,30 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return section == 0 ? 0 : 10;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view = [[UIView alloc] init];
+    view.backgroundColor = [UIColor clearColor];
+    return view;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    UIView *view = [[UIView alloc] init];
+    view.backgroundColor = [UIColor clearColor];
+    return view;
 }
 
 /**
