@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property UILabel *addSourceLabel;
 @property UILabel *addWordingLabel;
 @property UIButton *agreeButton;
+@property UIButton *rejectButton;
+@property UIStackView *stackView;
 
 @property (nonatomic) TUICommonPendencyCellData *pendencyData;
 

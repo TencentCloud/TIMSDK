@@ -19,18 +19,21 @@
 #import "TUIGroupLiveMessageCell.h"
 #import "TUILinkCell.h"
 #import "TUILinkCell.h"
+#import "TUIReplyMessageCell.h"
 #import "TUIDarkModel.h"
 #import "TUIImageViewController.h"
 #import "TUIVideoViewController.h"
 #import "TUIFileViewController.h"
 #import "TUIMessageDataProvider.h"
 #import "TUIDefine.h"
+#import "TUIReplyMessageCellData.h"
 
 #define STR(x) @#x
 
 @interface TUIMergeMessageListController () <TUIMessageCellDelegate>
 @property (nonatomic, strong) NSMutableArray<TUIMessageCellData *> *uiMsgs;
 @property (nonatomic, strong) NSMutableDictionary *stylesCache;
+@property (nonatomic, strong) TUIMessageDataProvider *msgDataProvider;
 @end
 
 @implementation TUIMergeMessageListController
@@ -113,15 +116,20 @@
 - (void)getMessages:(NSArray *)msgs
 {
     NSMutableArray *uiMsgs = [self transUIMsgFromIMMsg:msgs];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if(uiMsgs.count != 0){
-            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
-            [self.uiMsgs insertObjects:uiMsgs atIndexes:indexSet];
-//            [self.heightCache removeAllObjects];
-            [self.tableView reloadData];
-            [self.tableView layoutIfNeeded];
-        }
-    });
+    @weakify(self)
+    [self.msgDataProvider preProcessReplyMessage:uiMsgs callback:^{
+        @strongify(self)
+        @weakify(self)
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self)
+            if(uiMsgs.count != 0){
+                NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
+                [self.uiMsgs insertObjects:uiMsgs atIndexes:indexSet];
+                [self.tableView reloadData];
+                [self.tableView layoutIfNeeded];
+            }
+        });
+    }];
 }
 
 - (NSMutableArray *)transUIMsgFromIMMsg:(NSArray *)msgs
@@ -209,6 +217,7 @@
     [self.tableView registerClass:[TUIJoinGroupMessageCell class] forCellReuseIdentifier:TJoinGroupMessageCell_ReuseId];
     [self.tableView registerClass:[TUIMergeMessageCell class] forCellReuseIdentifier:TRelayMessageCell_ReuserId];
     [self.tableView registerClass:[TUIGroupLiveMessageCell class] forCellReuseIdentifier:TGroupLiveMessageCell_ReuseId];
+    [self.tableView registerClass:[TUIReplyMessageCell class] forCellReuseIdentifier:TReplyMessageCell_ReuseId];
     
     // 自定义消息注册 cell
     NSArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
@@ -281,10 +290,102 @@
     if ([cell isKindOfClass:[TUILinkCell class]]) {
         [self showLinkMessage:(TUILinkCell *)cell];
     }
+    if ([cell isKindOfClass:[TUIReplyMessageCell class]]) {
+        [self showReplyMessage:(TUIReplyMessageCell *)cell];
+    }
     
     if ([self.delegate respondsToSelector:@selector(messageController:onSelectMessageContent:)]) {
         [self.delegate messageController:nil onSelectMessageContent:cell];
     }
+}
+
+- (void)showReplyMessage:(TUIReplyMessageCell *)cell
+{
+    TUIReplyMessageCellData *cellData = cell.replyData;
+    V2TIMMessage *message = cellData.originMessage;
+    if (message == nil) {
+        [TUITool makeToast:@"原始消息不存在，无法跳转"];
+        return;
+    }
+    
+    // 当前消息已经处于加载状态
+    BOOL memoryExist = NO;
+    for (TUIMessageCellData *cellData in self.uiMsgs) {
+        if ([cellData.innerMessage.msgID isEqual:message.msgID]) {
+            memoryExist = YES;
+            break;
+        }
+    }
+    if (memoryExist == NO) {
+        [TUITool makeToast:@"原始消息不存在，无法跳转"];
+        return;
+    }
+    
+    // 滚动
+    [self scrollLocateMessage:message];
+    // 高亮
+    [self highlightKeyword:cellData.msgAbstract locateMessage:message];
+}
+
+- (void)scrollLocateMessage:(V2TIMMessage *)locateMessage
+{
+    // 先找到 locateMsg 的坐标偏移
+    CGFloat offsetY = 0;
+    for (TUIMessageCellData *uiMsg in self.uiMsgs) {
+        if ([uiMsg.innerMessage.msgID isEqualToString:locateMessage.msgID]) {
+            break;
+        }
+        offsetY += [uiMsg heightOfWidth:Screen_Width];
+    }
+    
+    // 再偏移半个 tableview 的高度
+    offsetY -= self.tableView.frame.size.height / 2.0;
+    if (offsetY <= TMessageController_Header_Height) {
+        offsetY = TMessageController_Header_Height + 0.1;
+    }
+
+    if (offsetY > TMessageController_Header_Height) {
+        if (self.tableView.contentOffset.y > offsetY) {
+            [self.tableView scrollRectToVisible:CGRectMake(0, offsetY, Screen_Width, self.tableView.bounds.size.height) animated:YES];
+        }
+    }
+}
+
+- (void)highlightKeyword:(NSString *)keyword locateMessage:(V2TIMMessage *)locateMessage
+{
+    TUIMessageCellData *cellData = nil;
+    for (TUIMessageCellData *tmp in self.uiMsgs) {
+        if ([tmp.msgID isEqualToString:locateMessage.msgID]) {
+            cellData = tmp;
+            break;
+        }
+    }
+    if (cellData == nil) {
+        return;
+    }
+    
+    CGFloat time = 0.5;
+    UITableViewRowAnimation animation = UITableViewRowAnimationFade;
+    if ([cellData isKindOfClass:TUITextMessageCellData.class]) {
+        time = 2;
+        animation = UITableViewRowAnimationNone;
+    }
+    
+    @weakify(self)
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @strongify(self)
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.uiMsgs indexOfObject:cellData] inSection:0];
+        cellData.highlightKeyword = keyword;
+        TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        [cell fillWithData:cellData];
+    });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        @strongify(self)
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.uiMsgs indexOfObject:cellData] inSection:0];
+        cellData.highlightKeyword = nil;
+        TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        [cell fillWithData:cellData];
+    });
 }
 
 - (void)showImageMessage:(TUIImageMessageCell *)cell
@@ -361,4 +462,13 @@
     UIGraphicsEndImageContext();
     return img;
 }
+
+- (TUIMessageDataProvider *)msgDataProvider
+{
+    if (_msgDataProvider == nil) {
+        _msgDataProvider = [[TUIMessageDataProvider alloc] init];
+    }
+    return _msgDataProvider;
+}
+
 @end

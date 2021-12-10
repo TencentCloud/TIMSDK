@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)didSelectOnNotDisturb:(TUICommonSwitchCell *)cell;
 - (void)didSelectOnTop:(TUICommonSwitchCell *)cell;
 - (void)didDeleteGroup:(TUIButtonCell *)cell;
+- (void)didClearAllHistory:(TUIButtonCell *)cell;
 @end
 
 @interface TUIGroupInfoDataProvider : NSObject
@@ -30,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *dataList;
 @property (nonatomic, strong) NSMutableArray<TUIGroupMemberCellData *> *membersData;
 @property (nonatomic, strong) TUIGroupMembersCellData *groupMembersCellData;
+@property (nonatomic, strong, readonly) V2TIMGroupMemberFullInfo *selfInfo;
 
 - (instancetype)initWithGroupID:(NSString *)groupID;
 - (void)loadData;
@@ -40,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setGroupMemberNameCard:(NSString *)nameCard;
 - (void)dismissGroup:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 - (void)quitGroup:(V2TIMSucc)succ fail:(V2TIMFail)fail;
+- (void)clearAllHistory:(V2TIMSucc)succ fail:(V2TIMFail)fail;
+- (void)updateGroupAvatar:(NSString *)url succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 /**
  *  判断当前用户在对与当前 TIMGroupInfo 来说是否是管理。
  *

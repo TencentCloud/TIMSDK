@@ -18,7 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSString *addSource;
 @property NSString *addWording;
 @property BOOL isAccepted;
+@property BOOL isRejected;
 @property SEL cbuttonSelector;
+@property SEL cRejectButtonSelector;
+
+@property BOOL hideSource;
 
 - (instancetype)initWithPendency:(V2TIMFriendApplication *)application;
 

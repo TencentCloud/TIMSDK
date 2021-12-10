@@ -10,6 +10,7 @@
 #import "UIView+TUILayout.h"
 #import "NSString+TUIUtil.h"
 #import "TUITool.h"
+#import "TUIDarkModel.h"
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -1094,6 +1095,18 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.navigationBar.backgroundColor = self.tintColor;
+    self.navigationBar.barTintColor = self.tintColor;
+    self.navigationBar.shadowImage = [UIImage new];
+    self.navigationBar.tintColor = [UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1.0];
+    self.delegate = self;
+}
+
+- (UIColor *)tintColor
+{
+    UIColor *lightColor = [UIColor colorWithRed:235/255.0 green:240/255.0 blue:246/255.0 alpha:1/1.0];
+    UIColor *darkColor = [UIColor blackColor];
+    return [UIColor d_colorWithColorLight:lightColor dark:darkColor];
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
@@ -1116,6 +1129,17 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
         }
     }
     return [super popToRootViewControllerAnimated:animated];
+}
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    if ([navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        if (self.viewControllers.count == 1) {// 禁止首页的侧滑返回
+            navigationController.interactivePopGestureRecognizer.enabled = NO;
+        }else{
+            navigationController.interactivePopGestureRecognizer.enabled = YES;
+        }
+    }
 }
 
 @end

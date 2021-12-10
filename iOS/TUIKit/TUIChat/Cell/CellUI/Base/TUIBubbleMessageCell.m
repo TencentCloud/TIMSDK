@@ -38,4 +38,36 @@
     self.bubbleView.mm_top(self.bubbleData.bubbleTop);
     self.retryView.mm__centerY(self.bubbleView.mm_centerY);
 }
+
+- (void)highlightWhenMatchKeyword:(NSString *)keyword
+{
+    // 默认高亮效果，闪烁
+    if (keyword) {
+        // 显示高亮动画
+        if (self.highlightAnimating) {
+            return;
+        }
+        [self animate:3];
+    }
+}
+
+// 默认高亮动画
+- (void)animate:(int)times
+{
+    times--;
+    if (times < 0) {
+        self.bubbleView.image = self.bubbleData.bubble;
+        self.highlightAnimating = NO;
+        return;
+    }
+    self.highlightAnimating = YES;
+    self.bubbleView.image = self.bubbleData.animateHighlightBubble_alpha50;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.bubbleView.image = self.bubbleData.animateHighlightBubble_alpha20;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{        
+            [self animate:times];
+        });
+    });
+}
+
 @end

@@ -34,28 +34,33 @@
     self.content.textColor = data.textColor;
 }
 
-- (void)highlightWhenMatchKeyword:(NSString *)keyword
-{
-    // 子类重写高亮文本效果
-    TUITextMessageCellData *data = (TUITextMessageCellData *)self.data;
-    if (data.highlightKeyword == nil) {
-        return;
-    }
-    
-    NSRange range = [data.attributedString.string rangeOfString:data.highlightKeyword];
-    if (range.location == NSNotFound) {
-        return;
-    }
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithAttributedString:data.attributedString];
-    [attr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:range];
-    self.content.attributedText = attr;
-}
+//- (void)highlightWhenMatchKeyword:(NSString *)keyword
+//{
+//    // 子类重写高亮文本效果
+//    TUITextMessageCellData *data = (TUITextMessageCellData *)self.data;
+//    if (data.highlightKeyword == nil) {
+//        return;
+//    }
+//
+//    NSRange range = [data.attributedString.string rangeOfString:data.highlightKeyword];
+//    if (range.location == NSNotFound) {
+//        return;
+//    }
+//    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithAttributedString:data.attributedString];
+//    [attr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:range];
+//    self.content.attributedText = attr;
+//}
 
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     self.content.frame = (CGRect){.origin = self.textData.textOrigin, .size = self.textData.textSize};
+}
+
+- (UIView *)highlightAnimateView
+{
+    return self.bubbleView;
 }
 
 @end

@@ -18,6 +18,8 @@
 #import "TUIMergeMessageCell.h"
 #import "TUIGroupLiveMessageCell.h"
 #import "TUILinkCell.h"
+#import "TUIReplyMessageCell.h"
+#import "TUIReplyMessageCellData.h"
 #import "TUIMessageDataProvider.h"
 #import "TUIConfig.h"
 #import "TUIFaceView.h"
@@ -30,6 +32,8 @@
 #import "TUIChatConversationModel.h"
 #import "TUIMessageDataProvider+Call.h"
 #import "TUIMessageDataProvider+Live.h"
+#import "TUIChatPopMenu.h"
+#import "TUITool.h"
 
 @interface TUIMessageController () <TUIMessageCellDelegate,
 TUIJoinGroupMessageCellDelegate,
@@ -124,6 +128,7 @@ TUIMessageDataProviderDataSource>
     [self.tableView registerClass:[TUIJoinGroupMessageCell class] forCellReuseIdentifier:TJoinGroupMessageCell_ReuseId];
     [self.tableView registerClass:[TUIMergeMessageCell class] forCellReuseIdentifier:TRelayMessageCell_ReuserId];
     [self.tableView registerClass:[TUIGroupLiveMessageCell class] forCellReuseIdentifier:TGroupLiveMessageCell_ReuseId];
+    [self.tableView registerClass:[TUIReplyMessageCell class] forCellReuseIdentifier:TReplyMessageCell_ReuseId];
     
     // 自定义消息注册 cell
     NSArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
@@ -191,16 +196,17 @@ TUIMessageDataProviderDataSource>
 }
 - (void)dataProviderDataSourceChange:(TUIMessageDataProvider *)dataProvider
                             withType:(TUIMessageDataProviderDataSourceChangeType)type
-                             atIndex:(NSUInteger)index {
+                             atIndex:(NSUInteger)index
+                           animation:(BOOL)animation {
     switch (type) {
         case TUIMessageDataProviderDataSourceChangeTypeInsert:
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:animation? UITableViewRowAnimationFade:UITableViewRowAnimationNone];
             break;
         case TUIMessageDataProviderDataSourceChangeTypeDelete:
-            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:animation? UITableViewRowAnimationFade:UITableViewRowAnimationNone];
             break;
         case TUIMessageDataProviderDataSourceChangeTypeReload:
-            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:animation? UITableViewRowAnimationFade:UITableViewRowAnimationNone];
             break;
         default:
             break;
@@ -459,6 +465,9 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     if ([cell isKindOfClass:[TUILinkCell class]]) {
         [self showLinkMessage:(TUILinkCell *)cell];
     }
+    if ([cell isKindOfClass:TUIReplyMessageCell.class]) {
+        [self showReplyMessage:(TUIReplyMessageCell *)cell];
+    }
 
     if ([self.delegate respondsToSelector:@selector(messageController:onSelectMessageContent:)]) {
         [self.delegate messageController:self onSelectMessageContent:cell];
@@ -471,25 +480,40 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     if ([data isKindOfClass:[TUISystemMessageCellData class]])
         return; // 系统消息不响应
 
-    NSMutableArray *items = [NSMutableArray array];
-    if ([data isKindOfClass:[TUITextMessageCellData class]]) {
-        [items addObject:[[UIMenuItem alloc] initWithTitle:TUIKitLocalizableString(Copy) action:@selector(onCopyMsg:)]];
+    self.menuUIMsg = data;
+    
+    __weak typeof(self) weakSelf = self;
+    TUIChatPopMenu *menu = [[TUIChatPopMenu alloc] init];
+    if ([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReplyMessageCellData.class]) {
+        [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Copy) image:[UIImage d_imageNamed:@"icon_copy" bundle:TUIChatBundle] callback:^{
+            [weakSelf onCopyMsg:nil];
+        }]];
     }
-
-    [items addObject:[[UIMenuItem alloc] initWithTitle:TUIKitLocalizableString(Delete) action:@selector(onDelete:)]];
+    
+    [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Delete) image:[UIImage d_imageNamed:@"icon_delete" bundle:TUIChatBundle] callback:^{
+        [weakSelf onDelete:nil];
+    }]];
+    
     V2TIMMessage *imMsg = data.innerMessage;
     if(imMsg){
         if([imMsg isSelf] && [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < 2 * 60 && (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)){
-            [items addObject:[[UIMenuItem alloc] initWithTitle:TUIKitLocalizableString(Revoke) action:@selector(onRevoke:)]];
+            [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Revoke) image:[UIImage d_imageNamed:@"icon_recall" bundle:TUIChatBundle] callback:^{
+                [weakSelf onRevoke:nil];
+            }]];
         }
     }
-    if(imMsg.status == V2TIM_MSG_STATUS_SEND_FAIL){
-        [items addObject:[[UIMenuItem alloc] initWithTitle:TUIKitLocalizableString(Resend) action:@selector(onReSend:)]];
-    }
 
-    [items addObject:[[UIMenuItem alloc] initWithTitle:TUIKitLocalizableString(Multiple) action:@selector(onMulitSelect:)]];
+    [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Multiple) image:[UIImage d_imageNamed:@"icon_multi" bundle:TUIChatBundle] callback:^{
+        [weakSelf onMulitSelect:nil];
+    }]];
+    
     if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) {
-        [items addObject:[[UIMenuItem alloc] initWithTitle:TUIKitLocalizableString(Forward) action:@selector(onRelay:)]];
+        [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Forward) image:[UIImage d_imageNamed:@"icon_forward" bundle:TUIChatBundle] callback:^{
+            [weakSelf onForward:nil];
+        }]];
+        [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Reply) image:[UIImage d_imageNamed:@"icon_quote" bundle:TUIChatBundle] callback:^{
+            [weakSelf onReply:nil];
+        }]];
     }
 
     BOOL isFirstResponder = NO;
@@ -502,13 +526,11 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     else{
         [self becomeFirstResponder];
     }
-    UIMenuController *controller = [UIMenuController sharedMenuController];
-    controller.menuItems = items;
-    _menuUIMsg = data;
-    [controller setTargetRect:cell.container.bounds inView:cell.container];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [controller setMenuVisible:YES animated:YES];
-    });
+    
+    CGRect frame = [UIApplication.sharedApplication.keyWindow convertRect:cell.container.frame fromView:cell];
+    [menu setArrawPosition:CGPointMake(frame.origin.x + frame.size.width * 0.5, frame.origin.y - 5)
+              adjustHeight:frame.size.height + 5];
+    [menu showInView:self.tableView];
 }
 
 - (void)onLongSelectMessageAvatar:(TUIMessageCell *)cell {
@@ -545,7 +567,8 @@ ReceiveReadMsgWithUserID:(NSString *)userId
         action == @selector(onReSend:) ||
         action == @selector(onCopyMsg:) ||
         action == @selector(onMulitSelect:) ||
-        action == @selector(onRelay:)){
+        action == @selector(onForward:) ||
+        action == @selector(onReply:)){
         return YES;
     }
     return NO;
@@ -558,10 +581,17 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 
 - (void)onDelete:(id)sender
 {
-    [self.messageDataProvider deleteUIMsgs:@[self.menuUIMsg] SuccBlock:nil FailBlock:^(int code, NSString *desc) {
-        NSLog(@"remove msg failed!");
-        NSAssert(NO, desc);
-    }];
+    @weakify(self)
+    UIAlertController *vc = [UIAlertController alertControllerWithTitle:nil message:TUIKitLocalizableString(ConfirmDeleteMessage) preferredStyle:UIAlertControllerStyleActionSheet];
+    [vc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Delete) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        @strongify(self)
+        [self.messageDataProvider deleteUIMsgs:@[self.menuUIMsg] SuccBlock:nil FailBlock:^(int code, NSString *desc) {
+            NSLog(@"remove msg failed!");
+            NSAssert(NO, desc);
+        }];
+    }]];
+    [vc addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)menuDidHide:(NSNotification*)notification
@@ -574,11 +604,18 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 
 - (void)onCopyMsg:(id)sender
 {
+    NSString *content = @"";
     if ([_menuUIMsg isKindOfClass:[TUITextMessageCellData class]]) {
         TUITextMessageCellData *txtMsg = (TUITextMessageCellData *)_menuUIMsg;
-        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-        pasteboard.string = txtMsg.content;
+        content = txtMsg.content;
+    } else if ([_menuUIMsg isKindOfClass:TUIReplyMessageCellData.class]) {
+        TUIReplyMessageCellData *replyMsg = (TUIReplyMessageCellData *)_menuUIMsg;
+        content = replyMsg.content;
     }
+    
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = content;
+    [TUITool makeToast:TUIKitLocalizableString(Copied)];
 }
 
 - (void)onRevoke:(id)sender
@@ -610,10 +647,18 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     }
 }
 
-- (void)onRelay:(id)sender
+- (void)onForward:(id)sender
 {
     if (_delegate && [_delegate respondsToSelector:@selector(messageController:onSelectMessageMenu:withData:)]) {
         [_delegate messageController:self onSelectMessageMenu:1 withData:_menuUIMsg];
+    }
+}
+
+- (void)onReply:(id)sender
+{
+    // 消息回复
+    if (_delegate && [_delegate respondsToSelector:@selector(messageController:onRelyMessage:)]) {
+        [_delegate messageController:self onRelyMessage:self.menuUIMsg];
     }
 }
 
@@ -734,6 +779,10 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     if (cellData.link) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cellData.link]];
     }
+}
+
+- (void)showReplyMessage:(TUIReplyMessageCell *)cell
+{
 }
 
 - (void)showLiveMessage:(TUIGroupLiveMessageCell *)cell {

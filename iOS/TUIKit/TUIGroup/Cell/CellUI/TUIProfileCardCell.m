@@ -31,7 +31,7 @@
 
 - (CGFloat)heightOfWidth:(CGFloat)width
 {
-    return TPersonalCommonCell_Image_Size.height + 2 * TPersonalCommonCell_Margin;
+    return TPersonalCommonCell_Image_Size.height + 2 * TPersonalCommonCell_Margin + (self.showSignature ? 24 : 0);
 }
 
 @end
@@ -51,6 +51,8 @@
     CGSize headSize = TPersonalCommonCell_Image_Size;
     _avatar = [[UIImageView alloc] initWithFrame:CGRectMake(TPersonalCommonCell_Margin, TPersonalCommonCell_Margin, headSize.width, headSize.height)];
     _avatar.contentMode = UIViewContentModeScaleAspectFit;
+    _avatar.layer.cornerRadius = 4;
+    _avatar.layer.masksToBounds = YES;
     //添加点击头像的手势
     UITapGestureRecognizer *tapAvatar = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAvatar)];
     [_avatar addGestureRecognizer:tapAvatar];
@@ -63,28 +65,28 @@
         self.avatar.layer.masksToBounds = YES;
         self.avatar.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
-    [self addSubview:_avatar];
+    [self.contentView addSubview:_avatar];
     
     //CGSize genderIconSize = CGSizeMake(20, 20);
     _genderIcon = [[UIImageView alloc] init];
     _genderIcon.contentMode = UIViewContentModeScaleAspectFit;
     _genderIcon.image = self.cardData.genderIconImage;
-    [self addSubview:_genderIcon];
+    [self.contentView addSubview:_genderIcon];
     
     _name = [[UILabel alloc] init];
-    [_name setFont:[UIFont systemFontOfSize:15]];
+    [_name setFont:[UIFont boldSystemFontOfSize:18]];
     [_name setTextColor:[UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark]];
-    [self addSubview:_name];
+    [self.contentView addSubview:_name];
     
     _identifier = [[UILabel alloc] init];
-    [_identifier setFont:[UIFont systemFontOfSize:14]];
-    [_identifier setTextColor:[UIColor d_systemGrayColor]];
-    [self addSubview:_identifier];
+    [_identifier setFont:[UIFont systemFontOfSize:13]];
+    [_identifier setTextColor:[UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0]];
+    [self.contentView addSubview:_identifier];
     
     _signature = [[UILabel alloc] init];
     [_signature setFont:[UIFont systemFontOfSize:14]];
     [_signature setTextColor:[UIColor d_systemGrayColor]];
-    [self addSubview:_signature];
+    [self.contentView addSubview:_signature];
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
@@ -94,6 +96,7 @@
 {
     [super fillWithData:data];
     self.cardData = data;
+    _signature.hidden = !data.showSignature;
     //set data
     @weakify(self)
     
@@ -136,8 +139,17 @@
     [super layoutSubviews];
     //此处解除 nameLabel 的 fit 宽度，使性别 icon 能够在短昵称情况下和 nameLabel 相邻。
     _name.mm_sizeToFitThan(0, _avatar.mm_h/3).mm_top(_avatar.mm_y).mm_left(_avatar.mm_maxX + TPersonalCommonCell_Margin);
-    _identifier.mm_sizeToFitThan(80, _avatar.mm_h/3).mm__centerY(_avatar.mm_centerY).mm_left(_name.mm_x);
-    _signature.mm_sizeToFitThan(80, _avatar.mm_h/3).mm_bottom(_avatar.mm_b).mm_left(_name.mm_x);
+    _identifier.mm_sizeToFitThan(80, _avatar.mm_h/3).mm_left(_name.mm_x);
+
+    if (self.cardData.showSignature) {
+        _identifier.mm_y = _name.mm_y + _name.mm_h + 5;
+    } else {
+        _identifier.mm_bottom(_avatar.mm_b);
+    }
+    
+    _signature.mm_sizeToFitThan(80, _avatar.mm_h/3).mm_left(_name.mm_x);
+    _signature.mm_y = CGRectGetMaxY(_identifier.frame) + 5;
+    
     //iCon大小 = 字体*0.9，视觉上最为自然
     _genderIcon.mm_sizeToFitThan(_name.font.pointSize * 0.9, _name.font.pointSize * 0.9).mm__centerY(_name.mm_centerY).mm_left(_name.mm_x + _name.mm_w + TPersonalCommonCell_Margin);
 }

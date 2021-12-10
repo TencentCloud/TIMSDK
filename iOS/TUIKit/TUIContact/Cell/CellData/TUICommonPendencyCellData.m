@@ -29,6 +29,7 @@
     _avatarUrl = [NSURL URLWithString:application.faceUrl];
     _isAccepted = NO;
     _application = application;
+    _hideSource = NO;
     return self;
 }
 

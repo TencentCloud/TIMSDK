@@ -26,9 +26,17 @@
     [self setupViews];
 }
 
+- (UIColor *)bgColorOfSearchBar
+{
+    UIColor *lightColor = [UIColor colorWithRed:235/255.0 green:240/255.0 blue:246/255.0 alpha:1/1.0];
+    UIColor *darkColor = [UIColor blackColor];
+    return [UIColor d_colorWithColorLight:lightColor dark:darkColor];
+}
+
 - (void)setupViews
 {
-    self.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    
+    self.backgroundColor = self.bgColorOfSearchBar;
     _searchBar = [[UISearchBar alloc] init];
     _searchBar.placeholder = TUIKitLocalizableString(Search); // @"搜索";
     _searchBar.backgroundImage = [UIImage new];
@@ -47,6 +55,13 @@
 {
     [super layoutSubviews];
     self.searchBar.frame = CGRectMake(10, 5, self.mm_w - 10 - 10, self.mm_h - 5 - 5);
+    if ([self.searchBar isFirstResponder]) {
+        [self.searchBar setPositionAdjustment:UIOffsetZero forSearchBarIcon:UISearchBarIconSearch];
+        self.backgroundColor = self.superview.backgroundColor;
+    } else {
+        [self.searchBar setPositionAdjustment:UIOffsetMake(0.5 * (self.mm_w - 10 - 10) - 40, 0) forSearchBarIcon:UISearchBarIconSearch];
+        self.backgroundColor = self.bgColorOfSearchBar;
+    }
 }
 
 - (void)showSearchVC {

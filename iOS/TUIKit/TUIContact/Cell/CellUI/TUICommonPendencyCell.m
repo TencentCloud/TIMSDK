@@ -44,9 +44,21 @@
 
     self.agreeButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.agreeButton setTitleColor:[UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark] forState:UIControlStateNormal];
-    self.accessoryView = self.agreeButton;
     [self.agreeButton addTarget:self action:@selector(agreeClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.rejectButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.rejectButton setTitleColor:[UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark] forState:UIControlStateNormal];
+    [self.rejectButton addTarget:self action:@selector(rejectClick) forControlEvents:UIControlEventTouchUpInside];
 
+    UIStackView *stackView = [[UIStackView alloc] init];
+    [stackView addSubview:self.agreeButton];
+    [stackView addSubview:self.rejectButton];
+    stackView.axis = UILayoutConstraintAxisHorizontal;
+    stackView.alignment = UIStackViewAlignmentCenter;
+    [stackView sizeToFit];
+    self.stackView = stackView;
+    self.accessoryView = stackView;
+    
     return self;
 }
 
@@ -77,13 +89,48 @@
         [self.agreeButton setTitle:TUIKitLocalizableString(Agreed) forState:UIControlStateNormal];
         self.agreeButton.enabled = NO;
         self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
+        [self.agreeButton setTitleColor:[UIColor d_colorWithColorLight:TText_Color dark:[UIColor whiteColor]] forState:UIControlStateNormal];
+        self.agreeButton.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:[UIColor grayColor]];
     } else {
         [self.agreeButton setTitle:TUIKitLocalizableString(Agree) forState:UIControlStateNormal];
         self.agreeButton.enabled = YES;
-        self.agreeButton.layer.borderColor = [UIColor grayColor].CGColor;
+        self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
         self.agreeButton.layer.borderWidth = 1;
+        [self.agreeButton setTitleColor:[UIColor d_colorWithColorLight:[UIColor whiteColor] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
+        self.agreeButton.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:52/255.0 green:124/255.0 blue:246/255.0 alpha:1.0] dark:[UIColor grayColor]];
     }
+    
+    if (pendencyData.isRejected) {
+        [self.rejectButton setTitle:TUIKitLocalizableString(Disclined) forState:UIControlStateNormal];
+        self.rejectButton.enabled = NO;
+        self.rejectButton.layer.borderColor = [UIColor clearColor].CGColor;
+        [self.rejectButton setTitleColor:[UIColor d_colorWithColorLight:[UIColor grayColor] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
+    } else {
+        [self.rejectButton setTitle:TUIKitLocalizableString(Discline) forState:UIControlStateNormal];
+        self.rejectButton.enabled = YES;
+        self.rejectButton.layer.borderColor = [UIColor groupTableViewBackgroundColor].CGColor;
+        self.rejectButton.layer.borderWidth = 1;
+        [self.rejectButton setTitleColor:[UIColor d_colorWithColorLight:[UIColor colorWithRed:52/255.0 green:124/255.0 blue:246/255.0 alpha:1.0] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
+    }
+    
     self.agreeButton.mm_sizeToFit().mm_width(self.agreeButton.mm_w+20);
+    self.rejectButton.mm_left(CGRectGetMaxX(self.agreeButton.frame) + 10).mm_sizeToFit().mm_width(self.rejectButton.mm_w+20);
+    self.stackView.bounds = CGRectMake(0, 0, 2 * self.agreeButton.mm_w + 10, self.agreeButton.mm_h);
+    
+    
+    if (self.pendencyData.isRejected && !self.pendencyData.isAccepted) {
+        self.agreeButton.hidden = YES;
+        self.rejectButton.hidden = NO;
+    } else if (self.pendencyData.isAccepted && !self.pendencyData.isRejected) {
+        self.agreeButton.hidden = NO;
+        self.rejectButton.hidden = YES;
+        self.agreeButton.frame = self.rejectButton.frame;
+    } else {
+        self.agreeButton.hidden = NO;
+        self.rejectButton.hidden = NO;
+    }
+    
+    self.addSourceLabel.hidden = self.pendencyData.hideSource;
 }
 
 - (void)agreeClick
@@ -100,9 +147,24 @@
 
 }
 
+- (void)rejectClick
+{
+    if (self.pendencyData.cRejectButtonSelector) {
+        UIViewController *vc = self.mm_viewController;
+        if ([vc respondsToSelector:self.pendencyData.cRejectButtonSelector]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            [vc performSelector:self.pendencyData.cRejectButtonSelector withObject:self];
+#pragma clang diagnostic pop
+        }
+    }
+}
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     if ((touch.view == self.agreeButton)) {
+        return NO;
+    } else if (touch.view == self.rejectButton) {
         return NO;
     }
     return YES;

@@ -51,6 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)removeData:(TUICommonPendencyCellData *)data;
 - (void)agreeData:(TUICommonPendencyCellData *)data;
+- (void)rejectData:(TUICommonPendencyCellData *)data;
 @end
 
 NS_ASSUME_NONNULL_END

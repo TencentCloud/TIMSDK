@@ -19,8 +19,8 @@
         [self.bubbleView addSubview:_voice];
 
         _duration = [[UILabel alloc] init];
-        _duration.font = [UIFont systemFontOfSize:12];
-        _duration.textColor = [UIColor grayColor];
+        _duration.font = [UIFont boldSystemFontOfSize:12];
+        _duration.textColor = [UIColor blackColor];
         [self.bubbleView addSubview:_duration];
 
         _voiceReadPoint = [[UIImageView alloc] init];
@@ -74,21 +74,23 @@
 {
     [super layoutSubviews];
     
-    self.duration.mm_sizeToFitThan(10,TVoiceMessageCell_Duration_Size.height).mm__centerY(self.bubbleView.mm_h/2 - 1);
+    self.duration.mm_sizeToFitThan(10,TVoiceMessageCell_Duration_Size.height);
     
     self.voice.mm_sizeToFit().mm_top(self.voiceData.voiceTop);
     
     if (self.voiceData.direction == MsgDirectionOutgoing) {
         self.bubbleView.mm_left(self.duration.mm_w).mm_flexToRight(0);
-        self.duration.mm_left(-self.duration.mm_w);
         self.voice.mm_right(self.voiceData.cellLayout.bubbleInsets.right);
+        self.duration.mm_left(self.voice.mm_x - self.duration.mm_w - 5);
         self.voiceReadPoint.hidden = YES;
     } else {
         self.bubbleView.mm_left(0).mm_flexToRight(self.duration.mm_w);
-        self.duration.mm_right(-self.duration.mm_w);
         self.voice.mm_left(self.voiceData.cellLayout.bubbleInsets.left);
-        self.voiceReadPoint.mm_bottom(self.duration.mm_y + self.duration.mm_h).mm_left(self.duration.mm_x);
+        self.duration.mm_left(self.voice.mm_x + self.voice.mm_w + 5);
+//        self.voiceReadPoint.mm_bottom(self.duration.mm_y + self.duration.mm_h).mm_left(self.duration.mm_x);
+        self.voiceReadPoint.mm_top(0).mm_right(-self.voiceReadPoint.mm_w);
     }
+    self.duration.mm_centerY = self.voice.mm_centerY;
 }
 
 

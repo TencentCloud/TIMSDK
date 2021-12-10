@@ -10,6 +10,7 @@
 
 @class TUIGroupInfoController;
 @class TUIGroupMemberCellData;
+@class V2TIMGroupInfo;
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -26,7 +27,7 @@
  *  @param controller 委托者，即当前的群组信息控制器。
  *  @param groupId 群组 ID，当前群组信息控制器对应的群组 ID，同时也是被点击的成员所在群的群 ID。
  */
-- (void)groupInfoController:(TUIGroupInfoController *)controller didSelectMembersInGroup:(NSString *)groupId;
+- (void)groupInfoController:(TUIGroupInfoController *)controller didSelectMembersInGroup:(NSString *)groupId groupInfo:(V2TIMGroupInfo *)groupInfo;
 
 /**
  *  点击群组信息视图内“+”按钮添加群成员时的回调。

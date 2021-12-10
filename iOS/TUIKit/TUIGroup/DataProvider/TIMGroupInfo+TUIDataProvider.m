@@ -13,7 +13,7 @@
 }
 
 -(BOOL) canInviteMember{
-    if([self.groupType isEqualToString:@"Work"] || [self.groupType isEqualToString:@"Community"]){
+    if([self.groupType isEqualToString:@"Work"] || [self.groupType isEqualToString:@"Community"] || [self.groupType isEqualToString:@"Private"]){
         return YES;
     }
     return NO;

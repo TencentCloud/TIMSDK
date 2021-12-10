@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)saveDraftWithConversationID:(NSString *)conversationId Text:(NSString *)text;
 
++ (void)findMessages:(NSArray *)msgIDs callback:(void(^)(BOOL succ, NSString *error_message, NSArray *msgs))callback;
+
 #pragma mark - C2C
 + (void)getFriendInfoWithUserId:(nullable NSString *)userID
                       SuccBlock:(void(^)(V2TIMFriendInfoResult *friendInfoResult))succ

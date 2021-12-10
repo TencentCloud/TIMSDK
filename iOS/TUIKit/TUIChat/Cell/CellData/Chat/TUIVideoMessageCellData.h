@@ -12,6 +12,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^TUIVideoMessageDownloadCallback)(void);
+
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                             TUIVideoItem
@@ -152,6 +154,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  5、下载成功后，会生成封面 path 并存储下来。
  */
 - (void)downloadThumb;
+- (void)downloadThumb:(TUIVideoMessageDownloadCallback)finish;
 
 /**
  *  获取视频

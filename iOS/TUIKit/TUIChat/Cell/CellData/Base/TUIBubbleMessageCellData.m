@@ -18,10 +18,22 @@
             _bubble = [[self class] incommingBubble];
             _highlightedBubble = [[self class] incommingHighlightedBubble];
             _bubbleTop = [[self class] incommingBubbleTop];
+            _animateHighlightBubble_alpha50 = [[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkg_alpha50")]
+                                                                        resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{12,12,12,12}")
+                                                                                       resizingMode:UIImageResizingModeStretch];
+            _animateHighlightBubble_alpha20 = [[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkg_alpha20")]
+                                                                        resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{12,12,12,12}")
+                                                                                       resizingMode:UIImageResizingModeStretch];
         } else {
             _bubble = [[self class] outgoingBubble];
             _highlightedBubble = [[self class] outgoingHighlightedBubble];
             _bubbleTop = [[self class] outgoingBubbleTop];
+            _animateHighlightBubble_alpha50 = [[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkg_alpha50")]
+                                                                        resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{12,12,12,12}")
+                                                                                       resizingMode:UIImageResizingModeStretch];
+            _animateHighlightBubble_alpha20 = [[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkg_alpha20")]
+                                                                        resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{12,12,12,12}")
+                                                                                       resizingMode:UIImageResizingModeStretch];
         }
     }
     return self;
@@ -33,7 +45,7 @@ static UIImage *sOutgoingBubble;
 + (UIImage *)outgoingBubble
 {
     if (!sOutgoingBubble) {
-        sOutgoingBubble = [[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkg")] resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{30,20,22,20}") resizingMode:UIImageResizingModeStretch];
+        sOutgoingBubble = [[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkg")] resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{12,12,12,12}") resizingMode:UIImageResizingModeStretch];
     }
     return sOutgoingBubble;
 }
@@ -47,7 +59,7 @@ static UIImage *sOutgoingHighlightedBubble;
 + (UIImage *)outgoingHighlightedBubble
 {
     if (!sOutgoingHighlightedBubble) {
-        sOutgoingHighlightedBubble = [[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkgHL")] resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{30,20,22,20}") resizingMode:UIImageResizingModeStretch];
+        sOutgoingHighlightedBubble = [[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkgHL")] resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{12,12,12,12}") resizingMode:UIImageResizingModeStretch];
     }
     return sOutgoingHighlightedBubble;
 }
@@ -61,7 +73,7 @@ static UIImage *sIncommingBubble;
 + (UIImage *)incommingBubble
 {
     if (!sIncommingBubble) {
-        sIncommingBubble = [[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkg")] resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{30,22,22,22}") resizingMode:UIImageResizingModeStretch];
+        sIncommingBubble = [[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkg")] resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{12,12,12,12}") resizingMode:UIImageResizingModeStretch];
     }
     return sIncommingBubble;
 }
@@ -75,7 +87,7 @@ static UIImage *sIncommingHighlightedBubble;
 + (UIImage *)incommingHighlightedBubble
 {
     if (!sIncommingHighlightedBubble) {
-        sIncommingHighlightedBubble =[[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkgHL")] resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{30,22,22,22}") resizingMode:UIImageResizingModeStretch];
+        sIncommingHighlightedBubble =[[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkgHL")] resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{12,12,12,12}") resizingMode:UIImageResizingModeStretch];
     }
     return sIncommingHighlightedBubble;
 }
@@ -98,7 +110,7 @@ static CGFloat sOutgoingBubbleTop = -2;
     sOutgoingBubbleTop = outgoingBubble;
 }
 
-static CGFloat sIncommingBubbleTop = -2;
+static CGFloat sIncommingBubbleTop = 0;
 
 + (CGFloat)incommingBubbleTop
 {

@@ -534,3 +534,14 @@
 "TUIKitSearchResultMatchGroupMember" = "Inclued group member:";
 "TUIKitSearchResultDisplayChatHistoryCountFormat" = "%zd of chat history";
 /***************************** 消息转发 & 消息搜索 *************************/
+
+
+/***************************** 消息回复 & 换肤 *************************/
+"Reply" = "Reply";
+"TUIKitReplyMessageNotFoundOriginMessage" = "Unable to locate the original message";
+"TUIKitClearAllChatHistory" = "Clear chat history";
+"TUIKitClearAllChatHistoryTips" = "Sure to clear all chat history?";
+"Discline" = "Discline";
+"Copied" = "Copied";
+"ConfirmDeleteMessage" = "Sure to delete selected messages";
+/***************************** 消息回复 & 换肤 *************************/

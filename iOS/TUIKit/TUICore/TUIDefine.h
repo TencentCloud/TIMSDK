@@ -24,8 +24,13 @@
 #define BussinessID_GroupCreate @"group_create"
 #define BussinessID_TextLink @"text_link"
 
-#define GroupCreate_Version 4       // 创建群自定义消息业务版本
-#define TextLink_Version    4       // 自定义 cell 业务版本（点击跳转官网）
+#define GroupCreate_Version 4           // 创建群自定义消息业务版本
+#define TextLink_Version    4           // 自定义 cell 业务版本（点击跳转官网）
+
+// 消息回复的协议版本
+#define kMessageReplyVersion 1          // 「消息自定义字段」中的「消息回复协议」版本号
+#define kDraftMessageReplyVersion 1     // 「草稿字段」中的「消息回复协议」版本号
+
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -68,17 +73,28 @@
 #define TUISearchBundle          @"TUISearch"
 #define TUIKitLocalizableBundle  @"TUIKitLocalizable"
 
-#define  TUIBundlePath(bundleName) [[NSBundle bundleForClass:NSClassFromString(@"TUICore")] pathForResource:bundleName ofType:@"bundle"]
-#define  TUIBundle(bundleName) [NSBundle bundleWithPath:TUIBundlePath(bundleName)]
+#define TUIDemoBundle_Key_Class            @"TUIKit"
+#define TUICoreBundle_Key_Class            @"TUICore"
+#define TUIChatBundle_Key_Class            @"TUIChatService"
+#define TUIChatFaceBundle_Key_Class        @"TUIChatService"
+#define TUIConversationBundle_Key_Class    @"TUIConversationService"
+#define TUIContactBundle_Key_Class         @"TUIContactService"
+#define TUIGroupBundle_Key_Class           @"TUIGroupService"
+#define TUISearchBundle_Key_Class          @"TUISearchService"
+#define TUIKitLocalizableBundle_Key_Class  @"TUICore"
 
-#define TUIDemoImagePath(imageName) [TUIBundlePath(TUIDemoBundle) stringByAppendingPathComponent:imageName]
-#define TUICoreImagePath(imageName) [TUIBundlePath(TUICoreBundle) stringByAppendingPathComponent:imageName]
-#define TUIChatImagePath(imageName) [TUIBundlePath(TUIChatBundle) stringByAppendingPathComponent:imageName]
-#define TUIChatFaceImagePath(imageName) [TUIBundlePath(TUIChatFaceBundle) stringByAppendingPathComponent:imageName]
-#define TUIConversationImagePath(imageName) [TUIBundlePath(TUIConversationBundle) stringByAppendingPathComponent:imageName]
-#define TUIContactImagePath(imageName) [TUIBundlePath(TUIContactBundle) stringByAppendingPathComponent:imageName]
-#define TUIGroupImagePath(imageName) [TUIBundlePath(TUIGroupBundle) stringByAppendingPathComponent:imageName]
-#define TUISearchImagePath(imageName) [TUIBundlePath(TUISearchBundle) stringByAppendingPathComponent:imageName]
+#define TUIBundlePath(bundleName, bundleKeyClass) [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"].length > 0 ? [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"] : [[NSBundle bundleForClass:NSClassFromString(bundleKeyClass)] pathForResource:bundleName ofType:@"bundle"]
+
+#define TUIKitLocalizable(bundleName) [NSBundle bundleWithPath:TUIBundlePath(bundleName, TUIKitLocalizableBundle_Key_Class)]
+
+#define TUIDemoImagePath(imageName) [TUIBundlePath(TUIDemoBundle,TUIDemoBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUICoreImagePath(imageName) [TUIBundlePath(TUICoreBundle,TUICoreBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIChatImagePath(imageName) [TUIBundlePath(TUIChatBundle,TUIChatBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIChatFaceImagePath(imageName) [TUIBundlePath(TUIChatFaceBundle,TUIChatFaceBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIConversationImagePath(imageName) [TUIBundlePath(TUIConversationBundle,TUIConversationBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIContactImagePath(imageName) [TUIBundlePath(TUIContactBundle,TUIContactBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIGroupImagePath(imageName) [TUIBundlePath(TUIGroupBundle,TUIGroupBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUISearchImagePath(imageName) [TUIBundlePath(TUISearchBundle,TUISearchBundle_Key_Class) stringByAppendingPathComponent:imageName]
 
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -173,9 +189,12 @@
 //group live cell
 #define TGroupLiveMessageCell_ReuseId @"TGroupLiveMessageCell"
 
+//repply message cell
+#define TReplyMessageCell_ReuseId @"TUIReplyMessageCell"
+
 //relay message cell
 #define TRelayMessageCell_ReuserId @"TRelayMessageCell"
-#define TRelayMessageCell_Text_PADDING (200)
+#define TRelayMessageCell_Text_PADDING (230)
 #define TRelayMessageCell_Text_Height_Max (100)
 #define TRelayMessageCell_Text_Width_Max (Screen_Width - TRelayMessageCell_Text_PADDING)
 
@@ -224,7 +243,7 @@
 //group member cell
 #define TGroupMemberCell_ReuseId @"TGroupMemberCell"
 #define TGroupMemberCell_Margin 5
-#define TGroupMemberCell_Head_Size CGSizeMake(60, 60)
+#define TGroupMemberCell_Head_Size CGSizeMake(50, 50)
 #define TGroupMemberCell_Name_Height 20
 
 //conversation cell
@@ -282,7 +301,7 @@
 #define TAddCell_Head_Size CGSizeMake(38, 38)
 
 //modify view
-#define TModifyView_Background_Color RGBA(188, 188, 188, 0.5)
+#define TModifyView_Background_Color RGBA(0, 0, 0, 0.5)
 #define TModifyView_Background_Color_Dark RGBA(76, 76, 76, 0.5)
 #define TModifyView_Confirm_Color RGBA(44, 145, 247, 1.0)
 
@@ -301,8 +320,8 @@
 
 //button cell
 #define TButtonCell_ReuseId @"TButtonCell"
-#define TButtonCell_Height 60
-#define TButtonCell_Margin 12
+#define TButtonCell_Height 56
+#define TButtonCell_Margin 1
 
 //switch cell
 #define TSwitchCell_ReuseId @"TSwitchCell"
@@ -310,8 +329,8 @@
 #define TSwitchCell_Margin 10
 
 //personal common cell
-#define TPersonalCommonCell_Image_Size CGSizeMake(80, 80)
-#define TPersonalCommonCell_Margin 10
+#define TPersonalCommonCell_Image_Size CGSizeMake(48, 48)
+#define TPersonalCommonCell_Margin 20
 #define TPersonalCommonCell_Indicator_Size CGSizeMake(15, 15)
 
 //group common cell
@@ -331,7 +350,7 @@
 #define TUINaviBarIndicatorView_Margin 5
 
 // controller commom color
-#define TController_Background_Color RGBA(237, 237, 237, 1.0)
+#define TController_Background_Color RGBA(255, 255, 255, 1.0)
 #define TController_Background_Color_Dark RGBA(25, 25, 25, 1.0)
 
 // title commom color
@@ -359,7 +378,7 @@
 #define TPage_Current_Color_Dark RGBA(140, 140, 140, 1.0)
 
 // input view commom color
-#define TInput_Background_Color  RGBA(246, 246, 246, 1.0)
+#define TInput_Background_Color  RGBA(235, 240, 246, 1.0)
 #define TInput_Background_Color_Dark  RGBA(30, 30, 30, 1.0)
 
 // rich

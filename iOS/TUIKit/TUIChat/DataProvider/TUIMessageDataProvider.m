@@ -14,6 +14,7 @@
 #import "TUIMergeMessageCellData.h"
 #import "TUIFaceMessageCellData.h"
 #import "TUIJoinGroupMessageCellData.h"
+#import "TUIReplyMessageCellData.h"
 #import "TUIFaceView.h"
 #import "TUIDefine.h"
 #import "TUITool.h"
@@ -90,7 +91,7 @@ static NSArray *customMessageInfo = nil;
         if ([uiMsg.msgID isEqualToString:msgId]) {
             [self.dataSource dataProviderDataSourceWillChange:self];
             NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
-            [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageDataProviderDataSourceChangeTypeReload atIndex:index];
+            [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageDataProviderDataSourceChangeTypeReload atIndex:index animation:YES];
             [self.dataSource dataProviderDataSourceDidChange:self];
             return;
         }
@@ -105,20 +106,25 @@ static NSArray *customMessageInfo = nil;
     if (cellDataList.count == 0) {
         return;
     }
-    // 更新数据, 刷新页面
-    [self.dataSource dataProviderDataSourceWillChange:self];
-    for (TUIMessageCellData *uiMsg in cellDataList) {
-        [self addUIMsg:uiMsg];
-        [self.dataSource dataProviderDataSourceChange:self
-                                             withType:TUIMessageDataProviderDataSourceChangeTypeInsert
-                                              atIndex:(self.uiMsgs_.count - 1)];
-    }
-    [self.dataSource dataProviderDataSourceDidChange:self];
-    
-    // 抛出收到新消息事件
-    if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveNewUIMsg:)]) {
-        [self.dataSource dataProvider:self ReceiveNewUIMsg:cellDataList.firstObject];
-    }
+    @weakify(self)
+    [self preProcessReplyMessage:cellDataList callback:^{
+        @strongify(self)
+        // 更新数据, 刷新页面
+        [self.dataSource dataProviderDataSourceWillChange:self];
+        for (TUIMessageCellData *uiMsg in cellDataList) {
+            [self addUIMsg:uiMsg];
+            [self.dataSource dataProviderDataSourceChange:self
+                                                 withType:TUIMessageDataProviderDataSourceChangeTypeInsert
+                                                  atIndex:(self.uiMsgs_.count - 1)
+                                                animation:YES];
+        }
+        [self.dataSource dataProviderDataSourceDidChange:self];
+        
+        // 抛出收到新消息事件
+        if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveNewUIMsg:)]) {
+            [self.dataSource dataProvider:self ReceiveNewUIMsg:cellDataList.firstObject];
+        }        
+    }];
 }
 
 - (NSMutableArray *)transUIMsgFromIMMsg:(NSArray *)msgs {
@@ -167,18 +173,22 @@ static NSArray *customMessageInfo = nil;
 
 /// 收到消息撤回
 - (void)onRecvMessageRevoked:(NSString *)msgID {
-    TUIMessageCellData *uiMsg = nil;
-    for (uiMsg in self.uiMsgs) {
-        if ([uiMsg.msgID isEqualToString:msgID]) {
-            [self.dataSource dataProviderDataSourceWillChange:self];
-            NSUInteger index = [self.uiMsgs indexOfObject:uiMsg];
-            TUISystemMessageCellData *revokeCellData = [TUIMessageDataProvider getRevokeCellData:uiMsg.innerMessage];
-            [self replaceUIMsg:revokeCellData atIndex:index];
-            [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageDataProviderDataSourceChangeTypeReload atIndex:index];
-            [self.dataSource dataProviderDataSourceDidChange:self];
-            return;
+    @weakify(self)
+    [TUITool dispatchMainAsync:^{
+        @strongify(self)
+        TUIMessageCellData *uiMsg = nil;
+        for (uiMsg in self.uiMsgs) {
+            if ([uiMsg.msgID isEqualToString:msgID]) {
+                [self.dataSource dataProviderDataSourceWillChange:self];
+                NSUInteger index = [self.uiMsgs indexOfObject:uiMsg];
+                TUISystemMessageCellData *revokeCellData = [TUIMessageDataProvider getRevokeCellData:uiMsg.innerMessage];
+                [self replaceUIMsg:revokeCellData atIndex:index];
+                [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageDataProviderDataSourceChangeTypeReload atIndex:index animation:YES];
+                [self.dataSource dataProviderDataSourceDidChange:self];
+                return;
+            }
         }
-    }
+    }];
 }
 
 /// 消息内容被修改（第三方服务回调修改了消息内容）
@@ -189,19 +199,24 @@ static NSArray *customMessageInfo = nil;
     }
     
     // 更新消息
+    @weakify(self)
     for (TUIMessageCellData *uiMsg in self.uiMsgs) {
         if ([uiMsg.msgID isEqualToString:imMsg.msgID]) {
             NSMutableArray *cellDataList = [self transUIMsgFromIMMsg:@[imMsg]];
-            if (cellDataList.count > 0) {
-                TUIMessageCellData *cellData =cellDataList.firstObject;
-                [self.dataSource dataProviderDataSourceWillChange:self];
-                NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
-                [self replaceUIMsg:cellData atIndex:index];
-                [self.dataSource dataProviderDataSourceChange:self
-                                                     withType:TUIMessageDataProviderDataSourceChangeTypeReload
-                                                      atIndex:index];
-                [self.dataSource dataProviderDataSourceDidChange:self];
-            }
+            [self preProcessReplyMessage:cellDataList callback:^{
+                @strongify(self)
+                if (cellDataList.count > 0) {
+                    TUIMessageCellData *cellData =cellDataList.firstObject;
+                    [self.dataSource dataProviderDataSourceWillChange:self];
+                    NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
+                    [self replaceUIMsg:cellData atIndex:index];
+                    [self.dataSource dataProviderDataSourceChange:self
+                                                         withType:TUIMessageDataProviderDataSourceChangeTypeReload
+                                                          atIndex:index
+                                                        animation:YES];
+                    [self.dataSource dataProviderDataSourceDidChange:self];
+                }
+            }];
             return;
         }
     }
@@ -262,102 +277,152 @@ static NSArray *customMessageInfo = nil;
        SucceedBlock:(void (^)(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))SucceedBlock
 {
     NSMutableArray<TUIMessageCellData *> *uiMsgs = [self transUIMsgFromIMMsg:msgs];
-    if(msgs.count < self.pageCount) {
-        self.isNoMoreMsg = YES;
-    }
-    if(uiMsgs.count != 0) {
-        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
-        [self.uiMsgs_ insertObjects:uiMsgs atIndexes:indexSet];
+    @weakify(self)
+    [self preProcessReplyMessage:uiMsgs callback:^{
+        @strongify(self)
+        if(msgs.count < self.pageCount) {
+            self.isNoMoreMsg = YES;
+        }
+        if(uiMsgs.count != 0) {
+            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
+            [self.uiMsgs_ insertObjects:uiMsgs atIndexes:indexSet];
+        }
+        
+        self.isLoadingData = NO;
+        if (SucceedBlock) {
+            SucceedBlock(self.isFirstLoad, self.isNoMoreMsg, uiMsgs);
+        }
+        self.isFirstLoad = NO;
+    }];
+}
+
+- (void)preProcessReplyMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback
+{
+    if (uiMsgs.count == 0) {
+        if (callback) {
+            callback();
+        }
+        return;
     }
     
-    self.isLoadingData = NO;
-    if (SucceedBlock) {
-        SucceedBlock(self.isFirstLoad, self.isNoMoreMsg, uiMsgs);
+    @weakify(self)
+    dispatch_group_t group = dispatch_group_create();
+    for (TUIMessageCellData *cellData in uiMsgs) {
+        if (![cellData isKindOfClass:TUIReplyMessageCellData.class]) {
+            continue;
+        }
+        
+        TUIReplyMessageCellData *myData = (TUIReplyMessageCellData *)cellData;
+        __weak typeof(myData) weakMyData = myData;
+        myData.onFinish = ^{
+            @strongify(self)
+            [self.dataSource dataProviderDataSourceWillChange:self];
+            NSUInteger index = [self.uiMsgs indexOfObject:weakMyData];
+            [self.dataSource dataProviderDataSourceChange:self
+                                                 withType:TUIMessageDataProviderDataSourceChangeTypeReload
+                                                  atIndex:index
+                                                animation:NO];
+            [self.dataSource dataProviderDataSourceDidChange:self];
+        };
+        dispatch_group_enter(group);
+        [myData loadOriginMessage:^{
+            dispatch_group_leave(group);
+        }];
     }
-    self.isFirstLoad = NO;
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        if (callback) {
+            callback();
+        }
+    });
 }
 
 - (void)sendUIMsg:(TUIMessageCellData *)uiMsg
    toConversation:(TUIChatConversationModel *)conversationData
     willSendBlock:(void(^)(BOOL isReSend, TUIMessageCellData *dateUIMsg))willSendBlock
         SuccBlock:(nullable V2TIMSucc)succ
-        FailBlock:(nullable V2TIMFail)fail {
-    
-    [TUITool dispatchMainAsync:^{
-        V2TIMMessage *imMsg = uiMsg.innerMessage;
-        TUIMessageCellData *dateMsg = nil;
-        BOOL isReSent = NO;
-        if (uiMsg.status == Msg_Status_Init) {
-            //新消息
-            dateMsg = [self getSystemMsgFromDate:imMsg.timestamp];
-        } else if (imMsg) {
-            //重发
-            isReSent = YES;
-            dateMsg = [self getSystemMsgFromDate:[NSDate date]];
-        } else {
-            if (fail) {
-                fail(ERR_INVALID_PARAMETERS, @"Unknown message state");
+        FailBlock:(nullable V2TIMFail)fail
+{
+    [self preProcessReplyMessage:@[uiMsg] callback:^{
+        [TUITool dispatchMainAsync:^{
+            V2TIMMessage *imMsg = uiMsg.innerMessage;
+            TUIMessageCellData *dateMsg = nil;
+            BOOL isReSent = NO;
+            if (uiMsg.status == Msg_Status_Init) {
+                //新消息
+                dateMsg = [self getSystemMsgFromDate:imMsg.timestamp];
+            } else if (imMsg) {
+                //重发
+                isReSent = YES;
+                dateMsg = [self getSystemMsgFromDate:[NSDate date]];
+            } else {
+                if (fail) {
+                    fail(ERR_INVALID_PARAMETERS, @"Unknown message state");
+                }
+                return;
             }
-            return;
-        }
-        
-        imMsg.isExcludedFromUnreadCount = [TUIConfig defaultConfig].isExcludedFromUnreadCount;
-        imMsg.isExcludedFromLastMessage = [TUIConfig defaultConfig].isExcludedFromLastMessage;
-        
-        // 更新发送状态
-        uiMsg.status = Msg_Status_Sending;
-        
-        // 处理数据
-        [self.dataSource dataProviderDataSourceWillChange:self];
-        if (isReSent) {
-            NSInteger row = [self.uiMsgs indexOfObject:uiMsg];
-            [self removeUImsgAtIndex:row];
-            [self.dataSource dataProviderDataSourceChange:self
-                                                 withType:TUIMessageDataProviderDataSourceChangeTypeDelete
-                                                  atIndex:row];
-        }
-        if (dateMsg) {
-            [self addUIMsg:dateMsg];
+            
+            imMsg.isExcludedFromUnreadCount = [TUIConfig defaultConfig].isExcludedFromUnreadCount;
+            imMsg.isExcludedFromLastMessage = [TUIConfig defaultConfig].isExcludedFromLastMessage;
+            
+            // 更新发送状态
+            uiMsg.status = Msg_Status_Sending;
+            
+            // 处理数据
+            [self.dataSource dataProviderDataSourceWillChange:self];
+            if (isReSent) {
+                NSInteger row = [self.uiMsgs indexOfObject:uiMsg];
+                [self removeUImsgAtIndex:row];
+                [self.dataSource dataProviderDataSourceChange:self
+                                                     withType:TUIMessageDataProviderDataSourceChangeTypeDelete
+                                                      atIndex:row
+                                                    animation:YES];
+            }
+            if (dateMsg) {
+                [self addUIMsg:dateMsg];
+                [self.dataSource dataProviderDataSourceChange:self
+                                                     withType:TUIMessageDataProviderDataSourceChangeTypeInsert
+                                                      atIndex:(self.uiMsgs.count - 1)
+                                                    animation:YES];
+            }
+            [self addUIMsg:uiMsg];
             [self.dataSource dataProviderDataSourceChange:self
                                                  withType:TUIMessageDataProviderDataSourceChangeTypeInsert
-                                                  atIndex:(self.uiMsgs.count - 1)];
-        }
-        [self addUIMsg:uiMsg];
-        [self.dataSource dataProviderDataSourceChange:self
-                                             withType:TUIMessageDataProviderDataSourceChangeTypeInsert
-                                              atIndex:(self.uiMsgs.count - 1)];
-        [self.dataSource dataProviderDataSourceDidChange:self];
-        
-        if (willSendBlock) {
-            willSendBlock(isReSent, dateMsg);
-        }
-        
-        // 更新日期消息
-        if (dateMsg) {
-            self.msgForDate = imMsg;
-        }
-        
-        // 发送请求
-        uiMsg.msgID = [TUIMessageDataProvider sendMessage:imMsg
-                                           toConversation:conversationData
-                                           isSendPushInfo:YES
-                                         isOnlineUserOnly:NO
-                                                 priority:V2TIM_PRIORITY_NORMAL
-                                                 Progress:^(uint32_t progress) {
-            // 更新上传进度
-            [self.uiMsgs enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TUIMessageCellData * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj.innerMessage.msgID isEqualToString:imMsg.msgID]
-                    && [obj conformsToProtocol:@protocol(TUIMessageCellDataFileUploadProtocol)]) {
-                    ((id<TUIMessageCellDataFileUploadProtocol>)obj).uploadProgress = progress;
-                    *stop = YES;
-                }
-            }];
-        }
-                                                SuccBlock:succ
-                                                FailBlock:fail];
-        uiMsg.name = [TUIMessageDataProvider getShowName:uiMsg.innerMessage];
-        // !!!innerMessage.faceURL在sendMessage内部赋值,所以需要放在最后面. TUIMessageCell内部监听了avatarUrl的变更,所以不需要再次刷新
-        uiMsg.avatarUrl = [NSURL URLWithString:[uiMsg.innerMessage faceURL]];
+                                                  atIndex:(self.uiMsgs.count - 1)
+                                                animation:self];
+            [self.dataSource dataProviderDataSourceDidChange:self];
+            
+            if (willSendBlock) {
+                willSendBlock(isReSent, dateMsg);
+            }
+            
+            // 更新日期消息
+            if (dateMsg) {
+                self.msgForDate = imMsg;
+            }
+            
+            // 发送请求
+            uiMsg.msgID = [TUIMessageDataProvider sendMessage:imMsg
+                                               toConversation:conversationData
+                                               isSendPushInfo:YES
+                                             isOnlineUserOnly:NO
+                                                     priority:V2TIM_PRIORITY_NORMAL
+                                                     Progress:^(uint32_t progress) {
+                // 更新上传进度
+                [self.uiMsgs enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TUIMessageCellData * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj.innerMessage.msgID isEqualToString:imMsg.msgID]
+                        && [obj conformsToProtocol:@protocol(TUIMessageCellDataFileUploadProtocol)]) {
+                        ((id<TUIMessageCellDataFileUploadProtocol>)obj).uploadProgress = progress;
+                        *stop = YES;
+                    }
+                }];
+            }
+                                                    SuccBlock:succ
+                                                    FailBlock:fail];
+            uiMsg.name = [TUIMessageDataProvider getShowName:uiMsg.innerMessage];
+            // !!!innerMessage.faceURL在sendMessage内部赋值,所以需要放在最后面. TUIMessageCell内部监听了avatarUrl的变更,所以不需要再次刷新
+            uiMsg.avatarUrl = [NSURL URLWithString:[uiMsg.innerMessage faceURL]];
+        }];
     }];
 }
 
@@ -414,7 +479,7 @@ static NSArray *customMessageInfo = nil;
         [self.dataSource dataProviderDataSourceWillChange:self];
         for (TUIMessageCellData *uiMsg in uiMsgList) {
             NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
-            [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageDataProviderDataSourceChangeTypeDelete atIndex:index];
+            [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageDataProviderDataSourceChangeTypeDelete atIndex:index animation:YES];
         }
         [self removeUIMsgList:uiMsgList];
         
@@ -546,6 +611,15 @@ static NSArray *customMessageInfo = nil;
         default:
             break;
     }
+
+    // 判断是否为「回复消息」
+    if (message.cloudCustomData) {
+        TUIMessageCellData *replyData = [TUIReplyMessageCellData getCellData:message];
+        if (replyData) {
+            data = replyData;
+        }
+    }
+    
     if (data) {
         data.innerMessage = message;
         data.msgID = message.msgID;

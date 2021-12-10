@@ -10,6 +10,12 @@
 #import "TUIGlobalization.h"
 #import "TUIDarkModel.h"
 
+@interface TUIMessageMultiChooseView ()
+
+@property (nonatomic, strong) CALayer *separtorLayer;
+
+@end
+
 @implementation TUIMessageMultiChooseView
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -35,7 +41,7 @@
     [super layoutSubviews];
     
     CGFloat toolHeight = 44;
-    CGFloat menuHeight = 44;
+    CGFloat menuHeight = 54;
     CGFloat centerTopOffset = 0;
     CGFloat centerBottomOffset = 0;
     if (@available(iOS 11.0, *)) {
@@ -47,6 +53,7 @@
     
     self.toolView.frame = CGRectMake(0, 0, self.bounds.size.width, toolHeight);
     self.menuView.frame = CGRectMake(0, self.bounds.size.height - menuHeight, self.bounds.size.width, menuHeight);
+    self.separtorLayer.frame = CGRectMake(0, 0, self.menuView.mm_w, 1);
     
     // toolView
     {
@@ -82,6 +89,7 @@
     
     _menuView = [[UIView alloc] init];
     _menuView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:[UIColor darkGrayColor]];
+    [_menuView.layer addSublayer:self.separtorLayer];
     [self addSubview:_menuView];
     
     _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -133,6 +141,15 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(messageMultiChooseViewOnDeleteClicked:)]) {
         [self.delegate messageMultiChooseViewOnDeleteClicked:self];
     }
+}
+
+- (CALayer *)separtorLayer
+{
+    if (_separtorLayer == nil) {
+        _separtorLayer = [CALayer layer];
+        _separtorLayer.backgroundColor = [UIColor groupTableViewBackgroundColor].CGColor;
+    }
+    return _separtorLayer;
 }
 
 @end

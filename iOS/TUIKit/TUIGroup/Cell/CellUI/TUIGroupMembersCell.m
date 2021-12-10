@@ -32,9 +32,9 @@
 
     CGSize cellSize = [TUIGroupMemberCell getSize];
     _memberFlowLayout.itemSize = cellSize;
-    _memberFlowLayout.minimumInteritemSpacing = (Screen_Width - cellSize.width * TGroupMembersCell_Column_Count - 2*TGroupMembersCell_Margin) / (TGroupMembersCell_Column_Count - 1);
+    _memberFlowLayout.minimumInteritemSpacing = (Screen_Width - cellSize.width * TGroupMembersCell_Column_Count - 2*20) / (TGroupMembersCell_Column_Count - 1);
     _memberFlowLayout.minimumLineSpacing = TGroupMembersCell_Margin;
-    _memberFlowLayout.sectionInset = UIEdgeInsetsMake(TGroupMembersCell_Margin, TGroupMembersCell_Margin, TGroupMembersCell_Margin, TGroupMembersCell_Margin);
+    _memberFlowLayout.sectionInset = UIEdgeInsetsMake(TGroupMembersCell_Margin, 20, TGroupMembersCell_Margin, 20);
 
     _memberCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:_memberFlowLayout];
     [_memberCollectionView registerClass:[TUIGroupMemberCell class] forCellWithReuseIdentifier:TGroupMemberCell_ReuseId];

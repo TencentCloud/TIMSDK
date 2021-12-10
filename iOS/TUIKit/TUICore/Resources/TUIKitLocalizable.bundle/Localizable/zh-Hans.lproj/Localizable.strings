@@ -151,7 +151,7 @@
 "TUIKitMessageTypeDraftFormat" = "[草稿]";
 
 "TUIKitMoreCamera" = "拍照";
-"TUIKitMorePhoto" = "相册";
+"TUIKitMorePhoto" = "图片";
 "TUIKitMoreVideo" = "录像";
 "TUIKitMoreVideoCaptureDurationTip" = "录制时间过短";
 "TUIKitMoreFile" = "文件";
@@ -534,3 +534,14 @@
 "TUIKitSearchResultMatchGroupMember" = "包含群成员:";
 "TUIKitSearchResultDisplayChatHistoryCountFormat" = "%zd条聊天记录";
 /***************************** 消息转发 & 消息搜索 *************************/
+
+
+/***************************** 消息回复 & 换肤 *************************/
+"Reply" = "回复";
+"TUIKitReplyMessageNotFoundOriginMessage" = "无法定位到原消息";
+"TUIKitClearAllChatHistory" = "清除聊天记录";
+"TUIKitClearAllChatHistoryTips" = "确定清空聊天记录？";
+"Discline" = "拒绝";
+"Copied" = "已复制";
+"ConfirmDeleteMessage" = "确定删除已选消息";
+/***************************** 消息回复 & 换肤 *************************/

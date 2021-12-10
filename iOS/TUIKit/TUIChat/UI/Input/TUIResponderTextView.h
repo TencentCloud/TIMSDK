@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@class TUIResponderTextView;
+
+@protocol TUIResponderTextViewDelegate <UITextViewDelegate>
+
+- (void)onDeleteBackward:(TUIResponderTextView *)textView;
+
+@end
+
 @interface TUIResponderTextView : UITextView
 @property (nonatomic, weak) UIResponder *overrideNextResponder;
 @end

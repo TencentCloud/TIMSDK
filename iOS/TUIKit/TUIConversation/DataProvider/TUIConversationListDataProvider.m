@@ -192,6 +192,24 @@
     self.dataList = dataList;
 }
 
+- (NSString *)getDraftContent:(V2TIMConversation *)conv
+{
+    NSString *draft = conv.draftText;
+    if (draft.length == 0) {
+        return nil;
+    }
+    
+    NSError *error = nil;
+    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:[draft dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:&error];
+    if (error || jsonDict == nil) {
+        return draft;
+    }
+    
+    // 显示草稿
+    NSString *draftContent = [jsonDict.allKeys containsObject:@"content"] ? jsonDict[@"content"] : @"";
+    return draftContent;
+}
+
 - (BOOL)filteConversation:(V2TIMConversation *)conv
 {
     // 屏蔽AVChatRoom的群聊会话
@@ -299,7 +317,7 @@
     
     if(conv.draftText.length > 0){
         [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:TUIKitLocalizableString(TUIKitMessageTypeDraftFormat) attributes:@{NSForegroundColorAttributeName:[UIColor d_systemRedColor]}]];
-        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:conv.draftText attributes:@{NSForegroundColorAttributeName:[UIColor d_systemGrayColor]}]];
+        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:[self getDraftContent:conv] attributes:@{NSForegroundColorAttributeName:[UIColor d_systemGrayColor]}]];
     } else {
         [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:lastMsgStr]];
     }

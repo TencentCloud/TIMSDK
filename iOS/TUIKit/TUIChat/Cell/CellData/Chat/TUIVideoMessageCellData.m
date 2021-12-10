@@ -20,6 +20,7 @@
 @interface TUIVideoMessageCellData ()
 @property (nonatomic, assign) BOOL isDownloadingSnapshot;
 @property (nonatomic, assign) BOOL isDownloadingVideo;
+@property (nonatomic, copy) TUIVideoMessageDownloadCallback onFinish;
 @end
 
 @implementation TUIVideoMessageCellData
@@ -49,6 +50,17 @@
     return TUIKitLocalizableString(TUIkitMessageTypeVideo); // @"[视频]";
 }
 
+- (Class)getReplyQuoteViewDataClass
+{
+    return NSClassFromString(@"TUIVideoReplyQuoteViewData");
+}
+
+- (Class)getReplyQuoteViewClass
+{
+    return NSClassFromString(@"TUIVideoReplyQuoteView");
+}
+
+
 - (instancetype)initWithDirection:(TMsgDirection)direction {
     self = [super initWithDirection:direction];
     if (self) {
@@ -57,6 +69,12 @@
         _isDownloadingSnapshot = NO;
     }
     return self;
+}
+
+- (void)downloadThumb:(TUIVideoMessageDownloadCallback)finish
+{
+    self.onFinish = finish;
+    [self downloadThumb];
 }
 
 - (void)downloadThumb
@@ -107,10 +125,17 @@
     if (!isExist) {
         return;
     }
+    @weakify(self)
     [TUITool asyncDecodeImage:path complete:^(NSString *path, UIImage *image) {
+        @strongify(self)
+        @weakify(self)
         dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self)
             self.thumbImage = image;
             self.thumbProgress = 100;
+            if (self.onFinish) {
+                self.onFinish();
+            }
         });
     }];
 }

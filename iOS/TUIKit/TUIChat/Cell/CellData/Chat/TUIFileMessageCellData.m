@@ -31,6 +31,24 @@
     return TUIKitLocalizableString(TUIkitMessageTypeFile); // @"[文件]";
 }
 
+- (Class)getReplyQuoteViewDataClass
+{
+    return NSClassFromString(@"TUIFileReplyQuoteViewData");
+}
+
+- (Class)getReplyQuoteViewClass
+{
+    return NSClassFromString(@"TUIFileReplyQuoteView");
+}
+
+- (int)length
+{
+    if (self.innerMessage) {
+        _length = self.innerMessage.fileElem.fileSize;
+    }
+    return _length;
+}
+
 - (instancetype)initWithDirection:(TMsgDirection)direction {
     self = [super initWithDirection:direction];
     if (self) {

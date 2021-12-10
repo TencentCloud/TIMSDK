@@ -14,7 +14,7 @@
 {
     NSString *language = [self tk_localizableLanguageKey];
     language = [@"Localizable" stringByAppendingPathComponent:language];
-    NSBundle *bundle = [NSBundle bundleWithPath:[TUIBundle(bundleName) pathForResource:language ofType:@"lproj"]];
+    NSBundle *bundle = [NSBundle bundleWithPath:[TUIKitLocalizable(bundleName) pathForResource:language ofType:@"lproj"]];
     value = [bundle localizedStringForKey:key value:value table:nil];
     NSString *resultStr = [[NSBundle mainBundle] localizedStringForKey:key value:value table:nil];
     return resultStr;

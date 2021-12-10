@@ -34,11 +34,7 @@
 
     _button = [UIButton buttonWithType:UIButtonTypeCustom];
     [_button.titleLabel setFont:[UIFont systemFontOfSize:18]];
-    _button.layer.cornerRadius = 5;
-    [_button.layer setMasksToBounds:YES];
     [_button addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
-    _button.layer.borderColor = [UIColor colorWithWhite:0.5 alpha:0.3].CGColor;
-    _button.layer.borderWidth = 1;
 
     [self.contentView addSubview:_button];
 
@@ -88,6 +84,10 @@
             break;
         default:
             break;
+    }
+    
+    if (data.textColor) {
+        [_button setTitleColor:data.textColor forState:UIControlStateNormal];
     }
 }
 

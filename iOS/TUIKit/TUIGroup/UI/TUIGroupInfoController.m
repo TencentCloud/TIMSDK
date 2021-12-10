@@ -39,7 +39,7 @@
 - (void)setupViews {
     self.title = TUIKitLocalizableString(TUIKitGroupProfileDetails);
     self.tableView.tableFooterView = [[UIView alloc] init];
-    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:242/255.0 green:243/255.0 blue:245/255.0 alpha:1/1.0] dark:[UIColor blackColor]];
     //加入此行，会让反馈更加灵敏
     self.tableView.delaysContentTouches = NO;
 }
@@ -64,7 +64,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 20;
+    return 10;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -148,8 +148,8 @@
 
 - (void)didSelectMembers
 {
-    if(_delegate && [_delegate respondsToSelector:@selector(groupInfoController:didSelectMembersInGroup:)]){
-        [_delegate groupInfoController:self didSelectMembersInGroup:_groupId];
+    if(_delegate && [_delegate respondsToSelector:@selector(groupInfoController:didSelectMembersInGroup:groupInfo:)]){
+        [_delegate groupInfoController:self didSelectMembersInGroup:_groupId groupInfo:self.dataProvider.groupInfo];
     }
 }
 
@@ -174,6 +174,9 @@
 {
     TModifyViewData *data = [[TModifyViewData alloc] init];
     data.title = TUIKitLocalizableString(TUIKitGroupProfileEditAlias);
+    data.content = self.dataProvider.selfInfo.nameCard;
+    data.desc = TUIKitLocalizableString(TUIKitGroupProfileEditAlias);
+    data.enableNull = YES;
     TUIModifyView *modify = [[TUIModifyView alloc] init];
     modify.tag = 2;
     modify.delegate = self;
@@ -190,6 +193,8 @@
 
             TModifyViewData *data = [[TModifyViewData alloc] init];
             data.title = TUIKitLocalizableString(TUIKitGroupProfileEditGroupName);
+            data.content = self.dataProvider.groupInfo.groupName;
+            data.desc = TUIKitLocalizableString(TUIKitGroupProfileEditGroupName);
             TUIModifyView *modify = [[TUIModifyView alloc] init];
             modify.tag = 0;
             modify.delegate = self;
@@ -295,12 +300,41 @@
     [self presentViewController:ac animated:YES completion:nil];
 }
 
+- (void)didClearAllHistory:(TUIButtonCell *)cell
+{
+    @weakify(self)
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:TUIKitLocalizableString(TUIKitClearAllChatHistoryTips) preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Confirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        @strongify(self)
+        [self.dataProvider clearAllHistory:^{
+            [TUITool makeToast:@"success"];
+        } fail:^(int code, NSString *desc) {
+            [TUITool makeToastError:code msg:desc];
+        }];
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:ac animated:YES completion:nil];
+}
+
 #pragma mark TUIProfileCardDelegate
 
 -(void)didTapOnAvatar:(TUIProfileCardCell *)cell{
-    TUIAvatarViewController *image = [[TUIAvatarViewController alloc] init];
-    image.avatarData = cell.cardData;
-    [self.navigationController pushViewController:image animated:YES];
+    //点击头像的响应函数，换头像，上传头像URL
+    @weakify(self)
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"choose_avatar_for_you", nil) message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        @strongify(self)
+        NSString *url = [TUITool randAvatarUrl];
+        @weakify(self)
+        [self.dataProvider updateGroupAvatar:url succ:^{
+            @strongify(self)
+            [self updateData];
+        } fail:^(int code, NSString *desc) {
+            [TUITool makeToast:[NSString stringWithFormat:@"%d, %@", code, desc]];
+        }];
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:ac animated:YES completion:nil];
 }
 
 #pragma mark TUIGroupMembersCellDelegate

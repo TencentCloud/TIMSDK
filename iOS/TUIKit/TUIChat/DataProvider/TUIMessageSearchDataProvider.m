@@ -101,15 +101,20 @@
         self.msgForOlderGet = results.firstObject;
         self.msgForNewerGet = results.lastObject;
         
-        
+        @weakify(self)
         dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self)
             [self.heightCache_ removeAllObjects];
             [self.uiMsgs_ removeAllObjects];
             
             NSMutableArray *uiMsgs = [self transUIMsgFromIMMsg:results.reverseObjectEnumerator.allObjects];
-            [self.uiMsgs_ addObjectsFromArray:uiMsgs];
+            @weakify(self)
+            [self preProcessReplyMessage:uiMsgs callback:^{
+                @strongify(self)
+                [self.uiMsgs_ addObjectsFromArray:uiMsgs];
+                SucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.uiMsgs_);
+            }];
             
-            SucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.uiMsgs_);
         });
     });
 }
@@ -126,7 +131,7 @@
     V2TIMMessageListGetOption *option = [[V2TIMMessageListGetOption alloc] init];
     option.userID = conversation.userID;
     option.groupID = conversation.groupID;
-    option.getType = orderType ? V2TIM_GET_LOCAL_OLDER_MSG : V2TIM_GET_LOCAL_NEWER_MSG;
+    option.getType = orderType ? V2TIM_GET_CLOUD_OLDER_MSG : V2TIM_GET_CLOUD_NEWER_MSG;
     option.count = requestCount;
     option.lastMsg = orderType ? self.msgForOlderGet : self.msgForNewerGet;
     @weakify(self);
@@ -138,6 +143,8 @@
         }
         
         // 更新lastMsg标志位
+        // -- 当前是从最新的时间点开始往旧的方向拉取
+        BOOL isLastest = (self.msgForNewerGet == nil) && (self.msgForOlderGet == nil) && orderType;
         if (msgs.count != 0) {
             if (orderType) {
                 self.msgForOlderGet = msgs.lastObject;
@@ -161,21 +168,31 @@
             }
         }
         
-        // 转换数据
-        NSMutableArray<TUIMessageCellData *> *uiMsgs = [self transUIMsgFromIMMsg:msgs];
-        
-        if (orderType) {
-            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
-            [self.uiMsgs_ insertObjects:uiMsgs atIndexes:indexSet];
-        } else {
-            [self.uiMsgs_ addObjectsFromArray:uiMsgs];
+        if (isLastest) {
+            // 当前是从最新的时间点往旧的方向拉取
+            self.isNewerNoMoreMsg = YES;
         }
         
-        // 回调
-        SucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.isFirstLoad, uiMsgs);
+        // 转换数据
+        @weakify(self)
+        NSMutableArray<TUIMessageCellData *> *uiMsgs = [self transUIMsgFromIMMsg:msgs];
+        [self preProcessReplyMessage:uiMsgs callback:^{
+            @strongify(self)
+            
+            if (orderType) {
+                NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
+                [self.uiMsgs_ insertObjects:uiMsgs atIndexes:indexSet];
+            } else {
+                [self.uiMsgs_ addObjectsFromArray:uiMsgs];
+            }
+            
+            // 回调
+            SucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.isFirstLoad, uiMsgs);
+            
+            self.isLoadingData = NO;
+            self.isFirstLoad = NO;
+        }];
         
-        self.isLoadingData = NO;
-        self.isFirstLoad = NO;
 
     } fail:^(int code, NSString *desc) {
         self.isLoadingData = NO;
@@ -189,6 +206,20 @@
     self.isFirstLoad = YES;
     self.msgForNewerGet = nil;
     self.msgForOlderGet = nil;
+}
+
+- (void)findMessages:(NSArray<NSString *> *)msgIDs callback:(void(^)(BOOL success, NSString *desc, NSArray<V2TIMMessage *> *messages))callback
+{
+    
+    [V2TIMManager.sharedInstance findMessages:msgIDs succ:^(NSArray<V2TIMMessage *> *msgs) {
+        if (callback) {
+            callback(YES, @"", msgs);
+        }
+    } fail:^(int code, NSString *desc) {
+        if (callback) {
+            callback(NO, desc, nil);
+        }
+    }];
 }
 
 #pragma mark - Override
