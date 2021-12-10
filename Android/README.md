@@ -76,7 +76,7 @@ api project(':tuicalling')
 ```
 这样，就不再集成音视频通话功能，聊天页面的更多输入界面就不再出现音视频通话按钮：
 
-<img src="https://im.sdk.cloud.tencent.cn/tools/resource/chat_no_voice.png" width="500"/>
+<img src="https://qcloudimg.tencent-cloud.cn/raw/b1298323048c32ebfcedf8a929059466.jpg" width="500"/>
 
 ## 步骤6：编译运行（移除搜索模块）
 如果您不需要搜索功能，那么只需要在 `app 模块` 的 `build.gradle` 文件中删除下面一行即可：
@@ -88,4 +88,4 @@ api project(':tuisearch')
 ```
 这样在会话列表界面就不会出现搜索框，如下图所示：
 
-<img src="https://im.sdk.cloud.tencent.cn/tools/resource/conversation_no_search.png" width="500"/>
+<img src="https://qcloudimg.tencent-cloud.cn/raw/b8cb53196326dc6e68f5ca1d210a28bf.jpg" width="500"/>
