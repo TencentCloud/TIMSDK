@@ -65,12 +65,6 @@
 			}
 		}
 	],
-	"plugins": {
-		"myPlugin": {
-			"version": "1.0.0",
-			"provider": "wx649acbec87e200b4"
-		}
-	},
 	"tabBar": {
 		"list": [
 			{

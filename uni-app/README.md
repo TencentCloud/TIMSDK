@@ -63,6 +63,9 @@ git clone https://github.com/tencentyun/TIMSDK.git
 
 # 进入 uni-app TUIKit 项目
 cd TIMSDK/uni-app/TUIKit
+
+# 安装依赖
+npm install
 ```
 
 2. 将 uni-app 中 TUIKit 工程文件，导入自己的 HBuilderX 工程（版本3.2.11.20211021-alpha）。
