@@ -1,6 +1,5 @@
 import dayjs from '../../base/dayjs';
 import logger from '../../../utils/logger';
-// eslint-disable-next-line no-undef
 const app = getApp();
 // eslint-disable-next-line no-undef
 Component({
