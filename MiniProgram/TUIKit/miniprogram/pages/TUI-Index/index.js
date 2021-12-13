@@ -1,7 +1,9 @@
 // miniprogram/pages/TUI-Index/TUI-create.js
-import logger from '../../utils/logger'
+import logger from '../../utils/logger';
 
-const app = getApp()
+// eslint-disable-next-line no-undef
+const app = getApp();
+// eslint-disable-next-line no-undef
 Page({
 
   /**
@@ -21,30 +23,30 @@ Page({
   onLoad() {
   },
   onShow() {
-    logger.log(`| TUI-Index | onshow | login |userSig:${app.globalData.userInfo.userSig} userID:${app.globalData.userInfo.userID}`)
+    logger.log(`| TUI-Index | onshow | login |userSig:${app.globalData.userInfo.userSig} userID:${app.globalData.userInfo.userID}`);
     wx.$TUIKit.login({
       userID: app.globalData.userInfo.userID,
       userSig: app.globalData.userInfo.userSig,
     }).then(() => {
     })
       .catch(() => {
-      })
+      });
   },
   handleOnPageNavigate(event) {
-    const tab = event.currentTarget.dataset.item
+    const tab = event.currentTarget.dataset.item;
     if (!tab.url) {
       wx.navigateToMiniProgram({
         appId: 'wx3b91b7aaa809ecf9',
-      })
+      });
     } else {
       wx.navigateTo({
         url: tab.url,
-      })
+      });
     }
   },
   learnMore() {
     wx.navigateTo({
       url: '../TUI-User-Center/webview/webview?url=https://cloud.tencent.com/product/im',
-    })
+    });
   },
-})
+});

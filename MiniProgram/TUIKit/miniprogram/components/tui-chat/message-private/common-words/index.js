@@ -9,8 +9,9 @@ const commonWordsList = [
   '物流一直显示正在揽收',
   '问题A',
   '问题B',
-]
+];
 
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -22,7 +23,7 @@ Component({
       observer(newVal) {
         this.setData({
           displayTag: newVal,
-        })
+        });
       },
     },
   },
@@ -43,25 +44,25 @@ Component({
     handleClose() {
       this.triggerEvent('close', {
         key: '0',
-      })
+      });
     },
     wordsInput(e) {
       this.data.commonWordsMatch = [],
       commonWordsList.forEach((item) => {
         if (item.indexOf(e.detail.value) > -1) {
-          this.data.commonWordsMatch.push(item)
+          this.data.commonWordsMatch.push(item);
         }
-      })
+      });
       this.setData({
         words: e.detail.value,
         commonWordsMatch: this.data.commonWordsMatch,
-      })
+      });
     },
     sendMessage(e) {
       this.triggerEvent('sendMessage', {
         message: e.currentTarget.dataset.words,
-      })
+      });
     },
 
   },
-})
+});

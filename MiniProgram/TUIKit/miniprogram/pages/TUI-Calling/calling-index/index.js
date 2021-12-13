@@ -1,4 +1,5 @@
 // room.js
+// eslint-disable-next-line no-undef
 Page({
   data: {
     entryInfos: [
@@ -11,10 +12,10 @@ Page({
 
   },
   handleEntry(e) {
-    const url = this.data.entryInfos[e.currentTarget.id].navigateTo
+    const url = this.data.entryInfos[e.currentTarget.id].navigateTo;
     wx.navigateTo({
       url,
-    })
+    });
   },
 
   onShow() {
@@ -24,6 +25,6 @@ Page({
   onBack() {
     wx.navigateBack({
       delta: 1,
-    })
+    });
   },
-})
+});

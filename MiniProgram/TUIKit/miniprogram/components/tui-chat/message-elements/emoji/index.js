@@ -1,4 +1,5 @@
-import { emojiName, emojiUrl, emojiMap } from '../../../base/emojiMap'
+import { emojiName, emojiUrl, emojiMap } from '../../../base/emojiMap';
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -20,11 +21,11 @@ Component({
         this.data.emojiList.push({
           emojiName: emojiName[i],
           url: emojiUrl + emojiMap[emojiName[i]],
-        })
+        });
       }
       this.setData({
         emojiList: this.data.emojiList,
-      })
+      });
     },
   },
 
@@ -35,7 +36,7 @@ Component({
     handleEnterEmoji(event) {
       this.triggerEvent('enterEmoji', {
         message: event.currentTarget.dataset.name,
-      })
+      });
     },
   },
-})
+});

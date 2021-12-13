@@ -1,4 +1,5 @@
-import { parseImage } from '../../../base/message-facade'
+import { parseImage } from '../../../base/message-facade';
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -6,12 +7,12 @@ Component({
   properties: {
     message: {
       type: Object,
-      value: '',
+      value: {},
       observer(newVal) {
         this.setData({
           renderDom: parseImage(newVal),
           percent: newVal.percent,
-        })
+        });
       },
     },
     isMine: {
@@ -26,6 +27,7 @@ Component({
   data: {
     renderDom: [],
     percent: 0,
+    showSave: false,
   },
 
   /**
@@ -36,7 +38,17 @@ Component({
       wx.previewImage({
         current: this.data.renderDom[0].src, // 当前显示图片的http链接
         urls: [this.data.renderDom[0].src],
-      })
+        success: () => {
+          this.setData({
+            showSave: true,
+          });
+        },
+        complete: () => {
+          this.setData({
+            showSave: false,
+          });
+        },
+      });
     },
   },
-})
+});

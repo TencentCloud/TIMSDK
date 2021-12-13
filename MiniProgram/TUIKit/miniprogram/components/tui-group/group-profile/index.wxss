@@ -290,16 +290,40 @@ flex: 1;
   border-radius: 4px;
   border-radius: 4px;
 }
+.groupownername-box {
+  display: flex
+}
+.groupownername {
+     margin-top: 10px;
+    display: inline-block;
+    font-family: PingFangSC-Regular;
+    font-size: 10px;
+    color: white;
+    letter-spacing: 0;
+    white-space: nowrap;
+    width: 80rpx;
+}
 .groupmembername{
   display: inline-block;
   font-family: PingFangSC-Regular;
   font-size: 12px;
   color: #999999;
   letter-spacing: 0;
-  padding-left: 32rpx;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  width: 80rpx;
+}
+.groupowner-box {
+  display: flex;
+}
+.groupownername-bootom {
+    display: inline-block;
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #999999;
+  letter-spacing: 0;
+  white-space: nowrap;
   width: 80rpx;
 }
 .text-box-qiut{
@@ -314,4 +338,10 @@ flex: 1;
   align-items: center;
   height: 112rpx;
   border-top: 16rpx solid #eeeeee ;
+}
+.moremember{
+  width: 108rpx;
+  height: 140rpx;
+  padding-left: 32rpx;
+  padding-top: 32rpx;
 }

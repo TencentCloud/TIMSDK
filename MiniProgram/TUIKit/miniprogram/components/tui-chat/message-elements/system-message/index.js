@@ -1,5 +1,6 @@
-import { parseGroupSystemNotice } from '../../../base/message-facade'
-import { caculateTimeago } from '../../../base/common'
+import { parseGroupSystemNotice } from '../../../base/message-facade';
+import { caculateTimeago } from '../../../base/common';
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -7,13 +8,13 @@ Component({
   properties: {
     message: {
       type: Object,
-      value: '',
+      value: {},
       observer(newVal) {
         this.setData({
           message: newVal,
           messageTime: caculateTimeago(newVal.time * 1000),
           renderDom: parseGroupSystemNotice(newVal),
-        })
+        });
       },
     },
   },
@@ -42,37 +43,37 @@ Component({
     handleClick() {
       wx.showActionSheet({
         itemList: ['同意', '拒绝'],
-        success: res => {
+        success: (res) => {
           this.triggerEvent('changeSystemMessageList', {
             message: this.data.message,
-          })
+          });
           const option = {
             handleAction: 'Agree',
             handleMessage: '欢迎进群',
             message: this.data.message,
-          }
+          };
           if (res.tapIndex === 1) {
             this.triggerEvent('changeSystemMessageList', {
               message: this.data.message,
-            })
-            option.handleAction = 'Reject'
-            option.handleMessage = '拒绝申请'
+            });
+            option.handleAction = 'Reject';
+            option.handleMessage = '拒绝申请';
           }
           wx.$TUIKit.handleGroupApplication(option)
             .then(() => {
-              wx.showToast({ title: option.handleAction === 'Agree' ? '已同意申请' : '已拒绝申请' })
+              wx.showToast({ title: option.handleAction === 'Agree' ? '已同意申请' : '已拒绝申请' });
             })
             .catch((error) => {
               wx.showToast({
                 title: error.message || '处理失败',
                 icon: 'none',
-              })
-            })
+              });
+            });
         },
-      })
+      });
     },
 
   },
 
 
-})
+});

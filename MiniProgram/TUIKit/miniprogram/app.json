@@ -8,6 +8,7 @@
     "pages/TUI-User-Center/mine/mine",
     "pages/TUI-User-Center/about/about",
     "pages/TUI-User-Center/personal/personal",
+    "pages/TUI-User-Center/cancel/cancel",
     "pages/TUI-User-Center/webview/webview",
     "pages/TUI-Calling/calling-index/index",
     "pages/TUI-Calling/calling-room/room",

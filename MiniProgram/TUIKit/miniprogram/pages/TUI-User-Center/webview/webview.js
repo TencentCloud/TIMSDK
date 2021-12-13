@@ -1,4 +1,5 @@
 // miniprogram/webview/webview.js
+// eslint-disable-next-line no-undef
 Page({
   /**
    * 页面的初始数据
@@ -16,7 +17,7 @@ Page({
     this.setData({
       url: options.url,
       title: options.nav,
-    })
+    });
   },
 
   /**
@@ -67,4 +68,4 @@ Page({
   onShareAppMessage() {
 
   },
-})
+});

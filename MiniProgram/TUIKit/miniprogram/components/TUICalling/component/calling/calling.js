@@ -1,4 +1,5 @@
 // components/tui-calling/TUICalling/component/calling.js
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -34,48 +35,48 @@ Component({
       const data = {
         name: 'accept',
         event,
-      }
-      this.triggerEvent('callingEvent', data)
+      };
+      this.triggerEvent('callingEvent', data);
     },
     hangup(event) {
       const data = {
         name: 'hangup',
         event,
-      }
-      this.triggerEvent('callingEvent', data)
+      };
+      this.triggerEvent('callingEvent', data);
     },
     reject(event) {
       const data = {
         name: 'reject',
         event,
-      }
-      this.triggerEvent('callingEvent', data)
+      };
+      this.triggerEvent('callingEvent', data);
     },
     handleErrorImage(e) {
-      const { id } = e.target
-      const remoteUsers = this.data.remoteUsers.map((item)=>{
+      const { id } = e.target;
+      const remoteUsers = this.data.remoteUsers.map((item) => {
         if (item.userID === id) {
-          item.avatar = '../../static/default_avatar.png'
+          item.avatar = '../../static/default_avatar.png';
         }
-        return item
-      })
+        return item;
+      });
       this.setData({
-        remoteUsers
-      })
+        remoteUsers,
+      });
     },
     toggleSwitchCamera(event) {
       const data = {
         name: 'toggleSwitchCamera',
         event,
-      }
-      this.triggerEvent('callingEvent', data)
+      };
+      this.triggerEvent('callingEvent', data);
     },
     switchAudioCall(event) {
       const data = {
         name: 'switchAudioCall',
         event,
-      }
-      this.triggerEvent('callingEvent', data)
+      };
+      this.triggerEvent('callingEvent', data);
     },
   },
-})
+});
