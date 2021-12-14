@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -9,7 +10,7 @@ Component({
       observer(newVal) {
         this.setData({
           displayTag: newVal,
-        })
+        });
       },
     },
   },
@@ -31,21 +32,21 @@ Component({
     handleClose() {
       this.triggerEvent('close', {
         key: '2',
-      })
+      });
     },
     handleScore(e) {
-      let { score } = e.currentTarget.dataset
+      let { score } = e.currentTarget.dataset;
       if (score === this.data.score) {
-        score = 0
+        score = 0;
       }
       this.setData({
         score,
-      })
+      });
     },
     bindTextAreaInput(e) {
       this.setData({
         comment: e.detail.value,
-      })
+      });
     },
     sendMessage() {
       this.triggerEvent('sendCustomMessage', {
@@ -58,13 +59,13 @@ Component({
             comment: this.data.comment,
           }),
         },
-      })
+      });
 
       this.setData({
         score: 0,
         comment: '',
-      })
-      this.handleClose()
+      });
+      this.handleClose();
     },
   },
 
@@ -73,7 +74,7 @@ Component({
       this.setData({
         score: 0,
         comment: '',
-      })
+      });
     },
   },
-})
+});

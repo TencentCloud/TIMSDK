@@ -15,8 +15,9 @@ const orderList = [
     imageUrl: 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/miles.jpeg',
     price: '7000元',
   },
-]
+];
 
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -28,7 +29,7 @@ Component({
       observer(newVal) {
         this.setData({
           displayTag: newVal,
-        })
+        });
       },
     },
     conversation: {
@@ -37,7 +38,7 @@ Component({
       observer(newVal) {
         this.setData({
           conversation: newVal,
-        })
+        });
       },
     },
   },
@@ -58,22 +59,22 @@ Component({
     handleClose() {
       this.triggerEvent('close', {
         key: '1',
-      })
+      });
     },
     wordsInput(e) {
       this.data.orderMatch = [],
       orderList.forEach((item) => {
         if (item.title.indexOf(e.detail.value) > -1 || item.orderNum === ~~e.detail.value) {
-          this.data.orderMatch.push(item)
+          this.data.orderMatch.push(item);
         }
-      })
+      });
       this.setData({
         words: e.detail.value,
         orderMatch: this.data.orderMatch,
-      })
+      });
     },
     sendMessage(e) {
-      const { order } = e.currentTarget.dataset
+      const { order } = e.currentTarget.dataset;
       this.triggerEvent('sendCustomMessage', { // 传递给父组件，在父组件处调用SDK的接口，来进行自定消息的发送
         payload: {
           data: 'order', // data字段用于标识该消息类型
@@ -83,7 +84,7 @@ Component({
             imageUrl: order.imageUrl,
             price: order.price }), // 自定义消息的具体内容
         },
-      })
+      });
     },
   },
-})
+});

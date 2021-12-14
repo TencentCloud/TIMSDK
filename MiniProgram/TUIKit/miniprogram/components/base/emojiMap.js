@@ -1,4 +1,4 @@
-export const emojiUrl = 'https://web.sdk.qcloud.com/im/assets/emoji/'
+export const emojiUrl = 'https://web.sdk.qcloud.com/im/assets/emoji/';
 export const emojiMap = {
   '[NO]': 'emoji_0@2x.png',
   '[OK]': 'emoji_1@2x.png',
@@ -142,7 +142,7 @@ export const emojiMap = {
   '[麻将]': 'emoji_139@2x.png',
   '[鼓掌]': 'emoji_140@2x.png',
   '[龇牙]': 'emoji_141@2x.png',
-}
+};
 export const emojiName = [
   '[龇牙]',
   '[调皮]',
@@ -283,4 +283,4 @@ export const emojiName = [
   '[纸巾]',
   '[手枪]',
   '[青蛙]',
-]
+];

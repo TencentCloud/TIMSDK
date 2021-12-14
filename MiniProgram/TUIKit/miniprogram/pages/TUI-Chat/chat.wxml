@@ -6,12 +6,12 @@
     <view class="conversation-title">{{conversationName}}</view>
   </view>
   <view class="group-profile">
-    <TUI-group-profile id="groip-profile" wx:if="{{isShow}}" conversation="{{conversation}}"></TUI-group-profile>
+    <TUI-group-profile id="group-profile" wx:if="{{isShow}}" conversation="{{conversation}}"></TUI-group-profile>
   </view>
   <view class="message-list" bindtap="triggerClose">
-    <TUI-message-list id="message-list" conversation="{{conversation}}" unreadCount="{{unreadCount}}" bind:changeMemberCount="changeMemberCount"></TUI-message-list>
+    <TUI-message-list id="message-list" conversation="{{conversation}}" unreadCount="{{unreadCount}}" bind:changeMemberCount="changeMemberCount" bind:resendMessage="resendMessage"></TUI-message-list>
   </view>
   <view class="message-input" wx:if="{{showChat}}">
-    <TUI-message-input id="message-input" conversation="{{conversation}}" bind:sendMessage="sendMessage" bind:handleCall="handleCall"></TUI-message-input>
+    <TUI-message-input id="message-input" conversation="{{conversation}}" bind:sendMessage="sendMessage"  bind:showMessageErrorImage="showMessageErrorImage" bind:handleCall="handleCall"></TUI-message-input>
   </view>
 </view>

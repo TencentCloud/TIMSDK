@@ -20,13 +20,13 @@ export const EVENT = {
 
   HANG_UP: 'HANG_UP',
   ERROR: 'ERROR', // 组件内部抛出的错误
-}
+};
 
 export const CALL_STATUS = {
   IDLE: 'idle',
   CALLING: 'calling',
   CONNECTED: 'connected',
-}
+};
 
 export const ACTION_TYPE = {
   INVITE: 1, // 邀请方发起邀请
@@ -34,21 +34,21 @@ export const ACTION_TYPE = {
   ACCEPT_INVITE: 3, // 被邀请方同意邀请
   REJECT_INVITE: 4, // 被邀请方拒绝邀请
   INVITE_TIMEOUT: 5, // 被邀请方超时未回复
-}
+};
 
 export const BUSINESS_ID = {
   SIGNAL: 1, // 信令
-}
+};
 
 export const CALL_TYPE = {
   AUDIO: 1,
   VIDEO: 2,
-}
+};
 
-export const CMD_TYPE_LIST = ['', 'audioCall', 'videoCall']
+export const CMD_TYPE_LIST = ['', 'audioCall', 'videoCall'];
 
 // audio视频切音频；video：音频切视频
 export const MODE_TYPE = {
   AUDIO: 'audio',
   VIDEO: 'video',
-}
+};

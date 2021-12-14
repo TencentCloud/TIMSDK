@@ -84,7 +84,6 @@
     position: absolute;
     top: -25px;
     left: 65px;
-    width: 100rpx;
     background: black;
     padding-right: 3px;
     padding-left: 3px;
@@ -99,7 +98,7 @@
     border-width: 20px;
     position: absolute;
     bottom: -27px;
-    left:  14px;
+    left:  8px;
     border-style: solid dashed dashed;
     border-color: black transparent transparent;
     font-size: 0;
@@ -136,7 +135,7 @@
     border-width: 20px;
     position: absolute;
     bottom: -27px;
-    left: 30px;
+    left: 55px;
     border-style: solid dashed dashed;
     border-color: black transparent transparent;
     font-size: 0;
@@ -163,6 +162,10 @@
   font-size: 14px;
   color: white; 
 }
+.copymessage{
+  font-size: 14px;
+  color: white; 
+}
 .notice{
   display: flex;
   justify-content: center;
@@ -171,7 +174,6 @@
     background-color:white;
     border-radius: 8px;
     font-size: 14px;
-    color: blue;
     padding: 6px 8px;
   }
 .new-message-item{
@@ -223,4 +225,35 @@
   font-size: 14px;
   color: white;
   padding: 2px;
+}
+.time-self-body{
+  position: absolute;
+  top: -14px;
+  right: 67px;
+}
+.time-recieve-body{
+  position: absolute;
+  top: -13px;
+  left: 65px;
+}
+.time{
+  font-size: 26rpx;
+  color: #333333;
+}
+.t-message-error-box{
+  display: flex;
+  align-items: center;
+  padding-right: 6px;
+}
+.t-message-error{
+  width: 16px;
+  height: 16px;
+}
+.showmessagetime{
+  display: flex;
+  justify-content: center;
+}
+.rewrite{
+  padding-left: 5px;
+  color: blue;
 }

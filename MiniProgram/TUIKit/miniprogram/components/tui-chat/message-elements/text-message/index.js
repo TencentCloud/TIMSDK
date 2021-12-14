@@ -1,4 +1,5 @@
-import { parseText } from '../../../base/message-facade.js'
+import { parseText } from '../../../base/message-facade.js';
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -6,11 +7,11 @@ Component({
   properties: {
     message: {
       type: Object,
-      value: '',
+      value: {},
       observer(newVal) {
         this.setData({
           renderDom: parseText(newVal),
-        })
+        });
       },
     },
     isMine: {
@@ -39,4 +40,4 @@ Component({
   methods: {
 
   },
-})
+});

@@ -1,4 +1,7 @@
-const app = getApp()
+import { genTestUserSig } from '../../../debug/GenerateTestUserSig';
+// eslint-disable-next-line no-undef
+const app = getApp();
+// eslint-disable-next-line no-undef
 Page({
 
   /**
@@ -28,22 +31,21 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    const { config } = this.data
-    config.sdkAppID = app.globalData.SDKAppID
-    config.userID = app.globalData.userInfo.userID
-    config.userSig = app.globalData.userInfo.userSig
-    config.phone = app.globalData.phone
-    config.type = Number(options.type)
-    config.tim = wx.$TUIKit
+    const { config } = this.data;
+    config.sdkAppID = app.globalData.SDKAppID;
+    config.userID = app.globalData.userInfo.userID;
+    config.userSig = genTestUserSig(config.userID).userSig;
+    config.type = Number(options.type);
+    config.tim = wx.$TUIKit;
 
     this.setData({
       params: { ...this.data.params, ...options },
       title: config.type === 1 ? '语音通话' : '视频通话',
       config,
     }, () => {
-      this.TRTCCalling = this.selectComponent('#TRTCCalling-component')
-      this.TRTCCalling.init()
-    })
+      this.TRTCCalling = this.selectComponent('#TRTCCalling-component');
+      this.TRTCCalling.init();
+    });
   },
 
   /**
@@ -71,7 +73,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload() {
-    this.TRTCCalling.destroyed()
+    this.TRTCCalling.destroyed();
   },
 
   /**
@@ -99,50 +101,50 @@ Page({
     if (this.data.config.userID === this.data.remoteUserInfo.userID) {
       wx.showToast({
         title: '不可呼叫本机',
-      })
-      return
+      });
+      return;
     }
-    console.log(this.data.remoteUserInfo)
-    this.TRTCCalling.call({ userID: this.data.remoteUserInfo.userID, type: ~~this.data.params.type })
+    console.log(this.data.remoteUserInfo);
+    this.TRTCCalling.call({ userID: this.data.remoteUserInfo.userID, type: ~~this.data.params.type });
   },
 
   // 搜索input
   userIDToSearchInput(e) {
     if (!e.detail.value) {
-      this.data.searchResultShow = false
+      this.data.searchResultShow = false;
     }
     this.setData({
       searchResultShow: this.data.searchResultShow,
       userID: e.detail.value,
-    })
+    });
   },
 
   // 搜素
   searchUser() {
     if (!this.data.userID) {
-      return
+      return;
     }
 
     wx.$TUIKit.getUserProfile({ userIDList: [this.data.userID] }).then((imResponse) => {
       this.setData({
         remoteUserInfo: { ...imResponse.data[0] },
         searchResultShow: true,
-      })
-    })
+      });
+    });
   },
   // 返回
   onBack() {
     wx.navigateBack({
       delta: 1,
-    })
-    this.TRTCCalling.destroyed()
+    });
+    this.TRTCCalling.destroyed();
   },
   // 图像解析不出来的缺省图设置
   handleErrorImage() {
-    const { remoteUserInfo } = this.data
-    remoteUserInfo.avatar = 'https://web.sdk.qcloud.com/component/miniApp/resources/avatar2_100.png'
+    const { remoteUserInfo } = this.data;
+    remoteUserInfo.avatar = 'https://web.sdk.qcloud.com/component/miniApp/resources/avatar2_100.png';
     this.setData({
       remoteUserInfo,
-    })
+    });
   },
-})
+});

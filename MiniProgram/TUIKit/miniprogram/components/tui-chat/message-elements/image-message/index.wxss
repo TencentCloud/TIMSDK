@@ -11,3 +11,10 @@
   height: 300rpx;
   border-radius: 10px 10px 10px 10px;
 }
+.big-image {
+  width: 100vw;
+  height: 100vh;
+  position: fix;
+  top: 0;
+  left: 0;
+}

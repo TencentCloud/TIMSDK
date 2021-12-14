@@ -1,4 +1,5 @@
-import { parseAudio } from '../../../base/message-facade'
+import { parseAudio } from '../../../base/message-facade';
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -6,11 +7,11 @@ Component({
   properties: {
     message: {
       type: Object,
-      value: '',
+      value: {},
       observer(newVal) {
         this.setData({
           renderDom: parseAudio(newVal),
-        })
+        });
       },
     },
     isMine: {
@@ -21,13 +22,13 @@ Component({
 
   lifetimes: {
     attached() {
-      this.audio = wx.createInnerAudioContext()
+      this.audio = wx.createInnerAudioContext();
       this.audio.onPlay(() => {
-        console.log('开始播放')
-      })
+        console.log('开始播放');
+      });
       this.audio.onEnded(() => {
-        console.log('停止播放')
-      })
+        console.log('停止播放');
+      });
       // this.audio.onError(() => {
       //   // ios 音频播放无声，可能是因为系统开启了静音模式
       //   wx.showToast({
@@ -37,7 +38,7 @@ Component({
       // })
     },
     detached() {
-      this.audio.stop()
+      this.audio.stop();
     },
   },
 
@@ -57,24 +58,24 @@ Component({
     // 点击切换语音播放状态
     handlePlayAudioMessage() {
       if (this.data.isPlay === 1) {
-        this.audio.src = this.data.renderDom[0].src
-        this.audio.play()
+        this.audio.src = this.data.renderDom[0].src;
+        this.audio.play();
         this.setData({
           isPlay: 2,
           audioSrc: this.data.renderDom[0].src,
-        })
+        });
       } else if (this.data.isPlay === 2) {
-        this.audio.src = this.data.renderDom[0].src
-        this.audio.stop()
+        this.audio.src = this.data.renderDom[0].src;
+        this.audio.stop();
         this.setData({
           isPlay: 1,
-        })
+        });
       }
       if (this.data.audioSrc !== this.data.renderDom[0].src) {
-        this.audio.src = this.data.audioSrc
-        this.audio.stop()
+        this.audio.src = this.data.audioSrc;
+        this.audio.stop();
       }
     },
 
   },
-})
+});

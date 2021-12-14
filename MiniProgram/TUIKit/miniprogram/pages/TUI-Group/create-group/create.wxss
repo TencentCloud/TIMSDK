@@ -73,7 +73,7 @@
     font-size: 16px;
     color: black;
     letter-spacing: 0;
-    padding-left: 130px;
+    padding-left: 104px;
     line-height: 56px;
     z-index: 999;
 }
