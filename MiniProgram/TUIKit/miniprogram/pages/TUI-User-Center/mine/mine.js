@@ -1,5 +1,7 @@
-import logger from '../../../utils/logger'
-const app = getApp()
+import logger from '../../../utils/logger';
+// eslint-disable-next-line no-undef
+const app = getApp();
+// eslint-disable-next-line no-undef
 Page({
   data: {
     // 页面初始信息
@@ -24,59 +26,59 @@ Page({
       .then((imResponse) => {
         this.setData({
           config: imResponse.data,
-        })
-        app.globalData.userProfile = imResponse.data
+        });
+        app.globalData.userProfile = imResponse.data;
         if (imResponse.data.nick) {
           this.setData({
             hasname: false,
-          })
+          });
         }
       })
       .catch((imError) => {
-        console.warn('getMyProfile error:', imError) // 获取个人资料失败的相关信息
-      })
+        console.warn('getMyProfile error:', imError); // 获取个人资料失败的相关信息
+      });
   },
   personal() {
     // TUIKit xxxx | mine | personal | xxxx
     wx.navigateTo({
       url: '../personal/personal',
-    })
+    });
   },
   // 退出登陆
   quit() {
-    logger.log('| TUI-User-Center | mine | quit-logout ')
+    logger.log('| TUI-User-Center | mine | quit-logout ');
     wx.$TUIKit.logout().then(() => {
-      wx.clearStorage()
-      app.resetLoginData()
+      wx.clearStorage();
+      app.resetLoginData();
       wx.redirectTo({ url: '../../TUI-Login/login',
         success: () => {
           wx.showToast({
             title: '退出成功',
             icon: 'none',
-          })
+          });
         },
-      })
-    })
+      });
+    });
   },
 
 
   handleRouter(event) {
-    const data = event.currentTarget.dataset.item
+    const data = event.currentTarget.dataset.item;
     if (data.url) {
-      wx.navigateTo({ url: `${data.url}` })
+      wx.navigateTo({ url: `${data.url}` });
     } else if (data.name === '免责声明') {
       this.setData({
         popupToggle: true,
-      })
+      });
     } else {
       wx.navigateTo({
         url: `../webview/webview?url=${data.path}&nav=${data.nav}`,
-      })
+      });
     }
   },
   Agree() {
     this.setData({
       popupToggle: false,
-    })
+    });
   },
-})
+});

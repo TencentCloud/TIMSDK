@@ -6,6 +6,8 @@ import { SDKAPPID } from './debug/GenerateTestUserSig'
 App({
   onLaunch() {
     wx.setStorageSync('islogin', false)
+    const SDKAppID = this.globalData.SDKAppID
+    wx.setStorageSync(`TIM_${SDKAppID}_isTUIKit`, true)
     wx.$TUIKit = TIM.create({ SDKAppID: this.globalData.SDKAppID })
     wx.$TUIKit.registerPlugin({ 'tim-upload-plugin': TIMUploadPlugin })
     wx.$TUIKitTIM = TIM
@@ -43,6 +45,7 @@ App({
   globalData: {
     // userInfo: userID userSig token phone
     userInfo: null,
+    isTUIKit: true,
     // 个人信息
     userProfile: null,
     headerHeight: 0,

@@ -1,4 +1,5 @@
-import { parseGroupTip } from '../../../base/message-facade.js'
+import { parseGroupTip } from '../../../base/message-facade.js';
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -6,11 +7,11 @@ Component({
   properties: {
     message: {
       type: Object,
-      value: '',
+      value: {},
       observer(newVal) {
         this.setData({
           renderDom: parseGroupTip(newVal),
-        })
+        });
       },
     },
   },
@@ -35,4 +36,4 @@ Component({
   methods: {
 
   },
-})
+});

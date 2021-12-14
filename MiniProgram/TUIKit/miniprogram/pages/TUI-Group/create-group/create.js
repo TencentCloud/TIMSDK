@@ -1,6 +1,7 @@
 // miniprogram/pages/TUI-Group/create-group/create.js
-import logger from '../../../utils/logger'
+import logger from '../../../utils/logger';
 
+// eslint-disable-next-line no-undef
 Page({
 
   /**
@@ -25,21 +26,21 @@ Page({
   showGroupTypeList() {
     this.setData({
       popupToggle: true,
-    })
+    });
   },
   // 获取输入的群ID
   bindGroupIDInput(e) {
-    const id = e.detail.value
+    const id = e.detail.value;
     this.setData({
       groupID: id,
-    })
+    });
   },
   // 获取输入的群名称
   bindGroupNameInput(e) {
-    const groupname = e.detail.value
+    const groupname = e.detail.value;
     this.setData({
       name: groupname,
-    })
+    });
   },
   // 创建群聊时，传点击事件对应的值
   click(e) {
@@ -48,35 +49,35 @@ Page({
       Type: e.currentTarget.dataset.value.Type,
       name: e.currentTarget.dataset.value.name,
       popupToggle: false,
-    })
+    });
   },
   // 确认创建群聊
   bindConfirmCreate() {
-    logger.log(`| TUI-Group | create-group | bindConfirmCreate | groupID: ${this.data.groupID}`)
+    logger.log(`| TUI-Group | create-group | bindConfirmCreate | groupID: ${this.data.groupID}`);
     const promise =  wx.$TUIKit.createGroup({
       type: this.data.Type,
       name: this.data.name,
       groupID: this.data.groupID,
-    })
+    });
     promise.then((imResponse) => { // 创建成功
       // 创建的群的资料
       const payloadData = {
         conversationID: `GROUP${imResponse.data.group.groupID}`,
-      }
+      };
       wx.navigateTo({
         url: `../../TUI-Chat/chat?conversationInfomation=${JSON.stringify(payloadData)}`,
-      })
+      });
     }).catch(() => {
       wx.showToast({
         title: '该群组ID被使用，请更换群ID',
         icon: 'none',
-      })
-    })
+      });
+    });
   },
   // 点击空白区域关闭弹窗
   handleChooseToggle() {
     this.setData({
       popupToggle: false,
-    })
+    });
   },
-})
+});

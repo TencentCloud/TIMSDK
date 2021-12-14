@@ -1,3 +1,5 @@
+import logger from '../../../utils/logger';
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -9,7 +11,7 @@ Component({
       observer(newVal) {
         this.setData({
           conversation: newVal,
-        })
+        });
       },
     },
   },
@@ -39,20 +41,21 @@ Component({
       { name: '服务评价', key: '2' },
     ],
     displayServiceEvaluation: false,
+    showErrorImageFlag: 0,
   },
 
   lifetimes: {
     attached() {
       // 加载声音录制管理器
-      this.recorderManager = wx.getRecorderManager()
+      this.recorderManager = wx.getRecorderManager();
       this.recorderManager.onStop((res) => {
-        wx.hideLoading()
+        wx.hideLoading();
         if (this.data.canSend) {
           if (res.duration < 1000) {
             wx.showToast({
               title: '录音时间太短',
               icon: 'none',
-            })
+            });
           } else {
             // res.tempFilePath 存储录音文件的临时路径
             const message = wx.$TUIKit.createAudioMessage({
@@ -61,8 +64,8 @@ Component({
               payload: {
                 file: res,
               },
-            })
-            this.$sendTIMMessage(message)
+            });
+            this.$sendTIMMessage(message);
           }
         }
         this.setData({
@@ -72,10 +75,9 @@ Component({
           canSend: true,
           title: ' ',
           text: '按住说话',
-        })
-      })
+        });
+      });
     },
-
   },
 
   /**
@@ -87,7 +89,7 @@ Component({
       this.setData({
         isAudio: !this.data.isAudio,
         text: '按住说话',
-      })
+      });
     },
     // 长按录音
     handleLongPress(e) {
@@ -97,7 +99,7 @@ Component({
         numberOfChannels: 1, // 录音通道数
         encodeBitRate: 192000, // 编码码率
         format: 'aac', // 音频格式，选择此格式创建的音频消息，可以在即时通信 IM 全平台（Android、iOS、微信小程序和Web）互通
-      })
+      });
       this.setData({
         startPoint: e.touches[0],
         title: '正在录音',
@@ -107,7 +109,7 @@ Component({
         isShow: false,
         isRecording: true,
         popupToggle: true,
-      })
+      });
     },
 
     // 录音时的手势上划移动距离对应文案变化
@@ -118,19 +120,19 @@ Component({
             text: '抬起停止',
             title: '松开手指，取消发送',
             canSend: false,
-          })
+          });
         } else if (this.data.startPoint.clientY - e.touches[e.touches.length - 1].clientY > 20) {
           this.setData({
             text: '抬起停止',
             title: '上划可取消',
             canSend: true,
-          })
+          });
         } else {
           this.setData({
             text: '抬起停止',
             title: '正在录音',
             canSend: true,
-          })
+          });
         }
       }
     },
@@ -140,40 +142,40 @@ Component({
         isRecording: false,
         popupToggle: false,
 
-      })
-      wx.hideLoading()
-      this.recorderManager.stop()
+      });
+      wx.hideLoading();
+      this.recorderManager.stop();
     },
     // 选中表情消息
     handleEmoji() {
-      let targetFlag = 'emoji'
+      let targetFlag = 'emoji';
       if (this.data.displayFlag === 'emoji') {
-        targetFlag = ''
+        targetFlag = '';
       }
       this.setData({
         displayFlag: targetFlag,
-      })
+      });
     },
     // 选自定义消息
     handleExtensions() {
-      let targetFlag = 'extension'
+      let targetFlag = 'extension';
       if (this.data.displayFlag === 'extension') {
-        targetFlag = ''
+        targetFlag = '';
       }
       this.setData({
         displayFlag: targetFlag,
-      })
+      });
     },
 
     error(e) {
-      console.log(e.detail)
+      console.log(e.detail);
     },
 
     handleSendPicture() {
-      this.sendImageMessage('camera')
+      this.sendImageMessage('camera');
     },
     handleSendImage() {
-      this.sendImageMessage('album')
+      this.sendImageMessage('album');
     },
     sendImageMessage(type) {
       wx.chooseImage({
@@ -187,20 +189,20 @@ Component({
               payload: {
                 file: res,
               },
-              onProgress: percent => {
-                message.percent = percent
+              onProgress: (percent) => {
+                message.percent = percent;
               },
-            })
-            this.$sendTIMMessage(message)
+            });
+            this.$sendTIMMessage(message);
           }
         },
-      })
+      });
     },
     handleShootVideo() {
-      this.sendVideoMessage('camera')
+      this.sendVideoMessage('camera');
     },
     handleSendVideo() {
-      this.sendVideoMessage('album')
+      this.sendVideoMessage('album');
     },
     sendVideoMessage(type) {
       wx.chooseVideo({
@@ -215,58 +217,58 @@ Component({
               payload: {
                 file: res,
               },
-              onProgress: percent => {
-                message.percent = percent
+              onProgress: (percent) => {
+                message.percent = percent;
               },
-            })
-            this.$sendTIMMessage(message)
+            });
+            this.$sendTIMMessage(message);
           }
         },
-      })
+      });
     },
     handleCommonFunctions(e) {
       switch (e.target.dataset.function.key) {
         case '0':
           this.setData({
             displayCommonWords: true,
-          })
-          break
+          });
+          break;
         case '1':
           this.setData({
             displayOrderList: true,
-          })
-          break
+          });
+          break;
         case '2':
           this.setData({
             displayServiceEvaluation: true,
-          })
-          break
+          });
+          break;
         default:
-          break
+          break;
       }
     },
     handleSendOrder() {
       this.setData({
         displayOrderList: true,
-      })
+      });
     },
     appendMessage(e) {
       this.setData({
         message: this.data.message + e.detail.message,
         sendMessageBtn: true,
-      })
+      });
     },
     getToAccount() {
       if (!this.data.conversation || !this.data.conversation.conversationID) {
-        return ''
+        return '';
       }
       switch (this.data.conversation.type) {
         case 'C2C':
-          return this.data.conversation.conversationID.replace('C2C', '')
+          return this.data.conversation.conversationID.replace('C2C', '');
         case 'GROUP':
-          return this.data.conversation.conversationID.replace('GROUP', '')
+          return this.data.conversation.conversationID.replace('GROUP', '');
         default:
-          return this.data.conversation.conversationID
+          return this.data.conversation.conversationID;
       }
     },
     handleCalling(e) {
@@ -275,56 +277,60 @@ Component({
         wx.showToast({
           title: '群聊暂不支持',
           icon: 'none',
-        })
-        return
-        
+        });
+        return;
       }
-      const type = e.currentTarget.dataset.value
-      const { userID } = this.data.conversation.userProfile
+      const type = e.currentTarget.dataset.value;
+      const { userID } = this.data.conversation.userProfile;
       this.triggerEvent('handleCall', {
         type,
         userID,
-      })
+      });
       this.setData({
         displayFlag: '',
-      })
+      });
     },
 
     sendTextMessage(msg, flag) {
-      const to = this.getToAccount()
-      const text = flag ? msg : this.data.message
+      const to = this.getToAccount();
+      const text = flag ? msg : this.data.message;
       const message = wx.$TUIKit.createTextMessage({
         to,
         conversationType: this.data.conversation.type,
         payload: {
           text,
         },
-      })
+      });
       this.setData({
         message: '',
         sendMessageBtn: false,
-      })
-      this.$sendTIMMessage(message)
+      });
+      this.$sendTIMMessage(message);
     },
 
     onInputValueChange(event) {
-      if (event.detail.value) {
+      if (event.detail.message) {
+        this.setData({
+          message: event.detail.message.payload.text,
+          sendMessageBtn: true,
+        });
+      } else if (event.detail.value) {
         this.setData({
           message: event.detail.value,
           sendMessageBtn: true,
-        })
+        });
       } else {
         this.setData({
           sendMessageBtn: false,
-        })
+        });
       }
     },
 
     $handleSendTextMessage(event) {
-      this.sendTextMessage(event.detail.message, true)
+      this.sendTextMessage(event.detail.message, true);
       this.setData({
         displayCommonWords: false,
-      })
+      });
     },
 
     $handleSendCustomMessage(e) {
@@ -332,11 +338,11 @@ Component({
         to: this.getToAccount(),
         conversationType: this.data.conversation.type,
         payload: e.detail.payload,
-      })
-      this.$sendTIMMessage(message)
+      });
+      this.$sendTIMMessage(message);
       this.setData({
         displayOrderList: false,
-      })
+      });
     },
 
     $handleCloseCards(e) {
@@ -344,46 +350,51 @@ Component({
         case '0':
           this.setData({
             displayCommonWords: false,
-          })
-          break
+          });
+          break;
         case '1':
           this.setData({
             displayOrderList: false,
-          })
-          break
+          });
+          break;
         case '2':
           this.setData({
             displayServiceEvaluation: false,
-          })
-          break
+          });
+          break;
         default:
-          break
+          break;
       }
     },
 
     $sendTIMMessage(message) {
       this.triggerEvent('sendMessage', {
         message,
-      })
+      });
       wx.$TUIKit.sendMessage(message, {
         offlinePushInfo: {
           disablePush: true,
         },
-      })
+      }).catch((error) => {
+        logger.log(`| TUI-chat | message-input | sendMessageError: ${error.code} `);
+        this.triggerEvent('showMessageErrorImage', {
+          showErrorImageFlag: error.code,
+          message,
+        });
+      });
       this.setData({
         displayFlag: '',
-      })
+      });
     },
-
     handleClose() {
       this.setData({
         displayFlag: '',
-      })
+      });
     },
     handleServiceEvaluation() {
       this.setData({
         displayServiceEvaluation: true,
-      })
+      });
     },
   },
-})
+});

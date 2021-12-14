@@ -1,6 +1,7 @@
 // miniprogram/pages/TUI-personal/personal.js'
-
-const app = getApp()
+// eslint-disable-next-line no-undef
+const app = getApp();
+// eslint-disable-next-line no-undef
 Page({
 
   /**
@@ -55,67 +56,67 @@ Page({
   onLoad() {
     this.setData({
       userInfo: app.globalData.userProfile,
-    })
+    });
     wx.setNavigationBarTitle({
       title: '个人中心',
-    })
+    });
   },
 
   bindEditInput(e) {
-    const val = e.detail.value
+    const val = e.detail.value;
     this.setData({
       nick: val ? val : '',
-    })
+    });
   },
 
   // 修改昵称确认
   handleEditSubmit() {
-    const { nick } = this.data
+    const { nick } = this.data;
     if (nick === app.globalData.userProfile.nick) {
-      return
-    };
+      return;
+    }
     this.setData({
       popupToggle: false,
-    })
+    });
     const promise = wx.$TUIKit.updateMyProfile({
       nick: this.data.nick,
-    })
+    });
     promise.then((imResponse) => {
       this.setData({
         userInfo: imResponse.data,
         popupToggle: false,
-      })
+      });
     }).catch((imError) => {
       this.setData({
         popupToggle: false,
-      })
-      console.warn('updateMyProfile error:', imError) // 更新资料失败的相关信息
-    })
+      });
+      console.warn('updateMyProfile error:', imError); // 更新资料失败的相关信息
+    });
   },
 
   handleEditToggle() {
     this.setData({
       popupToggle: !this.data.popupToggle,
       nick: this.data.userInfo.nick,
-    })
+    });
   },
 
   // 修改昵称 禁止冒泡
   handleCatchTap() {
-    return
+    return;
   },
 
   // 修改头像
   changeAvatar() {
     this.setData({
       popupToggleAvatar: true,
-    })
+    });
   },
 
   click(e) {
     this.setData({
       avatar: e.currentTarget.dataset.value.URL,
-    })
+    });
   },
   // 修改头像确认
   handleEditSubmitAvatar() {
@@ -125,19 +126,19 @@ Page({
       this.setData({
         userInfo: imResponse.data,
         popupToggleAvatar: !this.data.popupToggleAvatar,
-      })
+      });
     })
       .catch(() => {
         this.setData({
           popupToggleAvatar: !this.data.popupToggleAvatar,
-        })
-      })
+        });
+      });
   },
   handleEditToggleAvatar() {
     this.setData({
       popupToggleAvatar: !this.data.popupToggleAvatar,
       avatar: this.data.avatar,
-    })
+    });
   },
 
-})
+});

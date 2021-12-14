@@ -15,7 +15,7 @@
   <view class="item">
     <view class="nickname">
       <text class="aside-left">昵称</text>
-      <text class="aside-right" >{{personalProfile.nick}}</text>
+      <text class="aside-right" >{{personalProfile.nick?personalProfile.nick:"暂无昵称"}}</text>
     </view>
   </view>
     <view class="item">
@@ -24,10 +24,10 @@
       <text class="aside-right" >{{personalProfile.userID}}</text>
     </view>
   </view>
-    <view class="item">
+    <view class="item" wx:if="{{personalProfile.type !== 'C2C'}}">
     <view class="nickname" >
       <text class="aside-left">群名片</text>
-      <text class="aside-right" >{{personalProfile.nameCard}}</text>
+      <text class="aside-right" >{{personalProfile.nameCard?personalProfile.nameCard:"暂无群名片"}}</text>
     </view>
   </view>
 </view>

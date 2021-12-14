@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 Component({
   /**
    * 组件的属性列表
@@ -5,11 +6,11 @@ Component({
   properties: {
     message: {
       type: Object,
-      value: '',
+      value: {},
       observer(newVal) {
         this.setData({
           filePayload: newVal.payload,
-        })
+        });
       },
     },
     isMine: {
@@ -33,25 +34,25 @@ Component({
     download() {
       this.setData({
         Show: true,
-      })
+      });
     },
     downloadConfirm() {
       wx.downloadFile({
         url: this.data.filePayload.fileUrl,
         success(res) {
-          const filePath = res.tempFilePath
+          const filePath = res.tempFilePath;
           wx.openDocument({
             filePath,
             success() {
             },
-          })
+          });
         },
-      })
+      });
     },
     cancel() {
       this.setData({
         Show: false,
-      })
+      });
     },
   },
-})
+});

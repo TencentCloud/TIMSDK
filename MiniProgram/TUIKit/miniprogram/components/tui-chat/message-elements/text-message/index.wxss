@@ -1,11 +1,14 @@
 .text-message {
-  display: inline-flex;
   max-width: 60vw;
   line-height: 52rpx;
   padding: 12rpx 24rpx;
   background: #F8F8F8;
   border: 1px solid #D9D9D9;
   border-radius: 2px 10px 10px 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  white-space: pre-wrap;
 }
 .my-text {
   border-radius: 10px 2px 10px 10px;
