@@ -101,4 +101,5 @@
  *  在拉取信息成功之后，本函数会将拉取到的信息正确设置并显示在控制器视图中。
  */
 - (void)updateData;
+- (void)updateGroupInfo;
 @end

@@ -48,6 +48,10 @@
     [self.dataProvider loadData];
 }
 
+- (void)updateGroupInfo {
+    [self.dataProvider updateGroupInfo];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -328,7 +332,7 @@
         @weakify(self)
         [self.dataProvider updateGroupAvatar:url succ:^{
             @strongify(self)
-            [self updateData];
+            [self updateGroupInfo];
         } fail:^(int code, NSString *desc) {
             [TUITool makeToast:[NSString stringWithFormat:@"%d, %@", code, desc]];
         }];

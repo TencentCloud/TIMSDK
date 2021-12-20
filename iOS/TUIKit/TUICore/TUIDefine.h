@@ -218,8 +218,8 @@
 
 //more view
 #define TMoreView_Column_Count 4
-#define TMoreView_Section_Padding 30
-#define TMoreView_Margin 10
+#define TMoreView_Section_Padding 24
+#define TMoreView_Margin 20
 #define TMoreView_Page_Height 30
 
 //menu item cell
@@ -234,7 +234,7 @@
 //more item cell
 #define TMoreCell_ReuseId @"TMoreCell"
 #define TMoreCell_Margin 5
-#define TMoreCell_Image_Size CGSizeMake(70, 70)
+#define TMoreCell_Image_Size CGSizeMake(65, 65)
 #define TMoreCell_Title_Height 20
 
 //face item cell

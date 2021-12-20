@@ -105,10 +105,6 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (@available(iOS 11.0, *)) {
-        return nil;
-    }
-    
     NSMutableArray *rowActions = [NSMutableArray array];
     TUIConversationCellData *cellData = self.dataProvider.dataList[indexPath.row];
     __weak typeof(self) weakSelf = self;
@@ -169,9 +165,13 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [arrayM addObject:({
         UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:cellData.isOnTop?TUIKitLocalizableString(CancelStickonTop):TUIKitLocalizableString(StickyonTop) handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             if (cellData.isOnTop) {
-                [TUIConversationPin.sharedInstance removeTopConversation:cellData.conversationID callback:nil];
+                [TUIConversationPin.sharedInstance removeTopConversation:cellData.conversationID callback:^(BOOL success, NSString * _Nullable errorMessage) {
+                    [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
+                }];
             } else {
-                [TUIConversationPin.sharedInstance addTopConversation:cellData.conversationID callback:nil];
+                [TUIConversationPin.sharedInstance addTopConversation:cellData.conversationID callback:^(BOOL success, NSString * _Nullable errorMessage) {
+                    [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
+                }];
             }
         }];
         action.backgroundColor = RGB(242, 147, 64);

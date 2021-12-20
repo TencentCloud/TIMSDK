@@ -51,6 +51,20 @@
     [self getGroupInfo];
 }
 
+- (void)updateGroupInfo
+{
+    @weakify(self)
+    [[V2TIMManager sharedInstance] getGroupsInfo:@[self.groupID] succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
+        @strongify(self)
+        if(groupResultList.count == 1){
+            self.groupInfo = groupResultList[0].info;
+            [self setupData];
+        }
+    } fail:^(int code, NSString *msg) {
+        [TUITool makeToastError:code msg:msg];
+    }];
+}
+
 - (void)updateGroupAvatar:(NSString *)url succ:(V2TIMSucc)succ fail:(V2TIMFail)fail
 {
     V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
@@ -291,7 +305,7 @@
 - (NSMutableArray *)getShowMembers:(NSMutableArray *)members
 {
     int maxCount = TGroupMembersCell_Column_Count * TGroupMembersCell_Row_Count;
-    if ([self.groupInfo canRemoveMember]) maxCount--;
+    if ([self.groupInfo canInviteMember]) maxCount--;
     if ([self.groupInfo canRemoveMember]) maxCount--;
     NSMutableArray *tmpArray = [NSMutableArray array];
 
