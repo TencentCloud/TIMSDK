@@ -90,7 +90,7 @@ public class DemoApplication extends Application {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        TUIUtils.init(this, GenerateTestUserSig.SDKAPPID, null, null);
+
         HeytapPushManager.init(this, true);
         if (BrandUtil.isBrandXiaoMi()) {
             // 小米离线推送
@@ -138,6 +138,9 @@ public class DemoApplication extends Application {
         initLoginStatusListener();
     }
 
+    public void init() {
+        TUIUtils.init(this, GenerateTestUserSig.SDKAPPID, null, null);
+    }
     public void initLoginStatusListener() {
         V2TIMManager.getInstance().addIMSDKListener(loginStatusListener);
     }

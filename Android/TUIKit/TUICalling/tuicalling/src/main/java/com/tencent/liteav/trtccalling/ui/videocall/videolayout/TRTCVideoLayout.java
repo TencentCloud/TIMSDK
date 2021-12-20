@@ -88,4 +88,8 @@ public class TRTCVideoLayout extends RelativeLayout {
     public void setUserName(String userName) {
         mTextUserName.setText(userName);
     }
+
+    public void setUserNameColor(int color) {
+        mTextUserName.setTextColor(color);
+    }
 }

@@ -25,6 +25,8 @@
     <string name="forward_button">Forward</string>
     <string name="reply_button">Reply</string>
     <string name="delete_button">Delete</string>
+    <string name="chat_delete_msg_tip">Delete Selected Message</string>
+
     <string name="forward_chats">Group Chat History</string>
     <string name="and_text">and</string>
     <string name="forward_chats_c2c">Chat History</string>

@@ -1,9 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.util;
 
-import android.os.Build;
-
-import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuicore.util.TUIBuild;
 
 public class DeviceUtil {
 
@@ -17,14 +14,11 @@ public class DeviceUtil {
             "hwChe2",      //x1
     };
 
-    public static String getDeviceModel() {
-        return Build.DEVICE;
-    }
-
     public static boolean isHuaWeiRongyao() {
+        String device = TUIBuild.getDevice();
         int length = huaweiRongyao.length;
         for (int i = 0; i < length; i++) {
-            if (huaweiRongyao[i].equals(getDeviceModel())) {
+            if (huaweiRongyao[i].equals(device)) {
                 return true;
             }
         }
@@ -33,6 +27,7 @@ public class DeviceUtil {
 
 
     public static boolean isVivoX21() {
-        return "vivo X21".equalsIgnoreCase(Build.MODEL);
+        String model = TUIBuild.getModel();
+        return "vivo X21".equalsIgnoreCase(model);
     }
 }

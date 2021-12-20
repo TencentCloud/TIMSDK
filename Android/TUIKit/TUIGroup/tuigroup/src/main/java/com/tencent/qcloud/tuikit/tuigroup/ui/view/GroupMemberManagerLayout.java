@@ -7,6 +7,7 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
@@ -19,11 +20,15 @@ import com.tencent.qcloud.tuicore.util.PopWindowUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
+import com.tencent.qcloud.tuikit.tuigroup.component.BottomSelectSheet;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberChangedCallback;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberRouter;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupInfoFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class GroupMemberManagerLayout extends LinearLayout implements IGroupMemberLayout {
@@ -130,51 +135,31 @@ public class GroupMemberManagerLayout extends LinearLayout implements IGroupMemb
         if (mGroupInfo == null) {
             return;
         }
-        if (mDialog == null) {
-            mDialog = PopWindowUtil.buildFullScreenDialog((Activity) getContext());
-            View moreActionView = inflate(getContext(), R.layout.group_member_pop_menu, null);
-            moreActionView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mDialog.dismiss();
-                }
-            });
-            Button addBtn = moreActionView.findViewById(R.id.add_group_member);
-            addBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+
+        BottomSelectSheet sheet = new BottomSelectSheet(getContext());
+        List<String> stringList = new ArrayList<>();
+        String addMember = getResources().getString(R.string.add_group_member);
+        String removeMember = getResources().getString(R.string.remove_group_member);
+        stringList.add(addMember);
+        if (mGroupInfo.isOwner()) {
+            stringList.add(removeMember);
+        }
+        sheet.setSelectList(stringList);
+        sheet.setOnClickListener(new BottomSelectSheet.BottomSelectSheetOnClickListener() {
+            @Override
+            public void onSheetClick(int index) {
+                if (index == 0) {
                     if (mGroupMemberManager != null) {
                         mGroupMemberManager.forwardAddMember(mGroupInfo);
                     }
-                    mDialog.dismiss();
-
-                }
-            });
-            Button deleteBtn = moreActionView.findViewById(R.id.remove_group_member);
-            if (!mGroupInfo.isOwner()) {
-                deleteBtn.setVisibility(View.GONE);
-            }
-            deleteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+                } else if (index == 1) {
                     if (mGroupMemberManager != null) {
                         mGroupMemberManager.forwardDeleteMember(mGroupInfo);
                     }
-                    mDialog.dismiss();
                 }
-            });
-            Button cancelBtn = moreActionView.findViewById(R.id.cancel);
-            cancelBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mDialog.dismiss();
-                }
-            });
-            mDialog.setContentView(moreActionView);
-        } else {
-            mDialog.show();
-        }
-
+            }
+        });
+        sheet.show();
     }
 
     public void setRouter(IGroupMemberRouter callBack) {

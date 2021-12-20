@@ -37,7 +37,7 @@
     <string name="contact_friend_remark">Set Alias</string>
     <string name="contact_friend_group">Group</string>
     <string name="contact_set_add_wording">Verification Message</string>
-    <string name="contact_add_wording">Verification Message</string>
+    <string name="contact_add_wording">Verification Message：</string>
     <string name="contact_set_remark_and_group">Remark And Group</string>
 
 

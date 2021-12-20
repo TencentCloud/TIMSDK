@@ -6,7 +6,7 @@ import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
-import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
+import com.tencent.qcloud.tuicore.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
 
 public class ContactItemBean extends BaseIndexPinyinBean {
     public static final int TYPE_C2C = V2TIMConversation.V2TIM_C2C;
@@ -118,7 +118,6 @@ public class ContactItemBean extends BaseIndexPinyinBean {
             return this;
         }
         setId(friendInfo.getUserID());
-        setRemark(friendInfo.getFriendRemark());
         setNickName(friendInfo.getUserProfile().getNickName());
         setAvatarUrl(friendInfo.getUserProfile().getFaceUrl());
         setSignature(friendInfo.getUserProfile().getSelfSignature());

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
@@ -52,6 +53,8 @@ public class LoginForDevActivity extends Activity {
         mLoginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DemoApplication.instance().init();
+
                 UserInfo.getInstance().setUserId(mUserAccount.getText().toString());
                 // 获取userSig函数
                 String userSig = GenerateTestUserSig.genTestUserSig(mUserAccount.getText().toString());

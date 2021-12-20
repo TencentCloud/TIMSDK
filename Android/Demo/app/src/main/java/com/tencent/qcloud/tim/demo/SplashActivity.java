@@ -39,6 +39,7 @@ public class SplashActivity extends Activity {
 
     private void handleData() {
         if (mUserInfo != null && mUserInfo.isAutoLogin()) {
+            DemoApplication.instance().init();
             login();
         } else {
             BackgroundTasks.getInstance().postDelayed(new Runnable() {

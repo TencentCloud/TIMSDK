@@ -57,7 +57,7 @@ public class PopMenuAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.menu_icon = convertView.findViewById(R.id.pop_menu_icon);
 
-            int iconSize = ScreenUtil.dip2px(20);
+            int iconSize = convertView.getResources().getDimensionPixelSize(R.dimen.core_pop_menu_icon_size);
             ViewGroup.LayoutParams params = holder.menu_icon.getLayoutParams();
             params.width = iconSize;
             params.height = iconSize;

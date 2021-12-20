@@ -59,10 +59,32 @@ public class MergeMessageHolder extends MessageContentHolder{
             }
         }
 
+        MergeMessageBean messageBean = (MergeMessageBean) msg;
+        String title = messageBean.getTitle();
+        List<String> abstractList= messageBean.getAbstractList();
+        msgForwardTitle.setText(title);
+        String content = "";
+        for (int i = 0; i < abstractList.size(); i++) {
+            content += abstractList.get(i) + "\n";
+        }
+        content = FaceManager.emojiJudge(content);
+        msgForwardContent.setText(content);
+
+        if (isMultiSelectMode) {
+            mForwardMsgLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onMessageClick(v, position, messageBean);
+                    }
+                }
+            });
+            return;
+        }
         mForwardMsgLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                onItemLongClickListener.onMessageLongClick(v, position, msg);
+                onItemClickListener.onMessageLongClick(v, position, msg);
                 return true;
             }
         });
@@ -75,16 +97,6 @@ public class MergeMessageHolder extends MessageContentHolder{
                 TUICore.startActivity("TUIForwardChatActivity", bundle);
             }
         });
-        MergeMessageBean messageBean = (MergeMessageBean) msg;
-        String title = messageBean.getTitle();
-        List<String> abstractList= messageBean.getAbstractList();
-        msgForwardTitle.setText(title);
-        String content = "";
-        for (int i = 0; i < abstractList.size(); i++) {
-            content += abstractList.get(i) + "\n";
-        }
-        content = FaceManager.emojiJudge(content);
-        msgForwardContent.setText(content);
     }
 
 }

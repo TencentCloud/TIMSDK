@@ -203,7 +203,11 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     private void setTotalUnread() {
         UnreadCountTextView unreadCountTextView = mTitleBar.getUnreadCountTextView();
         unreadCountTextView.setPaintColor(getResources().getColor(R.color.chat_unread_count_tip_color));
-        long unreadCount = (long) TUICore.callService(TUIConstants.TUIConversation.SERVICE_NAME, TUIConstants.TUIConversation.METHOD_GET_TOTAL_UNREAD_COUNT, null);
+        long unreadCount = 0;
+        Object result = TUICore.callService(TUIConstants.TUIConversation.SERVICE_NAME, TUIConstants.TUIConversation.METHOD_GET_TOTAL_UNREAD_COUNT, null);
+        if (result != null && result instanceof Long) {
+            unreadCount = (long) TUICore.callService(TUIConstants.TUIConversation.SERVICE_NAME, TUIConstants.TUIConversation.METHOD_GET_TOTAL_UNREAD_COUNT, null);
+        }
         updateUnreadCount(unreadCountTextView, unreadCount);
         unreadCountListener = new TotalUnreadCountListener() {
             @Override
@@ -382,7 +386,25 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
             @Override
             public void onDeleteMessageClick(TUIMessageBean msg) {
-                deleteMessage(msg);
+                TUIKitDialog tipsDialog = new TUIKitDialog(getContext())
+                        .builder()
+                        .setCancelable(true)
+                        .setCancelOutside(true)
+                        .setTitle(getContext().getString(R.string.chat_delete_msg_tip))
+                        .setDialogWidth(0.75f)
+                        .setPositiveButton(getContext().getString(R.string.sure), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deleteMessage(msg);
+                            }
+                        })
+                        .setNegativeButton(getContext().getString(R.string.cancel), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        });
+                tipsDialog.show();
             }
 
             @Override

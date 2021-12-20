@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
@@ -14,7 +13,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.ICommonMessageAdapter;
-import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageContentHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageHeaderHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageAdapter;
@@ -34,11 +33,11 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     private boolean mLoading = true;
     private MessageRecyclerView mRecycleView;
     private List<TUIMessageBean> mDataSource = new ArrayList<>();
-    private OnItemLongClickListener mOnItemLongClickListener;
+    private OnItemClickListener mOnItemClickListener;
 
     //消息转发
     private HashMap<String, Boolean> mSelectedPositions = new HashMap<String, Boolean>();
-    private boolean isShowMultiSelectCheckBox = false;
+    protected boolean isShowMultiSelectCheckBox = false;
 
     private int mHighShowPosition;
 
@@ -99,12 +98,12 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         }
     }
 
-    public OnItemLongClickListener getOnItemClickListener() {
-        return this.mOnItemLongClickListener;
+    public OnItemClickListener getOnItemClickListener() {
+        return this.mOnItemClickListener;
     }
 
-    public void setOnItemClickListener(OnItemLongClickListener listener) {
-        this.mOnItemLongClickListener = listener;
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mOnItemClickListener = listener;
     }
 
     public void setHighShowPosition(int mHighShowPosition) {
@@ -126,8 +125,11 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         final TUIMessageBean msg = getItem(position);
         if (holder instanceof MessageBaseHolder) {
+            if (holder instanceof MessageContentHolder) {
+                ((MessageContentHolder) holder).isMultiSelectMode = isShowMultiSelectCheckBox;
+            }
             final MessageBaseHolder baseHolder = (MessageBaseHolder) holder;
-            baseHolder.setOnItemClickListener(mOnItemLongClickListener);
+            baseHolder.setOnItemClickListener(mOnItemClickListener);
             String msgId = "";
             if (msg != null) {
                 msgId = msg.getId();
@@ -148,8 +150,8 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                     }
                     break;
             }
-            baseHolder.layoutViews(msg, position);
             setCheckBoxStatus(position, msgId, baseHolder);
+            baseHolder.layoutViews(msg, position);
         }
     }
 
@@ -160,6 +162,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         }
         if (!isShowMultiSelectCheckBox) {
             baseHolder.mMutiSelectCheckBox.setVisibility(View.GONE);
+            baseHolder.setOnItemClickListener(mOnItemClickListener);
+            if (baseHolder.msgContentFrame != null) {
+                baseHolder.msgContentFrame.setOnClickListener(null);
+            }
         } else {
             baseHolder.mMutiSelectCheckBox.setVisibility(View.VISIBLE);
 
@@ -169,11 +175,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             baseHolder.mMutiSelectCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (isItemChecked(msgId)) {
-                        setItemChecked(msgId, false);
-                    } else {
-                        setItemChecked(msgId, true);
-                    }
+                    changeCheckedStatus(msgId, position);
                 }
             });
 
@@ -181,15 +183,54 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             baseHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (isItemChecked(msgId)) {
-                        setItemChecked(msgId, false);
-                    } else {
-                        setItemChecked(msgId, true);
-                    }
-                    notifyItemChanged(position);
+                    changeCheckedStatus(msgId, position);
                 }
             });
+
+            baseHolder.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {
+                }
+
+                @Override
+                public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
+                    changeCheckedStatus(msgId, position);
+                }
+
+                @Override
+                public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
+                    changeCheckedStatus(msgId, position);
+                }
+
+                @Override
+                public void onReplyMessageClick(View view, int position, String originMsgId) {
+                    changeCheckedStatus(msgId, position);
+                }
+
+                @Override
+                public void onMessageClick(View view, int position, TUIMessageBean messageInfo) {
+                    changeCheckedStatus(msgId, position);
+                }
+            });
+
+            if (baseHolder.msgContentFrame != null) {
+                baseHolder.msgContentFrame.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        changeCheckedStatus(msgId, position);
+                    }
+                });
+            }
         }
+    }
+
+    private void changeCheckedStatus(String msgId, int position) {
+        if (isItemChecked(msgId)) {
+            setItemChecked(msgId, false);
+        } else {
+            setItemChecked(msgId, true);
+        }
+        notifyItemChanged(position);
     }
 
     @Override
@@ -277,10 +318,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                     notifyDataSetChanged();
                 } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_LOAD) {
                     notifyDataSetChanged();
-                    RecyclerView.LayoutManager layoutManager = mRecycleView.getLayoutManager();
-                    if (layoutManager instanceof LinearLayoutManager && mDataSource != null && !mDataSource.isEmpty()) {
-                        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(mDataSource.size() - 1, 0);
-                    }
+                    mRecycleView.scrollToEnd();
                 }
                 refreshLoadView();
             }

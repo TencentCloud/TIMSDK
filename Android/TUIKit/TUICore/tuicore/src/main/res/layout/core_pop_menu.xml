@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/core_pop_menu_padding_top"
+    android:paddingBottom="@dimen/core_pop_menu_padding_bottom"
+    android:paddingLeft="20dp"
+    android:paddingRight="10dp">
+
+    <ListView
+        android:id="@+id/menu_pop_list"
+        android:divider="@null"
+        android:layout_width="@dimen/core_pop_menu_item_width"
+        android:layout_height="wrap_content" />
+
+</FrameLayout>

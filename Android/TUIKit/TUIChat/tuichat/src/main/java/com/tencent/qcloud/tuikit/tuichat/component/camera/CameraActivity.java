@@ -13,6 +13,7 @@ import android.view.WindowManager;
 
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.FileUtil;
+import com.tencent.qcloud.tuicore.util.TUIBuild;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -116,7 +117,7 @@ public class CameraActivity extends Activity {
             }
         });
         //jCameraView.setVisibility(View.GONE);
-        TUIChatLog.i(TAG, DeviceUtil.getDeviceModel());
+        TUIChatLog.i(TAG, TUIBuild.getDevice());
     }
 
     private boolean checkPermission() {

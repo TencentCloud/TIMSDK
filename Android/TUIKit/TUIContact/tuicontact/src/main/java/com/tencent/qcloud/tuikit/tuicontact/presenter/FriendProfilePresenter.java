@@ -82,6 +82,7 @@ public class FriendProfilePresenter {
                 bean.setNickName(user.getNickName());
                 bean.setId(user.getId());
                 bean.setAvatarUrl(user.getAvatarUrl());
+                bean.setSignature(user.getSignature());
 
                 CountDownLatch latch = new CountDownLatch(2);
                 ThreadHelper.INST.execute(new Runnable() {

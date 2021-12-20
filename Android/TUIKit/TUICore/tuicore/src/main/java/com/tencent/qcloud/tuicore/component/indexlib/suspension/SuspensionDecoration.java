@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.suspension;
+package com.tencent.qcloud.tuicore.component.indexlib.suspension;
 
 import android.content.Context;
 import android.graphics.Canvas;

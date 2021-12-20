@@ -13,7 +13,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
-import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class TUIGroupChatFragment extends TUIBaseChatFragment {
@@ -47,7 +47,7 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
         chatView.setPresenter(presenter);
         presenter.setGroupInfo(groupInfo);
         chatView.setChatInfo(groupInfo);
-        chatView.getMessageLayout().setOnItemClickListener(new OnItemLongClickListener() {
+        chatView.getMessageLayout().setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onMessageLongClick(View view, int position, TUIMessageBean messageBean) {
                 //因为adapter中第一条为加载条目，位置需减1

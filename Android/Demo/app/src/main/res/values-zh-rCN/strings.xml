@@ -12,10 +12,12 @@
     <string name="password">密码</string>
 
 
-    <string name="demo_login_country_label">国家/地区</string>
-    <string name="demo_login_zh_cn">中国大陆</string>
+    <string name="demo_login_country_or_region_label">国家/地区</string>
+    <string name="demo_area_code_title">选择国家或地区</string>
+    <string name="demo_login_chinese_mainland">中国大陆</string>
     <string name="demo_login_mobile_phone_number">手机号</string>
     <string name="demo_login_verification_code_label">验证码</string>
+    <string name="demo_search">搜索</string>
 
     <string name="login_title">登录·即时通信</string>
     <string name="login_sub_title">体验群组聊天，音视频对话等 IM 功能</string>
@@ -144,5 +146,7 @@
     
     <string name="mark_all_message_as_read_succ">清空未读成功</string>
     <string name="mark_all_message_as_read_err_format">清空未读失败, %d, %s</string>
+
+    <string name="demo_profile_detail">详细资料</string>
 
 </resources>

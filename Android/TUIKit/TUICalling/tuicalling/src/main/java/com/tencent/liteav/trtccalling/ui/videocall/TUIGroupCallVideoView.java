@@ -216,6 +216,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
                     mIsCameraOpen = false;
                     mOpenCameraImg.setActivated(true);
                     mSwitchCameraImg.setVisibility(GONE);
+                    loadUserInfo(mSelfModel, videoLayout);
                 } else {
                     mTRTCCalling.openCamera(mIsFrontCamera, videoLayout.getVideoView());
                     videoLayout.setVideoAvailable(true);
@@ -408,8 +409,6 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
             } else {
                 mTRTCCalling.stopRemoteView(userId);
             }
-        } else {
-
         }
     }
 

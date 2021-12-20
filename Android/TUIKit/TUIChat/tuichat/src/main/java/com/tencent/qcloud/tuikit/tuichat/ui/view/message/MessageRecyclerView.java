@@ -14,9 +14,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.tencent.qcloud.tuicore.component.PopupList;
-import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
-import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -28,7 +25,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.popmenu.ChatPopMenu;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
-import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageLayout;
 
@@ -52,7 +49,10 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     // 先刷新消息再滚动到消息位置
     public static final int DATA_CHANGE_SCROLL_TO_POSITION = 10;
 
-    protected OnItemLongClickListener mOnItemLongClickListener;
+    // 取一个足够大的偏移保证能一次性滚动到最底部
+    private static final int SCROLL_TO_END_OFFSET = -999999;
+
+    protected OnItemClickListener mOnItemClickListener;
     protected MessageRecyclerView.OnLoadMoreHandler mHandler;
     protected MessageRecyclerView.OnEmptySpaceClickListener mEmptySpaceClickListener;
     protected MessageAdapter mAdapter;
@@ -259,10 +259,15 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
 
     public void scrollToEnd() {
         if (getAdapter() != null) {
-            scrollToPosition(getAdapter().getItemCount() - 1);
+            RecyclerView.LayoutManager layoutManager = getLayoutManager();
+            int itemCount = getAdapter().getItemCount();
+            if (layoutManager instanceof LinearLayoutManager && itemCount > 0) {
+                ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(itemCount - 1, SCROLL_TO_END_OFFSET);
+            }
         }
     }
 
+    @Override
     public void scrollToPosition(int position) {
         if (getAdapter() != null && position < getAdapter().getItemCount()) {
             super.scrollToPosition(position);
@@ -302,25 +307,25 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     }
 
     public void setAdapterListener() {
-        mAdapter.setOnItemClickListener(new OnItemLongClickListener() {
+        mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {
-                if (mOnItemLongClickListener != null) {
-                    mOnItemLongClickListener.onMessageLongClick(view, position, messageInfo);
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onMessageLongClick(view, position, messageInfo);
                 }
             }
 
             @Override
             public void onUserIconClick(View view, int position, TUIMessageBean info) {
-                if (mOnItemLongClickListener != null) {
-                    mOnItemLongClickListener.onUserIconClick(view, position, info);
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onUserIconClick(view, position, info);
                 }
             }
 
             @Override
             public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
-                if (mOnItemLongClickListener != null) {
-                    mOnItemLongClickListener.onUserIconLongClick(view, position, messageInfo);
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onUserIconLongClick(view, position, messageInfo);
                 }
             }
 
@@ -554,13 +559,13 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     }
 
     @Override
-    public OnItemLongClickListener getOnItemClickListener() {
+    public OnItemClickListener getOnItemClickListener() {
         return mAdapter.getOnItemClickListener();
     }
 
     @Override
-    public void setOnItemClickListener(OnItemLongClickListener listener) {
-        mOnItemLongClickListener = listener;
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mOnItemClickListener = listener;
         setAdapterListener();
     }
 

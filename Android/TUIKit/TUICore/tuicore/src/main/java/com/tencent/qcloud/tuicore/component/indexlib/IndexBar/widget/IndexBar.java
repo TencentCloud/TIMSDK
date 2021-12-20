@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.widget;
+package com.tencent.qcloud.tuicore.component.indexlib.IndexBar.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,11 +13,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
-import com.tencent.qcloud.tuikit.tuicontact.R;
-import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
-import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.helper.IIndexBarDataHelper;
-import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.helper.IndexBarDataHelperImpl;
+import com.tencent.qcloud.tuicore.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
+import com.tencent.qcloud.tuicore.component.indexlib.IndexBar.helper.IIndexBarDataHelper;
+import com.tencent.qcloud.tuicore.component.indexlib.IndexBar.helper.IndexBarDataHelperImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,7 +123,7 @@ public class IndexBar extends View {
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         int textSize = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics());//默认的TextSize
+                TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics());//默认的TextSize
         mPressedBackground = Color.BLACK;//默认按下是纯黑色
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.IndexBar, defStyleAttr, 0);
         int n = typedArray.getIndexCount();
@@ -144,7 +144,7 @@ public class IndexBar extends View {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setTextSize(textSize);
-        mPaint.setColor(context.getResources().getColor(R.color.black));
+        mPaint.setColor(0xff888888);
 
         //设置index触摸监听器
         setOnIndexPressedListener(new onIndexPressedListener() {
@@ -291,7 +291,6 @@ public class IndexBar extends View {
      *
      * @return
      */
-
     public IndexBar setPressedShowTextView(TextView mPressedShowTextView) {
         this.mPressedShowTextView = mPressedShowTextView;
         return this;

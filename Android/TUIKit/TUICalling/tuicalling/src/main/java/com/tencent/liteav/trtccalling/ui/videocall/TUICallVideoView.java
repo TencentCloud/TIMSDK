@@ -69,7 +69,7 @@ public class TUICallVideoView extends BaseTUICallView {
     private Handler                mTimeHandler;
     private HandlerThread          mTimeHandlerThread;
     private TextView               mTextInviteWait;
-
+    private View                   mRootView;
     /**
      * 拨号相关成员变量
      */
@@ -96,6 +96,7 @@ public class TUICallVideoView extends BaseTUICallView {
     @Override
     protected void initView() {
         LayoutInflater.from(mContext).inflate(R.layout.trtccalling_videocall_activity_call_main, this);
+        mRootView = findViewById(R.id.cl_root);
         mMuteImg = (ImageView) findViewById(R.id.iv_mute);
         mMuteLl = (LinearLayout) findViewById(R.id.ll_mute);
         mHangupImg = (ImageView) findViewById(R.id.iv_hangup);
@@ -641,7 +642,7 @@ public class TUICallVideoView extends BaseTUICallView {
         hideOtherInvitingUserView();
         mTvHangup.setText(R.string.trtccalling_text_hangup);
         if (mTextInviteWait != null && null != mTextInviteWait.getParent()) {
-            ((ViewGroup)mTextInviteWait.getParent()).removeView(mTextInviteWait);
+            ((ViewGroup) mTextInviteWait.getParent()).removeView(mTextInviteWait);
             mTextInviteWait = null;
         }
     }
@@ -728,6 +729,9 @@ public class TUICallVideoView extends BaseTUICallView {
                 TRTCVideoLayout layout = mLayoutManagerTrtc.findCloudView(model.userId);
                 if (layout != null) {
                     layout.setUserName(model.userName);
+                    if (mIsAudioMode) {
+                        layout.setUserNameColor(getResources().getColor(R.color.trtccalling_color_black));
+                    }
                     ImageLoader.loadImage(mContext, layout.getHeadImg(), model.userAvatar,
                             R.drawable.trtccalling_ic_avatar);
                 }
@@ -755,6 +759,7 @@ public class TUICallVideoView extends BaseTUICallView {
     }
 
     private void updateAudioCallView() {
+        updateAudioCallViewColor();
         visibleSponsorGroup(false);
         mViewSwitchAudioCall.setVisibility(View.GONE);
         mOpenCameraLl.setVisibility(View.GONE);
@@ -799,7 +804,7 @@ public class TUICallVideoView extends BaseTUICallView {
         TRTCVideoLayout videoLayout = mLayoutManagerTrtc.findCloudView(remoteUser.userId);
         if (null != videoLayout && !mIsCalling) {
             mTextInviteWait = new TextView(mContext);
-            mTextInviteWait.setTextColor(Color.WHITE);
+            mTextInviteWait.setTextColor(getResources().getColor(R.color.trtccalling_color_gray));
             mTextInviteWait.setText(mRole == TUICalling.Role.CALL ? mContext.getString(R.string.trtccalling_waiting_be_accepted) : mContext.getString(R.string.trtccalling_invite_audio_call));
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.BELOW, R.id.tv_user_name);
@@ -808,4 +813,12 @@ public class TUICallVideoView extends BaseTUICallView {
         }
     }
 
+    private void updateAudioCallViewColor() {
+        mRootView.setBackgroundColor(getResources().getColor(R.color.trtccalling_color_audiocall_background));
+        ((TextView) findViewById(R.id.tv_time)).setTextColor(getResources().getColor(R.color.trtccalling_color_main));
+        ((TextView) findViewById(R.id.tv_mic)).setTextColor(getResources().getColor(R.color.trtccalling_color_second));
+        ((TextView) findViewById(R.id.tv_speaker)).setTextColor(getResources().getColor(R.color.trtccalling_color_second));
+        ((TextView) findViewById(R.id.tv_hangup)).setTextColor(getResources().getColor(R.color.trtccalling_color_second));
+        ((TextView) findViewById(R.id.tv_answer)).setTextColor(getResources().getColor(R.color.trtccalling_color_second));
+    }
 }

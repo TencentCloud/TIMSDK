@@ -1,19 +1,11 @@
 package com.tencent.qcloud.tim.demo.utils;
 
-import android.os.Build;
-import android.text.TextUtils;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.tencent.qcloud.tim.demo.DemoApplication;
+import com.tencent.qcloud.tuicore.util.TUIBuild;
 
 public class BrandUtil {
-    private static String buildBrand = "";
-    private static String buildManufacturer = "";
-    private static String buildModel = "";
-    private static String buildVersionRelease = "";
-    private static int buildVersionSDKInt = 0;
-
     /**
      * 判断是否为小米设备
      */
@@ -75,42 +67,22 @@ public class BrandUtil {
     }
 
     public static String getBuildBrand() {
-        if (TextUtils.isEmpty(buildBrand)) {
-            buildBrand = Build.BRAND;
-        }
-
-        return buildBrand;
+        return TUIBuild.getBrand();
     }
 
     public static String getBuildManufacturer() {
-        if (TextUtils.isEmpty(buildManufacturer)) {
-            buildManufacturer = Build.MANUFACTURER;
-        }
-
-        return buildManufacturer;
+        return TUIBuild.getManufacturer();
     }
 
     public static String getBuildModel() {
-        if (TextUtils.isEmpty(buildModel)) {
-            buildModel = Build.MODEL;
-        }
-
-        return buildModel;
+        return TUIBuild.getModel();
     }
 
     public static String getBuildVersionRelease() {
-        if (TextUtils.isEmpty(buildVersionRelease)) {
-            buildVersionRelease = Build.VERSION.RELEASE;
-        }
-
-        return buildVersionRelease;
+        return TUIBuild.getVersion();
     }
 
     public static int getBuildVersionSDKInt() {
-        if (buildVersionSDKInt == 0) {
-            buildVersionSDKInt = Build.VERSION.SDK_INT;
-        }
-
-        return buildVersionSDKInt;
+        return TUIBuild.getVersionInt();
     }
 }

@@ -8,13 +8,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ForwardPresenter;
@@ -58,7 +56,7 @@ public class TUIForwardChatActivity extends BaseLightActivity {
             }
         });
 
-        mFowardChatMessageRecyclerView.setOnItemClickListener(new OnItemLongClickListener() {
+        mFowardChatMessageRecyclerView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {
 

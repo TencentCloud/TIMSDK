@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuigroup.bean;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
+import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 
@@ -21,6 +22,7 @@ public class GroupInfo extends ChatInfo {
     private boolean messageReceiveOption;
     private String faceUrl;
     private long mNextSeq = 0;
+    private boolean canManagerGroup;
 
     public GroupInfo() {
         setType(V2TIMConversation.V2TIM_GROUP);
@@ -186,6 +188,10 @@ public class GroupInfo extends ChatInfo {
         this.mNextSeq = mNextSeq;
     }
 
+    public boolean isCanManagerGroup() {
+        return canManagerGroup;
+    }
+
     /**
      * 从SDK转化为TUIKit的群信息bean
      *
@@ -206,6 +212,10 @@ public class GroupInfo extends ChatInfo {
         setJoinType(infoResult.getGroupInfo().getGroupAddOpt());
         setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE ? true : false);
         setFaceUrl(infoResult.getGroupInfo().getFaceUrl());
+        int role = infoResult.getGroupInfo().getRole();
+        canManagerGroup = role == V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_OWNER
+                || role == V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_ADMIN
+                || groupType == V2TIMManager.GROUP_TYPE_WORK;
         return this;
     }
 }

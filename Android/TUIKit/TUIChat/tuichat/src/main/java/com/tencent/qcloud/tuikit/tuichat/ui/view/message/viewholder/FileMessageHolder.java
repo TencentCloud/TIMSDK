@@ -40,12 +40,23 @@ public class FileMessageHolder extends MessageContentHolder {
         String size = FileUtil.formatFileSize(message.getFileSize());
         final String fileName = message.getFileName();
         fileSizeText.setText(size);
-        msgContentFrame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FileUtil.openFile(path, fileName);
-            }
-        });
+        if (!isMultiSelectMode) {
+            msgContentFrame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FileUtil.openFile(path, fileName);
+                }
+            });
+        } else {
+            msgContentFrame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onMessageClick(v, position, msg);
+                    }
+                }
+            });
+        }
 
         if (isForwardMode) {
             msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
@@ -90,6 +101,9 @@ public class FileMessageHolder extends MessageContentHolder {
         }
 
         if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_UN_DOWNLOAD) {
+            if (isMultiSelectMode) {
+                return;
+            }
             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -44,6 +44,7 @@ import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
@@ -318,7 +319,7 @@ public class MainActivity extends BaseLightActivity {
     }
 
     private void setConversationMenu() {
-        menu = new Menu(this, mainTitleBar);
+        menu = new Menu(this, mainTitleBar.getRightIcon());
         PopActionClickListener popActionClickListener = new PopActionClickListener() {
             @Override
             public void onActionClick(int position, Object data) {
@@ -396,7 +397,7 @@ public class MainActivity extends BaseLightActivity {
     }
 
     public void setContactMenu() {
-        menu = new Menu(this, mainTitleBar);
+        menu = new Menu(this, mainTitleBar.getRightIcon());
         List<PopMenuAction> menuActionList = new ArrayList<>(2);
         PopActionClickListener popActionClickListener = new PopActionClickListener() {
             @Override

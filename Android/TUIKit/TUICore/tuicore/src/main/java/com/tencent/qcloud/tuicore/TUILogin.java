@@ -123,6 +123,7 @@ public class TUILogin {
                 callback.onSuccess();
             }
             getUserInfo(userId);
+            return;
         }
         TUILogin.userId = userId;
         TUILogin.userSig = userSig;

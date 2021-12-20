@@ -19,7 +19,6 @@ import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
-import com.tencent.qcloud.tuikit.tuicontact.component.CircleImageView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.NewFriendPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 
