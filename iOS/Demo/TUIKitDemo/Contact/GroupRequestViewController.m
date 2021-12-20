@@ -19,6 +19,7 @@
 #import "TUIKit.h"
 #import "TCUtil.h"
 #import "TUIAvatarViewController.h"
+#import "TUIButtonCell.h"
 
 @interface GroupRequestViewController ()<UITableViewDataSource, UITableViewDelegate>
 @property UITableView *tableView;
@@ -51,7 +52,6 @@
     data.avatarUrl = [NSURL URLWithString:self.groupInfo.faceURL];
     self.cardCellData = data;
 
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Send", nil) style:UIBarButtonItemStylePlain target:self action:@selector(onSend)];
     self.title = NSLocalizedString(@"GroupJoin", nil);
 }
 
@@ -67,22 +67,55 @@
         return 120;
     }
     if (indexPath.section == 2) {
-        return 44;
+        return 54;
     }
     return 0.;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    return 2;
+    UIView *view = [[UIView alloc] init];
+    return view;
 }
 
-- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if (section == 1)
-        return NSLocalizedString(@"please_fill_in_verification_information", nil); // @"填写验证信息";
-    return nil;
+    UIView *view = [[UIView alloc] init];
+    view.backgroundColor = [UIColor clearColor];
+    
+    UILabel *label = [[UILabel alloc] init];
+    label.text = NSLocalizedString(@"please_fill_in_verification_information", nil); // @"填写验证信息";
+    label.textColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
+    label.font = [UIFont systemFontOfSize:14.0];
+    
+    label.frame = CGRectMake(10, 0, self.tableView.bounds.size.width - 20, 40);
+    [view addSubview:label];
+    
+    return section == 1 ? view : nil;
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == 1) {
+        return 40;
+    }
+    if (section == 2) {
+        return 10;
+    }
+    
+    return 0;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
+{
+    return 3;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return 1;
@@ -100,6 +133,16 @@
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AddWord"];
         [cell.contentView addSubview:self.addMsgTextView];
         self.addMsgTextView.mm_width(Screen_Width).mm_height(120);
+        return cell;
+    }
+    if (indexPath.section == 2) {
+        TUIButtonCell *cell = [[TUIButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"send"];
+        TUIButtonCellData *cellData = [[TUIButtonCellData alloc] init];
+        cellData.title = NSLocalizedString(@"Send", nil);
+        cellData.style = ButtonWhite;
+        cellData.cselector = @selector(onSend);
+        cellData.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+        [cell fillWithData:cellData];
         return cell;
     }
 

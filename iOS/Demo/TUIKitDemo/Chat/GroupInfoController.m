@@ -163,7 +163,7 @@
         info.groupID = groupId;
         info.faceURL = url;
         [[V2TIMManager sharedInstance] setGroupInfo:info succ:^{
-            [controller updateData];;
+            [controller updateGroupInfo];
         } fail:^(int code, NSString *msg) {
             [TUITool makeToastError:code msg:msg];
         }];

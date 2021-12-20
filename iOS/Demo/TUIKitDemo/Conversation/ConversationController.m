@@ -261,7 +261,7 @@
         };
         return;
     } else if(index == 4){
-        //创建社群
+        //创建社区
         TUIContactSelectController *vc = [TUIContactSelectController new];
         vc.title = NSLocalizedString(@"ChatsSelectContact", nil);//@"选择联系人";
         [self.navigationController pushViewController:vc animated:YES];
@@ -329,7 +329,7 @@
             } else if([info.groupType isEqualToString:GroupType_Meeting]) {
                 content = NSLocalizedString(@"ChatsCreateChatRoomTips", nil); // @"创建聊天室";
             } else if([info.groupType isEqualToString:GroupType_Community]) {
-                content = NSLocalizedString(@"ChatsCreateCommunityTips", nil); // @"创建社群";
+                content = NSLocalizedString(@"ChatsCreateCommunityTips", nil); // @"创建社区";
             } else {
                 content = NSLocalizedString(@"ChatsCreateDefaultTips", nil); // @"创建群组";
             }
@@ -376,7 +376,18 @@
         if ([businessID isEqualToString:BussinessID_TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
             NSString *desc = param[@"text"];
             if (msg.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
-                desc = @"You recalled a message";
+                if(msg.isSelf){
+                    desc = NSLocalizedString(@"MessageTipsYouRecallMessage", nil);
+                } else if (msg.userID.length > 0){
+                    desc = NSLocalizedString(@"MessageTipsOthersRecallMessage", nil);
+                } else if (msg.groupID.length > 0) {
+                    //对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
+                    NSString *userName = msg.nameCard;
+                    if (userName.length == 0) {
+                        userName = msg.nickName?:msg.sender;
+                    }
+                    desc = [NSString stringWithFormat:NSLocalizedString(@"MessageTipsOthersRecallMessageFormat", nil), userName];
+                }
             }
             return desc;
         }

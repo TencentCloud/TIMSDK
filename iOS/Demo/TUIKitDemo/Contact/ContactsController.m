@@ -29,6 +29,9 @@
 #import "TUserProfileController.h"
 #import "TUICommonModel.h"
 
+#import "TUIFindContactViewController.h"
+#import "FriendRequestViewController.h"
+#import "GroupRequestViewController.h"
 
 @interface ContactsController () <TPopViewDelegate>
 
@@ -98,16 +101,23 @@
 
 - (void)popView:(TPopView *)popView didSelectRowAtIndex:(NSInteger)index
 {
-    if(index == 0){
-        //添加好友
-        UIViewController *add = [[SearchFriendViewController alloc] init];
-        [self.navigationController pushViewController:add animated:YES];
-    }
-    if(index == 1){
-        //添加群组
-        UIViewController *add = [[SearchGroupViewController alloc] init];
-        [self.navigationController pushViewController:add animated:YES];
-    }
+    TUIFindContactViewController *add = [[TUIFindContactViewController alloc] init];
+    add.type = index == 0 ? TUIFindContactTypeC2C : TUIFindContactTypeGroup;
+    __weak typeof(self) weakSelf = self;
+    add.onSelect = ^(TUIFindContactCellModel * cellModel) {
+        if (cellModel.type == TUIFindContactTypeC2C) {
+            FriendRequestViewController *frc = [[FriendRequestViewController alloc] init];
+            frc.profile = cellModel.userInfo;
+            [weakSelf.navigationController popViewControllerAnimated:NO];
+            [weakSelf.navigationController pushViewController:frc animated:YES];
+        } else {
+            GroupRequestViewController *frc = [[GroupRequestViewController alloc] init];
+            frc.groupInfo = cellModel.groupInfo;
+            [weakSelf.navigationController popViewControllerAnimated:NO];
+            [weakSelf.navigationController pushViewController:frc animated:YES];
+        }
+    };
+    [self.navigationController pushViewController:add animated:YES];
 }
 
 - (void)onSelectFriend:(TUICommonContactCell *)cell

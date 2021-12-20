@@ -105,6 +105,7 @@
                     data.value = self.groupPendency.requestMsg;
                 }
                 data.reuseId = @"TextCell";
+                data.enableMultiLineValue = YES;
                 data;
             })];
             inlist;
