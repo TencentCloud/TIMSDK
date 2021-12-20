@@ -83,7 +83,7 @@
             personal.avatarUrl = [NSURL URLWithString:self.userFullInfo.faceURL];
             personal.name = [self.userFullInfo showName];
             personal.genderString = [self.userFullInfo showGender];
-            personal.signature = [self.userFullInfo showSignature];
+            personal.signature = self.userFullInfo.selfSignature.length ? [NSString stringWithFormat:NSLocalizedString(@"SignatureFormat", nil), self.userFullInfo.selfSignature] : NSLocalizedString(@"no_personal_signature", nil);
             personal.reuseId = @"CardCell";
             personal.showSignature = YES;
             personal;
