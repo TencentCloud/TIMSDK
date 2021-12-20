@@ -315,6 +315,9 @@ public class ContactProvider {
             public void onSuccess(List<V2TIMGroupInfoResult> v2TIMGroupInfoResults) {
                 List<GroupInfo> groupInfos = new ArrayList<>();
                 for (V2TIMGroupInfoResult result : v2TIMGroupInfoResults) {
+                    if (result.getResultCode() != 0) {
+                        return;
+                    }
                     GroupInfo groupInfo = new GroupInfo();
                     groupInfo.setId(result.getGroupInfo().getGroupID());
                     groupInfo.setFaceUrl(result.getGroupInfo().getFaceUrl());

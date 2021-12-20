@@ -25,14 +25,14 @@ public interface IMessageLayout extends IMessageProperties {
      *
      * @return
      */
-    OnItemLongClickListener getOnItemClickListener();
+    OnItemClickListener getOnItemClickListener();
 
     /**
-     * 设置消息列表的事件监听器 {@link OnItemLongClickListener}
+     * 设置消息列表的事件监听器 {@link OnItemClickListener}
      *
      * @param listener
      */
-    void setOnItemClickListener(OnItemLongClickListener listener);
+    void setOnItemClickListener(OnItemClickListener listener);
 
     /**
      * 获取 PopMenu 的 Action 列表

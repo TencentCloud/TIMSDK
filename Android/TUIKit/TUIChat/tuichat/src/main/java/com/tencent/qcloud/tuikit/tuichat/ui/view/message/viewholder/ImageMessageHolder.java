@@ -145,6 +145,17 @@ public class ImageMessageHolder extends MessageContentHolder {
                 }
             }
         }
+        if (isMultiSelectMode) {
+            contentImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onMessageClick(v, position, msg);
+                    }
+                }
+            });
+            return;
+        }
         contentImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,8 +184,8 @@ public class ImageMessageHolder extends MessageContentHolder {
         contentImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (onItemLongClickListener != null) {
-                    onItemLongClickListener.onMessageLongClick(view, position, msg);
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageLongClick(view, position, msg);
                 }
                 return true;
             }

@@ -33,6 +33,7 @@ import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuigroup.component.BottomSelectSheet;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberRouter;
@@ -41,6 +42,7 @@ import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -188,20 +190,47 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 mMemberPreviewListener.forwardListMember(mGroupInfo);
             }
         } else if (v.getId() == R.id.group_detail_area) {
+            if (!mGroupInfo.isCanManagerGroup()) {
+                return;
+            }
             PopupInputCard popupInputCard = new PopupInputCard((Activity) getContext());
-            popupInputCard.setContent(mGroupNameView.getText().toString());
-            popupInputCard.setTitle(getResources().getString(R.string.modify_group_name));
-            popupInputCard.setOnPositive((result -> {
-                mPresenter.modifyGroupName(result);
-                mGroupNameView.setText(result);
-            }));
-            popupInputCard.show(groupDetailArea, Gravity.BOTTOM);
+            BottomSelectSheet sheet = new BottomSelectSheet(getContext());
+            List<String> stringList = new ArrayList<>();
+            String modifyGroupName = getResources().getString(R.string.modify_group_name);
+            String modifyGroupNotice = getResources().getString(R.string.modify_group_notice);
+            stringList.add(modifyGroupName);
+            stringList.add(modifyGroupNotice);
+            sheet.setSelectList(stringList);
+            sheet.setOnClickListener(new BottomSelectSheet.BottomSelectSheetOnClickListener() {
+                @Override
+                public void onSheetClick(int index) {
+                    if (index == 0) {
+                        popupInputCard.setContent(mGroupNameView.getText().toString());
+                        popupInputCard.setTitle(modifyGroupName);
+                        popupInputCard.setOnPositive((result -> {
+                            mPresenter.modifyGroupName(result);
+                            mGroupNameView.setText(result);
+                        }));
+                        popupInputCard.show(groupDetailArea, Gravity.BOTTOM);
+                    } else if (index == 1) {
+                        popupInputCard.setContent(mGroupNotice.getContent());
+                        popupInputCard.setTitle(modifyGroupNotice);
+                        popupInputCard.setOnPositive((result -> {
+                            mPresenter.modifyGroupNotice(result);
+                            mGroupNotice.setContent(result);
+                        }));
+                        popupInputCard.show(groupDetailArea, Gravity.BOTTOM);
+                    }
+                }
+            });
+            sheet.show();
         } else if (v.getId() == R.id.group_icon) {
             String groupUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
             mPresenter.modifyGroupFaceUrl(mGroupInfo.getId(), groupUrl, new IUIKitCallback<Void>() {
                 @Override
                 public void onSuccess(Void data) {
-                    loadGroupInfo(mGroupInfo.getId());
+                    mGroupInfo.setFaceUrl(groupUrl);
+                    setGroupInfo(mGroupInfo);
                     ToastUtil.toastLongMessage(TUIGroupService.getAppContext().getString(R.string.modify_icon_suc));
                 }
 

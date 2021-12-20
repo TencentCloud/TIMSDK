@@ -11,10 +11,12 @@
     <string name="account">Username</string>
     <string name="password">Password</string>
 
-    <string name="demo_login_country_label">国家/地区</string>
-    <string name="demo_login_zh_cn">中国大陆</string>
+    <string name="demo_login_country_or_region_label">Country/Region</string>
+    <string name="demo_area_code_title">Select country or region</string>
+    <string name="demo_login_chinese_mainland">Chinese Mainland</string>
     <string name="demo_login_mobile_phone_number">Phone Number</string>
     <string name="demo_login_verification_code_label">Verification Code</string>
+    <string name="demo_search">Search</string>
 
 
     <string name="login_title">Log in to IM</string>
@@ -147,5 +149,7 @@
 
     <string name="mark_all_message_as_read_succ">Success to mark all as read</string>
     <string name="mark_all_message_as_read_err_format">Error, %d, %s</string>
+
+    <string name="demo_profile_detail">Details</string>
 
 </resources>

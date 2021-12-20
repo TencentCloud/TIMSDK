@@ -68,6 +68,8 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     private Button refuseFriendBtn;
     private View addFriendArea;
     private EditText addWordingEditText;
+    private View friendApplicationVerifyArea;
+    private TextView friendApplicationAddWording;
 
     private ContactItemBean mContactInfo;
     private FriendApplicationBean friendApplicationBean;
@@ -132,6 +134,9 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
 
         addFriendArea = findViewById(R.id.add_friend_verify_area);
         addWordingEditText = findViewById(R.id.add_wording_edit);
+
+        friendApplicationVerifyArea = findViewById(R.id.friend_application_verify_area);
+        friendApplicationAddWording = findViewById(R.id.friend_application_add_wording);
 
         addFriendRemarkLv = findViewById(R.id.friend_remark_lv);
         addFriendRemarkLv.setOnClickListener(this);
@@ -255,9 +260,14 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         friendApplicationBean = data;
         mId = friendApplicationBean.getUserId();
         mNickname = friendApplicationBean.getNickName();
+        mSignatureTagView.setVisibility(GONE);
+        mSignatureView.setVisibility(GONE);
         mRemarkView.setVisibility(GONE);
         mAddBlackView.setVisibility(GONE);
         mMessageOptionView.setVisibility(GONE);
+
+        friendApplicationVerifyArea.setVisibility(VISIBLE);
+        friendApplicationAddWording.setText(friendApplicationBean.getAddWording());
 
         refuseFriendBtn.setVisibility(VISIBLE);
         acceptFriendBtn.setVisibility(VISIBLE);

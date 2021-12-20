@@ -18,7 +18,7 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageProperties;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.ICommonMessageAdapter;
-import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 
 import java.util.Date;
 
@@ -27,7 +27,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
 
     public ICommonMessageAdapter mAdapter;
     public MessageProperties properties = MessageProperties.getInstance();
-    protected OnItemLongClickListener onItemLongClickListener;
+    protected OnItemClickListener onItemClickListener;
 
     public TextView chatTimeText;
     public FrameLayout msgContentFrame;
@@ -64,12 +64,12 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         mAdapter = adapter;
     }
 
-    public void setOnItemClickListener(OnItemLongClickListener listener) {
-        this.onItemLongClickListener = listener;
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
     }
 
-    public OnItemLongClickListener getOnItemClickListener() {
-        return this.onItemLongClickListener;
+    public OnItemClickListener getOnItemClickListener() {
+        return this.onItemClickListener;
     }
 
     public void layoutViews(final TUIMessageBean msg, final int position) {

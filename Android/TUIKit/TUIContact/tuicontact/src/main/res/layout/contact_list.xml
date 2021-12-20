@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.widget.IndexBar
+    <com.tencent.qcloud.tuicore.component.indexlib.IndexBar.widget.IndexBar
         android:id="@+id/contact_indexBar"
         android:layout_width="24dp"
         android:layout_marginTop="54dp"

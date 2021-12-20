@@ -69,7 +69,7 @@ public class SelfDetailActivity extends AppCompatActivity implements View.OnClic
     private void setupViews() {
         titleBarLayout.setLeftIcon(R.drawable.demo_back);
         titleBarLayout.getRightIcon().setVisibility(View.GONE);
-        titleBarLayout.setTitle(getString(R.string.profile_detail), ITitleBarLayout.Position.MIDDLE);
+        titleBarLayout.setTitle(getString(R.string.demo_profile_detail), ITitleBarLayout.Position.MIDDLE);
         titleBarLayout.setOnLeftClickListener(this);
 
         int radius = getResources().getDimensionPixelSize(R.dimen.demo_profile_face_radius);

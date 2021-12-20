@@ -31,4 +31,10 @@
         <!-- 是否是开关 -->
         <attr name="isSwitch" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="IndexBar">
+        <attr name="indexBarTextSize" format="dimension"/>
+        <attr name="indexBarPressBackground" format="color" />
+    </declare-styleable>
+
 </resources>

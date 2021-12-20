@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,6 +30,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     public TextView unreadAudioText;
 
     public boolean isForwardMode = false;
+    public boolean isMultiSelectMode = false;
 
     protected ChatPresenter presenter;
 
@@ -189,31 +189,31 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             }
 
             //// 聊天气泡的点击事件处理
-            if (onItemLongClickListener != null) {
+            if (onItemClickListener != null) {
                 msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        onItemLongClickListener.onMessageLongClick(v, position, msg);
+                        onItemClickListener.onMessageLongClick(v, position, msg);
                         return true;
                     }
                 });
                 leftUserIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onItemLongClickListener.onUserIconClick(view, position, msg);
+                        onItemClickListener.onUserIconClick(view, position, msg);
                     }
                 });
                 leftUserIcon.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        onItemLongClickListener.onUserIconLongClick(view, position, msg);
+                        onItemClickListener.onUserIconLongClick(view, position, msg);
                         return true;
                     }
                 });
                 rightUserIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onItemLongClickListener.onUserIconClick(view, position, msg);
+                        onItemClickListener.onUserIconClick(view, position, msg);
                     }
                 });
             }
@@ -224,21 +224,28 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 msgContentFrame.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (onItemLongClickListener != null) {
-                            onItemLongClickListener.onMessageLongClick(msgContentFrame, position, msg);
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onMessageLongClick(msgContentFrame, position, msg);
                         }
                     }
                 });
                 statusImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (onItemLongClickListener != null) {
-                            onItemLongClickListener.onSendFailBtnClick(statusImage, position, msg);
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onSendFailBtnClick(statusImage, position, msg);
                         }
                     }
                 });
             } else {
-                msgContentFrame.setOnClickListener(null);
+                msgContentFrame.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onMessageClick(msgContentFrame, position, msg);
+                        }
+                    }
+                });
                 statusImage.setVisibility(View.GONE);
             }
         }

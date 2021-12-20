@@ -15,8 +15,8 @@ import android.widget.TextView;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.widget.IndexBar;
-import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.suspension.SuspensionDecoration;
+import com.tencent.qcloud.tuicore.component.indexlib.IndexBar.widget.IndexBar;
+import com.tencent.qcloud.tuicore.component.indexlib.suspension.SuspensionDecoration;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.ui.interfaces.IContactListView;
 

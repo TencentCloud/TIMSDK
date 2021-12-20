@@ -63,5 +63,7 @@
     <color name="demo_popup_card_line_bg">#E4E5E9</color>
 
     <color name="demo_profile_bg">#E6E9EB</color>
+    <color name="demo_partTranslucent">#39000000</color>
+    <color name="demo_slide_bar_hint_color">#CCCCCC</color>
 
 </resources>

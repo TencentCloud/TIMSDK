@@ -107,8 +107,8 @@ public class ChatLayoutSetting {
 //        });
 //        messageRecyclerView.addPopAction(action);
 //
-//        final MessageRecyclerView.OnItemLongClickListener l = messageRecyclerView.getOnItemClickListener();
-//        messageRecyclerView.setOnItemClickListener(new MessageRecyclerView.OnItemLongClickListener() {
+//        final MessageRecyclerView.OnItemClickListener l = messageRecyclerView.getOnItemClickListener();
+//        messageRecyclerView.setOnItemClickListener(new MessageRecyclerView.OnItemClickListener() {
 //            @Override
 //            public void onMessageLongClick(View view, int position, MessageInfo messageInfo) {
 //                l.onMessageLongClick(view, position, messageInfo);

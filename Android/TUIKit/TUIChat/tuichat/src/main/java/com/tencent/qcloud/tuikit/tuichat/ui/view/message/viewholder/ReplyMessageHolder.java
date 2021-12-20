@@ -1,47 +1,22 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.tencent.qcloud.tuicore.TUIConfig;
-import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
-import com.tencent.qcloud.tuicore.util.ImageUtil;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.FileReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ImageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.TUIReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.TextReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ReplyMessageHolder extends MessageContentHolder {
 
@@ -78,8 +53,8 @@ public class ReplyMessageHolder extends MessageContentHolder {
         msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (onItemLongClickListener != null) {
-                    onItemLongClickListener.onMessageLongClick(view, position, msg);
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageLongClick(view, position, msg);
                 }
                 return true;
             }
@@ -87,8 +62,8 @@ public class ReplyMessageHolder extends MessageContentHolder {
         originMsgLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (onItemLongClickListener != null) {
-                    onItemLongClickListener.onMessageLongClick(v, position, msg);
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageLongClick(v, position, msg);
                 }
                 return true;
             }
@@ -108,8 +83,8 @@ public class ReplyMessageHolder extends MessageContentHolder {
         originMsgLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onItemLongClickListener != null) {
-                    onItemLongClickListener.onReplyMessageClick(v, position, replyMessageBean.getOriginMsgId());
+                if (onItemClickListener != null) {
+                    onItemClickListener.onReplyMessageClick(v, position, replyMessageBean.getOriginMsgId());
                 }
             }
         });

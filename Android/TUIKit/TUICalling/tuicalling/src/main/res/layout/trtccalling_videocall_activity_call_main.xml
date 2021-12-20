@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/cl_root"
     android:background="@color/trtccalling_color_videocall_background">
 
     <androidx.constraintlayout.widget.Guideline
@@ -137,6 +138,7 @@
             android:src="@drawable/trtccalling_bg_mute_mic" />
 
         <TextView
+            android:id="@+id/tv_mic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -165,6 +167,7 @@
             android:src="@drawable/trtccalling_bg_handsfree" />
 
         <TextView
+            android:id="@+id/tv_speaker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -280,6 +283,7 @@
             android:src="@drawable/trtccalling_bg_dialing" />
 
         <TextView
+            android:id="@+id/tv_answer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

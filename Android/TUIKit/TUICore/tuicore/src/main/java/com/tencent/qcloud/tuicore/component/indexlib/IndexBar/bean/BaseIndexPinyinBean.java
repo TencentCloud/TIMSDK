@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean;
+package com.tencent.qcloud.tuicore.component.indexlib.IndexBar.bean;
 
 /**
  * 介绍：索引类的汉语拼音的接口

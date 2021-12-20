@@ -135,6 +135,19 @@ public class VideoMessageHolder extends MessageContentHolder {
             sendingProgress.setVisibility(View.GONE);
 
         }
+
+        if (isMultiSelectMode) {
+            msgContentFrame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onMessageClick(v, position, msg);
+                    }
+                }
+            });
+            return;
+        }
+
         //以上代码为zanhanding修改，用于fix视频消息发送失败后不显示红色感叹号的问题
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override

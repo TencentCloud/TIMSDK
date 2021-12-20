@@ -25,6 +25,7 @@
     <string name="forward_button">转发</string>
     <string name="reply_button">回复</string>
     <string name="delete_button">删除</string>
+    <string name="chat_delete_msg_tip">确定删除已选消息</string>
     <string name="forward_chats">群聊的聊天记录</string>
     <string name="and_text">和</string>
     <string name="forward_chats_c2c">的聊天记录</string>

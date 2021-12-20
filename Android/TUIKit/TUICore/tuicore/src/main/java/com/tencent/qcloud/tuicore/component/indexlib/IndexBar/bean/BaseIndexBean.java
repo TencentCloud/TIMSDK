@@ -1,6 +1,6 @@
-package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean;
+package com.tencent.qcloud.tuicore.component.indexlib.IndexBar.bean;
 
-import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.suspension.ISuspensionInterface;
+import com.tencent.qcloud.tuicore.component.indexlib.suspension.ISuspensionInterface;
 
 import java.io.Serializable;
 

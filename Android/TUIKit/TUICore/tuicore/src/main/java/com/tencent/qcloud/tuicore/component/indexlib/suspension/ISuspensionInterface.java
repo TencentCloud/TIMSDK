@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.suspension;
+package com.tencent.qcloud.tuicore.component.indexlib.suspension;
 
 /**
  * 介绍：分类悬停的接口

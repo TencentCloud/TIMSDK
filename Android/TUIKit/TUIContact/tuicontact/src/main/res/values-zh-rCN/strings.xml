@@ -38,7 +38,7 @@
     <string name="contact_friend_group">分组</string>
     <string name="contact_set_add_wording">请填写验证信息</string>
     <string name="contact_set_remark_and_group">请填写备注和分组</string>
-    <string name="contact_add_wording">验证信息</string>
+    <string name="contact_add_wording">验证信息：</string>
     <string name="contact_my_friend">我的朋友</string>
 
     <!-- 好友资料 -->

@@ -101,26 +101,42 @@
             android:textColor="#444444"
             android:textSize="17.28sp"
             android:textStyle="bold"
-            android:text="@string/demo_login_country_label"
-            android:visibility="gone"/>
+            android:text="@string/demo_login_country_or_region_label"
+            tools:visibility="visible"/>
 
-        <com.tencent.qcloud.tuicore.component.LineControllerView
-            android:id="@+id/country_lv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/telephone_area_codes_area"
+            android:orientation="horizontal"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="-15dp"
-            android:layout_marginRight="-15dp"
-            app:canNav="true"
-            app:name="@string/demo_login_zh_cn"
-            android:visibility="gone"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/country_or_region_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/demo_login_chinese_mainland"
+                android:textSize="15.36dp"
+                android:textColor="@color/black"
+                tools:visibility="visible"/>
+
+            <ImageView
+                android:src="@drawable/demo_login_select_list"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
-            android:background="#EBEDF5"
-            android:visibility="gone"/>
+            android:background="#EBEDF5" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -151,7 +167,10 @@
                 android:text="86"
                 android:inputType="number"
                 android:maxLength="6"
+                android:minWidth="20dp"
                 android:background="@null"
+                android:textColor="@color/black"
+                android:enabled="false"
                 android:textSize="15.36sp" />
 
             <View

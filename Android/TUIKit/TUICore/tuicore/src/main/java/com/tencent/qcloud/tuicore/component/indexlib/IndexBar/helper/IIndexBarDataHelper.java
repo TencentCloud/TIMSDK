@@ -1,7 +1,7 @@
-package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.helper;
+package com.tencent.qcloud.tuicore.component.indexlib.IndexBar.helper;
 
 
-import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
+import com.tencent.qcloud.tuicore.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
 
 import java.util.List;
 
