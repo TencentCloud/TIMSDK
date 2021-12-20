@@ -61,6 +61,12 @@
 {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+    
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
+                                                  forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    
+    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

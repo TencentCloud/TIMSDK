@@ -10,7 +10,7 @@
 #import "TUIDefine.h"
 #import "TUITool.h"
 
-@interface TUIMessageCell()
+@interface TUIMessageCell() <CAAnimationDelegate>
 @property (nonatomic, strong) TUIMessageCellData *messageData;
 
 @end
@@ -157,13 +157,25 @@
 
 - (void)highlightWhenMatchKeyword:(NSString *)keyword
 {
-    // 默认高亮效果，闪烁
-    if (keyword) {
-        // 显示高亮动画
+    static NSString * const key = @"highlightAnimation";
+    if (keyword && keyword.length) {
         if (self.highlightAnimating) {
             return;
         }
-        [self animate:3 originColor:self.highlightAnimateView.backgroundColor];
+        self.highlightAnimating = YES;
+        CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"backgroundColor"];
+        animation.repeatCount = 3;
+        animation.values = @[
+                                (id)[[UIColor orangeColor] colorWithAlphaComponent:0.2].CGColor,
+                                (id)[[UIColor orangeColor] colorWithAlphaComponent:0.5].CGColor,
+                                (id)[[UIColor orangeColor] colorWithAlphaComponent:0.2].CGColor,
+                            ];
+        animation.duration = 0.5;
+        animation.removedOnCompletion = YES;
+        animation.delegate = self;
+        [self.highlightAnimateView.layer addAnimation:animation forKey:key];
+    } else {
+        [self.highlightAnimateView.layer removeAnimationForKey:key];
     }
 }
 
@@ -172,31 +184,19 @@
     return self.container;
 }
 
-// 默认高亮动画
-- (void)animate:(int)times originColor:(UIColor *)originColor
+- (void)animationDidStart:(CAAnimation *)anim
 {
-    times--;
-    if (times < 0) {
-        self.highlightAnimateView.backgroundColor = originColor;
-        self.highlightAnimating = NO;
-        return;
-    }
     self.highlightAnimating = YES;
-    [UIView animateWithDuration:0.25 animations:^{
-        self.highlightAnimateView.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.5];
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.25 animations:^{
-            self.highlightAnimateView.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.2];
-        } completion:^(BOOL finished) {
-            [self animate:times originColor:originColor];
-        }];
-    }];
 }
 
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
+    self.highlightAnimating = NO;
+}
 
 - (void)layoutSubviews
 {
-    [super layoutSubviews];
+    [super layoutSubviews]; 
     if (self.messageData.showName) {
         _nameLabel.mm_sizeToFitThan(1, 20);
         _nameLabel.hidden = NO;

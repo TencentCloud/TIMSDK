@@ -138,6 +138,10 @@
         [UIView animateWithDuration:0.25 animations:^{
             self.animateHighlightView.alpha = 0.1;
         } completion:^(BOOL finished) {
+            if (!self.videoData.highlightKeyword) {
+                [self animate:0];
+                return;
+            }
             [self animate:times];
         }];
     }];

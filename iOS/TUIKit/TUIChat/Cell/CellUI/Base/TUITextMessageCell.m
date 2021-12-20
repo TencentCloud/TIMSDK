@@ -58,9 +58,4 @@
     self.content.frame = (CGRect){.origin = self.textData.textOrigin, .size = self.textData.textSize};
 }
 
-- (UIView *)highlightAnimateView
-{
-    return self.bubbleView;
-}
-
 @end

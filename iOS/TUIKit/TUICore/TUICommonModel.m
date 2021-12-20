@@ -38,8 +38,8 @@
 - (NSString *)showSignature
 {
     if (self.selfSignature == nil)
-        return NSLocalizedString(@"no_personal_signature", nil); ;
-    return self.selfSignature;
+        return TUIKitLocalizableString(TUIKitNoSelfSignature);
+    return [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSelfSignatureFormat), self.selfSignature];
 }
 
 - (NSString *)showAllowType

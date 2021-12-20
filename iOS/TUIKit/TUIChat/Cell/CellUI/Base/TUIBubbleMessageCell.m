@@ -64,7 +64,11 @@
     self.bubbleView.image = self.bubbleData.animateHighlightBubble_alpha50;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.bubbleView.image = self.bubbleData.animateHighlightBubble_alpha20;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (!self.bubbleData.highlightKeyword) {
+                [self animate:0];
+                return;
+            }
             [self animate:times];
         });
     });

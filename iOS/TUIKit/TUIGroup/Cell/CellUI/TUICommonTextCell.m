@@ -15,6 +15,17 @@
     return self;
 }
 
+- (CGFloat)heightOfWidth:(CGFloat)width {
+    CGFloat height = [super heightOfWidth:width];
+    if (self.enableMultiLineValue) {
+        NSString *str = self.value;
+        NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:16]};
+        CGSize size = [str boundingRectWithSize:CGSizeMake(280, 999) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
+        height = size.height + 30;
+    }
+    return height;
+}
+
 @end
 
 @interface TUICommonTextCell()
@@ -85,6 +96,12 @@
     
     if (self.textData.valueColor) {
         self.valueLabel.textColor = self.textData.valueColor;
+    }
+    
+    if (self.textData.enableMultiLineValue) {
+        self.valueLabel.numberOfLines = 0;
+    } else {
+        self.valueLabel.numberOfLines = 1;
     }
 }
 
