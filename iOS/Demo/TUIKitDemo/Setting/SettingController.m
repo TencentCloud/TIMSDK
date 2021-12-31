@@ -13,7 +13,6 @@
  *  本类依赖于腾讯云 TUIKit和IMSDK 实现
  */
 #import "SettingController.h"
-#import "LoginController.h"
 #import "AppDelegate.h"
 #import "TUIProfileCardCell.h"
 #import "TUIButtonCell.h"
@@ -29,17 +28,23 @@
 #import "TUICommonSwitchCell.h"
 #import "TCUtil.h"
 #import <QAPM/QAPM.h>
-#import "V2ManageTestViewController.h"
-#import "V2GroupTestViewController.h"
-#import "V2FriendTestViewController.h"
+
+
 #import "TUIDarkModel.h"
-#import "TestViewController.h"
+
 #import "TUILoginCache.h"
 #import "TUICommonModel.h"
 
 #if ENABLELIVE
 #import "TUIKitLive.h"
 #import "TUILiveUserProfile.h"
+#endif
+
+#if ENABLEPRIVATE
+#import "TestViewController.h"
+#import "V2ManageTestViewController.h"
+#import "V2GroupTestViewController.h"
+#import "V2FriendTestViewController.h"
 #endif
 
 #define SHEET_COMMON 1
@@ -90,7 +95,7 @@
     [self.parentViewController.view addGestureRecognizer:tap];
 
     self.tableView.tableFooterView = [[UIView alloc] init];
-    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:242/255.0 green:243/255.0 blue:245/255.0 alpha:1/1.0] dark:TController_Background_Color_Dark];
 
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"personalCell"];
@@ -98,7 +103,7 @@
     [self.tableView registerClass:[TUICommonSwitchCell class] forCellReuseIdentifier:@"switchCell"];
     
     if (@available(iOS 15.0, *)) {
-        self.tableView.sectionHeaderTopPadding = 0;
+//        self.tableView.sectionHeaderTopPadding = 0;
     }
     
     [[V2TIMManager sharedInstance] addIMSDKListener:self];
@@ -114,6 +119,7 @@
     }
 }
 
+#if ENABLEPRIVATE
 - (void)onTapTest:(UIGestureRecognizer *)recognizer
 {
     TestViewController *vc = [[TestViewController alloc] init];
@@ -121,6 +127,7 @@
     nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:nav animated:YES completion:nil];
 }
+#endif
 
 #pragma mark - V2TIMSDKListener
 - (void)onSelfInfoUpdated:(V2TIMUserFullInfo *)Info {
@@ -142,9 +149,10 @@
     personal.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
     personal.name = [self.profile showName];
     personal.genderString = [self.profile showGender];
-    personal.signature = [self.profile showSignature];
+    personal.signature = self.profile.selfSignature.length ? [NSString stringWithFormat:NSLocalizedString(@"SignatureFormat", nil), self.profile.selfSignature] : NSLocalizedString(@"no_personal_signature", nil);
     personal.cselector = @selector(didSelectCommon);
     personal.showAccessory = YES;
+    personal.showSignature = YES;
     self.profileCellData = personal;
     [_data addObject:@[personal]];
 
@@ -162,43 +170,29 @@
     if (self.profile.allowType == V2TIM_FRIEND_DENY_ANY) {
         friendApply.value = NSLocalizedString(@"MeFriendRequestMethodDenyAll", nil); // @"拒绝任何人加好友";
     }
-
-//    TCommonTextCellData *messageNotify = [TCommonTextCellData new];
-//    messageNotify.key = @"消息提醒";
-//    messageNotify.showAccessory = YES;
-//    messageNotify.cselector = @selector(didSelectNotifySet);
-//    [_data addObject:@[friendApply, messageNotify]];
     [_data addObject:@[friendApply]];
-
+    
+    TUICommonTextCellData *skin = [TUICommonTextCellData new];
+    skin.key = NSLocalizedString(@"MeSwitchSkin", nil); // @"更换主题";
+    skin.showAccessory = YES;
+    skin.value = @"轻快";
+    skin.cselector = @selector(didChangeSkin);
+    
+    TUICommonTextCellData *lang = [TUICommonTextCellData new];
+    lang.key = NSLocalizedString(@"MeSwitchLaunguage", nil); // @"切换语言";
+    lang.showAccessory = YES;
+    lang.value = @"跟随系统";
+    lang.cselector = @selector(didChangeLanguage);
+    
+//    [_data addObject:@[skin, lang]];
+    
     TUICommonTextCellData *about = [TUICommonTextCellData new];
     about.key = NSLocalizedString(@"MeAbout", nil); // @"关于腾讯·云通信";
     about.showAccessory = YES;
     about.cselector = @selector(didSelectAbout);
     [_data addObject:@[about]];
-
-    TUICommonTextCellData *log = [TUICommonTextCellData new];
-    log.key = NSLocalizedString(@"MeDevelop", nil); // @"开发调试";
-    log.showAccessory = YES;
-    log.cselector = @selector(didSelectLog);
-    [_data addObject:@[log]];
     
-    TUICommonTextCellData *privacy = [TUICommonTextCellData new];
-    privacy.key = NSLocalizedString(@"MePrivacy", nil); // @"隐私条例";
-    privacy.showAccessory = YES;
-    privacy.cselector = @selector(didSelectPrivacy);
-    [_data addObject:@[privacy]];
     
-    TUICommonTextCellData *disclaimer = [TUICommonTextCellData new];
-    disclaimer.key = NSLocalizedString(@"MeDisclaimer", nil); // @"免责声明";
-    disclaimer.showAccessory = YES;
-    disclaimer.cselector = @selector(didSelectDisclaimer);
-    [_data addObject:@[disclaimer]];
-    
-    TUICommonSwitchCellData *memory = [TUICommonSwitchCellData new];
-    memory.title = NSLocalizedString(@"MeReportMemoryLeak", nil); // @"内存泄露上报";
-    memory.on = self.memoryReport;
-    memory.cswitchSelector = @selector(onNotifySwitch:);
-    [_data addObject:@[memory]];
 
     TUIButtonCellData *button =  [[TUIButtonCellData alloc] init];
     button.title = NSLocalizedString(@"logout", nil); // @"退出登录";
@@ -227,7 +221,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 20;
+    return section == 0 ? 0 : 10;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -332,9 +326,9 @@
 - (void)didLogoutInSettingController:(SettingController *)controller
 {
     [[TUILoginCache sharedInstance] logout];
-    UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    LoginController *login = [board instantiateViewControllerWithIdentifier:@"LoginController"];
-    self.view.window.rootViewController = login;
+
+    UIViewController *loginVc = [AppDelegate.sharedInstance getLoginController];
+    self.view.window.rootViewController = loginVc;
 }
 
 - (void)didSelectAbout
@@ -350,6 +344,16 @@
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://cloud.tencent.com/product/im"]];
     }
     [TCUtil report:Action_Clickaboutsdk actionSub:@"" code:@(0) msg:@"clickaboutsdk"];
+}
+
+- (void)didChangeSkin
+{
+    [self.view makeToast:@"功能正在开发中，敬请期待"];
+}
+
+- (void)didChangeLanguage
+{
+    [self.view makeToast:@"功能正在开发中，敬请期待"];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -368,6 +372,7 @@
         } fail:nil];
         [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifyallowtype code:@(0) msg:@"modifyallowtype"];
     }
+#if ENABLEPRIVATE
     else if (actionSheet.tag == SHEET_V2API) {
         if (buttonIndex == 0) {
             V2ManageTestViewController *vc = [[V2ManageTestViewController alloc] initWithNibName:@"V2ManageTestViewController" bundle:nil];
@@ -393,7 +398,7 @@
             [self presentViewController:alert animated:YES completion:nil];
         }
     }
-
+#endif
 }
 - (void)didSelectLog
 {

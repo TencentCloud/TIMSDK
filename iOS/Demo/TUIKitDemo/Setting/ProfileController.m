@@ -20,12 +20,13 @@
 #import "TCUtil.h"
 #import "TUIDefine.h"
 #import "TUICommonAvatarCell.h"
+#import "TUIModifyView.h"
 
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2
 #define SHEET_SEX    3
 
-@interface ProfileController () <UIActionSheetDelegate, V2TIMSDKListener>
+@interface ProfileController () <UIActionSheetDelegate, V2TIMSDKListener, TModifyViewDelegate>
 @property (nonatomic, strong) NSMutableArray *data;
 @property V2TIMUserFullInfo *profile;
 @property (nonatomic, weak) UIDatePicker *picker;
@@ -54,7 +55,7 @@
     self.navigationItem.title = NSLocalizedString(@"ProfileDetails", nil); // @"个人信息";
 
     //self.tableView.tableFooterView = [[UIView alloc] init];
-    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:242/255.0 green:243/255.0 blue:245/255.0 alpha:1/1.0] dark:TController_Background_Color_Dark];
     self.clearsSelectionOnViewWillAppear = YES;
 
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
@@ -88,13 +89,13 @@
 
     TUICommonTextCellData *IDData = [TUICommonTextCellData new];
     IDData.key = NSLocalizedString(@"ProfileAccount", nil); // @"帐号";
-    IDData.value = self.profile.userID;
+    IDData.value = [NSString stringWithFormat:@"%@      ", self.profile.userID];
     IDData.showAccessory = NO;
     [_data addObject:@[nicknameData, IDData]];
 
     TUICommonTextCellData *signatureData = [TUICommonTextCellData new];
     signatureData.key = NSLocalizedString(@"ProfileSignature", nil); // @"个性签名";
-    signatureData.value = self.profile.showSignature;
+    signatureData.value = self.profile.selfSignature.length ? self.profile.selfSignature : NSLocalizedString(@"no_personal_signature", nil);
     signatureData.showAccessory = YES;
     signatureData.cselector = @selector(didSelectChangeSignature);
 
@@ -144,7 +145,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 20;
+    return section == 0 ? 0 : 10;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -186,42 +187,70 @@
     return nil;
 }
 
-
-- (void)didSelectChangeNick
+- (void)modifyView:(TUIModifyView *)modifyView didModiyContent:(NSString *)content
 {
-    TUITextEditController *vc = [[TUITextEditController alloc] initWithText:self.profile.nickName];
-    vc.title = NSLocalizedString(@"ProfileEditName", nil); // @"修改昵称";
-    [self.navigationController pushViewController:vc animated:YES];
-    @weakify(self)
-    [[RACObserve(vc, textValue) skip:1] subscribeNext:^(NSString *x) {
-        @strongify(self)
+    if (modifyView.tag == 0) {
+        // 文本校验
+        if (![self validForSignatureAndNick:content]) {
+            [TUITool makeToast:NSLocalizedString(@"ProfileEditNameDesc", nil)];
+            return;
+        }
         V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
-        info.nickName = x;
+        info.nickName = content;
         [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
-            self.profile.nickName = x;
+            self.profile.nickName = content;
             [self setupData];
         } fail:nil];
         [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifynick code:@(0) msg:@"modifynick"];
-    }];
+    } else if (modifyView.tag == 1) {
+        // 文本校验
+        if (![self validForSignatureAndNick:content]) {
+            [TUITool makeToast:NSLocalizedString(@"ProfileEditNameDesc", nil)];
+            return;
+        }
+        V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
+        info.selfSignature = content;
+        [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
+            self.profile.selfSignature = content;
+            [self setupData];
+        } fail:nil];
+        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifysignature code:@(0) msg:@"modifysignature"];
+    }
+    
+}
+
+- (BOOL)validForSignatureAndNick:(NSString *)content
+{
+    NSString *reg = @"^[a-zA-Z0-9_\u4e00-\u9fa5]*$";
+    NSPredicate *regex = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", reg];
+    return [regex evaluateWithObject:content];
+}
+
+
+- (void)didSelectChangeNick
+{
+    TModifyViewData *data = [[TModifyViewData alloc] init];
+    data.title = NSLocalizedString(@"ProfileEditName", nil);
+    data.desc = NSLocalizedString(@"ProfileEditNameDesc", nil);
+    data.content = self.profile.showName;
+    TUIModifyView *modify = [[TUIModifyView alloc] init];
+    modify.tag = 0;
+    modify.delegate = self;
+    [modify setData:data];
+    [modify showInWindow:self.view.window];
 }
 
 - (void)didSelectChangeSignature
 {
-    TUITextEditController *vc = [[TUITextEditController alloc] initWithText:[self.profile showSignature]];
-    vc.title = NSLocalizedString(@"ProfileEditSignture", nil); // @"修改个性签名";
-    [self.navigationController pushViewController:vc animated:YES];
-
-    @weakify(self)
-    [[RACObserve(vc, textValue) skip:1] subscribeNext:^(NSString *x) {
-        @strongify(self)
-        V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
-        info.selfSignature = x;
-        [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
-            self.profile.selfSignature = x;
-            [self setupData];
-        } fail:nil];
-        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifysignature code:@(0) msg:@"modifysignature"];
-    }];
+    TModifyViewData *data = [[TModifyViewData alloc] init];
+    data.title = NSLocalizedString(@"ProfileEditSignture", nil); // @"修改个性签名";
+    data.desc = NSLocalizedString(@"ProfileEditNameDesc", nil);
+    data.content = self.profile.selfSignature;
+    TUIModifyView *modify = [[TUIModifyView alloc] init];
+    modify.tag = 1;
+    modify.delegate = self;
+    [modify setData:data];
+    [modify showInWindow:self.view.window];
 }
 
 - (void)didSelectSex
@@ -324,30 +353,33 @@
 {
     if (_datePicker == nil) {
         UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height)];
-        cover.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        cover.backgroundColor = [UIColor d_colorWithColorLight:[[UIColor blackColor] colorWithAlphaComponent:0.5] dark:[UIColor.lightGrayColor colorWithAlphaComponent:0.5]];
         [cover addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDatePicker)]];
         
         UIView *menuView = [[UIView alloc] init];
-        menuView.backgroundColor = [UIColor whiteColor];
+        menuView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:UIColor.darkGrayColor];
         menuView.frame = CGRectMake(0, UIScreen.mainScreen.bounds.size.height - 340, UIScreen.mainScreen.bounds.size.width, 40);
         [cover addSubview:menuView];
         
         UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [cancelButton setTitle:@"cancel" forState:UIControlStateNormal];
+        [cancelButton setTitle:NSLocalizedString(@"Cancel", nil) forState:UIControlStateNormal];
         [cancelButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
         cancelButton.frame = CGRectMake(10, 0, 60, 35);
         [cancelButton addTarget:self action:@selector(hideDatePicker) forControlEvents:UIControlEventTouchUpInside];
         [menuView addSubview:cancelButton];
         
         UIButton *okButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [okButton setTitle:@"ok" forState:UIControlStateNormal];
+        [okButton setTitle:NSLocalizedString(@"confirm", nil) forState:UIControlStateNormal];
         [okButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
         okButton.frame = CGRectMake(cover.bounds.size.width - 10 - 60, 0, 60, 35);
         [okButton addTarget:self action:@selector(onOKDatePicker) forControlEvents:UIControlEventTouchUpInside];
         [menuView addSubview:okButton];
         
         UIDatePicker *picker = [[UIDatePicker alloc] init];
-        picker.backgroundColor = [UIColor whiteColor];
+        if (@available(iOS 13.4, *)) {
+            picker.preferredDatePickerStyle = UIDatePickerStyleWheels;
+        }
+        picker.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:UIColor.darkGrayColor];
         picker.datePickerMode = UIDatePickerModeDate;
         picker.frame = CGRectMake(0, CGRectGetMaxY(menuView.frame), cover.bounds.size.width, 300);
         [cover addSubview:picker];

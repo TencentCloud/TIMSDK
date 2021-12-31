@@ -60,20 +60,20 @@
 "ChatsNewPrivateGroupText"   = "创建讨论组";
 "ChatsNewGroupText"  = "创建群聊";
 "ChatsNewChatRoomText" = "创建聊天室";
-"ChatsNewCommunityText" = "创建社区";
+"ChatsNewCommunityText" = "创建社群";
 
 "ChatsCreatePrivateGroupTips" = "创建讨论组";
 "ChatsCreateGroupTips" = "创建群聊";
 "ChatsCreateChatRoomTips" = "创建聊天室";
 "ChatsCreateDefaultTips" = "创建群组";
-"ChatsCreateCommunityTips" = "创建社区";
+"ChatsCreateCommunityTips" = "创建社群";
 
 "ChatsSelectContact" = "选择联系人";
 
 "ContactsAddFriends" = "添加好友";
-"ContactsJoinGroup"  = "添加群组";
+"ContactsJoinGroup"  = "添加群聊";
 
-"MeFriendRequest" = "好友申请";
+"MeFriendRequest" = "加我为好友时";
 "MeFriendRequestMethodAgreeAll" = "同意任何用户加好友";
 "MeFriendRequestMethodNeedConfirm" = "需要验证";
 "MeFriendRequestMethodDenyAll" = "拒绝任何人加好友";
@@ -82,12 +82,16 @@
 "MeDevelop" = "开发调试";
 "MeReportMemoryLeak" = "内存泄漏上报";
 
+"MeSwitchSkin" = "更换主题";
+"MeSwitchLaunguage" = "切换语言";
+
 "ProfilePhoto" = "头像";
 "ProfileName"  = "昵称";
 "ProfileAccount" = "账号";
 "ProfileSignature" = "个性签名";
 "ProfileGender" = "性别";
 "ProfileEditName" = "修改昵称";
+"ProfileEditNameDesc" = "仅限中文、字母、数字和下划线";
 "ProfileEditSignture" = "修改个性签名";
 "ProfileEditGender" = "修改性别";
 "ProfileEditAlia" = "修改备注";
@@ -107,7 +111,7 @@
 "GroupJoin" = "添加群组";
 
 "FriendRequestFormat" = "我是%@";
-"FriendRequestFillInfo" = "填写信息";
+"FriendRequestFillInfo" = "添加好友";
 "FriendOneWay" = "单向好友";
 "FriendAddResultSuccessWait" = "发送成功,等待审核同意";
 "FriendAddResultForbid" = "对方禁止添加";
@@ -170,3 +174,10 @@
 
 "MarkAllMessageAsReadSucc" = "清空未读成功";
 "MarkAllMessageAsReadErrFormat" = "清空未读失败, %d, %@";
+
+"ChooseNationOrRegion" = "选择国家或地区";
+
+"MessageTipsYouRecallMessage" = "你撤回了一条消息";
+"MessageTipsOthersRecallMessageFormat" = "\"%@\" 撤回了一条消息";
+"MessageTipsOthersRecallMessage" = "对方撤回了一条消息";
+"SignatureFormat" = "个性签名:%@";

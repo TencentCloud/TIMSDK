@@ -6,7 +6,7 @@
 "8jc-YP-vv6.normalTitle" = "登录";
 
 /* Class = "UILabel"; text = "登录·即时通信"; ObjectID = "FYr-lV-7eY"; */
-"FYr-lV-7eY.text" = "登录·即时通信";
+"FYr-lV-7eY.text" = "腾讯云即时通信 IM";
 
 /* Class = "UIButton"; normalTitle = "+"; ObjectID = "GPZ-iZ-NTr"; */
 "GPZ-iZ-NTr.normalTitle" = "+";

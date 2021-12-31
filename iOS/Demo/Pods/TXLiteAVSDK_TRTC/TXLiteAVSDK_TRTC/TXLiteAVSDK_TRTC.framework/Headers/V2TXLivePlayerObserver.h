@@ -44,24 +44,55 @@
 - (void)onWarning:(id<V2TXLivePlayer>)player code:(V2TXLiveCode)code message:(NSString *)msg extraInfo:(NSDictionary *)extraInfo;
 
 /**
- * 直播播放器视频状态变化通知
+ * 直播播放器分辨率变化通知
  *
  * @param player    回调该通知的播放器对象
- * @param status    状态码 {@link V2TXLivePlayStatus}
- * @param reason    状态对应的原因 {@link V2TXLiveStatusChangeReason}
- * @param extraInfo 扩展信息
+ * @param width     视频宽
+ * @param height    视频高
  */
-- (void)onVideoPlayStatusUpdate:(id<V2TXLivePlayer>)player status:(V2TXLivePlayStatus)status reason:(V2TXLiveStatusChangeReason)reason extraInfo:(NSDictionary *)extraInfo;
+- (void)onVideoResolutionChanged:(id<V2TXLivePlayer>)player width:(NSInteger)width height:(NSInteger)height;
 
 /**
- * 直播播放器音频状态变化通知
+ * 已经成功连接到服务器
  *
  * @param player    回调该通知的播放器对象
- * @param status    状态码 {@link V2TXLivePlayStatus}
- * @param reason    状态对应的原因 {@link V2TXLiveStatusChangeReason}
  * @param extraInfo 扩展信息
  */
-- (void)onAudioPlayStatusUpdate:(id<V2TXLivePlayer>)player status:(V2TXLivePlayStatus)status reason:(V2TXLiveStatusChangeReason)reason extraInfo:(NSDictionary *)extraInfo;
+- (void)onConnected:(id<V2TXLivePlayer>)player extraInfo:(NSDictionary *)extraInfo;
+
+/**
+ * 视频播放事件
+ *
+ * @param player    回调该通知的播放器对象
+ * @param firstPlay 第一次播放标志
+ * @param extraInfo 扩展信息
+ */
+- (void)onVideoPlaying:(id<V2TXLivePlayer>)player firstPlay:(BOOL)firstPlay extraInfo:(NSDictionary *)extraInfo;
+
+/**
+ * 音频播放事件
+ *
+ * @param player    回调该通知的播放器对象
+ * @param firstPlay 第一次播放标志
+ * @param extraInfo 扩展信息
+ */
+- (void)onAudioPlaying:(id<V2TXLivePlayer>)player firstPlay:(BOOL)firstPlay extraInfo:(NSDictionary *)extraInfo;
+
+/**
+ * 视频加载事件
+ *
+ * @param player    回调该通知的播放器对象
+ * @param extraInfo 扩展信息
+ */
+- (void)onVideoLoading:(id<V2TXLivePlayer>)player extraInfo:(NSDictionary *)extraInfo;
+
+/**
+ * 音频加载事件
+ *
+ * @param player    回调该通知的播放器对象
+ * @param extraInfo 扩展信息
+ */
+- (void)onAudioLoading:(id<V2TXLivePlayer>)player extraInfo:(NSDictionary *)extraInfo;
 
 /**
  * 播放器音量大小回调

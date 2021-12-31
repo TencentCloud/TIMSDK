@@ -12,26 +12,22 @@
 #import "TUIKit.h"
 #import "GenerateTestUserSig.h"
 #import "TUILogin.h"
+#import "TUIContactViewDataProvider.h"
 //sdkappid 请查看 GenerateTestUserSig.h
-
-//apns
-#ifdef DEBUG
-#define sdkBusiId 15108
-#else
-#define sdkBusiId 16205
-#endif
-
-//bugly
-#define BUGLY_APP_ID @"0a3cbc2dfe"
-
-#define installApp     @"_installApp_"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 + (id)sharedInstance;
 
-@property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) NSData *deviceToken;
+
+@property (nonatomic, strong) NSString *groupID;
+@property (nonatomic, strong) NSString *userID;
+@property (nonatomic, strong) V2TIMSignalingInfo *signalingInfo;
+
+@property (nonatomic, assign) NSUInteger unReadCount;
+@property (nonatomic, strong) TUIContactViewDataProvider *contactDataProvider;
 
 - (UIViewController *)getLoginController;
 - (UITabBarController *)getMainController;
