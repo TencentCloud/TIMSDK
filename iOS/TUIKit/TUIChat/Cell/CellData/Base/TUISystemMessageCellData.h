@@ -22,6 +22,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *content;
 
 /**
+ *  是否支持重新编辑
+ */
+@property (nonatomic, assign) BOOL supportReEdit;
+
+/**
+ *  可变字符串
+ *  撤回消息可以在 2min 内重新编辑，这里基于 attributedString 做展示。
+ */
+@property (nonatomic, strong) NSMutableAttributedString *attributedString;
+
+
+/**
  *  内容字体
  *  系统消息显示时的 UI 字体。
  */

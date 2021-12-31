@@ -410,6 +410,16 @@
     self.inputController.inputBar.inputTextView.overrideNextResponder = nil;
 }
 
+- (void)messageController:(TUIMessageController *)controller onReEditMessage:(TUIMessageCellData *)data
+{
+    V2TIMMessage *message = data.innerMessage;
+    if (message.elemType == V2TIM_ELEM_TYPE_TEXT) {
+        NSString *text = message.textElem.text;
+        self.inputController.inputBar.inputTextView.text = text;
+        [self.inputController.inputBar.inputTextView becomeFirstResponder];
+    }
+}
+
 #pragma mark - UIImagePickerController & UIDocumentPickerViewController
 - (void)selectPhotoForSend
 {

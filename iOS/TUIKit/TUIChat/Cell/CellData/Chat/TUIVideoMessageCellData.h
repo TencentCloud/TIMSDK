@@ -143,6 +143,11 @@ typedef void(^TUIVideoMessageDownloadCallback)(void);
 @property (nonatomic, assign) NSUInteger videoProgress;
 
 /**
+ *  视频视频下载 URL
+ */
+- (void)getVideoUrl:(void(^)(NSString *url))urlCallBack;
+
+/**
  *  获取视频封面
  *  本函数整合调用了 IM SDK，通过 SDK 提供的接口在线获取封面。
  *  1、下载前会判断封面是否在本地，若不在本地，则在本地直接获取封面文件。

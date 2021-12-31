@@ -17,6 +17,7 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (void)makeToast:(NSString *)str duration:(NSTimeInterval)duration position:(CGPoint)position;
 + (void)makeToast:(NSString *)str duration:(NSTimeInterval)duration idposition:(id)position;
 + (void)makeToastError:(NSInteger)error msg:(NSString *)msg;
++ (void)hideToast;
 + (void)makeToastActivity;
 + (void)hideToastActivity;
 

@@ -10,7 +10,7 @@
 #import "UIView+TUILayout.h"
 #import "UIView+TUIToast.h"
 #import "NSDictionary+TUISafe.h"
-#import "ReactiveObjC/ReactiveObjC.h"
+#import <ReactiveObjC/ReactiveObjC.h>
 #import <SDWebImage/SDWebImage.h>
 
 @import ImSDK_Plus;
@@ -491,7 +491,7 @@
 
 #define TUICore_TUICallingService_ShowCallingViewMethod_GroupIDKey @"TUICore_TUICallingService_ShowCallingViewMethod_GroupIDKey"
 #define TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey @"TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey"
-#define TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey @"TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey"
+#define TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey @"TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey" //@"0" 音频通话 @"1" 视频通话
 
 #define TUICore_TUICallingService_ReceivePushCallingMethod @"TUICore_TUICallingService_ReceivePushCallingMethod"
 #define TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo @"TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo"

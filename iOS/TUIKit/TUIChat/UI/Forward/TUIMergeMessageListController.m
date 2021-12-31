@@ -21,16 +21,16 @@
 #import "TUILinkCell.h"
 #import "TUIReplyMessageCell.h"
 #import "TUIDarkModel.h"
-#import "TUIImageViewController.h"
-#import "TUIVideoViewController.h"
 #import "TUIFileViewController.h"
 #import "TUIMessageDataProvider.h"
+#import "TUIMediaView.h"
 #import "TUIDefine.h"
 #import "TUIReplyMessageCellData.h"
 
 #define STR(x) @#x
 
 @interface TUIMergeMessageListController () <TUIMessageCellDelegate>
+@property (nonatomic, strong) NSArray<V2TIMMessage *> *imMsgs;
 @property (nonatomic, strong) NSMutableArray<TUIMessageCellData *> *uiMsgs;
 @property (nonatomic, strong) NSMutableDictionary *stylesCache;
 @property (nonatomic, strong) TUIMessageDataProvider *msgDataProvider;
@@ -104,12 +104,14 @@
 
 - (void)loadMessages
 {
-    __weak typeof(self) weakSelf = self;
+    @weakify(self)
     [self.mergerElem downloadMergerMessage:^(NSArray<V2TIMMessage *> *msgs) {
-        [weakSelf updateCellStyle:NO];
-        [weakSelf getMessages:msgs];
+        @strongify(self)
+        self.imMsgs = msgs;
+        [self updateCellStyle:NO];
+        [self getMessages:self.imMsgs];
     } fail:^(int code, NSString *desc) {
-        [weakSelf updateCellStyle:NO];
+        [self updateCellStyle:NO];
     }];
 }
 
@@ -390,9 +392,11 @@
 
 - (void)showImageMessage:(TUIImageMessageCell *)cell
 {
-    TUIImageViewController *image = [[TUIImageViewController alloc] init];
-    image.data = [cell imageData];
-    [self.navigationController pushViewController:image animated:YES];
+    CGRect frame = [cell.thumb convertRect:cell.thumb.bounds toView:[UIApplication sharedApplication].delegate.window];
+    TUIMediaView *mediaView = [[TUIMediaView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height)];
+    [mediaView setThumb:cell.thumb frame:frame];
+    [mediaView setCurMessage:cell.messageData.innerMessage allMessages:self.imMsgs];
+    [[UIApplication sharedApplication].keyWindow addSubview:mediaView];
 }
 
 - (void)playVoiceMessage:(TUIVoiceMessageCell *)cell
@@ -414,9 +418,11 @@
 
 - (void)showVideoMessage:(TUIVideoMessageCell *)cell
 {
-    TUIVideoViewController *video = [[TUIVideoViewController alloc] init];
-    video.data = [cell videoData];
-    [self.navigationController pushViewController:video animated:YES];
+    CGRect frame = [cell.thumb convertRect:cell.thumb.bounds toView:[UIApplication sharedApplication].delegate.window];
+    TUIMediaView *mediaView = [[TUIMediaView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height)];
+    [mediaView setThumb:cell.thumb frame:frame];
+    [mediaView setCurMessage:cell.messageData.innerMessage allMessages:self.imMsgs];
+    [[UIApplication sharedApplication].keyWindow addSubview:mediaView];
 }
 
 - (void)showFileMessage:(TUIFileMessageCell *)cell

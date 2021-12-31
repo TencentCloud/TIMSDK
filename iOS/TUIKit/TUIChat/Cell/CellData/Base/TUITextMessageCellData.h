@@ -35,12 +35,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic) UIColor *textColor;
 
+@property (nonatomic) BOOL isAudioCall;
+@property (nonatomic) BOOL isVideoCall;
+
 /**
  *  可变字符串
  *  文本消息接收到 content 字符串后，需要将字符串中可能存在的字符串表情（比如[微笑]），转为图片表情。
  *  本字符串则负责存储上述过程转换后的结果。
  */
-@property (nonatomic, strong) NSAttributedString *attributedString;
+@property (nonatomic, strong) NSMutableAttributedString *attributedString;
 
 /**
  *  文本内容尺寸。

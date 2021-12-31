@@ -22,7 +22,7 @@
     self = [super init];
     if (self) {
         _movieWritingQueue = dispatch_queue_create("com.tui.Movie.Writing.Queue", DISPATCH_QUEUE_SERIAL);
-        _movieURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", NSTemporaryDirectory(), @"TUICaptureTempMovie.mov"]];
+        _movieURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"TUICaptureTempMovie.mp4"]];
         _referenceOrientation = AVCaptureVideoOrientationPortrait;
     }
     return self;
@@ -36,7 +36,7 @@
         [self removeFile:self->_movieURL];
         NSError *error;
         if (!self->_movieWriter) {
-            self->_movieWriter = [[AVAssetWriter alloc] initWithURL:self->_movieURL fileType:AVFileTypeQuickTimeMovie error:&error];
+            self->_movieWriter = [[AVAssetWriter alloc] initWithURL:self->_movieURL fileType:AVFileTypeMPEG4 error:&error];
         }
         handle(error);
     });

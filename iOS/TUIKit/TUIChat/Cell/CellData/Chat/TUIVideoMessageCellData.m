@@ -18,6 +18,7 @@
 #define TVideo_Block_Response @"TVideo_Block_Response";
 
 @interface TUIVideoMessageCellData ()
+@property (nonatomic, strong) NSString *videoUrl;
 @property (nonatomic, assign) BOOL isDownloadingSnapshot;
 @property (nonatomic, assign) BOOL isDownloadingVideo;
 @property (nonatomic, copy) TUIVideoMessageDownloadCallback onFinish;
@@ -179,6 +180,24 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         self.videoProgress = progress;
     });
+}
+
+- (void)getVideoUrl:(void(^)(NSString *url))urlCallBack {
+    if (!urlCallBack) {
+        return;
+    }
+    if (self.videoUrl) {
+        urlCallBack(self.videoUrl);
+    }
+    @weakify(self)
+    V2TIMMessage *imMsg = self.innerMessage;
+    if (imMsg.elemType == V2TIM_ELEM_TYPE_VIDEO) {
+        [imMsg.videoElem getVideoUrl:^(NSString *url) {
+            @strongify(self)
+            self.videoUrl = url;
+            urlCallBack(self.videoUrl);
+        }];
+    }
 }
 
 - (BOOL)isVideoExist

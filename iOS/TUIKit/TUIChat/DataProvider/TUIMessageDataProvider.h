@@ -75,8 +75,6 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 @property (nonatomic, readonly) BOOL isFirstLoad;
 /// loadMessage请求的分页大小, default is 20
 @property (nonatomic) int pageCount;
-/// 消息上方的日期时间间隔, 单位秒 , default is (5 * 60)
-@property (nonatomic) NSUInteger maxDateMessageDelay;
 
 - (instancetype)initWithConversationModel:(TUIChatConversationModel *)conversationModel;
 

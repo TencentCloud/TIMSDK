@@ -110,6 +110,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)messageController:(TUIMessageController *)controller onRelyMessage:(TUIMessageCellData *)data;
 
+
+/**
+ * 重新编辑消息（一般用于撤回消息）
+ */
+- (void)messageController:(TUIMessageController *)controller onReEditMessage:(TUIMessageCellData *)data;
 @end
 
 NS_ASSUME_NONNULL_END

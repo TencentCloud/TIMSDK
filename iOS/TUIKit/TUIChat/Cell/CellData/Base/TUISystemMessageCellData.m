@@ -24,10 +24,25 @@
 
 - (CGSize)contentSize
 {
-    CGSize size = [self.content textSizeIn:CGSizeMake(TSystemMessageCell_Text_Width_Max, MAXFLOAT) font:self.contentFont];
+    CGSize size = [self.attributedString.string textSizeIn:CGSizeMake(TSystemMessageCell_Text_Width_Max, MAXFLOAT) font:self.contentFont];
     size.height += 10;
     size.width += 16;
     return size;
+}
+
+- (NSMutableAttributedString *)attributedString {
+    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:self.content];
+    NSDictionary *attributeDict = @{NSForegroundColorAttributeName:[UIColor d_systemGrayColor]};
+    [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
+    if (self.supportReEdit) {
+        NSString *reEditStr = TUIKitLocalizableString(TUIKitMessageTipsReEditMessage);
+        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@", reEditStr]]]; // @"重新编辑"
+        NSDictionary *attributeDict = @{NSForegroundColorAttributeName:[UIColor d_systemBlueColor]};
+        [attributeString setAttributes:attributeDict range:NSMakeRange(self.content.length + 1, reEditStr.length)];
+        [attributeString addAttribute:NSUnderlineStyleAttributeName value:
+                [NSNumber numberWithInteger:NSUnderlineStyleNone] range:NSMakeRange(self.content.length + 1, reEditStr.length)];
+    }
+    return attributeString;
 }
 
 - (CGFloat)heightOfWidth:(CGFloat)width
