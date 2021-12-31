@@ -90,12 +90,13 @@ public class SearchMainPresenter {
                     SearchDataBean dataBean = new SearchDataBean();
                     dataBean.setIconPath(searchDataBean.getIconPath());
                     dataBean.setTitle(searchDataBean.getUserID());
+                    dataBean.setSubTitleLabel(TUISearchService.getAppContext().getString(R.string.nick_name));
                     if (!TextUtils.isEmpty(searchDataBean.getRemark())) {
-                        dataBean.setSubTitle(TUISearchService.getAppContext().getString(R.string.nick_name) + searchDataBean.getRemark());
+                        dataBean.setSubTitle(searchDataBean.getRemark());
                     } else if (!TextUtils.isEmpty(searchDataBean.getNickName())) {
-                        dataBean.setSubTitle(TUISearchService.getAppContext().getString(R.string.nick_name) + searchDataBean.getNickName());
+                        dataBean.setSubTitle(searchDataBean.getNickName());
                     } else if (!TextUtils.isEmpty(searchDataBean.getUserID())) {
-                        dataBean.setSubTitle(TUISearchService.getAppContext().getString(R.string.nick_name) + searchDataBean.getUserID());
+                        dataBean.setSubTitle(searchDataBean.getUserID());
                     }
                     dataBean.setType(CONTACT_TYPE);
 
@@ -169,7 +170,8 @@ public class SearchMainPresenter {
                     dataBean.setIconPath(groupInfo.getFaceUrl());
                     if (searchGroupResult.getMatchField() == TUISearchGroupParam.TUISearchGroupMatchField.SEARCH_FIELD_GROUP_ID) {
                         dataBean.setTitle(groupInfo.getGroupName());
-                        dataBean.setSubTitle(TUISearchService.getAppContext().getString(R.string.include_group_id) + groupId);
+                        dataBean.setSubTitleLabel(TUISearchService.getAppContext().getString(R.string.include_group_id));
+                        dataBean.setSubTitle(groupId);
                     } else if (searchGroupResult.getMatchField() == TUISearchGroupParam.TUISearchGroupMatchField.SEARCH_FIELD_GROUP_NAME) {
                         dataBean.setTitle(groupInfo.getGroupName());
                     } else {
@@ -177,7 +179,8 @@ public class SearchMainPresenter {
                         if (searchGroupResult.getMatchMembers() != null && !searchGroupResult.getMatchMembers().isEmpty()) {
                             TUISearchGroupResult.TUISearchGroupMemberMatchResult searchGroupMemberMatchResult = searchGroupResult.getMatchMembers().get(0);
                             if (searchGroupMemberMatchResult.getMemberMatchField() != TUISearchGroupParam.TUISearchGroupMemberMatchField.SEARCH_FIELD_MEMBER_NONE) {
-                                dataBean.setSubTitle(TUISearchService.getAppContext().getString(R.string.include_group_member) + searchGroupMemberMatchResult.getMemberMatchValue());
+                                dataBean.setSubTitleLabel(TUISearchService.getAppContext().getString(R.string.include_group_member));
+                                dataBean.setSubTitle(searchGroupMemberMatchResult.getMemberMatchValue());
                             } else {
                                 dataBean.setSubTitle("");
                             }

@@ -18,8 +18,10 @@ public class BrandUtil {
      * 判断是否为华为设备
      */
     public static boolean isBrandHuawei() {
-        return "huawei".equalsIgnoreCase(getBuildBrand())
-                || "huawei".equalsIgnoreCase(getBuildManufacturer());
+        return "huawei".equalsIgnoreCase(getBuildBrand()) ||
+                "huawei".equalsIgnoreCase(getBuildManufacturer()) ||
+                "honor".equalsIgnoreCase(getBuildBrand()) ||
+                "honor".equalsIgnoreCase(getBuildManufacturer());
     }
 
     /**

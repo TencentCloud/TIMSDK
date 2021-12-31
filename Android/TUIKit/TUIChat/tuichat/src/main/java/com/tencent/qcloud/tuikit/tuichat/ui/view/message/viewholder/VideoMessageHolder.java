@@ -21,10 +21,12 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.video.VideoViewActivity;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,6 @@ public class VideoMessageHolder extends MessageContentHolder {
     private ImageView contentImage;
     private ImageView videoPlayBtn;
     private TextView videoDurationText;
-    private boolean mClicking;
 
     public VideoMessageHolder(View itemView) {
         super(itemView);
@@ -148,80 +149,23 @@ public class VideoMessageHolder extends MessageContentHolder {
             return;
         }
 
-        //以上代码为zanhanding修改，用于fix视频消息发送失败后不显示红色感叹号的问题
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mClicking) {
-                    return;
-                }
-                sendingProgress.setVisibility(View.VISIBLE);
-                mClicking = true;
-                //以下代码为zanhanding修改，用于fix点击发送失败视频后无法播放，并且红色感叹号消失的问题
-                final File videoFile = new File(videoPath);
-                if (videoFile.exists() && msg.getVideoSize() == videoFile.length()) {//若存在本地文件则优先获取本地文件
-                    mAdapter.notifyItemChanged(position);
-                    mClicking = false;
-                    play(msg);
-                    // 有可能播放的Activity还没有显示，这里延迟200ms，拦截压力测试的快速点击
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mClicking = false;
-                        }
-                    }, 200);
-                } else {
-                    getVideo(videoPath, msg, true, position);
-                }
-                //以上代码为zanhanding修改，用于fix点击发送失败视频后无法播放，并且红色感叹号消失的问题
-            }
-        });
-    }
-
-    private void getVideo(String videoPath, final VideoMessageBean msg, final boolean autoPlay, final int position) {
-        msg.downloadVideo(videoPath, new VideoMessageBean.VideoDownloadCallback() {
-            @Override
-            public void onProgress(long currentSize, long totalSize) {
-                TUIChatLog.i("downloadVideo progress current:", currentSize + ", total:" + totalSize);
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-                ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.download_file_error) + code + "=" + desc);
-                msg.setStatus(TUIMessageBean.MSG_STATUS_DOWNLOADED);
-                sendingProgress.setVisibility(View.GONE);
-                statusImage.setVisibility(View.VISIBLE);
-                mAdapter.notifyItemChanged(position);
-                mClicking = false;
-            }
-
-            @Override
-            public void onSuccess() {
-                mAdapter.notifyItemChanged(position);
-                if (autoPlay) {
-                    play(msg);
-                }
-                // 有可能播放的Activity还没有显示，这里延迟200ms，拦截压力测试的快速点击
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mClicking = false;
+                Intent intent = new Intent(TUIChatService.getAppContext(), ImageVideoScanActivity.class);
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                if (isForwardMode) {
+                    if (getDataSource() != null && !getDataSource().isEmpty()) {
+                        intent.putExtra(TUIChatConstants.OPEN_MESSAGES_SCAN_FORWARD, (Serializable) getDataSource());
                     }
-                }, 200);
+                }
+
+                intent.putExtra(TUIChatConstants.OPEN_MESSAGE_SCAN, msg);
+                intent.putExtra(TUIChatConstants.FORWARD_MODE, isForwardMode);
+                TUIChatService.getAppContext().startActivity(intent);
             }
         });
     }
-
-    private void play(final VideoMessageBean msg) {
-        statusImage.setVisibility(View.GONE);
-        sendingProgress.setVisibility(View.GONE);
-        Intent intent = new Intent(TUIChatService.getAppContext(), VideoViewActivity.class);
-        intent.putExtra(TUIChatConstants.CAMERA_IMAGE_PATH, msg.getDataPath());
-        intent.putExtra(TUIChatConstants.CAMERA_VIDEO_PATH, msg.getDataUriObj());
-        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-        TUIChatService.getAppContext().startActivity(intent);
-    }
-
 
     @Override
     public void setHighLightBackground(int color) {

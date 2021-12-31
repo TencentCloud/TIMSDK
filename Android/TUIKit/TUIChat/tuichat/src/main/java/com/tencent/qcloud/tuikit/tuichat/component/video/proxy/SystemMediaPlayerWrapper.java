@@ -47,6 +47,16 @@ public class SystemMediaPlayerWrapper implements IPlayer {
     }
 
     @Override
+    public void setOnSeekCompleteListener(final OnSeekCompleteListener l) {
+        mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete(MediaPlayer mediaPlayer) {
+                l.OnSeekComplete(SystemMediaPlayerWrapper.this);
+            }
+        });
+    }
+
+    @Override
     public void setOnVideoSizeChangedListener(final OnVideoSizeChangedListener l) {
         mMediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
             @Override
@@ -120,6 +130,21 @@ public class SystemMediaPlayerWrapper implements IPlayer {
     @Override
     public int getVideoHeight() {
         return mMediaPlayer.getVideoHeight();
+    }
+
+    @Override
+    public void seekTo(int progress) {
+        mMediaPlayer.seekTo(progress);
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return mMediaPlayer.getCurrentPosition();
+    }
+
+    @Override
+    public int getDuration() {
+        return mMediaPlayer.getDuration();
     }
 
 }

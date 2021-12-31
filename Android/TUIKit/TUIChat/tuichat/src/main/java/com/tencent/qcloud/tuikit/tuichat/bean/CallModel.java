@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
@@ -183,6 +184,11 @@ public class CallModel implements Cloneable, Serializable {
                 callModel.invitedList = signalingInfo.getInviteeList();
                 callModel.version = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
             }
+
+            if (extraMap != null) {
+                callModel.callType = ((Double)extraMap.get(TUIConstants.Message.CALLING_TYPE_KEY)).intValue();
+            }
+
         } catch (Exception e) {
             TUIChatLog.e(TAG, "convert2VideoCallData exception:" + e);
         }

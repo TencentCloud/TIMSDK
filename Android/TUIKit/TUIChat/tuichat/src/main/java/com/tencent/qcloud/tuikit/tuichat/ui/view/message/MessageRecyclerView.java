@@ -330,6 +330,20 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
             }
 
             @Override
+            public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onReEditRevokeMessage(view, position, messageInfo);
+                }
+            }
+
+            @Override
+            public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onRecallClick(view, position, messageInfo);
+                }
+            }
+
+            @Override
             public void onReplyMessageClick(View view, int position, String originMsgId) {
                 // 点击转发消息进行跳转
                 locateOriginMessage(originMsgId);

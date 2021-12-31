@@ -54,6 +54,11 @@ public class IjkMediaPlayerWrapper implements IPlayer {
     }
 
     @Override
+    public void setOnSeekCompleteListener(final OnSeekCompleteListener l) {
+        invokeListener("OnSeekCompleteListener", "setOnSeekCompleteListener", l);
+    }
+
+    @Override
     public void setDisplay(SurfaceHolder sh) {
         invoke("setDisplay", sh);
     }
@@ -106,6 +111,21 @@ public class IjkMediaPlayerWrapper implements IPlayer {
     @Override
     public int getVideoHeight() {
         return (int) invoke("getVideoHeight");
+    }
+
+    @Override
+    public void seekTo(int progress) {
+        invoke("seekTo", progress);
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return (int) invoke("getCurrentPosition");
+    }
+
+    @Override
+    public int getDuration() {
+        return (int) invoke("getDuration");
     }
 
     private Object invoke(String methodName, Object... args) {

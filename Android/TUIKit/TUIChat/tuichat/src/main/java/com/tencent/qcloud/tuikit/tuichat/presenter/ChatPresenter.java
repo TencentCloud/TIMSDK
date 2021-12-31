@@ -668,6 +668,9 @@ public abstract class ChatPresenter {
         }
         for (int i = 0; i < loadedMessageInfoList.size(); i++) {
             TUIMessageBean messageInfo = loadedMessageInfoList.get(i);
+            if (!TextUtils.equals(messageInfo.getUserId(), max.getUserID())) {
+                continue;
+            }
             if (messageInfo.getMessageTime() > max.getTimestamp()) {
                 messageInfo.setPeerRead(false);
             } else if (messageInfo.isPeerRead()) {

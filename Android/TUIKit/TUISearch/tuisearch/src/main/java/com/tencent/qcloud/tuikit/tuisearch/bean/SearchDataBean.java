@@ -8,6 +8,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 public class SearchDataBean implements Parcelable {
     private String title;
     private String subTitle;
+    private String subTitleLabel = "";
     private String iconPath;
     private int type;
     private int isSubTextMatch;
@@ -57,14 +58,20 @@ public class SearchDataBean implements Parcelable {
         }
     };
 
-    public String getSubTitle()
-    {
+    public String getSubTitle() {
         return this.subTitle;
     }
 
-    public void setSubTitle(String subTitle)
-    {
+    public void setSubTitle(String subTitle) {
         this.subTitle = subTitle;
+    }
+
+    public void setSubTitleLabel(String subTitleLabel) {
+        this.subTitleLabel = subTitleLabel;
+    }
+
+    public String getSubTitleLabel() {
+        return subTitleLabel;
     }
 
     public String getIconPath()

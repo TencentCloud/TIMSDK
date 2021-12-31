@@ -19,6 +19,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.CallModel;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageCustom;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
@@ -227,14 +228,36 @@ public class ChatMessageParser {
         String businessId = null;
         Double businessIdForTimeout = 0.0;
         Object businessIdObj = null;
+        Object dataInData = null;
         if (customJsonMap != null) {
             businessIdObj = customJsonMap.get(TUIConstants.Message.CUSTOM_BUSINESS_ID_KEY);
+            //dataInData = customJsonMap.get(TUIConstants.Message.CALLING_MESSAGE_DATA_KEY);
         }
         if (businessIdObj instanceof String) {
             businessId = (String) businessIdObj;
         } else if (businessIdObj instanceof Double) {
             businessIdForTimeout = (Double) businessIdObj;
         }
+
+        /*HashMap dataJsonMap = null;
+        Object typeObject = null;
+        int callType = 0;
+        if (dataInData instanceof String) {
+            String dataString = (String) dataInData;
+            Gson gsonData = new Gson();
+            try {
+                dataJsonMap = gsonData.fromJson(dataString, HashMap.class);
+            } catch (JsonSyntaxException e) {
+                TUIChatLog.e(TAG, " getCustomJsonMap error ");
+            }
+        }
+        if (dataJsonMap != null) {
+            typeObject = dataJsonMap.get(TUIConstants.Message.CALLING_TYPE_KEY);
+        }
+
+        if (typeObject instanceof Integer) {
+            callType = (Integer) typeObject;
+        }*/
 
         V2TIMSignalingInfo signalingInfo = V2TIMManager.getSignalingManager().getSignalingInfo(v2TIMMessage);
 
@@ -328,11 +351,12 @@ public class ChatMessageParser {
             tipsMessageBean.setExtra(content);
             message = tipsMessageBean;
         } else {
-            TextMessageBean textMessageBean = new TextMessageBean();
-            textMessageBean.setCommonAttribute(timMessage);
-            textMessageBean.setText(content);
-            textMessageBean.setExtra(content);
-            message = textMessageBean;
+            CallingMessageBean callingMessageBean = new CallingMessageBean();
+            callingMessageBean.setCommonAttribute(timMessage);
+            callingMessageBean.setText(content);
+            callingMessageBean.setExtra(content);
+            callingMessageBean.setCallType(callModel.callType);
+            message = callingMessageBean;
         }
         return message;
     }

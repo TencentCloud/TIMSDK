@@ -84,7 +84,7 @@
     <string name="no_response_call">无应答</string>
     <string name="accept_call">已接听</string>
     <string name="stop_group_call">结束群通话</string>
-    <string name="stop_call_tip">结束通话，通话时长：</string>
+    <string name="stop_call_tip">通话时长：</string>
     <string name="line_busy">忙线</string>
     <string name="reject_call">拒绝通话</string>
     <string name="invalid_command">不能识别的通话指令</string>

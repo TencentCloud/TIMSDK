@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:gravity="center"
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/chat_tips_tv"
@@ -12,6 +13,20 @@
         android:includeFontPadding="false"
         android:gravity="center"
         android:textColor="@color/text_tips_color"
+        android:clickable="true"
+        android:textSize="14.2sp" />
+
+    <TextView
+        android:id="@+id/re_edit"
+        android:layout_marginLeft="@dimen/btn_margin_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:includeFontPadding="false"
+        android:gravity="center"
+        android:text="@string/reedit_msg"
+        android:textColor="@color/font_blue"
+        android:visibility="gone"
         android:clickable="true"
         android:textSize="14.2sp" />
 

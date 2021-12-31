@@ -13,6 +13,10 @@ public interface OnItemClickListener {
 
     void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo);
 
+    void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo);
+
+    void onRecallClick(View view, int position, TUIMessageBean messageInfo);
+
     default void onReplyMessageClick(View view, int position, String originMsgId) {}
 
     default void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {};

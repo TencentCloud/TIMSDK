@@ -22,11 +22,13 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.photoview.PhotoViewActivity;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,25 +161,16 @@ public class ImageMessageHolder extends MessageContentHolder {
         contentImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String localImgPath = TUIChatUtils.getOriginImagePath(msg);
-                boolean isOriginImg = localImgPath != null;
-                // 点击后的预览图片路径 如果是原图直接放原图，否则用缩略图
-                String previewImgPath = localImgPath;
-                for (int i = 0; i < imgs.size(); i++) {
-                    ImageMessageBean.ImageBean img = imgs.get(i);
-                    if (img.getType() == ImageMessageBean.IMAGE_TYPE_ORIGIN) {
-                        PhotoViewActivity.mCurrentOriginalImage = img.getV2TIMImage();
-                    }
-                    if (img.getType() == ImageMessageBean.IMAGE_TYPE_THUMB) {
-                        if (!isOriginImg) {
-                            previewImgPath = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_THUMB);
-                        }
+                Intent intent = new Intent(TUIChatService.getAppContext(), ImageVideoScanActivity.class);
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                if (isForwardMode) {
+                    if (getDataSource() != null && !getDataSource().isEmpty()) {
+                        intent.putExtra(TUIChatConstants.OPEN_MESSAGES_SCAN_FORWARD, (Serializable) getDataSource());
                     }
                 }
-                Intent intent = new Intent(TUIChatService.getAppContext(), PhotoViewActivity.class);
-                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(TUIChatConstants.IMAGE_PREVIEW_PATH, previewImgPath);
-                intent.putExtra(TUIChatConstants.IS_ORIGIN_IMAGE, isOriginImg);
+
+                intent.putExtra(TUIChatConstants.OPEN_MESSAGE_SCAN, msg);
+                intent.putExtra(TUIChatConstants.FORWARD_MODE, isForwardMode);
                 TUIChatService.getAppContext().startActivity(intent);
             }
         });

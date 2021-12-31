@@ -97,4 +97,5 @@
     <string name="input_tip">没有输入昵称，请重新填写</string>
     <string name="profile_msgrev_opt">消息免打扰</string>
 
+    <string name="contact_over_limit_tip">最多只能选择%d个。</string>
 </resources>

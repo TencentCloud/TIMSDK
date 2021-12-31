@@ -131,8 +131,10 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (contactViewHolder != null && mDataList != null && mDataList.size() > 0 && position < mDataList.size()) {
             String title = mDataList.get(position).getTitle();
             String subTitle = mDataList.get(position).getSubTitle();
+            String subTitleLabel = mDataList.get(position).getSubTitleLabel();
             String path = mDataList.get(position).getIconPath();
 
+            contactViewHolder.mSubTvLabelText.setText(subTitleLabel);
             // subTitle 内容为空时，title 可居中显示
             if (TextUtils.isEmpty(subTitle)) {
                 RelativeLayout.LayoutParams layoutParams= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -206,6 +208,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private ImageView mUserIconView;
         private TextView mTvText;
         private TextView mSubTvText;
+        private TextView mSubTvLabelText;
 
         public ContactViewHolder(View itemView) {
             super(itemView);
@@ -213,6 +216,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mUserIconView = (ImageView) itemView.findViewById(R.id.ivAvatar);
             mTvText = (TextView) itemView.findViewById(R.id.conversation_title);
             mSubTvText = (TextView) itemView.findViewById(R.id.conversation_sub_title);
+            mSubTvLabelText = (TextView) itemView.findViewById(R.id.conversation_sub_title_label);
         }
     }
 

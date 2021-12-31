@@ -45,6 +45,11 @@ public class MediaPlayerProxy implements IPlayer {
     }
 
     @Override
+    public void setOnSeekCompleteListener(OnSeekCompleteListener l) {
+        mMediaPlayer.setOnSeekCompleteListener(l);
+    }
+
+    @Override
     public void setOnInfoListener(final OnInfoListener l) {
         mMediaPlayer.setOnInfoListener(l);
     }
@@ -102,5 +107,20 @@ public class MediaPlayerProxy implements IPlayer {
     @Override
     public int getVideoHeight() {
         return mMediaPlayer.getVideoHeight();
+    }
+
+    @Override
+    public void seekTo(int progress) {
+        mMediaPlayer.seekTo(progress);
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return mMediaPlayer.getCurrentPosition();
+    }
+
+    @Override
+    public int getDuration() {
+        return mMediaPlayer.getDuration();
     }
 }

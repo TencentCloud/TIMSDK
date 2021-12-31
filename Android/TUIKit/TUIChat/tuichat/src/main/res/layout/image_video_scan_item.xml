@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_dark"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/video_view_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/content_image_iv"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.tencent.qcloud.tuikit.tuichat.component.video.UIKitVideoView
+            android:id="@+id/video_play_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/pause_button_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:visibility="gone"
+            android:src="@drawable/ic_pause_center" />
+
+        <ProgressBar
+            android:id="@+id/message_sending_pb"
+            android:indeterminateTint="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:visibility="visible" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/photo_view_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <com.tencent.qcloud.tuikit.tuichat.component.photoview.view.PhotoView
+            android:id="@+id/photo_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <TextView
+            android:id="@+id/view_original_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/view_original_image_border"
+            android:padding="2dp"
+            android:text="@string/view_original_image"
+            android:textColor="#fff"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/btn_margin_bottom"
+        android:layout_marginLeft="@dimen/btn_padding_left"
+        android:clickable="true"
+        android:visibility="visible"
+        android:src="@drawable/ic_close_button" />
+
+    <LinearLayout
+        android:id="@+id/play_control_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/close_button"
+        android:layout_marginBottom="@dimen/btn_margin_top"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="@dimen/btn_padding_right"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:gravity="center_vertical" >
+
+        <ImageView
+            android:id="@+id/play_button"
+            android:layout_weight="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:clickable="true"
+            android:src="@drawable/ic_play_icon" />
+
+        <TextView
+            android:id="@+id/time_begin"
+            android:layout_weight="2"
+            android:layout_toRightOf="@+id/play_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:text="00:00"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
+
+        <SeekBar
+            android:id="@+id/play_seek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_toRightOf="@+id/time_begin"
+            android:layout_centerVertical="true"
+            android:maxHeight="2dp"
+            android:minHeight="2dp"
+            android:paddingBottom="3dp"
+            android:paddingLeft="12dp"
+            android:max="200"
+            android:paddingRight="12dp"
+            android:paddingTop="3dp"
+            android:progressDrawable="@drawable/layer_progress"
+            android:thumb="@drawable/shape_circle" />
+
+        <TextView
+            android:id="@+id/time_end"
+            android:layout_weight="2"
+            android:layout_marginRight="0dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:text="00:00"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

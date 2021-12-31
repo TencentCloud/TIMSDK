@@ -50,6 +50,13 @@ public final class TUIConstants {
         // 用户个人信息变化
         public static final String EVENT_SUB_KEY_USER_INFO_UPDATED = "eventSubKeyUserInfoUpdated";
 
+        // imsdk 初始化状态变化
+        public static final String EVENT_IMSDK_INIT_STATE_CHANGED = "eventIMSDKInitStateChanged";
+        // 开始初始化
+        public static final String EVENT_SUB_KEY_START_INIT = "eventSubKeyStartInit";
+        // 开始反初始化
+        public static final String EVENT_SUB_KEY_START_UNINIT = "eventSubKeyStartUnInit";
+
 
         public static final String SELF_ID = "selfId";
         public static final String SELF_SIGNATURE = "selfSignature";
@@ -263,6 +270,7 @@ public final class TUIConstants {
 
     public static final class Message {
         public static final String CUSTOM_BUSINESS_ID_KEY = "businessID";
+        public static final String CALLING_TYPE_KEY = "call_type";
     }
 
 }

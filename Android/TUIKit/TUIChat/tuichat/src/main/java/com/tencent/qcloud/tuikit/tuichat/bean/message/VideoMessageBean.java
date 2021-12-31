@@ -3,16 +3,17 @@ package com.tencent.qcloud.tuikit.tuichat.bean.message;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMDownloadCallback;
 import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.imsdk.v2.V2TIMVideoElem;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.util.FileUtil;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.VideoReplyQuoteBean;
 
@@ -149,6 +150,21 @@ public class VideoMessageBean extends TUIMessageBean {
             return videoElem.getVideoSize();
         }
         return 0;
+    }
+
+    /**
+     * 获取视频 URL 下载地址
+     */
+    public void getVideoUrl(final V2TIMValueCallback<String> callback) {
+        if (callback == null) {
+            return;
+        }
+        if (videoElem == null) {
+            callback.onError(BaseConstants.ERR_INVALID_PARAMETERS, "elem is null");
+            return;
+        }
+
+        videoElem.getVideoUrl(callback);
     }
 
     public void downloadSnapshot(String path, VideoDownloadCallback callback) {

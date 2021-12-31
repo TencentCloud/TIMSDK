@@ -39,14 +39,27 @@
                 android:textSize="16.3sp" />
 
             <TextView
+                android:id="@+id/conversation_sub_title_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="2dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="aaa"
+                android:textColor="@color/list_bottom_text_bg"
+                android:textSize="12.86sp" />
+
+            <TextView
                 android:id="@+id/conversation_sub_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="48dp"
-                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@id/conversation_sub_title_label"
+                android:layout_alignTop="@id/conversation_sub_title_label"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:layout_marginRight="48dp"
                 android:text="aaa"
                 android:textColor="@color/list_bottom_text_bg"
                 android:textSize="12.86sp" />

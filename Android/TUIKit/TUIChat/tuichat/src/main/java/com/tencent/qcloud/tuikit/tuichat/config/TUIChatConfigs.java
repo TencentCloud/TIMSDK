@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.config;
 
-import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.qcloud.tuikit.tuichat.component.face.CustomFaceConfig;
 
 public class TUIChatConfigs {
