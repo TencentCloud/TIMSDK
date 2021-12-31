@@ -110,6 +110,7 @@
 "TUIKitGroupDropoutTipsFormat" = "You have left the group %@.";
 
 "TUIKitMessageTipsYouRecallMessage" = "You recalled a message.";
+"TUIKitMessageTipsReEditMessage" = "re-edit";
 "TUIKitMessageTipsRecallMessageFormat" = "\"%@\" recalled a message.";
 "TUIkitMessageTipsOthersRecallMessage" = "The other user recalled a message.";
 "TUIKitMessageTipsJoinGroupFormat" = "\"%@\" joined the group.";
@@ -129,7 +130,7 @@
 "TUIKitMessageTipsUnmute" = "Unblocked";
 
 "TUIKitSignalingFinishGroupChat" = "End Group Chat";
-"TUIKitSignalingFinishConversationAndTimeFormat" = "Call ended. Duration: %.2d:%.2d.";
+"TUIKitSignalingFinishConversationAndTimeFormat" = "Duration: %.2d:%.2d.";
 "TUIKitSignalingNewCall" = "Start Call";
 "TUIKitSignalingNewGroupCallFormat" = "\"%@\" initiated a group call.";
 "TUIkitSignalingCancelCall" = "Cancel Call";
@@ -551,3 +552,12 @@
 "TUIKitNoSelfSignature" = "What's Up not set";
 "TUIKitSelfSignatureFormat" = "Signature:%@";
 /***************************** 消息回复 & 换肤 *************************/
+
+/***************************** 视频、图片加载 & 保存 *************************/
+"TUIKitVideoTranscoding" = "video transcoding...";
+"TUIKitVideoDownloading" = "video downloading...";
+"TUIKitVideoSavedSuccess" = "video saved successfully";
+"TUIKitVideoSavedFailed" = "video save failed";
+"TUIKitPictureSavedSuccess" = "picture saved successfully";
+"TUIKitPictureSavedFailed" = "picture saved failed";
+/***************************** 视频、图片加载 & 保存 *************************/

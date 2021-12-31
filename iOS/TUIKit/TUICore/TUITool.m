@@ -182,6 +182,12 @@
     }
 }
 
++ (void)hideToast {
+    if ([TUIConfig defaultConfig].enableToast) {
+        [[UIApplication sharedApplication].keyWindow hideToast];
+    }
+}
+
 + (void)makeToastActivity
 {
     if ([TUIConfig defaultConfig].enableToast) {

@@ -21,11 +21,8 @@
 #import "TUIReplyMessageCell.h"
 #import "TUIReplyMessageCellData.h"
 #import "TUIMessageDataProvider.h"
-#import "TUIConfig.h"
 #import "TUIFaceView.h"
-#import "TUIDefine.h"
-#import "TUIImageViewController.h"
-#import "TUIVideoViewController.h"
+#import "TUIMediaView.h"
 #import "TUIFileViewController.h"
 #import "TUIMergeMessageListController.h"
 #import "TUIChatDataProvider.h"
@@ -33,7 +30,11 @@
 #import "TUIMessageDataProvider+Call.h"
 #import "TUIMessageDataProvider+Live.h"
 #import "TUIChatPopMenu.h"
+#import "TUIDefine.h"
+#import "TUIConfig.h"
 #import "TUITool.h"
+#import "TUICore.h"
+#import <UIKit/UIWindow.h>
 
 @interface TUIMessageController () <TUIMessageCellDelegate,
 TUIJoinGroupMessageCellDelegate,
@@ -444,28 +445,34 @@ ReceiveReadMsgWithUserID:(NSString *)userId
         return;
     }
     
-    if ([cell isKindOfClass:[TUIVoiceMessageCell class]]) {
+    if ([cell isKindOfClass:[TUITextMessageCell class]]) {
+        [self clickTextMessage:(TUITextMessageCell *)cell];
+    }
+    else if ([cell isKindOfClass:[TUISystemMessageCell class]]) {
+        [self clickSystemMessage:(TUISystemMessageCell *)cell];
+    }
+    else if ([cell isKindOfClass:[TUIVoiceMessageCell class]]) {
         [self playVoiceMessage:(TUIVoiceMessageCell *)cell];
     }
-    if ([cell isKindOfClass:[TUIImageMessageCell class]]) {
+    else if ([cell isKindOfClass:[TUIImageMessageCell class]]) {
         [self showImageMessage:(TUIImageMessageCell *)cell];
     }
-    if ([cell isKindOfClass:[TUIVideoMessageCell class]]) {
+    else if ([cell isKindOfClass:[TUIVideoMessageCell class]]) {
         [self showVideoMessage:(TUIVideoMessageCell *)cell];
     }
-    if ([cell isKindOfClass:[TUIFileMessageCell class]]) {
+    else if ([cell isKindOfClass:[TUIFileMessageCell class]]) {
         [self showFileMessage:(TUIFileMessageCell *)cell];
     }
-    if ([cell isKindOfClass:[TUIMergeMessageCell class]]) {
+    else if ([cell isKindOfClass:[TUIMergeMessageCell class]]) {
         [self showRelayMessage:(TUIMergeMessageCell *)cell];
     }
-    if ([cell isKindOfClass:[TUIGroupLiveMessageCell class]]) {
+    else if ([cell isKindOfClass:[TUIGroupLiveMessageCell class]]) {
         [self showLiveMessage:(TUIGroupLiveMessageCell *)cell];
     }
-    if ([cell isKindOfClass:[TUILinkCell class]]) {
+    else if ([cell isKindOfClass:[TUILinkCell class]]) {
         [self showLinkMessage:(TUILinkCell *)cell];
     }
-    if ([cell isKindOfClass:TUIReplyMessageCell.class]) {
+    else if ([cell isKindOfClass:TUIReplyMessageCell.class]) {
         [self showReplyMessage:(TUIReplyMessageCell *)cell];
     }
 
@@ -724,6 +731,44 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     }];
 }
 
+- (void)clickTextMessage:(TUITextMessageCell *)cell
+{
+    V2TIMMessage *message = cell.messageData.innerMessage;
+    if (0 == message.userID.length) {
+        return;
+    }
+    NSInteger callType = 0;
+    NSDictionary *param = nil;
+    if ([TUIMessageDataProvider isCallMessage:message callTye:&callType]) {
+        if (1 == callType) {
+            param = @{
+                TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[message.userID],
+                TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : @"0"
+            };
+        } else if (2 == callType) {
+            param = @{
+                TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[message.userID],
+                TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : @"1"
+            };
+        }
+        if (param) {
+            [TUICore callService:TUICore_TUICallingService
+                          method:TUICore_TUICallingService_ShowCallingViewMethod
+                           param:param];
+        }
+    }
+}
+
+- (void)clickSystemMessage:(TUISystemMessageCell *)cell
+{
+    TUISystemMessageCellData *data = (TUISystemMessageCellData *)cell.messageData;
+    if (data.supportReEdit) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(messageController:onReEditMessage:)]) {
+            [self.delegate messageController:self onReEditMessage:cell.messageData];
+        }
+    }
+}
+
 - (void)playVoiceMessage:(TUIVoiceMessageCell *)cell
 {
     for (TUIMessageCellData *cellData in self.messageDataProvider.uiMsgs) {
@@ -742,16 +787,20 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 
 - (void)showImageMessage:(TUIImageMessageCell *)cell
 {
-    TUIImageViewController *image = [[TUIImageViewController alloc] init];
-    image.data = [cell imageData];
-    [self.navigationController pushViewController:image animated:YES];
+    CGRect frame = [cell.thumb convertRect:cell.thumb.bounds toView:[UIApplication sharedApplication].delegate.window];
+    TUIMediaView *mediaView = [[TUIMediaView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height)];
+    [mediaView setThumb:cell.thumb frame:frame];
+    [mediaView setCurMessage:cell.messageData.innerMessage];
+    [[UIApplication sharedApplication].keyWindow addSubview:mediaView];
 }
 
 - (void)showVideoMessage:(TUIVideoMessageCell *)cell
 {
-    TUIVideoViewController *video = [[TUIVideoViewController alloc] init];
-    video.data = [cell videoData];
-    [self.navigationController pushViewController:video animated:YES];
+    CGRect frame = [cell.thumb convertRect:cell.thumb.bounds toView:[UIApplication sharedApplication].delegate.window];
+    TUIMediaView *mediaView = [[TUIMediaView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height)];
+    [mediaView setThumb:cell.thumb frame:frame];
+    [mediaView setCurMessage:cell.messageData.innerMessage];
+    [[UIApplication sharedApplication].keyWindow addSubview:mediaView];
 }
 
 - (void)showFileMessage:(TUIFileMessageCell *)cell

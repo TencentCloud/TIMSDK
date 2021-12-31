@@ -25,9 +25,6 @@ typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
     TUIMultiResultOptionFiterUnsupportRelay = 1 << 0,           // 过滤掉不支持转发
 };
 
-
-
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                         TUIMessageController

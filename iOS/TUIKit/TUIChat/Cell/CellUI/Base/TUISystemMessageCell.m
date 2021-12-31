@@ -36,9 +36,7 @@
 {
     [super fillWithData:data];
     self.systemData = data;
-    //set data
-    self.messageLabel.text = data.content;
-    self.messageLabel.textColor = data.contentColor;
+    self.messageLabel.attributedText = data.attributedString;
     self.nameLabel.hidden = YES;
     self.avatarView.hidden = YES;
     self.retryView.hidden = YES;

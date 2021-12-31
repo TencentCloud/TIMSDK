@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChat'
-  spec.version      = '5.9.1872'
+  spec.version      = '5.9.1886'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -17,8 +17,8 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/tuikit/5.9.1872/ios/TUIChat.zip'}
-  spec.dependency 'TUICore','5.9.1872'
+  spec.source = { :http => 'https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/tuikit/5.9.1886/ios/TUIChat.zip'}
+  spec.dependency 'TUICore','5.9.1886'
 
   spec.subspec 'VoiceConvert' do |voiceConvert|
     voiceConvert.vendored_libraries = ['**/TUIChat/VoiceConvert/*.a']

@@ -1,0 +1,227 @@
+//
+//  TUIMessageSearchDataProvider.m
+//  TXIMSDK_TUIKit_iOS
+//
+//  Created by kayev on 2021/7/8.
+//
+
+#import "TUIMessageMediaDataProvider.h"
+#import "TUIMessageDataProvider+ProtectedAPI.h"
+#import "TUIImageMessageCellData.h"
+#import "TUIVideoMessageCellData.h"
+
+/// 消息拉取方式
+typedef NS_ENUM(NSInteger, TUIMediaLoadType){
+    TUIMediaLoadType_Older                 = 1,  ///< 拉取更早的富媒体消息
+    TUIMediaLoadType_Newer                 = 2,  ///< 拉取更新的富媒体消息
+    TUIMediaLoadType_Older_And_Newer       = 3,  ///< 拉取更早和更新的富媒体消息
+};
+
+@interface TUIMessageMediaDataProvider()
+@property (nonatomic) TUIChatConversationModel* conversationModel;
+@property (nonatomic, assign) TUIMediaLoadType loadType;
+@property (nonatomic, strong) V2TIMMessage* loadMessage;
+@property (nonatomic, assign) BOOL isOlderNoMoreMsg;
+@property (nonatomic, assign) BOOL isNewerNoMoreMsg;
+@end
+
+@implementation TUIMessageMediaDataProvider
+
+- (instancetype)initWithConversationModel:(nullable TUIChatConversationModel *)conversationModel {
+    self = [super initWithConversationModel:conversationModel];
+    if (self) {
+        self.conversationModel = conversationModel;
+        self.isOlderNoMoreMsg = NO;
+        self.isNewerNoMoreMsg = NO;
+        self.pageCount = 20;
+        self.medias = [NSMutableArray array];
+    }
+    return self;
+}
+
+- (void)loadMediaWithMessage:(V2TIMMessage *)curMessage {
+    self.loadMessage = curMessage;
+    self.loadType = TUIMediaLoadType_Older_And_Newer;
+    // 消息处于发送中的时候，通过消息拉取前后视频（图片）消息会异常，这里暂时只展示当前消息。
+    if (self.loadMessage.status != V2TIM_MSG_STATUS_SENDING) {
+        [self loadMedia];
+    } else {
+        NSMutableArray *medias = self.medias;
+        TUIMessageCellData *data = [TUIMessageMediaDataProvider getCellData:self.loadMessage];
+        if (data) {
+            [medias addObject:data];
+            self.medias = medias;
+        }
+    }
+}
+
+- (void)loadOlderMedia{
+    if (self.loadMessage.status != V2TIM_MSG_STATUS_SENDING) {
+        TUIMessageCellData *firstData = (TUIMessageCellData *)self.medias.firstObject;
+        self.loadMessage = firstData.innerMessage;
+        self.loadType = TUIMediaLoadType_Older;
+        [self loadMedia];
+    }
+}
+
+- (void)loadNewerMedia{
+    if (self.loadMessage.status != V2TIM_MSG_STATUS_SENDING) {
+        TUIMessageCellData *lastData = (TUIMessageCellData *)self.medias.lastObject;
+        self.loadMessage = lastData.innerMessage;
+        self.loadType = TUIMediaLoadType_Newer;
+        [self loadMedia];
+    }
+}
+
+- (void)loadMedia{
+    if (!self.loadMessage) {
+        return;
+    }
+    if (![self isNeedLoad:self.loadType]) {
+        return;
+    }
+    @weakify(self)
+    [self loadMediaMessage:self.loadMessage loadType:self.loadType SucceedBlock:^(NSArray<V2TIMMessage *> * _Nonnull olders, NSArray<V2TIMMessage *> * _Nonnull newers) {
+        @strongify(self)
+        NSMutableArray *medias = self.medias;
+        for (V2TIMMessage *msg in olders) {
+            TUIMessageCellData *data = [TUIMessageMediaDataProvider getCellData:msg];
+            if (data) {
+                [medias insertObject:data atIndex:0];
+            }
+        }
+        if(self.loadType == TUIMediaLoadType_Older_And_Newer) {
+            TUIMessageCellData *data = [TUIMessageMediaDataProvider getCellData:self.loadMessage];
+            if (data) {
+                [medias addObject:data];;
+            }
+        }
+        for (V2TIMMessage *msg in newers) {
+            TUIMessageCellData *data = [TUIMessageMediaDataProvider getCellData:msg];
+            if (data) {
+                [medias addObject:data];
+            }
+        }
+        self.medias = medias;
+    } FailBlock:^(int code, NSString *desc) {
+        NSLog(@"load message failed!");
+    }];
+}
+
+- (BOOL)isNeedLoad:(TUIMediaLoadType)type {
+    if ((TUIMediaLoadType_Older == type && self.isOlderNoMoreMsg) ||
+        (TUIMediaLoadType_Newer == type && self.isNewerNoMoreMsg) ||
+        (TUIMediaLoadType_Older_And_Newer == type && self.isOlderNoMoreMsg && self.isNewerNoMoreMsg)) {
+        return NO;
+    }
+    return YES;
+}
+
+- (void)loadMediaMessage:(V2TIMMessage *)loadMsg
+                loadType:(TUIMediaLoadType)type
+            SucceedBlock:(void(^)(NSArray<V2TIMMessage *> * _Nonnull olders, NSArray<V2TIMMessage *> * _Nonnull newers))SucceedBlock
+               FailBlock:(V2TIMFail)FailBlock {
+    if(self.isLoadingData) {
+        FailBlock(ERR_SUCC, @"正在加载中");
+        return;
+    }
+    self.isLoadingData = YES;
+    
+    dispatch_group_t group = dispatch_group_create();
+    __block NSArray *olders = @[];
+    __block NSArray *newers = @[];
+    __block BOOL isOldLoadFail = NO;
+    __block BOOL isNewLoadFail = NO;
+    __block int failCode = 0;
+    __block NSString *failDesc = nil;
+    
+    // 以定位消息为起点，加载最旧的20条富媒体消息
+    if(TUIMediaLoadType_Older == type || TUIMediaLoadType_Older_And_Newer == type)
+    {
+        dispatch_group_enter(group);
+        V2TIMMessageListGetOption *option = [[V2TIMMessageListGetOption alloc] init];
+        option.getType = V2TIM_GET_LOCAL_OLDER_MSG;
+        option.count = self.pageCount;
+        option.groupID = self.conversationModel.groupID;
+        option.userID = self.conversationModel.userID;
+        option.lastMsg = loadMsg;
+        option.messageTypeList = @[@(V2TIM_ELEM_TYPE_IMAGE), @(V2TIM_ELEM_TYPE_VIDEO)];
+        [V2TIMManager.sharedInstance getHistoryMessageList:option succ:^(NSArray<V2TIMMessage *> *msgs) {
+            olders = msgs?:@[];
+            if (olders.count < self.pageCount) {
+                self.isOlderNoMoreMsg = YES;
+            }
+            dispatch_group_leave(group);
+        } fail:^(int code, NSString *desc) {
+            isOldLoadFail = YES;
+            failCode = code;
+            failDesc = desc;
+            dispatch_group_leave(group);
+        }];
+    }
+    // 以定位消息为起点，加载最新的20条富媒体消息
+    if(TUIMediaLoadType_Newer == type || TUIMediaLoadType_Older_And_Newer == type)
+    {
+        dispatch_group_enter(group);
+        V2TIMMessageListGetOption *option = [[V2TIMMessageListGetOption alloc] init];
+        option.getType = V2TIM_GET_LOCAL_NEWER_MSG;
+        option.count = self.pageCount;
+        option.groupID = self.conversationModel.groupID;
+        option.userID = self.conversationModel.userID;
+        option.lastMsg = loadMsg;
+        option.messageTypeList = @[@(V2TIM_ELEM_TYPE_IMAGE), @(V2TIM_ELEM_TYPE_VIDEO)];
+        [V2TIMManager.sharedInstance getHistoryMessageList:option succ:^(NSArray<V2TIMMessage *> *msgs) {
+            newers = msgs?:@[];
+            if (newers.count < self.pageCount) {
+                self.isNewerNoMoreMsg = YES;
+            }
+            dispatch_group_leave(group);
+        } fail:^(int code, NSString *desc) {
+            isNewLoadFail = YES;
+            failCode = code;
+            failDesc = desc;
+            dispatch_group_leave(group);
+        }];
+    }
+    @weakify(self)
+    
+    dispatch_group_notify(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        @strongify(self)
+        self.isLoadingData = NO;
+        if (isOldLoadFail || isNewLoadFail) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                FailBlock(failCode, failDesc);
+            });
+        }
+        self.isFirstLoad = NO;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            SucceedBlock(olders, newers);
+        });
+    });
+}
+
+- (void)removeCache {
+    [self.medias removeAllObjects];
+    self.isNewerNoMoreMsg = NO;
+    self.isOlderNoMoreMsg = NO;
+    self.isFirstLoad = YES;
+}
+
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
+    if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
+        return nil;
+    }
+    TUIMessageCellData *data = nil;
+    if (message.elemType == V2TIM_ELEM_TYPE_IMAGE) {
+        data = [TUIImageMessageCellData getCellData:message];
+    } else if (message.elemType == V2TIM_ELEM_TYPE_VIDEO) {
+        data = [TUIVideoMessageCellData getCellData:message];
+    }
+    if (data) {
+        data.innerMessage = message;
+    }
+    return data;
+}
+
+@end

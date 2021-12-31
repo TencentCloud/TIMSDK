@@ -87,7 +87,7 @@
 
 
 
-- (NSAttributedString *)getFormatEmojiStringWithFont:(UIFont *)textFont
+- (NSMutableAttributedString *)getFormatEmojiStringWithFont:(UIFont *)textFont
 {
     //先判断text是否存在
     if (self.length == 0) {

@@ -10,11 +10,21 @@
 #import "TUITextMessageCell.h"
 #import "TUISystemMessageCell.h"
 #import "TUIDefine.h"
+#import "TUIDarkModel.h"
 
 @implementation TUIMessageDataProvider (Call)
 + (BOOL)isCallMessage:(V2TIMMessage *)message {
     /// 音视频通话信令文本，比如 “xxx 发起群通话”，“xxx接收群通话” 等
-    NSString *content = [self getCallSignalingContentWithMessage:message];
+    NSString *content = [self getCallSignalingContentWithMessage:message callTye:nil];
+    if (content.length > 0) {
+        return YES;
+    }
+    return NO;
+}
+
++ (BOOL)isCallMessage:(V2TIMMessage *)message callTye:(NSInteger *)callType{
+    /// 音视频通话信令文本，比如 “xxx 发起群通话”，“xxx接收群通话” 等
+    NSString *content = [self getCallSignalingContentWithMessage:message callTye:callType];
     if (content.length > 0) {
         return YES;
     }
@@ -22,10 +32,16 @@
 }
 
 + (TUIMessageCellData *)getCallCellData:(V2TIMMessage *)message{
-    NSString *content = [self getCallSignalingContentWithMessage:message];
+    NSInteger callType = 0;
+    NSString *content = [self getCallSignalingContentWithMessage:message callTye:&callType];
     TMsgDirection direction = message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming;
     if (message.userID.length > 0) {
         TUITextMessageCellData *cellData = [[TUITextMessageCellData alloc] initWithDirection:direction];
+        if (1 == callType) {
+            cellData.isAudioCall = YES;
+        } else if (2 == callType) {
+            cellData.isVideoCall = YES;
+        }
         cellData.content = content;
         V2TIMMessage *innerMessage = [V2TIMManager.sharedInstance createTextMessage:content];
         cellData.innerMessage = innerMessage;
@@ -43,12 +59,12 @@
 }
 
 + (NSString *)getCallMessageDisplayString:(V2TIMMessage *)message {
-    return [self getCallSignalingContentWithMessage:message];
+    return [self getCallSignalingContentWithMessage:message callTye:nil];
 }
 
 #pragma mark - Utils
 /// 信令消息对应的自定义文本
-+ (NSString *)getCallSignalingContentWithMessage:(V2TIMMessage *)message
++ (NSString *)getCallSignalingContentWithMessage:(V2TIMMessage *)message callTye:(NSInteger *)callType
 {
     V2TIMSignalingInfo *info = [[V2TIMManager sharedInstance] getSignallingInfo:message];
     if (!info) {
@@ -72,14 +88,14 @@
 
     // 判断是否为音视频通话信令
     NSString *callContent = @"";
-    if ([self isCallSignalingInfo:message info:info infoData:param withCustomContent:&callContent]) {
+    if ([self isCallSignalingInfo:message info:info infoData:param withCustomContent:&callContent callTye:callType]) {
         return callContent;
     }
     
     return nil;
 }
 
-+ (BOOL)isCallSignalingInfo:(V2TIMMessage *)message info:(V2TIMSignalingInfo *)info infoData:(NSDictionary *)param withCustomContent:(NSString **)content
++ (BOOL)isCallSignalingInfo:(V2TIMMessage *)message info:(V2TIMSignalingInfo *)info infoData:(NSDictionary *)param withCustomContent:(NSString **)content callTye:(NSInteger *)callType
 {
     NSMutableString *mutableContent = [NSMutableString string];
     
@@ -87,6 +103,9 @@
 //    if (![businessId isEqualToString:Signal_Business_Call]) {
     if (![businessId isEqualToString:@"av_call"]) {
         return NO;
+    }
+    if (callType) {
+        *callType = [[param objectForKey:@"call_type"] integerValue];
     }
     NSString *showName = [TUIMessageDataProvider getShowName:message];
     switch (info.actionType) {

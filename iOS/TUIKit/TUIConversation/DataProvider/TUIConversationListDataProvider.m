@@ -15,7 +15,7 @@
 @interface TUIConversationListDataProvider ()<V2TIMConversationListener, V2TIMGroupListener>
 @property (nonatomic, assign) uint64_t nextSeq;
 @property (nonatomic, assign) uint64_t isFinished;
-@property (nonatomic, strong) NSMutableArray<V2TIMConversation *> *convList;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, TUIConversationCellData *> *dataDic;
 @end
 
 @implementation TUIConversationListDataProvider
@@ -30,7 +30,7 @@
                                                  selector:@selector(didTopConversationListChanged:)
                                                      name:kTopConversationListChangedNotification
                                                    object:nil];
-        self.convList = [[NSMutableArray alloc] init];
+        self.dataDic = [NSMutableDictionary dictionary];
         self.pagePullCount = Default_PagePullCount;
         self.nextSeq = 0;
         self.isFinished = NO;
@@ -145,25 +145,7 @@
 
 - (void)updateConversation:(NSArray *)convList
 {
-    // 更新 UI 会话列表，如果 UI 会话列表有新增的会话，就替换，如果没有，就新增
-    for (int i = 0 ; i < convList.count ; ++ i) {
-        V2TIMConversation *conv = convList[i];
-        BOOL isExit = NO;
-        for (int j = 0; j < self.convList.count; ++ j) {
-            V2TIMConversation *localConv = self.convList[j];
-            if ([localConv.conversationID isEqualToString:conv.conversationID]) {
-                [self.convList replaceObjectAtIndex:j withObject:conv];
-                isExit = YES;
-                break;
-            }
-        }
-        if (!isExit) {
-            [self.convList addObject:conv];
-        }
-    }
-    // 更新 cell data
-    NSMutableArray *dataList = [NSMutableArray array];
-    for (V2TIMConversation *conv in self.convList) {
+    for (V2TIMConversation *conv in convList) {
         // 屏蔽会话
         if ([self filteConversation:conv]) {
             continue;
@@ -185,11 +167,15 @@
         data.isNotDisturb = ![conv.groupType isEqualToString:GroupType_Meeting] && (V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE == conv.recvOpt);
         data.orderKey = conv.orderKey;
         data.avatarImage = (conv.type == V2TIM_C2C ? DefaultAvatarImage : DefaultGroupAvatarImage);
-        [dataList addObject:data];
+        
+        if (data && data.conversationID) {
+            [self.dataDic setObject:data forKey:data.conversationID];
+        }
     }
+    NSMutableArray *newDataList = [NSMutableArray arrayWithArray:self.dataDic.allValues];
     // UI 会话列表根据 orderKey 重新排序
-    [self sortDataList:dataList];
-    self.dataList = dataList;
+    [self sortDataList:newDataList];
+    self.dataList = newDataList;
 }
 
 - (NSString *)getDraftContent:(V2TIMConversation *)conv
@@ -290,36 +276,61 @@
 
 - (NSMutableAttributedString *)getLastDisplayString:(V2TIMConversation *)conv
 {
-    NSString *lastMsgStr = @"";
-    // 先看下外部有没自定义会话的 lastMsg 展示信息
-    if (self.delegate && [self.delegate respondsToSelector:@selector(getConversationDisplayString:)]) {
-        lastMsgStr = [self.delegate getConversationDisplayString:conv];
-    }
-    // 外部没有自定义，通过消息获取 lastMsg 展示信息
-    if (lastMsgStr.length == 0 && conv.lastMessage) {
-        NSDictionary *param = @{TUICore_TUIChatService_GetDisplayStringMethod_MsgKey:conv.lastMessage};
-        lastMsgStr = [TUICore callService:TUICore_TUIChatService method:TUICore_TUIChatService_GetDisplayStringMethod param:param];
-    }
-    // 如果没有 lastMsg 展示信息，也没有草稿信息，直接返回 nil
-    if (lastMsgStr.length == 0 && conv.draftText.length == 0) {
-        return nil;
-    }
-    // 如果设置了免打扰，需要展示免打扰消息数量
-    // Meeting 群默认就是 V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE 状态，UI 上不特殊处理
-    if (![conv.groupType isEqualToString:GroupType_Meeting] && V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE == conv.recvOpt && conv.unreadCount > 0) {
-        lastMsgStr = [NSString stringWithFormat:@"[%d条] %@", conv.unreadCount,lastMsgStr];
-    }
-    // 如果有群 @ ，需要展示群 @ 信息
+    // 如果有群 @ ，展示群 @ 信息
     NSString *atStr = [self getGroupAtTipString:conv];
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",atStr]];
     NSDictionary *attributeDict = @{NSForegroundColorAttributeName:[UIColor d_systemRedColor]};
     [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
     
+    // 如果有草稿箱，优先展示草稿箱信息
     if(conv.draftText.length > 0){
         [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:TUIKitLocalizableString(TUIKitMessageTypeDraftFormat) attributes:@{NSForegroundColorAttributeName:[UIColor d_systemRedColor]}]];
         [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:[self getDraftContent:conv] attributes:@{NSForegroundColorAttributeName:[UIColor d_systemGrayColor]}]];
     } else {
+        // 没有草稿箱，展示会话 lastMsg 信息
+        NSString *lastMsgStr = @"";
+        
+        // 先看下外部有没自定义会话的 lastMsg 展示信息
+        if (self.delegate && [self.delegate respondsToSelector:@selector(getConversationDisplayString:)]) {
+            lastMsgStr = [self.delegate getConversationDisplayString:conv];
+        }
+        
+        // 外部没有自定义，通过消息获取 lastMsg 展示信息
+        if (lastMsgStr.length == 0 && conv.lastMessage) {
+            NSDictionary *param = @{TUICore_TUIChatService_GetDisplayStringMethod_MsgKey:conv.lastMessage};
+            lastMsgStr = [TUICore callService:TUICore_TUIChatService method:TUICore_TUIChatService_GetDisplayStringMethod param:param];
+        }
+        
+        // 如果没有 lastMsg 展示信息，也没有草稿信息，直接返回 nil
+        if (lastMsgStr.length == 0) {
+            return nil;
+        }
         [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:lastMsgStr]];
+    }
+    
+    // 如果设置了免打扰，展示消息免打扰状态
+    // Meeting 群默认就是 V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE 状态，UI 上不特殊处理
+    if (![conv.groupType isEqualToString:GroupType_Meeting] && V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE == conv.recvOpt && conv.unreadCount > 0) {
+        NSAttributedString *unreadString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"[%d条] ", conv.unreadCount]];
+        [attributeString insertAttributedString:unreadString atIndex:0];
+    }
+    
+    // 如果会话 lastMsg 在发送中或则发送失败，展示消息发送状态
+    if (V2TIM_MSG_STATUS_SENDING == conv.lastMessage.status || V2TIM_MSG_STATUS_SEND_FAIL == conv.lastMessage.status) {
+        UIFont *textFont = [UIFont systemFontOfSize:14];
+        NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@" " attributes:@{NSFontAttributeName: textFont}];
+        NSTextAttachment *attchment = [[NSTextAttachment alloc] init];
+        UIImage *image = nil;
+        if (V2TIM_MSG_STATUS_SENDING == conv.lastMessage.status) {
+            image = [UIImage d_imagePath:TUIChatImagePath(@"msg_sending_for_conv")];
+        } else {
+            image = [UIImage d_imagePath:TUIChatImagePath(@"msg_error_for_conv")];
+        }
+        attchment.image = image;
+        attchment.bounds = CGRectMake(0, -(textFont.lineHeight-textFont.pointSize)/2, textFont.pointSize, textFont.pointSize);
+        NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:(NSTextAttachment *)(attchment)];
+        [attributeString insertAttributedString:spaceString atIndex:0];
+        [attributeString insertAttributedString:imageString atIndex:0];
     }
     return attributeString;
 }
@@ -337,12 +348,8 @@
 
 - (TUIConversationCellData *)cellDataOfGroupID:(NSString *)groupID
 {
-    for (TUIConversationCellData *data in self.dataList) {
-        if ([data.groupID isEqualToString:groupID]) {
-            return data;
-        }
-    }
-    return nil;
+    NSString *conversationID = [NSString stringWithFormat:@"group_%@",groupID];
+    return self.dataDic[conversationID];
 }
 
 - (void)sortDataList:(NSMutableArray<TUIConversationCellData *> *)dataList
@@ -357,12 +364,7 @@
     NSMutableArray *list = [NSMutableArray arrayWithArray:self.dataList];
     [list removeObject:data];
     self.dataList = list;
-    for (V2TIMConversation *conv in self.convList) {
-        if ([conv.conversationID isEqualToString:data.conversationID]) {
-            [self.convList removeObject:conv];
-            break;
-        }
-    }
+    [self.dataDic removeObjectForKey:data.conversationID];
     [[V2TIMManager sharedInstance] deleteConversation:data.conversationID succ:nil fail:nil];
 }
 

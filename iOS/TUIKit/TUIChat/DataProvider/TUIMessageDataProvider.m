@@ -21,6 +21,9 @@
 #import "TUILogin.h"
 #import "NSString+TUIUtil.h"
 
+#define MaxDateMessageDelay 5 * 60 /// 消息上方的日期时间间隔, 单位秒 , default is (5 * 60)
+#define MaxReEditMessageDelay 2 * 60 /// 消息撤回后最大可编辑时间 , default is (2 * 60)
+
 static NSArray *customMessageInfo = nil;
 
 @interface TUIMessageDataProvider ()<V2TIMAdvancedMsgListener>
@@ -59,7 +62,6 @@ static NSArray *customMessageInfo = nil;
         _isNoMoreMsg = NO;
         _pageCount = 20;
         _isFirstLoad = YES;
-        _maxDateMessageDelay = 5 * 60;
         [self registerTUIKitNotification];
     }
     return self;
@@ -699,11 +701,16 @@ static NSArray *customMessageInfo = nil;
     return nil;
 }
 
+#pragma mark - UITextViewDelegate
+
 + (TUISystemMessageCellData *)getRevokeCellData:(V2TIMMessage *)message{
 
     TUISystemMessageCellData *revoke = [[TUISystemMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
     revoke.reuseId = TSystemMessageCell_ReuseId;
     if(message.isSelf){
+        if (message.elemType == V2TIM_ELEM_TYPE_TEXT && fabs([[NSDate date] timeIntervalSinceDate:message.timestamp]) < MaxReEditMessageDelay) {
+            revoke.supportReEdit = YES;
+        }
         revoke.content = TUIKitLocalizableString(TUIKitMessageTipsYouRecallMessage); // @"你撤回了一条消息";
         revoke.innerMessage = message;
         return revoke;
@@ -726,7 +733,7 @@ static NSArray *customMessageInfo = nil;
 
 - (nullable TUISystemMessageCellData *)getSystemMsgFromDate:(NSDate *)date {
     if (self.msgForDate == nil
-       || fabs([date timeIntervalSinceDate:self.msgForDate.timestamp]) > self.maxDateMessageDelay) {
+       || fabs([date timeIntervalSinceDate:self.msgForDate.timestamp]) > MaxDateMessageDelay) {
         TUISystemMessageCellData *system = [[TUISystemMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
         system.content = [TUITool convertDateToStr:date];
         system.reuseId = TSystemMessageCell_ReuseId;
@@ -863,7 +870,7 @@ static NSArray *customMessageInfo = nil;
     gen.maximumSize = CGSizeMake(192, 192);
     NSError *error = nil;
     CMTime actualTime;
-    CMTime time = CMTimeMakeWithSeconds(0.0, 10);
+    CMTime time = CMTimeMakeWithSeconds(0.5, 30);
     CGImageRef imageRef = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
     UIImage *image = [[UIImage alloc] initWithCGImage:imageRef];
     CGImageRelease(imageRef);

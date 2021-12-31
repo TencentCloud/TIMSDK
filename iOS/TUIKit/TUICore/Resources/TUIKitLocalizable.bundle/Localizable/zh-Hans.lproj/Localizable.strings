@@ -110,6 +110,7 @@
 "TUIKitGroupDropoutTipsFormat" = "您已退出 %@ 群";
 
 "TUIKitMessageTipsYouRecallMessage" = "您撤回了一条消息";
+"TUIKitMessageTipsReEditMessage" = "重新编辑";
 "TUIKitMessageTipsRecallMessageFormat" = "\"%@\"撤回了一条消息";
 "TUIkitMessageTipsOthersRecallMessage" = "对方撤回了一条消息";
 "TUIKitMessageTipsJoinGroupFormat" = "\"%@\"加入群组";
@@ -129,7 +130,7 @@
 "TUIKitMessageTipsUnmute" = "被解除禁言";
 
 "TUIKitSignalingFinishGroupChat" = "结束群聊";
-"TUIKitSignalingFinishConversationAndTimeFormat" = "结束通话，通话时长：%.2d:%.2d";
+"TUIKitSignalingFinishConversationAndTimeFormat" = "通话时长：%.2d:%.2d";
 "TUIKitSignalingNewCall" = "发起通话";
 "TUIKitSignalingNewGroupCallFormat" = "\"%@\" 发起群通话";
 "TUIkitSignalingCancelCall" = "取消通话";
@@ -551,3 +552,13 @@
 "TUIKitNoSelfSignature" = "暂无个性签名";
 "TUIKitSelfSignatureFormat" = "个性签名:%@";
 /***************************** 消息回复 & 换肤 *************************/
+
+
+/***************************** 视频、图片加载 & 保存 *************************/
+"TUIKitVideoTranscoding" = "视频转码中...";
+"TUIKitVideoDownloading" = "视频下载中...";
+"TUIKitVideoSavedSuccess" = "视频保存成功";
+"TUIKitVideoSavedFailed" = "视频保存失败";
+"TUIKitPictureSavedSuccess" = "图片保存成功";
+"TUIKitPictureSavedFailed" = "图片保存失败";
+/***************************** 视频、图片加载 & 保存 *************************/
