@@ -16,8 +16,6 @@
 #import <UIKit/UIKit.h>
 
 @interface LoginController : UIViewController
-@property (weak, nonatomic) IBOutlet UIButton *smsBtn;
-@property (weak, nonatomic) IBOutlet UIView *coverView;
 
 @end
 

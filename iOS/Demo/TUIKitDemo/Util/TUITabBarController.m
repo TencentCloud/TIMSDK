@@ -23,6 +23,12 @@
     [super viewDidLoad];
     //解决navigationtroller+tabbarcontroller，push是navigationbar变黑问题
     [UIApplication sharedApplication].keyWindow.backgroundColor = [UIColor whiteColor];
+    
+    self.tabBar.backgroundColor = self.backgroudColor;
+    self.tabBar.backgroundImage = [UIImage new];
+    self.tabBar.tintColor = self.selectTextColor;
+    self.tabBar.barTintColor = self.backgroudColor;
+    self.tabBar.shadowImage = [UIImage new];
 }
 
 - (void)setTabBarItems:(NSMutableArray *)tabBarItems
@@ -36,6 +42,18 @@
         [controllers addObject:item.controller];
     }
     self.viewControllers = controllers;
+}
+
+- (UIColor *)backgroudColor
+{
+    UIColor *lightColor = [UIColor colorWithRed:235/255.0 green:240/255.0 blue:246/255.0 alpha:1/1.0];
+    UIColor *darkColor = [UIColor blackColor];
+    return [UIColor d_colorWithColorLight:lightColor dark:darkColor];
+}
+
+- (UIColor *)selectTextColor
+{
+    return [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
 }
 
 - (void)viewDidLayoutSubviews {

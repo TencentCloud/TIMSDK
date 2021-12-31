@@ -82,12 +82,16 @@
 "MeDevelop" = "Develop and Debug";
 "MeReportMemoryLeak" = "Report Memory Leak";
 
+"MeSwitchSkin" = "Change Skin";
+"MeSwitchLaunguage" = "Change Launguage";
+
 "ProfilePhoto" = "Profile Photo";
 "ProfileName"  = "Name";
 "ProfileAccount" = "Account";
 "ProfileSignature" = "What's Up";
 "ProfileGender" = "Gender";
 "ProfileEditName" = "Edit Name";
+"ProfileEditNameDesc" = "Only for chinese, charactors, numbers and underline.";
 "ProfileEditSignture" = "Edit What's Up";
 "ProfileEditGender" = "Edit Gender";
 "ProfileEditAlia" = "Edit Alias";
@@ -107,7 +111,7 @@
 "GroupJoin" = "Add Group";
 
 "FriendRequestFormat" = "I'm %@";
-"FriendRequestFillInfo" = "Enter Information";
+"FriendRequestFillInfo" = "Add Friend";
 "FriendOneWay" = "One-way Friend";
 "FriendAddResultSuccessWait" = "Sent successfully. Wait for approval.";
 "FriendAddResultForbid" = "The other user disabled friend request.";
@@ -170,3 +174,10 @@
 
 "MarkAllMessageAsReadSucc" = "Success to mark all as read";
 "MarkAllMessageAsReadErrFormat" = "Error, %d, %@";
+
+"ChooseNationOrRegion" = "Choose Nation or Region";
+
+"MessageTipsYouRecallMessage" = "You recalled a message.";
+"MessageTipsOthersRecallMessageFormat" = "\"%@\" recalled a message.";
+"MessageTipsOthersRecallMessage" = "The other user recalled a message.";
+"SignatureFormat" = "Signature:%@";

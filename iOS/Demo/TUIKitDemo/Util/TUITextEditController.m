@@ -55,7 +55,7 @@
 {
     [super viewDidLoad];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TUIKitLocalizableString(Save) style:UIBarButtonItemStylePlain target:self action:@selector(onSave)];
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor groupTableViewBackgroundColor] dark:TController_Background_Color_Dark];
 
     _inputTextField = [[TTextField alloc] initWithFrame:CGRectZero];
     _inputTextField.text = [self.textValue stringByTrimmingCharactersInSet:

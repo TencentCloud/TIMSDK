@@ -76,6 +76,9 @@
 
     [self addSubview:_keyLabel];
     [self addSubview:_valueLabel];
+    
+    self.keyLabel.textColor = [UIColor d_colorWithColorLight:self.keyLabel.textColor dark:UIColor.lightGrayColor];
+    self.valueLabel.textColor = [UIColor d_colorWithColorLight:self.valueLabel.textColor dark:UIColor.lightGrayColor];
 
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }

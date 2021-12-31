@@ -33,7 +33,16 @@
 - (void)setupWithAppId:(UInt32)sdkAppId
 {
     _sdkAppid = sdkAppId;
+    
+    [self setupConfig];
     [TUILogin initWithSdkAppID:sdkAppId];
+}
+
+- (void)setupConfig
+{
+    // 设置头像的圆角
+    self.config.avatarType = TAvatarTypeRadiusCorner;
+    self.config.avatarCornerRadius = 5;
 }
 
 - (void)login:(NSString *)userID userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail

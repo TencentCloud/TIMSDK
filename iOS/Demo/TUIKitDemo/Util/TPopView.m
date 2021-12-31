@@ -55,6 +55,7 @@
     _tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     _tableView.tableFooterView = [[UIView alloc] init];
     _tableView.scrollEnabled = NO;
+    _tableView.layer.cornerRadius = 5.0;
     [self addSubview:_tableView];
 }
 
