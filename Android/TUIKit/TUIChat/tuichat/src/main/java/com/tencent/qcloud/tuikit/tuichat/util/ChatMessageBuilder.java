@@ -41,6 +41,10 @@ public class ChatMessageBuilder {
 
     public static TextAtMessageBean buildTextAtMessage(List<String> atUserList, String message) {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createTextAtMessage(message, atUserList);
+        if (message.contains("定向消息")) {
+            v2TIMMessage = V2TIMManager.getMessageManager().createTextMessage(message);
+            v2TIMMessage.setTargetGroupMemberList(atUserList);
+        }
         TextAtMessageBean textAtMessageBean = new TextAtMessageBean();
         textAtMessageBean.setCommonAttribute(v2TIMMessage);
         textAtMessageBean.onProcessMessage(v2TIMMessage);

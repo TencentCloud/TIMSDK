@@ -98,6 +98,9 @@ public class TUILogin {
                 notifyUserInfoChanged(info);
             }
         });
+        // 开始初始化 IMSDK，发送广播
+        TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, null);
+
         return V2TIMManager.getInstance().initSDK(context, sdkAppId, config);
     }
 
@@ -106,6 +109,9 @@ public class TUILogin {
      */
     public static void unInit() {
         sdkAppId = 0;
+        // 开始反初始化 IMSDK，发送广播
+        TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_UNINIT, null);
+
         V2TIMManager.getInstance().unInitSDK();
         TUIConfig.clearSelfInfo();
     }
@@ -118,6 +124,8 @@ public class TUILogin {
      * @param callback 登录是否成功的回调
      */
     public static void login(@NonNull String userId, @NonNull String userSig, @Nullable V2TIMCallback callback) {
+        TUILogin.userId = userId;
+        TUILogin.userSig = userSig;
         if (TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser()) && !TextUtils.isEmpty(userId)) {
             if (callback != null) {
                 callback.onSuccess();
@@ -125,8 +133,7 @@ public class TUILogin {
             getUserInfo(userId);
             return;
         }
-        TUILogin.userId = userId;
-        TUILogin.userSig = userSig;
+
         V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
             @Override
             public void onSuccess() {

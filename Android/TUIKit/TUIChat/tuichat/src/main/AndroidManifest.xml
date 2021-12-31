@@ -27,6 +27,10 @@
         <activity
             android:name=".component.photoview.PhotoViewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".component.imagevideoscan.ImageVideoScanActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name=".TUIChatService"

@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -37,7 +37,7 @@ dependencies {
     if (projects.contains("imsdk-plus")) {
         api project(':imsdk-plus')
     } else {
-        api 'com.tencent.imsdk:imsdk-plus:5.9.1872'
+        api 'com.tencent.imsdk:imsdk-plus:5.9.1886'
     }
 
 }

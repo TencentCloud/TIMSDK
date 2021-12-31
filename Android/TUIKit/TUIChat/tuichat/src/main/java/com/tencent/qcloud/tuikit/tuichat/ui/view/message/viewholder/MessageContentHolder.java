@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -32,6 +33,8 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     public boolean isForwardMode = false;
     public boolean isMultiSelectMode = false;
 
+    private List<TUIMessageBean> mDataSource = new ArrayList<>();
+
     protected ChatPresenter presenter;
 
     public MessageContentHolder(View itemView) {
@@ -49,6 +52,25 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
 
     public void setPresenter(ChatPresenter chatPresenter) {
         this.presenter = chatPresenter;
+    }
+
+    public void setDataSource(List<TUIMessageBean> dataSource) {
+        if (dataSource == null || dataSource.isEmpty()) {
+            mDataSource = null;
+        }
+
+        List<TUIMessageBean> mediaSource = new ArrayList<>();
+        for(TUIMessageBean messageBean : dataSource) {
+            int type = messageBean.getMsgType();
+            if (type == V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE || type == V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO) {
+                mediaSource.add(messageBean);
+            }
+        }
+        mDataSource = mediaSource;
+    }
+
+    public List<TUIMessageBean> getDataSource() {
+        return mDataSource;
     }
 
     @Override

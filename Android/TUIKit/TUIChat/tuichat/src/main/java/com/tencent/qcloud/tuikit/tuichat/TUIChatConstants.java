@@ -26,6 +26,9 @@ public class TUIChatConstants {
 
     public static final String CHAT_INFO = "chatInfo";
 
+    public static final String OPEN_MESSAGE_SCAN = "open_message_scan";
+    public static final String OPEN_MESSAGES_SCAN_FORWARD = "open_messages_scan_forward";
+
     public static final String FORWARD_MODE = "forward_mode";//0,onebyone;  1,merge;
     public static final int FORWARD_MODE_ONE_BY_ONE = 0;
     public static final int FORWARD_MODE_MERGE = 1;
@@ -58,6 +61,7 @@ public class TUIChatConstants {
 
     public static class Selection {
         public static final String SELECT_ALL = "select_all";
+        public static final String LIMIT = "limit";
 
         public static final String USER_ID_SELECT = "user_id_select";
         public static final String USER_NAMECARD_SELECT = "user_namecard_select";

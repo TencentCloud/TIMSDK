@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupMemberInfo;
@@ -69,6 +71,7 @@ public class StartGroupMemberSelectActivity extends Activity {
         String groupId = getIntent().getStringExtra(TUIContactConstants.Group.GROUP_ID);
         boolean isSelectFriends = getIntent().getBooleanExtra(TUIContactConstants.Selection.SELECT_FRIENDS, false);
         boolean isSelectForCall = getIntent().getBooleanExtra(TUIContactConstants.Selection.SELECT_FOR_CALL, false);
+        int limit = getIntent().getIntExtra(TUIContactConstants.Selection.LIMIT, Integer.MAX_VALUE);
 
         mTitleBar = findViewById(R.id.group_create_title_bar);
         mTitleBar.setTitle(getResources().getString(R.string.sure), ITitleBarLayout.Position.RIGHT);
@@ -77,6 +80,11 @@ public class StartGroupMemberSelectActivity extends Activity {
         mTitleBar.setOnRightClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mMembers.size() > limit) {
+                    String overLimitTip = getString(R.string.contact_over_limit_tip, limit);
+                    ToastUtil.toastShortMessage(overLimitTip);
+                    return;
+                }
                 Intent i = new Intent();
                 List<String> friendIdList = new ArrayList<>();
                 for (GroupMemberInfo memberInfo : mMembers) {

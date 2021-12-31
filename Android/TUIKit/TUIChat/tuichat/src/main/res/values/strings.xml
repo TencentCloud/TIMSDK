@@ -181,7 +181,7 @@
     <string name="reject_call">reject</string>
     <string name="invalid_command">invalid command</string>
     <string name="stop_group_call">End Group Call</string>
-    <string name="stop_call_tip">Call ended. Duration:</string>
+    <string name="stop_call_tip">Duration:</string>
     <string name="reject_calls">Decline Call</string>
 
     <string name="test_custom_message">View Details>></string>
@@ -190,4 +190,8 @@
     <string name="welcome_tip">Thank you for joining Instant Messaging!</string>
 
     <string name="resend_tips">Are you sure to resend ?</string>
+    <string name="delete_tips">Are you sure to delete the message？</string>
+    <string name="reedit_msg">re-edit</string>
+    <string name="save_tips">Save Success</string>
+    <string name="saving_tips">Saving</string>
 </resources>

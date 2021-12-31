@@ -9,23 +9,27 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
-import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView;
-import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-import com.tencent.qcloud.tuicore.TUICore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,6 +118,38 @@ public class TUIBaseChatFragment extends BaseFragment {
             @Override
             public void onUserIconLongClick(View view, int position, TUIMessageBean message) {
 
+            }
+
+            @Override
+            public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {
+                if (messageInfo == null) {
+                    return;
+                }
+                int messageType = messageInfo.getMsgType();
+                if (messageType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT){
+                    chatView.getInputLayout().appendText(messageInfo.getV2TIMMessage().getTextElem().getText());
+                } else {
+                    TUIChatLog.e(TAG, "error type: " + messageType);
+                }
+            }
+
+            @Override
+            public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {
+                if (messageInfo == null) {
+                    return;
+                }
+                CallingMessageBean callingMessageBean = (CallingMessageBean) messageInfo;
+                String callTypeString = "";
+                int callType = callingMessageBean.getCallType();
+                if (callType == CallingMessageBean.ACTION_ID_VIDEO_CALL) {
+                    callTypeString = TUIConstants.TUICalling.TYPE_VIDEO;
+                } else if (callType == CallingMessageBean.ACTION_ID_AUDIO_CALL) {
+                    callTypeString = TUIConstants.TUICalling.TYPE_AUDIO;
+                }
+                Map<String, Object> map = new HashMap<>();
+                map.put(TUIConstants.TUICalling.PARAM_NAME_USERIDS, new String[]{messageInfo.getUserId()});
+                map.put(TUIConstants.TUICalling.PARAM_NAME_TYPE, callTypeString);
+                TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_CALL, map);
             }
         });
 

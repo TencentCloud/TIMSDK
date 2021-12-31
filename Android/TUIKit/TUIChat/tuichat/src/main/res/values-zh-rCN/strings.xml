@@ -175,7 +175,7 @@
     <string name="no_response_call">无应答</string>
     <string name="accept_call">已接听</string>
     <string name="stop_group_call">结束群通话</string>
-    <string name="stop_call_tip">结束通话，通话时长：</string>
+    <string name="stop_call_tip">通话时长：</string>
     <string name="line_busy">忙线</string>
     <string name="reject_call">拒绝通话</string>
     <string name="invalid_command">不能识别的通话指令</string>
@@ -187,5 +187,8 @@
     <string name="welcome_tip">欢迎加入云通信IM大家庭！</string>
 
     <string name="resend_tips">确定重发吗？</string>
-
+    <string name="delete_tips">是否删除该消息？</string>
+    <string name="reedit_msg">重新编辑</string>
+    <string name="save_tips">保存成功</string>
+    <string name="saving_tips">保存中...</string>
 </resources>

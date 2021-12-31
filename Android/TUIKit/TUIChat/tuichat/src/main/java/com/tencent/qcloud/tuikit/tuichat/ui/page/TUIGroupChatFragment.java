@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -74,6 +75,24 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
                 String result_id = messageBean.getV2TIMMessage().getSender();
                 String result_name = messageBean.getV2TIMMessage().getNickName();
                 chatView.getInputLayout().addInputText(result_name, result_id);
+            }
+
+            @Override
+            public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {
+                if (messageInfo == null) {
+                    return;
+                }
+                int messageType = messageInfo.getMsgType();
+                if (messageType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT){
+                    chatView.getInputLayout().appendText(messageInfo.getV2TIMMessage().getTextElem().getText());
+                } else {
+                    TUIChatLog.e(TAG, "error type: " + messageType);
+                }
+            }
+
+            @Override
+            public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {
+
             }
         });
     }

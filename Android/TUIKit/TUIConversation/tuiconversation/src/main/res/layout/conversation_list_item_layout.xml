@@ -87,6 +87,36 @@
             android:textSize="13.44sp"
             android:visibility="gone" />
 
+        <RelativeLayout
+            android:id="@+id/message_status_layout"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_above="@+id/view_line"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="1.37dp"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
+            android:layout_toRightOf="@+id/conversation_at_msg">
+
+            <ProgressBar
+                android:id="@+id/message_status_sending"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/message_status_failed"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitCenter"
+                android:src="@drawable/message_send_fail"
+                android:visibility="gone" />
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/conversation_last_msg"
             android:layout_width="wrap_content"
@@ -95,11 +125,12 @@
             android:layout_alignParentBottom="true"
             android:layout_marginRight="48dp"
             android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
-            android:layout_toRightOf="@+id/conversation_at_msg"
+            android:layout_toRightOf="@+id/message_status_layout"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/list_bottom_text_bg"
             android:textSize="13.44sp" />
+
 
         <ImageView
             android:id="@+id/not_disturb"

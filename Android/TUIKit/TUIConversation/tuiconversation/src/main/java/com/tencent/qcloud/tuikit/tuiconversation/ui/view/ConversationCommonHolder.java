@@ -8,10 +8,13 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
@@ -35,6 +38,9 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected TextView atInfoText;
     protected ImageView disturbView;
     protected CheckBox multiSelectCheckBox;
+    protected RelativeLayout messageStatusLayout;
+    public ProgressBar messageSending;
+    public ImageView messagefailed;
     private boolean isForwardMode = false;
 
     public ConversationCommonHolder(View itemView) {
@@ -48,6 +54,9 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         atInfoText = rootView.findViewById(R.id.conversation_at_msg);
         disturbView = rootView.findViewById(R.id.not_disturb);
         multiSelectCheckBox = rootView.findViewById(R.id.select_checkbox);
+        messageStatusLayout = rootView.findViewById(R.id.message_status_layout);
+        messagefailed = itemView.findViewById(R.id.message_status_failed);
+        messageSending = itemView.findViewById(R.id.message_status_sending);
     }
 
     public void setForwardMode(boolean forwardMode) {
@@ -155,11 +164,32 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             disturbView.setVisibility(View.GONE);
         }
 
+        V2TIMMessage lastMessage = conversation.getLastMessage();
+        if (lastMessage != null) {
+            int status = lastMessage.getStatus();
+            if (status == V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL) {
+                messageStatusLayout.setVisibility(View.VISIBLE);
+                messagefailed.setVisibility(View.VISIBLE);
+                messageSending.setVisibility(View.GONE);
+            } else if (status == V2TIMMessage.V2TIM_MSG_STATUS_SENDING) {
+                messageStatusLayout.setVisibility(View.VISIBLE);
+                messagefailed.setVisibility(View.GONE);
+                messageSending.setVisibility(View.VISIBLE);
+            } else {
+                messageStatusLayout.setVisibility(View.GONE);
+                messagefailed.setVisibility(View.GONE);
+                messageSending.setVisibility(View.GONE);
+            }
+        }
+
         if (isForwardMode) {
             messageText.setVisibility(View.GONE);
             timelineText.setVisibility(View.GONE);
             unreadText.setVisibility(View.GONE);
             atInfoText.setVisibility(View.GONE);
+            messageStatusLayout.setVisibility(View.GONE);
+            messagefailed.setVisibility(View.GONE);
+            messageSending.setVisibility(View.GONE);
         }
 
         //// 由子类设置指定消息类型的views

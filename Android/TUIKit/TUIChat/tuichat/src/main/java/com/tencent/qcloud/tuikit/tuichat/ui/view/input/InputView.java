@@ -91,6 +91,10 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     protected static final int VIDEO_RECORD = 3;
     protected static final int SEND_PHOTO = 4;
     protected static final int SEND_FILE = 5;
+
+    // 音视频通话成员数限制
+    protected static final int CALL_MEMBER_LIMIT = 8;
+
     /**
      * 语音/文字切换输入控件
      */
@@ -997,6 +1001,21 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         }
     }
 
+    public void appendText(String text) {
+        if (mChatInfo == null) {
+            TUIChatLog.e(TAG, "appendText error :  chatInfo is null");
+            return;
+        }
+        if (mTextInput == null) {
+            TUIChatLog.e(TAG, "appendText error :  textInput is null");
+            return;
+        }
+        String draftText = mTextInput.getText().toString();
+        draftText += text;
+        mTextInput.setText(draftText);
+        mTextInput.setSelection(mTextInput.getText().length());
+    }
+
     public void setChatInfo(ChatInfo chatInfo) {
         mChatInfo = chatInfo;
         if (chatInfo != null) {
@@ -1165,6 +1184,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 bundle.putString(TUIConstants.TUICalling.PARAM_NAME_TYPE, type);
                 bundle.putString(TUIChatConstants.GROUP_ID, getChatInfo().getId());
                 bundle.putBoolean(TUIChatConstants.SELECT_FOR_CALL, true);
+                bundle.putInt(TUIChatConstants.Selection.LIMIT, CALL_MEMBER_LIMIT);
                 TUICore.startActivity(getContext(), "StartGroupMemberSelectActivity", bundle, 11);
             }
             return;

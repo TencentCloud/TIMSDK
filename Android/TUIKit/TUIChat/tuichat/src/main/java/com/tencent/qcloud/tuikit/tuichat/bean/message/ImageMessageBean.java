@@ -15,6 +15,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ImageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -167,7 +168,7 @@ public class ImageMessageBean  extends TUIMessageBean {
         return "";
     }
 
-    public static class ImageBean {
+    public static class ImageBean implements Serializable {
         private V2TIMImageElem.V2TIMImage v2TIMImage;
 
         public void setV2TIMImage(V2TIMImageElem.V2TIMImage v2TIMImage) {

@@ -7,6 +7,7 @@ import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service 注册和调用
@@ -22,7 +23,7 @@ class ServiceManager {
         return ServiceManagerHolder.serviceManager;
     }
 
-    private final HashMap<String, ITUIService> serviceMap = new HashMap<>();
+    private final Map<String, ITUIService> serviceMap = new ConcurrentHashMap<>();
 
     private ServiceManager() {}
 

@@ -115,8 +115,13 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(parent, this, viewType);
         if (holder instanceof MessageContentHolder) {
-            ((MessageContentHolder) holder).isForwardMode = isForwardMode;
-            ((MessageContentHolder) holder).setPresenter(presenter);
+            MessageContentHolder messageContentHolder = (MessageContentHolder) holder;
+            messageContentHolder.isForwardMode = isForwardMode;
+            messageContentHolder.setPresenter(presenter);
+
+            if (isForwardMode) {
+                messageContentHolder.setDataSource(mDataSource);
+            }
         }
         return holder;
     }
@@ -200,6 +205,16 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 @Override
                 public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
                     changeCheckedStatus(msgId, position);
+                }
+
+                @Override
+                public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {
+
+                }
+
+                @Override
+                public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {
+
                 }
 
                 @Override

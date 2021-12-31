@@ -114,8 +114,10 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
             SearchDataBean dataBean = mDataList.get(position - 1);
             String title = dataBean.getTitle();
             String subTitle = dataBean.getSubTitle();
+            String subTitleLabel = dataBean.getSubTitleLabel();
             String path = dataBean.getIconPath();
 
+            contactViewHolder.mSubTvLabelText.setText(subTitleLabel);
             if (!TextUtils.isEmpty(path)) {
                 GlideEngine.loadImage(contactViewHolder.mUserIconView, path);
             } else {
@@ -197,6 +199,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
         private ImageView mUserIconView;
         private TextView mTvText;
         private TextView mSubTvText;
+        private TextView mSubTvLabelText;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
@@ -204,6 +207,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
             mUserIconView = (ImageView) itemView.findViewById(R.id.ivAvatar);
             mTvText = (TextView) itemView.findViewById(R.id.conversation_title);
             mSubTvText = (TextView) itemView.findViewById(R.id.conversation_sub_title);
+            mSubTvLabelText = (TextView) itemView.findViewById(R.id.conversation_sub_title_label);
         }
     }
 

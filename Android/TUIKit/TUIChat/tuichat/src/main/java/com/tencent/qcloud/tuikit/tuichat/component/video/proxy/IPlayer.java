@@ -17,6 +17,8 @@ public interface IPlayer {
 
     void setOnVideoSizeChangedListener(final OnVideoSizeChangedListener l);
 
+    void setOnSeekCompleteListener(final OnSeekCompleteListener l);
+
     void setOnInfoListener(final OnInfoListener l);
 
     void setDisplay(SurfaceHolder sh);
@@ -41,6 +43,10 @@ public interface IPlayer {
 
     int getVideoHeight();
 
+    void seekTo(int progress);
+    int getCurrentPosition();
+    int getDuration();
+
     interface OnPreparedListener {
         void onPrepared(IPlayer mp);
     }
@@ -59,5 +65,9 @@ public interface IPlayer {
 
     interface OnInfoListener {
         void onInfo(IPlayer mp, int what, int extra);
+    }
+
+    interface OnSeekCompleteListener {
+        void OnSeekComplete(IPlayer mp);
     }
 }
