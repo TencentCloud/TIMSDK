@@ -1,0 +1,21 @@
+.TRTCCaling-container {
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	background-image: url(https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png);
+	margin: 0;
+}
+.hidden {
+	display: none;
+}
+.TUICalling {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	z-index: 10;
+	background: #ffffff;
+}
+.show {
+	top: 0;
+	left: 0;
+}
