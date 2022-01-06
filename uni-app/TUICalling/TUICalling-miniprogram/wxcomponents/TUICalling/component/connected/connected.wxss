@@ -1,0 +1,186 @@
+.player {
+    position: absolute;
+    right: 16px;
+    top: 107px;
+    width: 100px;
+    height: 178px;
+    padding: 16px;
+    z-index: 3;
+  }
+  .pusher-video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* background-color: #f75c45; */
+    z-index: 1;
+  }
+  .stream-box {
+    position: relative;
+    float: left;
+    width: 50vw;
+    height: 260px;
+    /* background-color: #f75c45; */
+    z-index: 3;
+  }
+  .handle-btns {
+    position: absolute;
+    bottom: 44px;
+    width: 100vw;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+  }
+  .handle-btns .btn-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  .btn-normal {
+    width: 8vh;
+    height: 8vh;
+    box-sizing: border-box;
+    display: flex;
+    /* background: white; */
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+  }
+  .btn-image{
+    width: 8vh;
+    height: 8vh;
+    background: none;
+  }
+  .btn-hangup  {
+    width: 8vh;
+    height: 8vh;
+    background: #f75c45;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+  }
+  .btn-hangup>.btn-image {
+    width: 4vh;
+    height: 4vh;
+    background: none;
+  }
+  
+  .TRTCCalling-call-audio {
+    width: 100%;
+    height: 100%;
+  }
+
+  .btn-footer {
+    position: relative;
+  }
+  
+  .btn-footer .multi-camera {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .btn-footer .camera {
+    width: 64px;
+    height: 64px;
+    position: fixed;
+    left: 16px;
+    top: 107px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(#ffffff, 0.7);
+  }
+  .btn-footer .camera .camera-image {
+    width: 32px;
+    height: 32px;
+  }
+  
+.TUICalling-connected-layout {
+  width: 100%;
+  height: 100%;
+}
+.audio{
+  padding-top: 15vh;
+  background: #ffffff;
+}
+
+.pusher-audio {
+  width: 0;
+  height: 0;
+}
+
+.player-audio{
+  width: 0;
+  height: 0;
+}
+
+.live {
+  width: 100%;
+  height: 100%;
+}
+
+.other-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 18px;
+  letter-spacing: 0;
+  font-weight: 400;
+  padding: 16px;
+}
+
+.white {
+  color: #FFFFFF;
+  padding: 5px;
+}
+
+.black {
+  color: #000000;
+  padding: 5px;
+}
+
+.TRTCCalling-call-audio-box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.mutil-img {
+  justify-content: flex-start !important;
+}
+
+.TRTCCalling-call-audio-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.TRTCCalling-call-audio-img>image {
+  width: 25vw;
+  height: 25vw;
+  margin: 0 4vw;
+  border-radius: 4vw;
+  position: relative;
+}
+.TRTCCalling-call-audio-img text{
+  font-size: 20px;
+  color: #333333;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+.btn-list-item {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 16px 0;
+}
+
+.btn-image-small {
+  transform: scale(.7);
+}
+
+.avatar {
+	background: #dddddd;
+}

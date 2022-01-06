@@ -1,0 +1,21 @@
+<view class="TUICalling {{callStatus === 'idle' ? 'hidden': 'show'}}">
+  <view class="TRTCCaling-container">
+    <TUI-Calling
+      wx:if="{{callStatus === 'calling'}}"
+      isSponsor="{{isSponsor}}"
+      pusher="{{pusher}}"
+      callType="{{config.type}}"
+      remoteUsers="{{remoteUsers}}"
+      bind:callingEvent="handleCallingEvent"
+    ></TUI-Calling>
+    <TUI-Connected 
+      wx:if="{{callStatus === 'connection'}}"
+      playerList="{{playerList}}"
+      pusher="{{pusher}}"
+      callType="{{config.type}}"
+      soundMode="{{soundMode}}"
+      screen="{{screen}}"
+      bind:connectedEvent="handleConnectedEvent"
+    ></TUI-Connected>
+  </view>
+</view>

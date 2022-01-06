@@ -1,0 +1,18 @@
+{
+  "name": "腾讯云小程序音视频",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "tim-wx-sdk": "^2.15.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.16.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
