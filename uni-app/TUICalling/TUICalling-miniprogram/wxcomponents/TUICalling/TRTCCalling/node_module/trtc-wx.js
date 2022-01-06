@@ -65,10 +65,10 @@
     } }, { key: 'push', value(e) {
       this.queue.push(e);
     } }, { key: 'log', value(e) {
-      wx.request({ url: 'https://yun.tim.qq.com/v5/AVQualityReportSvc/C2S?sdkappid=1&cmdtype=jssdk_log', method: 'POST', header: { 'content-type': 'application/json' }, data: { timestamp: d(), sdkAppId: this.sdkAppId, userId: this.userId, version: this.version, log: e } });
+      uni.request({ url: 'https://yun.tim.qq.com/v5/AVQualityReportSvc/C2S?sdkappid=1&cmdtype=jssdk_log', method: 'POST', header: { 'content-type': 'application/json' }, data: { timestamp: d(), sdkAppId: this.sdkAppId, userId: this.userId, version: this.version, log: e } });
     } }, { key: 'send', value() {
       const e = this;if (!this.queue.sent()) {
-        if (!this.queue.length()) return;const t = this.queue.send();this.queue.content = 'string' !== typeof log ? '{"logs":['.concat(t.join(','), ']}') : t.join('\n'), wx.request({ url: 'https://yun.tim.qq.com/v5/AVQualityReportSvc/C2S?sdkappid=1&cmdtype=jssdk_log', method: 'POST', header: { 'content-type': 'application/json' }, data: { timestamp: d(), sdkAppId: this.sdkAppId, userId: this.userId, version: this.version, log: this.queue.content }, success() {
+        if (!this.queue.length()) return;const t = this.queue.send();this.queue.content = 'string' !== typeof log ? '{"logs":['.concat(t.join(','), ']}') : t.join('\n'), uni.request({ url: 'https://yun.tim.qq.com/v5/AVQualityReportSvc/C2S?sdkappid=1&cmdtype=jssdk_log', method: 'POST', header: { 'content-type': 'application/json' }, data: { timestamp: d(), sdkAppId: this.sdkAppId, userId: this.userId, version: this.version, log: this.queue.content }, success() {
           e.queue.confirm();
         }, fail() {
           e.queue.fail();
@@ -77,7 +77,7 @@
     } }]), t;
   }()); const y = (function () {
     function t(r, s) {
-      e(this, t), this.context = wx.createLivePusherContext(s), this.pusherAttributes = {}, Object.assign(this.pusherAttributes, m, r);
+      e(this, t), this.context = uni.createLivePusherContext(s), this.pusherAttributes = {}, Object.assign(this.pusherAttributes, m, r);
     } return r(t, [{ key: 'setPusherAttributes', value(e) {
       return Object.assign(this.pusherAttributes, e), this.pusherAttributes;
     } }, { key: 'start', value(e) {
@@ -95,7 +95,7 @@
     } }, { key: 'snapshot', value() {
       const e = this;return l.log('[apiLog][pusherSnapshot]'), new Promise(((t, r) => {
         e.context.snapshot({ quality: 'raw', complete(e) {
-          e.tempImagePath ? (wx.saveImageToPhotosAlbum({ filePath: e.tempImagePath, success(r) {
+          e.tempImagePath ? (uni.saveImageToPhotosAlbum({ filePath: e.tempImagePath, success(r) {
             t(e);
           }, fail(e) {
             l.error('[error] pusher截图失败: ', e), r(new Error('截图失败'));
@@ -163,7 +163,7 @@
     } }, { key: 'snapshot', value(e) {
       const t = this;return l.log('[playerSnapshot]', e), new Promise(((e, r) => {
         t.getPlayerContext().snapshot({ quality: 'raw', complete(t) {
-          t.tempImagePath ? (wx.saveImageToPhotosAlbum({ filePath: t.tempImagePath, success(r) {
+          t.tempImagePath ? (uni.saveImageToPhotosAlbum({ filePath: t.tempImagePath, success(r) {
             l.log('save photo is success', r), e(t);
           }, fail(e) {
             l.error('save photo is fail', e), r(e);
@@ -173,7 +173,7 @@
     } }, { key: 'setPlayerAttributes', value(e) {
       Object.assign(this.playerAttributes, e);
     } }, { key: 'getPlayerContext', value() {
-      return this.playerContext || (this.playerContext = wx.createLivePlayerContext(this.playerAttributes.id, this.ctx)), this.playerContext;
+      return this.playerContext || (this.playerContext = uni.createLivePlayerContext(this.playerAttributes.id, this.ctx)), this.playerContext;
     } }, { key: 'reset', value() {
       this.playerContext && (this.playerContext.stop(), this.playerContext = void 0), Object.assign(this.playerAttributes, f, { userID: '', streamType: '', streamID: '', hasVideo: !1, hasAudio: !1, volume: 0, playerContext: void 0 });
     } }]), t;
@@ -257,7 +257,7 @@
     } }]), t;
   }());return (function () {
     function t(r, s) {
-      const i = this;e(this, t), this.ctx = r, this.eventEmitter = new L, this.pusherInstance = null, this.userController = new I(this.eventEmitter, this.ctx), this.EVENT = p, 'test' !== s ? wx.getSystemInfo({ success(e) {
+      const i = this;e(this, t), this.ctx = r, this.eventEmitter = new L, this.pusherInstance = null, this.userController = new I(this.eventEmitter, this.ctx), this.EVENT = p, 'test' !== s ? uni.getSystemInfo({ success(e) {
         return i.systemInfo = e;
       } }) : (g.log = function () {}, l.log = function () {}, l.warn = function () {});
     } return r(t, [{ key: 'on', value(e, t, r) {

@@ -106,6 +106,9 @@ git clone https://gitee.com/cloudtencent/TIMSDK
 
 # 进入 uni-app TUICalling 项目
 cd TIMSDK/uni-app/TUICalling-miniprogram
+
+# 安装依赖
+npm install
 ```
 
 将项目中的 wxcomponents 中的 TUICalling 组件复制到自己项目的wxcomponents中，如果没有 wxcomponents文件，请将 wxcomponents 复制到自己的项目中。
