@@ -3,6 +3,7 @@ import 'package:im_api_example/im/addFriend.dart';
 import 'package:im_api_example/im/addFriendsToFriendGroup.dart';
 import 'package:im_api_example/im/addInvitedSignaling.dart';
 import 'package:im_api_example/im/addToBlackList.dart';
+import 'package:im_api_example/im/agreeFriendApplication.dart';
 import 'package:im_api_example/im/checkFriend.dart';
 import 'package:im_api_example/im/createFriendGroup.dart';
 import 'package:im_api_example/im/createGroup.dart';
@@ -51,10 +52,12 @@ import 'package:im_api_example/im/login.dart';
 import 'package:im_api_example/im/logout.dart';
 import 'package:im_api_example/im/markC2CMessageAsRead.dart';
 import 'package:im_api_example/im/markGroupMessageAsRead.dart';
+import 'package:im_api_example/im/MarkAllMessageAsRead.dart';
 import 'package:im_api_example/im/muteGroupMember.dart';
 import 'package:im_api_example/im/pinConversation.dart';
 import 'package:im_api_example/im/quitGroup.dart';
 import 'package:im_api_example/im/reSendMessage.dart';
+import 'package:im_api_example/im/refuseFriendApplication.dart';
 import 'package:im_api_example/im/renameFriendGroup.dart';
 import 'package:im_api_example/im/revokeMessage.dart';
 import 'package:im_api_example/im/sendC2CCustomMessage.dart';
@@ -145,29 +148,29 @@ class Config {
         },
         {
           "apiName": "sendC2CTextMessage",
-          "apiNameCN": "发送C2C文本消息",
-          "apiDesc": "发送C2C文本消息",
+          "apiNameCN": "发送C2C文本消息（3.6版本已弃用）",
+          "apiDesc": "发送C2C文本消息（3.6版本已弃用）",
           "detailRoute": SendC2CTextMessage(),
           "codeFile": "lib/im/sendC2CTextMessage.dart",
         },
         {
           "apiName": "sendC2CCustomMessage",
-          "apiNameCN": "发送C2C自定义消息",
-          "apiDesc": "发送C2C自定义消息",
+          "apiNameCN": "发送C2C自定义消息（3.6版本已弃用）",
+          "apiDesc": "发送C2C自定义消息（3.6版本已弃用）",
           "detailRoute": SendC2CCustomMessage(),
           "codeFile": "lib/im/sendC2CCustomMessage.dart",
         },
         {
           "apiName": "sendGroupTextMessage",
-          "apiNameCN": "发送Group文本消息",
-          "apiDesc": "发送Group文本消息",
+          "apiNameCN": "发送Group文本消息（3.6版本已弃用）",
+          "apiDesc": "发送Group文本消息（3.6版本已弃用）",
           "detailRoute": SendGroupTextMessage(),
           "codeFile": "lib/im/sendGroupTextMessage.dart",
         },
         {
           "apiName": "sendGroupCustomMessage",
-          "apiNameCN": "发送Group自定义消息",
-          "apiDesc": "发送Group自定义消息",
+          "apiNameCN": "发送Group自定义消息（3.6版本已弃用）",
+          "apiDesc": "发送Group自定义消息（3.6版本已弃用）",
           "detailRoute": SendGroupCustomMessage(),
           "codeFile": "lib/im/sendGroupCustomMessage.dart",
         },
@@ -402,8 +405,8 @@ class Config {
         },
         {
           "apiName": "setCloudCustomData",
-          "apiNameCN": "修改云端消息（String）",
-          "apiDesc": "修改云端消息（String）",
+          "apiNameCN": "修改云端消息（String-已弃用）",
+          "apiDesc": "修改云端消息（String-已弃用）",
           "detailRoute": SetCloudCustomData(),
           "codeFile": "lib/im/setCloudCustomData.dart",
         },
@@ -455,6 +458,13 @@ class Config {
           "apiDesc": "标记Group会话已读",
           "detailRoute": MarkGroupMessageAsRead(),
           "codeFile": "lib/im/markGroupMessageAsRead.dart",
+        },
+        {
+          "apiName": "MarkAllMessageAsRead",
+          "apiNameCN": "标记所有消息为已读",
+          "apiDesc": "标记所有消息为已读",
+          "detailRoute": MarkAllMessageAsRead(),
+          "codeFile": "lib/im/MarkAllMessageAsRead.dart",
         },
         {
           "apiName": "deleteMessageFromLocalStorage",
@@ -573,6 +583,20 @@ class Config {
           "apiDesc": "获取好友申请列表",
           "detailRoute": GetFriendApplicationList(),
           "codeFile": "lib/im/getFriendApplicationList.dart",
+        },
+        {
+          "apiName": "agreeFriendApplication",
+          "apiNameCN": "同意好友申请",
+          "apiDesc": "同意好友申请",
+          "detailRoute": AgreeFriendApplication(),
+          "codeFile": "lib/im/agreeFriendApplication.dart"
+        },
+        {
+          "apiName": "refuseFriendApplicationState",
+          "apiNameCN": "拒绝好友申请",
+          "apiDesc": "拒绝好友申请",
+          "detailRoute": RefuseFriendApplication(),
+          "codeFile": "lib/im/refuseFriendApplication.dart"
         },
         {
           "apiName": "getBlackList",

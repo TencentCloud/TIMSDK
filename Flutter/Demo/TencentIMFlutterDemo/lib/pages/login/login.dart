@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 // import 'package:device_info/device_info.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';

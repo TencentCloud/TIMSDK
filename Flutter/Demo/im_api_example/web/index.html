@@ -22,7 +22,13 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="im_api_example">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
+  <script src="main.1.0.0.bundle.js"></script>
+  <script src="ImWrapper.1.0.0.bundle.js"></script>
+  <script src="TrtcWrapper.2.0.0-dev.0.0.1.bundle.js"></script>
+  <script src='./tim-upload-plugin.js'></script>
+  <script src="./tim-js.js"></script>
+  <script src="./tim-js-friendship.js"></script>
+  <!-- <script src="./wrapper.js"></script> -->
   <title>im_api_example</title>
   <link rel="manifest" href="manifest.json">
 </head>
@@ -77,7 +83,7 @@
               loadMainDartJs();
             }
           });
-
+//
         // If service worker doesn't succeed in a reasonable amount of time,
         // fallback to plaint <script> tag.
         setTimeout(() => {

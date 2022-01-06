@@ -7,6 +7,7 @@ import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/enum/history_message_get_type.dart';
+import 'package:tencent_im_sdk_plugin/enum/history_msg_get_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
 class GetHistoryMessageListWithoutFormat extends StatefulWidget {
@@ -21,7 +22,7 @@ class GetHistoryMessageListWithoutFormatState
   String? lastMsgID;
   List<String> users = List.empty(growable: true);
   List<String> group = List.empty(growable: true);
-  int type = HistoryMessageGetType.V2TIM_GET_LOCAL_OLDER_MSG;
+  HistoryMsgGetTypeEnum type = HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG;
   getHistoryMessageListWithoutFormat() async {
     LinkedHashMap<dynamic, dynamic> res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
@@ -104,7 +105,7 @@ class GetHistoryMessageListWithoutFormatState
                             title: const Text('V2TIM_GET_CLOUD_NEWER_MSG'),
                             onPressed: () {
                               setState(() {
-                                type = HistoryMessageGetType
+                                type = HistoryMsgGetTypeEnum
                                     .V2TIM_GET_CLOUD_NEWER_MSG;
                                 lastMsgID = null;
                               });
@@ -115,7 +116,7 @@ class GetHistoryMessageListWithoutFormatState
                             title: const Text('V2TIM_GET_CLOUD_OLDER_MSG'),
                             onPressed: () {
                               setState(() {
-                                type = HistoryMessageGetType
+                                type = HistoryMsgGetTypeEnum
                                     .V2TIM_GET_CLOUD_OLDER_MSG;
                                 lastMsgID = null;
                               });
@@ -126,7 +127,7 @@ class GetHistoryMessageListWithoutFormatState
                             title: const Text('V2TIM_GET_LOCAL_OLDER_MSG'),
                             onPressed: () {
                               setState(() {
-                                type = HistoryMessageGetType
+                                type = HistoryMsgGetTypeEnum
                                     .V2TIM_GET_LOCAL_OLDER_MSG;
                                 lastMsgID = null;
                               });
@@ -137,7 +138,7 @@ class GetHistoryMessageListWithoutFormatState
                             title: const Text('V2TIM_GET_LOCAL_NEWER_MSG'),
                             onPressed: () {
                               setState(() {
-                                type = HistoryMessageGetType
+                                type = HistoryMsgGetTypeEnum
                                     .V2TIM_GET_LOCAL_NEWER_MSG;
                                 lastMsgID = null;
                               });

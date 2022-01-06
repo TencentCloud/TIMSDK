@@ -15,6 +15,7 @@ class RevokeMessageState extends State<RevokeMessage> {
   List<String> conversaions = List.empty(growable: true);
   List<String> msgIDs = List.empty(growable: true);
   revokeMessage() async {
+    // 注意：web中webMessageInstatnce 为必填写
     V2TimCallback res =
         await TencentImSDKPlugin.v2TIMManager.getMessageManager().revokeMessage(
               msgID: msgIDs.first,

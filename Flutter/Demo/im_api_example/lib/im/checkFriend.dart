@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/enum/friend_type.dart';
+import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_check_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
@@ -16,7 +17,7 @@ class CheckFriendState extends State<CheckFriend> {
   List<String> users = List.empty(growable: true);
   String? friendRemark;
   Map<String, dynamic>? resData;
-  int checkType = FriendType.V2TIM_FRIEND_TYPE_BOTH;
+  FriendTypeEnum checkType = FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH;
   checkFriend() async {
     V2TimValueCallback<List<V2TimFriendCheckResult>> res =
         await TencentImSDKPlugin.v2TIMManager
@@ -78,7 +79,8 @@ class CheckFriendState extends State<CheckFriend> {
                             title: const Text('双向好友'),
                             onPressed: () {
                               setState(() {
-                                checkType = FriendType.V2TIM_FRIEND_TYPE_BOTH;
+                                checkType =
+                                    FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH;
                               });
                               Navigator.pop(context);
                             },
@@ -87,7 +89,8 @@ class CheckFriendState extends State<CheckFriend> {
                             title: const Text('单向好友'),
                             onPressed: () {
                               setState(() {
-                                checkType = FriendType.V2TIM_FRIEND_TYPE_SINGLE;
+                                checkType =
+                                    FriendTypeEnum.V2TIM_FRIEND_TYPE_SINGLE;
                               });
                               Navigator.pop(context);
                             },

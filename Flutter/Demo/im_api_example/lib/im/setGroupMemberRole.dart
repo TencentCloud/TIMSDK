@@ -4,6 +4,8 @@ import 'package:im_api_example/im/groupMemberSelector.dart';
 import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_role.dart';
+import 'package:tencent_im_sdk_plugin/enum/group_member_role_enum.dart';
+import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
@@ -16,7 +18,8 @@ class SetGroupMemberRoleState extends State<SetGroupMemberRole> {
   Map<String, dynamic>? resData;
   List<String> group = List.empty(growable: true);
   List<String> memberList = List.empty(growable: true);
-  int role = GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_MEMBER;
+  GroupMemberRoleTypeEnum role =
+      GroupMemberRoleTypeEnum.V2TIM_GROUP_MEMBER_ROLE_MEMBER;
   setGroupMemberRole() async {
     V2TimCallback res = await TencentImSDKPlugin.v2TIMManager
         .getGroupManager()
@@ -95,7 +98,7 @@ class SetGroupMemberRoleState extends State<SetGroupMemberRole> {
                             title: const Text('V2TIM_GROUP_MEMBER_ROLE_ADMIN'),
                             onPressed: () {
                               setState(() {
-                                role = GroupMemberRoleType
+                                role = GroupMemberRoleTypeEnum
                                     .V2TIM_GROUP_MEMBER_ROLE_ADMIN;
                               });
                               Navigator.pop(context);
@@ -105,7 +108,7 @@ class SetGroupMemberRoleState extends State<SetGroupMemberRole> {
                             title: const Text('V2TIM_GROUP_MEMBER_ROLE_MEMBER'),
                             onPressed: () {
                               setState(() {
-                                role = GroupMemberRoleType
+                                role = GroupMemberRoleTypeEnum
                                     .V2TIM_GROUP_MEMBER_ROLE_MEMBER;
                               });
                               Navigator.pop(context);
@@ -115,7 +118,7 @@ class SetGroupMemberRoleState extends State<SetGroupMemberRole> {
                             title: const Text('V2TIM_GROUP_MEMBER_ROLE_OWNER'),
                             onPressed: () {
                               setState(() {
-                                role = GroupMemberRoleType
+                                role = GroupMemberRoleTypeEnum
                                     .V2TIM_GROUP_MEMBER_ROLE_OWNER;
                               });
                               Navigator.pop(context);
@@ -125,7 +128,7 @@ class SetGroupMemberRoleState extends State<SetGroupMemberRole> {
                             title: const Text('V2TIM_GROUP_MEMBER_UNDEFINED'),
                             onPressed: () {
                               setState(() {
-                                role = GroupMemberRoleType
+                                role = GroupMemberRoleTypeEnum
                                     .V2TIM_GROUP_MEMBER_UNDEFINED;
                               });
                               Navigator.pop(context);

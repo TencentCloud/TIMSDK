@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:im_api_example/config/config.dart';
-import 'package:im_api_example/provider/event.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
-import 'package:im_api_example/utils/toast.dart';
-import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 // import 'package:tpns_flutter_plugin/tpns_flutter_plugin.dart';
@@ -191,9 +187,9 @@ class SetOfflinePushConfigState extends State<SetOfflinePushConfig> {
   //   print("********");
   // }
 
-  void _showAlert(String title) {
-    Utils.toast(title);
-  }
+  // void _showAlert(String title) {
+  //   Utils.toast(title);
+  // }
 
   getToken() {}
   @override

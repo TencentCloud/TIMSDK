@@ -2,6 +2,7 @@ import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/enum/friend_type.dart';
+import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
@@ -18,7 +19,7 @@ class AddFriendState extends State<AddFriend> {
   String? friendGroup;
   String addWording = '';
   String addSource = 'flutter';
-  int addType = FriendType.V2TIM_FRIEND_TYPE_BOTH;
+  FriendTypeEnum addType = FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH;
   List<String> receiver = List.empty(growable: true);
   List<String> groupID = List.empty(growable: true);
   int priority = 0;
@@ -139,7 +140,7 @@ class AddFriendState extends State<AddFriend> {
                             title: const Text('双向好友'),
                             onPressed: () {
                               setState(() {
-                                addType = FriendType.V2TIM_FRIEND_TYPE_BOTH;
+                                addType = FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH;
                               });
                               Navigator.pop(context);
                             },
@@ -148,7 +149,8 @@ class AddFriendState extends State<AddFriend> {
                             title: const Text('单向好友'),
                             onPressed: () {
                               setState(() {
-                                addType = FriendType.V2TIM_FRIEND_TYPE_SINGLE;
+                                addType =
+                                    FriendTypeEnum.V2TIM_FRIEND_TYPE_SINGLE;
                               });
                               Navigator.pop(context);
                             },
