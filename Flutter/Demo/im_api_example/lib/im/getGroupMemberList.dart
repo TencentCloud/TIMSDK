@@ -2,6 +2,7 @@ import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
+import 'package:tencent_im_sdk_plugin/enum/group_member_filter_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_filter_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
@@ -15,7 +16,8 @@ class GetGroupMemberList extends StatefulWidget {
 class GetGroupMemberListState extends State<GetGroupMemberList> {
   Map<String, dynamic>? resData;
   List<String> group = List.empty(growable: true);
-  int filter = GroupMemberFilterType.V2TIM_GROUP_MEMBER_FILTER_ALL;
+  GroupMemberFilterTypeEnum filter =
+      GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_ALL;
   String nextSeq = "0";
   getGroupMemberList() async {
     V2TimValueCallback<V2TimGroupMemberInfoResult> res =
@@ -82,7 +84,7 @@ class GetGroupMemberListState extends State<GetGroupMemberList> {
                                 const Text('V2TIM_GROUP_MEMBER_FILTER_ADMIN'),
                             onPressed: () {
                               setState(() {
-                                filter = GroupMemberFilterType
+                                filter = GroupMemberFilterTypeEnum
                                     .V2TIM_GROUP_MEMBER_FILTER_ADMIN;
                               });
                               Navigator.pop(context);
@@ -92,7 +94,7 @@ class GetGroupMemberListState extends State<GetGroupMemberList> {
                             title: const Text('V2TIM_GROUP_MEMBER_FILTER_ALL'),
                             onPressed: () {
                               setState(() {
-                                filter = GroupMemberFilterType
+                                filter = GroupMemberFilterTypeEnum
                                     .V2TIM_GROUP_MEMBER_FILTER_ALL;
                               });
                               Navigator.pop(context);
@@ -103,7 +105,7 @@ class GetGroupMemberListState extends State<GetGroupMemberList> {
                                 const Text('V2TIM_GROUP_MEMBER_FILTER_COMMON'),
                             onPressed: () {
                               setState(() {
-                                filter = GroupMemberFilterType
+                                filter = GroupMemberFilterTypeEnum
                                     .V2TIM_GROUP_MEMBER_FILTER_COMMON;
                               });
                               Navigator.pop(context);
@@ -114,7 +116,7 @@ class GetGroupMemberListState extends State<GetGroupMemberList> {
                                 const Text('V2TIM_GROUP_MEMBER_FILTER_OWNER'),
                             onPressed: () {
                               setState(() {
-                                filter = GroupMemberFilterType
+                                filter = GroupMemberFilterTypeEnum
                                     .V2TIM_GROUP_MEMBER_FILTER_OWNER;
                               });
                               Navigator.pop(context);

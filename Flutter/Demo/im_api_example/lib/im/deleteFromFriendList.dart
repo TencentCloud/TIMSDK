@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/enum/friend_type.dart';
+import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
@@ -16,7 +17,7 @@ class DeleteFromFriendListState extends State<DeleteFromFriendList> {
   List<String> users = List.empty(growable: true);
   String? friendRemark;
   Map<String, dynamic>? resData;
-  int deleteType = FriendType.V2TIM_FRIEND_TYPE_BOTH;
+  FriendTypeEnum deleteType = FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH;
   deleteFromFriendList() async {
     V2TimValueCallback<List<V2TimFriendOperationResult>> res =
         await TencentImSDKPlugin.v2TIMManager
@@ -78,7 +79,8 @@ class DeleteFromFriendListState extends State<DeleteFromFriendList> {
                             title: const Text('双向好友'),
                             onPressed: () {
                               setState(() {
-                                deleteType = FriendType.V2TIM_FRIEND_TYPE_BOTH;
+                                deleteType =
+                                    FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH;
                               });
                               Navigator.pop(context);
                             },
@@ -88,7 +90,7 @@ class DeleteFromFriendListState extends State<DeleteFromFriendList> {
                             onPressed: () {
                               setState(() {
                                 deleteType =
-                                    FriendType.V2TIM_FRIEND_TYPE_SINGLE;
+                                    FriendTypeEnum.V2TIM_FRIEND_TYPE_SINGLE;
                               });
                               Navigator.pop(context);
                             },

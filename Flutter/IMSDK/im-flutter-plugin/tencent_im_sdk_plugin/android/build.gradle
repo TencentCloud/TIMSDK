@@ -1,0 +1,54 @@
+group 'com.qq.qcloud.tencent_im_sdk_plugin'
+version '1.0'
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+}
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion 16
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // library 混淆 -> 随 library 引用，自动添加到 apk 打包混淆
+        consumerProguardFiles 'consumer-proguard-rules.txt'
+        multiDexEnabled true
+        ndk {
+            abiFilters 'x86', 'x86_64', 'armeabi-v7a','arm64-v8a'
+        }
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    dependencies {
+       api 'com.tencent.imsdk:imsdk-plus:5.8.1668'
+        //    implementation fileTree(dir: 'libs', include: ['*.aar'])
+
+    }
+
+    packagingOptions{
+        pickFirst '**/libc++_shared.so'
+        doNotStrip "*/armeabi/libYTCommon.so"
+        doNotStrip "*/armeabi-v7a/libYTCommon.so"
+        doNotStrip "*/x86/libYTCommon.so"
+        doNotStrip "*/arm64-v8a/libYTCommon.so"
+    }
+    
+}

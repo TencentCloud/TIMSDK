@@ -2,6 +2,7 @@ import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
+import 'package:tencent_im_sdk_plugin/enum/group_add_opt_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_add_opt_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
@@ -21,7 +22,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
   String? introduction;
   String? faceUrl;
   bool isAllMuted = false;
-  int? addOpt = GroupAddOptType.V2TIM_GROUP_ADD_AUTH;
+  GroupAddOptTypeEnum? addOpt = GroupAddOptTypeEnum.V2TIM_GROUP_ADD_AUTH;
   List<String> memberList = List.empty(growable: true);
   createGroupv2() async {
     V2TimValueCallback<String> res =
@@ -349,7 +350,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                             const Text('V2TIM_GROUP_ADD_ANY'),
                                         onPressed: () {
                                           setState(() {
-                                            addOpt = GroupAddOptType
+                                            addOpt = GroupAddOptTypeEnum
                                                 .V2TIM_GROUP_ADD_ANY;
                                           });
                                           Navigator.pop(context);
@@ -360,7 +361,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                             const Text('V2TIM_GROUP_ADD_AUTH'),
                                         onPressed: () {
                                           setState(() {
-                                            addOpt = GroupAddOptType
+                                            addOpt = GroupAddOptTypeEnum
                                                 .V2TIM_GROUP_ADD_AUTH;
                                           });
                                           Navigator.pop(context);
@@ -371,7 +372,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                             'V2TIM_GROUP_ADD_FORBID'),
                                         onPressed: () {
                                           setState(() {
-                                            addOpt = GroupAddOptType
+                                            addOpt = GroupAddOptTypeEnum
                                                 .V2TIM_GROUP_ADD_FORBID;
                                           });
                                           Navigator.pop(context);

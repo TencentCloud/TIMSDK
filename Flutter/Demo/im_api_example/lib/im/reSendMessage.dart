@@ -21,6 +21,7 @@ class ReSendMessageState extends State<ReSendMessage> {
   List<String> conversaions = List.empty(growable: true);
   List<String> msgIDs = List.empty(growable: true);
   reSendMessage() async {
+    // 注意：web下 reSendMessage 的webMessageInstatnce 为必填写（msgID和onlineUserOnly可不填写）
     V2TimValueCallback<V2TimMessage> res =
         await TencentImSDKPlugin.v2TIMManager.getMessageManager().reSendMessage(
               msgID: msgIDs.first,

@@ -27,18 +27,20 @@ dependencies:
   provider: ^5.0.0
   gradient_ui_widgets: ^1.0.2-nullsafety
   modal_bottom_sheet: ^2.0.0
-  tencent_im_sdk_plugin: ^3.5.0
+  tencent_im_sdk_plugin: ^3.6.5
+  # tencent_im_sdk_plugin: 3.5.6
   flutter_syntax_view: ^4.0.0
   loading_indicator: ^2.0.1
   crypto: ^3.0.1
   flutter_easyloading: ^3.0.0
   fluttertoast: ^8.0.6
+  archive: ^3.1.6
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   pretty_json: ^2.0.0 
   adaptive_action_sheet: ^2.0.0
-  image_picker: ^0.7.4
+  image_picker: ^0.8.4
   video_thumbnail: ^0.4.3
   path_provider: ^2.0.1
   record: ^2.1.1
@@ -47,6 +49,8 @@ dependencies:
   #   path: /Users/xingchenhe/Documents/work/TPNS-Flutter-Plugin
   localstorage: ^4.0.0+1
   adaptive_dialog: ^0.10.0+5
+  mime_type: ^1.0.0
+  file_picker: ^4.2.1
 
 dev_dependencies:
   flutter_test:

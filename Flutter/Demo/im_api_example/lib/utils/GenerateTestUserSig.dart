@@ -1,9 +1,11 @@
 // for flutter 2.0+
 
 import 'dart:convert';
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:archive/archive.dart';
+import 'package:archive/archive_io.dart';
 
 ///生成腾讯云即时通信测试用userSig
 ///
@@ -35,7 +37,7 @@ class GenerateTestUserSig {
     );
     sigDoc['TLS.sig'] = sig;
     String jsonStr = json.encode(sigDoc);
-    List<int> compress = zlib.encode(utf8.encode(jsonStr));
+    List<int>? compress = ZLibEncoder().encode(utf8.encode(jsonStr));
     return _escape(content: base64.encode(compress));
   }
 

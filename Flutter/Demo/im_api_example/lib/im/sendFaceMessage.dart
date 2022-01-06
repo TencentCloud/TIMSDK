@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
+import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
@@ -18,7 +19,7 @@ class SendFaceMessageState extends State<SendFaceMessage> {
   int index = 0;
   List<String> receiver = List.empty(growable: true);
   List<String> groupID = List.empty(growable: true);
-  int priority = 0;
+  MessagePriorityEnum priority = MessagePriorityEnum.V2TIM_PRIORITY_DEFAULT;
   bool onlineUserOnly = false;
   bool isExcludedFromUnreadCount = false;
   sendFaceMessage() async {
@@ -139,37 +140,41 @@ class SendFaceMessageState extends State<SendFaceMessage> {
                         title: const Text('优先级'),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
-                            title: const Text('0'),
+                            title: const Text('V2TIM_PRIORITY_DEFAULT'),
                             onPressed: () {
                               setState(() {
-                                priority = 0;
+                                priority =
+                                    MessagePriorityEnum.V2TIM_PRIORITY_DEFAULT;
                               });
                               Navigator.pop(context);
                             },
                           ),
                           BottomSheetAction(
-                            title: const Text('1'),
+                            title: const Text('V2TIM_PRIORITY_HIGH'),
                             onPressed: () {
                               setState(() {
-                                priority = 1;
+                                priority =
+                                    MessagePriorityEnum.V2TIM_PRIORITY_HIGH;
                               });
                               Navigator.pop(context);
                             },
                           ),
                           BottomSheetAction(
-                            title: const Text('2'),
+                            title: const Text('V2TIM_PRIORITY_LOW'),
                             onPressed: () {
                               setState(() {
-                                priority = 2;
+                                priority =
+                                    MessagePriorityEnum.V2TIM_PRIORITY_LOW;
                               });
                               Navigator.pop(context);
                             },
                           ),
                           BottomSheetAction(
-                            title: const Text('3'),
+                            title: const Text('V2TIM_PRIORITY_NORMAL'),
                             onPressed: () {
                               setState(() {
-                                priority = 3;
+                                priority =
+                                    MessagePriorityEnum.V2TIM_PRIORITY_NORMAL;
                               });
                               Navigator.pop(context);
                             },
