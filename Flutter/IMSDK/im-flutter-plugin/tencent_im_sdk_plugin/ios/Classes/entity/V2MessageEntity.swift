@@ -424,10 +424,16 @@ public class V2MessageEntity {
 		self.v2message = message
 		
 		if message.localCustomData != nil {
-			self.localCustomData = String.init(data: message.localCustomData!, encoding: String.Encoding.utf8)!;
+            if let localCustomData = message.localCustomData  as? Data {
+                let dataStr = String(data: localCustomData, encoding: .utf8) ?? "";
+                self.localCustomData = dataStr;
+            }
 		}
 		if message.cloudCustomData != nil {
-			self.cloudCustomData = String.init(data: message.cloudCustomData!, encoding: String.Encoding.utf8)!;
+            if let cloudCustomData = message.cloudCustomData  as? Data {
+                let dataStr = String(data: cloudCustomData, encoding: .utf8) ?? "";
+                self.cloudCustomData = dataStr;
+            }
 		}
 		// 文本消息
 		if message.textElem != nil {

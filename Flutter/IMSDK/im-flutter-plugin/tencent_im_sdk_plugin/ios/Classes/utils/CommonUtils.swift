@@ -89,6 +89,17 @@ public class CommonUtils {
 		])
         result(res)
     }
+    
+    
+    public static func parseMessageListDict( list:[V2TIMMessage]) -> [Any]{
+        var messageList: [[String: Any]] = [];
+        for i in list {
+            
+            messageList.append(V2MessageEntity.init(message: i).getDict());
+        }
+        
+        return messageList;
+    }
 
     public static func logFromSwift(channel: FlutterMethodChannel, data: Any) {
       channel.invokeMethod("logFromSwift", arguments: data);
