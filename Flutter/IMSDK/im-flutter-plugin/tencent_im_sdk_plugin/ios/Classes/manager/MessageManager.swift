@@ -757,7 +757,8 @@ class MessageManager {
             messageSearchParam.conversationID = searchParam["conversationID"] as? String ?? nil;
         }
         if(searchParam["messageTypeList"] != nil){
-            messageSearchParam.messageTypeList = searchParam["messageTypeList"] as? [NSNumber];
+            let messageTypeListLength = (searchParam["messageTypeList"] as! [Any]).count;
+            messageSearchParam.messageTypeList = messageTypeListLength == 0 ? nil : searchParam["messageTypeList"] as? [NSNumber];
         }
         if(searchParam["type"] != nil){
 
@@ -787,19 +788,27 @@ class MessageManager {
         }
         
         if(searchParam["userIDList"] != nil){
-            messageSearchParam.senderUserIDList = searchParam["userIDList"] as? [String];
+            let userIDListLength = (searchParam["userIDList"] as! [String]).count;
+            messageSearchParam.senderUserIDList = userIDListLength == 0 ? nil : searchParam["userIDList"] as? [String];
         }
         
         
         V2TIMManager.sharedInstance().searchLocalMessages(messageSearchParam, succ: {
                 (res) -> Void in
             let list = res?.messageSearchResultItems ?? [];
+            var messageSearchResultItems:[Any] = [];
             var map = [String: Any]();
-            map.updateValue(res?.totalCount, forKey: "totalCount");
-            map.updateValue(res?.messageSearchResultItems ?? [], forKey: "messageSearchResultItems");
+            
+            
             for(index,element) in list.enumerated(){
-                
+                var messageSearchResultItemMap = [String: Any]();
+                messageSearchResultItemMap.updateValue(element.conversationID!, forKey: "conversationID");
+                messageSearchResultItemMap.updateValue(element.messageCount, forKey: "messageCount");
+                messageSearchResultItemMap.updateValue(CommonUtils.parseMessageListDict(list: element.messageList) , forKey: "messageList");
+                messageSearchResultItems.append(messageSearchResultItemMap);
             };
+            map.updateValue(res!.totalCount, forKey: "totalCount");
+            map.updateValue(messageSearchResultItems, forKey: "messageSearchResultItems")
             CommonUtils.resultSuccess(call: call, result: result, data: map);
             }, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
         
