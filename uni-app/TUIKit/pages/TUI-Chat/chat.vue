@@ -1,7 +1,13 @@
 <template>
 <view class="container">
-<!--  <TUI-calling class="calling" id="tui-calling" @sendMessage="sendMessage"></TUI-calling>-->
-  <view class="tui-chatroom-navigatorbar">
+	<!-- #ifdef MP-WEIXIN -->
+	<!-- <tuicalling
+		ref="TUICalling" 
+		id="TUICalling-component" 
+		:config="config">
+	</tuicalling> -->
+    <!-- #endif -->
+   <view class="tui-chatroom-navigatorbar">
     <image class="tui-chatroom-navigatorbar-back" @tap="goBack" src="/static/static/assets/ic_back_white.svg"></image>
     <!-- 先查 remark；无 remark 查 (c2c)nick/(group)name；最后查 (c2c)userID/(group)groupID -->
     <view class="conversation-title">{{conversationName}}</view>
@@ -27,7 +33,7 @@ import logger from '../../utils/logger';
 import TUIMessageList from "../../components/tui-chat/message-list/index";
 import TUIMessageInput from "../../components/tui-chat/message-input/index";
 import TUIGroupProfile from "../../components/tui-group/group-profile/index";
-
+const app = getApp()
 export default {
   data() {
     return {
@@ -39,6 +45,13 @@ export default {
       conversationID: '',
       videoPlay: false,
       videoMessage: {},
+	  config: {
+	    sdkAppID: '',
+	    userID: '',
+	    userSig: '',
+	    type: 1,
+		tim: null
+	  },
     };
   },
 
@@ -67,6 +80,19 @@ export default {
     this.setData({
       conversationID
     });
+	// #ifdef MP-WEIXIN
+	// this.config = {
+	// 	sdkAppID: app.globalData.SDKAppID,
+	// 	userID: app.globalData.userInfo.userID,
+	// 	userSig: app.globalData.userInfo.userSig
+	// }
+	// logger.log(`TUI-chat | TUICalling-config  | config:${JSON.stringify(this.callingConfig)}`);
+	// // 挂载在 uni 上
+	// uni.$wxTUICalling = this.$refs.TUICalling;
+	// 		this.$nextTick(() => {
+	// 			uni.$wxTUICalling.init()
+	// })
+	// #endif
     uni.$TUIKit.setMessageRead({
       conversationID
     }).then(() => {
@@ -83,7 +109,14 @@ export default {
       });
     });
   },
-
+    mounted() {
+		
+	},
+	onUnload() {
+	// #ifdef MP-WEIXIN
+	//   this.$refs.TUICalling.destroyed();
+	// // #endif  
+	},
   methods: {
     stopVideoHander() {
       this.videoPlay = false

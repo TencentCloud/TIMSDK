@@ -49,11 +49,7 @@ export default {
   onLoad() {},
 
   onShow() {
-    logger.log(`| TUI-Index | onshow  | login |userSig:${app.globalData.userInfo.userSig} userID:${app.globalData.userInfo.userID}`);
-    uni.$TUIKit.login({
-      userID: app.globalData.userInfo.userID,
-      userSig: app.globalData.userInfo.userSig
-    }).then(() => {}).catch(() => {});
+    logger.log(`| TUI-Index | onshow  | login|userSig:${app.globalData.userInfo.userSig} userID:${app.globalData.userInfo.userID}`);
   },
 
   methods: {

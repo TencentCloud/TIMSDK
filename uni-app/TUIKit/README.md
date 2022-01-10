@@ -21,9 +21,9 @@
    <th>微信小程序演示：</th>
  </tr>
 <tr>
-<td><img src="android-uniapp.gif" height = "400"/></td>
-<td><img src="ios-uniapp.gif" height = "400"/></td>
-<td><img src="wx-uniapp.gif" height = "400"/></td>
+<td><img src="TUIKit/android-uniapp.gif" height = "400"/></td>
+<td><img src="TUIKit/ios-uniapp.gif" height = "400"/></td>
+<td><img src="TUIKit/wx-uniapp.gif" height = "400"/></td>
 </tr>
 </table>
 
@@ -84,11 +84,15 @@ npm install
 >- 本文提到的生成 `UserSig` 的方案是在客户端代码中配置 `SECRETKEY`，该方法中 `SECRETKEY` 很容易被反编译逆向破解，一旦您的密钥泄露，攻击者就可以盗用您的腾讯云流量，因此**该方法仅适合本地跑通 uni-app 和功能调试**。
 >- 正确的 `UserSig` 签发方式是将 `UserSig` 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 `UserSig` 时由您的 App 向业务服务器发起请求获取动态 `UserSig`。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/647/17275#Server)。
 
-####  步骤4：编译运行
+####  步骤4：开启音视频能力
+
+ 请参考 [官方音视频原生插件](https://ext.dcloud.net.cn/plugin?id=7097)
+
+####  步骤5：编译运行
 
  请参考官方 [uni-app 运行](https://uniapp.dcloud.io/quickstart-hx?id=%e8%bf%90%e8%a1%8cuni-app)
 
-####  步骤5：打包发布
+####  步骤6：打包发布
 
  请参考官方 [uni-app 打包](https://uniapp.dcloud.io/quickstart-hx?id=%e5%8f%91%e5%b8%83uni-app)
 - 原生App-云打包：HBuilderX 编辑器 → 发行 → 原生 App-云打包 （app图标，启动页等详细配置可在 manifest.json 进行配置）。

@@ -27,6 +27,9 @@
   <view v-if="renderDom[0].type ==='group_create'" :class="'custom-message ' + (isMine?'my-custom':'')">
     <view class="custom-content-text">{{renderDom[0].text}}</view>
   </view>
+  <view v-if="renderDom[0].type ==='c2cCalling' || renderDom[0].type ==='groupCalling'" :class="'custom-message ' + (isMine?'my-custom':'')" >
+    <view class="custom-content-text">{{renderDom[0].text}}</view>
+  </view>
   <view v-if="renderDom[0].type ==='notSupport'" class="message-body-span text-message">
     <view class="message-body-span-text">{{renderDom[0].text}}</view>
   </view>
@@ -34,7 +37,7 @@
 </template>
 
 <script>
-
+import { formateTime } from '../../../base/common.js'
 export default {
   data() {
     return {};
@@ -64,6 +67,53 @@ export default {
     }
   },
   methods: {
+	     // 解析音视频通话消息
+	      extractCallingInfoFromMessage(message) {
+	        const callingmessage = JSON.parse(message.payload.data)
+	        if (callingmessage.businessID !== 1) {
+	          return ''
+	        }
+	        const objectData = JSON.parse(callingmessage.data)
+	        switch (callingmessage.actionType) {
+	          case 1: {
+	            if (objectData.call_end >= 0 && !callingmessage.groupID) {
+	              return `通话时长：${formateTime(objectData.call_end)}`
+	            }
+	            if (callingmessage.groupID) {
+	              return '结束群聊'
+	            }
+	            if (objectData.data && objectData.data.cmd === 'switchToAudio') {
+	              return '切换语音通话'
+	            }
+	            if (objectData.data && objectData.data.cmd === 'switchToVideo') {
+	              return '切换视频通话'
+	            }
+	            return '发起通话'
+	          }
+	          case 2:
+	            return '取消通话'
+	          case 3:
+	            if (objectData.data && objectData.data.cmd === 'switchToAudio') {
+	              return '切换语音通话'
+	            }
+	            if (objectData.data && objectData.data.cmd === 'switchToVideo') {
+	              return '切换视频通话'
+	            }
+	            return '已接听'
+	          case 4:
+	            return '拒绝通话'
+	          case 5:
+	            if (objectData.data && objectData.data.cmd === 'switchToAudio') {
+	              return '切换语音通话'
+	            }
+	            if (objectData.data && objectData.data.cmd === 'switchToVideo') {
+	              return '切换视频通话'
+	            }
+	            return '无应答'
+	          default:
+	            return ''
+	        }
+	      },
     parseCustom(message) {
       // 约定自定义消息的 data 字段作为区分，不解析的不进行展示
       if (message.payload.data === 'order') {
@@ -102,8 +152,41 @@ export default {
         }];
         return renderDom;
       } // 群消息解析
-
-
+	   // 群消息解析
+	        if (message.payload.data === 'group_create') {
+	          const renderDom = [{
+	            type: 'group_create',
+	            text: message.payload.extension,
+	          }]
+	          return renderDom
+	        }
+      // 音视频通话消息解析
+           const callingmessage = JSON.parse(message.payload.data)
+     
+           if (callingmessage.businessID === 1) {
+             if (message.conversationType === 'GROUP') {
+               if (message.payload.data.actionType === 5) {
+                 message.nick = message.payload.data.inviteeList ? message.payload.data.inviteeList.join(',') : message.from
+               }
+               const _text = this.extractCallingInfoFromMessage(message)
+               const groupText = `${_text}`
+               const renderDom = [{
+                 type: 'groupCalling',
+                 text: groupText,
+                 userIDList: [],
+               }]
+               return renderDom
+             }
+             if (message.conversationType === 'C2C') {
+               const c2cText = this.extractCallingInfoFromMessage(message)
+               const renderDom = [{
+                 type: 'c2cCalling',
+                 text: c2cText,
+               }]
+               return renderDom
+             }
+           }
+      
       if (message.payload.data === 'group_create') {
         const renderDom = [{
           type: 'group_create',
