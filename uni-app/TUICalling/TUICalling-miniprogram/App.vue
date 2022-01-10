@@ -14,7 +14,9 @@ export default {
 		uni.$TUIKit = TIM.create({
 		  SDKAppID: this.globalData.SDKAppID
 		});
-	},  
+		// 如果您已创建了 tim，请将 tim 实例挂载在 wx 上。完成 TUICalling 初始化，如果您没有创建，可以不传
+	 	// wx.$TIM = uni.$TUIKit
+	 },  
 	onShow() {  
 		console.log('App Show')  
 	},  

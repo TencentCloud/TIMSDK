@@ -60,7 +60,7 @@
 				userID: getApp().globalData.userID,
 				userSig: getApp().globalData.userSig
 			}
-			console.log(this.$refs.TUICalling, 'TUICalling ｜ ok')
+			console.log(this.$refs.TUICalling, 'TUICalling | ok')
 			this.$nextTick(() => {
 				this.$refs.TUICalling.init()
 			})
@@ -86,7 +86,6 @@
 					})
 					.then((res) => {
 						if (res.data.length < userIDs.length) {
-							debugger
 							uni.showToast({
 								title: '该用户不存在，请重新输入userID',
 								icon: "none"
