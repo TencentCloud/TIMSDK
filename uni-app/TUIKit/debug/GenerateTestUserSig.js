@@ -1,4 +1,4 @@
-import LibGenerateTestUserSig from './lib-generate-test-usersig-es.min.js';
+import LibGenerateTestUserSig from './lib-generate-test-usersig-es.min.js'
 /**
  * 腾讯云 SDKAppId，需要替换为您自己账号下的 SDKAppId。
  *
@@ -6,7 +6,9 @@ import LibGenerateTestUserSig from './lib-generate-test-usersig-es.min.js';
  * 它是腾讯云用于区分客户的唯一标识。
  */
 
-const SDKAPPID = 0;
+
+const SDKAPPID = 0
+
 /**
  * 签名过期时间，建议不要设置的过短
  * <p>
@@ -14,7 +16,7 @@ const SDKAPPID = 0;
  * 默认时间：7 x 24 x 60 x 60 = 604800 = 7 天
  */
 
-const EXPIRETIME = 604800;
+const EXPIRETIME = 604800
 /**
  * 计算签名用的加密密钥，获取步骤如下：
  *
@@ -26,7 +28,8 @@ const EXPIRETIME = 604800;
  * 文档：https://cloud.tencent.com/document/product/647/17275#Server
  */
 
-const SECRETKEY = '';
+const SECRETKEY = ''
+
 /*
  * Module:   GenerateTestUserSig
  *
@@ -46,14 +49,14 @@ const SECRETKEY = '';
  */
 
 function genTestUserSig(userID) {
-  const generator = new LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
-  const userSig = generator.genTestUserSig(userID);
+  const generator = new LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME)
+  const userSig = generator.genTestUserSig(userID)
   return {
     sdkAppID: SDKAPPID,
-    userSig
-  };
+    userSig,
+  }
 }
 
 module.exports = {
-  genTestUserSig
-};
+  genTestUserSig,
+}

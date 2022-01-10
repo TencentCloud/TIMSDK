@@ -7,9 +7,15 @@
     "cos-wx-sdk-v5": "^1.0.10",
     "tim-wx-sdk": "^2.16.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^7.29.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-tencent": "^1.0.1",
+    "eslint-plugin-import": "^2.23.4"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "./node_modules/.bin/eslint ./",
+    "fix": "./node_modules/.bin/eslint --fix ./"
   },
   "keywords": [],
   "author": "",

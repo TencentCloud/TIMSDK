@@ -1,3 +1,5 @@
 static/
 unpackage/
 utils/
+polyfill/
+components/base/
