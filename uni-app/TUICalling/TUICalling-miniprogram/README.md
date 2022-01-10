@@ -18,7 +18,6 @@ TUICalling 小程序组件是基于腾讯云实时音视频（TRTC）和腾讯�
 - 小程序基础库最低版本要求：2.10.0。
 - 由于微信开发者工具不支持原生组件（即 &lt;live-pusher&gt; 和 &lt;live-player&gt; 标签），需要在真机上进行运行体验。
 - 由于小程序测试号不具备 &lt;live-pusher&gt; 和 &lt;live-player&gt; 的使用权限，需要申请常规小程序账号进行开发。
-- 不支持 uniapp 开发环境，请使用原生小程序开发环境。
 
 ## 前提条件
 1. 您已 [注册腾讯云](https://cloud.tencent.com/document/product/378/17985) 账号，并完成 [实名认证](https://cloud.tencent.com/document/product/378/3629)。
@@ -66,6 +65,9 @@ git clone https://gitee.com/cloudtencent/TIMSDK
 
 # 进入 uni-app TUICalling 项目
 cd TIMSDK/uni-app/TUICalling-miniprogram
+
+# 安装依赖
+npm install
 ```
 
 2. 将 uni-app 中 TUICalling 工程文件，导入自己的 HBuilderX 工程。
