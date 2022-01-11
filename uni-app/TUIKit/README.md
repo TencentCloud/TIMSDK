@@ -21,9 +21,9 @@
    <th>微信小程序演示：</th>
  </tr>
 <tr>
-<td><img src="android-uniapp.gif" height = "400"/></td>
-<td><img src="ios-uniapp.gif" height = "400"/></td>
-<td><img src="wx-uniapp.gif" height = "400"/></td>
+<td><img src="TUIKit/android-uniapp.gif" height = "400"/></td>
+<td><img src="TUIKit/ios-uniapp.gif" height = "400"/></td>
+<td><img src="TUIKit/wx-uniapp.gif" height = "400"/></td>
 </tr>
 </table>
 
@@ -63,9 +63,6 @@ git clone https://github.com/tencentyun/TIMSDK.git
 
 # 进入 uni-app TUIKit 项目
 cd TIMSDK/uni-app/TUIKit
-
-# 安装依赖
-npm install
 ```
 
 2. 将 uni-app 中 TUIKit 工程文件，导入自己的 HBuilderX 工程（版本3.2.11.20211021-alpha）。

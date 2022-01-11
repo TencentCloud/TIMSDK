@@ -1,6 +1,5 @@
 {
-	"pages": [
-		{
+	"pages": [{
 			"path": "pages/TUI-Login/login",
 			"style": {}
 		},
@@ -65,9 +64,9 @@
 			}
 		}
 	],
+	"plugins": {},
 	"tabBar": {
-		"list": [
-			{
+		"list": [{
 				"pagePath": "pages/TUI-Index/index",
 				"text": "首页",
 				"iconPath": "/static/static/images/homepage-normal.png",

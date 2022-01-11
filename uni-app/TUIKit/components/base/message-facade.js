@@ -1,4 +1,7 @@
-import { emojiMap, emojiUrl } from './emojiMap';
+import {
+  emojiMap,
+  emojiUrl
+} from './emojiMap';
 /** 传入message.element（群系统消息SystemMessage，群提示消息GroupTip除外）
  * content = {
  *  type: 'TIMTextElem',
