@@ -5,6 +5,7 @@ import 'package:discuss/provider/conversationlistprovider.dart';
 import 'package:discuss/provider/friend.dart';
 import 'package:discuss/provider/friendapplication.dart';
 import 'package:discuss/provider/groupapplication.dart';
+import 'package:discuss/utils/GenerateTestUserSig.dart';
 
 import 'package:discuss/utils/imsdk.dart';
 import 'package:discuss/utils/offline_push_config.dart';
@@ -173,6 +174,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   bool isGeted = false;
+  String userName = ""; // userName其实即为登陆的userId
   String tel = '';
   int timer = 60;
   String sessionId = '';
@@ -276,10 +278,15 @@ class _LoginFormState extends State<LoginForm> {
                         try {
                           var messageObj = jsonDecode(message.message);
                           vervifyPicture(messageObj);
-                          Navigator.pop(context);
                         } catch (e) {
                           Utils.toast("图片验证码校验失败");
                         }
+                        Navigator.pop(context);
+                      }),
+                  JavascriptChannel(
+                      name: 'capClose',
+                      onMessageReceived: (JavascriptMessage message) {
+                        Navigator.pop(context);
                       })
                 },
               ),
@@ -290,6 +297,69 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
+  // 根据key计算得到userSign进行登陆
+  keyLogin() async {
+    String userId = userName;
+    String key = IMDiscussConfig.key;
+    int sdkAppId = IMDiscussConfig.sdkappid;
+    if (key == "") {
+      Utils.toast("请在环境变量中写入key");
+      return;
+    }
+
+    GenerateTestUserSig generateTestUserSig = GenerateTestUserSig(
+      sdkappid: sdkAppId,
+      key: key,
+    );
+    String userSign =
+        generateTestUserSig.genSig(identifier: userId, expire: 99999);
+    //identifier 为uerID
+    // expire 为userSign的有效期时间
+    var data = await TencentImSDKPlugin.v2TIMManager
+        .login(userID: userId, userSig: userSign);
+    if (data.code != 0) {
+      Utils.toast("登录失败${data.desc}");
+      return;
+    }
+    V2TimValueCallback<List<V2TimUserFullInfo>> infos =
+        await TencentImSDKPlugin.v2TIMManager.getUsersInfo(
+      userIDList: [userId],
+    );
+    if (infos.code == 0) {
+      if (infos.data![0].nickName == null ||
+          infos.data![0].faceUrl == null ||
+          infos.data![0].nickName == '' ||
+          infos.data![0].faceUrl == '') {
+        await TencentImSDKPlugin.v2TIMManager.setSelfInfo(
+          userFullInfo: V2TimUserFullInfo.fromJson(
+            {
+              "nickName": userId,
+              "faceUrl": infos.data![0].faceUrl ?? "",
+            },
+          ),
+        );
+      }
+      Provider.of<UserModel>(context, listen: false).setInfo(infos.data![0]);
+    }
+    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    SharedPreferences prefs = await _prefs;
+
+    prefs.setString("userId", userId);
+
+    setState(() {
+      userName = "";
+      tel = '';
+      code = '';
+      timer = 60;
+      isGeted = false;
+    });
+    userSigEtController.clear();
+    telEtController.clear();
+    await getIMData();
+    Navigator.pop(context);
+  }
+
+  // 短信登陆
   smsFristLogin() async {
     if (tel == '' && IMDiscussConfig.productEnv) {
       Utils.toast("请输入手机号");
@@ -480,51 +550,66 @@ class _LoginFormState extends State<LoginForm> {
               autofocus: false,
               controller: telEtController,
               decoration: const InputDecoration(
-                labelText: "手机号",
-                hintText: "请输入手机号",
-                icon: Icon(Icons.phone_android),
+                labelText: "用户名",
+                hintText: "请输入userId",
+                icon: Icon(Icons.account_circle),
               ),
               keyboardType: TextInputType.number,
               onChanged: (v) {
                 setState(() {
-                  tel = v;
+                  userName = v;
                 });
               },
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: userSigEtController,
-                    decoration: const InputDecoration(
-                      labelText: "验证码",
-                      hintText: "请输入验证码",
-                      icon: Icon(Icons.lock),
-                    ),
-                    keyboardType: TextInputType.number,
-                    //校验密码
-                    onChanged: (v) {
-                      setState(() {
-                        code = v;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 120,
-                  child: ElevatedButton(
-                    child:
-                        isGeted ? Text(timer.toString()) : const Text("获取验证码"),
-                    onPressed: isGeted
-                        ? null
-                        : () {
-                            //获取验证码
-                            getLoginCode(context);
-                          },
-                  ),
-                )
-              ],
-            ),
+            // TextField(
+            //   autofocus: false,
+            //   controller: telEtController,
+            //   decoration: const InputDecoration(
+            //     labelText: "手机号",
+            //     hintText: "请输入手机号",
+            //     icon: Icon(Icons.phone_android),
+            //   ),
+            //   keyboardType: TextInputType.number,
+            //   onChanged: (v) {
+            //     setState(() {
+            //       tel = v;
+            //     });
+            //   },
+            // ),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: TextField(
+            //         controller: userSigEtController,
+            //         decoration: const InputDecoration(
+            //           labelText: "验证码",
+            //           hintText: "请输入验证码",
+            //           icon: Icon(Icons.lock),
+            //         ),
+            //         keyboardType: TextInputType.number,
+            //         //校验密码
+            //         onChanged: (v) {
+            //           setState(() {
+            //             code = v;
+            //           });
+            //         },
+            //       ),
+            //     ),
+            //     SizedBox(
+            //       width: 120,
+            //       child: ElevatedButton(
+            //         child:
+            //             isGeted ? Text(timer.toString()) : const Text("获取验证码"),
+            //         onPressed: isGeted
+            //             ? null
+            //             : () {
+            //                 //获取验证码
+            //                 getLoginCode(context);
+            //               },
+            //       ),
+            //     )
+            //   ],
+            // ),
             Container(
               margin: const EdgeInsets.only(
                 top: 20,
@@ -618,7 +703,7 @@ class _LoginFormState extends State<LoginForm> {
                       child: const Text("登录"),
                       onPressed: !checkboxSelected // 需要隐私协议勾选才可以登陆
                           ? unSelectedPrivacy
-                          : smsFristLogin,
+                          : keyLogin,
                     ),
                   )
                 ],

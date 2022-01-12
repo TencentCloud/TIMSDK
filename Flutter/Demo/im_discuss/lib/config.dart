@@ -6,7 +6,7 @@ class IMDiscussConfig {
   static const String smsLoginHttpBase =
       'https://demos.trtc.tencent-cloud.com/prod';
   static const String captchaUrl =
-      'https://imgcache.qq.com/operation/dianshi/other/index.e7ef9e022229b9167136a9ed48572f258fe7d528.html';
+      'https://imgcache.qq.com/operation/dianshi/other/captcha.11f3ef11e3657473779f28383735c6a680a87180.html';
   static const int loglevel = 3;
   static const String appName = "云通信·IM";
   static const pushConfig = <String, Map<String, double>>{

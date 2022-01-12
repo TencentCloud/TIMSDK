@@ -20,7 +20,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ```
 flutter run --dart-define=SDK_APPID=xxxx（xxxx是你自己申请的sdkappID，记得删掉这个括号） --dart-define=ISPRODUCT_ENV=false
---dart-define=PROJECT_TYPE=demo
+--dart-define=KEY=xxxx
 ```
 
 PS:如您打算使用Xcode或者Android Studio直接执行项目，请直接修改环境变量，具体参考修改配置
@@ -30,8 +30,9 @@ PS:如您打算使用Xcode或者Android Studio直接执行项目，请直接修�
 ```
 "args": [
             "--dart-define=SDK_APPID=xxxx（xxxx是你自己申请的sdkappID）",
+            "--dart-define=KEY=xxxx(xxx你自己的key)"
             "--dart-define=ISPRODUCT_ENV=false"
-            "--dart-define=PROJECT_TYPE=demo"
+            
         ]
 ```
 

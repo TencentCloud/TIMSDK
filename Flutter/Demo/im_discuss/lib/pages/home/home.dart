@@ -17,6 +17,7 @@ import 'package:discuss/provider/friendapplication.dart';
 import 'package:discuss/provider/groupapplication.dart';
 import 'package:discuss/provider/historymessagelistprovider.dart';
 import 'package:discuss/provider/user.dart';
+import 'package:discuss/utils/GenerateTestUserSig.dart';
 import 'package:discuss/utils/imsdk.dart';
 import 'package:discuss/utils/offline_push_config.dart';
 import 'package:discuss/utils/smslogin.dart';
@@ -125,7 +126,8 @@ class HomePageState extends State<HomePage> {
     prefs.remove("smsLoginUserID");
   }
 
-  // 如果有本地存的短信登录凭证，直接用凭证登录，如果没有，直接跳转到登录页进行登录
+  /*
+      // 如果有本地存的短信登录凭证，直接用凭证登录，如果没有，直接跳转到登录页进行登录
   checkLogin() async {
     Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     SharedPreferences prefs = await _prefs;
@@ -164,6 +166,44 @@ class HomePageState extends State<HomePage> {
         removeLocalSetting();
         Utils.toast(errorMessage);
       }
+    } else {
+      directToLogin();
+    }
+  }
+  */
+
+  // 如果有本地存userId，说明之前登陆过
+  checkLogin() async {
+    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    SharedPreferences prefs = await _prefs;
+
+    String key = IMDiscussConfig.key;
+    int sdkAppId = IMDiscussConfig.sdkappid;
+    GenerateTestUserSig generateTestUserSig = GenerateTestUserSig(
+      sdkappid: sdkAppId,
+      key: key,
+    );
+
+    String? userId = prefs.getString("userId");
+
+    Utils.log(" $userId");
+    if (userId != null) {
+      String userSig =
+          generateTestUserSig.genSig(identifier: userId, expire: 99999);
+
+      V2TimCallback data = await IMSDK.login(
+        userID: userId,
+        userSig: userSig,
+      );
+
+      if (data.code != 0) {
+        Utils.toast("登录失败 ${data.desc}");
+        removeLocalSetting();
+        directToLogin();
+        return;
+      }
+      getSelfInfo(userId, null);
+      getIMData();
     } else {
       directToLogin();
     }
@@ -210,7 +250,7 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  getSelfInfo(userId, avatar) async {
+  getSelfInfo(userId, String? avatar) async {
     V2TimValueCallback<List<V2TimUserFullInfo>> infos =
         await IMSDK.getUsersInfo(
       userIDList: [userId],
@@ -224,7 +264,7 @@ class HomePageState extends State<HomePage> {
           userFullInfo: V2TimUserFullInfo.fromJson(
             {
               "nickName": userId,
-              "faceUrl": avatar,
+              "faceUrl": avatar ?? infos.data![0].faceUrl ?? "",
             },
           ),
         );

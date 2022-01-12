@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:discuss/provider/historymessagelistprovider.dart';
 import 'package:discuss/provider/keybooadshow.dart';
+import 'package:discuss/utils/permissions.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_status.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
@@ -15,6 +17,7 @@ import 'package:discuss/common/hextocolor.dart';
 import 'package:discuss/pages/conversion/component/advancemsgitem.dart';
 import 'package:discuss/pages/conversion/dataInterface/advancemsglist.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:discuss/utils/toast.dart';
 // import 'package:video_player/video_player.dart';
@@ -67,12 +70,12 @@ class AdvanceMsg extends StatelessWidget {
 
     // 获取视频文件大小(默认为字节)
     var file = File(video.path);
+    VideoPlayerController controller = VideoPlayerController.file(file);
     int size = await file.length();
     if (size >= 104857600) {
       Utils.toast("发送失败,视频不能大于100MB");
       return;
     }
-
     V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .sendVideoMessage(
@@ -82,7 +85,7 @@ class AdvanceMsg extends StatelessWidget {
           type: 'mp4',
           snapshotPath: thumbnail ?? "",
           onlineUserOnly: false,
-          duration: 10,
+          duration: controller.value.duration.inSeconds,
         );
 
     if (res.code == 0) {
@@ -103,6 +106,12 @@ class AdvanceMsg extends StatelessWidget {
   }
 
   sendImageMsg(context, checktype) async {
+    bool hasPermission = checktype == 0
+        ? await Permissions.checkPermission(context, Permission.camera.value)
+        : await Permissions.checkPermission(context, Permission.photos.value);
+    if (!hasPermission) {
+      return;
+    }
     // ignore: deprecated_member_use
     final image = await picker.getImage(
         source: checktype == 0 ? ImageSource.camera : ImageSource.gallery);
@@ -399,6 +408,11 @@ class AdvanceMsgComp extends StatelessWidget {
 
   //TOOD： sendVideoMessage暂时不做改动，视频发送依然存在问题
   sendVideoMsg(context) async {
+    bool hasPermission =
+        await Permissions.checkPermission(context, Permission.camera.value);
+    if (!hasPermission) {
+      return;
+    }
     // ignore: deprecated_member_use
     final video = await picker.getVideo(
       source: ImageSource.camera,
@@ -420,6 +434,7 @@ class AdvanceMsgComp extends StatelessWidget {
 
     // 获取视频文件大小(默认为字节)
     var file = File(video.path);
+    VideoPlayerController controller = VideoPlayerController.file(file);
     int size = await file.length();
     if (size >= 104857600) {
       Utils.toast("发送失败,视频不能大于100MB");
@@ -435,7 +450,7 @@ class AdvanceMsgComp extends StatelessWidget {
           type: 'mp4',
           snapshotPath: thumbnail ?? "",
           onlineUserOnly: false,
-          duration: 10,
+          duration: controller.value.duration.inSeconds,
         );
 
     if (res.code == 0) {
@@ -456,6 +471,12 @@ class AdvanceMsgComp extends StatelessWidget {
   }
 
   sendImageMsg(context, checktype) async {
+    bool hasPermission = checktype == 0
+        ? await Permissions.checkPermission(context, Permission.camera.value)
+        : await Permissions.checkPermission(context, Permission.photos.value);
+    if (!hasPermission) {
+      return;
+    }
     // ignore: deprecated_member_use
     final image = await picker.getImage(
         source: checktype == 0 ? ImageSource.camera : ImageSource.gallery);

@@ -18,4 +18,10 @@ class Const {
     '星期六',
     '星期七'
   ];
+
+  static const DAY_SEC = 86400;
+  static const HOUR_SEC = 3600;
+  static const MIN_SEC = 60;
+
+  static const SEC_SERIES = [HOUR_SEC, MIN_SEC];
 }
