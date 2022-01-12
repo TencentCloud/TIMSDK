@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_application.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_change_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_change_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info.dart';
@@ -602,6 +603,23 @@ class Event with ChangeNotifier {
         {
           "type": "onNewConversation",
           "conversationList": ml,
+        },
+      ),
+    );
+  }
+
+  void onFriendApplicationListAdded(
+    List<V2TimFriendApplication> friendApplicationList,
+  ) {
+    List<Map<String, dynamic>> ml = List.empty(growable: true);
+    friendApplicationList.forEach((element) {
+      ml.add(element.toJson());
+    });
+    this.addEvents(
+      Map<String, dynamic>.from(
+        {
+          "type": "onFriendApplicationListAdded",
+          "friendApplicationList": ml,
         },
       ),
     );

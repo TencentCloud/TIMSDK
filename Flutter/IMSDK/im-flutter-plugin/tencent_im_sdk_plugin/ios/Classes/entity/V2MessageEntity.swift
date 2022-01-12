@@ -33,6 +33,7 @@ public class V2MessageEntity {
 	var seq: String?;
 	var random: UInt64?;
 	var isExcludedFromUnreadCount: Bool?;
+    var id:String?; // 只有在onProgress时才能拿掉此id
 	var v2message: V2TIMMessage;
 	
 	func getUrl(_ message: V2TIMMessage) -> Promise<String> {
@@ -144,6 +145,7 @@ public class V2MessageEntity {
         result["seq"] = String(self.seq!)
 		result["random"] = self.random;
 		result["isExcludedFromUnreadCount"] = self.isExcludedFromUnreadCount;
+        result["id"] = self.id;
 		result["timestamp"] = (self.timestamp == nil) ? Int(Date().timeIntervalSince1970) : Int(self.timestamp!.timeIntervalSince1970)
 		
 		return result

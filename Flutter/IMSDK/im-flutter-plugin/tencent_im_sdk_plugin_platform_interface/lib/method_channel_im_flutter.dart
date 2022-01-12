@@ -2410,6 +2410,9 @@ class MethodChannelIm extends ImFlutterPlatform {
     );
   }
 
+  /*
+   注意：reSendMessage的onProgress不会返回id
+  */
   @override
   Future<V2TimValueCallback<V2TimMessage>> reSendMessage(
       {required String msgID,

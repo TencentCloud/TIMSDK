@@ -17,6 +17,9 @@ class SendGroupTextMessageState extends State<SendGroupTextMessage> {
   int priority = 0;
   List<String> groups = List.empty(growable: true);
   sendGroupTextMessage() async {
+    /*
+      3.6.0后已经弃用，建议使用高级消息
+    */
     V2TimValueCallback<V2TimMessage> res =
         await TencentImSDKPlugin.v2TIMManager.sendGroupTextMessage(
       text: text,
@@ -155,7 +158,7 @@ class SendGroupTextMessageState extends State<SendGroupTextMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendGroupTextMessage,
-                  child: Text("发送Group文本消息"),
+                  child: Text("发送Group文本消息（已弃用）"),
                 ),
               )
             ],

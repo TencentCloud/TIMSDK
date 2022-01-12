@@ -7,6 +7,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:im_api_example/utils/toast.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
@@ -25,18 +26,24 @@ class SendLocationMessageState extends State<SendLocationMessage> {
   bool onlineUserOnly = false;
   bool isExcludedFromUnreadCount = false;
   sendLocationMessage() async {
+    V2TimValueCallback<V2TimMsgCreateInfoResult> createMessage =
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .createLocationMessage(
+                desc: '地理位置消息描述', longitude: longitude, latitude: latitude);
+
+    String id = createMessage.data!.id!;
+
     V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
-        .sendLocationMessage(
-          receiver: receiver.length > 0 ? receiver.first : "",
-          groupID: groupID.length > 0 ? groupID.first : "",
-          priority: priority,
-          onlineUserOnly: onlineUserOnly,
-          isExcludedFromUnreadCount: isExcludedFromUnreadCount,
-          desc: '地理位置消息描述',
-          latitude: latitude,
-          longitude: longitude,
-        );
+        .sendMessage(
+            id: id,
+            receiver: receiver.length > 0 ? receiver.first : "",
+            groupID: groupID.length > 0 ? groupID.first : "",
+            priority: priority,
+            onlineUserOnly: onlineUserOnly,
+            isExcludedFromUnreadCount: isExcludedFromUnreadCount,
+            localCustomData: "自定义localCustomData(sendLocationMessage)");
     setState(() {
       resData = res.toJson();
     });

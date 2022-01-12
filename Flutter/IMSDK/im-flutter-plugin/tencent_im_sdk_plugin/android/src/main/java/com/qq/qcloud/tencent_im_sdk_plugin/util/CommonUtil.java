@@ -174,6 +174,11 @@ public class CommonUtil {
         }else{
             message.put("progress",progress[0]);
         }
+        // onProgress监听会传回id
+        if(progress.length == 2){
+            message.put("id",progress[1]);
+        }
+
         message.put("sender",msg.getSender());
         message.put("nickName",msg.getNickName());
         message.put("friendRemark",msg.getFriendRemark());

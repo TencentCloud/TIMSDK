@@ -127,7 +127,11 @@ class AddEventListenerState extends State<AddEventListener> {
     await TencentImSDKPlugin.v2TIMManager
         .getFriendshipManager()
         .setFriendListener(
-          listener: new V2TimFriendshipListener(),
+          listener: new V2TimFriendshipListener(
+            onFriendApplicationListAdded:
+                Provider.of<Event>(context, listen: false)
+                    .onFriendApplicationListAdded,
+          ),
         );
   }
 

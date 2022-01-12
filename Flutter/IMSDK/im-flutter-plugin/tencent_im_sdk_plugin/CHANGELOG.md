@@ -493,3 +493,13 @@ setGroupReceiveMessageOpt、getC2CReceiveMessageOpt、getConversationListByConve
 
 ## 3.6.8
 * 回复消息接口优化
+
+## 3.6.9
+* 回复消息参数优化
+
+## 3.7.0
+* 优化cloudCustomData解包
+
+## 3.7.1
+* 消息发送进度事件返回创建消息的id
+* 优化回调部分，提示业务方回调的错误在SDK中被catch需业务方修改
