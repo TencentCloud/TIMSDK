@@ -1,115 +1,120 @@
 .container {
-  width: 100vw;
-  height: 100vh;
-  background-color: #F4F5F9;
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: #F4F5F9;
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
 }
 
 .counter-warp {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
 }
+
 .counter-main {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .background-image {
-  width: 100%;
+	width: 100%;
 }
 
 .header-content {
-  display: flex;
-  width: 100vw;
-  padding: 80px 20px 40px;
-  box-sizing: border-box;
-  top: 100rpx;
-  align-items: center;
+	display: flex;
+	width: 100vw;
+	padding: 80px 20px 40px;
+	box-sizing: border-box;
+	top: 100rpx;
+	align-items: center;
 }
 
-.header-content > image {
-  width: 128px;
-  height: 84px;
-}
-.header-content > .icon {
-  width: 76px;
-  height: 50px;
-}
-.text{
-  text-align: left;
-  padding-left: 40rpx;
-}
-.text-header{
-  height: 72rpx;
-  font-size: 48rpx;
-  line-height: 72rpx;
-  color: #FFFFFF;
+.header-content>image {
+	width: 128px;
+	height: 84px;
 }
 
-.text-content{
-  width: 364rpx;
-  height: 36rpx;
-  font-size: 24rpx;
-  line-height: 36rpx;
-  color: #FFFFFF;
+.header-content>.icon {
+	width: 76px;
+	height: 50px;
+}
+
+.text {
+	text-align: left;
+	padding-left: 40rpx;
+}
+
+.text-header {
+	height: 72rpx;
+	font-size: 48rpx;
+	line-height: 72rpx;
+	color: #FFFFFF;
+}
+
+.text-content {
+	width: 364rpx;
+	height: 36rpx;
+	font-size: 24rpx;
+	line-height: 36rpx;
+	color: #FFFFFF;
 }
 
 .tui-scene-router {
-  background: #f4f5f9;
-  /* position: absolute; */
-  width: 670rpx;
-  /* top: 402rpx;
+	background: #f4f5f9;
+	/* position: absolute; */
+	width: 670rpx;
+	/* top: 402rpx;
   left: 40rpx; */
 }
 
 .scene-item-card {
-  width: 670rpx;
-  height: 176rpx;
-  margin-bottom: 32rpx;
-  display: flex;
-  align-items: center;
-  background-color: #FFFFFF;
-  border-radius: 8rpx;
+	width: 670rpx;
+	height: 176rpx;
+	margin-bottom: 32rpx;
+	display: flex;
+	align-items: center;
+	background-color: #FFFFFF;
+	border-radius: 8rpx;
 }
 
 .tui-scene-icon {
-  width: 96rpx;
-  height: 96rpx;
-  margin-left: 48rpx;
+	width: 96rpx;
+	height: 96rpx;
+	margin-left: 48rpx;
 }
 
 .tui-scene-name {
-  line-height: 50rpx;
-  padding-left: 32rpx;
-  color: #333333 ;
-  font-size: 36rpx;
+	line-height: 50rpx;
+	padding-left: 32rpx;
+	color: #333333;
+	font-size: 36rpx;
 }
+
 .tui-scene-link {
-  width: 32rpx;
-  height: 32rpx;
-  margin-left: 286rpx;
+	width: 32rpx;
+	height: 32rpx;
+	margin-left: 286rpx;
 }
 
 .foot {
-  font-family: PingFangSC-Regular;
-  font-size: 14px;
-  color: #006EFF;
-  letter-spacing: 0;
-  text-align: center;
-  line-height: 18px;
-  padding: 16px;
+	font-family: PingFangSC-Regular;
+	font-size: 14px;
+	color: #006EFF;
+	letter-spacing: 0;
+	text-align: center;
+	line-height: 18px;
+	padding: 16px;
 }

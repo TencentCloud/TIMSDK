@@ -1,95 +1,103 @@
 .custom-message {
-  display: flex;
-  padding: 10rpx 24rpx;
-  background-color: #fff;
-  border-radius: 2px 10px 10px 10px;
-  border: 1px solid #D9D9D9;
+	display: flex;
+	padding: 10rpx 24rpx;
+	background-color: #fff;
+	border-radius: 2px 10px 10px 10px;
+	border: 1px solid #D9D9D9;
 }
+
 .my-custom {
-  border-radius: 10px 2px 10px 10px;
-  border: 1px solid rgba(0,110,255,0.30);
+	border-radius: 10px 2px 10px 10px;
+	border: 1px solid rgba(0, 110, 255, 0.30);
 }
+
 .custom-content-title {
-  font-family: PingFangSC-Medium;
-  width: 278rpx;
-  line-height: 34rpx;
-  font-size: 24rpx;
-  color: #000000;
-  letter-spacing: 0;
-  margin-bottom: 12rpx;
+	font-family: PingFangSC-Medium;
+	width: 278rpx;
+	line-height: 34rpx;
+	font-size: 24rpx;
+	color: #000000;
+	letter-spacing: 0;
+	margin-bottom: 12rpx;
 }
 
 .custom-content-description {
-  font-family: PingFangSC-Regular;
-  width: 278rpx;
-  line-height: 34rpx;
-  font-size: 28rpx;
-  color: #006EFF;
-  letter-spacing: 0;
-  margin-bottom: 12rpx;
+	font-family: PingFangSC-Regular;
+	width: 278rpx;
+	line-height: 34rpx;
+	font-size: 28rpx;
+	color: #006EFF;
+	letter-spacing: 0;
+	margin-bottom: 12rpx;
 }
 
 .custom-content-price {
-  font-family: PingFangSC-Medium;
-  line-height: 50rpx;
-  color: #FF7201;
-  letter-spacing: 0;
+	font-family: PingFangSC-Medium;
+	line-height: 50rpx;
+	color: #FF7201;
+	letter-spacing: 0;
 }
 
 .custom-image {
-  width: 135rpx;
-  height: 135rpx;
-  border-radius: 6rpx;
-  margin-right: 10rpx;
-  margin-top: 4rpx;
+	width: 135rpx;
+	height: 135rpx;
+	border-radius: 6rpx;
+	margin-right: 10rpx;
+	margin-top: 4rpx;
 }
 
 .custom-content-score {
-  display: flex;
-  align-items: center;
-  padding-bottom: 12rpx;
+	display: flex;
+	align-items: center;
+	padding-bottom: 12rpx;
 }
+
 .custom-content-score .score-star {
-  width: 36rpx;
-  height: 36rpx;
-  margin-right: 10rpx;
+	width: 36rpx;
+	height: 36rpx;
+	margin-right: 10rpx;
 }
+
 .text-message {
-  display: inline-flex;
-  max-width: 60vw;
-  line-height: 52rpx;
-  padding: 12rpx 24rpx;
-  background: #F8F8F8;
-  border: 1px solid #D9D9D9;
-  border-radius: 2px 10px 10px 10px;
+	display: inline-flex;
+	max-width: 60vw;
+	line-height: 52rpx;
+	padding: 12rpx 24rpx;
+	background: #F8F8F8;
+	border: 1px solid #D9D9D9;
+	border-radius: 2px 10px 10px 10px;
 }
+
 .my-text {
-  border-radius: 10px 2px 10px 10px;
-  border: 1px solid rgba(0,110,255,0.30);
-  background: rgba(0,110,255,0.10);
+	border-radius: 10px 2px 10px 10px;
+	border: 1px solid rgba(0, 110, 255, 0.30);
+	background: rgba(0, 110, 255, 0.10);
 }
+
 .message-body-span {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /*justify-content: flex-start;*/
-  flex-wrap: wrap;
-  outline: none;
-  font-size: 28rpx;
-  color: #333333;
-  position: relative;
-  max-width: 60vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/*justify-content: flex-start;*/
+	flex-wrap: wrap;
+	outline: none;
+	font-size: 28rpx;
+	color: #333333;
+	position: relative;
+	max-width: 60vw;
 }
+
 .message-body-span-text {
-  width: 100%;
-  display: inline;
-  word-wrap: break-word;
-  word-break: break-all;
+	width: 100%;
+	display: inline;
+	word-wrap: break-word;
+	word-break: break-all;
 }
-.custom-content-text{
-  font-family: PingFangSC-Regular;
-  height: 25px;
-  line-height: 25px;
-  font-size: 28rpx;
-  letter-spacing: 0;
+
+.custom-content-text {
+	font-family: PingFangSC-Regular;
+	height: 25px;
+	line-height: 25px;
+	font-size: 28rpx;
+	letter-spacing: 0;
 }

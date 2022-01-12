@@ -1,26 +1,27 @@
-.video-message {
+.video-message {}
 
-
-}
 .video-box {
-    width: 160px;
-    height: 120px;
-    background-color: rgba(0,0,0,0.2);
-    border-radius: 10px 2px 10px 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	width: 160px;
+	height: 120px;
+	background-color: rgba(0, 0, 0, 0.2);
+	border-radius: 10px 2px 10px 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
+
 .my-video {
-    border-radius: 10px 2px 10px 10px;
+	border-radius: 10px 2px 10px 10px;
 }
-.icon{
-    position:absolute;
-    bottom:30px;
-    right:30px;
+
+.icon {
+	position: absolute;
+	bottom: 30px;
+	right: 30px;
 }
+
 .video-icon {
-    display: block;
-    width: 32px;
-    height: 32px;
+	display: block;
+	width: 32px;
+	height: 32px;
 }
