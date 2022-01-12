@@ -33,23 +33,23 @@
     <string name="quit_group">退出群组</string>
     <string name="kick_group_tip">被踢出群组</string>
     <string name="be_group_manager">被设置管理员</string>
-    <string name="cancle_group_manager">被取消管理员</string>
+    <string name="cancel_group_manager">被取消管理员</string>
     <string name="modify_group_name_is">修改群名称为</string>
     <string name="modify_notice">修改群公告为</string>
     <string name="move_owner">转让群主给</string>
     <string name="modify_group_avatar">修改了群头像</string>
     <string name="banned">被禁言</string>
-    <string name="cancle_banned">被取消禁言</string>
+    <string name="cancel_banned">被取消禁言</string>
 
     <!-- 搜索 -->
     <string name="search">搜索</string>
-    <string name="cancle">取消</string>
+    <string name="text_cancel">取消</string>
 
     <string name="live">的直播</string>
     <string name="start_group_call">发起群通话</string>
     <string name="start_call">发起通话</string>
-    <string name="cancle_group_call">取消群通话</string>
-    <string name="cancle_call">取消通话</string>
+    <string name="cancel_group_call">取消群通话</string>
+    <string name="cancel_call">取消通话</string>
     <string name="other_line_busy">对方忙线</string>
     <string name="reject_group_calls">拒绝群通话</string>
     <string name="no_response_call">无应答</string>

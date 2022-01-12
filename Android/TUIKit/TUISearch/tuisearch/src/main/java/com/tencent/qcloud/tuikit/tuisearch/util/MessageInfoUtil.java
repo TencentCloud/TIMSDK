@@ -505,7 +505,7 @@ public class MessageInfoUtil {
                         context.getString(R.string.start_group_call)) : (context.getString(R.string.start_call));
                 break;
             case CallModel.VIDEO_CALL_ACTION_SPONSOR_CANCEL:
-                content = isGroup ? context.getString(R.string.cancle_group_call) : context.getString(R.string.cancle_call);
+                content = isGroup ? context.getString(R.string.cancel_group_call) : context.getString(R.string.cancel_call);
                 break;
             case CallModel.VIDEO_CALL_ACTION_LINE_BUSY:
                 content = isGroup ? ("\"" + senderShowName + "\"" +
@@ -665,7 +665,7 @@ public class MessageInfoUtil {
         }
         if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_CANCEL_ADMIN) {
             msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_MODIFY_NOTICE);
-            tipsMessage = targetUser + context.getString(R.string.cancle_group_manager);
+            tipsMessage = targetUser + context.getString(R.string.cancel_group_manager);
         }
         if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE) {
             List<V2TIMGroupChangeInfo> modifyList = groupTipElem.getGroupChangeInfoList();
@@ -716,7 +716,7 @@ public class MessageInfoUtil {
                 if (shutupTime > 0) {
                     tipsMessage = targetUser + context.getString(R.string.banned) + "\"" + DateTimeUtil.formatSeconds(shutupTime) + "\"";
                 } else {
-                    tipsMessage = targetUser + context.getString(R.string.cancle_banned);
+                    tipsMessage = targetUser + context.getString(R.string.cancel_banned);
                 }
             }
         }
