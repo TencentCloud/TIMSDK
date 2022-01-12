@@ -1,8 +1,8 @@
 {
     "name" : "云通信IM",
-    "appid" : "xxx",
+    "appid" : "__UNI__C42E036",
     "description" : "基于 TIM 实现场景化接入方案",
-    "versionName" : "1.0.0",
+    "versionName" : "1.0.1",
     "versionCode" : "100",
     "transformPx" : false,
     "app-plus" : {
@@ -44,15 +44,38 @@
                 ],
                 "abiFilters" : [ "armeabi-v7a" ]
             },
-            "ios" : {},
+            "ios" : {
+                "privacyDescription" : {
+                    "NSPhotoLibraryUsageDescription" : "app 想访问你的相册",
+                    "NSPhotoLibraryAddUsageDescription" : "app 想访问你的相册",
+                    "NSCameraUsageDescription" : "app 想访问你的摄像头",
+                    "NSMicrophoneUsageDescription" : "app 想访问你的麦克风"
+                }
+            },
             "sdkConfigs" : {
                 "ad" : {}
+            }
+        },
+        "nativePlugins" : {
+            "TUICallingUniPlugin-TUICallingModule" : {
+                "__plugin_info__" : {
+                    "name" : "【官方】腾讯云原生音视频插件",
+                    "description" : "TUICalling 是 腾讯云官方推出 的基于腾讯云实时音视频 TRTC 和即时通信 IM 服务组合而成的插件，支持双人和多人音视频通话。插件提供了全套定制UI，开发者仅需三个 API 就可实现",
+                    "platforms" : "Android,iOS",
+                    "url" : "https://ext.dcloud.net.cn/plugin?id=7097",
+                    "android_package_name" : "",
+                    "ios_bundle_id" : "",
+                    "isCloud" : true,
+                    "bought" : 1,
+                    "pid" : "7097",
+                    "parameters" : {}
+                }
             }
         }
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "xxx",
+        "appid": "appid",
         "setting" : {
             "urlCheck" : false,
             "es6" : true,
@@ -63,6 +86,9 @@
             "scope.userLocation" : {
                 "desc" : "你的位置信息将用于小程序位置接口的效果展示"
             }
+        },
+        "plugins" : {
+      
         },
         "cloudfunctionRoot" : "cloudfunctions/"
     },

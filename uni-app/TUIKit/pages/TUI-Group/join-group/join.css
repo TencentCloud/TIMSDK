@@ -1,133 +1,133 @@
 .TUI-Create-conversation-container {
-  width: 100vw;
-  height: 100vh;
-  background-color: #F4F5F9;
+	width: 100vw;
+	height: 100vh;
+	background-color: #F4F5F9;
 }
 
-.tui-navigatorbar{
-  position: absolute;
-  top: 0;
-  width: 750rpx;
-  height: 176rpx;
-  background-color: #006EFF;
+.tui-navigatorbar {
+	position: absolute;
+	top: 0;
+	width: 750rpx;
+	height: 176rpx;
+	background-color: #006EFF;
 }
 
-.tui-navigatorbar-back{
-  position: absolute;
-  width: 48rpx;
-  height: 48rpx;
-  left: 24rpx;
-  bottom: 20rpx;
+.tui-navigatorbar-back {
+	position: absolute;
+	width: 48rpx;
+	height: 48rpx;
+	left: 24rpx;
+	bottom: 20rpx;
 }
 
 .conversation-title {
-  position:absolute;
-  width: 350rpx;
-  height: 88rpx;
-  line-height: 56rpx;
-  font-size: 36rpx;
-  color: #FFFFFF;
-  z-index:100;
-  bottom: 0;
-  left: 200rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	position: absolute;
+	width: 350rpx;
+	height: 88rpx;
+	line-height: 56rpx;
+	font-size: 36rpx;
+	color: #FFFFFF;
+	z-index: 100;
+	bottom: 0;
+	left: 200rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .tui-search-area {
-  position: absolute;
-  top: 176rpx;
-  width: 750rpx;
-  height: 144rpx;
-  background-color: #006EFF;
+	position: absolute;
+	top: 176rpx;
+	width: 750rpx;
+	height: 144rpx;
+	background-color: #006EFF;
 }
 
 .tui-search-bar {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  margin-left: 40rpx;
-  margin-top: 32rpx;
-  width: 670rpx;
-  height: 80rpx;
-  background: #FFFFFF;
-  border-radius: 40rpx;
-  border-radius: 40rpx;
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	margin-left: 40rpx;
+	margin-top: 32rpx;
+	width: 670rpx;
+	height: 80rpx;
+	background: #FFFFFF;
+	border-radius: 40rpx;
+	border-radius: 40rpx;
 }
 
 .tui-searchcion {
-  display: inline-block;
-  margin-left: 24rpx;
-  width: 48rpx;
-  height: 48rpx;
+	display: inline-block;
+	margin-left: 24rpx;
+	width: 48rpx;
+	height: 48rpx;
 }
 
 .tui-search-bar-input {
-  margin-left: 16rpx;
-  line-height: 40rpx;
-  font-size: 28rpx;
-  width: 100%;
-  display: inline-block;
+	margin-left: 16rpx;
+	line-height: 40rpx;
+	font-size: 28rpx;
+	width: 100%;
+	display: inline-block;
 }
 
 .tui-person-to-invite {
-  position: absolute;
-  top: 320rpx;
-  display: flex;
-  flex-wrap: nowrap;
-  width: 750rpx;
-  height: 150rpx;
-  background-color: #FFFFFF;
+	position: absolute;
+	top: 320rpx;
+	display: flex;
+	flex-wrap: nowrap;
+	width: 750rpx;
+	height: 150rpx;
+	background-color: #FFFFFF;
 }
 
 .tui-normal-choose {
-  margin-left: 40rpx;
-  margin-right: 40rpx;
-  margin-top: 52rpx;
-  margin-bottom: 50rpx;
-  width: 48rpx;
-  height: 48rpx;
+	margin-left: 40rpx;
+	margin-right: 40rpx;
+	margin-top: 52rpx;
+	margin-bottom: 50rpx;
+	width: 48rpx;
+	height: 48rpx;
 }
 
 .tui-person-profile {
-  width: 622rpx;
-  display: flex;
-  align-items: center;
+	width: 622rpx;
+	display: flex;
+	align-items: center;
 }
 
 .tui-person-profile-avatar {
-  width: 96rpx;
-  height: 96rpx;
-  margin-right: 24rpx;
+	width: 96rpx;
+	height: 96rpx;
+	margin-right: 24rpx;
 }
 
 .tui-person-profile-nick {
-  color: #333333;
-  line-height: 50rpx;
-  font-size: 36rpx;
-  margin-bottom: 4rpx;
+	color: #333333;
+	line-height: 50rpx;
+	font-size: 36rpx;
+	margin-bottom: 4rpx;
 }
 
 .tui-person-profile-userID {
-  color: #999999;
-  line-height: 40rpx;
-  font-size: 28rpx;
+	color: #999999;
+	line-height: 40rpx;
+	font-size: 28rpx;
 }
 
 .tui-confirm-btn {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  bottom: 100rpx;
-  width: 670rpx;
-  height: 96rpx;
-  background: #006EFF;
-  color: #FFFFFF;
-  border-radius: 48rpx;
-  border-radius: 48rpx;
-  margin-left: 40rpx;
-  line-height: 44rpx;
-  font-size: 32rpx;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	bottom: 100rpx;
+	width: 670rpx;
+	height: 96rpx;
+	background: #006EFF;
+	color: #FFFFFF;
+	border-radius: 48rpx;
+	border-radius: 48rpx;
+	margin-left: 40rpx;
+	line-height: 44rpx;
+	font-size: 32rpx;
 }

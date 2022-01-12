@@ -1,28 +1,29 @@
-.container{
-  width: 100%;
-  height: 200rpx;
+.container {
+	width: 100%;
+	height: 200rpx;
 }
+
 .handle {
-  display: flex;
-  justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 
-.card{
-  font-size: 14px;
-  margin: 20px;
-  padding: 20px;
-  box-sizing: border-box;
-  border: 1px solid #abdcff;
-  background-color: #f0faff;
-  border-radius: 12px;
+.card {
+	font-size: 14px;
+	margin: 20px;
+	padding: 20px;
+	box-sizing: border-box;
+	border: 1px solid #abdcff;
+	background-color: #f0faff;
+	border-radius: 12px;
 }
-.time {
 
-}
-.button{
-  color: blue;
-  border-radius: 8px;
-  line-height: 30px;
-  font-size: 16px;
-  width: 70px;
+.time {}
+
+.button {
+	color: blue;
+	border-radius: 8px;
+	line-height: 30px;
+	font-size: 16px;
+	width: 70px;
 }
