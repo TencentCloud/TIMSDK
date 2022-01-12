@@ -7,6 +7,7 @@ import 'package:im_api_example/im/messageSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
@@ -25,19 +26,27 @@ class SendMergerMessageState extends State<SendMergerMessage> {
   List<String> conversaions = List.empty(growable: true);
   List<String> msgIDs = List.empty(growable: true);
   sendMergerMessage() async {
+    V2TimValueCallback<V2TimMsgCreateInfoResult> createMessage =
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .createMergerMessage(
+              msgIDList: msgIDs,
+              title: "XXX与XXX的会话", abstractList: msgIDs, //每条消息的摘要，这里暂时写为每条消息的id
+              compatibleText: '低版本不支持会会收到文本消息', // 低版本不支持此类消息，将会由这个字段的文本代替
+            );
+    String id = createMessage.data!.id!;
+
     V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
-        .sendMergerMessage(
-          msgIDList: msgIDs,
-          title: "XXX与XXX的会话",
-          receiver: receiver.length > 0 ? receiver.first : "",
-          groupID: groupID.length > 0 ? groupID.first : "",
-          priority: priority,
-          onlineUserOnly: onlineUserOnly,
-          isExcludedFromUnreadCount: isExcludedFromUnreadCount,
-          abstractList: msgIDs, //每条消息的摘要，这里暂时写为每条消息的id
-          compatibleText: '低版本不支持会会收到文本消息', // 低版本不支持此类消息，将会由这个字段的文本代替
-        );
+        .sendMessage(
+            id: id,
+            receiver: receiver.length > 0 ? receiver.first : "",
+            groupID: groupID.length > 0 ? groupID.first : "",
+            priority: priority,
+            onlineUserOnly: onlineUserOnly,
+            isExcludedFromUnreadCount: isExcludedFromUnreadCount,
+            localCustomData: "自定义localCustomData(sendMergerMessage)");
+
     setState(() {
       resData = res.toJson();
     });

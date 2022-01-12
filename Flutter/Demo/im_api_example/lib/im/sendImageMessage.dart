@@ -9,6 +9,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
@@ -29,17 +30,26 @@ class SendImageMessageState extends State<SendImageMessage> {
   String? fileName;
   final picker = ImagePicker();
   sendImageMessage() async {
+    V2TimValueCallback<V2TimMsgCreateInfoResult> createMessage =
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .createImageMessage(
+              imagePath: image!.path,
+              fileName: 'test.png',
+              fileContent: fileContent,
+            );
+    String id = createMessage.data!.id!;
+
     V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
-        .sendImageMessage(
-            imagePath: image!.path,
+        .sendMessage(
+            id: id,
             receiver: receiver.length > 0 ? receiver.first : "",
             groupID: groupID.length > 0 ? groupID.first : "",
             priority: priority,
             onlineUserOnly: onlineUserOnly,
             isExcludedFromUnreadCount: isExcludedFromUnreadCount,
-            fileContent: fileContent,
-            fileName: 'test.png');
+            localCustomData: "自定义localCustomData(sendImageMessage)");
     setState(() {
       resData = res.toJson();
     });

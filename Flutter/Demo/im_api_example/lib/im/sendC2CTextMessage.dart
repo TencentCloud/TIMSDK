@@ -14,6 +14,9 @@ class SendC2CTextMessageState extends State<SendC2CTextMessage> {
   Map<String, dynamic>? resData;
   String text = '';
   List<String> users = List.empty(growable: true);
+  /*
+    3.6.0 后已经弃用建议不要使用
+  */
   sendC2CTextMessage() async {
     V2TimValueCallback<V2TimMessage> res =
         await TencentImSDKPlugin.v2TIMManager.sendC2CTextMessage(
@@ -73,7 +76,7 @@ class SendC2CTextMessageState extends State<SendC2CTextMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendC2CTextMessage,
-                  child: Text("发送C2C文本消息"),
+                  child: Text("发送C2C文本消息（已经弃用）"),
                 ),
               )
             ],

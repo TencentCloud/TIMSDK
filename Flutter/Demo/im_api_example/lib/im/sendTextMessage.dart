@@ -5,6 +5,7 @@ import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
@@ -22,16 +23,22 @@ class SendTextMessageState extends State<SendTextMessage> {
   bool onlineUserOnly = false;
   bool isExcludedFromUnreadCount = false;
   sendTextMessage() async {
+    V2TimValueCallback<V2TimMsgCreateInfoResult> createMessage =
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .createTextMessage(text: text);
+    String id = createMessage.data!.id!;
+
     V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
-        .sendTextMessage(
-          text: text,
-          receiver: receiver.length > 0 ? receiver.first : "",
-          groupID: groupID.length > 0 ? groupID.first : "",
-          priority: priority,
-          onlineUserOnly: onlineUserOnly,
-          isExcludedFromUnreadCount: isExcludedFromUnreadCount,
-        );
+        .sendMessage(
+            id: id,
+            receiver: receiver.length > 0 ? receiver.first : "",
+            groupID: groupID.length > 0 ? groupID.first : "",
+            priority: priority,
+            onlineUserOnly: onlineUserOnly,
+            isExcludedFromUnreadCount: isExcludedFromUnreadCount,
+            localCustomData: "自定义localCustomData");
     setState(() {
       resData = res.toJson();
     });

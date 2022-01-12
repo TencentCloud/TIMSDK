@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -36,21 +37,28 @@ class SendVideoMessageState extends State<SendVideoMessage> {
   final picker = ImagePicker();
   sendVideoMessage() async {
     print("${video!.path} $type $duration $snapshotPath");
+    V2TimValueCallback<V2TimMsgCreateInfoResult> createMessage =
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .createVideoMessage(
+              videoFilePath: kIsWeb ? '' : video!.path,
+              type: type,
+              snapshotPath: snapshotPath,
+              duration: duration,
+              fileContent: _fileContent,
+              fileName: _fileName,
+            );
+    String id = createMessage.data!.id!;
     V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
-        .sendVideoMessage(
-          videoFilePath: kIsWeb ? '' : video!.path,
-          type: type,
-          snapshotPath: snapshotPath,
-          duration: duration,
-          receiver: receiver.length > 0 ? receiver.first : "",
-          groupID: groupID.length > 0 ? groupID.first : "",
-          priority: priority,
-          onlineUserOnly: onlineUserOnly,
-          isExcludedFromUnreadCount: isExcludedFromUnreadCount,
-          fileContent: _fileContent,
-          fileName: _fileName,
-        );
+        .sendMessage(
+            id: id,
+            receiver: receiver.length > 0 ? receiver.first : "",
+            groupID: groupID.length > 0 ? groupID.first : "",
+            priority: priority,
+            onlineUserOnly: onlineUserOnly,
+            isExcludedFromUnreadCount: isExcludedFromUnreadCount,
+            localCustomData: "自定义localCustomData(sendVideoMessage)");
     setState(() {
       resData = res.toJson();
     });

@@ -17,7 +17,6 @@ class GetC2CReceiveMessageOptState extends State<GetC2CReceiveMessageOpt> {
     V2TimValueCallback res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
         .getC2CReceiveMessageOpt(userIDList: users);
-    print("resaa:$res");
     setState(() {
       resData = res.toJson();
     });

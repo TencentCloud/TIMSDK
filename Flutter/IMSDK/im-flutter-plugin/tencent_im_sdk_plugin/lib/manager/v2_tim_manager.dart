@@ -112,6 +112,14 @@ class V2TIMManager {
     this.addNativeCallback(channel);
   }
 
+  _catchListenerError(Function listener) {
+    try {
+      listener();
+    } catch (err, errorStack) {
+      print("$err $errorStack");
+    }
+  }
+
   ///@nodoc
   void addNativeCallback(MethodChannel _channel) {
     _channel.setMethodCallHandler((call) {
@@ -125,40 +133,55 @@ class V2TIMManager {
               data['data'] == null ? new Map<String, dynamic>() : data['data'];
           String type = data['type'];
           if (simpleMsgListener != null) {
+            final msgID = params['msgID'];
             switch (type) {
               case 'onRecvC2CCustomMessage':
                 // String msgID, V2TIMUserInfo sender, byte[] customData
-                simpleMsgListener.onRecvC2CCustomMessage(
-                  params['msgID'],
-                  V2TimUserInfo.fromJson(params['sender']),
-                  params['customData'],
-                );
+                final sender = V2TimUserInfo.fromJson(params['sender']);
+                _catchListenerError(() {
+                  simpleMsgListener.onRecvC2CCustomMessage(
+                    msgID,
+                    sender,
+                    params['customData'],
+                  );
+                });
                 break;
               case 'onRecvC2CTextMessage':
                 // String msgID, V2TIMUserInfo sender, String text
-                simpleMsgListener.onRecvC2CTextMessage(
-                  params['msgID'],
-                  V2TimUserInfo.fromJson(params['sender']),
-                  params['text'],
-                );
+                final sender = V2TimUserInfo.fromJson(params['sender']);
+                _catchListenerError(() {
+                  simpleMsgListener.onRecvC2CTextMessage(
+                    msgID,
+                    sender,
+                    params['text'],
+                  );
+                });
                 break;
               case 'onRecvGroupCustomMessage':
                 // String msgID, String groupID, V2TIMGroupMemberInfo sender, byte[] customData
-                simpleMsgListener.onRecvGroupCustomMessage(
-                  params['msgID'],
-                  params['groupID'],
-                  V2TimGroupMemberInfo.fromJson(params['sender']),
-                  params['customData'],
-                );
+                final groupSender =
+                    V2TimGroupMemberInfo.fromJson(params['sender']);
+                _catchListenerError(() {
+                  simpleMsgListener.onRecvGroupCustomMessage(
+                    msgID,
+                    params['groupID'],
+                    groupSender,
+                    params['customData'],
+                  );
+                });
                 break;
               case 'onRecvGroupTextMessage':
                 // String msgID, String groupID, V2TIMGroupMemberInfo sender, String text
-                simpleMsgListener.onRecvGroupTextMessage(
-                  params['msgID'],
-                  params['groupID'],
-                  V2TimGroupMemberInfo.fromJson(params['sender']),
-                  params['text'],
-                );
+                final groupSender =
+                    V2TimGroupMemberInfo.fromJson(params['sender']);
+                _catchListenerError(() {
+                  simpleMsgListener.onRecvGroupTextMessage(
+                    params['msgID'],
+                    params['groupID'],
+                    groupSender,
+                    params['text'],
+                  );
+                });
                 break;
             }
           }
@@ -173,27 +196,38 @@ class V2TIMManager {
           if (initSDKListener != null) {
             switch (type) {
               case 'onSelfInfoUpdated':
-                initSDKListener.onSelfInfoUpdated(
-                  V2TimUserFullInfo.fromJson(params),
-                );
+                final userInfo = V2TimUserFullInfo.fromJson(params);
+                _catchListenerError(() {
+                  initSDKListener.onSelfInfoUpdated(userInfo);
+                });
                 break;
               case 'onConnectFailed':
-                initSDKListener.onConnectFailed(
-                  params['code'],
-                  params['desc'],
-                );
+                _catchListenerError(() {
+                  initSDKListener.onConnectFailed(
+                    params['code'],
+                    params['desc'],
+                  );
+                });
                 break;
               case 'onConnecting':
-                initSDKListener.onConnecting();
+                _catchListenerError(() {
+                  initSDKListener.onConnecting();
+                });
                 break;
               case 'onConnectSuccess':
-                initSDKListener.onConnectSuccess();
+                _catchListenerError(() {
+                  initSDKListener.onConnectSuccess();
+                });
                 break;
               case 'onKickedOffline':
-                initSDKListener.onKickedOffline();
+                _catchListenerError(() {
+                  initSDKListener.onKickedOffline();
+                });
                 break;
               case 'onUserSigExpired':
-                initSDKListener.onUserSigExpired();
+                _catchListenerError(() {
+                  initSDKListener.onUserSigExpired();
+                });
                 break;
             }
           }
@@ -267,101 +301,133 @@ class V2TIMManager {
           if (groupListener != null) {
             switch (type) {
               case 'onMemberEnter':
-                groupListener.onMemberEnter(
-                  groupID,
-                  memberList,
-                );
+                _catchListenerError(() {
+                  groupListener.onMemberEnter(
+                    groupID,
+                    memberList,
+                  );
+                });
                 break;
               case 'onMemberLeave':
-                groupListener.onMemberLeave(
-                  groupID,
-                  member,
-                );
+                _catchListenerError(() {
+                  groupListener.onMemberLeave(
+                    groupID,
+                    member,
+                  );
+                });
                 break;
               case 'onMemberInvited':
-                groupListener.onMemberInvited(
-                  groupID,
-                  opUser,
-                  memberList,
-                );
+                _catchListenerError(() {
+                  groupListener.onMemberInvited(
+                    groupID,
+                    opUser,
+                    memberList,
+                  );
+                });
                 break;
               case 'onMemberKicked':
-                groupListener.onMemberKicked(
-                  groupID,
-                  opUser,
-                  memberList,
-                );
+                _catchListenerError(() {
+                  groupListener.onMemberKicked(
+                    groupID,
+                    opUser,
+                    memberList,
+                  );
+                });
                 break;
               case 'onMemberInfoChanged':
-                groupListener.onMemberInfoChanged(
-                  groupID,
-                  groupMemberChangeInfoList,
-                );
+                _catchListenerError(() {
+                  groupListener.onMemberInfoChanged(
+                    groupID,
+                    groupMemberChangeInfoList,
+                  );
+                });
                 break;
               case 'onGroupCreated':
-                groupListener.onGroupCreated(groupID);
+                _catchListenerError(() {
+                  groupListener.onGroupCreated(groupID);
+                });
                 break;
               case 'onGroupDismissed':
-                groupListener.onGroupDismissed(
-                  groupID,
-                  opUser,
-                );
+                _catchListenerError(() {
+                  groupListener.onGroupDismissed(
+                    groupID,
+                    opUser,
+                  );
+                });
                 break;
               case 'onGroupRecycled':
-                groupListener.onGroupRecycled(
-                  groupID,
-                  opUser,
-                );
+                _catchListenerError(() {
+                  groupListener.onGroupRecycled(
+                    groupID,
+                    opUser,
+                  );
+                });
                 break;
               case 'onGroupInfoChanged':
-                groupListener.onGroupInfoChanged(
-                  groupID,
-                  groupChangeInfoList,
-                );
+                _catchListenerError(() {
+                  groupListener.onGroupInfoChanged(
+                    groupID,
+                    groupChangeInfoList,
+                  );
+                });
                 break;
               case 'onReceiveJoinApplication':
-                groupListener.onReceiveJoinApplication(
-                  groupID,
-                  member,
-                  opReason,
-                );
+                _catchListenerError(() {
+                  groupListener.onReceiveJoinApplication(
+                    groupID,
+                    member,
+                    opReason,
+                  );
+                });
                 break;
               case 'onApplicationProcessed':
-                groupListener.onApplicationProcessed(
-                  groupID,
-                  opUser,
-                  isAgreeJoin,
-                  opReason,
-                );
+                _catchListenerError(() {
+                  groupListener.onApplicationProcessed(
+                    groupID,
+                    opUser,
+                    isAgreeJoin,
+                    opReason,
+                  );
+                });
                 break;
               case 'onGrantAdministrator':
-                groupListener.onGrantAdministrator(
-                  groupID,
-                  opUser,
-                  memberList,
-                );
+                _catchListenerError(() {
+                  groupListener.onGrantAdministrator(
+                    groupID,
+                    opUser,
+                    memberList,
+                  );
+                });
                 break;
               case 'onRevokeAdministrator':
-                groupListener.onRevokeAdministrator(
-                  groupID,
-                  opUser,
-                  memberList,
-                );
+                _catchListenerError(() {
+                  groupListener.onRevokeAdministrator(
+                    groupID,
+                    opUser,
+                    memberList,
+                  );
+                });
                 break;
               case 'onQuitFromGroup':
-                groupListener.onQuitFromGroup(groupID);
+                _catchListenerError(() {
+                  groupListener.onQuitFromGroup(groupID);
+                });
                 break;
               case 'onReceiveRESTCustomData':
-                groupListener.onReceiveRESTCustomData(
-                  groupID,
-                  customData,
-                );
+                _catchListenerError(() {
+                  groupListener.onReceiveRESTCustomData(
+                    groupID,
+                    customData,
+                  );
+                });
                 break;
               case 'onGroupAttributeChanged':
-                groupListener.onGroupAttributeChanged(
-                  groupID,
-                  groupAttributeMap,
-                );
+                _catchListenerError(() {
+                  groupListener.onGroupAttributeChanged(
+                    groupID,
+                    groupAttributeMap,
+                  );
+                });
                 break;
             }
           }
@@ -385,16 +451,24 @@ class V2TIMManager {
                 dataList.forEach((element) {
                   receiptList.add(V2TimMessageReceipt.fromJson(element));
                 });
-                listener.onRecvC2CReadReceipt(receiptList);
+                _catchListenerError(() {
+                  listener.onRecvC2CReadReceipt(receiptList);
+                });
                 break;
               case 'onRecvMessageRevoked':
-                listener.onRecvMessageRevoked(params);
+                _catchListenerError(() {
+                  listener.onRecvMessageRevoked(params);
+                });
                 break;
               case 'onSendMessageProgress':
-                listener.onSendMessageProgress(
-                  V2TimMessage.fromJson(params['message']),
-                  params['progress'],
-                );
+                final message = V2TimMessage.fromJson(params['message']);
+                _catchListenerError(() {
+                  listener.onSendMessageProgress(
+                    message,
+                    params['progress'],
+                  );
+                });
+
                 break;
             }
           }
@@ -408,13 +482,19 @@ class V2TIMManager {
           if (listener != null) {
             switch (type) {
               case 'onSyncServerStart':
-                listener.onSyncServerStart();
+                _catchListenerError(() {
+                  listener.onSyncServerStart();
+                });
                 break;
               case 'onSyncServerFinish':
-                listener.onSyncServerFinish();
+                _catchListenerError(() {
+                  listener.onSyncServerFinish();
+                });
                 break;
               case 'onSyncServerFailed':
-                listener.onSyncServerFailed();
+                _catchListenerError(() {
+                  listener.onSyncServerFailed();
+                });
                 break;
               case 'onNewConversation':
                 dynamic params = data['data'] == null
@@ -425,7 +505,9 @@ class V2TIMManager {
                 params.forEach((element) {
                   conversationList.add(V2TimConversation.fromJson(element));
                 });
-                listener.onNewConversation(conversationList);
+                _catchListenerError(() {
+                  listener.onNewConversation(conversationList);
+                });
                 break;
               case 'onConversationChanged':
                 dynamic params = data['data'] == null
@@ -436,11 +518,16 @@ class V2TIMManager {
                 params.forEach((element) {
                   conversationList.add(V2TimConversation.fromJson(element));
                 });
-                listener.onConversationChanged(conversationList);
+
+                _catchListenerError(() {
+                  listener.onConversationChanged(conversationList);
+                });
                 break;
               case 'onTotalUnreadMessageCountChanged':
                 dynamic params = data['data'] == null ? 0 : data['data'];
-                listener.onTotalUnreadMessageCountChanged(params);
+                _catchListenerError(() {
+                  listener.onTotalUnreadMessageCountChanged(params);
+                });
                 break;
             }
           }
@@ -452,57 +539,73 @@ class V2TIMManager {
               data['data'] == null ? new Map<String, dynamic>() : data['data'];
           V2TimFriendshipListener? listener =
               this.v2TIMFriendshipManager.friendListenerList[listenerUuid];
-          switch (type) {
-            case 'onFriendApplicationListAdded':
-              List applicationListMap = params;
-              List<V2TimFriendApplication> applicationList =
-                  List.empty(growable: true);
-              applicationListMap.forEach((element) {
-                applicationList.add(V2TimFriendApplication.fromJson(element));
-              });
-              listener!.onFriendApplicationListAdded(applicationList);
-              break;
-            case 'onFriendApplicationListDeleted':
-              List<String> userIDList = List.from(params);
-              listener!.onFriendApplicationListDeleted(userIDList);
-              break;
-            case 'onFriendApplicationListRead':
-              listener!.onFriendApplicationListRead();
-              break;
-            case 'onFriendListAdded':
-              List userMap = params;
-              List<V2TimFriendInfo> users = List.empty(growable: true);
-              userMap.forEach((element) {
-                users.add(V2TimFriendInfo.fromJson(element));
-              });
-              listener!.onFriendListAdded(users);
-              break;
-            case 'onFriendListDeleted':
-              List<String> userList = List.from(params);
-              listener!.onFriendListDeleted(userList);
-              print("onFriendListDeleted");
-              break;
-            case 'onBlackListAdd':
-              List infoListMap = params;
-              List<V2TimFriendInfo> infoList = List.empty(growable: true);
-              infoListMap.forEach((element) {
-                infoList.add(V2TimFriendInfo.fromJson(element));
-              });
-              listener!.onBlackListAdd(infoList);
-              print("onBlackListAdd");
-              break;
-            case 'onBlackListDeleted':
-              List<String> userList = List.from(params);
-              listener!.onBlackListDeleted(userList);
-              break;
-            case 'onFriendInfoChanged':
-              List infoListMap = params;
-              List<V2TimFriendInfo> infoList = List.empty(growable: true);
-              infoListMap.forEach((element) {
-                infoList.add(V2TimFriendInfo.fromJson(element));
-              });
-              listener!.onFriendInfoChanged(infoList);
-              break;
+          if (listener != null) {
+            switch (type) {
+              case 'onFriendApplicationListAdded':
+                List applicationListMap = params;
+                List<V2TimFriendApplication> applicationList =
+                    List.empty(growable: true);
+                applicationListMap.forEach((element) {
+                  applicationList.add(V2TimFriendApplication.fromJson(element));
+                });
+                _catchListenerError(() {
+                  listener.onFriendApplicationListAdded(applicationList);
+                });
+                break;
+              case 'onFriendApplicationListDeleted':
+                List<String> userIDList = List.from(params);
+                _catchListenerError(() {
+                  listener.onFriendApplicationListDeleted(userIDList);
+                });
+                break;
+              case 'onFriendApplicationListRead':
+                _catchListenerError(() {
+                  listener.onFriendApplicationListRead();
+                });
+                break;
+              case 'onFriendListAdded':
+                List userMap = params;
+                List<V2TimFriendInfo> users = List.empty(growable: true);
+                userMap.forEach((element) {
+                  users.add(V2TimFriendInfo.fromJson(element));
+                });
+                _catchListenerError(() {
+                  listener.onFriendListAdded(users);
+                });
+                break;
+              case 'onFriendListDeleted':
+                List<String> userList = List.from(params);
+                _catchListenerError(() {
+                  listener.onFriendListDeleted(userList);
+                });
+                break;
+              case 'onBlackListAdd':
+                List infoListMap = params;
+                List<V2TimFriendInfo> infoList = List.empty(growable: true);
+                infoListMap.forEach((element) {
+                  infoList.add(V2TimFriendInfo.fromJson(element));
+                });
+                _catchListenerError(() {
+                  listener.onBlackListAdd(infoList);
+                });
+                break;
+              case 'onBlackListDeleted':
+                List<String> userList = List.from(params);
+                _catchListenerError(() {
+                  listener.onBlackListDeleted(userList);
+                });
+                break;
+              case 'onFriendInfoChanged':
+                List infoListMap = params;
+                List<V2TimFriendInfo> infoList = List.empty(growable: true);
+                infoListMap.forEach((element) {
+                  infoList.add(V2TimFriendInfo.fromJson(element));
+                });
+                _catchListenerError(() {
+                  listener.onFriendInfoChanged(infoList);
+                });
+                break;
+            }
           }
         } else if (call.method == 'logFromSwift') {
           var data = call.arguments["data"];
@@ -526,20 +629,30 @@ class V2TIMManager {
               this.v2timSignalingManager.signalingListenerList[listenerUuid];
           switch (type) {
             case 'onReceiveNewInvitation':
-              listener!.onReceiveNewInvitation(
-                  inviteID, inviter, groupID, inviteeList!, data);
+              _catchListenerError(() {
+                listener!.onReceiveNewInvitation(
+                    inviteID, inviter, groupID, inviteeList!, data);
+              });
               break;
             case 'onInviteeAccepted':
-              listener!.onInviteeAccepted(inviteID, invitee, data);
+              _catchListenerError(() {
+                listener!.onInviteeAccepted(inviteID, invitee, data);
+              });
               break;
             case 'onInviteeRejected':
-              listener!.onInviteeRejected(inviteID, invitee, data);
+              _catchListenerError(() {
+                listener!.onInviteeRejected(inviteID, invitee, data);
+              });
               break;
             case 'onInvitationCancelled':
-              listener!.onInvitationCancelled(inviteID, inviter, data);
+              _catchListenerError(() {
+                listener!.onInvitationCancelled(inviteID, inviter, data);
+              });
               break;
             case 'onInvitationTimeout':
-              listener!.onInvitationTimeout(inviteID, inviteeList!);
+              _catchListenerError(() {
+                listener!.onInvitationTimeout(inviteID, inviteeList!);
+              });
               break;
           }
         }

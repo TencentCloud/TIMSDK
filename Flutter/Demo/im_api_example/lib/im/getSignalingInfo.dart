@@ -26,7 +26,6 @@ class GetSignalingInfoState extends State<GetSignalingInfo> {
         .getSignalingInfo(
           msgID: msgIDs[0],
         );
-    print("msgIDs[0]:${msgIDs[0]}");
     setState(() {
       resData = res.toJson();
     });

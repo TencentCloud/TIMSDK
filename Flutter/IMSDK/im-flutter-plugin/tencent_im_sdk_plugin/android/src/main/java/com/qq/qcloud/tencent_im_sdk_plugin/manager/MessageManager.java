@@ -139,9 +139,9 @@ public class MessageManager {
             @Override
             public void onProgress(int i) {
                 HashMap<String,Object> data = new HashMap<String,Object>();
-                data.put("message",CommonUtil.convertV2TIMMessageToMap(msg,i));
+                data.put("message",CommonUtil.convertV2TIMMessageToMap(msg,i,id));
                 data.put("progress",i);
-                data.put("id",id);
+
                 for (String listenerUuid : listenerUuidList) {
                     makeAddAdvancedMsgListenerEventData("onSendMessageProgress",data, listenerUuid);
                 }
@@ -287,7 +287,6 @@ public class MessageManager {
         final String cloudCustomData = CommonUtil.getParam(methodCall,result,"cloudCustomData");
         final String localCustomData = CommonUtil.getParam(methodCall,result,"localCustomData");
 
-
         boolean isExcludedFromUnreadCount = CommonUtil.getParam(methodCall,result,"isExcludedFromUnreadCount");
         int priority;
 
@@ -320,7 +319,7 @@ public class MessageManager {
         HashMap<String,Object> offlinePushInfoParams = CommonUtil.getParam(methodCall,result,"offlinePushInfo");
         V2TIMOfflinePushInfo offlinePushInfo = handleOfflinePushInfo(methodCall,result);
         msg.setExcludedFromUnreadCount(isExcludedFromUnreadCount);
-        handleSendMessage(msg,receiver,groupID,priority,onlineUserOnly,offlinePushInfo,result,id);
+         handleSendMessage(msg,receiver,groupID,priority,onlineUserOnly,offlinePushInfo,result,id);
     }
     // 3.6.0 后不推荐使用
     public  void  sendTextMessage(MethodCall methodCall, final MethodChannel.Result result){

@@ -17,10 +17,11 @@ class SearchLocalMessagesState extends State<SearchLocalMessages> {
     if (keyword == '') return;
     V2TimMessageSearchParam searchParam = V2TimMessageSearchParam(
       keywordList: [keyword],
-      type: 1, // 对应 keywordListMatchType sdk层处理  代表 或 与关系
+      type:
+          1, // 对应 keywordListMatchType.KEYWORD_LIST_MATCH_TYPE_AND sdk层处理  代表 或 与关系
       pageSize: 50, // size 写死
-      pageIndex: 1, // index写死
-      conversationID: conversaions.first, // 不传代表指定所有会话
+      pageIndex: 0, // index写死
+      conversationID: conversaions.first, // 不传代表指定所有会话,而且不会返回messageList
     );
     var res = await TencentImSDKPlugin.v2TIMManager
         .getMessageManager()
@@ -89,7 +90,7 @@ class SearchLocalMessagesState extends State<SearchLocalMessages> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: searchLocaltMessage,
-                  child: Text("查询本地消息"),
+                  child: Text("查询本地消息(不指定会话不返回messageList)"),
                 ),
               )
             ],

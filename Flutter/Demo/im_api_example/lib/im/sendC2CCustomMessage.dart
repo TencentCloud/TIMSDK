@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
@@ -14,12 +15,21 @@ class SendC2CCustomMessageState extends State<SendC2CCustomMessage> {
   Map<String, dynamic>? resData;
   String customData = '';
   List<String> users = List.empty(growable: true);
+  /*
+  3.6.0 后已弃用建议不要使用
+  */
   sendC2CCustomMessage() async {
+    V2TimValueCallback<V2TimMsgCreateInfoResult> createMessage =
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .createCustomMessage(data: customData);
+    String id = createMessage.data!.id!;
     V2TimValueCallback<V2TimMessage> res =
-        await TencentImSDKPlugin.v2TIMManager.sendC2CCustomMessage(
-      customData: customData,
-      userID: users.first,
-    );
+        await TencentImSDKPlugin.v2TIMManager.getMessageManager().sendMessage(
+              id: id,
+              receiver: users.length > 0 ? users.first : "",
+              groupID: "",
+            );
     setState(() {
       resData = res.toJson();
     });
@@ -73,7 +83,7 @@ class SendC2CCustomMessageState extends State<SendC2CCustomMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendC2CCustomMessage,
-                  child: Text("发送C2C自定义消息"),
+                  child: Text("发送C2C自定义消息（弃用）"),
                 ),
               )
             ],
