@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:discuss/provider/historymessagelistprovider.dart';
+import 'package:discuss/utils/permissions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -617,12 +619,11 @@ class TextMsgState extends State<TextMsg> {
             )
           : GestureDetector(
               onLongPressStart: (e) async {
-                if (await Permission.microphone.request().isGranted) {
+                if (await Permissions.checkPermission(
+                    context, Permission.microphone.value)) {
                   // Either the permission was already granted before or the user just granted it.
                   buildOverLayView(context); //显示图标
                   start();
-                } else {
-                  Utils.toast("请打开麦克风权限");
                 }
               },
               onLongPressMoveUpdate: (e) {

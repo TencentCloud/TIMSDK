@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:discuss/utils/commonUtils.dart';
+import 'package:discuss/utils/permissions.dart';
 
 import 'package:discuss/utils/toast.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,8 @@ import 'package:photo_view/photo_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+
+import 'ImageScreen.dart';
 
 class ImageMessage extends StatefulWidget {
   final V2TimMessage message;
@@ -102,34 +106,18 @@ class ImageMessageState extends State<ImageMessage>
   }
 
   //保存网络图片到本地
-  _savenNetworkImage(String imageUrl, {bool isAsset = true}) async {
-    var status = await Permission.storage.status;
+  _savenNetworkImage(context, String imageUrl, {bool isAsset = true}) async {
     var response;
-    if (status.isDenied) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("提示"),
-              content: const Text("您当前没有开启相册权限"),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text("好呀"),
-                  onPressed: () => //打开ios的设置
-                      openAppSettings(), //关闭对话框
-                ),
-                TextButton(
-                  child: const Text("取消"),
-                  onPressed: () {
-                    // ... 执行删除操作
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          });
-
-      return;
+    if (Platform.isIOS) {
+      if (!await Permissions.checkPermission(
+          context, Permission.photos.value)) {
+        return;
+      }
+    } else {
+      if (!await Permissions.checkPermission(
+          context, Permission.storage.value)) {
+        return;
+      }
     }
 
     // 本地资源的情况下
@@ -160,20 +148,17 @@ class ImageMessageState extends State<ImageMessage>
     }
   }
 
-  //动态申请权限
-  Future<bool> requestPermission() async {
-    // PermissionStatus photoStatus = await Permission.photos.status;
-    PermissionStatus storageStatus = await Permission.storage.status;
-    if (storageStatus != PermissionStatus.granted) {
-      Map<Permission, PermissionStatus> statuses = await [
-        Permission.storage,
-      ].request();
-      if (statuses[0] != PermissionStatus.granted) {
-        Utils.toast('无法存储图片，请先授权！');
-        return storageStatus.isDenied;
-      }
+  void _saveImg() {
+    String? path = widget.message.imageElem?.path;
+    String? imageUrl = path == ""
+        // 第0项一般为原图
+        ? widget.message.imageElem?.imageList![0]?.url
+        : path;
+    bool isAsset = path != "" ? true : false;
+    if (imageUrl == null) {
+      return;
     }
-    return storageStatus.isGranted;
+    _savenNetworkImage(context, imageUrl, isAsset: isAsset);
   }
 
   void openDialog(BuildContext context) => showDialog(
@@ -207,15 +192,7 @@ class ImageMessageState extends State<ImageMessage>
                         if (imageUrl == null) {
                           return;
                         }
-                        if (Platform.isIOS) {
-                          _savenNetworkImage(imageUrl, isAsset: isAsset);
-                          return;
-                        }
-                        requestPermission().then((bool res) {
-                          if (res) {
-                            _savenNetworkImage(imageUrl, isAsset: isAsset);
-                          }
-                        });
+                        _savenNetworkImage(context, imageUrl, isAsset: isAsset);
                       },
                     ),
                   )
@@ -248,7 +225,12 @@ class ImageMessageState extends State<ImageMessage>
                 return getImage(
                     GestureDetector(
                       onTap: () {
-                        openDialog(context);
+                        // openDialog(context);
+                        Navigator.of(context).push(FadeRoute(
+                            page: ImageScreen(
+                                imageProvider: NetworkImage(getBigPic()),
+                                heroTag: widget.message.msgID!,
+                                downloadFn: _saveImg)));
                       },
                       child:
                           // Container(
@@ -279,7 +261,12 @@ class ImageMessageState extends State<ImageMessage>
                   return getImage(
                       GestureDetector(
                         onTap: () {
-                          openDialog(context);
+                          // openDialog(context);
+                          Navigator.of(context).push(FadeRoute(
+                              page: ImageScreen(
+                                  imageProvider: NetworkImage(getBigPic()),
+                                  heroTag: widget.message.msgID!,
+                                  downloadFn: _saveImg)));
                         },
                         child: Image.file(
                           File(widget.message.imageElem!.path!),
