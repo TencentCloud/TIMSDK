@@ -35,7 +35,3 @@ PS:如您打算使用Xcode或者Android Studio直接执行项目，请直接修�
             
         ]
 ```
-
-PROJECT_TYPE：有两种
-（1）demo 以demo的形式运行打包（多了通讯录bar）,不填写情况下默认为discord运行
-（2）discord 以discord形式运行（无通讯录bar,个人设置略有不同）
