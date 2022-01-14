@@ -241,14 +241,18 @@ static NSArray *customInputBtnInfo = nil;
                     failBlock:(nullable V2TIMFail)fail
 {
     NSParameterAssert(userID);
-    if (fail && !userID) {
-        fail(ERR_INVALID_PARAMETERS, @"userID is nil");
+    if (!userID) {
+        if (fail) {
+            fail(ERR_INVALID_PARAMETERS, @"userID is nil");
+        }
         return;
     }
     
     [[V2TIMManager sharedInstance] getUsersInfo:@[userID] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
         V2TIMUserFullInfo *info = infoList.firstObject;
-        succ(info);
+        if (succ) {        
+            succ(info);
+        }
     } fail:fail];
 }
 
