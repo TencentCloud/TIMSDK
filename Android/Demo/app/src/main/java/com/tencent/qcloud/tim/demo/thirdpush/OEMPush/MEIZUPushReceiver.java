@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tim.demo.thirdpush;
+package com.tencent.qcloud.tim.demo.thirdpush.OEMPush;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import com.meizu.cloud.pushsdk.platform.message.RegisterStatus;
 import com.meizu.cloud.pushsdk.platform.message.SubAliasStatus;
 import com.meizu.cloud.pushsdk.platform.message.SubTagsStatus;
 import com.meizu.cloud.pushsdk.platform.message.UnRegisterStatus;
+import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 
 public class MEIZUPushReceiver extends MzPushMessageReceiver {

@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tim.demo.thirdpush;
+package com.tencent.qcloud.tim.demo.thirdpush.OEMPush;
 
 import android.content.Context;
 

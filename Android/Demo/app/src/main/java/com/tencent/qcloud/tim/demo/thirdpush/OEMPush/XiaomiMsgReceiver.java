@@ -1,11 +1,13 @@
-package com.tencent.qcloud.tim.demo.thirdpush;
+package com.tencent.qcloud.tim.demo.thirdpush.OEMPush;
 
 import android.content.Context;
-import android.os.Bundle;
+import android.content.Intent;
 import android.text.TextUtils;
 
+import com.tencent.qcloud.tim.demo.DemoApplication;
+import com.tencent.qcloud.tim.demo.main.MainActivity;
+import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
@@ -35,10 +37,10 @@ public class XiaomiMsgReceiver extends PushMessageReceiver {
             DemoLog.w(TAG, "onNotificationMessageClicked: no extra data found");
             return;
         }
-
-        Bundle bundle = new Bundle();
-        bundle.putString("ext", ext);
-        TUIUtils.startActivity("MainActivity", bundle);
+        Intent intent = new Intent(DemoApplication.instance(), MainActivity.class);
+        intent.putExtra("ext", ext);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        DemoApplication.instance().startActivity(intent);
     }
 
     @Override

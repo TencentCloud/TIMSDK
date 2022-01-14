@@ -180,6 +180,10 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 messagefailed.setVisibility(View.GONE);
                 messageSending.setVisibility(View.GONE);
             }
+        } else {
+            messageStatusLayout.setVisibility(View.GONE);
+            messagefailed.setVisibility(View.GONE);
+            messageSending.setVisibility(View.GONE);
         }
 
         if (isForwardMode) {

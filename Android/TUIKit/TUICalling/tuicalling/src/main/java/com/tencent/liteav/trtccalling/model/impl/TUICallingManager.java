@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
 import com.tencent.liteav.trtccalling.model.TUICalling;
-import com.tencent.liteav.trtccalling.model.util.EventHandler;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 import com.tencent.liteav.trtccalling.ui.audiocall.TRTCAudioCallActivity;
 import com.tencent.liteav.trtccalling.ui.audiocall.TUICallAudioView;
@@ -36,7 +33,7 @@ public final class TUICallingManager implements TUICalling, TRTCCallingDelegate 
 
     private static final String TAG = "TUICallingManager";
 
-    private static TUICallingManager INSTANCE = new TUICallingManager();
+    private static TUICallingManager sInstance;
 
     private         Context            mContext;
     private         TUICallingListener mTUICallingListener;
@@ -48,23 +45,28 @@ public final class TUICallingManager implements TUICalling, TRTCCallingDelegate 
     private Type     mType;
     private Role     mRole;
     private long     mStartTime;
+    private String   mGroupID;
+    private boolean  mIsFromGroup;
 
     private BaseTUICallView mCallView;
 
     private CallingManagerListener mCallingManagerListener;
 
-    public static final TUICallingManager sharedInstance() {
-        return INSTANCE;
+    public static final TUICalling sharedInstance(Context context) {
+        if (null == sInstance) {
+            synchronized (TUICallingManager.class) {
+                if (null == sInstance) {
+                    sInstance = new TUICallingManager(context);
+                }
+            }
+        }
+        return sInstance;
     }
 
-    private TUICallingManager() {
-
-    }
-
-    void init(Context context) {
-        mContext = context;
+    private TUICallingManager(Context context) {
+        mContext = context.getApplicationContext();
         TRTCCalling.sharedInstance(mContext).addDelegate(this);
-        EventHandler.sharedInstance().addHandler(new CallingHandler());
+        Log.d(TAG, "init success.");
     }
 
     void setCallingManagerListener(CallingManagerListener listener) {
@@ -93,6 +95,8 @@ public final class TUICallingManager implements TUICalling, TRTCCallingDelegate 
         Log.d(TAG, String.format("internalCall, userIDs=%s, sponsorID=%s, groupID=%s, type=%s, role=%s", Arrays.toString(userIDs), sponsorID, groupID, type, role));
         mStartTime = SystemClock.uptimeMillis();
         mUserIDs = null == userIDs ? new String[0] : userIDs;
+        mGroupID = groupID;
+        mIsFromGroup = isFromGroup;
         mType = type;
         mRole = role;
         if (mEnableCustomViewRoute) {
@@ -174,24 +178,9 @@ public final class TUICallingManager implements TUICalling, TRTCCallingDelegate 
         mEnableCustomViewRoute = enable;
     }
 
-    private class CallingHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            final int type = msg.what;
-            if (EventHandler.EVENT_TYPE_ACTIVE_HANGUP == type) {
-                if (null != mTUICallingListener) {
-                    mTUICallingListener.onCallEnd(mUserIDs, mType, mRole, 0);
-                }
-                if (mCallingManagerListener != null) {
-                    mCallingManagerListener.onEvent(TUICallingConstants.EVENT_ACTIVE_HANGUP, new Bundle());
-                }
-            }
-        }
-    }
-
     @Override
     public void onError(int code, String msg) {
-
+        Log.d(TAG, "onError: code = " + code + " , msg = " + msg);
     }
 
     @Override
@@ -225,39 +214,105 @@ public final class TUICallingManager implements TUICalling, TRTCCallingDelegate 
     @Override
     public void onUserLeave(String userId) {
         Log.d(TAG, "onUserLeave enter");
+        if (null == userId) {
+            return;
+        }
+        //有用户退出时,根据单聊/群聊去做不同的处理
+        if (isGroupCall(mGroupID, mUserIDs, mRole, mIsFromGroup)) {
+            Log.d(TAG, "onUserLeave: userId = " + userId);
+        } else {
+            onCallEnd();
+        }
     }
 
     @Override
     public void onReject(String userId) {
         Log.d(TAG, "onReject enter");
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mCallingManagerListener != null) {
+                    mCallingManagerListener.onEvent(TUICallingConstants.EVENT_ACTIVE_HANGUP, new Bundle());
+                }
+                if (null != mTUICallingListener) {
+                    mTUICallingListener.onCallEvent(Event.CALL_END, mType, mRole, TUICallingConstants.EVENT_CALL_HANG_UP);
+                }
+                onCallEnd();
+            }
+        });
+
     }
 
     @Override
     public void onNoResp(String userId) {
         Log.d(TAG, "onNoResp enter");
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mTUICallingListener) {
+                    mTUICallingListener.onCallEvent(Event.CALL_FAILED, mType, mRole, TUICallingConstants.EVENT_CALL_NO_RESP);
+                }
+                onCallEnd();
+            }
+        });
     }
 
     @Override
     public void onLineBusy(String userId) {
         Log.d(TAG, "onLineBusy enter");
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mTUICallingListener) {
+                    mTUICallingListener.onCallEvent(Event.CALL_FAILED, mType, mRole, TUICallingConstants.EVENT_CALL_LINE_BUSY);
+                }
+                onCallEnd();
+            }
+        });
     }
 
     @Override
     public void onCallingCancel() {
         Log.d(TAG, "onCallingCancel enter");
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mCallingManagerListener != null) {
+                    mCallingManagerListener.onEvent(TUICallingConstants.EVENT_ACTIVE_HANGUP, new Bundle());
+                }
+                if (null != mTUICallingListener) {
+                    mTUICallingListener.onCallEvent(Event.CALL_END, mType, mRole, TUICallingConstants.EVENT_CALL_CNACEL);
+                }
+                onCallEnd();
+            }
+        });
     }
 
     @Override
     public void onCallingTimeout() {
         Log.d(TAG, "onCallingTimeout enter");
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mTUICallingListener) {
+                    mTUICallingListener.onCallEvent(Event.CALL_END, mType, mRole, TUICallingConstants.EVENT_CALL_TIMEOUT);
+                }
+                onCallEnd();
+            }
+        });
     }
 
     @Override
     public void onCallEnd() {
         Log.d(TAG, "onCallEnd enter");
-        if (null != mTUICallingListener) {
-            mTUICallingListener.onCallEnd(mUserIDs, mType, mRole, SystemClock.uptimeMillis() - mStartTime);
-        }
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mTUICallingListener) {
+                    mTUICallingListener.onCallEnd(mUserIDs, mType, mRole, SystemClock.uptimeMillis() - mStartTime);
+                }
+            }
+        });
     }
 
     @Override
@@ -288,5 +343,4 @@ public final class TUICallingManager implements TUICalling, TRTCCallingDelegate 
     public interface CallingManagerListener {
         void onEvent(String key, Bundle bundle);
     }
-
 }

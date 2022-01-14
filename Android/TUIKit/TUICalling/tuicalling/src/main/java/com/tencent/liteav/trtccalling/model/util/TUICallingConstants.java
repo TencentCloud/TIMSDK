@@ -25,4 +25,12 @@ public class TUICallingConstants {
     public static final String EVENT_KEY_NAME      = "event_name";
     public static final String EVENT_ACTIVE_HANGUP = "active_hangup";
 
+    //onCallEvent常用类型定义
+    public static final String EVENT_CALL_HANG_UP         = "Hangup";
+    public static final String EVENT_CALL_LINE_BUSY       = "LineBusy";
+    public static final String EVENT_CALL_CNACEL          = "Cancel";
+    public static final String EVENT_CALL_TIMEOUT         = "Timeout";
+    public static final String EVENT_CALL_NO_RESP         = "NoResp";
+    public static final String EVENT_CALL_SWITCH_TO_AUDIO = "SwitchToAudio";
+
 }

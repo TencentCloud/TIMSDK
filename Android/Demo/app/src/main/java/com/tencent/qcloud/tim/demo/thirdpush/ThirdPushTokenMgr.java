@@ -2,7 +2,6 @@ package com.tencent.qcloud.tim.demo.thirdpush;
 
 import android.text.TextUtils;
 
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMOfflinePushConfig;
@@ -39,20 +38,24 @@ public class ThirdPushTokenMgr {
             return;
         }
         V2TIMOfflinePushConfig v2TIMOfflinePushConfig = null;
-        if (BrandUtil.isBrandXiaoMi()) {
-            v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.XM_PUSH_BUZID, token);
-        } else if (BrandUtil.isBrandHuawei()) {
-            v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.HW_PUSH_BUZID, token);
-        } else if (BrandUtil.isBrandMeizu()) {
-            v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.MZ_PUSH_BUZID, token);
-        } else if (BrandUtil.isBrandOppo()) {
-            v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.OPPO_PUSH_BUZID, token);
-        } else if (BrandUtil.isBrandVivo()) {
-            v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.VIVO_PUSH_BUZID, token);
-        } else if (BrandUtil.isGoogleServiceSupport()) {
-            v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.GOOGLE_FCM_PUSH_BUZID, token);
+        if (PushSetting.isTPNSChannel) {
+            v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(0, token, true);
         } else {
-            return;
+            if (BrandUtil.isBrandXiaoMi()) {
+                v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.XM_PUSH_BUZID, token, false);
+            } else if (BrandUtil.isBrandHuawei()) {
+                v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.HW_PUSH_BUZID, token, false);
+            } else if (BrandUtil.isBrandMeizu()) {
+                v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.MZ_PUSH_BUZID, token, false);
+            } else if (BrandUtil.isBrandOppo()) {
+                v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.OPPO_PUSH_BUZID, token, false);
+            } else if (BrandUtil.isBrandVivo()) {
+                v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.VIVO_PUSH_BUZID, token, false);
+            } else if (BrandUtil.isGoogleServiceSupport()) {
+                v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(PrivateConstants.GOOGLE_FCM_PUSH_BUZID, token, false);
+            } else {
+                return;
+            }
         }
 
         V2TIMManager.getOfflinePushManager().setOfflinePushConfig(v2TIMOfflinePushConfig, new V2TIMCallback() {

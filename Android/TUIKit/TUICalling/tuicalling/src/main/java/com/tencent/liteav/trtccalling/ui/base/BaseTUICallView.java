@@ -2,7 +2,6 @@ package com.tencent.liteav.trtccalling.ui.base;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.FrameLayout;
@@ -10,11 +9,10 @@ import android.widget.Toast;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.trtccalling.R;
-import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
 import com.tencent.liteav.trtccalling.model.TUICalling;
+import com.tencent.liteav.trtccalling.model.impl.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.impl.UserModel;
-import com.tencent.liteav.trtccalling.model.util.EventHandler;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -22,7 +20,6 @@ import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,17 +33,15 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
     protected final String          mSponsorID;
     protected final String          mGroupID;
     protected final boolean         mIsFromGroup;
-    protected final Handler         mMainHandler  = new Handler(Looper.getMainLooper());
-    protected final Handler         mEventHandler = EventHandler.sharedInstance();
+    protected final Handler         mMainHandler = new Handler(Looper.getMainLooper());
 
     private long mSelfLowQualityTime;
     private long mOtherPartyLowQualityTime;
 
-    private boolean mNeedAutoHangup = true;
-
     private static final int MIN_DURATION_SHOW_LOW_QUALITY = 5000; //显示网络不佳最小间隔时间
 
-    public BaseTUICallView(Context context, TUICalling.Role role, String[] userIDs, String sponsorID, String groupID, boolean isFromGroup) {
+    public BaseTUICallView(Context context, TUICalling.Role role, String[] userIDs,
+                           String sponsorID, String groupID, boolean isFromGroup) {
         super(context);
         mContext = context;
         mTRTCCalling = TRTCCalling.sharedInstance(context);
@@ -79,18 +74,9 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mNeedAutoHangup) {
-            mTRTCCalling.removeDelegate(this);
-            if (TUICalling.Role.CALL == mRole) {
-                mTRTCCalling.hangup();
-            } else {
-                mTRTCCalling.reject();
-            }
-        }
     }
 
     protected void finish() {
-        mNeedAutoHangup = false;
         mTRTCCalling.removeDelegate(this);
     }
 
@@ -155,7 +141,8 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
     }
 
     @Override
-    public void onNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
+    public void onNetworkQuality(TRTCCloudDef.TRTCQuality localQuality,
+                                 ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
 
     }
 
@@ -175,7 +162,8 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
     }
 
     //localQuality 己方网络状态， remoteQualityList对方网络状态列表，取第一个为1v1通话的网络状态
-    protected void updateNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, List<TRTCCloudDef.TRTCQuality> remoteQualityList) {
+    protected void updateNetworkQuality(TRTCCloudDef.TRTCQuality localQuality,
+                                        List<TRTCCloudDef.TRTCQuality> remoteQualityList) {
         //如果己方网络和对方网络都很差，优先显示己方网络差
         boolean isLocalLowQuality = isLowQuality(localQuality);
         if (isLocalLowQuality) {
@@ -216,7 +204,8 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
             }
         } else {
             if (currentTime - mOtherPartyLowQualityTime > MIN_DURATION_SHOW_LOW_QUALITY) {
-                Toast.makeText(mContext, R.string.trtccalling_other_party_network_low_quality, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.trtccalling_other_party_network_low_quality,
+                        Toast.LENGTH_SHORT).show();
                 mOtherPartyLowQualityTime = currentTime;
             }
         }
@@ -234,20 +223,26 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
         ITUINotification notification = new ITUINotification() {
             @Override
             public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
-                if (TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED.equals(key) && TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE.equals(subKey)) {
+                if (TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED.equals(key)
+                        && TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE.equals(subKey)) {
                     ToastUtils.showShort(mContext.getString(R.string.trtccalling_user_kicked_offline));
                     mTRTCCalling.hangup();
                     finish();
                 }
-                if (TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED.equals(key) && TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED.equals(subKey)) {
+                if (TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED.equals(key)
+                        && TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED.equals(subKey)) {
                     ToastUtils.showShort(mContext.getString(R.string.trtccalling_user_sig_expired));
                     mTRTCCalling.hangup();
                     finish();
                 }
             }
         };
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, notification);
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, notification);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
+                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE,
+                notification);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
+                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED,
+                notification);
     }
 
 }
