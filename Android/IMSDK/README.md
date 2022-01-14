@@ -13,6 +13,9 @@
 ### C 接口版
 [最新C接口下载](https://im.sdk.cloud.tencent.cn/download/plus/6.0.1975/cross_platform/ImSDK_Android_C_6.0.1975.zip)
 
+### C++ 接口版
+[最新C++接口下载](https://im.sdk.cloud.tencent.cn/download/plus/6.0.1975/cross_platform/ImSDK_Android_CPP_6.0.1975.zip)
+
 #### maven 集成 (Android 平台)
  如果使用基础版 SDK，请在 gradle 里添加如下依赖
  ```
