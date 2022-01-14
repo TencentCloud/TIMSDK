@@ -10,47 +10,90 @@
 
 #import "ConversationController.h"
 #import "TCUtil.h"
+#import "Aspects.h"
 
 @implementation AppDelegate (Push)
 
--(void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
++ (void)load
 {
-    self.deviceToken = deviceToken;
+    // 未读数相关的处理
+    // 1. hook AppDelegate 进入前后台的事件，从而设置 APP 的角标
+    // 2. hook AppDelegate 中监听的 onTotalUnreadMessageCountChanged: 事件，从而设置设置 APP 角标并更新 _unReadCount
+    id appDidEnterBackGroundBlock = ^(id<AspectInfo> aspectInfo, UIApplication *application){
+        AppDelegate *app = (AppDelegate *)application.delegate;
+        application.applicationIconBadgeNumber = app.unReadCount;
+        NSLog(@"[PUSH] applicationDidEnterBackground, unReadCount:%zd", app.unReadCount);
+    };
+    [AppDelegate aspect_hookSelector:@selector(applicationDidEnterBackground:)
+                         withOptions:AspectPositionAfter
+                          usingBlock:appDidEnterBackGroundBlock
+                               error:nil];
+    
+    id appWillEnterForegroupBlock = ^(id<AspectInfo> aspectInfo, UIApplication *application){
+        AppDelegate *app = (AppDelegate *)application.delegate;
+        application.applicationIconBadgeNumber = app.unReadCount;
+        NSLog(@"[PUSH] applicationWillEnterForeground, unReadCount:%zd", app.unReadCount);
+    };
+    [AppDelegate aspect_hookSelector:@selector(applicationWillEnterForeground:)
+                         withOptions:AspectPositionAfter
+                          usingBlock:appWillEnterForegroupBlock
+                               error:nil];
+    
+    id onTotalUnreadMessageChangedBlock = ^(id<AspectInfo> aspectInfo, UInt64 totalUnreadCount){
+        AppDelegate *app = (AppDelegate *)UIApplication.sharedApplication.delegate;
+        [app onTotalUnreadCountChanged:totalUnreadCount];
+        NSLog(@"[PUSH] onTotalUnreadMessageCountChanged, unReadCount:%zd", app.unReadCount);
+    };
+    [AppDelegate aspect_hookSelector:@selector(onTotalUnreadMessageCountChanged:)
+                         withOptions:AspectPositionAfter
+                          usingBlock:onTotalUnreadMessageChangedBlock
+                               error:nil];
+    
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler
+- (void)push_registerIfLogined:(NSString *)userID
 {
-    // 收到推送普通信息推送（普通消息推送设置代码请参考 TUIMessageController -> sendMessage）
-    //普通消息推送格式（C2C）：
-    //@"ext" :
-    //@"{\"entity\":{\"action\":1,\"chatType\":1,\"content\":\"Hhh\",\"sendTime\":0,\"sender\":\"2019\",\"version\":1}}"
-    //普通消息推送格式（Group）：
-    //@"ext"
-    //@"{\"entity\":{\"action\":1,\"chatType\":2,\"content\":\"Hhh\",\"sendTime\":0,\"sender\":\"@TGS#1PWYXLTGA\",\"version\":1}}"
+    NSLog(@"[PUSH] %s, %@", __func__, userID);
+    BOOL supportTPNS = NO;
+    if ([self respondsToSelector:@selector(supportTPNS:)]) {
+        supportTPNS = [self supportTPNS:userID];
+    }
     
-    // 收到推送音视频推送（音视频推送设置代码请参考 TUICall+Signal -> sendAPNsForCall）
-    //音视频通话推送格式（C2C）：
-    //@"ext" :
-    //@"{\"entity\":{\"action\":2,\"chatType\":1,\"content\":\"{\\\"action\\\":1,\\\"call_id\\\":\\\"144115224193193423-1595225880-515228569\\\",\\\"call_type\\\":1,\\\"code\\\":0,\\\"duration\\\":0,\\\"invited_list\\\":[\\\"10457\\\"],\\\"room_id\\\":1688911421,\\\"timeout\\\":30,\\\"timestamp\\\":0,\\\"version\\\":4}\",\"sendTime\":1595225881,\"sender\":\"2019\",\"version\":1}}"
-    //音视频通话推送格式（Group）：
-    //@"ext"
-    //@"{\"entity\":{\"action\":2,\"chatType\":2,\"content\":\"{\\\"action\\\":1,\\\"call_id\\\":\\\"144115212826565047-1595506130-2098177837\\\",\\\"call_type\\\":2,\\\"code\\\":0,\\\"duration\\\":0,\\\"group_id\\\":\\\"@TGS#1BUBQNTGS\\\",\\\"invited_list\\\":[\\\"10457\\\"],\\\"room_id\\\":1658793276,\\\"timeout\\\":30,\\\"timestamp\\\":0,\\\"version\\\":4}\",\"sendTime\":1595506130,\"sender\":\"vinson1\",\"version\":1}}"
-    NSLog(@"didReceiveRemoteNotification, %@", userInfo);
-    NSDictionary *extParam = [TCUtil jsonSring2Dictionary:userInfo[@"ext"]];
-    NSDictionary *entity = extParam[@"entity"];
-    if (!entity) {
+    if (self.deviceToken) {
+        V2TIMAPNSConfig *confg = [[V2TIMAPNSConfig alloc] init];
+        /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
+        //企业证书 ID
+        confg.businessID = sdkBusiId;
+        confg.token = self.deviceToken;
+        confg.isTPNSToken = supportTPNS;
+        [[V2TIMManager sharedInstance] setAPNS:confg succ:^{
+             NSLog(@"%s, succ, %@", __func__, supportTPNS ? @"TPNS": @"APNS");
+        } fail:^(int code, NSString *msg) {
+             NSLog(@"%s, fail, %d, %@", __func__, code, msg);
+        }];
+    }
+    
+    [self onReceiveNormalMessageOfflinePush];
+    [self onReceiveGroupCallOfflinePush];
+    [self setupTotalUnreadCount];
+}
+
+- (void)onReceiveOfflinePushEntity:(NSDictionary *)entity
+{
+    NSLog(@"[PUSH] %s, %@", __func__, entity);
+    if (entity == nil ||
+        ![entity.allKeys containsObject:@"action"] ||
+        ![entity.allKeys containsObject:@"chatType"]) {
         return;
     }
-    // 业务，action : 1 普通文本推送；2 音视频通话推送
-    NSString *action = entity[@"action"];
-    if (!action) {
-        return;
-    }
+    // 业务，   action : 1 普通文本推送；2 音视频通话推送
     // 聊天类型，chatType : 1 单聊；2 群聊
+    NSString *action = entity[@"action"];
     NSString *chatType = entity[@"chatType"];
-    if (!chatType) {
+    if (action == nil || chatType == nil) {
         return;
     }
+
     // action : 1 普通消息推送
     if ([action intValue] == APNs_Business_NormalMsg) {
         if ([chatType intValue] == 1) {   //C2C
@@ -59,7 +102,7 @@
             self.groupID = entity[@"sender"];
         }
         if ([[V2TIMManager sharedInstance] getLoginStatus] == V2TIM_STATUS_LOGINED) {
-            [self onReceiveNomalMsgAPNs];
+            [self onReceiveNormalMessageOfflinePush];
         }
     }
     // action : 2 音视频通话推送
@@ -87,59 +130,18 @@
         self.signalingInfo.inviteeList = content[@"invited_list"];
         self.signalingInfo.groupID = content[@"group_id"];
         self.signalingInfo.timeout = timeout;
-//        self.signalingInfo.data = [TCUtil dictionary2JsonStr:@{SIGNALING_EXTRA_KEY_ROOM_ID : content[@"room_id"], SIGNALING_EXTRA_KEY_VERSION : content[@"version"], SIGNALING_EXTRA_KEY_CALL_TYPE : content[@"call_type"]}];
+        self.signalingInfo.data = [TCUtil dictionary2JsonStr:@{@"room_id" : content[@"room_id"],
+                                                               @"version" : content[@"version"],
+                                                               @"call_type" : content[@"call_type"]}];
         if ([[V2TIMManager sharedInstance] getLoginStatus] == V2TIM_STATUS_LOGINED) {
-            [self onReceiveGroupCallAPNs];
+            [self onReceiveGroupCallOfflinePush];
         }
     }
 }
 
-- (void)push_onLoginSucc
+- (void)onReceiveNormalMessageOfflinePush
 {
-    if (self.deviceToken) {
-        V2TIMAPNSConfig *confg = [[V2TIMAPNSConfig alloc] init];
-        /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
-        //企业证书 ID
-        confg.businessID = sdkBusiId;
-        confg.token = self.deviceToken;
-        [[V2TIMManager sharedInstance] setAPNS:confg succ:^{
-             NSLog(@"-----> 设置 APNS 成功");
-        } fail:^(int code, NSString *msg) {
-             NSLog(@"-----> 设置 APNS 失败, code:%d msg:%@",code, msg);
-        }];
-    }
-    
-    [self onReceiveNomalMsgAPNs];
-    [self onReceiveGroupCallAPNs];
-    [self setupTotalUnreadCount];
-}
-
-- (void)push_applicationDidEnterBackground:(UIApplication *)application
-{
-    UIApplication.sharedApplication.applicationIconBadgeNumber = self.unReadCount;
-}
-
-- (void)push_applicationWillEnterForeground:(UIApplication *)application
-{
-    UIApplication.sharedApplication.applicationIconBadgeNumber = self.unReadCount;
-}
-
-- (void)push_registNotification
-{
-    if ([[TUITool deviceVersion] floatValue] >= 8.0)
-    {
-        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-    }
-    else
-    {
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert)];
-    }
-}
-
-- (void)onReceiveNomalMsgAPNs
-{
-    NSLog(@"---> receive normal msg apns, groupId:%@, userId:%@", self.groupID, self.userID);
+    NSLog(@"[PUSH] %s, groupId:%@, userId:%@", __func__, self.groupID, self.userID);
     // 异步处理，防止出现时序问题, 特别是当前正在登录操作中
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -168,9 +170,9 @@
     });
 }
 
-- (void)onReceiveGroupCallAPNs
+- (void)onReceiveGroupCallOfflinePush
 {
-    NSLog(@"---> receive group call apns, signalingInfo:%@", self.signalingInfo);
+    NSLog(@"[PUSH] %s, signalingInfo:%@", __func__, self.signalingInfo);
     if (self.signalingInfo) {
         [[TUIKit sharedInstance] onReceiveGroupCallAPNs:self.signalingInfo];
         self.signalingInfo = nil;
@@ -180,6 +182,7 @@
 #pragma mark - 未读数相关
 - (void)setupTotalUnreadCount
 {
+    NSLog(@"[PUSH] %s", __func__);
     // 查询总的消息未读数
     __weak typeof(self) weakSelf = self;
     [V2TIMManager.sharedInstance getTotalUnreadMessageCount:^(UInt64 totalCount) {
@@ -199,6 +202,7 @@
 
 - (void)onTotalUnreadCountChanged:(UInt64)totalUnreadCount
 {
+    NSLog(@"[PUSH] %s, %llu", __func__, totalUnreadCount);
     NSUInteger total = totalUnreadCount;
     TUITabBarController *tab = (TUITabBarController *)UIApplication.sharedApplication.keyWindow.rootViewController;
     if (![tab isKindOfClass:TUITabBarController.class]) {
@@ -209,8 +213,9 @@
     self.unReadCount = total;
 }
 
-- (void)clearUnreadMessage
+- (void)push_clearUnreadMessage
 {
+    NSLog(@"[PUSH] %s", __func__);
     @weakify(self)
     [V2TIMManager.sharedInstance markAllMessageAsRead:^{
         @strongify(self)
@@ -225,6 +230,7 @@
 
 - (void)onFriendApplicationCountChanged:(NSInteger)applicationCount
 {
+    NSLog(@"[PUSH] %s, %zd", __func__, applicationCount);
     TUITabBarController *tab = (TUITabBarController *)UIApplication.sharedApplication.keyWindow.rootViewController;
     if (![tab isKindOfClass:TUITabBarController.class]) {
         return;

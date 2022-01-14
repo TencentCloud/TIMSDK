@@ -50,7 +50,7 @@ static AppDelegate *app;
     [[TUIKit sharedInstance] setupWithAppId:SDKAPPID];
     [[TUIKit sharedInstance] login:identifier userSig:sig succ:^{
         
-        [self push_onLoginSucc];
+        [self push_registerIfLogined:identifier];
         self.window.rootViewController = [app getMainController];
         
         [TUITool makeToast:NSLocalizedString(@"AppLoginSucc", nil) duration:1];
@@ -72,7 +72,7 @@ static AppDelegate *app;
     // Override point for customization after application launch.
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
-    [self push_registNotification];
+    [self push_init];
     [self setupListener];
     [self setupCustomSticker];
     [self setupGlobalUI];
@@ -198,23 +198,6 @@ static AppDelegate *app;
     [[V2TIMManager sharedInstance] addConversationListener:self];
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-    
-    [self push_applicationDidEnterBackground:application];
-    
-}
-
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    
-    [self push_applicationWillEnterForeground:application];
-    
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-   
-}
-
 void uncaughtExceptionHandler(NSException*exception){
     NSLog(@"CRASH: %@", exception);
     NSLog(@"Stack Trace: %@",[exception callStackSymbols]);
@@ -243,7 +226,7 @@ void uncaughtExceptionHandler(NSException*exception){
     @weakify(self)
     msgItem.badgeView.clearCallback = ^{
         @strongify(self)
-        [self clearUnreadMessage];
+        [self push_clearUnreadMessage];
     };
     [items addObject:msgItem];
 
@@ -321,7 +304,7 @@ void uncaughtExceptionHandler(NSException*exception){
 
 #pragma mark - V2TIMConversationListener
 - (void)onTotalUnreadMessageCountChanged:(UInt64) totalUnreadCount {
-    [self onTotalUnreadCountChanged:totalUnreadCount];
+    NSLog(@"%s, totalUnreadCount:%llu", __func__, totalUnreadCount);
 }
 
 #pragma mark - V2TIMSDKListener

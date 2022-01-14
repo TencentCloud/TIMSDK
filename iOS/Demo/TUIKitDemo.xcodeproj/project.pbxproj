@@ -23,6 +23,7 @@
 		48DF2C46253FE1B800BC522F /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 48DF2C45253FE1B800BC522F /* NotificationService.m */; };
 		48DF2C4A253FE1B800BC522F /* pushservice.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DF2C42253FE1B800BC522F /* pushservice.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		48DF2CF82542E0EA00BC522F /* CustomFaceResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 48DF2CF72542E0EA00BC522F /* CustomFaceResource.bundle */; };
+		48FBB4902791887A00099B2F /* AppDelegate+TPNS.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FBB48E2791887A00099B2F /* AppDelegate+TPNS.m */; };
 		910AF7112292820300ED5675 /* GroupRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF7102292820300ED5675 /* GroupRequestViewController.m */; };
 		910D900122AE057E00C9A318 /* TCLoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 910D900022AE057E00C9A318 /* TCLoginModel.m */; };
 		910D900422AE05A100C9A318 /* TCLoginParam.m in Sources */ = {isa = PBXBuildFile; fileRef = 910D900222AE05A100C9A318 /* TCLoginParam.m */; };
@@ -121,6 +122,8 @@
 		48DF2C45253FE1B800BC522F /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
 		48DF2C47253FE1B800BC522F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48DF2CF72542E0EA00BC522F /* CustomFaceResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = CustomFaceResource.bundle; sourceTree = "<group>"; };
+		48FBB48E2791887A00099B2F /* AppDelegate+TPNS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+TPNS.m"; sourceTree = "<group>"; };
+		48FBB48F2791887A00099B2F /* AppDelegate+TPNS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+TPNS.h"; sourceTree = "<group>"; };
 		8D757F7318DC3B846A870603 /* Pods-TUIKitDemo.dailybuild.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.dailybuild.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.dailybuild.xcconfig"; sourceTree = "<group>"; };
 		910AF70922925BF000ED5675 /* SearchGroupViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchGroupViewController.h; sourceTree = "<group>"; };
 		910AF70A22925BF000ED5675 /* SearchGroupViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchGroupViewController.m; sourceTree = "<group>"; };
@@ -433,6 +436,8 @@
 		CF014484216E1A4900C12E35 /* TUIKitDemo */ = {
 			isa = PBXGroup;
 			children = (
+				48FBB48F2791887A00099B2F /* AppDelegate+TPNS.h */,
+				48FBB48E2791887A00099B2F /* AppDelegate+TPNS.m */,
 				4805496D277F073F00FAEA4D /* AppDelegate+APNS.h */,
 				4805496F277F073F00FAEA4D /* AppDelegate+APNS.m */,
 				4805496E277F073F00FAEA4D /* AppDelegate+Push.h */,
@@ -704,6 +709,7 @@
 			files = (
 				480C761922DCA3EB007495EC /* SearchFriendViewController.m in Sources */,
 				CE440CDC26E072530085EB57 /* TUITabBarController.m in Sources */,
+				48FBB4902791887A00099B2F /* AppDelegate+TPNS.m in Sources */,
 				CEE776232654F8A00091012B /* GroupCreateCellData.m in Sources */,
 				CE440CDF26E072530085EB57 /* Aspects.m in Sources */,
 				4805497E277F085500FAEA4D /* TelephoneAreaCodeDataProvider.m in Sources */,
@@ -971,6 +977,7 @@
 					"ENABLECALL=1",
 					"ENABLELIVE=0",
 					"PUBLISHGIT=1",
+					"ENABLETPNS=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1136,6 +1143,7 @@
 					"ENABLECALL=1",
 					"ENABLELIVE=0",
 					"PUBLISHGIT=1",
+					"ENABLETPNS=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1190,6 +1198,7 @@
 					"ENABLECALL=1",
 					"ENABLELIVE=0",
 					"PUBLISHGIT=1",
+					"ENABLETPNS=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
