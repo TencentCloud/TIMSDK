@@ -344,7 +344,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         if (videoFile.exists() && videoMessageBean.getVideoSize() == videoFile.length()) {//若存在本地文件则优先获取本地文件
             playVideo(holder, videoMessageBean);
         } else {
-            if (!holder.downloadVideoFailed) {
+            if (!holder.downloadVideoFailed && !holder.downloadVideoFinished) {
                 getVideo(holder, videoPath, videoMessageBean, true, position);
             }
         }
@@ -580,6 +580,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             @Override
             public void onProgress(long currentSize, long totalSize) {
                 TUIChatLog.i("downloadVideo progress current:", currentSize + ", total:" + totalSize);
+                holder.downloadVideoFinished = false;
             }
 
             @Override
@@ -596,6 +597,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                 holder.loadingView.setVisibility(View.GONE);
                 notifyItemChanged(position);
                 holder.downloadVideoFailed = false;
+                holder.downloadVideoFinished = true;
                 if (autoPlay) {
                     playVideo(holder, msg);
                 }
@@ -755,6 +757,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         FrameLayout videoViewLayout;
         UIKitVideoView videoView;
         boolean downloadVideoFailed = false;
+        boolean downloadVideoFinished = false;
         ImageView closeButton;
         LinearLayout playControlLayout;
         ImageView playButton;
