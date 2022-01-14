@@ -13,7 +13,7 @@
  *  本类依赖于腾讯云 TUIKit和IMSDK 实现
  */
 #import "SettingController.h"
-#import "AppDelegate.h"
+#import "AppDelegate+Push.h"
 #import "TUIProfileCardCell.h"
 #import "TUIButtonCell.h"
 #import "TUITextEditController.h"
@@ -299,6 +299,7 @@
 - (void)didConfirmLogout
 {
     [[TUIKit sharedInstance] logout:^{
+        [AppDelegate.sharedInstance push_unregisterIfLogouted];
         [self didLogoutInSettingController:self];
     } fail:^(int code, NSString *msg) {
         NSLog(@"退出登录失败");
