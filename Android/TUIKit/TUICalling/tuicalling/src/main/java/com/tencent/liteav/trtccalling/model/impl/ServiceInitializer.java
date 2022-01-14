@@ -5,13 +5,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 
 
 /**
@@ -21,34 +20,16 @@ public final class ServiceInitializer extends ContentProvider {
 
     /**
      * 应用启动时自动调起的初始化方法
+     *
      * @param context applicationContext
      */
     public void init(Context context) {
-        // 必然存在编译依赖
-        TUICallingManager.sharedInstance().init(context);
-        // 可能存在编译依赖，所以要动态反射调用
-        initTUICallingService(context);
+        TUICallingService callingService = TUICallingService.sharedInstance();
+        callingService.init(context);
+        TUICore.registerService(TUIConstants.TUICalling.SERVICE_NAME, callingService);
+        TUICore.registerExtension(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL, callingService);
+        TUICore.registerExtension(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL, callingService);
     }
-
-    private void initTUICallingService(Context context) {
-        try {
-            Class clazz = Class.forName("com.tencent.liteav.trtccalling.model.impl.TUICallingService");
-            Method method = clazz.getDeclaredMethod("sharedInstance");
-            Object object = method.invoke(clazz);
-            method = clazz.getDeclaredMethod("init", new Class[]{Context.class});
-            method.invoke(object, context);
-            Log.d("ServiceInitializer", "TUICallingService init success!!!");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //                               以下方法无需重写                                 //

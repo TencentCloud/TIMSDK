@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tim.demo.thirdpush;
+package com.tencent.qcloud.tim.demo.thirdpush.OEMPush;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Build;
 
 import com.heytap.msp.push.callback.ICallBackResultService;
+import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 
 public class OPPOPushImpl implements ICallBackResultService {

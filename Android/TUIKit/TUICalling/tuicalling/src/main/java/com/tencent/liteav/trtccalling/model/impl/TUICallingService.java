@@ -15,6 +15,7 @@ import com.tencent.liteav.trtccalling.model.TUICalling;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 
 import java.util.HashMap;
@@ -23,13 +24,13 @@ import java.util.Map;
 /**
  * TUICore来调用（如果未引入TUICore模块，请使用TUICallingManager）
  */
-final class TUICallingService implements ITUIService, ITUIExtension, TUICallingManager.CallingManagerListener {
+final class TUICallingService implements ITUINotification, ITUIService, ITUIExtension, TUICallingManager.CallingManagerListener {
 
     private static final String TAG = "TUICallingService";
 
     private static final TUICallingService INSTANCE = new TUICallingService();
 
-    private final TUICallingManager mCallingManager = TUICallingManager.sharedInstance();
+    private TUICallingManager mCallingManager;
 
     static final TUICallingService sharedInstance() {
         return INSTANCE;
@@ -43,15 +44,17 @@ final class TUICallingService implements ITUIService, ITUIExtension, TUICallingM
 
     public void init(Context context) {
         appContext = context;
-        mCallingManager.setCallingManagerListener(this);
-        TUICore.registerService(TUIConstants.TUICalling.SERVICE_NAME, this);
-        TUICore.registerExtension(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL, this);
-        TUICore.registerExtension(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL, this);
+        // 注册IM初始化广播
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, this);
     }
 
     @Override
     public Object onCall(String method, Map<String, Object> param) {
         Log.d(TAG, String.format("onCall, method=%s, param=%s", method, null == param ? "" : param.toString()));
+        if (null == mCallingManager) {
+            Log.e(TAG, "mCallingManager is null!!!");
+            return null;
+        }
         if (null != param && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_CALL, method)) {
             String[] userIDs = (String[]) param.get(TUIConstants.TUICalling.PARAM_NAME_USERIDS);
             String typeString = (String) param.get(TUIConstants.TUICalling.PARAM_NAME_TYPE);
@@ -105,6 +108,10 @@ final class TUICallingService implements ITUIService, ITUIExtension, TUICallingM
             unitView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (null == mCallingManager) {
+                        Log.e(TAG, "mCallingManager is null!!!");
+                        return;
+                    }
                     if (key.equals(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL)) {
                         mCallingManager.internalCall(new String[]{chatId}, null, TUICalling.Type.AUDIO, TUICalling.Role.CALL);
                     } else if (key.equals(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL)) {
@@ -123,5 +130,13 @@ final class TUICallingService implements ITUIService, ITUIExtension, TUICallingM
         HashMap<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUICalling.EVENT_KEY_NAME, key);
         TUICore.notifyEvent(TUIConstants.TUICalling.EVENT_KEY_CALLING, TUIConstants.TUICalling.EVENT_KEY_CALLING, param);
+    }
+
+    @Override
+    public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
+        if (TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED.equals(key) && TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT.equals(subKey)) {
+            mCallingManager = (TUICallingManager) TUICallingManager.sharedInstance(appContext);
+            mCallingManager.setCallingManagerListener(this);
+        }
     }
 }

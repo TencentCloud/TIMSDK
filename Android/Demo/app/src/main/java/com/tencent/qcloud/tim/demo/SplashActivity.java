@@ -84,6 +84,10 @@ public class SplashActivity extends Activity {
         if (bean != null) {
             DemoLog.i(TAG, "startMain offlinePush bean is " + bean);
             OfflineMessageDispatcher.redirect(bean);
+
+            DemoApplication.instance().initPush();
+            DemoApplication.instance().bindUserID(UserInfo.getInstance().getUserId());
+
             finish();
             return;
         }

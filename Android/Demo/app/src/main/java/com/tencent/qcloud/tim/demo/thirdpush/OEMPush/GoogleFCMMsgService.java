@@ -1,6 +1,7 @@
-package com.tencent.qcloud.tim.demo.thirdpush;
+package com.tencent.qcloud.tim.demo.thirdpush.OEMPush;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
+import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 
 public class GoogleFCMMsgService extends FirebaseMessagingService {

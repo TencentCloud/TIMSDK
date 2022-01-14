@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tencent.qcloud.tim.demo">
 
-    <uses-sdk tools:overrideLibrary="tv.danmaku.ijk.media.player_arm64, tv.danmaku.ijk.media.player_x86_64"/>
+    <uses-sdk tools:overrideLibrary="tv.danmaku.ijk.media.player_arm64, tv.danmaku.ijk.media.player_x86_64" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -19,20 +19,29 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+    <permission
+        android:name="com.tencent.qcloud.tim.tuikit.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.tencent.qcloud.tim.tuikit.permission.C2D_MESSAGE" />
+
+    <!-- ********************************* OEMPush Permission begin************************ -->
+    <!-- 如果选择开启 TPNS 通道，OEM 的相关以下代码可以删掉 -->
+
     <!-- ********OPPO 推送 start******** -->
-    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE"/>
-    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE"/>
+    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
+    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" />
     <!-- ********OPPO 推送 end******** -->
 
-    <uses-feature android:name="android.hardware.Camera"/>
+    <uses-feature android:name="android.hardware.Camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <!-- ********华为推送权限设置******** -->
     <permission
         android:name="com.tencent.qcloud.tim.tuikit.permission.PROCESS_PUSH_MSG"
         android:protectionLevel="signatureOrSystem" />
-    <uses-permission android:name = "com.huawei.android.launcher.permission.CHANGE_BADGE" />
 
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
     <uses-permission android:name="com.tencent.qcloud.tim.tuikit.permission.PROCESS_PUSH_MSG" />
 
     <!-- ********小米推送权限设置******** -->
@@ -55,21 +64,17 @@
     <!-- 兼容flyme3.0配置权限 -->
     <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE" />
 
-    <permission
-        android:name="com.tencent.qcloud.tim.tuikit.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="com.tencent.qcloud.tim.tuikit.permission.C2D_MESSAGE" />
+    <!-- ********************************* OEMPush Permission end************************ -->
 
     <application
-        android:name="com.tencent.qcloud.tim.demo.DemoApplication"
+        android:name=".DemoApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.tencent.qcloud.tim.demo.SplashActivity"
+            android:name=".SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -81,12 +86,16 @@
         </activity>
 
         <activity
-            android:name="com.tencent.qcloud.tim.demo.login.LoginForDevActivity"
+            android:name=".login.LoginForDevActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.tencent.qcloud.tim.demo.main.MainActivity"
+            android:name=".login.LoginUsernameModeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden">
@@ -96,6 +105,7 @@
             <!-- VIVO离线推送打开应用内页面 -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
                 <data
                     android:host="com.tencent.qcloud"
                     android:path="/detail"
@@ -105,25 +115,43 @@
             <!-- OPPO离线推送的intent action方式必须配置category且不能有data数据 -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <!-- OPPO离线推送的scheme url方式必须配置action和category -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data
-                    android:scheme="pushscheme"
-                    android:host="com.tencent.qcloud"/>
-            </intent-filter>
 
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="com.tencent.qcloud"
+                    android:scheme="pushscheme" />
+            </intent-filter>
         </activity>
+        <activity
+            android:name=".profile.WebViewActivity"
+            android:screenOrientation="portrait" />
+
+        <receiver
+            android:name=".LanguageReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
         <activity
-            android:name="com.tencent.qcloud.tim.demo.profile.WebViewActivity"
+            android:name=".profile.SelfDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".profile.AboutIMActivity"
             android:screenOrientation="portrait" />
 
 
+        <!-- ********************************* OEMPush begin************************ -->
+        <!-- 如果选择开启 TPNS 通道，OEM 的相关以下代码可以删掉 -->
 
         <!-- ********小米推送service和receiver设置start******** -->
         <service
@@ -136,8 +164,8 @@
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:process=":pushservice" />
-
         <!-- 注：此service必须在3.0.1版本以后（包括3.0.1版本）加入 -->
+
         <service
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
             android:enabled="true"
@@ -145,8 +173,8 @@
         <service
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
             android:enabled="true" />
-
         <!-- 注：此service必须在2.2.5版本以后（包括2.2.5版本）加入 -->
+
         <receiver
             android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
             android:exported="true">
@@ -167,7 +195,7 @@
 
         <!-- 自实现小米推送的接收广播 -->
         <receiver
-            android:name="com.tencent.qcloud.tim.demo.thirdpush.XiaomiMsgReceiver"
+            android:name="com.tencent.qcloud.tim.demo.thirdpush.OEMPush.XiaomiMsgReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
@@ -183,20 +211,21 @@
 
         <!-- ********华为推送设置start******** -->
         <service
-            android:name="com.tencent.qcloud.tim.demo.thirdpush.HUAWEIHmsMessageService"
+            android:name="com.tencent.qcloud.tim.demo.thirdpush.OEMPush.HUAWEIHmsMessageService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
-        <meta-data tools:replace="android:value"
+        <meta-data
             android:name="com.huawei.hms.client.appid"
-            android:value="" />
+            android:value=""
+            tools:replace="android:value" />
         <!-- ********华为推送设置end******** -->
 
         <!-- ********魅族推送设置start******** -->
-        <receiver android:name="com.tencent.qcloud.tim.demo.thirdpush.MEIZUPushReceiver">
+        <receiver android:name="com.tencent.qcloud.tim.demo.thirdpush.OEMPush.MEIZUPushReceiver">
             <intent-filter>
 
                 <!-- 接收push消息 -->
@@ -226,7 +255,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- push应用定义消息receiver声明 -->
-        <receiver android:name="com.tencent.qcloud.tim.demo.thirdpush.VIVOPushMessageReceiverImpl">
+        <receiver android:name="com.tencent.qcloud.tim.demo.thirdpush.OEMPush.VIVOPushMessageReceiverImpl">
             <intent-filter>
 
                 <!-- 接收push消息 -->
@@ -234,17 +263,19 @@
             </intent-filter>
         </receiver>
 
-        <meta-data tools:replace="android:value"
+        <meta-data
             android:name="com.vivo.push.api_key"
-            android:value="" />
-        <meta-data tools:replace="android:value"
+            android:value=""
+            tools:replace="android:value" />
+        <meta-data
             android:name="com.vivo.push.app_id"
-            android:value="" />
+            android:value=""
+            tools:replace="android:value" />
         <!-- ********vivo推送设置end******** -->
 
         <!-- ********海外google云消息传递start******** -->
         <service
-            android:name="com.tencent.qcloud.tim.demo.thirdpush.GoogleFCMMsgService"
+            android:name="com.tencent.qcloud.tim.demo.thirdpush.OEMPush.GoogleFCMMsgService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -255,41 +286,61 @@
         <!-- ********OPPO 推送 start******** -->
         <service
             android:name="com.heytap.msp.push.service.CompatibleDataMessageCallbackService"
-
             android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
             <intent-filter>
-                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE"/>
+                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
-        </service> <!--兼容Q以下版本-->
+        </service>
+        <!-- 兼容Q以下版本 -->
 
         <service
             android:name="com.heytap.msp.push.service.DataMessageCallbackService"
-
             android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE">
-
             <intent-filter>
-                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE"/>
-
-                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE"/>
+                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE" />
+                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
-        </service> <!--兼容Q版本-->
+        </service>
+        <!-- 兼容Q版本 -->
         <!-- ********OPPO 推送 end******** -->
 
-        <receiver
-            android:name=".LanguageReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.LOCALE_CHANGED"/>
+        <!-- ********************************* OEMPush end************************ -->
+
+        <!-- ********************************* TPNSPush begin************************ -->
+        <!-- 如果选择开启 OEM 通道，TPNS 的相关以下代码可以删掉 -->
+
+        <!--TPNS 可选：配置首次启动应用时不自动启动推送服务进程，直到调用 XGPushManager.registerPush 接口才开始启动-->
+        <meta-data
+            android:name="XG_SERVICE_PULL_UP_OFF"
+            android:value="true" />
+
+        <!--如果您的应用服务接入点为广州，SDK 默认实现该配置。
+            如果您的应用服务接入点为上海、新加坡或中国香港，请按照下文步骤完成其他服务接入点域名配置
+
+            其他服务接入点域名如下：
+               上海：tpns.sh.tencent.com
+               新加坡：tpns.sgp.tencent.com
+               中国香港：tpns.hk.tencent.com
+        -->
+
+        <!--<meta-data
+            android:name="XG_SERVER_SUFFIX"
+            android:value="tpns.hk.tencent.com" />-->
+
+        <!-- TPNS receiver -->
+        <receiver android:name="com.tencent.qcloud.tim.demo.thirdpush.TPNSPush.TPNSMessageReceiver">
+            <intent-filter>
+                <!-- 接收消息透传 -->
+                <action android:name="com.tencent.android.xg.vip.action.PUSH_MESSAGE" />
+                <!-- 监听注册、反注册、设置/删除标签、通知被点击等处理结果 -->
+                <action android:name="com.tencent.android.xg.vip.action.FEEDBACK" />
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".profile.SelfDetailActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".profile.AboutIMActivity"
-            android:screenOrientation="portrait" />
+        <!-- TPNS 如需兼容 Android P，需要添加使用 Apache HTTP client 库，在 AndroidManifest 的 application 节点内添加以下配置即可。-->
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
+        <!-- ********************************* TPNSPush end************************ -->
     </application>
 
 </manifest>

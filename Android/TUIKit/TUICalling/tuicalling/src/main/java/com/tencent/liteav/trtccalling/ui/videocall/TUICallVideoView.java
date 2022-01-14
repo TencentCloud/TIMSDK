@@ -1,7 +1,6 @@
 package com.tencent.liteav.trtccalling.ui.videocall;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.text.TextUtils;
@@ -21,12 +20,11 @@ import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.trtccalling.R;
-import com.tencent.liteav.trtccalling.model.TRTCCalling;
+import com.tencent.liteav.trtccalling.model.impl.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TUICalling;
 import com.tencent.liteav.trtccalling.model.impl.UserModel;
 import com.tencent.liteav.trtccalling.model.impl.base.CallingInfoManager;
 import com.tencent.liteav.trtccalling.model.util.AvatarConstant;
-import com.tencent.liteav.trtccalling.model.util.EventHandler;
 import com.tencent.liteav.trtccalling.model.util.ImageLoader;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
 import com.tencent.liteav.trtccalling.ui.common.RoundCornerImageView;
@@ -576,7 +574,6 @@ public class TUICallVideoView extends BaseTUICallView {
             public void onClick(View v) {
                 mTRTCCalling.hangup();
                 stopCameraAndFinish();
-                mEventHandler.sendEmptyMessage(EventHandler.EVENT_TYPE_ACTIVE_HANGUP);
             }
         });
         mDialingLl.setVisibility(View.GONE);

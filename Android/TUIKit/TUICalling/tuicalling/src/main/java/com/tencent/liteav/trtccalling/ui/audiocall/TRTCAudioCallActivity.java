@@ -61,9 +61,15 @@ public class TRTCAudioCallActivity extends Activity {
             return userIDs.length >= 1 || isFromGroup;
         }
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mWindow.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }
