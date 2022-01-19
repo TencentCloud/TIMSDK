@@ -2,6 +2,7 @@ import 'package:discuss/common/hextocolor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
+import 'package:tencent_im_sdk_plugin/enum/group_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
@@ -46,10 +47,29 @@ class Input extends StatelessWidget {
     }
     if (type == 2) {
       //加群
-      V2TimCallback res = await TencentImSDKPlugin.v2TIMManager
-          .joinGroup(groupID: userID, message: "我要加群");
+      V2TimCallback res = await TencentImSDKPlugin.v2TIMManager.joinGroup(
+        groupID: userID,
+        message: "我要加群",
+      );
       if (res.code == 0) {
         Utils.toast('申请成功');
+        getFriendList(context);
+        Navigator.pop(context);
+      } else {
+        Utils.log(res.desc);
+        Utils.toast(res.desc);
+      }
+    }
+    if (type == 3) {
+      // 创建群组
+      V2TimValueCallback res =
+          await TencentImSDKPlugin.v2TIMManager.getGroupManager().createGroup(
+                groupType: GroupType.Public,
+                groupID: userID,
+                groupName: userID,
+              );
+      if (res.code == 0) {
+        Utils.toast('创建成功');
         getFriendList(context);
         Navigator.pop(context);
       } else {
@@ -73,6 +93,16 @@ class Input extends StatelessWidget {
     }
   }
 
+  String getLabelText(int type) {
+    if (type == 1) {
+      return "请输入用户userID";
+    }
+    if (type == 2) {
+      return "请输入群ID";
+    }
+    return "请输入要创建的群名称";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -84,7 +114,7 @@ class Input extends StatelessWidget {
             child: TextField(
               controller: controller,
               decoration: InputDecoration(
-                labelText: type == 1 ? '请输入用户userID' : '请输入群ID',
+                labelText: getLabelText(type),
               ),
               onSubmitted: (s) {
                 addFriend(context, s.trim());
@@ -125,6 +155,25 @@ class SearchState extends State<Search> {
   void initState() {
     type = widget.type;
     super.initState();
+  }
+
+  Widget getTitle(int type) {
+    if (type == 1) {
+      return const Text(
+        '添加好友',
+        style: TextStyle(color: Colors.black),
+      );
+    }
+    if (type == 2) {
+      return const Text(
+        '添加群组',
+        style: TextStyle(color: Colors.black),
+      );
+    }
+    return const Text(
+      '创建群组',
+      style: TextStyle(color: Colors.black),
+    );
   }
 
   @override

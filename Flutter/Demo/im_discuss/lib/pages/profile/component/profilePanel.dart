@@ -1,4 +1,7 @@
+import 'package:discuss/utils/commonUtils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 import 'package:discuss/common/avatar.dart';
@@ -34,82 +37,90 @@ class ProfilePanel extends StatelessWidget {
         color: CommonColors.getWitheColor(),
         child: InkWell(
           onTap: () {
-            showModalBottomSheet(
-                context: context,
-                builder: (BuildContext context) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min, // 设置最小的弹出
-                    children: <Widget>[
-                      ListTile(
-                        title: Text(
-                          "修改昵称",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: CommonColors.getThemeColor()),
+            List profileActionList = [
+              {
+                'name': '修改昵称',
+              },
+            ];
+
+            showCupertinoModalPopup<String>(
+              context: context,
+              builder: (BuildContext context) {
+                return CupertinoActionSheet(
+                  title: null,
+                  actions: profileActionList
+                      .map(
+                        (e) => CupertinoActionSheetAction(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const Alert();
+                                });
+                          },
+                          child: Text(e['name']),
+                          isDefaultAction: false,
                         ),
-                        onTap: () async {
-                          Navigator.of(context).pop();
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return const Alert();
-                              });
-                        },
                       )
-                    ],
-                  );
-                });
+                      .toList(),
+                );
+              },
+            );
           },
           child: Container(
-            height: 112,
+            height: CommonUtils.adaptHeight(200),
             padding: const EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 80,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: Avatar(
                     avtarUrl:
                         userInfo!.faceUrl == null || userInfo!.faceUrl == ''
                             ? 'images/logo.png'
                             : userInfo!.faceUrl,
-                    width: 80,
-                    height: 80,
+                    width: CommonUtils.adaptWidth(96),
+                    height: CommonUtils.adaptHeight(96),
                     radius: 9.6,
                   ),
                 ),
                 Expanded(
                   child: Container(
+                    height: CommonUtils.adaptHeight(188),
                     margin: const EdgeInsets.only(left: 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // 昵称
                         SizedBox(
-                          height: 34,
+                          height: CommonUtils.adaptHeight(48),
                           child: Text(
                             (userInfo!.nickName == null ||
                                     userInfo!.nickName == '')
                                 ? "${userInfo!.userID}"
                                 : "${userInfo!.nickName}",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: CommonUtils.adaptFontSize(36),
                               color: CommonColors.getTextBasicColor(),
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 23,
+                        Container(
+                          margin: const EdgeInsets.only(top: 4),
+                          height: CommonUtils.adaptHeight(40),
                           child: Text(
                             '用户ID：${userInfo!.userID}',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: ScreenUtil().setSp(26),
                               color: CommonColors.getTextWeakColor(),
                             ),
                           ),
                         ),
                         !isSelf
                             ? SizedBox(
-                                height: 20,
+                                height: CommonUtils.adaptHeight(40),
                                 child: Text(
                                   '个性签名：${getSelfSignature()}',
                                   style: TextStyle(

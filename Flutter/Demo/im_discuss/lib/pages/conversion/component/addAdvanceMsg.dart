@@ -76,21 +76,49 @@ class AdvanceMsg extends StatelessWidget {
       Utils.toast("发送失败,视频不能大于100MB");
       return;
     }
-    V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
-        .getMessageManager()
-        .sendVideoMessage(
-          videoFilePath: video.path,
-          receiver: type == 1 ? toUser : "",
-          groupID: type == 2 ? toUser : "",
-          type: 'mp4',
-          snapshotPath: thumbnail ?? "",
-          onlineUserOnly: false,
-          duration: controller.value.duration.inSeconds,
-        );
 
-    if (res.code == 0) {
+    V2TimValueCallback<V2TimMessage> sendRes;
+
+    String key = (type == 1 ? "c2c_$toUser" : "group_$toUser");
+
+    V2TimValueCallback<V2TimMsgCreateInfoResult> createResult =
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .createVideoMessage(
+              videoFilePath: video.path,
+              type: 'mp4',
+              duration: controller.value.duration.inSeconds,
+              snapshotPath: thumbnail ?? "",
+            );
+
+    String id = createResult.toJson()["data"]["id"];
+    V2TimMessage createMessage = createResult.data!.messageInfo!;
+    String mockKey = id;
+
+    // msgID填充一下，部分组件会使用其做判断
+    createMessage.id = mockKey;
+    createMessage.msgID = mockKey;
+    createMessage.status = MessageStatus.V2TIM_MSG_STATUS_SENDING;
+    createMessage.groupID = toUser;
+    addMessageForHistoryMsgList(createMessage, key, context);
+
+    sendRes = await TencentImSDKPlugin.v2TIMManager
+        .getMessageManager()
+        .sendMessage(
+            id: id,
+            receiver: type == 1 ? toUser : "",
+            groupID: type == 2 ? toUser : "",
+            onlineUserOnly: false,
+            isExcludedFromUnreadCount: toUser.contains('im_discuss_'));
+    V2TimMessage resultMessage = sendRes.data!;
+    String msgId = resultMessage.msgID!;
+    resultMessage.id = mockKey;
+
+    updateMessageForHistoryMsgList(resultMessage, msgId, mockKey, key, context);
+
+    if (sendRes.code == 0) {
       String key = (type == 1 ? "c2c_$toUser" : "group_$toUser");
-      V2TimMessage? msg = res.data;
+      V2TimMessage? msg = sendRes.data;
       // 添加新消息
 
       try {
@@ -100,8 +128,8 @@ class AdvanceMsg extends StatelessWidget {
         Utils.log("发生错误");
       }
     } else {
-      Utils.toast("发送失败 ${res.code} ${res.desc}");
-      Utils.log(res.desc);
+      Utils.toast("发送失败 ${sendRes.code} ${sendRes.desc}");
+      Utils.log(sendRes.desc);
     }
   }
 
@@ -317,17 +345,17 @@ class AdvanceMsg extends StatelessWidget {
                   sendVideoMsg(context);
                 },
               ),
-              AdvanceMsgList(
-                name: '文件',
-                icon: const Icon(
-                  Icons.insert_drive_file,
-                  size: 30,
-                ),
-                onPressed: () async {
-                  close();
-                  sendFile(context);
-                },
-              ),
+              // AdvanceMsgList(
+              //   name: '文件',
+              //   icon: const Icon(
+              //     Icons.insert_drive_file,
+              //     size: 30,
+              //   ),
+              //   onPressed: () async {
+              //     close();
+              //     sendFile(context);
+              //   },
+              // ),
               AdvanceMsgList(
                 name: '自定义',
                 icon: const Icon(Icons.topic),
@@ -441,21 +469,49 @@ class AdvanceMsgComp extends StatelessWidget {
       return;
     }
 
-    V2TimValueCallback<V2TimMessage> res = await TencentImSDKPlugin.v2TIMManager
-        .getMessageManager()
-        .sendVideoMessage(
-          videoFilePath: video.path,
-          receiver: getReciverId(),
-          groupID: getGroupId(),
-          type: 'mp4',
-          snapshotPath: thumbnail ?? "",
-          onlineUserOnly: false,
-          duration: controller.value.duration.inSeconds,
-        );
+    V2TimValueCallback<V2TimMessage> sendRes;
 
-    if (res.code == 0) {
+    String key = (type == 1 ? "c2c_$toUser" : "group_$toUser");
+
+    V2TimValueCallback<V2TimMsgCreateInfoResult> createResult =
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .createVideoMessage(
+              videoFilePath: video.path,
+              type: 'mp4',
+              duration: controller.value.duration.inSeconds,
+              snapshotPath: thumbnail ?? "",
+            );
+
+    String id = createResult.toJson()["data"]["id"];
+    V2TimMessage createMessage = createResult.data!.messageInfo!;
+    String mockKey = id;
+
+    // msgID填充一下，部分组件会使用其做判断
+    createMessage.id = mockKey;
+    createMessage.msgID = mockKey;
+    createMessage.status = MessageStatus.V2TIM_MSG_STATUS_SENDING;
+    createMessage.groupID = toUser;
+    addMessageForHistoryMsgList(createMessage, key, context);
+
+    sendRes = await TencentImSDKPlugin.v2TIMManager
+        .getMessageManager()
+        .sendMessage(
+            id: id,
+            receiver: type == 1 ? toUser : "",
+            groupID: type == 2 ? toUser : "",
+            onlineUserOnly: false,
+            isExcludedFromUnreadCount: toUser.contains('im_discuss_'));
+    V2TimMessage resultMessage = sendRes.data!;
+    String msgId = resultMessage.msgID!;
+    resultMessage.id = mockKey;
+
+    updateMessageForHistoryMsgList(resultMessage, msgId, mockKey, key, context);
+
+    if (sendRes.code == 0) {
       String key = (type == 1 ? "c2c_$toUser" : "group_$toUser");
-      V2TimMessage? msg = res.data;
+      V2TimMessage? msg = sendRes.data;
+      // 添加新消息
       // 添加新消息
 
       try {
@@ -465,8 +521,8 @@ class AdvanceMsgComp extends StatelessWidget {
         Utils.log("发生错误");
       }
     } else {
-      Utils.toast("发送失败 ${res.code} ${res.desc}");
-      Utils.log(res.desc);
+      Utils.toast("发送失败 ${sendRes.code} ${sendRes.desc}");
+      Utils.log(sendRes.desc);
     }
   }
 
@@ -679,17 +735,17 @@ class AdvanceMsgComp extends StatelessWidget {
               sendVideoMsg(context);
             },
           ),
-          AdvanceMsgList(
-            name: '文件',
-            icon: const Icon(
-              Icons.insert_drive_file,
-              size: 30,
-            ),
-            onPressed: () async {
-              close();
-              sendFile(context);
-            },
-          ),
+          // AdvanceMsgList(
+          //   name: '文件',
+          //   icon: const Icon(
+          //     Icons.insert_drive_file,
+          //     size: 30,
+          //   ),
+          //   onPressed: () async {
+          //     close();
+          //     sendFile(context);
+          //   },
+          // ),
           AdvanceMsgList(
             name: '自定义',
             icon: const Icon(Icons.topic),

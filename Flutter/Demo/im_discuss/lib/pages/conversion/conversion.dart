@@ -55,6 +55,11 @@ class ConversionState extends State<Conversion> with WidgetsBindingObserver {
   double faceContainerHeight = 180;
   double advanceContainerHeight = 56;
   double bottomContainerHeight = 0;
+  // 触摸开始时的值
+  double startDx = 0;
+  // 触摸结束时的值
+  double endDx = 0;
+  // bool touchMoveFinish = false;
 
   @override
   void initState() {
@@ -106,8 +111,13 @@ class ConversionState extends State<Conversion> with WidgetsBindingObserver {
             lastMsgID: lastMsgID,
           );
     if (res.code == 0) {
-      Provider.of<HistoryMessageListProvider>(context, listen: false)
-          .addMessage('c2c_$userID', res.data!);
+      if (res.data!.isNotEmpty) {
+        Provider.of<HistoryMessageListProvider>(context, listen: false)
+            .addMessage('c2c_$userID', res.data!);
+      } else {
+        Provider.of<HistoryMessageListProvider>(context, listen: false)
+            .setMessageListFin('c2c_$userID');
+      }
     }
   }
 
@@ -121,6 +131,9 @@ class ConversionState extends State<Conversion> with WidgetsBindingObserver {
       if (data.isNotEmpty) {
         Provider.of<HistoryMessageListProvider>(context, listen: false)
             .addMessage('group_$groupID', data);
+      } else {
+        Provider.of<HistoryMessageListProvider>(context, listen: false)
+            .setMessageListFin('group_$groupID');
       }
     }
   }
@@ -324,9 +337,7 @@ class ConversionState extends State<Conversion> with WidgetsBindingObserver {
 
   // 表情组件
   Widget faceContainer(toUser, type) {
-    close() {
-      print("这是一个🪂函数");
-    }
+    close() {}
 
     return Container(
       height: 180,
@@ -355,14 +366,12 @@ class ConversionState extends State<Conversion> with WidgetsBindingObserver {
   }
 
 // 节流
-  throttle(
-    Function func,
-  ) {
+  throttle(Function func, int milliseconds) {
     bool enable = true;
     return (val) {
       if (enable == true) {
         enable = false;
-        Future.delayed(const Duration(milliseconds: 50), () {
+        Future.delayed(Duration(milliseconds: milliseconds), () {
           enable = true;
           func();
         });
@@ -478,9 +487,26 @@ class ConversionState extends State<Conversion> with WidgetsBindingObserver {
                           onTap: () => {
                                 keyboardHide(),
                               },
+                          onHorizontalDragStart: (DragStartDetails e) {
+                            startDx = e.localPosition.dx;
+                          },
+                          onHorizontalDragUpdate: (DragUpdateDetails e) {
+                            endDx = e.localPosition.dx;
+                          },
+                          // debounce((DragUpdateDetails e) {}),
+                          onHorizontalDragEnd: (DragEndDetails e) {
+                            if ((startDx - endDx).abs() > 60) {
+                              Navigator.pop(context);
+                            }
+                            startDx = 0;
+                            endDx = 0;
+                            // print("结束");
+                            // print(e.velocity.pixelsPerSecond);
+                            // touchMoveFinish = true;
+                          },
                           // GestureDetector的垂直手势监听冲突，采用监听实现滑动监听
                           child: Listener(
-                            onPointerDown: throttle(keyboardHide),
+                            onPointerDown: throttle(keyboardHide, 50),
                             child: Container(
                               color: Colors.white,
                               child: ConversationInner(

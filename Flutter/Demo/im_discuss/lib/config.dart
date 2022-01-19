@@ -15,5 +15,6 @@ class IMDiscussConfig {
       "prod": 30572,
     },
   };
+  // appBarTile无法做适配，必须要常量才可以
   static const double appBarTitleFontSize = 14;
 }

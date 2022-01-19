@@ -1,3 +1,4 @@
+import 'package:discuss/utils/commonUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_application_handle_status.dart';
@@ -55,7 +56,7 @@ class MyGroups extends StatelessWidget {
               child: Text(
                 "我的群聊",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: CommonUtils.adaptFontSize(32),
                   color: Color(int.parse('111111', radix: 16)).withAlpha(255),
                 ),
               ),
@@ -124,14 +125,14 @@ class BlakList extends StatelessWidget {
               child: Text(
                 "我的黑名单",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: CommonUtils.adaptFontSize(32),
                   color: Color(int.parse('111111', radix: 16)).withAlpha(255),
                 ),
               ),
             ),
             SizedBox(
               // color: Colors.green,
-              width: 200,
+              width: CommonUtils.adaptWidth(400),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -191,7 +192,7 @@ class UserListItem extends StatelessWidget {
         );
       },
       child: SizedBox(
-        height: 56,
+        height: CommonUtils.adaptHeight(112),
         child: Row(
           children: [
             Container(
@@ -201,8 +202,8 @@ class UserListItem extends StatelessWidget {
                 avtarUrl: (faceUrl == '' || faceUrl == null)
                     ? 'images/logo.png'
                     : faceUrl,
-                width: 40,
-                height: 40,
+                width: CommonUtils.adaptWidth(80),
+                height: CommonUtils.adaptHeight(80),
                 radius: 4.8,
               ),
             ),
@@ -215,13 +216,13 @@ class UserListItem extends StatelessWidget {
                     Text(
                       name!,
                       style: TextStyle(
-                          fontSize: 18,
+                          fontSize: CommonUtils.adaptFontSize(28),
                           color: Color(int.parse('111111', radix: 16))
                               .withAlpha(255)),
                     ),
                   ],
                 ),
-                height: 56,
+                height: CommonUtils.adaptHeight(112),
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
@@ -259,11 +260,11 @@ class ConcatList extends StatelessWidget {
             left: 16,
           ),
           child: Row(
-            children: const [
+            children: [
               Text(
                 "好友列表",
                 textAlign: TextAlign.left,
-                style: TextStyle(),
+                style: TextStyle(fontSize: CommonUtils.adaptFontSize(28)),
               ),
             ],
           ),

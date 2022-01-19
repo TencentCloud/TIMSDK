@@ -5,6 +5,7 @@ import 'package:tencent_im_sdk_plugin/enum/group_type.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_elem_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 import 'package:discuss/common/avatar.dart';
@@ -239,17 +240,28 @@ class ChooseContactState extends State<ChooseContact> {
                                           if (res.code == 0) {
                                             List<V2TimMessage> messages =
                                                 res.data!;
+                                            V2TimValueCallback<
+                                                    V2TimMsgCreateInfoResult>
+                                                createResult = await TencentImSDKPlugin
+                                                    .v2TIMManager
+                                                    .getMessageManager()
+                                                    .createMergerMessage(
+                                                        msgIDList: msgIds,
+                                                        title:
+                                                            getMergeMessageTitle(
+                                                                messages),
+                                                        abstractList:
+                                                            getMergeMessageAbstractList(
+                                                                messages),
+                                                        compatibleText:
+                                                            "该版本不支持此消息");
+                                            String id = createResult
+                                                .toJson()["data"]["id"];
                                             await TencentImSDKPlugin
                                                 .v2TIMManager
                                                 .getMessageManager()
-                                                .sendMergerMessage(
-                                                  msgIDList: msgIds,
-                                                  title: getMergeMessageTitle(
-                                                      messages),
-                                                  abstractList:
-                                                      getMergeMessageAbstractList(
-                                                          messages),
-                                                  compatibleText: "该版本不支持此消息",
+                                                .sendMessage(
+                                                  id: id,
                                                   receiver: selectList[0],
                                                   groupID: "",
                                                 );

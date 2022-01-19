@@ -39,7 +39,8 @@ class CommonMessageContent extends StatefulWidget {
   State<StatefulWidget> createState() => CommonMessageContentState();
 }
 
-class CommonMessageContentState extends State<CommonMessageContent> {
+class CommonMessageContentState extends State<CommonMessageContent>
+    with AutomaticKeepAliveClientMixin {
   SuperTooltip? tooltip;
   GlobalKey _globalKey = GlobalKey();
   @override
@@ -47,6 +48,10 @@ class CommonMessageContentState extends State<CommonMessageContent> {
     super.initState();
     initTools();
   }
+
+  @override
+  // 覆写`wantKeepAlive`返回`true`
+  bool get wantKeepAlive => true;
 
   List<Widget> getAction() {
     Color c = hexToColor("444444");
@@ -107,7 +112,7 @@ class CommonMessageContentState extends State<CommonMessageContent> {
   }
 
   String getMessageCanCopy() {
-    return "";
+    return widget.message.textElem?.text ?? '';
   }
 
   bodyMessage() async {
@@ -368,7 +373,23 @@ class CommonMessageContentState extends State<CommonMessageContent> {
         res = buildContentCommon(VideoMessage(widget.message));
         break;
       case MessageElemType.V2TIM_ELEM_TYPE_FILE:
-        res = buildContentCommon(FileMessage(widget.message));
+        // res = buildContentCommon(FileMessage(widget.message));
+        res = buildContentCommon(Container(
+          padding: const EdgeInsets.all(10),
+          constraints: const BoxConstraints(
+            minHeight: 40,
+          ),
+          decoration: BoxDecoration(
+            color: isSelf() ? hexToColor("DCEAFD") : hexToColor("ECECEC"),
+            borderRadius: BorderRadius.only(
+              topLeft: isSelf() ? const Radius.circular(10) : Radius.zero,
+              bottomLeft: const Radius.circular(10),
+              topRight: isSelf() ? Radius.zero : const Radius.circular(10),
+              bottomRight: const Radius.circular(10),
+            ),
+          ),
+          child: const Text("[文件]"),
+        ));
         break;
       case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
         res = buildContentCommon(MergeMessage(

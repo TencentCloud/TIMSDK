@@ -35,7 +35,7 @@ class AllMembersState extends State<AllMembers> {
   MemberInfo _handleMemberInfo(V2TimGroupMemberFullInfo m) {
     if (m.role == GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_OWNER ||
         m.role == GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_ADMIN) {
-      return MemberInfo(memberInfo: m, tagIndex: '管');
+      return MemberInfo(memberInfo: m, tagIndex: '@');
     }
     String pinyin = PinyinHelper.getPinyinE(m.nickName ?? m.userID);
     String tag = pinyin.substring(0, 1).toUpperCase();
@@ -153,7 +153,7 @@ class AllMembersState extends State<AllMembers> {
 
   static Widget getSusItem(BuildContext context, String tag,
       {double susHeight = 40}) {
-    if (tag == '管') {
+    if (tag == '@') {
       tag = '群主、管理员';
     }
     return Container(
@@ -333,7 +333,7 @@ class AllMembersState extends State<AllMembers> {
                                 itemCount: searchedMemberList!.length,
                                 indexBarData: SuspensionUtil.getTagIndexList(
                                         searchedMemberList!)
-                                    .skipWhile((tagIndex) => tagIndex == '管')
+                                    .skipWhile((tagIndex) => tagIndex == '@')
                                     .toList(),
                                 itemBuilder: (BuildContext context, int index) {
                                   return _buildListItem(

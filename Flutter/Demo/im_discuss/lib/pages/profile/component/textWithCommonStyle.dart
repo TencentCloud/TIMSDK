@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:discuss/common/colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TextWithCommonStyle extends StatelessWidget {
   const TextWithCommonStyle(
@@ -13,7 +14,7 @@ class TextWithCommonStyle extends StatelessWidget {
       text!,
       style: TextStyle(
         color: CommonColors.getTextBasicColor(),
-        fontSize: 16,
+        fontSize: ScreenUtil().setSp(32),
       ),
     );
   }

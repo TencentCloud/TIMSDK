@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tencent_im_sdk_plugin/enum/receive_message_opt_enum.dart';
 
 import 'const.dart';
@@ -32,6 +33,18 @@ class CommonUtils {
       }
     }
     return formatTime;
+  }
+
+  static double adaptHeight(double height) {
+    return height.h;
+  }
+
+  static double adaptWidth(double width) {
+    return width.h;
+  }
+
+  static double adaptFontSize(double fontSize) {
+    return fontSize.sp;
   }
 }
 

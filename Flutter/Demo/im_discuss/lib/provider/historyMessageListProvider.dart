@@ -9,6 +9,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 */
 class HistoryMessageListProvider with ChangeNotifier {
   Map<String, List<V2TimMessage>> _messageMap = Map.from({});
+  final Map<String, bool> _messageFinMap = Map.from({});
   static SharedPreferences? prefs;
 
   Future<SharedPreferences?> getPrefsInstance() async {
@@ -74,13 +75,12 @@ class HistoryMessageListProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  isMessageEnd(String userId) {
+    return _messageFinMap[userId] ?? false;
+  }
+
   List<V2TimMessage> getMessageList(id) {
     List<V2TimMessage> list = _messageMap[id] ?? [];
-    V2TimMessage? endMsg;
-    if (list.isNotEmpty &&
-        list[list.length - 1].elemType == Const.V2TIM_ELEM_TYPE_END) {
-      endMsg = list.removeLast();
-    }
     // 1. 按时序排序
     list.sort((a, b) {
       if (a.timestamp! == b.timestamp!) {
@@ -105,9 +105,6 @@ class HistoryMessageListProvider with ChangeNotifier {
       }
       listWithTimestamp.insert(0, item);
     }
-    if (endMsg != null) {
-      listWithTimestamp.insert(0, endMsg);
-    }
     return listWithTimestamp;
   }
 
@@ -121,20 +118,19 @@ class HistoryMessageListProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  setMessageListFin(String userID) {
+    _messageFinMap[userID] = true;
+    notifyListeners();
+  }
+
   /*
     注意高级消息在add 到update阶段，msgID都为createMessage到msgID
   */
   addMessage(String userID, List<V2TimMessage> messageList,
       {bool needCheck = false}) {
-    if (messageList.isEmpty) return;
-
     List<V2TimMessage> notInList = [];
     if (_messageMap[userID] == null) {
       _messageMap[userID] = [];
-    }
-    // 没有新消息，加一条前端模拟消息，表示消息到底
-    if (messageList.isEmpty) {
-      notInList.add(V2TimMessage(elemType: Const.V2TIM_ELEM_TYPE_END));
     }
     int i = -1;
 
@@ -143,23 +139,17 @@ class HistoryMessageListProvider with ChangeNotifier {
       int index = _messageMap[userID]!.indexWhere(
         (element) => item.msgID == element.msgID,
       );
-      // 降级处理
-      if (index == -1) {
-        index = _messageMap[userID]!.indexWhere(
-          (element) => item.id == element.id,
-        );
-      }
       // 找到所在位置后
       if (index > -1) {
         _messageMap[userID]![index] = item;
         i = index;
-        Utils.log("index $index change ${item.toJson()}");
+        // Utils.log("index $index change ${item.toJson()}");
       } else {
         notInList.add(item);
       }
     }
     if (notInList.isNotEmpty) {
-      _messageMap[userID]?.addAll(notInList);
+      _messageMap[userID]!.addAll(notInList);
     }
     if (i > -1) {
       Utils.log("最终数据${_messageMap[userID]![i].toJson()}");

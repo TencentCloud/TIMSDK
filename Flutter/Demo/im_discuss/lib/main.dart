@@ -19,6 +19,7 @@ import 'package:flutter/services.dart';
 // import 'package:flutter_autosize_screen/auto_size_util.dart';
 // import 'package:flutter_autosize_screen/binding.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -49,7 +50,18 @@ void main() {
         ChangeNotifierProvider(create: (_) => DiscussData()),
       ],
       child: MaterialApp(
+        localizationsDelegates: [
+          // 本地化的代理类
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', 'US'), // 美国英语
+          Locale('zh', 'CN'), // 中文简体
+        ],
         theme: ThemeData(
+          platform: TargetPlatform.iOS,
           pageTransitionsTheme: const PageTransitionsTheme(builders: {
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
