@@ -1,4 +1,3 @@
-import 'package:discuss/utils/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -39,11 +38,11 @@ class Permissions {
   ];
 
   static Future<bool> checkPermission(BuildContext context, int value) async {
-    if (await Permission.byValue(value).request().isGranted) {
-      return true;
+    bool hasPermission = await Permission.byValue(value).request().isGranted;
+    if (!hasPermission) {
+      showPermissionConfirmDialog(context, value);
     }
-    showPermissionConfirmDialog(context, value);
-    return false;
+    return hasPermission;
   }
 
   static Future<bool?> showPermissionConfirmDialog(
@@ -52,7 +51,7 @@ class Permissions {
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text("“云通信 IM”想访问您的${_names[value]}"),
+          title: Text("“IM云通信”想访问您的${_names[value]}"),
           content: const Text("我们需要您的同意才能获取信息"),
           actions: <Widget>[
             CupertinoDialogAction(
@@ -63,8 +62,8 @@ class Permissions {
             CupertinoDialogAction(
               child:
                   const Text("好", style: TextStyle(color: Color(0xFF147AFF))),
-              onPressed: () {
-                //关闭对话框并返回true
+              onPressed: () async {
+                //关闭对话框并请求权限
                 Navigator.of(context).pop();
                 openAppSettings();
               },

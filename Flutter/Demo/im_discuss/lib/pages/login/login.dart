@@ -10,6 +10,7 @@ import 'package:discuss/utils/GenerateTestUserSig.dart';
 import 'package:discuss/utils/imsdk.dart';
 import 'package:discuss/utils/offline_push_config.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
@@ -166,6 +167,12 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
     setTel();
+    // 设置状态栏样式
+    SystemUiOverlayStyle style = SystemUiOverlayStyle(
+      statusBarColor: hexToColor('006fff'),
+    );
+
+    SystemChrome.setSystemUIOverlayStyle(style);
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:discuss/utils/commonUtils.dart';
 import 'package:discuss/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,7 @@ class FrientNotice extends StatelessWidget {
               child: Text(
                 "我的好友通知",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: CommonUtils.adaptFontSize(32),
                   color: Color(int.parse('111111', radix: 16)).withAlpha(255),
                 ),
               ),

@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:discuss/common/hextocolor.dart';
+import 'package:discuss/utils/permissions.dart';
 import 'package:discuss/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_plugin_record/flutter_plugin_record.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 
 class SoundMessage extends StatefulWidget {
@@ -55,7 +58,7 @@ class SoundMessageState extends State<SoundMessage> {
     });
   }
 
-  initRecord() {
+  initRecord() async {
     recordPlugin.responseFromInit.listen((data) {
       if (data) {
         setState(() {
@@ -68,7 +71,9 @@ class SoundMessageState extends State<SoundMessage> {
         widget.setSelectedMsgId('');
       }
     });
-    recordPlugin.init();
+    if (Platform.isIOS || await Permission.microphone.isGranted) {
+      recordPlugin.init();
+    }
   }
 
   @override
@@ -78,6 +83,14 @@ class SoundMessageState extends State<SoundMessage> {
   }
 
   void play() async {
+    // 安卓首次init会触发microphone权限
+    if (!Platform.isIOS && !isRecordInited) {
+      if (await Permissions.checkPermission(
+          context, Permission.microphone.value)) {
+        recordPlugin.init();
+      }
+      return;
+    }
     String? url = widget.message.soundElem!.url;
     if (url != null) {
       if (isRecordInited) {

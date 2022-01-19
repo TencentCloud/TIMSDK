@@ -2,8 +2,10 @@ import 'package:discuss/common/avatar.dart';
 import 'package:discuss/pages/conversion/component/fixposition.dart';
 import 'package:discuss/pages/conversion/component/message_content.dart';
 import 'package:discuss/provider/multiselect.dart';
+import 'package:discuss/utils/commonUtils.dart';
 import 'package:discuss/utils/const.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_elem_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
@@ -84,8 +86,8 @@ class DisplayTextMessageState extends State<DisplayTextMessage> {
 
     return Avatar(
       avtarUrl: message.faceUrl ?? 'images/logo.png',
-      width: 40,
-      height: 40,
+      width: CommonUtils.adaptWidth(80),
+      height: CommonUtils.adaptHeight(80),
       radius: 4.8,
     );
   }

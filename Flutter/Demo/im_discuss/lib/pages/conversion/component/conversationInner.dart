@@ -31,6 +31,8 @@ class ConversationInnerState extends State<ConversationInner> {
   double listHeight = 0;
   static final loadingTag =
       V2TimMessage(elemType: Const.V2TIM_ELEM_TYPE_REFRESH); //表尾标记
+  static final endTag =
+      V2TimMessage(elemType: Const.V2TIM_ELEM_TYPE_END); //终止标记
   @override
   void initState() {
     setState(() {
@@ -94,8 +96,11 @@ class ConversationInnerState extends State<ConversationInner> {
     List<V2TimMessage> currentMessageList =
         Provider.of<HistoryMessageListProvider>(context)
             .getMessageList(conversation.conversationID);
-    if (currentMessageList.isEmpty ||
-        currentMessageList[0].elemType != Const.V2TIM_ELEM_TYPE_END) {
+    bool isFinised = Provider.of<HistoryMessageListProvider>(context)
+        .isMessageEnd(conversation.conversationID);
+    if (isFinised) {
+      currentMessageList.add(endTag);
+    } else {
       currentMessageList.add(loadingTag);
     }
     return Align(
@@ -110,7 +115,7 @@ class ConversationInnerState extends State<ConversationInner> {
           addAutomaticKeepAlives: true,
           cacheExtent: 400,
           itemBuilder: (context, index) {
-            // 到房间底部了，之后再没数据
+            // 到房间底部或已经响应了刷新，之后再没数据
             if (currentMessageList[index].elemType ==
                 Const.V2TIM_ELEM_TYPE_END) {
               return Container();
@@ -118,6 +123,7 @@ class ConversationInnerState extends State<ConversationInner> {
             // 到末尾了，更新MsgList
             if (currentMessageList[index].elemType ==
                 Const.V2TIM_ELEM_TYPE_REFRESH) {
+              currentMessageList.removeAt(index);
               // 从接口获取数据
               if (index > 0) {
                 if (currentMessageList[index - 1].elemType ==
@@ -129,16 +135,20 @@ class ConversationInnerState extends State<ConversationInner> {
               }
               return Container();
             }
-            return FrameSeparateWidget(
-                index: index,
-                placeHolder: Container(
-                  color: Colors.white,
-                  height: 60,
-                ),
-                child: SendMsg(
-                    message: currentMessageList[index],
-                    selectedMsgId: selectedMsgId,
-                    setSelectedMsgId: setSelectedMsgId));
+            return SendMsg(
+                message: currentMessageList[index],
+                selectedMsgId: selectedMsgId,
+                setSelectedMsgId: setSelectedMsgId);
+            // return FrameSeparateWidget(
+            //     index: index,
+            //     placeHolder: Container(
+            //       color: Colors.white,
+            //       height: 60,
+            //     ),
+            //     child: SendMsg(
+            //         message: currentMessageList[index],
+            //         selectedMsgId: selectedMsgId,
+            //         setSelectedMsgId: setSelectedMsgId));
           }),
     );
   }

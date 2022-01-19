@@ -6,6 +6,7 @@ import 'package:discuss/provider/multiselect.dart';
 import 'package:discuss/utils/commonUtils.dart';
 import 'package:discuss/utils/permissions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
@@ -29,8 +30,7 @@ class VideoMessage extends StatefulWidget {
   State<StatefulWidget> createState() => VideoMessageState();
 }
 
-class VideoMessageState extends State<VideoMessage>
-    with AutomaticKeepAliveClientMixin {
+class VideoMessageState extends State<VideoMessage> {
   late VideoPlayerController videoPlayerController;
   late ChewieController chewieController;
   late double height;
@@ -39,14 +39,11 @@ class VideoMessageState extends State<VideoMessage>
   @override
   void initState() {
     super.initState();
-    super.build(context);
     bool isOpen = Provider.of<MultiSelect>(context, listen: false).isopen;
     setVideoMessage(isOpen);
   }
 
-  @override
   // 覆写`wantKeepAlive`返回`true`
-  bool get wantKeepAlive => true;
 
   //保存网络视频到本地
   _savenNetworkVideo(context, String videoUrl, {bool isAsset = true}) async {
@@ -103,13 +100,9 @@ class VideoMessageState extends State<VideoMessage>
           );
     player.initialize();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      //需要创建的小组件
-      double currentVideoHeight = geiVideoheight();
-      double w = getMaxWidth(isOpen);
-      // 这里做判断是为了防止某些机型，发送视屏时无法正确获取到视屏高度的情况
-      double h = currentVideoHeight == 0
-          ? 490
-          : ((w * currentVideoHeight) / geiVideoWidth());
+      // 图片目前按照缩略图尺寸走的，并未走UI图，UI图比例过大图片很糊
+      double w = getVideoWidth();
+      double h = getVideoHeight();
       ChewieController controller = ChewieController(
         videoPlayerController: player,
         autoPlay: false,
@@ -129,36 +122,34 @@ class VideoMessageState extends State<VideoMessage>
   }
 
   @override
-  didUpdateWidget(oldWidget) {
-    if (oldWidget.message.videoElem!.videoUrl !=
-            widget.message.videoElem!.videoUrl ||
-        oldWidget.message.videoElem!.videoPath !=
-            widget.message.videoElem!.videoPath) {
-      setVideoMessage();
-    }
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   void dispose() {
     videoPlayerController.dispose();
     chewieController.dispose();
     super.dispose();
   }
 
-  // double getMaxWidth(isopen) {
-  //   return AutoSizeUtil.getScreenSize().width - (isopen ? 180 : 130);
-  // }
   double getMaxWidth(isopen) {
     return MediaQuery.of(context).size.width - (isopen ? 180 : 130);
   }
 
-  double geiVideoheight() {
-    return widget.message.videoElem!.snapshotHeight!.toDouble();
+  double getVideoHeight() {
+    double height = widget.message.videoElem!.snapshotHeight!.toDouble();
+    double width = widget.message.videoElem!.snapshotWidth!.toDouble();
+    // 横图
+    if (width > height) {
+      return height * 1.3;
+    }
+    return height;
   }
 
-  double geiVideoWidth() {
-    return widget.message.videoElem!.snapshotWidth!.toDouble();
+  double getVideoWidth() {
+    double height = widget.message.videoElem!.snapshotHeight!.toDouble();
+    double width = widget.message.videoElem!.snapshotWidth!.toDouble();
+    // 横图
+    if (width > height) {
+      return width * 1.3;
+    }
+    return width;
   }
 
   Widget errorDisplay() {
@@ -179,7 +170,7 @@ class VideoMessageState extends State<VideoMessage>
               size: 16,
             ),
             Text(
-              "图片加载失败",
+              "视频加载失败",
               style: TextStyle(color: Colors.red),
             ),
           ],
@@ -200,27 +191,32 @@ class VideoMessageState extends State<VideoMessage>
                 videoController: chewieController, downloadFn: _saveVideo)));
       },
       child: Container(
-        constraints: BoxConstraints(maxWidth: width, maxHeight: height),
         decoration: BoxDecoration(
           border: Border.all(
             color: hexToColor("E5E5E5"),
-            width: 2,
+            width: 1,
             style: BorderStyle.solid,
           ),
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
         child: ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
             child: Stack(
               children: <Widget>[
                 Positioned(
                   child: widget.message.videoElem!.snapshotUrl == null
-                      ? Image.file(
-                          File(widget.message.videoElem!.snapshotPath!),
+                      ? ConstrainedBox(
+                          constraints: BoxConstraints(
+                              maxHeight: CommonUtils.adaptHeight(420), //宽度尽可能大
+                              maxWidth: CommonUtils.adaptWidth(320) //最小高度为50像素
+                              ),
+                          child: Image.file(
+                            File(widget.message.videoElem!.snapshotPath!),
+                          ),
                         )
                       : FadeInImage.memoryNetwork(
-                          height: widget.message.videoElem!.snapshotHeight!
-                              .toDouble(),
+                          height: getVideoHeight(),
+                          width: getVideoWidth(),
                           fadeInCurve: Curves.ease,
                           fit: BoxFit.contain,
                           image: widget.message.videoElem!.snapshotUrl!,

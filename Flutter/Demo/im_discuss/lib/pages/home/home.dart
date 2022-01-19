@@ -48,6 +48,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_message_receipt.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 首页
 class HomePage extends StatefulWidget {
@@ -479,11 +480,10 @@ class HomePageState extends State<HomePage> {
       key = "group_${message.groupID}";
     }
     try {
-      int imgType = MessageElemType.V2TIM_ELEM_TYPE_IMAGE;
-      int soundType = MessageElemType.V2TIM_ELEM_TYPE_SOUND;
+      // int imgType = MessageElemType.V2TIM_ELEM_TYPE_IMAGE;
+      // int soundType = MessageElemType.V2TIM_ELEM_TYPE_SOUND;
       // int videoType = MessageElemType.V2TIM_ELEM_TYPE_VIDEO;
       int fileType = MessageElemType.V2TIM_ELEM_TYPE_FILE;
-      var typeArr = [imgType, soundType, fileType];
 
       // progress回调中必定会回传id(只有progress会带id)
       String id = message.id!;
@@ -503,25 +503,13 @@ class HomePageState extends State<HomePage> {
         }
       }
 
-      if (typeArr.contains(message.elemType)) {
-        // TODO: 这个判断是为了暂时解决发送图片时滑动屏幕会导致Provider更新UI冲突临时所添加
-        if (progress == 100) {
-          message.status = MessageStatus.V2TIM_MSG_STATUS_SEND_SUCC;
-        }
-        Provider.of<HistoryMessageListProvider>(
-          context,
-          listen: false,
-        ).updateCreateMessage(key, msgId, id, message);
-      } else {
-        //TODO VideoMessage还没改目前只有老版本用这个
-        Provider.of<HistoryMessageListProvider>(
-          context,
-          listen: false,
-        ).updateMessageStatus(
-          key,
-          message,
-        );
+      if (progress == 100) {
+        message.status = MessageStatus.V2TIM_MSG_STATUS_SEND_SUCC;
       }
+      Provider.of<HistoryMessageListProvider>(
+        context,
+        listen: false,
+      ).updateCreateMessage(key, msgId, id, message);
     } catch (err) {
       Utils.log("error $err");
     }
@@ -636,6 +624,7 @@ class HomePageState extends State<HomePage> {
     2: "账号",
     3: "我",
   };
+
   getFriendList() async {
     V2TimValueCallback<List<V2TimFriendInfo>> friendRes =
         await TencentImSDKPlugin.v2TIMManager
@@ -799,6 +788,10 @@ class HomePageState extends State<HomePage> {
       'name': '加入群组',
       'type': 2,
     },
+    {
+      'name': '创建群组',
+      'type': 3,
+    },
   ];
   chooseContact(int type) {
     Navigator.push(
@@ -897,6 +890,16 @@ class HomePageState extends State<HomePage> {
     //     unreadDisplay = unreadCount.toString();
     //   }
     // }
+    // 字体和屏幕适配
+    ScreenUtil.init(
+      BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width,
+          maxHeight: MediaQuery.of(context).size.height),
+      // 设计稿尺寸：px
+      designSize: const Size(750, 1624),
+      context: context,
+      minTextAdapt: true,
+    );
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(

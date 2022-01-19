@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:discuss/provider/historymessagelistprovider.dart';
 import 'package:discuss/utils/permissions.dart';
@@ -23,9 +23,9 @@ class TextMsg extends StatefulWidget {
   final String toUser;
   final int type;
   final bool recordBackStatus;
-  String? lastDraftText;
+  final String? lastDraftText;
 
-  TextMsg(this.toUser, this.type, this.recordBackStatus,
+  const TextMsg(this.toUser, this.type, this.recordBackStatus,
       {this.lastDraftText, Key? key})
       : super(key: key);
 
@@ -82,8 +82,15 @@ class TextMsgState extends State<TextMsg> {
     });
   }
 
-  initRecord() {
+  initRecord() async {
     Utils.log("初始化");
+    bool hasMicrophonePermission =
+        await Permissions.checkPermission(context, Permission.microphone.value);
+    bool hasStoragePermission = Platform.isIOS ||
+        await Permissions.checkPermission(context, Permission.storage.value);
+    if (!hasMicrophonePermission || !hasStoragePermission) {
+      return;
+    }
     recordPlugin.responseFromInit.listen((data) {
       if (data) {
         Utils.log("初始化成功");
@@ -492,9 +499,6 @@ class TextMsgState extends State<TextMsg> {
   @override
   Widget build(BuildContext context) {
     bool isKeyboradshow = Provider.of<KeyBoradModel>(context).show;
-    if (!isKeyboradshow && !isRecordInited) {
-      initRecord();
-    }
     V2TimMessage? replyMessage =
         Provider.of<KeyBoradModel>(context).replyMessage;
     if (replyMessage != null) {
@@ -618,9 +622,13 @@ class TextMsgState extends State<TextMsg> {
               ],
             )
           : GestureDetector(
+              onTapDown: (detail) {
+                if (!isKeyboradshow && !isRecordInited) {
+                  initRecord();
+                }
+              },
               onLongPressStart: (e) async {
-                if (await Permissions.checkPermission(
-                    context, Permission.microphone.value)) {
+                if (isRecordInited) {
                   // Either the permission was already granted before or the user just granted it.
                   buildOverLayView(context); //显示图标
                   start();

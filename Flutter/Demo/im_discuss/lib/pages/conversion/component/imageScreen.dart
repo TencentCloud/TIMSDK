@@ -52,17 +52,17 @@ class ImageScreen extends StatelessWidget {
                   enableRotation: false,
                 ),
               ),
-              // Positioned(
-              //   left: 10,
-              //   bottom: 50,
-              //   child: IconButton(
-              //     icon: Image.asset('images/close.png'),
-              //     iconSize: 30,
-              //     onPressed: () {
-              //       Navigator.of(context).pop();
-              //     },
-              //   ),
-              // ),
+              Positioned(
+                left: 10,
+                bottom: 50,
+                child: IconButton(
+                  icon: Image.asset('images/close.png'),
+                  iconSize: 30,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
               Positioned(
                 right: 10,
                 bottom: 50,

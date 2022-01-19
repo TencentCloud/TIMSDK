@@ -58,14 +58,14 @@ class FriendProfilePanel extends StatelessWidget {
                 children: [
                   // 昵称
                   SizedBox(
-                    height: 34,
+                    height: 30,
                     child: Text(
                       (userInfo!.friendInfo!.userProfile!.nickName == null ||
                               userInfo!.friendInfo!.userProfile!.nickName == '')
                           ? "${userInfo!.friendInfo!.userProfile!.userID}"
                           : "${userInfo!.friendInfo!.userProfile!.nickName}",
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 20,
                         color: CommonColors.getTextBasicColor(),
                       ),
                     ),

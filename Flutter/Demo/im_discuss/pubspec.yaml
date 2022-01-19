@@ -29,7 +29,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   tencent_im_sdk_plugin: ^3.7.1
+  flutter_screenutil: ^5.1.0
   badges: ^2.0.2
   crypto: ^3.0.1
   flutter_easyloading: ^3.0.0
@@ -68,6 +71,7 @@ dependencies:
   lpinyin: ^2.0.3
   image_gallery_saver: ^1.7.1
   keframe: ^2.0.3
+  country_list_pick: ^1.0.1+5
 
 
 dev_dependencies:

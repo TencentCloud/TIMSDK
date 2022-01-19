@@ -3,6 +3,7 @@ import 'package:discuss/provider/conversationlistprovider.dart';
 import 'package:discuss/utils/commonUtils.dart';
 import 'package:discuss/utils/imsdk.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/conversation_type.dart';
@@ -158,7 +159,7 @@ class MessageState extends State<Message> {
     return ListView(
       children: finalList.map((e) {
         return Container(
-          height: 70,
+          height: CommonUtils.adaptHeight(145),
           color: e.isPinned ?? false ? const Color(0xFFF4F4F4) : Colors.white,
           child: Slidable(
             key: Key(e.conversationID),
@@ -412,7 +413,7 @@ class ConversionItem extends StatelessWidget {
             // 头像区域
             SizedBox(
               width: 70,
-              height: 74,
+              height: 78,
               child: Padding(
                 padding: const EdgeInsets.all(11),
                 child: PhysicalModel(
@@ -420,8 +421,8 @@ class ConversionItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4.8),
                   clipBehavior: Clip.antiAlias,
                   child: Avatar(
-                    width: 48,
-                    height: 48,
+                    width: CommonUtils.adaptWidth(96),
+                    height: CommonUtils.adaptHeight(96),
                     radius: 0,
                     avtarUrl: getFaceUrl(),
                   ),
@@ -443,7 +444,7 @@ class ConversionItem extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      height: 24,
+                      height: CommonUtils.adaptHeight(46),
                       margin: const EdgeInsets.only(top: 11),
                       child: Row(
                         children: [
@@ -453,7 +454,7 @@ class ConversionItem extends StatelessWidget {
                               conversation.showName!,
                               style: TextStyle(
                                 color: hexToColor("111111"),
-                                fontSize: IMDiscussConfig.appBarTitleFontSize,
+                                fontSize: CommonUtils.adaptFontSize(30),
                                 height: 1,
                               ),
                               textAlign: TextAlign.left,
@@ -469,7 +470,7 @@ class ConversionItem extends StatelessWidget {
                               style: TextStyle(
                                 color: Color(int.parse('b0b0b0', radix: 16))
                                     .withAlpha(255),
-                                fontSize: 12,
+                                fontSize: CommonUtils.adaptFontSize(28),
                               ),
                             ),
                             width: 105,

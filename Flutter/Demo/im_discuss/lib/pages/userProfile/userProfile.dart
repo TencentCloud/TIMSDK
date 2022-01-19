@@ -1,4 +1,5 @@
 import 'package:discuss/common/hextocolor.dart';
+import 'package:discuss/utils/commonUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
@@ -237,9 +238,10 @@ class UserProfileState extends State<UserProfile> {
         ),
         shadowColor: hexToColor("ececec"),
         elevation: 1,
-        title: const Text(
+        title: Text(
           '用户资料',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+              color: Colors.black, fontSize: CommonUtils.adaptFontSize(30)),
         ),
         backgroundColor: CommonColors.getThemeColor(),
       ),
@@ -256,7 +258,8 @@ class UserProfileState extends State<UserProfile> {
                         children: [
                           FriendProfilePanel(userInfo, false),
                           const ListGap(),
-                          AddToBlackList(userInfo!),
+                          AddToBlackList(userInfo ??
+                              V2TimFriendInfoResult(resultCode: -1)),
                           UserRemark(userInfo, getUserInfo)
                         ],
                       ),

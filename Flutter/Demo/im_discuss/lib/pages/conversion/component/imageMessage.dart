@@ -1,13 +1,15 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:discuss/utils/commonUtils.dart';
+import 'package:discuss/utils/const.dart';
 import 'package:discuss/utils/permissions.dart';
 
-import 'package:discuss/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_image.dart';
 
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:photo_view/photo_view.dart';
@@ -27,12 +29,9 @@ class ImageMessage extends StatefulWidget {
   State<StatefulWidget> createState() => ImageMessageState();
 }
 
-class ImageMessageState extends State<ImageMessage>
-    with AutomaticKeepAliveClientMixin {
+class ImageMessageState extends State<ImageMessage> {
   bool imageIsRender = false;
-  @override
-  // 覆写`wantKeepAlive`返回`true`
-  bool get wantKeepAlive => true;
+
   /*
   为了解决，重复渲染的跳闪问题
   当现有图片队列只有一个，且上一个图片队列不存在时才进行更新，因为此时是发送了新的图片
@@ -50,21 +49,18 @@ class ImageMessageState extends State<ImageMessage>
     super.didUpdateWidget(oldWidget);
   }
 
-  getPlatformType() {
-    return Platform.isAndroid ? 1 : 2;
-  }
-
   getBigPic() {
-    String url = '';
-    for (var element in widget.message.imageElem!.imageList!) {
-      try {
-        url = element!.url!;
-      } catch (err) {
-        Utils.log("message img url is empty！");
-        rethrow;
-      }
-    }
-    return url;
+    V2TimImage? img;
+    img = widget.message.imageElem!.imageList!.firstWhere(
+        (e) => e?.type == Const.V2_TIM_IMAGE_TYPES['SMALL'],
+        orElse: () => null);
+    img = widget.message.imageElem!.imageList!.firstWhere(
+        (e) => e?.type == Const.V2_TIM_IMAGE_TYPES['BIG'],
+        orElse: () => null);
+    img = widget.message.imageElem!.imageList!.firstWhere(
+        (e) => e?.type == Const.V2_TIM_IMAGE_TYPES['ORIGINAL'],
+        orElse: () => null);
+    return img == null ? widget.message.imageElem!.path! : img.url!;
   }
 
   Widget errorDisplay() {
@@ -95,11 +91,9 @@ class ImageMessageState extends State<ImageMessage>
   }
 
   Widget getImage(image, {imageElem}) {
-    Widget res = Expanded(
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        child: image,
-      ),
+    Widget res = ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(5)),
+      child: image,
     );
 
     return res;
@@ -107,7 +101,7 @@ class ImageMessageState extends State<ImageMessage>
 
   //保存网络图片到本地
   _savenNetworkImage(context, String imageUrl, {bool isAsset = true}) async {
-    var response;
+    Uint8List response;
     if (Platform.isIOS) {
       if (!await Permissions.checkPermission(
           context, Permission.photos.value)) {
@@ -146,6 +140,15 @@ class ImageMessageState extends State<ImageMessage>
         Fluttertoast.showToast(msg: '保存失败', gravity: ToastGravity.CENTER);
       }
     }
+  }
+
+  getImgWidthAndHeight(
+      BoxConstraints constraints, double height, double width) {
+    // 消息列表展示缩略图的大小
+    double hwrate = height / width;
+    double curWidth = min(width, constraints.maxWidth * 0.4);
+    double curHeight = curWidth * hwrate;
+    return {height: curHeight, width: curWidth};
   }
 
   void _saveImg() {
@@ -200,103 +203,106 @@ class ImageMessageState extends State<ImageMessage>
               ));
         },
       );
+
+  V2TimImage? getImageFromList() {
+    V2TimImage? img;
+    // 缩略图优先，大图次之，最后是原图
+    img = widget.message.imageElem!.imageList?.firstWhere(
+        (e) => e!.type == Const.V2_TIM_IMAGE_TYPES['ORIGINAL'],
+        orElse: () => null);
+    img = widget.message.imageElem!.imageList?.firstWhere(
+        (e) => e!.type == Const.V2_TIM_IMAGE_TYPES['BIG'],
+        orElse: () => null);
+    img = widget.message.imageElem!.imageList?.firstWhere(
+        (e) => e!.type == Const.V2_TIM_IMAGE_TYPES['SMALL'],
+        orElse: () => null);
+    if (img == null) {
+      setState(() {
+        imageIsRender = true;
+      });
+    }
+    return img;
+  }
+
+  Widget imageBuilder(BoxConstraints constraints, V2TimImage? img) {
+    if (img == null) {
+      // 有path
+      if (widget.message.imageElem!.path!.isNotEmpty) {
+        return getImage(
+            Image.file(File(widget.message.imageElem!.path!),
+                fit: BoxFit.fitWidth),
+            imageElem: null);
+      } else {
+        return errorDisplay();
+      }
+    } else if (img.url != null && !imageIsRender) {
+      return getImage(
+          GestureDetector(
+            onTap: () {
+              // openDialog(context);
+              Navigator.of(context).push(FadeRoute(
+                  page: ImageScreen(
+                      imageProvider: NetworkImage(getBigPic()),
+                      heroTag: widget.message.msgID!,
+                      downloadFn: _saveImg)));
+            },
+            child:
+                // Container(
+                // height: height + 10,
+                // decoration: BoxDecoration(
+                //   borderRadius:
+                //       const BorderRadius.all(Radius.circular(20)),
+                //   border: Border.all(
+                //     color: hexToColor("E5E5E5"),
+                //     width: 1,
+                //     style: BorderStyle.solid,
+                //   ),
+                // ),
+                FadeInImage.memoryNetwork(
+              fadeInCurve: Curves.ease,
+              fit: BoxFit.fitWidth,
+              image: img.url!,
+              placeholder: kTransparentImage,
+              imageErrorBuilder: (context, error, stackTrace) => errorDisplay(),
+            ),
+          ),
+          imageElem: e);
+    } else {
+      // 有path
+      if (widget.message.imageElem!.path!.isNotEmpty) {
+        return getImage(
+            GestureDetector(
+              onTap: () {
+                // openDialog(context);
+                Navigator.of(context).push(FadeRoute(
+                    page: ImageScreen(
+                        imageProvider: NetworkImage(getBigPic()),
+                        heroTag: widget.message.msgID!,
+                        downloadFn: _saveImg)));
+              },
+              child: Image.file(File(widget.message.imageElem!.path!),
+                  fit: BoxFit.fitWidth),
+            ),
+            imageElem: null);
+      } else {
+        return errorDisplay();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: widget.message.isSelf!
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
-      children: widget.message.imageElem!.imageList!.map(
-        (e) {
-          if (e!.type != null) {
-            if (e.type == getPlatformType()) {
-              // 获取不同平台的图片
-              if (e.url != null && !imageIsRender) {
-                // 1.获取屏幕高度
-                var screenWidth = MediaQuery.of(context).size.width;
-                // 2. 根据屏幕宽度大概计算图片消息宽度，1.556为屏幕与元素测出的比例系数
-                var elementWidth = screenWidth / 1.5;
-                // 3. 算出图片的宽高比例
-                var rate = e.width!.toDouble() / e.height!.toDouble();
-                // 4、根据宽高比例,减去多选时的高度
-                double height = (elementWidth / rate -
-                    (widget.isSelect ? 10 : 0).toDouble());
-                // 为什么做这个骚操作：避免EXpended组件变化导致的图片明显闪动，误差肯定是存在，只要闪动变化较小用户就很难看出来
-                return getImage(
-                    GestureDetector(
-                      onTap: () {
-                        // openDialog(context);
-                        Navigator.of(context).push(FadeRoute(
-                            page: ImageScreen(
-                                imageProvider: NetworkImage(getBigPic()),
-                                heroTag: widget.message.msgID!,
-                                downloadFn: _saveImg)));
-                      },
-                      child:
-                          // Container(
-                          // height: height + 10,
-                          // decoration: BoxDecoration(
-                          //   borderRadius:
-                          //       const BorderRadius.all(Radius.circular(20)),
-                          //   border: Border.all(
-                          //     color: hexToColor("E5E5E5"),
-                          //     width: 1,
-                          //     style: BorderStyle.solid,
-                          //   ),
-                          // ),
-                          FadeInImage.memoryNetwork(
-                        height: height,
-                        fadeInCurve: Curves.ease,
-                        fit: BoxFit.contain,
-                        image: e.url!,
-                        placeholder: kTransparentImage,
-                        imageErrorBuilder: (context, error, stackTrace) =>
-                            errorDisplay(),
-                      ),
-                    ),
-                    imageElem: e);
-              } else {
-                // 有path
-                if (widget.message.imageElem!.path!.isNotEmpty) {
-                  return getImage(
-                      GestureDetector(
-                        onTap: () {
-                          // openDialog(context);
-                          Navigator.of(context).push(FadeRoute(
-                              page: ImageScreen(
-                                  imageProvider: NetworkImage(getBigPic()),
-                                  heroTag: widget.message.msgID!,
-                                  downloadFn: _saveImg)));
-                        },
-                        child: Image.file(
-                          File(widget.message.imageElem!.path!),
-                        ),
-                      ),
-                      imageElem: null);
-                } else {
-                  return errorDisplay();
-                }
-              }
-            } else {
-              return Container();
-            }
-          } else {
-            setState(() {
-              imageIsRender = true;
-            });
-            // 有path
-            if (widget.message.imageElem!.path!.isNotEmpty) {
-              return getImage(
-                  Image.file(
-                    File(widget.message.imageElem!.path!),
-                  ),
-                  imageElem: null);
-            } else {
-              return errorDisplay();
-            }
-          }
-        },
-      ).toList(),
-    );
+    V2TimImage? img = getImageFromList();
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      return Align(
+        alignment: widget.message.isSelf!
+            ? Alignment.centerRight
+            : Alignment.centerLeft,
+        child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.4),
+            child: imageBuilder(constraints, img)),
+      );
+    });
   }
 }

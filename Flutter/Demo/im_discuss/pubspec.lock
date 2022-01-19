@@ -113,6 +113,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  country_list_pick:
+    dependency: "direct main"
+    description:
+      name: country_list_pick
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1+5"
   cross_file:
     dependency: transitive
     description:
@@ -147,7 +154,7 @@ packages:
       name: dbus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.6"
+    version: "0.6.8"
   dio:
     dependency: "direct main"
     description:
@@ -189,7 +196,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.3.1"
+    version: "4.3.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -209,6 +216,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -223,6 +235,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  flutter_screenutil:
+    dependency: "direct main"
+    description:
+      name: flutter_screenutil
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.1.0"
   flutter_slidable:
     dependency: "direct main"
     description:
@@ -834,7 +853,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.3"
+    version: "2.3.4"
   xdg_directories:
     dependency: transitive
     description:

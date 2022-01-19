@@ -24,4 +24,10 @@ class Const {
   static const MIN_SEC = 60;
 
   static const SEC_SERIES = [HOUR_SEC, MIN_SEC];
+
+  static const V2_TIM_IMAGE_TYPES = {
+    'ORIGINAL': 0,
+    'BIG': 1,
+    'SMALL': 2,
+  };
 }
