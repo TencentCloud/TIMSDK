@@ -28,12 +28,12 @@ class MyGroups extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<V2TimGroupApplication> applicationList;
+    List<V2TimGroupApplication?> applicationList;
     bool hasApplication;
     applicationList =
         Provider.of<GroupApplicationModel>(context).groupApplicationList;
     hasApplication = applicationList.any((element) =>
-        element.handleStatus ==
+        element!.handleStatus ==
         GroupApplicationHandleStatus
             .V2TIM_GROUP_APPLICATION_HANDLE_STATUS_UNHANDLED);
     return InkWell(
@@ -72,6 +72,7 @@ class MyGroups extends StatelessWidget {
                     child: Text(
                       hasApplication ? "有新的加群申请" : "",
                       textAlign: TextAlign.right,
+                      style: const TextStyle(color: Color(0xFFFF584C)),
                     ),
                   ),
                   SizedBox(

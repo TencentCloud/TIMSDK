@@ -2,6 +2,7 @@ import 'package:discuss/utils/const.dart';
 import 'package:discuss/utils/toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tencent_im_sdk_plugin/enum/message_elem_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 
 /*
@@ -92,7 +93,10 @@ class HistoryMessageListProvider with ChangeNotifier {
     List<V2TimMessage> listWithTimestamp = [];
     for (var item in list) {
       if (listWithTimestamp.isEmpty ||
-          item.timestamp! - listWithTimestamp[0].timestamp! > 300) {
+          item.timestamp! - listWithTimestamp[0].timestamp! > 300 &&
+              (item.elemType != MessageElemType.V2TIM_ELEM_TYPE_NONE &&
+                  item.elemType !=
+                      MessageElemType.V2TIM_ELEM_TYPE_GROUP_TIPS)) {
         listWithTimestamp.insert(
             0,
             V2TimMessage(

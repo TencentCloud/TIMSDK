@@ -1,3 +1,4 @@
+import 'package:discuss/utils/commonUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -9,7 +10,7 @@ class Utils {
       gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 1,
       textColor: Colors.white,
-      fontSize: 16.0,
+      fontSize: CommonUtils.adaptFontSize(34),
       backgroundColor: Colors.black,
     );
   }
@@ -21,7 +22,7 @@ class Utils {
       gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 1,
       textColor: Colors.white,
-      fontSize: 16.0,
+      fontSize: CommonUtils.adaptFontSize(34),
       backgroundColor: Colors.black,
     );
   }

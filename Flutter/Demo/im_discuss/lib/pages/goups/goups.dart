@@ -1,4 +1,5 @@
 import 'package:discuss/common/hextocolor.dart';
+import 'package:discuss/utils/commonUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
@@ -15,18 +16,21 @@ class Groups extends StatefulWidget {
 }
 
 class GroupItem extends StatelessWidget {
-  const GroupItem(this.groupInfo, {Key? key}) : super(key: key);
+  const GroupItem(this.groupInfo, this.getJoinedGroupList, {Key? key})
+      : super(key: key);
   final V2TimGroupInfo groupInfo;
+  final Function getJoinedGroupList;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => Conversion('group_${groupInfo.groupID}'),
           ),
         );
+        getJoinedGroupList();
       },
       child: Container(
         height: 50,
@@ -63,6 +67,7 @@ class GroupsState extends State<Groups> {
     getJoinedGroupList();
   }
   List<V2TimGroupInfo> groupList = List.empty(growable: true);
+
   getJoinedGroupList() async {
     V2TimValueCallback<List<V2TimGroupInfo>> data = await TencentImSDKPlugin
         .v2TIMManager
@@ -80,6 +85,7 @@ class GroupsState extends State<Groups> {
 
   @override
   Widget build(Object context) {
+    print("groupList你倒是更新一哈啊");
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -87,9 +93,10 @@ class GroupsState extends State<Groups> {
         ),
         shadowColor: hexToColor("ececec"),
         elevation: 1,
-        title: const Text(
+        title: Text(
           '群聊',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+              color: Colors.black, fontSize: CommonUtils.adaptFontSize(30)),
         ),
         backgroundColor: CommonColors.getThemeColor(),
       ),
@@ -101,7 +108,10 @@ class GroupsState extends State<Groups> {
                 color: CommonColors.getGapColor(),
                 child: groupList.isNotEmpty
                     ? ListView(
-                        children: groupList.map((e) => GroupItem(e)).toList(),
+                        children: groupList
+                            .map(
+                                (e) => GroupItem(e, () => getJoinedGroupList()))
+                            .toList(),
                       )
                     : Center(
                         child: Text(

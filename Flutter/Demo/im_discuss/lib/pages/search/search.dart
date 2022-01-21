@@ -1,4 +1,5 @@
 import 'package:discuss/common/hextocolor.dart';
+import 'package:discuss/utils/commonUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
@@ -38,10 +39,14 @@ class Input extends StatelessWidget {
                 addType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH,
               );
       if (data.code != 0) {
-        Utils.toast('${data.code}-${data.desc}');
+        data.code == 6011
+            ? Utils.toast('userId不存在')
+            : Utils.toast(' ${data.code}-${data.desc}');
       } else {
+        addFriendTips(data.data?.resultCode);
         controller.clear();
         getFriendList(context);
+        Navigator.pop(context);
         Navigator.pop(context);
       }
     }
@@ -54,6 +59,7 @@ class Input extends StatelessWidget {
       if (res.code == 0) {
         Utils.toast('申请成功');
         getFriendList(context);
+        Navigator.pop(context);
         Navigator.pop(context);
       } else {
         Utils.log(res.desc);
@@ -72,9 +78,21 @@ class Input extends StatelessWidget {
         Utils.toast('创建成功');
         getFriendList(context);
         Navigator.pop(context);
+        Navigator.pop(context);
       } else {
         Utils.log(res.desc);
         Utils.toast(res.desc);
+      }
+    }
+  }
+
+  addFriendTips(int? resultCode) {
+    if (resultCode != null) {
+      if (resultCode == 30539) {
+        Utils.toast('好友申请已发出');
+      }
+      if (resultCode == 0) {
+        Utils.toast('好友添加成功');
       }
     }
   }
@@ -100,7 +118,7 @@ class Input extends StatelessWidget {
     if (type == 2) {
       return "请输入群ID";
     }
-    return "请输入要创建的群名称";
+    return "请输入要创建的群ID（限数字字母）";
   }
 
   @override
@@ -112,6 +130,7 @@ class Input extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+              textInputAction: TextInputAction.done,
               controller: controller,
               decoration: InputDecoration(
                 labelText: getLabelText(type),
@@ -159,20 +178,23 @@ class SearchState extends State<Search> {
 
   Widget getTitle(int type) {
     if (type == 1) {
-      return const Text(
+      return Text(
         '添加好友',
-        style: TextStyle(color: Colors.black),
+        style: TextStyle(
+            color: Colors.black, fontSize: CommonUtils.adaptFontSize(30)),
       );
     }
     if (type == 2) {
-      return const Text(
+      return Text(
         '添加群组',
-        style: TextStyle(color: Colors.black),
+        style: TextStyle(
+            color: Colors.black, fontSize: CommonUtils.adaptFontSize(30)),
       );
     }
-    return const Text(
+    return Text(
       '创建群组',
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(
+          color: Colors.black, fontSize: CommonUtils.adaptFontSize(30)),
     );
   }
 
@@ -180,22 +202,21 @@ class SearchState extends State<Search> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        shadowColor: hexToColor("ececec"),
-        elevation: 1,
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-        title: type == 1
-            ? const Text(
-                '添加好友',
-                style: TextStyle(color: Colors.black),
-              )
-            : const Text(
-                '添加群组',
-                style: TextStyle(color: Colors.black),
-              ),
-        backgroundColor: CommonColors.getThemeColor(),
-      ),
+          shadowColor: hexToColor("ececec"),
+          elevation: 1,
+          iconTheme: const IconThemeData(
+            color: Colors.black,
+          ),
+          title: getTitle(type!),
+          backgroundColor: CommonColors.getThemeColor(),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () => {
+              Navigator.of(context).pop(),
+              // 为了保证退出弹窗
+              Navigator.of(context).pop()
+            },
+          )),
       body: SafeArea(
         child: Column(
           children: [

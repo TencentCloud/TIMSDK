@@ -501,8 +501,6 @@ class ConversionItem extends StatelessWidget {
                                         clipBehavior: Clip.antiAlias,
                                         child: Container(
                                           color: CommonColors.getReadColor(),
-                                          width: 18,
-                                          height: 18,
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -525,10 +523,13 @@ class ConversionItem extends StatelessWidget {
                                               )
                                             ],
                                           ),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              4, 0, 4, 0),
                                         ),
                                       )
                                     : null,
-                            width: 18,
+                            constraints: const BoxConstraints(
+                                minWidth: 18, maxWidth: 32),
                             height: 18,
                             margin: const EdgeInsets.only(right: 16),
                           )

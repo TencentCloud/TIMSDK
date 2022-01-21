@@ -1,4 +1,5 @@
 import 'package:discuss/common/hextocolor.dart';
+import 'package:discuss/utils/commonUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_im_sdk_plugin/enum/friend_application_type_enum.dart';
@@ -120,7 +121,7 @@ class ApplicationItem extends StatelessWidget {
                           child: Text(
                             "同意",
                             style: TextStyle(
-                              color: CommonColors.getThemeColor(),
+                              color: CommonColors.getThemeBlueColor(),
                             ),
                           ),
                         ),
@@ -171,7 +172,7 @@ class GroupApplicationItem extends StatelessWidget {
         );
     if (res.code == 0) {
       Utils.toast("拒绝成功");
-      getGroupApplicationList(context);
+      await getGroupApplicationList(context);
       back(context);
     } else {
       Utils.log(res.desc);
@@ -190,7 +191,7 @@ class GroupApplicationItem extends StatelessWidget {
         );
     if (res.code == 0) {
       Utils.toast("添加成功");
-      getGroupApplicationList(context);
+      await getGroupApplicationList(context);
       back(context);
     } else {
       Utils.toast("加群失败 ${res.desc}");
@@ -211,7 +212,8 @@ class GroupApplicationItem extends StatelessWidget {
     if (res.code == 0) {
       if (res.data!.groupApplicationList!.isNotEmpty) {
         Provider.of<GroupApplicationModel>(context, listen: false)
-            .setGroupApplicationResult(res.data!.groupApplicationList);
+            .setGroupApplicationResult(
+                List.castFrom(res.data!.groupApplicationList!));
       } else {
         Provider.of<GroupApplicationModel>(context, listen: false)
             .setGroupApplicationResult(List.empty(growable: true));
@@ -259,10 +261,10 @@ class GroupApplicationItem extends StatelessWidget {
                               child: Container(
                                 padding:
                                     const EdgeInsets.only(left: 5, right: 5),
-                                child: Text(
+                                child: const Text(
                                   "同意",
                                   style: TextStyle(
-                                    color: CommonColors.getThemeColor(),
+                                    color: Color(0xFF147AFF),
                                   ),
                                 ),
                               ),
@@ -274,11 +276,9 @@ class GroupApplicationItem extends StatelessWidget {
                               child: Container(
                                 padding:
                                     const EdgeInsets.only(left: 5, right: 5),
-                                child: Text(
+                                child: const Text(
                                   "拒绝",
-                                  style: TextStyle(
-                                    color: CommonColors.getTextWeakColor(),
-                                  ),
+                                  style: TextStyle(color: Color(0xFFFF584C)),
                                 ),
                               ),
                               onTap: () {
@@ -380,13 +380,17 @@ class NewFriendOrGroupNoticeState extends State<NewFriendOrGroupNotice> {
         shadowColor: hexToColor("ececec"),
         elevation: 1,
         title: type == 1
-            ? const Text(
+            ? Text(
                 '新的好友申请',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: CommonUtils.adaptFontSize(30)),
               )
-            : const Text(
+            : Text(
                 '新的加群申请',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: CommonUtils.adaptFontSize(30)),
               ),
         backgroundColor: CommonColors.getThemeColor(),
       ),

@@ -1,4 +1,5 @@
 import 'package:discuss/common/hextocolor.dart';
+import 'package:discuss/utils/commonUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
@@ -47,9 +48,10 @@ class BlackListState extends State<BlackList> {
         ),
         shadowColor: hexToColor("ececec"),
         elevation: 1,
-        title: const Text(
+        title: Text(
           '黑名单',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+              color: Colors.black, fontSize: CommonUtils.adaptFontSize(30)),
         ),
         backgroundColor: CommonColors.getThemeColor(),
       ),
@@ -147,7 +149,7 @@ class BlackListItem extends StatelessWidget {
                   child: Text(
                     "移除",
                     style: TextStyle(
-                      color: CommonColors.getThemeColor(),
+                      color: CommonColors.getThemeBlueColor(),
                     ),
                   ),
                 )

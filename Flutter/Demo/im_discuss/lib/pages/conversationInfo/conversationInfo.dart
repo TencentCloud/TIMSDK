@@ -1,5 +1,6 @@
 import 'package:discuss/common/hextocolor.dart';
 import 'package:discuss/pages/allmembers/allmembers.dart';
+import 'package:discuss/utils/commonUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_filter_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_role.dart';
@@ -31,10 +32,12 @@ class ConversationInfo extends StatefulWidget {
 }
 
 class GroupMemberProfileTitle extends StatelessWidget {
-  const GroupMemberProfileTitle(this.memberInfo, this.groupInfo, {Key? key})
+  const GroupMemberProfileTitle(this.memberInfo, this.groupInfo, this.getDetail,
+      {Key? key})
       : super(key: key);
   final V2TimGroupMemberInfoResult memberInfo;
   final V2TimGroupInfoResult groupInfo;
+  final Function getDetail;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,9 @@ class GroupMemberProfileTitle extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => AllMembers(groupInfo),
               ),
-            );
+            ).then((res) {
+              getDetail();
+            });
           },
           child: Container(
             margin: const EdgeInsets.only(right: 10, left: 10),
@@ -135,28 +140,30 @@ class MemberListOverview extends StatelessWidget {
             groupInfo.groupInfo!.role ==
                 GroupMemberRoleType.V2TIM_GROUP_MEMBER_ROLE_OWNER) &&
         groupInfo.groupInfo!.groupType == GroupType.Work) {
-      member.add(
-        SizedBox(
-          child: IconButton(
-              icon: Icon(
-                Icons.add_box,
-                color: CommonColors.getTextWeakColor(),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChooseContact(
-                      6,
-                      groupInfo.groupInfo!.groupID,
-                    ),
+      member.add(Column(
+        children: [
+          SizedBox(
+              child: IconButton(
+                  icon: Icon(
+                    Icons.add_box,
+                    color: CommonColors.getTextWeakColor(),
                   ),
-                );
-              }),
-          width: 40,
-          height: 40,
-        ),
-      );
+                  // iconSize: 40,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChooseContact(
+                          6,
+                          groupInfo.groupInfo!.groupID,
+                        ),
+                      ),
+                    );
+                  }),
+              width: 40,
+              height: 40)
+        ],
+      ));
     }
     return member;
   }
@@ -187,15 +194,17 @@ class MemberListOverview extends StatelessWidget {
 //               ),
 //             )
 class GroupMemberProfile extends StatelessWidget {
-  const GroupMemberProfile(this.memberInfo, this.groupInfo, {Key? key})
+  const GroupMemberProfile(this.memberInfo, this.groupInfo, this.getDetail,
+      {Key? key})
       : super(key: key);
   final V2TimGroupMemberInfoResult memberInfo;
   final V2TimGroupInfoResult groupInfo;
+  final Function getDetail;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GroupMemberProfileTitle(memberInfo, groupInfo),
+        GroupMemberProfileTitle(memberInfo, groupInfo, getDetail),
         MemberListOverview(memberInfo, groupInfo),
       ],
     );
@@ -290,6 +299,9 @@ class GroupTypeAndAddInfo extends StatelessWidget {
                     .then((res) {
                   if (res.code == 0) {
                     Utils.toast("解散群组成功");
+                    // 退出到最新到界面
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   } else {
                     Utils.toast("解散群组失败${res.code}  ${res.desc}");
@@ -404,10 +416,10 @@ class GroupTypeAndAddInfo extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min, // 设置最小的弹出
                     children: <Widget>[
                       ListTile(
-                        title: Text(
+                        title: const Text(
                           "任何人可以加入",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: CommonColors.getThemeColor()),
+                          // style: TextStyle(color: CommonColors.getThemeColor()),
                         ),
                         onTap: () async {
                           Navigator.of(context).pop();
@@ -434,10 +446,10 @@ class GroupTypeAndAddInfo extends StatelessWidget {
                         },
                       ),
                       ListTile(
-                        title: Text(
+                        title: const Text(
                           "需要管理员审批",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: CommonColors.getThemeColor()),
+                          // style: TextStyle(color: CommonColors.getThemeColor()),
                         ),
                         onTap: () async {
                           Navigator.of(context).pop();
@@ -447,7 +459,9 @@ class GroupTypeAndAddInfo extends StatelessWidget {
                                 info: V2TimGroupInfo.fromJson(
                                   {
                                     "groupID": groupInfo!.groupInfo!.groupID,
-                                    "addOpt":
+                                    "groupType":
+                                        groupInfo!.groupInfo!.groupType,
+                                    "groupAddOpt":
                                         GroupAddOptType.V2TIM_GROUP_ADD_AUTH,
                                   },
                                 ),
@@ -463,10 +477,10 @@ class GroupTypeAndAddInfo extends StatelessWidget {
                         },
                       ),
                       ListTile(
-                        title: Text(
+                        title: const Text(
                           "禁止加群",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: CommonColors.getThemeColor()),
+                          // style: TextStyle(color: CommonColors.getThemeColor()),
                         ),
                         onTap: () async {
                           Navigator.of(context).pop();
@@ -562,7 +576,8 @@ class ConversationInfoState extends State<ConversationInfo> {
     super.initState();
     id = widget.id;
     type = widget.type;
-    groupInfo = V2TimGroupInfoResult();
+    groupInfo = V2TimGroupInfoResult(
+        groupInfo: V2TimGroupInfo(groupID: '', groupType: ''));
     memberInfo = V2TimGroupMemberInfoResult();
     memberInfo.memberInfoList = List.empty();
     Utils.log("当前会话id $id");
@@ -620,9 +635,10 @@ class ConversationInfoState extends State<ConversationInfo> {
         shadowColor: hexToColor("ececec"),
         elevation: 1,
         backgroundColor: CommonColors.getThemeColor(),
-        title: const Text(
+        title: Text(
           "详细资料",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+              color: Colors.black, fontSize: CommonUtils.adaptFontSize(30)),
         ),
       ),
       body: SafeArea(
@@ -630,7 +646,7 @@ class ConversationInfoState extends State<ConversationInfo> {
           children: [
             GroupProfilePanel(groupInfo),
             const ListGap(),
-            GroupMemberProfile(memberInfo, groupInfo),
+            GroupMemberProfile(memberInfo, groupInfo, getDetail),
             const ListGap(),
             GroupTypeAndAddInfo(groupInfo),
             const ListGap(),

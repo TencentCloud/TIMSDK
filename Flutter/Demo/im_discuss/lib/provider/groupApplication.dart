@@ -2,13 +2,16 @@ import 'package:flutter/foundation.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_application.dart';
 
 class GroupApplicationModel with ChangeNotifier, DiagnosticableTreeMixin {
-  List<V2TimGroupApplication> _groupApplicationList =
+  List<V2TimGroupApplication?> _groupApplicationList =
       List.empty(growable: true);
   get groupApplicationList => _groupApplicationList;
-  setGroupApplicationResult(newInfo) {
-    _groupApplicationList = newInfo;
-    notifyListeners();
-    return _groupApplicationList;
+  setGroupApplicationResult(List<V2TimGroupApplication?>? newInfo) {
+    if (newInfo != null) {
+      _groupApplicationList = newInfo;
+      notifyListeners();
+      return _groupApplicationList;
+    }
+    return [];
   }
 
   clear() {
@@ -20,7 +23,7 @@ class GroupApplicationModel with ChangeNotifier, DiagnosticableTreeMixin {
   removeApplicationByuserId(String groupID) {
     int? index;
     for (int i = 0; i < _groupApplicationList.length; i++) {
-      if (_groupApplicationList[i].groupID == groupID) {
+      if (_groupApplicationList[i]!.groupID == groupID) {
         index = i;
         break;
       }

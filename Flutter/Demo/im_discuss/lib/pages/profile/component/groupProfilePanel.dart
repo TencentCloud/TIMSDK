@@ -1,3 +1,4 @@
+import 'package:discuss/utils/commonUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info_result.dart';
@@ -39,14 +40,16 @@ class GroupProfilePanel extends StatelessWidget {
                         title: Text(
                           "修改群名称",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: CommonColors.getThemeColor()),
+                          style: TextStyle(
+                              color: CommonColors.getThemeBlueColor()),
                         ),
                         onTap: () async {
                           Navigator.of(context).pop();
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return AlertName(userInfo!.groupInfo!.groupID);
+                                return AlertName(userInfo!.groupInfo!.groupID,
+                                    userInfo!.groupInfo!.groupType);
                               });
                         },
                       ),
@@ -54,14 +57,16 @@ class GroupProfilePanel extends StatelessWidget {
                         title: Text(
                           "修改群简介",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: CommonColors.getThemeColor()),
+                          style: TextStyle(
+                              color: CommonColors.getThemeBlueColor()),
                         ),
                         onTap: () async {
                           Navigator.of(context).pop();
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return AlertIntro(userInfo!.groupInfo!.groupID);
+                                return AlertIntro(userInfo!.groupInfo!.groupID,
+                                    userInfo!.groupInfo!.groupType);
                               });
                         },
                       ),
@@ -70,7 +75,7 @@ class GroupProfilePanel extends StatelessWidget {
                 });
           },
           child: Container(
-            height: 112,
+            height: 113,
             padding: const EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,17 +100,17 @@ class GroupProfilePanel extends StatelessWidget {
                       children: [
                         // 昵称
                         SizedBox(
-                          height: 34,
+                          height: CommonUtils.adaptHeight(60),
                           child: Text(
                             getGroupName(),
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: CommonUtils.adaptFontSize(38),
                               color: CommonColors.getTextBasicColor(),
                             ),
                           ),
                         ),
                         SizedBox(
-                          height: 23,
+                          height: CommonUtils.adaptHeight(40),
                           child: Text(
                             '群ID：${userInfo!.groupInfo!.groupID}',
                             style: TextStyle(
@@ -117,7 +122,7 @@ class GroupProfilePanel extends StatelessWidget {
                         SizedBox(
                           height: 23,
                           child: Text(
-                            '群简介：${userInfo!.groupInfo!.introduction}',
+                            '群简介：${userInfo?.groupInfo?.introduction ?? ""}',
                             style: TextStyle(
                               fontSize: 14,
                               color: CommonColors.getTextWeakColor(),
@@ -139,15 +144,17 @@ class GroupProfilePanel extends StatelessWidget {
 }
 
 class AlertName extends StatefulWidget {
-  const AlertName(this.groupId, {Key? key}) : super(key: key);
+  const AlertName(this.groupId, this.groupType, {Key? key}) : super(key: key);
   final String groupId;
+  final String groupType;
   @override
   State<StatefulWidget> createState() => AlertDialogState();
 }
 
 class AlertIntro extends StatefulWidget {
-  const AlertIntro(this.groupId, {Key? key}) : super(key: key);
+  const AlertIntro(this.groupId, this.groupType, {Key? key}) : super(key: key);
   final String groupId;
+  final String groupType;
   @override
   State<StatefulWidget> createState() => AlertDialogAlertIntroState();
 }
@@ -158,7 +165,10 @@ class AlertDialogAlertIntroState extends State<AlertIntro> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('修改群简介'),
+      title: Text('修改群简介',
+          style: TextStyle(
+            fontSize: CommonUtils.adaptFontSize(32),
+          )),
       content: TextField(
         controller: controller,
         onChanged: (s) {
@@ -185,14 +195,15 @@ class AlertDialogAlertIntroState extends State<AlertIntro> {
                     {
                       "introduction": name,
                       "groupID": widget.groupId,
+                      "groupType": widget.groupType,
                     },
                   ),
                 )
                 .then((value) {
               if (value.code == 0) {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
                 Utils.toast('修改成功');
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               }
             });
           },
@@ -208,7 +219,10 @@ class AlertDialogState extends State<AlertName> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('修改群名称'),
+      title: Text('修改群名称',
+          style: TextStyle(
+            fontSize: CommonUtils.adaptFontSize(32),
+          )),
       content: TextField(
         controller: controller,
         onChanged: (s) {
@@ -234,12 +248,15 @@ class AlertDialogState extends State<AlertName> {
                     info: V2TimGroupInfo.fromJson({
                   "groupName": name,
                   "groupID": widget.groupId,
+                  "groupType": widget.groupType,
                 }))
                 .then((value) {
               if (value.code == 0) {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(name);
                 Utils.toast('修改成功');
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(name);
+              } else {
+                Utils.toast("${value.code}  ${value.desc}");
               }
             });
             Utils.log('确定');

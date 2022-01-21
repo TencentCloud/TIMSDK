@@ -1,3 +1,4 @@
+import 'package:discuss/common/hexToColor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
@@ -57,7 +58,7 @@ class AddFriendSettingState extends State<AddFriendSetting> {
                       });
                     }
                   },
-                  activeColor: CommonColors.getThemeColor(),
+                  activeColor: hexToColor('008fff'),
                 ),
               ],
             ),
