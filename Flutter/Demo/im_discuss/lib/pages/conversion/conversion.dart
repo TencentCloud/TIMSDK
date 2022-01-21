@@ -55,6 +55,7 @@ class ConversionState extends State<Conversion> with WidgetsBindingObserver {
   double faceContainerHeight = 180;
   double advanceContainerHeight = 56;
   double bottomContainerHeight = 0;
+  String showName = "";
   // 触摸开始时的值
   double startDx = 0;
   // 触摸结束时的值
@@ -84,19 +85,23 @@ class ConversionState extends State<Conversion> with WidgetsBindingObserver {
     }
   }
 
-  openProfile(context) {
+  openProfile(context) async {
     int type = conversation.type!;
     String id = conversation.type == ConversationType.V2TIM_C2C
         ? conversation.userID!
         : conversation.groupID!;
-    Navigator.push(
-      context,
+    final res = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => type == ConversationType.V2TIM_C2C
             ? UserProfile(id)
             : ConversationInfo(id, type),
       ),
     );
+    if (res != null) {
+      setState(() {
+        showName = res;
+      });
+    }
   }
 
   getC2CMessageList(String userID, [String? lastMsgID]) async {
@@ -150,6 +155,7 @@ class ConversionState extends State<Conversion> with WidgetsBindingObserver {
       setState(() {
         hasConversation = true;
         conversation = data.data!;
+        showName = conversation.showName!;
         if (conversation.type == ConversationType.V2TIM_C2C) {
           righTopIcon = Icon(
             Icons.account_box,
@@ -381,6 +387,7 @@ class ConversionState extends State<Conversion> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    print("你倒是更新一哈啊");
     if (!hasConversation) {
       return Scaffold(
         appBar: AppBar(),
@@ -437,7 +444,7 @@ class ConversionState extends State<Conversion> with WidgetsBindingObserver {
                     },
                   ),
             title: Text(
-              conversation.showName!,
+              showName,
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: IMDiscussConfig.appBarTitleFontSize,

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:discuss/common/hextocolor.dart';
 
 class CommonColors {
@@ -35,5 +37,9 @@ class CommonColors {
 
   static getReadColor() {
     return hexToColor(redColor);
+  }
+
+  static getThemeBlueColor() {
+    return const Color(0xFF147AFF);
   }
 }

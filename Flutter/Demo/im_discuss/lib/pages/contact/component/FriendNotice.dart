@@ -13,7 +13,7 @@ class FrientNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<V2TimFriendApplication>? applicationList =
+    List<V2TimFriendApplication?>? applicationList =
         Provider.of<FriendApplicationModel>(context).friendApplicationList;
     Utils.log("重新渲染好友申请");
     return InkWell(
@@ -56,7 +56,7 @@ class FrientNotice extends StatelessWidget {
                             ? []
                             : applicationList.map(
                                 (e) {
-                                  if (e.type == 1) {
+                                  if (e!.type == 1) {
                                     return Container(
                                       padding: const EdgeInsets.only(left: 4),
                                       child: Avatar(

@@ -33,7 +33,7 @@ class ConversationListProvider with ChangeNotifier {
     SharedPreferences? prefs = await getPrefsInstance();
     if (prefs != null) {
       List<String>? data = prefs.getStringList("latest_conversations");
-      if (data!.isNotEmpty) {
+      if (data != null && data.isNotEmpty) {
         List<V2TimConversation> conList =
             data.map((e) => V2TimConversation.fromJson(jsonDecode(e))).toList();
         _conversationList = conList;

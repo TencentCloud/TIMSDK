@@ -342,7 +342,8 @@ class HomePageState extends State<HomePage> {
       if (res.code == 0) {
         if (res.data!.groupApplicationList!.isNotEmpty) {
           Provider.of<GroupApplicationModel>(context, listen: false)
-              .setGroupApplicationResult(res.data!.groupApplicationList);
+              .setGroupApplicationResult(
+                  List.castFrom(res.data!.groupApplicationList!));
         }
       }
     } else {}
@@ -357,7 +358,8 @@ class HomePageState extends State<HomePage> {
       if (res.code == 0) {
         if (res.data!.groupApplicationList!.isNotEmpty) {
           Provider.of<GroupApplicationModel>(context, listen: false)
-              .setGroupApplicationResult(res.data!.groupApplicationList);
+              .setGroupApplicationResult(
+                  List.castFrom(res.data!.groupApplicationList!));
         }
       }
     } else {}
@@ -652,7 +654,8 @@ class HomePageState extends State<HomePage> {
       if (res.code == 0) {
         if (res.data!.groupApplicationList!.isNotEmpty) {
           Provider.of<GroupApplicationModel>(context, listen: false)
-              .setGroupApplicationResult(res.data!.groupApplicationList);
+              .setGroupApplicationResult(
+                  List.castFrom(res.data!.groupApplicationList!));
         } else {
           List<V2TimGroupApplication> list = List.empty(growable: true);
           Provider.of<GroupApplicationModel>(context, listen: false)
