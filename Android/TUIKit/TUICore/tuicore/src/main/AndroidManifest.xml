@@ -8,7 +8,7 @@
             android:screenOrientation="portrait" />
 
         <provider
-            android:name=".ServiceInitializer"
+            android:name=".TUICoreService"
             android:authorities="${applicationId}.TUICore.Init"
             android:enabled="true"
             android:exported="false"/>

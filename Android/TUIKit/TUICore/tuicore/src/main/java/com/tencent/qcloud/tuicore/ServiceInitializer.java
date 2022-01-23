@@ -28,8 +28,6 @@ public class ServiceInitializer extends ContentProvider {
     @Override
     public boolean onCreate() {
         Context appContext = getContext().getApplicationContext();
-        TUIRouter.init(appContext);
-        TUIConfig.init(appContext);
         init(appContext);
         return false;
     }
