@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TUIContactLivelyTheme" parent="TUIBaseLivelyTheme">
+        <item name="contact_new_friend_icon">@drawable/contact_new_friend_icon_lively</item>
+        <item name="contact_group_list_icon">@drawable/contact_group_list_icon_lively</item>
+        <item name="contact_black_list_icon">@drawable/contact_black_list_icon_lively</item>
+    </style>
+
+</resources>

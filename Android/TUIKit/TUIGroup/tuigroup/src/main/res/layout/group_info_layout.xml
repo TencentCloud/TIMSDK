@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/core_bg_color"
     android:orientation="vertical">
 
     <com.tencent.qcloud.tuicore.component.TitleBarLayout
@@ -33,10 +34,10 @@
                     android:layout_width="@dimen/group_profile_face_size"
                     android:layout_height="@dimen/group_profile_face_size"
                     android:layout_gravity="center"
-                    android:scaleType="centerCrop"
                     android:layout_marginLeft="@dimen/group_profile_face_margin_left"
+                    android:layout_marginTop="@dimen/group_profile_face_margin_top"
                     android:layout_marginRight="@dimen/group_profile_face_margin_right"
-                    android:layout_marginTop="@dimen/group_profile_face_margin_top"/>
+                    android:scaleType="centerCrop" />
 
                 <TextView
                     android:id="@+id/group_name"
@@ -44,8 +45,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/group_icon"
                     android:layout_toEndOf="@id/group_icon"
-                    android:gravity="center_vertical"
                     android:ellipsize="end"
+                    android:gravity="center_vertical"
                     android:singleLine="true"
                     android:textSize="@dimen/group_profile_group_name_size"
                     tools:text="群聊" />
@@ -54,20 +55,20 @@
                     android:id="@+id/group_account_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignStart="@id/group_name"
                     android:layout_below="@id/group_name"
+                    android:layout_alignStart="@id/group_name"
                     android:layout_marginTop="7.64dp"
                     android:gravity="center_vertical"
-                    android:textSize="@dimen/group_profile_group_id_size"
-                    android:text="@string/group_account_tag" />
+                    android:text="@string/group_account_tag"
+                    android:textSize="@dimen/group_profile_group_id_size" />
 
                 <TextView
                     android:id="@+id/group_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/group_name"
                     android:layout_alignTop="@+id/group_account_tag"
                     android:layout_toEndOf="@id/group_account_tag"
-                    android:layout_below="@id/group_name"
                     android:gravity="center_vertical"
                     android:textIsSelectable="true"
                     android:textSize="@dimen/group_profile_group_id_size"
@@ -75,12 +76,13 @@
 
 
                 <ImageView
-                    android:src="@drawable/arrow_right"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="15.36dp"
+                    android:id="@+id/group_detail_arrow"
                     android:layout_width="11.52dp"
-                    android:layout_height="11.52dp"/>
+                    android:layout_height="11.52dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15.36dp"
+                    android:src="@drawable/arrow_right" />
             </RelativeLayout>
 
 
@@ -91,40 +93,91 @@
                 android:layout_marginTop="10dp"
                 app:name="@string/group_members" />
 
-            <GridView
-                android:id="@+id/group_members"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/group_profile_member_grid_padding_left_right"
-                android:paddingTop="@dimen/group_profile_member_grid_padding_top"
-                android:fadeScrollbars="true"
-                android:scrollbars="none"
-                android:layout_marginTop="0.6dp"
-                android:numColumns="5" />
-
             <LinearLayout
-                android:id="@+id/view_more_group_members"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:text="@string/group_view_more_group_members"
-                    android:paddingEnd="7.68dp"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
+                <GridView
+                    android:id="@+id/group_members"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/arrow_right"/>
+                    android:layout_marginTop="0.6dp"
+                    android:background="@color/white"
+                    android:fadeScrollbars="true"
+                    android:numColumns="5"
+                    android:paddingLeft="@dimen/group_profile_member_grid_padding_left_right"
+                    android:paddingTop="@dimen/group_profile_member_grid_padding_top"
+                    android:scrollbars="none" />
 
+                <LinearLayout
+                    android:id="@+id/view_more_group_members"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:paddingEnd="7.68dp"
+                        android:text="@string/group_view_more_group_members" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/arrow_right" />
+
+                </LinearLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/group_notice"
+                android:layout_width="match_parent"
+                android:layout_height="69dp"
+                android:background="@color/white"
+                android:paddingLeft="@dimen/group_profile_face_margin_left"
+                android:paddingRight="@dimen/group_profile_face_margin_right"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="11.52dp"
+                    android:lineHeight="23.04sp"
+                    android:text="@string/group_notice"
+                    android:textColor="#444444"
+                    android:textSize="15.36sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15.36dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/group_notice_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:text="@string/group_notice_empty_tip"
+                        android:lineHeight="17.28sp"
+                        android:singleLine="true"
+                        android:textColor="#888888"
+                        android:textSize="11.52sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/arrow_right" />
+
+                </LinearLayout>
+            </LinearLayout>
 
             <com.tencent.qcloud.tuicore.component.LineControllerView
                 android:id="@+id/group_notice"
@@ -139,9 +192,11 @@
                 android:id="@+id/group_manage"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
+                android:visibility="gone"
+                app:canNav="true"
                 app:isTop="true"
                 app:name="@string/group_manager"
-                android:visibility="gone"/>
+                tools:visibility="visible" />
 
             <com.tencent.qcloud.tuicore.component.LineControllerView
                 android:id="@+id/group_type_bar"
@@ -170,16 +225,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
                 android:layout_marginTop="10dp"
-                app:name="@string/profile_msgrev_opt"
-                app:isSwitch="true"/>
+                app:isSwitch="true"
+                app:name="@string/profile_msgrev_opt" />
 
             <com.tencent.qcloud.tuicore.component.LineControllerView
                 android:id="@+id/chat_to_top_switch"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/group_profile_item_height"
+                app:isSwitch="true"
                 app:isTop="true"
-                app:name="@string/chat_to_top"
-                app:isSwitch="true"/>
+                app:name="@string/chat_to_top" />
 
 
             <TextView
@@ -189,8 +244,9 @@
                 android:layout_marginTop="10dp"
                 android:background="#ffffff"
                 android:gravity="center"
-                android:textColor="#fb6155"
-                tools:visibility="visible"/>
+                android:textSize="16.32sp"
+                android:textColor="?attr/core_error_tip_color"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/group_change_owner_button"
@@ -198,20 +254,23 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="0.6dp"
                 android:background="#ffffff"
-                android:textColor="#fb6155"
                 android:gravity="center"
-                tools:visibility="visible"
-                android:visibility="gone"/>
+                android:text="@string/group_transfer_group_owner"
+                android:textColor="?attr/core_error_tip_color"
+                android:textSize="16.32sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/group_dissolve_button"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="0.6dp"
-                android:gravity="center"
+                android:textSize="16.32sp"
                 android:background="#ffffff"
-                tools:visibility="visible"
-                android:textColor="#fb6155" />
+                android:gravity="center"
+                android:textColor="?attr/core_error_tip_color"
+                tools:visibility="visible" />
 
 
         </LinearLayout>

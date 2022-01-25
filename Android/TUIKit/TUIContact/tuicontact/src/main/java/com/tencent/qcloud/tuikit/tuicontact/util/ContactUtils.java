@@ -8,18 +8,19 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 
 public class ContactUtils {
 
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, String module, int errCode, String desc) {
         if (callBack != null) {
-            callBack.onError(module, errCode, desc);
+            callBack.onError(module, errCode, ErrorMessageConverter.convertIMError(errCode, desc));
         }
     }
 
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, int errCode, String desc) {
         if (callBack != null) {
-            callBack.onError(null, errCode, desc);
+            callBack.onError(null, errCode, ErrorMessageConverter.convertIMError(errCode, desc));
         }
     }
 

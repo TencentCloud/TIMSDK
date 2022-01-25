@@ -14,6 +14,7 @@
 
     <string name="demo_login_country_or_region_label">国家/地区</string>
     <string name="demo_area_code_title">选择国家或地区</string>
+    <string name="demo_language_title">选择语言</string>
     <string name="demo_login_chinese_mainland">中国大陆</string>
     <string name="demo_login_mobile_phone_number">手机号</string>
     <string name="demo_login_verification_code_label">验证码</string>
@@ -49,10 +50,13 @@
     <string name="modify_signature">个性签名</string>
     <string name="modify_account">账号</string>
 
-    <string name="modify_theme">更换主题</string>
+    <string name="modify_theme">切换皮肤</string>
+    <string name="light_theme">轻快</string>
+    <string name="lively_theme">明媚</string>
+    <string name="serious_theme">深沉</string>
     <string name="modify_language">切换语言</string>
 
-    <string name="demo_simplified_Chinese">简体中文</string>
+    <string name="demo_language">简体中文</string>
     <string name="demo_theme_light">轻快</string>
     <string name="demo_signature_tag">个性签名：</string>
     <string name="demo_account_tag">ID：</string>
@@ -129,8 +133,8 @@
     <string name="login_user_tips">字母开头，4~24个字母+数字</string>
 
     <string name="login_agree_content">我已阅读并同意《隐私条例》和《用户协议》。</string>
-    <string name="login_agree_content_key1">《隐私条例》</string>
-    <string name="login_agree_content_key2">《用户协议》</string>
+    <string name="login_agree_privacy_regulations">《隐私条例》</string>
+    <string name="login_agree_user_agreement">《用户协议》</string>
     <string name="im_privacy">隐私条例</string>
     <string name="im_statement">免责声明</string>
     <string name="im_user_agreement">用户协议</string>

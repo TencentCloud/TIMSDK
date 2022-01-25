@@ -59,7 +59,7 @@
         android:layout_width="51.84dp"
         android:layout_height="28.8dp"
         android:background="@drawable/reject_btn_bg"
-        android:textColor="@color/font_blue"
+        android:textColor="?attr/core_primary_color"
         android:textSize="15.36sp"
         android:layout_marginRight="15.36dp"
         android:layout_gravity="center"

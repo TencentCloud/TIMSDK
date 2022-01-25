@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TUIChatLightTheme" parent="TUIBaseLightTheme">
+        <item name="chat_bubble_self_bg_color">@color/chat_bubble_self_color_light</item>
+        <item name="chat_bubble_other_bg_color">@color/chat_bubble_other_color_light</item>
+        <item name="chat_bubble_self_bg">@drawable/chat_bubble_self_bg_light</item>
+        <item name="chat_bubble_other_bg">@drawable/chat_bubble_other_bg_light</item>
+
+        <item name="chat_input_area_bg">@color/chat_input_layout_bg_light</item>
+
+        <item name="chat_unread_dot_bg_color">@color/chat_unread_dot_bg_color_light</item>
+        <item name="chat_unread_dot_text_color">@color/chat_unread_dot_text_color_light</item>
+
+        <item name="chat_title_bar_more_menu">@drawable/chat_title_bar_more_menu_light</item>
+
+        <item name="chat_other_msg_text_color">@color/chat_other_msg_text_color_light</item>
+        <item name="chat_self_msg_text_color">@color/chat_self_msg_text_color_light</item>
+        <item name="chat_self_custom_msg_text_color">@color/chat_self_custom_msg_text_color_light</item>
+        <item name="chat_other_custom_msg_text_color">@color/chat_other_custom_msg_text_color_light</item>
+        <item name="chat_self_custom_msg_link_color">@color/chat_self_custom_msg_link_color_light</item>
+        <item name="chat_other_custom_msg_link_color">@color/chat_other_custom_msg_link_color_light</item>
+
+        <item name="chat_tip_text_color">@color/chat_tip_text_color_light</item>
+
+        <item name="chat_self_reply_quote_bg_color">@color/chat_self_reply_quote_bg_color_light</item>
+        <item name="chat_other_reply_quote_bg_color">@color/chat_other_reply_quote_bg_color_light</item>
+        <item name="chat_self_reply_line_bg_color">@color/chat_self_reply_line_bg_color_light</item>
+        <item name="chat_other_reply_line_bg_color">@color/chat_other_reply_line_bg_color_light</item>
+        <item name="chat_self_reply_quote_text_color">@color/chat_self_reply_quote_text_color_light</item>
+        <item name="chat_other_reply_quote_text_color">@color/chat_other_reply_quote_text_color_light</item>
+        <item name="chat_self_reply_text_color">@color/chat_self_reply_text_color_light</item>
+        <item name="chat_other_reply_text_color">@color/chat_other_reply_text_color_light</item>
+    </style>
+</resources>

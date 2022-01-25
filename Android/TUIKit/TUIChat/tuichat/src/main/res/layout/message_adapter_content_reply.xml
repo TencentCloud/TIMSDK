@@ -14,15 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/reply_abstract_margin_right"
-        android:background="@color/reply_abstract_bg"
+        android:background="?attr/chat_self_reply_quote_bg_color"
         android:orientation="horizontal"
         android:layout_marginLeft="@dimen/reply_abstract_margin_left">
 
         <!--左边细线-->
         <View
+            android:id="@+id/reply_line"
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:background="@color/reply_abstract_line_bg"
+            android:background="?attr/chat_self_reply_line_bg_color"
             android:layout_marginRight="@dimen/reply_line_margin_right"
             android:layout_marginEnd="@dimen/reply_line_margin_right" />
 
@@ -43,7 +44,7 @@
                 android:layout_marginBottom="@dimen/reply_abstract_margin_bottom"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/reply_msg_sender_text_color"
+                android:textColor="?attr/chat_self_reply_quote_text_color"
                 android:textStyle="bold"
                 android:textSize="@dimen/reply_origin_text_size" />
 
@@ -65,7 +66,7 @@
         android:layout_marginTop="@dimen/chat_item_padding_bottom"
         android:layout_marginLeft="@dimen/reply_abstract_margin_left"
         android:layout_marginRight="@dimen/reply_abstract_margin_right"
-        android:textColor="@color/chat_text_color"
+        android:textColor="?attr/chat_self_reply_text_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

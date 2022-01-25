@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuiconversation.bean;
 import androidx.annotation.NonNull;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMMessage;
 
 import java.io.Serializable;
@@ -244,6 +245,14 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     public long getOrderKey() {
         return orderKey;
+    }
+
+    public List<V2TIMGroupAtInfo> getGroupAtInfoList() {
+        if (conversation != null) {
+            return conversation.getGroupAtInfoList();
+        }
+
+        return null;
     }
 
     /**

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 颜色规范 start -->
+    <color name="core_light_bg_title_text_color_serious">#FF000000</color>
+    <color name="core_light_bg_primary_text_color_serious">#FF444444</color>
+    <color name="core_light_bg_secondary_text_color_serious">#FF888888</color>
+    <color name="core_light_bg_secondary2_text_color_serious">#FF999999</color>
+    <color name="core_light_bg_disable_text_color_serious">#FFBBBBBB</color>
+    <color name="core_dark_bg_primary_text_color_serious">#FFFFFFFF</color>
+
+    <color name="core_primary_bg_color_serious">#FFFFFFFF</color>
+    <color name="core_bg_color_serious">#FFF2F3F5</color>
+    <color name="core_primary_color_serious">#FF0052FF</color>
+    <color name="core_error_tip_color_serious">#FFFF584C</color>
+    <color name="core_success_tip_color_serious">#FF26CB3E</color>
+    <color name="core_bubble_bg_color_serious">#FF4F87FF</color>
+    <color name="core_divide_color_serious">#FFE5E5E5</color>
+    <color name="core_border_color_serious">#FFDDDDDD</color>
+    <color name="core_header_start_color_serious">#FF6395FF</color>
+    <color name="core_header_end_color_serious">#FF0052FF</color>
+
+    <color name="core_btn_normal_color_serious">#FF0052FF</color>
+    <color name="core_btn_pressed_color_serious">#FF0049E4</color>
+    <color name="core_btn_disable_color_serious">#4D0052FF</color>
+    <!-- 颜色规范 end -->
+
+    <color name="core_title_bar_text_bg_serious">#FFFFFFFF</color>
+
+</resources>

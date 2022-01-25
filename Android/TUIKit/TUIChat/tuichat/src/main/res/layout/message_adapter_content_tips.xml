@@ -25,7 +25,7 @@
         android:includeFontPadding="false"
         android:gravity="center"
         android:text="@string/reedit_msg"
-        android:textColor="@color/font_blue"
+        android:textColor="?attr/chat_tip_text_color"
         android:visibility="gone"
         android:clickable="true"
         android:textSize="14.2sp" />

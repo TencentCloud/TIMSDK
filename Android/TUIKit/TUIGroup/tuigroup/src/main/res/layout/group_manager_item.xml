@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="58dp"
+    android:background="@color/white"
+    android:orientation="horizontal">
+
+    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        android:id="@+id/group_manager_face"
+        android:layout_width="38.4dp"
+        android:layout_height="38.4dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15.36dp"
+        android:layout_marginRight="11.52dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/group_manage_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_weight="1"
+            android:lineHeight="23.04sp"
+            android:textSize="17.28sp" />
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.55dp"
+            android:background="#D9D9D9" />
+    </LinearLayout>
+</LinearLayout>

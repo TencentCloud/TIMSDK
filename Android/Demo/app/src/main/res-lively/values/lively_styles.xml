@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <style name="DemoLivelyTheme" parent="TUIBaseLivelyTheme">
+        <item name="demo_login_bg">@drawable/login_im_bg_lively</item>
+        <item name="demo_login_btn_normal_color">@color/core_btn_normal_color_lively</item>
+        <item name="demo_login_btn_pressed_color">@color/core_btn_pressed_color_lively</item>
+        <item name="demo_login_btn_disable_color">@color/core_btn_disable_color_lively</item>
+
+        <item name="demo_main_tab_selected_text_color">@color/demo_main_tab_text_selected_color_lively</item>
+        <item name="demo_main_tab_normal_text_color">@color/core_light_bg_secondary_text_color_lively</item>
+        <item name="demo_main_tab_conversation_normal_bg">@drawable/demo_conversation_not_selected</item>
+        <item name="demo_main_tab_conversation_selected_bg">@drawable/demo_main_tab_conversation_selected_lively</item>
+        <item name="demo_main_tab_contact_normal_bg">@drawable/demo_contact_not_selected</item>
+        <item name="demo_main_tab_contact_selected_bg">@drawable/demo_main_tab_contact_selected_lively</item>
+        <item name="demo_main_tab_profile_normal_bg">@drawable/demo_profile_not_selected</item>
+        <item name="demo_main_tab_profile_selected_bg">@drawable/demo_main_tab_profile_selected_lively</item>
+
+        <item name="demo_navigate_bar_bg">@color/demo_navigate_bar_bg_lively</item>
+        <item name="demo_title_bar_more">@drawable/demo_title_bar_more_lively</item>
+
+        <item name="demo_login_language_arrow">@drawable/demo_login_language_arrow_lively</item>
+        <item name="demo_login_language_icon">@drawable/demo_login_language_icon_lively</item>
+        <item name="demo_login_theme_icon">@drawable/demo_login_theme_icon_lively</item>
+        <item name="demo_login_theme_language_text_color">@color/demo_login_theme_language_text_color_lively</item>
+        <item name="demo_login_ic_logo">@drawable/demo_ic_logo_lively</item>
+
+    </style>
+
+</resources>

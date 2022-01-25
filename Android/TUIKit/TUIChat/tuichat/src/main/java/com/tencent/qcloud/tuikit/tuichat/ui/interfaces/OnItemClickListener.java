@@ -20,4 +20,6 @@ public interface OnItemClickListener {
     default void onReplyMessageClick(View view, int position, String originMsgId) {}
 
     default void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {};
+
+    default void onTextSelected(View view, int position, TUIMessageBean messageInfo) {};
 }

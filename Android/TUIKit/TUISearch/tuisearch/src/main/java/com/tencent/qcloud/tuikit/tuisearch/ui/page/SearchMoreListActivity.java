@@ -70,10 +70,6 @@ public class SearchMoreListActivity extends BaseLightActivity {
     private RelativeLayout mMoreGroupLayout;
     private RelativeLayout mMoreConversationLayout;
 
-    private List<SearchDataBean> mContactSearchData = new ArrayList<>();
-    private List<SearchDataBean> mGroupSearchData = new ArrayList<>();
-    private List<SearchDataBean> mConversationData = new ArrayList<>();
-
     private int mViewType = -1;
     private String mKeyWords;
     private int pageIndex = 0;
@@ -261,6 +257,8 @@ public class SearchMoreListActivity extends BaseLightActivity {
 
                 @Override
                 public boolean isListEnd(int postion) {
+                    mConversationRcSearch.setNestedScrollingEnabled(false);
+
                     if (mConversationRcSearchAdapter == null || mConversationRcSearchAdapter.getTotalCount() == 0) {
                         return true;
                     }
@@ -268,11 +266,10 @@ public class SearchMoreListActivity extends BaseLightActivity {
                     int totalCount = mConversationRcSearchAdapter.getTotalCount();
                     int totalPage = (totalCount % SearchDataProvider.CONVERSATION_MESSAGE_PAGE_SIZE == 0) ?
                             (totalCount / SearchDataProvider.CONVERSATION_MESSAGE_PAGE_SIZE) : (totalCount / SearchDataProvider.CONVERSATION_MESSAGE_PAGE_SIZE + 1);
-                    if (pageIndex < totalPage) {
+                    if (pageIndex + 1 < totalPage) {
                         return false;
                     }
 
-                    mConversationRcSearch.setNestedScrollingEnabled(false);
                     return true;
                 }
             });
@@ -321,7 +318,6 @@ public class SearchMoreListActivity extends BaseLightActivity {
             presenter.searchContact(keywordList,new IUIKitCallback<List<SearchDataBean>>() {
                 @Override
                 public void onSuccess(List<SearchDataBean> searchDataBeans) {
-                    mContactSearchData = searchDataBeans;
                     if (searchDataBeans.isEmpty()) {
                         mContactLayout.setVisibility(View.GONE);
                     } else {
@@ -339,7 +335,6 @@ public class SearchMoreListActivity extends BaseLightActivity {
             presenter.searchGroup(keywordList, new IUIKitCallback<List<SearchDataBean>>() {
                 @Override
                 public void onSuccess(List<SearchDataBean> searchDataBeans) {
-                    mGroupSearchData = searchDataBeans;
 
                     if (searchDataBeans.size() > 0) {
                         mGroupLayout.setVisibility(View.VISIBLE);

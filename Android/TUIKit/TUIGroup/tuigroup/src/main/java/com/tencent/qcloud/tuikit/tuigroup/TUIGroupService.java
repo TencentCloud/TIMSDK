@@ -192,4 +192,19 @@ public class TUIGroupService extends ServiceInitializer implements ITUIGroupServ
     public static Context getAppContext() {
         return appContext;
     }
+
+    @Override
+    public int getLightThemeResId() {
+        return R.style.TUIGroupLightTheme;
+    }
+
+    @Override
+    public int getLivelyThemeResId() {
+        return R.style.TUIGroupLivelyTheme;
+    }
+
+    @Override
+    public int getSeriousThemeResId() {
+        return R.style.TUIGroupSeriousTheme;
+    }
 }

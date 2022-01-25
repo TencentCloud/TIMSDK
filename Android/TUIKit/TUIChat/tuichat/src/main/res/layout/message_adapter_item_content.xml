@@ -45,7 +45,7 @@
             android:layout_height="41dp"
             android:layout_alignParentLeft="true"
             android:layout_marginRight="6.23dp"
-            app:default_image="@drawable/default_user_icon"
+            app:default_image="?attr/core_default_user_icon"
             app:image_radius="20dp"
             android:visibility="gone"/>
 
@@ -55,7 +55,7 @@
             android:layout_height="41dp"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="6.23dp"
-            app:default_image="@drawable/default_user_icon"
+            app:default_image="?attr/core_default_user_icon"
             app:image_radius="20dp"
             android:visibility="gone"/>
 

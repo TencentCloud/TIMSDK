@@ -21,6 +21,7 @@ import com.tencent.qcloud.tim.demo.thirdpush.OEMPush.VIVOPushMessageReceiverImpl
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageHelper;
@@ -233,7 +234,7 @@ public class OfflineMessageDispatcher {
 
                         @Override
                         public void onError(int code, String desc) {
-                            DemoLog.e(TAG, "addInvitedSignaling code: " + code + " desc: " + desc);
+                            DemoLog.e(TAG, "addInvitedSignaling code: " + code + " desc: " + ErrorMessageConverter.convertIMError(code, desc));
                         }
 
                         @Override

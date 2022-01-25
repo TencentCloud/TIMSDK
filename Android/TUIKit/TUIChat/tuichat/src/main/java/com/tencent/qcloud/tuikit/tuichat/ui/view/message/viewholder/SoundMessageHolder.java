@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -54,6 +55,10 @@ public class SoundMessageHolder extends MessageContentHolder {
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_VERTICAL);
         if (message.isSelf()) {
+            int selfTextColorResId = TUIThemeManager.getAttrResId(audioTimeText.getContext(), R.attr.chat_self_msg_text_color);
+            int selfTextColor = audioTimeText.getResources().getColor(selfTextColorResId);
+            audioTimeText.setTextColor(selfTextColor);
+
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.rightMargin = 24;
             audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
@@ -62,6 +67,10 @@ public class SoundMessageHolder extends MessageContentHolder {
             audioContentView.addView(audioPlayImage);
             unreadAudioText.setVisibility(View.GONE);
         } else {
+            int otherTextColorResId = TUIThemeManager.getAttrResId(audioTimeText.getContext(), R.attr.chat_other_msg_text_color);
+            int otherTextColor = audioTimeText.getResources().getColor(otherTextColorResId);
+            audioTimeText.setTextColor(otherTextColor);
+
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             params.leftMargin = 24;
             // TODO 图标不对

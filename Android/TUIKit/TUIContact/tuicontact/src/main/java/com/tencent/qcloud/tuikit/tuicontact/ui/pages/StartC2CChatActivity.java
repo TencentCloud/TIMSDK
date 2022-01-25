@@ -37,7 +37,6 @@ public class StartC2CChatActivity extends BaseLightActivity {
 
         mTitleBar = findViewById(R.id.start_c2c_chat_title);
         mTitleBar.setTitle(getResources().getString(R.string.sure), ITitleBarLayout.Position.RIGHT);
-        mTitleBar.getRightTitle().setTextColor(getResources().getColor(R.color.title_bar_font_color));
         mTitleBar.getRightIcon().setVisibility(View.GONE);
         mTitleBar.setOnRightClickListener(new View.OnClickListener() {
             @Override

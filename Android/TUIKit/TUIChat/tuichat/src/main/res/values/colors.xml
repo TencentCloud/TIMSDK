@@ -9,7 +9,6 @@
     <color name="chat_title_line_color">#E6E6E6</color>
     <color name="input_title_line_color">#D2D2D2</color>
 
-    <color name="chat_input_layout_bg">#EBF0F6</color>
     <color name="chat_title_bar_bg">#EBF0F6</color>
 
     <color name="voice_pressed">#DEDEDE</color>
@@ -50,5 +49,5 @@
     <color name="chat_message_bubble_high_light_dark_color">#80FF9800</color>
 
     <color name="chat_unread_count_tip_color">#AABCD1</color>
-
+    <color name="jum_message_text_color">#147AFF</color>
 </resources>

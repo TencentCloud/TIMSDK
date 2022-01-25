@@ -587,7 +587,7 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
 
 
-        if (DeviceUtil.isHuaWeiRongyao()) {
+        if (DeviceUtil.isHuaWeiOrHonor()) {
             mediaRecorder.setVideoEncodingBitRate(4 * 100000);
         } else {
             mediaRecorder.setVideoEncodingBitRate(mediaQuality);

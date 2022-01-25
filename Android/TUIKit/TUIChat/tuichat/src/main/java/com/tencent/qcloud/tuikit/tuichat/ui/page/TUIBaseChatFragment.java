@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMTextElem;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -22,11 +23,13 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
@@ -99,6 +102,7 @@ public class TUIBaseChatFragment extends BaseFragment {
             @Override
             public void onMessageLongClick(View view, int position, TUIMessageBean message) {
                 //因为adapter中第一条为加载条目，位置需减1
+                TUIChatLog.d(TAG, "chatfragment onTextSelected selectedText = ");
                 chatView.getMessageLayout().showItemPopMenu(position - 1, message, view);
             }
 
@@ -149,6 +153,15 @@ public class TUIBaseChatFragment extends BaseFragment {
                 map.put(TUIConstants.TUICalling.PARAM_NAME_USERIDS, new String[]{messageInfo.getUserId()});
                 map.put(TUIConstants.TUICalling.PARAM_NAME_TYPE, callTypeString);
                 TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_CALL, map);
+            }
+
+            @Override
+            public void onTextSelected(View view, int position, TUIMessageBean messageInfo) {
+                if (messageInfo instanceof  TextMessageBean) {
+                    TUIChatLog.d(TAG, "chatfragment onTextSelected selectedText = " + ((TextMessageBean) messageInfo).getSelectText());
+                }
+                chatView.getMessageLayout().setSelectedPosition(position);
+                chatView.getMessageLayout().showItemPopMenu(position - 1, messageInfo, view);
             }
         });
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 颜色规范 start -->
+    <attr name="core_light_bg_title_text_color" format="reference|color"/>
+    <attr name="core_light_bg_primary_text_color" format="reference|color"/>
+    <attr name="core_light_bg_secondary_text_color" format="reference|color"/>
+    <attr name="core_light_bg_secondary2_text_color" format="reference|color"/>
+    <attr name="core_light_bg_disable_text_color" format="reference|color"/>
+    <attr name="core_dark_bg_primary_text_color" format="reference|color"/>
+    <attr name="core_primary_bg_color" format="reference|color"/>
+    <attr name="core_bg_color" format="reference|color"/>
+    <attr name="core_primary_color" format="reference|color"/>
+    <attr name="core_error_tip_color" format="reference|color"/>
+    <attr name="core_success_tip_color" format="reference|color"/>
+    <attr name="core_bubble_bg_color" format="reference|color"/>
+    <attr name="core_divide_color" format="reference|color"/>
+    <attr name="core_border_color" format="reference|color"/>
+    <attr name="core_header_start_color" format="reference|color"/>
+    <attr name="core_header_end_color" format="reference|color"/>
+
+    <attr name="core_btn_normal_color" format="reference|color"/>
+    <attr name="core_btn_pressed_color" format="reference|color"/>
+    <attr name="core_btn_disable_color" format="reference|color"/>
+    <!-- 颜色规范 end -->
+
+    <attr name="core_line_controller_view_switch_btn_selected_bg" format="reference|color"/>
+    <attr name="core_selected_icon" format="reference"/>
+    <attr name="core_title_bar_bg" format="reference"/>
+    <attr name="core_title_bar_text_bg" format="reference|color"/>
+    <attr name="core_title_bar_back_icon" format="reference"/>
+    <attr name="core_default_group_icon" format="reference"/>
+    <attr name="core_default_user_icon" format="reference"/>
+
+</resources>

@@ -4,7 +4,7 @@ import com.tencent.qcloud.tuicore.util.TUIBuild;
 
 public class DeviceUtil {
 
-    private static String[] huaweiRongyao = {
+    private static String[] huaweiAndHonorDevice = {
             "hwH60",    //荣耀6
             "hwPE",     //荣耀6 plus
             "hwH30",    //3c
@@ -14,11 +14,11 @@ public class DeviceUtil {
             "hwChe2",      //x1
     };
 
-    public static boolean isHuaWeiRongyao() {
+    public static boolean isHuaWeiOrHonor() {
         String device = TUIBuild.getDevice();
-        int length = huaweiRongyao.length;
+        int length = huaweiAndHonorDevice.length;
         for (int i = 0; i < length; i++) {
-            if (huaweiRongyao[i].equals(device)) {
+            if (huaweiAndHonorDevice[i].equals(device)) {
                 return true;
             }
         }

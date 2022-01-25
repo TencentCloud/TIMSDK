@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -37,12 +38,14 @@ import com.tencent.qcloud.tim.demo.thirdpush.OfflineMessageDispatcher;
 import com.tencent.qcloud.tim.demo.thirdpush.PushSetting;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.menu.Menu;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.ui.pages.TUIContactFragment;
@@ -56,9 +59,15 @@ public class MainActivity extends BaseLightActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private TextView mConversationBtn;
-    private TextView mContactBtn;
-    private TextView mProfileSelfBtn;
+    private TextView mConversationBtnText;
+    private TextView mContactBtnText;
+    private TextView mProfileSelfBtnText;
+    private View mConversationBtn;
+    private View mContactBtn;
+    private View mProfileSelfBtn;
+    private ImageView mConversationBtnIcon;
+    private ImageView mContactBtnIcon;
+    private ImageView mProfileSelfBtnIcon;
     private TextView mMsgUnread;
     private TextView mNewFriendUnread;
     private View mLastTab;
@@ -92,16 +101,17 @@ public class MainActivity extends BaseLightActivity {
     private void initView() {
         setContentView(R.layout.main_activity);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(getResources().getColor(R.color.demo_title_bar_bg));
-        }
-
         mainTitleBar = findViewById(R.id.main_title_bar);
         initMenuAction();
-        mConversationBtn = findViewById(R.id.conversation);
-        mContactBtn = findViewById(R.id.contact);
-        mProfileSelfBtn = findViewById(R.id.mine);
+        mConversationBtnText = findViewById(R.id.conversation);
+        mContactBtnText = findViewById(R.id.contact);
+        mProfileSelfBtnText = findViewById(R.id.mine);
+        mConversationBtnIcon = findViewById(R.id.tab_conversation_icon);
+        mContactBtnIcon = findViewById(R.id.tab_contact_icon);
+        mProfileSelfBtnIcon = findViewById(R.id.tab_profile_icon);
+        mConversationBtn = findViewById(R.id.conversation_btn_group);
+        mContactBtn = findViewById(R.id.contact_btn_group);
+        mProfileSelfBtn = findViewById(R.id.myself_btn_group);
         mMsgUnread = findViewById(R.id.msg_total_unread);
         mNewFriendUnread = findViewById(R.id.new_friend_total_unread);
 
@@ -121,7 +131,7 @@ public class MainActivity extends BaseLightActivity {
         mainViewPager.setCurrentItem(0, false);
         setConversationTitleBar();
         if (mLastTab == null) {
-            mLastTab = findViewById(R.id.conversation_btn_group);
+            mLastTab = mConversationBtn;
         } else {
             // 初始化时，强制切换tab到上一次的位置
             View tmp = mLastTab;
@@ -134,13 +144,11 @@ public class MainActivity extends BaseLightActivity {
     }
 
     private void initMenuAction() {
-        mainTitleBar.setBackgroundColor(getResources().getColor(R.color.demo_title_bar_bg));
         int titleBarIconSize = getResources().getDimensionPixelSize(R.dimen.demo_title_bar_icon_size);
         mainTitleBar.getLeftIcon().setMaxHeight(titleBarIconSize);
         mainTitleBar.getLeftIcon().setMaxWidth(titleBarIconSize);
         mainTitleBar.getRightIcon().setMaxHeight(titleBarIconSize);
         mainTitleBar.getRightIcon().setMaxWidth(titleBarIconSize);
-        mainTitleBar.setBackgroundColor(getResources().getColor(R.color.demo_title_bar_bg));
         mainTitleBar.setOnRightClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,8 +220,8 @@ public class MainActivity extends BaseLightActivity {
 
             @Override
             public void onError(int code, String desc) {
-                Log.i(TAG, "markAllMessageAsRead error:" + code + ", desc:" + desc);
-                ToastUtil.toastShortMessage(MainActivity.this.getString(R.string.mark_all_message_as_read_err_format, code, desc));
+                Log.i(TAG, "markAllMessageAsRead error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                ToastUtil.toastShortMessage(MainActivity.this.getString(R.string.mark_all_message_as_read_err_format, code, ErrorMessageConverter.convertIMError(code, desc)));
                 mMsgUnread.setVisibility(View.VISIBLE);
             }
         });
@@ -231,20 +239,20 @@ public class MainActivity extends BaseLightActivity {
             case R.id.conversation_btn_group:
                 mainViewPager.setCurrentItem(0, false);
                 setConversationTitleBar();
-                mConversationBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_conversation_selected), null, null);
+                mConversationBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_selected_text_color)));
+                mConversationBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_conversation_selected_bg)));
                 break;
             case R.id.contact_btn_group:
                 mainViewPager.setCurrentItem(1, false);
                 setContactTitleBar();
-                mContactBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_contact_selected), null, null);
+                mContactBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_selected_text_color)));
+                mContactBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_contact_selected_bg)));
                 break;
             case R.id.myself_btn_group:
                 mainViewPager.setCurrentItem(2, false);
                 setProfileTitleBar();
-                mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_profile_selected), null, null);
+                mProfileSelfBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_selected_text_color)));
+                mProfileSelfBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_profile_selected_bg)));
                 break;
             default:
                 break;
@@ -255,7 +263,7 @@ public class MainActivity extends BaseLightActivity {
         mainTitleBar.setTitle(getResources().getString(R.string.conversation_title), ITitleBarLayout.Position.MIDDLE);
         mainTitleBar.getLeftGroup().setVisibility(View.GONE);
         mainTitleBar.getRightGroup().setVisibility(View.VISIBLE);
-        mainTitleBar.setRightIcon(R.drawable.demo_add_icon);
+        mainTitleBar.setRightIcon(TUIThemeManager.getAttrResId(this, R.attr.demo_title_bar_more));
         setConversationMenu();
     }
 
@@ -333,7 +341,7 @@ public class MainActivity extends BaseLightActivity {
         mainTitleBar.setTitle(getResources().getString(R.string.contact_title), ITitleBarLayout.Position.MIDDLE);
         mainTitleBar.getLeftGroup().setVisibility(View.GONE);
         mainTitleBar.getRightGroup().setVisibility(View.VISIBLE);
-        mainTitleBar.getRightIcon().setImageResource(R.drawable.demo_add_icon);
+        mainTitleBar.setRightIcon(TUIThemeManager.getAttrResId(this, R.attr.demo_title_bar_more));
         setContactMenu();
     }
 
@@ -378,12 +386,12 @@ public class MainActivity extends BaseLightActivity {
     }
 
     private void resetMenuState() {
-        mConversationBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-        mConversationBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_conversation_not_selected), null, null);
-        mContactBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-        mContactBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_contact_not_selected), null, null);
-        mProfileSelfBtn.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-        mProfileSelfBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.demo_profile_not_selected), null, null);
+        mConversationBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_normal_text_color)));
+        mConversationBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_conversation_normal_bg)));
+        mContactBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_normal_text_color)));
+        mContactBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_contact_normal_bg)));
+        mProfileSelfBtnText.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_normal_text_color)));
+        mProfileSelfBtnIcon.setBackground(getResources().getDrawable(TUIThemeManager.getAttrResId(this, R.attr.demo_main_tab_profile_normal_bg)));
     }
 
 

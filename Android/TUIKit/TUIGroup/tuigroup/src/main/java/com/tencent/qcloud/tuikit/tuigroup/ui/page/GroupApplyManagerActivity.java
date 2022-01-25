@@ -1,11 +1,11 @@
 package com.tencent.qcloud.tuikit.tuigroup.ui.page;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
@@ -13,7 +13,7 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.ui.view.GroupApplyManagerLayout;
 
-public class GroupApplyManagerActivity extends Activity {
+public class GroupApplyManagerActivity extends BaseLightActivity {
 
     private GroupApplyManagerLayout mManagerLayout;
 

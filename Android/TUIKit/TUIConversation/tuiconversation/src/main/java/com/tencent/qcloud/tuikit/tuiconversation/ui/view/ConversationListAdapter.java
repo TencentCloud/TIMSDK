@@ -164,7 +164,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(TUIConversationService.getAppContext());
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ConversationBaseHolder holder = null;
         // 创建不同的 ViewHolder
         View view;

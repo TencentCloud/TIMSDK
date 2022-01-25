@@ -146,7 +146,6 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         remarkAndGroupTip = findViewById(R.id.remark_and_group_tip);
 
         mTitleBar = findViewById(R.id.friend_titlebar);
-        mTitleBar.setLeftIcon(R.drawable.contact_title_bar_back);
         mTitleBar.setTitle(getResources().getString(R.string.profile_detail), ITitleBarLayout.Position.MIDDLE);
         mTitleBar.getRightGroup().setVisibility(View.GONE);
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
@@ -248,7 +247,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         mSignatureTagView.setText(getResources().getString(R.string.contact_group_type_tag));
         mSignatureView.setText(groupInfo.getGroupType());
         int radius = getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
-        GlideEngine.loadUserIcon(mHeadImageView, groupInfo.getFaceUrl(), R.drawable.default_group_icon, radius);
+        GlideEngine.loadUserIcon(mHeadImageView, groupInfo.getFaceUrl(), R.drawable.core_default_group_icon_serious, radius);
         addFriendSendBtn.setVisibility(VISIBLE);
         addFriendArea.setVisibility(VISIBLE);
         remarkAndGroupTip.setVisibility(GONE);

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TUIGroupLivelyTheme" parent="TUIBaseLivelyTheme">
+        <item name="group_add_icon">@drawable/group_add_icon_lively</item>
+    </style>
+
+</resources>

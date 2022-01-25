@@ -150,6 +150,10 @@
             android:screenOrientation="portrait" />
 
 
+        <activity android:name=".login.ThemeSelectActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".login.LanguageSelectActivity"
+            android:screenOrientation="portrait"/>
         <!-- ********************************* OEMPush begin************************ -->
         <!-- 如果选择开启 TPNS 通道，OEM 的相关以下代码可以删掉 -->
 

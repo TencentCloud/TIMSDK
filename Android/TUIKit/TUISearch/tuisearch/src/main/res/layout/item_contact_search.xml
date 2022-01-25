@@ -18,7 +18,7 @@
             android:layout_height="@dimen/search_avatar_height"
             android:clickable="false"
             android:focusable="false"
-            android:src="@drawable/default_user_icon"/>
+            android:background="?attr/core_default_user_icon"/>
 
         <RelativeLayout
             android:layout_toRightOf="@id/ivAvatar"

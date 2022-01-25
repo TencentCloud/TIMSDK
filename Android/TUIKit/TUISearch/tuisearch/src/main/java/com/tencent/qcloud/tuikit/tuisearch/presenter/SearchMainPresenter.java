@@ -223,11 +223,12 @@ public class SearchMainPresenter {
                     msgCountInConversationMap.clear();
                     if (totalCount == 0) {
                         conversationAdapter.onDataSourceChanged(conversationSearchDataBeans, CONVERSATION_TYPE);
-                        conversationAdapter.onTotalCountChanged(conversationSearchDataBeans.size());
                         TUISearchUtils.callbackOnError(callback, -1, "search conversation , total count is 0");
                         return;
                     }
                 }
+                conversationAdapter.onTotalCountChanged(totalCount);
+
                 List<String> conversationIdList = new ArrayList<>();
                 for (SearchMessageBean searchMessageBean : searchMessageBeanList) {
                     if (conversationSearchIdSet.contains(searchMessageBean.getConversationId())) {
@@ -235,6 +236,11 @@ public class SearchMainPresenter {
                     }
                     conversationIdList.add(searchMessageBean.getConversationId());
                     msgCountInConversationMap.put(searchMessageBean.getConversationId(), searchMessageBean);
+                }
+
+                if (conversationIdList.isEmpty()) {
+                    TUISearchUtils.callbackOnSuccess(callback, conversationSearchDataBeans);
+                    return;
                 }
 
                 conversationProvider.getConversationList(conversationIdList, new IUIKitCallback<List<ConversationInfo>>() {
@@ -272,14 +278,12 @@ public class SearchMainPresenter {
                             }
                         }
                         conversationAdapter.onDataSourceChanged(conversationSearchDataBeans, CONVERSATION_TYPE);
-                        conversationAdapter.onTotalCountChanged(conversationSearchDataBeans.size());
                         TUISearchUtils.callbackOnSuccess(callback, conversationSearchDataBeans);
                     }
 
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
                         conversationAdapter.onDataSourceChanged(conversationSearchDataBeans, CONVERSATION_TYPE);
-                        conversationAdapter.onTotalCountChanged(conversationSearchDataBeans.size());
                         TUISearchUtils.callbackOnError(callback, module, errCode, errMsg);
                     }
                 });

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#F2F3F5"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.tencent.qcloud.tuicore.component.TitleBarLayout
+        android:id="@+id/demo_select_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/theme_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

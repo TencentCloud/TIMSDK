@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
@@ -116,7 +117,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
         boolean loadSuccess = true;
         List<Object> imageUrls = imageData.getImageUrls();
         for (int i = 0; i < imageUrls.size(); i++) {
-            Bitmap defaultIcon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_user_icon);
+            Bitmap defaultIcon = BitmapFactory.decodeResource(mContext.getResources(), TUIThemeManager.getAttrResId(mContext, R.attr.core_default_user_icon));
             //下载图片
             try {
                 Bitmap bitmap = asyncLoadImage(imageUrls.get(i), imageData.targetImageSize);

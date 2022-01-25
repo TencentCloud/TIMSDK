@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TUIChatLivelyTheme" parent="TUIBaseLivelyTheme">
+        <item name="chat_bubble_self_bg_color">@color/chat_bubble_self_color_lively</item>
+        <item name="chat_bubble_other_bg_color">@color/chat_bubble_other_color_lively</item>
+
+        <item name="chat_bubble_self_bg">@drawable/chat_bubble_self_bg_lively</item>
+        <item name="chat_bubble_other_bg">@drawable/chat_bubble_other_bg_lively</item>
+
+        <item name="chat_input_area_bg">@color/chat_input_layout_bg_lively</item>
+
+        <item name="chat_unread_dot_bg_color">@color/chat_unread_dot_bg_color_lively</item>
+        <item name="chat_unread_dot_text_color">?attr/core_primary_color</item>
+
+        <item name="chat_title_bar_more_menu">@drawable/chat_title_bar_more_menu_lively</item>
+
+        <item name="chat_other_msg_text_color">@color/chat_other_msg_text_color_lively</item>
+        <item name="chat_self_msg_text_color">@color/chat_self_msg_text_color_lively</item>
+        <item name="chat_self_custom_msg_text_color">@color/chat_self_custom_msg_text_color_lively</item>
+        <item name="chat_other_custom_msg_text_color">@color/chat_other_custom_msg_text_color_lively</item>
+        <item name="chat_self_custom_msg_link_color">@color/chat_self_custom_msg_link_color_lively</item>
+        <item name="chat_other_custom_msg_link_color">@color/chat_other_custom_msg_link_color_lively</item>
+
+        <item name="chat_tip_text_color">@color/chat_tip_text_color_lively</item>
+
+        <item name="chat_self_reply_quote_bg_color">@color/chat_self_reply_quote_bg_color_lively</item>
+        <item name="chat_other_reply_quote_bg_color">@color/chat_other_reply_quote_bg_color_lively</item>
+        <item name="chat_self_reply_line_bg_color">@color/chat_self_reply_line_bg_color_lively</item>
+        <item name="chat_other_reply_line_bg_color">@color/chat_other_reply_line_bg_color_lively</item>
+        <item name="chat_self_reply_quote_text_color">@color/chat_self_reply_quote_text_color_lively</item>
+        <item name="chat_other_reply_quote_text_color">@color/chat_other_reply_quote_text_color_lively</item>
+        <item name="chat_self_reply_text_color">@color/chat_self_reply_text_color_lively</item>
+        <item name="chat_other_reply_text_color">@color/chat_other_reply_text_color_lively</item>
+    </style>
+
+</resources>

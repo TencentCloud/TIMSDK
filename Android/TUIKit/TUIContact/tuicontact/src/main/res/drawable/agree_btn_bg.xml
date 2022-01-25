@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <solid
-        android:color="@color/contact_profile_btn_positive_color"/>
+        android:color="?attr/core_primary_color"/>
 
     <corners
         android:radius="2dp"/>

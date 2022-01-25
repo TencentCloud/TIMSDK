@@ -10,7 +10,6 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ImageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 

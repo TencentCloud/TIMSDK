@@ -20,6 +20,26 @@ public class ServiceInitializer extends ContentProvider {
      */
     public void init(Context context) {}
 
+    /**
+     * 获取轻量版主题资源 id
+     */
+    public int getLightThemeResId() {
+        return 0;
+    }
+
+    /**
+     * 获取活泼版主题资源 id
+     */
+    public int getLivelyThemeResId() {
+        return 0;
+    }
+
+    /**
+     * 获取严肃版主题资源 id
+     */
+    public int getSeriousThemeResId() {
+        return 0;
+    }
 
 /////////////////////////////////////////////////////////////////////////////////
 //                               以下方法无需重写                                 //
@@ -28,8 +48,16 @@ public class ServiceInitializer extends ContentProvider {
     @Override
     public boolean onCreate() {
         Context appContext = getContext().getApplicationContext();
+        // 路由初始化
         TUIRouter.init(appContext);
+        // 公共配置初始化
         TUIConfig.init(appContext);
+        // 皮肤语言初始化
+        TUIThemeManager.addLightTheme(getLightThemeResId());
+        TUIThemeManager.addLivelyTheme(getLivelyThemeResId());
+        TUIThemeManager.addSeriousTheme(getSeriousThemeResId());
+        TUIThemeManager.setTheme(appContext);
+        // 子类初始化，包括监听注册、扩展注册等。
         init(appContext);
         return false;
     }

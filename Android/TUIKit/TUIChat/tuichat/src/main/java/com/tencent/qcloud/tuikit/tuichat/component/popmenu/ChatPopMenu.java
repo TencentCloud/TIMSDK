@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,8 @@ public class ChatPopMenu {
     private final MenuAdapter adapter;
     private final List<ChatPopMenuAction> chatPopMenuActionList = new ArrayList<>();
     private ChatPopMenu chatPopMenu;
+    private MessageRecyclerView.OnEmptySpaceClickListener mEmptySpaceClickListener;
+
     public ChatPopMenu(Context context) {
         chatPopMenu = this;
         this.context = context;
@@ -84,8 +87,8 @@ public class ChatPopMenu {
             int itemSpaceWidth = context.getResources().getDimensionPixelSize(R.dimen.chat_pop_menu_item_space_width);
             int itemSpaceHeight = context.getResources().getDimensionPixelSize(R.dimen.chat_pop_menu_item_space_height);
 
-            int itemWidth = context.getResources().getDimensionPixelSize(R.dimen.chat_pop_menu_icon_size);
-            int itemHeight = context.getResources().getDimensionPixelSize(R.dimen.chat_pop_menu_item_height);
+            int itemWidth = ScreenUtil.dip2px(36.72f);
+            int itemHeight = ScreenUtil.dip2px(36.72f);;
 
             int paddingLeftRight = ScreenUtil.dip2px(18.0f);
             int paddingTopBottom = ScreenUtil.dip2px(18.0f);
@@ -131,6 +134,10 @@ public class ChatPopMenu {
         chatPopMenuActionList.clear();
         chatPopMenuActionList.addAll(actionList);
         adapter.notifyDataSetChanged();
+    }
+
+    public void setEmptySpaceClickListener(MessageRecyclerView.OnEmptySpaceClickListener mEmptySpaceClickListener) {
+        this.mEmptySpaceClickListener = mEmptySpaceClickListener;
     }
 
     private ChatPopMenuAction getChatPopMenuAction(int position) {
@@ -207,6 +214,10 @@ public class ChatPopMenu {
                 public void onClick(View v) {
                     chatPopMenuAction.actionClickListener.onClick();
                     chatPopMenu.hide();
+
+                    if (mEmptySpaceClickListener != null) {
+                        mEmptySpaceClickListener.onClick();
+                    }
                 }
             });
         }

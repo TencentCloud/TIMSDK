@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
@@ -25,6 +26,18 @@ public class MergeReplyQuoteView extends TUIReplyQuoteView {
         mergeMsgLayout = findViewById(R.id.merge_msg_layout);
         mergeMsgTitle = findViewById(R.id.merge_msg_title);
         mergeMsgContent = findViewById(R.id.merge_msg_content);
+    }
+
+
+    @Override
+    public void setSelf(boolean isSelf) {
+        if (!isSelf) {
+            mergeMsgContent.setTextColor(mergeMsgContent.getResources().getColor(TUIThemeManager.getAttrResId(mergeMsgContent.getContext(), R.attr.chat_other_reply_quote_text_color)));
+            mergeMsgTitle.setTextColor(mergeMsgTitle.getResources().getColor(TUIThemeManager.getAttrResId(mergeMsgTitle.getContext(), R.attr.chat_other_reply_quote_text_color)));
+        } else {
+            mergeMsgContent.setTextColor(mergeMsgContent.getResources().getColor(TUIThemeManager.getAttrResId(mergeMsgContent.getContext(), R.attr.chat_self_reply_quote_text_color)));
+            mergeMsgTitle.setTextColor(mergeMsgTitle.getResources().getColor(TUIThemeManager.getAttrResId(mergeMsgTitle.getContext(), R.attr.chat_self_reply_quote_text_color)));
+        }
     }
 
     @Override

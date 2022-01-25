@@ -16,13 +16,13 @@
             android:textStyle="bold"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/reply_msg_abstract_text_color"
+            android:textColor="?attr/chat_self_reply_quote_text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/merge_msg_content"
-            android:textColor="@color/reply_msg_abstract_text_color"
+            android:textColor="?attr/chat_self_reply_quote_text_color"
             android:textSize="@dimen/reply_merge_text_size"
             android:maxLines="3"
             android:layout_width="wrap_content"

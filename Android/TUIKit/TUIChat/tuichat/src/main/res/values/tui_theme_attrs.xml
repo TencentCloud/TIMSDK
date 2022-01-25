@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 参与换肤的属性 -->
+    <attr name="chat_bubble_self_bg" format="reference"/>
+    <attr name="chat_bubble_other_bg" format="reference"/>
+    <attr name="chat_bubble_self_bg_color" format="reference|color"/>
+    <attr name="chat_bubble_other_bg_color" format="reference|color"/>
+
+    <attr name="chat_input_area_bg" format="reference|color"/>
+
+    <attr name="chat_unread_dot_bg_color" format="color|reference"/>
+    <attr name="chat_unread_dot_text_color" format="color|reference"/>
+
+    <attr name="chat_title_bar_more_menu" format="reference"/>
+
+    <attr name="chat_other_msg_text_color" format="reference|color"/>
+    <attr name="chat_self_msg_text_color" format="reference|color"/>
+
+    <attr name="chat_self_custom_msg_text_color" format="reference|color"/>
+    <attr name="chat_other_custom_msg_text_color" format="reference|color"/>
+    <attr name="chat_self_custom_msg_link_color" format="reference|color"/>
+    <attr name="chat_other_custom_msg_link_color" format="reference|color"/>
+
+    <attr name="chat_tip_text_color" format="reference|color"/>
+
+    <attr name="chat_self_reply_quote_bg_color" format="reference|color"/>
+    <attr name="chat_other_reply_quote_bg_color" format="reference|color"/>
+    <attr name="chat_self_reply_line_bg_color" format="reference|color"/>
+    <attr name="chat_other_reply_line_bg_color" format="reference|color"/>
+    <attr name="chat_self_reply_quote_text_color" format="reference|color"/>
+    <attr name="chat_other_reply_quote_text_color" format="reference|color"/>
+    <attr name="chat_self_reply_text_color" format="reference|color"/>
+    <attr name="chat_other_reply_text_color" format="reference|color"/>
+
+</resources>

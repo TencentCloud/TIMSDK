@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuigroup.util;
 
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX;
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX;

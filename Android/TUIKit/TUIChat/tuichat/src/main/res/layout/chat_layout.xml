@@ -36,23 +36,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/chat_notice_layout"
-        android:layout_above="@id/chat_at_text_view"
+        android:layout_above="@id/chat_input_layout"
         android:baselineAligned="false"
         android:clickable="false"
         android:descendantFocusability="blocksDescendants" />
 
-    <TextView
-        android:id="@+id/chat_at_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:text="@string/ui_at_me"
-        android:visibility="gone"
+    <LinearLayout
+        android:id="@+id/jump_message_layout"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        android:visibility="visible"
         android:layout_above="@+id/chat_input_layout"
-        android:textColor="@color/read_dot_bg"
-        android:background="@color/list_bottom_text_bg"
+        android:background="@drawable/white_back_ground"
+        android:gravity="center"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/btn_margin_right"/>
+        android:layout_marginEnd="@dimen/btn_margin_right"
+        android:layout_marginBottom="@dimen/btn_margin_right"
+        android:orientation="horizontal">
 
+        <ImageView
+            android:id="@+id/arrow_icon"
+            android:layout_marginLeft="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:src="@drawable/ic_arrow_down" />
+
+        <TextView
+            android:id="@+id/jump_message_content"
+            android:textColor="@color/jum_message_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="7dp"
+            android:singleLine="true"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
     <com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView
         android:id="@+id/chat_input_layout"

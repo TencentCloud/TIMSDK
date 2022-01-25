@@ -12,7 +12,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/default_user_icon" />
+        android:background="?attr/core_default_user_icon" />
 
     <LinearLayout
         android:layout_width="wrap_content"

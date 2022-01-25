@@ -58,7 +58,6 @@ public class StartGroupChatActivity extends BaseLightActivity {
         mMembers.add(0, memberInfo);
         mTitleBar = findViewById(R.id.group_create_title_bar);
         mTitleBar.setTitle(getResources().getString(R.string.sure), ITitleBarLayout.Position.RIGHT);
-        mTitleBar.getRightTitle().setTextColor(getResources().getColor(R.color.title_bar_font_color));
         mTitleBar.getRightIcon().setVisibility(View.GONE);
         mTitleBar.setOnRightClickListener(new View.OnClickListener() {
             @Override

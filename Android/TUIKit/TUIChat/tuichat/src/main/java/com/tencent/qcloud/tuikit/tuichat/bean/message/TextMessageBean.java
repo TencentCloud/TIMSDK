@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
 import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 
@@ -10,6 +9,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
  */
 public class TextMessageBean extends TUIMessageBean {
     private String text;
+    private String selectText;
 
     @Override
     public String onGetDisplayString() {
@@ -30,6 +30,14 @@ public class TextMessageBean extends TUIMessageBean {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getSelectText() {
+        return selectText;
+    }
+
+    public void setSelectText(String text) {
+        this.selectText = text;
     }
 
     @Override

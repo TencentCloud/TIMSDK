@@ -6,6 +6,7 @@ import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
@@ -91,7 +92,7 @@ public class ConversationUtils {
             }
         } else {
             if (TextUtils.isEmpty(conversation.getFaceUrl())) {
-                faceList.add(R.drawable.default_user_icon);
+                faceList.add(TUIThemeManager.getAttrResId(TUIConversationService.getAppContext(), R.attr.core_default_user_icon));
             } else {
                 faceList.add(conversation.getFaceUrl());
             }

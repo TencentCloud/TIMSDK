@@ -1,20 +1,29 @@
 package com.tencent.qcloud.tuikit.tuigroup.ui.page;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.R;
+import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
+
+import java.util.List;
 
 
-public class GroupInfoActivity extends AppCompatActivity {
+public class GroupInfoActivity extends BaseLightActivity {
 
+    public static final int REQUEST_FOR_CHANGE_OWNER = 1;
+
+    private GroupInfoFragment fragment;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_info_activity);
-        GroupInfoFragment fragment = new GroupInfoFragment();
+        fragment = new GroupInfoFragment();
         fragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.group_manager_base, fragment).commitAllowingStateLoss();
     }
@@ -23,5 +32,17 @@ public class GroupInfoActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         setResult(1001);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_FOR_CHANGE_OWNER && data != null) {
+            List<String> selectedList = data.getStringArrayListExtra(TUIGroupConstants.Selection.LIST);
+            if (selectedList != null && !selectedList.isEmpty()) {
+                String newOwnerId = selectedList.get(0);
+                fragment.changeGroupOwner(newOwnerId);
+            }
+        }
     }
 }

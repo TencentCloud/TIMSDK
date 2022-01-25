@@ -76,6 +76,4 @@ public interface IChatLayout extends ILayout {
      * @param retry 是否重试
      */
     void sendMessage(TUIMessageBean msg, boolean retry);
-
-    TextView getAtInfoLayout();
 }

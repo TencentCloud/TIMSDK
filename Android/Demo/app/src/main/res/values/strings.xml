@@ -13,6 +13,7 @@
 
     <string name="demo_login_country_or_region_label">Country/Region</string>
     <string name="demo_area_code_title">Select country or region</string>
+    <string name="demo_language_title">Language</string>
     <string name="demo_login_chinese_mainland">Chinese Mainland</string>
     <string name="demo_login_mobile_phone_number">Phone Number</string>
     <string name="demo_login_verification_code_label">Verification Code</string>
@@ -40,19 +41,22 @@
     <string name="modify_nick_name">Nick Name</string>
     <string name="modify_signature">Signature</string>
     <string name="modify_account">Account</string>
-    <string name="add_rule">Who Can Add Me</string>
-    <string name="allow_type_allow_any">Everyone</string>
-    <string name="allow_type_deny_any">Nobody</string>
+    <string name="add_rule">Friend Request</string>
+    <string name="allow_type_allow_any">Allow any user to add you as friend</string>
+    <string name="allow_type_deny_any">Decline friend request from any user</string>
     <string name="allow_type_need_confirm">Anyone upon Request</string>
     <string name="exit">Log Out</string>
     <string name="about_im">About Instant Messaging</string>
     <string name="modify_birthday">birthday</string>
     <string name="modify_gender">Gender</string>
 
-    <string name="modify_theme">Modify Theme</string>
+    <string name="modify_theme">Theme</string>
+    <string name="light_theme">Light</string>
+    <string name="lively_theme">Lively</string>
+    <string name="serious_theme">Solemn</string>
     <string name="modify_language">Modify Language</string>
 
-    <string name="demo_simplified_Chinese">Simplified Chinese</string>
+    <string name="demo_language">English</string>
     <string name="demo_theme_light">light</string>
 
     <string name="demo_signature_tag">Signature : </string>
@@ -69,7 +73,7 @@
     <string name="demo_self_detail_modify_signature">Modify Signature</string>
     <string name="demo_self_detail_modify_gender">Modify Gender</string>
 
-    <string name="demo_self_detail_modify_nickname_rule">Only for chinese, charactors, numbers and underline.</string>
+    <string name="demo_self_detail_modify_nickname_rule">Only for chinese, characters, numbers and underline.</string>
 
     // 主页Tab相关
     <string name="tab_contact_tab_text">Contacts</string>
@@ -131,8 +135,8 @@
     <string name="login_user_tips">Letters start, 4~24 characters(letters+numbers)</string>
 
     <string name="login_agree_content">I have read and agreed to the "Privacy Regulations" and "User Agreement".</string>
-    <string name="login_agree_content_key1">"Privacy Regulations"</string>
-    <string name="login_agree_content_key2">"User Agreement"</string>
+    <string name="login_agree_privacy_regulations">"Privacy Regulations"</string>
+    <string name="login_agree_user_agreement">"User Agreement"</string>
     <string name="im_privacy">Privacy Regulations</string>
     <string name="im_statement">Disclaimer</string>
     <string name="im_user_agreement">User Agreement</string>

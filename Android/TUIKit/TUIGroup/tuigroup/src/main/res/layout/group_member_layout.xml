@@ -12,12 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/page_title_height" />
 
-    <GridView
+    <!-- 搜索 -->
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/group_all_members"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/group_profile_member_grid_padding_left_right"
-        android:paddingTop="@dimen/group_profile_member_grid_padding_top"
-        android:numColumns="5" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

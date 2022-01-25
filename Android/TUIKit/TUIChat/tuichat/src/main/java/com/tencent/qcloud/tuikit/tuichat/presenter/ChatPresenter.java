@@ -4,8 +4,10 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.ThreadHelper;
@@ -60,6 +62,10 @@ public abstract class ChatPresenter {
     protected List<TUIMessageBean> loadedMessageInfoList = new ArrayList<>();
 
     protected IMessageAdapter messageListAdapter;
+
+    private MessageRecyclerView messageRecyclerView;
+    private int currentChatUnreadCount = 0;
+    private TUIMessageBean mCacheNewMessage = null;
 
     protected ChatNotifyHandler chatNotifyHandler;
 
@@ -119,6 +125,45 @@ public abstract class ChatPresenter {
         loadMessage(TUIChatConstants.GET_MESSAGE_FORWARD, null);
     }
 
+    public void locateMessageBySeq(String chatId, long seq, IUIKitCallback<Void> callback) {
+        if (seq < 0) {
+            TUIChatUtils.callbackOnError(callback, -1, "invalid param");
+            return;
+        }
+
+        provider.getGroupMessageBySeq(chatId, seq, new IUIKitCallback<List<TUIMessageBean>>() {
+            @Override
+            public void onSuccess(List<TUIMessageBean> data) {
+                if (data == null || data.size() == 0) {
+                    TUIChatUtils.callbackOnError(callback, -1, "null message");
+                    return;
+                }
+                TUIMessageBean messageBean = data.get(0);
+                if (messageBean.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
+                    TUIChatUtils.callbackOnError(callback, -1, "origin msg is revoked");
+                    return;
+                }
+
+                locateMessage(messageBean.getId(), new IUIKitCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void data) {
+
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        TUIChatUtils.callbackOnError(callback, errCode, errMsg);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIChatUtils.callbackOnError(callback, errCode, errMsg);
+            }
+        });
+    }
+
     public void locateMessage(String originMsgId, IUIKitCallback<Void> callback) {
         // 如果已经在列表中，直接跳转到对应位置，否则清空重新加载
         for (TUIMessageBean loadedMessage : loadedMessageInfoList) {
@@ -148,7 +193,7 @@ public abstract class ChatPresenter {
 
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
-                        TUIChatUtils.callbackOnError(callback, errCode, errMsg);
+                       TUIChatUtils.callbackOnError(callback, errCode, errMsg);
                     }
                 });
             }
@@ -174,6 +219,12 @@ public abstract class ChatPresenter {
 
     public void setMessageListAdapter(IMessageAdapter messageListAdapter) {
         this.messageListAdapter = messageListAdapter;
+    }
+
+    public void setMessageRecycleView(MessageRecyclerView recycleView) {
+        this.messageRecyclerView = recycleView;
+        this.currentChatUnreadCount = 0;
+        this.mCacheNewMessage = null;
     }
 
     private void loadToWayMessageAsync(String chatId, boolean isGroup, int getType, int loadCount,
@@ -486,6 +537,7 @@ public abstract class ChatPresenter {
             } else {
                 return;
             }
+
             if (isChatFragmentShow()) {
                 messageInfo.setRead(true);
             }
@@ -493,13 +545,38 @@ public abstract class ChatPresenter {
             addMessageInfo(messageInfo);
 
             if (isChatFragmentShow()) {
-                if (isGroupMessage) {
-                    limitReadReport(groupID, true);
+                if (messageRecyclerView != null && messageRecyclerView.isDisplayJumpMessageLayout()) {
+                    if (messageInfo.getStatus() != TUIMessageBean.MSG_STATUS_REVOKE) {
+                        currentChatUnreadCount ++;
+                        if (mCacheNewMessage == null) {
+                            mCacheNewMessage = messageInfo;
+                        }
+                        messageRecyclerView.displayBackToNewMessage(true, mCacheNewMessage.getId(), currentChatUnreadCount);
+                    } else if (messageInfo.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE){
+                        currentChatUnreadCount --;
+                        if (currentChatUnreadCount == 0) {
+                            messageRecyclerView.displayBackToNewMessage(false, "", 0);
+                            mCacheNewMessage = null;
+                        } else {
+                            messageRecyclerView.displayBackToNewMessage(true, mCacheNewMessage.getId(), currentChatUnreadCount);
+                        }
+                    }
                 } else {
-                    limitReadReport(userID, false);
+                    mCacheNewMessage = null;
+                    currentChatUnreadCount = 0;
+                    if (isGroupMessage) {
+                        limitReadReport(groupID, true);
+                    } else {
+                        limitReadReport(userID, false);
+                    }
                 }
             }
         }
+    }
+
+    public void resetCurrentChatUnreadCount() {
+        this.currentChatUnreadCount = 0;
+        this.mCacheNewMessage = null;
     }
 
     public boolean isChatFragmentShow() {
@@ -550,9 +627,7 @@ public abstract class ChatPresenter {
                 if (message instanceof FileMessageBean) {
                     message.setDownloadStatus(FileMessageBean.MSG_STATUS_DOWNLOADED);
                 }
-                if (callBack != null) {
-                    callBack.onSuccess(data);
-                }
+                TUIChatUtils.callbackOnSuccess(callBack, data);
                 updateMessageInfo(message);
             }
 
@@ -563,11 +638,16 @@ public abstract class ChatPresenter {
                     TUIChatLog.w(TAG, "sendMessage unSafetyCall");
                     return;
                 }
-                if (callBack != null) {
-                    callBack.onError(TAG, errCode, errMsg);
-                }
+
+                TUIChatUtils.callbackOnError(callBack, TAG, errCode, errMsg);
+
                 message.setStatus(TUIMessageBean.MSG_STATUS_SEND_FAIL);
                 updateMessageInfo(message);
+            }
+
+            @Override
+            public void onProgress(Object data) {
+                TUIChatUtils.callbackOnProgress(callBack, data);
             }
         });
         //消息先展示，通过状态来确认发送是否成功
@@ -596,6 +676,7 @@ public abstract class ChatPresenter {
         for (int i = 0; i < loadedMessageInfoList.size(); i++) {
             if (loadedMessageInfoList.get(i).getId().equals(messageInfo.getId())) {
                 loadedMessageInfoList.remove(i);
+                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_DELETE, i);
                 found = true;
                 break;
             }
@@ -644,6 +725,41 @@ public abstract class ChatPresenter {
             if (messageInfo.getId().equals(msgId)) {
                 messageInfo.setStatus(TUIMessageBean.MSG_STATUS_REVOKE);
                 updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
+
+                if (isChatFragmentShow()) {
+                    if (messageRecyclerView != null && messageRecyclerView.isDisplayJumpMessageLayout()) {
+                        if (messageInfo.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE){
+                            currentChatUnreadCount --;
+                            if (currentChatUnreadCount <= 0) {
+                                messageRecyclerView.displayBackToNewMessage(false, "", 0);
+                                mCacheNewMessage = null;
+                            } else {
+                                boolean isNeedRefreshCacheNewMessage = false;
+                                ChatInfo chatInfo = getChatInfo();
+                                if (chatInfo != null) {
+                                    if (chatInfo.getType() == V2TIMConversation.V2TIM_GROUP) {
+                                        isNeedRefreshCacheNewMessage = messageInfo.getV2TIMMessage().getSeq() <= mCacheNewMessage.getV2TIMMessage().getSeq() ? true : false;
+                                    } else {
+                                        isNeedRefreshCacheNewMessage = messageInfo.getV2TIMMessage().getTimestamp() <= mCacheNewMessage.getV2TIMMessage().getTimestamp() ? true : false;
+                                    }
+                                }
+
+                                if (!isNeedRefreshCacheNewMessage) {
+                                    messageRecyclerView.displayBackToNewMessage(true, mCacheNewMessage.getId(), currentChatUnreadCount);
+                                    return;
+                                }
+
+                                if ((i + 1) < loadedMessageInfoList.size()) {
+                                    mCacheNewMessage = loadedMessageInfoList.get(i + 1);
+                                    messageRecyclerView.displayBackToNewMessage(true, mCacheNewMessage.getId(), currentChatUnreadCount);
+                                } else {
+                                    messageRecyclerView.displayBackToNewMessage(false, "", 0);
+                                    mCacheNewMessage = null;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -942,12 +1058,41 @@ public abstract class ChatPresenter {
         return false;
     }
 
+    public List<TUIMessageBean> forwardTextMessageForSelected(List<TUIMessageBean> msgInfos) {
+        // 选择文字转发只能是一条消息的操作
+        if (msgInfos != null && msgInfos.size() >1) {
+            return msgInfos;
+        }
+
+        List<TUIMessageBean> forwardMsgInfos = new ArrayList<>();
+        TUIMessageBean messageBean = msgInfos.get(0);
+        if (messageBean instanceof TextMessageBean) {
+            TextMessageBean textMessageBean = (TextMessageBean) messageBean;
+            if (textMessageBean.getText().equals(textMessageBean.getSelectText())) {
+                return msgInfos;
+            } else {
+                TUIMessageBean selectedMessageBean = ChatMessageBuilder.buildTextMessage(textMessageBean.getSelectText());
+                forwardMsgInfos.add(selectedMessageBean);
+                return forwardMsgInfos;
+            }
+        } else {
+            return msgInfos;
+        }
+    }
     public void forwardMessage(List<TUIMessageBean> msgInfos, boolean isGroup, String id, String offlineTitle, int forwardMode, boolean selfConversation, final IUIKitCallback callBack) {
         if (!safetyCall()) {
             TUIChatLog.w(TAG, "sendMessage unSafetyCall");
             return;
         }
 
+        for (TUIMessageBean messageBean : msgInfos) {
+            if (messageBean instanceof  TextMessageBean) {
+                TUIChatLog.d(TAG, "chatprensetor forwardMessage onTextSelected selectedText = " + ((TextMessageBean) messageBean).getSelectText());
+            }
+        }
+
+        // 选中转发暂不做特殊处理，转发原消息
+        //List<TUIMessageBean> forwardMsgInfos = forwardTextMessageForSelected(msgInfos);
         if (forwardMode == TUIChatConstants.FORWARD_MODE_ONE_BY_ONE) {
             forwardMessageOneByOne(msgInfos, isGroup, id, offlineTitle, selfConversation, callBack);
         } else if (forwardMode == TUIChatConstants.FORWARD_MODE_MERGE) {

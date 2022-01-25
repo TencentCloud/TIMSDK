@@ -43,7 +43,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:scaleType="fitCenter"
-                android:src="@drawable/imgv_search" />
+                android:src="@drawable/core_search_icon" />
             <EditText
                 android:id="@+id/edt_search"
                 android:layout_width="0dp"
@@ -64,7 +64,7 @@
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
-                android:src="@drawable/imgv_delete"
+                android:src="@drawable/core_delete_icon"
                 android:visibility="gone" />
         </LinearLayout>
     </RelativeLayout>
@@ -141,7 +141,7 @@
                         android:layout_gravity="center"
                         android:layout_alignParentLeft="true"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/imgv_search" />
+                        android:src="@drawable/core_search_icon" />
 
                     <TextView
                         android:id="@+id/more_contact_title"
@@ -231,7 +231,7 @@
                         android:layout_gravity="center"
                         android:layout_alignParentLeft="true"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/imgv_search" />
+                        android:src="@drawable/core_search_icon" />
 
                     <TextView
                         android:id="@+id/more_group_title"
@@ -321,7 +321,7 @@
                         android:layout_gravity="center"
                         android:layout_alignParentLeft="true"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/imgv_search" />
+                        android:src="@drawable/core_search_icon" />
 
                     <TextView
                         android:id="@+id/more_conversation_title"

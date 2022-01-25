@@ -136,8 +136,11 @@
                     android:layout_height="@dimen/demo_logout_btn_height"
                     android:layout_alignParentBottom="true"
                     android:background="@color/bg_negative_btn"
+                    android:textSize="16.32sp"
+                    android:lineHeight="24.96sp"
                     android:text="@string/exit"
-                    android:textColor="@color/negative_text" />
+                    android:textAllCaps="false"
+                    android:textColor="?attr/core_primary_color" />
 
             </LinearLayout>
 

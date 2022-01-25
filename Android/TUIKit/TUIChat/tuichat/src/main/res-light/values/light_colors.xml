@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chat_bubble_other_color_light">#ECECEC</color>
+    <color name="chat_bubble_self_color_light">@color/core_bubble_bg_color_light</color>
+    <color name="chat_input_layout_bg_light">#EBF0F6</color>
+
+    <color name="chat_unread_dot_bg_color_light">#FFAABCDE</color>
+    <color name="chat_unread_dot_text_color_light">#FFFFFFFF</color>
+
+    <color name="chat_other_msg_text_color_light">#000000</color>
+    <color name="chat_self_msg_text_color_light">#000000</color>
+
+    <color name="chat_self_custom_msg_text_color_light">#000000</color>
+    <color name="chat_self_custom_msg_link_color_light">#147AFF</color>
+    <color name="chat_other_custom_msg_text_color_light">#000000</color>
+    <color name="chat_other_custom_msg_link_color_light">#147AFF</color>
+
+    <color name="chat_tip_text_color_light">#147AFF</color>
+
+    <color name="chat_self_reply_quote_bg_color_light">#1A000000</color>
+    <color name="chat_self_reply_line_bg_color_light">#66FFFFFF</color>
+    <color name="chat_self_reply_quote_text_color_light">#888888</color>
+    <color name="chat_self_reply_text_color_light">#000000</color>
+
+    <color name="chat_other_reply_quote_bg_color_light">#0D444444</color>
+    <color name="chat_other_reply_line_bg_color_light">#1A444444</color>
+    <color name="chat_other_reply_quote_text_color_light">#FF888888</color>
+    <color name="chat_other_reply_text_color_light">#000000</color>
+
+</resources>

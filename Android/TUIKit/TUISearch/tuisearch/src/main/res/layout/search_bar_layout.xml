@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="12dp"
     android:paddingBottom="12dp"
-    android:background="@color/search_bar_bg">
+    android:background="?attr/core_header_start_color">
 
     <LinearLayout
         android:focusable="true"
@@ -21,7 +21,7 @@
             android:id="@+id/search_button"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/imgv_search"
+            android:background="@drawable/core_search_icon"
             android:textCursorDrawable="@drawable/my_cursor" />
 
         <TextView

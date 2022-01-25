@@ -19,7 +19,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:clickable="false"
-            android:src="@drawable/title_bar_back" />
+            android:background="?attr/core_title_bar_back_icon" />
 
         <com.tencent.qcloud.tuicore.component.UnreadCountTextView
             android:id="@+id/new_message_total_unread"
@@ -38,7 +38,7 @@
             android:id="@+id/page_title_left_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black_font_color"
+            android:textColor="?attr/core_title_bar_text_bg"
             android:gravity="center"
             android:textSize="14sp"/>
 
@@ -52,7 +52,7 @@
         android:layout_centerInParent="true"
         android:singleLine="true"
         android:textAlignment="center"
-        android:textColor="@color/black_font_color"
+        android:textColor="?attr/core_title_bar_text_bg"
         android:textSize="16.3sp"
         android:textStyle="bold" />
 
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:textColor="@color/black_font_color"
+            android:textColor="?attr/core_title_bar_text_bg"
             android:textSize="14sp"/>
 
         <ImageView

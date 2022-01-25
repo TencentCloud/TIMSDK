@@ -17,7 +17,6 @@ import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
@@ -30,6 +29,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListLayout;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -209,6 +209,7 @@ public class TUIConversationFragment extends BaseFragment {
         if (conversationInfo.isGroup()) {
             param.putString(TUIConstants.TUIChat.FACE_URL, conversationInfo.getIconPath());
             param.putString(TUIConstants.TUIChat.GROUP_TYPE, conversationInfo.getGroupType());
+            param.putSerializable(TUIConstants.TUIChat.AT_INFO_LIST, (Serializable) conversationInfo.getGroupAtInfoList());
         }
         if (conversationInfo.isGroup()) {
             TUICore.startActivity(TUIConstants.TUIChat.GROUP_CHAT_ACTIVITY_NAME, param);

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 参与换肤的属性 -->
+    <attr name="contact_new_friend_icon" format="reference"/>
+    <attr name="contact_group_list_icon" format="reference"/>
+    <attr name="contact_black_list_icon" format="reference"/>
+</resources>

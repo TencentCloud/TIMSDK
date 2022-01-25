@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 参与换肤的属性 -->
+    <attr name="group_add_icon" format="reference"/>
+</resources>

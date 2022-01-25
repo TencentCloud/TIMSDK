@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="demo_main_tab_text_selected_color_serious">@color/core_primary_color_serious</color>
+    <color name="demo_navigate_bar_bg_serious">#F4F6F9</color>
+
+    <color name="demo_login_theme_language_text_color_serious">#FFFFFF</color>
+</resources>

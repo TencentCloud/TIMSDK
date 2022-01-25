@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.imageEngine.ImageEngine;
 
 import java.io.File;
@@ -27,7 +28,7 @@ public class GlideEngine implements ImageEngine {
         CornerTransform transform = new CornerTransform(TUILogin.getAppContext(), radius);
         RequestOptions options = new RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.default_user_icon)
+                .placeholder(TUIThemeManager.getAttrResId(TUILogin.getAppContext(), R.attr.core_default_user_icon))
                 .transform(transform);
         Glide.with(TUILogin.getAppContext())
                 .load(filePath)
@@ -56,14 +57,14 @@ public class GlideEngine implements ImageEngine {
         Glide.with(TUILogin.getAppContext())
                 .load(filePath)
                 .listener(listener)
-                .apply(new RequestOptions().error(R.drawable.default_user_icon))
+                .apply(new RequestOptions().error(TUIThemeManager.getAttrResId(TUILogin.getAppContext(), R.attr.core_default_user_icon)))
                 .into(imageView);
     }
 
     public static void loadImage(ImageView imageView, String filePath) {
         Glide.with(TUILogin.getAppContext())
                 .load(filePath)
-                .apply(new RequestOptions().error(R.drawable.default_user_icon))
+                .apply(new RequestOptions().error(TUIThemeManager.getAttrResId(TUILogin.getAppContext(), R.attr.core_default_user_icon)))
                 .into(imageView);
     }
 
@@ -71,7 +72,7 @@ public class GlideEngine implements ImageEngine {
         Glide.with(TUILogin.getAppContext())
                 .load(filePath)
                 .listener(listener)
-                .apply(new RequestOptions().error(R.drawable.default_user_icon))
+                .apply(new RequestOptions().error(TUIThemeManager.getAttrResId(TUILogin.getAppContext(), R.attr.core_default_user_icon)))
                 .into(imageView);
     }
 
@@ -85,7 +86,7 @@ public class GlideEngine implements ImageEngine {
         }
         Glide.with(TUILogin.getAppContext())
                 .load(uri)
-                .apply(new RequestOptions().error(R.drawable.default_user_icon))
+                .apply(new RequestOptions().error(TUIThemeManager.getAttrResId(TUILogin.getAppContext(), R.attr.core_default_user_icon)))
                 .into(imageView);
     }
 
@@ -107,7 +108,7 @@ public class GlideEngine implements ImageEngine {
         }
         Glide.with(TUILogin.getAppContext())
                 .load(uri)
-                .apply(new RequestOptions().error(R.drawable.default_user_icon))
+                .apply(new RequestOptions().error(TUIThemeManager.getAttrResId(TUILogin.getAppContext(), R.attr.core_default_user_icon)))
                 .into(imageView);
     }
 
@@ -118,8 +119,8 @@ public class GlideEngine implements ImageEngine {
     public static void loadUserIcon(ImageView imageView, Object uri, int radius) {
         Glide.with(TUILogin.getAppContext())
                 .load(uri)
-                .placeholder(R.drawable.default_user_icon)
-                .apply(new RequestOptions().centerCrop().error(R.drawable.default_user_icon))
+                .placeholder(TUIThemeManager.getAttrResId(TUILogin.getAppContext(), R.attr.core_default_user_icon))
+                .apply(new RequestOptions().centerCrop().error(TUIThemeManager.getAttrResId(TUILogin.getAppContext(), R.attr.core_default_user_icon)))
                 .into(imageView);
     }
 
@@ -144,7 +145,7 @@ public class GlideEngine implements ImageEngine {
         }
         return Glide.with(TUILogin.getAppContext()).asBitmap()
                 .load(imageUrl)
-                .apply(new RequestOptions().error(R.drawable.default_user_icon))
+                .apply(new RequestOptions().error(TUIThemeManager.getAttrResId(TUILogin.getAppContext(), R.attr.core_default_user_icon)))
                 .into(targetImageSize, targetImageSize)
                 .get();
     }

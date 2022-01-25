@@ -23,6 +23,7 @@ import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ThreadHelper;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
@@ -51,7 +52,7 @@ public class ContactProvider {
                 V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
                     @Override
                     public void onError(int code, String desc) {
-                        TUIContactLog.e(TAG, "loadFriendListDataAsync err code:" + code + ", desc:" + desc);
+                        TUIContactLog.e(TAG, "loadFriendListDataAsync err code:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
                         ContactUtils.callbackOnError(callback, TAG, code, desc);
                     }
 
@@ -79,7 +80,7 @@ public class ContactProvider {
         V2TIMManager.getFriendshipManager().getBlackList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "getBlackList err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "getBlackList err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -106,7 +107,7 @@ public class ContactProvider {
         V2TIMManager.getGroupManager().getJoinedGroupList(new V2TIMValueCallback<List<V2TIMGroupInfo>>() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "getGroupList err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "getGroupList err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -140,7 +141,7 @@ public class ContactProvider {
             @Override
             public void onError(int code, String desc) {
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
-                TUIContactLog.e(TAG, "loadGroupMembers failed, code: " + code + "|desc: " + desc);
+                TUIContactLog.e(TAG, "loadGroupMembers failed, code: " + code + "|desc: " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
@@ -177,7 +178,7 @@ public class ContactProvider {
         V2TIMManager.getFriendshipManager().addFriend(v2TIMFriendAddApplication, new V2TIMValueCallback<V2TIMFriendOperationResult>() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "addFriend err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "addFriend err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -193,7 +194,7 @@ public class ContactProvider {
         V2TIMManager.getInstance().joinGroup(groupId, addWording, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "addGroup err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "addGroup err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -209,7 +210,7 @@ public class ContactProvider {
         V2TIMManager.getFriendshipManager().getFriendApplicationList(new V2TIMValueCallback<V2TIMFriendApplicationResult>() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "getPendencyList err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "getPendencyList err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -230,7 +231,7 @@ public class ContactProvider {
         V2TIMManager.getFriendshipManager().getFriendApplicationList(new V2TIMValueCallback<V2TIMFriendApplicationResult>() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "getPendencyList err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "getPendencyList err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -246,7 +247,7 @@ public class ContactProvider {
                 friendApplication, responseType, new V2TIMValueCallback<V2TIMFriendOperationResult>() {
                     @Override
                     public void onError(int code, String desc) {
-                        TUIContactLog.e(TAG, "acceptFriend err code = " + code + ", desc = " + desc);
+                        TUIContactLog.e(TAG, "acceptFriend err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                     }
 
                     @Override
@@ -281,7 +282,7 @@ public class ContactProvider {
 
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.d(TAG, "getC2CReceiveMessageOpt onError code = " + code + ", desc = " + desc);
+                TUIContactLog.d(TAG, "getC2CReceiveMessageOpt onError code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
         });
@@ -303,7 +304,7 @@ public class ContactProvider {
 
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.d(TAG, "setC2CReceiveMessageOpt onError code = " + code + ", desc = " + desc);
+                TUIContactLog.d(TAG, "setC2CReceiveMessageOpt onError code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
         });
@@ -316,6 +317,7 @@ public class ContactProvider {
                 List<GroupInfo> groupInfos = new ArrayList<>();
                 for (V2TIMGroupInfoResult result : v2TIMGroupInfoResults) {
                     if (result.getResultCode() != 0) {
+                        ContactUtils.callbackOnError(callback, result.getResultCode(), result.getResultMessage());
                         return;
                     }
                     GroupInfo groupInfo = new GroupInfo();
@@ -340,7 +342,7 @@ public class ContactProvider {
         V2TIMManager.getInstance().getUsersInfo(userIdList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
             @Override
             public void onError ( int code, String desc){
-                TUIContactLog.e(TAG, "loadUserProfile err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "loadUserProfile err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -364,7 +366,7 @@ public class ContactProvider {
         V2TIMManager.getFriendshipManager().getBlackList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "getBlackList err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "getBlackList err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -387,7 +389,7 @@ public class ContactProvider {
         V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "getFriendList err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "getFriendList err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -413,7 +415,7 @@ public class ContactProvider {
         V2TIMManager.getFriendshipManager().deleteFromBlackList(idList, new V2TIMValueCallback<List<V2TIMFriendOperationResult>>() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "deleteBlackList err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "deleteBlackList err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -430,7 +432,7 @@ public class ContactProvider {
         V2TIMManager.getFriendshipManager().addToBlackList(idList, new V2TIMValueCallback<List<V2TIMFriendOperationResult>>() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "deleteBlackList err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "deleteBlackList err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -452,7 +454,7 @@ public class ContactProvider {
         V2TIMManager.getFriendshipManager().setFriendInfo(v2TIMFriendInfo, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "modifyRemark err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "modifyRemark err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -468,7 +470,7 @@ public class ContactProvider {
         V2TIMManager.getFriendshipManager().deleteFromFriendList(identifiers, V2TIMFriendInfo.V2TIM_FRIEND_TYPE_BOTH, new V2TIMValueCallback<List<V2TIMFriendOperationResult>>() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "deleteFriends err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "deleteFriends err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -489,9 +491,9 @@ public class ContactProvider {
         V2TIMManager.getFriendshipManager().refuseFriendApplication(v2TIMFriendApplication, new V2TIMValueCallback<V2TIMFriendOperationResult>() {
             @Override
             public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "accept err code = " + code + ", desc = " + desc);
+                TUIContactLog.e(TAG, "accept err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 ContactUtils.callbackOnError(callback, TAG, code, desc);
-                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
@@ -541,7 +543,7 @@ public class ContactProvider {
 
                     @Override
                     public void onError(int code, String desc) {
-                        TUIContactLog.i(TAG, "sendTipsMessage error , code : " + code + " desc : " + desc);
+                        TUIContactLog.i(TAG, "sendTipsMessage error , code : " + code + " desc : " + ErrorMessageConverter.convertIMError(code, desc));
                         ContactUtils.callbackOnError(callback, TAG, code, desc);
                     }
 

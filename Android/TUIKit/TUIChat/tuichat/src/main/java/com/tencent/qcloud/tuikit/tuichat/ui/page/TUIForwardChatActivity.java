@@ -10,6 +10,7 @@ import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuicore.interfaces.ITUIThemeChangeable;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;

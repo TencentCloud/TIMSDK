@@ -2,7 +2,7 @@
 <resources>
     <color name="text_color_gray">#696969</color>
 
-    <color name="status_bar_color">#EDEDED</color>
+    <color name="status_bar_color">#00FFFFFF</color>
     <color name="navigation_bar_color">#F7F7F7</color>
 
     <color name="read_dot_bg">#f74c31</color>
@@ -22,4 +22,6 @@
     <color name="core_popup_card_positive_normal_bg">#147AFF</color>
     <color name="core_popup_card_positive_pressed_bg">#B9D7FF</color>
     <color name="core_popup_card_line_bg">#E4E5E9</color>
+
+    <color name="text_select_color">#FFAFE1F4</color>
 </resources>

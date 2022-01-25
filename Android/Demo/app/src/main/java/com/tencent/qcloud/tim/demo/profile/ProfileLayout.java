@@ -27,6 +27,7 @@ import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
 import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -96,8 +97,6 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         modifyLanguageView = findViewById(R.id.modify_language);
         modifyLanguageView.setCanNav(false);
         modifyLanguageView.setOnClickListener(this);
-        modifyLanguageView.setContent(getResources().getString(R.string.demo_simplified_Chinese));
-
 
         joinTypeTextList.add(getResources().getString(R.string.allow_type_allow_any));
         joinTypeTextList.add(getResources().getString(R.string.allow_type_deny_any));
@@ -202,8 +201,8 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         V2TIMManager.getInstance().setSelfInfo(v2TIMUserFullInfo, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
-                DemoLog.e(TAG, "modifySelfProfile err code = " + code + ", desc = " + desc);
-                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
+                DemoLog.e(TAG, "modifySelfProfile err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override

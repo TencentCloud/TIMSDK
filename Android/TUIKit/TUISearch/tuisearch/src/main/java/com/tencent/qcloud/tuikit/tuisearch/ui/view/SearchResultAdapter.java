@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
@@ -148,7 +149,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (!TextUtils.isEmpty(path)) {
                 GlideEngine.loadImage(contactViewHolder.mUserIconView, path);
             } else {
-                contactViewHolder.mUserIconView.setImageResource(R.drawable.default_user_icon);
+                contactViewHolder.mUserIconView.setImageResource(TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), R.attr.core_default_user_icon));
             }
             if (text != null) {
                 if (mViewType == CONVERSATION_TYPE) {

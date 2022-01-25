@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <solid
-        android:color="@color/core_popup_card_positive_normal_bg"/>
+        android:color="?attr/core_btn_normal_color"/>
 
     <corners
         android:radius="7.68dp"/>

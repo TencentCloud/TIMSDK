@@ -8,7 +8,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.resources.MaterialAttributes;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -94,8 +96,8 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             leftUserIcon.setDefaultImageResId(properties.getAvatar());
             rightUserIcon.setDefaultImageResId(properties.getAvatar());
         } else {
-            leftUserIcon.setDefaultImageResId(R.drawable.default_user_icon);
-            rightUserIcon.setDefaultImageResId(R.drawable.default_user_icon);
+            leftUserIcon.setDefaultImageResId(TUIThemeManager.getAttrResId(leftUserIcon.getContext(), R.attr.core_default_user_icon));
+            rightUserIcon.setDefaultImageResId(TUIThemeManager.getAttrResId(rightUserIcon.getContext(), R.attr.core_default_user_icon));
         }
         if (properties.getAvatarRadius() != 0) {
             leftUserIcon.setRadius(properties.getAvatarRadius());
@@ -191,7 +193,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
 
         if (isForwardMode) {
-            msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_bg);
+            msgContentFrame.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
             statusImage.setVisibility(View.GONE);
         } else {
             //// 聊天气泡设置
@@ -199,14 +201,14 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
                     msgContentFrame.setBackground(properties.getRightBubble().getConstantState().newDrawable());
                 } else {
-                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_self_bg);
+                    msgContentFrame.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_self_bg));
                 }
             } else {
                 if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
                     msgContentFrame.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
                     msgContentFrame.setLayoutParams(msgContentFrame.getLayoutParams());
                 } else {
-                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_other_bg);
+                    msgContentFrame.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
                 }
             }
 
@@ -325,4 +327,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     }
 
     public abstract void layoutVariableViews(final TUIMessageBean msg, final int position);
+
+    public void onRecycled() {}
+
 }

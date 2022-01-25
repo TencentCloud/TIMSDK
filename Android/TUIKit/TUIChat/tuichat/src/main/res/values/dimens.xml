@@ -55,7 +55,7 @@
     <dimen name="chat_pop_menu_text_margin_top">3.92dp</dimen>
     <dimen name="chat_pop_menu_indicator_height">7dp</dimen>
     <dimen name="chat_pop_menu_radius">8dp</dimen>
-    <dimen name="chat_pop_menu_item_space_width">38dp</dimen>
+    <dimen name="chat_pop_menu_item_space_width">26dp</dimen>
     <dimen name="chat_pop_menu_item_space_height">26dp</dimen>
 
 
