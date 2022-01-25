@@ -29,9 +29,11 @@
 
 #import "TUIBadgeView.h"
 #import "AppDelegate+Push.h"
+#import "ThemeSelectController.h"
+#import "TUIThemeManager.h"
+#import "LanguageSelectController.h"
 
-
-@interface AppDelegate () <UIAlertViewDelegate, V2TIMConversationListener, V2TIMSDKListener>
+@interface AppDelegate () <UIAlertViewDelegate, V2TIMConversationListener, V2TIMSDKListener, ThemeSelectControllerDelegate, LanguageSelectControllerDelegate>
 
 @property (nonatomic, weak) TUIBadgeView *badgeView;
 
@@ -71,6 +73,10 @@ static AppDelegate *app;
 
     // Override point for customization after application launch.
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    
+    // 设置主题样式
+    TUIRegisterThemeResourcePath([NSBundle.mainBundle pathForResource:@"TUIDemoTheme.bundle" ofType:nil], TUIThemeModuleDemo);
+    [ThemeSelectController applyTheme:nil];
     
     [self push_init];
     [self setupListener];
@@ -204,22 +210,20 @@ void uncaughtExceptionHandler(NSException*exception){
     // Internal error reporting
 }
 
-#if ENABLEPRIVATE
-#else
 - (UIViewController *)getLoginController{
     UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     LoginController *login = [board instantiateViewControllerWithIdentifier:@"LoginController"];
-    return login;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:login];
+    return nav;
 }
-#endif
 
 - (UITabBarController *)getMainController{
     TUITabBarController *tbc = [[TUITabBarController alloc] init];
     NSMutableArray *items = [NSMutableArray array];
     TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
     msgItem.title = NSLocalizedString(@"TabBarItemMessageText", nil); //@"消息";
-    msgItem.selectedImage = [UIImage imageNamed:@"session_selected"];
-    msgItem.normalImage = [UIImage imageNamed:@"session_normal"];
+    msgItem.selectedImage = TUIDemoDynamicImage(@"tab_msg_selected_img", [UIImage imageNamed:@"session_selected"]);
+    msgItem.normalImage = TUIDemoDynamicImage(@"tab_msg_normal_img", [UIImage imageNamed:@"session_normal"]);
     msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
     msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     msgItem.badgeView = [[TUIBadgeView alloc] init];
@@ -232,8 +236,8 @@ void uncaughtExceptionHandler(NSException*exception){
 
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
     contactItem.title = NSLocalizedString(@"TabBarItemContactText", nil);
-    contactItem.selectedImage = [UIImage imageNamed:@"contact_selected"];
-    contactItem.normalImage = [UIImage imageNamed:@"contact_normal"];
+    contactItem.selectedImage = TUIDemoDynamicImage(@"tab_contact_selected_img", [UIImage imageNamed:@"contact_selected"]);
+    contactItem.normalImage = TUIDemoDynamicImage(@"tab_contact_normal_img", [UIImage imageNamed:@"contact_normal"]);
     contactItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
     contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     contactItem.badgeView = [[TUIBadgeView alloc] init];
@@ -241,8 +245,8 @@ void uncaughtExceptionHandler(NSException*exception){
     
     TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
     setItem.title = NSLocalizedString(@"TabBarItemMeText", nil);
-    setItem.selectedImage = [UIImage imageNamed:@"myself_selected"];
-    setItem.normalImage = [UIImage imageNamed:@"myself_normal"];
+    setItem.selectedImage = TUIDemoDynamicImage(@"tab_me_selected_img", [UIImage imageNamed:@"myself_selected"]);
+    setItem.normalImage = TUIDemoDynamicImage(@"tab_me_normal_img", [UIImage imageNamed:@"myself_normal"]);
     setItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
     setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     [items addObject:setItem];
@@ -323,6 +327,82 @@ void uncaughtExceptionHandler(NSException*exception){
         _contactDataProvider = [[TUIContactViewDataProvider alloc] init];
     }
     return _contactDataProvider;
+}
+
+#pragma mark - LanguageSelectControllerDelegate
+- (void)onSelectLanguage:(LanguageSelectCellModel *)cellModel
+{
+    // 动态刷新语言的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新语言
+    [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"need_recover_login_page_info"];
+    [NSUserDefaults.standardUserDefaults synchronize];
+    
+    // 1. 重新创建登录控制器以及根导航控制器
+    UIViewController *loginVc = [self getLoginController];
+    UINavigationController *navVc = nil;
+    if ([loginVc isKindOfClass:UINavigationController.class]) {
+        navVc = (UINavigationController *)loginVc;
+    } else {
+        navVc = loginVc.navigationController;
+    }
+    if (navVc == nil) {
+        return;
+    }
+    
+    // 2. 创建语言选择页面，并 push
+    LanguageSelectController *languageVc = [[LanguageSelectController alloc] init];
+    languageVc.delegate = self;
+    [navVc pushViewController:languageVc animated:NO];
+    
+    // 3. 切换根控制器
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIApplication.sharedApplication.keyWindow.rootViewController = navVc;
+    });
+}
+
+#pragma mark - ThemeSelectControllerDelegate
+- (void)onSelectTheme:(ThemeSelectCollectionViewCellModel *)cellModel
+{
+    // 动态刷新主题的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新主题
+    [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"need_recover_login_page_info"];
+    [NSUserDefaults.standardUserDefaults synchronize];
+    
+    // 1. 重新创建登录控制器以及根导航控制器
+    UIViewController *loginVc = [self getLoginController];
+    UINavigationController *navVc = nil;
+    if ([loginVc isKindOfClass:UINavigationController.class]) {
+        navVc = (UINavigationController *)loginVc;
+    } else {
+        navVc = loginVc.navigationController;
+    }
+    if (navVc == nil) {
+        return;
+    }
+    
+    // 2. 创建主题选择控制器并 push
+    ThemeSelectController *themeVc = [[ThemeSelectController alloc] init];
+    themeVc.disable = YES;
+    themeVc.delegate = self;
+    [themeVc.view makeToastActivity:TUICSToastPositionCenter];
+    [navVc pushViewController:themeVc animated:NO];
+    
+    // 3. 切换根控制器
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIApplication.sharedApplication.keyWindow.rootViewController = navVc;
+        if (@available(iOS 13.0, *)) {
+            if ([cellModel.themeID isEqual:@"system"]) {
+                // 跟随系统
+                UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = 0;
+            } else if ([cellModel.themeID isEqual:@"dark"]) {
+                // 强制切换成黑色
+                UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+            } else {
+                // 忽略系统的设置，强制修改成白天模式，并应用当前的主题
+                UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+            }
+        }
+        [themeVc.view hideToastActivity];
+        themeVc.disable = NO;
+    });
 }
 
 @end

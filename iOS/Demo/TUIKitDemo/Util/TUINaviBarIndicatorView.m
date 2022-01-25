@@ -8,6 +8,7 @@
 
 #import "TUINaviBarIndicatorView.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @implementation TUINaviBarIndicatorView
 - (id)init
@@ -29,19 +30,21 @@
     _label = [[UILabel alloc] init];
     _label.backgroundColor = [UIColor clearColor];
     _label.font = [UIFont boldSystemFontOfSize:17];
-    _label.textColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark];
+    _label.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
     [self addSubview:_label];
 }
 
 - (void)setTitle:(NSString *)title
 {
+    _label.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
     _label.text = title;
     [self updateLayout];
 }
 
 - (void)updateLayout
 {
-    CGSize labelSize = [_label sizeThatFits:CGSizeMake(Screen_Width, NavBar_Height)];
+    [_label sizeToFit];
+    CGSize labelSize = _label.bounds.size; // [_label sizeThatFits:CGSizeMake(Screen_Width, NavBar_Height)];
     CGFloat labelY = 0;
     CGFloat labelX = _indicator.hidden ? 0 : (_indicator.frame.origin.x + _indicator.frame.size.width + TUINaviBarIndicatorView_Margin);
     _label.frame = CGRectMake(labelX, labelY, labelSize.width, NavBar_Height);

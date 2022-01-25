@@ -30,10 +30,13 @@
 #import "TUIAvatarViewController.h"
 #import "TUIConversationCellData.h"
 #import "TUIKit.h"
+#import "TUINaviBarIndicatorView.h"
+#import "TUIThemeManager.h"
 
 
 @interface TUserProfileController ()<TUIProfileCardDelegate>
 @property NSMutableArray<NSArray *> *dataList;
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation TUserProfileController
@@ -53,7 +56,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.title = NSLocalizedString(@"ProfileDetails", nil); // @"详细资料";
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    [_titleView setTitle:NSLocalizedString(@"ProfileDetails", nil)];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
     self.clearsSelectionOnViewWillAppear = YES;
 
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"TextCell"];
@@ -177,16 +183,16 @@
             NSMutableArray *inlist = @[].mutableCopy;
             [inlist addObject:({
                 TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = @"同意";
+                data.title = NSLocalizedString(@"Accept", nil);// @"同意";
                 data.style = ButtonWhite;
-                data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+                data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
                 data.cbuttonSelector = @selector(onAgreeGroup);
                 data.reuseId = @"ButtonCell";
                 data;
             })];
             [inlist addObject:({
                 TUIButtonCellData *data = TUIButtonCellData.new;
-                data.title = @"拒绝";
+                data.title = NSLocalizedString(@"Decline", nil);//@"拒绝";
                 data.style = ButtonRedText;
                 data.cbuttonSelector =  @selector(onRejectGroup);
                 data.reuseId = @"ButtonCell";

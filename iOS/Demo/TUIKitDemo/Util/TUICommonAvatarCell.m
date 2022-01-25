@@ -1,5 +1,6 @@
 #import "TUICommonAvatarCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @implementation TUICommonAvatarCellData
 - (instancetype)init {
@@ -27,9 +28,7 @@
     if (self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier])
     {
         [self setupViews];
-         //self.selectionStyle = UITableViewCellSelectionStyleDefault;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.changeColorWhenTouched = YES;
     }
     return self;
 }
@@ -77,8 +76,8 @@
     [self addSubview:_keyLabel];
     [self addSubview:_valueLabel];
     
-    self.keyLabel.textColor = [UIColor d_colorWithColorLight:self.keyLabel.textColor dark:UIColor.lightGrayColor];
-    self.valueLabel.textColor = [UIColor d_colorWithColorLight:self.valueLabel.textColor dark:UIColor.lightGrayColor];
+    self.keyLabel.textColor = TUICoreDynamicColor(@"form_key_text_color", @"#444444");
+    self.valueLabel.textColor = TUICoreDynamicColor(@"form_value_text_color", @"#000000");
 
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }

@@ -23,6 +23,7 @@
 #import "TUINaviBarIndicatorView.h"
 #import "TUIKit.h"
 #import "TCUtil.h"
+#import "TUIThemeManager.h"
 
 @interface ConversationController () <TUIConversationListControllerListener, TPopViewDelegate, V2TIMSDKListener>
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
@@ -39,7 +40,8 @@
     [self.view addSubview:conv.view];
 
     UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [moreButton setImage:[UIImage imageNamed:TUIDemoImagePath(@"more")] forState:UIControlStateNormal];
+    
+    [moreButton setImage:TUIDemoDynamicImage(@"nav_more_img", [UIImage imageNamed:TUIDemoImagePath(@"more")]) forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     moreButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
     [moreButton.widthAnchor constraintEqualToConstant:20].active = YES;
@@ -451,6 +453,7 @@
     model.faceUrl = data.faceUrl;
     model.avatarImage = data.avatarImage;
     model.draftText = data.draftText;
+    model.atMsgSeqs = data.atMsgSeqs;
     return model;
 }
 

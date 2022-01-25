@@ -32,9 +32,13 @@
 #import "TUIFindContactViewController.h"
 #import "FriendRequestViewController.h"
 #import "GroupRequestViewController.h"
+#import "TUINaviBarIndicatorView.h"
+#import "TUIThemeManager.h"
+#import "TUIGroupConversationListController.h"
 
 @interface ContactsController () <TPopViewDelegate>
 
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation ContactsController
@@ -49,14 +53,17 @@
 
 
     UIButton *moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-    [moreButton setImage:[UIImage imageNamed:TUIDemoImagePath(@"more")] forState:UIControlStateNormal];
+    [moreButton setImage:TUIDemoDynamicImage(@"nav_more_img", [UIImage imageNamed:TUIDemoImagePath(@"more")]) forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(onRightItem:) forControlEvents:UIControlEventTouchUpInside];
     [moreButton.widthAnchor constraintEqualToConstant:20].active = YES;
     [moreButton.heightAnchor constraintEqualToConstant:20].active = YES;
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
     self.navigationItem.rightBarButtonItem = moreItem;
 
-    self.title = NSLocalizedString(@"TabBarItemContactText", nil);
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    [_titleView setTitle:NSLocalizedString(@"TabBarItemContactText", nil)];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
 
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
@@ -142,6 +149,21 @@
     };
     [self.navigationController pushViewController:vc animated:YES];
     [self.viewModel clearApplicationCnt];
+}
+
+- (void)onGroupConversation:(TUICommonTableViewCell *)cell
+{
+    TUIGroupConversationListController *vc = TUIGroupConversationListController.new;
+    __weak typeof(self) weakSelf = self;
+    vc.onSelect = ^(TUICommonContactCellData * _Nonnull cellData) {
+        TUIChatConversationModel *data = [[TUIChatConversationModel alloc] init];
+        data.userID = nil;
+        data.groupID = cellData.identifier;
+        ChatViewController *chatVc = [[ChatViewController alloc] init];
+        chatVc.conversationData = data;
+        [weakSelf.navigationController pushViewController:chatVc animated:YES];
+    };
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 

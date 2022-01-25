@@ -21,12 +21,15 @@
 #import "TUIDefine.h"
 #import "TUICommonAvatarCell.h"
 #import "TUIModifyView.h"
+#import "TUIThemeManager.h"
+#import "TUINaviBarIndicatorView.h"
 
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2
 #define SHEET_SEX    3
 
 @interface ProfileController () <UIActionSheetDelegate, V2TIMSDKListener, TModifyViewDelegate>
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property (nonatomic, strong) NSMutableArray *data;
 @property V2TIMUserFullInfo *profile;
 @property (nonatomic, weak) UIDatePicker *picker;
@@ -52,11 +55,12 @@
 
 - (void)setupViews
 {
-    self.navigationItem.title = NSLocalizedString(@"ProfileDetails", nil); // @"个人信息";
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    [_titleView setTitle:NSLocalizedString(@"ProfileDetails", nil)];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
 
-    //self.tableView.tableFooterView = [[UIView alloc] init];
-    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:242/255.0 green:243/255.0 blue:245/255.0 alpha:1/1.0] dark:TController_Background_Color_Dark];
-    self.clearsSelectionOnViewWillAppear = YES;
+    self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TUICommonAvatarCell class] forCellReuseIdentifier:@"avatarCell"];
@@ -160,17 +164,6 @@
 
     return [data heightOfWidth:Screen_Width];
 }
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-
-}
-
-- (void)tableView:(UITableView *)tableView didUnhighlightRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.backgroundColor = [UIColor whiteColor];
-}
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *array = _data[indexPath.section];
@@ -353,33 +346,40 @@
 {
     if (_datePicker == nil) {
         UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height)];
-        cover.backgroundColor = [UIColor d_colorWithColorLight:[[UIColor blackColor] colorWithAlphaComponent:0.5] dark:[UIColor.lightGrayColor colorWithAlphaComponent:0.5]];
+        cover.backgroundColor = TUIGroupDynamicColor(@"group_modify_view_bg_color", @"#0000007F");
         [cover addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDatePicker)]];
         
         UIView *menuView = [[UIView alloc] init];
-        menuView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:UIColor.darkGrayColor];
+        menuView.backgroundColor = TUIGroupDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");
         menuView.frame = CGRectMake(0, UIScreen.mainScreen.bounds.size.height - 340, UIScreen.mainScreen.bounds.size.width, 40);
         [cover addSubview:menuView];
         
         UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [cancelButton setTitle:NSLocalizedString(@"Cancel", nil) forState:UIControlStateNormal];
-        [cancelButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+        [cancelButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateNormal];
         cancelButton.frame = CGRectMake(10, 0, 60, 35);
         [cancelButton addTarget:self action:@selector(hideDatePicker) forControlEvents:UIControlEventTouchUpInside];
         [menuView addSubview:cancelButton];
         
         UIButton *okButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [okButton setTitle:NSLocalizedString(@"confirm", nil) forState:UIControlStateNormal];
-        [okButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+        [okButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateNormal];
         okButton.frame = CGRectMake(cover.bounds.size.width - 10 - 60, 0, 60, 35);
         [okButton addTarget:self action:@selector(onOKDatePicker) forControlEvents:UIControlEventTouchUpInside];
         [menuView addSubview:okButton];
         
         UIDatePicker *picker = [[UIDatePicker alloc] init];
+        NSString *language = [TUIGlobalization tk_localizableLanguageKey];
+        picker.locale = [[NSLocale alloc] initWithLocaleIdentifier:language];
+        if (@available(iOS 13.0, *)) {
+            picker.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+        } else {
+            // Fallback on earlier versions
+        }
         if (@available(iOS 13.4, *)) {
             picker.preferredDatePickerStyle = UIDatePickerStyleWheels;
         }
-        picker.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:UIColor.darkGrayColor];
+        picker.backgroundColor = TUIGroupDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");
         picker.datePickerMode = UIDatePickerModeDate;
         picker.frame = CGRectMake(0, CGRectGetMaxY(menuView.frame), cover.bounds.size.width, 300);
         [cover addSubview:picker];

@@ -19,10 +19,19 @@
 #import "AppDelegate.h"
 #import "TUILoginCache.h"
 #import "GenerateTestUserSig.h"
+#import "TUIThemeManager.h"
+#import "ThemeSelectController.h"
+#import "LanguageSelectController.h"
 
 
 @interface LoginController ()
 @property (weak, nonatomic) IBOutlet UITextField *user;
+@property (weak, nonatomic) IBOutlet UIImageView *logView;
+@property (weak, nonatomic) IBOutlet UIButton *loginButton;
+
+@property (nonatomic, strong) UIView *changeSkinView;
+@property (nonatomic, strong) UIView *changeLanguageView;
+
 @end
 
 @implementation LoginController
@@ -32,14 +41,66 @@
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
     
+    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F3F4F5");
+    self.logView.image = TUIDemoDynamicImage(@"public_login_logo_img", [UIImage imageNamed:@"public_login_logo"]);
+    self.loginButton.backgroundColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)]];
+    [self.loginButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [self.loginButton setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
+    
+    
+    self.changeSkinView = [self createOptionalView:NSLocalizedString(@"ChangeSkin", nil)
+                                          leftIcon:[UIImage imageNamed:@"icon_skin"]
+                                         rightIcon:[UIImage imageNamed:@"icon_drop_arraw"]];
+    [self.changeSkinView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onChangeSkin)]];
+    self.changeLanguageView = [self createOptionalView:NSLocalizedString(@"CurrentLanguage", nil)
+                                              leftIcon:[UIImage imageNamed:@"icon_language"]
+                                             rightIcon:[UIImage imageNamed:@"icon_drop_arraw"]];
+    [self.changeLanguageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onChangeLanguage)]];
+    
+    [self.view addSubview:self.changeSkinView];
+    [self.view addSubview:self.changeLanguageView];
 }
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        weakSelf.changeLanguageView.mm_right(20);
+        if (@available(iOS 11.0, *)) {
+            weakSelf.changeLanguageView.mm_y = 10 + weakSelf.view.mm_safeAreaTopGap;
+        } else {
+            weakSelf.changeLanguageView.mm_y = 10;
+        }
+        
+        weakSelf.changeSkinView.mm_right(20 + weakSelf.changeLanguageView.mm_w + 20);
+        weakSelf.changeSkinView.mm_y = weakSelf.changeLanguageView.mm_y;
+    });
+}
+
 
 - (void)onTap
 {
     [self.view endEditing:YES];
 }
 
+- (void)onChangeLanguage
+{
+    // 切换语言
+    LanguageSelectController *vc = [[LanguageSelectController alloc] init];
+    vc.delegate = AppDelegate.sharedInstance;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)onChangeSkin
+{
+    // 切换主题
+    ThemeSelectController *vc = [[ThemeSelectController alloc] init];
+    vc.delegate = AppDelegate.sharedInstance;
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 - (IBAction)login:(id)sender {
     
@@ -80,6 +141,45 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+- (UIView *)createOptionalView:(NSString *)title
+                      leftIcon:(UIImage *)leftImage
+                     rightIcon:(UIImage *)rightImage
+{
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+    
+    UILabel *label = [[UILabel alloc] init];
+    label.text = title;
+    label.font = [UIFont systemFontOfSize:14.0];
+    label.textColor = [UIColor grayColor];
+    label.userInteractionEnabled = YES;
+    [contentView addSubview:label];
+    
+    UIImageView *leftIconView = [[UIImageView alloc] init];
+    leftIconView.image = leftImage;
+    leftIconView.userInteractionEnabled = YES;
+    [contentView addSubview:leftIconView];
+    
+    UIImageView *rightIconView = [[UIImageView alloc] init];
+    rightIconView.image = rightImage;
+    rightIconView.userInteractionEnabled = YES;
+    [contentView addSubview:rightIconView];
+
+    leftIconView.mm_width(18.0).mm_height(18.0);
+    leftIconView.mm_x = 0;
+    leftIconView.mm_centerY = 0.5 * (contentView.mm_h - leftIconView.mm_h);
+    
+    [label sizeToFit];
+    label.mm_x = CGRectGetMaxX(leftIconView.frame) + 5.0;
+    label.mm_centerY = leftIconView.mm_centerY;
+    
+    rightIconView.mm_width(10.0).mm_height(7.0);
+    rightIconView.mm_x = CGRectGetMaxX(label.frame) + 5.0;
+    rightIconView.mm_centerY = leftIconView.mm_centerY;
+    
+    contentView.mm_w = CGRectGetMaxX(rightIconView.frame);
+    
+    return contentView;
+}
 
 
 @end

@@ -8,6 +8,7 @@
 
 #import "TPopCell.h"
 #import "TUIKit.h"
+#import "TUIThemeManager.h"
 
 @implementation TPopCellData
 @end
@@ -33,7 +34,7 @@
 
     _title = [[UILabel alloc] init];
     _title.font = [UIFont systemFontOfSize:15];
-    _title.textColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark];
+    _title.textColor = TUIDemoDynamicColor(@"pop_text_color", @"#444444");
     _title.numberOfLines = 0;
     [self addSubview:_title];
 

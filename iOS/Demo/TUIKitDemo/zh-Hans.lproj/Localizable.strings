@@ -181,3 +181,15 @@
 "MessageTipsOthersRecallMessageFormat" = "\"%@\" 撤回了一条消息";
 "MessageTipsOthersRecallMessage" = "对方撤回了一条消息";
 "SignatureFormat" = "个性签名:%@";
+
+"ChangeSkin" = "切换皮肤";
+"ChangeLanguage" = "切换语言";
+"SimpleChinese" = "简体中文";
+"English" = "英语(English)";
+"CurrentLanguage" = "简体中文";
+
+"ThemeNameSerious" = "深沉";
+"ThemeNameLight" = "轻量";
+"ThemeNameLivey" = "活泼";
+"ThemeNameDark" = "黑夜";
+"ThemeNameSystem" = "跟随系统";

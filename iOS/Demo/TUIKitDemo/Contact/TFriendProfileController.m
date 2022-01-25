@@ -25,11 +25,14 @@
 #import "TUIKit.h"
 #import "TCUtil.h"
 #import "TUICore.h"
+#import "TUIThemeManager.h"
+#import "TUINaviBarIndicatorView.h"
 
 @interface TFriendProfileController ()
 @property NSArray<NSArray *> *dataList;
 @property BOOL modified;
 @property V2TIMUserFullInfo *userFullInfo;
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation TFriendProfileController
@@ -56,6 +59,8 @@
     [self addLongPressGesture];
 
     self.userFullInfo = self.friendProfile.userFullInfo;
+    
+    self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[TUICommonSwitchCell class] forCellReuseIdentifier:@"SwitchCell"];
@@ -64,7 +69,10 @@
 
     //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
     self.tableView.delaysContentTouches = NO;
-    self.navigationItem.title = NSLocalizedString(@"ProfileDetails", nil); // @"详细资料";
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    [_titleView setTitle:NSLocalizedString(@"ProfileDetails", nil)];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
     
     [self loadData];
 }
@@ -187,7 +195,7 @@
             TUIButtonCellData *data = TUIButtonCellData.new;
             data.title = NSLocalizedString(@"ProfileSendMessages", nil); // @"发送消息";
             data.style = ButtonWhite;
-            data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+            data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
             data.cbuttonSelector = @selector(onSendMessage:);
             data.reuseId = @"ButtonCell";
             data;
@@ -203,7 +211,7 @@
                 TUIButtonCellData *data = TUIButtonCellData.new;
                 data.title = TUIKitLocalizableString(TUIKitMoreVoiceCall); // @"语音通话";
                 data.style = ButtonWhite;
-                data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+                data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
                 data.cbuttonSelector = @selector(onVoiceCall:);
                 data.reuseId = @"ButtonCell";
                 data;
@@ -214,7 +222,7 @@
                 TUIButtonCellData *data = TUIButtonCellData.new;
                 data.title = TUIKitLocalizableString(TUIKitMoreVideoCall); // @"视频通话";
                 data.style = ButtonWhite;
-                data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+                data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF");
                 data.cbuttonSelector = @selector(onVideoCall:);
                 data.reuseId = @"ButtonCell";
                 data;
