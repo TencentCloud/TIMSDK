@@ -37,4 +37,7 @@
     <dimen name="core_pop_menu_padding_bottom">8dp</dimen>
     <dimen name="core_pop_menu_icon_size">20dp</dimen>
 
+    <dimen name="core_title_text_size">17.28sp</dimen>
+
+
 </resources>

@@ -13,9 +13,10 @@ import android.webkit.WebViewClient;
 
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 
-public class WebViewActivity extends Activity {
+public class WebViewActivity extends BaseLightActivity {
 
     private WebView mWebView;
     private TitleBarLayout mTitleBar;

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 颜色规范 start -->
+    <color name="core_light_bg_title_text_color_lively">#FF000000</color>
+    <color name="core_light_bg_primary_text_color_lively">#FF444444</color>
+    <color name="core_light_bg_secondary_text_color_lively">#FF888888</color>
+    <color name="core_light_bg_secondary2_text_color_lively">#FF999999</color>
+    <color name="core_light_bg_disable_text_color_lively">#FFBBBBBB</color>
+    <color name="core_dark_bg_primary_text_color_lively">#FFFFFFFF</color>
+
+    <color name="core_primary_bg_color_lively">#FFFFFFFF</color>
+    <color name="core_bg_color_lively">#FFF2F3F5</color>
+    <color name="core_primary_color_lively">#FFFF8E82</color>
+    <color name="core_error_tip_color_lively">#FFFF584C</color>
+    <color name="core_success_tip_color_lively">#FF26CB3E</color>
+    <color name="core_bubble_bg_color_lively">#FF9D85</color>
+    <color name="core_divide_color_lively">#FFE5E5E5</color>
+    <color name="core_border_color_lively">#FFDDDDDD</color>
+    <color name="core_header_start_color_lively">#FFFF7B7B</color>
+    <color name="core_header_end_color_lively">#FFFFA88B</color>
+
+    <color name="core_btn_normal_color_lively">#FFFF8E82</color>
+    <color name="core_btn_pressed_color_lively">#FFF86657</color>
+    <color name="core_btn_disable_color_lively">#4DFF8E82</color>
+    <!-- 颜色规范 end -->
+
+    <color name="core_title_bar_text_bg_lively">#FFFFFFFF</color>
+
+</resources>

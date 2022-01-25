@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply;
 import android.content.Context;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
@@ -18,6 +19,15 @@ public class TextReplyQuoteView extends TUIReplyQuoteView {
     public TextReplyQuoteView(Context context) {
         super(context);
         textView = findViewById(R.id.text_quote_tv);
+    }
+
+    @Override
+    public void setSelf(boolean isSelf) {
+        if (!isSelf) {
+            textView.setTextColor(textView.getResources().getColor(TUIThemeManager.getAttrResId(textView.getContext(), R.attr.chat_other_reply_quote_text_color)));
+        } else {
+            textView.setTextColor(textView.getResources().getColor(TUIThemeManager.getAttrResId(textView.getContext(), R.attr.chat_self_reply_quote_text_color)));
+        }
     }
 
     @Override

@@ -18,7 +18,7 @@ import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.ui.view.GroupInfoLayout;
-import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberRouter;
+import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberListener;
 
 import java.util.List;
 
@@ -32,14 +32,18 @@ public class GroupInfoFragment extends BaseFragment {
 
     private GroupInfoPresenter groupInfoPresenter = null;
 
-    private GroupMemberManagerFragment groupMemberManagerFragment = null;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         baseView = inflater.inflate(R.layout.group_info_fragment, container, false);
         initView();
         return baseView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        groupInfoLayout.loadGroupInfo(groupId);
     }
 
     private void initView() {
@@ -54,22 +58,13 @@ public class GroupInfoFragment extends BaseFragment {
         groupInfoPresenter = new GroupInfoPresenter(groupInfoLayout);
         groupInfoLayout.setGroupInfoPresenter(groupInfoPresenter);
 
-        groupInfoLayout.loadGroupInfo(getArguments().getString(TUIGroupConstants.Group.GROUP_ID));
-        groupInfoLayout.setRouter(new IGroupMemberRouter() {
+        groupInfoLayout.loadGroupInfo(groupId);
+        groupInfoLayout.setRouter(new IGroupMemberListener() {
             @Override
             public void forwardListMember(GroupInfo info) {
-                groupMemberManagerFragment = new GroupMemberManagerFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(TUIGroupConstants.Group.GROUP_INFO, info);
-                groupMemberManagerFragment.setArguments(bundle);
-                forward(groupMemberManagerFragment, false);
-
-                groupMemberManagerFragment.setGroupMembersListener(new GroupMembersListener() {
-                    @Override
-                    public void loadMoreGroupMember(GroupInfo groupInfo) {
-                        groupInfoLayout.getGroupMembers(groupInfo);
-                    }
-                });
+                Intent intent = new Intent(getContext(), GroupMemberActivity.class);
+                intent.putExtra(TUIGroupConstants.Group.GROUP_INFO, info);
+                startActivity(intent);
             }
 
             @Override
@@ -82,11 +77,10 @@ public class GroupInfoFragment extends BaseFragment {
 
             @Override
             public void forwardDeleteMember(GroupInfo info) {
-                GroupMemberDeleteFragment fragment = new GroupMemberDeleteFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(TUIGroupConstants.Group.GROUP_INFO, info);
-                fragment.setArguments(bundle);
-                forward(fragment, false);
+                Bundle param = new Bundle();
+                param.putString(TUIGroupConstants.Group.GROUP_ID, info.getId());
+                param.putBoolean(TUIGroupConstants.Selection.SELECT_FOR_CALL, true);
+                TUICore.startActivity(GroupInfoFragment.this, "StartGroupMemberSelectActivity", param, 2);
             }
         });
 
@@ -95,14 +89,35 @@ public class GroupInfoFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == 3) {
-            inviteGroupMembers(data);
+        if (resultCode == 3) {
+            List<String> friends = (List<String>) data.getSerializableExtra(TUIGroupConstants.Selection.LIST);
+            if (requestCode == 1) {
+                inviteGroupMembers(friends);
+            } else if (requestCode == 2) {
+                deleteGroupMembers(friends);
+            }
         }
-
     }
 
-    private void inviteGroupMembers(Intent data) {
-        List<String> friends = (List<String>) data.getSerializableExtra(TUIGroupConstants.Selection.LIST);
+    private void deleteGroupMembers(List<String> friends) {
+        if (friends != null && friends.size() > 0) {
+            if (groupInfoPresenter != null) {
+                groupInfoPresenter.deleteGroupMembers(groupId, friends, new IUIKitCallback<List<String>>() {
+                    @Override
+                    public void onSuccess(List<String> data) {
+                        groupInfoPresenter.loadGroupInfo(groupId);
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+
+                    }
+                });
+            }
+        }
+    }
+
+    private void inviteGroupMembers(List<String> friends) {
         if (friends != null && friends.size() > 0) {
             groupInfoPresenter.inviteGroupMembers(groupId, friends, new IUIKitCallback<Object>() {
                 @Override
@@ -122,7 +137,18 @@ public class GroupInfoFragment extends BaseFragment {
         }
     }
 
-    public interface GroupMembersListener {
-        void loadMoreGroupMember(GroupInfo groupInfo);
+    public void changeGroupOwner(String newOwnerId) {
+        groupInfoPresenter.transferGroupOwner(groupId, newOwnerId, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                groupInfoLayout.loadGroupInfo(groupId);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+
+            }
+        });
     }
+
 }

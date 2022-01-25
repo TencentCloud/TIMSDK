@@ -9,6 +9,7 @@ import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
+import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
@@ -26,17 +27,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.FaceReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.FileReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ImageReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.LocationReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.MergeReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ReplyReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.SoundReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.VideoReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
@@ -44,16 +34,8 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IBaseMessageSender;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.NetworkConnectionListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.TotalUnreadCountListener;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.FaceReplyQuoteView;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.FileReplyQuoteView;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.ImageReplyQuoteView;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.LocationReplyQuoteView;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.MergeReplyQuoteView;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.SoundReplyQuoteView;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.TUIReplyQuoteView;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.TextReplyQuoteView;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.VideoReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CallingMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CustomLinkMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FaceMessageHolder;
@@ -103,6 +85,8 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
     private final Map<Class<? extends TUIMessageBean>, Integer> messageViewTypeMap = new HashMap<>();
 
     private final Map<Integer, Class<? extends MessageBaseHolder>> messageViewHolderMap = new HashMap<>();
+
+    private final List<WeakReference<NetworkConnectionListener>> connectListenerList = new ArrayList<>();
 
     private int viewType = 0;
 
@@ -395,6 +379,34 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
                 }
             }
         });
+
+        V2TIMManager.getInstance().addIMSDKListener(new V2TIMSDKListener() {
+            @Override
+            public void onConnectSuccess() {
+                for (WeakReference<NetworkConnectionListener> listenerWeakReference : connectListenerList) {
+                    NetworkConnectionListener listener = listenerWeakReference.get();
+                    if (listener != null) {
+                        listener.onConnected();
+                    }
+                }
+            }
+        });
+    }
+
+    public void registerNetworkListener(NetworkConnectionListener listener) {
+        if (listener == null) {
+            return;
+        }
+
+        for (WeakReference<NetworkConnectionListener> weakReference : connectListenerList) {
+            NetworkConnectionListener networkConnectionListener = weakReference.get();
+            if (networkConnectionListener == listener) {
+                return;
+            }
+        }
+
+        WeakReference<NetworkConnectionListener> weakReference = new WeakReference<>(listener);
+        connectListenerList.add(weakReference);
     }
 
     public static TUIChatConfigs getChatConfig() {
@@ -452,5 +464,20 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
 
     public static Context getAppContext() {
         return appContext;
+    }
+
+    @Override
+    public int getLightThemeResId() {
+        return R.style.TUIChatLightTheme;
+    }
+
+    @Override
+    public int getLivelyThemeResId() {
+        return R.style.TUIChatLivelyTheme;
+    }
+
+    @Override
+    public int getSeriousThemeResId() {
+        return R.style.TUIChatSeriousTheme;
     }
 }

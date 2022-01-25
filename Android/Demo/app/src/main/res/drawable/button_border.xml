@@ -5,7 +5,7 @@
     <item android:state_enabled="false">
         <shape android:shape="rectangle"
             android:useLevel="false">
-            <solid android:color="#B9D7FF" />
+            <solid android:color="?attr/demo_login_btn_disable_color" />
             <corners android:radius="8dp"/>
             <padding android:left="5dp" android:right="5dp" android:top="3dp" android:bottom="3dp"/>
         </shape>
@@ -14,7 +14,7 @@
     <item android:state_pressed="false">
         <shape android:shape="rectangle"
             android:useLevel="false">
-            <solid android:color="@color/colorCloud" />
+            <solid android:color="?attr/demo_login_btn_normal_color" />
             <corners android:radius="8dp"/>
             <padding android:left="5dp" android:right="5dp" android:top="3dp" android:bottom="3dp"/>
         </shape>
@@ -22,7 +22,7 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle"
             android:useLevel="false">
-            <solid android:color="@color/colorCloud" />
+            <solid android:color="?attr/demo_login_btn_pressed_color" />
             <corners android:radius="8dp"/>
             <padding android:left="5dp" android:right="5dp" android:top="3dp" android:bottom="3dp"/>
         </shape>

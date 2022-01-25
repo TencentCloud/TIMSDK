@@ -12,6 +12,17 @@ import java.util.List;
 
 public class GroupInfo extends ChatInfo {
 
+    public static final String GROUP_TYPE_MEETING = V2TIMManager.GROUP_TYPE_MEETING;
+    public static final String GROUP_TYPE_AVCHATROOM = V2TIMManager.GROUP_TYPE_AVCHATROOM;
+    public static final String GROUP_TYPE_COMMUNITY = V2TIMManager.GROUP_TYPE_COMMUNITY;
+    public static final String GROUP_TYPE_PUBLIC = V2TIMManager.GROUP_TYPE_PUBLIC;
+    public static final String GROUP_TYPE_WORK = V2TIMManager.GROUP_TYPE_WORK;
+
+    public static final int GROUP_MEMBER_FILTER_ALL = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL;
+    public static final int GROUP_MEMBER_FILTER_OWNER = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_OWNER;
+    public static final int GROUP_MEMBER_FILTER_ADMIN = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ADMIN;
+    public static final int GROUP_MEMBER_FILTER_COMMON = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_COMMON;
+
     private String groupType;
     private int memberCount;
     private String groupName;
@@ -23,6 +34,7 @@ public class GroupInfo extends ChatInfo {
     private String faceUrl;
     private long mNextSeq = 0;
     private boolean canManagerGroup;
+    private boolean isAllMuted;
 
     public GroupInfo() {
         setType(V2TIMConversation.V2TIM_GROUP);
@@ -192,6 +204,10 @@ public class GroupInfo extends ChatInfo {
         return canManagerGroup;
     }
 
+    public boolean isAllMuted() {
+        return isAllMuted;
+    }
+
     /**
      * 从SDK转化为TUIKit的群信息bean
      *
@@ -216,6 +232,7 @@ public class GroupInfo extends ChatInfo {
         canManagerGroup = role == V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_OWNER
                 || role == V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_ADMIN
                 || groupType == V2TIMManager.GROUP_TYPE_WORK;
+        isAllMuted = infoResult.getGroupInfo().isAllMuted();
         return this;
     }
 }

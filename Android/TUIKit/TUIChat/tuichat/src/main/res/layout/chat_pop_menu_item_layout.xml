@@ -5,8 +5,8 @@
 
     <!-- 需要在外层包一层 FrameLayout , 否则设置尺寸不生效  -->
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="36.72dp"
+        android:layout_height="36.72dp"
         android:orientation="vertical">
 
         <ImageView
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/chat_pop_menu_text_margin_top"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textSize="@dimen/chat_pop_menu_font_size" />
 
     </LinearLayout>

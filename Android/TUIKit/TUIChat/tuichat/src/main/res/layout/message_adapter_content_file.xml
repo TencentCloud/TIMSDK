@@ -41,11 +41,15 @@
 
             <TextView
                 android:id="@+id/file_status_tv"
+                android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_toEndOf="@id/file_size_tv"
                 android:includeFontPadding="false"
                 android:text="@string/un_download"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:textColor="#888888"
                 android:textSize="13sp" />
         </RelativeLayout>

@@ -8,6 +8,7 @@ import com.tencent.imsdk.v2.V2TIMOfflinePushConfig;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 
 /**
  * 用来保存厂商注册离线推送token的管理类示例，当登陆im后，通过 setOfflinePushToken 上报证书 ID 及设备 token 给im后台。开发者可以根据自己的需求灵活实现
@@ -61,7 +62,7 @@ public class ThirdPushTokenMgr {
         V2TIMManager.getOfflinePushManager().setOfflinePushConfig(v2TIMOfflinePushConfig, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
-                DemoLog.d(TAG, "setOfflinePushToken err code = " + code);
+                DemoLog.d(TAG, "setOfflinePushToken err code = " + code + " desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override

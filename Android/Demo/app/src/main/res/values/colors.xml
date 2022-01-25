@@ -4,7 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorCloud">#147AFF</color>
+    <color name="colorCloudLight">#147AFF</color>
+    <color name="colorCloudLively">#FF8E82</color>
+    <color name="colorCloudSerious">#FF8E82</color>
     <color name="colorShade">#33000000</color>
 
     <color name="tab_text_selected_color">#006EFF</color>
@@ -65,5 +67,9 @@
     <color name="demo_profile_bg">#E6E9EB</color>
     <color name="demo_partTranslucent">#39000000</color>
     <color name="demo_slide_bar_hint_color">#CCCCCC</color>
+
+    <color name="demo_theme_select_light_color">#FFC0E1FF</color>
+    <color name="demo_theme_select_lively_color">#FFF38787</color>
+    <color name="demo_theme_select_serious_color">#FF3371CD</color>
 
 </resources>

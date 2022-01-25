@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicontact.ui.view;
 
-import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -25,26 +25,29 @@ import java.util.List;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
     protected List<ContactItemBean> mData;
-    protected LayoutInflater mInflater;
     private ContactListView.OnSelectChangedListener mOnSelectChangedListener;
     private ContactListView.OnItemClickListener mOnClickListener;
 
     private int mPreSelectedPosition;
     private boolean isSingleSelectMode;
     private ContactPresenter presenter;
+    private boolean isGroupList = false;
 
     public ContactAdapter(List<ContactItemBean> data) {
         this.mData = data;
-        mInflater = LayoutInflater.from(TUIContactService.getAppContext());
     }
 
     public void setPresenter(ContactPresenter presenter) {
         this.presenter = presenter;
     }
 
+    public void setIsGroupList(boolean groupList) {
+        isGroupList = groupList;
+    }
+
     @Override
     public ContactAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ContactAdapter.ViewHolder(mInflater.inflate(R.layout.contact_selecable_adapter_item, parent, false));
+        return new ContactAdapter.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_selecable_adapter_item, parent, false));
     }
 
     @Override
@@ -100,7 +103,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         });
         holder.unreadText.setVisibility(View.GONE);
         if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.new_friend), contactBean.getId())) {
-            holder.avatar.setImageResource(R.drawable.group_new_friend);
+            holder.avatar.setImageResource(TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.contact_new_friend_icon));
 
             presenter.getFriendApplicationUnreadCount(new IUIKitCallback<Integer>() {
                 @Override
@@ -120,12 +123,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             });
 
         } else if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.group), contactBean.getId())) {
-            holder.avatar.setImageResource(R.drawable.group_common_list);
+            holder.avatar.setImageResource(TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.contact_group_list_icon));
         } else if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.blacklist), contactBean.getId())) {
-            holder.avatar.setImageResource(R.drawable.group_black_list);
+            holder.avatar.setImageResource(TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.contact_black_list_icon));
         } else {
             int radius = holder.itemView.getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
-            GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), radius);
+            if (isGroupList) {
+                GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), TUIThemeManager.getAttrResId(holder.avatar.getContext(), R.attr.core_default_group_icon), radius);
+            } else {
+                GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), radius);
+            }
         }
 
     }

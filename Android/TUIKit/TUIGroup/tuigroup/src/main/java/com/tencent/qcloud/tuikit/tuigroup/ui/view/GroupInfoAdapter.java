@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +15,7 @@ import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberRouter;
+import com.tencent.qcloud.tuikit.tuigroup.ui.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class GroupInfoAdapter extends BaseAdapter {
     private static final int NORMAL_COMMUNITY_MAX_LIMIT = 9; //社群,普通人可以添加成员
 
     private List<GroupMemberInfo> mGroupMembers = new ArrayList<>();
-    private IGroupMemberRouter mTailListener;
+    private IGroupMemberListener mTailListener;
     private GroupInfo mGroupInfo;
 
     private GroupInfoPresenter presenter;
@@ -46,7 +45,7 @@ public class GroupInfoAdapter extends BaseAdapter {
         this.presenter = presenter;
     }
 
-    public void setManagerCallBack(IGroupMemberRouter listener) {
+    public void setManagerCallBack(IGroupMemberListener listener) {
         mTailListener = listener;
     }
 
@@ -69,7 +68,7 @@ public class GroupInfoAdapter extends BaseAdapter {
     public View getView(final int i, View view, final ViewGroup viewGroup) {
         MyViewHolder holder;
         if (view == null) {
-            view = LayoutInflater.from(TUIGroupService.getAppContext()).inflate(R.layout.group_member_item_layout, viewGroup, false);
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.group_member_item_layout, viewGroup, false);
             holder = new MyViewHolder();
             holder.memberIcon = view.findViewById(R.id.group_member_icon);
             holder.memberName = view.findViewById(R.id.group_member_name);

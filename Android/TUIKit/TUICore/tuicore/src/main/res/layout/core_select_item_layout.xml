@@ -21,7 +21,7 @@
 
     <ImageView
         android:id="@+id/selected_icon"
-        android:src="@drawable/core_selected_icon"
+        android:background="?attr/core_selected_icon"
         android:layout_gravity="center"
         android:visibility="gone"
         android:layout_width="21dp"

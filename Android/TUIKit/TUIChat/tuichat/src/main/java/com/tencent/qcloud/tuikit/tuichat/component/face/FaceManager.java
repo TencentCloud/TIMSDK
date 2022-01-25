@@ -4,10 +4,16 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ImageSpan;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
@@ -193,10 +199,9 @@ public class FaceManager {
         return drawableCache.get(faceChar) != null;
     }
 
-
-    public static void handlerEmojiText(TextView comment, String content, boolean typing) {
+    public static boolean handlerEmojiText(TextView comment, String content, boolean typing) {
         if (content == null) {
-            return;
+            return false;
         }
         SpannableStringBuilder sb = new SpannableStringBuilder(content);
         String regex = "\\[(\\S+?)\\]";
@@ -208,19 +213,22 @@ public class FaceManager {
             Bitmap bitmap = drawableCache.get(emojiName);
             if (bitmap != null) {
                 imageFound = true;
+
                 sb.setSpan(new ImageSpan(context, bitmap),
                         m.start(), m.end(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
             }
         }
         // 如果没有发现表情图片，并且当前是输入状态，不再重设输入框
         if (!imageFound && typing) {
-            return;
+            return false;
         }
         int selection = comment.getSelectionStart();
         comment.setText(sb);
         if (comment instanceof EditText) {
             ((EditText) comment).setSelection(selection);
         }
+
+        return true;
     }
 
     public static Bitmap getEmoji(String name) {

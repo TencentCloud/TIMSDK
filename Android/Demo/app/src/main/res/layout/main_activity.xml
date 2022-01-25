@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/demo_title_bar_bg"
     android:clipChildren="false"
     android:orientation="vertical">
 
@@ -23,7 +22,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="65dp"
-        android:background="@color/demo_navigate_bar_bg"
+        android:background="?attr/demo_navigate_bar_bg"
         android:clipChildren="false"
         android:orientation="horizontal">
 
@@ -34,15 +33,21 @@
             android:onClick="tabClick"
             android:layout_weight="1">
 
+            <ImageView
+                android:id="@+id/tab_conversation_icon"
+                android:background="?attr/demo_main_tab_conversation_selected_bg"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"/>
+
             <TextView
                 android:id="@+id/conversation"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/demo_conversation_selected"
-                android:textColor="@color/tab_text_selected_color"
-                android:drawablePadding="3dp"
+                android:layout_below="@id/tab_conversation_icon"
+                android:textColor="?attr/demo_main_tab_selected_text_color"
                 android:gravity="center"
                 android:textSize="12sp"
                 android:text="@string/tab_conversation_tab_text" />
@@ -59,7 +64,6 @@
                 android:includeFontPadding="false"
                 android:minWidth="18.4dp"
                 android:minHeight="18.4dp"
-                android:textColor="#fff"
                 android:textSize="13.6sp"
                 android:visibility="gone" />
 
@@ -72,13 +76,21 @@
             android:onClick="tabClick"
             android:layout_weight="1">
 
+            <ImageView
+                android:id="@+id/tab_contact_icon"
+                android:background="?attr/demo_main_tab_contact_normal_bg"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"/>
+
             <TextView
                 android:id="@+id/contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/tab_contact_icon"
                 android:layout_centerInParent="true"
-                android:drawableTop="@drawable/demo_contact_not_selected"
-                android:drawablePadding="3dp"
+                android:textColor="?attr/demo_main_tab_normal_text_color"
                 android:gravity="center"
                 android:textSize="12sp"
                 android:text="@string/tab_contact_tab_text" />
@@ -95,7 +107,6 @@
                 android:includeFontPadding="false"
                 android:minWidth="18.4dp"
                 android:minHeight="18.4dp"
-                android:textColor="#fff"
                 android:textSize="13.6sp"
                 android:visibility="gone" />
         </RelativeLayout>
@@ -107,13 +118,21 @@
             android:onClick="tabClick"
             android:layout_weight="1">
 
+            <ImageView
+                android:id="@+id/tab_profile_icon"
+                android:background="?attr/demo_main_tab_profile_normal_bg"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"/>
+
             <TextView
                 android:id="@+id/mine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/tab_profile_icon"
                 android:layout_centerInParent="true"
-                android:drawableTop="@drawable/demo_profile_not_selected"
-                android:drawablePadding="3dp"
+                android:textColor="?attr/demo_main_tab_normal_text_color"
                 android:textSize="12sp"
                 android:gravity="center"
                 android:text="@string/tab_profile_tab_text" />

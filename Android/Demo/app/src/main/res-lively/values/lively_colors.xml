@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="demo_main_tab_text_selected_color_lively">@color/core_primary_color_lively</color>
+    <color name="demo_navigate_bar_bg_lively">#F4F6F9</color>
+
+    <color name="demo_login_theme_language_text_color_lively">#FFFFFF</color>
+
+</resources>

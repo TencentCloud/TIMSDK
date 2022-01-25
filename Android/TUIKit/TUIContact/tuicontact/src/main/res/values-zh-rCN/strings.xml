@@ -98,4 +98,10 @@
     <string name="profile_msgrev_opt">消息免打扰</string>
 
     <string name="contact_over_limit_tip">最多只能选择%d个。</string>
+
+    <string name="contact_no_such_group">该群不存在</string>
+    <string name="contact_no_such_user">该用户不存在</string>
+
+    <string name="contact_my_user_id">我的用户ID：%s</string>
+
 </resources>

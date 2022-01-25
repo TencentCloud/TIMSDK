@@ -18,6 +18,7 @@ import com.tencent.imsdk.v2.V2TIMMessageSearchParam;
 import com.tencent.imsdk.v2.V2TIMMessageSearchResult;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.tuisearch.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.GroupInfo;
@@ -84,7 +85,7 @@ public class SearchDataProvider {
 
             @Override
             public void onError(int code, String desc) {
-                TUISearchLog.e(TAG, "code = " + code + ", desc = " + desc);
+                TUISearchLog.e(TAG, "code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 groupInfoFinish = true;
                 mergeGroupAndGroupMemberResult(searchParam.getKeywordList(), groupInfos, groupMemberFullInfos, callback);
             }
@@ -118,7 +119,7 @@ public class SearchDataProvider {
 
             @Override
             public void onError(int code, String desc) {
-                TUISearchLog.e(TAG, "code = " + code + ", desc = " + desc);
+                TUISearchLog.e(TAG, "code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 groupMemberFullInfofinish = true;
                 mergeGroupAndGroupMemberResult(searchParam.getKeywordList(), groupInfos, groupMemberFullInfos, callback);
             }
@@ -164,7 +165,7 @@ public class SearchDataProvider {
 
             @Override
             public void onError(int code, String desc) {
-                TUISearchLog.e(TAG, "searchMessages code = " + code + ", desc = " + desc);
+                TUISearchLog.e(TAG, "searchMessages code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 TUISearchUtils.callbackOnError(callBack, TAG, code, desc);
 
             }
@@ -182,7 +183,7 @@ public class SearchDataProvider {
 
             @Override
             public void onError(int code, String desc) {
-                TUISearchLog.e(TAG, "getConversation code = " + code + ", desc = " + desc);
+                TUISearchLog.e(TAG, "getConversation code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 TUISearchUtils.callbackOnError(callBack, code, desc);
             }
         });
@@ -314,7 +315,7 @@ public class SearchDataProvider {
         V2TIMManager.getGroupManager().getGroupsInfo(groupIDList, new V2TIMValueCallback<List<V2TIMGroupInfoResult>>() {
             @Override
             public void onError(int code, String desc) {
-                TUISearchLog.e(TAG, "getGroupsInfo failed, code: " + code + "|desc: " + desc);
+                TUISearchLog.e(TAG, "getGroupsInfo failed, code: " + code + "|desc: " + ErrorMessageConverter.convertIMError(code, desc));
                 if (callback != null) {
                     callback.onSuccess(searchGroupResults);
                 }

@@ -19,7 +19,7 @@
         android:text="@string/cancel"
         android:textSize="17sp"
         android:gravity="center"
-        android:textColor="@color/font_blue"
+        android:textColor="?attr/core_primary_color"
         android:textStyle="bold"
         android:background="@drawable/bottom_sheet_border"
         android:layout_marginTop="10dp"

@@ -24,6 +24,7 @@ import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
@@ -61,7 +62,7 @@ public class ChatProvider {
             @Override
             public void onError(int code, String desc) {
                 TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
-                TUIChatLog.e(TAG, "loadChatMessages getC2CHistoryMessageList failed, code = " + code + ", desc = " + desc);
+                TUIChatLog.e(TAG, "loadChatMessages getC2CHistoryMessageList failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
@@ -81,7 +82,7 @@ public class ChatProvider {
             @Override
             public void onError(int code, String desc) {
                 TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
-                TUIChatLog.e(TAG, "loadChatMessages getC2CHistoryMessageList failed, code = " + code + ", desc = " + desc);
+                TUIChatLog.e(TAG, "loadChatMessages getC2CHistoryMessageList failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
@@ -114,7 +115,7 @@ public class ChatProvider {
             @Override
             public void onError(int code, String desc) {
                 TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
-                TUIChatLog.e(TAG, "loadChatMessages getHistoryMessageList optionBackward failed, code = " + code + ", desc = " + desc);
+                TUIChatLog.e(TAG, "loadChatMessages getHistoryMessageList optionBackward failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
@@ -129,7 +130,7 @@ public class ChatProvider {
         V2TIMManager.getMessageManager().markC2CMessageAsRead(userId, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
-                TUIChatLog.e(TAG, "markC2CMessageAsRead setReadMessage failed, code = " + code + ", desc = " + desc);
+                TUIChatLog.e(TAG, "markC2CMessageAsRead setReadMessage failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
@@ -143,7 +144,7 @@ public class ChatProvider {
         V2TIMManager.getMessageManager().markGroupMessageAsRead(groupId, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
-                TUIChatLog.e(TAG, "markGroupMessageAsRead failed, code = " + code + ", desc = " + desc);
+                TUIChatLog.e(TAG, "markGroupMessageAsRead failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
@@ -159,8 +160,8 @@ public class ChatProvider {
         V2TIMManager.getGroupManager().getGroupApplicationList(new V2TIMValueCallback<V2TIMGroupApplicationResult>() {
             @Override
             public void onError(int code, String desc) {
-                TUIChatLog.e(TAG, "getGroupPendencyList failed, code: " + code + "|desc: " + desc);
-                callBack.onError(TAG, code, desc);
+                TUIChatLog.e(TAG, "getGroupPendencyList failed, code: " + code + "|desc: " + ErrorMessageConverter.convertIMError(code, desc));
+                callBack.onError(TAG, code, ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
@@ -212,7 +213,7 @@ public class ChatProvider {
                 V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
                     @Override
                     public void onProgress(int progress) {
-
+                        TUIChatUtils.callbackOnProgress(callBack, progress);
                     }
 
                     @Override
@@ -244,7 +245,7 @@ public class ChatProvider {
 
                     @Override
                     public void onError(int code, String desc) {
-                        TUIChatLog.v(TAG, "sendMessage fail:" + code + "=" + desc);
+                        TUIChatLog.v(TAG, "sendMessage fail:" + code + "=" + ErrorMessageConverter.convertIMError(code, desc));
                         TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
                     }
 
@@ -318,7 +319,7 @@ public class ChatProvider {
             @Override
             public void onError(int code, String desc) {
                 TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
-                TUIChatLog.w(TAG, "deleteMessages code:" + code + "|desc:" + desc);
+                TUIChatLog.w(TAG, "deleteMessages code:" + code + "|desc:" + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
@@ -338,7 +339,7 @@ public class ChatProvider {
 
             @Override
             public void onError(int code, String desc) {
-                TUIChatLog.e(TAG, "set drafts error : " + code + " " + desc);
+                TUIChatLog.e(TAG, "set drafts error : " + code + " " + ErrorMessageConverter.convertIMError(code, desc));
             }
         });
     }
@@ -347,7 +348,7 @@ public class ChatProvider {
         V2TIMManager.getConversationManager().getConversation(conversationId, new V2TIMValueCallback<V2TIMConversation>() {
             @Override
             public void onError(int code, String desc) {
-                Log.e(TAG, "getConversationLastMessage error:" + code + ", desc:" + desc);
+                Log.e(TAG, "getConversationLastMessage error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
@@ -376,7 +377,7 @@ public class ChatProvider {
         V2TIMManager.getGroupManager().createGroup(v2TIMGroupInfo, v2TIMCreateGroupMemberInfoList, new V2TIMValueCallback<String>() {
             @Override
             public void onError(int code, String desc) {
-                TUIChatLog.e(TAG, "createGroup failed, code: " + code + "|desc: " + desc);
+                TUIChatLog.e(TAG, "createGroup failed, code: " + code + "|desc: " + ErrorMessageConverter.convertIMError(code, desc));
                 TUIChatUtils.callbackOnError(callback, TAG, code, desc);
             }
 
@@ -527,6 +528,28 @@ public class ChatProvider {
             }
         });
 
+    }
+
+    public void getGroupMessageBySeq(String chatId, long seq, IUIKitCallback<List<TUIMessageBean>> callback) {
+        V2TIMMessageListGetOption optionBackward = new V2TIMMessageListGetOption();
+        optionBackward.setCount(1);
+        optionBackward.setGetType(V2TIMMessageListGetOption.V2TIM_GET_CLOUD_OLDER_MSG);
+        optionBackward.setLastMsgSeq(seq);
+        optionBackward.setGroupID(chatId);
+
+        V2TIMManager.getMessageManager().getHistoryMessageList(optionBackward, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatUtils.callbackOnError(callback, TAG, code, desc);
+                TUIChatLog.e(TAG, "loadChatMessages getHistoryMessageList optionBackward failed, code = " + code + ", desc = " + desc);
+            }
+
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                List<TUIMessageBean> messageInfoList = ChatMessageParser.parseMessageList(v2TIMMessages);
+                TUIChatUtils.callbackOnSuccess(callback, messageInfoList);
+            }
+        });
     }
 
     public void downloadMergerMessage(MergeMessageBean messageBean, IUIKitCallback<List<TUIMessageBean>> callback) {

@@ -1,15 +1,9 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 
-import java.util.HashMap;
 
 /**
  * 音视频通话消息

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
@@ -121,7 +122,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (!TextUtils.isEmpty(path)) {
                 GlideEngine.loadImage(contactViewHolder.mUserIconView, path);
             } else {
-                contactViewHolder.mUserIconView.setImageResource(R.drawable.default_user_icon);
+                contactViewHolder.mUserIconView.setImageResource(TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), R.attr.core_default_user_icon));
             }
             if (text != null) {
                 //设置span
@@ -184,7 +185,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (!TextUtils.isEmpty(searchDataBean.getIconPath())) {
             GlideEngine.loadImage(holder.conversationIcon, searchDataBean.getIconPath());
         } else {
-            holder.conversationIcon.setImageResource(R.drawable.default_user_icon);
+            holder.conversationIcon.setImageResource(TUIThemeManager.getAttrResId(holder.conversationIcon.getContext(), R.attr.core_default_user_icon));
         }
         holder.conversationTitle.setText(searchDataBean.getTitle());
     }

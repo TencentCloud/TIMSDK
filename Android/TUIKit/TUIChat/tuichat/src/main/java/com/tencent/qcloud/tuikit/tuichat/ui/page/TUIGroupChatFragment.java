@@ -13,8 +13,10 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class TUIGroupChatFragment extends TUIBaseChatFragment {
@@ -93,6 +95,15 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
             @Override
             public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {
 
+            }
+
+            @Override
+            public void onTextSelected(View view, int position, TUIMessageBean messageInfo) {
+                if (messageInfo instanceof  TextMessageBean) {
+                    TUIChatLog.d(TAG, "chatfragment onTextSelected selectedText = " + ((TextMessageBean) messageInfo).getSelectText());
+                }
+                chatView.getMessageLayout().setSelectedPosition(position);
+                chatView.getMessageLayout().showItemPopMenu(position - 1, messageInfo, view);
             }
         });
     }

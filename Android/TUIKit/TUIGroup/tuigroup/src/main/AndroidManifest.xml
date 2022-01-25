@@ -3,13 +3,15 @@
     package="com.tencent.qcloud.tuikit.tuigroup">
 
     <application>
+        <activity android:name=".ui.page.GroupNoticeActivity"></activity>
+        <activity android:name=".ui.page.SetGroupManagerActivity" />
+        <activity android:name=".ui.page.GroupMemberActivity" />
+        <activity android:name=".ui.page.ManageGroupActivity" />
         <activity
-            android:name="com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupInfoActivity"
+            android:name=".ui.page.GroupInfoActivity"
             android:screenOrientation="portrait" />
-
-
         <activity
-            android:name="com.tencent.qcloud.tuikit.tuigroup.ui.page.GroupApplyManagerActivity"
+            android:name=".ui.page.GroupApplyManagerActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
@@ -17,7 +19,7 @@
             android:name=".TUIGroupService"
             android:authorities="${applicationId}.TUIGroup.Init"
             android:enabled="true"
-            android:exported="false"/>
-
+            android:exported="false" />
     </application>
+
 </manifest>

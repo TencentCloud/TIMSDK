@@ -4,6 +4,7 @@ import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
@@ -16,19 +17,25 @@ public class TUIChatUtils {
 
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, String module, int errCode, String desc) {
         if (callBack != null) {
-            callBack.onError(module, errCode, desc);
+            callBack.onError(module, errCode, ErrorMessageConverter.convertIMError(errCode, desc));
         }
     }
 
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, int errCode, String desc) {
         if (callBack != null) {
-            callBack.onError(null, errCode, desc);
+            callBack.onError(null, errCode, ErrorMessageConverter.convertIMError(errCode, desc));
         }
     }
 
     public static <T> void callbackOnSuccess(IUIKitCallback<T> callBack, T data) {
         if (callBack != null) {
             callBack.onSuccess(data);
+        }
+    }
+
+    public static void callbackOnProgress(IUIKitCallback callBack, Object data) {
+        if (callBack != null) {
+            callBack.onProgress(data);
         }
     }
 

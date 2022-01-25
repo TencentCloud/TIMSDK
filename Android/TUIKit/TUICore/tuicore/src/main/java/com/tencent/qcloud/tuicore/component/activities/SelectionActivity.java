@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuicore.component.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,10 +20,11 @@ import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuicore.interfaces.ITUIThemeChangeable;
 
 import java.util.ArrayList;
 
-public class SelectionActivity extends Activity {
+public class SelectionActivity extends BaseLightActivity {
 
     private static OnResultReturnListener sOnResultReturnListener;
 
@@ -35,6 +35,8 @@ public class SelectionActivity extends Activity {
     private ArrayList<String> selectList = new ArrayList<>();
     private int selectedItem = -1;
     private OnItemClickListener onItemClickListener;
+    private boolean needConfirm = true;
+    private boolean returnNow = true;
 
     public static void startTextSelection(Context context, Bundle bundle, OnResultReturnListener listener) {
         bundle.putInt(Selection.TYPE, Selection.TYPE_TEXT);
@@ -59,7 +61,6 @@ public class SelectionActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tuicore_selection_activity);
         final TitleBarLayout titleBar = findViewById(R.id.edit_title_bar);
-        titleBar.setBackgroundColor(0xFFFFFF);
         selectListView = findViewById(R.id.select_list);
         selectListAdapter = new SelectAdapter();
         selectListView.setAdapter(selectListAdapter);
@@ -73,6 +74,9 @@ public class SelectionActivity extends Activity {
                 selectedItem = position;
                 selectListAdapter.setSelectedItem(position);
                 selectListAdapter.notifyDataSetChanged();
+                if (!needConfirm) {
+                    echoClick();
+                }
             }
         };
         input = findViewById(R.id.edit_content_et);
@@ -112,6 +116,10 @@ public class SelectionActivity extends Activity {
         mSelectionType = bundle.getInt(Selection.TYPE);
 
         final String title = bundle.getString(Selection.TITLE);
+
+        needConfirm = bundle.getBoolean(Selection.NEED_CONFIRM, true);
+        returnNow = bundle.getBoolean(Selection.RETURN_NOW, true);
+
         titleBar.setTitle(title, ITitleBarLayout.Position.MIDDLE);
         titleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override
@@ -120,13 +128,17 @@ public class SelectionActivity extends Activity {
             }
         });
         titleBar.getRightIcon().setVisibility(View.GONE);
-        titleBar.getRightTitle().setText(getResources().getString(R.string.sure));
-        titleBar.setOnRightClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                echoClick();
-            }
-        });
+        if (needConfirm) {
+            titleBar.getRightTitle().setText(getResources().getString(R.string.sure));
+            titleBar.setOnRightClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    echoClick();
+                }
+            });
+        } else {
+            titleBar.getRightGroup().setVisibility(View.GONE);
+        }
     }
 
     private void echoClick() {
@@ -142,7 +154,9 @@ public class SelectionActivity extends Activity {
                 }
                 break;
         }
-        finish();
+        if (returnNow) {
+            finish();
+        }
     }
 
     @Override
@@ -221,6 +235,8 @@ public class SelectionActivity extends Activity {
         public static final String DEFAULT_SELECT_ITEM_INDEX = "default_select_item_index";
         public static final String LIST = "list";
         public static final String LIMIT = "limit";
+        public static final String NEED_CONFIRM = "needConfirm";
+        public static final String RETURN_NOW = "returnNow";
         public static final int TYPE_TEXT = 1;
         public static final int TYPE_LIST = 2;
 

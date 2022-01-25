@@ -63,7 +63,7 @@ public class GroupApplyAdapter extends BaseAdapter {
         MyViewHolder holder;
         final GroupApplyInfo info = getItem(i);
         if (view == null) {
-            view = LayoutInflater.from(TUIGroupService.getAppContext()).inflate(R.layout.group_member_apply_adpater, viewGroup, false);
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.group_member_apply_adpater, viewGroup, false);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

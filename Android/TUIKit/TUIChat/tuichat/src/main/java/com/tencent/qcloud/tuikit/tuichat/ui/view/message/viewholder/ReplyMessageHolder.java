@@ -1,10 +1,12 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -25,6 +27,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
     private TextView senderNameTv;
     private TextView replyContentTv;
     private FrameLayout quoteFrameLayout;
+    private View line;
 
     public ReplyMessageHolder(View itemView) {
         super(itemView);
@@ -32,6 +35,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
         replyContentTv = itemView.findViewById(R.id.reply_content_tv);
         originMsgLayout = itemView.findViewById(R.id.origin_msg_abs_layout);
         quoteFrameLayout = itemView.findViewById(R.id.quote_frame_layout);
+        line = itemView.findViewById(R.id.reply_line);
     }
 
     @Override
@@ -68,6 +72,24 @@ public class ReplyMessageHolder extends MessageContentHolder {
                 return true;
             }
         });
+
+        setThemeColor(msg);
+    }
+
+    private void setThemeColor(TUIMessageBean messageBean) {
+        Context context = itemView.getContext();
+        Resources resources = itemView.getResources();
+        if (!messageBean.isSelf()) {
+            originMsgLayout.setBackgroundColor(resources.getColor(TUIThemeManager.getAttrResId(context, R.attr.chat_other_reply_quote_bg_color)));
+            senderNameTv.setTextColor(resources.getColor(TUIThemeManager.getAttrResId(context, R.attr.chat_other_reply_quote_text_color)));
+            replyContentTv.setTextColor(resources.getColor(TUIThemeManager.getAttrResId(context, R.attr.chat_other_reply_text_color)));
+            line.setBackgroundColor(resources.getColor(TUIThemeManager.getAttrResId(context, R.attr.chat_other_reply_line_bg_color)));
+        } else {
+            originMsgLayout.setBackgroundColor(resources.getColor(TUIThemeManager.getAttrResId(context, R.attr.chat_self_reply_quote_bg_color)));
+            senderNameTv.setTextColor(resources.getColor(TUIThemeManager.getAttrResId(context, R.attr.chat_self_reply_quote_text_color)));
+            replyContentTv.setTextColor(resources.getColor(TUIThemeManager.getAttrResId(context, R.attr.chat_self_reply_text_color)));
+            line.setBackgroundColor(resources.getColor(TUIThemeManager.getAttrResId(context, R.attr.chat_self_reply_line_bg_color)));
+        }
     }
 
     private void performMsgAbstract(ReplyMessageBean replyMessageBean, int position) {
@@ -75,9 +97,9 @@ public class ReplyMessageHolder extends MessageContentHolder {
 
         TUIReplyQuoteBean replyQuoteBean = replyMessageBean.getReplyQuoteBean();
         if (originMessage != null) {
-            performQuote(replyQuoteBean);
+            performQuote(replyQuoteBean, replyMessageBean);
         } else {
-            performNotFound(replyQuoteBean);
+            performNotFound(replyQuoteBean, replyMessageBean);
         }
 
         originMsgLayout.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +113,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
 
     }
 
-    private void performNotFound(TUIReplyQuoteBean replyQuoteBean) {
+    private void performNotFound(TUIReplyQuoteBean replyQuoteBean, ReplyMessageBean replyMessageBean) {
         String typeStr = ChatMessageParser.getMsgTypeStr(replyQuoteBean.getMessageType());
         String abstractStr = replyQuoteBean.getDefaultAbstract();
         if (ChatMessageParser.isFileType(replyQuoteBean.getMessageType())) {
@@ -101,11 +123,12 @@ public class ReplyMessageHolder extends MessageContentHolder {
         textReplyQuoteBean.setText(typeStr + abstractStr);
         TextReplyQuoteView textReplyQuoteView = new TextReplyQuoteView(itemView.getContext());
         textReplyQuoteView.onDrawReplyQuote(textReplyQuoteBean);
+        textReplyQuoteView.setSelf(replyMessageBean.isSelf());
         quoteFrameLayout.removeAllViews();
         quoteFrameLayout.addView(textReplyQuoteView);
     }
 
-    private void performQuote(TUIReplyQuoteBean replyQuoteBean) {
+    private void performQuote(TUIReplyQuoteBean replyQuoteBean, ReplyMessageBean replyMessageBean) {
         Class<? extends TUIReplyQuoteView> quoteViewClass = replyQuoteBean.getReplyQuoteViewClass();
         if (quoteViewClass != null) {
             TUIReplyQuoteView quoteView = null;
@@ -125,6 +148,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
                 quoteView.onDrawReplyQuote(replyQuoteBean);
                 quoteFrameLayout.removeAllViews();
                 quoteFrameLayout.addView(quoteView);
+                quoteView.setSelf(replyMessageBean.isSelf());
             }
         }
     }

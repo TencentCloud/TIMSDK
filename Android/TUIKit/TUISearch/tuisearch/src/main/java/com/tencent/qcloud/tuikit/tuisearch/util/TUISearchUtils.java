@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.tuisearch.bean.ChatInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -17,13 +18,13 @@ public class TUISearchUtils {
 
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, String module, int errCode, String desc) {
         if (callBack != null) {
-            callBack.onError(module, errCode, desc);
+            callBack.onError(module, errCode, ErrorMessageConverter.convertIMError(errCode, desc));
         }
     }
 
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, int errCode, String desc) {
         if (callBack != null) {
-            callBack.onError(null, errCode, desc);
+            callBack.onError(null, errCode, ErrorMessageConverter.convertIMError(errCode, desc));
         }
     }
 

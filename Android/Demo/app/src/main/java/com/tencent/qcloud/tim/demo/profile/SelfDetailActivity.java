@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo.profile;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -17,6 +15,7 @@ import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
@@ -25,6 +24,7 @@ import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-public class SelfDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class SelfDetailActivity extends BaseLightActivity implements View.OnClickListener {
     private static final String TAG = SelfDetailActivity.class.getSimpleName();
 
     private TitleBarLayout titleBarLayout;
@@ -67,7 +67,6 @@ public class SelfDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setupViews() {
-        titleBarLayout.setLeftIcon(R.drawable.demo_back);
         titleBarLayout.getRightIcon().setVisibility(View.GONE);
         titleBarLayout.setTitle(getString(R.string.demo_profile_detail), ITitleBarLayout.Position.MIDDLE);
         titleBarLayout.setOnLeftClickListener(this);
@@ -249,8 +248,8 @@ public class SelfDetailActivity extends AppCompatActivity implements View.OnClic
         V2TIMManager.getInstance().setSelfInfo(v2TIMUserFullInfo, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
-                DemoLog.e(TAG, "modifySelfProfile err code = " + code + ", desc = " + desc);
-                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + desc);
+                DemoLog.e(TAG, "modifySelfProfile err code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
+                ToastUtil.toastShortMessage("Error code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override

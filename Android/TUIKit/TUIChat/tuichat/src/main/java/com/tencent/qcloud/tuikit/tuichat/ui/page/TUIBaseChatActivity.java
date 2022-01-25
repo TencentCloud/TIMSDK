@@ -14,6 +14,7 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.interfaces.ITUIThemeChangeable;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -37,10 +38,7 @@ public abstract class TUIBaseChatActivity extends BaseLightActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(getResources().getColor(R.color.chat_title_bar_bg));
-        }
+
         chat(getIntent());
     }
 

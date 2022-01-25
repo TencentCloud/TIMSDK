@@ -19,11 +19,15 @@ public class TUIGroupConstants {
 
     public static class Selection {
         public static final String SELECT_FRIENDS = "select_friends";
+        public static final String SELECT_FOR_CALL = "isSelectForCall";
+        public static final String IS_SELECT_MODE = "isSelectMode";
+
         public static final String CONTENT = "content";
         public static final String TYPE = "type";
         public static final String TITLE = "title";
         public static final String LIST = "list";
         public static final String LIMIT = "limit";
+        public static final String FILTER = "filter";
 
     }
 }

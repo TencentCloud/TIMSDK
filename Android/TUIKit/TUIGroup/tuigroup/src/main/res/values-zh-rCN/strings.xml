@@ -5,6 +5,7 @@
     <string name="group_name">群聊名称</string>
     <string name="group_icon">修改群头像</string>
     <string name="group_notice">群公告</string>
+    <string name="group_notice_empty_tip">暂无群公告。</string>
     <string name="group_members">群成员</string>
     <string name="group_type">群类型</string>
     <string name="add_group_member">添加成员</string>
@@ -15,6 +16,7 @@
     <string name="clear_message">清除聊天记录</string>
     <string name="modify_group_notice">修改群公告</string>
     <string name="modify_nick_name_in_goup">修改我的群昵称</string>
+    <string name="group_edit">编辑</string>
 
     <string name="group_detail">群聊详情</string>
 
@@ -79,5 +81,23 @@
 
     <string name="group_account_tag">ID：</string>
     <string name="group_view_more_group_members">查看更多群成员</string>
+
+    <string name="group_set_manager">设置管理员</string>
+    <string name="group_mute_all">全员禁言</string>
+    <string name="group_cancel_mute_label">取消禁言</string>
+    <string name="group_mute_tip">全员禁言开启后，只允许群主和管理员发言。</string>
+    <string name="group_add_mute_member_tip">添加需要禁言的群成员</string>
+    <string name="group_owner_label">群主</string>
+    <string name="group_manager_label">管理员</string>
+    <string name="group_add_manager_count_label">管理员（%d）</string>
+    <string name="group_add_manager_label">添加管理员</string>
+    <string name="group_remove_manager_label">取消管理员</string>
+    <string name="group_remove_manager_tip">成功取消管理员身份。</string>
+
+    <string name="group_over_limit_tip">最多只能选择%d个。</string>
+    <string name="group_transfer_group_owner">转让群主</string>
+
+    <string name="group_not_support_set_manager">当前类型群聊不支持设置管理员。</string>
+    <string name="group_not_support_mute_member">当前类型群聊不支持禁言指定群成员。</string>
 
 </resources>

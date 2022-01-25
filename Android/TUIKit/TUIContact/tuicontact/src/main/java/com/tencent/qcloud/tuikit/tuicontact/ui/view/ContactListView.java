@@ -15,8 +15,8 @@ import android.widget.TextView;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuicore.component.indexlib.IndexBar.widget.IndexBar;
-import com.tencent.qcloud.tuicore.component.indexlib.suspension.SuspensionDecoration;
+import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.widget.IndexBar;
+import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.suspension.SuspensionDecoration;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.ui.interfaces.IContactListView;
 
@@ -36,6 +36,7 @@ public class ContactListView extends LinearLayout implements IContactListView {
     private SuspensionDecoration mDecoration;
     private ProgressBar mContactLoadingBar;
     private String groupId;
+    private boolean isGroupList = false;
 
     /**
      * 右侧边栏导航区域
@@ -70,7 +71,12 @@ public class ContactListView extends LinearLayout implements IContactListView {
         this.presenter = presenter;
         if (mAdapter != null) {
             mAdapter.setPresenter(presenter);
+            mAdapter.setIsGroupList(isGroupList);
         }
+    }
+
+    public void setIsGroupList(boolean isGroupList) {
+        this.isGroupList = isGroupList;
     }
 
     private void init() {

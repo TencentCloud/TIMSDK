@@ -14,6 +14,7 @@ import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class TUILogin {
             @Override
             public void onConnectFailed(int code, String error) {
                 if (listener != null) {
-                    listener.onConnectFailed(code, error);
+                    listener.onConnectFailed(code, ErrorMessageConverter.convertIMError(code, error));
                 }
             }
 
@@ -146,7 +147,7 @@ public class TUILogin {
             @Override
             public void onError(int code, String desc) {
                 if (callback != null) {
-                    callback.onError(code, desc);
+                    callback.onError(code, ErrorMessageConverter.convertIMError(code, desc));
                 }
             }
         });
@@ -169,7 +170,7 @@ public class TUILogin {
 
             @Override
             public void onError(int code, String desc) {
-                Log.e(TAG, "get logined userInfo failed. code : " + code + " desc : " + desc);
+                Log.e(TAG, "get logined userInfo failed. code : " + code + " desc : " + ErrorMessageConverter.convertIMError(code, desc));
             }
         });
     }
@@ -209,7 +210,7 @@ public class TUILogin {
             @Override
             public void onError(int code, String desc) {
                 if (callback != null) {
-                    callback.onError(code, desc);
+                    callback.onError(code, ErrorMessageConverter.convertIMError(code, desc));
                 }
             }
         });

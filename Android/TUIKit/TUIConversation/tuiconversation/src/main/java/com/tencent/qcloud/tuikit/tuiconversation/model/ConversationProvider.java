@@ -9,8 +9,11 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
+import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
@@ -31,7 +34,7 @@ public class ConversationProvider {
         V2TIMManager.getConversationManager().getConversationList(startSeq, loadCount, new V2TIMValueCallback<V2TIMConversationResult>() {
             @Override
             public void onError(int code, String desc) {
-                TUIConversationLog.v(TAG, "loadConversation getConversationList error, code = " + code + ", desc = " + desc);
+                TUIConversationLog.v(TAG, "loadConversation getConversationList error, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 TUIConversationUtils.callbackOnError(callBack, TAG, code, desc);
             }
 
@@ -91,7 +94,7 @@ public class ConversationProvider {
         V2TIMManager.getConversationManager().deleteConversation(conversationId, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
-                TUIConversationLog.e(TAG, "deleteConversation error:" + code + ", desc:" + desc);
+                TUIConversationLog.e(TAG, "deleteConversation error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
                 TUIConversationUtils.callbackOnError(callBack, TAG, code, desc);
             }
 
@@ -109,7 +112,7 @@ public class ConversationProvider {
             V2TIMManager.getMessageManager().clearGroupHistoryMessage(userId, new V2TIMCallback() {
                 @Override
                 public void onError(int code, String desc) {
-                    TUIConversationLog.e(TAG, "clearConversationMessage error:" + code + ", desc:" + desc);
+                    TUIConversationLog.e(TAG, "clearConversationMessage error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
                     TUIConversationUtils.callbackOnError(callBack, TAG, code, desc);
                 }
 
@@ -123,7 +126,7 @@ public class ConversationProvider {
             V2TIMManager.getMessageManager().clearC2CHistoryMessage(userId, new V2TIMCallback() {
                 @Override
                 public void onError(int code, String desc) {
-                    TUIConversationLog.e(TAG, "clearConversationMessage error:" + code + ", desc:" + desc);
+                    TUIConversationLog.e(TAG, "clearConversationMessage error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
                     TUIConversationUtils.callbackOnError(callBack, TAG, code, desc);
 
                 }
@@ -143,7 +146,7 @@ public class ConversationProvider {
             @Override
             public void onError(int code, String desc) {
                 TUIConversationUtils.callbackOnError(callback, code, desc);
-                TUIConversationLog.e("ConversationIconView", "getGroupMemberList failed! groupID:" + groupId + "|code:" + code + "|desc: " + desc);
+                TUIConversationLog.e("ConversationIconView", "getGroupMemberList failed! groupID:" + groupId + "|code:" + code + "|desc: " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
@@ -153,20 +156,10 @@ public class ConversationProvider {
                 final List<Object> urlList = new ArrayList<>();
                 for (int i = 0; i < faceSize; i++) {
                     V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = v2TIMGroupMemberFullInfoList.get(i);
-                    if (TextUtils.isEmpty(v2TIMGroupMemberFullInfo.getFaceUrl())) {
-                        urlList.add(R.drawable.default_user_icon);
-                    } else {
-                        urlList.add(v2TIMGroupMemberFullInfo.getFaceUrl());
-                    }
+                    urlList.add(v2TIMGroupMemberFullInfo.getFaceUrl());
                 }
                 TUIConversationUtils.callbackOnSuccess(callback, urlList);
             }
         });
     }
-
-
-//
-//    public ChatInfo getChatInfoByConversationInfo(ConversationInfo conversationInfo) {
-//        return ConversationUtils.getChatInfoByConversationInfo(conversationInfo);
-//    }
 }

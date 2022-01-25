@@ -39,7 +39,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected ImageView disturbView;
     protected CheckBox multiSelectCheckBox;
     protected RelativeLayout messageStatusLayout;
-    public ProgressBar messageSending;
+    public ImageView messageSending;
     public ImageView messagefailed;
     private boolean isForwardMode = false;
 
@@ -132,6 +132,10 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             atInfoText.setVisibility(View.VISIBLE);
             atInfoText.setText(R.string.drafts);
             atInfoText.setTextColor(Color.RED);
+
+            messageStatusLayout.setVisibility(View.GONE);
+            messagefailed.setVisibility(View.GONE);
+            messageSending.setVisibility(View.GONE);
         } else {
             if (conversation.getAtInfoText().isEmpty()) {
                 atInfoText.setVisibility(View.GONE);
@@ -139,6 +143,28 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 atInfoText.setVisibility(View.VISIBLE);
                 atInfoText.setText(conversation.getAtInfoText());
                 atInfoText.setTextColor(Color.RED);
+            }
+
+            V2TIMMessage lastMessage = conversation.getLastMessage();
+            if (lastMessage != null) {
+                int status = lastMessage.getStatus();
+                if (status == V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL) {
+                    messageStatusLayout.setVisibility(View.VISIBLE);
+                    messagefailed.setVisibility(View.VISIBLE);
+                    messageSending.setVisibility(View.GONE);
+                } else if (status == V2TIMMessage.V2TIM_MSG_STATUS_SENDING) {
+                    messageStatusLayout.setVisibility(View.VISIBLE);
+                    messagefailed.setVisibility(View.GONE);
+                    messageSending.setVisibility(View.VISIBLE);
+                } else {
+                    messageStatusLayout.setVisibility(View.GONE);
+                    messagefailed.setVisibility(View.GONE);
+                    messageSending.setVisibility(View.GONE);
+                }
+            } else {
+                messageStatusLayout.setVisibility(View.GONE);
+                messagefailed.setVisibility(View.GONE);
+                messageSending.setVisibility(View.GONE);
             }
         }
 
@@ -162,28 +188,6 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             disturbView.setVisibility(View.VISIBLE);
         } else {
             disturbView.setVisibility(View.GONE);
-        }
-
-        V2TIMMessage lastMessage = conversation.getLastMessage();
-        if (lastMessage != null) {
-            int status = lastMessage.getStatus();
-            if (status == V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL) {
-                messageStatusLayout.setVisibility(View.VISIBLE);
-                messagefailed.setVisibility(View.VISIBLE);
-                messageSending.setVisibility(View.GONE);
-            } else if (status == V2TIMMessage.V2TIM_MSG_STATUS_SENDING) {
-                messageStatusLayout.setVisibility(View.VISIBLE);
-                messagefailed.setVisibility(View.GONE);
-                messageSending.setVisibility(View.VISIBLE);
-            } else {
-                messageStatusLayout.setVisibility(View.GONE);
-                messagefailed.setVisibility(View.GONE);
-                messageSending.setVisibility(View.GONE);
-            }
-        } else {
-            messageStatusLayout.setVisibility(View.GONE);
-            messagefailed.setVisibility(View.GONE);
-            messageSending.setVisibility(View.GONE);
         }
 
         if (isForwardMode) {

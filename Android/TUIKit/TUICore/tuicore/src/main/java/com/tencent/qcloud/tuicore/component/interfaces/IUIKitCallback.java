@@ -8,4 +8,6 @@ public interface IUIKitCallback<T> {
     void onSuccess(T data);
 
     void onError(String module, int errCode, String errMsg);
+
+    default void onProgress(Object data) {};
 }

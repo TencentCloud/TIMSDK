@@ -5,19 +5,21 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.util.SoftKeyBoardUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
@@ -66,7 +68,6 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
         groupTypeTagView = findViewById(R.id.group_type_tag);
 
         mTitleBar = findViewById(R.id.add_friend_titlebar);
-        mTitleBar.setLeftIcon(R.drawable.contact_title_bar_back);
         mTitleBar.setTitle(mIsGroup ? getResources().getString(R.string.add_group) : getResources().getString(R.string.add_friend), ITitleBarLayout.Position.MIDDLE);
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override
@@ -138,11 +139,44 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
             }
         });
 
+        if (!mIsGroup) {
+            idLabel.setText(getString(R.string.contact_my_user_id, TUILogin.getLoginUser()));
+        }
+
+        searchEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    idLabel.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        searchEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(searchEdit.getText())) {
+                    detailArea.setVisibility(View.GONE);
+                    notFoundTip.setVisibility(View.GONE);
+                }
+            }
+        });
+
     }
 
     private void setGroupDetail(GroupInfo groupInfo) {
         int radius = getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
-        GlideEngine.loadUserIcon(faceImgView, groupInfo.getFaceUrl(), R.drawable.default_group_icon, radius);
+        GlideEngine.loadUserIcon(faceImgView, groupInfo.getFaceUrl(), R.drawable.core_default_group_icon_serious, radius);
         idTextView.setText(groupInfo.getId());
         nickNameView.setText(groupInfo.getGroupName());
         groupTypeTagView.setVisibility(View.VISIBLE);
@@ -164,9 +198,9 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
     private void setNotFound(boolean isGroup) {
         detailArea.setVisibility(View.GONE);
         if (isGroup) {
-            notFoundTip.setText("该群不存在");
+            notFoundTip.setText(getString(R.string.contact_no_such_group));
         } else {
-            notFoundTip.setText("该用户不存在");
+            notFoundTip.setText(getString(R.string.contact_no_such_user));
         }
         notFoundTip.setVisibility(View.VISIBLE);
     }

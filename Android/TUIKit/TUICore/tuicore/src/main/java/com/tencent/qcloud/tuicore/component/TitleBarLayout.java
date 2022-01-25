@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.R;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
@@ -55,7 +56,7 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
         LayoutParams params = (LayoutParams) mTitleLayout.getLayoutParams();
         params.height = ScreenUtil.getPxByDp(50);
         mTitleLayout.setLayoutParams(params);
-        setBackgroundColor(getResources().getColor(R.color.status_bar_color));
+        setBackgroundResource(TUIThemeManager.getAttrResId(getContext(), R.attr.core_title_bar_bg));
 
         int iconSize = ScreenUtil.dip2px(20);
         ViewGroup.LayoutParams iconParams = mLeftIcon.getLayoutParams();
@@ -112,7 +113,7 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
 
     @Override
     public void setLeftIcon(int resId) {
-        mLeftIcon.setImageResource(resId);
+        mLeftIcon.setBackgroundResource(resId);
     }
 
     @Override
@@ -122,7 +123,7 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
 
     @Override
     public void setRightIcon(int resId) {
-        mRightIcon.setImageResource(resId);
+        mRightIcon.setBackgroundResource(resId);
     }
 
     @Override

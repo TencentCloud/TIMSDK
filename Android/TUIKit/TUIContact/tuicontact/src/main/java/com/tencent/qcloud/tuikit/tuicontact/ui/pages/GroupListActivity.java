@@ -77,9 +77,9 @@ public class GroupListActivity extends BaseLightActivity {
     public void loadDataSource() {
         presenter = new ContactPresenter();
         presenter.setFriendListListener();
+        mListView.setIsGroupList(true);
         mListView.setPresenter(presenter);
         presenter.setContactListView(mListView);
-
         mListView.loadDataSource(ContactListView.DataSource.GROUP_LIST);
     }
 

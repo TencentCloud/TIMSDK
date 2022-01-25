@@ -5,27 +5,19 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
-import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
 import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuicore.component.menu.Menu;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactLayout;
 import com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TUIContactFragment extends BaseFragment {
 

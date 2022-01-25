@@ -1,15 +1,14 @@
 package com.tencent.qcloud.tuikit.tuicontact.ui.pages;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StartGroupMemberSelectActivity extends Activity {
+public class StartGroupMemberSelectActivity extends BaseLightActivity {
 
     private static final String TAG = StartGroupMemberSelectActivity.class.getSimpleName();
 
@@ -75,7 +74,6 @@ public class StartGroupMemberSelectActivity extends Activity {
 
         mTitleBar = findViewById(R.id.group_create_title_bar);
         mTitleBar.setTitle(getResources().getString(R.string.sure), ITitleBarLayout.Position.RIGHT);
-        mTitleBar.getRightTitle().setTextColor(getResources().getColor(R.color.title_bar_font_color));
         mTitleBar.getRightIcon().setVisibility(View.GONE);
         mTitleBar.setOnRightClickListener(new View.OnClickListener() {
             @Override

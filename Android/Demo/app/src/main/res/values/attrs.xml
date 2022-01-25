@@ -12,4 +12,5 @@
         <!-- 是否是开关 -->
         <attr name="isSwitch" format="boolean"/>
     </declare-styleable>
+
 </resources>

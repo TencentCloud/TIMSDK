@@ -19,7 +19,7 @@ public class MessageViewHolderFactory {
 
     public static RecyclerView.ViewHolder getInstance(ViewGroup parent, ICommonMessageAdapter adapter, int viewType) {
 
-        LayoutInflater inflater = LayoutInflater.from(TUIChatService.getAppContext());
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         RecyclerView.ViewHolder holder = null;
         View view = null;
 

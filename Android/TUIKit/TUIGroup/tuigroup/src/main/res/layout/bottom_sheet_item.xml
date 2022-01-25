@@ -8,7 +8,7 @@
         android:textSize="17sp"
         android:gravity="center"
         android:background="@null"
-        android:textColor="@color/font_blue"
+        android:textColor="?attr/core_primary_color"
         android:layout_width="match_parent"
         android:layout_height="48dp"/>
 

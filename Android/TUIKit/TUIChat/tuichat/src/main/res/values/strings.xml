@@ -194,4 +194,9 @@
     <string name="reedit_msg">re-edit</string>
     <string name="save_tips">Save Success</string>
     <string name="saving_tips">Saving</string>
+
+    <string name="back_to_lastmessage">Back to newest message</string>
+    <string name="back_to_newmessage"> new message</string>
+    <string name="back_to_atmessage_all">\@All</string>
+    <string name="back_to_atmessage_me">You were mentione</string>
 </resources>

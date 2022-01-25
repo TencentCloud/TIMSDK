@@ -11,6 +11,7 @@
         android:id="@+id/video_view_layout"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <ImageView
@@ -87,7 +88,7 @@
         android:layout_marginBottom="@dimen/btn_margin_bottom"
         android:layout_marginLeft="@dimen/btn_padding_left"
         android:clickable="true"
-        android:visibility="visible"
+        android:visibility="gone"
         android:src="@drawable/ic_close_button" />
 
     <LinearLayout
@@ -101,7 +102,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="horizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         android:gravity="center_vertical" >
 
         <ImageView

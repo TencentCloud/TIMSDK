@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/core_bg_color"
     android:orientation="vertical">
 
     <com.tencent.qcloud.tuicore.component.TitleBarLayout
@@ -224,8 +225,9 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/contact_add"
-                    android:textColor="@color/contact_profile_btn_positive_color"
+                    android:textColor="?attr/core_primary_color"
                     android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:textAllCaps="false"
                     android:visibility="gone"
                     tools:visibility="visible" />
 
@@ -238,8 +240,9 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/accept"
-                    android:textColor="@color/contact_profile_btn_positive_color"
+                    android:textColor="?attr/core_primary_color"
                     android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:textAllCaps="false"
                     android:visibility="gone"
                     tools:visibility="visible" />
 
@@ -252,8 +255,9 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/profile_chat"
-                    android:textColor="@color/contact_profile_btn_positive_color"
+                    android:textColor="?attr/core_primary_color"
                     android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:textAllCaps="false"
                     android:visibility="gone"
                     tools:visibility="visible" />
 
@@ -266,8 +270,9 @@
                     android:layout_marginTop="0.68dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/profile_voice_chat"
-                    android:textColor="@color/contact_profile_btn_positive_color"
+                    android:textColor="?attr/core_primary_color"
                     android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:textAllCaps="false"
                     android:visibility="gone"
                     tools:visibility="visible" />
 
@@ -280,8 +285,9 @@
                     android:layout_marginTop="0.68dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/profile_video_chat"
-                    android:textColor="@color/contact_profile_btn_positive_color"
+                    android:textColor="?attr/core_primary_color"
                     android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:textAllCaps="false"
                     android:visibility="gone"
                     tools:visibility="visible" />
 
@@ -294,9 +300,10 @@
                     android:layout_marginTop="0.68dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/profile_delete_friend"
-                    android:textColor="@color/contact_profile_btn_negative_color"
+                    android:textColor="?attr/core_error_tip_color"
                     android:textSize="@dimen/contact_profile_btn_text_size"
                     android:visibility="gone"
+                    android:textAllCaps="false"
                     tools:visibility="visible" />
 
                 <Button
@@ -308,7 +315,8 @@
                     android:layout_marginTop="0.6dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/refuse"
-                    android:textColor="@color/text_negative"
+                    android:textColor="?attr/core_error_tip_color"
+                    android:textAllCaps="false"
                     android:textSize="@dimen/contact_profile_btn_text_size"
                     android:visibility="gone"
                     tools:visibility="visible" />

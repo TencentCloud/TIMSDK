@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TUIBaseLightTheme">
+        <!-- 颜色规范 start -->
+        <item name="core_light_bg_title_text_color">@color/core_light_bg_title_text_color_light</item>
+        <item name="core_light_bg_primary_text_color">@color/core_light_bg_primary_text_color_light</item>
+        <item name="core_light_bg_secondary_text_color">@color/core_light_bg_secondary_text_color_light</item>
+        <item name="core_light_bg_secondary2_text_color">@color/core_light_bg_secondary2_text_color_light</item>
+        <item name="core_light_bg_disable_text_color">@color/core_light_bg_disable_text_color_light</item>
+        <item name="core_dark_bg_primary_text_color">@color/core_dark_bg_primary_text_color_light</item>
+        <item name="core_primary_bg_color">@color/core_primary_bg_color_light</item>
+        <item name="core_bg_color">@color/core_bg_color_light</item>
+        <item name="core_primary_color">@color/core_primary_color_light</item>
+        <item name="core_error_tip_color">@color/core_error_tip_color_light</item>
+        <item name="core_success_tip_color">@color/core_success_tip_color_light</item>
+        <item name="core_bubble_bg_color">@color/core_bubble_bg_color_light</item>
+        <item name="core_divide_color">@color/core_divide_color_light</item>
+        <item name="core_border_color">@color/core_border_color_light</item>
+        <item name="core_header_start_color">@color/core_header_start_color_light</item>
+        <item name="core_header_end_color">@color/core_header_end_color_light</item>
+        <item name="core_btn_normal_color">@color/core_btn_normal_color_light</item>
+        <item name="core_btn_pressed_color">@color/core_btn_pressed_color_light</item>
+        <item name="core_btn_disable_color">@color/core_btn_disable_color_light</item>
+        <!-- 颜色规范 end -->
+
+        <item name="core_line_controller_view_switch_btn_selected_bg">@color/core_primary_color_light</item>
+        <item name="core_selected_icon">@drawable/core_selected_icon_light</item>
+        <item name="core_title_bar_bg">@drawable/core_title_bar_bg_light</item>
+        <item name="core_title_bar_text_bg">@color/core_title_bar_text_bg_light</item>
+        <item name="core_title_bar_back_icon">@drawable/core_title_bar_back_light</item>
+        <item name="core_default_group_icon">@drawable/core_default_group_icon_light</item>
+        <item name="core_default_user_icon">@drawable/core_default_user_icon_light</item>
+
+    </style>
+
+</resources>

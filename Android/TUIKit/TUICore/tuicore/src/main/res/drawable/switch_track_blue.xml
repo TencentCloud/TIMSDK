@@ -7,7 +7,7 @@
         android:height="26.88dp"/>
 
     <corners android:radius="15dp" />
-    <gradient
-        android:endColor="#00a4ff"
-        android:startColor="#00a4ff" />
+
+    <solid
+        android:color="?attr/core_primary_color" />
 </shape>

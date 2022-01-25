@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chat_bubble_other_color_lively">#F8F8F9</color>
+    <color name="chat_bubble_self_color_lively">@color/core_bubble_bg_color_lively</color>
+    <color name="chat_input_layout_bg_lively">#F4F6F9</color>
+
+    <color name="chat_unread_dot_bg_color_lively">#FFFFFFFF</color>
+
+    <color name="chat_custom_msg_text_color_lively">#FFFFFF</color>
+    <color name="chat_custom_msg_link_color_lively">#C23D26</color>
+
+    <color name="chat_other_msg_text_color_lively">#000000</color>
+    <color name="chat_self_msg_text_color_lively">#FFFFFF</color>
+
+    <color name="chat_self_custom_msg_text_color_lively">#FFFFFF</color>
+    <color name="chat_self_custom_msg_link_color_lively">#C23D26</color>
+    <color name="chat_other_custom_msg_text_color_lively">#000000</color>
+    <color name="chat_other_custom_msg_link_color_lively">#C23D26</color>
+
+    <color name="chat_tip_text_color_lively">#FF7756</color>
+
+    <color name="chat_self_reply_quote_bg_color_lively">#1A000000</color>
+    <color name="chat_self_reply_line_bg_color_lively">#66FFFFFF</color>
+    <color name="chat_self_reply_quote_text_color_lively">#FFE1EC</color>
+    <color name="chat_self_reply_text_color_lively">#FFFFFF</color>
+
+    <color name="chat_other_reply_quote_bg_color_lively">#0D444444</color>
+    <color name="chat_other_reply_line_bg_color_lively">#1A444444</color>
+    <color name="chat_other_reply_quote_text_color_lively">#FF888888</color>
+    <color name="chat_other_reply_text_color_lively">#000000</color>
+</resources>

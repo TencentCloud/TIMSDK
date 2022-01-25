@@ -14,11 +14,14 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FileMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageContentHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageHeaderHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageViewHolderFactory;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.TextMessageHolder;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,6 +77,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         if (!isShowMultiSelectCheckBox && mSelectedPositions != null) {
             mSelectedPositions.clear();
         }
+
     }
 
     //设置给定位置条目的选择状态
@@ -248,6 +252,21 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         notifyItemChanged(position);
     }
 
+    public void resetSelectableText() {
+        int index = mRecycleView.getSelectedPosition();
+        if (index < 0) {
+            return;
+        }
+        RecyclerView.ViewHolder holder = mRecycleView.findViewHolderForAdapterPosition(index);
+        if (holder != null) {
+            if (holder instanceof TextMessageHolder) {
+                ((TextMessageHolder) holder).resetSelectableText();
+            }
+        } else {
+            TUIChatLog.d(TAG, "holder == null");
+        }
+    }
+
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
@@ -271,6 +290,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         if (holder instanceof MessageContentHolder) {
             ((MessageContentHolder) holder).msgContentFrame.setBackground(null);
             ((MessageContentHolder) holder).stopHighLight();
+            ((MessageContentHolder) holder).onRecycled();
         }
     }
 
@@ -290,6 +310,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                     mRecycleView.setHighShowPosition(position);
                     mRecycleView.scrollToPosition(position);
                     notifyItemChanged(position);
+                    mRecycleView.scrollMessageFinish();
                 } else if (type == MessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION) {
                     notifyDataSetChanged();
                     int position = getMessagePosition(locateMessage);
@@ -297,6 +318,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                     mRecycleView.scrollToEnd();
                     mRecycleView.smoothScrollToPosition(position);
                     notifyItemChanged(position);
+                    mRecycleView.scrollMessageFinish();
                 }
             }
         });
@@ -334,6 +356,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_LOAD) {
                     notifyDataSetChanged();
                     mRecycleView.scrollToEnd();
+                    mRecycleView.loadMessageFinish();
                 }
                 refreshLoadView();
             }

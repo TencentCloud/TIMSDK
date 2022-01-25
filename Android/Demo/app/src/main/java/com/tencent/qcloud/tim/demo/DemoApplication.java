@@ -23,6 +23,8 @@ import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -53,6 +55,11 @@ public class DemoApplication extends Application {
         strategy.setAppVersion(V2TIMManager.getInstance().getVersion());
         CrashReport.initCrashReport(getApplicationContext(), PrivateConstants.BUGLY_APPID, true, strategy);
 
+        // 添加 Demo 主题
+        TUIThemeManager.addLightTheme(R.style.DemoLightTheme);
+        TUIThemeManager.addLivelyTheme(R.style.DemoLivelyTheme);
+        TUIThemeManager.addSeriousTheme(R.style.DemoSeriousTheme);
+
         /**
          * TUIKit的初始化函数
          *
@@ -76,7 +83,7 @@ public class DemoApplication extends Application {
 
                 @Override
                 public void onError(int code, String desc) {
-                    DemoLog.i(TAG, "setBuildInfo code:" + code + " desc:" + desc);
+                    DemoLog.i(TAG, "setBuildInfo code:" + code + " desc:" + ErrorMessageConverter.convertIMError(code, desc));
                 }
             });
         } catch (JSONException e) {
@@ -183,7 +190,7 @@ public class DemoApplication extends Application {
                 V2TIMManager.getOfflinePushManager().doForeground(new V2TIMCallback() {
                     @Override
                     public void onError(int code, String desc) {
-                        DemoLog.e(TAG, "doForeground err = " + code + ", desc = " + desc);
+                        DemoLog.e(TAG, "doForeground err = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                     }
 
                     @Override
@@ -220,7 +227,7 @@ public class DemoApplication extends Application {
                         V2TIMManager.getOfflinePushManager().doBackground(totalCount, new V2TIMCallback() {
                             @Override
                             public void onError(int code, String desc) {
-                                DemoLog.e(TAG, "doBackground err = " + code + ", desc = " + desc);
+                                DemoLog.e(TAG, "doBackground err = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                             }
 
                             @Override

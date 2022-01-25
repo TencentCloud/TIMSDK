@@ -14,9 +14,10 @@ import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 
-public class AboutIMActivity extends AppCompatActivity implements View.OnClickListener {
+public class AboutIMActivity extends BaseLightActivity implements View.OnClickListener {
     private TitleBarLayout titleBarLayout;
     private LineControllerView sdkVersionLv;
     private LineControllerView privacyLv;
@@ -39,7 +40,6 @@ public class AboutIMActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void setupViews() {
-        titleBarLayout.setLeftIcon(R.drawable.demo_back);
         titleBarLayout.getRightIcon().setVisibility(View.GONE);
         titleBarLayout.setTitle(getResources().getString(R.string.about_im), ITitleBarLayout.Position.MIDDLE);
         titleBarLayout.setOnLeftClickListener(this);

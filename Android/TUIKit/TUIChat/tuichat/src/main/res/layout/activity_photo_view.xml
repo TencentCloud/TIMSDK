@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:clickable="false"
-            android:src="@drawable/title_bar_back" />
+            android:src="@drawable/core_title_bar_back_light" />
 
     </RelativeLayout>
 
