@@ -87,7 +87,7 @@
 
 
 
-- (NSMutableAttributedString *)getFormatEmojiStringWithFont:(UIFont *)textFont
+- (NSMutableAttributedString *)getFormatEmojiStringWithFont:(UIFont *)textFont emojiLocations:(nullable NSMutableArray<NSDictionary<NSValue *, NSAttributedString *> *> *)emojiLocations
 {
     //先判断text是否存在
     if (self.length == 0) {
@@ -148,13 +148,33 @@
     }
 
     //4、从后往前替换，否则会引起位置问题
+    NSMutableArray *locations = [NSMutableArray array];
     for (int i = (int)imageArray.count -1; i >= 0; i--) {
-        NSRange range;
-        [imageArray[i][@"range"] getValue:&range];
+        NSRange originRange;
+        [imageArray[i][@"range"] getValue:&originRange];
+        
+        //存储位置信息
+        NSAttributedString *originStr = [attributeString attributedSubstringFromRange:originRange];
+        NSAttributedString *currentStr = imageArray[i][@"image"];
+        [locations insertObject:@[[NSValue valueWithRange:originRange], originStr, currentStr] atIndex:0];
+        
         //进行替换
-        [attributeString replaceCharactersInRange:range withAttributedString:imageArray[i][@"image"]];
+        [attributeString replaceCharactersInRange:originRange withAttributedString:currentStr];
     }
-
+    
+    //5、获取 emoji 转换后字符串的位置信息
+    NSInteger offsetLocation = 0;
+    for (NSArray *obj in locations) {
+        NSArray *location = (NSArray *)obj;
+        NSRange originRange = [(NSValue *)location[0] rangeValue];
+        NSAttributedString *originStr = location[1];
+        NSAttributedString *currentStr = location[2];
+        NSRange currentRange;
+        currentRange.location = originRange.location + offsetLocation;
+        currentRange.length = currentStr.length;
+        offsetLocation += currentStr.length - originStr.length;
+        [emojiLocations addObject:@{[NSValue valueWithRange:currentRange] : originStr}];
+    }
 
     [attributeString addAttribute:NSFontAttributeName value:textFont range:NSMakeRange(0, attributeString.length)];
 

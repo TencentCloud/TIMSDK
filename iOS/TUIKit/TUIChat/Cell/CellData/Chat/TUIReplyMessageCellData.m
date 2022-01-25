@@ -105,7 +105,7 @@
     CGSize placeholderSize = [self quotePlaceholderSizeWithType:self.originMsgType data:self.quoteData];
     
     // 动态计算回复内容的尺寸
-    NSAttributedString *attributeString = [self.content getFormatEmojiStringWithFont:[UIFont systemFontOfSize:16.0]];
+    NSAttributedString *attributeString = [self.content getFormatEmojiStringWithFont:[UIFont systemFontOfSize:16.0] emojiLocations:nil];
     CGRect replyContentRect = [attributeString boundingRectWithSize:CGSizeMake(quoteMaxWidth, CGFLOAT_MAX)
                                                             options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                             context:nil];

@@ -9,6 +9,7 @@
 #import "TUICommonSwitchCell.h"
 #import "TUIButtonCell.h"
 #import "TUIDefine.h"
+#import "TUIGroupNoticeCell.h"
 
 @interface TUIGroupInfoDataProvider()<V2TIMGroupListener>
 @property (nonatomic, strong) TUICommonTextCellData *addOptionData;
@@ -62,6 +63,14 @@
         }
     } fail:^(int code, NSString *msg) {
         [TUITool makeToastError:code msg:msg];
+    }];
+}
+
+- (void)transferGroupOwner:(NSString*)groupID member:(NSString*)userID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail {
+    [V2TIMManager.sharedInstance transferGroupOwner:groupID member:userID succ:^{
+        succ();
+    } fail:^(int code, NSString *desc) {
+        fail(code,desc);
     }];
 }
 
@@ -156,6 +165,24 @@
 
         //group info
         NSMutableArray *groupInfoArray = [NSMutableArray array];
+        
+        TUIGroupNoticeCellData *notice = [[TUIGroupNoticeCellData alloc] init];
+        notice.name = TUIKitLocalizableString(TUIKitGroupNotice);
+        notice.desc = self.groupInfo.notification?:TUIKitLocalizableString(TUIKitGroupNoticeNull);
+        notice.target = self;
+        notice.selector = @selector(didSelectNotice);
+        [groupInfoArray addObject:notice];
+        
+        TUICommonTextCellData *manageData = [[TUICommonTextCellData alloc] init];
+        manageData.key = TUIKitLocalizableString(TUIKitGroupProfileManage);
+        manageData.value = @"";
+        manageData.showAccessory = YES;
+        manageData.cselector = @selector(didSelectGroupManage);
+        //只有管理员露出群管理入口
+        if (([TUIGroupInfoDataProvider isMeOwner:self.groupInfo])) {
+            [groupInfoArray addObject:manageData];
+        }
+
         TUICommonTextCellData *typeData = [[TUICommonTextCellData alloc] init];
         typeData.key = TUIKitLocalizableString(TUIKitGroupProfileType);
         typeData.value = [TUIGroupInfoDataProvider getGroupTypeName:self.groupInfo];
@@ -238,6 +265,16 @@
         quitButton.style = ButtonRedText;
         quitButton.cbuttonSelector = @selector(didDeleteGroup:);
         [buttonArray addObject:quitButton];
+        
+        //群转移按钮
+
+        if ([self.class isMeSuper:self.groupInfo]) {
+            TUIButtonCellData *transferButton = [[TUIButtonCellData alloc] init];
+            transferButton.title =TUIKitLocalizableString(TUIKitGroupTransferOwner);
+            transferButton.style = ButtonRedText;
+            transferButton.cbuttonSelector = @selector(didTransferGroup:);
+            [buttonArray addObject:transferButton];
+        }
 
         //群解散按钮
         if ([self.groupInfo canDelete]) {
@@ -290,6 +327,11 @@
     }
 }
 
+- (void)didTransferGroup:(TUIButtonCell *)cell  {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didTransferGroup:)]) {
+        [self.delegate didTransferGroup:cell];
+    }
+}
 - (void)didDeleteGroup:(TUIButtonCell *)cell {
     if (self.delegate && [self.delegate respondsToSelector:@selector(didDeleteGroup:)]) {
         [self.delegate didDeleteGroup:cell];
@@ -299,6 +341,20 @@
 - (void)didClearAllHistory:(TUIButtonCell *)cell {
     if (self.delegate && [self.delegate respondsToSelector:@selector(didClearAllHistory:)]) {
         [self.delegate didClearAllHistory:cell];
+    }
+}
+
+- (void)didSelectGroupManage
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectGroupManage)]) {
+        [self.delegate didSelectGroupManage];
+    }
+}
+
+- (void)didSelectNotice
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectGroupNotice)]) {
+        [self.delegate didSelectGroupNotice];
     }
 }
 
@@ -470,5 +526,14 @@
  */
 + (BOOL)isMeOwner:(V2TIMGroupInfo *)groupInfo {
     return [groupInfo.owner isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]] || (groupInfo.role == V2TIM_GROUP_MEMBER_ROLE_ADMIN);
+}
+
+/**
+ *  判断当前用户在对与当前 TIMGroupInfo 来说是否是群主。
+ *
+ *  @return YES：是群主；NO：不是群主
+ */
++ (BOOL)isMeSuper:(V2TIMGroupInfo *)groupInfo {
+    return [groupInfo.owner isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]] && (groupInfo.role == V2TIM_GROUP_MEMBER_ROLE_SUPER);
 }
 @end

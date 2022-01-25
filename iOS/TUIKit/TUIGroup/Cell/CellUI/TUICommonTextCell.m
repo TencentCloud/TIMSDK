@@ -7,6 +7,7 @@
 
 #import "TUICommonTextCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @implementation TUICommonTextCellData
 - (instancetype)init {
@@ -38,17 +39,18 @@
 {
     if (self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier])
     {
+        self.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+        self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+        
         _keyLabel = self.textLabel;
-        _keyLabel.textColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:68/255.0 green:68/255.0 blue:68/255.0 alpha:1/1.0] dark:UIColor.lightGrayColor];
+        _keyLabel.textColor = TUICoreDynamicColor(@"form_key_text_color", @"#444444");
         _keyLabel.font = [UIFont systemFontOfSize:16.0];
         
         _valueLabel = self.detailTextLabel;
-        _valueLabel.textColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:1/1.0] dark:UIColor.lightGrayColor];
+        _valueLabel.textColor = TUICoreDynamicColor(@"form_value_text_color", @"#000000");
         _valueLabel.font = [UIFont systemFontOfSize:16.0];
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        //self.selectionStyle = UITableViewCellSelectionStyleDefault;
-        self.changeColorWhenTouched = YES;
     }
     return self;
 }

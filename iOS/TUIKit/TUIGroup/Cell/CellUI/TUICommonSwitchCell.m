@@ -7,6 +7,7 @@
 
 #import "TUICommonSwitchCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @implementation TUICommonSwitchCellData
 - (instancetype)init {
@@ -29,12 +30,11 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])
     {
         _titleLabel = self.textLabel;
-        _titleLabel.textColor = [UIColor d_colorWithColorLight:TText_Color dark:UIColor.lightGrayColor];
+        _titleLabel.textColor = TUICoreDynamicColor(@"form_key_text_color", @"#444444");
         
         _switcher = [[UISwitch alloc] init];
         //将开关开启时的颜色改为蓝色
-        _switcher.onTintColor = RGB(30.0, 144.0, 255.0);
-
+        _switcher.onTintColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
         self.accessoryView = _switcher;
         [self.contentView addSubview:_switcher];
         [_switcher addTarget:self action:@selector(switchClick) forControlEvents:UIControlEventValueChanged];

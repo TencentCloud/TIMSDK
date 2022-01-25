@@ -103,6 +103,9 @@
 "TUIKitGroupProfileManage" = "管理";
 "TUIKitGroupProfileManageAdd" = "添加成员";
 "TUIKitGroupProfileManageDelete" = "删除成员";
+"TUIKitGroupTransferOwner" = "转让群主";
+"TUIKitGroupTransferOwnerSuccess" = "转让群主成功";
+
 "TUIKitGroupApplicant" = "群申请";
 "TUIKitGroupDismssTipsFormat" = "%@ 群已解散";
 "TUIKitGroupRecycledTipsFormat" = "%@ 群已回收";
@@ -122,6 +125,7 @@
 "TUIkitMessageTipsEditGroupNameFormat" = "%@修改群名为\"%@\"、";
 "TUIKitMessageTipsEditGroupIntroFormat" = "%@修改群简介为\"%@\"、";
 "TUIKitMessageTipsEditGroupAnnounceFormat" = "%@修改群公告为\"%@\"、";
+"TUIKitMessageTipsDeleteGroupAnnounceFormat" = "%@删除了群公告、";
 "TUIKitMessageTipsEditGroupAvatarFormat" = "%@修改群头像、";
 "TUIKitMessageTipsEditGroupOwnerFormat" = "%@修改群主为\"%@\"、";
 "TUIKitMessageTipsCreateGroupFormat" = "\"%@\"创建群组";
@@ -149,7 +153,7 @@
 "TUIkitMessageTypeVideo" = "[视频]";
 "TUIkitMessageTypeFile" = "[文件]";
 "TUIKitMessageTypeAnimateEmoji" = "[动画表情]";
-"TUIKitMessageTypeDraftFormat" = "[草稿]";
+"TUIKitMessageTypeDraftFormat" = "[草稿] ";
 
 "TUIKitMoreCamera" = "拍照";
 "TUIKitMorePhoto" = "图片";
@@ -191,6 +195,9 @@
 
 "TUIKitChatPendencyTitle" = "点击处理";
 "TUIKitChatPendencyRequestToJoinGroupFormat" = "%@条入群请求";
+"TUIKitChatTipsAtMe" = "有人@我";
+"TUIKitChatBackToLatestLocation" = "回到最新位置";
+"TUIKitChatNewMessages" = "%@条新消息";
 
 "TUIKitSignalingLiveRequestForMic" = "直播间申请上麦";
 "TUIKitSignalingLiveRequestForMicRejected" = "直播间申请上麦被拒绝";
@@ -551,6 +558,22 @@
 "TUIKitSearchGroupID" = "搜索群ID";
 "TUIKitNoSelfSignature" = "暂无个性签名";
 "TUIKitSelfSignatureFormat" = "个性签名:%@";
+"TUIKitGroupProfileManage" = "群管理";
+"TUIKitGroupManageShutupAllTips" = "全员禁言开启后，只允许群主和管理员发言。";
+"TUIKitGroupManageAdminSetting" = "设置管理员";
+"TUIKitGroupManageShutAll" = "全员禁言";
+"TUIKitGroupAddShutupMember" = "添加需要禁言的群成员";
+"TUIKitGroupOwner" = "群主";
+"TUIKitGroupManagerFormat" = "管理员(%zd/%zd)";
+"TUIKitSetShutupAllFormat" = "%@ 开启全员禁言、";
+"TUIKitCancelShutupAllFormat" = "%@ 取消全员禁言、";
+"TUIKitGroupNotice" = "群公告";
+"TUIKitGroupNoticeNull" = "暂未设置群公告";
+"Edit" = "编辑";
+"Done" = "完成";
+"TUIKitAddContactMyUserIDFormat" = "我的用户ID: %@";
+"TUIKitAddUserNoDataTips" = "该用户不存在";
+"TUIKitAddGroupNoDataTips" = "该群聊不存在";
 /***************************** 消息回复 & 换肤 *************************/
 
 
@@ -562,3 +585,9 @@
 "TUIKitPictureSavedSuccess" = "图片保存成功";
 "TUIKitPictureSavedFailed" = "图片保存失败";
 /***************************** 视频、图片加载 & 保存 *************************/
+
+"TUIKitGroupSetAdminsForbidden" = "当前类型群聊暂不支持设置管理员";
+"TUIKitGroupAddAdmins" = "添加管理员";
+"TUIKitGroupAddMemberOfBlockedForbidden" = "当前类型群聊暂不支持禁言指定群成员";
+
+"TUIKitNotDownload"= "未下载";

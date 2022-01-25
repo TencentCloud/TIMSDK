@@ -8,6 +8,7 @@
 #import "TUIBlackListController.h"
 #import "ReactiveObjC.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @interface TUIBlackListController ()<V2TIMFriendshipListener>
 
@@ -24,7 +25,13 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
-    self.title = TUIKitLocalizableString(TUIKitContactsBlackList); // @"黑名单";
+
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.text = TUIKitLocalizableString(TUIKitContactsBlackList);
+    titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
+    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    [titleLabel sizeToFit];
+    self.navigationItem.titleView = titleLabel;
     self.tableView.delaysContentTouches = NO;
 
     if (!self.viewModel) {

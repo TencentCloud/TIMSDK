@@ -59,6 +59,12 @@ static NSString * const HFId  = @"HFId";
     self.navigationController.navigationBar.shadowImage = [UIImage new];
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
     
+    UIImage *image = [UIImage imageNamed:@"ic_back_white"];
+    image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(back)];
+    self.navigationItem.leftBarButtonItems = @[back];
+    self.navigationItem.leftItemsSupplementBackButton = NO;
+    
     _searchBar = [[TUISearchBar alloc] init];
     [_searchBar setEntrance:NO];
     _searchBar.delegate = self;
@@ -79,6 +85,11 @@ static NSString * const HFId  = @"HFId";
         // 聊天记录，重新搜索
         [self.dataProvider searchForKeyword:self.searchBar.searchBar.text forModules:self.module param:self.param];
     }
+}
+
+- (void)back
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)viewWillLayoutSubviews

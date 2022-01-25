@@ -20,6 +20,7 @@
 }
 
 - (void)loadMessageWithSearchMsg:(V2TIMMessage *)searchMsg
+                    SearchMsgSeq:(uint64_t)searchSeq
                 ConversationInfo:(TUIChatConversationModel *)conversation
                     SucceedBlock:(void (^)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))SucceedBlock
                        FailBlock:(V2TIMFail)FailBlock {
@@ -28,6 +29,8 @@
         return;
     }
     self.isLoadingData = YES;
+    self.isOlderNoMoreMsg = NO;
+    self.isNewerNoMoreMsg = NO;
     
     dispatch_group_t group = dispatch_group_create();
     __block NSArray *olders = @[];
@@ -45,7 +48,11 @@
         option.count = self.pageCount;
         option.groupID = conversation.groupID;
         option.userID = conversation.userID;
-        option.lastMsg = searchMsg;
+        if (searchMsg) {
+            option.lastMsg = searchMsg;
+        } else {
+            option.lastMsgSeq = searchSeq;
+        }
         [V2TIMManager.sharedInstance getHistoryMessageList:option succ:^(NSArray<V2TIMMessage *> *msgs) {
             msgs = msgs.reverseObjectEnumerator.allObjects;
             olders = msgs?:@[];
@@ -68,7 +75,11 @@
         option.count = self.pageCount;
         option.groupID = conversation.groupID;
         option.userID = conversation.userID;
-        option.lastMsg = searchMsg;
+        if (searchMsg) {
+            option.lastMsg = searchMsg;
+        } else {
+            option.lastMsgSeq = searchSeq;
+        }
         [V2TIMManager.sharedInstance getHistoryMessageList:option succ:^(NSArray<V2TIMMessage *> *msgs) {
             newers = msgs?:@[];
             if (newers.count < self.pageCount) {
@@ -96,7 +107,13 @@
         
         NSMutableArray *results = [NSMutableArray array];
         [results addObjectsFromArray:olders];
-        [results addObject:searchMsg];
+        if (searchMsg) {
+            // 通过 msg 拉取消息不会返回 msg 对象本身，这里需要把 msg 主动添加到 results 列表
+            [results addObject:searchMsg];
+        } else {
+            // 通过 msg seq 拉取消息，拉取旧消息和新消息都会返回 msg 对象本身，这里需要在 results 对 msg 对象去重
+            [results removeLastObject];
+        }
         [results addObjectsFromArray:newers];
         self.msgForOlderGet = results.firstObject;
         self.msgForNewerGet = results.lastObject;

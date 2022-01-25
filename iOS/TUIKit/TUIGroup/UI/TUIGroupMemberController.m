@@ -13,9 +13,14 @@
 #import "TIMGroupInfo+TUIDataProvider.h"
 #import "TUIGroupMemberDataProvider.h"
 
-@interface TUIGroupMemberController () <TUIGroupMembersViewDelegate>
+#import "TUIMemberInfoCell.h"
+#import "TUIMemberInfoCellData.h"
+#import "TUIThemeManager.h"
+
+@interface TUIGroupMemberController () </*TUIGroupMembersViewDelegate*/UITableViewDelegate, UITableViewDataSource>
+@property(nonatomic,strong) UIActivityIndicatorView *indicatorView;
 @property(nonatomic, strong) TUIGroupMemberDataProvider *dataProvider;
-@property (nonatomic, strong) NSMutableArray<TUIGroupMemberCellData *> *members;
+@property (nonatomic, strong) NSMutableArray<TUIMemberInfoCellData *> *members;
 @end
 
 @implementation TUIGroupMemberController
@@ -35,21 +40,22 @@
     @weakify(self)
     [self.dataProvider loadDatas:^(BOOL success, NSString * _Nonnull err, NSArray * _Nonnull datas) {
         @strongify(self)
-        [self.groupMembersView setData:datas];
         NSString *title = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitGroupProfileGroupCountFormat), (long)datas.count];
         self.title = title;
         self.members = [NSMutableArray arrayWithArray:datas];
+        [self.tableView reloadData];
     }];
 }
 
 - (void)setupViews
 {
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     //left
+    UIImage *image = TUIGroupDynamicImage(@"group_nav_back_img", [UIImage imageNamed:TUIGroupImagePath(@"back")]);
     UIButton *leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [leftButton addTarget:self action:@selector(leftBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    [leftButton setImage:[UIImage imageNamed:TUIGroupImagePath(@"back")] forState:UIControlStateNormal];
+    [leftButton setImage:image forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     spaceItem.width = -10.0f;
@@ -64,16 +70,18 @@
     UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [rightButton addTarget:self action:@selector(rightBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [rightButton setTitle:TUIKitLocalizableString(TUIKitGroupProfileManage) forState:UIControlStateNormal];
-    [rightButton setTitleColor:[UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark] forState:UIControlStateNormal];
+    [rightButton setTitleColor:TUICoreDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
     rightButton.titleLabel.font = [UIFont systemFontOfSize:16];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightItem;
     self.parentViewController.navigationItem.rightBarButtonItem = rightItem;
-
-    _groupMembersView = [[TUIGroupMembersView alloc] initWithFrame:CGRectMake(0, StatusBar_Height + NavBar_Height, self.view.bounds.size.width, self.view.bounds.size.height - StatusBar_Height - NavBar_Height)];
-    _groupMembersView.delegate = self;
-    _groupMembersView.backgroundColor = self.view.backgroundColor;
-    [self.view addSubview:_groupMembersView];
+    
+    
+    self.indicatorView.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMessageController_Header_Height);
+    
+    self.tableView.frame = self.view.bounds;
+    self.tableView.tableFooterView = self.indicatorView;
+    [self.view addSubview:self.tableView];
 }
 
 - (void)leftBarButtonClick{
@@ -104,24 +112,85 @@
     [self presentViewController:ac animated:YES completion:nil];
 }
 
-#pragma mark TUIGroupMembersViewDelegate
-- (void)groupMembersView:(TUIGroupMembersView *)groupMembersView didLoadMoreData:(void (^)(NSArray<TUIGroupMemberCellData *> *))completion {
-    // 分页加载更多数据
-    if (self.dataProvider.isNoMoreData) {
-        if (completion) {
-            completion(@[]);
+#pragma mark - UITableViewDelegate, UITableViewDataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.members.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    TUIMemberInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    TUIMemberInfoCellData *data = self.members[indexPath.row];
+    cell.data = data;
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 0;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    return [UIView new];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return [UIView new];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if(scrollView.contentOffset.y > 0 && (scrollView.contentOffset.y >= scrollView.bounds.origin.y)){
+        if (self.indicatorView.isAnimating) {
+            return;
         }
-        return;
+        [self.indicatorView startAnimating];
+        @weakify(self);
+        [self.dataProvider loadDatas:^(BOOL success, NSString * _Nonnull err, NSArray * _Nonnull datas) {
+            @strongify(self);
+            [self.indicatorView stopAnimating];
+            if (!success) {
+                return;
+            }
+            [self.members addObjectsFromArray:datas];
+            [self.tableView reloadData];
+            [self.tableView layoutIfNeeded];
+            if (datas.count == 0) {
+                [self.tableView setContentOffset:CGPointMake(0, scrollView.contentOffset.y - TMessageController_Header_Height) animated:YES];
+            }
+        }];
     }
-    __weak typeof(self) weakSelf = self;
-    [self.dataProvider loadDatas:^(BOOL success, NSString *err, NSArray *datas) {
-        if (datas && datas.count) {
-            [weakSelf.members addObjectsFromArray:datas];
-        }
-        if (completion) {
-            completion(datas);
-        }
-    }];
+}
+
+
+- (UIActivityIndicatorView *)indicatorView {
+    if (_indicatorView == nil) {
+        _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _indicatorView.hidesWhenStopped = YES;
+    }
+    return _indicatorView;
+}
+
+
+- (UITableView *)tableView
+{
+    if (_tableView == nil) {
+        _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+        _tableView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor groupTableViewBackgroundColor] dark:TController_Background_Color_Dark];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        [_tableView registerClass:TUIMemberInfoCell.class forCellReuseIdentifier:@"cell"];
+        _tableView.rowHeight = 48.0;
+    }
+    return _tableView;
 }
 
 @end

@@ -1,0 +1,278 @@
+//
+//  TUIGroupManageDataProvider.m
+//  TUIGroup
+//
+//  Created by harvy on 2021/12/24.
+//
+
+#import "TUIGroupManageDataProvider.h"
+#import "TUIGlobalization.h"
+#import "TUICommonTextCell.h"
+#import "TUICommonSwitchCell.h"
+#import "TUISelectGroupMemberCell.h"
+#import "TUIAddCellData.h"
+#import "TUIMemberInfoCellData.h"
+#import <ImSDK_Plus/ImSDK_Plus.h>
+
+@interface TUIGroupManageDataProvider ()
+
+@property (nonatomic, strong) NSMutableArray *datas;
+
+// 群信息数据源
+@property (nonatomic, strong) NSMutableArray *groupInfoDatasArray;
+// 禁言群成员数据源
+@property (nonatomic, strong) NSMutableArray *muteMembersDataArray;
+
+@property (nonatomic, strong) V2TIMGroupInfo *groupInfo;
+
+@end
+
+@implementation TUIGroupManageDataProvider
+
+- (void)mutedAll:(BOOL)mute completion:(void(^)(int, NSString *))completion
+{
+    __weak typeof(self) weakSelf = self;
+    V2TIMGroupInfo *groupInfo = [[V2TIMGroupInfo alloc] init];
+    groupInfo.groupID = self.groupID;
+    groupInfo.allMuted = mute;
+    [V2TIMManager.sharedInstance setGroupInfo:groupInfo succ:^{
+        weakSelf.muteAll = mute;
+        if (completion) {
+            completion(0, nil);
+        }
+    } fail:^(int code, NSString *desc) {
+        weakSelf.muteAll = !mute;
+        if (completion) {
+            completion(code, desc);
+        }
+    }];
+}
+
+- (void)mute:(BOOL)mute user:(TUIUserModel *)user
+{
+    if (!NSThread.isMainThread) {
+        @weakify(self);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self);
+            [self mute:mute user:user];
+        });
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    void(^callback)(int, NSString *, BOOL) = ^(int code, NSString *desc, BOOL mute){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            TUIMemberInfoCellData *existData = nil;
+            for (TUIMemberInfoCellData *data in weakSelf.muteMembersDataArray) {
+                if ([data.identifier isEqualToString:user.userId]) {
+                    existData = data;
+                    break;
+                }
+            }
+            
+            if (code == 0 && mute) {
+                // 禁言成功
+                if (!existData) {
+                    TUIMemberInfoCellData *cellData = [[TUIMemberInfoCellData alloc] init];
+                    cellData.identifier = user.userId;
+                    cellData.name = user.name?:user.userId;
+                    cellData.avatarUrl = user.avatar;
+                    [weakSelf.muteMembersDataArray addObject:cellData];
+                }
+            } else if (code == 0 && !mute){
+                // 解除禁言成功
+                if (existData) {
+                    [weakSelf.muteMembersDataArray removeObject:existData];
+                }
+            } else {
+                // 操作失败
+                if ([weakSelf.delegate respondsToSelector:@selector(onError:desc:operate:)]) {
+                    [weakSelf.delegate onError:code desc:desc operate:mute?@"禁言":@"解除禁言"];
+                }
+            }
+            
+            if ([weakSelf.delegate respondsToSelector:@selector(reloadData)]) {
+                [weakSelf.delegate reloadData];
+            }
+            
+        });
+    };
+    
+    // 禁言/取消禁言
+    [V2TIMManager.sharedInstance muteGroupMember:self.groupID member:user.userId muteTime:mute?365 * 24 * 3600:0 succ:^{
+        callback(0, nil, mute);
+    } fail:^(int code, NSString *desc) {
+        callback(code, desc, mute);
+    }];
+}
+
+- (void)loadData
+{
+    self.groupInfoDatasArray = [NSMutableArray array];
+    self.muteMembersDataArray = [NSMutableArray array];
+    self.datas = [NSMutableArray arrayWithArray:@[self.groupInfoDatasArray, self.muteMembersDataArray]];
+    
+    @weakify(self)
+    [V2TIMManager.sharedInstance getGroupsInfo:@[self.groupID?:@""] succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
+        @strongify(self)
+        V2TIMGroupInfoResult *result = groupResultList.firstObject;
+        if (result == nil || result.resultCode != 0) {
+            return;
+        }
+       
+        V2TIMGroupInfo *groupInfo = result.info;
+        self.groupInfo = groupInfo;
+        [self setupGroupInfo:groupInfo];
+        self.muteAll = groupInfo.allMuted;
+        self.currentGroupTypeSupportSettingAdmin = [self canSupportSettingAdminAtThisGroupType:groupInfo.groupType];
+        self.currentGroupTypeSupportAddMemberOfBlocked = [self canSupportAddMemberOfBlockedAtThisGroupType:groupInfo.groupType];
+    } fail:^(int code, NSString *desc) {
+        @strongify(self)
+        [self setupGroupInfo:nil];
+    }];
+    
+    
+    [self loadMuteMembers];
+}
+
+- (void)loadMuteMembers
+{
+    if (!NSThread.isMainThread) {
+        @weakify(self);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self);
+            [self loadMuteMembers];
+        });
+    }
+    
+    [self.muteMembersDataArray removeAllObjects];
+    if ([self.delegate respondsToSelector:@selector(reloadData)]) {
+        [self.delegate reloadData];
+    }
+    
+    TUIMemberInfoCellData *add = [[TUIMemberInfoCellData alloc] init];
+    add.avatar = [UIImage d_imageNamed:@"icon_add" bundle:TUIGroupBundle];
+    add.name = TUIKitLocalizableString(TUIKitGroupAddShutupMember);
+    add.style = TUIMemberInfoCellStyleAdd;
+    [self.muteMembersDataArray addObject:add];
+    
+    if ([self.delegate respondsToSelector:@selector(insertRowsAtIndexPaths:withRowAnimation:)]) {
+        [self.delegate insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
+    }
+    
+    // 遍历群成员
+    [self setupGroupMembers:0 first:YES];
+}
+
+- (void)setupGroupMembers:(uint64_t)seq first:(uint64_t)first
+{
+    if (seq == 0 && !first) {
+        return;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [V2TIMManager.sharedInstance getGroupMemberList:self.groupID filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:0 succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+        
+        NSMutableArray *indexPaths = [NSMutableArray array];
+        for (V2TIMGroupMemberFullInfo *info in memberList) {
+            if (info.muteUntil && info.muteUntil > [NSDate.new timeIntervalSince1970]) {
+                TUIMemberInfoCellData *member = [[TUIMemberInfoCellData alloc] init];
+                member.avatarUrl = info.faceURL;
+                member.name = (info.nameCard?:info.nickName)?:info.userID;
+                member.identifier = info.userID;
+                
+                BOOL exist = NO;
+                for (TUIMemberInfoCellData *data in weakSelf.muteMembersDataArray) {
+                    if ([data.identifier isEqualToString:info.userID]) {
+                        exist = YES;
+                        break;
+                    }
+                }
+                
+                if (!exist) {                
+                    [weakSelf.muteMembersDataArray addObject:member];
+                    [indexPaths addObject:[NSIndexPath indexPathForRow:[weakSelf.muteMembersDataArray indexOfObject:member] inSection:1]];
+                }
+            }
+        }
+        
+        if (indexPaths.count) {
+            if ([weakSelf.delegate respondsToSelector:@selector(insertRowsAtIndexPaths:withRowAnimation:)]) {
+                [weakSelf.delegate insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+            }
+        }
+        
+        [weakSelf setupGroupMembers:nextSeq first:NO];
+        
+    } fail:^(int code, NSString *desc) {
+        
+    }];
+}
+
+- (void)setupGroupInfo:(V2TIMGroupInfo *)groupInfo
+{
+    if (!NSThread.isMainThread) {
+        @weakify(self);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self);
+            [self setupGroupInfo:groupInfo];
+        });
+        return;
+    }
+    
+    if (groupInfo == nil) {
+        return;
+    }
+    [self.groupInfoDatasArray removeAllObjects];
+
+    TUICommonTextCellData *adminSetting = [[TUICommonTextCellData alloc] init];
+    adminSetting.key = TUIKitLocalizableString(TUIKitGroupManageAdminSetting);
+    adminSetting.value = @"";
+    adminSetting.showAccessory = YES;
+    adminSetting.cselector = @selector(onSettingAdmin:);
+    [self.groupInfoDatasArray addObject:adminSetting];
+    
+    TUICommonSwitchCellData *shutupAll = [[TUICommonSwitchCellData alloc] init];
+    shutupAll.title = TUIKitLocalizableString(TUIKitGroupManageShutAll);
+    shutupAll.on = groupInfo.allMuted;
+    shutupAll.cswitchSelector = @selector(onMutedAll:);
+    [self.groupInfoDatasArray addObject:shutupAll];
+    
+    // 通知UI刷新列表
+    if ([self.delegate respondsToSelector:@selector(reloadData)]) {
+        [self.delegate reloadData];
+    }
+}
+
+//- (void)onMutedAll:(TUICommonSwitchCellData *)switchData
+//{
+//    if ([self.delegate respondsToSelector:@selector(onMutedAll:)]) {
+//        [self.delegate onMutedAll:switchData.isOn];
+//    }
+//}
+
+
+- (NSMutableArray *)datas
+{
+    if (_datas == nil) {
+        _datas = [NSMutableArray array];
+    }
+    return _datas;
+}
+
+//当前类型【群聊】是否支持设置管理员
+- (BOOL)canSupportSettingAdminAtThisGroupType:(NSString *)grouptype {
+    if ([grouptype isEqualToString:@"Work"] ||[grouptype isEqualToString:@"AVChatRoom"] ) {
+        return NO;
+    }
+    return YES;
+}
+
+//当前类型【群聊】是否支持指定群员禁言
+- (BOOL)canSupportAddMemberOfBlockedAtThisGroupType:(NSString *)grouptype {
+    if ([grouptype isEqualToString:@"Work"]) {
+        return NO;
+    }
+    return YES;
+}
+
+@end

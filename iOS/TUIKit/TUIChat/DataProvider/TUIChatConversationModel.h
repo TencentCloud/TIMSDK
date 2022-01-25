@@ -43,17 +43,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) NSString *faceUrl;
 
-
 /**
  *  头像图片，通过头像 UIImage 获取。
  */
 @property (nonatomic, strong) UIImage *avatarImage;
 
-
 /**
  *  会话草稿箱
  */
 @property (nonatomic, strong) NSString *draftText;
+
+/**
+ *  群@ 消息 seq 列表
+ */
+@property (nonatomic, strong) NSMutableArray<NSNumber *> *atMsgSeqs;
 
 @end
 

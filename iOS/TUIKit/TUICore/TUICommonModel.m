@@ -11,6 +11,8 @@
 #import "NSString+TUIUtil.h"
 #import "TUITool.h"
 #import "TUIDarkModel.h"
+#import "TUIThemeManager.h"
+#import <objc/runtime.h>
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -323,11 +325,9 @@ static void *ScrollViewBoundsChangeNotificationContext = &ScrollViewBoundsChange
         _tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
         _tapRecognizer.delegate = self;
         _tapRecognizer.cancelsTouchesInView = NO;
-
-        _colorWhenTouched = [UIColor d_colorWithColorLight:TCell_Touched dark:TCell_Touched_Dark];
-        _changeColorWhenTouched = NO;
         
-        self.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+        self.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+        self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
     }
     return self;
 }
@@ -356,24 +356,24 @@ static void *ScrollViewBoundsChangeNotificationContext = &ScrollViewBoundsChange
         [self removeGestureRecognizer:self.tapRecognizer];
     }
 }
-
--(void) touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    if(self.changeColorWhenTouched){
-        self.backgroundColor = self.colorWhenTouched;
-    }
-}
-
--(void) touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    if(self.changeColorWhenTouched){
-        self.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
-    }
-}
-
--(void) touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    if(self.changeColorWhenTouched){
-        self.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
-    }
-}
+//
+//-(void) touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//    if(self.changeColorWhenTouched){
+//        self.backgroundColor = self.colorWhenTouched;
+//    }
+//}
+//
+//-(void) touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//    if(self.changeColorWhenTouched){
+//        self.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+//    }
+//}
+//
+//-(void) touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//    if(self.changeColorWhenTouched){
+//        self.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+//    }
+//}
 
 //-(void) touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
 //    if(self.changeColorWhenTouched){
@@ -1092,21 +1092,53 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 @implementation TUINavigationController
 
+- (instancetype)initWithRootViewController:(UIViewController *)rootViewController
+{
+    if (self = [super initWithRootViewController:rootViewController]) {
+        self.interactivePopGestureRecognizer.delegate = self;
+        self.delegate = self;
+    }
+    return self;
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationBar.backgroundColor = self.tintColor;
-    self.navigationBar.barTintColor = self.tintColor;
-    self.navigationBar.shadowImage = [UIImage new];
-    self.navigationBar.tintColor = [UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1.0];
+
+    if (@available(iOS 15.0, *)) {
+        UINavigationBarAppearance *appearance = [UINavigationBarAppearance new];
+        [appearance configureWithDefaultBackground];
+        appearance.shadowColor = nil;
+        appearance.backgroundEffect = nil;
+        appearance.backgroundColor =  self.tintColor;
+        self.navigationBar.backgroundColor = self.tintColor;
+        self.navigationBar.barTintColor = self.tintColor;
+        self.navigationBar.shadowImage = [UIImage new];
+        self.navigationBar.standardAppearance = appearance;
+        //iOS15新增特性：滑动边界样式
+        self.navigationBar.scrollEdgeAppearance= appearance;
+
+    }
+    else {
+        self.navigationBar.backgroundColor = self.tintColor;
+        self.navigationBar.barTintColor = self.tintColor;
+        self.navigationBar.shadowImage = [UIImage new];
+        self.navigationBar.tintColor = [UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1.0];
+    }
+    
     self.delegate = self;
+
+
+}
+
+- (void)back {
+    [self popViewControllerAnimated:YES];
 }
 
 - (UIColor *)tintColor
 {
-    UIColor *lightColor = [UIColor colorWithRed:235/255.0 green:240/255.0 blue:246/255.0 alpha:1/1.0];
-    UIColor *darkColor = [UIColor blackColor];
-    return [UIColor d_colorWithColorLight:lightColor dark:darkColor];
+    return TUICoreDynamicColor(@"head_bg_gradient_start_color", @"#EBF0F6");
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
@@ -1115,6 +1147,12 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     if(self.viewControllers.count != 0){
         viewController.hidesBottomBarWhenPushed = YES;
         self.tabBarController.tabBar.hidden = YES;
+        
+        UIImage *image = TUIDemoDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
+        image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(back)];
+        viewController.navigationItem.leftBarButtonItems = @[back];
+        viewController.navigationItem.leftItemsSupplementBackButton = NO;
     }
     [super pushViewController:viewController animated:animated];
 }
@@ -1133,6 +1171,15 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
+    if (navigationController.viewControllers.count == 1){
+        //如果堆栈内的视图控制器数量为1 说明只有根控制器，将currentShowVC 清空，为了下面的方法禁用侧滑手势
+        self.currentShowVC = Nil;
+    }
+    else{
+        //将push进来的视图控制器赋值给currentShowVC
+        self.currentShowVC = viewController;
+    }
+
     if ([navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         if (self.viewControllers.count == 1) {// 禁止首页的侧滑返回
             navigationController.interactivePopGestureRecognizer.enabled = NO;
@@ -1142,5 +1189,67 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     }
 }
 
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer == self.interactivePopGestureRecognizer) {
+        if (self.currentShowVC == self.topViewController) {
+            //如果 currentShowVC 存在说明堆栈内的控制器数量大于 1 ，允许激活侧滑手势
+            return YES;
+        }
+        return NO;
+    }
+    return YES;
+}
+
 @end
 
+@implementation UIAlertController (TUITheme)
+
++ (void)load {
+    // 只执行一次
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self hookMethod:self originSelector:@selector(addAction:) swizzledSelector:@selector(tuitheme_addAction:) classMethod:NO];
+    });
+}
+ 
+- (void)tuitheme_addAction:(UIAlertAction *)action {
+    if (action.style == UIAlertActionStyleDefault || action.style == UIAlertActionStyleCancel) {
+        UIColor *tempColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
+        [action setValue:tempColor forKey:@"_titleTextColor"];
+    }
+    [self tuitheme_addAction:action];
+}
+
++ (void)hookMethod:(Class)cls originSelector:(SEL)originSelector swizzledSelector:(SEL)swizzledSelector classMethod:(BOOL)clsMethod {
+    
+    Method origin_method;
+    Method swizzled_method;
+    
+    if (clsMethod) {
+        // 类方法
+        origin_method = class_getClassMethod(cls, originSelector);
+        swizzled_method = class_getClassMethod(cls, swizzledSelector);
+    } else {
+        // 实例(对象)方法
+        origin_method = class_getInstanceMethod(cls, originSelector);
+        swizzled_method = class_getInstanceMethod(cls, swizzledSelector);
+    }
+    
+    BOOL addSuccess = class_addMethod(cls,
+                                      originSelector,
+                                      method_getImplementation(swizzled_method),
+                                      method_getTypeEncoding(swizzled_method)
+                                      );
+    if (addSuccess) {
+        class_replaceMethod(cls,
+                            swizzledSelector,
+                            method_getImplementation(origin_method),
+                            method_getTypeEncoding(origin_method)
+                            );
+    } else {
+        method_exchangeImplementations(origin_method, swizzled_method);
+    }
+}
+
+@end

@@ -85,6 +85,14 @@
 
 #define TUIBundlePath(bundleName, bundleKeyClass) [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"].length > 0 ? [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"] : [[NSBundle bundleForClass:NSClassFromString(bundleKeyClass)] pathForResource:bundleName ofType:@"bundle"]
 
+// 主题包存储路径
+#define TUICoreThemePath TUIBundlePath(@"TUICoreTheme",TUICoreBundle_Key_Class)
+#define TUIChatThemePath TUIBundlePath(@"TUIChatTheme",TUIChatBundle_Key_Class)
+#define TUIConversationThemePath TUIBundlePath(@"TUIConversationTheme",TUIConversationBundle_Key_Class)
+#define TUIContactThemePath TUIBundlePath(@"TUIContactTheme",TUIContactBundle_Key_Class)
+#define TUIGroupThemePath TUIBundlePath(@"TUIGroupTheme",TUIGroupBundle_Key_Class)
+#define TUISearchThemePath TUIBundlePath(@"TUISearchTheme",TUISearchBundle_Key_Class)
+
 #define TUIKitLocalizable(bundleName) [NSBundle bundleWithPath:TUIBundlePath(bundleName, TUIKitLocalizableBundle_Key_Class)]
 
 #define TUIDemoImagePath(imageName) [TUIBundlePath(TUIDemoBundle,TUIDemoBundle_Key_Class) stringByAppendingPathComponent:imageName]

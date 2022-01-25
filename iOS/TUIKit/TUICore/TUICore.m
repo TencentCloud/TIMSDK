@@ -7,6 +7,8 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 #include <mach-o/ldsyms.h>
+#import "TUIThemeManager.h"
+#import "TUIDefine.h"
 
 static NSMutableArray *serviceList = nil;
 static NSMutableArray<NSMapTable *> *eventList = nil;
@@ -20,6 +22,7 @@ static NSMutableDictionary *objectHashMap = nil;
     eventList = [NSMutableArray array];
     extensionList = [NSMutableArray array];
     objectHashMap = [NSMutableDictionary dictionary];
+    TUIRegisterThemeResourcePath(TUICoreThemePath, TUIThemeModuleCore);
 }
 
 + (void)registerService:(NSString *)serviceName object:(id<TUIServiceProtocol>)object {

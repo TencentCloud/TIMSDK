@@ -9,6 +9,7 @@
 #import "TUIDefine.h"
 #import "TUICommonModel.h"
 #import "TUITool.h"
+#import "TUIThemeManager.h"
 
 @implementation TUIConversationCell
 
@@ -16,20 +17,20 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.contentView.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+        self.contentView.backgroundColor = TUIConversationDynamicColor(@"conversation_cell_bg_color", @"#FFFFFF");
 
         _headImageView = [[UIImageView alloc] init];
         [self.contentView addSubview:_headImageView];
 
         _timeLabel = [[UILabel alloc] init];
         _timeLabel.font = [UIFont systemFontOfSize:12];
-        _timeLabel.textColor = [UIColor d_systemGrayColor];
+        _timeLabel.textColor = TUICoreDynamicColor(@"form_desc_color", @"#BBBBBB");
         _timeLabel.layer.masksToBounds = YES;
         [self.contentView addSubview:_timeLabel];
 
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font = [UIFont systemFontOfSize:16];
-        _titleLabel.textColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark];
+        _titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
         _titleLabel.layer.masksToBounds = YES;
         [self.contentView addSubview:_titleLabel];
 
@@ -39,7 +40,7 @@
         _subTitleLabel = [[UILabel alloc] init];
         _subTitleLabel.layer.masksToBounds = YES;
         _subTitleLabel.font = [UIFont systemFontOfSize:14];
-        _subTitleLabel.textColor = [UIColor d_systemGrayColor];
+        _subTitleLabel.textColor = TUICoreDynamicColor(@"form_subtitle_color", @"#888888");
         [self.contentView addSubview:_subTitleLabel];
         
         _notDisturbRedDot = [[UIView alloc] init];
@@ -89,9 +90,9 @@
     }
 
     if (convData.isOnTop) {
-        self.contentView.backgroundColor = [UIColor d_colorWithColorLight:TCell_OnTop dark:TCell_OnTop_Dark];
+        self.contentView.backgroundColor = TUIConversationDynamicColor(@"conversation_cell_top_bg_color", @"#F4F4F4");
     } else {
-        self.contentView.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+        self.contentView.backgroundColor = TUIConversationDynamicColor(@"conversation_cell_bg_color", @"#FFFFFF");;
     }
     
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {

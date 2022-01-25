@@ -11,6 +11,7 @@
  */
 #import "TUILinkCell.h"
 #import "TUIGlobalization.h"
+#import "TUIThemeManager.h"
 
 @implementation TUILinkCell
 
@@ -18,18 +19,18 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.container.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+        self.container.backgroundColor = TUIChatDynamicColor(@"chat_link_message_bg_color", @"#FFFFFF");
         
         _myTextLabel = [[UILabel alloc] init];
         _myTextLabel.numberOfLines = 0;
         _myTextLabel.font = [UIFont systemFontOfSize:15];
-        _myTextLabel.textColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark];
+        _myTextLabel.textColor = TUIChatDynamicColor(@"chat_link_message_title_color", @"#888888");
         [self.container addSubview:_myTextLabel];
 
         _myLinkLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _myLinkLabel.text = TUIKitLocalizableString(TUIKitMoreLinkDetails); // @"查看详情>>";
         _myLinkLabel.font = [UIFont systemFontOfSize:15];
-        _myLinkLabel.textColor = [UIColor d_systemBlueColor];
+        _myLinkLabel.textColor = TUIChatDynamicColor(@"chat_link_message_subtitle_color", @"#0000FF");
         [self.container addSubview:_myLinkLabel];
 
         [self.container.layer setMasksToBounds:YES];

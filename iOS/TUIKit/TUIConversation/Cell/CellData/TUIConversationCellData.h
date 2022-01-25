@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  群@ 消息 seq 列表
  */
-@property (nonatomic, strong) NSMutableArray<NSNumber *> *atMsgSeqList;
+@property (nonatomic, strong) NSMutableArray<NSNumber *> *atMsgSeqs;
 
 /**
  *  最新消息时间

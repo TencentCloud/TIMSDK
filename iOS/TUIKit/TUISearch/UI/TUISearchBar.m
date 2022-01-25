@@ -12,10 +12,12 @@
 #import "UIView+TUILayout.h"
 #import "TUICore.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @interface TUISearchBar () <UISearchBarDelegate>
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, assign) BOOL isEntrance;
+@property (nonatomic, strong) UIView *coverView;
 @end
 
 @implementation TUISearchBar
@@ -24,28 +26,32 @@
 - (void)setEntrance:(BOOL)isEntrance {
     self.isEntrance = isEntrance;
     [self setupViews];
+    self.coverView.hidden = !isEntrance;
 }
 
 - (UIColor *)bgColorOfSearchBar
 {
-    UIColor *lightColor = [UIColor colorWithRed:235/255.0 green:240/255.0 blue:246/255.0 alpha:1/1.0];
-    UIColor *darkColor = [UIColor blackColor];
-    return [UIColor d_colorWithColorLight:lightColor dark:darkColor];
+    return TUICoreDynamicColor(@"head_bg_gradient_start_color", @"#EBF0F6");
 }
 
 - (void)setupViews
 {
     
     self.backgroundColor = self.bgColorOfSearchBar;
+    _coverView = [[UIView alloc] init];
+    _coverView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1];
+    _coverView.hidden = YES;
+    [self addSubview:_coverView];
+    
     _searchBar = [[UISearchBar alloc] init];
     _searchBar.placeholder = TUIKitLocalizableString(Search); // @"搜索";
     _searchBar.backgroundImage = [UIImage new];
-    _searchBar.barTintColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:[UIColor colorWithRed:55/255.0 green:55/255.0 blue:55/255.0 alpha:1.0]];
+    _searchBar.barTintColor = UIColor.redColor;
     _searchBar.showsCancelButton = NO;
     _searchBar.delegate = self;
     _searchBar.showsCancelButton = !self.isEntrance;
     if (@available(iOS 13.0, *)) {
-        _searchBar.searchTextField.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:[UIColor colorWithRed:55/255.0 green:55/255.0 blue:55/255.0 alpha:1.0]];
+        _searchBar.searchTextField.backgroundColor = TUISearchDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
     }
     [self addSubview:_searchBar];
     [self enableCancelButton];
@@ -54,8 +60,15 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    self.coverView.frame = self.bounds;
     self.searchBar.frame = CGRectMake(10, 5, self.mm_w - 10 - 10, self.mm_h - 5 - 5);
-    if ([self.searchBar isFirstResponder]) {
+    
+    [self updateSearchIcon];
+}
+
+- (void)updateSearchIcon
+{
+    if ([self.searchBar isFirstResponder] || self.searchBar.text.length || !self.isEntrance) {
         [self.searchBar setPositionAdjustment:UIOffsetZero forSearchBarIcon:UISearchBarIconSearch];
         self.backgroundColor = self.superview.backgroundColor;
     } else {
@@ -79,6 +92,11 @@
     if (self.isEntrance && [self.delegate respondsToSelector:@selector(searchBarDidEnterSearch:)]) {
         [self.delegate searchBarDidEnterSearch:self];
     }
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakSelf updateSearchIcon];
+    });
     return !self.isEntrance;
 }
 

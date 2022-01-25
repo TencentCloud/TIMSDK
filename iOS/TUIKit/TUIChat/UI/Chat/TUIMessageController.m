@@ -35,6 +35,7 @@
 #import "TUITool.h"
 #import "TUICore.h"
 #import <UIKit/UIWindow.h>
+#import "TUIThemeManager.h"
 
 @interface TUIMessageController () <TUIMessageCellDelegate,
 TUIJoinGroupMessageCellDelegate,
@@ -45,7 +46,6 @@ TUIMessageDataProviderDataSource>
 @property (nonatomic, strong) TUIMessageCellData *reSendUIMsg;
 @property (nonatomic, strong) TUIChatConversationModel *conversationData;
 @property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
-@property (nonatomic, assign) BOOL isInVC;
 @property (nonatomic, assign) BOOL isActive;
 @property (nonatomic, assign) BOOL showCheckBox;
 @end
@@ -59,7 +59,6 @@ TUIMessageDataProviderDataSource>
     [self setupViews];
     self.isActive = YES;
 }
-
 
 - (void)dealloc
 {
@@ -78,20 +77,6 @@ TUIMessageDataProviderDataSource>
     self.isInVC = NO;
     [self readedReport];
     [super viewWillDisappear:animated];
-}
-
-- (void)readedReport
-{
-    if (self.isInVC && self.isActive) {
-        NSString *userID = self.conversationData.userID;
-        if (userID.length > 0) {
-            [TUIMessageDataProvider markC2CMessageAsRead:userID succ:nil fail:nil];
-        }
-        NSString *groupID = self.conversationData.groupID;
-        if (groupID.length > 0) {
-            [TUIMessageDataProvider markGroupMessageAsRead:groupID succ:nil fail:nil];
-        }
-    }
 }
 
 - (void)applicationBecomeActive
@@ -117,7 +102,7 @@ TUIMessageDataProviderDataSource>
     self.tableView.scrollsToTop = NO;
     self.tableView.estimatedRowHeight = 0;
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
 
     [self.tableView registerClass:[TUITextMessageCell class] forCellReuseIdentifier:TTextMessageCell_ReuseId];
     [self.tableView registerClass:[TUIVoiceMessageCell class] forCellReuseIdentifier:TVoiceMessageCell_ReuseId];
@@ -147,6 +132,7 @@ TUIMessageDataProviderDataSource>
     self.tableView.tableHeaderView = self.indicatorView;
 }
 
+#pragma mark - Data Provider
 - (void)setConversation:(TUIChatConversationModel *)conversationData {
     self.conversationData = conversationData;
     if (!self.messageDataProvider) {
@@ -162,30 +148,31 @@ TUIMessageDataProviderDataSource>
         return;
     }
     
+    __weak typeof(self) weakSelf = self;
     [self.messageDataProvider loadMessageSucceedBlock:^(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> * _Nonnull newMsgs) {
         if (isNoMoreMsg) {
-            self.indicatorView.mm_h = 0;
+            weakSelf.indicatorView.mm_h = 0;
         }
         if (newMsgs.count != 0) {
             
-            [self.tableView reloadData];
-            [self.tableView layoutIfNeeded];
+            [weakSelf.tableView reloadData];
+            [weakSelf.tableView layoutIfNeeded];
             
             if(isFirstLoad) {   // 第一次加载
-                [self scrollToBottom:NO];
+                [weakSelf scrollToBottom:NO];
             } else {
                 CGFloat visibleHeight = 0;
                 for (NSInteger i = 0; i < newMsgs.count; ++i) {
                     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                    visibleHeight += [self tableView:self.tableView heightForRowAtIndexPath:indexPath];
+                    visibleHeight += [weakSelf tableView:weakSelf.tableView heightForRowAtIndexPath:indexPath];
                 }
                 if(isNoMoreMsg) {
                     visibleHeight -= TMessageController_Header_Height;
                 }
-                [self.tableView scrollRectToVisible:CGRectMake(0, self.tableView.contentOffset.y + visibleHeight, self.tableView.frame.size.width, self.tableView.frame.size.height) animated:NO];
+                [weakSelf.tableView scrollRectToVisible:CGRectMake(0, weakSelf.tableView.contentOffset.y + visibleHeight, weakSelf.tableView.frame.size.width, weakSelf.tableView.frame.size.height) animated:NO];
             }
         }
-        [self.indicatorView stopAnimating];
+        [weakSelf.indicatorView stopAnimating];
     } FailBlock:^(int code, NSString *desc) {
         [TUITool makeToastError:code msg:desc];
     }];
@@ -268,6 +255,10 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     [self limitReadReport];
 }
 
+- (void)dataProvider:(TUIMessageDataProvider *)dataProvider ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg {
+    return;
+}
+
 - (void)limitReadReport {
     static uint64_t lastTs = 0;
     uint64_t curTs = [[NSDate date] timeIntervalSince1970];
@@ -282,14 +273,29 @@ ReceiveReadMsgWithUserID:(NSString *)userId
             return;
         }
         delayReport = YES;
+        __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self readedReport];
+            [weakSelf readedReport];
             delayReport = NO;
         });
     }
 }
 
-#pragma mark - UITableView
+- (void)readedReport
+{
+    if (self.isInVC && self.isActive) {
+        NSString *userID = self.conversationData.userID;
+        if (userID.length > 0) {
+            [TUIMessageDataProvider markC2CMessageAsRead:userID succ:nil fail:nil];
+        }
+        NSString *groupID = self.conversationData.groupID;
+        if (groupID.length > 0) {
+            [TUIMessageDataProvider markGroupMessageAsRead:groupID succ:nil fail:nil];
+        }
+    }
+}
+
+#pragma mark - UITableViewDelegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.messageDataProvider.uiMsgs.count;
@@ -336,6 +342,11 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 {
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [self didTapViewController];
+}
+
 #pragma mark - Event Response
 - (void)scrollToBottom:(BOOL)animate
 {
@@ -365,7 +376,10 @@ ReceiveReadMsgWithUserID:(NSString *)userId
         if ([cellData isKindOfClass:[TUIImageMessageCellData class]]) {
             delay = 0;
         }
+        
+        @weakify(self)
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            @strongify(self)
             if (cellData.status == Msg_Status_Sending) {
                 [self changeMsg:cellData status:Msg_Status_Sending_2];
             }
@@ -484,43 +498,61 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 - (void)onLongPressMessage:(TUIMessageCell *)cell
 {
     TUIMessageCellData *data = cell.messageData;
-    if ([data isKindOfClass:[TUISystemMessageCellData class]])
-        return; // 系统消息不响应
+    if ([data isKindOfClass:[TUISystemMessageCellData class]]) {
+        // 系统消息不响应
+        return;
+    }
+    if ([data isKindOfClass:[TUITextMessageCellData class]]) {
+        // 文本消息选中状态的时候会默认 becomeFirstResponder 导致键盘消失，界面错乱，这里先收起已经弹出的键盘。
+        TUITextMessageCell *textCell = (TUITextMessageCell *)cell;
+        [textCell.textView becomeFirstResponder];
+    }
 
     self.menuUIMsg = data;
-    
+
     __weak typeof(self) weakSelf = self;
     TUIChatPopMenu *menu = [[TUIChatPopMenu alloc] init];
+    TUIChatPopMenuAction *copyAction = nil;
     if ([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReplyMessageCellData.class]) {
-        [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Copy) image:[UIImage d_imageNamed:@"icon_copy" bundle:TUIChatBundle] callback:^{
-            [weakSelf onCopyMsg:nil];
-        }]];
+        copyAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Copy) image:[UIImage d_imageNamed:@"icon_copy" bundle:TUIChatBundle] callback:^{
+            [weakSelf onCopyMsg:cell];
+        }];
+        [menu addAction:copyAction];
     }
-    
-    [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Delete) image:[UIImage d_imageNamed:@"icon_delete" bundle:TUIChatBundle] callback:^{
+
+    TUIChatPopMenuAction *deleteAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Delete) image:[UIImage d_imageNamed:@"icon_delete" bundle:TUIChatBundle] callback:^{
         [weakSelf onDelete:nil];
-    }]];
-    
+    }];
+    [menu addAction:deleteAction];
+
+    TUIChatPopMenuAction *recallAction = nil;
     V2TIMMessage *imMsg = data.innerMessage;
     if(imMsg){
         if([imMsg isSelf] && [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < 2 * 60 && (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)){
-            [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Revoke) image:[UIImage d_imageNamed:@"icon_recall" bundle:TUIChatBundle] callback:^{
+            recallAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Revoke) image:[UIImage d_imageNamed:@"icon_recall" bundle:TUIChatBundle] callback:^{
                 [weakSelf onRevoke:nil];
-            }]];
+            }];
+            [menu addAction:recallAction];
         }
     }
 
-    [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Multiple) image:[UIImage d_imageNamed:@"icon_multi" bundle:TUIChatBundle] callback:^{
+    TUIChatPopMenuAction *multiAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Multiple) image:[UIImage d_imageNamed:@"icon_multi" bundle:TUIChatBundle] callback:^{
         [weakSelf onMulitSelect:nil];
-    }]];
-    
+    }];
+    [menu addAction:multiAction];
+
+    TUIChatPopMenuAction *forwardAction = nil;
+    TUIChatPopMenuAction *quoteAction = nil;
     if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) {
-        [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Forward) image:[UIImage d_imageNamed:@"icon_forward" bundle:TUIChatBundle] callback:^{
+        forwardAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Forward) image:[UIImage d_imageNamed:@"icon_forward" bundle:TUIChatBundle] callback:^{
             [weakSelf onForward:nil];
-        }]];
-        [menu addAction:[[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Reply) image:[UIImage d_imageNamed:@"icon_quote" bundle:TUIChatBundle] callback:^{
+        }];
+        [menu addAction:forwardAction];
+        
+        quoteAction = [[TUIChatPopMenuAction alloc] initWithTitle:TUIKitLocalizableString(Reply) image:[UIImage d_imageNamed:@"icon_quote" bundle:TUIChatBundle] callback:^{
             [weakSelf onReply:nil];
-        }]];
+        }];
+        [menu addAction:quoteAction];
     }
 
     BOOL isFirstResponder = NO;
@@ -533,11 +565,39 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     else{
         [self becomeFirstResponder];
     }
-    
+
     CGRect frame = [UIApplication.sharedApplication.keyWindow convertRect:cell.container.frame fromView:cell];
     [menu setArrawPosition:CGPointMake(frame.origin.x + frame.size.width * 0.5, frame.origin.y - 5)
               adjustHeight:frame.size.height + 5];
     [menu showInView:self.tableView];
+    
+    // 如果是文本类型消息，设置文本消息光标选中状态，如果文字不是全选状态，只保留复制和转发
+    if ([data isKindOfClass:[TUITextMessageCellData class]]) {
+        TUITextMessageCell *textCell = (TUITextMessageCell *)cell;
+        [textCell.textView selectAll:self];
+        __block BOOL isSelectAll = YES;
+        textCell.selectAllContentContent = ^(BOOL selectAll) {
+            if (isSelectAll == selectAll) {
+                return;
+            }
+            isSelectAll = selectAll;
+            [menu removeAllAction];
+            if (isSelectAll) {
+                [menu addAction:copyAction];
+                [menu addAction:deleteAction];
+                [menu addAction:multiAction];
+                [menu addAction:forwardAction];
+                [menu addAction:quoteAction];
+            } else {
+                [menu addAction:copyAction];
+                [menu addAction:forwardAction];
+            }
+            [menu layoutSubview];
+        };
+        menu.hideCallback = ^{
+            [textCell.textView setSelectedTextRange:nil];
+        };
+    }
 }
 
 - (void)onLongSelectMessageAvatar:(TUIMessageCell *)cell {
@@ -612,17 +672,20 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 - (void)onCopyMsg:(id)sender
 {
     NSString *content = @"";
-    if ([_menuUIMsg isKindOfClass:[TUITextMessageCellData class]]) {
-        TUITextMessageCellData *txtMsg = (TUITextMessageCellData *)_menuUIMsg;
-        content = txtMsg.content;
-    } else if ([_menuUIMsg isKindOfClass:TUIReplyMessageCellData.class]) {
+    // 文本消息要以光标实际选中的消息内容为准
+    if ([sender isKindOfClass:[TUITextMessageCell class]]) {
+        TUITextMessageCell *txtCell = (TUITextMessageCell *)sender;
+        content = txtCell.selectContent;
+    }
+    if ([_menuUIMsg isKindOfClass:TUIReplyMessageCellData.class]) {
         TUIReplyMessageCellData *replyMsg = (TUIReplyMessageCellData *)_menuUIMsg;
         content = replyMsg.content;
     }
-    
-    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = content;
-    [TUITool makeToast:TUIKitLocalizableString(Copied)];
+    if (content.length > 0) {
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = content;
+        [TUITool makeToast:TUIKitLocalizableString(Copied)];
+    }
 }
 
 - (void)onRevoke:(id)sender
@@ -791,6 +854,11 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     TUIMediaView *mediaView = [[TUIMediaView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height)];
     [mediaView setThumb:cell.thumb frame:frame];
     [mediaView setCurMessage:cell.messageData.innerMessage];
+    __weak typeof(self) weakSelf = self;
+    mediaView.onClose = ^{
+        [weakSelf didCloseMediaMessage:cell];
+    };
+    [self willShowMediaMessage:cell];
     [[UIApplication sharedApplication].keyWindow addSubview:mediaView];
 }
 
@@ -800,11 +868,24 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     TUIMediaView *mediaView = [[TUIMediaView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height)];
     [mediaView setThumb:cell.thumb frame:frame];
     [mediaView setCurMessage:cell.messageData.innerMessage];
+    __weak typeof(self) weakSelf = self;
+    mediaView.onClose = ^{
+        [weakSelf didCloseMediaMessage:cell];
+    };
+    [self willShowMediaMessage:cell];
     [[UIApplication sharedApplication].keyWindow addSubview:mediaView];
 }
 
 - (void)showFileMessage:(TUIFileMessageCell *)cell
 {
+    TUIFileMessageCellData *fileData = cell.fileData;
+    if (![fileData isLocalExist]) {
+        // 开始下载
+        [fileData downloadFile];
+        return;
+    }
+    
+    // 本地存在，直接打开
     TUIFileViewController *file = [[TUIFileViewController alloc] init];
     file.data = [cell fileData];
     [self.navigationController pushViewController:file animated:YES];
@@ -832,6 +913,7 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 
 - (void)showReplyMessage:(TUIReplyMessageCell *)cell
 {
+    // 子类实现
 }
 
 - (void)showLiveMessage:(TUIGroupLiveMessageCell *)cell {
@@ -844,5 +926,14 @@ ReceiveReadMsgWithUserID:(NSString *)userId
     }];
 }
 
+- (void)willShowMediaMessage:(TUIMessageCell *)cell
+{
+    
+}
+
+- (void)didCloseMediaMessage:(TUIMessageCell *)cell
+{
+    
+}
 
 @end

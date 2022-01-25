@@ -7,6 +7,7 @@
 
 #import "TUIVoiceMessageCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @implementation TUIVoiceMessageCell
 
@@ -20,7 +21,6 @@
 
         _duration = [[UILabel alloc] init];
         _duration.font = [UIFont boldSystemFontOfSize:12];
-        _duration.textColor = [UIColor blackColor];
         [self.bubbleView addSubview:_duration];
 
         _voiceReadPoint = [[UIImageView alloc] init];
@@ -63,13 +63,21 @@
             [self.voice stopAnimating];
         }
     }];
-    if (data.direction == MsgDirectionIncoming) {
-        _duration.textAlignment = NSTextAlignmentLeft;
-    } else {
-        _duration.textAlignment = NSTextAlignmentRight;
-    }
+    
+    [self applyStyleFromDirection:data.direction];
 }
 
+- (void)applyStyleFromDirection:(TMsgDirection)direction {
+    if (direction == MsgDirectionIncoming) {
+        //消息到达
+        _duration.textAlignment = NSTextAlignmentLeft;
+        _duration.textColor = TUIChatDynamicColor(@"chat_voice_message_recv_duration_time_color", @"#000000");
+    } else {
+        //消息发送
+        _duration.textAlignment = NSTextAlignmentRight;
+        _duration.textColor = TUIChatDynamicColor(@"chat_voice_message_send_duration_time_color", @"#000000");
+    }
+}
 - (void)layoutSubviews
 {
     [super layoutSubviews];

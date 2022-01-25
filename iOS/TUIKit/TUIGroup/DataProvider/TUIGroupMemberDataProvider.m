@@ -6,7 +6,7 @@
 //
 
 #import "TUIGroupMemberDataProvider.h"
-#import "TUIGroupMemberCellData.h"
+#import "TUIMemberInfoCellData.h"
 #import "TUIDefine.h"
 
 @interface TUIGroupMemberDataProvider()
@@ -34,7 +34,7 @@
         NSMutableArray *ids = [NSMutableArray array];
         NSMutableDictionary *map = [NSMutableDictionary dictionary];
         for (V2TIMGroupMemberFullInfo *member in memberList) {
-            TUIGroupMemberCellData *user = [[TUIGroupMemberCellData alloc] init];
+            TUIMemberInfoCellData *user = [[TUIMemberInfoCellData alloc] init];
             user.identifier = member.userID;
             if (member.nameCard.length > 0) {
                 user.name = member.nameCard;
@@ -58,7 +58,7 @@
                 if (![userIDs containsObject:info.userID]) {
                     continue;
                 }
-                TUIGroupMemberCellData *user = map[info.userID];
+                TUIMemberInfoCellData *user = map[info.userID];
                 user.avatarUrl = info.faceURL;
             }
             if (completion) {

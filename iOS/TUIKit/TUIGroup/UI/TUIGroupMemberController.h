@@ -57,12 +57,8 @@
  */
 @interface TUIGroupMemberController : UIViewController
 
-/**
- *  群成员视图
- *  用于在控制器内显示群内成员信息，以 collectionView 的形式对群成员进行展示，同时能够响应用户的点击操作。
- *  详细信息请参考 Section\Group\TUIGroupMembersView.h
- */
-@property (nonatomic, strong) TUIGroupMembersView *groupMembersView;
+
+@property (nonatomic, strong) UITableView *tableView;
 
 /**
  *  群组 ID

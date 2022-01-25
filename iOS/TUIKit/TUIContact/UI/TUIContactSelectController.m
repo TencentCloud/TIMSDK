@@ -10,6 +10,7 @@
 #import "TUIContactSelectViewDataProvider.h"
 #import "TUICore.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 static NSString *kReuseIdentifier = @"ContactSelectCell";
 
@@ -55,7 +56,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.view.backgroundColor =  TUICoreDynamicColor(@"controller_bg_color", @"#F3F5F9");
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
@@ -70,7 +71,9 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     [_tableView setTableFooterView:v];
     _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);
     [_tableView registerClass:[TUICommonContactSelectCell class] forCellReuseIdentifier:kReuseIdentifier];
-
+    if (@available(iOS 15.0, *)) {
+        _tableView.sectionHeaderTopPadding = 0;
+    }
     _emptyView = [[UIView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:_emptyView];
     _emptyView.mm_fill();

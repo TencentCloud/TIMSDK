@@ -6,11 +6,13 @@
 //
 
 #import "TUIContactService.h"
+#import "TUIThemeManager.h"
 
 @implementation TUIContactService
 
 + (void)load {
     [TUICore registerService:TUICore_TUIContactService object:[TUIContactService shareInstance]];
+    TUIRegisterThemeResourcePath(TUIContactThemePath, TUIThemeModuleContact);
 }
 
 + (TUIContactService *)shareInstance {

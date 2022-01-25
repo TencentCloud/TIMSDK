@@ -27,6 +27,7 @@
 #import "TUIDefine.h"
 #import "NSDictionary+TUISafe.h"
 #import "NSString+emoji.h"
+#import "TUIThemeManager.h"
 
 @interface TUIBaseChatViewController () <TUIMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate, TUIChatDataProviderForwardDelegate, TUICameraViewControllerDelegate, TUINotificationProtocol>
 @property (nonatomic, strong) TUIMessageMultiChooseView *multiChooseView;
@@ -40,6 +41,8 @@
 @property (nonatomic) BOOL isMergeForward;
 
 @property (nonatomic, assign) BOOL firstAppear;
+
+@property (nonatomic, copy) NSString *mainTitle;
 
 @end
 
@@ -61,11 +64,22 @@
     return self;
 }
 
+- (void)setTitle:(NSString *)title
+{
+    self.mainTitle = title;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.firstAppear = YES;
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#FFFFFF");
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.text = self.mainTitle;
+    titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
+    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    [titleLabel sizeToFit];
+    self.navigationItem.titleView = titleLabel;
 
     //message
 //    if (self.locateMessage) {

@@ -50,7 +50,13 @@
 
 - (void)addAction:(TUIChatPopMenuAction *)action
 {
-    [self.actions addObject:action];
+    if (action) {
+        [self.actions addObject:action];
+    }
+}
+
+- (void)removeAllAction {
+    [self.actions removeAllObjects];
 }
 
 - (void)setArrawPosition:(CGPoint)point adjustHeight:(CGFloat)adjustHeight
@@ -86,6 +92,9 @@
 
 - (void)hide
 {
+    if (self.hideCallback) {
+        self.hideCallback();
+    }
     [self removeFromSuperview];
 }
 
@@ -98,7 +107,11 @@
     self.frame = window.bounds;
     [window addSubview:self];
     
-    // 绘制 container
+    // 绘制子视图
+    [self layoutSubview];
+}
+
+- (void)layoutSubview {
     [self prepareContainerView];
     [self setupContainerPosition];
 }
@@ -168,6 +181,10 @@
 
 - (void)prepareContainerView
 {
+    if (self.containerView) {
+        [self.containerView removeFromSuperview];
+        self.containerView = nil;
+    }
     self.containerView = [[UIView alloc] init];
     self.containerView.backgroundColor = [UIColor whiteColor];
     self.containerView.layer.shadowColor = [UIColor blackColor].CGColor;

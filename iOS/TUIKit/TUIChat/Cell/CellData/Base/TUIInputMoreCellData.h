@@ -67,6 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (class, nonatomic, assign) TUIInputMoreCellData *fileData;
 
++ (void)resetAllCelData;
+
 @end
 
 NS_ASSUME_NONNULL_END

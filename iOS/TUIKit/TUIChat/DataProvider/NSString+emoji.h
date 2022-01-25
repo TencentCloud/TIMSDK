@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)getInternationalStringWithfaceContent;
 
 // 获取格式化之后的表情文本（图文混排过后）
-- (NSMutableAttributedString *)getFormatEmojiStringWithFont:(UIFont *)textFont;
+- (NSMutableAttributedString *)getFormatEmojiStringWithFont:(UIFont *)textFont emojiLocations:(nullable NSMutableArray<NSDictionary<NSValue *, NSAttributedString *> *> *)emojiLocations;
 
 @end
 

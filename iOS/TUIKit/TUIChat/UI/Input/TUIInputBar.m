@@ -16,6 +16,7 @@
 #import "UIView+TUILayout.h"
 #import "TUIDarkModel.h"
 #import "TUIGlobalization.h"
+#import "TUIThemeManager.h"
 
 @interface TUIInputBar() <UITextViewDelegate, AVAudioRecorderDelegate>
 @property (nonatomic, strong) TUIRecordView *record;
@@ -38,11 +39,10 @@
 
 - (void)setupViews
 {
-    self.backgroundColor = [UIColor d_colorWithColorLight:TInput_Background_Color dark:TInput_Background_Color_Dark];
+    self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
 
     _lineView = [[UIView alloc] init];
-    _lineView.backgroundColor = [UIColor d_colorWithColorLight:TLine_Color dark:TLine_Color_Dark];
-    [self addSubview:_lineView];
+    _lineView.backgroundColor = TUICoreDynamicColor(@"separtor_color", @"#FFFFFF");
 
     _micButton = [[UIButton alloc] init];
     [_micButton addTarget:self action:@selector(clickVoiceBtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -91,7 +91,9 @@
     [_inputTextView.layer setMasksToBounds:YES];
     [_inputTextView.layer setCornerRadius:4.0f];
     [_inputTextView.layer setBorderWidth:0.5f];
-    [_inputTextView.layer setBorderColor:[UIColor d_colorWithColorLight:TLine_Color dark:TLine_Color_Dark].CGColor];
+    [_inputTextView.layer setBorderColor:TUICoreDynamicColor(@"separtor_color", @"#FFFFFF").CGColor];
+    _inputTextView.backgroundColor = TUIChatDynamicColor(@"chat_input_bg_color", @"#FFFFFF");
+    _inputTextView.textColor = TUIChatDynamicColor(@"chat_input_text_color", @"#000000");
     [_inputTextView setReturnKeyType:UIReturnKeySend];
     [self addSubview:_inputTextView];
 }

@@ -9,6 +9,7 @@
 #import "TUINewFriendViewController.h"
 #import "TUINewFriendViewDataProvider.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @interface TUINewFriendViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property UITableView *tableView;
@@ -21,9 +22,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = TUIKitLocalizableString(TUIKitContactsNewFriends); // @"新的联系人";
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:242/255.0 green:243/255.0 blue:245/255.0 alpha:1/1.0] dark:TController_Background_Color_Dark];
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.text = TUIKitLocalizableString(TUIKitContactsNewFriends); // @"新的联系人";
+    titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
+    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    [titleLabel sizeToFit];
+    self.navigationItem.titleView = titleLabel;
+    
+    
+    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    if (@available(iOS 15.0, *)) {
+        _tableView.sectionHeaderTopPadding = 0;
+    }
     [self.view addSubview:_tableView];
     _tableView.delegate = self;
     _tableView.dataSource = self;

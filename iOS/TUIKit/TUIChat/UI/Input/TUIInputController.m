@@ -20,6 +20,7 @@
 #import "TUIMessageDataProvider.h"
 #import "NSString+emoji.h"
 #import <AVFoundation/AVFoundation.h>
+#import "TUIThemeManager.h"
 
 @interface TUIInputController () <TTextViewDelegate, TMenuViewDelegate, TFaceViewDelegate, TMoreViewDelegate>
 @property (nonatomic, assign) InputStatus status;
@@ -59,7 +60,7 @@
 
 - (void)setupViews
 {
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:TInput_Background_Color dark:TInput_Background_Color_Dark];
+    self.view.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
     _status = Input_Status_Input;
     
     _inputBar = [[TUIInputBar alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.replyPreviewBar.frame), self.view.frame.size.width, TTextView_Height)];
@@ -69,7 +70,6 @@
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
-    // http://tapd.oa.com/20398462/bugtrace/bugs/view?bug_id=1020398462072883317&url_cache_key=b8dc0f6bee40dbfe0e702ef8cebd5d81
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]){
         [_delegate inputController:self didChangeHeight:CGRectGetMaxY(_inputBar.frame) + Bottom_SafeHeight];
     }

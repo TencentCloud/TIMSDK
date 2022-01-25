@@ -9,6 +9,7 @@
 #import "TUICore.h"
 #import "TUIDefine.h"
 #import "TUICommonModel.h"
+#import "TUIThemeManager.h"
 
 static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
@@ -20,6 +21,15 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.text = TUIKitLocalizableString(TUIKitContactsGroupChats); // @"群聊";
+    titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
+    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    [titleLabel sizeToFit];
+
+    self.navigationItem.titleView = titleLabel;
+    
 
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
@@ -29,6 +39,9 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [_tableView setSectionIndexBackgroundColor:[UIColor clearColor]];
     [_tableView setSectionIndexColor:[UIColor darkGrayColor]];
     [_tableView setBackgroundColor:self.view.backgroundColor];
+    if (@available(iOS 15.0, *)) {
+        _tableView.sectionHeaderTopPadding = 0;
+    }
     //cell无数据时，不显示间隔线
     UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
     [_tableView setTableFooterView:v];
@@ -136,6 +149,11 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (void)didSelectConversation:(TUICommonContactCell *)cell
 {
+    if (self.onSelect) {
+        self.onSelect(cell.contactData);
+        return;
+    }
+    
     NSDictionary *param = @{
         TUICore_TUIChatService_GetChatViewControllerMethod_TitleKey : cell.contactData.title ?: @"",
         TUICore_TUIChatService_GetChatViewControllerMethod_GroupIDKey : cell.contactData.identifier ?: @"",

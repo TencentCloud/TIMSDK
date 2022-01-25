@@ -46,6 +46,7 @@
     data.cselector = @selector(cellClick:);
     data.cbuttonSelector = @selector(btnClick:);
     [cell fillWithData:data];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
     return cell;
 }

@@ -7,6 +7,7 @@
 
 #import "TUIMergeMessageCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @interface TUIMergeMessageCell ()
 
@@ -27,12 +28,12 @@
 
 - (void)setupViews
 {
-    self.container.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+    self.container.backgroundColor = TUIChatDynamicColor(@"chat_merge_message_bg_color", @"#FFFFFF");
     
     _relayTitleLabel = [[UILabel alloc] init];
     _relayTitleLabel.text = @"聊天记录";
     _relayTitleLabel.font = [UIFont systemFontOfSize:16];
-    _relayTitleLabel.textColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark];
+    _relayTitleLabel.textColor = TUIChatDynamicColor(@"chat_merge_message_title_color", @"#000000");
     [self.container addSubview:_relayTitleLabel];
 
     _abstractLabel = [[UILabel alloc] initWithFrame:CGRectZero];
