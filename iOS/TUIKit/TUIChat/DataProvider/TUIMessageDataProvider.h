@@ -49,6 +49,13 @@ ReceiveReadMsgWithUserID:(NSString *)userId
      ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg;
 
 /**
+ * 收到一条撤回消息
+ * @param uiMsg 撤回消息
+ */
+- (void)dataProvider:(TUIMessageDataProvider *)dataProvider
+     ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg;
+
+/**
  * 在请求新消息完成后、收到新消息时, 会触发该事件
  * 外部可以通过该方法来实现修改要展示的CellData、加入消息(如时间消息)、自定义消息
  * @param msg 原始的IM消息

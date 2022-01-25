@@ -7,6 +7,7 @@
 #import "TUIMessageDataProvider.h"
 #import "TUICore.h"
 #import "NSDictionary+TUISafe.h"
+#import "TUIThemeManager.h"
 
 #define Input_SendBtn_Key @"Input_SendBtn_Key"
 #define Input_SendBtn_Title @"Input_SendBtn_Title"
@@ -15,13 +16,27 @@
 static NSArray *customInputBtnInfo = nil;
 
 @implementation TUIChatDataProvider
-+ (void)load {
-    // 以下代码需要您自己实现
-    customInputBtnInfo = @[@{Input_SendBtn_Key : TUIInputMoreCellKey_Link,  // 按钮唯一标识
-                             Input_SendBtn_Title :  TUIKitLocalizableString(TUIKitMoreLink), // 按钮文本信息
-                             Input_SendBtn_ImageName : @"more_link"// 图片名称，图片需要放在 TUIChat.bundle 中
-                            }
-    ];
++ (void)initialize
+{
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onChangeLanguage) name:TUIChangeLanguageNotification object:nil];   
+}
+
++ (void)onChangeLanguage
+{
+    customInputBtnInfo = nil;
+}
+
++ (NSArray *)customInputBtnInfo
+{
+    if (customInputBtnInfo == nil) {
+        // 以下代码需要您自己实现
+        customInputBtnInfo = @[@{Input_SendBtn_Key : TUIInputMoreCellKey_Link,  // 按钮唯一标识
+                                 Input_SendBtn_Title :  TUIKitLocalizableString(TUIKitMoreLink), // 按钮文本信息
+                                 Input_SendBtn_ImageName : @"chat_more_link_img"// 图片名称，图片需要放在 TUIChat.bundle 中
+                                }
+        ];
+    }
+    return customInputBtnInfo;
 }
 
 // 转发消息到目标会话
@@ -185,7 +200,7 @@ static NSArray *customInputBtnInfo = nil;
         [moreMenus addObject:liveMenusData];
     }
     // 自定义消息
-    for (NSDictionary *buttonInfo in customInputBtnInfo) {
+    for (NSDictionary *buttonInfo in [self customInputBtnInfo]) {
         NSString *key = buttonInfo[Input_SendBtn_Key];
         NSString *title = buttonInfo[Input_SendBtn_Title];
         NSString *imageName = buttonInfo[Input_SendBtn_ImageName];
@@ -195,7 +210,7 @@ static NSArray *customInputBtnInfo = nil;
         TUIInputMoreCellData *linkMenusData = [TUIInputMoreCellData new];
         linkMenusData.key = key;
         linkMenusData.title = title;
-        linkMenusData.image = [UIImage d_imageNamed:imageName bundle:TUIChatBundle];
+        linkMenusData.image = TUIChatDynamicImage(imageName, [UIImage d_imageNamed:imageName bundle:TUIChatBundle]);
         [moreMenus addObject:linkMenusData];
     }
     return moreMenus;

@@ -9,6 +9,7 @@
 #import "TUIMoreView.h"
 #import "TUIInputMoreCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @interface TUIMoreView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSArray *data;
@@ -32,7 +33,7 @@
 
 - (void)setupViews
 {
-    self.backgroundColor = [UIColor d_colorWithColorLight:TInput_Background_Color dark:TInput_Background_Color_Dark];
+    self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
 
     _moreFlowLayout = [[UICollectionViewFlowLayout alloc] init];
     _moreFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -53,12 +54,12 @@
     [self addSubview:_moreCollectionView];
 
     _lineView = [[UIView alloc] init];
-    _lineView.backgroundColor =  [UIColor d_colorWithColorLight:TLine_Color dark:TLine_Color_Dark];
+    _lineView.backgroundColor =  TUICoreDynamicColor(@"separtor_color", @"#BCBCBC");
     [self addSubview:_lineView];
 
     _pageControl = [[UIPageControl alloc] init];
-    _pageControl.currentPageIndicatorTintColor = [UIColor d_colorWithColorLight:TPage_Current_Color dark:TPage_Current_Color_Dark];
-    _pageControl.pageIndicatorTintColor = [UIColor d_colorWithColorLight:TPage_Color dark:TPage_Color_Dark];;
+    _pageControl.currentPageIndicatorTintColor = TUIChatDynamicColor(@"chat_face_page_control_current_color", @"#7D7D7D");
+    _pageControl.pageIndicatorTintColor = TUIChatDynamicColor(@"chat_face_page_control_color", @"#DEDEDE");
     [self addSubview:_pageControl];
 }
 
@@ -80,8 +81,11 @@
     if(_rowCount > 1){
         _moreFlowLayout.minimumInteritemSpacing = (_moreCollectionView.frame.size.height - cellSize.height * _rowCount) / (_rowCount - 1);
     }
-    _moreFlowLayout.minimumLineSpacing = (_moreCollectionView.frame.size.width - cellSize.width * TMoreView_Column_Count - 2 * TMoreView_Section_Padding) / (TMoreView_Column_Count - 1);
 
+    CGFloat margin = TMoreView_Section_Padding;
+    CGFloat spacing = (_moreCollectionView.frame.size.width - cellSize.width * TMoreView_Column_Count - 2 * margin) / (TMoreView_Column_Count - 1);
+    _moreFlowLayout.minimumLineSpacing = spacing;
+    _moreFlowLayout.sectionInset = UIEdgeInsetsMake(0, margin, 0, margin);
 
     CGFloat height = _moreCollectionView.frame.origin.y + _moreCollectionView.frame.size.height + TMoreView_Margin;
     if(_sectionCount > 1){

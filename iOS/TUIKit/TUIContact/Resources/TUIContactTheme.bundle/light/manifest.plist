@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>id</key>
+	<string>light</string>
+	<key>name</key>
+	<string>轻量</string>
+	<key>name_en</key>
+	<string>Light</string>
+	<key>contact_new_friend_img</key>
+	<string>new_friend.png</string>
+	<key>contact_blacklist_img</key>
+	<string>blacklist.png</string>
+	<key>contact_public_group_img</key>
+	<string>public_group.png</string>
+	<key>contact_add_contact_tips_text_color</key>
+	<string>#444444</string>
+	<key>contact_add_contact_nodata_tips_text_color</key>
+	<string>#999999</string>
+</dict>
+</plist>

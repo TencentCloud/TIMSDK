@@ -8,6 +8,7 @@
 #import "TUIFileMessageCellData.h"
 #import "TUIDefine.h"
 #import "NSString+TUIUtil.h"
+#import "TUIMessageProgressManager.h"
 
 @interface TUIFileMessageCellData ()
 @property (nonatomic, strong) NSMutableArray *progressBlocks;
@@ -69,16 +70,24 @@
     if(isExist){
         return;
     }
+    
+    NSInteger progress = [TUIMessageProgressManager.shareManager progressForMessage:self.msgID];
+    if (progress != 0) {
+        return;
+    }
+    
     if (self.isDownloading)
         return;
     self.isDownloading = YES;
-
     //网络下载
     @weakify(self)
     if (self.innerMessage.elemType == V2TIM_ELEM_TYPE_FILE) {
+        NSString *msgID = self.msgID;
         [self.innerMessage.fileElem downloadFile:path progress:^(NSInteger curSize, NSInteger totalSize) {
             @strongify(self)
-            [self updateDownalodProgress:curSize * 100 / totalSize];
+            NSInteger progress = curSize * 100 / totalSize;
+            [self updateDownalodProgress:progress];
+            [TUIMessageProgressManager.shareManager appendProgress:msgID progress:progress];
         } succ:^{
             @strongify(self)
             self.isDownloading = NO;

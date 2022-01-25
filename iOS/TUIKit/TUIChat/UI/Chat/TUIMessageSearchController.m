@@ -1,21 +1,24 @@
 
 #import "TUIMessageSearchController.h"
 #import "TUIMessageController+ProtectedAPI.h"
-#import "ReactiveObjC.h"
-#import "UIView+TUILayout.h"
-#import "TUIDefine.h"
+#import "TUIChatSmallTongueView.h"
 #import "TUITextMessageCell.h"
-#import "TUIMessageSearchDataProvider.h"
-#import "TUIReplyMessageCellData.h"
 #import "TUIReplyMessageCell.h"
+#import "TUIReplyMessageCellData.h"
 #import "TUIGlobalization.h"
+#import "TUIThemeManager.h"
+#import "TUIMessageSearchDataProvider.h"
+#import "UIView+TUILayout.h"
+#import "ReactiveObjC.h"
+#import "TUIDefine.h"
 
 #define MSG_GET_COUNT 20
 
-@interface  TUIMessageSearchController()
-
-@property (nonatomic) UIActivityIndicatorView *bottomIndicatorView;
-
+@interface  TUIMessageSearchController()<TUIChatSmallTongueViewDelegate>
+@property (nonatomic, strong) UIActivityIndicatorView *bottomIndicatorView;
+@property (nonatomic, assign) uint64_t locateGroupMessageSeq;
+@property (nonatomic, strong) TUIChatSmallTongueView *tongueView;
+@property (nonatomic, strong) NSMutableArray *receiveMsgs;
 @end
 
 @implementation TUIMessageSearchController
@@ -27,13 +30,33 @@
     self.bottomIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, TMessageController_Header_Height)];
     self.bottomIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     self.tableView.tableFooterView = self.bottomIndicatorView;
+    self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
     
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
+    
+    if (self.conversationData.atMsgSeqs.count > 0) {
+        TUIChatSmallTongue *tongue = [[TUIChatSmallTongue alloc] init];
+        tongue.type = TUIChatSmallTongueType_SomeoneAtMe;
+        tongue.atMsgSeqs = [self.conversationData.atMsgSeqs copy];
+        [TUIChatSmallTongueManager showTongue:tongue delegate:self];
+    }
+    self.receiveMsgs = [NSMutableArray array];
 }
 
 - (void)dealloc
 {
+    [TUIChatSmallTongueManager removeTongue];
     [NSNotificationCenter.defaultCenter removeObserver:self];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [TUIChatSmallTongueManager hideTongue:NO];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [TUIChatSmallTongueManager hideTongue:YES];
 }
 
 #pragma mark - Notification
@@ -48,6 +71,15 @@
 }
 
 #pragma mark - Overrider
+- (void)willShowMediaMessage:(TUIMessageCell *)cell
+{
+    [TUIChatSmallTongueManager hideTongue:YES];
+}
+
+- (void)didCloseMediaMessage:(TUIMessageCell *)cell
+{
+    [TUIChatSmallTongueManager hideTongue:NO];
+}
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -59,13 +91,31 @@
             [self.indicatorView startAnimating];
         }
     }
-    else if ([self isScrollToBottomIndicatorViewY:scrollView]
-             && ![self messageSearchDataProvider].isNewerNoMoreMsg
-             ) {
-        // 显示上拉加载
-        if (!self.bottomIndicatorView.isAnimating) {
-            [self.bottomIndicatorView startAnimating];
+    else if ([self isScrollToBottomIndicatorViewY:scrollView]) {
+        if (![self messageSearchDataProvider].isNewerNoMoreMsg) {
+            // 显示上拉加载
+            if (!self.bottomIndicatorView.isAnimating) {
+                [self.bottomIndicatorView startAnimating];
+            }
         }
+        // 去掉 "回到最新位置", "xxx条新消息" 小舌头
+        if (self.isInVC) {
+            [TUIChatSmallTongueManager removeTongue:TUIChatSmallTongueType_ScrollToBoom];
+            [TUIChatSmallTongueManager removeTongue:TUIChatSmallTongueType_ReceiveNewMsg];
+        }
+    }
+    else if (self.isInVC && 0 == self.receiveMsgs.count && self.tableView.contentSize.height - self.tableView.contentOffset.y >= Screen_Height * 2.0) {
+        CGPoint point = [scrollView.panGestureRecognizer translationInView:scrollView];
+        // 下滑的时候，添加 "回到最新位置" 小舌头
+        if (point.y > 0) {
+            TUIChatSmallTongue *tongue = [[TUIChatSmallTongue alloc] init];
+            tongue.type = TUIChatSmallTongueType_ScrollToBoom;
+            [TUIChatSmallTongueManager showTongue:tongue delegate:self];
+        }
+    }
+    else if (self.isInVC && self.tableView.contentSize.height - self.tableView.contentOffset.y >= 20) {
+        // 去掉 "有人 @ 我" 小舌头
+        [TUIChatSmallTongueManager removeTongue:TUIChatSmallTongueType_SomeoneAtMe];
     }
     else {
         if (self.indicatorView.isAnimating) {
@@ -121,6 +171,7 @@
 {
     @weakify(self);
     [[self messageSearchDataProvider] loadMessageWithSearchMsg:self.locateMessage
+                                                  SearchMsgSeq:self.locateGroupMessageSeq
                                               ConversationInfo:self.conversationData
                                                   SucceedBlock:^(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, NSArray<TUIMessageCellData *> * _Nonnull newMsgs) {
         [self.indicatorView stopAnimating];
@@ -154,11 +205,16 @@
     CGFloat offsetY = 0;
     NSInteger index = 0;
     for (TUIMessageCellData *uiMsg in [self messageSearchDataProvider].uiMsgs) {
-        if ([uiMsg.innerMessage.msgID isEqualToString:self.locateMessage.msgID]) {
+        if ([self isLocateMessage:uiMsg]) {
             break;
         }
         offsetY += [uiMsg heightOfWidth:Screen_Width];
         index++;
+    }
+    
+    // 没有找到定位消息
+    if (index == [self messageSearchDataProvider].uiMsgs.count) {
+        return;
     }
     
     // 再偏移半个 tableview 的高度
@@ -171,9 +227,7 @@
         if (firstLoad) {
             [self.tableView scrollRectToVisible:CGRectMake(0, self.tableView.contentOffset.y + offsetY, Screen_Width, self.tableView.bounds.size.height) animated:NO];
         } else {
-            if (self.tableView.contentOffset.y > offsetY) {
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-            }
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
         }
     }
 }
@@ -182,7 +236,7 @@
 {
     TUIMessageCellData *cellData = nil;
     for (TUIMessageCellData *tmp in [self messageSearchDataProvider].uiMsgs) {
-        if ([tmp.msgID isEqualToString:self.locateMessage.msgID]) {
+        if ([self isLocateMessage:tmp]) {
             cellData = tmp;
             break;
         }
@@ -190,7 +244,6 @@
     if (cellData == nil) {
         return;
     }
-    
     
     @weakify(self)
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -210,6 +263,18 @@
     });
 }
 
+- (BOOL)isLocateMessage:(TUIMessageCellData *)uiMsg {
+    if (self.locateMessage) {
+        if ([uiMsg.innerMessage.msgID isEqualToString:self.locateMessage.msgID]) {
+            return YES;
+        }
+    } else {
+        if (self.conversationData.groupID.length > 0 && uiMsg.innerMessage && uiMsg.innerMessage.seq == self.locateGroupMessageSeq) {
+            return YES;
+        }
+    }
+    return NO;
+}
 
 /// @param order order=YES, 代表获取旧消息; order=NO, 代表获取新消息
 - (void)loadMessages:(BOOL)order
@@ -330,5 +395,74 @@
     [self loadLocateMessages:NO];
 }
 
+#pragma mark - TUIMessageDataProviderDataSource
+- (void)dataProvider:(TUIMessageDataProvider *)dataProvider
+     ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg {
+    [super dataProvider:dataProvider ReceiveNewUIMsg:uiMsg];
+    // 查看历史消息的时候，如果滚动超过两屏，收到新消息后，添加 "xxx条新消息"小舌头
+    if (self.isInVC && self.tableView.contentSize.height - self.tableView.contentOffset.y >= Screen_Height * 2.0) {
+        [self.receiveMsgs addObject:uiMsg];
+        TUIChatSmallTongue *tongue = [[TUIChatSmallTongue alloc] init];
+        tongue.type = TUIChatSmallTongueType_ReceiveNewMsg;
+        tongue.unreadMsgCount = self.receiveMsgs.count;
+        [TUIChatSmallTongueManager showTongue:tongue delegate:self];
+    }
+}
 
+- (void)dataProvider:(TUIMessageDataProvider *)dataProvider
+  ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg {
+    // 撤回的消息要从 "xxx条新消息" 踢出
+    [super dataProvider:dataProvider ReceiveRevokeUIMsg:uiMsg];
+    if ([self.receiveMsgs containsObject:uiMsg]) {
+        [self.receiveMsgs removeObject:uiMsg];
+        TUIChatSmallTongue *tongue = [[TUIChatSmallTongue alloc] init];
+        tongue.type = TUIChatSmallTongueType_ReceiveNewMsg;
+        tongue.unreadMsgCount = self.receiveMsgs.count;
+        if (tongue.unreadMsgCount != 0) {
+            [TUIChatSmallTongueManager showTongue:tongue delegate:self];
+        } else {
+            [TUIChatSmallTongueManager removeTongue:TUIChatSmallTongueType_ReceiveNewMsg];
+        }
+    }
+}
+
+#pragma mark - TUIChatSmallTongueViewDelegate
+- (void)onChatSmallTongueClick:(TUIChatSmallTongue *)tongue {
+    switch (tongue.type) {
+        case TUIChatSmallTongueType_ScrollToBoom:
+        {
+            [self scrollToBottom:YES];
+        }
+            break;
+        case TUIChatSmallTongueType_ReceiveNewMsg:
+        {
+            [TUIChatSmallTongueManager removeTongue:TUIChatSmallTongueType_ReceiveNewMsg];
+            TUIMessageCellData *cellData = self.receiveMsgs.firstObject;
+            if (cellData) {
+                self.locateMessage = cellData.innerMessage;
+                [self scrollLocateMessage:NO];
+                [self highlightKeyword];
+            }
+            [self.receiveMsgs removeAllObjects];
+        }
+            break;
+        case TUIChatSmallTongueType_SomeoneAtMe:
+        {
+            [TUIChatSmallTongueManager removeTongue:TUIChatSmallTongueType_SomeoneAtMe];
+            [self.conversationData.atMsgSeqs removeAllObjects];;
+            self.locateGroupMessageSeq = [tongue.atMsgSeqs.firstObject integerValue];
+            for (TUIMessageCellData *cellData in self.messageDataProvider.uiMsgs) {
+                if ([self isLocateMessage:cellData]) {
+                    [self scrollLocateMessage:NO];
+                    [self highlightKeyword];
+                    return;
+                }
+            }
+            [self loadLocateMessages:NO];
+        }
+            break;
+        default:
+            break;
+    }
+}
 @end

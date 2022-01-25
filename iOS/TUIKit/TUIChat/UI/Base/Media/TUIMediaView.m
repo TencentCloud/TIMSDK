@@ -190,8 +190,13 @@
         self.mediaView.frame = self.thumbFrame;
         self.coverView.alpha = 0;
     }];
+    
+    __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(ANIMATION_TIME * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self removeFromSuperview];
+        [weakSelf removeFromSuperview];
+        if (weakSelf.onClose) {
+            weakSelf.onClose();
+        }
     });
 }
 @end

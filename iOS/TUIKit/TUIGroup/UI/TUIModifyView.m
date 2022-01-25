@@ -8,6 +8,7 @@
 
 #import "TUIModifyView.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 #define kContainerWidth Screen_Width
 #define kContainerHeight kContainerWidth * 3 / 4
@@ -47,10 +48,10 @@
     tap.delegate = self;
     [self addGestureRecognizer:tap];
 
-    self.backgroundColor = [UIColor d_colorWithColorLight:TModifyView_Background_Color dark:TModifyView_Background_Color_Dark];
+    self.backgroundColor = TUIGroupDynamicColor(@"group_modify_view_bg_color", @"#FFFFFF7F");
 
     _container = [[UIView alloc] initWithFrame:CGRectMake(0, Screen_Height, kContainerWidth, kContainerHeight)];
-    _container.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+    _container.backgroundColor = TUIGroupDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");// [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
     _container.layer.cornerRadius = 8;
     [_container.layer setMasksToBounds:YES];
     [self addSubview:_container];
@@ -61,12 +62,12 @@
 
     _title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, _container.frame.size.width, titleHeight)];
     _title.font = [UIFont systemFontOfSize:17];
-    _title.textColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark];
+    _title.textColor = TUIGroupDynamicColor(@"group_modify_title_color", @"#000000");
     _title.textAlignment = NSTextAlignmentCenter;
     [_container addSubview:_title];
     
     _hLine = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_title.frame), kContainerWidth, TLine_Heigh)];
-    _hLine.backgroundColor = [UIColor d_colorWithColorLight:TLine_Color dark:TLine_Color_Dark];
+    _hLine.backgroundColor = TUICoreDynamicColor(@"separtor_color", @"#BCBCBC99");
     [_container addSubview:_hLine];
     
     CGFloat contentMargin = 20;
@@ -75,7 +76,8 @@
     CGFloat contentheight = 40;
     _content = [[UITextField alloc] initWithFrame:CGRectMake(contentMargin, contentY, contentWidth, contentheight)];
     _content.delegate = self;
-    _content.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1/1.0] dark:UIColor.darkGrayColor];
+    _content.backgroundColor = TUIGroupDynamicColor(@"group_modify_input_bg_color", @"#F5F5F5");
+    _content.textColor = TUIGroupDynamicColor(@"group_modify_input_text_color", @"#000000");
     [_content setFont:[UIFont systemFontOfSize:16]];
     [_content.layer setMasksToBounds:YES];
     [_content.layer setCornerRadius:4.0f];
@@ -84,7 +86,7 @@
     [_container addSubview:_content];
     
     _descLabel = [[UILabel alloc] initWithFrame:CGRectMake(_content.frame.origin.x, CGRectGetMaxY(_content.frame) + 17, contentWidth, contentheight)];
-    _descLabel.textColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
+    _descLabel.textColor = TUIGroupDynamicColor(@"group_modify_desc_color", @"#888888");
     _descLabel.font = [UIFont systemFontOfSize:13.0];
     _descLabel.numberOfLines = 0;
     _descLabel.text = @"desc";
@@ -219,10 +221,10 @@
 - (void)enableConfirmButton:(BOOL)enable
 {
     if (enable) {
-        _confirm.backgroundColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+        _confirm.backgroundColor = TUIGroupDynamicColor(@"group_modify_confirm_enable_bg_color", @"147AFF");
         _confirm.enabled = YES;
     } else {
-        _confirm.backgroundColor = [UIColor colorWithRed:190/255.0 green:215/255.0 blue:251/255.0 alpha:1/1.0];
+        _confirm.backgroundColor = [TUIGroupDynamicColor(@"group_modify_confirm_enable_bg_color", @"147AFF") colorWithAlphaComponent:0.3];
         _confirm.enabled = NO;
     }
 }

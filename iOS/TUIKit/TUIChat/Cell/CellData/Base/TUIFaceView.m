@@ -9,6 +9,7 @@
 #import "TUIFaceView.h"
 #import "TUICommonModel.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @interface TUIFaceView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSMutableArray *faceGroups;
@@ -34,7 +35,7 @@
 
 - (void)setupViews
 {
-    self.backgroundColor = [UIColor d_colorWithColorLight:TInput_Background_Color dark:TInput_Background_Color_Dark];
+    self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
 
     _faceFlowLayout = [[UICollectionViewFlowLayout alloc] init];
     _faceFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -55,12 +56,11 @@
     [self addSubview:_faceCollectionView];
 
     _lineView = [[UIView alloc] init];
-    _lineView.backgroundColor = [UIColor d_colorWithColorLight:TLine_Color dark:TLine_Color_Dark];
-    [self addSubview:_lineView];
+    _lineView.backgroundColor = TUICoreDynamicColor(@"separtor_color", @"#FFFFFF");
 
     _pageControl = [[UIPageControl alloc] init];
-    _pageControl.currentPageIndicatorTintColor = [UIColor d_colorWithColorLight:TPage_Current_Color dark:TPage_Current_Color_Dark];
-    _pageControl.pageIndicatorTintColor = [UIColor d_colorWithColorLight:TPage_Color dark:TPage_Color_Dark];
+    _pageControl.currentPageIndicatorTintColor = TUIChatDynamicColor(@"chat_face_page_control_current_color", @"#7D7D7D");
+    _pageControl.pageIndicatorTintColor = TUIChatDynamicColor(@"chat_face_page_control_color", @"#DEDEDE");
     [self addSubview:_pageControl];
 }
 

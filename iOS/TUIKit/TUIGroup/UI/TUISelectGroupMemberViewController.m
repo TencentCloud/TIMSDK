@@ -13,6 +13,7 @@
 #import "TUIMemberPanelCell.h"
 #import "TUIGlobalization.h"
 #import "TUICore.h"
+#import "TUIThemeManager.h"
 
 #define kUserBorder 44.0
 #define kUserSpacing 2
@@ -47,7 +48,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = self.name?:TUIKitLocalizableString(Make-a-call);
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.text = self.name?:TUIKitLocalizableString(Make-a-call);
+    titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
+    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    [titleLabel sizeToFit];
+    self.navigationItem.titleView = titleLabel;
+    
     self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:self.cancelBtn];
@@ -80,7 +87,7 @@
     if (!_cancelBtn.superview) {
          _cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
         [_cancelBtn setTitle:TUIKitLocalizableString(Cancel) forState:UIControlStateNormal];
-        [_cancelBtn setTitleColor:[UIColor d_systemBlueColor] forState:UIControlStateNormal];
+        [_cancelBtn setTitleColor:TUICoreDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
         [_cancelBtn addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
     }
     return _cancelBtn;
@@ -92,7 +99,7 @@
         _doneBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
         [_doneBtn setTitle:TUIKitLocalizableString(Done) forState:UIControlStateNormal];
         [_doneBtn setAlpha:0.5];
-        [_doneBtn setTitleColor:[UIColor d_systemBlueColor] forState:UIControlStateNormal];
+        [_doneBtn setTitleColor:TUICoreDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
         [_doneBtn addTarget:self action:@selector(onNext) forControlEvents:UIControlEventTouchUpInside];
     }
     return _doneBtn;
@@ -128,6 +135,9 @@
         _selectTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         _selectTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         [_selectTable registerClass:[TUISelectGroupMemberCell class] forCellReuseIdentifier:@"TUISelectGroupMemberCell"];
+        if (@available(iOS 15.0, *)) {
+            _selectTable.sectionHeaderTopPadding = 0;
+        }
         _selectTable.delegate = self;
         _selectTable.dataSource = self;
         [self.view addSubview:_selectTable];
@@ -172,6 +182,10 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             self.selectedFinished(users);
         });
+    }
+    if (self.optionalStyle == TUISelectMemberOptionalStyleTransferOwner) {
+        //转移群主用不到模块通信
+        return;
     }
     [TUICore notifyEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self param:@{TUICore_TUIGroupNotify_SelectGroupMemberSubKey_UserListKey : users}];
 }
@@ -241,6 +255,10 @@
         return;
     }
     
+    if (self.optionalStyle == TUISelectMemberOptionalStyleTransferOwner) {
+        // 清空选择
+        [self.selectedUsers removeAllObjects];
+    }
     if (isSelected) {
         for (TUIUserModel *user in self.selectedUsers) {
             if ([user.userId isEqualToString:userSelected.userId]) {
@@ -373,6 +391,15 @@
             if ([info.userID isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
                 continue;
             }
+            if (weakSelf.optionalStyle & TUISelectMemberOptionalStylePublicMan) {
+                //TUISelectMemberOptionalStylePublicMan 模式下 管理员和群主不添加进选中列表
+                BOOL isSuper = (info.role == V2TIM_GROUP_MEMBER_ROLE_SUPER);
+                BOOL isAdMin = (info.role == V2TIM_GROUP_MEMBER_ROLE_ADMIN);
+                if (isSuper || isAdMin) {
+                    continue;
+                }
+            }
+            
             TUIUserModel *model = [[TUIUserModel alloc] init];
             model.userId = info.userID;
             if (info.nameCard.length > 0) {

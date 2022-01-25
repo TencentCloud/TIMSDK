@@ -8,6 +8,7 @@
 
 #import "TUIMenuCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @implementation TUIMenuCell
 - (id)initWithFrame:(CGRect)frame
@@ -22,7 +23,7 @@
 
 - (void)setupViews
 {
-    self.backgroundColor = [UIColor d_colorWithColorLight:TMenuCell_Background_Color dark:TMenuCell_Background_Color_Dark];
+    self.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#EBF0F6");
     _menu = [[UIImageView alloc] init];
     _menu.backgroundColor = [UIColor clearColor];
     [self addSubview:_menu];
@@ -37,10 +38,10 @@
     //set data
     _menu.image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
     if(data.isSelected){
-        self.backgroundColor = [UIColor d_colorWithColorLight:TMenuCell_Selected_Background_Color dark:TMenuCell_Selected_Background_Color_Dark];
+        self.backgroundColor = TUIChatDynamicColor(@"chat_face_menu_select_color", @"#FFFFFF");
     }
     else{
-        self.backgroundColor = [UIColor d_colorWithColorLight:TMenuCell_Background_Color dark:TMenuCell_Background_Color_Dark];
+        self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
     }
     //update layout
     CGSize size = self.frame.size;

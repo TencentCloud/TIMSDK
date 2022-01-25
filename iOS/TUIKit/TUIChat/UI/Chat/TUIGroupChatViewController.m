@@ -67,7 +67,7 @@
     [RACObserve(self.pendencyViewModel, unReadCnt) subscribeNext:^(NSNumber *unReadCnt) {
         @strongify(self)
         if ([unReadCnt intValue]) {
-            self.pendencyLabel.text = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitChatPendencyRequestToJoinGroupFormat), unReadCnt]; ; // @"%@条入群请求"
+            self.pendencyLabel.text = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitChatPendencyRequestToJoinGroupFormat), unReadCnt]; // @"%@条入群请求"
             [self.pendencyLabel sizeToFit];
             CGFloat gap = (self.tipsView.mm_w - self.pendencyLabel.mm_w - self.pendencyBtn.mm_w-8)/2;
             self.pendencyLabel.mm_left(gap).mm__centerY(self.tipsView.mm_h/2);
@@ -85,16 +85,6 @@
     
     //监听入群请求通知
     [[V2TIMManager sharedInstance] addGroupListener:self];
-    
-    //群 @ ,UI 细节比较多，放在二期实现
-//    if (self.conversationData.groupID.length > 0 && self.conversationData.atMsgSeqList.count > 0) {
-//        self.atBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.view.mm_w - 100, 100, 100, 40)];
-//        [self.atBtn setTitle:@"有人@我" forState:UIControlStateNormal];
-//        [self.atBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-//        [self.atBtn setBackgroundColor:[UIColor whiteColor]];
-//        [self.atBtn addTarget:self action:@selector(loadMessageToAT) forControlEvents:UIControlEventTouchUpInside];
-//        [self.view addSubview:_atBtn];
-//    }
     
     [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_SelectGroupMemberSubKey object:self];
 }

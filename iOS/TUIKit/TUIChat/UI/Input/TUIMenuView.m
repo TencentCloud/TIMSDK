@@ -11,6 +11,7 @@
 #import "TUIMenuCell.h"
 #import "TUIDarkModel.h"
 #import "TUIGlobalization.h"
+#import "TUIThemeManager.h"
 
 @interface TUIMenuView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSMutableArray<TUIMenuCellData *> *data;
@@ -38,7 +39,7 @@
 
 - (void)setupViews
 {
-    self.backgroundColor = [UIColor d_colorWithColorLight:TInput_Background_Color dark:TInput_Background_Color_Dark];
+    self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
 
     _sendButton = [[UIButton alloc] init];
     _sendButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
@@ -63,6 +64,7 @@
     _menuCollectionView.showsVerticalScrollIndicator = NO;
     _menuCollectionView.backgroundColor = self.backgroundColor;
     _menuCollectionView.alwaysBounceHorizontal = YES;
+    _menuCollectionView.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
     [self addSubview:_menuCollectionView];
 }
 

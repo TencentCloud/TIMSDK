@@ -32,12 +32,12 @@
 - (CGSize)contentSize:(CGFloat)maxWidth
 {
     CGFloat singleHeight = [UIFont systemFontOfSize:10.0].lineHeight;
-    NSAttributedString *titleAttributeString = [self.title getFormatEmojiStringWithFont:[UIFont systemFontOfSize:10.0]];
+    NSAttributedString *titleAttributeString = [self.title getFormatEmojiStringWithFont:[UIFont systemFontOfSize:10.0] emojiLocations:nil];
     CGRect titleRect = [titleAttributeString boundingRectWithSize:CGSizeMake(maxWidth, singleHeight)
                                                           options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                           context:nil];
     
-    NSAttributedString *abstractAttributeString = [self.abstract getFormatEmojiStringWithFont:[UIFont systemFontOfSize:10.0]];
+    NSAttributedString *abstractAttributeString = [self.abstract getFormatEmojiStringWithFont:[UIFont systemFontOfSize:10.0] emojiLocations:nil];
     CGRect abstractRect = [abstractAttributeString boundingRectWithSize:CGSizeMake(maxWidth, singleHeight * 2)
                                                                 options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                                 context:nil];

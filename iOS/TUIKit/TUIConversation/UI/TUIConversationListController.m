@@ -9,6 +9,7 @@
 #import "TUIConversationCell.h"
 #import "TUICore.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
@@ -35,7 +36,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 {
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.view.backgroundColor = TUIConversationDynamicColor(@"conversation_bg_color", @"#FFFFFF");
     
     // 获取扩展 searchBar
     UIView *searchBar = nil;

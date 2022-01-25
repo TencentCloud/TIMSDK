@@ -8,6 +8,7 @@
 
 #import "TUIButtonCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @implementation TUIButtonCellData
 
@@ -30,7 +31,8 @@
 
 - (void)setupViews
 {
-    self.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+    self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
 
     _button = [UIButton buttonWithType:UIButtonTypeCustom];
     [_button.titleLabel setFont:[UIFont systemFontOfSize:18]];
@@ -51,35 +53,28 @@
     [_button setTitle:data.title forState:UIControlStateNormal];
     switch (data.style) {
         case ButtonGreen: {
-            [_button.titleLabel setTextColor:[UIColor d_colorWithColorLight:[UIColor whiteColor] dark:RGB(180, 180, 180)]];
-            [_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            _button.backgroundColor = [UIColor d_colorWithColorLight:RGB(28, 185, 31) dark:RGB(35, 35, 35)];
+            [_button setTitleColor:TUICoreDynamicColor(@"form_green_button_text_color", @"#FFFFFF") forState:UIControlStateNormal];
+            _button.backgroundColor = TUICoreDynamicColor(@"form_green_button_bg_color", @"#232323");
             //对于背景色为绿色的按钮，高亮颜色比原本略深（原本的5/6）。由于无法直接设置高亮时的背景色，所以高亮背景色的变化通过生成并设置纯色图片来实现。
-            [_button setBackgroundImage:[self imageWithColor:[UIColor d_colorWithColorLight:RGB(23, 154, 26) dark:RGB(47, 47, 47)]] forState:UIControlStateHighlighted];
+            [_button setBackgroundImage:[self imageWithColor:TUICoreDynamicColor(@"form_green_button_highlight_bg_color", @"#179A1A")] forState:UIControlStateHighlighted];
         }
             break;
         case ButtonWhite: {
-            [_button.titleLabel setTextColor:[UIColor blackColor]];
-            [_button setTitleColor:[UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark] forState:UIControlStateNormal];
-            _button.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
-            //对于原本白色背景色的按钮，高亮颜色保持和白色 cell 统一。由于无法直接设置高亮时的背景色，所以高亮背景色的变化通过生成并设置纯色图片来实现。
-            [_button setBackgroundImage:[self imageWithColor:self.colorWhenTouched] forState:UIControlStateHighlighted];
+            [_button setTitleColor:TUICoreDynamicColor(@"form_white_button_text_color", @"#000000") forState:UIControlStateNormal];
+            _button.backgroundColor = TUICoreDynamicColor(@"form_white_button_bg_color", @"#FFFFFF");
         }
             break;
         case ButtonRedText: {
-            [_button.titleLabel setTextColor:[UIColor systemRedColor]];
-            [_button setTitleColor:[UIColor d_systemRedColor] forState:UIControlStateNormal];
-            _button.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
-            //对于原本白色背景色的按钮，高亮颜色保持和白色 cell 统一。由于无法直接设置高亮时的背景色，所以高亮背景色的变化通过生成并设置纯色图片来实现。
-            [_button setBackgroundImage:[self imageWithColor:self.colorWhenTouched] forState:UIControlStateHighlighted];
+            [_button setTitleColor:TUICoreDynamicColor(@"form_redtext_button_text_color", @"#FF0000") forState:UIControlStateNormal];
+            _button.backgroundColor = TUICoreDynamicColor(@"form_redtext_button_bg_color", @"#FFFFFF");
 
             break;
         }
         case ButtonBule:{
-            [_button.titleLabel setTextColor:[UIColor d_colorWithColorLight:[UIColor whiteColor] dark:RGB(180, 180, 180)]];
-            _button.backgroundColor = [UIColor d_colorWithColorLight:RGB(30, 144, 255) dark:RGB(35, 35, 35)];
+            [_button.titleLabel setTextColor:TUICoreDynamicColor(@"form_blue_button_text_color", @"#FFFFFF")];
+            _button.backgroundColor = TUICoreDynamicColor(@"form_blue_button_bg_color", @"#1E90FF");
             //对于背景色为蓝色的按钮，高亮颜色比原本略深（原本的5/6）。由于无法直接设置高亮时的背景色，所以高亮背景色的变化通过生成并设置纯色图片来实现。
-            [_button setBackgroundImage:[self imageWithColor:[UIColor d_colorWithColorLight:RGB(25, 120, 213) dark:RGB(47, 47, 47)]] forState:UIControlStateHighlighted];
+            [_button setBackgroundImage:[self imageWithColor:TUICoreDynamicColor(@"form_blue_button_highlight_bg_color", @"#1978D5")] forState:UIControlStateHighlighted];
         }
             break;
         default:

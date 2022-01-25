@@ -8,6 +8,7 @@
 #import "TUIVoiceMessageCellData.h"
 #import "TUIDefine.h"
 #import "EMVoiceConverter.h"
+#import "TUIThemeManager.h"
 @import AVFoundation;
 
 @interface TUIVoiceMessageCellData ()<AVAudioPlayerDelegate>
@@ -47,7 +48,7 @@
     if (self) {
         if (direction == MsgDirectionIncoming) {
             self.cellLayout = [TUIMessageCellLayout incommingVoiceMessageLayout];
-            _voiceImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_receiver_normal")];
+            _voiceImage = TUIChatDynamicImage(@"chat_voice_message_receiver_voice_normal_img", [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_receiver_normal")]);
             _voiceAnimationImages = [NSArray arrayWithObjects:
                                       [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_receiver_playing_1")],
                                       [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_receiver_playing_2")],
@@ -55,7 +56,7 @@
             _voiceTop = [[self class] incommingVoiceTop];
         } else {
             self.cellLayout = [TUIMessageCellLayout outgoingVoiceMessageLayout];
-            _voiceImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_sender_normal")];
+            _voiceImage = TUIChatDynamicImage(@"chat_voice_message_sender_voice_normal_img", [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_sender_normal")]);
             _voiceAnimationImages = [NSArray arrayWithObjects:
                                       [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_sender_playing_1")],
                                       [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_sender_playing_2")],

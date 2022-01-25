@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)findUser:(NSString *)userID completion:(dispatch_block_t)completion;
 - (void)findGroup:(NSString *)groupID completion:(dispatch_block_t)completion;
 
+- (NSString *)getMyUserIDDescription;
+- (void)clear;
+
 @end
 
 NS_ASSUME_NONNULL_END

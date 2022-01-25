@@ -375,7 +375,15 @@ typedef void(^TUIContactListPickerOnCancel)(TUICommonContactSelectCellData *data
 //                          TUINavigationController（通讯录多选视图）
 //
 /////////////////////////////////////////////////////////////////////////////////
-@interface TUINavigationController : UINavigationController <UINavigationControllerDelegate>
+@interface TUINavigationController : UINavigationController <UINavigationControllerDelegate, UIGestureRecognizerDelegate>
+
+
+@property(nonatomic,weak) UIViewController* currentShowVC;
+
+@end
+
+
+@interface UIAlertController (TUITheme)
 
 @end
 

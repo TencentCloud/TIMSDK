@@ -9,6 +9,7 @@
 #import "TUIMessageCell.h"
 #import "TUIDefine.h"
 #import "TUITool.h"
+#import "TUIThemeManager.h"
 
 @interface TUIMessageCell() <CAAnimationDelegate>
 @property (nonatomic, strong) TUIMessageCellData *messageData;
@@ -83,6 +84,8 @@
         [self.contentView addSubview:_timeLabel];
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
+        self.contentView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
     }
     return self;
 }

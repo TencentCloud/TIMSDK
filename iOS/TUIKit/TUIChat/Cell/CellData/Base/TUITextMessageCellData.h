@@ -46,6 +46,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableAttributedString *attributedString;
 
 /**
+ *  NSValue（NSRange） 存储的 emoji 转换后的字符串在 attributedString 的位置。
+ *  NSAttributedString 存储的 emoji 转换前的字符串，比如 "[呲牙]"。
+ *  在文本选中复制的时候，要找到 emoji 原始的字符串。
+ */
+@property (nonatomic, strong) NSMutableArray<NSDictionary<NSValue *, NSAttributedString *> *> *emojiLocations;
+
+/**
  *  文本内容尺寸。
  *  配合原点定位文本消息。
  */

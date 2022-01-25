@@ -3,6 +3,8 @@
 #import "NSDictionary+TUISafe.h"
 #import "TUIMessageDataProvider.h"
 
+#import "TUIThemeManager.h"
+
 @interface TUIChatService ()<TUINotificationProtocol, TUIExtensionProtocol>
 @end
 
@@ -10,6 +12,7 @@
 
 + (void)load {
     [TUICore registerService:TUICore_TUIChatService object:[TUIChatService shareInstance]];
+    TUIRegisterThemeResourcePath(TUIChatThemePath, TUIThemeModuleChat);
 }
 
 + (TUIChatService *)shareInstance {

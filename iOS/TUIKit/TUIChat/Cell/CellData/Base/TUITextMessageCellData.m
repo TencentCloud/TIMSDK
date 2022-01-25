@@ -10,6 +10,7 @@
 #import "TUICommonModel.h"
 #import "TUIDefine.h"
 #import "NSString+emoji.h"
+#import "TUIThemeManager.h"
 
 #ifndef CGFLOAT_CEIL
 #ifdef CGFLOAT_IS_DOUBLE
@@ -26,6 +27,11 @@
 @end
 
 @implementation TUITextMessageCellData
+
++ (void)initialize
+{
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onThemeChanged) name:TUIDidApplyingThemeChangedNotfication object:nil];
+}
 
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
     TUITextMessageCellData *textData = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
@@ -62,7 +68,7 @@
         } else {
             _textColor = [[self class] outgoingTextColor];
             _textFont = [[self class] outgoingTextFont];
-            self.cellLayout = [TUIMessageCellLayout outgoingTextMessageLayout];
+            self.cellLayout = [TUIMessageCellLayout outgoingTextMessageLayout]; 
         }
     }
     return self;
@@ -92,7 +98,8 @@
 - (NSMutableAttributedString *)attributedString
 {
     if (!_attributedString) {
-        _attributedString = [self.content getFormatEmojiStringWithFont:self.textFont];
+        _emojiLocations = [NSMutableArray array];
+        _attributedString = [self.content getFormatEmojiStringWithFont:self.textFont emojiLocations:_emojiLocations];
         // 音视频通话消息需要加上对应图标
         if (self.isAudioCall || self.isVideoCall) {
             NSTextAttachment *attchment = [[NSTextAttachment alloc] init];
@@ -128,7 +135,7 @@ static UIColor *sOutgoingTextColor;
 + (UIColor *)outgoingTextColor
 {
     if (!sOutgoingTextColor) {
-        sOutgoingTextColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_OutMessage_Color_Dark];
+        sOutgoingTextColor = TUIChatDynamicColor(@"chat_text_message_send_text_color", @"#000000");
     }
     return sOutgoingTextColor;
 }
@@ -158,7 +165,7 @@ static UIColor *sIncommingTextColor;
 + (UIColor *)incommingTextColor
 {
     if (!sIncommingTextColor) {
-        sIncommingTextColor = [UIColor d_colorWithColorLight:TText_Color dark:[UIColor d_systemGrayColor]];
+        sIncommingTextColor = TUIChatDynamicColor(@"chat_text_message_receive_text_color", @"#000000");
     }
     return sIncommingTextColor;
 }
@@ -182,4 +189,11 @@ static UIFont *sIncommingTextFont;
 {
     sIncommingTextFont = incommingTextFont;
 }
+
++ (void)onThemeChanged
+{
+    sOutgoingTextColor = nil;
+    sIncommingTextColor = nil;
+}
+
 @end

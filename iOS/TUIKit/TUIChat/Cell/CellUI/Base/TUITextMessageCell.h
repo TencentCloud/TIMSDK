@@ -8,19 +8,32 @@
 #import "TUIBubbleMessageCell.h"
 #import "TUITextMessageCellData.h"
 
+@class TUITextView;
+
+typedef void(^TUIChatSelectAllContentCallback)(BOOL);
+
 /**
  * 【模块名称】TUITextMessageCell
  * 【功能说明】文本消息单元
  *  文本消息单元，即在多数信息收发情况下最常见的消息单元。
  *  文本消息单元继承自气泡消息单元（TUIBubbleMessageCell），在气泡消息单元提供的气泡视图基础上填充文本信息并显示。
  */
-@interface TUITextMessageCell : TUIBubbleMessageCell
+@interface TUITextMessageCell : TUIBubbleMessageCell<UITextViewDelegate>
 
 /**
- *  内容标签
- *  用于展示文本消息的内容。
+ *  展示文本消息的内容容器
  */
-@property (nonatomic, strong) UILabel *content;
+@property (nonatomic, strong) TUITextView *textView;
+
+/**
+ *  选中文本内容
+ */
+@property (nonatomic, strong) NSString *selectContent;
+
+/**
+ *  选中全部文本回调
+ */
+@property (nonatomic, strong) TUIChatSelectAllContentCallback selectAllContentContent;
 
 /**
  *  文本消息单元数据源
@@ -35,4 +48,8 @@
  *  @param  data    填充数据需要的数据源
  */
 - (void)fillWithData:(TUITextMessageCellData *)data;
+@end
+
+
+@interface TUITextView : UITextView
 @end

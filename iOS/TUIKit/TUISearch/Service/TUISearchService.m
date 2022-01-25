@@ -1,11 +1,13 @@
 #import "TUISearchService.h"
 #import "TUISearchBar.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @implementation TUISearchService
 
 + (void)load {
     [TUICore registerExtension:TUICore_TUIConversationExtension_GetSearchBar object:[TUISearchService shareInstance]];
+    TUIRegisterThemeResourcePath(TUISearchThemePath, TUIThemeModuleSearch);
 }
 
 + (TUISearchService *)shareInstance {

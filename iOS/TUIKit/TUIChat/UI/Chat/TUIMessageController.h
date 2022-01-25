@@ -49,6 +49,11 @@ typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
 @property (nonatomic, weak) id<TUIMessageControllerDelegate> delegate;
 
 /**
+ *  是否在当前 VC 界面
+ */
+@property (nonatomic, assign) BOOL isInVC;
+
+/**
  *  发送消息
  */
 - (void)sendMessage:(V2TIMMessage *)msg;
@@ -100,5 +105,11 @@ typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
  * 子类实现点击回复消息
  */
 - (void)showReplyMessage:(TUIReplyMessageCell *)cell;
+
+/*
+ * 子类监听媒体消息的显示和关闭
+ */
+- (void)willShowMediaMessage:(TUIMessageCell *)cell;
+- (void)didCloseMediaMessage:(TUIMessageCell *)cell;
 
 @end

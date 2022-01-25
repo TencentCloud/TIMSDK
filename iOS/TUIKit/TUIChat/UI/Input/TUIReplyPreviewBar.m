@@ -9,6 +9,7 @@
 #import "TUIDarkModel.h"
 #import "TUIDefine.h"
 #import "NSString+emoji.h"
+#import "TUIThemeManager.h"
 
 @implementation TUIReplyPreviewData
 
@@ -46,7 +47,7 @@
 }
 
 - (void)setupViews {
-    self.backgroundColor = [UIColor d_colorWithColorLight:TInput_Background_Color dark:TInput_Background_Color_Dark];
+    self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#FFFFFF");
     [self addSubview:self.titleLabel];
     [self addSubview:self.closeButton];
 }
@@ -85,7 +86,6 @@
     if (_titleLabel == nil) {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font = [UIFont systemFontOfSize:16];
-        // TODO: 暗黑模式适配
         _titleLabel.textColor = [UIColor colorWithRed:143/255.0 green:150/255.0 blue:160/255.0 alpha:1/1.0];
     }
     return _titleLabel;
@@ -95,7 +95,6 @@
 {
     if (_closeButton == nil) {
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        // TODO: 暗黑模式适配
         [_closeButton setImage:[UIImage d_imageNamed:@"icon_close" bundle:TUIChatBundle] forState:UIControlStateNormal];
         [_closeButton addTarget:self action:@selector(onClose:) forControlEvents:UIControlEventTouchUpInside];
         [_closeButton sizeToFit];

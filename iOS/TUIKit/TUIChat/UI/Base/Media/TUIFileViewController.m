@@ -13,6 +13,7 @@
 #import "UIView+TUILayout.h"
 #import "UIView+TUIToast.h"
 #import "TUIGlobalization.h"
+#import "TUIThemeManager.h"
 
 @interface TUIFileViewController () <UIDocumentInteractionControllerDelegate>
 @property (nonatomic, strong) UIImageView *image;
@@ -28,20 +29,21 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
 
-    self.title = TUIKitLocalizableString(File);
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.text = TUIKitLocalizableString(File);
+    titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
+    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
+    [titleLabel sizeToFit];
+    self.navigationItem.titleView = titleLabel;
+    
     //left
+    UIImage *defaultImage = [UIImage imageNamed:TUIChatImagePath(@"back")];
     UIButton *leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [leftButton addTarget:self action:@selector(onBack:) forControlEvents:UIControlEventTouchUpInside];
-    [leftButton setImage:[UIImage imageNamed:TUIChatImagePath(@"back")] forState:UIControlStateNormal];
+    [leftButton setImage:TUICoreDynamicImage(@"nav_back_img", defaultImage) forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
-    UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    spaceItem.width = -10.0f;
-    if (([[TUITool deviceVersion] floatValue] >= 11.0)) {
-        leftButton.contentEdgeInsets =UIEdgeInsetsMake(0, -15, 0, 0);
-        leftButton.imageEdgeInsets =UIEdgeInsetsMake(0, -15, 0, 0);
-    }
-    self.navigationItem.leftBarButtonItems = @[spaceItem,leftItem];
-    self.parentViewController.navigationItem.leftBarButtonItems = @[spaceItem,leftItem];
+    self.navigationItem.leftBarButtonItem = leftItem;
+    
 
     _image = [[UIImageView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 80) * 0.5, NavBar_Height + StatusBar_Height + 50, 80, 80)];
     _image.contentMode = UIViewContentModeScaleAspectFit;

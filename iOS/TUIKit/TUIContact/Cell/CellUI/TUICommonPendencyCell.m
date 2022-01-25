@@ -7,6 +7,7 @@
 
 #import "TUICommonPendencyCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @implementation TUICommonPendencyCell
 
@@ -97,7 +98,7 @@
         self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
         self.agreeButton.layer.borderWidth = 1;
         [self.agreeButton setTitleColor:[UIColor d_colorWithColorLight:[UIColor whiteColor] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
-        self.agreeButton.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:52/255.0 green:124/255.0 blue:246/255.0 alpha:1.0] dark:[UIColor grayColor]];
+        self.agreeButton.backgroundColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
     }
     
     if (pendencyData.isRejected) {
@@ -110,7 +111,7 @@
         self.rejectButton.enabled = YES;
         self.rejectButton.layer.borderColor = [UIColor groupTableViewBackgroundColor].CGColor;
         self.rejectButton.layer.borderWidth = 1;
-        [self.rejectButton setTitleColor:[UIColor d_colorWithColorLight:[UIColor colorWithRed:52/255.0 green:124/255.0 blue:246/255.0 alpha:1.0] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
+        [self.rejectButton setTitleColor:TUICoreDynamicColor(@"primary_theme_color", @"#147AFF") forState:UIControlStateNormal];
     }
     
     self.agreeButton.mm_sizeToFit().mm_width(self.agreeButton.mm_w+20);

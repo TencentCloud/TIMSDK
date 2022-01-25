@@ -13,6 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^TUIGroupConversationListSelectCallback)(TUICommonContactCellData *cellData);
+
 /**
  * 【模块名称】群组列表界面（TUIGroupConversationListController）
  * 【功能说明】负责拉取用户的所在的群组信息，并在界面中显示。
@@ -31,6 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  视图模型负责通过 IM SDK 提供的接口拉取群列表数据并进行加载，方便页面对群列表进行展示。
  */
 @property (nonatomic, strong) TUIGroupConversationListViewDataProvider *viewModel;
+
+/**
+ * 选中后的回调，如果为空，TUIKit 内部会自己跳转
+ */
+@property (nonatomic, copy) TUIGroupConversationListSelectCallback __nullable onSelect;
 
 @end
 

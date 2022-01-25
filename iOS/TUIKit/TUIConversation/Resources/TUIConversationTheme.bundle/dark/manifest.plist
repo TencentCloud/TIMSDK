@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>id</key>
+	<string>dark</string>
+	<key>name</key>
+	<string>黑夜</string>
+	<key>name_en</key>
+	<string>Dark</string>
+	<key>conversation_cell_bg_color</key>
+	<string>#222632</string>
+	<key>conversation_cell_top_bg_color</key>
+	<string>#2D313C</string>
+	<key>conversation_bg_color</key>
+	<string>#13151B</string>
+</dict>
+</plist>

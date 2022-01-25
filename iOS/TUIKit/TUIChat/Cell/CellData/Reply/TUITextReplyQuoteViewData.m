@@ -30,7 +30,7 @@
 - (CGSize)contentSize:(CGFloat)maxWidth
 {
     CGSize size = [@"0" sizeWithAttributes: @{NSFontAttributeName:[UIFont systemFontOfSize:10.0]}];
-    NSAttributedString *attributeString = [self.text getFormatEmojiStringWithFont:[UIFont systemFontOfSize:10.0]];
+    NSAttributedString *attributeString = [self.text getFormatEmojiStringWithFont:[UIFont systemFontOfSize:10.0] emojiLocations:nil];
     CGRect rect = [attributeString boundingRectWithSize:CGSizeMake(maxWidth, size.height * 2)
                                                 options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                 context:nil];

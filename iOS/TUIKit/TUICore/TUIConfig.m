@@ -10,6 +10,7 @@
 #import "TUIDefine.h"
 #import "TUICommonModel.h"
 #import "TUILogin.h"
+#import "TUIThemeManager.h"
 
 @interface TUIConfig ()
 
@@ -26,12 +27,21 @@
     self = [super init];
     if(self){
         _avatarCornerRadius = 5.f;
-        _defaultAvatarImage = [UIImage d_imageNamed:@"default_c2c_head" bundle:TUICoreBundle];
-        _defaultGroupAvatarImage = [UIImage d_imageNamed:@"default_group_head" bundle:TUICoreBundle];
+        _defaultAvatarImage = TUICoreDynamicImage(@"default_c2c_head_img", [UIImage d_imageNamed:@"default_c2c_head" bundle:TUICoreBundle]);
+        _defaultGroupAvatarImage = TUICoreDynamicImage(@"default_group_head_img", [UIImage d_imageNamed:@"default_group_head" bundle:TUICoreBundle]);
         _isExcludedFromUnreadCount = NO;
         _isExcludedFromLastMessage = NO;
         _enableToast = YES;
-        [self defaultFace];
+        
+        NSMutableArray *faceArray = [NSMutableArray array];
+        TUIFaceGroup *defaultFaceGroup = [self getDefaultFaceGroup];
+        if (defaultFaceGroup) {
+            [faceArray addObject:defaultFaceGroup];
+        }
+        _faceGroups = faceArray;
+        
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onChangeLanguage) name:TUIChangeLanguageNotification object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onChangeTheme) name:TUIDidApplyingThemeChangedNotfication object:nil];
     }
     return self;
 }
@@ -46,12 +56,34 @@
     return config;
 }
 
+- (void)onChangeLanguage
+{
+    // 更新表情面板
+    if (self.faceGroups.count) {
+        NSMutableArray *arrayM = [NSMutableArray arrayWithArray:self.faceGroups];
+        [arrayM removeObjectAtIndex:0];
+        
+        TUIFaceGroup *defaultFaceGroup = [self getDefaultFaceGroup];
+        if (defaultFaceGroup) {
+            [arrayM insertObject:[self getDefaultFaceGroup] atIndex:0];
+        }
+        self.faceGroups = [NSArray arrayWithArray:arrayM];
+    }
+}
+
+
+- (void)onChangeTheme
+{
+    // 更新默认头像
+    self.defaultAvatarImage = TUICoreDynamicImage(@"default_c2c_head_img", [UIImage d_imageNamed:@"default_c2c_head" bundle:TUICoreBundle]);
+    self.defaultGroupAvatarImage = TUICoreDynamicImage(@"default_group_head_img", [UIImage d_imageNamed:@"default_group_head" bundle:TUICoreBundle]);
+}
+
 /**
  *  初始化默认表情，并将配默认表情写入本地缓存，方便下一次快速加载
  */
-- (void)defaultFace
+- (TUIFaceGroup *)getDefaultFaceGroup
 {
-    NSMutableArray *faceGroups = [NSMutableArray array];
     //emoji group
     NSMutableArray *emojiFaces = [NSMutableArray array];
     NSArray *emojis = [NSArray arrayWithContentsOfFile:TUIChatFaceImagePath(@"emoji/emoji.plist")];
@@ -76,11 +108,11 @@
         emojiGroup.needBackDelete = YES;
         emojiGroup.menuPath = TUIChatFaceImagePath(@"emoji/menu");
         [self addFaceToCache:emojiGroup.menuPath];
-        [faceGroups addObject:emojiGroup];
         [self addFaceToCache:TUIChatFaceImagePath(@"del_normal")];
+        return emojiGroup;
     }
-
-    _faceGroups = faceGroups;
+    
+    return nil;
 }
 
 #pragma mark - resource

@@ -13,7 +13,7 @@
 #import "TUINewFriendViewController.h"
 #import "TUIGroupConversationListController.h"
 #import "TUIContactActionCell.h"
-
+#import "TUIThemeManager.h"
 
 #define kContactCellReuseId @"ContactCellReuseId"
 #define kContactActionCellReuseId @"ContactActionCellReuseId"
@@ -30,21 +30,21 @@
     NSMutableArray *list = @[].mutableCopy;
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
-        data.icon = [UIImage imageNamed:TUIContactImagePath(@"new_friend")];
+        data.icon = TUIContactDynamicImage(@"contact_new_friend_img", [UIImage imageNamed:TUIContactImagePath(@"new_friend")]);
         data.title = TUIKitLocalizableString(TUIKitContactsNewFriends); // @"新的联系人";
         data.cselector = @selector(onAddNewFriend:);
         data;
     })];
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
-        data.icon = [UIImage imageNamed:TUIContactImagePath(@"public_group")];
+        data.icon = TUIContactDynamicImage(@"contact_public_group_img", [UIImage imageNamed:TUIContactImagePath(@"public_group")]);
         data.title = TUIKitLocalizableString(TUIKitContactsGroupChats); // @"群聊";
         data.cselector = @selector(onGroupConversation:);
         data;
     })];
     [list addObject:({
         TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
-        data.icon = [UIImage imageNamed:TUIContactImagePath(@"blacklist")];
+        data.icon = TUIContactDynamicImage(@"contact_blacklist_img", [UIImage imageNamed:TUIContactImagePath(@"blacklist")]);
         data.title = TUIKitLocalizableString(TUIKitContactsBlackList); // @"黑名单";
         data.cselector = @selector(onBlackList:);
         data;
@@ -53,7 +53,7 @@
 
 
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -61,6 +61,9 @@
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, 8, 0);
     [_tableView setSectionIndexColor:[UIColor darkGrayColor]];
     [_tableView setBackgroundColor:self.view.backgroundColor];
+    if (@available(iOS 15.0, *)) {
+        _tableView.sectionHeaderTopPadding = 0;
+    }
     [self.view addSubview:_tableView];
      
     //cell无数据时，不显示间隔线
@@ -139,7 +142,7 @@
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
     label.text = self.viewModel.groupList[section-1];
-
+    headerView.contentView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
     return headerView;
 }
 
@@ -200,9 +203,8 @@
 
 - (void)onGroupConversation:(TUICommonTableViewCell *)cell
 {
-    TUIGroupConversationListController *vc = TUIGroupConversationListController.new;
-    vc.title = TUIKitLocalizableString(TUIKitContactsGroupChats); // @"群聊";
-    [self.navigationController pushViewController:vc animated:YES];
+//    TUIGroupConversationListController *vc = TUIGroupConversationListController.new;
+//    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)onBlackList:(TUICommonContactCell *)cell

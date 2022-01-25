@@ -2,11 +2,13 @@
 #import "TUIGroupService.h"
 #import "TUIDefine.h"
 #import "NSDictionary+TUISafe.h"
+#import "TUIThemeManager.h"
 
 @implementation TUIGroupService
 
 + (void)load {
     [TUICore registerService:TUICore_TUIGroupService object:[TUIGroupService shareInstance]];
+    TUIRegisterThemeResourcePath(TUIGroupThemePath, TUIThemeModuleGroup);
 }
 
 + (TUIGroupService *)shareInstance {

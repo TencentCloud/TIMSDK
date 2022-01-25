@@ -1,10 +1,12 @@
 
 #import "TUIConversationService.h"
+#import "TUIThemeManager.h"
 
 @implementation TUIConversationService
 
 + (void)load {
     [TUICore registerService:TUICore_TUIConversationService object:[TUIConversationService shareInstance]];
+    TUIRegisterThemeResourcePath(TUIConversationThemePath, TUIThemeModuleConversation);
 }
 
 + (TUIConversationService *)shareInstance {

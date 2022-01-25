@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 加载指定的历史消息
 - (void)loadMessageWithSearchMsg:(V2TIMMessage *)searchMsg
+                    SearchMsgSeq:(uint64_t)searchSeq
                 ConversationInfo:(TUIChatConversationModel *)conversation
                     SucceedBlock:(void (^)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))SucceedBlock
                        FailBlock:(V2TIMFail)FailBlock;

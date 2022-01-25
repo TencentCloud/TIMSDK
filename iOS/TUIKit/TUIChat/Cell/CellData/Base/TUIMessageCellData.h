@@ -231,3 +231,20 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, assign) NSUInteger uploadProgress;
 
 @end
+
+@protocol TUIMessageCellDataFileDownloadProtocol <NSObject>
+
+@required
+/**
+ *  下载（接收）进度
+ */
+@property (nonatomic, assign) NSUInteger downladProgress;
+
+/**
+ *  下载标识符
+ *  YES：正在下载；NO：未在下载
+ */
+@property (nonatomic, assign) BOOL isDownloading;
+
+
+@end

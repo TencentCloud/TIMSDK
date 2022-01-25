@@ -8,6 +8,7 @@
 @import ImSDK_Plus;
 
 @interface TUIMediaView : UIView
+@property (nonatomic, copy) dispatch_block_t onClose;
 /// 微缩图，主要用于动画的展示
 - (void)setThumb:(UIImageView *)thumb frame:(CGRect)frame;
 /// 当前需要展示的消息，MediaView 会自动加载当前消息的前后消息展示，主要用于正常消息列表

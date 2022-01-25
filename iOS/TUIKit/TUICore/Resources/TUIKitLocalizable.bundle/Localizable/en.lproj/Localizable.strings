@@ -103,6 +103,9 @@
 "TUIKitGroupProfileManage" = "Manage";
 "TUIKitGroupProfileManageAdd" = "Add Member";
 "TUIKitGroupProfileManageDelete" = "Delete Member";
+"TUIKitGroupTransferOwner" = "Transfer group";
+"TUIKitGroupTransferOwnerSuccess" = "Successful transfer";
+
 "TUIKitGroupApplicant" = "Request to Join Group";
 "TUIKitGroupDismssTipsFormat" = "Group %@ disbanded";
 "TUIKitGroupRecycledTipsFormat" = "%@ group has been reclaimed.";
@@ -122,12 +125,13 @@
 "TUIkitMessageTipsEditGroupNameFormat" = "%@ changed the group name to\"%@\",";
 "TUIKitMessageTipsEditGroupIntroFormat" = "%@ changed the group description to \"%@\".";
 "TUIKitMessageTipsEditGroupAnnounceFormat" = "%@ changed the group notice to \"%@\".";
+"TUIKitMessageTipsDeleteGroupAnnounceFormat" = "%@ deleted the group notice.";
 "TUIKitMessageTipsEditGroupAvatarFormat" = "%@ changed the group profile photo.";
 "TUIKitMessageTipsEditGroupOwnerFormat" = "%@ changed the group owner to \"%@\".";
 "TUIKitMessageTipsCreateGroupFormat" = "\"%@\" created a group.";
 "TUIKitMessageTipsUnsupportCustomMessage" = "[Custom Messages]";
 "TUIKitMessageTipsMute" = "is blocked from posting";
-"TUIKitMessageTipsUnmute" = "Unblocked";
+"TUIKitMessageTipsUnmute" = "unblocked";
 
 "TUIKitSignalingFinishGroupChat" = "End Group Chat";
 "TUIKitSignalingFinishConversationAndTimeFormat" = "Duration: %.2d:%.2d.";
@@ -191,6 +195,9 @@
 
 "TUIKitChatPendencyTitle" = "Tap to Process";
 "TUIKitChatPendencyRequestToJoinGroupFormat" = "%@ group joining request(s)";
+"TUIKitChatTipsAtMe" = "You were mentioned";
+"TUIKitChatBackToLatestLocation" = "back to latest location";
+"TUIKitChatNewMessages" = "%@new messages";
 
 "TUIKitSignalingLiveRequestForMic" = "Apply to Turn on Mic in Live Room";
 "TUIKitSignalingLiveRequestForMicRejected" = "Application for turning on mic in live room declined";
@@ -551,6 +558,22 @@
 "TUIKitSearchGroupID" = "Search group ID";
 "TUIKitNoSelfSignature" = "What's Up not set";
 "TUIKitSelfSignatureFormat" = "Signature:%@";
+"TUIKitGroupProfileManage" = "Group manage";
+"TUIKitGroupManageShutupAllTips" = "After the prohibition is opened, only group leaders and administrators are allowed to speak.";
+"TUIKitGroupManageAdminSetting" = "Setting administrators";
+"TUIKitGroupManageShutAll" = "Blocked from posting";
+"TUIKitGroupAddShutupMember" = "Add Member of blocked from posting";
+"TUIKitGroupOwner" = "Group owner";
+"TUIKitGroupManagerFormat" = "Group manager(%zd/%zd)";
+"TUIKitSetShutupAllFormat" = "%@ mute all";
+"TUIKitCancelShutupAllFormat" = "%@ cancel mute all";
+"TUIKitGroupNotice" = "Group notice";
+"TUIKitGroupNoticeNull" = "Group notice not set";
+"Edit" = "Edit";
+"Done" = "Done";
+"TUIKitAddContactMyUserIDFormat" = "My identifier: %@";
+"TUIKitAddUserNoDataTips" = "The user not exists";
+"TUIKitAddGroupNoDataTips" = "The group not exists";
 /***************************** 消息回复 & 换肤 *************************/
 
 /***************************** 视频、图片加载 & 保存 *************************/
@@ -561,3 +584,9 @@
 "TUIKitPictureSavedSuccess" = "picture saved successfully";
 "TUIKitPictureSavedFailed" = "picture saved failed";
 /***************************** 视频、图片加载 & 保存 *************************/
+
+"TUIKitGroupSetAdminsForbidden" = "The current type of group chat does not support setting administrators";
+"TUIKitGroupAddAdmins" = "Add administrators";
+"TUIKitGroupAddMemberOfBlockedForbidden" = "The current group chat does not support mute specified group members";
+
+"TUIKitNotDownload"= "Not download";

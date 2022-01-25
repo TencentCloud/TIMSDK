@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIGroup'
-  spec.version      = '6.0.1975'
+  spec.version      = '6.0.1992'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,12 +16,12 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/tuikit/6.0.1975/ios/TUIGroup.zip'}
+  spec.source = { :http => 'https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/tuikit/6.0.1992/ios/TUIGroup.zip'}
 
   spec.subspec 'Cell' do |cell|
     cell.subspec 'CellData' do |cellData|
       cellData.source_files = '**/TUIGroup/Cell/CellData/*.{h,m,mm}'
-      cellData.dependency 'TUICore','6.0.1975'
+      cellData.dependency 'TUICore','6.0.1992'
     end
 
     cell.subspec 'CellUI' do |cellUI|

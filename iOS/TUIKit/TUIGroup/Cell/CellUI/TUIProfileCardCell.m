@@ -8,6 +8,7 @@
 
 #import "TUIProfileCardCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @implementation TUIProfileCardCellData
 
@@ -75,17 +76,17 @@
     
     _name = [[UILabel alloc] init];
     [_name setFont:[UIFont boldSystemFontOfSize:18]];
-    [_name setTextColor:[UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark]];
+    [_name setTextColor:TUICoreDynamicColor(@"form_title_color", @"#000000")];
     [self.contentView addSubview:_name];
     
     _identifier = [[UILabel alloc] init];
     [_identifier setFont:[UIFont systemFontOfSize:13]];
-    [_identifier setTextColor:[UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0]];
+    [_identifier setTextColor:TUICoreDynamicColor(@"form_subtitle_color", @"#888888")];
     [self.contentView addSubview:_identifier];
     
     _signature = [[UILabel alloc] init];
     [_signature setFont:[UIFont systemFontOfSize:14]];
-    [_signature setTextColor:[UIColor d_systemGrayColor]];
+    [_signature setTextColor:TUICoreDynamicColor(@"form_subtitle_color", @"#888888")];
     [self.contentView addSubview:_signature];
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;

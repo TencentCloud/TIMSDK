@@ -23,11 +23,15 @@ typedef void(^TUIChatPopMenuActionCallback)(void);
 @end
 
 
+typedef void(^TUIChatPopMenuHideCallback)(void);
 @interface TUIChatPopMenu : UIView
+@property (nonatomic, copy) TUIChatPopMenuHideCallback hideCallback;
 
 - (void)addAction:(TUIChatPopMenuAction *)action;
+- (void)removeAllAction;
 - (void)setArrawPosition:(CGPoint)point adjustHeight:(CGFloat)adjustHeight;
 - (void)showInView:(UIView * __nullable)window;
+- (void)layoutSubview;
 - (void)hide;
 
 @end

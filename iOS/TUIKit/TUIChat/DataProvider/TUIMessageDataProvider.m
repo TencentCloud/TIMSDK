@@ -20,13 +20,14 @@
 #import "TUITool.h"
 #import "TUILogin.h"
 #import "NSString+TUIUtil.h"
+#import "TUIMessageProgressManager.h"
 
 #define MaxDateMessageDelay 5 * 60 /// 消息上方的日期时间间隔, 单位秒 , default is (5 * 60)
 #define MaxReEditMessageDelay 2 * 60 /// 消息撤回后最大可编辑时间 , default is (2 * 60)
 
 static NSArray *customMessageInfo = nil;
 
-@interface TUIMessageDataProvider ()<V2TIMAdvancedMsgListener>
+@interface TUIMessageDataProvider ()<V2TIMAdvancedMsgListener, TUIMessageProgressManagerDelegate>
 @property (nonatomic) TUIChatConversationModel *conversationModel;
 @property (nonatomic) NSMutableArray<TUIMessageCellData *> *uiMsgs_;
 @property (nonatomic) NSMutableDictionary<NSString *, NSNumber *> *heightCache_;
@@ -124,7 +125,8 @@ static NSArray *customMessageInfo = nil;
         
         // 抛出收到新消息事件
         if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveNewUIMsg:)]) {
-            [self.dataSource dataProvider:self ReceiveNewUIMsg:cellDataList.firstObject];
+            // 注意这里不能去 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
+            [self.dataSource dataProvider:self ReceiveNewUIMsg:cellDataList.lastObject];
         }        
     }];
 }
@@ -187,8 +189,12 @@ static NSArray *customMessageInfo = nil;
                 [self replaceUIMsg:revokeCellData atIndex:index];
                 [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageDataProviderDataSourceChangeTypeReload atIndex:index animation:YES];
                 [self.dataSource dataProviderDataSourceDidChange:self];
-                return;
+                break;
             }
+        }
+        // 抛出收到消息撤回事件
+        if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveRevokeUIMsg:)]) {
+            [self.dataSource dataProvider:self ReceiveRevokeUIMsg:uiMsg];
         }
     }];
 }
@@ -410,20 +416,15 @@ static NSArray *customMessageInfo = nil;
                                              isOnlineUserOnly:NO
                                                      priority:V2TIM_PRIORITY_NORMAL
                                                      Progress:^(uint32_t progress) {
-                // 更新上传进度
-                [self.uiMsgs enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TUIMessageCellData * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if ([obj.innerMessage.msgID isEqualToString:imMsg.msgID]
-                        && [obj conformsToProtocol:@protocol(TUIMessageCellDataFileUploadProtocol)]) {
-                        ((id<TUIMessageCellDataFileUploadProtocol>)obj).uploadProgress = progress;
-                        *stop = YES;
-                    }
-                }];
+                [TUIMessageProgressManager.shareManager appendProgress:uiMsg.msgID progress:progress];
             }
                                                     SuccBlock:succ
                                                     FailBlock:fail];
             uiMsg.name = [TUIMessageDataProvider getShowName:uiMsg.innerMessage];
             // !!!innerMessage.faceURL在sendMessage内部赋值,所以需要放在最后面. TUIMessageCell内部监听了avatarUrl的变更,所以不需要再次刷新
             uiMsg.avatarUrl = [NSURL URLWithString:[uiMsg.innerMessage faceURL]];
+            //发送消息需要携带【identifier】，否则再次发送消息，点击【我】的头像会导致无法进入的个人信息页面
+            uiMsg.identifier = [uiMsg.innerMessage sender];
         }];
     }];
 }
@@ -647,6 +648,18 @@ static NSArray *customMessageInfo = nil;
                 break;
             default:
                 break;
+        }
+        
+        // 更新消息的上传/下载进度
+        {
+            NSInteger progress = [TUIMessageProgressManager.shareManager progressForMessage:message.msgID];
+            if ([data conformsToProtocol:@protocol(TUIMessageCellDataFileUploadProtocol)]) {
+                ((id<TUIMessageCellDataFileUploadProtocol>)data).uploadProgress = progress;
+            }
+            if ([data conformsToProtocol:@protocol(TUIMessageCellDataFileDownloadProtocol)]) {
+                ((id<TUIMessageCellDataFileDownloadProtocol>)data).downladProgress = progress;
+                ((id<TUIMessageCellDataFileDownloadProtocol>)data).isDownloading = (progress != 0) && (progress != 100);
+            }
         }
     }
     return data;
@@ -1062,7 +1075,11 @@ static NSArray *customMessageInfo = nil;
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION:
                         {
-                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAnnounceFormat), str, info.value]; // %@修改群公告为\"%@\"、
+                            if (info.value.length) {
+                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupAnnounceFormat), str, info.value]; // %@修改群公告为\"%@\"、
+                            } else {
+                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsDeleteGroupAnnounceFormat), str]; 
+                            }
                         }
                             break;
                         case V2TIM_GROUP_INFO_CHANGE_TYPE_FACE:
@@ -1081,6 +1098,18 @@ static NSArray *customMessageInfo = nil;
 
                         }
                             break;
+                        case V2TIM_GROUP_INFO_CHANGE_TYPE_SHUT_UP_ALL:
+                        {
+                            // 全员禁言
+                            if (info.boolValue) {
+                                // 开启
+                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitSetShutupAllFormat), opUser];
+                            } else {
+                                // 取消
+                                str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitCancelShutupAllFormat), opUser];
+                            }
+                        }
+                            break;
                         default:
                             break;
                     }
@@ -1097,7 +1126,7 @@ static NSArray *customMessageInfo = nil;
                     NSString *userId = [(V2TIMGroupMemberChangeInfo *)info userID];
                     int32_t muteTime = [(V2TIMGroupMemberChangeInfo *)info muteTime];
                     NSString *myId = V2TIMManager.sharedInstance.getLoginUser;
-                    str = [NSString stringWithFormat:@"%@%@", [userId isEqualToString:myId] ? TUIKitLocalizableString(You) : userId, muteTime == 0 ? TUIKitLocalizableString(TUIKitMessageTipsUnmute): TUIKitLocalizableString(TUIKitMessageTipsMute)];
+                    str = [NSString stringWithFormat:@"%@ %@", [userId isEqualToString:myId] ? TUIKitLocalizableString(You) : userId, muteTime == 0 ? TUIKitLocalizableString(TUIKitMessageTipsUnmute): TUIKitLocalizableString(TUIKitMessageTipsMute)];
                     break;
                 }
             }

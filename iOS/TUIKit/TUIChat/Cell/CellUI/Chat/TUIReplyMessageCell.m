@@ -17,6 +17,7 @@
 #import "TUIMergeMessageCellData.h"
 #import "TUILinkCellData.h"
 #import "NSString+emoji.h"
+#import "TUIThemeManager.h"
 
 #import "TUITextReplyQuoteView.h"
 #import "TUIImageReplyQuoteView.h"
@@ -59,7 +60,12 @@
     self.replyData = data;
     
     self.senderLabel.text = [NSString stringWithFormat:@"%@:", data.sender];
-    self.contentLabel.attributedText = [data.content getFormatEmojiStringWithFont:self.contentLabel.font];
+    if (data.direction == MsgDirectionIncoming) {
+        self.contentLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_content_recv_text_color", @"#000000");
+    } else {
+        self.contentLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_content_text_color", @"#000000");
+    }
+    self.contentLabel.attributedText = [data.content getFormatEmojiStringWithFont:self.contentLabel.font emojiLocations:nil];
     
     @weakify(self)
     [[RACObserve(data, originMessage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(V2TIMMessage *originMessage) {
@@ -158,7 +164,7 @@
         _senderLabel = [[UILabel alloc] init];
         _senderLabel.text = @"harvy:";
         _senderLabel.font = [UIFont boldSystemFontOfSize:12.0];
-        _senderLabel.textColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];;
+        _senderLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_sender_text_color", @"#888888");
     }
     return _senderLabel;
 }
@@ -186,7 +192,7 @@
     if (_contentLabel == nil) {
         _contentLabel = [[UILabel alloc] init];
         _contentLabel.font = [UIFont systemFontOfSize:16.0];
-        _contentLabel.textColor = UIColor.blackColor;
+        _contentLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_content_text_color", @"#000000");
         _contentLabel.numberOfLines = 0;
     }
     return _contentLabel;

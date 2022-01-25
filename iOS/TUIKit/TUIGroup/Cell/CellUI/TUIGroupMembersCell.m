@@ -9,6 +9,7 @@
 #import "TUIGroupMembersCell.h"
 #import "TUIGroupMemberCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @interface TUIGroupMembersCell () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @end
@@ -26,7 +27,7 @@
 
 - (void)setupViews
 {
-    self.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+    self.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#F2F3F5");
     _memberFlowLayout = [[UICollectionViewFlowLayout alloc] init];
 //    _memberFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 

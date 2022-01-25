@@ -159,7 +159,7 @@
         data.title = conv.showName;
         data.faceUrl = conv.faceUrl;
         data.subTitle = [self getLastDisplayString:conv];
-        data.atMsgSeqList = [self getGroupAtMsgSeqList:conv];
+        data.atMsgSeqs = [self getGroupatMsgSeqs:conv];
         data.time = [self getLastDisplayDate:conv];
         data.isOnTop = conv.isPinned;
         data.unreadCount = conv.unreadCount;
@@ -231,7 +231,7 @@
     return NO;
 }
 
-- (NSMutableArray<NSNumber *> *)getGroupAtMsgSeqList:(V2TIMConversation *)conv {
+- (NSMutableArray<NSNumber *> *)getGroupatMsgSeqs:(V2TIMConversation *)conv {
     NSMutableArray *seqList = [NSMutableArray array];
     for (V2TIMGroupAtInfo *atInfo in conv.groupAtInfolist) {
         [seqList addObject:@(atInfo.seq)];
@@ -284,7 +284,7 @@
     
     // 如果有草稿箱，优先展示草稿箱信息
     if(conv.draftText.length > 0){
-        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:TUIKitLocalizableString(TUIKitMessageTypeDraftFormat) attributes:@{NSForegroundColorAttributeName:[UIColor d_systemRedColor]}]];
+        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:TUIKitLocalizableString(TUIKitMessageTypeDraftFormat) attributes:@{NSForegroundColorAttributeName:RGB(250, 81, 81)}]];
         [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:[self getDraftContent:conv] attributes:@{NSForegroundColorAttributeName:[UIColor d_systemGrayColor]}]];
     } else {
         // 没有草稿箱，展示会话 lastMsg 信息
@@ -315,8 +315,8 @@
         [attributeString insertAttributedString:unreadString atIndex:0];
     }
     
-    // 如果会话 lastMsg 在发送中或则发送失败，展示消息发送状态
-    if (V2TIM_MSG_STATUS_SENDING == conv.lastMessage.status || V2TIM_MSG_STATUS_SEND_FAIL == conv.lastMessage.status) {
+    // 如果会话 lastMsg 在发送中或则发送失败，展示消息发送状态（草稿箱不用展示发送状态）
+    if (!conv.draftText && (V2TIM_MSG_STATUS_SENDING == conv.lastMessage.status || V2TIM_MSG_STATUS_SEND_FAIL == conv.lastMessage.status)) {
         UIFont *textFont = [UIFont systemFontOfSize:14];
         NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@" " attributes:@{NSFontAttributeName: textFont}];
         NSTextAttachment *attchment = [[NSTextAttachment alloc] init];
