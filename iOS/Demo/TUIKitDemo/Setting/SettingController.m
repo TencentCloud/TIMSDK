@@ -34,6 +34,8 @@
 
 #import "TUILoginCache.h"
 #import "TUICommonModel.h"
+#import "TUINaviBarIndicatorView.h"
+#import "TUIThemeManager.h"
 
 #if ENABLELIVE
 #import "TUIKitLive.h"
@@ -59,6 +61,7 @@
 @property (nonatomic, assign) BOOL memoryReport;
 @property V2TIMUserFullInfo *profile;
 @property (nonatomic, strong) TUIProfileCardCellData *profileCellData;
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation SettingController
@@ -86,7 +89,11 @@
 
 - (void)setupViews
 {
-    self.title = NSLocalizedString(@"TabBarItemMeText", nil);
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    [_titleView setTitle:NSLocalizedString(@"TabBarItemMeText", nil)];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
+    
     self.parentViewController.title = NSLocalizedString(@"TabBarItemMeText", nil);
     
     
@@ -95,7 +102,7 @@
     [self.parentViewController.view addGestureRecognizer:tap];
 
     self.tableView.tableFooterView = [[UIView alloc] init];
-    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:242/255.0 green:243/255.0 blue:245/255.0 alpha:1/1.0] dark:TController_Background_Color_Dark];
+    self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TUIProfileCardCell class] forCellReuseIdentifier:@"personalCell"];
@@ -103,7 +110,7 @@
     [self.tableView registerClass:[TUICommonSwitchCell class] forCellReuseIdentifier:@"switchCell"];
     
     if (@available(iOS 15.0, *)) {
-//        self.tableView.sectionHeaderTopPadding = 0;
+        self.tableView.sectionHeaderTopPadding = 0;
     }
     
     [[V2TIMManager sharedInstance] addIMSDKListener:self];

@@ -52,6 +52,9 @@
 #import "TUILiveHeartBeatManager.h"
 #endif
 
+#import "TUIThemeManager.h"
+#import "TUINaviBarIndicatorView.h"
+
 // MLeaksFinder 会对这个类误报，这里需要关闭一下
 @implementation UIImagePickerController (Leak)
 
@@ -72,6 +75,7 @@ UIImagePickerControllerDelegate,
 UINavigationControllerDelegate,
 UIDocumentPickerDelegate>
 @property (nonatomic, strong) TUIBaseChatViewController *chat;
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation ChatViewController
@@ -108,14 +112,19 @@ UIDocumentPickerDelegate>
     [self addChildViewController:_chat];
     [self.view addSubview:_chat.view];
     
-    RAC(self, title) = [RACObserve(_conversationData, title) distinctUntilChanged];
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
+    __weak typeof (self)weakSelf = self;
+    [[RACObserve(_conversationData, title) distinctUntilChanged] subscribeNext:^(NSString *title) {
+        [weakSelf.titleView setTitle:title];
+    }];
     [self checkTitle:NO];
 
     // 导航栏
     [self setupNavigator];
 
     // 刷新未读数
-    __weak typeof(self) weakSelf = self;
     [TUIChatDataProvider getTotalUnreadMessageCountWithSuccBlock:^(UInt64 totalCount) {
         [weakSelf onChangeUnReadCount:totalCount];
     } fail:nil];
@@ -143,16 +152,17 @@ UIDocumentPickerDelegate>
     //left
     _unRead = [[TUIUnReadView alloc] init];
 
-    _unRead.backgroundColor = [UIColor colorWithRed:170/255.0 green:188/255.0 blue:209/255.0 alpha:1/1.0];   // 默认使用红色未读视图
-    UIBarButtonItem *urBtn = [[UIBarButtonItem alloc] initWithCustomView:_unRead];
-    self.navigationItem.leftBarButtonItems = @[urBtn];
-    //既显示返回按钮，又显示未读视图
-    self.navigationItem.leftItemsSupplementBackButton = YES;
+//    _unRead.backgroundColor = [UIColor colorWithRed:170/255.0 green:188/255.0 blue:209/255.0 alpha:1/1.0];   // 默认使用红色未读视图
+//    UIBarButtonItem *urBtn = [[UIBarButtonItem alloc] initWithCustomView:_unRead];
+//    self.navigationItem.leftBarButtonItems = @[urBtn];
+//    //既显示返回按钮，又显示未读视图
+//    self.navigationItem.leftItemsSupplementBackButton = YES;
 
     //right，根据当前聊天页类型设置右侧按钮格式
     UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [rightButton addTarget:self action:@selector(rightBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    [rightButton setTitle:@"···" forState:UIControlStateNormal];
+    UIImage *img = TUIDemoDynamicImage(@"nav_more_menu_img", [UIImage imageNamed:@"nav_more_item"]);
+    [rightButton setImage:TUIDemoDynamicImage(@"nav_more_menu_img", [UIImage imageNamed:@"nav_more_item"]) forState:UIControlStateNormal];
     [rightButton setTitleColor:[UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1.0] forState:UIControlStateNormal];
     rightButton.titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];

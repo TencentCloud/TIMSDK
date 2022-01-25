@@ -17,10 +17,12 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "UIView+TUIToast.h"
 #import "TUIKit.h"
+#import "TUINaviBarIndicatorView.h"
 
 @interface GroupMemberController () <TGroupMemberControllerDelegagte>
 
 @property (nonatomic, weak) TUIGroupMemberController *memberVc;
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 
 @end
 
@@ -35,6 +37,11 @@
     [self addChildViewController:members];
     [self.view addSubview:members.view];
     self.memberVc = members;
+    
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
+    [_titleView setTitle:NSLocalizedString(@"GroupMember", nil)];
 }
 
 - (void)didReceiveMemoryWarning {

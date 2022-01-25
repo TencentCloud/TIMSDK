@@ -8,6 +8,7 @@
 
 #import "TUITabBarController.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 
 @implementation TUITabBarItem
@@ -46,14 +47,12 @@
 
 - (UIColor *)backgroudColor
 {
-    UIColor *lightColor = [UIColor colorWithRed:235/255.0 green:240/255.0 blue:246/255.0 alpha:1/1.0];
-    UIColor *darkColor = [UIColor blackColor];
-    return [UIColor d_colorWithColorLight:lightColor dark:darkColor];
+    return TUIDemoDynamicColor(@"tab_bg_color", @"#EBF0F6");
 }
 
 - (UIColor *)selectTextColor
 {
-    return [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+    return TUIDemoDynamicColor(@"tab_title_text_select_color", @"#147AFF");
 }
 
 - (void)viewDidLayoutSubviews {

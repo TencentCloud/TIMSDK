@@ -20,9 +20,10 @@
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "UIView+TUIToast.h"
 #import "TUIKit.h"
+#import "TUINaviBarIndicatorView.h"
 
 @interface GroupInfoController () <TUIGroupInfoControllerDelegate>
-
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation GroupInfoController
@@ -35,7 +36,11 @@
     info.view.frame = self.view.bounds;
     [self addChildViewController:info];
     [self.view addSubview:info.view];
-    self.title = NSLocalizedString(@"ProfileDetails", nil); // @"详细资料";
+    
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
+    [_titleView setTitle:NSLocalizedString(@"ProfileDetails", nil)];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -50,7 +55,6 @@
     GroupMemberController *membersController = [[GroupMemberController alloc] init];
     membersController.groupId = groupId;
     membersController.groupInfo = groupInfo;
-    membersController.title = NSLocalizedString(@"GroupMember", nil); // @"群成员";
     [self.navigationController pushViewController:membersController animated:YES];
 }
 

@@ -10,14 +10,15 @@
 		48054970277F073F00FAEA4D /* AppDelegate+Push.m in Sources */ = {isa = PBXBuildFile; fileRef = 4805495F277F073F00FAEA4D /* AppDelegate+Push.m */; };
 		48054972277F073F00FAEA4D /* GenerateTestUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = 48054963277F073F00FAEA4D /* GenerateTestUserSig.m */; };
 		48054976277F073F00FAEA4D /* AppDelegate+APNS.m in Sources */ = {isa = PBXBuildFile; fileRef = 4805496F277F073F00FAEA4D /* AppDelegate+APNS.m */; };
-		4805497E277F085500FAEA4D /* TelephoneAreaCodeDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 48054979277F085500FAEA4D /* TelephoneAreaCodeDataProvider.m */; };
-		4805497F277F085500FAEA4D /* TelephoneAreaCodeSelectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4805497A277F085500FAEA4D /* TelephoneAreaCodeSelectorController.m */; };
 		480C761122DCA2F7007495EC /* FriendRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C85392268260100D74B58 /* FriendRequestViewController.m */; };
 		480C761322DCA33F007495EC /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFDC2FA4216E2D5E002EAEC2 /* ChatViewController.m */; };
 		480C761522DCA38A007495EC /* ContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 915AA6692248DBC600C0C9A0 /* ContactsController.m */; };
 		480C761622DCA3A7007495EC /* TFriendProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91FE93E22276EF0E00C17D6C /* TFriendProfileController.m */; };
 		480C761922DCA3EB007495EC /* SearchFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C852E226705C300D74B58 /* SearchFriendViewController.m */; };
 		480C761A22DCA3EB007495EC /* SearchGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF70A22925BF000ED5675 /* SearchGroupViewController.m */; };
+		4842D98927A033DF000DA6AF /* LanguageSelectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4842D98627A033DF000DA6AF /* LanguageSelectController.m */; };
+		4842D98A27A033DF000DA6AF /* ThemeSelectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4842D98827A033DF000DA6AF /* ThemeSelectController.m */; };
+		4842D98C27A03451000DA6AF /* TUIDemoTheme.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4842D98B27A03451000DA6AF /* TUIDemoTheme.bundle */; };
 		487D4B8E22E15B8A00FD54BC /* ProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D4B8D22E15B8A00FD54BC /* ProfileController.m */; };
 		48D7D3BD2539DE4C0044E957 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48C93F722539DB1600FDB5CF /* Localizable.strings */; };
 		48DF2C46253FE1B800BC522F /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 48DF2C45253FE1B800BC522F /* NotificationService.m */; };
@@ -105,11 +106,12 @@
 		4805496D277F073F00FAEA4D /* AppDelegate+APNS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+APNS.h"; sourceTree = "<group>"; };
 		4805496E277F073F00FAEA4D /* AppDelegate+Push.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+Push.h"; sourceTree = "<group>"; };
 		4805496F277F073F00FAEA4D /* AppDelegate+APNS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+APNS.m"; sourceTree = "<group>"; };
-		48054977277F085500FAEA4D /* TelephoneAreaCodeDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TelephoneAreaCodeDataProvider.h; sourceTree = "<group>"; };
-		48054979277F085500FAEA4D /* TelephoneAreaCodeDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TelephoneAreaCodeDataProvider.m; sourceTree = "<group>"; };
-		4805497A277F085500FAEA4D /* TelephoneAreaCodeSelectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TelephoneAreaCodeSelectorController.m; sourceTree = "<group>"; };
-		4805497B277F085500FAEA4D /* TelephoneAreaCodeSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TelephoneAreaCodeSelectorController.h; sourceTree = "<group>"; };
 		480C761722DCA3C3007495EC /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = ../ImSDK/Framework/ImSDK.framework; sourceTree = "<group>"; };
+		4842D98527A033DE000DA6AF /* LanguageSelectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LanguageSelectController.h; sourceTree = "<group>"; };
+		4842D98627A033DF000DA6AF /* LanguageSelectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LanguageSelectController.m; sourceTree = "<group>"; };
+		4842D98727A033DF000DA6AF /* ThemeSelectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThemeSelectController.h; sourceTree = "<group>"; };
+		4842D98827A033DF000DA6AF /* ThemeSelectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThemeSelectController.m; sourceTree = "<group>"; };
+		4842D98B27A03451000DA6AF /* TUIDemoTheme.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TUIDemoTheme.bundle; sourceTree = "<group>"; };
 		487D4B8C22E15B8A00FD54BC /* ProfileController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProfileController.h; sourceTree = "<group>"; };
 		487D4B8D22E15B8A00FD54BC /* ProfileController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileController.m; sourceTree = "<group>"; };
 		48C93EE2253934FB00FDB5CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
@@ -271,10 +273,10 @@
 		910D8FFB22AE051C00C9A318 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				48054977277F085500FAEA4D /* TelephoneAreaCodeDataProvider.h */,
-				48054979277F085500FAEA4D /* TelephoneAreaCodeDataProvider.m */,
-				4805497B277F085500FAEA4D /* TelephoneAreaCodeSelectorController.h */,
-				4805497A277F085500FAEA4D /* TelephoneAreaCodeSelectorController.m */,
+				4842D98527A033DE000DA6AF /* LanguageSelectController.h */,
+				4842D98627A033DF000DA6AF /* LanguageSelectController.m */,
+				4842D98727A033DF000DA6AF /* ThemeSelectController.h */,
+				4842D98827A033DF000DA6AF /* ThemeSelectController.m */,
 				910D900322AE05A100C9A318 /* TCLoginParam.h */,
 				910D900222AE05A100C9A318 /* TCLoginParam.m */,
 				910D8FFF22AE057E00C9A318 /* TCLoginModel.h */,
@@ -405,6 +407,7 @@
 		CEF98DD526E5C0A900EC6A20 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4842D98B27A03451000DA6AF /* TUIDemoTheme.bundle */,
 				CEF98E0826E5FD8900EC6A20 /* TUIDemo.bundle */,
 			);
 			path = Resources;
@@ -602,6 +605,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48D7D3BD2539DE4C0044E957 /* Localizable.strings in Resources */,
+				4842D98C27A03451000DA6AF /* TUIDemoTheme.bundle in Resources */,
 				CED9761D243C9D5700082605 /* 00.caf in Resources */,
 				CF014492216E1A4B00C12E35 /* LaunchScreen.storyboard in Resources */,
 				CF01448F216E1A4B00C12E35 /* Assets.xcassets in Resources */,
@@ -712,14 +716,14 @@
 				48FBB4902791887A00099B2F /* AppDelegate+TPNS.m in Sources */,
 				CEE776232654F8A00091012B /* GroupCreateCellData.m in Sources */,
 				CE440CDF26E072530085EB57 /* Aspects.m in Sources */,
-				4805497E277F085500FAEA4D /* TelephoneAreaCodeDataProvider.m in Sources */,
 				CE440CE026E072530085EB57 /* TCUtil.m in Sources */,
 				CE440CDA26E072530085EB57 /* TUIDateEditController.m in Sources */,
 				480C761A22DCA3EB007495EC /* SearchGroupViewController.m in Sources */,
 				CE440CD726E072530085EB57 /* TUINaviBarIndicatorView.m in Sources */,
-				4805497F277F085500FAEA4D /* TelephoneAreaCodeSelectorController.m in Sources */,
 				CE440CDB26E072530085EB57 /* PAirSandbox.m in Sources */,
 				480C761622DCA3A7007495EC /* TFriendProfileController.m in Sources */,
+				4842D98A27A033DF000DA6AF /* ThemeSelectController.m in Sources */,
+				4842D98927A033DF000DA6AF /* LanguageSelectController.m in Sources */,
 				480C761522DCA38A007495EC /* ContactsController.m in Sources */,
 				CEE776242654F8A00091012B /* GroupCreateCell.m in Sources */,
 				CE440CDD26E072530085EB57 /* TUITextEditController.m in Sources */,

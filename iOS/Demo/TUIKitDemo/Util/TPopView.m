@@ -9,6 +9,8 @@
 #import "TPopView.h"
 #import "TPopCell.h"
 #import "TUIKit.h"
+#import "TUIThemeManager.h"
+#import "UIColor+TUIHexColor.h"
 
 @interface TPopView ()<UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
 @property (nonatomic, strong) NSMutableArray *data;
@@ -46,13 +48,13 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
     tap.delegate = self;
     [self addGestureRecognizer:tap];
-    self.backgroundColor = [UIColor d_colorWithColorLight:TPopView_Background_Color dark:TPopView_Background_Color_Dark];
+    self.backgroundColor = [[UIColor colorWithHex:@"#888888"] colorWithAlphaComponent:0.8];
     CGSize arrowSize = TPopView_Arrow_Size;
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y + arrowSize.height, self.frame.size.width, self.frame.size.height - arrowSize.height)];
     self.frame = [UIScreen mainScreen].bounds;
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    _tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    _tableView.backgroundColor = TUIDemoDynamicColor(@"pop_bg_color", @"#FFFFFF");
     _tableView.tableFooterView = [[UIView alloc] init];
     _tableView.scrollEnabled = NO;
     _tableView.layer.cornerRadius = 5.0;

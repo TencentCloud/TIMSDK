@@ -20,6 +20,8 @@
 #import "TUIKit.h"
 #import "TCUtil.h"
 #import "TUIDefine.h"
+#import "TUINaviBarIndicatorView.h"
+#import "TUIThemeManager.h"
 
 @interface FriendRequestViewController () <UITableViewDataSource, UITableViewDelegate>
 @property UITableView *tableView;
@@ -29,6 +31,7 @@
 @property BOOL keyboardShown;
 @property TUIProfileCardCellData *cardCellData;
 @property TUICommonSwitchCellData *singleSwitchData;
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation FriendRequestViewController
@@ -45,7 +48,9 @@
     [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 0, 0, 0)];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-
+    if (@available(iOS 15.0, *)) {
+        self.tableView.sectionHeaderTopPadding = 0;
+    }
 
     self.addWordTextView = [[UITextView alloc] initWithFrame:CGRectZero];
     self.addWordTextView.font = [UIFont systemFontOfSize:14];
@@ -66,7 +71,10 @@
     self.nickTextField.textAlignment = NSTextAlignmentRight;
 
 
-    self.title = NSLocalizedString(@"FriendRequestFillInfo", nil);
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    [_titleView setTitle:NSLocalizedString(@"FriendRequestFillInfo", nil)];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
 
     TUIProfileCardCellData *data = [TUIProfileCardCellData new];
     data.name = [self.profile showName];
@@ -225,7 +233,7 @@
         data.style = ButtonWhite;
         data.title = NSLocalizedString(@"Send", nil);
         data.cselector = @selector(onSend);
-        data.textColor = [UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+        data.textColor = TUICoreDynamicColor(@"primary_theme_color", @"147AFF"); //[UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
         [cell fillWithData:data];
         
         return cell;

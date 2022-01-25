@@ -181,3 +181,16 @@
 "MessageTipsOthersRecallMessageFormat" = "\"%@\" recalled a message.";
 "MessageTipsOthersRecallMessage" = "The other user recalled a message.";
 "SignatureFormat" = "Signature:%@";
+
+"ChangeSkin" = "Theme";
+"ChangeLanguage" = "Language";
+"SimpleChinese" = "Chinese,Simplified";
+"English" = "English";
+"CurrentLanguage" = "English";
+
+"ThemeNameSerious" = "Solemn";
+"ThemeNameLight" = "Light";
+"ThemeNameLivey" = "Lively";
+"ThemeNameDark" = "Dark";
+"ThemeNameSystem" = "System";
+
