@@ -1,0 +1,5 @@
+<view class="video-message" >
+  <video  class="video-box {{isMine?'my-video':''}}" src="{{renderDom[0].src}}" 
+  poster="{{message.payload.thumbUrl}}" error="videoError" bindfullscreenchange="showVideoFullScreenChange" 
+   bind:longpress="handleLongPress"></video>
+</view>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>隐私条例</title>
+    <desc>Created with Sketch.</desc>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1-个人中心" transform="translate(-28.000000, -244.000000)">
+            <g id="编组-13" transform="translate(28.000000, 244.000000)">
+                <g id="编组-9">
+                    <rect id="矩形" x="0" y="0" width="16" height="16"></rect>
+                    <path d="M8,2 C10.209139,2 12,3.790861 12,6 L12,7 L12,7 L4,7 L4,6 C4,3.790861 5.790861,2 8,2 Z" id="矩形" stroke="#006EFF" stroke-width="2" opacity="0.4"></path>
+                    <rect id="矩形" stroke="#006EFF" stroke-width="2" x="2" y="7" width="12" height="8" rx="1"></rect>
+                    <rect id="矩形" fill="#006EFF" opacity="0.4" x="7" y="10" width="2" height="2"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

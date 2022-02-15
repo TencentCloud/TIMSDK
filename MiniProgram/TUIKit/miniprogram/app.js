@@ -29,6 +29,7 @@ App({
       keepScreenOn: true,
     })
   },
+  
   // TODO:
   resetLoginData() {
     this.globalData.expiresIn = ''
