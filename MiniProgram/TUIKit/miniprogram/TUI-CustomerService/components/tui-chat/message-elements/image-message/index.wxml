@@ -1,0 +1,5 @@
+<view class="TUI-ImageMessage" bindtap="previewImage">
+  <image class="image-message {{isMine?'my-image':''}}"  mode="aspectFill" src="{{renderDom[0].src}}" />
+  <image wx:if="{{showSave}}" class="image-message {{isMine?'my-image':''}}"  mode="aspectFill" src="{{renderDom[0].src}}" show-menu-by-longpress="{{true}}"/>
+</view>
+
