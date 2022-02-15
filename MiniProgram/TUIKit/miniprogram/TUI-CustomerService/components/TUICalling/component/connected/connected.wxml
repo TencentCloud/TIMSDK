@@ -1,0 +1,116 @@
+<view class="TUICalling-connected-layout {{callType === 1 ? 'audio' : 'video'}}">
+    <view class="{{callType === 1 ? 'pusher-audio' : playerList.length > 1 ? 'stream-box' : (screen === 'pusher' ? 'pusher-video' : 'player')}}" data-screen="pusher" catch:tap="toggleViewSize">
+        <live-pusher
+            class="{{callType === 1 ? 'pusher-audio' : 'live'}}"
+            url="{{pusher.url}}"
+            mode="{{pusher.mode}}"
+            autopush="{{true}}"
+            enable-camera="{{pusher.enableCamera}}"
+            enable-mic="{{true}}"
+            muted="{{!pusher.enableMic}}"
+            enable-agc="{{true}}"
+            enable-ans="{{true}}"
+            enable-ear-monitor="{{pusher.enableEarMonitor}}"
+            auto-focus="{{pusher.enableAutoFocus}}"
+            zoom="{{pusher.enableZoom}}"
+            min-bitrate="{{pusher.minBitrate}}"
+            max-bitrate="{{pusher.maxBitrate}}"
+            video-width="{{pusher.videoWidth}}"
+            video-height="{{pusher.videoHeight}}"
+            beauty="{{pusher.beautyLevel}}"
+            whiteness="{{pusher.whitenessLevel}}"
+            orientation="{{pusher.videoOrientation}}"
+            aspect="{{pusher.videoAspect}}"
+            device-position="{{pusher.frontCamera}}"
+            remote-mirror="{{pusher.enableRemoteMirror}}"
+            local-mirror="{{pusher.localMirror}}"
+            background-mute="{{pusher.enableBackgroundMute}}"
+            audio-quality="{{pusher.audioQuality}}"
+            audio-volume-type="{{pusher.audioVolumeType}}"
+            audio-reverb-type="{{pusher.audioReverbType}}"
+            waiting-image="{{pusher.waitingImage}}"
+            beauty-style="{{pusher.beautyStyle}}"
+            filter="{{pusher.filter}}"
+            bindstatechange="pusherStateChangeHandler"
+            bindnetstatus="pusherNetStatus"
+            binderror="pusherErrorHandler"
+            bindaudiovolumenotify="pusherAudioVolumeNotify"
+        />
+    </view>
+    <view wx:if="{{callType === 1}}" class="TRTCCalling-call-audio-box {{playerList.length > 1 && 'mutil-img'}}">
+        <view class="TRTCCalling-call-audio-img" wx:if="{{playerList.length > 1}}">
+            <image src="{{pusher.avatar || '../../static/default_avatar.png'}}" class="img-place-holder avatar" data-value="{{pusher.userID}}" data-flag="pusher" binderror="handleConnectErrorImage"/>
+            <text class="audio-name">{{pusher.nick || pusher.userID}}(自己)</text>
+        </view>
+        <view class="TRTCCalling-call-audio-img" wx:for="{{playerList}}" wx:key="userID">
+            <image src="{{item.avatar || '../../static/default_avatar.png'}}" class="img-place-holder avatar" data-value="{{item.userID}}" data-flag="player" binderror="handleConnectErrorImage"/>
+            <text class="audio-name">{{item.nick || item.userID}}</text>
+        </view>
+    </view>
+    <view wx:for="{{playerList}}" wx:key="streamID" class="view-container player-container {{callType === 1 ? 'player-audio' : ''}}">
+        <view class="{{callType === 1 ? 'player-audio' : playerList.length > 1 ? 'stream-box' : (screen === 'player' ? 'pusher-video' : 'player')}}" data-screen="player" catch:tap="toggleViewSize">
+            <live-player
+                class="live"
+                id="{{item.id}}"
+                data-userid="{{item.userID}}"
+                data-streamid="{{item.streamID}}"
+                data-streamtype="{{item.streamType}}"
+                src= "{{item.src}}"
+                mode= "RTC"
+                autoplay= "{{item.autoplay}}"
+                mute-audio= "{{item.muteAudio}}"
+                mute-video= "{{item.muteVideo}}"
+                orientation= "{{item.orientation}}"
+                object-fit= "{{item.objectFit}}"
+                background-mute= "{{item.enableBackgroundMute}}"
+                min-cache= "{{item.minCache}}"
+                max-cache= "{{item.maxCache}}"
+                sound-mode= "{{soundMode}}"
+                enable-recv-message= "{{item.enableRecvMessage}}"
+                auto-pause-if-navigate= "{{item.autoPauseIfNavigate}}"
+                auto-pause-if-open-native= "{{item.autoPauseIfOpenNative}}"
+                bindstatechange="playerStateChange"
+                bindfullscreenchange="playerFullscreenChange"
+                bindnetstatus="playNetStatus"
+                bindaudiovolumenotify="playerAudioVolumeNotify"
+            />
+        </view>
+    </view>
+    <view class="handle-btns">
+        <view class="other-view {{callType === 1 ? 'black' : 'white'}}">
+            <text>{{pusher.chatTime}}</text>
+        </view>
+        <view class="btn-list">
+            <view class="btn-normal" bindtap="pusherAudioHandler">
+                <image class="btn-image" src="{{pusher.enableMic? '../../static/audio-true.png': '../../static/audio-false.png'}} "></image>
+            </view>
+            <view class="btn-hangup" bindtap="hangup" wx:if="{{callType === 1}}">
+                <image class="btn-image" src="../../static/hangup.png"></image>
+            </view>
+            <view class="btn-normal" bindtap="toggleSoundMode">
+                <image class="btn-image" src="{{soundMode === 'ear' ? '../../static/speaker-false.png': '../../static/speaker-true.png'}} "></image>
+            </view>
+            <view class="btn-normal" bindtap="pusherVideoHandler" wx:if="{{callType === 2}}">
+                <image class="btn-image" src="{{pusher.enableCamera ? '../../static/camera-true.png': '../../static/camera-false.png'}} "></image>
+            </view>
+        </view>
+        <view class="btn-list" wx:if="{{callType===2}}">
+            <view class="btn-list-item">
+                <view wx:if="{{playerList.length === 1}}" class="btn-normal" bindtap="switchAudioCall">
+                    <image class="btn-image btn-image-small" src="{{ '../../static/trans.png'}} "></image>
+                </view>
+            </view>
+            <view class="btn-list-item other-view">
+                <view class="btn-hangup" bindtap="hangup">
+                    <image class="btn-image" src="../../static/hangup.png"></image>
+                </view>
+                <text class="white">挂断</text>
+            </view>
+            <view class="btn-list-item btn-footer">
+                <view wx:if="{{pusher.enableCamera}}" class="{{playerList.length > 1 ? 'multi-camera' : 'camera'}}">
+                    <image class="camera-image" src="../../static/swtich-camera.png" data-device="{{pusher.frontCamera}}" catch:tap="toggleSwitchCamera" />
+                </view>
+            </view>
+        </view>
+    </view>
+</view>

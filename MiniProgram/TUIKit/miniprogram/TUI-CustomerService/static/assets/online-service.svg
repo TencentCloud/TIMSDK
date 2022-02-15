@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>在线客服</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#006EFF" offset="0%"></stop>
+            <stop stop-color="#006EFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="主页" transform="translate(-44.000000, -221.000000)">
+            <g id="编组-9" transform="translate(44.000000, 221.000000)">
+                <g id="编组-5">
+                    <rect id="矩形" opacity="0.05" x="0" y="0" width="48" height="48"></rect>
+                    <circle id="椭圆形" fill="url(#linearGradient-1)" opacity="0.2" cx="26" cy="27" r="15"></circle>
+                    <path d="M24,39 C32.2842712,39 39,32.2842712 39,24 C39,15.7157288 32.2842712,9 24,9 C15.7157288,9 9,15.7157288 9,24" id="路径" stroke="#006EFF" stroke-width="2" stroke-linecap="round"></path>
+                    <rect id="矩形" stroke="#006EFF" stroke-width="2" fill="#FFFFFF" x="7" y="22" width="4" height="5" rx="1"></rect>
+                    <rect id="矩形备份-3" stroke="#006EFF" stroke-width="2" fill="#FFFFFF" x="37" y="22" width="4" height="5" rx="1"></rect>
+                    <path d="M21,25 C21,26.6568542 22.3431458,28 24,28 C25.6568542,28 27,26.6568542 27,25" id="路径" stroke="#00C8DC" stroke-width="2" stroke-linecap="round"></path>
+                    <rect id="矩形" fill="#006EFF" x="21" y="37" width="5" height="4" rx="2"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>发送订单</title>
+    <desc>Created with Sketch.</desc>
+    <g id="浅色版本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="在线客服-更多功能" transform="translate(-291.000000, -677.000000)">
+            <g id="编组-23" transform="translate(291.000000, 677.000000)">
+                <g id="编组-12">
+                    <rect id="矩形备份-12" fill="#FFFFFF" x="0" y="0" width="64" height="64" rx="4"></rect>
+                    <path d="M32,16 C33.0543618,16 33.9181651,16.8158778 33.9945143,17.8507377 L34,18 L35,18 C36.1045695,18 37,18.8954305 37,20 L42,20 C43.1045695,20 44,20.8954305 44,22 L44,43 C44,44.1045695 43.1045695,45 42,45 L22,45 C20.8954305,45 20,44.1045695 20,43 L20,22 C20,20.8954305 20.8954305,20 22,20 L27,20 L27,20 C27,18.8954305 27.8954305,18 29,18 L30,18 C30,16.8954305 30.8954305,16 32,16 Z" id="形状结合" fill="#444444"></path>
+                    <rect id="矩形" fill="#FFFFFF" x="26" y="26" width="12" height="2" rx="1"></rect>
+                    <rect id="矩形备份-22" fill="#FFFFFF" x="26" y="31" width="12" height="2" rx="1"></rect>
+                    <rect id="矩形备份-23" fill="#FFFFFF" x="26" y="36" width="7" height="2" rx="1"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
