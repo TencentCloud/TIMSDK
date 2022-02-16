@@ -74,7 +74,7 @@ static const int india_SDKAPPID = 0;
  *  时间单位：秒
  *  默认时间：7 x 24 x 60 x 60 = 604800 = 7 天
  */
-static const int EXPIRETIME = 0;
+static const int EXPIRETIME = 604800;
 
 /**
  * 计算签名用的加密密钥，获取步骤如下：
