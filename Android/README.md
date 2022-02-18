@@ -31,7 +31,7 @@
      </tr> 
   <tr>
       <td>iOS</td>   
-      <td>iOS/Demo/TUIKitDemo/Debug/GenerateTestUserSig.h</td>
+      <td>iOS/Demo/TUIKitDemo/Private/GenerateTestUserSig.h</td>
      </tr> 
   <tr>      
       <td>Mac</td>   
@@ -74,9 +74,16 @@
 ```groovy
 api project(':tuicalling')
 ```
-这样，就不再集成音视频通话功能，聊天页面的更多输入界面就不再出现音视频通话按钮：
+操作完上述步骤后会发现，Demo 中的音频通话、视频通话入口均被隐藏。
+会话界面屏蔽 TUICalling 前后的效果：
 
-<img src="https://qcloudimg.tencent-cloud.cn/raw/8fbdba7660919147a690bdcaf4f4488d.jpg" width="500"/>
+![](https://qcloudimg.tencent-cloud.cn/raw/11d6846dc76aedcda15f6f70b78c59c7.png) ![](https://qcloudimg.tencent-cloud.cn/raw/ca116e25894a6ba72d49e2507cc213ba.png)
+
+联系人资料界面屏蔽 TUICalling 前后的效果：
+
+![](https://qcloudimg.tencent-cloud.cn/raw/98df67c187384445432d490f6c0f7847.png)  ![](https://qcloudimg.tencent-cloud.cn/raw/b604eeac45f0a2cf5924d23567c69090.png)
+
+> 以上演示的仅仅是 Demo 对移除音视频通话功能的处理，开发者可以按照业务要求自定义。
 
 ## 步骤6：编译运行（移除搜索模块）
 如果您不需要搜索功能，那么只需要在 `app 模块` 的 `build.gradle` 文件中删除下面一行即可：
@@ -86,6 +93,10 @@ api project(':tuicalling')
 ```groovy
 api project(':tuisearch')
 ```
-这样在会话列表界面就不会出现搜索框，如下图所示：
+操作完上述步骤后会发现，Demo 中的消息搜索框被隐藏。
 
-<img src="https://qcloudimg.tencent-cloud.cn/raw/b8cb53196326dc6e68f5ca1d210a28bf.jpg" width="500"/>
+消息界面屏蔽 TUISearch 前后的效果：
+
+![](https://qcloudimg.tencent-cloud.cn/raw/e099c8fe41f3c908cd88573dad6dc820.png)  ![](https://qcloudimg.tencent-cloud.cn/raw/c501170cbb23923d6bacff893b30fdbb.png)
+
+> 以上演示的仅仅是 Demo 对移除搜索功能的处理，开发者可以按照业务要求自定义。
