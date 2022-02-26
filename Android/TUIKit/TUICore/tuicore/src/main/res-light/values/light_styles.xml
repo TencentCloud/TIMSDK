@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- 设置父主图 parent=xxx -->
     <style name="TUIBaseLightTheme">
         <!-- 颜色规范 start -->
         <item name="core_light_bg_title_text_color">@color/core_light_bg_title_text_color_light</item>
