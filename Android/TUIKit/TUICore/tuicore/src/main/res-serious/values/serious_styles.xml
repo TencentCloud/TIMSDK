@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- 设置父主图 parent=xxx -->
     <style name="TUIBaseSeriousTheme">
 
         <!-- 颜色规范 start -->
