@@ -98,11 +98,7 @@ pod repo update
 #  pod 'TUICalling' （不需要再集成该库）
 ```
 
-2. 进入 `TUIKitDemo` 的 `Building Setting` 界面，设置 `ENABLECALL` 为 0，关闭音视频通话相关逻辑。
-
-![](https://main.qcloudimg.com/raw/d03964a3a8949609036c70973157f341.png)
-
-操作完上述步骤后会发现，Demo 中的音频通话、视频通话入口均被隐藏。
+操作完后会发现，Demo 中的音频通话、视频通话入口均被隐藏。
 
 会话界面屏蔽 TUICalling 前后的效果：
 
@@ -121,7 +117,7 @@ pod repo update
 #  pod 'TUISearch' （不需要再集成该库）
 ```
 
-操作完上述步骤后会发现，Demo 中的消息搜索框被隐藏。
+操作完后会发现，Demo 中的消息搜索框被隐藏。
 
 消息界面屏蔽 TUISearch 前后的效果：
 
