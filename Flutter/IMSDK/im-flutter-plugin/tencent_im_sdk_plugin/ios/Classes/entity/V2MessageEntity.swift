@@ -159,9 +159,9 @@ public class V2MessageEntity {
     
     func convertCustomMessageElem(customElem:V2TIMCustomElem) -> [String:Any] {
         return [
-            "data": String.init(data: customElem.data!, encoding: String.Encoding.utf8)!,
-            "desc": customElem.desc,
-            "extension": customElem.extension
+            "data": String.init(data: customElem.data, encoding: String.Encoding.utf8) ?? "",
+            "desc": customElem.desc  as Any,
+            "extension": customElem.extension  as Any
         ]
     }
     
@@ -220,7 +220,7 @@ public class V2MessageEntity {
         } else {}
 
         return [
-            "uuid": soundElem.uuid,
+            "uuid": soundElem.uuid as Any,
             "dataSize": soundElem.dataSize,
             "duration": soundElem.duration,
             "url": url,
@@ -230,8 +230,8 @@ public class V2MessageEntity {
     }
     
     func convertVideoMessageElem(videoElem:V2TIMVideoElem) -> [String:Any] {
-        let pathSnapshot = videoElem.snapshotPath ?? NSTemporaryDirectory() + "\(videoElem.snapshotUUID)";
-        let pathVideo = videoElem.videoPath ?? NSTemporaryDirectory() + "\(videoElem.videoUUID)";
+        let pathSnapshot = videoElem.snapshotPath ?? NSTemporaryDirectory() + "\(String(describing: videoElem.snapshotUUID))";
+        let pathVideo = videoElem.videoPath ?? NSTemporaryDirectory() + "\(String(describing: videoElem.videoUUID))";
         let fileManager = FileManager.default;
         let videoUrl: String? = nil;
         let snapshotUrl: String? = nil;
@@ -255,15 +255,15 @@ public class V2MessageEntity {
         } else {}
         
        return [
-            "snapshotUUID": videoElem.snapshotUUID,
-            "snapshotPath": videoElem.snapshotPath,
-            "snapshotUrl": snapshotUrl,
+        "snapshotUUID": videoElem.snapshotUUID as Any,
+        "snapshotPath": videoElem.snapshotPath as Any,
+        "snapshotUrl": snapshotUrl as Any ,
             "snapshotSize": videoElem.snapshotSize,
             "snapshotWidth": videoElem.snapshotWidth,
             "snapshotHeight": videoElem.snapshotHeight,
-            "UUID": videoElem.videoUUID,
-            "videoPath": videoElem.videoPath,
-            "videoUrl": videoUrl,
+        "UUID": videoElem.videoUUID as Any,
+        "videoPath": videoElem.videoPath as Any,
+        "videoUrl": videoUrl  as Any,
             "videoSize": videoElem.videoSize,
             "duration": videoElem.duration
         ];
@@ -334,8 +334,8 @@ public class V2MessageEntity {
         for info in groupTipsElem.groupChangeInfoList {
             let item: [String: Any] = [
                 "type": info.type.rawValue,
-                "value": info.value,
-                "key": info.key
+                "value": info.value as Any,
+                "key": info.key as Any
             ]
             groupChangeInfoList.append(item)
         }
@@ -357,7 +357,7 @@ public class V2MessageEntity {
     
     func convertMessageElem(nextElem:V2TIMElem) -> [String: Any] {
         var result: [String: Any] = [:];
-        if nextElem != nil {
+        
             if nextElem is V2TIMTextElem {
                 let textElem:V2TIMTextElem = nextElem as! V2TIMTextElem;
                 result = self.convertTextMessage(textElem: textElem);
@@ -398,12 +398,12 @@ public class V2MessageEntity {
             if nextElem.next() != nil {
                 result["nextElem"] = self.convertMessageElem(nextElem: nextElem.next());
             }
-        }
+        
         return result;
     }
 	// V2TIMMessage没有 progress和priority 字段
 	init(message : V2TIMMessage) {
-		let base = NSTemporaryDirectory()
+        _ = NSTemporaryDirectory()
 		self.msgID = message.msgID;
 		self.timestamp = message.timestamp as Date?;
 		self.sender = message.sender;
@@ -426,13 +426,13 @@ public class V2MessageEntity {
 		self.v2message = message
 		
 		if message.localCustomData != nil {
-            if let localCustomData = message.localCustomData  as? Data {
+            if let localCustomData = message.localCustomData {
                 let dataStr = String(data: localCustomData, encoding: .utf8) ?? "";
                 self.localCustomData = dataStr;
             }
 		}
 		if message.cloudCustomData != nil {
-            if let cloudCustomData = message.cloudCustomData  as? Data {
+            if let cloudCustomData = message.cloudCustomData {
                 let dataStr = String(data: cloudCustomData, encoding: .utf8) ?? "";
                 self.cloudCustomData = dataStr;
             }

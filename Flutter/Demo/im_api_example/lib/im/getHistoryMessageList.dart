@@ -8,6 +8,7 @@ import 'package:tencent_im_sdk_plugin/enum/history_msg_get_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class GetHistoryMessageList extends StatefulWidget {
   @override
@@ -58,7 +59,7 @@ class GetHistoryMessageListState extends State<GetHistoryMessageList> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(users.length > 0 ? users.toString() : "未选择"),
+                  child: Text(users.length > 0 ? users.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -78,7 +79,7 @@ class GetHistoryMessageListState extends State<GetHistoryMessageList> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(group.length > 0 ? group.toString() : "未选择"),
+                  child: Text(group.length > 0 ? group.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -152,12 +153,12 @@ class GetHistoryMessageListState extends State<GetHistoryMessageList> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择type"),
+                    child: Text(imt("选择type")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text('已选：$type'),
+                  child: Text(imt_para("已选：{{type}}", "已选：${type}")(type: type)),
                 )
               ],
             ),
@@ -179,7 +180,7 @@ class GetHistoryMessageListState extends State<GetHistoryMessageList> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: getHistoryMessageList,
-                  child: Text("获取历史消息高级接口"),
+                  child: Text(imt("获取历史消息高级接口")),
                 ),
               )
             ],

@@ -3,6 +3,7 @@ import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class Invite extends StatefulWidget {
   @override
@@ -39,8 +40,8 @@ class InviteState extends State<Invite> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "发送文本",
-                    hintText: "文本内容",
+                    labelText: imt("发送文本"),
+                    hintText: imt("文本内容"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -67,7 +68,7 @@ class InviteState extends State<Invite> {
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
                   child:
-                      Text(receiver.length > 0 ? receiver.toString() : "未选择"),
+                      Text(receiver.length > 0 ? receiver.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -86,14 +87,14 @@ class InviteState extends State<Invite> {
           //     Expanded(
           //       child: Container(
           //         margin: EdgeInsets.only(left: 10),
-          //         child: Text(groupID.length > 0 ? groupID.toString() : "未选择"),
+          //         child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
           //       ),
           //     )
           //   ],
           // ),
           Row(
             children: [
-              Text("是否仅在线用户接受到消息"),
+              Text(imt("是否仅在线用户接受到消息")),
               Switch(
                 value: onlineUserOnly,
                 onChanged: (res) {
@@ -109,7 +110,7 @@ class InviteState extends State<Invite> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: invite,
-                  child: Text("邀请"),
+                  child: Text(imt("邀请")),
                 ),
               )
             ],

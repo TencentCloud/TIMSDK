@@ -6,6 +6,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SetLocalCustomData extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class SetLocalCustomDataState extends State<SetLocalCustomData> {
         .getMessageManager()
         .setLocalCustomData(
           msgID: msgIDs.first,
-          localCustomData: "自定义数据",
+          localCustomData: imt("自定义数据"),
         );
     setState(() {
       resData = res.toJson();
@@ -54,7 +55,7 @@ class SetLocalCustomDataState extends State<SetLocalCustomData> {
                   margin: EdgeInsets.only(left: 10),
                   child: Text(conversaions.length > 0
                       ? conversaions.toString()
-                      : "未选择"),
+                      : imt("未选择")),
                 ),
               )
             ],
@@ -82,7 +83,7 @@ class SetLocalCustomDataState extends State<SetLocalCustomData> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: setLocalCustomData,
-                  child: Text("本地修改消息（String）"),
+                  child: Text(imt("本地修改消息（String）")),
                 ),
               )
             ],

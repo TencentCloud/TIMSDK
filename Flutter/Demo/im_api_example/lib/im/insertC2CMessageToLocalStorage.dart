@@ -4,6 +4,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class InsertC2CMessageToLocalStorage extends StatefulWidget {
   @override
@@ -31,6 +32,8 @@ class InsertC2CMessageToLocalStorageState
 
   @override
   Widget build(BuildContext context) {
+    String userStr = users.length > 0 ? (users.isNotEmpty ? users.first : "") : imt("未选择");
+    String senderStr = users.length > 0 ? (senders.isNotEmpty ? senders.first : "") : imt("未选择");
     return Container(
       child: Column(
         children: [
@@ -49,9 +52,7 @@ class InsertC2CMessageToLocalStorageState
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(users.length > 0
-                      ? "消息接收者：${users.isNotEmpty ? users.first : ""}"
-                      : "消息接收者：未选择"),
+                  child: Text(imt_para("要查询的用户: {{userStr}}", "要查询的用户: ${userStr}")(userStr: userStr)),
                 ),
               )
             ],
@@ -71,9 +72,7 @@ class InsertC2CMessageToLocalStorageState
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(users.length > 0
-                      ? "消息发送者：${senders.isNotEmpty ? senders.first : ""}"
-                      : "消息发送者：未选择"),
+                  child: Text(imt_para("要查询的用户: {{senderStr}}", "要查询的用户: ${senderStr}")(senderStr: senderStr)),
                 ),
               )
             ],
@@ -83,7 +82,7 @@ class InsertC2CMessageToLocalStorageState
               Expanded(
                 child: ElevatedButton(
                   onPressed: insertC2CMessageToLocalStorage,
-                  child: Text("向c2c会话中插入一条本地消息"),
+                  child: Text(imt("向c2c会话中插入一条本地消息")),
                 ),
               )
             ],

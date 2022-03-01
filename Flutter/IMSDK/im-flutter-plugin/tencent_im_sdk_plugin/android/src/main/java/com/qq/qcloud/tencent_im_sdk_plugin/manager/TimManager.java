@@ -518,6 +518,7 @@ public class TimManager {
         String selfSignature = methodCall.argument("selfSignature");
         Integer gender = methodCall.argument("gender");
         Integer allowType = methodCall.argument("allowType");
+        Integer birthday = methodCall.argument("birthday");
         HashMap<String,String> customInfoString = methodCall.argument("customInfo");
 
         V2TIMUserFullInfo userFullInfo = new V2TIMUserFullInfo();
@@ -533,6 +534,9 @@ public class TimManager {
         }
         if(gender!=null){
             userFullInfo.setGender(gender);
+        }
+        if(birthday!=null){
+            userFullInfo.setBirthday(birthday);
         }
         if(allowType!=null){
             userFullInfo.setAllowType(allowType);

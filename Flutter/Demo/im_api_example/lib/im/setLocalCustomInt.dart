@@ -6,6 +6,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SetLocalCustomInt extends StatefulWidget {
   @override
@@ -54,7 +55,7 @@ class SetLocalCustomIntState extends State<SetLocalCustomInt> {
                   margin: EdgeInsets.only(left: 10),
                   child: Text(conversaions.length > 0
                       ? conversaions.toString()
-                      : "未选择"),
+                      : imt("未选择")),
                 ),
               )
             ],
@@ -82,7 +83,7 @@ class SetLocalCustomIntState extends State<SetLocalCustomInt> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: setLocalCustomInt,
-                  child: Text("本地修改消息（Int）"),
+                  child: Text(imt("本地修改消息（Int）")),
                 ),
               )
             ],

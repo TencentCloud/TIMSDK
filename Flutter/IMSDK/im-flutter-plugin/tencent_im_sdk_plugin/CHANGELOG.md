@@ -503,3 +503,22 @@ setGroupReceiveMessageOpt、getC2CReceiveMessageOpt、getConversationListByConve
 ## 3.7.1
 * 消息发送进度事件返回创建消息的id
 * 优化回调部分，提示业务方回调的错误在SDK中被catch需业务方修改
+
+## 3.7.5
+* 升级底层库到6.0.1975
+* 离线推送配置支持TPNS TOKEN
+
+## 3.7.7
+* 修复swift代码warning
+* 重写swift强解包代码
+* sendMessage接口返回的message实例增加id字段
+
+## 3.7.8
+* 修复强解包带来的异常
+
+## 3.8.0
+* 升级底层interface依赖
+
+## 3.8.2
+* 更新群成员参数约束
+

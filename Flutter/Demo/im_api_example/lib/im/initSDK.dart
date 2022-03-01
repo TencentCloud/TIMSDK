@@ -8,6 +8,7 @@ import 'package:tencent_im_sdk_plugin/enum/log_level.dart';
 import 'package:tencent_im_sdk_plugin/enum/log_level_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class InitSDK extends StatefulWidget {
   @override
@@ -53,7 +54,7 @@ class InitSDKState extends State<InitSDK> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: initIMSDK,
-                  child: Text("初始化"),
+                  child: Text(imt("初始化")),
                 ),
               )
             ],

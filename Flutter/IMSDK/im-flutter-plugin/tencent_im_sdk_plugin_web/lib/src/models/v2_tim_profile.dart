@@ -22,6 +22,7 @@ class V2TimProfile {
       "allowType": convertAllowTypeFromDartToWeb(params['allowType']),
       "level": params["level"] ?? 0,
       "role": params["role"] ?? 0,
+      "birthday": params["birthday"] ?? 0,
       "profileCustomField":
           convertCustomInfoFromDartToWeb(params['customInfo']),
     };

@@ -149,13 +149,16 @@ public class MessageManager {
 
             @Override
             public void onError(int i, String s) {
-
-                CommonUtil.returnError(result,i,s, CommonUtil.convertV2TIMMessageToMap(msg));
+                HashMap<String,Object> msgMap = CommonUtil.convertV2TIMMessageToMap(msg);
+                msgMap.put("id",id);
+                CommonUtil.returnError(result,i,s,msgMap);
             }
 
             @Override
             public void onSuccess(V2TIMMessage v2TIMMessage) {
-                CommonUtil.returnSuccess(result,CommonUtil.convertV2TIMMessageToMap(v2TIMMessage));
+                HashMap<String,Object> data = CommonUtil.convertV2TIMMessageToMap(v2TIMMessage);
+                data.put("id",id);
+                CommonUtil.returnSuccess(result,data);
             }
         });
     }
@@ -165,7 +168,10 @@ public class MessageManager {
         messageIDMap.put(id,message);
 
         HashMap<String,Object> resultMap = new HashMap<String,Object>();
-        resultMap.put("messageInfo",CommonUtil.convertV2TIMMessageToMap(message));
+        HashMap<String,Object> messageMap = CommonUtil.convertV2TIMMessageToMap(message);
+
+        messageMap.put("id",id);
+        resultMap.put("messageInfo",messageMap);
         resultMap.put("id",id);
 
         CommonUtil.returnSuccess(result,resultMap);

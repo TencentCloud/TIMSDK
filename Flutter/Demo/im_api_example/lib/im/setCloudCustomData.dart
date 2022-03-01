@@ -6,6 +6,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SetCloudCustomData extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class SetCloudCustomDataState extends State<SetCloudCustomData> {
         .getMessageManager()
         .setCloudCustomData(
           msgID: msgIDs.first,
-          data: '云端数据',
+          data: imt(imt("云端数据")),
         );
     setState(() {
       resData = res.toJson();
@@ -54,7 +55,7 @@ class SetCloudCustomDataState extends State<SetCloudCustomData> {
                   margin: EdgeInsets.only(left: 10),
                   child: Text(conversaions.length > 0
                       ? conversaions.toString()
-                      : "未选择"),
+                      : imt("未选择")),
                 ),
               )
             ],
@@ -82,7 +83,7 @@ class SetCloudCustomDataState extends State<SetCloudCustomData> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: setCloudCustomData,
-                  child: Text("云端修改消息（String）"),
+                  child: Text(imt("云端修改消息（String）")),
                 ),
               )
             ],

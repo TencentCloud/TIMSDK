@@ -3,6 +3,7 @@ import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/customerField/CustomerField.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
 class SetFriendInfo extends StatefulWidget {
@@ -57,7 +58,7 @@ class SetFriendInfoState extends State<SetFriendInfo> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(users.length > 0 ? users.toString() : "未选择"),
+                  child: Text(users.length > 0 ? users.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -70,8 +71,8 @@ class SetFriendInfoState extends State<SetFriendInfo> {
                     children: <Widget>[
                       TextField(
                         decoration: InputDecoration(
-                          labelText: "好友备注",
-                          hintText: "好友备注",
+                          labelText: imt("好友备注"),
+                          hintText: imt("好友备注"),
                           prefixIcon: Icon(Icons.person),
                         ),
                         onChanged: (res) {
@@ -95,7 +96,7 @@ class SetFriendInfoState extends State<SetFriendInfo> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: setFriendInfo,
-                  child: Text("设置好友信息"),
+                  child: Text(imt("设置好友信息")),
                 ),
               )
             ],

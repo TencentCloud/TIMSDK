@@ -5,6 +5,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class ReSendMessage extends StatefulWidget {
   @override
@@ -53,7 +54,7 @@ class ReSendMessageState extends State<ReSendMessage> {
                   margin: EdgeInsets.only(left: 10),
                   child: Text(conversaions.length > 0
                       ? conversaions.toString()
-                      : "未选择"),
+                      : imt("未选择")),
                 ),
               )
             ],
@@ -78,7 +79,7 @@ class ReSendMessageState extends State<ReSendMessage> {
           ),
           Row(
             children: [
-              Text("是否仅在线用户接受到消息"),
+              Text(imt("是否仅在线用户接受到消息")),
               Switch(
                 value: onlineUserOnly,
                 onChanged: (res) {
@@ -94,7 +95,7 @@ class ReSendMessageState extends State<ReSendMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: reSendMessage,
-                  child: Text("重发消息"),
+                  child: Text(imt("重发消息")),
                 ),
               )
             ],

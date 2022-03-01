@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class CallExperimentalAPI extends StatefulWidget {
   @override
@@ -32,8 +33,8 @@ class CallExperimentalAPIState extends State<CallExperimentalAPI> {
               children: <Widget>[
                 TextField(
                   decoration: InputDecoration(
-                    labelText: "请输入用户名",
-                    hintText: "调用实验性接口：初始化本地数据库（您可以在SDK中自行尝试其他接口）",
+                    labelText: imt("请输入用户名"),
+                    hintText: imt("调用实验性接口：初始化本地数据库（您可以在SDK中自行尝试其他接口）"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -50,7 +51,7 @@ class CallExperimentalAPIState extends State<CallExperimentalAPI> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendC2CTextMessage,
-                  child: Text("调用实验性接口"),
+                  child: Text(imt("调用实验性接口")),
                 ),
               )
             ],

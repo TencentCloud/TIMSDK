@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class UserSetting extends StatelessWidget {
   @override
@@ -42,7 +43,7 @@ class UserSettingState extends State<UserSettingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("配置信息"),
+        title: Text(imt("配置信息")),
       ),
       body: Container(
           child: Padding(
@@ -52,8 +53,8 @@ class UserSettingState extends State<UserSettingPage> {
             children: [
               TextField(
                 decoration: InputDecoration(
-                  labelText: "sdkappid，控制台去申请",
-                  hintText: "sdkappid，控制台去申请",
+                  labelText: imt("sdkappid，控制台去申请"),
+                  hintText: imt("sdkappid，控制台去申请"),
                   prefixIcon: Icon(Icons.person),
                 ),
                 keyboardType: TextInputType.number,
@@ -66,8 +67,8 @@ class UserSettingState extends State<UserSettingPage> {
               ),
               TextField(
                 decoration: InputDecoration(
-                  labelText: "secret，控制台去申请",
-                  hintText: "secret，控制台去申请",
+                  labelText: imt("secret，控制台去申请"),
+                  hintText: imt("secret，控制台去申请"),
                   prefixIcon: Icon(Icons.person),
                 ),
                 controller: secretc,
@@ -79,8 +80,8 @@ class UserSettingState extends State<UserSettingPage> {
               ),
               TextField(
                 decoration: InputDecoration(
-                  labelText: "userID，随便填",
-                  hintText: "userID，随便填",
+                  labelText: imt("userID，随便填"),
+                  hintText: imt("userID，随便填"),
                   prefixIcon: Icon(Icons.person),
                 ),
                 controller: userIDc,
@@ -110,7 +111,7 @@ class UserSettingState extends State<UserSettingPage> {
                               // 返回
                             }
                           : null,
-                      child: Text('确认设置'),
+                      child: Text(imt(imt("确认设置"))),
                     ),
                   )
                 ],
@@ -136,7 +137,7 @@ class UserSettingState extends State<UserSettingPage> {
                               });
                             }
                           : null,
-                      child: Text('清除所有配置'),
+                      child: Text(imt(imt("清除所有配置"))),
                     ),
                   )
                 ],

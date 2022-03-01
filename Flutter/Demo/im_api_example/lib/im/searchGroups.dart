@@ -4,6 +4,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_search_param.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SearchGroups extends StatefulWidget {
   @override
@@ -43,8 +44,8 @@ class SearchGroupsState extends State<SearchGroups> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "搜索关键字(最多支持五个，example只支持一个)",
-                    hintText: "关键字",
+                    labelText: imt("搜索关键字(最多支持五个，example只支持一个)"),
+                    hintText: imt("关键字"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -58,7 +59,7 @@ class SearchGroupsState extends State<SearchGroups> {
           ),
           Row(
             children: [
-              Text("设置是否搜索群 ID"),
+              Text(imt("设置是否搜索群 ID")),
               Switch(
                 value: isSearchGroupID,
                 onChanged: (res) {
@@ -71,7 +72,7 @@ class SearchGroupsState extends State<SearchGroups> {
           ),
           Row(
             children: [
-              Text("设置是否搜索群名称"),
+              Text(imt("设置是否搜索群名称")),
               Switch(
                 value: isSearchGroupName,
                 onChanged: (res) {
@@ -87,7 +88,7 @@ class SearchGroupsState extends State<SearchGroups> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendTextMessage,
-                  child: Text("搜索Group"),
+                  child: Text(imt("搜索Group")),
                 ),
               )
             ],

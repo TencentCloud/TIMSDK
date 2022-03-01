@@ -3,6 +3,7 @@ import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class GetC2CReceiveMessageOpt extends StatefulWidget {
   @override
@@ -24,6 +25,7 @@ class GetC2CReceiveMessageOptState extends State<GetC2CReceiveMessageOpt> {
 
   @override
   Widget build(BuildContext context) {
+    String userStr = users.length > 0 ? (users.isNotEmpty ? users.first : "") : imt("未选择");
     return Container(
       child: Column(
         children: [
@@ -42,9 +44,7 @@ class GetC2CReceiveMessageOptState extends State<GetC2CReceiveMessageOpt> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(users.length > 0
-                      ? "要查询的用户：${users.isNotEmpty ? users.first : ""}"
-                      : "要查询的用户：未选择"),
+                  child: Text(imt_para("要查询的用户: {{userStr}}", "要查询的用户: ${userStr}")(userStr: userStr)),
                 ),
               )
             ],
@@ -54,7 +54,7 @@ class GetC2CReceiveMessageOptState extends State<GetC2CReceiveMessageOpt> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: getC2CReceiveMessageOpt,
-                  child: Text("查询针对某个用户的 C2C 消息接收选项（免打扰状态）"),
+                  child: Text(imt("查询针对某个用户的 C2C 消息接收选项（免打扰状态）")),
                 ),
               )
             ],

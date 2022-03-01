@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class JoinGroup extends StatefulWidget {
   @override
@@ -32,8 +33,8 @@ class JoinGroupState extends State<JoinGroup> {
               children: <Widget>[
                 TextField(
                   decoration: InputDecoration(
-                    labelText: "群ID",
-                    hintText: "群ID",
+                    labelText: imt("群ID"),
+                    hintText: imt("群ID"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -44,8 +45,8 @@ class JoinGroupState extends State<JoinGroup> {
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    labelText: "进群打招呼Message",
-                    hintText: "进群打招呼Message",
+                    labelText: imt("进群打招呼Message"),
+                    hintText: imt("进群打招呼Message"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -62,7 +63,7 @@ class JoinGroupState extends State<JoinGroup> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: joinGroup,
-                  child: Text("加入群组"),
+                  child: Text(imt("加入群组")),
                 ),
               )
             ],

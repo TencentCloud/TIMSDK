@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class ClearGroupHistoryMessage extends StatefulWidget {
   @override
@@ -41,7 +42,7 @@ class ClearGroupHistoryMessageState extends State<ClearGroupHistoryMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groupID.length > 0 ? groupID.toString() : "未选择"),
+                  child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -51,7 +52,7 @@ class ClearGroupHistoryMessageState extends State<ClearGroupHistoryMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: getGroupsInfo,
-                  child: Text("获取群组信息"),
+                  child: Text(imt("获取群组信息")),
                 ),
               )
             ],

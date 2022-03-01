@@ -130,6 +130,7 @@ public class CommonUtil {
         userInfo.put("selfSignature",info.getSelfSignature());
         userInfo.put("gender",info.getGender());
         userInfo.put("allowType",info.getAllowType());
+        userInfo.put("birthday",info.getBirthday());
         HashMap<String,byte[]> customInfo = info.getCustomInfo();
         HashMap<String,String> customInfoTypeString = new HashMap<String, String>();
         Iterator it = customInfo.entrySet().iterator();

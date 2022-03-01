@@ -99,7 +99,10 @@ class SignalingManager {
                         resultMap = V2TIMSignalingInfoEntiry.getDict(info: signalInfo!);
 
                         CommonUtils.resultSuccess(call: call, result: result, data: resultMap)
-                    }else {CommonUtils.resultSuccess(call: call, result: result, data: signalInfo)}
+                    }else {
+                        CommonUtils.resultSuccess(call: call, result: result, data: signalInfo as Any)
+                        
+                    }
                     
                 }
             }, fail:  TencentImUtils.returnErrorClosures(call: call, result: result))
@@ -126,7 +129,7 @@ class SignalingManager {
             param.timeout = info["timeout"] as! UInt32;
         }
         if(info["actionType"] != nil) {
-            SignalingActionType(rawValue:info["actionType"] as! Int);
+            param.actionType = SignalingActionType(rawValue:info["actionType"] as! Int)!;
         }
         // 注意：ios不需要businessID
         V2TIMManager.sharedInstance().addInvitedSignaling(param, succ: {

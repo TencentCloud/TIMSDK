@@ -8,6 +8,7 @@ import 'package:tencent_im_sdk_plugin/enum/V2TimGroupListener.dart';
 import 'package:tencent_im_sdk_plugin/enum/V2TimSignalingListener.dart';
 import 'package:tencent_im_sdk_plugin/enum/V2TimSimpleMsgListener.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class AddEventListener extends StatefulWidget {
   @override
@@ -175,28 +176,28 @@ class AddEventListenerState extends State<AddEventListener> {
         children: [
           new ElevatedButton(
             onPressed: addEventListener,
-            child: Text("注册事件"),
+            child: Text(imt("注册事件")),
           ),
           new ElevatedButton(
             onPressed: removeSimpleMsgListener,
-            child: Text("注销simpleMsgListener事件"),
+            child: Text(imt("注销simpleMsgListener事件")),
           ),
           new ElevatedButton(
             onPressed: removeAllSimpleMsgListener,
-            child: Text("注销所有simpleMsgListener事件"),
+            child: Text(imt("注销所有simpleMsgListener事件")),
           ),
           new ElevatedButton(
               onPressed: removeAdvanceMsgListener,
-              child: Text("注销advanceMsgListener")),
+              child: Text(imt("注销advanceMsgListener"))),
           new ElevatedButton(
               onPressed: removeAllAdvanceMsgListener,
-              child: Text("注销所有advanceMsgListener")),
+              child: Text(imt("注销所有advanceMsgListener"))),
           new ElevatedButton(
               onPressed: removeSignalingListener,
-              child: Text("注销signalingListener")),
+              child: Text(imt("注销signalingListener"))),
           new ElevatedButton(
               onPressed: removeAllSignalingListener,
-              child: Text("注销所有signalingListener"))
+              child: Text(imt("注销所有signalingListener")))
         ],
       ),
     );

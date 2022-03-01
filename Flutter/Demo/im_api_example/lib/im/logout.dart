@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class Logout extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class LogoutState extends State<Logout> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: logout,
-                  child: Text("登出"),
+                  child: Text(imt("登出")),
                 ),
               )
             ],

@@ -4,6 +4,7 @@ import 'package:im_api_example/utils/toast.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 typedef OnSelect(List<String> data);
 typedef OnSelectItemChange(String groupID);
@@ -54,7 +55,7 @@ class GroupItemState extends State<GroupItem> {
       if (widget.selected.length > 0) {
         String selectedGroupID = widget.selected.first;
         if (selectedGroupID != groupID) {
-          Utils.toast("单选只能选一个呀");
+          Utils.toast(imt("单选只能选一个呀"));
           return;
         }
       }
@@ -177,8 +178,9 @@ class GroupSelectorState extends State<GroupSelector> {
   }
 
   AlertDialog dialogShow(context) {
+    String chooseType = (widget.switchSelectType ? imt(imt("单选")) : imt(imt("多选")));
     AlertDialog dialog = AlertDialog(
-      title: Text('群组选择（${widget.switchSelectType ? '单选' : '多选'}）'),
+      title: Text(imt_para("群组选择（{{chooseType}}）", "群组选择（${chooseType}）")(chooseType: chooseType)),
       contentPadding: EdgeInsets.zero,
       content: GroupList(widget.switchSelectType, groupList, (data) {
         setState(() {
@@ -191,13 +193,13 @@ class GroupSelectorState extends State<GroupSelector> {
             widget.onSelect(selected);
             Navigator.pop(context);
           },
-          child: Text('确认'),
+          child: Text(imt(imt("确认"))),
         ),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('取消'),
+          child: Text(imt(imt("取消"))),
         ),
       ],
     );
@@ -216,11 +218,11 @@ class GroupSelectorState extends State<GroupSelector> {
               builder: (context) => dialogShow(context),
             );
           } else {
-            Utils.toast("请先加入群组");
+            Utils.toast(imt("请先加入群组"));
           }
         }
       },
-      child: Text("选择群组"),
+      child: Text(imt("选择群组")),
     );
   }
 }

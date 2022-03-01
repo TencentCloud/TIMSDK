@@ -11,12 +11,10 @@ class V2TIMSignalingInfoEntiry {
         result["groupID"] = info.groupID ?? "";
         result["inviter"] = info.inviter;
         result["data"] = info.data;
-        if( info.timeout != nil){
-            result["timeout"] = info.timeout ;
-        }
+        result["timeout"] = info.timeout;
+        
         
         result["actionType"] = info.actionType.rawValue;
-        
         
         for item in info.inviteeList {
             myInviteeList.append(item as! String);

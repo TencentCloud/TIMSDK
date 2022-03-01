@@ -28,6 +28,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_se
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_application_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_info_result.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_full_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_operation_result.dart';
@@ -356,7 +357,7 @@ abstract class ImFlutterPlatform extends PlatformInterface {
     String? faceUrl,
     bool? isAllMuted,
     int? addOpt,
-    List<Map>? memberList,
+    List<V2TimGroupMember>? memberList,
   }) async {
     throw UnimplementedError('createGroup() has not been implemented.');
   }

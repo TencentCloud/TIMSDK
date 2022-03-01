@@ -26,7 +26,7 @@ class FriendManager {
 			(array) -> Void in
 			
 			var resultData: [[String: Any]] = []
-			for item in array! {
+			for item in array ?? [] {
 				resultData.append(V2FriendInfoEntity.getDict(info: item));
 			}
 			
@@ -42,7 +42,7 @@ class FriendManager {
 			(array) -> Void in
 			
 			var resultData: [[String: Any]] = []
-			for item in array! {
+			for item in array ?? [] {
 				resultData.append(V2FriendInfoResultEntity.getDict(info: item));
 			}
 			
@@ -57,8 +57,8 @@ class FriendManager {
 			let friendCustomInfo = CommonUtils.getParam(call: call, result: result, param: "friendCustomInfo") as? Dictionary<String, String>
 			let friendInfo = V2FriendInfoEntity.init(dict: [
 				"userID": userID,
-				"friendRemark": friendRemark,
-				"friendCustomInfo": friendCustomInfo
+                "friendRemark": friendRemark as Any,
+                "friendCustomInfo": friendCustomInfo as Any
 			])
 			V2TIMManager.sharedInstance().setFriendInfo(friendInfo, succ: {
 				CommonUtils.resultSuccess(call: call, result: result, data: "");
@@ -75,7 +75,7 @@ class FriendManager {
 				(array) -> Void in
 				
 				var res: [Any] = []
-				for item in array! {
+				for item in array ?? [] {
 					res.append(FriendCheckResultEntity(result: item));
 				}
 				
@@ -91,8 +91,8 @@ class FriendManager {
 			
 			let res = V2FriendApplicationResultEntity(result: list!);
 			let data = [
-				"unreadCount": res.unreadCount,
-				"friendApplicationList": JsonUtil.getDictionaryOrArrayFromObject(res.applicationList)
+                "unreadCount": res.unreadCount as Any,
+                "friendApplicationList": JsonUtil.getDictionaryOrArrayFromObject(res.applicationList as Any)
 			]
 			
 			CommonUtils.resultSuccess(call: call, result: result, data: data);
@@ -109,7 +109,7 @@ class FriendManager {
 			let request = V2TIMFriendAddApplication();
 			
 			request.userID = userID;
-			request.addType = V2TIMFriendType(rawValue: addType ?? 2)!;
+            request.addType = V2TIMFriendType(rawValue: addType )!;
 			request.friendRemark = remark ?? nil;
 			request.addWording = addWording ?? nil;
 			request.addSource = addSource ?? nil;
@@ -128,15 +128,16 @@ class FriendManager {
 	func deleteFromFriendList(call: FlutterMethodCall, result: @escaping FlutterResult) {
 		if let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? Array<Any>,
 		   let deleteType = CommonUtils.getParam(call: call, result: result, param: "deleteType") as? Int {
-			let requestDeleteType = V2TIMFriendType(rawValue: deleteType ?? 2)!;
+            let requestDeleteType = V2TIMFriendType(rawValue: deleteType )!;
 			
 			V2TIMManager.sharedInstance()?.delete(fromFriendList: userIDList, delete: requestDeleteType, succ: {
 				(array) -> Void in
 				
 				var res: [Any] = []
-				for item in array! {
-					res.append(FriendOperationResultEntity(result: item));
-				}
+                    for item in array ?? [] {
+                        res.append(FriendOperationResultEntity(result: item));
+                    }
+
 				
 				CommonUtils.resultSuccess(call: call, result: result, data: JsonUtil.getDictionaryOrArrayFromObject(res));
 			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
@@ -150,9 +151,9 @@ class FriendManager {
 			(array) -> Void in
 			
 			var resultData: [[String: Any]] = []
-			for item in array! {
+			for item in array ?? [] {
 				resultData.append(V2FriendInfoEntity.getDict(info: item));
-			}
+                }
 			
 			CommonUtils.resultSuccess(call: call, result: result, data: resultData);
 		}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
@@ -165,7 +166,7 @@ class FriendManager {
 			(array) -> Void in
 			
 			var resultData: [FriendOperationResultEntity] = []
-			for item in array! {
+			for item in array ?? [] {
 				resultData.append(FriendOperationResultEntity(result: item));
 			}
 			
@@ -181,7 +182,7 @@ class FriendManager {
 			(array) -> Void in
 			
 			var resultData: [FriendOperationResultEntity] = []
-			for item in array! {
+			for item in array ?? [] {
 				resultData.append(FriendOperationResultEntity(result: item));
 			}
 			
@@ -198,7 +199,7 @@ class FriendManager {
 		V2TIMManager.sharedInstance()?.getFriendApplicationList({
 			(res) -> Void in
 			
-			for item in res!.applicationList {
+            for item in res?.applicationList ?? [] {
 				let app = item as! V2TIMFriendApplication;
 				if(app.userID == userID) {
 					application = app
@@ -222,7 +223,7 @@ class FriendManager {
 		V2TIMManager.sharedInstance()?.getFriendApplicationList({
 			(res) -> Void in
 			
-			for item in res!.applicationList {
+			for item in res?.applicationList ?? [] {
 				let app = item as! V2TIMFriendApplication;
 				if(app.userID == userID) {
 					application = app
@@ -246,7 +247,7 @@ class FriendManager {
 		V2TIMManager.sharedInstance()?.getFriendApplicationList({
 			(res) -> Void in
 			
-			for item in res!.applicationList {
+			for item in res?.applicationList ?? [] {
 				let app = item as! V2TIMFriendApplication;
 				if(app.userID == userID) {
 					application = app
@@ -277,11 +278,11 @@ class FriendManager {
 				(array) -> Void in
 	
 				var res: [[String: Any]] = []
-				for item in array! {
+				for item in array ?? [] {
 					let i = [
-						"userID": item.userID!,
+                        "userID": item.userID ?? "",
 						"resultCode": item.resultCode,
-						"resultInfo": item.resultInfo
+                        "resultInfo": item.resultInfo as Any
 					] as [String : Any]
 					res.append(i)
 				}
@@ -298,11 +299,11 @@ class FriendManager {
 			(array) -> Void in
 			
 			var res: [[String: Any]] = []
-			for item in array! {
+			for item in array ?? [] {
 				let i = [
-					 "name": item.groupName!,
+					 "name": item.groupName ?? "",
                     "friendCount": item.userCount,
-                    "friendIDList": item.friendList
+                     "friendIDList": item.friendList as Any
 				] as [String : Any]
 				res.append(i)
 			}
@@ -322,8 +323,8 @@ class FriendManager {
 	}
 	
 	func renameFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-		let oldName = CommonUtils.getParam(call: call, result: result, param: "oldName") as! String;
-		let newName = CommonUtils.getParam(call: call, result: result, param: "newName") as! String;
+		let oldName = CommonUtils.getParam(call: call, result: result, param: "oldName") as? String;
+		let newName = CommonUtils.getParam(call: call, result: result, param: "newName") as? String;
 		
 		V2TIMManager.sharedInstance()?.renameFriendGroup(oldName, newName: newName, succ: {
 			() -> Void in
@@ -333,16 +334,16 @@ class FriendManager {
 	}
 	
 	func addFriendsToFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-		let groupName = CommonUtils.getParam(call: call, result: result, param: "groupName") as! String;
+		let groupName = CommonUtils.getParam(call: call, result: result, param: "groupName") as? String;
 		let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? Array<String>;
 		
 		V2TIMManager.sharedInstance()?.addFriends(toFriendGroup: groupName, userIDList: userIDList, succ: {
 			(array) -> Void in
 			
 			var res: [[String: Any]] = []
-			for item in array! {
+			for item in array ?? [] {
 				let i = [
-					"userID": item.userID!,
+					"userID": item.userID ?? "",
 					"resultCode": item.resultCode,
 					"resultInfo": item.resultInfo ?? ""
 				] as [String : Any]
@@ -354,16 +355,16 @@ class FriendManager {
 	}
 	
 	func deleteFriendsFromFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-		let groupName = CommonUtils.getParam(call: call, result: result, param: "groupName") as! String;
+		let groupName = CommonUtils.getParam(call: call, result: result, param: "groupName") as? String;
 		let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? Array<String>;
 		
 		V2TIMManager.sharedInstance()?.deleteFriends(fromFriendGroup: groupName, userIDList: userIDList, succ: {
 			(array) -> Void in
 			
 			var res: [[String: Any]] = []
-			for item in array! {
+			for item in array ?? [] {
 				let i = [
-					"userID": item.userID!,
+					"userID": item.userID ?? "",
 					"resultCode": item.resultCode,
 					"resultInfo": item.resultInfo ?? ""
 				] as [String : Any]
@@ -395,7 +396,7 @@ class FriendManager {
                 res in
                 var resultData: [[String: Any]] = [];
                 if(!res!.isEmpty){
-                    for item in res! {
+                    for item in res ?? [] {
                         resultData.append(V2FriendInfoResultEntity.getDict(info: item));
                     }
                 }

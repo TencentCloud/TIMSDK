@@ -17,7 +17,8 @@ public class OfflinePushManager {
     public void setOfflinePushConfig(MethodCall methodCall, final MethodChannel.Result result){
         Double businessID = CommonUtil.getParam(methodCall,result,"businessID");
         String token = CommonUtil.getParam(methodCall,result,"token");
-        V2TIMManager.getOfflinePushManager().setOfflinePushConfig(new V2TIMOfflinePushConfig(new Double(businessID).longValue(),token), new V2TIMCallback() {
+        boolean isTPNSToken = CommonUtil.getParam(methodCall,result,"isTPNSToken");
+        V2TIMManager.getOfflinePushManager().setOfflinePushConfig(new V2TIMOfflinePushConfig(new Double(businessID).longValue(),token, isTPNSToken), new V2TIMCallback() {
             @Override
             public void onError(int i, String s) {
                 CommonUtil.returnError(result,i,s);

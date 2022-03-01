@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class GetServerTime extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class GetServerTimeState extends State<GetServerTime> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: getServerTime,
-                  child: Text("获取服务端时间"),
+                  child: Text(imt("获取服务端时间")),
                 ),
               )
             ],

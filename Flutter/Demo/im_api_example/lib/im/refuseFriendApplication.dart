@@ -7,6 +7,7 @@ import 'package:tencent_im_sdk_plugin/enum/friend_type.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_filter_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
 class RefuseFriendApplication extends StatefulWidget {
@@ -33,6 +34,7 @@ class RefuseFriendApplicationState extends State<RefuseFriendApplication> {
 
   @override
   Widget build(BuildContext context) {
+    String chooseType = (acceptType == FriendApplicationType.V2TIM_FRIEND_APPLICATION_COME_IN ? imt("别人发给我的") : imt("我发别人的"));
     return Container(
       child: Column(
         children: [
@@ -50,7 +52,7 @@ class RefuseFriendApplicationState extends State<RefuseFriendApplication> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(users.length > 0 ? users.toString() : "未选择"),
+                  child: Text(users.length > 0 ? users.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -72,10 +74,10 @@ class RefuseFriendApplicationState extends State<RefuseFriendApplication> {
                     onPressed: () {
                       showAdaptiveActionSheet(
                         context: context,
-                        title: const Text('请求类型类型'),
+                        title: Text(imt("请求类型类型")),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
-                            title: const Text('别人发给我的加好友请求'),
+                            title: Text(imt("别人发给我的加好友请求")),
                             onPressed: () {
                               setState(() {
                                 acceptType = FriendApplicationTypeEnum
@@ -85,7 +87,7 @@ class RefuseFriendApplicationState extends State<RefuseFriendApplication> {
                             },
                           ),
                           BottomSheetAction(
-                            title: const Text('我发给别人的加好友请求'),
+                            title: Text(imt("我发给别人的加好友请求")),
                             onPressed: () {
                               setState(() {
                                 acceptType = FriendApplicationTypeEnum
@@ -100,13 +102,13 @@ class RefuseFriendApplicationState extends State<RefuseFriendApplication> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择类型"),
+                    child: Text(imt("选择类型")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
                   child: Text(
-                      '已选：${acceptType == FriendApplicationType.V2TIM_FRIEND_APPLICATION_COME_IN ? "别人发给我的" : "我发别人的"}'),
+                      imt_para("已选：{{chooseType}}", "已选：${chooseType}")(chooseType: chooseType)),
                 )
               ],
             ),
@@ -116,7 +118,7 @@ class RefuseFriendApplicationState extends State<RefuseFriendApplication> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: deleteFromFriendList,
-                  child: Text("拒绝申请"),
+                  child: Text(imt("拒绝申请")),
                 ),
               )
             ],

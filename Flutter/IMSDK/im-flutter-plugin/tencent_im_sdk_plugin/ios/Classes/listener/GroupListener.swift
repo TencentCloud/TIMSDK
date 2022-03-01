@@ -21,7 +21,7 @@ class GroupListener: NSObject, V2TIMGroupListener {
 			data.append(V2GroupMemberFullInfoEntity.getDict(simpleInfo: item));
 		}
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onMemberEnter, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID as Any,
 			"memberList": data,
 		], listenerUuid: listenerUuid)
 	}
@@ -29,7 +29,7 @@ class GroupListener: NSObject, V2TIMGroupListener {
 	/// 有用户离开群（全员能够收到）
 	public func onMemberLeave(_ groupID: String!, member: V2TIMGroupMemberInfo!) {
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onMemberLeave, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID  as Any,
 			"member": V2GroupMemberFullInfoEntity.getDict(simpleInfo: member!),
 		], listenerUuid: listenerUuid)
 	}
@@ -42,7 +42,7 @@ class GroupListener: NSObject, V2TIMGroupListener {
 			data.append(V2GroupMemberFullInfoEntity.getDict(simpleInfo: item));
 		}
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onMemberInvited, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID  as Any,
 			"memberList": data,
 			"opUser": V2GroupMemberFullInfoEntity.getDict(simpleInfo: opUser!),
 		], listenerUuid: listenerUuid)
@@ -55,7 +55,7 @@ class GroupListener: NSObject, V2TIMGroupListener {
 			data.append(V2GroupMemberFullInfoEntity.getDict(simpleInfo: item));
 		}
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onMemberKicked, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID  as Any,
 			"memberList": data,
 			"opUser": V2GroupMemberFullInfoEntity.getDict(simpleInfo: opUser!),
 		],listenerUuid: listenerUuid)
@@ -68,7 +68,7 @@ class GroupListener: NSObject, V2TIMGroupListener {
 			data.append(V2GroupMemberChangeInfoEntity.getDict(info: item));
 		}
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onMemberInfoChanged, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID  as Any,
 			"groupMemberChangeInfoList": data,
 		], listenerUuid: listenerUuid)
 	}
@@ -81,7 +81,7 @@ class GroupListener: NSObject, V2TIMGroupListener {
 	/// 群被解散了（全员能收到）
 	public func onGroupDismissed(_ groupID: String!, opUser: V2TIMGroupMemberInfo!) {
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onGroupDismissed, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID  as Any,
 			"opUser": V2GroupMemberFullInfoEntity.getDict(simpleInfo: opUser),
 		], listenerUuid: listenerUuid)
 	}
@@ -89,7 +89,7 @@ class GroupListener: NSObject, V2TIMGroupListener {
 	/// 群被回收（全员能收到）
 	public func onGroupRecycled(_ groupID: String!, opUser: V2TIMGroupMemberInfo!) {
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onGroupRecycled, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID as Any,
 			"opUser": V2GroupMemberFullInfoEntity.getDict(simpleInfo: opUser),
 		], listenerUuid: listenerUuid)
 	}
@@ -101,7 +101,7 @@ class GroupListener: NSObject, V2TIMGroupListener {
 			data.append(V2GroupChangeInfoEntity.getDict(info: item));
 		}
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onGroupInfoChanged, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID as Any,
 			"groupChangeInfoList": data,
 		], listenerUuid: listenerUuid)
 	}
@@ -109,19 +109,19 @@ class GroupListener: NSObject, V2TIMGroupListener {
 	/// 有新的加群请求（只有群主或管理员会收到）
 	public func onReceiveJoinApplication(_ groupID: String!, member: V2TIMGroupMemberInfo!, opReason: String!) {
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onReceiveJoinApplication, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID as Any,
 			"member": V2GroupMemberFullInfoEntity.getDict(simpleInfo: member),
-			"opReason": opReason,
+            "opReason": opReason as Any,
 		], listenerUuid: listenerUuid)
 	}
 	
 	/// 加群请求已经被群主或管理员处理了（只有申请人能够收到）
 	public func onApplicationProcessed(_ groupID: String!, opUser: V2TIMGroupMemberInfo!, opResult isAgreeJoin: Bool, opReason: String!) {
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onApplicationProcessed, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID as Any,
 			"opUser": V2GroupMemberFullInfoEntity.getDict(simpleInfo: opUser),
 			"isAgreeJoin": isAgreeJoin,
-			"opReason": opReason,
+            "opReason": opReason as Any,
 		], listenerUuid: listenerUuid)
 	}
 	
@@ -132,7 +132,7 @@ class GroupListener: NSObject, V2TIMGroupListener {
 			data.append(V2GroupMemberFullInfoEntity.getDict(simpleInfo: item));
 		}
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onGrantAdministrator, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID as Any,
 			"opUser": V2GroupMemberFullInfoEntity.getDict(simpleInfo: opUser),
 			"memberList": data,
 		], listenerUuid: listenerUuid)
@@ -145,7 +145,7 @@ class GroupListener: NSObject, V2TIMGroupListener {
 			data.append(V2GroupMemberFullInfoEntity.getDict(simpleInfo: item));
 		}
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onRevokeAdministrator, method: "groupListener", data: [
-			"groupID": groupID,
+            "groupID": groupID as Any,
 			"opUser": V2GroupMemberFullInfoEntity.getDict(simpleInfo: opUser),
 			"memberList": data,
 		], listenerUuid: listenerUuid)
@@ -159,15 +159,15 @@ class GroupListener: NSObject, V2TIMGroupListener {
 	/// 收到 RESTAPI 下发的自定义系统消息
 	public func onReceiveRESTCustomData(_ groupID: String!, data: Data!) {
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onReceiveRESTCustomData, method: "groupListener", data: [
-			"groupID": groupID!,
+			"groupID": groupID ?? "",
 			"customData": String.init(data: data!, encoding: String.Encoding.utf8)!,
 		], listenerUuid: listenerUuid)
 	}
 	
 	public func onGroupAttributeChanged(_ groupID: String!, attributes: NSMutableDictionary!) {
 		TencentImSDKPlugin.invokeListener(type: ListenerType.onGroupAttributeChanged, method: "groupListener", data: [
-			"groupID": groupID!,
-			"groupAttributeMap": attributes!,
+			"groupID": groupID ?? "",
+			"groupAttributeMap": attributes ?? NSMutableDictionary(),
 		], listenerUuid: listenerUuid)
 	}
 	

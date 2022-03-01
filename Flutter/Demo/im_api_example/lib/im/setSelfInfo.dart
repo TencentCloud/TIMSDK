@@ -5,6 +5,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_user_full_info.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SetSelfInfo extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
   String selfSignature = "";
   int? gender;
   int? allowType;
+  int? bithday;
   Map<String, String> customInfo = {};
 
   Map<String, dynamic>? resData;
@@ -29,6 +31,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
         "gender": gender,
         "allowType": allowType,
         "customInfo": customInfo,
+        "birthday": bithday,
       }),
     );
     setState(() {
@@ -44,6 +47,8 @@ class SetSelfInfoState extends State<SetSelfInfo> {
 
   @override
   Widget build(BuildContext context) {
+    String chooseType = (gender == 1 ? imt(imt("男")) : gender == 2 ? imt(imt("女")) : '');
+    String chooseAllowType = (allowType == 0 ? imt(imt("允许所有人加我好友")) : allowType == 1 ? imt(imt("不允许所有人加我好友")) : allowType == 2 ? imt(imt("加我好友许我确认")) : '');
     return Container(
       child: Column(
         children: [
@@ -55,7 +60,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                     children: <Widget>[
                       TextField(
                         decoration: InputDecoration(
-                          labelText: "昵称",
+                          labelText: imt("昵称"),
                           hintText: "",
                           prefixIcon: Icon(Icons.person),
                         ),
@@ -67,13 +72,26 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                          labelText: "签名",
-                          hintText: "签名",
+                          labelText: imt("签名"),
+                          hintText: imt("签名"),
                           prefixIcon: Icon(Icons.person),
                         ),
                         onChanged: (res) {
                           setState(() {
                             selfSignature = res;
+                          });
+                        },
+                      ),
+                      TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: imt("生日(int类型，不要输入字符串)"),
+                          hintText: imt("生日"),
+                          prefixIcon: Icon(Icons.person),
+                        ),
+                        onChanged: (res) {
+                          setState(() {
+                            bithday = int.parse(res);
                           });
                         },
                       ),
@@ -102,10 +120,10 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                                 onPressed: () {
                                   showAdaptiveActionSheet(
                                     context: context,
-                                    title: const Text('性别'),
+                                    title: Text(imt("性别")),
                                     actions: <BottomSheetAction>[
                                       BottomSheetAction(
-                                        title: const Text('男'),
+                                        title: Text(imt("男")),
                                         onPressed: () {
                                           setState(() {
                                             gender = 1;
@@ -114,7 +132,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                                         },
                                       ),
                                       BottomSheetAction(
-                                        title: const Text('女'),
+                                        title: Text(imt("女")),
                                         onPressed: () {
                                           setState(() {
                                             gender = 2;
@@ -128,13 +146,13 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                                     ), // onPressed parameter is optional by default will dismiss the ActionSheet
                                   );
                                 },
-                                child: Text("选择性别"),
+                                child: Text(imt("选择性别")),
                               ),
                             ),
                             Container(
                               margin: EdgeInsets.only(left: 12),
                               child: Text(
-                                  '已选：${gender == 1 ? '男' : gender == 2 ? '女' : ''}'),
+                                  imt_para("已选：{{chooseType}}", "已选：${chooseType}")(chooseType: chooseType)),
                             )
                           ],
                         ),
@@ -164,10 +182,10 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                                 onPressed: () {
                                   showAdaptiveActionSheet(
                                     context: context,
-                                    title: const Text('加好友验证方式'),
+                                    title: Text(imt("加好友验证方式")),
                                     actions: <BottomSheetAction>[
                                       BottomSheetAction(
-                                        title: const Text('允许所有人加我好友'),
+                                        title: Text(imt("允许所有人加我好友")),
                                         onPressed: () {
                                           setState(() {
                                             allowType = 0;
@@ -176,7 +194,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                                         },
                                       ),
                                       BottomSheetAction(
-                                        title: const Text('加我好友需我确认'),
+                                        title: Text(imt("加我好友需我确认")),
                                         onPressed: () {
                                           setState(() {
                                             allowType = 1;
@@ -185,7 +203,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                                         },
                                       ),
                                       BottomSheetAction(
-                                        title: const Text('不允许所有人加我好友'),
+                                        title: Text(imt("不允许所有人加我好友")),
                                         onPressed: () {
                                           setState(() {
                                             allowType = 2;
@@ -199,13 +217,13 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                                     ), // onPressed parameter is optional by default will dismiss the ActionSheet
                                   );
                                 },
-                                child: Text("加好友验证方式"),
+                                child: Text(imt("加好友验证方式")),
                               ),
                             ),
                             Container(
                               margin: EdgeInsets.only(left: 12),
                               child: Text(
-                                  '已选：${allowType == 0 ? '允许所有人加我好友' : allowType == 1 ? '不允许所有人加我好友' : allowType == 2 ? '加我好友许我确认' : ''}'),
+                                  imt_para("已选：{{chooseAllowType}}", "已选：${chooseAllowType}")(chooseAllowType: chooseAllowType)),
                             )
                           ],
                         ),
@@ -235,7 +253,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                                 onPressed: () {
                                   showAdaptiveActionSheet(
                                     context: context,
-                                    title: const Text('头像'),
+                                    title: Text(imt("头像")),
                                     actions: <BottomSheetAction>[
                                       BottomSheetAction(
                                         title: Image.network(
@@ -299,7 +317,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                                     ), // onPressed parameter is optional by default will dismiss the ActionSheet
                                   );
                                 },
-                                child: Text("选择头像"),
+                                child: Text(imt("选择头像")),
                               ),
                             ),
                             Container(
@@ -330,7 +348,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: setSelfInfo,
-                  child: Text("设置个人信息"),
+                  child: Text(imt("设置个人信息")),
                 ),
               )
             ],

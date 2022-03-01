@@ -7,6 +7,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:im_api_example/setting/userSetting.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class ExampleList extends StatefulWidget {
   @override
@@ -102,9 +103,9 @@ class Apis extends StatelessWidget {
     if (sdkappid == null && secret == null && userID == null) {
       OkCancelResult res = await showOkAlertDialog(
         context: context,
-        title: "提示",
-        message: "检测到您还未配置应用信息，请先配置",
-        okLabel: "去配置",
+        title: imt("提示"),
+        message: imt("检测到您还未配置应用信息，请先配置"),
+        okLabel: imt("去配置"),
       );
       if (res.index == 0) {
         openSettingPage(context);

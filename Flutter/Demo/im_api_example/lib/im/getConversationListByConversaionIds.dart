@@ -4,6 +4,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class GetConversationByIDs extends StatefulWidget {
   @override
@@ -46,7 +47,7 @@ class GetConversationByIDsState extends State<GetConversationByIDs> {
                   margin: EdgeInsets.only(left: 10),
                   child: Text(conversaions.length > 0
                       ? conversaions.toString()
-                      : "未选择"),
+                      : imt("未选择")),
                 ),
               )
             ],
@@ -56,7 +57,7 @@ class GetConversationByIDsState extends State<GetConversationByIDs> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: getConversation,
-                  child: Text("获取会话详情"),
+                  child: Text(imt("获取会话详情")),
                 ),
               )
             ],

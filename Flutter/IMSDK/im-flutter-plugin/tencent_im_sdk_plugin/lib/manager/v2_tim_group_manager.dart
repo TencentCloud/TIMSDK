@@ -18,6 +18,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_result.d
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_search_param.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/im_flutter_plugin_platform_interface.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member.dart';
 
 /// 群组高级接口，包含了群组的高级功能，例如群成员邀请、非群成员申请进群等操作接口。
 ///
@@ -99,7 +100,7 @@ class V2TIMGroupManager {
     String? faceUrl,
     bool? isAllMuted,
     GroupAddOptTypeEnum? addOpt,
-    List<Map>? memberList,
+    List<V2TimGroupMember>? memberList,
   }) async {
     return ImFlutterPlatform.instance.createGroup(
       groupType: groupType,
@@ -141,6 +142,8 @@ class V2TIMGroupManager {
 
   ///修改群资料
   ///
+  ///参数：
+  ///[V2TimGroupInfo]  群资料参数
   Future<V2TimCallback> setGroupInfo({
     // required String groupID,
     // String? groupType,
@@ -235,8 +238,12 @@ class V2TIMGroupManager {
         .getGroupAttributes(groupID: groupID, keys: keys);
   }
 
-  ///获取指定群属性，keys 传 null 则获取所有群属性。
-  ///
+  ///获取指定群在线人数
+  ///请注意：
+  ///```
+  ///目前只支持：直播群（AVChatRoom）。
+  ///该接口有频限检测，SDK 限制调用频率为60秒1次。
+  ///```
   Future<V2TimValueCallback<int>> getGroupOnlineMemberCount({
     required String groupID,
   }) async {
@@ -250,10 +257,10 @@ class V2TIMGroupManager {
   ///
   /// ```
   /// filter	指定群成员类型
-  /// V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL：所有类型
-  /// V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_OWNER：群主
-  /// V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ADMIN：群管理员
-  /// V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_COMMON：普通群成员
+  /// GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_ALL：所有类型
+  /// GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_OWNER：群主
+  /// GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_ADMIN：群管理员
+  /// GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_COMMON：普通群成员
   /// nextSeq	分页拉取标志，第一次拉取填0，回调成功如果 nextSeq 不为零，需要分页，传入再次拉取，直至为0。
   /// ```
   /// 注意
@@ -438,8 +445,15 @@ class V2TIMGroupManager {
 
   ///拒绝某一条加群申请
   ///
+  ///参数：
+  ///webMessageInstance [web端实例](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#handleGroupApplication)
+  ///type [GroupApplicationTypeEnum] 群未决请求类型
+  ///fromUser  请求者ID
+  ///toUser 获取处理者 ID, 请求加群:0，邀请加群:被邀请人
+  ///addTime 获取群未决添加的时间
+  ///```
   ///web 端使用时必须传入webMessageInstance 字段。 对应【群系统通知】的消息实例
-  ///
+  ///```
   Future<V2TimCallback> refuseGroupApplication({
     required String groupID,
     String? reason,
@@ -466,10 +480,14 @@ class V2TIMGroupManager {
     return ImFlutterPlatform.instance.setGroupApplicationRead();
   }
 
-  /// 搜索群资料
+  /// 搜索群资料(需要您购买旗舰套餐)
   ///
+  ///参数：
+  ///searchParam	搜索参数([V2TimGroupSearchParam])
+  ///```
+  ///SDK 会搜索群名称包含于关键字列表 keywordList 的所有群并返回群信息列表。关键字列表最多支持5个。
   /// web 不支持关键字搜索搜索, 请使用searchGroupByID
-  ///
+  ///```
   Future<V2TimValueCallback<List<V2TimGroupInfo>>> searchGroups({
     required V2TimGroupSearchParam searchParam,
   }) async {
@@ -478,8 +496,12 @@ class V2TIMGroupManager {
 
   /// 搜索群成员
   /// TODO这里安卓和ios有差异化，ios能根据组名返回key:list但 安卓但key是""为空，我设为default
-  ///
+  ///参数：
+  ///searchParam	搜索参数([V2TimGroupSearchParam])
+  ///```
+  ///SDK 会在本地搜索指定群 ID 列表中，群成员信息（名片、好友备注、昵称、userID）包含于关键字列表 keywordList 的所有群成员并返回群 ID 和群成员列表的 map，关键字列表最多支持5个。
   /// web 不支持搜索
+  /// ```
   ///
   Future<V2TimValueCallback<V2GroupMemberInfoSearchResult>> searchGroupMembers({
     required V2TimGroupMemberSearchParam param,

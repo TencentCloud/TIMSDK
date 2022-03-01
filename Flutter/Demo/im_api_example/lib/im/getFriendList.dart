@@ -3,6 +3,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class GetFriendList extends StatefulWidget {
   @override
@@ -31,7 +32,7 @@ class GetFriendListState extends State<GetFriendList> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: getFriendList,
-                  child: Text("获取好友列表"),
+                  child: Text(imt("获取好友列表")),
                 ),
               )
             ],

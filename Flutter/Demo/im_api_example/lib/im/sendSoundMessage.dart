@@ -13,6 +13,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SendSoundMessage extends StatefulWidget {
   @override
@@ -66,7 +67,7 @@ class SendSoundMessageState extends State<SendSoundMessage> {
             priority: priority,
             onlineUserOnly: onlineUserOnly,
             isExcludedFromUnreadCount: isExcludedFromUnreadCount,
-            localCustomData: "自定义localCustomData(sendSoundMessage)");
+            localCustomData: imt("自定义localCustomData(sendSoundMessage)"));
 
     setState(() {
       resData = res.toJson();
@@ -74,7 +75,7 @@ class SendSoundMessageState extends State<SendSoundMessage> {
     // 删除本地的录音文件
     File soundFile = new File(soundPath);
     soundFile.delete().then((value) {
-      print("删除文件成功");
+      print(imt("删除文件成功"));
       setState(() {
         soundPath = '';
       });
@@ -118,10 +119,10 @@ class SendSoundMessageState extends State<SendSoundMessage> {
                   onPressed: () {
                     isRecording ? stop() : start();
                   },
-                  child: Text(isRecording ? "结束录音" : "开始录音")),
+                  child: Text(isRecording ? imt("结束录音") : imt("开始录音"))),
               soundPath == ''
                   ? Container(
-                      child: Text("未录制"),
+                      child: Text(imt("未录制")),
                       margin: EdgeInsets.only(left: 12),
                     )
                   : Container(
@@ -145,7 +146,7 @@ class SendSoundMessageState extends State<SendSoundMessage> {
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
                   child:
-                      Text(receiver.length > 0 ? receiver.toString() : "未选择"),
+                      Text(receiver.length > 0 ? receiver.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -164,7 +165,7 @@ class SendSoundMessageState extends State<SendSoundMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groupID.length > 0 ? groupID.toString() : "未选择"),
+                  child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -186,7 +187,7 @@ class SendSoundMessageState extends State<SendSoundMessage> {
                     onPressed: () {
                       showAdaptiveActionSheet(
                         context: context,
-                        title: const Text('优先级'),
+                        title: Text(imt("优先级")),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
                             title: const Text('V2TIM_PRIORITY_DEFAULT'),
@@ -234,19 +235,19 @@ class SendSoundMessageState extends State<SendSoundMessage> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择优先级"),
+                    child: Text(imt("选择优先级")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text('已选：$priority'),
+                  child: Text(imt_para("已选：{{priority}}", "已选：${priority}")(priority: priority)),
                 )
               ],
             ),
           ),
           Row(
             children: [
-              Text("是否仅在线用户接受到消息"),
+              Text(imt("是否仅在线用户接受到消息")),
               Switch(
                 value: onlineUserOnly,
                 onChanged: (res) {
@@ -259,7 +260,7 @@ class SendSoundMessageState extends State<SendSoundMessage> {
           ),
           Row(
             children: [
-              Text("发送消息是否不计入未读数"),
+              Text(imt("发送消息是否不计入未读数")),
               Switch(
                 value: isExcludedFromUnreadCount,
                 onChanged: (res) {
@@ -275,7 +276,7 @@ class SendSoundMessageState extends State<SendSoundMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendSoundMessage,
-                  child: Text("发送录音消息"),
+                  child: Text(imt("发送录音消息")),
                 ),
               )
             ],

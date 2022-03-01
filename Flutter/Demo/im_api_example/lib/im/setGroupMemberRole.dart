@@ -8,6 +8,7 @@ import 'package:tencent_im_sdk_plugin/enum/group_member_role_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SetGroupMemberRole extends StatefulWidget {
   @override
@@ -52,7 +53,7 @@ class SetGroupMemberRoleState extends State<SetGroupMemberRole> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(group.length > 0 ? group.toString() : "未选择"),
+                  child: Text(group.length > 0 ? group.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -92,7 +93,7 @@ class SetGroupMemberRoleState extends State<SetGroupMemberRole> {
                     onPressed: () {
                       showAdaptiveActionSheet(
                         context: context,
-                        title: const Text('群角色'),
+                        title: Text(imt("群角色")),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
                             title: const Text('V2TIM_GROUP_MEMBER_ROLE_ADMIN'),
@@ -140,12 +141,12 @@ class SetGroupMemberRoleState extends State<SetGroupMemberRole> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择群角色"),
+                    child: Text(imt("选择群角色")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text('已选：$role'),
+                  child: Text(imt_para("已选：{{role}}", "已选：${role}")(role: role)),
                 )
               ],
             ),
@@ -155,7 +156,7 @@ class SetGroupMemberRoleState extends State<SetGroupMemberRole> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: setGroupMemberRole,
-                  child: Text("设置群成员角色"),
+                  child: Text(imt("设置群成员角色")),
                 ),
               )
             ],

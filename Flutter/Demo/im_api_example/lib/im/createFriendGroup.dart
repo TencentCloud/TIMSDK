@@ -4,6 +4,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class CreateFriendGroup extends StatefulWidget {
   @override
@@ -37,8 +38,8 @@ class CreateFriendGroupState extends State<CreateFriendGroup> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "分组名",
-                    hintText: "分组名",
+                    labelText: imt("分组名"),
+                    hintText: imt("分组名"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -65,7 +66,7 @@ class CreateFriendGroupState extends State<CreateFriendGroup> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(users.length > 0 ? users.toString() : "未选择"),
+                  child: Text(users.length > 0 ? users.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -75,7 +76,7 @@ class CreateFriendGroupState extends State<CreateFriendGroup> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: createFriendGroup,
-                  child: Text("创建好友分组"),
+                  child: Text(imt("创建好友分组")),
                 ),
               )
             ],

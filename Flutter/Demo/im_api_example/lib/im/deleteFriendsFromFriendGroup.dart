@@ -5,6 +5,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class DeleteFriendsFromFriendGroup extends StatefulWidget {
   @override
@@ -48,7 +49,7 @@ class DeleteFriendsFromFriendGroupState
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(users.length > 0 ? users.toString() : "未选择"),
+                  child: Text(users.length > 0 ? users.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -67,7 +68,7 @@ class DeleteFriendsFromFriendGroupState
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(fgs.length > 0 ? fgs.toString() : "未选择"),
+                  child: Text(fgs.length > 0 ? fgs.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -77,7 +78,7 @@ class DeleteFriendsFromFriendGroupState
               Expanded(
                 child: ElevatedButton(
                   onPressed: deleteFriendsFromFriendGroup,
-                  child: Text("从分组中删除好友"),
+                  child: Text(imt("从分组中删除好友")),
                 ),
               )
             ],

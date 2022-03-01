@@ -180,6 +180,7 @@ class V2TIMSignalingManager {
   ///
   /// 参数
   /// msg	消息对象
+  ///
   /// 返回
   /// V2TIMSignalingInfo 信令信息，如果为 null，则 msg 不是一条信令消息。
   ///

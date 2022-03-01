@@ -4,6 +4,7 @@ import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class InviteInGroup extends StatefulWidget {
   @override
@@ -49,8 +50,8 @@ class InviteInGroupState extends State<InviteInGroup> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "发送文本",
-                    hintText: "文本内容",
+                    labelText: imt("发送文本"),
+                    hintText: imt("文本内容"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -76,7 +77,7 @@ class InviteInGroupState extends State<InviteInGroup> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(group.length > 0 ? group.toString() : "未选择"),
+                  child: Text(group.length > 0 ? group.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -101,7 +102,7 @@ class InviteInGroupState extends State<InviteInGroup> {
           ),
           Row(
             children: [
-              Text("是否仅在线用户接受到消息"),
+              Text(imt("是否仅在线用户接受到消息")),
               Switch(
                 value: onlineUserOnly,
                 onChanged: (res) {
@@ -117,7 +118,7 @@ class InviteInGroupState extends State<InviteInGroup> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: inviteInGroup,
-                  child: Text("邀请"),
+                  child: Text(imt("邀请")),
                 ),
               )
             ],

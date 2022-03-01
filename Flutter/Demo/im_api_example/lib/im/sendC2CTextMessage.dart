@@ -4,6 +4,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SendC2CTextMessage extends StatefulWidget {
   @override
@@ -38,8 +39,8 @@ class SendC2CTextMessageState extends State<SendC2CTextMessage> {
               children: <Widget>[
                 TextField(
                   decoration: InputDecoration(
-                    labelText: "发送文本",
-                    hintText: "发送文本",
+                    labelText: imt("发送文本"),
+                    hintText: imt("发送文本"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -63,7 +64,7 @@ class SendC2CTextMessageState extends State<SendC2CTextMessage> {
                       child: Container(
                         margin: EdgeInsets.only(left: 10),
                         child:
-                            Text(users.length > 0 ? users.toString() : "未选择"),
+                            Text(users.length > 0 ? users.toString() : imt("未选择")),
                       ),
                     )
                   ],
@@ -76,7 +77,7 @@ class SendC2CTextMessageState extends State<SendC2CTextMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendC2CTextMessage,
-                  child: Text("发送C2C文本消息（已经弃用）"),
+                  child: Text(imt("发送C2C文本消息（已经弃用）")),
                 ),
               )
             ],

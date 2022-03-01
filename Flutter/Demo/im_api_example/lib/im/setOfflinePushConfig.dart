@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 // import 'package:tpns_flutter_plugin/tpns_flutter_plugin.dart';
 
 class SetOfflinePushConfig extends StatefulWidget {
@@ -13,20 +14,24 @@ class SetOfflinePushConfigState extends State<SetOfflinePushConfig> {
   late TextEditingController bcontroller = new TextEditingController();
   Map<String, dynamic>? resData;
   int businessID = 0;
-  String deviceToken = ''; // 设备token，im推送用这个。
-  String token = ''; // tpns的token,业务后台可以用这个。
+  String deviceToken =
+      '03021cef4c0455530073e269982ce7019603'; // 设备token，im推送用这个。
+  String token =
+      '03021cef4c0455530073e269982ce7019603'; // tpns的token,业务后台可以用这个。
   String pushType = "";
   List<String> users = List.empty(growable: true);
   Map<String, int> config = Map<String, int>.from({
     "fcm": 6768,
     "huawei": 5220,
   });
+
   setOfflinePushConfig() async {
     V2TimCallback res = await TencentImSDKPlugin.v2TIMManager
         .getOfflinePushManager()
         .setOfflinePushConfig(
           businessID: businessID.toDouble(),
           token: deviceToken,
+          isTPNSToken: true,
         );
     setState(() {
       resData = res.toJson();
@@ -59,7 +64,7 @@ class SetOfflinePushConfigState extends State<SetOfflinePushConfig> {
   //           {"type": "onRegisteredDone", "data": msg},
   //         ),
   //       );
-  //       _showAlert("注册成功");
+  //       _showAlert(imt("注册成功"));
   //       setState(() {
   //         token = msg;
   //       });
@@ -214,8 +219,8 @@ class SetOfflinePushConfigState extends State<SetOfflinePushConfig> {
               children: <Widget>[
                 TextField(
                   decoration: InputDecoration(
-                    labelText: "证书id",
-                    hintText: "控制台上传证书返回的id",
+                    labelText: imt("证书id"),
+                    hintText: imt("控制台上传证书返回的id"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   controller: bcontroller,
@@ -234,7 +239,7 @@ class SetOfflinePushConfigState extends State<SetOfflinePushConfig> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: setOfflinePushConfig,
-                  child: Text("上报推送配置"),
+                  child: Text(imt("上报推送配置")),
                 ),
               )
             ],

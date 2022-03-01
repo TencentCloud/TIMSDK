@@ -38,8 +38,8 @@ class GroupManager {
 		if memberListMap != nil {
 			for i in memberListMap! {
 				let item = V2TIMCreateGroupMemberInfo()
-				item.userID = i["userID"] as! String;
-				item.role = 200;
+                item.userID = i["userID"] as? String;
+                item.role = i["role"] as? UInt32 ?? 200;
 				memberList.append(item);
 			}
 		}
@@ -87,7 +87,7 @@ class GroupManager {
 			(array) -> Void in
 			
 			var res: [[String: Any]] = []
-			for info in array! {
+			for info in array ?? [] {
 				res.append(V2GroupInfoEntity.getDict(info: info))
 			}
 			CommonUtils.resultSuccess(call: call, result: result, data: res);
@@ -101,8 +101,8 @@ class GroupManager {
 			(array) -> Void in
 			
 			var groupList: [[String: Any]] = []
-			for item in array! {
-				let i = ["resultCode": item.resultCode, "resultMessage": item.resultMsg, "groupInfo": V2GroupInfoEntity.getDict(info: item.info)] as [String : Any]
+			for item in array ?? [] {
+                let i = ["resultCode": item.resultCode, "resultMessage": item.resultMsg!, "groupInfo": V2GroupInfoEntity.getDict(info: item.info)] as [String : Any]
 				groupList.append(i)
 			}
 			
@@ -153,7 +153,7 @@ class GroupManager {
 			
 			var res: [[String: Any]] = []
 			
-			for item in memberList! {
+			for item in memberList ?? [] {
 				res.append(V2GroupMemberFullInfoEntity.getDict(info: item))
 			}
 			
@@ -170,7 +170,7 @@ class GroupManager {
 			
 			var res: [[String: Any]] = []
 			
-			for item in array! {
+			for item in array ?? [] {
 				res.append(V2GroupMemberFullInfoEntity.getDict(info: item));
 			}
 			
@@ -197,7 +197,7 @@ class GroupManager {
 			(array) -> Void in
 			
 			var info: V2TIMGroupMemberFullInfo;
-			for item in array! {
+			for item in array ?? [] {
 				if item.userID == userID {
 					info = item
 					info.nameCard = nameCard
@@ -252,7 +252,7 @@ class GroupManager {
 			
 			var res: [GroupMemberOperationResultEntity] = []
 			
-			for item in array! {
+			for item in array ?? [] {
 				res.append(GroupMemberOperationResultEntity(result: item))
 			}
 			
@@ -301,7 +301,7 @@ class GroupManager {
 		V2TIMManager.sharedInstance()?.getGroupApplicationList({
 			(array) -> Void in
 			
-			for item in array!.applicationList {
+			for item in array?.applicationList ?? [] {
 				let app = item as! V2TIMGroupApplication;
 				if app.fromUser == fromUser && app.groupID == groupID {
 					application = app
@@ -325,7 +325,7 @@ class GroupManager {
 		V2TIMManager.sharedInstance()?.getGroupApplicationList({
 			(array) -> Void in
 			
-			for item in array!.applicationList {
+			for item in array?.applicationList ?? [] {
 				let app = item as! V2TIMGroupApplication;
 				if app.fromUser == fromUser && app.groupID == groupID {
 					application = app

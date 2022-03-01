@@ -19,10 +19,10 @@ class ConversationManager {
 	public func getConversationList(call: FlutterMethodCall, result: @escaping FlutterResult) {
 		if let nextSeq = CommonUtils.getParam(call: call, result: result, param: "nextSeq") as? String,
 		   let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
-            V2TIMManager.sharedInstance().getConversationList(UInt64(nextSeq)! , count: count, succ: {
+            V2TIMManager.sharedInstance().getConversationList(UInt64(nextSeq) ?? 0 , count: count, succ: {
 				conversations, nextSeq, finished in
 				
-				let dict = V2ConversationResultEntity.init(conversations: conversations!, nextSeq: String(nextSeq), finished: finished).getDict();
+                let dict = V2ConversationResultEntity.init(conversations: conversations ?? [], nextSeq: String(nextSeq), finished: finished).getDict();
 				CommonUtils.resultSuccess(call: call, result: result, data: dict);
 			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
 		}
@@ -31,8 +31,11 @@ class ConversationManager {
 	public func getConversationListByConversaionIds(call: FlutterMethodCall, result: @escaping FlutterResult) {
 		if let conversationIDList = CommonUtils.getParam(call: call, result: result, param: "conversationIDList") as? [String] {
 		   V2TIMManager.sharedInstance().getConversationList(conversationIDList, succ: {
-				let dict = $0!.map { V2ConversationEntity.getDict(info: $0) }
-				CommonUtils.resultSuccess(call: call, result: result, data: dict);
+               if($0 != nil){
+                   let dict = $0!.map { V2ConversationEntity.getDict(info: $0) };
+                   CommonUtils.resultSuccess(call: call, result: result, data: dict);
+               }
+				
 			}, fail: TencentImUtils.returnErrorClosures(call: call, result: result))
 		}
 	}
@@ -48,7 +51,7 @@ class ConversationManager {
 	}
 	
 	public func deleteConversation(call: FlutterMethodCall, result: @escaping FlutterResult) {
-		let conversationID = CommonUtils.getParam(call: call, result: result, param: "conversationID") as! String;
+		let conversationID = CommonUtils.getParam(call: call, result: result, param: "conversationID") as? String;
 		
 		V2TIMManager.sharedInstance()?.deleteConversation(conversationID, succ: {
 			() -> Void in
@@ -58,8 +61,8 @@ class ConversationManager {
 	}
 	
 	public func setConversationDraft(call: FlutterMethodCall, result: @escaping FlutterResult) {
-		let conversationID = CommonUtils.getParam(call: call, result: result, param: "conversationID") as! String;
-		let draftText = CommonUtils.getParam(call: call, result: result, param: "draftText") as! String;
+		let conversationID = CommonUtils.getParam(call: call, result: result, param: "conversationID") as? String;
+		let draftText = CommonUtils.getParam(call: call, result: result, param: "draftText") as? String;
 		
 		V2TIMManager.sharedInstance()?.setConversationDraft(conversationID, draftText: draftText, succ: {
 			() -> Void in
@@ -69,10 +72,10 @@ class ConversationManager {
 	}
 	
 	public func pinConversation(call: FlutterMethodCall, result: @escaping FlutterResult) {
-		let conversationID = CommonUtils.getParam(call: call, result: result, param: "conversationID") as! String;
-		let isPinned = CommonUtils.getParam(call: call, result: result, param: "isPinned") as! Bool;
+		let conversationID = CommonUtils.getParam(call: call, result: result, param: "conversationID") as? String;
+		let isPinned = CommonUtils.getParam(call: call, result: result, param: "isPinned") as? Bool;
 		
-		V2TIMManager.sharedInstance()?.pinConversation(conversationID, isPinned: isPinned, succ: {
+		V2TIMManager.sharedInstance()?.pinConversation(conversationID, isPinned: isPinned ?? false, succ: {
 			() -> Void in
 			CommonUtils.resultSuccess(call: call, result: result, data: "ok")
 		}, fail: TencentImUtils.returnErrorClosures(call: call, result: result))

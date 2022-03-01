@@ -5,6 +5,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_application.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_application_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 typedef OnSelect(List<String> data);
 typedef OnSelectItemChange(String userID);
@@ -55,7 +56,7 @@ class FriendItemState extends State<FriendApplicationItem> {
       if (widget.selected.length > 0) {
         String selectedUserID = widget.selected.first;
         if (selectedUserID != userID) {
-          Utils.toast("单选只能选一个呀");
+          Utils.toast(imt("单选只能选一个呀"));
           return;
         }
       }
@@ -183,8 +184,9 @@ class FriendApplicationSelectorState extends State<FriendApplicationSelector> {
 
   // 弹窗了
   AlertDialog dialogShow(context, applicationTransferList) {
+    final chooseType = (widget.switchSelectType ? imt(imt("单选")) : imt(imt("多选")));
     AlertDialog dialog = AlertDialog(
-      title: Text('好友申请选择（${widget.switchSelectType ? '单选' : '多选'}）'),
+      title: Text(imt_para("好友申请选择（{{chooseType}}）", "好友申请选择（${chooseType}）")(chooseType: chooseType)),
       contentPadding: EdgeInsets.zero,
       content: FriendApplicationList(
           widget.switchSelectType, applicationTransferList, (data) {
@@ -198,13 +200,13 @@ class FriendApplicationSelectorState extends State<FriendApplicationSelector> {
             widget.onSelect(selected);
             Navigator.pop(context);
           },
-          child: Text('确认'),
+          child: Text(imt(imt("确认"))),
         ),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('取消'),
+          child: Text(imt(imt("取消"))),
         ),
       ],
     );
@@ -227,11 +229,11 @@ class FriendApplicationSelectorState extends State<FriendApplicationSelector> {
                   dialogShow(context, applicationTransferList),
             );
           } else {
-            Utils.toast("目前没有好友申请");
+            Utils.toast(imt("目前没有好友申请"));
           }
         }
       },
-      child: Text("选择好友申请"),
+      child: Text(imt("选择好友申请")),
     );
   }
 }

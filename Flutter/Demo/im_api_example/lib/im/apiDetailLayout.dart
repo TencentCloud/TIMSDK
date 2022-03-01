@@ -9,6 +9,7 @@ import 'package:im_api_example/provider/event.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class ApiDetailLayout extends StatelessWidget {
   final ApiItem pageData;
@@ -144,7 +145,7 @@ class SimpleModal extends StatelessWidget {
     return Material(
         child: CupertinoPageScaffold(
       navigationBar:
-          CupertinoNavigationBar(leading: Container(), middle: Text('收到的事件回调')),
+          CupertinoNavigationBar(leading: Container(), middle: Text(imt(imt("收到的事件回调")))),
       child: Container(
         child: Column(
           children: Provider.of<Event>(

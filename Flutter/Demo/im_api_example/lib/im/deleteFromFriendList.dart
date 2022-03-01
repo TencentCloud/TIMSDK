@@ -7,6 +7,7 @@ import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class DeleteFromFriendList extends StatefulWidget {
   @override
@@ -51,7 +52,7 @@ class DeleteFromFriendListState extends State<DeleteFromFriendList> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(users.length > 0 ? users.toString() : "未选择"),
+                  child: Text(users.length > 0 ? users.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -73,10 +74,10 @@ class DeleteFromFriendListState extends State<DeleteFromFriendList> {
                     onPressed: () {
                       showAdaptiveActionSheet(
                         context: context,
-                        title: const Text('删除类型'),
+                        title: Text(imt("删除类型")),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
-                            title: const Text('双向好友'),
+                            title: Text(imt("双向好友")),
                             onPressed: () {
                               setState(() {
                                 deleteType =
@@ -86,7 +87,7 @@ class DeleteFromFriendListState extends State<DeleteFromFriendList> {
                             },
                           ),
                           BottomSheetAction(
-                            title: const Text('单向好友'),
+                            title: Text(imt("单向好友")),
                             onPressed: () {
                               setState(() {
                                 deleteType =
@@ -101,12 +102,12 @@ class DeleteFromFriendListState extends State<DeleteFromFriendList> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择删除类型"),
+                    child: Text(imt("选择删除类型")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text('已选：$deleteType'),
+                  child: Text(imt_para("已选：{{deleteType}}", "已选：${deleteType}")(deleteType: deleteType)),
                 )
               ],
             ),
@@ -116,7 +117,7 @@ class DeleteFromFriendListState extends State<DeleteFromFriendList> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: deleteFromFriendList,
-                  child: Text("删除好友"),
+                  child: Text(imt("删除好友")),
                 ),
               )
             ],

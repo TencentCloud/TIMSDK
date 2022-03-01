@@ -23,6 +23,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_se
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_application_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_info_result.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_operation_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_search_param.dart';
@@ -308,7 +309,7 @@ class MethodChannelIm extends ImFlutterPlatform {
     String? faceUrl,
     bool? isAllMuted,
     int? addOpt,
-    List<Map>? memberList,
+    List<V2TimGroupMember>? memberList,
   }) async {
     return V2TimValueCallback<String>.fromJson(
       formatJson(
@@ -324,7 +325,7 @@ class MethodChannelIm extends ImFlutterPlatform {
               "faceUrl": faceUrl,
               "isAllMuted": isAllMuted,
               "addOpt": addOpt,
-              "memberList": memberList,
+              "memberList": memberList?.map((e) => e.toJson()).toList(),
             },
           ),
         ),
@@ -403,6 +404,7 @@ class MethodChannelIm extends ImFlutterPlatform {
               "nickName": userFullInfo.nickName,
               "faceUrl": userFullInfo.faceUrl,
               "selfSignature": userFullInfo.selfSignature,
+              "birthday": userFullInfo.birthday,
               "gender": userFullInfo.gender,
               "allowType": userFullInfo.allowType,
               "customInfo": userFullInfo.customInfo

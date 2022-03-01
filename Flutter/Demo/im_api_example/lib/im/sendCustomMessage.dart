@@ -8,6 +8,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SendCustomMessage extends StatefulWidget {
   @override
@@ -56,8 +57,8 @@ class SendCustomMessageState extends State<SendCustomMessage> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "自定义数据data",
-                    hintText: "自定义数据data",
+                    labelText: imt("自定义数据data"),
+                    hintText: imt("自定义数据data"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -74,8 +75,8 @@ class SendCustomMessageState extends State<SendCustomMessage> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "自定义数据desc",
-                    hintText: "自定义数据desc",
+                    labelText: imt("自定义数据desc"),
+                    hintText: imt("自定义数据desc"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -92,8 +93,8 @@ class SendCustomMessageState extends State<SendCustomMessage> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "自定义数据extension",
-                    hintText: "自定义数据extension",
+                    labelText: imt("自定义数据extension"),
+                    hintText: imt("自定义数据extension"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -120,7 +121,7 @@ class SendCustomMessageState extends State<SendCustomMessage> {
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
                   child:
-                      Text(receiver.length > 0 ? receiver.toString() : "未选择"),
+                      Text(receiver.length > 0 ? receiver.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -139,7 +140,7 @@ class SendCustomMessageState extends State<SendCustomMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groupID.length > 0 ? groupID.toString() : "未选择"),
+                  child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -161,7 +162,7 @@ class SendCustomMessageState extends State<SendCustomMessage> {
                     onPressed: () {
                       showAdaptiveActionSheet(
                         context: context,
-                        title: const Text('优先级'),
+                        title: Text(imt("优先级")),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
                             title: const Text('V2TIM_PRIORITY_DEFAULT'),
@@ -209,19 +210,19 @@ class SendCustomMessageState extends State<SendCustomMessage> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择优先级"),
+                    child: Text(imt("选择优先级")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text('已选：$priority'),
+                  child: Text(imt_para("已选：{{priority}}", "已选：${priority}")(priority: priority)),
                 )
               ],
             ),
           ),
           Row(
             children: [
-              Text("是否仅在线用户接受到消息"),
+              Text(imt("是否仅在线用户接受到消息")),
               Switch(
                 value: onlineUserOnly,
                 onChanged: (res) {
@@ -234,7 +235,7 @@ class SendCustomMessageState extends State<SendCustomMessage> {
           ),
           Row(
             children: [
-              Text("发送消息是否不计入未读数"),
+              Text(imt("发送消息是否不计入未读数")),
               Switch(
                 value: isExcludedFromUnreadCount,
                 onChanged: (res) {
@@ -250,7 +251,7 @@ class SendCustomMessageState extends State<SendCustomMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendCustomMessage,
-                  child: Text("发送自定义消息"),
+                  child: Text(imt("发送自定义消息")),
                 ),
               )
             ],

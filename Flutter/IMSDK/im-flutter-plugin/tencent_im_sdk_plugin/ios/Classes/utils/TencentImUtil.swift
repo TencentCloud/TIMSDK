@@ -17,30 +17,30 @@ public class TencentImUtils {
         break
       case 1:
 		if let atUserList = messageMap["atUserList"] as? NSMutableArray {
-			if messageMap["text"] as! String == "" {
+			if messageMap["text"] as? String == "" {
 				messageMap["text"] = " "
 			}
-			message = (V2TIMManager.sharedInstance()?.createText(atMessage: messageMap["text"] as? String, atUserList: atUserList))!
+            message = (V2TIMManager.sharedInstance()?.createText(atMessage: messageMap["text"] as? String, atUserList: atUserList)) ?? V2TIMMessage();
         } else {
-          message = (V2TIMManager.sharedInstance()?.createTextMessage(messageMap["text"] as? String))!
+            message = (V2TIMManager.sharedInstance()?.createTextMessage(messageMap["text"] as? String)) ?? V2TIMMessage();
         }
         break
       case 2:
         message = (V2TIMManager.sharedInstance()?.createCustomMessage(
-			(messageMap["data"] as! String).data(using: String.Encoding.utf8, allowLossyConversion: true),
+            (messageMap["data"] as? String)?.data(using: String.Encoding.utf8, allowLossyConversion: true),
 			desc: messageMap["desc"] as? String,
 			extension: messageMap["extension"] as? String
-		))!
+        ))  ?? V2TIMMessage();
         break
       case 3:
-        var imagePath = CommonUtils.getParam(call: call, result: result, param: "imagePath") as! String;
-        message = (V2TIMManager.sharedInstance()?.createImageMessage(imagePath))!
+        let imagePath = CommonUtils.getParam(call: call, result: result, param: "imagePath") as! String;
+        message = (V2TIMManager.sharedInstance()?.createImageMessage(imagePath)) ?? V2TIMMessage();
         break
       case 4:
 		message = (V2TIMManager.sharedInstance()?.createSoundMessage(
 			(messageMap["soundPath"] as? String) ?? "",
 			duration: messageMap["duration"] as! Int32
-		))!
+        )) ?? V2TIMMessage();
         break
       case 5:
         message = (V2TIMManager.sharedInstance()?.createVideoMessage(
@@ -54,16 +54,16 @@ public class TencentImUtils {
         message = (V2TIMManager.sharedInstance()?.createFileMessage(
 			messageMap["filePath"] as? String,
 			fileName: messageMap["fileName"] as? String
-        ))!
+        )) ?? V2TIMMessage();
         break
       case 7:
-		message = (V2TIMManager.sharedInstance()?.createLocationMessage(messageMap["desc"] as? String, longitude: messageMap["longitude"] as! Double, latitude: messageMap["latitude"] as! Double)!)!
+        message = (V2TIMManager.sharedInstance()?.createLocationMessage(messageMap["desc"] as? String, longitude: messageMap["longitude"] as! Double, latitude: messageMap["latitude"] as! Double)!) ?? V2TIMMessage();
         break
       case 8:
         message = (V2TIMManager.sharedInstance()?.createFaceMessage(
           messageMap["index"] as! Int32,
             data: (messageMap["data"] as! String).data(using: String.Encoding.utf8, allowLossyConversion: true)
-        ))!
+        )) ?? V2TIMMessage();
         break
       // 新增，合并消息
       case 10:
@@ -73,7 +73,7 @@ public class TencentImUtils {
 //         ))!
          break
       default:
-        message = (V2TIMManager.sharedInstance()?.createTextMessage(messageMap["text"] as! String))!
+        message = (V2TIMManager.sharedInstance()?.createTextMessage(messageMap["text"] as? String))!
     }
 
     return message

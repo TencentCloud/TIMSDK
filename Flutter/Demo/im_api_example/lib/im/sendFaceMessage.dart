@@ -8,6 +8,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SendFaceMessage extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ class SendFaceMessageState extends State<SendFaceMessage> {
             priority: priority,
             onlineUserOnly: onlineUserOnly,
             isExcludedFromUnreadCount: isExcludedFromUnreadCount,
-            localCustomData: "自定义localCustomData");
+            localCustomData: imt("自定义localCustomData"));
 
     setState(() {
       resData = res.toJson();
@@ -59,8 +60,8 @@ class SendFaceMessageState extends State<SendFaceMessage> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "表情位置",
-                    hintText: "表情位置",
+                    labelText: imt("表情位置"),
+                    hintText: imt("表情位置"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   keyboardType: TextInputType.number,
@@ -78,8 +79,8 @@ class SendFaceMessageState extends State<SendFaceMessage> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "表情信息",
-                    hintText: "表情信息",
+                    labelText: imt("表情信息"),
+                    hintText: imt("表情信息"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -106,7 +107,7 @@ class SendFaceMessageState extends State<SendFaceMessage> {
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
                   child:
-                      Text(receiver.length > 0 ? receiver.toString() : "未选择"),
+                      Text(receiver.length > 0 ? receiver.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -125,7 +126,7 @@ class SendFaceMessageState extends State<SendFaceMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groupID.length > 0 ? groupID.toString() : "未选择"),
+                  child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -147,7 +148,7 @@ class SendFaceMessageState extends State<SendFaceMessage> {
                     onPressed: () {
                       showAdaptiveActionSheet(
                         context: context,
-                        title: const Text('优先级'),
+                        title: Text(imt("优先级")),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
                             title: const Text('V2TIM_PRIORITY_DEFAULT'),
@@ -195,19 +196,19 @@ class SendFaceMessageState extends State<SendFaceMessage> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择优先级"),
+                    child: Text(imt("选择优先级")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text('已选：$priority'),
+                  child: Text(imt_para("已选：{{priority}}", "已选：${priority}")(priority: priority)),
                 )
               ],
             ),
           ),
           Row(
             children: [
-              Text("是否仅在线用户接受到消息"),
+              Text(imt("是否仅在线用户接受到消息")),
               Switch(
                 value: onlineUserOnly,
                 onChanged: (res) {
@@ -220,7 +221,7 @@ class SendFaceMessageState extends State<SendFaceMessage> {
           ),
           Row(
             children: [
-              Text("发送消息是否不计入未读数"),
+              Text(imt("发送消息是否不计入未读数")),
               Switch(
                 value: isExcludedFromUnreadCount,
                 onChanged: (res) {
@@ -236,7 +237,7 @@ class SendFaceMessageState extends State<SendFaceMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendFaceMessage,
-                  child: Text("发送表情消息"),
+                  child: Text(imt("发送表情消息")),
                 ),
               )
             ],

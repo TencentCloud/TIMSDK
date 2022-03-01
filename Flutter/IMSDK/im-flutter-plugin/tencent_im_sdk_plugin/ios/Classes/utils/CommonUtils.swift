@@ -40,9 +40,7 @@ public class CommonUtils {
     // 存在则赋值
     public static func getRequestInstance(call: FlutterMethodCall, instance: NSObject) -> NSObject {
       for item in call.arguments as! [String: Any] {
-        if item.value != nil {
           instance.setValue(item.value, forKey: item.key)
-        }
       }
       return instance
     }
@@ -64,7 +62,7 @@ public class CommonUtils {
 
     // 返回失败结果
 	public static func resultFailed(desc: String? = "failed", code: Int32? = 0, call: FlutterMethodCall, result: @escaping FlutterResult) {
-		let res = ["code": code, "desc": desc] as [String : Any]
+        let res = ["code": code ?? -1, "desc": desc ?? ""] as [String : Any]
 
 		TencentImSDKPlugin.channel?.invokeMethod("logFromSwift", arguments: ["msg": "Swift Error，方法名\(call.method)，错误信息：", "data": desc])
 		result(res)
@@ -72,7 +70,7 @@ public class CommonUtils {
 	
 	// 返回失败结果带data
 	public static func resultFailed(desc: String? = "failed", code: Int32? = -1, data: Dictionary<String, Any>, call: FlutterMethodCall, result: @escaping FlutterResult) {
-		let res = ["code": code, "desc": desc, "data": data] as [String : Any]
+        let res = ["code": code ?? -1, "desc": desc ?? "", "data": data] as [String : Any]
 	  
 		TencentImSDKPlugin.channel?.invokeMethod("logFromSwift", arguments: ["msg": "Swift Error，方法名\(call.method)，错误信息：", "data": res])
 		result(res)
