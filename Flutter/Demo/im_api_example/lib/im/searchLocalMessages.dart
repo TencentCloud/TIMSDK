@@ -3,6 +3,7 @@ import 'package:im_api_example/im/conversationSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message_search_param.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SearchLocalMessages extends StatefulWidget {
   @override
@@ -41,8 +42,8 @@ class SearchLocalMessagesState extends State<SearchLocalMessages> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "关键字(必填)",
-                    hintText: "关键字（接口支持5个，example支持一个）",
+                    labelText: imt("关键字(必填)"),
+                    hintText: imt("关键字（接口支持5个，example支持一个）"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -70,7 +71,7 @@ class SearchLocalMessagesState extends State<SearchLocalMessages> {
                   margin: EdgeInsets.only(left: 10),
                   child: Text(conversaions.length > 0
                       ? conversaions.toString()
-                      : "未选择"),
+                      : imt("未选择")),
                 ),
               )
             ],
@@ -90,7 +91,7 @@ class SearchLocalMessagesState extends State<SearchLocalMessages> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: searchLocaltMessage,
-                  child: Text("查询本地消息(不指定会话不返回messageList)"),
+                  child: Text(imt("查询本地消息(不指定会话不返回messageList)")),
                 ),
               )
             ],

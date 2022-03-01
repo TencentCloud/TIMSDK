@@ -5,6 +5,7 @@ import 'package:im_api_example/im/messageSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class FindMessages extends StatefulWidget {
   @override
@@ -51,7 +52,7 @@ class FindMessagesState extends State<FindMessages> {
                   margin: EdgeInsets.only(left: 10),
                   child: Text(conversaions.length > 0
                       ? conversaions.toString()
-                      : "未选择"),
+                      : imt("未选择")),
                 ),
               )
             ],
@@ -79,7 +80,7 @@ class FindMessagesState extends State<FindMessages> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: findeMessages,
-                  child: Text("查询指定会话中的本地消息"),
+                  child: Text(imt("查询指定会话中的本地消息")),
                 ),
               )
             ],

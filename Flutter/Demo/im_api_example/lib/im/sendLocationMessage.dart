@@ -10,6 +10,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SendLocationMessage extends StatefulWidget {
   @override
@@ -30,7 +31,7 @@ class SendLocationMessageState extends State<SendLocationMessage> {
         await TencentImSDKPlugin.v2TIMManager
             .getMessageManager()
             .createLocationMessage(
-                desc: '地理位置消息描述', longitude: longitude, latitude: latitude);
+                desc: imt(imt("地理位置消息描述")), longitude: longitude, latitude: latitude);
 
     String id = createMessage.data!.id!;
 
@@ -43,7 +44,7 @@ class SendLocationMessageState extends State<SendLocationMessage> {
             priority: priority,
             onlineUserOnly: onlineUserOnly,
             isExcludedFromUnreadCount: isExcludedFromUnreadCount,
-            localCustomData: "自定义localCustomData(sendLocationMessage)");
+            localCustomData: imt("自定义localCustomData(sendLocationMessage)"));
     setState(() {
       resData = res.toJson();
     });
@@ -80,7 +81,7 @@ class SendLocationMessageState extends State<SendLocationMessage> {
           Row(
             children: [
               ElevatedButton(
-                child: Text("获取当前地理位置信息"),
+                child: Text(imt("获取当前地理位置信息")),
                 onPressed: getLocation,
               ),
               Expanded(
@@ -106,7 +107,7 @@ class SendLocationMessageState extends State<SendLocationMessage> {
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
                   child:
-                      Text(receiver.length > 0 ? receiver.toString() : "未选择"),
+                      Text(receiver.length > 0 ? receiver.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -125,7 +126,7 @@ class SendLocationMessageState extends State<SendLocationMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groupID.length > 0 ? groupID.toString() : "未选择"),
+                  child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -147,7 +148,7 @@ class SendLocationMessageState extends State<SendLocationMessage> {
                     onPressed: () {
                       showAdaptiveActionSheet(
                         context: context,
-                        title: const Text('优先级'),
+                        title: Text(imt("优先级")),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
                             title: const Text('V2TIM_PRIORITY_DEFAULT'),
@@ -195,19 +196,19 @@ class SendLocationMessageState extends State<SendLocationMessage> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择优先级"),
+                    child: Text(imt("选择优先级")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text('已选：$priority'),
+                  child: Text(imt_para("已选：{{priority}}", "已选：${priority}")(priority: priority)),
                 )
               ],
             ),
           ),
           Row(
             children: [
-              Text("是否仅在线用户接受到消息"),
+              Text(imt("是否仅在线用户接受到消息")),
               Switch(
                 value: onlineUserOnly,
                 onChanged: (res) {
@@ -220,7 +221,7 @@ class SendLocationMessageState extends State<SendLocationMessage> {
           ),
           Row(
             children: [
-              Text("发送消息是否不计入未读数"),
+              Text(imt("发送消息是否不计入未读数")),
               Switch(
                 value: isExcludedFromUnreadCount,
                 onChanged: (res) {
@@ -236,7 +237,7 @@ class SendLocationMessageState extends State<SendLocationMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendLocationMessage,
-                  child: Text("发送地理位置消息"),
+                  child: Text(imt("发送地理位置消息")),
                 ),
               )
             ],

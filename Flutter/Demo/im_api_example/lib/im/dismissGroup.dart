@@ -3,6 +3,7 @@ import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class DismissGroup extends StatefulWidget {
   @override
@@ -40,7 +41,7 @@ class DismissGroupState extends State<DismissGroup> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groups.length > 0 ? groups.toString() : "未选择"),
+                  child: Text(groups.length > 0 ? groups.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -50,7 +51,7 @@ class DismissGroupState extends State<DismissGroup> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: dismissGroup,
-                  child: Text("解散群组"),
+                  child: Text(imt("解散群组")),
                 ),
               )
             ],

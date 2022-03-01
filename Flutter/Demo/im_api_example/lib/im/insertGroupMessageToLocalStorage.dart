@@ -5,6 +5,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class InsertGroupMessageToLocalStorage extends StatefulWidget {
   @override
@@ -51,7 +52,7 @@ class InsertGroupMessageToLocalStorageState
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(group.length > 0 ? group.toString() : "未选择"),
+                  child: Text(group.length > 0 ? group.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -81,7 +82,7 @@ class InsertGroupMessageToLocalStorageState
               Expanded(
                 child: ElevatedButton(
                   onPressed: insertGroupMessageToLocalStorage,
-                  child: Text("向group中插入一条本地消息"),
+                  child: Text(imt("向group中插入一条本地消息")),
                 ),
               )
             ],

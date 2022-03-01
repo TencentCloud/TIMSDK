@@ -22,6 +22,11 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>im_api_example</string>
+	<key>CFBundleLocalizations</key>
+        <array>
+           <string>en</string>
+           <string>zh</string>
+        </array>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

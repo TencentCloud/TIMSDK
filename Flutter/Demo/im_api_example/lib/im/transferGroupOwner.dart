@@ -5,6 +5,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_role.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class TransferGroupOwner extends StatefulWidget {
   @override
@@ -47,7 +48,7 @@ class TransferGroupOwnerState extends State<TransferGroupOwner> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(group.length > 0 ? group.toString() : "未选择"),
+                  child: Text(group.length > 0 ? group.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -75,7 +76,7 @@ class TransferGroupOwnerState extends State<TransferGroupOwner> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: transferGroupOwner,
-                  child: Text("转移群主"),
+                  child: Text(imt("转移群主")),
                 ),
               )
             ],

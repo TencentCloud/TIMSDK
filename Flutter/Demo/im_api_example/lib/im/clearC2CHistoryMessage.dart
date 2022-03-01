@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
-
+import 'package:im_api_example/i18n/i18n_utils.dart';
 class ClearC2CHistoryMessage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => ClearC2CHistoryMessageState();
@@ -46,7 +46,7 @@ class ClearC2CHistoryMessageState extends State<ClearC2CHistoryMessage> {
                       child: Container(
                         margin: EdgeInsets.only(left: 10),
                         child:
-                            Text(users.length > 0 ? users.toString() : "未选择"),
+                            Text(users.length > 0 ? users.toString() : imt("未选择")),
                       ),
                     )
                   ],
@@ -59,7 +59,7 @@ class ClearC2CHistoryMessageState extends State<ClearC2CHistoryMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: clearMessage,
-                  child: Text("清空单聊本地及云端的消息（不删除会话）"),
+                  child: Text(imt("清空单聊本地及云端的消息（不删除会话）")),
                 ),
               )
             ],

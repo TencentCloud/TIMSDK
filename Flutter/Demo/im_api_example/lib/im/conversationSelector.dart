@@ -5,6 +5,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 typedef OnSelect(List<String> data);
 typedef OnSelectItemChange(String conversationID);
@@ -55,7 +56,7 @@ class ConversationItemState extends State<ConversationItem> {
       if (widget.selected.length > 0) {
         String selectedconversationID = widget.selected.first;
         if (selectedconversationID != conversationID) {
-          Utils.toast("单选只能选一个呀");
+          Utils.toast(imt("单选只能选一个呀"));
           return;
         }
       }
@@ -178,8 +179,9 @@ class ConversationSelectorState extends State<ConversationSelector> {
   }
 
   AlertDialog dialogShow(context) {
+    final chooseType = (widget.switchSelectType ? imt(imt("单选")) : imt(imt("多选")));
     AlertDialog dialog = AlertDialog(
-      title: Text('会话选择（${widget.switchSelectType ? '单选' : '多选'}）'),
+      title: Text(imt_para("会话选择（{{chooseType}}）", "会话选择（${chooseType}）")(chooseType: chooseType)),
       contentPadding: EdgeInsets.zero,
       content:
           ConversationList(widget.switchSelectType, conversationList, (data) {
@@ -193,13 +195,13 @@ class ConversationSelectorState extends State<ConversationSelector> {
             widget.onSelect(selected);
             Navigator.pop(context);
           },
-          child: Text('确认'),
+          child: Text(imt(imt("确认"))),
         ),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('取消'),
+          child: Text(imt(imt("取消"))),
         ),
       ],
     );
@@ -218,11 +220,11 @@ class ConversationSelectorState extends State<ConversationSelector> {
               builder: (context) => dialogShow(context),
             );
           } else {
-            Utils.toast("暂无会话信息");
+            Utils.toast(imt("暂无会话信息"));
           }
         }
       },
-      child: Text("选择会话"),
+      child: Text(imt("选择会话")),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:im_api_example/utils/toast.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 typedef OnSelect(List<String> data);
 typedef OnSelectItemChange(String userID);
@@ -54,7 +55,7 @@ class FriendItemState extends State<FriendItem> {
       if (widget.selected.length > 0) {
         String selectedUserID = widget.selected.first;
         if (selectedUserID != userID) {
-          Utils.toast("单选只能选一个呀");
+          Utils.toast(imt("单选只能选一个呀"));
           return;
         }
       }
@@ -176,8 +177,9 @@ class BlackListSelectorState extends State<BlackListSelector> {
   }
 
   AlertDialog dialogShow(context) {
+    String chooseType = (widget.switchSelectType ? imt(imt("单选")) : imt(imt("多选")));
     AlertDialog dialog = AlertDialog(
-      title: Text('黑名单好友选择（${widget.switchSelectType ? '单选' : '多选'}）'),
+      title: Text(imt_para("黑名单好友选择（{{chooseType}}）", "黑名单好友选择（${chooseType}）")(chooseType: chooseType)),
       contentPadding: EdgeInsets.zero,
       content: FriendList(widget.switchSelectType, friendList, (data) {
         setState(() {
@@ -190,13 +192,13 @@ class BlackListSelectorState extends State<BlackListSelector> {
             widget.onSelect(selected);
             Navigator.pop(context);
           },
-          child: Text('确认'),
+          child: Text(imt(imt("确认"))),
         ),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('取消'),
+          child: Text(imt(imt("取消"))),
         ),
       ],
     );
@@ -215,11 +217,11 @@ class BlackListSelectorState extends State<BlackListSelector> {
               builder: (context) => dialogShow(context),
             );
           } else {
-            Utils.toast("请先在好友关系链模块中添加好友");
+            Utils.toast(imt("请先在好友关系链模块中添加好友"));
           }
         }
       },
-      child: Text("选择黑名单好友"),
+      child: Text(imt("选择黑名单好友")),
     );
   }
 }

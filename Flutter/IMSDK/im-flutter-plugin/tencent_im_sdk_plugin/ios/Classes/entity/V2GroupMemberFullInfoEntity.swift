@@ -28,12 +28,7 @@ class V2GroupMemberFullInfoEntity: V2TIMGroupMemberFullInfo {
         result["joinTime"] = info.joinTime;
         result["nameCard"] = info.nameCard;
 		for (k, v) in info.customInfo {
-			var data: NSData
-			if v is NSData {
 				customInfo[k] = String(data: v, encoding: String.Encoding.utf8)
-			} else {
-				customInfo[k] = v
-			}
 		};
 		result["customInfo"] = customInfo;
         return result;

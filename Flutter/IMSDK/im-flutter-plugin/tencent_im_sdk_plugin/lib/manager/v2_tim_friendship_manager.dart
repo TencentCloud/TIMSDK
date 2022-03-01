@@ -153,8 +153,8 @@ class V2TIMFriendshipManager {
   /// ```
   ///
   /// ```
-  /// V2TIMFriendInfo.V2TIM_FRIEND_TYPE_SINGLE：单向好友
-  /// V2TIMFriendInfo.V2TIM_FRIEND_TYPE_BOTH：双向好友
+  /// FriendType.V2TIM_FRIEND_TYPE_SINGLE：单向好友
+  /// FriendType.V2TIM_FRIEND_TYPE_BOTH：双向好友
   /// ```
   ///
   Future<V2TimValueCallback<List<V2TimFriendOperationResult>>>
@@ -176,8 +176,8 @@ class V2TIMFriendshipManager {
   /// ```
   ///
   /// ```
-  /// V2TIMFriendInfo.V2TIM_FRIEND_TYPE_SINGLE：单向好友
-  /// V2TIMFriendInfo.V2TIM_FRIEND_TYPE_BOTH：双向好友
+  /// FriendType.V2TIM_FRIEND_TYPE_SINGLE：单向好友
+  /// FriendType.V2TIM_FRIEND_TYPE_BOTH：双向好友
   /// ```
   ///
   Future<V2TimValueCallback<List<V2TimFriendCheckResult>>> checkFriend({
@@ -206,8 +206,8 @@ class V2TIMFriendshipManager {
   /// ```
   ///
   /// ```
-  /// V2TIMFriendApplication.V2TIM_FRIEND_ACCEPT_AGREE：同意添加单向好友
-  /// V2TIMFriendApplication.V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD：同意并添加为双向好友
+  /// FriendApplicationType.V2TIM_FRIEND_ACCEPT_AGREE：同意添加单向好友
+  /// FriendApplicationType.V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD：同意并添加为双向好友
   /// ```
   ///
   Future<V2TimValueCallback<V2TimFriendOperationResult>>

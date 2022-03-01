@@ -12,6 +12,7 @@ class V2TimUserFullInfo {
   late Map<String, String>? customInfo;
   late int? role;
   late int? level;
+  late int? birthday;
 
   V2TimUserFullInfo({
     this.userID,
@@ -23,6 +24,7 @@ class V2TimUserFullInfo {
     this.customInfo,
     this.role,
     this.level,
+    this.birthday,
   });
 
   V2TimUserFullInfo.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class V2TimUserFullInfo {
         : Map<String, String>.from(json['customInfo']);
     role = json['role'];
     level = json['level'];
+    birthday = json['birthday'];
   }
 
   Map<String, dynamic> toJson() {
@@ -50,6 +53,7 @@ class V2TimUserFullInfo {
     data['customInfo'] = this.customInfo;
     data['role'] = this.role;
     data['level'] = this.level;
+    data['birthday'] = this.birthday;
     return data;
   }
 }

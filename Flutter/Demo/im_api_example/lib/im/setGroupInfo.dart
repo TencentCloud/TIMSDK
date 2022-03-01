@@ -6,6 +6,7 @@ import 'package:tencent_im_sdk_plugin/enum/group_add_opt_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_info.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 import 'package:im_api_example/utils/customerField/CustomerField.dart';
 
 class SetGroupInfo extends StatefulWidget {
@@ -79,15 +80,15 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                             child: Container(
                               margin: EdgeInsets.only(left: 10),
                               child: Text(
-                                  group.length > 0 ? group.toString() : "未选择"),
+                                  group.length > 0 ? group.toString() : imt("未选择")),
                             ),
                           )
                         ],
                       ),
                       TextField(
                         decoration: InputDecoration(
-                          labelText: "群名称",
-                          hintText: "群名称",
+                          labelText: imt("群名称"),
+                          hintText: imt("群名称"),
                           prefixIcon: Icon(Icons.person),
                         ),
                         onChanged: (res) {
@@ -98,8 +99,8 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                          labelText: "群通告",
-                          hintText: "群通告",
+                          labelText: imt("群通告"),
+                          hintText: imt("群通告"),
                           prefixIcon: Icon(Icons.person),
                         ),
                         onChanged: (res) {
@@ -110,8 +111,8 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                          labelText: "群简介",
-                          hintText: "群简介",
+                          labelText: imt("群简介"),
+                          hintText: imt("群简介"),
                           prefixIcon: Icon(Icons.person),
                         ),
                         onChanged: (res) {
@@ -145,7 +146,7 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                                 onPressed: () {
                                   showAdaptiveActionSheet(
                                     context: context,
-                                    title: const Text('群头像'),
+                                    title: Text(imt("群头像")),
                                     actions: <BottomSheetAction>[
                                       BottomSheetAction(
                                         title: Image.network(
@@ -209,7 +210,7 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                                     ), // onPressed parameter is optional by default will dismiss the ActionSheet
                                   );
                                 },
-                                child: Text("选择群头像"),
+                                child: Text(imt("选择群头像")),
                               ),
                             ),
                             Container(
@@ -227,7 +228,7 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                       ),
                       Row(
                         children: [
-                          Text("是否全员禁言"),
+                          Text(imt("是否全员禁言")),
                           Switch(
                             value: isAllMuted,
                             onChanged: (res) {
@@ -263,10 +264,10 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                                 onPressed: () {
                                   showAdaptiveActionSheet(
                                     context: context,
-                                    title: const Text('选择群类型'),
+                                    title: Text(imt("选择群类型")),
                                     actions: <BottomSheetAction>[
                                       BottomSheetAction(
-                                        title: const Text('Work 工作群'),
+                                        title: Text(imt("Work 工作群")),
                                         onPressed: () {
                                           setState(() {
                                             groupType = 'Work';
@@ -275,7 +276,7 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                                         },
                                       ),
                                       BottomSheetAction(
-                                        title: const Text('Public 公开群'),
+                                        title: Text(imt("Public 公开群")),
                                         onPressed: () {
                                           setState(() {
                                             groupType = 'Public';
@@ -284,7 +285,7 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                                         },
                                       ),
                                       BottomSheetAction(
-                                        title: const Text('Meeting 会议群'),
+                                        title: Text(imt("Meeting 会议群")),
                                         onPressed: () {
                                           setState(() {
                                             groupType = 'Meeting';
@@ -293,7 +294,7 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                                         },
                                       ),
                                       BottomSheetAction(
-                                        title: const Text('AVChatRoom 直播群'),
+                                        title: Text(imt("AVChatRoom 直播群")),
                                         onPressed: () {
                                           setState(() {
                                             groupType = 'AVChatRoom';
@@ -307,12 +308,12 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                                     ), // onPressed parameter is optional by default will dismiss the ActionSheet
                                   );
                                 },
-                                child: Text("选择群类型"),
+                                child: Text(imt("选择群类型")),
                               ),
                             ),
                             Container(
                               margin: EdgeInsets.only(left: 12),
-                              child: Text('已选：$groupType'),
+                              child: Text(imt_para("已选：{{groupType}}", "已选：${groupType}")(groupType: groupType)),
                             )
                           ],
                         ),
@@ -342,7 +343,7 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                                 onPressed: () {
                                   showAdaptiveActionSheet(
                                     context: context,
-                                    title: const Text('选择加群类型'),
+                                    title: Text(imt("选择加群类型")),
                                     actions: <BottomSheetAction>[
                                       BottomSheetAction(
                                         title:
@@ -383,12 +384,12 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                                     ), // onPressed parameter is optional by default will dismiss the ActionSheet
                                   );
                                 },
-                                child: Text("选择加群类型"),
+                                child: Text(imt("选择加群类型")),
                               ),
                             ),
                             Container(
                               margin: EdgeInsets.only(left: 12),
-                              child: Text('已选：$addOpt'),
+                              child: Text(imt_para("已选：{{addOpt}}", "已选：${addOpt}")(addOpt: addOpt)),
                             )
                           ],
                         ),
@@ -408,7 +409,7 @@ class SetGroupInfoState extends State<SetGroupInfo> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: setGroupInfo,
-                  child: Text("设置群信息"),
+                  child: Text(imt("设置群信息")),
                 ),
               )
             ],
@@ -420,23 +421,23 @@ class SetGroupInfoState extends State<SetGroupInfo> {
   }
 }
 // DropdownButton<String>(
-//                         hint: Text('群类型'),
+//                         hint: Text(imt(imt("群类型"))),
 //                         icon: Icon(Icons.person),
 //                         items: [
 //                           DropdownMenuItem<String>(
-//                             child: Text('群类型：Work'),
+//                             child: Text(imt(imt("群类型：Work"))),
 //                             value: "Work",
 //                           ),
 //                           DropdownMenuItem<String>(
-//                             child: Text('群类型：Public'),
+//                             child: Text(imt(imt("群类型：Public"))),
 //                             value: "Public",
 //                           ),
 //                           DropdownMenuItem<String>(
-//                             child: Text('群类型：Meeting'),
+//                             child: Text(imt(imt("群类型：Meeting"))),
 //                             value: "Meeting",
 //                           ),
 //                           DropdownMenuItem<String>(
-//                             child: Text('群类型r：AVChatRoom'),
+//                             child: Text(imt(imt("群类型r：AVChatRoom"))),
 //                             value: "AVChatRoom",
 //                           )
 //                         ],

@@ -54,13 +54,10 @@ public class JsonUtil {
 			return ret
 		}
 		
-        if object is AnyObject {
-            let json = toJson(object)
-			let ret = getDictionaryFromJSONString(jsonString: json as! String);
-			return ret
-        }
+        let json = toJson(object)
+        let ret = getDictionaryFromJSONString(jsonString: json as! String);
+        return ret
 		
-		return object
     }
 
     /**

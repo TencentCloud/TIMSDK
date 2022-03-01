@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
 typedef OnGet(List<String> data);
@@ -68,7 +69,7 @@ class MessageSelectorState extends State<MessageSelector> {
 
   AlertDialog dialogShow(context) {
     AlertDialog dialog = AlertDialog(
-      title: Text('选择消息'),
+      title: Text(imt(imt("选择消息"))),
       contentPadding: EdgeInsets.zero,
       content: MemberList(
         timmessages,
@@ -87,13 +88,13 @@ class MessageSelectorState extends State<MessageSelector> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('确认'),
+          child: Text(imt(imt("确认"))),
         ),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('取消'),
+          child: Text(imt(imt("取消"))),
         ),
       ],
     );
@@ -104,7 +105,7 @@ class MessageSelectorState extends State<MessageSelector> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(),
-      child: Text("选择消息"),
+      child: Text(imt("选择消息")),
       onPressed: widget.conversationID == ''
           ? null
           : () {

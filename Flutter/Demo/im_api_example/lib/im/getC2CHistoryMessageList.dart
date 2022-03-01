@@ -4,6 +4,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class GetC2CHistoryMessageList extends StatefulWidget {
   @override
@@ -55,7 +56,7 @@ class GetC2CHistoryMessageListState extends State<GetC2CHistoryMessageList> {
                       child: Container(
                         margin: EdgeInsets.only(left: 10),
                         child:
-                            Text(users.length > 0 ? users.toString() : "未选择"),
+                            Text(users.length > 0 ? users.toString() : imt("未选择")),
                       ),
                     )
                   ],
@@ -80,7 +81,7 @@ class GetC2CHistoryMessageListState extends State<GetC2CHistoryMessageList> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: getC2CHistoryMessageList,
-                  child: Text("获取C2C历史消息"),
+                  child: Text(imt("获取C2C历史消息")),
                 ),
               )
             ],

@@ -23,11 +23,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   expandable: ^5.0.1
   provider: ^5.0.0
   gradient_ui_widgets: ^1.0.2-nullsafety
   modal_bottom_sheet: ^2.0.0
-  tencent_im_sdk_plugin: ^3.6.9
+  tencent_im_sdk_plugin: ^3.8.2
   # tencent_im_sdk_plugin: 3.5.6
   flutter_syntax_view: ^4.0.0
   loading_indicator: ^2.0.1
@@ -51,10 +53,13 @@ dependencies:
   adaptive_dialog: ^0.10.0+5
   mime_type: ^1.0.0
   file_picker: ^4.2.1
+  js_shims: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: any
+  fast_i18n: 5.11.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

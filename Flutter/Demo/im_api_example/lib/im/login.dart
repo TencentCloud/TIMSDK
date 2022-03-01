@@ -4,6 +4,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ class LoginState extends State<Login> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: login,
-                  child: Text("登录"),
+                  child: Text(imt("登录")),
                 ),
               )
             ],

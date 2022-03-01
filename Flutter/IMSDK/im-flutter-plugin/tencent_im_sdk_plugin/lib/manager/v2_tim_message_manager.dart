@@ -161,12 +161,20 @@ class V2TIMMessageManager {
   }
 
   /// 创建文本消息
+  ///
+  /// 参数：
+  /// text 要传递的文本
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createTextMessage(
       {required String text}) async {
     return ImFlutterPlatform.instance.createTextMessage(text: text);
   }
 
   /// 创建定制化消息
+  ///
+  ///参数：
+  /// data 即自定义消息
+  /// description 自定义消息描述信息，做离线Push时文本展示。
+  /// extension 离线Push时扩展字段信息。
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createCustomMessage({
     required String data,
     String desc = "",
@@ -176,7 +184,10 @@ class V2TIMMessageManager {
         .createCustomMessage(data: data, extension: extension, desc: desc);
   }
 
-  /// 创建图片消息
+  /// 创建图片消息（图片文件最大支持 28 MB）
+  /// imagePath 图片路径（只有发送方可以获取到）
+  /// fileContent 字节数组（只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createImageMessage)时用到且必填）
+  /// fileName 图片名（只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createImageMessage)用到且必填）
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createImageMessage(
       {required String imagePath,
       Uint8List? fileContent, // web 必填
@@ -186,7 +197,9 @@ class V2TIMMessageManager {
         imagePath: imagePath, fileContent: fileContent, fileName: fileName);
   }
 
-  // 创建音频文件
+  /// 创建音频文件
+  /// soundPath 音频文件地址
+  /// duration 时长
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createSoundMessage({
     required String soundPath,
     required int duration,
@@ -196,6 +209,12 @@ class V2TIMMessageManager {
   }
 
   /// 创建视频文件
+  /// videoFilePath 路径
+  /// type 视频类型，如 mp4 mov 等
+  /// duration	视频时长，单位 s
+  /// snapshotPath	视频封面图片路径
+  /// fileName 文件名 （只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createVideoMessage)用到且必填）
+  /// fileContent 字节数组 （只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createVideoMessage)用到且必填）
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createVideoMessage({
     required String videoFilePath,
     required String type,
@@ -214,6 +233,19 @@ class V2TIMMessageManager {
     );
   }
 
+  ///  创建文本消息，并且可以附带 @ 提醒功能（最大支持 8KB）
+  /// 提醒消息仅适用于在群组中发送的消息
+  ///
+  /// 参数：
+  /// text 文本
+  /// atUserList	需要 @ 的用户列表，如果需要 @ALL，请传入 kImSDK_MesssageAtALL 常量字符串。 举个例子，假设该条文本消息希望@提醒 denny 和 lucy 两个用户，同时又希望@所有人，atUserList 传 @["denny",@"lucy",kImSDK_MesssageAtALL]
+  ///
+  ///备注：
+  ///  ```
+  /// 默认情况下，最多支持 @ 30个用户，超过限制后，消息会发送失败。atUserList 的总数不能超过默认最大数，包括 @ALL。
+  ///直播群（AVChatRoom）不支持发送 @ 消息。
+  ///```
+
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createTextAtMessage({
     required String text,
     required List<String> atUserList,
@@ -224,7 +256,13 @@ class V2TIMMessageManager {
     );
   }
 
-  /// 发送文件消息
+  /// 创建文件消息
+  ///
+  /// 参数：
+  /// filePath 文件路径
+  /// fileName文件名称
+  /// fileContent 字节数组（[web](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createFileMessage)端使用，且必填）
+  ///
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createFileMessage(
       {required String filePath,
       required String fileName,
@@ -234,6 +272,9 @@ class V2TIMMessageManager {
   }
 
   /// 创建位置信息
+  /// longitude 经度，发送消息时设置
+  /// latitude 纬度，发送消息时设置
+  /// desc 地理位置描述信息
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createLocationMessage({
     required String desc,
     required double longitude,
@@ -247,6 +288,15 @@ class V2TIMMessageManager {
   }
 
   /// 发送消息
+  /// 参数
+  ///  ```
+  /// id	消息唯一标识
+  /// receiver	消息接收者的 userID, 如果是发送 C2C 单聊消息，只需要指定 receiver 即可。
+  /// groupID	目标群组 ID，如果是发送群聊消息，只需要指定 groupID 即可。
+  /// priority	消息优先级，仅针对群聊消息有效。请把重要消息设置为高优先级（比如红包、礼物消息），高频且不重要的消息设置为低优先级（比如点赞消息）。
+  /// onlineUserOnly	是否只有在线用户才能收到，如果设置为 true ，接收方历史消息拉取不到，常被用于实现“对方正在输入”或群组里的非重要提示等弱提示功能，该字段不支持 AVChatRoom。
+  /// offlinePushInfo	离线推送时携带的标题和内容。
+  ///  ```
   Future<V2TimValueCallback<V2TimMessage>> sendMessage(
       {required String id, // 自己创建的ID
       required String receiver,
@@ -269,25 +319,41 @@ class V2TIMMessageManager {
         cloudCustomData: cloudCustomData);
   }
 
+  /// 获取message的抽象信息，用于replyMessage
   String _getAbstractMessage(V2TimMessage message) {
-    final abstractMap = {
-      MessageElemType.V2TIM_ELEM_TYPE_FACE: "[表情消息]",
-      MessageElemType.V2TIM_ELEM_TYPE_CUSTOM: "[自定义消息]",
-      MessageElemType.V2TIM_ELEM_TYPE_FILE: "[文件消息]",
-      MessageElemType.V2TIM_ELEM_TYPE_GROUP_TIPS: "[群消息]",
-      MessageElemType.V2TIM_ELEM_TYPE_IMAGE: "[图片消息]",
-      MessageElemType.V2TIM_ELEM_TYPE_LOCATION: "[位置消息]",
-      MessageElemType.V2TIM_ELEM_TYPE_MERGER: "[合并消息]",
-      MessageElemType.V2TIM_ELEM_TYPE_NONE: "[没有元素]",
-      MessageElemType.V2TIM_ELEM_TYPE_SOUND: "[语音消息]",
-      MessageElemType.V2TIM_ELEM_TYPE_TEXT: "[文本消息]",
-      MessageElemType.V2TIM_ELEM_TYPE_VIDEO: "[视频消息]",
-    };
-
-    return abstractMap[message.elemType] ?? "";
+    final elemType = message.elemType;
+    switch (elemType) {
+      case MessageElemType.V2TIM_ELEM_TYPE_FACE:
+        return "[表情消息]";
+      case MessageElemType.V2TIM_ELEM_TYPE_CUSTOM:
+        return "[自定义消息]";
+      case MessageElemType.V2TIM_ELEM_TYPE_FILE:
+        return "[文件消息]";
+      case MessageElemType.V2TIM_ELEM_TYPE_GROUP_TIPS:
+        return "[群消息]";
+      case MessageElemType.V2TIM_ELEM_TYPE_IMAGE:
+        return "[图片消息]";
+      case MessageElemType.V2TIM_ELEM_TYPE_LOCATION:
+        return "[位置消息]";
+      case MessageElemType.V2TIM_ELEM_TYPE_MERGER:
+        return "[合并消息]";
+      case MessageElemType.V2TIM_ELEM_TYPE_NONE:
+        return "[没有元素]";
+      case MessageElemType.V2TIM_ELEM_TYPE_SOUND:
+        return "[语音消息]";
+      case MessageElemType.V2TIM_ELEM_TYPE_TEXT:
+        return "[文本消息]";
+      case MessageElemType.V2TIM_ELEM_TYPE_VIDEO:
+        return "[视频消息]";
+      default:
+        return "";
+    }
   }
 
   /// 发送回复消息
+  /// ```
+  /// 此id为你要回复的消息的id。举个例子 我发送文本消息："欧拉欧拉"，你回复消息文本消息 "大木大木"，回复的文本消息"大木大木"需要创建，其id即此id
+  /// ```
   Future<V2TimValueCallback<V2TimMessage>> sendReplyMessage(
       {required String id, // 自己创建的ID
       required String receiver,
@@ -322,6 +388,14 @@ class V2TIMMessageManager {
         cloudCustomData: json.encode(cloudCustomData));
   }
 
+  /// 创建表情消息
+  /// index	表情索引
+  /// data	自定义数据
+
+  /// 备注：
+  /// ```
+  /// SDK 并不提供表情包，如果开发者有表情包，可使用 index 存储表情在表情包中的索引，或者使用 data 存储表情映射的字符串 key，这些都由用户自定义，SDK 内部只做透传。
+  /// ```
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createFaceMessage({
     required int index,
     required String data,
@@ -332,6 +406,24 @@ class V2TIMMessageManager {
     );
   }
 
+  /// 创建合并消息
+  /// 参数:
+  /// ```
+  /// messageList	消息列表（最大支持 300 条，消息对象必须是 V2TIM_MSG_STATUS_SEND_SUCC 状态，消息类型不能为 V2TIMGroupTipsElem）
+  /// title	合并消息的来源，比如 "vinson 和 lynx 的聊天记录"、"xxx 群聊的聊天记录"。
+  /// abstractList	合并消息的摘要列表(最大支持 5 条摘要，每条摘要的最大长度不超过 100 个字符),不同的消息类型可以设置不同的摘要信息，比如: 文本消息可以设置为：sender：text，图片消息可以设置为：sender：[图片]，文件消息可以设置为：sender：[文件]。
+  /// compatibleText	合并消息兼容文本，低版本 SDK 如果不支持合并消息，默认会收到一条文本消息，文本消息的内容为 compatibleText， 该参数不能为 null。
+  /// ```
+  /// 备注:
+  /// ```
+  /// 多条被转发的消息可以被创建成一条合并消息 V2TIMMessage，然后调用 sendMessage 接口发送，实现步骤如下：
+  /// 1. 调用 createMergerMessage 创建一条合并消息 V2TIMMessage。
+  /// 2. 调用 sendMessage 发送转发消息 V2TIMMessage。
+  /// 收到合并消息解析步骤：
+  /// 1. 通过 V2TIMMessage 获取 mergerElem。
+  /// 2. 通过 mergerElem 获取 title 和 abstractList UI 展示。
+  /// 3. 当用户点击摘要信息 UI 的时候，调用 downloadMessageList 接口获取转发消息列表。
+  /// ```
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createMergerMessage({
     required List<String> msgIDList,
     required String title,
@@ -460,13 +552,14 @@ class V2TIMMessageManager {
   ///
   /// 提醒消息仅适用于在群组中发送的消息
   ///
-  /// 参数
+  /// 参数:
   /// atUserList	需要 @ 的用户列表，如果需要 @ALL，请传入 AT_ALL_TAG 常量字符串。 举个例子，假设该条文本消息希望@提醒 denny 和 lucy 两个用户，同时又希望@所有人，atUserList 传 ["denny","lucy",AT_ALL_TAG]
-  /// 注意
+  /// 注意：
+  /// ```
   /// atUserList 使用注意事项
   /// 默认情况下，最多支持 @ 30个用户，超过限制后，消息会发送失败。
   /// atUserList 的总数不能超过默认最大数，包括 @ALL。
-  ///
+  ///```
   @Deprecated(
       'sendTextAtMessage自3.6.0开始弃用，我们将创建消息与发送消息分离，请先使用createTextAtMessage创建消息,再调用sendMessage发送消息')
   Future<V2TimValueCallback<V2TimMessage>> sendTextAtMessage({
@@ -576,10 +669,10 @@ class V2TIMMessageManager {
   ///
   /// 3. 当用户点击摘要信息 UI 的时候，调用 downloadMessageList 接口获取转发消息列表。
   ///
-  ///
+  ///```
   /// 注意
   /// web 端使用时必须传入webMessageInstanceList 字段。 在web端返回的消息实例会包含该字段
-  ///
+  ///```
   @Deprecated(
       'sendMergerMessage自3.6.0开始弃用，我们将创建消息与发送消息分离，请先使用createMergerMessage创建消息,再调用sendMessage发送消息')
   Future<V2TimValueCallback<V2TimMessage>> sendMergerMessage(
@@ -608,8 +701,9 @@ class V2TIMMessageManager {
         webMessageInstanceList: webMessageInstanceList);
   }
 
-  /// 获取合并消息的子消息
-  ///
+  /// 获取合并消息的子消息列表（下载被合并的消息列表）
+  /// 参数：
+  /// msgID 合并消息的msgID
   Future<V2TimValueCallback<List<V2TimMessage>>> downloadMergerMessage({
     required String msgID,
   }) async {
@@ -679,8 +773,10 @@ class V2TIMMessageManager {
   /// userIDList 一次最大允许设置 30 个用户。
   /// 该接口调用频率限制为 1s 1次，超过频率限制会报错。
   /// 参数
+  /// ```
   /// opt	三种类型的消息接收选项： 0,V2TIMMessage.V2TIM_RECEIVE_MESSAGE：在线正常接收消息，离线时会有厂商的离线推送通知 1, V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE：不会接收到消息 2,V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE：在线正常接收消息，离线不会有推送通知
-  ///
+  /// userIDList
+  ///```
   /// 注意： web不支持该接口
   ///
   Future<V2TimCallback> setC2CReceiveMessageOpt({
@@ -721,7 +817,7 @@ class V2TIMMessageManager {
   }
 
   /// 设置消息自定义数据（本地保存，不会发送到对端，程序卸载重装后失效）
-  ///
+  /// localCustomData 只是透传
   /// 注意： web不支持该接口
   Future<V2TimCallback> setLocalCustomData({
     required String msgID,
@@ -833,7 +929,10 @@ class V2TIMMessageManager {
   /// 获取历史消息高级接口
   ///
   /// 参数
-  /// option	拉取消息选项设置，可以设置从云端、本地拉取更老或更新的消息
+  ///```
+  /// getType 拉取消息类型，可以设置拉取本地、云端更老或者更新的消息（具体类型在HistoryMessageGetType类中）
+  /// lastMsg/lastMsgSeq 用来表示拉取时的起点，第一次拉取时可以不填或者填 0；
+  ///```
   ///
   /// 请注意：
   /// 如果设置为拉取云端消息，当 SDK 检测到没有网络，默认会直接返回本地数据
@@ -899,6 +998,11 @@ class V2TIMMessageManager {
 
   /// 删除本地消息
   ///
+  ///参数
+  ///```
+  ///msgID 消息ID
+  ///```
+  ///
   /// 注意
   ///
   /// ```
@@ -915,9 +1019,15 @@ class V2TIMMessageManager {
 
   /// 删除本地及漫游消息
   ///
-  /// 注意
+  ///参数
+  ///
+  /// msgIDs
+  /// webMessageInstanceList  这个参数web独有其中元素是web端的message实例,具体请看[web文档](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#deleteMessage)
+  ///
+  ///
   ///
   /// ```
+  /// 注意:
   ///该接口会删除本地历史的同时也会把漫游消息即保存在服务器上的消息也删除，卸载重装后无法再拉取到。需要注意的是：
   ///   一次最多只能删除 30 条消息
   ///   要删除的消息必须属于同一会话
@@ -933,15 +1043,23 @@ class V2TIMMessageManager {
   }
 
   ///向群组消息列表中添加一条消息
-  ///
   ///该接口主要用于满足向群组聊天会话中插入一些提示性消息的需求，比如“您已经退出该群”，这类消息有展示 在聊天消息区的需求，但并没有发送给其他人的必要。 所以 insertGroupMessageToLocalStorage() 相当于一个被禁用了网络发送能力的 sendMessage() 接口。
   ///
-  ///返回[V2TimMessage]
+  ///参数
+  ///```
+  ///data 类似customMessage中的data
+  ///groupID 群组id
+  ///sender 发送者
+  ///```
+  ///返回
+  ///```
+  ///[V2TimMessage]
+  ///```
   ///
   ///通过该接口 save 的消息只存本地，程序卸载后会丢失。
-  ///
+  ///```
   ///注意： web不支持该接口
-  ///
+  ///```
   Future<V2TimValueCallback<V2TimMessage>> insertGroupMessageToLocalStorage({
     required String data,
     required String groupID,
@@ -955,12 +1073,19 @@ class V2TIMMessageManager {
   ///
   ///该接口主要用于满足向C2C聊天会话中插入一些提示性消息的需求，比如“您已成功发送消息”，这类消息有展示 在聊天消息区的需求，但并没有发送给其他人的必要。 所以 insertC2CMessageToLocalStorage() 相当于一个被禁用了网络发送能力的 sendMessage() 接口。
   ///
+  /// ```
+  ///data 类似customMessage中的data
+  ///groupID 群组id
+  ///sender 发送者
+  ///```
+  ///```
   ///返回[V2TimMessage]
+  ///```
   ///
   ///通过该接口 save 的消息只存本地，程序卸载后会丢失。
-  ///
+  ///```
   ///注意： web不支持该接口
-  ///
+  ///```
   Future<V2TimValueCallback<V2TimMessage>> insertC2CMessageToLocalStorage({
     required String data,
     required String userID,
@@ -972,14 +1097,13 @@ class V2TIMMessageManager {
 
   /// 清空单聊本地及云端的消息（不删除会话）
   ///
-  /// 5.4.666 及以上版本支持
   ///
-  /// 注意
   /// 请注意：
-  /// 会话内的消息在本地删除的同时，在服务器也会同步删除。
+  ///```
+  ///  会话内的消息在本地删除的同时，在服务器也会同步删除。
   ///
-  /// 注意： web不支持该接口
-  ///
+  ///  web不支持该接口
+  ///```
   Future<V2TimCallback> clearC2CHistoryMessage({
     required String userID,
   }) async {
@@ -989,14 +1113,12 @@ class V2TIMMessageManager {
 
   /// 清空群聊本地及云端的消息（不删除会话）
   ///
-  /// 5.4.666 及以上版本支持
-  ///
-  /// 注意
   /// 请注意：
+  /// ```
   /// 会话内的消息在本地删除的同时，在服务器也会同步删除。
   ///
-  /// 注意： web不支持该接口
-  ///
+  /// web不支持该接口
+  ///```
   Future<V2TimCallback> clearGroupHistoryMessage({
     required String groupID,
   }) async {
@@ -1005,14 +1127,15 @@ class V2TIMMessageManager {
   }
 
   ///标记所有消息为已读
-  ///5.8及其以上版本支持
   Future<V2TimCallback> markAllMessageAsRead() async {
     return await ImFlutterPlatform.instance.markAllMessageAsRead();
   }
 
   /// 搜索本地消息
-  ///
+  /// 参数：searchParam消息搜索参数，详见 [V2TIMMessageSearchParam] 的定义
+  ///```
   /// 注意： web不支持该接口
+  /// ```
   Future<V2TimValueCallback<V2TimMessageSearchResult>> searchLocalMessages({
     required V2TimMessageSearchParam searchParam,
   }) async {
@@ -1021,9 +1144,10 @@ class V2TIMMessageManager {
   }
 
   /// 根据 messageID 查询指定会话中的本地消息
-  ///
+  /// 参数：messageIDList 消息ID列表
+  ///```
   /// 注意： web不支持该接口
-  ///
+  ///```
   Future<V2TimValueCallback<List<V2TimMessage>>> findMessages({
     required List<String> messageIDList,
   }) async {

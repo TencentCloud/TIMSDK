@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:im_api_example/utils/customerField/CustomerFieldDialog.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 typedef CallbackAction = void Function(Map<String, String>);
 
@@ -62,7 +63,7 @@ class CustomerFieldState extends State<CustomerField> {
                 ),
                 Container(
                   child: ElevatedButton(
-                      child: const Text('添加字段'),
+                      child: Text(imt("添加字段")),
                       onPressed: customeInfo.keys.length >= maxSetCount
                           ? null
                           : () => handleDialogClose(context)),
@@ -70,7 +71,7 @@ class CustomerFieldState extends State<CustomerField> {
                 ),
               ],
             ),
-            Text('已设置字段：'),
+            Text(imt(imt("已设置字段："))),
             Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: customeInfo.entries

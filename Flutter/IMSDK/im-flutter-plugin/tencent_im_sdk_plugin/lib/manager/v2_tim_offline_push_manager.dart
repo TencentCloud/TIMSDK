@@ -30,11 +30,13 @@ class V2TIMOfflinePushManager {
   /// ```
   /// config	离线推送配置
   /// callback	回调
+  /// isTPNSToken 是否使用tpnstoken
   /// ```
   ///
   Future<V2TimCallback> setOfflinePushConfig({
     required double businessID,
     required String token,
+    bool isTPNSToken = false,
   }) async {
     return V2TimCallback.fromJson(
       formatJson(
@@ -44,6 +46,7 @@ class V2TIMOfflinePushManager {
             {
               "businessID": businessID,
               "token": token,
+              "isTPNSToken": isTPNSToken,
             },
           ),
         ),

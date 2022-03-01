@@ -18,6 +18,7 @@ class V2UserFullInfoEntity: V2TIMUserFullInfo {
         if dict["allowType"] != nil {
             self.allowType = V2TIMFriendAllowType.init(rawValue: (dict["allowType"] as! Int))!;
         }
+        self.birthday = (dict["birthday"] as? UInt32 ?? 0);
 		self.role = dict["role"] as? UInt32 ?? 0;
 		self.level = dict["level"] as? UInt32 ?? 0;
         self.customInfo = (dict["customInfo"] as? [String: Data]);
@@ -36,6 +37,7 @@ class V2UserFullInfoEntity: V2TIMUserFullInfo {
         result["allowType"] = info.allowType.rawValue;
         result["role"] = info.role;
         result["level"] = info.level;
+        result["birthday"] = info.birthday;
 		
 		for i in info.customInfo {
 			retCustomInfo[i.key] = String(data: i.value, encoding: String.Encoding.utf8)

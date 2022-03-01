@@ -6,6 +6,7 @@ import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class AddFriend extends StatefulWidget {
   @override
@@ -50,8 +51,8 @@ class AddFriendState extends State<AddFriend> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "被添加好友ID",
-                    hintText: "被添加好友ID",
+                    labelText: imt("被添加好友ID"),
+                    hintText: imt("被添加好友ID"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -68,8 +69,8 @@ class AddFriendState extends State<AddFriend> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "好友备注",
-                    hintText: "好友备注",
+                    labelText: imt("好友备注"),
+                    hintText: imt("好友备注"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -86,8 +87,8 @@ class AddFriendState extends State<AddFriend> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "好友分组",
-                    hintText: "好友分组，首先得有这个分组",
+                    labelText: imt("好友分组"),
+                    hintText: imt("好友分组，首先得有这个分组"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -104,8 +105,8 @@ class AddFriendState extends State<AddFriend> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "添加简述",
-                    hintText: "添加简述",
+                    labelText: imt("添加简述"),
+                    hintText: imt("添加简述"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -134,10 +135,10 @@ class AddFriendState extends State<AddFriend> {
                     onPressed: () {
                       showAdaptiveActionSheet(
                         context: context,
-                        title: const Text('好友类型'),
+                        title: Text(imt("好友类型")),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
-                            title: const Text('双向好友'),
+                            title: Text(imt("双向好友")),
                             onPressed: () {
                               setState(() {
                                 addType = FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH;
@@ -146,7 +147,7 @@ class AddFriendState extends State<AddFriend> {
                             },
                           ),
                           BottomSheetAction(
-                            title: const Text('单向好友'),
+                            title: Text(imt("单向好友")),
                             onPressed: () {
                               setState(() {
                                 addType =
@@ -161,12 +162,12 @@ class AddFriendState extends State<AddFriend> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择优先级"),
+                    child: Text(imt("选择优先级")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text('已选：$addType'),
+                  child: Text(imt_para("已选：{{addType}}", "已选：${addType}")(addType: addType)),
                 )
               ],
             ),
@@ -176,7 +177,7 @@ class AddFriendState extends State<AddFriend> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: addFriend,
-                  child: Text("添加好友"),
+                  child: Text(imt("添加好友")),
                 ),
               )
             ],

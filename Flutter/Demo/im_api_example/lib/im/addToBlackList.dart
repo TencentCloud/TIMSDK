@@ -4,6 +4,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class AddToBlackList extends StatefulWidget {
   @override
@@ -49,7 +50,7 @@ class AddToBlackListState extends State<AddToBlackList> {
                       child: Container(
                         margin: EdgeInsets.only(left: 10),
                         child:
-                            Text(users.length > 0 ? users.toString() : "未选择"),
+                            Text(users.length > 0 ? users.toString() : imt("未选择")),
                       ),
                     )
                   ],
@@ -62,7 +63,7 @@ class AddToBlackListState extends State<AddToBlackList> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: addToBlackList,
-                  child: Text("添加到黑名单"),
+                  child: Text(imt("添加到黑名单")),
                 ),
               )
             ],

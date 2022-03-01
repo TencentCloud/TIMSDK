@@ -3,6 +3,7 @@ import 'package:im_api_example/im/friendGroupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class DeleteFriendGroup extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ class DeleteFriendGroupState extends State<DeleteFriendGroup> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(fgs.length > 0 ? fgs.toString() : "未选择"),
+                  child: Text(fgs.length > 0 ? fgs.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -52,7 +53,7 @@ class DeleteFriendGroupState extends State<DeleteFriendGroup> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: deleteFriendGroup,
-                  child: Text("删除好友分组"),
+                  child: Text(imt("删除好友分组")),
                 ),
               )
             ],

@@ -27,13 +27,13 @@ apply plugin: 'com.huawei.agconnect'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.tencent.qcloud.tim.uikit"
         minSdkVersion 17
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         consumerProguardFiles 'consumer-proguard-rules.txt'

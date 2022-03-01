@@ -5,6 +5,7 @@ import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SendGroupTextMessage extends StatefulWidget {
   @override
@@ -41,8 +42,8 @@ class SendGroupTextMessageState extends State<SendGroupTextMessage> {
               children: <Widget>[
                 TextField(
                   decoration: InputDecoration(
-                    labelText: "发送文本",
-                    hintText: "发送文本",
+                    labelText: imt("发送文本"),
+                    hintText: imt("发送文本"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -76,7 +77,7 @@ class SendGroupTextMessageState extends State<SendGroupTextMessage> {
                           onPressed: () {
                             showAdaptiveActionSheet(
                               context: context,
-                              title: const Text('优先级'),
+                              title: Text(imt("优先级")),
                               actions: <BottomSheetAction>[
                                 BottomSheetAction(
                                   title: const Text('0'),
@@ -120,12 +121,12 @@ class SendGroupTextMessageState extends State<SendGroupTextMessage> {
                               ), // onPressed parameter is optional by default will dismiss the ActionSheet
                             );
                           },
-                          child: Text("选择优先级"),
+                          child: Text(imt("选择优先级")),
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(left: 12),
-                        child: Text('已选：$priority'),
+                        child: Text(imt_para("已选：{{priority}}", "已选：${priority}")(priority: priority)),
                       )
                     ],
                   ),
@@ -145,7 +146,7 @@ class SendGroupTextMessageState extends State<SendGroupTextMessage> {
                       child: Container(
                         margin: EdgeInsets.only(left: 10),
                         child:
-                            Text(groups.length > 0 ? groups.toString() : "未选择"),
+                            Text(groups.length > 0 ? groups.toString() : imt("未选择")),
                       ),
                     )
                   ],
@@ -158,7 +159,7 @@ class SendGroupTextMessageState extends State<SendGroupTextMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendGroupTextMessage,
-                  child: Text("发送Group文本消息（已弃用）"),
+                  child: Text(imt("发送Group文本消息（已弃用）")),
                 ),
               )
             ],

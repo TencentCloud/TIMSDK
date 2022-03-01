@@ -3,13 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_add_opt_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_add_opt_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class CreateGroupV2 extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => CreateGroupV2State();
+}
+
+class MemberItem {
+  late String userID;
+  late int role;
+  MemberItem(String id, int role) {
+    this.userID = id;
+    this.role = role;
+  }
+  fromJson(String userID, int role) {
+    this.userID = userID;
+    this.role = role;
+  }
+
+  Map<dynamic, dynamic> toJson() {
+    return {"userID": this.userID, "role": this.role};
+  }
 }
 
 class CreateGroupV2State extends State<CreateGroupV2> {
@@ -25,6 +43,10 @@ class CreateGroupV2State extends State<CreateGroupV2> {
   GroupAddOptTypeEnum? addOpt = GroupAddOptTypeEnum.V2TIM_GROUP_ADD_AUTH;
   List<String> memberList = List.empty(growable: true);
   createGroupv2() async {
+    List<V2TimGroupMember> list = [];
+    for (String userID in memberList) {
+      list.add(V2TimGroupMember(userID: userID, role: 200));
+    }
     V2TimValueCallback<String> res =
         await TencentImSDKPlugin.v2TIMManager.getGroupManager().createGroup(
               groupType: groupType,
@@ -35,6 +57,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
               isAllMuted: isAllMuted,
               faceUrl: faceUrl,
               addOpt: addOpt,
+              memberList: list,
             );
     this.setState(() {
       resData = res.toJson();
@@ -54,8 +77,8 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                     children: <Widget>[
                       TextField(
                         decoration: InputDecoration(
-                          labelText: "群ID",
-                          hintText: "选填（如填，则自定义群ID）",
+                          labelText: imt("群ID"),
+                          hintText: imt("选填（如填，则自定义群ID）"),
                           prefixIcon: Icon(Icons.person),
                         ),
                         onChanged: (res) {
@@ -66,8 +89,8 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                          labelText: "群名称",
-                          hintText: "群名称",
+                          labelText: imt("群名称"),
+                          hintText: imt("群名称"),
                           prefixIcon: Icon(Icons.person),
                         ),
                         onChanged: (res) {
@@ -78,8 +101,8 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                          labelText: "群通告",
-                          hintText: "群通告",
+                          labelText: imt("群通告"),
+                          hintText: imt("群通告"),
                           prefixIcon: Icon(Icons.person),
                         ),
                         onChanged: (res) {
@@ -90,8 +113,8 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                          labelText: "群简介",
-                          hintText: "群简介",
+                          labelText: imt("群简介"),
+                          hintText: imt("群简介"),
                           prefixIcon: Icon(Icons.person),
                         ),
                         onChanged: (res) {
@@ -125,7 +148,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                 onPressed: () {
                                   showAdaptiveActionSheet(
                                     context: context,
-                                    title: const Text('群头像'),
+                                    title: Text(imt("群头像")),
                                     actions: <BottomSheetAction>[
                                       BottomSheetAction(
                                         title: Image.network(
@@ -189,7 +212,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                     ), // onPressed parameter is optional by default will dismiss the ActionSheet
                                   );
                                 },
-                                child: Text("选择群头像"),
+                                child: Text(imt("选择群头像")),
                               ),
                             ),
                             Container(
@@ -207,7 +230,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                       ),
                       Row(
                         children: [
-                          Text("是否全员禁言"),
+                          Text(imt("是否全员禁言")),
                           Switch(
                             value: isAllMuted,
                             onChanged: (res) {
@@ -234,7 +257,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                               margin: EdgeInsets.only(left: 10),
                               child: Text(memberList.length > 0
                                   ? memberList.toString()
-                                  : "未选择"),
+                                  : imt("未选择")),
                             ),
                           )
                         ],
@@ -264,10 +287,10 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                 onPressed: () {
                                   showAdaptiveActionSheet(
                                     context: context,
-                                    title: const Text('选择群类型'),
+                                    title: Text(imt("选择群类型")),
                                     actions: <BottomSheetAction>[
                                       BottomSheetAction(
-                                        title: const Text('Work 工作群'),
+                                        title: Text(imt("Work 工作群")),
                                         onPressed: () {
                                           setState(() {
                                             groupType = 'Work';
@@ -276,7 +299,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                         },
                                       ),
                                       BottomSheetAction(
-                                        title: const Text('Public 公开群'),
+                                        title: Text(imt("Public 公开群")),
                                         onPressed: () {
                                           setState(() {
                                             groupType = 'Public';
@@ -285,7 +308,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                         },
                                       ),
                                       BottomSheetAction(
-                                        title: const Text('Meeting 会议群'),
+                                        title: Text(imt("Meeting 会议群")),
                                         onPressed: () {
                                           setState(() {
                                             groupType = 'Meeting';
@@ -294,7 +317,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                         },
                                       ),
                                       BottomSheetAction(
-                                        title: const Text('AVChatRoom 直播群'),
+                                        title: Text(imt("AVChatRoom 直播群")),
                                         onPressed: () {
                                           setState(() {
                                             groupType = 'AVChatRoom';
@@ -308,12 +331,12 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                     ), // onPressed parameter is optional by default will dismiss the ActionSheet
                                   );
                                 },
-                                child: Text("选择群类型"),
+                                child: Text(imt("选择群类型")),
                               ),
                             ),
                             Container(
                               margin: EdgeInsets.only(left: 12),
-                              child: Text('已选：$groupType'),
+                              child: Text(imt_para("已选：{{groupType}}", "已选：${groupType}")(groupType: groupType)),
                             )
                           ],
                         ),
@@ -343,7 +366,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                 onPressed: () {
                                   showAdaptiveActionSheet(
                                     context: context,
-                                    title: const Text('选择加群类型'),
+                                    title: Text(imt("选择加群类型")),
                                     actions: <BottomSheetAction>[
                                       BottomSheetAction(
                                         title:
@@ -384,12 +407,12 @@ class CreateGroupV2State extends State<CreateGroupV2> {
                                     ), // onPressed parameter is optional by default will dismiss the ActionSheet
                                   );
                                 },
-                                child: Text("选择加群类型"),
+                                child: Text(imt("选择加群类型")),
                               ),
                             ),
                             Container(
                               margin: EdgeInsets.only(left: 12),
-                              child: Text('已选：$addOpt'),
+                              child: Text(imt_para("已选：{{addOpt}}", "已选：${addOpt}")(addOpt: addOpt)),
                             )
                           ],
                         ),
@@ -405,7 +428,7 @@ class CreateGroupV2State extends State<CreateGroupV2> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: createGroupv2,
-                  child: Text("高级创建群"),
+                  child: Text(imt("高级创建群")),
                 ),
               )
             ],
@@ -417,23 +440,23 @@ class CreateGroupV2State extends State<CreateGroupV2> {
   }
 }
 // DropdownButton<String>(
-//                         hint: Text('群类型'),
+//                         hint: Text(imt(imt("群类型"))),
 //                         icon: Icon(Icons.person),
 //                         items: [
 //                           DropdownMenuItem<String>(
-//                             child: Text('群类型：Work'),
+//                             child: Text(imt(imt("群类型：Work"))),
 //                             value: "Work",
 //                           ),
 //                           DropdownMenuItem<String>(
-//                             child: Text('群类型：Public'),
+//                             child: Text(imt(imt("群类型：Public"))),
 //                             value: "Public",
 //                           ),
 //                           DropdownMenuItem<String>(
-//                             child: Text('群类型：Meeting'),
+//                             child: Text(imt(imt("群类型：Meeting"))),
 //                             value: "Meeting",
 //                           ),
 //                           DropdownMenuItem<String>(
-//                             child: Text('群类型r：AVChatRoom'),
+//                             child: Text(imt(imt("群类型r：AVChatRoom"))),
 //                             value: "AVChatRoom",
 //                           )
 //                         ],

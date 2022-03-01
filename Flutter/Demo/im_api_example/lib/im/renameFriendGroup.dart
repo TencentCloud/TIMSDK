@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 
+import 'package:im_api_example/i18n/i18n_utils.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 
 class RenameFriendGroup extends StatefulWidget {
@@ -36,8 +37,8 @@ class RenameFriendGroupState extends State<RenameFriendGroup> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "旧分组名",
-                    hintText: "旧分组名",
+                    labelText: imt("旧分组名"),
+                    hintText: imt("旧分组名"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -54,8 +55,8 @@ class RenameFriendGroupState extends State<RenameFriendGroup> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "新分组名",
-                    hintText: "新分组名",
+                    labelText: imt("新分组名"),
+                    hintText: imt("新分组名"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -72,7 +73,7 @@ class RenameFriendGroupState extends State<RenameFriendGroup> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: renameFriendGroup,
-                  child: Text("重命名好友分组"),
+                  child: Text(imt("重命名好友分组")),
                 ),
               )
             ],

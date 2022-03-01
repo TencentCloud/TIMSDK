@@ -679,6 +679,7 @@ class V2TIMManager {
   /// true：成功；
   /// false：失败
   /// ```
+  /// 本sdk封装与nativeSDk，也可以参考[native文档](https://im.sdk.qcloud.com/doc/zh-cn/classcom_1_1tencent_1_1imsdk_1_1v2_1_1V2TIMMessageManager.html#a28e01403acd422e53e999f21ec064795)
   Future<V2TimValueCallback<bool>> initSDK({
     required int sdkAppID,
     required LogLevelEnum loglevel,
@@ -922,6 +923,7 @@ class V2TIMManager {
   ///```
   /// 不支持在同一个 SDKAPPID 下创建两个相同 groupID 的群
   /// ```
+  @Deprecated('简单创建群组自3.6.0开始弃用，请使用groupManager下的高级创建群组,此接口将在以后版本中被删除')
   Future<V2TimValueCallback<String>> createGroup({
     required String groupType,
     required String groupName,
@@ -1006,7 +1008,7 @@ class V2TIMManager {
   /// 参数
   /// api	接口名称
   /// param	接口参数
-  // 注意
+  /// 注意
   /// 该接口提供一些实验性功能
   ///
   /// 注意：web不支持该接口

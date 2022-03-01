@@ -8,6 +8,7 @@ import 'package:tencent_im_sdk_plugin/enum/friend_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class AgreeFriendApplication extends StatefulWidget {
   @override
@@ -36,6 +37,7 @@ class AgreeFriendApplicationState extends State<AgreeFriendApplication> {
 
   @override
   Widget build(BuildContext context) {
+    String friendType = (acceptType == FriendApplicationType.V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD ? imt("双向好友") : imt("单项好友"));
     return Container(
       child: Column(
         children: [
@@ -53,7 +55,7 @@ class AgreeFriendApplicationState extends State<AgreeFriendApplication> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(users.length > 0 ? users.toString() : "未选择"),
+                  child: Text(users.length > 0 ? users.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -75,10 +77,10 @@ class AgreeFriendApplicationState extends State<AgreeFriendApplication> {
                     onPressed: () {
                       showAdaptiveActionSheet(
                         context: context,
-                        title: const Text('删除类型'),
+                        title: Text(imt("删除类型")),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
-                            title: const Text('同意添加双向好友'),
+                            title: Text(imt("同意添加双向好友")),
                             onPressed: () {
                               setState(() {
                                 acceptType = FriendResponseTypeEnum
@@ -88,7 +90,7 @@ class AgreeFriendApplicationState extends State<AgreeFriendApplication> {
                             },
                           ),
                           BottomSheetAction(
-                            title: const Text('同意添加单向好友'),
+                            title: Text(imt("同意添加单向好友")),
                             onPressed: () {
                               setState(() {
                                 acceptType = FriendResponseTypeEnum
@@ -103,13 +105,13 @@ class AgreeFriendApplicationState extends State<AgreeFriendApplication> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择同意类型类型"),
+                    child: Text(imt("选择同意类型类型")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
                   child: Text(
-                      '已选：${acceptType == FriendApplicationType.V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD ? "双向好友" : "单项好友"}'),
+                      imt_para("已选：{{friendType}}", "已选：${friendType}")(friendType: friendType)),
                 )
               ],
             ),
@@ -119,7 +121,7 @@ class AgreeFriendApplicationState extends State<AgreeFriendApplication> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: deleteFromFriendList,
-                  child: Text("同意申请"),
+                  child: Text(imt("同意申请")),
                 ),
               )
             ],

@@ -3,6 +3,7 @@ import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_param.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SearchGroupMembers extends StatefulWidget {
   @override
@@ -44,8 +45,8 @@ class SearchGroupMembersState extends State<SearchGroupMembers> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "搜索关键字列表，最多支持5个",
-                    hintText: "关键字",
+                    labelText: imt("搜索关键字列表，最多支持5个"),
+                    hintText: imt("关键字"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -71,7 +72,7 @@ class SearchGroupMembersState extends State<SearchGroupMembers> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groupID.length > 0 ? groupID.toString() : "未选择"),
+                  child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -88,7 +89,7 @@ class SearchGroupMembersState extends State<SearchGroupMembers> {
           ),
           Row(
             children: [
-              Text("设置是否搜索群成员 userID"),
+              Text(imt("设置是否搜索群成员 userID")),
               Switch(
                 value: isSearchMemberUserID,
                 onChanged: (res) {
@@ -101,7 +102,7 @@ class SearchGroupMembersState extends State<SearchGroupMembers> {
           ),
           Row(
             children: [
-              Text("设置是否搜索群成员昵称"),
+              Text(imt("设置是否搜索群成员昵称")),
               Switch(
                 value: isSearchMemberNickName,
                 onChanged: (res) {
@@ -114,7 +115,7 @@ class SearchGroupMembersState extends State<SearchGroupMembers> {
           ),
           Row(
             children: [
-              Text("设置是否搜索群成员名片"),
+              Text(imt("设置是否搜索群成员名片")),
               Switch(
                 value: isSearchMemberNameCard,
                 onChanged: (res) {
@@ -127,7 +128,7 @@ class SearchGroupMembersState extends State<SearchGroupMembers> {
           ),
           Row(
             children: [
-              Text("设置是否搜索群成员备注"),
+              Text(imt("设置是否搜索群成员备注")),
               Switch(
                 value: isSearchMemberRemark,
                 onChanged: (res) {
@@ -143,7 +144,7 @@ class SearchGroupMembersState extends State<SearchGroupMembers> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendTextMessage,
-                  child: Text("搜索群成员"),
+                  child: Text(imt("搜索群成员")),
                 ),
               )
             ],

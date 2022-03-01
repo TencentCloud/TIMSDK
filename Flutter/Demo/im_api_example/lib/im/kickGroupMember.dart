@@ -4,6 +4,7 @@ import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class KickGroupMember extends StatefulWidget {
   @override
@@ -46,7 +47,7 @@ class KickGroupMemberState extends State<KickGroupMember> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(group.length > 0 ? group.toString() : "未选择"),
+                  child: Text(group.length > 0 ? group.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -92,7 +93,7 @@ class KickGroupMemberState extends State<KickGroupMember> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: kickGroupMember,
-                  child: Text("踢群成员出群"),
+                  child: Text(imt("踢群成员出群")),
                 ),
               )
             ],

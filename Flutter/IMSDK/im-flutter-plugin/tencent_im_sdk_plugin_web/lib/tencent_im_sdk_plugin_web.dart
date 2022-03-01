@@ -31,6 +31,7 @@ import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_friend_se
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_application_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_info_result.dart';
+import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_full_info.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_info_result.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member_operation_result.dart';
@@ -202,6 +203,7 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
       {
         "nickName": userFullInfo.nickName,
         "faceUrl": userFullInfo.faceUrl,
+        "birthday": userFullInfo.birthday,
         "selfSignature": userFullInfo.selfSignature,
         "gender": userFullInfo.gender,
         "allowType": userFullInfo.allowType,
@@ -511,7 +513,7 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
     String? faceUrl,
     bool? isAllMuted,
     int? addOpt,
-    List<Map>? memberList,
+    List<V2TimGroupMember>? memberList,
   }) async {
     return await _v2timGroupManager.createGroup({
       "groupID": groupID,
@@ -522,7 +524,7 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
       "faceUrl": faceUrl,
       "isAllMuted": isAllMuted,
       "addOpt": addOpt,
-      "memberList": memberList
+      "memberList": memberList?.map((member) => member.toJson()).toList(),
     });
   }
 

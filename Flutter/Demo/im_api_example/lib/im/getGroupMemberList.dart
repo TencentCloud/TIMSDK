@@ -7,6 +7,7 @@ import 'package:tencent_im_sdk_plugin/enum/group_member_filter_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class GetGroupMemberList extends StatefulWidget {
   @override
@@ -55,7 +56,7 @@ class GetGroupMemberListState extends State<GetGroupMemberList> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(group.length > 0 ? group.toString() : "未选择"),
+                  child: Text(group.length > 0 ? group.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -128,12 +129,12 @@ class GetGroupMemberListState extends State<GetGroupMemberList> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择优先级"),
+                    child: Text(imt("选择优先级")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text('已选：$filter'),
+                  child: Text(imt_para("已选：{{filter}}", "已选：${filter}")(filter: filter)),
                 )
               ],
             ),
@@ -170,7 +171,7 @@ class GetGroupMemberListState extends State<GetGroupMemberList> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: getGroupMemberList,
-                  child: Text("获取群成员列表"),
+                  child: Text(imt("获取群成员列表")),
                 ),
               )
             ],

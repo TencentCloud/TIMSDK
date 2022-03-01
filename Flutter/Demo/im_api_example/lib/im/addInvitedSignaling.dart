@@ -7,6 +7,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_offline_push_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_signaling_info.dart';
 
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class AddInvitedSignaling extends StatefulWidget {
   @override
@@ -70,7 +71,7 @@ class AddInvitedSignalingState extends State<AddInvitedSignaling> {
                   margin: EdgeInsets.only(left: 10),
                   child: Text(conversaions.length > 0
                       ? conversaions.toString()
-                      : "未选择"),
+                      : imt("未选择")),
                 ),
               )
             ],
@@ -98,7 +99,7 @@ class AddInvitedSignalingState extends State<AddInvitedSignaling> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: getSignalingInfo,
-                  child: Text("添加信令信息（选择已有的信令信息进行测试）"),
+                  child: Text(imt("添加信令信息（选择已有的信令信息进行测试）")),
                 ),
               )
             ],

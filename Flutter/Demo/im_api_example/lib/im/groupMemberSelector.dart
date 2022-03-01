@@ -5,6 +5,7 @@ import 'package:tencent_im_sdk_plugin/enum/group_member_filter_type.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 typedef OnGet(List<String> data);
 
@@ -55,7 +56,7 @@ class GroupMemberSelectorState extends State<GroupMemberSelector> {
 
   AlertDialog dialogShow(context) {
     AlertDialog dialog = AlertDialog(
-      title: Text('选择群成员'),
+      title: Text(imt(imt("选择群成员"))),
       contentPadding: EdgeInsets.zero,
       content: MemberList(
         groupMembers,
@@ -74,13 +75,13 @@ class GroupMemberSelectorState extends State<GroupMemberSelector> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('确认'),
+          child: Text(imt(imt("确认"))),
         ),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('取消'),
+          child: Text(imt(imt("取消"))),
         ),
       ],
     );
@@ -91,7 +92,7 @@ class GroupMemberSelectorState extends State<GroupMemberSelector> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(),
-      child: Text("选择群成员"),
+      child: Text(imt("选择群成员")),
       onPressed: widget.groupID == ''
           ? null
           : () {

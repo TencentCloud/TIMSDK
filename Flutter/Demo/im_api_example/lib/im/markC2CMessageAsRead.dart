@@ -3,6 +3,7 @@ import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class MarkC2CMessageAsRead extends StatefulWidget {
   @override
@@ -47,7 +48,7 @@ class MarkC2CMessageAsReadState extends State<MarkC2CMessageAsRead> {
                       child: Container(
                         margin: EdgeInsets.only(left: 10),
                         child:
-                            Text(users.length > 0 ? users.toString() : "未选择"),
+                            Text(users.length > 0 ? users.toString() : imt("未选择")),
                       ),
                     )
                   ],
@@ -60,7 +61,7 @@ class MarkC2CMessageAsReadState extends State<MarkC2CMessageAsRead> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: markC2CMessageAsRead,
-                  child: Text("标记c2c会话已读"),
+                  child: Text(imt("标记c2c会话已读")),
                 ),
               )
             ],

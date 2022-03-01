@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/provider/event.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:provider/provider.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class Callbacks extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class CallbackState extends State<Callbacks> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("事件回调"),
+        title: Text(imt("事件回调")),
         actions: [
           IconButton(
             onPressed: () {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_search_param.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SearchFriends extends StatefulWidget {
   @override
@@ -42,8 +43,8 @@ class SearchFriendsState extends State<SearchFriends> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "搜索关键字列表，最多支持5个",
-                    hintText: "关键字(example只有设置了一个关键字)",
+                    labelText: imt("搜索关键字列表，最多支持5个"),
+                    hintText: imt("关键字(example只有设置了一个关键字)"),
                     prefixIcon: Icon(Icons.person),
                   ),
                   onChanged: (res) {
@@ -67,7 +68,7 @@ class SearchFriendsState extends State<SearchFriends> {
           ),
           Row(
             children: [
-              Text("设置是否搜索userID"),
+              Text(imt("设置是否搜索userID")),
               Switch(
                 value: isSearchUserID,
                 onChanged: (res) {
@@ -80,7 +81,7 @@ class SearchFriendsState extends State<SearchFriends> {
           ),
           Row(
             children: [
-              Text("是否设置搜索昵称"),
+              Text(imt("是否设置搜索昵称")),
               Switch(
                 value: isSearchNickName,
                 onChanged: (res) {
@@ -93,7 +94,7 @@ class SearchFriendsState extends State<SearchFriends> {
           ),
           Row(
             children: [
-              Text("设置是否搜索备注"),
+              Text(imt("设置是否搜索备注")),
               Switch(
                 value: isSearchRemark,
                 onChanged: (res) {
@@ -109,7 +110,7 @@ class SearchFriendsState extends State<SearchFriends> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendTextMessage,
-                  child: Text("搜索好友"),
+                  child: Text(imt("搜索好友")),
                 ),
               )
             ],

@@ -7,6 +7,7 @@ import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_check_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class CheckFriend extends StatefulWidget {
   @override
@@ -51,7 +52,7 @@ class CheckFriendState extends State<CheckFriend> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(users.length > 0 ? users.toString() : "未选择"),
+                  child: Text(users.length > 0 ? users.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -73,10 +74,10 @@ class CheckFriendState extends State<CheckFriend> {
                     onPressed: () {
                       showAdaptiveActionSheet(
                         context: context,
-                        title: const Text('检测类型'),
+                        title: Text(imt("检测类型")),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
-                            title: const Text('双向好友'),
+                            title: Text(imt("双向好友")),
                             onPressed: () {
                               setState(() {
                                 checkType =
@@ -86,7 +87,7 @@ class CheckFriendState extends State<CheckFriend> {
                             },
                           ),
                           BottomSheetAction(
-                            title: const Text('单向好友'),
+                            title: Text(imt("单向好友")),
                             onPressed: () {
                               setState(() {
                                 checkType =
@@ -101,12 +102,12 @@ class CheckFriendState extends State<CheckFriend> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择检测类型"),
+                    child: Text(imt("选择检测类型")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text('已选：$checkType'),
+                  child: Text(imt_para("已选：{{checkType}}", "已选：${checkType}")(checkType: checkType)),
                 )
               ],
             ),
@@ -116,7 +117,7 @@ class CheckFriendState extends State<CheckFriend> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: checkFriend,
-                  child: Text("检测好友"),
+                  child: Text(imt("检测好友")),
                 ),
               )
             ],

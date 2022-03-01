@@ -10,6 +10,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SendMergerMessage extends StatefulWidget {
   @override
@@ -31,8 +32,8 @@ class SendMergerMessageState extends State<SendMergerMessage> {
             .getMessageManager()
             .createMergerMessage(
               msgIDList: msgIDs,
-              title: "XXX与XXX的会话", abstractList: msgIDs, //每条消息的摘要，这里暂时写为每条消息的id
-              compatibleText: '低版本不支持会会收到文本消息', // 低版本不支持此类消息，将会由这个字段的文本代替
+              title: imt("XXX与XXX的会话"), abstractList: msgIDs, //每条消息的摘要，这里暂时写为每条消息的id
+              compatibleText: imt(imt("低版本不支持会会收到文本消息")), // 低版本不支持此类消息，将会由这个字段的文本代替
             );
     String id = createMessage.data!.id!;
 
@@ -45,7 +46,7 @@ class SendMergerMessageState extends State<SendMergerMessage> {
             priority: priority,
             onlineUserOnly: onlineUserOnly,
             isExcludedFromUnreadCount: isExcludedFromUnreadCount,
-            localCustomData: "自定义localCustomData(sendMergerMessage)");
+            localCustomData: imt("自定义localCustomData(sendMergerMessage)"));
 
     setState(() {
       resData = res.toJson();
@@ -73,7 +74,7 @@ class SendMergerMessageState extends State<SendMergerMessage> {
                   margin: EdgeInsets.only(left: 10),
                   child: Text(conversaions.length > 0
                       ? conversaions.toString()
-                      : "未选择"),
+                      : imt("未选择")),
                 ),
               )
             ],
@@ -111,7 +112,7 @@ class SendMergerMessageState extends State<SendMergerMessage> {
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
                   child:
-                      Text(receiver.length > 0 ? receiver.toString() : "未选择"),
+                      Text(receiver.length > 0 ? receiver.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -130,7 +131,7 @@ class SendMergerMessageState extends State<SendMergerMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groupID.length > 0 ? groupID.toString() : "未选择"),
+                  child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -152,7 +153,7 @@ class SendMergerMessageState extends State<SendMergerMessage> {
                     onPressed: () {
                       showAdaptiveActionSheet(
                         context: context,
-                        title: const Text('优先级'),
+                        title: Text(imt("优先级")),
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
                             title: const Text('V2TIM_PRIORITY_DEFAULT'),
@@ -200,19 +201,19 @@ class SendMergerMessageState extends State<SendMergerMessage> {
                         ), // onPressed parameter is optional by default will dismiss the ActionSheet
                       );
                     },
-                    child: Text("选择优先级"),
+                    child: Text(imt("选择优先级")),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text('已选：$priority'),
+                  child: Text(imt_para("已选：{{priority}}", "已选：${priority}")(priority: priority)),
                 )
               ],
             ),
           ),
           Row(
             children: [
-              Text("是否仅在线用户接受到消息"),
+              Text(imt("是否仅在线用户接受到消息")),
               Switch(
                 value: onlineUserOnly,
                 onChanged: (res) {
@@ -225,7 +226,7 @@ class SendMergerMessageState extends State<SendMergerMessage> {
           ),
           Row(
             children: [
-              Text("发送消息是否不计入未读数"),
+              Text(imt("发送消息是否不计入未读数")),
               Switch(
                 value: isExcludedFromUnreadCount,
                 onChanged: (res) {
@@ -241,7 +242,7 @@ class SendMergerMessageState extends State<SendMergerMessage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: sendMergerMessage,
-                  child: Text("合并消息"),
+                  child: Text(imt("合并消息")),
                 ),
               )
             ],

@@ -3,6 +3,7 @@ import 'package:im_api_example/im/conversationSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class SetConversationDraft extends StatefulWidget {
   @override
@@ -18,7 +19,7 @@ class SetConversationDraftState extends State<SetConversationDraft> {
         .getConversationManager()
         .setConversationDraft(
           conversationID: conversaions.first,
-          draftText: isSetting ? "草稿内容，null为取消" : null,
+          draftText: isSetting ? imt("草稿内容，null为取消") : null,
         );
     setState(() {
       resData = res.toJson();
@@ -46,14 +47,14 @@ class SetConversationDraftState extends State<SetConversationDraft> {
                   margin: EdgeInsets.only(left: 10),
                   child: Text(conversaions.length > 0
                       ? conversaions.toString()
-                      : "未选择"),
+                      : imt("未选择")),
                 ),
               )
             ],
           ),
           Row(
             children: [
-              Text("设置草稿/取消草稿"),
+              Text(imt("设置草稿/取消草稿")),
               Switch(
                 value: isSetting,
                 onChanged: (res) {
@@ -69,7 +70,7 @@ class SetConversationDraftState extends State<SetConversationDraft> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: setConversationDraft,
-                  child: Text("设置会话草稿"),
+                  child: Text(imt("设置会话草稿")),
                 ),
               )
             ],

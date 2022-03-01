@@ -31,7 +31,7 @@ public class V2FriendInfoEntity : V2TIMFriendInfo{
         result["friendGroups"] = info.friendGroups;
         result["userProfile"] = V2UserFullInfoEntity.getDict(info: info.userFullInfo);
 		
-		if let customInfo = info.friendCustomInfo as? Dictionary<String, Data> {
+        if let customInfo = info.friendCustomInfo {
 			var retCustomInfo: Dictionary<String, String> = [:]
 			for i in customInfo {
 				retCustomInfo[i.key] = String(data: i.value, encoding: String.Encoding.utf8)

@@ -1,5 +1,6 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class CustomerFieldDialog extends StatefulWidget {
   @override
@@ -14,8 +15,8 @@ class CustomerFieldDialogState extends State<CustomerFieldDialog> {
     if (fieldKey == '') {
       await showOkAlertDialog(
         context: context,
-        title: "提示",
-        message: "字段名不能为空",
+        title: imt("提示"),
+        message: imt("字段名不能为空"),
       );
       return;
     }
@@ -27,15 +28,15 @@ class CustomerFieldDialogState extends State<CustomerFieldDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('自定义字段'),
+      title: Text(imt(imt("自定义字段"))),
       content: Container(
         height: 150,
         child: Column(
           children: [
             TextField(
               decoration: InputDecoration(
-                labelText: "字段名",
-                hintText: "请在控制台查看",
+                labelText: imt("字段名"),
+                hintText: imt("请在控制台查看"),
               ),
               onChanged: (res) {
                 setState(() {
@@ -45,7 +46,7 @@ class CustomerFieldDialogState extends State<CustomerFieldDialog> {
             ),
             TextField(
               decoration: InputDecoration(
-                labelText: "字段值",
+                labelText: imt("字段值"),
                 hintText: "",
               ),
               onChanged: (res) {
@@ -59,8 +60,8 @@ class CustomerFieldDialogState extends State<CustomerFieldDialog> {
       ),
       actions: <Widget>[
         TextButton(
-            onPressed: () => Navigator.of(context).pop(), child: Text("取消")),
-        TextButton(onPressed: handleSetFieldValue, child: Text("确定"))
+            onPressed: () => Navigator.of(context).pop(), child: Text(imt("取消"))),
+        TextButton(onPressed: handleSetFieldValue, child: Text(imt("确定")))
       ],
     );
   }
