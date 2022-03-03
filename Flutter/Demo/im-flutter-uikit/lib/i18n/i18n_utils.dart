@@ -25,7 +25,7 @@ class I18nUtils {
 
   String _imt(String value) {
     String currentKey = zhMapRevert[value] ?? getKeyFromMap(zhMap, value) ?? "";
-    String translatedValue = t[currentKey] ?? "文本错误";
+    String translatedValue = t[currentKey] ?? value;
     return translatedValue;
   }
 

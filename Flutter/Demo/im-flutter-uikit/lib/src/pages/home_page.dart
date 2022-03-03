@@ -8,7 +8,6 @@ import 'package:timuikit/src/conversation.dart';
 import 'package:timuikit/src/profile.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
-import '../channel.dart';
 
 /// 首页
 class HomePage extends StatefulWidget {
@@ -44,29 +43,15 @@ class HomePageState extends State<HomePage> {
 
   Map<int, String> pageTitle() {
     return {
-      0: imt("频道"),
-      1: imt("消息"),
-      2: imt("通讯录"),
-      3: imt("我的"),
+      0: imt("消息"),
+      1: imt("通讯录"),
+      2: imt("我的"),
     };
   }
 
   static List<NavigationBarData> getBottomNavigatorList(BuildContext context) {
     List<NavigationBarData> list = [];
     final List<NavigationBarData> bottomNavigatorList = [
-      NavigationBarData(
-        widget: const Channel(),
-        // widget: Text("1"),
-        title: imt("频道"),
-        selectedIcon: Icon(
-          Icons.group_work_outlined,
-          color: hexToColor("4f98f9"),
-        ),
-        unselectedIcon: const Icon(
-          Icons.group_work_outlined,
-          color: Colors.grey,
-        ),
-      ),
       NavigationBarData(
         widget: const Conversation(),
         title: imt("消息"),
@@ -152,20 +137,18 @@ class HomePageState extends State<HomePage> {
       minTextAdapt: true,
     );
     return Scaffold(
-      appBar: currentIndex != 0
-          ? AppBar(
-              iconTheme: const IconThemeData(
-                color: Colors.black,
-              ),
-              shadowColor: hexToColor("ececec"),
-              elevation: 1,
-              automaticallyImplyLeading: false,
-              leading: null,
-              backgroundColor: hexToColor("EBF0F6"),
-              title: getTitle(),
-              centerTitle: true,
-            )
-          : null,
+      appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
+        shadowColor: hexToColor("ececec"),
+        elevation: 1,
+        automaticallyImplyLeading: false,
+        leading: null,
+        backgroundColor: hexToColor("EBF0F6"),
+        title: getTitle(),
+        centerTitle: true,
+      ),
       body: IndexedStack(
         index: currentIndex,
         children: bottomNavigatorList().map((res) => res.widget).toList(),

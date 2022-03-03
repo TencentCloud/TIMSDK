@@ -14,7 +14,7 @@ Flutter TIMUIKit 是基于Flutter IM SDK 实现的一套UI组件，其中包含�
 - [TIMUIKitBlackList](DETAIL.md#timuikitblacklist) 黑名单
 - [TIMUIKitNewContact](DETAIL.md#timuikitnewcontact) 新的联系人
 
-![](https://imgcache.qq.com/operation/dianshi/other/1645529175357.c28a14c65022a4fdae449f264ccc38ebd10c4b49.png)
+![](https://imgcache.qq.com/operation/dianshi/other/uikit.e8f3557a9e34f99120644b7a4a5645ec30c2cbd2.jpg)
 
 ## 支持平台
 - Android
@@ -73,16 +73,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
 
-  void _initTIMUIKit() {
-    _coreInstance.init(
-        sdkAppID: 0, // 控制台申请的sdkAppID
-        loglevel: LogLevelEnum.V2TIM_LOG_DEBUG,
-        listener: V2TimSDKListener());
-  }
-
   @override
   void initState() {
-    _initTIMUIKit();
+    _coreInstance.init(
+      sdkAppID: 0, // 控制台申请的sdkAppID
+      loglevel: LogLevelEnum.V2TIM_LOG_DEBUG,
+      listener: V2TimSDKListener());    
     super.initState();
   }
 
@@ -97,8 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 ```
-### 步骤3: 获取签名和登录
->! 
+### 步骤4: 获取签名和登录
 >- 正确的 `UserSig` 签发方式是将 `UserSig` 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 `UserSig` 时由您的 App 向业务服务器发起请求获取动态 `UserSig`。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/647/17275#Server)。
 
 添加两个`TextField`用于输入`userID` 和 `userSig`。点击登录后掉用登录接口。
@@ -106,6 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
 /// main.dart
 /// 省略
 class _MyHomePageState extends State<MyHomePage> {
+  /// 获取 TIMUIKitCore Instance
   final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
   String userID = "";
   String userSig = "";
@@ -113,6 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
   /// 省略
 
   void _login() {
+    // 登录
     _coreInstance.login(userID: userID, userSig: userSig);
   }
 
@@ -158,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
-### 步骤3: 集成所需组件
+### 步骤4: 集成所需组件
 - 创建`message.dart`文件集成`TIMUIKitConversation` 和 `TIMUIKitChat`包含不仅限于此。可根据您的需求集成更多的组件。
 - 修改`main.dart`中代码，登录成功后跳转至该页面。 
 ```dart
@@ -202,16 +199,12 @@ class Chat extends StatelessWidget {
         : selectedConversation.groupID;
   }
 
-  String _getTitle() {
-    return selectedConversation.showName ?? "";
-  }
-
   @override
   Widget build(BuildContext context) {
     return TIMUIKitChat(
       conversationID: _getConvID() ?? '', // groupID 或者 userID
       conversationType: selectedConversation.type ?? 0, // 会话类型
-      conversationShowName: _getTitle(), // 会话展示名称
+      conversationShowName: selectedConversation.showName ?? "", // 会话展示名称
       onTapAvatar: (_) {}, // 点击消息发送者头像回调事件、可与TIMUIKitProfile关联使用
       appBarActions: [
         IconButton(

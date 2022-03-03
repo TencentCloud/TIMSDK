@@ -84,7 +84,7 @@ class TIMUIKitConversationItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        height: 24,
+                        // height: 24,
                         padding: const EdgeInsets.symmetric(vertical: 2),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -108,16 +108,12 @@ class TIMUIKitConversationItem extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                        child: lastMsg != null
-                            ? TIMUIKitLastMsg(
-                                groupAtInfoList: groupAtInfoList,
-                                lastMsg: lastMsg,
-                                context: context,
-                              )
-                            : null,
-                      ),
+                      if (lastMsg != null)
+                        TIMUIKitLastMsg(
+                          groupAtInfoList: groupAtInfoList,
+                          lastMsg: lastMsg,
+                          context: context,
+                        )
                     ],
                   ),
                 ))

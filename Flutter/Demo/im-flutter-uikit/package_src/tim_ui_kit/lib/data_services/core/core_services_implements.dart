@@ -26,9 +26,11 @@ class CoreServicesImpl with CoreServices {
       {required int sdkAppID,
       required LogLevelEnum loglevel,
       required V2TimSDKListener listener}) async {
-    // setupServiceLocator();
     final result = await TencentImSDKPlugin.v2TIMManager
         .initSDK(sdkAppID: sdkAppID, loglevel: loglevel, listener: listener);
+    // TencentImSDKPlugin.v2TIMManager.callExperimentalAPI(
+    //     api: "internal_operation_set_ui_platform",
+    //     param: {"request_set_ui_platform_param": "flutter_uikit"});
     return result.data;
   }
 

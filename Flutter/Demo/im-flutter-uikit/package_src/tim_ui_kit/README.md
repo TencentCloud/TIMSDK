@@ -11,21 +11,23 @@ TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、�
 - TIMUIKitGroup 群组列表组件
 - TIMUIKitBlackList 黑名单列表组件
 - TIMUIKitContact 联系人组件
+- TIMUIKitNewContact 新的联系人
+
 
 ### 截图
-![](https://imgcache.qq.com/operation/dianshi/other/1645529175357.c28a14c65022a4fdae449f264ccc38ebd10c4b49.png)
+![](https://imgcache.qq.com/operation/dianshi/other/uikit.e8f3557a9e34f99120644b7a4a5645ec30c2cbd2.jpg)
 
 ## 介绍及使用
 ![](https://imgcache.qq.com/operation/dianshi/other/191645543019_.pic.06d8f22e726287c07cf38d362ec40d4deb4799c7.jpg)
+
+## 国际化
+node scan 全局扫描
+放入翻译JSON文件后，执行该命令：
+flutter pub run fast_i18n
 ## TIMUIKitCore
 `TIMUIKitCore`提供两个静态方法`getInstance` 和 `getSDKInstance`。
 - `getInstance`: 返回 `CoreServicesImpl` 实例。
 - `getSDKInstance`:  返回SDK实例。
-
-### 国际化
-node scan 全局扫描
-放入翻译JSON文件后，执行该命令：
-flutter pub run fast_i18n
 
 `CoreServicesImpl` 为`TIMUIKit` 核心类，包含初始化、登录、登出、获取用户信息等方法。
 ```dart
@@ -34,7 +36,7 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
 final V2TIMManager _sdkInstance = TIMUIKitCore.getSDKInstance();
 
-/// init 
+/// init
 _coreInstance.init(
         sdkAppID: 0, // 控制台申请的sdkAppID
         loglevel: LogLevelEnum.V2TIM_LOG_DEBUG,
@@ -44,7 +46,7 @@ _coreInstance.unInit();
 
 /// login
 _coreInstance.login(
-    userID: 0, // 用户ID 
+    userID: 0, // 用户ID
     userSig: "" // 参考官方文档userSig
 )
 
@@ -63,10 +65,40 @@ _coreInstance.setOfflinePushConfig(
 
 /// setSelfInfo
 _coreInstance.setSelfInfo(userFullInfo: userFullInfo) // 设置用户信息
+
+/// setTheme
+_coreInstance.setTheme(TUITheme theme: theme) // 设置主题色
+/*
+  TUITheme(
+    // 应用主色
+    final Color? primaryColor;
+    // 应用次色
+    final Color? secondaryColor;
+    // 提示颜色，用于次级操作或提示
+    final Color? infoColor;
+    // 浅背景颜色，比主背景颜色浅，用于填充缝隙或阴影
+    final Color? weakBackgroundColor;
+    // 浅分割线颜色，用于分割线或边框
+    final Color? weakDividerColor;
+    // 浅字色
+    final Color? weakTextColor;
+    // 深字色
+    final Color? darkTextColor;
+    // 浅主色，用于AppBar或Panels
+    final Color? lightPrimaryColor;
+    // 字色
+    final Color? textColor;
+    // 警示色，用于危险操作
+    final Color? cautionColor;
+    // 群主标识色
+    final Color? ownerColor;
+    // 群管理员标识色
+    final Color? adminColor;)
+*/
 ```
 
-### 静态方法 
-- **TIMUIKitCore.getInstance()**:  
+### 静态方法
+- **TIMUIKitCore.getInstance()**:
 返回`CoreServicesImpl` 实例
 - **TIMUIKitCore.getSDKInstance()**:
 返回为 `V2TIMManager` 为`SDK 实例` 具体使用方式请参考[`Flutter IM SDK 文档`](https://pub.dev/documentation/tencent_im_sdk_plugin/latest/manager_v2_tim_manager/V2TIMManager/initSDK.html)

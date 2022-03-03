@@ -183,8 +183,8 @@ Promise.all(
     `The process of scanning and hashing is finished, do you want replace for no parameter string automatically?[Y/n]`,
     (bool) => {
       if (bool === "Y") {
-         replace();
-//        console.log("第二次全局替换会出问题，请手动对已写的新增字符串进行包裹。格式如下：");
+        //  replace();
+       console.log("第二次全局替换会出问题，请手动对已写的新增字符串进行包裹。格式如下：");
       } else {
         console.log("请手动替换，格式如下：");
       }

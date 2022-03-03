@@ -522,3 +522,6 @@ setGroupReceiveMessageOpt、getC2CReceiveMessageOpt、getConversationListByConve
 ## 3.8.2
 * 更新群成员参数约束
 
+## 3.8.3
+* 根据环境切换token编码
+

@@ -87,25 +87,11 @@ class _TIMUIKItHistoryMessageListItemState
   final TUIThemeViewModel themeModel = serviceLocator<TUIThemeViewModel>();
   // bool isChecked = false;
 
-  Stream waitForStateLoading() async* {
-    while (!mounted) {
-      yield false;
-    }
-    yield true;
-  }
-
-  Future<void> postInit(VoidCallback action) async {
-    await for (var isLoaded in waitForStateLoading()) {}
-    action();
-  }
-
   @override
   initState() {
     super.initState();
     setState(() {});
-    postInit(() {
-      initTools();
-    });
+    initTools();
   }
 
   _buildeFirstRow() {
@@ -120,6 +106,9 @@ class _TIMUIKItHistoryMessageListItemState
       {"label": ttBuild.imt("多选"), "id": "multiSelect", "icon": "images/multi_message.png"},
       {"label": ttBuild.imt("引用"), "id": "replyMessage", "icon": "images/reply_message.png"}
     ];
+    if (widget.messageItem.elemType != MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
+      firstRowList.removeAt(0);
+    }
     return firstRowList
         .map((item) => Material(
               child: InkWell(
@@ -163,7 +152,9 @@ class _TIMUIKItHistoryMessageListItemState
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 12),
       height: 131,
-      width: 242,
+      width: widget.messageItem.elemType == MessageElemType.V2TIM_ELEM_TYPE_TEXT
+          ? 242
+          : 181.5,
       child: Column(
         children: [
           Row(

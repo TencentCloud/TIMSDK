@@ -108,6 +108,8 @@ class _TUIChatState extends State<TIMUIKitChat> {
   @override
   Widget build(BuildContext context) {
     final I18nUtils ttBuild = I18nUtils(context);
+    final closePanel = OptimizeUtils.throttle(
+        (_) => inputextField.currentState.hideAllPanel(), 60);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: model),
@@ -157,9 +159,9 @@ class _TUIChatState extends State<TIMUIKitChat> {
                                 onPressed: () {
                                   model.updateMultiSelectStatus(false);
                                 },
-                                child: const Text(
-                                  '取消',
-                                  style: TextStyle(
+                                child: Text(
+                                  ttBuild.imt('取消'),
+                                  style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
                                   ),
@@ -202,10 +204,7 @@ class _TUIChatState extends State<TIMUIKitChat> {
                               child: Align(
                                   alignment: Alignment.topCenter,
                                   child: Listener(
-                                    onPointerMove: OptimizeUtils.throttle(
-                                        () => inputextField.currentState
-                                            .hideAllPanel(),
-                                        60),
+                                    onPointerMove: closePanel,
                                     child: TIMUIKitHistoryMessageList(
                                       exteraTipsActionItemBuilder:
                                           widget.exteraTipsActionItemBuilder,

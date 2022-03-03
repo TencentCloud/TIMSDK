@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
+import 'package:tim_ui_kit/ui/utils/optimize_utils.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKItMessageList/tim_uikit_chat_history_message_list_item.dart';
 import 'package:tim_ui_kit/ui/widgets/keepalive_wrapper.dart';
 
@@ -46,6 +47,10 @@ class TIMUIKitHistoryMessageList extends StatelessWidget {
     if (messageList.isEmpty) {
       return Container();
     }
+    final throteFunction = OptimizeUtils.throttle((index) {
+      final msgID = _getMessageId(index);
+      loadMore(msgID);
+    }, 20);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ListView.builder(
@@ -60,11 +65,14 @@ class TIMUIKitHistoryMessageList extends StatelessWidget {
             final messageItem = messageList[index];
             if (index == messageList.length - 1) {
               if (!isNoMoreMessage) {
-                final msgID = _getMessageId(index);
-                loadMore(msgID);
+                // final throteFunction = OptimizeUtils.throttle(() {
+                //   final msgID = _getMessageId(index);
+                //   loadMore(msgID);
+                // }, 200);
+                // throteFunction();
+                throteFunction(index);
               }
             }
-
             return KeepAliveWrapper(
                 child: TIMUIKitHistoryMessageListItem(
               exteraTipsActionItemBuilder: exteraTipsActionItemBuilder,

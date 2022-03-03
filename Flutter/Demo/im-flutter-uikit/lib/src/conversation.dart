@@ -79,10 +79,6 @@ class _ConversationState extends State<Conversation> {
       onTapItem: _handleOnConvItemTaped,
       itemSlidableBuilder: _itemSlidableBuilder,
       controller: _controller,
-      conversationCollector: (conversation) {
-        final groupID = conversation?.groupID ?? "";
-        return !groupID.contains("im_discuss_");
-      },
       emptyBuilder: () {
         return Center(
           child: Text(imt("暂无会话")),

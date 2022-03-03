@@ -6,7 +6,7 @@ class OptimizeUtils {
         enable = false;
         Future.delayed(Duration(milliseconds: milliseconds), () {
           enable = true;
-          func();
+          func(val);
         });
       }
     };
