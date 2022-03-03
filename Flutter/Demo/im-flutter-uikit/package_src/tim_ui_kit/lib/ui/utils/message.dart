@@ -42,7 +42,7 @@ class MessageUtils {
         break;
     }
 
-    return ttBuild.imt_para("{{s}}为", "${s}为")(s: s) + '<${value}>';
+    return ttBuild.imt_para("{{s}}为 ", "${s}为 ")(s: s) + ' ${value}';
   }
 
   static String? _getOpUserNick(V2TimGroupMemberInfo opUser) {
@@ -74,29 +74,29 @@ class MessageUtils {
         final changedInfoString =
             groupChangeInfoList!.map((e) => _getGroupChangeType(e!, context)).join("、");
         displayMessage =
-            ttBuild.imt_para("<{{opUserNickName}}>修改", "<${opUserNickName}>修改")(opUserNickName: opUserNickName) + changedInfoString;
+            ttBuild.imt_para("{{opUserNickName}}修改", "${opUserNickName}修改")(opUserNickName: opUserNickName) + changedInfoString;
         break;
       case GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_QUIT:
-        displayMessage = ttBuild.imt_para("<{{opUserNickName}}>退出群聊", "<${opUserNickName}>退出群聊")(opUserNickName: opUserNickName);
+        displayMessage = ttBuild.imt_para("{{opUserNickName}}退出群聊", "${opUserNickName}退出群聊")(opUserNickName: opUserNickName);
         break;
       case GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_INVITE:
         final invitedMemberString =
             memberList!.map((e) => _getMemberNickName(e!).toString()).join("、");
         final inviteUser = _getOpUserNick(operationMember);
         displayMessage =
-            '<${inviteUser}>' + ttBuild.imt_para("邀请<{{invitedMemberString}}>加入群组", "邀请<${invitedMemberString}>加入群组")(invitedMemberString: invitedMemberString);
+            '$inviteUser' + ttBuild.imt_para("邀请{{invitedMemberString}}加入群组", "邀请${invitedMemberString}加入群组")(invitedMemberString: invitedMemberString);
         break;
       case GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_KICKED:
         final invitedMemberString =
             memberList!.map((e) => _getMemberNickName(e!).toString()).join("、");
         final kickUser = _getOpUserNick(operationMember);
         displayMessage =
-            '<${kickUser}>' + ttBuild.imt_para("将<{{invitedMemberString}}>踢出群组", "将<${invitedMemberString}>踢出群组")(invitedMemberString: invitedMemberString);
+            '$kickUser' + ttBuild.imt_para("将{{invitedMemberString}}踢出群组", "将${invitedMemberString}踢出群组")(invitedMemberString: invitedMemberString);
         break;
       case GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_JOIN:
         final joinedMemberString =
             memberList!.map((e) => _getMemberNickName(e!).toString()).join("、");
-        displayMessage = ttBuild.imt_para("用户<{{joinedMemberString}}>加入了群聊", "用户<${joinedMemberString}>加入了群聊")(joinedMemberString: joinedMemberString);
+        displayMessage = ttBuild.imt_para("用户{{joinedMemberString}}加入了群聊", "用户${joinedMemberString}加入了群聊")(joinedMemberString: joinedMemberString);
         break;
       case GroupTipsElemType.V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE:
         displayMessage = groupTipsElem.memberList!.map((e) {
@@ -109,7 +109,7 @@ class MessageUtils {
         }).join("、");
         break;
       default:
-        displayMessage = ttBuild.imt_para("系统消息{{operationType}}", "系统消息${operationType}")(operationType: operationType);
+        displayMessage = ttBuild.imt_para("系统消息 {{operationType}}", "系统消息 ${operationType}")(operationType: operationType);
         break;
     }
     return displayMessage;

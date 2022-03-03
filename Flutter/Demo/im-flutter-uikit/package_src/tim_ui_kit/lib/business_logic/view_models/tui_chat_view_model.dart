@@ -147,6 +147,8 @@ class TUIChatViewModel extends ChangeNotifier {
       ]; // 拼接拉取更多历史
     } else {
       _messageListMap[convID!] = response; // 首屏默认历史消息
+      // put the last 20 messages to local
+      storeMsgToLocal(response, convID, ifEmptyHistory);
     }
     if (response!.isEmpty || response.length < 20) {
       _haveMoreData = false;
@@ -156,8 +158,8 @@ class TUIChatViewModel extends ChangeNotifier {
     notifyListeners();
 
     // put the last 20 messages to local
-    final latestMsgList = _messageListMap[convID];
-    storeMsgToLocal(latestMsgList, convID, ifEmptyHistory);
+    // final latestMsgList = _messageListMap[convID];
+    // storeMsgToLocal(latestMsgList, convID, ifEmptyHistory);
   }
 
   void storeMsgToLocal(List<V2TimMessage>? msgList, String convID,
@@ -535,13 +537,14 @@ class TUIChatViewModel extends ChangeNotifier {
     storeMsgToLocal(latestMsgList, _currentSelectedConv);
   }
 
-  revokeMsg(String msgID) async {
+  Future<V2TimCallback> revokeMsg(String msgID) async {
     final res = await _messageService.revokeMessage(msgID: msgID);
     if (res.code == 0) {
       _onMessageRevoked(msgID);
     }
     final latestMsgList = _messageListMap[_currentSelectedConv];
     storeMsgToLocal(latestMsgList, _currentSelectedConv);
+    return res;
   }
 
   markMessageAsRead({required String convID, required int convType}) {

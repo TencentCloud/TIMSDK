@@ -4,13 +4,10 @@ import 'package:flutter/services.dart';
 // import 'package:flutter_autosize_screen/binding.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:tim_ui_kit/i18n/strings.g.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/custom_animation.dart';
 import 'package:timuikit/src/pages/app.dart';
-
-import 'i18n/strings.g.dart';
-import 'src/provider/discuss.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   // 设置状态栏样式
@@ -28,13 +25,7 @@ void main() {
 
   runApp(
       // runAutoApp(
-      TranslationProvider(
-        child: MultiProvider(
-          providers: [
-        ChangeNotifierProvider(create: (_) => DiscussData()),
-      ],
-          child: const TUIKitDemoApp(),
-        )));
+      TranslationProvider(child: const TUIKitDemoApp()));
   // );
 }
 

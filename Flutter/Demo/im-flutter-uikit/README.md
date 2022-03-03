@@ -1,16 +1,21 @@
-# Flutter TUIKit
+# Flutter TUIKit Demo
 
-TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、搜索、关系链、群组、音视频通话等功能，基于 UI 组件您可以像搭积木一样快速搭建起自己的业务逻辑。
+TUIKit Demo 是基于 `TIMUIKit` 快速搭建的一套即使通信系统。
 
-## Getting Started
+- ## 运行demo
 
-This project is a starting point for a Flutter application.
+```
+flutter run --dart-define=SDK_APPID=xxxx（xxxx是你自己申请的sdkappID，记得删掉这个括号） --dart-define=ISPRODUCT_ENV=false
+--dart-define=KEY=xxxx
+```
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- ### 若要使用vs的调试工具
+请在launch.json中添加环境参数
+```
+"args": [
+            "--dart-define=SDK_APPID=xxxx（xxxx是你自己申请的sdkappID）",
+            "--dart-define=KEY=xxxx(xxx你自己的key)"
+            "--dart-define=ISPRODUCT_ENV=false"
+            
+        ]
+```

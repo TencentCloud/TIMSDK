@@ -1,7 +1,7 @@
 name: tim_ui_kit
-description: A new Flutter package project.
-version: 0.0.1
-homepage:
+description: TUIKit 是基于 IM SDK 实现的一套 UI 组件,其包含会话、聊天、搜索、关系链、群组、音视频通话等功能。
+version: 0.0.2
+homepage: https://cloud.tencent.com/product/im
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -12,8 +12,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  tencent_im_sdk_plugin: 3.7.7
-  # tencent_im_sdk_plugin: 3.6.6
+  tencent_im_sdk_plugin: ^3.7.7
   adaptive_action_sheet: ^2.0.1
   provider: ^6.0.1
   intl: ^0.17.0
@@ -43,6 +42,7 @@ dependencies:
   i18n: ^3.4.1
   cached_network_image: ^3.2.0
   shared_preferences: ^2.0.13
+  json_annotation: ^4.4.0
 
 dev_dependencies:
   flutter_test:

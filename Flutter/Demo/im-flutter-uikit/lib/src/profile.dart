@@ -31,8 +31,8 @@ class _ProfileState extends State<MyProfile> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(imt("免责声明")),
-          content: Text(
-              imt("IM即时通信（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。")),
+          content: Text(imt(
+              "IM即时通信（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。")),
           actions: <Widget>[
             ElevatedButton(
               child: Text(imt("取消")),

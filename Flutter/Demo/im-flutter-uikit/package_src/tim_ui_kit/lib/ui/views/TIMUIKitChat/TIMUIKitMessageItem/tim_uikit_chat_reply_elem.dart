@@ -158,6 +158,7 @@ class _TIMUIKitReplyElemState extends State<TIMUIKitReplyElem> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            // 这里是引用的部分
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
             constraints: const BoxConstraints(minWidth: 120),
             decoration: const BoxDecoration(

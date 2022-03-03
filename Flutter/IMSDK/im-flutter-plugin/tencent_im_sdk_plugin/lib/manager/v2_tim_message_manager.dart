@@ -802,9 +802,9 @@ class V2TIMMessageManager {
   /// 修改群消息接收选项
   ///
   /// 参数
-  /// opt	三种类型的消息接收选项： V2TIMMessage.V2TIM_GROUP_RECEIVE_MESSAGE：在线正常接收消息，离线时会有厂商的离线推送通知 V
-  /// 2TIMMessage.V2TIM_GROUP_NOT_RECEIVE_MESSAGE：不会接收到群消息
-  /// V2TIMMessage.V2TIM_GROUP_RECEIVE_NOT_NOTIFY_MESSAGE：在线正常接收消息，离线不会有推送通知
+  /// opt	三种类型的消息接收选项： ReceiveMsgOptEnum.V2TIM_GROUP_RECEIVE_MESSAGE：在线正常接收消息，离线时会有厂商的离线推送通知 V
+  /// ReceiveMsgOptEnum.V2TIM_GROUP_NOT_RECEIVE_MESSAGE：不会接收到群消息
+  /// ReceiveMsgOptEnum.V2TIM_GROUP_RECEIVE_NOT_NOTIFY_MESSAGE：在线正常接收消息，离线不会有推送通知
   ///
   Future<V2TimCallback> setGroupReceiveMessageOpt({
     required String groupID,
