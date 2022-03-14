@@ -1250,6 +1250,17 @@ abstract class ImFlutterPlatform extends PlatformInterface {
     throw UnimplementedError("createTextMessage() has not been implemented");
   }
 
+  ///  创建定向群消息
+  /// 如果您需要在群内给指定群成员列表发消息，可以创建一条定向群消息，定向群消息只有指定群成员才能收到。
+  /// 原始消息对象不支持群 @ 消息。
+  /// 社群（Community）和直播群（AVChatRoom）不支持发送定向群消息。
+  /// 定向群消息默认不计入群会话的未读计数。
+  Future<V2TimValueCallback<V2TimMsgCreateInfoResult>>
+      createTargetedGroupMessage(
+          {required String id, required List<String> receiverList}) async {
+    throw UnimplementedError("createTextMessage() has not been implemented");
+  }
+
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createImageMessage(
       {required String imagePath,
       Uint8List? fileContent, // web 必填

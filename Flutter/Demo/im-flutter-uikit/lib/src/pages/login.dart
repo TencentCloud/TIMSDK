@@ -176,11 +176,10 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Future<void> setOfflinePushInfo() async {
-    String token = await OfflinePush.getDeviceToken();
-    Utils.log("getDeviceToken $token");
+    String token = await OfflinePush.getTPNSToken();
+    Utils.log("getTPNSToken $token");
     if (token != "") {
       coreInstance.setOfflinePushConfig(
-        businessID: IMDemoConfig.pushConfig['ios']!['dev']!,
         token: token,
       );
     }

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
@@ -7,8 +6,11 @@ import 'package:timuikit/src/user_profile.dart';
 
 class Chat extends StatefulWidget {
   final V2TimConversation selectedConversation;
+  final int? initFindingTimestamp;
 
-  const Chat({Key? key, required this.selectedConversation}) : super(key: key);
+  const Chat(
+      {Key? key, required this.selectedConversation, this.initFindingTimestamp})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ChatState();
@@ -23,6 +25,10 @@ class _ChatState extends State<Chat> {
 
   String _getTitle() {
     return backRemark ?? widget.selectedConversation.showName ?? "";
+  }
+
+  String? _getDraftText() {
+    return widget.selectedConversation.draftText;
   }
 
   String? _getConvID() {
@@ -64,6 +70,8 @@ class _ChatState extends State<Chat> {
       conversationType: widget.selectedConversation.type ?? 0,
       onTapAvatar: _onTapAvatar,
       conversationShowName: _getTitle(),
+      initFindingTimestamp: widget.initFindingTimestamp,
+      draftText: _getDraftText(),
       // messageItemBuilder: (message) {
       //   if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
       //     return const Text(imt("我是自定义文本消息"));

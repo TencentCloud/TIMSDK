@@ -272,6 +272,8 @@ public class TencentImSDKPlugin: NSObject, FlutterPlugin, UNUserNotificationCent
 			break
         case "sendMessage":
             messageManager!.sendMessage(call: call, result: result)
+		case "createTargetedGroupMessage":
+			messageManager!.createTargetedGroupMessage(call: call, result: result)
 		case "createTextMessage":
 			messageManager!.createTextMessage(call: call, result: result, type: 1)
 			break

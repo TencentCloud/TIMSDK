@@ -4,10 +4,13 @@ import 'package:flutter/services.dart';
 // import 'package:flutter_autosize_screen/binding.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:tim_ui_kit/i18n/strings.g.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/custom_animation.dart';
+import 'package:timuikit/i18n/strings.g.dart';
 import 'package:timuikit/src/pages/app.dart';
+import 'package:timuikit/src/provider/theme.dart';
+
+import 'package:provider/provider.dart';
 
 void main() {
   // 设置状态栏样式
@@ -25,15 +28,19 @@ void main() {
 
   runApp(
       // runAutoApp(
-      TranslationProvider(child: const TUIKitDemoApp()));
+      TranslationProvider(
+          child: MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => DefaultThemeData())],
+    child: const TUIKitDemoApp(),
+  )));
   // );
 }
 
 class TUIKitDemoApp extends StatelessWidget {
   const TUIKitDemoApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<DefaultThemeData>(context).theme;
     return MaterialApp(
       locale: TranslationProvider.of(context).flutterLocale, // use provider
       supportedLocales: LocaleSettings.supportedLocales,
@@ -44,6 +51,10 @@ class TUIKitDemoApp extends StatelessWidget {
           TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
           TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         }),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+          primary: theme.primaryColor,
+        )),
       ),
       home: const MyApp(),
       builder: EasyLoading.init(),

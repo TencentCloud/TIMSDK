@@ -494,10 +494,10 @@ class V2TIMGroupManager {
     return ImFlutterPlatform.instance.searchGroups(searchParam: searchParam);
   }
 
-  /// 搜索群成员
-  /// TODO这里安卓和ios有差异化，ios能根据组名返回key:list但 安卓但key是""为空，我设为default
+  /// ## 搜索群成员
+  /// `TODO这里安卓和ios有差异化，ios能根据组名返回key:list但 安卓但key是""为空，我设为default`
   ///参数：
-  ///searchParam	搜索参数([V2TimGroupSearchParam])
+  /// - searchParam	搜索参数([V2TimGroupSearchParam])
   ///```
   ///SDK 会在本地搜索指定群 ID 列表中，群成员信息（名片、好友备注、昵称、userID）包含于关键字列表 keywordList 的所有群成员并返回群 ID 和群成员列表的 map，关键字列表最多支持5个。
   /// web 不支持搜索

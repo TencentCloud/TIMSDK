@@ -1,20 +1,20 @@
-// for flutter 2.0+
-
 import 'dart:convert';
-// import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
 
-///生成腾讯云即时通信测试用userSig
+/// 生成腾讯云即时通信测试用userSig
+/// Generate userSig for Tencent Cloud instant messaging test
 ///
 class GenerateTestUserSig {
   GenerateTestUserSig({required this.sdkappid, required this.key});
   int sdkappid;
   String key;
 
-  ///生成UserSig
+  /// 生成UserSig
+  /// Generate UserSig
+  ///
   String genSig({
     required String identifier,
     required int expire,

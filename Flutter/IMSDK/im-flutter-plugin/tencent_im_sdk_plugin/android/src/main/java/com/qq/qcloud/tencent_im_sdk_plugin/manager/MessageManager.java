@@ -151,6 +151,7 @@ public class MessageManager {
             public void onError(int i, String s) {
                 HashMap<String,Object> msgMap = CommonUtil.convertV2TIMMessageToMap(msg);
                 msgMap.put("id",id);
+                messageIDMap.remove(id);
                 CommonUtil.returnError(result,i,s,msgMap);
             }
 
@@ -158,6 +159,7 @@ public class MessageManager {
             public void onSuccess(V2TIMMessage v2TIMMessage) {
                 HashMap<String,Object> data = CommonUtil.convertV2TIMMessageToMap(v2TIMMessage);
                 data.put("id",id);
+                messageIDMap.remove(id);
                 CommonUtil.returnSuccess(result,data);
             }
         });
@@ -181,6 +183,14 @@ public class MessageManager {
         String text = CommonUtil.getParam(methodCall,result,"text");
         final V2TIMMessage msg = V2TIMManager.getMessageManager().createTextMessage(text);
         handleSetMessageMap(msg,result);
+    }
+
+    public  void createTargetedGroupMessage(MethodCall methodCall, final MethodChannel.Result result){
+        String id = CommonUtil.getParam(methodCall,result,"id");
+        List<String> receiverList = CommonUtil.getParam(methodCall,result,"receiverList");
+        V2TIMMessage msg = messageIDMap.get(id);
+        final V2TIMMessage newMsg = V2TIMManager.getMessageManager().createTargetedGroupMessage(msg,receiverList);
+        handleSetMessageMap(newMsg,result);
     }
     public void createCustomMessage(MethodCall methodCall, final MethodChannel.Result result){
         String data = CommonUtil.getParam(methodCall,result,"data");

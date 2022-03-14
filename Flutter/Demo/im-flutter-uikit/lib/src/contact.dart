@@ -3,7 +3,7 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:timuikit/src/blackList.dart';
-import 'package:timuikit/src/groupList.dart';
+import 'package:timuikit/src/group_list.dart';
 import 'package:timuikit/src/user_profile.dart';
 import 'newContact.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';

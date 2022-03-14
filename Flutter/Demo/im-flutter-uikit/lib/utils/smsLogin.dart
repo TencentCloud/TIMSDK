@@ -1,6 +1,7 @@
 // 短信验证码登录，开发者用不到，可以去掉此部分
 
 import 'package:dio/dio.dart';
+import 'package:timuikit/src/config.dart';
 import 'package:timuikit/utils/request.dart';
 
 class SmsLogin {
@@ -75,6 +76,14 @@ class SmsLogin {
         });
     Map<String, dynamic> res = data.data!;
     return res;
+  }
+
+  static initLoginService() async {
+    final res = await Dio(BaseOptions(
+      method: "get",
+    )).request(
+      IMDemoConfig.captchaUrl,
+    );
   }
 
   // 修改用户信息

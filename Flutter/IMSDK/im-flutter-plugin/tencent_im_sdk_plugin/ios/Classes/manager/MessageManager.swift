@@ -115,7 +115,7 @@ class MessageManager {
 			() -> Void in
 			
 			CommonUtils.resultSuccess(call: call, result: result)
-		}, fail: TencentImUtils.returnErrorClosures(call: call, result: result));
+		}, fail: TencentImUtils.returnErrorClosures(call: call, result: result) );
 	}
     func setMessageMapProcess(call: FlutterMethodCall, result: @escaping FlutterResult,message: V2TIMMessage){
         let millisecond = self.getMessageMapId();
@@ -134,6 +134,23 @@ class MessageManager {
     func createMessageProcess(call: FlutterMethodCall, result: @escaping FlutterResult, type: Int){
         let message = TencentImUtils.createMessage(call: call, result: result, type: type);
         setMessageMapProcess(call: call, result: result, message: message);
+    }
+
+	func createTargetedGroupMessage(call: FlutterMethodCall, result: @escaping FlutterResult){
+        if let receiverIDList = CommonUtils.getParam(call: call, result: result, param: "receiverList") as? [String],
+           let id = CommonUtils.getParam(call: call, result: result, param: "id") as? String {
+            let message = messageDict[id];
+            
+            let array: NSMutableArray = [];
+            
+            for receiverId in receiverIDList  {
+                array.add(receiverId)
+            }
+
+            let newMsg = V2TIMManager.sharedInstance()?.createTargetedGroupMessage(message, receiverList: array)
+        self.clearMessageMap(id: id);
+        setMessageMapProcess(call: call, result: result, message: newMsg ?? V2TIMMessage());
+        }
     }
     
     func createTextMessage(call: FlutterMethodCall, result: @escaping FlutterResult, type: Int) {
@@ -779,7 +796,7 @@ class MessageManager {
             messageSearchParam.keywordListMatchType = searchParam["type"] as! Int == 0 ? V2TIMKeywordListMatchType.KEYWORD_LIST_MATCH_TYPE_OR : V2TIMKeywordListMatchType.KEYWORD_LIST_MATCH_TYPE_AND;
         }
         if(searchParam["pageSize"] != nil){
-            messageSearchParam.pageSize = searchParam["pageSize"] as! UInt;
+            messageSearchParam.pageSize = searchParam["pageSize"] as? UInt ?? 20;
         }
 
         if let searchTimePosition = searchParam["searchTimePosition"] as? UInt {
@@ -791,7 +808,7 @@ class MessageManager {
 
 
         if(searchParam["pageIndex"] != nil){
-            messageSearchParam.pageIndex = searchParam["pageIndex"] as! UInt;
+            messageSearchParam.pageIndex = searchParam["pageIndex"] as? UInt ?? 0;
         }
 
         if let searchTimePeriod = searchParam["searchTimePeriod"] as? UInt {
