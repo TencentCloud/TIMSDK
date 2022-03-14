@@ -46,16 +46,17 @@ dependencies:
   url_launcher: ^6.0.20
   adaptive_action_sheet: ^2.0.1
   webview_flutter: ^3.0.0
+  flutter_easyloading: ^3.0.3
+  connectivity_plus: ^2.2.0
+  i18n: any
   tpns_flutter_plugin:
     git:
       url: https://github.com/TencentCloud/TPNS-Flutter-Plugin
       ref: V1.1.5
-  flutter_easyloading: ^3.0.3
-  connectivity_plus: ^2.2.0
-  i18n: any
-  tim_ui_kit: ^0.0.2
-  # tim_ui_kit: 
-  #   path: package_src/tim_ui_kit
+  tim_ui_kit: ^0.0.3
+  # tim_ui_kit:
+  #  path: package_src/tim_ui_kit
+  super_tooltip: ^1.0.1
 dev_dependencies:
   fast_i18n: 5.10.0
   build_runner: any

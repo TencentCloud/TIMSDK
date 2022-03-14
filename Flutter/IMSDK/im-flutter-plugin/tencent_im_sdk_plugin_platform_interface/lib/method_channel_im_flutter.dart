@@ -1587,7 +1587,7 @@ class MethodChannelIm extends ImFlutterPlatform {
   *               只是为了区分不同模块
    */
 
-  // 创建文本消息
+  /// 创建文本消息
   @override
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createTextMessage(
       {required String text}) async {
@@ -1599,6 +1599,22 @@ class MethodChannelIm extends ImFlutterPlatform {
             {
               "text": text,
             },
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<V2TimValueCallback<V2TimMsgCreateInfoResult>>
+      createTargetedGroupMessage(
+          {required String id, required List<String> receiverList}) async {
+    return V2TimValueCallback<V2TimMsgCreateInfoResult>.fromJson(
+      formatJson(
+        await _channel.invokeMethod(
+          "createTargetedGroupMessage",
+          buildMessageMangerParam(
+            {"id": id, "receiverList": receiverList},
           ),
         ),
       ),

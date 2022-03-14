@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
@@ -101,22 +103,28 @@ class _MyAppState extends State<MyApp> {
     isInitScreenUtils = true;
   }
 
+  void handleClickNotification(Map<String, dynamic> msg) {
+    // TODO跳转页面，拉起音视频通话等
+    print(msg);
+  }
+
   @override
   void initState() {
     super.initState();
     subscription =
         _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return const NoConnectivityPage();
-            },
-          ),
-        );
+        Utils.toast(imt("网络连接丢失"));
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) {
+        //       return const NoConnectivityPage();
+        //     },
+        //   ),
+        // );
       }
     });
-    OfflinePush.init();
+    OfflinePush.init(handleClickNotification);
     initApp();
   }
 

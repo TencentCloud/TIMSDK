@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:timuikit/src/provider/theme.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 
@@ -13,13 +15,14 @@ class PrivacyAgreementPage extends StatefulWidget {
 class PrivacyAgreementPageState extends State {
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<DefaultThemeData>(context).theme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.black,
+          color: Colors.white,
         ),
-        shadowColor: hexToColor("ececec"),
+        shadowColor: theme.weakDividerColor,
         elevation: 1,
         title: Text(
           imt("腾讯云即时通信IM"),
@@ -35,7 +38,14 @@ class PrivacyAgreementPageState extends State {
           onPressed: () => {Navigator.pop(context)},
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromRGBO(14, 25, 44, 1),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+              theme.primaryColor ?? CommonColor.primaryColor
+            ]),
+          ),
+        ),
       ),
       body: SizedBox(
         width: MediaQuery.of(context).size.width,

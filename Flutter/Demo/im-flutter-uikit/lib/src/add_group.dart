@@ -5,8 +5,8 @@ import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/theme.dart';
 
-class NewContact extends StatelessWidget {
-  const NewContact({Key? key}) : super(key: key);
+class AddGroup extends StatelessWidget {
+  const AddGroup({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +14,10 @@ class NewContact extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-            imt("新的联系人"),
+            imt("添加群聊"),
             style: const TextStyle(color: Colors.white),
           ),
-          shadowColor: Colors.white,
+          shadowColor: theme.weakDividerColor,
           flexibleSpace: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
@@ -29,7 +29,7 @@ class NewContact extends StatelessWidget {
           iconTheme: const IconThemeData(
             color: Colors.white,
           )),
-      body: const TIMUIKitNewContact(),
+      body: const TIMUIKitAddGroup(),
     );
   }
 }

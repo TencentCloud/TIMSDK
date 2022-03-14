@@ -1,15 +1,22 @@
 import 'dart:ui';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:provider/provider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/src/contactPage.dart';
 import 'package:timuikit/src/pages/login.dart';
+import 'package:timuikit/src/provider/theme.dart';
+import 'package:timuikit/utils/theme.dart';
 import 'package:timuikit/utils/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
+
+import 'pages/skin/skin_page.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({Key? key}) : super(key: key);
@@ -102,10 +109,16 @@ class _ProfileState extends State<MyProfile> {
     _timuiKitProfileController.changeFriendVerificationMethod(allowType);
   }
 
-  showApplicationTypeSheet() {
+  showApplicationTypeSheet(theme) async {
     const allowAny = 0;
     const neddConfirm = 1;
     const denyAny = 2;
+
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      Utils.toast("无网络连接，无法修改");
+      return;
+    }
 
     showAdaptiveActionSheet(
       context: context,
@@ -113,7 +126,7 @@ class _ProfileState extends State<MyProfile> {
         BottomSheetAction(
           title: Text(
             imt("同意任何用户加好友"),
-            style: TextStyle(color: Colors.lightBlueAccent, fontSize: 18),
+            style: TextStyle(color: theme.primaryColor, fontSize: 18),
           ),
           onPressed: () {
             changeFriendVerificationMethod(allowAny);
@@ -123,7 +136,7 @@ class _ProfileState extends State<MyProfile> {
         BottomSheetAction(
             title: Text(
               imt("需要验证"),
-              style: TextStyle(color: Colors.lightBlueAccent, fontSize: 18),
+              style: TextStyle(color: theme.primaryColor, fontSize: 18),
             ),
             onPressed: () {
               changeFriendVerificationMethod(neddConfirm);
@@ -132,7 +145,7 @@ class _ProfileState extends State<MyProfile> {
         BottomSheetAction(
           title: Text(
             imt("拒绝任何人加好友"),
-            style: TextStyle(color: Colors.lightBlueAccent, fontSize: 18),
+            style: TextStyle(color: theme.primaryColor, fontSize: 18),
           ),
           onPressed: () {
             changeFriendVerificationMethod(denyAny);
@@ -160,11 +173,14 @@ class _ProfileState extends State<MyProfile> {
     if (userID == null) {
       return Container();
     }
+    final themeType = Provider.of<DefaultThemeData>(context).currentThemeType;
+    final theme = Provider.of<DefaultThemeData>(context).theme;
     return TIMUIKitProfile(
       controller: _timuiKitProfileController,
       canJumpToPersonalProfile: true,
       userID: userID!,
-      operationListBuilder: (context, userInfo, conversation, friendType) {
+      operationListBuilder:
+          (context, userInfo, conversation, friendType, isDisturb) {
         final allowType = userInfo.userProfile?.allowType ?? 0;
         final allowText = _getAllowText(allowType);
 
@@ -175,12 +191,28 @@ class _ProfileState extends State<MyProfile> {
               margin: const EdgeInsets.symmetric(vertical: 10),
               child: InkWell(
                 onTap: () {
-                  showApplicationTypeSheet();
+                  showApplicationTypeSheet(theme);
                 },
                 child: TIMUIKitOperationItem(
                   operationName: imt("加我为好友时需要验证"),
                   operationRightWidget: Text(allowText),
                 ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SkinPage(),
+                  ),
+                );
+              },
+              child: TIMUIKitOperationItem(
+                operationName: imt("更换皮肤"),
+                operationRightWidget: Text(
+                    DefTheme.defaultThemeName[themeType]!,
+                    style: TextStyle(color: theme.primaryColor)),
               ),
             ),
             InkWell(

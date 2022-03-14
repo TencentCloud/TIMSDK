@@ -93,7 +93,7 @@ class SendSoundMessageState extends State<SendSoundMessage> {
   start() async {
     String tempPath = (await getTemporaryDirectory()).path;
     int random = new Random().nextInt(10000);
-    String path = "$tempPath/sendSoundMessage_$random.acc";
+    String path = "$tempPath/sendSoundMessage_$random.aac";
     File soundFile = new File(path);
     soundFile.createSync();
     try {
@@ -145,8 +145,8 @@ class SendSoundMessageState extends State<SendSoundMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child:
-                      Text(receiver.length > 0 ? receiver.toString() : imt("未选择")),
+                  child: Text(
+                      receiver.length > 0 ? receiver.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -165,7 +165,8 @@ class SendSoundMessageState extends State<SendSoundMessage> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(groupID.length > 0 ? groupID.toString() : imt("未选择")),
+                  child: Text(
+                      groupID.length > 0 ? groupID.toString() : imt("未选择")),
                 ),
               )
             ],
@@ -240,7 +241,8 @@ class SendSoundMessageState extends State<SendSoundMessage> {
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text(imt_para("已选：{{priority}}", "已选：${priority}")(priority: priority)),
+                  child: Text(imt_para("已选：{{priority}}", "已选：${priority}")(
+                      priority: priority)),
                 )
               ],
             ),

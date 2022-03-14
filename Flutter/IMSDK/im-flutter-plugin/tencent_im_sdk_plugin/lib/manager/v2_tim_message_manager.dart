@@ -162,19 +162,32 @@ class V2TIMMessageManager {
 
   /// 创建文本消息
   ///
-  /// 参数：
-  /// text 要传递的文本
+  /// - 参数：
+  /// - text 要传递的文本
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createTextMessage(
       {required String text}) async {
     return ImFlutterPlatform.instance.createTextMessage(text: text);
   }
 
+  /// 如果您需要在群内给指定群成员列表发消息，可以创建一条定向群消息，定向群消息只有指定群成员才能收到。
+  /// - 请注意：
+  /// - 原始消息对象不支持群 @ 消息。
+  /// - 社群（Community）和直播群（AVChatRoom）不支持发送定向群消息。
+  /// - 定向群消息默认不计入群会话的未读计数。
+  /// - web目前不支持此消息
+  Future<V2TimValueCallback<V2TimMsgCreateInfoResult>>
+      createTargetedGroupMessage(
+          {required String id, required List<String> receiverList}) async {
+    return ImFlutterPlatform.instance
+        .createTargetedGroupMessage(id: id, receiverList: receiverList);
+  }
+
   /// 创建定制化消息
   ///
   ///参数：
-  /// data 即自定义消息
-  /// description 自定义消息描述信息，做离线Push时文本展示。
-  /// extension 离线Push时扩展字段信息。
+  /// - data 即自定义消息
+  /// - description 自定义消息描述信息，做离线Push时文本展示。
+  /// - extension 离线Push时扩展字段信息。
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createCustomMessage({
     required String data,
     String desc = "",
@@ -185,9 +198,9 @@ class V2TIMMessageManager {
   }
 
   /// 创建图片消息（图片文件最大支持 28 MB）
-  /// imagePath 图片路径（只有发送方可以获取到）
-  /// fileContent 字节数组（只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createImageMessage)时用到且必填）
-  /// fileName 图片名（只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createImageMessage)用到且必填）
+  /// - imagePath 图片路径（只有发送方可以获取到）
+  /// - fileContent 字节数组（只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createImageMessage)时用到且必填）
+  /// - fileName 图片名（只有[web端](https://web.sdk.qcloud.com/im/doc/zh-cn/SDK.html#createImageMessage)用到且必填）
   Future<V2TimValueCallback<V2TimMsgCreateInfoResult>> createImageMessage(
       {required String imagePath,
       Uint8List? fileContent, // web 必填
@@ -364,13 +377,14 @@ class V2TIMMessageManager {
       bool isExcludedFromUnreadCount = false,
       OfflinePushInfo? offlinePushInfo,
       String? localCustomData}) async {
+    final hasNickName =
+        replyMessage.nickName != null && replyMessage.nickName != "";
     final cloudCustomData = {
       "messageReply": {
         "messageID": replyMessage.msgID,
         "messageAbstract": _getAbstractMessage(replyMessage),
-        "messageSender": replyMessage.nickName != ""
-            ? replyMessage.nickName
-            : replyMessage.sender,
+        "messageSender":
+            hasNickName ? replyMessage.nickName : replyMessage.sender,
         "messageType": replyMessage.elemType,
         "version": 1
       }

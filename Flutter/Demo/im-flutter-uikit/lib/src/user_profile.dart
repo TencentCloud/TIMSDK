@@ -1,9 +1,14 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search.dart';
 import 'package:tim_ui_kit/ui/widgets/toast.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
+import 'package:timuikit/src/provider/theme.dart';
 
+import '../utils/toast.dart';
 import 'chat.dart';
 
 class UserProfile extends StatefulWidget {
@@ -48,7 +53,7 @@ class UserProfileState extends State<UserProfile> {
   }
 
   _buildBottomOperationList(
-      BuildContext context, V2TimConversation conversation) {
+      BuildContext context, V2TimConversation conversation, theme) {
     final operationList = [
       {
         "label": imt("发送消息"),
@@ -78,12 +83,14 @@ class UserProfileState extends State<UserProfile> {
           padding: const EdgeInsets.symmetric(vertical: 15),
           decoration: BoxDecoration(
               color: Colors.white,
-              border: Border(bottom: BorderSide(color: hexToColor("E5E5E5")))),
+              border:
+                  Border(bottom: BorderSide(color: theme.weakDividerColor))),
           child: Text(
             e["label"] ?? "",
             style: TextStyle(
-                color:
-                    hexToColor(e["id"] != "deleteFriend" ? "147AFF" : "FF584C"),
+                color: e["id"] != "deleteFriend"
+                    ? theme.primaryColor
+                    : theme.cautionColor,
                 fontSize: 17),
           ),
         ),
@@ -92,6 +99,11 @@ class UserProfileState extends State<UserProfile> {
   }
 
   _addFriend(BuildContext context) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      Utils.toast("无网络连接，无法修改");
+      return;
+    }
     _timuiKitProfileController.addFriend(widget.userID).then((res) {
       if (res == null) {
         throw Error();
@@ -114,7 +126,20 @@ class UserProfileState extends State<UserProfile> {
     });
   }
 
-  handleTapRemarkBar(BuildContext context) {
+  handleTapRemarkBar(BuildContext context) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      Utils.toast("无网络连接，无法修改");
+      return;
+    }
+    _timuiKitProfileController.showTextInputBottomSheet(
+        context, imt("修改备注"), imt("支持数字、英文、下划线"), (String remark) {
+      newUserMARK = remark;
+      _timuiKitProfileController.updateRemarks(widget.userID, remark);
+    });
+  }
+
+  handleTapSearch(BuildContext context) async {
     _timuiKitProfileController.showTextInputBottomSheet(
         context, imt("修改备注"), imt("支持数字、英文、下划线"), (String remark) {
       newUserMARK = remark;
@@ -124,16 +149,24 @@ class UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<DefaultThemeData>(context).theme;
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.white,
         title: Text(
           imt("详细资料"),
-          style: TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.white),
         ),
-        backgroundColor: hexToColor("EBF0F6"),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+              theme.primaryColor ?? CommonColor.primaryColor
+            ]),
+          ),
+        ),
         iconTheme: const IconThemeData(
-          color: Colors.black,
+          color: Colors.white,
         ),
         leading: IconButton(
           padding: const EdgeInsets.only(left: 8),
@@ -148,12 +181,12 @@ class UserProfileState extends State<UserProfile> {
         ),
       ),
       body: Container(
-        color: hexToColor("F2F3F5"),
+        color: theme.weakBackgroundColor,
         child: TIMUIKitProfile(
           userID: widget.userID,
           controller: _timuiKitProfileController,
           operationListBuilder:
-              (context, friendInfo, conversation, friendType) {
+              (context, friendInfo, conversation, friendType, isDisturb) {
             final remark = friendInfo.friendRemark ?? imt("无");
             final isPined = conversation.isPinned ?? false;
             final userID = friendInfo.userID;
@@ -164,15 +197,59 @@ class UserProfileState extends State<UserProfile> {
                       TIMUIKitProfile.operationDivider(),
                       TIMUIKitProfile.remarkBar(remark, context,
                           handleTap: () => handleTapRemarkBar(context)),
+                      TIMUIKitProfile.searchBar(context, conversation,
+                          handleTap: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TIMUIKitSearch(
+                                      conversation: conversation,
+                                      onTapConversation: (V2TimConversation conversation, [int? timestamp]){
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Chat(
+                                                selectedConversation: conversation,
+                                                initFindingTimestamp: timestamp,
+                                              ),
+                                            ));
+                                      }),
+                                ));
+                          }),
                       TIMUIKitProfile.operationDivider(),
-                      TIMUIKitProfile.addToBlackListBar(false, context, (value) {
+                      TIMUIKitProfile.addToBlackListBar(false, context,
+                          (value) async {
+                        final connectivityResult =
+                            await (Connectivity().checkConnectivity());
+                        if (connectivityResult == ConnectivityResult.none) {
+                          Utils.toast("无网络连接，无法修改");
+                          return;
+                        }
                         _timuiKitProfileController.addUserToBlackList(
                             value, userID);
                       }),
                       TIMUIKitProfile.operationDivider(),
-                      TIMUIKitProfile.pinConversationBar(isPined, context, (value) {
+                      TIMUIKitProfile.pinConversationBar(isPined, context,
+                          (value) async {
+                        final connectivityResult =
+                            await (Connectivity().checkConnectivity());
+                        if (connectivityResult == ConnectivityResult.none) {
+                          Utils.toast("无网络连接，无法修改");
+                          return;
+                        }
                         _timuiKitProfileController.pinedConversation(
                             value, conversationId);
+                      }),
+                      TIMUIKitProfile.messageDisturb(context, isDisturb,
+                          (value) async {
+                        final connectivityResult =
+                            await (Connectivity().checkConnectivity());
+                        if (connectivityResult == ConnectivityResult.none) {
+                          Utils.toast("无网络连接，无法修改");
+                          return;
+                        }
+                        _timuiKitProfileController.setMessageDisturb(
+                            userID, value);
                       }),
                       TIMUIKitProfile.operationDivider(),
                     ],
@@ -186,14 +263,15 @@ class UserProfileState extends State<UserProfile> {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border(
-                                bottom:
-                                    BorderSide(color: hexToColor("E5E5E5")))),
+                                bottom: BorderSide(
+                                    color: theme.weakDividerColor ??
+                                        CommonColor.weakDividerColor))),
                         child: Row(children: [
                           Expanded(
                             child: TextButton(
                                 child: Text(imt("加为好友"),
                                     style: TextStyle(
-                                        color: CommonColor.primaryColor,
+                                        color: theme.primaryColor,
                                         fontSize: 17)),
                                 onPressed: () {
                                   _addFriend(context);
@@ -208,7 +286,8 @@ class UserProfileState extends State<UserProfile> {
               (context, friendInfo, conversation, friendType) {
             return friendType != 0
                 ? Column(
-                    children: _buildBottomOperationList(context, conversation!))
+                    children: _buildBottomOperationList(
+                        context, conversation!, theme))
                 : Container();
           },
         ),
