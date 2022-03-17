@@ -1,3 +1,18 @@
+.container-box {
+	z-index: 2;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0,0,0,0.1);
+	color: #FFFFFF;
+	position: fixed;
+	text-align: center;
+	padding-top: 50vh;
+	font-size: 16px;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+}
 .container {
 	width: 100vw;
 	height: 100vh;

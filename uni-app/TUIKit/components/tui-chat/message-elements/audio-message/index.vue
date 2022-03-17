@@ -57,7 +57,6 @@ export default {
 	methods: {
 		handlePlayAudioMessage() {
 			this.audio.src = this.message.payload.url;
-			console.error(this.message.payload.second, 'handlePlayAudioMessage');
 			this.audio.play();
 		}
 	}
