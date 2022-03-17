@@ -5,6 +5,7 @@
 
 提供了示例客服群 ➕ 示例好友的基础模版，在线客服场景功能包括：
 - 支持发送文本消息、图片消息、语音消息、视频消息等常见消息。
+- 支持双人语音、视频通话功能。
 - 支持常用语、订单、服务评价等自定义消息。
 - 支持创建群聊会话、群成员管理等。
 
@@ -14,18 +15,9 @@
 - 微信小程序
 
 ### 效果展示：
-<table>
-<tr>
-   <th>安卓演示：</th>
-   <th>iOS 演示：</th>
-   <th>微信小程序演示：</th>
- </tr>
-<tr>
-<td><img src="TUIKit/android-uniapp.gif" height = "400"/></td>
-<td><img src="TUIKit/ios-uniapp.gif" height = "400"/></td>
-<td><img src="TUIKit/wx-uniapp.gif" height = "400"/></td>
-</tr>
-</table>
+| 安卓演示| iOS 演示 |
+| :-----| ----: |
+| <img  src="https://web.sdk.qcloud.com/component/TUIKit/assets/uni-app/android-uniapp.gif">|<img src="https://web.sdk.qcloud.com/component/TUIKit/assets/uni-app/ios-uniapp.gif">|
 
 ### 快速跑通
 
