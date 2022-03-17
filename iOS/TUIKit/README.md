@@ -1,5 +1,4 @@
-## (English Click [here](#readme_en))
-<a name="readme_cn"></a>
+[English](./README_EN.md) | 简体中文
 
 # TUIKit（iOS）
 
@@ -27,27 +26,3 @@
 欢迎加入 QQ 群进行技术交流和反馈问题，QQ 群：**592465424**。
 
 ![img](https://qcloudimg.tencent-cloud.cn/raw/ca5f8724cd5a9002abc454f80bf3df12.png)
-
-------------------------------
-## (中文版本请参看[这里](#readme_cn))
-<a name="readme_en"></a>
-
-# TUIKit (iOS)
-
-## Download Links
-
-[Latest TUIChat download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.0.1992/ios/TUIChat.zip)
-
-[Latest TUIConversation download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.0.1992/ios/TUIConversation.zip)
-
-[Latest TUIContact download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.0.1992/ios/TUIContact.zip)
-
-[Latest TUIGroup download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.0.1992/ios/TUIGroup.zip)
-
-[Latest TUISearch download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.0.1992/ios/TUISearch.zip)
-
-[Latest TUICalling download](https://im.sdk.cloud.tencent.cn/download/tuikit/5.8.1672/ios/TUICalling.zip)
-
-[Latest TUICore download](https://im.sdk.cloud.tencent.cn/download/tuikit/6.0.1992/ios/TUICore.zip)
-
-If you encounter a TUIKit bug, please submit a pull request. After successful merging, we will update the TUIKit library for pod integration in time.
