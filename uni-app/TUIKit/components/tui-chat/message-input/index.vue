@@ -103,6 +103,7 @@ export default {
 		return {
 			// todo  conversation
 			// conversation: {},
+			firstSendMessage: true,
 			inputText: '',
 			extensionArea: false,
 			sendMessageBtn: false,
@@ -436,15 +437,24 @@ export default {
 			const { userID } = this.conversation.userProfile;
 
 			// #ifdef APP-PLUS
-			uni.$TUICalling.call(
-				{
-					userID: userID,
-					type: value
-				},
-				res => {
-					console.log(JSON.stringify(res));
-				}
-			);
+			if(typeof(uni.$TUICalling) === 'undefined') {
+					logger.error('请使用真机运行并且自定义基座调试，可能影响音视频功能～ 插件地址：https://ext.dcloud.net.cn/plugin?id=7097 , 调试地址：https://nativesupport.dcloud.net.cn/NativePlugin/use/use');
+					uni.showToast({
+						title: '请使用真机运行并且自定义基座调试，可能影响音视频功能～ ',
+						icon: 'none',
+						duration: 3000
+					});
+			} else {
+				uni.$TUICalling.call(
+					{
+						userID: userID,
+						type: value
+					},
+					res => {
+						console.log(JSON.stringify(res));
+					}
+				);
+			}
 			// #endif
 			// #ifdef MP-WEIXIN
 			uni.showToast({
@@ -528,12 +538,30 @@ export default {
 		},
 
 		$sendTIMMessage(message) {
+			const SDKAppID = getApp().globalData.SDKAppID;
 			this.$emit('sendMessage', {
 				detail: {
 					message
 				}
 			});
-			uni.$TUIKit.sendMessage(message);
+			uni.$TUIKit.sendMessage(message).then((res) => {
+				if(this.firstSendMessage) {
+					uni.$aegis.reportEvent({
+					    name: 'sendMessage',
+					    ext1: 'sendMessage-success',
+					    ext2: 'uniTuikitExternal',
+					    ext3: `${SDKAppID}`,
+					})
+				}
+				this.firstSendMessage = false
+			}).catch((error) => {
+				uni.$aegis.reportEvent({
+						name: 'sendMessage',
+						ext1: `sendMessage-failed#error: ${error}`,
+						ext2: 'uniTuikitExternal',
+						ext3: `${SDKAppID}`,
+			  })
+			})
 			this.setData({
 				displayFlag: ''
 			});
