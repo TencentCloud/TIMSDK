@@ -155,7 +155,7 @@ class UserProfileState extends State<UserProfile> {
         shadowColor: Colors.white,
         title: Text(
           imt("详细资料"),
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white, fontSize: 17),
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -169,11 +169,12 @@ class UserProfileState extends State<UserProfile> {
           color: Colors.white,
         ),
         leading: IconButton(
-          padding: const EdgeInsets.only(left: 8),
-          constraints: const BoxConstraints(),
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            size: 18,
+          padding: const EdgeInsets.only(left: 16),
+          icon: Image.asset(
+            'images/arrow_back.png',
+            package: 'tim_ui_kit',
+            height: 34,
+            width: 34,
           ),
           onPressed: () {
             Navigator.pop(context, newUserMARK);
@@ -198,24 +199,26 @@ class UserProfileState extends State<UserProfile> {
                       TIMUIKitProfile.remarkBar(remark, context,
                           handleTap: () => handleTapRemarkBar(context)),
                       TIMUIKitProfile.searchBar(context, conversation,
-                          handleTap: (){
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TIMUIKitSearch(
-                                      conversation: conversation,
-                                      onTapConversation: (V2TimConversation conversation, [int? timestamp]){
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => Chat(
-                                                selectedConversation: conversation,
-                                                initFindingTimestamp: timestamp,
-                                              ),
-                                            ));
-                                      }),
-                                ));
-                          }),
+                          handleTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TIMUIKitSearch(
+                                  conversation: conversation,
+                                  onTapConversation:
+                                      (V2TimConversation conversation,
+                                          [int? timestamp]) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Chat(
+                                            selectedConversation: conversation,
+                                            initFindingTimestamp: timestamp,
+                                          ),
+                                        ));
+                                  }),
+                            ));
+                      }),
                       TIMUIKitProfile.operationDivider(),
                       TIMUIKitProfile.addToBlackListBar(false, context,
                           (value) async {

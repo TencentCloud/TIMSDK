@@ -19,7 +19,7 @@ class ContactPage extends StatelessWidget {
           elevation: 1,
           title: Text(
             imt("联系我们"),
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white, fontSize: 17),
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(

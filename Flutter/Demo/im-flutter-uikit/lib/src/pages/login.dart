@@ -1,11 +1,14 @@
+import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
+import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/pages/home_page.dart';
 import 'package:timuikit/src/pages/privacy/privacy.dart';
 import 'package:timuikit/src/pages/privacy/privacy_agreement.dart';
+import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/utils/GenerateUserSig.dart';
 import 'package:timuikit/utils/commonUtils.dart';
 import 'package:timuikit/utils/offline_push_config.dart';
@@ -60,10 +63,21 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<DefaultThemeData>(context).theme;
     return Stack(
       alignment: Alignment.center,
       children: [
-        Image.asset("assets/hero_image.png"),
+        Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+                    theme.primaryColor ?? CommonColor.primaryColor
+                  ]),
+            ),
+            child: Image.asset("assets/hero_image.png")),
         Positioned(
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -160,7 +174,7 @@ class _LoginFormState extends State<LoginForm> {
     );
     if (data.code != 0) {
       final errorReason = data.desc;
-      Utils.toast(imt_para("登录失败{{errorReason}}", "登录失败${errorReason}")(
+      Utils.toast(imt_para("登录失败{{errorReason}}", "登录失败$errorReason")(
           errorReason: errorReason));
       return;
     }
@@ -339,7 +353,7 @@ class _LoginFormState extends State<LoginForm> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                              child: Text(imt("登录")),
+                              child: Text(imt("登陆")),
                               onPressed: !checkboxSelected // 需要隐私协议勾选才可以登陆
                                   ? unSelectedPrivacy
                                   : userLogin,

@@ -17,6 +17,7 @@ import io.flutter.plugin.common.MethodChannel;
 
 public class ConversationManager {
     private static MethodChannel channel;
+    private static  HashMap<String, V2TIMConversationListener> conversationListenerList= new HashMap();
     public ConversationManager(MethodChannel _channel){
         ConversationManager.channel = _channel;
     }
@@ -63,6 +64,68 @@ public class ConversationManager {
         });
         result.success("add conversation listener success");
     }
+    public void removeConversationListener(MethodCall call,final MethodChannel.Result result){
+        final String listenerUuid = CommonUtil.getParam(call,result,"listenerUuid");
+        if (listenerUuid != "") {
+            final V2TIMConversationListener listener = conversationListenerList.get(listenerUuid);
+            V2TIMManager.getConversationManager().removeConversationListener(listener);
+            conversationListenerList.remove(listenerUuid);
+            result.success("removeConversationListener is done");
+        } else {
+            for (V2TIMConversationListener listener : conversationListenerList.values()) {
+                V2TIMManager.getConversationManager().removeConversationListener(listener);
+            }
+            conversationListenerList.clear();
+            result.success("all conversation listener message is removed");
+        }
+    }
+
+    public void  addConversationListener(MethodCall call,final MethodChannel.Result result){
+        final String listenerUuid = CommonUtil.getParam(call,result,"listenerUuid");
+        final V2TIMConversationListener conversationLister = new V2TIMConversationListener() {
+            @Override
+            public void onSyncServerStart() {
+                makeConversationListenerEventData("onSyncServerStart",null, listenerUuid);
+            }
+
+            @Override
+            public void onSyncServerFinish() {
+                makeConversationListenerEventData("onSyncServerFinish",null, listenerUuid);
+            }
+
+            @Override
+            public void onSyncServerFailed() {
+                makeConversationListenerEventData("onSyncServerFailed",null, listenerUuid);
+            }
+
+            @Override
+            public void onNewConversation(List<V2TIMConversation> conversationList) {
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for(int i = 0;i<conversationList.size();i++){
+                    list.add(CommonUtil.convertV2TIMConversationToMap(conversationList.get(i)));
+                }
+                makeConversationListenerEventData("onNewConversation",list, listenerUuid);
+            }
+
+            @Override
+            public void onConversationChanged(List<V2TIMConversation> conversationList) {
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for(int i = 0;i<conversationList.size();i++){
+                    list.add(CommonUtil.convertV2TIMConversationToMap(conversationList.get(i)));
+                }
+                makeConversationListenerEventData("onConversationChanged",list, listenerUuid);
+            }
+            @Override
+            public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
+                makeConversationListenerEventData("onTotalUnreadMessageCountChanged",totalUnreadCount, listenerUuid);
+            }
+        };
+        conversationListenerList.put(listenerUuid, conversationLister);
+        V2TIMManager.getConversationManager().addConversationListener(conversationLister);
+        result.success("addConversationListener success");
+    }
+
+
     public  void  getConversation(MethodCall methodCall,final  MethodChannel.Result result){
         String conversationID = CommonUtil.getParam(methodCall,result,"conversationID");
         V2TIMManager.getConversationManager().getConversation(conversationID, new V2TIMValueCallback<V2TIMConversation>() {

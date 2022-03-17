@@ -34,7 +34,7 @@ class GroupList extends StatelessWidget {
       appBar: AppBar(
           title: Text(
             imt("群聊"),
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white, fontSize: 17),
           ),
           shadowColor: Colors.white,
           flexibleSpace: Container(
@@ -52,6 +52,11 @@ class GroupList extends StatelessWidget {
         onTapItem: (groupInfo) {
           final groupID = groupInfo.groupID;
           _jumpToChatPage(context, groupID);
+        },
+        emptyBuilder: (_) {
+          return Center(
+            child: Text(imt("暂无群聊")),
+          );
         },
         groupCollector: (groupInfo) {
           final groupID = groupInfo?.groupID ?? "";

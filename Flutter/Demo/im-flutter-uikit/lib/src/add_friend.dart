@@ -15,7 +15,7 @@ class AddFriend extends StatelessWidget {
       appBar: AppBar(
           title: Text(
             imt("添加好友"),
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white, fontSize: 17),
           ),
           shadowColor: theme.weakDividerColor,
           flexibleSpace: Container(

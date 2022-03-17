@@ -7,9 +7,8 @@ enum ThemeType { solemn, brisk, bright, fantasy }
 
 class DefTheme {
   static ThemeType themeTypeFromString(String str) {
-    return ThemeType.values.firstWhere(
-        (e) => e.toString() == 'ThemeType.' + str,
-        orElse: () => ThemeType.brisk);
+    return ThemeType.values
+        .firstWhere((e) => e.toString() == str, orElse: () => ThemeType.brisk);
   }
 
   static final Map<ThemeType, TUITheme> defaultTheme = {
@@ -18,7 +17,7 @@ class DefTheme {
       lightPrimaryColor: Color(0xFF3371CD),
     ),
     ThemeType.brisk: const TUITheme(
-      primaryColor: Color(0xFF77BBFF),
+      primaryColor: Color(0xFF147AFF),
       lightPrimaryColor: Color(0xFFC0E1FF),
     ),
     ThemeType.bright: const TUITheme(

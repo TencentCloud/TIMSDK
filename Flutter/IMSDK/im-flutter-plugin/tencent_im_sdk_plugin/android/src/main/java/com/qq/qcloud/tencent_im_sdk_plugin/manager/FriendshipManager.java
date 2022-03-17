@@ -25,6 +25,7 @@ import java.util.List;
 
 public class FriendshipManager {
     private static MethodChannel channel;
+    private static  HashMap<String, V2TIMFriendshipListener> friendshipListenerList= new HashMap();
     public FriendshipManager(MethodChannel _channel){
         FriendshipManager.channel = _channel;
     }
@@ -32,7 +33,7 @@ public class FriendshipManager {
 
     public void setFriendListener(MethodCall methodCall, final MethodChannel.Result result){
         final  String listenerUuid = methodCall.argument("listenerUuid");
-        V2TIMManager.getFriendshipManager().setFriendListener(new V2TIMFriendshipListener() {
+        V2TIMFriendshipListener friendshipListener = new V2TIMFriendshipListener() {
             @Override
             public void onFriendApplicationListAdded(List<V2TIMFriendApplication> applicationList) {
                 LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
@@ -90,9 +91,91 @@ public class FriendshipManager {
                 }
                 makeFriendListenerEventData("onFriendInfoChanged",list,listenerUuid);
             }
-        });
-
+        };
+        friendshipListenerList.put(listenerUuid,friendshipListener);
+        V2TIMManager.getFriendshipManager().addFriendListener(friendshipListener);
+        result.success("addFriendListener  success");
         result.success("add friend msg listener success");
+    }
+    public void addFriendListener (MethodCall methodCall, final MethodChannel.Result result){
+        final  String listenerUuid = methodCall.argument("listenerUuid");
+        V2TIMFriendshipListener friendshipListener = new V2TIMFriendshipListener() {
+            @Override
+            public void onFriendApplicationListAdded(List<V2TIMFriendApplication> applicationList) {
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for(int i= 0;i<applicationList.size();i++){
+                    list.add(CommonUtil.convertV2TIMFriendApplicationToMap(applicationList.get(i)));
+                }
+
+                makeFriendListenerEventData("onFriendApplicationListAdded",list,listenerUuid);
+            }
+
+            @Override
+            public void onFriendApplicationListDeleted(List<String> userIDList) {
+
+                makeFriendListenerEventData("onFriendApplicationListDeleted",userIDList,listenerUuid);
+            }
+
+            @Override
+            public void onFriendApplicationListRead() {
+                makeFriendListenerEventData("onFriendApplicationListRead",null,listenerUuid);
+            }
+
+            @Override
+            public void onFriendListAdded(List<V2TIMFriendInfo> users) {
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for(int i= 0;i<users.size();i++){
+                    list.add(CommonUtil.convertV2TIMFriendInfoToMap(users.get(i)));
+                }
+                makeFriendListenerEventData("onFriendListAdded",list,listenerUuid);
+            }
+
+            @Override
+            public void onFriendListDeleted(List<String> userList) {
+                makeFriendListenerEventData("onFriendListDeleted",userList,listenerUuid);
+            }
+
+            @Override
+            public void onBlackListAdd(List<V2TIMFriendInfo> infoList) {
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for(int i= 0;i<infoList.size();i++){
+                    list.add(CommonUtil.convertV2TIMFriendInfoToMap(infoList.get(i)));
+                }
+                makeFriendListenerEventData("onBlackListAdd",list,listenerUuid);
+            }
+
+            @Override
+            public void onBlackListDeleted(List<String> userList) {
+                makeFriendListenerEventData("onBlackListDeleted",userList,listenerUuid);
+            }
+
+            @Override
+            public void onFriendInfoChanged(List<V2TIMFriendInfo> infoList) {
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for(int i= 0;i<infoList.size();i++){
+                    list.add(CommonUtil.convertV2TIMFriendInfoToMap(infoList.get(i)));
+                }
+                makeFriendListenerEventData("onFriendInfoChanged",list,listenerUuid);
+            }
+        };
+        friendshipListenerList.put(listenerUuid,friendshipListener);
+        V2TIMManager.getFriendshipManager().addFriendListener(friendshipListener);
+        result.success("addFriendListener  success");
+    }
+    public void removeFriendListener(MethodCall call,final MethodChannel.Result result){
+        final String listenerUuid = CommonUtil.getParam(call,result,"listenerUuid");
+        if (listenerUuid != "") {
+            final V2TIMFriendshipListener listener = friendshipListenerList.get(listenerUuid);
+            V2TIMManager.getFriendshipManager().removeFriendListener(listener);
+            friendshipListenerList.remove(listenerUuid);
+            result.success("removeFriendListener is done");
+        } else {
+            for (V2TIMFriendshipListener listener : friendshipListenerList.values()) {
+                V2TIMManager.getFriendshipManager().removeFriendListener(listener);
+            }
+            friendshipListenerList.clear();
+            result.success("all friendship listener message is removed");
+        }
     }
     private <T> void  makeFriendListenerEventData(String type,T data, String listenerUuid){
         CommonUtil.emitEvent(FriendshipManager.channel,"friendListener",type,data, listenerUuid);

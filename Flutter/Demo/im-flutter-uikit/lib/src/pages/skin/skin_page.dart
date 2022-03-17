@@ -26,7 +26,7 @@ class SkinPage extends StatelessWidget {
           elevation: 1,
           title: Text(
             imt("更换皮肤"),
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white, fontSize: 17),
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(

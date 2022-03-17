@@ -42,4 +42,16 @@ class AdvancedMsgListener: NSObject, V2TIMAdvancedMsgListener {
         TencentImSDKPlugin.invokeListener(type: ListenerType.onRecvMessageRevoked, method: "advancedMsgListener", data: msgID, listenerUuid: listenerUuid)
 	}
 	
+
+    public func onRecvMessageModified(_ msg: V2TIMMessage!) {
+        let promise =  Promise<Int>(in: .main,{ resolve, reject, _ in
+                V2MessageEntity.init(message: msg!).getDictAll().then(in: .main,{ res in
+                    TencentImSDKPlugin.invokeListener(type: ListenerType.onRecvNewMessage, method: "onRecvMessageModified", data: res, listenerUuid: self.listenerUuid)
+                    resolve(1);
+                })
+            })
+        
+        HydraThreadManager.subsc(promise: promise);
+	}
+
 }

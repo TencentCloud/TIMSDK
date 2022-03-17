@@ -32,6 +32,7 @@ class V2TIMConversationManager {
   V2TIMConversationManager(channel) {
     this._channel = channel;
   }
+
   Future<void> setConversationListener({
     required V2TimConversationListener listener,
   }) {
@@ -39,6 +40,32 @@ class V2TIMConversationManager {
     this.conversationListenerList[uuid] = listener;
     return ImFlutterPlatform.instance
         .setConversationListener(listener: listener, listenerUuid: uuid);
+  }
+
+  Future<void> addConversationListener({
+    required V2TimConversationListener listener,
+  }) {
+    final String uuid = Uuid().v4();
+    this.conversationListenerList[uuid] = listener;
+    return ImFlutterPlatform.instance
+        .addConversationListener(listener: listener, listenerUuid: uuid);
+  }
+
+  Future<void> removeConversationListener(
+      {V2TimConversationListener? listener}) {
+    var listenerUuid = "";
+    if (listener != null) {
+      listenerUuid = this.conversationListenerList.keys.firstWhere(
+            (k) => this.conversationListenerList[k] == listener,
+            orElse: () => "",
+          );
+      this.conversationListenerList.remove(listenerUuid);
+    } else {
+      this.conversationListenerList.clear();
+    }
+    return ImFlutterPlatform.instance.removeConversationListener(
+      listenerUuid: listenerUuid,
+    );
   }
 
   ///   获取会话列表

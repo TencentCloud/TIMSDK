@@ -58,6 +58,12 @@ public class MessageManager {
             public void onRecvMessageRevoked(String msgID) {
                 makeAddAdvancedMsgListenerEventData("onRecvMessageRevoked",msgID,listenerUuid);
             }
+
+            @Override
+            public void onRecvMessageModified(V2TIMMessage msg) {
+                makeAddAdvancedMsgListenerEventData("onRecvMessageModified",CommonUtil.convertV2TIMMessageToMap(msg),listenerUuid);
+            }
+            
         };
         advancedMessageListenerList.put(listenerUuid, advacedMessageListener);
         V2TIMManager.getMessageManager().addAdvancedMsgListener(advacedMessageListener);

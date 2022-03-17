@@ -525,3 +525,13 @@ setGroupReceiveMessageOpt、getC2CReceiveMessageOpt、getConversationListByConve
 ## 3.8.3
 * 根据环境切换token编码
 
+## 3.8.4
+* 更新interface
+
+## 3.8.5
+* 增加移除会话监听接口
+* 增加移除好友关系链接口
+
+## 3.8.6
+* 解决包无法get问题
+

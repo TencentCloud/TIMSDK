@@ -115,7 +115,12 @@ class _ChatState extends State<Chat> {
                 }
               }
             },
-            icon: const Icon(Icons.more_horiz_outlined))
+            icon: Image.asset(
+              'images/more.png',
+              package: 'tim_ui_kit',
+              height: 34,
+              width: 34,
+            ))
       ],
     );
   }

@@ -1,6 +1,6 @@
 name: tencent_im_sdk_plugin
 description: tencent_im_sdk_plugin由腾讯云即时通信IM精简版Native SDK封装而成，包含了精简版SDK的全部功能。
-version: 3.8.3
+version: 3.8.6
 homepage: https://cloud.tencent.com/product/im
 
 environment:
@@ -13,8 +13,8 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   json_annotation: ^4.0.1
-  tencent_im_sdk_plugin_web: 0.0.7
-  tencent_im_sdk_plugin_platform_interface: 0.1.2
+  tencent_im_sdk_plugin_web: 0.1.0
+  tencent_im_sdk_plugin_platform_interface: 0.1.5
   uuid: ^3.0.5
 
 dev_dependencies:

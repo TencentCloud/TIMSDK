@@ -11,6 +11,7 @@ import 'callbacks.dart';
 
 class V2TimAdvancedMsgListener {
   OnRecvNewMessageCallback onRecvNewMessage = (V2TimMessage message) {};
+  OnRecvMessageModified onRecvMessageModified = (V2TimMessage message) {};
   OnSendMessageProgressCallback onSendMessageProgress =
       (V2TimMessage message, int progress) {};
   OnRecvC2CReadReceiptCallback onRecvC2CReadReceipt =
@@ -22,6 +23,7 @@ class V2TimAdvancedMsgListener {
     OnRecvMessageRevokedCallback? onRecvMessageRevoked,
     OnRecvNewMessageCallback? onRecvNewMessage,
     OnSendMessageProgressCallback? onSendMessageProgress,
+    OnRecvMessageModified? onRecvMessageModified,
   }) {
     if (onRecvC2CReadReceipt != null) {
       this.onRecvC2CReadReceipt = onRecvC2CReadReceipt;
@@ -34,6 +36,9 @@ class V2TimAdvancedMsgListener {
     }
     if (onSendMessageProgress != null) {
       this.onSendMessageProgress = onSendMessageProgress;
+    }
+    if (onRecvMessageModified != null) {
+      this.onRecvMessageModified = onRecvMessageModified;
     }
   }
 }

@@ -89,6 +89,33 @@ class V2TIMFriendshipManager {
         .setFriendListener(listener: listener, listenerUuid: listenerUuid);
   }
 
+  Future<void> removeFriendListener({
+    V2TimFriendshipListener? listener,
+  }) {
+    var listenerUuid = "";
+    if (listener != null) {
+      listenerUuid = this.friendListenerList.keys.firstWhere(
+            (k) => this.friendListenerList[k] == listener,
+            orElse: () => "",
+          );
+      this.friendListenerList.remove(listenerUuid);
+    } else {
+      this.friendListenerList.clear();
+    }
+    return ImFlutterPlatform.instance.removeFriendListener(
+      listenerUuid: listenerUuid,
+    );
+  }
+
+  Future<void> addFriendListener({
+    required V2TimFriendshipListener listener,
+  }) {
+    final String uuid = Uuid().v4();
+    this.friendListenerList[uuid] = listener;
+    return ImFlutterPlatform.instance
+        .addFriendListener(listener: listener, listenerUuid: uuid);
+  }
+
   ///获取好友列表
   ///
   Future<V2TimValueCallback<List<V2TimFriendInfo>>> getFriendList() async {

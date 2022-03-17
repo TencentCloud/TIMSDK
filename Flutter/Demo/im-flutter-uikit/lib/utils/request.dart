@@ -28,14 +28,14 @@ Future<Response<Map<String, dynamic>>> appRequest({
       final errorMessage = e.message;
       return Response(data: {
         'errorCode': Const.SERVER_ERROR_CODE,
-        'errorMessage': imt_para("服务器错误：{{errorMessage}}", "服务器错误：${errorMessage}")(errorMessage: errorMessage),
+        'errorMessage': imt_para("服务器错误：{{errorMessage}}", "服务器错误：$errorMessage")(errorMessage: errorMessage),
       }, requestOptions: e.requestOptions);
     } else {
       // Request error 请求时的问题
       final requestErrorMessage = e.message;
       return Response(data: {
         'errorCode': Const.REQUEST_ERROR_CODE,
-        'errorMessage': imt_para("请求错误：{{requestErrorMessage}}", "请求错误：${requestErrorMessage}")(requestErrorMessage: requestErrorMessage),
+        'errorMessage': imt_para("请求错误：{{requestErrorMessage}}", "请求错误：$requestErrorMessage")(requestErrorMessage: requestErrorMessage),
       }, requestOptions: e.requestOptions);
     }
   }

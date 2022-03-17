@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 2
- * Strings: 254 (127.0 per locale)
+ * Strings: 284 (142.0 per locale)
  *
- * Built on 2022-03-05 at 16:50 UTC
+ * Built on 2022-03-16 at 10:12 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -311,19 +311,21 @@ class _StringsEn {
 	late final _StringsEn _root = this;
 
 	// Translations
+	String get k_16758qw => '添加好友';
+	String get k_0elt0kw => '添加群聊';
 	String get k_03f15qk => '黑名单';
+	String get k_0s3p3ji => '暂无黑名单';
 	String get k_0uc5cnb => '我们还在内测中，暂不支持创建频道。';
 	String get k_003nevv => '取消';
 	String get k_003rzap => '确定';
 	String get k_0s5ey0o => '实时音视频 TRTC';
-	String k_0chorra({required Object message}) => '获取列表失败 ${message}';
 	String get k_03gpl3d => '大家好';
 	String get k_0352fjr => '无网络连接，进入频道失败';
 	String get k_0d7n018 => '结束话题';
 	String get k_0d826hk => '置顶话题';
 	String get k_15wcgna => '结束成功';
 	String get k_15wo7xu => '置顶成功';
-	String k_1a8zex8({required Object errorMessage}) => '发生错误 ${errorMessage}';
+	String k_02slfpm({required Object errorMessage}) => '发生错误 $errorMessage';
 	String get k_1kvftgu => '我是自定义文本消息';
 	String get k_0cvagfm => '我是自定义视频消息';
 	String get k_1muiqp7 => '我是自定义群提示消息';
@@ -339,13 +341,15 @@ class _StringsEn {
 	String get k_17fmlyf => '清除聊天';
 	String get k_0dhesoz => '取消置顶';
 	String get k_002sk7x => '置顶';
+	String get k_003kv3v => '搜索';
 	String get k_0gmpgcg => '暂无会话';
+	String get k_1m8zuj4 => '选择联系人';
 	String get k_002tu9r => '性能';
-	String k_0welsao({required Object getMsg}) => '获取到的消息:${getMsg}';
-	String k_1mvlw3y({required Object message}) => '获取讨论区列表失败 ${message}';
+	String k_0vwtop2({required Object getMsg}) => '获取到的消息:$getMsg';
+	String k_0upijvs({required Object message}) => '获取讨论区列表失败 $message';
 	String get k_1tmcw5c => '请完善话题标题';
 	String get k_1cnmslk => '必须选择一个标签';
-	String k_0f2a1ks({required Object message}) => '创建话题失败 ${message}';
+	String k_0v5hlay({required Object message}) => '创建话题失败 $message';
 	String get k_0z3ytji => '创建话题成功';
 	String get k_1a8vem3 => '创建者异常';
 	String get k_0eskkr1 => '选择讨论区';
@@ -361,16 +365,23 @@ class _StringsEn {
 	String get k_1pq0ybn => '暂未加入任何话题';
 	String get k_0bh95w0 => '无网络连接，进入话题失败';
 	String get k_002twmj => '群聊';
+	String get k_0em28sp => '暂无群聊';
 	String get k_09kalj0 => '清空聊天记录';
 	String get k_18qjstb => '转让群主';
 	String get k_14j5iul => '删除并退出';
 	String get k_0jtutmw => '退出后不会接收到此群聊消息';
+	String get k_14n0fo2 => '暂无请求';
 	String get k_08k00l9 => '正在加载...';
 	String get k_197r4f7 => '即时通信服务连接成功';
 	String get k_0gfsln9 => '信息已变更';
 	String get k_1s5xnir => '即时通信 SDK初始化失败';
-	String k_0d3vixm({required Object failedReason}) => '登录失败 ${failedReason}';
+	String k_0owk5ss({required Object failedReason}) => '登录失败 $failedReason';
 	String get k_15bxnkw => '网络连接丢失';
+	String get k_0glj9us => '发起会话';
+	String get k_1631kyh => '创建工作群';
+	String get k_1644yii => '创建社交群';
+	String get k_1fxfx04 => '创建会议群';
+	String get k_1cnkqc9 => '创建直播群';
 	String get k_002r09z => '频道';
 	String get k_003nvk2 => '消息';
 	String get k_1jwxwgt => '连接中...';
@@ -384,13 +395,11 @@ class _StringsEn {
 	String get k_03jia4z => '无网络连接';
 	String get k_007jqt2 => '验证码发送成功';
 	String get k_0m9ineu => '需要同意隐私与用户协议';
-	String get k_1t2zg6h => '图片验证码校验失败';
 	String get k_1a55aib => '验证码异常';
-	String k_06emov5({required Object errorReason}) => '登录失败${errorReason}';
+	String k_1mw45lz({required Object errorReason}) => '登录失败$errorReason';
 	String get k_16r3sej => '国家/地区';
 	String get k_15hlgzr => '选择你的国家区号';
 	String get k_1bnmt3h => '请使用英文搜索';
-	String get k_003kv3v => '搜索';
 	String get k_03fei8z => '手机号';
 	String get k_03aj66h => '验证码';
 	String get k_1m9jtmw => '请输入验证码';
@@ -399,11 +408,12 @@ class _StringsEn {
 	String get k_0orhtx0 => '《隐私协议》';
 	String get k_00041m1 => '和';
 	String get k_0opnzp6 => '《用户协议》';
-	String get k_003r6vf => '登录';
+	String get k_002ri2g => '登陆';
 	String get k_161ecly => '当前无网络';
 	String get k_11uz2i8 => '重试网络';
 	String get k_1vhzltr => '腾讯云即时通信IM';
 	String get k_0j433ys => '腾讯云TRTC';
+	String get k_0epvs61 => '更换皮肤';
 	String get k_12u8g8l => '免责声明';
 	String get k_1p0j8i3 => 'IM即时通信（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。';
 	String get k_0k7qoht => '同意任何用户加好友';
@@ -429,6 +439,7 @@ class _StringsEn {
 	String get k_11z7ml4 => '详细资料';
 	String get k_0003y9x => '无';
 	String get k_1679vrd => '加为好友';
+	String get k_1t2zg6h => '图片验证码校验失败';
 	String get k_03ibg5h => '星期一';
 	String get k_03i7hu1 => '星期二';
 	String get k_03iaiks => '星期三';
@@ -436,8 +447,12 @@ class _StringsEn {
 	String get k_03i7ok1 => '星期五';
 	String get k_03efxyg => '星期六';
 	String get k_03ibfd2 => '星期七';
-	String k_0fc9uho({required Object errorMessage}) => '服务器错误：${errorMessage}';
-	String k_0mmwekc({required Object requestErrorMessage}) => '请求错误：${requestErrorMessage}';
+	String k_1o7lf2y({required Object errorMessage}) => '服务器错误：$errorMessage';
+	String k_118l7sq({required Object requestErrorMessage}) => '请求错误：$requestErrorMessage';
+	String get k_003nfx9 => '深沉';
+	String get k_003rvjp => '轻快';
+	String get k_003rtht => '明媚';
+	String get k_003qxiw => '梦幻';
 }
 
 // Path: <root>
@@ -457,19 +472,21 @@ class _StringsZh implements _StringsEn {
 	@override late final _StringsZh _root = this;
 
 	// Translations
+	@override String get k_16758qw => '添加好友';
+	@override String get k_0elt0kw => '添加群聊';
 	@override String get k_03f15qk => '黑名单';
+	@override String get k_0s3p3ji => '暂无黑名单';
 	@override String get k_0uc5cnb => '我们还在内测中，暂不支持创建频道。';
 	@override String get k_003nevv => '取消';
 	@override String get k_003rzap => '确定';
 	@override String get k_0s5ey0o => '实时音视频 TRTC';
-	@override String k_0chorra({required Object message}) => '获取列表失败 ${message}';
 	@override String get k_03gpl3d => '大家好';
 	@override String get k_0352fjr => '无网络连接，进入频道失败';
 	@override String get k_0d7n018 => '结束话题';
 	@override String get k_0d826hk => '置顶话题';
 	@override String get k_15wcgna => '结束成功';
 	@override String get k_15wo7xu => '置顶成功';
-	@override String k_1a8zex8({required Object errorMessage}) => '发生错误 ${errorMessage}';
+	@override String k_02slfpm({required Object errorMessage}) => '发生错误 $errorMessage';
 	@override String get k_1kvftgu => '我是自定义文本消息';
 	@override String get k_0cvagfm => '我是自定义视频消息';
 	@override String get k_1muiqp7 => '我是自定义群提示消息';
@@ -485,13 +502,15 @@ class _StringsZh implements _StringsEn {
 	@override String get k_17fmlyf => '清除聊天';
 	@override String get k_0dhesoz => '取消置顶';
 	@override String get k_002sk7x => '置顶';
+	@override String get k_003kv3v => '搜索';
 	@override String get k_0gmpgcg => '暂无会话';
+	@override String get k_1m8zuj4 => '选择联系人';
 	@override String get k_002tu9r => '性能';
-	@override String k_0welsao({required Object getMsg}) => '获取到的消息:${getMsg}';
-	@override String k_1mvlw3y({required Object message}) => '获取讨论区列表失败 ${message}';
+	@override String k_0vwtop2({required Object getMsg}) => '获取到的消息:$getMsg';
+	@override String k_0upijvs({required Object message}) => '获取讨论区列表失败 $message';
 	@override String get k_1tmcw5c => '请完善话题标题';
 	@override String get k_1cnmslk => '必须选择一个标签';
-	@override String k_0f2a1ks({required Object message}) => '创建话题失败 ${message}';
+	@override String k_0v5hlay({required Object message}) => '创建话题失败 $message';
 	@override String get k_0z3ytji => '创建话题成功';
 	@override String get k_1a8vem3 => '创建者异常';
 	@override String get k_0eskkr1 => '选择讨论区';
@@ -507,16 +526,23 @@ class _StringsZh implements _StringsEn {
 	@override String get k_1pq0ybn => '暂未加入任何话题';
 	@override String get k_0bh95w0 => '无网络连接，进入话题失败';
 	@override String get k_002twmj => '群聊';
+	@override String get k_0em28sp => '暂无群聊';
 	@override String get k_09kalj0 => '清空聊天记录';
 	@override String get k_18qjstb => '转让群主';
 	@override String get k_14j5iul => '删除并退出';
 	@override String get k_0jtutmw => '退出后不会接收到此群聊消息';
+	@override String get k_14n0fo2 => '暂无请求';
 	@override String get k_08k00l9 => '正在加载...';
 	@override String get k_197r4f7 => '即时通信服务连接成功';
 	@override String get k_0gfsln9 => '信息已变更';
 	@override String get k_1s5xnir => '即时通信 SDK初始化失败';
-	@override String k_0d3vixm({required Object failedReason}) => '登录失败 ${failedReason}';
+	@override String k_0owk5ss({required Object failedReason}) => '登录失败 $failedReason';
 	@override String get k_15bxnkw => '网络连接丢失';
+	@override String get k_0glj9us => '发起会话';
+	@override String get k_1631kyh => '创建工作群';
+	@override String get k_1644yii => '创建社交群';
+	@override String get k_1fxfx04 => '创建会议群';
+	@override String get k_1cnkqc9 => '创建直播群';
 	@override String get k_002r09z => '频道';
 	@override String get k_003nvk2 => '消息';
 	@override String get k_1jwxwgt => '连接中...';
@@ -530,13 +556,11 @@ class _StringsZh implements _StringsEn {
 	@override String get k_03jia4z => '无网络连接';
 	@override String get k_007jqt2 => '验证码发送成功';
 	@override String get k_0m9ineu => '需要同意隐私与用户协议';
-	@override String get k_1t2zg6h => '图片验证码校验失败';
 	@override String get k_1a55aib => '验证码异常';
-	@override String k_06emov5({required Object errorReason}) => '登录失败${errorReason}';
+	@override String k_1mw45lz({required Object errorReason}) => '登录失败$errorReason';
 	@override String get k_16r3sej => '国家/地区';
 	@override String get k_15hlgzr => '选择你的国家区号';
 	@override String get k_1bnmt3h => '请使用英文搜索';
-	@override String get k_003kv3v => '搜索';
 	@override String get k_03fei8z => '手机号';
 	@override String get k_03aj66h => '验证码';
 	@override String get k_1m9jtmw => '请输入验证码';
@@ -545,11 +569,12 @@ class _StringsZh implements _StringsEn {
 	@override String get k_0orhtx0 => '《隐私协议》';
 	@override String get k_00041m1 => '和';
 	@override String get k_0opnzp6 => '《用户协议》';
-	@override String get k_003r6vf => '登录';
+	@override String get k_002ri2g => '登陆';
 	@override String get k_161ecly => '当前无网络';
 	@override String get k_11uz2i8 => '重试网络';
 	@override String get k_1vhzltr => '腾讯云即时通信IM';
 	@override String get k_0j433ys => '腾讯云TRTC';
+	@override String get k_0epvs61 => '更换皮肤';
 	@override String get k_12u8g8l => '免责声明';
 	@override String get k_1p0j8i3 => 'IM即时通信（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。';
 	@override String get k_0k7qoht => '同意任何用户加好友';
@@ -575,6 +600,7 @@ class _StringsZh implements _StringsEn {
 	@override String get k_11z7ml4 => '详细资料';
 	@override String get k_0003y9x => '无';
 	@override String get k_1679vrd => '加为好友';
+	@override String get k_1t2zg6h => '图片验证码校验失败';
 	@override String get k_03ibg5h => '星期一';
 	@override String get k_03i7hu1 => '星期二';
 	@override String get k_03iaiks => '星期三';
@@ -582,8 +608,12 @@ class _StringsZh implements _StringsEn {
 	@override String get k_03i7ok1 => '星期五';
 	@override String get k_03efxyg => '星期六';
 	@override String get k_03ibfd2 => '星期七';
-	@override String k_0fc9uho({required Object errorMessage}) => '服务器错误：${errorMessage}';
-	@override String k_0mmwekc({required Object requestErrorMessage}) => '请求错误：${requestErrorMessage}';
+	@override String k_1o7lf2y({required Object errorMessage}) => '服务器错误：$errorMessage';
+	@override String k_118l7sq({required Object requestErrorMessage}) => '请求错误：$requestErrorMessage';
+	@override String get k_003nfx9 => '深沉';
+	@override String get k_003rvjp => '轻快';
+	@override String get k_003rtht => '明媚';
+	@override String get k_003qxiw => '梦幻';
 }
 
 /// Flat map(s) containing all translations.
@@ -592,19 +622,21 @@ class _StringsZh implements _StringsEn {
 extension on _StringsEn {
 	Map<String, dynamic> _buildFlatMap() {
 		return {
+			'k_16758qw': '添加好友',
+			'k_0elt0kw': '添加群聊',
 			'k_03f15qk': '黑名单',
+			'k_0s3p3ji': '暂无黑名单',
 			'k_0uc5cnb': '我们还在内测中，暂不支持创建频道。',
 			'k_003nevv': '取消',
 			'k_003rzap': '确定',
 			'k_0s5ey0o': '实时音视频 TRTC',
-			'k_0chorra': ({required Object message}) => '获取列表失败 ${message}',
 			'k_03gpl3d': '大家好',
 			'k_0352fjr': '无网络连接，进入频道失败',
 			'k_0d7n018': '结束话题',
 			'k_0d826hk': '置顶话题',
 			'k_15wcgna': '结束成功',
 			'k_15wo7xu': '置顶成功',
-			'k_1a8zex8': ({required Object errorMessage}) => '发生错误 ${errorMessage}',
+			'k_02slfpm': ({required Object errorMessage}) => '发生错误 $errorMessage',
 			'k_1kvftgu': '我是自定义文本消息',
 			'k_0cvagfm': '我是自定义视频消息',
 			'k_1muiqp7': '我是自定义群提示消息',
@@ -620,13 +652,15 @@ extension on _StringsEn {
 			'k_17fmlyf': '清除聊天',
 			'k_0dhesoz': '取消置顶',
 			'k_002sk7x': '置顶',
+			'k_003kv3v': '搜索',
 			'k_0gmpgcg': '暂无会话',
+			'k_1m8zuj4': '选择联系人',
 			'k_002tu9r': '性能',
-			'k_0welsao': ({required Object getMsg}) => '获取到的消息:${getMsg}',
-			'k_1mvlw3y': ({required Object message}) => '获取讨论区列表失败 ${message}',
+			'k_0vwtop2': ({required Object getMsg}) => '获取到的消息:$getMsg',
+			'k_0upijvs': ({required Object message}) => '获取讨论区列表失败 $message',
 			'k_1tmcw5c': '请完善话题标题',
 			'k_1cnmslk': '必须选择一个标签',
-			'k_0f2a1ks': ({required Object message}) => '创建话题失败 ${message}',
+			'k_0v5hlay': ({required Object message}) => '创建话题失败 $message',
 			'k_0z3ytji': '创建话题成功',
 			'k_1a8vem3': '创建者异常',
 			'k_0eskkr1': '选择讨论区',
@@ -642,16 +676,23 @@ extension on _StringsEn {
 			'k_1pq0ybn': '暂未加入任何话题',
 			'k_0bh95w0': '无网络连接，进入话题失败',
 			'k_002twmj': '群聊',
+			'k_0em28sp': '暂无群聊',
 			'k_09kalj0': '清空聊天记录',
 			'k_18qjstb': '转让群主',
 			'k_14j5iul': '删除并退出',
 			'k_0jtutmw': '退出后不会接收到此群聊消息',
+			'k_14n0fo2': '暂无请求',
 			'k_08k00l9': '正在加载...',
 			'k_197r4f7': '即时通信服务连接成功',
 			'k_0gfsln9': '信息已变更',
 			'k_1s5xnir': '即时通信 SDK初始化失败',
-			'k_0d3vixm': ({required Object failedReason}) => '登录失败 ${failedReason}',
+			'k_0owk5ss': ({required Object failedReason}) => '登录失败 $failedReason',
 			'k_15bxnkw': '网络连接丢失',
+			'k_0glj9us': '发起会话',
+			'k_1631kyh': '创建工作群',
+			'k_1644yii': '创建社交群',
+			'k_1fxfx04': '创建会议群',
+			'k_1cnkqc9': '创建直播群',
 			'k_002r09z': '频道',
 			'k_003nvk2': '消息',
 			'k_1jwxwgt': '连接中...',
@@ -665,13 +706,11 @@ extension on _StringsEn {
 			'k_03jia4z': '无网络连接',
 			'k_007jqt2': '验证码发送成功',
 			'k_0m9ineu': '需要同意隐私与用户协议',
-			'k_1t2zg6h': '图片验证码校验失败',
 			'k_1a55aib': '验证码异常',
-			'k_06emov5': ({required Object errorReason}) => '登录失败${errorReason}',
+			'k_1mw45lz': ({required Object errorReason}) => '登录失败$errorReason',
 			'k_16r3sej': '国家/地区',
 			'k_15hlgzr': '选择你的国家区号',
 			'k_1bnmt3h': '请使用英文搜索',
-			'k_003kv3v': '搜索',
 			'k_03fei8z': '手机号',
 			'k_03aj66h': '验证码',
 			'k_1m9jtmw': '请输入验证码',
@@ -680,11 +719,12 @@ extension on _StringsEn {
 			'k_0orhtx0': '《隐私协议》',
 			'k_00041m1': '和',
 			'k_0opnzp6': '《用户协议》',
-			'k_003r6vf': '登录',
+			'k_002ri2g': '登陆',
 			'k_161ecly': '当前无网络',
 			'k_11uz2i8': '重试网络',
 			'k_1vhzltr': '腾讯云即时通信IM',
 			'k_0j433ys': '腾讯云TRTC',
+			'k_0epvs61': '更换皮肤',
 			'k_12u8g8l': '免责声明',
 			'k_1p0j8i3': 'IM即时通信（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。',
 			'k_0k7qoht': '同意任何用户加好友',
@@ -710,6 +750,7 @@ extension on _StringsEn {
 			'k_11z7ml4': '详细资料',
 			'k_0003y9x': '无',
 			'k_1679vrd': '加为好友',
+			'k_1t2zg6h': '图片验证码校验失败',
 			'k_03ibg5h': '星期一',
 			'k_03i7hu1': '星期二',
 			'k_03iaiks': '星期三',
@@ -717,8 +758,12 @@ extension on _StringsEn {
 			'k_03i7ok1': '星期五',
 			'k_03efxyg': '星期六',
 			'k_03ibfd2': '星期七',
-			'k_0fc9uho': ({required Object errorMessage}) => '服务器错误：${errorMessage}',
-			'k_0mmwekc': ({required Object requestErrorMessage}) => '请求错误：${requestErrorMessage}',
+			'k_1o7lf2y': ({required Object errorMessage}) => '服务器错误：$errorMessage',
+			'k_118l7sq': ({required Object requestErrorMessage}) => '请求错误：$requestErrorMessage',
+			'k_003nfx9': '深沉',
+			'k_003rvjp': '轻快',
+			'k_003rtht': '明媚',
+			'k_003qxiw': '梦幻',
 		};
 	}
 }
@@ -726,19 +771,21 @@ extension on _StringsEn {
 extension on _StringsZh {
 	Map<String, dynamic> _buildFlatMap() {
 		return {
+			'k_16758qw': '添加好友',
+			'k_0elt0kw': '添加群聊',
 			'k_03f15qk': '黑名单',
+			'k_0s3p3ji': '暂无黑名单',
 			'k_0uc5cnb': '我们还在内测中，暂不支持创建频道。',
 			'k_003nevv': '取消',
 			'k_003rzap': '确定',
 			'k_0s5ey0o': '实时音视频 TRTC',
-			'k_0chorra': ({required Object message}) => '获取列表失败 ${message}',
 			'k_03gpl3d': '大家好',
 			'k_0352fjr': '无网络连接，进入频道失败',
 			'k_0d7n018': '结束话题',
 			'k_0d826hk': '置顶话题',
 			'k_15wcgna': '结束成功',
 			'k_15wo7xu': '置顶成功',
-			'k_1a8zex8': ({required Object errorMessage}) => '发生错误 ${errorMessage}',
+			'k_02slfpm': ({required Object errorMessage}) => '发生错误 $errorMessage',
 			'k_1kvftgu': '我是自定义文本消息',
 			'k_0cvagfm': '我是自定义视频消息',
 			'k_1muiqp7': '我是自定义群提示消息',
@@ -754,13 +801,15 @@ extension on _StringsZh {
 			'k_17fmlyf': '清除聊天',
 			'k_0dhesoz': '取消置顶',
 			'k_002sk7x': '置顶',
+			'k_003kv3v': '搜索',
 			'k_0gmpgcg': '暂无会话',
+			'k_1m8zuj4': '选择联系人',
 			'k_002tu9r': '性能',
-			'k_0welsao': ({required Object getMsg}) => '获取到的消息:${getMsg}',
-			'k_1mvlw3y': ({required Object message}) => '获取讨论区列表失败 ${message}',
+			'k_0vwtop2': ({required Object getMsg}) => '获取到的消息:$getMsg',
+			'k_0upijvs': ({required Object message}) => '获取讨论区列表失败 $message',
 			'k_1tmcw5c': '请完善话题标题',
 			'k_1cnmslk': '必须选择一个标签',
-			'k_0f2a1ks': ({required Object message}) => '创建话题失败 ${message}',
+			'k_0v5hlay': ({required Object message}) => '创建话题失败 $message',
 			'k_0z3ytji': '创建话题成功',
 			'k_1a8vem3': '创建者异常',
 			'k_0eskkr1': '选择讨论区',
@@ -776,16 +825,23 @@ extension on _StringsZh {
 			'k_1pq0ybn': '暂未加入任何话题',
 			'k_0bh95w0': '无网络连接，进入话题失败',
 			'k_002twmj': '群聊',
+			'k_0em28sp': '暂无群聊',
 			'k_09kalj0': '清空聊天记录',
 			'k_18qjstb': '转让群主',
 			'k_14j5iul': '删除并退出',
 			'k_0jtutmw': '退出后不会接收到此群聊消息',
+			'k_14n0fo2': '暂无请求',
 			'k_08k00l9': '正在加载...',
 			'k_197r4f7': '即时通信服务连接成功',
 			'k_0gfsln9': '信息已变更',
 			'k_1s5xnir': '即时通信 SDK初始化失败',
-			'k_0d3vixm': ({required Object failedReason}) => '登录失败 ${failedReason}',
+			'k_0owk5ss': ({required Object failedReason}) => '登录失败 $failedReason',
 			'k_15bxnkw': '网络连接丢失',
+			'k_0glj9us': '发起会话',
+			'k_1631kyh': '创建工作群',
+			'k_1644yii': '创建社交群',
+			'k_1fxfx04': '创建会议群',
+			'k_1cnkqc9': '创建直播群',
 			'k_002r09z': '频道',
 			'k_003nvk2': '消息',
 			'k_1jwxwgt': '连接中...',
@@ -799,13 +855,11 @@ extension on _StringsZh {
 			'k_03jia4z': '无网络连接',
 			'k_007jqt2': '验证码发送成功',
 			'k_0m9ineu': '需要同意隐私与用户协议',
-			'k_1t2zg6h': '图片验证码校验失败',
 			'k_1a55aib': '验证码异常',
-			'k_06emov5': ({required Object errorReason}) => '登录失败${errorReason}',
+			'k_1mw45lz': ({required Object errorReason}) => '登录失败$errorReason',
 			'k_16r3sej': '国家/地区',
 			'k_15hlgzr': '选择你的国家区号',
 			'k_1bnmt3h': '请使用英文搜索',
-			'k_003kv3v': '搜索',
 			'k_03fei8z': '手机号',
 			'k_03aj66h': '验证码',
 			'k_1m9jtmw': '请输入验证码',
@@ -814,11 +868,12 @@ extension on _StringsZh {
 			'k_0orhtx0': '《隐私协议》',
 			'k_00041m1': '和',
 			'k_0opnzp6': '《用户协议》',
-			'k_003r6vf': '登录',
+			'k_002ri2g': '登陆',
 			'k_161ecly': '当前无网络',
 			'k_11uz2i8': '重试网络',
 			'k_1vhzltr': '腾讯云即时通信IM',
 			'k_0j433ys': '腾讯云TRTC',
+			'k_0epvs61': '更换皮肤',
 			'k_12u8g8l': '免责声明',
 			'k_1p0j8i3': 'IM即时通信（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。',
 			'k_0k7qoht': '同意任何用户加好友',
@@ -844,6 +899,7 @@ extension on _StringsZh {
 			'k_11z7ml4': '详细资料',
 			'k_0003y9x': '无',
 			'k_1679vrd': '加为好友',
+			'k_1t2zg6h': '图片验证码校验失败',
 			'k_03ibg5h': '星期一',
 			'k_03i7hu1': '星期二',
 			'k_03iaiks': '星期三',
@@ -851,8 +907,12 @@ extension on _StringsZh {
 			'k_03i7ok1': '星期五',
 			'k_03efxyg': '星期六',
 			'k_03ibfd2': '星期七',
-			'k_0fc9uho': ({required Object errorMessage}) => '服务器错误：${errorMessage}',
-			'k_0mmwekc': ({required Object requestErrorMessage}) => '请求错误：${requestErrorMessage}',
+			'k_1o7lf2y': ({required Object errorMessage}) => '服务器错误：$errorMessage',
+			'k_118l7sq': ({required Object requestErrorMessage}) => '请求错误：$requestErrorMessage',
+			'k_003nfx9': '深沉',
+			'k_003rvjp': '轻快',
+			'k_003rtht': '明媚',
+			'k_003qxiw': '梦幻',
 		};
 	}
 }

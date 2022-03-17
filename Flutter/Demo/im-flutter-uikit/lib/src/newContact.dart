@@ -15,7 +15,7 @@ class NewContact extends StatelessWidget {
       appBar: AppBar(
           title: Text(
             imt("新的联系人"),
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white, fontSize: 17),
           ),
           shadowColor: Colors.white,
           flexibleSpace: Container(
@@ -29,7 +29,13 @@ class NewContact extends StatelessWidget {
           iconTheme: const IconThemeData(
             color: Colors.white,
           )),
-      body: const TIMUIKitNewContact(),
+      body: TIMUIKitNewContact(
+        emptyBuilder: (c) {
+          return Center(
+            child: Text(imt("暂无请求")),
+          );
+        },
+      ),
     );
   }
 }

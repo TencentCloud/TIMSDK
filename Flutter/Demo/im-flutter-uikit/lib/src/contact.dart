@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/widgets/avatar.dart';
 import 'package:timuikit/src/blackList.dart';
 import 'package:timuikit/src/group_list.dart';
+import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/src/user_profile.dart';
 import 'newContact.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
@@ -47,13 +49,17 @@ class _ContactState extends State<Contact> {
   }
 
   String _getImagePathByID(String id) {
+    final themeTypeSubfix = Provider.of<DefaultThemeData>(context)
+        .currentThemeType
+        .toString()
+        .replaceFirst('ThemeType.', '');
     switch (id) {
       case "newContact":
-        return "assets/newContact.png";
+        return "assets/newContact_$themeTypeSubfix.png";
       case "groupList":
-        return "assets/groupList.png";
+        return "assets/groupList_$themeTypeSubfix.png";
       case "blackList":
-        return "assets/blackList.png";
+        return "assets/blackList_$themeTypeSubfix.png";
       default:
         return "";
     }

@@ -15,7 +15,7 @@ class BlackList extends StatelessWidget {
       appBar: AppBar(
           title: Text(
             imt("黑名单"),
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white, fontSize: 17),
           ),
           shadowColor: Colors.white,
           flexibleSpace: Container(
@@ -30,6 +30,11 @@ class BlackList extends StatelessWidget {
             color: Colors.white,
           )),
       body: TIMUIKitBlackList(
+        emptyBuilder: (_) {
+          return Center(
+            child: Text(imt("暂无黑名单")),
+          );
+        },
         onTapItem: (_) {},
       ),
     );
