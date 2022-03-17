@@ -21,18 +21,24 @@ void main() {
   // 全局loading
   configLoading();
   // AutoSizeUtil.setStandard(375, isAutoTextSize: true);
-
   // fast i18n use device locale
   WidgetsFlutterBinding.ensureInitialized();
   LocaleSettings.useDeviceLocale();
-
-  runApp(
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(
       // runAutoApp(
       TranslationProvider(
-          child: MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => DefaultThemeData())],
-    child: const TUIKitDemoApp(),
-  )));
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => DefaultThemeData())
+          ],
+          child: const TUIKitDemoApp(),
+        ),
+      ),
+    );
+  });
+
   // );
 }
 

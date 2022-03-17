@@ -26,13 +26,15 @@ class UserAgreementPateState extends State {
         ),
         title: Text(
           imt("腾讯云即时通信IM"),
-          style: TextStyle(fontSize: 17),
+          style: const TextStyle(fontSize: 17),
         ),
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            size: 18,
-            color: Colors.white,
+          padding: const EdgeInsets.only(left: 16),
+          icon: Image.asset(
+            'images/arrow_back.png',
+            package: 'tim_ui_kit',
+            height: 34,
+            width: 34,
           ),
           // 返回Home事件
           onPressed: () => {Navigator.pop(context)},

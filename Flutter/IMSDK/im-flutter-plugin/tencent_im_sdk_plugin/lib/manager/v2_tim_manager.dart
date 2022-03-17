@@ -444,6 +444,9 @@ class V2TIMManager {
               case 'onRecvNewMessage':
                 listener.onRecvNewMessage(V2TimMessage.fromJson(params));
                 break;
+              case 'onRecvMessageModified':
+                listener.onRecvMessageModified(V2TimMessage.fromJson(params));
+                break;
               case 'onRecvC2CReadReceipt':
                 List dataList = params;
                 List<V2TimMessageReceipt> receiptList =

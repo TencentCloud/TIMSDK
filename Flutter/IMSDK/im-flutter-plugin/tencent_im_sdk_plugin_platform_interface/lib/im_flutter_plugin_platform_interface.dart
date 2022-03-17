@@ -504,6 +504,19 @@ abstract class ImFlutterPlatform extends PlatformInterface {
     throw UnimplementedError("getConversationList() has not been implemented");
   }
 
+  Future<void> removeConversationListener({
+    String? listenerUuid,
+  }) async {
+    throw UnimplementedError(
+        'removeConversationListener() has not been implemented');
+  }
+
+  Future<void> removeFriendListener({
+    String? listenerUuid,
+  }) async {
+    throw UnimplementedError('removeFriendListener() has not been implemented');
+  }
+
   /// 通过会话ID获取指定会话列表
   ///
   Future<V2TimValueCallback<List<V2TimConversation>>>
@@ -1896,9 +1909,26 @@ abstract class ImFlutterPlatform extends PlatformInterface {
 
   /// 添加高级消息的事件监听器
   ///
-  Future<void> addAdvancedMsgListener(
-      {required V2TimAdvancedMsgListener listener,
-      String? listenerUuid}) async {
+  Future<void> addAdvancedMsgListener({
+    required V2TimAdvancedMsgListener listener,
+    String? listenerUuid,
+  }) async {
+    throw UnimplementedError(
+        'addAdvancedMsgListener() has not been implemented.');
+  }
+
+  Future<void> addConversationListener({
+    required V2TimConversationListener listener,
+    String? listenerUuid,
+  }) async {
+    throw UnimplementedError(
+        'addAdvancedMsgListener() has not been implemented.');
+  }
+
+  Future<void> addFriendListener({
+    required V2TimFriendshipListener listener,
+    String? listenerUuid,
+  }) async {
     throw UnimplementedError(
         'addAdvancedMsgListener() has not been implemented.');
   }

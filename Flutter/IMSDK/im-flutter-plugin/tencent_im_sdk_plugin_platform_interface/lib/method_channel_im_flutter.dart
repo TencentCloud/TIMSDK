@@ -501,6 +501,46 @@ class MethodChannelIm extends ImFlutterPlatform {
   }
 
   @override
+  Future<void> removeConversationListener({String? listenerUuid}) async {
+    return _channel.invokeMethod("removeConversationListener",
+        buildConversationManagerParam({"listenerUuid": listenerUuid}));
+  }
+
+  @override
+  Future<void> removeFriendListener({String? listenerUuid}) async {
+    return _channel.invokeMethod("removeFriendListener",
+        buildFriendManagerParam({"listenerUuid": listenerUuid}));
+  }
+
+  @override
+  Future<void> addConversationListener({
+    required V2TimConversationListener listener,
+    String? listenerUuid,
+  }) async {
+    return await _channel.invokeMethod(
+        "addConversationListener",
+        buildMessageMangerParam(
+          {
+            "listenerUuid": listenerUuid,
+          },
+        ));
+  }
+
+  @override
+  Future<void> addFriendListener({
+    required V2TimFriendshipListener listener,
+    String? listenerUuid,
+  }) async {
+    return await _channel.invokeMethod(
+        "addFriendListener",
+        buildFriendManagerParam(
+          {
+            "listenerUuid": listenerUuid,
+          },
+        ));
+  }
+
+  @override
   Future<V2TimValueCallback<List<V2TimConversation>>>
       getConversationListByConversaionIds({
     required List<String> conversationIDList,

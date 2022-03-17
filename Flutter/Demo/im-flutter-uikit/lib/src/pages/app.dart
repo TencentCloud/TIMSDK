@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/pages/home_page.dart';
 import 'package:timuikit/src/pages/login.dart';
-import 'package:timuikit/src/pages/no_connect.dart';
 import 'package:timuikit/utils/offline_push_config.dart';
 import 'package:timuikit/utils/toast.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';

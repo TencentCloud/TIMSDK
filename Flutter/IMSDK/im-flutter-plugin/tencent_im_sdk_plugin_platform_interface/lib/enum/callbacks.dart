@@ -125,6 +125,12 @@ typedef OnGroupAttributeChangedCallback = void Function(
 typedef OnRecvNewMessageCallback = void Function(
   V2TimMessage msg,
 );
+
+// void 	onGroupAttributeChanged (String groupID, Map< String, String > groupAttributeMap)
+typedef OnRecvMessageModified = void Function(
+  V2TimMessage msg,
+);
+
 // void 	onRecvNewMessage (V2TIMMessage msg)
 typedef OnRecvC2CReadReceiptCallback = void Function(
   List<V2TimMessageReceipt> receiptList,
@@ -164,6 +170,7 @@ typedef OnConversationChangedCallback = void Function(
 typedef OnNewConversation = void Function(
   List<V2TimConversation> conversationList,
 );
+
 // void 	onConversationChanged (List< V2TIMConversation > conversationList)
 typedef OnReceiveNewInvitationCallback = void Function(
   String inviteID,

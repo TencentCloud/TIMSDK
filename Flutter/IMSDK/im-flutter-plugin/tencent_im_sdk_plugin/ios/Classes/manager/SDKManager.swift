@@ -137,7 +137,32 @@ class SDKManager {
         V2TIMManager.sharedInstance().addConversationListener(listener:conversationListener);
 		CommonUtils.resultSuccess(call: call, result: result, data: "setConversationListener is done");
 	}
+
+	public func addConversationListener(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let listenerUuid = CommonUtils.getParam(call: call, result: result, param: "listenerUuid") as! String;
+        let conversationListener = ConversationListener(listenerUid: listenerUuid);
+        conversationMsgListenerList[listenerUuid] = conversationListener;
+        V2TIMManager.sharedInstance().addConversationListener(listener:conversationListener);
+		CommonUtils.resultSuccess(call: call, result: result, data: "addConversationListener is done");
+	}
 	
+	public func removeConversationListener(call: FlutterMethodCall, result: @escaping FlutterResult) {
+		let listenerUuid = CommonUtils.getParam(call: call, result: result, param: "listenerUuid") as! String;
+        if listenerUuid != "" {
+            let listener = conversationMsgListenerList[listenerUuid];
+            V2TIMManager.sharedInstance().removeConversationListener(listener: listener);
+            conversationMsgListenerList.removeValue(forKey: listenerUuid);
+            CommonUtils.resultSuccess(call: call, result: result, data: "removeConversationListener is done");
+        } else {
+            for listener in conversationMsgListenerList {
+                let callback = listener.value;
+                V2TIMManager.sharedInstance().removeConversationListener(listener: callback);
+
+            }
+            conversationMsgListenerList = [:];
+            CommonUtils.resultSuccess(call: call, result: result, data: "removed all conversationListener");
+        }
+	}
 	public func addAdvancedMsgListener(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let listenerUuid = CommonUtils.getParam(call: call, result: result, param: "listenerUuid") as! String;
         let advancedMessageListener = AdvancedMsgListener(listenerUid: listenerUuid);
@@ -171,7 +196,33 @@ class SDKManager {
         V2TIMManager.sharedInstance().addFriendListener(listener:friendshipListener)
 		CommonUtils.resultSuccess(call: call, result: result, data: "setFriendListener is done");
 	}
+
+	public func addFriendListener(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let listenerUuid = CommonUtils.getParam(call: call, result: result, param: "listenerUuid") as! String;
+        let friendshipListener = FriendshipListener(listenerUid: listenerUuid);
+        friendShipListenerList[listenerUuid] = friendshipListener;
+        V2TIMManager.sharedInstance().addFriendListener(listener:friendshipListener)
+		CommonUtils.resultSuccess(call: call, result: result, data: "addFriendListener is done");
+	}
 	
+	public func removeFriendListener(call: FlutterMethodCall, result: @escaping FlutterResult) {
+		let listenerUuid = CommonUtils.getParam(call: call, result: result, param: "listenerUuid") as! String;
+        if listenerUuid != "" {
+            let listener = friendShipListenerList[listenerUuid];
+            V2TIMManager.sharedInstance().removeFriendListener(listener: listener);
+            friendShipListenerList.removeValue(forKey: listenerUuid);
+            CommonUtils.resultSuccess(call: call, result: result, data: "removeFriendListener is done");
+        } else {
+            for listener in friendShipListenerList {
+                let callback = listener.value;
+                V2TIMManager.sharedInstance().removeFriendListener(listener: callback);
+
+            }
+            friendShipListenerList = [:];
+            CommonUtils.resultSuccess(call: call, result: result, data: "removed all removeFriendListener");
+        }
+	}
+
 	public func setGroupListener(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let listenerUuid: String = CommonUtils.getParam(call: call, result: result, param: "listenerUuid") as! String;
         let groupListener = GroupListener(listenerUid: listenerUuid);

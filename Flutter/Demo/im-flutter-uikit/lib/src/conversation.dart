@@ -9,19 +9,21 @@ import 'package:provider/provider.dart';
 import 'package:timuikit/src/provider/theme.dart';
 
 class Conversation extends StatefulWidget {
-  const Conversation({Key? key}) : super(key: key);
+  final TIMUIKitConversationController conversationController;
+  const Conversation({Key? key, required this.conversationController})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ConversationState();
 }
 
 class _ConversationState extends State<Conversation> {
-  final TIMUIKitConversationController _controller =
-      TIMUIKitConversationController();
+  late TIMUIKitConversationController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = widget.conversationController;
     _controller.setConversationListener();
   }
 
@@ -115,13 +117,10 @@ class _ConversationState extends State<Conversation> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 0, 6, 0),
-                  child: Icon(
-                    Icons.search,
-                    color: hexToColor("979797"),
-                    size: 18,
-                  ),
+                Icon(
+                  Icons.search,
+                  color: hexToColor("979797"),
+                  size: 18,
                 ),
                 Text(imt("搜索"),
                     style: TextStyle(

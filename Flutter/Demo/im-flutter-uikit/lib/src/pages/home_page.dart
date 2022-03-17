@@ -4,12 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
+import 'package:tim_ui_kit/ui/controller/tim_uikit_conversation_controller.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/src/add_friend.dart';
 import 'package:timuikit/src/add_group.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/contact.dart';
 import 'package:timuikit/src/conversation.dart';
+import 'package:timuikit/src/create_group.dart';
 import 'package:timuikit/src/profile.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
@@ -28,8 +30,23 @@ class HomePageState extends State<HomePage> {
   bool hasInit = false;
   var subscription;
   final Connectivity _connectivity = Connectivity();
+  int totalUnreadCount = 0;
   bool hasInternet = true;
   final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
+  final V2TIMManager _sdkInstance = TIMUIKitCore.getSDKInstance();
+  final TIMUIKitConversationController _conversationController =
+      TIMUIKitConversationController();
+  final contactTooltip = [
+    {"id": "addFriend", "asset": "assets/add_friend.png", "label": "添加好友"},
+    {"id": "addGroup", "asset": "assets/add_group.png", "label": "添加群聊"}
+  ];
+  final conversationTooltip = [
+    {"id": "createConv", "asset": "assets/c2c_conv.png", "label": "发起会话"},
+    {"id": "createWork", "asset": "assets/group_conv.png", "label": "创建工作群"},
+    {"id": "createPublic", "asset": "assets/group_conv.png", "label": "创建社交群"},
+    {"id": "createMeeting", "asset": "assets/group_conv.png", "label": "创建会议群"},
+    {"id": "createAvChat", "asset": "assets/group_conv.png", "label": "创建直播群"},
+  ];
 
   /// 当前选择下标
   int currentIndex = 0;
@@ -40,25 +57,42 @@ class HomePageState extends State<HomePage> {
     return Image.asset("assets/logo.png");
   }
 
+  _initConversationListener() {
+    final listener = V2TimConversationListener(
+        onTotalUnreadMessageCountChanged: ((unreadCount) {
+      totalUnreadCount = unreadCount;
+      setState(() {});
+    }));
+
+    _conversationController.removeConversationListener();
+    _conversationController.setConversationListener(listener: listener);
+  }
+
+  _getTotalUnreadCount() async {
+    final res = await _sdkInstance
+        .getConversationManager()
+        .getTotalUnreadMessageCount();
+    if (res.code == 0) {
+      totalUnreadCount = res.data ?? 0;
+      setState(() {});
+    }
+  }
+
+  _connectivityChange(ConnectivityResult result) {
+    hasInternet = result != ConnectivityResult.none;
+    setState(() {});
+  }
+
   @override
   initState() {
     super.initState();
+    currentIndex = widget.pageIndex;
     _coreInstance.setEmptyAvatarBuilder(_emptyAvatarBuilder);
-    setState(() {
-      currentIndex = widget.pageIndex;
-    });
+    _initConversationListener();
+    _getTotalUnreadCount();
+    setState(() {});
     subscription =
-        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        setState(() {
-          hasInternet = false;
-        });
-      } else {
-        setState(() {
-          hasInternet = true;
-        });
-      }
-    });
+        _connectivity.onConnectivityChanged.listen(_connectivityChange);
   }
 
   @override
@@ -76,45 +110,104 @@ class HomePageState extends State<HomePage> {
     };
   }
 
-  static List<NavigationBarData> getBottomNavigatorList(
-      BuildContext context, theme) {
-    List<NavigationBarData> list = [];
+  List<NavigationBarData> getBottomNavigatorList(BuildContext context, theme) {
     final List<NavigationBarData> bottomNavigatorList = [
       NavigationBarData(
-        widget: const Conversation(),
-        title: imt("消息"),
-        selectedIcon: ColorFiltered(
-          child: Image.asset(
-            "assets/chat_active.png",
-            width: 24,
-            height: 24,
-          ),
-          colorFilter: ColorFilter.mode(
-              theme.primaryColor ?? CommonColor.primaryColor,
-              BlendMode.srcATop),
+        widget: Conversation(
+          conversationController: _conversationController,
         ),
-        unselectedIcon: Image.asset(
-          "assets/chat.png",
-          width: 24,
-          height: 24,
+        title: imt("消息"),
+        selectedIcon: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            ColorFiltered(
+              child: Image.asset(
+                "assets/chat_active.png",
+                width: 24,
+                height: 24,
+              ),
+              colorFilter: ColorFilter.mode(
+                  theme.primaryColor ?? CommonColor.primaryColor,
+                  BlendMode.srcATop),
+            ),
+            if (totalUnreadCount != 0)
+              Positioned(
+                top: -5,
+                right: -6,
+                child: UnconstrainedBox(
+                  child: UnreadMessage(
+                      width: 16, height: 16, unreadCount: totalUnreadCount),
+                ),
+              )
+          ],
+        ),
+        unselectedIcon: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Image.asset(
+              "assets/chat.png",
+              width: 24,
+              height: 24,
+            ),
+            if (totalUnreadCount != 0)
+              Positioned(
+                top: -5,
+                right: -6,
+                child: UnconstrainedBox(
+                  child: UnreadMessage(
+                      width: 16, height: 16, unreadCount: totalUnreadCount),
+                ),
+              )
+          ],
         ),
       ),
       NavigationBarData(
         widget: const Contact(),
         title: imt("通讯录"),
-        selectedIcon: ColorFiltered(
-            child: Image.asset(
-              "assets/contact_active.png",
+        selectedIcon: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            ColorFiltered(
+              child: Image.asset(
+                "assets/contact_active.png",
+                width: 24,
+                height: 24,
+              ),
+              colorFilter: ColorFilter.mode(
+                  theme.primaryColor ?? CommonColor.primaryColor,
+                  BlendMode.srcATop),
+            ),
+            const Positioned(
+              top: -5,
+              right: -6,
+              child: UnconstrainedBox(
+                child: TIMUIKitUnreadCount(
+                  width: 16,
+                  height: 16,
+                ),
+              ),
+            )
+          ],
+        ),
+        unselectedIcon: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Image.asset(
+              "assets/contact.png",
               width: 24,
               height: 24,
             ),
-            colorFilter: ColorFilter.mode(
-                theme.primaryColor ?? CommonColor.primaryColor,
-                BlendMode.srcATop)),
-        unselectedIcon: Image.asset(
-          "assets/contact.png",
-          width: 24,
-          height: 24,
+            const Positioned(
+              top: -5,
+              right: -6,
+              child: UnconstrainedBox(
+                child: TIMUIKitUnreadCount(
+                  width: 16,
+                  height: 16,
+                ),
+              ),
+            )
+          ],
         ),
       ),
       NavigationBarData(
@@ -166,69 +259,111 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  _handleTapTooltipItem(String id) {
+    switch (id) {
+      case "addFriend":
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const AddFriend(),
+          ),
+        );
+        break;
+      case "addGroup":
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const AddGroup(),
+          ),
+        );
+        break;
+      case "createConv":
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const CreateGroup(
+              convType: ConversationType.single,
+            ),
+          ),
+        );
+        break;
+      case "createWork":
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const CreateGroup(
+              convType: ConversationType.work,
+            ),
+          ),
+        );
+        break;
+      case "createPublic":
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const CreateGroup(
+              convType: ConversationType.public,
+            ),
+          ),
+        );
+        break;
+      case "createMeeting":
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const CreateGroup(
+              convType: ConversationType.meeting,
+            ),
+          ),
+        );
+        break;
+      case "createAvChat":
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const CreateGroup(
+              convType: ConversationType.chat,
+            ),
+          ),
+        );
+        break;
+    }
+  }
+
+  List<Widget> _getTooltipContent(BuildContext context) {
+    List toolTipList = currentIndex == 0 ? conversationTooltip : contactTooltip;
+
+    return toolTipList.map((e) {
+      return InkWell(
+        onTap: () {
+          _handleTapTooltipItem(e["id"]!);
+          tooltip!.close();
+        },
+        child: Row(
+          children: [
+            Image.asset(
+              e["asset"]!,
+              width: 21,
+              height: 21,
+            ),
+            const SizedBox(
+              width: 12,
+            ),
+            Text(e['label']!)
+          ],
+        ),
+      );
+    }).toList();
+  }
+
   _showTooltip(BuildContext context) {
     tooltip = SuperTooltip(
         minimumOutSidePadding: 5,
         arrowTipDistance: 15,
         arrowBaseWidth: 15.0,
         arrowLength: 10.0,
-        maxHeight: 110,
-        maxWidth: 110,
+        // maxHeight: 110,
+        // maxWidth: 110,
         borderColor: Colors.white,
         backgroundColor: Colors.white,
         shadowColor: Colors.black26,
-        content: Column(
-          children: [
-            InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const AddFriend(),
-                  ),
-                );
-                tooltip!.close();
-              },
-              child: Row(
-                children: [
-                  Image.asset(
-                    "assets/add_friend.png",
-                    width: 21,
-                    height: 21,
-                  ),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  const Text("添加好友")
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const AddGroup(),
-                  ),
-                );
-                tooltip!.close();
-              },
-              child: Row(
-                children: [
-                  Image.asset(
-                    "assets/add_group.png",
-                    width: 21,
-                    height: 21,
-                  ),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  const Text("添加群聊")
-                ],
-              ),
-            ),
-          ],
+        content: Wrap(
+          direction: Axis.vertical,
+          spacing: 10,
+          children: [..._getTooltipContent(context)],
         ),
         popupDirection: TooltipDirection.down);
     tooltip?.show(context);
@@ -267,7 +402,7 @@ class HomePageState extends State<HomePage> {
           ),
         ),
         actions: [
-          if (currentIndex == 1)
+          if ([0, 1].contains(currentIndex))
             Builder(builder: (BuildContext c) {
               return IconButton(
                   onPressed: () {

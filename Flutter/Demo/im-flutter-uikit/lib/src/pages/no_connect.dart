@@ -1,5 +1,4 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timuikit/utils/toast.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
@@ -42,7 +41,7 @@ class NoConnectivityPageState extends State<NoConnectivityPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(imt("当前无网络"),
-                style: TextStyle(fontSize: 26, color: Colors.black45)),
+                style: const TextStyle(fontSize: 26, color: Colors.black45)),
             const Icon(Icons.wifi_off, size: 44, color: Colors.black45),
             TextButton(
               child: Text(imt("重试网络")),

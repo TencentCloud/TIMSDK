@@ -1,6 +1,6 @@
 name: tencent_im_sdk_plugin_platform_interface
 description: tencent_im_sdk_plugin插件的通用平台接口
-version: 0.1.2
+version: 0.1.5
 homepage:
 
 environment:

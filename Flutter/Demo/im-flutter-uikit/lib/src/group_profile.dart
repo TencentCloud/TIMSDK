@@ -138,7 +138,7 @@ class GroupProfilePage extends StatelessWidget {
         appBar: AppBar(
             title: Text(
               imt("群聊"),
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white, fontSize: 17),
             ),
             shadowColor: Colors.white,
             flexibleSpace: Container(

@@ -79,7 +79,7 @@ class SmsLogin {
   }
 
   static initLoginService() async {
-    final res = await Dio(BaseOptions(
+    await Dio(BaseOptions(
       method: "get",
     )).request(
       IMDemoConfig.captchaUrl,

@@ -27,7 +27,7 @@ class OfflinePush {
         pushClickAction(msg);
       },
     );
-    tpush.startXg("1600015942", "IRCJESPU71W3");
+    tpush.startXg("1600029281", "IAML6E9J80RI");
   }
 
   static Future<String> getDeviceToken() async {

@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:math';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/contactPage.dart';
 import 'package:timuikit/src/pages/login.dart';
 import 'package:timuikit/src/provider/theme.dart';
@@ -156,7 +157,7 @@ class _ProfileState extends State<MyProfile> {
       cancelAction: CancelAction(
         title: Text(
           imt("取消"),
-          style: TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 18),
         ),
       ), // onPressed parameter is optional by default will dismiss the ActionSheet
     );
@@ -166,6 +167,43 @@ class _ProfileState extends State<MyProfile> {
   void initState() {
     super.initState();
     getLoginUser();
+  }
+
+  setRandomAvatar() async {
+    int random = Random().nextInt(999);
+    String avatar = "https://picsum.photos/id/$random/200/200";
+    await _coreServices.setSelfInfo(
+        userFullInfo: V2TimUserFullInfo.fromJson({
+      "faceUrl": avatar,
+    }));
+  }
+
+  Future<bool?> showChangeAvatarDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("提示"),
+          content: const Text("Flutter TUIKIT 为你选择一个头像?"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("取消"),
+              onPressed: () {
+                //关闭对话框并返回true
+                Navigator.of(context).pop(true);
+              }, // 关闭对话框
+            ),
+            TextButton(
+              child: const Text("确定"),
+              onPressed: () {
+                setRandomAvatar();
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -179,6 +217,7 @@ class _ProfileState extends State<MyProfile> {
       controller: _timuiKitProfileController,
       canJumpToPersonalProfile: true,
       userID: userID!,
+      onSelfAvatarTap: showChangeAvatarDialog,
       operationListBuilder:
           (context, userInfo, conversation, friendType, isDisturb) {
         final allowType = userInfo.userProfile?.allowType ?? 0;
@@ -221,7 +260,7 @@ class _ProfileState extends State<MyProfile> {
               },
               child: TIMUIKitOperationItem(
                 operationName: imt("关于腾讯云·通信"),
-                operationRightWidget: Text(""),
+                operationRightWidget: const Text(""),
               ),
             ),
             Container(
@@ -243,7 +282,7 @@ class _ProfileState extends State<MyProfile> {
                   },
                   child: TIMUIKitOperationItem(
                     operationName: imt("隐私条例"),
-                    operationRightWidget: Text(""),
+                    operationRightWidget: const Text(""),
                   ),
                 )),
             Container(
@@ -262,7 +301,7 @@ class _ProfileState extends State<MyProfile> {
                 },
                 child: TIMUIKitOperationItem(
                   operationName: imt("免责声明"),
-                  operationRightWidget: Text(""),
+                  operationRightWidget: const Text(""),
                 ),
               ),
             ),
@@ -277,8 +316,13 @@ class _ProfileState extends State<MyProfile> {
               },
               child: TIMUIKitOperationItem(
                 operationName: imt("联系我们"),
-                operationRightWidget: Text(""),
+                operationRightWidget: const Text(""),
               ),
+            ),
+            TIMUIKitOperationItem(
+              showArrowRightIcon: false,
+              operationName: imt("版本号"),
+              operationRightWidget: const Text(IMDemoConfig.appVersion),
             ),
             const SizedBox(
               height: 10,
