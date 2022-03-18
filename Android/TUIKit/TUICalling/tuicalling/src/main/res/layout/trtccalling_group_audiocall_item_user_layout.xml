@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,17 +12,14 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:scaleType="centerCrop"
-        android:src="@drawable/trtccalling_wait_background" />
+        android:src="@drawable/trtccalling_ic_avatar" />
 
-    <FrameLayout
-        android:id="@+id/fl_shade"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/trtccalling_wait_background"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        tools:visibility="visible">
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/img_loading"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -44,6 +40,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="4dp"
-        android:visibility="gone"
-        android:background="@drawable/trtccalling_ic_mutemic_enable" />
+        android:background="@drawable/trtccalling_ic_mutemic_enable"
+        android:visibility="gone" />
 </merge>

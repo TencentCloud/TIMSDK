@@ -11,7 +11,7 @@
     <string name="trtccalling_toast_user_not_response">%1$s didn’t answer.</string>
     <string name="trtccalling_toast_user_busy">%1$s is busy.</string>
     <string name="trtccalling_toast_user_cancel_call">%1$s cancelled the call.</string>
-    <string name="trtccalling_toast_user_timeout" >%1$s timed out.</string>
+    <string name="trtccalling_toast_user_timeout">%1$s timed out.</string>
     <string name="trtccalling_toast_enable_mute">Muted</string>
     <string name="trtccalling_toast_disable_mute">Unmuted</string>
     <string name="trtccalling_toast_use_speaker">Speaker</string>
@@ -26,7 +26,7 @@
     <string name="trtccalling_toast_enable_camera">Camera On</string>
     <string name="trtccalling_toast_disable_camera">Camera Off</string>
     <string name="trtccalling_waiting_be_accepted">Waiting for the user to accept…</string>
-    <string name="trtccalling_invite_audio_call">Invited you to an audio call…</string>
+    <string name="trtccalling_invite_audio_call">Invited you to an voice call…</string>
     <string name="trtccalling_text_microphone">Mic</string>
     <string name="trtccalling_text_hangup">Hang Up</string>
     <string name="trtccalling_text_reject">Decline</string>
@@ -34,12 +34,14 @@
     <string name="trtccalling_text_dialing">Answer</string>
     <string name="trtccalling_text_camera">Camera</string>
     <string name="trtccalling_switch_camera_hint">Turn on your camera first</string>
-    <string name="trtccalling_switch_audio_call">Switch to Audio Call</string>
+    <string name="trtccalling_switch_audio_call">Switch to Voice Call</string>
     <string name="trtccalling_btn_cancel">Cancel</string>
     <string name="trtccalling_tips_start_camera_audio">Please turn on the camera and microphone permissions first</string>
     <string name="trtccalling_tips_start_audio">Please turn on the microphone permissions first</string>
     <string name="trtccalling_video_call">Video Call</string>
-    <string name="trtccalling_audio_call">Audio Call</string>
+    <string name="trtccalling_audio_call">Voice Call</string>
     <string name="trtccalling_user_kicked_offline">You have been kicked off the line. Please log in again!</string>
     <string name="trtccalling_user_sig_expired">Your user signature information has expired</string>
+    <string name="trtccalling_user_exceed_limit">TUICalling currently supports call with up to 9 people.For
+        larger conference calls,try using TUIRoom</string>
 </resources>

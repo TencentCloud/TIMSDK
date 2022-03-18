@@ -11,7 +11,7 @@
     <string name="trtccalling_toast_user_not_response">%1$s无响应</string>
     <string name="trtccalling_toast_user_busy">%1$s忙线</string>
     <string name="trtccalling_toast_user_cancel_call">%1$s取消了通话</string>
-    <string name="trtccalling_toast_user_timeout" >%1$s通话超时</string>
+    <string name="trtccalling_toast_user_timeout">%1$s通话超时</string>
     <string name="trtccalling_toast_enable_mute">开启静音</string>
     <string name="trtccalling_toast_disable_mute">关闭静音</string>
     <string name="trtccalling_toast_use_speaker">使用扬声器</string>
@@ -42,4 +42,5 @@
     <string name="trtccalling_audio_call">语音通话</string>
     <string name="trtccalling_user_kicked_offline">您已被踢下线，请重新登录</string>
     <string name="trtccalling_user_sig_expired">您的用户签名信息已过期</string>
+    <string name="trtccalling_user_exceed_limit">暂支持最多9人通话。如需多人会议，请使用TUIRoom</string>
 </resources>

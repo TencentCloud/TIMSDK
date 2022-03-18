@@ -1,8 +1,5 @@
 <resources>
-    <string name="app_name">Instant Messaging (IM)</string>
-
-    <string name="welcome_tip">Thank you for joining Instant Messaging!</string>
-    <string name="test_custom_action">Custom Messages</string>
+    <string name="app_name">Tencent IM</string>
 
     <string name="test_custom_message">View Details>></string>
 
@@ -12,7 +9,7 @@
     <string name="password">Password</string>
 
     <string name="demo_login_country_or_region_label">Country/Region</string>
-    <string name="demo_area_code_title">Select country or region</string>
+    <string name="demo_area_code_title">Select a country or region</string>
     <string name="demo_language_title">Language</string>
     <string name="demo_login_chinese_mainland">Chinese Mainland</string>
     <string name="demo_login_mobile_phone_number">Phone Number</string>
@@ -20,7 +17,7 @@
     <string name="demo_search">Search</string>
 
 
-    <string name="login_title">Log in to IM</string>
+    <string name="login_title">Tencent Cloud IM</string>
     <string name="login_sub_title">Use Group Chat, Voice/Video Call, and various IM features</string>
     <string name="input_number">Enter mobile number</string>
     <string name="input_verification">Enter SMS verification code</string>
@@ -38,8 +35,8 @@
     // "我"相关
     <string name="profile">Me</string>
     <string name="modify_user_icon">Profile Photo</string>
-    <string name="modify_nick_name">Nick Name</string>
-    <string name="modify_signature">Signature</string>
+    <string name="modify_nick_name">Name</string>
+    <string name="modify_signature">Status</string>
     <string name="modify_account">Account</string>
     <string name="add_rule">Friend Request</string>
     <string name="allow_type_allow_any">Allow any user to add you as friend</string>
@@ -47,33 +44,43 @@
     <string name="allow_type_need_confirm">Anyone upon Request</string>
     <string name="exit">Log Out</string>
     <string name="about_im">About Instant Messaging</string>
-    <string name="modify_birthday">birthday</string>
+    <string name="modify_birthday">Birthday</string>
     <string name="modify_gender">Gender</string>
+    <string name="cancel_account">Cancel Account</string>
+    <string name="cancel_account_alert_tip">Are you sure you want to cancel this account?</string>
+    <string name="cancel_account_tip">After canceling this account, you will be unable to use it, and related data will be permanently deleted. Current account: %s</string>
+    <string name="cancel_account_error_msg">Cancellation failed. No token or mobile number associated with the current account is detected. Please log in with your mobile number.</string>
+    <string name="cancel_account_successful">Canceled</string>
+    <string name="self_infomation_collection_list">Personal Information Collected</string>
+    <string name="third_part_shared_list">Information Shared with Third Parties</string>
 
     <string name="modify_theme">Theme</string>
     <string name="light_theme">Light</string>
     <string name="lively_theme">Lively</string>
     <string name="serious_theme">Solemn</string>
-    <string name="modify_language">Modify Language</string>
+    <string name="modify_language">Language</string>
 
     <string name="demo_language">English</string>
     <string name="demo_theme_light">light</string>
 
-    <string name="demo_signature_tag">Signature : </string>
+    <string name="demo_signature_tag">Status : </string>
     <string name="demo_account_tag">ID : </string>
 
     <string name="demo_about_sdk_version">SDK Version</string>
     <string name="demo_about_im">About</string>
+    <string name="demo_contact_us">Contact us</string>
 
     <string name="demo_self_detail_gender_male">Male</string>
     <string name="demo_self_detail_gender_female">Female</string>
     <string name="demo_self_detail_gender_unknown">Unknown</string>
 
-    <string name="demo_self_detail_modify_nickname">Modify NickName</string>
-    <string name="demo_self_detail_modify_signature">Modify Signature</string>
-    <string name="demo_self_detail_modify_gender">Modify Gender</string>
+    <string name="demo_self_detail_modify_nickname">Name</string>
+    <string name="demo_self_detail_modify_signature">Status</string>
+    <string name="demo_no_status">No status</string>
 
-    <string name="demo_self_detail_modify_nickname_rule">Only for chinese, characters, numbers and underline.</string>
+    <string name="demo_self_detail_modify_gender">Gender</string>
+
+    <string name="demo_self_detail_modify_nickname_rule">Only letters, digits, underscores, and Chinese characters.</string>
 
     // 主页Tab相关
     <string name="tab_contact_tab_text">Contacts</string>
@@ -84,8 +91,8 @@
 
     <string name="conversation_title">Tencent·Instant Messaging</string>
     <string name="contact_title">Contacts</string>
-    <string name="add_friend">Add to Contacts</string>
-    <string name="add_group">Add Group Chat</string>
+    <string name="add_friend">Add Contact</string>
+    <string name="add_group">Add Group</string>
     <string name="start_conversation">New Chat</string>
     <string name="create_group_chat">Create Group Chat</string>
     <string name="create_chat_room">Create Chat Room</string>
@@ -118,8 +125,7 @@
     <string name="permission_tip">Not fully authorized. Some features may not be available.</string>
 
     <string name="logout_tip">Log out now?</string>
-    <string name="sure">OK</string>
-    <string name="cancle">Cancel</string>
+
     <string name="online_fail">Network request failed</string>
     <string name="online">Online</string>
     <string name="unknow_error">Unknown error</string>
@@ -134,25 +140,28 @@
     <string name="login_password_tips">1~16 characters(letters+numbers)</string>
     <string name="login_user_tips">Letters start, 4~24 characters(letters+numbers)</string>
 
-    <string name="login_agree_content">I have read and agreed to the "Privacy Regulations" and "User Agreement".</string>
-    <string name="login_agree_privacy_regulations">"Privacy Regulations"</string>
-    <string name="login_agree_user_agreement">"User Agreement"</string>
-    <string name="im_privacy">Privacy Regulations</string>
+    <string name="login_agree_privacy_regulations">\"Privacy Policy\"</string>
+    <string name="login_agree_user_agreement">\"User Agreement\"</string>
+    <string name="login_agree_self_infomation_collection_list">\"Personal Information Collected\"</string>
+    <string name="login_agree_third_part_shared_list">\"Information Shared with Third Parties\"</string>
+    <string name="im_privacy">Privacy Policy</string>
     <string name="im_statement">Disclaimer</string>
     <string name="im_user_agreement">User Agreement</string>
 
-    <string name="im_statement_content">IM ("this product") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, the audio and video interactions of this product are archived throughout the entire audio and video interactions. Any pornography, abusive, violent, and politically related content is strictly prohibited during use.</string>
-    <string name="im_privacy_tips">Please read and approve the agreement first</string>
+    <string name="im_statement_content">Instant Messaging (IM) is a test product provided by Tencent Cloud, and Tencent Cloud enjoys its copyright and ownership. It is for trying out features, but not for commercial use. To follow regulatory requirements of the authority, audio and video-based interactions performed via IM will be recorded and archived throughout the whole process. It is strictly prohibited to disseminate via IM any pornographic, abusive, violent, political and other noncompliant content.</string>
+    <string name="im_privacy_tips">Read and agree to the agreement first</string>
+    <string name="demo_im_privacy_dialog_tips">Welcome to Tencent Cloud Instant Messaging. To protect your personal information, we have updated the \"Privacy Policy\", involving improving the specific contents and purposes of collecting user information, and adding third-party SDKs.\n\n Please carefully read the \"User Agreement\",\"Privacy Policy\",\"Personal Information Collected\" and \"Information Shared with Third Parties\", and tap Agree and Continue to use our products and services if you agree to them.</string>
+    <string name="demo_im_privacy_agree">Agree and Continue</string>
+    <string name="demo_im_privacy_refuse_and_exit">Disagree and Exit</string>
 
-    <string name="get_verify_code_error">Failed to get verifcation code！(%d)</string>
+    <string name="get_verify_code_error">An error occurred while getting the verification code. Refresh and try again. (%d)</string>
 
-    <string name="cancel">Cancel</string>
     <string name="modify_group_name">Edit Group Name</string>
-    <string name="input_tip">No nickname entered, please fill in again</string>
+    <string name="input_tip">No nickname. Enter again.</string>
     <string name="call_time_out">time out</string>
 
-    <string name="mark_all_message_as_read_succ">Success to mark all as read</string>
-    <string name="mark_all_message_as_read_err_format">Error, %d, %s</string>
+    <string name="mark_all_message_as_read_succ">Cleared unread messages successfully</string>
+    <string name="mark_all_message_as_read_err_format">Failed to clear unread messages. %d, %s</string>
 
     <string name="demo_profile_detail">Details</string>
 

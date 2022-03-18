@@ -21,6 +21,9 @@ public class CallModel implements Cloneable, Serializable {
     public static String KEY_CMD         = "cmd";
     public static String KEY_USERIDS     = "userIDs";
     public static String KEY_MESSAGE     = "message";
+    public static String KEY_CALLACTION  = "call_action";
+    public static String KEY_CALLID      = "callid";
+    public static String KEY_USER        = "user";
 
     public static final int    VALUE_VERSION             = 4;
     public static final String VALUE_BUSINESS_ID         = "av_call";           //calling场景
@@ -30,6 +33,7 @@ public class CallModel implements Cloneable, Serializable {
     public static final String VALUE_CMD_HAND_UP         = "hangup";            //挂断
     public static final String VALUE_CMD_SWITCH_TO_AUDIO = "switchToAudio";     //切换为语音通话
     public static final String VALUE_MSG_LINE_BUSY       = "lineBusy";          //忙线
+    public static final String VALUE_MSG_SYNC_INFO       = "sync_info";          //C2C多人通话,主叫向其他人同步信息
 
     /**
      * 系统错误

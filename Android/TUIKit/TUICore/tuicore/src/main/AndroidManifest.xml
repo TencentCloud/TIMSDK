@@ -7,6 +7,13 @@
             android:name=".component.activities.SelectionActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".util.PermissionUtils$PermissionActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:multiprocess="true"
+            android:theme="@style/CoreActivityTranslucent"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+
         <provider
             android:name=".ServiceInitializer"
             android:authorities="${applicationId}.TUICore.Init"

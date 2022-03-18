@@ -32,6 +32,7 @@ public class TUILogin {
     private static int sdkAppId = 0;
     private static String userId;
     private static String userSig;
+    public static boolean hasPrivacyPermission = false; //是否同意了隐私权限,默认值为false
 
     /**
      * IMSDK 初始化
@@ -101,7 +102,8 @@ public class TUILogin {
         });
         // 开始初始化 IMSDK，发送广播
         TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, null);
-
+        // 用户操作初始化, 默认已经读过隐私协议
+        hasPrivacyPermission = true;
         return V2TIMManager.getInstance().initSDK(context, sdkAppId, config);
     }
 

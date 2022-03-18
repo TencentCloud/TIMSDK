@@ -3,11 +3,11 @@ package com.tencent.qcloud.tuicore.component.interfaces;
 /**
  * UIKit回调的通用接口类
  */
-public interface IUIKitCallback<T> {
+public abstract class IUIKitCallback<T> {
 
-    void onSuccess(T data);
+    public abstract void onSuccess(T data);
 
-    void onError(String module, int errCode, String errMsg);
+    public abstract void onError(String module, int errCode, String errMsg);
 
-    default void onProgress(Object data) {};
+    public void onProgress(Object data) {};
 }

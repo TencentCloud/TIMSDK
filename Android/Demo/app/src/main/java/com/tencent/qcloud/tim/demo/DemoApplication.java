@@ -1,9 +1,12 @@
 package com.tencent.qcloud.tim.demo;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.multidex.MultiDex;
 
@@ -15,9 +18,10 @@ import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
-import com.tencent.qcloud.tim.demo.thirdpush.OEMPush.HUAWEIHmsMessageService;
+import com.tencent.qcloud.tim.demo.thirdpush.OfflineMessageDispatcher;
 import com.tencent.qcloud.tim.demo.thirdpush.PushSetting;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
@@ -26,12 +30,12 @@ import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
-import com.vivo.push.PushClient;
-import com.xiaomi.mipush.sdk.MiPushClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class DemoApplication extends Application {
 
@@ -48,25 +52,31 @@ public class DemoApplication extends Application {
     public void onCreate() {
         DemoLog.i(TAG, "onCreate");
         super.onCreate();
-        instance = this;
-        MultiDex.install(this);
+
+        if (isMainProcess()) {
+            instance = this;
+            MultiDex.install(this);
+
+            // 添加 Demo 主题
+            TUIThemeManager.addLightTheme(R.style.DemoLightTheme);
+            TUIThemeManager.addLivelyTheme(R.style.DemoLivelyTheme);
+            TUIThemeManager.addSeriousTheme(R.style.DemoSeriousTheme);
+
+            registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
+            initLoginStatusListener();
+
+        }
+    }
+
+    private void initBugly() {
         // bugly上报
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
-        strategy.setAppVersion(V2TIMManager.getInstance().getVersion());
+        strategy.setAppVersion(BuildConfig.VERSION_NAME);
+        strategy.setDeviceModel(BrandUtil.getBuildModel());
         CrashReport.initCrashReport(getApplicationContext(), PrivateConstants.BUGLY_APPID, true, strategy);
+    }
 
-        // 添加 Demo 主题
-        TUIThemeManager.addLightTheme(R.style.DemoLightTheme);
-        TUIThemeManager.addLivelyTheme(R.style.DemoLivelyTheme);
-        TUIThemeManager.addSeriousTheme(R.style.DemoSeriousTheme);
-
-        /**
-         * TUIKit的初始化函数
-         *
-         * @param context  应用的上下文，一般为对应应用的ApplicationContext
-         * @param sdkAppID 您在腾讯云注册应用时分配的sdkAppID
-         * @param configs  TUIKit的相关配置项，一般使用默认即可，需特殊配置参考API文档
-         */
+    private void initBuildInformation() {
         try {
             JSONObject buildInfoJson = new JSONObject();
             buildInfoJson.put("buildBrand", BrandUtil.getBuildBrand());
@@ -89,12 +99,11 @@ public class DemoApplication extends Application {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
-        initLoginStatusListener();
     }
 
     public void init() {
+        initBuildInformation();
+        initBugly();
         TUIUtils.init(this, GenerateTestUserSig.SDKAPPID, null, null);
 
     }
@@ -166,7 +175,7 @@ public class DemoApplication extends Application {
         private final V2TIMConversationListener unreadListener = new V2TIMConversationListener() {
             @Override
             public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
-                HUAWEIHmsMessageService.updateBadge(DemoApplication.this, (int) totalUnreadCount);
+                OfflineMessageDispatcher.updateBadge(DemoApplication.this, (int) totalUnreadCount);
             }
         };
 
@@ -257,5 +266,34 @@ public class DemoApplication extends Application {
         public void onActivityDestroyed(Activity activity) {
 
         }
+    }
+
+    private boolean isMainProcess() {
+        ActivityManager am = ((ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE));
+        String mainProcessName = this.getPackageName();
+        int myPid = android.os.Process.myPid();
+
+        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+        if (processInfos == null) {
+            Log.i(TAG, "isMainProcess get getRunningAppProcesses null");
+            List<ActivityManager.RunningServiceInfo> processList = am.getRunningServices(Integer.MAX_VALUE);
+            if (processList == null) {
+                Log.i(TAG, "isMainProcess get getRunningServices null");
+                return false;
+            }
+            for (ActivityManager.RunningServiceInfo rsi : processList) {
+                if (rsi.pid == myPid && mainProcessName.equals(rsi.service.getPackageName())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
+            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

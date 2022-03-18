@@ -239,7 +239,9 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                         popupInputCard.setTitle(modifyGroupName);
                         popupInputCard.setOnPositive((result -> {
                             mPresenter.modifyGroupName(result);
-                            mGroupNameView.setText(result);
+                            if (!TextUtils.isEmpty(result)) {
+                                mGroupNameView.setText(result);
+                            }
                         }));
                         popupInputCard.show(groupDetailArea, Gravity.BOTTOM);
                     } else if (index == 1) {
@@ -278,6 +280,16 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             });
         } else if (v.getId() == R.id.group_notice) {
             Intent intent = new Intent(getContext(), GroupNoticeActivity.class);
+            GroupNoticeActivity.setOnGroupNoticeChangedListener(new GroupNoticeActivity.OnGroupNoticeChangedListener() {
+                @Override
+                public void onChanged(String notice) {
+                    if (TextUtils.isEmpty(notice)) {
+                        mGroupNoticeText.setText(getResources().getString(R.string.group_notice_empty_tip));
+                    } else {
+                        mGroupNoticeText.setText(notice);
+                    }
+                }
+            });
             intent.putExtra(TUIGroupConstants.Group.GROUP_INFO, mGroupInfo);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             getContext().startActivity(intent);
@@ -304,8 +316,6 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 @Override
                 public void onReturn(final Object text) {
                     mPresenter.modifyGroupInfo((Integer) text, TUIGroupConstants.Group.MODIFY_GROUP_JOIN_TYPE);
-                    mJoinTypeView.setContent(mJoinTypes.get((Integer) text));
-
                 }
             });
         } else if (v.getId() == R.id.group_dissolve_button) {

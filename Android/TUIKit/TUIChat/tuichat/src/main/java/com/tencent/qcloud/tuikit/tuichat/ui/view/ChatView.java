@@ -637,7 +637,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         getMessageLayout().setEmptySpaceClickListener(new MessageRecyclerView.OnEmptySpaceClickListener() {
             @Override
             public void onClick() {
-                getInputLayout().hideSoftInput();
+                getInputLayout().onEmptyClick();
             }
         });
 
@@ -692,7 +692,9 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mVolumeAnim.stop();
+                        if (mVolumeAnim != null) {
+                            mVolumeAnim.stop();
+                        }
                         mRecordingGroup.setVisibility(View.GONE);
                     }
                 }, 500);

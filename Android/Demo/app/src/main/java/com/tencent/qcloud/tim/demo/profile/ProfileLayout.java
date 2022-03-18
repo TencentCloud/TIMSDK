@@ -41,6 +41,7 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
     private TextView accountView;
     private TextView nickNameView;
     private TextView signatureView;
+    private TextView signatureTagView;
 
     private LineControllerView modifyAllowTypeView;
     private LineControllerView aboutIM;
@@ -82,6 +83,7 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         accountView = findViewById(R.id.self_account);
         nickNameView = findViewById(R.id.self_nick_name);
         signatureView = findViewById(R.id.self_signature);
+        signatureTagView = findViewById(R.id.self_signature_tag);
         modifyAllowTypeView = findViewById(R.id.modify_allow_type);
         modifyAllowTypeView.setCanNav(true);
         modifyAllowTypeView.setOnClickListener(this);
@@ -138,6 +140,11 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         accountView.setText(info.getUserID());
 
         mSignature = info.getSelfSignature();
+        if (TextUtils.isEmpty(mSignature)) {
+            signatureTagView.setText(getResources().getString(R.string.demo_no_status));
+        } else {
+            signatureTagView.setText(getResources().getString(R.string.demo_signature_tag));
+        }
         signatureView.setText(mSignature);
         modifyAllowTypeView.setContent(getResources().getString(R.string.allow_type_need_confirm));
         int allowType = info.getAllowType();

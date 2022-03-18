@@ -260,6 +260,11 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     //生命周期onPause
     public void onPause() {
         TUIChatLog.i(TAG, "JCameraView onPause");
+        machine.stop();
+        CameraInterface.getInstance().unregisterSensorManager(mContext);
+    }
+
+    public void onDestroy() {
         stopVideo();
         resetState(TYPE_PICTURE);
         CameraInterface.getInstance().isPreview(false);

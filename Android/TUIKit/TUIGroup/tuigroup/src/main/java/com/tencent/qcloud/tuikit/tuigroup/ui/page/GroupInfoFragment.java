@@ -40,12 +40,6 @@ public class GroupInfoFragment extends BaseFragment {
         return baseView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        groupInfoLayout.loadGroupInfo(groupId);
-    }
-
     private void initView() {
         Bundle bundle = getArguments();
         if (bundle == null) {
