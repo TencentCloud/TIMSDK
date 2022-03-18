@@ -183,7 +183,7 @@ export default {
 				    ext3: `${SDKAppID}`,
 				})
 			}).catch((error) => {
-				aegis.reportEvent({
+				uni.$aegis.reportEvent({
 				    name: 'login',
 				    ext1: `login-failed#error:${error}`,
 				    ext2: 'uniTuikitExternal',
