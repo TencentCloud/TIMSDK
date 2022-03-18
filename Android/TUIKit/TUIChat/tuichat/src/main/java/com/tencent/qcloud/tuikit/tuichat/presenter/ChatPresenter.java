@@ -39,6 +39,7 @@ import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
+import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
@@ -1151,6 +1152,9 @@ public abstract class ChatPresenter {
                     offlinePushInfo.setDescription(offlineTitle);
                     // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
                     offlinePushInfo.setAndroidOPPOChannelID("tuikit");
+                    if (TUIChatConfigs.getConfigs().getGeneralConfig().isAndroidPrivateRing()) {
+                        offlinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
+                    }
 
                     forwardMessageInternal(message, isGroup, id, offlinePushInfo, callBack);
                     try {
@@ -1237,6 +1241,9 @@ public abstract class ChatPresenter {
         offlinePushInfo.setDescription(offlineTitle);
         // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
         offlinePushInfo.setAndroidOPPOChannelID("tuikit");
+        if (TUIChatConfigs.getConfigs().getGeneralConfig().isAndroidPrivateRing()) {
+            offlinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
+        }
 
         forwardMessageInternal(msgInfo, isGroup, id, offlinePushInfo, callBack);
     }

@@ -5,7 +5,7 @@
     <string name="group_name">Group Chat Name</string>
     <string name="group_icon">Change Group Profile Photo</string>
     <string name="group_notice">Group Notice</string>
-    <string name="group_notice_empty_tip">Group notice is empty.</string>
+    <string name="group_notice_empty_tip">No group notice</string>
     <string name="group_members">Group Members</string>
     <string name="group_type">Group Type</string>
     <string name="add_group_member">Add Member</string>
@@ -13,7 +13,7 @@
     <string name="join_group_type">Group Joining Method</string>
     <string name="in_group_nick_name">My Alias in Group</string>
     <string name="dissolve">Disband Group</string>
-    <string name="clear_message">Clear Message</string>
+    <string name="clear_message">Clear Chat History</string>
     <string name="modify_group_notice">Edit Group Notice</string>
     <string name="modify_nick_name_in_goup">Edit My Alias in Group</string>
     <string name="group_edit">Edit</string>
@@ -38,7 +38,7 @@
     <string name="community_group">Community</string>
     <string name="dismiss_group_tip">Disband the group?</string>
     <string name="quit_group_tip">Leave the group?</string>
-    <string name="clear_group_msg_tip">Clear History Message？</string>
+    <string name="clear_group_msg_tip">Are you sure you want to clear the chat history?</string>
 
     <string name="private_group">Discussion Group</string>
     <string name="public_group">Public Group</string>
@@ -51,7 +51,7 @@
     <string name="invite_fail">Invitation failed:</string>
     <string name="remove_fail_tip">Removal failed</string>
     <string name="manager">Manage</string>
-    <string name="group_manager">Manage Group</string>
+    <string name="group_manager">Manage</string>
 
     <string name="forbid_join">Prohibited from Joining</string>
     <string name="manager_judge">Admin Approval</string>
@@ -60,18 +60,15 @@
     <string name="modify_group_name">Edit Group Name</string>
     <string name="group_join_type">Group Joining Method</string>
 
-    <string name="sure">OK</string>
-    <string name="cancel">Cancel</string>
-
     <string name="accept">Agree</string>
     <string name="refuse">Decline</string>
     <string name="accepted">Agreed</string>
     <string name="refused">Declined</string>
 
-    <string name="input_tip">No nickname entered, please fill in again</string>
+    <string name="input_tip">No nickname. Enter again.</string>
 
     <string name="chat_to_top">Sticky on Top</string>
-    <string name="profile_msgrev_opt">Message Do Not Disturb</string>
+    <string name="profile_msgrev_opt">Mute Notifications</string>
 
     <string name="join_group_tip">You have been invited to the group: </string>
     <string name="joined_tip">You have joined the group: </string>
@@ -84,21 +81,21 @@
     <string name="group_account_tag">ID : </string>
     <string name="group_view_more_group_members">View more group members</string>
 
-    <string name="group_set_manager">Set Manager</string>
+    <string name="group_set_manager">Set as Admin</string>
     <string name="group_mute_all">Mute All</string>
     <string name="group_cancel_mute_label">Cancel Mute</string>
-    <string name="group_mute_tip">After the prohibition is opened, only group managers and owner are allowed to speak.</string>
-    <string name="group_add_mute_member_tip">Add group members that need to be muted</string>
-    <string name="group_owner_label">Owner</string>
-    <string name="group_manager_label">Manager</string>
+    <string name="group_mute_tip">When Mute All is enabled, only the group owner and admins are allowed to send messages.</string>
+    <string name="group_add_mute_member_tip">Add members to mute</string>
+    <string name="group_owner_label">Group Owner</string>
+    <string name="group_manager_label">Admin</string>
     <string name="group_add_manager_count_label">Manager (%d)</string>
-    <string name="group_add_manager_label">Add Manager</string>
-    <string name="group_remove_manager_label">Remove Manager</string>
-    <string name="group_remove_manager_tip">The manager status is successfully cancelled.</string>
+    <string name="group_add_manager_label">Add Admin</string>
+    <string name="group_remove_manager_label">Cancel Admin</string>
+    <string name="group_remove_manager_tip">Admin canceled successfully.</string>
 
-    <string name="group_over_limit_tip">At most %d can be selected.</string>
-    <string name="group_transfer_group_owner">Transfer Group Ownership</string>
+    <string name="group_over_limit_tip">Max allowed: %d</string>
+    <string name="group_transfer_group_owner">Transfer Group Owner</string>
 
-    <string name="group_not_support_set_manager">The current type of group does not support setting an administrator.</string>
-    <string name="group_not_support_mute_member">The current type of group does not support mute specified group members.</string>
+    <string name="group_not_support_set_manager">Unable to set an admin for this type of group chat.</string>
+    <string name="group_not_support_mute_member">Unable to mute specified members for this type of group chat.</string>
 </resources>

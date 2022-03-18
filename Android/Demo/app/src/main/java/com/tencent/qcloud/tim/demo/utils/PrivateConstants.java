@@ -50,9 +50,4 @@ public class PrivateConstants {
     public static final String OPPO_PUSH_APPSECRET = "";
     /****** oppo离线推送参数end ******/
 
-    /***** TPNS 相关参数 start *******/
-    public static final String TPNS_SERVER_SUFFIX = "tpns.hk.tencent.com";
-    public static final long TPNS_ACCESS_ID = 0;
-    public static final String TPNS_ACCESS_KEY = "";
-    /***** TPNS 相关参数 end *******/
 }

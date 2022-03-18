@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuigroup.ui.page;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -21,9 +20,10 @@ import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupManagerPresenter;
-import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
 
 public class GroupNoticeActivity extends BaseLightActivity {
+
+    private static OnGroupNoticeChangedListener changedListener;
 
     private EditText editText;
 
@@ -34,6 +34,10 @@ public class GroupNoticeActivity extends BaseLightActivity {
     private boolean isEditModel = false;
 
     private GroupManagerPresenter presenter;
+
+    public static void setOnGroupNoticeChangedListener(OnGroupNoticeChangedListener listener) {
+        GroupNoticeActivity.changedListener = listener;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,9 @@ public class GroupNoticeActivity extends BaseLightActivity {
             @Override
             public void onSuccess(Void data) {
                 groupInfo.setNotice(groupNotice);
+                if (changedListener != null) {
+                    changedListener.onChanged(groupNotice);
+                }
                 ToastUtil.toastShortMessage(getResources().getString(R.string.modify_group_notice_success));
             }
 
@@ -137,5 +144,9 @@ public class GroupNoticeActivity extends BaseLightActivity {
         } else {
             return 0;
         }
+    }
+
+    public interface OnGroupNoticeChangedListener {
+        void onChanged(String notice);
     }
 }

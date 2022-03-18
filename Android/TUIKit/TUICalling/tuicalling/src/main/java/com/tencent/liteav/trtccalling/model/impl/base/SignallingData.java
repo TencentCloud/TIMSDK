@@ -8,6 +8,34 @@ public class SignallingData {
     private String   platform;
     private String   extInfo;
     private DataInfo data;
+    //多人通话custom message增加字段
+    private int      call_action;
+    private String   callid;
+    private String   user;
+
+    public int getCallAction() {
+        return call_action;
+    }
+
+    public void setCallAction(int call_action) {
+        this.call_action = call_action;
+    }
+
+    public String getCallid() {
+        return callid;
+    }
+
+    public void setcallid(String callid) {
+        this.callid = callid;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 
     //兼容老版本字段，待废弃字段
     private int    call_type;
@@ -15,7 +43,6 @@ public class SignallingData {
     private int    call_end;
     private String switch_to_audio_call;
     private String line_busy;
-
 
     public int getVersion() {
         return version;

@@ -29,7 +29,6 @@ import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.demo.utils.PermissionUtils;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
@@ -103,7 +102,6 @@ public class LoginForDevActivity extends BaseLightActivity {
         // https://github.com/tencentyun/TIMSDK/tree/master/Android
         mUserAccount = findViewById(R.id.login_user);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        PermissionUtils.checkPermission(this);
         mLoginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,22 +190,6 @@ public class LoginForDevActivity extends BaseLightActivity {
             finish();
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    /**
-     * 系统请求权限回调
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PermissionUtils.REQ_PERMISSION_CODE:
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    ToastUtil.toastLongMessage(getString(R.string.permission_tip));
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
     }
 
     @Override

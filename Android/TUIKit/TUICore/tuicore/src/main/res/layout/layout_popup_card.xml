@@ -51,6 +51,7 @@
         android:id="@+id/popup_card_positive_btn"
         android:text="@string/sure"
         android:textSize="@dimen/core_popup_card_btn_text_size"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:background="@drawable/core_positive_btn_bg"
         android:layout_width="match_parent"

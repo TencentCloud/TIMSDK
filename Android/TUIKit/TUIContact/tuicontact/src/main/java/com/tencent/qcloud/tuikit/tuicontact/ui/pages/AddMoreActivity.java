@@ -189,7 +189,11 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
         int radius = getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
         GlideEngine.loadUserIcon(faceImgView, faceUrl, radius);
         idTextView.setText(id);
-        nickNameView.setText(nickName);
+        if (TextUtils.isEmpty(nickName)) {
+            nickNameView.setText(id);
+        } else {
+            nickNameView.setText(nickName);
+        }
         groupTypeTagView.setVisibility(View.GONE);
         groupTypeView.setVisibility(View.GONE);
         detailArea.setVisibility(View.VISIBLE);

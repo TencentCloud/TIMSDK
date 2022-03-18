@@ -54,6 +54,7 @@
             android:layout_weight="1"
             android:background="@drawable/voice_btn_selector"
             android:text="@string/hold_say"
+            android:textAllCaps="false"
             android:textColor="@color/text_color_gray"
             android:visibility="gone" />
 

@@ -3,14 +3,12 @@ package com.tencent.liteav.trtccalling.ui.audiocall.audiolayout;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.liteav.trtccalling.R;
 import com.tencent.liteav.trtccalling.ui.common.RoundCornerImageView;
-
 
 /**
  * 通话界面中，显示单个用户头像的自定义布局
@@ -21,7 +19,7 @@ public class TRTCAudioLayout extends RelativeLayout {
     private RoundCornerImageView mImageHead;
     private TextView             mTextName;
     private ImageView            mImageAudioInput;
-    private FrameLayout          mLayoutShade;
+    private ImageView            mImgLoading;
 
     public TRTCAudioLayout(Context context) {
         this(context, null);
@@ -37,7 +35,7 @@ public class TRTCAudioLayout extends RelativeLayout {
         mImageHead = (RoundCornerImageView) findViewById(R.id.img_head);
         mTextName = (TextView) findViewById(R.id.tv_name);
         mImageAudioInput = (ImageView) findViewById(R.id.iv_audio_input);
-        mLayoutShade = (FrameLayout) findViewById(R.id.fl_shade);
+        mImgLoading = (ImageView) findViewById(R.id.img_loading);
     }
 
     public void setAudioVolume(int vol) {
@@ -61,10 +59,10 @@ public class TRTCAudioLayout extends RelativeLayout {
     }
 
     public void startLoading() {
-        mLayoutShade.setVisibility(VISIBLE);
+        mImgLoading.setVisibility(VISIBLE);
     }
 
     public void stopLoading() {
-        mLayoutShade.setVisibility(GONE);
+        mImgLoading.setVisibility(GONE);
     }
 }

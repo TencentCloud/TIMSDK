@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.input;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -38,6 +37,7 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.FileUtil;
+import com.tencent.qcloud.tuicore.util.PermissionUtils;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -60,7 +60,6 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
-import com.tencent.qcloud.tuikit.tuichat.util.PermissionUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -88,7 +87,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
 
     protected static final int CAPTURE = 1;
     protected static final int AUDIO_RECORD = 2;
-    protected static final int VIDEO_RECORD = 3;
     protected static final int SEND_PHOTO = 4;
     protected static final int SEND_FILE = 5;
 
@@ -167,6 +165,8 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     private ImageView replyCloseBtn;
     private ReplyPreviewBean replyPreviewBean;
 
+
+    private boolean isRequestPermission = false;
     public InputView(Context context) {
         super(context);
         initViews();
@@ -264,53 +264,60 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 TUIChatLog.i(TAG, "mSendAudioButton onTouch action:" + motionEvent.getAction());
-                if (!checkPermission(AUDIO_RECORD)) {
-                    TUIChatLog.i(TAG, "audio record checkPermission failed");
-                    return false;
-                }
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        mAudioCancel = true;
-                        mStartRecordY = motionEvent.getY();
-                        if (mChatInputHandler != null) {
-                            mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_START);
-                        }
-                        mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.release_end));
-                        AudioPlayer.getInstance().startRecord(new AudioPlayer.Callback() {
-                            @Override
-                            public void onCompletion(Boolean success) {
-                                recordComplete(success);
-                            }
-                        });
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (motionEvent.getY() - mStartRecordY < -100) {
-                            mAudioCancel = true;
-                            if (mChatInputHandler != null) {
-                                mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CANCEL);
-                            }
-                        } else {
-                            if (mAudioCancel) {
+                requestPermission(AUDIO_RECORD, new PermissionUtils.SimpleCallback() {
+                    @Override
+                    public void onGranted() {
+                        switch (motionEvent.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                mAudioCancel = true;
+                                mStartRecordY = motionEvent.getY();
                                 if (mChatInputHandler != null) {
                                     mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_START);
                                 }
-                            }
-                            mAudioCancel = false;
+                                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.release_end));
+                                AudioPlayer.getInstance().startRecord(new AudioPlayer.Callback() {
+                                    @Override
+                                    public void onCompletion(Boolean success) {
+                                        recordComplete(success);
+                                    }
+                                });
+                                break;
+                            case MotionEvent.ACTION_MOVE:
+                                if (motionEvent.getY() - mStartRecordY < -100) {
+                                    mAudioCancel = true;
+                                    if (mChatInputHandler != null) {
+                                        mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CANCEL);
+                                    }
+                                } else {
+                                    if (mAudioCancel) {
+                                        if (mChatInputHandler != null) {
+                                            mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_START);
+                                        }
+                                    }
+                                    mAudioCancel = false;
+                                }
+                                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.release_end));
+                                break;
+                            case MotionEvent.ACTION_CANCEL:
+                            case MotionEvent.ACTION_UP:
+                                mAudioCancel = motionEvent.getY() - mStartRecordY < -100;
+                                if (mChatInputHandler != null) {
+                                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_STOP);
+                                }
+                                AudioPlayer.getInstance().stopRecord();
+                                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.hold_say));
+                                break;
+                            default:
+                                break;
                         }
-                        mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.release_end));
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-                        mAudioCancel = motionEvent.getY() - mStartRecordY < -100;
-                        if (mChatInputHandler != null) {
-                            mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_STOP);
-                        }
-                        AudioPlayer.getInstance().stopRecord();
-                        mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.hold_say));
-                        break;
-                    default:
-                        break;
-                }
+                    }
+
+                    @Override
+                    public void onDenied() {
+                        TUIChatLog.i(TAG, "audio record checkPermission failed");
+
+                    }
+                });
                 return false;
             }
         });
@@ -460,19 +467,25 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
 
     protected void startSendPhoto() {
         TUIChatLog.i(TAG, "startSendPhoto");
-        if (!checkPermission(SEND_PHOTO)) {
-            TUIChatLog.i(TAG, "startSendPhoto checkPermission failed");
-            return;
-        }
 
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        String[] mimetypes = {"image/*", "video/*"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
+        requestPermission(SEND_PHOTO, new PermissionUtils.SimpleCallback() {
+            @Override
+            public void onGranted() {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                String[] mimetypes = {"image/*", "video/*"};
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
 
-        setOpenPhotoCallback();
-        mInputMoreFragment.startActivityForResult(intent, InputMoreFragment.REQUEST_CODE_PHOTO);
+                setOpenPhotoCallback();
+                mInputMoreFragment.startActivityForResult(intent, InputMoreFragment.REQUEST_CODE_PHOTO);
+            }
+
+            @Override
+            public void onDenied() {
+                TUIChatLog.i(TAG, "startSendPhoto checkPermission failed");
+            }
+        });
     }
 
     private void setOpenPhotoCallback() {
@@ -558,90 +571,124 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
 
     protected void startCapture() {
         TUIChatLog.i(TAG, "startCapture");
-        if (!checkPermission(CAPTURE)) {
-            TUIChatLog.i(TAG, "startCapture checkPermission failed");
-            return;
-        }
-        Intent captureIntent = new Intent(getContext(), CameraActivity.class);
-        captureIntent.putExtra(TUIChatConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_ONLY_CAPTURE);
-        CameraActivity.mCallBack = new IUIKitCallback() {
+
+        requestPermission(CAPTURE, new PermissionUtils.SimpleCallback() {
             @Override
-            public void onSuccess(Object data) {
-                Uri contentUri = Uri.fromFile(new File(data.toString()));
-                TUIMessageBean msg = ChatMessageBuilder.buildImageMessage(contentUri);
-                if (mMessageHandler != null) {
-                    mMessageHandler.sendMessage(msg);
-                    hideSoftInput();
-                }
+            public void onGranted() {
+                Intent captureIntent = new Intent(getContext(), CameraActivity.class);
+                captureIntent.putExtra(TUIChatConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_ONLY_CAPTURE);
+                CameraActivity.mCallBack = new IUIKitCallback() {
+                    @Override
+                    public void onSuccess(Object data) {
+                        Uri contentUri = Uri.fromFile(new File(data.toString()));
+                        TUIMessageBean msg = ChatMessageBuilder.buildImageMessage(contentUri);
+                        if (mMessageHandler != null) {
+                            mMessageHandler.sendMessage(msg);
+                            hideSoftInput();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+
+                    }
+                };
+                setOpenPhotoCallback();
+                mInputMoreFragment.startActivityForResult(captureIntent, InputMoreFragment.REQUEST_CODE_PHOTO);
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
+            public void onDenied() {
+                TUIChatLog.i(TAG, "startCapture checkPermission failed");
             }
-        };
-        setOpenPhotoCallback();
-        mInputMoreFragment.startActivityForResult(captureIntent, InputMoreFragment.REQUEST_CODE_PHOTO);
+        });
+
     }
 
     protected void startVideoRecord() {
         TUIChatLog.i(TAG, "startVideoRecord");
-        if (!checkPermission(VIDEO_RECORD)) {
-            TUIChatLog.i(TAG, "startVideoRecord checkPermission failed");
-            return;
-        }
-        Intent captureIntent = new Intent(getContext(), CameraActivity.class);
-        captureIntent.putExtra(TUIChatConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_ONLY_RECORDER);
-        CameraActivity.mCallBack = new IUIKitCallback() {
+
+        requestPermission(CAPTURE, new PermissionUtils.SimpleCallback() {
             @Override
-            public void onSuccess(Object data) {
-                Intent videoData = (Intent) data;
-                String imgPath = videoData.getStringExtra(TUIChatConstants.CAMERA_IMAGE_PATH);
-                String videoPath = videoData.getStringExtra(TUIChatConstants.CAMERA_VIDEO_PATH);
-                int imgWidth = videoData.getIntExtra(TUIChatConstants.IMAGE_WIDTH, 0);
-                int imgHeight = videoData.getIntExtra(TUIChatConstants.IMAGE_HEIGHT, 0);
-                long duration = videoData.getLongExtra(TUIChatConstants.VIDEO_TIME, 0);
-                TUIMessageBean msg = ChatMessageBuilder.buildVideoMessage(imgPath, videoPath, imgWidth, imgHeight, duration);
-                if (mMessageHandler != null) {
-                    mMessageHandler.sendMessage(msg);
-                    hideSoftInput();
-                }
+            public void onGranted() {
+                requestPermission(AUDIO_RECORD, new PermissionUtils.SimpleCallback() {
+                    @Override
+                    public void onGranted() {
+                        Intent captureIntent = new Intent(getContext(), CameraActivity.class);
+                        captureIntent.putExtra(TUIChatConstants.CAMERA_TYPE, JCameraView.BUTTON_STATE_ONLY_RECORDER);
+                        CameraActivity.mCallBack = new IUIKitCallback() {
+                            @Override
+                            public void onSuccess(Object data) {
+                                Intent videoData = (Intent) data;
+                                String imgPath = videoData.getStringExtra(TUIChatConstants.CAMERA_IMAGE_PATH);
+                                String videoPath = videoData.getStringExtra(TUIChatConstants.CAMERA_VIDEO_PATH);
+                                int imgWidth = videoData.getIntExtra(TUIChatConstants.IMAGE_WIDTH, 0);
+                                int imgHeight = videoData.getIntExtra(TUIChatConstants.IMAGE_HEIGHT, 0);
+                                long duration = videoData.getLongExtra(TUIChatConstants.VIDEO_TIME, 0);
+                                TUIMessageBean msg = ChatMessageBuilder.buildVideoMessage(imgPath, videoPath, imgWidth, imgHeight, duration);
+                                if (mMessageHandler != null) {
+                                    mMessageHandler.sendMessage(msg);
+                                    hideSoftInput();
+                                }
+                            }
+
+                            @Override
+                            public void onError(String module, int errCode, String errMsg) {
+
+                            }
+                        };
+                        setOpenPhotoCallback();
+                        mInputMoreFragment.startActivityForResult(captureIntent, InputMoreFragment.REQUEST_CODE_PHOTO);
+                    }
+
+                    @Override
+                    public void onDenied() {
+                        TUIChatLog.i(TAG, "startVideoRecord checkPermission failed");
+                    }
+                });
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
+            public void onDenied() {
+                TUIChatLog.i(TAG, "startVideoRecord checkPermission failed");
             }
-        };
-        setOpenPhotoCallback();
-        mInputMoreFragment.startActivityForResult(captureIntent, InputMoreFragment.REQUEST_CODE_PHOTO);
+        });
+
+
     }
 
     protected void startSendFile() {
         TUIChatLog.i(TAG, "startSendFile");
-        if (!checkPermission(SEND_FILE)) {
-            TUIChatLog.i(TAG, "startSendFile checkPermission failed");
-            return;
-        }
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        mInputMoreFragment.setCallback(new IUIKitCallback() {
+
+        requestPermission(SEND_FILE, new PermissionUtils.SimpleCallback() {
             @Override
-            public void onSuccess(Object data) {
-                TUIMessageBean info = ChatMessageBuilder.buildFileMessage((Uri) data);
-                if (mMessageHandler != null) {
-                    mMessageHandler.sendMessage(info);
-                    hideSoftInput();
-                }
+            public void onGranted() {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                mInputMoreFragment.setCallback(new IUIKitCallback() {
+                    @Override
+                    public void onSuccess(Object data) {
+                        TUIMessageBean info = ChatMessageBuilder.buildFileMessage((Uri) data);
+                        if (mMessageHandler != null) {
+                            mMessageHandler.sendMessage(info);
+                            hideSoftInput();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        ToastUtil.toastLongMessage(errMsg);
+                    }
+                });
+                mInputMoreFragment.startActivityForResult(intent, InputMoreFragment.REQUEST_CODE_FILE);
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastLongMessage(errMsg);
+            public void onDenied() {
+                TUIChatLog.i(TAG, "startSendFile checkPermission failed");
             }
         });
-        mInputMoreFragment.startActivityForResult(intent, InputMoreFragment.REQUEST_CODE_FILE);
     }
 
     public void setChatInputHandler(ChatInputHandler handler) {
@@ -679,6 +726,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             if (mCurrentState == STATE_VOICE_INPUT) {
                 mSendAudioButton.setVisibility(VISIBLE);
                 mTextInput.setVisibility(GONE);
+                mAudioInputSwitchButton.setImageResource(R.drawable.chat_input_keyboard);
                 hideSoftInput();
             } else {
                 mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
@@ -687,19 +735,21 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 showSoftInput();
             }
         } else if (view.getId() == R.id.face_btn) {
+            mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
             if (mCurrentState == STATE_VOICE_INPUT) {
                 mCurrentState = STATE_NONE_INPUT;
-                mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
                 mSendAudioButton.setVisibility(GONE);
                 mTextInput.setVisibility(VISIBLE);
             }
             if (mCurrentState == STATE_FACE_INPUT) {
-                mCurrentState = STATE_NONE_INPUT;
+                mCurrentState = STATE_SOFT_INPUT;
                 mInputMoreView.setVisibility(View.GONE);
                 mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
                 mTextInput.setVisibility(VISIBLE);
+                showSoftInput();
             } else {
                 mCurrentState = STATE_FACE_INPUT;
+                mEmojiInputButton.setImageResource(R.drawable.chat_input_keyboard);
                 showFaceViewGroup();
             }
         } else if (view.getId() == R.id.more_btn) {//若点击右边的“+”号按钮
@@ -788,6 +838,15 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
         mTextInput.clearFocus();
         mInputMoreView.setVisibility(View.GONE);
+    }
+
+    public void onEmptyClick() {
+        hideSoftInput();
+        mCurrentState = STATE_SOFT_INPUT;
+        mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
+        mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
+        mSendAudioButton.setVisibility(GONE);
+        mTextInput.setVisibility(VISIBLE);
     }
 
     private boolean isSoftInputShown() {
@@ -1131,7 +1190,20 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             audioUnit.setOnClickListener(audioUnit.new OnActionClickListener() {
                 @Override
                 public void onClick() {
-                    onCustomActionClick(audioUnit.getActionId());
+                    PermissionUtils.permission(PermissionUtils.PermissionConstants.MICROPHONE)
+                            .callback(new PermissionUtils.SimpleCallback() {
+                                @Override
+                                public void onGranted() {
+                                    onCustomActionClick(audioUnit.getActionId());
+                                }
+
+                                @Override
+                                public void onDenied() {
+
+                                }
+                            })
+                            .reason(getResources().getString(R.string.chat_permission_mic_reason))
+                            .request();
                 }
             });
             mInputMoreActionList.add(audioUnit);
@@ -1148,7 +1220,33 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             videoUnit.setOnClickListener(videoUnit.new OnActionClickListener() {
                 @Override
                 public void onClick() {
-                    onCustomActionClick(videoUnit.getActionId());
+                    PermissionUtils.permission(PermissionUtils.PermissionConstants.MICROPHONE)
+                            .callback(new PermissionUtils.SimpleCallback() {
+                                @Override
+                                public void onGranted() {
+                                    PermissionUtils.permission(PermissionUtils.PermissionConstants.CAMERA)
+                                            .callback(new PermissionUtils.SimpleCallback() {
+                                                @Override
+                                                public void onGranted() {
+                                                    onCustomActionClick(videoUnit.getActionId());
+                                                }
+
+                                                @Override
+                                                public void onDenied() {
+
+                                                }
+                                            })
+                                            .reason(getResources().getString(R.string.chat_permission_camera_reason))
+                                            .request();
+                                }
+
+                                @Override
+                                public void onDenied() {
+
+                                }
+                            })
+                            .reason(getResources().getString(R.string.chat_permission_mic_reason))
+                            .request();
                 }
             });
             mInputMoreActionList.add(videoUnit);
@@ -1197,24 +1295,53 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_INPUT_MORE, TUIConstants.TUIChat.EVENT_SUB_KEY_ON_CLICK, param);
     }
 
-    protected boolean checkPermission(int type) {
-        if (!PermissionUtils.checkPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            return false;
+    protected void requestPermission(int type, PermissionUtils.SimpleCallback callback) {
+        String permission = null;
+        String reason = null;
+        if (isRequestPermission) {
+            return;
         }
-        if (!PermissionUtils.checkPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            return false;
+        isRequestPermission = true;
+        switch (type) {
+            case SEND_FILE:
+            case SEND_PHOTO:
+                permission = PermissionUtils.PermissionConstants.STORAGE;
+                reason = getResources().getString(R.string.chat_permission_storage_reason);
+                break;
+            case CAPTURE:
+                permission = PermissionUtils.PermissionConstants.CAMERA;
+                reason = getResources().getString(R.string.chat_permission_camera_reason);
+                break;
+            case AUDIO_RECORD:
+                permission = PermissionUtils.PermissionConstants.MICROPHONE;
+                reason = getResources().getString(R.string.chat_permission_mic_reason);
+                break;
+            default:
+                break;
         }
-        if (type == SEND_FILE || type == SEND_PHOTO) {
-            return true;
-        } else if (type == CAPTURE) {
-            return PermissionUtils.checkPermission(mActivity, Manifest.permission.CAMERA);
-        } else if (type == AUDIO_RECORD) {
-            return PermissionUtils.checkPermission(mActivity, Manifest.permission.RECORD_AUDIO);
-        } else if (type == VIDEO_RECORD) {
-            return PermissionUtils.checkPermission(mActivity, Manifest.permission.CAMERA)
-                    && PermissionUtils.checkPermission(mActivity, Manifest.permission.RECORD_AUDIO);
+        PermissionUtils.SimpleCallback simpleCallback = new PermissionUtils.SimpleCallback() {
+            @Override
+            public void onGranted() {
+                isRequestPermission = false;
+                if (callback != null) {
+                    callback.onGranted();
+                }
+            }
+
+            @Override
+            public void onDenied() {
+                isRequestPermission = false;
+                if (callback != null) {
+                    callback.onDenied();
+                }
+            }
+        };
+        if (!TextUtils.isEmpty(permission)) {
+            PermissionUtils.permission(permission)
+                    .reason(reason)
+                    .callback(simpleCallback)
+                    .request();
         }
-        return true;
     }
 
     @Override

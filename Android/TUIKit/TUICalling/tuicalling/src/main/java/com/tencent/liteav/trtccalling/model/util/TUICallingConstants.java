@@ -33,4 +33,9 @@ public class TUICallingConstants {
     public static final String EVENT_CALL_NO_RESP         = "NoResp";
     public static final String EVENT_CALL_SWITCH_TO_AUDIO = "SwitchToAudio";
 
+    public static final int TC_TUICALLING_COMPONENT = 3;
+    public static final int TC_TIMCALLING_COMPONENT = 10;
+    public static final int TC_TRTC_FRAMEWORK       = 1;
+
+    public static int component = TC_TUICALLING_COMPONENT;
 }

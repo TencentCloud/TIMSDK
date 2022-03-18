@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.liteav.trtccalling.R;
-import com.tencent.liteav.trtccalling.model.TUICalling;
+import com.tencent.liteav.trtccalling.TUICalling;
+import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
+import com.tencent.liteav.trtccalling.TUICallingImpl;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
@@ -22,15 +24,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TUICore来调用（如果未引入TUICore模块，请使用TUICallingManager）
+ * TUICore来调用（如果未引入TUICore模块，请使用TUICallingImpl）
  */
-final class TUICallingService implements ITUINotification, ITUIService, ITUIExtension, TUICallingManager.CallingManagerListener {
+final class TUICallingService implements ITUINotification, ITUIService, ITUIExtension, TUICallingImpl.CallingManagerListener {
 
     private static final String TAG = "TUICallingService";
 
     private static final TUICallingService INSTANCE = new TUICallingService();
 
-    private TUICallingManager mCallingManager;
+    private TUICallingImpl mCallingImpl;
 
     static final TUICallingService sharedInstance() {
         return INSTANCE;
@@ -51,8 +53,12 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
     @Override
     public Object onCall(String method, Map<String, Object> param) {
         Log.d(TAG, String.format("onCall, method=%s, param=%s", method, null == param ? "" : param.toString()));
-        if (null == mCallingManager) {
-            Log.e(TAG, "mCallingManager is null!!!");
+        TUICallingConstants.component = TUICallingConstants.TC_TIMCALLING_COMPONENT;
+        if (param != null && param.containsKey("component")) {
+            TUICallingConstants.component = (int) param.get("component");
+        }
+        if (null == mCallingImpl) {
+            Log.e(TAG, "mCallingImpl is null!!!");
             return null;
         }
         if (null != param && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_CALL, method)) {
@@ -60,20 +66,10 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
             String typeString = (String) param.get(TUIConstants.TUICalling.PARAM_NAME_TYPE);
             String groupID = (String) param.get(TUIConstants.TUICalling.PARAM_NAME_GROUPID);
             if (TUIConstants.TUICalling.TYPE_AUDIO.equals(typeString)) {
-                mCallingManager.internalCall(userIDs, groupID, TUICalling.Type.AUDIO, TUICalling.Role.CALL);
+                mCallingImpl.internalCall(userIDs, groupID, TUICalling.Type.AUDIO, TUICalling.Role.CALL);
             } else if (TUIConstants.TUICalling.TYPE_VIDEO.equals(typeString)) {
-                mCallingManager.internalCall(userIDs, groupID, TUICalling.Type.VIDEO, TUICalling.Role.CALL);
+                mCallingImpl.internalCall(userIDs, groupID, TUICalling.Type.VIDEO, TUICalling.Role.CALL);
             }
-        } else if (null != param && TextUtils.equals(TUIConstants.TUICalling.METHOD_START_CALL, method)) {
-            if (!param.containsKey(TUIConstants.TUICalling.SENDER) || !param.containsKey(TUIConstants.TUICalling.PARAM_NAME_CALLMODEL)) {
-                return null;
-            }
-            String sender = (String) param.get(TUIConstants.TUICalling.SENDER);
-            String content = (String) param.get(TUIConstants.TUICalling.PARAM_NAME_CALLMODEL);
-            if (TextUtils.isEmpty(sender) || TextUtils.isEmpty(content)) {
-                return null;
-            }
-            mCallingManager.receiveOfflineCalled(sender, content);
         }
         return null;
     }
@@ -81,6 +77,10 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
     @Override
     public Map<String, Object> onGetExtensionInfo(final String key, Map<String, Object> param) {
         Log.d(TAG, String.format("onGetExtensionInfo, key=%s, param=%s", key, null == param ? "" : param.toString()));
+        TUICallingConstants.component = TUICallingConstants.TC_TIMCALLING_COMPONENT;
+        if (param != null && param.containsKey("component")) {
+            TUICallingConstants.component = (int) param.get("component");
+        }
         Context inflateContext = (Context) param.get(TUIConstants.TUIChat.CONTEXT);
         if (inflateContext == null) {
             inflateContext = appContext;
@@ -108,14 +108,14 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
             unitView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (null == mCallingManager) {
-                        Log.e(TAG, "mCallingManager is null!!!");
+                    if (null == mCallingImpl) {
+                        Log.e(TAG, "mCallingImpl is null!!!");
                         return;
                     }
                     if (key.equals(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL)) {
-                        mCallingManager.internalCall(new String[]{chatId}, null, TUICalling.Type.AUDIO, TUICalling.Role.CALL);
+                        mCallingImpl.internalCall(new String[]{chatId}, null, TUICalling.Type.AUDIO, TUICalling.Role.CALL);
                     } else if (key.equals(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL)) {
-                        mCallingManager.internalCall(new String[]{chatId}, null, TUICalling.Type.VIDEO, TUICalling.Role.CALL);
+                        mCallingImpl.internalCall(new String[]{chatId}, null, TUICalling.Type.VIDEO, TUICalling.Role.CALL);
                     }
                 }
             });
@@ -135,8 +135,8 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
     @Override
     public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
         if (TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED.equals(key) && TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT.equals(subKey)) {
-            mCallingManager = (TUICallingManager) TUICallingManager.sharedInstance(appContext);
-            mCallingManager.setCallingManagerListener(this);
+            mCallingImpl = (TUICallingImpl) TUICallingImpl.sharedInstance(appContext);
+            mCallingImpl.setCallingManagerListener(this);
         }
     }
 }

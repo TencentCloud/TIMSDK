@@ -12,6 +12,8 @@
 
     <string name="sure">确定</string>
     <string name="cancel">取消</string>
+    <string name="core_permission_dialog_positive_text">去授权</string>
+    <string name="core_permission_dialog_positive_setting_text">去设置</string>
 
     <string name="group_apply_click_handle">点击处理</string>
 

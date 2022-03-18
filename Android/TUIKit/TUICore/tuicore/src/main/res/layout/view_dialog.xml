@@ -43,6 +43,7 @@
             android:layout_weight="1"
             android:background="@drawable/trans_bg"
             android:gravity="center"
+            android:textAllCaps="false"
             android:textColor="@color/font_blue"
             android:textSize="16sp" />
 
@@ -59,6 +60,7 @@
             android:layout_weight="1"
             android:background="@drawable/trans_bg"
             android:gravity="center"
+            android:textAllCaps="false"
             android:textColor="@color/font_blue"
             android:textSize="16sp" />
     </LinearLayout>

@@ -9,24 +9,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.liteav.trtccalling.R;
+import com.tencent.liteav.trtccalling.model.util.ImageLoader;
 import com.tencent.liteav.trtccalling.ui.common.RoundCornerImageView;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 
 /**
- * Module: TRTCVideoLayout
- * <p>
- * Function:
- * <p>
- * 此 TRTCVideoLayout 封装了{@link TXCloudVideoView} 以及业务逻辑 UI 控件
+ * Module: TRTCGroupVideoLayout
+ * 视频通话界面中，显示多个用户的自定义布局
+ * 此 TRTCGroupVideoLayout 封装了{@link TXCloudVideoView} 以及业务逻辑 UI 控件
  */
 public class TRTCGroupVideoLayout extends RelativeLayout {
     private static final int MIN_AUDIO_VOLUME = 10;
-    private boolean              mMoveAble;
+
     private TXCloudVideoView     mTCCloudViewTRTC;
     private ProgressBar          mProgressAudio;
     private RoundCornerImageView mImageHead;
     private TextView             mTextUserName;
     private ImageView            mImageAudioInput;
+    private ImageView            mImgLoading;
 
     private boolean mMuteAudio = false; // 静音状态 true : 开启静音
 
@@ -52,7 +52,7 @@ public class TRTCGroupVideoLayout extends RelativeLayout {
         if (available) {
             mTCCloudViewTRTC.setVisibility(VISIBLE);
             mImageHead.setVisibility(GONE);
-            mTextUserName.setVisibility(GONE);
+            mTextUserName.setVisibility(VISIBLE);
         } else {
             mTCCloudViewTRTC.setVisibility(GONE);
             mImageHead.setVisibility(VISIBLE);
@@ -84,35 +84,31 @@ public class TRTCGroupVideoLayout extends RelativeLayout {
         mImageHead = findViewById(R.id.img_head);
         mTextUserName = findViewById(R.id.tv_name);
         mImageAudioInput = findViewById(R.id.iv_audio_input);
-    }
-
-    public boolean isMoveAble() {
-        return mMoveAble;
-    }
-
-    public void setMoveAble(boolean enable) {
-        mMoveAble = enable;
+        mImgLoading = (ImageView) findViewById(R.id.img_loading);
+        ImageLoader.loadGifImage(getContext(), mImgLoading, R.drawable.trtccalling_loading);
     }
 
     public void setUserName(String userName) {
         mTextUserName.setText(userName);
     }
+
     public void setAudioVolume(int vol) {
         if (mMuteAudio) {
             return;
         }
-        if (vol > MIN_AUDIO_VOLUME) {
-            mImageAudioInput.setVisibility(VISIBLE);
-        } else {
-            mImageAudioInput.setVisibility(GONE);
-        }
+        mImageAudioInput.setVisibility(vol > MIN_AUDIO_VOLUME ? VISIBLE : GONE);
     }
+
     public void muteMic(boolean mute) {
         mMuteAudio = mute;
-        if (mMuteAudio) {
-            mImageAudioInput.setVisibility(VISIBLE);
-        }
-        int resId = mute ? R.drawable.trtccalling_ic_mutemic_disable : R.drawable.trtccalling_ic_mutemic_enable;
-        mImageAudioInput.setImageResource(resId);
+        mImageAudioInput.setVisibility(mMuteAudio ? GONE : VISIBLE);
+    }
+
+    public void startLoading() {
+        mImgLoading.setVisibility(VISIBLE);
+    }
+
+    public void stopLoading() {
+        mImgLoading.setVisibility(GONE);
     }
 }

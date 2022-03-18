@@ -15,6 +15,8 @@ public class GeneralConfig {
     private boolean excludedFromUnreadCount;
     private boolean excludedFromLastMessage;
 
+    private boolean isAndroidPrivateRing;
+
     public String getUserNickname() {
         return userNickname;
     }
@@ -125,5 +127,13 @@ public class GeneralConfig {
 
     public void setExcludedFromLastMessage(boolean excludedFromLastMessage) {
         this.excludedFromLastMessage = excludedFromLastMessage;
+    }
+
+    public boolean isAndroidPrivateRing() {
+        return isAndroidPrivateRing;
+    }
+
+    public void setAndroidPrivateRing(boolean ring) {
+        this.isAndroidPrivateRing = ring;
     }
 }

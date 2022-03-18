@@ -8,20 +8,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.tencent.imsdk.v2.V2TIMCallback;
-import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.demo.bean.CallModel;
 import com.tencent.qcloud.tim.demo.bean.OfflineMessageBean;
 import com.tencent.qcloud.tim.demo.bean.OfflineMessageContainerBean;
-import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.thirdpush.OEMPush.VIVOPushMessageReceiverImpl;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.demo.utils.TUIUtils;
-import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageHelper;
@@ -192,62 +185,6 @@ public class OfflineMessageDispatcher {
             return null;
         }
         return bean;
-    }
-
-    public static boolean redirect(final OfflineMessageBean bean) {
-        if (bean.action == OfflineMessageBean.REDIRECT_ACTION_CHAT) {
-            if (TextUtils.isEmpty(bean.sender)) {
-                return true;
-            }
-            TUIUtils.startChat(bean.sender, bean.nickname, bean.chatType);
-            return true;
-        } else if (bean.action == OfflineMessageBean.REDIRECT_ACTION_CALL) {
-            redirectCall(bean);
-        }
-        return true;
-    }
-
-    static void redirectCall(OfflineMessageBean bean) {
-        if (bean == null || bean.content == null) {
-            return;
-        }
-        final CallModel model = new Gson().fromJson(bean.content, CallModel.class);
-        DemoLog.i(TAG, "bean: " + bean + " model: " + model);
-        if (model != null) {
-            model.sender = bean.sender;
-            model.data = bean.content;
-            long timeout = V2TIMManager.getInstance().getServerTime() - bean.sendTime;
-            if (timeout >= model.timeout) {
-                ToastUtil.toastLongMessage(DemoApplication.instance().getString(R.string.call_time_out));
-            } else {
-                if (TextUtils.isEmpty(model.groupId)) {
-                    Intent mainIntent = new Intent(DemoApplication.instance(), MainActivity.class);
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    DemoApplication.instance().startActivity(mainIntent);
-                } else {
-                    V2TIMSignalingInfo info = new V2TIMSignalingInfo();
-                    info.setInviteID(model.callId);
-                    info.setInviteeList(model.invitedList);
-                    info.setGroupID(model.groupId);
-                    info.setInviter(bean.sender);
-                    V2TIMManager.getSignalingManager().addInvitedSignaling(info, new V2TIMCallback() {
-
-                        @Override
-                        public void onError(int code, String desc) {
-                            DemoLog.e(TAG, "addInvitedSignaling code: " + code + " desc: " + ErrorMessageConverter.convertIMError(code, desc));
-                        }
-
-                        @Override
-                        public void onSuccess() {
-                            Intent mainIntent = new Intent(DemoApplication.instance(), MainActivity.class);
-                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            DemoApplication.instance().startActivity(mainIntent);
-                            TUIUtils.startCall(bean.sender, model.data);
-                        }
-                    });
-                }
-            }
-        }
     }
 
     public static void updateBadge(final Context context, final int number) {

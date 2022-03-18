@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.util.PermissionUtils;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -57,17 +59,20 @@ public class ImageVideoScanActivity extends Activity {
             @Override
             public void onClick(View view) {
                 TUIChatLog.d(TAG, "onClick");
-                String[] PERMISSIONS = {
-                                "android.permission.READ_EXTERNAL_STORAGE",
-                                "android.permission.WRITE_EXTERNAL_STORAGE" };
-                //检测是否有写的权限
-                int permission = ContextCompat.checkSelfPermission(ImageVideoScanActivity.this,
-                                "android.permission.WRITE_EXTERNAL_STORAGE");
-                if (permission != PackageManager.PERMISSION_GRANTED) {
-                        // 没有写的权限，去申请写的权限，会弹出对话框
-                    ActivityCompat.requestPermissions(ImageVideoScanActivity.this, PERMISSIONS,1);
-                }
-                mImageVideoScanPresenter.saveLocal(ImageVideoScanActivity.this);
+                PermissionUtils.permission(PermissionUtils.PermissionConstants.STORAGE)
+                        .callback(new PermissionUtils.FullCallback() {
+                            @Override
+                            public void onGranted(List<String> permissionsGranted) {
+                                mImageVideoScanPresenter.saveLocal(ImageVideoScanActivity.this);
+                            }
+
+                            @Override
+                            public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
+                                ToastUtil.toastShortMessage("图片保存失败，请检查权限设置");
+                            }
+                        })
+                        .reason(getString(R.string.chat_permission_storage_reason))
+                        .request();
             }
         });
 

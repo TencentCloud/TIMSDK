@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
+import android.text.TextUtils;
+
 import com.tencent.imsdk.v2.V2TIMDownloadCallback;
 import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -28,7 +30,7 @@ public class SoundMessageBean extends TUIMessageBean {
     @Override
     public void onProcessMessage(V2TIMMessage v2TIMMessage) {
         soundElem = v2TIMMessage.getSoundElem();
-        if (isSelf()) {
+        if (isSelf() && !TextUtils.isEmpty(soundElem.getPath())) {
             dataPath = soundElem.getPath();
         } else {
             final String path = TUIConfig.getRecordDownloadDir() + soundElem.getUUID();

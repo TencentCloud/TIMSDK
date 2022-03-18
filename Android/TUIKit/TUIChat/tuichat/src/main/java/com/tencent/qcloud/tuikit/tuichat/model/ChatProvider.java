@@ -23,6 +23,7 @@ import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -35,6 +36,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.config.GeneralConfig;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
@@ -204,6 +206,9 @@ public class ChatProvider {
         v2TIMOfflinePushInfo.setExt(new Gson().toJson(containerBean).getBytes());
         // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
         v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
+        if (TUIChatConfigs.getConfigs().getGeneralConfig().isAndroidPrivateRing()) {
+            v2TIMOfflinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
+        }
 
         final V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
         v2TIMMessage.setExcludedFromUnreadCount(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());

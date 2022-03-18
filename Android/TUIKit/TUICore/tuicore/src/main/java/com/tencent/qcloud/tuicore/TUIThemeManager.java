@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuicore;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -17,7 +16,6 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuicore.interfaces.ITUIThemeChangeable;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
 
 import java.util.ArrayList;
@@ -59,7 +57,7 @@ public class TUIThemeManager {
 
     private int currentTheme = THEME_LIGHT;
     private String currentLanguage = "";
-
+    private Locale defaultLocale = null;
     static void setTheme(Context context) {
         getInstance().setThemeInternal(context);
     }
@@ -79,8 +77,9 @@ public class TUIThemeManager {
                 new WebView(appContext).destroy();
             }
 
+            Locale defaultLocale = getLocale(appContext);
             SharedPreferences sharedPreferences = context.getSharedPreferences(SP_THEME_AND_LANGUAGE_NAME, Context.MODE_PRIVATE);
-            currentLanguage = sharedPreferences.getString(SP_KEY_LANGUAGE, "");
+            currentLanguage = sharedPreferences.getString(SP_KEY_LANGUAGE, defaultLocale.getLanguage());
             currentTheme = sharedPreferences.getInt(SP_KEY_THEME, THEME_LIGHT);
 
             // 语言只需要初始化一次
@@ -88,6 +87,10 @@ public class TUIThemeManager {
         }
         // 主题需要更新多次
         applyTheme(appContext);
+    }
+
+    public void setDefaultLocale(Locale defaultLocale) {
+        this.defaultLocale = defaultLocale;
     }
 
     public static void addLightTheme(int resId) {
@@ -167,6 +170,8 @@ public class TUIThemeManager {
             locale = Locale.ENGLISH;
         } else if ("zh".equals(currentLanguage)) {
             locale = Locale.CHINA;
+        } else if (defaultLocale != null) {
+            locale = defaultLocale;
         }
 
         Resources resources = context.getResources();
@@ -259,10 +264,7 @@ public class TUIThemeManager {
 
         @Override
         public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-            // 如果 Activity 支持换肤则设置主题
-            if (activity instanceof ITUIThemeChangeable) {
-                TUIThemeManager.getInstance().applyTheme(activity);
-            }
+            TUIThemeManager.getInstance().applyTheme(activity);
             TUIThemeManager.getInstance().applyLanguage(activity);
         }
 

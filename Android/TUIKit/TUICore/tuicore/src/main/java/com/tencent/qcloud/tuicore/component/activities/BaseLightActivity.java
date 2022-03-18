@@ -10,10 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.interfaces.ITUIThemeChangeable;
 
 
-public class BaseLightActivity extends AppCompatActivity implements ITUIThemeChangeable {
+public class BaseLightActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

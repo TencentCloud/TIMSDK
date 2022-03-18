@@ -43,7 +43,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     private final HashMap<String, Boolean> mSelectedPositions = new HashMap<>();
     private boolean isShowMultiSelectCheckBox = false;
     private boolean isForwardFragment = false;
-    private boolean isShowSearch = false;
 
     private boolean mIsLoading = false;
 
@@ -87,10 +86,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
 
     public void setSearchView(View searchView) {
         this.searchView = searchView;
-    }
-
-    public void setShowSearch(boolean showSearch) {
-        isShowSearch = showSearch;
     }
 
     //设置给定位置条目的选择状态
@@ -170,6 +165,10 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         View view;
         // 根据ViewType来创建条目
         if (viewType == ITEM_TYPE_HEADER_SEARCH) {
+            // 如果 searchView 不显示，添加一个隐藏的 view，防止 recyclerview 自动滑到最底部
+            if (searchView == null) {
+                searchView = new View(parent.getContext());
+            }
             return new HeaderViewHolder(searchView);
         }else if (viewType == ConversationInfo.TYPE_CUSTOM) {
             view = inflater.inflate(R.layout.conversation_custom_adapter, parent, false);
@@ -317,13 +316,11 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
             return null;
         }
 
-        int dataPosition = position;
+        int dataPosition;
         if (isForwardFragment) {
             dataPosition = position - SELECT_COUNT - SELECT_LABEL_COUNT;
         } else {
-            if (isShowSearch) {
-                dataPosition = position - HEADER_COUNT;
-            }
+            dataPosition = position - HEADER_COUNT;
         }
         if (dataPosition < mDataSource.size() && dataPosition >= 0) {
             return mDataSource.get(dataPosition);
@@ -338,10 +335,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         if (isForwardFragment) {
             return listSize + SELECT_COUNT + SELECT_LABEL_COUNT + FOOTER_COUNT;
         }
-        if (isShowSearch) {
-            return listSize + HEADER_COUNT + FOOTER_COUNT;
-        }
-        return listSize + FOOTER_COUNT;
+        return listSize + HEADER_COUNT + FOOTER_COUNT;
     }
 
     @Override
@@ -353,10 +347,8 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
                 return ConversationInfo.TYPE_RECENT_LABEL;
             }
         } else {
-            if (isShowSearch) {
-                if (position == 0) {
-                    return ITEM_TYPE_HEADER_SEARCH;
-                }
+            if (position == 0) {
+                return ITEM_TYPE_HEADER_SEARCH;
             }
         }
         if (position == getItemCount() - 1) {
@@ -375,9 +367,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         if (isForwardFragment) {
             itemIndex = index + SELECT_LABEL_COUNT + SELECT_COUNT;
         } else {
-            if (isShowSearch) {
-                itemIndex = index + HEADER_COUNT;
-            }
+            itemIndex = index + HEADER_COUNT;
         }
         return itemIndex;
     }

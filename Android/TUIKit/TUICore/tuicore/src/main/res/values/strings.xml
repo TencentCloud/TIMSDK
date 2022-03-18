@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="open_file_tips">Select the app to open this file</string>
+    <string name="open_file_tips">Select an app to open the file</string>
 
     <string name="date_yesterday">Yesterday</string>
     <string name="date_year_short">YYYY</string>
@@ -11,7 +11,9 @@
     <string name="date_second_short">SS</string>
 
     <string name="cancel">Cancel</string>
-    <string name="sure">OK</string>
+    <string name="sure">Confirm</string>
+    <string name="core_permission_dialog_positive_text">Authorize Now</string>
+    <string name="core_permission_dialog_positive_setting_text">Set Now</string>
 
     <string name="group_apply_click_handle">Tap to Process</string>
 

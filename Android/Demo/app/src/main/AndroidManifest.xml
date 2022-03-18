@@ -19,12 +19,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-    <permission
-        android:name="com.tencent.qcloud.tim.tuikit.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="com.tencent.qcloud.tim.tuikit.permission.C2D_MESSAGE" />
-
     <!-- ********************************* OEMPush Permission begin************************ -->
     <!-- 如果选择开启 TPNS 通道，OEM 的相关以下代码可以删掉 -->
 
@@ -64,6 +58,12 @@
     <!-- 兼容flyme3.0配置权限 -->
     <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE" />
 
+    <permission
+        android:name="com.tencent.qcloud.tim.tuikit.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.tencent.qcloud.tim.tuikit.permission.C2D_MESSAGE" />
+
     <!-- ********************************* OEMPush Permission end************************ -->
 
     <application
@@ -90,10 +90,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".login.LoginUsernameModeActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".main.MainActivity"
             android:launchMode="singleTask"
@@ -130,9 +126,6 @@
                     android:scheme="pushscheme" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".profile.WebViewActivity"
-            android:screenOrientation="portrait" />
 
         <receiver
             android:name=".LanguageReceiver"
@@ -222,10 +215,6 @@
             </intent-filter>
         </service>
 
-        <meta-data
-            android:name="com.huawei.hms.client.appid"
-            android:value=""
-            tools:replace="android:value" />
         <!-- ********华为推送设置end******** -->
 
         <!-- ********魅族推送设置start******** -->
@@ -267,14 +256,6 @@
             </intent-filter>
         </receiver>
 
-        <meta-data
-            android:name="com.vivo.push.api_key"
-            android:value=""
-            tools:replace="android:value" />
-        <meta-data
-            android:name="com.vivo.push.app_id"
-            android:value=""
-            tools:replace="android:value" />
         <!-- ********vivo推送设置end******** -->
 
         <!-- ********海外google云消息传递start******** -->
@@ -313,23 +294,20 @@
         <!-- ********************************* TPNSPush begin************************ -->
         <!-- 如果选择开启 OEM 通道，TPNS 的相关以下代码可以删掉 -->
 
-        <!--TPNS 可选：配置首次启动应用时不自动启动推送服务进程，直到调用 XGPushManager.registerPush 接口才开始启动-->
-        <meta-data
-            android:name="XG_SERVICE_PULL_UP_OFF"
-            android:value="true" />
-
         <!--如果您的应用服务接入点为广州，SDK 默认实现该配置。
-            如果您的应用服务接入点为上海、新加坡或中国香港，请按照下文步骤完成其他服务接入点域名配置
-
             其他服务接入点域名如下：
                上海：tpns.sh.tencent.com
                新加坡：tpns.sgp.tencent.com
                中国香港：tpns.hk.tencent.com
         -->
-
-        <!--<meta-data
+        <meta-data
             android:name="XG_SERVER_SUFFIX"
-            android:value="tpns.hk.tencent.com" />-->
+            android:value="${XG_SERVER_SUFFIX}" />
+
+        <!--TPNS 可选：配置首次启动应用时不自动启动推送服务进程，直到调用 XGPushManager.registerPush 接口才开始启动-->
+        <meta-data
+            android:name="XG_SERVICE_PULL_UP_OFF"
+            android:value="${XG_SERVICE_PULL_UP_OFF}" />
 
         <!-- TPNS receiver -->
         <receiver android:name="com.tencent.qcloud.tim.demo.thirdpush.TPNSPush.TPNSMessageReceiver">

@@ -26,6 +26,7 @@ import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
+import com.tencent.qcloud.tuikit.tuicontact.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
@@ -156,6 +157,23 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         });
     }
 
+    private void setupCall() {
+        HashMap<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIChat.CHAT_ID, mId);
+        param.put(TUIConstants.TUIChat.CHAT_NAME, mNickname);
+        param.put(TUIConstants.TUIChat.CHAT_TYPE, ChatInfo.TYPE_C2C);
+        param.put(TUIConstants.TUIChat.CONTEXT, getContext());
+        Map<String, Object> videoCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_VIDEO_CALL, param);
+        if (videoCallExtension == null) {
+            videoCallBtn.setVisibility(GONE);
+        }
+
+        Map<String, Object> audioCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL, param);
+        if (audioCallExtension == null) {
+            audioCallBtn.setVisibility(GONE);
+        }
+    }
+
     private void initEvent() {
         mChatTopView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -214,6 +232,8 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             mNickNameView.setText(mId);
         }
         mIDView.setText(mId);
+
+        setupCall();
     }
 
     private void setViewContentFromContactGroupApplyInfo(ContactGroupApplyInfo data) {
@@ -281,6 +301,11 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         mId = mContactInfo.getId();
         mNickname = mContactInfo.getNickName();
         mSignatureView.setText(mContactInfo.getSignature());
+        if (TextUtils.isEmpty(mContactInfo.getSignature())) {
+            mSignatureTagView.setText(getResources().getString(R.string.contact_no_status));
+        } else {
+            mSignatureTagView.setText(getResources().getString(R.string.contact_signature_tag));
+        }
         int radius = getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
         GlideEngine.loadUserIcon(mHeadImageView, mContactInfo.getAvatarUrl(), radius);
         mChatTopView.setChecked(presenter.isTopConversation(mId));
@@ -366,7 +391,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     @Override
     public void onDataSourceChanged(ContactItemBean bean) {
         setViewContentFromItemBean(bean);
-
+        setupCall();
         if (bean.isFriend()) {
             updateMessageOptionView();
         }
