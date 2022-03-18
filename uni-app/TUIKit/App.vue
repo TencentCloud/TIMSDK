@@ -12,15 +12,15 @@
 	// #endif
 	
   // #ifdef APP-PLUS
-	import Aegis from '@tencent/aegis-weex-sdk';
+	import Aegis from 'aegis-weex-sdk';
 	// #endif
 	
 	// #ifdef MP-WEIXIN
-	import Aegis from '@tencent/aegis-mp-sdk';
+	import Aegis from 'aegis-mp-sdk';
 	// #endif
 	
 	// #ifdef H5
-	import Aegis from '@tencent/aegis-web-sdk';
+	import Aegis from 'aegis-web-sdk';
 	// #endif
 	
 	import logger from './utils/logger'; // app.js
