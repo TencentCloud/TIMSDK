@@ -135,6 +135,11 @@
         if (self.isSaveVideo) {
             [self saveVideo];
         }
+        
+        // 如果还没播放，或者播放错误，将在线地址切成本地
+        if (self.player.status == AVPlayerStatusFailed || self.player.status == AVPlayerStatusReadyToPlay) {
+            [self addPlayer:[NSURL fileURLWithPath:self.videoPath]];
+        }
     }];
 
 }

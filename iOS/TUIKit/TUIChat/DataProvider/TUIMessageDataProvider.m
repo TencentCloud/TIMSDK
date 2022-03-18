@@ -829,6 +829,7 @@ static NSArray *customMessageInfo = nil;
         NSData *data = [NSJSONSerialization dataWithJSONObject:ext options:NSJSONWritingPrettyPrinted error:nil];
         pushInfo.ext = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         pushInfo.AndroidOPPOChannelID = @"tuikit";
+        pushInfo.AndroidSound = TUIConfig.defaultConfig.enableCustomRing ? @"private_ring" : nil;
     }
     
     return [V2TIMManager.sharedInstance sendMessage:message

@@ -179,7 +179,6 @@
                 member.avatarUrl = info.faceURL;
                 member.name = (info.nameCard?:info.nickName)?:info.userID;
                 member.identifier = info.userID;
-                
                 BOOL exist = NO;
                 for (TUIMemberInfoCellData *data in weakSelf.muteMembersDataArray) {
                     if ([data.identifier isEqualToString:info.userID]) {
@@ -188,7 +187,14 @@
                     }
                 }
                 
-                if (!exist) {                
+                BOOL isSuper = (info.role == V2TIM_GROUP_MEMBER_ROLE_SUPER);
+                BOOL isAdMin = (info.role == V2TIM_GROUP_MEMBER_ROLE_ADMIN);
+                BOOL allowShowInMuteList = YES;
+                //在已禁言列表中需要过滤管理员
+                if (isSuper || isAdMin) {
+                    allowShowInMuteList = NO;
+                }
+                if (!exist && allowShowInMuteList) {
                     [weakSelf.muteMembersDataArray addObject:member];
                     [indexPaths addObject:[NSIndexPath indexPathForRow:[weakSelf.muteMembersDataArray indexOfObject:member] inSection:1]];
                 }
@@ -250,7 +256,9 @@
 //    }
 //}
 
-
+- (void)updateMuteMembersFilterAdmins {
+    [self loadMuteMembers];
+}
 - (NSMutableArray *)datas
 {
     if (_datas == nil) {

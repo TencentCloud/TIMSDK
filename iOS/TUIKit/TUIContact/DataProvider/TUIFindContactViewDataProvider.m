@@ -75,6 +75,9 @@
             cellModel.groupInfo = info;
             weakSelf.groups = @[cellModel];
         }
+        else {
+            weakSelf.groups = @[];
+        }
         completion();
     } fail:^(int code, NSString *desc) {
         weakSelf.groups = @[];

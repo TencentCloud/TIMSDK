@@ -26,7 +26,7 @@
     [self addSubview:_image];
 
     _title = [[UILabel alloc] init];
-    [_title setFont:[UIFont systemFontOfSize:14]];
+    [_title setFont:[UIFont systemFontOfSize:10]];
     [_title setTextColor:[UIColor grayColor]];
     _title.textAlignment = NSTextAlignmentCenter;
     [self addSubview:_title];

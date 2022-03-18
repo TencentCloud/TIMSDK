@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 禁言/取消禁言 指定人员
 - (void)mute:(BOOL)mute user:(TUIUserModel *)user;
 
+- (void)updateMuteMembersFilterAdmins;
 @end
 
 NS_ASSUME_NONNULL_END

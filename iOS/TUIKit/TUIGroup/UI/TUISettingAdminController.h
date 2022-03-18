@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *groupID;
 
+@property (nonatomic, copy) void (^settingAdminDissmissCallBack)(void);
 @end
 
 NS_ASSUME_NONNULL_END
