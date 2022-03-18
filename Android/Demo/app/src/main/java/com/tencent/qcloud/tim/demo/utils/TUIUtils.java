@@ -92,11 +92,4 @@ public class TUIUtils {
         }
     }
 
-    public static void startCall(String sender, String data) {
-        Map<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUICalling.SENDER, sender);
-        param.put(TUIConstants.TUICalling.PARAM_NAME_CALLMODEL, data);
-        TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_START_CALL, param);
-    }
-
 }

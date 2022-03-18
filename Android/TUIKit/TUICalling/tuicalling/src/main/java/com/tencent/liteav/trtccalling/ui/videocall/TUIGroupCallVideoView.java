@@ -4,23 +4,22 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 
 import com.blankj.utilcode.constant.PermissionConstants;
+import com.blankj.utilcode.util.CollectionUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.trtccalling.R;
-import com.tencent.liteav.trtccalling.model.TUICalling;
-import com.tencent.liteav.trtccalling.model.impl.TRTCCalling;
+import com.tencent.liteav.trtccalling.TUICalling;
+import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.impl.UserModel;
 import com.tencent.liteav.trtccalling.model.impl.base.CallingInfoManager;
 import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
@@ -53,6 +52,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
     private TextView                    mTvHangup;
     private TRTCGroupVideoLayoutManager mLayoutManagerTrtc;
     private Group                       mInvitingGroup;
+    private TextView                    mInvitedTag;
     private LinearLayout                mImgContainerLl;
     private TextView                    mTimeTv;
     private RoundCornerImageView        mSponsorAvatarImg;
@@ -68,9 +68,9 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
     /**
      * 拨号相关成员变量
      */
-    private final List<UserModel>        mCallUserInfoList          = new ArrayList<>(); // 呼叫方
+    private final List<UserModel>        mCallUserInfoList          = new ArrayList<>(); // 呼叫方保存的被叫信息
     private final Map<String, UserModel> mCallUserModelMap          = new HashMap<>();
-    private       UserModel              mSponsorUserInfo;                               // 被叫方
+    private       UserModel              mSponsorUserInfo;                               // 被叫方存储的主叫的信息
     private final List<UserModel>        mOtherInvitingUserInfoList = new ArrayList<>();
     private       boolean                mIsHandsFree               = true;
     private       boolean                mIsMuteMic                 = false;
@@ -78,8 +78,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
     private       boolean                mIsCameraOpen              = true;
     private       boolean                mIsAudioMode               = false;
     private       boolean                mIsCalledClick             = false;  //被叫方点击转换语音
-
-    private static final int MAX_SHOW_INVITING_USER = 4;
+    private       boolean                mIsInRoom                  = false;  //被叫是否已接听进房(true:已接听进房 false:未接听)
 
     private static final String TAG = "TUIGroupCallVideoView";
 
@@ -100,6 +99,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         mDialingLl = (LinearLayout) findViewById(R.id.ll_dialing);
         mLayoutManagerTrtc = (TRTCGroupVideoLayoutManager) findViewById(R.id.trtc_layout_manager);
         mInvitingGroup = (Group) findViewById(R.id.group_inviting);
+        mInvitedTag = findViewById(R.id.tv_inviting_tag);
         mImgContainerLl = (LinearLayout) findViewById(R.id.ll_img_container);
         mTimeTv = (TextView) findViewById(R.id.tv_time);
         mSponsorAvatarImg = (RoundCornerImageView) findViewById(R.id.iv_sponsor_avatar);
@@ -242,7 +242,6 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
             public void onClick(View v) {
                 mTRTCCalling.switchToAudioCall();
                 mIsCalledClick = true;
-                enableHandsFree(false);
             }
         });
     }
@@ -297,7 +296,12 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
                 if (null == layout) {
                     layout = addUserToManager(userModel);
                 }
+                layout.stopLoading();
                 loadUserInfo(userModel, layout);
+                //C2C多人通话:有被叫用户接听了通话,从被叫列表中移除
+                if (null != userModel && mOtherInvitingUserInfoList.contains(userModel)) {
+                    mOtherInvitingUserInfoList.remove(userModel);
+                }
             }
         });
     }
@@ -307,12 +311,22 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                TRTCLogger.d(TAG, "onUserLeave userId:" + userId + " , list:" + mOtherInvitingUserInfoList);
                 //1. 回收界面元素
                 mLayoutManagerTrtc.recyclerVideoCallLayout(userId);
                 //2. 删除用户model
                 UserModel userInfo = mCallUserModelMap.remove(userId);
                 if (userInfo != null) {
                     mCallUserInfoList.remove(userInfo);
+                }
+                //C2C多人通话:被叫方:如果是主叫"取消"了电话,更新已接听用户的UI显示
+                if (null != mSponsorUserInfo && userId.equals(mSponsorUserInfo.userId)) {
+                    for (UserModel model : mOtherInvitingUserInfoList) {
+                        if (null != model && !TextUtils.isEmpty(model.userId)) {
+                            //回收所有未接通用户的界面
+                            mLayoutManagerTrtc.recyclerVideoCallLayout(model.userId);
+                        }
+                    }
                 }
             }
         });
@@ -323,6 +337,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                TRTCLogger.d(TAG, "onReject: userId = " + userId + ",mCallUserModelMap " + mCallUserModelMap);
                 if (mCallUserModelMap.containsKey(userId)) {
                     // 进入拒绝环节
                     //1. 回收界面元素
@@ -331,7 +346,14 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
                     UserModel userInfo = mCallUserModelMap.remove(userId);
                     if (userInfo != null) {
                         mCallUserInfoList.remove(userInfo);
-                        ToastUtils.showLong(mContext.getString(R.string.trtccalling_toast_user_reject_call, userInfo.userName));
+                        //主叫提示"***拒绝通话",其他被叫不提示
+                        if (null == mSponsorUserInfo) {
+                            showUserToast(userId, R.string.trtccalling_toast_user_reject_call);
+                        }
+                    }
+                    if (null != userInfo && mOtherInvitingUserInfoList.contains(userInfo)) {
+                        mOtherInvitingUserInfoList.remove(userInfo);
+                        showOtherInvitingUserView();
                     }
                 }
             }
@@ -343,6 +365,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                TRTCLogger.d(TAG, "onNoResp: userId = " + userId + ",mCallUserModelMap: " + mCallUserModelMap);
                 if (mCallUserModelMap.containsKey(userId)) {
                     // 进入无响应环节
                     //1. 回收界面元素
@@ -351,7 +374,13 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
                     UserModel userInfo = mCallUserModelMap.remove(userId);
                     if (userInfo != null) {
                         mCallUserInfoList.remove(userInfo);
-                        ToastUtils.showLong(mContext.getString(R.string.trtccalling_toast_user_not_response, userInfo.userName));
+                        //用户超时,所有人提示"***无响应"
+                        showUserToast(userId, R.string.trtccalling_toast_user_not_response);
+                    }
+                    //C2C多人通话:有被叫用户超时未接听,从被叫列表中移除
+                    if (null != userInfo && mOtherInvitingUserInfoList.contains(userInfo)) {
+                        mOtherInvitingUserInfoList.remove(userInfo);
+                        showOtherInvitingUserView();
                     }
                 }
             }
@@ -360,6 +389,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
 
     @Override
     public void onLineBusy(String userId) {
+        TRTCLogger.d(TAG, "onLineBusy: userId = " + userId + ",mCallUserModelMap " + mCallUserModelMap);
         if (mCallUserModelMap.containsKey(userId)) {
             // 进入无响应环节
             //1. 回收界面元素
@@ -368,7 +398,13 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
             UserModel userInfo = mCallUserModelMap.remove(userId);
             if (userInfo != null) {
                 mCallUserInfoList.remove(userInfo);
-                ToastUtils.showLong(mContext.getString(R.string.trtccalling_toast_user_busy, userInfo.userName));
+                //用户忙线,所有人提示"***忙线"
+                showUserToast(userId, R.string.trtccalling_toast_user_busy);
+            }
+            //C2C多人通话:有被叫用户忙线中,从被叫列表中移除
+            if (null != userInfo && mOtherInvitingUserInfoList.contains(userInfo)) {
+                mOtherInvitingUserInfoList.remove(userInfo);
+                showOtherInvitingUserView();
             }
         }
     }
@@ -376,23 +412,26 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
     @Override
     public void onCallingCancel() {
         if (mSponsorUserInfo != null) {
-            ToastUtils.showLong(mContext.getString(R.string.trtccalling_toast_user_cancel_call, mSponsorUserInfo.userName));
+            showUserToast(mSponsorUserInfo.userId, R.string.trtccalling_toast_user_cancel_call);
         }
         stopCameraAndFinish();
     }
 
     @Override
     public void onCallingTimeout() {
-        if (mSponsorUserInfo != null) {
-            ToastUtils.showLong(mContext.getString(R.string.trtccalling_toast_user_timeout, mSponsorUserInfo.userName));
-        }
         stopCameraAndFinish();
     }
 
     @Override
     public void onCallEnd() {
-        if (mSponsorUserInfo != null) {
-            ToastUtils.showLong(mContext.getString(R.string.trtccalling_toast_user_end, mSponsorUserInfo.userName));
+        //最后一个用户退出时,onReject回调比onCallEnd慢，因此,主叫端判断是最后一个用户提示"***结束通话"
+        if (null == mSponsorUserInfo && mCallUserModelMap.size() == 1) {
+            for (Map.Entry<String, UserModel> entry : mCallUserModelMap.entrySet()) {
+                UserModel model = mCallUserModelMap.get(entry.getKey());
+                if (null != model) {
+                    showUserToast(model.userId, R.string.trtccalling_toast_user_end);
+                }
+            }
         }
         stopCameraAndFinish();
     }
@@ -446,9 +485,9 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
             if (mIsCalledClick && mRole == TUICalling.Role.CALLED) {
                 mTRTCCalling.accept();
             }
-            enableHandsFree(false);
+            enableHandsFree(true);
         } else {
-            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+            ToastUtils.showShort(message);
         }
     }
 
@@ -462,17 +501,11 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
      * 等待接听界面
      */
     public void showWaitingResponseView() {
-        // 展示自己的画面
+        //1. 展示自己的画面
         mLayoutManagerTrtc.setMySelfUserId(mSelfModel.userId);
-        final TRTCGroupVideoLayout videoLayout = addUserToManager(mSelfModel);
-        if (videoLayout == null) {
-            return;
-        }
-        videoLayout.setVideoAvailable(true);
-        mTRTCCalling.openCamera(true, videoLayout.getVideoView());
         visibleSponsorGroup(false);
+        //2. 展示对方的头像和蒙层
         if (null == mSponsorUserInfo) {
-            // 展示对方的头像和蒙层
             for (UserModel userModel : mOtherInvitingUserInfoList) {
                 loadUserInfo(userModel, addUserToManager(userModel));
             }
@@ -487,7 +520,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         mMuteLl.setVisibility(View.GONE);
         mSwitchCameraImg.setVisibility(View.GONE);
         mOpenCameraLl.setVisibility(View.GONE);
-        //3. 设置对应的listener
+        //设置对应的listener
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -498,7 +531,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         mDialingLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //2.接听电话
+                //接听电话
                 mTRTCCalling.accept();
                 showCallingView();
             }
@@ -508,6 +541,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
             showOtherInvitingUserView();
         }
         mTvHangup.setText(R.string.trtccalling_text_reject);
+        mInvitedTag.setText(mContext.getString(R.string.trtccalling_invite_video_call));
     }
 
     private void visibleSponsorGroup(boolean visible) {
@@ -534,11 +568,14 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         if (videoLayout != null) {
             videoLayout.setVideoAvailable(true);
         }
+        //2. 展示其他用户的画面
         for (int i = 0; i < mCallUserInfoList.size(); i++) {
             final UserModel userModel = mCallUserInfoList.get(i);
-            loadUserInfo(userModel, addUserToManager(userModel));
+            TRTCGroupVideoLayout layout = addUserToManager(userModel);
+            layout.startLoading();
+            loadUserInfo(userModel, layout);
         }
-        //2. 设置底部栏
+        //3. 设置底部栏
         mHangupLl.setVisibility(View.VISIBLE);
         mHangupLl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -552,22 +589,31 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         mMuteLl.setVisibility(View.GONE);
         mSwitchCameraImg.setVisibility(View.GONE);
         mOpenCameraLl.setVisibility(View.GONE);
-        //3. 隐藏中间他们也在界面
+        //4. 隐藏中间他们也在界面
         hideOtherInvitingUserView();
-        //4. sponsor画面也隐藏
         visibleSponsorGroup(false);
-        mSponsorUserInfo = mCallUserInfoList.get(0);
-        ImageLoader.loadImage(mContext, mSponsorAvatarImg, mSponsorUserInfo.userAvatar, R.drawable.trtccalling_ic_avatar);
+        UserModel initeeModel = mCallUserInfoList.get(0);
+        ImageLoader.loadImage(mContext, mSponsorAvatarImg, initeeModel.userAvatar, R.drawable.trtccalling_ic_avatar);
         mSponsorUserVideoTag.setText(mContext.getString(R.string.trtccalling_waiting_be_accepted));
-        mSponsorUserNameTv.setText(mSponsorUserInfo.userName);
+        mSponsorUserNameTv.setText(initeeModel.userName);
         mTvHangup.setText(R.string.trtccalling_text_hangup);
+        mInvitingGroup.setVisibility(VISIBLE);
+        mInvitedTag.setText(mContext.getString(R.string.trtccalling_waiting_be_accepted));
     }
 
     /**
      * 展示通话中的界面
      */
     public void showCallingView() {
-        //1. 蒙版消失
+        //1. 增加自己的画面
+        mLayoutManagerTrtc.setMySelfUserId(mSelfModel.userId);
+        TRTCGroupVideoLayout videoLayout = mLayoutManagerTrtc.findVideoCallLayout(mSelfModel.userId);
+        if (null == videoLayout) {
+            videoLayout = addUserToManager(mSelfModel);
+            loadUserInfo(mSelfModel, videoLayout);
+        }
+        videoLayout.setVideoAvailable(true);
+        mTRTCCalling.openCamera(true, videoLayout.getVideoView());
         visibleSponsorGroup(false);
         //2. 底部状态栏
         mHangupLl.setVisibility(View.VISIBLE);
@@ -584,8 +630,28 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
             }
         });
         showTimeCount();
-        hideOtherInvitingUserView();
         mTvHangup.setText(R.string.trtccalling_text_hangup);
+        //3. 隐藏其他未接听用户的小窗
+        hideOtherInvitingUserView();
+        //mSponsorUserInfo不为空,说明是被叫;
+        //C2C多人通话增加:自己接通后,其他用户大窗显示,未接听用户显示头像
+        if (null != mSponsorUserInfo) {
+            //被叫已接听
+            mIsInRoom = true;
+            TRTCLogger.d(TAG, "showCallingView: mCallUserModelMap = " + mCallUserModelMap);
+            for (Map.Entry<String, UserModel> entry : mCallUserModelMap.entrySet()) {
+                UserModel model = mCallUserModelMap.get(entry.getKey());
+                if (null != model && !TextUtils.isEmpty(model.userId)) {
+                    TRTCGroupVideoLayout layout = mLayoutManagerTrtc.findVideoCallLayout(model.userId);
+                    TRTCLogger.d(TAG, "showCallingView model=" + model.userId + " ,layout=" + layout);
+                    if (layout == null) {
+                        layout = addUserToManager(model);
+                        layout.startLoading();
+                    }
+                    loadUserInfo(model, layout);
+                }
+            }
+        }
     }
 
     private void showTimeCount() {
@@ -624,13 +690,16 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
     }
 
     private void showOtherInvitingUserView() {
-        if (mOtherInvitingUserInfoList == null || mOtherInvitingUserInfoList.size() == 0) {
+        if (CollectionUtils.isEmpty(mOtherInvitingUserInfoList)) {
+            mImgContainerLl.removeAllViews();
+            mInvitingGroup.setVisibility(mIsInRoom ? GONE : VISIBLE);
             return;
         }
         mInvitingGroup.setVisibility(View.VISIBLE);
+        mImgContainerLl.removeAllViews();
         int squareWidth = getResources().getDimensionPixelOffset(R.dimen.trtccalling_small_image_size);
         int leftMargin = getResources().getDimensionPixelOffset(R.dimen.trtccalling_small_image_left_margin);
-        for (int index = 0; index < mOtherInvitingUserInfoList.size() && index < MAX_SHOW_INVITING_USER; index++) {
+        for (int index = 0; index < mOtherInvitingUserInfoList.size(); index++) {
             final UserModel userInfo = mOtherInvitingUserInfoList.get(index);
             final ImageView imageView = new ImageView(mContext);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(squareWidth, squareWidth);
@@ -648,7 +717,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ImageLoader.loadImage(mContext, imageView, userInfo.userAvatar, R.drawable.trtccalling_groupcall_wait_background);
+                            ImageLoader.loadImage(mContext, imageView, userInfo.userAvatar, R.drawable.trtccalling_ic_avatar);
                         }
                     });
                 }
@@ -664,7 +733,6 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
     private void hideOtherInvitingUserView() {
         mInvitingGroup.setVisibility(View.GONE);
     }
-
 
     private void showRemoteUserView() {
 
@@ -690,15 +758,16 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         if (layout == null) {
             return null;
         }
-        Log.d(TAG, String.format("addUserToManager, userId=%s, userName=%s, userAvatar=%s", userInfo.userId, userInfo.userName, userInfo.userAvatar));
-        layout.setUserName(userInfo.userName);
-        ImageLoader.loadImage(mContext, layout.getHeadImg(), userInfo.userAvatar, R.drawable.trtccalling_groupcall_wait_background);
+        TRTCLogger.d(TAG, String.format("addUserToManager, userId=%s, userName=%s, userAvatar=%s", userInfo.userId,
+                userInfo.userName, userInfo.userAvatar));
+        loadUserInfo(userInfo, layout);
         return layout;
     }
 
+    //从IM查询用户信息并更新布局显示
     private void loadUserInfo(final UserModel userModel, final TRTCGroupVideoLayout layout) {
         if (null == userModel || null == layout) {
-            Log.e(TAG, "loadUserInfo error: null == userModel || null == layout");
+            TRTCLogger.e(TAG, "loadUserInfo error: null == userModel || null == layout");
             return;
         }
         CallingInfoManager.getInstance().getUserInfoByUserId(userModel.userId, new CallingInfoManager.UserCallback() {
@@ -710,7 +779,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
                     @Override
                     public void run() {
                         layout.setUserName(userModel.userName);
-                        ImageLoader.loadImage(mContext, layout.getHeadImg(), userModel.userAvatar, R.drawable.trtccalling_groupcall_wait_background);
+                        ImageLoader.loadImage(mContext, layout.getHeadImg(), userModel.userAvatar, R.drawable.trtccalling_ic_avatar);
                     }
                 });
             }
@@ -763,6 +832,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         mOtherInvitingUserInfoList.clear();
         mCallUserInfoList.clear();
         mCallUserModelMap.clear();
+        mIsInRoom = false;
     }
 
 }

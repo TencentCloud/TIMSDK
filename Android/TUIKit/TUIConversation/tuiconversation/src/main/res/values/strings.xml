@@ -20,30 +20,27 @@
     <string name="load_msg_error">Failed to load message</string>
 
     // 云通信
-    <string name="chat_top">Sticky on Top</string>
+    <string name="chat_top">Pin</string>
     <string name="chat_delete">Delete Chat</string>
-    <string name="quit_chat_top">Remove from Top</string>
-    <string name="clear_conversation_message">Clear messages</string>
+    <string name="quit_chat_top">Unpin</string>
+    <string name="clear_conversation_message">Clear Messages</string>
 
     <string name="forward_select_new_chat">Create new chat</string>
     <string name="forward_select_from_contact">Select from contact</string>
     <string name="titlebar_cancle">Cancel</string>
     <string name="titlebar_close">Close</string>
-    <string name="forward_alert_title">Are you sure to forward the message?</string>
+    <string name="forward_alert_title">Are you sure you want to forward?</string>
 
     <string name="forward_list_label">Recent Conversations</string>
 
     <string name="forward_extra">[Chat Record]</string>
     <string name="revoke_tips_you">You recalled a message.</string>
     <string name="revoke_tips">recalled a message.</string>
-    <string name="revoke_tips_other">The other user recalled a message.</string>
-
-    <string name="cancel">Cancel</string>
-    <string name="sure">OK</string>
+    <string name="revoke_tips_other">A message is recalled.</string>
 
     <string name="ui_at_all">[@All]</string>
-    <string name="ui_at_me">[You were mentioned]</string>
-    <string name="ui_at_all_me">[@All][You were mentioned]</string>
+    <string name="ui_at_me">[Someone @ me]</string>
+    <string name="ui_at_all_me">[@All][Someone @ me]</string>
     <string name="drafts">[Drafts]</string>
     <string name="custom_msg">[Custom Messages]</string>
 
@@ -63,8 +60,8 @@
     <string name="cancle_group_manager">\'s admin status is terminated.</string>
     <string name="modify_group_name_is">Change the group name to</string>
     <string name="modify_notice">Change the group notice to</string>
-    <string name="modify_shut_up_all">shut up all group members</string>
-    <string name="modify_cancel_shut_up_all">cancel to shut up all group members</string>
+    <string name="modify_shut_up_all">Mute All</string>
+    <string name="modify_cancel_shut_up_all">Unmute All</string>
     <string name="move_owner">Transfer group ownership to</string>
     <string name="modify_group_avatar">changed the group profile photo.</string>
     <string name="banned">is blocked from posting</string>

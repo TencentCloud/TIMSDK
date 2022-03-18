@@ -169,7 +169,7 @@ public class GroupInfoProvider {
         V2TIMManager.getGroupManager().setGroupInfo(v2TIMGroupInfo, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
-                TUIGroupLog.i(TAG, "modifyGroupInfo faild tyep| value| code| desc " + value + ":" + type + ":" + code + ":" + ErrorMessageConverter.convertIMError(code, desc));
+                TUIGroupLog.i(TAG, "modifyGroupInfo failed type| value| code| desc " + value + ":" + type + ":" + code + ":" + ErrorMessageConverter.convertIMError(code, desc));
                 TUIGroupUtils.callbackOnError(callBack, TAG, code, desc);
             }
 

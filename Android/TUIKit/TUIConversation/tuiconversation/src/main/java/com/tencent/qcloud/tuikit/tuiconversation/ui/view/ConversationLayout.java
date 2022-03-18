@@ -71,7 +71,6 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         if (searchExtension != null) {
             View searchView = (View) searchExtension.get(TUIConstants.TUIConversation.SEARCH_VIEW);
             if (searchView != null) {
-                adapter.setShowSearch(true);
                 adapter.setSearchView(searchView);
             }
         }

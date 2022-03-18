@@ -4,23 +4,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Window;
-import android.view.WindowManager;
 
-import com.tencent.liteav.trtccalling.model.TUICalling;
+import com.tencent.liteav.trtccalling.TUICalling;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
+import com.tencent.liteav.trtccalling.ui.common.Utils;
 
 public class TRTCVideoCallActivity extends Activity {
 
     private BaseTUICallView mCallView;
-    private Window          mWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mWindow = this.getWindow();
-        mWindow.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Utils.setScreenLockParams(getWindow());
 
         Intent intent = getIntent();
         TUICalling.Role role = (TUICalling.Role) intent.getExtras().get(TUICallingConstants.PARAM_NAME_ROLE);
@@ -57,12 +54,6 @@ public class TRTCVideoCallActivity extends Activity {
         } else {
             return userIDs.length >= 1 || isFromGroup;
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override

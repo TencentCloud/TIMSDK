@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -74,6 +73,7 @@ public class SplashActivity extends BaseLightActivity {
 
     private void startLogin() {
         Intent intent = new Intent(SplashActivity.this, LoginForDevActivity.class);
+        intent.putExtras(getIntent());
         startActivity(intent);
         finish();
     }
@@ -81,20 +81,9 @@ public class SplashActivity extends BaseLightActivity {
     private void startMain() {
         DemoLog.i(TAG, "MainActivity" );
 
-        OfflineMessageBean bean = OfflineMessageDispatcher.parseOfflineMessage(getIntent());
-        if (bean != null) {
-            DemoLog.i(TAG, "startMain offlinePush bean is " + bean);
-            OfflineMessageDispatcher.redirect(bean);
-
-            DemoApplication.instance().initPush();
-            DemoApplication.instance().bindUserID(UserInfo.getInstance().getUserId());
-
-            finish();
-            return;
-        }
-
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         intent.putExtras(getIntent());
+        intent.setData(getIntent().getData());
         startActivity(intent);
         finish();
     }

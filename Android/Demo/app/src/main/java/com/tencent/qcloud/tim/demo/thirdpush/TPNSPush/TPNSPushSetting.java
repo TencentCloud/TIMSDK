@@ -3,6 +3,7 @@ package com.tencent.qcloud.tim.demo.thirdpush.TPNSPush;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.heytap.msp.push.HeytapPushManager;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
@@ -26,15 +27,6 @@ public class TPNSPushSetting implements PushSettingInterface {
         // 关闭 TPNS SDK 拉活其他 app 的功能
         // ref: https://cloud.tencent.com/document/product/548/36674#.E5.A6.82.E4.BD.95.E5.85.B3.E9.97.AD-tpns-.E7.9A.84.E4.BF.9D.E6.B4.BB.E5.8A.9F.E8.83.BD.EF.BC.9F
         XGPushConfig.enablePullUpOtherApp(DemoApplication.instance(), false);
-
-        // tpns sdk一个bug，后续版本可以去掉
-        // setAccessId 可能会触发了当前版本一个已知bug，调用 setAccessId 且调用时机靠前的话，会重置TPNS SDK内缓存，导致TPNS token 刷新。当前版本可以通过set前先get 一次来规避。
-        XGPushConfig.getAccessId(DemoApplication.instance());
-
-        // 设置接入点, 注意：集群的切换将需要下次启动app生效。
-        XGApiConfig.setServerSuffix(DemoApplication.instance(), PrivateConstants.TPNS_SERVER_SUFFIX);
-        XGPushConfig.setAccessId(DemoApplication.instance(), PrivateConstants.TPNS_ACCESS_ID);
-        XGPushConfig.setAccessKey(DemoApplication.instance(), PrivateConstants.TPNS_ACCESS_KEY);
 
         // TPNS SDK 注册
         prepareTPNSRegister();
@@ -122,6 +114,8 @@ public class TPNSPushSetting implements PushSettingInterface {
         // 重要：开启厂商通道注册
         XGPushConfig.enableOtherPush(context, true);
 
+        XGPushConfig.setUseFcmFirst(context, false);
+
         // 注册 TPNS 推送服务
         XGPushManager.registerPush(context, new XGIOperateCallback() {
             @Override
@@ -139,6 +133,9 @@ public class TPNSPushSetting implements PushSettingInterface {
                     String otherPushToken = XGPushConfig.getOtherPushToken(context);
                     DemoLog.w(TAG, "otherPushToken token: " + otherPushToken);
                 }
+
+                // OPPO 手机默认关闭通知，需要申请
+                HeytapPushManager.requestNotificationPermission();
             }
 
             @Override

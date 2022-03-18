@@ -12,24 +12,20 @@
         android:id="@+id/img_head"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="98dp"
-        app:radius="15dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:scaleType="centerCrop"
-        android:src="@drawable/trtccalling_wait_background" />
-
-    <FrameLayout
-        android:id="@+id/fl_shade"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
         android:layout_marginTop="98dp"
-        android:src="@drawable/trtccalling_wait_background"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:scaleType="centerCrop"
+        android:src="@drawable/trtccalling_ic_avatar"
+        app:radius="15dp" />
 
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/img_loading"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="98dp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -37,15 +33,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/img_head"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold"
-        android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:textAlignment="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
         android:background="@android:color/transparent"
+        android:textAlignment="center"
         android:textColor="@color/trtccalling_color_black"
-        android:visibility="visible"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 
     <ImageView
         android:id="@+id/iv_audio_input"
@@ -55,7 +51,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="4dp"
-        android:visibility="gone"
-        android:background="@drawable/trtccalling_ic_mutemic_enable" />
+        android:background="@drawable/trtccalling_ic_mutemic_enable"
+        android:visibility="gone" />
 
 </merge>

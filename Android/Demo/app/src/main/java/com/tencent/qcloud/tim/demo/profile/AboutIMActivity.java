@@ -24,6 +24,9 @@ public class AboutIMActivity extends BaseLightActivity implements View.OnClickLi
     private LineControllerView userAgreementLv;
     private LineControllerView statementLv;
     private LineControllerView aboutIMLv;
+    private LineControllerView cancelAccountLv;
+    private LineControllerView selfInfomationCollectionLv;
+    private LineControllerView thirdPartSharedLv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,9 @@ public class AboutIMActivity extends BaseLightActivity implements View.OnClickLi
         userAgreementLv = findViewById(R.id.about_user_agreement_lv);
         statementLv = findViewById(R.id.about_statement_lv);
         aboutIMLv = findViewById(R.id.about_im_lv);
-
+        cancelAccountLv = findViewById(R.id.cancel_account_lv);
+        selfInfomationCollectionLv = findViewById(R.id.self_infomation_collection_lv);
+        thirdPartSharedLv = findViewById(R.id.third_part_shared_lv);
         setupViews();
     }
 
@@ -51,16 +56,19 @@ public class AboutIMActivity extends BaseLightActivity implements View.OnClickLi
         userAgreementLv.setOnClickListener(this);
         statementLv.setOnClickListener(this);
         aboutIMLv.setOnClickListener(this);
+        cancelAccountLv.setOnClickListener(this);
+        selfInfomationCollectionLv.setOnClickListener(this);
+        thirdPartSharedLv.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         if (v == privacyLv) {
             String title = getResources().getString(R.string.im_privacy);
-            startWebUrl(title, Constants.IM_PRIVACY_PROTECTION);
+            startWebUrl(Constants.IM_PRIVACY_PROTECTION);
         } else if (v == userAgreementLv) {
             String title = getResources().getString(R.string.im_user_agreement);
-            startWebUrl(title, Constants.IM_USER_AGREEMENT);
+            startWebUrl(Constants.IM_USER_AGREEMENT);
         } else if (v == statementLv) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle(this.getString(R.string.im_statement))
@@ -76,16 +84,25 @@ public class AboutIMActivity extends BaseLightActivity implements View.OnClickLi
             mDialogStatement.show();
         } else if (v == aboutIMLv) {
             String title = getResources().getString(R.string.about_im);
-            startWebUrl(title, Constants.IM_ABOUT);
+            startWebUrl(Constants.IM_ABOUT);
         } else if (v == titleBarLayout.getLeftGroup()) {
             finish();
+        } else if (v == cancelAccountLv) {
+        } else if (v == selfInfomationCollectionLv) {
+            String title = getResources().getString(R.string.self_infomation_collection_list);
+            startWebUrl(Constants.IM_SELF_INFORMATION_COLLECTION);
+        } else if (v == thirdPartSharedLv) {
+            String title = getResources().getString(R.string.third_part_shared_list);
+            startWebUrl(Constants.IM_THIRD_SHARED);
         }
     }
 
-    private void startWebUrl(String title, String url) {
-        Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra("title", title);
-        intent.putExtra("url", url);
+    private void startWebUrl(String url) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri contentUrl = Uri.parse(url);
+        intent.setData(contentUrl);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

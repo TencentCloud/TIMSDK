@@ -122,6 +122,9 @@ public class OEMPushSetting implements PushSettingInterface {
             // oppo接入文档要求，应用必须要调用init(...)接口，才能执行后续操作。
             HeytapPushManager.init(context, false);
             HeytapPushManager.register(context, PrivateConstants.OPPO_PUSH_APPKEY, PrivateConstants.OPPO_PUSH_APPSECRET, oppo);
+
+            // OPPO 手机默认关闭通知，需要申请
+            HeytapPushManager.requestNotificationPermission();
         } else if (BrandUtil.isGoogleServiceSupport()) {
             // 谷歌推送
         }

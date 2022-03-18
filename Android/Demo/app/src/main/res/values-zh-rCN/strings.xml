@@ -1,11 +1,7 @@
 <resources>
     <string name="app_name">云通信IM</string>
 
-    <string name="welcome_tip">欢迎加入云通信IM大家庭！</string>
-    <string name="test_custom_action">自定义消息</string>
-
     <string name="test_custom_message">查看详情>></string>
-
 
     // 登录相关
     <string name="account">用户名</string>
@@ -20,7 +16,7 @@
     <string name="demo_login_verification_code_label">验证码</string>
     <string name="demo_search">搜索</string>
 
-    <string name="login_title">登录·即时通信</string>
+    <string name="login_title">腾讯云即时通信IM</string>
     <string name="login_sub_title">体验群组聊天，音视频对话等 IM 功能</string>
     <string name="input_number">请输入手机号</string>
     <string name="input_verification">请输入短信验证码</string>
@@ -48,7 +44,17 @@
     <string name="modify_birthday">生日</string>
     <string name="modify_gender">性别</string>
     <string name="modify_signature">个性签名</string>
+    <string name="demo_no_status">暂无个性签名</string>
     <string name="modify_account">账号</string>
+    <string name="cancel_account">注销账号</string>
+    <string name="cancel_account_alert_tip">您确定要注销账号吗？</string>
+    <string name="cancel_account_tip">注销后，您将无法使用当前账号，相关数据也将删除无法找回。当前账号 %s </string>
+    <string name="cancel_account_error_msg">注销失败,当前账号未查到token或手机号，请使用手机号登录。</string>
+    <string name="cancel_account_successful">注销成功</string>
+
+    <string name="self_infomation_collection_list">个人信息收集清单</string>
+    <string name="third_part_shared_list">第三方信息共享清单</string>
+
 
     <string name="modify_theme">切换皮肤</string>
     <string name="light_theme">轻快</string>
@@ -63,6 +69,7 @@
 
     <string name="demo_about_sdk_version">SDK版本</string>
     <string name="demo_about_im">关于</string>
+    <string name="demo_contact_us">联系我们</string>
 
     <string name="demo_self_detail_gender_male">男</string>
     <string name="demo_self_detail_gender_female">女</string>
@@ -116,8 +123,7 @@
     <string name="permission_tip">未全部授权，部分功能可能无法使用！</string>
 
     <string name="logout_tip">您确定要退出登录么？</string>
-    <string name="sure">确定</string>
-    <string name="cancle">取消</string>
+
     <string name="online_fail">请求网络失败</string>
     <string name="online">在线</string>
     <string name="unknow_error">未知错误</string>
@@ -132,18 +138,22 @@
     <string name="login_password_tips">1~16个字符（字母+数字）</string>
     <string name="login_user_tips">字母开头，4~24个字母+数字</string>
 
-    <string name="login_agree_content">我已阅读并同意《隐私条例》和《用户协议》。</string>
-    <string name="login_agree_privacy_regulations">《隐私条例》</string>
+    <string name="login_agree_privacy_regulations">《隐私政策》</string>
     <string name="login_agree_user_agreement">《用户协议》</string>
-    <string name="im_privacy">隐私条例</string>
+    <string name="login_agree_self_infomation_collection_list">《个人信息收集清单》</string>
+    <string name="login_agree_third_part_shared_list">《第三方信息共享清单》</string>
+
+    <string name="im_privacy">隐私政策</string>
     <string name="im_statement">免责声明</string>
     <string name="im_user_agreement">用户协议</string>
     <string name="im_statement_content">IM（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。</string>
     <string name="im_privacy_tips">请先阅读并同意协议</string>
+    <string name="demo_im_privacy_dialog_tips">欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。\n\n请您点击 《用户协议》、《隐私政策》、《个人信息收集清单》和《第三方信息共享清单》并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！</string>
+    <string name="demo_im_privacy_agree">同意并继续</string>
+    <string name="demo_im_privacy_refuse_and_exit">不同意，退出</string>
 
     <string name="get_verify_code_error">获取验证码错误，请刷新重试！(%d)</string>
 
-    <string name="cancel">取消</string>
     <string name="modify_group_name">修改群名称</string>
     <string name="input_tip">没有输入昵称，请重新填写</string>
     <string name="call_time_out"> 通话超时</string>

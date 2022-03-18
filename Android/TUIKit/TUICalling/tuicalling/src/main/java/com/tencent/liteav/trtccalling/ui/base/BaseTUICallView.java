@@ -1,18 +1,22 @@
 package com.tencent.liteav.trtccalling.ui.base;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.trtccalling.R;
+import com.tencent.liteav.trtccalling.TUICalling;
+import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
-import com.tencent.liteav.trtccalling.model.TUICalling;
-import com.tencent.liteav.trtccalling.model.impl.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.impl.UserModel;
+import com.tencent.liteav.trtccalling.model.impl.base.CallingInfoManager;
+import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -24,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class BaseTUICallView extends FrameLayout implements TRTCCallingDelegate {
+    private static final String TAG = "BaseTUICallView";
 
     protected final Context         mContext;
     protected final TRTCCalling     mTRTCCalling;
@@ -69,6 +74,14 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         mTRTCCalling.addDelegate(this);
+        if (TUICalling.Role.CALLED == mRole && !mTRTCCalling.isValidInvite()) {
+            TRTCLogger.w(TAG, "this invitation is invalid");
+            onCallingCancel();
+        }
+        //开启界面后,清除通知栏消息
+        NotificationManager notificationManager =
+                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 
     @Override
@@ -245,4 +258,26 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
                 notification);
     }
 
+    public void showUserToast(String userId, int msgId) {
+        if (TextUtils.isEmpty(userId)) {
+            TRTCLogger.d(TAG, "showUserToast userId is empty");
+            return;
+        }
+        CallingInfoManager.getInstance().getUserInfoByUserId(userId,
+                new CallingInfoManager.UserCallback() {
+                    @Override
+                    public void onSuccess(UserModel model) {
+                        if (null == model || TextUtils.isEmpty(model.userName)) {
+                            ToastUtils.showLong(mContext.getString(msgId, userId));
+                        } else {
+                            ToastUtils.showLong(mContext.getString(msgId, model.userName));
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(int code, String msg) {
+                        ToastUtils.showLong(mContext.getString(msgId, userId));
+                    }
+                });
+    }
 }

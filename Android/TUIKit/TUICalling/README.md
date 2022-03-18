@@ -4,7 +4,7 @@
 
 ```
 TUICalling
-├─ App          // 主面板，各种场景入口
+├─ App          // 主面板，音视频通话场景入口
 ├─ Debug        // 调试相关
 └─ Source       // 实时语音/视频通话业务逻辑
 ```
@@ -42,10 +42,10 @@ TUICalling
 
 ### 集成 SDK
 
-您可以选择使用 JCenter 自动加载的方式，或者手动下载 aar 再将其导入到您当前的工程项目中，工程默认采用方法一配置。
+您可以选择使用`mavenCentral`自动加载的方式，或者手动下载 aar 再将其导入到您当前的工程项目中，工程默认采用方法一配置。
 
 #### 方法一：自动加载（aar）
-实时音视频（TRTC） SDK 已经发布到 JCenter 库，您可以通过配置 gradle 自动下载更新。
+实时音视频（TRTC） SDK 已经发布到`mavenCentral`库，您可以通过配置 gradle 自动下载更新。
 只需要用 Android Studio 打开需要集成 SDK 的工程，然后通过简单的三个步骤修改 App/build.gradle 文件，就可以完成 SDK 集成：
 
 1. 在 dependencies 中添加 SDK 的依赖。
@@ -79,7 +79,7 @@ defaultConfig {
 
 
 #### 方法二：手动下载（aar）
-如果您的网络连接 JCenter 有问题，您也可以手动下载 SDK 集成到工程里：
+如果您的网络连接`mavenCentral`有问题，您也可以手动下载 SDK 集成到工程里：
 
 1. 下载最新版本 [实时音视频 SDK](https://liteav.sdk.qcloud.com/download/latest/TXLiteAVSDK_TRTC_Android_latest.zip)。
 2. 将下载到的 aar 文件拷贝到工程的 **App/libs** 目录下。
@@ -126,21 +126,21 @@ defaultConfig {
 
 步骤1、输入用户名(<font color=red>请确保用户名唯一性，不能与其他用户重复</font>)，如图示：
 
-<img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/user_a.png" width="320"/>
+<img src="https://qcloudimg.tencent-cloud.cn/raw/ab18c3dee2fa825b14ff19fc727a161b.png" width="320"/>
 
-步骤2、输入要拨打的用户名，点击搜索，如下图示：
+步骤2、根据不同场景及人数需求，进入不同的场景界面，如图示：
+
+<img src="https://qcloudimg.tencent-cloud.cn/raw/011897b6601bac5ba27641a9b120647a.png" width="320">
+
+步骤3、输入要拨打的用户名，点击搜索，然后点击呼叫，如图示：（<font color=red>请确保被叫方保持在应用内，否则可能会拨打失败</font>）；
 
 <img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/tuicalling_user.png" width="320"/>
-
-步骤3、点击呼叫，选择拨打**语音通话**或者**视频通话**（<font color=red>请确保被叫方保持在应用内，否则可能会拨打失败</font>）；
-
-<img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/tuicalling_call.png" width="320"/>
 
 #### 用户 B
 
 步骤1、输入用户名(<font color=red>请确保用户名唯一性，不能与其他用户重复</font>)，如图示：
 
-<img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/user_b.png" width="320"/>
+<img src="https://qcloudimg.tencent-cloud.cn/raw/3c4a59146e1a325918bf4fa46aaa70af.png" width="320"/>
 
 步骤2、进入主页，等待接听来电；
 
@@ -170,7 +170,8 @@ TRTC SDK 6.6 版本（2019年08月）开始启用新的签名算法 HMAC-SHA256�
 
 #### 2. 两台手机同时运行工程，为什么看不到彼此的画面？
 请确保两台手机在运行工程时使用的是不同的 UserID，TRTC 不支持同一个 UserID （除非 SDKAppID 不同）在两个终端同时使用。
-<img src="https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/login_userid.png" width="720" height="790"/>
+
+<img src="https://qcloudimg.tencent-cloud.cn/raw/43e70445b4eaa33da89851d2bb78ec4a.png" width="320"/>
 
 #### 3. 防火墙有什么限制？
 由于 SDK 使用 UDP 协议进行音视频传输，所以在对 UDP 有拦截的办公网络下无法使用。如遇到类似问题，请参考 [应对公司防火墙限制](https://cloud.tencent.com/document/product/647/34399) 排查并解决。

@@ -36,9 +36,6 @@
     <string name="revoke_tips">撤回了一条消息</string>
     <string name="revoke_tips_other">对方撤回了一条消息</string>
 
-    <string name="cancel">取消</string>
-    <string name="sure">确定</string>
-
     <string name="ui_at_all">[@所有人]</string>
     <string name="ui_at_me">[有人@我]</string>
     <string name="ui_at_all_me">[@所有人][有人@我]</string>

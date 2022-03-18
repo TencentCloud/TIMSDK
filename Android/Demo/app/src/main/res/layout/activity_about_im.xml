@@ -42,11 +42,35 @@
         app:name="@string/im_statement" />
 
     <com.tencent.qcloud.tuicore.component.LineControllerView
+        android:id="@+id/self_infomation_collection_lv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_profile_item_height"
+        app:canNav="true"
+        app:isTop="true"
+        app:name="@string/self_infomation_collection_list" />
+
+    <com.tencent.qcloud.tuicore.component.LineControllerView
+        android:id="@+id/third_part_shared_lv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_profile_item_height"
+        app:canNav="true"
+        app:isTop="true"
+        app:name="@string/third_part_shared_list" />
+
+    <com.tencent.qcloud.tuicore.component.LineControllerView
+        android:id="@+id/cancel_account_lv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_profile_item_height"
+        app:canNav="true"
+        app:isTop="true"
+        app:name="@string/cancel_account" />
+
+    <com.tencent.qcloud.tuicore.component.LineControllerView
         android:id="@+id/about_im_lv"
         android:layout_width="match_parent"
         android:layout_height="@dimen/demo_profile_item_height"
         app:canNav="true"
         app:isTop="true"
-        app:name="@string/demo_about_im" />
+        app:name="@string/demo_contact_us" />
 
 </LinearLayout>

@@ -8,14 +8,14 @@
     <string name="more_group_label">More Group Chat</string>
     <string name="more_conversation_label">More Conversations</string>
     <string name="chat_record_reference">Chat Record</string>
-    <string name="chat_records">Chat Records</string>
+    <string name="chat_records">message(s)</string>
     <string name="nick_name">nick name: </string>
-    <string name="include_group_id">contain group ID: </string>
-    <string name="include_group_member">contain group member: </string>
+    <string name="include_group_id">Contains group ID: </string>
+    <string name="include_group_member">Contains group members: </string>
     <string name="ui_at_all">[@All]</string>
-    <string name="ui_at_me">[You were mentioned]</string>
-    <string name="ui_at_all_me">[@All][You were mentioned]</string>
-    <string name="open_file_tips">Select the app to open this file</string>
+    <string name="ui_at_me">[Someone @ me]</string>
+    <string name="ui_at_all_me">[@All][Someone @ me]</string>
+    <string name="open_file_tips">Select an app to open the file</string>
     <string name="date_year_short">YYYY</string>
     <string name="date_month_short">MM</string>
     <string name="date_day_short">DD</string>
@@ -32,7 +32,7 @@
     <string name="forward_extra">[Chat Record]</string>
     <string name="revoke_tips_you">You recalled a message.</string>
     <string name="revoke_tips">recalled a message.</string>
-    <string name="revoke_tips_other">The other user recalled a message.</string>
+    <string name="revoke_tips_other">A message is recalled.</string>
     <string name="create_group">Create Group</string>
     <string name="etc">, etc.</string>
     <string name="join_group">Join Group</string>
@@ -66,6 +66,6 @@
     <string name="stop_group_call">End Group Call</string>
     <string name="stop_call_tip">Call ended. Duration:</string>
     <string name="reject_calls">Decline Call</string>
-    <string name="modify_shut_up_all">shut up all group members</string>
-    <string name="modify_cancel_shut_up_all">cancel to shut up all group members</string>
+    <string name="modify_shut_up_all">Mute All</string>
+    <string name="modify_cancel_shut_up_all">Unmute All</string>
 </resources>

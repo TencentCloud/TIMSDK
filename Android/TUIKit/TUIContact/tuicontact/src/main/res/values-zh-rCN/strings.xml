@@ -52,6 +52,8 @@
     <string name="profile_delete_friend">删除好友</string>
 
     <string name="contact_signature_tag">个性签名：</string>
+    <string name="contact_no_status">暂无个性签名</string>
+
     <string name="contact_account_tag">ID：</string>
     <string name="contact_group_type_tag">群类型：</string>
 
@@ -64,9 +66,6 @@
     <string name="refuse">拒绝</string>
     <string name="accepted">已同意</string>
     <string name="refused">已拒绝</string>
-
-    <string name="cancel">取消</string>
-    <string name="sure">确定</string>
 
     <string name="chat_to_top">置顶聊天</string>
 
