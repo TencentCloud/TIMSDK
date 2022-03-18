@@ -99,7 +99,7 @@
 
     TUICommonTextCellData *signatureData = [TUICommonTextCellData new];
     signatureData.key = NSLocalizedString(@"ProfileSignature", nil); // @"个性签名";
-    signatureData.value = self.profile.selfSignature.length ? self.profile.selfSignature : NSLocalizedString(@"no_personal_signature", nil);
+    signatureData.value = self.profile.selfSignature.length ? self.profile.selfSignature : @"";
     signatureData.showAccessory = YES;
     signatureData.cselector = @selector(didSelectChangeSignature);
 

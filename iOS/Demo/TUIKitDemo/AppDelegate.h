@@ -24,7 +24,6 @@
 
 @property (nonatomic, strong) NSString *groupID;
 @property (nonatomic, strong) NSString *userID;
-@property (nonatomic, strong) V2TIMSignalingInfo *signalingInfo;
 
 @property (nonatomic, assign) NSUInteger unReadCount;
 @property (nonatomic, strong) TUIContactViewDataProvider *contactDataProvider;

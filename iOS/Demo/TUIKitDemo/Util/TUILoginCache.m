@@ -12,6 +12,9 @@
 #define Key_UserInfo_Pwd   @"Key_UserInfo_Pwd"
 #define Key_UserInfo_Sig   @"Key_UserInfo_Sig"
 
+#define Key_UserInfo_Phone @"Key_UserInfo_Phone"
+#define Key_UserInfo_Token @"Key_UserInfo_Token"
+
 @implementation TUILoginCache
 
 + (instancetype)sharedInstance
@@ -30,7 +33,21 @@
     [[NSUserDefaults standardUserDefaults] setObject:user forKey:Key_UserInfo_User];
     [[NSUserDefaults standardUserDefaults] setObject:sig forKey:Key_UserInfo_Sig];
 }
+- (void)saveExt:(NSDictionary *)dic {
+    if ([dic isKindOfClass:[NSDictionary class]]) {
+        NSString *phone = dic[@"phone"] ?dic[@"phone"]:@"";
+        NSString *token = dic[@"token"] ?dic[@"token"]:@"";
 
+        if (phone.length>0) {
+            [[NSUserDefaults standardUserDefaults] setObject:phone forKey:Key_UserInfo_Phone];
+        }
+        if (token.length>0) {
+            [[NSUserDefaults standardUserDefaults] setObject:token forKey:Key_UserInfo_Token];
+        }
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+    }
+}
 - (void)logout
 {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:Key_UserInfo_Sig];

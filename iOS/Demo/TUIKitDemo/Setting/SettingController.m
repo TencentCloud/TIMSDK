@@ -49,6 +49,8 @@
 #import "V2FriendTestViewController.h"
 #endif
 
+#import "TUIAboutUsViewController.h"
+
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2
 #define SHEET_SEX    3
@@ -341,16 +343,8 @@
 
 - (void)didSelectAbout
 {
-    if (@available(iOS 10.0, *)) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://cloud.tencent.com/product/im"]
-                                           options:@{} completionHandler:^(BOOL success) {
-                                               if (success) {
-                                                   NSLog(@"Opened url");
-                                               }
-                                           }];
-    } else {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://cloud.tencent.com/product/im"]];
-    }
+    TUIAboutUsViewController *vc = [[TUIAboutUsViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
     [TCUtil report:Action_Clickaboutsdk actionSub:@"" code:@(0) msg:@"clickaboutsdk"];
 }
 

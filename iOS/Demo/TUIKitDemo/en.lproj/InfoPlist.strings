@@ -1,0 +1,14 @@
+/* 
+  InfoPlist.strings
+  TUIKitDemo
+
+  Created by wyl on 2022/2/11.
+  Copyright © 2022 Tencent. All rights reserved.
+*/
+
+
+"NSCameraUsageDescription"  =  "To take photos, record videos, and make video calls, allow IM to access your camera.";
+"NSMicrophoneUsageDescription" = "To send voice messages, record videos, and make voice and video calls, allow IM to access your microphone.";
+"NSPhotoLibraryAddUsageDescription" = "Allow IM to access your album to send images and videos.";
+"NSPhotoLibraryUsageDescription" = "Allow IM to access your album to send images and videos.";
+"CFBundleDisplayName" = "Tencent IM";
