@@ -37,7 +37,7 @@
 {
     _userModel = model;
     _selectedMark.image = isSelect ? [UIImage imageNamed:TUIGroupImagePath(@"ic_selected")] : [UIImage imageNamed:TUIGroupImagePath(@"ic_unselect")];
-    [_userImg sd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholderImage:[UIImage imageNamed:TUICoreImagePath(@"default_c2c_head")]];
+    [_userImg sd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholderImage:TUIConfig.defaultConfig.defaultAvatarImage];
     _nameLabel.text = model.name;
 }
 

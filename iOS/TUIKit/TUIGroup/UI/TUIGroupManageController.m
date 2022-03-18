@@ -61,6 +61,11 @@
     }
     TUISettingAdminController *vc = [[TUISettingAdminController alloc] init];
     vc.groupID = self.groupID;
+    __weak typeof(self)weakSelf = self;
+    vc.settingAdminDissmissCallBack = ^{
+        [weakSelf.dataProvider updateMuteMembersFilterAdmins];
+        [weakSelf.tableView reloadData];
+    };
     [self.navigationController pushViewController:vc animated:YES];
 }
 

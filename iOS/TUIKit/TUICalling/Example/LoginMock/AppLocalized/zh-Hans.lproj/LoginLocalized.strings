@@ -1,0 +1,19 @@
+/* 
+  LoginLocalized.strings
+  TRTCVoiceRoomApp
+
+  Created by adams on 2021/5/8.
+  
+*/
+
+"Demo.TRTC.Login.welcome" = "欢迎使用腾讯云实时音视频";
+"V2.Live.LinkMicNew.enterphonenumber" = "请输入用户名";
+"V2.Live.LinkMicNew.enterverificationcode" = "请输入验证码";
+"V2.Live.LinkMicNew.getverificationcode" = "获取验证码";
+"V2.Live.LoginMock.login" = "登录";
+"App.PortalViewController.loginimfailed" = "登录IM失败";
+"V2.Live.LinkMicNew.loginsuccess" = "登录成功";
+"Demo.TRTC.Login.regist" = "注册";
+"Demo.TRTC.Login.enterusername" = "请输入用户昵称";
+"Demo.TRTC.Login.limit20count" = "仅限中文、字母、数字和下划线，2-20个字";
+"Demo.TRTC.Login.registsuccess" = "注册成功";

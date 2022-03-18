@@ -5,6 +5,9 @@
   Created by harvy on 2020/10/9.
   
 */
+/***************************** 日期格式化 Start *************************/
+"YesterdayDateFormat" = "HH:mma";       // 英文是 HH:mma 不要动
+/***************************** 日期格式化 End ***************************/
 
 "TUIKitTipsMostSelectTextFormat" = "Select %ld at most";
 
@@ -30,7 +33,6 @@
 "Yesterday" = "Yesterday";
 "am" = "AM";
 "pm" = "PM";
-"YesterdayDateFormat" = "HH:mma";       // 英文是 HH:mma 不要动
 
 "Read" = "Read";
 "Unread" = "Unread";
@@ -51,7 +53,7 @@
 "Have-been-sent" = "Sent";
 "View-the-original" = "View Full Image";
 
-"TUIKitWelcome" = "Welcome to join the Tencent Cloud Communications family!";
+"TUIKitWelcome" = "Welcome to Tencent Instant Messaging!";
 "TUIKitMicCamerAuthTips" = "Enable mic and camera permissions";
 "TUIKitMicAuth" = "Enable mic permission";
 "TUIKitTipsConfirmResendMessage" = "Resend this message? ";
@@ -68,10 +70,7 @@
 "TUIKitInputHoldToTalk" = "Hold to Talk";
 "TUIKitInputReleaseToSend" = "Release to End";
 "TUIKitInputReleaseToCancel" = "Release to Cancel";
-"TUIKitInputNoMicTitle" = "Failed to access mic";
-"TUIKitInputNoMicTips"  = "Enable mic permission to send voice messages";
-"TUIKitInputNoMicOperateLater" = "Later";
-"TUIKitInputNoMicOperateEnable" = "Enable";
+
 "TUIKitInputBlankMessageTitle" = "Unable to send blank message";
 "TUIKitInputWillFinishRecordInSeconds" = "Recording will end in %ld seconds.";
 "TUIKitInputRecordSlideToCancel" = "Slide up to cancel";
@@ -88,7 +87,7 @@
 "TUIKitGroupProfileInviteJoin" = "Invite";
 "TUIKitGroupProfileAutoApproval" = "Auto Approval";
 "TUIKitGroupProfileAlias" = "My Alias in Group";
-"TUIKitGroupProfileMessageDoNotDisturb" = "Message Do Not Disturb";
+"TUIKitGroupProfileMessageDoNotDisturb" = "Mute Notifications";
 "TUIKitGroupProfileStickyOnTop" = "Sticky on Top";
 "TUIKitGroupProfileDeleteAndExit" = "Delete and Leave";
 "TUIKitGroupProfileDissolve" = "Disband Group";
@@ -157,9 +156,9 @@
 
 "TUIKitMoreCamera" = "Take Photo";
 "TUIKitMorePhoto" = "Album";
-"TUIKitMoreVideo" = "Video";
+"TUIKitMoreVideo" = "Record Video";
 "TUIKitMoreVideoCaptureDurationTip" = "record time is too short";
-"TUIKitMoreFile" = "Files";
+"TUIKitMoreFile" = "File";
 "TUIKitMoreVideoCall" = "Video Call";
 "TUIKitMoreVoiceCall" = "Voice Call";
 "TUIKitMoreGroupLive" = "Group Live";
@@ -185,7 +184,7 @@
 "TUIKitCommunity" = "Community";
 
 "TUIKitContactsNewFriends" = "New Contacts";
-"TUIKitContactsGroupChats" = "Group Chat";
+"TUIKitContactsGroupChats" = "Group Chats";
 "TUIKitContactsBlackList" = "Blocked List";
 "TUIKitAddFriendSourceFormat" = "Source: %@";
 "TUIKitFriendApplicationApproved" = "Friend request accepted";
@@ -506,87 +505,105 @@
 "Revoke" = "Revoke";
 "Resend" = "Resend";
 "Search" = "Search";
-"TUIKitCallMicCamAuthTips" = "Please granted the prillage to mic and camera";
-"TUIKitCallMicAuthTips" = "Please granted the prillage to mic";
-"TUIKitMessageTipsSureToResend" = "Sure to re-send message?";
+"TUIKitCallMicCamAuthTips" = "Allow access to your microphone and camera";
+"TUIKitCallMicAuthTips" = "Allow access to your microphone";
+"TUIKitMessageTipsSureToResend" = "Are you sure you want to resend the message?";
 
 // 消息转发
-"TUIKitRelayNoMessageTips" = "Please select one message at least";
-"TUIKitRelayRecentMessages" = "Recent messages";
-"TUIKitRelayChatHistory" = "History";
-"TUIKitRelaySepcialForbid" = "Audio messages and other special messages cannot be forwarded.";
-"TUIKitRelayConfirmForward" = "Forward to?";
-"TUIKitRelayOneByOneForward" = "One-by-one forward";
-"TUIKitRelayCombineForwad" = "Combine and forward";
-"TUIKitRelayGroupChatHistory" = "Chat history for group";
-"TUIKitRelayChatHistoryForSomebodyFormat" = "Chat history for %@ and %@";
-"TUIKitRelayErrorForwardFormat" = "@\"Forward error, code:%d, desc:%@\"";
-"TUIKitRelayTargetCreateNewChat" = "Create new chat";
-"TUIKitRelayTargetSelectFromContacts" = "Select from Contacts";
-"TUIKitRelayTargetCrateGroupError" = "Create group error";
-"TUIKitRelayTargetNoneTips" = "Contact or conversation cannot null";
-"TUIKitRelayLayerLimitTips" = "Sorry，the message has over-limit layers";
-"TUIKitRelayCompatibleText" = "Unsupported merged message, please upgrade to the latest version.";
-"TUIKitRelayUnsupportForward" = "Messages that failed to be sent do not support forwarding";
-"TUIKitRelayOneByOnyOverLimit" = "Too many forwarded messages, one by one forwarding is not currently supported";
+"TUIKitRelayNoMessageTips" = "Select messages";
+"TUIKitRelayRecentMessages" = "Recent Chats";
+"TUIKitRelayChatHistory" = "Chat History";
+"TUIKitRelaySepcialForbid" = "Cannot forward some selected messages (e.g., voice messages).";
+"TUIKitRelayConfirmForward" = "Are you sure you want to forward the messages?";
+"TUIKitRelayOneByOneForward" = "One-by-One Forward";
+"TUIKitRelayCombineForwad" = "Combine and Forward";
+"TUIKitRelayGroupChatHistory" = "Group Chat History";
+"TUIKitRelayChatHistoryForSomebodyFormat" = "Chat History of %@ and %@";
+"TUIKitRelayErrorForwardFormat" = "@\"Failed to forward: code:%d, desc:%@\"";
+"TUIKitRelayTargetCreateNewChat" = "New Chat";
+"TUIKitRelayTargetSelectFromContacts" = "Select from contacts";
+"TUIKitRelayTargetCrateGroupError" = "Failed to create the group.";
+"TUIKitRelayTargetNoneTips" = "Select a contact or conversation";
+"TUIKitRelayLayerLimitTips" = "The current nesting level exceeds the limit.";
+"TUIKitRelayCompatibleText" = "Combine and Forward is not available. Upgrade to the latest version first.";
+"TUIKitRelayUnsupportForward" = "Unable to forward failed messages.";
+"TUIKitRelayOneByOnyOverLimit" = "Unable to forward the messages one by one because there are too many messages.";
 
 // 消息搜索
-"TUIKitSearchItemHeaderTitleContact" = "Contact";
-"TUIKitSearchItemFooterTitleContact" = "More contacts";
-"TUIKitSearchItemHeaderTitleGroup" = "Group";
-"TUIKitSearchItemFooterTitleGroup" = "More Groups";
-"TUIkitSearchItemHeaderTitleChatHistory" = "Chat history";
-"TUIKitSearchItemFooterTitleChatHistory" = "More chat history";
-"TUIKitSearchResultMatchFormat" = "Included:%@";
-"TUIKitSearchResultMatchGroupIDFormat" = "Inclued group ID:%@";
-"TUIKitSearchResultMatchGroupMember" = "Inclued group member:";
-"TUIKitSearchResultDisplayChatHistoryCountFormat" = "%zd of chat history";
+"TUIKitSearchItemHeaderTitleContact" = "Contacts";
+"TUIKitSearchItemFooterTitleContact" = "More";
+"TUIKitSearchItemHeaderTitleGroup" = "Group Chat";
+"TUIKitSearchItemFooterTitleGroup" = "More";
+"TUIkitSearchItemHeaderTitleChatHistory" = "Chat History";
+"TUIKitSearchItemFooterTitleChatHistory" = "More";
+"TUIKitSearchResultMatchFormat" = "Contains: %@";
+"TUIKitSearchResultMatchGroupIDFormat" = "Contains group ID: %@";
+"TUIKitSearchResultMatchGroupMember" = "Contains group members:";
+"TUIKitSearchResultDisplayChatHistoryCountFormat" = "%zd message(s)";
 /***************************** 消息转发 & 消息搜索 *************************/
 
 
 /***************************** 消息回复 & 换肤 *************************/
 "Reply" = "Reply";
-"TUIKitReplyMessageNotFoundOriginMessage" = "Unable to locate the original message";
-"TUIKitClearAllChatHistory" = "Clear chat history";
-"TUIKitClearAllChatHistoryTips" = "Sure to clear all chat history?";
-"Discline" = "Discline";
+"TUIKitReplyMessageNotFoundOriginMessage" = "Unable to locate the original message.";
+"TUIKitClearAllChatHistory" = "Clear Chat History";
+"TUIKitClearAllChatHistoryTips" = "Are you sure you want to clear the chat history?";
+"Discline" = "Decline";
 "Copied" = "Copied";
-"ConfirmDeleteMessage" = "Sure to delete selected messages";
-"TUIKitAddFriend" = "Add friend";
+"ConfirmDeleteMessage" = "Delete now";
+"TUIKitAddFriend" = "Add Contact";
 "TUIKitAddGroup" = "Add Group";
-"TUIKitSearchUserID" = "Search user ID";
-"TUIKitSearchGroupID" = "Search group ID";
-"TUIKitNoSelfSignature" = "What's Up not set";
-"TUIKitSelfSignatureFormat" = "Signature:%@";
-"TUIKitGroupProfileManage" = "Group manage";
-"TUIKitGroupManageShutupAllTips" = "After the prohibition is opened, only group leaders and administrators are allowed to speak.";
-"TUIKitGroupManageAdminSetting" = "Setting administrators";
-"TUIKitGroupManageShutAll" = "Blocked from posting";
-"TUIKitGroupAddShutupMember" = "Add Member of blocked from posting";
-"TUIKitGroupOwner" = "Group owner";
-"TUIKitGroupManagerFormat" = "Group manager(%zd/%zd)";
-"TUIKitSetShutupAllFormat" = "%@ mute all";
-"TUIKitCancelShutupAllFormat" = "%@ cancel mute all";
-"TUIKitGroupNotice" = "Group notice";
-"TUIKitGroupNoticeNull" = "Group notice not set";
+"TUIKitSearchUserID" = "Search by user ID";
+"TUIKitSearchGroupID" = "Search by group ID";
+"TUIKitNoSelfSignature" = "No status";
+"TUIKitSelfSignatureFormat" = "Status: %@";
+"TUIKitGroupProfileManage" = "Manage";
+"TUIKitGroupManageShutupAllTips" = "When Mute All is enabled, only the group owner and admins are allowed to send messages.";
+"TUIKitGroupManageAdminSetting" = "Set as Admin";
+"TUIKitGroupManageShutAll" = "Mute All";
+"TUIKitGroupAddShutupMember" = "Add members to mute";
+"TUIKitGroupOwner" = "Group Owner";
+"TUIKitGroupManagerFormat" = "Admin (%zd/%zd)";
+"TUIKitSetShutupAllFormat" = "%@ enabled Mute All";
+"TUIKitCancelShutupAllFormat" = "%@ disabled Mute All";
+"TUIKitGroupNotice" = "Group Notice";
+"TUIKitGroupNoticeNull" = "No group notice";
 "Edit" = "Edit";
-"Done" = "Done";
-"TUIKitAddContactMyUserIDFormat" = "My identifier: %@";
-"TUIKitAddUserNoDataTips" = "The user not exists";
-"TUIKitAddGroupNoDataTips" = "The group not exists";
+"Done" = "OK";
+"TUIKitAddContactMyUserIDFormat" = "My User ID: %@";
+"TUIKitAddUserNoDataTips" = "This user does not exist.";
+"TUIKitAddGroupNoDataTips" = "This group chat does not exist.";
 /***************************** 消息回复 & 换肤 *************************/
 
+
 /***************************** 视频、图片加载 & 保存 *************************/
-"TUIKitVideoTranscoding" = "video transcoding...";
-"TUIKitVideoDownloading" = "video downloading...";
-"TUIKitVideoSavedSuccess" = "video saved successfully";
-"TUIKitVideoSavedFailed" = "video save failed";
-"TUIKitPictureSavedSuccess" = "picture saved successfully";
-"TUIKitPictureSavedFailed" = "picture saved failed";
+"TUIKitVideoTranscoding" = "Transcoding video...";
+"TUIKitVideoDownloading" = "Downloading video...";
+"TUIKitVideoSavedSuccess" = "Video saved successfully.";
+"TUIKitVideoSavedFailed" = "Failed to save video.";
+"TUIKitPictureSavedSuccess" = "Image saved successfully.";
+"TUIKitPictureSavedFailed" = "Failed to save image.";
 /***************************** 视频、图片加载 & 保存 *************************/
 
-"TUIKitGroupSetAdminsForbidden" = "The current type of group chat does not support setting administrators";
-"TUIKitGroupAddAdmins" = "Add administrators";
-"TUIKitGroupAddMemberOfBlockedForbidden" = "The current group chat does not support mute specified group members";
+"TUIKitGroupSetAdminsForbidden" = "Unable to set an admin for this type of group chat.";
+"TUIKitGroupAddAdmins" = "Add Admin";
+"TUIKitGroupAddMemberOfBlockedForbidden" = "Unable to mute specified members for this type of group chat.";
+
 
 "TUIKitNotDownload"= "Not download";
+"TUIKitInputNoCameraTitle" = "No access to camera";
+"TUIKitInputNoCameraTips"  = "Unable to take photos, record videos, or make video calls. Click Authorize Now to allow access to your camera.";
+"TUIKitInputNoCameraOperateLater" = "Later";
+"TUIKitInputNoCameraOperateEnable" = "Authorize Now";
+
+
+"TUIKitInputNoMicTitle" = "No access to microphone";
+"TUIKitInputNoMicTips"  = "Unable to send voice messages, record videos, or make voice and video calls. Click Authorize Now to allow access to your microphone.";
+"TUIKitInputNoMicOperateLater" = "Later";
+"TUIKitInputNoMicOperateEnable" = "Authorize Now";
+
+
+"TUIKitInputNoPhotoTitle" = "No access to images";
+"TUIKitInputNoPhotoTips"  = "Unable to view or select images in a chat. Click Authorize Now to allow access to your images.";
+"TUIKitInputNoPhotoOperateLater" = "Later";
+"TUIKitInputNoPhotoerateEnable" = "Authorize Now";

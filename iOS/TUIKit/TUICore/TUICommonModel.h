@@ -53,6 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUICommonCellData : NSObject
 @property (strong) NSString *reuseId;
 @property (nonatomic, assign) SEL cselector;
+@property (nonatomic, strong) NSDictionary *ext;
 - (CGFloat)heightOfWidth:(CGFloat)width;
 @end
 

@@ -1,0 +1,22 @@
+//
+//  MainLocalized.strings
+//  TUICallingApp
+//
+//  Created by noah on 2021/12/27.
+//
+
+"Audio Call" = "语音通话";
+"Video Call" = "视频通话";
+"App.PortalViewController.highqualityspeech" = "48kHz高音质语音，60%丢包可正常语音，领先行业的3A处理，杜绝回声和啸叫";
+"App.PortalViewController.supports1080PUHDvideo" = "支持1080P超清视频，50%丢包率可正常视频，自备美颜特效，带来高品质视频通话体验";
+"App.PortalViewController.loginimfailed" = "登录IM失败";
+"App.PortalViewController.videocalling" = "视频通话";
+"App.PortalViewController.audiocalling" = "语音通话";
+"App.PortalViewController.groupvideocalling" = "多人视频通话";
+"App.PortalViewController.groupaudiocalling" = "多人语音通话";
+"App.PortalViewController.areyousureloginout" = "确定要退出登录吗？";
+"App.PortalViewController.cancel" = "取消";
+"App.PortalViewController.determine" = "确定";
+"Demo.TRTC.Portal.Home.audiocalldesc" = "丢包率70%仍可正常语音通话";
+"Demo.TRTC.Portal.Home.videocalldesc" = "丢包率50%仍可正常视频通话";
+"Demo.TRTC.Portal.Home.logout" = "退出登录";

@@ -72,5 +72,10 @@ typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
  */
 @property(nonatomic, assign) BOOL enableToast;
 
+/**
+ * 是否开启自定义铃音（仅针对 Android 有效）
+ */
+@property(nonatomic, assign) BOOL enableCustomRing;
+
 - (void)setSceneOptimizParams:(NSString *)path;
 @end
