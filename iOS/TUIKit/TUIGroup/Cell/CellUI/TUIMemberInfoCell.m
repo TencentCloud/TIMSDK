@@ -40,7 +40,7 @@
 {
     _data = data;
     
-    UIImage *defaultImage = [UIImage imageNamed:TUICoreImagePath(@"default_c2c_head")];
+    UIImage *defaultImage = TUIConfig.defaultConfig.defaultAvatarImage;
     [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:data.avatarUrl] placeholderImage:data.avatar?:defaultImage];
     self.nameLabel.text = data.name;
     

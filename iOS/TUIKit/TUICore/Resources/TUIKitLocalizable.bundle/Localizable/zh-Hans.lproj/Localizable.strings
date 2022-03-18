@@ -6,6 +6,10 @@
   
 */
 
+/***************************** 日期格式化 Start *************************/
+"YesterdayDateFormat" = "aHH:mm";
+/***************************** 日期格式化 End *************************/
+
 "TUIKitTipsMostSelectTextFormat" = "最多选择%ld个";
 
 "Confirm" = "确定";
@@ -30,7 +34,6 @@
 "Yesterday" = "昨天";
 "am" = "上午";
 "pm" = "下午";
-"YesterdayDateFormat" = "aHH:mm";
 
 "Read" = "已读";
 "Unread" = "未读";
@@ -68,10 +71,6 @@
 "TUIKitInputHoldToTalk" = "按住 说话";
 "TUIKitInputReleaseToSend" = "松开 结束";
 "TUIKitInputReleaseToCancel" = "松开 取消";
-"TUIKitInputNoMicTitle" = "无法访问麦克风";
-"TUIKitInputNoMicTips"  = "开启麦克风权限才能发送语音消息";
-"TUIKitInputNoMicOperateLater" = "以后再说";
-"TUIKitInputNoMicOperateEnable" = "去开启";
 "TUIKitInputBlankMessageTitle" = "不能发送空白消息";
 "TUIKitInputWillFinishRecordInSeconds" = "将在 %ld 秒后结束录制";
 "TUIKitInputRecordSlideToCancel" = "手指上滑，取消发送";
@@ -591,3 +590,19 @@
 "TUIKitGroupAddMemberOfBlockedForbidden" = "当前类型群聊暂不支持禁言指定群成员";
 
 "TUIKitNotDownload"= "未下载";
+
+"TUIKitInputNoCameraTitle" = "相机权限未开启";
+"TUIKitInputNoCameraTips"  = "无法使用拍摄图片视频、视频通话等功能，点击\"去开启\"打开相机权限";
+"TUIKitInputNoCameraOperateLater" = "以后再说";
+"TUIKitInputNoCameraOperateEnable" = "去开启";
+
+"TUIKitInputNoMicTitle" = "麦克风权限未开启";
+"TUIKitInputNoMicTips"  = "无法使用发送语音消息、拍摄视频、音视频通话等功能，点击\"去开启\"打开麦克风权限";
+"TUIKitInputNoMicOperateLater" = "以后再说";
+"TUIKitInputNoMicOperateEnable" = "去开启";
+
+"TUIKitInputNoPhotoTitle" = "图片权限未开启";
+"TUIKitInputNoPhotoTips"  = "无法使用聊天功能中的图片查看、选择等功能，点击\"去开启\"打开图片权限";
+"TUIKitInputNoPhotoOperateLater" = "以后再说";
+"TUIKitInputNoPhotoerateEnable" = "去开启";
+

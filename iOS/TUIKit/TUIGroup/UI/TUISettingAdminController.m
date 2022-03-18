@@ -22,6 +22,11 @@
 
 @implementation TUISettingAdminController
 
+- (void)dealloc {
+    if (self.settingAdminDissmissCallBack) {
+        self.settingAdminDissmissCallBack();
+    }
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     

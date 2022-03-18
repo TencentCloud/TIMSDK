@@ -1,0 +1,67 @@
+PODS:
+  - Alamofire (5.4.4)
+  - Kingfisher (7.1.1)
+  - Masonry (1.1.0)
+  - ReactiveObjC (3.1.1)
+  - SDWebImage (5.12.3):
+    - SDWebImage/Core (= 5.12.3)
+  - SDWebImage/Core (5.12.3)
+  - SnapKit (5.0.1)
+  - Toast-Swift (5.0.1)
+  - TUICalling/TRTC (9.5):
+    - Masonry
+    - TUICore
+    - TXLiteAVSDK_TRTC
+  - TUICore (6.0.1992):
+    - ReactiveObjC
+    - SDWebImage
+    - TXIMSDK_Plus_iOS (= 6.0.1975)
+  - TXAppBasic (1.0.0)
+  - TXIMSDK_Plus_iOS (6.0.1975)
+  - TXLiteAVSDK_TRTC (9.3.10765)
+
+DEPENDENCIES:
+  - Alamofire
+  - Kingfisher
+  - SnapKit
+  - Toast-Swift
+  - TUICalling/TRTC (from `../`)
+  - TXAppBasic (from `./TXAppBasic/`)
+  - TXLiteAVSDK_TRTC
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - Kingfisher
+    - Masonry
+    - ReactiveObjC
+    - SDWebImage
+    - SnapKit
+    - Toast-Swift
+    - TUICore
+    - TXIMSDK_Plus_iOS
+    - TXLiteAVSDK_TRTC
+
+EXTERNAL SOURCES:
+  TUICalling:
+    :path: "../"
+  TXAppBasic:
+    :path: "./TXAppBasic/"
+
+SPEC CHECKSUMS:
+  Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
+  Kingfisher: f738f9c4a3415823b8e2985d10aa2d6a9f37bc4d
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
+  SDWebImage: 53179a2dba77246efa8a9b85f5c5b21f8f43e38f
+  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
+  TUICalling: ec9ebbb298e6291695940ee5fe038b4484c01208
+  TUICore: addee8e37417b986fad60d582555763ff153a6ae
+  TXAppBasic: f72fd658cb2cec20f0368158752b82226cb6cdec
+  TXIMSDK_Plus_iOS: b4938e8a26865ddf81fcff413236d99f6fbae39c
+  TXLiteAVSDK_TRTC: a383e8a7a5bee76d99e10802ceb94908b0de8e33
+
+PODFILE CHECKSUM: 348a2aa7723699143c8f4bc15ab2e46a1fd136a9
+
+COCOAPODS: 1.10.1
