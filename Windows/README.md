@@ -1,5 +1,4 @@
-## (English Click [here](#readme_en))
-<a name="readme_cn"></a>
+## (English Click [here](./README_EN.md))
 
 - Windows 快速开始 [集成 SDK](https://cloud.tencent.com/document/product/269/33489) 和 [跑通 demo](https://cloud.tencent.com/document/product/269/33488)。
 
