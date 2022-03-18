@@ -1,0 +1,16 @@
+/* 
+  InfoPlist.strings
+  TUIKitDemo
+
+  Created by wyl on 2022/2/11.
+  Copyright © 2022 Tencent. All rights reserved.
+*/
+
+"NSCameraUsageDescription"  =  "
+您需要授予云通信 IM 相机权限，以正常使用拍摄图片视频、视频通话等功能。";
+"NSMicrophoneUsageDescription" = "您需要授予云通信 IM 麦克风权限，以正常使用发送语音消息、拍摄视频、音视频通话等功能。";
+"NSPhotoLibraryAddUsageDescription" = "想访问您的相册
+需要授予云通信 IM 相册读写权限，以正常使用图片、视频发送能力。";
+"NSPhotoLibraryUsageDescription" = "想访问您的相册
+需要授予云通信 IM 相册读写权限，以正常使用图片、视频发送能力。";
+"CFBundleDisplayName" = "云通信IM";

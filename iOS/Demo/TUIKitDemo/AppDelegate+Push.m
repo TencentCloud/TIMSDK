@@ -74,7 +74,6 @@
     }
     
     [self onReceiveNormalMessageOfflinePush];
-    [self onReceiveGroupCallOfflinePush];
     [self setupTotalUnreadCount];
 }
 
@@ -107,35 +106,7 @@
     }
     // action : 2 音视频通话推送
     else if ([action intValue] == APNs_Business_Call) {
-        // 单聊中的音视频邀请推送不需处理，APP 启动后，TUIkit 会自动处理
-        if ([chatType intValue] == 1) {   //C2C
-            return;
-        }
-        // 内容
-        NSDictionary *content = [TCUtil jsonSring2Dictionary:entity[@"content"]];
-        if (!content) {
-            return;
-        }
-        UInt64 sendTime = [entity[@"sendTime"] integerValue];
-        uint32_t timeout = [content[@"timeout"] intValue];
-        UInt64 curTime = [[V2TIMManager sharedInstance] getServerTime];
-        if (curTime - sendTime > timeout) {
-            [TUITool makeToast:@"通话接收超时"];
-            return;
-        }
-        self.signalingInfo = [[V2TIMSignalingInfo alloc] init];
-        self.signalingInfo.actionType = (SignalingActionType)[content[@"action"] intValue];
-        self.signalingInfo.inviteID = content[@"call_id"];
-        self.signalingInfo.inviter = entity[@"sender"];
-        self.signalingInfo.inviteeList = content[@"invited_list"];
-        self.signalingInfo.groupID = content[@"group_id"];
-        self.signalingInfo.timeout = timeout;
-        self.signalingInfo.data = [TCUtil dictionary2JsonStr:@{@"room_id" : content[@"room_id"],
-                                                               @"version" : content[@"version"],
-                                                               @"call_type" : content[@"call_type"]}];
-        if ([[V2TIMManager sharedInstance] getLoginStatus] == V2TIM_STATUS_LOGINED) {
-            [self onReceiveGroupCallOfflinePush];
-        }
+        // 如果是音视频通话，无需单独处理，TUIKit (TUICalling 内部会自动处理音视频通话)
     }
 }
 
@@ -168,15 +139,6 @@
             weakSelf.userID = nil;
         }
     });
-}
-
-- (void)onReceiveGroupCallOfflinePush
-{
-    NSLog(@"[PUSH] %s, signalingInfo:%@", __func__, self.signalingInfo);
-    if (self.signalingInfo) {
-        [[TUIKit sharedInstance] onReceiveGroupCallAPNs:self.signalingInfo];
-        self.signalingInfo = nil;
-    }
 }
 
 #pragma mark - 未读数相关

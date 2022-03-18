@@ -20,6 +20,7 @@ typedef void (^loginBlock) (NSString *user, NSUInteger appId, NSString *userSig)
 - (void)saveLogin:(NSString *)user
         withAppId:(NSUInteger)appId
       withUserSig:(NSString *)sig;
+- (void)saveExt:(NSDictionary *)dic;
 @end
 
 NS_ASSUME_NONNULL_END

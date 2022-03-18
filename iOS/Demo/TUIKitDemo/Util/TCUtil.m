@@ -390,4 +390,52 @@ static const NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRS
     return randomString;
 }
 
++ (void)openLinkWithURL:(NSURL *)url {
+    if (@available(iOS 10.0, *)) {
+        [[UIApplication sharedApplication] openURL:url
+                                           options:@{}
+                                 completionHandler:^(BOOL success) {
+            if (success) {
+                NSLog(@"Opened url");
+            }
+        }];
+    } else {
+        [[UIApplication sharedApplication] openURL:url];
+    }
+}
+BOOL isFirstLaunch(void) {
+    static NSInteger first = -1;
+    if (first!=-1) {
+        return (first == 0 ? YES:NO);
+    }
+    
+    first = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kFirstLaunch"] integerValue];
+    [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"kFirstLaunch"];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    });
+    
+    return (first == 0 ? YES:NO);
+}
+
+BOOL isFirstLaunchToday(void) {
+    static BOOL isFirstLaunchToday;
+    NSDate *now = [NSDate date];
+    NSDate *agoDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"nowDate"];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+
+    NSString *agoDateString = [dateFormatter stringFromDate:agoDate];
+    NSString *nowDateString = [dateFormatter stringFromDate:now];
+   if([agoDateString isEqualToString:nowDateString]) {
+       isFirstLaunchToday = NO;
+    }else{
+        isFirstLaunchToday = YES;
+        NSDate *nowDate = [NSDate date];
+        [[NSUserDefaults standardUserDefaults] setObject:nowDate forKey:@"nowDate"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    return isFirstLaunchToday;
+}
 @end
