@@ -59,6 +59,9 @@
 #define Action_Sub_Modifygender    @"modifygender"     //修改性别
 #define Action_Sub_Modifyallowtype @"modifyallowtype"  //修改好友申请
 
+#define IS_NOT_EMPTY_NSSTRING(__X__)            (__X__ && [__X__ isKindOfClass:[NSString class]] && ![__X__ isEqualToString:@""])
+
+
 @interface TCUtil : NSObject
 
 + (NSData *)dictionary2JsonData:(NSDictionary *)dict;
@@ -85,5 +88,10 @@
 /// @param len length
 + (NSString *) randomStringWithLength: (int) len;
 
+//返回是否第一次安装客户端
+BOOL isFirstLaunch(void);
+//返回是否是当天首次启动
+BOOL isFirstLaunchToday(void);
++ (void)openLinkWithURL:(NSURL *)url;
 @end
 

@@ -20,6 +20,7 @@ Pod::Spec.new do |spec|
   spec.source = { :http => 'https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/tuikit/6.1.2155/ios/TUIChat.zip'}
   spec.dependency 'TUICore','6.1.2155'
   spec.source_files = '**/TUIChat/**/*.{h,m,mm}'
+  spec.vendored_libraries = ['**/TUIChat/VoiceConvert/*.a']
   spec.resource = [
       '**/TUIChat/Resources/*.bundle'
   ]

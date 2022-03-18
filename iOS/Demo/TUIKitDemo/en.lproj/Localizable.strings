@@ -33,7 +33,7 @@
 "None" = "None";
 
 "confirm_log_out" = "Leave now?";
-"no_personal_signature" = "What's Up not set";
+"no_personal_signature" = "No status";
 "no_set" = "Not set";
 "please_fill_in_verification_information" = "Enter verification information";
 "send_success" = "Sent";
@@ -88,17 +88,17 @@
 "ProfilePhoto" = "Profile Photo";
 "ProfileName"  = "Name";
 "ProfileAccount" = "Account";
-"ProfileSignature" = "What's Up";
+"ProfileSignature" = "Status";
 "ProfileGender" = "Gender";
-"ProfileEditName" = "Edit Name";
-"ProfileEditNameDesc" = "Only for chinese, charactors, numbers and underline.";
-"ProfileEditSignture" = "Edit What's Up";
-"ProfileEditGender" = "Edit Gender";
-"ProfileEditAlia" = "Edit Alias";
+"ProfileEditName" = "Name";
+"ProfileEditNameDesc" = "Only letters, digits, underscores, and Chinese characters.";
+"ProfileEditSignture" = "Status";
+"ProfileEditGender" = "Gender";
+"ProfileEditAlia" = "Alias";
 "ProfileDetails" = "Details";
 "ProfileAlia" = "Alias";
 "ProfileBlocked" = "Block";
-"ProfileMessageDoNotDisturb" = "Message Do Not Disturb";
+"ProfileMessageDoNotDisturb" = "Mute Notifications";
 "ProfileStickyonTop" = "Sticky on Top";
 "ProfileSendMessages" = "Send Message";
 "ProfileDeleteFirend" = "Delete Friend";
@@ -193,4 +193,29 @@
 "ThemeNameLivey" = "Lively";
 "ThemeNameDark" = "Dark";
 "ThemeNameSystem" = "System";
+
+"TUIKitAboutUsSDKVersion" = "SDK Version";
+"TUIKitAboutUsPrivacyRegulations" = "Privacy Policy";
+"TUIKitAboutUsUserAgreement" = "User Agreement";
+"TUIKitAboutUsDisclaimer" = "Disclaimer";
+"TUIKitAboutUsPersonalInformationCollectionList" = "Personal Information Collected";
+"TUIKitAboutUs3PartySharingList" = "Information Shared with Third Parties";
+"TUIKitAboutUsCloseAccount" = "Cancel Account";
+"TUIKitAboutUsContactUs" = "Contact Us";
+"TUIKitAboutUsDisclaimerText" = "IM (\"this product\") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, the audio and video interactions of this product are archived throughout the entire audio and video interactions. Any pornography, abusive, violent, and politically related content is strictly prohibited during use.";
+"TUIKitAboutUsCloseAccountDescribe" =  "After canceling this account, you will be unable to use it, and related data will be permanently deleted. Current account:%@";
+"TUIKitAboutUsCloseAccountAlterMsg" = "Are you sure you want to cancel this account?";
+"TUIKitAboutUsCloseAccountAlterAction1" = "Confirm";
+"TUIKitAboutUsCloseAccountError1" = "Cancellation failed. No token or mobile number associated with the current account is detected. Please log in with your mobile number.";
+"TUIKitAboutUsCloseAccountSuccessful" = "Canceled";
+
+
+"TUIPrivateProtocolAlertMsg" = "Welcome to Tencent Cloud Instant Messaging. To protect your personal information, we have updated the \"Privacy Policy\", involving improving the specific contents and purposes of collecting user information, and adding third-party SDKs.\n\n Please carefully read the \"User Agreement\",\"Privacy Policy\",\"Personal Information Collected\" and \"Information Shared with Third Parties\", and tap Agree and Continue to use our products and services if you agree to them.";
+"TUIPrivateProtocolHighlight1" = "\"User Agreement\"";
+"TUIPrivateProtocolHighlight2" = "\"Privacy Policy\"";
+"TUIPrivateProtocolHighlight3" = "\"Personal Information Collected\"";
+"TUIPrivateProtocolHighlight4" = "\"Information Shared with Third Parties\"";
+
+"TUIPrivateProtocolAlertActionAgree" = "Agree and Continue";
+"TUIPrivateProtocolAlertActionDisagree" = "Disagree and Exit";
 

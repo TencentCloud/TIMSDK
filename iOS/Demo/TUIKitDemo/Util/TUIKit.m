@@ -158,4 +158,5 @@
 - (NSString *)nickName {
     return [TUILogin getNickName];
 }
+
 @end
