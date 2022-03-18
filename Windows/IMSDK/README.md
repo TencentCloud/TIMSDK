@@ -1,5 +1,4 @@
-## (English Click [here](#readme_en))
-<a name="readme_cn"></a>
+简体中文 | [English](./README_EN.md)
 
 # 跨平台库 （Windows）
 
@@ -14,22 +13,3 @@
 [集成SDK](https://cloud.tencent.com/document/product/269/33489)
 
 [概述](https://cloud.tencent.com/document/product/269/33490)
-
-------------------------------
-## (中文版本请参看[这里](#readme_cn))
-<a name="readme_en"></a>
-
-# Cross-Platform Library (Windows)
-
-## Download Links
-
-[Latest C API download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2155/ImSDK_Windows_C_6.1.2155.zip)
-
-[Latest C++ API download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2155/ImSDK_Windows_CPP_6.1.2155.zip)
-
-## TIMSDK for Windows
-
-[SDK Integration](https://intl.cloud.tencent.com/document/product/1047/34310)
-
-[Overview](https://intl.cloud.tencent.com/document/product/1047/34304)
-
