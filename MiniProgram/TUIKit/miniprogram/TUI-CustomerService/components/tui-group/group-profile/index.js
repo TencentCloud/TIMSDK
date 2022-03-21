@@ -271,6 +271,11 @@ Component({
             groupMemberProfile: imResponse.data.memberList,
             memberCount: this.data.memberCount + 1,
           });
+          if (this.data.memberCount > 3) {
+            this.setData({
+              showMore: true,
+            });
+          }
         });
       }
       if (event === 2) { // 2是有成员退群
@@ -282,6 +287,11 @@ Component({
             groupMemberProfile: imResponse.data.memberList,
             memberCount: this.data.memberCount - 1,
           });
+          if (this.data.memberCount <= 3) {
+            this.setData({
+              showMore: false,
+            });
+          }
         });
       }
     },

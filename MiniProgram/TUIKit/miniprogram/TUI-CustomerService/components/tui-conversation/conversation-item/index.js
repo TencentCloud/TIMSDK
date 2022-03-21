@@ -1,5 +1,6 @@
 import { caculateTimeago } from '../../base/common';
 // eslint-disable-next-line no-undef
+// eslint-disable-next-line no-undef
 const app = getApp();
 // eslint-disable-next-line no-undef
 Component({
@@ -15,6 +16,8 @@ Component({
           conversationName: this.getConversationName(conversation),
           setConversationAvatar: this.setConversationAvatar(conversation),
         });
+        this.setMuteIcon(conversation);
+        this.showMuteIconImg(conversation);
         this.$updateTimeAgo(conversation);
         this.setPinName(conversation.isPinned);
       },
@@ -31,7 +34,6 @@ Component({
       },
     },
   },
-
   /**
    * 组件的初始数据
    */
@@ -42,10 +44,12 @@ Component({
     showName: '',
     showMessage: '',
     showPin: '置顶聊天',
+    showMute: '消息免打扰',
     popupToggle: false,
     isTrigger: false,
     num: 0,
     setShowName: '',
+    showMuteIcon: false,
   },
   lifetimes: {
     attached() {
@@ -55,7 +59,9 @@ Component({
   pageLifetimes: {
     // 展示已经置顶的消息和更新时间戳
     show() {
+      this.showMuteIconImg(this.data.conversation);
       this.setPinName(this.data.conversation.isPinned);
+      this.setMuteIcon(this.data.conversation);
       this.$updateTimeAgo(this.data.conversation);
     },
     // 隐藏动画
@@ -73,6 +79,12 @@ Component({
     setPinName(isPinned) {
       this.setData({
         showPin: isPinned ? '取消置顶' : '置顶聊天',
+      });
+    },
+    // 切换免打扰状态
+    setMuteIcon(conversation) {
+      this.setData({
+        showMute: (conversation.messageRemindType === 'AcceptNotNotify') ? '取消免打扰' : '消息免打扰',
       });
     },
     // 先查 remark；无 remark 查 (c2c)nick/(group)name；最后查 (c2c)userID/(group)groupID
@@ -152,6 +164,78 @@ Component({
           });
       }
     },
+    // 是否显示免打扰图标
+    showMuteIconImg(conversation) {
+      if (conversation.messageRemindType === 'AcceptNotNotify') {
+        this.setData({
+          showMuteIcon: true,
+        });
+      } else {
+        this.setData({
+          showMuteIcon: false,
+        });
+      }
+    },
+    // 消息免打扰
+    muteNotifications() {
+      if (this.data.conversation.type === 'C2C') {
+        // C2C 消息免打扰，一般的实现是在线接收消息，离线不接收消息（在有离线推送的情况下），v2.16.0起支持
+        wx.$TUIKit.setMessageRemindType({ userIDList: [this.data.conversation.userProfile.userID], messageRemindType: wx.$TUIKitTypes.MSG_REMIND_ACPT_NOT_NOTE })
+          .then((imResponse) => {
+            this.setData({
+              xScale: 0,
+              showMuteIcon: true,
+              showMute: '取消免打扰',
+            });
+          })
+          .catch((imError) => {
+            console.warn('setMessageRemindType error:', imError);
+          });
+        if (this.data.showMute === '取消免打扰') {
+          wx.$TUIKit.setMessageRemindType({ userIDList: [this.data.conversation.userProfile.userID], messageRemindType: wx.$TUIKitTypes.MSG_REMIND_ACPT_AND_NOTE })
+            .then((imResponse) => {
+              this.setData({
+                xScale: 0,
+                showMuteIcon: false,
+                showMute: '消息免打扰',
+              });
+            })
+            .catch((imError) => {
+              console.warn('setMessageRemindType error:', imError);
+            });
+        }
+      }
+      if (this.data.conversation.type === 'GROUP')  {
+        const muteID = this.data.conversation.groupProfile.groupID;
+        // 群消息免打扰，一般的实现是在线接收消息，离线不接收消息（在有离线推送的情况下）
+        wx.$TUIKit.setMessageRemindType({ groupID: muteID, messageRemindType: wx.$TUIKitTypes.MSG_REMIND_ACPT_NOT_NOTE })
+          .then((imResponse) => {
+            this.setData({
+              xScale: 0,
+              showMuteIcon: true,
+              showMute: '取消免打扰',
+            });
+          // 设置消息免打扰成功
+          })
+          .catch((imError) => {
+            // 设置消息免打扰失败
+            console.warn('setMessageRemindType error:', imError);
+          });
+        if (this.data.showMute === '取消免打扰') {
+          wx.$TUIKit.setMessageRemindType({ groupID: muteID, messageRemindType: wx.$TUIKitTypes.MSG_REMIND_ACPT_AND_NOTE })
+            .then((imResponse) => {
+              this.setData({
+                xScale: 0,
+                showMuteIcon: false,
+                showMute: '消息免打扰',
+              });
+            })
+            .catch((imError) => {
+              console.warn('setMessageRemindType error:', imError);
+            });
+        }
+      }
+    },
     // 控制左滑动画
     handleTouchMove(e) {
       this.setData({
@@ -174,7 +258,7 @@ Component({
     handleTouchEnd() {
       if (this.data.num < -wx.getSystemInfoSync().windowWidth / 5) {
         this.setData({
-          xScale: -wx.getSystemInfoSync().windowWidth / 2.5,
+          xScale: -wx.getSystemInfoSync().windowWidth,
         });
       }
       if (this.data.num >= -wx.getSystemInfoSync().windowWidth / 5 && this.data.num < 0) {

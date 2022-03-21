@@ -4,9 +4,14 @@
    <view class="avatar-box">
        <image class="t-conversation-item-avatar"  src="{{setConversationAvatar}}" binderror="handleimageerro">
        </image>
-     <view class="unread" wx:if="{{conversation.unreadCount !== 0}}">
+     <view class="unread" wx:if="{{conversation.unreadCount !== 0 && conversation.messageRemindType !== 'AcceptNotNotify'}}">
        <view class="read-text" wx:if="{{conversation.unreadCount > 99}}">99+</view>
        <view class="read-text" wx:else>{{conversation.unreadCount}}</view>
+     </view>
+
+     <view  wx:if="{{conversation.unreadCount !== 0}}">
+     <view class="unread-mute" wx:if="{{conversation.messageRemindType === 'AcceptNotNotify'}}">
+     </view>
      </view>
    </view>
     <view class="t-conversation-item-content">
@@ -15,15 +20,26 @@
       <view class="tui-conversation-lastName" wx:if="{{conversation.type === 'GROUP'}}">
         <text>{{showName}}:</text>
       </view>
-      <view class="tui-conversation-lastMessage">
+         <view class="tui-conversation-lastMessage"   wx:if="{{conversation.unreadCount !== 0 && conversation.messageRemindType === 'AcceptNotNotify'}}">
+         <text>[{{conversation.unreadCount}}条]</text>
+        <text>{{showMessage}}</text>
+      </view>
+      <view wx:else class="tui-conversation-lastMessage" >
         <text>{{showMessage}}</text>
       </view>
       </view>
     </view>
+
+   <view class= "t-conversation-item-box">
     <view class="t-conversation-item-info">
       {{conversation.lastMessage.timeago}}
     </view>
+    <view wx:if="{{showMuteIcon}}" class="t-conversation-item-mutenotifications">
+    <image class="t-conversation-mutenotifications-img" src="../../../static/images/mutenotifications.png"/>
+    </view>
+    </view>
     <view class="t-conversation-box">
+    <view  class="t-conversation-mutenotifications" catchtap="muteNotifications">{{showMute}}</view>
     <view  class="t-conversation-pinconversation" catchtap="pinConversation">{{showPin}}</view>
     <view class="t-conversation-delete" catchtap="deleteConversation">删除</view>
     </view>
@@ -32,26 +48,41 @@
    <view class="avatar-box">
        <image class="t-conversation-item-avatar"  src="{{setConversationAvatar}}" binderror="handleimageerro">
        </image>
-     <view class="unread" wx:if="{{conversation.unreadCount !== 0}}">
+     <view class="unread" wx:if="{{conversation.unreadCount !== 0 &&  conversation.messageRemindType !== 'AcceptNotNotify'}}">
        <view class="read-text" wx:if="{{conversation.unreadCount > 99}}">99+</view>
        <view class="read-text" wx:else>{{conversation.unreadCount}}</view>
      </view>
+        <view  wx:if="{{conversation.unreadCount !== 0}}">
+     <view class="unread-mute" wx:if="{{conversation.messageRemindType === 'AcceptNotNotify'}}">
+     </view>
+     </view>
    </view>
+
     <view class="t-conversation-item-content">
       <label class="tui-conversation-item-name">{{conversationName}}</label>
       <view class="tui-conversation-box">
       <view class="tui-conversation-lastName" wx:if="{{conversation.type === 'GROUP'}}">
         <text>{{showName}}:</text>
       </view>
-      <view class="tui-conversation-lastMessage">
+       <view class="tui-conversation-lastMessage"   wx:if="{{conversation.unreadCount !== 0 && conversation.messageRemindType === 'AcceptNotNotify'}}">
+         <text>[{{conversation.unreadCount}}条]</text>
+        <text>{{showMessage}}</text>
+      </view>
+      <view wx:else class="tui-conversation-lastMessage">
         <text>{{showMessage}}</text>
       </view>
       </view>
     </view>
+    <view class= "t-conversation-item-box">
     <view class="t-conversation-item-info">
       {{conversation.lastMessage.timeago}}
     </view>
+    <view  wx:if="{{showMuteIcon}}" class= "t-conversation-item-mutenotifications">
+    <image class="t-conversation-mutenotifications-img" src="../../../static/images/mutenotifications.png"/>
+    </view>
+    </view>
     <view class="t-conversation-box">
+    <view  class="t-conversation-mutenotifications" catchtap="muteNotifications">{{showMute}}</view>
     <view  class="t-conversation-pinconversation" catchtap="pinConversation">{{showPin}}</view>
     <view class="t-conversation-delete" catchtap="deleteConversation">删除</view>
     </view>
