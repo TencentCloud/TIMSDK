@@ -57,7 +57,7 @@ After the app is created, an app ID (SDKAppID) will be automatically generated, 
 
 - SDKAPPID: set it to the SDKAppID obtained in [Step 1](#step1).
 - SECRETKEY: enter the key obtained in [Step 2](#step2).
-![](https://qcloudimg.tencent-cloud.cn/raw/1e4d0ce283c6ff4acdf7054f96bbc027.png)
+![ ](https://qcloudimg.tencent-cloud.cn/raw/487fe57e41ae261f3bbf86c830584afa.png)
 
 
 >! In this document, the method to obtain UserSig is to configure a SECRETKEY in the client code. In this method, the SECRETKEY is vulnerable to decompilation and reverse engineering. Once your SECRETKEY is leaked, attackers can steal your Tencent Cloud traffic. Therefore, **this method is only suitable for locally running a demo project and feature debugging**.
@@ -106,11 +106,11 @@ After the preceding steps are completed, the audio and video call entries in the
 
 The conversation UIs before and after TUICalling masking are as follows:
 
-![](https://qcloudimg.tencent-cloud.cn/raw/11d6846dc76aedcda15f6f70b78c59c7.png) ![](https://qcloudimg.tencent-cloud.cn/raw/ca116e25894a6ba72d49e2507cc213ba.png)
+<img src="https://qcloudimg.tencent-cloud.cn/raw/bc84e5278199bdd29320218ca6dc1f62.png" style="zoom:70%;" /> <img src="https://qcloudimg.tencent-cloud.cn/raw/5f9f5cca47deac0ceb490e09361699de.png" style="zoom:70%;" />
 
 The contact profile UIs before and after TUICalling masking are as follows:
 
-![](https://qcloudimg.tencent-cloud.cn/raw/98df67c187384445432d490f6c0f7847.png)  ![](https://qcloudimg.tencent-cloud.cn/raw/b604eeac45f0a2cf5924d23567c69090.png)
+<img src="https://qcloudimg.tencent-cloud.cn/raw/b46981fc2d51ef2c4d8a75c2909fb651.png" style="zoom:70%;" />  <img src="https://qcloudimg.tencent-cloud.cn/raw/18be475fada3f04da1d99483111dc9d8.png" style="zoom:70%;" />
 
 > The above only shows how to remove the audio/video call feature from the demo. Developers can customize the demo according to their business requirements.
 
@@ -125,7 +125,7 @@ After the preceding steps are completed, the message search box in the demo is h
 
 The message UIs before and after TUISearch masking are as follows:
 
-![](https://qcloudimg.tencent-cloud.cn/raw/e099c8fe41f3c908cd88573dad6dc820.png)  ![](https://qcloudimg.tencent-cloud.cn/raw/c501170cbb23923d6bacff893b30fdbb.png)
+<img src="https://qcloudimg.tencent-cloud.cn/raw/5b060202bb08e9f776d55288e61106bc.png" style="zoom:43%;" />  <img src="https://qcloudimg.tencent-cloud.cn/raw/cd96429527c4a6c37c58b0392208926c.png" style="zoom:70%;" />
 
 > The above only shows how to remove the search feature from the demo. Developers can customize the demo according to their business requirements.
 
