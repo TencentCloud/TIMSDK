@@ -59,7 +59,7 @@ This document introduces how to quickly run through the IM demo.
  - SDKAPPID: set it to the SDKAppID obtained in **step 1**.
  - SECRETKEY: enter the actual key information obtained in **step 2**.
 
-![](https://qcloudimg.tencent-cloud.cn/raw/bc39d074e1c70cfe6541971836f8dc56.png)
+![](https://qcloudimg.tencent-cloud.cn/raw/7db2b7abfe1018f0b2612d4c49f95ab3.png)
 
 > In this document, the method to obtain UserSig is to configure a SECRETKEY in the client code. In this method, the SECRETKEY is vulnerable to decompilation and reverse engineering. Once your SECRETKEY is leaked, attackers can steal your Tencent Cloud traffic. Therefore, **this method is only suitable for locally running a demo project and feature debugging**.
 >The correct `UserSig` distribution method is to integrate the calculation code of `UserSig` into your server and provide an application-oriented API. When `UserSig` is needed, your app can send a request to the business server for a dynamic `UserSig`. For more information, please see [How do I calculate UserSig on the server?](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig).
