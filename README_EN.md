@@ -145,25 +145,25 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 6.0.1992 @2022.02.09
+## Latest Enhanced Version 6.1.2155 @2022.3.18
 
 ### SDK
 
-- Fixed occasional crashes when sending two consecutive messages to a deleted or nonexistent group. 
+- Added support for read receipts for group messages.
+- Added support for setting offline push alert sound for Android.
+- Added the API for setting network proxy for mobile SDKs.
+- Supplemented offline push APIs for the C/C++ platform.
+- Added support for automatically synchronizing signaling messages in a group after login.
+- Fixed the issue where a user cannot get complete custom fields after receiving a notification on custom field changes.
+- Fixed the notification muting status return error that occasionally occurred when the conversation list was pulled under a weak network.
+- Optimized the log printing logic.
+- Optimized error descriptions.
 
 ### TUIKit
 
-- Added the theme setting capability.
-- Added the language setting capability.
-- Added the group profile feature of group management.
-- Added the file message feature of animation upload/download.
-- Added the redirection entry "Received XX new messages" when browsing historical messages.
-- Added the redirection entry "Back to the latest position" when browsing historical messages.
-- Added the entry for one-click redirection to group @ messages.
-- Optimized the display style of the last message in the conversation list.
-- Added the selected state for text messages.
-- Optimized the A2 and D2 error descriptions.
-- iOS 15 system UI adaptation.
+- Upgraded the personal information protection law for TUIKit demo to meet compliance requirements.
+- Fixed the issue where a user cannot initiate an audio/video call by tapping the banner notification after receiving an offline push notification.
+- Fixed the issue where a user cannot initiate an audio/video call by directly opening the app after switching the app to background and receiving an offline push notification.
 
 ## Latest Basic Version 5.1.66 @2021.09.22
 
