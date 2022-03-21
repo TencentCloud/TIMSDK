@@ -59,7 +59,7 @@ This document introduces how to quickly run through the IM demo.
  - SDKAPPID: set it to the SDKAppID obtained in **step 1**.
  - SECRETKEY: enter the actual key information obtained in **step 2**.
 
-![](https://qcloudimg.tencent-cloud.cn/raw/bfd58419e5461819c690fa5d4ff315e8.png)
+![](https://qcloudimg.tencent-cloud.cn/raw/bc39d074e1c70cfe6541971836f8dc56.png)
 
 > In this document, the method to obtain UserSig is to configure a SECRETKEY in the client code. In this method, the SECRETKEY is vulnerable to decompilation and reverse engineering. Once your SECRETKEY is leaked, attackers can steal your Tencent Cloud traffic. Therefore, **this method is only suitable for locally running a demo project and feature debugging**.
 >The correct `UserSig` distribution method is to integrate the calculation code of `UserSig` into your server and provide an application-oriented API. When `UserSig` is needed, your app can send a request to the business server for a dynamic `UserSig`. For more information, please see [How do I calculate UserSig on the server?](https://cloud.tencent.com/document/product/269/32688#GeneratingdynamicUserSig).
@@ -70,7 +70,7 @@ Import the demo project with Android Studio, and then compile and run it.
 ## Step 5: Compile and Run the Demo (Removing the Audio/Video Call Feature)
 If you do not need the audio/video call feature, you only delete the audio/video call integration code as shown in the figure below from the `build.gradle` file under the `app` module:
 
-![](https://qcloudimg.tencent-cloud.cn/raw/be4673087f137a26df082c94ee74db3a.png)
+![](https://qcloudimg.tencent-cloud.cn/raw/cd9e13bec6a5ac6ea67d1aeecfa5e9be.png)
 
 ```groovy
 api project(':tuicalling')
@@ -80,20 +80,20 @@ The conversation UIs before and after TUICalling masking are as follows:
 
 | before | After |
 |---------|---------|
-| ![](https://qcloudimg.tencent-cloud.cn/raw/2a42b792104ded95e2d76eb45ed8c686.png) |  ![](https://qcloudimg.tencent-cloud.cn/raw/9da96276bd2b8c74c80e4840e5371525.png)
+| ![](https://qcloudimg.tencent-cloud.cn/raw/745d4c09fe7f68264750267957f49904.png) | ![](https://qcloudimg.tencent-cloud.cn/raw/71b73179123f1fc0201eca1f8b20e3ec.png)
 
 The contact profile UIs before and after TUICalling masking are as follows:
 
 | before | After |
 |---------|---------|
-| ![](https://qcloudimg.tencent-cloud.cn/raw/d705fe53861ea02310cb7a5007a3a5ad.png) | ![](https://qcloudimg.tencent-cloud.cn/raw/f05ff0bf06a39aa9fad5faebccfeadff.png)
+| ![](https://qcloudimg.tencent-cloud.cn/raw/5f0f2c490267ab4986d68a8c54f1e1fa.png) | ![](https://qcloudimg.tencent-cloud.cn/raw/a722756f50dcf96fe120c9dccb7dee44.png)
 
 > The above only shows how to remove the audio/video call feature from the demo. Developers can customize the demo according to their business requirements.
 
 ## Step 6: Compile and Run the Demo (Removing the Search Module)
 If you do not need the search feature, you only delete the line of code as shown in the figure below from the `build.gradle` file under the `app` module:
 
-![](https://qcloudimg.tencent-cloud.cn/raw/465b011dc5447eba484f7390818aef18.png)
+![](https://qcloudimg.tencent-cloud.cn/raw/70c328a1ef45eb844d946f86ba65941e.png)
 
 ```groovy
 api project(':tuisearch')
@@ -104,6 +104,6 @@ The message UIs before and after TUISearch masking are as follows:
 
 | before | After |
 |---------|---------|
-| ![](https://qcloudimg.tencent-cloud.cn/raw/bc1f8de02355e3af65459fc256aad8b0.png) | ![](https://qcloudimg.tencent-cloud.cn/raw/0de07a0a39ae6513d0a5a0579abef3d5.png)
+| ![](https://qcloudimg.tencent-cloud.cn/raw/a5da1ef2be61d395a3fb7a54c117afc0.png) | ![](https://qcloudimg.tencent-cloud.cn/raw/84223f91d5681b7c15d333f5743044a2.png)
 
 > The above only shows how to remove the search feature from the demo. Developers can customize the demo according to their business requirements.
