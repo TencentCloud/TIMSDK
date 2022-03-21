@@ -80,7 +80,7 @@ The conversation UIs before and after TUICalling masking are as follows:
 
 | before | After |
 |---------|---------|
-| ![](https://qcloudimg.tencent-cloud.cn/raw/745d4c09fe7f68264750267957f49904.png) | ![](https://qcloudimg.tencent-cloud.cn/raw/71b73179123f1fc0201eca1f8b20e3ec.png)
+| ![](https://qcloudimg.tencent-cloud.cn/raw/760e9de375121f01f4b385d101c30157.png) | ![](https://qcloudimg.tencent-cloud.cn/raw/71b73179123f1fc0201eca1f8b20e3ec.png)
 
 The contact profile UIs before and after TUICalling masking are as follows:
 
