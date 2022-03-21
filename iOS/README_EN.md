@@ -125,7 +125,7 @@ After the preceding steps are completed, the message search box in the demo is h
 
 The message UIs before and after TUISearch masking are as follows:
 
-<img src="https://qcloudimg.tencent-cloud.cn/raw/5b060202bb08e9f776d55288e61106bc.png" style="zoom:43%;" />  <img src="https://qcloudimg.tencent-cloud.cn/raw/cd96429527c4a6c37c58b0392208926c.png" style="zoom:70%;" />
+<img src="https://qcloudimg.tencent-cloud.cn/raw/18ab24ad10e8ba40d7c6168d8c8d4088.png" style="zoom:75%;" />  <img src="https://qcloudimg.tencent-cloud.cn/raw/dcc6d7230ed303563863d7b6280b0c0f.png" style="zoom:75%;" />
 
 > The above only shows how to remove the search feature from the demo. Developers can customize the demo according to their business requirements.
 
