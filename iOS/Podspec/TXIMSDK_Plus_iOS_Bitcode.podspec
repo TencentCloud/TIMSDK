@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155_Bitcode.framework.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/6.1.2155/ImSDK_Plus_6.1.2155_Bitcode.framework.zip'}
   spec.preserve_paths = '**/ImSDK_Plus.framework'
   spec.source_files = '**/ImSDK_Plus.framework/Headers/*.h'
   spec.public_header_files = '**/ImSDK_Plus.framework/Headers/*.h'
