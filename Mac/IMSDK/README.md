@@ -5,7 +5,7 @@
 ## 下载地址
 
 ### 增强版（推荐）
-[最新 ImSDKForMac_Plus.framework 下载](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.1.2155/ImSDKForMac_Plus_6.1.2155.framework.zip)
+[最新 ImSDKForMac_Plus.framework 下载](https://im.sdk.qcloud.com/download/plus/6.1.2155/ImSDKForMac_Plus_6.1.2155.framework.zip)
 
 ### 基础版
 [最新 ImSDKForMac.framework 下载](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_Mac_latest_framework.zip)
