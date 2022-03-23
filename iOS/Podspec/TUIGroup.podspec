@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/tuikit/6.1.2155/ios/TUIGroup.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.1.2155/ios/TUIGroup.zip'}
 
   spec.subspec 'Cell' do |cell|
     cell.subspec 'CellData' do |cellData|
