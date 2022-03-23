@@ -4,7 +4,7 @@
   background-color: #FFFFFF;
 }
 .t-conversation-item {
-  width: 140vw;
+  width: 162vw;
   height: 150rpx;
   display: flex;
   left: 0;
@@ -14,7 +14,7 @@
   border-bottom: 2rpx solid #EEF0F3;
 }
 .t-conversation-pinneditem{
-  width: 140vw;
+  width: 162vw;
   height: 150rpx;
   display: flex;
   left: 0;
@@ -66,12 +66,30 @@
   line-height: 44rpx;
   font-size: 32rpx;
 }
+.t-conversation-item-mutenotifications{
+  margin-right: 40rpx;
+}
+.t-conversation-mutenotifications-img{
+  height: 34rpx;
+  width: 28rpx;
+  float: right;
+}
 .t-conversation-pinconversation{
     width: 144rpx;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #006EFF;
+    color: #FFFFFF;
+    line-height: 44rpx;
+    font-size: 32rpx;
+}
+.t-conversation-mutenotifications{
+    width: 180rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: orange;
     color: #FFFFFF;
     line-height: 44rpx;
     font-size: 32rpx;
@@ -98,6 +116,16 @@
   border-radius: 16rpx;
   color: #ffffff;
   background-color: red;
+}
+.unread-mute{
+   top: -10rpx;
+    right: 0rpx;
+    position: absolute;
+    padding: 0px 14rpx;
+    height: 15px;
+    border-radius: 50%;
+    color: #ffffff;
+    background-color: red;
 }
 .read-text {
   line-height: 15px;

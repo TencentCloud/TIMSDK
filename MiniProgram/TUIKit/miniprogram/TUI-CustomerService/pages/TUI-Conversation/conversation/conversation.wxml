@@ -8,7 +8,7 @@
    </view>
    <view class="conversation-list-area">
      <scroll-view class="scoll-view" scroll-y="true">
-       <TUI-conversation-item wx:for="{{conversationList}}" wx:key="index" id="{{item.conversationID}}" data-type="{{item.type}}" conversation="{{item}}" bindtap="handleRoute" bind:transCheckID="transCheckID" charge="{{transChenckID===item.conversationID}}"></TUI-conversation-item>
+       <TUI-conversation-item wx:for="{{conversationList}}" wx:key="index" id="{{item.conversationID}}" data-type="{{item.type}}" conversation="{{item}}" bindtap="handleRoute" bind:transCheckID="transCheckID"  charge="{{transChenckID===item.conversationID}}"></TUI-conversation-item>
      </scroll-view>
    </view>
  </view>

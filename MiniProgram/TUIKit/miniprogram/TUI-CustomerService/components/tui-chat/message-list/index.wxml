@@ -1,7 +1,7 @@
 <view class="container">
 <scroll-view  class="message-list-container" scroll-y="true" scroll-top='{{topNum}}'  scroll-into-view="{{jumpAim}}" refresher-enabled="{{true}}" bindrefresherrefresh="refresh" refresher-triggered="{{triggered}}" lower-threshold="200" bindscroll="handleScroll" bindscrolltolower="scrollHandler">
     <view class="no-message" wx:if="{{isCompleted}}">没有更多啦</view>
-    <view class="t-message" wx:if="{{conversation.type !== '@TIM#SYSTEM' }}" wx:for="{{messageList}}" wx:key="index" id="{{item.ID}}" data-index ='{{index}}'  >
+    <view class="t-message" wx:if="{{conversation.type !== '@TIM#SYSTEM'}}" wx:for="{{messageList}}" wx:key="index" id="{{item.ID}}" data-index ='{{index}}'   >
          <view class="time-pop-mask" data-value="{{item.time}}" wx:if="{{showMessageTime}}">
              <view class="showmessagetime" wx:if="{{item.isShowTime}}">
              <text class="time"  wx:if="{{!item.isDeleted && !item.isRevoked}}">{{messageTime}} </text> 
@@ -37,14 +37,14 @@
                     <view wx:if="{{item.isPeerRead}}" >已读</view>
                     <view wx:else>未读</view>
                 </view>
-                 <view wx:if="{{item.isSelf && item.sequence === 0 }}" class="t-message-error-box">
+                 <view wx:if="{{item.isSelf && item.ID === errorMessageID || item.status === 'fail'}}" class="t-message-error-box">
                  <image class="t-message-error" wx:if="{{showMessageError}}" src='../../../static/images/tuikit-msg-error.png' bindtap="ResndMessage" />
                 </view>
                 <view  class="{{item.isSelf ? 't-self-message-body':'t-recieve-message-body'}}"  catch:longpress="handleLongPress" data-index ='{{index}}' id="{{item.ID}}" message-value="{{item}}" >
                     <TUI-TextMessage wx:if="{{item.type === 'TIMTextElem'}}" message="{{item}}" isMine="{{item.isSelf}}" />
                     <TUI-ImageMessage wx:if="{{item.type === 'TIMImageElem'}}" message="{{item}}" isMine="{{item.isSelf}}" />
                     <TUI-VideoMessage wx:if="{{item.type === 'TIMVideoFileElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>
-                    <TUI-AudioMessage wx:if="{{item.type === 'TIMSoundElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>
+                    <TUI-AudioMessage wx:if="{{item.type === 'TIMSoundElem'}}"  message="{{item}}" data-index ='{{index}}' messageList="{{messageList}}" isMine="{{item.isSelf}}"/>
                     <TUI-CustomMessage wx:if="{{item.type === 'TIMCustomElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>
                     <TUI-FaceMessage wx:if="{{item.type === 'TIMFaceElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>
                     <TUI-FileMessage wx:if="{{item.type === 'TIMFileElem'}}" message="{{item}}" isMine="{{item.isSelf}}"/>

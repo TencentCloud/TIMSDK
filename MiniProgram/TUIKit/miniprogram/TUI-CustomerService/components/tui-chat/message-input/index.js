@@ -1,4 +1,5 @@
 import logger from '../../../utils/logger';
+const app = getApp()
 // eslint-disable-next-line no-undef
 Component({
   /**
@@ -42,6 +43,7 @@ Component({
     ],
     displayServiceEvaluation: false,
     showErrorImageFlag: 0,
+    firstSendMessage: true,
   },
 
   lifetimes: {
@@ -178,23 +180,29 @@ Component({
       this.sendImageMessage('album');
     },
     sendImageMessage(type) {
+      const maxSize = 20480000;
       wx.chooseImage({
         sourceType: [type],
         count: 1,
         success: (res) => {
-          if (res) {
-            const message = wx.$TUIKit.createImageMessage({
-              to: this.getToAccount(),
-              conversationType: this.data.conversation.type,
-              payload: {
-                file: res,
-              },
-              onProgress: (percent) => {
-                message.percent = percent;
-              },
+          if (res.tempFiles[0].size > maxSize) {
+            wx.showToast({
+              title: '大于20M图片不支持发送',
+              icon: 'none',
             });
-            this.$sendTIMMessage(message);
+            return;
           }
+          const message = wx.$TUIKit.createImageMessage({
+            to: this.getToAccount(),
+            conversationType: this.data.conversation.type,
+            payload: {
+              file: res,
+            },
+            onProgress: (percent) => {
+              message.percent = percent;
+            },
+          });
+          this.$sendTIMMessage(message);
         },
       });
     },
@@ -375,8 +383,23 @@ Component({
         offlinePushInfo: {
           disablePush: true,
         },
-      }).catch((error) => {
+      }).then((res)=>{
+        if(this.data.firstSendMessage) {
+				wx.aegis.reportEvent({
+					    name: 'sendMessage',
+					    ext1: 'sendMessage-success',
+					    ext2: 'imTuikitExternal',
+              ext3: app.globalData.SDKAppID
+        })
+      }
+    }).catch((error) => {
         logger.log(`| TUI-chat | message-input | sendMessageError: ${error.code} `);
+        wx.aegis.reportEvent({
+          name: 'sendMessage',
+          ext1: `sendMessage-failed#error: ${error}`,
+          ext2: 'imTuikitExternal',
+          ext3: app.globalData.SDKAppID
+    })
         this.triggerEvent('showMessageErrorImage', {
           showErrorImageFlag: error.code,
           message,

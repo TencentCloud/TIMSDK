@@ -79,6 +79,8 @@ Component({
     isMessageTime: {},
     firstTime: Number,
     newArr: {},
+    errorMessage: {},
+    errorMessageID: ''
   },
 
   lifetimes: {
@@ -91,9 +93,7 @@ Component({
             isLostsOfUnread: true,
             showUpJump: true,
           });
-          console.log(this.data.unreadCount, 'dasdsadasd');
         } else {
-          console.log(this.data.unreadCount, 'dasdsadasd');
           this.setData({
             showUpJump: true,
           });
@@ -369,9 +369,6 @@ Component({
       this.setData({
         Show: false,
       });
-      // }
-      // },
-      // });
     },
     // 消息跳转到最新
     handleJumpNewMessage() {
@@ -385,11 +382,10 @@ Component({
     handleJumpUnreadMessage() {
       if (this.data.unreadCount > 15) {
         this.getMessageList(this.data.conversation);
-          this.setData({
-            jumpAim: this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - this.data.unreadCount].ID),
-            showUpJump: false,
-          });
-          console.log(1, 'miles');
+        this.setData({
+          jumpAim: this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - this.data.unreadCount].ID),
+          showUpJump: false,
+        });
       } else {
         this.getMessageList(this.data.conversation);
         this.setData({
@@ -460,6 +456,10 @@ Component({
     },
     // 消息发送失败
     sendMessageError(event) {
+      this.setData({
+        errorMessage : event.detail.message,
+        errorMessageID: event.detail.message.ID
+      })
       const DIRTYWORDS_CODE = 80001;
       const UPLOADFAIL_CODE = 6008;
       const REQUESTOVERTIME_CODE = 2081;
@@ -495,6 +495,10 @@ Component({
     },
     // 消息发送失败后重新发送
     ResndMessage() {
+      const DIRTYWORDS_CODE = 80001;
+      const UPLOADFAIL_CODE = 6008;
+      const REQUESTOVERTIME_CODE = 2081;
+      const DISCONNECTNETWORK_CODE = 2800;
       wx.showModal({
         content: '确认重发该消息？',
         success: (res) => {
@@ -510,12 +514,27 @@ Component({
                   showMessageError: false,
                 });
               })
-              .catch(() => {
-                wx.showToast({
-                  title: '重发失败!',
-                  duration: 600,
-                  icon: 'error',
-                });
+              .catch((imError) => {
+                if(imError.code === DIRTYWORDS_CODE) {
+                  wx.showToast({
+                    title:  '您发送的消息包含违禁词汇!',
+                    duration: 800,
+                    icon: 'none',
+                  });
+                } else if (imError.code === UPLOADFAIL_CODE ) {
+                  wx.showToast({
+                    title:  '文件上传失败!',
+                    duration: 800,
+                    icon: 'none',
+                  });
+                } else if (imError.code === (REQUESTOVERTIME_CODE || DISCONNECTNETWORK_CODE))
+                 {
+                  wx.showToast({
+                    title:  '网络已断开!',
+                    duration: 800,
+                    icon: 'none',
+                  });
+                }
               });
           }
         },
@@ -551,4 +570,5 @@ Component({
       }
     },
   },
+
 });

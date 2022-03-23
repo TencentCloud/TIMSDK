@@ -24,7 +24,6 @@ Page({
     },
     unreadCount: 0,
   },
-
   /**
    * 生命周期函数--监听页面加载
    */
@@ -97,6 +96,7 @@ Page({
       this.TRTCCalling.call(event.detail);
     }
   },
+  
   goBack() {
     // eslint-disable-next-line no-undef
     const pages = getCurrentPages(); // 当前页面栈

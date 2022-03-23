@@ -1,6 +1,14 @@
-<view class="audio-message {{isMine?'my-audio':''}}">
-  <view class="audio "   bindtap="handlePlayAudioMessage" data-value="{{item}}" style="width: {{120 + message.renderDom[0].second * 7}}rpx">
-    <image class="image {{isMine?'my-image':''}}" src="../../../../static/images/sendingaduio.png"/> {{renderDom[0].second}}s
-  </view>
-</view>
+<block>
+    <view class="audio-message {{isMine?'my-audio':''}}">
+    <!-- 默认状态 未播放 -->
+    <view class='audio' wx:if="{{!isPlay}}" bindtap='audioPlay' data-id="{{message.ID}}"  >
+    <image class="image {{isMine?'my-image':''}}" src="../../../../static/images/sendingaudio.png"/> {{renderDom[0].second}}s
+    </view>
+    <!-- 当前正在播放状态 -->
+    <view class='audio' wx:else data-value="{{message}}" bindtap='audioStop'   data-id="{{message.ID}}" >
+         <image class="image {{isMine?'my-image':''}}" src="../../../../static/images/sendingaudio.png"/> {{renderDom[0].second}}s
+    </view>
+    </view>
+</block>
+
 

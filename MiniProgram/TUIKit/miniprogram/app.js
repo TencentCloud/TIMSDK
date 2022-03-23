@@ -1,10 +1,18 @@
 import TIM from './static/tim-wx'
+import Aegis from './static/aegis'
 import TIMUploadPlugin from './static/tim-upload-plugin'
 import logger from './utils/logger'
 import { SDKAPPID } from './debug/GenerateTestUserSig'
 // app.js
 App({
   onLaunch() {
+    this.aegisInit()
+    wx.aegis.reportEvent({
+      name: 'time',
+      ext1: 'first-run-time',
+      ext2: 'imTuikitExternal',
+      ext3: this.globalData.SDKAppID,
+  })
     wx.setStorageSync('islogin', false)
     const SDKAppID = this.globalData.SDKAppID
     wx.setStorageSync(`TIM_${SDKAppID}_isTUIKit`, true)
@@ -29,7 +37,14 @@ App({
       keepScreenOn: true,
     })
   },
-  
+  aegisInit() {
+    wx.aegis = new Aegis({
+      id: 'iHWefAYquFxvklBblC', // 项目key
+      reportApiSpeed: true, // 接口测速
+      reportAssetSpeed: true, // 静态资源测速
+      pagePerformance: true, // 开启页面测速
+    });
+  },
   // TODO:
   resetLoginData() {
     this.globalData.expiresIn = ''
