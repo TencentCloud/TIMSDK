@@ -57,6 +57,22 @@ Page({
     setTokenStorage({
       userInfo: app.globalData.userInfo,
     })
+    wx.$TUIKit.login({userID: userID, userSig: userSig})
+    .then(()=> {
+      wx.aegis.reportEvent({
+        name: 'login',
+        ext1: 'login-success',
+        ext2: 'imTuikitExternal',
+        ext3: app.globalData.SDKAppID,
+      })
+    }).catch((error)=> {
+      wx.aegis.reportEvent({
+        name: 'login',
+        ext1: `login-failed#error:${error}`,
+        ext2: 'imTuikitxEternal',
+        ext3: app.globalData.SDKAppID,
+    })
+})
     if (this.data.path && this.data.path !== 'undefined') {
       wx.redirectTo({
         url: this.data.path,

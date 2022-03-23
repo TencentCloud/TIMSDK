@@ -1,6 +1,5 @@
 // miniprogram/pages/TUI-Index/TUI-create.js
 import logger from '../../utils/logger';
-
 // eslint-disable-next-line no-undef
 const app = getApp();
 // eslint-disable-next-line no-undef
@@ -16,7 +15,6 @@ Page({
       { name: '互动直播', url: '', iconUrl: '../../static/assets/interactive-live.svg' },
     ],
   },
-
   /**
    * 生命周期函数--监听页面加载
    */
@@ -24,6 +22,7 @@ Page({
   },
   onShow() {
     logger.log(`| TUI-Index | onshow | login |userSig:${app.globalData.userInfo.userSig} userID:${app.globalData.userInfo.userID}`);
+
     wx.$TUIKit.login({
       userID: app.globalData.userInfo.userID,
       userSig: app.globalData.userInfo.userSig,
