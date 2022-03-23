@@ -5,16 +5,16 @@
 ## 下载地址
 
 ### 增强版（推荐）
-[最新 ImSDK_Plus.framework下载](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155.framework.zip)
+[最新 ImSDK_Plus.framework下载](https://im.sdk.qcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155.framework.zip)
 
 ### 增强版 bitcode 版本
-[最新 ImSDK_Plus_Bitcode.framework下载](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155_Bitcode.framework.zip)
+[最新 ImSDK_Plus_Bitcode.framework下载](https://im.sdk.qcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155_Bitcode.framework.zip)
 
 ### 增强版 xcframework 版本（支持 mac catalyst）
-[最新 ImSDK_Plus.xcframework.zip下载](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155.xcframework.zip)
+[最新 ImSDK_Plus.xcframework.zip下载](https://im.sdk.qcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155.xcframework.zip)
 
 ### 增强版 xcframework 版本（支持 mac catalyst、支持 bitcode）
-[最新 ImSDK_Plus_Bitcode.xcframework.zip下载](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155_Bitcode.xcframework.zip)
+[最新 ImSDK_Plus_Bitcode.xcframework.zip下载](https://im.sdk.qcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155_Bitcode.xcframework.zip)
 
 ### 基础版
 [最新 ImSDK.framework 下载](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_iOS_latest_framework.zip)
