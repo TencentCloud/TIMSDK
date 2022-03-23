@@ -5,16 +5,16 @@ English | [简体中文](./README.md)
 ## Download Links
 
 ### Enhanced Edition(Recommend)
-[Latest ImSDK_Plus.framework download](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155.framework.zip)
+[Latest ImSDK_Plus.framework download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2155/ImSDK_Plus_6.1.2155.framework.zip)
 
 ### Enhanced bitcode edition
-[Latest ImSDK_Plus_Bitcode.framework download](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155_Bitcode.framework.zip)
+[Latest ImSDK_Plus_Bitcode.framework download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2155/ImSDK_Plus_6.1.2155_Bitcode.framework.zip)
 
 ### Enhanced XCFramework edition (supporting Mac Catalyst)
-[Latest ImSDK_Plus.xcframework.zip download](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155.xcframework.zip)
+[Latest ImSDK_Plus.xcframework.zip download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2155/ImSDK_Plus_6.1.2155.xcframework.zip)
 
 ### Enhanced XCFramework edition (supporting Mac Catalyst and bitcode)
-[Latest ImSDK_Plus_Bitcode.xcframework.zip download](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.1.2155/ImSDK_Plus_6.1.2155_Bitcode.xcframework.zip)
+[Latest ImSDK_Plus_Bitcode.xcframework.zip download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2155/ImSDK_Plus_6.1.2155_Bitcode.xcframework.zip)
 
 ### Basic Edition
 [Latest ImSDK.framework download](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_iOS_latest_framework.zip)
