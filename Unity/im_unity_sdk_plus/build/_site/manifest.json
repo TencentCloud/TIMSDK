@@ -1,0 +1,1734 @@
+{
+  "homepages": [],
+  "source_base_path": "/Users/xingchenhe/Documents/work/unity/im_unity_sdk_plus/Docfx",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.TencentIMSDK.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.TencentIMSDK.html",
+          "hash": "l8Yx6qEEjQnxq0IK+1yzfGFdEFS5/Gy8y+yq0ZgPk+g="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.ConvEventCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.ConvEventCallback.html",
+          "hash": "ULL+tZTtrgH5soizjnKIRewX2sRo1kzHk6dZQbYZNx0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.ConvTotalUnreadMessageCountChangedCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.ConvTotalUnreadMessageCountChangedCallback.html",
+          "hash": "7O8q2rB2GEyjDUXcYxOQiH4op6IaJpwRnpxdTX4/SVo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.FriendAddRequestCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.FriendAddRequestCallback.html",
+          "hash": "1md84mlTm9Ua0dVlGqwdIdHoOYlsLkRL7msvVnRnLIc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.FriendApplicationListDeletedCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.FriendApplicationListDeletedCallback.html",
+          "hash": "tVHD/fyEPVNx/m8+x0bz+zniwuTVz3rQKWkNPnVlaFg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.FriendApplicationListReadCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.FriendApplicationListReadCallback.html",
+          "hash": "W/HC7JsVjA7b3Cxlg3Eb8H3PRUHIFZuu+InFbri0t6E="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.FriendBlackListAddedCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.FriendBlackListAddedCallback.html",
+          "hash": "e4cB0YD8mzo2RfFVBNihIouRsUIw63E8ykVYcpreYgM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.FriendBlackListDeletedCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.FriendBlackListDeletedCallback.html",
+          "hash": "6wefmVNx4SxW+3NXYL9FNjqsjs/iTaaPuOuW0ThN4nQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.GroupAttributeChangedCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.GroupAttributeChangedCallback.html",
+          "hash": "ekiinXnmD9iGgiweFWd+31TjV3iJzLgNocd8Pyf1NlE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.GroupTipsEventCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.GroupTipsEventCallback.html",
+          "hash": "SnKafZ6mB4W2n8sANP71MgPWv+yHOJA4E04iz5w7DUE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.KickedOfflineCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.KickedOfflineCallback.html",
+          "hash": "zpVe/enTJfwT/yfw0C/sCqvhqFoCnc1dULj5rEnM8mM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.LogCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.LogCallback.html",
+          "hash": "hlC+rBS9EHN9vYbcYpcwwXSoUSwNinACBObOF3LsIqM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.MsgElemUploadProgressCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.MsgElemUploadProgressCallback.html",
+          "hash": "KXStv7E+j4NAeyiZzHAD2DuFR751NnJfzACQRm/XQI4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.MsgReadedReceiptCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.MsgReadedReceiptCallback.html",
+          "hash": "ujiAMT2SKkQ5jw9zPXrnpSKzAISU7OElaMJzoN+ASWc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.MsgRevokeCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.MsgRevokeCallback.html",
+          "hash": "K7ZsLJPMvpFINl3dG28lcfYKZILwsi8zak6W36WoQbQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.MsgUpdateCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.MsgUpdateCallback.html",
+          "hash": "YNmtBzKdPACPrh8Ur/mMeOT+nOsKmeUpXNRgUV+gdYQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.NetworkStatusListenerCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.NetworkStatusListenerCallback.html",
+          "hash": "CFAoXqnUpr3U0Ei3kXZG1KelLCu6OzUGN4higyHKeaA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.OnAddFriendCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.OnAddFriendCallback.html",
+          "hash": "eM0zYu6fDyR9183nkqTFabsYZ+3cdZ1dz1jGw4P8cqs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.OnDeleteFriendCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.OnDeleteFriendCallback.html",
+          "hash": "uDjXiN5nSsA7qHj70Cy8Bs6VcWUz3NUR0Nga9mnx+Ws="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.RecvNewMsgCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.RecvNewMsgCallback.html",
+          "hash": "P8P70NtEZEDNjAXWqufPvVpIG5jwPf6mCcgtl9rKZo0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.UpdateFriendProfileCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.UpdateFriendProfileCallback.html",
+          "hash": "EQnRQVWXNdqFfTEQNr2+xW5LZ6ChNHQBQKX/aCISTGM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.UserSigExpiredCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.UserSigExpiredCallback.html",
+          "hash": "sGDMZplM92ri1ZpnRhpInuGm487r38+THr2INONYyNA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.ValueCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.ValueCallback.html",
+          "hash": "HG/aezrQYfdNBUhaUv0FupwvXCOXqxEVXWKvPMZcS1U="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.callback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.callback.html",
+          "hash": "mSv/7rnItJxZWjSO+/S5Hn53Za6PE0YuVmumnjXoppk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMAndroidOfflinePushNotifyMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMAndroidOfflinePushNotifyMode.html",
+          "hash": "5/wq1BBoS3h1+vmuHa5XnVrBHsZvKEtb6lf9e1EyK2w="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMConvEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMConvEvent.html",
+          "hash": "HCeDLco44H8mKTARdQ0qvAfDgUGaAVWhg6QVCVWi0e4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMConvType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMConvType.html",
+          "hash": "eydeaOrbp+9e9Jh4T08//QdzLTNUOQbSyYlsdSN5CEE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMDownloadType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMDownloadType.html",
+          "hash": "e+jiEp6NQyGjvflKuZ9jwN+T/CcqZO5b4twSZ7DCbX8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMElemType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMElemType.html",
+          "hash": "mlp0LSCzvfW2qzMYPH4132gAsU2zX0HDBxXqPH4tg/Y="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMFriendCheckRelation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMFriendCheckRelation.html",
+          "hash": "HCi6YCe/NN/h3oF7D6rV+2SHZCbhxLEwZaRRQ0CgBFQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMFriendPendencyType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMFriendPendencyType.html",
+          "hash": "l/MZwn0ChCoa6/SP7GAweK8kH3TtXfs5pKxdsIGCJ50="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMFriendResponseAction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMFriendResponseAction.html",
+          "hash": "RQixlttVS8dWp31Fo8gMs9Y3+gW78MLZaMLH5GxVwCQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMFriendType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMFriendType.html",
+          "hash": "uZo0/7NKTPArMpjNAI0O4M3hI75mRuernBcksYBQBvs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMFriendshipSearchFieldKey.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMFriendshipSearchFieldKey.html",
+          "hash": "+HLRu05rPWOIbeLEYdznPiC09FpgbgsJHlCVBbxeyQo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGenderType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGenderType.html",
+          "hash": "/Z5FcMiHJ3oOS7gspe5p/fgZnPWg/TandvCckSM/mGg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupAddOption.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupAddOption.html",
+          "hash": "+XhUUxEJczIgfeXsfZXUEfeNDjdCgaLIcBUueVaWnQI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupAtType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupAtType.html",
+          "hash": "CU9qY7jmkmNwH5AdDEu2+Drw5f0Vo8L4eI9veZAthX4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupGetInfoFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupGetInfoFlag.html",
+          "hash": "687dDeDp92YSNCG4QI0WDhuyUUMgxpcqJVPyf+xNxxE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMemberInfoFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMemberInfoFlag.html",
+          "hash": "+Bt21rHXT8+LVqfeeh0fT2rUVkipMEfbz3QYBXv/ioM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMemberModifyInfoFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMemberModifyInfoFlag.html",
+          "hash": "I05wB0zlQD/hlj332p9R6XYL3Weybvm1mCb1Y+DIJII="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMemberRole.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMemberRole.html",
+          "hash": "FCIDQzlZPPb9PCq6yhVRWceyoG2JJYn/bHzzPo/YPTk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMemberRoleFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMemberRoleFlag.html",
+          "hash": "V6+5MHemfaToKXwscff222Nh42ET9uIaC7omOu0xTFo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMemberSearchFieldKey.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupMemberSearchFieldKey.html",
+          "hash": "8/rkRkx39YWKxv+8cX4e0rfVnttUqLE0YgT23AvrQGg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupModifyInfoFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupModifyInfoFlag.html",
+          "hash": "YT4N4CmUenJqQNYLX+825MkqOQYEL908ncPBDaJzWrc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupPendencyHandle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupPendencyHandle.html",
+          "hash": "c9BtEB8m5mW+L54wFkYQB2H95sPzE0HD2xRz4o6Z5eg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupPendencyHandleResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupPendencyHandleResult.html",
+          "hash": "EGeC/suU89Vwv5hUsi9yssQdphFhGpCMOdS0Z036sok="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupPendencyType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupPendencyType.html",
+          "hash": "4ZZcuuwJHguUy17mNBAk/Ps/iCFZPE8Pe3rr7bf7A2E="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupReportType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupReportType.html",
+          "hash": "/zzoIHVh6+Lx3azSb92fKDK6jRklg4PVbNuO5npM+5E="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupSearchFieldKey.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupSearchFieldKey.html",
+          "hash": "L3sEWfFehTSXsNG/w0rduh5J3XOdjngvFSOB/z7xc5c="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupTipGroupChangeFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupTipGroupChangeFlag.html",
+          "hash": "Wll/A2ypjyqovD4MEUJKh4b5jQvfF59tS2dlHLzvKXw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupTipType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupTipType.html",
+          "hash": "wwKcaWQ45LEbdjKqG9sPcrN1HReTCwSPt5l6gSCUJtQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMGroupType.html",
+          "hash": "XCX7Js+/9i7YbdjP4K8kyE0BXzc7JYkdP6Nqs4GuRvE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMImageLevel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMImageLevel.html",
+          "hash": "EGmpdK8h+EoHZTGjLSQOB9pKdD23ED9abS9AwJDSSHE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMInternalOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMInternalOperation.html",
+          "hash": "vzfN7bSEblatQkhcyGV6RmUNtNCTYy+Qx9zcbCPgAgA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMKeywordListMatchType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMKeywordListMatchType.html",
+          "hash": "m6ZfvWyYCiexVFZYEn9F06uEN7gg2t93th5/kB0X8LU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMLogLevel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMLogLevel.html",
+          "hash": "1aMwVd+oEvy7Df0GGcHv8f123N6Vlu7haiJAspB4oUQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMLoginStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMLoginStatus.html",
+          "hash": "PZIq9EUBKbUnfObAhdqupiprD/5bxHbxnCOlcvQKzAY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMMsgPriority.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMMsgPriority.html",
+          "hash": "2/Wa5sY1+UCNwYLYsZaUGft5lON89s6KOkI/nyn9pi4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMMsgStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMMsgStatus.html",
+          "hash": "V3brgt8hgPKN03V1zCnB+gH9xWmipoyvmPa4pBpxP0w="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMNetworkStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMNetworkStatus.html",
+          "hash": "CmaimfX8lY9ZwcOSjBkM+Zoo0tNRhuzHowEdOOpLHrI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMOfflinePushFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMOfflinePushFlag.html",
+          "hash": "sD03qMMb/xCMYgVqtJJVHARHn+XQW4nfgnRJdpZ7NKs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMPlatform.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMPlatform.html",
+          "hash": "iR6/NtJ+mCcYaCN2oOC0GWcQTpbRMPbNo0nm0Ud9oM4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMProfileAddPermission.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMProfileAddPermission.html",
+          "hash": "itSiQO9j6nx7yJaZEulldNX2pSe1l72DJfxQvNzxjsk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMProfileChangeType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMProfileChangeType.html",
+          "hash": "ZtQMmp8TiLaevOIJuDXhxlQV6BKPecXrK86JfhYhwwE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMReceiveMessageOpt.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMReceiveMessageOpt.html",
+          "hash": "rWdo+ElRHBnEXWZoqzLeVZUGbs8fS5lAS9m3D5JTVCE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.TIMResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.TIMResult.html",
+          "hash": "PgGqjbhXpQdQQlHMN3CSR8Da3x5i9dsLlWQwG0CmL1M="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.enums.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.enums.html",
+          "hash": "LF1BsWYHArwIp5t1GAo4UnT8eBOnCcO/OfpgSOJdEeQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.AndroidOfflinePushConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.AndroidOfflinePushConfig.html",
+          "hash": "30M99Xhptcg1Blhs+KvGUUrSmJLzS8j3NqsO8nOtFps="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.ConvInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.ConvInfo.html",
+          "hash": "mUQX8bUwwE33BPuAwOPV36nePjAxlxjDt4M1Kw+6cSQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.ConvParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.ConvParam.html",
+          "hash": "LMtBl12vujRzgvm2dyECD6kCxTahIblG8t0u3xZhDYU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.CosSaveRegionForConversationParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.CosSaveRegionForConversationParam.html",
+          "hash": "ZPmE2qiglBhV9zIQMkMspLhsZhqVUOk9CROG2A9qef4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.CreateGroupParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.CreateGroupParam.html",
+          "hash": "5RnufJQyZULUQh136QUZn47vEfk70bq1/yKBIwrqn+E="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.CustomServerInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.CustomServerInfo.html",
+          "hash": "D7h47zNxV0+2IpR7gwjVK/kZ5Hlys+rP7qghVKjSou0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.DownloadElemParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.DownloadElemParam.html",
+          "hash": "TDJqdEN3tOsbp2JV+f0Cw943JRH/lgUupcKO7hIQ4oQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.Draft.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.Draft.html",
+          "hash": "xr35eK4VJIWdGAftB0ZdJeg3PwtmrFKbnAqArU2isXY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.DraftParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.DraftParam.html",
+          "hash": "Cc6G0imLsLTY9v1xiesJURJmEhoZTYcg7kovCm7ZWZ4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.Elem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.Elem.html",
+          "hash": "nfHcIOZj5l6oxKsP3lW2IRm3UquL5PdxJeObc/UxrcM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.ExperimentalAPIReqeustParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.ExperimentalAPIReqeustParam.html",
+          "hash": "tazgzLUpdh+5lv6LJvWD7s8DlVP2KVvU+vfzWecnN+E="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendAddPendency.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendAddPendency.html",
+          "hash": "MlHfXd+lXB69Odcb8lM+NT4RKmUWyj8YP5oW8rsKQQg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendGroupInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendGroupInfo.html",
+          "hash": "3qLyFtb0cpLtWlbzVu9Xzq8XkINkkWT6fHEK+fd+Uqw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendProfile.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendProfile.html",
+          "hash": "bgbMxcg9J4Z6zf30Vl5kIN6w16WsWtthqxybYnBmE0Y="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendProfileCustemStringInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendProfileCustemStringInfo.html",
+          "hash": "JS0R+yWbNHuzEbFzWcP9cmnGjFXWAB3WPFbZn6F+qM4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendProfileItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendProfileItem.html",
+          "hash": "Pv6ktvyOemwGUoGfXVa5j4aXfT0RSR/JQrlm2SwNBe8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendRespone.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendRespone.html",
+          "hash": "hmpBUcF/ETZn9HtkMgPIL9lH6E5lbE4IGLin2ZkgsGg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendSearchParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendSearchParam.html",
+          "hash": "OEG2h0sabXoVM7WCgtUjSt02eow1PlONjJBkrU9dbMg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendShipGetProfileListParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendShipGetProfileListParam.html",
+          "hash": "crqe6zZse7gz331STjUlT1saClORw8sl5m2gfuaLU0Y="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendshipAddFriendParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipAddFriendParam.html",
+          "hash": "xZZxCKokzUDMfKK6ntRl3s8VR1xCfBhZfPispDfnOiI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendshipCheckFriendTypeParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipCheckFriendTypeParam.html",
+          "hash": "sgNGjY/pMFK8jJ94qLk41tvIinwoiXw4kXr/R96Jp8w="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendshipDeleteFriendParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipDeleteFriendParam.html",
+          "hash": "quKkFyNsPWcqr6fYUIp68aOfd+yYt8q8ERRhk713Kx8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendshipDeletePendencyParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipDeletePendencyParam.html",
+          "hash": "R1YrJkAICOQPueBjT5RT4HavfA/DEJ8nQM3CKsRi6WA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendshipGetPendencyListParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipGetPendencyListParam.html",
+          "hash": "ykbUbQp17bAf6TnvKUEdSXj5jVhlk3JlM8EnNCoq1jw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendshipModifyFriendGroupParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipModifyFriendGroupParam.html",
+          "hash": "d9EZDRFwQVGJ5tLtgXBvxcLTmVwX/Ep5yvFhrwCtGNY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.FriendshipModifyFriendProfileParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.FriendshipModifyFriendProfileParam.html",
+          "hash": "tz3upOXz7VFqQZh6595THYYOHH9lq0zMFKeODPViPDY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupAtInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupAtInfo.html",
+          "hash": "puHgcKjArjcw/3MDpDT2KRUtv+lulQevv3jsMQOd08M="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupAttributes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupAttributes.html",
+          "hash": "VsXJZj4CalFwVA5af2lc0UWXBosbfcjSDVK9SxVjOw8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupDeleteMemberParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupDeleteMemberParam.html",
+          "hash": "X8SPIu0PTxfkDcucRU+UpCMJegONW1RSxVAbCwPO4Y4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupGetInfoOption.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupGetInfoOption.html",
+          "hash": "Su0bedjdSGuOdrvOjHfxktHo2dXEgdRIyq35O72bOm0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupGetMemberInfoListParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupGetMemberInfoListParam.html",
+          "hash": "iAtUh5QG1WWZCgdyjp8CUmPLRuFUNUdTdHgCWO1auHg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupHandlePendencyParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupHandlePendencyParam.html",
+          "hash": "SLtPzbNzYPfeRfbf34XyizvNEpuhPBWjGaIrTnIV1n8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupInfoCustemString.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupInfoCustemString.html",
+          "hash": "wN27B58mQcc3NjCHFo1w+ZhGGrGmW4ChrAPfwofCOJ8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupInviteMemberParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupInviteMemberParam.html",
+          "hash": "6EJLnhUPx2b9Q8KzqwyjC/SNIjnQpLmT7vkctlLGwh8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberGetInfoOption.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberGetInfoOption.html",
+          "hash": "GXtDZFzAZPohwA1DsAhs09HjjwC/uzoGsV7xyNoGOXs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberInfo.html",
+          "hash": "ZAwSaJNRwrtlCusz/ng+GEd+YWHMTAVFpc4ghSu1iNU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberInfoCustemString.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberInfoCustemString.html",
+          "hash": "13dZfP3FN8nU6I9yGx3YQUf2UBtUAAn9RDLSVxdqEOw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberSearchParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupMemberSearchParam.html",
+          "hash": "vUxPFgJeB0cQVI7ivrhMTU+ORKTOKRu9/ECNn5Nvf0w="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupModifyInfoParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupModifyInfoParam.html",
+          "hash": "Cqsun28tV2mF/Z2JYAx7l7l9iF9y1jdJDz/JhTgSgTE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupModifyMemberInfoParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupModifyMemberInfoParam.html",
+          "hash": "32G5DaAKHAsaLzPFDXMI4hCBfR0Z+Yt1aa584putEP8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupPendency.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupPendency.html",
+          "hash": "0Z0spAY46Sh3/R8bnivfetNjtJjY1LzMQnoggJ+5L5k="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupPendencyOption.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupPendencyOption.html",
+          "hash": "d4PkBK/NmmObG+yx1A4WG+Soib9e9z1Di2gBNmNQkEs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupSearchParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupSearchParam.html",
+          "hash": "cuMnGNAM07VLo0mHkH5yf92NRnDZc/VF6tSM4ENCbEQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupTipGroupChangeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupTipGroupChangeInfo.html",
+          "hash": "mOY6wIVTkBqva12JYwVKUO84nJoSPdUgTEGHMRVxfRo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupTipMemberChangeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupTipMemberChangeInfo.html",
+          "hash": "pLv6ybSy8fDoYQyj3XzhbXBVqBjn9u8ik+XesgPBkCE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.GroupTipsElem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.GroupTipsElem.html",
+          "hash": "xCr/R35nrSJvQh82juKaoR7sMl4CIxUsRauhN+v/Wgg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.HttpProxyInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.HttpProxyInfo.html",
+          "hash": "bsoGeAyYuXJs2o43r/baIUorOGpuKQKE3/1ky2oe7OM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.IOSOfflinePushConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.IOSOfflinePushConfig.html",
+          "hash": "YpCayBHcSiFZ4gtkWtCF+Uj+6/XV+7hqUPI7lT1qO98="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.Message.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.Message.html",
+          "hash": "dJeWRsy4GD06NAtR1jSL6nX9tBj98/xndIBMcc9bDn4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.MessageReceipt.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.MessageReceipt.html",
+          "hash": "JMu3FgDue96RE6SvppJlCwjkjtn9DqSEXARoJsh6vXw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.MessageSearchParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.MessageSearchParam.html",
+          "hash": "7J6sfYpBQkLrPU7FAxxKfhXhJpJKXOD8L7XodiHPoSg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.MsgBatchSendParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.MsgBatchSendParam.html",
+          "hash": "wY4J6j8IH4RdJ55po/7zCDQcQ3SnPghWIf+oQb+iRW8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.MsgDeleteParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.MsgDeleteParam.html",
+          "hash": "5rQf14l2afFdo+9ORwS83tfWPPE50kH2vDqO8Axr8Qg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.MsgGetMsgListParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.MsgGetMsgListParam.html",
+          "hash": "fC9zb0AzmUw3wlZlMcpGe1UylmCjl2b+Wj/ltZjlYT8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.MsgLocator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.MsgLocator.html",
+          "hash": "Omgl3gJWaN5a2azPRbTy5wFGZ8YZ8FwaUXJsv7sGTW8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.OfflinePushConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.OfflinePushConfig.html",
+          "hash": "QO2gtqpYsdt/xfSCKg2NnMIN4q89ct9bU700SgRGDiU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.SM4GCMCallbackParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.SM4GCMCallbackParam.html",
+          "hash": "5mXoI8TVFGFu6A2l9IWpFGCJRiRlDGrA7FyXVtHM62s="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.SSODataParam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.SSODataParam.html",
+          "hash": "aLes/iiTbfCYd7s/1IreLeiJZRPfDOCDCh0dbO9PNaU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.SdkConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.SdkConfig.html",
+          "hash": "X/RyAVlBqrBI0v2DXoduRl+KXAIQ3FjgNo3ONLVb2e0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.ServerAddress.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.ServerAddress.html",
+          "hash": "fKl+8QaOK1B5IHUIcOZizeAA6ighDjLXj2+X1iycRIY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.SetConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.SetConfig.html",
+          "hash": "1c/AWLEg3ck8WQSxtzKMs2X0lYewJ9VTz79Qo+gmJSo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.Socks5ProxyInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.Socks5ProxyInfo.html",
+          "hash": "4jSUX+lemyN//dNeaG+DF8ZraDBd2XDgJXHi4yEVnqY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.UserConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.UserConfig.html",
+          "hash": "BMHEYv4H+Skl+sGqwqSu6dBET9bHVDFUifWeSKmlvDs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.UserProfile.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.UserProfile.html",
+          "hash": "2cRnkzwTNtZLo2PuS7aEuPD9fvr3w/MZhLaboLtcXLk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.UserProfileCustemStringInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.UserProfileCustemStringInfo.html",
+          "hash": "MJ/eLco2Sx0iizdtB7BHXizGnKxe62jDQioCq6SM7RY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.UserProfileItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.UserProfileItem.html",
+          "hash": "FJmMRxjJde18S7hlKoITv8cizPNh5LyGMb9GlvcIgZ8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.types.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.types.html",
+          "hash": "7j0F5hOKQJBI72WQSLb7i0+pKtY+YPOEow9vMu6LbNg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/com.tencent.imsdk.unity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/com.tencent.imsdk.unity.html",
+          "hash": "pZT9LX2ffG4XkdpPnX+Sk43S5lLz0m0Q9BtnjSZ//w0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "zZ0s5OA62DJyyXMRGQYVC0CCvnF6Yf9JrpStJYLk5kY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "J16tPljbCW5UQZHXkCSKEgj/ndCORtU7lIyC3KiEN9I="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "BlPxk5mtl2kgfcZUgkEguqiSAR/EUyUTT4EdebwkQvs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "eJe4RPOVc5VL4Ma+l0bnGWYSbmg+F4jj3nEQ/z6cwBw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "qIRsAMUcTYxRicVL9vNYF3+3YqQPWrJ0n/2+6/aFR1E="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": true,
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 2,
+          "skipped_file_count": 1
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 135,
+          "skipped_file_count": 135
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": true,
+        "details": "Can support incremental post processing.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
