@@ -33,17 +33,17 @@ import java.lang.reflect.Method;
 public class
 tencent_im_sdk_plugin implements FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware {
     /**
-     * 日志签名
+     * log signature
      */
     public static String TAG = "tencent_im_sdk_plugin";
 
     /**
-     * 全局上下文
+     * global context
      */
     public static Context context;
 
     /**
-     * 与Flutter的通信管道
+     * Communication pipeline with Flutter
      */
     private static MethodChannel channel;
     private static MessageManager messageManager;

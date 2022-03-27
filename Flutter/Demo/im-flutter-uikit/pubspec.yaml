@@ -53,9 +53,9 @@ dependencies:
     git:
       url: https://github.com/TencentCloud/TPNS-Flutter-Plugin
       ref: V1.1.5
-  tim_ui_kit: ^0.0.4
-  # tim_ui_kit:
-  #   path: package_src/tim_ui_kit
+  # tim_ui_kit: ^0.0.5
+  tim_ui_kit:
+    path: package_src/tim_ui_kit
   super_tooltip: ^1.0.1
 dev_dependencies:
   fast_i18n: 5.10.0

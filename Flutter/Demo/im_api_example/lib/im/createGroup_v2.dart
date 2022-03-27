@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_add_opt_enum.dart';
+import 'package:tencent_im_sdk_plugin/enum/group_member_role_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member.dart';
@@ -45,7 +46,10 @@ class CreateGroupV2State extends State<CreateGroupV2> {
   createGroupv2() async {
     List<V2TimGroupMember> list = [];
     for (String userID in memberList) {
-      list.add(V2TimGroupMember(userID: userID, role: 200));
+      list.add(V2TimGroupMember(
+        userID: userID,
+        role: GroupMemberRoleTypeEnum.V2TIM_GROUP_MEMBER_ROLE_MEMBER,
+      ));
     }
     V2TimValueCallback<String> res =
         await TencentImSDKPlugin.v2TIMManager.getGroupManager().createGroup(

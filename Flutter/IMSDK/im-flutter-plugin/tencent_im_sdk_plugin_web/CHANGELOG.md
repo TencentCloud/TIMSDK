@@ -27,3 +27,12 @@
 
 ## 0.1.0
 * 升级interface
+
+## 0.1.1
+* 升级interface
+
+## 0.1.2
+* 修改grouplistener
+
+## 0.1.3
+* 修改初始化SDK的传参

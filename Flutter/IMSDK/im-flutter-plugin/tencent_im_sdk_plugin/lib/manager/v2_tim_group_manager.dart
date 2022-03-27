@@ -18,7 +18,7 @@ import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_search_result.d
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_search_param.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:tencent_im_sdk_plugin_platform_interface/im_flutter_plugin_platform_interface.dart';
-import 'package:tencent_im_sdk_plugin_platform_interface/models/v2_tim_group_member.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member.dart';
 
 /// 群组高级接口，包含了群组的高级功能，例如群成员邀请、非群成员申请进群等操作接口。
 ///

@@ -1,5 +1,7 @@
 import '../i18n/i18n_utils.dart';
 
+enum WebUrl { personalInfo, thirdPartyInfo }
+
 class IMDemoConfig {
   static const int sdkappid = int.fromEnvironment('SDK_APPID', defaultValue: 0);
   static const String key = String.fromEnvironment('KEY', defaultValue: "");
@@ -25,4 +27,11 @@ class IMDemoConfig {
   };
   // appBarTile无法做适配，必须要常量才可以
   static const double appBarTitleFontSize = 17;
+
+  static const Map<WebUrl, String> webUrls = {
+    WebUrl.personalInfo:
+        "https://privacy.qq.com/document/preview/45ba982a1ce6493597a00f8c86b52a1e",
+    WebUrl.thirdPartyInfo:
+        "https://privacy.qq.com/document/preview/dea84ac4bb88454794928b77126e9246",
+  };
 }

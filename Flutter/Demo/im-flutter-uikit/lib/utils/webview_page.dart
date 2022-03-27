@@ -5,14 +5,10 @@ import 'package:timuikit/src/provider/theme.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 
-class PrivacyAgreementPage extends StatefulWidget {
-  const PrivacyAgreementPage({Key? key}) : super(key: key);
+class WebviewPage extends StatelessWidget {
+  const WebviewPage({Key? key, required this.url}) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => PrivacyAgreementPageState();
-}
-
-class PrivacyAgreementPageState extends State {
+  final String url;
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<DefaultThemeData>(context).theme;
@@ -52,10 +48,8 @@ class PrivacyAgreementPageState extends State {
       ),
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
-        child: const WebView(
-            initialUrl:
-                'https://privacy.qq.com/document/preview/1cfe904fb7004b8ab1193a55857f7272',
-            javascriptMode: JavascriptMode.unrestricted),
+        child: WebView(
+            initialUrl: url, javascriptMode: JavascriptMode.unrestricted),
       ),
     );
   }

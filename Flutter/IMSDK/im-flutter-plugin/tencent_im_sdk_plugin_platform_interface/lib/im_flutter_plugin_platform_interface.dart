@@ -116,7 +116,9 @@ abstract class ImFlutterPlatform extends PlatformInterface {
       {required int sdkAppID,
       required int loglevel,
       String? listenerUuid,
-      V2TimSDKListener? listener}) {
+      V2TimSDKListener? listener,
+      required String uiPlatform,
+      }) {
     throw UnimplementedError('initSDK() has not been implemented.');
   }
 
@@ -1922,15 +1924,27 @@ abstract class ImFlutterPlatform extends PlatformInterface {
     String? listenerUuid,
   }) async {
     throw UnimplementedError(
-        'addAdvancedMsgListener() has not been implemented.');
+        'addConversationListener() has not been implemented.');
+  }
+
+  Future<void> addGroupListener({
+    required V2TimGroupListener listener,
+    String? listenerUuid,
+  }) async {
+    throw UnimplementedError('addGroupListener() has not been implemented.');
+  }
+
+  Future<void> removeGroupListener({
+    String? listenerUuid,
+  }) async {
+    throw UnimplementedError('removeGroupListener() has not been implemented.');
   }
 
   Future<void> addFriendListener({
     required V2TimFriendshipListener listener,
     String? listenerUuid,
   }) async {
-    throw UnimplementedError(
-        'addAdvancedMsgListener() has not been implemented.');
+    throw UnimplementedError('addFriendListener() has not been implemented.');
   }
 
   /// 移除高级消息监听器

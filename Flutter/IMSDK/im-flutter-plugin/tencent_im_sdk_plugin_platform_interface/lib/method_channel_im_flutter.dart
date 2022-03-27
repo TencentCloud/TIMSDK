@@ -76,7 +76,9 @@ class MethodChannelIm extends ImFlutterPlatform {
       {required int sdkAppID,
       required int loglevel,
       String? listenerUuid,
-      V2TimSDKListener? listener}) async {
+      V2TimSDKListener? listener,
+      required String uiPlatform,
+      }) async {
     return V2TimValueCallback<bool>.fromJson(
       formatJson(
         await _channel.invokeMethod(
@@ -85,7 +87,8 @@ class MethodChannelIm extends ImFlutterPlatform {
             {
               "sdkAppID": sdkAppID,
               "logLevel": loglevel,
-              "listenerUuid": listenerUuid
+              "listenerUuid": listenerUuid,
+              "uiPlatform": uiPlatform
             },
           ),
         ),
@@ -513,13 +516,35 @@ class MethodChannelIm extends ImFlutterPlatform {
   }
 
   @override
+  Future<void> removeGroupListener({
+    String? listenerUuid,
+  }) async {
+    return _channel.invokeMethod("removeGroupListener",
+        buildTimManagerParam({"listenerUuid": listenerUuid}));
+  }
+
+  @override
   Future<void> addConversationListener({
     required V2TimConversationListener listener,
     String? listenerUuid,
   }) async {
     return await _channel.invokeMethod(
         "addConversationListener",
-        buildMessageMangerParam(
+        buildConversationManagerParam(
+          {
+            "listenerUuid": listenerUuid,
+          },
+        ));
+  }
+
+  @override
+  Future<void> addGroupListener({
+    required V2TimGroupListener listener,
+    String? listenerUuid,
+  }) async {
+    return await _channel.invokeMethod(
+        "addGroupListener",
+        buildTimManagerParam(
           {
             "listenerUuid": listenerUuid,
           },

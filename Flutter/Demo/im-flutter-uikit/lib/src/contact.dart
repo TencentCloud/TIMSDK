@@ -65,63 +65,85 @@ class _ContactState extends State<Contact> {
     }
   }
 
-  Widget _topListBuilder(TopListItem item) {
+  Widget? _topListBuilder(TopListItem item) {
     final showName = item.name;
-    return InkWell(
-      onTap: () {
-        _topListItemTap(item.id);
-      },
-      child: Container(
-        padding: const EdgeInsets.only(top: 10, left: 16),
-        child: Row(
-          children: [
-            Container(
-              height: 40,
-              width: 40,
-              margin: const EdgeInsets.only(right: 12),
-              child: Avatar(
-                  faceUrl: _getImagePathByID(item.id),
-                  showName: showName,
-                  isFromLocal: true),
-            ),
-            Expanded(
-                child: Container(
-              padding: const EdgeInsets.only(top: 10, bottom: 19),
-              decoration: BoxDecoration(
-                  border:
-                      Border(bottom: BorderSide(color: hexToColor("DBDBDB")))),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    showName,
-                    style: TextStyle(color: hexToColor("111111"), fontSize: 18),
-                  ),
-                  Expanded(child: Container()),
-                  if (item.id == "newContact") const TIMUIKitUnreadCount(),
-                  Container(
-                    margin: const EdgeInsets.only(right: 16),
-                    child: Icon(
-                      Icons.keyboard_arrow_right,
-                      color: hexToColor('BBBBBB'),
-                    ),
-                  )
-                ],
+    if (item.id == "newContact") {
+      return InkWell(
+        onTap: () {
+          _topListItemTap(item.id);
+        },
+        child: Container(
+          padding: const EdgeInsets.only(top: 10, left: 16),
+          child: Row(
+            children: [
+              Container(
+                height: 40,
+                width: 40,
+                margin: const EdgeInsets.only(right: 12),
+                child: Avatar(
+                    faceUrl: _getImagePathByID(item.id),
+                    showName: showName,
+                    isFromLocal: true),
               ),
-            ))
-          ],
+              Expanded(
+                  child: Container(
+                padding: const EdgeInsets.only(top: 10, bottom: 19),
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(color: hexToColor("DBDBDB")))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      showName,
+                      style:
+                          TextStyle(color: hexToColor("111111"), fontSize: 18),
+                    ),
+                    Expanded(child: Container()),
+                    const TIMUIKitUnreadCount(),
+                    Container(
+                      margin: const EdgeInsets.only(right: 16),
+                      child: Icon(
+                        Icons.keyboard_arrow_right,
+                        color: hexToColor('BBBBBB'),
+                      ),
+                    )
+                  ],
+                ),
+              ))
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return TIMUIKitContact(
       topList: [
-        TopListItem(name: imt("新的联系人"), id: "newContact"),
-        TopListItem(name: imt("我的群聊"), id: "groupList"),
-        TopListItem(name: imt("黑名单"), id: "blackList")
+        TopListItem(
+            name: imt("新的联系人"),
+            id: "newContact",
+            icon: Image.asset(_getImagePathByID("newContact")),
+            onTap: () {
+              _topListItemTap("newContact");
+            }),
+        TopListItem(
+            name: imt("我的群聊"),
+            id: "groupList",
+            icon: Image.asset(_getImagePathByID("groupList")),
+            onTap: () {
+              _topListItemTap("groupList");
+            }),
+        TopListItem(
+            name: imt("黑名单"),
+            id: "blackList",
+            icon: Image.asset(_getImagePathByID("blackList")),
+            onTap: () {
+              _topListItemTap("blackList");
+            })
       ],
       topListItemBuilder: _topListBuilder,
       onTapItem: (item) {
