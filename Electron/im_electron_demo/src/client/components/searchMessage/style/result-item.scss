@@ -1,0 +1,15 @@
+.result-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+
+    &__nick-name {
+        margin-left: 8px;
+    }
+
+    &:hover {
+        background-color: #E8F2FF;
+    }
+}

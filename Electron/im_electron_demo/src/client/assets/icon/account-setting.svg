@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_列表_账号设置</title>
+    <defs>
+        <circle id="path-1" cx="18" cy="18" r="18"></circle>
+    </defs>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-16.000000, -410.000000)">
+            <g id="ic_列表_账号设置" transform="translate(16.000000, 410.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="蒙版" fill="#006EFF" fill-rule="nonzero" xlink:href="#path-1"></use>
+                <path d="M25.504378,16.7284672 C26.8555821,15.3649778 27.5794694,13.7590551 26.4229769,11.5644789 L23.8815199,14.1290432 L21.6611799,11.8885156 L24.2026369,9.32395133 C22.5829193,8.71707576 20.4709269,8.92227259 19.1197228,10.285762 C17.7810807,11.6365751 17.3924427,13.5586119 18.0221148,15.2358385 L9.82460069,22.195101 C8.73248862,23.2971426 8.72149683,25.0734025 9.81360891,26.1762364 C10.905721,27.2782781 12.6714723,27.2727323 13.7635844,26.1706906 L20.6185308,17.8558614 C22.2814304,18.4920508 24.1657359,18.0792803 25.504378,16.7284672" id="Fill-388" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

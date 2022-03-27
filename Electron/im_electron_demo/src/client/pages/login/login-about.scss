@@ -1,0 +1,54 @@
+.login-about {
+    &__header {
+        display: flex;
+        align-items: center;
+
+        &--logo {
+            width: 50px;
+            height: 36px;
+            background-image: url('../../assets/icon/tencent-cloud-logo.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        &--tc-text, &--im-text {
+            font-size: 24px;
+            margin-left: 12px;
+            padding-right: 20px;
+            font-weight: bold;
+        }
+    }
+
+    &__text {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #888888;
+        line-height: 22px;
+    }
+
+    &__logo {
+        margin-top: 20px;
+        img {
+            display: block;
+            margin: 0 auto;
+            width: 280px;
+        }
+    }
+
+    &__button {
+        display: flex;
+        flex-direction: column;
+        margin-top: 30px;
+
+        &--purchase {
+            margin-bottom: 8px;
+        }
+
+        &--contact {
+            color: rgba(136, 136, 136, 1);
+        }
+    }
+}

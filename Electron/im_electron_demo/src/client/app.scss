@@ -1,0 +1,22 @@
+#app-container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  font-family: PingFangSC-Regular, PingFang SC;
+}
+
+.dialog {
+  & .tea-dialog__inner {
+    box-shadow: 0px 1px 8px 0px rgba(0, 50, 150, 0.1);
+    border-radius: 4px;
+  }
+}
+.empty {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}

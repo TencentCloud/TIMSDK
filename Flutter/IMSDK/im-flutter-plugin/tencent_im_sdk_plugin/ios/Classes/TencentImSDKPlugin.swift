@@ -78,6 +78,18 @@ public class TencentImSDKPlugin: NSObject, FlutterPlugin, UNUserNotificationCent
 		case "setFriendListener":
 			sdkManager!.setFriendListener(call: call, result: result)
 			break
+		case "addConversationListener":
+			sdkManager!.addConversationListener(call: call, result: result)
+			break
+		case "addFriendListener":
+			sdkManager!.addFriendListener(call: call, result: result)
+			break
+		case "removeConversationListener":
+			sdkManager!.removeConversationListener(call: call, result: result)
+			break
+		case "removeFriendListener":
+			sdkManager!.removeFriendListener(call: call, result: result)
+			break
 		case "addAdvancedMsgListener":
 			sdkManager!.addAdvancedMsgListener(call: call, result: result)
 			break
@@ -95,6 +107,12 @@ public class TencentImSDKPlugin: NSObject, FlutterPlugin, UNUserNotificationCent
 			break
 		case "setGroupListener":
 			sdkManager!.setGroupListener(call: call, result: result)
+			break
+		case "addGroupListener":
+			sdkManager!.addGroupListener(call: call, result: result)
+			break
+		case "removeGroupListener":
+			sdkManager!.removeGroupListener(call: call, result: result)
 			break
 		case "addSimpleMsgListener":
 			sdkManager!.addSimpleMsgListener(call: call, result: result)

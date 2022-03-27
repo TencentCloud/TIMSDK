@@ -95,7 +95,6 @@ public class FriendshipManager {
         friendshipListenerList.put(listenerUuid,friendshipListener);
         V2TIMManager.getFriendshipManager().addFriendListener(friendshipListener);
         result.success("addFriendListener  success");
-        result.success("add friend msg listener success");
     }
     public void addFriendListener (MethodCall methodCall, final MethodChannel.Result result){
         final  String listenerUuid = methodCall.argument("listenerUuid");

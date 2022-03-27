@@ -87,41 +87,43 @@ class _ChatState extends State<Chat> {
       //   }
       //   return null;
       // },
-      appBarActions: [
-        IconButton(
-            onPressed: () async {
-              final conversationType = widget.selectedConversation.type;
-              if (conversationType == 1) {
-                final userID = widget.selectedConversation.userID;
-                // if had remark modifed its will back new remark
-                String? newRemark = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => UserProfile(userID: userID!),
-                    ));
-                setState(() {
-                  backRemark = newRemark;
-                });
-              } else {
-                final groupID = widget.selectedConversation.groupID;
-                if (groupID != null) {
-                  Navigator.push(
+      appBarConfig: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () async {
+                final conversationType = widget.selectedConversation.type;
+                if (conversationType == 1) {
+                  final userID = widget.selectedConversation.userID;
+                  // if had remark modifed its will back new remark
+                  String? newRemark = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => GroupProfilePage(
-                          groupID: groupID,
-                        ),
+                        builder: (context) => UserProfile(userID: userID!),
                       ));
+                  setState(() {
+                    backRemark = newRemark;
+                  });
+                } else {
+                  final groupID = widget.selectedConversation.groupID;
+                  if (groupID != null) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GroupProfilePage(
+                            groupID: groupID,
+                          ),
+                        ));
+                  }
                 }
-              }
-            },
-            icon: Image.asset(
-              'images/more.png',
-              package: 'tim_ui_kit',
-              height: 34,
-              width: 34,
-            ))
-      ],
+              },
+              icon: Image.asset(
+                'images/more.png',
+                package: 'tim_ui_kit',
+                height: 34,
+                width: 34,
+              ))
+        ],
+      ),
     );
   }
 }

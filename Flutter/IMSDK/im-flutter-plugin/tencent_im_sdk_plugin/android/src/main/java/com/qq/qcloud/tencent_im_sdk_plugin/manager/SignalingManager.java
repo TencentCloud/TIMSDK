@@ -144,7 +144,7 @@ public class SignalingManager {
 
             @Override
             public void onSuccess() {
-                // 这里使用上面同步返回的id
+                // Here, the id returned synchronously above is used
                 CommonUtil.returnSuccess(result,invitedIDMap.get(current));
                 invitedIDMap.remove(current);
             }

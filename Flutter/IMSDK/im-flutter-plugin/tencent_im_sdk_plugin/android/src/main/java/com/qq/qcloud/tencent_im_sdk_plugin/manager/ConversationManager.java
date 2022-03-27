@@ -205,7 +205,7 @@ public class ConversationManager {
         });
     }
     public void deleteConversation(MethodCall methodCall, final MethodChannel.Result result) {
-        // 会话ID
+        // session id
         String conversationID = CommonUtil.getParam(methodCall, result, "conversationID");
         V2TIMManager.getConversationManager().deleteConversation(conversationID, new V2TIMCallback() {
             @Override
@@ -221,7 +221,7 @@ public class ConversationManager {
 
     }
     public void setConversationDraft(MethodCall methodCall, final MethodChannel.Result result) {
-        // 会话ID
+        // session id
         String conversationID = CommonUtil.getParam(methodCall, result, "conversationID");
         String draftText = CommonUtil.getParam(methodCall, result, "draftText");
         if(draftText==""){

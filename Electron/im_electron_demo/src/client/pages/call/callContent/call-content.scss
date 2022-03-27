@@ -1,0 +1,38 @@
+body {
+    padding: 0;
+    margin: 0;
+    font-family: PingFangSC-Regular, PingFang SC;
+}
+
+.call-content {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        font-weight: 400;
+        font-size: 14px;
+        color: #666666;
+        line-height: 20px;
+        height: 36px;
+        margin-left: 20px;
+        
+        -webkit-app-region: drag;
+    }
+
+    &__video {
+        flex: 1;
+    }
+
+    &__entering-room {
+        position: fixed;
+        top: 36px;
+        background: #000;
+        color: #fff;
+        z-index: 1;
+        text-align: center;
+    }
+}

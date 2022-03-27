@@ -57,20 +57,20 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
 /**
- * 工具类
+ * Tools
  */
 public class CommonUtil {
     /**
-     * 主线程处理器
+     * main thread processor
      */
     private final static Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
 
     /**
-     * 通用方法，获得参数值，如未找到参数，则直接中断
+     * General method, get the parameter value, if the parameter is not found, it will be interrupted directly
      *
-     * @param methodCall 方法调用对象
-     * @param result     返回对象
-     * @param param      参数名
+     * @param methodCall method call object
+     * @param result     return object
+     * @param param      parameter name
      */
     public static <T> T getParam(MethodCall methodCall, MethodChannel.Result result, String param) {
         T par = methodCall.argument(param);
@@ -82,10 +82,10 @@ public class CommonUtil {
     }
 
     /**
-     * 运行主线程返回结果执行
+     * Run the main thread and return the result to execute
      *
-     * @param result 返回结果对象
-     * @param param  返回参数
+     * @param result return result object
+     * @param param  return parameter
      */
     public static void runMainThreadReturn(final MethodChannel.Result result, final Object param) {
         MAIN_HANDLER.post(new Runnable() {
@@ -175,7 +175,7 @@ public class CommonUtil {
         }else{
             message.put("progress",progress[0]);
         }
-        // onProgress监听会传回id
+        // onProgress listener will return id
         if(progress.length == 2){
             message.put("id",progress[1]);
         }
@@ -846,12 +846,12 @@ public class CommonUtil {
         return rinfo;
     }
     /**
-     * 运行主线程返回错误结果执行
+     * Running the main thread returns an error result execution
      *
-     * @param result       返回结果对象
-     * @param errorCode    错误码
-     * @param errorMessage 错误信息
-     * @param errorDetails 错误内容
+     * @param result       return result object
+     * @param errorCode    error code
+     * @param errorMessage error message
+     * @param errorDetails Error content
      */
     public static void runMainThreadReturnError(final MethodChannel.Result result, final String errorCode, final String errorMessage, final Object errorDetails) {
         MAIN_HANDLER.post(new Runnable() {

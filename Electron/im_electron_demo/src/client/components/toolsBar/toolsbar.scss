@@ -1,0 +1,39 @@
+.windows {
+    height: 20px;
+    padding: 5px 15px;
+    background-color: #F5F5F5;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    -webkit-app-region: drag;
+
+    .min-size,.max-size,.close-btn {
+        cursor: pointer;
+        -webkit-app-region: none;
+    }
+
+    .min-size {
+        margin-right: 20px;
+    }
+    .max-size {
+        width: 8px;
+        height: 8px;
+        border: 2px solid #8F959E;
+        margin-right: 20px;
+    }
+}
+.mac {
+    height: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    -webkit-app-region: drag;
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+
+    .mac-bars {
+        margin-top: 20px;
+    }
+}

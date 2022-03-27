@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:convert';
 
 import 'package:tencent_im_sdk_plugin/enum/V2TimAdvancedMsgListener.dart';
@@ -688,6 +690,7 @@ class V2TIMManager {
     required LogLevelEnum loglevel,
     required V2TimSDKListener listener,
   }) {
+    String platform = _getUiPlatform(StackTrace.current.toString());
     final String uuid = Uuid().v4();
     this.initSDKListenerList[uuid] = listener;
     return ImFlutterPlatform.instance.initSDK(
@@ -695,7 +698,17 @@ class V2TIMManager {
       loglevel: EnumUtils.convertLogLevelEnum(loglevel),
       listenerUuid: uuid,
       listener: listener,
+      uiPlatform: platform,
     );
+  }
+
+  ///@nodoc
+  String _getUiPlatform(String trace) {
+    String platfrom = "flutter";
+    if (trace.contains("package:tim_ui_kit")) {
+      platfrom = "flutter_uikit";
+    }
+    return platfrom;
   }
 
   ///反初始化 SDK
@@ -1137,6 +1150,40 @@ class V2TIMManager {
     this.groupListenerList[uuid] = listener;
     return ImFlutterPlatform.instance
         .setGroupListener(listener: listener, listenerUuid: uuid);
+  }
+
+  /// 添加群组监听器
+  ///
+  /// 在web端时，不支持onQuitFromGroup回调
+  ///
+  Future<void> addGroupListener({
+    required V2TimGroupListener listener,
+  }) {
+    final uuid = Uuid().v4();
+    this.groupListenerList[uuid] = listener;
+    return ImFlutterPlatform.instance
+        .addGroupListener(listener: listener, listenerUuid: uuid);
+  }
+
+  /// 移除群组监听器
+  ///
+  ///
+  Future<void> removeGroupListener({
+    V2TimGroupListener? listener,
+  }) {
+    var listenerUuid = "";
+    if (listener != null) {
+      listenerUuid = this.groupListenerList.keys.firstWhere(
+            (k) => this.groupListenerList[k] == listener,
+            orElse: () => "",
+          );
+      this.groupListenerList.remove(listenerUuid);
+    } else {
+      this.groupListenerList.clear();
+    }
+    return ImFlutterPlatform.instance.removeGroupListener(
+      listenerUuid: listenerUuid,
+    );
   }
 
   /// 设置apns监听

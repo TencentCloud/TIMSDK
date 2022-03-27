@@ -1,0 +1,59 @@
+.black-list {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__title {
+        height: 36px;
+        display: flex;
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+        align-items: center;
+
+        &--icon {
+            display: inline-block;
+            height: 36px;
+            width: 36px;
+            background-image: url("../../../assets/icon/black-list.svg");
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 50%;
+            background-color: #515151;
+        }
+
+        &--text {
+            margin-left: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #000000;
+        }
+    }
+
+    &__content {
+        flex: 1;
+    }
+
+    &__content-item {
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &--left {
+            display: flex;
+            align-items: center;
+        }
+
+        &--avatar {
+            margin-right: 12px;
+        }
+
+        &--name {
+            font-size: 14px;
+            font-weight: 400;
+            color: #000000;
+        }
+
+    }
+}

@@ -1,0 +1,60 @@
+.settings {
+    display: flex;
+    height: 100%;
+    .settings-nav {
+        width: 256px;
+        border-right: 1px solid rgba(238, 238, 238, 1);
+
+        &--item {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            padding-left: 12px;
+            height: 62px;
+            cursor: pointer;
+
+            &:hover, &.is-active {
+                background: rgba(232, 242, 255, 1);
+            }
+
+            &__name {
+                font-size: 14px;
+                margin-left: 12px;
+            }
+
+            &__icon {
+                width: 36px;
+                height: 36px;
+
+                &.accountSetting {
+                    background-image: url('../../assets/icon/account-setting.svg');
+                }
+
+                &.commonSetting {
+                    background: url('../../assets/icon/common-setting.svg');
+                }
+
+                &.fileManager {
+                    background: url('../../assets/icon/file-manager.svg');
+                }
+
+                &.connectUs {
+                    background: url('../../assets/icon/connect-us.svg');
+                }
+            }
+        }
+    }
+
+    .settings-search {
+        margin: 12px;
+        margin-bottom: 13px;
+        display: flex;
+        .add-icon{
+            width: 40px;
+        }
+    }
+
+    .settings-content {
+        flex: 1;
+    }
+}

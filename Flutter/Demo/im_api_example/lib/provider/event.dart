@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_conversation.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_application.dart';
+import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_change_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_change_info.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_group_member_info.dart';
@@ -206,7 +207,7 @@ class Event with ChangeNotifier {
     this.addEvents(
       Map<String, dynamic>.from(
         {
-          "type": "onApplicationProcessed",
+          "type": "onGroupAttributeChanged",
           "groupID": groupID,
           "groupAttributeMap": groupAttributeMap,
         },
@@ -620,6 +621,21 @@ class Event with ChangeNotifier {
         {
           "type": "onFriendApplicationListAdded",
           "friendApplicationList": ml,
+        },
+      ),
+    );
+  }
+
+  void onFriendInfoChanged(List<V2TimFriendInfo> data) {
+    List<Map<String, dynamic>> ml = List.empty(growable: true);
+    data.forEach((element) {
+      ml.add(element.toJson());
+    });
+    this.addEvents(
+      Map<String, dynamic>.from(
+        {
+          "type": "onFriendInfoChanged",
+          "V2TimFriendInfoList": ml,
         },
       ),
     );

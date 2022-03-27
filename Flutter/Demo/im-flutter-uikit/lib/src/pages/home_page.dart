@@ -64,7 +64,6 @@ class HomePageState extends State<HomePage> {
       setState(() {});
     }));
 
-    _conversationController.removeConversationListener();
     _conversationController.setConversationListener(listener: listener);
   }
 

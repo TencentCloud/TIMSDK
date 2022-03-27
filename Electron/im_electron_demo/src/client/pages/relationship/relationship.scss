@@ -1,0 +1,61 @@
+.relationship {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  &-nav {
+    width: 256px;
+    height: 100%;
+    border-right: 1px solid #eee;
+
+    & .is-active {
+      background: rgba(232, 242, 255, 1);
+    }
+
+    &--item {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      padding-left: 12px;
+      height: 62px;
+      background: #ffffff;
+      cursor: pointer;
+
+      &__name {
+        font-size: 14px;
+        font-weight: 400;
+        color: #000000;
+        margin-left: 8px;
+        text-decoration: none;
+      }
+
+      &__icon {
+        width: 36px;
+        height: 36px;
+
+        &.group {
+          background-image: url("../../assets/icon/group.svg");
+        }
+        &.buddy-apply {
+          background-image: url("../../assets/icon/buddy-apply.svg");
+        }
+        &.buddy-list {
+          background-image: url("../../assets/icon/buddy-list.svg");
+        }
+
+        &.blackList {
+          background-image: url("../../assets/icon/black-list.svg");
+          background-color: #515151;
+          border-radius: 50%;
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+      }
+    }
+  }
+
+  &-content {
+    flex: 1;
+    height: 100%;
+  }
+}

@@ -19,7 +19,9 @@ class AddEventListenerState extends State<AddEventListener> {
   late V2TimSimpleMsgListener simpleMsgListener;
   late V2TimAdvancedMsgListener advancedMsgListener;
   late V2TimSignalingListener signalingListener;
-
+  late V2TimConversationListener conversationListener;
+  late V2TimFriendshipListener friendshipListener;
+  late V2TimGroupListener groupListener;
   addEventListener() async {
     simpleMsgListener = new V2TimSimpleMsgListener(
       onRecvC2CCustomMessage:
@@ -32,6 +34,36 @@ class AddEventListenerState extends State<AddEventListener> {
           Provider.of<Event>(context, listen: false).onRecvGroupTextMessage,
     );
 
+    groupListener = new V2TimGroupListener(
+      onApplicationProcessed:
+          Provider.of<Event>(context, listen: false).onApplicationProcessed,
+      onGrantAdministrator:
+          Provider.of<Event>(context, listen: false).onGrantAdministrator,
+      onGroupAttributeChanged:
+          Provider.of<Event>(context, listen: false).onGroupAttributeChanged,
+      onGroupCreated: Provider.of<Event>(context, listen: false).onGroupCreated,
+      onGroupDismissed:
+          Provider.of<Event>(context, listen: false).onGroupDismissed,
+      onGroupInfoChanged:
+          Provider.of<Event>(context, listen: false).onGroupInfoChanged,
+      onGroupRecycled:
+          Provider.of<Event>(context, listen: false).onGroupRecycled,
+      onMemberEnter: Provider.of<Event>(context, listen: false).onMemberEnter,
+      onMemberInfoChanged:
+          Provider.of<Event>(context, listen: false).onMemberInfoChanged,
+      onMemberInvited:
+          Provider.of<Event>(context, listen: false).onMemberInvited,
+      onMemberKicked: Provider.of<Event>(context, listen: false).onMemberKicked,
+      onMemberLeave: Provider.of<Event>(context, listen: false).onMemberLeave,
+      onQuitFromGroup:
+          Provider.of<Event>(context, listen: false).onQuitFromGroup,
+      onReceiveJoinApplication:
+          Provider.of<Event>(context, listen: false).onReceiveJoinApplication,
+      onReceiveRESTCustomData:
+          Provider.of<Event>(context, listen: false).onReceiveRESTCustomData,
+      onRevokeAdministrator:
+          Provider.of<Event>(context, listen: false).onRevokeAdministrator,
+    );
     advancedMsgListener = new V2TimAdvancedMsgListener(
       onRecvC2CReadReceipt:
           Provider.of<Event>(context, listen: false).onRecvC2CReadReceipt,
@@ -55,45 +87,34 @@ class AddEventListenerState extends State<AddEventListener> {
       onReceiveNewInvitation:
           Provider.of<Event>(context, listen: false).onReceiveNewInvitation,
     );
+
+    conversationListener = new V2TimConversationListener(
+      onConversationChanged:
+          Provider.of<Event>(context, listen: false).onConversationChanged,
+      onNewConversation:
+          Provider.of<Event>(context, listen: false).onNewConversation,
+      onSyncServerFailed:
+          Provider.of<Event>(context, listen: false).onSyncServerFailed,
+      onSyncServerFinish:
+          Provider.of<Event>(context, listen: false).onSyncServerFinish,
+      onSyncServerStart:
+          Provider.of<Event>(context, listen: false).onSyncServerStart,
+    );
+
+    friendshipListener = new V2TimFriendshipListener(
+      onFriendApplicationListAdded: Provider.of<Event>(context, listen: false)
+          .onFriendApplicationListAdded,
+      onFriendInfoChanged:
+          Provider.of<Event>(context, listen: false).onFriendInfoChanged,
+    );
     //注册简单消息监听器
     // ignore: deprecated_member_use
     await TencentImSDKPlugin.v2TIMManager.addSimpleMsgListener(
       listener: simpleMsgListener,
     );
     //注册群组消息监听器
-    await TencentImSDKPlugin.v2TIMManager.setGroupListener(
-      listener: new V2TimGroupListener(
-        onApplicationProcessed:
-            Provider.of<Event>(context, listen: false).onApplicationProcessed,
-        onGrantAdministrator:
-            Provider.of<Event>(context, listen: false).onGrantAdministrator,
-        onGroupAttributeChanged:
-            Provider.of<Event>(context, listen: false).onGroupAttributeChanged,
-        onGroupCreated:
-            Provider.of<Event>(context, listen: false).onGroupCreated,
-        onGroupDismissed:
-            Provider.of<Event>(context, listen: false).onGroupDismissed,
-        onGroupInfoChanged:
-            Provider.of<Event>(context, listen: false).onGroupInfoChanged,
-        onGroupRecycled:
-            Provider.of<Event>(context, listen: false).onGroupRecycled,
-        onMemberEnter: Provider.of<Event>(context, listen: false).onMemberEnter,
-        onMemberInfoChanged:
-            Provider.of<Event>(context, listen: false).onMemberInfoChanged,
-        onMemberInvited:
-            Provider.of<Event>(context, listen: false).onMemberInvited,
-        onMemberKicked:
-            Provider.of<Event>(context, listen: false).onMemberKicked,
-        onMemberLeave: Provider.of<Event>(context, listen: false).onMemberLeave,
-        onQuitFromGroup:
-            Provider.of<Event>(context, listen: false).onQuitFromGroup,
-        onReceiveJoinApplication:
-            Provider.of<Event>(context, listen: false).onReceiveJoinApplication,
-        onReceiveRESTCustomData:
-            Provider.of<Event>(context, listen: false).onReceiveRESTCustomData,
-        onRevokeAdministrator:
-            Provider.of<Event>(context, listen: false).onRevokeAdministrator,
-      ),
+    await TencentImSDKPlugin.v2TIMManager.addGroupListener(
+      listener: groupListener,
     );
     //注册高级消息监听器
     await TencentImSDKPlugin.v2TIMManager
@@ -110,29 +131,14 @@ class AddEventListenerState extends State<AddEventListener> {
     //注册会话监听器
     await TencentImSDKPlugin.v2TIMManager
         .getConversationManager()
-        .setConversationListener(
-          listener: new V2TimConversationListener(
-            onConversationChanged: Provider.of<Event>(context, listen: false)
-                .onConversationChanged,
-            onNewConversation:
-                Provider.of<Event>(context, listen: false).onNewConversation,
-            onSyncServerFailed:
-                Provider.of<Event>(context, listen: false).onSyncServerFailed,
-            onSyncServerFinish:
-                Provider.of<Event>(context, listen: false).onSyncServerFinish,
-            onSyncServerStart:
-                Provider.of<Event>(context, listen: false).onSyncServerStart,
-          ),
+        .addConversationListener(
+          listener: conversationListener,
         );
     //注册关系链监听器
     await TencentImSDKPlugin.v2TIMManager
         .getFriendshipManager()
-        .setFriendListener(
-          listener: new V2TimFriendshipListener(
-            onFriendApplicationListAdded:
-                Provider.of<Event>(context, listen: false)
-                    .onFriendApplicationListAdded,
-          ),
+        .addFriendListener(
+          listener: friendshipListener,
         );
   }
 
@@ -169,6 +175,10 @@ class AddEventListenerState extends State<AddEventListener> {
         .removeSignalingListener();
   }
 
+  removeGroupListener() async {
+    await TencentImSDKPlugin.v2TIMManager.removeGroupListener();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -196,8 +206,17 @@ class AddEventListenerState extends State<AddEventListener> {
               onPressed: removeSignalingListener,
               child: Text(imt("注销signalingListener"))),
           new ElevatedButton(
-              onPressed: removeAllSignalingListener,
-              child: Text(imt("注销所有signalingListener")))
+            onPressed: removeAllSignalingListener,
+            child: Text(
+              imt("注销所有signalingListener"),
+            ),
+          ),
+          new ElevatedButton(
+            onPressed: removeGroupListener,
+            child: Text(
+              imt("注销gruopListener"),
+            ),
+          ),
         ],
       ),
     );

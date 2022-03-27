@@ -1,0 +1,72 @@
+.search-message {
+    &__input-area {
+        display: flex;
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+        align-items: center;.tea-tabs__tabitem
+
+        &--icon {
+            margin-right: 10px;
+        }
+
+        &--input {
+            flex: 1;
+            height: 22px;
+            border:none;
+            background: none;
+        }
+    }
+
+    &__tab {
+        height: calc(80vh - 63px);
+
+        .tea-tabs__tabitem {
+            margin-top: 20px;
+            height: auto;
+        }
+
+        .tea-tabs__tab  {
+            font-size: 16px;
+            font-weight: 500;
+            padding-bottom: 10px;
+            &.is-active {
+                color: #006eff;
+                font-weight: 500;
+            }
+        }
+
+        .tea-tabs__tabpanel {
+            padding: 0;
+        }
+    }
+}
+
+.customize-scroll-style {
+    overflow-y: overlay;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    &:hover {
+        &::-webkit-scrollbar {
+            width:8px;
+            background-color:transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+            border-radius:8px;
+            box-shadow:inset 0 0 2px rgba(0,0,0,.3);
+            background-color:#d1d1d1;
+        }
+    } 
+    &::-webkit-scrollbar {
+        width:0px;
+        background-color:transparent;
+    }
+   
+    &::-webkit-scrollbar-track {
+        background-color:transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        width: 8px;
+        background-color: transparent;
+    }
+}

@@ -1,0 +1,45 @@
+.group-member {
+  padding: 12px 0;
+
+  &--title {
+    font-size: 14px;
+    font-weight: 400;
+    color: #333333;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+
+    &__right {
+      font-size: 12px;
+      font-weight: 400;
+      color: #999999;
+    }
+  }
+
+  &--avatar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    div {
+      margin-right: 12px;
+      margin-bottom: 12px;
+    }
+  }
+
+  &--add {
+    width: 38px;
+    height: 38px;
+    margin-right: 12px;
+    margin-bottom: 12px;
+    background-image: url("../../../assets/icon/add-member.svg");
+  }
+
+  &--delete {
+    width: 38px;
+    height: 38px;
+    margin-right: 12px;
+    margin-bottom: 12px;
+    background-image: url("../../../assets/icon/delete-member.svg");
+  }
+}

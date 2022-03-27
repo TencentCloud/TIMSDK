@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_会议_停止视频小</title>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-64.000000, -548.000000)">
+            <g id="ic_会议_停止视频小" transform="translate(64.000000, 548.000000)">
+                <rect id="矩形" x="0" y="0" width="24" height="24"></rect>
+                <path d="M5.25,7.5 L12.75,7.5 C13.9926407,7.5 15,8.50735931 15,9.75 L15,16.5 L15,16.5" id="矩形" stroke="#FFFFFF" stroke-width="1.5" transform="translate(10.125000, 12.000000) scale(-1, -1) translate(-10.125000, -12.000000) "></path>
+                <path d="M9,7.5 L13.5,7.5 C14.7426407,7.5 15.75,8.50735931 15.75,9.75 L15.75,13.5 L15.75,13.5" id="矩形" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"></path>
+                <line x1="10.263841" y1="20.5831016" x2="10.6364854" y2="3.51148539" id="直线-14" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(10.495860, 12.323985) scale(-1, 1) rotate(45.000000) translate(-10.495860, -12.323985) "></line>
+                <path d="M17.6444338,8.52603166 L20.25,10.96875 L20.25,10.96875 L20.25,13.78125 L17.6444338,16.2239683 C17.1911575,16.6489149 16.4792172,16.6259491 16.0542706,16.1726728 C15.8587884,15.9641584 15.75,15.6890564 15.75,15.403239 L15.75,9.34676101 C15.75,8.72544067 16.2536797,8.22176101 16.875,8.22176101 C17.1608174,8.22176101 17.4359194,8.33054941 17.6444338,8.52603166 Z" id="矩形" stroke="#FFFFFF" stroke-width="1.5" transform="translate(18.000000, 12.375000) scale(-1, 1) translate(-18.000000, -12.375000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

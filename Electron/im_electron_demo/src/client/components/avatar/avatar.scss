@@ -1,0 +1,39 @@
+.avatar{
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    text-align: center;
+    font-size: 12px;
+    background-color: #5cadff;
+    color: #ffffff;
+    font-weight: 400;
+}
+.avatar.default {
+    width: 40px;
+    height: 40px;
+    background-size: 40px 40px;
+    line-height: 40px;
+}
+
+.avatar.small {
+    width: 36px;
+    height: 36px;
+    background-size: 36px 36px;
+    line-height: 36px;
+}
+
+.avatar.large {
+    width: 50px;
+    height: 50px;
+    background-size: 50px 50px;
+    line-height: 50px;
+}
+
+.avatar.mini {
+    width: 24px;
+    height: 24px;
+    background-size: 24px 24px;
+    line-height: 24px;
+}

@@ -28,8 +28,10 @@ class MockTencentPlatformInterface extends Fake
       {required int sdkAppID,
       required int loglevel,
       V2TimSDKListener? listener,
-      String? listenerUuid}) async {
-    final arg = {"sdkAppID": sdkAppID, "loglevel": loglevel};
+      String? listenerUuid,
+      required String uiPlatform,
+      }) async {
+    final arg = {"sdkAppID": sdkAppID, "loglevel": loglevel,"uiPlatform":""};
     expect(arg, this.arguments);
     return this.responses;
   }

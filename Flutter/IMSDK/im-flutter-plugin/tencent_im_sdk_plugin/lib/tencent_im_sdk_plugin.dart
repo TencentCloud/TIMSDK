@@ -1,7 +1,7 @@
 import 'package:tencent_im_sdk_plugin/manager/v2_tim_manager.dart';
 import 'package:flutter/services.dart';
 
-///TencentImSDKPlugin入口
+/// TencentImSDKPlugin entry
 ///
 class TencentImSDKPlugin {
   static const MethodChannel _channel =
