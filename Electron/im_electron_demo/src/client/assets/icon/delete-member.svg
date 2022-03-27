@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="38px" height="38px" viewBox="0 0 38 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>位图备份 5</title>
+    <defs>
+        <circle id="path-1" cx="18" cy="18" r="18"></circle>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="04-群聊-扩展功能-群设置" transform="translate(-855.000000, -321.000000)">
+            <g id="位图备份-5" transform="translate(856.000000, 322.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="蒙版" stroke="#999999" fill-rule="nonzero" xlink:href="#path-1"></use>
+                <rect id="形状结合" fill="#999999" x="11" y="17" width="14" height="2"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

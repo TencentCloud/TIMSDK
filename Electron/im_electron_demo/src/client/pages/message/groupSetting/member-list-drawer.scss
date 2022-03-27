@@ -1,0 +1,113 @@
+.member-list-drawer {
+  position: absolute;
+  top: 0;
+  left: auto;
+  right: 0;
+  bottom: 0;
+  box-shadow: -2px 0px 8px 0px rgba(0, 50, 150, 0.1);
+  border-radius: 8px 0px 0px 8px;
+
+  & .tea-drawer__header {
+    height: 77px;
+    padding: 20px;
+  }
+
+  & .tea-drawer__body {
+    padding: 0;
+    & .tea-drawer__body-inner {
+      height: 100%;
+      overflow-y: overlay;
+      overflow-x: hidden;
+
+      &:hover {
+        &::-webkit-scrollbar {
+          width: 8px;
+          background-color: transparent;
+        }
+      }
+      &::-webkit-scrollbar {
+        width: 0px;
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+        background-color: #d1d1d1;
+      }
+    }
+  }
+
+  &--table {
+    & .tea-table__body {
+      padding: 20px;
+      border: 0;
+
+      overflow-y: overlay !important;
+      overflow-x: hidden;
+
+      &:hover {
+        &::-webkit-scrollbar {
+          width: 8px;
+          background-color: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 8px;
+          box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+          background-color: #d1d1d1;
+        }
+      }
+      &::-webkit-scrollbar {
+        width: 0px;
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+        background-color: #d1d1d1;
+      }
+    }
+
+    td {
+      border: none;
+      padding: 0;
+    }
+  }
+
+  &--item {
+    display: flex;
+    align-items: center;
+
+    &__name {
+      margin-left: 8px;
+    }
+
+    &__owner {
+      margin-left: 16px;
+      padding: 0 2px;
+      background: #ffead7;
+      border-radius: 2px;
+      font-size: 10px;
+      font-weight: 400;
+      color: #8b572a;
+    }
+  }
+
+  &--title {
+    height: 55px;
+    &__sub {
+      font-size: 12px;
+      font-weight: 400;
+      color: #999999;
+    }
+  }
+}

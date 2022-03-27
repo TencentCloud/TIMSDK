@@ -54,7 +54,7 @@ class PrivacyAgreementPageState extends State {
         width: MediaQuery.of(context).size.width,
         child: const WebView(
             initialUrl:
-                'https://web.sdk.qcloud.com/document/Tencent-IM-Privacy-Protection-Guidelines.html',
+                'https://privacy.qq.com/document/preview/1cfe904fb7004b8ab1193a55857f7272',
             javascriptMode: JavascriptMode.unrestricted),
       ),
     );

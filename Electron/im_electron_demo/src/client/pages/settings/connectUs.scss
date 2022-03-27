@@ -1,0 +1,93 @@
+.connect {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+   .connect-header {
+       display: flex;
+       align-items: center;
+       height: 76px;
+       padding-left: 20px;
+       border-bottom: 1px solid #eeeeee;
+
+        &--logo {
+            width: 36px;
+            height: 36px;
+            background: url('../../assets/icon/connect-us.svg');
+        }
+
+        &--text {
+            font-size: 16px;
+            font-family: PingFangSC-Medium;
+            margin-left: 12px;
+        }
+   }
+   .connet-section {
+       padding: 20px;
+       flex: 1;
+       background: url('../../assets/icon/bg.png') 100% 100% no-repeat;
+       .info-panel{
+           padding: 20px;
+           display: flex;
+           .info-avatar{
+               width: 60px;
+           }
+           .info-name {
+            width: 200px;
+            line-height: 40px;
+           }
+       }
+   }
+
+    .connect-section--title{
+        display: flex;
+        align-items: center; 
+    }
+
+    .tencent-cloud-name {
+        font-size: 24px;
+        font-family: PingFangSC-Regular;
+
+        &.tc {
+            margin-left: 12px;
+            padding-right: 20px;
+            border-right: 2px solid #ccc;
+            font-weight: bold;
+        }
+
+        &.im {
+            margin-left: 20px;
+        }
+    }
+
+    .connect-desc {
+        margin-top: 5%;
+        color: rgba(102, 102, 102, 1);
+        font-size: 16px;
+    }
+
+   .tencent-cloud-logo {
+        width: 50px;
+        display: block;
+        height: 36px;
+        background: url('../../assets/icon/tencent-cloud-logo.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+   }
+
+   .im-logo {
+       margin-top: 12.5%;
+        width: 134px;
+        height: 134px;
+        background: url('../../assets/icon/im_logo.png');
+        background-size: cover;
+   }
+
+   .connect-us-button {
+       display: flex;
+        margin-top: 5%;
+       &--purchase, &--contact {
+           border-radius: 4px;
+           margin-right: 20px;
+       }
+   }
+}

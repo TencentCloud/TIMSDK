@@ -6,7 +6,6 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   // testWidgets('Verify Platform version', (WidgetTester tester) async {
@@ -22,6 +21,5 @@ void main() {
   //     findsOneWidget,
   //   );
   // });
-  SharedPreferences.setMockInitialValues({});
   WidgetsFlutterBinding.ensureInitialized();
 }

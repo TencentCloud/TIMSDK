@@ -1,0 +1,31 @@
+.group-flag-message {
+  padding: 12px 0;
+
+  &--title {
+    margin-bottom: 8px;
+
+    &__text {
+      font-size: 14px;
+      font-weight: 400;
+      color: #333333;
+      line-height: 20px;
+      margin-right: 8px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+  }
+
+  &--info {
+    font-size: 12px;
+    font-weight: 400;
+    color: #999999;
+    line-height: 16px;
+    min-height: 12px;
+  }
+
+  &--select {
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid #dddddd;
+  }
+}

@@ -1,0 +1,18 @@
+.search-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+}
+
+.search-icon {
+    margin-left: 4px;
+}
+
+.search-input {
+    flex: 1;
+    border:none;
+    background: none;
+    height: 24px;
+    width: 170px;
+}

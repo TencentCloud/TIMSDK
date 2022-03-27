@@ -12,48 +12,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  tencent_im_sdk_plugin: 
-    # When depending on this package from a real application you should use:
-    #   tencent_im_sdk_plugin: ^x.y.z
-    # See https://dart.dev/tools/pub/dependencies#version-constraints
-    # The example app is bundled with the plugin so we use a path dependency on
-    # the parent directory to use the current plugin's version. 
-    path: ../
+  
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  toast: ^0.1.5
-  dio: ^4.0.0
-  json_annotation: '>=4.0.1'
-  provider: ^4.3.2+2
-  url_launcher: ^6.0.3
-  shared_preferences: ^2.0.5
-  image_picker: ^0.7.4
-  flutter_plugin_record: ^1.0.1
-  file_picker: ^3.0.1
-  video_player: ^2.1.1
-  loading: ^1.0.2
-  transparent_image: ^2.0.0
-  flutter_video_compress: ^0.3.7+8
-  # tencent_tpns_oppo_push_plugin: ^0.0.2
-  # tencent_tpns_xiaomi_push_plugin: ^0.0.1
-  # tencent_tpns_vivo_push_plugin: ^0.0.1
-  device_info: ^2.0.0
-  flutter_slidable: ^0.6.0
-  # firebase_messaging: ^6.0.16
-  flutter_apns: ^1.4.1
-  webview_flutter: ^2.0.4
-  # tencent_trtc_cloud: ^0.1.8
+  
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
   
-  permission_handler: ^4.0.0
-  path_provider: ^2.0.1
-  json_serializable: '>=4.0.0'
-  build_runner: ^1.10.3
   
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

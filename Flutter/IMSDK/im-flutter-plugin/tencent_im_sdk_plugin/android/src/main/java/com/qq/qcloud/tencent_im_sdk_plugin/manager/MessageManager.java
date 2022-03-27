@@ -25,8 +25,8 @@ import java.util.List;
 public class MessageManager {
     private static MethodChannel channel;
     private static V2TIMMessageManager manager;
-    private static V2TIMAdvancedMsgListener advacedMessageListener;//暂时只能有一个listener
-    private static HashMap<String,V2TIMMessage> messageIDMap = new HashMap(); // 用来将创建好的消息进行暂存
+    private static V2TIMAdvancedMsgListener advacedMessageListener;// There can only be one listener for the time being
+    private static HashMap<String,V2TIMMessage> messageIDMap = new HashMap(); // Used to temporarily store the created message
     private static LinkedList<String> listenerUuidList = new LinkedList<String>();
     private static  HashMap<String, V2TIMAdvancedMsgListener> advancedMessageListenerList= new HashMap();
 
@@ -93,7 +93,7 @@ public class MessageManager {
         T value =  map.get(key);
         return value;
     }
-    // 封装处理离线推送的方法 MethodCall methodCall, final MethodChannel.Result result
+    // Encapsulates the method of processing offline push MethodCall methodCall, final MethodChannel.Result result
     private V2TIMOfflinePushInfo handleOfflinePushInfo(MethodCall methodCall,final MethodChannel.Result result){
         HashMap<String,Object> offlinePushInfoParams = CommonUtil.getParam(methodCall,result,"offlinePushInfo");
         V2TIMOfflinePushInfo offlinePushInfo = new V2TIMOfflinePushInfo();
@@ -129,7 +129,7 @@ public class MessageManager {
         }
         return offlinePushInfo;
     }
-    // 封装发送消息
+    // encapsulate send message
     private void handleSendMessage(
         final V2TIMMessage msg,
         String receiver,
@@ -170,7 +170,7 @@ public class MessageManager {
             }
         });
     }
-    // 封装设置本地id的过程
+    // Encapsulate the process of setting local id
     private void handleSetMessageMap(V2TIMMessage message, final MethodChannel.Result result){
         final String id = String.valueOf(System.nanoTime());
         messageIDMap.put(id,message);
@@ -343,7 +343,7 @@ public class MessageManager {
         msg.setExcludedFromUnreadCount(isExcludedFromUnreadCount);
          handleSendMessage(msg,receiver,groupID,priority,onlineUserOnly,offlinePushInfo,result,id);
     }
-    // 3.6.0 后不推荐使用
+    // Deprecated since 3.6.0
     public  void  sendTextMessage(MethodCall methodCall, final MethodChannel.Result result){
         String message = CommonUtil.getParam(methodCall,result,"text");
         String receiver = CommonUtil.getParam(methodCall,result,"receiver");
@@ -1583,7 +1583,7 @@ public class MessageManager {
                 @Override
                 public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
                     if(v2TIMMessages.size() == 1){
-                        //找到了message
+                        // found message
                         option.setLastMsg(v2TIMMessages.get(0));
                         V2TIMManager.getMessageManager().getHistoryMessageList(option, new V2TIMValueCallback<List<V2TIMMessage>>() {
                             @Override
@@ -1744,7 +1744,7 @@ public class MessageManager {
 
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
-                System.out.println("find 到了 message"+v2TIMMessages.size());
+                System.out.println("find arrived message"+v2TIMMessages.size());
                 if(v2TIMMessages.size()>0){
                     V2TIMManager.getMessageManager().deleteMessages(v2TIMMessages, new V2TIMCallback() {
                         @Override

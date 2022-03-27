@@ -71,25 +71,25 @@ PODS:
     - Flutter
     - FlutterMacOS
   - ReachabilitySwift (5.0.0)
-  - SDWebImage (5.12.2):
-    - SDWebImage/Core (= 5.12.2)
-  - SDWebImage/Core (5.12.2)
+  - SDWebImage (5.12.5):
+    - SDWebImage/Core (= 5.12.5)
+  - SDWebImage/Core (5.12.5)
   - shared_preferences_ios (0.0.1):
     - Flutter
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
-  - SwiftyGif (5.4.2)
+  - SwiftyGif (5.4.3)
   - tencent_im_sdk_plugin (1.0.5):
     - Flutter
     - HydraAsync
-    - TXIMSDK_Plus_iOS (= 6.0.1975)
+    - TXIMSDK_Plus_iOS (= 6.1.2155.1)
   - Toast (4.0.0)
   - TPNS-iOS (1.3.4.1)
   - tpns_flutter_plugin (1.1.5):
     - Flutter
     - TPNS-iOS (= 1.3.4.1)
-  - TXIMSDK_Plus_iOS (6.0.1975)
+  - TXIMSDK_Plus_iOS (6.1.2155.1)
   - url_launcher_ios (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
@@ -202,15 +202,15 @@ SPEC CHECKSUMS:
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   photo_manager: 4f6810b7dfc4feb03b461ac1a70dacf91fba7604
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
-  SDWebImage: 240e5c12b592fb1268c1d03b8c90d90e8c2ffe82
+  SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
-  SwiftyGif: dec758a9dd3d278e5a855dbf279bf062c923c387
-  tencent_im_sdk_plugin: 5d60e74beb9dafda611bb9bf2aa6ba8ab1ee7b39
+  SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
+  tencent_im_sdk_plugin: c68993c62fd0198cd47132a055a06c9cef33b8e3
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   TPNS-iOS: 36c335eff80670de6ede780ab827f679d78f64ff
   tpns_flutter_plugin: 51978efb8da959e9c2389421b0a73b175fdc4e1e
-  TXIMSDK_Plus_iOS: b4938e8a26865ddf81fcff413236d99f6fbae39c
+  TXIMSDK_Plus_iOS: 2b0e9440eacdb49f385c90a23ad6558013f0cac6
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
@@ -219,4 +219,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: bd217481dcc1c792f2a7f79a61b826d345e3262d
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

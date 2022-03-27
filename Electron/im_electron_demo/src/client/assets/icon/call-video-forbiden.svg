@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>停止视频 icon</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1.000000 0 0 0 0 0.345098 0 0 0 0 0.298039 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="停止视频-icon" transform="translate(-92.000000, -466.000000)" filter="url(#filter-1)">
+            <g transform="translate(92.000000, 466.000000)">
+                <rect id="矩形" x="0" y="0" width="36" height="36"></rect>
+                <path d="M7.875,11.25 L19.125,11.25 C20.988961,11.25 22.5,12.761039 22.5,14.625 L22.5,24.75 L22.5,24.75" id="矩形" stroke="#FFFFFF" stroke-width="2.25" transform="translate(15.187500, 18.000000) scale(-1, -1) translate(-15.187500, -18.000000) "></path>
+                <path d="M13.5,11.25 L20.25,11.25 C22.113961,11.25 23.625,12.761039 23.625,14.625 L23.625,20.25 L23.625,20.25" id="矩形" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round"></path>
+                <line x1="15.3957615" y1="30.8746525" x2="15.9547281" y2="5.26722808" id="直线-14" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" transform="translate(15.743791, 18.485978) scale(-1, 1) rotate(45.000000) translate(-15.743791, -18.485978) "></line>
+                <path d="M26.4666507,12.7890475 L30.375,16.453125 L30.375,16.453125 L30.375,20.671875 L26.4666507,24.3359525 C25.7867362,24.9733723 24.7188258,24.9389236 24.081406,24.2590091 C23.7881826,23.9462375 23.625,23.5335845 23.625,23.1048585 L23.625,14.0201415 C23.625,13.088161 24.3805195,12.3326415 25.3125,12.3326415 C25.7412261,12.3326415 26.153879,12.4958241 26.4666507,12.7890475 Z" id="矩形" stroke="#FFFFFF" stroke-width="2.25" transform="translate(27.000000, 18.562500) scale(-1, 1) translate(-27.000000, -18.562500) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

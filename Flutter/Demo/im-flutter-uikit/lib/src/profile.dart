@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:timuikit/src/pages/login.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/utils/theme.dart';
 import 'package:timuikit/utils/toast.dart';
+import 'package:timuikit/utils/webview_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
@@ -42,11 +44,11 @@ class _ProfileState extends State<MyProfile> {
           content: Text(imt(
               "IM即时通信（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。")),
           actions: <Widget>[
-            ElevatedButton(
+            TextButton(
               child: Text(imt("取消")),
               onPressed: () => Navigator.of(context).pop(), // 关闭对话框
             ),
-            ElevatedButton(
+            TextButton(
               child: Text(imt("确定")),
               onPressed: () {
                 //关闭对话框并返回true
@@ -182,22 +184,21 @@ class _ProfileState extends State<MyProfile> {
     return showDialog<bool>(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("提示"),
-          content: const Text("Flutter TUIKIT 为你选择一个头像?"),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("取消"),
-              onPressed: () {
-                //关闭对话框并返回true
-                Navigator.of(context).pop(true);
-              }, // 关闭对话框
-            ),
-            TextButton(
+        return CupertinoAlertDialog(
+          title: const Text("TUIKIT 为你选择一个头像?"),
+          actions: [
+            CupertinoDialogAction(
               child: const Text("确定"),
               onPressed: () {
                 setRandomAvatar();
-                Navigator.of(context).pop(true);
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: const Text("取消"),
+              isDestructiveAction: true,
+              onPressed: () {
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -305,6 +306,50 @@ class _ProfileState extends State<MyProfile> {
                 ),
               ),
             ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WebviewPage(
+                        url: IMDemoConfig.webUrls[WebUrl.personalInfo]!),
+                  ),
+                );
+              },
+              child: TIMUIKitOperationItem(
+                operationName: imt("个人信息收集清单"),
+                operationRightWidget: const Text(""),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WebviewPage(
+                        url: IMDemoConfig.webUrls[WebUrl.thirdPartyInfo]!),
+                  ),
+                );
+              },
+              child: TIMUIKitOperationItem(
+                operationName: imt("第三方信息共享清单"),
+                operationRightWidget: const Text(""),
+              ),
+            ),
+            // InkWell(
+            //   onTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => const ContactPage(),
+            //       ),
+            //     );
+            //   },
+            //   child: TIMUIKitOperationItem(
+            //     operationName: imt("注销账户"),
+            //     operationRightWidget: const Text(""),
+            //   ),
+            // ),
             InkWell(
               onTap: () {
                 Navigator.push(

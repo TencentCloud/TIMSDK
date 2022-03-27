@@ -1,0 +1,29 @@
+.error-boundary {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &__content {
+        display: flex;
+        align-items: center;
+        box-shadow: 0px 1px 16px 0px rgb(0 50 150 / 8%);
+        border-radius: 8px;
+        padding: 30px;
+
+        &--header {
+            width: 64px;
+            height: 64px;
+            background: url('../../assets/icon/error.svg');
+        }
+
+        &--text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 30px;
+        }
+    }
+}

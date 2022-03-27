@@ -36,6 +36,7 @@ public class TimManager {
     public static String TAG = "tencent_im_sdk_plugin";
     private static MethodChannel channel;
     private static HashMap<String, V2TIMSimpleMsgListener> simpleMsgListenerMap = new HashMap<>();
+    private static HashMap<String, V2TIMGroupListener> groupListenerMap = new HashMap<>();
     public static Context context;
     public TimManager(MethodChannel _channel, Context context){
         TimManager.channel = _channel;
@@ -97,15 +98,32 @@ public class TimManager {
             result.success("all simple msg listener is removed");
         }
     }
+    public void removeGroupListener(MethodCall methodCall, MethodChannel.Result result){
+        final String listenerUuid = CommonUtil.getParam(methodCall,result,"listenerUuid");
+        if (listenerUuid != "") {
+            final V2TIMGroupListener listener = groupListenerMap.get(listenerUuid);
+            V2TIMManager.getInstance().removeGroupListener(listener);
+            groupListenerMap.remove(listenerUuid);
+            result.success("removeGroupListener is done");
+        } else {
+            for (V2TIMGroupListener listener : groupListenerMap.values()) {
+                V2TIMManager.getInstance().removeGroupListener(listener);
+            }
+            groupListenerMap.clear();
+            result.success("all groupListener is removed");
+        }
+    }
     public void initSDK(MethodCall methodCall, MethodChannel.Result result) {
 
         int sdkAppID =  methodCall.argument("sdkAppID");
         int logLevel =  methodCall.argument("logLevel");
+        String uiPlatform =  methodCall.argument("uiPlatform");
         final String listenerUuid = methodCall.argument("listenerUuid");
 
-
-
-        // 主线程才初始化SDK
+        // Global configuration
+        
+            V2TIMManager.getInstance().callExperimentalAPI("setUIPlatform",uiPlatform, null);
+        // The main thread initializes the SDK
 //        if (SessionWrapper.isMainProcess(context)) {
 
             V2TIMSDKConfig config = new V2TIMSDKConfig();
@@ -157,7 +175,7 @@ public class TimManager {
     public void login(MethodCall methodCall, final MethodChannel.Result result) {
         String userID = CommonUtil.getParam(methodCall, result, "userID");
         String userSig = CommonUtil.getParam(methodCall, result, "userSig");
-        // 登录操作
+        // login operation
         V2TIMManager.getInstance().login(userID, userSig, new V2TIMCallback(){
             public void onError (int code, String desc){
                 CommonUtil.returnError(result,code,desc);
@@ -262,7 +280,175 @@ public class TimManager {
             }
         });
     }
+    public void addGroupListener(MethodCall methodCall, final MethodChannel.Result result){
+        final String listenerUuid = CommonUtil.getParam(methodCall,result,"listenerUuid");
+        V2TIMGroupListener groupListener =  new V2TIMGroupListener() {
+            @Override
+            public void onMemberEnter(String groupID, List<V2TIMGroupMemberInfo> memberList) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for (int i = 0;i<memberList.size();i++){
+                    list.add(CommonUtil.convertV2TIMGroupMemberInfoToMap(memberList.get(i)));
+                }
+                data.put("memberList",list);
+                makeaddGroupListenerEventData("onMemberEnter",data,listenerUuid);
+            }
 
+            @Override
+            public void onMemberLeave(String groupID, V2TIMGroupMemberInfo member) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                data.put("member",CommonUtil.convertV2TIMGroupMemberInfoToMap(member));
+                makeaddGroupListenerEventData("onMemberLeave",data,listenerUuid);
+            }
+
+            @Override
+            public void onMemberInvited(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                data.put("opUser",CommonUtil.convertV2TIMGroupMemberInfoToMap(opUser));
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for (int i = 0;i<memberList.size();i++){
+                    list.add(CommonUtil.convertV2TIMGroupMemberInfoToMap(memberList.get(i)));
+                }
+                data.put("memberList",list);
+                makeaddGroupListenerEventData("onMemberInvited",data,listenerUuid);
+            }
+
+            @Override
+            public void onMemberKicked(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                data.put("opUser",CommonUtil.convertV2TIMGroupMemberInfoToMap(opUser));
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for (int i = 0;i<memberList.size();i++){
+                    list.add(CommonUtil.convertV2TIMGroupMemberInfoToMap(memberList.get(i)));
+                }
+                data.put("memberList",list);
+                makeaddGroupListenerEventData("onMemberKicked",data,listenerUuid);
+            }
+
+            @Override
+            public void onMemberInfoChanged(String groupID, List<V2TIMGroupMemberChangeInfo> v2TIMGroupMemberChangeInfoList) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for (int i = 0;i<v2TIMGroupMemberChangeInfoList.size();i++){
+                    list.add(CommonUtil.convertV2TIMGroupMemberChangeInfoToMap(v2TIMGroupMemberChangeInfoList.get(i)));
+                }
+                data.put("groupMemberChangeInfoList",list);
+                makeaddGroupListenerEventData("onMemberInfoChanged",data,listenerUuid);
+            }
+
+            @Override
+            public void onGroupCreated(String groupID) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                makeaddGroupListenerEventData("onGroupCreated",data,listenerUuid);
+            }
+
+            @Override
+            public void onGroupDismissed(String groupID, V2TIMGroupMemberInfo opUser) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                data.put("opUser",CommonUtil.convertV2TIMGroupMemberInfoToMap(opUser));
+                makeaddGroupListenerEventData("onGroupDismissed",data,listenerUuid);
+            }
+
+            @Override
+            public void onGroupRecycled(String groupID, V2TIMGroupMemberInfo opUser) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                data.put("opUser",CommonUtil.convertV2TIMGroupMemberInfoToMap(opUser));
+                makeaddGroupListenerEventData("onGroupRecycled",data,listenerUuid);
+            }
+
+            @Override
+            public void onGroupInfoChanged(String groupID, List<V2TIMGroupChangeInfo> changeInfos) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for (int i = 0;i<changeInfos.size();i++){
+                    list.add(CommonUtil.convertV2TIMGroupChangeInfoToMap(changeInfos.get(i)));
+                }
+                data.put("groupChangeInfoList",list);
+                makeaddGroupListenerEventData("onGroupInfoChanged",data,listenerUuid);
+            }
+
+            @Override
+            public void onReceiveJoinApplication(String groupID, V2TIMGroupMemberInfo member, String opReason) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                data.put("member",CommonUtil.convertV2TIMGroupMemberInfoToMap(member));
+                data.put("opReason",opReason);
+                makeaddGroupListenerEventData("onReceiveJoinApplication",data,listenerUuid);
+            }
+
+            @Override
+            public void onApplicationProcessed(String groupID, V2TIMGroupMemberInfo opUser, boolean isAgreeJoin, String opReason) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                data.put("opUser",CommonUtil.convertV2TIMGroupMemberInfoToMap(opUser));
+                data.put("isAgreeJoin",isAgreeJoin);
+                data.put("opReason",opReason);
+                makeaddGroupListenerEventData("onApplicationProcessed",data,listenerUuid);
+            }
+
+            @Override
+            public void onGrantAdministrator(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                data.put("opUser",CommonUtil.convertV2TIMGroupMemberInfoToMap(opUser));
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for (int i = 0;i<memberList.size();i++){
+                    list.add(CommonUtil.convertV2TIMGroupMemberInfoToMap(memberList.get(i)));
+                }
+                data.put("memberList",list);
+                makeaddGroupListenerEventData("onGrantAdministrator",data,listenerUuid);
+            }
+
+            @Override
+            public void onRevokeAdministrator(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                data.put("opUser",CommonUtil.convertV2TIMGroupMemberInfoToMap(opUser));
+                LinkedList<HashMap<String,Object>> list = new LinkedList<HashMap<String,Object>>();
+                for (int i = 0;i<memberList.size();i++){
+                    list.add(CommonUtil.convertV2TIMGroupMemberInfoToMap(memberList.get(i)));
+                }
+                data.put("memberList",list);
+                makeaddGroupListenerEventData("onRevokeAdministrator",data,listenerUuid);
+            }
+
+            @Override
+            public void onQuitFromGroup(String groupID) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+
+                makeaddGroupListenerEventData("onQuitFromGroup",data,listenerUuid);
+            }
+
+            @Override
+            public void onReceiveRESTCustomData(String groupID, byte[] customData) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                data.put("customData",customData == null ? "" : new String(customData));
+                makeaddGroupListenerEventData("onReceiveRESTCustomData",data,listenerUuid);
+            }
+
+            @Override
+            public void onGroupAttributeChanged(String groupID, Map<String, String> groupAttributeMap) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                data.put("groupID",groupID);
+                data.put("groupAttributeMap",groupAttributeMap);
+                makeaddGroupListenerEventData("onGroupAttributeChanged",data,listenerUuid);
+            }
+        };
+        groupListenerMap.put(listenerUuid, groupListener);
+        V2TIMManager.getInstance().addGroupListener(groupListener);
+        result.success("add group listener success");
+    }
     public void setGroupListener(MethodCall methodCall, final MethodChannel.Result result){
         final String listenerUuid = CommonUtil.getParam(methodCall,result,"listenerUuid");
         V2TIMManager.getInstance().setGroupListener(new V2TIMGroupListener() {
@@ -428,7 +614,7 @@ public class TimManager {
                 makeaddGroupListenerEventData("onGroupAttributeChanged",data,listenerUuid);
             }
         });
-        result.success("add group listener success");
+        result.success("set group listener success");
     }
     public void createGroup(MethodCall methodCall, final MethodChannel.Result result) {
 

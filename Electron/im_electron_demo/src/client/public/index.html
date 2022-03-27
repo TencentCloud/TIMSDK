@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+    <script src="https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js"></script>
+    <script>
+      window.aegis = new Aegis({
+        id: 'RwEwUcYtWvUlgCDVnR', // 项目key
+        reportApiSpeed: true, // 接口测速
+        reportAssetSpeed: true, // 静态资源测速
+        spa: true, // spa 页面需要开启，页面切换的时候上报pv
+      })
+    </script>
+  </body>
+</html>

@@ -1,412 +1,6 @@
-## 0.0.1
-
-* init version
-
-## 0.0.2
-
-* change sdk name
-
-## 0.0.3
-
-* change licese 
-
-## 0.0.4
-
-* add readme
-
-## 0.0.5
-
-* change conversion return data
-
-## 0.0.6
-
-* add document
-
-## 0.0.7
-
-* add other document
-
-## 0.0.8
-
-* change document
-
-## 0.0.9
-
-* change document
-
-## 0.0.9
-
-* 设置对外不可见
-
-## 0.0.12
-
-* 更改配置
-
-## 0.0.13
-
-* 更改会话列表传参类型
-
-## 0.0.13
-
-* 已知bug修复
-
-## 0.0.15
-
-* 新增insertMessageToLocalStorage接口
-
-## 0.0.16
-
-* 修改插入本地消息的类型textMessage to customMessage
-
-## 0.0.17
-
-* 兼容R8
-
-## 0.0.18
-
-* update native sdk
-
-## 0.0.19
-
-* 正式上线版本
-
-## 1.0.0
-
-* 更新最新版文档
-
-## 1.0.1
-
-* 更新最新版文档
-
-## 1.0.2
-
-* 更新最新版文档
-
-## 1.0.3
-
-* 更新最新版文档
-
-## 1.0.4
-
-* 更新native sdk到5.1.129
-
-## 1.0.5
-
-* 修复deleteFriendApplication传参错误
-
-## 1.0.6
-
-* 更新native sdk到5.1.132
-
-## 1.0.7
-
-* 更新native sdk到5.1.137
-
-## 1.0.8
-
-* 修改信令邀请接口传参bug
-
-## 1.0.9
-
-* 修复信令接口不返回id
-
-## 1.0.10
-
-* 修改sdk压缩配置
-
-## 1.0.11
-
-* 修改sdk压缩配置
-
-## 1.0.12
-
-* 修改信令回调bug
-
-## 1.0.13
-
-* 修改自定义消息返回数据
-
-## 1.0.14
-
-* 【重要】信令消息返回内容格式修改，用到信令请更新到该版本或以上版本
-
-## 1.0.15
-
-* 新增群成员自定义字段
-
-## 1.0.16
-
-* 修改一些已知bug
-
-## 1.0.17
-
-* 完善ios信令
-
-## 1.0.18
-
-* 修复已知bug
-
-## 1.0.19
-
-* iOS信令bug修复
-
-## 1.0.20
-
-* iOS信令bug修复
-
-## 1.0.21
-
-* iOS信令bug修复
-
-## 1.0.22
-
-* 自定义字段解析成String返回
-
-## 1.0.23
-
-* 优化设置个人自定义字段
-
-## 1.0.24
-
-* 优化设置个人自定义字段
-
-## 1.0.25
-
-* 更新Android getHistoryMessageList
-
-## 1.0.26
-
-* 修复Android端checkFriend传参错误
-
-## 1.0.27
-
-* 修复Android端checkFriend传参错误
-
-## 1.0.28
-
-* 【重要】checkFriends接口入参改变
-
-## 1.0.29
-
-* 【重要】修复获取群成员列表传参报错
-
-## 1.0.30
-
-* 修复自定义消息data字段为null时crash
-
-## 1.0.31
-
-* 修复自定义消息data字段为null时crash
-
-## 1.0.32
-
-* 修复会话信息lastMessage为空时crash
-
-## 1.0.33
-
-* 修改sdk的minSdkVersion到16
-
-## 1.0.34
-
-* 修复ios获取历史消息报错
-
-## 1.0.35
-
-* 修复安卓manifest配置冲突
-
-## 1.0.36
-
-* 修复Android设置好友自定义字段失败
-
-## 1.0.37
-
-* 信令补充invitee字段
-
-## 1.1.0
-
-* ios端消息实例新增seq字段
-
-## 2.0.0
-
-* 【重要】flutter升级到2.0,支持空安全
-
-## 2.0.1
-
-* 修复返回数据类型错误
-
-## 2.0.2
-
-* ios修复修改群资料报错
-
-## 2.0.3
-
-* ios修复修改群资料报错（二）
-
-## 2.0.4
-
-* ios/android，新增高级消息，发送文本消息sendTextMessage
-* android，修复sendCustomMessage不传递extension报错
-
-## 2.0.5
-
-* 修复会话isFinish的bug
-
-## 2.0.6
-
-* 修复事件监听传参
-
-
-## 3.0.0
-* 发送高级消息新增offlinePushInfo
-* 高级消息发送失败将失败的消息返回
-* 新增reSendMessage用做失败重发
-* 修改listener注册方式
-* 新增api sendTextAtMessage、sendLocationMessage、sendFaceMessage、sendMergerMessage、sendForwardMessage、setC2CReceiveMessageOpt
-setGroupReceiveMessageOpt、getC2CReceiveMessageOpt、getConversationListByConversaionIds、pinConversation、getTotalUnreadMessageCount、* tCloudCustomData、setLocalCustomInt、setLocalCustomData
-* 更换新包，上报、关键节点日志
-* 支持发送高级消息不计入未读数
-* V2TimMessage对象新增mergeElem、random、isExcludedFromUnreadCount
-* 提升性能，修改部分方法传参
-
-## 3.0.1
-* 修复若干问题
-
-## 3.0.2
-* 修复信令inviteID为空
-
-## 3.0.3
-* 修复信令接收回调异常
-
-## 3.0.4
-* 修复groupListener回调异常
-
-## 3.0.5
-* 修复信令回调异常
-
-## 3.0.6
-* 修复groupListener回调异常
-
-## 3.0.7
-* 修复已知问题
-
-## 3.0.8
-* ios修复直播群发送消息无返回的问题
-* ios修改createFriendGroup返回的字段名
-
-## 3.0.9
-* 修复groupListener回调异常
-
-## 3.1.0
-* 修复会话回调异常
-
-## 3.1.1
-* 修复sendForwardMessage bug
-
-## 3.1.2
-* ios修复发消息错误时返回的数据格式
-
-## 3.1.3
-* ios已知问题修复
-
-## 3.1.4
-* ios返回数据异常
-
-## 3.1.5
-* 获取群属性，keys字段改成非必传&去掉demo，demo请在官网直接体验和下载
-
-## 3.1.6
-* ios已知问题修复
-
-## 3.1.7
-* 新增接口getHistoryMessageListWithoutFormat
-
-## 3.1.8
-* 更新Android Native SDK到5.3.435
-* 新增接口getConversationListWithoutFormat
-* 修复信令接口crash
-
-## 3.1.9
-* 修改sdk压缩混淆选项
-
-## 3.2.0
-* 修复会话中lastMessage转化异常
-
-## 3.2.1
-* ios修复已知问题
-
-## 3.2.2
-* ios修复已知问题
-
-## 3.2.3
-* ios升级native sdk
-
-## 3.2.4
-* ios修复已知问题
-
-## 3.2.5
-* seq修改为string类型
-
-## 3.2.6
-* ios修复已知问题
-
-## 3.2.7
-* ios修复invite无推送的问题
-
-## 3.2.8
-* 修复invite参数
-
-## 3.2.9
-* 拉历史消息新增seq参数
-
-## 3.3.0
-* 修复iOSSound参数
-
-## 3.3.1
-* 修复已知问题
-
-## 3.3.2
-* Android权限修改
-
-## 3.3.3
-* 打包时支持混淆
-
-## 3.3.4
-* 修正path返回
-
-## 3.3.5
-* ios修复onSyncServerStart等事件
-
-## 3.3.6
-* ios bug修复
-
-## 3.3.7
-* ios bug修复
-
-## 3.3.8
-* ios 修复饭初始化crash
-
-## 3.3.9
-* 兼容firebase
-* 升级底层sdk
-
-## 3.4.0
-* 修复disable字段错误
-
-## 3.4.1
-* 修复群tips信息不完善
-
-## 3.4.2
-* disablePush字段对齐
-
-## 3.4.3
-* Hydra命名空间
-
-## 3.4.4
-* Hydra命名空间
-
 ## 3.5.0
-* 新增接口
-* callExperimentalAPI 
+* New interface
+* callExperimentalAPI
 * clearC2CHistoryMessage
 * clearGroupHistoryMessage
 * searchLocalMessages
@@ -418,120 +12,138 @@ setGroupReceiveMessageOpt、getC2CReceiveMessageOpt、getConversationListByConve
 * searchFriends
 
 ## 3.5.1
-* 数组越界兼容逻辑
+* Array out-of-bounds compatible logic
 
 ## 3.5.2
 * add web support
 
 ## 3.5.3
-* 新增onTotalUnreadMessageCountChanged事件
-* V2TimConversation新增orderkey字段，用于会话排序
+* Added onTotalUnreadMessageCountChanged event
+* Added orderkey field to V2TimConversation for session sorting
 
 ## 3.5.4
-* 新增downloadMergeMesasge接口
+* Added downloadMergeMesasge interface
 
 ## 3.5.5
-* 架构调整
+* Architecture adjustment
 
 ## 3.5.6
-* 修复checkFriend失败问题
-* 修复getC2CHistoryMessageList无法获取后续消息问题
+* Fix checkFriend failure problem
+* Fix the problem that getC2CHistoryMessageList cannot get follow-up messages
 
 ## 3.6.0
-* 各个模块支持listener多次注册，多次回调
-* 新增api markAllMessageAsRead 设置全部会话已读
-* 新增组合消息解析
-* 升级native 版本至5.8.1668
+* Each module supports multiple registration of listener and multiple callbacks
+* Added api markAllMessageAsRead to set all sessions read
+* Added combined message parsing
+* Upgrade the native version to 5.8.1668
 
 ## 3.6.1
-* 修复文件进度事件丢失
+* Fix file progress event missing
 
 ## 3.6.2
-* 修复移除高级消息未传uuid
+* Fixed removing advanced message not passing uuid
 
 ## 3.6.3
-* addFriend 接口优化: addType 由int 变更为 FriendTypeEnum
-* acceptFriendApplication 接口优化: acceptType 由int 变更为 FriendResponseTypeEnum
-* checkFriend 接口优化: checkType 由int 变更为 FriendTypeEnum
-* createGroup 接口优化: addOpt 由int 变更为 GroupAddOptTypeEnum
-* deleteFromFriendList 接口优化: deleteType 由int 变更为 FriendTypeEnum
-* getGroupMemberList 接口优化: filter 由int 变更为 GroupMemberFilterTypeEnum
-* getHistoryMessageList 接口优化: type 由int 变更为 HistoryMsgGetTypeEnum
-* getHistoryMessageListWithoutFormat 接口优化: type 由int 变更为 HistoryMsgGetTypeEnum
-* getGroupMemberList 接口优化: type 由int 变更为 GroupMemberFilterTypeEnum
-* getGroupMemberList 接口优化: filter 由int 变更为 GroupMemberFilterTypeEnum
-* initSDK 接口优化: loglevel 由int 变更为 LogLevelEnum
-* refuseFriendApplication 接口优化: acceptType 由int 变更为 FriendApplicationTypeEnum
-* sendCustomMessage 接口优化: priority 由int 变更为 MessagePriorityEnum
-* sendFaceMessage 接口优化: priority 由int 变更为 MessagePriorityEnum
-* sendFileMessage 接口优化: priority 由int 变更为 MessagePriorityEnum
-* sendForwardMessage 接口优化: priority 由int 变更为 MessagePriorityEnum
-* sendImageMessage 接口优化: priority 由int 变更为 MessagePriorityEnum
-* sendLocationMessage 接口优化: priority 由int 变更为 MessagePriorityEnum
-* sendMergerMessage 接口优化: priority 由int 变更为 MessagePriorityEnum
-* sendSoundMessage 接口优化: priority 由int 变更为 MessagePriorityEnum
-* sendTextAtMessage 接口优化: priority 由int 变更为 MessagePriorityEnum
-* sendTextMessage 接口优化: priority 由int 变更为 MessagePriorityEnum
-* setGroupMemberRole 接口优化: role 由int 变更为 GroupMemberRoleTypeEnum
-* 事件回调注册返回修改为异步
+* addFriend interface optimization: addType changed from int to FriendTypeEnum
+* acceptFriendApplication interface optimization: acceptType changed from int to FriendResponseTypeEnum
+* checkFriend interface optimization: checkType changed from int to FriendTypeEnum
+* createGroup interface optimization: addOpt changed from int to GroupAddOptTypeEnum
+* deleteFromFriendList interface optimization: deleteType changed from int to FriendTypeEnum
+* getGroupMemberList interface optimization: filter changed from int to GroupMemberFilterTypeEnum
+* getHistoryMessageList interface optimization: type changed from int to HistoryMsgGetTypeEnum
+* getHistoryMessageListWithoutFormat interface optimization: type changed from int to HistoryMsgGetTypeEnum
+* getGroupMemberList interface optimization: type changed from int to GroupMemberFilterTypeEnum
+* getGroupMemberList interface optimization: filter changed from int to GroupMemberFilterTypeEnum
+* initSDK interface optimization: loglevel changed from int to LogLevelEnum
+* refuseFriendApplication interface optimization: change acceptType from int to FriendApplicationTypeEnum
+* sendCustomMessage interface optimization: priority changed from int to MessagePriorityEnum
+* sendFaceMessage interface optimization: priority changed from int to MessagePriorityEnum
+* sendFileMessage interface optimization: priority changed from int to MessagePriorityEnum
+* sendForwardMessage interface optimization: priority changed from int to MessagePriorityEnum
+* sendImageMessage interface optimization: priority changed from int to MessagePriorityEnum
+* sendLocationMessage interface optimization: priority changed from int to MessagePriorityEnum
+* sendMergerMessage interface optimization: priority changed from int to MessagePriorityEnum
+* sendSoundMessage interface optimization: priority changed from int to MessagePriorityEnum
+* sendTextAtMessage interface optimization: priority changed from int to MessagePriorityEnum
+* sendTextMessage interface optimization: priority changed from int to MessagePriorityEnum
+* setGroupMemberRole interface optimization: role changed from int to GroupMemberRoleTypeEnum
+* Event callback registration return modified to be asynchronous
 
 
 ## 3.6.4
-* 修复安卓异步注册事件无返回bug
-* 修复移除基础监听事件报错
-* 消息进度事件增加发送中的消息的uuid
+* Fix Android asynchronous registration event no return bug
+* Fix the error of removing the basic listener event
+* The message progress event adds the uuid of the message being sent
 
 ## 3.6.5
-* 修复java语法错误
+* fix java syntax error
 
 ## 3.6.6
-* 添加消息回复接口
-* 修复web端release mode 下报错问题
+* Add message reply interface
+* Fix the problem of error reporting in release mode on the web side
 
 ## 3.6.7
-* ios编译环境从8.0升到9.0
+* The ios compilation environment has been upgraded from 8.0 to 9.0
 
 ## 3.6.8
-* 回复消息接口优化
+* Reply message interface optimization
 
 ## 3.6.9
-* 回复消息参数优化
+* Reply message parameter optimization
 
 ## 3.7.0
-* 优化cloudCustomData解包
+* Optimize cloudCustomData unpacking
 
 ## 3.7.1
-* 消息发送进度事件返回创建消息的id
-* 优化回调部分，提示业务方回调的错误在SDK中被catch需业务方修改
+* The message sending progress event returns the id of the created message
+* Optimize the callback part, prompting the business side to call back errors that are caught in the SDK and need to be modified by the business side
 
 ## 3.7.5
-* 升级底层库到6.0.1975
-* 离线推送配置支持TPNS TOKEN
+* Upgrade the underlying library to 6.0.1975
+* Offline push configuration supports TPNS TOKEN
 
 ## 3.7.7
-* 修复swift代码warning
-* 重写swift强解包代码
-* sendMessage接口返回的message实例增加id字段
+* Fix swift code warning
+* Rewrite swift strong unpacking code
+* Add the id field to the message instance returned by the sendMessage interface
 
 ## 3.7.8
-* 修复强解包带来的异常
+* Fix the exception caused by strong unpacking
 
 ## 3.8.0
-* 升级底层interface依赖
+* Upgrade the underlying interface dependencies
 
 ## 3.8.2
-* 更新群成员参数约束
+* Update group member parameter constraints
 
 ## 3.8.3
-* 根据环境切换token编码
+* Switch the token encoding according to the environment
 
 ## 3.8.4
-* 更新interface
+* update interface
 
 ## 3.8.5
-* 增加移除会话监听接口
-* 增加移除好友关系链接口
+* Added remove session listener interface
+* Add the interface for removing the friend relationship link
 
 ## 3.8.6
-* 解决包无法get问题
+* Solve the problem that the package cannot be get
 
+## 3.8.7
+* Modify add friends enumeration
+
+## 3.8.8
+* Monitor registration problem fix
+
+## 3.8.9
+* Monitor registration problem fix
+
+
+## 3.9.0
+* Modify grouplistener
+
+## 3.9.1
+* Upgrade the underlying library version to 6.1.2155
+
+## 3.9.2
+* Upgrade the ios library version to 6.1.2155.1

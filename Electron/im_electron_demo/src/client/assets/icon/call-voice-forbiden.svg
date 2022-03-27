@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>关闭声音icon</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1.000000 0 0 0 0 0.345098 0 0 0 0 0.298039 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="PC补齐界面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="关闭声音icon" transform="translate(-156.000000, -466.000000)" filter="url(#filter-1)">
+            <g transform="translate(156.000000, 466.000000)">
+                <rect id="矩形" x="0" y="0" width="36" height="36"></rect>
+                <path d="M7.485,13.5 L11.7777778,13.5 L11.7777778,13.5 L19,9 L19,27 L11.7777778,22.5 L7.485,22.5 C6.66485715,22.5 6,21.8351429 6,21.015 L6,14.985 C6,14.1648571 6.66485715,13.5 7.485,13.5 Z" id="矩形" stroke="#FF584C" stroke-width="2" stroke-linejoin="round"></path>
+                <line x1="26.3908845" y1="22.9976185" x2="26.6091155" y2="13" id="直线-14" stroke="#FF584C" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" transform="translate(26.500000, 17.998809) scale(-1, 1) rotate(45.000000) translate(-26.500000, -17.998809) "></line>
+                <line x1="26.3908845" y1="22.9976185" x2="26.6091155" y2="13" id="直线-14" stroke="#FF584C" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" transform="translate(26.500000, 17.998809) rotate(45.000000) translate(-26.500000, -17.998809) "></line>
+            </g>
+        </g>
+    </g>
+</svg>

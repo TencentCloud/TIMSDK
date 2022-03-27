@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/src/config.dart';
@@ -134,11 +138,112 @@ class _LoginFormState extends State<LoginForm> {
   final CoreServicesImpl coreInstance = TIMUIKitCore.getInstance();
 
   String userID = '';
-  bool checkboxSelected = false;
 
-  unSelectedPrivacy() {
-    Utils.toast(imt("需要同意隐私与用户协议"));
-    return null;
+  @override
+  initState() {
+    super.initState();
+    checkFirstEnter();
+  }
+
+  void checkFirstEnter() async {
+    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    SharedPreferences prefs = await _prefs;
+    String? firstTime = prefs.getString("firstTime");
+    if (firstTime != null && firstTime == "true") {
+      return;
+    }
+    showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          content: Text.rich(
+            TextSpan(
+                style: const TextStyle(
+                    fontSize: 14, color: Colors.black, height: 2.0),
+                children: [
+                  TextSpan(
+                    text: imt(
+                        "欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。"),
+                  ),
+                  const TextSpan(
+                    text: "\n",
+                  ),
+                  TextSpan(
+                    text: imt("请您点击"),
+                  ),
+                  TextSpan(
+                    text: imt("《用户协议》"),
+                    style: const TextStyle(
+                      color: Color.fromRGBO(0, 110, 253, 1),
+                    ),
+                    // 设置点击事件
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const UserAgreementPage()));
+                      },
+                  ),
+                  TextSpan(
+                    text: imt("和"),
+                  ),
+                  TextSpan(
+                      text: imt("《隐私协议》"),
+                      style: const TextStyle(
+                        color: Color.fromRGBO(0, 110, 253, 1),
+                      ),
+                      // 设置点击事件
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const PrivacyAgreementPage(),
+                            ),
+                          );
+                        }),
+                  TextSpan(
+                      text: imt("并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！")),
+                ]),
+            overflow: TextOverflow.clip,
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(0, 110, 253, 1),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(24),
+                    ),
+                  ),
+                  child: Text(imt("同意并继续"),
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 16))),
+              onPressed: () {
+                prefs.setString("firstTime", "true");
+                Navigator.of(context).pop(true);
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(imt("不同意并退出"),
+                  style: const TextStyle(color: Colors.grey, fontSize: 16)),
+              isDestructiveAction: true,
+              onPressed: () {
+                exit(0);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   directToHomePage() {
@@ -266,87 +371,6 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                     Container(
                       margin: EdgeInsets.only(
-                        top: CommonUtils.adaptHeight(40),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                              margin: const EdgeInsets.only(right: 5),
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 2),
-                                child: SizedBox(
-                                  height: CommonUtils.adaptHeight(38),
-                                  width: CommonUtils.adaptWidth(38),
-                                  child: Checkbox(
-                                    value: checkboxSelected,
-                                    shape: const CircleBorder(),
-                                    onChanged: (bool? value) {
-                                      setState(() {
-                                        checkboxSelected = value!;
-                                      });
-                                      SystemChannels.textInput
-                                          .invokeMethod('TextInput.hide');
-                                    },
-                                  ),
-                                ),
-                              )),
-                          Expanded(
-                              child: Text.rich(
-                            TextSpan(
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                ),
-                                children: [
-                                  TextSpan(
-                                      text: imt("我已阅读并同意"),
-                                      style:
-                                          const TextStyle(color: Colors.grey)),
-                                  TextSpan(
-                                      text: imt("《隐私协议》"),
-                                      style: const TextStyle(
-                                        color: Color.fromRGBO(0, 110, 253, 1),
-                                      ),
-                                      // 设置点击事件
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const PrivacyAgreementPage(),
-                                            ),
-                                          );
-                                        }),
-                                  TextSpan(
-                                      text: imt("和"),
-                                      style:
-                                          const TextStyle(color: Colors.grey)),
-                                  TextSpan(
-                                    text: imt("《用户协议》"),
-                                    style: const TextStyle(
-                                      color: Color.fromRGBO(0, 110, 253, 1),
-                                    ),
-                                    // 设置点击事件
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const UserAgreementPage()));
-                                      },
-                                  ),
-                                  const TextSpan(text: " ")
-                                ]),
-                            overflow: TextOverflow.clip,
-                          ))
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
                         top: CommonUtils.adaptHeight(46),
                       ),
                       child: Row(
@@ -354,9 +378,7 @@ class _LoginFormState extends State<LoginForm> {
                           Expanded(
                             child: ElevatedButton(
                               child: Text(imt("登陆")),
-                              onPressed: !checkboxSelected // 需要隐私协议勾选才可以登陆
-                                  ? unSelectedPrivacy
-                                  : userLogin,
+                              onPressed: userLogin,
                             ),
                           )
                         ],

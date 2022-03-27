@@ -1,0 +1,52 @@
+.call-footer {
+    padding: 16px 20px 20px 20px;
+    display: flex;
+    justify-content: space-between;
+
+    &__control-btn {
+        .video {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background: url('../../../assets/icon/call-video.svg');
+            margin-right: 16px;
+
+            &.is-active {
+                background: url('../../../assets/icon/call-video-forbiden.svg');
+            }
+        }
+    
+        .voice {
+            display: inline-block;
+            margin-right: 16px;
+            width: 36px;
+            height: 36px;
+            background: url('../../../assets/icon/禁言\ icon.svg');
+
+            &.is-active {
+                background: url('../../../assets/icon/call-voice.svg');
+            }
+        }
+
+        .screen-share {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background: url('../../../assets/icon/分享PPTicon.svg')
+        }
+    }
+
+    &__end-btn {
+        button {
+            height: 36px;
+            width: 96px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #ff4d4f;
+            background: #fff;
+            border: 1px solid transparent;
+            border-color: #ff4d4f;
+            outline: 0;
+        }
+    }
+}
