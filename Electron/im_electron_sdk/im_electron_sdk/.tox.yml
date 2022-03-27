@@ -1,0 +1,12 @@
+tox:
+  type: cloud
+  target: toc-electron-sdk-doc
+  dist: doc
+  wework:
+    ? chatid
+  clashKey: 867429fea0c07dae4018544f0bd39138
+  xingyun:
+    department: 通信FT
+    service: 云呼叫中心
+    app: Web前端
+    codereviewer: hexingcheng

@@ -1,0 +1,24 @@
+{
+    "entryPoints": [
+        "./src/interface/",
+         "./src/manager",
+         "./src/enum",
+         "./src/manager/advanceMessageManager.ts",
+         "./src/manager/conversationManager.ts",
+         "./src/manager/friendshipManager.ts",
+         "./src/manager/groupManager.ts",
+         "./src/manager/timbaseManager.ts"
+        ],
+    "out": "doc",
+    "excludePrivate": true,
+    "excludeInternal": true,
+    "name": "im_electron_sdk文档",
+    "categoryOrder": [
+        "高级消息相关回调(callback)",
+        "好友相关回调(callback)",
+        "基础接口相关回调(callback)",
+        "群组相关回调(callback)",
+        "会话相关回调(callback)",
+        "*"],
+    "categorizeByGroup": false
+}
