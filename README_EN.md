@@ -149,7 +149,7 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 ### SDK
 
-- Added support for read receipts for group messages.
+- Added support for read receipts for group messages（[iOS documentation,](https://cloud.tencent.com/document/product/269/44490#.E7.BE.A4.E6.B6.88.E6.81.AF.E5.B7.B2.E8.AF.BB.E5.9B.9E.E6.89.A7) [Android documentation](https://cloud.tencent.com/document/product/269/44489#.E7.BE.A4.E6.B6.88.E6.81.AF.E5.B7.B2.E8.AF.BB.E5.9B.9E.E6.89.A7)）.
 - Added support for setting offline push alert sound for Android.
 - Added the API for setting network proxy for mobile SDKs.
 - Supplemented offline push APIs for the C/C++ platform.
