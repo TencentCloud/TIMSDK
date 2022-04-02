@@ -46,27 +46,23 @@ public class ProfileFragment extends BaseFragment {
                         .setPositiveButton(getString(R.string.sure), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Thread logoutThread = new Thread(() -> TUIUtils.logout(new V2TIMCallback() {
+                                TUIUtils.logout(new V2TIMCallback() {
                                     @Override
                                     public void onSuccess() {
-
+                                        UserInfo.getInstance().cleanUserInfo();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putBoolean(TUIKitConstants.LOGOUT, true);
+                                        TUIUtils.startActivity("LoginForDevActivity", bundle);
+                                        if (getActivity() != null) {
+                                            getActivity().finish();
+                                        }
                                     }
 
                                     @Override
                                     public void onError(int code, String desc) {
                                         ToastUtil.toastLongMessage("logout fail: " + code + "=" + desc);
                                     }
-                                }));
-                                logoutThread.setName("Logout-Thread");
-                                logoutThread.start();
-                                UserInfo.getInstance().setToken("");
-                                UserInfo.getInstance().setAutoLogin(false);
-                                Bundle bundle = new Bundle();
-                                bundle.putBoolean(TUIKitConstants.LOGOUT, true);
-                                TUIUtils.startActivity("LoginForDevActivity", bundle);
-                                if (getActivity() != null) {
-                                    getActivity().finish();
-                                }
+                                });
                             }
 
                         })

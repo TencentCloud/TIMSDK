@@ -11,6 +11,7 @@ public class TUICallingConstants {
     public static final String PARAM_NAME_GROUPID     = "groupId";
     public static final String PARAM_NAME_SPONSORID   = "sponsorID";
     public static final String PARAM_NAME_ISFROMGROUP = "isFromGroup";
+    public static final String PARAM_NAME_FLOATWINDOW = "enableFloatWindow";
 
     public static final String KEY_CALL_TYPE    = "call_type";
     public static final String KEY_GROUP_ID     = "group_id";

@@ -44,4 +44,7 @@
     <string name="trtccalling_user_sig_expired">Your user signature information has expired</string>
     <string name="trtccalling_user_exceed_limit">TUICalling currently supports call with up to 9 people.For
         larger conference calls,try using TUIRoom</string>
+    <string name="trtccalling_wait_resonse">Waiting</string>
+    <string name="trtccalling_float_permission">please open "Display over other apps" permission</string>
+    <string name="trtccalling_is_calling">Unable to restart the call</string>
 </resources>

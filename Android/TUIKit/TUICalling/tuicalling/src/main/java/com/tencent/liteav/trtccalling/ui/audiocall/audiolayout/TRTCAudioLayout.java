@@ -50,10 +50,6 @@ public class TRTCAudioLayout extends RelativeLayout {
         mTextName.setText(userName);
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        mImageHead.setImageBitmap(bitmap);
-    }
-
     public RoundCornerImageView getImageView() {
         return mImageHead;
     }

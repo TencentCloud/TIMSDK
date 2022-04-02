@@ -123,6 +123,13 @@ public abstract class TUIMessageBean implements Serializable {
           return msgTime;
      }
 
+     public long getMsgSeq() {
+          if (v2TIMMessage != null) {
+               return v2TIMMessage.getSeq();
+          }
+          return 0;
+     }
+
      public void setId(String id) {
           this.id = id;
      }

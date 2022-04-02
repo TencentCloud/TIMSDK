@@ -11,6 +11,7 @@ import com.meizu.cloud.pushsdk.platform.message.RegisterStatus;
 import com.meizu.cloud.pushsdk.platform.message.SubAliasStatus;
 import com.meizu.cloud.pushsdk.platform.message.SubTagsStatus;
 import com.meizu.cloud.pushsdk.platform.message.UnRegisterStatus;
+import com.tencent.qcloud.tim.demo.thirdpush.PushSetting;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 
@@ -67,6 +68,11 @@ public class MEIZUPushReceiver extends MzPushMessageReceiver {
     @Override
     public void onRegisterStatus(Context context, RegisterStatus registerStatus) {
         DemoLog.i(TAG, "onRegisterStatus token = " + registerStatus.getPushId());
+
+        if (PushSetting.isTPNSChannel) {
+            return;
+        }
+
         ThirdPushTokenMgr.getInstance().setThirdPushToken(registerStatus.getPushId());
         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
 

@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.tencent.liteav.trtccalling.ui.base.TRTCLayoutEntity;
+import com.tencent.liteav.trtccalling.ui.base.VideoLayoutFactory;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 
 import java.util.ArrayList;
@@ -44,14 +46,14 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
     public static final int MODE_GRID  = 2;  // 九宫格模式
     public static final int MAX_USER   = 9;
 
-    private LinkedList<TRTCLayoutEntity> mLayoutEntityList;
-    private ArrayList<LayoutParams>      mFloatParamList;
-    private ArrayList<LayoutParams>      mGrid4ParamList;
-    private ArrayList<LayoutParams>      mGrid9ParamList;
-    private int                          mCount = 0;
-    private int                          mMode;
-    private String                       mSelfUserId;
-    private Context                      mContext;
+    private ArrayList<LayoutParams> mFloatParamList;
+    private ArrayList<LayoutParams> mGrid4ParamList;
+    private ArrayList<LayoutParams> mGrid9ParamList;
+    private int                     mCount = 0;
+    private int                     mMode;
+    private String                  mSelfUserId;
+    private Context                 mContext;
+    private VideoLayoutFactory      mVideoFactory;
 
     /**
      * ===============================View相关===============================
@@ -60,17 +62,25 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
         this(context, null);
     }
 
-
     public TRTCVideoLayoutManager(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        initView(context);
+    }
+
+    public void initVideoFactory(VideoLayoutFactory factory) {
+        mVideoFactory = factory;
+        initView(mContext);
     }
 
     private void initView(Context context) {
         Log.i(TAG, "initView: ");
 
-        mLayoutEntityList = new LinkedList<>();
+        if (null == mVideoFactory) {
+            return;
+        }
+        if (null == mVideoFactory.mLayoutEntityList) {
+            mVideoFactory.mLayoutEntityList = new LinkedList<>();
+        }
         // 默认为堆叠模式
         mMode = MODE_FLOAT;
         this.post(new Runnable() {
@@ -109,7 +119,7 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
      */
     public TRTCVideoLayout findCloudView(String userId) {
         if (userId == null) return null;
-        for (TRTCLayoutEntity layoutEntity : mLayoutEntityList) {
+        for (TRTCLayoutEntity layoutEntity : mVideoFactory.mLayoutEntityList) {
             if (layoutEntity.userId.equals(userId)) {
                 return layoutEntity.layout;
             }
@@ -133,7 +143,7 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
         layoutEntity.layout = new TRTCVideoLayout(mContext);
         layoutEntity.layout.setVisibility(VISIBLE);
         initGestureListener(layoutEntity.layout);
-        mLayoutEntityList.add(layoutEntity);
+        mVideoFactory.mLayoutEntityList.add(layoutEntity);
         addView(layoutEntity.layout);
         mCount++;
         switchModeInternal();
@@ -157,7 +167,6 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
         }
 
     }
-
 
     private void initGestureListener(final TRTCVideoLayout layout) {
         final GestureDetector detector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
@@ -207,14 +216,14 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
     public void recyclerCloudViewView(String userId) {
         if (userId == null) return;
         if (mMode == MODE_FLOAT) {
-            TRTCLayoutEntity entity = mLayoutEntityList.get(mLayoutEntityList.size() - 1);
+            TRTCLayoutEntity entity = mVideoFactory.mLayoutEntityList.get(mVideoFactory.mLayoutEntityList.size() - 1);
             // 当前离开的是处于0号位的人，那么需要将我换到这个位置
             if (userId.equals(entity.userId)) {
                 makeFullVideoView(mSelfUserId);
             }
         } else {
         }
-        Iterator iterator = mLayoutEntityList.iterator();
+        Iterator iterator = mVideoFactory.mLayoutEntityList.iterator();
         while (iterator.hasNext()) {
             TRTCLayoutEntity item = (TRTCLayoutEntity) iterator.next();
             if (item.userId.equals(userId)) {
@@ -231,7 +240,7 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
      * 隐藏所有音量的进度条
      */
     public void hideAllAudioVolumeProgressBar() {
-        for (TRTCLayoutEntity entity : mLayoutEntityList) {
+        for (TRTCLayoutEntity entity : mVideoFactory.mLayoutEntityList) {
             entity.layout.setAudioVolumeProgressBarVisibility(View.GONE);
         }
     }
@@ -240,7 +249,7 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
      * 显示所有音量的进度条
      */
     public void showAllAudioVolumeProgressBar() {
-        for (TRTCLayoutEntity entity : mLayoutEntityList) {
+        for (TRTCLayoutEntity entity : mVideoFactory.mLayoutEntityList) {
             entity.layout.setAudioVolumeProgressBarVisibility(View.VISIBLE);
         }
     }
@@ -253,7 +262,7 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
      */
     public void updateAudioVolume(String userId, int audioVolume) {
         if (userId == null) return;
-        for (TRTCLayoutEntity entity : mLayoutEntityList) {
+        for (TRTCLayoutEntity entity : mVideoFactory.mLayoutEntityList) {
             if (entity.layout.getVisibility() == VISIBLE) {
                 if (userId.equals(entity.userId)) {
                     entity.layout.setAudioVolumeProgress(audioVolume);
@@ -263,14 +272,14 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
     }
 
     private TRTCLayoutEntity findEntity(TRTCVideoLayout layout) {
-        for (TRTCLayoutEntity entity : mLayoutEntityList) {
+        for (TRTCLayoutEntity entity : mVideoFactory.mLayoutEntityList) {
             if (entity.layout == layout) return entity;
         }
         return null;
     }
 
     private TRTCLayoutEntity findEntity(String userId) {
-        for (TRTCLayoutEntity entity : mLayoutEntityList) {
+        for (TRTCLayoutEntity entity : mVideoFactory.mLayoutEntityList) {
             if (entity.userId.equals(userId)) return entity;
         }
         return null;
@@ -294,8 +303,8 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
                 paramList = mGrid9ParamList;
             }
             int layoutIndex = 1;
-            for (int i = 0; i < mLayoutEntityList.size(); i++) {
-                TRTCLayoutEntity entity = mLayoutEntityList.get(i);
+            for (int i = 0; i < mVideoFactory.mLayoutEntityList.size(); i++) {
+                TRTCLayoutEntity entity = mVideoFactory.mLayoutEntityList.get(i);
                 entity.layout.setMoveAble(false);
                 entity.layout.setOnClickListener(null);
                 // 我自己要放在布局的左上角
@@ -325,9 +334,9 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
         }
 
         // 根据堆叠布局参数，将每个view放到适当的位置，后加入的放在最大位
-        int size = mLayoutEntityList.size();
+        int size = mVideoFactory.mLayoutEntityList.size();
         for (int i = 0; i < size; i++) {
-            TRTCLayoutEntity entity = mLayoutEntityList.get(size - i - 1);
+            TRTCLayoutEntity entity = mVideoFactory.mLayoutEntityList.get(size - i - 1);
             LayoutParams layoutParams = mFloatParamList.get(i);
             entity.layout.setLayoutParams(layoutParams);
             if (i == 0) {
@@ -369,13 +378,8 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
     private void makeFullVideoView(String userId) {
         Log.i(TAG, "makeFullVideoView: from = " + userId);
         TRTCLayoutEntity entity = findEntity(userId);
-        mLayoutEntityList.remove(entity);
-        mLayoutEntityList.addLast(entity);
+        mVideoFactory.mLayoutEntityList.remove(entity);
+        mVideoFactory.mLayoutEntityList.addLast(entity);
         makeFloatLayout();
-    }
-
-    private static class TRTCLayoutEntity {
-        public TRTCVideoLayout layout;
-        public String          userId = "";
     }
 }

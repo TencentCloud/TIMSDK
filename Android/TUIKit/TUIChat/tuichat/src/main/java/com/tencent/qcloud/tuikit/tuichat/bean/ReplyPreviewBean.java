@@ -3,12 +3,17 @@ package com.tencent.qcloud.tuikit.tuichat.bean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
 public class ReplyPreviewBean {
+
+    public static final int VERSION = 1;
+
     private String messageID;
     private String messageAbstract;
     private String messageSender;
     private int messageType;
+    private long messageTime;
+    private long messageSequence;
 
-    private int version = 1;
+    private int version = VERSION;
 
     private transient TUIMessageBean originalMessageBean;
 
@@ -58,5 +63,21 @@ public class ReplyPreviewBean {
 
     public int getVersion() {
         return version;
+    }
+
+    public long getMessageSequence() {
+        return messageSequence;
+    }
+
+    public long getMessageTime() {
+        return messageTime;
+    }
+
+    public void setMessageSequence(long messageSequence) {
+        this.messageSequence = messageSequence;
+    }
+
+    public void setMessageTime(long messageTime) {
+        this.messageTime = messageTime;
     }
 }
