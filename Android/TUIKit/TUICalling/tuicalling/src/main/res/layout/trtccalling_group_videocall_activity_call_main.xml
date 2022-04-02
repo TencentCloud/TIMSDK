@@ -13,6 +13,24 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp" />
 
+    <LinearLayout
+        android:id="@+id/ll_video_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@color/trtccalling_color_transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/gl_horizontal_top">
+
+        <ImageView
+            android:id="@+id/img_video_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/trtccalling_ic_movetoback" />
+    </LinearLayout>
+
+
     <com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCGroupVideoLayoutManager
         android:id="@+id/trtc_layout_manager"
         android:layout_width="wrap_content"
@@ -20,7 +38,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/ll_video_toolbar" />
 
     <View
         android:id="@+id/shade_sponsor"
@@ -291,6 +309,7 @@
         android:src="@drawable/trtccalling_ic_switch_camera"
         app:layout_constraintStart_toEndOf="@id/ll_hangup"
         app:layout_constraintTop_toTopOf="@id/ll_hangup" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_horizontal_bottom"
         android:layout_width="0dp"

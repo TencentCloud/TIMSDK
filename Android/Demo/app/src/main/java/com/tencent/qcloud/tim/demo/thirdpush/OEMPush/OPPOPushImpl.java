@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Build;
 
 import com.heytap.msp.push.callback.ICallBackResultService;
+import com.tencent.qcloud.tim.demo.thirdpush.PushSetting;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 
@@ -16,6 +17,11 @@ public class OPPOPushImpl implements ICallBackResultService {
     @Override
     public void onRegister(int responseCode, String registerID) {
         DemoLog.i(TAG, "onRegister responseCode: " + responseCode + " registerID: " + registerID);
+
+        if (PushSetting.isTPNSChannel) {
+            return;
+        }
+
         ThirdPushTokenMgr.getInstance().setThirdPushToken(registerID);
         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
     }

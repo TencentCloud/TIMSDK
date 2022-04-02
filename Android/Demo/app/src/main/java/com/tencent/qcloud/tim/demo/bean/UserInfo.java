@@ -14,6 +14,7 @@ public class UserInfo implements Serializable {
 
     private static UserInfo sUserInfo;
 
+    private int  sdkAppId;
     private String zone;
     private String phone;
     private String token;
@@ -22,6 +23,7 @@ public class UserInfo implements Serializable {
     private String name;
     private String avatar;
     private boolean autoLogin;
+    private boolean debugLogin = false;
 
     public synchronized static UserInfo getInstance() {
         if (sUserInfo == null) {
@@ -44,6 +46,14 @@ public class UserInfo implements Serializable {
         SharedPreferences.Editor editor = shareInfo.edit();
         editor.putString(PER_USER_MODEL, new Gson().toJson(info));
         editor.commit();
+    }
+
+    public int getSdkAppId() {
+        return sdkAppId;
+    }
+
+    public void setSdkAppId(int sdkAppId) {
+        this.sdkAppId = sdkAppId;
     }
 
     public String getUserSig() {
@@ -115,6 +125,27 @@ public class UserInfo implements Serializable {
 
     public void setAvatar(String url) {
         this.avatar = url;
+        setUserInfo(this);
+    }
+
+    public void setDebugLogin(boolean debugLogin) {
+        this.debugLogin = debugLogin;
+        setUserInfo(this);
+    }
+
+    public boolean isDebugLogin() {
+        return debugLogin;
+    }
+
+    public void cleanUserInfo() {
+        sdkAppId = 0;
+        zone = "";
+        token = "";
+        userId = "";
+        userSig = "";
+        name = "";
+        avatar = "";
+        autoLogin = false;
         setUserInfo(this);
     }
 

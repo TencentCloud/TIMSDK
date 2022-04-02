@@ -23,4 +23,5 @@
     <color name="trtccalling_color_line">#DDDDDD</color>
     <color name="trtccalling_color_disable">#DBDBDB</color>
     <color name="trtccalling_color_transparent">#00000000</color>
+    <color name="trtccalling_color_green">#FF29CC85</color>
 </resources>

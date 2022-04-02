@@ -14,12 +14,12 @@ import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
 import com.tencent.liteav.trtccalling.model.impl.TRTCCallingCallback;
 import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
-import com.tencent.liteav.trtccalling.ui.audiocall.TRTCAudioCallActivity;
 import com.tencent.liteav.trtccalling.ui.audiocall.TUICallAudioView;
 import com.tencent.liteav.trtccalling.ui.audiocall.TUIGroupCallAudioView;
+import com.tencent.liteav.trtccalling.ui.base.BaseCallActivity;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
+import com.tencent.liteav.trtccalling.ui.base.Status;
 import com.tencent.liteav.trtccalling.ui.service.TUICallService;
-import com.tencent.liteav.trtccalling.ui.videocall.TRTCVideoCallActivity;
 import com.tencent.liteav.trtccalling.ui.videocall.TUICallVideoView;
 import com.tencent.liteav.trtccalling.ui.videocall.TUIGroupCallVideoView;
 import com.tencent.trtc.TRTCCloudDef;
@@ -43,7 +43,7 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
     private         TUICallingListener mTUICallingListener;
     protected final Handler            mMainHandler = new Handler(Looper.getMainLooper());
 
-    private boolean  mEnableFloatWindow     = false;  // 是否开启悬浮窗
+    private boolean  mEnableFloatWindow     = false;  // 是否开启悬浮窗,默认关闭,用户决定是否开启
     private boolean  mEnableCustomViewRoute = false;  // 是否开启自定义视图
     private String[] mUserIDs;
     private Type     mType;
@@ -114,6 +114,13 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
     }
 
     void internalCall(final String[] userIDs, final String sponsorID, final String groupID, final boolean isFromGroup, final Type type, final Role role) {
+        //当前悬浮窗显示,说明在通话流程中,不能再发起通话
+        if (Status.mIsShowFloatWindow) {
+            ToastUtils.showShort(mContext.getString(R.string.trtccalling_is_calling));
+            return;
+        }
+
+        //最大支持9人,超过9人,不能发起通话
         if (userIDs.length > MAX_USERS) {
             ToastUtils.showShort(mContext.getString(R.string.trtccalling_user_exceed_limit));
             return;
@@ -133,17 +140,19 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
         if (mEnableCustomViewRoute) {
             if (Type.AUDIO == type) {
                 if (isGroupCall(groupID, userIDs, role, isFromGroup)) {
-                    mCallView = new TUIGroupCallAudioView(mContext, role, userIDs, sponsorID, groupID, isFromGroup);
+                    mCallView = new TUIGroupCallAudioView(mContext, role, type, userIDs, sponsorID, groupID, isFromGroup);
                 } else {
-                    mCallView = new TUICallAudioView(mContext, role, userIDs, sponsorID, groupID, isFromGroup);
+                    mCallView = new TUICallAudioView(mContext, role, type, userIDs, sponsorID, groupID, isFromGroup);
                 }
             } else if (Type.VIDEO == type) {
                 if (isGroupCall(groupID, userIDs, role, isFromGroup)) {
-                    mCallView = new TUIGroupCallVideoView(mContext, role, userIDs, sponsorID, groupID, isFromGroup);
+                    mCallView = new TUIGroupCallVideoView(mContext, role, type, userIDs, sponsorID, groupID, isFromGroup);
                 } else {
-                    mCallView = new TUICallVideoView(mContext, role, userIDs, sponsorID, groupID, isFromGroup);
+                    mCallView = new TUICallVideoView(mContext, role, type, userIDs, sponsorID, groupID, isFromGroup, null);
                 }
             }
+            //用户自加载CallView时,不支持悬浮窗功能
+            mCallView.enableFloatWindow(false);
             if (null != mTUICallingListener) {
                 mTUICallingListener.onCallStart(userIDs, type, role, mCallView);
             }
@@ -151,7 +160,8 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
             Runnable task = new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = Type.AUDIO == type ? new Intent(mContext, TRTCAudioCallActivity.class) : new Intent(mContext, TRTCVideoCallActivity.class);
+                    Intent intent = new Intent(mContext, BaseCallActivity.class);
+                    intent.putExtra(TUICallingConstants.PARAM_NAME_TYPE, type);
                     intent.putExtra(TUICallingConstants.PARAM_NAME_ROLE, role);
                     if (Role.CALLED == role) {
                         intent.putExtra(TUICallingConstants.PARAM_NAME_SPONSORID, sponsorID);
@@ -159,6 +169,7 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
                     }
                     intent.putExtra(TUICallingConstants.PARAM_NAME_USERIDS, userIDs);
                     intent.putExtra(TUICallingConstants.PARAM_NAME_GROUPID, groupID);
+                    intent.putExtra(TUICallingConstants.PARAM_NAME_FLOATWINDOW, mEnableFloatWindow);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 }
@@ -169,7 +180,7 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
             }
         }
     }
-    
+
     private boolean isGroupCall(String groupID, String[] userIDs, TUICalling.Role role, boolean isFromGroup) {
         if (!TextUtils.isEmpty(groupID)) {
             return true;
@@ -360,12 +371,10 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
 
     @Override
     public void onUserVoiceVolume(Map<String, Integer> volumeMap) {
-//        Log.d(TAG, "onUserVoiceVolume enter");
     }
 
     @Override
     public void onNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
-        Log.d(TAG, "onNetworkQuality enter");
     }
 
     @Override

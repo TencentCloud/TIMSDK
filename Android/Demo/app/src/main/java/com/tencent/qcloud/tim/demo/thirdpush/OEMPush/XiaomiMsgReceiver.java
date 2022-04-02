@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
+import com.tencent.qcloud.tim.demo.thirdpush.PushSetting;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.xiaomi.mipush.sdk.ErrorCode;
@@ -31,6 +32,11 @@ public class XiaomiMsgReceiver extends PushMessageReceiver {
     @Override
     public void onNotificationMessageClicked(Context context, MiPushMessage miPushMessage) {
         DemoLog.d(TAG, "onNotificationMessageClicked miPushMessage " + miPushMessage.toString());
+
+        if (PushSetting.isTPNSChannel) {
+            return;
+        }
+
         Map<String, String> extra = miPushMessage.getExtra();
         String ext = extra.get("ext");
         if (TextUtils.isEmpty(ext)) {
@@ -65,6 +71,11 @@ public class XiaomiMsgReceiver extends PushMessageReceiver {
         }
 
         DemoLog.d(TAG, "regId: " + mRegId);
+
+        if (PushSetting.isTPNSChannel) {
+            return;
+        }
+
         ThirdPushTokenMgr.getInstance().setThirdPushToken(mRegId);
         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
     }

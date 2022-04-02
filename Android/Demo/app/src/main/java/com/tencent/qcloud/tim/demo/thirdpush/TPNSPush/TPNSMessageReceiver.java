@@ -8,6 +8,7 @@ import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
+import com.tencent.qcloud.tim.demo.thirdpush.PushSetting;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 
@@ -43,7 +44,7 @@ public class TPNSMessageReceiver extends XGPushBaseReceiver {
 	 */
 	@Override
 	public void onRegisterResult(Context context, int errorCode, XGPushRegisterResult message) {
-		if (context == null || message == null) {
+		if (context == null || message == null || !PushSetting.isTPNSChannel) {
 			return;
 		}
 		String text = "";
@@ -149,7 +150,7 @@ public class TPNSMessageReceiver extends XGPushBaseReceiver {
 	 */
 	@Override
 	public void onNotificationClickedResult(Context context, XGPushClickedResult message) {
-		if (context == null || message == null) {
+		if (context == null || message == null || !PushSetting.isTPNSChannel) {
 			return;
 		}
 		String text = "";

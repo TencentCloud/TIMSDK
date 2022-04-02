@@ -246,6 +246,8 @@ public class ChatMessageBuilder {
         previewBean.setMessageID(messageBean.getId());
         previewBean.setMessageAbstract(messageAbstract);
         previewBean.setMessageSender(sender);
+        previewBean.setMessageTime(messageBean.getMessageTime());
+        previewBean.setMessageSequence(messageBean.getMsgSeq());
         previewBean.setMessageType(messageBean.getMsgType());
 
         return previewBean;
