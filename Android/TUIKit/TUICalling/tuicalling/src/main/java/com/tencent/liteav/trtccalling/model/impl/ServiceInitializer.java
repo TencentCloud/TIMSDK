@@ -51,10 +51,9 @@ public final class ServiceInitializer extends ContentProvider {
                     if (foregroundActivities == 1 && !isChangingConfiguration) {
                         // 应用切到前台
                         Log.i(TAG, "application enter foreground");
-
                         //应用回到前台,需要主动去查询是否有未处理的通话请求
                         //例如应用在后台时没有拉起应用的权限,当用户听到铃声,从桌面或通知栏进入应用时,主动查询,拉起通话
-                        if (TUILogin.hasPrivacyPermission) {
+                        if (TUILogin.isUserLogined()) {
                             TUICallingImpl.sharedInstance(context).queryOfflineCalling();
                         }
                     }

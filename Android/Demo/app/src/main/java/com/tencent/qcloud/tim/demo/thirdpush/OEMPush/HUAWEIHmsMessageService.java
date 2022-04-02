@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.huawei.hms.push.HmsMessageService;
 import com.huawei.hms.push.RemoteMessage;
+import com.tencent.qcloud.tim.demo.thirdpush.PushSetting;
 import com.tencent.qcloud.tim.demo.thirdpush.ThirdPushTokenMgr;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
@@ -32,6 +33,11 @@ public class HUAWEIHmsMessageService extends HmsMessageService {
     @Override
     public void onNewToken(String token) {
         DemoLog.i(TAG, "onNewToken token=" + token);
+
+        if (PushSetting.isTPNSChannel) {
+            return;
+        }
+
         ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
     }

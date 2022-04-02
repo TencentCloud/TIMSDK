@@ -23,7 +23,7 @@ public class PushSetting {
         PushSettingInterface pushSettingInterface;
         Context context = DemoApplication.instance();
         SharedPreferences sharedPreferences = context.getSharedPreferences("TUIKIT_DEMO_SETTINGS", context.MODE_PRIVATE);
-        isTPNSChannel = sharedPreferences.getBoolean("isTPNSChannel", true);
+        isTPNSChannel = sharedPreferences.getBoolean("isTPNSChannel", false);
         DemoLog.i("PushSetting", "initPush isTPNSChannel = " + isTPNSChannel);
         if (isTPNSChannel) {
             pushSettingInterface = new TPNSPushSetting();

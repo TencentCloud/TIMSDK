@@ -143,6 +143,9 @@ public class ChatMessageParser {
                     replyPreviewBean = gson.fromJson(gson.toJson(replyContentObj), ReplyPreviewBean.class);
                 }
                 if (replyPreviewBean != null) {
+                    if (replyPreviewBean.getVersion() > ReplyPreviewBean.VERSION) {
+                        return null;
+                    }
                     return new ReplyMessageBean(replyPreviewBean);
                 }
             }

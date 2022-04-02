@@ -13,6 +13,23 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp" />
 
+    <LinearLayout
+        android:id="@+id/ll_audio_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@color/trtccalling_color_audiocall_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/top_guide_line">
+
+        <ImageView
+            android:id="@+id/img_audio_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/trtccalling_ic_movetoback" />
+    </LinearLayout>
+
     <com.tencent.liteav.trtccalling.ui.audiocall.audiolayout.TRTCAudioLayoutManager
         android:id="@+id/trtc_layout_manager"
         android:layout_width="wrap_content"
@@ -20,7 +37,7 @@
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/top_guide_line" />
+        app:layout_constraintTop_toBottomOf="@+id/ll_audio_toolbar" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_inviting"

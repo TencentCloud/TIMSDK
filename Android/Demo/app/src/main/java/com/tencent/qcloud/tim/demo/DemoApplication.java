@@ -101,11 +101,14 @@ public class DemoApplication extends Application {
         }
     }
 
-    public void init() {
+    public void init(int sdkAppId) {
         initBuildInformation();
         initBugly();
-        TUIUtils.init(this, GenerateTestUserSig.SDKAPPID, null, null);
-
+        if (sdkAppId != 0) {
+            TUIUtils.init(this, sdkAppId, null, null);
+        } else {
+            TUIUtils.init(this, GenerateTestUserSig.SDKAPPID, null, null);
+		}
     }
 
     public void initPush() {
@@ -156,8 +159,7 @@ public class DemoApplication extends Application {
 
     public void logout() {
         DemoLog.i(TAG, "logout");
-        UserInfo.getInstance().setToken("");
-        UserInfo.getInstance().setAutoLogin(false);
+        UserInfo.getInstance().cleanUserInfo();
 
         unBindUserID(UserInfo.getInstance().getUserId());
         unInitPush();

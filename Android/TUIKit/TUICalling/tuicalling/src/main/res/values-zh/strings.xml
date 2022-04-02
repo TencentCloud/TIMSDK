@@ -43,4 +43,7 @@
     <string name="trtccalling_user_kicked_offline">您已被踢下线，请重新登录</string>
     <string name="trtccalling_user_sig_expired">您的用户签名信息已过期</string>
     <string name="trtccalling_user_exceed_limit">暂支持最多9人通话。如需多人会议，请使用TUIRoom</string>
+    <string name="trtccalling_wait_resonse">等待接听</string>
+    <string name="trtccalling_float_permission">请打开悬浮窗权限</string>
+    <string name="trtccalling_is_calling">正在通话中,无法再次发起</string>
 </resources>

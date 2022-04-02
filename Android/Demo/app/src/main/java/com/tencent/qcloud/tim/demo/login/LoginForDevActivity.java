@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -105,7 +103,7 @@ public class LoginForDevActivity extends BaseLightActivity {
         mLoginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DemoApplication.instance().init();
+                DemoApplication.instance().init(0);
 
                 UserInfo.getInstance().setUserId(mUserAccount.getText().toString());
                 // 获取userSig函数
@@ -125,6 +123,7 @@ public class LoginForDevActivity extends BaseLightActivity {
                     @Override
                     public void onSuccess() {
                         UserInfo.getInstance().setAutoLogin(true);
+                        UserInfo.getInstance().setDebugLogin(true);
                         Intent intent = new Intent(LoginForDevActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

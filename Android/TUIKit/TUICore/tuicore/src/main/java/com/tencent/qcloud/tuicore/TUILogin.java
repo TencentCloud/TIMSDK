@@ -32,7 +32,7 @@ public class TUILogin {
     private static int sdkAppId = 0;
     private static String userId;
     private static String userSig;
-    public static boolean hasPrivacyPermission = false; //是否同意了隐私权限,默认值为false
+    private static boolean hasLoginSuccess = false;
 
     /**
      * IMSDK 初始化
@@ -103,7 +103,6 @@ public class TUILogin {
         // 开始初始化 IMSDK，发送广播
         TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, null);
         // 用户操作初始化, 默认已经读过隐私协议
-        hasPrivacyPermission = true;
         return V2TIMManager.getInstance().initSDK(context, sdkAppId, config);
     }
 
@@ -140,6 +139,7 @@ public class TUILogin {
         V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
             @Override
             public void onSuccess() {
+                hasLoginSuccess = true;
                 if (callback != null) {
                     callback.onSuccess();
                 }
@@ -271,7 +271,7 @@ public class TUILogin {
      * @return true：用户已经登录； false：用户尚未登录
      */
     public static boolean isUserLogined() {
-        return V2TIMManager.getInstance().getLoginStatus() == V2TIM_STATUS_LOGINED;
+        return hasLoginSuccess && V2TIMManager.getInstance().getLoginStatus() == V2TIM_STATUS_LOGINED;
     }
 
     /**
