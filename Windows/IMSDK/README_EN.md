@@ -4,9 +4,9 @@ English | [简体中文](./README.md)
 
 ## Download Links
 
-[Latest C++ API download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2155/ImSDK_Windows_CPP_6.1.2155.zip)
+[Latest C++ API download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2166/cross_platform/ImSDK_Windows_CPP_6.1.2166.zip)
 
-[Latest C API download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2155/ImSDK_Windows_C_6.1.2155.zip)
+[Latest C API download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2166/cross_platform/ImSDK_Windows_C_6.1.2166.zip)
 
 ## TIMSDK for Windows
 
