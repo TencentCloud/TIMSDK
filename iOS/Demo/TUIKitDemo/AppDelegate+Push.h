@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 //tpns
 #define tpnsAccessID  0
 #define tpnsAccessKey @""
+#define tpnsDomain @""
 // **********************************************************
 
 @interface AppDelegate (Push)

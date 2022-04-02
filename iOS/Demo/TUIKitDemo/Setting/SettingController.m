@@ -27,27 +27,14 @@
 #import "TUIAvatarViewController.h"
 #import "TUICommonSwitchCell.h"
 #import "TCUtil.h"
-#import <QAPM/QAPM.h>
 
-
+#import "TCLoginModel.h"
 #import "TUIDarkModel.h"
 
-#import "TUILoginCache.h"
 #import "TUICommonModel.h"
 #import "TUINaviBarIndicatorView.h"
 #import "TUIThemeManager.h"
 
-#if ENABLELIVE
-#import "TUIKitLive.h"
-#import "TUILiveUserProfile.h"
-#endif
-
-#if ENABLEPRIVATE
-#import "TestViewController.h"
-#import "V2ManageTestViewController.h"
-#import "V2GroupTestViewController.h"
-#import "V2FriendTestViewController.h"
-#endif
 
 #import "TUIAboutUsViewController.h"
 
@@ -128,15 +115,6 @@
     }
 }
 
-#if ENABLEPRIVATE
-- (void)onTapTest:(UIGestureRecognizer *)recognizer
-{
-    TestViewController *vc = [[TestViewController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-    nav.modalPresentationStyle = UIModalPresentationFullScreen;
-    [self presentViewController:nav animated:YES completion:nil];
-}
-#endif
 
 #pragma mark - V2TIMSDKListener
 - (void)onSelfInfoUpdated:(V2TIMUserFullInfo *)Info {
@@ -147,9 +125,7 @@
 /**
  *初始化视图显示数据
  */
-- (void)setupData
-{
-
+- (void)setupData {
     _data = [NSMutableArray array];
 
     TUIProfileCardCellData *personal = [[TUIProfileCardCellData alloc] init];
@@ -164,7 +140,6 @@
     personal.showSignature = YES;
     self.profileCellData = personal;
     [_data addObject:@[personal]];
-
 
     TUICommonTextCellData *friendApply = [TUICommonTextCellData new];
     friendApply.key = NSLocalizedString(@"MeFriendRequest", nil); // @"好友申请";
@@ -181,19 +156,6 @@
     }
     [_data addObject:@[friendApply]];
     
-    TUICommonTextCellData *skin = [TUICommonTextCellData new];
-    skin.key = NSLocalizedString(@"MeSwitchSkin", nil); // @"更换主题";
-    skin.showAccessory = YES;
-    skin.value = @"轻快";
-    skin.cselector = @selector(didChangeSkin);
-    
-    TUICommonTextCellData *lang = [TUICommonTextCellData new];
-    lang.key = NSLocalizedString(@"MeSwitchLaunguage", nil); // @"切换语言";
-    lang.showAccessory = YES;
-    lang.value = @"跟随系统";
-    lang.cselector = @selector(didChangeLanguage);
-    
-//    [_data addObject:@[skin, lang]];
     
     TUICommonTextCellData *about = [TUICommonTextCellData new];
     about.key = NSLocalizedString(@"MeAbout", nil); // @"关于腾讯·云通信";
@@ -212,24 +174,17 @@
     [self.tableView reloadData];
 }
 #pragma mark - Table view data source
-/**
- *  tableView委托函数
- */
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return _data.count;
 }
 
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor clearColor];
     return view;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return section == 0 ? 0 : 10;
 }
 
@@ -238,16 +193,14 @@
     return array.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *array = _data[indexPath.section];
     TUICommonCellData *data = array[indexPath.row];
 
     return [data heightOfWidth:Screen_Width];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 }
 
@@ -281,20 +234,17 @@
     return nil;
 }
 
-- (void)didSelectCommon
-{
+- (void)didSelectCommon {
     [self setupData];
     //点击个人资料，跳转到详细界面。
     ProfileController *test = [[ProfileController alloc] init];
     [self.navigationController pushViewController:test animated:YES];
-
 }
 
 /**
  *点击 退出登录 后执行的函数，负责账户登出的操作
  */
-- (void)logout:(TUIButtonCell *)cell
-{
+- (void)logout:(TUIButtonCell *)cell {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"confirm_log_out", nil)/*@"确定退出吗"*/ message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
@@ -305,8 +255,7 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)didConfirmLogout
-{
+- (void)didConfirmLogout {
     [[TUIKit sharedInstance] logout:^{
         [AppDelegate.sharedInstance push_unregisterIfLogouted];
         [self didLogoutInSettingController:self];
@@ -314,14 +263,12 @@
         NSLog(@"退出登录失败");
     }];
     
-    [TCUtil report:Action_Logout actionSub:@"" code:@(0) msg:@"logout"];
 }
 
 /**
  *点击 好友申请 后执行的函数，使用户能够设置自己审核好友申请的程度
  */
-- (void)onEditFriendApply
-{
+- (void)onEditFriendApply {
     UIActionSheet *sheet = [[UIActionSheet alloc] init];
     sheet.tag = SHEET_AGREE;
     [sheet addButtonWithTitle:NSLocalizedString(@"MeFriendRequestMethodAgreeAll", nil)];
@@ -333,33 +280,17 @@
     [self setupData];
 }
 
-- (void)didLogoutInSettingController:(SettingController *)controller
-{
-    [[TUILoginCache sharedInstance] logout];
-
+- (void)didLogoutInSettingController:(SettingController *)controller {
     UIViewController *loginVc = [AppDelegate.sharedInstance getLoginController];
     self.view.window.rootViewController = loginVc;
 }
 
-- (void)didSelectAbout
-{
+- (void)didSelectAbout {
     TUIAboutUsViewController *vc = [[TUIAboutUsViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
-    [TCUtil report:Action_Clickaboutsdk actionSub:@"" code:@(0) msg:@"clickaboutsdk"];
 }
 
-- (void)didChangeSkin
-{
-    [self.view makeToast:@"功能正在开发中，敬请期待"];
-}
-
-- (void)didChangeLanguage
-{
-    [self.view makeToast:@"功能正在开发中，敬请期待"];
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == SHEET_AGREE) {
         if (buttonIndex >= 3)
             return;
@@ -367,112 +298,14 @@
         [self setupData];
         V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
         info.allowType = [NSNumber numberWithInteger:buttonIndex].intValue;
-        [[V2TIMManager sharedInstance] setSelfInfo:info succ:^{
-#if ENABLELIVE
-            [TUILiveUserProfile getLoginUserInfo].allowType = info.allowType;
-#endif
-        } fail:nil];
-        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifyallowtype code:@(0) msg:@"modifyallowtype"];
+        [[V2TIMManager sharedInstance] setSelfInfo:info succ:nil fail:nil];
     }
-#if ENABLEPRIVATE
-    else if (actionSheet.tag == SHEET_V2API) {
-        if (buttonIndex == 0) {
-            V2ManageTestViewController *vc = [[V2ManageTestViewController alloc] initWithNibName:@"V2ManageTestViewController" bundle:nil];
-            [self presentViewController:vc animated:YES completion:nil];
-        }
-        else if (buttonIndex == 1) {
-            V2GroupTestViewController *vc = [[V2GroupTestViewController alloc] initWithNibName:@"V2GroupTestViewController" bundle:nil];
-            [self presentViewController:vc animated:YES completion:nil];
-        }
-        else if (buttonIndex == 2) {
-            V2FriendTestViewController *vc = [[V2FriendTestViewController alloc] initWithNibName:@"V2FriendTestViewController" bundle:nil];
-            [self presentViewController:vc animated:YES completion:nil];
-        }
-        else if (buttonIndex == 3) {
-            //直播开关 CDN 播放
-            BOOL useCdnPlay = [[[NSUserDefaults standardUserDefaults] objectForKey:@"TUIKitDemo_useCdnPlay"] boolValue];
-            [[NSUserDefaults standardUserDefaults] setObject:@(!useCdnPlay) forKey:@"TUIKitDemo_useCdnPlay"];
-            NSString *message = [NSString stringWithFormat:@"已%@使用CDN播放", !useCdnPlay?@"启用":@"停用"];
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"直播CDN播放" message:message preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                
-            }]];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-    }
-#endif
-}
-- (void)didSelectLog
-{
-#ifdef DEBUG
-    UIActionSheet *sheet = [[UIActionSheet alloc] init];
-    sheet.tag = SHEET_V2API;
-    [sheet addButtonWithTitle:@"manager + apns + message + conv"];
-    [sheet addButtonWithTitle:@"group"];
-    [sheet addButtonWithTitle:@"friend"];
-    [sheet addButtonWithTitle:@"group live cdn"];
-    [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"cancel", nil)]];
-    [sheet setDelegate:self];
-    [sheet showInView:self.view];
-#else
-    [[PAirSandbox sharedInstance] showSandboxBrowser];
-    [TCUtil report:Action_Clickdebug actionSub:@"" code:@(0) msg:@"clickdebug"];
-#endif
-}
-
-- (void)didSelectPrivacy
-{
-    NSString *privacyStr = @"https://web.sdk.qcloud.com/document/Tencent-IM-Privacy-Protection-Guidelines.html";
-    if (@available(iOS 10.0, *)) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:privacyStr]
-                                           options:@{} completionHandler:^(BOOL success) {
-                                               if (success) {
-                                                   NSLog(@"Opened url");
-                                               }
-                                           }];
-    } else {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:privacyStr]];
-    }
-}
-
-- (void)didSelectDisclaimer
-{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"MeDisclaimer", nil)  // 免责声明
-                                                                   message:NSLocalizedString(@"MeDisclaimerContent", nil)
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"confirm", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-
-    }]];
-    [self presentViewController:alert animated:YES completion:nil];
-}
-
-- (void)onNotifySwitch:(TUICommonSwitchCell *)cell
-{
-    //定时去上报内存泄露，1min 上报一次
-    if (cell.switcher.isOn) {
-        _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
-        dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW,5 *NSEC_PER_SEC);
-        uint64_t intevel = 5 * NSEC_PER_SEC;
-        dispatch_source_set_timer(_timer, start, intevel, 0 * NSEC_PER_SEC);
-        dispatch_source_set_event_handler(_timer, ^{
-            [QAPMQQLeakProfile executeLeakCheck];
-        });
-        dispatch_resume(_timer);
-        self.memoryReport = YES;
-    } else {
-        if (_timer) {
-            dispatch_cancel(_timer);
-            _timer = nil;
-        }
-        self.memoryReport = NO;
-    }
-    [TCUtil report:Action_Clickmemoryreport actionSub:@"" code:@(0) msg:@"clickmemoryreport"];
 }
 
 /**
  *  点击头像查看大图的委托实现。
  */
--(void)didTapOnAvatar:(TUIProfileCardCell *)cell{
+- (void)didTapOnAvatar:(TUIProfileCardCell *)cell{
     TUIAvatarViewController *image = [[TUIAvatarViewController alloc] init];
     image.avatarData = cell.cardData;
     [self.navigationController pushViewController:image animated:YES];

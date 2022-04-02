@@ -291,7 +291,6 @@
         [TUITool makeToastError:code msg:desc];
     }];
 
-    [TCUtil report:Action_Addfriend actionSub:@"" code:@(0) msg:@"addfriend"];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView

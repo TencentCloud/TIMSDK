@@ -225,7 +225,6 @@
             [tempArray removeObjectAtIndex:tempArray.count-2];
             self.navigationController.viewControllers = tempArray;
             
-            [TCUtil report:Action_Createc2c actionSub:@"" code:@(0) msg:@"createc2c"];
         };
         return;
     }
@@ -237,7 +236,6 @@
         vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
             [self addGroup:GroupType_Work addOption:0 withContacts:array];
-            [TCUtil report:Action_Createprivategrp actionSub:@"" code:@(0) msg:@"createprivategrp"];
         };
         return;
     } else if(index == 2){
@@ -248,7 +246,6 @@
         vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
             [self addGroup:GroupType_Public addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
-            [TCUtil report:Action_Createpublicgrp actionSub:@"" code:@(0) msg:@"createpublicgrp"];
         };
         return;
     } else if(index == 3){
@@ -259,7 +256,6 @@
         vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
             [self addGroup:GroupType_Meeting addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
-            [TCUtil report:Action_Createchatroomgrp actionSub:@"" code:@(0) msg:@"createchatroomgrp"];
         };
         return;
     } else if(index == 4){
@@ -270,7 +266,6 @@
         vc.finishBlock = ^(NSArray<TUICommonContactSelectCellData *> *array) {
             @strongify(self)
             [self addGroup:GroupType_Community addOption:V2TIM_GROUP_ADD_ANY withContacts:array];
-            [TCUtil report:Action_Createcommunitygrp actionSub:@"" code:@(0) msg:@"createcommunitygrp"];
         };
         return;
     }
@@ -409,13 +404,6 @@
     ChatViewController *chat = [[ChatViewController alloc] init];
     chat.conversationData = [self getConversationModel:conversationCell.convData];
     [self.navigationController pushViewController:chat animated:YES];
-    
-    if ([conversationCell.convData.groupID isEqualToString:@"im_demo_admin"] || [conversationCell.convData.userID isEqualToString:@"im_demo_admin"]) {
-        [TCUtil report:Action_Clickhelper actionSub:@"" code:@(0) msg:@"clickhelper"];
-    }
-    if ([conversationCell.convData.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [conversationCell.convData.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
-        [TCUtil report:Action_Clickdefaultgrp actionSub:@"" code:@(0) msg:@"clickdefaultgrp"];
-    }
 }
 
 

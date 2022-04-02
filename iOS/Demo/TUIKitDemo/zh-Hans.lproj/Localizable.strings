@@ -44,6 +44,11 @@
 "choose_avatar_for_you" = "TUIKit为您选择一个头像";
 
 "AppLoginSucc" = "已成功登录";
+"AppGetAccessAddressFail" = "服务异常，请检查网络后重试";
+"AppOfflineTitle" = "下线通知";
+"AppOfflineDesc" = "您的帐号于另一台手机上登录";
+"AppCancelRelogin" = "退出";
+"AppConfirmRelogin" = "重新登录";
 
 "AppMainTitle" = "腾讯·云通信";
 "AppMainConnectingTitle" = "连接中...";
@@ -143,7 +148,7 @@
 "TipsGetCheckcode" = "获取验证码";
 "TipsCheckCodeFailedFormat" = "获取验证码失败，code：%d errMsg:%@";
 "TipsPhoneCodeNotNull" = "手机号和验证码不能为空";
-"TipsPhoneNotMathc" = "当前手机号与获取验证码手机号不一致，请确认";
+"TipsPhoneNotMatch" = "当前手机号与获取验证码手机号不一致，请确认";
 "TipsLoginErrorWithUserIdfailed" = "登录失败,userId or userSig 获取失败";
 "TipsLoginErrorFormat" = "登录失败，code：%d errMsg:%@";
 "TipsLoginWithAccountPassword" = "账号密码登录";
@@ -209,6 +214,7 @@
 "TUIKitAboutUsCloseAccountAlterAction1" = "注销";
 "TUIKitAboutUsCloseAccountError1" = "注销失败,当前账号未查到token或手机号，请使用手机号登录";
 "TUIKitAboutUsCloseAccountSuccessful" = "注销成功";
+"TUIKitAboutUsCloseAccountFailed" = "注销失败";
 
 //隐私弹窗协议
 "TUIPrivateProtocolAlertMsg" = "欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。\n请您点击 《用户协议》、《隐私政策》、《个人信息收集清单》和《第三方信息共享清单》并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！";

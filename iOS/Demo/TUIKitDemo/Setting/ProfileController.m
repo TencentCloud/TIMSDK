@@ -194,7 +194,6 @@
             self.profile.nickName = content;
             [self setupData];
         } fail:nil];
-        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifynick code:@(0) msg:@"modifynick"];
     } else if (modifyView.tag == 1) {
         // 文本校验
         if (![self validForSignatureAndNick:content]) {
@@ -207,7 +206,6 @@
             self.profile.selfSignature = content;
             [self setupData];
         } fail:nil];
-        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifysignature code:@(0) msg:@"modifysignature"];
     }
     
 }
@@ -272,7 +270,6 @@
         } fail:^(int code, NSString *desc) {
             
         }];
-        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifyfaceurl code:@(0) msg:@"modifyfaceurl"];
 
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
@@ -295,7 +292,6 @@
             self.profile.gender = gender;
             [self setupData];
         } fail:nil];
-        [TCUtil report:Action_Modifyselfprofile actionSub:Action_Sub_Modifygender code:@(0) msg:@"modifygender"];
     }
 }
 
