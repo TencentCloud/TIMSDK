@@ -1,10 +1,10 @@
 /* 
-  CallingLocalized.strings
-  TRTCCalling
-
-  Created by adams on 2021/5/13.
-  
-*/
+ CallingLocalized.strings
+ TRTCCalling
+ 
+ Created by adams on 2021/5/13.
+ 
+ */
 
 "LoginNetwork.ProfileManager.sendfailed" = "Send failed. Please try again later.";
 "V2.Live.LoginMock.sendtheverificatcode" = "Please send the verification code";
@@ -53,3 +53,9 @@
 "Demo.TRTC.Calling.failedtogetcamerapermission" = "Failed to get camera permission. Please go to Privacy > Camera to grant the permission";
 "Demo.TRTC.Calling.failedtogetmicrophonepermission" = "Failed to get mic permission. Please go to Privacy > Microphone to grant the permission";
 "Demo.TRTC.Calling.calleeTip" = "They also";
+
+"Demo.TRTC.Calling.FloatingWindow.waitaccept" = "Waiting";
+"Demo.TRTC.Calling.FloatingWindow.dailing" = "Waiting";
+
+"Demo.TRTC.Calling.User.Exceed.Limit" = "TUICalling currently supports call with up to 9 people.For larger conference calls,try using TUIRoom";
+"Demo.TRTC.Calling.UnableToRestartTheCall" = "Unable to restart the call";

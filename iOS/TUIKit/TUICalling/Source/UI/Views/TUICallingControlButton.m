@@ -11,11 +11,8 @@
 @interface TUICallingControlButton()
 
 @property (nonatomic, copy) TUICallingButtonActionBlcok buttonActionBlock;
-
 @property (nonatomic, strong) UIButton *button;
-
 @property (nonatomic, strong) UILabel *titleLabel;
-
 @property (nonatomic, assign) CGSize imageSize;
 
 @end
@@ -45,7 +42,7 @@
     [self.button mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self);
         make.size.mas_equalTo(self.imageSize);
-        make.bottom.mas_equalTo(self.titleLabel.mas_top).offset(-(CGSizeEqualToSize(CGSizeMake(64, 64), self.imageSize) ? 10.0f : 16.0f));
+        make.bottom.mas_equalTo(self.titleLabel.mas_top).offset(-8.0f);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.centerX.bottom.equalTo(self);

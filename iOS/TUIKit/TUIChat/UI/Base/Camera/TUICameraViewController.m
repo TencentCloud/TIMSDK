@@ -149,12 +149,13 @@
         }
     }
     _deviceInput = videoInput;
-    
-    // 音频输入
-    AVCaptureDevice *audioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-    AVCaptureDeviceInput *audioIn = [[AVCaptureDeviceInput alloc] initWithDevice:audioDevice error:error];
-    if ([_session canAddInput:audioIn]) {
-        [_session addInput:audioIn];
+    if (_type == TUICameraMediaTypeVideo) {
+        // 音频输入
+        AVCaptureDevice *audioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+        AVCaptureDeviceInput *audioIn = [[AVCaptureDeviceInput alloc] initWithDevice:audioDevice error:error];
+        if ([_session canAddInput:audioIn]) {
+            [_session addInput:audioIn];
+        }
     }
 }
 
@@ -173,13 +174,15 @@
     _videoOutput = videoOut;
     _videoConnection = [videoOut connectionWithMediaType:AVMediaTypeVideo];
 
-    // 音频输出
-    AVCaptureAudioDataOutput *audioOut = [[AVCaptureAudioDataOutput alloc] init];
-    [audioOut setSampleBufferDelegate:self queue:captureQueue];
-    if ([_session canAddOutput:audioOut]){
-        [_session addOutput:audioOut];
+    if (_type == TUICameraMediaTypeVideo) {
+        // 音频输出
+        AVCaptureAudioDataOutput *audioOut = [[AVCaptureAudioDataOutput alloc] init];
+        [audioOut setSampleBufferDelegate:self queue:captureQueue];
+        if ([_session canAddOutput:audioOut]){
+            [_session addOutput:audioOut];
+        }
+        _audioConnection = [audioOut connectionWithMediaType:AVMediaTypeAudio];
     }
-    _audioConnection = [audioOut connectionWithMediaType:AVMediaTypeAudio];
     
     // 静态图片输出
     AVCaptureStillImageOutput *imageOutput = [[AVCaptureStillImageOutput alloc] init];            

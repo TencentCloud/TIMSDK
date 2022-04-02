@@ -25,10 +25,6 @@
     return random;
 }
 
-+ (NSString *)loginUser {
-    return [[V2TIMManager sharedInstance] getLoginUser];
-}
-
 + (void)getCallUserModel:(NSString *)userID finished:(void(^)(CallUserModel *))finished {
     [[V2TIMManager sharedInstance] getUsersInfo:@[userID] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
         V2TIMUserFullInfo *info = infoList.firstObject;
