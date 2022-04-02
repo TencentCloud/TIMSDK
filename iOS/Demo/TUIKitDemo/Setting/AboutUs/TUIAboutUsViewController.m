@@ -10,7 +10,6 @@
 #import "TUINaviBarIndicatorView.h"
 #import "TUIThemeManager.h"
 #import "TUICommonTextCell.h"
-#import "TUICancelAccountViewController.h"
 #import "TCUtil.h"
 @interface TUIAboutUsViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
@@ -43,12 +42,6 @@
     if (self.data) {
         [self.data removeAllObjects];
     }
-    NSString *privacyUrl = @"https://privacy.qq.com/document/preview/1cfe904fb7004b8ab1193a55857f7272";
-    NSString *agreeUrl = @"https://web.sdk.qcloud.com/document/Tencent-IM-User-Agreement.html";
-    NSString *disclaimerText = NSLocalizedString(@"TUIKitAboutUsDisclaimerText", nil);
-    
-    NSString *personalInformationURL = @"https://privacy.qq.com/document/preview/45ba982a1ce6493597a00f8c86b52a1e";
-    NSString *threePartySharingURL = @"https://privacy.qq.com/document/preview/dea84ac4bb88454794928b77126e9246";
     NSString *aboutUsUrl = @"https://cloud.tencent.com/document/product/269/59590";
     NSString *versionText = [V2TIMManager sharedInstance].getVersion;
     TUICommonTextCellData *versionData = [TUICommonTextCellData new];
@@ -56,20 +49,9 @@
     versionData.value = versionText?versionText:@"";// @"版本号"
     versionData.showAccessory = NO;
     versionData.ext = @{@"event_type":@"0"};
-    NSArray * keysArray = @[NSLocalizedString(@"TUIKitAboutUsPrivacyRegulations", nil)
-                            ,NSLocalizedString(@"TUIKitAboutUsUserAgreement", nil)
-                            ,NSLocalizedString(@"TUIKitAboutUsDisclaimer", nil)
-                            ,NSLocalizedString(@"TUIKitAboutUsPersonalInformationCollectionList", nil)
-                            ,NSLocalizedString(@"TUIKitAboutUs3PartySharingList", nil)
-                            ,NSLocalizedString(@"TUIKitAboutUsCloseAccount", nil)
-                            ,NSLocalizedString(@"TUIKitAboutUsContactUs", nil)];
+    NSArray * keysArray = @[
+                            NSLocalizedString(@"TUIKitAboutUsContactUs", nil)];
     NSArray * extssArray = @[
-        @{@"event_type":@"101",@"url":privacyUrl},
-        @{@"event_type":@"101",@"url":agreeUrl},
-        @{@"event_type":@"102",@"txt":disclaimerText},
-        @{@"event_type":@"101",@"url":personalInformationURL},
-        @{@"event_type":@"101",@"url":threePartySharingURL},
-        @{@"event_type":@"103"},
         @{@"event_type":@"101",@"url":aboutUsUrl},
     ];
     
@@ -122,8 +104,7 @@
                 [self showAlertWithText:txt];
             }
             else if ([event_type isEqualToString:@"103"]) {
-                TUICancelAccountViewController * vc = [[TUICancelAccountViewController alloc] init];
-                [self.navigationController pushViewController:vc animated:YES];
+
             }
             else {
                 

@@ -17,8 +17,6 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-+ (id)sharedInstance;
-
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) NSData *deviceToken;
 
@@ -27,6 +25,8 @@
 
 @property (nonatomic, assign) NSUInteger unReadCount;
 @property (nonatomic, strong) TUIContactViewDataProvider *contactDataProvider;
+
++ (id)sharedInstance;
 
 - (UIViewController *)getLoginController;
 - (UITabBarController *)getMainController;

@@ -1,5 +1,5 @@
 //
-//  TCLoginModel.h
+//  TCLoginModel.m
 //  TCLVBIMDemo
 //
 //  Created by dackli on 16/8/3.

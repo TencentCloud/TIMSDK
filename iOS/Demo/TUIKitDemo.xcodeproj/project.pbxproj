@@ -17,7 +17,6 @@
 		480C761922DCA3EB007495EC /* SearchFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 913C852E226705C300D74B58 /* SearchFriendViewController.m */; };
 		480C761A22DCA3EB007495EC /* SearchGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 910AF70A22925BF000ED5675 /* SearchGroupViewController.m */; };
 		4824838127E4B1DC002F1926 /* TUIAboutSettingObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 4824837B27E4B1DC002F1926 /* TUIAboutSettingObj.m */; };
-		4824838227E4B1DC002F1926 /* TUICancelAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4824837F27E4B1DC002F1926 /* TUICancelAccountViewController.m */; };
 		4824838327E4B1DC002F1926 /* TUIAboutUsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4824838027E4B1DC002F1926 /* TUIAboutUsViewController.m */; };
 		4842D98927A033DF000DA6AF /* LanguageSelectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4842D98627A033DF000DA6AF /* LanguageSelectController.m */; };
 		4842D98A27A033DF000DA6AF /* ThemeSelectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4842D98827A033DF000DA6AF /* ThemeSelectController.m */; };
@@ -111,10 +110,8 @@
 		4805496F277F073F00FAEA4D /* AppDelegate+APNS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+APNS.m"; sourceTree = "<group>"; };
 		480C761722DCA3C3007495EC /* ImSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImSDK.framework; path = ../ImSDK/Framework/ImSDK.framework; sourceTree = "<group>"; };
 		4824837B27E4B1DC002F1926 /* TUIAboutSettingObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIAboutSettingObj.m; sourceTree = "<group>"; };
-		4824837C27E4B1DC002F1926 /* TUICancelAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUICancelAccountViewController.h; sourceTree = "<group>"; };
 		4824837D27E4B1DC002F1926 /* TUIAboutUsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIAboutUsViewController.h; sourceTree = "<group>"; };
 		4824837E27E4B1DC002F1926 /* TUIAboutSettingObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIAboutSettingObj.h; sourceTree = "<group>"; };
-		4824837F27E4B1DC002F1926 /* TUICancelAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUICancelAccountViewController.m; sourceTree = "<group>"; };
 		4824838027E4B1DC002F1926 /* TUIAboutUsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIAboutUsViewController.m; sourceTree = "<group>"; };
 		4842D98527A033DE000DA6AF /* LanguageSelectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LanguageSelectController.h; sourceTree = "<group>"; };
 		4842D98627A033DF000DA6AF /* LanguageSelectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LanguageSelectController.m; sourceTree = "<group>"; };
@@ -272,10 +269,8 @@
 			isa = PBXGroup;
 			children = (
 				4824837B27E4B1DC002F1926 /* TUIAboutSettingObj.m */,
-				4824837C27E4B1DC002F1926 /* TUICancelAccountViewController.h */,
 				4824837D27E4B1DC002F1926 /* TUIAboutUsViewController.h */,
 				4824837E27E4B1DC002F1926 /* TUIAboutSettingObj.h */,
-				4824837F27E4B1DC002F1926 /* TUICancelAccountViewController.m */,
 				4824838027E4B1DC002F1926 /* TUIAboutUsViewController.m */,
 			);
 			path = AboutUs;
@@ -743,7 +738,6 @@
 				480C761A22DCA3EB007495EC /* SearchGroupViewController.m in Sources */,
 				CE440CD726E072530085EB57 /* TUINaviBarIndicatorView.m in Sources */,
 				CE440CDB26E072530085EB57 /* PAirSandbox.m in Sources */,
-				4824838227E4B1DC002F1926 /* TUICancelAccountViewController.m in Sources */,
 				480C761622DCA3A7007495EC /* TFriendProfileController.m in Sources */,
 				4842D98A27A033DF000DA6AF /* ThemeSelectController.m in Sources */,
 				4842D98927A033DF000DA6AF /* LanguageSelectController.m in Sources */,

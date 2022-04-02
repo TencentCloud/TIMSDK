@@ -44,6 +44,11 @@
 "choose_avatar_for_you" = "TUIKit chooses a profile photo for you.";
 
 "AppLoginSucc" = "Successfully logged in";
+"AppGetAccessAddressFail" = "The service is abnormal. Please check the network and try again";
+"AppOfflineTitle" = "Account Offline";
+"AppOfflineDesc" = "Your account is logged in on another mobile phone";
+"AppCancelRelogin" = "Logout";
+"AppConfirmRelogin" = "Login again";
 
 "AppMainTitle" = "Tencent·Instant Messaging";
 "AppMainConnectingTitle" = "Connecting…";
@@ -143,7 +148,7 @@
 "TipsGetCheckcode" = "Send Code";
 "TipsCheckCodeFailedFormat" = "Failed to get verification code. Code: %d errMsg: %@";
 "TipsPhoneCodeNotNull" = "Mobile number and verification code are required.";
-"TipsPhoneNotMathc" = "This mobile number is not the one that receives the verification code. Please confirm.";
+"TipsPhoneNotMatch" = "This mobile number is not the one that receives the verification code. Please confirm.";
 "TipsLoginErrorWithUserIdfailed" = "Login failed. Failed to get userId or userSig.";
 "TipsLoginErrorFormat" = "Login failed. Code: %d errMsg: %@";
 "TipsLoginWithAccountPassword" = "Log in via password";
@@ -207,8 +212,8 @@
 "TUIKitAboutUsCloseAccountAlterMsg" = "Are you sure you want to cancel this account?";
 "TUIKitAboutUsCloseAccountAlterAction1" = "Confirm";
 "TUIKitAboutUsCloseAccountError1" = "Cancellation failed. No token or mobile number associated with the current account is detected. Please log in with your mobile number.";
-"TUIKitAboutUsCloseAccountSuccessful" = "Canceled";
-
+"TUIKitAboutUsCloseAccountSuccessful" = "Account cancelled successfully";
+"TUIKitAboutUsCloseAccountFailed" = "Account cancelled failed";
 
 "TUIPrivateProtocolAlertMsg" = "Welcome to Tencent Cloud Instant Messaging. To protect your personal information, we have updated the \"Privacy Policy\", involving improving the specific contents and purposes of collecting user information, and adding third-party SDKs.\n\n Please carefully read the \"User Agreement\",\"Privacy Policy\",\"Personal Information Collected\" and \"Information Shared with Third Parties\", and tap Agree and Continue to use our products and services if you agree to them.";
 "TUIPrivateProtocolHighlight1" = "\"User Agreement\"";

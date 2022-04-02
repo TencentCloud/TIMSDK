@@ -39,7 +39,13 @@ NSString * _currentAccount;
 #if DEBUG
     [[XGPush defaultManager] setEnableDebug:YES];
 #endif
-    [[XGPush defaultManager] configureClusterDomainName:@"tpns.hk.tencent.com"];
+    /**
+     * 如果您的应用服务接入点为广州，SDK 默认实现该配置，可不调用 configureClusterDomainName 设置。
+     * 如果您的应用服务接入点为上海、新加坡或中国香港，请按照下文步骤完成其他服务接入点域名配置：
+     * https://cloud.tencent.com/document/product/548/36663
+     *
+    */
+    [[XGPush defaultManager] configureClusterDomainName:tpnsDomain];
     [[XGPush defaultManager] startXGWithAccessID:tpnsAccessID accessKey:tpnsAccessKey delegate:self];
     NSLog(@"[PUSH][TPNS] %s", __func__);
 }

@@ -21,8 +21,6 @@
 #import "TUILoginCache.h"
 
 #if ENABLELIVE
-#import "TUILiveSceneViewController.h"
-#import "TUIKitLive.h"
 #import "TRTCSignalFactory.h"
 @import TXLiteAVSDK_TRTC;
 #endif
@@ -330,8 +328,7 @@ void uncaughtExceptionHandler(NSException*exception){
 }
 
 #pragma mark - LanguageSelectControllerDelegate
-- (void)onSelectLanguage:(LanguageSelectCellModel *)cellModel
-{
+- (void)onSelectLanguage:(LanguageSelectCellModel *)cellModel {
     // 动态刷新语言的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新语言
     [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"need_recover_login_page_info"];
     [NSUserDefaults.standardUserDefaults synchronize];
@@ -360,8 +357,7 @@ void uncaughtExceptionHandler(NSException*exception){
 }
 
 #pragma mark - ThemeSelectControllerDelegate
-- (void)onSelectTheme:(ThemeSelectCollectionViewCellModel *)cellModel
-{
+- (void)onSelectTheme:(ThemeSelectCollectionViewCellModel *)cellModel {
     // 动态刷新主题的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新主题
     [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"need_recover_login_page_info"];
     [NSUserDefaults.standardUserDefaults synchronize];
