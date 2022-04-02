@@ -40,18 +40,6 @@
 #import "UIView+TUIToast.h"
 #import "TUIGlobalization.h"
 #import <MobileCoreServices/MobileCoreServices.h>
-
-#if ENABLELIVE
-#import "TUIKitLive.h"
-#import "TUIGroupLiveMessageCell.h"
-#import "TUILiveRoomAnchorViewController.h"
-#import "TUILiveRoomAudienceViewController.h"
-#import "TUILiveDefaultGiftAdapterImp.h"
-#import "TUILiveUserProfile.h"
-#import "TUILiveRoomManager.h"
-#import "TUILiveHeartBeatManager.h"
-#endif
-
 #import "TUIThemeManager.h"
 #import "TUINaviBarIndicatorView.h"
 
@@ -68,9 +56,6 @@
 TUIChatControllerListener,
 V2TIMConversationListener,
 TUIJoinGroupMessageCellDelegate,
-#if ENABLELIVE
-TUILiveRoomAnchorDelegate,
-#endif
 UIImagePickerControllerDelegate,
 UINavigationControllerDelegate,
 UIDocumentPickerDelegate>
@@ -84,10 +69,6 @@ UIDocumentPickerDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[V2TIMManager sharedInstance] addConversationListener:self];
-
-#if ENABLELIVE
-    [[TUIKitLive shareInstance] setGroupLiveDelegate:self];
-#endif
     
     if (self.conversationData.groupID.length > 0) {
         _chat = [[TUIGroupChatViewController alloc] init];
@@ -192,47 +173,12 @@ UIDocumentPickerDelegate>
 }
 
 #pragma mark - TUIChatControllerListener
-- (void)chatController:(TUIBaseChatViewController *)controller didSendMessage:(V2TIMMessage *)message
-{
-    if ([message.groupID isEqualToString:@"im_demo_admin"] || [message.userID isEqualToString:@"im_demo_admin"]) {
-        [TCUtil report:Action_Sendmsg2helper actionSub:@"" code:@(0) msg:@"sendmsg2helper"];
-    }
-    else if ([message.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [message.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
-        [TCUtil report:Action_Sendmsg2defaultgrp actionSub:@"" code:@(0) msg:@"sendmsg2defaultgrp"];
-    }
-    switch (message.elemType) {
-        case V2TIM_ELEM_TYPE_TEXT:
-            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendtext code:@(0) msg:@"sendtext"];
-            break;
-        case V2TIM_ELEM_TYPE_SOUND:
-            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendaudio code:@(0) msg:@"sendaudio"];
-            break;
-        case V2TIM_ELEM_TYPE_FACE:
-            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendface code:@(0) msg:@"sendface"];
-            break;
-        case V2TIM_ELEM_TYPE_IMAGE:
-            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendpicture code:@(0) msg:@"sendpicture"];
-            break;
-        case V2TIM_ELEM_TYPE_VIDEO:
-            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendvideo code:@(0) msg:@"sendvideo"];
-            break;
-        case V2TIM_ELEM_TYPE_FILE:
-            [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendfile code:@(0) msg:@"sendfile"];
-            break;
-        default:
-            break;
-    }
+- (void)chatController:(TUIBaseChatViewController *)controller didSendMessage:(V2TIMMessage *)message {
+    //write code
 }
 
-- (void)chatController:(TUIBaseChatViewController *)chatController onSelectMoreCell:(TUIInputMoreCell *)cell
-{
-    if ([_conversationData.groupID isEqualToString:@"im_demo_admin"] || [_conversationData.userID isEqualToString:@"im_demo_admin"]) {
-        [TCUtil report:Action_Sendmsg2helper actionSub:@"" code:@(0) msg:@"sendmsg2helper"];
-    }
-    else if ([_conversationData.groupID isEqualToString:@"@TGS#33NKXK5FK"] || [_conversationData.userID isEqualToString:@"@TGS#33NKXK5FK"]) {
-        [TCUtil report:Action_Sendmsg2defaultgrp actionSub:@"" code:@(0) msg:@"sendmsg2defaultgrp"];
-    }
-    [TCUtil report:Action_SendMsg actionSub:Action_Sub_Sendcustom code:@(0) msg:@"sendcustom"];
+- (void)chatController:(TUIBaseChatViewController *)chatController onSelectMoreCell:(TUIInputMoreCell *)cell {
+    //write code
 }
 
 - (TUIMessageCellData *)chatController:(TUIBaseChatViewController *)controller onNewMessage:(V2TIMMessage *)msg
@@ -388,29 +334,6 @@ UIDocumentPickerDelegate>
         [self.navigationController pushViewController:groupInfo animated:YES];
     }
 }
-
-#if ENABLELIVE
-#pragma mark - TUILiveRoomAnchorDelegate
-- (void)onRoomCreate:(TRTCLiveRoomInfo *)roomInfo {
-    [[TUILiveRoomManager sharedManager] createRoom:SDKAPPID type:@"groupLive" roomID:[NSString stringWithFormat:@"%@", roomInfo.roomId] success:^{
-        NSLog(@"----> 业务层创建群直播房间成功: roomId:%@", roomInfo.roomId);
-        [TUILiveHeartBeatManager.shareManager startWithType:@"groupLive" roomId:roomInfo.roomId];
-    } failed:^(int code, NSString * _Nonnull errorMsg) {
-        NSLog(@"----> 业务层创建群直播房间失败，%d, %@", code, errorMsg);
-    }];
-
-}
-
-- (void)onRoomDestroy:(TRTCLiveRoomInfo *)roomInfo {
-    [[TUILiveRoomManager sharedManager] destroyRoom:SDKAPPID type:@"groupLive" roomID:[NSString stringWithFormat:@"%@", roomInfo.roomId] success:^{
-        NSLog(@"----> 业务层销毁群直播房间成功");
-        [TUILiveHeartBeatManager.shareManager stop];
-    } failed:^(int code, NSString * _Nonnull errorMsg) {
-        NSLog(@"----> 业务层销毁群直播房间失败，%d, %@", code, errorMsg);
-    }];
-}
-#endif
-
 
 + (void)getUserOrFriendProfileVCWithUserID:(NSString *)userID
                                  SuccBlock:(void(^)(UIViewController *vc))succ

@@ -78,7 +78,7 @@ static TCLoginModel *_sharedInstance = nil;
         }
     }];
     
-    [TCUtil report:Action_Register actionSub:@"" code:@(0) msg:@"register"];
+    
 }
 
 - (void)loginWithUsername:(NSString *)username password:(NSString *)password succ:(TCLoginSuccess)succ fail:(TCFail)fail
@@ -234,7 +234,7 @@ static TCLoginModel *_sharedInstance = nil;
         case RequestType_GetSms:
             return [NSString stringWithFormat:@"%@?type=im&phone=%@&ticket=%@&randstr=%@",kHttpSmsImageAddr,param[@"phone"],param[@"ticket"],param[@"randstr"]];
             break;
-        case RequestType_Smslogin:{            
+        case RequestType_Smslogin:{
             NSString *host = (TUIDemoCurrentServer == TUIDemoServerTypeSingapore) ? kHttpSmsLoginAddr_singapore : kHttpSmsLoginAddr_public;
             return [NSString stringWithFormat:@"%@?method=login&type=im&phone=%@&code=%@&&sessionId=%@",host,param[@"phone"],param[@"code"],param[@"sessionId"]];
         }

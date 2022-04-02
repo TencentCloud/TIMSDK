@@ -170,7 +170,6 @@
         [TUITool hideToastActivity];
         [TUITool makeToastError:code msg:desc];
     }];
-    [TCUtil report:Action_Addgroup actionSub:@"" code:@(0) msg:@"addgroup"];
 }
 
 /**

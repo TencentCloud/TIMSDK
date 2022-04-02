@@ -54,6 +54,7 @@
     NSString *loginUserId = userID.copy;
     NSString *loginSig = sig.copy;
     [TUILogin login:_userID userSig:_userSig succ:^{
+        NSLog(@"TUILogin login succeed");
         Class liveClass = NSClassFromString(@"TUIKitLive");
         if (liveClass) {
             /// TUIKitLive obeject
@@ -93,6 +94,7 @@
         }
         succ();
     } fail:^(int code, NSString *msg) {
+        NSLog(@"TUILogin login failed, code: %d, msg: %@", code, msg);
         fail(code,msg);
     }];
 }

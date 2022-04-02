@@ -22,7 +22,7 @@
 #import "TUIThemeManager.h"
 #import "ThemeSelectController.h"
 #import "LanguageSelectController.h"
-
+#import "TCLoginModel.h"
 
 @interface LoginController ()
 @property (weak, nonatomic) IBOutlet UITextField *user;
@@ -62,8 +62,7 @@
     [self.view addSubview:self.changeLanguageView];
 }
 
-- (void)viewDidLayoutSubviews
-{
+- (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
     __weak typeof(self) weakSelf = self;
@@ -80,22 +79,18 @@
     });
 }
 
-
-- (void)onTap
-{
+- (void)onTap {
     [self.view endEditing:YES];
 }
 
-- (void)onChangeLanguage
-{
+- (void)onChangeLanguage {
     // 切换语言
     LanguageSelectController *vc = [[LanguageSelectController alloc] init];
     vc.delegate = AppDelegate.sharedInstance;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)onChangeSkin
-{
+- (void)onChangeSkin {
     // 切换主题
     ThemeSelectController *vc = [[ThemeSelectController alloc] init];
     vc.delegate = AppDelegate.sharedInstance;
@@ -103,13 +98,11 @@
 }
 
 - (IBAction)login:(id)sender {
-    
     [self.view endEditing:YES];
     
     NSString *userid = self.user.text;
     NSString *userSig = [GenerateTestUserSig genTestUserSig:userid];
     [self loginIM:userid userSig:userSig];
-   
 }
 
 - (void)loginIM:(NSString *)userId userSig:(NSString *)userSig {
@@ -131,8 +124,7 @@
 }
 
 
-- (void)alertText:(NSString *)str
-{
+- (void)alertText:(NSString *)str {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:str message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"confirm", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
@@ -143,8 +135,7 @@
 
 - (UIView *)createOptionalView:(NSString *)title
                       leftIcon:(UIImage *)leftImage
-                     rightIcon:(UIImage *)rightImage
-{
+                     rightIcon:(UIImage *)rightImage {
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
     
     UILabel *label = [[UILabel alloc] init];
