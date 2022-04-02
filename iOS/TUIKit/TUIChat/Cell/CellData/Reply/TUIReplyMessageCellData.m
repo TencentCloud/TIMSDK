@@ -19,16 +19,13 @@
  */
 
 #import "TUIReplyMessageCellData.h"
-#import "TUIMessageDataProvider.h"
 #import "TUIImageMessageCellData.h"
 #import "TUIVideoMessageCellData.h"
 #import "TUIFileMessageCellData.h"
 #import "TUIVoiceMessageCellData.h"
 #import "TUITextMessageCellData.h"
 #import "TUIMergeMessageCellData.h"
-#import "TUILinkCellData.h"
 #import "NSString+emoji.h"
-#import "TUIChatDataProvider.h"
 
 #import "TUITextReplyQuoteViewData.h"
 #import "TUIImageReplyQuoteViewData.h"
@@ -36,7 +33,7 @@
 #import "TUIVoiceReplyQuoteViewData.h"
 #import "TUIFileReplyQuoteViewData.h"
 #import "TUIMergeReplyQuoteViewData.h"
-#import "TUIReplyPreviewBar.h"
+#import "TUIReplyPreviewData.h"
 
 #define kReplyQuoteViewMaxWidth 175
 #define kReplyQuoteViewMarginWidth 35
@@ -151,63 +148,7 @@
 }
 
 
-- (void)loadOriginMessage:(void(^)(void))callback
-{
-    if (self.originMsgID.length == 0) {
-        if (callback) {
-            callback();
-        }
-        return;
-    }
-    
-    @weakify(self)
-    [TUIChatDataProvider findMessages:@[self.originMsgID] callback:^(BOOL succ, NSString * _Nonnull error_message, NSArray * _Nonnull msgs) {
-        @strongify(self)
-        if (!succ) {
-            self.quoteData = [self getQuoteData:nil];
-            self.originMessage = nil;
-            if (callback) {
-                callback();
-            }
-            return;
-        }
-        V2TIMMessage *originMessage = msgs.firstObject;
-        if (originMessage == nil) {
-            self.quoteData = [self getQuoteData:nil];
-            if (callback) {
-                callback();
-            }
-            return;
-        }
-        TUIMessageCellData *cellData = [TUIMessageDataProvider getCellData:originMessage];
-        self.originCellData = cellData;
-        if ([cellData isKindOfClass:TUIImageMessageCellData.class]) {
-            // 原始消息是图片
-            TUIImageMessageCellData *imageData = (TUIImageMessageCellData *)cellData;
-            [imageData downloadImage:TImage_Type_Thumb];
-            self.quoteData = [self getQuoteData:imageData];
-            self.originMessage = originMessage;
-            if (callback) {
-                callback();
-            }
-        } else if ([cellData isKindOfClass:TUIVideoMessageCellData.class]) {
-            // 原始消息是视频
-            TUIVideoMessageCellData *videoData = (TUIVideoMessageCellData *)cellData;
-            [videoData downloadThumb];
-            self.quoteData = [self getQuoteData:videoData];
-            self.originMessage = originMessage;
-            if (callback) {
-                callback();
-            }
-        } else {
-            self.quoteData = [self getQuoteData:cellData];
-            self.originMessage = originMessage;
-            if (callback) {
-                callback();
-            }
-        }
-    }];
-}
+
 
 - (TUIReplyQuoteViewData *)getQuoteData:(TUIMessageCellData *)originCellData
 {

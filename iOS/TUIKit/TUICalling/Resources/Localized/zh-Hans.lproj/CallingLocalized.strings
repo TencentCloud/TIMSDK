@@ -1,10 +1,10 @@
 /* 
-  CallingLocalized.strings
-  TRTCCalling
-
-  Created by adams on 2021/5/13.
-  
-*/
+ CallingLocalized.strings
+ TRTCCalling
+ 
+ Created by adams on 2021/5/13.
+ 
+ */
 
 "LoginNetwork.ProfileManager.sendfailed" = "发送失败，请稍后重试";
 "V2.Live.LoginMock.sendtheverificatcode" = "请发送验证码";
@@ -53,3 +53,9 @@
 "Demo.TRTC.Calling.failedtogetcamerapermission" = "获取摄像头权限失败，请前往隐私-相机设置里面打开应用权限";
 "Demo.TRTC.Calling.failedtogetmicrophonepermission" = "获取麦克风权限失败，请前往隐私-麦克风设置里面打开应用权限";
 "Demo.TRTC.Calling.calleeTip" = "他们也在";
+
+"Demo.TRTC.Calling.FloatingWindow.waitaccept" = "等待接听";
+"Demo.TRTC.Calling.FloatingWindow.dailing" = "呼叫中…";
+
+"Demo.TRTC.Calling.User.Exceed.Limit" = "暂支持最多9人通话。如需多人会议，请使用TUIRoom";
+"Demo.TRTC.Calling.UnableToRestartTheCall" = "正在通话中，无法再次发起";

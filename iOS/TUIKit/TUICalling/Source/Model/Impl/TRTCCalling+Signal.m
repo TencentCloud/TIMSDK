@@ -9,6 +9,7 @@
 #import "TRTCCallingUtils.h"
 #import "TRTCCallingHeader.h"
 #import <ImSDK_Plus/ImSDK_Plus.h>
+#import "TUILogin.h"
 #import "CallingLocalized.h"
 #import "TRTCSignalFactory.h"
 #import "TUICallingConstants.h"
@@ -361,7 +362,7 @@
                                   @"chatType" : @(chatType),
                                   @"content" : [TRTCCallingUtils dictionary2JsonStr:contentParam],
                                   @"sendTime" : @((UInt32)[[V2TIMManager sharedInstance] getServerTime]),
-                                  @"sender" : [TRTCCallingUtils loginUser],
+                                  @"sender" : TUILogin.getUserID ?: @"",
                                   @"version" : @(APNs_Version)};       // 推送版本
     NSDictionary *extParam = @{@"entity" : entityParam};
     V2TIMOfflinePushInfo *info = [[V2TIMOfflinePushInfo alloc] init];
@@ -390,6 +391,7 @@
 
 #pragma mark - V2TIMSignalingListener
 
+/// 收到邀请 - 回调
 - (void)onReceiveNewInvitation:(NSString *)inviteID
                        inviter:(NSString *)inviter
                        groupID:(NSString *)groupID
@@ -423,37 +425,57 @@
         model.roomid = [data[SIGNALING_EXTRA_KEY_ROOMID] intValue];
         
         if ([data[SIGNALING_EXTRA_KEY_CMD] isEqualToString:SIGNALING_CMD_SWITCHTOVOICECALL]) {
+            /// 多端登录，A1和A2同时登录账号A，A1呼叫B，B接听，B点击切换语音按钮，A2需要过滤掉A1的「邀请信令」
+            /// 过滤条件：当前不在通话流程中， 收到被邀请者的点击切换按钮的「邀请信令」，不做处理。
+            if (!self.isOnCalling) {
+                return;
+            }
+            
             model.action = CallAction_SwitchToAudio;
             self.switchToAudioCallID = inviteID;
         } else {
+            /// 多端登录，A1和A2同时登录账号A，账号A1呼叫账号B 或者 A1点击切换语音，过滤掉A2收到的自己的邀请信令
+            if ([self checkLoginUserIsEqualTo:inviter]) {
+                return;
+            }
+            
             self.currentCallingUserID = inviter;
             model.action = CallAction_Call;
         }
+        
         [self handleCallModel:inviter model:model message:cmdInfoStr userIds:userIds];
     }
 }
 
+/// 邀请被取消 -  回调
 - (void)onInvitationCancelled:(NSString *)inviteID inviter:(NSString *)inviter data:(NSString *)data {
     TRTCLog(@"Calling - onInvitationCancelled inviteID:%@ inviter:%@ data:%@", inviteID, inviter, data);
-    NSDictionary *param = [self check:data];
-    
-    /// 多端登录，A1和A2同时登录账号A，账号B呼叫账号A ，账号B取消通话
-    if (inviter && [inviter isKindOfClass:[NSString class]] && [inviter isEqualToString:[V2TIMManager sharedInstance].getLoginUser]) {
+    /// 多端登录，A1和A2同时登录账号A，账号A呼叫账号B ，账号A取消通话，过滤掉A1和A2自己收到的此信令
+    if ([self checkLoginUserIsEqualTo:inviter]) {
         return;
     }
     
-    if (param) {
-        CallModel *model = [[CallModel alloc] init];
-        model.callid = inviteID;
-        model.action = CallAction_Cancel;
-        [self handleCallModel:inviter model:model message:@""];
+    NSDictionary *param = [self check:data];
+    if (!(param && [param isKindOfClass:[NSDictionary class]])) {
+        return;
     }
+    
+    CallModel *model = [[CallModel alloc] init];
+    model.callid = inviteID;
+    model.action = CallAction_Cancel;
+    [self handleCallModel:inviter model:model message:@""];
 }
 
+/// 邀请者接受邀请 -  回调
 - (void)onInviteeAccepted:(NSString *)inviteID invitee:(NSString *)invitee data:(NSString *)data {
     TRTCLog(@"Calling - onInviteeAccepted inviteID:%@ invitee:%@ data:%@", inviteID, invitee, data);
-    NSDictionary *param = [self check:data];
+    /// 多端登录，A1和A2同时登录账号A，A1呼叫B，B接听，A2 需要过滤掉B「接受邀请信令」
+    /// 过滤条件：当前不在通话流程中， 收到邀请者接受邀请，不做处理。
+    if (!self.isOnCalling) {
+        return;
+    }
     
+    NSDictionary *param = [self check:data];
     if (!(param && [param isKindOfClass:[NSDictionary class]])) {
         return;
     }
@@ -466,35 +488,59 @@
     if ([paramData[SIGNALING_EXTRA_KEY_CMD] isEqualToString:SIGNALING_CMD_SWITCHTOVOICECALL]) {
         model.action = CallAction_AcceptSwitchToAudio;
     } else {
+        /// 多端登录，A1和A2同时登录账号A，账号B呼叫账号A ，A1接听正常处理，A2需要退出界面
+        if (!self.isProcessedBySelf && [self checkLoginUserIsEqualTo:invitee]) {
+            [self exitRoom];
+            return;
+        }
         model.action = CallAction_Accept;
     }
     
     [self handleCallModel:invitee model:model message:@""];
 }
 
+/// 被邀请者拒绝邀请  -  回调
 - (void)onInviteeRejected:(NSString *)inviteID invitee:(NSString *)invitee data:(NSString *)data {
     TRTCLog(@"Calling - onInviteeRejected inviteID:%@ invitee:%@ data:%@", inviteID, invitee, data);
-    NSDictionary *param = [self check:data];
-    
-    if (param) {
-        CallModel *model = [[CallModel alloc] init];
-        model.callid = inviteID;
-        NSDictionary *data = [TRTCSignalFactory getDataDictionary:param];
-        if ([data[SIGNALING_EXTRA_KEY_MESSAGE] isEqualToString:SIGNALING_MESSAGE_LINEBUSY]) {
-            model.action = CallAction_Linebusy;
-        }
-        else if ([data[SIGNALING_EXTRA_KEY_CMD] isEqualToString:SIGNALING_CMD_SWITCHTOVOICECALL]) {
-            model.action = CallAction_AcceptSwitchToAudio;
-        }
-        else {
-            model.action = CallAction_Reject;
-        }
-        [self handleCallModel:invitee model:model message:@"Other status error"];
+    /// 多端登录，A1和A2同时登录账号A，A1呼叫B，B拒绝接听，A2 需要过滤掉B「拒绝邀请信令」
+    /// 过滤条件：当前不在通话流程中， 收到被邀请者拒绝邀请信令，不做处理。
+    if (!self.isOnCalling) {
+        return;
     }
+    
+    NSDictionary *param = [self check:data];
+    if (!param || ![param isKindOfClass:[NSDictionary class]]) {
+        return;
+    }
+    
+    CallModel *model = [[CallModel alloc] init];
+    model.callid = inviteID;
+    NSDictionary *dataDic = [TRTCSignalFactory getDataDictionary:param];
+    
+    if ([dataDic[SIGNALING_EXTRA_KEY_MESSAGE] isEqualToString:SIGNALING_MESSAGE_LINEBUSY]) {
+        model.action = CallAction_Linebusy;
+    } else if ([dataDic[SIGNALING_EXTRA_KEY_CMD] isEqualToString:SIGNALING_CMD_SWITCHTOVOICECALL]) {
+        model.action = CallAction_AcceptSwitchToAudio;
+    } else {
+        /// 多端登录，A1和A2同时登录账号A，账号B呼叫账号A ，A1拒接通话，A2退出界面
+        if (!self.isProcessedBySelf && [self checkLoginUserIsEqualTo:invitee]) {
+            [self exitRoom];
+            return;
+        }
+        model.action = CallAction_Reject;
+    }
+    [self handleCallModel:invitee model:model message:@"Other status error"];
 }
 
+/// 邀请超时 -  回调
 - (void)onInvitationTimeout:(NSString *)inviteID inviteeList:(NSArray<NSString *> *)invitedList {
     TRTCLog(@"Calling - onInvitationTimeout inviteID:%@ invitedList:%@", inviteID, invitedList);
+    /// 多端登录，A1和A2同时登录账号A，A1呼叫B，B未接听，A2 需要过滤掉B「超时信令」
+    /// 过滤条件：当前不在通话流程中， 收到被邀请者拒绝邀请信令，不做处理。
+    if (!self.isOnCalling) {
+        return;
+    }
+    
     CallModel *model = [[CallModel alloc] init];
     model.callid = inviteID;
     model.invitedList = [NSMutableArray arrayWithArray:invitedList];
@@ -550,7 +596,7 @@
                 }
             };
             
-            if (model.groupid != nil && ![model.invitedList containsObject:[TRTCCallingUtils loginUser]]
+            if (model.groupid != nil && ![model.invitedList containsObject:TUILogin.getUserID]
                 ) { // 群聊但是邀请不包含自己不处理
                 if (self.curCallID == model.callid) { // 在房间中更新列表
                     syncInvitingList();
@@ -621,7 +667,7 @@
             
             if (checkCallID && self.delegate) {
                 // 这里需要判断下是否是自己超时了，自己超时，直接退出界面
-                if ([model.invitedList containsObject:[TRTCCallingUtils loginUser]] && self.delegate) {
+                if ([model.invitedList containsObject:TUILogin.getUserID] && self.delegate) {
                     self.isOnCalling = false;
                     if ([self canDelegateRespondMethod:@selector(onCallingTimeOut)]) {
                         [self.delegate onCallingTimeOut];
@@ -824,11 +870,18 @@
 }
 
 #pragma mark - private method
+/// 检查当前登录用户是否是邀请者/被邀请者
+- (BOOL)checkLoginUserIsEqualTo:(NSString *)inviteUser {
+    if (inviteUser && [inviteUser isKindOfClass:NSString.class] && inviteUser.length > 0 && [inviteUser isEqualToString:TUILogin.getUserID]) {
+        return YES;
+    }
+    return NO;
+}
 
 - (void)sendInviteAction:(CallAction)action user:(NSString *)user model:(CallModel *)model {
     BOOL isGroupidCall = (model.groupid && model.groupid > 0);
     
-    if (self.isBeingCalled || isGroupidCall || [user isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
+    if (self.isBeingCalled || isGroupidCall || [user isEqualToString:TUILogin.getUserID]) {
         return;
     }
     
@@ -865,12 +918,18 @@
     return self.delegate && [self.delegate respondsToSelector:selector];
 }
 
-- (NSString *)getCallIDWithUserID:(NSString *)userID {
-    if (userID && userID.length > 0 && [self.curCallIdDic.allKeys containsObject:userID]) {
-        return [self.curCallIdDic objectForKey:userID];
-    } else {
-        return nil;
+- (NSString * _Nullable)getCallIDWithUserID:(NSString *)userID {
+    NSString *callID;
+    
+    if (userID && [userID isKindOfClass:NSString.class] && userID.length > 0) {
+        callID = self.curCallIdDic[userID];
     }
+    
+    if ([callID isKindOfClass:NSString.class]) {
+        return callID;
+    }
+    
+    return nil;
 }
 
 @end

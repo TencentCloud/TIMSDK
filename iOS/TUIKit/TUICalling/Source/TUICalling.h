@@ -96,7 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 开启静音模式（默认关）
 - (void)enableMuteMode:(BOOL)enable NS_SWIFT_NAME(enableMuteMode(enable:));
 
-/// 打开悬浮窗(默认关)
+/// 打开悬浮窗(默认关), 注意：用户自定义路由 不支持悬浮窗
 - (void)enableFloatWindow:(BOOL)enable NS_SWIFT_NAME(enableFloatWindow(enable:));
 
 /**

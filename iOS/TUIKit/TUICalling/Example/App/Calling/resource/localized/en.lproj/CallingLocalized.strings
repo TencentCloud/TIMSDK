@@ -30,5 +30,5 @@
 "App.PortalViewController.determine" = "Yes";
 "Demo.TRTC.calling.calltitle" = "Audio/Video Call";
 "Demo.TRTC.calling.callType" = "Please select the calling method";
-"Audio Call" = "Voice Call";
+"Audio Call" = "Audio Call";
 "Video Call" = "Video Call";

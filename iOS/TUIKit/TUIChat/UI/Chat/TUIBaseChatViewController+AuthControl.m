@@ -57,29 +57,17 @@
         vc.delegate = strongSelf;
         [strongSelf.navigationController pushViewController:vc animated:YES];
     };
-    if ([TUIUserAuthorizationCenter isEnableMicroAuthorization] &&
-        [TUIUserAuthorizationCenter isEnableCameraAuthorization]) {
+    if ([TUIUserAuthorizationCenter isEnableCameraAuthorization]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             actionBlock();
         });
     }
     else {
-        if (![TUIUserAuthorizationCenter isEnableMicroAuthorization]) {
-            [TUIUserAuthorizationCenter microStateActionWithPopCompletion:^{
-                if ([TUIUserAuthorizationCenter isEnableCameraAuthorization]) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        actionBlock();
-                    });
-                }
-            }];
-        }
         if (![TUIUserAuthorizationCenter isEnableCameraAuthorization]) {
             [TUIUserAuthorizationCenter cameraStateActionWithPopCompletion:^{
-                if ([TUIUserAuthorizationCenter isEnableMicroAuthorization]) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         actionBlock();
                     });
-                }
             }];
         };
     }

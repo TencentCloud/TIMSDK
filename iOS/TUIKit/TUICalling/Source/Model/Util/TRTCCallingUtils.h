@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 ///生成随机 RoomID
 + (UInt32)generateRoomID;
 
-+ (NSString *)loginUser;
-
 + (void)getCallUserModel:(NSString *)userID finished:(void(^)(CallUserModel *))finished;
 
 + (NSString *)dictionary2JsonStr:(NSDictionary *)dict;
