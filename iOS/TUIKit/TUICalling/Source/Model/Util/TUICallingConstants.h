@@ -12,8 +12,15 @@ NS_ASSUME_NONNULL_BEGIN
 static const int TC_TUICALLING_COMPONENT = 3;
 static const int TC_TIMCALLING_COMPONENT = 10;
 static const int TC_TRTC_FRAMEWORK       = 1;
+static const int MAX_USERS = 8; // 最大通话数为9 (需包含自己)
 
 @interface TUICallingConstants : NSObject
+
+typedef NS_ENUM(NSUInteger, TUICallingState) {
+    TUICallingStateDailing = 0, // 正在拨打中（主动）
+    TUICallingStateOnInvitee,   // 等待接听状态（被动）
+    TUICallingStateCalling      // 正在通话中状态(已接听)
+};
 
 extern NSString *const SIGNALING_EXTRA_KEY_VERSION;
 extern NSString *const SIGNALING_EXTRA_KEY_BUSINESSID;

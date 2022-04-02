@@ -53,7 +53,6 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
 @property (nonatomic, copy) NSString *timerName;
 /// 记录通话时间 单位：秒
 @property (nonatomic, assign) NSInteger totalTime;
-
 /// 记录是否需要继续播放来电铃声
 @property (nonatomic, assign) BOOL needContinuePlaying;
 
@@ -90,14 +89,26 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
 #pragma mark - Public method
 
 - (void)call:(NSArray<NSString *> *)userIDs type:(TUICallingType)type {
-    if (![TUICommonUtil checkArrayValid:userIDs]) return;
+    if (![TUICommonUtil checkArrayValid:userIDs]) {
+        return;
+    }
+    if ([[TUICallingFloatingWindowManager shareInstance] isFloating]) {
+        [self makeToast:CallingLocalize(@"Demo.TRTC.Calling.UnableToRestartTheCall")];
+        return;
+    }
+    // 最大支持9人超过9人不能发起通话
+    if (userIDs.count > MAX_USERS) {
+        [self makeToast:CallingLocalize(@"Demo.TRTC.Calling.User.Exceed.Limit")];
+        return;
+    }
     
     self.userIDs = [NSArray arrayWithArray:userIDs];
     self.currentCallingType = type;
     self.currentCallingRole = TUICallingRoleCall;
     
-    if ([self checkAuthorizationStatusIsDenied]) return;
-    if (!self.currentUserId) return;
+    if ([self checkAuthorizationStatusIsDenied] || !self.currentUserId) {
+        return;
+    }
     
     [[TRTCCalling shareInstance] groupCall:userIDs type:[self transformCallingType:type] groupID:self.groupID ?: nil];
     __weak typeof(self)weakSelf = self;
@@ -109,13 +120,12 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
         CallUserModel *model = [self covertUser:infoList.firstObject];
         
         if (userIDs.count >= 2 || self.groupID.length > 0) {
-            [self initCallingViewIsGroup:YES];
+            [self initCallingViewWithUser:model isGroup:YES];
             NSMutableArray *ids = [NSMutableArray arrayWithArray:userIDs];
             [ids addObject:self.currentUserId];
-            [self.callingView setCurrentUser:model];
             [self configCallViewWithUserIDs:[ids copy] sponsor:nil];
         } else {
-            [self initCallingViewIsGroup:NO];
+            [self initCallingViewWithUser:nil isGroup:NO];
             [self configCallViewWithUserIDs:userIDs sponsor:nil];
         }
         
@@ -218,7 +228,7 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
         [callVC.view addSubview:self.callingView];
         [self.listener callStart:userIDs type:type role:role viewController:callVC];
     } else {
-        [self.callingView show];
+        [self.callingView showCalingViewEnableFloatWindow:self.enableFloatWindow];
     }
     
     if (self.enableMuteMode) {
@@ -257,7 +267,7 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
         [self.listener callEnd:self.userIDs type:self.currentCallingType role:self.currentCallingRole totalTime:(CGFloat)self.totalTime];
     }
     
-    [self.callingView disMiss];
+    [self.callingView disMissCalingView];
     self.callingView = nil;
     [self handleStopAudio];
     [TRTCGCDTimer canelTimer:self.timerName];
@@ -348,6 +358,7 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
 - (void)onSwitchToAudio:(BOOL)success
                 message:(NSString *)message {
     if (success) {
+        self.currentCallingType = TUICallingTypeAudio;
         [self.callingView switchToAudio];
     }
     if (message && message.length > 0) {
@@ -360,6 +371,7 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
       isFromGroup:(BOOL)isFromGroup
          callType:(CallType)callType {
     NSLog(@"log: onInvited sponsor:%@ userIds:%@", sponsor, userIDs);
+    
     if (![TUICommonUtil checkArrayValid:userIDs]) {
         return;
     }
@@ -376,44 +388,56 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
     self.currentCallingRole = TTUICallingRoleCalled;
     self.currentCallingType = [self transformCallType:callType];
     
-    if ([self checkAuthorizationStatusIsDenied]) return;
-    
-    NSMutableArray *userArray = [NSMutableArray arrayWithArray:userIDs];
-    
-    if (isFromGroup) {
-        [userArray addObject:sponsor];
+    if ([self checkAuthorizationStatusIsDenied]) {
+        return;
     }
     
-    if (userArray.count >= 2 || isFromGroup) {
+    NSMutableArray *userIds = [NSMutableArray arrayWithArray:userIDs];
+    
+    if (isFromGroup) {
+        [userIds addObject:sponsor];
+    }
+    
+    if (userIds.count >= 2 || isFromGroup) {
         if (!self.currentUserId) return;
-        
-        [userArray addObject:self.currentUserId];
-        [self initCallingViewIsGroup:YES];
-        [self callStartWithUserIDs:userArray type:[self transformCallType:callType] role:TTUICallingRoleCalled];
-        
-        __weak typeof(self) weakSelf = self;
-        [[V2TIMManager sharedInstance] getUsersInfo:@[[self currentUserId]] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-            if (infoList.count == 0) return;
-            
-            [weakSelf.callingView setCurrentUser:[weakSelf covertUser:[infoList firstObject]]];
-            [weakSelf refreshCallingViewWithUserIDs:userIDs sponsor:sponsor];
+        __weak typeof(self)weakSelf = self;
+        NSMutableArray *users = [NSMutableArray arrayWithObject:self.currentUserId];
+        if (userIds.count > 0) {
+            [users addObjectsFromArray:userIds];
+        }
+        [[V2TIMManager sharedInstance] getUsersInfo:users succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+            if (infoList.count == 0) {
+                return;
+            }
+            __strong typeof(weakSelf)self = weakSelf;
+            __block V2TIMUserFullInfo *currentInfo = nil;
+            [infoList enumerateObjectsUsingBlock:^(V2TIMUserFullInfo * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj.userID isEqualToString:[self currentUserId]]) {
+                    currentInfo = obj;
+                    *stop = YES;
+                }
+            }];
+            CallUserModel *model = [self covertUser:currentInfo];
+            [self initCallingViewWithUser:model isGroup:YES];
+            [self callStartWithUserIDs:userIDs type:[self transformCallType:callType] role:TTUICallingRoleCalled];
+            [self refreshCallingViewWithUserIDs:userIDs sponsor:sponsor];
         } fail:^(int code, NSString *desc) {
-            NSLog(@"OnInvited getUsersInfo: code %d, msg %@", code, desc);
+            NSLog(@"V2TIMManager getUsersInfo: code %d, msg %@", code, desc);
         }];
     } else {
-        [self initCallingViewIsGroup:NO];
-        [self callStartWithUserIDs:[userArray copy] type:[self transformCallType:callType] role:TTUICallingRoleCalled];
-        [self refreshCallingViewWithUserIDs:[userArray copy] sponsor:sponsor];
+        [self initCallingViewWithUser:nil isGroup:NO];
+        [self callStartWithUserIDs:userIDs type:[self transformCallType:callType] role:TTUICallingRoleCalled];
+        [self refreshCallingViewWithUserIDs:userIDs sponsor:sponsor];
     }
 }
 
-- (void)initCallingViewIsGroup:(BOOL)isGroup {
+- (void)initCallingViewWithUser:(CallUserModel *)userModel isGroup:(BOOL)isGroup {
     TUICallingBaseView *callingView = nil;
     BOOL isCallee = (self.currentCallingRole == TTUICallingRoleCalled);
     BOOL isVideo = (self.currentCallingType == TUICallingTypeVideo);
     
     if (isGroup) {
-        callingView = (TUICallingBaseView *)[[TUIGroupCallingView alloc] initWithIsVideo:isVideo isCallee:isCallee];
+        callingView = (TUICallingBaseView *)[[TUIGroupCallingView alloc] initWithUser:userModel isVideo:isVideo isCallee:isCallee];
     } else {
         callingView = (TUICallingBaseView *)[[TUICallingView alloc] initWithIsVideo:isVideo isCallee:isCallee];
     }

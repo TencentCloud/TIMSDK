@@ -48,7 +48,11 @@ typedef void(^YUReplyMessageAsyncLoadFinsh)(TUIReplyMessageCellData *replyData);
 
 @property (nonatomic, copy) TUIReplyAsyncLoadFinish onFinish;
 
-- (void)loadOriginMessage:(void(^)(void))callback;
+//Deprecated
+//Search `loadOriginMessageFromReplyData` in TUIMessageDataProvider+MessageDeal
+//- (void)loadOriginMessage:(void(^)(void))callback;
+
+- (TUIReplyQuoteViewData *)getQuoteData:(TUIMessageCellData *)originCellData;
 
 @end
 

@@ -181,6 +181,8 @@
                     @"messageAbstract" : [self.inputController.replyData.msgAbstract?:@"" getInternationalStringWithfaceContent],
                     @"messageSender"   : self.inputController.replyData.sender?:@"",
                     @"messageType"     : @(self.inputController.replyData.type),
+                    @"messageTime"     : @(self.inputController.replyData.originMessage.timestamp ? [self.inputController.replyData.originMessage.timestamp timeIntervalSince1970] : 0),  // 兼容 web
+                    @"messageSequence" : @(self.inputController.replyData.originMessage.seq),                                                                                             // 兼容 web
                     @"version"         : @(kDraftMessageReplyVersion)
             }
         };

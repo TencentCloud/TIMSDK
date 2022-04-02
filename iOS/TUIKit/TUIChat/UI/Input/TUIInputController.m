@@ -270,6 +270,8 @@
                     @"messageAbstract" : [self.replyData.msgAbstract?:@"" getInternationalStringWithfaceContent],
                     @"messageSender"   : self.replyData.sender?:@"",
                     @"messageType"     : @(self.replyData.type),
+                    @"messageTime"     : @(self.replyData.originMessage.timestamp ? [self.replyData.originMessage.timestamp timeIntervalSince1970] : 0),  // 兼容 web
+                    @"messageSequence" : @(self.replyData.originMessage.seq),                                                                             // 兼容 web
                     @"version"         : @(kMessageReplyVersion)
             }
         };

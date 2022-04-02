@@ -4,6 +4,7 @@
 #import "TUIMessageDataProvider.h"
 #import "TUIMessageDataProvider+Call.h"
 #import "TUIMessageDataProvider+Live.h"
+#import "TUIMessageDataProvider+MessageDeal.h"
 #import "TUITextMessageCellData.h"
 #import "TUISystemMessageCellData.h"
 #import "TUIVoiceMessageCellData.h"
@@ -333,7 +334,7 @@ static NSArray *customMessageInfo = nil;
             [self.dataSource dataProviderDataSourceDidChange:self];
         };
         dispatch_group_enter(group);
-        [myData loadOriginMessage:^{
+        [self loadOriginMessageFromReplyData:myData dealCallback:^{
             dispatch_group_leave(group);
         }];
     }

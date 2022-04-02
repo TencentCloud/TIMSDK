@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUIGroupCallingView : TUICallingBaseView
 
 /// 初始化页面
-- (instancetype)initWithIsVideo:(BOOL)isVideo isCallee:(BOOL)isCallee;
+- (instancetype)initWithUser:(CallUserModel *)user isVideo:(BOOL)isVideo isCallee:(BOOL)isCallee;
 
 @end
 

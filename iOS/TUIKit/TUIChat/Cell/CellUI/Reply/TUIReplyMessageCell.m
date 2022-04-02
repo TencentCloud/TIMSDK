@@ -19,6 +19,7 @@
 #import "NSString+emoji.h"
 #import "TUIThemeManager.h"
 
+#import "TUIReplyQuoteView.h"
 #import "TUITextReplyQuoteView.h"
 #import "TUIImageReplyQuoteView.h"
 #import "TUIVideoReplyQuoteView.h"

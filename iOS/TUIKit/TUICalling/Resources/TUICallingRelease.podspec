@@ -38,7 +38,7 @@ Pod::Spec.new do |spec|
     trtc.ios.framework = ['AVFoundation', 'Accelerate']
     trtc.library = 'c++', 'resolv'
     trtc.resource_bundles = {
-      'TUICallingKitBundle' => ['iOS/Resources/Localized/*', 'iOS/Resources/AudioFile', 'iOS/Resources/*.xcassets']
+      'TUICallingKitBundle' => ['iOS/Resources/Localized/**/*.strings', 'iOS/Resources/AudioFile', 'iOS/Resources/*.xcassets']
     }
   end
  
@@ -53,7 +53,7 @@ Pod::Spec.new do |spec|
     professional.ios.framework = ['AVFoundation', 'Accelerate', 'AssetsLibrary']
     professional.library = 'c++', 'resolv', 'sqlite3'
     professional.resource_bundles = {
-      'TUICallingKitBundle' => ['iOS/Resources/Localized/*', 'iOS/Resources/AudioFile', 'iOS/Resources/*.xcassets']
+      'TUICallingKitBundle' => ['iOS/Resources/Localized/**/*.strings', 'iOS/Resources/AudioFile', 'iOS/Resources/*.xcassets']
     }
   end
   
