@@ -145,25 +145,20 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 6.1.2155 @2022.3.18
+## Latest Enhanced Version 6.1.2166 @2022.04.02
 
 ### SDK
 
-- Added support for read receipts for group messages（[iOS documentation,](https://cloud.tencent.com/document/product/269/44490#.E7.BE.A4.E6.B6.88.E6.81.AF.E5.B7.B2.E8.AF.BB.E5.9B.9E.E6.89.A7) [Android documentation](https://cloud.tencent.com/document/product/269/44489#.E7.BE.A4.E6.B6.88.E6.81.AF.E5.B7.B2.E8.AF.BB.E5.9B.9E.E6.89.A7)）.
-- Added support for setting offline push alert sound for Android.
-- Added the API for setting network proxy for mobile SDKs.
-- Supplemented offline push APIs for the C/C++ platform.
-- Added support for automatically synchronizing signaling messages in a group after login.
-- Fixed the issue where a user cannot get complete custom fields after receiving a notification on custom field changes.
-- Fixed the notification muting status return error that occasionally occurred when the conversation list was pulled under a weak network.
-- Optimized the log printing logic.
-- Optimized error descriptions.
+- Fixed the issue where no data was returned when two or more userIDs were entered for `senderUserIDList` to search for local messages.
+- Fixed the issue where the SDK for Android called back only one message when a user recalled multiple messages with the RESTful API.
+- Fixed occasional crashes in quickly clearing unread messages for Windows.
 
-### TUIKit
+### TUIKit and demo
 
-- Upgraded the personal information protection law for TUIKit demo to meet compliance requirements.
-- Fixed the issue where a user cannot initiate an audio/video call by tapping the banner notification after receiving an offline push notification.
-- Fixed the issue where a user cannot initiate an audio/video call by directly opening the app after switching the app to background and receiving an offline push notification.
+- Released the International Edition demo.
+- Switched offline push back to vendor channels.
+- Switched the login with mobile number to the aPaaS service.
+- Fixed the failure of audio/video call sync across multiple clients.
 
 ## Latest Basic Version 5.1.66 @2021.09.22
 
