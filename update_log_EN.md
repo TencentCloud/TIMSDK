@@ -2,6 +2,21 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 6.1.2166 @2022.04.02 - Enhanced Version
+
+### SDK
+
+- Fixed the issue where no data was returned when two or more userIDs were entered for `senderUserIDList` to search for local messages.
+- Fixed the issue where the SDK for Android called back only one message when a user recalled multiple messages with the RESTful API.
+- Fixed occasional crashes in quickly clearing unread messages for Windows.
+
+### TUIKit and demo
+
+- Released the International Edition demo.
+- Switched offline push back to vendor channels.
+- Switched the login with mobile number to the aPaaS service.
+- Fixed the failure of audio/video call sync across multiple clients.
+
 ## 6.1.2155 @2022.3.18 - Enhanced Version
 
 ### SDK
