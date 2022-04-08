@@ -359,6 +359,9 @@ class ConversationManager {
             code !== 0 && reject({ code });
         });
     }
+    setSDKAPPID(sdkappid: number) {
+        this._sdkconfig.sdkappid = sdkappid;
+    }
     private setConvEventCallback(
         conv_event: number,
         json_conv_array: string,

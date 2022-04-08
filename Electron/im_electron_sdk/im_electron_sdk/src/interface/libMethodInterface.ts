@@ -497,13 +497,13 @@ interface TIMProfileModifySelfUserProfileFun {
 }
 // ==========Interface For friendship End===========
 
-interface TIMMsgSendGroupMessageReceiptsFun {
+interface TIMMsgSendMessageReadReceiptsFun {
     (json_param: string, callback: Buffer, user_data: string): number;
 }
-interface TIMMsgGetGroupMessageReceiptsFun {
+interface TIMMsgGetMessageReadReceiptsFun {
     (json_param: string, callback: Buffer, user_data: string): number;
 }
-interface TIMMsgGetGroupMessageReadMembersFun {
+interface TIMMsgGetGroupMessageReadMemberListFun {
     (
         json_param: string,
         filter: number,
@@ -512,9 +512,6 @@ interface TIMMsgGetGroupMessageReadMembersFun {
         callback: Buffer,
         user_data: string
     ): number;
-}
-interface TIMSetMsgGroupMessageReceiptCallbackFun {
-    (callback: Buffer, user_data: string): void;
 }
 
 interface libMethods {
@@ -604,10 +601,9 @@ interface libMethods {
     // friendship end
 
     // group start
-    TIMMsgSendGroupMessageReceipts: TIMMsgSendGroupMessageReceiptsFun;
-    TIMMsgGetGroupMessageReceipts: TIMMsgGetGroupMessageReceiptsFun;
-    TIMMsgGetGroupMessageReadMembers: TIMMsgGetGroupMessageReadMembersFun;
-    TIMSetMsgGroupMessageReceiptCallback: TIMSetMsgGroupMessageReceiptCallbackFun;
+    TIMMsgSendMessageReadReceipts: TIMMsgSendMessageReadReceiptsFun;
+    TIMMsgGetMessageReadReceipts: TIMMsgGetMessageReadReceiptsFun;
+    TIMMsgGetGroupMessageReadMemberList: TIMMsgGetGroupMessageReadMemberListFun;
     TIMGroupCreate: TIMGroupCreateFun;
     TIMGroupDelete: TIMGroupDeleteFun;
     TIMGroupJoin: TIMGroupJoinFun;

@@ -23,9 +23,20 @@ const ConversationManager = {
     },
     TIMConvSetDraft(){
         return timRenderInstance.TIMConvSetDraft({
-            convId:"test",
+            convId:"admin",
             convType:1,
-            draftParam:"2",
+            draftParam: {
+                draft_edit_time: (Date.now() / 1000) + 60 * 60 * 24, 
+                draft_msg: {
+                    message_elem_array: [
+                        {
+                            "elem_type" : 0,
+                            "text_elem_content" : "this draft"
+                        }
+                    ]
+                },
+                draft_user_define: "",
+            },
         })
         
     },

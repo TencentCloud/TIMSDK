@@ -156,7 +156,7 @@ class FriendGroupSelectorState extends State<FriendGroupSelector> {
   List<String> selected = List.empty(growable: true);
   List<V2TimFriendGroup> friendList = List.empty();
 
-  Future<List<V2TimFriendGroup>?> getFrienList() async {
+  Future<List<V2TimFriendGroup>?> getFriendList() async {
     await EasyLoading.show(
       status: 'loading...',
       maskType: EasyLoadingMaskType.black,
@@ -174,12 +174,13 @@ class FriendGroupSelectorState extends State<FriendGroupSelector> {
       });
       return res.data;
     }
+    return null;
   }
 
   AlertDialog dialogShow(context) {
     final chooseType = (widget.switchSelectType ? imt(imt("单选")) : imt(imt("多选")));
     AlertDialog dialog = AlertDialog(
-      title: Text(imt_para("分组选择（{{chooseType}}）", "分组选择（${chooseType}）")(chooseType: chooseType)),
+      title: Text(imt_para("分组选择（{{chooseType}}）", "分组选择（$chooseType）")(chooseType: chooseType)),
       contentPadding: EdgeInsets.zero,
       content: FriendList(widget.switchSelectType, friendList, (data) {
         setState(() {
@@ -209,7 +210,7 @@ class FriendGroupSelectorState extends State<FriendGroupSelector> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        List<V2TimFriendGroup>? fl = await this.getFrienList();
+        List<V2TimFriendGroup>? fl = await this.getFriendList();
         if (fl != null) {
           if (fl.length > 0) {
             showDialog<void>(

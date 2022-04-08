@@ -152,7 +152,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                             Container(
                               margin: EdgeInsets.only(left: 12),
                               child: Text(
-                                  imt_para("已选：{{chooseType}}", "已选：${chooseType}")(chooseType: chooseType)),
+                                  imt_para("已选：{{chooseType}}", "已选：$chooseType")(chooseType: chooseType)),
                             )
                           ],
                         ),
@@ -223,7 +223,7 @@ class SetSelfInfoState extends State<SetSelfInfo> {
                             Container(
                               margin: EdgeInsets.only(left: 12),
                               child: Text(
-                                  imt_para("已选：{{chooseAllowType}}", "已选：${chooseAllowType}")(chooseAllowType: chooseAllowType)),
+                                  imt_para("已选：{{chooseAllowType}}", "已选：$chooseAllowType")(chooseAllowType: chooseAllowType)),
                             )
                           ],
                         ),

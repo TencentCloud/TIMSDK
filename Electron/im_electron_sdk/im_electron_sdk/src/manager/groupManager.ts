@@ -39,7 +39,7 @@ import {
     MsgGroupMessageReceiptCallbackParam,
     GroupReadMembersCallback,
 } from "../interface";
-import log from "../utils/log";
+// import log from "../utils/log";
 import {
     nodeStrigToCString,
     jsFuncToFFIFun,
@@ -48,7 +48,10 @@ import {
     randomString,
     jsFuncToFFIFunForGroupRead,
 } from "../utils/utils";
-
+const log = {
+    info: function (...args: any) {},
+    error: function (...args: any) {},
+};
 class GroupManager {
     private _imskdLib: libMethods;
     private _callback: Map<String, Function> = new Map();
@@ -988,7 +991,7 @@ class GroupManager {
             if (code !== 0) reject(this.getErrorResponse({ code }));
         });
     }
-    TIMMsgSendGroupMessageReceipts(
+    TIMMsgSendMessageReadReceipts(
         msgSendGroupMessageReceipts: MsgSendGroupMessageReceiptsParam
     ): Promise<commonResponse> {
         const { json_msg_array, user_data } = msgSendGroupMessageReceipts;
@@ -1005,10 +1008,10 @@ class GroupManager {
                 code === 0
                     ? resolve({ code, desc, json_param, user_data })
                     : reject(this.getErrorResponse({ code, desc }));
-                this._cache.get("TIMMsgSendGroupMessageReceipts")?.delete(now);
+                this._cache.get("TIMMsgSendMessageReadReceipts")?.delete(now);
             };
             const callback = jsFuncToFFIFun(successCallback);
-            let cacheMap = this._cache.get("TIMMsgSendGroupMessageReceipts");
+            let cacheMap = this._cache.get("TIMMsgSendMessageReadReceipts");
             if (cacheMap === undefined) {
                 cacheMap = new Map();
             }
@@ -1016,17 +1019,17 @@ class GroupManager {
                 cb: successCallback,
                 callback: callback,
             });
-            this._cache.set("TIMMsgSendGroupMessageReceipts", cacheMap);
-            const code = this._imskdLib.TIMMsgSendGroupMessageReceipts(
+            this._cache.set("TIMMsgSendMessageReadReceipts", cacheMap);
+            const code = this._imskdLib.TIMMsgSendMessageReadReceipts(
                 nodeStrigToCString(json_msg_array),
-                this._cache.get("TIMMsgSendGroupMessageReceipts")?.get(now)
+                this._cache.get("TIMMsgSendMessageReadReceipts")?.get(now)
                     ?.callback,
                 userData
             );
             if (code !== 0) reject(this.getErrorResponse({ code }));
         });
     }
-    TIMMsgGetGroupMessageReceipts(
+    TIMMsgGetMessageReadReceipts(
         msgGetGroupMessageReceipts: MsgGetGroupMessageReceiptsParam
     ): Promise<commonResponse> {
         const { json_msg_array, user_data } = msgGetGroupMessageReceipts;
@@ -1044,10 +1047,10 @@ class GroupManager {
                 code === 0
                     ? resolve({ code, desc, json_param, user_data })
                     : reject(this.getErrorResponse({ code, desc }));
-                this._cache.get("TIMMsgGetGroupMessageReceipts")?.delete(now);
+                this._cache.get("TIMMsgGetMessageReadReceipts")?.delete(now);
             };
             const callback = jsFuncToFFIFun(successCallback);
-            let cacheMap = this._cache.get("TIMMsgGetGroupMessageReceipts");
+            let cacheMap = this._cache.get("TIMMsgGetMessageReadReceipts");
             if (cacheMap === undefined) {
                 cacheMap = new Map();
             }
@@ -1055,17 +1058,17 @@ class GroupManager {
                 cb: successCallback,
                 callback: callback,
             });
-            this._cache.set("TIMMsgGetGroupMessageReceipts", cacheMap);
-            const code = this._imskdLib.TIMMsgGetGroupMessageReceipts(
+            this._cache.set("TIMMsgGetMessageReadReceipts", cacheMap);
+            const code = this._imskdLib.TIMMsgGetMessageReadReceipts(
                 this.stringFormator(json_msg_array),
-                this._cache.get("TIMMsgGetGroupMessageReceipts")?.get(now)
+                this._cache.get("TIMMsgGetMessageReadReceipts")?.get(now)
                     ?.callback,
                 userData
             );
             if (code !== 0) reject(this.getErrorResponse({ code }));
         });
     }
-    TIMMsgGetGroupMessageReadMembers(
+    TIMMsgGetGroupMessageReadMemberList(
         msgGetGroupMessageReadMembers: MsgGetGroupMessageReadMembersParam
     ): Promise<commonResponse> {
         const { json_msg, user_data, filter, next_seq, count } =
@@ -1097,11 +1100,13 @@ class GroupManager {
                     user_data,
                 });
                 this._cache
-                    .get("TIMMsgGetGroupMessageReadMembers")
+                    .get("TIMMsgGetGroupMessageReadMemberList")
                     ?.delete(now);
             };
             const callback = jsFuncToFFIFunForGroupRead(successCallback);
-            let cacheMap = this._cache.get("TIMMsgGetGroupMessageReadMembers");
+            let cacheMap = this._cache.get(
+                "TIMMsgGetGroupMessageReadMemberList"
+            );
             if (cacheMap === undefined) {
                 cacheMap = new Map();
             }
@@ -1109,14 +1114,14 @@ class GroupManager {
                 cb: successCallback,
                 callback: callback,
             });
-            this._cache.set("TIMMsgGetGroupMessageReadMembers", cacheMap);
+            this._cache.set("TIMMsgGetGroupMessageReadMemberList", cacheMap);
 
-            const code = this._imskdLib.TIMMsgGetGroupMessageReadMembers(
+            const code = this._imskdLib.TIMMsgGetGroupMessageReadMemberList(
                 nodeStrigToCString(json_msg),
                 filter,
                 next_seq,
                 count,
-                this._cache.get("TIMMsgGetGroupMessageReadMembers")?.get(now)
+                this._cache.get("TIMMsgGetGroupMessageReadMemberList")?.get(now)
                     ?.callback,
                 userData
             );
@@ -1306,38 +1311,6 @@ class GroupManager {
             this._ffiCallback.get("TIMSetGroupTipsEventCallback") as Buffer,
             userData
         );
-    }
-    private msgGroupMessageReceiptCallback(
-        json_msg_readed_receipt_array: string,
-        user_data: string
-    ) {
-        console.log("msgGroupMessageReceiptCallback called");
-
-        const fn = this._callback.get("TIMSetMsgGroupMessageReceiptCallback");
-        fn && fn(json_msg_readed_receipt_array, user_data);
-    }
-    async TIMSetMsgGroupMessageReceiptCallback(
-        params: MsgGroupMessageReceiptCallbackParam
-    ): Promise<any> {
-        const { callback, user_data } = params;
-        console.log(params);
-        const userData = this.stringFormator(user_data);
-        const c_callback = transformGroupTipFun(
-            this.msgGroupMessageReceiptCallback.bind(this)
-        );
-        this._ffiCallback.set(
-            "TIMSetMsgGroupMessageReceiptCallback",
-            c_callback
-        );
-        this._callback.set("TIMSetMsgGroupMessageReceiptCallback", callback);
-
-        this._imskdLib.TIMSetMsgGroupMessageReceiptCallback(
-            this._ffiCallback.get(
-                "TIMSetMsgGroupMessageReceiptCallback"
-            ) as Buffer,
-            userData
-        );
-        return Promise.resolve({});
     }
 
     /**

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:im_api_example/i18n/i18n_utils.dart';
 
 class Utils {
   static void toast(String msg) {

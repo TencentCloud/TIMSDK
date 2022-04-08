@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 2
- * Strings: 284 (142.0 per locale)
+ * Strings: 334 (167.0 per locale)
  *
- * Built on 2022-03-16 at 10:12 UTC
+ * Built on 2022-04-01 at 07:04 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -316,8 +316,8 @@ class _StringsEn {
 	String get k_03f15qk => '黑名单';
 	String get k_0s3p3ji => '暂无黑名单';
 	String get k_0uc5cnb => '我们还在内测中，暂不支持创建频道。';
-	String get k_003nevv => '取消';
 	String get k_003rzap => '确定';
+	String get k_003nevv => '取消';
 	String get k_0s5ey0o => '实时音视频 TRTC';
 	String get k_03gpl3d => '大家好';
 	String get k_0352fjr => '无网络连接，进入频道失败';
@@ -326,6 +326,7 @@ class _StringsEn {
 	String get k_15wcgna => '结束成功';
 	String get k_15wo7xu => '置顶成功';
 	String k_02slfpm({required Object errorMessage}) => '发生错误 $errorMessage';
+	String get k_003ltgm => '位置';
 	String get k_1kvftgu => '我是自定义文本消息';
 	String get k_0cvagfm => '我是自定义视频消息';
 	String get k_1muiqp7 => '我是自定义群提示消息';
@@ -370,10 +371,9 @@ class _StringsEn {
 	String get k_18qjstb => '转让群主';
 	String get k_14j5iul => '删除并退出';
 	String get k_0jtutmw => '退出后不会接收到此群聊消息';
-	String get k_14n0fo2 => '暂无请求';
+	String get k_04dqh36 => '暂无新联系人';
 	String get k_08k00l9 => '正在加载...';
 	String get k_197r4f7 => '即时通信服务连接成功';
-	String get k_0gfsln9 => '信息已变更';
 	String get k_1s5xnir => '即时通信 SDK初始化失败';
 	String k_0owk5ss({required Object failedReason}) => '登录失败 $failedReason';
 	String get k_15bxnkw => '网络连接丢失';
@@ -390,11 +390,18 @@ class _StringsEn {
 	String get k_14yh35u => '登录·即时通信';
 	String get k_0st7i3e => '体验群组聊天，音视频对话等IM功能';
 	String get k_0cr1atw => '中国大陆';
+	String get k_0mnxjg7 => '欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。';
+	String get k_1545beg => '请您点击';
+	String get k_0opnzp6 => '《用户协议》';
+	String get k_00041m1 => '和';
+	String get k_0orhtx0 => '《隐私协议》';
+	String get k_11x8pvm => '并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！';
+	String get k_17nw8gq => '同意并继续';
+	String get k_1nynslj => '不同意并退出';
 	String get k_0jsvmjm => '请输入手机号';
 	String get k_1lg8qh2 => '手机号格式错误';
 	String get k_03jia4z => '无网络连接';
 	String get k_007jqt2 => '验证码发送成功';
-	String get k_0m9ineu => '需要同意隐私与用户协议';
 	String get k_1a55aib => '验证码异常';
 	String k_1mw45lz({required Object errorReason}) => '登录失败$errorReason';
 	String get k_16r3sej => '国家/地区';
@@ -404,10 +411,6 @@ class _StringsEn {
 	String get k_03aj66h => '验证码';
 	String get k_1m9jtmw => '请输入验证码';
 	String get k_0y1wbxk => '获取验证码';
-	String get k_0o6nt4d => '我已阅读并同意';
-	String get k_0orhtx0 => '《隐私协议》';
-	String get k_00041m1 => '和';
-	String get k_0opnzp6 => '《用户协议》';
 	String get k_002ri2g => '登陆';
 	String get k_161ecly => '当前无网络';
 	String get k_11uz2i8 => '重试网络';
@@ -421,9 +424,14 @@ class _StringsEn {
 	String get k_121ruco => '拒绝任何人加好友';
 	String get k_003kfai => '未知';
 	String get k_1kvyskd => '无网络连接，无法修改';
+	String get k_1j91bvz => 'TUIKIT 为你选择一个头像?';
 	String get k_1wmkneq => '加我为好友时需要验证';
 	String get k_1eitsd0 => '关于腾讯云·通信';
 	String get k_1919d6m => '隐私条例';
+	String get k_0wqhgor => '个人信息收集清单';
+	String get k_12rfxml => '第三方信息共享清单';
+	String get k_131g7q4 => '注销账户';
+	String get k_03fel2u => '版本号';
 	String get k_16kts8h => '退出登录';
 	String get k_129scag => '好友删除成功';
 	String get k_094phq4 => '好友添加失败';
@@ -439,6 +447,23 @@ class _StringsEn {
 	String get k_11z7ml4 => '详细资料';
 	String get k_0003y9x => '无';
 	String get k_1679vrd => '加为好友';
+	String get k_002r305 => '发送';
+	String get k_1ajt0b1 => '获取当前位置失败';
+	String get k_0lhm9xq => '发起检索成功';
+	String get k_0fdeled => '发起检索失败';
+	String get k_1yh0a50 => 'mapDidLoad-地图加载完成';
+	String get k_13yu58r => '未检测到高德地图~';
+	String get k_0491q5x => '未检测到腾讯地图~';
+	String get k_1uszkgs => '未检测到百度地图~';
+	String get k_0o0ej24 => '打开失败~';
+	String get k_03fw6h1 => '深圳市';
+	String get k_0f7mdn7 => '检索失败';
+	String get k_158cssa => '腾讯地图';
+	String get k_157htdw => '高德地图';
+	String get k_157im4z => '百度地图';
+	String get k_157m20e => '苹果地图';
+	String get k_10o8gk2 => '搜索地点';
+	String get k_10o86v7 => '未知地点';
 	String get k_1t2zg6h => '图片验证码校验失败';
 	String get k_03ibg5h => '星期一';
 	String get k_03i7hu1 => '星期二';
@@ -477,8 +502,8 @@ class _StringsZh implements _StringsEn {
 	@override String get k_03f15qk => '黑名单';
 	@override String get k_0s3p3ji => '暂无黑名单';
 	@override String get k_0uc5cnb => '我们还在内测中，暂不支持创建频道。';
-	@override String get k_003nevv => '取消';
 	@override String get k_003rzap => '确定';
+	@override String get k_003nevv => '取消';
 	@override String get k_0s5ey0o => '实时音视频 TRTC';
 	@override String get k_03gpl3d => '大家好';
 	@override String get k_0352fjr => '无网络连接，进入频道失败';
@@ -487,6 +512,7 @@ class _StringsZh implements _StringsEn {
 	@override String get k_15wcgna => '结束成功';
 	@override String get k_15wo7xu => '置顶成功';
 	@override String k_02slfpm({required Object errorMessage}) => '发生错误 $errorMessage';
+	@override String get k_003ltgm => '位置';
 	@override String get k_1kvftgu => '我是自定义文本消息';
 	@override String get k_0cvagfm => '我是自定义视频消息';
 	@override String get k_1muiqp7 => '我是自定义群提示消息';
@@ -531,10 +557,9 @@ class _StringsZh implements _StringsEn {
 	@override String get k_18qjstb => '转让群主';
 	@override String get k_14j5iul => '删除并退出';
 	@override String get k_0jtutmw => '退出后不会接收到此群聊消息';
-	@override String get k_14n0fo2 => '暂无请求';
+	@override String get k_04dqh36 => '暂无新联系人';
 	@override String get k_08k00l9 => '正在加载...';
 	@override String get k_197r4f7 => '即时通信服务连接成功';
-	@override String get k_0gfsln9 => '信息已变更';
 	@override String get k_1s5xnir => '即时通信 SDK初始化失败';
 	@override String k_0owk5ss({required Object failedReason}) => '登录失败 $failedReason';
 	@override String get k_15bxnkw => '网络连接丢失';
@@ -551,11 +576,18 @@ class _StringsZh implements _StringsEn {
 	@override String get k_14yh35u => '登录·即时通信';
 	@override String get k_0st7i3e => '体验群组聊天，音视频对话等IM功能';
 	@override String get k_0cr1atw => '中国大陆';
+	@override String get k_0mnxjg7 => '欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。';
+	@override String get k_1545beg => '请您点击';
+	@override String get k_0opnzp6 => '《用户协议》';
+	@override String get k_00041m1 => '和';
+	@override String get k_0orhtx0 => '《隐私协议》';
+	@override String get k_11x8pvm => '并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！';
+	@override String get k_17nw8gq => '同意并继续';
+	@override String get k_1nynslj => '不同意并退出';
 	@override String get k_0jsvmjm => '请输入手机号';
 	@override String get k_1lg8qh2 => '手机号格式错误';
 	@override String get k_03jia4z => '无网络连接';
 	@override String get k_007jqt2 => '验证码发送成功';
-	@override String get k_0m9ineu => '需要同意隐私与用户协议';
 	@override String get k_1a55aib => '验证码异常';
 	@override String k_1mw45lz({required Object errorReason}) => '登录失败$errorReason';
 	@override String get k_16r3sej => '国家/地区';
@@ -565,10 +597,6 @@ class _StringsZh implements _StringsEn {
 	@override String get k_03aj66h => '验证码';
 	@override String get k_1m9jtmw => '请输入验证码';
 	@override String get k_0y1wbxk => '获取验证码';
-	@override String get k_0o6nt4d => '我已阅读并同意';
-	@override String get k_0orhtx0 => '《隐私协议》';
-	@override String get k_00041m1 => '和';
-	@override String get k_0opnzp6 => '《用户协议》';
 	@override String get k_002ri2g => '登陆';
 	@override String get k_161ecly => '当前无网络';
 	@override String get k_11uz2i8 => '重试网络';
@@ -582,9 +610,14 @@ class _StringsZh implements _StringsEn {
 	@override String get k_121ruco => '拒绝任何人加好友';
 	@override String get k_003kfai => '未知';
 	@override String get k_1kvyskd => '无网络连接，无法修改';
+	@override String get k_1j91bvz => 'TUIKIT 为你选择一个头像?';
 	@override String get k_1wmkneq => '加我为好友时需要验证';
 	@override String get k_1eitsd0 => '关于腾讯云·通信';
 	@override String get k_1919d6m => '隐私条例';
+	@override String get k_0wqhgor => '个人信息收集清单';
+	@override String get k_12rfxml => '第三方信息共享清单';
+	@override String get k_131g7q4 => '注销账户';
+	@override String get k_03fel2u => '版本号';
 	@override String get k_16kts8h => '退出登录';
 	@override String get k_129scag => '好友删除成功';
 	@override String get k_094phq4 => '好友添加失败';
@@ -600,6 +633,23 @@ class _StringsZh implements _StringsEn {
 	@override String get k_11z7ml4 => '详细资料';
 	@override String get k_0003y9x => '无';
 	@override String get k_1679vrd => '加为好友';
+	@override String get k_002r305 => '发送';
+	@override String get k_1ajt0b1 => '获取当前位置失败';
+	@override String get k_0lhm9xq => '发起检索成功';
+	@override String get k_0fdeled => '发起检索失败';
+	@override String get k_1yh0a50 => 'mapDidLoad-地图加载完成';
+	@override String get k_13yu58r => '未检测到高德地图~';
+	@override String get k_0491q5x => '未检测到腾讯地图~';
+	@override String get k_1uszkgs => '未检测到百度地图~';
+	@override String get k_0o0ej24 => '打开失败~';
+	@override String get k_03fw6h1 => '深圳市';
+	@override String get k_0f7mdn7 => '检索失败';
+	@override String get k_158cssa => '腾讯地图';
+	@override String get k_157htdw => '高德地图';
+	@override String get k_157im4z => '百度地图';
+	@override String get k_157m20e => '苹果地图';
+	@override String get k_10o8gk2 => '搜索地点';
+	@override String get k_10o86v7 => '未知地点';
 	@override String get k_1t2zg6h => '图片验证码校验失败';
 	@override String get k_03ibg5h => '星期一';
 	@override String get k_03i7hu1 => '星期二';
@@ -627,8 +677,8 @@ extension on _StringsEn {
 			'k_03f15qk': '黑名单',
 			'k_0s3p3ji': '暂无黑名单',
 			'k_0uc5cnb': '我们还在内测中，暂不支持创建频道。',
-			'k_003nevv': '取消',
 			'k_003rzap': '确定',
+			'k_003nevv': '取消',
 			'k_0s5ey0o': '实时音视频 TRTC',
 			'k_03gpl3d': '大家好',
 			'k_0352fjr': '无网络连接，进入频道失败',
@@ -637,6 +687,7 @@ extension on _StringsEn {
 			'k_15wcgna': '结束成功',
 			'k_15wo7xu': '置顶成功',
 			'k_02slfpm': ({required Object errorMessage}) => '发生错误 $errorMessage',
+			'k_003ltgm': '位置',
 			'k_1kvftgu': '我是自定义文本消息',
 			'k_0cvagfm': '我是自定义视频消息',
 			'k_1muiqp7': '我是自定义群提示消息',
@@ -681,10 +732,9 @@ extension on _StringsEn {
 			'k_18qjstb': '转让群主',
 			'k_14j5iul': '删除并退出',
 			'k_0jtutmw': '退出后不会接收到此群聊消息',
-			'k_14n0fo2': '暂无请求',
+			'k_04dqh36': '暂无新联系人',
 			'k_08k00l9': '正在加载...',
 			'k_197r4f7': '即时通信服务连接成功',
-			'k_0gfsln9': '信息已变更',
 			'k_1s5xnir': '即时通信 SDK初始化失败',
 			'k_0owk5ss': ({required Object failedReason}) => '登录失败 $failedReason',
 			'k_15bxnkw': '网络连接丢失',
@@ -701,11 +751,18 @@ extension on _StringsEn {
 			'k_14yh35u': '登录·即时通信',
 			'k_0st7i3e': '体验群组聊天，音视频对话等IM功能',
 			'k_0cr1atw': '中国大陆',
+			'k_0mnxjg7': '欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。',
+			'k_1545beg': '请您点击',
+			'k_0opnzp6': '《用户协议》',
+			'k_00041m1': '和',
+			'k_0orhtx0': '《隐私协议》',
+			'k_11x8pvm': '并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！',
+			'k_17nw8gq': '同意并继续',
+			'k_1nynslj': '不同意并退出',
 			'k_0jsvmjm': '请输入手机号',
 			'k_1lg8qh2': '手机号格式错误',
 			'k_03jia4z': '无网络连接',
 			'k_007jqt2': '验证码发送成功',
-			'k_0m9ineu': '需要同意隐私与用户协议',
 			'k_1a55aib': '验证码异常',
 			'k_1mw45lz': ({required Object errorReason}) => '登录失败$errorReason',
 			'k_16r3sej': '国家/地区',
@@ -715,10 +772,6 @@ extension on _StringsEn {
 			'k_03aj66h': '验证码',
 			'k_1m9jtmw': '请输入验证码',
 			'k_0y1wbxk': '获取验证码',
-			'k_0o6nt4d': '我已阅读并同意',
-			'k_0orhtx0': '《隐私协议》',
-			'k_00041m1': '和',
-			'k_0opnzp6': '《用户协议》',
 			'k_002ri2g': '登陆',
 			'k_161ecly': '当前无网络',
 			'k_11uz2i8': '重试网络',
@@ -732,9 +785,14 @@ extension on _StringsEn {
 			'k_121ruco': '拒绝任何人加好友',
 			'k_003kfai': '未知',
 			'k_1kvyskd': '无网络连接，无法修改',
+			'k_1j91bvz': 'TUIKIT 为你选择一个头像?',
 			'k_1wmkneq': '加我为好友时需要验证',
 			'k_1eitsd0': '关于腾讯云·通信',
 			'k_1919d6m': '隐私条例',
+			'k_0wqhgor': '个人信息收集清单',
+			'k_12rfxml': '第三方信息共享清单',
+			'k_131g7q4': '注销账户',
+			'k_03fel2u': '版本号',
 			'k_16kts8h': '退出登录',
 			'k_129scag': '好友删除成功',
 			'k_094phq4': '好友添加失败',
@@ -750,6 +808,23 @@ extension on _StringsEn {
 			'k_11z7ml4': '详细资料',
 			'k_0003y9x': '无',
 			'k_1679vrd': '加为好友',
+			'k_002r305': '发送',
+			'k_1ajt0b1': '获取当前位置失败',
+			'k_0lhm9xq': '发起检索成功',
+			'k_0fdeled': '发起检索失败',
+			'k_1yh0a50': 'mapDidLoad-地图加载完成',
+			'k_13yu58r': '未检测到高德地图~',
+			'k_0491q5x': '未检测到腾讯地图~',
+			'k_1uszkgs': '未检测到百度地图~',
+			'k_0o0ej24': '打开失败~',
+			'k_03fw6h1': '深圳市',
+			'k_0f7mdn7': '检索失败',
+			'k_158cssa': '腾讯地图',
+			'k_157htdw': '高德地图',
+			'k_157im4z': '百度地图',
+			'k_157m20e': '苹果地图',
+			'k_10o8gk2': '搜索地点',
+			'k_10o86v7': '未知地点',
 			'k_1t2zg6h': '图片验证码校验失败',
 			'k_03ibg5h': '星期一',
 			'k_03i7hu1': '星期二',
@@ -776,8 +851,8 @@ extension on _StringsZh {
 			'k_03f15qk': '黑名单',
 			'k_0s3p3ji': '暂无黑名单',
 			'k_0uc5cnb': '我们还在内测中，暂不支持创建频道。',
-			'k_003nevv': '取消',
 			'k_003rzap': '确定',
+			'k_003nevv': '取消',
 			'k_0s5ey0o': '实时音视频 TRTC',
 			'k_03gpl3d': '大家好',
 			'k_0352fjr': '无网络连接，进入频道失败',
@@ -786,6 +861,7 @@ extension on _StringsZh {
 			'k_15wcgna': '结束成功',
 			'k_15wo7xu': '置顶成功',
 			'k_02slfpm': ({required Object errorMessage}) => '发生错误 $errorMessage',
+			'k_003ltgm': '位置',
 			'k_1kvftgu': '我是自定义文本消息',
 			'k_0cvagfm': '我是自定义视频消息',
 			'k_1muiqp7': '我是自定义群提示消息',
@@ -830,10 +906,9 @@ extension on _StringsZh {
 			'k_18qjstb': '转让群主',
 			'k_14j5iul': '删除并退出',
 			'k_0jtutmw': '退出后不会接收到此群聊消息',
-			'k_14n0fo2': '暂无请求',
+			'k_04dqh36': '暂无新联系人',
 			'k_08k00l9': '正在加载...',
 			'k_197r4f7': '即时通信服务连接成功',
-			'k_0gfsln9': '信息已变更',
 			'k_1s5xnir': '即时通信 SDK初始化失败',
 			'k_0owk5ss': ({required Object failedReason}) => '登录失败 $failedReason',
 			'k_15bxnkw': '网络连接丢失',
@@ -850,11 +925,18 @@ extension on _StringsZh {
 			'k_14yh35u': '登录·即时通信',
 			'k_0st7i3e': '体验群组聊天，音视频对话等IM功能',
 			'k_0cr1atw': '中国大陆',
+			'k_0mnxjg7': '欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。',
+			'k_1545beg': '请您点击',
+			'k_0opnzp6': '《用户协议》',
+			'k_00041m1': '和',
+			'k_0orhtx0': '《隐私协议》',
+			'k_11x8pvm': '并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！',
+			'k_17nw8gq': '同意并继续',
+			'k_1nynslj': '不同意并退出',
 			'k_0jsvmjm': '请输入手机号',
 			'k_1lg8qh2': '手机号格式错误',
 			'k_03jia4z': '无网络连接',
 			'k_007jqt2': '验证码发送成功',
-			'k_0m9ineu': '需要同意隐私与用户协议',
 			'k_1a55aib': '验证码异常',
 			'k_1mw45lz': ({required Object errorReason}) => '登录失败$errorReason',
 			'k_16r3sej': '国家/地区',
@@ -864,10 +946,6 @@ extension on _StringsZh {
 			'k_03aj66h': '验证码',
 			'k_1m9jtmw': '请输入验证码',
 			'k_0y1wbxk': '获取验证码',
-			'k_0o6nt4d': '我已阅读并同意',
-			'k_0orhtx0': '《隐私协议》',
-			'k_00041m1': '和',
-			'k_0opnzp6': '《用户协议》',
 			'k_002ri2g': '登陆',
 			'k_161ecly': '当前无网络',
 			'k_11uz2i8': '重试网络',
@@ -881,9 +959,14 @@ extension on _StringsZh {
 			'k_121ruco': '拒绝任何人加好友',
 			'k_003kfai': '未知',
 			'k_1kvyskd': '无网络连接，无法修改',
+			'k_1j91bvz': 'TUIKIT 为你选择一个头像?',
 			'k_1wmkneq': '加我为好友时需要验证',
 			'k_1eitsd0': '关于腾讯云·通信',
 			'k_1919d6m': '隐私条例',
+			'k_0wqhgor': '个人信息收集清单',
+			'k_12rfxml': '第三方信息共享清单',
+			'k_131g7q4': '注销账户',
+			'k_03fel2u': '版本号',
 			'k_16kts8h': '退出登录',
 			'k_129scag': '好友删除成功',
 			'k_094phq4': '好友添加失败',
@@ -899,6 +982,23 @@ extension on _StringsZh {
 			'k_11z7ml4': '详细资料',
 			'k_0003y9x': '无',
 			'k_1679vrd': '加为好友',
+			'k_002r305': '发送',
+			'k_1ajt0b1': '获取当前位置失败',
+			'k_0lhm9xq': '发起检索成功',
+			'k_0fdeled': '发起检索失败',
+			'k_1yh0a50': 'mapDidLoad-地图加载完成',
+			'k_13yu58r': '未检测到高德地图~',
+			'k_0491q5x': '未检测到腾讯地图~',
+			'k_1uszkgs': '未检测到百度地图~',
+			'k_0o0ej24': '打开失败~',
+			'k_03fw6h1': '深圳市',
+			'k_0f7mdn7': '检索失败',
+			'k_158cssa': '腾讯地图',
+			'k_157htdw': '高德地图',
+			'k_157im4z': '百度地图',
+			'k_157m20e': '苹果地图',
+			'k_10o8gk2': '搜索地点',
+			'k_10o86v7': '未知地点',
 			'k_1t2zg6h': '图片验证码校验失败',
 			'k_03ibg5h': '星期一',
 			'k_03i7hu1': '星期二',

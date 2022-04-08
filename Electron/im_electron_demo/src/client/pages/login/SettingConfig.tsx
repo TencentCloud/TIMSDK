@@ -68,7 +68,7 @@ export const SettingConfig = () => {
         // @ts-ignore
         if(configSetting) {
             setDefaultConfig(configSetting);
-            dispatch(updateSettingConfig(configSetting));
+            // dispatch(updateSettingConfig(configSetting));
         } else {
             // setShowModal(true);
         }

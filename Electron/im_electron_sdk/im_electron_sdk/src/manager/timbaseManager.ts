@@ -33,7 +33,24 @@ import {
 import { TIMInternalOperation, TIMLoginStatus } from "../enum";
 import os from "os";
 import fs from "fs";
-import log from "../utils/log";
+// import log from "../utils/log";
+const ffi = require("ffi-napi");
+const voidPtrType = function () {
+    return ffi.types.CString;
+};
+const charPtrType = function () {
+    return ffi.types.CString;
+};
+const int32Type = function () {
+    return ffi.types.int32;
+};
+const voidType = function () {
+    return ffi.types.void;
+};
+const log = {
+    info: function (...args: any) {},
+    error: function (...args: any) {},
+};
 class TimbaseManager {
     private _sdkconfig: sdkconfig;
     private _callback: Map<String, Function> = new Map();
@@ -53,6 +70,7 @@ class TimbaseManager {
 
      */
     TIMInit(initParams?: initParam): Promise<number> {
+        this.TIMUninit();
         let sdkconfig: string;
         const { config_path } = initParams || {};
         if (config_path) {
@@ -78,13 +96,16 @@ class TimbaseManager {
                     request_set_ui_platform_param: "electron",
                 },
             });
-            console.log(data);
+            console.log(data, this._sdkconfig.sdkappid);
             const res: number = this._sdkconfig.Imsdklib.TIMInit(
                 this._sdkconfig.sdkappid,
                 nodeStrigToCString(sdkconfig)
             );
             resolve(res);
         });
+    }
+    setSDKAPPID(sdkappid: number) {
+        this._sdkconfig.sdkappid = sdkappid;
     }
     /**
      * ### ImSDK卸载
@@ -132,39 +153,32 @@ class TimbaseManager {
             : nodeStrigToCString("");
 
         return new Promise((resolve, reject) => {
-            const now = `${Date.now()}${randomString()}`;
-            const cb: CommonCallbackFun = (
-                code,
-                desc,
-                json_param,
-                user_data
-            ) => {
+            const code: number = this._sdkconfig.Imsdklib.TIMLogin(
+                userID,
+                userSig,
+                this.jsFuncToFFIFun(resolve, reject),
+                userData
+            );
+            code !== 0 && reject({ code });
+        });
+    }
+    jsFuncToFFIFun(resolve: any, reject: any) {
+        return ffi.Callback(
+            voidType(),
+            [int32Type(), charPtrType(), charPtrType(), voidPtrType()],
+            function (
+                code: number,
+                desc: string,
+                json_param: string,
+                user_data?: any
+            ) {
                 if (code === 0) {
                     resolve({ code, desc, json_param, user_data });
                 } else {
                     reject({ code, desc, json_param, user_data });
                 }
-                this._cache.get("TIMLogin")?.delete(now);
-            };
-
-            const callback = jsFuncToFFIFun(cb);
-            let cacheMap = this._cache.get("TIMLogin");
-            if (cacheMap === undefined) {
-                cacheMap = new Map();
             }
-            cacheMap.set(now, {
-                cb: cb,
-                callback: callback,
-            });
-            this._cache.set("TIMLogin", cacheMap);
-            const code: number = this._sdkconfig.Imsdklib.TIMLogin(
-                userID,
-                userSig,
-                this._cache.get("TIMLogin")?.get(now)?.callback,
-                userData
-            );
-            code !== 0 && reject({ code });
-        });
+        );
     }
     /**
      * @brief  登出

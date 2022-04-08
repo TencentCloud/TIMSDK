@@ -15,14 +15,23 @@ import {
 import { app } from "electron";
 const path = require("path");
 const os = require("os");
-const ref = require("ref-napi");
 const ffi = require("ffi-napi");
 const fs = require("fs");
-const voidPtrType = ref.types.CString;
-const charPtrType = ref.types.CString;
-const int32Type = ref.types.int32;
-const voidType = ref.types.void;
-const intType = ref.types.int;
+const voidPtrType = function () {
+    return ffi.types.CString;
+};
+const charPtrType = function () {
+    return ffi.types.CString;
+};
+const int32Type = function () {
+    return ffi.types.int32;
+};
+const voidType = function () {
+    return ffi.types.void;
+};
+const intType = function () {
+    return ffi.types.int;
+};
 
 const ffipaths: any = {
     linux: app.isPackaged
@@ -89,23 +98,23 @@ function getFFIPath() {
     }
     return res;
 }
-function nodeStrigToCString(str: string): string {
+function nodeStrigToCString(str: string): any {
     const buffer = Buffer.from(`${str}\0`, "utf8");
-    return ref.readCString(buffer);
+    return buffer;
 }
 function escapeUnicode(str: string) {
-    var escRE = /[\u0000-\u001F\u2028\u2029]/g;
-    return str
-        .replace(escRE, function (ch) {
-            return "\\u" + ("0000" + ch.charCodeAt(0).toString(16)).slice(-4);
-        })
-        .replace(/\\u000a/g, "\n");
+    return str.replace(
+        /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]|[\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u000b\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f]/g,
+        function (a) {
+            return "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4);
+        }
+    );
 }
 
 function jsFuncToFFIFun(fun: CommonCallbackFun) {
     const callback = ffi.Callback(
-        voidType,
-        [int32Type, charPtrType, charPtrType, voidPtrType],
+        voidType(),
+        [int32Type(), charPtrType(), charPtrType(), voidPtrType()],
         function (
             code: number,
             desc: string,
@@ -119,8 +128,8 @@ function jsFuncToFFIFun(fun: CommonCallbackFun) {
 }
 function jsFuncToFFIFunForGroupRead(fun: GroupReadMembersCallback) {
     const callback = ffi.Callback(
-        voidType,
-        [charPtrType, int32Type, ref.types.bool, voidPtrType],
+        voidType(),
+        [charPtrType(), int32Type(), ffi.types.bool, voidPtrType()],
         function (
             json_group_member_array: string,
             next_seq: number,
@@ -134,8 +143,8 @@ function jsFuncToFFIFunForGroupRead(fun: GroupReadMembersCallback) {
 }
 function jsFuncToFFIConvEventCallback(fun: convEventCallback) {
     const callback = ffi.Callback(
-        voidType,
-        [intType, charPtrType, voidPtrType],
+        voidType(),
+        [intType(), charPtrType(), voidPtrType()],
         function (
             conv_event: number,
             json_conv_array: string,
@@ -151,8 +160,8 @@ function jsFunToFFITIMSetConvTotalUnreadMessageCountChangedCallback(
     fun: convTotalUnreadMessageCountChangedCallback
 ) {
     const callback = ffi.Callback(
-        voidType,
-        [intType, voidPtrType],
+        voidType(),
+        [intType(), voidPtrType()],
         function (total_unread_count: number, user_data?: any) {
             fun(total_unread_count, user_data);
         }
@@ -163,8 +172,8 @@ function jsFunToFFITIMSetNetworkStatusListenerCallback(
     fun: TIMSetNetworkStatusListenerCallback
 ) {
     const callback = ffi.Callback(
-        voidType,
-        [intType, int32Type, charPtrType, voidPtrType],
+        voidType(),
+        [intType(), int32Type(), charPtrType(), voidPtrType()],
         function (
             status: number,
             code: number,
@@ -181,8 +190,8 @@ function jsFunToFFITIMSetKickedOfflineCallback(
     fun: TIMSetKickedOfflineCallback
 ) {
     const callback = ffi.Callback(
-        voidType,
-        [voidPtrType],
+        voidType(),
+        [voidPtrType()],
         function (user_data?: any) {
             fun(user_data);
         }
@@ -193,8 +202,8 @@ function jsFunToFFITIMSetUserSigExpiredCallback(
     fun: TIMSetUserSigExpiredCallback
 ) {
     const callback = ffi.Callback(
-        ref.types.void,
-        [voidPtrType],
+        ffi.types.void,
+        [voidPtrType()],
         function (user_data?: any) {
             fun(user_data);
         }
@@ -203,8 +212,8 @@ function jsFunToFFITIMSetUserSigExpiredCallback(
 }
 function transformGroupTipFun(fun: GroupTipCallBackFun) {
     const callback = ffi.Callback(
-        ref.types.void,
-        [charPtrType, voidPtrType],
+        ffi.types.void,
+        [charPtrType(), voidPtrType()],
         function (json_group_tip_array: string, user_data?: any) {
             fun(json_group_tip_array, user_data);
         }
@@ -214,8 +223,8 @@ function transformGroupTipFun(fun: GroupTipCallBackFun) {
 
 function transformGroupAttributeFun(fun: GroupAttributeCallbackFun) {
     const callback = ffi.Callback(
-        ref.types.void,
-        [charPtrType, charPtrType, voidPtrType],
+        ffi.types.void,
+        [charPtrType(), charPtrType(), voidPtrType()],
         function (
             group_id: string,
             json_group_attibute_array: string,
@@ -228,8 +237,8 @@ function transformGroupAttributeFun(fun: GroupAttributeCallbackFun) {
 }
 function transferTIMLogCallbackFun(fun: TIMLogCallbackFun) {
     const callback = ffi.Callback(
-        voidType,
-        [intType, charPtrType, voidPtrType],
+        voidType(),
+        [intType(), charPtrType(), voidPtrType()],
         function (level: number, log: string, user_data?: any) {
             fun(level, log, user_data);
         }

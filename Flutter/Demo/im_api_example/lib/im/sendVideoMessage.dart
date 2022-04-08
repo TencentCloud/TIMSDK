@@ -225,7 +225,7 @@ class SendVideoMessageState extends State<SendVideoMessage> {
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text(imt_para("已选：{{priority}}", "已选：${priority}")(priority: priority)),
+                  child: Text(imt_para("已选：{{priority}}", "已选：$priority")(priority: priority)),
                 )
               ],
             ),

@@ -44,7 +44,7 @@ class GetC2CReceiveMessageOptState extends State<GetC2CReceiveMessageOpt> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(imt_para("要查询的用户: {{userStr}}", "要查询的用户: ${userStr}")(userStr: userStr)),
+                  child: Text(imt_para("要查询的用户: {{userStr}}", "要查询的用户: $userStr")(userStr: userStr)),
                 ),
               )
             ],

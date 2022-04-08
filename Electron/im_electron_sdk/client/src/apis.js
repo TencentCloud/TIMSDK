@@ -269,12 +269,14 @@ const APIS = [
             {
                 name:"TIMConvGetConvList",
                 action:(callback)=>{
-                    ConversationManager.TIMConvGetConvList().then(data=>{
-                        console.log(data)
-                        callback(JSON.stringify(data))
-                    }).catch(err=>{
-                        callback(err.toString())
-                    })
+                    for(let i = 0;i<100;i++){
+                        ConversationManager.TIMConvGetConvList().then(data=>{
+                            console.log(data)
+                            callback(JSON.stringify(data))
+                        }).catch(err=>{
+                            callback(err.toString())
+                        })
+                    }
                     // for(let i = 0;i<30;i++){
                     //     TimGroupManager.TIMGroupGetJoinedGroupList().then(data => {
                     //         console.log('hehehe')
@@ -369,9 +371,9 @@ const APIS = [
         manager: "groupManager",
         method: [
             {
-                name: "TIMMsgSendGroupMessageReceipts",
+                name: "TIMMsgSendMessageReadReceipts",
                 action: (callback) => {
-                    TimGroupManager.TIMMsgSendGroupMessageReceipts().then(res => {
+                    TimGroupManager.TIMMsgSendMessageReadReceipts().then(res => {
                         callback(JSON.stringify(res))
                     }).catch(err => {
                         callback(err.toString())
@@ -379,9 +381,9 @@ const APIS = [
                 }
             },
             {
-                name: "TIMMsgGetGroupMessageReceipts",
+                name: "TIMMsgGetMessageReadReceipts",
                 action: (callback) => {
-                    TimGroupManager.TIMMsgGetGroupMessageReceipts().then(res => {
+                    TimGroupManager.TIMMsgGetMessageReadReceipts().then(res => {
                         
                         callback(JSON.stringify(res))
                     }).catch(err => {
@@ -390,9 +392,9 @@ const APIS = [
                 }
             },
             {
-                name: "TIMMsgGetGroupMessageReadMembers",
+                name: "TIMMsgGetGroupMessageReadMemberList",
                 action: (callback) => {
-                    TimGroupManager.TIMMsgGetGroupMessageReadMembers().then(res => {
+                    TimGroupManager.TIMMsgGetGroupMessageReadMemberList().then(res => {
                         
                         callback(JSON.stringify(res))
                     }).catch(err => {
@@ -400,17 +402,7 @@ const APIS = [
                     })
                 }
             },
-            {
-                name: "TIMSetMsgGroupMessageReceiptCallback",
-                action: (callback) => {
-                    TimGroupManager.TIMSetMsgGroupMessageReceiptCallback().then(res => {
-                        
-                        callback(JSON.stringify(res))
-                    }).catch(err => {
-                        callback(err.toString())
-                    })
-                }
-            },
+           
             {
                 name: "TIMGroupCreate",
                 action: (callback) => {

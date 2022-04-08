@@ -4,11 +4,11 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
-    "im_electron_sdk": "^1.2.46",
+    "im_electron_sdk": "^1.4.18",
     "JSON": "^1.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "^4.0.3"
+    "react-scripts": "^5.0.0"
   },
   "devDependencies": {
     "react-app-rewired": "^2.1.8"

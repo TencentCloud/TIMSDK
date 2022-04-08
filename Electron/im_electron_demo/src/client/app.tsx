@@ -41,7 +41,9 @@ export const App = () => {
     }, []);
     
     useEffect(() => {
+        
         if(sdkappId !== '' || shouldCallExperimentalAPI) {
+            console.log("重新初始化SDK",sdkappId,shouldCallExperimentalAPI)
             initSdk(directToMsgPage, history, true);
         }
     }, [sdkappId, shouldCallExperimentalAPI]);

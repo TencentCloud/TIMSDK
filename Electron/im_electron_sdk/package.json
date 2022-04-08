@@ -87,9 +87,6 @@
     "prettier": "^2.3.2"
   },
   "dependencies": {
-    "@electron/remote": "^2.0.7",
-    "ffi-napi": "^4.0.3",
-    "im_electron_sdk": "^1.2.46",
-    "ref-napi": "^3.0.3"
+    "im_electron_sdk": "^1.4.18"
   }
 }

@@ -40,10 +40,15 @@ import {
     randomString,
 } from "../utils/utils";
 const ffi = require("ffi-napi");
-const ref = require("ref-napi");
-const voidPtrType = ref.types.CString;
-const charPtrType = ref.types.CString;
-const voidType = ref.types.void;
+const voidPtrType = function () {
+    return ffi.types.CString;
+};
+const charPtrType = function () {
+    return ffi.types.CString;
+};
+const voidType = function () {
+    return ffi.types.void;
+};
 
 class FriendshipManager {
     private _sdkconfig: sdkconfig;
@@ -60,7 +65,9 @@ class FriendshipManager {
             user_data: params.user_data || "",
         };
     }
-
+    setSDKAPPID(sdkappid: number) {
+        this._sdkconfig.sdkappid = sdkappid;
+    }
     getErrorResponseByCode(code: number) {
         return this.getErrorResponse({ code });
     }
@@ -999,8 +1006,8 @@ class FriendshipManager {
         const c_user_data = this.stringFormator(user_data);
         this._callback.set("TIMSetOnAddFriendCallback", callback);
         const c_callback = ffi.Callback(
-            voidType,
-            [charPtrType, voidPtrType],
+            voidType(),
+            [charPtrType(), voidPtrType()],
             this.onAddFriendCallback.bind(this)
         );
         this._ffiCallback.set("TIMSetOnAddFriendCallback", c_callback);
@@ -1024,8 +1031,8 @@ class FriendshipManager {
         const c_user_data = this.stringFormator(user_data);
         this._callback.set("TIMSetOnDeleteFriendCallback", callback);
         const c_callback = ffi.Callback(
-            voidType,
-            [charPtrType, voidPtrType],
+            voidType(),
+            [charPtrType(), voidPtrType()],
             this.onDeleteFriendCallback.bind(this)
         );
         this._ffiCallback.set("TIMSetOnDeleteFriendCallback", c_callback);
@@ -1050,8 +1057,8 @@ class FriendshipManager {
 
         this._callback.set("TIMSetUpdateFriendProfileCallback", callback);
         const c_callback = ffi.Callback(
-            voidType,
-            [charPtrType, voidPtrType],
+            voidType(),
+            [charPtrType(), voidPtrType()],
             this.updateFriendProfileCallback.bind(this)
         );
         this._ffiCallback.set("TIMSetUpdateFriendProfileCallback", c_callback);
@@ -1078,8 +1085,8 @@ class FriendshipManager {
 
         this._callback.set("TIMSetFriendAddRequestCallback", callback);
         const c_callback = ffi.Callback(
-            voidType,
-            [charPtrType, voidPtrType],
+            voidType(),
+            [charPtrType(), voidPtrType()],
             this.friendAddRequestCallback.bind(this)
         );
         this._ffiCallback.set("TIMSetFriendAddRequestCallback", c_callback);
@@ -1110,8 +1117,8 @@ class FriendshipManager {
             callback
         );
         const c_callback = ffi.Callback(
-            voidType,
-            [charPtrType, voidPtrType],
+            voidType(),
+            [charPtrType(), voidPtrType()],
             this.friendApplicationListDeletedCallback.bind(this)
         );
         this._ffiCallback.set(
@@ -1141,8 +1148,8 @@ class FriendshipManager {
 
         this._callback.set("TIMSetFriendApplicationListReadCallback", callback);
         const c_callback = ffi.Callback(
-            voidType,
-            [charPtrType, voidPtrType],
+            voidType(),
+            [charPtrType(), voidPtrType()],
             this.friendApplicationListReadCallback.bind(this)
         );
         this._ffiCallback.set(
@@ -1169,8 +1176,8 @@ class FriendshipManager {
 
         this._callback.set("TIMSetFriendBlackListAddedCallback", callback);
         const c_callback = ffi.Callback(
-            voidType,
-            [charPtrType, voidPtrType],
+            voidType(),
+            [charPtrType(), voidPtrType()],
             this.friendBlackListAddedCallback.bind(this)
         );
         this._ffiCallback.set("TIMSetFriendBlackListAddedCallback", c_callback);
@@ -1194,8 +1201,8 @@ class FriendshipManager {
         const c_user_data = this.stringFormator(user_data);
         this._callback.set("TIMSetFriendBlackListDeletedCallback", callback);
         const c_callback = ffi.Callback(
-            voidType,
-            [charPtrType, voidPtrType],
+            voidType(),
+            [charPtrType(), voidPtrType()],
             this.friendBlackListDeletedCallback.bind(this)
         );
         this._ffiCallback.set(

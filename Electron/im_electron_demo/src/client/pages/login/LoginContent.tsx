@@ -40,7 +40,7 @@ export const LoginContent = (): JSX.Element => {
     const isDisablelogin = (activedTab === 'passwordLogin' && userID && usersig) || (activedTab === 'verifyCodeLogin' && phone && captceh) || (activedTab === 'verifyCodeLogin' && smsLoginUserId && smsLoginToken);
     const [sessionId, setsessionId] = useState('')
     const [count, setcount] = useState(60)
-
+    const [logining,setLogining] = useState(false);
     useEffect(() => {
         setUserID(userId);
         setUserSig(userSig);
@@ -70,6 +70,7 @@ export const LoginContent = (): JSX.Element => {
         }
     }
     const smsFristLogin = async () => {
+        setLogining(true)
         const response: any = await loginSms({
             sessionId,
             phone: `+86${phone}`,
@@ -83,6 +84,8 @@ export const LoginContent = (): JSX.Element => {
         if (errorCode === 0) {
             const { userId, sdkAppId, sdkUserSig, token, phone:tel } = data;
 
+            await ipcRenderer.invoke("re-create-main-instance", sdkAppId)
+
             dispatch(updateSettingConfig(
                 {
                     sdkappId: sdkAppId,
@@ -90,18 +93,21 @@ export const LoginContent = (): JSX.Element => {
                     userSig: sdkUserSig
                 }
             ))
-            // 主进程重新初始化IM
-            ipcRenderer.invoke("re-create-main-instance", sdkAppId).then(() => {
-                // 登录到im
-                smsLoginIM(userId, sdkUserSig, sdkAppId, token,tel)
-            })
+            await sleep(1000)
+
+            smsLoginIM(userId, sdkUserSig, sdkAppId, token,tel)
+
+            
         } else {
             message.error({
                 content: `发送错误:${errorMessage}`
             })
         }
+        setLogining(false)
     }
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     const smsReLogin = async () => {
+        setLogining(true)
         const response: any = await reloginSms({
             userId: smsLoginUserId,
             token: smsLoginToken,
@@ -110,24 +116,26 @@ export const LoginContent = (): JSX.Element => {
         const { errorCode, errorMessage, data } = response.data;
         if (errorCode === 0) {
             const { userId, sdkAppId, sdkUserSig, token, phone:tel } = data;
-            dispatch(updateSettingConfig(
-                {
-                    sdkappId: sdkAppId,
-                    userId,
-                    userSig: sdkUserSig
-                }
-            ))
-            // 主进程重新初始化IM
-            ipcRenderer.invoke("re-create-main-instance", sdkAppId).then(() => {
-                // 登录到im
+            
+             ipcRenderer.invoke("re-create-main-instance", sdkAppId).then(async ()=>{
+                dispatch(updateSettingConfig(
+                    {
+                        sdkappId: sdkAppId,
+                        userId,
+                        userSig: sdkUserSig
+                    }
+                ))
+                await sleep(1000)
                 smsLoginIM(userId, sdkUserSig, sdkAppId, token,tel)
-            })
+             })
+            
+            
         } else {
             message.error({
                 content: `发送错误:${errorMessage}`
             })
         }
-
+        setLogining(false)
     }
     const smsLoginIM = async (userId, sdkUserSig, sdkAppId, token,tel) => {
         const params: loginParam = {
@@ -169,10 +177,21 @@ export const LoginContent = (): JSX.Element => {
         window.aegis.report("tim_login_sms")
     }
     const handleLoginClick = async () => {
+        setLogining(true)
         const params: loginParam = {
             userID: userID,
             userSig: usersig
         }
+
+        await ipcRenderer.invoke("re-create-main-instance", sdkappId);
+         dispatch(updateSettingConfig(
+            {
+                sdkappId: sdkappId,
+                userId,
+                userSig: usersig
+            }
+        ))
+        await sleep(1000)
         const { data: { code, data, desc, json_param } } = await timRenderInstance.TIMLogin(params);
         console.log(code, data, desc, json_param);
         if (code === 0) {
@@ -199,8 +218,10 @@ export const LoginContent = (): JSX.Element => {
             dispatch(changeFunctionTab('message'));
             history.replace('/home/message');
         }
+        setLogining(false)
         // @ts-ignore
         window.aegis.report("tim_login_secret")
+        
     }
 
     const startCountDown = () => {
@@ -286,6 +307,7 @@ export const LoginContent = (): JSX.Element => {
         })
     }, []);
 
+    
     return (
         <div className="login--context">
             <h2 className="login--context__title">登录IM</h2>
@@ -316,7 +338,7 @@ export const LoginContent = (): JSX.Element => {
             {/* <Checkbox display="block" onChange={hanldeAutoLogin} value={isAutoLogin} className="login--auto">
                 下次自动登录
             </Checkbox> */}
-            <Button type="primary" className="login--button" onClick={handleLogin} disabled={!isDisablelogin}> 登 录</Button>
+            <Button type="primary" loading={logining} className="login--button" onClick={handleLogin} disabled={!isDisablelogin}> 登 录</Button>
         </div>
     )
 }

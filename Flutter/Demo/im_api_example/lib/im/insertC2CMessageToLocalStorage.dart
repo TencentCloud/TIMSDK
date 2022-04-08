@@ -52,7 +52,7 @@ class InsertC2CMessageToLocalStorageState
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(imt_para("要查询的用户: {{userStr}}", "要查询的用户: ${userStr}")(userStr: userStr)),
+                  child: Text(imt_para("要查询的用户: {{userStr}}", "要查询的用户: $userStr")(userStr: userStr)),
                 ),
               )
             ],
@@ -72,7 +72,7 @@ class InsertC2CMessageToLocalStorageState
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(imt_para("要查询的用户: {{senderStr}}", "要查询的用户: ${senderStr}")(senderStr: senderStr)),
+                  child: Text(imt_para("要查询的用户: {{senderStr}}", "要查询的用户: $senderStr")(senderStr: senderStr)),
                 ),
               )
             ],
