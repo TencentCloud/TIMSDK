@@ -52,10 +52,11 @@ dependencies:
     git:
       url: https://github.com/TencentCloud/TPNS-Flutter-Plugin
       ref: V1.1.5
-  # tim_ui_kit: ^0.0.5
   tim_ui_kit: ^0.0.6
-  tim_ui_kit_calling_plugin: ^0.0.2
-  tim_ui_kit_sticker_plugin: ^0.0.1
+  # tim_ui_kit:
+  #   path: package_src/tim_ui_kit
+  tim_ui_kit_calling_plugin: ^0.0.3
+  tim_ui_kit_sticker_plugin: ^0.0.2
   # tim_ui_kit_sticker_plugin:
   #   path: ../tim_ui_kit_sticker_plugin
   super_tooltip: ^1.0.1
