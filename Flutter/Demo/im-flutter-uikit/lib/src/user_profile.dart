@@ -5,6 +5,8 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitSearch/tim_uikit_search.dart';
 import 'package:tim_ui_kit/ui/widgets/toast.dart';
+import 'package:tim_ui_kit_calling_plugin/enum/tim_uikit_trtc_calling_scence.dart';
+import 'package:tim_ui_kit_calling_plugin/tim_ui_kit_calling_plugin.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/theme.dart';
 
@@ -21,6 +23,7 @@ class UserProfile extends StatefulWidget {
 class UserProfileState extends State<UserProfile> {
   final TIMUIKitProfileController _timuiKitProfileController =
       TIMUIKitProfileController();
+  final TUICalling _calling = TUICalling();
   String? newUserMARK;
 
   _itemClick(String id, BuildContext context, V2TimConversation conversation) {
@@ -49,6 +52,12 @@ class UserProfileState extends State<UserProfile> {
           Toast.showToast(ToastType.fail, imt("好友添加失败"), context);
         });
         break;
+      case "audioCall":
+        _calling.call(widget.userID, CallingScenes.Audio);
+        break;
+      case "videoCall":
+        _calling.call(widget.userID, CallingScenes.Video);
+        break;
     }
   }
 
@@ -59,14 +68,14 @@ class UserProfileState extends State<UserProfile> {
         "label": imt("发送消息"),
         "id": "sendMsg",
       },
-      // {
-      //   "label": imt("语音通话"),
-      //   "id": "audioCall",
-      // },
-      // {
-      //   "label": imt("视频通话"),
-      //   "id": "videoCall",
-      // },
+      {
+        "label": imt("语音通话"),
+        "id": "audioCall",
+      },
+      {
+        "label": imt("视频通话"),
+        "id": "videoCall",
+      },
       {
         "label": imt("清除好友"),
         "id": "deleteFriend",

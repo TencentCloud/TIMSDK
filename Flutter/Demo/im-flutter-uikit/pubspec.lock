@@ -1191,17 +1191,17 @@ packages:
   tim_ui_kit:
     dependency: "direct main"
     description:
-      path: "package_src/tim_ui_kit"
-      relative: true
-    source: path
-    version: "0.0.5"
+      name: tim_ui_kit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   tim_ui_kit_calling_plugin:
     dependency: "direct main"
     description:
       name: tim_ui_kit_calling_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3"
   tim_ui_kit_lbs_plugin:
     dependency: "direct main"
     description:
