@@ -37,7 +37,7 @@ class AgreeFriendApplicationState extends State<AgreeFriendApplication> {
 
   @override
   Widget build(BuildContext context) {
-    String friendType = (acceptType == FriendApplicationType.V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD ? imt("双向好友") : imt("单项好友"));
+    String friendType = (acceptType == FriendApplicationType.V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD ? imt("双向好友") : imt("单向好友"));
     return Container(
       child: Column(
         children: [
@@ -111,7 +111,7 @@ class AgreeFriendApplicationState extends State<AgreeFriendApplication> {
                 Container(
                   margin: EdgeInsets.only(left: 12),
                   child: Text(
-                      imt_para("已选：{{friendType}}", "已选：${friendType}")(friendType: friendType)),
+                      imt_para("已选：{{friendType}}", "已选：$friendType")(friendType: friendType)),
                 )
               ],
             ),

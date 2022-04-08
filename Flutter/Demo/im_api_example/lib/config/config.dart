@@ -679,7 +679,7 @@ class Config {
         {
           "apiName": "createGroup",
           "apiNameCN": imt("高级创建群组"),
-          "apiDesc": imt("高考创建群组"),
+          "apiDesc": imt("高级创建群组"),
           "detailRoute": CreateGroupV2(),
           "codeFile": "lib/im/createGroup_v2.dart",
         },

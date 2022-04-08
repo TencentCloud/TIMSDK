@@ -2,7 +2,6 @@ import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
-import 'package:tencent_im_sdk_plugin/enum/friend_type.dart';
 import 'package:tencent_im_sdk_plugin/enum/friend_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_check_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
@@ -107,7 +106,7 @@ class CheckFriendState extends State<CheckFriend> {
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text(imt_para("已选：{{checkType}}", "已选：${checkType}")(checkType: checkType)),
+                  child: Text(imt_para("已选：{{checkType}}", "已选：$checkType")(checkType: checkType)),
                 )
               ],
             ),

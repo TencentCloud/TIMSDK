@@ -313,7 +313,7 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                             ),
                             Container(
                               margin: EdgeInsets.only(left: 12),
-                              child: Text(imt_para("已选：{{groupType}}", "已选：${groupType}")(groupType: groupType)),
+                              child: Text(imt_para("已选：{{groupType}}", "已选：$groupType")(groupType: groupType)),
                             )
                           ],
                         ),
@@ -389,7 +389,7 @@ class SetGroupInfoState extends State<SetGroupInfo> {
                             ),
                             Container(
                               margin: EdgeInsets.only(left: 12),
-                              child: Text(imt_para("已选：{{addOpt}}", "已选：${addOpt}")(addOpt: addOpt)),
+                              child: Text(imt_para("已选：{{addOpt}}", "已选：$addOpt")(addOpt: addOpt)),
                             )
                           ],
                         ),

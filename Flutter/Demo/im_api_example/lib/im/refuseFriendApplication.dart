@@ -4,7 +4,6 @@ import 'package:im_api_example/im/friendApplicationSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
 import 'package:tencent_im_sdk_plugin/enum/friend_application_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/enum/friend_type.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_member_filter_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
 import 'package:im_api_example/i18n/i18n_utils.dart';
@@ -108,7 +107,7 @@ class RefuseFriendApplicationState extends State<RefuseFriendApplication> {
                 Container(
                   margin: EdgeInsets.only(left: 12),
                   child: Text(
-                      imt_para("已选：{{chooseType}}", "已选：${chooseType}")(chooseType: chooseType)),
+                      imt_para("已选：{{chooseType}}", "已选：$chooseType")(chooseType: chooseType)),
                 )
               ],
             ),

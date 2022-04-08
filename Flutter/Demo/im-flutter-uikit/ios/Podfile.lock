@@ -1,4 +1,11 @@
 PODS:
+  - BaiduMapKit/Base (6.5.1)
+  - BaiduMapKit/Map (6.5.1):
+    - BaiduMapKit/Base
+  - BaiduMapKit/Search (6.5.1):
+    - BaiduMapKit/Base
+  - BaiduMapKit/Utils (6.5.1):
+    - BaiduMapKit/Base
   - camera (0.0.1):
     - Flutter
   - connectivity_plus (0.0.1):
@@ -39,6 +46,21 @@ PODS:
     - DKImagePickerController/PhotoGallery
     - Flutter
   - Flutter (1.0.0)
+  - flutter_baidu_mapapi_base (3.1.0):
+    - BaiduMapKit/Utils (= 6.5.1)
+    - Flutter
+  - flutter_baidu_mapapi_map (3.1.0):
+    - BaiduMapKit/Map (= 6.5.1)
+    - Flutter
+    - flutter_baidu_mapapi_base
+  - flutter_baidu_mapapi_search (3.1.0):
+    - BaiduMapKit/Search (= 6.5.1)
+    - Flutter
+    - flutter_baidu_mapapi_base
+  - flutter_baidu_mapapi_utils (3.1.0):
+    - BaiduMapKit/Utils (= 6.5.1)
+    - Flutter
+    - flutter_baidu_mapapi_base
   - flutter_plugin_record (0.0.1):
     - Flutter
   - fluttertoast (0.0.2):
@@ -61,7 +83,11 @@ PODS:
   - libwebp/mux (1.2.1):
     - libwebp/demux
   - libwebp/webp (1.2.1)
+  - location (0.0.1):
+    - Flutter
   - open_file (0.0.1):
+    - Flutter
+  - package_info_plus (0.4.5):
     - Flutter
   - path_provider_ios (0.0.1):
     - Flutter
@@ -84,12 +110,16 @@ PODS:
     - Flutter
     - HydraAsync
     - TXIMSDK_Plus_iOS (= 6.1.2155.1)
+  - tencent_trtc_cloud (9.5.11234):
+    - Flutter
+    - TXLiteAVSDK_Live
   - Toast (4.0.0)
   - TPNS-iOS (1.3.4.1)
   - tpns_flutter_plugin (1.1.5):
     - Flutter
     - TPNS-iOS (= 1.3.4.1)
   - TXIMSDK_Plus_iOS (6.1.2155.1)
+  - TXLiteAVSDK_Live (9.5.11344)
   - url_launcher_ios (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
@@ -107,17 +137,24 @@ DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
+  - flutter_baidu_mapapi_base (from `.symlinks/plugins/flutter_baidu_mapapi_base/ios`)
+  - flutter_baidu_mapapi_map (from `.symlinks/plugins/flutter_baidu_mapapi_map/ios`)
+  - flutter_baidu_mapapi_search (from `.symlinks/plugins/flutter_baidu_mapapi_search/ios`)
+  - flutter_baidu_mapapi_utils (from `.symlinks/plugins/flutter_baidu_mapapi_utils/ios`)
   - flutter_plugin_record (from `.symlinks/plugins/flutter_plugin_record/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - location (from `.symlinks/plugins/location/ios`)
   - open_file (from `.symlinks/plugins/open_file/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - photo_manager (from `.symlinks/plugins/photo_manager/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - tencent_im_sdk_plugin (from `.symlinks/plugins/tencent_im_sdk_plugin/ios`)
+  - tencent_trtc_cloud (from `.symlinks/plugins/tencent_trtc_cloud/ios`)
   - tpns_flutter_plugin (from `.symlinks/plugins/tpns_flutter_plugin/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
@@ -127,6 +164,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - BaiduMapKit
     - DKImagePickerController
     - DKPhotoGallery
     - FMDB
@@ -138,6 +176,7 @@ SPEC REPOS:
     - Toast
     - TPNS-iOS
     - TXIMSDK_Plus_iOS
+    - TXLiteAVSDK_Live
 
 EXTERNAL SOURCES:
   camera:
@@ -148,6 +187,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
     :path: Flutter
+  flutter_baidu_mapapi_base:
+    :path: ".symlinks/plugins/flutter_baidu_mapapi_base/ios"
+  flutter_baidu_mapapi_map:
+    :path: ".symlinks/plugins/flutter_baidu_mapapi_map/ios"
+  flutter_baidu_mapapi_search:
+    :path: ".symlinks/plugins/flutter_baidu_mapapi_search/ios"
+  flutter_baidu_mapapi_utils:
+    :path: ".symlinks/plugins/flutter_baidu_mapapi_utils/ios"
   flutter_plugin_record:
     :path: ".symlinks/plugins/flutter_plugin_record/ios"
   fluttertoast:
@@ -156,8 +203,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_gallery_saver/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
+  location:
+    :path: ".symlinks/plugins/location/ios"
   open_file:
     :path: ".symlinks/plugins/open_file/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
   permission_handler:
@@ -170,6 +221,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite/ios"
   tencent_im_sdk_plugin:
     :path: ".symlinks/plugins/tencent_im_sdk_plugin/ios"
+  tencent_trtc_cloud:
+    :path: ".symlinks/plugins/tencent_trtc_cloud/ios"
   tpns_flutter_plugin:
     :path: ".symlinks/plugins/tpns_flutter_plugin/ios"
   url_launcher_ios:
@@ -184,12 +237,17 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
+  BaiduMapKit: f227cfb43581e91466fb4f1344f655eab5788777
   camera: 9993f92f2c793e87b65e35f3a23c70582afb05b1
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  flutter_baidu_mapapi_base: cb406be78c3a949fb58a45dc6627f139d580bd37
+  flutter_baidu_mapapi_map: 81c4e6e93dc668e311d9b521421deaf292390434
+  flutter_baidu_mapapi_search: 13a360334e91abea0bcf820546b2ef4548e42e08
+  flutter_baidu_mapapi_utils: f6a5d23da26b0e58f1ae9908da7ba87fd48384b1
   flutter_plugin_record: 562ded56f3a109d769e72c3ef52ef20d835493d4
   fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
@@ -197,7 +255,9 @@ SPEC CHECKSUMS:
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   image_picker: 541dcbb3b9cf32d87eacbd957845d8651d6c62c3
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
+  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
+  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   photo_manager: 4f6810b7dfc4feb03b461ac1a70dacf91fba7604
@@ -207,10 +267,12 @@ SPEC CHECKSUMS:
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
   tencent_im_sdk_plugin: c68993c62fd0198cd47132a055a06c9cef33b8e3
+  tencent_trtc_cloud: c503175ea9e5455667bca8b0f8391559efb5ab79
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   TPNS-iOS: 36c335eff80670de6ede780ab827f679d78f64ff
   tpns_flutter_plugin: 51978efb8da959e9c2389421b0a73b175fdc4e1e
   TXIMSDK_Plus_iOS: 2b0e9440eacdb49f385c90a23ad6558013f0cac6
+  TXLiteAVSDK_Live: f6cd001826ad1dce7c931a556b7c79f581c0425e
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
@@ -219,4 +281,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: bd217481dcc1c792f2a7f79a61b826d345e3262d
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.11.2

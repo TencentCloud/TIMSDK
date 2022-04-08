@@ -183,17 +183,13 @@ Promise.all(
     `The process of scanning and hashing is finished, do you want replace for no parameter string automatically?[Y/n]`,
     (bool) => {
       if (bool === "Y") {
-        //  replace();
-       console.log("第二次全局替换会出问题，请手动对已写的新增字符串进行包裹。格式如下：");
-      } else {
-        console.log("请手动替换，格式如下：");
-      }
-      console.log("无参数：imt(\"你的中文文字。字符串\")");
-      console.log("有参数：imt_para(\"已选：{{addType}}\",\'已选：${addType}\')(addType: addType)");
-      console.log("请把“strings_zh.i18n.json”的内容提交翻译，并把结果命名为“strings.i18n.json”放回")
-      console.log("执行”flutter pub run fast_i18n“来刷新框架翻译");
-      console.log("并把“i18n/for_dart.json”的内容贴进“i18n/i18n_utils.dart”内");
-      readline.close();
+                    // replace();
+                    console.log("第二次全局替换会出问题，请手动对已写的新增字符串进行包裹。");
+                  } else {
+                    console.log("请手动替换。");
+                  }
+                  console.log("请参考该文档内指引操作。https://to.woa.com/im")
+                  readline.close();
     }
   );
 });

@@ -701,24 +701,24 @@ packages:
   tencent_im_sdk_plugin:
     dependency: "direct main"
     description:
-      path: "/Users/xingchenhe/Documents/work/Flutter/TencentImSDKPlugin/tencent_im_sdk_plugin"
-      relative: false
-    source: path
-    version: "3.8.6"
+      name: tencent_im_sdk_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.9.2"
   tencent_im_sdk_plugin_platform_interface:
     dependency: transitive
     description:
-      path: "/Users/xingchenhe/Documents/work/Flutter/TencentImSDKPlugin/tencent_im_sdk_plugin_platform_interface"
-      relative: false
-    source: path
-    version: "0.1.5"
+      name: tencent_im_sdk_plugin_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.8"
   tencent_im_sdk_plugin_web:
     dependency: transitive
     description:
-      path: "/Users/xingchenhe/Documents/work/Flutter/TencentImSDKPlugin/tencent_im_sdk_plugin_web"
-      relative: false
-    source: path
-    version: "0.1.0"
+      name: tencent_im_sdk_plugin_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.3"
   term_glyph:
     dependency: transitive
     description:

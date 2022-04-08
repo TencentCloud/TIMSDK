@@ -4,6 +4,7 @@
     >
    <application
         android:label="云通信IM"
+        android:name=".application.TIMApplication"
         tools:replace="android:label"
         android:icon="@mipmap/logo"
         android:requestLegacyExternalStorage="true">
@@ -41,9 +42,14 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-    </application>
+       <meta-data
+           android:name="com.baidu.lbsapi.API_KEY"
+           android:value="jjINVRaE1vsCYXMu3L7u2tM8CHByKmQB" />
+   </application>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <!-- Optional, you'll have to check this permission by yourself. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- Permissions options for the `camera` group -->

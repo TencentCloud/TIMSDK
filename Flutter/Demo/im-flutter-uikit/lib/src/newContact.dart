@@ -32,7 +32,7 @@ class NewContact extends StatelessWidget {
       body: TIMUIKitNewContact(
         emptyBuilder: (c) {
           return Center(
-            child: Text(imt("暂无请求")),
+            child: Text(imt("暂无新联系人")),
           );
         },
       ),
