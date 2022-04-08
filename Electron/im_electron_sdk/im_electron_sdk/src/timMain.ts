@@ -7,7 +7,12 @@ import TIM from "./tim";
 import path from "path";
 import os from "os";
 import { escapeUnicode, mkdirsSync } from "./utils/utils";
-import log from "./utils/log";
+// import log from "./utils/log";
+const log = {
+    info: function (...args: any) {},
+    error: function (...args: any) {},
+};
+const recvNewMsgCallback = null;
 
 class Callback {
     private requestData;
@@ -236,11 +241,19 @@ class TimMain {
         ipcMain.removeHandler("_setCallInfo");
         ipcMain.removeHandler("_getCallInfo");
         ipcMain.removeHandler("_deleteCallInfo");
-
+        this._tim.getAdvanceMessageManager().TIMRemoveRecvNewMsgCallback();
         this._tim.getTimbaseManager().TIMUninit();
     }
     enable(webContents: any) {
         require("@electron/remote/main").enable(webContents);
+    }
+    setSDKAPPID(sdkappid: number) {
+        console.log(`更新sdkappid ${sdkappid}`);
+        this._tim.setSDKAPPID(sdkappid);
+        this._tim.getAdvanceMessageManager().setSDKAPPID(sdkappid);
+        this._tim.getConversationManager().setSDKAPPID(sdkappid);
+        this._tim.getFriendshipManager().setSDKAPPID(sdkappid);
+        this._tim.getTimbaseManager().setSDKAPPID(sdkappid);
     }
 }
 export default TimMain;

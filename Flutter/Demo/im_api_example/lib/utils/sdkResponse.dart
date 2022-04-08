@@ -8,7 +8,7 @@ class SDKResponse extends StatelessWidget {
   final String commonStrText = imt("code=0 业务成功 code!=0 业务失败，请在腾讯云即时通信文档文档查看对应的错误码信息。\n");
   final String commonStr =
       "\/\/****************************************************************************************\n\/\/";
-  String triggerText(type) => imt_para("{{type}}触发'\n", "${type}触发'\n")(type: type);
+  String triggerText(type) => imt_para("{{type}}触发\n", "$type触发\n")(type: type);
   SDKResponse(this.response);
 
   @override

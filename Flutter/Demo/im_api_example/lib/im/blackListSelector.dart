@@ -156,7 +156,7 @@ class BlackListSelectorState extends State<BlackListSelector> {
   List<String> selected = List.empty(growable: true);
   List<V2TimFriendInfo> friendList = List.empty();
 
-  Future<List<V2TimFriendInfo>?> getFrienList() async {
+  Future<List<V2TimFriendInfo>?> getFriendList() async {
     await EasyLoading.show(
       status: 'loading...',
       maskType: EasyLoadingMaskType.black,
@@ -174,12 +174,13 @@ class BlackListSelectorState extends State<BlackListSelector> {
       });
       return res.data;
     }
+    return null;
   }
 
   AlertDialog dialogShow(context) {
     String chooseType = (widget.switchSelectType ? imt(imt("单选")) : imt(imt("多选")));
     AlertDialog dialog = AlertDialog(
-      title: Text(imt_para("黑名单好友选择（{{chooseType}}）", "黑名单好友选择（${chooseType}）")(chooseType: chooseType)),
+      title: Text(imt_para("黑名单好友选择（{{chooseType}}）", "黑名单好友选择（$chooseType）")(chooseType: chooseType)),
       contentPadding: EdgeInsets.zero,
       content: FriendList(widget.switchSelectType, friendList, (data) {
         setState(() {
@@ -209,7 +210,7 @@ class BlackListSelectorState extends State<BlackListSelector> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        List<V2TimFriendInfo>? fl = await this.getFrienList();
+        List<V2TimFriendInfo>? fl = await this.getFriendList();
         if (fl != null) {
           if (fl.length > 0) {
             showDialog<void>(

@@ -880,10 +880,10 @@ static const char* kTIMMsgPlatform    = "message_platform";      //uint, [TIMPla
 static const char* kTIMMsgIsRead      = "message_is_read";       //bool,           读写(选填),       消息是否已读
 static const char* kTIMMsgIsOnlineMsg = "message_is_online_msg"; //bool,           读写(选填),       消息是否是在线消息，false表示普通消息,true表示阅后即焚消息，默认为false
 static const char* kTIMMsgIsPeerRead  = "message_is_peer_read";  //bool,           只读,            消息是否被会话对方已读
-static const char* kTIMMsgNeedReadReceipt    = "message_need_read_receipt";     //bool,           读写(选填),    是否需要已读回执（只对 Group 消息有效）
-static const char* kTIMMsgHasSentReceipt     = "message_has_sent_receipt";      //bool,           只读,         是否已经发送了已读回执（只对 Group 消息有效）
-static const char* kTIMMsgReceiptReadCount   = "message_receipt_read_count";    //int32,          只读,         注意：这个字段是内部字段，不推荐使用，推荐调用 TIMMsgGetGroupMessageReceipts 获取群消息已读回执
-static const char* kTIMMsgReceiptUnreadCount = "message_receipt_unread_count";  //int32,          只读,         注意：这个字段是内部字段，不推荐使用，推荐调用 TIMMsgGetGroupMessageReceipts 获取群消息已读回执
+static const char* kTIMMsgNeedReadReceipt    = "message_need_read_receipt";     //bool,           读写(选填),    是否需要已读回执（只有 Group 消息有效）
+static const char* kTIMMsgHasSentReceipt     = "message_has_sent_receipt";      //bool,           只读,         是否已经发送了已读回执（只有Group 消息有效）
+static const char* kTIMMsgGroupReceiptReadCount   = "message_group_receipt_read_count";    //int32,          只读,         注意：这个字段是内部字段，不推荐使用，推荐调用 TIMMsgGetMessageReadReceipts 获取群消息已读回执
+static const char* kTIMMsgGroupReceiptUnreadCount = "message_group_receipt_unread_count";  //int32,          只读,         注意：这个字段是内部字段，不推荐使用，推荐调用 TIMMsgGetMessageReadReceipts 获取群消息已读回执
 static const char* kTIMMsgStatus      = "message_status";        //uint [TIMMsgStatus](), 读写(选填), 消息当前状态
 static const char* kTIMMsgUniqueId    = "message_unique_id";     //uint64,         只读,       消息的唯一标识，推荐使用 kTIMMsgMsgId
 static const char* kTIMMsgMsgId       = "message_msg_id";        //string,         只读,       消息的唯一标识
@@ -903,22 +903,15 @@ static const char* kTIMMsgOfflinePushConfig     = "message_offlie_push_config"; 
 // EndStruct
 
 /**
-* @brief C2C 消息已读回执
+* @brief 消息已读回执
 */
 // Struct MessageReceipt JsonKey
-static const char* kTIMMsgReceiptConvId    = "msg_receipt_conv_id";     //string, 只读, 会话ID
-static const char* kTIMMsgReceiptConvType  = "msg_receipt_conv_type";   //uint [TIMConvType](), 只读, 会话类型
-static const char* kTIMMsgReceiptTimeStamp = "msg_receipt_time_stamp";  //uint64, 只读, 时间戳
-// EndStruct
- 
-/**
-* @brief Group 消息已读回执
-*/
-// Struct GroupMessageReceipt JsonKey
-static const char* kTIMMsgGroupMessageReceiptGroupId     = "msg_group_message_receipt_group_id";        //string, 只读, 群 ID
-static const char* kTIMMsgGroupMessageReceiptMsgId       = "msg_group_message_receipt_msg_id";          //string, 只读, 群消息 ID
-static const char* kTIMMsgGroupMessageReceiptReadCount   = "msg_group_message_receipt_read_count";      //uint64, 只读, 群消息已读人数
-static const char* kTIMMsgGroupMessageReceiptUnreadCount = "msg_group_message_receipt_unread_count";    //uint64, 只读, 群消息未读人数
+static const char* kTIMMsgReceiptConvId         = "msg_receipt_conv_id";       //string, 只读, 会话ID
+static const char* kTIMMsgReceiptConvType       = "msg_receipt_conv_type";     //uint [TIMConvType](), 只读, 会话类型
+static const char* kTIMMsgReceiptTimeStamp      = "msg_receipt_time_stamp";    //uint64, 只读, 时间戳
+static const char* kTIMMsgReceiptMsgId          = "msg_receipt_msg_id";        //string, 只读, 群消息 ID
+static const char* kTIMMsgReceiptReadCount      = "msg_receipt_read_count";    //uint64, 只读, 群消息已读人数
+static const char* kTIMMsgReceiptUnreadCount    = "msg_receipt_unread_count";  //uint64, 只读, 群消息未读人数
 // EndStruct
 
 /**

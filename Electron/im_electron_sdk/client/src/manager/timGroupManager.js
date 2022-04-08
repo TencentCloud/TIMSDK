@@ -31,7 +31,7 @@ const TimBaseManager = {
       data: "ssss"
     });
   },
-  async TIMMsgSendGroupMessageReceipts(){
+  async TIMMsgSendMessageReadReceipts(){
     const data = await timRenderInstance.TIMMsgGetMsgList({
          conv_id: "@TGS#2N7OQRSHS",
          conv_type: 2,
@@ -41,16 +41,16 @@ const TimBaseManager = {
          }
      })
      var d = JSON.parse(data.data.json_params);
-     return timRenderInstance.TIMMsgSendGroupMessageReceipts({
+     return timRenderInstance.TIMMsgSendMessageReadReceipts({
        json_msg_array:JSON.stringify([
          d[0]
        ]),
      }); 
    },
-   async TIMMsgGetGroupMessageReceipts(){
+   async TIMMsgGetMessageReadReceipts(){
  
      const data = await timRenderInstance.TIMMsgGetMsgList({
-       conv_id: "@TGS#2N7OQRSHS",
+       conv_id: "@TGS#_im_discuss_Zice8DNTw3REtfSs",
        conv_type: 2,
        params: {
            msg_getmsglist_param_last_msg: null,
@@ -58,13 +58,15 @@ const TimBaseManager = {
        }
    })
    var d = JSON.parse(data.data.json_params);
-     return timRenderInstance.TIMMsgGetGroupMessageReceipts({
+    console.log(d[0])
+     return timRenderInstance.TIMMsgGetMessageReadReceipts({
        json_msg_array:JSON.stringify([
-         d[0]
+        d[0]
        ]),
+       user_data:"12"
      }); 
    },
-   async TIMMsgGetGroupMessageReadMembers(){
+   async TIMMsgGetGroupMessageReadMemberList(){
      const data = await timRenderInstance.TIMMsgGetMsgList({
        conv_id: "@TGS#2N7OQRSHS",
        conv_type: 2,
@@ -74,21 +76,14 @@ const TimBaseManager = {
        }
    })
    const arr = JSON.parse(data.data.json_params);
-     return timRenderInstance.TIMMsgGetGroupMessageReadMembers({
+     return timRenderInstance.TIMMsgGetGroupMessageReadMemberList({
        json_msg:JSON.stringify(arr[0]),
        filter: 0,
        next_seq: 0,
        count: 10,
      }); 
    },
-   TIMSetMsgGroupMessageReceiptCallback(){
-     return timRenderInstance.TIMSetMsgGroupMessageReceiptCallback({
-       callback:(...args)=>{
-         console.log(args)
-       },
-       user_data:"hahh"
-     }); 
-   },
+   
   TIMGroupGetJoinedGroupList: () => {
     return timRenderInstance.TIMGroupGetJoinedGroupList();
   },

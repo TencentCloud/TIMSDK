@@ -176,12 +176,13 @@ class ConversationSelectorState extends State<ConversationSelector> {
       });
       return res.data!.conversationList;
     }
+    return null;
   }
 
   AlertDialog dialogShow(context) {
     final chooseType = (widget.switchSelectType ? imt(imt("单选")) : imt(imt("多选")));
     AlertDialog dialog = AlertDialog(
-      title: Text(imt_para("会话选择（{{chooseType}}）", "会话选择（${chooseType}）")(chooseType: chooseType)),
+      title: Text(imt_para("会话选择（{{chooseType}}）", "会话选择（$chooseType）")(chooseType: chooseType)),
       contentPadding: EdgeInsets.zero,
       content:
           ConversationList(widget.switchSelectType, conversationList, (data) {

@@ -19,7 +19,7 @@ const sdkappid = catchedSdkAppId = settingConfig?.sdkappId ?? SDK_APP_ID;
 
 const initTimMain = (appid) => {
   mainInstance = new TimMain({
-    sdkappid: appid
+    sdkappid: Number(appid)
   });
 }
 
@@ -29,13 +29,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 ipcMain.handle('re-create-main-instance',async (event, newSdkAppid) => {
   console.log("************ re-create-main-instance",newSdkAppid)
-  if( newSdkAppid !== catchedSdkAppId ) {
-    catchedSdkAppId = newSdkAppid;
-    mainInstance.destroy();
-    await initTimMain(newSdkAppid);
-  }
-
-  await sleep(1000)
+  mainInstance.setSDKAPPID(newSdkAppid)   
   return
 })
 

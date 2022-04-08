@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit_calling_plugin/tim_ui_kit_calling_plugin.dart';
 import 'package:timuikit/custom_animation.dart';
 import 'package:timuikit/i18n/strings.g.dart';
 import 'package:timuikit/src/pages/app.dart';
@@ -48,6 +49,7 @@ class TUIKitDemoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Provider.of<DefaultThemeData>(context).theme;
     return MaterialApp(
+      navigatorKey: TUICalling.navigatorKey,
       locale: TranslationProvider.of(context).flutterLocale, // use provider
       supportedLocales: LocaleSettings.supportedLocales,
       localizationsDelegates: GlobalMaterialLocalizations.delegates,

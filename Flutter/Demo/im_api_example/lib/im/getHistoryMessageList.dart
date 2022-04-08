@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/im/friendSelector.dart';
 import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
-import 'package:tencent_im_sdk_plugin/enum/history_message_get_type.dart';
 import 'package:tencent_im_sdk_plugin/enum/history_msg_get_type_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_message.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_value_callback.dart';
@@ -158,7 +157,7 @@ class GetHistoryMessageListState extends State<GetHistoryMessageList> {
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text(imt_para("已选：{{type}}", "已选：${type}")(type: type)),
+                  child: Text(imt_para("已选：{{type}}", "已选：$type")(type: type)),
                 )
               ],
             ),

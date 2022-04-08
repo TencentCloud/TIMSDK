@@ -102,13 +102,34 @@ import {
     MsgGetGroupMessageReceiptsParam,
     MsgGetGroupMessageReadMembersParam,
     MsgGroupMessageReceiptCallbackParam,
+    TIMMsgReadedReceiptCallbackFunc,
+    TIMMsgElemUploadProgressCallbackFunc,
+    GroupTipCallBackFun,
+    convEventCallback,
+    convTotalUnreadMessageCountChangedCallback,
+    GroupAttributeCallbackFun,
+    TIMFriendAddRequestCallbackFunc,
+    TIMFriendApplicationListDeletedCallbackFunc,
+    TIMFriendApplicationListReadCallbackFunc,
+    TIMFriendBlackListAddedCallbackFunc,
+    TIMFriendBlackListDeletedCallbackFunc,
+    TIMMsgUpdateCallbackFunc,
+    TIMOnAddFriendCallbackFunc,
+    TIMOnDeleteFriendCallbackFunc,
+    TIMSetKickedOfflineCallback,
+    TIMSetNetworkStatusListenerCallback,
+    TIMSetUserSigExpiredCallback,
+    TIMUpdateFriendProfileCallbackFunc,
 } from "./interface";
 import { ipcData, Managers } from "./interface/ipcInterface";
 import { ipcRenderer } from "electron";
 import { TIMConvType } from "./enum";
-import log from "./utils/log";
+// import log from "./utils/log";
 import { getCurrentWindow } from "@electron/remote";
-
+const log = {
+    info: function (...args: any) {},
+    error: function (...args: any) {},
+};
 const deepClone = (obj: object) => {
     if (!obj) {
         return false;
@@ -704,7 +725,75 @@ export default class TimRender {
         };
         return this._call(formatedData);
     }
-    TIMLogout(param: logoutParam) {
+    async TIMLogout(param: logoutParam) {
+        await this.TIMRemoveRecvNewMsgCallback();
+        await this.TIMSetMsgReadedReceiptCallback({
+            callback: null as unknown as TIMMsgReadedReceiptCallbackFunc,
+        });
+        await this.TIMSetMsgRevokeCallback({
+            callback: null as unknown as TIMMsgReadedReceiptCallbackFunc,
+        });
+        await this.TIMSetMsgElemUploadProgressCallback({
+            callback: null as unknown as TIMMsgElemUploadProgressCallbackFunc,
+        });
+        await this.TIMSetGroupTipsEventCallback({
+            callback: null as unknown as GroupTipCallBackFun,
+        });
+        await this.TIMSetGroupAttributeChangedCallback({
+            callback: null as unknown as GroupAttributeCallbackFun,
+        });
+        await this.TIMSetGroupAttributeChangedCallback({
+            callback: null as unknown as GroupAttributeCallbackFun,
+        });
+        await this.TIMSetConvEventCallback({
+            callback: null as unknown as convEventCallback,
+        });
+        await this.TIMSetConvTotalUnreadMessageCountChangedCallback({
+            callback:
+                null as unknown as convTotalUnreadMessageCountChangedCallback,
+        });
+        await this.TIMSetNetworkStatusListenerCallback({
+            callback: null as unknown as TIMSetNetworkStatusListenerCallback,
+            userData: "",
+        });
+        await this.TIMSetKickedOfflineCallback({
+            callback: null as unknown as TIMSetKickedOfflineCallback,
+            userData: "",
+        });
+        await this.TIMSetUserSigExpiredCallback({
+            callback: null as unknown as TIMSetUserSigExpiredCallback,
+            userData: "",
+        });
+        await this.TIMSetOnAddFriendCallback({
+            callback: null as unknown as TIMOnAddFriendCallbackFunc,
+        });
+        await this.TIMSetOnDeleteFriendCallback({
+            callback: null as unknown as TIMOnDeleteFriendCallbackFunc,
+        });
+        await this.TIMSetUpdateFriendProfileCallback({
+            callback: null as unknown as TIMUpdateFriendProfileCallbackFunc,
+        });
+        await this.TIMSetFriendAddRequestCallback({
+            callback: null as unknown as TIMFriendAddRequestCallbackFunc,
+        });
+        await this.TIMSetFriendApplicationListDeletedCallback({
+            callback:
+                null as unknown as TIMFriendApplicationListDeletedCallbackFunc,
+        });
+        await this.TIMSetFriendApplicationListReadCallback({
+            callback:
+                null as unknown as TIMFriendApplicationListReadCallbackFunc,
+        });
+        await this.TIMSetFriendBlackListAddedCallback({
+            callback: null as unknown as TIMFriendBlackListAddedCallbackFunc,
+        });
+        await this.TIMSetFriendBlackListDeletedCallback({
+            callback: null as unknown as TIMFriendBlackListDeletedCallbackFunc,
+        });
+        await this.TIMSetMsgUpdateCallback({
+            callback: null as unknown as TIMMsgUpdateCallbackFunc,
+        });
+
         const formatedData = {
             method: "TIMLogout",
             manager: Managers.timBaseManager,
@@ -918,33 +1007,33 @@ export default class TimRender {
 
         return this._call(formatedData);
     }
-    TIMMsgSendGroupMessageReceipts(
+    TIMMsgSendMessageReadReceipts(
         msgSendGroupMessageReceipts: MsgSendGroupMessageReceiptsParam
     ) {
         const formatedData = {
-            method: "TIMMsgSendGroupMessageReceipts",
+            method: "TIMMsgSendMessageReadReceipts",
             manager: Managers.groupManager,
             param: msgSendGroupMessageReceipts,
         };
 
         return this._call(formatedData);
     }
-    TIMMsgGetGroupMessageReceipts(
+    TIMMsgGetMessageReadReceipts(
         msgGetGroupMessageReceipts: MsgGetGroupMessageReceiptsParam
     ) {
         const formatedData = {
-            method: "TIMMsgGetGroupMessageReceipts",
+            method: "TIMMsgGetMessageReadReceipts",
             manager: Managers.groupManager,
             param: msgGetGroupMessageReceipts,
         };
 
         return this._call(formatedData);
     }
-    TIMMsgGetGroupMessageReadMembers(
+    TIMMsgGetGroupMessageReadMemberList(
         msgGetGroupMessageReadMembers: MsgGetGroupMessageReadMembersParam
     ) {
         const formatedData = {
-            method: "TIMMsgGetGroupMessageReadMembers",
+            method: "TIMMsgGetGroupMessageReadMemberList",
             manager: Managers.groupManager,
             param: msgGetGroupMessageReadMembers,
         };
@@ -1365,22 +1454,6 @@ export default class TimRender {
         const formatedData = {
             method: "TIMSetFriendBlackListDeletedCallback",
             manager: Managers.friendshipManager,
-            callback,
-            windowID: this._currentWindowID,
-            param: params,
-        };
-
-        this._setCallback(callback, params.callback);
-        return this._call(formatedData);
-    }
-
-    TIMSetMsgGroupMessageReceiptCallback(
-        params: MsgGroupMessageReceiptCallbackParam
-    ) {
-        const callback = "TIMSetMsgGroupMessageReceiptCallback";
-        const formatedData = {
-            method: "TIMSetMsgGroupMessageReceiptCallback",
-            manager: Managers.groupManager,
             callback,
             windowID: this._currentWindowID,
             param: params,

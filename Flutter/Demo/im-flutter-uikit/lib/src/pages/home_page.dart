@@ -6,6 +6,7 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_conversation_controller.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:tim_ui_kit_calling_plugin/tim_ui_kit_calling_plugin.dart';
 import 'package:timuikit/src/add_friend.dart';
 import 'package:timuikit/src/add_group.dart';
 import 'package:timuikit/src/config.dart';
@@ -34,6 +35,7 @@ class HomePageState extends State<HomePage> {
   bool hasInternet = true;
   final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
   final V2TIMManager _sdkInstance = TIMUIKitCore.getSDKInstance();
+  final TUICalling _calling = TUICalling();
   final TIMUIKitConversationController _conversationController =
       TIMUIKitConversationController();
   final contactTooltip = [
@@ -82,6 +84,14 @@ class HomePageState extends State<HomePage> {
     setState(() {});
   }
 
+  _initTrtc() {
+    final loginInfo = _coreInstance.loginInfo;
+    final userID = loginInfo.userID;
+    final userSig = loginInfo.userSig;
+    final sdkAppId = loginInfo.sdkAppID;
+    _calling.init(sdkAppID: sdkAppId, userID: userID, userSig: userSig);
+  }
+
   @override
   initState() {
     super.initState();
@@ -89,6 +99,7 @@ class HomePageState extends State<HomePage> {
     _coreInstance.setEmptyAvatarBuilder(_emptyAvatarBuilder);
     _initConversationListener();
     _getTotalUnreadCount();
+    _initTrtc();
     setState(() {});
     subscription =
         _connectivity.onConnectivityChanged.listen(_connectivityChange);

@@ -214,6 +214,8 @@ public class TestApi : MonoBehaviour
 
 
 
+
+
     public static void GroupAttributeChangedCallback(string group_id, List<GroupAttributes> group_attributes, string user_data)
     {
         addStringDataToConsole("SetGroupAttributeChangedCallback called " + JsonConvert.SerializeObject(group_attributes[0]));

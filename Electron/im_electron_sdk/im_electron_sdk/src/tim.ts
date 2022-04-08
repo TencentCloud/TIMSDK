@@ -42,5 +42,8 @@ class TIM {
     getGroupManager() {
         return this._groupManager;
     }
+    setSDKAPPID(sdkappid: number) {
+        this._sdkconfig.sdkappid = sdkappid;
+    }
 }
 export default TIM;

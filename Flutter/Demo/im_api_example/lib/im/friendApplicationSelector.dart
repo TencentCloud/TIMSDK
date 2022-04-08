@@ -180,13 +180,14 @@ class FriendApplicationSelectorState extends State<FriendApplicationSelector> {
       });
       return res.data?.friendApplicationList ?? [];
     }
+    return null;
   }
 
   // 弹窗了
   AlertDialog dialogShow(context, applicationTransferList) {
     final chooseType = (widget.switchSelectType ? imt(imt("单选")) : imt(imt("多选")));
     AlertDialog dialog = AlertDialog(
-      title: Text(imt_para("好友申请选择（{{chooseType}}）", "好友申请选择（${chooseType}）")(chooseType: chooseType)),
+      title: Text(imt_para("好友申请选择（{{chooseType}}）", "好友申请选择（$chooseType）")(chooseType: chooseType)),
       contentPadding: EdgeInsets.zero,
       content: FriendApplicationList(
           widget.switchSelectType, applicationTransferList, (data) {

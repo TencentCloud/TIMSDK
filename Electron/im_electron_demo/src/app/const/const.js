@@ -21,7 +21,7 @@ const GET_FILE_INFO_CALLBACK = 'GET_FILE_INFO_CALLBACK';
 const END_CALL_WINDOW = 'END_CALL_WINDOW'
 const SUPPORT_IMAGE_TYPE = ['png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF' ];
 
-const SDK_APP_ID = '1400187352'; // sdkappid 
+const SDK_APP_ID = '0'; // sdkappid 
 
 module.exports = {
     MINSIZEWIN,

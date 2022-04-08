@@ -177,7 +177,7 @@ typedef void (*TIMRecvNewMsgCallback)(const char* json_msg_array, const void* us
 
 
 /**
-* @brief 收到单聊消息已读回执
+* @brief 收到消息已读回执
 *
 * @param json_msg_readed_receipt_array 消息已读回执数组
 * @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
@@ -193,43 +193,22 @@ typedef void (*TIMRecvNewMsgCallback)(const char* json_msg_array, const void* us
 *     
 *     for (Json::ArrayIndex i = 0; i < json_value_receipts.size(); i++) {
 *         Json::Value& json_value_receipt = json_value_receipts[i];
-*     
-*         std::string convid = json_value_receipt[kTIMMsgReceiptConvId].asString();
 *         uint32_t conv_type = json_value_receipt[kTIMMsgReceiptConvType].asUInt();
+*         std::string convid = json_value_receipt[kTIMMsgReceiptConvId].asString();
+*
+*         // C2C 消息回执
 *         uint64_t timestamp = json_value_receipt[kTIMMsgReceiptTimeStamp].asUInt64();
+*
+*         // 群消息回执
+*         std::string msg_id = json_value_receipt[kTIMMsgReceiptMsgId].asString();
+*         uint64_t read_count = json_value_receipt[kTIMMsgReceiptReadCount].asUInt64();
+*         uint64_t unread_count = json_value_receipt[kTIMMsgReceiptUnreadCount].asUInt64();
 *     
 *         // 消息已读逻辑
 *     }
 * }
 */
 typedef void (*TIMMsgReadedReceiptCallback)(const char* json_msg_readed_receipt_array, const void* user_data);
-
-/**
-* @brief 收到群聊消息已读回执
-*
-* @param json_msg_readed_receipt_array 消息已读回执数组
-* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
-*
-* @example
-* void MsgGroupReadReceiptCallback(const char* json_msg_readed_receipt_array, const void* user_data) {
-*     Json::Value json_value_receipts;
-*     Json::Reader reader;
-*     if (!reader.parse(json_msg_readed_receipt_array, json_value_receipts)) {
-*         // Json 解析失败
-*         return;
-*     }
-*     
-*     for (Json::ArrayIndex i = 0; i < json_value_receipts.size(); i++) {
-*         Json::Value& json_value_receipt = json_value_receipts[i];
-*     
-*         std::string group_id = json_value_receipt[kTIMMsgGroupMessageReceiptGroupId].asString();
-*         std::string msg_id = json_value_receipt[kTIMMsgGroupMessageReceiptMsgId].asString();
-*         uint64_t read_count = json_value_receipt[kTIMMsgGroupMessageReceiptReadCount].asUInt64();
-*         uint64_t unread_count = json_value_receipt[kTIMMsgGroupMessageReceiptUnreadCount].asUInt64();
-*     }
-* }
-*/
-typedef void (*TIMMsgGroupReadReceiptCallback)(const char* json_msg_readed_receipt_array, const void* user_data);
 
 /**
 * @brief 获取群消息已读群成员列表
@@ -256,11 +235,11 @@ typedef void (*TIMMsgGroupReadReceiptCallback)(const char* json_msg_readed_recei
 *     }
 *
 *     if (false == is_finished) {
-*         TIMMsgGetGroupMessageReadMembers(json_msg, TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_READ, next_seq, 100, MsgGroupReadMembersCallback, user_data);
+*         TIMMsgGetGroupMessageReadMemberList(json_msg, TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_READ, next_seq, 100, MsgGroupReadMembersCallback, user_data);
 *     }
 * }
 */
-typedef void (*TIMMsgGroupReadMembersCallback)(const char* json_group_member_array, uint64_t next_seq, bool is_finished, const void* user_data);
+typedef void (*TIMMsgGroupMessageReadMemberListCallback)(const char* json_group_member_array, uint64_t next_seq, bool is_finished, const void* user_data);
 
 /**
 * @brief 接收的消息被撤回回调

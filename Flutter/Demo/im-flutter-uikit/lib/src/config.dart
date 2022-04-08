@@ -28,6 +28,8 @@ class IMDemoConfig {
   // appBarTile无法做适配，必须要常量才可以
   static const double appBarTitleFontSize = 17;
 
+  static const String baiduMapIOSAppKey = "Zj9tGHMYCGyE3Q2rdk3Mh6qRGXQvG6kv";
+
   static const Map<WebUrl, String> webUrls = {
     WebUrl.personalInfo:
         "https://privacy.qq.com/document/preview/45ba982a1ce6493597a00f8c86b52a1e",

@@ -61,5 +61,17 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<string>YES</string>
+	<key>CFBundleDisplayName</key>
+	<string>云通信IM</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>我们需要访问您的位置用于发送接收位置消息</string>
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+    	<string>iosamap</string>
+    	<string>qqmap</string>
+    	<string>baidumap</string>
+    </array>
 </dict>
 </plist>

@@ -1,5 +1,5 @@
 name: timuikit
-description: A new Flutter project.
+description: tencent im uikit
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -42,7 +42,6 @@ dependencies:
   image_picker: ^0.8.4+4
   loading_indicator: ^2.0.1
   shared_preferences: ^2.0.12
-  country_list_pick: ^1.0.1+5
   url_launcher: ^6.0.20
   adaptive_action_sheet: ^2.0.1
   webview_flutter: ^3.0.0
@@ -56,7 +55,18 @@ dependencies:
   # tim_ui_kit: ^0.0.5
   tim_ui_kit:
     path: package_src/tim_ui_kit
+  tim_ui_kit_calling_plugin: ^0.0.2
+  tim_ui_kit_sticker_plugin: ^0.0.1
+  # tim_ui_kit_sticker_plugin:
+  #   path: ../tim_ui_kit_sticker_plugin
   super_tooltip: ^1.0.1
+  flutter_baidu_mapapi_map: ^3.1.0+1
+  flutter_baidu_mapapi_base: ^3.1.0
+  flutter_baidu_mapapi_search: ^3.1.0
+  flutter_baidu_mapapi_utils: ^3.1.0+1
+  location: ^4.3.0
+  flutter_svg: ^1.0.3
+  tim_ui_kit_lbs_plugin: ^1.0.1
 dev_dependencies:
   fast_i18n: 5.10.0
   build_runner: any
@@ -82,7 +92,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
-
+    - assets/custom_face_resource/4350/
+    - assets/custom_face_resource/4351/
+    - assets/custom_face_resource/4352/
+    - lib/country_list_pick-1.0.1+5/flags/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

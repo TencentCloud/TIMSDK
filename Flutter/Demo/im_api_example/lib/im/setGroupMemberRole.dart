@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:im_api_example/im/groupMemberSelector.dart';
 import 'package:im_api_example/im/groupSelector.dart';
 import 'package:im_api_example/utils/sdkResponse.dart';
-import 'package:tencent_im_sdk_plugin/enum/group_member_role.dart';
 import 'package:tencent_im_sdk_plugin/enum/group_member_role_enum.dart';
-import 'package:tencent_im_sdk_plugin/enum/message_priority_enum.dart';
 import 'package:tencent_im_sdk_plugin/models/v2_tim_callback.dart';
 import 'package:tencent_im_sdk_plugin/tencent_im_sdk_plugin.dart';
 import 'package:im_api_example/i18n/i18n_utils.dart';
@@ -146,7 +144,7 @@ class SetGroupMemberRoleState extends State<SetGroupMemberRole> {
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 12),
-                  child: Text(imt_para("已选：{{role}}", "已选：${role}")(role: role)),
+                  child: Text(imt_para("已选：{{role}}", "已选：$role")(role: role)),
                 )
               ],
             ),

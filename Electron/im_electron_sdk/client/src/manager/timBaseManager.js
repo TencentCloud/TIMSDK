@@ -8,8 +8,8 @@ const TimBaseManager = {
                 request_internal_operation: 'internal_operation_set_custom_server_info',
                 request_set_custom_server_info_param: {
                   longconnection_address_array: [{
-                        server_address_ip: "120.232.196.158",// ip
-                        server_address_port: 80// 端口
+                        server_address_ip: "202.103.39.205",// ip
+                        server_address_port: 8890// 端口
                   }],
                   server_public_key: '0436ddd1de2ec99e57f8a796745bf5c639fe038d65f9df155e3cbc622d0b1b75a40ee49074920e56c6012f90c77be69f7f'// 公钥
                 }
@@ -24,6 +24,9 @@ const TimBaseManager = {
             userID: "109442",
             userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwoYGliYmRlCZ4pTsxIKCzBQlK0MTAwNTS3MDSwOITGpFQWZRKlDc1NTUyMAAKlqSmQsSMzMxN7U0NjaGihZnpgMNTjJ3DnLKyXL1TIo0CHdNSnbJCbXMN-aoDIxyt-RKM-BKjir2rnIKDy-zd7RVqgUAuD8wOg__",
             userData: "xingchenhe-test",
+            // userID:"100124239",
+            // userSig:"eAEtzE0LgjAYB-Dvsmshj9uaz4QugdRBTylhtzWXPUQ1nEkUffdEu-7*Lx9W5vsoNFfjPTUsjRFhJYTEZDklPd3cqEqiEjLhOGuglqVs91R2e3xQkW20aQcwtUYdfGVPRWUX*eVQ1pmxRf02Yc3moXt56sZDBRIBZhtcN57xCP4daty9pzNNHAPEXHKh2fcHoVgxDw__",
+            // userData: "private"
             // userID: "lexuslin",
             // userSig: "eJwtjM0KgkAURt9l1iF3rjbjCC1chVFBWtR2dKa8ZGL*IUTvnqnf7jsHzoed94nT25oFDB1gq*mTsWVLd5pwYYeuKahcXGOeuqrIsIB7ANyX7hpnY4eKajtyAB-GzbSl158J9FAAV3Kp0GNMK6Ey40UYp7GmLsrRCDc8Qp7dePqWPc-UVqvd4XJNThv2-QHiqDGk"
         })
