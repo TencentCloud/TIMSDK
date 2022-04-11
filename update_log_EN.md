@@ -62,7 +62,6 @@ English | [简体中文](./版本历史.md)
 
   - Added the feature of quickly clearing the total unread message count of all conversations.
   - Added support for the community group (Community) feature. A community group supports up to 100,000 members. Users must activate the Flagship Edition package before they can use the feature.
-  - Added the feature of displaying the 20 historical messages before a user joins an audio-video group (AVChatRoom). Users must activate the Flagship Edition package before they can use the feature.
   - Added the feature of automatically excluding conversions whose message receiving option is "Receive but not notify" or "Not receive" when getting the total unread message count of all conversations.
   - Added support for Chinese SM algorithms for encrypted tunnels of persistent connections.
   - Fixed the issue where, when historical messages were pulled, the end tag was incorrectly determined occasionally.
