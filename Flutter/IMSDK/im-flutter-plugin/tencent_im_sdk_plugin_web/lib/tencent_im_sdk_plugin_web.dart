@@ -62,13 +62,15 @@ class TencentImSDKPluginWeb extends ImFlutterPlatform {
   static void registerWith(Registrar registrar) {
     ImFlutterPlatform.instance = TencentImSDKPluginWeb();
   }
-
+  
   @override
-  Future<V2TimValueCallback<bool>> initSDK(
-      {required int sdkAppID,
-      required int loglevel,
-      String? listenerUuid,
-      V2TimSDKListener? listener}) async {
+  Future<V2TimValueCallback<bool>> initSDK({
+    required int sdkAppID,
+    required int loglevel,
+    String? listenerUuid,
+    V2TimSDKListener? listener,
+    required String uiPlatform,
+  }) async {
     return _v2timManager.initSDK(sdkAppID: sdkAppID, listener: listener);
   }
 
