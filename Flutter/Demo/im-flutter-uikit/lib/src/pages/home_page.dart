@@ -17,7 +17,6 @@ import 'package:timuikit/src/profile.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
 import 'package:timuikit/src/provider/theme.dart';
-import '../channel.dart';
 
 /// 首页
 class HomePage extends StatefulWidget {
@@ -30,9 +29,9 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   bool hasInit = false;
-  int totalUnreadCount = 0;
   var subscription;
   final Connectivity _connectivity = Connectivity();
+  int totalUnreadCount = 0;
   bool hasInternet = true;
   final CoreServicesImpl _coreInstance = TIMUIKitCore.getInstance();
   final V2TIMManager _sdkInstance = TIMUIKitCore.getSDKInstance();
@@ -116,28 +115,14 @@ class HomePageState extends State<HomePage> {
 
   Map<int, String> pageTitle() {
     return {
-      0: imt("频道"),
-      1: hasInternet ? imt("消息") : imt("连接中..."),
-      2: imt("通讯录"),
-      3: imt("我的"),
+      0: hasInternet ? imt("消息") : imt("连接中..."),
+      1: imt("通讯录"),
+      2: imt("我的"),
     };
   }
 
   List<NavigationBarData> getBottomNavigatorList(BuildContext context, theme) {
     final List<NavigationBarData> bottomNavigatorList = [
-      NavigationBarData(
-        widget: const Channel(),
-        // widget: Text("1"),
-        title: imt("频道"),
-        selectedIcon: Icon(
-          Icons.group_work_outlined,
-          color: theme.primaryColor,
-        ),
-        unselectedIcon: const Icon(
-          Icons.group_work_outlined,
-          color: Colors.grey,
-        ),
-      ),
       NavigationBarData(
         widget: Conversation(
           conversationController: _conversationController,
@@ -350,7 +335,7 @@ class HomePageState extends State<HomePage> {
   }
 
   List<Widget> _getTooltipContent(BuildContext context) {
-    List toolTipList = currentIndex == 1 ? conversationTooltip : contactTooltip;
+    List toolTipList = currentIndex == 0 ? conversationTooltip : contactTooltip;
 
     return toolTipList.map((e) {
       return InkWell(
@@ -409,40 +394,38 @@ class HomePageState extends State<HomePage> {
 
     final theme = Provider.of<DefaultThemeData>(context).theme;
     return Scaffold(
-      appBar: currentIndex != 0
-          ? AppBar(
-              iconTheme: const IconThemeData(
-                color: Colors.white,
-              ),
-              shadowColor: theme.weakDividerColor,
-              elevation: currentIndex == 1 ? 0 : 1,
-              automaticallyImplyLeading: false,
-              leading: null,
-              title: getTitle(),
-              centerTitle: true,
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
-                    theme.primaryColor ?? CommonColor.primaryColor
-                  ]),
-                ),
-              ),
-              actions: [
-                if ([1, 2].contains(currentIndex))
-                  Builder(builder: (BuildContext c) {
-                    return IconButton(
-                        onPressed: () {
-                          _showTooltip(c);
-                        },
-                        icon: const Icon(
-                          Icons.add_circle_outline,
-                          color: Colors.white,
-                        ));
-                  })
-              ],
-            )
-          : null,
+      appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        shadowColor: theme.weakDividerColor,
+        elevation: currentIndex == 0 ? 0 : 1,
+        automaticallyImplyLeading: false,
+        leading: null,
+        title: getTitle(),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+              theme.primaryColor ?? CommonColor.primaryColor
+            ]),
+          ),
+        ),
+        actions: [
+          if ([0, 1].contains(currentIndex))
+            Builder(builder: (BuildContext c) {
+              return IconButton(
+                  onPressed: () {
+                    _showTooltip(c);
+                  },
+                  icon: const Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.white,
+                  ));
+            })
+        ],
+      ),
       body: IndexedStack(
         index: currentIndex,
         children: bottomNavigatorList(theme).map((res) => res.widget).toList(),
