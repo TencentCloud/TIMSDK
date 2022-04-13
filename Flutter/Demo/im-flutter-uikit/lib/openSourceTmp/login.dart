@@ -1,0 +1,397 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tim_ui_kit/tim_ui_kit.dart';
+import 'package:tim_ui_kit/ui/utils/color.dart';
+import 'package:timuikit/src/config.dart';
+import 'package:timuikit/src/pages/home_page.dart';
+import 'package:timuikit/src/pages/privacy/privacy.dart';
+import 'package:timuikit/src/pages/privacy/privacy_agreement.dart';
+import 'package:timuikit/src/provider/theme.dart';
+import 'package:timuikit/utils/GenerateUserSig.dart';
+import 'package:timuikit/utils/commonUtils.dart';
+import 'package:timuikit/utils/offline_push_config.dart';
+import 'package:timuikit/utils/toast.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:timuikit/i18n/i18n_utils.dart';
+
+var timNewLogo = const AssetImage("assets/im_logo.png");
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: const Scaffold(
+          body: AppLayout(),
+          resizeToAvoidBottomInset: false,
+        ));
+  }
+}
+
+class AppLayout extends StatelessWidget {
+  const AppLayout({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        SystemChannels.textInput.invokeMethod('TextInput.hide');
+      },
+      child: Stack(
+        children: const [
+          AppLogo(),
+          LoginForm(),
+        ],
+      ),
+    );
+  }
+}
+
+class AppLogo extends StatelessWidget {
+  const AppLogo({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Provider.of<DefaultThemeData>(context).theme;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    theme.lightPrimaryColor ?? CommonColor.lightPrimaryColor,
+                    theme.primaryColor ?? CommonColor.primaryColor
+                  ]),
+            ),
+            child: Image.asset("assets/hero_image.png")),
+        Positioned(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                height: CommonUtils.adaptWidth(380),
+                width: CommonUtils.adaptWidth(200),
+                child: Image(
+                    image: timNewLogo,
+                    width: CommonUtils.adaptWidth(380),
+                    height: CommonUtils.adaptHeight(200)),
+              ),
+              Expanded(child: Container(
+                margin: const EdgeInsets.only(right: 5),
+                height: CommonUtils.adaptHeight(180),
+                padding: const EdgeInsets.only(top: 10, left: 5, right: 15),
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      imt("登录·即时通信"),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        fontSize: CommonUtils.adaptFontSize(64),
+                      ),
+                    ),
+                    Text(
+                      imt("体验群组聊天，音视频对话等IM功能"),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        fontSize: CommonUtils.adaptFontSize(28),
+                      ),
+                    ),
+                  ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+              )),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class LoginForm extends StatefulWidget {
+  const LoginForm({Key? key}) : super(key: key);
+
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  final CoreServicesImpl coreInstance = TIMUIKitCore.getInstance();
+
+  String userID = '';
+
+  @override
+  initState() {
+    super.initState();
+    checkFirstEnter();
+  }
+
+  void checkFirstEnter() async {
+    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    SharedPreferences prefs = await _prefs;
+    String? firstTime = prefs.getString("firstTime");
+    if (firstTime != null && firstTime == "true") {
+      return;
+    }
+    showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          content: Text.rich(
+            TextSpan(
+                style: const TextStyle(
+                    fontSize: 14, color: Colors.black, height: 2.0),
+                children: [
+                  TextSpan(
+                    text: imt(
+                        "欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。"),
+                  ),
+                  const TextSpan(
+                    text: "\n",
+                  ),
+                  TextSpan(
+                    text: imt("请您点击"),
+                  ),
+                  TextSpan(
+                    text: imt("《用户协议》"),
+                    style: const TextStyle(
+                      color: Color.fromRGBO(0, 110, 253, 1),
+                    ),
+                    // 设置点击事件
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const UserAgreementPage()));
+                      },
+                  ),
+                  TextSpan(
+                    text: imt("和"),
+                  ),
+                  TextSpan(
+                      text: imt("《隐私协议》"),
+                      style: const TextStyle(
+                        color: Color.fromRGBO(0, 110, 253, 1),
+                      ),
+                      // 设置点击事件
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const PrivacyAgreementPage(),
+                            ),
+                          );
+                        }),
+                  TextSpan(
+                      text: imt("并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！")),
+                ]),
+            overflow: TextOverflow.clip,
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(0, 110, 253, 1),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(24),
+                    ),
+                  ),
+                  child: Text(imt("同意并继续"),
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 16))),
+              onPressed: () {
+                prefs.setString("firstTime", "true");
+                Navigator.of(context).pop(true);
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(imt("不同意并退出"),
+                  style: const TextStyle(color: Colors.grey, fontSize: 16)),
+              isDestructiveAction: true,
+              onPressed: () {
+                exit(0);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  directToHomePage() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (BuildContext context) => const HomePage()),
+      (route) => false,
+    );
+  }
+
+  userLogin() async {
+    if (userID.trim() == '') {
+      Utils.toast(imt("请输入用户名"));
+      return;
+    }
+
+    String key = IMDemoConfig.key;
+    int sdkAppId = IMDemoConfig.sdkappid;
+    if (key == "") {
+      Utils.toast("请在环境变量中写入key");
+      return;
+    }
+    GenerateTestUserSig generateTestUserSig = GenerateTestUserSig(
+      sdkappid: sdkAppId,
+      key: key,
+    );
+
+    String userSig =
+        generateTestUserSig.genSig(identifier: userID, expire: 99999);
+
+    var data = await coreInstance.login(
+      userID: userID,
+      userSig: userSig,
+    );
+    if (data.code != 0) {
+      final errorReason = data.desc;
+      Utils.toast(imt_para("登录失败{{errorReason}}", "登录失败$errorReason")(
+          errorReason: errorReason));
+      return;
+    }
+    await getIMData();
+
+    directToHomePage();
+  }
+
+  getIMData() async {
+    await Future.wait([
+      setOfflinePushInfo(),
+    ]);
+  }
+
+  Future<void> setOfflinePushInfo() async {
+    String token = await OfflinePush.getTPNSToken();
+    Utils.log("getTPNSToken $token");
+    if (token != "") {
+      coreInstance.setOfflinePushConfig(
+        token: token,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ScreenUtil.init(
+      BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width,
+          maxHeight: MediaQuery.of(context).size.height),
+      // 设计稿尺寸：px
+      designSize: const Size(750, 1624),
+      context: context,
+      minTextAdapt: true,
+    );
+    return Stack(
+      children: [
+        Positioned(
+            bottom: CommonUtils.adaptHeight(200),
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
+              decoration: const BoxDecoration(
+                //背景
+                color: Colors.white,
+
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                    bottomLeft: Radius.circular(30.0),
+                    bottomRight: Radius.circular(30.0)),
+                //设置四周边框
+              ),
+              // color: Colors.white,
+              height: MediaQuery.of(context).size.height -
+                  CommonUtils.adaptHeight(600),
+
+              width: MediaQuery.of(context).size.width,
+              child: Form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.only(top: CommonUtils.adaptFontSize(34)),
+                      child: Text(
+                        imt("用户名"),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: CommonUtils.adaptFontSize(34),
+                        ),
+                      ),
+                    ),
+                    TextField(
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.only(left: CommonUtils.adaptWidth(14)),
+                        hintText: imt("请输入用户名"),
+                        hintStyle:
+                            TextStyle(fontSize: CommonUtils.adaptFontSize(32)),
+                        //
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (v) {
+                        setState(() {
+                          userID = v;
+                        });
+                      },
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: CommonUtils.adaptHeight(46),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              child: Text(imt("登陆")),
+                              onPressed: userLogin,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(),
+                    )
+                  ],
+                ),
+              ),
+            ))
+      ],
+    );
+  }
+}

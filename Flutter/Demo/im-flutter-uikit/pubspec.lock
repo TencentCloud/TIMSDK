@@ -350,7 +350,7 @@ packages:
       name: fast_i18n
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.10.0"
+    version: "5.12.0"
   ffi:
     dependency: transitive
     description:
@@ -1191,9 +1191,9 @@ packages:
   tim_ui_kit:
     dependency: "direct main"
     description:
-      name: tim_ui_kit
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "package_src/tim_ui_kit"
+      relative: true
+    source: path
     version: "0.0.6"
   tim_ui_kit_calling_plugin:
     dependency: "direct main"
@@ -1201,21 +1201,21 @@ packages:
       name: tim_ui_kit_calling_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.3"
+    version: "0.1.0"
   tim_ui_kit_lbs_plugin:
     dependency: "direct main"
     description:
       name: tim_ui_kit_lbs_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.6"
   tim_ui_kit_sticker_plugin:
     dependency: "direct main"
     description:
       name: tim_ui_kit_sticker_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.2"
   timing:
     dependency: transitive
     description:
@@ -1485,5 +1485,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.16.1 <3.0.0"
+  dart: ">=2.16.0 <3.0.0"
   flutter: ">=2.10.0"

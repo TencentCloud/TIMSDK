@@ -185,17 +185,17 @@ class _ProfileState extends State<MyProfile> {
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: const Text("TUIKIT 为你选择一个头像?"),
+          title: Text(imt("TUIKIT 为你选择一个头像?")),
           actions: [
             CupertinoDialogAction(
-              child: const Text("确定"),
+              child: Text(imt("确定")),
               onPressed: () {
                 setRandomAvatar();
                 Navigator.of(context).pop();
               },
             ),
             CupertinoDialogAction(
-              child: const Text("取消"),
+              child: Text(imt("取消")),
               isDestructiveAction: true,
               onPressed: () {
                 Navigator.of(context).pop();

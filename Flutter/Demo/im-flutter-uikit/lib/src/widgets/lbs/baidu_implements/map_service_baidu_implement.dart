@@ -4,11 +4,12 @@ import 'package:tim_ui_kit_lbs_plugin/abstract/map_service.dart';
 import 'package:tim_ui_kit_lbs_plugin/utils/tim_location_model.dart';
 import '../../../../i18n/i18n_utils.dart';
 import 'dart:io' show Platform;
+import '../../../config.dart';
 
 
 class BaiduMapService extends TIMMapService{
 
-  String appKey = "Zj9tGHMYCGyE3Q2rdk3Mh6qRGXQvG6kv";
+  String appKey = IMDemoConfig.baiduMapIOSAppKey;
 
   /// 使用百度地图提供的定位能力，需要先安装flutter_bmflocation包。
   /// 安装好包后，去除这些代码的注释，根据百度地图官方的flutter即可定位文档，配置好环境，即可使用。
