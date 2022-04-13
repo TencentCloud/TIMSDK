@@ -1279,7 +1279,6 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            Utils.Log(Utils.ToJson(json_modify_friend_info_param));
 
             int res = IMNativeSDK.TIMFriendshipModifyFriendProfile(Utils.string2intptr(Utils.ToJson(json_modify_friend_info_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
 
