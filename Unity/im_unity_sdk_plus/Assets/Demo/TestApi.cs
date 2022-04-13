@@ -724,11 +724,14 @@ public class TestApi : MonoBehaviour
     }
     public static void GroupCreate()
     {
-        CreateGroupParam param = new CreateGroupParam(); // 这个message可以是业务的其他message实例
-        param.create_group_param_group_id = "test_unity_create_av_1";
-        param.create_group_param_group_name = "test_unity_create_name";
-        param.create_group_param_group_type = TIMGroupType.kTIMGroup_AVChatRoom;
+        CreateGroupParam param = new CreateGroupParam(); 
+        param.create_group_param_group_id = "379595063308chat11_chatroom";
+        param.create_group_param_group_name = "name";
+        param.create_group_param_group_type = TIMGroupType.kTIMGroup_ChatRoom;
         param.create_group_param_add_option = TIMGroupAddOption.kTIMGroupAddOpt_Any;
+        param.create_group_param_notification = "create_group_param_notification";
+        param.create_group_param_introduction = "create_group_param_introduction";
+        param.create_group_param_face_url = "https://yq.sukeni.com/Logo.jpg";
         TIMResult res = TencentIMSDK.GroupCreate(param, addAsyncDataToConsole);
         Utils.Log(((int)res).ToString());
         addDataToConsole(res);
