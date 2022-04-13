@@ -44,7 +44,7 @@ class TIMUIKitHistoryMessageListItem extends StatefulWidget {
   final Function(String? userId, String? nickName)?
       onLongPressForOthersHeadPortrait;
 
-  final Widget Function(V2TimMessage message, Function() closeTooltip)?
+  final Widget? Function(V2TimMessage message, Function() closeTooltip, [Key? key])?
       exteraTipsActionItemBuilder;
 
   /// 消息构造器
@@ -149,8 +149,11 @@ class _TIMUIKItHistoryMessageListItemState
     super.dispose();
   }
 
-  _buildeFirstRow(TIMUIKitChatConfig? chatConfig) {
+  _buildLongPressTipItem(TIMUIKitChatConfig? chatConfig) {
     final I18nUtils ttBuild = I18nUtils(context);
+    final isCanRevoke = isRevokable(widget.messageItem.timestamp!);
+    final shouldShowRevokeAction =
+        isCanRevoke && (widget.messageItem.isSelf ?? false);
     final firstRowList = [
       {
         "label": ttBuild.imt("复制"),
@@ -171,6 +174,16 @@ class _TIMUIKItHistoryMessageListItemState
         "label": ttBuild.imt("引用"),
         "id": "replyMessage",
         "icon": "images/reply_message.png"
+      },
+      {
+        "label": ttBuild.imt("删除"),
+        "id": "delete",
+        "icon": "images/delete_message.png"
+      },
+      if(shouldShowRevokeAction) {
+        "label": ttBuild.imt("撤回"),
+        "id": "delete",
+        "icon": "images/revoke_message.png"
       }
     ];
     if (widget.messageItem.elemType != MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
@@ -204,8 +217,8 @@ class _TIMUIKItHistoryMessageListItemState
                   ],
                 ),
               ),
-            ))
-        .toList();
+            ),
+    ).toList();
   }
 
   bool isRevokable(int timestamp) =>
@@ -215,115 +228,42 @@ class _TIMUIKItHistoryMessageListItemState
     Widget? child,
     GestureTapCallback? onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
-        decoration: const BoxDecoration(
-          color: Colors.white,
+    return SizedBox(
+      width: 50,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+          ),
+          child: child,
         ),
-        child: child,
       ),
     );
   }
 
   Widget _getTooltipAction(TIMUIKitChatConfig? chatConfig) {
-    final isCanRevoke = isRevokable(widget.messageItem.timestamp!);
-    final shouldShowRevokeAction =
-        isCanRevoke && (widget.messageItem.isSelf ?? false);
-    final I18nUtils ttBuild = I18nUtils(context);
-
+    Widget? extraTipsActionItem = widget.exteraTipsActionItemBuilder != null
+        ? widget.exteraTipsActionItemBuilder!(widget.messageItem, closeTooltip)
+        : null;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(bottom: 10),
-            margin: const EdgeInsets.only(bottom: 10),
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(width: 0.5, color: Colors.grey.shade300))
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: _buildeFirstRow(chatConfig),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Material(
-                child: ItemInkWell(
-                  onTap: () {
-                    _onTap("delete");
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        'images/delete_message.png',
-                        package: 'tim_ui_kit',
-                        width: 20,
-                        height: 20,
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        ttBuild.imt("删除"),
-                        style: TextStyle(
-                          decoration: TextDecoration.none,
-                          color: themeModel.theme.darkTextColor,
-                          fontSize: 10,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              if (shouldShowRevokeAction) const SizedBox(width: 40),
-              if (shouldShowRevokeAction)
-                Material(
-                  child: ItemInkWell(
-                    onTap: () {
-                      _onTap("revoke");
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          'images/revoke_message.png',
-                          package: 'tim_ui_kit',
-                          width: 20,
-                          height: 20,
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          ttBuild.imt("撤回"),
-                          style: TextStyle(
-                            decoration: TextDecoration.none,
-                            color: themeModel.theme.darkTextColor,
-                            fontSize: 10,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              if (widget.exteraTipsActionItemBuilder != null)
-                widget.exteraTipsActionItemBuilder!(
-                    widget.messageItem, closeTooltip)
-            ],
-          )
-        ],
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: 250,
+        ),
+        child: Wrap(
+          direction: Axis.horizontal,
+          alignment: WrapAlignment.start,
+          // crossAxisAlignment: crossAxisAlignment.st,
+          spacing: 4,
+          runSpacing: 24,
+          children: [
+            ..._buildLongPressTipItem(chatConfig),
+            if(extraTipsActionItem != null) extraTipsActionItem
+          ],
+        ),
+      )
     );
   }
 

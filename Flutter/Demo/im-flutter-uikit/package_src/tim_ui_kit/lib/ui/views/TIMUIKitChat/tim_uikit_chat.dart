@@ -43,7 +43,7 @@ class TIMUIKitChat extends StatefulWidget {
   /// show unread message count, default value is false
   final bool showTotalUnReadCount;
 
-  final Widget Function(V2TimMessage message, Function() closeTooltip)?
+  final Widget? Function(V2TimMessage message, Function() closeTooltip, [Key? key])?
       exteraTipsActionItemBuilder;
 
   /// show draft Text on TextField

@@ -47,6 +47,7 @@ class _ChatState extends State<Chat> {
   bool isTopic = false;
   String? backRemark;
   final V2TIMManager sdkInstance = TIMUIKitCore.getSDKInstance();
+  GlobalKey<dynamic> tuiChatField = GlobalKey();
 
   String _getTitle() {
     return backRemark ?? widget.selectedConversation.showName ?? "";
@@ -83,6 +84,7 @@ class _ChatState extends State<Chat> {
 
   _onTapLocation() {
     if(IMDemoConfig.baiduMapIOSAppKey != null && IMDemoConfig.baiduMapIOSAppKey.isNotEmpty){
+      tuiChatField.currentState.inputextField.currentState.hideAllPanel();
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -116,6 +118,7 @@ class _ChatState extends State<Chat> {
 
   _goToVideoUI() async {
     final isGroup = widget.selectedConversation.type == 2;
+    tuiChatField.currentState.inputextField.currentState.hideAllPanel();
     if (isGroup) {
       List<V2TimGroupMemberFullInfo>? selectedMember = await Navigator.push(
         context,
@@ -137,6 +140,7 @@ class _ChatState extends State<Chat> {
 
   _goToVoiceUI() async {
     final isGroup = widget.selectedConversation.type == 2;
+    tuiChatField.currentState.inputextField.currentState.hideAllPanel();
     if (isGroup) {
       List<V2TimGroupMemberFullInfo>? selectedMember = await Navigator.push(
         context,
@@ -185,6 +189,7 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return TIMUIKitChat(
+        key: tuiChatField,
         customStickerPanel: renderCustomStickerPanel,
         config: const TIMUIKitChatConfig(
           // 仅供演示，非全部配置项，实际使用中，可只传和默认项不同的参数，无需传入所有开关
