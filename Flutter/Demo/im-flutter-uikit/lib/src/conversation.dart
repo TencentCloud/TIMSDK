@@ -149,16 +149,21 @@ class _ConversationState extends State<Conversation> {
       children: [
         searchEntry(theme),
         Expanded(
-            child: TIMUIKitConversation(
-          onTapItem: _handleOnConvItemTaped,
-          itemSlidableBuilder: _itemSlidableBuilder,
-          controller: _controller,
-          emptyBuilder: () {
-            return Center(
-              child: Text(imt("暂无会话")),
-            );
-          },
-        ))
+          child: TIMUIKitConversation(
+            onTapItem: _handleOnConvItemTaped,
+            // itemSlidableBuilder: _itemSlidableBuilder,
+            controller: _controller,
+            conversationCollector: (conversation) {
+              final groupID = conversation?.groupID ?? "";
+              return !groupID.contains("im_discuss_");
+            },
+            emptyBuilder: () {
+              return Center(
+                child: Text(imt("暂无会话")),
+              );
+            },
+          ),
+        )
       ],
     );
   }

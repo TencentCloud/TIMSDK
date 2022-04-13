@@ -52,10 +52,10 @@ dependencies:
     git:
       url: https://github.com/TencentCloud/TPNS-Flutter-Plugin
       ref: V1.1.5
-  tim_ui_kit: ^0.0.6
+ tim_ui_kit: ^0.0.6
   # tim_ui_kit:
-  #   path: package_src/tim_ui_kit
-  tim_ui_kit_calling_plugin: ^0.0.3
+  #  path: package_src/tim_ui_kit
+  tim_ui_kit_calling_plugin: ^0.1.0
   tim_ui_kit_sticker_plugin: ^0.0.2
   # tim_ui_kit_sticker_plugin:
   #   path: ../tim_ui_kit_sticker_plugin
@@ -66,9 +66,11 @@ dependencies:
   flutter_baidu_mapapi_utils: ^3.1.0+1
   location: ^4.3.0
   flutter_svg: ^1.0.3
-  tim_ui_kit_lbs_plugin: ^1.0.1
+  tim_ui_kit_lbs_plugin: ^1.0.6
+#  tim_ui_kit_lbs_plugin:
+#    path: /Users/owennwang/Documents/GitHub/im-flutter-uikit-lbs
 dev_dependencies:
-  fast_i18n: 5.10.0
+  fast_i18n: 5.12.0
   build_runner: any
   flutter_test:
     sdk: flutter
