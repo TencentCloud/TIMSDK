@@ -24,7 +24,6 @@ namespace com.tencent.imsdk.unity.utils
         public static string intptr2string(IntPtr ptr)
         {
             if(ptr == null){
-                Utils.Log("jin1231221");
                 return "";
             }
             return Marshal.PtrToStringAnsi(ptr);
