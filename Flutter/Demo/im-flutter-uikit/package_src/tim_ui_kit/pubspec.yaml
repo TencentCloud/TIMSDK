@@ -1,6 +1,6 @@
 name: tim_ui_kit
 description: TUIKit 是基于 IM SDK 实现的一套 UI 组件,其包含会话、聊天、搜索、关系链、群组、音视频通话等功能。
-version: 0.0.6
+version: 0.0.6-bugfix-1.0
 homepage: https://cloud.tencent.com/product/im
 
 environment:

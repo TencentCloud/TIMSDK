@@ -42,7 +42,7 @@ class TIMUIKitHistoryMessageList extends StatefulWidget {
     String? messageID,
   )? locationMessageItemBuilder;
 
-  final Widget Function(V2TimMessage message, Function() closeTooltip)?
+  final Widget? Function(V2TimMessage message, Function() closeTooltip, [Key? key])?
       exteraTipsActionItemBuilder;
 
   const TIMUIKitHistoryMessageList({

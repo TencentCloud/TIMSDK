@@ -95,7 +95,8 @@ class AppLogo extends StatelessWidget {
                     width: CommonUtils.adaptWidth(380),
                     height: CommonUtils.adaptHeight(200)),
               ),
-              Expanded(child: Container(
+              Expanded(
+                  child: Container(
                 margin: const EdgeInsets.only(right: 5),
                 height: CommonUtils.adaptHeight(180),
                 padding: const EdgeInsets.only(top: 10, left: 5, right: 15),
@@ -279,8 +280,11 @@ class _LoginFormState extends State<LoginForm> {
     );
     if (data.code != 0) {
       final errorReason = data.desc;
-      Utils.toast(imt_para("登录失败{{errorReason}}", "登录失败$errorReason")(
-          errorReason: errorReason));
+      Utils.toast(
+        imt_para("登录失败{{errorReason}}", "登录失败$errorReason")(
+          errorReason,
+        ),
+      );
       return;
     }
     await getIMData();
