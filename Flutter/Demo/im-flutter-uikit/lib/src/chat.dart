@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
@@ -6,27 +5,27 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/controller/tim_uikit_chat_controller.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:tim_ui_kit/ui/views/TIMUIKitChat/TIMUIKitTextField/tim_uikit_call_invite_list.dart';
-import 'package:tim_ui_kit/ui/widgets/toast.dart';
 import 'package:tim_ui_kit_calling_plugin/enum/tim_uikit_trtc_calling_scence.dart';
 import 'package:tim_ui_kit_calling_plugin/tim_ui_kit_calling_plugin.dart';
 import 'package:tim_ui_kit_sticker_plugin/tim_ui_kit_sticker_plugin.dart';
-import 'package:timuikit/src/discuss/create_topic.dart';
-import 'package:timuikit/src/group_profile.dart';
-import 'package:timuikit/src/provider/custom_sticker_package.dart';
-import 'package:timuikit/src/provider/theme.dart';
-import 'package:timuikit/src/user_profile.dart';
 import 'package:tim_ui_kit_lbs_plugin/pages/location_picker.dart';
 import 'package:tim_ui_kit_lbs_plugin/utils/location_utils.dart';
 import 'package:tim_ui_kit_lbs_plugin/utils/tim_location_model.dart';
 import 'package:tim_ui_kit_lbs_plugin/widget/location_msg_element.dart';
+import 'package:timuikit/src/group_profile.dart';
+import 'package:timuikit/src/provider/custom_sticker_package.dart';
+import 'package:timuikit/src/provider/theme.dart';
+import 'package:timuikit/src/user_profile.dart';
 import 'package:timuikit/src/widgets/lbs/baidu_implements/map_service_baidu_implement.dart';
 import 'package:timuikit/src/widgets/lbs/baidu_implements/map_widget_baidu_implement.dart';
-import 'package:timuikit/utils/discuss.dart';
-import 'package:tencent_im_sdk_plugin/enum/conversation_type.dart';
 import 'package:provider/provider.dart';
 
-import 'discuss/topic.dart';
 import 'package:timuikit/i18n/i18n_utils.dart';
+import 'package:timuikit/utils/toast.dart';
+import '../i18n/i18n_utils.dart';
+import '../src/config.dart';
+import '../src/widgets/lbs/baidu_implements/map_service_baidu_implement.dart';
+import '../src/widgets/lbs/baidu_implements/map_widget_baidu_implement.dart';
 
 class Chat extends StatefulWidget {
   final V2TimConversation selectedConversation;
@@ -70,19 +69,6 @@ class _ChatState extends State<Chat> {
         : ConvType.group;
   }
 
-  isValidateDisscuss(String _groupID) async {
-    if (!_groupID.contains("im_discuss_")) {
-      return;
-    }
-    Map<String, dynamic> data = await DisscussApi.isValidateDisscuss(
-      imGroupId: _groupID,
-    );
-    setState(() {
-      isDisscuss = data['data']['isDisscuss'];
-      isTopic = data['data']['isTopic'];
-    });
-  }
-
   _initListener() async {
     await _timuiKitChatController.removeMessageListener();
     await _timuiKitChatController.setMessageListener();
@@ -97,87 +83,37 @@ class _ChatState extends State<Chat> {
   }
 
   _onTapLocation() {
-    tuiChatField.currentState.inputextField.currentState.hideAllPanel();
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LocationPicker(
-            onChange: (LocationMessage location) async {
-              final locationMessageInfo = await sdkInstance.v2TIMMessageManager
-                  .createLocationMessage(
-                      desc: location.desc,
-                      longitude: location.longitude,
-                      latitude: location.latitude);
-              final messageInfo = locationMessageInfo.data!.messageInfo;
-              _timuiKitChatController.sendMessage(
-                  receiverID: _getConvID(),
-                  groupID: _getConvID(),
-                  convType: _getConvType(),
-                  messageInfo: messageInfo);
-            },
-            mapBuilder: (onMapLoadDone, mapKey, onMapMoveEnd) => BaiduMap(
-              onMapMoveEnd: onMapMoveEnd,
-              onMapLoadDone: onMapLoadDone,
-              key: mapKey,
+    if(IMDemoConfig.baiduMapIOSAppKey != null && IMDemoConfig.baiduMapIOSAppKey.isNotEmpty){
+      tuiChatField.currentState.inputextField.currentState.hideAllPanel();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LocationPicker(
+              onChange: (LocationMessage location) async {
+                final locationMessageInfo = await sdkInstance.v2TIMMessageManager
+                    .createLocationMessage(
+                    desc: location.desc,
+                    longitude: location.longitude,
+                    latitude: location.latitude);
+                final messageInfo = locationMessageInfo.data!.messageInfo;
+                _timuiKitChatController.sendMessage(
+                    receiverID: _getConvID(),
+                    groupID: _getConvID(),
+                    convType: _getConvType(),
+                    messageInfo: messageInfo);
+              },
+              mapBuilder: (onMapLoadDone, mapKey, onMapMoveEnd) => BaiduMap(
+                onMapMoveEnd: onMapMoveEnd,
+                onMapLoadDone: onMapLoadDone,
+                key: mapKey,
+              ),
+              locationUtils: LocationUtils(BaiduMapService()),
             ),
-            locationUtils: LocationUtils(BaiduMapService()),
-          ),
-        ));
-  }
-
-  _openTopicPage(String groupID) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Topic(groupID),
-      ),
-    );
-  }
-
-  List<Map<String, dynamic>> handleTopicActionList = [
-    {"name": imt("结束话题"), "type": "0"},
-    {"name": imt("置顶话题"), "type": "1000"}
-  ];
-
-  handleTopic(BuildContext context, String type, String groupID) async {
-    Map<String, dynamic> res = await DisscussApi.updateTopicStatus(
-      imGroupId: groupID,
-      status: type,
-    );
-    if (res['code'] == 0) {
-      Toast.showToast(
-          ToastType.success, type == '0' ? imt("结束成功") : imt("置顶成功"), context);
-      Navigator.pop(context);
-    } else {
-      String errorMessage = res['message'];
-      Toast.showToast(
-          ToastType.fail,
-          imt_para("发生错误 {{errorMessage}}", "发生错误 $errorMessage")(
-              errorMessage: errorMessage),
-          context);
+          ));
+    }else{
+      Utils.toast("请根据Demo的README指引，配置百度AK，体验DEMO的位置消息能力");
+      print("请根据本文档指引 https://docs.qq.com/doc/DSVliWE9acURta2dL ， 快速体验位置消息能力");
     }
-  }
-
-  messagePopUpMenu(BuildContext context, String groupID) {
-    return showCupertinoModalPopup<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoActionSheet(
-          title: null,
-          actions: handleTopicActionList
-              .map(
-                (e) => CupertinoActionSheetAction(
-                  onPressed: () {
-                    handleTopic(context, e['type'], groupID);
-                  },
-                  child: Text(e['name']),
-                  isDefaultAction: false,
-                ),
-              )
-              .toList(),
-        );
-      },
-    );
   }
 
   _goToVideoUI() async {
@@ -228,16 +164,11 @@ class _ChatState extends State<Chat> {
   void initState() {
     super.initState();
     _initListener();
-    if (widget.selectedConversation.type != ConversationType.V2TIM_C2C) {
-      isValidateDisscuss(widget.selectedConversation.groupID!);
-    }
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    // _timuiKitChatController.dispose();
   }
 
   Widget renderCustomStickerPanel(
@@ -289,6 +220,7 @@ class _ChatState extends State<Chat> {
         morePanelConfig: MorePanelConfig(
           extraAction: [
             MorePanelItem(
+              // 使用前，清先根据本文档配置AK。https://docs.qq.com/doc/DSVliWE9acURta2dL
                 id: "location",
                 title: imt("位置"),
                 onTap: (c) {
@@ -351,69 +283,8 @@ class _ChatState extends State<Chat> {
                 ))
           ],
         ),
-        exteraTipsActionItemBuilder: (message, closeTooltip, [Key? key]) {
-          if (isDisscuss) {
-            return Container(
-              key: key,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              width: 50,
-              child:
-                InkWell(
-                  onTap: () {
-                    closeTooltip();
-                    String disscussId;
-                    if (message.groupID == null) {
-                      disscussId = '';
-                    } else {
-                      disscussId = message.groupID!;
-                    }
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateTopic(
-                            disscussId: disscussId,
-                            message: message.textElem?.text ?? '',
-                            messageIdList: [message.msgID!]),
-                      ),
-                    );
-                  },
-                  child: TipsActionItem(
-                      label: imt("话题"), icon: 'assets/topic.png'),
-                ),
-            );
-          } else {
-            return null;
-          }
-        },
         appBarConfig: AppBar(
           actions: [
-            if (isDisscuss)
-              SizedBox(
-                width: 34,
-                child: TextButton(
-                  onPressed: () {
-                    _openTopicPage(widget.selectedConversation.groupID!);
-                  },
-                  child: const Image(
-                      width: 34,
-                      height: 34,
-                      image: AssetImage('assets/topic.png'),
-                      color: Colors.white),
-                ),
-              ),
-            if (isTopic)
-              IconButton(
-                onPressed: () {
-                  messagePopUpMenu(
-                      context, widget.selectedConversation.groupID!);
-                },
-                icon: const Icon(
-                  Icons.settings,
-                ),
-              ),
             IconButton(
                 padding: const EdgeInsets.only(left: 8, right: 16),
                 onPressed: () async {
