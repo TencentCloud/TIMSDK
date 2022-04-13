@@ -2138,7 +2138,7 @@ namespace com.tencent.imsdk.unity
         }
 
 
-        
+
         [MonoPInvokeCallback(typeof(IMNativeSDK.CommonValueCallback))]
         private static void ValueCallbackInstance(int code, IntPtr desc, IntPtr json_param, IntPtr user_data)
         {
@@ -2152,186 +2152,192 @@ namespace com.tencent.imsdk.unity
         static private void threadOperation(object obj)
         {
             CallbackConvert data = (CallbackConvert)obj;
-            switch (data.type)
+            try
             {
-                case "ValueCallback":
-                    if (ValuecallbackStore.ContainsKey(data.user_data))
-                    {
-                        if (ValuecallbackStore.TryGetValue(data.user_data, out ValueCallback callback))
+                switch (data.type)
+                {
+                    case "ValueCallback":
+                        if (ValuecallbackStore.ContainsKey(data.user_data))
                         {
-                            callback(data.code, data.desc, data.data, data.user_data);
+                            if (ValuecallbackStore.TryGetValue(data.user_data, out ValueCallback callback))
+                            {
+                                callback(data.code, data.desc, data.data, data.user_data);
 
-                            ValuecallbackStore.Remove(data.user_data);
+                                ValuecallbackStore.Remove(data.user_data);
+                            }
+
+                        };
+                        break;
+                    case "TIMRecvNewMsgCallback":
+                        if (RecvNewMsgCallbackStore != null)
+                        {
+                            RecvNewMsgCallbackStore(Utils.FromJson<List<Message>>(data.data), data.user_data);
+                        }
+                        break;
+                    case "TIMMsgReadedReceiptCallback":
+                        if (MsgReadedReceiptCallbackStore != null)
+                        {
+                            MsgReadedReceiptCallbackStore(Utils.FromJson<List<MessageReceipt>>(data.data), data.user_data);
+
+                        }
+                        break;
+                    case "TIMMsgRevokeCallback":
+                        if (MsgRevokeCallbackStore != null)
+                        {
+                            MsgRevokeCallbackStore(Utils.FromJson<List<MsgLocator>>(data.data), data.user_data);
+
+                        }
+                        break;
+                    case "TIMMsgElemUploadProgressCallback":
+                        if (MsgElemUploadProgressCallbackStore != null)
+                        {
+                            MsgElemUploadProgressCallbackStore(Utils.FromJson<Message>(data.data), data.index, data.cur_size, data.total_size, data.user_data);
+
+                        }
+                        break;
+                    case "TIMGroupTipsEventCallback":
+
+                        if (GroupTipsEventCallbackStore != null)
+                        {
+                            GroupTipsEventCallbackStore(Utils.FromJson<GroupTipsElem>(data.data), data.user_data);
+
+                        }
+                        break;
+                    case "TIMGroupAttributeChangedCallback":
+
+                        if (GroupAttributeChangedCallbackStore != null)
+                        {
+                            GroupAttributeChangedCallbackStore(data.group_id, Utils.FromJson<List<GroupAttributes>>(data.data), data.user_data);
+
+                        }
+                        break;
+                    case "TIMConvEventCallback":
+
+                        if (ConvEventCallbackStore != null)
+                        {
+                            ConvEventCallbackStore((TIMConvEvent)data.conv_event, Utils.FromJson<List<ConvInfo>>(data.data), data.user_data);
+
                         }
 
-                    };
-                    break;
-                case "TIMRecvNewMsgCallback":
-                    if (RecvNewMsgCallbackStore != null)
-                    {
-                        Utils.Log(data.data);
-                        RecvNewMsgCallbackStore(Utils.FromJson<List<Message>>(data.data), data.user_data);
-                    }
-                    break;
-                case "TIMMsgReadedReceiptCallback":
-                    if (MsgReadedReceiptCallbackStore != null)
-                    {
-                        MsgReadedReceiptCallbackStore(Utils.FromJson<List<MessageReceipt>>(data.data), data.user_data);
 
-                    }
-                    break;
-                case "TIMMsgRevokeCallback":
-                    if (MsgRevokeCallbackStore != null)
-                    {
-                        MsgRevokeCallbackStore(Utils.FromJson<List<MsgLocator>>(data.data), data.user_data);
+                        break;
+                    case "TIMConvTotalUnreadMessageCountChangedCallback":
 
-                    }
-                    break;
-                case "TIMMsgElemUploadProgressCallback":
-                    if (MsgElemUploadProgressCallbackStore != null)
-                    {
-                        MsgElemUploadProgressCallbackStore(Utils.FromJson<Message>(data.data), data.index, data.cur_size, data.total_size, data.user_data);
+                        if (ConvTotalUnreadMessageCountChangedCallbackStore != null)
+                        {
+                            ConvTotalUnreadMessageCountChangedCallbackStore(data.code, data.user_data);
 
-                    }
-                    break;
-                case "TIMGroupTipsEventCallback":
+                        }
+                        break;
+                    case "TIMNetworkStatusListenerCallback":
 
-                    if (GroupTipsEventCallbackStore != null)
-                    {
-                        GroupTipsEventCallbackStore(Utils.FromJson<GroupTipsElem>(data.data), data.user_data);
+                        if (NetworkStatusListenerCallbackStore != null)
+                        {
+                            NetworkStatusListenerCallbackStore((TIMNetworkStatus)data.code, data.index, data.desc, data.user_data);
 
-                    }
-                    break;
-                case "TIMGroupAttributeChangedCallback":
+                        }
+                        break;
+                    case "TIMKickedOfflineCallback":
 
-                    if (GroupAttributeChangedCallbackStore != null)
-                    {
-                        GroupAttributeChangedCallbackStore(data.group_id, Utils.FromJson<List<GroupAttributes>>(data.data), data.user_data);
+                        if (KickedOfflineCallbackStore != null)
+                        {
+                            KickedOfflineCallbackStore(data.user_data);
 
-                    }
-                    break;
-                case "TIMConvEventCallback":
+                        }
+                        break;
+                    case "TIMUserSigExpiredCallback":
 
-                    if (ConvEventCallbackStore != null)
-                    {
-                        ConvEventCallbackStore((TIMConvEvent)data.conv_event, Utils.FromJson<List<ConvInfo>>(data.data), data.user_data);
+                        if (UserSigExpiredCallbackStore != null)
+                        {
+                            UserSigExpiredCallbackStore(data.user_data);
 
-                    }
+                        }
 
+                        break;
+                    case "TIMOnAddFriendCallback":
 
-                    break;
-                case "TIMConvTotalUnreadMessageCountChangedCallback":
+                        if (OnAddFriendCallbackStore != null)
+                        {
+                            OnAddFriendCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
 
-                    if (ConvTotalUnreadMessageCountChangedCallbackStore != null)
-                    {
-                        ConvTotalUnreadMessageCountChangedCallbackStore(data.code, data.user_data);
+                        }
+                        break;
+                    case "TIMOnDeleteFriendCallback":
+                        if (OnDeleteFriendCallbackStore != null)
+                        {
+                            OnDeleteFriendCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
 
-                    }
-                    break;
-                case "TIMNetworkStatusListenerCallback":
+                        }
+                        break;
+                    case "TIMUpdateFriendProfileCallback":
 
-                    if (NetworkStatusListenerCallbackStore != null)
-                    {
-                        NetworkStatusListenerCallbackStore((TIMNetworkStatus)data.code, data.index, data.desc, data.user_data);
+                        if (UpdateFriendProfileCallbackStore != null)
+                        {
+                            UpdateFriendProfileCallbackStore(Utils.FromJson<List<FriendProfileItem>>(data.data), data.user_data);
 
-                    }
-                    break;
-                case "TIMKickedOfflineCallback":
+                        }
+                        break;
 
-                    if (KickedOfflineCallbackStore != null)
-                    {
-                        KickedOfflineCallbackStore(data.user_data);
+                    case "TIMFriendAddRequestCallback":
 
-                    }
-                    break;
-                case "TIMUserSigExpiredCallback":
+                        if (FriendAddRequestCallbackStore != null)
+                        {
+                            FriendAddRequestCallbackStore(Utils.FromJson<List<FriendAddPendency>>(data.data), data.user_data);
 
-                    if (UserSigExpiredCallbackStore != null)
-                    {
-                        UserSigExpiredCallbackStore(data.user_data);
+                        }
+                        break;
+                    case "TIMFriendApplicationListDeletedCallback":
 
-                    }
+                        if (FriendApplicationListDeletedCallbackStore != null)
+                        {
+                            FriendApplicationListDeletedCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
 
-                    break;
-                case "TIMOnAddFriendCallback":
+                        }
+                        break;
+                    case "TIMFriendApplicationListReadCallback":
 
-                    if (OnAddFriendCallbackStore != null)
-                    {
-                        OnAddFriendCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
+                        if (FriendApplicationListReadCallbackStore != null)
+                        {
+                            FriendApplicationListReadCallbackStore(data.user_data);
 
-                    }
-                    break;
-                case "TIMOnDeleteFriendCallback":
-                    if (OnDeleteFriendCallbackStore != null)
-                    {
-                        OnDeleteFriendCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
+                        }
+                        break;
+                    case "TIMFriendBlackListAddedCallback":
 
-                    }
-                    break;
-                case "TIMUpdateFriendProfileCallback":
+                        if (FriendBlackListAddedCallbackStore != null)
+                        {
+                            FriendBlackListAddedCallbackStore(Utils.FromJson<List<FriendProfile>>(data.data), data.user_data);
 
-                    if (UpdateFriendProfileCallbackStore != null)
-                    {
-                        UpdateFriendProfileCallbackStore(Utils.FromJson<List<FriendProfileItem>>(data.data), data.user_data);
+                        }
+                        break;
+                    case "TIMFriendBlackListDeletedCallback":
 
-                    }
-                    break;
+                        if (FriendBlackListDeletedCallbackStore != null)
+                        {
+                            FriendBlackListDeletedCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
 
-                case "TIMFriendAddRequestCallback":
+                        }
+                        break;
+                    case "TIMLogCallback":
 
-                    if (FriendAddRequestCallbackStore != null)
-                    {
-                        FriendAddRequestCallbackStore(Utils.FromJson<List<FriendAddPendency>>(data.data), data.user_data);
+                        if (LogCallbackStore != null)
+                        {
+                            LogCallbackStore((TIMLogLevel)data.code, data.data, data.user_data);
+                        }
+                        break;
+                    case "TIMMsgUpdateCallback":
 
-                    }
-                    break;
-                case "TIMFriendApplicationListDeletedCallback":
+                        if (MsgUpdateCallbackStore != null)
+                        {
+                            MsgUpdateCallbackStore(Utils.FromJson<List<Message>>(data.data), data.user_data);
+                        }
+                        break;
 
-                    if (FriendApplicationListDeletedCallbackStore != null)
-                    {
-                        FriendApplicationListDeletedCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
-
-                    }
-                    break;
-                case "TIMFriendApplicationListReadCallback":
-
-                    if (FriendApplicationListReadCallbackStore != null)
-                    {
-                        FriendApplicationListReadCallbackStore(data.user_data);
-
-                    }
-                    break;
-                case "TIMFriendBlackListAddedCallback":
-
-                    if (FriendBlackListAddedCallbackStore != null)
-                    {
-                        FriendBlackListAddedCallbackStore(Utils.FromJson<List<FriendProfile>>(data.data), data.user_data);
-
-                    }
-                    break;
-                case "TIMFriendBlackListDeletedCallback":
-
-                    if (FriendBlackListDeletedCallbackStore != null)
-                    {
-                        FriendBlackListDeletedCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
-
-                    }
-                    break;
-                case "TIMLogCallback":
-
-                    if (LogCallbackStore != null)
-                    {
-                        LogCallbackStore((TIMLogLevel)data.code, data.data, data.user_data);
-                    }
-                    break;
-                case "TIMMsgUpdateCallback":
-
-                    if (MsgUpdateCallbackStore != null)
-                    {
-                        MsgUpdateCallbackStore(Utils.FromJson<List<Message>>(data.data), data.user_data);
-                    }
-                    break;
-
+                }
+            }
+            catch (System.Exception error)
+            {
+                Debug.LogError(error);
             }
 
         }
