@@ -20,6 +20,8 @@ import 'package:tim_ui_kit/i18n/i18n_utils.dart';
 
 import 'package:tim_ui_kit/ui/utils/shared_theme.dart';
 
+import '../../../utils/color.dart';
+
 class MorePanelConfig {
   final bool showGalleryPickAction;
   final bool showCameraAction;
@@ -309,8 +311,13 @@ class _MorePanelState extends State<MorePanel> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
       height: 248,
+      decoration: BoxDecoration(
+        color: hexToColor("EBF0F6"),
+        border: Border(
+          top: BorderSide(width: 1, color: Colors.grey.shade300),
+        ),
+      ),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 23),
-      color: theme?.weakBackgroundColor,
       width: screenWidth,
       child: Wrap(
         spacing: (screenWidth - (23 * 2) - 64 * 4) / 3,
