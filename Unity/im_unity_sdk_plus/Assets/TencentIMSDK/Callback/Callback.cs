@@ -41,7 +41,7 @@ namespace com.tencent.imsdk.unity.callback
     /// 群tips
     /// </summary>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void GroupTipsEventCallback(GroupTipsElem message, string user_data);
+    public delegate void GroupTipsEventCallback(List<GroupTipsElem> message, string user_data);
 
     /// <summary>
     /// 群属性改变
