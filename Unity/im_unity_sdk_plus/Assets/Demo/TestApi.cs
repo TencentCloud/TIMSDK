@@ -11,7 +11,6 @@ using System;
 using System.Text;
 using AOT;
 using Newtonsoft.Json;
-using demo.tencent.im.unity;
 using System.Reflection;
 using UnityEngine.UI;
 // 部分接口测试
@@ -220,7 +219,7 @@ public class TestApi : MonoBehaviour
     {
         addStringDataToConsole("SetGroupAttributeChangedCallback called " + JsonConvert.SerializeObject(group_attributes[0]));
     }
-    public static void GroupTipsEventCallback(GroupTipsElem tips, string user_data)
+    public static void GroupTipsEventCallback(List<GroupTipsElem> tips, string user_data)
     {
         addStringDataToConsole("SetGroupTipsEventCallback called " + JsonConvert.SerializeObject(tips));
     }
