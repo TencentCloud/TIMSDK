@@ -2198,7 +2198,7 @@ namespace com.tencent.imsdk.unity
 
                         if (GroupTipsEventCallbackStore != null)
                         {
-                            GroupTipsEventCallbackStore(Utils.FromJson<List<GroupTipsElem>>(data.data), data.user_data);
+                            GroupTipsEventCallbackStore(Utils.FromJson<GroupTipsElem>(data.data), data.user_data);
 
                         }
                         break;
