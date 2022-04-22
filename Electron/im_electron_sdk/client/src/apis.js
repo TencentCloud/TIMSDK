@@ -6,7 +6,9 @@ import TimAdvanceMessageManager from "./manager/advanceMessageManager";
 import { ipcRenderer } from "electron";
 
 let createdGroupId;
-
+let seq = {
+    group_get_memeber_info_list_result_next_seq: 0
+};
 const APIS = [
     {
         manager: "timBaseManager",
@@ -430,13 +432,11 @@ const APIS = [
             {
                 name: "TIMGroupGetJoinedGroupList",
                 action: (callback) => {
-                    for(let i = 0;i<20;i++){
-                        TimGroupManager.TIMGroupGetJoinedGroupList().then(data => {
-                            callback(JSON.stringify(data))
-                        }).catch(err => {
-                            callback(err.toString())
-                        })
-                    }
+                    TimGroupManager.TIMGroupGetJoinedGroupList().then(data => {
+                        callback(JSON.stringify(data))
+                    }).catch(err => {
+                        callback(err.toString())
+                    })
                 }
             },
             {
@@ -464,9 +464,13 @@ const APIS = [
             {
                 name: "TIMGroupGetMemberInfoList",
                 action: (callback) => {
-                    TimGroupManager.TIMGroupGetMemberInfoList(createdGroupId).then(data => {
-                        console.log(data)
+                    
+                    TimGroupManager.TIMGroupGetMemberInfoList(createdGroupId,seq.group_get_memeber_info_list_result_next_seq).then(data => {
+                        console.log(data.data.json_param)
+                        //  seq = JSON.parse(data.data.json_param).group_get_memeber_info_list_result_next_seq
+                        seq = JSON.parse(data.data.json_param);
                         callback(JSON.stringify(data))
+
                     }).catch(err => {
                         callback(err.toString())
                     })

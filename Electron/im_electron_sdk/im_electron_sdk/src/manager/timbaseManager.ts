@@ -70,7 +70,6 @@ class TimbaseManager {
 
      */
     TIMInit(initParams?: initParam): Promise<number> {
-        this.TIMUninit();
         let sdkconfig: string;
         const { config_path } = initParams || {};
         if (config_path) {

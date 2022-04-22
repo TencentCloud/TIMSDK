@@ -104,10 +104,11 @@ const TimBaseManager = {
       data: 'test data'
     })
   },
-  TIMGroupGetMemberInfoList: () => {
+  TIMGroupGetMemberInfoList: (id,seq) => {
     return timRenderInstance.TIMGroupGetMemberInfoList({
       params: {
-        group_get_members_info_list_param_group_id: "@TGS#1CT",
+        group_get_members_info_list_param_group_id: "@TGS#_im_discuss_6iQBFthZWrmRdcYS",
+        group_get_members_info_list_param_next_seq: seq,
       }
     })
   },
