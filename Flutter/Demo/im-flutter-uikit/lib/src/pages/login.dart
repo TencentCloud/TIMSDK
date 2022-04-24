@@ -10,8 +10,7 @@ import 'package:tim_ui_kit/tim_ui_kit.dart';
 import 'package:tim_ui_kit/ui/utils/color.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/src/pages/home_page.dart';
-import 'package:timuikit/src/pages/privacy/privacy.dart';
-import 'package:timuikit/src/pages/privacy/privacy_agreement.dart';
+import 'package:timuikit/src/pages/privacy/privacy_webview.dart';
 import 'package:timuikit/src/provider/theme.dart';
 import 'package:timuikit/utils/GenerateUserSig.dart';
 import 'package:timuikit/utils/commonUtils.dart';
@@ -146,6 +145,23 @@ class _LoginFormState extends State<LoginForm> {
     checkFirstEnter();
   }
 
+  TextSpan webViewLink(String title, String url) {
+    return TextSpan(
+      text: imt(title),
+      style: const TextStyle(
+        color: Color.fromRGBO(0, 110, 253, 1),
+      ),
+      recognizer: TapGestureRecognizer()
+        ..onTap = () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      PrivacyDocument(title: title, url: url)));
+        },
+    );
+  }
+
   void checkFirstEnter() async {
     Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     SharedPreferences prefs = await _prefs;
@@ -175,40 +191,23 @@ class _LoginFormState extends State<LoginForm> {
                   TextSpan(
                     text: imt("请您点击"),
                   ),
+                  webViewLink("《用户协议》",
+                      'https://web.sdk.qcloud.com/document/Tencent-IM-User-Agreement.html'),
                   TextSpan(
-                    text: imt("《用户协议》"),
-                    style: const TextStyle(
-                      color: Color.fromRGBO(0, 110, 253, 1),
-                    ),
-                    // 设置点击事件
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const UserAgreementPage()));
-                      },
+                    text: imt(", "),
                   ),
+                  webViewLink("《隐私协议》",
+                      'https://privacy.qq.com/document/preview/1cfe904fb7004b8ab1193a55857f7272'),
+                  TextSpan(
+                    text: imt(", "),
+                  ),
+                  webViewLink("《信息收集清单》",
+                      'https://privacy.qq.com/document/preview/45ba982a1ce6493597a00f8c86b52a1e'),
                   TextSpan(
                     text: imt("和"),
                   ),
-                  TextSpan(
-                      text: imt("《隐私协议》"),
-                      style: const TextStyle(
-                        color: Color.fromRGBO(0, 110, 253, 1),
-                      ),
-                      // 设置点击事件
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const PrivacyAgreementPage(),
-                            ),
-                          );
-                        }),
+                  webViewLink("《信息共享清单》",
+                      'https://privacy.qq.com/document/preview/dea84ac4bb88454794928b77126e9246'),
                   TextSpan(
                       text: imt("并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！")),
                 ]),
@@ -279,12 +278,9 @@ class _LoginFormState extends State<LoginForm> {
       userSig: userSig,
     );
     if (data.code != 0) {
-      final errorReason = data.desc;
+      final option1 = data.desc;
       Utils.toast(
-        imt_para("登录失败{{errorReason}}", "登录失败$errorReason")(
-          errorReason,
-        ),
-      );
+          imt_para("登录失败{{option1}}", "登录失败$option1")(option1: option1));
       return;
     }
     await getIMData();

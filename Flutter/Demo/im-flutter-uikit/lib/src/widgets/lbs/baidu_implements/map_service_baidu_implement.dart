@@ -1,14 +1,13 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart';
 import 'package:flutter_baidu_mapapi_search/flutter_baidu_mapapi_search.dart';
 import 'package:tim_ui_kit_lbs_plugin/abstract/map_service.dart';
 import 'package:tim_ui_kit_lbs_plugin/utils/tim_location_model.dart';
 import '../../../../i18n/i18n_utils.dart';
-import 'dart:io' show Platform;
 import '../../../config.dart';
 
-
-class BaiduMapService extends TIMMapService{
-
+class BaiduMapService extends TIMMapService {
   String appKey = IMDemoConfig.baiduMapIOSAppKey;
 
   /// 使用百度地图提供的定位能力，需要先安装flutter_bmflocation包。
@@ -18,7 +17,7 @@ class BaiduMapService extends TIMMapService{
   void moveToCurrentLocationActionWithSearchPOIByMapSDK({
     required void Function(TIMCoordinate coordinate) moveMapCenter,
     void Function(TIMReverseGeoCodeSearchResult, bool)?
-    onGetReverseGeoCodeSearchResult,
+        onGetReverseGeoCodeSearchResult,
   }) async {
     // await initBaiduLocationPermission();
     // Map iosMap = initIOSOptions().getMap();
@@ -101,8 +100,7 @@ class BaiduMapService extends TIMMapService{
 
   @override
   void poiCitySearch({
-    required void Function(List<TIMPoiInfo>?, bool)
-    onGetPoiCitySearchResult,
+    required void Function(List<TIMPoiInfo>?, bool) onGetPoiCitySearchResult,
     required String keyword,
     required String city,
   }) async {
@@ -117,18 +115,14 @@ class BaiduMapService extends TIMMapService{
     BMFPoiCitySearch citySearch = BMFPoiCitySearch();
 
     // 检索回调
-    citySearch.onGetPoiCitySearchResult(
-        callback: (result, errorCode) {
-          List<TIMPoiInfo> tmpPoiInfoList = [];
-          result.poiInfoList?.forEach((v) {
-            tmpPoiInfoList.add(TIMPoiInfo.fromMap(v.toMap()));
-          });
-          onGetPoiCitySearchResult(
-              tmpPoiInfoList,
-              errorCode != BMFSearchErrorCode.NO_ERROR
-          );
-        }
-    );
+    citySearch.onGetPoiCitySearchResult(callback: (result, errorCode) {
+      List<TIMPoiInfo> tmpPoiInfoList = [];
+      result.poiInfoList?.forEach((v) {
+        tmpPoiInfoList.add(TIMPoiInfo.fromMap(v.toMap()));
+      });
+      onGetPoiCitySearchResult(
+          tmpPoiInfoList, errorCode != BMFSearchErrorCode.NO_ERROR);
+    });
 
     // 发起检索
     bool result = await citySearch.poiCitySearch(citySearchOption);
@@ -143,8 +137,8 @@ class BaiduMapService extends TIMMapService{
   @override
   void searchPOIByCoordinate(
       {required TIMCoordinate coordinate,
-        required void Function(TIMReverseGeoCodeSearchResult, bool)
-        onGetReverseGeoCodeSearchResult}) async {
+      required void Function(TIMReverseGeoCodeSearchResult, bool)
+          onGetReverseGeoCodeSearchResult}) async {
     BMFReverseGeoCodeSearchOption option = BMFReverseGeoCodeSearchOption(
       location: BMFCoordinate.fromMap(coordinate.toMap()),
     );
@@ -154,16 +148,17 @@ class BaiduMapService extends TIMMapService{
 
     // 注册检索回调
     reverseGeoCodeSearch.onGetReverseGeoCodeSearchResult(
-        callback: (result, errorCode){
-          print("failed reason ${errorCode} ${errorCode.name} ${errorCode.toString()}");
-          return onGetReverseGeoCodeSearchResult(
-              TIMReverseGeoCodeSearchResult.fromMap(result.toMap()),
-              errorCode != BMFSearchErrorCode.NO_ERROR
-          );
-        });
+        callback: (result, errorCode) {
+      print(
+          "failed reason $errorCode ${errorCode.name} ${errorCode.toString()}");
+      return onGetReverseGeoCodeSearchResult(
+          TIMReverseGeoCodeSearchResult.fromMap(result.toMap()),
+          errorCode != BMFSearchErrorCode.NO_ERROR);
+    });
 
     // 发起检索
-    bool result = await reverseGeoCodeSearch.reverseGeoCodeSearch(BMFReverseGeoCodeSearchOption.fromMap(option.toMap()));
+    bool result = await reverseGeoCodeSearch.reverseGeoCodeSearch(
+        BMFReverseGeoCodeSearchOption.fromMap(option.toMap()));
 
     if (result) {
       print(imt("发起检索成功"));
@@ -171,5 +166,4 @@ class BaiduMapService extends TIMMapService{
       print(imt("发起检索失败"));
     }
   }
-  
 }

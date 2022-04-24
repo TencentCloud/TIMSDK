@@ -1,13 +1,14 @@
+// ignore_for_file: prefer_typing_uninitialized_variables, curly_braces_in_flow_control_structures
+
 import 'country_selection_theme.dart';
 import 'support/code_country.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'country_list_pick.dart';
 
 class SelectionList extends StatefulWidget {
-  SelectionList(this.elements, this.initialSelection,
+  const SelectionList(this.elements, this.initialSelection,
       {Key? key,
       this.appBar,
       this.theme,
@@ -40,7 +41,7 @@ class _SelectionListState extends State<SelectionList> {
   late var _heightscroller;
   var _text;
   var _oldtext;
-  var _itemsizeheight = 50.0;
+  final _itemsizeheight = 50.0;
   double _offsetContainer = 0.0;
 
   bool isShow = true;
@@ -60,13 +61,13 @@ class _SelectionListState extends State<SelectionList> {
     Navigator.pop(context, initialSelection);
   }
 
-  List _alphabet =
+  final List _alphabet =
       List.generate(26, (i) => String.fromCharCode('A'.codeUnitAt(0) + i));
 
   @override
   Widget build(BuildContext context) {
     if (widget.useUiOverlay)
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: Colors.white,
@@ -77,7 +78,7 @@ class _SelectionListState extends State<SelectionList> {
     Widget scaffold = Scaffold(
       appBar: widget.appBar,
       body: Container(
-        color: Color(0xfff4f4f4),
+        color: const Color(0xfff4f4f4),
         child: LayoutBuilder(builder: (context, contrainsts) {
           diff = height - contrainsts.biggest.height;
           _heightscroller = (contrainsts.biggest.height) / _alphabet.length;
@@ -111,7 +112,7 @@ class _SelectionListState extends State<SelectionList> {
                               enabledBorder: InputBorder.none,
                               errorBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
-                              contentPadding: EdgeInsets.only(
+                              contentPadding: const EdgeInsets.only(
                                   left: 15, bottom: 0, top: 0, right: 15),
                               hintText:
                                   widget.theme?.searchHintText ?? "Search...",
@@ -138,14 +139,14 @@ class _SelectionListState extends State<SelectionList> {
                                 width: 32.0,
                               ),
                               title: Text(widget.initialSelection!.name!),
-                              trailing: Padding(
-                                padding: const EdgeInsets.only(right: 20.0),
+                              trailing: const Padding(
+                                padding: EdgeInsets.only(right: 20.0),
                                 child: Icon(Icons.check, color: Colors.green),
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                       ],
                     ),
                   ),
@@ -170,10 +171,8 @@ class _SelectionListState extends State<SelectionList> {
                       color: Colors.transparent,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: []..addAll(
-                            List.generate(_alphabet.length,
-                                (index) => _getAlphabetItem(index)),
-                          ),
+                        children: [...List.generate(_alphabet.length,
+                                (index) => _getAlphabetItem(index))],
                       ),
                     ),
                   ),

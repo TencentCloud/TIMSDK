@@ -216,13 +216,13 @@ class UserProfileState extends State<UserProfile> {
                                   conversation: conversation,
                                   onTapConversation:
                                       (V2TimConversation conversation,
-                                          [int? timestamp]) {
+                                          [V2TimMessage? targetMsg]) {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => Chat(
                                             selectedConversation: conversation,
-                                            initFindingTimestamp: timestamp,
+                                            initFindingMsg: targetMsg,
                                           ),
                                         ));
                                   }),

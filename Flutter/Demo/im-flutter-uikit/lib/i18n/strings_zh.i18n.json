@@ -148,5 +148,13 @@
   "k_003nfx9": "深沉",
   "k_003rvjp": "轻快",
   "k_003rtht": "明媚",
-  "k_003qxiw": "梦幻"
+  "k_003qxiw": "梦幻",
+  "k_0s5zoi3": "发生错误 $option1",
+  "k_0i8egqa": "获取到的消息:$option8",
+  "k_0pokyns": "获取讨论区列表失败 $option8",
+  "k_1y03m8a": "创建话题失败 $option8",
+  "k_1v6uh9c": "登录失败 $option8",
+  "k_0t5a9hl": "登录失败$option1",
+  "k_0k3uv02": "服务器错误：$option8",
+  "k_1g9o3kz": "请求错误：$option8"
 }
