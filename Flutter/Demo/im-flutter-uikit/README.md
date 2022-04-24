@@ -1,6 +1,6 @@
 # Flutter TUIKit Demo
 
-TUIKit Demo 是基于 `TIMUIKit` 快速搭建的一套即使通信系统。
+TUIKit Demo 是基于 `TIMUIKit` 快速搭建的一套及时通信系统。
 
 - ## 运行demo
 

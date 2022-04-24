@@ -39,13 +39,13 @@ class _ConversationState extends State<Conversation> {
   }
 
   void _handleOnConvItemTapedWithPlace(V2TimConversation? selectedConv,
-      [int? timestamp]) async {
+      [V2TimMessage? targetMsg]) async {
     await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => Chat(
             selectedConversation: selectedConv!,
-            initFindingTimestamp: timestamp,
+            initFindingMsg: targetMsg,
           ),
         ));
     _controller.reloadData();
@@ -137,7 +137,6 @@ class _ConversationState extends State<Conversation> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _controller.dispose();
   }

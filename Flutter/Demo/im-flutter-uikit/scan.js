@@ -112,7 +112,7 @@ const replace = () => {
     }else if(ifReplace){
       const parameter = val.match(dartParameterREP)[0];
       const template = val.replace(extractDartParaOutREP, `{{${parameter}}}`);
-      return `imt_para("${template}", "${val}")(${parameter}: ${parameter})`;
+      return parameter;
     }else{
       return origin;
     }
@@ -156,40 +156,62 @@ Promise.all(
   const resultArray = dealWithResult(res);
   const chineseDict = {};
   resultArray.forEach((item) => (chineseDict[hashKey(item)] = item));
+  
+  try{
+    const data = fs.readFileSync('lib/i18n/i18n_utils.dart', 'utf8').split('\n');
+    const lineIndex = data.findIndex(item => item.indexOf("final zhJson") > -1);
+    data[lineIndex] = `  final zhJson = '''${JSON.stringify(chineseDict).replace(/\$/g, "\\$")}''';`
+    fs.writeFileSync('lib/i18n/i18n_utils.dart', data.join('\n'), 'utf8');
+  }catch(err){
+    console.log(`替换dart文件失败, ${err}`);
+  }
+  
 
-  fs.writeFile(
-    "lib/i18n/strings_zh.i18n.json",
-    JSON.stringify(chineseDict),
-    (err) => {
-      if (err) {
-        console.error(err);
-        return;
+  try{
+    // 增补英文JSON
+    const enDataFile = fs.readFileSync('lib/i18n/strings.i18n.json');
+    const enData = JSON.parse(enDataFile);
+    for(const item in chineseDict){
+      if(!enData.hasOwnProperty(item)){
+        enData[item] = chineseDict[item];
       }
     }
-  );
+    fs.writeFile(
+      "lib/i18n/strings.i18n.json",
+      JSON.stringify(enData),
+      (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      }
+    );
+  }catch(err){
+    console.error(err);
+  }
 
-  fs.writeFile(
-    "lib/i18n/for_dart.json",
-    JSON.stringify(chineseDict).replace("${", "\\${"),
-    (err) => {
-      if (err) {
-        console.error(err);
-        return;
+  try{
+    // 增补中文JSON
+    const zhDataFile = fs.readFileSync('lib/i18n/strings_zh.i18n.json');
+    const zhData = JSON.parse(zhDataFile);
+    for(const item in chineseDict){
+      if(!zhData.hasOwnProperty(item)){
+        zhData[item] = chineseDict[item];
       }
     }
-  );
+    fs.writeFile(
+      "lib/i18n/strings_zh.i18n.json",
+      JSON.stringify(zhData),
+      (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      }
+    );
+  }catch(err){
+    console.error(err);
+  }
 
-  readline.question(
-    `The process of scanning and hashing is finished, do you want replace for no parameter string automatically?[Y/n]`,
-    (bool) => {
-      if (bool === "Y") {
-                    // replace();
-                    console.log("第二次全局替换会出问题，请手动对已写的新增字符串进行包裹。");
-                  } else {
-                    console.log("请手动替换。");
-                  }
-                  console.log("请参考该文档内指引操作。https://to.woa.com/im")
-                  readline.close();
-    }
-  );
+  readline.close();
 });

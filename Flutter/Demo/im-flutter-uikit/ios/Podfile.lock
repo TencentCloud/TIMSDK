@@ -119,7 +119,9 @@ PODS:
     - Flutter
     - TPNS-iOS (= 1.3.4.1)
   - TXIMSDK_Plus_iOS (6.1.2155.1)
-  - TXLiteAVSDK_Live (9.5.11344)
+  - TXLiteAVSDK_Live (9.5.11344):
+    - TXLiteAVSDK_Live/Live (= 9.5.11344)
+  - TXLiteAVSDK_Live/Live (9.5.11344)
   - url_launcher_ios (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
@@ -272,7 +274,7 @@ SPEC CHECKSUMS:
   TPNS-iOS: 36c335eff80670de6ede780ab827f679d78f64ff
   tpns_flutter_plugin: 51978efb8da959e9c2389421b0a73b175fdc4e1e
   TXIMSDK_Plus_iOS: 2b0e9440eacdb49f385c90a23ad6558013f0cac6
-  TXLiteAVSDK_Live: f6cd001826ad1dce7c931a556b7c79f581c0425e
+  TXLiteAVSDK_Live: 84d79436ed65ce7ad57aa29f2ca16f0abf85ebf3
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1

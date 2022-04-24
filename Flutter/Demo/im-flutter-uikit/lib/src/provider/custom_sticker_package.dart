@@ -42,7 +42,6 @@ class CustomStickerPackageData extends ChangeNotifier {
   }
 
   removeEmojiPackage(CustomStickerPackage sticker) {
-    // TODO
   }
 
   clearStickerPackageList() {
