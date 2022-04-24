@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, prefer_typing_uninitialized_variables, empty_catches
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +58,8 @@ class _MyAppState extends State<MyApp> {
 
   initIMSDKAndAddIMListeners() async {
     final isInitSuccess = await _coreInstance.init(
+      // 此处可指定显示语言，不传该字段使用系统语言
+      // language: LanguageEnum.zh,
       sdkAppID: IMDemoConfig.sdkappid,
       loglevel: LogLevelEnum.V2TIM_LOG_DEBUG,
       listener: V2TimSDKListener(
@@ -110,7 +112,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   void handleClickNotification(Map<String, dynamic> msg) {
-    // TODO跳转页面，拉起音视频通话等
     print(msg);
   }
 
@@ -160,7 +161,7 @@ class _MyAppState extends State<MyApp> {
               .asMap()
               .keys
               .map((idx) =>
-              CustomSticker(index: idx, name: customEmojiPackage.list[idx]))
+                  CustomSticker(index: idx, name: customEmojiPackage.list[idx]))
               .toList(),
           menuItem: CustomSticker(
             index: 0,

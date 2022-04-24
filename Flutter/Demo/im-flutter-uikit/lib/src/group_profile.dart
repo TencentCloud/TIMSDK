@@ -159,13 +159,13 @@ class GroupProfilePage extends StatelessWidget {
               children: [
                 TIMUIKitGroupProfile.memberTile(),
                 TIMUIKitGroupProfile.searchMessage(
-                    (V2TimConversation conversation, int? timeStamp) {
+                    (V2TimConversation conversation, V2TimMessage? targetMsg) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => Chat(
                           selectedConversation: conversation,
-                          initFindingTimestamp: timeStamp,
+                          initFindingMsg: targetMsg,
                         ),
                       ));
                 }),

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors_in_immutables, no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:timuikit/country_list_pick-1.0.1+5/lib/country_selection_theme.dart';
 import 'package:timuikit/country_list_pick-1.0.1+5/lib/selection_list.dart';
@@ -6,15 +8,15 @@ import 'package:timuikit/country_list_pick-1.0.1+5/lib/support/code_country.dart
 import 'package:timuikit/country_list_pick-1.0.1+5/lib/support/code_countrys.dart';
 
 class CountryListPick extends StatefulWidget {
-  CountryListPick(
-      {this.onChanged,
+   CountryListPick(
+      {Key? key, this.onChanged,
       this.initialSelection,
       this.appBar,
       this.pickerBuilder,
       this.countryBuilder,
       this.theme,
       this.useUiOverlay = true,
-      this.useSafeArea = false});
+      this.useSafeArea = false}) : super(key: key);
 
   final String? initialSelection;
   final ValueChanged<CountryCode?>? onChanged;
@@ -30,7 +32,7 @@ class CountryListPick extends StatefulWidget {
   @override
   _CountryListPickState createState() {
     List<Map> jsonList =
-        this.theme?.showEnglishName ?? true ? countriesEnglish : codes;
+        theme?.showEnglishName ?? true ? countriesEnglish : codes;
 
     List elements = jsonList
         .map((s) => CountryCode(
@@ -76,8 +78,8 @@ class _CountryListPickState extends State<CountryListPick> {
             selectedItem,
             appBar: widget.appBar ??
                 AppBar(
-                  backgroundColor: Theme.of(context).appBarTheme.color,
-                  title: Text("Select Country"),
+                  backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+                  title: const Text("Select Country"),
                 ),
             theme: theme,
             countryBuilder: widget.countryBuilder,
@@ -129,7 +131,7 @@ class _CountryListPickState extends State<CountryListPick> {
                     ),
                   ),
                 if (widget.theme?.isDownIcon ?? true == true)
-                  Flexible(
+                  const Flexible(
                     child: Icon(Icons.keyboard_arrow_down),
                   )
               ],

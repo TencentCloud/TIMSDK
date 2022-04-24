@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tim_ui_kit/business_logic/view_models/tui_chat_view_model.dart';
@@ -29,10 +31,10 @@ import '../src/widgets/lbs/baidu_implements/map_widget_baidu_implement.dart';
 
 class Chat extends StatefulWidget {
   final V2TimConversation selectedConversation;
-  final int? initFindingTimestamp;
+  final V2TimMessage? initFindingMsg;
 
   const Chat(
-      {Key? key, required this.selectedConversation, this.initFindingTimestamp})
+      {Key? key, required this.selectedConversation, this.initFindingMsg})
       : super(key: key);
 
   @override
@@ -70,8 +72,9 @@ class _ChatState extends State<Chat> {
   }
 
   _initListener() async {
-    await _timuiKitChatController.removeMessageListener();
-    await _timuiKitChatController.setMessageListener();
+    // 这个注册监听的逻辑，我们在TIMUIKitChat内已处理，您如果没有单独需要，可不手动注册
+    // await _timuiKitChatController.removeMessageListener();
+    // await _timuiKitChatController.setMessageListener();
   }
 
   _onTapAvatar(String userID) {
@@ -83,18 +86,18 @@ class _ChatState extends State<Chat> {
   }
 
   _onTapLocation() {
-    if(IMDemoConfig.baiduMapIOSAppKey != null && IMDemoConfig.baiduMapIOSAppKey.isNotEmpty){
+    if (IMDemoConfig.baiduMapIOSAppKey.isNotEmpty) {
       tuiChatField.currentState.inputextField.currentState.hideAllPanel();
       Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => LocationPicker(
               onChange: (LocationMessage location) async {
-                final locationMessageInfo = await sdkInstance.v2TIMMessageManager
-                    .createLocationMessage(
-                    desc: location.desc,
-                    longitude: location.longitude,
-                    latitude: location.latitude);
+                final locationMessageInfo =
+                    await sdkInstance.v2TIMMessageManager.createLocationMessage(
+                        desc: location.desc,
+                        longitude: location.longitude,
+                        latitude: location.latitude);
                 final messageInfo = locationMessageInfo.data!.messageInfo;
                 _timuiKitChatController.sendMessage(
                     receiverID: _getConvID(),
@@ -110,7 +113,7 @@ class _ChatState extends State<Chat> {
               locationUtils: LocationUtils(BaiduMapService()),
             ),
           ));
-    }else{
+    } else {
       Utils.toast("请根据Demo的README指引，配置百度AK，体验DEMO的位置消息能力");
       print("请根据本文档指引 https://docs.qq.com/doc/DSVliWE9acURta2dL ， 快速体验位置消息能力");
     }
@@ -189,6 +192,7 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return TIMUIKitChat(
+        groupAtInfoList: widget.selectedConversation.groupAtInfoList,
         key: tuiChatField,
         customStickerPanel: renderCustomStickerPanel,
         config: const TIMUIKitChatConfig(
@@ -201,26 +205,28 @@ class _ChatState extends State<Chat> {
         conversationType: widget.selectedConversation.type ?? 0,
         onTapAvatar: _onTapAvatar,
         conversationShowName: _getTitle(),
-        initFindingTimestamp: widget.initFindingTimestamp,
+        initFindingMsg: widget.initFindingMsg,
         draftText: _getDraftText(),
-        locationMessageItemBuilder:
-            (locationElem, isFromSelf, isShowJump, clearJump, messageID) =>
-                LocationMsgElement(
-                  messageID: messageID,
-                  locationElem: locationElem,
-                  isFromSelf: isFromSelf,
-                  isShowJump: isShowJump,
-                  clearJump: clearJump,
-                  mapBuilder: (onMapLoadDone, mapKey) => BaiduMap(
-                    onMapLoadDone: onMapLoadDone,
-                    key: mapKey,
-                  ),
-                  locationUtils: LocationUtils(BaiduMapService()),
-                ),
+        messageItemBuilder: MessageItemBuilder(
+          locationMessageItemBuilder: (message, isShowJump, clearJump) {
+            return LocationMsgElement(
+              messageID: message.msgID,
+              locationElem: message.locationElem!,
+              isFromSelf: message.isSelf ?? false,
+              isShowJump: isShowJump,
+              clearJump: clearJump,
+              mapBuilder: (onMapLoadDone, mapKey) => BaiduMap(
+                onMapLoadDone: onMapLoadDone,
+                key: mapKey,
+              ),
+              locationUtils: LocationUtils(BaiduMapService()),
+            );
+          },
+        ),
         morePanelConfig: MorePanelConfig(
           extraAction: [
             MorePanelItem(
-              // 使用前，清先根据本文档配置AK。https://docs.qq.com/doc/DSVliWE9acURta2dL
+                // 使用前，清先根据本文档配置AK。https://docs.qq.com/doc/DSVliWE9acURta2dL
                 id: "location",
                 title: imt("位置"),
                 onTap: (c) {

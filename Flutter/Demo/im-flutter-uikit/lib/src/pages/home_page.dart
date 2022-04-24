@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,10 +46,26 @@ class HomePageState extends State<HomePage> {
   ];
   final conversationTooltip = [
     {"id": "createConv", "asset": "assets/c2c_conv.png", "label": imt("发起会话")},
-    {"id": "createWork", "asset": "assets/group_conv.png", "label": imt("创建工作群")},
-    {"id": "createPublic", "asset": "assets/group_conv.png", "label": imt("创建社交群")},
-    {"id": "createMeeting", "asset": "assets/group_conv.png", "label": imt("创建会议群")},
-    {"id": "createAvChat", "asset": "assets/group_conv.png", "label": imt("创建直播群")},
+    {
+      "id": "createWork",
+      "asset": "assets/group_conv.png",
+      "label": imt("创建工作群")
+    },
+    {
+      "id": "createPublic",
+      "asset": "assets/group_conv.png",
+      "label": imt("创建社交群")
+    },
+    {
+      "id": "createMeeting",
+      "asset": "assets/group_conv.png",
+      "label": imt("创建会议群")
+    },
+    {
+      "id": "createAvChat",
+      "asset": "assets/group_conv.png",
+      "label": imt("创建直播群")
+    },
   ];
 
   /// 当前选择下标

@@ -6,6 +6,8 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>云通信IM</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -27,6 +29,12 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>iosamap</string>
+		<string>qqmap</string>
+		<string>baidumap</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -38,10 +46,16 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>我们需要访问您的相机拍摄照片和录制视频</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>我们需要访问您的位置用于发送接收位置消息</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>我们需要访问您的麦克风录制音频</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>我们需要访问您的相册</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -63,15 +77,5 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<string>YES</string>
-	<key>CFBundleDisplayName</key>
-	<string>云通信IM</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>我们需要访问您的位置用于发送接收位置消息</string>
-	<key>LSApplicationQueriesSchemes</key>
-    <array>
-    	<string>iosamap</string>
-    	<string>qqmap</string>
-    	<string>baidumap</string>
-    </array>
 </dict>
 </plist>

@@ -1,5 +1,7 @@
 // 短信验证码登录，开发者用不到，可以去掉此部分
 
+// ignore_for_file: file_names
+
 import 'package:dio/dio.dart';
 import 'package:timuikit/src/config.dart';
 import 'package:timuikit/utils/request.dart';
