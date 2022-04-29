@@ -5,16 +5,16 @@ English | [简体中文](./README.md)
 ## Download Links
 
 ### Enhanced Edition(Recommend)
-[Latest ImSDKForMac_Plus.framework download](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.1.2166/ImSDKForMac_Plus_6.1.2166.framework.zip)
+[Latest ImSDKForMac_Plus.framework download](https://sdk-im-1252463788.cos.ap-hongkong.myqcloud.com/download/plus/6.2.2363/ImSDKForMac_Plus_6.2.2363.framework.zip)
 
 ### Basic Edition
 [Latest ImSDKForMac.framework download](https://im.sdk.qcloud.com/download/standard/5.1.62/TIM_SDK_Mac_latest_framework.zip)
 
 ### C API edition
-[Latest C API download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2166/cross_platform/ImSDK_Mac_C_6.1.2166.framework.zip)
+[Latest C API download](https://im.sdk.cloud.tencent.cn/download/plus/6.2.2363/cross_platform/ImSDK_Mac_C_6.2.2363.framework.zip)
 
 ### C++ API edition
-[Latest C++ API download](https://im.sdk.cloud.tencent.cn/download/plus/6.1.2166/cross_platform/ImSDK_Mac_CPP_6.1.2166.framework.zip)
+[Latest C++ API download](https://im.sdk.cloud.tencent.cn/download/plus/6.2.2363/cross_platform/ImSDK_Mac_CPP_6.2.2363.framework.zip)
 
 ## CocoaPods Integration
 If you are using the SDK basic edition, edit the Podfile as follows:
