@@ -14,6 +14,8 @@
 #import "TUILogin.h"
 #import "TUIContactViewDataProvider.h"
 //sdkappid 请查看 GenerateTestUserSig.h
+@class AppDelegate;
+static AppDelegate *app = nil;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -31,6 +33,7 @@
 - (UIViewController *)getLoginController;
 - (UITabBarController *)getMainController;
 
-- (void)login:(NSString *)identifier userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail;
+- (void)loginSDK:(NSString *)userID userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail;
+
 @end
 

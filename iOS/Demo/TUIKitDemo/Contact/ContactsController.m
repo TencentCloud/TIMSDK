@@ -17,27 +17,26 @@
 #import "TPopView.h"
 #import "TPopCell.h"
 #import "TUIKit.h"
-#import "SearchFriendViewController.h"
-#import "SearchGroupViewController.h"
-#import "TFriendProfileController.h"
+#import "TUISearchFriendViewController.h"
+#import "TUISearchGroupViewController.h"
+#import "TUIFriendProfileController.h"
 #import "TUIConversationCell.h"
 #import "TUIBlackListController.h"
 #import "TUINewFriendViewController.h"
-#import "ChatViewController.h"
+#import "TUIC2CChatViewController.h"
+#import "TUIGroupChatViewController.h"
 #import "TUIContactSelectController.h"
-#import "TFriendProfileController.h"
-#import "TUserProfileController.h"
+#import "TUIUserProfileController.h"
 #import "TUICommonModel.h"
 
 #import "TUIFindContactViewController.h"
-#import "FriendRequestViewController.h"
-#import "GroupRequestViewController.h"
-#import "TUINaviBarIndicatorView.h"
+#import "TUIFriendRequestViewController.h"
+#import "TUIGroupRequestViewController.h"
 #import "TUIThemeManager.h"
 #import "TUIGroupConversationListController.h"
 
-@interface ContactsController () <TPopViewDelegate>
-
+@interface ContactsController () <TPopViewDelegate, TUIContactControllerListener>
+@property (nonatomic, strong) TUIContactController *convVC;
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
@@ -51,7 +50,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-
     UIButton *moreButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     [moreButton setImage:TUIDemoDynamicImage(@"nav_more_img", [UIImage imageNamed:TUIDemoImagePath(@"more")]) forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(onRightItem:) forControlEvents:UIControlEventTouchUpInside];
@@ -64,20 +62,19 @@
     [_titleView setTitle:NSLocalizedString(@"TabBarItemContactText", nil)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
+    
+    [self.convVC.viewModel loadContacts];
+    self.convVC = [[TUIContactController alloc] init];
+    self.convVC.delegate = self;
+    [self addChildViewController:self.convVC];
+    [self.view addSubview:self.convVC.view];
 
-    //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
-    self.tableView.delaysContentTouches = NO;
-    
-    if (@available(iOS 15.0, *)) {
-        self.tableView.sectionHeaderTopPadding = 0;
-    }
-    
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
 }
 
 - (void)onFriendInfoChanged:(NSNotification *)notice
 {
-    [self.viewModel loadContacts];
+    [self.convVC.viewModel loadContacts];
 }
 
 /**
@@ -87,12 +84,15 @@
 {
     NSMutableArray *menus = [NSMutableArray array];
     TPopCellData *friend = [[TPopCellData alloc] init];
-    friend.image = TUIDemoImagePath(@"add_friend");
+    friend.image =
+    TUIDemoDynamicImage(@"pop_icon_add_friend_img", [UIImage imageNamed:TUIDemoImagePath(@"add_friend")]);
     friend.title = NSLocalizedString(@"ContactsAddFriends", nil); //@"添加好友";
     [menus addObject:friend];
 
     TPopCellData *group = [[TPopCellData alloc] init];
-    group.image = TUIDemoImagePath(@"add_group");
+    group.image =
+    TUIDemoDynamicImage(@"pop_icon_add_group_img", [UIImage imageNamed:TUIDemoImagePath(@"add_group")]);
+
     group.title = NSLocalizedString(@"ContactsJoinGroup", nil);//@"添加群组";
     [menus addObject:group];
 
@@ -113,12 +113,12 @@
     __weak typeof(self) weakSelf = self;
     add.onSelect = ^(TUIFindContactCellModel * cellModel) {
         if (cellModel.type == TUIFindContactTypeC2C) {
-            FriendRequestViewController *frc = [[FriendRequestViewController alloc] init];
+            TUIFriendRequestViewController *frc = [[TUIFriendRequestViewController alloc] init];
             frc.profile = cellModel.userInfo;
             [weakSelf.navigationController popViewControllerAnimated:NO];
             [weakSelf.navigationController pushViewController:frc animated:YES];
         } else {
-            GroupRequestViewController *frc = [[GroupRequestViewController alloc] init];
+            TUIGroupRequestViewController *frc = [[TUIGroupRequestViewController alloc] init];
             frc.groupInfo = cellModel.groupInfo;
             [weakSelf.navigationController popViewControllerAnimated:NO];
             [weakSelf.navigationController pushViewController:frc animated:YES];
@@ -131,15 +131,16 @@
 {
     TUICommonContactCellData *data = cell.contactData;
 
-    TFriendProfileController *vc = [[TFriendProfileController alloc] init];
+    TUIFriendProfileController *vc = [[TUIFriendProfileController alloc] init];
     vc.friendProfile = data.friendProfile;
     [self.navigationController pushViewController:(UIViewController *)vc animated:YES];
 }
+
 - (void)onAddNewFriend:(TUICommonTableViewCell *)cell
 {
     TUINewFriendViewController *vc = TUINewFriendViewController.new;
     vc.cellClickBlock = ^(TUICommonPendencyCell * _Nonnull cell) {
-        TUserProfileController *controller = [[TUserProfileController alloc] init];
+        TUIUserProfileController *controller = [[TUIUserProfileController alloc] init];
         [[V2TIMManager sharedInstance] getUsersInfo:@[cell.pendencyData.identifier] succ:^(NSArray<V2TIMUserFullInfo *> *profiles) {
             controller.userFullInfo = profiles.firstObject;
             controller.pendency = cell.pendencyData;
@@ -148,20 +149,20 @@
         } fail:nil];
     };
     [self.navigationController pushViewController:vc animated:YES];
-    [self.viewModel clearApplicationCnt];
+    [self.convVC.viewModel clearApplicationCnt];
 }
 
 - (void)onGroupConversation:(TUICommonTableViewCell *)cell
 {
     TUIGroupConversationListController *vc = TUIGroupConversationListController.new;
-    __weak typeof(self) weakSelf = self;
+    @weakify(self)
     vc.onSelect = ^(TUICommonContactCellData * _Nonnull cellData) {
+        @strongify(self)
         TUIChatConversationModel *data = [[TUIChatConversationModel alloc] init];
-        data.userID = nil;
         data.groupID = cellData.identifier;
-        ChatViewController *chatVc = [[ChatViewController alloc] init];
+        TUIGroupChatViewController *chatVc = [[TUIGroupChatViewController alloc] init];
         chatVc.conversationData = data;
-        [weakSelf.navigationController pushViewController:chatVc animated:YES];
+        [self.navigationController pushViewController:chatVc animated:YES];
     };
     [self.navigationController pushViewController:vc animated:YES];
 }

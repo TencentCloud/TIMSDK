@@ -35,13 +35,8 @@
 "confirm_log_out" = "Leave now?";
 "no_personal_signature" = "No status";
 "no_set" = "Not set";
-"please_fill_in_verification_information" = "Enter verification information";
-"send_success" = "Sent";
-"please_fill_in_remarks_group_info" = "Enter remark and list name";
-"my_friend" = "My Friends";
-"add_success" = "Added";
-"delete_success" = "Deleted";
-"choose_avatar_for_you" = "TUIKit chooses a profile photo for you.";
+
+"choose_avatar_for_you" = "The App randomly assigns you a system avatar.";
 
 "AppLoginSucc" = "Successfully logged in";
 "AppGetAccessAddressFail" = "The service is abnormal. Please check the network and try again";
@@ -50,9 +45,9 @@
 "AppCancelRelogin" = "Logout";
 "AppConfirmRelogin" = "Login again";
 
-"AppMainTitle" = "Tencent·Instant Messaging";
+"AppMainTitle" = "TencentCloud·IM";
 "AppMainConnectingTitle" = "Connecting…";
-"AppMainDisconnectTitle" = "Tencent·Instant Messaging (not connected)";
+"AppMainDisconnectTitle" = "TencentCloud·IM (not connected)";
 
 "TabBarItemMessageText" = "Message";
 "TabBarItemContactText" = "Contacts";
@@ -67,11 +62,7 @@
 "ChatsNewChatRoomText" = "Create Chat Room";
 "ChatsNewCommunityText" = "Create Community";
 
-"ChatsCreatePrivateGroupTips" = "Create Discussion Group";
-"ChatsCreateGroupTips" = "Create Group Chat";
-"ChatsCreateChatRoomTips" = "Create Chat Room";
-"ChatsCreateDefaultTips" = "Create Group";
-"ChatsCreateCommunityTips" = "Create Community";
+"ChatsCreateFailed" = "Create Group Failed";
 
 "ChatsSelectContact" = "Select Contact";
 
@@ -83,12 +74,14 @@
 "MeFriendRequestMethodNeedConfirm" = "Anyone upon Request";
 "MeFriendRequestMethodDenyAll" = "Decline friend request from any user";
 
-"MeAbout" = "About Tencent·Instant Messaging";
+"MeAbout" = "About TencentCloud·IM";
 "MeDevelop" = "Develop and Debug";
 "MeReportMemoryLeak" = "Report Memory Leak";
 
 "MeSwitchSkin" = "Change Skin";
 "MeSwitchLaunguage" = "Change Launguage";
+"MeMessageReadStatus" = "Message read status";
+"MeMessageReadStatusDesc" = "If disabled, the message read status is hidden for all your messages and for all the messages sent by members in a chat.";
 
 "ProfilePhoto" = "Profile Photo";
 "ProfileName"  = "Name";
@@ -161,19 +154,6 @@
 
 // ---- 2021-04-22 新增
 "TipsPhoneNotNull" = "Mobile number is required.";
-"StickyonTop" = "Sticky on Top";
-"CancelStickonTop" = "Remove from Top";
-"ClearHistoryChatMessage" = "Clear messages";
-
-// ---- 2021-06-15 新增
-"LoginAgreementFormat" = "I have read and agreed to the %@ and %@.";
-"LoginAgreementParamPrivacy" = "\"Privacy Regulations\"";
-"LoginAgreementParamUser" = "\"User Agreement\"";
-
-"MePrivacy" = "Privacy Regulations";
-"MeDisclaimer" = "Disclaimer";
-"MeDisclaimerContent" = "IM (\"this product\") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, the audio and video interactions of this product are archived throughout the entire audio and video interactions. Any pornography, abusive, violent, and politically related content is strictly prohibited during use.";
-"TipsAgreementError" = "Please read and approve the agreement first";
 
 "GetSmsErrorFormat" = "Failed to get verifcation code！(%@)";
 
@@ -207,7 +187,7 @@
 "TUIKitAboutUs3PartySharingList" = "Information Shared with Third Parties";
 "TUIKitAboutUsCloseAccount" = "Cancel Account";
 "TUIKitAboutUsContactUs" = "Contact Us";
-"TUIKitAboutUsDisclaimerText" = "IM (\"this product\") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, the audio and video interactions of this product are archived throughout the entire audio and video interactions. Any pornography, abusive, violent, and politically related content is strictly prohibited during use.";
+"TUIKitAboutUsDisclaimerText" = "腾讯云IM APP (\"this product\") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, the audio and video interactions of this product are archived throughout the entire audio and video interactions. Any pornography, abusive, violent, and politically related content is strictly prohibited during use.";
 "TUIKitAboutUsCloseAccountDescribe" =  "After canceling this account, you will be unable to use it, and related data will be permanently deleted. Current account:%@";
 "TUIKitAboutUsCloseAccountAlterMsg" = "Are you sure you want to cancel this account?";
 "TUIKitAboutUsCloseAccountAlterAction1" = "Confirm";
@@ -215,12 +195,15 @@
 "TUIKitAboutUsCloseAccountSuccessful" = "Account cancelled successfully";
 "TUIKitAboutUsCloseAccountFailed" = "Account cancelled failed";
 
-"TUIPrivateProtocolAlertMsg" = "Welcome to Tencent Cloud Instant Messaging. To protect your personal information, we have updated the \"Privacy Policy\", involving improving the specific contents and purposes of collecting user information, and adding third-party SDKs.\n\n Please carefully read the \"User Agreement\",\"Privacy Policy\",\"Personal Information Collected\" and \"Information Shared with Third Parties\", and tap Agree and Continue to use our products and services if you agree to them.";
+"TUIPrivateProtocolAlertMsg" = "Welcome to Tencent Cloud Instant Messaging. To protect your personal information, we have updated the \"Privacy Policy\", involving improving the specific contents and purposes of collecting user information, and adding third-party SDKs.\n\n Please carefully read the \"User Agreement\",\"Summary of Privacy Policy\",\"Privacy Policy\",\"Personal Information Collected\" and \"Information Shared with Third Parties\", and tap Agree and Continue to use our products and services if you agree to them.";
 "TUIPrivateProtocolHighlight1" = "\"User Agreement\"";
 "TUIPrivateProtocolHighlight2" = "\"Privacy Policy\"";
 "TUIPrivateProtocolHighlight3" = "\"Personal Information Collected\"";
 "TUIPrivateProtocolHighlight4" = "\"Information Shared with Third Parties\"";
-
+"TUIPrivateProtocolHighlight5" = "\"Summary of Privacy Policy\"";
 "TUIPrivateProtocolAlertActionAgree" = "Agree and Continue";
 "TUIPrivateProtocolAlertActionDisagree" = "Disagree and Exit";
 
+//未翻译---start
+"TUIThemeNameSystemFollowTitle" = "Automatic";
+"TUIThemeNameSystemFollowSubTitle" = "After this function is enabled, only the default skin (light/dark) will be displayed. Other skin styles cannot be switched";

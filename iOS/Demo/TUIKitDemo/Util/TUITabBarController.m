@@ -30,6 +30,7 @@
     self.tabBar.tintColor = self.selectTextColor;
     self.tabBar.barTintColor = self.backgroudColor;
     self.tabBar.shadowImage = [UIImage new];
+    
 }
 
 - (void)setTabBarItems:(NSMutableArray *)tabBarItems

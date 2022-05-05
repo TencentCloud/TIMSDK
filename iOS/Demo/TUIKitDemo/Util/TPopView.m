@@ -48,7 +48,10 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
     tap.delegate = self;
     [self addGestureRecognizer:tap];
-    self.backgroundColor = [[UIColor colorWithHex:@"#888888"] colorWithAlphaComponent:0.8];
+    UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
+    [self addGestureRecognizer:pan];
+    
+    self.backgroundColor = [UIColor clearColor];
     CGSize arrowSize = TPopView_Arrow_Size;
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y + arrowSize.height, self.frame.size.width, self.frame.size.height - arrowSize.height)];
     self.frame = [UIScreen mainScreen].bounds;

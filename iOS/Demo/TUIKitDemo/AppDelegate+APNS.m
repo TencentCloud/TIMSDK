@@ -47,6 +47,7 @@
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     self.deviceToken = deviceToken;
+    [self push_registerIfLogined:nil];
     NSLog(@"[APNS] %s", __func__);
 }
 
