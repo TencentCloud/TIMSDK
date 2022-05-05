@@ -197,7 +197,7 @@
 {
     if (_borderLayer == nil) {
         _borderLayer = [CAShapeLayer layer];
-        _borderLayer.lineWidth = 1.f;
+        _borderLayer.lineWidth = 0.2f;
         _borderLayer.strokeColor = [UIColor colorWithRed:221/255.0 green:221/255.0 blue:221/255.0 alpha:1.0].CGColor;
         _borderLayer.fillColor = [UIColor clearColor].CGColor;
     }

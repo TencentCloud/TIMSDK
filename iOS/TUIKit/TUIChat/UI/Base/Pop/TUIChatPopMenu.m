@@ -7,13 +7,13 @@
 
 #import "TUIChatPopMenu.h"
 #import "TUIDefine.h"
-
+#import "TUIThemeManager.h"
 #define maxColumns 4    // 一排最多放 4 个
 #define kContainerInsets UIEdgeInsetsMake(3, 0, 3, 0)
 #define kActionWidth 54
 #define kActionHeight 65
 #define kActionMargin 5
-#define kSepartorHeight 1
+#define kSepartorHeight 0.5
 #define kSepartorLRMargin 10
 #define kArrowSize CGSizeMake(15, 10)
 
@@ -44,6 +44,8 @@
 
 @property (nonatomic, strong) NSMutableDictionary *actionCallback;
 
+@property (nonatomic, strong) CAShapeLayer *arrowLayer;
+
 @end
 
 @implementation TUIChatPopMenu
@@ -61,6 +63,7 @@
 
 - (void)setArrawPosition:(CGPoint)point adjustHeight:(CGFloat)adjustHeight
 {
+    point = CGPointMake(point.x, point.y - NavBar_Height);
     self.arrawPoint = point;
     self.adjustHeight = adjustHeight;
 }
@@ -76,6 +79,8 @@
         [self addGestureRecognizer:pan];
         
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(hide) name:UIKeyboardWillChangeFrameNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onThemeChanged) name:TUIDidApplyingThemeChangedNotfication object:nil];
+
     }
     return self;
 }
@@ -127,7 +132,7 @@
     
     // 默认箭头朝下
     CGFloat containerX = self.arrawPoint.x - 0.5 * containerW;
-    CGFloat containerY = self.arrawPoint.y - kArrowSize.height - containerH;
+    CGFloat containerY = self.arrawPoint.y - kArrowSize.height - containerH - NavBar_Height;
     BOOL top = NO;     // 箭头朝下
     CGFloat arrawX = 0.5 * containerW;
     CGFloat arrawY = kArrowSize.height + containerH;
@@ -144,7 +149,7 @@
         } else {
             // 箭头可以朝上
             top = YES;
-            self.arrawPoint = CGPointMake(self.arrawPoint.x, self.arrawPoint.y + self.adjustHeight);
+            self.arrawPoint = CGPointMake(self.arrawPoint.x, self.arrawPoint.y + self.adjustHeight - NavBar_Height - 5);
             arrawY = - kArrowSize.height;
             containerY = self.arrawPoint.y + kArrowSize.height;
         }
@@ -173,10 +178,10 @@
     self.containerView.frame = CGRectMake(containerX, containerY, containerW, containerH);
     
     // 绘制 箭头
-    CAShapeLayer *layer = [[CAShapeLayer alloc] init];
-    layer.path = [self arrawPath:CGPointMake(arrawX, arrawY) directionTop:top].CGPath;
-    layer.fillColor = UIColor.whiteColor.CGColor;
-    [self.containerView.layer addSublayer:layer];
+    self.arrowLayer = [[CAShapeLayer alloc] init];
+    self.arrowLayer.path = [self arrawPath:CGPointMake(arrawX, arrawY) directionTop:top].CGPath;
+    self.arrowLayer.fillColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF").CGColor;
+    [self.containerView.layer addSublayer:self.arrowLayer];
 }
 
 - (void)prepareContainerView
@@ -186,7 +191,7 @@
         self.containerView = nil;
     }
     self.containerView = [[UIView alloc] init];
-    self.containerView.backgroundColor = [UIColor whiteColor];
+    self.containerView.backgroundColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF");
     self.containerView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.containerView.layer.shadowRadius = 5;
     self.containerView.layer.shadowOpacity = 0.5;
@@ -200,7 +205,7 @@
         i++;
         if (i == maxColumns && i < self.actions.count ) {
             UIView *separtorView = [[UIView alloc] init];
-            separtorView.backgroundColor = [UIColor colorWithRed:229/255.0 green:229/255.0 blue:229/255.0 alpha:1.0];
+            separtorView.backgroundColor =  TUICoreDynamicColor(@"separator_color", @"#39393B");
             [self.containerView addSubview:separtorView];
             i = 0;
         }
@@ -265,7 +270,8 @@
 - (UIButton *)buttonWithAction:(TUIChatPopMenuAction *)action tag:(NSInteger)tag
 {
     UIButton *actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [actionButton setTitleColor:[UIColor colorWithRed:68/255.0 green:68/255.0 blue:68/255.0 alpha:1/1.0] forState:UIControlStateNormal];
+    [actionButton setTitleColor:
+     TUIChatDynamicColor(@"chat_pop_menu_text_color", @"#444444") forState:UIControlStateNormal];
     actionButton.titleLabel.font = [UIFont systemFontOfSize:10.0];
     [actionButton setTitle:action.title forState:UIControlStateNormal];
     [actionButton setImage:action.image forState:UIControlStateNormal];
@@ -318,5 +324,17 @@
     }
     return _actionCallback;
 }
+
+//MARK: ThemeChanged
+- (void)applyBorderTheme {
+    if (_arrowLayer) {
+        _arrowLayer.fillColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF").CGColor;
+    }
+}
+
+- (void)onThemeChanged {
+    [self applyBorderTheme];
+}
+
 
 @end

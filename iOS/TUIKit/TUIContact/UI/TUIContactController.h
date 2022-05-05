@@ -11,6 +11,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol TUIContactControllerListener <NSObject>
+@optional
+- (void)onSelectFriend:(TUICommonContactCell *)cell;
+- (void)onAddNewFriend:(TUICommonTableViewCell *)cell;
+- (void)onGroupConversation:(TUICommonTableViewCell *)cell;
+@end
+
 /**
  * 【模块名称】消息列表界面（TUIContactController）
  * 【功能说明】显示消息列表总界面，为用户提供消息管理的操作入口。
@@ -27,7 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  视图模型负责通过 IM SDK 的接口，拉取好友列表、好友请求等信息并将其加载，以便客户端的进一步处理。
  *  详细信息请参考 Section\Contact\ViewModel\TContactViewModel.h
  */
-@property (nonatomic) TUIContactViewDataProvider *viewModel;
+@property (nonatomic, strong) TUIContactViewDataProvider *viewModel;
+@property (nonatomic, weak) id<TUIContactControllerListener> delegate;
 @property UITableView *tableView;
 
 @end

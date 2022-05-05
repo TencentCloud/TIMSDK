@@ -10,6 +10,7 @@
 #import "TUIMemberInfoCellData.h"
 #import "UIImageView+WebCache.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 #define kScale UIScreen.mainScreen.bounds.size.width / 375.0
 
@@ -53,12 +54,12 @@
         self.avatarImageView.mm_width(20.0 * kScale).mm_height(20.0 * kScale);
         self.avatarImageView.mm_left(18.0 * kScale);
         self.nameLabel.font = [UIFont systemFontOfSize:16.0 * kScale];
-        self.nameLabel.textColor = [UIColor colorWithRed:68/255.0 green:68/255.0 blue:68/255.0 alpha:1/1.0];
+        self.nameLabel.textColor = TUICoreDynamicColor(@"form_value_text_color", @"#000000");
     } else {
         self.avatarImageView.mm_width(34.0 * kScale).mm_height(34.0 * kScale);
         self.avatarImageView.mm_left(16.0 * kScale);
         self.nameLabel.font = [UIFont systemFontOfSize:16.0 * kScale];
-        self.nameLabel.textColor = [UIColor colorWithRed:17/255.0 green:17/255.0 blue:17/255.0 alpha:1/1.0];
+        self.nameLabel.textColor = TUICoreDynamicColor(@"form_value_text_color", @"#000000");
     }
     
     self.avatarImageView.mm_centerY = self.contentView.mm_centerY;

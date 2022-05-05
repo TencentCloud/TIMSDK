@@ -9,6 +9,7 @@
 #import "TUIGroupMemberController.h"
 #import "TUIGroupMemberCell.h"
 #import "TUIDefine.h"
+#import "TUICore.h"
 #import "TUIAddCell.h"
 #import "TIMGroupInfo+TUIDataProvider.h"
 #import "TUIGroupMemberDataProvider.h"
@@ -17,10 +18,13 @@
 #import "TUIMemberInfoCellData.h"
 #import "TUIThemeManager.h"
 
-@interface TUIGroupMemberController () </*TUIGroupMembersViewDelegate*/UITableViewDelegate, UITableViewDataSource>
+@interface TUIGroupMemberController () </*TUIGroupMembersViewDelegate*/UITableViewDelegate, UITableViewDataSource, TUINotificationProtocol>
 @property(nonatomic,strong) UIActivityIndicatorView *indicatorView;
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property (nonatomic, strong) UIViewController *showContactSelectVC;
 @property(nonatomic, strong) TUIGroupMemberDataProvider *dataProvider;
 @property (nonatomic, strong) NSMutableArray<TUIMemberInfoCellData *> *members;
+@property NSInteger tag;
 @end
 
 @implementation TUIGroupMemberController
@@ -31,8 +35,9 @@
     
     self.dataProvider = [[TUIGroupMemberDataProvider alloc] initWithGroupID:self.groupId];
     self.dataProvider.groupInfo = self.groupInfo;
-    
     [self refreshData];
+    
+    [TUICore registerEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_SelectedContactsSubKey object:self];
 }
 
 - (void)refreshData
@@ -82,34 +87,76 @@
     self.tableView.frame = self.view.bounds;
     self.tableView.tableFooterView = self.indicatorView;
     [self.view addSubview:self.tableView];
+    
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
+    [_titleView setTitle:TUIKitLocalizableString(GroupMember)];
 }
 
 - (void)leftBarButtonClick{
-    if(_delegate && [_delegate respondsToSelector:@selector(didCancelInGroupMemberController:)]){
-        [_delegate didCancelInGroupMemberController:self];
-    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)rightBarButtonClick {
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    NSMutableArray *ids = NSMutableArray.new;
+    for (TUIGroupMemberCellData *cd in self.members) {
+        if (![cd.identifier isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
+            [ids addObject:cd.identifier];
+        }
+    }
 
     if ([self.dataProvider.groupInfo canInviteMember]) {
         [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileManageAdd) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            if(self.delegate && [self.delegate respondsToSelector:@selector(groupMemberController:didAddMembersInGroup:hasMembers:)]){
-                [self.delegate groupMemberController:self didAddMembersInGroup:self.groupId hasMembers:self.members];
-            }
+            // add
+            self.tag = 1;
+            self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService
+                                                 method:TUICore_TUIContactService_GetContactSelectControllerMethod
+                                                  param:@{TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey :                 TUIKitLocalizableString(GroupAddFirend),
+                                                          TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey:ids}];
+            [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
         }]];
     }
     if ([self.dataProvider.groupInfo canRemoveMember]) { // 删除成员
         [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileManageDelete) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            if(self.delegate && [self.delegate respondsToSelector:@selector(groupMemberController:didDeleteMembersInGroup:hasMembers:)]){
-                [self.delegate groupMemberController:self didDeleteMembersInGroup:self.groupId hasMembers:self.members];
-            }
+            // delete
+            self.tag = 2;
+            self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService
+                                                 method:TUICore_TUIContactService_GetContactSelectControllerMethod
+                                                  param:@{TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey : TUIKitLocalizableString(GroupDeleteFriend),
+                                                          TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey:ids}];
+            [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
         }]];
     }
     [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
 
     [self presentViewController:ac animated:YES completion:nil];
+}
+
+- (void)addGroupId:(NSString *)groupId memebers:(NSArray *)members
+{
+    @weakify(self)
+    [[V2TIMManager sharedInstance] inviteUserToGroup:_groupId userList:members succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
+        @strongify(self)
+        [self refreshData];
+        [TUITool makeToast:TUIKitLocalizableString(add_success)];
+    } fail:^(int code, NSString *desc) {
+        [TUITool makeToastError:code msg:desc];
+    }];
+}
+
+- (void)deleteGroupId:(NSString *)groupId memebers:(NSArray *)members
+{
+    @weakify(self)
+    [[V2TIMManager sharedInstance] kickGroupMember:groupId memberList:members reason:@"" succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
+        @strongify(self)
+        [self refreshData];
+        [TUITool makeToast:TUIKitLocalizableString(delete_success)];
+    } fail:^(int code, NSString *desc) {
+        [TUITool makeToastError:code msg:desc];
+    }];
 }
 
 #pragma mark - UITableViewDelegate, UITableViewDataSource
@@ -148,11 +195,19 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    if(scrollView.contentOffset.y > 0 && (scrollView.contentOffset.y >= scrollView.bounds.origin.y)){
+    if (scrollView.contentOffset.y > 0 && (scrollView.contentOffset.y >= scrollView.bounds.origin.y)) {
         if (self.indicatorView.isAnimating) {
             return;
         }
         [self.indicatorView startAnimating];
+        
+        // There's no more data, stop loading.
+        if (self.dataProvider.isNoMoreData) {
+            [self.indicatorView stopAnimating];
+            [TUITool makeToast:TUIKitLocalizableString(TUIKitMessageReadNoMoreData)];
+            return;
+        }
+        
         @weakify(self);
         [self.dataProvider loadDatas:^(BOOL success, NSString * _Nonnull err, NSArray * _Nonnull datas) {
             @strongify(self);
@@ -184,7 +239,7 @@
 {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-        _tableView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor groupTableViewBackgroundColor] dark:TController_Background_Color_Dark];
+        _tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
         _tableView.delegate = self;
         _tableView.dataSource = self;
         [_tableView registerClass:TUIMemberInfoCell.class forCellReuseIdentifier:@"cell"];
@@ -193,6 +248,36 @@
     return _tableView;
 }
 
+#pragma mark - TUICore
+- (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(nullable id)anObject param:(NSDictionary *)param {
+    if ([key isEqualToString:TUICore_TUIContactNotify]
+        && [subKey isEqualToString:TUICore_TUIContactNotify_SelectedContactsSubKey]
+        && anObject == self.showContactSelectVC) {
+
+        NSArray<TUICommonContactSelectCellData *> *selectArray = [param tui_objectForKey:TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey asClass:NSArray.class];
+        if (![selectArray.firstObject isKindOfClass:TUICommonContactSelectCellData.class]) {
+            NSAssert(NO, @"传值类型错误");
+        }
+        
+        if (self.tag == 1) {
+            // add
+            NSMutableArray *list = @[].mutableCopy;
+            for (TUICommonContactSelectCellData *data in selectArray) {
+                [list addObject:data.identifier];
+            }
+            [self.navigationController popToViewController:self animated:YES];
+            [self addGroupId:_groupId memebers:list];
+        } else if (self.tag == 2) {
+            // delete
+            NSMutableArray *list = @[].mutableCopy;
+            for (TUICommonContactSelectCellData *data in selectArray) {
+                [list addObject:data.identifier];
+            }
+            [self.navigationController popToViewController:self animated:YES];
+            [self deleteGroupId:_groupId memebers:list];
+        }
+    }
+}
 @end
 
 

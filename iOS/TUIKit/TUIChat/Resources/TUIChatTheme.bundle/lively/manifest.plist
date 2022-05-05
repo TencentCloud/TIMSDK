@@ -30,12 +30,8 @@
 	<string>chat_more_link.png</string>
 	<key>chat_more_picture_img</key>
 	<string>chat_more_picture.png</string>
-	<key>chat_more_video_call_img</key>
-	<string>chat_more_video_call.png</string>
 	<key>chat_more_video_img</key>
 	<string>chat_more_video.png</string>
-	<key>chat_more_voice_call_img</key>
-	<string>chat_more_voice_call.png</string>
 	<key>chat_bubble_send_img</key>
 	<string>chat_bubble_send.png</string>
 	<key>chat_bubble_send_alpha20_img</key>
@@ -72,6 +68,8 @@
 	<string>#FFFFFF</string>
 	<key>chat_merge_message_title_color</key>
 	<string>#000000</string>
+	<key>chat_merge_message_content_color</key>
+	<string>#d5d5d5</string>
 	<key>chat_drop_down_color</key>
 	<string>#FF7756</string>
 	<key>chat_reply_message_content_text_color</key>
@@ -88,5 +86,21 @@
 	<string>message_voice_sender_normal.png</string>
 	<key>chat_voice_message_receiver_voice_normal_img</key>
 	<string>message_voice_receiver_normal.png</string>
+	<key>chat_small_tongue_bg_color</key>
+	<string>#FFFFFF</string>
+	<key>chat_small_tongue_line_color</key>
+	<string>#E5E5E5</string>
+	<key>chat_nav_more_menu_img</key>
+	<string>chat_nav_more_menu.png</string>
+	<key>chat_message_read_status_text_color</key>
+	<string>#ECA08E</string>
+	<key>chat_message_read_status_text_gray_color</key>
+	<string>#BBBBBB</string>
+	<key>chat_message_read_status_tab_color</key>
+	<string>#FF584C</string>
+	<key>chat_message_read_status_tab_unselect_color</key>
+	<string>#444444</string>
+	<key>chat_message_read_name_date_text_color</key>
+	<string>#999999</string>
 </dict>
 </plist>

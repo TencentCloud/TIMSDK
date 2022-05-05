@@ -43,4 +43,14 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (NSString *)deviceModel;
 + (NSString *)deviceVersion;
 + (NSString *)deviceName;
+
+// 跳转浏览器打开
++ (void)openLinkWithURL:(NSURL *)url;
+
+// 套餐包不支持功能弹框
++ (void)showUnsupportAlertOfService:(NSString *)service onVC:(UIViewController *)vc;
+// 套餐包不支持通知
++ (void)postUnsupportNotificationOfService:(NSString *)service;
++ (void)addUnsupportNotificationInVC:(UIViewController *)vc;
+
 @end

@@ -7,7 +7,6 @@
 #import "TUIGroupMemberCellData.h"
 #import "TUIGroupMembersCellData.h"
 #import "TUICommonSwitchCell.h"
-#import "TUIButtonCell.h"
 #import "TUIDefine.h"
 #import "TUIGroupNoticeCell.h"
 
@@ -285,6 +284,8 @@
               [buttonArray addObject:Deletebutton];
         }
 
+        TUIButtonCellData *lastCellData = [buttonArray lastObject];
+        lastCellData.hideSeparatorLine = YES;
         [dataList addObject:buttonArray];
         
         self.dataList = dataList;
@@ -370,13 +371,13 @@
     }
     if ([self.groupInfo canInviteMember]) {
         TUIGroupMemberCellData *add = [[TUIGroupMemberCellData alloc] init];
-        add.avatarImage = [UIImage d_imageNamed:@"add" bundle:TUIGroupBundle];
+        add.avatarImage = TUIGroupCommonBundleImage(@"add");
         add.tag = 1;
         [tmpArray addObject:add];
     }
     if ([self.groupInfo canRemoveMember]) {
         TUIGroupMemberCellData *delete = [[TUIGroupMemberCellData alloc] init];
-        delete.avatarImage = [UIImage d_imageNamed:@"delete" bundle:TUIGroupBundle];
+        delete.avatarImage = TUIGroupCommonBundleImage(@"delete");
         delete.tag = 2;
         [tmpArray addObject:delete];
     }

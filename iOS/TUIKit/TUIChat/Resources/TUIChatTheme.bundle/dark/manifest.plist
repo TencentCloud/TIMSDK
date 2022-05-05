@@ -9,13 +9,13 @@
 	<key>name_en</key>
 	<string>Dark</string>
 	<key>chat_controller_bg_color</key>
-	<string>#13151B</string>
+	<string>#111111</string>
 	<key>chat_input_controller_bg_color</key>
-	<string>#222632</string>
+	<string>#1E1E1E</string>
 	<key>chat_input_bg_color</key>
-	<string>#222632</string>
+	<string>#292929</string>
 	<key>chat_input_text_color</key>
-	<string>#FFFFFF2C</string>
+	<string>#CCCCCC</string>
 	<key>chat_face_page_control_current_color</key>
 	<string>#8C8C8C</string>
 	<key>chat_face_page_control_color</key>
@@ -30,12 +30,8 @@
 	<string>chat_more_link.png</string>
 	<key>chat_more_picture_img</key>
 	<string>chat_more_picture.png</string>
-	<key>chat_more_video_call_img</key>
-	<string>chat_more_video_call.png</string>
 	<key>chat_more_video_img</key>
 	<string>chat_more_video.png</string>
-	<key>chat_more_voice_call_img</key>
-	<string>chat_more_voice_call.png</string>
 	<key>chat_bubble_send_img</key>
 	<string>chat_bubble_send.png</string>
 	<key>chat_bubble_send_alpha20_img</key>
@@ -49,38 +45,98 @@
 	<key>chat_bubble_receive_alpha50_img</key>
 	<string>chat_bubble_receive_alpha50.png</string>
 	<key>chat_text_message_send_text_color</key>
-	<string>#FFFFFF2C</string>
+	<string>#000000</string>
 	<key>chat_text_message_receive_text_color</key>
-	<string>#FFFFFF2C</string>
-	<key>chat_file_message_bg_color</key>
-	<string>#232323</string>
-	<key>chat_file_message_title_color</key>
-	<string>#FFFFFF2C</string>
-	<key>chat_file_message_subtitle_color</key>
-	<string>#FFFFFF66</string>
-	<key>chat_link_message_bg_color</key>
-	<string>#232323</string>
-	<key>chat_link_message_title_color</key>
-	<string>#FFFFFF2C</string>
-	<key>chat_link_message_subtitle_color</key>
-	<string>#2B8BD5</string>
-	<key>chat_merge_message_bg_color</key>
-	<string>#232323</string>
-	<key>chat_merge_message_title_color</key>
 	<string>#D9D9D9</string>
+	<key>chat_file_message_bg_color</key>
+	<string>#2D2D2D</string>
+	<key>chat_file_message_title_color</key>
+	<string>#CCCCCC</string>
+	<key>chat_file_message_subtitle_color</key>
+	<string>#888888</string>
+	<key>chat_link_message_bg_color</key>
+	<string>#6395DA</string>
+	<key>chat_link_message_title_color</key>
+	<string>#000000</string>
+	<key>chat_link_message_subtitle_color</key>
+	<string>#C0DAFC</string>
+	<key>chat_merge_message_bg_color</key>
+	<string>#2D2D2D</string>
+	<key>chat_merge_message_title_color</key>
+	<string>#CCCCCC</string>
+	<key>chat_merge_message_content_color</key>
+	<string>#d5d5d5</string>
+	<key>chat_drop_down_color</key>
+	<string>#2170B1</string>
 	<key>chat_reply_message_content_text_color</key>
 	<string>#000000</string>
+	<key>chat_reply_message_quoteView_text_color</key>
+	<string>#D9D9D9</string>
+	<key>chat_reply_message_quoteView_bg_color</key>
+	<string>#393939</string>
 	<key>chat_reply_message_sender_text_color</key>
 	<string>#00000026</string>
 	<key>chat_reply_message_content_recv_text_color</key>
-	<string>#000000</string>
+	<string>#D9D9D9</string>
+	<key>chat_reply_message_quoteView_recv_text_color</key>
+	<string>#888888</string>
 	<key>chat_voice_message_send_duration_time_color</key>
-	<string>#F3F45</string>
+	<string>#000000</string>
 	<key>chat_voice_message_recv_duration_time_color</key>
-	<string>#F3F45</string>
+	<string>#000000</string>
 	<key>chat_voice_message_sender_voice_normal_img</key>
 	<string>message_voice_sender_normal.png</string>
 	<key>chat_voice_message_receiver_voice_normal_img</key>
 	<string>message_voice_receiver_normal.png</string>
+	<key>chat_small_tongue_bg_color</key>
+	<string>#2D2F2E</string>
+	<key>chat_small_tongue_line_color</key>
+	<string>#3D3D3D</string>
+	<key>chat_pop_menu_bg_color</key>
+	<string>#2d2d2d</string>
+	<key>chat_pop_menu_text_color</key>
+	<string>#D9D9D9</string>
+	<key>chat_more_group_live_img</key>
+	<string>chat_more_group_live.png</string>
+	<key>chat_icon_copy_img</key>
+	<string>icon_copy</string>
+	<key>chat_icon_delete_img</key>
+	<string>icon_delete</string>
+	<key>chat_icon_recall_img</key>
+	<string>icon_recall</string>
+	<key>chat_icon_multi_img</key>
+	<string>icon_multi</string>
+	<key>chat_icon_forward_img</key>
+	<string>icon_forward</string>
+	<key>chat_icon_quote_img</key>
+	<string>icon_quote</string>
+	<key>chat_ToolViewInputVoice_img</key>
+	<string>ToolViewInputVoice</string>
+	<key>chat_ToolViewInputVoiceHL_img</key>
+	<string>ToolViewInputVoiceHL</string>
+	<key>chat_ToolViewEmotion_img</key>
+	<string>ToolViewEmotion</string>
+	<key>chat_ToolViewEmotionHL_img</key>
+	<string>ToolViewEmotionHL</string>
+	<key>chat_ToolViewKeyboard_img</key>
+	<string>ToolViewKeyboard</string>
+	<key>chat_ToolViewKeyboardHL_img</key>
+	<string>ToolViewKeyboardHL</string>
+	<key>chat_TypeSelectorBtn_Black_img</key>
+	<string>TypeSelectorBtn_Black</string>
+	<key>chat_TypeSelectorBtnHL_Black_img</key>
+	<string>TypeSelectorBtnHL_Black</string>
+	<key>chat_nav_more_menu_img</key>
+	<string>chat_nav_more_menu.png</string>
+	<key>chat_message_read_status_text_color</key>
+	<string>#4877B7</string>
+	<key>chat_message_read_status_text_gray_color</key>
+	<string>#5E5E5E</string>
+	<key>chat_message_read_status_tab_color</key>
+	<string>#2170B1</string>
+	<key>chat_message_read_status_tab_unselect_color</key>
+	<string>#444444</string>
+	<key>chat_message_read_name_date_text_color</key>
+	<string>#888888</string>
 </dict>
 </plist>

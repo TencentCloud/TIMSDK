@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TUIGroupPendencyViewDataProvider.h"
-#import "TUIGroupPendencyCell.h"
+#import "TUIDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

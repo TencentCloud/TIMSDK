@@ -196,6 +196,11 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 @property (nonatomic, copy) NSString * __nullable highlightKeyword;
 
 /**
+ * 消息已读回执
+ */
+@property (nonatomic, strong) V2TIMMessageReceipt *messageReceipt;
+
+/**
  *  内容大小
  *  返回一个气泡内容的视图大小。
  */

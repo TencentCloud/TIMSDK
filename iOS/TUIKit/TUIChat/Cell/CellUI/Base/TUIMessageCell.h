@@ -65,6 +65,14 @@
  *  @param cell 委托者，消息单元
  */
 - (void)onLongSelectMessageAvatar:(TUIMessageCell *)cell;
+
+/**
+ *  点击消息单元中已读标签回调
+ *
+ *  @param cell 委托者，消息单元
+ */
+- (void)onSelectReadReceipt:(TUIMessageCellData *)cell;
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -176,5 +184,10 @@
  高亮闪烁的 view
  */
 - (UIView *)highlightAnimateView;
+
+/**
+ 更新已读 label 的内容
+ */
+- (void)updateReadLabelText;
 
 @end

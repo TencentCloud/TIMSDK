@@ -13,7 +13,9 @@
 	<key>primary_bg_color</key>
 	<string>#F2F3F5</string>
 	<key>primary_theme_color</key>
-	<string>#13151B</string>
+	<string>#2170B1</string>
+	<key>common_switch_on_color</key>
+	<string>#2170B1</string>
 	<key>succ_tips_color</key>
 	<string>#26CB3E</string>
 	<key>error_tips_color</key>
@@ -21,23 +23,23 @@
 	<key>bubble_bg_color</key>
 	<string>#DCEAFD</string>
 	<key>head_bg_gradient_start_color</key>
-	<string>#13151B</string>
+	<string>#111111</string>
 	<key>head_bg_gradient_end_color</key>
 	<string>#13151B</string>
 	<key>outline_color</key>
 	<string>#DDDDDD</string>
-	<key>separtor_color</key>
-	<string>#EEF0F319</string>
+	<key>separator_color</key>
+	<string>#39393B</string>
 	<key>controller_bg_color</key>
-	<string>#13151B</string>
+	<string>#111111</string>
 	<key>form_title_color</key>
-	<string>#FFFFFFCC</string>
+	<string>#CCCCCC</string>
 	<key>form_subtitle_color</key>
-	<string>#FFFFFFBB</string>
+	<string>#666666</string>
 	<key>form_desc_color</key>
-	<string>#BBBBBB</string>
+	<string>#5E5E5E</string>
 	<key>form_bg_color</key>
-	<string>#222632</string>
+	<string>#181818</string>
 	<key>form_green_button_text_color</key>
 	<string>#FFFFFF</string>
 	<key>form_green_button_bg_color</key>
@@ -47,15 +49,15 @@
 	<key>form_white_button_text_color</key>
 	<string>#D9D9D9</string>
 	<key>form_white_button_bg_color</key>
-	<string>#232323</string>
+	<string>#1A1A1A</string>
 	<key>form_redtext_button_text_color</key>
 	<string>#FF0000</string>
 	<key>form_redtext_button_bg_color</key>
-	<string>#232323</string>
+	<string>#1A1A1A</string>
 	<key>form_blue_button_text_color</key>
 	<string>#B4B4B4</string>
 	<key>form_blue_button_bg_color</key>
-	<string>#232323</string>
+	<string>#1A1A1A</string>
 	<key>form_blue_button_highlight_bg_color</key>
 	<string>#2F2F2F</string>
 	<key>form_key_text_color</key>
@@ -70,5 +72,11 @@
 	<string>default_group_head.png</string>
 	<key>default_c2c_head_img</key>
 	<string>default_c2c_head.png</string>
+	<key>search_textfield_bg_color</key>
+	<string>#292929</string>
+	<key>service_more_video_call_img</key>
+	<string>service_more_video_call.png</string>
+	<key>service_more_voice_call_img</key>
+	<string>service_more_voice_call.png</string>
 </dict>
 </plist>

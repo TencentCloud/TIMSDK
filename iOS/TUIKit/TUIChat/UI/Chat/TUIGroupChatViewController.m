@@ -60,8 +60,7 @@
     [self.pendencyBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
     [self.pendencyBtn addTarget:self action:@selector(openPendency:) forControlEvents:UIControlEventTouchUpInside];
     [self.pendencyBtn sizeToFit];
-    self.tipsView.hidden = YES;
-
+    self.tipsView.alpha = 0;
 
     @weakify(self)
     [RACObserve(self.pendencyViewModel, unReadCnt) subscribeNext:^(NSNumber *unReadCnt) {
@@ -74,11 +73,11 @@
             self.pendencyBtn.mm_hstack(8);
 
             [UIView animateWithDuration:1.f animations:^{
-                self.tipsView.hidden = NO;
-                self.tipsView.mm_top(self.navigationController.navigationBar.mm_maxY);
+                self.tipsView.alpha = 1;
+                self.tipsView.mm_top(0);
             }];
         } else {
-            self.tipsView.hidden = YES;
+            self.tipsView.alpha = 0;
         }
     }];
     [self getPendencyList];
@@ -104,10 +103,23 @@
     TUIGroupPendencyController *vc = [[TUIGroupPendencyController alloc] init];
     @weakify(self);
     vc.cellClickBlock = ^(TUIGroupPendencyCell * _Nonnull cell) {
-        @strongify(self);
-        if (self.openUserProfileVCBlock) {
-            self.openUserProfileVCBlock(cell);
+        if (cell.pendencyData.isRejectd || cell.pendencyData.isAccepted) {
+            //选择后不再进详情页了
+            return;
         }
+        @strongify(self);
+        [[V2TIMManager sharedInstance] getUsersInfo:@[cell.pendencyData.fromUser] succ:^(NSArray<V2TIMUserFullInfo *> *profiles) {
+            // 显示用户资料 VC
+            NSDictionary *param = @{
+                TUICore_TUIContactService_GetUserProfileControllerMethod_UserProfileKey : profiles.firstObject,
+                TUICore_TUIContactService_GetUserProfileControllerMethod_PendencyDataKey : cell.pendencyData,
+                TUICore_TUIContactService_GetUserProfileControllerMethod_ActionTypeKey : @(3)
+            };
+            UIViewController *vc = [TUICore callService:TUICore_TUIContactService
+                                                 method:TUICore_TUIContactService_GetUserProfileControllerMethod
+                                                  param:param];
+            [self.navigationController pushViewController:vc animated:YES];
+        } fail:nil];
     };
     vc.viewModel = self.pendencyViewModel;
     [self.navigationController pushViewController:vc animated:YES];
@@ -305,8 +317,8 @@
     }
 }
 
-#pragma mark - TUIMessageControllerDelegate
-- (void)messageController:(TUIMessageController *)controller onLongSelectMessageAvatar:(TUIMessageCell *)cell {
+#pragma mark - TUIBaseMessageControllerDelegate
+- (void)messageController:(TUIBaseMessageController *)controller onLongSelectMessageAvatar:(TUIMessageCell *)cell {
     if (!cell || !cell.messageData || !cell.messageData.identifier) {
         return;
     }

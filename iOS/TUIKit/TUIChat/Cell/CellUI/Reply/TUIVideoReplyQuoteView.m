@@ -16,7 +16,7 @@
 {
     if (self = [super initWithFrame:frame]) {
         _playView = [[UIImageView alloc] init];
-        _playView.image = [UIImage d_imageNamed:@"play_normal" bundle:TUIChatBundle];
+        _playView.image = TUIChatCommonBundleImage(@"play_normal");
         _playView.frame = CGRectMake(0, 0, 30, 30);
         [self addSubview:_playView];
     }

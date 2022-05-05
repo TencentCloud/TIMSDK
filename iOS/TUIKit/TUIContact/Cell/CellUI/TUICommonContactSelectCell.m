@@ -1,6 +1,7 @@
 
 #import "TUICommonContactSelectCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @interface TUICommonContactSelectCell()
 @property TUICommonContactSelectCellData *selectData;
@@ -39,7 +40,7 @@
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
-        self.titleLabel.textColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark];
+        self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
         self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
         self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 

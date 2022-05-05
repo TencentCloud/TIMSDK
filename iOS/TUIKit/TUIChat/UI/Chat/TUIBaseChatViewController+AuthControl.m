@@ -11,14 +11,14 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "TUIMessageController.h"
+#import "TUIBaseMessageController.h"
 #import "TUIImageMessageCellData.h"
 #import "TUIVideoMessageCellData.h"
 #import "TUIFileMessageCellData.h"
 #import "TUIVoiceMessageCellData.h"
 #import "TUIDefine.h"
 #import "TUIMessageMultiChooseView.h"
-#import "TUIMessageSearchController.h"
+#import "TUIMessageController.h"
 #import "TUIChatDataProvider.h"
 #import "TUIMessageDataProvider.h"
 #import "TUICameraViewController.h"
@@ -153,9 +153,6 @@
             
             V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
             [self sendMessage:message];
-            if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-                [self.delegate chatController:self didSendMessage:message];
-            }
         }
         else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){
             NSURL *url = [info objectForKey:UIImagePickerControllerMediaURL];
@@ -346,9 +343,6 @@
     [TUITool dispatchMainAsync:^{
         V2TIMMessage *message = [TUIMessageDataProvider getVideoMessageWithURL:url];
         [self sendMessage:message];
-        if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-            [self.delegate chatController:self didSendMessage:message];
-        }
     }];
 }
 
@@ -389,9 +383,6 @@
             
             V2TIMMessage *message = [[V2TIMManager sharedInstance] createFileMessage:filePath fileName:fileName];
             [self sendMessage:message];
-            if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-                [self.delegate chatController:self didSendMessage:message];
-            }
         }
     }];
     [url stopAccessingSecurityScopedResource];
@@ -415,9 +406,6 @@
     
     V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
     [self sendMessage:message];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-        [self.delegate chatController:self didSendMessage:message];
-    }
 }
 
 - (void)cameraViewControllerDidCancel:(TUICameraViewController *)controller {
@@ -544,9 +532,6 @@
                     [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
                     V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:path];
                     [strongSelf sendMessage:message];
-                    if (strongSelf.delegate && [strongSelf.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-                        [strongSelf.delegate chatController:strongSelf didSendMessage:message];
-                    }
                 });
             }];
         }

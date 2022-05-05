@@ -14,61 +14,6 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                         TUIChatControllerListener
-//
-/////////////////////////////////////////////////////////////////////////////////
-
-@protocol TUIGroupInfoControllerDelegate <NSObject>
-
-/**
- *  当您在群组信息内点击“群成员”按钮，出发该回调。
- *  您可以通过该回调实现：跳转到群成员视图，同意展示当前群组内的群成员。
- *
- *  @param controller 委托者，即当前的群组信息控制器。
- *  @param groupId 群组 ID，当前群组信息控制器对应的群组 ID，同时也是被点击的成员所在群的群 ID。
- */
-- (void)groupInfoController:(TUIGroupInfoController *)controller didSelectMembersInGroup:(NSString *)groupId groupInfo:(V2TIMGroupInfo *)groupInfo;
-
-/**
- *  点击群组信息视图内“+”按钮添加群成员时的回调。
- *  您可以通过该回调实现：跳转到相应的 UI 界面进行群成员的添加操作。
- *  当您准备添加群成员时，传入的 members 参数，为您的联系人信息，即您只能邀请您的联系人加入群组。
- *
- *  @param controller 委托者，即当前的群组信息控制器。
- *  @param members 群成员信息数据源，群组内存放的对象为（TUIGroupMemberCellData）
- */
-- (void)groupInfoController:(TUIGroupInfoController *)controller didAddMembersInGroup:(NSString *)groupId members:(NSArray<TUIGroupMemberCellData *> *)members;
-
-/**
- *  点击群组信息视图内“-”删除添加群成员时的回调。
- *  您可以通过该回调实现：跳转到相应的 UI 界面进行群成员的删除操作。
- *  当您准备删除群成员时，传入的 members 参数，为群组内的群员信息，即只有群内的成员才可以被删除。
- *
- *  @param controller 委托者，即当前的群组信息控制器。
- *  @param members 群成员信息数据源，群组内存放的对象为（TUIGroupMemberCellData）
- */
-- (void)groupInfoController:(TUIGroupInfoController *)controller didDeleteMembersInGroup:(NSString *)groupId members:(NSArray<TUIGroupMemberCellData *> *)members;
-
-/**
- *  删除群组成功后的回调。如果因为网络等各种原因删除失败，该回调不会被调用。
- *  您可以通过该回调实现：（删除成功后）退出当前群组页面，返回消息列表。
- */
-- (void)groupInfoController:(TUIGroupInfoController *)controller didDeleteGroup:(NSString *)groupId;
-
-/**
- *  退出群组成功后的回调。如果因为网络等各种原因退群失败，该回调不会被调用。
- *  您可以通过该回调实现：（退出成功后）退出当前群组页面，返回消息列表。
- */
-- (void)groupInfoController:(TUIGroupInfoController *)controller didQuitGroup:(NSString *)groupId;
-/**
- *  选择修改头像的调用。
- *  如果没有实现改回调，则不会显示修改头像的对话框入口
- */
-- (void)groupInfoController:(TUIGroupInfoController *)controller didSelectChangeAvatar:(NSString *)groupId;
-@end
-
-/////////////////////////////////////////////////////////////////////////////////
-//
 //                         TUIGroupInfoController
 //
 /////////////////////////////////////////////////////////////////////////////////
@@ -87,11 +32,6 @@
  *  请注意：群组名称和群组 ID 有所区别， 此处为群组 ID，是 IM SDK 定位群组的标识。
  */
 @property (nonatomic, strong) NSString *groupId;
-
-/**
- *  协议委托，负责实现上文中说明的 TUIChatControllerListener。
- */
-@property (nonatomic, weak) id<TUIGroupInfoControllerDelegate> delegate;
 
 /**
  *  信息更新

@@ -7,6 +7,7 @@
 
 #import "TUIGroupLiveMessageCell.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @interface TUIGroupLiveMessageCell ()
 //@property(nonatomic, strong) UILabel *titleLabel;
@@ -22,13 +23,13 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.container.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+        self.container.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
         
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
         self.titleLabel.numberOfLines = 1;
         self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         self.titleLabel.font = [UIFont boldSystemFontOfSize:15];
-        self.titleLabel.textColor = [UIColor d_colorWithColorLight:TText_Color dark:TText_Color_Dark];
+        self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
         [self.container addSubview:self.titleLabel];
 
         self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, 100, 30)];
@@ -56,7 +57,7 @@
         [self.container addSubview:self.tagLabel];
         
         [self.container.layer setMasksToBounds:YES];
-        [self.container.layer setBorderColor:[UIColor d_systemGrayColor].CGColor];
+        [self.container.layer setBorderColor:TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor];
         [self.container.layer setBorderWidth:1];
         [self.container.layer setCornerRadius:5];
     }
@@ -77,9 +78,10 @@
     self.statusLabel.text = statusStr;
     if ([data.roomInfo[@"roomCover"] length] > 0) {
         NSURL *imageUrl = [NSURL URLWithString:data.roomInfo[@"roomCover"]];
-        [self.roomCoverImageView sd_setImageWithURL:imageUrl placeholderImage:[UIImage d_imageNamed:@"thumb_1" bundle:TUIChatBundle]];
+        [self.roomCoverImageView sd_setImageWithURL:imageUrl placeholderImage:
+         TUIChatCommonBundleImage(@"thumb_1")];
     } else {
-        [self.roomCoverImageView setImage:[UIImage d_imageNamed:@"thumb_1" bundle:TUIChatBundle]];
+        [self.roomCoverImageView setImage:TUIChatCommonBundleImage(@"thumb_1")];
     }
 }
 

@@ -19,9 +19,9 @@
         _avatarImage = DefaultAvatarImage;
         
         if([_genderString isEqualToString:TUIKitLocalizableString(Male)]){
-            _genderIconImage = [UIImage d_imageNamed:@"male" bundle:TUIGroupBundle];
+            _genderIconImage = TUIGroupCommonBundleImage(@"male");
         }else if([_genderString isEqualToString:TUIKitLocalizableString(Female)]){
-            _genderIconImage = [UIImage d_imageNamed:@"female" bundle:TUIGroupBundle];
+            _genderIconImage = TUIGroupCommonBundleImage(@"female");
         }else{
             //(性别 iCon 在未设置性别时不显示)
             _genderIconImage = nil;
@@ -119,9 +119,9 @@
     [[RACObserve(data, genderString) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSString *x) {
         @strongify(self)
         if([x isEqualToString:TUIKitLocalizableString(Male)]){
-            self.genderIcon.image = [UIImage d_imageNamed:@"male" bundle:TUIGroupBundle];
+            self.genderIcon.image = TUIGroupCommonBundleImage(@"male");
         }else if([x isEqualToString:TUIKitLocalizableString(Female)]){
-            self.genderIcon.image = [UIImage d_imageNamed:@"female" bundle:TUIGroupBundle];
+            self.genderIcon.image = TUIGroupCommonBundleImage(@"female");
         }else{
             //(性别 iCon 在未设置性别时不显示)
             self.genderIcon.image = nil;

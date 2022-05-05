@@ -24,7 +24,7 @@
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.text = TUIKitLocalizableString(TUIKitContactsBlackList);

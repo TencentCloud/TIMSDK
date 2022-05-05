@@ -2,8 +2,9 @@
 #import <Foundation/Foundation.h>
 #import "TUIChatConversationModel.h"
 #import "TUIDefine.h"
+#import "TUIMessageCellData.h"
 
-@class TUIMessageCellData;
+//@class TUIMessageCellData;
 @class TUITextMessageCellData;
 @class TUIFaceMessageCellData;
 @class TUIImageMessageCellData;
@@ -40,6 +41,19 @@ typedef NS_ENUM(NSUInteger, TUIMessageDataProviderDataSourceChangeType) {
 - (void)dataProvider:(TUIMessageDataProvider *)dataProvider
 ReceiveReadMsgWithUserID:(NSString *)userId
                 Time:(time_t)timestamp;
+
+/**
+ * 群消息已读事件
+ * @param groupID 群 ID
+ * @param msgID 消息 ID
+ * @param readCount 消息已读数
+ * @param unreadCount 消息未读数
+ */
+- (void)dataProvider:(TUIMessageDataProvider *)dataProvider
+ReceiveReadMsgWithGroupID:(NSString *)groupID
+               msgID:(NSString *)msgID
+           readCount:(NSUInteger)readCount
+         unreadCount:(NSUInteger)unreadCount;
 
 /**
  * 收到一条新消息, 数据的更改, 刷新, 内部已经处理, 可以在这个方法中做后续的处理
@@ -109,6 +123,16 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 
 // 预处理回复消息(异步加载原始消息以及下载对应的缩略图)
 - (void)preProcessReplyMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback;
+
+// 发送最新消息的已读回执
+- (void)sendLatestMessageReadReceipt;
+
+// 发送指定 index 消息的已读回执
+- (void)sendMessageReadReceiptAtIndexes:(NSArray *)indexes;
+
+// 通过 msgID 获取到 message 的 index
+- (NSInteger)getIndexOfMessage:(NSString *)msgID;
+
 @end
 
 @interface TUIMessageDataProvider (IMSDK)
@@ -145,6 +169,19 @@ ReceiveReadMsgWithUserID:(NSString *)userId
 + (NSString *)getShowName:(V2TIMMessage *)message;
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message;
+
++ (void)sendMessageReadReceipts:(NSArray *)msgs;
+
+// 获取群消息已读、未读成员列表
++ (void)getReadMembersOfMessage:(V2TIMMessage *)msg
+                         filter:(V2TIMGroupMessageReadMembersFilter)filter
+                        nextSeq:(NSUInteger)nextSeq
+                     completion:(void (^)(int code, NSString *desc, NSArray *members, NSUInteger nextSeq, BOOL isFinished))block;
+
+// 获取消息的阅读信息回执
++ (void)getMessageReadReceipt:(NSArray *)messages
+                         succ:(nullable V2TIMMessageReadReceiptsSucc)succ
+                         fail:(nullable V2TIMFail)fail;
 
 @end
 

@@ -22,6 +22,7 @@
 {
     if ([super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         [self setupViews];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onThemeChanged) name:TUIDidApplyingThemeChangedNotfication object:nil];
     }
     return self;
 }
@@ -39,15 +40,17 @@
     _abstractLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _abstractLabel.text = @"我: ******";
     _abstractLabel.numberOfLines = 0;
+    _abstractLabel.textColor = TUIChatDynamicColor(@"chat_merge_message_content_color", @"#d5d5d5");
     [self.container addSubview:_abstractLabel];
-    
+
+
     _separtorView = [[UIView alloc] init];
-    _separtorView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    _separtorView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
     [self.container addSubview:_separtorView];
     
     _bottomTipsLabel = [[UILabel alloc] init];
     _bottomTipsLabel.text = TUIKitLocalizableString(TUIKitRelayChatHistory);
-    _bottomTipsLabel.textColor = [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0];
+    _bottomTipsLabel.textColor = TUIChatDynamicColor(@"chat_merge_message_content_color", @"#d5d5d5");
     _bottomTipsLabel.font = [UIFont systemFontOfSize:9];
     [self.container addSubview:_bottomTipsLabel];
 
@@ -97,11 +100,22 @@
 {
     if (_borderLayer == nil) {
         _borderLayer = [CAShapeLayer layer];
-        _borderLayer.lineWidth = 1.f;
-        _borderLayer.strokeColor = [UIColor colorWithRed:221/255.0 green:221/255.0 blue:221/255.0 alpha:1.0].CGColor;
+        _borderLayer.lineWidth = 1.0;
+        _borderLayer.strokeColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor;
         _borderLayer.fillColor = [UIColor clearColor].CGColor;
     }
     return _borderLayer;
+}
+
+//MARK: ThemeChanged
+- (void)applyBorderTheme {
+    if (_borderLayer) {
+        _borderLayer.strokeColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor;
+    }
+}
+
+- (void)onThemeChanged {
+    [self applyBorderTheme];
 }
 
 @end

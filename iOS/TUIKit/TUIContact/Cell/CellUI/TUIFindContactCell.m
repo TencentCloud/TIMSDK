@@ -8,7 +8,7 @@
 #import "TUIFindContactCell.h"
 #import "UIView+TUILayout.h"
 #import "TUIDefine.h"
-
+#import "TUIThemeManager.h"
 #define kScale UIScreen.mainScreen.bounds.size.width / 375.0
 
 @implementation TUIFindContactCell
@@ -23,7 +23,6 @@
 
 - (void)setupView
 {
-    self.contentView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:[UIColor colorWithRed:34/255.0 green:38/255.0 blue:50/255.0 alpha:1/1.0]];
     [self.contentView addSubview:self.avatarView];
     [self.contentView addSubview:self.mainTitleLabel];
     [self.contentView addSubview:self.subTitleLabel];
@@ -78,7 +77,7 @@
     if (_mainTitleLabel == nil) {
         _mainTitleLabel = [[UILabel alloc] init];
         _mainTitleLabel.text = @"mainTitle";
-        _mainTitleLabel.textColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:1/1.0] dark:UIColor.lightGrayColor];
+        _mainTitleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
         _mainTitleLabel.font = [UIFont systemFontOfSize:18.0 * kScale];
     }
     return _mainTitleLabel;
@@ -89,7 +88,7 @@
     if (_subTitleLabel == nil) {
         _subTitleLabel = [[UILabel alloc] init];
         _subTitleLabel.text = @"subTitle";
-        _subTitleLabel.textColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0] dark:UIColor.darkGrayColor];
+        _subTitleLabel.textColor =  TUICoreDynamicColor(@"form_subtitle_color", @"#888888");
         _subTitleLabel.font = [UIFont systemFontOfSize:13.0 * kScale];
     }
     return _subTitleLabel;
@@ -100,7 +99,7 @@
     if (_descLabel == nil) {
         _descLabel = [[UILabel alloc] init];
         _descLabel.text = @"descLabel";
-        _descLabel.textColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1/1.0] dark:UIColor.darkGrayColor];
+        _descLabel.textColor = TUICoreDynamicColor(@"form_desc_color", @"#888888");
         _descLabel.font = [UIFont systemFontOfSize:13.0 * kScale];
     }
     return _descLabel;

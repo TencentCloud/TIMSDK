@@ -9,10 +9,12 @@
 	<key>name_en</key>
 	<string>Dark</string>
 	<key>conversation_cell_bg_color</key>
-	<string>#222632</string>
+	<string>#000000</string>
 	<key>conversation_cell_top_bg_color</key>
-	<string>#2D313C</string>
+	<string>#191919</string>
 	<key>conversation_bg_color</key>
-	<string>#13151B</string>
+	<string>#111111</string>
+	<key>conversation_message_not_disturb_img</key>
+	<string>message_not_disturb</string>
 </dict>
 </plist>

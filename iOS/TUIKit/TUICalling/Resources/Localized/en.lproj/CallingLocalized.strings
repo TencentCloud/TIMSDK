@@ -52,6 +52,17 @@
 
 "Demo.TRTC.Calling.failedtogetcamerapermission" = "Failed to get camera permission. Please go to Privacy > Camera to grant the permission";
 "Demo.TRTC.Calling.failedtogetmicrophonepermission" = "Failed to get mic permission. Please go to Privacy > Microphone to grant the permission";
+
+"Demo.TRTC.Calling.failedtogetcamerapermission.Title" = "No access to camera";
+"Demo.TRTC.Calling.failedtogetcamerapermission.Tips"  = "Unable to use the video call function, click \"Authorize Now\" to open the camera permission.";
+"Demo.TRTC.Calling.failedtogetcamerapermission.Later" = "Later";
+"Demo.TRTC.Calling.failedtogetcamerapermission.Enable" = "Authorize Now";
+
+"Demo.TRTC.Calling.failedtogetmicrophonepermission.Title" = "No access to microphone";
+"Demo.TRTC.Calling.failedtogetmicrophonepermission.Tips"  = "Unable to use the function of sending audio and video calls, click \"Authorize Now\" to open the microphone permission";
+"Demo.TRTC.Calling.failedtogetmicrophonepermission.Later" = "Later";
+"Demo.TRTC.Calling.failedtogetmicrophonepermission.Enable" = "Authorize Now";
+
 "Demo.TRTC.Calling.calleeTip" = "They also";
 
 "Demo.TRTC.Calling.FloatingWindow.waitaccept" = "Waiting";

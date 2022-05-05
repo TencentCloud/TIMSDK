@@ -53,6 +53,53 @@
 "Have-been-sent" = "Sent";
 "View-the-original" = "View Full Image";
 
+"OK" = "OK";
+"None" = "None";
+"Send" = "Send";
+"Cancel" = "Cancel";
+"Alia" = "Remark";
+"Group" = "List";
+"Accept" = "Agree";
+"Decline" = "Decline";
+"send_success" = "Sent";
+"add_success" = "Added";
+"delete_success" = "Deleted";
+"my_friend" = "My Friends";
+"no_personal_signature" = "No status";
+"SignatureFormat" = "Signature:%@";
+"choose_avatar_for_you" = "The App randomly assigns you a system avatar.";
+"SearchGroupPlaceholder" = "User ID";
+"please_fill_in_verification_information" = "Enter verification information";
+"please_fill_in_remarks_group_info" = "Enter remark and list name";
+"ContactsJoinGroup"  = "Add Group";
+"ContactsAddFriends" = "Add to Contacts";
+"ChatsCreatePrivateGroupTips" = "Create Discussion Group";
+"ChatsCreateGroupTips" = "Create Group Chat";
+"ChatsCreateChatRoomTips" = "Create Chat Room";
+"ChatsCreateDefaultTips" = "Create Group";
+"ChatsCreateCommunityTips" = "Create Community";
+"GroupJoin" = "Add Group";
+"GroupRequestJoinGroupFormat" = "%@ requests to join group chat.";
+"GroupDeleteFriend" = "Delete Contact";
+"GroupAddFirend" = "Add Contact";
+"GroupMember" = "Group Members";
+"ProfileAlia" = "Alias";
+"ProfileMessageDoNotDisturb" = "Mute Notifications";
+"ProfileStickyonTop" = "Sticky on Top";
+"ProfileBlocked" = "Block";
+"ProfileSendMessages" = "Send Message";
+"ProfileDeleteFirend" = "Delete Friend";
+"ProfileEditAlia" = "Alias";
+"ProfileDetails" = "Details";
+"FriendRequestFormat" = "I'm %@";
+"FriendRequestFillInfo" = "Add Friend";
+"FriendOneWay" = "One-way Friend";
+"FriendAddTitle" = "Add Friend";
+"FriendAddVerificationMessage" = "Verification Message";
+"FriendAddResultSuccessWait" = "Sent successfully. Wait for approval.";
+"FriendAddResultForbid" = "The other user disabled friend request.";
+"FriendAddResultSuccess" = "Added to friend list";
+"FriendAddResultExists" = "Friend already exists.";
 "TUIKitWelcome" = "Welcome to Tencent Instant Messaging!";
 "TUIKitMicCamerAuthTips" = "Enable mic and camera permissions";
 "TUIKitMicAuth" = "Enable mic permission";
@@ -153,6 +200,13 @@
 "TUIkitMessageTypeFile" = "[File]";
 "TUIKitMessageTypeAnimateEmoji" = "[Animated Sticker]";
 "TUIKitMessageTypeDraftFormat" = "[Drafts]";
+
+"TUIKitMessageReadPartRead" = "read";
+"TUIKitMessageReadPartUnread" = "unread";
+"TUIKitMessageReadPartDisable" = "disable read";
+"TUIKitMessageReadAllRead" = "All read";
+"TUIKitMessageReadDetail" = "Message Detail";
+"TUIKitMessageReadNoMoreData" = "There is no more data";
 
 "TUIKitMoreCamera" = "Take Photo";
 "TUIKitMorePhoto" = "Album";
@@ -495,7 +549,14 @@
 "TUIKitErrorRequestNoNetOnReq" = "No network connection when sending request. Try again once network connection is restored.";
 "TUIKitErrorRequestNoNetOnRsp" = "No network connection when sending response. Try again once network connection is restored.";
 "TUIKitErrorRequestOnverLoaded" = "Request queue is full.";
-
+"TUIKitErrorUnsupportIntefaceSearch" = "Search";
+"TUIKitErrorUnsupportIntefaceMessageRead" = "Message Read Receipt";
+"TUIKitErrorUnsupportIntefaceCommunity" = "Community";
+"TUIKitErrorUnsupportIntefaceDesc" = " features are IM Flagship Edition features, which can be used after purchasing the Flagship Edition. If you are currently using the Pro Edition, you need to do a refund on the Pro Edition first, and then purchase the Flagship Edition. See the purchase guidelines for details";
+"TUIKitErrorUnsupportIntefaceGuidelines" = "purchase guidelines";
+"TUIKitErrorUnsupportIntefaceTitle" = "Tips";
+"TUIKitErrorUnsupportIntefaceIGotIt" = "I got it";
+"TUIKitErrorUnsupportIntefaceNoMoreAlert" = "No more reminders";
 /***************************** 消息转发 & 消息搜索 *************************/
 // 补充
 "Multiple" = "Multiple";
@@ -607,3 +668,8 @@
 "TUIKitInputNoPhotoTips"  = "Unable to view or select images in a chat. Click Authorize Now to allow access to your images.";
 "TUIKitInputNoPhotoOperateLater" = "Later";
 "TUIKitInputNoPhotoerateEnable" = "Authorize Now";
+
+"StickyonTop" = "Sticky on Top";
+"CancelStickonTop" = "Remove from Top";
+"ClearHistoryChatMessage" = "Clear messages";
+

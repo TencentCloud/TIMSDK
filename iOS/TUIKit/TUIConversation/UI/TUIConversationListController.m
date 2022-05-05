@@ -46,8 +46,12 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
             searchBar = [searchExtension tui_objectForKey:TUICore_TUIConversationExtension_SearchBar asClass:UIView.class];
         }
     }
-    
-    _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+    //Fix  translucent = NO;
+    CGRect rect = self.view.bounds;
+    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
+        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
+    }
+    _tableView = [[UITableView alloc] initWithFrame:rect];
     _tableView.tableFooterView = [[UIView alloc] init];
     _tableView.backgroundColor = self.view.backgroundColor;
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, 8, 0);

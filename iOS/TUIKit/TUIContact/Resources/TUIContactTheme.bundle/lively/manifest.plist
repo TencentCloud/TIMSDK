@@ -18,5 +18,7 @@
 	<string>#444444</string>
 	<key>contact_add_contact_nodata_tips_text_color</key>
 	<string>#999999</string>
+	<key>contact_add_agree_bg_color</key>
+	<string>#FF8E82</string>
 </dict>
 </plist>

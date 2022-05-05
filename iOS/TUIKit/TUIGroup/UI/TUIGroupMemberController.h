@@ -11,39 +11,6 @@
 @class TUIGroupMemberController;
 @class V2TIMGroupInfo;
 
-
-/////////////////////////////////////////////////////////////////////////////////
-//
-//                     TGroupMemberControllerDelegagte
-//
-/////////////////////////////////////////////////////////////////////////////////
-
-@protocol TGroupMemberControllerDelegagte <NSObject>
-
-/**
- *  在群成员管理界面点击添加群成员的回调。
- *  群信息界面点击“+”也有类似的回调，但本回调的对应的控制器为群成员控制器，在使用该回调时请注意二者的差别。
- *  您可以通过本回调实现：跳转到相应的 UI 界面进行群成员的添加操作。
- *  当您准备添加群成员时，传入的 members 参数，为您的联系人信息，即您只能邀请您的联系人加入群组。
- */
-- (void)groupMemberController:(TUIGroupMemberController *)controller didAddMembersInGroup:(NSString *)groupId hasMembers:(NSMutableArray *)members;
-
-/**
- *  在群成员管理界面点击删除群成员的回调。
- *  群信息界面点击“-”也有类似的回调，但本回调的对应的控制器为群成员控制器，在使用该回调时请注意二者的差别。
- *  您可以通过本回调实现：跳转到相应的 UI 界面进行群成员的删除操作。
- *  当您准备删除群成员时，传入的 members 参数，为群组内的群员信息，即只有群内的成员才可以被删除
- */
-- (void)groupMemberController:(TUIGroupMemberController *)controller didDeleteMembersInGroup:(NSString *)groupId hasMembers:(NSMutableArray *)members;
-
-/**
- *  取消本次群成员管理操作的回调。
- *  您可以通过本回调实现：（取消本次操作）返回上一级界面。
- */
-- (void)didCancelInGroupMemberController:(TUIGroupMemberController *)controller;
-@end
-
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                        TUIGroupMemberController
@@ -70,11 +37,6 @@
  *  群信息
  */
 @property (nonatomic, strong) V2TIMGroupInfo *groupInfo;
-
-/**
- *  委托类，负责实现 TGroupMemberControllerDelegagte 协议中的委托。
- */
-@property (nonatomic, weak) id<TGroupMemberControllerDelegagte> delegate;
 
 /**
  * 刷新数据源
