@@ -172,6 +172,9 @@ public class TUIOfflinePushService extends ServiceInitializer implements ITUINot
     private static Object getBuildConfigValue(String fieldName) {
         try {
             String appPackageName = appContext.getPackageName();
+            if (TextUtils.equals("com.tencent.qcloud.tim.tuikit", appPackageName)) {
+                appPackageName = "com.tencent.qcloud.tim.demo";
+            }
             Class<?> clazz = Class.forName(appPackageName + ".BuildConfig");
             Field field = clazz.getField(fieldName);
             return field.get(null);
