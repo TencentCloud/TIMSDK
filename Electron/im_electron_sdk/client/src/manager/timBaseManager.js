@@ -22,13 +22,13 @@ const TimBaseManager = {
     TIMLogin: () => {
         return timRenderInstance.TIMLogin({
             userID: "109442",
-            userSig: "",
+            userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwoYGliYmRlCZ4pTsxIKCzBQlK0MTAwNTS3MDSwOITGpFQWZRKlDc1NTUyMAAKlqSmQsSMzMxN7U0NjaGihZnpgMNTjJ3DnLKyXL1TIo0CHdNSnbJCbXMN-aoDIxyt-RKM-BKjir2rnIKDy-zd7RVqgUAuD8wOg__",
         })
     },
     TIMInvite: () => {
         return timRenderInstance.TIMInvite({
-            userID: '109442',
-            senderID: '3708',
+            userID: '121405',
+            senderID: '109442',
 
             data: JSON.stringify({
                 buisnessID: 'av_call',
@@ -39,9 +39,9 @@ const TimBaseManager = {
     },
     TIMInviteInGroup: () => {
         return timRenderInstance.TIMInviteInGroup({
-            senderID: '3708',
-            groupID: "@TGS#17VSIGKHC",
-            userIDs: ['109442'],
+            senderID: '109442',
+            groupID: "@TGS#2WWPGH7HM",
+            userIDs: ['121405'],
             data: JSON.stringify({
                 buisnessID: 'av_call',
                 call_type: 2,
