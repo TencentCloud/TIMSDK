@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class TencentIMSDK
    ">
-    <meta name="generator" content="docfx 2.58.9.0">
+    <meta name="generator" content="docfx 2.59.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -118,8 +118,8 @@
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_AddRecvNewMsgCallback_com_tencent_imsdk_unity_callback_RecvNewMsgCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.AddRecvNewMsgCallback(com.tencent.imsdk.unity.callback.RecvNewMsgCallback)">AddRecvNewMsgCallback(RecvNewMsgCallback)</h4>
   <div class="markdown level1 summary"><p>注册收到新消息回调</p>
 <p>如果用户是登录状态，ImSDK收到新消息会通过此接口设置的回调抛出，另外需要注意，抛出的消息不一定是未读的消息 </p>
-<p>只是本地曾经没有过的消息（例如在另外一个终端已读，拉取最近联系人消息时可以获取会话最后一条消息，如果本地没有，会通过此方法抛出）。</p>
-<p>在用户登录之后，ImSDK会拉取离线消息，为了不漏掉消息通知，需要在登录之前注册新消息通知。</p>
+<p>只是本地曾经没有过的消息（例如在另外一个终端已读，拉取最近联系人消息时可以获取会话最后一条消息，如果本地没有，会通过此方法抛出）</p>
+<p>在用户登录之后，ImSDK会拉取离线消息，为了不漏掉消息通知，需要在登录之前注册新消息通知</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4215,9 +4215,9 @@
 <p>会话更新</p>
 <p>会话开始</p>
 <p>会话结束</p>
-<p>任何产生一个新会话的操作都会触发会话新增事件，例如调用接口[TIMConvCreate]()创建会话，接收到未知会话的第一条消息等。</p>
-<p>任何已有会话变化的操作都会触发会话更新事件，例如收到会话新消息，消息撤回，已读上报等。</p>
-<p>调用接口[TIMConvDelete]()删除会话成功时会触发会话删除事件。</p>
+<p>任何产生一个新会话的操作都会触发会话新增事件，例如调用接口[TIMConvCreate]()创建会话，接收到未知会话的第一条消息等</p>
+<p>任何已有会话变化的操作都会触发会话更新事件，例如收到会话新消息，消息撤回，已读上报等</p>
+<p>调用接口[TIMConvDelete]()删除会话成功时会触发会话删除事件</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4276,7 +4276,7 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendAddRequestCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendAddRequestCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetFriendAddRequestCallback_com_tencent_imsdk_unity_callback_FriendAddRequestCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetFriendAddRequestCallback(com.tencent.imsdk.unity.callback.FriendAddRequestCallback)">SetFriendAddRequestCallback(FriendAddRequestCallback)</h4>
   <div class="markdown level1 summary"><p>设置好友添加请求的回调</p>
-<p>当前登入用户设置添加好友需要确认时，如果有用户请求加当前登入用户为好友，会收到好友添加请求的回调，ImSDK通过此回调告知开发者。如果多终端登入同一帐号，每个终端都会收到这个回调。</p>
+<p>当前登入用户设置添加好友需要确认时，如果有用户请求加当前登入用户为好友，会收到好友添加请求的回调，ImSDK通过此回调告知开发者。如果多终端登入同一帐号，每个终端都会收到这个回调</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4427,7 +4427,7 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetGroupAttributeChangedCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetGroupAttributeChangedCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetGroupAttributeChangedCallback_com_tencent_imsdk_unity_callback_GroupAttributeChangedCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetGroupAttributeChangedCallback(com.tencent.imsdk.unity.callback.GroupAttributeChangedCallback)">SetGroupAttributeChangedCallback(GroupAttributeChangedCallback)</h4>
   <div class="markdown level1 summary"><p>设置群组属性变更回调</p>
-<p>某个已加入的群的属性被修改了，会返回所在群组的所有属性（该群所有的成员都能收到）。</p>
+<p>某个已加入的群的属性被修改了，会返回所在群组的所有属性（该群所有的成员都能收到）</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4457,7 +4457,7 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetGroupTipsEventCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetGroupTipsEventCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetGroupTipsEventCallback_com_tencent_imsdk_unity_callback_GroupTipsEventCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetGroupTipsEventCallback(com.tencent.imsdk.unity.callback.GroupTipsEventCallback)">SetGroupTipsEventCallback(GroupTipsEventCallback)</h4>
   <div class="markdown level1 summary"><p>设置群组系统消息回调</p>
-<p>群组系统消息事件包括 加入群、退出群、踢出群、设置管理员、取消管理员、群资料变更、群成员资料变更。此消息是针对所有群组成员下发的。</p>
+<p>群组系统消息事件包括 加入群、退出群、踢出群、设置管理员、取消管理员、群资料变更、群成员资料变更。此消息是针对所有群组成员下发的</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4487,15 +4487,15 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetKickedOfflineCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetKickedOfflineCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetKickedOfflineCallback_com_tencent_imsdk_unity_callback_KickedOfflineCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetKickedOfflineCallback(com.tencent.imsdk.unity.callback.KickedOfflineCallback)">SetKickedOfflineCallback(KickedOfflineCallback)</h4>
   <div class="markdown level1 summary"><p>设置被踢下线通知回调</p>
-<p>用户如果在其他终端登录，会被踢下线，这时会收到用户被踢下线的通知，出现这种情况常规的做法是提示用户进行操作（退出，或者再次把对方踢下线）。</p>
-<p>用户如果在离线状态下被踢，下次登录将会失败，可以给用户一个非常强的提醒（登录错误码ERR_IMSDK_KICKED_BY_OTHERS：6208），开发者也可以选择忽略这次错误，再次登录即可。</p>
+<p>用户如果在其他终端登录，会被踢下线，这时会收到用户被踢下线的通知，出现这种情况常规的做法是提示用户进行操作（退出，或者再次把对方踢下线）</p>
+<p>用户如果在离线状态下被踢，下次登录将会失败，可以给用户一个非常强的提醒（登录错误码ERR_IMSDK_KICKED_BY_OTHERS：6208），开发者也可以选择忽略这次错误，再次登录即可</p>
 <p>用户在线情况下的互踢情况：</p>
-<p>用户在设备1登录，保持在线状态下，该用户又在设备2登录，这时用户会在设备1上强制下线，收到 KickedOfflineCallback 回调。</p>
-<p>用户在设备1上收到回调后，提示用户，可继续调用login上线，强制设备2下线。这里是在线情况下互踢过程。</p>
+<p>用户在设备1登录，保持在线状态下，该用户又在设备2登录，这时用户会在设备1上强制下线，收到 KickedOfflineCallback 回调</p>
+<p>用户在设备1上收到回调后，提示用户，可继续调用login上线，强制设备2下线。这里是在线情况下互踢过程</p>
 <p>用户离线状态互踢:</p>
 <p>用户在设备1登录，没有进行logout情况下进程退出。该用户在设备2登录，此时由于用户不在线，无法感知此事件，</p>
-<p>为了显式提醒用户，避免无感知的互踢，用户在设备1重新登录时，会返回（ERR_IMSDK_KICKED_BY_OTHERS：6208）错误码，表明之前被踢，是否需要把对方踢下线。</p>
-<p>如果需要，则再次调用login强制上线，设备2的登录的实例将会收到 KickedOfflineCallback 回调。</p>
+<p>为了显式提醒用户，避免无感知的互踢，用户在设备1重新登录时，会返回（ERR_IMSDK_KICKED_BY_OTHERS：6208）错误码，表明之前被踢，是否需要把对方踢下线</p>
+<p>如果需要，则再次调用login强制上线，设备2的登录的实例将会收到 KickedOfflineCallback 回调</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4525,8 +4525,8 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetLogCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetLogCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetLogCallback_com_tencent_imsdk_unity_callback_LogCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetLogCallback(com.tencent.imsdk.unity.callback.LogCallback)">SetLogCallback(LogCallback)</h4>
   <div class="markdown level1 summary"><p>设置日志回调</p>
-<p>设置日志监听的回调之后，ImSDK内部的日志会回传到此接口设置的回调。</p>
-<p>开发者可以通过接口SetConfig()配置哪些日志级别的日志回传到回调函数。</p>
+<p>设置日志监听的回调之后，ImSDK内部的日志会回传到此接口设置的回调</p>
+<p>开发者可以通过接口SetConfig()配置哪些日志级别的日志回传到回调函数</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4556,7 +4556,7 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgElemUploadProgressCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgElemUploadProgressCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgElemUploadProgressCallback_com_tencent_imsdk_unity_callback_MsgElemUploadProgressCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgElemUploadProgressCallback(com.tencent.imsdk.unity.callback.MsgElemUploadProgressCallback)">SetMsgElemUploadProgressCallback(MsgElemUploadProgressCallback)</h4>
   <div class="markdown level1 summary"><p>设置消息内元素相关文件上传进度回调</p>
-<p>设置消息元素上传进度回调。当消息内包含图片、声音、文件、视频元素时，ImSDK会上传这些文件，并触发此接口设置的回调，用户可以根据回调感知上传的进度。</p>
+<p>设置消息元素上传进度回调。当消息内包含图片、声音、文件、视频元素时，ImSDK会上传这些文件，并触发此接口设置的回调，用户可以根据回调感知上传的进度</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4586,7 +4586,7 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgReadedReceiptCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgReadedReceiptCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgReadedReceiptCallback_com_tencent_imsdk_unity_callback_MsgReadedReceiptCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgReadedReceiptCallback(com.tencent.imsdk.unity.callback.MsgReadedReceiptCallback)">SetMsgReadedReceiptCallback(MsgReadedReceiptCallback)</h4>
   <div class="markdown level1 summary"><p>设置消息已读回执回调</p>
-<p>发送方发送消息，接收方调用接口[TIMMsgReportReaded]()上报该消息已读，发送方ImSDK会通过此接口设置的回调抛出。</p>
+<p>发送方发送消息，接收方调用接口[TIMMsgReportReaded]()上报该消息已读，发送方ImSDK会通过此接口设置的回调抛出</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4616,7 +4616,7 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgRevokeCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgRevokeCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetMsgRevokeCallback_com_tencent_imsdk_unity_callback_MsgRevokeCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetMsgRevokeCallback(com.tencent.imsdk.unity.callback.MsgRevokeCallback)">SetMsgRevokeCallback(MsgRevokeCallback)</h4>
   <div class="markdown level1 summary"><p>设置接收的消息被撤回回调</p>
-<p>发送方发送消息，接收方收到消息。此时发送方调用接口[TIMMsgRevoke]()撤回该消息，接收方的ImSDK会通过此接口设置的回调抛出。</p>
+<p>发送方发送消息，接收方收到消息。此时发送方调用接口[TIMMsgRevoke]()撤回该消息，接收方的ImSDK会通过此接口设置的回调抛出</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4648,8 +4648,8 @@
   <div class="markdown level1 summary"><p>设置消息在云端被修改后回传回来的消息更新通知回调</p>
 <p> 当您发送的消息在服务端被修改后，ImSDK会通过该回调通知给您 </p>
 <p> 您可以在您自己的服务器上拦截所有即时通信IM消息 [发单聊消息之前回调](https://cloud.tencent.com/document/product/269/1632)</p>
-<p> 设置成功之后，即时通信IM服务器会将您的用户发送的每条消息都同步地通知给您的业务服务器。</p>
-<p> 您的业务服务器可以对该条消息进行修改（例如过滤敏感词），如果您的服务器对消息进行了修改，ImSDK就会通过此回调通知您。</p>
+<p> 设置成功之后，即时通信IM服务器会将您的用户发送的每条消息都同步地通知给您的业务服务器</p>
+<p> 您的业务服务器可以对该条消息进行修改（例如过滤敏感词），如果您的服务器对消息进行了修改，ImSDK就会通过此回调通知您</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4679,10 +4679,10 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetNetworkStatusListenerCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetNetworkStatusListenerCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetNetworkStatusListenerCallback_com_tencent_imsdk_unity_callback_NetworkStatusListenerCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetNetworkStatusListenerCallback(com.tencent.imsdk.unity.callback.NetworkStatusListenerCallback)">SetNetworkStatusListenerCallback(NetworkStatusListenerCallback)</h4>
   <div class="markdown level1 summary"><p>设置网络连接状态监听回调</p>
-<p>当调用接口 Init() 时，ImSDK会去连接云后台。此接口设置的回调用于监听网络连接的状态。</p>
-<p>网络连接状态包含四个：正在连接、连接失败、连接成功、已连接。这里的网络事件不表示用户本地网络状态，仅指明ImSDK是否与即时通信IM云Server连接状态。</p>
+<p>当调用接口 Init() 时，ImSDK会去连接云后台。此接口设置的回调用于监听网络连接的状态</p>
+<p>网络连接状态包含四个：正在连接、连接失败、连接成功、已连接。这里的网络事件不表示用户本地网络状态，仅指明ImSDK是否与即时通信IM云Server连接状态</p>
 <p>可选设置，如果要用户感知是否已经连接服务器，需要设置此回调，用于通知调用者跟通讯后台链接的连接和断开事件，另外，如果断开网络，等网络恢复后会自动重连，自动拉取消息通知用户，用户无需关心网络状态，仅作通知之用</p>
-<p>只要用户处于登录状态，ImSDK内部会进行断网重连，用户无需关心。</p>
+<p>只要用户处于登录状态，ImSDK内部会进行断网重连，用户无需关心</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4712,7 +4712,7 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetOnAddFriendCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetOnAddFriendCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetOnAddFriendCallback_com_tencent_imsdk_unity_callback_OnAddFriendCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetOnAddFriendCallback(com.tencent.imsdk.unity.callback.OnAddFriendCallback)">SetOnAddFriendCallback(OnAddFriendCallback)</h4>
   <div class="markdown level1 summary"><p>设置添加好友的回调</p>
-<p>此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备添加了好友，B设备ImSDK会收到添加好友的推送，ImSDK通过此回调告知开发者。</p>
+<p>此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备添加了好友，B设备ImSDK会收到添加好友的推送，ImSDK通过此回调告知开发者</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4742,7 +4742,7 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetOnDeleteFriendCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetOnDeleteFriendCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetOnDeleteFriendCallback_com_tencent_imsdk_unity_callback_OnDeleteFriendCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetOnDeleteFriendCallback(com.tencent.imsdk.unity.callback.OnDeleteFriendCallback)">SetOnDeleteFriendCallback(OnDeleteFriendCallback)</h4>
   <div class="markdown level1 summary"><p>设置删除好友的回调</p>
-<p>此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备删除了好友，B设备ImSDK会收到删除好友的推送，ImSDK通过此回调告知开发者。</p>
+<p>此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备删除了好友，B设备ImSDK会收到删除好友的推送，ImSDK通过此回调告知开发者</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4772,7 +4772,7 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetUpdateFriendProfileCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetUpdateFriendProfileCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetUpdateFriendProfileCallback_com_tencent_imsdk_unity_callback_UpdateFriendProfileCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetUpdateFriendProfileCallback(com.tencent.imsdk.unity.callback.UpdateFriendProfileCallback)">SetUpdateFriendProfileCallback(UpdateFriendProfileCallback)</h4>
   <div class="markdown level1 summary"><p>设置更新好友资料的回调</p>
-<p>此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备更新了好友资料，B设备ImSDK会收到更新好友资料的推送，ImSDK通过此回调告知开发者。</p>
+<p>此回调为了多终端同步。例如A设备、B设备都登录了同一帐号的ImSDK，A设备更新了好友资料，B设备ImSDK会收到更新好友资料的推送，ImSDK通过此回调告知开发者</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -4802,7 +4802,7 @@
   <a id="com_tencent_imsdk_unity_TencentIMSDK_SetUserSigExpiredCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetUserSigExpiredCallback*"></a>
   <h4 id="com_tencent_imsdk_unity_TencentIMSDK_SetUserSigExpiredCallback_com_tencent_imsdk_unity_callback_UserSigExpiredCallback_" data-uid="com.tencent.imsdk.unity.TencentIMSDK.SetUserSigExpiredCallback(com.tencent.imsdk.unity.callback.UserSigExpiredCallback)">SetUserSigExpiredCallback(UserSigExpiredCallback)</h4>
   <div class="markdown level1 summary"><p>设置票据过期回调</p>
-<p>用户票据，可能会存在过期的情况，如果用户票据过期，此接口设置的回调会调用。</p>
+<p>用户票据，可能会存在过期的情况，如果用户票据过期，此接口设置的回调会调用</p>
 <p>Login()也将会返回70001错误码。开发者可根据错误码或者票据过期回调进行票据更换</p>
 </div>
   <div class="markdown level1 conceptual"></div>
