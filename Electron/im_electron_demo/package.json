@@ -114,7 +114,7 @@
     "node-fetch": "^2.6.1",
     "npm": "^7.23.0",
     "progress-stream": "^2.0.0",
-    "save": "^2.4.0",
+    "save": "^2.5.0",
     "trtc-electron-sdk": "^8.6.102-beta.0",
     "vue-router": "^3.5.2"
   }
