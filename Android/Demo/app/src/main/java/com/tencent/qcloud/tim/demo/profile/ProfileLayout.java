@@ -1,16 +1,22 @@
 package com.tencent.qcloud.tim.demo.profile;
 
+import static com.tencent.qcloud.tim.demo.utils.Constants.DEMO_SETTING_SP_NAME;
+import static com.tencent.qcloud.tim.demo.utils.Constants.DEMO_SP_KEY_MESSAGE_READ_STATUS;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -29,6 +35,7 @@ import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +52,8 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
 
     private LineControllerView modifyAllowTypeView;
     private LineControllerView aboutIM;
-    private LineControllerView modifyThemeView;
-    private LineControllerView modifyLanguageView;
     private RelativeLayout selfDetailArea;
+    private Switch messageReadStatusSwitch;
 
     private ArrayList<String> joinTypeTextList = new ArrayList<>();
     private ArrayList<Integer> joinTypeIdList = new ArrayList<>();
@@ -92,20 +98,21 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         aboutIM.setCanNav(true);
         aboutIM.setOnClickListener(this);
 
-        modifyThemeView = findViewById(R.id.modify_theme);
-        modifyThemeView.setCanNav(false);
-        modifyThemeView.setOnClickListener(this);
-        modifyThemeView.setContent(getResources().getString(R.string.demo_theme_light));
-        modifyLanguageView = findViewById(R.id.modify_language);
-        modifyLanguageView.setCanNav(false);
-        modifyLanguageView.setOnClickListener(this);
-
         joinTypeTextList.add(getResources().getString(R.string.allow_type_allow_any));
         joinTypeTextList.add(getResources().getString(R.string.allow_type_deny_any));
         joinTypeTextList.add(getResources().getString(R.string.allow_type_need_confirm));
         joinTypeIdList.add(V2TIMUserFullInfo.V2TIM_FRIEND_ALLOW_ANY);
         joinTypeIdList.add(V2TIMUserFullInfo.V2TIM_FRIEND_DENY_ANY);
         joinTypeIdList.add(V2TIMUserFullInfo.V2TIM_FRIEND_NEED_CONFIRM);
+
+        messageReadStatusSwitch = findViewById(R.id.message_read_switch);
+        messageReadStatusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                setMessageReadStatus(isChecked, true);
+            }
+        });
+        initMessageReadStatus();
 
         String selfUserID = V2TIMManager.getInstance().getLoginUser();
 
@@ -126,17 +133,33 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         setUserInfoListener();
     }
 
+    private void initMessageReadStatus() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE );
+        boolean messageReadStatus = sharedPreferences.getBoolean(DEMO_SP_KEY_MESSAGE_READ_STATUS, false);
+        setMessageReadStatus(messageReadStatus, false);
+        messageReadStatusSwitch.setChecked(messageReadStatus);
+    }
+
+    private void setMessageReadStatus(boolean isShowReadStatus, boolean needUpdate) {
+        TUIChatService.getChatConfig().getGeneralConfig().setShowRead(isShowReadStatus);
+        if (needUpdate) {
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(DEMO_SP_KEY_MESSAGE_READ_STATUS, isShowReadStatus);
+            editor.commit();
+        }
+    }
+
     private void setUserInfo(V2TIMUserFullInfo info) {
         mIconUrl = info.getFaceUrl();
         int radius = getResources().getDimensionPixelSize(R.dimen.demo_profile_face_radius);
         GlideEngine.loadUserIcon(userIcon, Uri.parse(mIconUrl), radius);
         mNickName = info.getNickName();
         if (TextUtils.isEmpty(mNickName)) {
-            nickNameView.setVisibility(GONE);
+            nickNameView.setText(info.getUserID());
         } else {
-            nickNameView.setVisibility(VISIBLE);
+            nickNameView.setText(mNickName);
         }
-        nickNameView.setText(mNickName);
         accountView.setText(info.getUserID());
 
         mSignature = info.getSelfSignature();

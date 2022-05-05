@@ -352,6 +352,55 @@ public class ImageUtil {
         return output;
     }
 
+    /**
+     *  加载高分辨率图片需要做下适配
+     *
+     * @param imagePath 图片路径
+     * @return Bitmap 调整后的位图
+     */
+    public static Bitmap adaptBitmapFormPath(String imagePath, int reqWidth, int reqHeight){
+        try {
+            // 获取图片分辨率
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(imagePath, options); //此时返回的bitmap为null,但是option会保留一部分参数
+
+            // 计算 inSampleSize
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+            // 使用获取到的 inSampleSize 值再次解析图片
+            options.inJustDecodeBounds = false;
+            return BitmapFactory.decodeFile(imagePath, options);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
 
     /**
      * 根据图片 UUID 和 类型得到图片文件路径

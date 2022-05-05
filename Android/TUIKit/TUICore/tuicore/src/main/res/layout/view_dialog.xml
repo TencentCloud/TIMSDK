@@ -9,14 +9,17 @@
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
         android:gravity="center"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:focusable="true" />
 
 
     <LinearLayout
@@ -44,7 +47,7 @@
             android:background="@drawable/trans_bg"
             android:gravity="center"
             android:textAllCaps="false"
-            android:textColor="@color/font_blue"
+            android:textColor="?attr/core_primary_color"
             android:textSize="16sp" />
 
         <ImageView
@@ -61,7 +64,7 @@
             android:background="@drawable/trans_bg"
             android:gravity="center"
             android:textAllCaps="false"
-            android:textColor="@color/font_blue"
+            android:textColor="?attr/core_primary_color"
             android:textSize="16sp" />
     </LinearLayout>
 

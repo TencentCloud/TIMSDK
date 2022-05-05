@@ -11,9 +11,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 
-import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.CollectionUtils;
-import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.trtccalling.R;
 import com.tencent.liteav.trtccalling.TUICalling;
@@ -27,8 +25,8 @@ import com.tencent.liteav.trtccalling.ui.common.RoundCornerImageView;
 import com.tencent.liteav.trtccalling.ui.common.Utils;
 import com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCGroupVideoLayout;
 import com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCGroupVideoLayoutManager;
+import com.tencent.qcloud.tuicore.util.PermissionRequester;
 
-import java.util.List;
 import java.util.Map;
 
 public class TUIGroupCallVideoView extends BaseTUICallView {
@@ -100,38 +98,68 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         initListener();
         if (mRole == TUICalling.Role.CALLED) {
             // 被叫方
-            PermissionUtils.permission(PermissionConstants.CAMERA, PermissionConstants.MICROPHONE).callback(new PermissionUtils.FullCallback() {
-                @Override
-                public void onGranted(List<String> permissionsGranted) {
-                    showWaitingResponseView();
-                }
+            PermissionRequester.permission(PermissionRequester.PermissionConstants.MICROPHONE)
+                    .callback(new PermissionRequester.SimpleCallback() {
+                        @Override
+                        public void onGranted() {
+                            PermissionRequester.permission(PermissionRequester.PermissionConstants.CAMERA)
+                                    .callback(new PermissionRequester.SimpleCallback() {
+                                        @Override
+                                        public void onGranted() {
+                                            showWaitingResponseView();
+                                        }
 
-                @Override
-                public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
-                    mTRTCCalling.reject();
-                    ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
-                    finish();
-                }
-            }).request();
+                                        @Override
+                                        public void onDenied() {
+                                            mTRTCCalling.reject();
+                                            ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
+                                            finish();
+                                        }
+                                    })
+                                    .request();
+                        }
+
+                        @Override
+                        public void onDenied() {
+                            mTRTCCalling.reject();
+                            ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
+                            finish();
+                        }
+                    })
+                    .request();
         } else {
             // 主叫方
             showInvitingView();
-            PermissionUtils.permission(PermissionConstants.CAMERA, PermissionConstants.MICROPHONE).callback(new PermissionUtils.FullCallback() {
-                @Override
-                public void onGranted(List<String> permissionsGranted) {
-                    TRTCGroupVideoLayout layout = mLayoutManagerTRTC.findVideoCallLayout(mSelfModel.userId);
-                    if (null != layout) {
-                        mTRTCCalling.openCamera(true, layout.getVideoView());
-                    }
-                    startInviting(TRTCCalling.TYPE_VIDEO_CALL);
-                }
+            PermissionRequester.permission(PermissionRequester.PermissionConstants.MICROPHONE)
+                    .callback(new PermissionRequester.SimpleCallback() {
+                        @Override
+                        public void onGranted() {
+                            PermissionRequester.permission(PermissionRequester.PermissionConstants.CAMERA)
+                                    .callback(new PermissionRequester.SimpleCallback() {
+                                        @Override
+                                        public void onGranted() {
+                                            TRTCGroupVideoLayout layout = mLayoutManagerTRTC.findVideoCallLayout(mSelfModel.userId);
+                                            if (null != layout) {
+                                                mTRTCCalling.openCamera(true, layout.getVideoView());
+                                            }
+                                            startInviting(TRTCCalling.TYPE_VIDEO_CALL);                  }
 
-                @Override
-                public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
-                    ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
-                    finish();
-                }
-            }).request();
+                                        @Override
+                                        public void onDenied() {
+                                            ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
+                                            finish();
+                                        }
+                                    })
+                                    .request();
+                        }
+
+                        @Override
+                        public void onDenied() {
+                            ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
+                            finish();
+                        }
+                    })
+                    .request();
         }
     }
 

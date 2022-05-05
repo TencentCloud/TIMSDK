@@ -97,4 +97,5 @@
     <string name="group_not_support_set_manager">当前类型群聊不支持设置管理员。</string>
     <string name="group_not_support_mute_member">当前类型群聊不支持禁言指定群成员。</string>
 
+    <string name="group_choose_random_face">App 随机为您分配一个群头像。</string>
 </resources>

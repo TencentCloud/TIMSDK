@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -27,7 +28,7 @@
 
         <!-- 保活Service-->
         <service
-            android:name=".ui.service.TUICallService"
+            android:name=".model.service.TUICallService"
             android:enabled="true"
             android:exported="false" />
 

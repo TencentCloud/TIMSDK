@@ -16,6 +16,8 @@
 
     <string name="copy_success_tip">复制成功</string>
 
+    <string name="chat_message_detail">消息详情</string>
+
     <!-- 消息转发 -->
 
     <string name="titlebar_back">返回</string>
@@ -85,6 +87,7 @@
     <string name="cancle_group_manager">被取消管理员</string>
     <string name="modify_group_name_is">修改群名称为</string>
     <string name="modify_notice">修改群公告为</string>
+    <string name="modify_introduction">修改群简介为</string>
     <string name="modify_shut_up_all">禁言全员</string>
     <string name="modify_cancel_shut_up_all">取消禁言全员</string>
     <string name="move_owner">转让群主给</string>
@@ -103,24 +106,10 @@
 
     <string name="has_read">已读</string>
     <string name="unread">未读</string>
-
-    <string name="date_yesterday">昨天</string>
-    <string name="date_tommorow">明天</string>
-    <string name="date_year">年</string>
-    <string name="date_month">月</string>
-    <string name="date_day">天</string>
-    <string name="date_hour">时</string>
-    <string name="date_minute">分</string>
-    <string name="date_second">秒</string>
-
-    <string name="date_year_short">年</string>
-    <string name="date_month_short">月</string>
-    <string name="date_day_short">天</string>
-    <string name="date_hour_short">时</string>
-    <string name="date_minute_short">分</string>
-    <string name="date_second_short">秒</string>
-
-    <string name="no_support_custom_msg">[不支持的自定义消息]</string>
+    <string name="has_all_read">全部已读</string>
+    <string name="someone_has_read">%d人已读</string>
+    <string name="someone_unread">%d人未读</string>
+    <string name="someone_have_read">%d人已读</string>
 
     <string name="un_download">未下载</string>
     <string name="downloaded">已下载</string>
@@ -182,7 +171,7 @@
     <string name="test_custom_message">查看详情>></string>
 
     <string name="test_custom_action">自定义消息</string>
-    <string name="welcome_tip">欢迎加入腾讯·云通信大家庭！</string>
+    <string name="welcome_tip">欢迎加入腾讯云IM大家庭！</string>
 
     <string name="resend_tips">确定重发吗？</string>
     <string name="delete_tips">是否删除该消息？</string>
@@ -195,8 +184,23 @@
     <string name="back_to_atmessage_all">\@所有人</string>
     <string name="back_to_atmessage_me">有人@我</string>
 
-    <string name="chat_permission_storage_reason">需要授予云通信 IM 文件读写权限，以正常使用在聊天功能中的图片查看、保存、选择能力和发送文件的能力。</string>
-    <string name="chat_permission_camera_reason">需要授予云通信 IM 相机权限，以正常使用拍摄图片视频、视频通话等功能。</string>
-    <string name="chat_permission_mic_reason">需要授予云通信 IM 麦克风权限，以正常使用发送语音消息、拍摄视频、音视频通话等功能。</string>
+    <!--  权限相关 start -->
+    <string name="chat_permission_mic_reason_title">%s申请获取麦克风权限</string>
+    <string name="chat_permission_mic_reason">为方便您发送语音消息，进行摄像和音视频通话，请允许我们访问麦克风。</string>
+    <string name="chat_permission_camera_reason_title">%s申请获取相机权限</string>
+    <string name="chat_permission_camera_reason">为方便您拍摄照片或视频以发送给朋友，以及进行视频通话，请允许我们访问摄像头。</string>
+    <string name="chat_permission_storage_reason_title">%s申请获取存储权限</string>
+    <string name="chat_permission_storage_reason">为方便您查看和选择相册里的图片视频、设备里的文件发送给朋友，以及保存内容到设备，请允许我们访问您设备上的照片、媒体内容和文件。</string>
+    <string name="chat_permission_mic_dialog_alert">在设置-应用-%s-权限中开启麦克风权限，以正常使用语音消息、摄像和音视频通话功能</string>
+    <string name="chat_permission_camera_dialog_alert">在设置-应用-%s-权限中开启相机权限，以正常使用拍照、摄像和视频通话功能</string>
+    <string name="chat_permission_storage_dialog_alert">在设置-应用-%s-权限中开启存储权限，以正常使用文件选择、发送和保存内容功能</string>
+    <!--  权限相关 end -->
+
+    <string name="chat_message_read_receipt">消息已读回执</string>
+    <string name="chat_i_know">我知道了</string>
+    <string name="chat_no_more_reminders">不再提醒</string>
+    <string name="chat_im_flagship">旗舰版</string>
+    <string name="chat_buying_guidelines">购买指引</string>
+    <string name="chat_im_flagship_edition_update_tip">%s功能为IM旗舰版功能，购买旗舰版套餐包后可使用。如果您当前使用的是专业版套餐包，您需要先对专业版套餐包做退费处理，再购买旗舰版套餐包，详见购买指引。</string>
 
 </resources>

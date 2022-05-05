@@ -36,6 +36,7 @@
     <string name="cancle_group_manager">被取消管理员</string>
     <string name="modify_group_name_is">修改群名称为</string>
     <string name="modify_notice">修改群公告为</string>
+    <string name="modify_introduction">修改群简介为</string>
     <string name="move_owner">转让群主给</string>
     <string name="modify_group_avatar">修改了群头像</string>
     <string name="banned">被禁言</string>
@@ -62,4 +63,11 @@
     <string name="reject_calls">拒绝通话</string>
     <string name="modify_shut_up_all">禁言全员</string>
     <string name="modify_cancel_shut_up_all">取消禁言全员</string>
+
+    <string name="search_i_know">我知道了</string>
+    <string name="search_no_more_reminders">不再提醒</string>
+    <string name="search_im_flagship">旗舰版</string>
+    <string name="search_buying_guidelines">购买指引</string>
+    <string name="search_im_flagship_edition_update_tip">%s功能为IM旗舰版功能，购买旗舰版套餐包后可使用。如果您当前使用的是专业版套餐包，您需要先对专业版套餐包做退费处理，再购买旗舰版套餐包，详见购买指引。</string>
+
 </resources>

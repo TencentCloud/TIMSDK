@@ -29,6 +29,9 @@ public class FileMessageBean extends TUIMessageBean {
 
     @Override
     public void onProcessMessage(V2TIMMessage v2TIMMessage) {
+        if (getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
+            return;
+        }
         fileElem = v2TIMMessage.getFileElem();
         String filename = fileElem.getUUID();
         if (TextUtils.isEmpty(filename)) {
@@ -37,6 +40,7 @@ public class FileMessageBean extends TUIMessageBean {
         final String path = TUIConfig.getFileDownloadDir() + filename;
         String finalPath = path;
         File file = new File(path);
+
         if (file.exists()) {
             if (isSelf()) {
                 setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);

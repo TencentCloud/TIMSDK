@@ -20,3 +20,5 @@ project(':tuigroup').projectDir = new File(settingsDir, '../TUIKit/TUIGroup/tuig
 
 include ':tuicalling'
 project(':tuicalling').projectDir = new File(settingsDir, '../TUIKit/TUICalling/tuicalling')
+include ':tuiofflinepush'
+project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOfflinePush/tuiofflinepush')

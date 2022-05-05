@@ -52,6 +52,14 @@
                         android:layout_marginEnd="@dimen/demo_profile_face_margin_right"
                         android:layout_gravity="center"
                         android:scaleType="centerCrop" />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/arrow_right"/>
                 </LinearLayout>
 
 

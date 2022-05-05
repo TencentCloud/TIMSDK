@@ -1,9 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.interfaces;
 
-import android.widget.TextView;
-
 import com.tencent.qcloud.tuicore.component.interfaces.ILayout;
-import com.tencent.qcloud.tuicore.component.NoticeLayout;
+import com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayout;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView;

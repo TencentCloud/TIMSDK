@@ -1,25 +1,21 @@
 package com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan;
 
 import android.app.Activity;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.util.PermissionUtils;
+import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.util.PermissionHelper;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.util.ArrayList;
@@ -59,20 +55,17 @@ public class ImageVideoScanActivity extends Activity {
             @Override
             public void onClick(View view) {
                 TUIChatLog.d(TAG, "onClick");
-                PermissionUtils.permission(PermissionUtils.PermissionConstants.STORAGE)
-                        .callback(new PermissionUtils.FullCallback() {
-                            @Override
-                            public void onGranted(List<String> permissionsGranted) {
-                                mImageVideoScanPresenter.saveLocal(ImageVideoScanActivity.this);
-                            }
+                PermissionHelper.requestPermission(PermissionHelper.PERMISSION_STORAGE, new PermissionHelper.PermissionCallback() {
+                    @Override
+                    public void onGranted() {
+                        mImageVideoScanPresenter.saveLocal(ImageVideoScanActivity.this);
+                    }
 
-                            @Override
-                            public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
-                                ToastUtil.toastShortMessage("图片保存失败，请检查权限设置");
-                            }
-                        })
-                        .reason(getString(R.string.chat_permission_storage_reason))
-                        .request();
+                    @Override
+                    public void onDenied() {
+                        ToastUtil.toastShortMessage("图片保存失败，请检查权限设置");
+                    }
+                });
             }
         });
 

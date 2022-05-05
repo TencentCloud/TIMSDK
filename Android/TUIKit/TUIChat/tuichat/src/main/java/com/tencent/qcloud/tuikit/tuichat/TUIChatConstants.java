@@ -2,6 +2,8 @@ package com.tencent.qcloud.tuikit.tuichat;
 
 import android.os.Environment;
 
+import com.tencent.imsdk.BaseConstants;
+
 public class TUIChatConstants {
     public static final String CAMERA_IMAGE_PATH = "camera_image_path";
     public static final String IMAGE_WIDTH = "image_width";
@@ -26,6 +28,8 @@ public class TUIChatConstants {
 
     public static final String CHAT_INFO = "chatInfo";
 
+    public static final String MESSAGE_BEAN = "messageBean";
+
     public static final String OPEN_MESSAGE_SCAN = "open_message_scan";
     public static final String OPEN_MESSAGES_SCAN_FORWARD = "open_messages_scan_forward";
 
@@ -37,6 +41,9 @@ public class TUIChatConstants {
     public static final String GROUP_ID = "group_id";
     public static final String SELECT_FOR_CALL = "isSelectForCall";
 
+    public static final int ERR_SDK_INTERFACE_NOT_SUPPORT = BaseConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
+    public static final String BUYING_GUIDELINES_EN = "https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
+    public static final String BUYING_GUIDELINES = "https://cloud.tencent.com/document/product/269/32458";
     /**
      * 1: 仅仅是一个带链接的文本消息
      * 2: iOS支持的视频通话版本，后续已经不兼容

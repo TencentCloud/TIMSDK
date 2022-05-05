@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuigroup.ui.view;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
@@ -100,8 +102,9 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    if (!mGroupInfo.isOwner())
+                    if (!mGroupInfo.isOwner()) {
                         return false;
+                    }
                     TextView delete = new TextView(holder.itemView.getContext());
                     delete.setText(R.string.group_remove_member);
                     int padding = ScreenUtil.getPxByDp(10);
@@ -137,6 +140,15 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
                         }
                     });
                     return false;
+                }
+            });
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("chatId", info.getAccount());
+                    TUICore.startActivity("FriendProfileActivity", bundle);
                 }
             });
         }

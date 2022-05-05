@@ -13,6 +13,7 @@ public class GroupMemberInfo implements Serializable {
     private String location;
     private String birthday;
     private String nameCard;
+    private String friendRemark;
     private String nickName;
     private boolean isTopChat;
     private boolean isFriend;
@@ -116,6 +117,14 @@ public class GroupMemberInfo implements Serializable {
         this.memberType = memberType;
     }
 
+    public String getFriendRemark() {
+        return friendRemark;
+    }
+
+    public void setFriendRemark(String friendRemark) {
+        this.friendRemark = friendRemark;
+    }
+
     public GroupMemberInfo covertTIMGroupMemberInfo(V2TIMGroupMemberInfo info) {
         if (info instanceof V2TIMGroupMemberFullInfo) {
             V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = (V2TIMGroupMemberFullInfo)info;
@@ -125,6 +134,7 @@ public class GroupMemberInfo implements Serializable {
         setAccount(info.getUserID());
         setNameCard(info.getNameCard());
         setIconUrl(info.getFaceUrl());
+        setFriendRemark(info.getFriendRemark());
         setNickName(info.getNickName());
         return this;
     }

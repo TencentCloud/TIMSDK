@@ -1,0 +1,4 @@
+<resources>
+    <string name="you_app">Your App</string>
+    <string name="low_version"> The version is too low. Unable to open the offline message.</string>
+</resources>

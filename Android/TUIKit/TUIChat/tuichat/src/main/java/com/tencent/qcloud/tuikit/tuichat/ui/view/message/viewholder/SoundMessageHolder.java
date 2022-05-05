@@ -73,7 +73,7 @@ public class SoundMessageHolder extends MessageContentHolder {
 
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             params.leftMargin = 24;
-            // TODO 图标不对
+
             audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
             audioContentView.removeView(audioPlayImage);
             audioContentView.addView(audioPlayImage, 0);

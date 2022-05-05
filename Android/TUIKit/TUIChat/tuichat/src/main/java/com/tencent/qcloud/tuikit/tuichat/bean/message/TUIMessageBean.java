@@ -58,12 +58,29 @@ public abstract class TUIMessageBean implements Serializable {
      private V2TIMMessage v2TIMMessage;
      private long msgTime;
      private String extra;
-     private boolean read;
-     private boolean peerRead;
      private String id;
      private boolean isGroup;
      private int status;
      private int downloadStatus;
+
+     private long readCount = 0;
+     private long unreadCount = 1;
+
+     public void setReadCount(long readCount) {
+          this.readCount = readCount;
+     }
+
+     public void setUnreadCount(long unreadCount) {
+          this.unreadCount = unreadCount;
+     }
+
+     public long getReadCount() {
+          return readCount;
+     }
+
+     public long getUnreadCount() {
+          return unreadCount;
+     }
 
      public void setCommonAttribute(V2TIMMessage v2TIMMessage) {
           msgTime = System.currentTimeMillis() / 1000;
@@ -72,11 +89,13 @@ public abstract class TUIMessageBean implements Serializable {
           if (v2TIMMessage == null) {
                return;
           }
-          peerRead = v2TIMMessage.isPeerRead();
-          read = v2TIMMessage.isRead();
+
           id = v2TIMMessage.getMsgID();
           isGroup = !TextUtils.isEmpty(v2TIMMessage.getGroupID());
-
+          if (!isGroup && v2TIMMessage.isPeerRead()) {
+               unreadCount = 0;
+               readCount = 1;
+          }
           if (v2TIMMessage.getStatus() == V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_REVOKED) {
                status = MSG_STATUS_REVOKE;
                if (isSelf()) {
@@ -98,6 +117,28 @@ public abstract class TUIMessageBean implements Serializable {
                     }
                }
           }
+     }
+
+     public boolean isPeerRead() {
+          return unreadCount == 0 && readCount == 1;
+     }
+
+     public void setPeerRead(boolean isPeerRead) {
+          if (isPeerRead) {
+               unreadCount = 0;
+               readCount = 1;
+          } else {
+               unreadCount = 1;
+               readCount = 0;
+          }
+     }
+
+     public boolean isAllRead() {
+          return unreadCount == 0 && readCount > 0;
+     }
+
+     public boolean isUnread() {
+          return readCount == 0;
      }
 
      /**
@@ -183,14 +224,6 @@ public abstract class TUIMessageBean implements Serializable {
           return "";
      }
 
-     public boolean isPeerRead() {
-          return peerRead;
-     }
-
-     public boolean isRead() {
-          return read;
-     }
-
      public String getNameCard() {
           if (v2TIMMessage != null) {
                return v2TIMMessage.getNameCard();
@@ -210,6 +243,21 @@ public abstract class TUIMessageBean implements Serializable {
                return v2TIMMessage.getFriendRemark();
           }
           return "";
+     }
+
+     public String getUserDisplayName() {
+          // 群名片->好友备注->昵称->ID
+          String displayName;
+          if (!TextUtils.isEmpty(getNameCard())) {
+               displayName = getNameCard();
+          } else if (!TextUtils.isEmpty(getFriendRemark())) {
+               displayName = getFriendRemark();
+          } else if (!TextUtils.isEmpty(getNickName())) {
+               displayName = getNickName();
+          } else {
+               displayName = getSender();
+          }
+          return displayName;
      }
 
      public String getFaceUrl() {
@@ -235,15 +283,6 @@ public abstract class TUIMessageBean implements Serializable {
           return extra;
      }
 
-     public void setRead(boolean read) {
-          this.read = read;
-     }
-
-     public void setPeerRead(boolean peerRead) {
-          this.peerRead = peerRead;
-     }
-
-
      public void setDownloadStatus(int downloadStatus) {
           this.downloadStatus = downloadStatus;
      }
@@ -260,6 +299,18 @@ public abstract class TUIMessageBean implements Serializable {
           }
      }
 
+     public boolean isNeedReadReceipt() {
+          if (v2TIMMessage != null) {
+               return v2TIMMessage.isNeedReadReceipt();
+          }
+          return false;
+     }
+
+     public void setNeedReadReceipt(boolean isNeedReceipt) {
+          if (v2TIMMessage != null) {
+               v2TIMMessage.setNeedReadReceipt(isNeedReceipt);
+          }
+     }
 
      public void setV2TIMMessage(V2TIMMessage v2TIMMessage) {
           this.v2TIMMessage = v2TIMMessage;

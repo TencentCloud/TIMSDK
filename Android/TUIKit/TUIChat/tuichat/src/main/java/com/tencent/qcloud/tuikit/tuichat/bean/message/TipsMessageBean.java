@@ -142,7 +142,7 @@ public class TipsMessageBean extends TUIMessageBean {
                     tipsMessage = operationUser + TUIChatService.getAppContext().getString(R.string.modify_group_avatar);
                 } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION) {
                     setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                    tipsMessage = operationUser + TUIChatService.getAppContext().getString(R.string.modify_notice) + "\"" + modifyInfo.getValue() + "\"";
+                    tipsMessage = operationUser + TUIChatService.getAppContext().getString(R.string.modify_introduction) + "\"" + modifyInfo.getValue() + "\"";
                 } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_SHUT_UP_ALL) {
                     setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
                     boolean isShutUpAll = modifyInfo.getBoolValue();

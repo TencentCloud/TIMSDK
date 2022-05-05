@@ -43,6 +43,7 @@
     <string name="cancle_group_manager">\'s admin status is terminated.</string>
     <string name="modify_group_name_is">Change the group name to</string>
     <string name="modify_notice">Change the group notice to</string>
+    <string name="modify_introduction">Change the group introduction to</string>
     <string name="move_owner">Transfer group ownership to</string>
     <string name="modify_group_avatar">changed the group profile photo.</string>
     <string name="banned">is blocked from posting</string>
@@ -68,4 +69,11 @@
     <string name="reject_calls">Decline Call</string>
     <string name="modify_shut_up_all">Mute All</string>
     <string name="modify_cancel_shut_up_all">Unmute All</string>
+
+    <string name="search_i_know">I got it</string>
+    <string name="search_no_more_reminders">No more reminders</string>
+    <string name="search_im_flagship">Flagship Edition</string>
+    <string name="search_buying_guidelines">purchase guidelines</string>
+    <string name="search_im_flagship_edition_update_tip">%s features are IM Flagship Edition features, which can be used after purchasing the Flagship Edition. If you are currently using the Pro Edition, you need to do a refund on the Pro Edition first, and then purchase the Flagship Edition. see the purchase guidelines for details.</string>
+
 </resources>

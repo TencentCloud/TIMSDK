@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuicore;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -14,11 +13,14 @@ import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
+import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.tencent.imsdk.v2.V2TIMManager.V2TIM_STATUS_LOGINED;
 
@@ -28,11 +30,179 @@ import static com.tencent.imsdk.v2.V2TIMManager.V2TIM_STATUS_LOGINED;
  */
 public class TUILogin {
     private static final String TAG = TUILogin.class.getSimpleName();
-    private static Context appContext;
-    private static int sdkAppId = 0;
-    private static String userId;
-    private static String userSig;
-    private static boolean hasLoginSuccess = false;
+
+    private static class TUILoginHolder {
+        private static final TUILogin loginInstance = new TUILogin();
+    }
+
+    public static TUILogin getInstance() {
+        return TUILoginHolder.loginInstance;
+    }
+
+    private Context appContext;
+    private int sdkAppId = 0;
+    private String userId;
+    private String userSig;
+    private boolean hasLoginSuccess = false;
+
+    private final List<TUILoginListener> listenerList = new CopyOnWriteArrayList<>();
+
+    private TUILogin() {}
+
+    private final V2TIMSDKListener imSdkListener = new V2TIMSDKListener() {
+        @Override
+        public void onConnecting() {
+            for (TUILoginListener listener : listenerList) {
+                listener.onConnecting();
+            }
+        }
+
+        @Override
+        public void onConnectSuccess() {
+            for (TUILoginListener listener : listenerList) {
+                listener.onConnectSuccess();
+            }
+        }
+
+        @Override
+        public void onConnectFailed(int code, String error) {
+            for (TUILoginListener listener : listenerList) {
+                listener.onConnectFailed(code, error);
+            }
+        }
+
+        @Override
+        public void onKickedOffline() {
+            for (TUILoginListener listener : listenerList) {
+                listener.onKickedOffline();
+            }
+            TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
+                    TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, null);
+        }
+
+        @Override
+        public void onUserSigExpired() {
+            for (TUILoginListener listener : listenerList) {
+                listener.onUserSigExpired();
+            }
+            TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
+                    TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, null);
+        }
+
+        @Override
+        public void onSelfInfoUpdated(V2TIMUserFullInfo info) {
+            TUIConfig.setSelfInfo(info);
+            notifyUserInfoChanged(info);
+        }
+    };
+
+    /**
+     * IMSDK 登录
+     *
+     * @param context  应用的上下文，一般为对应应用的 ApplicationContext
+     * @param sdkAppId 您在腾讯云注册应用时分配的sdkAppID
+     * @param userId   用户名
+     * @param userSig  从业务服务器获取的 userSig
+     * @param callback  登录回调
+     */
+    public static void login(@NonNull Context context, int sdkAppId, String  userId, String userSig, TUICallback callback) {
+        getInstance().internalLogin(context, sdkAppId, userId, userSig, callback);
+    }
+
+    /**
+     * IMSDK 登出
+     * @param callback 登出回调
+     */
+    public static void logout(TUICallback callback) {
+        getInstance().internalLogout(callback);
+    }
+
+    public static void addLoginListener(TUILoginListener listener) {
+        getInstance().internalAddLoginListener(listener);
+    }
+
+    public static void removeLoginListener(TUILoginListener listener) {
+        getInstance().internalRemoveLoginListener(listener);
+    }
+
+    private void internalLogin(Context context, final int sdkAppId, final String  userId, final String userSig, TUICallback callback) {
+        if (this.sdkAppId != 0 && sdkAppId != this.sdkAppId) {
+            logout((TUICallback) null);
+        }
+        this.appContext = context;
+        this.sdkAppId = sdkAppId;
+        V2TIMManager.getInstance().addIMSDKListener(imSdkListener);
+        // 开始初始化 IMSDK，发送广播
+        TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, null);
+        // 用户操作初始化, 默认已经读过隐私协议
+        boolean initSuccess = V2TIMManager.getInstance().initSDK(context, sdkAppId, null);
+        if (initSuccess) {
+            this.userId = userId;
+            this.userSig = userSig;
+            if (TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser()) && !TextUtils.isEmpty(userId)) {
+                TUICallback.onSuccess(callback);
+                getUserInfo(userId);
+                return;
+            }
+
+            V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
+                @Override
+                public void onSuccess() {
+                    hasLoginSuccess = true;
+                    getUserInfo(userId);
+                    TUICallback.onSuccess(callback);
+                    TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, null);
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    TUICallback.onError(callback, code, ErrorMessageConverter.convertIMError(code, desc));
+                }
+            });
+        } else {
+            TUICallback.onError(callback, -1, "init failed");
+        }
+    }
+
+    private void internalLogout(TUICallback callback) {
+        // 开始反初始化 IMSDK，发送广播
+        TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_UNINIT, null);
+        V2TIMManager.getInstance().logout(new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                sdkAppId = 0;
+                userId = null;
+                userSig = null;
+                V2TIMManager.getInstance().unInitSDK();
+                TUIConfig.clearSelfInfo();
+                TUICallback.onSuccess(callback);
+                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS, null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUICallback.onError(callback, code, desc);
+            }
+        });
+    }
+
+    private void internalAddLoginListener(TUILoginListener listener) {
+        Log.i(TAG, "addLoginListener listener : " + listener);
+        if (listener == null) {
+            return;
+        }
+        if (!listenerList.contains(listener)) {
+            listenerList.add(listener);
+        }
+    }
+
+    private void internalRemoveLoginListener(TUILoginListener listener) {
+        Log.i(TAG, "removeLoginListener listener : " + listener);
+        if (listener == null) {
+            return;
+        }
+        listenerList.remove(listener);
+    }
 
     /**
      * IMSDK 初始化
@@ -43,13 +213,14 @@ public class TUILogin {
      * @param listener  IMSDK 初始化监听器
      * @return  true：成功；false：失败，如果 context 为空会返回失败
      */
+    @Deprecated
     public static boolean init(@NonNull Context context, int sdkAppId, @Nullable V2TIMSDKConfig config, @Nullable V2TIMSDKListener listener) {
-        if (TUILogin.sdkAppId != 0 && sdkAppId != TUILogin.sdkAppId) {
-            logout(null);
+        if (getInstance().sdkAppId != 0 && sdkAppId != getInstance().sdkAppId) {
+            logout((V2TIMCallback) null);
             unInit();
         }
-        TUILogin.appContext = context;
-        TUILogin.sdkAppId = sdkAppId;
+        getInstance().appContext = context;
+        getInstance().sdkAppId = sdkAppId;
         V2TIMManager.getInstance().addIMSDKListener(new V2TIMSDKListener() {
             @Override
             public void onConnecting() {
@@ -109,8 +280,9 @@ public class TUILogin {
     /**
      * 反初始化 IMSDK，释放资源
      */
+    @Deprecated
     public static void unInit() {
-        sdkAppId = 0;
+        getInstance().sdkAppId = 0;
         // 开始反初始化 IMSDK，发送广播
         TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_UNINIT, null);
 
@@ -125,9 +297,10 @@ public class TUILogin {
      * @param userSig  从业务服务器获取的 userSig
      * @param callback 登录是否成功的回调
      */
+    @Deprecated
     public static void login(@NonNull String userId, @NonNull String userSig, @Nullable V2TIMCallback callback) {
-        TUILogin.userId = userId;
-        TUILogin.userSig = userSig;
+        getInstance().userId = userId;
+        getInstance().userSig = userSig;
         if (TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser()) && !TextUtils.isEmpty(userId)) {
             if (callback != null) {
                 callback.onSuccess();
@@ -139,11 +312,41 @@ public class TUILogin {
         V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
             @Override
             public void onSuccess() {
-                hasLoginSuccess = true;
+                getInstance().hasLoginSuccess = true;
                 if (callback != null) {
                     callback.onSuccess();
                 }
                 getUserInfo(userId);
+                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                if (callback != null) {
+                    callback.onError(code, ErrorMessageConverter.convertIMError(code, desc));
+                }
+            }
+        });
+    }
+
+    /**
+     * 用户退出登录
+     *
+     * @param callback 退出登录是否成功的回调
+     */
+    @Deprecated
+    public static void logout(@Nullable V2TIMCallback callback) {
+        V2TIMManager.getInstance().logout(new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                getInstance().userId = null;
+                getInstance().userSig = null;
+                if (callback != null) {
+                    callback.onSuccess();
+                }
+                TUIConfig.clearSelfInfo();
+
+                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS, null);
             }
 
             @Override
@@ -193,37 +396,11 @@ public class TUILogin {
     }
 
     /**
-     * 用户退出登录
-     *
-     * @param callback 退出登录是否成功的回调
-     */
-    public static void logout(@Nullable V2TIMCallback callback) {
-        V2TIMManager.getInstance().logout(new V2TIMCallback() {
-            @Override
-            public void onSuccess() {
-                TUILogin.userId = null;
-                TUILogin.userSig = null;
-                if (callback != null) {
-                    callback.onSuccess();
-                }
-                TUIConfig.clearSelfInfo();
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-                if (callback != null) {
-                    callback.onError(code, ErrorMessageConverter.convertIMError(code, desc));
-                }
-            }
-        });
-    }
-
-    /**
      * 获取 sdkAppId，未初始化时 sdkAppId 默认为 0
      * @return sdkAppId
      */
     public static int getSdkAppId() {
-        return sdkAppId;
+        return getInstance().sdkAppId;
     }
 
     /**
@@ -231,7 +408,7 @@ public class TUILogin {
      * @return userId
      */
     public static String getUserId() {
-        return userId;
+        return getInstance().userId;
     }
 
     /**
@@ -239,7 +416,7 @@ public class TUILogin {
      * @return userSig
      */
     public static String getUserSig() {
-        return userSig;
+        return getInstance().userSig;
     }
 
     /**
@@ -263,7 +440,7 @@ public class TUILogin {
      * @return appContext
      */
     public static Context getAppContext() {
-        return appContext;
+        return getInstance().appContext;
     }
 
     /**
@@ -271,7 +448,7 @@ public class TUILogin {
      * @return true：用户已经登录； false：用户尚未登录
      */
     public static boolean isUserLogined() {
-        return hasLoginSuccess && V2TIMManager.getInstance().getLoginStatus() == V2TIM_STATUS_LOGINED;
+        return getInstance().hasLoginSuccess && V2TIMManager.getInstance().getLoginStatus() == V2TIM_STATUS_LOGINED;
     }
 
     /**

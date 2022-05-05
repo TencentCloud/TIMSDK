@@ -5,33 +5,31 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.multidex.MultiDex;
 
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.imsdk.v2.V2TIMCallback;
-import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
+import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
-import com.tencent.qcloud.tim.demo.thirdpush.OfflineMessageDispatcher;
-import com.tencent.qcloud.tim.demo.thirdpush.PushSetting;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
-import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.PrivateConstants;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 
-import com.tencent.qcloud.tim.demo.utils.TUIUtils;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
+import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,7 +45,7 @@ public class DemoApplication extends Application {
         return instance;
     }
 
-    private PushSetting pushSetting = new PushSetting();
+    private int sdkAppId = 0;
     @Override
     public void onCreate() {
         DemoLog.i(TAG, "onCreate");
@@ -64,6 +62,7 @@ public class DemoApplication extends Application {
 
             registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
             initLoginStatusListener();
+            setPermissionRequestContent();
 
         }
     }
@@ -101,49 +100,25 @@ public class DemoApplication extends Application {
         }
     }
 
-    public void init(int sdkAppId) {
+    public void init(int imsdkAppId) {
         initBuildInformation();
         initBugly();
-        if (sdkAppId != 0) {
-            TUIUtils.init(this, sdkAppId, null, null);
+        if (imsdkAppId != 0) {
+            sdkAppId = imsdkAppId;
         } else {
-            TUIUtils.init(this, GenerateTestUserSig.SDKAPPID, null, null);
-		}
+            sdkAppId = GenerateTestUserSig.SDKAPPID;
+        }
     }
 
-    public void initPush() {
-        if (pushSetting == null) {
-            pushSetting = new PushSetting();
-        }
-        pushSetting.initPush();
-    }
-
-    public void bindUserID(String userId) {
-        if (pushSetting == null) {
-            pushSetting = new PushSetting();
-        }
-        pushSetting.bindUserID(userId);
-    }
-
-    public void unBindUserID(String userId) {
-        if (pushSetting == null) {
-            pushSetting = new PushSetting();
-        }
-        pushSetting.unBindUserID(userId);
-    }
-
-    public void unInitPush(){
-        if (pushSetting == null) {
-            pushSetting = new PushSetting();
-        }
-        pushSetting.unInitPush();
+    public int getSdkAppId() {
+        return sdkAppId;
     }
 
     public void initLoginStatusListener() {
-        V2TIMManager.getInstance().addIMSDKListener(loginStatusListener);
+        TUILogin.addLoginListener(loginStatusListener);
     }
 
-    private final V2TIMSDKListener loginStatusListener = new V2TIMSDKListener() {
+    private final TUILoginListener loginStatusListener = new TUILoginListener() {
         @Override
         public void onKickedOffline() {
             ToastUtil.toastLongMessage(DemoApplication.instance().getString(R.string.repeat_login_tip));
@@ -161,25 +136,16 @@ public class DemoApplication extends Application {
         DemoLog.i(TAG, "logout");
         UserInfo.getInstance().cleanUserInfo();
 
-        unBindUserID(UserInfo.getInstance().getUserId());
-        unInitPush();
-
         Intent intent = new Intent(this, LoginForDevActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("LOGOUT", true);
         startActivity(intent);
+
+        MainActivity.finishMainActivity();
     }
 
     class StatisticActivityLifecycleCallback implements ActivityLifecycleCallbacks {
-        private int foregroundActivities = 0;
-        private boolean isChangingConfiguration;
 
-        private final V2TIMConversationListener unreadListener = new V2TIMConversationListener() {
-            @Override
-            public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
-                OfflineMessageDispatcher.updateBadge(DemoApplication.this, (int) totalUnreadCount);
-            }
-        };
 
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle) {
@@ -194,25 +160,7 @@ public class DemoApplication extends Application {
 
         @Override
         public void onActivityStarted(Activity activity) {
-            foregroundActivities++;
-            if (foregroundActivities == 1 && !isChangingConfiguration) {
-                // 应用切到前台
-                DemoLog.i(TAG, "application enter foreground");
-                V2TIMManager.getOfflinePushManager().doForeground(new V2TIMCallback() {
-                    @Override
-                    public void onError(int code, String desc) {
-                        DemoLog.e(TAG, "doForeground err = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
-                    }
 
-                    @Override
-                    public void onSuccess() {
-                        DemoLog.i(TAG, "doForeground success");
-                    }
-                });
-
-                V2TIMManager.getConversationManager().removeConversationListener(unreadListener);
-            }
-            isChangingConfiguration = false;
         }
 
         @Override
@@ -227,36 +175,7 @@ public class DemoApplication extends Application {
 
         @Override
         public void onActivityStopped(Activity activity) {
-            foregroundActivities--;
-            if (foregroundActivities == 0) {
-                // 应用切到后台
-                DemoLog.i(TAG, "application enter background");
-                V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new V2TIMValueCallback<Long>() {
-                    @Override
-                    public void onSuccess(Long aLong) {
-                        int totalCount = aLong.intValue();
-                        V2TIMManager.getOfflinePushManager().doBackground(totalCount, new V2TIMCallback() {
-                            @Override
-                            public void onError(int code, String desc) {
-                                DemoLog.e(TAG, "doBackground err = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
-                            }
 
-                            @Override
-                            public void onSuccess() {
-                                DemoLog.i(TAG, "doBackground success");
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError(int code, String desc) {
-
-                    }
-                });
-
-                V2TIMManager.getConversationManager().addConversationListener(unreadListener);
-            }
-            isChangingConfiguration = activity.isChangingConfigurations();
         }
 
         @Override
@@ -268,6 +187,25 @@ public class DemoApplication extends Application {
         public void onActivityDestroyed(Activity activity) {
 
         }
+    }
+    private void setPermissionRequestContent() {
+        ApplicationInfo applicationInfo = this.getApplicationInfo();
+        Resources resources = this.getResources();
+        String appName = resources.getString(applicationInfo.labelRes);
+
+        PermissionRequester.PermissionRequestContent microphoneContent = new PermissionRequester.PermissionRequestContent();
+        microphoneContent.setReasonTitle(getString(R.string.demo_permission_mic_reason_title, appName));
+        microphoneContent.setReason(getString(R.string.demo_permission_mic_reason));
+        microphoneContent.setIconResId(R.drawable.demo_permission_icon_mic);
+        microphoneContent.setDeniedAlert(getString(R.string.demo_permission_mic_dialog_alert, appName));
+        PermissionRequester.setPermissionRequestContent(PermissionRequester.PermissionConstants.MICROPHONE, microphoneContent);
+
+        PermissionRequester.PermissionRequestContent cameraContent = new PermissionRequester.PermissionRequestContent();
+        cameraContent.setReasonTitle(getString(R.string.demo_permission_camera_reason_title, appName));
+        cameraContent.setReason(getString(R.string.demo_permission_camera_reason));
+        cameraContent.setIconResId(R.drawable.demo_permission_icon_camera);
+        cameraContent.setDeniedAlert(getString(R.string.demo_permission_camera_dialog_alert, appName));
+        PermissionRequester.setPermissionRequestContent(PermissionRequester.PermissionConstants.CAMERA, cameraContent);
     }
 
     private boolean isMainProcess() {

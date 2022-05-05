@@ -33,7 +33,8 @@ public final class TUIConstants {
         public static final String TUI_GROUP = "TUIGroupService";
         public static final String TUI_CALLING = "TUICallingService";
         public static final String TUI_LIVE = "TUILiveService";
-
+        public static final String TUI_BEAUTY = "TUIBeauty";
+        public static final String TUI_OFFLINEPUSH = "TUIOfflinePushService";
     }
 
     /**
@@ -56,7 +57,10 @@ public final class TUIConstants {
         public static final String EVENT_SUB_KEY_START_INIT = "eventSubKeyStartInit";
         // 开始反初始化
         public static final String EVENT_SUB_KEY_START_UNINIT = "eventSubKeyStartUnInit";
-
+        // 登录成功
+        public static final String EVENT_SUB_KEY_USER_LOGIN_SUCCESS = "eventSubKeyUserLoginSuccess";
+        // 登出成功
+        public static final String EVENT_SUB_KEY_USER_LOGOUT_SUCCESS = "eventSubKeyUserLogoutSuccess";
 
         public static final String SELF_ID = "selfId";
         public static final String SELF_SIGNATURE = "selfSignature";
@@ -178,7 +182,7 @@ public final class TUIConstants {
 
     }
 
-        /**
+    /**
      * TUICalling 相关字段
      */
     public static final class TUICalling {
@@ -186,7 +190,7 @@ public final class TUIConstants {
 
         public static final String METHOD_NAME_CALL = "call";
         public static final String METHOD_NAME_RECEIVEAPNSCALLED = "receiveAPNSCalled";
-        
+
         public static final String PARAM_NAME_TYPE = "type";
         public static final String PARAM_NAME_USERIDS = "userIDs";
         public static final String PARAM_NAME_GROUPID = "groupId";
@@ -205,7 +209,7 @@ public final class TUIConstants {
 
         public static final String TYPE_AUDIO = "audio";
         public static final String TYPE_VIDEO = "video";
-        
+
         public static final int ACTION_ID_AUDIO_CALL = 1;
         public static final int ACTION_ID_VIDEO_CALL = 2;
 
@@ -266,6 +270,30 @@ public final class TUIConstants {
         public static final String GROUP_NOTIFICATION= "groupNotification";
         public static final String GROUP_MEMBER_ID_LIST= "groupMemberIdList";
 
+    }
+
+
+    public static final class TUIBeauty {
+        public static final String SERVICE_NAME = Service.TUI_BEAUTY;
+
+        public static final String PARAM_NAME_CONTEXT        = "context";
+        public static final String PARAM_NAME_LICENSE_KEY    = "licenseKey";
+        public static final String PARAM_NAME_LICENSE_URL    = "licenseUrl";
+        public static final String PARAM_NAME_FRAME_WIDTH    = "frameWidth";
+        public static final String PARAM_NAME_FRAME_HEIGHT   = "frameHeight";
+        public static final String PARAM_NAME_SRC_TEXTURE_ID = "srcTextureId";
+
+        public static final String METHOD_PROCESS_VIDEO_FRAME = "processVideoFrame";
+        public static final String METHOD_INIT_XMAGIC         = "initXmagic";
+    }
+    
+    /**
+     * TUIOfflinePush 相关字段
+     */
+    public static final class TUIOfflinePush {
+        public static final String SERVICE_NAME = Service.TUI_OFFLINEPUSH;
+
+        public static final String METHOD_UNREGISTER_PUSH = "unRegiterPush";
     }
 
     public static final class Message {

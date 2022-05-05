@@ -46,6 +46,7 @@ public class FriendApplicationBean implements Serializable {
     private int addType;
     private String faceUrl;
     private V2TIMFriendApplication friendApplication;
+    private boolean isAccept = false;
     public FriendApplicationBean() {}
 
     public String getUserId() {
@@ -78,6 +79,14 @@ public class FriendApplicationBean implements Serializable {
 
     public void setAddType(int addType) {
         this.addType = addType;
+    }
+
+    public void setAccept(boolean accept) {
+        isAccept = accept;
+    }
+
+    public boolean isAccept() {
+        return isAccept;
     }
 
     public void setFriendApplication(V2TIMFriendApplication friendApplication) {

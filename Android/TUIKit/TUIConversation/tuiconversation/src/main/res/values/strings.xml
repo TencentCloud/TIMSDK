@@ -1,24 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="date_yesterday">Yesterday</string>
-    <string name="date_tommorow">Tomorrow</string>
-    <string name="date_year">YYYY</string>
-    <string name="date_month">MM</string>
-    <string name="date_day">DD</string>
-    <string name="date_hour">HH</string>
-    <string name="date_minute">MM</string>
-    <string name="date_second">SS</string>
-
-    <string name="date_year_short">YYYY</string>
-    <string name="date_month_short">MM</string>
-    <string name="date_day_short">DD</string>
-    <string name="date_hour_short">HH</string>
-    <string name="date_minute_short">MM</string>
-    <string name="date_second_short">SS</string>
-
-
-    <string name="load_msg_error">Failed to load message</string>
-
     // 云通信
     <string name="chat_top">Pin</string>
     <string name="chat_delete">Delete Chat</string>
@@ -30,64 +11,11 @@
     <string name="titlebar_cancle">Cancel</string>
     <string name="titlebar_close">Close</string>
     <string name="forward_alert_title">Are you sure you want to forward?</string>
-
     <string name="forward_list_label">Recent Conversations</string>
-
-    <string name="forward_extra">[Chat Record]</string>
-    <string name="revoke_tips_you">You recalled a message.</string>
-    <string name="revoke_tips">recalled a message.</string>
-    <string name="revoke_tips_other">A message is recalled.</string>
-
     <string name="ui_at_all">[@All]</string>
     <string name="ui_at_me">[Someone @ me]</string>
     <string name="ui_at_all_me">[@All][Someone @ me]</string>
     <string name="drafts">[Drafts]</string>
-    <string name="custom_msg">[Custom Messages]</string>
-
-    <string name="hint_add_user_id">Enter ID</string>
-    <string name="hint_add_wording">Enter verification message</string>
-    <string name="contact_add">Add</string>
-    <string name="user_id">ID</string>
-    <string name="add_wording">Verification Message</string>
-
-    <string name="create_group">Create Group</string>
-    <string name="etc">, etc.</string>
-    <string name="join_group">Join Group</string>
-    <string name="invite_joined_group">is invited to the group.</string>
-    <string name="quit_group">Leave Group</string>
-    <string name="kick_group_tip">is removed from the group.</string>
-    <string name="be_group_manager">is set as admin.</string>
-    <string name="cancle_group_manager">\'s admin status is terminated.</string>
-    <string name="modify_group_name_is">Change the group name to</string>
-    <string name="modify_notice">Change the group notice to</string>
-    <string name="modify_shut_up_all">Mute All</string>
-    <string name="modify_cancel_shut_up_all">Unmute All</string>
-    <string name="move_owner">Transfer group ownership to</string>
-    <string name="modify_group_avatar">changed the group profile photo.</string>
-    <string name="banned">is blocked from posting</string>
-    <string name="cancle_banned">is unblocked and can post now</string>
-
     <string name="titlebar_mutiselect">MultiSelect</string>
-    <string name="group_apply_click_handle">Tap to Process</string>
-
-    <string name="search">Search</string>
-
-    <string name="live">\'s live stream</string>
-
-    <string name="start_group_call">Start Group Call</string>
-    <string name="start_call">Start Call</string>
-    <string name="cancle_group_call">Cancel Group Call</string>
-    <string name="cancle_call">Cancel Call</string>
-    <string name="other_line_busy">Line busy</string>
-    <string name="reject_group_calls">Decline Group Call</string>
-    <string name="no_response_call">No answer</string>
-    <string name="accept_call">Answered</string>
-    <string name="line_busy">Line busy</string>
-    <string name="reject_call">reject</string>
-    <string name="invalid_command">invalid command</string>
-    <string name="stop_group_call">End Group Call</string>
-    <string name="stop_call_tip">Call ended. Duration:</string>
-    <string name="reject_calls">Decline Call</string>
-
     <string name="message_num">messages</string>
 </resources>

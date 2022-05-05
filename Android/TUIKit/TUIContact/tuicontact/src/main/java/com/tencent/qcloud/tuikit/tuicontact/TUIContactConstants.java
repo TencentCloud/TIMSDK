@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuicontact;
 
+import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 
 public class TUIContactConstants {
@@ -10,6 +11,9 @@ public class TUIContactConstants {
 
     public static final String FORWARD_CREATE_NEW_CHAT = "forward_create_new_chat";
 
+    public static final int ERR_SDK_INTERFACE_NOT_SUPPORT = BaseConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
+    public static final String BUYING_GUIDELINES_EN = "https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
+    public static final String BUYING_GUIDELINES = "https://cloud.tencent.com/document/product/269/32458";
     /**
      * 1: 仅仅是一个带链接的文本消息
      * 2: iOS支持的视频通话版本，后续已经不兼容

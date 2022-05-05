@@ -86,16 +86,21 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
                 mViewHolder.agree.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        doResponse(mViewHolder, data, true);
+                        doResponse(data, true);
                     }
                 });
                 mViewHolder.reject.setText(res.getString(R.string.refuse));
                 mViewHolder.reject.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        doResponse(mViewHolder, data, false);
+                        doResponse(data, false);
                     }
                 });
+                if (data.isAccept()) {
+                    mViewHolder.agree.setVisibility(View.GONE);
+                    mViewHolder.reject.setVisibility(View.GONE);
+                    mViewHolder.result.setVisibility(View.VISIBLE);
+                }
                 break;
             case FriendApplicationBean.FRIEND_APPLICATION_BOTH:
                 mViewHolder.agree.setText(res.getString(R.string.request_accepted));
@@ -104,17 +109,14 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
         return mView;
     }
 
-    private void doResponse(final ViewHolder viewHolder, FriendApplicationBean data, boolean isAccept) {
+    private void doResponse(FriendApplicationBean bean, boolean isAccept) {
         if (presenter != null) {
             if (isAccept) {
-                presenter.acceptFriendApplication(data, new IUIKitCallback<Void>() {
+                presenter.acceptFriendApplication(bean, new IUIKitCallback<Void>() {
                     @Override
                     public void onSuccess(Void data) {
-                        if (viewHolder != null) {
-                            viewHolder.agree.setVisibility(View.GONE);
-                            viewHolder.reject.setVisibility(View.GONE);
-                            viewHolder.result.setVisibility(View.VISIBLE);
-                        }
+                        bean.setAccept(true);
+                        refreshList();
                     }
 
                     @Override
@@ -123,16 +125,9 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
                     }
                 });
             } else {
-                presenter.refuseFriendApplication(data, new IUIKitCallback<Void>() {
+                presenter.refuseFriendApplication(bean, new IUIKitCallback<Void>() {
                     @Override
                     public void onSuccess(Void data) {
-                        if (viewHolder != null) {
-                            viewHolder.agree.setVisibility(View.GONE);
-                            viewHolder.reject.setVisibility(View.GONE);
-                            viewHolder.result.setVisibility(View.VISIBLE);
-                            viewHolder.result.setText(TUIContactService.getAppContext().getResources().getString(R.string.refused));
-
-                        }
                     }
 
                     @Override
@@ -142,7 +137,10 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
                 });
             }
         }
+    }
 
+    private void refreshList() {
+        notifyDataSetChanged();
     }
 
     public void setPresenter(NewFriendPresenter presenter) {

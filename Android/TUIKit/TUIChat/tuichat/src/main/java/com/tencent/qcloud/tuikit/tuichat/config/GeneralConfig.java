@@ -10,7 +10,7 @@ public class GeneralConfig {
     private String appCacheDir;
     private int audioRecordMaxTime = DEFAULT_AUDIO_RECORD_MAX_TIME;
     private int videoRecordMaxTime = DEFAULT_VIDEO_RECORD_MAX_TIME;
-    private boolean showRead = true;
+    private boolean showRead = false;
     private String userNickname = "";
     private boolean excludedFromUnreadCount;
     private boolean excludedFromLastMessage;
