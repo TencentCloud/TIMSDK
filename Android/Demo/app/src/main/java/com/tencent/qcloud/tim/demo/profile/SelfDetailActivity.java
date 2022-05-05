@@ -16,6 +16,7 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuicore.component.popupcard.PopupInputCard;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
@@ -38,6 +39,7 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
 
     private TitleBarLayout titleBarLayout;
     private ShadeImageView selfIcon;
+    private View faceArea;
     private LineControllerView nickNameLv;
     private LineControllerView accountLv;
     private LineControllerView genderLv;
@@ -56,6 +58,7 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
         setContentView(R.layout.activity_self_detail);
 
         titleBarLayout = findViewById(R.id.self_detail_title_bar);
+        faceArea = findViewById(R.id.face_url_area);
         selfIcon = findViewById(R.id.self_icon);
         nickNameLv = findViewById(R.id.modify_nick_name_lv);
         accountLv = findViewById(R.id.modify_account_lv);
@@ -74,6 +77,7 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
         int radius = getResources().getDimensionPixelSize(R.dimen.demo_profile_face_radius);
         selfIcon.setRadius(radius);
         selfIcon.setOnClickListener(this);
+        faceArea.setOnClickListener(this);
         nickNameLv.setOnClickListener(this);
         accountLv.setOnClickListener(this);
         genderLv.setOnClickListener(this);
@@ -140,9 +144,27 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        if (v == selfIcon) {
-            faceUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
-            updateProfile();
+        if (v == selfIcon || v == faceArea) {
+            TUIKitDialog tipsDialog = new TUIKitDialog(this)
+                    .builder()
+                    .setCancelable(true)
+                    .setCancelOutside(true)
+                    .setTitle(this.getString(R.string.demo_choose_random_face))
+                    .setDialogWidth(0.75f)
+                    .setPositiveButton(this.getString(R.string.sure), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            faceUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
+                            updateProfile();                        }
+                    })
+                    .setNegativeButton(this.getString(R.string.cancel), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+            tipsDialog.show();
+
         } else if (v == nickNameLv) {
             PopupInputCard popupInputCard = new PopupInputCard(this);
             popupInputCard.setContent(nickName);

@@ -21,16 +21,9 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
         init();
     }
 
-    public ViewPagerLayoutManager(Context context, int orientation, boolean reverseLayout) {
-        super(context, orientation, reverseLayout);
-        init();
-    }
-
     private void init() {
         mPagerSnapHelper = new PagerSnapHelper();
-
     }
-
 
     @Override
     public void onAttachedToWindow(RecyclerView view) {
@@ -43,7 +36,6 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         super.onLayoutChildren(recycler, state);
-//
     }
 
     /**
@@ -55,7 +47,6 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
      */
     @Override
     public void onScrollStateChanged(int state) {
-        //TUIChatLog.d(TAG, "onScrollStateChanged state = " + state);
         switch (state) {
             case RecyclerView.SCROLL_STATE_IDLE:
                 View viewIdle = mPagerSnapHelper.findSnapView(this);
@@ -64,19 +55,8 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
                     mOnViewPagerListener.onPageSelected(positionIdle,positionIdle == getItemCount() - 1, mIsLeftScroll);
                 }
                 break;
-            case RecyclerView.SCROLL_STATE_DRAGGING:
-                View viewDrag = mPagerSnapHelper.findSnapView(this);
-                int positionDrag = getPosition(viewDrag);
-                break;
-            case RecyclerView.SCROLL_STATE_SETTLING:
-                View viewSettling = mPagerSnapHelper.findSnapView(this);
-                int positionSettling = getPosition(viewSettling);
-                break;
-
         }
     }
-
-
 
     /**
      * 监听竖直方向的相对偏移量
@@ -101,7 +81,6 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
      */
     @Override
     public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        //TUIChatLog.d(TAG, "scrollHorizontallyBy dx = " + dx);
         if (dx <= 0) {
             mIsLeftScroll = true;
         } else {

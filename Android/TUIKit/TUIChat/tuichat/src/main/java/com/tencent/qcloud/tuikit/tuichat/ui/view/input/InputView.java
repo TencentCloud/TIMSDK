@@ -37,7 +37,7 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.FileUtil;
-import com.tencent.qcloud.tuicore.util.PermissionUtils;
+import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -60,6 +60,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
+import com.tencent.qcloud.tuikit.tuichat.util.PermissionHelper;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -165,8 +166,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     private ImageView replyCloseBtn;
     private ReplyPreviewBean replyPreviewBean;
 
-
-    private boolean isRequestPermission = false;
     public InputView(Context context) {
         super(context);
         initViews();
@@ -264,7 +263,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 TUIChatLog.i(TAG, "mSendAudioButton onTouch action:" + motionEvent.getAction());
-                requestPermission(AUDIO_RECORD, new PermissionUtils.SimpleCallback() {
+                requestPermission(AUDIO_RECORD, new PermissionHelper.PermissionCallback() {
                     @Override
                     public void onGranted() {
                         switch (motionEvent.getAction()) {
@@ -468,7 +467,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     protected void startSendPhoto() {
         TUIChatLog.i(TAG, "startSendPhoto");
 
-        requestPermission(SEND_PHOTO, new PermissionUtils.SimpleCallback() {
+        requestPermission(SEND_PHOTO, new PermissionHelper.PermissionCallback() {
             @Override
             public void onGranted() {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -572,7 +571,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     protected void startCapture() {
         TUIChatLog.i(TAG, "startCapture");
 
-        requestPermission(CAPTURE, new PermissionUtils.SimpleCallback() {
+        requestPermission(CAPTURE, new PermissionHelper.PermissionCallback() {
             @Override
             public void onGranted() {
                 Intent captureIntent = new Intent(getContext(), CameraActivity.class);
@@ -608,10 +607,10 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     protected void startVideoRecord() {
         TUIChatLog.i(TAG, "startVideoRecord");
 
-        requestPermission(CAPTURE, new PermissionUtils.SimpleCallback() {
+        requestPermission(CAPTURE, new PermissionHelper.PermissionCallback() {
             @Override
             public void onGranted() {
-                requestPermission(AUDIO_RECORD, new PermissionUtils.SimpleCallback() {
+                requestPermission(AUDIO_RECORD, new PermissionHelper.PermissionCallback() {
                     @Override
                     public void onGranted() {
                         Intent captureIntent = new Intent(getContext(), CameraActivity.class);
@@ -660,7 +659,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     protected void startSendFile() {
         TUIChatLog.i(TAG, "startSendFile");
 
-        requestPermission(SEND_FILE, new PermissionUtils.SimpleCallback() {
+        requestPermission(SEND_FILE, new PermissionHelper.PermissionCallback() {
             @Override
             public void onGranted() {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -1190,20 +1189,17 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             audioUnit.setOnClickListener(audioUnit.new OnActionClickListener() {
                 @Override
                 public void onClick() {
-                    PermissionUtils.permission(PermissionUtils.PermissionConstants.MICROPHONE)
-                            .callback(new PermissionUtils.SimpleCallback() {
-                                @Override
-                                public void onGranted() {
-                                    onCustomActionClick(audioUnit.getActionId());
-                                }
+                    PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
+                        @Override
+                        public void onGranted() {
+                            onCustomActionClick(audioUnit.getActionId());
+                        }
 
-                                @Override
-                                public void onDenied() {
+                        @Override
+                        public void onDenied() {
 
-                                }
-                            })
-                            .reason(getResources().getString(R.string.chat_permission_mic_reason))
-                            .request();
+                        }
+                    });
                 }
             });
             mInputMoreActionList.add(audioUnit);
@@ -1220,33 +1216,27 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
             videoUnit.setOnClickListener(videoUnit.new OnActionClickListener() {
                 @Override
                 public void onClick() {
-                    PermissionUtils.permission(PermissionUtils.PermissionConstants.MICROPHONE)
-                            .callback(new PermissionUtils.SimpleCallback() {
+                    PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
+                        @Override
+                        public void onGranted() {
+                            PermissionHelper.requestPermission(PermissionHelper.PERMISSION_CAMERA, new PermissionHelper.PermissionCallback() {
                                 @Override
                                 public void onGranted() {
-                                    PermissionUtils.permission(PermissionUtils.PermissionConstants.CAMERA)
-                                            .callback(new PermissionUtils.SimpleCallback() {
-                                                @Override
-                                                public void onGranted() {
-                                                    onCustomActionClick(videoUnit.getActionId());
-                                                }
-
-                                                @Override
-                                                public void onDenied() {
-
-                                                }
-                                            })
-                                            .reason(getResources().getString(R.string.chat_permission_camera_reason))
-                                            .request();
+                                    onCustomActionClick(videoUnit.getActionId());
                                 }
 
                                 @Override
                                 public void onDenied() {
 
                                 }
-                            })
-                            .reason(getResources().getString(R.string.chat_permission_mic_reason))
-                            .request();
+                            });
+                        }
+
+                        @Override
+                        public void onDenied() {
+
+                        }
+                    });
                 }
             });
             mInputMoreActionList.add(videoUnit);
@@ -1295,53 +1285,23 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_INPUT_MORE, TUIConstants.TUIChat.EVENT_SUB_KEY_ON_CLICK, param);
     }
 
-    protected void requestPermission(int type, PermissionUtils.SimpleCallback callback) {
-        String permission = null;
-        String reason = null;
-        if (isRequestPermission) {
-            return;
-        }
-        isRequestPermission = true;
+    protected void requestPermission(int type, PermissionHelper.PermissionCallback callback) {
+        int permission = 0;
         switch (type) {
             case SEND_FILE:
             case SEND_PHOTO:
-                permission = PermissionUtils.PermissionConstants.STORAGE;
-                reason = getResources().getString(R.string.chat_permission_storage_reason);
+                permission = PermissionHelper.PERMISSION_STORAGE;
                 break;
             case CAPTURE:
-                permission = PermissionUtils.PermissionConstants.CAMERA;
-                reason = getResources().getString(R.string.chat_permission_camera_reason);
+                permission = PermissionHelper.PERMISSION_CAMERA;
                 break;
             case AUDIO_RECORD:
-                permission = PermissionUtils.PermissionConstants.MICROPHONE;
-                reason = getResources().getString(R.string.chat_permission_mic_reason);
+                permission = PermissionHelper.PERMISSION_MICROPHONE;
                 break;
             default:
                 break;
         }
-        PermissionUtils.SimpleCallback simpleCallback = new PermissionUtils.SimpleCallback() {
-            @Override
-            public void onGranted() {
-                isRequestPermission = false;
-                if (callback != null) {
-                    callback.onGranted();
-                }
-            }
-
-            @Override
-            public void onDenied() {
-                isRequestPermission = false;
-                if (callback != null) {
-                    callback.onDenied();
-                }
-            }
-        };
-        if (!TextUtils.isEmpty(permission)) {
-            PermissionUtils.permission(permission)
-                    .reason(reason)
-                    .callback(simpleCallback)
-                    .request();
-        }
+        PermissionHelper.requestPermission(permission, callback);
     }
 
     @Override

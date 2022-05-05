@@ -11,6 +11,12 @@ import java.util.List;
 
 public class GroupInfo extends ChatInfo {
 
+    public static final String GROUP_TYPE_PUBLIC = V2TIMManager.GROUP_TYPE_PUBLIC;
+    public static final String GROUP_TYPE_WORK = V2TIMManager.GROUP_TYPE_WORK;
+    public static final String GROUP_TYPE_AVCHATROOM = V2TIMManager.GROUP_TYPE_AVCHATROOM;
+    public static final String GROUP_TYPE_MEETING = V2TIMManager.GROUP_TYPE_MEETING;
+    public static final String GROUP_TYPE_COMMUNITY = V2TIMManager.GROUP_TYPE_COMMUNITY;
+
     private String groupType;
     private int memberCount;
     private String groupName;

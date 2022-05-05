@@ -16,14 +16,14 @@
         android:layout_height="0.3dp"
         android:background="@color/chat_title_line_color" />
 
-    <com.tencent.qcloud.tuicore.component.NoticeLayout
+    <com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayout
         android:id="@+id/chat_group_apply_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/view_line"
         android:visibility="gone" />
 
-    <com.tencent.qcloud.tuicore.component.NoticeLayout
+    <com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayout
         android:id="@+id/chat_notice_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

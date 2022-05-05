@@ -10,9 +10,7 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.Group;
 
-import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.CollectionUtils;
-import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.liteav.trtccalling.R;
 import com.tencent.liteav.trtccalling.TUICalling;
@@ -24,6 +22,7 @@ import com.tencent.liteav.trtccalling.model.util.ImageLoader;
 import com.tencent.liteav.trtccalling.ui.audiocall.audiolayout.TRTCGroupAudioLayout;
 import com.tencent.liteav.trtccalling.ui.audiocall.audiolayout.TRTCGroupAudioLayoutManager;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
+import com.tencent.qcloud.tuicore.util.PermissionRequester;
 
 import java.util.List;
 import java.util.Map;
@@ -61,14 +60,14 @@ public class TUIGroupCallAudioView extends BaseTUICallView {
         initListener();
         if (mRole == TUICalling.Role.CALLED) {
             // 被叫方
-            PermissionUtils.permission(PermissionConstants.MICROPHONE).callback(new PermissionUtils.FullCallback() {
+            PermissionRequester.permission(PermissionRequester.PermissionConstants.MICROPHONE).callback(new PermissionRequester.FullCallback() {
                 @Override
                 public void onGranted(List<String> permissionsGranted) {
                     showWaitingResponseView();
                 }
 
                 @Override
-                public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
+                public void onDenied(List<String> permissionsDenied) {
                     mTRTCCalling.reject();
                     ToastUtils.showShort(R.string.trtccalling_tips_start_audio);
                     finish();
@@ -77,14 +76,14 @@ public class TUIGroupCallAudioView extends BaseTUICallView {
         } else {
             // 主叫方
             showInvitingView();
-            PermissionUtils.permission(PermissionConstants.MICROPHONE).callback(new PermissionUtils.FullCallback() {
+            PermissionRequester.permission(PermissionRequester.PermissionConstants.MICROPHONE).callback(new PermissionRequester.FullCallback() {
                 @Override
                 public void onGranted(List<String> permissionsGranted) {
                     startInviting(TRTCCalling.TYPE_AUDIO_CALL);
                 }
 
                 @Override
-                public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
+                public void onDenied(List<String> permissionsDenied) {
                     ToastUtils.showShort(R.string.trtccalling_tips_start_audio);
                     finish();
                 }

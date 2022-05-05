@@ -13,7 +13,9 @@ import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 public class SplashActivity extends BaseLightActivity {
@@ -50,7 +52,7 @@ public class SplashActivity extends BaseLightActivity {
 
     private void login() {
         UserInfo userInfo = UserInfo.getInstance();
-        TUIUtils.login(userInfo.getUserId(), userInfo.getUserSig(), new V2TIMCallback() {
+        TUILogin.login(DemoApplication.instance(), DemoApplication.instance().getSdkAppId(), userInfo.getUserId(), userInfo.getUserSig(), new TUICallback() {
             @Override
             public void onError(final int code, final String desc) {
                 runOnUiThread(new Runnable() {

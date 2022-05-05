@@ -54,6 +54,7 @@
             android:id="@+id/conversation_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxWidth="180dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:ellipsize="end"
@@ -71,8 +72,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/conversation_list_time_margin_right"
             android:textColor="@color/conversation_item_time_color"
-            android:textSize="13.44sp"
-            android:lineHeight="19.2sp"/>
+            android:textSize="11.52sp"
+            android:lineHeight="15.84sp"/>
 
 
         <TextView

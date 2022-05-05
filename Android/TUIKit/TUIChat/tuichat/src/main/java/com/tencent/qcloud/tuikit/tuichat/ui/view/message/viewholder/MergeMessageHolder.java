@@ -65,7 +65,10 @@ public class MergeMessageHolder extends MessageContentHolder{
         msgForwardTitle.setText(title);
         String content = "";
         for (int i = 0; i < abstractList.size(); i++) {
-            content += abstractList.get(i) + "\n";
+            if (i > 0) {
+                content += "\n";
+            }
+            content += abstractList.get(i);
         }
         content = FaceManager.emojiJudge(content);
         msgForwardContent.setText(content);

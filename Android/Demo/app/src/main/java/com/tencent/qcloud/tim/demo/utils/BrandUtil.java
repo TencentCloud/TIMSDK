@@ -1,8 +1,5 @@
 package com.tencent.qcloud.tim.demo.utils;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
 
 public class BrandUtil {
@@ -55,17 +52,6 @@ public class BrandUtil {
     public static boolean isBrandVivo() {
         return "vivo".equalsIgnoreCase(getBuildBrand())
                 || "vivo".equalsIgnoreCase(getBuildManufacturer());
-    }
-
-    /**
-     * 判断是否支持谷歌服务
-     *
-     * @return
-     */
-    public static boolean isGoogleServiceSupport() {
-        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(DemoApplication.instance());
-        return resultCode == ConnectionResult.SUCCESS;
     }
 
     public static String getBuildBrand() {

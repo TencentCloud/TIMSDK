@@ -12,11 +12,12 @@ import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.C2CMessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.LocationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
@@ -331,13 +332,27 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             public void onRecvC2CReadReceipt(List<V2TIMMessageReceipt> receiptList) {
                 C2CChatEventListener c2CChatManagerKit = getInstance().getC2CChatEventListener();
                 if (c2CChatManagerKit != null) {
-                    List<MessageReceiptInfo> messageReceiptInfoList = new ArrayList<>();
+                    List<C2CMessageReceiptInfo> c2CMessageReceiptInfoList = new ArrayList<>();
                     for(V2TIMMessageReceipt messageReceipt : receiptList) {
-                        MessageReceiptInfo messageReceiptInfo = new MessageReceiptInfo();
-                        messageReceiptInfo.setMessageReceipt(messageReceipt);
-                        messageReceiptInfoList.add(messageReceiptInfo);
+                        C2CMessageReceiptInfo c2CMessageReceiptInfo = new C2CMessageReceiptInfo();
+                        c2CMessageReceiptInfo.setMessageReceipt(messageReceipt);
+                        c2CMessageReceiptInfoList.add(c2CMessageReceiptInfo);
                     }
-                    c2CChatManagerKit.onReadReport(messageReceiptInfoList);
+                    c2CChatManagerKit.onReadReport(c2CMessageReceiptInfoList);
+                }
+            }
+
+            @Override
+            public void onRecvMessageReadReceipts(List<V2TIMMessageReceipt> receiptList) {
+                GroupChatEventListener groupChatListener = getInstance().getGroupChatEventListener();
+                if (groupChatListener != null) {
+                    List<GroupMessageReceiptInfo> groupMessageReceiptInfos = new ArrayList<>();
+                    for(V2TIMMessageReceipt messageReceipt : receiptList) {
+                        GroupMessageReceiptInfo messageReceiptInfo = new GroupMessageReceiptInfo();
+                        messageReceiptInfo.setMessageReceipt(messageReceipt);
+                        groupMessageReceiptInfos.add(messageReceiptInfo);
+                    }
+                    groupChatListener.onReadReport(groupMessageReceiptInfos);
                 }
             }
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/selectable_contact_item"
+    android:layout_width="match_parent"
+    android:layout_height="58.58dp"
+    android:background="#FFFFFF"
+    android:focusable="true"
+    android:paddingLeft="15.36dp"
+    android:paddingStart="15.36dp"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+        android:id="@+id/avatar_img"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_width="38.4dp"
+        android:layout_height="38.4dp"
+        android:layout_marginTop="9.6dp"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_alignTop="@id/avatar_img"
+        android:layout_toEndOf="@id/avatar_img"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="11.52dp"
+        android:layout_marginLeft="11.52dp"
+        android:layout_marginRight="11.52dp"
+        android:layout_marginTop="7.68dp"
+        android:ellipsize="end"
+        android:lineHeight="23.04sp"
+        android:singleLine="true"
+        android:textColor="@color/black_font_color"
+        android:textSize="17.28sp"
+        tools:text="Bob"
+        android:layout_toRightOf="@id/avatar_img" />
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@id/name_tv"
+        android:layout_height="0.5dp"
+        android:background="#DBDBDB"
+        android:layout_alignLeft="@id/name_tv" />
+
+</RelativeLayout>

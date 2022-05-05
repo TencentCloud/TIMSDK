@@ -13,6 +13,7 @@ import android.os.PowerManager;
 import android.text.TextUtils;
 
 import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.ServiceUtils;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -40,6 +41,7 @@ import com.tencent.liteav.trtccalling.model.impl.base.OfflineMessageContainerBea
 import com.tencent.liteav.trtccalling.model.impl.base.SignallingData;
 import com.tencent.liteav.trtccalling.model.impl.base.TRTCInternalListenerManager;
 import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
+import com.tencent.liteav.trtccalling.model.service.TUICallService;
 import com.tencent.liteav.trtccalling.model.util.MediaPlayHelper;
 import com.tencent.liteav.trtccalling.model.util.PermissionUtil;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
@@ -1037,6 +1039,9 @@ public class TRTCCalling {
         stopRing();
         unregisterSensorEventListener();
         mIsProcessedBySelf = false;
+        if (ServiceUtils.isServiceRunning(TUICallService.class)) {
+            TUICallService.stop(mContext);
+        }
     }
 
     private void realSwitchToAudioCall() {
@@ -1215,6 +1220,7 @@ public class TRTCCalling {
             }
         }
         mLastCallModel.callId = mCurCallID;
+        TUICallService.start(mContext);
     }
 
     /**
@@ -1257,6 +1263,7 @@ public class TRTCCalling {
         mIsProcessedBySelf = true;
         enterTRTCRoom();
         stopRing();
+        TUICallService.start(mContext);
     }
 
     /**

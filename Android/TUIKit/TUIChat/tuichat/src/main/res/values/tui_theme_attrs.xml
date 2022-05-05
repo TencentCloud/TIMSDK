@@ -32,4 +32,6 @@
     <attr name="chat_self_reply_text_color" format="reference|color"/>
     <attr name="chat_other_reply_text_color" format="reference|color"/>
 
+    <attr name="chat_read_receipt_text_color" format="reference|color"/>
+
 </resources>

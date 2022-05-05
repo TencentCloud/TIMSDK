@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.component.camera;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -13,7 +12,7 @@ import android.view.WindowManager;
 
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.FileUtil;
-import com.tencent.qcloud.tuicore.util.PermissionUtils;
+import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -22,6 +21,7 @@ import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.ClickListener
 import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.ErrorListener;
 import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.JCameraListener;
 import com.tencent.qcloud.tuikit.tuichat.component.camera.view.JCameraView;
+import com.tencent.qcloud.tuikit.tuichat.util.PermissionHelper;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.util.List;
@@ -124,25 +124,22 @@ public class CameraActivity extends Activity {
     private void startSendPhoto() {
         TUIChatLog.i(TAG, "startSendPhoto");
 
-        PermissionUtils.permission(PermissionUtils.PermissionConstants.STORAGE)
-                .callback(new PermissionUtils.FullCallback() {
-                    @Override
-                    public void onGranted(List<String> permissionsGranted) {
-                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        intent.setType("*/*");
-                        String[] mimeTypes = {"image/*", "video/*"};
-                        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-                        startActivityForResult(intent, REQUEST_CODE_PHOTO_AND_VIDEO);
-                    }
+        PermissionHelper.requestPermission(PermissionHelper.PERMISSION_STORAGE, new PermissionHelper.PermissionCallback() {
+            @Override
+            public void onGranted() {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                String[] mimeTypes = {"image/*", "video/*"};
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+                startActivityForResult(intent, REQUEST_CODE_PHOTO_AND_VIDEO);
+            }
 
-                    @Override
-                    public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
-                        TUIChatLog.i(TAG, "startSendPhoto checkPermission failed");
-                    }
-                })
-                .reason(getString(R.string.chat_permission_storage_reason))
-                .request();
+            @Override
+            public void onDenied() {
+                TUIChatLog.i(TAG, "startSendPhoto checkPermission failed");
+            }
+        });
     }
 
     @Override

@@ -3,20 +3,18 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import com.google.gson.Gson;
-import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageCustom;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
@@ -77,6 +75,11 @@ public class GroupChatPresenter extends ChatPresenter {
             }
 
             @Override
+            public void onReadReport(List<GroupMessageReceiptInfo> receiptInfoList) {
+                GroupChatPresenter.this.onReadReport(receiptInfoList);
+            }
+
+            @Override
             public void onGroupNameChanged(String groupId, String newName) {
                 if (groupInfo == null || !TextUtils.equals(groupId, groupInfo.getId())) {
                     return;
@@ -86,6 +89,63 @@ public class GroupChatPresenter extends ChatPresenter {
         };
         TUIChatService.getInstance().setGroupChatEventListener(groupChatEventListener);
         initMessageSender();
+    }
+
+    public void onReadReport(List<GroupMessageReceiptInfo> receiptList) {
+        if (groupInfo != null) {
+            List<GroupMessageReceiptInfo> processReceipts = new ArrayList<>();
+            for (GroupMessageReceiptInfo groupMessageReceiptInfo : receiptList) {
+                if (!TextUtils.equals(groupMessageReceiptInfo.getGroupID(), groupInfo.getId())) {
+                    continue;
+                }
+                processReceipts.add(groupMessageReceiptInfo);
+            }
+            onGroupMessageReadReceiptUpdated(loadedMessageInfoList, processReceipts);
+        }
+    }
+
+    @Override
+    public void getGroupMessageReadReceipt(List<TUIMessageBean> messageBeanList, IUIKitCallback<List<GroupMessageReceiptInfo>> callback) {
+        provider.getGroupReadReceipt(messageBeanList, callback);
+    }
+
+    @Override
+    public void sendGroupMessageReadReceipt(List<TUIMessageBean> messageBeanList, IUIKitCallback<Void> callback) {
+        List<TUIMessageBean> messageBeans = new ArrayList<>();
+        for (TUIMessageBean messageBean : messageBeanList) {
+            if (messageBean.isNeedReadReceipt()) {
+                messageBeans.add(messageBean);
+            }
+        }
+        if (messageBeans.isEmpty()) {
+            return;
+        }
+        provider.sendGroupMessageReadReceipt(messageBeans, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                TUIChatLog.i(TAG, "sendGroupMessageReadReceipt success");
+                TUIChatUtils.callbackOnSuccess(callback, null);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIChatLog.e(TAG, "sendGroupMessageReadReceipt failed, errCode " + errCode + " errMsg " + errMsg);
+                TUIChatUtils.callbackOnError(callback, errCode, errMsg);
+            }
+        });
+    }
+
+    public void onGroupMessageReadReceiptUpdated(List<TUIMessageBean> messageBeanList, List<GroupMessageReceiptInfo> data) {
+        for (GroupMessageReceiptInfo receiptInfo : data) {
+            for (int i = 0; i < messageBeanList.size(); i++) {
+                TUIMessageBean messageBean = loadedMessageInfoList.get(i);
+                if (TextUtils.equals(messageBean.getId(), receiptInfo.getMsgID())) {
+                    messageBean.setUnreadCount(receiptInfo.getUnreadCount());
+                    messageBean.setReadCount(receiptInfo.getReadCount());
+                    updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
+                }
+            }
+        }
     }
 
     @Override
@@ -123,45 +183,23 @@ public class GroupChatPresenter extends ChatPresenter {
     @Override
     protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {
         groupReadReport(groupInfo.getId());
-        processLoadedMessage(data, getType);
-    }
-
-    public void createGroupChat(final GroupInfo chatInfo, final IUIKitCallback<String> callBack) {
-
-        provider.createGroup(chatInfo, new IUIKitCallback<String>() {
+        getGroupMessageReadReceipt(data, new IUIKitCallback<List<GroupMessageReceiptInfo>>() {
             @Override
-            public void onSuccess(String groupId) {
-                chatInfo.setId(groupId);
-                Gson gson = new Gson();
-                MessageCustom messageCustom = new MessageCustom();
-                messageCustom.version = TUIChatConstants.version;
-                messageCustom.businessID = MessageCustom.BUSINESS_ID_GROUP_CREATE;
-                messageCustom.opUser = TUILogin.getLoginUser();
-                messageCustom.content = TUIChatService.getAppContext().getString(R.string.create_group);
-                String data = gson.toJson(messageCustom);
-
-
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            public void onSuccess(List<GroupMessageReceiptInfo> receiptInfoList) {
+                for (GroupMessageReceiptInfo messageReceiptInfo : receiptInfoList) {
+                    for (TUIMessageBean messageBean : data) {
+                        if (TextUtils.equals(messageBean.getId(), messageReceiptInfo.getMsgID())) {
+                            messageBean.setReadCount(messageReceiptInfo.getReadCount());
+                            messageBean.setUnreadCount(messageReceiptInfo.getUnreadCount());
+                        }
+                    }
                 }
-                sendGroupTipsMessage(groupId, data, new IUIKitCallback<String>() {
-                    @Override
-                    public void onSuccess(String data) {
-                        TUIChatUtils.callbackOnSuccess(callBack, data);
-                    }
-
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-                        TUIChatUtils.callbackOnError(callBack, module, errCode, errMsg);
-                    }
-                });
+                processLoadedMessage(data, getType);
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                TUIChatUtils.callbackOnError(callBack, module, errCode, errMsg);
+                processLoadedMessage(data, getType);
             }
         });
     }
@@ -250,6 +288,10 @@ public class GroupChatPresenter extends ChatPresenter {
 
     protected void assembleGroupMessage(TUIMessageBean message) {
         message.setGroup(true);
+        String groupType = groupInfo.getGroupType();
+        if (TextUtils.equals(groupType, GroupInfo.GROUP_TYPE_AVCHATROOM) || TextUtils.equals(groupType, GroupInfo.GROUP_TYPE_COMMUNITY)) {
+            message.setNeedReadReceipt(false);
+        }
     }
 
     public void onGroupForceExit(String groupId) {

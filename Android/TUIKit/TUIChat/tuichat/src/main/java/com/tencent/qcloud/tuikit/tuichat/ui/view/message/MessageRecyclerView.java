@@ -1,8 +1,8 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message;
 
-import android.content.ClipData;
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,7 +16,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -31,7 +30,6 @@ import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageLayout;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.util.ArrayList;
@@ -179,18 +177,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         });
 
         handler.postDelayed(runnable, 10000);
-
-        /*postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mChatPopMenu != null) {
-                    mChatPopMenu.hide();
-                }
-                if (mAdapter != null) {
-                    mAdapter.resetSelectableText();
-                }
-            }
-        }, 10000); // 10s后无操作自动消失*/
     }
 
     public void onMsgAddBack() {

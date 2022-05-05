@@ -21,13 +21,4 @@ public class GroupInfoUtils {
         groupInfo.setFaceUrl(v2TIMGroupInfo.getFaceUrl());
         return groupInfo;
     }
-
-    public static List<GroupInfo> convertTimGroupInfos2GroupInfos(List<V2TIMGroupInfo> v2TIMGroupInfos) {
-        List<GroupInfo> groupInfoList = new ArrayList<>();
-        for(V2TIMGroupInfo v2TIMGroupInfo : v2TIMGroupInfos) {
-            GroupInfo groupInfo = convertTimGroupInfo2GroupInfo(v2TIMGroupInfo);
-            groupInfoList.add(groupInfo);
-        }
-        return groupInfoList;
-    }
 }

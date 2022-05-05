@@ -1,0 +1,4 @@
+<resources>
+    <string name="you_app">您的应用</string>
+    <string name="low_version"> 版本太低，不支持打开该离线消息</string>
+</resources>

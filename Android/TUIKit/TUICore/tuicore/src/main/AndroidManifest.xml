@@ -8,9 +8,10 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".util.PermissionUtils$PermissionActivity"
+            android:name=".util.PermissionRequester$PermissionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:multiprocess="true"
+            android:launchMode="singleTask"
             android:theme="@style/CoreActivityTranslucent"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 

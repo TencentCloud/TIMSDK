@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">云通信IM</string>
+    <string name="app_name">腾讯云IM</string>
 
     <string name="test_custom_message">查看详情>></string>
 
@@ -17,7 +17,7 @@
     <string name="demo_search">搜索</string>
 
     <string name="login_title">腾讯云即时通信IM</string>
-    <string name="login_sub_title">体验群组聊天，音视频对话等 IM 功能</string>
+    <string name="login_sub_title">欢迎使用本 APP 体验腾讯云 IM 产品服务</string>
     <string name="input_number">请输入手机号</string>
     <string name="input_verification">请输入短信验证码</string>
     <string name="verification_code">获取验证码</string>
@@ -40,7 +40,7 @@
     <string name="allow_type_deny_any">拒绝任何人</string>
     <string name="allow_type_need_confirm">需要验证</string>
     <string name="exit">退出登录</string>
-    <string name="about_im">关于腾讯云·通信</string>
+    <string name="about_im">关于腾讯云·IM</string>
     <string name="modify_birthday">生日</string>
     <string name="modify_gender">性别</string>
     <string name="modify_signature">个性签名</string>
@@ -81,7 +81,7 @@
 
     <string name="demo_self_detail_modify_nickname_rule">仅限中文、字母、数字和下划线</string>
 
-    <string name="conversation_title">腾讯·云通信</string>
+    <string name="conversation_title">腾讯云·IM</string>
     <string name="contact_title">通讯录</string>
     <string name="add_friend">添加好友</string>
     <string name="add_group">添加群聊</string>
@@ -139,6 +139,7 @@
     <string name="login_user_tips">字母开头，4~24个字母+数字</string>
 
     <string name="login_agree_privacy_regulations">《隐私政策》</string>
+    <string name="login_agree_privacy_regulations_summary">《隐私政策摘要》</string>
     <string name="login_agree_user_agreement">《用户协议》</string>
     <string name="login_agree_self_infomation_collection_list">《个人信息收集清单》</string>
     <string name="login_agree_third_part_shared_list">《第三方信息共享清单》</string>
@@ -146,9 +147,9 @@
     <string name="im_privacy">隐私政策</string>
     <string name="im_statement">免责声明</string>
     <string name="im_user_agreement">用户协议</string>
-    <string name="im_statement_content">IM（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。</string>
+    <string name="im_statement_content">腾讯云IM APP（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。</string>
     <string name="im_privacy_tips">请先阅读并同意协议</string>
-    <string name="demo_im_privacy_dialog_tips">欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。\n\n请您点击 《用户协议》、《隐私政策》、《个人信息收集清单》和《第三方信息共享清单》并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！</string>
+    <string name="demo_im_privacy_dialog_tips">欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。\n\n请您点击 《用户协议》、《隐私政策摘要》、《隐私政策》、《个人信息收集清单》和《第三方信息共享清单》并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！</string>
     <string name="demo_im_privacy_agree">同意并继续</string>
     <string name="demo_im_privacy_refuse_and_exit">不同意，退出</string>
 
@@ -162,5 +163,22 @@
     <string name="mark_all_message_as_read_err_format">清空未读失败, %d, %s</string>
 
     <string name="demo_profile_detail">详细资料</string>
+
+    <string name="demo_message_read_switch_title">消息阅读状态</string>
+    <string name="demo_message_read_switch_text">关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到你是否已读。</string>
+
+    <string name="demo_choose_random_face">App 随机为您分配一个系统头像。</string>
+
+    <!--  权限相关 start -->
+    <string name="demo_permission_mic_reason_title">%s申请获取麦克风权限</string>
+    <string name="demo_permission_mic_reason">为方便您发送语音消息，进行摄像和音视频通话，请允许我们访问麦克风。</string>
+    <string name="demo_permission_camera_reason_title">%s申请获取相机权限</string>
+    <string name="demo_permission_camera_reason">为方便您拍摄照片或视频以发送给朋友，以及进行视频通话，请允许我们访问摄像头。</string>
+    <string name="demo_permission_storage_reason_title">%s申请获取存储权限</string>
+    <string name="demo_permission_storage_reason">为方便您查看和选择相册里的图片视频、设备里的文件发送给朋友，以及保存内容到设备，请允许我们访问您设备上的照片、媒体内容和文件。</string>
+    <string name="demo_permission_mic_dialog_alert">在设置-应用-%s-权限中开启麦克风权限，以正常使用语音消息、摄像和音视频通话功能</string>
+    <string name="demo_permission_camera_dialog_alert">在设置-应用-%s-权限中开启相机权限，以正常使用拍照、摄像和视频通话功能</string>
+    <string name="demo_permission_storage_dialog_alert">在设置-应用-%s-权限中开启存储权限，以正常使用文件选择、发送和保存内容功能</string>
+    <!--  权限相关 end -->
 
 </resources>

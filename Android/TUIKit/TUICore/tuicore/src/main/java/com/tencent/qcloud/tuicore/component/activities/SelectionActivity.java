@@ -20,6 +20,7 @@ import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuicore.interfaces.ITUIThemeChangeable;
 
 import java.util.ArrayList;
 
