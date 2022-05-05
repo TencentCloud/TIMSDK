@@ -101,4 +101,12 @@
     <string name="contact_no_such_user">This user does not exist.</string>
 
     <string name="contact_my_user_id">My User ID : %s</string>
+
+    <string name="contact_community">Community</string>
+    <string name="contact_i_know">I got it</string>
+    <string name="contact_no_more_reminders">No more reminders</string>
+    <string name="contact_im_flagship">Flagship Edition</string>
+    <string name="contact_buying_guidelines">purchase guidelines</string>
+    <string name="contact_im_flagship_edition_update_tip">%s features are IM Flagship Edition features, which can be used after purchasing the Flagship Edition. If you are currently using the Pro Edition, you need to do a refund on the Pro Edition first, and then purchase the Flagship Edition. see the purchase guidelines for details.</string>
+
 </resources>

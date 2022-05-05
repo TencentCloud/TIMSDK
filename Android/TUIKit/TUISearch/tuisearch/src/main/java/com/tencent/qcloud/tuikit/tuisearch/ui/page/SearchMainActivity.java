@@ -2,11 +2,18 @@ package com.tencent.qcloud.tuikit.tuisearch.ui.page;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -18,7 +25,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
@@ -33,6 +42,8 @@ import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants.BUYING_GUIDELINES;
+import static com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants.BUYING_GUIDELINES_EN;
 import static com.tencent.qcloud.tuikit.tuisearch.ui.view.SearchResultAdapter.CONTACT_TYPE;
 import static com.tencent.qcloud.tuikit.tuisearch.ui.view.SearchResultAdapter.CONVERSATION_TYPE;
 import static com.tencent.qcloud.tuikit.tuisearch.ui.view.SearchResultAdapter.GROUP_TYPE;
@@ -322,6 +333,9 @@ public class SearchMainActivity extends BaseLightActivity {
 
             @Override
             public void onError(String module, int code, String desc) {
+                if (code == TUISearchConstants.ERR_SDK_INTERFACE_NOT_SUPPORT) {
+                    showNotSupportDialog();
+                }
                 TUISearchLog.d(TAG, "SearchContact onError code = " + code + ", desc = " + desc);
             }
         });
@@ -348,6 +362,9 @@ public class SearchMainActivity extends BaseLightActivity {
 
             @Override
             public void onError(String module, int code, String desc) {
+                if (code == TUISearchConstants.ERR_SDK_INTERFACE_NOT_SUPPORT) {
+                    showNotSupportDialog();
+                }
                 TUISearchLog.d(TAG, "SearchContact onError code = " + code + ", desc = " + desc);
             }
         });
@@ -371,10 +388,76 @@ public class SearchMainActivity extends BaseLightActivity {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
+                if (errCode == TUISearchConstants.ERR_SDK_INTERFACE_NOT_SUPPORT) {
+                    showNotSupportDialog();
+                }
                 mConversationLayout.setVisibility(View.GONE);
                 mMoreConversationLayout.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void showNotSupportDialog() {
+        String string = getResources().getString(R.string.search_im_flagship_edition_update_tip, getString(R.string.search));
+        String buyingGuidelines = getResources().getString(R.string.search_buying_guidelines);
+        int buyingGuidelinesIndex = string.lastIndexOf(buyingGuidelines);
+        final int foregroundColor = getResources().getColor(TUIThemeManager.getAttrResId(SearchMainActivity.this, R.attr.core_primary_color));
+        //需要显示的字串
+        SpannableString spannedString = new SpannableString(string);
+        //设置点击字体颜色
+        ForegroundColorSpan colorSpan2 = new ForegroundColorSpan(foregroundColor);
+        spannedString.setSpan(colorSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+        ClickableSpan clickableSpan2 = new ClickableSpan() {
+            @Override
+            public void onClick(View view) {
+                if (TextUtils.equals(TUIThemeManager.getInstance().getCurrentLanguage(), "zh")) {
+                    openWebUrl(BUYING_GUIDELINES);
+                } else {
+                    openWebUrl(BUYING_GUIDELINES_EN);
+                }
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                //点击事件去掉下划线
+                ds.setUnderlineText(false);
+            }
+        };
+        spannedString.setSpan(clickableSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        //开始响应点击事件
+        TUIKitDialog.TUIIMUpdateDialog.getInstance()
+                .createDialog(this)
+                // 只在 debug 模式下弹窗
+                .setShowOnlyDebug(true)
+                .setMovementMethod(LinkMovementMethod.getInstance())
+                .setCancelable(true)
+                .setCancelOutside(true)
+                .setTitle(spannedString)
+                .setDialogWidth(0.75f)
+                .setPositiveButton(getString(R.string.search_no_more_reminders), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TUIKitDialog.TUIIMUpdateDialog.getInstance().dismiss();
+                        TUIKitDialog.TUIIMUpdateDialog.getInstance().setNeverShow(true);
+                    }
+                })
+                .setNegativeButton(getString(R.string.search_i_know), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TUIKitDialog.TUIIMUpdateDialog.getInstance().dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void openWebUrl(String url) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri contentUrl = Uri.parse(url);
+        intent.setData(contentUrl);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     private void initView() {

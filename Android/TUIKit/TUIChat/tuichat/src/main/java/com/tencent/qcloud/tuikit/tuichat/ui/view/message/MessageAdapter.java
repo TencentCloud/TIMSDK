@@ -423,4 +423,24 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         return mDataSource.get(position - 1);
     }
 
+    public List<TUIMessageBean> getItemList(int first, int last) {
+        if (first < 0 || last < 0) {
+            return new ArrayList<>(0);
+        }
+        if (first == 0) {
+            first = 1;
+        }
+        if (last == 0) {
+            last = 1;
+        }
+        if (mDataSource == null || mDataSource.size() == 0 || first > last) {
+            return new ArrayList<>(0);
+        }
+        if (first >= mDataSource.size() + 1 || last >= mDataSource.size() + 1) {
+            return new ArrayList<>(0);
+        }
+
+        return mDataSource.subList(first - 1, last);
+    }
+
 }

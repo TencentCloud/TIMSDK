@@ -70,11 +70,4 @@ public class TUISearchUtils {
         }
     }
 
-    public static String getLoginUser() {
-        return V2TIMManager.getInstance().getLoginUser();
-    }
-
-    public static boolean isUserLogined() {
-        return V2TIMManager.getInstance().getLoginStatus() == V2TIMManager.V2TIM_STATUS_LOGINED;
-    }
 }

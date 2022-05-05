@@ -8,6 +8,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -115,17 +116,26 @@ public class IjkMediaPlayerWrapper implements IPlayer {
 
     @Override
     public void seekTo(int progress) {
-        invoke("seekTo", progress);
+        try {
+            Method methodInstance = mMediaPlayerClass.getMethod("seekTo", long.class);
+            methodInstance.invoke(mMediaPlayerInstance, progress);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getCurrentPosition() {
-        return (int) invoke("getCurrentPosition");
+        return (int)((long) invoke("getCurrentPosition"));
     }
 
     @Override
     public int getDuration() {
-        return (int) invoke("getDuration");
+        return (int)((long) invoke("getDuration"));
     }
 
     private Object invoke(String methodName, Object... args) {

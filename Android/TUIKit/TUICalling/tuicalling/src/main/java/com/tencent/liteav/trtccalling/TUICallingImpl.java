@@ -19,7 +19,6 @@ import com.tencent.liteav.trtccalling.ui.audiocall.TUIGroupCallAudioView;
 import com.tencent.liteav.trtccalling.ui.base.BaseCallActivity;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
 import com.tencent.liteav.trtccalling.ui.base.Status;
-import com.tencent.liteav.trtccalling.ui.service.TUICallService;
 import com.tencent.liteav.trtccalling.ui.videocall.TUICallVideoView;
 import com.tencent.liteav.trtccalling.ui.videocall.TUIGroupCallVideoView;
 import com.tencent.trtc.TRTCCloudDef;
@@ -69,7 +68,6 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
 
     private TUICallingImpl(Context context) {
         mContext = context.getApplicationContext();
-        TUICallService.start(context);
         TRTCCalling.sharedInstance(mContext).addDelegate(this);
         TRTCLogger.d(TAG, "TUICallingImpl init success.");
     }

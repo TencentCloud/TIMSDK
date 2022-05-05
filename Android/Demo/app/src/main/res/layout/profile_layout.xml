@@ -91,6 +91,13 @@
                         android:textSize="@dimen/demo_profile_signature_text_size"
                         tools:text="相信光" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/arrow_right"
+                    android:layout_alignTop="@id/self_account_tag"
+                    android:layout_alignParentEnd="true" />
+
             </RelativeLayout>
 
             <LinearLayout
@@ -105,21 +112,58 @@
                     android:layout_marginTop="10dp"
                     app:name="@string/add_rule" />
 
-
-                <com.tencent.qcloud.tuicore.component.LineControllerView
-                    android:id="@+id/modify_theme"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/demo_profile_item_height"
+                <LinearLayout
+                    android:id="@+id/message_read_setting_area"
                     android:layout_marginTop="10dp"
-                    android:visibility="gone"
-                    app:name="@string/modify_theme" />
-                <com.tencent.qcloud.tuicore.component.LineControllerView
-                    android:id="@+id/modify_language"
+                    android:paddingLeft="15.36dp"
+                    android:paddingTop="11.52dp"
+                    android:paddingBottom="11.52dp"
+                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/demo_profile_item_height"
-                    android:visibility="gone"
-                    app:isTop="true"
-                    app:name="@string/modify_language" />
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:id="@+id/message_read_setting_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:background="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:gravity="right"
+                            android:textColor="@color/black"
+                            android:textSize="15.36sp"
+                            android:text="@string/demo_message_read_switch_title"/>
+
+                        <TextView
+                            android:background="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="11.52sp"
+                            android:textColor="#888888"
+                            android:text="@string/demo_message_read_switch_text"/>
+                    </LinearLayout>
+
+                    <Switch
+                        android:layout_marginLeft="30dp"
+                        android:id="@+id/message_read_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
+                        android:switchMinWidth="@dimen/switch_mini_width"
+                        android:textOff=""
+                        android:textOn=""
+                        android:layout_marginRight="15.36dp" />
+                </LinearLayout>
 
                 <com.tencent.qcloud.tuicore.component.LineControllerView
                     android:id="@+id/about_im"
@@ -140,7 +184,7 @@
                     android:lineHeight="24.96sp"
                     android:text="@string/exit"
                     android:textAllCaps="false"
-                    android:textColor="?attr/core_primary_color" />
+                    android:textColor="?attr/core_error_tip_color" />
 
             </LinearLayout>
 

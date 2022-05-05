@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat.model;
 
 import android.util.Log;
 import android.util.Pair;
-import android.view.View;
 
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
@@ -15,15 +14,16 @@ import com.tencent.imsdk.v2.V2TIMGroupApplicationResult;
 import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMessageReadMemberList;
 import com.tencent.imsdk.v2.V2TIMGroupTipsElem;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMergerElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
+import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -33,6 +33,8 @@ import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageContainerBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
@@ -573,6 +575,68 @@ public class ChatProvider {
                 }
             });
         }
+    }
+
+    public void getGroupReadReceipt(List<TUIMessageBean> messageBeanList, IUIKitCallback<List<GroupMessageReceiptInfo>> callback) {
+        List<V2TIMMessage> messageList = new ArrayList<>();
+        for (TUIMessageBean messageBean : messageBeanList) {
+            messageList.add(messageBean.getV2TIMMessage());
+        }
+
+        V2TIMManager.getMessageManager().getMessageReadReceipts(messageList, new V2TIMValueCallback<List<V2TIMMessageReceipt>>() {
+            @Override
+            public void onSuccess(List<V2TIMMessageReceipt> v2TIMGroupMessageReceipts) {
+                List<GroupMessageReceiptInfo> messageReceiptInfoList = new ArrayList<>();
+                for (V2TIMMessageReceipt receipt : v2TIMGroupMessageReceipts) {
+                    GroupMessageReceiptInfo groupMessageReceiptInfo = new GroupMessageReceiptInfo();
+                    groupMessageReceiptInfo.setMessageReceipt(receipt);
+                    messageReceiptInfoList.add(groupMessageReceiptInfo);
+                }
+                TUIChatUtils.callbackOnSuccess(callback, messageReceiptInfoList);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatUtils.callbackOnError(callback, code, desc);
+            }
+        });
+    }
+
+    public void sendGroupMessageReadReceipt(List<TUIMessageBean> messageBeanList, IUIKitCallback<Void> callback) {
+        List<V2TIMMessage> messageList = new ArrayList<>();
+        for (TUIMessageBean messageBean : messageBeanList) {
+            messageList.add(messageBean.getV2TIMMessage());
+        }
+
+        V2TIMManager.getMessageManager().sendMessageReadReceipts(messageList, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                TUIChatUtils.callbackOnSuccess(callback, null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatUtils.callbackOnError(callback, code, desc);
+            }
+        });
+    }
+
+    public void getGroupMessageReadMembers(TUIMessageBean messageBean, boolean isRead, int count, long nextSeq, IUIKitCallback<GroupMessageReadMembersInfo> callback) {
+        V2TIMMessage message = messageBean.getV2TIMMessage();
+        int filter = isRead ? V2TIMMessage.V2TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_READ : V2TIMMessage.V2TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_UNREAD;
+        V2TIMManager.getMessageManager().getGroupMessageReadMemberList(message, filter, nextSeq, count, new V2TIMValueCallback<V2TIMGroupMessageReadMemberList>() {
+            @Override
+            public void onSuccess(V2TIMGroupMessageReadMemberList v2TIMGroupMessageReadMembers) {
+                GroupMessageReadMembersInfo messageReadMembersInfo = new GroupMessageReadMembersInfo();
+                messageReadMembersInfo.setReadMembers(v2TIMGroupMessageReadMembers);
+                TUIChatUtils.callbackOnSuccess(callback, messageReadMembersInfo);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatUtils.callbackOnError(callback, code, desc);
+            }
+        });
     }
 
 }

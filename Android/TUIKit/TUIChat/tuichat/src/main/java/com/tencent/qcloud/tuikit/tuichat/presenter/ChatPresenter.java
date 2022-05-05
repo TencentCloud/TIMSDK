@@ -17,12 +17,13 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageContainerBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
@@ -366,7 +367,10 @@ public abstract class ChatPresenter {
         });
     }
 
+    public void getGroupMessageReadReceipt(List<TUIMessageBean> messageBeanList, IUIKitCallback<List<GroupMessageReceiptInfo>> callback) {}
+
     private void onLoadedMessageProcessed(List<TUIMessageBean> data, int type) {
+
         boolean isForward = type == TUIChatConstants.GET_MESSAGE_FORWARD;
         boolean isTwoWay = type == TUIChatConstants.GET_MESSAGE_TWO_WAY;
         boolean isLocate = type == TUIChatConstants.GET_MESSAGE_LOCATE;
@@ -392,11 +396,6 @@ public abstract class ChatPresenter {
             updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_ADD_BACK, data.size());
         }
 
-        for (TUIMessageBean message : data) {
-            if (message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
-                sendMessage(message, true, null);
-            }
-        }
         isLoading = false;
     }
 
@@ -495,7 +494,6 @@ public abstract class ChatPresenter {
         }
         loadedMessageInfoList.add(messageInfo);
         updateAdapter(MessageRecyclerView.DATA_CHANGE_NEW_MESSAGE, 1);
-
     }
 
     protected void onRecvNewMessage(TUIMessageBean msg) {
@@ -522,7 +520,6 @@ public abstract class ChatPresenter {
                 addMessageAfterPreProcess(messageInfo);
             }
         });
-
     }
 
     private void addMessageAfterPreProcess(TUIMessageBean messageInfo) {
@@ -537,10 +534,6 @@ public abstract class ChatPresenter {
                 userID = messageInfo.getUserId();
             } else {
                 return;
-            }
-
-            if (isChatFragmentShow()) {
-                messageInfo.setRead(true);
             }
 
             addMessageInfo(messageInfo);
@@ -574,6 +567,8 @@ public abstract class ChatPresenter {
             }
         }
     }
+
+    public void sendGroupMessageReadReceipt(List<TUIMessageBean> messageBeanList, IUIKitCallback<Void> callback) {}
 
     public void resetCurrentChatUnreadCount() {
         this.currentChatUnreadCount = 0;
@@ -612,7 +607,6 @@ public abstract class ChatPresenter {
         if (message == null || message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
             return;
         }
-        message.setRead(true);
         assembleGroupMessage(message);
 
         String msgId = provider.sendMessage(message, getChatInfo(), new IUIKitCallback<TUIMessageBean>() {
@@ -761,40 +755,6 @@ public abstract class ChatPresenter {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    public void onReadReport(List<MessageReceiptInfo> receiptList) {
-        TUIChatLog.i(TAG, "onReadReport:" + receiptList.size());
-        if (!safetyCall()) {
-            TUIChatLog.w(TAG, "onReadReport unSafetyCall");
-            return;
-        }
-        if (receiptList.size() == 0) {
-            return;
-        }
-        MessageReceiptInfo max = receiptList.get(0);
-        for (MessageReceiptInfo msg : receiptList) {
-            if (!TextUtils.equals(msg.getUserID(), getChatInfo().getId())) {
-                continue;
-            }
-            if (max.getTimestamp() < msg.getTimestamp()) {
-                max = msg;
-            }
-        }
-        for (int i = 0; i < loadedMessageInfoList.size(); i++) {
-            TUIMessageBean messageInfo = loadedMessageInfoList.get(i);
-            if (!TextUtils.equals(messageInfo.getUserId(), max.getUserID())) {
-                continue;
-            }
-            if (messageInfo.getMessageTime() > max.getTimestamp()) {
-                messageInfo.setPeerRead(false);
-            } else if (messageInfo.isPeerRead()) {
-                // do nothing
-            } else {
-                messageInfo.setPeerRead(true);
-                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
             }
         }
     }
@@ -1131,7 +1091,6 @@ public abstract class ChatPresenter {
                     if (message == null || message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
                         continue;
                     }
-                    message.setRead(true);
                     assembleGroupMessage(message);
 
                     OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
@@ -1220,7 +1179,6 @@ public abstract class ChatPresenter {
             return;
         }
 
-        msgInfo.setRead(true);
         assembleGroupMessage(msgInfo);
 
         OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();

@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.component.video.proxy;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -134,7 +135,11 @@ public class SystemMediaPlayerWrapper implements IPlayer {
 
     @Override
     public void seekTo(int progress) {
-        mMediaPlayer.seekTo(progress);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mMediaPlayer.seekTo(progress, MediaPlayer.SEEK_CLOSEST);
+        } else {
+            mMediaPlayer.seekTo(progress);
+        }
     }
 
     @Override

@@ -24,14 +24,9 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.tencent.imsdk.v2.V2TIMDownloadCallback;
 import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMImageElem;
@@ -57,6 +52,7 @@ import com.tencent.qcloud.tuikit.tuichat.component.photoview.listener.OnSingleFl
 import com.tencent.qcloud.tuikit.tuichat.component.photoview.view.PhotoView;
 import com.tencent.qcloud.tuikit.tuichat.component.video.UIKitVideoView;
 import com.tencent.qcloud.tuikit.tuichat.component.video.proxy.IPlayer;
+import com.tencent.qcloud.tuikit.tuichat.util.DeviceUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
@@ -117,6 +113,14 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         if (messageBean == null) {
             return;
         }
+        // SeekBar 的触摸事件不被父 View 拦截
+        holder.playSeekBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
         V2TIMMessage timMessage = messageBean.getV2TIMMessage();
         if (timMessage.getElemType() == V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE) {
             performPhotoView(holder, messageBean, position);
@@ -211,7 +215,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         holder.photoView.setOnPhotoTapListener(new PhotoTapListener());
         holder.photoView.setOnSingleFlingListener(new SingleFlingListener());
         // 如果是原图就直接显示原图， 否则显示缩略图，点击查看原图按钮后下载原图显示
-        holder.photoView.setImageURI(uri);
+        holder.photoView.setImageBitmap(ImageUtil.adaptBitmapFormPath(previewImgPath, DeviceUtil.getScreenSize()[0], DeviceUtil.getScreenSize()[1]));
 
         if (!isOriginImg) {
             holder.viewOriginalButton.setVisibility(View.VISIBLE);
@@ -244,7 +248,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                             BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    holder.photoView.setImageURI(FileUtil.getUriFromPath(path));
+                                    holder.photoView.setImageBitmap(ImageUtil.adaptBitmapFormPath(path, DeviceUtil.getScreenSize()[0], DeviceUtil.getScreenSize()[1]));
                                     holder.viewOriginalButton.setText(mContext.getString(R.string.completed));
                                     holder.viewOriginalButton.setOnClickListener(null);
                                     holder.viewOriginalButton.setVisibility(View.INVISIBLE);
@@ -269,7 +273,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                         if (BROADCAST_DOWNLOAD_COMPLETED_ACTION.equals(action)) {
                             String originImagePath = intent.getStringExtra(DOWNLOAD_ORIGIN_IMAGE_PATH);
                             if (originImagePath != null) {
-                                holder.photoView.setImageURI(FileUtil.getUriFromPath(originImagePath));
+                                holder.photoView.setImageBitmap(ImageUtil.adaptBitmapFormPath(originImagePath, DeviceUtil.getScreenSize()[0], DeviceUtil.getScreenSize()[1]));
                             }
                         }
                     }
@@ -411,14 +415,17 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                /*if (mIsVideoPlay && holder.videoView.isPlaying()){
-                    holder.videoView.pause();
-                }*/
+                int progress = seekBar.getProgress();
+                TUIChatLog.i(TAG,"onStartTrackingTouch progress == " + progress);
+                if (holder.videoView != null) {
+                    //进度条在当前位置播放
+                    holder.videoView.seekTo(progress * 1000);
+                }
             }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int progress = seekBar.getProgress();
-                TUIChatLog.e(TAG,"onStopTrackingTouch progress == " + progress);
+                TUIChatLog.i(TAG,"onStopTrackingTouch progress == " + progress);
                 if (holder.videoView != null && holder.videoView.isPlaying()) {
                     //进度条在当前位置播放
                     holder.videoView.seekTo(progress * 1000);
@@ -453,7 +460,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             mIsVideoPlay = false;
         } else {
             //获取音乐的总时长
-            int times= holder.videoView.getDuration()/1000;
+            float times= holder.videoView.getDuration() *1.0f / 1000;
             if (times <= 0) {
                 TUIChatLog.e(TAG,"onClick, downloading video");
                 //ToastUtil.toastShortMessage("downloading video");
@@ -464,8 +471,8 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             }
 
             //获取音乐的总时长
-            int duration= holder.videoView.getDuration()/1000;
-            int progress =  holder.videoView.getCurrentPosition()/1000;
+            int duration= Math.round(holder.videoView.getDuration() * 1.0f / 1000);
+            int progress = Math.round(holder.videoView.getCurrentPosition() * 1.0f / 1000);
             TUIChatLog.d(TAG,"onClick playSeekBar duration == " + duration + " playSeekBar progress = " + progress);
             if (holder.playSeekBar.getProgress() >= duration) {
                 TUIChatLog.e(TAG, "getProgress() >= duration");
@@ -545,9 +552,9 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                         }
                         //set seekbar progress
                         //TUIChatLog.e(TAG, "Runnable playSeekBar setProgress = " + (int) timeElapsed/1000);
-                        holder.playSeekBar.setProgress((int) timeElapsed/1000);
+                        holder.playSeekBar.setProgress(Math.round(timeElapsed * 1.0f / 1000));
 
-                        String durations = DateTimeUtil.formatSecondsTo00(holder.videoView.getCurrentPosition()/1000);
+                        String durations = DateTimeUtil.formatSecondsTo00(Math.round(holder.videoView.getCurrentPosition() * 1.0f / 1000));
                         holder.timeBeginView.setText(durations);
                         //repeat yourself that again in 100 miliseconds
                         if (mIsVideoPlay) {
@@ -557,8 +564,8 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                 };
 
                 //获取音乐的总时长
-                int duration=mediaPlayer.getDuration()/1000;
-                int progress = mediaPlayer.getCurrentPosition()/1000;
+                int duration = Math.round(mediaPlayer.getDuration() * 1.0f / 1000);
+                int progress = Math.round(mediaPlayer.getCurrentPosition() *1.0f / 1000);
                 //将进度条设置最大值为：音乐的总时长
                 holder.playSeekBar.setMax(duration);
                 holder.playSeekBar.setProgress(progress);

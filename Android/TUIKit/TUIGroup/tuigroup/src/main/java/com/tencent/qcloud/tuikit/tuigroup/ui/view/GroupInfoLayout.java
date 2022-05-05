@@ -264,20 +264,37 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             if (!mGroupInfo.isCanManagerGroup()) {
                 return;
             }
-            String groupUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
-            mPresenter.modifyGroupFaceUrl(mGroupInfo.getId(), groupUrl, new IUIKitCallback<Void>() {
-                @Override
-                public void onSuccess(Void data) {
-                    mGroupInfo.setFaceUrl(groupUrl);
-                    setGroupInfo(mGroupInfo);
-                    ToastUtil.toastLongMessage(TUIGroupService.getAppContext().getString(R.string.modify_icon_suc));
-                }
+            TUIKitDialog tipsDialog = new TUIKitDialog(getContext())
+                    .builder()
+                    .setCancelable(true)
+                    .setCancelOutside(true)
+                    .setTitle(getContext().getString(R.string.group_choose_random_face))
+                    .setDialogWidth(0.75f)
+                    .setPositiveButton(getContext().getString(R.string.sure), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String groupUrl = String.format("https://picsum.photos/id/%d/200/200", new Random().nextInt(1000));
+                            mPresenter.modifyGroupFaceUrl(mGroupInfo.getId(), groupUrl, new IUIKitCallback<Void>() {
+                                @Override
+                                public void onSuccess(Void data) {
+                                    mGroupInfo.setFaceUrl(groupUrl);
+                                    setGroupInfo(mGroupInfo);
+                                    ToastUtil.toastLongMessage(TUIGroupService.getAppContext().getString(R.string.modify_icon_suc));
+                                }
 
-                @Override
-                public void onError(String module, int errCode, String errMsg) {
-                    ToastUtil.toastLongMessage(TUIGroupService.getAppContext().getString(R.string.modify_icon_fail) + ", code = " + errCode + ", info = " + errMsg);
-                }
-            });
+                                @Override
+                                public void onError(String module, int errCode, String errMsg) {
+                                    ToastUtil.toastLongMessage(TUIGroupService.getAppContext().getString(R.string.modify_icon_fail) + ", code = " + errCode + ", info = " + errMsg);
+                                }
+                            });                      }
+                    })
+                    .setNegativeButton(getContext().getString(R.string.cancel), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+            tipsDialog.show();
         } else if (v.getId() == R.id.group_notice) {
             Intent intent = new Intent(getContext(), GroupNoticeActivity.class);
             GroupNoticeActivity.setOnGroupNoticeChangedListener(new GroupNoticeActivity.OnGroupNoticeChangedListener() {

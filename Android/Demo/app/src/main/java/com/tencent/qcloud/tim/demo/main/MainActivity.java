@@ -23,13 +23,11 @@ import com.tencent.imsdk.v2.V2TIMFriendApplicationResult;
 import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.SplashActivity;
-import com.tencent.qcloud.tim.demo.bean.OfflineMessageBean;
-import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
-import com.tencent.qcloud.tim.demo.thirdpush.OfflineMessageDispatcher;
+import com.tencent.qcloud.tim.demo.push.OfflineMessageBean;
+import com.tencent.qcloud.tim.demo.push.OfflineMessageDispatcher;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
@@ -38,7 +36,6 @@ import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuicore.component.menu.Menu;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
@@ -83,8 +80,6 @@ public class MainActivity extends BaseLightActivity {
         super.onCreate(savedInstanceState);
         instance = new WeakReference<>(this);
 
-        DemoApplication.instance().initPush();
-        DemoApplication.instance().bindUserID(UserInfo.getInstance().getUserId());
         initView();
     }
 
@@ -93,8 +88,6 @@ public class MainActivity extends BaseLightActivity {
         super.onNewIntent(intent);
         DemoLog.i(TAG, "onNewIntent");
         setIntent(intent);
-        DemoApplication.instance().initPush();
-        DemoApplication.instance().bindUserID(UserInfo.getInstance().getUserId());
     }
 
     private void initView() {

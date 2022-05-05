@@ -34,9 +34,12 @@ public class ToastUtil {
                         isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
                 // 解决各个手机系统 toast 文字对齐方式不一致的问题
                 View view = toast.getView();
-                TextView textView = view.findViewById(android.R.id.message);
-                if (textView != null) {
-                    textView.setGravity(Gravity.CENTER);
+                // 红米手机上可能为空
+                if (view != null) {
+                    TextView textView = view.findViewById(android.R.id.message);
+                    if (textView != null) {
+                        textView.setGravity(Gravity.CENTER);
+                    }
                 }
                 toast.show();
             }

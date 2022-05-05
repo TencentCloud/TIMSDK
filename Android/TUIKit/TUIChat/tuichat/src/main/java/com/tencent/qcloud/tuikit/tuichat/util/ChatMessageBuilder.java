@@ -21,6 +21,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class ChatMessageBuilder {
 
     public static TextMessageBean buildTextMessage(String message) {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createTextMessage(message);
+        v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
 
         TextMessageBean textMessageBean = new TextMessageBean();
         textMessageBean.setCommonAttribute(v2TIMMessage);
@@ -41,6 +43,7 @@ public class ChatMessageBuilder {
 
     public static TextAtMessageBean buildTextAtMessage(List<String> atUserList, String message) {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createTextAtMessage(message, atUserList);
+        v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
         TextAtMessageBean textAtMessageBean = new TextAtMessageBean();
         textAtMessageBean.setCommonAttribute(v2TIMMessage);
         textAtMessageBean.onProcessMessage(v2TIMMessage);
@@ -56,6 +59,8 @@ public class ChatMessageBuilder {
      */
     public static TUIMessageBean buildFaceMessage(int groupId, String faceName) {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createFaceMessage(groupId, faceName.getBytes());
+        v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
+
         FaceMessageBean message = new FaceMessageBean();
         message.setCommonAttribute(v2TIMMessage);
         message.onProcessMessage(v2TIMMessage);
@@ -71,6 +76,8 @@ public class ChatMessageBuilder {
     public static TUIMessageBean buildImageMessage(final Uri uri) {
         String path = ImageUtil.getImagePathAfterRotate(uri);
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createImageMessage(path);
+        v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
+
         final ImageMessageBean messageBean = new ImageMessageBean();
         messageBean.setCommonAttribute(v2TIMMessage);
         messageBean.onProcessMessage(v2TIMMessage);
@@ -94,7 +101,9 @@ public class ChatMessageBuilder {
      * @return
      */
     public static TUIMessageBean buildVideoMessage(String imgPath, String videoPath, int width, int height, long duration) {
-        V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createVideoMessage(videoPath, "mp4", (int) duration / 1000, imgPath);
+        V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createVideoMessage(videoPath, "mp4", Math.round(duration * 1.0f / 1000), imgPath);
+        v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
+
         VideoMessageBean messageBean = new VideoMessageBean();
         messageBean.setCommonAttribute(v2TIMMessage);
         messageBean.onProcessMessage(v2TIMMessage);
@@ -115,7 +124,9 @@ public class ChatMessageBuilder {
      * @return
      */
     public static TUIMessageBean buildAudioMessage(String recordPath, int duration) {
-        V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createSoundMessage(recordPath, duration / 1000);
+        V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createSoundMessage(recordPath, Math.round(duration * 1.0f / 1000));
+        v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
+
         SoundMessageBean messageBean = new SoundMessageBean();
         messageBean.setCommonAttribute(v2TIMMessage);
         messageBean.onProcessMessage(v2TIMMessage);
@@ -135,6 +146,8 @@ public class ChatMessageBuilder {
         File file = new File(filePath);
         if (file.exists()) {
             V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createFileMessage(filePath, file.getName());
+            v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
+
             FileMessageBean messageBean = new FileMessageBean();
             messageBean.setCommonAttribute(v2TIMMessage);
             messageBean.onProcessMessage(v2TIMMessage);
@@ -153,6 +166,7 @@ public class ChatMessageBuilder {
      */
     public static TUIMessageBean buildForwardMessage(V2TIMMessage v2TIMMessage) {
         V2TIMMessage forwardMessage = V2TIMManager.getMessageManager().createForwardMessage(v2TIMMessage);
+        forwardMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
 
         return buildMessage(forwardMessage);
     }
@@ -175,6 +189,7 @@ public class ChatMessageBuilder {
         }
         V2TIMMessage mergeMsg = V2TIMManager.getMessageManager()
                 .createMergerMessage(msgList, title, abstractList, compatibleText);
+        mergeMsg.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
 
         MergeMessageBean messageBean = new MergeMessageBean();
         messageBean.setCommonAttribute(mergeMsg);
@@ -192,6 +207,8 @@ public class ChatMessageBuilder {
      */
     public static TUIMessageBean buildCustomMessage(String data, String description, byte[] extension) {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createCustomMessage(data.getBytes(), description, extension);
+        v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
+
         TUIMessageBean message = ChatMessageParser.parseMessage(v2TIMMessage);
         if (message.getExtra() == null) {
             message.setExtra(TUIChatService.getAppContext().getString(R.string.custom_msg));
@@ -215,11 +232,15 @@ public class ChatMessageBuilder {
 
     public static TUIMessageBean buildAtReplyMessage(String content, List<String> atList, ReplyPreviewBean previewBean) {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createTextAtMessage(content, atList);
+        v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
+
         return buildReplyMessage(v2TIMMessage, previewBean);
     }
 
     public static TUIMessageBean buildReplyMessage(String content, ReplyPreviewBean previewBean) {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createTextMessage(content);
+        v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
+
         return buildReplyMessage(v2TIMMessage, previewBean);
     }
 

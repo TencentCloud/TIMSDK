@@ -57,10 +57,6 @@ public class ImageVideoScanPresenter {
     private int mIndex = 0;
     private boolean mIsForwardMode = false;
 
-    void ImageVideoScanPresenter () {
-
-    }
-
     public void setAdapter(ImageVideoScanAdapter mAdapter) {
         this.mAdapter = mAdapter;
     }

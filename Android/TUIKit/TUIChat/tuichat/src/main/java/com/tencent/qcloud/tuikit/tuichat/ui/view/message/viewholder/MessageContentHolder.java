@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,12 +10,16 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.material.resources.MaterialAttributes;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.gatherimage.UserIconView;
+import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
@@ -296,6 +302,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
         msgContentLinear.setVisibility(View.VISIBLE);
 
+        // clear isReadText status
+        isReadText.setTextColor(isReadText.getResources().getColor(R.color.text_gray1));
+        isReadText.setOnClickListener(null);
+
         if (isForwardMode) {
             isReadText.setVisibility(View.GONE);
             unreadAudioText.setVisibility(View.GONE);
@@ -304,7 +314,35 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             if (TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead()) {
                 if (msg.isSelf() && TUIMessageBean.MSG_STATUS_SEND_SUCCESS == msg.getStatus()) {
                     if (msg.isGroup()) {
-                        isReadText.setVisibility(View.GONE);
+                        if (!msg.isNeedReadReceipt()) {
+                            isReadText.setVisibility(View.GONE);
+                        } else {
+                            isReadText.setVisibility(View.VISIBLE);
+                            if (msg.isAllRead()) {
+                                isReadText.setText(R.string.has_all_read);
+                            } else if (msg.isUnread()) {
+                                isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
+                                isReadText.setText(R.string.unread);
+                                isReadText.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startShowUnread(msg);
+                                    }
+                                });
+                            } else {
+                                long readCount = msg.getReadCount();
+                                if (readCount > 0) {
+                                    isReadText.setText(isReadText.getResources().getString(R.string.someone_has_read, readCount));
+                                    isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
+                                    isReadText.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            startShowUnread(msg);
+                                        }
+                                    });
+                                }
+                            }
+                        }
                     } else {
                         isReadText.setVisibility(View.VISIBLE);
                         if (msg.isPeerRead()) {
@@ -329,5 +367,11 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     public abstract void layoutVariableViews(final TUIMessageBean msg, final int position);
 
     public void onRecycled() {}
+
+    public void startShowUnread(TUIMessageBean messageBean) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(TUIChatConstants.MESSAGE_BEAN, messageBean);
+        TUICore.startActivity("GroupMessageReceiptActivity", bundle);
+    }
 
 }

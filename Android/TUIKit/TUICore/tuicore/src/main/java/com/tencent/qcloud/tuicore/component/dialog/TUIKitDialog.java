@@ -1,7 +1,11 @@
 package com.tencent.qcloud.tuicore.component.dialog;
 
+import static com.tencent.qcloud.tuicore.TUIConfig.TUICORE_SETTINGS_SP_NAME;
+
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.text.method.MovementMethod;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +20,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.tencent.qcloud.tuicore.BuildConfig;
 import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.TUIConfig;
+
+import java.lang.ref.WeakReference;
 
 public class TUIKitDialog {
 
@@ -25,7 +32,7 @@ public class TUIKitDialog {
     protected Dialog dialog;
     private LinearLayout mBackgroundLayout;
     private LinearLayout mMainLayout;
-    private TextView mTitleTv;
+    protected TextView mTitleTv;
     private Button mCancelButton;
     private Button mSureButton;
     private ImageView mLineImg;
@@ -79,7 +86,7 @@ public class TUIKitDialog {
     }
 
 
-    public TUIKitDialog setTitle(@NonNull String title) {
+    public TUIKitDialog setTitle(@NonNull CharSequence title) {
         showTitle = true;
         mTitleTv.setText(title);
         return this;
@@ -113,7 +120,7 @@ public class TUIKitDialog {
      * @param listener
      * @return
      */
-    public TUIKitDialog setPositiveButton(String text,
+    public TUIKitDialog setPositiveButton(CharSequence text,
                                           final OnClickListener listener) {
         showPosBtn = true;
         mSureButton.setText(text);
@@ -138,7 +145,7 @@ public class TUIKitDialog {
      * @param listener
      * @return
      */
-    public TUIKitDialog setNegativeButton(String text,
+    public TUIKitDialog setNegativeButton(CharSequence text,
                                           final OnClickListener listener) {
         showNegBtn = true;
         mCancelButton.setText(text);
@@ -152,8 +159,7 @@ public class TUIKitDialog {
         return this;
     }
 
-    public TUIKitDialog setNegativeButton(
-            final OnClickListener listener) {
+    public TUIKitDialog setNegativeButton(final OnClickListener listener) {
         setNegativeButton(TUIConfig.getAppContext().getString(R.string.cancel), listener);
         return this;
     }
@@ -199,7 +205,9 @@ public class TUIKitDialog {
     }
 
     public void dismiss() {
-        dialog.dismiss();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
     }
 
 
@@ -217,74 +225,118 @@ public class TUIKitDialog {
         return this;
     }
 
+    public static class TUIIMUpdateDialog {
 
-    /***
-     * 获取title
-     * @return
-     */
-    public TextView getTxt_title() {
-        return mTitleTv;
+        private static final class TUIIMUpdateDialogHolder {
+            private static TUIIMUpdateDialog instance = new TUIIMUpdateDialog();
+        }
+
+        public static final String KEY_NEVER_SHOW = "neverShow";
+
+        private boolean isNeverShow;
+        private boolean isShowOnlyDebug = false;
+        private SharedPreferences sharedPreferences = null;
+
+        private WeakReference<TUIKitDialog> tuiKitDialog;
+
+        public static TUIIMUpdateDialog getInstance() {
+           return TUIIMUpdateDialogHolder.instance;
+        }
+
+        private TUIIMUpdateDialog() {
+            sharedPreferences = TUIConfig.getAppContext().getSharedPreferences(TUICORE_SETTINGS_SP_NAME, Context.MODE_PRIVATE);
+            isNeverShow = sharedPreferences.getBoolean(KEY_NEVER_SHOW, false);
+        }
+
+        public TUIIMUpdateDialog createDialog(Context context) {
+            tuiKitDialog = new WeakReference<>(new TUIKitDialog(context));
+            tuiKitDialog.get().builder();
+            return this;
+        }
+
+        public void setNeverShow(boolean neverShowAlert) {
+            this.isNeverShow = neverShowAlert;
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(KEY_NEVER_SHOW, neverShowAlert);
+            editor.apply();
+        }
+
+        public TUIIMUpdateDialog setShowOnlyDebug(boolean isShowOnlyDebug) {
+            this.isShowOnlyDebug = isShowOnlyDebug;
+            return this;
+        }
+
+        public TUIIMUpdateDialog setMovementMethod(MovementMethod movementMethod) {
+            if (tuiKitDialog != null && tuiKitDialog.get() != null) {
+                tuiKitDialog.get().mTitleTv.setMovementMethod(movementMethod);
+            }
+            return this;
+        }
+
+        public TUIIMUpdateDialog setCancelable(boolean cancelable) {
+            if (tuiKitDialog != null && tuiKitDialog.get() != null) {
+                tuiKitDialog.get().setCancelable(cancelable);
+            }
+            return this;
+        }
+
+        public TUIIMUpdateDialog setCancelOutside(boolean cancelOutside) {
+            if (tuiKitDialog != null && tuiKitDialog.get() != null) {
+                tuiKitDialog.get().setCancelOutside(cancelOutside);
+            }
+            return this;
+        }
+
+        public TUIIMUpdateDialog setTitle(CharSequence charSequence) {
+            if (tuiKitDialog != null && tuiKitDialog.get() != null) {
+                tuiKitDialog.get().setTitle(charSequence);
+            }
+            return this;
+        }
+
+        public TUIIMUpdateDialog setDialogWidth(float dialogWidth) {
+            if (tuiKitDialog != null && tuiKitDialog.get() != null) {
+                tuiKitDialog.get().setDialogWidth(dialogWidth);
+            }
+            return this;
+        }
+
+        public TUIIMUpdateDialog setPositiveButton(CharSequence text, OnClickListener clickListener) {
+            if (tuiKitDialog != null && tuiKitDialog.get() != null) {
+                tuiKitDialog.get().setPositiveButton(text, clickListener);
+            }
+            return this;
+        }
+
+        public TUIIMUpdateDialog setNegativeButton(CharSequence text, OnClickListener clickListener) {
+            if (tuiKitDialog != null && tuiKitDialog.get() != null) {
+                tuiKitDialog.get().setNegativeButton(text, clickListener);
+            }
+            return this;
+        }
+
+        public void show() {
+            if (tuiKitDialog == null || tuiKitDialog.get() == null) {
+                return;
+            }
+            Dialog dialog = tuiKitDialog.get().dialog;
+            if (dialog == null || dialog.isShowing()) {
+                return;
+            }
+            if (isNeverShow) {
+                return;
+            }
+            if (isShowOnlyDebug && !BuildConfig.DEBUG) {
+                return;
+            }
+            tuiKitDialog.get().show();
+        }
+
+        public void dismiss() {
+            if (tuiKitDialog == null || tuiKitDialog.get() == null) {
+                return;
+            }
+            tuiKitDialog.get().dismiss();
+        }
     }
-
-    /**
-     * 获取确定按钮
-     *
-     * @return
-     */
-    public Button getBtn_neg() {
-        return mCancelButton;
-    }
-
-    /***
-     * 获取用于添加自定义控件的ll
-     * @return
-     */
-    public LinearLayout getlLayout_alert_ll() {
-        return mMainLayout;
-    }
-
-
-    /***
-     * 根据手机的分辨率从 dip 的单位 转成为 px(像素)
-     * @param dpValue
-     * @return
-     */
-    public int dp2px(float dpValue) {
-        final float scale = mContext.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-
-    /**
-     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
-     */
-    public int px2dip(float pxValue) {
-        final float scale = mContext.getResources().getDisplayMetrics().density;
-        return (int) (pxValue / scale + 0.5f);
-    }
-
-    /**
-     * 将px值转换为sp值，保证文字大小不变
-     */
-    public int px2sp(float pxValue) {
-        final float fontScale = mContext.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (pxValue / fontScale + 0.5f);
-    }
-
-    /**
-     * 将sp值转换为px值，保证文字大小不变
-     */
-    public int sp2px(float spValue) {
-        final float fontScale = mContext.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
-    }
-
-    /**
-     * 获取取消按钮
-     *
-     * @return
-     */
-    public Button getBtn_pos() {
-        return mSureButton;
-    }
-
 }

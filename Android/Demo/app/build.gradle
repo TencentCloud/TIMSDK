@@ -26,20 +26,12 @@ android {
             abiFilters.addAll(rootProject.ext.abiFilters)
         }
 
+        /*  集成组件 TUIOfflinePush 离线推送功能需要配置下厂商 vivo 的应用信息，不需要离线推送功能删除即可。
+         *
+         *  "VIVO_APPKEY" : 厂商推送平台注册应用的 AppKey
+         *  "VIVO_APPID" : 厂商推送平台注册应用的 AppID
+         */
         manifestPlaceholders = [
-                // TPNS 推送服务 接入点域名、accessId、accessKey
-                /** 如果您的应用服务接入点为广州，SDK 默认实现该配置。
-                 *  其他服务接入点域名如下：
-                 *  上海：tpns.sh.tencent.com
-                 *  新加坡：tpns.sgp.tencent.com
-                 *  中国香港：tpns.hk.tencent.com
-                 */
-                "XG_SERVER_SUFFIX" : "",
-                "XG_ACCESS_ID" : "",
-                "XG_ACCESS_KEY" : "",
-
-                // 可选：配置首次启动应用时不自动启动推送服务进程，直到调用 XGPushManager.registerPush 接口才开始启动
-                "XG_SERVICE_PULL_UP_OFF" : "true",
                 "VIVO_APPKEY" : "",
                 "VIVO_APPID" : ""
         ]
@@ -76,6 +68,7 @@ android {
             res.srcDirs += "src/main/res-light"
             res.srcDirs += "src/main/res-lively"
             res.srcDirs += "src/main/res-serious"
+            res.srcDirs += "src/main/self-res"
         }
     }
 }
@@ -94,25 +87,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     // Optional, if you use support library fragments:
 
-    // tpns推送,最新版本号可参考 [Android SDK 发布动态](https://cloud.tencent.com/document/product/548/44520)
-    // 主包
-    implementation 'com.tencent.tpns:tpns:1.3.1.1-release'
-    // Google FCM
-    implementation "com.tencent.tpns:fcm:1.3.1.1-release"
-    // google 云消息传递
-    implementation ('com.google.firebase:firebase-messaging:19.0.1')
-    // 小米
-    implementation "com.tencent.tpns:xiaomi:1.3.1.1-release"
-    // 魅族
-    implementation "com.tencent.tpns:meizu:1.3.1.1-release"
-    // OPPO
-    implementation "com.tencent.tpns:oppo:1.3.1.1-release"
-    // vivo
-    implementation "com.tencent.tpns:vivo:1.3.1.1-release"
-    // 华为
-    implementation 'com.tencent.tpns:huawei:1.3.1.1-release'
-    implementation 'com.huawei.hms:push:5.0.2.300'
-
     // bugly sdk
     implementation 'com.tencent.bugly:crashreport:latest.release'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
@@ -125,4 +99,5 @@ dependencies {
     api project(':tuisearch')
     api project(':tuigroup')
     api project(':tuicalling')
+    api project(':tuiofflinepush')
 }

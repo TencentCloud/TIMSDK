@@ -12,9 +12,7 @@
 
     <string name="cancel">Cancel</string>
     <string name="sure">Confirm</string>
-    <string name="core_permission_dialog_positive_text">Authorize Now</string>
-    <string name="core_permission_dialog_positive_setting_text">Set Now</string>
-
-    <string name="group_apply_click_handle">Tap to Process</string>
+    <string name="core_permission_dialog_title">Authorization Request</string>
+    <string name="core_permission_dialog_positive_setting_text">Settings</string>
 
 </resources>

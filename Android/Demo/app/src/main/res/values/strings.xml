@@ -18,7 +18,7 @@
 
 
     <string name="login_title">Tencent Cloud IM</string>
-    <string name="login_sub_title">Use Group Chat, Voice/Video Call, and various IM features</string>
+    <string name="login_sub_title">Welcome to use this APP to experience Tencent Cloud IM products and services</string>
     <string name="input_number">Enter mobile number</string>
     <string name="input_verification">Enter SMS verification code</string>
     <string name="verification_code">Send Code</string>
@@ -43,7 +43,7 @@
     <string name="allow_type_deny_any">Decline friend request from any user</string>
     <string name="allow_type_need_confirm">Anyone upon Request</string>
     <string name="exit">Log Out</string>
-    <string name="about_im">About Instant Messaging</string>
+    <string name="about_im">About Tencent Cloud·IM</string>
     <string name="modify_birthday">Birthday</string>
     <string name="modify_gender">Gender</string>
     <string name="cancel_account">Cancel Account</string>
@@ -89,7 +89,7 @@
     <string name="tab_scenes_tab_text">Live Stream</string>
 
 
-    <string name="conversation_title">Tencent·Instant Messaging</string>
+    <string name="conversation_title">Tencent Cloud·IM</string>
     <string name="contact_title">Contacts</string>
     <string name="add_friend">Add Contact</string>
     <string name="add_group">Add Group</string>
@@ -141,6 +141,7 @@
     <string name="login_user_tips">Letters start, 4~24 characters(letters+numbers)</string>
 
     <string name="login_agree_privacy_regulations">\"Privacy Policy\"</string>
+    <string name="login_agree_privacy_regulations_summary">\"Summary of Privacy Policy"\</string>
     <string name="login_agree_user_agreement">\"User Agreement\"</string>
     <string name="login_agree_self_infomation_collection_list">\"Personal Information Collected\"</string>
     <string name="login_agree_third_part_shared_list">\"Information Shared with Third Parties\"</string>
@@ -148,9 +149,9 @@
     <string name="im_statement">Disclaimer</string>
     <string name="im_user_agreement">User Agreement</string>
 
-    <string name="im_statement_content">Instant Messaging (IM) is a test product provided by Tencent Cloud, and Tencent Cloud enjoys its copyright and ownership. It is for trying out features, but not for commercial use. To follow regulatory requirements of the authority, audio and video-based interactions performed via IM will be recorded and archived throughout the whole process. It is strictly prohibited to disseminate via IM any pornographic, abusive, violent, political and other noncompliant content.</string>
+    <string name="im_statement_content">Tencent Cloud Instant Messaging APP is a test product provided by Tencent Cloud, and Tencent Cloud enjoys its copyright and ownership. It is for trying out features, but not for commercial use. To follow regulatory requirements of the authority, audio and video-based interactions performed via IM will be recorded and archived throughout the whole process. It is strictly prohibited to disseminate via IM any pornographic, abusive, violent, political and other noncompliant content.</string>
     <string name="im_privacy_tips">Read and agree to the agreement first</string>
-    <string name="demo_im_privacy_dialog_tips">Welcome to Tencent Cloud Instant Messaging. To protect your personal information, we have updated the \"Privacy Policy\", involving improving the specific contents and purposes of collecting user information, and adding third-party SDKs.\n\n Please carefully read the \"User Agreement\",\"Privacy Policy\",\"Personal Information Collected\" and \"Information Shared with Third Parties\", and tap Agree and Continue to use our products and services if you agree to them.</string>
+    <string name="demo_im_privacy_dialog_tips">Welcome to Tencent Cloud Instant Messaging. To protect your personal information, we have updated the \"Privacy Policy\", involving improving the specific contents and purposes of collecting user information, and adding third-party SDKs.\n\n Please carefully read the \"User Agreement\",\"Summary of Privacy Policy\",\"Privacy Policy\",\"Personal Information Collected\" and \"Information Shared with Third Parties\", and tap Agree and Continue to use our products and services if you agree to them.</string>
     <string name="demo_im_privacy_agree">Agree and Continue</string>
     <string name="demo_im_privacy_refuse_and_exit">Disagree and Exit</string>
 
@@ -164,5 +165,20 @@
     <string name="mark_all_message_as_read_err_format">Failed to clear unread messages. %d, %s</string>
 
     <string name="demo_profile_detail">Details</string>
+
+    <string name="demo_message_read_switch_title">Message read status</string>
+    <string name="demo_message_read_switch_text">If disabled, the message read status is hidden for all your messages and for all the messages sent by members in a chat.</string>
+
+    <string name="demo_choose_random_face">The App randomly assigns you a system avatar.</string>
+
+    <string name="demo_permission_mic_reason_title">%s applies for access to the microphone</string>
+    <string name="demo_permission_mic_reason">In order for you to send voice messages, make video and audio and video calls, please allow us to access the microphone.</string>
+    <string name="demo_permission_camera_reason_title">%s applies for camera permission</string>
+    <string name="demo_permission_camera_reason">In order for you to take photos or videos to send to friends, and to make video calls, please allow us to access the webcam.</string>
+    <string name="demo_permission_storage_reason_title">%s applies for storage permission</string>
+    <string name="demo_permission_storage_reason">In order for you to view and select pictures and videos in your albums, send files from your device to friends, and save content to your device, please allow us to access photos, media content and files on your device.</string>
+    <string name="demo_permission_mic_dialog_alert">Allow microphone access in Settings->Apps->%s to use voice messages, video cameras, and audio and video calls as normal</string>
+    <string name="demo_permission_camera_dialog_alert">Allow camera access in Settings->Apps->%s to use the photo, video and video calling functions as normal</string>
+    <string name="demo_permission_storage_dialog_alert">Allow storage access in Settings->Apps->%s to use the file selection, sending and saving content functions normally</string>
 
 </resources>

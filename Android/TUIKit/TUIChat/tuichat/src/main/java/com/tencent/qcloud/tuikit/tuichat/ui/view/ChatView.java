@@ -1,5 +1,9 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view;
 
+import static com.tencent.qcloud.tuikit.tuichat.TUIChatConstants.BUYING_GUIDELINES;
+import static com.tencent.qcloud.tuikit.tuichat.TUIChatConstants.BUYING_GUIDELINES_EN;
+import static com.tencent.qcloud.tuikit.tuichat.TUIChatConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
@@ -8,12 +12,21 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -27,7 +40,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
-import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
@@ -44,7 +56,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
-import com.tencent.qcloud.tuicore.component.NoticeLayout;
+import com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayout;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.tuichat.component.ProgressPresenter;
@@ -63,7 +75,6 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import com.tencent.qcloud.tuicore.TUICore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -332,6 +343,15 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                     TUICore.startActivity(getContext(), "GroupApplyManagerActivity", bundle);
                 }
             });
+            mMessageRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getMessageLayout().getLayoutManager();
+                    int firstVisiblePosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+                    int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                    sendGroupMsgReadReceipt(firstVisiblePosition, lastVisiblePosition);
+                }
+            });
         }
         getTitleBar().setRightIcon(TUIThemeManager.getAttrResId(getContext(), R.attr.chat_title_bar_more_menu));
 
@@ -339,6 +359,26 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         loadMessages(chatInfo.getLocateMessage(), chatInfo.getLocateMessage() == null ? TUIChatConstants.GET_MESSAGE_FORWARD : TUIChatConstants.GET_MESSAGE_TWO_WAY);
 
         setTotalUnread();
+    }
+
+    private void sendGroupMsgReadReceipt(int firstPosition, int lastPosition) {
+        if (mAdapter == null || presenter == null) {
+            return;
+        }
+        List<TUIMessageBean> tuiMessageBeans = mAdapter.getItemList(firstPosition, lastPosition);
+        presenter.sendGroupMessageReadReceipt(tuiMessageBeans, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                if (errCode == ERR_SDK_INTERFACE_NOT_SUPPORT) {
+                    showNotSupportDialog();
+                }
+            }
+        });
     }
 
     private void setTotalUnread() {
@@ -759,7 +799,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         getInputLayout().clearCustomActionList();
         if (getMessageLayout().getAdapter() == null) {
             mAdapter = new MessageAdapter();
-            getMessageLayout().setAdapter(mAdapter);
+            mMessageRecyclerView.setAdapter(mAdapter);
         }
         ChatLayoutSetting chatLayoutSetting = new ChatLayoutSetting(getContext());
         chatLayoutSetting.customizeChatLayout(this);
@@ -1037,6 +1077,9 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
+                if (errCode == ERR_SDK_INTERFACE_NOT_SUPPORT) {
+                    showNotSupportDialog();
+                }
                 ToastUtil.toastLongMessage(errMsg);
             }
 
@@ -1062,5 +1105,85 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
     public interface ForwardSelectActivityListener {
         public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds);
+    }
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        // 从其他界面会到 Chat ，也要上报一次已读回执
+        if (visibility == VISIBLE) {
+            if (getMessageLayout() == null) {
+                return;
+            }
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getMessageLayout().getLayoutManager();
+            if (linearLayoutManager == null) {
+                return;
+            }
+            int firstVisiblePosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+            int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+            sendGroupMsgReadReceipt(firstVisiblePosition, lastVisiblePosition);
+        }
+    }
+
+    private void showNotSupportDialog() {
+        String string = getResources().getString(R.string.chat_im_flagship_edition_update_tip, getResources().getString(R.string.chat_message_read_receipt));
+        String buyingGuidelines = getResources().getString(R.string.chat_buying_guidelines);
+        int buyingGuidelinesIndex = string.lastIndexOf(buyingGuidelines);
+        final int foregroundColor = getResources().getColor(TUIThemeManager.getAttrResId(getContext(), R.attr.core_primary_color));
+        //需要显示的字串
+        SpannableString spannedString = new SpannableString(string);
+        //设置点击字体颜色
+        ForegroundColorSpan colorSpan2 = new ForegroundColorSpan(foregroundColor);
+        spannedString.setSpan(colorSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+        ClickableSpan clickableSpan2 = new ClickableSpan() {
+            @Override
+            public void onClick(View view) {
+                if (TextUtils.equals(TUIThemeManager.getInstance().getCurrentLanguage(), "zh")) {
+                    openWebUrl(BUYING_GUIDELINES);
+                } else {
+                    openWebUrl(BUYING_GUIDELINES_EN);
+                }
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                //点击事件去掉下划线
+                ds.setUnderlineText(false);
+            }
+        };
+        spannedString.setSpan(clickableSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        //开始响应点击事件
+        TUIKitDialog.TUIIMUpdateDialog.getInstance()
+                .createDialog(getContext())
+                // 只在 debug 模式下弹窗
+                .setShowOnlyDebug(true)
+                .setMovementMethod(LinkMovementMethod.getInstance())
+                .setCancelable(true)
+                .setCancelOutside(true)
+                .setTitle(spannedString)
+                .setDialogWidth(0.75f)
+                .setPositiveButton(getResources().getString(R.string.chat_no_more_reminders), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TUIKitDialog.TUIIMUpdateDialog.getInstance().dismiss();
+                        TUIKitDialog.TUIIMUpdateDialog.getInstance().setNeverShow(true);
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.chat_i_know), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TUIKitDialog.TUIIMUpdateDialog.getInstance().dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void openWebUrl(String url) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri contentUrl = Uri.parse(url);
+        intent.setData(contentUrl);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getContext().startActivity(intent);
     }
 }

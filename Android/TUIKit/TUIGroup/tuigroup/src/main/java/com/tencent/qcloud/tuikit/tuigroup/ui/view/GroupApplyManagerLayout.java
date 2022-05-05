@@ -68,11 +68,6 @@ public class GroupApplyManagerLayout extends LinearLayout implements IGroupApply
         mTitleBar.setOnLeftClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO 通知群聊模块群聊刷新 UI
-//                GroupChatEventListener groupChatManagerKit = TUIKitPresenterManager.getInstance().getGroupChatEventListener();
-//                if (groupChatManagerKit != null) {
-//                    groupChatManagerKit.onApplied(mAdapter.getUnHandledSize());
-//                }
                 if (getContext() instanceof Activity) {
                     ((Activity) getContext()).finish();
                 }
