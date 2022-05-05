@@ -76,62 +76,62 @@ namespace com.tencent.imsdk.unity.types
     public class Message
     {
         /// <value>读写(必填), 消息内元素列表</value>
-        public List<Elem> message_elem_array ; 
+        public List<Elem> message_elem_array ;
         /// <value>读写(选填),       消息所属会话ID</value>
-        public string message_conv_id ; 
+        public string message_conv_id ;
         /// <value>读写(选填), 消息所属会话类型</value>
-        public TIMConvType message_conv_type ; 
+        public TIMConvType message_conv_type ;
         /// <value>读写(选填),       消息的发送者</value>
-        public string message_sender ; 
+        public string message_sender ;
         /// <value>读写(选填), 消息优先级</value>
-        public TIMMsgPriority message_priority ; 
+        public TIMMsgPriority message_priority ;
         /// <value>读写(选填),       客户端时间</value>
-        public ulong message_client_time ; 
+        public ulong message_client_time ;
         /// <value>读写(选填),       服务端时间</value>
-        public ulong message_server_time ; 
+        public ulong message_server_time ;
         /// <value>读写(选填),       消息是否来自自己</value>
-        public bool message_is_from_self ; 
+        public bool message_is_from_self ;
         /// <value>读写(选填), 发送消息的平台</value>
-        public TIMPlatform message_platform ; 
+        public TIMPlatform message_platform ;
         /// <value>读写(选填),       消息是否已读</value>
-        public bool message_is_read ; 
+        public bool message_is_read ;
         /// <value>读写(选填),       消息是否是在线消息，false表示普通消息,true表示阅后即焚消息，默认为false</value>
-        public bool message_is_online_msg ; 
+        public bool message_is_online_msg ;
         /// <value>只读,            消息是否被会话对方已读</value>
-        public bool message_is_peer_read ; 
+        public bool message_is_peer_read ;
         /// <value>读写(选填), 消息当前状态</value>
-        public TIMMsgStatus message_status ; 
+        public TIMMsgStatus message_status ;
         /// <value>只读,       消息的唯一标识，推荐使用 kTIMMsgMsgId</value>
         public ulong message_unique_id ;
 
         /// <value>只读,       消息的唯一标识</value>
-        public string message_msg_id ; 
+        public string message_msg_id ;
         /// <value> 只读,       消息的随机码</value>
-        public ulong message_rand ; 
+        public ulong message_rand ;
         /// <value>只读,       消息序列</value>
-        public ulong message_seq ; 
+        public ulong message_seq ;
         /// <value>读写(选填), 自定义整数值字段（本地保存，不会发送到对端，程序卸载重装后失效）</value>
-        public int message_custom_int ; 
+        public int message_custom_int ;
         /// <value>读写(选填), 自定义数据字段（本地保存，不会发送到对端，程序卸载重装后失效）</value>
-        public string message_custom_str ; 
+        public string message_custom_str ;
         /// <value>读写(选填), 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到）</value>
-        public string message_cloud_custom_str ; 
+        public string message_cloud_custom_str ;
         /// <value>读写(选填),  消息是否不计入未读计数：默认为 NO，表明需要计入未读计数，设置为 YES，表明不需要计入未读计数</value>
-        public bool message_is_excluded_from_unread_count ; 
+        public bool message_is_excluded_from_unread_count ;
 
         /// <value>读写(选填),  是否是转发消息</value>
-        public bool message_is_forward_message ; 
+        public bool message_is_forward_message ;
 
         /// <value>读写(选填), 群消息中被 @ 的用户 UserID 列表（即该消息都 @ 了哪些人），如果需要 @ALL ，请传入 kImSDK_MesssageAtALL 字段</value>
-        public List<string> message_group_at_user_array ; 
+        public List<string> message_group_at_user_array ;
         /// <value>读写(选填), 消息的发送者的用户资料</value>
-        public UserProfile message_sender_profile ; 
+        public UserProfile message_sender_profile ;
         /// <value>读写(选填), 消息发送者在群里面的信息，只有在群会话有效。目前仅能获取字段 kTIMGroupMemberInfoIdentifier、kTIMGroupMemberInfoNameCard 其他的字段建议通过 TIMGroupGetMemberInfoList 接口获取</value>
-        public GroupMemberInfo message_sender_group_member_info ; 
+        public GroupMemberInfo message_sender_group_member_info ;
         /// <value>读写(选填), 消息的离线推送设置</value>
-        public OfflinePushConfig message_offlie_push_config ; 
+        public OfflinePushConfig message_offlie_push_config ;
         /// <value>读写 是否作为会话的 lasgMessage，true - 不作为，false - 作为</value>
-        public bool message_excluded_from_last_message ; 
+        public bool message_excluded_from_last_message ;
 
     }
 
@@ -631,7 +631,7 @@ namespace com.tencent.imsdk.unity.types
     public class CreateGroupParam
     {
 
-        /// <value>只写(必填), 群组名称</value>        
+        /// <value>只写(必填), 群组名称</value>
         public string create_group_param_group_name ;
         /// <value>只写(选填), 群组ID,不填时创建成功回调会返回一个后台分配的群ID，如果创建社群（Community）需要自定义群组 ID ，那必须以 "@TGS#_" 作为前缀。</value>
         public string create_group_param_group_id ;
@@ -724,7 +724,15 @@ namespace com.tencent.imsdk.unity.types
 
     }
 
-
+    public class OfflinePushToken 
+    {
+       /// <value>只写（选填）, 注册应用到厂商平台或者 TPNS 时获取的 token。使用注意事项：当接入推送 TPNS 通道，需要设置 isTPNSToken 为 true，上报注册 TPNS 获取的 token；当接入推送为厂商通道，需要设置 isTPNSToken 为 false，上报注册厂商获取的 token。</value>
+       public string offline_push_token_token;       
+       /// <value>只写（选填），IM 控制台证书 ID，接入 TPNS 时不需要填写</value>  
+       public int offline_push_token_business_id;
+       /// <value>只写（选填），是否接入配置 TPNS, token 是否是从 TPNS 获取</value>
+       public bool offline_push_token_is_tpns_token;
+    }
 
     public class GroupGetMemberInfoListParam
     {
@@ -998,8 +1006,7 @@ namespace com.tencent.imsdk.unity.types
     }
 
 
-    public class FriendshipGetPendencyListParam
-    {
+    public class FriendshipGetPendencyListParam {
 
         /// <value>只写, 添加好友的未决请求类型</value>
         public TIMFriendPendencyType friendship_get_pendency_list_param_type ;
@@ -1186,7 +1193,7 @@ namespace com.tencent.imsdk.unity.types
     {
 
 
-        /// <value>只写(选填), 输出到日志文件的日志级别</value>    
+        /// <value>只写(选填), 输出到日志文件的日志级别</value>
         public TIMLogLevel set_config_log_level ;
         /// <value>只写(选填), 日志回调的日志级别 </value>
         public TIMLogLevel set_config_callback_log_level ;
@@ -1348,5 +1355,264 @@ namespace com.tencent.imsdk.unity.types
         public CosSaveRegionForConversationParam request_set_cos_save_region_for_conversation_param ;
         /// <value>只写(选填), 设置 UI 平台，当 kTIMRequestInternalOperation 为 kTIMInternalOperationSetUIPlatform 时需要设置</value>
         public string request_set_ui_platform_param ;
+    }
+
+    public class GetTotalUnreadNumberResult {
+        // int, 只读，会话未读数
+        public int conv_get_total_unread_message_count_result_unread_count;
+    }
+
+    public class GetC2CRecvMsgOptResult {
+        // string, 只读，用户ID
+        public string msg_recv_msg_opt_result_identifier;
+        // uint [TIMReceiveMessageOpt](), 只读，消息接收选项
+        public TIMReceiveMessageOpt msg_recv_msg_opt_result_opt;
+    }
+
+    public class CreateGroupResult {
+        // string, 只读, 创建的群ID
+        public string create_group_result_groupid;
+    }
+    public class GroupInviteMemberResult {
+        // string, 只读, 被邀请加入群组的用户ID
+        public string group_invite_member_result_identifier;
+        // uint [HandleGroupMemberResult](), 只读, 邀请结果
+        public HandleGroupMemberResult group_invite_member_result_result;
+    }
+
+    public class GroupDeleteMemberResult {
+        // string, 只读, 删除的成员ID
+        public string group_delete_member_result_identifier;
+        // uint [HandleGroupMemberResult](), 只读, 删除结果
+        public HandleGroupMemberResult group_delete_member_result_result;
+    }
+
+    public class GroupBaseInfo {
+        // string, 只读, 群组ID
+        public string group_base_info_group_id;
+        // string, 只读, 群组名称
+        public string group_base_info_group_name;
+        // uint [TIMGroupType](), 只读, 群组类型
+        public TIMGroupType group_base_info_group_type;
+        // string, 只读, 群组头像URL
+        public string group_base_info_face_url;
+        // uint,   只读, 群资料的Seq，群资料的每次变更都会增加这个字段的值
+        public uint group_base_info_info_seq;
+        // uint,   只读, 群最新消息的Seq。群组内每一条消息都有一条唯一的消息Seq，且该Seq是按照发消息顺序而连续的。从1开始，群内每增加一条消息，LastestSeq就会增加1
+        public uint group_base_info_lastest_seq;
+        // uint,   只读, 用户所在群已读的消息Seq
+        public uint group_base_info_readed_seq;
+        // uint,   只读, 消息接收选项
+        public uint group_base_info_msg_flag;
+        // bool,   只读, 当前群组是否设置了全员禁言
+        public bool group_base_info_is_shutup_all;
+        // object [GroupSelfInfo](), 只读, 用户所在群的个人信息
+        public GroupSelfInfo group_base_info_self_info;
+    }
+
+    public class GroupSelfInfo {
+        // uint, 只读, 加入群组时间
+        public uint group_self_info_join_time;
+        // uint, 只读, 用户在群组中的角色
+        public uint group_self_info_role;
+        // uint, 只读, 消息未读计数
+        public uint group_self_info_unread_num;
+        // uint [TIMReceiveMessageOpt](), 只读, 消息接收选项
+        public TIMReceiveMessageOpt group_self_info_msg_flag;
+    }
+
+    public class GetGroupInfoResult {
+        // int [错误码](https://cloud.tencent.com/document/product/269/1671),   只读, 获取群组详细信息的结果
+        public int get_groups_info_result_code;
+        // string, 只读, 获取群组详细失败的描述信息
+        public string get_groups_info_result_desc;
+        // object [GroupDetailInfo](), 只读, 群组详细信息
+        public GroupDetailInfo get_groups_info_result_info;
+    }
+
+    public class GroupDetailInfo {
+        // string, 只读, 群组ID
+        public string group_detial_info_group_id;
+        // uint [TIMGroupType](), 只读, 群组类型
+        public TIMGroupType group_detial_info_group_type;
+        // string, 只读, 群组名称
+        public string group_detial_info_group_name;
+        // string, 只读, 群组公告
+        public string group_detial_info_notification;
+        // string, 只读, 群组简介
+        public string group_detial_info_introduction;
+        // string, 只读, 群组头像URL
+        public string group_detial_info_face_url;
+        // uint,   只读, 群组创建时间
+        public uint group_detial_info_create_time;
+        // uint,   只读, 群资料的Seq，群资料的每次变更都会增加这个字段的值
+        public uint group_detial_info_info_seq;
+        // uint,   只读, 群组信息最后修改时间
+        public uint group_detial_info_last_info_time;
+        // uint,   只读, 群最新消息的Seq
+        public uint group_detial_info_next_msg_seq;
+        // uint,   只读, 最新群组消息时间
+        public uint group_detial_info_last_msg_time;
+        // uint,   只读, 群组当前成员数量
+        public uint group_detial_info_member_num;
+        // uint,   只读, 群组最大成员数量
+        public uint group_detial_info_max_member_num;
+        // uint [TIMGroupAddOption](), 只读, 群组加群选项
+        public TIMGroupAddOption group_detial_info_add_option;
+        // uint,   只读, 群组在线成员数量
+        public uint group_detial_info_online_member_num;
+        // uint,   只读, 群组成员是否对外可见
+        public uint group_detial_info_visible;
+        // uint,   只读, 群组是否能被搜索
+        public uint group_detial_info_searchable;
+        // bool,   只读, 群组是否被设置了全员禁言
+        public bool group_detial_info_is_shutup_all;
+        // string, 只读, 群组所有者ID
+        public string group_detial_info_owener_identifier;
+        // array [GroupInfoCustemString](), 只读, 请参考[自定义字段](https://cloud.tencent.com/document/product/269/1502#.E8.87.AA.E5.AE.9A.E4.B9.89.E5.AD.97.E6.AE.B5)
+        public List<GroupInfoCustemString> group_detial_info_custom_info;
+    }
+
+    public class GroupPendencyResult {
+        // uint64, 只读, 下一次拉取的起始时戳,server返回0表示没有更多的数据,否则在下次获取数据时以这个时间戳作为开始时间戳
+        public UInt64 group_pendency_result_next_start_time;
+        // uint64, 只读, 已读上报的时间戳
+        public UInt64 group_pendency_result_read_time_seq;
+        // uint,   只读, 未决请求的未读数
+        public uint group_pendency_result_unread_num;
+        // array [GroupPendency](), 只读, 群未决信息列表
+        public List<GroupPendency> group_pendency_result_pendency_array;
+    }
+
+    public class GroupGetOnlineMemberCountResult {
+        // int, 只读, 指定群的在线人数
+        public int group_get_online_member_count_result;
+    }
+
+    public class FriendResult {
+        // string, 只读, 关系链操作的用户ID
+        public string friend_result_identifier;
+        // int [错误码](https://cloud.tencent.com/document/product/269/1671), 只读, 关系链操作的结果
+        public int friend_result_code;
+        // string, 只读, 关系链操作失败的详细描述
+        public string friend_result_desc;
+    }
+
+    public class FriendshipCheckFriendTypeResult {
+        // string, 只读, 被检测的好友UserID
+        public string  friendship_check_friendtype_result_identifier;
+        // uint [TIMFriendCheckRelation](), 只读, 检测成功时返回的二者之间的关系
+        public TIMFriendCheckRelation  friendship_check_friendtype_result_relation;
+        // int [错误码](https://cloud.tencent.com/document/product/269/1671), 只读, 检测的结果
+        public int  friendship_check_friendtype_result_code;
+        // string, 只读, 检测好友失败的描述信息
+        public string  friendship_check_friendtype_result_desc;
+    }
+
+    public class PendencyPage {
+        // uint64, 只读, 未决请求信息页的起始时间
+        public UInt64  pendency_page_start_time;
+        // uint64, 只读, 未决请求信息页的未读数量
+        public UInt64  pendency_page_unread_num;
+        // uint64, 只读, 未决请求信息页的当前Seq
+        public UInt64  pendency_page_current_seq;
+        // array [FriendAddPendencyInfo](), 只读, 未决请求信息页的未决信息列表
+        public List<FriendAddPendencyInfo>  pendency_page_pendency_info_array;
+    }
+
+    public class FriendAddPendencyInfo {
+        // uint [TIMFriendPendencyType](), 只读, 好友添加请求未决类型
+        public TIMFriendPendencyType  friend_add_pendency_info_type;
+        // string, 只读, 好友添加请求未决的UserID
+        public string  friend_add_pendency_info_idenitifer;
+        // string, 只读, 好友添加请求未决的昵称
+        public string  friend_add_pendency_info_nick_name;
+        // uint64, 只读, 发起好友申请的时间
+        public UInt64  friend_add_pendency_info_add_time;
+        // string, 只读, 好友添加请求未决的添加来源
+        public string  friend_add_pendency_info_add_source;
+        // string, 只读, 好友添加请求未决的添加附言
+        public string  friend_add_pendency_info_add_wording;
+    }
+
+    public class FriendInfoGetResult {
+        // string, 只读, 好友 user_id
+        public string  friendship_friend_info_get_result_identifier;
+        // uint [TIMFriendshipRelationType], 只读， 好友关系
+        public TIMFriendshipRelationType  friendship_friend_info_get_result_relation_type;
+        // uint， 只读，错误码
+        public uint  friendship_friend_info_get_result_error_code;
+        // string, 只读， 错误描述
+        public string  friendship_friend_info_get_result_error_message;
+        // array [FriendProfile], 只读, 好友资料
+        public List<FriendProfile>  friendship_friend_info_get_result_field_info;
+    }
+
+    public class MessageSearchResult {
+        // uint, 只读, 如果您本次搜索【指定会话】，那么返回满足搜索条件的消息总数量；如果您本次搜索【全部会话】，那么返回满足搜索条件的消息所在的所有会话总数量。
+        public uint msg_search_result_total_count;
+        // array [TIMMessageSearchResultItem](), 只读, 如果您本次搜索【指定会话】，那么返回结果列表只包含该会话结果；如果您本次搜索【全部会话】，那么对满足搜索条件的消息根据会话 ID 分组，分页返回分组结果；
+        public List<MessageSearchResultItem> msg_search_result_item_array;
+    }
+
+    public class MessageSearchResultItem {
+        // string, 只读，会话 ID
+        public string msg_search_result_item_conv_id;
+        // uint [TIMConvType](), 只读, 会话类型
+        public TIMConvType msg_search_result_item_conv_type;
+        // uint, 只读, 当前会话一共搜索到了多少条符合要求的消息
+        public uint msg_search_result_item_total_message_count;
+        // array [Message](), 只读, 满足搜索条件的消息列表
+        public List<Message> msg_search_result_item_message_array;
+    }
+
+    public class MsgBatchSendResult {
+        // string, 只读, 接收群发消息的用户 ID
+        public string msg_batch_send_result_identifier;
+        // int [错误码](https://cloud.tencent.com/document/product/269/1671), 只读, 消息发送结果
+        public int msg_batch_send_result_code;
+        // string, 只读, 消息发送的描述
+        public string msg_batch_send_result_desc;
+        // object [Message](), 只读, 发送的消息
+        public Message msg_batch_send_result_msg;
+    }
+
+    public class MsgDownloadElemResult {
+        // uint, 只读, 当前已下载的大小
+        public uint msg_download_elem_result_current_size;
+        // uint, 只读, 需要下载的文件总大小
+        public uint msg_download_elem_result_total_size;
+    }
+
+    public class ReponseInfo {
+        // string [TIMInternalOperation](), 只读(必填), 响应的内部操作
+        public string response_internal_operation;
+        // object [SSODataRes](), 只读(选填), sso发包请求的响应, 当 kTIMResponseInternalOperation 为 kTIMInternalOperationSSOData 时有值
+        public SSODataRes response_sso_data_res;
+        // array [UserInfo](), 只读(选填), 响应的tinyid列表, 当 kTIMResponseInternalOperation 为 kTIMInternalOperationUserId2TinyId 时有值
+        public List<UserInfo> response_userid_tinyid_res;
+        // array [UserInfo](), 只读(选填), 响应的tinyid列表, 当 kTIMResponseInternalOperation 为 kTIMInternalOperationTinyId2UserId 时有值
+        public List<UserInfo> response_tinyid_userid_res;
+        // bool, 只读(选填), true 表示当前环境为测试环境，false表示当前环境是正式环境, 当 kTIMResponseInternalOperation 为 kTIMInternalOperationSetEnv 时有值
+        public bool response_set_env_res;
+    }
+
+    public class UserInfo {
+        public string user_info_userid;
+        public uint user_info_tinyid;
+    }
+
+    public class SSODataRes {
+        // string, 只读(必填), sso返回数据对应请求的命令字
+        public string sso_data_res_cmd;
+        // string, 只读(必填), sso返回的内容，内容是二进制，sdk内部使用base64编码了，外部使用前需要base64解码
+        public string sso_data_res_body;
+    }
+
+    public class GroupGetMemberInfoListResult {
+        // uint64, 只读, 下一次拉取的标志,server返回0表示没有更多的数据,否则在下次获取数据时填入这个标志
+        public UInt64 group_get_memeber_info_list_result_next_seq;
+        // array [GroupMemberInfo](), 只读, 成员信息列表
+        public List<GroupMemberInfo> group_get_memeber_info_list_result_info_array;
     }
 }

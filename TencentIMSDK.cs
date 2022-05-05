@@ -19,9 +19,7 @@ namespace com.tencent.imsdk.unity
     {
         private static SynchronizationContext mainSyncContext = SynchronizationContext.Current;
 
-
-
-        private static Dictionary<string, ValueCallback> ValuecallbackStore = new Dictionary<string, ValueCallback>();
+        private static Dictionary<string, object> ValuecallbackStore = new Dictionary<string, object>();
 
         private static RecvNewMsgCallback RecvNewMsgCallbackStore;
 
@@ -51,8 +49,8 @@ namespace com.tencent.imsdk.unity
 
 
 
-        [MonoPInvokeCallback(typeof(ValueCallback))]
-        public static void CallExperimentalAPICallback(int code, string desc, string json_param, string user_data) { }
+        [MonoPInvokeCallback(typeof(ValueCallback<ReponseInfo>))]
+        public static void CallExperimentalAPICallback(int code, string desc, ReponseInfo data, string user_data) { }
 
         /// <summary>
         /// 初始化IM SDK
@@ -140,7 +138,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="user_sig">通过sdk_app_id与secret生成，可参考 https://cloud.tencent.com/document/product/269/32688</param>
         /// <param name="callback">回调 <see cref="ValueCallback"/> </param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult Login(string user_id, string user_sig, ValueCallback callback)
+        public static TIMResult Login(string user_id, string user_sig, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -148,7 +146,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMLogin(Utils.string2intptr(user_id), Utils.string2intptr(user_sig), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMLogin(Utils.string2intptr(user_id), Utils.string2intptr(user_sig), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult Login(string user_id, string user_sig, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMLogin(Utils.string2intptr(user_id), Utils.string2intptr(user_sig), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -172,7 +182,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="config">配置 SetConfig</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult SetConfig(SetConfig config, ValueCallback callback)
+        public static TIMResult SetConfig(SetConfig config, ValueCallback<types.SetConfig> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -180,7 +190,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMSetConfig(Utils.string2intptr(Utils.ToJson(config)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMSetConfig(Utils.string2intptr(Utils.ToJson(config)), ValueCallbackInstance<types.SetConfig>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult SetConfig(SetConfig config, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMSetConfig(Utils.string2intptr(Utils.ToJson(config)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -199,7 +221,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult Logout(ValueCallback callback)
+        public static TIMResult Logout(ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -207,7 +229,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMLogout(ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMLogout(ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult Logout(ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMLogout(ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -240,7 +274,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult ConvGetConvList(ValueCallback callback)
+        public static TIMResult ConvGetConvList(ValueCallback<List<ConvInfo>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -248,7 +282,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMConvGetConvList(ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMConvGetConvList(ValueCallbackInstance<List<ConvInfo>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult ConvGetConvList(ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMConvGetConvList(ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -260,7 +306,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult ConvDelete(string conv_id, TIMConvType conv_type, ValueCallback callback)
+        public static TIMResult ConvDelete(string conv_id, TIMConvType conv_type, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -268,7 +314,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMConvDelete(Utils.string2intptr(conv_id), (int)conv_type, ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMConvDelete(Utils.string2intptr(conv_id), (int)conv_type, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult ConvDelete(string conv_id, TIMConvType conv_type, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMConvDelete(Utils.string2intptr(conv_id), (int)conv_type, ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -279,7 +337,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_list_param">获取会话列表参数 ConvParam列表</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult ConvGetConvInfo(List<ConvParam> conv_list_param, ValueCallback callback)
+        public static TIMResult ConvGetConvInfo(List<ConvParam> conv_list_param, ValueCallback<List<ConvInfo>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -287,7 +345,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMConvGetConvInfo(Utils.string2intptr(Utils.ToJson(conv_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMConvGetConvInfo(Utils.string2intptr(Utils.ToJson(conv_list_param)), ValueCallbackInstance<List<ConvInfo>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult ConvGetConvInfo(List<ConvParam> conv_list_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMConvGetConvInfo(Utils.string2intptr(Utils.ToJson(conv_list_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -329,10 +399,10 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="conv_id">会话ID</param>
         /// <param name="conv_type">会话类型 TIMConvType</param>
-        /// <param name="is_pinned">是否置顶标记</param> 
+        /// <param name="is_pinned">是否置顶标记</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult ConvPinConversation(string conv_id, TIMConvType conv_type, bool is_pinned, ValueCallback callback)
+        public static TIMResult ConvPinConversation(string conv_id, TIMConvType conv_type, bool is_pinned, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -340,7 +410,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMConvPinConversation(conv_id, (int)conv_type, is_pinned, ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMConvPinConversation(conv_id, (int)conv_type, is_pinned, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult ConvPinConversation(string conv_id, TIMConvType conv_type, bool is_pinned, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMConvPinConversation(conv_id, (int)conv_type, is_pinned, ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -350,7 +432,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult ConvGetTotalUnreadMessageCount(ValueCallback callback)
+        public static TIMResult ConvGetTotalUnreadMessageCount(ValueCallback<GetTotalUnreadNumberResult> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -358,7 +440,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMConvGetTotalUnreadMessageCount(ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMConvGetTotalUnreadMessageCount(ValueCallbackInstance<GetTotalUnreadNumberResult>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult ConvGetTotalUnreadMessageCount(ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMConvGetTotalUnreadMessageCount(ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -372,7 +466,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message_id">承接消息ID的StringBuilder</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgSendMessage(string conv_id, TIMConvType conv_type, Message message, StringBuilder message_id, ValueCallback callback)
+        public static TIMResult MsgSendMessage(string conv_id, TIMConvType conv_type, Message message, StringBuilder message_id, ValueCallback<Message> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -380,7 +474,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgSendMessage(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), message_id, ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgSendMessage(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), message_id, ValueCallbackInstance<Message>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgSendMessage(string conv_id, TIMConvType conv_type, Message message, StringBuilder message_id, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgSendMessage(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), message_id, ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -393,7 +499,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message_id">消息ID</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgCancelSend(string conv_id, TIMConvType conv_type, string message_id, ValueCallback callback)
+        public static TIMResult MsgCancelSend(string conv_id, TIMConvType conv_type, string message_id, ValueCallback<Message> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -401,7 +507,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgCancelSend(conv_id, (int)conv_type, Utils.string2intptr(message_id), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgCancelSend(conv_id, (int)conv_type, Utils.string2intptr(message_id), ValueCallbackInstance<Message>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgCancelSend(string conv_id, TIMConvType conv_type, string message_id, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgCancelSend(conv_id, (int)conv_type, Utils.string2intptr(message_id), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -412,7 +530,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message_id_array">查找消息的id列表</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgFindMessages(List<string> message_id_array, ValueCallback callback)
+        public static TIMResult MsgFindMessages(List<string> message_id_array, ValueCallback<List<Message>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -420,7 +538,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgFindMessages(Utils.string2intptr(Utils.ToJson(message_id_array)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgFindMessages(Utils.string2intptr(Utils.ToJson(message_id_array)), ValueCallbackInstance<List<Message>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgFindMessages(List<string> message_id_array, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgFindMessages(Utils.string2intptr(Utils.ToJson(message_id_array)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -433,7 +563,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message">消息体 Message</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgReportReaded(string conv_id, TIMConvType conv_type, Message message, ValueCallback callback)
+        public static TIMResult MsgReportReaded(string conv_id, TIMConvType conv_type, Message message, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -441,7 +571,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgReportReaded(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgReportReaded(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgReportReaded(string conv_id, TIMConvType conv_type, Message message, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgReportReaded(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -451,7 +593,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgMarkAllMessageAsRead(ValueCallback callback)
+        public static TIMResult MsgMarkAllMessageAsRead(ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -459,7 +601,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgMarkAllMessageAsRead(ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgMarkAllMessageAsRead(ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgMarkAllMessageAsRead(ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgMarkAllMessageAsRead(ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -471,8 +625,8 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="message">消息体 Message</param>
         /// <param name="callback">回调 ValueCallback</param>
-        /// <returns><see cref="TIMResult"/></returns> 
-        public static TIMResult MsgRevoke(string conv_id, TIMConvType conv_type, Message message, ValueCallback callback)
+        /// <returns><see cref="TIMResult"/></returns>
+        public static TIMResult MsgRevoke(string conv_id, TIMConvType conv_type, Message message, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -480,7 +634,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgRevoke(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgRevoke(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgRevoke(string conv_id, TIMConvType conv_type, Message message, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgRevoke(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -493,7 +659,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message_locator">消息定位符 MsgLocator</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgFindByMsgLocatorList(string conv_id, TIMConvType conv_type, MsgLocator message_locator, ValueCallback callback)
+        public static TIMResult MsgFindByMsgLocatorList(string conv_id, TIMConvType conv_type, MsgLocator message_locator, ValueCallback<List<Message>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -501,7 +667,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgFindByMsgLocatorList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_locator)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgFindByMsgLocatorList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_locator)), ValueCallbackInstance<List<Message>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgFindByMsgLocatorList(string conv_id, TIMConvType conv_type, MsgLocator message_locator, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgFindByMsgLocatorList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_locator)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -514,7 +692,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message_list">消息列表 Message列表</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgImportMsgList(string conv_id, TIMConvType conv_type, List<Message> message_list, ValueCallback callback)
+        public static TIMResult MsgImportMsgList(string conv_id, TIMConvType conv_type, List<Message> message_list, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -522,7 +700,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgImportMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_list)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgImportMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_list)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgImportMsgList(string conv_id, TIMConvType conv_type, List<Message> message_list, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgImportMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_list)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -535,7 +725,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message">消息体</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgSaveMsg(string conv_id, TIMConvType conv_type, Message message, ValueCallback callback)
+        public static TIMResult MsgSaveMsg(string conv_id, TIMConvType conv_type, Message message, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -543,7 +733,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgSaveMsg(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgSaveMsg(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgSaveMsg(string conv_id, TIMConvType conv_type, Message message, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgSaveMsg(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -556,7 +758,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="get_message_list_param">获取历史消息参数 MsgGetMsgListParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgGetMsgList(string conv_id, TIMConvType conv_type, MsgGetMsgListParam get_message_list_param, ValueCallback callback)
+        public static TIMResult MsgGetMsgList(string conv_id, TIMConvType conv_type, MsgGetMsgListParam get_message_list_param, ValueCallback<List<Message>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -564,7 +766,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgGetMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(get_message_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgGetMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(get_message_list_param)), ValueCallbackInstance<List<Message>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgGetMsgList(string conv_id, TIMConvType conv_type, MsgGetMsgListParam get_message_list_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgGetMsgList(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(get_message_list_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -577,7 +791,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message_delete_param">删除消息参数 MsgDeleteParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgDelete(string conv_id, TIMConvType conv_type, MsgDeleteParam message_delete_param, ValueCallback callback)
+        public static TIMResult MsgDelete(string conv_id, TIMConvType conv_type, MsgDeleteParam message_delete_param, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -585,7 +799,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgDelete(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_delete_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgDelete(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_delete_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgDelete(string conv_id, TIMConvType conv_type, MsgDeleteParam message_delete_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgDelete(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_delete_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -598,7 +824,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message_delete_param">删除消息参数 MsgDeleteParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgListDelete(string conv_id, TIMConvType conv_type, List<Message> message_list, ValueCallback callback)
+        public static TIMResult MsgListDelete(string conv_id, TIMConvType conv_type, List<Message> message_list, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -607,7 +833,20 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgListDelete(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_list)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgListDelete(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_list)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgListDelete(string conv_id, TIMConvType conv_type, List<Message> message_list, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgListDelete(conv_id, (int)conv_type, Utils.string2intptr(Utils.ToJson(message_list)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -619,7 +858,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="conv_type">会话类型 TIMConvType</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgClearHistoryMessage(string conv_id, TIMConvType conv_type, ValueCallback callback)
+        public static TIMResult MsgClearHistoryMessage(string conv_id, TIMConvType conv_type, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -627,7 +866,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgClearHistoryMessage(conv_id, (int)conv_type, ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgClearHistoryMessage(conv_id, (int)conv_type, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgClearHistoryMessage(string conv_id, TIMConvType conv_type, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgClearHistoryMessage(conv_id, (int)conv_type, ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -639,7 +890,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="opt">接收消息选项 TIMReceiveMessageOpt</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgSetC2CReceiveMessageOpt(List<string> user_id_list, TIMReceiveMessageOpt opt, ValueCallback callback)
+        public static TIMResult MsgSetC2CReceiveMessageOpt(List<string> user_id_list, TIMReceiveMessageOpt opt, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -647,7 +898,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgSetC2CReceiveMessageOpt(Utils.string2intptr(Utils.ToJson(user_id_list)), (int)opt, ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgSetC2CReceiveMessageOpt(Utils.string2intptr(Utils.ToJson(user_id_list)), (int)opt, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgSetC2CReceiveMessageOpt(List<string> user_id_list, TIMReceiveMessageOpt opt, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgSetC2CReceiveMessageOpt(Utils.string2intptr(Utils.ToJson(user_id_list)), (int)opt, ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -659,7 +922,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="opt">接收消息选项 TIMReceiveMessageOpt</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgGetC2CReceiveMessageOpt(List<string> user_id_list, ValueCallback callback)
+        public static TIMResult MsgGetC2CReceiveMessageOpt(List<string> user_id_list, ValueCallback<List<GetC2CRecvMsgOptResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -667,7 +930,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgGetC2CReceiveMessageOpt(Utils.string2intptr(Utils.ToJson(user_id_list)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgGetC2CReceiveMessageOpt(Utils.string2intptr(Utils.ToJson(user_id_list)), ValueCallbackInstance<List<GetC2CRecvMsgOptResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgGetC2CReceiveMessageOpt(List<string> user_id_list, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgGetC2CReceiveMessageOpt(Utils.string2intptr(Utils.ToJson(user_id_list)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -679,7 +954,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="opt">接收消息选项 TIMReceiveMessageOpt</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgSetGroupReceiveMessageOpt(string group_id, TIMReceiveMessageOpt opt, ValueCallback callback)
+        public static TIMResult MsgSetGroupReceiveMessageOpt(string group_id, TIMReceiveMessageOpt opt, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -687,11 +962,114 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgSetGroupReceiveMessageOpt(Utils.string2intptr(group_id), (int)opt, ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgSetGroupReceiveMessageOpt(Utils.string2intptr(group_id), (int)opt, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgSetGroupReceiveMessageOpt(string group_id, TIMReceiveMessageOpt opt, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgSetGroupReceiveMessageOpt(Utils.string2intptr(group_id), (int)opt, ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
 
+        /// <summary>
+        /// 设置离线推送配置信息（iOS 和 Android 平台专用）
+        /// </summary>
+        /// <param name="opt">OfflinePushToken</param>
+        /// <param name="callback">ValueCallback</param>
+        /// <returns><see cref="TIMResult"/></returns>
+        public static TIMResult MsgSetOfflinePushToken(OfflinePushToken json_token,  ValueCallback<object> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgSetOfflinePushToken(Utils.string2intptr(Utils.ToJson(json_token)),  ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgSetOfflinePushToken(OfflinePushToken json_token,  ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgSetOfflinePushToken(Utils.string2intptr(Utils.ToJson(json_token)),  ValueCallbackInstance<string>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+
+        /// <summary>
+        /// APP 检测到应用退后台时可以调用此接口，可以用作桌面应用角标的初始化未读数量（iOS 和 Android 平台专用）。
+        /// </summary>
+        /// <param name="unread_count">unread_count</param>
+        /// <param name="callback">ValueCallback</param>
+        /// <returns><see cref="TIMResult"/></returns>
+        public static TIMResult MsgDoBackground(int unread_count,  ValueCallback<object> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgDoBackground(unread_count,  ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgDoBackground(int unread_count,  ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgDoBackground(unread_count,  ValueCallbackInstance<string>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        /// <summary>
+        /// APP 检测到应用进前台时可以调用此接口（iOS 和 Android 平台专用）。
+        /// </summary>
+        /// <param name="callback">ValueCallback</param>
+        /// <returns><see cref="TIMResult"/></returns>
+        public static TIMResult MsgDoForeground(ValueCallback<object> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgDoForeground(ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgDoForeground(ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgDoForeground(ValueCallbackInstance<string>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        
         /// <summary>
         /// 下载多媒体消息
         /// </summary>
@@ -699,7 +1077,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="path">本地路径</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgDownloadElemToPath(DownloadElemParam download_param, string path, ValueCallback callback)
+        public static TIMResult MsgDownloadElemToPath(DownloadElemParam download_param, string path, ValueCallback<MsgDownloadElemResult> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -707,7 +1085,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgDownloadElemToPath(Utils.string2intptr(Utils.ToJson(download_param)), Utils.string2intptr(path), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgDownloadElemToPath(Utils.string2intptr(Utils.ToJson(download_param)), Utils.string2intptr(path), ValueCallbackInstance<MsgDownloadElemResult>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgDownloadElemToPath(DownloadElemParam download_param, string path, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgDownloadElemToPath(Utils.string2intptr(Utils.ToJson(download_param)), Utils.string2intptr(path), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -718,7 +1108,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message">消息体 Message</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgDownloadMergerMessage(Message message, ValueCallback callback)
+        public static TIMResult MsgDownloadMergerMessage(Message message, ValueCallback<List<Message>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -726,7 +1116,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgDownloadMergerMessage(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgDownloadMergerMessage(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<List<Message>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgDownloadMergerMessage(Message message, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgDownloadMergerMessage(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -737,7 +1139,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_batch_send_param">批量消息体 MsgBatchSendParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgBatchSend(MsgBatchSendParam json_batch_send_param, ValueCallback callback)
+        public static TIMResult MsgBatchSend(MsgBatchSendParam json_batch_send_param, ValueCallback<List<MsgBatchSendResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -745,7 +1147,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgBatchSend(Utils.string2intptr(Utils.ToJson(json_batch_send_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgBatchSend(Utils.string2intptr(Utils.ToJson(json_batch_send_param)), ValueCallbackInstance<List<MsgBatchSendResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgBatchSend(MsgBatchSendParam json_batch_send_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgBatchSend(Utils.string2intptr(Utils.ToJson(json_batch_send_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -756,7 +1170,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message_search_param">搜索消息参数 MessageSearchParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgSearchLocalMessages(MessageSearchParam message_search_param, ValueCallback callback)
+        public static TIMResult MsgSearchLocalMessages(MessageSearchParam message_search_param, ValueCallback<MessageSearchResult> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -764,7 +1178,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgSearchLocalMessages(Utils.string2intptr(Utils.ToJson(message_search_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgSearchLocalMessages(Utils.string2intptr(Utils.ToJson(message_search_param)), ValueCallbackInstance<MessageSearchResult>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgSearchLocalMessages(MessageSearchParam message_search_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgSearchLocalMessages(Utils.string2intptr(Utils.ToJson(message_search_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -775,7 +1201,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="message">消息体 Message</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult MsgSetLocalCustomData(Message message, ValueCallback callback)
+        public static TIMResult MsgSetLocalCustomData(Message message, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -783,7 +1209,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMMsgSetLocalCustomData(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMMsgSetLocalCustomData(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult MsgSetLocalCustomData(Message message, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMMsgSetLocalCustomData(Utils.string2intptr(Utils.ToJson(message)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -794,7 +1232,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="group">创建群信息 CreateGroupParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupCreate(CreateGroupParam group, ValueCallback callback)
+        public static TIMResult GroupCreate(CreateGroupParam group, ValueCallback<CreateGroupResult> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -802,7 +1240,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMGroupCreate(Utils.string2intptr(Utils.ToJson(group)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMGroupCreate(Utils.string2intptr(Utils.ToJson(group)), ValueCallbackInstance<CreateGroupResult>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult GroupCreate(CreateGroupParam group, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMGroupCreate(Utils.string2intptr(Utils.ToJson(group)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -813,7 +1263,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="group_id">群ID</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupDelete(string group_id, ValueCallback callback)
+        public static TIMResult GroupDelete(string group_id, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -821,7 +1271,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int timSucc = IMNativeSDK.TIMGroupDelete(Utils.string2intptr(group_id), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int timSucc = IMNativeSDK.TIMGroupDelete(Utils.string2intptr(group_id), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)timSucc;
+        }
+        public static TIMResult GroupDelete(string group_id, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int timSucc = IMNativeSDK.TIMGroupDelete(Utils.string2intptr(group_id), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)timSucc;
         }
@@ -833,7 +1295,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="hello_message">进群打招呼信息</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupJoin(string group_id, string hello_message, ValueCallback callback)
+        public static TIMResult GroupJoin(string group_id, string hello_message, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -841,7 +1303,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupJoin(Utils.string2intptr(group_id), Utils.string2intptr(hello_message), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupJoin(Utils.string2intptr(group_id), Utils.string2intptr(hello_message), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupJoin(string group_id, string hello_message, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupJoin(Utils.string2intptr(group_id), Utils.string2intptr(hello_message), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -852,7 +1326,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="group_id">群ID</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupQuit(string group_id, ValueCallback callback)
+        public static TIMResult GroupQuit(string group_id, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -860,7 +1334,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupQuit(Utils.string2intptr(group_id), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupQuit(Utils.string2intptr(group_id), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupQuit(string group_id, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupQuit(Utils.string2intptr(group_id), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -871,7 +1357,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="param">邀请人员信息 GroupInviteMemberParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupInviteMember(GroupInviteMemberParam param, ValueCallback callback)
+        public static TIMResult GroupInviteMember(GroupInviteMemberParam param, ValueCallback<List<GroupInviteMemberResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -879,7 +1365,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupInviteMember(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupInviteMember(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance<List<GroupInviteMemberResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupInviteMember(GroupInviteMemberParam param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupInviteMember(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -890,7 +1388,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="param">删除人员信息 GroupDeleteMemberParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupDeleteMember(GroupDeleteMemberParam param, ValueCallback callback)
+        public static TIMResult GroupDeleteMember(GroupDeleteMemberParam param, ValueCallback<List<GroupDeleteMemberResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -898,7 +1396,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupDeleteMember(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupDeleteMember(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance<List<GroupDeleteMemberResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupDeleteMember(GroupDeleteMemberParam param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupDeleteMember(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -908,7 +1418,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupGetJoinedGroupList(ValueCallback callback)
+        public static TIMResult GroupGetJoinedGroupList(ValueCallback<List<GroupBaseInfo>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -916,7 +1426,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupGetJoinedGroupList(ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupGetJoinedGroupList(ValueCallbackInstance<List<GroupBaseInfo>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupGetJoinedGroupList(ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupGetJoinedGroupList(ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -927,7 +1449,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="group_id_list">群ID列表</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupGetGroupInfoList(List<string> group_id_list, ValueCallback callback)
+        public static TIMResult GroupGetGroupInfoList(List<string> group_id_list, ValueCallback<List<GetGroupInfoResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -935,7 +1457,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupGetGroupInfoList(Utils.string2intptr(Utils.ToJson(group_id_list)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupGetGroupInfoList(Utils.string2intptr(Utils.ToJson(group_id_list)), ValueCallbackInstance<List<GetGroupInfoResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupGetGroupInfoList(List<string> group_id_list, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupGetGroupInfoList(Utils.string2intptr(Utils.ToJson(group_id_list)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -946,7 +1480,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_group_modifyinfo_param">修改信息参数 GroupModifyInfoParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupModifyGroupInfo(GroupModifyInfoParam json_group_modifyinfo_param, ValueCallback callback)
+        public static TIMResult GroupModifyGroupInfo(GroupModifyInfoParam json_group_modifyinfo_param, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -954,7 +1488,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupModifyGroupInfo(Utils.string2intptr(Utils.ToJson(json_group_modifyinfo_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupModifyGroupInfo(Utils.string2intptr(Utils.ToJson(json_group_modifyinfo_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupModifyGroupInfo(GroupModifyInfoParam json_group_modifyinfo_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupModifyGroupInfo(Utils.string2intptr(Utils.ToJson(json_group_modifyinfo_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -965,7 +1511,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_group_getmeminfos_param">修改信息参数 GroupGetMemberInfoListParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupGetMemberInfoList(GroupGetMemberInfoListParam json_group_getmeminfos_param, ValueCallback callback)
+        public static TIMResult GroupGetMemberInfoList(GroupGetMemberInfoListParam json_group_getmeminfos_param, ValueCallback<GroupGetMemberInfoListResult> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -973,7 +1519,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupGetMemberInfoList(Utils.string2intptr(Utils.ToJson(json_group_getmeminfos_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupGetMemberInfoList(Utils.string2intptr(Utils.ToJson(json_group_getmeminfos_param)), ValueCallbackInstance<GroupGetMemberInfoListResult>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupGetMemberInfoList(GroupGetMemberInfoListParam json_group_getmeminfos_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupGetMemberInfoList(Utils.string2intptr(Utils.ToJson(json_group_getmeminfos_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -984,7 +1542,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_group_modifymeminfo_param">修改信息参数 GroupModifyMemberInfoParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupModifyMemberInfo(GroupModifyMemberInfoParam json_group_modifymeminfo_param, ValueCallback callback)
+        public static TIMResult GroupModifyMemberInfo(GroupModifyMemberInfoParam json_group_modifymeminfo_param, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -992,7 +1550,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupModifyMemberInfo(Utils.string2intptr(Utils.ToJson(json_group_modifymeminfo_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupModifyMemberInfo(Utils.string2intptr(Utils.ToJson(json_group_modifymeminfo_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupModifyMemberInfo(GroupModifyMemberInfoParam json_group_modifymeminfo_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupModifyMemberInfo(Utils.string2intptr(Utils.ToJson(json_group_modifymeminfo_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1003,7 +1573,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_group_getpendence_list_param">修改信息参数 GroupPendencyOption</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupGetPendencyList(GroupPendencyOption json_group_getpendence_list_param, ValueCallback callback)
+        public static TIMResult GroupGetPendencyList(GroupPendencyOption json_group_getpendence_list_param, ValueCallback<GroupPendencyResult> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1011,7 +1581,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupGetPendencyList(Utils.string2intptr(Utils.ToJson(json_group_getpendence_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupGetPendencyList(Utils.string2intptr(Utils.ToJson(json_group_getpendence_list_param)), ValueCallbackInstance<GroupPendencyResult>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupGetPendencyList(GroupPendencyOption json_group_getpendence_list_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupGetPendencyList(Utils.string2intptr(Utils.ToJson(json_group_getpendence_list_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1022,7 +1604,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="time_stamp">时间戳</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupReportPendencyReaded(long time_stamp, ValueCallback callback)
+        public static TIMResult GroupReportPendencyReaded(long time_stamp, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1030,7 +1612,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupReportPendencyReaded(time_stamp, ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupReportPendencyReaded(time_stamp, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupReportPendencyReaded(long time_stamp, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupReportPendencyReaded(time_stamp, ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1041,7 +1635,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_group_handle_pendency_param">处理群未决信息参数 GroupHandlePendencyParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupHandlePendency(GroupHandlePendencyParam json_group_handle_pendency_param, ValueCallback callback)
+        public static TIMResult GroupHandlePendency(GroupHandlePendencyParam json_group_handle_pendency_param, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1049,7 +1643,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupHandlePendency(Utils.string2intptr(Utils.ToJson(json_group_handle_pendency_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupHandlePendency(Utils.string2intptr(Utils.ToJson(json_group_handle_pendency_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupHandlePendency(GroupHandlePendencyParam json_group_handle_pendency_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupHandlePendency(Utils.string2intptr(Utils.ToJson(json_group_handle_pendency_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1060,7 +1666,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="group_id">群ID</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupGetOnlineMemberCount(string group_id, ValueCallback callback)
+        public static TIMResult GroupGetOnlineMemberCount(string group_id, ValueCallback<GroupGetOnlineMemberCountResult> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1068,7 +1674,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupGetOnlineMemberCount(Utils.string2intptr(group_id), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupGetOnlineMemberCount(Utils.string2intptr(group_id), ValueCallbackInstance<GroupGetOnlineMemberCountResult>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupGetOnlineMemberCount(string group_id, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupGetOnlineMemberCount(Utils.string2intptr(group_id), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1079,7 +1697,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="group_id">群ID</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupSearchGroups(GroupSearchParam json_group_search_groups_param, ValueCallback callback)
+        public static TIMResult GroupSearchGroups(GroupSearchParam json_group_search_groups_param, ValueCallback<List<GroupDetailInfo>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1087,7 +1705,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupSearchGroups(Utils.string2intptr(Utils.ToJson(json_group_search_groups_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupSearchGroups(Utils.string2intptr(Utils.ToJson(json_group_search_groups_param)), ValueCallbackInstance<List<GroupDetailInfo>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupSearchGroups(GroupSearchParam json_group_search_groups_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupSearchGroups(Utils.string2intptr(Utils.ToJson(json_group_search_groups_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1098,7 +1728,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_group_search_group_members_param">搜索群成员参数 GroupMemberSearchParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupSearchGroupMembers(GroupMemberSearchParam json_group_search_group_members_param, ValueCallback callback)
+        public static TIMResult GroupSearchGroupMembers(GroupMemberSearchParam json_group_search_group_members_param, ValueCallback<List<GroupGetOnlineMemberCountResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1106,7 +1736,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupSearchGroupMembers(Utils.string2intptr(Utils.ToJson(json_group_search_group_members_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupSearchGroupMembers(Utils.string2intptr(Utils.ToJson(json_group_search_group_members_param)), ValueCallbackInstance<List<GroupGetOnlineMemberCountResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupSearchGroupMembers(GroupMemberSearchParam json_group_search_group_members_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupSearchGroupMembers(Utils.string2intptr(Utils.ToJson(json_group_search_group_members_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1118,7 +1760,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_group_atrributes">群属性参数 GroupAttributes</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupInitGroupAttributes(string group_id, GroupAttributes json_group_atrributes, ValueCallback callback)
+        public static TIMResult GroupInitGroupAttributes(string group_id, GroupAttributes json_group_atrributes, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1126,7 +1768,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupInitGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_group_atrributes)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupInitGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_group_atrributes)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupInitGroupAttributes(string group_id, GroupAttributes json_group_atrributes, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupInitGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_group_atrributes)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1138,7 +1792,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_keys">属性key列表</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupDeleteGroupAttributes(string group_id, List<string> json_keys, ValueCallback callback)
+        public static TIMResult GroupDeleteGroupAttributes(string group_id, List<string> json_keys, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1146,7 +1800,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupDeleteGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_keys)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupDeleteGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_keys)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupDeleteGroupAttributes(string group_id, List<string> json_keys, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupDeleteGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_keys)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1158,7 +1824,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_keys">属性key列表</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult GroupGetGroupAttributes(string group_id, List<string> json_keys, ValueCallback callback)
+        public static TIMResult GroupGetGroupAttributes(string group_id, List<string> json_keys, ValueCallback<List<GroupAttributes>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1166,7 +1832,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMGroupGetGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_keys)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMGroupGetGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_keys)), ValueCallbackInstance<List<GroupAttributes>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult GroupGetGroupAttributes(string group_id, List<string> json_keys, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMGroupGetGroupAttributes(Utils.string2intptr(group_id), Utils.string2intptr(Utils.ToJson(json_keys)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1177,7 +1855,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_get_user_profile_list_param">用户信息列表参数 FriendShipGetProfileListParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult ProfileGetUserProfileList(FriendShipGetProfileListParam json_get_user_profile_list_param, ValueCallback callback)
+        public static TIMResult ProfileGetUserProfileList(FriendShipGetProfileListParam json_get_user_profile_list_param, ValueCallback<List<UserProfile>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1185,7 +1863,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMProfileGetUserProfileList(Utils.string2intptr(Utils.ToJson(json_get_user_profile_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMProfileGetUserProfileList(Utils.string2intptr(Utils.ToJson(json_get_user_profile_list_param)), ValueCallbackInstance<List<UserProfile>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult ProfileGetUserProfileList(FriendShipGetProfileListParam json_get_user_profile_list_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMProfileGetUserProfileList(Utils.string2intptr(Utils.ToJson(json_get_user_profile_list_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1196,7 +1886,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_modify_self_user_profile_param">用户信息列表参数 UserProfileItem</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult ProfileModifySelfUserProfile(UserProfileItem json_modify_self_user_profile_param, ValueCallback callback)
+        public static TIMResult ProfileModifySelfUserProfile(UserProfileItem json_modify_self_user_profile_param, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1204,7 +1894,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMProfileModifySelfUserProfile(Utils.string2intptr(Utils.ToJson(json_modify_self_user_profile_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMProfileModifySelfUserProfile(Utils.string2intptr(Utils.ToJson(json_modify_self_user_profile_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult ProfileModifySelfUserProfile(UserProfileItem json_modify_self_user_profile_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMProfileModifySelfUserProfile(Utils.string2intptr(Utils.ToJson(json_modify_self_user_profile_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1214,7 +1916,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipGetFriendProfileList(ValueCallback callback)
+        public static TIMResult FriendshipGetFriendProfileList(ValueCallback<List<FriendProfile>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1222,7 +1924,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipGetFriendProfileList(ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipGetFriendProfileList(ValueCallbackInstance<List<FriendProfile>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipGetFriendProfileList(ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipGetFriendProfileList(ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1233,7 +1947,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="param">添加好友参数 FriendshipAddFriendParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipAddFriend(FriendshipAddFriendParam param, ValueCallback callback)
+        public static TIMResult FriendshipAddFriend(FriendshipAddFriendParam param, ValueCallback<FriendResult> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1241,7 +1955,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipAddFriend(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipAddFriend(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance<FriendResult>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipAddFriend(FriendshipAddFriendParam param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipAddFriend(Utils.string2intptr(Utils.ToJson(param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1252,7 +1978,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="param">处理好友申请参数 FriendRespone</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipHandleFriendAddRequest(FriendRespone json_handle_friend_add_param, ValueCallback callback)
+        public static TIMResult FriendshipHandleFriendAddRequest(FriendRespone json_handle_friend_add_param, ValueCallback<FriendResult> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1260,7 +1986,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipHandleFriendAddRequest(Utils.string2intptr(Utils.ToJson(json_handle_friend_add_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipHandleFriendAddRequest(Utils.string2intptr(Utils.ToJson(json_handle_friend_add_param)), ValueCallbackInstance<FriendResult>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipHandleFriendAddRequest(FriendRespone json_handle_friend_add_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipHandleFriendAddRequest(Utils.string2intptr(Utils.ToJson(json_handle_friend_add_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1271,7 +2009,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_modify_friend_info_param">修改好友信息参数 FriendshipModifyFriendProfileParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipModifyFriendProfile(FriendshipModifyFriendProfileParam json_modify_friend_info_param, ValueCallback callback)
+        public static TIMResult FriendshipModifyFriendProfile(FriendshipModifyFriendProfileParam json_modify_friend_info_param, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1280,7 +2018,20 @@ namespace com.tencent.imsdk.unity
             ValuecallbackStore.Add(user_data, callback);
 
 
-            int res = IMNativeSDK.TIMFriendshipModifyFriendProfile(Utils.string2intptr(Utils.ToJson(json_modify_friend_info_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipModifyFriendProfile(Utils.string2intptr(Utils.ToJson(json_modify_friend_info_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipModifyFriendProfile(FriendshipModifyFriendProfileParam json_modify_friend_info_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+
+            int res = IMNativeSDK.TIMFriendshipModifyFriendProfile(Utils.string2intptr(Utils.ToJson(json_modify_friend_info_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1291,7 +2042,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_delete_friend_param">删除好友参数 FriendshipDeleteFriendParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipDeleteFriend(FriendshipDeleteFriendParam json_delete_friend_param, ValueCallback callback)
+        public static TIMResult FriendshipDeleteFriend(FriendshipDeleteFriendParam json_delete_friend_param, ValueCallback<FriendResult> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1299,7 +2050,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipDeleteFriend(Utils.string2intptr(Utils.ToJson(json_delete_friend_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipDeleteFriend(Utils.string2intptr(Utils.ToJson(json_delete_friend_param)), ValueCallbackInstance<FriendResult>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipDeleteFriend(FriendshipDeleteFriendParam json_delete_friend_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipDeleteFriend(Utils.string2intptr(Utils.ToJson(json_delete_friend_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1310,7 +2073,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_check_friend_list_param">检测好友关系参数 FriendshipCheckFriendTypeParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipCheckFriendType(FriendshipCheckFriendTypeParam json_check_friend_list_param, ValueCallback callback)
+        public static TIMResult FriendshipCheckFriendType(FriendshipCheckFriendTypeParam json_check_friend_list_param, ValueCallback<List<FriendshipCheckFriendTypeResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1318,7 +2081,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipCheckFriendType(Utils.string2intptr(Utils.ToJson(json_check_friend_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipCheckFriendType(Utils.string2intptr(Utils.ToJson(json_check_friend_list_param)), ValueCallbackInstance<List<FriendshipCheckFriendTypeResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipCheckFriendType(FriendshipCheckFriendTypeParam json_check_friend_list_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipCheckFriendType(Utils.string2intptr(Utils.ToJson(json_check_friend_list_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1329,7 +2104,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_create_friend_group_param">创建好友分组参数 FriendGroupInfo</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipCreateFriendGroup(FriendGroupInfo json_create_friend_group_param, ValueCallback callback)
+        public static TIMResult FriendshipCreateFriendGroup(FriendGroupInfo json_create_friend_group_param, ValueCallback<List<FriendResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1337,7 +2112,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipCreateFriendGroup(Utils.string2intptr(Utils.ToJson(json_create_friend_group_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipCreateFriendGroup(Utils.string2intptr(Utils.ToJson(json_create_friend_group_param)), ValueCallbackInstance<List<FriendResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipCreateFriendGroup(FriendGroupInfo json_create_friend_group_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipCreateFriendGroup(Utils.string2intptr(Utils.ToJson(json_create_friend_group_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1348,7 +2135,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_get_friend_group_list_param">获取好友分组，userID列表</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipGetFriendGroupList(List<string> json_get_friend_group_list_param, ValueCallback callback)
+        public static TIMResult FriendshipGetFriendGroupList(List<string> json_get_friend_group_list_param, ValueCallback<List<FriendGroupInfo>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1356,7 +2143,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipGetFriendGroupList(Utils.string2intptr(Utils.ToJson(json_get_friend_group_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipGetFriendGroupList(Utils.string2intptr(Utils.ToJson(json_get_friend_group_list_param)), ValueCallbackInstance<List<FriendGroupInfo>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipGetFriendGroupList(List<string> json_get_friend_group_list_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipGetFriendGroupList(Utils.string2intptr(Utils.ToJson(json_get_friend_group_list_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1367,7 +2166,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_modify_friend_group_param">修改好友分组 FriendshipModifyFriendGroupParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipModifyFriendGroup(FriendshipModifyFriendGroupParam json_modify_friend_group_param, ValueCallback callback)
+        public static TIMResult FriendshipModifyFriendGroup(FriendshipModifyFriendGroupParam json_modify_friend_group_param, ValueCallback<List<FriendResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1375,7 +2174,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipModifyFriendGroup(Utils.string2intptr(Utils.ToJson(json_modify_friend_group_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipModifyFriendGroup(Utils.string2intptr(Utils.ToJson(json_modify_friend_group_param)), ValueCallbackInstance<List<FriendResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipModifyFriendGroup(FriendshipModifyFriendGroupParam json_modify_friend_group_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipModifyFriendGroup(Utils.string2intptr(Utils.ToJson(json_modify_friend_group_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1386,7 +2197,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_delete_friend_group_param">删除好友分组 ，userID列表</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipDeleteFriendGroup(List<string> json_delete_friend_group_param, ValueCallback callback)
+        public static TIMResult FriendshipDeleteFriendGroup(List<string> json_delete_friend_group_param, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1394,7 +2205,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipDeleteFriendGroup(Utils.string2intptr(Utils.ToJson(json_delete_friend_group_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipDeleteFriendGroup(Utils.string2intptr(Utils.ToJson(json_delete_friend_group_param)), ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipDeleteFriendGroup(List<string> json_delete_friend_group_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipDeleteFriendGroup(Utils.string2intptr(Utils.ToJson(json_delete_friend_group_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1405,7 +2228,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_delete_friend_group_param">删除好友分组 ，userID列表</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipAddToBlackList(List<string> json_add_to_blacklist_param, ValueCallback callback)
+        public static TIMResult FriendshipAddToBlackList(List<string> json_add_to_blacklist_param, ValueCallback<List<FriendResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1413,7 +2236,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipAddToBlackList(Utils.string2intptr(Utils.ToJson(json_add_to_blacklist_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipAddToBlackList(Utils.string2intptr(Utils.ToJson(json_add_to_blacklist_param)), ValueCallbackInstance<List<FriendResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipAddToBlackList(List<string> json_add_to_blacklist_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipAddToBlackList(Utils.string2intptr(Utils.ToJson(json_add_to_blacklist_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1423,7 +2258,7 @@ namespace com.tencent.imsdk.unity
         /// </summary>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipGetBlackList(ValueCallback callback)
+        public static TIMResult FriendshipGetBlackList(ValueCallback<List<FriendProfile>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1431,7 +2266,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipGetBlackList(ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipGetBlackList(ValueCallbackInstance<List<FriendProfile>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipGetBlackList(ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipGetBlackList(ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1442,7 +2289,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_delete_from_blacklist_param">userID列表</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipDeleteFromBlackList(List<string> json_delete_from_blacklist_param, ValueCallback callback)
+        public static TIMResult FriendshipDeleteFromBlackList(List<string> json_delete_from_blacklist_param, ValueCallback<List<FriendResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1450,7 +2297,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipDeleteFromBlackList(Utils.string2intptr(Utils.ToJson(json_delete_from_blacklist_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipDeleteFromBlackList(Utils.string2intptr(Utils.ToJson(json_delete_from_blacklist_param)), ValueCallbackInstance<List<FriendResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipDeleteFromBlackList(List<string> json_delete_from_blacklist_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipDeleteFromBlackList(Utils.string2intptr(Utils.ToJson(json_delete_from_blacklist_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1461,7 +2320,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_get_pendency_list_param">好友申请未决参数 FriendshipGetPendencyListParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipGetPendencyList(FriendshipGetPendencyListParam json_get_pendency_list_param, ValueCallback callback)
+        public static TIMResult FriendshipGetPendencyList(FriendshipGetPendencyListParam json_get_pendency_list_param, ValueCallback<PendencyPage> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1469,7 +2328,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipGetPendencyList(Utils.string2intptr(Utils.ToJson(json_get_pendency_list_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipGetPendencyList(Utils.string2intptr(Utils.ToJson(json_get_pendency_list_param)), ValueCallbackInstance<PendencyPage>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipGetPendencyList(FriendshipGetPendencyListParam json_get_pendency_list_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipGetPendencyList(Utils.string2intptr(Utils.ToJson(json_get_pendency_list_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1480,7 +2351,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_delete_pendency_param">删除好友申请未决参数 FriendshipDeletePendencyParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipDeletePendency(FriendshipDeletePendencyParam json_delete_pendency_param, ValueCallback callback)
+        public static TIMResult FriendshipDeletePendency(FriendshipDeletePendencyParam json_delete_pendency_param, ValueCallback<List<FriendResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1488,7 +2359,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipDeletePendency(Utils.string2intptr(Utils.ToJson(json_delete_pendency_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipDeletePendency(Utils.string2intptr(Utils.ToJson(json_delete_pendency_param)), ValueCallbackInstance<List<FriendResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipDeletePendency(FriendshipDeletePendencyParam json_delete_pendency_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipDeletePendency(Utils.string2intptr(Utils.ToJson(json_delete_pendency_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1499,7 +2382,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="time_stamp">上报时间戳</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipReportPendencyReaded(long time_stamp, ValueCallback callback)
+        public static TIMResult FriendshipReportPendencyReaded(long time_stamp, ValueCallback<object> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1507,7 +2390,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipReportPendencyReaded(time_stamp, ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipReportPendencyReaded(time_stamp, ValueCallbackInstance<object>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipReportPendencyReaded(long time_stamp, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipReportPendencyReaded(time_stamp, ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1518,7 +2413,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_search_friends_param">搜索参数 FriendSearchParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipSearchFriends(FriendSearchParam json_search_friends_param, ValueCallback callback)
+        public static TIMResult FriendshipSearchFriends(FriendSearchParam json_search_friends_param, ValueCallback<List<FriendInfoGetResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1526,7 +2421,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipSearchFriends(Utils.string2intptr(Utils.ToJson(json_search_friends_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipSearchFriends(Utils.string2intptr(Utils.ToJson(json_search_friends_param)), ValueCallbackInstance<List<FriendInfoGetResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipSearchFriends(FriendSearchParam json_search_friends_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipSearchFriends(Utils.string2intptr(Utils.ToJson(json_search_friends_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1537,7 +2444,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_get_friends_info_param">获取好友信息，好友userIDs</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult FriendshipGetFriendsInfo(List<string> json_get_friends_info_param, ValueCallback callback)
+        public static TIMResult FriendshipGetFriendsInfo(List<string> json_get_friends_info_param, ValueCallback<List<FriendInfoGetResult>> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1545,7 +2452,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.TIMFriendshipGetFriendsInfo(Utils.string2intptr(Utils.ToJson(json_get_friends_info_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.TIMFriendshipGetFriendsInfo(Utils.string2intptr(Utils.ToJson(json_get_friends_info_param)), ValueCallbackInstance<List<FriendInfoGetResult>>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult FriendshipGetFriendsInfo(List<string> json_get_friends_info_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.TIMFriendshipGetFriendsInfo(Utils.string2intptr(Utils.ToJson(json_get_friends_info_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1556,7 +2475,7 @@ namespace com.tencent.imsdk.unity
         /// <param name="json_param">实验性接口参数 ExperimentalAPIReqeustParam</param>
         /// <param name="callback">回调 ValueCallback</param>
         /// <returns><see cref="TIMResult"/></returns>
-        public static TIMResult CallExperimentalAPI(ExperimentalAPIReqeustParam json_param, ValueCallback callback)
+        public static TIMResult CallExperimentalAPI(ExperimentalAPIReqeustParam json_param, ValueCallback<ReponseInfo> callback)
         {
             string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
@@ -1564,7 +2483,19 @@ namespace com.tencent.imsdk.unity
 
             ValuecallbackStore.Add(user_data, callback);
 
-            int res = IMNativeSDK.callExperimentalAPI(Utils.string2intptr(Utils.ToJson(json_param)), ValueCallbackInstance, Utils.string2intptr(user_data));
+            int res = IMNativeSDK.callExperimentalAPI(Utils.string2intptr(Utils.ToJson(json_param)), ValueCallbackInstance<ReponseInfo>, Utils.string2intptr(user_data));
+
+            return (TIMResult)res;
+        }
+        public static TIMResult CallExperimentalAPI(ExperimentalAPIReqeustParam json_param, ValueCallback<string> callback)
+        {
+            string fn_name = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string user_data = fn_name + "_" + Utils.getRandomStr();
+
+            ValuecallbackStore.Add(user_data, callback);
+
+            int res = IMNativeSDK.callExperimentalAPI(Utils.string2intptr(Utils.ToJson(json_param)), ValueCallbackInstance<string>, Utils.string2intptr(user_data));
 
             return (TIMResult)res;
         }
@@ -1892,7 +2823,7 @@ namespace com.tencent.imsdk.unity
 
                 OnAddFriendCallbackStore = callback;
 
-
+                IMNativeSDK.TIMSetOnAddFriendCallback(TIMOnAddFriendCallbackInstance, Utils.string2intptr(user_data));
             }
             else
             {
@@ -1917,6 +2848,7 @@ namespace com.tencent.imsdk.unity
 
                 OnDeleteFriendCallbackStore = callback;
 
+                IMNativeSDK.TIMSetOnDeleteFriendCallback(TIMOnDeleteFriendCallbackInstance, Utils.string2intptr(user_data));
 
             }
             else
@@ -1942,7 +2874,7 @@ namespace com.tencent.imsdk.unity
 
                 UpdateFriendProfileCallbackStore = callback;
 
-
+                IMNativeSDK.TIMSetUpdateFriendProfileCallback(TIMUpdateFriendProfileCallbackInstance, Utils.string2intptr(user_data));
             }
             else
             {
@@ -2139,18 +3071,17 @@ namespace com.tencent.imsdk.unity
 
 
         [MonoPInvokeCallback(typeof(IMNativeSDK.CommonValueCallback))]
-        private static void ValueCallbackInstance(int code, IntPtr desc, IntPtr json_param, IntPtr user_data)
+        private static void ValueCallbackInstance<T> (int code, IntPtr desc, IntPtr json_param, IntPtr user_data)
         {
 
             string user_data_string = Utils.intptr2string(user_data);
             string desc_string = Utils.intptr2string(desc);
-            string json_param_string = Utils.intptr2string(json_param);
-
-            mainSyncContext.Send(threadOperation, new CallbackConvert(code, "ValueCallback", json_param_string, user_data_string, desc_string));
+            T param = Utils.FromJson<T>(Utils.intptr2string(json_param));
+            mainSyncContext.Send(threadOperation<T>, new CallbackConvert<T>(code, "ValueCallback", param, user_data_string, desc_string));
         }
-        static private void threadOperation(object obj)
+        static private void threadOperation<T>(object obj)
         {
-            CallbackConvert data = (CallbackConvert)obj;
+            CallbackConvert<T> data = (CallbackConvert<T>)obj;
             try
             {
                 switch (data.type)
@@ -2158,10 +3089,10 @@ namespace com.tencent.imsdk.unity
                     case "ValueCallback":
                         if (ValuecallbackStore.ContainsKey(data.user_data))
                         {
-                            if (ValuecallbackStore.TryGetValue(data.user_data, out ValueCallback callback))
+                            if (ValuecallbackStore.TryGetValue(data.user_data, out object callbackObj))
                             {
+                                ValueCallback<T> callback = (ValueCallback<T>) callbackObj;
                                 callback(data.code, data.desc, data.data, data.user_data);
-
                                 ValuecallbackStore.Remove(data.user_data);
                             }
 
@@ -2170,27 +3101,27 @@ namespace com.tencent.imsdk.unity
                     case "TIMRecvNewMsgCallback":
                         if (RecvNewMsgCallbackStore != null)
                         {
-                            RecvNewMsgCallbackStore(Utils.FromJson<List<Message>>(data.data), data.user_data);
+                            RecvNewMsgCallbackStore(Utils.FromJson<List<Message>>((string)(object) data.data), data.user_data);
                         }
                         break;
                     case "TIMMsgReadedReceiptCallback":
                         if (MsgReadedReceiptCallbackStore != null)
                         {
-                            MsgReadedReceiptCallbackStore(Utils.FromJson<List<MessageReceipt>>(data.data), data.user_data);
+                            MsgReadedReceiptCallbackStore(Utils.FromJson<List<MessageReceipt>>((string)(object) data.data), data.user_data);
 
                         }
                         break;
                     case "TIMMsgRevokeCallback":
                         if (MsgRevokeCallbackStore != null)
                         {
-                            MsgRevokeCallbackStore(Utils.FromJson<List<MsgLocator>>(data.data), data.user_data);
+                            MsgRevokeCallbackStore(Utils.FromJson<List<MsgLocator>>((string)(object) data.data), data.user_data);
 
                         }
                         break;
                     case "TIMMsgElemUploadProgressCallback":
                         if (MsgElemUploadProgressCallbackStore != null)
                         {
-                            MsgElemUploadProgressCallbackStore(Utils.FromJson<Message>(data.data), data.index, data.cur_size, data.total_size, data.user_data);
+                            MsgElemUploadProgressCallbackStore(Utils.FromJson<Message>((string)(object) data.data), data.index, data.cur_size, data.total_size, data.user_data);
 
                         }
                         break;
@@ -2198,7 +3129,7 @@ namespace com.tencent.imsdk.unity
 
                         if (GroupTipsEventCallbackStore != null)
                         {
-                            GroupTipsEventCallbackStore(Utils.FromJson<GroupTipsElem>(data.data), data.user_data);
+                            GroupTipsEventCallbackStore(Utils.FromJson<GroupTipsElem>((string)(object) data.data), data.user_data);
 
                         }
                         break;
@@ -2206,7 +3137,7 @@ namespace com.tencent.imsdk.unity
 
                         if (GroupAttributeChangedCallbackStore != null)
                         {
-                            GroupAttributeChangedCallbackStore(data.group_id, Utils.FromJson<List<GroupAttributes>>(data.data), data.user_data);
+                            GroupAttributeChangedCallbackStore(data.group_id, Utils.FromJson<List<GroupAttributes>>((string)(object) data.data), data.user_data);
 
                         }
                         break;
@@ -2214,7 +3145,7 @@ namespace com.tencent.imsdk.unity
 
                         if (ConvEventCallbackStore != null)
                         {
-                            ConvEventCallbackStore((TIMConvEvent)data.conv_event, Utils.FromJson<List<ConvInfo>>(data.data), data.user_data);
+                            ConvEventCallbackStore((TIMConvEvent)data.conv_event, Utils.FromJson<List<ConvInfo>>((string)(object) data.data), data.user_data);
 
                         }
 
@@ -2257,14 +3188,14 @@ namespace com.tencent.imsdk.unity
 
                         if (OnAddFriendCallbackStore != null)
                         {
-                            OnAddFriendCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
+                            OnAddFriendCallbackStore(Utils.FromJson<List<string>>((string)(object) data.data), data.user_data);
 
                         }
                         break;
                     case "TIMOnDeleteFriendCallback":
                         if (OnDeleteFriendCallbackStore != null)
                         {
-                            OnDeleteFriendCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
+                            OnDeleteFriendCallbackStore(Utils.FromJson<List<string>>((string)(object) data.data), data.user_data);
 
                         }
                         break;
@@ -2272,7 +3203,7 @@ namespace com.tencent.imsdk.unity
 
                         if (UpdateFriendProfileCallbackStore != null)
                         {
-                            UpdateFriendProfileCallbackStore(Utils.FromJson<List<FriendProfileItem>>(data.data), data.user_data);
+                            UpdateFriendProfileCallbackStore(Utils.FromJson<List<FriendProfileItem>>((string)(object) data.data), data.user_data);
 
                         }
                         break;
@@ -2281,7 +3212,7 @@ namespace com.tencent.imsdk.unity
 
                         if (FriendAddRequestCallbackStore != null)
                         {
-                            FriendAddRequestCallbackStore(Utils.FromJson<List<FriendAddPendency>>(data.data), data.user_data);
+                            FriendAddRequestCallbackStore(Utils.FromJson<List<FriendAddPendency>>((string)(object) data.data), data.user_data);
 
                         }
                         break;
@@ -2289,7 +3220,7 @@ namespace com.tencent.imsdk.unity
 
                         if (FriendApplicationListDeletedCallbackStore != null)
                         {
-                            FriendApplicationListDeletedCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
+                            FriendApplicationListDeletedCallbackStore(Utils.FromJson<List<string>>((string)(object) data.data), data.user_data);
 
                         }
                         break;
@@ -2305,7 +3236,7 @@ namespace com.tencent.imsdk.unity
 
                         if (FriendBlackListAddedCallbackStore != null)
                         {
-                            FriendBlackListAddedCallbackStore(Utils.FromJson<List<FriendProfile>>(data.data), data.user_data);
+                            FriendBlackListAddedCallbackStore(Utils.FromJson<List<FriendProfile>>((string)(object) data.data), data.user_data);
 
                         }
                         break;
@@ -2313,7 +3244,7 @@ namespace com.tencent.imsdk.unity
 
                         if (FriendBlackListDeletedCallbackStore != null)
                         {
-                            FriendBlackListDeletedCallbackStore(Utils.FromJson<List<string>>(data.data), data.user_data);
+                            FriendBlackListDeletedCallbackStore(Utils.FromJson<List<string>>((string)(object) data.data), data.user_data);
 
                         }
                         break;
@@ -2321,14 +3252,14 @@ namespace com.tencent.imsdk.unity
 
                         if (LogCallbackStore != null)
                         {
-                            LogCallbackStore((TIMLogLevel)data.code, data.data, data.user_data);
+                            LogCallbackStore((TIMLogLevel)data.code, (string)(object) data.data, data.user_data);
                         }
                         break;
                     case "TIMMsgUpdateCallback":
 
                         if (MsgUpdateCallbackStore != null)
                         {
-                            MsgUpdateCallbackStore(Utils.FromJson<List<Message>>(data.data), data.user_data);
+                            MsgUpdateCallbackStore(Utils.FromJson<List<Message>>((string)(object) data.data), data.user_data);
                         }
                         break;
 
@@ -2354,7 +3285,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-                mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMRecvNewMsgCallback", json_msg_array_string, user_data_string, ""));
+                mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMRecvNewMsgCallback", json_msg_array_string, user_data_string, ""));
             }
             catch (Exception e)
             {
@@ -2374,7 +3305,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMMsgReadedReceiptCallback", json_msg_readed_receipt_array_string, user_data_string, ""));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMMsgReadedReceiptCallback", json_msg_readed_receipt_array_string, user_data_string, ""));
 
 
         }
@@ -2388,7 +3319,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMMsgRevokeCallback", json_msg_locator_array_string, user_data_string, ""));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMMsgRevokeCallback", json_msg_locator_array_string, user_data_string, ""));
 
 
         }
@@ -2404,7 +3335,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMMsgElemUploadProgressCallback", json_msg_string, user_data_string, "", index, cur_size, total_size));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMMsgElemUploadProgressCallback", json_msg_string, user_data_string, "", index, cur_size, total_size));
 
 
         }
@@ -2416,7 +3347,7 @@ namespace com.tencent.imsdk.unity
             string user_data_string = Utils.intptr2string(user_data);
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMGroupTipsEventCallback", json_group_tip_array_string, user_data_string, ""));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMGroupTipsEventCallback", json_group_tip_array_string, user_data_string, ""));
 
 
 
@@ -2434,7 +3365,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMGroupAttributeChangedCallback", json_group_attibute_array_string, user_data_string, "", 0, 0, 0, group_id_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMGroupAttributeChangedCallback", json_group_attibute_array_string, user_data_string, "", 0, 0, 0, group_id_string));
 
 
         }
@@ -2447,7 +3378,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMConvEventCallback", json_conv_array_string, user_data_string, "", 0, 0, 0, "", conv_event));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMConvEventCallback", json_conv_array_string, user_data_string, "", 0, 0, 0, "", conv_event));
 
 
 
@@ -2462,7 +3393,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(total_unread_count, "TIMConvTotalUnreadMessageCountChangedCallback", "", user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(total_unread_count, "TIMConvTotalUnreadMessageCountChangedCallback", "", user_data_string));
 
 
 
@@ -2477,7 +3408,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(status, "TIMNetworkStatusListenerCallback", "", user_data_string, desc_string, code));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(status, "TIMNetworkStatusListenerCallback", "", user_data_string, desc_string, code));
 
 
 
@@ -2489,7 +3420,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMKickedOfflineCallback", "", user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMKickedOfflineCallback", "", user_data_string));
 
 
         }
@@ -2502,7 +3433,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMUserSigExpiredCallback", "", user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMUserSigExpiredCallback", "", user_data_string));
 
 
         }
@@ -2516,7 +3447,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMOnAddFriendCallback", json_identifier_array_string, user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMOnAddFriendCallback", json_identifier_array_string, user_data_string));
 
 
         }
@@ -2530,7 +3461,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMOnDeleteFriendCallback", json_identifier_array_string, user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMOnDeleteFriendCallback", json_identifier_array_string, user_data_string));
 
 
         }
@@ -2544,7 +3475,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMUpdateFriendProfileCallback", json_friend_profile_update_array_string, user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMUpdateFriendProfileCallback", json_friend_profile_update_array_string, user_data_string));
 
 
         }
@@ -2558,7 +3489,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMFriendAddRequestCallback", json_friend_add_request_pendency_array_string, user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMFriendAddRequestCallback", json_friend_add_request_pendency_array_string, user_data_string));
 
 
         }
@@ -2572,7 +3503,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMFriendApplicationListDeletedCallback", json_identifier_array_string, user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMFriendApplicationListDeletedCallback", json_identifier_array_string, user_data_string));
 
 
         }
@@ -2584,7 +3515,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMFriendApplicationListReadCallback", "", user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMFriendApplicationListReadCallback", "", user_data_string));
 
 
         }
@@ -2599,7 +3530,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMFriendBlackListAddedCallback", json_friend_black_added_array_string, user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMFriendBlackListAddedCallback", json_friend_black_added_array_string, user_data_string));
 
 
 
@@ -2614,7 +3545,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMFriendBlackListDeletedCallback", json_identifier_array_string, user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMFriendBlackListDeletedCallback", json_identifier_array_string, user_data_string));
 
 
 
@@ -2631,7 +3562,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(level, "TIMLogCallback", log_string, user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(level, "TIMLogCallback", log_string, user_data_string));
 
 
         }
@@ -2649,7 +3580,7 @@ namespace com.tencent.imsdk.unity
 
 
 
-            mainSyncContext.Send(threadOperation, new CallbackConvert(0, "TIMMsgUpdateCallback", json_msg_array_string, user_data_string));
+            mainSyncContext.Send(threadOperation<string>, new CallbackConvert<string>(0, "TIMMsgUpdateCallback", json_msg_array_string, user_data_string));
 
 
         }
