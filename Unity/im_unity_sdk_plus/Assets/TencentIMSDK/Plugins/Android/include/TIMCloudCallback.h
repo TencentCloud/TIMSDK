@@ -177,7 +177,7 @@ typedef void (*TIMRecvNewMsgCallback)(const char* json_msg_array, const void* us
 
 
 /**
-* @brief 消息已读回执回调
+* @brief 收到消息已读回执
 *
 * @param json_msg_readed_receipt_array 消息已读回执数组
 * @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
@@ -193,16 +193,53 @@ typedef void (*TIMRecvNewMsgCallback)(const char* json_msg_array, const void* us
 *     
 *     for (Json::ArrayIndex i = 0; i < json_value_receipts.size(); i++) {
 *         Json::Value& json_value_receipt = json_value_receipts[i];
-*     
-*         std::string convid = json_value_receipt[kTIMMsgReceiptConvId].asString();
 *         uint32_t conv_type = json_value_receipt[kTIMMsgReceiptConvType].asUInt();
+*         std::string convid = json_value_receipt[kTIMMsgReceiptConvId].asString();
+*
+*         // C2C 消息回执
 *         uint64_t timestamp = json_value_receipt[kTIMMsgReceiptTimeStamp].asUInt64();
+*
+*         // 群消息回执
+*         std::string msg_id = json_value_receipt[kTIMMsgReceiptMsgId].asString();
+*         uint64_t read_count = json_value_receipt[kTIMMsgReceiptReadCount].asUInt64();
+*         uint64_t unread_count = json_value_receipt[kTIMMsgReceiptUnreadCount].asUInt64();
 *     
 *         // 消息已读逻辑
 *     }
 * }
 */
 typedef void (*TIMMsgReadedReceiptCallback)(const char* json_msg_readed_receipt_array, const void* user_data);
+
+/**
+* @brief 获取群消息已读群成员列表
+*
+* @param json_group_member_array 群消息已读群成员列表
+* @param next_seq 下一次分页拉取的游标
+* @param is_finished 群消息已读群成员列表是否已经拉取完毕
+* @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
+*
+* @example
+* void MsgGroupReadMembersCallback(const char* json_group_member_array, uint64_t next_seq, bool is_finished, const void* user_data) {
+*     Json::Value member_array;
+*     Json::Reader reader;
+*     if (!reader.parse(json_group_member_array, member_array)) {
+*         // Json 解析失败
+*         return;
+*     }
+*     
+*     for (Json::ArrayIndex i = 0; i < member_array.size(); i++) {
+*         Json::Value& member = member_array[i];
+*         std::string user_id = member[kTIMGroupMemberInfoIdentifier].asString();
+*         std::string name_card = member[kTIMGroupMemberInfoNameCard].asString();
+*         std::string face_url = member[kTIMGroupMemberInfoFaceUrl].asString();
+*     }
+*
+*     if (false == is_finished) {
+*         TIMMsgGetGroupMessageReadMemberList(json_msg, TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_READ, next_seq, 100, MsgGroupReadMembersCallback, user_data);
+*     }
+* }
+*/
+typedef void (*TIMMsgGroupMessageReadMemberListCallback)(const char* json_group_member_array, uint64_t next_seq, bool is_finished, const void* user_data);
 
 /**
 * @brief 接收的消息被撤回回调
@@ -283,10 +320,10 @@ typedef void (*TIMMsgElemUploadProgressCallback)(const char* json_msg, uint32_t 
 /**
 * @brief 群事件回调
 *
-* @param json_group_tip_array 群提示列表
+* @param json_group_tip 群提示列表
 * @param user_data ImSDK负责透传的用户自定义数据，未做任何处理
 */
-typedef void (*TIMGroupTipsEventCallback)(const char* json_group_tip_array, const void* user_data);
+typedef void (*TIMGroupTipsEventCallback)(const char* json_group_tip, const void* user_data);
 
 /**
 * @brief 群属性变更回调
