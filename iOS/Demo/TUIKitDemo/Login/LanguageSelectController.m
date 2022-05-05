@@ -8,10 +8,9 @@
 
 #import "LanguageSelectController.h"
 #import "TUIDarkModel.h"
-#import "UIView+TUILayout.h"
 #import "TUIGlobalization.h"
-#import "TUINaviBarIndicatorView.h"
 #import "TUIThemeManager.h"
+#import "TUIDefine.h"
 
 @implementation LanguageSelectCell
 
@@ -49,9 +48,9 @@
 {
     if (_nameLabel == nil) {
         _nameLabel = [[UILabel alloc] init];
-        _nameLabel.textColor = [UIColor colorWithRed:68/255.0 green:68/255.0 blue:68/255.0 alpha:1/1.0];
         _nameLabel.font = [UIFont systemFontOfSize:16.0];
         _nameLabel.text = @"1233";
+        _nameLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");
     }
     return _nameLabel;
 }
@@ -112,6 +111,8 @@
         self.navigationController.navigationBar.backgroundColor = self.tintColor;
         self.navigationController.navigationBar.barTintColor = self.tintColor;
         self.navigationController.navigationBar.shadowImage = [UIImage new];
+        self.navigationController.navigationBar.translucent = NO;
+
     }
     self.navigationController.navigationBarHidden = NO;
 

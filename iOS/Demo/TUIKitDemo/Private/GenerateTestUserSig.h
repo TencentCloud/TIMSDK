@@ -72,6 +72,7 @@ typedef NS_ENUM(NSInteger, TUIDemoServerType) {
  * You can view your SDKAppID after creating an application in the [Tencent Cloud IM console](https://console.intl.cloud.tencent.com/im).
  * SDKAppID uniquely identifies a Tencent Cloud account.
  */
+
 static const int public_SDKAPPID = 0;
 
 /**
@@ -164,7 +165,6 @@ static NSString * const singapore_SECRETKEY = @"";
 /**
  * Encryption key in the environment in South Korea
  */
-
 static NSString * const korea_SECRETKEY = @"";
 
 /**
@@ -195,6 +195,9 @@ static NSString * const india_SECRETKEY = @"";
 // Switch the server
 + (void)switchServer:(TUIDemoServerType)serverType;
 
+// 服务器是否切换过
++ (BOOL)isServerSwitched;
+
 // 获取当前服务器类型
 // Get the current server type
 + (TUIDemoServerType)currentServer;
@@ -213,7 +216,7 @@ static NSString * const india_SECRETKEY = @"";
 
 // 获取当前的 sdkappid 和 secretKey
 // Get the current SDKAppID and SecretKey
-+ (int)currentSDKAppid;
++ (unsigned int)currentSDKAppid;
 + (NSString *)currentSecretkey;
 
 
@@ -250,6 +253,7 @@ static NSString * const india_SECRETKEY = @"";
  *
  * Reference：https://intl.cloud.tencent.com/document/product/1047/34385
  */
+
 + (NSString *)genTestUserSig:(NSString *)identifier;
 @end
 

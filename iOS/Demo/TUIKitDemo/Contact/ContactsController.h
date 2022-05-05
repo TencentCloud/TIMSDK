@@ -16,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ContactsController : TUIContactController
+@interface ContactsController : UIViewController
 
 @end
 

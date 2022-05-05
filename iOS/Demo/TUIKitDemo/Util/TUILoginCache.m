@@ -33,6 +33,7 @@
     [[NSUserDefaults standardUserDefaults] setObject:user forKey:Key_UserInfo_User];
     [[NSUserDefaults standardUserDefaults] setObject:sig forKey:Key_UserInfo_Sig];
 }
+
 - (void)saveExt:(NSDictionary *)dic {
     if ([dic isKindOfClass:[NSDictionary class]]) {
         NSString *phone = dic[@"phone"] ?dic[@"phone"]:@"";

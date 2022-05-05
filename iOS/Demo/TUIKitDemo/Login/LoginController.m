@@ -17,7 +17,6 @@
 #import "LoginController.h"
 #import "TUIKit.h"
 #import "AppDelegate.h"
-#import "TUILoginCache.h"
 #import "GenerateTestUserSig.h"
 #import "TUIThemeManager.h"
 #import "ThemeSelectController.h"
@@ -100,6 +99,7 @@
 - (IBAction)login:(id)sender {
     [self.view endEditing:YES];
     
+    [TCLoginModel sharedInstance].isDirectlyLoginSDK = YES;
     NSString *userid = self.user.text;
     NSString *userSig = [GenerateTestUserSig genTestUserSig:userid];
     [self loginIM:userid userSig:userSig];
@@ -111,10 +111,10 @@
         [self alertText:NSLocalizedString(@"TipsLoginErrorWithUserIdfailed", nil)];
         return;
     }
-    [[TUILoginCache sharedInstance] saveLogin:userId withAppId:SDKAPPID withUserSig:userSig];
+    [[TCLoginModel sharedInstance] saveLoginedInfoWithUserID:userId userSig:userSig];
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     @weakify(self)
-    [delegate login:userId userSig:userSig succ:^{
+    [delegate loginSDK:userId userSig:userSig succ:^{
         [TUITool hideToastActivity];
     } fail:^(int code, NSString *msg) {
         @strongify(self)

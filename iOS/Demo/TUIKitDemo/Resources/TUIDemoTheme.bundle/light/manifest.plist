@@ -26,8 +26,6 @@
 	<string>nav_back.png</string>
 	<key>nav_more_img</key>
 	<string>nav_more.png</string>
-	<key>nav_more_menu_img</key>
-	<string>nav_more_menu.png</string>
 	<key>nav_title_text_color</key>
 	<string>#000000</string>
 	<key>tab_title_text_select_color</key>
@@ -58,5 +56,15 @@
 	<string>#4444447F</string>
 	<key>public_login_logo_img</key>
 	<string>public_login_logo.png</string>
+	<key>separator_color</key>
+	<string>#DBDBDB</string>
+	<key>pop_icon_new_chat_img</key>
+	<string>new_chat.png</string>
+	<key>pop_icon_new_group_img</key>
+	<string>new_groupchat.png</string>
+	<key>pop_icon_add_group_img</key>
+	<string>add_group.png</string>
+	<key>pop_icon_add_friend_img</key>
+	<string>pop_icon_add_friend_img</string>
 </dict>
 </plist>

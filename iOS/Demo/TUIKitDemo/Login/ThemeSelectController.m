@@ -8,12 +8,11 @@
 
 #import "ThemeSelectController.h"
 #import "TUIDarkModel.h"
-#import "UIView+TUILayout.h"
-#import "UIColor+TUIHexColor.h"
 #import "TUIThemeManager.h"
 #import "TUITool.h"
-#import "TUINaviBarIndicatorView.h"
-
+#import "TUICommonModel.h"
+#import "Masonry.h"
+#import "TUIDefine.h"
 
 @implementation ThemeSelectCollectionViewCellModel
 
@@ -99,7 +98,92 @@
 
 @end
 
+@interface ThemeFooterCollectionViewCell()
+@property (nonatomic,strong) UISwitch *switcher;
+@property (nonatomic,strong) UILabel *titleLabel;
+@property (nonatomic,strong) UILabel *subTitleLabel;
 
+@end
+@implementation ThemeFooterCollectionViewCell
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        [self setupViews];
+    }
+    return self;
+}
+
+- (void)setCellModel:(ThemeSelectCollectionViewCellModel *)cellModel
+{
+    [super setCellModel:cellModel];
+    self.titleLabel.text = NSLocalizedString(@"TUIThemeNameSystemFollowTitle", nil);// 跟随系统自动切换;
+    self.subTitleLabel.text = NSLocalizedString(@"TUIThemeNameSystemFollowSubTitle", nil);//@"开启后仅展示默认皮肤 (轻快/深色)，不可切换其他皮肤样式";
+    self.switcher.on = cellModel.selected;
+}
+
+- (UILabel *)subTitleLabel {
+    if (!_subTitleLabel) {
+        _subTitleLabel = [[UILabel alloc] init];
+    }
+    return _subTitleLabel;
+}
+- (UISwitch *)switcher {
+    if (!_switcher) {
+        _switcher =  [[UISwitch alloc] init];
+        _switcher.onTintColor = TUICoreDynamicColor(@"common_switch_on_color", @"#147AFF");
+        [_switcher addTarget:self action:@selector(switchClick:) forControlEvents:UIControlEventValueChanged];
+
+    }
+    return _switcher;
+}
+- (void)setupViews
+{
+    self.contentView.layer.cornerRadius = 5.0;
+    self.contentView.layer.masksToBounds = YES;
+    [self.contentView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)]];
+    self.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
+    [self.contentView addSubview:self.switcher];
+    
+    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.titleLabel.textColor = TUICoreDynamicColor(@"form_title_color", @"#000000");;
+    self.titleLabel.font = [UIFont systemFontOfSize:16.0];
+    self.titleLabel.textAlignment = NSTextAlignmentLeft;
+    self.titleLabel.numberOfLines = 0;
+    [self.contentView addSubview:self.titleLabel];
+
+    [self.contentView addSubview:self.subTitleLabel];
+    self.subTitleLabel.textColor = TUICoreDynamicColor(@"form_desc_color", @"#888888");
+    self.subTitleLabel.textAlignment = NSTextAlignmentLeft;
+    self.subTitleLabel.font = [UIFont systemFontOfSize:12.0];
+    self.subTitleLabel.backgroundColor = [UIColor clearColor];
+    self.subTitleLabel.numberOfLines = 0;
+
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(16);
+        make.top.mas_equalTo(12);
+        make.width.mas_equalTo(self.contentView.mm_w * 0.8);
+    }];
+    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.titleLabel);
+        make.right.mas_equalTo(self.switcher.mas_right);
+        make.top.mas_equalTo(self.switcher.mas_bottom).mas_offset(4);
+    }];
+    [self.switcher mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.contentView.mas_right).mas_offset(-16);
+        make.width.mas_equalTo(48);
+        make.height.mas_equalTo(28);
+        make.centerY.mas_equalTo(self.titleLabel);
+    }];
+
+}
+- (void)switchClick:(id)sw {
+    if (self.onSelect) {
+        self.onSelect(self.cellModel);
+    }
+}
+
+@end
 
 @interface ThemeSelectController () <UICollectionViewDelegate, UICollectionViewDataSource>
 
@@ -108,6 +192,7 @@
 @property (nonatomic, strong) NSMutableArray *datas;
 
 @property (nonatomic, strong) ThemeSelectCollectionViewCellModel *selectModel;
+@property (nonatomic, strong )ThemeSelectCollectionViewCellModel *systemModel;
 
 @end
 
@@ -118,6 +203,8 @@
     
     [self setupViews];
     [self prepareData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onThemeChanged) name:TUIDidApplyingThemeChangedNotfication object:nil];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -141,6 +228,8 @@
         self.navigationController.navigationBar.backgroundColor = self.tintColor;
         self.navigationController.navigationBar.barTintColor = self.tintColor;
         self.navigationController.navigationBar.shadowImage = [UIImage new];
+        self.navigationController.navigationBar.translucent = NO;
+
     }
     self.navigationController.navigationBarHidden = NO;
    
@@ -183,12 +272,25 @@
 - (void)prepareData
 {
     NSString *lastThemeID = [self.class getCacheThemeID];
-    
+    BOOL isSystemDark = NO;
+    BOOL isSystemLight = NO;
+    if (@available(iOS 13.0, *)) {
+        if ([lastThemeID isEqualToString:@"system"]) {
+            if ((self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)) {
+                isSystemDark = YES;
+            }
+            else {
+                isSystemLight = YES;
+            }
+        }
+
+    }
     ThemeSelectCollectionViewCellModel *system = [[ThemeSelectCollectionViewCellModel alloc] init];
     system.backImage = [self imageWithColors:@[@"#FEFEFE", @"#FEFEFE"]];
     system.themeID = @"system";
     system.themeName =  NSLocalizedString(@"ThemeNameSystem", nil);//@"跟随系统";
     system.selected = [lastThemeID isEqual:system.themeID];
+    self.systemModel = system;
     
     ThemeSelectCollectionViewCellModel *serious = [[ThemeSelectCollectionViewCellModel alloc] init];
     serious.backImage = [UIImage imageNamed:@"theme_cover_serious"]; // [self imageWithColors:@[@"#3371CD", @"#00449E"]];
@@ -200,7 +302,7 @@
     light.backImage = [UIImage imageNamed:@"theme_cover_light"]; // [self imageWithColors:@[@"#147AFF", @"#147AFF"]];
     light.themeID = @"light";
     light.themeName = NSLocalizedString(@"ThemeNameLight", nil);//@"轻快";
-    light.selected = [lastThemeID isEqual:light.themeID];
+    light.selected = ([lastThemeID isEqual:light.themeID] || isSystemLight);
     
     ThemeSelectCollectionViewCellModel *mingmei = [[ThemeSelectCollectionViewCellModel alloc] init];
     mingmei.backImage = [UIImage imageNamed:@"theme_cover_lively"]; //[self imageWithColors:@[@"#FAE1B6", @"#F38787"]];
@@ -209,13 +311,12 @@
     mingmei.selected = [lastThemeID isEqual:mingmei.themeID];
     
     ThemeSelectCollectionViewCellModel *dark = [[ThemeSelectCollectionViewCellModel alloc] init];
-    dark.backImage = [self imageWithColors:@[@"#0B0B0B", @"#000000"]];
+    dark.backImage = [UIImage imageNamed:@"theme_cover_dark"];
     dark.themeID = @"dark";
     dark.themeName = NSLocalizedString(@"ThemeNameDark", nil); //@"黑夜";
-    dark.selected = [lastThemeID isEqual:dark.themeID];
+    dark.selected = ([lastThemeID isEqual:dark.themeID]|| isSystemDark);
     
-//    self.datas = [NSMutableArray arrayWithArray:@[serious, light, mingmei, system, dark]];
-    self.datas = [NSMutableArray arrayWithArray:@[light, serious, mingmei]];
+    self.datas = [NSMutableArray arrayWithArray:@[light, serious, mingmei,dark]];
     
     for (ThemeSelectCollectionViewCellModel *cellModel in self.datas) {
         if (cellModel.selected) {
@@ -223,7 +324,7 @@
             break;
         }
     }
-    if (self.selectModel == nil) {
+    if (self.selectModel == nil ||[lastThemeID isEqualToString:@"system"]) {
         self.selectModel = system;
     }
 }
@@ -251,9 +352,33 @@
 {
     NSString *lastThemeID = [NSUserDefaults.standardUserDefaults objectForKey:@"current_theme_id"];
     if (lastThemeID == nil || lastThemeID.length == 0) {
-        lastThemeID = @"light";
+        lastThemeID = @"system";
     }
     return lastThemeID;
+}
+
++ (void)changeFollowSystemChangeThemeSwitch:(BOOL)flag {
+    if (flag) {
+        [NSUserDefaults.standardUserDefaults setObject:@"0" forKey:@"followSystemChangeThemeSwitch"];
+    }
+    else {
+        [NSUserDefaults.standardUserDefaults setObject:@"1" forKey:@"followSystemChangeThemeSwitch"];
+    }
+    [NSUserDefaults.standardUserDefaults synchronize];
+}
++ (BOOL)followSystemChangeThemeSwitch {
+    //第一次启动/未设置 默认跟随系统
+    if ([[self.class getCacheThemeID] isEqualToString:@"system"]) {
+        return YES;
+    }
+    NSString *followSystemChangeThemeSwitch = [NSUserDefaults.standardUserDefaults objectForKey:@"followSystemChangeThemeSwitch"];
+    if (followSystemChangeThemeSwitch && followSystemChangeThemeSwitch.length >0) {
+        if ([followSystemChangeThemeSwitch isEqualToString:@"1"] ) {
+            return YES;
+        }
+    }
+    return NO;
+
 }
 
 #pragma mark - UICollectionViewDelegate, UICollectionViewDataSource
@@ -261,7 +386,24 @@
 {
     return self.datas.count;
 }
-
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    ThemeSelectCollectionViewCell *reusableView = nil;
+    if (kind == UICollectionElementKindSectionFooter)
+    {
+        BOOL changeThemeswitch = [self.class followSystemChangeThemeSwitch];
+        ThemeSelectCollectionViewCellModel *system = [[ThemeSelectCollectionViewCellModel alloc] init];
+        system.selected = changeThemeswitch;
+        ThemeSelectCollectionViewCell *footerview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterView" forIndexPath:indexPath];
+        footerview.cellModel = system;
+        __weak typeof(self) weakSelf = self;
+        footerview.onSelect = ^(ThemeSelectCollectionViewCellModel * _Nonnull cellModel) {
+            [weakSelf onSelectFollowSystem:cellModel];
+        };
+        reusableView = footerview;
+    }
+    return reusableView;
+}
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     ThemeSelectCollectionViewCellModel *cellModel = self.datas[indexPath.item];
@@ -274,11 +416,25 @@
     };
     return cell;
 }
+- (void)onSelectFollowSystem:(ThemeSelectCollectionViewCellModel *)cellModel {
+    
+    
+    
+    [self.class changeFollowSystemChangeThemeSwitch:cellModel.selected];
 
+    if (!cellModel.selected) {
+        [self onSelectTheme:self.systemModel];
+    }
+    
+}
 - (void)onSelectTheme:(ThemeSelectCollectionViewCellModel *)cellModel
 {
     if (self.disable) {
         return;
+    }
+    if (cellModel && ![cellModel.themeID isEqualToString:@"system"]) {
+        //只要选了皮肤 就关闭开关。
+        [self.class changeFollowSystemChangeThemeSwitch:YES];
     }
     
     // 切换主题
@@ -339,11 +495,15 @@
         layout.itemSize = CGSizeMake(itemWidth, itemHeight);
         layout.minimumLineSpacing = 12;
         layout.minimumInteritemSpacing = 0;
+        layout.sectionInset = UIEdgeInsetsMake(12, 16, 12, 16);
+        layout.footerReferenceSize = CGSizeMake((UIScreen.mainScreen.bounds.size.width), 68);
+        
         _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
-        _collectionView.contentInset = UIEdgeInsetsMake(12, 16, 12, 16);
+
         [_collectionView registerClass:ThemeSelectCollectionViewCell.class forCellWithReuseIdentifier:@"cell"];
+        [_collectionView registerClass:[ThemeFooterCollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterView"];
         _collectionView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     }
     return _collectionView;
@@ -411,6 +571,17 @@
     return image;
 }
 
+//MARK: ThemeChanged
+
+- (void)onThemeChanged {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.collectionView reloadData];
+        if ([self.delegate respondsToSelector:@selector(onSelectTheme:)]) {
+            [self.delegate onSelectTheme:self.selectModel];
+        }
+    });
+    
+}
 @end
 
 

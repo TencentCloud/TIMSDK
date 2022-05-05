@@ -9,7 +9,7 @@
 // 1. 将 AppDelegate+Push / AppDelegate+APNS 头文件和实现文件拷入自己的工程
 // 2. 默认提供了 APNS 的推送，修改本文件中的 APNS 证书 ID，在 IM 云控制台上传证书后会自动生成对应的证书 ID
 // 3. 代码接入步骤
-//    - 在 application:didFinishLaunchingWithOptions: 中调用 push_init 方法初始化推送
+//    - 在用户同意隐私协议后调用 push_init 方法初始化推送
 //    - 在 APP/IM 登录完成后，调用 push_registerIfLogined: 方法注册推送
 //    - 在 APP/IM 退出登录时，调用 push_unregisterIfLogouted 方法取消推送
 // 4. 本文件提供了未读数以及 APP 的 badge 更新功能，您只需作如下处理即可
@@ -24,7 +24,7 @@
 //    - 删除 AppDelegate+TPNS.h 和 AppDelegate+TPNS.m 文件中的 ```#if ENABLETPNS``` 以及对应的 ```#endif``` 字样
 // 3. 修改本文件中的 TPNS 推送信息，在 TPNS 云控制台上创建应用后会自动生成
 // 4. 代码接入步骤
-//    - 在 application:didFinishLaunchingWithOptions: 中调用 push_init 方法初始化推送
+//    - 在用户同意隐私协议后调用 push_init 方法初始化推送
 //    - 在 APP/IM 登录完成后，调用 push_registerIfLogined: 方法注册推送
 //    - 在 APP/IM 退出登录时，调用 push_unregisterIfLogouted 方法取消推送
 // 5. 本文件提供了未读数以及 APP 的 badge 更新功能，您只需作如下处理即可
@@ -39,18 +39,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 // ********************** 推送信息设置 ************************
 //apns 推送证书ID，在 IM 控制台可以查看
-#define sdkBusiId 0
+#define sdkBusiId kAPNSBusiId
 
 //tpns
-#define tpnsAccessID  0
-#define tpnsAccessKey @""
-#define tpnsDomain @""
+#define tpnsAccessID  kTPNSAccessID
+#define tpnsAccessKey kTPNSAccessKey
+#define tpnsDomain kTPNSDomain
 // **********************************************************
 
 @interface AppDelegate (Push)
 
 /**
- * 1. 初始化推送服务，在 application:didFinishLaunchingWithOptions: 中调用.
+ * 1. 初始化推送服务，在同意隐私协议之后调用.
  * @note 根据需要，自行对该方法覆盖来加载 APNS 通道或者 TPNS 通道的初始化服务
  */
 - (void)push_init;

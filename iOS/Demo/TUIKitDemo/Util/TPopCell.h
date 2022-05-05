@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface TPopCellData : NSObject
-@property (nonatomic, strong) NSString *image;
+@property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) NSString *title;
 @end
 

@@ -13,17 +13,17 @@
  */
 #import "ConversationController.h"
 #import "TUIConversationListController.h"
-#import "ChatViewController.h"
+#import "TUIC2CChatViewController.h"
+#import "TUIGroupChatViewController.h"
+#import "TUIContactSelectController.h"
+#import "TUIThemeManager.h"
 #import "TPopView.h"
 #import "TPopCell.h"
 #import "TUIDefine.h"
 #import "TUITool.h"
-#import "TUIContactSelectController.h"
-#import "ReactiveObjC/ReactiveObjC.h"
-#import "TUINaviBarIndicatorView.h"
 #import "TUIKit.h"
 #import "TCUtil.h"
-#import "TUIThemeManager.h"
+#import "TUIGroupService.h"
 
 @interface ConversationController () <TUIConversationListControllerListener, TPopViewDelegate, V2TIMSDKListener>
 @property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
@@ -137,8 +137,8 @@
     UIViewController *topVc = self.navigationController.topViewController;
     BOOL isSameTarget = NO;
     BOOL isInChat = NO;
-    if ([topVc isKindOfClass:ChatViewController.class]) {
-        TUIChatConversationModel *cellData = [(ChatViewController *)topVc conversationData];
+    if ([topVc isKindOfClass:TUIC2CChatViewController.class] || [topVc isKindOfClass:TUIGroupChatViewController.class]) {
+        TUIChatConversationModel *cellData = [(TUIBaseChatViewController *)topVc conversationData];
         isSameTarget = [cellData.groupID isEqualToString:groupID] || [cellData.userID isEqualToString:userID];
         isInChat = YES;
     }
@@ -150,12 +150,11 @@
         [self.navigationController popViewControllerAnimated:NO];
     }
     
-    ChatViewController *chat = [[ChatViewController alloc] init];
     TUIChatConversationModel *conversationData = [[TUIChatConversationModel alloc] init];
-    conversationData.groupID = groupID;
     conversationData.userID = userID;
-    chat.conversationData = conversationData;
-    [self.navigationController pushViewController:chat animated:YES];
+    conversationData.groupID = groupID;
+    TUIBaseChatViewController *chatVC = [self getChatViewController:conversationData];
+    [self.navigationController pushViewController:chatVC animated:YES];
 }
 
 /**
@@ -165,27 +164,29 @@
 {
     NSMutableArray *menus = [NSMutableArray array];
     TPopCellData *friend = [[TPopCellData alloc] init];
-    friend.image = TUIDemoImagePath(@"new_chat");
+    
+    friend.image = TUIDemoDynamicImage(@"pop_icon_new_chat_img", [UIImage imageNamed:TUIDemoImagePath(@"new_chat")]);
     friend.title = NSLocalizedString(@"ChatsNewChatText", nil);
     [menus addObject:friend];
 
     TPopCellData *group3 = [[TPopCellData alloc] init];
-    group3.image = TUIDemoImagePath(@"new_groupchat");
+    group3.image =
+    TUIDemoDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIDemoImagePath(@"new_groupchat")]);
     group3.title = NSLocalizedString(@"ChatsNewPrivateGroupText", nil);
     [menus addObject:group3];
 
     TPopCellData *group = [[TPopCellData alloc] init];
-    group.image = TUIDemoImagePath(@"new_groupchat");
+    group.image = TUIDemoDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIDemoImagePath(@"new_groupchat")]);
     group.title = NSLocalizedString(@"ChatsNewGroupText", nil);
     [menus addObject:group];
 
     TPopCellData *room = [[TPopCellData alloc] init];
-    room.image = TUIDemoImagePath(@"new_groupchat");
+    room.image = TUIDemoDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIDemoImagePath(@"new_groupchat")]);
     room.title = NSLocalizedString(@"ChatsNewChatRoomText", nil);
     [menus addObject:room];
     
     TPopCellData *community = [[TPopCellData alloc] init];
-    community.image = TUIDemoImagePath(@"new_groupchat");
+    community.image = TUIDemoDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIDemoImagePath(@"new_groupchat")]);
     community.title = NSLocalizedString(@"ChatsNewCommunityText", nil);
     [menus addObject:community];
 
@@ -217,14 +218,13 @@
             TUIChatConversationModel *data = [[TUIChatConversationModel alloc] init];
             data.userID = array.firstObject.identifier;
             data.title = array.firstObject.title;
-            ChatViewController *chat = [[ChatViewController alloc] init];
+            TUIC2CChatViewController *chat = [[TUIC2CChatViewController alloc] init];
             chat.conversationData = data;
             [self.navigationController pushViewController:chat animated:YES];
 
             NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
             [tempArray removeObjectAtIndex:tempArray.count-2];
             self.navigationController.viewControllers = tempArray;
-            
         };
         return;
     }
@@ -274,82 +274,29 @@
     }
 }
 
-/**
- *创建讨论组、群聊、聊天室的函数
- *groupType:创建的具体类型 Private--讨论组  Public--群聊 ChatRoom--聊天室
- *addOption:创建后加群时的选项          TIM_GROUP_ADD_FORBID       禁止任何人加群
-                                     TIM_GROUP_ADD_AUTH        加群需要管理员审批
-                                     TIM_GROUP_ADD_ANY         任何人可以加群
- *withContacts:群成员的信息数组。数组内每一个元素分别包含了对应成员的头像、ID等信息。具体信息可参照 TUICommonContactSelectCellData 定义
- */
-- (void)addGroup:(NSString *)groupType addOption:(V2TIMGroupAddOpt)addOption withContacts:(NSArray<TUICommonContactSelectCellData *>  *)contacts
-{
-    NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
-    [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-        NSString *showName = loginUser;
-        if (infoList.firstObject.nickName.length > 0) {
-            showName = infoList.firstObject.nickName;
+- (void)addGroup:(NSString *)groupType
+       addOption:(V2TIMGroupAddOpt)addOption
+    withContacts:(NSArray<TUICommonContactSelectCellData *> *)contacts {
+    [[TUIGroupService shareInstance] createGroup:groupType
+                                    createOption:addOption
+                                        contacts:contacts
+                                      completion:^(BOOL success, NSString * _Nonnull groupID, NSString * _Nonnull groupName) {
+        if (!success) {
+            [TUITool makeToast:NSLocalizedString(@"ChatsCreateFailed", nil)];
+            return;
         }
-        NSMutableString *groupName = [NSMutableString stringWithString:showName];
-        NSMutableArray *members = [NSMutableArray array];
-        //遍历contacts，初始化群组成员信息、群组名称信息
-        for (TUICommonContactSelectCellData *item in contacts) {
-            V2TIMCreateGroupMemberInfo *member = [[V2TIMCreateGroupMemberInfo alloc] init];
-            member.userID = item.identifier;
-            member.role = V2TIM_GROUP_MEMBER_ROLE_MEMBER;
-            [groupName appendFormat:@"、%@", item.title];
-            [members addObject:member];
-        }
-
-        //群组名称默认长度不超过10，如有需求可在此更改，但可能会出现UI上的显示bug
-        if ([groupName length] > 10) {
-            groupName = [groupName substringToIndex:10].mutableCopy;
-        }
-
-        V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
-        info.groupName = groupName;
-        info.groupType = groupType;
-        if(![info.groupType isEqualToString:GroupType_Work]){
-            info.groupAddOpt = addOption;
-        }
-
-        //发送创建请求后的回调函数
-        @weakify(self)
-        [[V2TIMManager sharedInstance] createGroup:info memberList:members succ:^(NSString *groupID) {
-            //创建成功后，在群内推送创建成功的信息
-            @strongify(self)
-            NSString *content = nil;
-            if([info.groupType isEqualToString:GroupType_Work]) {
-                content = NSLocalizedString(@"ChatsCreatePrivateGroupTips", nil); // @"创建讨论组";
-            } else if([info.groupType isEqualToString:GroupType_Public]){
-                content = NSLocalizedString(@"ChatsCreateGroupTips", nil); // @"创建群聊";
-            } else if([info.groupType isEqualToString:GroupType_Meeting]) {
-                content = NSLocalizedString(@"ChatsCreateChatRoomTips", nil); // @"创建聊天室";
-            } else if([info.groupType isEqualToString:GroupType_Community]) {
-                content = NSLocalizedString(@"ChatsCreateCommunityTips", nil); // @"创建社区";
-            } else {
-                content = NSLocalizedString(@"ChatsCreateDefaultTips", nil); // @"创建群组";
-            }
-            NSDictionary *dic = @{@"version": @(GroupCreate_Version),BussinessID: BussinessID_GroupCreate,@"opUser":showName,@"content":content};
-            NSData *data= [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
-            V2TIMMessage *msg = [[V2TIMManager sharedInstance] createCustomMessage:data];
-            //创建成功后，默认跳转到群组对应的聊天界面
-            TUIChatConversationModel *conversationData = [[TUIChatConversationModel alloc] init];
-            conversationData.groupID = groupID;
-            conversationData.title = groupName;
-            ChatViewController *chat = [[ChatViewController alloc] init];
-            chat.conversationData = conversationData;
-            chat.waitToSendMsg = msg;
-            [self.navigationController pushViewController:chat animated:YES];
-
-            NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
-            [tempArray removeObjectAtIndex:tempArray.count-2];
-            self.navigationController.viewControllers = tempArray;
-        } fail:^(int code, NSString *msg) {
-            [TUITool makeToastError:code msg:msg];
-        }];
-    } fail:^(int code, NSString *msg) {
-        // to do
+        TUIChatConversationModel *conversationData = [[TUIChatConversationModel alloc] init];
+        conversationData.groupID = groupID;
+        conversationData.title = groupName;
+        conversationData.groupType = groupType;
+        
+        TUIGroupChatViewController *vc = [[TUIGroupChatViewController alloc] init];
+        vc.conversationData = conversationData;
+        
+        [self.navigationController pushViewController:vc animated:YES];
+        NSMutableArray *tempArray = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+        [tempArray removeObjectAtIndex:tempArray.count-2];
+        self.navigationController.viewControllers = tempArray;
     }];
 }
 
@@ -401,9 +348,8 @@
  */
 - (void)conversationListController:(TUIConversationListController *)conversationController didSelectConversation:(TUIConversationCell *)conversationCell
 {
-    ChatViewController *chat = [[ChatViewController alloc] init];
-    chat.conversationData = [self getConversationModel:conversationCell.convData];
-    [self.navigationController pushViewController:chat animated:YES];
+    TUIBaseChatViewController *chatVc = [self getChatViewController:[self getConversationModel:conversationCell.convData]];
+    [self.navigationController pushViewController:chatVc animated:YES];
 }
 
 
@@ -415,16 +361,14 @@
 {
     if (searchType == TUISearchTypeChatHistory && [searchItem isKindOfClass:V2TIMMessage.class]) {
         // 点击搜索到的聊天消息
-        ChatViewController *chatVc = [[ChatViewController alloc] init];
-        [chatVc setConversationData:[self getConversationModel:conversationCellData]];
+        TUIBaseChatViewController *chatVc = [self getChatViewController:[self getConversationModel:conversationCellData]];
         chatVc.title = conversationCellData.title;
         chatVc.highlightKeyword = searchKey;
         chatVc.locateMessage = (V2TIMMessage *)searchItem;
         [searchVC.navigationController pushViewController:chatVc animated:YES];
     } else {
         // 点击搜索到的群组和联系人
-        ChatViewController *chatVc = [[ChatViewController alloc] init];
-        [chatVc setConversationData:[self getConversationModel:conversationCellData]];
+        TUIBaseChatViewController *chatVc = [self getChatViewController:[self getConversationModel:conversationCellData]];
         chatVc.title = conversationCellData.title;
         [searchVC.navigationController pushViewController:chatVc animated:YES];
     }
@@ -456,5 +400,16 @@
 
 - (void)onConnectFailed:(int)code err:(NSString*)err {
     [self onNetworkChanged:TNet_Status_ConnFailed];
+}
+
+- (TUIBaseChatViewController *)getChatViewController:(TUIChatConversationModel *)model {
+    TUIBaseChatViewController *chat = nil;
+    if (model.userID.length > 0) {
+        chat = [[TUIC2CChatViewController alloc] init];
+    } else if (model.groupID.length > 0) {
+        chat = [[TUIGroupChatViewController alloc] init];
+    }
+    chat.conversationData = model;
+    return chat;
 }
 @end

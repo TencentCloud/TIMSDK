@@ -11,7 +11,6 @@
 #import <UIKit/UIKit.h>
 #import "TUIDefine.h"
 #import "TUIProfileCardCell.h"
-#import "TUIButtonCell.h"
 #import "TUIBubbleMessageCell.h"
 #import "TUICommonModel.h"
 #import "TUIConversationCell.h"
@@ -59,21 +58,6 @@ typedef NS_ENUM(NSUInteger, TUINetStatus) {
  *  TUIKit为单例
  */
 + (instancetype)sharedInstance;
-
-/**
- *  设置sdkAppId，以便您能进一步接入IM SDK
- */
-- (void)setupWithAppId:(UInt32)sdkAppId;
-
-/**
- *  登录
- */
-- (void)login:(NSString *)userID userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail;
-
-/**
- *  登出
- */
-- (void)logout:(TSucc)succ fail:(TFail)fail;
 
 /**
  *  收到音视频通话邀请推送

@@ -7,6 +7,7 @@
 
 #import "TUIDateEditController.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @interface TUIDateEditController ()
 
@@ -32,7 +33,7 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TUIKitLocalizableString(Save)  style:UIBarButtonItemStylePlain target:self action:@selector(onSave)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TUIKitLocalizableString(Cancel) style:UIBarButtonItemStylePlain target:self action:@selector(onCancel)];
 
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
     self.datePicker = [[UIDatePicker alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.datePicker];
     self.datePicker.datePickerMode = UIDatePickerModeDate;
