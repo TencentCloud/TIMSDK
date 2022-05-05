@@ -6,7 +6,6 @@
 //
 
 #import "TUIGroupPendencyViewDataProvider.h"
-#import "TUIGroupPendencyCellData.h"
 #import "TUIDefine.h"
 
 @interface TUIGroupPendencyViewDataProvider()

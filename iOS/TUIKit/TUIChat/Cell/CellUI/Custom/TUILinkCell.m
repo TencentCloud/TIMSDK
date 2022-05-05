@@ -19,6 +19,8 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onThemeChanged) name:TUIDidApplyingThemeChangedNotfication object:nil];
+
         self.container.backgroundColor = TUIChatDynamicColor(@"chat_link_message_bg_color", @"#FFFFFF");
         
         _myTextLabel = [[UILabel alloc] init];
@@ -34,7 +36,7 @@
         [self.container addSubview:_myLinkLabel];
 
         [self.container.layer setMasksToBounds:YES];
-        [self.container.layer setBorderColor:[UIColor d_systemGrayColor].CGColor];
+        [self.container.layer setBorderColor:TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor];
         [self.container.layer setBorderWidth:1];
         [self.container.layer setCornerRadius:5];
     }
@@ -54,4 +56,16 @@
     self.myTextLabel.mm_top(10).mm_left(10).mm_flexToRight(10).mm_flexToBottom(50);
     self.myLinkLabel.mm_sizeToFit().mm_left(10).mm_bottom(10);
 }
+
+//MARK: ThemeChanged
+- (void)applyBorderTheme {
+    if (self.container) {
+        [self.container.layer setBorderColor:TUICoreDynamicColor(@"separator_color", @"#DBDBDB").CGColor];
+    }
+}
+
+- (void)onThemeChanged {
+    [self applyBorderTheme];
+}
+
 @end

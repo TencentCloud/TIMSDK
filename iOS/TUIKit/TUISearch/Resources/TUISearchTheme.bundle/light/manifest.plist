@@ -8,7 +8,5 @@
 	<string>轻量</string>
 	<key>name_en</key>
 	<string>Light</string>
-	<key>search_textfield_bg_color</key>
-	<string>#FEFEFE</string>
 </dict>
 </plist>

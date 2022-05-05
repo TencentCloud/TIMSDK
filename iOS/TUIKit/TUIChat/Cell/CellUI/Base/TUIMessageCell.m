@@ -10,6 +10,7 @@
 #import "TUIDefine.h"
 #import "TUITool.h"
 #import "TUIThemeManager.h"
+#import "TUISystemMessageCellData.h"
 
 @interface TUIMessageCell() <CAAnimationDelegate>
 @property (nonatomic, strong) TUIMessageCellData *messageData;
@@ -17,189 +18,91 @@
 @end
 
 @implementation TUIMessageCell
+
+#pragma mark - Life cycle
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if(self) {
-        self.backgroundColor = [UIColor clearColor];
-        //head
-        _avatarView = [[UIImageView alloc] init];
-        _avatarView.contentMode = UIViewContentModeScaleAspectFit;
-        [self.contentView addSubview:_avatarView];
-        UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSelectMessageAvatar:)];
-        [_avatarView addGestureRecognizer:tap1];
-        UILongPressGestureRecognizer *tap2 = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongSelectMessageAvatar:)];
-        [_avatarView addGestureRecognizer:tap2];
-        [_avatarView setUserInteractionEnabled:YES];
-
-        //nameLabel
-        _nameLabel = [[UILabel alloc] init];
-        _nameLabel.font = [UIFont systemFontOfSize:13];
-        _nameLabel.textColor = [UIColor d_systemGrayColor];
-        [self.contentView addSubview:_nameLabel];
-
-        //container
-        _container = [[UIView alloc] init];
-        _container.backgroundColor = [UIColor clearColor];
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSelectMessage:)];
-        [_container addGestureRecognizer:tap];
-        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPress:)];
-        [_container addGestureRecognizer:longPress];
-        [self.contentView addSubview:_container];
-        
-        //indicator
-        _indicator = [[UIActivityIndicatorView alloc] init];
-        _indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-        [self.contentView addSubview:_indicator];
-        
-        //error
-        _retryView = [[UIImageView alloc] init];
-        _retryView.userInteractionEnabled = YES;
-        UITapGestureRecognizer *resendTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onRetryMessage:)];
-        [_retryView addGestureRecognizer:resendTap];
-        [self.contentView addSubview:_retryView];
-        
-        //已读label,由于 indicator 和 error，所以默认隐藏，消息发送成功后进行显示
-        _readReceiptLabel = [[UILabel alloc] init];
-        _readReceiptLabel.hidden = YES;
-        _readReceiptLabel.font = [UIFont systemFontOfSize:12];
-        _readReceiptLabel.textColor = [UIColor d_systemGrayColor];
-        _readReceiptLabel.lineBreakMode = NSLineBreakByCharWrapping;
-        [self.contentView addSubview:_readReceiptLabel];
-        
-        // selectedIcon
-        _selectedIcon = [[UIImageView alloc] init];
-        [self.contentView addSubview:_selectedIcon];
-        
-        // selectedView
-        _selectedView = [UIButton buttonWithType:UIButtonTypeCustom];
-        _selectedView.backgroundColor = [UIColor clearColor];
-        [_selectedView addTarget:self action:@selector(onSelectMessage:) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:_selectedView];
-        
-        // timeLabel
-        _timeLabel = [[UILabel alloc] init];
-        _timeLabel.textColor = [UIColor darkGrayColor];
-        _timeLabel.font = [UIFont systemFontOfSize:11.0];
-        [self.contentView addSubview:_timeLabel];
-        
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
-        self.contentView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
+    if (self) {
+        [self setupSubViews];
+        [self setupRAC];
     }
     return self;
 }
 
-- (void)fillWithData:(TUIMessageCellData *)data
-{
-    [super fillWithData:data];
-    self.messageData = data;
+- (void)setupSubViews {
+    self.backgroundColor = [UIColor clearColor];
+    //head
+    _avatarView = [[UIImageView alloc] init];
+    _avatarView.contentMode = UIViewContentModeScaleAspectFit;
+    [self.contentView addSubview:_avatarView];
+    UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSelectMessageAvatar:)];
+    [_avatarView addGestureRecognizer:tap1];
+    UILongPressGestureRecognizer *tap2 = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongSelectMessageAvatar:)];
+    [_avatarView addGestureRecognizer:tap2];
+    [_avatarView setUserInteractionEnabled:YES];
 
-    [self.avatarView setImage:data.avatarImage];
-    @weakify(self)
-    [[[RACObserve(data, avatarUrl) takeUntil:self.rac_prepareForReuseSignal] ignore:nil] subscribeNext:^(NSURL *url) {
-        @strongify(self)
-        [self.avatarView sd_setImageWithURL:url placeholderImage:self.messageData.avatarImage];
-    }];
+    //nameLabel
+    _nameLabel = [[UILabel alloc] init];
+    _nameLabel.font = [UIFont systemFontOfSize:13];
+    _nameLabel.textColor = [UIColor d_systemGrayColor];
+    [self.contentView addSubview:_nameLabel];
 
-
-    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
-        self.avatarView.layer.masksToBounds = YES;
-        self.avatarView.layer.cornerRadius = data.cellLayout.avatarSize.height / 2;
-    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
-        self.avatarView.layer.masksToBounds = YES;
-        self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
-    }
+    //container
+    _container = [[UIView alloc] init];
+    _container.backgroundColor = [UIColor clearColor];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSelectMessage:)];
+    [_container addGestureRecognizer:tap];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPress:)];
+    [_container addGestureRecognizer:longPress];
+    [self.contentView addSubview:_container];
     
-    //set data
-    self.nameLabel.text = data.name;
-    self.nameLabel.textColor = data.nameColor;
-    self.nameLabel.font = data.nameFont;
+    //indicator
+    _indicator = [[UIActivityIndicatorView alloc] init];
+    _indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    [self.contentView addSubview:_indicator];
     
-    //由于tableView的刷新策略，导致部分情况下可能会出现未读label未显示的bug。原因是因为在label显示时，内容为空。
-    //label内容的变化不会引起tableView的刷新，但是hiddend状态的变化会引起tableView刷新。
-    //所以未读标签选择直接赋值，而不是在发送成功时赋值。显示时机由hidden属性控制。
-    self.readReceiptLabel.text = self.messageData.innerMessage.isPeerRead ? TUIKitLocalizableString(Read): TUIKitLocalizableString(Unread);
-    if(data.status == Msg_Status_Fail){
-        [_indicator stopAnimating];
-        self.retryView.image = [UIImage imageNamed:TUIChatImagePath(@"msg_error")];
-        _readReceiptLabel.hidden = YES;
-    } else {
-        if (data.status == Msg_Status_Sending_2) {
-            [_indicator startAnimating];
-            _readReceiptLabel.hidden = YES;
-        }
-        else if(data.status == Msg_Status_Succ){
-            [_indicator stopAnimating];
-            //发送成功，说明 indicator 和 error 已不会显示在 label 中,可以开始显示已读回执label
-            if(self.messageData.direction == MsgDirectionOutgoing
-               && self.messageData.showReadReceipt
-               && self.messageData.innerMessage.userID.length > 0){//只对发送的消息进行label显示。
-                _readReceiptLabel.hidden = NO;
-            }
-            
-        }
-        else if(data.status == Msg_Status_Sending){
-            [_indicator stopAnimating];
-            _readReceiptLabel.hidden = YES;
-        }
-        self.retryView.image = nil;
-    }
+    //error
+    _retryView = [[UIImageView alloc] init];
+    _retryView.userInteractionEnabled = YES;
+    UITapGestureRecognizer *resendTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onRetryMessage:)];
+    [_retryView addGestureRecognizer:resendTap];
+    [self.contentView addSubview:_retryView];
     
-    NSString *imageName = (data.showCheckBox && data.selected) ? TUICoreImagePath(@"icon_select_selected") : TUICoreImagePath(@"icon_select_normal");
-    self.selectedIcon.image = [UIImage imageNamed:imageName];
+    //已读label,由于 indicator 和 error，所以默认隐藏，消息发送成功后进行显示
+    _readReceiptLabel = [[UILabel alloc] init];
+    _readReceiptLabel.hidden = YES;
+    _readReceiptLabel.font = [UIFont systemFontOfSize:12];
+    _readReceiptLabel.textColor = [UIColor d_systemGrayColor];
+    _readReceiptLabel.lineBreakMode = NSLineBreakByCharWrapping;
+    UITapGestureRecognizer *showReadReceiptTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSelectReadReceipt:)];
+    [_readReceiptLabel addGestureRecognizer:showReadReceiptTap];
+    _readReceiptLabel.userInteractionEnabled = YES;
+    [self.contentView addSubview:_readReceiptLabel];
     
-    _timeLabel.text = [TUITool convertDateToStr:data.innerMessage.timestamp];
+    // selectedIcon
+    _selectedIcon = [[UIImageView alloc] init];
+    [self.contentView addSubview:_selectedIcon];
     
-    // 高亮文本 - 此处异步是为了让其执行顺序与子类一致
-    __weak typeof(self) weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf highlightWhenMatchKeyword:data.highlightKeyword];
-    });
+    // selectedView
+    _selectedView = [UIButton buttonWithType:UIButtonTypeCustom];
+    _selectedView.backgroundColor = [UIColor clearColor];
+    [_selectedView addTarget:self action:@selector(onSelectMessage:) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_selectedView];
+    
+    // timeLabel
+    _timeLabel = [[UILabel alloc] init];
+    _timeLabel.textColor = [UIColor darkGrayColor];
+    _timeLabel.font = [UIFont systemFontOfSize:11.0];
+    [self.contentView addSubview:_timeLabel];
+    
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    self.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
+    self.contentView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
 }
 
-- (void)highlightWhenMatchKeyword:(NSString *)keyword
-{
-    static NSString * const key = @"highlightAnimation";
-    if (keyword && keyword.length) {
-        if (self.highlightAnimating) {
-            return;
-        }
-        self.highlightAnimating = YES;
-        CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"backgroundColor"];
-        animation.repeatCount = 3;
-        animation.values = @[
-                                (id)[[UIColor orangeColor] colorWithAlphaComponent:0.2].CGColor,
-                                (id)[[UIColor orangeColor] colorWithAlphaComponent:0.5].CGColor,
-                                (id)[[UIColor orangeColor] colorWithAlphaComponent:0.2].CGColor,
-                            ];
-        animation.duration = 0.5;
-        animation.removedOnCompletion = YES;
-        animation.delegate = self;
-        [self.highlightAnimateView.layer addAnimation:animation forKey:key];
-    } else {
-        [self.highlightAnimateView.layer removeAnimationForKey:key];
-    }
-}
-
-- (UIView *)highlightAnimateView
-{
-    return self.container;
-}
-
-- (void)animationDidStart:(CAAnimation *)anim
-{
-    self.highlightAnimating = YES;
-}
-
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
-{
-    self.highlightAnimating = NO;
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews]; 
+- (void)layoutSubviews {
+    [super layoutSubviews];
     if (self.messageData.showName) {
         _nameLabel.mm_sizeToFitThan(1, 20);
         _nameLabel.hidden = NO;
@@ -273,13 +176,171 @@
         self.nameLabel.mm_right(_container.mm_r);
         self.indicator.mm_sizeToFit().mm__centerY(_container.mm_centerY).mm_left(_container.mm_x - 8 - _indicator.mm_w);
         self.retryView.frame = self.indicator.frame;
+        
         //这里不能像 retryView 一样直接使用 indicator 的设定，否则内容会显示不全。
-        self.readReceiptLabel.mm_sizeToFit().mm_bottom(self.container.mm_b + cellLayout.bubbleInsets.bottom).mm_left(_container.mm_x - 8 - _readReceiptLabel.mm_w);
+        self.readReceiptLabel.mm_sizeToFit().mm_bottom(self.container.mm_b).mm_left(_container.mm_x - 8 - _readReceiptLabel.mm_w);
         
     }
 }
 
+- (void)setupRAC {
+    @weakify(self);
+    [RACObserve(self, readReceiptLabel.text) subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        if ([self shouldHighlightReadReceiptLabel]) {
+            self.readReceiptLabel.textColor = TUIChatDynamicColor(@"chat_message_read_status_text_color", @"#147AFF");
+        } else {
+            self.readReceiptLabel.textColor = TUIChatDynamicColor(@"chat_message_read_status_text_gray_color", @"#BBBBBB");
+        }
+    }];
+}
 
+- (void)prepareForReuse{
+    [super prepareForReuse];
+    //今后任何关于复用产生的 UI 问题，都可以在此尝试编码解决。
+    _readReceiptLabel.text = TUIKitLocalizableString(Unread); // @"未读";//一但消息复用，说明即将新消息出现，label内容改为未读。
+    _readReceiptLabel.hidden = YES;
+}
+
+#pragma mark - Public
+- (void)fillWithData:(TUIMessageCellData *)data
+{
+    [super fillWithData:data];
+    self.messageData = data;
+
+    [self.avatarView setImage:data.avatarImage];
+    @weakify(self)
+    [[[RACObserve(data, avatarUrl) takeUntil:self.rac_prepareForReuseSignal] ignore:nil] subscribeNext:^(NSURL *url) {
+        @strongify(self)
+        [self.avatarView sd_setImageWithURL:url placeholderImage:self.messageData.avatarImage];
+    }];
+
+
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = data.cellLayout.avatarSize.height / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+    
+    //set data
+    self.nameLabel.text = data.name;
+    self.nameLabel.textColor = data.nameColor;
+    self.nameLabel.font = data.nameFont;
+    
+    //由于tableView的刷新策略，导致部分情况下可能会出现未读label未显示的bug。原因是因为在label显示时，内容为空。
+    //label内容的变化不会引起tableView的刷新，但是hiddend状态的变化会引起tableView刷新。
+    //所以未读标签选择直接赋值，而不是在发送成功时赋值。显示时机由hidden属性控制。
+    [self updateReadLabelText];
+    
+    if (data.status == Msg_Status_Fail ){
+        [_indicator stopAnimating];
+        self.retryView.image = [UIImage imageNamed:TUIChatImagePath(@"msg_error")];
+        _readReceiptLabel.hidden = YES;
+    } else {
+        if (data.status == Msg_Status_Sending_2) {
+            [_indicator startAnimating];
+            _readReceiptLabel.hidden = YES;
+        }
+        else if(data.status == Msg_Status_Succ) {
+            [_indicator stopAnimating];
+            // 发送成功，说明 indicator 和 error 已不会显示在 label，可以开始显示已读回执 label
+            if (self.messageData.direction == MsgDirectionOutgoing
+                && self.messageData.innerMessage.needReadReceipt
+                && (self.messageData.innerMessage.userID || self.messageData.innerMessage.groupID)
+                && ![self.messageData isKindOfClass:TUISystemMessageCellData.class]
+               ) {
+                // 群聊和单聊，默认都要显示
+                _readReceiptLabel.hidden = NO;
+            }
+        }
+        else if (data.status == Msg_Status_Sending) {
+            [_indicator stopAnimating];
+            _readReceiptLabel.hidden = YES;
+        }
+        self.retryView.image = nil;
+    }
+    
+    NSString *imageName = (data.showCheckBox && data.selected) ? TUICoreImagePath(@"icon_select_selected") : TUICoreImagePath(@"icon_select_normal");
+    self.selectedIcon.image = [UIImage imageNamed:imageName];
+    
+    _timeLabel.text = [TUITool convertDateToStr:data.innerMessage.timestamp];
+    
+    // 高亮文本 - 此处异步是为了让其执行顺序与子类一致
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakSelf highlightWhenMatchKeyword:data.highlightKeyword];
+    });
+}
+
+- (void)highlightWhenMatchKeyword:(NSString *)keyword
+{
+    static NSString * const key = @"highlightAnimation";
+    if (keyword && keyword.length) {
+        if (self.highlightAnimating) {
+            return;
+        }
+        self.highlightAnimating = YES;
+        CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"backgroundColor"];
+        animation.repeatCount = 3;
+        animation.values = @[
+                                (id)[[UIColor orangeColor] colorWithAlphaComponent:0.2].CGColor,
+                                (id)[[UIColor orangeColor] colorWithAlphaComponent:0.5].CGColor,
+                                (id)[[UIColor orangeColor] colorWithAlphaComponent:0.2].CGColor,
+                            ];
+        animation.duration = 0.5;
+        animation.removedOnCompletion = YES;
+        animation.delegate = self;
+        [self.highlightAnimateView.layer addAnimation:animation forKey:key];
+    } else {
+        [self.highlightAnimateView.layer removeAnimationForKey:key];
+    }
+}
+
+- (void)updateReadLabelText {
+    if (self.messageData.innerMessage.groupID.length > 0) {
+        // group message
+        NSString *text = TUIKitLocalizableString(Unread);
+        if (self.messageData.messageReceipt == nil) {
+            // haven't received the message receipt yet
+            return;
+        }
+        NSInteger readCount = self.messageData.messageReceipt.readCount;
+        NSInteger unreadCount = self.messageData.messageReceipt.unreadCount;
+        if (unreadCount == 0) {
+            // show "All read"
+            text = TUIKitLocalizableString(TUIKitMessageReadAllRead);
+        } else if (readCount > 0) {
+            // show "x read"
+            text = [NSString stringWithFormat:@"%ld %@", (long)readCount, TUIKitLocalizableString(TUIKitMessageReadPartRead)];
+        }
+        self.readReceiptLabel.text = text;
+    } else {
+        // c2c message
+        self.readReceiptLabel.text = self.messageData.innerMessage.isPeerRead ? TUIKitLocalizableString(Read): TUIKitLocalizableString(Unread);
+    }
+    TUIMessageCellLayout *cellLayout = self.messageData.cellLayout;
+    self.readReceiptLabel.mm_sizeToFit().mm_bottom(self.container.mm_b).mm_left(_container.mm_x - 8 - _readReceiptLabel.mm_w);
+}
+
+- (UIView *)highlightAnimateView
+{
+    return self.container;
+}
+
+#pragma mark - Private
+- (void)animationDidStart:(CAAnimation *)anim
+{
+    self.highlightAnimating = YES;
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
+    self.highlightAnimating = NO;
+}
+
+#pragma mark -- Event
 - (void)onLongPress:(UIGestureRecognizer *)recognizer
 {
     if([recognizer isKindOfClass:[UILongPressGestureRecognizer class]] &&
@@ -320,9 +381,20 @@
     }
 }
 
-- (void)prepareForReuse{
-    [super prepareForReuse];
-    //今后任何关于复用产生的 UI 问题，都可以在此尝试编码解决。
-    _readReceiptLabel.text = TUIKitLocalizableString(Unread); // @"未读";//一但消息复用，说明即将新消息出现，label内容改为未读。
+- (void)onSelectReadReceipt:(UITapGestureRecognizer *)gesture {
+    if (self.messageData.innerMessage.groupID.length == 0) {
+        return;
+    }
+    if (![self shouldHighlightReadReceiptLabel]) {
+        return;
+    }
+    if (_delegate && [_delegate respondsToSelector:@selector(onSelectReadReceipt:)]) {
+        [_delegate onSelectReadReceipt:self.messageData];
+    }
 }
+
+- (BOOL)shouldHighlightReadReceiptLabel {
+    return ![self.readReceiptLabel.text isEqualToString:TUIKitLocalizableString(TUIKitMessageReadAllRead)];
+}
+
 @end

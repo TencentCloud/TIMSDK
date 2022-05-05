@@ -34,8 +34,7 @@ static TUIInputMoreCellData *TUI_GroupLivePlay_MoreCell;
     if (!TUI_Picture_MoreCell) {
         TUI_Picture_MoreCell = [[TUIInputMoreCellData alloc] init];
         TUI_Picture_MoreCell.title = TUIKitLocalizableString(TUIKitMoreCamera);
-        TUI_Picture_MoreCell.image = TUIChatDynamicImage(@"chat_more_camera_img", [UIImage d_imageNamed:@"more_camera" bundle:TUIChatBundle]);
-
+        TUI_Picture_MoreCell.image = TUIChatBundleThemeImage(@"chat_more_camera_img", @"more_camera");
     }
     return TUI_Picture_MoreCell;
 }
@@ -50,7 +49,7 @@ static TUIInputMoreCellData *TUI_GroupLivePlay_MoreCell;
     if (!TUI_Photo_MoreCell) {
         TUI_Photo_MoreCell = [[TUIInputMoreCellData alloc] init];
         TUI_Photo_MoreCell.title = TUIKitLocalizableString(TUIKitMorePhoto);
-        TUI_Photo_MoreCell.image = TUIChatDynamicImage(@"chat_more_picture_img", [UIImage d_imageNamed:@"more_picture" bundle:TUIChatBundle]);
+        TUI_Photo_MoreCell.image = TUIChatBundleThemeImage(@"chat_more_picture_img", @"more_picture");
     }
     return TUI_Photo_MoreCell;
 }
@@ -65,7 +64,7 @@ static TUIInputMoreCellData *TUI_GroupLivePlay_MoreCell;
     if (!TUI_Video_MoreCell) {
         TUI_Video_MoreCell = [[TUIInputMoreCellData alloc] init];
         TUI_Video_MoreCell.title = TUIKitLocalizableString(TUIKitMoreVideo);
-        TUI_Video_MoreCell.image = TUIChatDynamicImage(@"chat_more_video_img", [UIImage d_imageNamed:@"more_video" bundle:TUIChatBundle]);
+        TUI_Video_MoreCell.image = TUIChatBundleThemeImage(@"chat_more_video_img", @"more_video");
     }
     return TUI_Video_MoreCell;
 }
@@ -80,7 +79,7 @@ static TUIInputMoreCellData *TUI_GroupLivePlay_MoreCell;
     if (!TUI_File_MoreCell) {
         TUI_File_MoreCell = [[TUIInputMoreCellData alloc] init];
         TUI_File_MoreCell.title = TUIKitLocalizableString(TUIKitMoreFile);
-        TUI_File_MoreCell.image = TUIChatDynamicImage(@"chat_more_file_img", [UIImage d_imageNamed:@"more_file" bundle:TUIChatBundle]);
+        TUI_File_MoreCell.image = TUIChatBundleThemeImage(@"chat_more_file_img", @"more_file");
     }
     return TUI_File_MoreCell;
 }

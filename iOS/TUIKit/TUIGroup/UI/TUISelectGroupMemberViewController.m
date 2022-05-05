@@ -55,7 +55,7 @@
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     
-    self.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
     
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:self.cancelBtn];
     self.navigationItem.leftBarButtonItem = item;
@@ -73,6 +73,13 @@
     topPadding = MAX(26, topPadding);
     CGFloat navBarHeight = self.navigationController.navigationBar.bounds.size.height;
     self.topStartPosition = topPadding + (navBarHeight > 0 ? navBarHeight : 44);
+    //Fix  translucent = NO;
+    CGRect rect = self.view.bounds;
+    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
+        self.topStartPosition = 0;
+        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
+        self.selectTable.frame = rect;
+    }
     self.memberList = [NSMutableArray array];
     self.selectedUsers = [NSMutableArray array];
     self.indicatorView.frame = CGRectMake(0, 0, self.view.bounds.size.width, TMessageController_Header_Height);

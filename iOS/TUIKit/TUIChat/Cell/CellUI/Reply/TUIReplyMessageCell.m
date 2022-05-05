@@ -62,9 +62,17 @@
     
     self.senderLabel.text = [NSString stringWithFormat:@"%@:", data.sender];
     if (data.direction == MsgDirectionIncoming) {
-        self.contentLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_content_recv_text_color", @"#000000");
+        self.contentLabel.textColor =
+        TUIChatDynamicColor(@"chat_reply_message_content_recv_text_color", @"#000000");
+        self.senderLabel.textColor =
+        TUIChatDynamicColor(@"chat_reply_message_quoteView_recv_text_color", @"#888888");
+        self.quoteView.backgroundColor = TUIChatDynamicColor(@"chat_reply_message_quoteView_bg_color", @"#4444440c");
     } else {
-        self.contentLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_content_text_color", @"#000000");
+        self.contentLabel.textColor =
+        TUIChatDynamicColor(@"chat_reply_message_content_text_color", @"#000000");
+        self.senderLabel.textColor =
+        TUIChatDynamicColor(@"chat_reply_message_quoteView_text_color", @"#888888");
+        self.quoteView.backgroundColor = [UIColor colorWithRed:68/255.0 green:68/255.0 blue:68/255.0 alpha:0.05];
     }
     self.contentLabel.attributedText = [data.content getFormatEmojiStringWithFont:self.contentLabel.font emojiLocations:nil];
     
@@ -132,7 +140,33 @@
     
     if (view == nil) {
         // 外部未实现，默认使用文本
-        view = [[TUITextReplyQuoteView alloc] init];
+        TUITextReplyQuoteView* quoteView = [[TUITextReplyQuoteView alloc] init];
+        view = quoteView;
+    }
+    
+    if ([view isKindOfClass:[TUITextReplyQuoteView class]] ) {
+        TUITextReplyQuoteView* quoteView = (TUITextReplyQuoteView*)view;
+        if (self.replyData.direction == MsgDirectionIncoming) {
+            quoteView.textLabel.textColor =
+            TUIChatDynamicColor(@"chat_reply_message_quoteView_recv_text_color", @"#888888");
+        }
+        else {
+            quoteView.textLabel.textColor =
+            TUIChatDynamicColor(@"chat_reply_message_quoteView_text_color", @"#888888");
+        }
+    }
+    else if ([view isKindOfClass:[TUIMergeReplyQuoteView class]]) {
+        TUIMergeReplyQuoteView * quoteView = (TUIMergeReplyQuoteView *)view;
+        if (self.replyData.direction == MsgDirectionIncoming) {
+            quoteView.titleLabel.textColor =
+            quoteView.subTitleLabel.textColor =
+            TUIChatDynamicColor(@"chat_reply_message_quoteView_recv_text_color", @"#888888");
+        }
+        else {
+            quoteView.titleLabel.textColor =
+            quoteView.subTitleLabel.textColor =
+            TUIChatDynamicColor(@"chat_reply_message_quoteView_text_color", @"#888888");
+        }
     }
     
     if (!reuse) {
@@ -174,7 +208,7 @@
 {
     if (_quoteView == nil) {
         _quoteView = [[UIView alloc] init];
-        _quoteView.backgroundColor = [UIColor colorWithRed:68/255.0 green:68/255.0 blue:68/255.0 alpha:0.05];
+        _quoteView.backgroundColor = TUIChatDynamicColor(@"chat_reply_message_quoteView_bg_color", @"#4444440c");
     }
     return _quoteView;
 }

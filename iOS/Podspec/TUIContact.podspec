@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIContact'
-  spec.version      = '6.1.2166'
+  spec.version      = '6.2.2363'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,12 +16,12 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.1.2166/ios/TUIContact.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/6.2.2363/ios/TUIContact.zip'}
 
   spec.subspec 'Cell' do |cell|
     cell.subspec 'CellData' do |cellData|
       cellData.source_files = '**/TUIContact/Cell/CellData/*.{h,m,mm}'
-      cellData.dependency 'TUICore','6.1.2166'
+      cellData.dependency 'TUICore','6.2.2363'
     end
 
     cell.subspec 'CellUI' do |cellUI|

@@ -33,13 +33,16 @@ static NSString * const HFId = @"HFId";
     _dataProvider = [[TUISearchDataProvider alloc] init];
     _dataProvider.delegate = self;
     [self setupViews];
+    [TUITool addUnsupportNotificationInVC:self];
+}
+
+- (void)dealloc {
+    NSLog(@"%s dealloc", __FUNCTION__);
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setupViews
 {
-    self.navigationController.navigationBar.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:[UIColor groupTableViewBackgroundColor]] forBarMetrics:UIBarMetricsDefault];
-    self.navigationController.navigationBar.shadowImage = [UIImage new];
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
     _searchBar = [[TUISearchBar alloc] init];
     [_searchBar setEntrance:NO];
@@ -69,17 +72,11 @@ static NSString * const HFId = @"HFId";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:[UIColor groupTableViewBackgroundColor]] forBarMetrics:UIBarMetricsDefault];
-    self.navigationController.navigationBar.shadowImage = [UIImage new];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    self.navigationController.navigationBar.backgroundColor = nil;
-    [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
-    self.navigationController.navigationBar.shadowImage = nil;
 }
 
 #pragma mark - TUISearchResultDelegate

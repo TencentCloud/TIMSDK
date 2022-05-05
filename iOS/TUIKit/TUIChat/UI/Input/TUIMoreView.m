@@ -54,7 +54,7 @@
     [self addSubview:_moreCollectionView];
 
     _lineView = [[UIView alloc] init];
-    _lineView.backgroundColor =  TUICoreDynamicColor(@"separtor_color", @"#BCBCBC");
+    _lineView.backgroundColor =  TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
     [self addSubview:_lineView];
 
     _pageControl = [[UIPageControl alloc] init];

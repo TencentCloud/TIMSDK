@@ -112,7 +112,7 @@ static CGFloat progressLayerLineWidth = 5.0;
         
         CGFloat switchCameraButtonWidth = 44.0;
         self.switchCameraButton.frame = CGRectMake(self.contentView.bounds.size.width - switchCameraButtonWidth - 16.0,
-                                                   20.0,
+                                                   30.0,
                                                    switchCameraButtonWidth,
                                                    switchCameraButtonWidth);
         

@@ -44,25 +44,25 @@
     
     self.mainPlayBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.mainPlayBtn.contentMode = UIViewContentModeScaleToFill;
-    [self.mainPlayBtn setImage:[UIImage d_imagePath:TUIChatImagePath(@"video_play_big")] forState:UIControlStateNormal];
+    [self.mainPlayBtn setImage: TUIChatCommonBundleImage(@"video_play_big") forState:UIControlStateNormal];
     [self.mainPlayBtn addTarget:self action:@selector(onPlayBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.mainPlayBtn];
 
     self.playBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.playBtn.contentMode = UIViewContentModeScaleToFill;
-    [self.playBtn setImage:[UIImage d_imagePath:TUIChatImagePath(@"video_play")] forState:UIControlStateNormal];
+    [self.playBtn setImage:TUIChatCommonBundleImage(@"video_play") forState:UIControlStateNormal];
     [self.playBtn addTarget:self action:@selector(onPlayBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.playBtn];
     
     self.closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.closeBtn.contentMode = UIViewContentModeScaleToFill;
-    [self.closeBtn setImage:[UIImage d_imagePath:TUIChatImagePath(@"video_close")] forState:UIControlStateNormal];
+    [self.closeBtn setImage:TUIChatCommonBundleImage(@"video_close") forState:UIControlStateNormal];
     [self.closeBtn addTarget:self action:@selector(onCloseBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.closeBtn];
     
     self.downloadBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.downloadBtn.contentMode = UIViewContentModeScaleToFill;
-    [self.downloadBtn setImage:[UIImage d_imagePath:TUIChatImagePath(@"download")] forState:UIControlStateNormal];
+    [self.downloadBtn setImage:TUIChatCommonBundleImage(@"download") forState:UIControlStateNormal];
     [self.downloadBtn addTarget:self action:@selector(onDownloadBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.downloadBtn];
     
@@ -237,14 +237,14 @@
     [self.player play];
     self.imageView.hidden = YES;
     self.mainPlayBtn.hidden = YES;
-    [self.playBtn setImage:[UIImage d_imagePath:TUIChatImagePath(@"video_pause")] forState:UIControlStateNormal];
+    [self.playBtn setImage: TUIChatCommonBundleImage(@"video_pause") forState:UIControlStateNormal];
 }
 
 - (void)stopPlay {
     self.isPlay = NO;
     [self.player pause];
     self.mainPlayBtn.hidden = NO;
-    [self.playBtn setImage:[UIImage d_imagePath:TUIChatImagePath(@"video_play")] forState:UIControlStateNormal];
+    [self.playBtn setImage:TUIChatCommonBundleImage(@"video_play") forState:UIControlStateNormal];
 }
 
 #pragma video save

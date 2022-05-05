@@ -640,6 +640,47 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
     }
 }
 
+- (void)showAuthorizationAlert:(int)type {
+    NSString * title = @"";
+    NSString * message = @"";
+    NSString * laterMessage = @"";
+    NSString * openSettingMessage = @"";
+    //mic
+    if (1 == type) {
+        title = CallingLocalize(@"Demo.TRTC.Calling.failedtogetmicrophonepermission.Title");
+        message = CallingLocalize(@"Demo.TRTC.Calling.failedtogetmicrophonepermission.Tips");
+        laterMessage = CallingLocalize(@"Demo.TRTC.Calling.failedtogetmicrophonepermission.Later");
+        openSettingMessage = CallingLocalize(@"Demo.TRTC.Calling.failedtogetmicrophonepermission.Enable");
+    }
+    //camera
+    else if (2 == type){
+        title = CallingLocalize(@"Demo.TRTC.Calling.failedtogetcamerapermission.Title");
+        message = CallingLocalize(@"Demo.TRTC.Calling.failedtogetcamerapermission.Tips");
+        laterMessage = CallingLocalize(@"Demo.TRTC.Calling.failedtogetcamerapermission.Later");
+        openSettingMessage = CallingLocalize(@"Demo.TRTC.Calling.failedtogetcamerapermission.Enable");
+    }
+    else {
+        return;
+    }
+    if (@available(iOS 8.0, *)) {
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:laterMessage style:UIAlertActionStyleCancel handler:nil]];
+        [ac addAction:[UIAlertAction actionWithTitle:openSettingMessage style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIApplication *app = [UIApplication sharedApplication];
+            NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+            if ([app canOpenURL:settingsURL]) {
+                [app openURL:settingsURL];
+            }
+        }]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UIApplication.sharedApplication.keyWindow.rootViewController presentViewController:ac animated:YES completion:nil];
+        });
+    } else {
+        // Fallback on earlier versions
+    }
+   
+
+}
 - (NSString *)currentUserId {
     return [[V2TIMManager sharedInstance] getLoginUser];
 }
@@ -694,11 +735,11 @@ typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
     AVAuthorizationStatus statusAudio = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     AVAuthorizationStatus statusVideo = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if (statusAudio == AVAuthorizationStatusDenied) {
-        [[TUICommonUtil getRootWindow] makeToast:CallingLocalize(@"Demo.TRTC.Calling.failedtogetmicrophonepermission")];
+        [self showAuthorizationAlert:1];
         return YES;
     }
     if ((self.currentCallingType == TUICallingTypeVideo) && (statusVideo == AVAuthorizationStatusDenied)) {
-        [[TUICommonUtil getRootWindow] makeToast:CallingLocalize(@"Demo.TRTC.Calling.failedtogetcamerapermission")];
+        [self showAuthorizationAlert:2];
         return YES;
     }
     return NO;

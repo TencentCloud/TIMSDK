@@ -7,6 +7,7 @@
 
 #import "TUIFileReplyQuoteViewData.h"
 #import "TUIFileMessageCellData.h"
+#import "TUIThemeManager.h"
 
 @implementation TUIFileReplyQuoteViewData
 
@@ -22,7 +23,7 @@
     
     TUIFileReplyQuoteViewData *myData = [[TUIFileReplyQuoteViewData alloc] init];
     myData.text = [(TUIFileMessageCellData *)originCellData fileName];
-    myData.icon = [UIImage d_imageNamed:@"msg_file" bundle:TUIChatBundle];
+    myData.icon = TUIChatCommonBundleImage(@"msg_file");
     myData.originCellData = originCellData;
     return myData;
 }

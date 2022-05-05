@@ -25,7 +25,7 @@
 
     self.downloadBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.downloadBtn.contentMode = UIViewContentModeScaleToFill;
-    [self.downloadBtn setImage:[UIImage d_imagePath:TUIChatImagePath(@"download")] forState:UIControlStateNormal];
+    [self.downloadBtn setImage: TUIChatCommonBundleImage(@"download") forState:UIControlStateNormal];
     [self.downloadBtn addTarget:self action:@selector(onDownloadBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.downloadBtn];
     

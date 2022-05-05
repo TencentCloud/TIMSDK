@@ -51,7 +51,7 @@
     self.backgroundColor = TUIGroupDynamicColor(@"group_modify_view_bg_color", @"#FFFFFF7F");
 
     _container = [[UIView alloc] initWithFrame:CGRectMake(0, Screen_Height, kContainerWidth, kContainerHeight)];
-    _container.backgroundColor = TUIGroupDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");// [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+    _container.backgroundColor = TUIGroupDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");
     _container.layer.cornerRadius = 8;
     [_container.layer setMasksToBounds:YES];
     [self addSubview:_container];
@@ -67,7 +67,7 @@
     [_container addSubview:_title];
     
     _hLine = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_title.frame), kContainerWidth, TLine_Heigh)];
-    _hLine.backgroundColor = TUICoreDynamicColor(@"separtor_color", @"#BCBCBC99");
+    _hLine.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#BCBCBC99");
     [_container addSubview:_hLine];
     
     CGFloat contentMargin = 20;

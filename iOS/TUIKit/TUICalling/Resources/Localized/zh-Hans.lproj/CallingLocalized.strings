@@ -52,6 +52,18 @@
 
 "Demo.TRTC.Calling.failedtogetcamerapermission" = "获取摄像头权限失败，请前往隐私-相机设置里面打开应用权限";
 "Demo.TRTC.Calling.failedtogetmicrophonepermission" = "获取麦克风权限失败，请前往隐私-麦克风设置里面打开应用权限";
+
+"Demo.TRTC.Calling.failedtogetcamerapermission.Title" = "相机权限未开启";
+"Demo.TRTC.Calling.failedtogetcamerapermission.Tips"  = "无法使用视频通话功能，点击\"去开启\"打开相机权限";
+"Demo.TRTC.Calling.failedtogetcamerapermission.Later" = "以后再说";
+"Demo.TRTC.Calling.failedtogetcamerapermission.Enable" = "去开启";
+
+"Demo.TRTC.Calling.failedtogetmicrophonepermission.Title" = "麦克风权限未开启";
+"Demo.TRTC.Calling.failedtogetmicrophonepermission.Tips"  = "无法使用发送音视频通话功能，点击\"去开启\"打开麦克风权限";
+"Demo.TRTC.Calling.failedtogetmicrophonepermission.Later" = "以后再说";
+"Demo.TRTC.Calling.failedtogetmicrophonepermission.Enable" = "去开启";
+
+
 "Demo.TRTC.Calling.calleeTip" = "他们也在";
 
 "Demo.TRTC.Calling.FloatingWindow.waitaccept" = "等待接听";

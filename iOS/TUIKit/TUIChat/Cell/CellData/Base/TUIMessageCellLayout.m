@@ -23,7 +23,7 @@
             };
             self.messageInsets = (UIEdgeInsets){
                 .top = 3,
-                .bottom = 1,
+                .bottom = 17,
                 .left = 8,
             };
         } else {
@@ -34,7 +34,7 @@
             };
             self.messageInsets = (UIEdgeInsets){
                 .top = 3,
-                .bottom = 1,
+                .bottom = 17,
                 .right = 8,
             };
         }
@@ -70,7 +70,7 @@ static TUIMessageCellLayout *sIncommingTextMessageLayout;
 {
     if (!sIncommingTextMessageLayout) {
         sIncommingTextMessageLayout = [[TUIMessageCellLayout alloc] init:YES];
-        sIncommingTextMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 12, .bottom = 12, .left = 16, .right = 16};
+        sIncommingTextMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 10.5, .bottom = 10.5, .left = 16, .right = 16};
     }
     return sIncommingTextMessageLayout;
 }
@@ -81,7 +81,7 @@ static TUIMessageCellLayout *sOutgingTextMessageLayout;
 {
     if (!sOutgingTextMessageLayout) {
         sOutgingTextMessageLayout = [[TUIMessageCellLayout alloc] init:NO];
-        sOutgingTextMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 12, .bottom = 12, .left = 16, .right = 16};
+        sOutgingTextMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 10.5, .bottom = 10.5, .left = 16, .right = 16};
     }
     return sOutgingTextMessageLayout;
 }

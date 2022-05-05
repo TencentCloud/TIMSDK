@@ -8,6 +8,16 @@
 #import "TUIMessageSearchDataProvider.h"
 #import "TUIMessageDataProvider+ProtectedAPI.h"
 
+typedef void(^LoadSearchMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs);
+typedef void(^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, BOOL isFirstLoad, NSArray<TUIMessageCellData *> *newUIMsgs);
+
+@interface TUIMessageSearchDataProvider()
+
+@property (nonatomic, copy) LoadSearchMsgSucceedBlock loadSearchMsgSucceedBlock;
+@property (nonatomic, copy) LoadMsgSucceedBlock loadMsgSucceedBlock;
+
+@end
+
 @implementation TUIMessageSearchDataProvider
 
 - (instancetype)init {
@@ -31,6 +41,7 @@
     self.isLoadingData = YES;
     self.isOlderNoMoreMsg = NO;
     self.isNewerNoMoreMsg = NO;
+    self.loadSearchMsgSucceedBlock = SucceedBlock;
     
     dispatch_group_t group = dispatch_group_create();
     __block NSArray *olders = @[];
@@ -124,18 +135,16 @@
             [self.heightCache_ removeAllObjects];
             [self.uiMsgs_ removeAllObjects];
             
-            NSMutableArray *uiMsgs = [self transUIMsgFromIMMsg:results.reverseObjectEnumerator.allObjects];
-            @weakify(self)
-            [self preProcessReplyMessage:uiMsgs callback:^{
-                @strongify(self)
-                [self.uiMsgs_ addObjectsFromArray:uiMsgs];
-                SucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.uiMsgs_);
+            NSArray *msgs = results.reverseObjectEnumerator.allObjects;
+            NSMutableArray *uiMsgs = [self transUIMsgFromIMMsg:msgs];
+            [self getGroupMessageReceipts:msgs uiMsgs:uiMsgs succ:^{
+                [self preprocessReplyMessage:uiMsgs];
+            } fail:^{
+                [self preprocessReplyMessage:uiMsgs];
             }];
-            
         });
     });
 }
-
 
 - (void)loadMessageWithIsRequestOlderMsg:(BOOL)orderType
                         ConversationInfo:(TUIChatConversationModel *)conversation
@@ -143,6 +152,7 @@
                                FailBlock:(V2TIMFail)FailBlock {
     
     self.isLoadingData = YES;
+    self.loadMsgSucceedBlock = SucceedBlock;
     
     int requestCount = self.pageCount;
     V2TIMMessageListGetOption *option = [[V2TIMMessageListGetOption alloc] init];
@@ -153,7 +163,7 @@
     option.lastMsg = orderType ? self.msgForOlderGet : self.msgForNewerGet;
     @weakify(self);
     [V2TIMManager.sharedInstance getHistoryMessageList:option succ:^(NSArray<V2TIMMessage *> *msgs) {
-        @strongify(self);
+        @strongify(self)
         if (!orderType) {
             // 逆序
             msgs = msgs.reverseObjectEnumerator.allObjects;
@@ -191,30 +201,71 @@
         }
         
         // 转换数据
-        @weakify(self)
         NSMutableArray<TUIMessageCellData *> *uiMsgs = [self transUIMsgFromIMMsg:msgs];
-        [self preProcessReplyMessage:uiMsgs callback:^{
-            @strongify(self)
-            
-            if (orderType) {
-                NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
-                [self.uiMsgs_ insertObjects:uiMsgs atIndexes:indexSet];
-            } else {
-                [self.uiMsgs_ addObjectsFromArray:uiMsgs];
-            }
-            
-            // 回调
-            SucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.isFirstLoad, uiMsgs);
-            
-            self.isLoadingData = NO;
-            self.isFirstLoad = NO;
+        [self getGroupMessageReceipts:msgs uiMsgs:uiMsgs succ:^{
+            [self preprocessReplyMessage:uiMsgs orderType:orderType];
+        } fail:^{
+            [self preprocessReplyMessage:uiMsgs orderType:orderType];
         }];
-        
-
     } fail:^(int code, NSString *desc) {
         self.isLoadingData = NO;
     }];
 }
+
+- (void)getGroupMessageReceipts:(NSArray *)msgs uiMsgs:(NSArray *)uiMsgs succ:(void (^)(void))succBlock fail:(void (^)(void))failBlock {
+    [[V2TIMManager sharedInstance] getMessageReadReceipts:msgs
+                                                     succ:^(NSArray<V2TIMMessageReceipt *> *receiptList) {
+        NSLog(@"getGroupMessageReceipts succeed, receiptList: %@", receiptList);
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        for (V2TIMMessageReceipt *receipt in receiptList) {
+            [dict setObject:receipt forKey:receipt.msgID];
+        }
+        for (TUIMessageCellData *data in uiMsgs) {
+            V2TIMMessageReceipt *receipt = dict[data.msgID];
+            data.messageReceipt = receipt;
+        }
+        
+        if (succBlock) {
+            succBlock();
+        }
+    }
+                                                      fail:^(int code, NSString *desc) {
+        NSLog(@"getGroupMessageReceipts failed, code: %d, desc: %@", code, desc);
+        if (failBlock) {
+            failBlock();
+        }
+    }];
+}
+
+- (void)preprocessReplyMessage:(NSArray *)uiMsgs {
+    @weakify(self)
+    [self preProcessReplyMessage:uiMsgs callback:^{
+        @strongify(self)
+        [self.uiMsgs_ addObjectsFromArray:uiMsgs];
+        self.loadSearchMsgSucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.uiMsgs_);
+    }];
+}
+
+- (void)preprocessReplyMessage:(NSArray *)uiMsgs orderType:(BOOL)orderType {
+    @weakify(self)
+    [self preProcessReplyMessage:uiMsgs callback:^{
+        @strongify(self)
+        
+        if (orderType) {
+            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
+            [self.uiMsgs_ insertObjects:uiMsgs atIndexes:indexSet];
+        } else {
+            [self.uiMsgs_ addObjectsFromArray:uiMsgs];
+        }
+        
+        // 回调
+        self.loadMsgSucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.isFirstLoad, uiMsgs);
+        
+        self.isLoadingData = NO;
+        self.isFirstLoad = NO;
+    }];
+}
+
 
 - (void)removeAllSearchData {
     [self.uiMsgs_ removeAllObjects];
@@ -223,6 +274,7 @@
     self.isFirstLoad = YES;
     self.msgForNewerGet = nil;
     self.msgForOlderGet = nil;
+    self.loadSearchMsgSucceedBlock = nil;
 }
 
 - (void)findMessages:(NSArray<NSString *> *)msgIDs callback:(void(^)(BOOL success, NSString *desc, NSArray<V2TIMMessage *> *messages))callback

@@ -30,10 +30,11 @@
 - (instancetype) initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = RGB(255, 255, 255);
+        
+        self.backgroundColor = TUIChatDynamicColor(@"chat_small_tongue_bg_color", @"#FFFFFF");
         // 边框
-        self.layer.borderWidth = 1;
-        self.layer.borderColor = RGB(229, 229, 229).CGColor;
+        self.layer.borderWidth = 0.2;
+        self.layer.borderColor = TUIChatDynamicColor(@"chat_small_tongue_line_color", @"#E5E5E5").CGColor;
         self.layer.cornerRadius = 2;
         self.layer.masksToBounds = YES;
         // 阴影
@@ -110,17 +111,17 @@
     switch (tongue.type) {
         case TUIChatSmallTongueType_ScrollToBoom:
         {
-            tongueImage = TUIChatDynamicImage(@"chat_drop_down_img", [UIImage d_imageNamed:@"drop_down" bundle:TUIChatBundle]);
+            tongueImage = TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down");
         }
             break;
         case TUIChatSmallTongueType_ReceiveNewMsg:
         {
-            tongueImage = TUIChatDynamicImage(@"chat_drop_down_img", [UIImage d_imageNamed:@"drop_down" bundle:TUIChatBundle]);
+            tongueImage = TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down");
             break;
         }
         case TUIChatSmallTongueType_SomeoneAtMe:
         {
-            tongueImage = TUIChatDynamicImage(@"chat_pull_up_img", [UIImage d_imageNamed:@"pull_up" bundle:TUIChatBundle]);
+            tongueImage = TUIChatBundleThemeImage(@"chat_pull_up_img", @"pull_up");
         }
             break;
         default:

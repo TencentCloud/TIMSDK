@@ -18,54 +18,6 @@
 #import "TUIGlobalization.h"
 @implementation TUIUserAuthorizationCenter
 
-+ (void)userIsAllowPush:(void (^)(BOOL))isOpenPushBlock {
-    if (@available(iOS 10.0, *)) {
-        [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                BOOL isAllow = (settings.authorizationStatus == UNAuthorizationStatusAuthorized);
-
-                if (isOpenPushBlock) {
-                    isOpenPushBlock(isAllow);
-                }
-            });
-
-        }];
-       }else{
-        dispatch_async(dispatch_get_main_queue(), ^{
-             UIUserNotificationSettings *settings = [[UIApplication sharedApplication] currentUserNotificationSettings];
-                   BOOL isAllow = (settings.types != UIUserNotificationTypeNone);
-            if (isOpenPushBlock) {
-                isOpenPushBlock(isAllow);
-            }
-        });
-    }
-    
-}
-+ (BOOL)isEnablePushAuthotization:(void (^) (BOOL enable))completion {
-    
-    if (@available(iOS 10.0, *)) {
-        
-        __block BOOL enable = NO;
-        [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings) {
-            enable = settings.authorizationStatus != UNAuthorizationStatusNotDetermined && settings.authorizationStatus != UNAuthorizationStatusDenied;
-            
-            if (completion){
-                completion(enable);
-            }
-        }];
-        return enable;
-    } else {
-        
-        if (@available(iOS 8.0, *)) {
-            return [[UIApplication sharedApplication] currentUserNotificationSettings].types  != UIUserNotificationTypeNone;
-        } else {
-            // Fallback on earlier versions
-        }
-    }
-    
-    return NO;
-}
-
 + (BOOL)isEnableCameraAuthorization {
     
     if (@available(iOS 7.0, *)) {
@@ -165,55 +117,6 @@
         // Fallback on earlier versions
         return YES;
     }
-}
-
-+ (void)locationStateActionWithPopCompletion:(void (^)(void))completion {
-    [self openSettingPage];
-}
-
-
-+ (BOOL)isEnableAudioRecognizeAuthorization {
-    
-    if (@available(iOS 10.0, *)) {
-        return [SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized;
-    }
-    
-    return NO;
-}
-
-+ (void)audioRecogStateActionWithPopCompletion:(void (^)(void))completion {
-    if (@available(iOS 10.0, *)) {
-        if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
-            [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
-                if (status == SFSpeechRecognizerAuthorizationStatusAuthorized && completion) {
-                    completion();
-                }
-            }];
-        } else {
-            [self openSettingPage];
-            
-        }
-    }
-}
-
-
-+ (BOOL)isEnableCalendarAuthorization {
-    EKAuthorizationStatus authorizationStatus = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
-    if(authorizationStatus != EKAuthorizationStatusAuthorized){
-        return NO;
-    } else {
-        return YES;
-    }
-}
-+ (BOOL)isEnableSportsAndFitnessAuthorization {
-    BOOL isAuth = NO;
-    if (@available(iOS 14.0, *)) {
-        CMHeadphoneMotionManager *motionMgr = [[CMHeadphoneMotionManager alloc] init];
-        if (motionMgr.isDeviceMotionAvailable) {
-            isAuth = [CMHeadphoneMotionManager authorizationStatus] == CMAuthorizationStatusAuthorized;
-        }
-    }
-    return isAuth;
 }
 
 

@@ -6,7 +6,6 @@
 //
 
 #import "TUIGroupPendencyController.h"
-#import "TUIGroupPendencyCell.h"
 #import "TUIDefine.h"
 
 @interface TUIGroupPendencyController ()

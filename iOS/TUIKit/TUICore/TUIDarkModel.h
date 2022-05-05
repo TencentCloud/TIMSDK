@@ -22,7 +22,7 @@
  *  @param dark 深色模式 Color
  *  @return 适配深色模式的 Color
  */
-+ (UIColor *)d_colorWithColorLight:(UIColor *)light dark:(UIColor *)dark;
++ (UIColor *)d_colorWithColorLight:(UIColor *)light dark:(UIColor *)dark __attribute__((deprecated("use TUICoreDynamicColor()")));
 
 /**
  *  系统灰色
@@ -70,7 +70,7 @@
  *  @param bundleName 存放图片的 bundleName
  *  @return 适配深色模式的 Image
  */
-+ (UIImage *)d_imageNamed:(NSString *)imageName bundle:(NSString *)bundleName;
++ (UIImage *)d_imageNamed:(NSString *)imageName bundle:(NSString *)bundleName __attribute__((deprecated("use TUIDemoBundleThemeImage(imageKey,defaultImageName)")));
 
 /**
  *  根据图片路径取 Image
@@ -79,12 +79,12 @@
  *  @param darkImagePath 暗黑图片路径
  *  @return 适配深色模式的 Image
  */
-+ (UIImage *)d_imageWithImageLight:(NSString *)lightImagePath dark:(NSString *)darkImagePath;
++ (UIImage *)d_imageWithImageLight:(NSString *)lightImagePath dark:(NSString *)darkImagePath __attribute__((deprecated("use TUIDemoBundleThemeImage(imageKey,defaultImageName)")));
 
 /**
  *  修复图片拉伸导致深色模式适配失效的问题
  */
 + (void)d_fixResizableImage;
 
-+ (UIImage *)d_imageWithImageLightImg:(UIImage *)lightImage dark:(UIImage *)darkImage;
++ (UIImage *)d_imageWithImageLightImg:(UIImage *)lightImage dark:(UIImage *)darkImage __attribute__((deprecated("use TUIDemoBundleThemeImage(imageKey,defaultImageName)")));
 @end

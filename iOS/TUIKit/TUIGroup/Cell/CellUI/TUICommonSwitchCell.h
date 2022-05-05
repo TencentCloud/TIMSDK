@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUICommonSwitchCellData : TUICommonCellData
 
 @property NSString *title;
+@property NSString *desc;
 @property (getter=isOn) BOOL on;
 @property CGFloat margin;
 @property SEL cswitchSelector;
@@ -20,7 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface TUICommonSwitchCell : TUICommonTableViewCell
-@property UILabel *titleLabel;
+@property UILabel *titleLabel; // main title label
+@property UILabel *descLabel; // detail title label below the main title label, used for explaining details
 @property UISwitch *switcher;
 
 @property (readonly) TUICommonSwitchCellData *switchData;

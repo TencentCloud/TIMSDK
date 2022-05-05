@@ -7,6 +7,7 @@
 
 #import "TUISearchResultHeaderFooterView.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 
 @interface TUISearchResultHeaderFooterView ()
@@ -31,8 +32,7 @@
 - (void)setupViews
 {
     [self.contentView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)]];
-    self.contentView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:[UIColor blackColor]]; // [UIColor whiteColor];
-    
+    self.contentView.backgroundColor = TUICoreDynamicColor(@"form_bg_color", @"#FFFFFF");
     _iconView = [[UIImageView alloc] init];
     _iconView.image = [UIImage imageNamed:TUISearchImagePath(@"search")];
     [self.contentView addSubview:_iconView];
@@ -40,7 +40,6 @@
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.text = @"";
     _titleLabel.font = [UIFont systemFontOfSize:12.0];
-    _titleLabel.textColor = [UIColor d_colorWithColorLight:[UIColor blackColor] dark:[UIColor whiteColor]]; // [UIColor blackColor];
     [self.contentView addSubview:_titleLabel];
     
     _accessoryView = [[UIImageView alloc] init];
@@ -48,7 +47,7 @@
     [self.contentView addSubview:_accessoryView];
     
     _separtorView = [[UIView alloc] init];
-    _separtorView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor groupTableViewBackgroundColor] dark:[UIColor colorWithRed:58/255.0 green:58/255.0 blue:58/255.0 alpha:1]]; // [UIColor groupTableViewBackgroundColor];
+    _separtorView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
     [self.contentView addSubview:_separtorView];
 }
 
@@ -66,8 +65,8 @@
     self.iconView.hidden = !self.isFooter;
     self.iconView.hidden = !self.isFooter;
     self.accessoryView.hidden = !self.isFooter;
-    
-    self.titleLabel.textColor = self.isFooter ? [UIColor blueColor] : [UIColor darkGrayColor];
+    UIColor *footerColor = TUICoreDynamicColor(@"primary_theme_color", @"#147AFF");
+    self.titleLabel.textColor = self.isFooter ? footerColor : [UIColor darkGrayColor];
 }
 
 - (void)setTitle:(NSString *)title

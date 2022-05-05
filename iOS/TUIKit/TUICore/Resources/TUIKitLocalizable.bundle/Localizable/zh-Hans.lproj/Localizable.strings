@@ -54,6 +54,54 @@
 "Have-been-sent" = "已发送";
 "View-the-original" = "查看原图";
 
+"OK" = "好";
+"None" = "无";
+"Send" = "发送";
+"Cancel" = "取消";
+"Alia" = "备注";
+"Group" = "分组";
+"Accept" = "同意";
+"Decline" = "拒绝";
+"send_success" = "发送成功";
+"add_success" = "添加成功";
+"delete_success" = "删除成功";
+"my_friend" = "我的朋友";
+"no_personal_signature" = "暂无个性签名";
+"SignatureFormat" = "个性签名:%@";
+"choose_avatar_for_you" = "App随机为您分配一个系统头像";
+"SearchGroupPlaceholder" = "用户ID";
+"please_fill_in_verification_information" = "请填写验证信息";
+"please_fill_in_remarks_group_info" = "请填写备注和分组";
+"ContactsJoinGroup"  = "添加群聊";
+"ContactsAddFriends" = "添加好友";
+"ChatsCreatePrivateGroupTips" = "创建讨论组";
+"ChatsCreateGroupTips" = "创建群聊";
+"ChatsCreateChatRoomTips" = "创建聊天室";
+"ChatsCreateDefaultTips" = "创建群组";
+"ChatsCreateCommunityTips" = "创建社群";
+"GroupJoin" = "添加群组";
+"GroupRequestJoinGroupFormat" = "%@ 申请加入群聊";
+"GroupDeleteFriend" = "删除联系人";
+"GroupAddFirend" = "添加联系人";
+"GroupMember" = "群成员";
+"ProfileAlia" = "备注名";
+"ProfileMessageDoNotDisturb" = "消息免打扰";
+"ProfileStickyonTop" = "置顶聊天";
+"ProfileBlocked" = "加入黑名单";
+"ProfileSendMessages" = "发送消息";
+"ProfileDeleteFirend" = "删除好友";
+"ProfileEditAlia" = "修改备注";
+"ProfileDetails" = "详细资料";
+"FriendRequestFormat" = "我是%@";
+"FriendRequestFillInfo" = "添加好友";
+"FriendOneWay" = "单向好友";
+"FriendAddTitle" = "加好友";
+"FriendAddVerificationMessage" = "验证消息";
+"FriendAddResultSuccessWait" = "发送成功,等待审核同意";
+"FriendAddResultForbid" = "对方禁止添加";
+"FriendAddResultSuccess" = "已添加到好友列表";
+"FriendAddResultExists" = "好友已存在";
+
 "TUIKitWelcome" = "欢迎加入腾讯·云通信大家庭！";
 "TUIKitMicCamerAuthTips" = "请开启麦克风和摄像头权限";
 "TUIKitMicAuth" = "请开启麦克风权限";
@@ -153,6 +201,13 @@
 "TUIkitMessageTypeFile" = "[文件]";
 "TUIKitMessageTypeAnimateEmoji" = "[动画表情]";
 "TUIKitMessageTypeDraftFormat" = "[草稿] ";
+
+"TUIKitMessageReadPartRead" = "人已读";
+"TUIKitMessageReadPartUnread" = "人未读";
+"TUIKitMessageReadPartDisable" = "人无状态";
+"TUIKitMessageReadAllRead" = "全部已读";
+"TUIKitMessageReadDetail" = "消息详情";
+"TUIKitMessageReadNoMoreData" = "没有更多数据了";
 
 "TUIKitMoreCamera" = "拍照";
 "TUIKitMorePhoto" = "图片";
@@ -495,6 +550,14 @@
 "TUIKitErrorRequestNoNetOnReq" = "请求时没有网络，请等网络恢复后重试";
 "TUIKitErrorRequestNoNetOnRsp" = "响应时没有网络，请等网络恢复后重试";
 "TUIKitErrorRequestOnverLoaded" = "请求队列満";
+"TUIKitErrorUnsupportIntefaceSearch" = "搜索";
+"TUIKitErrorUnsupportIntefaceMessageRead" = "消息已读回执";
+"TUIKitErrorUnsupportIntefaceCommunity" = "社群";
+"TUIKitErrorUnsupportIntefaceDesc" = "功能为 IM 旗舰版功能，购买旗舰版套餐包后可使用。如果您当前使用的是专业版套餐包，您需要先对专业版套餐包做退费处理，再购买旗舰版套餐包，详见购买指引";
+"TUIKitErrorUnsupportIntefaceGuidelines" = "购买指引";
+"TUIKitErrorUnsupportIntefaceTitle" = "提示";
+"TUIKitErrorUnsupportIntefaceIGotIt" = "我知道了";
+"TUIKitErrorUnsupportIntefaceNoMoreAlert" = "不再提醒";
 
 /***************************** 消息转发 & 消息搜索 *************************/
 // 补充
@@ -605,4 +668,8 @@
 "TUIKitInputNoPhotoTips"  = "无法使用聊天功能中的图片查看、选择等功能，点击\"去开启\"打开图片权限";
 "TUIKitInputNoPhotoOperateLater" = "以后再说";
 "TUIKitInputNoPhotoerateEnable" = "去开启";
+
+"StickyonTop" = "置顶";
+"CancelStickonTop" = "取消置顶";
+"ClearHistoryChatMessage" = "清空消息";
 
