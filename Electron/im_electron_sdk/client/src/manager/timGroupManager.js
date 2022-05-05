@@ -89,7 +89,7 @@ const TimBaseManager = {
   },
   TIMGroupGetGroupInfoList: () => {
     return timRenderInstance.TIMGroupGetGroupInfoList({
-      groupIds: ["@TGS#2F7WEKLHX"],
+      groupIds: ["@TGS#_im_discuss_6iQBFthZWrmRdcYS"],
       data: 'test data'
     })
   },
