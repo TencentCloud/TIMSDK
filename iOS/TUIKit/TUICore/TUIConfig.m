@@ -27,8 +27,8 @@
     self = [super init];
     if(self){
         _avatarCornerRadius = 5.f;
-        _defaultAvatarImage = TUICoreDynamicImage(@"default_c2c_head_img", [UIImage d_imageNamed:@"default_c2c_head" bundle:TUICoreBundle]);
-        _defaultGroupAvatarImage = TUICoreDynamicImage(@"default_group_head_img", [UIImage d_imageNamed:@"default_group_head" bundle:TUICoreBundle]);
+        _defaultAvatarImage = TUICoreBundleThemeImage(@"default_c2c_head_img", @"default_c2c_head");
+        _defaultGroupAvatarImage = TUICoreBundleThemeImage(@"default_group_head_img", @"default_group_head");
         _isExcludedFromUnreadCount = NO;
         _isExcludedFromLastMessage = NO;
         _enableToast = YES;
@@ -75,8 +75,8 @@
 - (void)onChangeTheme
 {
     // 更新默认头像
-    self.defaultAvatarImage = TUICoreDynamicImage(@"default_c2c_head_img", [UIImage d_imageNamed:@"default_c2c_head" bundle:TUICoreBundle]);
-    self.defaultGroupAvatarImage = TUICoreDynamicImage(@"default_group_head_img", [UIImage d_imageNamed:@"default_group_head" bundle:TUICoreBundle]);
+    self.defaultAvatarImage = TUICoreBundleThemeImage(@"default_c2c_head_img", @"default_c2c_head");
+    self.defaultGroupAvatarImage = TUICoreBundleThemeImage(@"default_group_head_img", @"default_group_head");
 }
 
 /**

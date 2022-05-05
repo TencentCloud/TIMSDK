@@ -1040,4 +1040,110 @@
     return deviceName;
 }
 
++ (void)openLinkWithURL:(NSURL *)url {
+    if (@available(iOS 10.0, *)) {
+        [[UIApplication sharedApplication] openURL:url
+                                           options:@{}
+                                 completionHandler:^(BOOL success) {
+            if (success) {
+                NSLog(@"Opened url");
+            }
+        }];
+    } else {
+        [[UIApplication sharedApplication] openURL:url];
+    }
+}
+
++ (void)addUnsupportNotificationInVC:(UIViewController *)vc {
+#if DEBUG
+    @weakify(vc);
+    [[NSNotificationCenter defaultCenter] addObserverForName:TUIKitNotification_onReceivedUnsupportInterfaceError object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        @strongify(vc);
+        NSDictionary *userInfo = note.userInfo;
+        NSString *service = [userInfo objectForKey:@"service"];
+        [TUITool showUnsupportAlertOfService:service onVC:vc];
+    }];
+#endif
+}
+
++ (void)postUnsupportNotificationOfService:(NSString *)service {
+#if DEBUG
+    if (!service) {
+        NSLog(@"postNotificationOfService, service is nil");
+        return;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onReceivedUnsupportInterfaceError
+                                                        object:nil
+                                                      userInfo:@{@"service": service}];
+#endif
+}
+
++ (void)showUnsupportAlertOfService:(NSString *)service onVC:(UIViewController *)vc {
+#if DEBUG
+    BOOL isShown = [[NSUserDefaults standardUserDefaults] boolForKey:@"show_unsupport_alert"];
+    if (isShown) {
+        return;
+    }
+    NSString *desc = [NSString stringWithFormat:@"%@%@", service, TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceDesc)];
+    NSArray *buttons = @[TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceIGotIt), TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceNoMoreAlert)];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceTitle)
+                                                                             message:desc
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:desc];
+    [attrStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(0, desc.length)];
+    [attrStr addAttribute:NSLinkAttributeName value:@"https://" range:[desc rangeOfString:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceGuidelines)]];
+    [alertController setValue:attrStr forKey:@"attributedMessage"];
+    UILabel *msgLabel = [TUITool messageLabelInAlertController:alertController];
+    msgLabel.userInteractionEnabled = YES;
+    msgLabel.textAlignment = NSTextAlignmentLeft;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:TUITool.class action:@selector(onTapLabel:)];
+    [msgLabel addGestureRecognizer:tap];
+
+    UIAlertAction *left = [UIAlertAction actionWithTitle:buttons[0] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    UIAlertAction *right = [UIAlertAction actionWithTitle:buttons[1] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"show_unsupport_alert"];
+    }];
+    [alertController addAction:left];
+    [alertController addAction:right];
+    [vc presentViewController:alertController animated:NO completion:nil];
+#endif
+}
+
++ (void)onTapLabel:(UIGestureRecognizer *)ges {
+    NSString *chinesePurchase = @"https://cloud.tencent.com/document/product/269/11673#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85";
+    NSString *englishPurchase = @"https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
+    NSString *language = [TUIGlobalization tk_localizableLanguageKey];
+    NSURL *url = [NSURL URLWithString:chinesePurchase];
+    if (![language containsString:@"zh-"]) {
+        url = [NSURL URLWithString:englishPurchase];
+    }
+    [TUITool openLinkWithURL:url];
+}
+
++ (UILabel *)messageLabelInAlertController:(UIAlertController *)alert {
+    UIView *target = [TUITool targetSubviewInAlertController:alert];
+    NSArray *subviews = [target subviews];
+    if (subviews.count == 0) {
+        return nil;
+    }
+    for (UIView *view in subviews) {
+        if ([view isKindOfClass:UILabel.class]) {
+            UILabel *label = (UILabel *)view;
+            if (label.text.length > 10) {
+                return label;
+            }
+        }
+    }
+    return nil;
+}
+
++ (UIView *)targetSubviewInAlertController:(UIAlertController *)alert {
+    UIView *view = alert.view;
+    for (int i = 0; i < 5; i++) {
+        view = view.subviews.firstObject;
+    }
+    return view;
+}
+
 @end

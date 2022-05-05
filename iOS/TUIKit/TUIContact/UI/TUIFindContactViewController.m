@@ -155,11 +155,10 @@
         _searchBar.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"F3F4F5");
         _searchBar.placeholder = self.type == TUIFindContactTypeC2C ? TUIKitLocalizableString(TUIKitSearchUserID) : TUIKitLocalizableString(TUIKitSearchGroupID);
         _searchBar.backgroundImage = [[UIImage alloc] init];
-        _searchBar.tintColor = [UIColor d_colorWithColorLight:UIColor.darkTextColor dark:UIColor.lightGrayColor];
         _searchBar.delegate = self;
         UITextField *searchField = [_searchBar valueForKey:@"searchField"];
         if (searchField) {
-            searchField.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:UIColor.lightGrayColor];
+            searchField.backgroundColor = TUICoreDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
         }
         
         [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTitle:TUIKitLocalizableString(Search)];

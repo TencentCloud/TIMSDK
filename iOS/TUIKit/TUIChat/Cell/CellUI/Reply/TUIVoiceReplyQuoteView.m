@@ -17,7 +17,7 @@
 {
     if (self = [super initWithFrame:frame]) {
         _iconView = [[UIImageView alloc] init];
-        _iconView.image = [UIImage d_imageNamed:@"message_voice_receiver_normal" bundle:TUIChatBundle];
+        _iconView.image = TUIChatCommonBundleImage(@"message_voice_receiver_normal");
         [self addSubview:_iconView];
         
         self.textLabel.numberOfLines = 1;

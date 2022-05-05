@@ -150,7 +150,7 @@
     }
     
     TUIMemberInfoCellData *add = [[TUIMemberInfoCellData alloc] init];
-    add.avatar = [UIImage d_imageNamed:@"icon_add" bundle:TUIGroupBundle];
+    add.avatar = TUIGroupCommonBundleImage(@"icon_add");
     add.name = TUIKitLocalizableString(TUIKitGroupAddShutupMember);
     add.style = TUIMemberInfoCellStyleAdd;
     [self.muteMembersDataArray addObject:add];

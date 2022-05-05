@@ -105,13 +105,13 @@
             NSTextAttachment *attchment = [[NSTextAttachment alloc] init];
             UIImage *image = nil;
             if (self.isAudioCall) {
-                image = [UIImage d_imagePath:TUIChatImagePath(@"audio_call")];
+                image = TUIChatCommonBundleImage(@"audio_call");
             }
             if (self.isVideoCall) {
                 if (self.innerMessage.isSelf) {
-                    image = [UIImage d_imagePath:TUIChatImagePath(@"video_call_self")];
+                    image = TUIChatCommonBundleImage(@"video_call_self");
                 } else {
-                    image = [UIImage d_imagePath:TUIChatImagePath(@"video_call")];
+                    image = TUIChatCommonBundleImage(@"video_call");
                 }
             }
             attchment.image = image;

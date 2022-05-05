@@ -322,9 +322,9 @@
         NSTextAttachment *attchment = [[NSTextAttachment alloc] init];
         UIImage *image = nil;
         if (V2TIM_MSG_STATUS_SENDING == conv.lastMessage.status) {
-            image = [UIImage d_imagePath:TUIChatImagePath(@"msg_sending_for_conv")];
+            image = TUIConversationCommonBundleImage(@"msg_sending_for_conv");
         } else {
-            image = [UIImage d_imagePath:TUIChatImagePath(@"msg_error_for_conv")];
+            image = TUIConversationCommonBundleImage(@"msg_error_for_conv");
         }
         attchment.image = image;
         attchment.bounds = CGRectMake(0, -(textFont.lineHeight-textFont.pointSize)/2, textFont.pointSize, textFont.pointSize);

@@ -196,8 +196,9 @@ static NSArray *customInputBtnInfo = nil;
         TUIInputMoreCellData *liveMenusData = [TUIInputMoreCellData new];
         liveMenusData.key = TUIInputMoreCellKey_GroupLive;
         liveMenusData.title = TUIKitLocalizableString(TUIKitMoreGroupLive);
-        liveMenusData.image = [UIImage d_imageNamed:@"more_group_live" bundle:TUIChatBundle];
+        liveMenusData.image = TUIChatBundleThemeImage(@"chat_more_group_live", @"more_group_live");
         [moreMenus addObject:liveMenusData];
+
     }
     // 自定义消息
     for (NSDictionary *buttonInfo in [self customInputBtnInfo]) {
@@ -210,7 +211,7 @@ static NSArray *customInputBtnInfo = nil;
         TUIInputMoreCellData *linkMenusData = [TUIInputMoreCellData new];
         linkMenusData.key = key;
         linkMenusData.title = title;
-        linkMenusData.image = TUIChatDynamicImage(imageName, [UIImage d_imageNamed:imageName bundle:TUIChatBundle]);
+        linkMenusData.image = TUIChatBundleThemeImage(imageName, imageName);
         [moreMenus addObject:linkMenusData];
     }
     return moreMenus;

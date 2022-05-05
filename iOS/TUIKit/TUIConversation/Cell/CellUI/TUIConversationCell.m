@@ -80,7 +80,7 @@
         }
         self.notDisturbView.hidden = NO;
         self.unReadView.hidden = YES;
-        UIImage *image = [UIImage d_imageWithImageLight:TUIConversationImagePath(@"message_not_disturb") dark:TUIConversationImagePath(@"message_not_disturb_dark")];
+        UIImage *image = TUIConversationBundleThemeImage(@"conversation_message_not_disturb_img", @"message_not_disturb");
         [self.notDisturbView setImage:image];
     } else {
         self.notDisturbRedDot.hidden = YES;

@@ -6,12 +6,9 @@
 //
 
 #import "TUIBaseChatViewController.h"
-#import "TUIGroupPendencyCell.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIGroupChatViewController : TUIBaseChatViewController
-
-@property (nonatomic, copy) void (^openUserProfileVCBlock)(TUIGroupPendencyCell *cell);
 
 @end
 

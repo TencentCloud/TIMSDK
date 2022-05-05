@@ -53,6 +53,18 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUISearchDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleSearch, defaultHex)
 #define TUICallingDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleCalling, defaultHex)
 
+//动态获取图片+指定bundle便利方法
+
+#define TUIDemoBundleThemeImage(imageKey,defaultImageName) TUIDemoDynamicImage(imageKey,TUIDemoCommonBundleImage(defaultImageName))
+#define TUICoreBundleThemeImage(imageKey,defaultImageName) TUICoreDynamicImage(imageKey,TUICoreCommonBundleImage(defaultImageName))
+#define TUIChatBundleThemeImage(imageKey,defaultImageName) TUIChatDynamicImage(imageKey,TUIChatCommonBundleImage(defaultImageName))
+#define TUIConversationBundleThemeImage(imageKey,defaultImageName) TUIConversationDynamicImage(imageKey,TUIConversationCommonBundleImage(defaultImageName))
+#define TUIContactBundleThemeImage(imageKey,defaultImageName) TUIContactDynamicImage(imageKey,TUIContactCommonBundleImage(defaultImageName))
+#define TUIGroupBundleThemeImage(imageKey,defaultImageName) TUIGroupDynamicImage(imageKey,TUIGroupCommonBundleImage(defaultImageName))
+#define TUISearchBundleThemeImage(imageKey,defaultImageName) TUISearchDynamicImage(imageKey,TUISearchCommonBundleImage(defaultImageName))
+#define TUICallingBundleThemeImage(imageKey,defaultImageName) TUICallingDynamicImage(imageKey,TUICallingCommonBundleImage(defaultImageName))
+
+
 // 动态获取图片
 #define TUIDynamicImage(imageKey, themeModule, defaultImg) [TUITheme dynamicImage:imageKey module:themeModule defaultImage:defaultImg]
 #define TUIDemoDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleDemo, defaultImg)
@@ -63,6 +75,18 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIGroupDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleGroup, defaultImg)
 #define TUISearchDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleSearch, defaultImg)
 #define TUICallingDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleCalling, defaultImg)
+
+//获取指定模块 common bundle共用图片
+#define __TUIDefaultBundleImage(imageBundlePath) [UIImage imageWithContentsOfFile:imageBundlePath]
+#define TUIDemoCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIDemoImagePath(imageName))
+#define TUICoreCommonBundleImage(imageName) __TUIDefaultBundleImage(TUICoreImagePath(imageName))
+#define TUIChatCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIChatImagePath(imageName))
+#define TUIConversationCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIConversationImagePath(imageName))
+#define TUIContactCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIContactImagePath(imageName))
+#define TUIGroupCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIGroupImagePath(imageName))
+#define TUISearchCommonBundleImage(imageName) __TUIDefaultBundleImage(TUISearchImagePath(imageName))
+#define TUICallingCommonBundleImage(imageName) __TUIDefaultBundleImage(TUICallingImagePath(imageName))
+
 
 // 主题模块
 typedef NS_ENUM(NSInteger, TUIThemeModule) {

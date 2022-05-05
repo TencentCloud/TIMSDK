@@ -8,7 +8,7 @@
 #import "TUIVoiceReplyQuoteViewData.h"
 #import "NSString+emoji.h"
 #import "TUIVoiceMessageCellData.h"
-
+#import "TUIThemeManager.h"
 @implementation TUIVoiceReplyQuoteViewData
 
 + (instancetype)getReplyQuoteViewData:(TUIMessageCellData *)originCellData
@@ -23,7 +23,7 @@
     
     TUIVoiceReplyQuoteViewData *myData = [[TUIVoiceReplyQuoteViewData alloc] init];
     myData.text = [NSString stringWithFormat:@"%ds\"", [(TUIVoiceMessageCellData *)originCellData duration]];
-    myData.icon = [UIImage d_imageNamed:@"voice_reply" bundle:TUIChatBundle];
+    myData.icon = TUIChatCommonBundleImage(@"voice_reply");
     myData.originCellData = originCellData;
     return myData;
 }

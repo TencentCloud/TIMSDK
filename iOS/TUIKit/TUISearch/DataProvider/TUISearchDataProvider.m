@@ -9,6 +9,7 @@
 #import "TUISearchDataProvider.h"
 #import "TUISearchResultCellModel.h"
 #import "TUISearchGroupDataProvider.h"
+#import "TUIThemeManager.h"
 
 TUISearchParamKey TUISearchChatHistoryParamKeyConversationId = @"TUISearchChatHistoryParamKeyConversationId";
 TUISearchParamKey TUISearchChatHistoryParamKeyCount = @"TUISearchChatHistoryParamKeyCount";
@@ -350,7 +351,9 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
                     }
                 }
             }
-            
+            TUISearchResultCellModel *lastCellModel = [arrayM lastObject];
+            lastCellModel.hideSeparatorLine = YES;
+
             if (callback) {
                 callback(YES, nil, arrayM);
             }
@@ -364,6 +367,9 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
     } fail:^(int code, NSString *desc) {
         if (callback) {
             callback(NO, desc, nil);
+        }
+        if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
+            [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceSearch)];
         }
     }];
 }
@@ -386,7 +392,7 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
     while (len > 0) {
         NSRange range = [text.lowercaseString rangeOfString:key.lowercaseString options:NSCaseInsensitiveSearch range:NSMakeRange(loc, len)];
         if (range.length) {
-            [attr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:range];
+            [attr addAttribute:NSForegroundColorAttributeName value:TUICoreDynamicColor(@"primary_theme_color", @"#147AFF") range:range];
             loc = range.location + 1;
             len = text.length - loc;
         }else {

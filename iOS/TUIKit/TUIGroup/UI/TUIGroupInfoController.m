@@ -2,13 +2,13 @@
 #import "TUIProfileCardCell.h"
 #import "TUIGroupMembersCell.h"
 #import "TUIGroupMemberCell.h"
-#import "TUIButtonCell.h"
 #import "TUICommonSwitchCell.h"
 #import "TUIGroupMemberController.h"
 #import "TUIModifyView.h"
 #import "TUIAddCell.h"
 #import "TUICommonTextCell.h"
 #import "TUIDefine.h"
+#import "TUICore.h"
 #import "TIMGroupInfo+TUIDataProvider.h"
 #import "TUIGroupInfoDataProvider.h"
 #import "TUIAvatarViewController.h"
@@ -21,8 +21,11 @@
 #define ADD_TAG @"-1"
 #define DEL_TAG @"-2"
 
-@interface TUIGroupInfoController () <TModifyViewDelegate, TUIGroupMembersCellDelegate, TUIProfileCardDelegate, TUIGroupInfoDataProviderDelegate>
+@interface TUIGroupInfoController () <TModifyViewDelegate, TUIGroupMembersCellDelegate, TUIProfileCardDelegate, TUIGroupInfoDataProviderDelegate, TUINotificationProtocol>
 @property(nonatomic, strong) TUIGroupInfoDataProvider *dataProvider;
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property (nonatomic, strong) UIViewController *showContactSelectVC;
+@property NSInteger tag;
 @end
 
 @implementation TUIGroupInfoController
@@ -39,6 +42,13 @@
         @strongify(self)
         [self.tableView reloadData];
     }];
+    
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
+    [_titleView setTitle:TUIKitLocalizableString(ProfileDetails)];
+    
+    [TUICore registerEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_SelectedContactsSubKey object:self];
 }
 
 - (void)setupViews {
@@ -167,9 +177,10 @@
 
 - (void)didSelectMembers
 {
-    if(_delegate && [_delegate respondsToSelector:@selector(groupInfoController:didSelectMembersInGroup:groupInfo:)]){
-        [_delegate groupInfoController:self didSelectMembersInGroup:_groupId groupInfo:self.dataProvider.groupInfo];
-    }
+    TUIGroupMemberController *membersController = [[TUIGroupMemberController alloc] init];
+    membersController.groupId = _groupId;
+    membersController.groupInfo = self.dataProvider.groupInfo;
+    [self.navigationController pushViewController:membersController animated:YES];
 }
 
 - (void)didSelectAddOption:(UITableViewCell *)cell
@@ -237,13 +248,26 @@
         }]];
     }
 
-    if ([self.delegate respondsToSelector:@selector(groupInfoController:didSelectChangeAvatar:)]) {
-        if ([TUIGroupInfoDataProvider isMeOwner:self.dataProvider.groupInfo]) {
-            [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditAvatar) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [weakSelf.delegate groupInfoController:weakSelf didSelectChangeAvatar:weakSelf.groupId];
-            }]];
-        }
+    if ([TUIGroupInfoDataProvider isMeOwner:self.dataProvider.groupInfo]) {
+        @weakify(self)
+        [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(TUIKitGroupProfileEditAvatar) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(choose_avatar_for_you) message:nil preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(OK) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    @strongify(self)
+                    NSString *url = [TUITool randAvatarUrl];
+                    V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
+                    info.groupID = self.groupId;
+                    info.faceURL = url;
+                    [[V2TIMManager sharedInstance] setGroupInfo:info succ:^{
+                        [self updateGroupInfo];
+                    } fail:^(int code, NSString *msg) {
+                        [TUITool makeToastError:code msg:msg];
+                    }];
+                }]];
+                [self presentViewController:ac animated:YES completion:nil];
+        }]];
     }
+    
     [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
 
     [self presentViewController:ac animated:YES completion:nil];
@@ -299,9 +323,7 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     @strongify(self)
                     [[TUIConversationPin sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",self.groupId] callback:nil];
-                    if(self.delegate && [self.delegate respondsToSelector:@selector(groupInfoController:didDeleteGroup:)]){
-                        [self.delegate groupInfoController:self didDeleteGroup:self.groupId];
-                    }
+                    [self.navigationController popToRootViewControllerAnimated:YES];
                 });
             } fail:^(int code, NSString *msg) {
                 [TUITool makeToastError:code msg:msg];
@@ -313,9 +335,7 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     @strongify(self)
                     [[TUIConversationPin sharedInstance] removeTopConversation:[NSString stringWithFormat:@"group_%@",self.groupId] callback:nil];
-                    if(self.delegate && [self.delegate respondsToSelector:@selector(groupInfoController:didQuitGroup:)]){
-                        [self.delegate groupInfoController:self didQuitGroup:self.groupId];
-                    }
+                    [self.navigationController popToRootViewControllerAnimated:YES];
                 });
             } fail:^(int code, NSString *msg) {
                 [TUITool makeToastError:code msg:msg];
@@ -391,8 +411,8 @@
 -(void)didTapOnAvatar:(TUIProfileCardCell *)cell{
     //点击头像的响应函数，换头像，上传头像URL
     @weakify(self)
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"choose_avatar_for_you", nil) message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(choose_avatar_for_you) message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(OK) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         @strongify(self)
         NSString *url = [TUITool randAvatarUrl];
         @weakify(self)
@@ -403,7 +423,7 @@
             [TUITool makeToast:[NSString stringWithFormat:@"%d, %@", code, desc]];
         }];
     }]];
-    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
+    [ac addAction:[UIAlertAction actionWithTitle:TUIKitLocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
 }
 
@@ -412,22 +432,64 @@
 - (void)groupMembersCell:(TUIGroupMembersCell *)cell didSelectItemAtIndex:(NSInteger)index
 {
     TUIGroupMemberCellData *mem = self.dataProvider.groupMembersCellData.members[index];
-    if(mem.tag == 1){
-        //add
-        if(_delegate && [_delegate respondsToSelector:@selector(groupInfoController:didAddMembersInGroup:members:)]){
-            [_delegate groupInfoController:self didAddMembersInGroup:_groupId members:self.dataProvider.membersData];
+    NSMutableArray *ids = NSMutableArray.new;
+    for (TUIGroupMemberCellData *cd in self.dataProvider.membersData) {
+        if (![cd.identifier isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
+            [ids addObject:cd.identifier];
         }
     }
-    else if(mem.tag == 2) {
-        //delete
-        if(_delegate && [_delegate respondsToSelector:@selector(groupInfoController:didDeleteMembersInGroup:members:)]){
-            [_delegate groupInfoController:self didDeleteMembersInGroup:_groupId members:self.dataProvider.membersData];
-        }
+    
+    self.tag = mem.tag;
+    if(self.tag == 1){
+        // add
+        self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService
+                                             method:TUICore_TUIContactService_GetContactSelectControllerMethod
+                                              param:@{TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey :                 TUIKitLocalizableString(GroupAddFirend),
+                                                      TUICore_TUIContactService_GetContactSelectControllerMethod_DisableIdsKey:ids}];
+        [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
+    }
+    else if(self.tag == 2) {
+        // delete
+        self.showContactSelectVC = [TUICore callService:TUICore_TUIContactService
+                                             method:TUICore_TUIContactService_GetContactSelectControllerMethod
+                                              param:@{TUICore_TUIContactService_GetContactSelectControllerMethod_TitleKey : TUIKitLocalizableString(GroupDeleteFriend),
+                                                      TUICore_TUIContactService_GetContactSelectControllerMethod_SourceIdsKey:ids}];
+        [self.navigationController pushViewController:self.showContactSelectVC animated:YES];
     }
     else
     {
         // TODO:
     }
+}
+
+/**
+ *确认添加群成员后的执行函数，函数内包含请求后的回调
+ */
+- (void)addGroupId:(NSString *)groupId memebers:(NSArray *)members
+{
+    @weakify(self)
+    [[V2TIMManager sharedInstance] inviteUserToGroup:_groupId userList:members succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
+        @strongify(self)
+        [self updateData];
+        [TUITool makeToast:TUIKitLocalizableString(add_success)];
+    } fail:^(int code, NSString *desc) {
+        [TUITool makeToastError:code msg:desc];
+    }];
+}
+
+/**
+ *确认删除群成员后的执行函数，函数内包含请求后的回调
+ */
+- (void)deleteGroupId:(NSString *)groupId memebers:(NSArray *)members
+{
+    @weakify(self)
+    [[V2TIMManager sharedInstance] kickGroupMember:groupId memberList:members reason:@"" succ:^(NSArray<V2TIMGroupMemberOperationResult *> *resultList) {
+        @strongify(self)
+        [self updateData];
+        [TUITool makeToast:TUIKitLocalizableString(delete_success)];
+    } fail:^(int code, NSString *desc) {
+        [TUITool makeToastError:code msg:desc];
+    }];
 }
 
 #pragma mark TModifyViewDelegate
@@ -445,4 +507,34 @@
     }
 }
 
+#pragma mark - TUICore
+- (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(nullable id)anObject param:(NSDictionary *)param {
+    if ([key isEqualToString:TUICore_TUIContactNotify]
+        && [subKey isEqualToString:TUICore_TUIContactNotify_SelectedContactsSubKey]
+        && anObject == self.showContactSelectVC) {
+
+        NSArray<TUICommonContactSelectCellData *> *selectArray = [param tui_objectForKey:TUICore_TUIContactNotify_SelectedContactsSubKey_ListKey asClass:NSArray.class];
+        if (![selectArray.firstObject isKindOfClass:TUICommonContactSelectCellData.class]) {
+            NSAssert(NO, @"传值类型错误");
+        }
+        
+        if (self.tag == 1) {
+            // add
+            NSMutableArray *list = @[].mutableCopy;
+            for (TUICommonContactSelectCellData *data in selectArray) {
+                [list addObject:data.identifier];
+            }
+            [self.navigationController popToViewController:self animated:YES];
+            [self addGroupId:_groupId memebers:list];
+        } else if (self.tag == 2) {
+            // delete
+            NSMutableArray *list = @[].mutableCopy;
+            for (TUICommonContactSelectCellData *data in selectArray) {
+                [list addObject:data.identifier];
+            }
+            [self.navigationController popToViewController:self animated:YES];
+            [self deleteGroupId:_groupId memebers:list];
+        }
+    }
+}
 @end

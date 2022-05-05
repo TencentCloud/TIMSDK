@@ -71,7 +71,8 @@
 {
     if (_closeButton == nil) {
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_closeButton setImage:[UIImage d_imageNamed:@"icon_close" bundle:TUIChatBundle] forState:UIControlStateNormal];
+        [_closeButton setImage: TUIChatCommonBundleImage(@"icon_close")
+          forState:UIControlStateNormal];
         [_closeButton addTarget:self action:@selector(onClose:) forControlEvents:UIControlEventTouchUpInside];
         [_closeButton sizeToFit];
     }

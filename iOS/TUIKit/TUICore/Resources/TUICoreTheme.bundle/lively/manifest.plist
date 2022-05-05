@@ -14,6 +14,8 @@
 	<string>#F2F3F5</string>
 	<key>primary_theme_color</key>
 	<string>#FF8E82</string>
+	<key>common_switch_on_color</key>
+	<string>#FF8E82</string>
 	<key>succ_tips_color</key>
 	<string>#26CB3E</string>
 	<key>error_tips_color</key>
@@ -26,7 +28,7 @@
 	<string>#FFA88B</string>
 	<key>outline_color</key>
 	<string>#DDDDDD</string>
-	<key>separtor_color</key>
+	<key>separator_color</key>
 	<string>#E5E5E5</string>
 	<key>controller_bg_color</key>
 	<string>#F2F3F5</string>
@@ -70,5 +72,11 @@
 	<string>default_group_head.png</string>
 	<key>default_c2c_head_img</key>
 	<string>default_c2c_head.png</string>
+	<key>search_textfield_bg_color</key>
+	<string>#FEFEFE</string>
+	<key>service_more_video_call_img</key>
+	<string>service_more_video_call.png</string>
+	<key>service_more_voice_call_img</key>
+	<string>service_more_voice_call.png</string>
 </dict>
 </plist>

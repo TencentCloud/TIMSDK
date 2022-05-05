@@ -102,7 +102,7 @@
         TUIMemberInfoCellData *add = [[TUIMemberInfoCellData alloc] init];
         add.style = TUIMemberInfoCellStyleAdd;
         add.name = TUIKitLocalizableString(TUIKitGroupAddAdmins);
-        add.avatar = [UIImage d_imageNamed:@"icon_add" bundle:TUIGroupBundle];
+        add.avatar = TUIGroupCommonBundleImage(@"icon_add");
         [self.admins addObject:add];
     }
     

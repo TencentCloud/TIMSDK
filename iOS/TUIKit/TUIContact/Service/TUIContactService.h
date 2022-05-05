@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "TUIContactController.h"
 #import "TUIContactSelectController.h"
+#import "TUIFriendProfileController.h"
+#import "TUIUserProfileController.h"
 #import "TUICore.h"
 #import "TUIDefine.h"
 
@@ -30,6 +32,19 @@ NS_ASSUME_NONNULL_BEGIN
 // > 创建联系人选择器：
 // serviceName: TUICore_TUIContactService
 // method ：TUICore_TUIContactService_GetContactSelectControllerMethod
+//
+// > 创建好友资料 VC：
+// serviceName: TUICore_TUIContactService
+// method: TUICore_TUIContactService_GetFriendProfileControllerMethod
+//
+// > 创建用户资料 VC：
+// serviceName: TUICore_TUIContactService
+// method: TUICore_TUIContactService_GetUserProfileControllerMethod
+//
+// > 根据 userID 获取好友或用户资料 VC：
+// serviceName: TUICore_TUIContactService
+// method: TUICore_TUIContactService_GetUserOrFriendProfileVCMethod
+
 
 @interface TUIContactService : NSObject <TUIServiceProtocol>
 /**
@@ -45,7 +60,26 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  获取联系人选择列表
  */
-- (TUIContactSelectController *)createContactSelectController;
+- (TUIContactSelectController *)createContactSelectController:(NSArray *)sourceIds
+                                                   disableIds:(NSArray *)disableIds;
+
+/**
+ *  获取好友资料 VC
+ */
+- (TUIFriendProfileController *)createFriendProfileController:(V2TIMFriendInfo *)friendInfo;
+
+/**
+ *  获取用户资料 VC
+ */
+- (TUIUserProfileController *)createUserProfileController:(V2TIMUserFullInfo *)user
+                                               actionType:(ProfileControllerAction)actionType;
+
+/**
+ *  根据 userID，返回好友资料 VC 或用户资料 VC
+ */
+- (void)createUserOrFriendProfileVCWithUserID:(NSString *)userID
+                                    succBlock:(void(^)(UIViewController *vc))succ
+                                    failBlock:(nullable V2TIMFail)fail;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -36,6 +36,11 @@ typedef void(^ContactSelectFinishBlock)(NSArray<TUICommonContactSelectCellData *
  */
 @property NSArray * _Nullable sourceIds;
 
+/**
+ * 需要禁用的数据列表
+ */
+@property NSArray * _Nullable disableIds;
+
 @end
 
 NS_ASSUME_NONNULL_END

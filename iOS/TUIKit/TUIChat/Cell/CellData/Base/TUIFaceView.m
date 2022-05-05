@@ -56,7 +56,7 @@
     [self addSubview:_faceCollectionView];
 
     _lineView = [[UIView alloc] init];
-    _lineView.backgroundColor = TUICoreDynamicColor(@"separtor_color", @"#FFFFFF");
+    _lineView.backgroundColor = TUICoreDynamicColor(@"separator_color", @"#DBDBDB");
 
     _pageControl = [[UIPageControl alloc] init];
     _pageControl.currentPageIndicatorTintColor = TUIChatDynamicColor(@"chat_face_page_control_current_color", @"#7D7D7D");

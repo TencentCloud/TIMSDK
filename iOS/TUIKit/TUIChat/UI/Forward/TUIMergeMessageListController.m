@@ -26,6 +26,7 @@
 #import "TUIMediaView.h"
 #import "TUIDefine.h"
 #import "TUIReplyMessageCellData.h"
+#import "TUIThemeManager.h"
 
 #define STR(x) @#x
 
@@ -93,11 +94,11 @@
     [self.stylesCache setObject:NSStringFromUIEdgeInsets(incommingMessageInsets) forKey:STR(incommingMessageInsets)];
     
     UIColor *outgoingTextColor = [TUITextMessageCellData outgoingTextColor];
-    [TUITextMessageCellData setOutgoingTextColor:[UIColor d_colorWithColorLight:[UIColor blackColor] dark:[UIColor whiteColor]]];
+    [TUITextMessageCellData setOutgoingTextColor:TUIChatDynamicColor(@"chat_text_message_send_text_color", @"#000000")];
     [self.stylesCache setObject:outgoingTextColor forKey:STR(outgoingTextColor)];
     
     UIColor *incomingTextColor = [TUITextMessageCellData incommingTextColor];
-    [TUITextMessageCellData setIncommingTextColor:[UIColor d_colorWithColorLight:[UIColor blackColor] dark:[UIColor whiteColor]]];
+    [TUITextMessageCellData setIncommingTextColor:TUIChatDynamicColor(@"chat_text_message_receive_text_color", @"#000000")];
     [self.stylesCache setObject:incomingTextColor forKey:STR(incomingTextColor)];
     
 }
@@ -207,7 +208,7 @@
     self.tableView.scrollsToTop = NO;
     self.tableView.estimatedRowHeight = 0;
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    self.tableView.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");;
 
     [self.tableView registerClass:[TUITextMessageCell class] forCellReuseIdentifier:TTextMessageCell_ReuseId];
     [self.tableView registerClass:[TUIVoiceMessageCell class] forCellReuseIdentifier:TVoiceMessageCell_ReuseId];

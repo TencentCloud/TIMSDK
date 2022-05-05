@@ -3,6 +3,7 @@
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "UIView+TUILayout.h"
 #import "TUICommonModel.h"
+#import "TUIDefine.h"
 
 @interface TUIAvatarViewController ()<UIScrollViewDelegate>
 @property UIImageView *avatarView;
@@ -25,10 +26,15 @@
                                                   forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
 
+    //Fix  translucent = NO;
+    CGRect rect = self.view.bounds;
+    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
+        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
+    }
     self.avatarScrollView = [[TUIScrollView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.avatarScrollView];
     self.avatarScrollView.backgroundColor = [UIColor blackColor];
-    self.avatarScrollView.mm_fill();
+    self.avatarScrollView.frame = rect;
 
     self.avatarView = [[UIImageView alloc] initWithImage:self.avatarData.avatarImage];
     self.avatarScrollView.imageView = self.avatarView;

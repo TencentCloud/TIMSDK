@@ -165,7 +165,7 @@
 {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-        _tableView.backgroundColor = [UIColor d_colorWithColorLight:[UIColor colorWithRed:242/255.0 green:243/255.0 blue:245/255.0 alpha:1/1.0] dark:[UIColor blackColor]];
+        _tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
         _tableView.delaysContentTouches = NO;
         _tableView.delegate = self;
         _tableView.dataSource = self;

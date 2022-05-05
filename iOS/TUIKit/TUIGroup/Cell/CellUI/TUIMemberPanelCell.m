@@ -9,6 +9,7 @@
 #import "TUIDarkModel.h"
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "TUIDefine.h"
+#import "TUIThemeManager.h"
 
 @implementation TUIMemberPanelCell
 {
@@ -18,7 +19,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor d_colorWithColorLight:TCell_Nomal dark:TCell_Nomal_Dark];
+        self.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#F2F3F5");
         _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         _imageView.backgroundColor = [UIColor clearColor];
         _imageView.contentMode = UIViewContentModeScaleToFill;

@@ -17,7 +17,6 @@
 @interface TUISearchBar () <UISearchBarDelegate>
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, assign) BOOL isEntrance;
-@property (nonatomic, strong) UIView *coverView;
 @end
 
 @implementation TUISearchBar
@@ -26,7 +25,6 @@
 - (void)setEntrance:(BOOL)isEntrance {
     self.isEntrance = isEntrance;
     [self setupViews];
-    self.coverView.hidden = !isEntrance;
 }
 
 - (UIColor *)bgColorOfSearchBar
@@ -38,11 +36,6 @@
 {
     
     self.backgroundColor = self.bgColorOfSearchBar;
-    _coverView = [[UIView alloc] init];
-    _coverView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1];
-    _coverView.hidden = YES;
-    [self addSubview:_coverView];
-    
     _searchBar = [[UISearchBar alloc] init];
     _searchBar.placeholder = TUIKitLocalizableString(Search); // @"搜索";
     _searchBar.backgroundImage = [UIImage new];
@@ -51,7 +44,7 @@
     _searchBar.delegate = self;
     _searchBar.showsCancelButton = !self.isEntrance;
     if (@available(iOS 13.0, *)) {
-        _searchBar.searchTextField.backgroundColor = TUISearchDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
+        _searchBar.searchTextField.backgroundColor = TUICoreDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
     }
     [self addSubview:_searchBar];
     [self enableCancelButton];
@@ -60,7 +53,6 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.coverView.frame = self.bounds;
     self.searchBar.frame = CGRectMake(10, 5, self.mm_w - 10 - 10, self.mm_h - 5 - 5);
     
     [self updateSearchIcon];

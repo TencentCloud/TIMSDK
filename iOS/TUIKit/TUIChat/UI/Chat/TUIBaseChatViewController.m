@@ -11,14 +11,14 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
 #import "ReactiveObjC/ReactiveObjC.h"
-#import "TUIMessageController.h"
+#import "TUIBaseMessageController.h"
 #import "TUIImageMessageCellData.h"
 #import "TUIVideoMessageCellData.h"
 #import "TUIFileMessageCellData.h"
 #import "TUIVoiceMessageCellData.h"
 #import "TUIDefine.h"
 #import "TUIMessageMultiChooseView.h"
-#import "TUIMessageSearchController.h"
+#import "TUIMessageController.h"
 #import "TUIChatDataProvider.h"
 #import "TUIMessageDataProvider.h"
 #import "TUICameraViewController.h"
@@ -29,8 +29,11 @@
 #import "NSString+emoji.h"
 #import "TUIThemeManager.h"
 #import "TUIBaseChatViewController+AuthControl.h"
+#import "TUIMessageReadViewController.h"
+#import "TUIJoinGroupMessageCell.h"
 
-@interface TUIBaseChatViewController () <TUIMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate, TUIChatDataProviderForwardDelegate, TUINotificationProtocol>
+@interface TUIBaseChatViewController () <TUIBaseMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate, TUIChatDataProviderForwardDelegate, TUINotificationProtocol, TUIJoinGroupMessageCellDelegate, V2TIMConversationListener>
+@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property (nonatomic, strong) TUIMessageMultiChooseView *multiChooseView;
 @property (nonatomic, assign) BOOL responseKeyboard;
 // @{@"serviceID" : serviceID, @"title" : @"视频通话", @"image" : image}
@@ -47,7 +50,33 @@
 
 @end
 
+static BOOL g_isMsgNeedReadReceipt = NO;
+static BOOL g_isEnableVideoCall = YES;
+static BOOL g_isEnableAudioCall = YES;
+static BOOL g_isEnableLive = NO;
+static BOOL g_isEnableLink = YES;
+
 @implementation TUIBaseChatViewController
+
++ (void)setIsMsgNeedReadReceipt:(BOOL)isMsgNeedReadReceipt {
+    g_isMsgNeedReadReceipt = isMsgNeedReadReceipt;
+}
+
++ (void)setIsEnableVideoCall:(BOOL)isEnableVideoCall {
+    g_isEnableVideoCall = isEnableVideoCall;
+}
+
++ (void)setIsEnableAudioCall:(BOOL)isEnableAudioCall {
+    g_isEnableAudioCall = isEnableAudioCall;
+}
+
++ (void)setIsEnableLive:(BOOL)isEnableLive {
+    g_isEnableLive = isEnableLive;
+}
+
++ (void)setIsEnableLink:(BOOL)isEnableLink {
+    g_isEnableLink = isEnableLink;
+}
 
 #pragma mark - Life Cycle
 - (instancetype)init {
@@ -56,11 +85,8 @@
         [TUIBaseChatViewController createCachePath];
 
         if (NSClassFromString(@"TUIKitLive")) {
-            self.isEnableLive = YES;
+            g_isEnableLive = YES;
         }
-        self.isEnableVideoCall= YES;
-        self.isEnableAudioCall= YES;
-        self.isEnableLink = YES;
     }
     return self;
 }
@@ -75,28 +101,27 @@
     
     self.firstAppear = YES;
     self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#FFFFFF");
-    UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = self.mainTitle;
-    titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
-    titleLabel.textColor = TUICoreDynamicColor(@"nav_title_text_color", @"#000000");
-    [titleLabel sizeToFit];
-    self.navigationItem.titleView = titleLabel;
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    // 导航栏
+    [self setupNavigator];
 
     //message
 //    if (self.locateMessage) {
-        TUIMessageSearchController *vc = [[TUIMessageSearchController alloc] init];
+        TUIMessageController *vc = [[TUIMessageController alloc] init];
         vc.hightlightKeyword = self.highlightKeyword;
         vc.locateMessage = self.locateMessage;
+        vc.isMsgNeedReadReceipt = g_isMsgNeedReadReceipt;
         _messageController = vc;
         
 //    }else {
-//        _messageController = [[TUIMessageController alloc] init];
+//        _messageController = [[TUIBaseMessageController alloc] init];
 //    }
     _messageController.delegate = self;
     [_messageController setConversation:self.conversationData];
     _messageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight);
     [self addChildViewController:_messageController];
     [self.view addSubview:_messageController.view];
+    [_messageController didMoveToParentViewController:self];
 
     //input
     _inputController = [[TUIInputController alloc] init];
@@ -115,16 +140,30 @@
     self.dataProvider = [[TUIChatDataProvider alloc] init];
     self.dataProvider.forwardDelegate = self;
     
-    // 注册会话选择完成监听
+    // 监听会话变化
+    [[V2TIMManager sharedInstance] addConversationListener:self];
+    
+    // 监听会话列表选择事件
     [TUICore registerEvent:TUICore_TUIConversationNotify subKey:TUICore_TUIConversationNotify_SelectConversationSubKey object:self];
+    
+    // 监听好友信息变更通知
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
 }
 
-- (void)dealloc {    
+- (void)dealloc {
     [TUICore unRegisterEventByObject:self];
+}
+
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+    if (parent == nil) {
+        [self saveDraft];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
     self.responseKeyboard = YES;
     if (self.firstAppear) {
         [self loadDraft];
@@ -156,11 +195,38 @@
     }
 }
 
-- (void)willMoveToParentViewController:(UIViewController *)parent
+- (void)setupNavigator
 {
-    if (parent == nil) {
-        [self saveDraft];
-    }
+    _titleView = [[TUINaviBarIndicatorView alloc] init];
+    self.navigationItem.titleView = _titleView;
+    self.navigationItem.title = @"";
+    __weak typeof (self)weakSelf = self;
+    [[RACObserve(_conversationData, title) distinctUntilChanged] subscribeNext:^(NSString *title) {
+        [weakSelf.titleView setTitle:title];
+    }];
+    [self checkTitle:NO];
+    // 刷新未读数
+    [TUIChatDataProvider getTotalUnreadMessageCountWithSuccBlock:^(UInt64 totalCount) {
+        [weakSelf onChangeUnReadCount:totalCount];
+    } fail:nil];
+    
+    //left
+    _unRead = [[TUIUnReadView alloc] init];
+
+//    _unRead.backgroundColor = [UIColor colorWithRed:170/255.0 green:188/255.0 blue:209/255.0 alpha:1/1.0];   // 默认使用红色未读视图
+//    UIBarButtonItem *urBtn = [[UIBarButtonItem alloc] initWithCustomView:_unRead];
+//    self.navigationItem.leftBarButtonItems = @[urBtn];
+//    //既显示返回按钮，又显示未读视图
+//    self.navigationItem.leftItemsSupplementBackButton = YES;
+
+    //right，根据当前聊天页类型设置右侧按钮格式
+    UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    [rightButton addTarget:self action:@selector(rightBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [rightButton setImage:TUIChatBundleThemeImage(@"chat_nav_more_menu_img", @"chat_nav_more_menu") forState:UIControlStateNormal];
+    [rightButton setTitleColor:[UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1.0] forState:UIControlStateNormal];
+    rightButton.titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItems = @[rightItem];
 }
 
 #pragma mark - Public Methods
@@ -242,40 +308,99 @@
     self.resgisterParam = [NSMutableArray array];
     _moreMenus = ({
         // TUIKit 组件内部自定义按钮
-        NSMutableArray<TUIInputMoreCellData *> *moreMenus = [TUIChatDataProvider moreMenuCellDataArray:conversationData.groupID userID:conversationData.userID isNeedVideoCall:self.isEnableVideoCall isNeedAudioCall:self.isEnableAudioCall isNeedGroupLive:self.isEnableLive isNeedLink:self.isEnableLink];
-        
-        NSMutableArray *highMenus = [NSMutableArray array];
-        NSMutableArray *nomalMenus = [NSMutableArray array];
-        NSMutableArray *lowMenus = [NSMutableArray array];
-        NSMutableArray *lowestMenus = [NSMutableArray array];
-        
-        // 获取 TUIKit 组件外部注册的 more cell
-        if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:onRegisterMoreCell:)]) {
-            MoreCellPriority priority;
-            NSArray <TUIInputMoreCellData *> *dataList = [self.delegate chatController:self onRegisterMoreCell:&priority];
-            if (dataList.count > 0) {
-                if (priority == MoreCellPriority_High) {
-                    [highMenus addObjectsFromArray:dataList];
-                } else if (priority == MoreCellPriority_Nomal) {
-                    [nomalMenus addObjectsFromArray:dataList];
-                } else if (priority == MoreCellPriority_Low) {
-                    [lowMenus addObjectsFromArray:dataList];
-                }  else if (priority == MoreCellPriority_Lowest) {
-                    [lowestMenus addObjectsFromArray:dataList];
-                }
-            }
-        }
-        
-        [moreMenus addObjectsFromArray:highMenus];
-        [moreMenus addObjectsFromArray:nomalMenus];
-        [moreMenus addObjectsFromArray:lowMenus];
-        [moreMenus addObjectsFromArray:lowestMenus];
+        NSMutableArray<TUIInputMoreCellData *> *moreMenus = [TUIChatDataProvider moreMenuCellDataArray:conversationData.groupID userID:conversationData.userID isNeedVideoCall:g_isEnableVideoCall isNeedAudioCall:g_isEnableAudioCall isNeedGroupLive:g_isEnableLive isNeedLink:g_isEnableLink];
         moreMenus;
     });
     
 }
 
-#pragma mark - TUICore
+#pragma mark - Event Response
+- (void)onChangeUnReadCount:(UInt64)totalCount {
+    
+    // 此处异步的原因：当前聊天页面连续频繁收到消息，可能还没标记已读，此时也会收到未读数变更。理论上此时未读数不会包括当前会话的。
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakSelf.unRead setNum:totalCount];
+    });
+}
+
+- (void)checkTitle:(BOOL)force {
+    
+    if (force || self.conversationData.title.length == 0) {
+        if (self.conversationData.userID.length > 0) {
+            self.conversationData.title = self.conversationData.userID;
+            @weakify(self);
+            
+            [TUIChatDataProvider getFriendInfoWithUserId:self.conversationData.userID
+                                             SuccBlock:^(V2TIMFriendInfoResult * _Nonnull friendInfoResult) {
+                @strongify(self);
+                if (friendInfoResult.relation & V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST
+                    && friendInfoResult.friendInfo.friendRemark.length > 0) {
+                    self.conversationData.title = friendInfoResult.friendInfo.friendRemark;
+                } else {
+                    [TUIChatDataProvider getUserInfoWithUserId:self.conversationData.userID
+                                                   SuccBlock:^(V2TIMUserFullInfo * _Nonnull userInfo) {
+                        if (userInfo.nickName.length > 0) {
+                            self.conversationData.title = userInfo.nickName;
+                        }
+                    } failBlock:nil];
+                }
+            } failBlock:nil];
+        }
+        else if (self.conversationData.groupID.length > 0) {
+            [TUIChatDataProvider getGroupInfoWithGroupID:self.conversationData.groupID
+                                             SuccBlock:^(V2TIMGroupInfoResult * _Nonnull groupResult) {
+                if (groupResult.info.groupName.length > 0) {
+                    self.conversationData.title = groupResult.info.groupName;
+                }
+            } failBlock:nil];
+        }
+    }
+}
+
+-(void)leftBarButtonClick
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)rightBarButtonClick
+{
+    //当前为用户和用户之间通信时，右侧按钮响应为用户信息视图入口
+    if (_conversationData.userID.length > 0) {
+        
+        [self getUserOrFriendProfileVCWithUserID:self.conversationData.userID
+                                       succBlock:^(UIViewController * _Nonnull vc) {
+            [self.navigationController pushViewController:vc animated:YES];
+        } failBlock:^(int code, NSString * _Nonnull desc) {
+            [TUITool makeToastError:code msg:desc];
+        }];
+
+    //当前为群组通信时，右侧按钮响应为群组信息入口
+    } else {
+        NSDictionary *param = @{
+            TUICore_TUIGroupService_GetGroupInfoControllerMethod_GroupIDKey: self.conversationData.groupID
+        };
+        UIViewController *vc = [TUICore callService:TUICore_TUIGroupService
+                                             method:TUICore_TUIGroupService_GetGroupInfoControllerMethod
+                                              param:param];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+- (void)getUserOrFriendProfileVCWithUserID:(NSString *)userID
+                                 succBlock:(void(^)(UIViewController *vc))succ
+                                 failBlock:(nullable V2TIMFail)fail {
+    NSDictionary *param = @{
+        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_UserIDKey: userID ? : @"",
+        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_SuccKey: succ ? : ^(UIViewController *vc){},
+        TUICore_TUIContactService_GetUserOrFriendProfileVCMethod_FailKey: fail ? : ^(int code, NSString * desc){}
+    };
+    [TUICore callService:TUICore_TUIContactService
+                  method:TUICore_TUIContactService_GetUserOrFriendProfileVCMethod
+                   param:param];
+}
+
+#pragma mark - TUICore notify
 
 - (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
     if ([key isEqualToString:TUICore_TUIConversationNotify]
@@ -320,9 +445,6 @@
 - (void)inputController:(TUIInputController *)inputController didSendMessage:(V2TIMMessage *)msg
 {
     [self.messageController sendMessage:msg];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-        [self.delegate chatController:self didSendMessage:msg];
-    }
 }
 
 - (void)inputControllerDidInputAt:(TUIInputController *)inputController
@@ -338,10 +460,6 @@
 - (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell
 {
     cell.disableDefaultSelectAction = NO;
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:onSelectMoreCell:)]) {
-        [self.delegate chatController:self onSelectMoreCell:cell];
-    }
     
     if (cell.disableDefaultSelectAction) {
         return;
@@ -360,13 +478,13 @@
     }
 }
 
-#pragma mark - TUIMessageControllerDelegate
-- (void)didTapInMessageController:(TUIMessageController *)controller
+#pragma mark - TUIBaseMessageControllerDelegate
+- (void)didTapInMessageController:(TUIBaseMessageController *)controller
 {
     [self.inputController reset];
 }
 
-- (BOOL)messageController:(TUIMessageController *)controller willShowMenuInCell:(TUIMessageCell *)cell
+- (BOOL)messageController:(TUIBaseMessageController *)controller willShowMenuInCell:(TUIMessageCell *)cell
 {
     if([self.inputController.inputBar.inputTextView isFirstResponder]){
         self.inputController.inputBar.inputTextView.overrideNextResponder = cell;
@@ -375,59 +493,54 @@
     return NO;
 }
 
-- (TUIMessageCellData *)messageController:(TUIMessageController *)controller onNewMessage:(V2TIMMessage *)message
+- (TUIMessageCellData *)messageController:(TUIBaseMessageController *)controller onNewMessage:(V2TIMMessage *)message
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:onNewMessage:)]) {
-        return [self.delegate chatController:self onNewMessage:message];
-    }
     return nil;
 }
 
-- (TUIMessageCell *)messageController:(TUIMessageController *)controller onShowMessageData:(TUIMessageCellData *)data
+- (TUIMessageCell *)messageController:(TUIBaseMessageController *)controller onShowMessageData:(TUIMessageCellData *)data
 {
-    if ([self.delegate respondsToSelector:@selector(chatController:onShowMessageData:)]) {
-        return [self.delegate chatController:self onShowMessageData:data];
-    }
     return nil;
 }
 
-- (void)messageController:(TUIMessageController *)controller willDisplayCell:(TUIMessageCell *)cell withData:(TUIMessageCellData *)cellData {
-    if ([self.delegate respondsToSelector:@selector(chatController:willDisplayCell:withData:)]) {
-        [self.delegate chatController:self willDisplayCell:cell withData:cellData];
+- (void)messageController:(TUIBaseMessageController *)controller willDisplayCell:(TUIMessageCell *)cell withData:(TUIMessageCellData *)cellData {
+    //对于入群小灰条，需要进一步设置其委托。
+    if([cell isKindOfClass:[TUIJoinGroupMessageCell class]]){
+        TUIJoinGroupMessageCell *joinCell = (TUIJoinGroupMessageCell *)cell;
+        joinCell.joinGroupDelegate = self;
     }
 }
 
-- (void)messageController:(TUIMessageController *)controller onSelectMessageAvatar:(TUIMessageCell *)cell
+- (void)messageController:(TUIBaseMessageController *)controller onSelectMessageAvatar:(TUIMessageCell *)cell
 {
-    if (cell.messageData.identifier == nil)
+    if (cell.messageData.identifier == nil) {
         return;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:onSelectMessageAvatar:)]) {
-        [self.delegate chatController:self onSelectMessageAvatar:cell];
     }
+    [self getUserOrFriendProfileVCWithUserID:cell.messageData.identifier
+                                   succBlock:^(UIViewController *vc) {
+        [self.navigationController pushViewController:vc animated:YES];
+    } failBlock:nil];
 }
 
-- (void)messageController:(TUIMessageController *)controller onSelectMessageContent:(TUIMessageCell *)cell
+- (void)messageController:(TUIBaseMessageController *)controller onSelectMessageContent:(TUIMessageCell *)cell
 {
     cell.disableDefaultSelectAction = NO;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:onSelectMessageContent:)]) {
-        [self.delegate chatController:self onSelectMessageContent:cell];
-    }
     if (cell.disableDefaultSelectAction) {
         return;
     }
 }
 
-- (void)messageController:(TUIMessageController *)controller onSelectMessageMenu:(NSInteger)menuType withData:(TUIMessageCellData *)data
+- (void)messageController:(TUIBaseMessageController *)controller onSelectMessageMenu:(NSInteger)menuType withData:(TUIMessageCellData *)data
 {
     [self onSelectMessageMenu:menuType withData:data];
 }
 
-- (void)didHideMenuInMessageController:(TUIMessageController *)controller
+- (void)didHideMenuInMessageController:(TUIBaseMessageController *)controller
 {
     self.inputController.inputBar.inputTextView.overrideNextResponder = nil;
 }
 
-- (void)messageController:(TUIMessageController *)controller onReEditMessage:(TUIMessageCellData *)data
+- (void)messageController:(TUIBaseMessageController *)controller onReEditMessage:(TUIMessageCellData *)data
 {
     V2TIMMessage *message = data.innerMessage;
     if (message.elemType == V2TIM_ELEM_TYPE_TEXT) {
@@ -437,21 +550,13 @@
     }
 }
 
-
-
-
 #pragma mark - TUIChatDataProviderForwardDelegate
 - (NSString *)dataProvider:(TUIChatDataProvider *)dataProvider mergeForwardTitleWithMyName:(NSString *)name {
     return [self forwardTitleWithMyName:name];
 }
 
 - (NSString *)dataProvider:(TUIChatDataProvider *)dataProvider mergeForwardMsgAbstactForMessage:(V2TIMMessage *)message {
-    
-    NSString *display = @"";
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatController:onGetMessageAbstact:)]) {
-        return [self.delegate chatController:self onGetMessageAbstact:message];
-    }
-    return display;
+    return @"";
 }
 
 #pragma mark - 消息菜单操作: 多选 & 转发
@@ -482,7 +587,7 @@
     
     if (open) {
         _multiChooseView = [[TUIMessageMultiChooseView alloc] init];
-        _multiChooseView.frame = self.view.bounds;
+        _multiChooseView.frame = UIScreen.mainScreen.bounds;
         _multiChooseView.delegate = self;
         _multiChooseView.titleLabel.text = self.conversationData.title;
         if (@available(iOS 12.0, *)) {
@@ -625,7 +730,7 @@
         
         // 发送到其他聊天
         for (V2TIMMessage *message in msgs) {
-            
+            message.needReadReceipt = g_isMsgNeedReadReceipt;
             [TUIMessageDataProvider sendMessage:message
                                  toConversation:convCellData
                                  isSendPushInfo:YES
@@ -654,7 +759,7 @@
 }
 
 #pragma mark - 消息回复
-- (void)messageController:(TUIMessageController *)controller onRelyMessage:(nonnull TUIMessageCellData *)data
+- (void)messageController:(TUIBaseMessageController *)controller onRelyMessage:(nonnull TUIMessageCellData *)data
 {
     NSString *desc = @"";
     if (data.innerMessage.elemType == V2TIM_ELEM_TYPE_FILE) {
@@ -697,4 +802,31 @@
     }
 }
 
+#pragma mark - TUIJoinGroupMessageCellDelegate
+- (void)didTapOnRestNameLabel:(TUIJoinGroupMessageCell *)cell withIndex:(NSInteger)index{
+    NSString *userId = cell.joinData.userIDList[index];
+    
+    [self getUserOrFriendProfileVCWithUserID:userId succBlock:^(UIViewController *vc) {
+        [self.navigationController pushViewController:vc animated:YES];
+    } failBlock:^(int code, NSString *desc) {
+        [TUITool makeToastError:code msg:desc];
+    }];
+}
+
+#pragma mark - V2TIMConversationListener
+- (void)onConversationChanged:(NSArray<V2TIMConversation*> *) conversationList {
+    // 聊天窗口标题由上层维护，需要自行设置标题
+    for (V2TIMConversation *conv in conversationList) {
+        if ([conv.conversationID isEqualToString:self.conversationData.conversationID]) {
+            self.conversationData.title = conv.showName;
+            break;
+        }
+    }
+}
+
+#pragma mark - FriendInfoChangedNotification
+- (void)onFriendInfoChanged:(NSNotification *)notice
+{
+    [self checkTitle:YES];
+}
 @end

@@ -54,13 +54,20 @@
 
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     self.view.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
-    _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    CGRect rect = self.view.bounds;
+    if (![UINavigationBar appearance].isTranslucent && [[[UIDevice currentDevice] systemVersion] doubleValue]<15.0) {
+        rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - TabBar_Height - NavBar_Height );
+    }
+    _tableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     [_tableView setSectionIndexBackgroundColor:[UIColor clearColor]];
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, 8, 0);
     [_tableView setSectionIndexColor:[UIColor darkGrayColor]];
     [_tableView setBackgroundColor:self.view.backgroundColor];
+    
+    //如果不加这一行代码，依然可以实现点击反馈，但反馈会有轻微延迟，体验不好。
+    _tableView.delaysContentTouches = NO;
     if (@available(iOS 15.0, *)) {
         _tableView.sectionHeaderTopPadding = 0;
     }
@@ -84,6 +91,13 @@
         @strongify(self)
         self.firstGroupData[0].readNum = [x integerValue];
     }];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
+}
+
+- (void)onFriendInfoChanged:(NSNotification *)notice
+{
+    [self.viewModel loadContacts];
 }
 
 - (TUIContactViewDataProvider *)viewModel
@@ -195,16 +209,23 @@
 #pragma mark -
 - (void)onSelectFriend:(TUICommonContactCell *)cell
 {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onSelectFriend:)]) {
+        [self.delegate onSelectFriend:cell];
+    }
 }
 
 - (void)onAddNewFriend:(TUICommonTableViewCell *)cell
 {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onAddNewFriend:)]) {
+        [self.delegate onAddNewFriend:cell];
+    }
 }
 
 - (void)onGroupConversation:(TUICommonTableViewCell *)cell
 {
-//    TUIGroupConversationListController *vc = TUIGroupConversationListController.new;
-//    [self.navigationController pushViewController:vc animated:YES];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onGroupConversation:)]) {
+        [self.delegate onGroupConversation:cell];
+    }
 }
 
 - (void)onBlackList:(TUICommonContactCell *)cell

@@ -44,6 +44,47 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) UIImageView *imageView;
 @end
 
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                           TUINaviBarIndicatorView
+//
+/////////////////////////////////////////////////////////////////////////////////
+@interface TUINaviBarIndicatorView : UIView
+
+/**
+ *  指示器视图，即“小圆圈”本体。
+ */
+@property (nonatomic, strong) UIActivityIndicatorView *indicator;
+
+/**
+ *  示意标签
+ *  除了通过“小圆圈”外，本试图还可通过文字形式对当前状态进行展示。
+ *  例如：“连接中..." / ”腾讯·云通信（未连接）“等。
+ */
+@property (nonatomic, strong) UILabel *label;
+
+/**
+ *  设置标签
+ *  通过本函数，您可以设置标签的内容，可以用于初始化标签或在合适的情况下修改标签内容。
+ *
+ *  @param title 需要设置的标签内容。
+ */
+- (void)setTitle:(NSString *)title;
+
+/**
+ *  开始转动
+ *  令”小圆圈“开始转动。
+ */
+- (void)startAnimating;
+
+/**
+ *  停止转动
+ *  令”小圆圈“停止转动。
+ */
+- (void)stopAnimating;
+@end
+
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                           TUICommonCell & data
@@ -64,6 +105,153 @@ NS_ASSUME_NONNULL_BEGIN
 @property BOOL changeColorWhenTouched;
 
 - (void)fillWithData:(TUICommonCellData *)data;
+
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                           TUIButtonCell & data
+//
+/////////////////////////////////////////////////////////////////////////////////
+typedef enum : NSUInteger {
+    ButtonGreen,
+    ButtonWhite,
+    ButtonRedText,
+    ButtonBule,
+} TUIButtonStyle;
+
+@interface TUIButtonCellData : TUICommonCellData
+@property (nonatomic, strong) NSString *title;
+@property SEL cbuttonSelector;
+@property TUIButtonStyle style;
+@property (nonatomic, strong) UIColor *textColor;
+@property (nonatomic, assign) BOOL hideSeparatorLine;
+@end
+
+@interface TUIButtonCell : TUICommonTableViewCell
+@property (nonatomic, strong) UIButton *button;
+@property TUIButtonCellData *buttonData;
+
+- (void)fillWithData:(TUIButtonCellData *)data;
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                             TUIGroupPendencyCell & data
+//
+/////////////////////////////////////////////////////////////////////////////////
+#define TUIGroupPendencyCellData_onPendencyChanged @"TUIGroupPendencyCellData_onPendencyChanged"
+
+@interface TUIGroupPendencyCellData : TUICommonCellData
+
+/**
+ *  请求中，请求加群的群组 ID。
+ */
+@property(nonatomic,strong) NSString* groupId;
+
+/**
+ *  请求的发送者 ID。
+ */
+@property(nonatomic,strong) NSString* fromUser;
+
+/**
+ *  请求接收者的 ID。在群组请求中，本项可根据具体需求个性化填写或不填写。
+ */
+@property(nonatomic,strong) NSString* toUser;
+
+/**
+ *  请求项目。
+ */
+@property (readonly) V2TIMGroupApplication *pendencyItem;
+
+/**
+ *  请求者的头像 URL。
+ */
+@property NSURL *avatarUrl;
+
+/**
+ *  请求者昵称。
+ */
+@property NSString *title;
+
+/**
+ *  请求者的加群简介。如“小明申请加入群聊”。
+ */
+@property NSString *requestMsg;
+
+/**
+ *  是否同意。YES：同意。
+ *  此变量为 NO时，仅表明当前请求未同意，并不意味着请求已拒绝。
+ */
+@property BOOL isAccepted;
+
+/**
+ *  是否拒绝。YES：拒绝。
+ *  此变量为 NO时，仅表明当前请求未拒绝，并不意味着请求已同意。
+ */
+@property BOOL isRejectd;
+@property SEL cbuttonSelector;
+
+/**
+ *  依据 IM SDK 中的 TIMGroupPendencyItem 初始化 cellData。
+ *
+ *  @param args 初始化的数据依据。通过 IM SDK 提供的请求相关接口获得。
+ *
+ *  @return 返回一个 TUIGroupPendencyCellData。将从 SDK 获取的对象转换成了更便于我们处理的对象。
+ */
+- (instancetype)initWithPendency:(V2TIMGroupApplication *)args;
+
+/**
+ *  接受请求
+ *  通过 IM SDK 提供的接口 accept 对此请求进行接受，并给出相应的提示信息。
+ */
+- (void)accept;
+
+/**
+ *  接受请求
+ *  通过 IM SDK 提供的接口 refuse 对此请求进行拒绝，并给出相应的提示信息。
+ */
+- (void)reject;
+
+@end
+
+@interface TUIGroupPendencyCell : TUICommonTableViewCell
+
+/**
+ *  申请者头像视图。
+ */
+@property UIImageView *avatarView;
+
+/**
+ *  申请者昵称标签。
+ */
+@property UILabel *titleLabel;
+
+/**
+ *  申请者请求简述。
+ */
+@property UILabel *addWordingLabel;
+
+/**
+ *  同意
+ *  在 tableCell 最右侧显示的同意按钮。
+ */
+@property UIButton *agreeButton;
+
+/**
+ *  请求单元数据源。
+ *  存放请求单元所需的一系列信息与数据。包括群组 ID、用户头像、用户昵称、请求状态（同意或拒绝）等等。
+ *  具体信息请参考 Section\Chat\Pendency\ViewModel\TUIGroupPendencyCellData.h
+ */
+@property TUIGroupPendencyCellData *pendencyData;
+
+/**
+ *  根据消息源填充请求单元。
+ *  包括用户头像、用户昵称、请求简述、按钮标题等。
+ *
+ *  @param pendencyData 负责存放数据的数据源。
+ */
+- (void)fillWithData:(TUIGroupPendencyCellData *)pendencyData;
 
 @end
 
