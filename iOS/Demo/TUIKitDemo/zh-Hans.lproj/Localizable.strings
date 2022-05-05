@@ -35,13 +35,8 @@
 "confirm_log_out" = "确定退出吗";
 "no_personal_signature" = "暂无个性签名";
 "no_set" = "未设置";
-"please_fill_in_verification_information" = "请填写验证信息";
-"send_success" = "发送成功";
-"please_fill_in_remarks_group_info" = "请填写备注和分组";
-"my_friend" = "我的朋友";
-"add_success" = "添加成功";
-"delete_success" = "删除成功";
-"choose_avatar_for_you" = "TUIKit为您选择一个头像";
+
+"choose_avatar_for_you" = "App随机为您分配一个系统头像";
 
 "AppLoginSucc" = "已成功登录";
 "AppGetAccessAddressFail" = "服务异常，请检查网络后重试";
@@ -50,9 +45,9 @@
 "AppCancelRelogin" = "退出";
 "AppConfirmRelogin" = "重新登录";
 
-"AppMainTitle" = "腾讯·云通信";
+"AppMainTitle" = "腾讯云·IM";
 "AppMainConnectingTitle" = "连接中...";
-"AppMainDisconnectTitle" = "腾讯·云通信(未连接)";
+"AppMainDisconnectTitle" = "腾讯云·IM(未连接)";
 
 "TabBarItemMessageText" = "消息";
 "TabBarItemContactText" = "通讯录";
@@ -67,11 +62,8 @@
 "ChatsNewChatRoomText" = "创建聊天室";
 "ChatsNewCommunityText" = "创建社群";
 
-"ChatsCreatePrivateGroupTips" = "创建讨论组";
-"ChatsCreateGroupTips" = "创建群聊";
-"ChatsCreateChatRoomTips" = "创建聊天室";
-"ChatsCreateDefaultTips" = "创建群组";
-"ChatsCreateCommunityTips" = "创建社群";
+
+"ChatsCreateFailed" = "创建群失败";
 
 "ChatsSelectContact" = "选择联系人";
 
@@ -83,12 +75,14 @@
 "MeFriendRequestMethodNeedConfirm" = "需要验证";
 "MeFriendRequestMethodDenyAll" = "拒绝任何人加好友";
 
-"MeAbout" = "关于腾讯·云通信";
+"MeAbout" = "关于腾讯云·IM";
 "MeDevelop" = "开发调试";
 "MeReportMemoryLeak" = "内存泄漏上报";
 
 "MeSwitchSkin" = "更换主题";
 "MeSwitchLaunguage" = "切换语言";
+"MeMessageReadStatus" = "消息阅读状态";
+"MeMessageReadStatusDesc" = "关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到您是否已读";
 
 "ProfilePhoto" = "头像";
 "ProfileName"  = "昵称";
@@ -161,19 +155,6 @@
 
 // ---- 2021-04-22 新增
 "TipsPhoneNotNull" = "手机号不能为空";
-"StickyonTop" = "置顶";
-"CancelStickonTop" = "取消置顶";
-"ClearHistoryChatMessage" = "清空消息";
-
-// ---- 2021-06-15 新增
-"LoginAgreementFormat" = "我已阅读并同意%@和%@。";
-"LoginAgreementParamPrivacy" = "《隐私条例》";
-"LoginAgreementParamUser" = "《用户协议》";
-
-"MePrivacy" = "隐私条例";
-"MeDisclaimer" = "免责声明";
-"MeDisclaimerContent" = "IM（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。";
-"TipsAgreementError" = "请先阅读并同意协议";
 
 "GetSmsErrorFormat" = "获取验证码错误，请刷新重试！(%@)";
 
@@ -196,7 +177,7 @@
 "ThemeNameSerious" = "深沉";
 "ThemeNameLight" = "轻量";
 "ThemeNameLivey" = "活泼";
-"ThemeNameDark" = "黑夜";
+"ThemeNameDark" = "深色";
 "ThemeNameSystem" = "跟随系统";
 
 "TUIKitAboutUsSDKVersion" = "SDK版本";
@@ -207,7 +188,7 @@
 "TUIKitAboutUs3PartySharingList" = "第三方信息共享清单";
 "TUIKitAboutUsCloseAccount" = "注销账户";
 "TUIKitAboutUsContactUs" = "联系我们";
-"TUIKitAboutUsDisclaimerText" = "IM（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。";
+"TUIKitAboutUsDisclaimerText" = "腾讯云IM APP（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，本产品音视频互动全程均有录音录像存档，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。";
 
 "TUIKitAboutUsCloseAccountDescribe" =  "注销后，您将无法使用当前账号，相关数据也将删除无法找回。当前账号ID:%@";
 "TUIKitAboutUsCloseAccountAlterMsg" = "确认注销账号吗?";
@@ -217,10 +198,15 @@
 "TUIKitAboutUsCloseAccountFailed" = "注销失败";
 
 //隐私弹窗协议
-"TUIPrivateProtocolAlertMsg" = "欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。\n请您点击 《用户协议》、《隐私政策》、《个人信息收集清单》和《第三方信息共享清单》并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！";
+"TUIPrivateProtocolAlertMsg" = "欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。\n请您点击 《用户协议》、《隐私政策摘要》、《隐私政策》、《个人信息收集清单》和《第三方信息共享清单》并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！";
 "TUIPrivateProtocolHighlight1" = "《用户协议》";
 "TUIPrivateProtocolHighlight2" = "《隐私政策》";
 "TUIPrivateProtocolHighlight3" = "《个人信息收集清单》";
 "TUIPrivateProtocolHighlight4" = "《第三方信息共享清单》";
+"TUIPrivateProtocolHighlight5" = "《隐私政策摘要》";
 "TUIPrivateProtocolAlertActionAgree" = "同意并继续";
 "TUIPrivateProtocolAlertActionDisagree" = "不同意并退出";
+
+"TUIThemeNameSystemFollowTitle" = "跟随系统自动切换";
+"TUIThemeNameSystemFollowSubTitle" = "开启后仅展示默认皮肤 (轻快/深色)，不可切换其他皮肤样式";
+

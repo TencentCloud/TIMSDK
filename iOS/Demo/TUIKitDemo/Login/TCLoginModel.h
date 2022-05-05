@@ -1,5 +1,5 @@
 //
-//  TCLoginModel.m
+//  TCLoginModel.h
 //  TCLVBIMDemo
 //
 //  Created by dackli on 16/8/3.
@@ -7,55 +7,65 @@
 //
 
 #import <Foundation/Foundation.h>
-#ifndef APP_EXT
-#import "TCLoginModel.h"
-#endif
-#import "TCLoginParam.h"
-#import <Foundation/Foundation.h>
 
-#define  logoutNotification  @"logoutNotification"
+extern NSString * const kKeyLoginInfoApaasTicket;
+extern NSString * const kKeyLoginInfoApaasRandStr;
+extern NSString * const kKeyLoginInfoUserSig;
+extern NSString * const kKeyLoginInfoUserID;
 
-typedef NS_ENUM(NSInteger,RequestType) {
-    RequestType_GetSms,
-    RequestType_Smslogin,
-};
+typedef void (^TCSuccess)(NSDictionary *data);
+typedef void (^TCFail)(NSInteger errorCode, NSString *errorMsg);
 
-typedef void (^TCSuccess)();
-typedef void (^TCFail)(int errCode, NSString* errMsg);
-typedef void (^TCSmsSuccess)(NSDictionary *smsParam);
-typedef void (^TCLoginSuccess)(NSString *sig, NSUInteger sdkAppId);
-
-@protocol TCLoginListener <NSObject>
-- (void)LoginOK:(NSString*)userName hashedPwd:(NSString*)pwd;
-@end
-
-/**
- *  业务server登录
- */
 @interface TCLoginModel : NSObject
 
-@property (nonatomic, copy) NSString* token;
+@property (nonatomic, copy, readonly) NSString *token;
+@property (nonatomic, copy, readonly) NSString *captchaAppID;
+@property (nonatomic, copy, readonly) NSString *userID;
+@property (nonatomic, copy, readonly) NSString *userSig;
+@property (nonatomic, assign, readonly) NSUInteger SDKAppID;
+@property (nonatomic, copy, readonly) NSString *sessionID;
+
+@property (nonatomic, copy) NSString *ticket;
+@property (nonatomic, copy) NSString *randStr;
+@property (nonatomic, copy) NSString *phone;
+@property (nonatomic, copy) NSString *smsCode;
+@property (nonatomic, assign) BOOL isDirectlyLoginSDK; // debug login is the only way to login sdk directly
 
 + (instancetype)sharedInstance;
 
-+ (BOOL)isAutoLogin;
+// fetch the global access address from server, usually called when app starts
+- (void)getAccessAddressWithSucceedBlock:(TCSuccess)succeed
+                               failBlock:(TCFail)fail;
 
-+ (void)setAutoLogin:(BOOL)autoLogin;
+// get sms verification code before logining
+- (void)getSmsVerificationCodeWithSucceedBlock:(TCSuccess)succeed
+                                     failBlock:(TCFail)fail;
 
-- (void)registerWithUsername:(NSString *)username password:(NSString *)password succ:(TCSuccess)succ fail:(TCFail)fail;
+// login account by phone number and sms code
+- (void)loginByPhoneWithSucceedBlock:(TCSuccess)succeed
+                           failBlock:(TCFail)fail;
 
-- (void)loginWithUsername:(NSString*)username password:(NSString*)password succ:(TCLoginSuccess)succ fail:(TCFail)fail;
+// login account by token, usually called in auto-login
+- (void)loginByTokenWithSucceedBlock:(TCSuccess)succeed
+                           failBlock:(TCFail)fail;
 
-- (void)loginByToken:(NSString*)username hashPwd:(NSString*)hashPwd succ:(TCLoginSuccess)succ fail:(TCFail)fail;
+// if user leaves/kills app without logout, app will try auto-login on the next launch of app
+- (void)autoLoginWithSucceedBlock:(TCSuccess)succeed
+                        failBlock:(TCFail)fail;
 
-- (void)logout:(TCSuccess)completion;
+// logout the account
+- (void)logoutWithSucceedBlock:(TCSuccess)succeed
+                     failBlock:(TCFail)fail;
 
-- (void)getCosSign:(void (^)(int errCode, NSString* msg, NSDictionary* resultDict))completion;
-- (void)getVodSign:(void (^)(int errCode, NSString* msg, NSDictionary* resultDict))completion;
-- (void)uploadUGC:(NSDictionary*)params completion:(void (^)(int errCode, NSString* msg, NSDictionary* resultDict))completion;
+// delete/cancel the account
+- (void)deleteUserWithSucceedBlock:(TCSuccess)succeed
+                         failBlock:(TCFail)fail;
 
-- (void)reLogin:(TCLoginSuccess)succ fail:(TCFail)fail;
+// clear user's login info
+- (void)clearLoginedInfo;
 
-- (void)smsRequest:(RequestType)type param:(NSDictionary *)param succ:(TCSmsSuccess)succ fail:(TCFail)fail;
+// save user's login info
+- (void)saveLoginedInfoWithUserID:(NSString *)userID
+                          userSig:(NSString *)userSig;
 
 @end

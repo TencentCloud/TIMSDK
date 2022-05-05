@@ -44,6 +44,9 @@ typedef void(^ThemeSelectCallback)(ThemeSelectCollectionViewCellModel *cellModel
 
 @end
 
+@interface ThemeFooterCollectionViewCell : ThemeSelectCollectionViewCell
+
+@end
 
 
 @interface ThemeSelectController : UIViewController

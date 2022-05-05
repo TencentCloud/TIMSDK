@@ -9,20 +9,16 @@
 #import "ProfileController.h"
 #import "LoginController.h"
 #import "AppDelegate.h"
-#import "TUIButtonCell.h"
 #import "TUITextEditController.h"
 #import "TUIDateEditController.h"
 #import "TUICommonModel.h"
 #import "TUICommonTextCell.h"
 #import "TUICommonModel.h"
-#import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIKit.h"
 #import "TCUtil.h"
-#import "TUIDefine.h"
 #import "TUICommonAvatarCell.h"
 #import "TUIModifyView.h"
 #import "TUIThemeManager.h"
-#import "TUINaviBarIndicatorView.h"
 
 #define SHEET_COMMON 1
 #define SHEET_AGREE  2

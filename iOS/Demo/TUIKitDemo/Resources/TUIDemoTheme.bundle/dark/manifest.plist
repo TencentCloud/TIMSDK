@@ -26,28 +26,26 @@
 	<string>nav_back.png</string>
 	<key>nav_more_img</key>
 	<string>nav_more.png</string>
-	<key>nav_more_menu_img</key>
-	<string>nav_more_menu.png</string>
 	<key>nav_title_text_color</key>
 	<string>#F4F5F9</string>
 	<key>tab_title_text_select_color</key>
-	<string>#FFFFFF</string>
+	<string>#2E8BD8</string>
 	<key>tab_title_text_color</key>
-	<string>#939393</string>
+	<string>#999999</string>
 	<key>tab_bg_color</key>
-	<string>#13151B</string>
+	<string>#000000</string>
 	<key>pop_bg_color</key>
-	<string>#13151B</string>
+	<string>#444444</string>
 	<key>pop_text_color</key>
 	<string>#FFFFFF</string>
 	<key>login_content_bg_color</key>
-	<string>#13151B</string>
+	<string>#131313</string>
 	<key>login_form_title_color</key>
 	<string>#FFFFFF</string>
 	<key>login_placeholder_color</key>
-	<string>#BBBBBB</string>
+	<string>#666666</string>
 	<key>login_btn_bg_color</key>
-	<string>#2B8BD5</string>
+	<string>#2170B1</string>
 	<key>login_theme_img</key>
 	<string>login_theme.png</string>
 	<key>login_language_img</key>
@@ -58,5 +56,17 @@
 	<string>#FFFFFF99</string>
 	<key>public_login_logo_img</key>
 	<string>public_login_logo.png</string>
+	<key>arrow_n_img</key>
+	<string>arrow_n</string>
+	<key>separator_color</key>
+	<string>#39393B</string>
+	<key>pop_icon_new_chat_img</key>
+	<string>new_chat.png</string>
+	<key>pop_icon_new_group_img</key>
+	<string>new_groupchat</string>
+	<key>pop_icon_add_group_img</key>
+	<string>add_group</string>
+	<key>pop_icon_add_friend_img</key>
+	<string>add_friend</string>
 </dict>
 </plist>

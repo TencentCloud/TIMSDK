@@ -54,7 +54,7 @@
 
 - (void)setData:(TPopCellData *)data
 {
-    _image.image = [UIImage imageNamed:data.image];
+    _image.image = data.image;
     _title.text = data.title;
 }
 

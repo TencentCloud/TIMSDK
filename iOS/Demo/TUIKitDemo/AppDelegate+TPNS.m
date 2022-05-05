@@ -44,6 +44,10 @@ NSString * _currentAccount;
      * 如果您的应用服务接入点为上海、新加坡或中国香港，请按照下文步骤完成其他服务接入点域名配置：
      * https://cloud.tencent.com/document/product/548/36663
      *
+     * 其他服务接入点域名如下：
+     * 上海：tpns.sh.tencent.com
+     * 新加坡：tpns.sgp.tencent.com
+     * 中国香港：tpns.hk.tencent.com
     */
     [[XGPush defaultManager] configureClusterDomainName:tpnsDomain];
     [[XGPush defaultManager] startXGWithAccessID:tpnsAccessID accessKey:tpnsAccessKey delegate:self];

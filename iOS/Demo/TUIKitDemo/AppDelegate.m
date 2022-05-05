@@ -15,58 +15,31 @@
 #import "TUIKit.h"
 #import "Aspects.h"
 #import "TCUtil.h"
-#import "TUILoginCache.h"
-#import "TUIDarkModel.h"
-#import "GenerateTestUserSig.h"
-#import "TUILoginCache.h"
+#import "TCLoginModel.h"
 
 #if ENABLELIVE
 #import "TRTCSignalFactory.h"
 @import TXLiteAVSDK_TRTC;
 #endif
 
+#import "TUIBaseChatViewController.h"
 #import "TUIBadgeView.h"
 #import "AppDelegate+Push.h"
 #import "ThemeSelectController.h"
 #import "TUIThemeManager.h"
 #import "LanguageSelectController.h"
 
-@interface AppDelegate () <UIAlertViewDelegate, V2TIMConversationListener, V2TIMSDKListener, ThemeSelectControllerDelegate, LanguageSelectControllerDelegate>
+#import "TUILogin.h"
 
-@property (nonatomic, weak) TUIBadgeView *badgeView;
+@interface AppDelegate () <V2TIMConversationListener, TUILoginListener, ThemeSelectControllerDelegate, LanguageSelectControllerDelegate>
 
 @end
 
-static AppDelegate *app;
 
 @implementation AppDelegate
 
-+ (instancetype)sharedInstance {
-    return app;
-}
-
-- (void)login:(NSString *)identifier userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail
-{
-    [[TUIKit sharedInstance] setupWithAppId:SDKAPPID];
-    [[TUIKit sharedInstance] login:identifier userSig:sig succ:^{
-        
-        [self push_registerIfLogined:identifier];
-        self.window.rootViewController = [app getMainController];
-        
-        [TUITool makeToast:NSLocalizedString(@"AppLoginSucc", nil) duration:1];
-        if (succ) {
-            succ();
-        }
-    } fail:^(int code, NSString *msg) {
-        self.window.rootViewController = [self getLoginController];
-        if (fail) {
-            fail(code, msg);
-        }
-    }];
-}
-
+#pragma mark - Life cycle
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
     app = self;
 
     // Override point for customization after application launch.
@@ -75,30 +48,162 @@ static AppDelegate *app;
     // 设置主题样式
     TUIRegisterThemeResourcePath([NSBundle.mainBundle pathForResource:@"TUIDemoTheme.bundle" ofType:nil], TUIThemeModuleDemo);
     [ThemeSelectController applyTheme:nil];
-    
-    [self push_init];
+        
     [self setupListener];
     [self setupCustomSticker];
     [self setupGlobalUI];
-    [self autoLoginIfNeeded];
+    [self setupConfig];
+    [self tryAutoLogin];
     
     return YES;
 }
+- (void)applicationDidEnterBackground:(UIApplication *)application {}
+- (void)applicationWillEnterForeground:(UIApplication *)application {}
+- (void)applicationWillTerminate:(UIApplication *)application {}
+#pragma mark - Public
++ (instancetype)sharedInstance {
+    return app;
+}
 
-- (void)autoLoginIfNeeded
-{
-    self.window.rootViewController = [self getLoginController];
-    [[TUILoginCache sharedInstance] login:^(NSString * _Nonnull identifier, NSUInteger appId, NSString * _Nonnull userSig) {
-        if(appId == SDKAPPID && identifier.length != 0 && userSig.length != 0){
-            [self login:identifier userSig:userSig succ:nil fail:nil];
-        } else {
-            self.window.rootViewController = [self getLoginController];
+- (UIViewController *)getLoginController {
+   UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+   LoginController *login = [board instantiateViewControllerWithIdentifier:@"LoginController"];
+   UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:login];
+   return nav;
+}
+- (void)loginSDK:(NSString *)userID userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail {
+    [TUILogin login:SDKAPPID userID:userID userSig:sig succ:^{
+        [self push_init];
+        [self push_registerIfLogined:userID];
+        
+        // fix: iOS 13 的系统，keyWindow 可能为空，导致切换跟控制器失败，从而引起白屏
+        // ios 13 的 iphone7plus 和 iphone xs max 都会出现，两者出现的频率不一样
+        // 复现步骤：APP 启动登录后，杀进程。再次点击桌面图标启动，页面白屏。（注意，xcode debug 模式下不会复现）
+        if (!self.window.isKeyWindow) {
+            [self.window makeKeyWindow];
+        }
+        
+        self.window.rootViewController = [self getMainController];
+        
+        [TUITool makeToast:NSLocalizedString(@"AppLoginSucc", nil) duration:1];
+        if (succ) {
+            succ();
+        }
+    } fail:^(int code, NSString *msg) {
+        // fix: iOS 13 的系统，keyWindow 可能为空，导致切换跟控制器失败，从而引起白屏
+        // ios 13 的 iphone7plus 和 iphone xs max 都会出现，两者出现的频率不一样
+        // 复现步骤：APP 启动登录后，杀进程。再次点击桌面图标启动，页面白屏。（注意，xcode debug 模式下不会复现）
+        if (!self.window.isKeyWindow) {
+            [self.window makeKeyWindow];
+        }
+        
+        self.window.rootViewController = [self getLoginController];
+        [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
+        if (fail) {
+            fail(code, msg);
         }
     }];
 }
 
-- (void)setupGlobalUI
-{
+- (UITabBarController *)getMainController {
+    TUITabBarController *tbc = [[TUITabBarController alloc] init];
+    NSMutableArray *items = [NSMutableArray array];
+    TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
+    msgItem.title = NSLocalizedString(@"TabBarItemMessageText", nil); //@"消息";
+    msgItem.selectedImage = TUIDemoDynamicImage(@"tab_msg_selected_img", [UIImage imageNamed:@"session_selected"]);
+    msgItem.normalImage = TUIDemoDynamicImage(@"tab_msg_normal_img", [UIImage imageNamed:@"session_normal"]);
+    msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
+    msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    msgItem.badgeView = [[TUIBadgeView alloc] init];
+    @weakify(self)
+    msgItem.badgeView.clearCallback = ^{
+        @strongify(self)
+        [self push_clearUnreadMessage];
+    };
+    [items addObject:msgItem];
+
+    TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
+    contactItem.title = NSLocalizedString(@"TabBarItemContactText", nil);
+    contactItem.selectedImage = TUIDemoDynamicImage(@"tab_contact_selected_img", [UIImage imageNamed:@"contact_selected"]);
+    contactItem.normalImage = TUIDemoDynamicImage(@"tab_contact_normal_img", [UIImage imageNamed:@"contact_normal"]);
+    contactItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
+    contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    contactItem.badgeView = [[TUIBadgeView alloc] init];
+    [items addObject:contactItem];
+    
+    TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
+    setItem.title = NSLocalizedString(@"TabBarItemMeText", nil);
+    setItem.selectedImage = TUIDemoDynamicImage(@"tab_me_selected_img", [UIImage imageNamed:@"myself_selected"]);
+    setItem.normalImage = TUIDemoDynamicImage(@"tab_me_normal_img", [UIImage imageNamed:@"myself_normal"]);
+    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
+    setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
+    [items addObject:setItem];
+    tbc.tabBarItems = items;
+
+    return tbc;
+}
+
+
+
+#pragma mark - Private
+- (void)setupListener {
+    [TUILogin addLoginListener:self];
+    [[V2TIMManager sharedInstance] addConversationListener:self];
+}
+
+void uncaughtExceptionHandler(NSException*exception) {
+    NSLog(@"CRASH: %@", exception);
+    NSLog(@"Stack Trace: %@",[exception callStackSymbols]);
+    // Internal error reporting
+}
+
+- (void)tryAutoLogin {
+    self.window.rootViewController = [self getLoginController];
+    [[TCLoginModel sharedInstance] getAccessAddressWithSucceedBlock:^(NSDictionary *data) {
+        [self autoLoginIfNeeded];
+    } failBlock:^(NSInteger errorCode, NSString *errorMsg) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[TCLoginModel sharedInstance] getAccessAddressWithSucceedBlock:^(NSDictionary *data) {
+                [self autoLoginIfNeeded];
+            } failBlock:^(NSInteger errorCode, NSString *errorMsg) {
+            }];
+        });
+    }];
+}
+
+- (void)autoLoginIfNeeded {
+    @weakify(self)
+    [[TCLoginModel sharedInstance] autoLoginWithSucceedBlock:^(NSDictionary *data) {
+        @strongify(self)
+        NSString *userSig = data[@"sdkUserSig"];
+        NSString *userID = data[@"userId"];
+        if (userID.length != 0 && userSig.length != 0) {
+            [self loginSDK:userID userSig:userSig succ:nil fail:nil];
+        } else {
+            self.window.rootViewController = [self getLoginController];
+            [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
+        }
+    } failBlock:^(NSInteger errorCode, NSString *errorMsg) {
+        @strongify(self)
+        self.window.rootViewController = [self getLoginController];
+        [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
+    }];
+}
+
+- (void)setupConfig {
+    [TUIBaseChatViewController setIsMsgNeedReadReceipt:[self loadIsShowMessageReadStatus]];
+}
+
+- (BOOL)loadIsShowMessageReadStatus {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:kEnableMsgReadStatus]) {
+        return [[NSUserDefaults standardUserDefaults] boolForKey:kEnableMsgReadStatus];
+    } else {
+        return YES;
+    }
+}
+
+#pragma mark -- Setup UI
+- (void)setupGlobalUI {
     [UIViewController aspect_hookSelector:@selector(setTitle:)
                               withOptions:AspectPositionAfter
                                usingBlock:^(id<AspectInfo> aspectInfo, NSString *title) {
@@ -113,8 +218,7 @@ static AppDelegate *app;
     } error:NULL];
 }
 
-- (void)setupCustomSticker
-{
+- (void)setupCustomSticker {
     NSMutableArray *faceGroups = [NSMutableArray arrayWithArray:TUIConfig.defaultConfig.faceGroups];
     
     //4350 group
@@ -183,83 +287,45 @@ static AppDelegate *app;
     TUIConfig.defaultConfig.faceGroups = faceGroups;
 }
 
-
-- (void)handleVCLeak:(UIViewController *)vc oprSeq:(NSString *)seq stackInfo:(NSString *)stack {
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"发现内存泄露:%@",vc] message:seq preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil]];
-    [self.window.rootViewController presentViewController:ac animated:YES completion:nil];
+#pragma mark - V2TIMConversationListener
+- (void)onTotalUnreadMessageCountChanged:(UInt64) totalUnreadCount {
+    NSLog(@"%s, totalUnreadCount:%llu", __func__, totalUnreadCount);
 }
 
-- (void)handleUIViewLeak:(UIView *)view detail:(NSString *)detail hierarchyInfo:(NSString *)hierarchy stackInfo:(NSString *)stack {
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"发现内存泄露:%@",view] message:hierarchy preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil]];
-    [self.window.rootViewController presentViewController:ac animated:YES completion:nil];
-}
-
-- (void)setupListener
-{
-    [[V2TIMManager sharedInstance] addIMSDKListener:self];
-    [[V2TIMManager sharedInstance] addConversationListener:self];
-}
-
-void uncaughtExceptionHandler(NSException*exception){
-    NSLog(@"CRASH: %@", exception);
-    NSLog(@"Stack Trace: %@",[exception callStackSymbols]);
-    // Internal error reporting
-}
-
-- (UIViewController *)getLoginController{
-    UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    LoginController *login = [board instantiateViewControllerWithIdentifier:@"LoginController"];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:login];
-    return nav;
-}
-
-- (UITabBarController *)getMainController{
-    TUITabBarController *tbc = [[TUITabBarController alloc] init];
-    NSMutableArray *items = [NSMutableArray array];
-    TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
-    msgItem.title = NSLocalizedString(@"TabBarItemMessageText", nil); //@"消息";
-    msgItem.selectedImage = TUIDemoDynamicImage(@"tab_msg_selected_img", [UIImage imageNamed:@"session_selected"]);
-    msgItem.normalImage = TUIDemoDynamicImage(@"tab_msg_normal_img", [UIImage imageNamed:@"session_normal"]);
-    msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
-    msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
-    msgItem.badgeView = [[TUIBadgeView alloc] init];
-    @weakify(self)
-    msgItem.badgeView.clearCallback = ^{
-        @strongify(self)
-        [self push_clearUnreadMessage];
-    };
-    [items addObject:msgItem];
-
-    TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
-    contactItem.title = NSLocalizedString(@"TabBarItemContactText", nil);
-    contactItem.selectedImage = TUIDemoDynamicImage(@"tab_contact_selected_img", [UIImage imageNamed:@"contact_selected"]);
-    contactItem.normalImage = TUIDemoDynamicImage(@"tab_contact_normal_img", [UIImage imageNamed:@"contact_normal"]);
-    contactItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
-    contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
-    contactItem.badgeView = [[TUIBadgeView alloc] init];
-    [items addObject:contactItem];
+#pragma mark - TUILoginListener
+- (void)onConnecting {
     
-    TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
-    setItem.title = NSLocalizedString(@"TabBarItemMeText", nil);
-    setItem.selectedImage = TUIDemoDynamicImage(@"tab_me_selected_img", [UIImage imageNamed:@"myself_selected"]);
-    setItem.normalImage = TUIDemoDynamicImage(@"tab_me_normal_img", [UIImage imageNamed:@"myself_normal"]);
-    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[SettingController alloc] init]];
-    setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
-    [items addObject:setItem];
-    tbc.tabBarItems = items;
-
-    return tbc;
 }
 
-- (void)onUserStatus:(TUIUserStatus)status
+- (void)onConnectSuccess {
+    
+}
+
+- (void)onConnectFailed:(int)code err:(NSString *)err {
+    
+}
+
+- (void)onUserSigExpired {
+    [self onUserStatus:TUser_Status_SigExpired];
+}
+
+- (void)onKickedOffline {
+    [self onUserStatus:TUser_Status_ForceOffline];
+}
+
+- (TUIContactViewDataProvider *)contactDataProvider
 {
+    if (_contactDataProvider == nil) {
+        _contactDataProvider = [[TUIContactViewDataProvider alloc] init];
+    }
+    return _contactDataProvider;
+}
+
+- (void)onUserStatus:(TUIUserStatus)status {
     switch (status) {
         case TUser_Status_ForceOffline:
         {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"下线通知" message:@"您的帐号于另一台手机上登录。" delegate:self cancelButtonTitle:@"退出" otherButtonTitles:@"重新登录", nil];
-            [alertView show];
+            [self showKickOffAlert];
         }
             break;
         case TUser_Status_ReConnFailed:
@@ -277,54 +343,27 @@ void uncaughtExceptionHandler(NSException*exception){
     }
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0)
-    {
-        [[TUIKit sharedInstance] logout:^{
-            NSLog(@"登出成功！");
+- (void)showKickOffAlert {
+    [self showAlertWithTitle:NSLocalizedString(@"AppOfflineTitle", nil) message:NSLocalizedString(@"AppOfflineDesc", nil) cancelAction:^(UIAlertAction *action, NSString *content) {
+        [TUILogin logout:^{
+            NSLog(@"logout sdk succeed");
         } fail:^(int code, NSString *msg) {
-            NSLog(@"退出登录");
+            NSLog(@"logout sdk failed, code: %ld, msg: %@", (long)code, msg);
         }];
-        
         self.window.rootViewController = [self getLoginController];
-    }
-    else
-    {
-        // 重新登录
-        [[TUILoginCache sharedInstance] login:^(NSString * _Nonnull identifier, NSUInteger appId, NSString * _Nonnull userSig) {
-            [self login:identifier userSig:userSig succ:^{
-                NSLog(@"登录成功！");
-                self.window.rootViewController = [self getMainController];
-            } fail:^(int code, NSString *msg) {
-                NSLog(@"登录失败！");
-                self.window.rootViewController = [self getLoginController];
-            }];
+        [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
+    } confirmAction:^(UIAlertAction *action, NSString *content) {
+        NSString *userID = [TCLoginModel sharedInstance].userID;
+        NSString *userSig = [TCLoginModel sharedInstance].userSig;
+        [self loginSDK:userID userSig:userSig succ:^{
+            NSLog(@"relogin sdk succeed");
+            self.window.rootViewController = [self getMainController];
+        } fail:^(int code, NSString *msg) {
+            NSLog(@"relogin sdk failed, code: %ld, msg: %@", (long)code, msg);
+            self.window.rootViewController = [self getLoginController];
+            [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
         }];
-    }
-}
-
-#pragma mark - V2TIMConversationListener
-- (void)onTotalUnreadMessageCountChanged:(UInt64) totalUnreadCount {
-    NSLog(@"%s, totalUnreadCount:%llu", __func__, totalUnreadCount);
-}
-
-#pragma mark - V2TIMSDKListener
-
-- (void)onKickedOffline {
-    [self onUserStatus:TUser_Status_ForceOffline];
-}
-
-- (void)onUserSigExpired {
-    [self onUserStatus:TUser_Status_SigExpired];
-}
-
-- (TUIContactViewDataProvider *)contactDataProvider
-{
-    if (_contactDataProvider == nil) {
-        _contactDataProvider = [[TUIContactViewDataProvider alloc] init];
-    }
-    return _contactDataProvider;
+    }];
 }
 
 #pragma mark - LanguageSelectControllerDelegate
@@ -399,6 +438,33 @@ void uncaughtExceptionHandler(NSException*exception){
         [themeVc.view hideToastActivity];
         themeVc.disable = NO;
     });
+}
+
+
+#pragma mark - Other
+typedef void (^cancelHandler)(UIAlertAction *action, NSString *content);
+typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
+- (void)showAlertWithTitle:(NSString *)title message:(NSString *)message cancelAction:(cancelHandler)cancelHandler confirmAction:(confirmHandler)confirmHandler {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"AppCancelRelogin", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        if (cancelHandler) {
+            cancelHandler(action, nil);
+        }
+    }];
+    
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"AppConfirmRelogin", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if (confirmHandler) {
+            confirmHandler(action, nil);
+        }
+    }];
+    
+    [alertController addAction:cancel];
+    [alertController addAction:confirm];
+    
+    [self.window.rootViewController presentViewController:alertController animated:NO completion:nil];
 }
 
 @end

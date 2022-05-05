@@ -1,6 +1,7 @@
 #import "GenerateTestUserSig.h"
 #import <CommonCrypto/CommonCrypto.h>
 #import <zlib.h>
+#import "TCLoginModel.h"
 
 @implementation GenerateTestUserSig
 
@@ -25,7 +26,12 @@
 
 + (void)switchServer:(TUIDemoServerType)serverType {
     [NSUserDefaults.standardUserDefaults setInteger:serverType forKey:@"server_type"];
+    [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"server_switched"];
     [NSUserDefaults.standardUserDefaults synchronize];
+}
+
++ (BOOL)isServerSwitched {
+    return [NSUserDefaults.standardUserDefaults boolForKey:@"server_switched"];
 }
 
 + (TUIDemoServerType)currentServer {
@@ -56,7 +62,10 @@
     return [NSUserDefaults.standardUserDefaults integerForKey:@"custom_private_port"];;
 }
 
-+ (int)currentSDKAppid {
++ (unsigned int)currentSDKAppid {
+    if (![TCLoginModel sharedInstance].isDirectlyLoginSDK) {
+        return (unsigned int)[TCLoginModel sharedInstance].SDKAppID;
+    }
     int appid = public_SDKAPPID;
     if ([self currentServer] == TUIDemoServerTypeSingapore) {
         appid = singapore_SDKAPPID;

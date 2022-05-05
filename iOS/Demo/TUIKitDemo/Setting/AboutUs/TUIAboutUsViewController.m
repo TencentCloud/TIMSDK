@@ -7,7 +7,6 @@
 //
 
 #import "TUIAboutUsViewController.h"
-#import "TUINaviBarIndicatorView.h"
 #import "TUIThemeManager.h"
 #import "TUICommonTextCell.h"
 #import "TCUtil.h"
@@ -37,8 +36,8 @@
     self.tableView.backgroundColor = TUICoreDynamicColor(@"controller_bg_color", @"#F2F3F5");
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
 }
-
 - (void)applyData {
+    //PRIVATEMARK
     if (self.data) {
         [self.data removeAllObjects];
     }
@@ -104,7 +103,12 @@
                 [self showAlertWithText:txt];
             }
             else if ([event_type isEqualToString:@"103"]) {
-
+                Class cls = NSClassFromString(@"TUICancelAccountViewController");
+                NSString * clsStr = NSStringFromClass(cls);
+                if ([clsStr isKindOfClass:[NSString class]] && clsStr.length>0) {
+                    UIViewController * vc = [[cls alloc] init];
+                    [self.navigationController pushViewController:vc animated:YES];
+                }
             }
             else {
                 
