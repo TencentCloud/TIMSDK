@@ -8,7 +8,7 @@ namespace com.tencent.imsdk.unity.enums
         TIM_SUCC = 0,
         /// <summary>
         /// <description>接口调用失败，ImSDK未初始化</description>
-        /// </summary>     
+        /// </summary>
         TIM_ERR_SDKUNINIT = -1,// 接口调用失败，ImSDK未初始化
         /// <summary>
         /// <description>接口调用失败，用户未登录</description>
@@ -149,7 +149,7 @@ namespace com.tencent.imsdk.unity.enums
         /// <description>消息取消</description>
         /// </summary>
         kTIMMsg_Cancel = 7,         // 消息取消
-        
+
     };
 
     public enum TIMGenderType
@@ -652,7 +652,7 @@ namespace com.tencent.imsdk.unity.enums
         /// <summary>
         /// <description>None</description>
         /// </summary>
-        kTIMGroupMemberModifyFlag_None = 0x00,      // 
+        kTIMGroupMemberModifyFlag_None = 0x00,      //
         /// <summary>
         /// <description>修改消息接收选项</description>
         /// </summary>
@@ -1052,4 +1052,42 @@ namespace com.tencent.imsdk.unity.enums
         internal_operation_set_ui_platform,
 
     }
+
+    public enum HandleGroupMemberResult {
+        /// <summary>
+        /// <description>kTIMGroupMember_HandledErr 失败</description>
+        /// </summary>
+        kTIMGroupMember_HandledErr,
+        /// <summary>
+        /// <description>kTIMGroupMember_HandledSuc 成功</description>
+        /// </summary>
+        kTIMGroupMember_HandledSuc,
+        /// <summary>
+        /// <description>kTIMGroupMember_Included 已是群成员</description>
+        /// </summary>
+        kTIMGroupMember_Included,
+        /// <summary>
+        /// <description>kTIMGroupMember_Invited 已发送邀请</description>
+        /// </summary>
+        kTIMGroupMember_Invited,
+    };
+
+    public enum TIMFriendshipRelationType {
+        /// <summary>
+        /// <description>kTIMFriendshipRelationType_None 未知关系</description>
+        /// </summary>
+        kTIMFriendshipRelationType_None,
+        /// <summary>
+        /// <description>kTIMFriendshipRelationType_InMyFriendList 单向好友：对方是我的好友，我不是对方的好友</description>
+        /// </summary>
+        kTIMFriendshipRelationType_InMyFriendList,
+        /// <summary>
+        /// <description>kTIMFriendshipRelationType_InOtherFriendList 单向好友：对方不是我的好友，我是对方的好友</description>
+        /// </summary>
+        kTIMFriendshipRelationType_InOtherFriendList,
+        /// <summary>
+        /// <description>kTIMFriendshipRelationType_BothFriend 双向好友</description>
+        /// </summary>
+        kTIMFriendshipRelationType_BothFriend,
+    };
 }

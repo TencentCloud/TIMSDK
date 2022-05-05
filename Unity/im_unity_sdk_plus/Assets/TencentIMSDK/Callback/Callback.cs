@@ -11,7 +11,7 @@ namespace com.tencent.imsdk.unity.callback
     /// 异步方法通用回调
     /// </summary>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void ValueCallback(int code, string desc, string data, string user_data);
+    public delegate void ValueCallback<T> (int code, string desc, T data, string user_data);
 
     /// <summary>
     /// 新消息回调

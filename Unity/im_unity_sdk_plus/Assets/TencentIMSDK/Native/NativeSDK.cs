@@ -101,6 +101,15 @@ namespace com.tencent.imsdk.unity.native
 
 
         [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMMsgSetOfflinePushToken(IntPtr json_token, CommonValueCallback cb, IntPtr user_data);
+
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMMsgDoBackground(int unread_count, CommonValueCallback cb, IntPtr user_data);
+
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int TIMMsgDoForeground(CommonValueCallback cb, IntPtr user_data);
+
+        [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int TIMMsgMarkAllMessageAsRead(CommonValueCallback cb, IntPtr user_data);
 
         [DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]

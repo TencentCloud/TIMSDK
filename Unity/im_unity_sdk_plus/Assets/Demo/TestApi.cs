@@ -13,6 +13,7 @@ using AOT;
 using Newtonsoft.Json;
 using System.Reflection;
 using UnityEngine.UI;
+using demo.tencent.im.unity;
 // 部分接口测试
 
 public class TestApi : MonoBehaviour
@@ -57,6 +58,15 @@ public class TestApi : MonoBehaviour
        },
        {
            "登出", "Logout"
+       },
+       {
+           "设置离线推送token", "MsgSetOfflinePushToken"
+       },
+       {
+           "应用切后台", "MsgDoBackground"
+       },
+       {
+           "应用切前台", "MsgDoForeground"
        },
        {
            "获取会话列表", "ConvGetConvList"
@@ -272,6 +282,26 @@ public class TestApi : MonoBehaviour
     {
         data += (d + " ");
     }
+
+
+    public static void MsgSetOfflinePushToken(){
+        OfflinePushToken token = new OfflinePushToken();
+        token.offline_push_token_token = "asda1asda";
+        token.offline_push_token_business_id = 13121;
+        token.offline_push_token_is_tpns_token = false;
+        TIMResult res = TencentIMSDK.MsgSetOfflinePushToken(token,addAsyncDataToConsole);
+        addDataToConsole(res);
+    }
+
+    public static void MsgDoBackground(){
+        TIMResult res = TencentIMSDK.MsgDoBackground(10,addAsyncDataToConsole);
+        addDataToConsole(res);
+    }
+
+    public static void MsgDoForeground(){
+        TIMResult res = TencentIMSDK.MsgDoForeground(addAsyncDataToConsole);
+        addDataToConsole(res);
+    }
     public static void Login()
     {
         if (userid == "" || user_sig == "")
@@ -481,7 +511,7 @@ public class TestApi : MonoBehaviour
     }
     public static void MsgCancelSend()
     {
-        string conv_id = "287646";
+        string conv_id = touserid;
         string message_id = "144115263066194686-1638863822-3314274833";
         TIMResult res = TencentIMSDK.MsgCancelSend(conv_id, TIMConvType.kTIMConv_C2C, message_id, addAsyncDataToConsole);
         addDataToConsole(res);
@@ -588,7 +618,6 @@ public class TestApi : MonoBehaviour
         TIMResult res = TencentIMSDK.MsgGetMsgList(conv_id, TIMConvType.kTIMConv_C2C, get_message_list_param, (int code, string desc, string json_param, string user_data) =>
         {
             List<Message> messages = JsonConvert.DeserializeObject<List<Message>>(json_param);
-
             if (messages.Count > 0)
             {
                 lastMsg = lastMsg = messages[messages.Count - 1];
@@ -723,7 +752,7 @@ public class TestApi : MonoBehaviour
     }
     public static void GroupCreate()
     {
-        CreateGroupParam param = new CreateGroupParam(); 
+        CreateGroupParam param = new CreateGroupParam();
         param.create_group_param_group_id = "379595063308chat11_chatroom";
         param.create_group_param_group_name = "name";
         param.create_group_param_group_type = TIMGroupType.kTIMGroup_ChatRoom;
@@ -775,7 +804,7 @@ public class TestApi : MonoBehaviour
     public static void GroupModifyMemberInfo()
     {
         GroupModifyMemberInfoParam param = new GroupModifyMemberInfoParam();
-        param.group_modify_member_info_group_id = "test_unity_create_av";
+        param.group_modify_member_info_group_id = "379595063308chat11";
         param.group_modify_member_info_modify_flag = TIMGroupMemberModifyInfoFlag.kTIMGroupMemberModifyFlag_MemberRole;
         param.group_modify_member_info_identifier = "287646";
         param.group_modify_member_info_member_role = TIMGroupMemberRole.kTIMMemberRole_Admin;

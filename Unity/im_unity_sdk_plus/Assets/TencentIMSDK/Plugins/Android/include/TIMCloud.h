@@ -57,11 +57,11 @@ TIM_DECL void TIMRemoveRecvNewMsgCallback(TIMRecvNewMsgCallback cb);
 
 /**
 * @brief 1.3 设置消息已读回执回调
-* @param cb 消息已读回执回调，请参考[TIMMsgReadedReceiptCallback](TIMCloudCallback.h)
+* @param cb  消息已读回执回调，请参考[TIMMsgReadedReceiptCallback](TIMCloudCallback.h)
 * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
 * 
 * @note 
-* 发送方发送消息，接收方调用接口[TIMMsgReportReaded]()上报该消息已读，发送方ImSDK会通过此接口设置的回调抛出。
+* 发送方发送消息，接收方调用接口[TIMMsgReportReaded]()上报 C2C 消息已读，或者调用[TIMMsgSendMessageReadReceipts]()发送群消息已读回执，发送方ImSDK会通过此接口设置的回调抛出。
 */
 TIM_DECL void TIMSetMsgReadedReceiptCallback(TIMMsgReadedReceiptCallback cb, const void* user_data);
 
@@ -95,7 +95,6 @@ TIM_DECL void TIMSetMsgElemUploadProgressCallback(TIMMsgElemUploadProgressCallba
 */
 TIM_DECL void TIMSetGroupTipsEventCallback(TIMGroupTipsEventCallback cb, const void* user_data);
 
-
 /**
 * @brief 1.7 设置群组属性变更回调
 * @param cb 群组属性变更回调，请参考[TIMGroupAttributeChangedCallback](TIMCloudCallback.h)
@@ -124,7 +123,6 @@ TIM_DECL void TIMSetGroupAttributeChangedCallback(TIMGroupAttributeChangedCallba
 * 调用接口[TIMConvDelete]()删除会话成功时会触发会话删除事件。
 */
 TIM_DECL void TIMSetConvEventCallback(TIMConvEventCallback cb, const void* user_data);
-
 
 /**
 * @brief 1.9 设置会话未读消息总数变更的回调
@@ -254,7 +252,6 @@ TIM_DECL void TIMSetFriendBlackListAddedCallback(TIMFriendBlackListAddedCallback
 *
 */
 TIM_DECL void TIMSetFriendBlackListDeletedCallback(TIMFriendBlackListDeletedCallback cb, const void* user_data);
-
 
 /**
 * @brief 1.21 设置日志回调
@@ -611,7 +608,6 @@ TIM_DECL int TIMConvGetConvList(TIMCommCallback cb, const void* user_data);
 * }]
 */
 TIM_DECL int TIMConvGetConvInfo(const char* json_get_conv_list_param, TIMCommCallback cb, const void* user_data);
-/// @}
 
 /**
 * @brief 4.5 设置指定会话的草稿
@@ -665,7 +661,6 @@ TIM_DECL int TIMConvSetDraft(const char* conv_id, enum TIMConvType conv_type, co
 *
 */
 TIM_DECL int TIMConvCancelDraft(const char* conv_id, enum TIMConvType conv_type);
-/// @}
 
 /**
 * @brief  4.7 设置会话置顶
@@ -679,14 +674,13 @@ TIM_DECL int TIMConvCancelDraft(const char* conv_id, enum TIMConvType conv_type)
 * 
 * @example
 * // json_param 返回值为空字符串， 直接判断 code 即可
-* TIMConvPinConversation(
+* TIMConvPinConversation(conv_id, conv_type, true,
 *      [](int32_t code, const char* desc, const char* json_param, const void* user_data) {
 *      printf("TIMConvPinConversation|code:%d|desc:%s\n", code, desc);
 * }, nullptr);
 *
 */
 TIM_DECL int TIMConvPinConversation(const char* conv_id, TIMConvType conv_type, bool is_pinned, TIMCommCallback cb, const void* user_data);
-/// @}
 
 /**
 * @brief  4.8 获取所有会话总的未读消息数
@@ -824,7 +818,7 @@ TIM_DECL int TIMMsgCancelSend(const char* conv_id, enum TIMConvType conv_type, c
 TIM_DECL int TIMMsgFindMessages(const char* json_message_id_array, TIMCommCallback cb, const void* user_data);
 
 /**
-* @brief 5.4 消息上报已读
+* @brief 5.4 会话上报已读
 *
 * @param conv_id   会话的ID，从 5.8 版本开始，当 conv_id 为 NULL 空字符串指针或者""空字符串时，标记 conv_type 表示的所有单聊消息或者群组消息为已读状态
 * @param conv_type 会话类型，请参考[TIMConvType](TIMCloudDef.h)
@@ -1337,7 +1331,6 @@ TIM_DECL int TIMMsgBatchSend(const char* json_batch_send_param, TIMCommCallback 
 * 
 */
 TIM_DECL int TIMMsgSearchLocalMessages(const char* json_search_message_param, TIMCommCallback cb, const void* user_data);
-/// @}
 
 /**
 * @brief 5.21 设置消息自定义数据（本地保存，不会发送到对端，程序卸载重装后失效）
@@ -1369,6 +1362,139 @@ TIM_DECL int TIMMsgSearchLocalMessages(const char* json_search_message_param, TI
 */ 
 TIM_DECL int TIMMsgSetLocalCustomData(const char* json_msg_param, TIMCommCallback cb, const void* user_data);
 
+/**
+* @brief 5.22 发送消息已读回执 （6.1 及其以上版本支持）
+*
+* @param json_msg_array  消息列表
+* @param cb 成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+*
+* @example 发送群消息已读回执
+* int ret = TIMMsgSendMessageReadReceipts(json_msg_array, [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+* }, this);
+*
+* @note 请注意：
+* - 该接口暂时只支持 Group 消息。
+* - messageList 里的消息必须在同一个 Group 会话中。
+* - 该接口调用成功后，会话未读数不会变化，消息发送者会收到 onRecvMessageReadReceipts 回调，回调里面会携带消息的最新已读信息。
+*/
+TIM_DECL int TIMMsgSendMessageReadReceipts(const char* json_msg_array, TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief 5.23 获取消息已读回执（6.1 及其以上版本支持）
+*
+* @param json_msg_array  消息列表
+* @param cb 成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+*
+* @example 发送群消息已读回执
+* int ret = TIMMsgGetMessageReadReceipts(json_msg_array, [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+*     Json::Value json_value_receipts;
+*     Json::Reader reader;
+*     if (!reader.parse(json_params, json_value_receipts)) {
+*         // Json 解析失败
+*         return;
+*     }
+*     
+*     for (Json::ArrayIndex i = 0; i < json_value_receipts.size(); i++) {
+*         Json::Value& json_value_receipt = json_value_receipts[i];
+*         uint32_t conv_type = json_value_receipt[kTIMMsgReceiptConvType].asUInt();
+*         std::string group_id = json_value_receipt[kTIMMsgReceiptConvId].asString();
+*         std::string msg_id = json_value_receipt[kTIMMsgReceiptMsgId].asString();
+*         uint64_t read_count = json_value_receipt[kTIMMsgReceiptReadCount].asUInt64();
+*         uint64_t unread_count = json_value_receipt[kTIMMsgReceiptUnreadCount].asUInt64();
+*     }
+* }, this);
+*
+*
+* @note 请注意：
+* - 该接口暂时只支持 Group 消息。
+* - messageList 里的消息必须在同一个 Group 会话中。
+*/
+TIM_DECL int TIMMsgGetMessageReadReceipts(const char* json_msg_array, TIMCommCallback cb, const void* user_data);
+
+/**
+* @brief 5.24 获取群消息已读群成员列表（6.1 及其以上版本支持）
+*
+* @param json_msg 单条群消息
+* @param filter 指定拉取已读或未读群成员列表。
+* @param next_seq 分页拉取的游标，第一次默认取传 0，后续分页拉取时，传上一次分页拉取成功回调里的 next_seq
+* @param count 分页拉取的个数，最大支持 100 个。
+* @param cb 成功与否的回调。回调函数定义和参数解析请参考 [TIMCommCallback](TIMCloudCallback.h)
+* @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+* @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+*
+* @example 发送群消息已读回执
+* int ret = TIMMsgGetGroupMessageReadMemberList(json_msg, TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_READ, next_seq, 100,
+*         [](const char* json_group_member_array, uint64_t next_seq, bool is_finished, const void* user_data) {
+*     Json::Value member_array;
+*     Json::Reader reader;
+*     if (!reader.parse(json_group_member_array, member_array)) {
+*         // Json 解析失败
+*         return;
+*     }
+*     
+*     for (Json::ArrayIndex i = 0; i < member_array.size(); i++) {
+*         Json::Value& member = member_array[i];
+*         std::string user_id = member[kTIMGroupMemberInfoIdentifier].asString();
+*         std::string name_card = member[kTIMGroupMemberInfoNameCard].asString();
+*         std::string face_url = member[kTIMGroupMemberInfoFaceUrl].asString();
+*     }
+*
+*     if (false == is_finished) {
+*         TIMMsgGetGroupMessageReadMemberList(json_msg, TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_READ, next_seq, 100, MsgGroupReadMembersCallback, user_data);
+*     }
+* }, this);
+*
+*/
+TIM_DECL int TIMMsgGetGroupMessageReadMemberList(const char* json_msg, TIMGroupMessageReadMembersFilter filter, uint64_t next_seq, uint32_t count, TIMMsgGroupMessageReadMemberListCallback cb, const void* user_data);
+
+/*
+ * @brief 5.25 设置离线推送配置信息（iOS 和 Android 平台专用）
+ *
+ * @param json_token  离线推送配置
+ * @param cb 成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+ * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+ * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+ * @example
+ *   Json::Value json_parameters;
+ *   json_parameters[kTIMOfflinePushTokenToken] = "xxxxx";
+ *   json_parameters[kTIMOfflinePushTokenBusinessID] = 1234578;
+ *   json_parameters[kTIMOfflinePushTokenIsTPNSToken] = false;
+ *   TIMMsgSetOfflinePushToken(json_parameters.toStyledString().c_str(),
+ *       [](int32_t code, const char* desc, const char* json_params, const void* user_data) {
+ *   }, nullptr);
+ *
+ * @note
+ * > 接口成功设置后会开启离线推送功能，如果您需要自定义推送的格式信息，请参考  TIMMsgSendMessage 接口。
+ * > 如果您想关闭离线推送，请把 json_token 设置为 NULL。
+*/
+TIM_DECL int TIMMsgSetOfflinePushToken(const char *json_token, TIMCommCallback cb, const void* user_data);
+
+/**
+ * @brief 5.26 APP 检测到应用退后台时可以调用此接口，可以用作桌面应用角标的初始化未读数量（iOS 和 Android 平台专用）。
+ *
+ * @param unread_count 未读数量
+ * @param cb 成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+ * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+ * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+ * @note
+ * > 从 6.1 版本开始，如果配置了离线推送，会收到厂商或 TPNS 的离线推送通道下发的通知栏消息。
+*/
+TIM_DECL int TIMMsgDoBackground(uint32_t unread_count, TIMCommCallback cb, const void* user_data);
+
+/**
+ * @brief 5.27 APP 检测到应用进前台时可以调用此接口（iOS 和 Android 平台专用）。
+ *
+ * @param cb 成功与否的回调。回调函数定义请参考 [TIMCommCallback](TIMCloudCallback.h)
+ * @param user_data 用户自定义数据，ImSDK只负责传回给回调函数cb，不做任何处理
+ * @return int 返回TIM_SUCC表示接口调用成功（接口只有返回TIM_SUCC，回调cb才会被调用），其他值表示接口调用失败。每个返回值的定义请参考 [TIMResult](TIMCloudDef.h)
+ * @note
+ * > 从 6.1 版本开始，调用 TIMMsgDoForeground，会停止离线推送。但如果应用被 kill，仍然可以正常接收离线推送。
+*/
+TIM_DECL int TIMMsgDoForeground(TIMCommCallback cb, const void* user_data);
 
 /////////////////////////////////////////////////////////////////////////////////
 //

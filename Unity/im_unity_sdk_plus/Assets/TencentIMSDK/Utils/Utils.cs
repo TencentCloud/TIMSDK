@@ -16,7 +16,7 @@ namespace com.tencent.imsdk.unity.utils
         public static IntPtr string2intptr(string str)
         {
             if(str ==null){
-                
+
                 return Marshal.StringToHGlobalAnsi("");
             }
             return Marshal.StringToHGlobalAnsi(str);
@@ -34,6 +34,9 @@ namespace com.tencent.imsdk.unity.utils
         }
         public static T FromJson<T>(string pJson)
         {
+            if (typeof(T) == typeof(string)) {
+                return (T)(object) pJson;
+            }
             if (string.IsNullOrEmpty(pJson)) return default(T);
             try
             {
